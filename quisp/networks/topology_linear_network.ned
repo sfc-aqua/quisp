@@ -1,0 +1,235 @@
+package networks;
+
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see http://www.gnu.org/licenses/.
+// 
+
+import ned.DatarateChannel;
+import ned.IdealChannel;
+
+
+network Linear_One_MIM
+{
+    parameters:
+        **.distance_of_light_in_fiber_per_sec = 205336.986301 km;
+        //**.HoM_handshake = false;
+
+    submodules:
+        source: QNode {
+            address = 1;
+            nodeType = "EndNode";
+            @display("i=device/pc");
+            buffers = 15;
+            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
+            //emission_timing_uncertainty = 10;
+        }
+        HoM: HoM {
+            address = 2;
+            @display("i=device/bsm");
+        }
+        target: QNode {
+            address = 3;
+            nodeType = "EndNode";
+            buffers = 20;
+            @display("i=device/pc");
+        }
+    connections:
+        source.port++ <--> ClassicalChannel{distance = 40km;} <--> HoM.port++;
+        HoM.port++ <--> ClassicalChannel <--> target.port++;
+        source.quantum_port++ <--> QuantumChannel{distance = 40km;}  <--> HoM.quantum_port++;
+        HoM.quantum_port++ <--> QuantumChannel <--> target.quantum_port++;
+
+}
+
+
+
+network Linear_One_MM
+{
+    parameters:
+        **.distance_of_light_in_fiber_per_sec = 205336.986301 km;
+
+    submodules:
+        source: QNode {
+            address = 112302;
+            nodeType = "EndNode";
+            @display("i=device/pc");
+            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
+            //emission_timing_uncertainty = 10;
+        }
+
+        target: QNode {
+            address = 300;
+            nodeType = "EndNode";
+            @display("i=device/pc");
+        }
+    connections:
+        source.port++ <--> ClassicalChannel {  distance = 40km; } <--> target.port++;
+        source.quantum_port_receiver++ <--> QuantumChannel {  distance = 40km; } <--> target.quantum_port++;
+}
+
+network Linear_One_MM_bufferGap
+{
+    parameters:
+        **.distance_of_light_in_fiber_per_sec = 205336.986301 km;
+
+    submodules:
+        source: QNode {
+            address = 112302;
+            nodeType = "EndNode";
+            buffers = 20;
+            @display("i=device/pc");
+            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
+            //emission_timing_uncertainty = 10;
+        }
+
+        target: QNode {
+            address = 300;
+            buffers = 10;
+            nodeType = "EndNode";
+            @display("i=device/pc");
+        }
+    connections:
+        source.port++ <--> ClassicalChannel {  distance = 40km; } <--> target.port++;
+        source.quantum_port_receiver++ <--> QuantumChannel {  distance = 40km; } <--> target.quantum_port++;
+}
+
+
+network Linear_One_MSM
+{
+    parameters:
+        **.distance_of_light_in_fiber_per_sec = 205336.986301 km;
+
+    submodules:
+        source: QNode {
+            address = 1;
+            nodeType = "EndNode";
+            @display("i=device/pc");
+
+            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
+            //emission_timing_uncertainty = 10;
+        }
+        epps: EPPS {//needs to check the buffersize, and tell each node how many photon arrivals to expect.
+            address = 2;
+            @display("i=device/epps");
+        }
+        target: QNode {
+            address = 3;
+            nodeType = "EndNode";
+            @display("i=device/pc");
+        }
+    connections:
+        source.port++ <--> ClassicalChannel {  distance = 40km; } <--> epps.port++;
+        epps.port++ <--> ClassicalChannel {  distance = 20km; } <--> target.port++;
+        source.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 40km; } <--> epps.quantum_port++;
+        epps.quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> target.quantum_port_receiver_passive++;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+network Linear_One_MIM_MM_MSM
+{
+    parameters:
+        **.distance_of_light_in_fiber_per_sec = 205336.986301 km;
+
+        @display("bgb=441,236");
+    submodules:
+        source: QNode {
+            address = 1;
+            nodeType = "EndNode";
+            @display("i=device/pc;p=362,83");
+            buffers = 10;
+            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
+            //emission_timing_uncertainty = 10;
+        }
+        HoM: HoM {
+            address = 2;
+            @display("i=device/bsm;p=289,83");
+        }
+        router: QNode {
+            address = 3;
+            nodeType = "EndNode";
+            buffers =50;
+            @display("i=device/router;p=213,52");
+        }
+        mm: QNode {
+            address = 4;
+            buffers = 12;
+            nodeType = "EndNode";
+            @display("i=device/pc_s;p=213,180");
+        }
+        epps: EPPS {
+            address = 5;
+            @display("i=device/epps;p=122,83");
+        }
+
+        pas: QNode {
+            address = 6;
+            @display("i=device/pc_s;p=43,83");
+        }
+    connections:
+        source.port++ <--> ClassicalChannel <--> HoM.port++;
+        HoM.port++ <--> ClassicalChannel{ distance = 60km; } <--> router.port++;
+        mm.port++ <--> ClassicalChannel {  distance = 40km; } <--> router.port++;
+        epps.port++ <--> ClassicalChannel <--> router.port++;
+        epps.port++ <--> ClassicalChannel <--> pas.port++;
+        source.quantum_port++ <--> QuantumChannel <--> HoM.quantum_port++;
+        HoM.quantum_port++ <--> QuantumChannel{ distance = 60km; } <--> router.quantum_port++;
+        mm.quantum_port_receiver++ <--> QuantumChannel {  distance = 40km; } <--> router.quantum_port++;
+        router.quantum_port_receiver_passive++ <--> QuantumChannel <--> epps.quantum_port++;
+        epps.quantum_port++ <--> QuantumChannel <--> pas.quantum_port_receiver_passive++;
+}
+
+
