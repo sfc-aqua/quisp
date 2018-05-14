@@ -18,14 +18,14 @@ class stationaryQubit : public cSimpleModule
         bool pauliZerr;//Phase error
         bool nonPaulierr;//completely mixed and so on.
         bool nonPaulierrTwo;
-        int NodeEntangledWith;//Entangled pair's node-level address. -1 if not entangled
-        int QNICEntangledWith;//Entangled pair's QNIC-level address
-        int stationaryQubitEntangledWith;//Entangled pair's bufferQubit-level address
+        int NodeEntangledWith;//Entangled pair's node-level (global) address. -1 if not entangled
+        int QNICEntangledWith;//Entangled pair's QNIC-level INDEX
+        int stationaryQubitEntangledWith;//Entangled pair's bufferQubit-level INDEX
         bool isBusy;//free or reserved
-        double std;
+        double std;//STANDARD DEVIATION
 
         virtual bool checkBusy();
-        virtual bool emitPhoton(int pulse);
+        virtual bool emitPhoton(int pulse);//int pulse = 1 indicates the beginning of the burst, -1 is the end.
         virtual void setFree();
     private:
         int stationaryQubit_address;

@@ -23,6 +23,7 @@ class QuantumChannel : public cDatarateChannel
         QuantumChannel();
         virtual void initialize();
         virtual void processMessage(cMessage *msg, simtime_t t, result_t& result);
+        virtual void applyPhotonLoss();
 
 };
 
@@ -37,18 +38,18 @@ QuantumChannel::QuantumChannel()
 void QuantumChannel::initialize(){
     cDatarateChannel::initialize();
     distance = par("distance");
-    err.Z_error_ratio = par("Z_error_ratio");//par("name") will be read from .ned file
+    err.Z_error_ratio = par("Z_error_ratio");//par("name") will be read from .ini or .ned file
     err.X_error_ratio = par("X_error_ratio");
     err.Y_error_ratio = par("Y_error_ratio");
-    err.total_ratio = err.Z_error_ratio+err.X_error_ratio+err.Y_error_ratio;
-    err.error_rate = par("channel_error_rate");
+    err.total_ratio = err.Z_error_ratio+err.X_error_ratio+err.Y_error_ratio;//Get the sum of x:y:z for normalization
+    err.error_rate = par("channel_error_rate");//This is per km.
     //Treat anything more than 100% as 100%
-    err.error_rate = err.error_rate * distance;
-    if(err.error_rate>1){
+    err.error_rate = par("channel_error_rate");//per km
+    if(err.error_rate>1){//Treat any error rate greater than 100% as 100%
         err.error_rate = 1;
     }
 
-    photon_loss_rate = par("photon_loss_rate");
+    photon_loss_rate = par("photon_loss_rate");//Photon Loss rate per km.
 }
 
 
@@ -86,5 +87,12 @@ void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t& result
         //error("Only PhotonicQubit is allowed in quantum channel");
         EV<<"Only PhotonicQubit is allowed in quantum channel";
     }
+}
+
+
+
+void QuantumChannel::applyPhotonLoss(){
 
 }
+
+

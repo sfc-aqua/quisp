@@ -192,7 +192,7 @@ void EPPS_Controller::checkNeighborsBuffer(){
     cModule *neighbor_qnic_two = getNextNode(epps,1,"interHoM")->getParentModule();
     neighbor_buffer_two = neighbor_qnic_two->par("numBuffer");
     par("neighbor_buffer_two") = neighbor_buffer_two;
-    max_buffer = std::min({neighbor_buffer,neighbor_buffer_two});//Adjust to the slower one
+    max_buffer = std::min(neighbor_buffer,neighbor_buffer_two);//Adjust to the slower one
     par("max_buffer") = max_buffer;
 }
 
@@ -207,7 +207,7 @@ void EPPS_Controller::checkNeighborsHoMCapacity(){
     accepted_rate_two = (double)1/(double)neighbor_interHoM_two->getSubmodule("Controller")->par("photon_detection_per_sec");
 
     EV<<tempt<<"- - - - -"<<accepted_rate_two<<",,,,,,,,,,,"<<accepted_rate_one << " - - - " << temp<<"\n";
-    max_accepted_rate = std::max({accepted_rate_one,accepted_rate_two});//Needs to adjust to the slower device
+    max_accepted_rate = std::max(accepted_rate_one,accepted_rate_two);//Needs to adjust to the slower device
     //Adjust pump frequency to the lower HoM detection rate by neighbors.
     //if detection rate is better than emission rate.
     double pump_rate = (double)1/(double)frequency;

@@ -59,7 +59,7 @@ network ispMap_1239_node_23_48
 submodules:
 hom[177]: HoM{
 	address = index+1000;
-	@display("i=device/satellite");
+	@display("i=device/bsm");
 };
 repeater[118]: QNode{
 	address = index+10000;

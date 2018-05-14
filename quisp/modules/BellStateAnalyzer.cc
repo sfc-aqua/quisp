@@ -135,14 +135,15 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
                 bubble("Success...!");
                 sendBSAresult(false, send_result);//succeeded because both reached, and both clicked
 
-            }else{
+            }//else if darkcount....
+            else{
                 bubble("Failed...!");
                 sendBSAresult(true, send_result);//just failed because only 1 detector clicked while both reached
-
             }
         }else{
             bubble("Photon lost!");
             sendBSAresult(true, send_result);
+            //If Dark count...
 
         }
         initializeVariables();
