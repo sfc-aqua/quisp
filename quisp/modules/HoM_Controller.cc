@@ -127,7 +127,7 @@ void HoM_Controller::checkNeighborAddress(bool receiver){
             neighbor_address_two =  getParentModule()->gate("quantum_port$o",1)->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->par("address");
             distance_to_neighbor = getParentModule()->par("internal_distance");
             distance_to_neighbor_two = getParentModule()->gate("quantum_port$o",1)->getNextGate()->getNextGate()->getChannel()->par("distance");
-            max_neighbor_distance = std::max({distance_to_neighbor,distance_to_neighbor_two});
+            max_neighbor_distance = std::max(distance_to_neighbor,distance_to_neighbor_two);
         }catch (std::exception& e) {
             error("Error in HoM_Controller.cc when getting neighbor addresses. Check internodeInitializer.");
             endSimulation();
@@ -138,7 +138,7 @@ void HoM_Controller::checkNeighborAddress(bool receiver){
             neighbor_address_two =  getParentModule()->gate("quantum_port$o",1)->getNextGate()->getOwnerModule()->par("address");
             distance_to_neighbor = getParentModule()->gate("quantum_port$o",0)->getChannel()->par("distance");
             distance_to_neighbor_two = getParentModule()->gate("quantum_port$o",1)->getChannel()->par("distance");
-            max_neighbor_distance = std::max({distance_to_neighbor,distance_to_neighbor_two});
+            max_neighbor_distance = std::max(distance_to_neighbor,distance_to_neighbor_two);
         }catch (std::exception& e) {
             error("Error in HoM_Controller.cc. Your stand-alone HoM module may not connected to the neighboring node (quantum_port).");
             endSimulation();
@@ -151,7 +151,7 @@ void HoM_Controller::checkNeighborBuffer(bool receiver){
         try{
             neighbor_buffer =  getParentModule()->getParentModule()->par("numBuffer");
             neighbor_buffer_two = getParentModule()->gate("quantum_port$o",1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->par("numBuffer");
-            max_buffer = std::min({neighbor_buffer,neighbor_buffer_two});//Both nodes should transmit the same amount of photons.
+            max_buffer = std::min(neighbor_buffer,neighbor_buffer_two);//Both nodes should transmit the same amount of photons.
         }catch (std::exception& e) {
             error("Error in HoM_Controller.cc. HoM couldnt find parameter numBuffer in the neighbor's qnic.");
             endSimulation();
@@ -160,7 +160,7 @@ void HoM_Controller::checkNeighborBuffer(bool receiver){
         try{
             neighbor_buffer =  getParentModule()->gate("quantum_port$o",0)->getNextGate()->getNextGate()->getOwnerModule()->par("numBuffer");
             neighbor_buffer_two =  getParentModule()->gate("quantum_port$o",1)->getNextGate()->getNextGate()->getOwnerModule()->par("numBuffer");
-            max_buffer = std::min({neighbor_buffer,neighbor_buffer_two});//Both nodes should transmit the same amount of photons.
+            max_buffer = std::min(neighbor_buffer,neighbor_buffer_two);//Both nodes should transmit the same amount of photons.
         }catch (std::exception& e) {
             error("Error in HoM_Controller.cc. HoM couldnt find parameter numBuffer in the neighbor's qnic.");
             endSimulation();
