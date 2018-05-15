@@ -1,0 +1,46 @@
+#!/bin/sh
+
+case "$-" in
+*i*);;
+*) exit 1;;
+esac
+
+__old_pwd="$(pwd)"
+while true; do
+  cd ..
+  __omnetpp_setenv="$(find . -maxdepth 2 -type f -name 'setenv' -executable -path '*omnetpp*' 2>/dev/null | head -n1)"
+  if [ -n "${__omnetpp_setenv}" ]; then
+    __omnetpp_root="$(realpath "$(dirname "${__omnetpp_setenv}")")"
+    echo "${__omnetpp_root}"
+    cd "${__old_pwd}"
+    break
+  fi
+  if [ "$(pwd)" = "/" ]; then
+    cd "${__old_pwd}"
+    echo "Could not find OmNET++"
+    return 1
+  fi
+done
+
+eval "activate () {
+  if [ `uname` = \"Darwin\" ]; then
+    export PATH=\"${__omnetpp_root}/tools/macosx/bin:$PATH\"
+    export QT_PLUGIN_PATH=\"${__omnetpp_root}/tools/macosx/plugins\"
+  else
+    export PATH=\"$PATH\"
+  fi
+  export PATH=\"${__omnetpp_root}/bin:\$PATH\"
+  export HOSTNAME
+  export HOST
+  export VIRTUAL_ENV=\"quisp\"
+
+  deactivate () {
+    export PATH=\"$PATH\"
+    unset QT_PLUGIN_PATH ||true
+    unset VIRTUAL_ENV
+    unset -f deactivate
+  }
+  unset -f activate
+}"
+
+activate

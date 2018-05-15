@@ -3,6 +3,7 @@ quisp_dbg
 out/
 .metadata/
 .settings/
+Makefile
 
 PhotonicQubit_m.cc
 PhotonicQubit_m.h
