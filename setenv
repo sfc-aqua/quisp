@@ -8,9 +8,10 @@ esac
 __old_pwd="$(pwd)"
 while true; do
   cd ..
-  __omnetpp_setenv="$(find . -maxdepth 2 -type f -name 'setenv' -executable -path '*omnetpp*' 2>/dev/null | head -n1)"
+  __omnetpp_setenv="$(find . -maxdepth 2 -type f -name 'setenv' -path '*omnetpp*' 2>/dev/null | head -n1)"
   if [ -n "${__omnetpp_setenv}" ]; then
-    __omnetpp_root="$(realpath "$(dirname "${__omnetpp_setenv}")")"
+    # __omnetpp_root="$(realpath "$(dirname "${__omnetpp_setenv}")")"
+    __omnetpp_root="$(cd "$(dirname "${__omnetpp_setenv}")" && pwd)"
     echo "${__omnetpp_root}"
     cd "${__old_pwd}"
     break
