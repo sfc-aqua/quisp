@@ -25,7 +25,7 @@ class stationaryQubit : public cSimpleModule
         double std;//STANDARD DEVIATION
 
         virtual bool checkBusy();
-        virtual bool emitPhoton(int pulse);//int pulse = 1 indicates the beginning of the burst, -1 is the end.
+        virtual void emitPhoton(int pulse);//int pulse = 1 indicates the beginning of the burst, -1 is the end.
         virtual void setFree();
     private:
         int stationaryQubit_address;

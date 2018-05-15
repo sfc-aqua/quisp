@@ -64,7 +64,7 @@ PhotonicQubit *stationaryQubit::generateEntangledPhoton(){
     return photon;
 }
 
-bool stationaryQubit::emitPhoton(int pulse)
+void stationaryQubit::emitPhoton(int pulse)
 {
     Enter_Method("emitPhoton()");
     if(!checkBusy()){
@@ -84,9 +84,8 @@ bool stationaryQubit::emitPhoton(int pulse)
         float jitter_timing = normal(0,std);
         float abso = fabs(jitter_timing);
         scheduleAt(simTime()+abso,pk); //cannot send back in time, so only positive lag
-        return true;
     }else{
-        return false;
+        error("Requested a photon emission to a busy qubit... this should not happen!");
     }
 
 }
