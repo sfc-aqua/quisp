@@ -4,3 +4,7 @@ out/
 .metadata/
 .settings/
 
+PhotonicQubit_m.cc
+PhotonicQubit_m.h
+classical_messages_m.cc
+classical_messages_m.h
