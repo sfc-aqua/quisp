@@ -12,7 +12,6 @@ while true; do
   if [ -n "${__omnetpp_setenv}" ]; then
     # __omnetpp_root="$(realpath "$(dirname "${__omnetpp_setenv}")")"
     __omnetpp_root="$(cd "$(dirname "${__omnetpp_setenv}")" && pwd)"
-    echo "${__omnetpp_root}"
     cd "${__old_pwd}"
     break
   fi
