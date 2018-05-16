@@ -12,8 +12,8 @@ void stationaryQubit::initialize()
 {
     pauliXerr = false;
     pauliZerr = false;
-    nonPaulierr = false;
-    nonPaulierrTwo = false;
+    //nonPaulierr = false;
+    //nonPaulierrTwo = false;
     NodeEntangledWith = -1;
     QNICEntangledWith = -1;
     stationaryQubit_address = par("stationaryQubit_address");

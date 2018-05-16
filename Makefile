@@ -1,4 +1,4 @@
-.PHONY: all clean run quisp/%
+.PHONY: all clean run quisp/% doc
 
 ifneq (${VIRTUAL_ENV},quisp)
 $(error Get inside the QUISP virtual environment with `source setenv`)
@@ -21,3 +21,6 @@ quisp/Makefile: quisp/makemakefiles
 run: quisp/quisp
 	cd quisp && \
 		./quisp -m -u Qtenv -n . networks/omnetpp.ini
+
+doc: Doxyfile
+	doxygen $<
