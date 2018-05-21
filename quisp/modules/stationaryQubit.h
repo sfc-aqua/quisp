@@ -1,18 +1,19 @@
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
-/*
- * stationaryQubit.h
+/** \file stationaryQubit.h
+ *  \todo clean Clean code when it is simple.
+ *  \authors cldurand,takaakimatsuo
+ *  \date 2018/03/14
  *
- *  Created on: 2018/03/14
- *      Author: takaakimatsuo
+ *  \brief stationaryQubit
  */
-
 #ifndef MODULES_STATIONARYQUBIT_H_
 #define MODULES_STATIONARYQUBIT_H_
 #include "../PhotonicQubit_m.h"
 using namespace omnetpp;
 
-
+/** \class stationaryQubit stationaryQubit.h
+ *
+ *  \brief stationaryQubit
+ */
 class stationaryQubit : public cSimpleModule
 {
     public:
@@ -67,6 +68,5 @@ class stationaryQubit : public cSimpleModule
         virtual void setBusy();
         virtual void setEntangledPartnerInfo(int node_address, int qnic_index, int qubit_index);
 };
-
 
 #endif /* MODULES_BUFFERQUBIT_H_ */

@@ -19,12 +19,16 @@ cat << EOF
 set -eu
 if grep -q '\\\\todo ${__tag}' "\${1}"; then
   echo "SET \${1}"
-  sed -i '/\\\\todo ${__tag}/ c\\
-/** \\\\todo ${__todo} */' "\${1}"
+  sed -i 's/\\\\todo ${__tag} [^*]*$/\\\\todo ${__todo}/' "\${1}"
 else
   echo "ADD \${1}"
-  sed -i '1 i\\
+  if grep -q '\\\\file' "\${1}"; then
+    sed -i '/\\\\file/ a\\
+ *  \\\\todo ${__todo}' "\${1}"
+  else
+    sed -i '1 i\\
 /** \\\\todo ${__todo} */' "\${1}"
+  fi
 fi
 set +eu
 EOF

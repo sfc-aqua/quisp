@@ -1,5 +1,11 @@
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
+/** \file stationaryQubit.cc
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *  \date 2018/03/14
+ *
+ *  \brief stationaryQubit
+ */
 #include "stationaryQubit.h"
 #include <vector>
 #include <omnetpp.h>

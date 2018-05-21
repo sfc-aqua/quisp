@@ -1,0 +1,53 @@
+#!/bin/sh
+set -eu
+__folder="$(dirname "$(cd "$(dirname $0)" && pwd)")";
+__file="${1}"
+__file_name="$(basename "${__file}")"
+__file_path="$(cd "$(dirname "${__file}")" && pwd)"/"${__file_name}"
+__file_base="$(echo "${__file_name}" | sed 's/\.[^.]*$//')"
+
+cd "${__folder}"
+get_authors () {
+  git blame --line-porcelain "${__file_path}" |
+  sed -n '/^author / { s/^author //; p; }' |
+  tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz' |
+  tr -c -d 'abcdefghijklmnopqrstuvwxyz\n' |
+  sort | uniq | sed '/^notcommittedyet$/ d' | tr '\n' ',' | head -c-1
+}
+__authors="$(get_authors)"
+
+get_creation_date () {
+  if grep -q 'Created on:' "${__file_path}"; then
+    grep -o 'Created on: .*$' "${__file_path}" | sed 's/Created on: //'
+  elif grep -q '\\date' "${__file_path}"; then
+    grep -o '\\date .*$' "${__file_path}" | sed 's/\\date //'
+  fi
+}
+__date="$(get_creation_date)"
+
+get_class () {
+  if grep -q '^class' "${__file_path}"; then
+    grep -o '^class [^ ]\+' "${__file_path}" | sed 's/class //'
+  fi
+}
+__class="$(get_class)"
+if [ -z "${__class}" ]; then
+  __class="${__file_base}"
+fi
+
+list_todos () {
+  grep -o '\\todo [^*]*' "${__file_path}" | sed 's/^/ *  /'
+}
+
+cat << EOF
+/** \\file ${__file_name}
+EOF
+list_todos | sed 's/\s*$//'
+cat << EOF
+ *  \\authors ${__authors}
+ *  \\date ${__date}
+ *
+ *  \\brief ${__class}
+ */
+EOF
+set +eu

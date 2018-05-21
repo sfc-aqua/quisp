@@ -75,3 +75,10 @@ The `todo` tool can help list, add and remove todos on every file at once.
 λ todo add doc Write some clear documentation.
 λ todo rm clean
 ```
+
+### Generate documentation blocks
+
+```
+λ doc_file quisp/modules/stationaryQubit.h
+λ echo "class stationaryQubit" | doc_class quisp/modules/stationaryQubit.h
+```
