@@ -1,3 +1,5 @@
+/** \todo clean Clean code when it is simple. */
+/** \todo doc Write doxygen documentation. */
 #include <map>
 #include <omnetpp.h>
 #include "../classical_messages_m.h" //Path selection: type = 1, Timing notifier for BMA: type = 4

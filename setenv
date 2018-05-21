@@ -29,7 +29,7 @@ eval "activate () {
   else
     export PATH=\"$PATH\"
   fi
-  export PATH=\"${__omnetpp_root}/bin:\$PATH\"
+  export PATH=\"${__old_pwd}/bin:${__omnetpp_root}/bin:\$PATH\"
   export HOSTNAME
   export HOST
   export VIRTUAL_ENV=\"quisp\"

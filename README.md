@@ -57,3 +57,21 @@ Documentation generation uses `doxygen`.
 ```sh
 ~/work/quisp λ make run
 ```
+
+## Development tools
+
+### File-wise todos
+
+In `*.h` and `*.cc` files, put todos as follows:
+
+```
+/** \todo <identifier> Anything describing what to do. */
+```
+
+The `todo` tool can help list, add and remove todos on every file at once.
+
+```
+λ todo ls clean
+λ todo add doc Write some clear documentation.
+λ todo rm clean
+```

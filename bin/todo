@@ -1,0 +1,64 @@
+#!/bin/sh
+set -eu
+__folder="$(dirname "$(cd "$(dirname $0)" && pwd)")";
+__action="${1}";
+case "${__action}" in
+  "add"|"set")__action=add;;
+  "rm");;
+  "ls");;
+  *) echo >&2 Valid actions: add,rm; exit 1;;
+esac
+
+shift
+__tag="${1}";
+__todo="$@";
+
+generate_add () {
+cat << EOF
+#!/bin/sh
+set -eu
+if grep -q '\\\\todo ${__tag}' "\${1}"; then
+  echo "SET \${1}"
+  sed -i '/\\\\todo ${__tag}/ c\\
+/** \\\\todo ${__todo} */' "\${1}"
+else
+  echo "ADD \${1}"
+  sed -i '1 i\\
+/** \\\\todo ${__todo} */' "\${1}"
+fi
+set +eu
+EOF
+}
+
+generate_rm () {
+cat << EOF
+#!/bin/sh
+set -eu
+if grep -q '\\\\todo ${__tag}' "\${1}"; then
+  echo "REM \${1}"
+  sed -i '/\\\\todo ${__tag}/ d' "\${1}"
+fi
+set +eu
+EOF
+}
+
+generate_ls () {
+cat << EOF
+#!/bin/sh
+set -eu
+if grep -q '\\\\todo ${__tag}' "\${1}"; then
+  echo "HIT \${1}"
+fi
+set +eu
+EOF
+}
+
+__script="$(mktemp)";
+
+chmod 200 ${__script}
+generate_${__action} > ${__script}
+chmod 500 ${__script}
+
+find "${__folder}" -type f '(' -name '*.cc' -o -name '*.h' ')' -exec "${__script}" '{}' ';'
+
+rm -f ${__script};

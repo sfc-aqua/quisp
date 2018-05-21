@@ -1,3 +1,5 @@
+/** \todo clean Clean code when it is simple. */
+/** \todo doc Write doxygen documentation. */
 #include "HoM_Controller.h"
 
 Define_Module(HoM_Controller);
