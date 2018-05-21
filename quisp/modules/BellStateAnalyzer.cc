@@ -1,6 +1,10 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
+/** \file BellStateAnalyzer.cc
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *
+ *  \brief BellStateAnalyzer
+ */
 #include <vector>
 #include <omnetpp.h>
 #include "../classical_messages_m.h"
@@ -11,6 +15,11 @@
 
 using namespace omnetpp;
 
+/** \class BellStateAnalyzer BellStateAnalyzer.cc
+ *  \todo Documentation of the class header.
+ *
+ *  \brief BellStateAnalyzer
+ */
 class BellStateAnalyzer : public cSimpleModule
 {
     private:
@@ -45,7 +54,6 @@ class BellStateAnalyzer : public cSimpleModule
 };
 
 Define_Module(BellStateAnalyzer);
-
 
 void BellStateAnalyzer::initialize()
 {
@@ -162,7 +170,6 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
     delete msg;
 }
 
-
 void BellStateAnalyzer::initializeVariables(){
     left_arrived_at = -1;
     left_photon_origin_node_address = -1;
@@ -217,5 +224,3 @@ bool BellStateAnalyzer::isPhotonLost(cMessage *msg){
     }
     delete msg;
 }
-
-

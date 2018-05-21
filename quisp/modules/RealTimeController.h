@@ -1,11 +1,10 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
-/*
- * RealTimeController.h
+/** \file RealTimeController.h
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *  \date 2018/03/19
  *
- *  Created on: 2018/03/19
- *      Author: takaakimatsuo
+ *  \brief RealTimeController
  */
 
 #ifndef MODULES_REALTIMECONTROLLER_H_
@@ -15,6 +14,11 @@
 #include "../classical_messages_m.h"
 using namespace omnetpp;
 
+/** \class RealTimeController RealTimeController.h
+ *  \todo Documentation of the class header.
+ *
+ *  \brief RealTimeController
+ */
 class RealTimeController : public cSimpleModule
 {
     private:
@@ -27,8 +31,5 @@ class RealTimeController : public cSimpleModule
         virtual void EmitPhoton(int qnic_index ,int qubit_index, int qnic_type, int pulse);
         virtual void GUI_setQubitFree(int qnic_index ,int qubit_index, int qnic_type);
 };
-
-
-
 
 #endif /* MODULES_REALTIMECONTROLLER_H_ */

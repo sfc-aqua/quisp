@@ -27,7 +27,7 @@ __date="$(get_creation_date)"
 
 get_class () {
   if grep -q '^class' "${__file_path}"; then
-    grep -o '^class [^ ]\+' "${__file_path}" | sed 's/class //'
+    grep -o '^class [^: ]\+' "${__file_path}" | sed 's/class //'
   fi
 }
 __class="$(get_class)"
@@ -45,7 +45,12 @@ EOF
 list_todos | sed 's/\s*$//'
 cat << EOF
  *  \\authors ${__authors}
+EOF
+if [ -n "${__date}" ]; then cat << EOF
  *  \\date ${__date}
+EOF
+fi
+cat << EOF
  *
  *  \\brief ${__class}
  */

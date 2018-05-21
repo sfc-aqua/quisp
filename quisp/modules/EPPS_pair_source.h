@@ -1,13 +1,11 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
-/*
- * EPPS_pair_source.h
+/** \file EPPS_pair_source.h
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *  \date 2018/03/30
  *
- *  Created on: 2018/03/30
- *      Author: takaakimatsuo
+ *  \brief EPPS_pair_source
  */
-
 #ifndef MODULES_EPPS_PAIR_SOURCE_H_
 #define MODULES_EPPS_PAIR_SOURCE_H_
 
@@ -23,6 +21,11 @@ typedef struct entangledPhotons{
   PhotonicQubit *qubitTwo;
 };
 
+/** \class EPPS_pair_source EPPS_pair_source.h
+ *  \todo Documentation of the class header.
+ *
+ *  \brief EPPS_pair_source
+ */
 class EPPS_pair_source : public cSimpleModule
 {
     private:
@@ -45,7 +48,5 @@ class EPPS_pair_source : public cSimpleModule
         virtual double getEmissionFrequency();
         virtual void emitPhotons();
 };
-
-
 
 #endif /* MODULES_EPPS_PAIR_SOURCE_H_ */

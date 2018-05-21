@@ -3,7 +3,8 @@ set -eu
 __folder="$(dirname "$(cd "$(dirname $0)" && pwd)")";
 __file="${1}"
 __file_name="$(basename "${__file}")"
-__file_path="$(cd "$(dirname "${__file}")" && pwd)"/"${__file_name}"
+__file_folder="$(cd "$(dirname "${__file}")" && pwd)"
+__file_path="${__file_folder}"/"${__file_name}"
 
 __input_path="$(mktemp)"
 chmod 600 "${__input_path}"
@@ -11,16 +12,20 @@ cat - > "${__input_path}"
 
 get_class () {
   if grep -q '^class' "${__input_path}"; then
-    grep -o '^class [^ ]\+' "${__input_path}" | sed 's/class //'
+    grep -o '^class [^: ]\+' "${__input_path}" | sed 's/class //'
   fi
 }
 __class="$(get_class)"
 
-__file_name="$(echo "${__file_name}" | sed 's/\.cc$/.h/')"
+__file_hname="$(echo "${__file_name}" | sed 's/\.cc$/.h/')"
+if [ ! -f "${__file_folder}/${__file_hname}" ]; then
+  __file_hname="${__file_name}"
+fi
 
 if [ -n "${__class}" ]; then
 cat << EOF
-/** \\class ${__class} ${__file_name}
+/** \\class ${__class} ${__file_hname}
+ *  \\todo Documentation of the class header.
  *
  *  \\brief ${__class}
  */

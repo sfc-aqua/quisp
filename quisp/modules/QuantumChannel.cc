@@ -1,6 +1,10 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
+/** \file QuantumChannel.cc
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *
+ *  \brief QuantumChannel
+ */
 //#include "QuantumChannel.h"
 #include <vector>
 #include <omnetpp.h>
@@ -16,6 +20,11 @@ typedef struct channel_error{
     double total_ratio;
 };
 
+/** \class QuantumChannel QuantumChannel.cc
+ *  \todo Documentation of the class header.
+ *
+ *  \brief QuantumChannel
+ */
 class QuantumChannel : public cDatarateChannel
 {
     public:
@@ -31,7 +40,6 @@ class QuantumChannel : public cDatarateChannel
 };
 
 Define_Channel(QuantumChannel)
-
 
 QuantumChannel::QuantumChannel()
 {
@@ -54,8 +62,6 @@ void QuantumChannel::initialize(){
 
     photon_loss_rate = par("photon_loss_rate");//Photon Loss rate per km.
 }
-
-
 
 void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t& result)
 {
@@ -92,10 +98,6 @@ void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t& result
     }
 }
 
-
-
 void QuantumChannel::applyPhotonLoss(){
 
 }
-
-

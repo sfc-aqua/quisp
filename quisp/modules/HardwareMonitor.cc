@@ -1,6 +1,11 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
+/** \file HardwareMonitor.cc
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *  \date 2018/03/19
+ *
+ *  \brief HardwareMonitor
+ */
 #include "HardwareMonitor.h"
 
 Define_Module(HardwareMonitor);
@@ -119,8 +124,6 @@ void HardwareMonitor::handleMessage(cMessage *msg){
 
 }
 
-
-
 HardwareMonitor::NeighborTable HardwareMonitor::prepareNeighborTable(NeighborTable ntable, int numQnic){
     //qnic_r does not need to know what the neighbor is.
     //This is because the internal Hom sends a request to its own connection manager, telling the internal qnic index it needs to run.
@@ -142,7 +145,6 @@ HardwareMonitor::NeighborTable HardwareMonitor::prepareNeighborTable_rp(Neighbor
         }
     return ntable_rp;
 }
-
 
 //This method finds out the address of the neighboring node with respect to the local qnic index.
 int  HardwareMonitor::findNeighborAddress(int local_qnic_index, cModule *thisQNode){
@@ -171,9 +173,6 @@ int  HardwareMonitor::findNeighborAddress_r(int local_qnic_index, cModule *thisQ
     return neighbor_is_QNode.address;
 }
 
-
-
-
 cModule* HardwareMonitor::getQNode(){
          cModule *currentModule = getParentModule();//We know that Connection manager is not the QNode, so start from the parent.
          try{
@@ -188,8 +187,6 @@ cModule* HardwareMonitor::getQNode(){
          }
          return currentModule;
 }
-
-
 
 neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode){
 
@@ -220,11 +217,8 @@ HardwareMonitor::NeighborTable HardwareMonitor::passNeighborTable(){
     Enter_Method("passNeighborTable()");
     return ntable;
 }
+
 HardwareMonitor::NeighborTable HardwareMonitor::passNeighborTable_rp(){
     Enter_Method("passNeighborTable_rp()");
     return ntable_rp;
 }
-
-
-
-

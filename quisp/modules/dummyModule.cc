@@ -1,25 +1,23 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
-/*
- * dummyModule.cc
+/** \file dummyModule.cc
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *  \date 2018/03/25
  *
- *  Created on: 2018/03/25
- *      Author: takaakimatsuo
+ *  \brief dummyModule
  */
-
-
-
-
 #include <vector>
 #include <omnetpp.h>
 #include "../classical_messages_m.h"
 #include "../PhotonicQubit_m.h"
 
-
-
 using namespace omnetpp;
 
+/** \class dummyModule dummyModule.cc
+ *  \todo Documentation of the class header.
+ *
+ *  \brief dummyModule
+ */
 class dummyModule : public cSimpleModule
 {
     protected:
@@ -29,15 +27,11 @@ class dummyModule : public cSimpleModule
 
 Define_Module(dummyModule);
 
-
 void dummyModule::initialize()
 {
 
 }
 
-
-
 void dummyModule::handleMessage(cMessage *msg){
     delete msg;
 }
-

@@ -1,6 +1,11 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
+/** \file HoM_Controller.cc
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *  \date 2018/04/01
+ *
+ *  \brief HoM_Controller
+ */
 #include "HoM_Controller.h"
 
 Define_Module(HoM_Controller);

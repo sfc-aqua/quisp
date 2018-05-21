@@ -1,16 +1,13 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
-/*
- * HardwareMonitor.h
+/** \file HardwareMonitor.h
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *  \date 2018/03/19
  *
- *  Created on: 2018/03/19
- *      Author: takaakimatsuo
+ *  \brief HardwareMonitor
  */
-
 #ifndef MODULES_HARDWAREMONITOR_H_
 #define MODULES_HARDWAREMONITOR_H_
-
 
 #include <vector>
 #include <omnetpp.h>
@@ -39,6 +36,11 @@ typedef struct stationaryQubitInfo{
     entangledWith entangled_inf;
 };
 
+/** \class HardwareMonitor HardwareMonitor.h
+ *  \todo Documentation of the class header.
+ *
+ *  \brief HardwareMonitor
+ */
 class HardwareMonitor : public cSimpleModule
 {
     private:
@@ -71,7 +73,5 @@ class HardwareMonitor : public cSimpleModule
         virtual int findNeighborAddress_r(int local_qnic_index, cModule *thisQNode);
         //virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
 };
-
-
 
 #endif /* MODULES_HARDWAREMONITOR_H_ */

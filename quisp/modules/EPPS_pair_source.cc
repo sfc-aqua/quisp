@@ -1,17 +1,14 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
-/*
- * EPPS_pair_source.cc
+/** \file EPPS_pair_source.cc
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *  \date 2018/03/25
  *
- *  Created on: 2018/03/25
- *      Author: takaakimatsuo
+ *  \brief EPPS_pair_source
  */
-
 #include "EPPS_pair_source.h"
 
 Define_Module(EPPS_pair_source);
-
 
 void EPPS_pair_source::initialize()
 {
@@ -63,7 +60,6 @@ void EPPS_pair_source::BubbleText(const char* txt){
     }
 }
 
-
 cModule* EPPS_pair_source::getEPPSNode(){
          cModule *currentModule = getParentModule();//We know that Connection manager is not the EPPS, so start from the parent.
          try{
@@ -84,5 +80,3 @@ double EPPS_pair_source::getEmissionFrequency(){
     EV<<"**********************Returning frequency"<<frequency;
     return frequency;
 }
-
-

@@ -1,13 +1,11 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
-/*
- * HoM_Controller.h
+/** \file HoM_Controller.h
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *  \date 2018/04/01
  *
- *  Created on: 2018/04/01
- *      Author: takaakimatsuo
+ *  \brief HoM_Controller
  */
-
 #ifndef MODULES_HOM_CONTROLLER_H_
 #define MODULES_HOM_CONTROLLER_H_
 
@@ -21,9 +19,13 @@
 
 using namespace omnetpp;
 
-//How about if two nodes have imbalanced buffers?
-//Maybe use unused qnic (which is ought to be used for another path)?
-
+/** \class HoM_Controller HoM_Controller.h
+ *  \todo Documentation of the class header.
+ *  \note How about if two nodes have imbalanced buffers?
+ *        Maybe use unused qnic (which is ought to be used for another path)?
+ *
+ *  \brief HoM_Controller
+ */
 class HoM_Controller : public cSimpleModule
 {
     private:

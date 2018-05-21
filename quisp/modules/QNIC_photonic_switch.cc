@@ -1,6 +1,10 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
+/** \file QNIC_photonic_switch.cc
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *
+ *  \brief QNIC_photonic_switch
+ */
 #include <vector>
 #include <omnetpp.h>
 #include "../classical_messages_m.h"
@@ -8,6 +12,11 @@
 
 using namespace omnetpp;
 
+/** \class QNIC_photonic_switch QNIC_photonic_switch.cc
+ *  \todo Documentation of the class header.
+ *
+ *  \brief QNIC_photonic_switch
+ */
 class QNIC_photonic_switch : public cSimpleModule
 {
     private:
@@ -55,8 +64,6 @@ void QNIC_photonic_switch::checkAndsetNeighborAddress(){
        //EV<<"\n ***********************"<<gt->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getName()<<gt->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getIndex();//EV<<gt->getNextGate()->getName()<<gt->getNextGate()->getIndex();
        //cModule *qnicType = module->getModuleByPath("networks.QNode.qnic");
 }
-
-
 
 void QNIC_photonic_switch::handleMessage(cMessage *msg){
         //scheduleAt(simTime(),msg);

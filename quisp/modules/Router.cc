@@ -1,13 +1,21 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
+/** \file Router.cc
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *
+ *  \brief Router
+ */
 #include <map>
 #include <omnetpp.h>
 #include "../classical_messages_m.h" //Path selection: type = 1, Timing notifier for BMA: type = 4
 
-
 using namespace omnetpp;
 
+/** \class Router Router.cc
+ *  \todo Documentation of the class header.
+ *
+ *  \brief Router
+ */
 class Router : public cSimpleModule
 {   private:
         int myAddress;
@@ -70,7 +78,6 @@ void Router::initialize()
       delete topo;
 }
 
-
 void Router::handleMessage(cMessage *msg)
 {
         //check the header of the received package
@@ -105,7 +112,3 @@ void Router::handleMessage(cMessage *msg)
         pk->setHopCount(pk->getHopCount()+1);
         send(pk, "toQueue", outGateIndex);
 }
-
-
-
-

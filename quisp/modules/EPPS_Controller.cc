@@ -1,29 +1,27 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
- /*
- * EPPS_Controller.cc
+/** \file EPPS_Controller.cc
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *  \date 2018/03/25
  *
- *  Created on: 2018/03/25
- *      Author: takaakimatsuo
+ *  \brief EPPS_Controller
  */
-
-
-
-
 #include <vector>
 #include <omnetpp.h>
 #include "../classical_messages_m.h"
 #include "../PhotonicQubit_m.h"
 #include "EPPS_pair_source.h"
 
-
-
 using namespace omnetpp;
 
 //How about if two nodes have imbalanced buffers?
 //Maybe use unused qnic (which is ought to be used for another path)?
 
+/** \class EPPS_Controller EPPS_Controller.cc
+ *  \todo Documentation of the class header.
+ *
+ *  \brief EPPS_Controller
+ */
 class EPPS_Controller : public cSimpleModule
 {
     private:
@@ -63,7 +61,6 @@ class EPPS_Controller : public cSimpleModule
 
 Define_Module(EPPS_Controller);
 
-
 void EPPS_Controller::initialize()
 {
     frequency = par("frequency");
@@ -84,7 +81,6 @@ void EPPS_Controller::initialize()
     //scheduleAt(simTime(),generatePacket);
 
 }
-
 
 void EPPS_Controller::handleMessage(cMessage *msg){
     if(msg == generatePacket){
@@ -129,10 +125,6 @@ EPPStimingNotifier* EPPS_Controller::generateNotifier(double distance_to_neighbo
            return pk;
 }
 
-
-
-
-
 cModule* EPPS_Controller::getNextNode(cModule *epps, int index, std::string type){
      std::string node;
      cGate *currentGate =  getParentModule()->gate("quantum_port$o",index)->getNextGate();
@@ -151,7 +143,6 @@ cModule* EPPS_Controller::getNextNode(cModule *epps, int index, std::string type
          return currentGate->getOwnerModule();
 }
 
-
 void EPPS_Controller::checkNeighborsDistance(){
     cModule *epps = getNode("EPPS");
     try{
@@ -168,7 +159,6 @@ void EPPS_Controller::checkNeighborsDistance(){
     }
 }
 
-
 void EPPS_Controller::checkNeighborsAddress(){
          //First, check the node address of neighbors and their channel length.
         cModule *epps = getNode("EPPS");
@@ -184,7 +174,6 @@ void EPPS_Controller::checkNeighborsAddress(){
             error("parameter not found in EPPS_Controller initialize()");
         }
 }
-
 
 //Store the buffer size
 void EPPS_Controller::checkNeighborsBuffer(){
@@ -222,7 +211,6 @@ void EPPS_Controller::checkNeighborsHoMCapacity(){
 
 }
 
-
 cModule* EPPS_Controller::getNode(std::string type){
          cModule *currentModule = getParentModule();//We know that Connection manager is not the QNode, so start from the parent.
          try{
@@ -240,17 +228,6 @@ cModule* EPPS_Controller::getNode(std::string type){
          return currentModule;
 }
 
-
 double EPPS_Controller::calculateTimeToTravel(double distance, double c){
     return (distance/c);
 }
-
-
-
-
-
-
-
-
-
-

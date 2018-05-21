@@ -1,15 +1,23 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
+/** \file Queue.cc
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *
+ *  \brief Queue
+ */
 #include <stdio.h>
 #include <string.h>
 #include <omnetpp.h>
 #include "../classical_messages_m.h"
 #include "../PhotonicQubit_m.h"
 
-
 using namespace omnetpp;
 
+/** \class Queue Queue.cc
+ *  \todo Documentation of the class header.
+ *
+ *  \brief Queue
+ */
 class Queue:  public cSimpleModule{
     private:
         long frameCapacity;
@@ -40,7 +48,6 @@ Queue::Queue()
 {
     endTransmissionEvent = nullptr;
 }
-
 
 void Queue::initialize()
 {
@@ -145,5 +152,3 @@ void Queue::refreshDisplay() const
     getDisplayString().setTagArg("t", 0, isBusy ? "transmitting" : "idle");
     getDisplayString().setTagArg("i", 1, isBusy ? (queue.getLength() >= 3 ? "red" : "yellow") : "");
 }
-
-

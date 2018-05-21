@@ -1,12 +1,21 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
+/** \file Application.cc
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *  \date 2018/03/14
+ *
+ *  \brief Application
+ */
 #include <vector>
 #include <omnetpp.h>
 #include "../classical_messages_m.h"
 
 using namespace omnetpp;
 
+/** \class Application Application.cc
+ *
+ *  \brief Application
+ */
 class Application : public cSimpleModule
 {
     private:
@@ -19,8 +28,6 @@ class Application : public cSimpleModule
         virtual void handleMessage(cMessage *msg) override;
         virtual void BubbleText(const char* txt);
         virtual cModule* getQNode();
-
-
 
     public:
         Application();

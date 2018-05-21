@@ -1,16 +1,13 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
-/*
- * RuleEngine.h
+/** \file RuleEngine.h
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *  \date 2018/04/04
  *
- *  Created on: 2018/04/04
- *      Author: takaakimatsuo
+ *  \brief RuleEngine
  */
-
 #ifndef MODULES_RULEENGINE_H_
 #define MODULES_RULEENGINE_H_
-
 
 #include <vector>
 #include <omnetpp.h>
@@ -21,11 +18,6 @@
 #include "HoM_Controller.h"
 
 using namespace omnetpp;
-
-//The Connection Manager responds to connection requests received from other nodes.
-//Connection setup, so a regular operation but not high bandwidth, relatively low constraints.
-//Connections from nearest neighbors only.
-//Connection manager needs to know which qnic is connected to where, which QNode not HoM/EPPS.
 
 struct QubitAddr_cons{
      QubitAddr_cons(const int node, const int qnic, const int qubit)
@@ -38,13 +30,11 @@ struct QubitAddr_cons{
 };
 
 struct QubitAddr{
-
     //QubitAddr(int node_addr, int qnic_index, int qubit_index):node_address(node_addr),qnic_index(qnic_index),qubit_index(qubit_index){}
     int node_address;
     int qnic_index;
     int qubit_index;
 };
-
 
 struct QubitState{
     //QubitState(int qubit_address, int qubit_index, int qnic_index, int node_address, bool busy, simtime_t time):addr(node_address,qnic_index, qubit_index), entangled_addr(node_address,qnic_index, qubit_index), isBusy(busy), timestamp(time){}
@@ -57,6 +47,15 @@ struct QubitState{
     simtime_t timestamp;
 };
 
+/** \class RuleEngine RuleEngine.h
+ *  \todo Documentation of the class header.
+ *  \note The Connection Manager responds to connection requests received from other nodes.
+ *        Connection setup, so a regular operation but not high bandwidth, relatively low constraints.
+ *        Connections from nearest neighbors only.
+ *        Connection manager needs to know which qnic is connected to where, which QNode not HoM/EPPS.
+ *
+ *  \brief RuleEngine
+ */
 class RuleEngine : public cSimpleModule
 {
     public:
@@ -97,7 +96,5 @@ class RuleEngine : public cSimpleModule
         virtual void freeFailedQubits(int destAddr, int internal_qnic_index, CombinedBSAresults *pk_result);
         virtual void clearTrackerTable(int destAddr, int internal_qnic_index);
 };
-
-
 
 #endif /* MODULES_RULEENGINE_H_ */

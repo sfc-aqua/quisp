@@ -1,6 +1,11 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
+/** \file RuleEngine.cc
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *  \date 2018/04/04
+ *
+ *  \brief RuleEngine
+ */
 #include "RuleEngine.h"
 
 Define_Module(RuleEngine);
@@ -31,16 +36,6 @@ void RuleEngine::initialize()
 
     tracker = new sentQubitIndexTracker[number_of_qnics_all];//Sent qubit index tracker needs to be prepared per qnic(r,rp)
 }
-
-
-
-
-
-
-
-
-
-
 
 void RuleEngine::handleMessage(cMessage *msg){
         header *pk = check_and_cast<header *>(msg);
@@ -133,16 +128,6 @@ void RuleEngine::handleMessage(cMessage *msg){
     delete msg;
 }
 
-
-
-
-
-
-
-
-
-
-
 void RuleEngine::clearTrackerTable(int destAddr, int internal_qnic_index){
 
     int qnic_index = -1, qnic_type;
@@ -156,12 +141,6 @@ void RuleEngine::clearTrackerTable(int destAddr, int internal_qnic_index){
      int global_qnic_index = getQNICjob_index_for_this_qnic(qnic_index,qnic_type);
      tracker[global_qnic_index].clear();
 }
-
-
-
-
-
-
 
 void RuleEngine::incrementTrial(int destAddr, int internal_qnic_index){
      int qnic_index = -1, qnic_type;
@@ -183,8 +162,6 @@ void RuleEngine::incrementTrial(int destAddr, int internal_qnic_index){
     }
 }
 
-
-
 int RuleEngine::getQNICjob_index_for_this_qnic(int qnic_index, int qnic_type){
     int index = -1;
     if(qnic_type == 0){//qnic
@@ -198,7 +175,6 @@ int RuleEngine::getQNICjob_index_for_this_qnic(int qnic_index, int qnic_type){
     }
     return index;
 }
-
 
 RuleEngine::QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTable table,int qnic_type){
     int qnics = -1;
@@ -231,8 +207,6 @@ bool RuleEngine::qnicJob_outdated(int job_index, int qnic_index, int qnic_type){
         stop_emitting = true;
     } return stop_emitting;
 }
-
-
 
 //Only for MIM and MM
 void RuleEngine::freeFailedQubits(int destAddr, int internal_qnic_index, CombinedBSAresults *pk_result){
@@ -271,7 +245,6 @@ void RuleEngine::freeFailedQubits(int destAddr, int internal_qnic_index, Combine
         }
     }
 
-
     //Any qubit that has been shot while BSA result is actually on the way to the node, needs to be freed as well.
     if(shot_fired > list_size){
         EV<<shot_fired<<" shots fired, but only "<<list_size<<" results returned\n";
@@ -287,9 +260,6 @@ void RuleEngine::freeFailedQubits(int destAddr, int internal_qnic_index, Combine
         }//endSimulation();
     }
 }
-
-
-
 
 void RuleEngine::scheduleNextEmissionEvent(int qnic_index, double interval, simtime_t timing, int num_sent, bool internal, int trial){
     SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne;
@@ -352,7 +322,6 @@ void RuleEngine::shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk){
    }
 }
 
-
 //This method is for qnic (not qnic_r, qnic_rp).
 void RuleEngine::shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk){
     if(getFreeBufferSize_stateTable(stable, pk->getQnic_index())==0){
@@ -399,7 +368,6 @@ void RuleEngine::shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk){
     }
 }
 
-
 int RuleEngine::getQnicIndex_toNeighbor(int destAddr){
     int qnic_index = -1;
     HardwareMonitor::NeighborTable::iterator it = ntable.find(destAddr);
@@ -409,7 +377,6 @@ int RuleEngine::getQnicIndex_toNeighbor(int destAddr){
         qnic_index = (*it).second;//store gate index connected to the destination (BSA) node by refering to the neighbor table.
     return qnic_index;
 }
-
 
 void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, int qnic_type){
 
@@ -500,8 +467,6 @@ RuleEngine::QubitStateTable RuleEngine::setQubitFree(QubitStateTable table, int 
        return table;
 }
 
-
-
 cModule* RuleEngine::getQNode(){
          cModule *currentModule = getParentModule();//We know that Connection manager is not the QNode, so start from the parent.
          try{
@@ -522,5 +487,3 @@ void RuleEngine::finish(){
     delete realtime_controller;
 
 }
-
-

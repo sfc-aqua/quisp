@@ -1,11 +1,15 @@
-/** \todo header Write doxygen file header. */
-/** \todo clean Clean code when it is simple. */
-/** \todo doc Write doxygen documentation. */
+/** \file RealTimeController.cc
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors cldurand,takaakimatsuo
+ *  \date 2018/03/19
+ *
+ *  \brief RealTimeController
+ */
 #include "RealTimeController.h"
 #include "stationaryQubit.h"
 
 Define_Module(RealTimeController);
-
 
 void RealTimeController::initialize()
 {
@@ -42,8 +46,6 @@ void RealTimeController::EmitPhoton(int qnic_index ,int qubit_index, int qnic_ty
     }
 }
 
-
-
 cModule* RealTimeController::getQNode(){
          cModule *currentModule = getParentModule();//We know that Connection manager is not the QNode, so start from the parent.
          try{
@@ -58,7 +60,6 @@ cModule* RealTimeController::getQNode(){
          }
          return currentModule;
 }
-
 
 void RealTimeController::GUI_setQubitFree(int qnic_index ,int qubit_index, int qnic_type){
 
