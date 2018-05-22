@@ -162,16 +162,10 @@ void RuleEngine::incrementTrial(int destAddr, int internal_qnic_index){
 }
 
 int RuleEngine::getQNICjob_index_for_this_qnic(int qnic_index, int qnic_type){
-    int index = -1;
-    if(qnic_type == 0){//qnic
-        index = qnic_index;
-    }else if(qnic_type == 1){
-        index =  number_of_qnics + qnic_index;
-    }else if(qnic_type == 2){
-        index =  number_of_qnics + number_of_qnics_r + qnic_index;
-    }else{
-        error("Unknown qnic type");
-    }
+    if (qnic_type<0 || qnic_type>2) error("Unknown qnic type");
+    int index = qnic_index;
+    if (qnic_type>0) index += number_of_qnics;
+    if (qnic_type>1) index += number_of_qnics_r;
     return index;
 }
 

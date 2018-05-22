@@ -10,10 +10,11 @@ case "${__action}" in
 esac
 
 shift
-__tag="${1}";
+__tag="${1:-}";
 __todo="$@";
 
 generate_add () {
+  test -n "${__tag}"
 cat << EOF
 #!/bin/sh
 set -eu
@@ -35,6 +36,7 @@ EOF
 }
 
 generate_rm () {
+  test -n "${__tag}"
 cat << EOF
 #!/bin/sh
 set -eu

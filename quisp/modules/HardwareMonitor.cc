@@ -47,36 +47,40 @@ HardwareMonitor::QnicInfo* HardwareMonitor::initializeQTable(int numQnic, QnicIn
 int HardwareMonitor::checkNumBuff(int qnic_index, int qnic_type){
     Enter_Method("checkNumBuff()");
 
-    if(qnic_type<0 || qnic_type >2){
+    cModule *qnode = nullptr;
+    switch (qnic_type) {
+      case 0:
+        qnode = getQNode()->getSubmodule("qnic", qnic_index); break;
+      case 1:
+        qnode = getQNode()->getSubmodule("qnic_r", qnic_index); break;
+      case 2:
+        qnode = getQNode()->getSubmodule("qnic_rp", qnic_index); break;
+      default:
         error("Only 3 qnic types are currently recognized....");
     }
 
-    cModule *qnode = nullptr;
-    if(qnic_type==0)
-        qnode = getQNode()->getSubmodule("qnic", qnic_index);
-    else if(qnic_type==1)
-        qnode = getQNode()->getSubmodule("qnic_r", qnic_index);
-    else
-        qnode = getQNode()->getSubmodule("qnic_rp", qnic_index);//for when connection manager receives an EPPStimingNotifier
     return qnode->par("numBuffer");
 }
 
 //Not in HM.....
 int HardwareMonitor::checkNumFreeBuff(int qnic_index, int qnic_type){
-    if(qnic_type<0 || qnic_type >2){
-        error("Only 3 qnic types are currently recognized....");
-    }
-
     //qnic_type 0 = qnic, 1 = qnic_r, 2 = qnic_rp
     int num_free_resources = 0;
     Enter_Method("checkNumFreeBuff()");
     cModule *qnode = nullptr;
-    if(qnic_type==0)
-        qnode = getQNode()->getSubmodule("qnic", qnic_index);//for when connection manager receives an BSMtimingNotifier
-    else if (qnic_type==1)
-        qnode = getQNode()->getSubmodule("qnic_r", qnic_index);//for when connection manager receives an EPPStimingNotifier
-    else
-        qnode = getQNode()->getSubmodule("qnic_rp", qnic_index);//for when connection manager receives an EPPStimingNotifier
+    switch (qnic_type) {
+      //for when connection manager receives an BSMtimingNotifier
+      case 0:
+        qnode = getQNode()->getSubmodule("qnic", qnic_index); break;
+      //for when connection manager receives an EPPStimingNotifier
+      case 1:
+        qnode = getQNode()->getSubmodule("qnic_r", qnic_index); break;
+      //for when connection manager receives an EPPStimingNotifier
+      case 2:
+        qnode = getQNode()->getSubmodule("qnic_rp", qnic_index); break;
+      default:
+        error("Only 3 qnic types are currently recognized....");
+    }
 
     int maxBuff = qnode->par("numBuffer");
     for(int i=0; i<maxBuff; i++){

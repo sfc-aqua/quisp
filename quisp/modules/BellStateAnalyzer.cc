@@ -88,7 +88,6 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
         bubble("Next round!");
     }
 
-
     if(msg->arrivedOn("fromHoM_quantum_port$i",0)){
         left_arrived_at=simTime();
         left_photon_origin_node_address = photon->getNodeEntangledWith();
