@@ -30,7 +30,7 @@ network Linear_One_MIM
             address = 1;
             nodeType = "EndNode";
             @display("i=device/pc");
-            buffers = 15;
+            //buffers = 15;
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
@@ -41,7 +41,7 @@ network Linear_One_MIM
         target: QNode {
             address = 3;
             nodeType = "EndNode";
-            buffers = 20;
+            //buffers = 20;
             @display("i=device/pc");
         }
     connections:
@@ -100,8 +100,8 @@ network Linear_One_MM_bufferGap
             @display("i=device/pc");
         }
     connections:
-        source.port++ <--> ClassicalChannel {  distance = 40km; } <--> target.port++;
-        source.quantum_port_receiver++ <--> QuantumChannel {  distance = 40km; } <--> target.quantum_port++;
+        source.port++ <--> ClassicalChannel {  distance = 12.3km; } <--> target.port++;
+        source.quantum_port_receiver++ <--> QuantumChannel {  distance = 12.3km; } <--> target.quantum_port++;
 }
 
 

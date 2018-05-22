@@ -23,6 +23,11 @@ For example:
     └── setenv
 ```
 
+To run the simulation, you need to get Eigen, which is a library for matrix calculation in C/C++. This is used for channel errors and memory errors.
+
+http://eigen.tuxfamily.org/index.php?title=Main_Page
+
+
 ### Environment setup
 
 Before using the project, always setup your environment. The `setenv` script

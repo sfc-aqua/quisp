@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <buildspec version="4.0">
-    <dir makemake-options="--deep -O out -I. --meta:recurse --meta:export-include-path --meta:use-exported-include-paths --meta:export-library --meta:use-exported-libs --meta:feature-cflags --meta:feature-ldflags" path="." type="makemake"/>
+    <dir makemake-options="--deep -O out -I. -I/Users/takaakimatsuo/Downloads/eigen-eigen-5a0156e40feb --meta:recurse --meta:export-include-path --meta:use-exported-include-paths --meta:export-library --meta:use-exported-libs --meta:feature-cflags --meta:feature-ldflags" path="." type="makemake"/>
 </buildspec>

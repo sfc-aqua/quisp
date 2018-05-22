@@ -40,7 +40,7 @@ class BellStateAnalyzer : public cSimpleModule
         int right_photon_origin_node_address;
         int right_photon_origin_qnic_index;
         int right_photon_origin_qubit_index;
-        int count_X=0, count_Y=0, count_Z=0, count_I=0, count_total=0;//for debug
+        int count_X=0, count_Y=0, count_Z=0, count_I=0, count_L=0, count_total=0;//for debug
         bool handshake = false;
         bool this_trial_done = false;
         double BSAsuccess_rate = 0.5;
@@ -208,10 +208,12 @@ void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg){
         count_X++;
     }else if(!q->getPauliXerr() && q->getPauliZerr()){
         count_Z++;
+    }else if(q->getPhotonLost()){
+        count_L++;
     }else{
         count_I++;
     }count_total++;
-    EV<<"Y%="<<(double)count_Y/(double)count_total<<", X%="<<(double)count_X/(double)count_total<<", Z%="<<(double)count_Z/(double)count_total<<", I% ="<<(double)count_I/(double)count_total<<"\n";
+    EV<<"Y%="<<(double)count_Y/(double)count_total<<", X%="<<(double)count_X/(double)count_total<<", Z%="<<(double)count_Z/(double)count_total<<", L%="<<(double)count_L/(double)count_total<<", I% ="<<(double)count_I/(double)count_total<<"\n";
 }
 
 bool BellStateAnalyzer::isPhotonLost(cMessage *msg){
