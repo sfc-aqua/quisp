@@ -1,5 +1,4 @@
 /** \file stationaryQubit.cc
- *  \todo clean Clean code when it is simple.
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/14
  *
@@ -72,11 +71,7 @@ void stationaryQubit::setFree(){
 
 bool stationaryQubit::checkBusy(){
     Enter_Method("checkBusy()");
-    if(!isBusy){
-        return false;
-    }else{
-        return true;
-    }
+    return !!isBusy;
 }
 
 /**
@@ -105,27 +100,19 @@ PhotonicQubit *stationaryQubit::generateEntangledPhoton(){
 void stationaryQubit::emitPhoton(int pulse)
 {
     Enter_Method("emitPhoton()");
-    if(!checkBusy()){
-        PhotonicQubit *pk = generateEntangledPhoton();
-        if(pulse == 1){
-            pk->setFirst(true);
-            pk->setKind(3);
-        }
-        else if(pulse == -1){
-            pk->setLast(true);
-            pk->setKind(3);
-        }else if(pulse == 2){
-            pk->setFirst(true);
-            pk->setLast(true);
-            pk->setKind(3);
-        }
-        float jitter_timing = normal(0,std);
-        float abso = fabs(jitter_timing);
-        scheduleAt(simTime()+abso,pk); //cannot send back in time, so only positive lag
-    }else{
+    if (checkBusy()) {
         error("Requested a photon emission to a busy qubit... this should not happen!");
+        return;
     }
-
+    PhotonicQubit *pk = generateEntangledPhoton();
+    if (pulse) {
+      if (pulse > 0) pk->setFirst(true);
+      if (pulse!= 1) pk->setLast(true);
+      pk->setKind(3);
+    }
+    float jitter_timing = normal(0,std);
+    float abso = fabs(jitter_timing);
+    scheduleAt(simTime()+abso,pk); //cannot send back in time, so only positive lag
 }
 
 void stationaryQubit::setEntangledPartnerInfo(int node_address, int qnic_index, int qubit_index){
