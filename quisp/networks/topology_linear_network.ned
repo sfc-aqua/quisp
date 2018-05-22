@@ -22,7 +22,7 @@ import ned.IdealChannel;
 network Linear_One_MIM
 {
     parameters:
-        **.distance_of_light_in_fiber_per_sec = 205336.986301 km;
+        **.Speed_of_light_in_fiber = 205336.986301 km;
         //**.HoM_handshake = false;
 
     submodules:
@@ -57,7 +57,7 @@ network Linear_One_MIM
 network Linear_One_MM
 {
     parameters:
-        **.distance_of_light_in_fiber_per_sec = 205336.986301 km;
+        **.Speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
         source: QNode {
@@ -81,7 +81,7 @@ network Linear_One_MM
 network Linear_One_MM_bufferGap
 {
     parameters:
-        **.distance_of_light_in_fiber_per_sec = 205336.986301 km;
+        **.Speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
         source: QNode {
@@ -108,7 +108,7 @@ network Linear_One_MM_bufferGap
 network Linear_One_MSM
 {
     parameters:
-        **.distance_of_light_in_fiber_per_sec = 205336.986301 km;
+        **.Speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
         source: QNode {
@@ -182,7 +182,7 @@ network Linear_One_MSM
 network Linear_One_MIM_MM_MSM
 {
     parameters:
-        **.distance_of_light_in_fiber_per_sec = 205336.986301 km;
+        **.Speed_of_light_in_fiber = 205336.986301 km;//per second
 
         @display("bgb=441,236");
     submodules:

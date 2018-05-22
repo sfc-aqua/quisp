@@ -37,7 +37,7 @@ simple HoM_Controller
 {
     parameters:
         int address;
-        volatile double distance_of_light_in_fiber_per_sec @unit(km);//per sec
+        volatile double Speed_of_light_in_fiber @unit(km);//per sec
         int photon_detection_per_sec = default(10000);
         //rate can be up to 1 billion photons per second by default
         //interval will be 1photon/ns

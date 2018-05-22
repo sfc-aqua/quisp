@@ -68,7 +68,7 @@ void EPPS_Controller::initialize()
     epps = check_and_cast<EPPS_pair_source *>(pump);
     address = par("address");
     timing_buffer = par("timing_buffer");
-    cPar *c = &par("distance_of_light_in_fiber_per_sec");
+    cPar *c = &par("Speed_of_light_in_fiber");
     speed_of_light_in_channel = c->doubleValue();
     //For simplicity, I assume the EPPS can access those neighbor information without classical communication but directly.
     checkNeighborsAddress();

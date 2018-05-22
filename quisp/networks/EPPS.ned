@@ -33,7 +33,7 @@ simple EPPS_Controller
         double distance_to_neighbor_two = default(-1);//in km
         double max_neighbor_distance = default(-1);//in km
         double accepted_burst_interval = default(-1);//in s
-        double distance_of_light_in_fiber_per_sec @unit(km);
+        double Speed_of_light_in_fiber @unit(km);
         double timing_buffer = default(1e-9);
         double frequency = default(-1);
     gates:

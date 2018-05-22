@@ -185,14 +185,14 @@ void HoM_Controller::updateIDE_Parameter(bool receiver){
         par("distance_to_neighbor_two") = distance_to_neighbor_two;
         par("max_neighbor_distance") = max_neighbor_distance;
         par("max_buffer") = max_buffer;
-        c = &par("distance_of_light_in_fiber_per_sec");
+        c = &par("Speed_of_light_in_fiber");
         speed_of_light_in_channel = c->doubleValue();//per sec
         if(receiver){
             getParentModule()->par("qnic_index") = qnic_index;
         }
     }
     catch(std::exception& e){
-        error("photon_detection_per_sec is missing as a HoM_Controller parameter. Or maybe you should specify **.distance_of_light_in_fiber_per_sec = (number)km in .ini file.");
+        error("photon_detection_per_sec is missing as a HoM_Controller parameter. Or maybe you should specify **.Speed_of_light_in_fiber = (number)km in .ini file.");
     }
 }
 
