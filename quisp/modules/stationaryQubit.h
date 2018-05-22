@@ -48,9 +48,9 @@ class stationaryQubit : public cSimpleModule
 
         /**
          * \brief Emit photon.
-         * \param pulse is 1 for the beginning, -1 for the end.
+         * \param pulse is 1 for the beginning of the burst, -1 for the end.
          */
-        virtual void emitPhoton(int pulse);//int pulse = 1 indicates the beginning of the burst, -1 is the end.
+        virtual void emitPhoton(int pulse);
 
     private:
         /** @name Self address

@@ -1,6 +1,5 @@
 /** \file stationaryQubit.cc
  *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/14
  *
@@ -16,6 +15,12 @@ using namespace omnetpp;
 
 Define_Module(stationaryQubit);
 
+/**
+ * \brief Initialize stationaryQubit
+ *
+ * Omnet called method to initialize objects.
+ *
+ */
 void stationaryQubit::initialize()
 {
     pauliXerr = false;
@@ -24,13 +29,21 @@ void stationaryQubit::initialize()
     //nonPaulierrTwo = false;
     NodeEntangledWith = -1;
     QNICEntangledWith = -1;
+
+    // Get parameters from omnet
     stationaryQubit_address = par("stationaryQubit_address");
     node_address = par("node_address");
     qnic_address = par("qnic_address");
     std = par("std");
+
     setFree();
 }
 
+/**
+ * \brief cSimpleModule handleMessage function
+ *
+ * \param msg is the message
+ */
 void stationaryQubit::handleMessage(cMessage *msg){
     bubble("Got a photon!!");
     setBusy();
@@ -39,18 +52,22 @@ void stationaryQubit::handleMessage(cMessage *msg){
 
 void stationaryQubit::setBusy(){
     isBusy = true;
+
+    // GUI part
     if(hasGUI()){
         getDisplayString().setTagArg("i", 1, "red");
     }
-    par("isBusy") = true;//For IDE
+    par("isBusy") = true;
 }
 
 void stationaryQubit::setFree(){
     isBusy = false;
+
+    // GUI part
     if(hasGUI()){
         getDisplayString().setTagArg("i", 1, "blue");
     }
-    par("isBusy") = false;//For IDE
+    par("isBusy") = false;
 }
 
 bool stationaryQubit::checkBusy(){
@@ -62,16 +79,29 @@ bool stationaryQubit::checkBusy(){
     }
 }
 
+/**
+ * \brief Generate photon entangled with the memory
+ *
+ * \warning Shouldn't we destroy a possibly existing photon object before?
+ */
 PhotonicQubit *stationaryQubit::generateEntangledPhoton(){
     Enter_Method("generateEntangledPhoton()");
     photon = new PhotonicQubit("Photon");
-    //To simulte the actual physical entangled partner, not what the system thinks!!! we need this.
+
+    //To simulate the actual physical entangled partner, not what the system thinks!!! we need this.
     photon->setNodeEntangledWith(node_address);//This photon is entangled with....
     photon->setQNICEntangledWith(qnic_address);
     photon->setStationaryQubitEntangledWith(stationaryQubit_address);
     return photon;
 }
 
+/**
+ * \brief Emit photon
+ *
+ * \param pulse: 0 for nothing, 1 for first, -1 for last, 2 for first and last
+ *
+ * The stationary qubit shouldn't be already busy.
+ */
 void stationaryQubit::emitPhoton(int pulse)
 {
     Enter_Method("emitPhoton()");
