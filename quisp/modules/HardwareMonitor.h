@@ -16,25 +16,25 @@
 
 using namespace omnetpp;
 
-typedef struct neighborInfo{
+typedef struct _neighborInfo{
     bool isQNode;
     cModuleType *type;
     int address;
-};
+} neighborInfo;
 
-typedef struct entangledWith{
+typedef struct _entangledWith{
     int node_address;
     int qnic_index;
     int buffer_index;
-};
+} entangledWith;
 
-typedef struct stationaryQubitInfo{
+typedef struct _stationaryQubitInfo{
     int qnic_index;
     int qubit_index;
     bool isBusy;//Reserved or free to use
     int assigned_job;//Maybe useful for bufferspace multiplexing and so on. Indicates which job this qubit is assigned for if isBusy is true.
     entangledWith entangled_inf;
-};
+} stationaryQubitInfo;
 
 /** \class HardwareMonitor HardwareMonitor.h
  *  \todo Documentation of the class header.

@@ -12,13 +12,13 @@
 
 using namespace omnetpp;
 
-typedef struct channel_error{
+typedef struct _channel_error{
     double error_rate;//Overall error rate
     double Z_error_ratio;//Phase flip error ratio
     double X_error_ratio;//Bit flip error ratio
     double Y_error_ratio;//Phase and Bit flip error ratio
     double total_ratio;
-};
+} channel_error;
 
 /** \class QuantumChannel QuantumChannel.cc
  *  \todo Documentation of the class header.

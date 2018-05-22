@@ -16,10 +16,10 @@
 
 using namespace omnetpp;
 
-typedef struct entangledPhotons{
+typedef struct _entangledPhotons{
   PhotonicQubit *qubitOne;
   PhotonicQubit *qubitTwo;
-};
+} entangledPhotons;
 
 /** \class EPPS_pair_source EPPS_pair_source.h
  *  \todo Documentation of the class header.
