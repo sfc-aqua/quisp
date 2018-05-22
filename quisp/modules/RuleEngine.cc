@@ -57,19 +57,18 @@ void RuleEngine::handleMessage(cMessage *msg){
                 int nth_shot = tracker[global_qnic_index].size();
                 tracker[global_qnic_index].insert(std::make_pair(nth_shot,Addr));
             }
-            if(pk->getKind()==-1){
-                bubble("last..");
-                realtime_controller->EmitPhoton(pk->getQnic_index(),pk->getQubit_index(),pk->getQnic_type(),-1);
-            }else if(pk->getKind()==1){
-                bubble("first..");
-                realtime_controller->EmitPhoton(pk->getQnic_index(),pk->getQubit_index(),pk->getQnic_type(),1);
-            }else if(pk->getKind()==2){
-                bubble("first and last..");
-                realtime_controller->EmitPhoton(pk->getQnic_index(),pk->getQubit_index(),pk->getQnic_type(),2);
-            }else{
-                bubble("Order received!");
-                realtime_controller->EmitPhoton(pk->getQnic_index(),pk->getQubit_index(),pk->getQnic_type(),0);
+            // switch: Only bubble messages
+            switch (pk->getKind()) {
+              case STATIONARYQUBIT_PULSE_BEGIN:
+                bubble("first.."); break;
+              case STATIONARYQUBIT_PULSE_END:
+                bubble("last.."); break;
+              case STATIONARYQUBIT_PULSE_BOUND:
+                bubble("first and last.."); break;
+              default:
+                bubble("order received!");
             }
+            realtime_controller->EmitPhoton(pk->getQnic_index(),pk->getQubit_index(),pk->getQnic_type(),pk->getKind());
         }
 
         else if(dynamic_cast<CombinedBSAresults *>(msg) != nullptr){
@@ -290,9 +289,9 @@ void RuleEngine::shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk){
             emt->setQubit_index(qubit_index);
             emt->setQnic_index(pk->getQnic_index());
             if(getFreeBufferSize_stateTable(stable_r, pk->getQnic_index())==0){
-                emt->setKind(2);//First and last photon.
+                emt->setKind(STATIONARYQUBIT_PULSE_BOUND);//First and last photon.
             }else{
-                emt->setKind(1);//First photon
+                emt->setKind(STATIONARYQUBIT_PULSE_BEGIN);//First photon
             }
             emt->setTrial(pk->getTrial());
             emt->setQnic_type(1);
@@ -309,7 +308,7 @@ void RuleEngine::shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk){
        emt->setTrial(pk->getTrial());
        emt->setQnic_index(pk->getQnic_index());
        if(getFreeBufferSize_stateTable(stable_r, pk->getQnic_index())==0){//If no more free qubit
-           emt->setKind(-1);//last one
+           emt->setKind(STATIONARYQUBIT_PULSE_END);//last one
        }else {
            emt->setKind(0);//others
        }
@@ -337,9 +336,9 @@ void RuleEngine::shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk){
         emt->setTrial(pk->getTrial());//inherit the trial/job index
         emt->setQnic_index(pk->getQnic_index());
         if(getFreeBufferSize_stateTable(stable, pk->getQnic_index())==0){
-            emt->setKind(2);//First and last photon.
+            emt->setKind(STATIONARYQUBIT_PULSE_BOUND);//First and last photon.
         }else{
-            emt->setKind(1);//First photon
+            emt->setKind(STATIONARYQUBIT_PULSE_BEGIN);//First photon
         }
         emt->setQnic_type(0);
         scheduleAt(simTime()+pk->getTiming(), emt);
@@ -354,7 +353,7 @@ void RuleEngine::shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk){
         emt->setQnic_index(pk->getQnic_index());
 
         if(getFreeBufferSize_stateTable(stable, pk->getQnic_index())==0){
-            emt->setKind(-1);//last one
+            emt->setKind(STATIONARYQUBIT_PULSE_END);//last one
         }else {
             emt->setKind(0);//others
         }

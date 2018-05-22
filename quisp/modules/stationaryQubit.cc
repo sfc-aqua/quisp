@@ -93,7 +93,7 @@ PhotonicQubit *stationaryQubit::generateEntangledPhoton(){
 /**
  * \brief Emit photon
  *
- * \param pulse: 0 for nothing, 1 for first, -1 for last, 2 for first and last
+ * \param pulse: 0 for nothing, 1 for first, 2 for last, 3 for first and last
  *
  * The stationary qubit shouldn't be already busy.
  */
@@ -105,11 +105,9 @@ void stationaryQubit::emitPhoton(int pulse)
         return;
     }
     PhotonicQubit *pk = generateEntangledPhoton();
-    if (pulse) {
-      if (pulse > 0) pk->setFirst(true);
-      if (pulse!= 1) pk->setLast(true);
-      pk->setKind(3);
-    }
+    if (pulse & STATIONARYQUBIT_PULSE_BEGIN) pk->setFirst(true);
+    if (pulse & STATIONARYQUBIT_PULSE_END) pk->setLast(true);
+    if (pulse & STATIONARYQUBIT_PULSE_BOUND) pk->setKind(3);
     float jitter_timing = normal(0,std);
     float abso = fabs(jitter_timing);
     scheduleAt(simTime()+abso,pk); //cannot send back in time, so only positive lag
