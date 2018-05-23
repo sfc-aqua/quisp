@@ -82,7 +82,7 @@ module QNode
         qnic_r[sizeof(quantum_port_receiver)]: QNIC {
         		parameters:
         		    	parent_node_address = address;
-                self_qnic_address = index;
+                self_qnic_address = index + sizeof(quantum_port);
                 numBuffer = buffers;//number of buffers for each qnic
                 receiver = true;
                 passive = false;
@@ -91,7 +91,7 @@ module QNode
         qnic_rp[sizeof(quantum_port_receiver_passive)]: QNIC {
         		parameters:
         		    	parent_node_address = address;
-                self_qnic_address = index;
+                self_qnic_address = index + sizeof(quantum_port) + sizeof(quantum_port_receiver);
                 numBuffer = buffers;//number of buffers for each qnic
                 receiver = true;
                 passive = true;

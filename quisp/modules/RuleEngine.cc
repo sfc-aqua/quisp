@@ -52,7 +52,8 @@ void RuleEngine::handleMessage(cMessage *msg){
                 return;
             }else{
                 //Index the qnic and qubit index to the tracker.
-                int global_qnic_index = getQNICjob_index_for_this_qnic(pk->getQnic_index(),pk->getQnic_type());
+                //int global_qnic_index = getQNICjob_index_for_this_qnic(pk->getQnic_index(),pk->getQnic_type());
+                int global_qnic_index = pk->getQnic_index();
                 QubitAddr_cons Addr(-1,pk->getQnic_index(),pk->getQubit_index());
                 int nth_shot = tracker[global_qnic_index].size();
                 tracker[global_qnic_index].insert(std::make_pair(nth_shot,Addr));
@@ -137,7 +138,8 @@ void RuleEngine::clearTrackerTable(int destAddr, int internal_qnic_index){
         qnic_index = internal_qnic_index;
         qnic_type = 1;
     }
-     int global_qnic_index = getQNICjob_index_for_this_qnic(qnic_index,qnic_type);
+     //int global_qnic_index = getQNICjob_index_for_this_qnic(qnic_index,qnic_type);
+    int global_qnic_index = qnic_index;
      tracker[global_qnic_index].clear();
 }
 
@@ -150,7 +152,8 @@ void RuleEngine::incrementTrial(int destAddr, int internal_qnic_index){
          qnic_index = internal_qnic_index;
          qnic_type = 1;
      }
-    int job_index = getQNICjob_index_for_this_qnic(qnic_index ,qnic_type);
+    //int job_index = getQNICjob_index_for_this_qnic(qnic_index ,qnic_type);
+     int job_index = qnic_index;
     qnic_job_index[job_index]++;
     //Just so that you can check how many jobs has been dealt by each qnic via IDE.
     cModule *qnode = getQNode();
@@ -161,13 +164,13 @@ void RuleEngine::incrementTrial(int destAddr, int internal_qnic_index){
     }
 }
 
-int RuleEngine::getQNICjob_index_for_this_qnic(int qnic_index, int qnic_type){
+/*int RuleEngine::getQNICjob_index_for_this_qnic(int qnic_index, int qnic_type){
     if (qnic_type<0 || qnic_type>2) error("Unknown qnic type");
     int index = qnic_index;
     if (qnic_type>0) index += number_of_qnics;
     if (qnic_type>1) index += number_of_qnics_r;
     return index;
-}
+}*/
 
 RuleEngine::QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTable table,int qnic_type){
     int qnics = -1;
@@ -195,7 +198,8 @@ RuleEngine::QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTabl
 
 bool RuleEngine::qnicJob_outdated(int job_index, int qnic_index, int qnic_type){
     bool stop_emitting = false;
-    int current_job_index = getQNICjob_index_for_this_qnic(qnic_index, qnic_type);
+    //int current_job_index = getQNICjob_index_for_this_qnic(qnic_index, qnic_type);
+    int current_job_index = qnic_index;
     if(job_index!=/*trial_index*/qnic_job_index[current_job_index]){
         stop_emitting = true;
     } return stop_emitting;
@@ -213,7 +217,8 @@ void RuleEngine::freeFailedQubits(int destAddr, int internal_qnic_index, Combine
            qnic_index = internal_qnic_index;
            qnic_type = 1;
      }
-    int global_qnic_index = getQNICjob_index_for_this_qnic(qnic_index,qnic_type);
+    //int global_qnic_index = getQNICjob_index_for_this_qnic(qnic_index,qnic_type);
+    int global_qnic_index = qnic_index;
     //QubitAddr_cons Addr(-1,pk->getQnic_index(),pk->getQubit_index());
     int shot_fired = tracker[global_qnic_index].size();
     for (auto it = tracker[global_qnic_index].begin(); it != tracker[global_qnic_index].end(); it++){
@@ -398,7 +403,8 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, int qnic_typ
     st->setQnic_index(qnic_index);
     st->setInterval(pk->getInterval());
     st->setTiming(pk->getTiming_at());
-    int index = getQNICjob_index_for_this_qnic(qnic_index ,qnic_type);
+    //int index = getQNICjob_index_for_this_qnic(qnic_index ,qnic_type);
+    int index = qnic_index;
 
     st->setTrial(qnic_job_index[index]);
     if(numFree>0)
