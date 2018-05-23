@@ -3,6 +3,9 @@ quisp_dbg
 out/
 .metadata/
 .settings/
+.qtenvrc
+.oppbuildspec
+.oppfeaturestate
 quisp.dSYM/
 Makefile
 
