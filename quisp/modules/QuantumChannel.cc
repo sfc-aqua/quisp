@@ -43,10 +43,11 @@ class QuantumChannel : public cDatarateChannel
        double Y_error_ceil;
        double Z_error_ceil;
        virtual void setErrorCeilings();
+       virtual void initialize();
+       virtual void processMessage(cMessage *msg, simtime_t t, result_t& result);
+       virtual bool XOR_error(bool error);
     public:
-        QuantumChannel();
-        virtual void initialize();
-        virtual void processMessage(cMessage *msg, simtime_t t, result_t& result);
+       QuantumChannel();
 
 };
 
@@ -100,6 +101,14 @@ void QuantumChannel::setErrorCeilings(){
     Y_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2)+Output_condition(0,3);
 }
 
+bool QuantumChannel::XOR_error(bool error){
+    if(error){
+        return false;
+    }else{
+        return true;
+    }
+}
+
 void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t& result)
 {
 
@@ -111,17 +120,20 @@ void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t& result
         double rand = dblrand();//Gives a random double between 0.0 ~ 1.0
         if(rand < No_error_ceil){
             //Qubit will end up with no error
-            //return;
         }else if(No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil!=X_error_ceil)){
             //X error
-            q->setPauliXerr(true);
+            bool xerr = q->getPauliXerr();
+            q->setPauliXerr(XOR_error(xerr));
         }else if(X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil!=Z_error_ceil)){
             //Z error
-            q->setPauliZerr(true);
+            bool zerr = q->getPauliZerr();
+            q->setPauliZerr(XOR_error(zerr));
         }else if(Z_error_ceil <= rand && rand < Y_error_ceil && (Z_error_ceil!=Y_error_ceil)){
             //Y error
-            q->setPauliXerr(true);
-            q->setPauliZerr(true);
+            bool xerr = q->getPauliXerr();
+            q->setPauliXerr(XOR_error(xerr));
+            bool zerr = q->getPauliZerr();
+            q->setPauliZerr(XOR_error(zerr));
         }else{
             //Photon was lost
             q->setPhotonLost(true);
