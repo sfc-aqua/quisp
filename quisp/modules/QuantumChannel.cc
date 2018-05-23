@@ -8,7 +8,7 @@
 //#include "QuantumChannel.h"
 #include <vector>
 #include <omnetpp.h>
-#include <eigen3/unsupported/Eigen/MatrixFunctions>
+#include <unsupported/Eigen/MatrixFunctions>
 //#include <Eigen/Dense>
 #include "../PhotonicQubit_m.h"
 

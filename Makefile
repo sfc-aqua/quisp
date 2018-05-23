@@ -16,7 +16,8 @@ quisp/quisp_dbg: quisp/Makefile
 	make -C quisp MODE=debug all
 
 quisp/Makefile: quisp/makemakefiles
-	make -C quisp -f makemakefiles all
+	get_oppbuildspec quisp/.oppbuildspec
+	make -C quisp -f makemakefiles all MMOPT="$$(get_oppbuildspec quisp/.oppbuildspec)"
 
 run: quisp/quisp
 	cd quisp && \

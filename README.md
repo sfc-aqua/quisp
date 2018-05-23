@@ -23,10 +23,28 @@ For example:
     └── setenv
 ```
 
-To run the simulation, you need to get Eigen, which is a library for matrix calculation in C/C++. This is used for channel errors and memory errors.
+### Libraries
 
-http://eigen.tuxfamily.org/index.php?title=Main_Page
+To run the simulation, you need to get Eigen, which is a library for matrix
+calculation in C/C++. This is used for channel errors and memory errors.
 
+Download Eigen (tested with version 3.3.4) on [their website][eigen].
+
+You will find installation information in the `INSTALL` file of their archive.
+
+[eigen]: http://eigen.tuxfamily.org/index.php?title=Main_Page
+
+Then, you need to tell OmNET++ where you put this library. Use the following
+location in the IDE:
+
+```
+Menu Project > Properties
+LeftTab OMNeT++ > Makemake
+Click on the quisp folder
+RightTab Check Makemake
+Options... > Compile
+Add the path to Eigen in the list
+```
 
 ### Environment setup
 

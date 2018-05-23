@@ -1,0 +1,22 @@
+#!/bin/sh
+set -eu
+__folder="$(dirname "$(cd "$(dirname $0)" && pwd)")";
+__oppbs="${1}";
+__default_cfg="--deep -O out -I."
+test -f "${__oppbs}" || {
+  echo "${__default_cfg}";
+  exit 0;
+}
+__python="$(which python)";
+
+cat << EOF | ${__python}
+import sys,xml.etree.ElementTree as ET
+options=None
+for x in ET.parse("${__oppbs}").iterfind('dir'):
+  options = options or x.get('makemake-options')
+options = options or "${__default_cfg}"
+options = ' '.join(list(filter(lambda x: x and not x.startswith('--meta:'), options.split(' '))))
+sys.stdout.write('{:}\n'.format(options))
+EOF
+
+set +eu
