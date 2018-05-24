@@ -68,7 +68,8 @@ void HoM_Controller::sendNotifiers(){
      double first_nodes_timing = calculateEmissionStartTime(time,distance_to_neighbor,speed_of_light_in_channel);
      pk->setTiming_at(first_nodes_timing);//Tell neighboring nodes to shoot photons so that the first one arrives at BSA at the specified timing
      if(receiver){
-         pk->setInternal_qnic(qnic_index);
+         pk->setInternal_qnic_index(qnic_index);
+         pk->setInternal_qnic_address(qnic_address);
      }
 
      BSMtimingNotifier *pkt = generateNotifier(time, speed_of_light_in_channel, distance_to_neighbor_two, neighbor_address_two, accepted_burst_interval,photon_detection_per_sec, max_buffer);
@@ -130,7 +131,9 @@ void HoM_Controller::handleMessage(cMessage *msg){
 void HoM_Controller::checkNeighborAddress(bool receiver){
     if(receiver){
         try{
-            qnic_index = getParentModule()->getParentModule()->par("self_qnic_address");
+            //qnic_index = getParentModule()->getParentModule()->par("self_qnic_address");//Not true anymore... address != index.
+            qnic_index = getParentModule()->getParentModule()->getIndex();
+            qnic_address = getParentModule()->getParentModule()->par("self_qnic_address");
             neighbor_address = getQNode()->par("address");
             neighbor_address_two =  getParentModule()->gate("quantum_port$o",1)->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->par("address");
             distance_to_neighbor = getParentModule()->par("internal_distance");
@@ -300,7 +303,8 @@ void HoM_Controller::sendBSAresultsToNeighbors(){
         pk->setList_of_failedArraySize(getStoredBSAresultsSize());
         pk->setKind(5);
         if(receiver){
-                   pk->setInternal_qnic(qnic_index);
+                   pk->setInternal_qnic_index(qnic_index);
+                   pk->setInternal_qnic_address(qnic_address);
         }
 
         pkt = generateNotifier_c(time, speed_of_light_in_channel, distance_to_neighbor_two, neighbor_address_two, accepted_burst_interval,photon_detection_per_sec, max_buffer);

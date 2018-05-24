@@ -43,7 +43,7 @@ class BellStateAnalyzer : public cSimpleModule
         int count_X=0, count_Y=0, count_Z=0, count_I=0, count_L=0, count_total=0;//for debug
         bool handshake = false;
         bool this_trial_done = false;
-        double BSAsuccess_rate = 0.5;
+        double BSAsuccess_rate = 1;
     protected:
         virtual void initialize();
         virtual void handleMessage(cMessage *msg);
@@ -148,6 +148,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
             }//else if darkcount....
             else{
                 bubble("Failed...!");
+                EV<<"rand = "<<rand<<" <"<<BSAsuccess_rate;
                 sendBSAresult(true, send_result);//just failed because only 1 detector clicked while both reached
             }
         }else{

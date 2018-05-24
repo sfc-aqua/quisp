@@ -61,7 +61,7 @@ class RuleEngine : public cSimpleModule
     public:
         int parentAddress;//Parent QNode's address
         EmitPhotonRequest *emt;
-        HardwareMonitor::NeighborTable ntable, ntable_rp;
+        HardwareMonitor::NeighborTable ntable;
         int number_of_qnics_all;//qnic,qnic_r,_qnic_rp
         int number_of_qnics;
         int number_of_qnics_r;
@@ -73,28 +73,29 @@ class RuleEngine : public cSimpleModule
         sentQubitIndexTracker* tracker;
         HardwareMonitor *hardware_monitor;
         RealTimeController *realtime_controller;
-        int* qnic_job_index;
+        int* qnic_burst_trial_counter;
         typedef std::map<int,bool> trial_tracker;//trial index, false or true (that trial is over or not)
     protected:
         virtual void initialize() override;
         virtual void finish() override;
         virtual void handleMessage(cMessage *msg) override;
         virtual cModule* getQNode();
-        virtual int getFreeBufferSize_stateTable(QubitStateTable table, int qnic_index);
-        virtual int getOneFreeQubit(QubitStateTable table, int qnic_index);
-        virtual QubitStateTable setQubitBusy(QubitStateTable table, int qnic_index, int qubit_index);
-        virtual QubitStateTable setQubitFree(QubitStateTable table, int qnic_index, int qubit_index);
+        virtual int countFreeQubits_inQnic(QubitStateTable table, int qnic_index);
+        virtual int getOneFreeQubit_inQnic(QubitStateTable table, int qnic_index);
+        virtual QubitStateTable setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
+        virtual QubitStateTable setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
         virtual QubitStateTable initializeQubitStateTable(QubitStateTable temp, int qnic_type);
         virtual void scheduleFirstPhotonEmission( BSMtimingNotifier *pk, int qnic_type);
         virtual void shootPhoton(SchedulePhotonTransmissionsOnebyOne * pk);
         //virtual int getQNICjob_index_for_this_qnic(int qnic_index, int qnic_type);
-        virtual void incrementTrial(int destAddr, int internal_qnic_index);
+        virtual void incrementBurstTrial(int destAddr, int internal_qnic_address, int internal_qnic_index);
         virtual void shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne * pk);
-        virtual bool qnicJob_outdated(int job_index, int qnic_index, int qnic_type);
-        virtual int getQnicIndex_toNeighbor(int destAddr);
+        virtual bool burstTrial_outdated(int this_trial, int qnic_address);
+        //virtual int getQnicIndex_toNeighbor(int destAddr);
+        virtual Interface_inf getInterface_toNeighbor(int destAddr);
         virtual void scheduleNextEmissionEvent(int qnic_index, double interval, simtime_t timing, int num_sent, bool internal, int trial);
-        virtual void freeFailedQubits(int destAddr, int internal_qnic_index, CombinedBSAresults *pk_result);
-        virtual void clearTrackerTable(int destAddr, int internal_qnic_index);
+        virtual void freeFailedQubits(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result);
+        //virtual void clearTrackerTable(int destAddr, int internal_qnic_index);
 };
 
 #endif /* MODULES_RULEENGINE_H_ */

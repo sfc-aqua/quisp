@@ -9,14 +9,13 @@
 #ifndef MODULES_HARDWAREMONITOR_H_
 #define MODULES_HARDWAREMONITOR_H_
 
-#define PASSIVE_EMITTER_QNIC 1//qnic
-#define ACTIVE_RECEIVER_QNIC 2//qnic_r
-#define PASSIVE_RECEIVER_QNIC 3//qnic_rp
-
+#define EMITTER_QNIC 0 //qnic
+#define RECEIVER_QNIC 1 //qnic_r
+#define PASSIVE_RECEIVER_QNIC 2 //qnic_rp
 
 #include <vector>
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
+//#include "../classical_messages_m.h"
 #include "stationaryQubit.h"
 
 using namespace omnetpp;
@@ -43,8 +42,12 @@ typedef struct _stationaryQubitInfo{
 
 typedef struct _Interface_inf{
     //QubitAddr(int node_addr, int qnic_index, int qubit_index):node_address(node_addr),qnic_index(qnic_index),qubit_index(qubit_index){}
-    int qnic_type;
-    double initial_fidelity;
+    cModule *qnic_pointer;
+    int qnic_type;/*0 = qnic, 1 = qnic_r, 2 = qnic_rp*/
+    int qnic_index;/*Index inside qnic || qnic_rp || qnic_r. Used for accessing the module.*/
+    int qnic_address;/*Unique address for qnic, qnic_r, qnic_rp. This may not be used.*/
+    double initial_fidelity = -1;/*Oka's protocol?*/
+    int buffer_size;
 } Interface_inf;
 
 /** \class HardwareMonitor HardwareMonitor.h
@@ -58,15 +61,13 @@ class HardwareMonitor : public cSimpleModule
 {
     private:
         int myAddress;
-        int numQnic;
-        int numQnic_r;
-        int numQnic_rp;
+        int numQnic, numQnic_r, numQnic_rp, numQnic_total;
         cModuleType *QNodeType =  cModuleType::get("networks.QNode");
         cModuleType *EPPSType =  cModuleType::get("networks.EPPS");
         cModuleType *HoMType =  cModuleType::get("networks.HoM");
     public:
-        typedef std::map<int,Interface_inf> Interfaces;//qnic_index -> Interface{qnic_type, initial_fidelity...}
-        typedef std::map<int,int> NeighborTable;
+        //typedef std::map<int,Interface_inf> Interfaces;//qnic_index -> Interface{qnic_type, initial_fidelity...}
+        typedef std::map<int,Interface_inf> NeighborTable;
         NeighborTable ntable;
         typedef std::map<int, stationaryQubitInfo> QnicInfo;  // stationary qubit index -> state
         QnicInfo *qtable;
@@ -80,7 +81,8 @@ class HardwareMonitor : public cSimpleModule
         virtual NeighborTable prepareNeighborTable(NeighborTable ntable, int numQnic);
         virtual neighborInfo checkIfQNode(cModule *thisNode);
         virtual cModule* getQNode();
-        virtual int findNeighborAddress(int local_qnic_index, cModule *thisQNode);
+        virtual int findNeighborAddress(cModule *qnic_pointer);
+        virtual Interface_inf getInterface_inf_fromQnicAddress(int qnic_index, int qnic_type);
         //virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
 };
 
