@@ -4,7 +4,7 @@
  *
  *  \brief ResourceManager
  */
-#include "ResourceManager.h"
+#include <modules/ResourceManager.h>
 
 Define_Module(ResourceManager);
 
