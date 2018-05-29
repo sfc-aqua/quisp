@@ -103,7 +103,8 @@ module interHoM{
          quantum_port++ <--> BSA.fromHoM_quantum_port++;        
 }
 
-simple dummyModule{
+simple dummyModule {
+     @class(quisp::modules::dummyModule);
 	gates:
 	   inout close @loose;
 	   input close_input @loose;

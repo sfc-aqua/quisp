@@ -1,5 +1,4 @@
 /** \file dummyModule.cc
- *  \todo org Organize namespaces
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
@@ -9,10 +8,13 @@
  */
 #include <vector>
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
-#include "../PhotonicQubit_m.h"
+#include <classical_messages_m.h>
+#include <PhotonicQubit_m.h>
 
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 /** \class dummyModule dummyModule.cc
  *  \todo Documentation of the class header.
@@ -28,11 +30,8 @@ class dummyModule : public cSimpleModule
 
 Define_Module(dummyModule);
 
-void dummyModule::initialize()
-{
+void dummyModule::initialize() {}
+void dummyModule::handleMessage(cMessage *msg){ delete msg; }
 
-}
-
-void dummyModule::handleMessage(cMessage *msg){
-    delete msg;
-}
+} // namespace modules
+} // namespace quisp
