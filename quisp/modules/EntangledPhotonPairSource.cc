@@ -1,19 +1,19 @@
-/** \file EPPS_pair_source.cc
+/** \file EntangledPhotonPairSource.cc
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/25
  *
- *  \brief EPPS_pair_source
+ *  \brief EntangledPhotonPairSource
  */
-#include "EPPS_pair_source.h"
+#include "EntangledPhotonPairSource.h"
 
 namespace quisp {
 namespace modules {
 
-Define_Module(EPPS_pair_source);
+Define_Module(EntangledPhotonPairSource);
 
-void EPPS_pair_source::initialize()
+void EntangledPhotonPairSource::initialize()
 {
     error_rate = par("error_rate");
     Y_error_ratio = par("Y_error_ratio");
@@ -24,11 +24,11 @@ void EPPS_pair_source::initialize()
     EV<<"------------------"<<frequency<<" aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 }
 
-void EPPS_pair_source::handleMessage(cMessage *msg){
+void EntangledPhotonPairSource::handleMessage(cMessage *msg){
     send(msg, "to_quantum_port$o",msg->par("gate"));
 }
 
-PhotonicQubit *EPPS_pair_source::generateEntangledPhotons(){
+PhotonicQubit *EntangledPhotonPairSource::generateEntangledPhotons(){
     Enter_Method("generateEntangledPhotons()");
     PhotonicQubit *photon_one = new PhotonicQubit();
     return photon_one;
@@ -42,7 +42,7 @@ PhotonicQubit *EPPS_pair_source::generateEntangledPhotons(){
     //return qubits;
 }
 
-void EPPS_pair_source::emitPhotons(){
+void EntangledPhotonPairSource::emitPhotons(){
     Enter_Method("emitPhotons()");
     PhotonicQubit *qubit = generateEntangledPhotons();
     qubit->addPar("gate") = 0;
@@ -55,7 +55,7 @@ void EPPS_pair_source::emitPhotons(){
     scheduleAt(simTime()+abso,qubitTwo);
 }
 
-void EPPS_pair_source::BubbleText(const char* txt){
+void EntangledPhotonPairSource::BubbleText(const char* txt){
     if (hasGUI()) {
       char text[32];
       sprintf(text, "%s", txt);
@@ -63,7 +63,7 @@ void EPPS_pair_source::BubbleText(const char* txt){
     }
 }
 
-cModule* EPPS_pair_source::getEPPSNode(){
+cModule* EntangledPhotonPairSource::getEPPSNode(){
          cModule *currentModule = getParentModule();//We know that Connection manager is not the EPPS, so start from the parent.
          try{
              cModuleType *QNodeType =  cModuleType::get("networks.EPPS");//Assumes the node in a network has a type EPPS
@@ -78,7 +78,7 @@ cModule* EPPS_pair_source::getEPPSNode(){
          return currentModule;
 }
 
-double EPPS_pair_source::getEmissionFrequency(){
+double EntangledPhotonPairSource::getEmissionFrequency(){
     Enter_Method("getEmissionFrequency()");
     EV<<"**********************Returning frequency"<<frequency;
     return frequency;

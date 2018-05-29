@@ -20,10 +20,10 @@ simple EPPS_simple
 
 
 
-simple EPPS_Controller
+simple SPDC_Controller
 {
     parameters:
-        //@class(quisp::modules::EPPS_Controller);
+        //@class(quisp::modules::SPDC_Controller);
         int address;
         int neighbor_address = default(-1);
         int neighbor_address_two = default(-1);
@@ -44,9 +44,9 @@ simple EPPS_Controller
 
 }
 
-simple EPPS_pair_source{
+simple EntangledPhotonPairSource{
 	parameters:
-      //@class(quisp::modules::EPPS_pair_source);
+      //@class(quisp::modules::EntangledPhotonPairSource);
 	    int address;
 	    double frequency;
 	    double error_rate;
@@ -99,7 +99,7 @@ module EPPS
         inout quantum_port[] @loose;
         inout port[] @loose;
     submodules:
-        Controller: EPPS_Controller {
+        Controller: SPDC_Controller {
             parameters:
                 address = address;//share the same address within all inner modules
                 timing_buffer = epps_timing_buffer;
@@ -120,7 +120,7 @@ module EPPS
                 @display("p=281.61,55.874996");
         }
         
-        PairSource: EPPS_pair_source {
+        PairSource: EntangledPhotonPairSource {
             parameters:
                 address = address;
                 frequency = epps_frequency;

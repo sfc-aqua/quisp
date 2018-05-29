@@ -1,11 +1,11 @@
-/** \file EPPS_pair_source.h
+/** \file EntangledPhotonPairSource.h
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/30
  *
- *  \brief EPPS_pair_source
+ *  \brief EntangledPhotonPairSource
  */
-#ifndef QUISP_MODULES_EPPS_PAIR_SOURCE_H_
-#define QUISP_MODULES_EPPS_PAIR_SOURCE_H_
+#ifndef QUISP_MODULES_EPPS_H_
+#define QUISP_MODULES_EPPS_H_
 
 #include <vector>
 #include <omnetpp.h>
@@ -22,13 +22,13 @@ typedef struct _entangledPhotons {
   PhotonicQubit *qubitTwo;
 } entangledPhotons;
 
-/** \class EPPS_pair_source EPPS_pair_source.h
+/** \class EntangledPhotonPairSource EntangledPhotonPairSource.h
  *
  *  \brief Entangled Photons Pairs Source
  *
  *  \see https://www.nist.gov/information-technology-laboratory/entangled-photon-pair-sources
  */
-class EPPS_pair_source : public cSimpleModule
+class EntangledPhotonPairSource : public cSimpleModule
 {
     private:
         int myAddress;
@@ -54,4 +54,4 @@ class EPPS_pair_source : public cSimpleModule
 } // namespace modules
 } // namespace quisp
 
-#endif /* QUISP_MODULES_EPPS_PAIR_SOURCE_H_ */
+#endif /* QUISP_MODULES_EPPS_H_ */

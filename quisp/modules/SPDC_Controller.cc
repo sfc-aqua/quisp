@@ -1,16 +1,16 @@
-/** \file EPPS_Controller.cc
+/** \file SPDC_Controller.cc
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/25
  *
- *  \brief EPPS_Controller
+ *  \brief SPDC_Controller
  */
 #include <vector>
 #include <omnetpp.h>
 #include <classical_messages_m.h>
 #include <PhotonicQubit_m.h>
-#include <modules/EPPS_pair_source.h>
+#include <modules/EntangledPhotonPairSource.h>
 
 using namespace omnetpp;
 
@@ -20,12 +20,12 @@ namespace modules {
 //How about if two nodes have imbalanced buffers?
 //Maybe use unused qnic (which is ought to be used for another path)?
 
-/** \class EPPS_Controller EPPS_Controller.cc
+/** \class SPDC_Controller SPDC_Controller.cc
  *  \todo Documentation of the class header.
  *
- *  \brief EPPS_Controller
+ *  \brief SPDC_Controller
  */
-class EPPS_Controller : public cSimpleModule
+class SPDC_Controller : public cSimpleModule
 {
     private:
            int address;
@@ -45,7 +45,7 @@ class EPPS_Controller : public cSimpleModule
            //double max_neighbor_distance;//in km
            //double accepted_burst_interval;//in s
            double speed_of_light_in_channel;
-           EPPS_pair_source *epps;
+           EntangledPhotonPairSource *epps;
            EmitPhotonRequest *emt;
 
     protected:
@@ -62,13 +62,13 @@ class EPPS_Controller : public cSimpleModule
         virtual void  startPump();
 };
 
-Define_Module(EPPS_Controller);
+Define_Module(SPDC_Controller);
 
-void EPPS_Controller::initialize()
+void SPDC_Controller::initialize()
 {
     frequency = par("frequency");
     cModule *pump = getParentModule()->getSubmodule("PairSource");
-    epps = check_and_cast<EPPS_pair_source *>(pump);
+    epps = check_and_cast<EntangledPhotonPairSource *>(pump);
     address = par("address");
     timing_buffer = par("timing_buffer");
     cPar *c = &par("Speed_of_light_in_fiber");
@@ -85,7 +85,7 @@ void EPPS_Controller::initialize()
 
 }
 
-void EPPS_Controller::handleMessage(cMessage *msg){
+void SPDC_Controller::handleMessage(cMessage *msg){
     if(msg == generatePacket){
         //Or just emit entangled photons without telling the neighbors?
         //Then the neighbor can analyze the intervaland adjust its emission accordingly.
@@ -96,7 +96,7 @@ void EPPS_Controller::handleMessage(cMessage *msg){
             send(pk, "toRouter_port");//send to port out. connected to local routing module (routing.localIn).
             send(pkt, "toRouter_port");
         }catch (std::exception& e) {
-           error("Error in EPPS_Controller.cc. It does not have port named toRouter_port.");
+           error("Error in SPDC_Controller.cc. It does not have port named toRouter_port.");
            endSimulation();
         }
         startPump();
@@ -106,14 +106,14 @@ void EPPS_Controller::handleMessage(cMessage *msg){
     delete msg;
 }
 
-void EPPS_Controller::startPump(){
+void SPDC_Controller::startPump(){
     for(int i=0; i<max_buffer; i++){
         emt = new  EmitPhotonRequest();
         scheduleAt(simTime()+timing_buffer+(max_accepted_rate*i), emt);
     }
 }
 
-EPPStimingNotifier* EPPS_Controller::generateNotifier(double distance_to_neighbor, double c, int destAddr){
+EPPStimingNotifier* SPDC_Controller::generateNotifier(double distance_to_neighbor, double c, int destAddr){
            EPPStimingNotifier *pk = new EPPStimingNotifier();
            double time_to_reach = calculateTimeToTravel(distance_to_neighbor,c);
            double time_to_travel = calculateTimeToTravel(distance_to_neighbor,speed_of_light_in_channel);//When the packet reaches = simitme()+time
@@ -128,7 +128,7 @@ EPPStimingNotifier* EPPS_Controller::generateNotifier(double distance_to_neighbo
            return pk;
 }
 
-cModule* EPPS_Controller::getNextNode(cModule *epps, int index, std::string type){
+cModule* SPDC_Controller::getNextNode(cModule *epps, int index, std::string type){
      std::string node;
      cGate *currentGate =  getParentModule()->gate("quantum_port$o",index)->getNextGate();
          try{
@@ -146,7 +146,7 @@ cModule* EPPS_Controller::getNextNode(cModule *epps, int index, std::string type
          return currentGate->getOwnerModule();
 }
 
-void EPPS_Controller::checkNeighborsDistance(){
+void SPDC_Controller::checkNeighborsDistance(){
     cModule *epps = getNode("EPPS");
     try{
         distance_to_neighbor = epps->gate("quantum_port$o",0)->getChannel()->par("distance");
@@ -158,11 +158,11 @@ void EPPS_Controller::checkNeighborsDistance(){
           par("distance_to_neighbor")=distance_to_neighbor;
           par("distance_to_neighbor_two")=distance_to_neighbor_two;
     }catch(std::exception& e){
-          error("Parameter not found in EPPS_Controller::checkNeighborDistance");
+          error("Parameter not found in SPDC_Controller::checkNeighborDistance");
     }
 }
 
-void EPPS_Controller::checkNeighborsAddress(){
+void SPDC_Controller::checkNeighborsAddress(){
          //First, check the node address of neighbors and their channel length.
         cModule *epps = getNode("EPPS");
         cModule *neighbor_one = getNextNode(epps,0,"QNode");
@@ -174,12 +174,12 @@ void EPPS_Controller::checkNeighborsAddress(){
             par("neighbor_address")=neighbor_address;
             par("neighbor_address_two")=neighbor_address_two;
         }catch(std::exception& e){
-            error("parameter not found in EPPS_Controller initialize()");
+            error("parameter not found in SPDC_Controller initialize()");
         }
 }
 
 //Store the buffer size
-void EPPS_Controller::checkNeighborsBuffer(){
+void SPDC_Controller::checkNeighborsBuffer(){
     cModule *epps = getNode("EPPS");
     cModule *neighbor_qnic_one = getNextNode(epps,0,"interHoM")->getParentModule();
     neighbor_buffer = neighbor_qnic_one->par("numBuffer");
@@ -192,7 +192,7 @@ void EPPS_Controller::checkNeighborsBuffer(){
 }
 
 //Store the frequency to adjust the emission rate.
-void EPPS_Controller::checkNeighborsHoMCapacity(){
+void SPDC_Controller::checkNeighborsHoMCapacity(){
     cModule *epps_node = getNode("EPPS");
     cModule *neighbor_interHoM_one = getNextNode(epps_node,0,"interHoM");
     double temp = neighbor_interHoM_one->getSubmodule("Controller")->par("photon_detection_per_sec");
@@ -214,7 +214,7 @@ void EPPS_Controller::checkNeighborsHoMCapacity(){
 
 }
 
-cModule* EPPS_Controller::getNode(std::string type){
+cModule* SPDC_Controller::getNode(std::string type){
          cModule *currentModule = getParentModule();//We know that Connection manager is not the QNode, so start from the parent.
          try{
              std::string node = "networks."+type;
@@ -231,7 +231,7 @@ cModule* EPPS_Controller::getNode(std::string type){
          return currentModule;
 }
 
-double EPPS_Controller::calculateTimeToTravel(double distance, double c){
+double SPDC_Controller::calculateTimeToTravel(double distance, double c){
     return (distance/c);
 }
 
