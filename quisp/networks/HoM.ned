@@ -36,6 +36,7 @@ simple BellStateAnalyzer
 simple HoM_Controller
 {
     parameters:
+        @class(quisp::modules::HoM_Controller);
         int address;
         volatile double Speed_of_light_in_fiber @unit(km);//per sec
         int photon_detection_per_sec = default(10000);

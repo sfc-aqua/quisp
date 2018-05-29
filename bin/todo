@@ -6,7 +6,7 @@ case "${__action}" in
   "add"|"set")__action=add;;
   "rm");;
   "ls");;
-  *) echo >&2 Valid actions: add,rm; exit 1;;
+  *) echo >&2 Valid actions: add,rm,ls; exit 1;;
 esac
 
 shift
