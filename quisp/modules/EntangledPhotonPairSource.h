@@ -43,7 +43,7 @@ class EntangledPhotonPairSource : public cSimpleModule
         virtual void handleMessage(cMessage *msg) override;
         virtual void BubbleText(const char* txt);
         virtual PhotonicQubit* generateEntangledPhotons();
-        virtual cModule* getEPPSNode();
+        virtual cModule* getSPDCNode();
 
     public:
         double frequency;

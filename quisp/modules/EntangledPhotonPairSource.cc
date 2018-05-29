@@ -63,10 +63,10 @@ void EntangledPhotonPairSource::BubbleText(const char* txt){
     }
 }
 
-cModule* EntangledPhotonPairSource::getEPPSNode(){
-         cModule *currentModule = getParentModule();//We know that Connection manager is not the EPPS, so start from the parent.
+cModule* EntangledPhotonPairSource::getSPDCNode(){
+         cModule *currentModule = getParentModule();//We know that Connection manager is not the SPDC, so start from the parent.
          try{
-             cModuleType *QNodeType =  cModuleType::get("networks.EPPS");//Assumes the node in a network has a type EPPS
+             cModuleType *QNodeType =  cModuleType::get("networks.SPDC");//Assumes the node in a network has a type SPDC
              while(currentModule->getModuleType()!=QNodeType){
                  currentModule = currentModule->getParentModule();
              }

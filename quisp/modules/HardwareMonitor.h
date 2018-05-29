@@ -52,7 +52,7 @@ class HardwareMonitor : public cSimpleModule
         int numQnic_r;
         int numQnic_rp;
         cModuleType *QNodeType =  cModuleType::get("networks.QNode");
-        cModuleType *EPPSType =  cModuleType::get("networks.EPPS");
+        cModuleType *SPDCType =  cModuleType::get("networks.SPDC");
         cModuleType *HoMType =  cModuleType::get("networks.HoM");
     public:
         typedef std::map<int, int> NeighborTable;  // interfaces: destaddr -> gateindex

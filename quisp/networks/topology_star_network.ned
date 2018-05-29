@@ -133,7 +133,7 @@ network Star_MSM
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
-        epps[6]: EPPS {
+        spdc[6]: SPDC {
             address = index+1000;
              @display("i=device/epps");
         }
@@ -148,35 +148,35 @@ network Star_MSM
        
        
     connections:
-        node[0].port++ <--> C<--> epps[0].port++;
-        epps[0].port++ <--> C <--> repeater[0].port++;
-        repeater[0].port++ <--> C <--> epps[1].port++;
-        epps[1].port++ <--> C <--> router[0].port++;
+        node[0].port++ <--> C<--> spdc[0].port++;
+        spdc[0].port++ <--> C <--> repeater[0].port++;
+        repeater[0].port++ <--> C <--> spdc[1].port++;
+        spdc[1].port++ <--> C <--> router[0].port++;
   
-        node[0].quantum_port_receiver++ <--> QuantumChannel <--> epps[0].quantum_port++;
-        epps[0].quantum_port++ <--> QuantumChannel <--> repeater[0].quantum_port_receiver++;    
-        repeater[0].quantum_port_receiver++ <--> QuantumChannel <--> epps[1].quantum_port++;
-        epps[1].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port_receiver++;    
+        node[0].quantum_port_receiver++ <--> QuantumChannel <--> spdc[0].quantum_port++;
+        spdc[0].quantum_port++ <--> QuantumChannel <--> repeater[0].quantum_port_receiver++;    
+        repeater[0].quantum_port_receiver++ <--> QuantumChannel <--> spdc[1].quantum_port++;
+        spdc[1].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port_receiver++;    
         
-        node[1].port++ <--> C<--> epps[2].port++;
-        epps[2].port++ <--> C <--> repeater[1].port++;
-        repeater[1].port++ <--> C <--> epps[3].port++;
-        epps[3].port++ <--> C <--> router[0].port++;
+        node[1].port++ <--> C<--> spdc[2].port++;
+        spdc[2].port++ <--> C <--> repeater[1].port++;
+        repeater[1].port++ <--> C <--> spdc[3].port++;
+        spdc[3].port++ <--> C <--> router[0].port++;
   
-        node[1].quantum_port_receiver++ <--> QuantumChannel <--> epps[2].quantum_port++;
-        epps[2].quantum_port++ <--> QuantumChannel <--> repeater[1].quantum_port_receiver++;    
-        repeater[1].quantum_port_receiver++ <--> QuantumChannel <--> epps[3].quantum_port++;
-        epps[3].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port_receiver++;  
+        node[1].quantum_port_receiver++ <--> QuantumChannel <--> spdc[2].quantum_port++;
+        spdc[2].quantum_port++ <--> QuantumChannel <--> repeater[1].quantum_port_receiver++;    
+        repeater[1].quantum_port_receiver++ <--> QuantumChannel <--> spdc[3].quantum_port++;
+        spdc[3].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port_receiver++;  
         
-         node[2].port++ <--> C<--> epps[4].port++;
-        epps[4].port++ <--> C <--> repeater[2].port++;
-        repeater[2].port++ <--> C <--> epps[5].port++;
-        epps[5].port++ <--> C <--> router[0].port++;
+         node[2].port++ <--> C<--> spdc[4].port++;
+        spdc[4].port++ <--> C <--> repeater[2].port++;
+        repeater[2].port++ <--> C <--> spdc[5].port++;
+        spdc[5].port++ <--> C <--> router[0].port++;
   
-        node[2].quantum_port_receiver++ <--> QuantumChannel <--> epps[4].quantum_port++;
-        epps[4].quantum_port++ <--> QuantumChannel <--> repeater[2].quantum_port_receiver++;    
-        repeater[2].quantum_port_receiver++ <--> QuantumChannel <--> epps[5].quantum_port++;
-        epps[5].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port_receiver++;    
+        node[2].quantum_port_receiver++ <--> QuantumChannel <--> spdc[4].quantum_port++;
+        spdc[4].quantum_port++ <--> QuantumChannel <--> repeater[2].quantum_port_receiver++;    
+        repeater[2].quantum_port_receiver++ <--> QuantumChannel <--> spdc[5].quantum_port++;
+        spdc[5].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port_receiver++;    
 }
 
 

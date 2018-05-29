@@ -200,7 +200,7 @@ neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode){
     neighborInfo inf;
     if(thisNode->getModuleType()!=QNodeType){//Not a Qnode!
 
-        if(thisNode->getModuleType()== EPPSType || thisNode->getModuleType()==  HoMType){
+        if(thisNode->getModuleType()== SPDCType || thisNode->getModuleType()==  HoMType){
             inf.isQNode=false;
             inf.type = thisNode->getModuleType();
             inf.address = thisNode->par("address");

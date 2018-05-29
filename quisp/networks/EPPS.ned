@@ -5,16 +5,16 @@ import ned.IdealChannel;
 
 
 //Maybe as a stand alone simple module is enough?
-simple EPPS_simple
-{
-    parameters:
-        int address;
-        double frequency = default(100);// 100 shots per sec as a default
-        double error_rate;
-    gates:
-        inout quantum_port[2];
-        inout port[2];
-}
+//simple SPDC_simple
+//{
+//    parameters:
+//        int address;
+//        double frequency = default(100);// 100 shots per sec as a default
+//        double error_rate;
+//    gates:
+//        inout quantum_port[2];
+//        inout port[2];
+//}
 
 
 
@@ -60,7 +60,7 @@ simple EntangledPhotonPairSource{
 }
 
 //Rather than simulating the entire pair generation success in the simulation,
-//I have decided to assume that the EPPS node is capable of emitting a pair per some rate.
+//I have decided to assume that the SPDC node is capable of emitting a pair per some rate.
 //simple Pump_Source
 //{
 //    parameters:
@@ -82,7 +82,7 @@ simple EntangledPhotonPairSource{
 //        inout to_quantum_port[2];
 //}
 
-module EPPS
+module SPDC
 {
     parameters:
         int address;
@@ -93,7 +93,7 @@ module EPPS
         double epps_Z_error_ratio = default(1);
         double epps_X_error_ratio = default(1);
         double epps_timing_buffer = default(1e-9);//1ns buffer (gap between classical notifier and the actual photon emission)
-        string nodeType = default("EPPS");
+        string nodeType = default("SPDC");
         double epps_emission_std = default(0);
     gates:
         inout quantum_port[] @loose;

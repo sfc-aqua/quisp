@@ -73,7 +73,7 @@ void SPDC_Controller::initialize()
     timing_buffer = par("timing_buffer");
     cPar *c = &par("Speed_of_light_in_fiber");
     speed_of_light_in_channel = c->doubleValue();
-    //For simplicity, I assume the EPPS can access those neighbor information without classical communication but directly.
+    //For simplicity, I assume the SPDC can access those neighbor information without classical communication but directly.
     checkNeighborsAddress();
     checkNeighborsDistance();
     checkNeighborsHoMCapacity();
@@ -147,12 +147,12 @@ cModule* SPDC_Controller::getNextNode(cModule *epps, int index, std::string type
 }
 
 void SPDC_Controller::checkNeighborsDistance(){
-    cModule *epps = getNode("EPPS");
+    cModule *epps = getNode("SPDC");
     try{
         distance_to_neighbor = epps->gate("quantum_port$o",0)->getChannel()->par("distance");
         distance_to_neighbor_two = epps->gate("quantum_port$o",1)->getChannel()->par("distance");
     }catch(std::exception& e){
-        error("EPPS could not find parameter distance in channel.");
+        error("SPDC could not find parameter distance in channel.");
     }
     try{
           par("distance_to_neighbor")=distance_to_neighbor;
@@ -164,7 +164,7 @@ void SPDC_Controller::checkNeighborsDistance(){
 
 void SPDC_Controller::checkNeighborsAddress(){
          //First, check the node address of neighbors and their channel length.
-        cModule *epps = getNode("EPPS");
+        cModule *epps = getNode("SPDC");
         cModule *neighbor_one = getNextNode(epps,0,"QNode");
         neighbor_address = neighbor_one->par("address");
         cModule *neighbor_two = getNextNode(epps,1,"QNode");
@@ -180,7 +180,7 @@ void SPDC_Controller::checkNeighborsAddress(){
 
 //Store the buffer size
 void SPDC_Controller::checkNeighborsBuffer(){
-    cModule *epps = getNode("EPPS");
+    cModule *epps = getNode("SPDC");
     cModule *neighbor_qnic_one = getNextNode(epps,0,"interHoM")->getParentModule();
     neighbor_buffer = neighbor_qnic_one->par("numBuffer");
     par("neighbor_buffer") = neighbor_buffer;
@@ -193,7 +193,7 @@ void SPDC_Controller::checkNeighborsBuffer(){
 
 //Store the frequency to adjust the emission rate.
 void SPDC_Controller::checkNeighborsHoMCapacity(){
-    cModule *epps_node = getNode("EPPS");
+    cModule *epps_node = getNode("SPDC");
     cModule *neighbor_interHoM_one = getNextNode(epps_node,0,"interHoM");
     double temp = neighbor_interHoM_one->getSubmodule("Controller")->par("photon_detection_per_sec");
     accepted_rate_one = (double)1/(double)neighbor_interHoM_one->getSubmodule("Controller")->par("photon_detection_per_sec");
@@ -208,7 +208,7 @@ void SPDC_Controller::checkNeighborsHoMCapacity(){
     double pump_rate = (double)1/(double)frequency;
     EV<<"Self's rate is 1/"<<frequency<<" = "<<pump_rate;
         if(pump_rate > max_accepted_rate){//If HoM detection rate is faster than pump
-            max_accepted_rate = pump_rate;//Now frequency is limited by EPPS pump rate
+            max_accepted_rate = pump_rate;//Now frequency is limited by SPDC pump rate
         }
     par("accepted_burst_interval") = max_accepted_rate;
 
@@ -225,7 +225,7 @@ cModule* SPDC_Controller::getNode(std::string type){
              }
              return currentModule;
          }catch(std::exception& e){
-             error("No module with EPPS type found. Have you changed the type name in ned file?");
+             error("No module with SPDC type found. Have you changed the type name in ned file?");
              endSimulation();
          }
          return currentModule;

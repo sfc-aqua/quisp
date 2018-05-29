@@ -31,7 +31,7 @@ module QNode
         inout port[];//size will be determined by the number of connections defined at the end of this file
         inout quantum_port[] @loose;
         inout quantum_port_receiver[] @loose;//HoM is active. Tells the neighboring nodes about the timings and so on.
-        inout quantum_port_receiver_passive[] @loose;//HoM is passive. Doesnt do anything. EPPS is in charge here.
+        inout quantum_port_receiver_passive[] @loose;//HoM is passive. Doesnt do anything. SPDC is in charge here.
         //inout qp_test[2] @loose;
 
     //types:
