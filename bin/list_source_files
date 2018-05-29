@@ -2,5 +2,5 @@
 set -eu
 __folder="$(dirname "$(cd "$(dirname $0)" && pwd)")";
 cd "${__folder}"
-find quisp -name '*.cc' -o -name '*.h' $@
+find quisp '(' -name '*.cc' -o -name '*.h' ')' $@
 set +eu
