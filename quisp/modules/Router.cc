@@ -1,5 +1,4 @@
 /** \file Router.cc
- *  \todo org Organize namespaces
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
@@ -8,9 +7,12 @@
  */
 #include <map>
 #include <omnetpp.h>
-#include "../classical_messages_m.h" //Path selection: type = 1, Timing notifier for BMA: type = 4
+#include <classical_messages_m.h> //Path selection: type = 1, Timing notifier for BMA: type = 4
 
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 /** \class Router Router.cc
  *  \todo Documentation of the class header.
@@ -113,3 +115,6 @@ void Router::handleMessage(cMessage *msg)
         pk->setHopCount(pk->getHopCount()+1);
         send(pk, "toQueue", outGateIndex);
 }
+
+} // namespace modules
+} // namespace quisp

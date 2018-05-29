@@ -27,6 +27,7 @@ simple Application
 simple Router
 {
     parameters:
+        @class(quisp::modules::Router);
         int address;
     gates:
         input fromQueue[];
