@@ -1,14 +1,18 @@
 /** \file stationaryQubit.h
- *  \todo org Organize namespaces
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/14
  *
  *  \brief stationaryQubit
  */
-#ifndef MODULES_STATIONARYQUBIT_H_
-#define MODULES_STATIONARYQUBIT_H_
+#ifndef QUISP_MODULES_STATIONARYQUBIT_H_
+#define QUISP_MODULES_STATIONARYQUBIT_H_
+
 #include <PhotonicQubit_m.h>
+
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 #define STATIONARYQUBIT_PULSE_BEGIN 0x01
 #define STATIONARYQUBIT_PULSE_END   0x02
@@ -73,4 +77,7 @@ class stationaryQubit : public cSimpleModule
         virtual void setEntangledPartnerInfo(int node_address, int qnic_index, int qubit_index);
 };
 
-#endif /* MODULES_BUFFERQUBIT_H_ */
+} // namespace modules
+} // namespace quisp
+
+#endif /* QUISP_MODULES_STATIONARYQUBIT_H_ */

@@ -1,16 +1,19 @@
 /** \file ResourceManager.h
- *  \todo org Organize namespaces
  *  \authors cldurand
  *  \date 2018/05/25
  *
  *  \brief ResourceManager
  */
 
-#ifndef MODULES_RESOURCEMANAGER_H_
-#define MODULES_RESOURCEMANAGER_H_
+#ifndef QUISP_MODULES_RESOURCEMANAGER_H_
+#define QUISP_MODULES_RESOURCEMANAGER_H_
 #include <omnetpp.h>
 #include <classical_messages_m.h>
+
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 /** \class ResourceManager ResourceManager.h
  *  \todo Documentation of the class header.
@@ -26,4 +29,7 @@ class ResourceManager : public cSimpleModule
     public:
 };
 
-#endif /* MODULES_RESOURCEMANAGER_H_ */
+} // namespace modules
+} // namespace quisp
+
+#endif /* QUISP_MODULES_RESOURCEMANAGER_H_ */

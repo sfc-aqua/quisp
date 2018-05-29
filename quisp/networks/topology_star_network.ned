@@ -41,7 +41,6 @@ network Three_HoM_star
         }
         channel QuantumChannel extends DatarateChannel
         {
-            @class(quisp::channels::QuantumChannel);
             double cost = default(1);
             double distance @unit(km) = default(20km);
             //delay = uniform(0.01ms, 1s);
@@ -113,7 +112,6 @@ network Star_MSM
         }
         channel QuantumChannel extends DatarateChannel
         {
-            @class(quisp::channels::QuantumChannel);
             double cost = default(1);
             double distance @unit(km) = default(20km);
             //delay = uniform(0.01ms, 1s);
@@ -202,7 +200,6 @@ network Star_MM
         }
         channel QuantumChannel extends DatarateChannel
         {
-            @class(quisp::channels::QuantumChannel);
             double cost = default(1);
             double distance @unit(km) = default(20km);
             //delay = uniform(0.01ms, 1s);

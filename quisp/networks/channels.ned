@@ -1,4 +1,6 @@
 package networks;
+@namespace(quisp::channels);
+
 import ned.DatarateChannel;
 import ned.DelayChannel;
 import ned.IdealChannel;
@@ -15,7 +17,7 @@ channel ClassicalChannel extends DatarateChannel{
 
 channel QuantumChannel extends DatarateChannel
 {
-            @class(quisp::channels::QuantumChannel);
+            //@class(quisp::channels::QuantumChannel);
             double cost = default(1);
             double distance @unit(km) = default(20km);
             //delay = uniform(0.01ms, 1s);
@@ -39,12 +41,3 @@ channel QuantumChannel_internal extends QuantumChannel
             X_error_ratio = default(1);
             Y_error_ratio = default(1);
 }
-
-
-
-
-
-
-
-
-

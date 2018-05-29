@@ -1,5 +1,4 @@
 /** \file RoutingDaemon.cc
- *  \todo org Organize namespaces
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
@@ -8,9 +7,12 @@
  */
 #include <vector>
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
+#include <classical_messages_m.h>
 
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 /** \class RoutingDaemon RoutingDaemon.cc
  *  \todo Documentation of the class header.
@@ -36,3 +38,6 @@ void RoutingDaemon::initialize()
 void RoutingDaemon::handleMessage(cMessage *msg){
 
 }
+
+} // namespace modules
+} // namespace quisp

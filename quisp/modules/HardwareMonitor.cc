@@ -1,5 +1,4 @@
 /** \file HardwareMonitor.cc
- *  \todo org Organize namespaces
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
@@ -8,6 +7,9 @@
  *  \brief HardwareMonitor
  */
 #include "HardwareMonitor.h"
+
+namespace quisp {
+namespace modules {
 
 Define_Module(HardwareMonitor);
 
@@ -227,3 +229,6 @@ HardwareMonitor::NeighborTable HardwareMonitor::passNeighborTable_rp(){
     Enter_Method("passNeighborTable_rp()");
     return ntable_rp;
 }
+
+} // namespace modules
+} // namespace quisp

@@ -1,2 +1,2 @@
 package networks;
-//@namespace(quisp);
+@namespace(quisp::modules);

@@ -1,5 +1,4 @@
 /** \file HardwareMonitor.h
- *  \todo org Organize namespaces
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
@@ -7,8 +6,8 @@
  *
  *  \brief HardwareMonitor
  */
-#ifndef MODULES_HARDWAREMONITOR_H_
-#define MODULES_HARDWAREMONITOR_H_
+#ifndef QUISP_MODULES_HARDWAREMONITOR_H_
+#define QUISP_MODULES_HARDWAREMONITOR_H_
 
 #include <vector>
 #include <omnetpp.h>
@@ -16,6 +15,9 @@
 #include <modules/stationaryQubit.h>
 
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 typedef struct _neighborInfo{
     bool isQNode;
@@ -75,4 +77,7 @@ class HardwareMonitor : public cSimpleModule
         //virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
 };
 
-#endif /* MODULES_HARDWAREMONITOR_H_ */
+} // namespace modules
+} // namespace quisp
+
+#endif /* QUISP_MODULES_HARDWAREMONITOR_H_ */

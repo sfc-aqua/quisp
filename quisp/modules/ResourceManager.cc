@@ -1,11 +1,13 @@
 /** \file ResourceManager.cc
- *  \todo org Organize namespaces
  *  \authors cldurand
  *  \date 2018/05/25
  *
  *  \brief ResourceManager
  */
 #include "ResourceManager.h"
+
+namespace quisp {
+namespace modules {
 
 Define_Module(ResourceManager);
 
@@ -17,3 +19,6 @@ void ResourceManager::initialize()
 void ResourceManager::handleMessage(cMessage *msg){
 
 }
+
+} // namespace modules
+} // namespace quisp

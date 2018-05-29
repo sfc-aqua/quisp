@@ -1,5 +1,4 @@
 /** \file RuleEngine.cc
- *  \todo org Organize namespaces
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
@@ -8,6 +7,9 @@
  *  \brief RuleEngine
  */
 #include "RuleEngine.h"
+
+namespace quisp {
+namespace modules {
 
 Define_Module(RuleEngine);
 
@@ -481,3 +483,6 @@ void RuleEngine::finish(){
     delete realtime_controller;
 
 }
+
+} // namespace modules
+} // namespace quisp

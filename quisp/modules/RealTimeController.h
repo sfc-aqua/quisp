@@ -1,5 +1,4 @@
 /** \file RealTimeController.h
- *  \todo org Organize namespaces
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
@@ -7,13 +6,17 @@
  *
  *  \brief RealTimeController
  */
+#ifndef QUISP_MODULES_REALTIMECONTROLLER_H_
+#define QUISP_MODULES_REALTIMECONTROLLER_H_
 
-#ifndef MODULES_REALTIMECONTROLLER_H_
-#define MODULES_REALTIMECONTROLLER_H_
 #include <vector>
 #include <omnetpp.h>
 #include <classical_messages_m.h>
+
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 /** \class RealTimeController RealTimeController.h
  *  \todo Documentation of the class header.
@@ -33,4 +36,7 @@ class RealTimeController : public cSimpleModule
         virtual void GUI_setQubitFree(int qnic_index ,int qubit_index, int qnic_type);
 };
 
-#endif /* MODULES_REALTIMECONTROLLER_H_ */
+} // namespace modules
+} // namespace quisp
+
+#endif /* QUISP_MODULES_REALTIMECONTROLLER_H_ */
