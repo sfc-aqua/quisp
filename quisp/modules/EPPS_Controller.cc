@@ -1,5 +1,4 @@
 /** \file EPPS_Controller.cc
- *  \todo org Organize namespaces
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
@@ -9,11 +8,14 @@
  */
 #include <vector>
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
-#include "../PhotonicQubit_m.h"
-#include "EPPS_pair_source.h"
+#include <classical_messages_m.h>
+#include <PhotonicQubit_m.h>
+#include <modules/EPPS_pair_source.h>
 
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 //How about if two nodes have imbalanced buffers?
 //Maybe use unused qnic (which is ought to be used for another path)?
@@ -232,3 +234,6 @@ cModule* EPPS_Controller::getNode(std::string type){
 double EPPS_Controller::calculateTimeToTravel(double distance, double c){
     return (distance/c);
 }
+
+} // namespace modules
+} // namespace quisp

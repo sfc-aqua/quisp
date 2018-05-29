@@ -1,5 +1,4 @@
 /** \file EPPS_pair_source.cc
- *  \todo org Organize namespaces
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
@@ -8,6 +7,9 @@
  *  \brief EPPS_pair_source
  */
 #include "EPPS_pair_source.h"
+
+namespace quisp {
+namespace modules {
 
 Define_Module(EPPS_pair_source);
 
@@ -81,3 +83,6 @@ double EPPS_pair_source::getEmissionFrequency(){
     EV<<"**********************Returning frequency"<<frequency;
     return frequency;
 }
+
+} // namespace modules
+} // namespace quisp

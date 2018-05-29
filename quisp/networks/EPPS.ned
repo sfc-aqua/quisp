@@ -23,6 +23,7 @@ simple EPPS_simple
 simple EPPS_Controller
 {
     parameters:
+        @class(quisp::modules::EPPS_Controller);
         int address;
         int neighbor_address = default(-1);
         int neighbor_address_two = default(-1);
@@ -45,6 +46,7 @@ simple EPPS_Controller
 
 simple EPPS_pair_source{
 	parameters:
+      @class(quisp::modules::EPPS_pair_source);
 	    int address;
 	    double frequency;
 	    double error_rate;
