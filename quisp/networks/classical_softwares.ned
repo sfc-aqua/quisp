@@ -44,6 +44,7 @@ simple Router
 simple Queue
 {
     parameters:
+        @class(quisp::modules::Queue);
         //int xPosition_Graphics;
         int address;
         //int buffer;//for qnic
@@ -67,6 +68,3 @@ simple Queue
         output out;
         inout line;
 }
-
-
-

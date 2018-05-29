@@ -1,5 +1,4 @@
 /** \file Queue.cc
- *  \todo org Organize namespaces
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
@@ -9,10 +8,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
-#include "../PhotonicQubit_m.h"
+#include <classical_messages_m.h>
+#include <PhotonicQubit_m.h>
 
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 /** \class Queue Queue.cc
  *  \todo Documentation of the class header.
@@ -153,3 +155,6 @@ void Queue::refreshDisplay() const
     getDisplayString().setTagArg("t", 0, isBusy ? "transmitting" : "idle");
     getDisplayString().setTagArg("i", 1, isBusy ? (queue.getLength() >= 3 ? "red" : "yellow") : "");
 }
+
+} // namespace modules
+} // namespace quisp
