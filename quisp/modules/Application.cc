@@ -1,5 +1,4 @@
 /** \file Application.cc
- *  \todo org Organize namespaces
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
@@ -9,9 +8,12 @@
  */
 #include <vector>
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
+#include <classical_messages_m.h>
 
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 /** \class Application Application.cc
  *
@@ -113,4 +115,5 @@ cModule* Application::getQNode(){
          return currentModule;
 }
 
-
+} // namespace modules
+} // namespace quisp

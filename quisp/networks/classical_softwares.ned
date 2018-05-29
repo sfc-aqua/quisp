@@ -17,6 +17,7 @@ import ned.IdealChannel;
 simple Application
 {
     parameters:
+        @class(quisp::modules::Application);
         int address;
         volatile double sendIaTime @unit(s) = default(exponential(1s)); // time between generating packets
     gates:
