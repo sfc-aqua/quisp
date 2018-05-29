@@ -20,14 +20,14 @@ network twonodes
         source: QNode {
             address = 1;
             buffers = 7;
-           
+
         }
         target: QNode {
             address = 3;
             buffers = 7;
-          
+
         }
-      
+
     connections:
         source.port++ <--> C <--> target.port++;
 }
@@ -52,19 +52,19 @@ network threenodes
             address = 1;
             buffers = 7;
             @display("p=299,147");
-           
+
         }
         target: QNode {
             address = 3;
             buffers = 3;
-          
+
         }
         anothertarget: QNode {
             address = 2;
             buffers = 3;
-          
+
         }
-      
+
     connections:
         source.port++ <--> C{@display("ls=green,2"); index_temp=1; cost=100;} <--> target.port++;
         source.port++ <--> C{@display("ls=red,2"); index_temp=2;} <--> anothertarget.port++;
@@ -104,7 +104,7 @@ network morenodes
             address = 4;
             @display("p=57,79");
         }
-      
+
     connections:
         source.port++ <--> C{cost=2;} <--> target.port++;
         source.port++ <--> C{cost=30; @display("ls=red");} <--> anotherTarget.port++;

@@ -4,15 +4,15 @@ package networks;
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 
 import ned.DatarateChannel;
 import ned.DelayChannel;
@@ -430,8 +430,8 @@ repeater[116].quantum_port++ <--> QuantumChannel{ distance = 5.000000km; } <--> 
  hom[175].quantum_port++ <--> QuantumChannel{ distance = 5.000000km; } <--> repeater[117].quantum_port++;
 repeater[117].quantum_port++ <--> QuantumChannel{ distance = 2.500000km; } <--> hom[176].quantum_port++;
  hom[176].quantum_port++ <--> QuantumChannel{ distance = 2.500000km; } <--> router[9].quantum_port++;
- 
- 
+
+
  endnode[0].port++ <--> C{ distance = 5.000000km; } <--> hom[0].port++;
  hom[0].port++ <--> C{ distance = 5.000000km; } <--> repeater[0].port++;
 repeater[0].port++ <--> C{ distance = 5.000000km; } <--> hom[1].port++;
@@ -786,6 +786,6 @@ repeater[116].port++ <--> C{ distance = 5.000000km; } <--> hom[175].port++;
  hom[175].port++ <--> C{ distance = 5.000000km; } <--> repeater[117].port++;
 repeater[117].port++ <--> C{ distance = 2.500000km; } <--> hom[176].port++;
  hom[176].port++ <--> C{ distance = 2.500000km; } <--> router[9].port++;
- 
- 
+
+
 }

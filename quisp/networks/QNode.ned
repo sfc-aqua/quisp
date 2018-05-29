@@ -5,15 +5,15 @@ package networks;
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 
 
 module QNode
@@ -26,7 +26,7 @@ module QNode
         string includeInTopo = "yes";
         string nodeType = default("none");
         double emission_timing_std = default(0);//in seconds
-        
+
     gates:
         inout port[];//size will be determined by the number of connections defined at the end of this file
         inout quantum_port[] @loose;
@@ -36,7 +36,7 @@ module QNode
 
     //types:
     //    channel I extends IdealChannel{
-    //    
+    //
     //    }
     submodules:
         app: Application {
@@ -97,7 +97,7 @@ module QNode
                 passive = true;
                 emission_std = emission_timing_std;
         }
-        
+
     connections:
         router.toApp --> app.fromRouter;
         router.fromApp <-- app.toRouter;
@@ -120,11 +120,11 @@ module QNode
         		qnic_rp[i].toParentRouter --> router.fromQNIC++;
         		//qnic[i].hom_quantum_port <--> inter_hom[i].hom_quantum_port;
         }
-        
+
         router.rePort <--> qrsa.rePort;
         router.cmPort <--> qrsa.cmPort;
         router.rdPort <--> qrsa.rdPort;
         //qrsa.QNICPort[0] <--> qnic[0].qrsaPort[0];
         //qnic[0].qrsaPort[0] <--> qchan[0];
-        
+
 }

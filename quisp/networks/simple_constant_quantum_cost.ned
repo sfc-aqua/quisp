@@ -3,15 +3,15 @@
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 import ned.DatarateChannel;
 package networks;
 
@@ -75,27 +75,27 @@ network Simple_constant_quantum_cost
 	    HoM[0].port++ <--> C <--> repeater[0].port++;
 	    repeater[0].port++ <--> C <--> HoM[1].port++;
 	    HoM[1].port++ <--> C <--> router[0].port++;
-	    
+
 	    	endnode[1].port++ <--> C <--> HoM[2].port++;
 	    HoM[2].port++ <--> C <--> repeater[1].port++;
 	    repeater[1].port++ <--> C <--> HoM[3].port++;
 	    HoM[3].port++ <--> C <--> router[0].port++;
-	    
+
 	    	endnode[2].port++ <--> C <--> HoM[4].port++;
 	    HoM[4].port++ <--> C <--> repeater[2].port++;
 	    repeater[2].port++ <--> C <--> HoM[5].port++;
 	    HoM[5].port++ <--> C <--> router[0].port++;
-	    
+
 	    endnode[0].quantum_port++ <--> QuantumChannel <--> HoM[0].quantum_port++;
 		HoM[0].quantum_port++ <--> QuantumChannel <--> repeater[0].quantum_port++;
 		repeater[0].quantum_port++ <--> QuantumChannel <--> HoM[1].quantum_port++;
 		HoM[1].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port++;
- 
+
  		endnode[1].quantum_port++ <--> QuantumChannel <--> HoM[2].quantum_port++;
 		HoM[2].quantum_port++ <--> QuantumChannel <--> repeater[1].quantum_port++;
 		repeater[1].quantum_port++ <--> QuantumChannel <--> HoM[3].quantum_port++;
 		HoM[3].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port++;
-		
+
 		endnode[2].quantum_port++ <--> QuantumChannel <--> HoM[4].quantum_port++;
 		HoM[4].quantum_port++ <--> QuantumChannel <--> repeater[2].quantum_port++;
 		repeater[2].quantum_port++ <--> QuantumChannel <--> HoM[5].quantum_port++;

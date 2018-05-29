@@ -4,15 +4,15 @@ package networks;
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 
 import ned.DatarateChannel;
 import ned.IdealChannel;
@@ -97,7 +97,7 @@ network Star_MSM
 {
     parameters:
         **.distance_of_light_in_fiber_per_sec = 205336.986301 km;
-        
+
     types:
         channel C extends DatarateChannel
         {
@@ -145,38 +145,38 @@ network Star_MSM
         		address = index+1000;
         		@display("i=device/device");
         }
-       
-       
+
+
     connections:
         node[0].port++ <--> C<--> spdc[0].port++;
         spdc[0].port++ <--> C <--> repeater[0].port++;
         repeater[0].port++ <--> C <--> spdc[1].port++;
         spdc[1].port++ <--> C <--> router[0].port++;
-  
+
         node[0].quantum_port_receiver++ <--> QuantumChannel <--> spdc[0].quantum_port++;
-        spdc[0].quantum_port++ <--> QuantumChannel <--> repeater[0].quantum_port_receiver++;    
+        spdc[0].quantum_port++ <--> QuantumChannel <--> repeater[0].quantum_port_receiver++;
         repeater[0].quantum_port_receiver++ <--> QuantumChannel <--> spdc[1].quantum_port++;
-        spdc[1].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port_receiver++;    
-        
+        spdc[1].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port_receiver++;
+
         node[1].port++ <--> C<--> spdc[2].port++;
         spdc[2].port++ <--> C <--> repeater[1].port++;
         repeater[1].port++ <--> C <--> spdc[3].port++;
         spdc[3].port++ <--> C <--> router[0].port++;
-  
+
         node[1].quantum_port_receiver++ <--> QuantumChannel <--> spdc[2].quantum_port++;
-        spdc[2].quantum_port++ <--> QuantumChannel <--> repeater[1].quantum_port_receiver++;    
+        spdc[2].quantum_port++ <--> QuantumChannel <--> repeater[1].quantum_port_receiver++;
         repeater[1].quantum_port_receiver++ <--> QuantumChannel <--> spdc[3].quantum_port++;
-        spdc[3].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port_receiver++;  
-        
+        spdc[3].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port_receiver++;
+
          node[2].port++ <--> C<--> spdc[4].port++;
         spdc[4].port++ <--> C <--> repeater[2].port++;
         repeater[2].port++ <--> C <--> spdc[5].port++;
         spdc[5].port++ <--> C <--> router[0].port++;
-  
+
         node[2].quantum_port_receiver++ <--> QuantumChannel <--> spdc[4].quantum_port++;
-        spdc[4].quantum_port++ <--> QuantumChannel <--> repeater[2].quantum_port_receiver++;    
+        spdc[4].quantum_port++ <--> QuantumChannel <--> repeater[2].quantum_port_receiver++;
         repeater[2].quantum_port_receiver++ <--> QuantumChannel <--> spdc[5].quantum_port++;
-        spdc[5].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port_receiver++;    
+        spdc[5].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port_receiver++;
 }
 
 
@@ -185,7 +185,7 @@ network Star_MM
 {
     parameters:
         **.distance_of_light_in_fiber_per_sec = 205336.986301 km;
-        
+
     types:
         channel C extends DatarateChannel
         {
@@ -225,14 +225,14 @@ network Star_MM
         		address = index+1000000;
         		@display("i=device/router");
         }
-        
-       
-       
+
+
+
     connections:
-    node[0].port++ <--> C <--> router[0].port++; 
-    node[1].port++ <--> C <--> router[0].port++;    
-    node[2].port++ <--> C <--> router[0].port++;       
-    
+    node[0].port++ <--> C <--> router[0].port++;
+    node[1].port++ <--> C <--> router[0].port++;
+    node[2].port++ <--> C <--> router[0].port++;
+
 	node[0].quantum_port_receiver++ <--> QuantumChannel <--> router[0].quantum_port++;
 	node[1].quantum_port_receiver++ <--> QuantumChannel <--> router[0].quantum_port++;
 	node[2].quantum_port_receiver++ <--> QuantumChannel <--> router[0].quantum_port++;

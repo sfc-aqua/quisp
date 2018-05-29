@@ -4,15 +4,15 @@ package networks;
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 
 
 
@@ -20,7 +20,7 @@ simple RoutingDaemon
 {
     parameters:
         int address;
-         
+
     gates:
         //output toRouter;
         //input fromRouter;
@@ -39,7 +39,7 @@ simple HardwareMonitor
         int number_of_qnics_r;
         int number_of_qnics_rp;
         string ntable = "";
-        
+
     gates:
         output toRoutingDaemon;
         input fromRoutingDaemon;
@@ -77,7 +77,7 @@ simple RuleEngine
         int number_of_qnics_r;
         int number_of_qnics_rp;
         int total_number_of_qnics;
-    
+
     gates:
         //output toRouter;
         //input fromRouter;
@@ -132,7 +132,7 @@ module quantumRoutingSoft
                 number_of_qnics = number_of_qnics;
                 number_of_qnics_r = number_of_qnics_r;
                 number_of_qnics_rp = number_of_qnics_rp;
-         
+
         }
         cm: ConnectionManager {
             parameters:
@@ -152,8 +152,8 @@ module quantumRoutingSoft
                 number_of_qnics_r = number_of_qnics_r;
                 number_of_qnics_rp = number_of_qnics_rp;
                 total_number_of_qnics = number_of_qnics +  number_of_qnics_r + number_of_qnics_rp;
-                
-  
+
+
         }
     connections:
         rd.toHardwareMonitor --> hm.fromRoutingDaemon;
