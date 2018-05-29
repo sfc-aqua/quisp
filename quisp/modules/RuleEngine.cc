@@ -7,7 +7,10 @@
  *  \brief RuleEngine
  */
 #include "RuleEngine.h"
-#include "HardwareMonitor.h"
+#include <modules/HardwareMonitor.h>
+
+namespace quisp {
+namespace modules {
 
 Define_Module(RuleEngine);
 
@@ -499,8 +502,5 @@ void RuleEngine::finish(){
 
 }
 
-
-
-
-
-
+} // namespace modules
+} // namespace quisp

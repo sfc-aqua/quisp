@@ -7,10 +7,13 @@
 #include "stationaryQubit.h"
 #include <vector>
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
-#include "../PhotonicQubit_m.h"
+#include <classical_messages_m.h>
+#include <PhotonicQubit_m.h>
 
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 Define_Module(stationaryQubit);
 
@@ -119,3 +122,6 @@ void stationaryQubit::setEntangledPartnerInfo(int node_address, int qnic_index, 
     QNICEntangledWith = qnic_index;//Entangled pair's QNIC-level address
     stationaryQubitEntangledWith = qubit_index;
 }
+
+} // namespace modules
+} // namespace quisp

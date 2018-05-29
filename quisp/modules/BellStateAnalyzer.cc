@@ -7,13 +7,16 @@
  */
 #include <vector>
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
-#include "../PhotonicQubit_m.h"
+#include <classical_messages_m.h>
+#include <PhotonicQubit_m.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 /** \class BellStateAnalyzer BellStateAnalyzer.cc
  *  \todo Documentation of the class header.
@@ -239,3 +242,6 @@ bool BellStateAnalyzer::isPhotonLost(cMessage *msg){
     }
     delete msg;
 }
+
+} // namespace modules
+} // namespace quisp

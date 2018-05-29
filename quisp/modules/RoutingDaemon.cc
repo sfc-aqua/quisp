@@ -7,9 +7,12 @@
  */
 #include <vector>
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
+#include <classical_messages_m.h>
 
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 /** \class RoutingDaemon RoutingDaemon.cc
  *  \todo Documentation of the class header.
@@ -35,3 +38,6 @@ void RoutingDaemon::initialize()
 void RoutingDaemon::handleMessage(cMessage *msg){
 
 }
+
+} // namespace modules
+} // namespace quisp

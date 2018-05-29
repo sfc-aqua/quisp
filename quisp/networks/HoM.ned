@@ -19,6 +19,7 @@ import ned.IdealChannel;
 simple BellStateAnalyzer
 {
     parameters:
+        //@class(quisp::modules::BellStateAnalyzer);
         double darkcount_rate = default(0);
         double loss_rate = default(0);
         double error_rate = default(0);
@@ -36,6 +37,7 @@ simple BellStateAnalyzer
 simple HoM_Controller
 {
     parameters:
+        //@class(quisp::modules::HoM_Controller);
         int address;
         volatile double Speed_of_light_in_fiber @unit(km);//per sec
         int photon_detection_per_sec = default(10000);
@@ -58,7 +60,7 @@ simple HoM_Controller
 
 
 
-module interHoM{
+module interHoM {
      parameters:
         int address;
         double internal_hom_darkcount_rate = default(0);
@@ -102,7 +104,8 @@ module interHoM{
          quantum_port++ <--> BSA.fromHoM_quantum_port++;        
 }
 
-simple dummyModule{
+simple dummyModule {
+     //@class(quisp::modules::dummyModule);
 	gates:
 	   inout close @loose;
 	   input close_input @loose;
@@ -174,8 +177,3 @@ module HoM
         router.toApp --> Controller.fromRouter_port;
         BSA.toHoMController_port --> Controller.fromBSA_port;
 }
-
-
-
-
-

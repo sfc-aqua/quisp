@@ -6,8 +6,8 @@
  *
  *  \brief RuleEngine
  */
-#ifndef MODULES_RULEENGINE_H_
-#define MODULES_RULEENGINE_H_
+#ifndef QUISP_MODULES_RULEENGINE_H_
+#define QUISP_MODULES_RULEENGINE_H_
 
 #include <vector>
 #include <omnetpp.h>
@@ -18,6 +18,9 @@
 #include <modules/HoM_Controller.h>
 
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 struct QubitAddr_cons{
      QubitAddr_cons(const int node, const int qnic, const int qubit)
@@ -97,5 +100,8 @@ class RuleEngine : public cSimpleModule
         virtual void freeFailedQubits(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result);
         virtual void clearTrackerTable(int destAddr, int internal_qnic_address);
 };
+
+} // namespace modules
+} // namespace quisp
 
 #endif /* MODULES_RULEENGINE_H_ */

@@ -6,18 +6,18 @@
  *
  *  \brief HoM_Controller
  */
-#ifndef MODULES_HOM_CONTROLLER_H_
-#define MODULES_HOM_CONTROLLER_H_
-
+#ifndef QUISP_MODULES_HOM_CONTROLLER_H_
+#define QUISP_MODULES_HOM_CONTROLLER_H_
 
 #include <vector>
 #include <omnetpp.h>
 #include <classical_messages_m.h>
 #include <PhotonicQubit_m.h>
 
-
-
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 /** \class HoM_Controller HoM_Controller.h
  *  \todo Documentation of the class header.
@@ -86,5 +86,7 @@ class HoM_Controller : public cSimpleModule
         HoM_Controller();
 };
 
+} // namespace modules
+} // namespace quisp
 
-#endif /* MODULES_HOM_CONTROLLER_H_ */
+#endif /* QUISP_MODULES_HOM_CONTROLLER_H_ */

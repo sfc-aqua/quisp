@@ -7,10 +7,13 @@
  */
 #include <vector>
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
-#include "../PhotonicQubit_m.h"
+#include <classical_messages_m.h>
+#include <PhotonicQubit_m.h>
 
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 /** \class QNIC_photonic_switch QNIC_photonic_switch.cc
  *  \todo Documentation of the class header.
@@ -109,3 +112,6 @@ cModule* QNIC_photonic_switch::getQNode(){
 void QNIC_photonic_switch::checkQubitNumber(){
 
 }
+
+} // namespace modules
+} // namespace quisp

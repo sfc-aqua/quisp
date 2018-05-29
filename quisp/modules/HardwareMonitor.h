@@ -6,8 +6,8 @@
  *
  *  \brief HardwareMonitor
  */
-#ifndef MODULES_HARDWAREMONITOR_H_
-#define MODULES_HARDWAREMONITOR_H_
+#ifndef QUISP_MODULES_HARDWAREMONITOR_H_
+#define QUISP_MODULES_HARDWAREMONITOR_H_
 
 #define EMITTER_QNIC 0 //qnic
 #define RECEIVER_QNIC 1 //qnic_r
@@ -18,6 +18,9 @@
 #include <modules/stationaryQubit.h>
 
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 typedef struct _neighborInfo{
     bool isQNode;
@@ -62,7 +65,7 @@ class HardwareMonitor : public cSimpleModule
         int myAddress;
         int numQnic, numQnic_r, numQnic_rp, numQnic_total;
         cModuleType *QNodeType =  cModuleType::get("networks.QNode");
-        cModuleType *EPPSType =  cModuleType::get("networks.EPPS");
+        cModuleType *SPDCType =  cModuleType::get("networks.SPDC");
         cModuleType *HoMType =  cModuleType::get("networks.HoM");
     public:
         //typedef std::map<int,Interface_inf> Interfaces;//qnic_index -> Interface{qnic_type, initial_fidelity...}
@@ -85,4 +88,7 @@ class HardwareMonitor : public cSimpleModule
         //virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
 };
 
-#endif /* MODULES_HARDWAREMONITOR_H_ */
+} // namespace modules
+} // namespace quisp
+
+#endif /* QUISP_MODULES_HARDWAREMONITOR_H_ */

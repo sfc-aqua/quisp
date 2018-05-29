@@ -1,13 +1,11 @@
-/** \file EPPS_pair_source.h
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
+/** \file EntangledPhotonPairSource.h
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/30
  *
- *  \brief EPPS_pair_source
+ *  \brief EntangledPhotonPairSource
  */
-#ifndef MODULES_EPPS_PAIR_SOURCE_H_
-#define MODULES_EPPS_PAIR_SOURCE_H_
+#ifndef QUISP_MODULES_EPPS_H_
+#define QUISP_MODULES_EPPS_H_
 
 #include <vector>
 #include <omnetpp.h>
@@ -16,17 +14,21 @@
 
 using namespace omnetpp;
 
-typedef struct _entangledPhotons{
+namespace quisp {
+namespace modules {
+
+typedef struct _entangledPhotons {
   PhotonicQubit *qubitOne;
   PhotonicQubit *qubitTwo;
 } entangledPhotons;
 
-/** \class EPPS_pair_source EPPS_pair_source.h
- *  \todo Documentation of the class header.
+/** \class EntangledPhotonPairSource EntangledPhotonPairSource.h
  *
- *  \brief EPPS_pair_source
+ *  \brief Entangled Photons Pairs Source
+ *
+ *  \see https://www.nist.gov/information-technology-laboratory/entangled-photon-pair-sources
  */
-class EPPS_pair_source : public cSimpleModule
+class EntangledPhotonPairSource : public cSimpleModule
 {
     private:
         int myAddress;
@@ -41,7 +43,7 @@ class EPPS_pair_source : public cSimpleModule
         virtual void handleMessage(cMessage *msg) override;
         virtual void BubbleText(const char* txt);
         virtual PhotonicQubit* generateEntangledPhotons();
-        virtual cModule* getEPPSNode();
+        virtual cModule* getSPDCNode();
 
     public:
         double frequency;
@@ -49,4 +51,7 @@ class EPPS_pair_source : public cSimpleModule
         virtual void emitPhotons();
 };
 
-#endif /* MODULES_EPPS_PAIR_SOURCE_H_ */
+} // namespace modules
+} // namespace quisp
+
+#endif /* QUISP_MODULES_EPPS_H_ */

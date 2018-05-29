@@ -17,6 +17,7 @@ import ned.IdealChannel;
 simple Application
 {
     parameters:
+        //@class(quisp::modules::Application);
         int address;
         volatile double sendIaTime @unit(s) = default(exponential(1s)); // time between generating packets
     gates:
@@ -27,6 +28,7 @@ simple Application
 simple Router
 {
     parameters:
+        //@class(quisp::modules::Router);
         int address;
     gates:
         input fromQueue[];
@@ -42,6 +44,7 @@ simple Router
 simple Queue
 {
     parameters:
+        //@class(quisp::modules::Queue);
         //int xPosition_Graphics;
         int address;
         //int buffer;//for qnic
@@ -65,6 +68,3 @@ simple Queue
         output out;
         inout line;
 }
-
-
-

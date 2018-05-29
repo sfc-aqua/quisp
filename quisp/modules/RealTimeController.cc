@@ -7,7 +7,10 @@
  *  \brief RealTimeController
  */
 #include "RealTimeController.h"
-#include "stationaryQubit.h"
+#include <modules/stationaryQubit.h>
+
+namespace quisp {
+namespace modules {
 
 Define_Module(RealTimeController);
 
@@ -80,3 +83,6 @@ void RealTimeController::GUI_setQubitFree(int qnic_index ,int qubit_index, int q
             error("Some error occured in RealTimeController. Maybe the qnic/statQubit couldnt be found. Have you changed the namings?");
     }
 }
+
+} // namespace modules
+} // namespace quisp

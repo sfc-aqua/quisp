@@ -8,6 +8,9 @@
  */
 #include "HoM_Controller.h"
 
+namespace quisp {
+namespace modules {
+
 Define_Module(HoM_Controller);
 
 HoM_Controller::HoM_Controller()
@@ -22,17 +25,18 @@ void HoM_Controller::initialize()
     address = par("address");
     receiver = par("receiver");
     passive = par("passive");
-    if(!receiver && !passive){
-        standaloneInitializer();//Other parameter settings
-    }else if (receiver && !passive){
-        internodeInitializer();//Other parameter settings
-    }else if(passive){
+    /** \todo This code looks awefully simplifiable */
+    if (passive) {
         //Nothing to do. EPPS will take care of entanglement creation.
         //max_buffer also stays unknown, until this gets a message about that info from epps.
         //Therefore, if passive, max_buffer has to be update manually every time when you get a packet from epps.
         //It still needs to know who is the neighbor of this internal hom (a.k.a qnic)
         checkNeighborAddress(true);
-    }else{
+    } else if (receiver) {
+        internodeInitializer();//Other parameter settings
+    } else if (!receiver) {
+        standaloneInitializer();//Other parameter settings
+    } else {
         error("Set receiver parameter of HoM to true or false.");
     }
 }
@@ -373,10 +377,5 @@ void HoM_Controller::finish(){
 
 }*/
 
-
-
-
-
-
-
-
+} // namespace modules
+} // namespace quisp

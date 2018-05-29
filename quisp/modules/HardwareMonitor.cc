@@ -10,7 +10,8 @@
 #include <sstream>
 #include <string>
 
-
+namespace quisp {
+namespace modules {
 
 Define_Module(HardwareMonitor);
 
@@ -55,8 +56,6 @@ HardwareMonitor::QnicInfo* HardwareMonitor::initializeQTable(int numQnic, QnicIn
     return qtable;
 }*/
 
-
-
 int HardwareMonitor::checkNumBuff(int qnic_index, int qnic_type){
     Enter_Method("checkNumBuff()");
 
@@ -73,7 +72,6 @@ int HardwareMonitor::checkNumBuff(int qnic_index, int qnic_type){
     }
     return qnode->par("numBuffer");
 }
-
 
 /*
 //Not in HM.....
@@ -220,7 +218,7 @@ neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode){
     neighborInfo inf;
     if(thisNode->getModuleType()!=QNodeType){//Not a Qnode!
 
-        if(thisNode->getModuleType()== EPPSType || thisNode->getModuleType()==  HoMType){
+        if(thisNode->getModuleType()== SPDCType || thisNode->getModuleType()==  HoMType){
             inf.isQNode=false;
         }else{
             error("This simulator only recognizes the following network level node types: QNode, EPPS and HoM. Not %s",thisNode->getClassName());
@@ -239,3 +237,6 @@ HardwareMonitor::NeighborTable HardwareMonitor::passNeighborTable(){
     Enter_Method("passNeighborTable()");
     return ntable;
 }
+
+} // namespace modules
+} // namespace quisp

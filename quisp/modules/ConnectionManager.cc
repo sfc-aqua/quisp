@@ -7,9 +7,12 @@
  */
 #include <vector>
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
+#include <classical_messages_m.h>
 
 using namespace omnetpp;
+
+namespace quisp {
+namespace modules {
 
 /** \class ConnectionManager ConnectionManager.cc
  *  \todo Documentation of the class header.
@@ -35,3 +38,6 @@ void ConnectionManager::initialize()
 void ConnectionManager::handleMessage(cMessage *msg){
 
 }
+
+} // namespace modules
+} // namespace quisp
