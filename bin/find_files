@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -eu
+__folder="$(dirname "$(cd "$(dirname $0)" && pwd)")";
+
+extensions=('.h');
+while [ $# -gt 0 ]; do
+  arg=$1;
+  if [ "${arg:0:1}" != '.' ]; then
+    break;
+  fi
+  shift
+  extensions+=(${arg});
+done
+
+match=();
+for ext in ${extensions[@]}; do
+  match+=('-o' '-name' "*${ext}");
+done
+
+cd "${__folder}"
+find quisp '(' -name '*.cc' ${match[@]} ')' $@
+set +eu
