@@ -6,7 +6,7 @@
  */
 #ifndef MODULES_STATIONARYQUBIT_H_
 #define MODULES_STATIONARYQUBIT_H_
-#include "../PhotonicQubit_m.h"
+#include <PhotonicQubit_m.h>
 using namespace omnetpp;
 
 #define STATIONARYQUBIT_PULSE_BEGIN 0x01

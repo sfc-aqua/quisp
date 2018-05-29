@@ -11,7 +11,7 @@
 #define MODULES_REALTIMECONTROLLER_H_
 #include <vector>
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
+#include <classical_messages_m.h>
 using namespace omnetpp;
 
 /** \class RealTimeController RealTimeController.h

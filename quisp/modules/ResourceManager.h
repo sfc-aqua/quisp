@@ -8,7 +8,7 @@
 #ifndef MODULES_RESOURCEMANAGER_H_
 #define MODULES_RESOURCEMANAGER_H_
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
+#include <classical_messages_m.h>
 using namespace omnetpp;
 
 /** \class ResourceManager ResourceManager.h

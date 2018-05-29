@@ -12,8 +12,8 @@
 
 #include <vector>
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
-#include "../PhotonicQubit_m.h"
+#include <classical_messages_m.h>
+#include <PhotonicQubit_m.h>
 
 
 

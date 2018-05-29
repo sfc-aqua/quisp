@@ -11,8 +11,8 @@
 
 #include <vector>
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
-#include "stationaryQubit.h"
+#include <classical_messages_m.h>
+#include <modules/stationaryQubit.h>
 
 using namespace omnetpp;
 

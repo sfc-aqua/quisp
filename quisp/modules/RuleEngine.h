@@ -11,11 +11,11 @@
 
 #include <vector>
 #include <omnetpp.h>
-#include "../classical_messages_m.h"
-#include "stationaryQubit.h"
-#include "RealTimeController.h"
-#include "HardwareMonitor.h"
-#include "HoM_Controller.h"
+#include <classical_messages_m.h>
+#include <modules/stationaryQubit.h>
+#include <modules/RealTimeController.h>
+#include <modules/HardwareMonitor.h>
+#include <modules/HoM_Controller.h>
 
 using namespace omnetpp;
 
