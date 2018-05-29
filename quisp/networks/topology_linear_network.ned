@@ -84,24 +84,24 @@ network Linear_One_MM_bufferGap
         **.Speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
-        source: QNode {
+        Small: QNode {
             address = 112302;
             nodeType = "EndNode";
-            buffers = 20;
+            buffers = 1;
             @display("i=device/pc");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
 
-        target: QNode {
+        Big: QNode {
             address = 300;
-            buffers = 10;
+            buffers = 1;
             nodeType = "EndNode";
             @display("i=device/pc");
         }
     connections:
-        source.port++ <--> ClassicalChannel {  distance = 12.3km; } <--> target.port++;
-        source.quantum_port_receiver++ <--> QuantumChannel {  distance = 12.3km; } <--> target.quantum_port++;
+        Small.port++ <--> ClassicalChannel {  distance = 12.3km; } <--> Big.port++;
+        Small.quantum_port_receiver++ <--> QuantumChannel {  distance = 12.3km; } <--> Big.quantum_port++;
 }
 
 
@@ -190,7 +190,7 @@ network Linear_One_MIM_MM_MSM
             address = 1;
             nodeType = "EndNode";
             @display("i=device/pc;p=362,83");
-            buffers = 10;
+            buffers = 5;
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
@@ -198,17 +198,23 @@ network Linear_One_MIM_MM_MSM
             address = 2;
             @display("i=device/bsm;p=289,83");
         }
+        repeater: QNode {
+        		address = 1234;
+        		nodeType="Repeater";
+        		buffers = 5;
+        		@display("i=device/smallrouter");
+        }
         router: QNode {
             address = 3;
             nodeType = "EndNode";
-            buffers =50;
+            buffers =10;
             @display("i=device/router;p=213,52");
         }
-        mm: QNode {
-            address = 4;
-            buffers = 12;
+        mm[2]: QNode {
+            address = index + 100;
+            buffers = 5;
             nodeType = "EndNode";
-            @display("i=device/pc_s;p=213,180");
+            @display("i=device/pc_s");
         }
         epps: EPPS {
             address = 5;
@@ -217,17 +223,22 @@ network Linear_One_MIM_MM_MSM
 
         pas: QNode {
             address = 6;
+            buffers = 5;
             @display("i=device/pc_s;p=43,83");
         }
     connections:
-        source.port++ <--> ClassicalChannel <--> HoM.port++;
-        HoM.port++ <--> ClassicalChannel{ distance = 60km; } <--> router.port++;
-        mm.port++ <--> ClassicalChannel {  distance = 40km; } <--> router.port++;
+        source.port++ <--> ClassicalChannel <--> repeater.port++;
+        repeater.port++ <--> ClassicalChannel <--> HoM.port++;
+        HoM.port++ <--> ClassicalChannel{ distance = 90km; } <--> router.port++;
+        mm[0].port++ <--> ClassicalChannel {  distance = 40km; } <--> router.port++;
+        mm[1].port++ <--> ClassicalChannel {  distance = 40km; } <--> router.port++;
         epps.port++ <--> ClassicalChannel <--> router.port++;
         epps.port++ <--> ClassicalChannel <--> pas.port++;
-        source.quantum_port++ <--> QuantumChannel <--> HoM.quantum_port++;
-        HoM.quantum_port++ <--> QuantumChannel{ distance = 60km; } <--> router.quantum_port++;
-        mm.quantum_port_receiver++ <--> QuantumChannel {  distance = 40km; } <--> router.quantum_port++;
+        source.quantum_port++ <--> QuantumChannel <--> repeater.quantum_port_receiver++;
+        repeater.quantum_port++ <--> QuantumChannel <--> HoM.quantum_port++;
+        HoM.quantum_port++ <--> QuantumChannel{ distance = 90km; } <--> router.quantum_port++;
+        mm[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 40km; } <--> router.quantum_port++;
+        mm[1].quantum_port++ <--> QuantumChannel {  distance = 40km; } <--> router.quantum_port_receiver++;
         router.quantum_port_receiver_passive++ <--> QuantumChannel <--> epps.quantum_port++;
         epps.quantum_port++ <--> QuantumChannel <--> pas.quantum_port_receiver_passive++;
 }

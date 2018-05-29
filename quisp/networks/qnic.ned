@@ -56,7 +56,7 @@ module QNIC
         double emission_std = default(0);
         bool passive = default(false);
         @display("bgb=612,194");
-        int job_index = default(0);
+        int burst_trial_counter = default(0);
     gates:
         inout qnic_quantum_port @loose;//One quantum port for every qnic in a node
         output toParentRouter @loose;//If not used, this still needs to be connected somewhere!!

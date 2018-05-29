@@ -52,6 +52,7 @@ class HoM_Controller : public cSimpleModule
 
         bool receiver, passive;
         int qnic_index = -1;
+        int qnic_address = -1;
 
         int *BSAresults;
         typedef std::map<int, bool> BSAresultTable;//BSA trial index --> success or failure

@@ -11,7 +11,8 @@ packet BSMtimingNotifier extends header
     int accepted_photons_per_sec;
     double interval;
     int number_of_qubits;
-    int internal_qnic = -1;
+    int internal_qnic_index = -1;
+    int internal_qnic_address = -1;
 }
 
 packet EPPStimingNotifier extends header
@@ -26,6 +27,7 @@ packet EmitPhotonRequest extends header
 {
 	int qubit_index;
 	int qnic_index;
+	int qnic_address;
 	int qnic_type;
 	bool receiver;
 	bool first;
@@ -35,7 +37,8 @@ packet EmitPhotonRequest extends header
 
 packet SchedulePhotonTransmissionsOnebyOne extends header
 {
-    int qnic_index;
+    int qnic_index = -1;
+    int qnic_address;
     	int num_sent = 0;
 	int number_of_qubits_to_send;
 	int trial;

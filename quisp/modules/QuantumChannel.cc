@@ -45,7 +45,6 @@ class QuantumChannel : public cDatarateChannel
        virtual void setErrorCeilings();
        virtual void initialize();
        virtual void processMessage(cMessage *msg, simtime_t t, result_t& result);
-       virtual bool XOR_error(bool error);
     public:
        QuantumChannel();
 
@@ -72,7 +71,7 @@ void QuantumChannel::initialize(){
     photon_loss_rate = par("photon_loss_rate");//Photon Loss rate per km.
 
     setErrorCeilings();
-    EV<<"\nNo_error_ceil = "<<No_error_ceil<<", X_error_ceil = "<< X_error_ceil << ", Z_error_ceil"<<Z_error_ceil<<", Y_error_ceil"<<Y_error_ceil<<"\n";
+    //EV<<"\nNo_error_ceil = "<<No_error_ceil<<", X_error_ceil = "<< X_error_ceil << ", Z_error_ceil"<<Z_error_ceil<<", Y_error_ceil"<<Y_error_ceil<<"\n";
 
 }
 
@@ -94,20 +93,13 @@ void QuantumChannel::setErrorCeilings(){
     MatrixPower<MatrixXd> Apow(Transition_matrix);
     Q_to_the_distance = Apow(distance);
     Output_condition = Initial_condition * Q_to_the_distance;
-    EV<<Output_condition;
+    //EV<<Output_condition;
     No_error_ceil = Output_condition(0,0);
     X_error_ceil = Output_condition(0,0)+Output_condition(0,1);
     Z_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2);
     Y_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2)+Output_condition(0,3);
 }
 
-bool QuantumChannel::XOR_error(bool error){
-    if(error){
-        return false;
-    }else{
-        return true;
-    }
-}
 
 void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t& result)
 {
@@ -123,17 +115,17 @@ void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t& result
         }else if(No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil!=X_error_ceil)){
             //X error
             bool xerr = q->getPauliXerr();
-            q->setPauliXerr(XOR_error(xerr));
+            q->setPauliXerr(!xerr);//if xerr already was true, then another x error will make it false
         }else if(X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil!=Z_error_ceil)){
             //Z error
             bool zerr = q->getPauliZerr();
-            q->setPauliZerr(XOR_error(zerr));
+            q->setPauliZerr(!zerr);
         }else if(Z_error_ceil <= rand && rand < Y_error_ceil && (Z_error_ceil!=Y_error_ceil)){
             //Y error
             bool xerr = q->getPauliXerr();
-            q->setPauliXerr(XOR_error(xerr));
+            q->setPauliXerr(!xerr);
             bool zerr = q->getPauliZerr();
-            q->setPauliZerr(XOR_error(zerr));
+            q->setPauliZerr(!zerr);
         }else{
             //Photon was lost
             q->setPhotonLost(true);

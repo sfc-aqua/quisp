@@ -23,6 +23,7 @@ void RealTimeController::handleMessage(cMessage *msg){
 void RealTimeController::EmitPhoton(int qnic_index ,int qubit_index, int qnic_type, int pulse){
     Enter_Method("EmitPhoton()");
     cModule *qnode = getQNode();//Get the parent QNode that runs this RC.
+
     try{
         //EV<<"EmitPhoton for qnic["<<qnic_index<<"] and qubit["<<qubit_index<<"]\n\n\n";
         cModule *qubit = nullptr;

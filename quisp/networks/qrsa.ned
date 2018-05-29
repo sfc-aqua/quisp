@@ -38,6 +38,8 @@ simple HardwareMonitor
         int number_of_qnics;
         int number_of_qnics_r;
         int number_of_qnics_rp;
+        string ntable = "";
+        
     gates:
         output toRoutingDaemon;
         input fromRoutingDaemon;
@@ -130,6 +132,7 @@ module quantumRoutingSoft
                 number_of_qnics = number_of_qnics;
                 number_of_qnics_r = number_of_qnics_r;
                 number_of_qnics_rp = number_of_qnics_rp;
+         
         }
         cm: ConnectionManager {
             parameters:
