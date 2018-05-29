@@ -37,7 +37,7 @@ network Simple_constant_quantum_cost
         }
         channel QuantumChannel extends DatarateChannel
         {
-            @class(QuantumChannel);
+            @class(quisp::channels::QuantumChannel);
             double cost = default(1);
             double distance @unit(km) = default(20km);
             //delay = uniform(0.01ms, 1s);

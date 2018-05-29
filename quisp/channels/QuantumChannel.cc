@@ -1,21 +1,21 @@
 /** \file QuantumChannel.cc
- *  \todo org Organize namespaces
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *
  *  \brief QuantumChannel
  */
-//#include "QuantumChannel.h"
 #include <vector>
 #include <omnetpp.h>
 #include <unsupported/Eigen/MatrixFunctions>
 //#include <Eigen/Dense>
-#include "../PhotonicQubit_m.h"
+#include <PhotonicQubit_m.h>
 
 using namespace Eigen;
 using namespace omnetpp;
 
+namespace quisp {
+namespace channels {
 
 /*The sum of Z,X and Y error rate equates to pauli_error_rate. Value could potentially between 0 ~ 1. */
 typedef struct _channel_error_model{
@@ -146,3 +146,5 @@ void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t& result
     }
 }
 
+} // namespace channels
+} // namespace quisp

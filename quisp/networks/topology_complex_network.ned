@@ -42,7 +42,7 @@ network ispMap_1239_node_23_48
         }
         channel QuantumChannel extends DatarateChannel
         {
-            @class(QuantumChannel);
+            @class(quisp::channels::QuantumChannel);
             double cost = default(1);
             double distance @unit(km) = default(20km);
             //delay = uniform(0.01ms, 1s);
