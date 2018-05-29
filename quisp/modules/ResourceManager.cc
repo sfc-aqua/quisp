@@ -1,4 +1,5 @@
 /** \file ResourceManager.cc
+ *  \todo org Organize namespaces
  *  \authors cldurand
  *  \date 2018/05/25
  *

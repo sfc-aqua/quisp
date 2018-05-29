@@ -1,4 +1,5 @@
 /** \file stationaryQubit.cc
+ *  \todo org Organize namespaces
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/14
  *

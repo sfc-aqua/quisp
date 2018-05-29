@@ -1,6 +1,5 @@
 /** \file EPPS_pair_source.h
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
+ *  \todo org Organize namespaces
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/30
  *

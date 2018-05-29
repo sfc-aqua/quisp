@@ -1,4 +1,5 @@
 /** \file RuleEngine.cc
+ *  \todo org Organize namespaces
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
