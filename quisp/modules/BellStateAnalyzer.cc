@@ -43,7 +43,8 @@ class BellStateAnalyzer : public cSimpleModule
         int count_X=0, count_Y=0, count_Z=0, count_I=0, count_L=0, count_total=0;//for debug
         bool handshake = false;
         bool this_trial_done = false;
-        double BSAsuccess_rate = 1;
+        double BSAsuccess_rate = 0.5;
+        int left_count, right_count = 0;
     protected:
         virtual void initialize();
         virtual void handleMessage(cMessage *msg);
@@ -84,6 +85,8 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
         right_last_photon_detected = false;
         left_last_photon_detected = false;
         send_result = false;
+        right_count = 0;
+        left_count = 0;
         EV<<"------------------Next round!\n";
         bubble("Next round!");
     }
@@ -101,7 +104,8 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
             left_last_photon_detected = true;
             //send_result = true;
         }
-        EV<<"Left = "<<simTime()<<"\n";
+        left_count++;
+        //EV<<"Photon from Left arrived at = "<<simTime()<<"\n";
     }else if(msg->arrivedOn("fromHoM_quantum_port$i",1)){
         right_arrived_at=simTime();
         right_photon_origin_node_address = photon->getNodeEntangledWith();
@@ -115,7 +119,8 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
             right_last_photon_detected = true;
             //send_result = true;
         }
-        EV<<"Right = "<<simTime()<<"\n";
+        right_count++;
+        //EV<<"Right = "<<simTime()<<"\n";
     }else{
         error("This shouldn't happen....! Only 2 connections to the BSA allowed");
     }
@@ -129,7 +134,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
     forDEBUG_countErrorTypes(msg);
 
     double difference = (left_arrived_at-right_arrived_at).dbl();
-    EV<<"!!!!!!!!!!!!!!!!!!!!!!!!!!this_trial_done == "<<this_trial_done<<"\n";
+    //EV<<"!!!!!!!!!!!!!!!!!!!!!!!!!!this_trial_done == "<<this_trial_done<<"\n";
     if(this_trial_done == true){
         bubble("dumping result");
         //No need to do anything. Just ignore the BSA result for this shot 'cause the trial is over and only 1 photon will arrive anyway.
@@ -145,7 +150,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
                 bubble("Success...!");
                 sendBSAresult(false, send_result);//succeeded because both reached, and both clicked
 
-            }//else if darkcount....
+            }//we also need else if darkcount....
             else{
                 bubble("Failed...!");
                 EV<<"rand = "<<rand<<" <"<<BSAsuccess_rate;
@@ -158,13 +163,19 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
 
         }
         initializeVariables();
+
     }else if((left_arrived_at != -1 && right_arrived_at != -1) && std::abs(difference)>(required_precision)){
         //Both qubits arrived, but the timing was bad.
         bubble("Emission Timing Failed");
         initializeVariables();
         sendBSAresult(true,send_result);
     }else{
-        //bubble("Waiting...");
+        bubble("Waiting...");
+        /*if(photon->getLast() && (left_count == 0 || right_count == 0)){//This is wrong, because it will ignore the 2nd photon arrival if both of the photons are the first and last.
+            //sendBSAresult(true,send_result);
+            bubble("Ehhh");
+            EV<<"left_count = "<<left_count<<", right_count = "<<right_count;
+        }*/
         //Just waiting for the other qubit to arrive.
     }
     delete msg;
@@ -179,13 +190,15 @@ void BellStateAnalyzer::initializeVariables(){
     right_photon_origin_node_address = -1;
     right_photon_origin_qnic_index = -1;
     right_photon_origin_qubit_index = -1;
+    left_count = 0;
+    right_count = 0;
 }
 
 void BellStateAnalyzer::sendBSAresult(bool result,bool sendresults){
     //result could be false positive (actually ok but recognized as ng),
     //false negative (actually ng but recognized as ok) due to darkcount
     //true positive and true negative is no problem.
-    EV<<"send?="<<sendresults<<"___________________________________\n";
+    //EV<<"send?="<<sendresults<<"___________________________________\n";
     if(!sendresults){
         BSAresult *pk = new BSAresult;
         pk->setEntangled(result);
@@ -197,7 +210,7 @@ void BellStateAnalyzer::sendBSAresult(bool result,bool sendresults){
         send(pk, "toHoMController_port");
         bubble("trial done now");
         this_trial_done = true;
-        EV<<"!!!!!!!!!!!!!!!over!!!!!!!!!!!this_trial_done == "<<this_trial_done<<"\n";
+        //EV<<"!!!!!!!!!!!!!!!over!!!!!!!!!!!this_trial_done == "<<this_trial_done<<"\n";
     }
 }
 
@@ -214,7 +227,7 @@ void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg){
     }else{
         count_I++;
     }count_total++;
-    EV<<"Y%="<<(double)count_Y/(double)count_total<<", X%="<<(double)count_X/(double)count_total<<", Z%="<<(double)count_Z/(double)count_total<<", L%="<<(double)count_L/(double)count_total<<", I% ="<<(double)count_I/(double)count_total<<"\n";
+    //EV<<"Y%="<<(double)count_Y/(double)count_total<<", X%="<<(double)count_X/(double)count_total<<", Z%="<<(double)count_Z/(double)count_total<<", L%="<<(double)count_L/(double)count_total<<", I% ="<<(double)count_I/(double)count_total<<"\n";
 }
 
 bool BellStateAnalyzer::isPhotonLost(cMessage *msg){

@@ -73,8 +73,8 @@ class HardwareMonitor : public cSimpleModule
         QnicInfo *qtable;
         virtual NeighborTable passNeighborTable();
         virtual int checkNumBuff(int qnic_index, int qnic_type);//returns the total number of qubits
-        virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, int qnic_type);//returns the set of free resources
-        virtual int checkNumFreeBuff(int qnic_index, int qnic_type);//returns the number of free qubits
+        //virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, int qnic_type);//returns the set of free resources
+        //virtual int checkNumFreeBuff(int qnic_index, int qnic_type);//returns the number of free qubits
     protected:
         virtual void initialize() override;
         virtual void handleMessage(cMessage *msg) override;

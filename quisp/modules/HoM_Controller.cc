@@ -86,13 +86,15 @@ void HoM_Controller::sendNotifiers(){
          error("Error in HoM_Controller.cc. It does not have port named toRouter_port.");
          endSimulation();
      }
-
 }
+
+
 
 
 void HoM_Controller::handleMessage(cMessage *msg){
     if(msg == generatePacket){
         sendNotifiers();
+        //Create timeout
     }else if(dynamic_cast<BSAresult *>(msg) != nullptr){
         bubble("BSAresult accumulated");
         BSAresult *pk = check_and_cast<BSAresult *>(msg);

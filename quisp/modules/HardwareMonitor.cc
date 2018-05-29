@@ -55,24 +55,27 @@ HardwareMonitor::QnicInfo* HardwareMonitor::initializeQTable(int numQnic, QnicIn
     return qtable;
 }*/
 
+
+
 int HardwareMonitor::checkNumBuff(int qnic_index, int qnic_type){
     Enter_Method("checkNumBuff()");
 
     cModule *qnode = nullptr;
     switch (qnic_type) {
-      case 0:
+      case EMITTER_QNIC:
         qnode = getQNode()->getSubmodule("qnic", qnic_index); break;
-      case 1:
+      case RECEIVER_QNIC:
         qnode = getQNode()->getSubmodule("qnic_r", qnic_index); break;
-      case 2:
+      case PASSIVE_RECEIVER_QNIC:
         qnode = getQNode()->getSubmodule("qnic_rp", qnic_index); break;
       default:
         error("Only 3 qnic types are currently recognized....");
     }
-
     return qnode->par("numBuffer");
 }
 
+
+/*
 //Not in HM.....
 int HardwareMonitor::checkNumFreeBuff(int qnic_index, int qnic_type){
     //qnic_type 0 = qnic, 1 = qnic_r, 2 = qnic_rp
@@ -81,13 +84,13 @@ int HardwareMonitor::checkNumFreeBuff(int qnic_index, int qnic_type){
     cModule *qnode = nullptr;
     switch (qnic_type) {
       //for when connection manager receives an BSMtimingNotifier
-      case 0:
+      case EMITTER_QNIC:
         qnode = getQNode()->getSubmodule("qnic", qnic_index); break;
       //for when connection manager receives an EPPStimingNotifier
-      case 1:
+      case RECEIVER_QNIC:
         qnode = getQNode()->getSubmodule("qnic_r", qnic_index); break;
       //for when connection manager receives an EPPStimingNotifier
-      case 2:
+      case PASSIVE_RECEIVER_QNIC:
         qnode = getQNode()->getSubmodule("qnic_rp", qnic_index); break;
       default:
         error("Only 3 qnic types are currently recognized....");
@@ -101,7 +104,7 @@ int HardwareMonitor::checkNumFreeBuff(int qnic_index, int qnic_type){
         }
     }
     return num_free_resources;
-}
+}*/
 
 Interface_inf HardwareMonitor::getInterface_inf_fromQnicAddress(int qnic_index, int qnic_type){
     cModule *local_qnic;
@@ -124,6 +127,8 @@ Interface_inf HardwareMonitor::getInterface_inf_fromQnicAddress(int qnic_index, 
     return inf;
 }
 
+
+/*
 //Not in HM......
 int* HardwareMonitor::checkFreeBuffSet(int qnic_index, int *list_of_free_resources, int qnic_type){
     if(qnic_type<0 || qnic_type >2){
@@ -153,7 +158,7 @@ int* HardwareMonitor::checkFreeBuffSet(int qnic_index, int *list_of_free_resourc
     }
     //EV<<"index is ....."<<index<<"\n";
     return list_of_free_resources;
-}
+}*/
 
 
 void HardwareMonitor::handleMessage(cMessage *msg){

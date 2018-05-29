@@ -37,7 +37,7 @@ packet EmitPhotonRequest extends header
 
 packet SchedulePhotonTransmissionsOnebyOne extends header
 {
-    int qnic_index;
+    int qnic_index = -1;
     int qnic_address;
     	int num_sent = 0;
 	int number_of_qubits_to_send;
