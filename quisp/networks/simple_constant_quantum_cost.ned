@@ -52,7 +52,7 @@ network Simple_constant_quantum_cost
         }
     submodules:
         endnode[3]: QNode {
-            address = index;
+            address = 10000000+index;
             nodeType = "EndNode";
             @display("i=device/pc");
         }

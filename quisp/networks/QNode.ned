@@ -16,6 +16,8 @@ package networks;
 //
 
 
+
+
 module QNode
 {
     parameters:
@@ -99,8 +101,10 @@ module QNode
         }
 
     connections:
-        router.toApp --> app.fromRouter;
-        router.fromApp <-- app.toRouter;
+        if(nodeType=="EndNode"){
+       	 	router.toApp --> app.fromRouter;
+        		router.fromApp <-- app.toRouter;
+        }
         for i=0..sizeof(port)-1 {
             router.toQueue[i] --> queue[i].in;//Each routing port is connected to its own queue
             router.fromQueue[i] <-- queue[i].out;

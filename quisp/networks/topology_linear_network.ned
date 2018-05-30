@@ -5,15 +5,15 @@ package networks;
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-//
+// 
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-//
+// 
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-//
+// 
 
 import ned.DatarateChannel;
 import ned.IdealChannel;
@@ -119,7 +119,7 @@ network Linear_One_MSM
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
-        spdc: SPDC {//needs to check the buffersize, and tell each node how many photon arrivals to expect.
+        epps: SPDC {//needs to check the buffersize, and tell each node how many photon arrivals to expect.
             address = 2;
             @display("i=device/epps");
         }
@@ -129,10 +129,10 @@ network Linear_One_MSM
             @display("i=device/pc");
         }
     connections:
-        source.port++ <--> ClassicalChannel {  distance = 40km; } <--> spdc.port++;
-        spdc.port++ <--> ClassicalChannel {  distance = 20km; } <--> target.port++;
-        source.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 40km; } <--> spdc.quantum_port++;
-        spdc.quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> target.quantum_port_receiver_passive++;
+        source.port++ <--> ClassicalChannel {  distance = 40km; } <--> epps.port++;
+        epps.port++ <--> ClassicalChannel {  distance = 20km; } <--> target.port++;
+        source.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 40km; } <--> epps.quantum_port++;
+        epps.quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> target.quantum_port_receiver_passive++;
 }
 
 
@@ -190,7 +190,7 @@ network Linear_One_MIM_MM_MSM
             address = 1;
             nodeType = "EndNode";
             @display("i=device/pc;p=362,83");
-            buffers = 5;
+            buffers = 15;
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
@@ -201,13 +201,14 @@ network Linear_One_MIM_MM_MSM
         repeater: QNode {
         		address = 1234;
         		nodeType="Repeater";
-        		buffers = 5;
+        		buffers = 25;
+
         		@display("i=device/smallrouter");
         }
         router: QNode {
             address = 3;
-            nodeType = "EndNode";
-            buffers =10;
+            nodeType = "Router";
+            buffers = 30;
             @display("i=device/router;p=213,52");
         }
         mm[2]: QNode {
@@ -216,7 +217,7 @@ network Linear_One_MIM_MM_MSM
             nodeType = "EndNode";
             @display("i=device/pc_s");
         }
-        spdc: SPDC {
+        epps: SPDC {
             address = 5;
             @display("i=device/epps;p=122,83");
         }
@@ -224,6 +225,7 @@ network Linear_One_MIM_MM_MSM
         pas: QNode {
             address = 6;
             buffers = 5;
+            nodeType = "EndNode";
             @display("i=device/pc_s;p=43,83");
         }
     connections:
@@ -232,15 +234,15 @@ network Linear_One_MIM_MM_MSM
         HoM.port++ <--> ClassicalChannel{ distance = 90km; } <--> router.port++;
         mm[0].port++ <--> ClassicalChannel {  distance = 40km; } <--> router.port++;
         mm[1].port++ <--> ClassicalChannel {  distance = 40km; } <--> router.port++;
-        spdc.port++ <--> ClassicalChannel <--> router.port++;
-        spdc.port++ <--> ClassicalChannel <--> pas.port++;
+        epps.port++ <--> ClassicalChannel <--> router.port++;
+        epps.port++ <--> ClassicalChannel <--> pas.port++;
         source.quantum_port++ <--> QuantumChannel <--> repeater.quantum_port_receiver++;
         repeater.quantum_port++ <--> QuantumChannel <--> HoM.quantum_port++;
         HoM.quantum_port++ <--> QuantumChannel{ distance = 90km; } <--> router.quantum_port++;
         mm[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 40km; } <--> router.quantum_port++;
         mm[1].quantum_port++ <--> QuantumChannel {  distance = 40km; } <--> router.quantum_port_receiver++;
-        router.quantum_port_receiver_passive++ <--> QuantumChannel <--> spdc.quantum_port++;
-        spdc.quantum_port++ <--> QuantumChannel <--> pas.quantum_port_receiver_passive++;
+        router.quantum_port_receiver_passive++ <--> QuantumChannel <--> epps.quantum_port++;
+        epps.quantum_port++ <--> QuantumChannel <--> pas.quantum_port_receiver_passive++;
 }
 
 
