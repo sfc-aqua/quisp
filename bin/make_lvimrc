@@ -1,0 +1,27 @@
+#!/bin/sh
+set -eu
+__folder="$(dirname "$(cd "$(dirname $0)" && pwd)")";
+__omnetpp_dir="$(cd "$(dirname "$(dirname "$(which omnetpp)")")" && pwd)/include"
+cd "${__folder}"
+
+cat << EOF
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+"set expandtab
+EOF
+
+cd quisp
+cat << EOF | python - $@ "-I${__omnetpp_dir}"
+import sys,os
+l=sys.argv[1:]
+def f(x):
+    return x.startswith('-I')
+def m(x):
+    if x.startswith('-I'):
+        path=x[2:]
+        return '{:}'.format(os.path.abspath(path))
+l=list(map(m,filter(f,l)))
+sys.stdout.write('let g:syntastic_cpp_include_dirs={:}\n'.format(l))
+EOF
+set +eu
