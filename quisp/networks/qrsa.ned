@@ -20,15 +20,14 @@ simple RoutingDaemon
 {
     parameters:
         int address;
-
     gates:
         //output toRouter;
         //input fromRouter;
-        inout RouterPort;
-        output toConnectionManager;
-        input fromConnectionManager;
-        output toHardwareMonitor;
-        input fromHardwareMonitor;
+        //inout RouterPort;
+        //output toConnectionManager;
+        //input fromConnectionManager;
+        //output toHardwareMonitor;
+        //input fromHardwareMonitor;
 }
 
 simple HardwareMonitor
@@ -41,13 +40,13 @@ simple HardwareMonitor
         string ntable = "";
 
     gates:
-        output toRoutingDaemon;
-        input fromRoutingDaemon;
+        //output toRoutingDaemon;
+        //input fromRoutingDaemon;
         //Either one of the sets
-        output toRealTimeController;
-        input fromRealTimeController;
-        output toRuleEngine;
-        input fromRuleEngine;
+        //output toRealTimeController;
+        //input fromRealTimeController;
+        //output toRuleEngine;
+        //input fromRuleEngine;
 }
 
 simple ConnectionManager
@@ -63,10 +62,10 @@ simple ConnectionManager
         //input fromRouter;
         inout RouterPort;
 
-        output toRoutingDaemon;
-        input fromRoutingDaemon;
-        output toRuleEngine;
-        input fromRuleEngine;
+        //output toRoutingDaemon;
+        //input fromRoutingDaemon;
+        //output toRuleEngine;
+        //input fromRuleEngine;
 }
 
 simple RuleEngine
@@ -83,13 +82,13 @@ simple RuleEngine
         //input fromRouter;
         inout RouterPort;
 
-        output toConnectionManager;
-        input fromConnectionManager;
-        output toRealTimeController;
-        input fromRealTimeController;
+        //output toConnectionManager;
+        //input fromConnectionManager;
+        //output toRealTimeController;
+        //input fromRealTimeController;
         //Maybe not needed
-        output toHardwareMonitor;
-        input fromHardwareMonitor;
+        //output toHardwareMonitor;
+        //input fromHardwareMonitor;
 }
 
 simple RealTimeController
@@ -98,11 +97,11 @@ simple RealTimeController
         int address;
     gates:
         inout QNIC[];
-        output toRuleEngine;
-        input fromRuleEngine;
+        //output toRuleEngine;
+        //input fromRuleEngine;
         //Maybe not needed
-        output toHardwareMonitor;
-        input fromHardwareMonitor;
+        //output toHardwareMonitor;
+        //input fromHardwareMonitor;
 }
 
 
@@ -114,7 +113,7 @@ module quantumRoutingSoft
         int number_of_qnics_r;
         int number_of_qnics_rp;
     gates:
-        inout rdPort;//size will be determined by the number of connections defined at the end of this file
+        //inout rdPort;//size will be determined by the number of connections defined at the end of this file
         inout cmPort;
         inout rePort;
         //inout QNICPort[1];//Maybe more than one if not ENDNODE
@@ -156,21 +155,21 @@ module quantumRoutingSoft
 
         }
     connections:
-        rd.toHardwareMonitor --> hm.fromRoutingDaemon;
-        rd.fromHardwareMonitor <-- hm.toRoutingDaemon;
-        rd.toConnectionManager --> cm.fromRoutingDaemon;
-        rd.fromConnectionManager <-- cm.toRoutingDaemon;
-        cm.toRuleEngine --> re.fromConnectionManager;
-        cm.fromRuleEngine <-- re.toConnectionManager;
-        re.toRealTimeController --> rt.fromRuleEngine;
-        re.fromRealTimeController <-- rt.toRuleEngine;
+        //rd.toHardwareMonitor --> hm.fromRoutingDaemon;
+        //rd.fromHardwareMonitor <-- hm.toRoutingDaemon;
+        //rd.toConnectionManager --> cm.fromRoutingDaemon;
+        //rd.fromConnectionManager <-- cm.toRoutingDaemon;
+        //cm.toRuleEngine --> re.fromConnectionManager;
+        //cm.fromRuleEngine <-- re.toConnectionManager;
+        //re.toRealTimeController --> rt.fromRuleEngine;
+        //re.fromRealTimeController <-- rt.toRuleEngine;
 
-        rt.toHardwareMonitor --> hm.fromRealTimeController;
-        rt.fromHardwareMonitor <-- hm.toRealTimeController;
-        hm.toRuleEngine --> re.fromHardwareMonitor;
-        hm.fromRuleEngine <-- re.toHardwareMonitor;
+        //rt.toHardwareMonitor --> hm.fromRealTimeController;
+        //rt.fromHardwareMonitor <-- hm.toRealTimeController;
+        //hm.toRuleEngine --> re.fromHardwareMonitor;
+        //hm.fromRuleEngine <-- re.toHardwareMonitor;
 
-        rd.RouterPort <--> rdPort;
+        //rd.RouterPort <--> rdPort;
         cm.RouterPort <--> cmPort;
         re.RouterPort <--> rePort;
         //rt.QNIC[0] <--> QNICPort[0];

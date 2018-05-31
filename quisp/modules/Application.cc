@@ -60,22 +60,24 @@ void Application::initialize()
             myAddress = getParentModule()->par("address");
             Addresses_of_other_EndNodes = storeEndNodeAddresses();
 
-
              cModule *qnode = getQNode();
              if(myAddress == 10000000){//hard-coded for now
                  int endnode_destination_address = getOneRandomEndNodeAddress();
                  EV<<"Connection setup request will be sent from"<<myAddress<<" to "<<endnode_destination_address<<"\n";
-
+                 ConnectionSetupRequest *pk = new ConnectionSetupRequest();
+                 pk->setActual_srcAddr(myAddress);
+                 pk->setActual_destAddr(endnode_destination_address);
+                 scheduleAt(simTime(),pk);
              }
         }
-
-
 }
 
 void Application::handleMessage(cMessage *msg){
 
     if(dynamic_cast<deleteThisModule *>(msg) != nullptr){
         deleteModule();
+    }else{
+        delete msg;
     }
 
     /*if(msg == generatePacket){
@@ -127,6 +129,7 @@ int* Application::storeEndNodeAddresses(){
      }
      std::string s = ss.str();
      par("Other_endnodes_table") = s;
+     delete topo;
      return Addresses_of_other_EndNodes;
 }
 

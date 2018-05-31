@@ -74,8 +74,8 @@ network Linear_One_MM
             @display("i=device/pc");
         }
     connections:
-        source.port++ <--> ClassicalChannel {  distance = 40km; } <--> target.port++;
-        source.quantum_port_receiver++ <--> QuantumChannel {  distance = 40km; } <--> target.quantum_port++;
+        source.port++ <--> ClassicalChannel {  distance = 40km; cost=40; } <--> target.port++;
+        source.quantum_port_receiver++ <--> QuantumChannel {  distance = 40km; cost=20; } <--> target.quantum_port++;
 }
 
 network Linear_One_MM_bufferGap

@@ -127,7 +127,7 @@ module QNode
 
         router.rePort <--> qrsa.rePort;
         router.cmPort <--> qrsa.cmPort;
-        router.rdPort <--> qrsa.rdPort;
+        //router.rdPort <--> qrsa.rdPort;
         //qrsa.QNICPort[0] <--> qnic[0].qrsaPort[0];
         //qnic[0].qrsaPort[0] <--> qchan[0];
 
