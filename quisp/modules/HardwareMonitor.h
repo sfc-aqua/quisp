@@ -58,7 +58,6 @@ typedef struct _Interface_inf{
  *  \brief HardwareMonitor
  */
 
-
 class HardwareMonitor : public cSimpleModule
 {
     private:

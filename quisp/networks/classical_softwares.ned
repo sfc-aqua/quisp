@@ -31,6 +31,7 @@ simple Router
     parameters:
         //@class(quisp::modules::Router);
         int address;
+        string classical_router_soft = "yes";
     gates:
         input fromQueue[];
         output toQueue[];

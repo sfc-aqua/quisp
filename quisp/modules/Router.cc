@@ -40,25 +40,17 @@ void Router::initialize()
 
        //Topology creation for routing table
        cTopology *topo = new cTopology("topo");
-       std::vector<std::string> nedTypes;
-       //nedTypes.push_back(getParentModule()->getNedTypeName());//Push all module types to vector
-       //EV << "NedTypes" <<getParentModule()->getNedTypeName() << "\n";
-       //topo->extractByNedTypeName(nedTypes);//extract topology by Types. In this case, all nodes in the network
-       //getParentModule()->par("inc").str().c_str();
-       //EV<<getParentModule()->par("includeInTopo").str().c_str();
-       //cPar& test = new par("whatever");
-       //test.setStringValue("yes");
-       //std::string aa = "yes";
        cMsgPar *yes = new cMsgPar();
        yes->setStringValue("yes");
        topo->extractByParameter("includeInTopo",yes->str().c_str());//Any node that has a parameter includeInTopo will be included in routing
-       //EV << "cTopology found " << topo->getNumNodes() << " nodes\n";
-       if(topo->getNumNodes()==0){//If no node with the parameter & value found, do nothing.
+
+       if(topo->getNumNodes()==0 || topo==nullptr){//If no node with the parameter & value found, do nothing.
                 return;
        }
 
+
        cTopology::Node *thisNode = topo->getNodeFor(getParentModule());//The parent node with this specific router
-       EV<<"\n thisNode is "<<thisNode->getModule()->getFullName()<<"\n";
+
        int number_of_links_total = 0;
 
 
@@ -67,19 +59,18 @@ void Router::initialize()
        for (int x = 0; x < topo->getNumNodes(); x++) {//Traverse through all nodes
            //For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
            for (int j = 0; j < topo->getNode(x)->getNumOutLinks(); j++) {//Traverse through all links from a specific node.
-             //thisNode->disable();//You can also disable nodes or channels accordingly to represent broken hardwares
+               //thisNode->disable();//You can also disable nodes or channels accordingly to represent broken hardwares
+               EV<<"\n thisNode is "<< topo->getNode(x)->getModule()->getFullName() <<" has "<<topo->getNode(x)->getNumOutLinks()<<" links \n";
                double channel_cost = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("cost");//Get assigned cost for each channel written in .ned file
-               //EV<<"\n !!!!!Classical!!!!!!!! topo->getNode("<<x<<"):"<<topo->getNode(x)->getModule()->getFullName()<<" [channel name is]"<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getChannelType()->getFullName()<<" has cost"<<channel_cost<<"\n";
-               //topo->getNode(x)->getLinkOut(j)->setWeight(channel_cost);//Set channel weight
-               cChannelType *QChannelType =  cChannelType::get("networks.QuantumChannel");
-               if(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getChannelType() != QChannelType){
-                   //EV<<"Ignoring quantum \n";
-                   //topo->getNode(x)->getLinkOut(j)->setWeight(1000000);
-                   topo->getNode(x)->getLinkOut(j)->setWeight(1000000);
-                   //topo->getNode(x)->getLinkOut(j)->setWeight(100000000000);//Set channel weight
+
+               EV<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName()<<" =? "<<"QuantumChannel"<<"\n";
+               if(strcmp(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName(),"QuantumChannel")==0){
+                   //Ignore quantum link in classical routing table
+                   topo->getNode(x)->getLinkOut(j)->disable();
                }else{
-                   EV<<"\n"<<thisNode->getModule()->getFullName()<<"!!!!!For_classical!!!!!!!! topo->getNode("<<x<<"):"<<topo->getNode(x)->getModule()->getFullName()<<" channel"<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getChannelType()<<" has cost"<<channel_cost<<"\n";
+                   //Otherwise, keep the classical channels and set the weight
                    topo->getNode(x)->getLinkOut(j)->setWeight(channel_cost);//Set channel weight
+                   EV<<"\n c channel link cost = "<< topo->getNode(x)->getLinkOut(j)->getWeight()<<"\n";
                }
            }
        }
@@ -87,10 +78,8 @@ void Router::initialize()
        for (int i = 0; i < topo->getNumNodes(); i++) {//Traverse through all the destinations from the thisNode
                if (topo->getNode(i) == thisNode)
                    continue;  // skip the node that is running this specific router app
-
                //Apply dijkstra to each node to find all shortest paths.
                topo->calculateWeightedSingleShortestPathsTo(topo->getNode(i));//Overwrites getNumPaths() and so on.
-               //topo->calculateUnweightedSingleShortestPathsTo(topo->getNode(i));
 
                //Check the number of shortest paths towards the target node. This may be more than 1 if multiple paths have the same minimum cost.
                if (thisNode->getNumPaths() == 0)
@@ -100,9 +89,10 @@ void Router::initialize()
                int gateIndex = parentModuleGate->getIndex();
                int address = topo->getNode(i)->getModule()->par("address");
                rtable[address] = gateIndex;//Store gate index per destination from this node
-               EV << "\n  Classical: Towards address " << address <<"("<< topo->getNode(i)->getModule()->getName() << ")"<<parentModuleGate->getFullName()<<"gateIndex is " << gateIndex << endl;
+               EV <<"\n  Classical: Towards address " << address <<"("<< topo->getNode(i)->getModule()->getName() << ")"<<parentModuleGate->getFullName()<<"gateIndex is " << gateIndex << "cost ="<< thisNode->getPath(0)->getWeight() << endl;
               // EV << "\n  Towards address " << address <<"("<< topo->getNode(i)->getModule()->getName() << ") gateIndex is " << gateIndex << endl;
       }
+
       delete topo;
 }
 

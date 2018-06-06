@@ -185,6 +185,35 @@ network Linear_One_MIM_MM_MSM
         **.Speed_of_light_in_fiber = 205336.986301 km;//per second
 
         @display("bgb=441,236");
+        
+        types:
+        channel ClassicalChannel extends DatarateChannel
+        {
+            double cost = default(100);
+            double distance @unit(km) = default(20km);
+            //delay = uniform(0.01ms, 1s);
+            double distance_of_light_in_fiber_per_sec @unit(km) = default(205336.986301km);
+            delay = this.distance / distance_of_light_in_fiber_per_sec * 1s;
+            datarate = uniform(1kbps, 100kbps);
+            int test = default(0);
+            @defaultname(ClassicalChannel);
+        }
+        channel QuantumChannel extends DatarateChannel
+        {
+            double cost = default(1);
+            double distance @unit(km) = default(20km);
+            //delay = uniform(0.01ms, 1s);
+            double distance_of_light_in_fiber_per_sec @unit(km) = default(205336.986301km);
+            delay = this.distance / distance_of_light_in_fiber_per_sec * 1s;
+            datarate = uniform(1kbps, 100kbps);
+            double photon_loss_rate = default(0);//per km
+            double channel_error_rate = default(0);//per km
+            double Z_error_ratio = default(1);
+            double X_error_ratio = default(1);
+            double Y_error_ratio = default(1);
+            int test = default(0);
+            @defaultname(QuantumChannel);
+        }
     submodules:
         source: QNode {
             address = 1;
