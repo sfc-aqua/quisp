@@ -23,9 +23,11 @@ class Application : public cSimpleModule
 {
     private:
         int myAddress;
-        cMessage *generatePacket; //Not the actual packet. Local message to invoke Events
+        cMessage *generatePacket; /**< Not the actual packet.
+                                    Local message to invoke Events */
         cPar *sendIATime;
-        bool isBusy;//Already requested a path selection for a Quantum app
+        bool isBusy; /**< Already requested a path selection
+                       for a Quantum app */
         int* Addresses_of_other_EndNodes = new int[1];
         int num_of_other_EndNodes;
     protected:
@@ -48,28 +50,32 @@ Application::Application()
     generatePacket = nullptr;
 }
 
+/**
+ * \brief Initialize module.
+ *
+ * If we're not in and end node, this module is not necessary.
+ */
 void Application::initialize()
 {
-        cGate *toRouterGate = gate("toRouter");
-        if(!toRouterGate->isConnected()){
-            //Since we only need this module in EndNode, delete it otherwise.
-            deleteThisModule *msg = new deleteThisModule;
-            scheduleAt(simTime(),msg);
+    cGate *toRouterGate = gate("toRouter");
+    if(!toRouterGate->isConnected()){
+        //Since we only need this module in EndNode, delete it otherwise.
+        deleteThisModule *msg = new deleteThisModule;
+        scheduleAt(simTime(),msg);
+    }else{
+        myAddress = getParentModule()->par("address");
+        Addresses_of_other_EndNodes = storeEndNodeAddresses();
 
-        }else{
-            myAddress = getParentModule()->par("address");
-            Addresses_of_other_EndNodes = storeEndNodeAddresses();
-
-             cModule *qnode = getQNode();
-             if(myAddress == 10000000){//hard-coded for now
-                 int endnode_destination_address = getOneRandomEndNodeAddress();
-                 EV<<"Connection setup request will be sent from"<<myAddress<<" to "<<endnode_destination_address<<"\n";
-                 ConnectionSetupRequest *pk = new ConnectionSetupRequest();
-                 pk->setActual_srcAddr(myAddress);
-                 pk->setActual_destAddr(endnode_destination_address);
-                 scheduleAt(simTime(),pk);
-             }
+        cModule *qnode = getQNode();
+        if(myAddress == 10000000){//hard-coded for now
+            int endnode_destination_address = getOneRandomEndNodeAddress();
+            EV<<"Connection setup request will be sent from"<<myAddress<<" to "<<endnode_destination_address<<"\n";
+            ConnectionSetupRequest *pk = new ConnectionSetupRequest();
+            pk->setActual_srcAddr(myAddress);
+            pk->setActual_destAddr(endnode_destination_address);
+            scheduleAt(simTime(),pk);
         }
+    }
 }
 
 void Application::handleMessage(cMessage *msg){
@@ -152,18 +158,16 @@ int Application::getAddress()
 }
 
 cModule* Application::getQNode(){
-         cModule *currentModule = getParentModule();//We know that Connection manager is not the QNode, so start from the parent.
-         try{
-             cModuleType *QNodeType =  cModuleType::get("networks.QNode");//Assumes the node in a network has a type QNode
-             while(currentModule->getModuleType()!=QNodeType){
-                 currentModule = currentModule->getParentModule();
-             }
-             return currentModule;
-         }catch(std::exception& e){
-             error("No module with QNode type found. Have you changed the type name in ned file?");
-             endSimulation();
-         }
-         return currentModule;
+    cModule *currentModule = getParentModule();//We know that Connection manager is not the QNode, so start from the parent.
+    try {
+        cModuleType *QNodeType = cModuleType::get("networks.QNode");//Assumes the node in a network has a type QNode
+        while(currentModule->getModuleType()!=QNodeType)
+            currentModule = currentModule->getParentModule();
+    } catch (std::exception& e) {
+        error("No module with QNode type found. Have you changed the type name in ned file?");
+        endSimulation();
+    }
+    return currentModule;
 }
 
 } // namespace modules
