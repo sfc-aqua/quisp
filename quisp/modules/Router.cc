@@ -10,6 +10,7 @@
 #include <classical_messages_m.h> //Path selection: type = 1, Timing notifier for BMA: type = 4
 
 using namespace omnetpp;
+using namespace quisp::messages;
 
 namespace quisp {
 namespace modules {

@@ -12,11 +12,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 //
-
+namespace quisp::messages;
 
 message PhotonicQubit
 {
-    
     string message_type = "qubit";
     //int SrcAddr = -1;
     //int DestAddr = -1;
@@ -30,6 +29,6 @@ message PhotonicQubit
     int StationaryQubitEntangledWith = -1;//Which buffer it is entangled with
     //EntangledWith entangledWith;
     double error_random_for_debug;
-    	bool first = false;
-	bool last = false;
+    bool first = false;
+    bool last = false;
 }

@@ -13,6 +13,7 @@
 
 using namespace Eigen;
 using namespace omnetpp;
+using namespace quisp::messages;
 
 namespace quisp {
 namespace channels {

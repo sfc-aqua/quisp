@@ -14,6 +14,7 @@
 #include <stdio.h>
 
 using namespace omnetpp;
+using namespace quisp::messages;
 
 namespace quisp {
 namespace modules {

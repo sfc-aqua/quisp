@@ -10,8 +10,6 @@
 #include <classical_messages_m.h>
 #include <PhotonicQubit_m.h>
 
-using namespace omnetpp;
-
 namespace quisp {
 namespace modules {
 

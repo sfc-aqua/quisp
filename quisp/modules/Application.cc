@@ -11,6 +11,7 @@
 #include <classical_messages_m.h>
 
 using namespace omnetpp;
+using namespace quisp::messages;
 
 namespace quisp {
 namespace modules {
