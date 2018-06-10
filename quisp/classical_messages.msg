@@ -1,8 +1,24 @@
+packet deleteThisModule{}
+
+
 packet header
 {
     int srcAddr;
     int destAddr;
     int hopCount;
+}
+
+packet ConnectionSetupRequest extends header
+{
+    int actual_destAddr;
+    int actual_srcAddr;
+    
+    int number_of_required_Bellpairs;
+	double required_fidelity;
+    
+	int stack_of_QNodeIndexes[];
+	int stack_of_linkCosts[];
+	
 }
 
 packet BSMtimingNotifier extends header

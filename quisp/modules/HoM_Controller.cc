@@ -42,6 +42,9 @@ void HoM_Controller::initialize()
 }
 
 
+//Initialization of the HoM module inside a QNode.
+//The initialization will be a little bit different from the stand-alone HoM module.
+//For example, you don't need to check both of the neighbors because it is inside a QNode.
 void HoM_Controller::internodeInitializer(){
     checkNeighborAddress(true);
     checkNeighborBuffer(true);
@@ -52,7 +55,9 @@ void HoM_Controller::internodeInitializer(){
     scheduleAt(simTime(),generatePacket);
 }
 
+//Initialization of the stand-alone HoM module.
 void HoM_Controller::standaloneInitializer(){
+    //Just in case, check if the 2 quantum port of the node
     if(getParentModule()->gateSize("quantum_port")!=2){
         error("No more or less than 2 neighbors are allowed for HoM.",getParentModule()->gateSize("quantum_port"));
                 endSimulation();
@@ -66,6 +71,9 @@ void HoM_Controller::standaloneInitializer(){
     scheduleAt(simTime(),generatePacket);
 }
 
+//This is invoked only once at the begining of the simulation.
+//This method sends 2 classical BSA timing notifiers to neighbors (or to itself).
+//During the simulation, this method is not needed because this information is piggybacked when the node returns the results of entanglement attempt.
 void HoM_Controller::sendNotifiers(){
      double time = calculateTimeToTravel(max_neighbor_distance,speed_of_light_in_channel);//When the packet reaches = simitme()+time
      BSMtimingNotifier *pk = generateNotifier(time, speed_of_light_in_channel, distance_to_neighbor, neighbor_address, accepted_burst_interval,photon_detection_per_sec, max_buffer);
@@ -134,10 +142,11 @@ void HoM_Controller::handleMessage(cMessage *msg){
 }
 
 
+//This method checks the address of the neighbors.
+//If it is a receiver, meaning that it is a internode, then it checks one neighbor address and stores its own QNode address.
 void HoM_Controller::checkNeighborAddress(bool receiver){
     if(receiver){
         try{
-            //qnic_index = getParentModule()->getParentModule()->par("self_qnic_address");//Not true anymore... address != index.
             qnic_index = getParentModule()->getParentModule()->getIndex();
             qnic_address = getParentModule()->getParentModule()->par("self_qnic_address");
             neighbor_address = getQNode()->par("address");
@@ -163,6 +172,7 @@ void HoM_Controller::checkNeighborAddress(bool receiver){
     }
 }
 
+//Checks the buffer size of the connected qnics.
 void HoM_Controller::checkNeighborBuffer(bool receiver){
     if(receiver){
         try{
@@ -205,6 +215,7 @@ void HoM_Controller::updateIDE_Parameter(bool receiver){
     }
 }
 
+//Generates a BSA timing notifier. This is also called only once for the same reason as sendNotifiers().
 BSMtimingNotifier* HoM_Controller::generateNotifier(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,int photon_detection_per_sec, int max_buffer){
            BSMtimingNotifier *pk = new BSMtimingNotifier();
            //pk->setNumber_of_qubits(max_buffer);
@@ -222,6 +233,7 @@ BSMtimingNotifier* HoM_Controller::generateNotifier(double time, double speed_of
            return pk;
 }
 
+//Generates a packet that includes the BSA timing notifier and the BSA entanglement attempt results.
 CombinedBSAresults* HoM_Controller::generateNotifier_c(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,int photon_detection_per_sec, int max_buffer){
            CombinedBSAresults *pk = new CombinedBSAresults();
            //pk->setNumber_of_qubits(max_buffer);
@@ -240,9 +252,10 @@ CombinedBSAresults* HoM_Controller::generateNotifier_c(double time, double speed
 }
 
 
+//Depending on the distance to the neighbor QNIC, this calculates when the neighbor needs to start the emission.
+//The farther node emits it instantaneously, while the closer one needs to wait because 2 photons need to arrive at HoM simultaneously.
 double HoM_Controller::calculateEmissionStartTime(double time, double distance_to_node, double c){
-    //distance_to_node is the distance to HoM to self.
-
+    //distance_to_node is the distance to HoM to self
     double self_timeToTravel = calculateTimeToTravel(distance_to_node,c);
     if((self_timeToTravel) != time){//If shorter distance, then the node needs to wait a little for the other node with the longer distance
             return (time-self_timeToTravel)*2;//Waiting time
@@ -291,12 +304,13 @@ int HoM_Controller::getStoredBSAresultsSize(){
 void HoM_Controller::clearBSAresults(){
     results.clear();
 }
+
+//Instead of sendNotifiers, we invoke this during the simulation to return the next BSA timing and the result.
+//This should be simplified more.
 void HoM_Controller::sendBSAresultsToNeighbors(){
 
     if(!passive){
         CombinedBSAresults *pk, *pkt;
-       // pk = new CombinedBSAresults();
-       // pkt = new CombinedBSAresults();
 
         double time = calculateTimeToTravel(max_neighbor_distance,speed_of_light_in_channel);//When the packet reaches = simitme()+time
         pk = generateNotifier_c(time, speed_of_light_in_channel, distance_to_neighbor, neighbor_address, accepted_burst_interval,photon_detection_per_sec, max_buffer);
@@ -331,7 +345,7 @@ void HoM_Controller::sendBSAresultsToNeighbors(){
         send(pk,"toRouter_port");
         send(pkt,"toRouter_port");
 
-    }else{
+    }else{//For SPDC type link
         CombinedBSAresults_epps *pk, *pkt;
         pk = new CombinedBSAresults_epps();
         pkt = new CombinedBSAresults_epps();

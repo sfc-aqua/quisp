@@ -20,9 +20,10 @@ simple Application
         //@class(quisp::modules::Application);
         int address;
         volatile double sendIaTime @unit(s) = default(exponential(1s)); // time between generating packets
+        string Other_endnodes_table = "";
     gates:
-        input fromRouter;
-        output toRouter;
+        input fromRouter @loose;
+        output toRouter @loose;
 }
 
 simple Router
@@ -30,6 +31,7 @@ simple Router
     parameters:
         //@class(quisp::modules::Router);
         int address;
+        string classical_router_soft = "yes";
     gates:
         input fromQueue[];
         output toQueue[];

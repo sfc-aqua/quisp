@@ -27,7 +27,7 @@ network Simple_constant_quantum_cost
     types:
         channel C extends DatarateChannel
         {
-            double cost = default(1);
+            double cost = default(0);
             double distance @unit(km) = default(20km);
             //delay = uniform(0.01ms, 1s);
             double distance_of_light_in_fiber_per_sec @unit(km) = default(205336.986301km);
@@ -37,7 +37,7 @@ network Simple_constant_quantum_cost
         }
         channel QuantumChannel extends DatarateChannel
         {
-            double cost = default(1);
+            double cost = default(0);
             double distance @unit(km) = default(20km);
             //delay = uniform(0.01ms, 1s);
             double distance_of_light_in_fiber_per_sec @unit(km) = default(205336.986301km);
@@ -52,7 +52,7 @@ network Simple_constant_quantum_cost
         }
     submodules:
         endnode[3]: QNode {
-            address = index;
+            address = 10000000+index;
             nodeType = "EndNode";
             @display("i=device/pc");
         }
@@ -71,7 +71,7 @@ network Simple_constant_quantum_cost
             @display("i=device/router");
 		}
 	connections:
-	    endnode[0].port++ <--> C <--> HoM[0].port++;
+	    endnode[0].port++ <--> C{cost = 20;} <--> HoM[0].port++;
 	    HoM[0].port++ <--> C <--> repeater[0].port++;
 	    repeater[0].port++ <--> C <--> HoM[1].port++;
 	    HoM[1].port++ <--> C <--> router[0].port++;

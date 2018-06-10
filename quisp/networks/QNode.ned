@@ -16,6 +16,8 @@ package networks;
 //
 
 
+
+
 module QNode
 {
     parameters:
@@ -23,6 +25,7 @@ module QNode
         int buffers; //default is defined as 10 in .ini file but can be changed independently in .ned file
         @display("bgl=4");
         //int numQNIC = 1;
+        
         string includeInTopo = "yes";
         string nodeType = default("none");
         double emission_timing_std = default(0);//in seconds
@@ -99,8 +102,10 @@ module QNode
         }
 
     connections:
-        router.toApp --> app.fromRouter;
-        router.fromApp <-- app.toRouter;
+        if(nodeType=="EndNode"){
+       	 	router.toApp --> app.fromRouter;
+        		router.fromApp <-- app.toRouter;
+        }
         for i=0..sizeof(port)-1 {
             router.toQueue[i] --> queue[i].in;//Each routing port is connected to its own queue
             router.fromQueue[i] <-- queue[i].out;
@@ -123,7 +128,7 @@ module QNode
 
         router.rePort <--> qrsa.rePort;
         router.cmPort <--> qrsa.cmPort;
-        router.rdPort <--> qrsa.rdPort;
+        //router.rdPort <--> qrsa.rdPort;
         //qrsa.QNICPort[0] <--> qnic[0].qrsaPort[0];
         //qnic[0].qrsaPort[0] <--> qchan[0];
 

@@ -26,10 +26,14 @@ class Application : public cSimpleModule
         cMessage *generatePacket; //Not the actual packet. Local message to invoke Events
         cPar *sendIATime;
         bool isBusy;//Already requested a path selection for a Quantum app
+        int* Addresses_of_other_EndNodes = new int[1];
+        int num_of_other_EndNodes;
     protected:
         virtual void initialize() override;
         virtual void handleMessage(cMessage *msg) override;
         virtual void BubbleText(const char* txt);
+        virtual int* storeEndNodeAddresses();
+        virtual int getOneRandomEndNodeAddress();
         virtual cModule* getQNode();
 
     public:
@@ -46,23 +50,37 @@ Application::Application()
 
 void Application::initialize()
 {
-       //read from ned
-       myAddress = getParentModule()->par("address");
-       sendIATime = &par("sendIaTime");  // volatile parameter
-       cModule *qnode = getQNode();
-       std::string nodetype = qnode->par("nodeType");
-        if(/*myAddress == 4 ||*/ myAddress == 1){//This should be NodeType = EndNode
-            //EV<<"In Application source node!\n";
-            //generatePacket = new cMessage("nextPacket");
-            //scheduleAt(sendIATime->doubleValue(), generatePacket);
-            //scheduleAt(simTime(),generatePacket);
+        cGate *toRouterGate = gate("toRouter");
+        if(!toRouterGate->isConnected()){
+            //Since we only need this module in EndNode, delete it otherwise.
+            deleteThisModule *msg = new deleteThisModule;
+            scheduleAt(simTime(),msg);
+
         }else{
-            EV<<"Not in source!"<<getParentModule()->getName()<<" Address = "<<myAddress<<"\n";
+            myAddress = getParentModule()->par("address");
+            Addresses_of_other_EndNodes = storeEndNodeAddresses();
+
+             cModule *qnode = getQNode();
+             if(myAddress == 10000000){//hard-coded for now
+                 int endnode_destination_address = getOneRandomEndNodeAddress();
+                 EV<<"Connection setup request will be sent from"<<myAddress<<" to "<<endnode_destination_address<<"\n";
+                 ConnectionSetupRequest *pk = new ConnectionSetupRequest();
+                 pk->setActual_srcAddr(myAddress);
+                 pk->setActual_destAddr(endnode_destination_address);
+                 scheduleAt(simTime(),pk);
+             }
         }
 }
 
 void Application::handleMessage(cMessage *msg){
-    if(msg == generatePacket){
+
+    if(dynamic_cast<deleteThisModule *>(msg) != nullptr){
+        deleteModule();
+    }else{
+        delete msg;
+    }
+
+    /*if(msg == generatePacket){
         header *pk = new header("PathRequest");
         pk->setSrcAddr(1);//packet source setting
         pk->setDestAddr(3);//packet destination setting
@@ -84,7 +102,40 @@ void Application::handleMessage(cMessage *msg){
         //EV<<"------------------------------"<<mod->getModuleType()<<"\n";
 
         EV << "Deleting msg\n";
-    }
+    }*/
+}
+
+int* Application::storeEndNodeAddresses(){
+    cTopology *topo = new cTopology("topo");
+    topo->extractByParameter("nodeType",getParentModule()->par("nodeType").str().c_str());//like topo.extractByParameter("nodeType","EndNode")
+    num_of_other_EndNodes = topo->getNumNodes()-1;
+    Addresses_of_other_EndNodes = new int[num_of_other_EndNodes];
+
+    int index = 0;
+    for (int i = 0; i < topo->getNumNodes(); i++) {
+        cTopology::Node *node = topo->getNode(i);
+        EV<<"\n\n\nEnd node address is "<<node->getModule()->par("address").str()<<"\n";
+        if((int) node->getModule()->par("address") != myAddress){//ignore self
+            Addresses_of_other_EndNodes[index] = (int) node->getModule()->par("address");
+            EV<<"\n Is it still "<<node->getModule()->par("address").str()<<"\n";
+            index++;
+        }
+     }
+
+     //Just so that we can see the data from the IDE
+     std::stringstream ss;
+     for(int i=0; i<num_of_other_EndNodes; i++){
+         ss << Addresses_of_other_EndNodes[i] <<", ";
+     }
+     std::string s = ss.str();
+     par("Other_endnodes_table") = s;
+     delete topo;
+     return Addresses_of_other_EndNodes;
+}
+
+int Application::getOneRandomEndNodeAddress(){
+    int random_index = intuniform(0,num_of_other_EndNodes-1);
+    return Addresses_of_other_EndNodes[random_index];
 }
 
 void Application::BubbleText(const char* txt){
