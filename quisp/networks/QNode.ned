@@ -25,7 +25,7 @@ module QNode
         int buffers; //default is defined as 10 in .ini file but can be changed independently in .ned file
         @display("bgl=4");
         //int numQNIC = 1;
-        
+
         string includeInTopo = "yes";
         string nodeType = default("none");
         double emission_timing_std = default(0);//in seconds
