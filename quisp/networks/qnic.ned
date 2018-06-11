@@ -38,6 +38,7 @@ simple QNIC_photonic_switch
         //input toQNIC_quantum_port_i;
         //output toQNIC_quantum_port_o;
         inout toqubit_quantum_port[] @loose;
+        //inout dummy_qnic_link;
     	    //input toqubit_quantum_port_i[];
     	    //output toqubit_quantum_port_o[];
 
@@ -52,6 +53,7 @@ module QNIC
         int neighbor_node_address = default(-1);
         //int neighbor_qnode_address = default(-1);
         int numBuffer = default(7);
+        int self_qnic_type;
         bool receiver = default(false);
         double emission_std = default(0);
         bool passive = default(false);
@@ -60,6 +62,7 @@ module QNIC
     gates:
         inout qnic_quantum_port @loose;//One quantum port for every qnic in a node
         output toParentRouter @loose;//If not used, this still needs to be connected somewhere!!
+        //inout dummyRoutingDaemonLink @loose;
 
     submodules:
         statQubit[numBuffer]: stationaryQubit {
@@ -93,5 +96,6 @@ module QNIC
         internal_hom.quantum_port++ <--> lens.toQNIC_quantum_port if receiver;//Also, put QuantumChannel_internal here if wanted
         internal_hom.quantum_port++ <--> qnic_quantum_port if receiver;
         internal_hom.toRouter --> toParentRouter if receiver;
+        //dummyRoutingDaemonLink <--> lens.dummy_qnic_link;
 
 }

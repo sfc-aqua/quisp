@@ -70,7 +70,6 @@ module QNode
                 number_of_qnics = sizeof(quantum_port);
                 number_of_qnics_r = sizeof(quantum_port_receiver);
                 number_of_qnics_rp = sizeof(quantum_port_receiver_passive);
-                //number_of_qnics_r = 1;
         }
         qnic[sizeof(quantum_port)]: QNIC {//number of QNIC is the same as number of classical queue/NIC
             parameters:
@@ -79,6 +78,7 @@ module QNode
                 numBuffer = buffers;//number of buffers for each qnic
                 receiver = false;
                 emission_std = emission_timing_std;
+                self_qnic_type = 0;
                 //@display("p=198,124");
                 //@display("p=209,195;b=,,,white");
         }
@@ -89,6 +89,7 @@ module QNode
                 numBuffer = buffers;//number of buffers for each qnic
                 receiver = true;
                 passive = false;
+                self_qnic_type = 1;
                 emission_std = emission_timing_std;
         }
         qnic_rp[sizeof(quantum_port_receiver_passive)]: QNIC {
@@ -98,6 +99,7 @@ module QNode
                 numBuffer = buffers;//number of buffers for each qnic
                 receiver = true;
                 passive = true;
+                self_qnic_type = 2;
                 emission_std = emission_timing_std;
         }
 
@@ -113,23 +115,19 @@ module QNode
         }
         for i=0..sizeof(quantum_port)-1{
         		qnic[i].qnic_quantum_port <--> quantum_port[i];
-        		//qnic[i].hom_quantum_port <--> inter_hom[i].hom_quantum_port;
+        		//qnic[i].dummyRoutingDaemonLink <--> qrsa.qnics++;
         }
         for i=0..sizeof(quantum_port_receiver)-1{
         		qnic_r[i].qnic_quantum_port <--> quantum_port_receiver[i];
-        		qnic_r[i].toParentRouter --> router.fromQNIC++;
-        		//qnic[i].hom_quantum_port <--> inter_hom[i].hom_quantum_port;
+        		qnic_r[i].toParentRouter --> router.fromQNIC++;//Directly connected to internal HoM
+        		//qnic_r[i].dummyRoutingDaemonLink <--> qrsa.qnics++;
         }
         for i=0..sizeof(quantum_port_receiver_passive)-1{
         		qnic_rp[i].qnic_quantum_port <--> quantum_port_receiver_passive[i];
-        		qnic_rp[i].toParentRouter --> router.fromQNIC++;
-        		//qnic[i].hom_quantum_port <--> inter_hom[i].hom_quantum_port;
+        		qnic_rp[i].toParentRouter --> router.fromQNIC++;//Directly connected to internal HoM
+        		//qnic_rp[i].dummyRoutingDaemonLink <--> qrsa.qnics++;
         }
 
         router.rePort <--> qrsa.rePort;
         router.cmPort <--> qrsa.cmPort;
-        //router.rdPort <--> qrsa.rdPort;
-        //qrsa.QNICPort[0] <--> qnic[0].qrsaPort[0];
-        //qnic[0].qrsaPort[0] <--> qchan[0];
-
 }

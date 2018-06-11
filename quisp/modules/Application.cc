@@ -74,6 +74,9 @@ void Application::initialize()
             ConnectionSetupRequest *pk = new ConnectionSetupRequest();
             pk->setActual_srcAddr(myAddress);
             pk->setActual_destAddr(endnode_destination_address);
+            pk->setDestAddr(myAddress);
+            pk->setSrcAddr(myAddress);
+            pk->setKind(5);
             scheduleAt(simTime(),pk);
         }
     }
@@ -83,9 +86,15 @@ void Application::handleMessage(cMessage *msg){
 
     if(dynamic_cast<deleteThisModule *>(msg) != nullptr){
         deleteModule();
-    }else{
-        delete msg;
+    }else if(dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
+        send(msg, "toRouter");
     }
+    else{
+        delete msg;
+        error("Application not recognizing this packet");
+    }
+
+
 
     /*if(msg == generatePacket){
         header *pk = new header("PathRequest");

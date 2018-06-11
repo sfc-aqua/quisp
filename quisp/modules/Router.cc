@@ -28,13 +28,14 @@ class Router : public cSimpleModule
         RoutingTable rtable;
 
     protected:
-        virtual void initialize() override;
+        virtual void initialize(int stage) override;
         virtual void handleMessage(cMessage *msg) override;
+        virtual int numInitStages() const override {return 1;};
 };
 
 Define_Module(Router);
 
-void Router::initialize()
+void Router::initialize(int stage)
 {
        EV<<"Routing table initialized \n";
        myAddress = getParentModule()->par("address");
@@ -49,29 +50,28 @@ void Router::initialize()
                 return;
        }
 
-
        cTopology::Node *thisNode = topo->getNodeFor(getParentModule());//The parent node with this specific router
 
        int number_of_links_total = 0;
-
-
 
        //Initialize channel weights for all existing links.
        for (int x = 0; x < topo->getNumNodes(); x++) {//Traverse through all nodes
            //For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
            for (int j = 0; j < topo->getNode(x)->getNumOutLinks(); j++) {//Traverse through all links from a specific node.
                //thisNode->disable();//You can also disable nodes or channels accordingly to represent broken hardwares
-               EV<<"\n thisNode is "<< topo->getNode(x)->getModule()->getFullName() <<" has "<<topo->getNode(x)->getNumOutLinks()<<" links \n";
+               //EV<<"\n thisNode is "<< topo->getNode(x)->getModule()->getFullName() <<" has "<<topo->getNode(x)->getNumOutLinks()<<" links \n";
                double channel_cost = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("cost");//Get assigned cost for each channel written in .ned file
 
-               EV<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName()<<" =? "<<"QuantumChannel"<<"\n";
-               if(strcmp(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName(),"QuantumChannel")==0){
+               EV<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName()<<" =? "<<"includes quantum?"<<"\n";
+               //if(strcmp(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName(),"QuantumChannel")==0){
+               if(strstr(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName(),"quantum")){
                    //Ignore quantum link in classical routing table
+                   EV<<"\n Disable quantum from topo \n";
                    topo->getNode(x)->getLinkOut(j)->disable();
                }else{
                    //Otherwise, keep the classical channels and set the weight
                    topo->getNode(x)->getLinkOut(j)->setWeight(channel_cost);//Set channel weight
-                   EV<<"\n c channel link cost = "<< topo->getNode(x)->getLinkOut(j)->getWeight()<<"\n";
+                   EV<<"\n Including classical channel link cost = "<< topo->getNode(x)->getLinkOut(j)->getWeight()<<": "<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName()<<"\n";
                }
            }
        }
@@ -90,12 +90,17 @@ void Router::initialize()
                int gateIndex = parentModuleGate->getIndex();
                int address = topo->getNode(i)->getModule()->par("address");
                rtable[address] = gateIndex;//Store gate index per destination from this node
-               EV <<"\n  Classical: Towards address " << address <<"("<< topo->getNode(i)->getModule()->getName() << ")"<<parentModuleGate->getFullName()<<"gateIndex is " << gateIndex << "cost ="<< thisNode->getPath(0)->getWeight() << endl;
-              // EV << "\n  Towards address " << address <<"("<< topo->getNode(i)->getModule()->getName() << ") gateIndex is " << gateIndex << endl;
+               EV <<"\n  Classical!!!!: Towards address " << address <<"("<< topo->getNode(i)->getModule()->getName() << ")"<<parentModuleGate->getFullName()<<"gateIndex is " << gateIndex << "cost ="<< thisNode->getPath(0)->getWeight() << endl;
+
+               if(strstr(parentModuleGate->getFullName(),"quantum")){
+                   error("Classical routing table referring to quantum gates...");
+               }
+               // EV << "\n  Towards address " << address <<"("<< topo->getNode(i)->getModule()->getName() << ") gateIndex is " << gateIndex << endl;
       }
 
       delete topo;
 }
+
 
 void Router::handleMessage(cMessage *msg)
 {
@@ -115,6 +120,10 @@ void Router::handleMessage(cMessage *msg)
         }else if (destAddr == myAddress && dynamic_cast<EPPStimingNotifier *>(msg) != nullptr) {//Timing for BSM
             bubble("Timing Notifier from EPPS received");
             send(pk, "rePort$o");//send to Application locally
+            return;
+        }else if (dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
+            bubble("Connection setup request received");
+            send(pk, "cmPort$o");
             return;
         }
 

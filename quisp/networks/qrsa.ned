@@ -21,13 +21,7 @@ simple RoutingDaemon
     parameters:
         int address;
     gates:
-        //output toRouter;
-        //input fromRouter;
-        //inout RouterPort;
-        //output toConnectionManager;
-        //input fromConnectionManager;
-        //output toHardwareMonitor;
-        //input fromHardwareMonitor;
+        //inout dummyQNICLink[];
 }
 
 simple HardwareMonitor
@@ -38,34 +32,14 @@ simple HardwareMonitor
         int number_of_qnics_r;
         int number_of_qnics_rp;
         string ntable = "";
-
-    gates:
-        //output toRoutingDaemon;
-        //input fromRoutingDaemon;
-        //Either one of the sets
-        //output toRealTimeController;
-        //input fromRealTimeController;
-        //output toRuleEngine;
-        //input fromRuleEngine;
 }
 
 simple ConnectionManager
 {
     parameters:
         int address;
-        //int number_of_qnics;
-        //int number_of_qnics_r;
-        //int numner_of_qnics_rp;
-        //int total_number_of_qnics;
     gates:
-        //output toRouter;
-        //input fromRouter;
         inout RouterPort;
-
-        //output toRoutingDaemon;
-        //input fromRoutingDaemon;
-        //output toRuleEngine;
-        //input fromRuleEngine;
 }
 
 simple RuleEngine
@@ -78,30 +52,15 @@ simple RuleEngine
         int total_number_of_qnics;
 
     gates:
-        //output toRouter;
-        //input fromRouter;
         inout RouterPort;
-
-        //output toConnectionManager;
-        //input fromConnectionManager;
-        //output toRealTimeController;
-        //input fromRealTimeController;
-        //Maybe not needed
-        //output toHardwareMonitor;
-        //input fromHardwareMonitor;
 }
 
 simple RealTimeController
 {
     parameters:
         int address;
-    gates:
-        inout QNIC[];
-        //output toRuleEngine;
-        //input fromRuleEngine;
-        //Maybe not needed
-        //output toHardwareMonitor;
-        //input fromHardwareMonitor;
+    //gates:
+        //inout QNIC[];
 }
 
 
@@ -116,6 +75,7 @@ module quantumRoutingSoft
         //inout rdPort;//size will be determined by the number of connections defined at the end of this file
         inout cmPort;
         inout rePort;
+        inout qnics[] @loose;
         //inout QNICPort[1];//Maybe more than one if not ENDNODE
 
     submodules:
@@ -155,22 +115,11 @@ module quantumRoutingSoft
 
         }
     connections:
-        //rd.toHardwareMonitor --> hm.fromRoutingDaemon;
-        //rd.fromHardwareMonitor <-- hm.toRoutingDaemon;
-        //rd.toConnectionManager --> cm.fromRoutingDaemon;
-        //rd.fromConnectionManager <-- cm.toRoutingDaemon;
-        //cm.toRuleEngine --> re.fromConnectionManager;
-        //cm.fromRuleEngine <-- re.toConnectionManager;
-        //re.toRealTimeController --> rt.fromRuleEngine;
-        //re.fromRealTimeController <-- rt.toRuleEngine;
-
-        //rt.toHardwareMonitor --> hm.fromRealTimeController;
-        //rt.fromHardwareMonitor <-- hm.toRealTimeController;
-        //hm.toRuleEngine --> re.fromHardwareMonitor;
-        //hm.fromRuleEngine <-- re.toHardwareMonitor;
-
-        //rd.RouterPort <--> rdPort;
         cm.RouterPort <--> cmPort;
         re.RouterPort <--> rePort;
-        //rt.QNIC[0] <--> QNICPort[0];
+        
+        //for i=0..sizeof(qnics)-1{
+        //    rd.dummyQNICLink++ <--> qnics[i];
+        //}
+
 }

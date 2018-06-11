@@ -10,6 +10,7 @@
 #include <classical_messages_m.h>
 
 using namespace omnetpp;
+using namespace quisp::messages;
 
 namespace quisp {
 namespace modules {
@@ -36,6 +37,14 @@ void ConnectionManager::initialize()
 }
 
 void ConnectionManager::handleMessage(cMessage *msg){
+
+    if(dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
+       ConnectionSetupRequest *pk = check_and_cast<ConnectionSetupRequest *>(msg);
+
+
+       int actual_dst = pk->getActual_destAddr();
+    }
+
 
 }
 

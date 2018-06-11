@@ -86,9 +86,9 @@ void QNIC_photonic_switch::BubbleText(const char* txt){
 void QNIC_photonic_switch::checkGateNumber(){
     std::vector<const char*> gatesss = getParentModule()->getGateNames();
     int num = gatesss.size();
-    if(num!=2){//!=2 because it is also conencted to the router if interHoM exists
+    /*if(num!=2){//!=2 because it is also conencted to the router if interHoM exists
         error("A single QNIC has more than one connection... Not allowed.");
-    }
+    }*/
     for (int i=0; i<num; i++){
           EV<<num<<" gates in  "<<getParentModule()->getName()<<": "<<gatesss[i]<<"\n";
     }
