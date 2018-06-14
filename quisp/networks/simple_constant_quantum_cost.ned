@@ -39,7 +39,7 @@ network Simple_constant_quantum_cost
         channel QuantumChannel extends DatarateChannel
         {
             @quantum;
-            double cost = default(0);
+            double cost = default(1);
             double distance @unit(km) = default(20km);
             //delay = uniform(0.01ms, 1s);
             double distance_of_light_in_fiber_per_sec @unit(km) = default(205336.986301km);

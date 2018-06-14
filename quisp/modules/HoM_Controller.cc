@@ -18,7 +18,7 @@ HoM_Controller::HoM_Controller()
 
 }
 
-void HoM_Controller::initialize()
+void HoM_Controller::initialize(int stage)
 {
     handshake = false;
     BSA_timeout = 1e-6;

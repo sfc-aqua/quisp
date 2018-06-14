@@ -66,12 +66,12 @@ void Router::initialize(int stage)
                //if(strcmp(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName(),"QuantumChannel")==0){
                if(strstr(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName(),"quantum")){
                    //Ignore quantum link in classical routing table
-                   EV<<"\n Disable quantum from topo \n";
+                   //EV<<"\n Disable quantum from topo \n";
                    topo->getNode(x)->getLinkOut(j)->disable();
                }else{
                    //Otherwise, keep the classical channels and set the weight
                    topo->getNode(x)->getLinkOut(j)->setWeight(channel_cost);//Set channel weight
-                   EV<<"\n Including classical channel link cost = "<< topo->getNode(x)->getLinkOut(j)->getWeight()<<": "<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName()<<"\n";
+                   //EV<<"\n Including classical channel link cost = "<< topo->getNode(x)->getLinkOut(j)->getWeight()<<": "<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName()<<"\n";
                }
            }
        }
@@ -90,7 +90,7 @@ void Router::initialize(int stage)
                int gateIndex = parentModuleGate->getIndex();
                int address = topo->getNode(i)->getModule()->par("address");
                rtable[address] = gateIndex;//Store gate index per destination from this node
-               EV <<"\n  Classical!!!!: Towards address " << address <<"("<< topo->getNode(i)->getModule()->getName() << ")"<<parentModuleGate->getFullName()<<"gateIndex is " << gateIndex << "cost ="<< thisNode->getPath(0)->getWeight() << endl;
+               //EV <<"\n  Classical!!!!: Towards address " << address <<"("<< topo->getNode(i)->getModule()->getName() << ")"<<parentModuleGate->getFullName()<<"gateIndex is " << gateIndex << "cost ="<< thisNode->getPath(0)->getWeight() << endl;
 
                if(strstr(parentModuleGate->getFullName(),"quantum")){
                    error("Classical routing table referring to quantum gates...");
@@ -121,7 +121,7 @@ void Router::handleMessage(cMessage *msg)
             bubble("Timing Notifier from EPPS received");
             send(pk, "rePort$o");//send to Application locally
             return;
-        }else if (dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
+        }else if (destAddr == myAddress && dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
             bubble("Connection setup request received");
             send(pk, "cmPort$o");
             return;

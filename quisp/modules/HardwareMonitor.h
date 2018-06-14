@@ -25,7 +25,8 @@ namespace modules {
 typedef struct _neighborInfo{
     bool isQNode;
     cModuleType *type;
-    int address;
+    int address;//May be QNode, SPDC, HOM
+    int neighborQNode_address;//QNode (May be across SDPC or HOM node)
 } neighborInfo;
 
 typedef struct _entangledWith{
@@ -50,7 +51,14 @@ typedef struct _Interface_inf{
     int qnic_address;/*Unique address for qnic, qnic_r, qnic_rp. This may not be used.*/
     double initial_fidelity = -1;/*Oka's protocol?*/
     int buffer_size;
+    double link_cost;
+    int neighborQNode_address;
 } Interface_inf;
+
+typedef struct _For_connection_setup{
+    int neighbor_address;
+    int quantum_link_cost;
+}connection_setup_inf;
 
 /** \class HardwareMonitor HardwareMonitor.h
  *  \todo Documentation of the class header.
@@ -68,22 +76,25 @@ class HardwareMonitor : public cSimpleModule
         cModuleType *HoMType =  cModuleType::get("networks.HoM");
     public:
         //typedef std::map<int,Interface_inf> Interfaces;//qnic_index -> Interface{qnic_type, initial_fidelity...}
-        typedef std::map<int,Interface_inf> NeighborTable;
+        typedef std::map<int,Interface_inf> NeighborTable;//qnic_index -> Interface{qnic_type, initial_fidelity...}
         NeighborTable ntable;
         typedef std::map<int, stationaryQubitInfo> QnicInfo;  // stationary qubit index -> state
         QnicInfo *qtable;
         virtual NeighborTable passNeighborTable();
         virtual int checkNumBuff(int qnic_index, int qnic_type);//returns the total number of qubits
+        virtual connection_setup_inf return_setupInf(int qnic_address);
         //virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, int qnic_type);//returns the set of free resources
         //virtual int checkNumFreeBuff(int qnic_index, int qnic_type);//returns the number of free qubits
     protected:
-        virtual void initialize() override;
+        virtual void initialize(int stage) override;
         virtual void handleMessage(cMessage *msg) override;
+        virtual int numInitStages() const override {return 2;};
         virtual NeighborTable prepareNeighborTable(NeighborTable ntable, int numQnic);
         virtual neighborInfo checkIfQNode(cModule *thisNode);
         virtual cModule* getQNode();
-        virtual int findNeighborAddress(cModule *qnic_pointer);
+        virtual neighborInfo findNeighborAddress(cModule *qnic_pointer);
         virtual Interface_inf getInterface_inf_fromQnicAddress(int qnic_index, int qnic_type);
+
         //virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
 };
 

@@ -16,7 +16,7 @@ namespace modules {
 Define_Module(HardwareMonitor);
 
 //Hm is also responsible for calculating the rssi/oka's protocol/fidelity calcu and give it to the rd
-void HardwareMonitor::initialize()
+void HardwareMonitor::initialize(int stage)
 {
   EV<<"HardwareMonitor booted\n";
   numQnic_rp = par("number_of_qnics_rp");// number of qnics connected to epps.
@@ -122,6 +122,27 @@ Interface_inf HardwareMonitor::getInterface_inf_fromQnicAddress(int qnic_index, 
     inf.qnic_index = qnic_index;
     inf.qnic_type = qnic_type;
     inf.buffer_size = local_qnic->par("numBuffer");
+
+    //Just read link cost from channel parameter for now as a dummy (or as an initialization).
+    //int cost = local_qnic->gate("qnic_quantum_port$o")->getNextGate()->getChannel()->par("cost");//This is false because the channel may only be between the node and HOM.
+    inf.link_cost = 1;//Dummy it up. This cost must be the cost based on the neighboring QNode (excluding SPDC and HOM nodes)
+
+    return inf;
+}
+
+connection_setup_inf HardwareMonitor::return_setupInf(int qnic_address){
+    Enter_Method("return_setupInf()");
+    connection_setup_inf inf;
+    inf.neighbor_address = -1;
+    inf.quantum_link_cost = -1;
+    for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
+        if(it->second.qnic_address == qnic_address){
+            inf.neighbor_address = it->second.neighborQNode_address;
+            //cModule *node = getModuleByPath("network.HoM");
+            inf.quantum_link_cost = it->second.link_cost;
+            break;
+        }
+    }
     return inf;
 }
 
@@ -169,17 +190,23 @@ HardwareMonitor::NeighborTable HardwareMonitor::prepareNeighborTable(NeighborTab
     cModule *qnode = getQNode();//Get the parent QNode that runs this connection manager.
         for (int index=0; index<numQnic; index++){//Travese through all local qnics to check where they are connected to. HoM and EPPS will be ignored in this case.
             Interface_inf inf = getInterface_inf_fromQnicAddress(index, EMITTER_QNIC);
-            int neighborNodeAddress = findNeighborAddress(inf.qnic_pointer);//get the address of the QNode nearby.
+            neighborInfo n_inf = findNeighborAddress(inf.qnic_pointer);
+            int neighborNodeAddress = n_inf.address;//get the address of the Node nearby.
+            inf.neighborQNode_address = n_inf.neighborQNode_address;
             ntable[neighborNodeAddress] = inf;
         }
         for (int index=0; index<numQnic_r; index++){
             Interface_inf inf = getInterface_inf_fromQnicAddress(index, RECEIVER_QNIC);
-            int neighborNodeAddress = findNeighborAddress(inf.qnic_pointer);//get the address of the QNode nearby.
+            neighborInfo n_inf = findNeighborAddress(inf.qnic_pointer);
+            int neighborNodeAddress = n_inf.address;//get the address of the Node nearby.
+            inf.neighborQNode_address = n_inf.neighborQNode_address;
             ntable[neighborNodeAddress] = inf;
         }
         for (int index=0; index<numQnic_rp; index++){
             Interface_inf inf = getInterface_inf_fromQnicAddress(index, PASSIVE_RECEIVER_QNIC);
-            int neighborNodeAddress = findNeighborAddress(inf.qnic_pointer);//get the address of the QNode nearby.
+            neighborInfo n_inf = findNeighborAddress(inf.qnic_pointer);
+            int neighborNodeAddress = n_inf.address;//get the address of the Node nearby.
+            inf.neighborQNode_address = n_inf.neighborQNode_address;
             ntable[neighborNodeAddress] = inf;
         }
         return ntable;
@@ -187,7 +214,7 @@ HardwareMonitor::NeighborTable HardwareMonitor::prepareNeighborTable(NeighborTab
 
 
 //This method finds out the address of the neighboring node with respect to the local unique qnic addres.
-int  HardwareMonitor::findNeighborAddress(cModule *qnic_pointer){
+neighborInfo  HardwareMonitor::findNeighborAddress(cModule *qnic_pointer){
     cGate *gt = qnic_pointer->gate("qnic_quantum_port$o")->getNextGate();//qnic_quantum_port$o is connected to the node's outermost quantum_port
     //EV<<"gt = "<<gt->getName()<<"\n";
     cGate *neighbor_gt = gt->getNextGate();
@@ -195,7 +222,7 @@ int  HardwareMonitor::findNeighborAddress(cModule *qnic_pointer){
     cModule *neighbor_node = neighbor_gt->getOwnerModule();//HoM, EPPS, QNode
     //EV<<"neighbor_node = "<<neighbor_node->getName()<<"\n";
     neighborInfo neighbor_is_QNode = checkIfQNode(neighbor_node);//Check if it is QNode
-    return neighbor_is_QNode.address;
+    return neighbor_is_QNode;
 }
 
 cModule* HardwareMonitor::getQNode(){
@@ -218,8 +245,25 @@ neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode){
     neighborInfo inf;
     if(thisNode->getModuleType()!=QNodeType){//Not a Qnode!
 
-        if(thisNode->getModuleType()== SPDCType || thisNode->getModuleType()==  HoMType){
+        if(thisNode->getModuleType()==HoMType){
             inf.isQNode=false;
+            int address_one = thisNode->getSubmodule("Controller")->par("neighbor_address");
+            int address_two = thisNode->getSubmodule("Controller")->par("neighbor_address_two");
+            int myaddress = par("address");
+            EV<<"\n myaddress = "<<myaddress<<", address = "<<address_one<<", address_two = "<<address_two<<" in "<<thisNode->getSubmodule("Controller")->getFullName()<<"\n";
+            //endSimulation();
+            if(address_one==myaddress){
+                inf.neighborQNode_address = address_two;
+            }else if(address_two==myaddress){
+                inf.neighborQNode_address = address_one;
+            }else{
+                //endSimulation();
+                //error("Something is wrong with tracking the neighbor address");
+            }
+
+
+        }else if(thisNode->getModuleType()== SPDCType){
+            error("TO BE IMPLEMENTED");
         }else{
             error("This simulator only recognizes the following network level node types: QNode, EPPS and HoM. Not %s",thisNode->getClassName());
             endSimulation();
@@ -227,6 +271,7 @@ neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode){
     }
     else{
         inf.isQNode=true;
+        //inf.neighborQNode_address =  thisNode->par("address");
     }
     inf.type = thisNode->getModuleType();
     inf.address = thisNode->par("address");

@@ -63,7 +63,8 @@ class HoM_Controller : public cSimpleModule
         double BSA_timeout = 1e-5;
 
     protected:
-        virtual void initialize() override;
+        virtual void initialize(int stage) override;
+        virtual int numInitStages() const override {return 1;};
         virtual void standaloneInitializer();
         virtual void internodeInitializer();
         virtual void handleMessage(cMessage *msg) override;

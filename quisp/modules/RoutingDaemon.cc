@@ -8,37 +8,12 @@
 #include <vector>
 #include <omnetpp.h>
 #include <classical_messages_m.h>
+#include "RoutingDaemon.h"
 
 using namespace omnetpp;
 
 namespace quisp {
 namespace modules {
-
-/** \class RoutingDaemon RoutingDaemon.cc
- *  \todo Documentation of the class header.
- *
- *  \brief RoutingDaemon
- */
-
-typedef struct _QNIC_identifier{
-    //QubitAddr(int node_addr, int qnic_index, int qubit_index):node_address(node_addr),qnic_index(qnic_index),qubit_index(qubit_index){}
-    cModule *qnic_pointer;
-    int qnic_type;/*0 = qnic, 1 = qnic_r, 2 = qnic_rp*/
-    int qnic_index;/*Index inside qnic || qnic_rp || qnic_r. Used for accessing the module.*/
-    int qnic_address;/*Unique address for qnic, qnic_r, qnic_rp. This may not be used.*/
-} QNIC;
-
-class RoutingDaemon : public cSimpleModule
-{
-    private:
-        int myAddress;
-        typedef std::map<int, QNIC> RoutingTable;  // destaddr -> {gate_index (We need this to access qnic, but it is not unique because we have 3 types of qnics), qnic_address (unique)}
-        RoutingTable qrtable;
-    protected:
-        virtual void initialize(int stage) override;
-        virtual void handleMessage(cMessage *msg) override;
-        virtual int numInitStages() const override {return 3;};
-};
 
 Define_Module(RoutingDaemon);
 
@@ -77,7 +52,7 @@ void RoutingDaemon::initialize(int stage)
                 //if(strcmp(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName(),"QuantumChannel")==0){
                 if(strstr(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName(),"quantum")){
                     //Otherwise, keep the quantum channels and set the weight
-                    EV<<"\n Quantum Channel!!!!!! cost is"<<channel_cost<<"\n";
+                    //EV<<"\n Quantum Channel!!!!!! cost is"<<channel_cost<<"\n";
                     topo->getNode(x)->getLinkOut(j)->setWeight(channel_cost);//Set channel weight
                 }else{
                     //Ignore classical link in quantum routing table
@@ -111,13 +86,23 @@ void RoutingDaemon::initialize(int stage)
                 thisqnic.qnic_pointer = parentModuleGate->getPreviousGate()->getOwnerModule();
 
                 qrtable[destAddr] = thisqnic;//Store gate index per destination from this node
-                EV<<"\n Quantum: "<<topo->getNode(i)->getModule()->getFullName()<<"\n";
-                EV <<"\n  Quantum: Towards node address " << destAddr << " use qnic with address = "<<parentModuleGate->getPreviousGate()->getOwnerModule()->getFullName()<<"\n";
+                //EV<<"\n Quantum: "<<topo->getNode(i)->getModule()->getFullName()<<"\n";
+                //EV <<"\n  Quantum: Towards node address " << destAddr << " use qnic with address = "<<parentModuleGate->getPreviousGate()->getOwnerModule()->getFullName()<<"\n";
                 if(!strstr(parentModuleGate->getFullName(),"quantum")){
                                  error("Quantum routing table referring to classical gates...");
                 }
         }
        delete topo;
+}
+
+int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr){
+    Enter_Method("return_QNIC_address_to_destAddr");
+    RoutingTable::iterator it = qrtable.find(destAddr);
+    if (it == qrtable.end()) {
+         EV << "Quantum: address " << destAddr << " unreachable from this node  \n";
+         return -1;
+    }
+    return it->second.qnic_address;
 }
 
 void RoutingDaemon::handleMessage(cMessage *msg){
