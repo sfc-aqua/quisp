@@ -76,7 +76,7 @@ void Application::initialize()
             pk->setActual_destAddr(endnode_destination_address);
             pk->setDestAddr(myAddress);
             pk->setSrcAddr(myAddress);
-            pk->setKind(5);
+            pk->setKind(7);
             scheduleAt(simTime(),pk);
         }
     }

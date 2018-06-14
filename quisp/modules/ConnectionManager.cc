@@ -58,7 +58,7 @@ void ConnectionManager::handleMessage(cMessage *msg){
            int stack_size = pk->getStack_of_QNodeIndexesArraySize();//Should be the same as pk->getStack_of_linkCostsArraySize()
            for(int i = 0; i<stack_size; i++){
                EV<<"\nThis is one of the stacked QNode addresses....."<<pk->getStack_of_QNodeIndexes(i)<<"\n";
-           }
+           } EV<<"\nThis is also one of the stacked QNode addresses (this destination node itself)....."<<myAddress<<"\n";
            for(int i = 0; i<stack_size; i++){
                //The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel but from only 1 channels from Src->BSA and ignoring BSA->Dest).
                //If you need to test with different costs, try changing the value.

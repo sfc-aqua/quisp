@@ -263,7 +263,7 @@ neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode){
 
 
         }else if(thisNode->getModuleType()== SPDCType){
-            error("TO BE IMPLEMENTED");
+            //error("TO BE IMPLEMENTED");
         }else{
             error("This simulator only recognizes the following network level node types: QNode, EPPS and HoM. Not %s",thisNode->getClassName());
             endSimulation();
@@ -271,7 +271,7 @@ neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode){
     }
     else{
         inf.isQNode=true;
-        //inf.neighborQNode_address =  thisNode->par("address");
+        inf.neighborQNode_address = thisNode->par("address");
     }
     inf.type = thisNode->getModuleType();
     inf.address = thisNode->par("address");
