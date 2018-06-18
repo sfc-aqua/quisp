@@ -52,6 +52,8 @@ void stationaryQubit::handleMessage(cMessage *msg){
 
 void stationaryQubit::setBusy(){
     isBusy = true;
+    emitted_time = simTime();
+    par("emitted_at") = emitted_time.dbl();
 
     // GUI part
     if(hasGUI()){
@@ -62,6 +64,8 @@ void stationaryQubit::setBusy(){
 
 void stationaryQubit::setFree(){
     isBusy = false;
+    emitted_time = -1;
+    par("emitted_at") = emitted_time.dbl();
 
     // GUI part
     if(hasGUI()){

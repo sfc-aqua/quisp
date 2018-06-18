@@ -45,6 +45,9 @@ class stationaryQubit : public cSimpleModule
         int QNICEntangledWith;
         /** Index of Qubit in qNIC. */
         int stationaryQubitEntangledWith;
+        /** Photon emitted at*/
+        simtime_t emitted_time = -1;
+
         //@}
 
         /** Stationary Qubit is free or reserved. */

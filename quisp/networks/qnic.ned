@@ -23,6 +23,7 @@ simple stationaryQubit
         int node_address;
         int qnic_address;
         int xPosition_Graphics;
+        double emitted_at = default(-1);
         bool isBusy = default(false);
         double std = default(0);
     gates:
