@@ -1,0 +1,94 @@
+#!/bin/sh
+set -eu
+__root_folder="$(dirname "$(cd "$(dirname $0)" && pwd)")";
+__target="$(echo "${1}" | sed 's/::/\//g')";
+__target_abs_folder="$(cd "$(dirname "${__target}")" && pwd)";
+__target_rel_folder="${__target_abs_folder#${__root_folder}/}";
+
+cd "${__root_folder}"
+if test '(' "$(cd "${__target_rel_folder}" && pwd)" '!=' "${__target_abs_folder}" ')' -o\
+    '(' "${__target_rel_folder}" '=' "${__target_abs_folder}" ')'; then
+    echo "Weird error"
+    exit 1
+fi
+
+upper () {
+    echo "$@" | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+}
+protect () {
+    for f in $@; do if [ -f "$f" ]; then cp "$f" "${f}.orig"; fi; done
+}
+
+__Class="${__target##*/}"
+__CLASS="$(upper "${__Class}")"
+__author="$(git config user.name)"
+__date="$(date +%Y/%m/%d)"
+
+__namespace_in=$(mktemp)
+__namespace_out=$(mktemp)
+
+__ifndef_var=""
+for namespace in $(echo "${__target_rel_folder}" | sed 's%/% %g'); do
+    __ifndef_var="${__ifndef_var}$(upper $namespace)_"
+    echo "namespace $namespace {" >> ${__namespace_in}
+    echo "} // namespace $namespace" >> ${__namespace_out}
+done
+__ifndef_var="${__ifndef_var}${__CLASS}_H_"
+
+__target_h="${__root_folder}/${__target_rel_folder}/${__Class}"
+__target_cc="${__target_h}.cc"
+__target_h="${__target_h}.h"
+protect "${__target_h}" "${__target_cc}"
+
+{
+cat << EOF
+/** \\file ${__Class}.h
+ *  \\authors ${__author}
+ *  \\date ${__date}
+ *
+ *  \\brief ${__Class}
+ */
+#ifndef ${__ifndef_var}
+#define ${__ifndef_var}
+
+#include <omnetpp.h>
+
+EOF
+cat "${__namespace_in}"
+cat << EOF
+
+/** \\class ${__Class} ${__Class}.h
+ *
+ *  \\brief ${__Class}
+ */
+class ${__Class} {};
+
+EOF
+tac "${__namespace_out}"
+cat << EOF
+
+#endif//${__ifndef_var}
+EOF
+} > "${__target_h}"
+{
+cat << EOF
+/** \\file ${__Class}.cc
+ *
+ *  \\authors ${__author}
+ *  \\date ${__date}
+ *
+ *  \\brief ${__Class}
+ */
+#include "${__Class}.h"
+
+EOF
+cat "${__namespace_in}"
+cat << EOF
+
+EOF
+tac "${__namespace_out}"
+} > "${__target_cc}"
+
+rm "${__namespace_in}" "${__namespace_out}"
+
+set +eu
