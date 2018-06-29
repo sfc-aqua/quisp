@@ -6,8 +6,12 @@ endif
 
 MODE?=release
 
-all clean: quisp/Makefile
+all: quisp/Makefile
 	make -C quisp MODE=${MODE} $@
+
+clean: quisp/Makefile
+	make -C quisp MODE=${MODE} $@
+	rm $<
 
 quisp/quisp: quisp/Makefile
 	make -C quisp MODE=release all
