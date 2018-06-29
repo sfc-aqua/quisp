@@ -47,9 +47,9 @@ void RuleEngine::initialize()
         };
      *
      */
-    stable = initializeQubitStateTable(stable, 0);//state for qubits/qnics with MIM links
-    stable_r = initializeQubitStateTable(stable_r, 1);//MM links
-    stable_rp = initializeQubitStateTable(stable_rp, 2);//MSM links
+    stable = initializeQubitStateTable(stable, QNIC_E);//state for qubits/qnics with MIM links
+    stable_r = initializeQubitStateTable(stable_r, QNIC_R);//MM links
+    stable_rp = initializeQubitStateTable(stable_rp, QNIC_RP);//MSM links
 
     tracker = new sentQubitIndexTracker[number_of_qnics_all];//Tracks which qubit was sent first, second and so on per qnic(r,rp)
 }
@@ -90,7 +90,7 @@ void RuleEngine::handleMessage(cMessage *msg){
                 bubble("order received!");
             }
 
-            realtime_controller->EmitPhoton(pk->getQnic_index(),pk->getQubit_index(),pk->getQnic_type(),pk->getKind());
+            realtime_controller->EmitPhoton(pk->getQnic_index(),pk->getQubit_index(),(QNIC_type) pk->getQnic_type(),pk->getKind());
         }
 
         else if(dynamic_cast<CombinedBSAresults *>(msg) != nullptr){
@@ -109,10 +109,10 @@ void RuleEngine::handleMessage(cMessage *msg){
             //incrementBurstTrial(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index());
             if(pk->getInternal_qnic_index()==-1){//MIM, or the other node without internnal HoM of MM
                 EV<<"This BSA request is non-internal\n";
-                scheduleFirstPhotonEmission(pk, EMITTER_QNIC);
+                scheduleFirstPhotonEmission(pk, QNIC_E);
             }else{
                 EV<<"This BSA request is internal\n";
-                scheduleFirstPhotonEmission(pk, RECEIVER_QNIC);
+                scheduleFirstPhotonEmission(pk, QNIC_R);
             }
         }
 
@@ -136,10 +136,10 @@ void RuleEngine::handleMessage(cMessage *msg){
             BSMtimingNotifier *pk = check_and_cast<BSMtimingNotifier *>(msg);
             if(pk->getInternal_qnic_index()==-1){//MIM, or the other node without internnal HoM of MM
                 EV<<"This BSA request is non-internal\n";
-                scheduleFirstPhotonEmission(pk, 0);
+                scheduleFirstPhotonEmission(pk, QNIC_E);
             }else{
                 EV<<"This BSA request is internal\n";
-                scheduleFirstPhotonEmission(pk, 1);
+                scheduleFirstPhotonEmission(pk, QNIC_R);
             }
         }
 
@@ -164,7 +164,7 @@ Interface_inf RuleEngine::getInterface_toNeighbor(int destAddr){
 }
 
 
-void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, int qnic_type){
+void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type){
 
     SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne;
     if(ntable.empty())//Just do this once, unless the network changes during the simulation.
@@ -176,23 +176,25 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, int qnic_typ
     cModule *qnic_pointer;
 
     switch (qnic_type) {
-            case EMITTER_QNIC:{
+        case QNIC_E:
+            {
                 Interface_inf inf = getInterface_toNeighbor(destAddr);
-                qnic_index = inf.qnic_index;
-                qnic_address = inf.qnic_address;
-                numFree = countFreeQubits_inQnic(stable, qnic_index);//Refer the qubit state table. Check number of free qubits of qnic with index qnic_index.
-                break;
-            }case RECEIVER_QNIC:{
-                qnic_address = pk->getInternal_qnic_address();
-                qnic_index = pk->getInternal_qnic_index();//If the BSA node is in this node, then obviously it is not in the neighbor table, 'cause it is inside it self. In that case, the gate index is stored in the packet.
-                numFree = countFreeQubits_inQnic(stable_r, qnic_index);//Same as above, except the table is managed independently.
-                st->setInternal_hom(1);//Mark request that the request is for internal BSA node. Default is 0.
-                break;
-            }case PASSIVE_RECEIVER_QNIC:{
-                error("This is not implemented yet");
-                break;
-            }default:
-              error("Only 3 qnic types are currently recognized....");
+                qnic_index = inf.qnic.index;
+                qnic_address = inf.qnic.address;
+            } // inf is not defined beyound this point
+            numFree = countFreeQubits_inQnic(stable, qnic_index);//Refer the qubit state table. Check number of free qubits of qnic with index qnic_index.
+            break;
+        case QNIC_R:
+            qnic_address = pk->getInternal_qnic_address();
+            qnic_index = pk->getInternal_qnic_index();//If the BSA node is in this node, then obviously it is not in the neighbor table, 'cause it is inside it self. In that case, the gate index is stored in the packet.
+            numFree = countFreeQubits_inQnic(stable_r, qnic_index);//Same as above, except the table is managed independently.
+            st->setInternal_hom(1);//Mark request that the request is for internal BSA node. Default is 0.
+            break;
+        case QNIC_RP:
+            error("This is not implemented yet");
+            break;
+        default:
+            error("Only 3 qnic types are currently recognized....");
     }
 
     st->setQnic_index(qnic_index);
@@ -236,7 +238,7 @@ void RuleEngine::shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk){
     emt->setQnic_index(pk->getQnic_index());
     emt->setQnic_address(pk->getQnic_address());
     emt->setTrial(pk->getTrial());
-    emt->setQnic_type(RECEIVER_QNIC);
+    emt->setQnic_type(QNIC_R);
 
     if(pk->getNum_sent() == 0){//First shot!!!
             if(countFreeQubits_inQnic(stable_r, pk->getQnic_index())==0)
@@ -272,7 +274,7 @@ void RuleEngine::shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk){
     emt->setQnic_address(pk->getQnic_address());
     emt->setTrial(pk->getTrial());
     emt->setQnic_index(pk->getQnic_index());
-    emt->setQnic_type(EMITTER_QNIC);
+    emt->setQnic_type(QNIC_E);
 
     if(pk->getNum_sent() == 0){
         if(countFreeQubits_inQnic(stable, pk->getQnic_index())==0)
@@ -309,16 +311,17 @@ void RuleEngine::scheduleNextEmissionEvent(int qnic_index, int qnic_address, dou
 }
 
 
-RuleEngine::QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTable table,int qnic_type){
+RuleEngine::QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTable table,QNIC_type qnic_type){
     int qnics = -1;
-    if(qnic_type == EMITTER_QNIC){//MIM
-        qnics = number_of_qnics;
-    }else if(qnic_type ==RECEIVER_QNIC){//MM
-        qnics = number_of_qnics_r;
-    }else if(qnic_type ==PASSIVE_RECEIVER_QNIC){//MSM
-        qnics = number_of_qnics_rp;
-    }else{
-        error("Dont put qnic_type except for 0,1 and 2");
+    switch (qnic_type) {
+        case QNIC_E:
+            qnics = number_of_qnics; break;
+        case QNIC_R:
+            qnics = number_of_qnics_rp; break;
+        case QNIC_RP:
+            qnics = number_of_qnics_rp; break;
+        default:
+            error("Dont put qnic_type except for 0,1 and 2");
     }
 
     int index = 0;
@@ -387,21 +390,21 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
      int qnic_address = -1, qnic_index, qnic_type;
      if(internal_qnic_address==-1){//destination hom is outside this node.
          Interface_inf inf = getInterface_toNeighbor(destAddr);
-         qnic_index = inf.qnic_index;
-         qnic_address = inf.qnic_address;
-         qnic_type = EMITTER_QNIC;
+         qnic_index = inf.qnic.index;
+         qnic_address = inf.qnic.address;
+         qnic_type = QNIC_E;
      }else{//destination hom is in the qnic in this node. This gets invoked when the request from internal hom is send from the same node.
          qnic_address = internal_qnic_address;
          qnic_index = internal_qnic_index;
-         qnic_type = RECEIVER_QNIC;
+         qnic_type = QNIC_R;
      }
     qnic_burst_trial_counter[qnic_address]++;//Increment the burst trial counter.
     //You dont need this unless you want to see how many trials have been dealt by each qnic via IDE.
     cModule *qnode = getQNode();
-    if(qnic_type == 0){
-        qnode->getSubmodule("qnic", qnic_index)->par("burst_trial_counter") = qnic_burst_trial_counter[qnic_address];
-    }else if(qnic_type==1){
-        qnode->getSubmodule("qnic_r", qnic_index)->par("burst_trial_counter") = qnic_burst_trial_counter[qnic_address];
+    switch (qnic_type) { // if ((qnic_type == QNIC_E) || (qnic_type == QNIC_R)) // if (qnic_type < QNIC_RP)
+        case QNIC_E:
+        case QNIC_R:
+            qnode->getSubmodule(QNIC_names[qnic_type], qnic_index)->par("burst_trial_counter") = qnic_burst_trial_counter[qnic_address];
     }
 }
 
@@ -411,16 +414,17 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
 void RuleEngine::freeFailedQubits(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result){
     int list_size = pk_result->getList_of_failedArraySize();
 
-    int qnic_index, qnic_address, qnic_type;
+    int qnic_index, qnic_address;
+    QNIC_type qnic_type;
     if(internal_qnic_index==-1){//destination hom is outside this node.
            Interface_inf inf = getInterface_toNeighbor(destAddr);
-           qnic_index = inf.qnic_index;
-           qnic_address = inf.qnic_address;
-           qnic_type = 0;
+           qnic_index = inf.qnic.index;
+           qnic_address = inf.qnic.address;
+           qnic_type = QNIC_E;
      }else{//destination hom is in the qnic in this node. This gets invoked when the request from internal hom is send from the same node.
            qnic_index = internal_qnic_index;
            qnic_address = internal_qnic_address;
-           qnic_type = 1;
+           qnic_type = QNIC_R;
      }
 
     int num_emitted_in_this_burstTrial = tracker[qnic_address].size();
@@ -438,7 +442,7 @@ void RuleEngine::freeFailedQubits(int destAddr, int internal_qnic_address, int i
         if(failed){
             EV<<i<<"th shot has failed.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
             realtime_controller->GUI_setQubitFree(it->second.qnic_index ,it->second.qubit_index, qnic_type);
-            if(qnic_type==0)
+            if(qnic_type==QNIC_E)
                 stable = setQubitFree_inQnic(stable, it->second.qnic_index, it->second.qubit_index);
             else
                 stable_r = setQubitFree_inQnic(stable_r, it->second.qnic_index, it->second.qubit_index);
@@ -457,7 +461,7 @@ void RuleEngine::freeFailedQubits(int destAddr, int internal_qnic_address, int i
             if (it == tracker[qnic_address].end())
                 error("Wait.... something is wrong with the tracker....%d th shot not recorded",i);//Neighbor not found! This should not happen unless you simulate broken links in real time.
             realtime_controller->GUI_setQubitFree(it->second.qnic_index ,it->second.qubit_index, qnic_type);
-            if(qnic_type==0)
+            if(qnic_type==QNIC_E)
                 stable = setQubitFree_inQnic(stable, it->second.qnic_index, it->second.qubit_index);
             else
                 stable_r = setQubitFree_inQnic(stable_r, it->second.qnic_index, it->second.qubit_index);
@@ -470,7 +474,7 @@ void RuleEngine::clearTrackerTable(int destAddr,int internal_qnic_address){
     int qnic_address = -1;
         if(internal_qnic_address==-1){//destination hom is outside this node.
             Interface_inf inf = getInterface_toNeighbor(destAddr);
-            qnic_address = inf.qnic_address;
+            qnic_address = inf.qnic.address;
         }else{//destination hom is in the qnic in this node. This gets invoked when the request from internal hom is send from the same node.
             qnic_address = internal_qnic_address;
         }

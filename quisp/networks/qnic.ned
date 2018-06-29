@@ -40,8 +40,8 @@ simple QNIC_photonic_switch
         //output toQNIC_quantum_port_o;
         inout toqubit_quantum_port[] @loose;
         //inout dummy_qnic_link;
-    	    //input toqubit_quantum_port_i[];
-    	    //output toqubit_quantum_port_o[];
+        //input toqubit_quantum_port_i[];
+        //output toqubit_quantum_port_o[];
 
 }
 
@@ -93,7 +93,7 @@ module QNIC
         //If no HoM is inside the node
         qnic_quantum_port <--> lens.toQNIC_quantum_port if !receiver;
         toParentRouter <-- gate_closer.close_output if !receiver;//Seal the unused gate. Otherwise, this causes an error.
-		//If an HoM is inside the node
+        //If an HoM is inside the node
         internal_hom.quantum_port++ <--> lens.toQNIC_quantum_port if receiver;//Also, put QuantumChannel_internal here if wanted
         internal_hom.quantum_port++ <--> qnic_quantum_port if receiver;
         internal_hom.toRouter --> toParentRouter if receiver;
