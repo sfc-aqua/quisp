@@ -60,22 +60,17 @@ network Linear_One_MM
         **.Speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
-        source: QNode {
-            address = 112302;
+        EndNode[2]: QNode {
+            address = index;
             nodeType = "EndNode";
             @display("i=device/pc");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
 
-        target: QNode {
-            address = 300;
-            nodeType = "EndNode";
-            @display("i=device/pc");
-        }
     connections:
-        source.port++ <--> ClassicalChannel {  distance = 40km; cost=40; } <--> target.port++;
-        source.quantum_port_receiver++ <--> QuantumChannel {  distance = 40km; cost=20; } <--> target.quantum_port++;
+        EndNode[0].port++ <--> ClassicalChannel {  distance = 40km; cost=40; } <--> EndNode[1].port++;
+        EndNode[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 40km; cost=20; } <--> EndNode[1].quantum_port++;
 }
 
 network Linear_One_MM_bufferGap

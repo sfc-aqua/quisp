@@ -45,7 +45,7 @@ void Router::initialize(int stage)
        cMsgPar *yes = new cMsgPar();
        yes->setStringValue("yes");
        topo->extractByParameter("includeInTopo",yes->str().c_str());//Any node that has a parameter includeInTopo will be included in routing
-
+       delete(yes);
        if(topo->getNumNodes()==0 || topo==nullptr){//If no node with the parameter & value found, do nothing.
                 return;
        }

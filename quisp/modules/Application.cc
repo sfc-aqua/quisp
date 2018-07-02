@@ -86,6 +86,7 @@ void Application::handleMessage(cMessage *msg){
 
     if(dynamic_cast<deleteThisModule *>(msg) != nullptr){
         deleteModule();
+        delete msg;
     }else if(dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
         send(msg, "toRouter");
     }

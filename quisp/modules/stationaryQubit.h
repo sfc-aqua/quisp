@@ -41,12 +41,15 @@ class stationaryQubit : public cSimpleModule
          *  @{                                  */
         /** Address node, or -1. */
         int NodeEntangledWith;
-        /** Number of qNIC in node. */
+        /** Address and type of qNIC in node. */
         int QNICEntangledWith;
+        int QNICtypeEntangledWith;
         /** Index of Qubit in qNIC. */
         int stationaryQubitEntangledWith;
         /** Photon emitted at*/
         simtime_t emitted_time = -1;
+        /** Stationary qubit last updated at*/
+        simtime_t updated_time = -1;
 
         //@}
 
@@ -70,6 +73,7 @@ class stationaryQubit : public cSimpleModule
         int stationaryQubit_address;
         int node_address;
         int qnic_address;
+        int qnic_type;
         //@}
         PhotonicQubit *photon;
 

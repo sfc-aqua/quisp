@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <modules/HardwareMonitor.h>
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -38,12 +39,16 @@ class BellStateAnalyzer : public cSimpleModule
         double required_precision;//1.5ns
         simtime_t left_arrived_at;
         int left_photon_origin_node_address;
-        int left_photon_origin_qnic_index;
-        int left_photon_origin_qubit_index;
+        int left_photon_origin_qnic_address;
+        int left_photon_origin_qnic_type;
+        int left_photon_origin_qubit_address;
+        cModule *left_statQubit_ptr;
         simtime_t right_arrived_at;
         int right_photon_origin_node_address;
-        int right_photon_origin_qnic_index;
-        int right_photon_origin_qubit_index;
+        int right_photon_origin_qnic_address;
+        int  right_photon_origin_qnic_type;
+        int right_photon_origin_qubit_address;
+        cModule *right_statQubit_ptr;
         int count_X=0, count_Y=0, count_Z=0, count_I=0, count_L=0, count_total=0;//for debug
         bool handshake = false;
         bool this_trial_done = false;
@@ -56,6 +61,7 @@ class BellStateAnalyzer : public cSimpleModule
         virtual void forDEBUG_countErrorTypes(cMessage *msg);
         virtual void sendBSAresult(bool result, bool last);
         virtual void initializeVariables();
+        virtual void  GOD_updateEntangledInfoParameters_of_qubits();
 };
 
 Define_Module(BellStateAnalyzer);
@@ -73,11 +79,15 @@ void BellStateAnalyzer::initialize()
    right_last_photon_detected = false;
    send_result = false;
    left_photon_origin_node_address = -1;
-   left_photon_origin_qnic_index = -1;
-   left_photon_origin_qubit_index = -1;
+   left_photon_origin_qnic_address = -1;
+   left_photon_origin_qubit_address = -1;
+   left_photon_origin_qnic_type = -1;
    right_photon_origin_node_address = -1;
-   right_photon_origin_qnic_index = -1;
-   right_photon_origin_qubit_index = -1;
+   right_photon_origin_qnic_address = -1;
+   right_photon_origin_qubit_address = -1;
+   right_photon_origin_qnic_type = -1;
+   left_statQubit_ptr = nullptr;
+   right_statQubit_ptr = nullptr;
 }
 
 void BellStateAnalyzer::handleMessage(cMessage *msg){
@@ -98,8 +108,11 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
     if(msg->arrivedOn("fromHoM_quantum_port$i",0)){
         left_arrived_at=simTime();
         left_photon_origin_node_address = photon->getNodeEntangledWith();
-        left_photon_origin_qnic_index = photon->getQNICEntangledWith();
-        left_photon_origin_qubit_index = photon->getStationaryQubitEntangledWith();
+        left_photon_origin_qnic_address = photon->getQNICEntangledWith();
+        left_photon_origin_qubit_address = photon->getStationaryQubitEntangledWith();
+        left_photon_origin_qnic_type = photon->getQNICtypeEntangledWith();
+        left_statQubit_ptr = photon->getEntangled_with();
+        //photon->setGODfree();
         if(photon->getFirst()){
             left_last_photon_detected = false;
             //send_result = false;
@@ -113,8 +126,10 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
     }else if(msg->arrivedOn("fromHoM_quantum_port$i",1)){
         right_arrived_at=simTime();
         right_photon_origin_node_address = photon->getNodeEntangledWith();
-        right_photon_origin_qnic_index = photon->getQNICEntangledWith();
-        right_photon_origin_qubit_index = photon->getStationaryQubitEntangledWith();
+        right_photon_origin_qnic_address = photon->getQNICEntangledWith();
+        right_photon_origin_qubit_address = photon->getStationaryQubitEntangledWith();
+        right_photon_origin_qnic_type = photon->getQNICtypeEntangledWith();
+        right_statQubit_ptr = photon->getEntangled_with();
         if(photon->getFirst()){
             right_last_photon_detected = false;
             //send_result = false;
@@ -137,11 +152,11 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
     //Just for debugging purpose
     forDEBUG_countErrorTypes(msg);
 
-    double difference = (left_arrived_at-right_arrived_at).dbl();
+    double difference = (left_arrived_at-right_arrived_at).dbl();//Difference in arrival time
     //EV<<"!!!!!!!!!!!!!!!!!!!!!!!!!!this_trial_done == "<<this_trial_done<<"\n";
     if(this_trial_done == true){
         bubble("dumping result");
-        //No need to do anything. Just ignore the BSA result for this shot 'cause the trial is over and only 1 photon will arrive anyway.
+        //No need to do anything. Just ignore the BSA result for this shot 'cause the trial is over and photons will only arrive from a single node anyway.
         delete msg;
         return;
     }else if((left_arrived_at != -1 && right_arrived_at != -1) && std::abs(difference)<=(required_precision)){
@@ -149,12 +164,13 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
         bool lost = isPhotonLost(msg);
         if(!lost){
 
-            double rand = dblrand();
+            double rand = dblrand();//Even if we have 2 photons, whether we success entangling the qubits or not is probablistic.
             if(rand < BSAsuccess_rate){
                 bubble("Success...!");
+                GOD_updateEntangledInfoParameters_of_qubits();
                 sendBSAresult(false, send_result);//succeeded because both reached, and both clicked
 
-            }//we also need else if darkcount....
+            }//we also need else if for darkcount....
             else{
                 bubble("Failed...!");
                 EV<<"rand = "<<rand<<" <"<<BSAsuccess_rate;
@@ -182,20 +198,25 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
         }*/
         //Just waiting for the other qubit to arrive.
     }
+
     delete msg;
 }
 
 void BellStateAnalyzer::initializeVariables(){
     left_arrived_at = -1;
     left_photon_origin_node_address = -1;
-    left_photon_origin_qnic_index = -1;
-    left_photon_origin_qubit_index = -1;
+    left_photon_origin_qnic_address = -1;
+    left_photon_origin_qubit_address = -1;
+    left_photon_origin_qnic_type = -1;
     right_arrived_at = -1;
     right_photon_origin_node_address = -1;
-    right_photon_origin_qnic_index = -1;
-    right_photon_origin_qubit_index = -1;
+    right_photon_origin_qnic_address = -1;
+    right_photon_origin_qubit_address = -1;
+    right_photon_origin_qnic_type = -1;
     left_count = 0;
     right_count = 0;
+    left_statQubit_ptr = nullptr;
+    right_statQubit_ptr = nullptr;
 }
 
 void BellStateAnalyzer::sendBSAresult(bool result,bool sendresults){
@@ -243,6 +264,37 @@ bool BellStateAnalyzer::isPhotonLost(cMessage *msg){
     }
     delete msg;
 }
+
+
+void BellStateAnalyzer:: GOD_updateEntangledInfoParameters_of_qubits(){
+    EV<<"Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<" with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"\n";
+    //left_statQubit_ptr->par() =
+    //endSimulation();
+    //We need a GOD to track entangled qubits pair (Not what the software knows but the reality).
+    //Updating parameters of other nodes gets really messy, so I will stop here for now.
+    //getModule(left_photon_origin_node_address);
+   /* cModule *sys = getSystemModule();
+    switch (left_photon_origin_qnic_type) {
+                case EMITTER_QNIC:{
+                    //EV<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n testing\n";
+                    //cModule *qnode = sys->getSubmodule("EndNode", left_photon_origin_node_address);
+                    //
+                    endSimulation();
+                    break;
+                }case RECEIVER_QNIC:{
+                    //EV<<sys->getSubmodule("EndNode", left_photon_origin_node_address)->getSubmodule("qnic_r",left_photon_origin_qnic_address )->getSubmodule("statQubit", left_photon_origin_qubit_address)<<"\n";
+                    break;
+                }case PASSIVE_RECEIVER_QNIC:{
+                    error("This is not implemented yet");
+                    break;
+                }default:
+                  error("Only 3 qnic types are currently recognized....");
+        }
+
+    //EV<<sys->getSubmodule("EndNode", left_photon_origin_node_address)->getSubmodule(name, index)<<" sys name....\n";
+    */
+}
+
 
 } // namespace modules
 } // namespace quisp

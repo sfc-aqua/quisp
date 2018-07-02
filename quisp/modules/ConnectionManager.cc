@@ -66,7 +66,8 @@ void ConnectionManager::handleMessage(cMessage *msg){
                EV<<"\nThis is one of the stacked link costs....."<<pk->getStack_of_linkCosts(i)<<"\n";
            }
 
-           error("Yay!");
+           //error("Yay!");
+           delete msg;
            return;
        }else{
            int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst);

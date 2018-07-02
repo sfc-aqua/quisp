@@ -29,13 +29,14 @@ void stationaryQubit::initialize()
     //nonPaulierrTwo = false;
     NodeEntangledWith = -1;
     QNICEntangledWith = -1;
+    QNICtypeEntangledWith = -1;
 
     // Get parameters from omnet
     stationaryQubit_address = par("stationaryQubit_address");
     node_address = par("node_address");
     qnic_address = par("qnic_address");
+    qnic_type = par("qnic_type");
     std = par("std");
-
     setFree();
 }
 
@@ -53,7 +54,7 @@ void stationaryQubit::handleMessage(cMessage *msg){
 void stationaryQubit::setBusy(){
     isBusy = true;
     emitted_time = simTime();
-    par("emitted_at") = emitted_time.dbl();
+    par("photon_emitted_at") = emitted_time.dbl();
 
     // GUI part
     if(hasGUI()){
@@ -65,7 +66,7 @@ void stationaryQubit::setBusy(){
 void stationaryQubit::setFree(){
     isBusy = false;
     emitted_time = -1;
-    par("emitted_at") = emitted_time.dbl();
+    par("photon_emitted_at") = emitted_time.dbl();
 
     // GUI part
     if(hasGUI()){
@@ -89,9 +90,11 @@ PhotonicQubit *stationaryQubit::generateEntangledPhoton(){
     photon = new PhotonicQubit("Photon");
 
     //To simulate the actual physical entangled partner, not what the system thinks!!! we need this.
-    photon->setNodeEntangledWith(node_address);//This photon is entangled with....
-    photon->setQNICEntangledWith(qnic_address);
-    photon->setStationaryQubitEntangledWith(stationaryQubit_address);
+    photon->setNodeEntangledWith(node_address);//This photon is entangled with.... node_address = node's index
+    photon->setQNICEntangledWith(qnic_address);//qnic_address != qnic_index. qnic_index is not unique because there are 3 types.
+    photon->setStationaryQubitEntangledWith(stationaryQubit_address);//stationaryQubit_address = stationaryQubit's index
+    photon->setQNICtypeEntangledWith(qnic_type);
+    photon->setEntangled_with(this);
     return photon;
 }
 
@@ -123,6 +126,7 @@ void stationaryQubit::setEntangledPartnerInfo(int node_address, int qnic_index, 
     NodeEntangledWith = node_address;//Entangled pair's node-level address. -1 if not entangled
     QNICEntangledWith = qnic_index;//Entangled pair's QNIC-level address
     stationaryQubitEntangledWith = qubit_index;
+    QNICtypeEntangledWith  = qnic_type;
 }
 
 } // namespace modules

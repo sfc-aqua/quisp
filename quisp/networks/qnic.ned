@@ -22,8 +22,16 @@ simple stationaryQubit
         int stationaryQubit_address;
         int node_address;
         int qnic_address;
+        int qnic_type;
+        
+        int GOD_entangled_stationaryQubit_address = default(-1);
+        int GOD_entangled_node_address = default(-1);
+        int GOD_entangled_qnic_address = default(-1);
+         int GOD_entangled_qnic_type = default(-1);
+        
         int xPosition_Graphics;
-        double emitted_at = default(-1);
+        double photon_emitted_at = default(-1);
+        double last_updated_at = default(-1);
         bool isBusy = default(false);
         double std = default(0);
     gates:
@@ -60,6 +68,7 @@ module QNIC
         bool passive = default(false);
         @display("bgb=612,194");
         int burst_trial_counter = default(0);
+        
     gates:
         inout qnic_quantum_port @loose;//One quantum port for every qnic in a node
         output toParentRouter @loose;//If not used, this still needs to be connected somewhere!!
@@ -70,6 +79,7 @@ module QNIC
             stationaryQubit_address = index;
             node_address = parent_node_address;
             qnic_address = self_qnic_address;
+            qnic_type = self_qnic_type;
             xPosition_Graphics = 70 + 65*index;  // use submodule index to generate different IDs
             //@display("p=$xPosition_Graphics,40,,circle");
             @display("t=Id $stationaryQubit_address;i=block/circle,blue;"); // modify display string

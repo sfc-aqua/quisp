@@ -101,7 +101,7 @@ void RuleEngine::handleMessage(cMessage *msg){
             //Set qubits free according to results
             //Also needs to send which qubit was which to the neighbor (not BSA). To update the QubitState table's entangled address.
             incrementBurstTrial(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index());
-            EV<<"The finished qnic["<<pk->getInternal_qnic_index()<<"] with address = "<<pk->getInternal_qnic_address()<<" has emitted tracker["<<pk->getInternal_qnic_address()<<"].size() = "<<tracker[pk->getInternal_qnic_address()].size()<<" photons \n";
+            EV<<"(if internal)The finished qnic["<<pk->getInternal_qnic_index()<<"] with address = "<<pk->getInternal_qnic_address()<<" has emitted tracker["<<pk->getInternal_qnic_address()<<"].size() = "<<tracker[pk->getInternal_qnic_address()].size()<<" photons \n";
             //endSimulation();
             freeFailedQubits(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index(), pk_result);
             clearTrackerTable(pk->getSrcAddr(), pk->getInternal_qnic_address());

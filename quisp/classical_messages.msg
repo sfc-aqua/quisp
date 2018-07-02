@@ -66,10 +66,12 @@ packet SchedulePhotonTransmissionsOnebyOne extends header
 packet BSAresult extends header
 {
     bool entangled;
+
 }
 
 packet BSAfinish extends header{
     bool entangled;
+
 }
 
 //Used for MIM and MM. BSA results are sent back to the neighboring nodes, together with the timing notifier
