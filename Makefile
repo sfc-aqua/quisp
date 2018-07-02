@@ -26,6 +26,10 @@ run: quisp/quisp
 	cd quisp && \
 		./quisp -m -u Qtenv -n . networks/omnetpp.ini
 
+dbg: quisp/quisp_dbg
+	cd quisp && \
+		gdb quisp_dbg -ex 'run -m -u Qtenv -n . networks/omnetpp.ini'
+
 doc: Doxyfile
 	doxygen $<
 
