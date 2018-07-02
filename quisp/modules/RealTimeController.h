@@ -12,6 +12,7 @@
 #include <vector>
 #include <omnetpp.h>
 #include <classical_messages_m.h>
+#include <modules/QNIC.h>
 
 using namespace omnetpp;
 
@@ -32,8 +33,8 @@ class RealTimeController : public cSimpleModule
         virtual void handleMessage(cMessage *msg) override;
         virtual cModule* getQNode();
     public:
-        virtual void EmitPhoton(int qnic_index ,int qubit_index, int qnic_type, int pulse);
-        virtual void GUI_setQubitFree(int qnic_index ,int qubit_index, int qnic_type);
+        virtual void EmitPhoton(int qnic_index ,int qubit_index, QNIC_type qnic_type, int pulse);
+        virtual void GUI_setQubitFree(int qnic_index ,int qubit_index, QNIC_type qnic_type);
 };
 
 } // namespace modules

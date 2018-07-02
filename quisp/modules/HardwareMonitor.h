@@ -9,13 +9,10 @@
 #ifndef QUISP_MODULES_HARDWAREMONITOR_H_
 #define QUISP_MODULES_HARDWAREMONITOR_H_
 
-#define EMITTER_QNIC 0 //qnic
-#define RECEIVER_QNIC 1 //qnic_r
-#define PASSIVE_RECEIVER_QNIC 2 //qnic_rp
-
 #include <vector>
 #include <omnetpp.h>
 #include <modules/stationaryQubit.h>
+#include <modules/QNIC.h>
 
 using namespace omnetpp;
 
@@ -29,11 +26,7 @@ typedef struct _neighborInfo{
     int neighborQNode_address;//QNode (May be across SDPC or HOM node)
 } neighborInfo;
 
-typedef struct _entangledWith{
-    int node_address;
-    int qnic_index;
-    int buffer_index;
-} entangledWith;
+typedef QNIC_id entangledWith;
 
 typedef struct _stationaryQubitInfo{
     int qnic_index;
@@ -45,10 +38,7 @@ typedef struct _stationaryQubitInfo{
 
 typedef struct _Interface_inf{
     //QubitAddr(int node_addr, int qnic_index, int qubit_index):node_address(node_addr),qnic_index(qnic_index),qubit_index(qubit_index){}
-    cModule *qnic_pointer;
-    int qnic_type;/*0 = qnic, 1 = qnic_r, 2 = qnic_rp*/
-    int qnic_index;/*Index inside qnic || qnic_rp || qnic_r. Used for accessing the module.*/
-    int qnic_address;/*Unique address for qnic, qnic_r, qnic_rp. This may not be used.*/
+    QNIC qnic;
     double initial_fidelity = -1;/*Oka's protocol?*/
     int buffer_size;
     double link_cost;
@@ -81,10 +71,10 @@ class HardwareMonitor : public cSimpleModule
         typedef std::map<int, stationaryQubitInfo> QnicInfo;  // stationary qubit index -> state
         QnicInfo *qtable;
         virtual NeighborTable passNeighborTable();
-        virtual int checkNumBuff(int qnic_index, int qnic_type);//returns the total number of qubits
+        virtual int checkNumBuff(int qnic_index, QNIC_type qnic_type);//returns the total number of qubits
         virtual connection_setup_inf return_setupInf(int qnic_address);
-        //virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, int qnic_type);//returns the set of free resources
-        //virtual int checkNumFreeBuff(int qnic_index, int qnic_type);//returns the number of free qubits
+        //virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, QNIC_type qnic_type);//returns the set of free resources
+        //virtual int checkNumFreeBuff(int qnic_index, QNIC_type qnic_type);//returns the number of free qubits
     protected:
         virtual void initialize(int stage) override;
         virtual void handleMessage(cMessage *msg) override;
@@ -93,7 +83,7 @@ class HardwareMonitor : public cSimpleModule
         virtual neighborInfo checkIfQNode(cModule *thisNode);
         virtual cModule* getQNode();
         virtual neighborInfo findNeighborAddress(cModule *qnic_pointer);
-        virtual Interface_inf getInterface_inf_fromQnicAddress(int qnic_index, int qnic_type);
+        virtual Interface_inf getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type);
 
         //virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
 };

@@ -81,10 +81,10 @@ void RoutingDaemon::initialize(int stage)
                 int gateIndex = parentModuleGate->getIndex();
                 QNIC thisqnic;
                 int destAddr = topo->getNode(i)->getModule()->par("address");
-                thisqnic.qnic_address = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
-                thisqnic.qnic_type = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_type");
-                thisqnic.qnic_index = parentModuleGate->getPreviousGate()->getOwnerModule()->getIndex();;
-                thisqnic.qnic_pointer = parentModuleGate->getPreviousGate()->getOwnerModule();
+                thisqnic.address = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
+                thisqnic.type = (QNIC_type) (int) parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_type");
+                thisqnic.index = parentModuleGate->getPreviousGate()->getOwnerModule()->getIndex();;
+                thisqnic.pointer = parentModuleGate->getPreviousGate()->getOwnerModule();
 
                 qrtable[destAddr] = thisqnic;//Store gate index per destination from this node
                 //EV<<"\n Quantum: "<<topo->getNode(i)->getModule()->getFullName()<<"\n";
@@ -103,7 +103,7 @@ int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr){
          EV << "Quantum: address " << destAddr << " unreachable from this node  \n";
          return -1;
     }
-    return it->second.qnic_address;
+    return it->second.address;
 }
 
 void RoutingDaemon::handleMessage(cMessage *msg){

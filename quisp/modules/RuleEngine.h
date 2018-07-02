@@ -87,10 +87,10 @@ class RuleEngine : public cSimpleModule
         virtual int getOneFreeQubit_inQnic(QubitStateTable table, int qnic_index);
         virtual QubitStateTable setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
         virtual QubitStateTable setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
-        virtual QubitStateTable initializeQubitStateTable(QubitStateTable temp, int qnic_type);
-        virtual void scheduleFirstPhotonEmission( BSMtimingNotifier *pk, int qnic_type);
+        virtual QubitStateTable initializeQubitStateTable(QubitStateTable temp, QNIC_type qnic_type);
+        virtual void scheduleFirstPhotonEmission( BSMtimingNotifier *pk, QNIC_type qnic_type);
         virtual void shootPhoton(SchedulePhotonTransmissionsOnebyOne * pk);
-        //virtual int getQNICjob_index_for_this_qnic(int qnic_index, int qnic_type);
+        //virtual int getQNICjob_index_for_this_qnic(int qnic_index, QNIC_type qnic_type);
         virtual void incrementBurstTrial(int destAddr, int internal_qnic_address, int internal_qnic_index);
         virtual void shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne * pk);
         virtual bool burstTrial_outdated(int this_trial, int qnic_address);

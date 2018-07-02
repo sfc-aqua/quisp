@@ -23,23 +23,15 @@ void RealTimeController::handleMessage(cMessage *msg){
 
 }
 
-void RealTimeController::EmitPhoton(int qnic_index ,int qubit_index, int qnic_type, int pulse){
+void RealTimeController::EmitPhoton(int qnic_index ,int qubit_index, QNIC_type qnic_type, int pulse){
     Enter_Method("EmitPhoton()");
     cModule *qnode = getQNode();//Get the parent QNode that runs this RC.
 
     try{
         //EV<<"EmitPhoton for qnic["<<qnic_index<<"] and qubit["<<qubit_index<<"]\n\n\n";
         cModule *qubit = nullptr;
-        switch (qnic_type) {
-          case 0:
-            qubit = qnode->getSubmodule("qnic", qnic_index)->getSubmodule("statQubit", qubit_index); break;
-          case 1:
-            qubit = qnode->getSubmodule("qnic_r", qnic_index)->getSubmodule("statQubit", qubit_index); break;
-          case 2:
-            qubit = qnode->getSubmodule("qnic_rp", qnic_index)->getSubmodule("statQubit", qubit_index); break;
-          default:
-            error("Only 3 qnic types are currently recognized....");
-        }
+        if (qnic_type>=QNIC_N) error("Only 3 qnic types are currently recognized...."); // avoid segfaults <3
+        qubit = qnode->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit", qubit_index);
         stationaryQubit *q  = check_and_cast<stationaryQubit *>(qubit);
         q->emitPhoton(pulse);
     }catch(std::exception& e){
@@ -62,21 +54,13 @@ cModule* RealTimeController::getQNode(){
          return currentModule;
 }
 
-void RealTimeController::GUI_setQubitFree(int qnic_index ,int qubit_index, int qnic_type){
+void RealTimeController::GUI_setQubitFree(int qnic_index ,int qubit_index, QNIC_type qnic_type){
     bool success;
     cModule *qnode = getQNode();//Get the parent QNode that runs this RC.
     try{
         cModule *qubit = nullptr;
-        switch (qnic_type) {
-          case 0:
-            qubit = qnode->getSubmodule("qnic", qnic_index)->getSubmodule("statQubit", qubit_index); break;
-          case 1:
-            qubit = qnode->getSubmodule("qnic_r", qnic_index)->getSubmodule("statQubit", qubit_index); break;
-          case 2:
-            qubit = qnode->getSubmodule("qnic_rp", qnic_index)->getSubmodule("statQubit", qubit_index); break;
-          default:
-            error("Only 3 qnic types are currently recognized....");
-        }
+        if (qnic_type>=QNIC_N) error("Only 3 qnic types are currently recognized...."); // avoid segfaults <3
+        qubit = qnode->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit", qubit_index);
         stationaryQubit *q  = check_and_cast<stationaryQubit *>(qubit);
         q->setFree();
     }catch(std::exception& e){

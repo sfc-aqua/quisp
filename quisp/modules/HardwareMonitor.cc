@@ -27,7 +27,7 @@ void HardwareMonitor::initialize(int stage)
 
   std::stringstream ss;
   for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
-      ss << it->first << "(d)->(i)" << it->second.qnic_index <<", ";
+      ss << it->first << "(d)->(i)" << it->second.qnic.index <<", ";
   }
   std::string s = ss.str();
   par("ntable") = s;
@@ -56,20 +56,12 @@ HardwareMonitor::QnicInfo* HardwareMonitor::initializeQTable(int numQnic, QnicIn
     return qtable;
 }*/
 
-int HardwareMonitor::checkNumBuff(int qnic_index, int qnic_type){
+int HardwareMonitor::checkNumBuff(int qnic_index, QNIC_type qnic_type){
     Enter_Method("checkNumBuff()");
 
     cModule *qnode = nullptr;
-    switch (qnic_type) {
-      case EMITTER_QNIC:
-        qnode = getQNode()->getSubmodule("qnic", qnic_index); break;
-      case RECEIVER_QNIC:
-        qnode = getQNode()->getSubmodule("qnic_r", qnic_index); break;
-      case PASSIVE_RECEIVER_QNIC:
-        qnode = getQNode()->getSubmodule("qnic_rp", qnic_index); break;
-      default:
-        error("Only 3 qnic types are currently recognized....");
-    }
+    if (qnic_type>=QNIC_N) error("Only 3 qnic types are currently recognized...."); // avoid segfaults <3
+    qnode = getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);
     return qnode->par("numBuffer");
 }
 
@@ -104,23 +96,15 @@ int HardwareMonitor::checkNumFreeBuff(int qnic_index, int qnic_type){
     return num_free_resources;
 }*/
 
-Interface_inf HardwareMonitor::getInterface_inf_fromQnicAddress(int qnic_index, int qnic_type){
+Interface_inf HardwareMonitor::getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type){
     cModule *local_qnic;
-    switch (qnic_type) {
-         case EMITTER_QNIC:
-           local_qnic = getQNode()->getSubmodule("qnic", qnic_index); break;
-          case RECEIVER_QNIC:
-           local_qnic = getQNode()->getSubmodule("qnic_r", qnic_index); break;
-         case PASSIVE_RECEIVER_QNIC:
-           local_qnic = getQNode()->getSubmodule("qnic_rp", qnic_index); break;
-         default:
-           error("Only 3 qnic types are currently recognized....");
-       }
+    if (qnic_type>=QNIC_N) error("Only 3 qnic types are currently recognized...."); // avoid segfaults <3
+    local_qnic = getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);
     Interface_inf inf;
-    inf.qnic_pointer = local_qnic;
-    inf.qnic_address = local_qnic->par("self_qnic_address");
-    inf.qnic_index = qnic_index;
-    inf.qnic_type = qnic_type;
+    inf.qnic.pointer = local_qnic;
+    inf.qnic.address = local_qnic->par("self_qnic_address");
+    inf.qnic.index = qnic_index;
+    inf.qnic.type = qnic_type;
     inf.buffer_size = local_qnic->par("numBuffer");
 
     //Just read link cost from channel parameter for now as a dummy (or as an initialization).
@@ -136,7 +120,7 @@ connection_setup_inf HardwareMonitor::return_setupInf(int qnic_address){
     inf.neighbor_address = -1;
     inf.quantum_link_cost = -1;
     for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
-        if(it->second.qnic_address == qnic_address){
+        if(it->second.qnic.address == qnic_address){
             inf.neighbor_address = it->second.neighborQNode_address;
             //cModule *node = getModuleByPath("network.HoM");
             inf.quantum_link_cost = it->second.link_cost;
@@ -189,22 +173,22 @@ void HardwareMonitor::handleMessage(cMessage *msg){
 HardwareMonitor::NeighborTable HardwareMonitor::prepareNeighborTable(NeighborTable ntable, int total_numQnic){
     cModule *qnode = getQNode();//Get the parent QNode that runs this connection manager.
         for (int index=0; index<numQnic; index++){//Travese through all local qnics to check where they are connected to. HoM and EPPS will be ignored in this case.
-            Interface_inf inf = getInterface_inf_fromQnicAddress(index, EMITTER_QNIC);
-            neighborInfo n_inf = findNeighborAddress(inf.qnic_pointer);
+            Interface_inf inf = getInterface_inf_fromQnicAddress(index, QNIC_E);
+            neighborInfo n_inf = findNeighborAddress(inf.qnic.pointer);
             int neighborNodeAddress = n_inf.address;//get the address of the Node nearby.
             inf.neighborQNode_address = n_inf.neighborQNode_address;
             ntable[neighborNodeAddress] = inf;
         }
         for (int index=0; index<numQnic_r; index++){
-            Interface_inf inf = getInterface_inf_fromQnicAddress(index, RECEIVER_QNIC);
-            neighborInfo n_inf = findNeighborAddress(inf.qnic_pointer);
+            Interface_inf inf = getInterface_inf_fromQnicAddress(index, QNIC_R);
+            neighborInfo n_inf = findNeighborAddress(inf.qnic.pointer);
             int neighborNodeAddress = n_inf.address;//get the address of the Node nearby.
             inf.neighborQNode_address = n_inf.neighborQNode_address;
             ntable[neighborNodeAddress] = inf;
         }
         for (int index=0; index<numQnic_rp; index++){
-            Interface_inf inf = getInterface_inf_fromQnicAddress(index, PASSIVE_RECEIVER_QNIC);
-            neighborInfo n_inf = findNeighborAddress(inf.qnic_pointer);
+            Interface_inf inf = getInterface_inf_fromQnicAddress(index, QNIC_RP);
+            neighborInfo n_inf = findNeighborAddress(inf.qnic.pointer);
             int neighborNodeAddress = n_inf.address;//get the address of the Node nearby.
             inf.neighborQNode_address = n_inf.neighborQNode_address;
             ntable[neighborNodeAddress] = inf;
