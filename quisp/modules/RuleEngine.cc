@@ -317,7 +317,7 @@ RuleEngine::QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTabl
         case QNIC_E:
             qnics = number_of_qnics; break;
         case QNIC_R:
-            qnics = number_of_qnics_rp; break;
+            qnics = number_of_qnics_r; break;
         case QNIC_RP:
             qnics = number_of_qnics_rp; break;
         default:
