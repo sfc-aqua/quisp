@@ -27,7 +27,7 @@ simple stationaryQubit
         int GOD_entangled_stationaryQubit_address = default(-1);
         int GOD_entangled_node_address = default(-1);
         int GOD_entangled_qnic_address = default(-1);
-         int GOD_entangled_qnic_type = default(-1);
+        int GOD_entangled_qnic_type = default(-1);
         
         int xPosition_Graphics;
         double photon_emitted_at = default(-1);

@@ -268,6 +268,15 @@ bool BellStateAnalyzer::isPhotonLost(cMessage *msg){
 
 void BellStateAnalyzer:: GOD_updateEntangledInfoParameters_of_qubits(){
     EV<<"Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<" with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"\n";
+    left_statQubit_ptr->par("GOD_entangled_stationaryQubit_address") = right_statQubit_ptr->par("stationaryQubit_address");
+    left_statQubit_ptr->par("GOD_entangled_node_address") = right_statQubit_ptr->par("node_address");
+    left_statQubit_ptr->par("GOD_entangled_qnic_address") = right_statQubit_ptr->par("qnic_address");
+    left_statQubit_ptr->par("GOD_entangled_qnic_type") = right_statQubit_ptr->par("qnic_type");
+
+    right_statQubit_ptr->par("GOD_entangled_stationaryQubit_address") = left_statQubit_ptr->par("stationaryQubit_address");
+    right_statQubit_ptr->par("GOD_entangled_node_address") = left_statQubit_ptr->par("node_address");
+    right_statQubit_ptr->par("GOD_entangled_qnic_address") = left_statQubit_ptr->par("qnic_address");
+    right_statQubit_ptr->par("GOD_entangled_qnic_type") = left_statQubit_ptr->par("qnic_type");
     //left_statQubit_ptr->par() =
     //endSimulation();
     //We need a GOD to track entangled qubits pair (Not what the software knows but the reality).

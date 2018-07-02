@@ -26,9 +26,10 @@ class Application : public cSimpleModule
         int myAddress;
         cMessage *generatePacket; /**< Not the actual packet.
                                     Local message to invoke Events */
-        cPar *sendIATime;
-        bool isBusy; /**< Already requested a path selection
-                       for a Quantum app */
+        //cPar *sendIATime;
+        //bool isBusy; /**< Already requested a path selection
+        //               for a Quantum app */
+
         int* Addresses_of_other_EndNodes = new int[1];
         int num_of_other_EndNodes;
     protected:
@@ -67,7 +68,7 @@ void Application::initialize()
         myAddress = getParentModule()->par("address");
         Addresses_of_other_EndNodes = storeEndNodeAddresses();
 
-        cModule *qnode = getQNode();
+        //cModule *qnode = getQNode();
         if(myAddress == 10000000){//hard-coded for now
             int endnode_destination_address = getOneRandomEndNodeAddress();
             EV<<"Connection setup request will be sent from"<<myAddress<<" to "<<endnode_destination_address<<"\n";

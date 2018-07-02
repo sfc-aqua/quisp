@@ -17,7 +17,7 @@ typedef enum _QNIC_type:int {
     QNIC_E,  /**< Emitter QNIC          */
     QNIC_R,  /**< Receiver QNIC         */
     QNIC_RP, /**< Passive Receiver QNIC */
-    QNIC_N,
+    QNIC_N, /** Just to make the size of the array = the number of qnics*/
 } QNIC_type;
 
 static const char* QNIC_names[QNIC_N] = {
