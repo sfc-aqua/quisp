@@ -67,6 +67,27 @@ class stationaryQubit : public cSimpleModule
          */
         virtual void emitPhoton(int pulse);
 
+        /**
+         * \brief Single Qubit X measurement.
+         * \param If a Z error, which affects the X-measurement, is present, then returns false. Otherwise it returns true. This is only for simulating error propagations.
+         * New errors only occur when wrong measurement result is delivered for feed-forward (The error on the measured qubit propagates to the byproduct gate target qubit).
+         */
+        virtual bool measure_X();
+
+        /**
+         * \brief Single Qubit Y measurement.
+         * \param If a Z error OR an X error, which affects the Y-measurement, is present, then returns false. Otherwise it returns true. This is only for simulating error propagations.
+         * New errors only occur when wrong measurement result is delivered for feed-forward (The error on the measured qubit propagates to the byproduct gate target qubit).
+         */
+        virtual bool measure_Y();
+
+        /**
+         * \brief Single Qubit Z measurement.
+         * \param If an X error, which affects the Z-measurement, is present, then returns false. Otherwise it returns true. This is only for simulating error propagations.
+         * New errors only occur when wrong measurement result is delivered for feed-forward (The error on the measured qubit propagates to the byproduct gate target qubit).
+         */
+        virtual bool measure_Z();
+
     private:
         /** @name Self address
          *  @{                   */

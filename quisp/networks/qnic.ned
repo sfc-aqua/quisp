@@ -34,6 +34,9 @@ simple stationaryQubit
         double last_updated_at = default(-1);
         bool isBusy = default(false);
         double std = default(0);
+        
+        bool GOD_Xerror = false;//Physical error on qubit
+        bool GOD_Zerror = false;//Physical error on qubit
     gates:
         inout tolens_quantum_port;
 }

@@ -51,6 +51,30 @@ void stationaryQubit::handleMessage(cMessage *msg){
     send(msg, "tolens_quantum_port$o");
 }
 
+bool stationaryQubit::measure_X(){
+    if(par("GOD_Zerror")){
+        return false;//Wrong measurement outcome
+    }else{
+        return true;//X err does not affect X measurement
+    }
+}
+
+bool stationaryQubit::measure_Y(){
+    if(par("GOD_Zerror") || par("GOD_Xerror")){
+        return false;//Wrong measurement outcome
+    }else{
+        return true;//Y error does not affect the measurement outcome
+    }
+}
+
+bool stationaryQubit::measure_Z(){
+    if(par("GOD_Xerror")){
+        return false;//Wrong measurement outcome
+    }else{
+        return true;//X error does not affect the measurement outcome
+    }
+}
+
 void stationaryQubit::setBusy(){
     isBusy = true;
     emitted_time = simTime();
