@@ -88,6 +88,12 @@ class stationaryQubit : public cSimpleModule
          */
         virtual bool measure_Z();
 
+        /**
+         * \brief Two qubit CNOT gate.
+         * \param Need to specify the control qubit as an argument.
+         */
+        virtual void CNOT(stationaryQubit *control_qubit);
+
     private:
         /** @name Self address
          *  @{                   */

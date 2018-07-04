@@ -75,6 +75,17 @@ bool stationaryQubit::measure_Z(){
     }
 }
 
+void stationaryQubit::CNOT(stationaryQubit *control_qubit){
+    if(control_qubit->par("GOD_Xerror")){
+        par("GOD_Xerror") = !par("GOD_Xerror");//X error propagates from control to target. If an X error is already present, then it cancels out.
+    }
+
+    if(par("GOD_Zerror")){
+        control_qubit->par("GOD_Zerror") = ! control_qubit->par("GOD_Zerror");//Z error propagates from target to control. If an Z error is already present, then it cancels out.
+    }
+
+}
+
 void stationaryQubit::setBusy(){
     isBusy = true;
     emitted_time = simTime();
