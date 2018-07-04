@@ -93,6 +93,11 @@ class stationaryQubit : public cSimpleModule
          * \param Need to specify the control qubit as an argument.
          */
         virtual void CNOT(stationaryQubit *control_qubit);
+        /**
+          * \brief Single qubit Hadamard gate
+          * \param X error transforms to Z, and vise-versa.
+          */
+        virtual void Hadamard();
 
     private:
         /** @name Self address

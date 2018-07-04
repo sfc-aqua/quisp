@@ -52,6 +52,8 @@ void stationaryQubit::handleMessage(cMessage *msg){
 }
 
 bool stationaryQubit::measure_X(){
+    //Need to add noise here later
+
     if(par("GOD_Zerror")){
         return false;//Wrong measurement outcome
     }else{
@@ -60,6 +62,8 @@ bool stationaryQubit::measure_X(){
 }
 
 bool stationaryQubit::measure_Y(){
+    //Need to add noise here later
+
     if(par("GOD_Zerror") || par("GOD_Xerror")){
         return false;//Wrong measurement outcome
     }else{
@@ -68,6 +72,8 @@ bool stationaryQubit::measure_Y(){
 }
 
 bool stationaryQubit::measure_Z(){
+    //Need to add noise here later
+
     if(par("GOD_Xerror")){
         return false;//Wrong measurement outcome
     }else{
@@ -75,7 +81,22 @@ bool stationaryQubit::measure_Z(){
     }
 }
 
+//Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
+void stationaryQubit::Hadamard(){
+    //Need to add noise here later
+
+    if(par("GOD_Xerror") && !par("GOD_Zerror")){
+        par("GOD_Xerror") = false;
+        par("GOD_Zerror") = true;
+    }else if(!par("GOD_Xerror") && par("GOD_Zerror")){
+        par("GOD_Xerror") = true;
+        par("GOD_Zerror") = false;
+    }
+}
+
 void stationaryQubit::CNOT(stationaryQubit *control_qubit){
+    //Need to add noise here later
+
     if(control_qubit->par("GOD_Xerror")){
         par("GOD_Xerror") = !par("GOD_Xerror");//X error propagates from control to target. If an X error is already present, then it cancels out.
     }
@@ -83,7 +104,6 @@ void stationaryQubit::CNOT(stationaryQubit *control_qubit){
     if(par("GOD_Zerror")){
         control_qubit->par("GOD_Zerror") = ! control_qubit->par("GOD_Zerror");//Z error propagates from target to control. If an Z error is already present, then it cancels out.
     }
-
 }
 
 void stationaryQubit::setBusy(){
