@@ -277,7 +277,6 @@ void BellStateAnalyzer:: GOD_updateEntangledInfoParameters_of_qubits(){
     right_statQubit_ptr->par("GOD_entangled_node_address") = left_statQubit_ptr->par("node_address");
     right_statQubit_ptr->par("GOD_entangled_qnic_address") = left_statQubit_ptr->par("qnic_address");
     right_statQubit_ptr->par("GOD_entangled_qnic_type") = left_statQubit_ptr->par("qnic_type");
-    //left_statQubit_ptr->par() =
     //endSimulation();
     //We need a GOD to track entangled qubits pair (Not what the software knows but the reality).
     //Updating parameters of other nodes gets really messy, so I will stop here for now.
