@@ -82,19 +82,30 @@ bool stationaryQubit::measure_Z(){
 }
 
 //Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
-void stationaryQubit::Hadamard(){
+void stationaryQubit::Hadamard_gate(){
     //Need to add noise here later
 
-    if(par("GOD_Xerror") && !par("GOD_Zerror")){
+
+    if(par("GOD_Xerror") && !par("GOD_Zerror")){//If only X error is present
         par("GOD_Xerror") = false;
         par("GOD_Zerror") = true;
-    }else if(!par("GOD_Xerror") && par("GOD_Zerror")){
+    }else if(!par("GOD_Xerror") && par("GOD_Zerror")){//If only Z error is present
         par("GOD_Xerror") = true;
         par("GOD_Zerror") = false;
     }
 }
 
-void stationaryQubit::CNOT(stationaryQubit *control_qubit){
+void stationaryQubit::Z_gate(){
+    //Need to add noise here later
+    par("GOD_Zerror") = !par("GOD_Zerror");
+}
+
+void stationaryQubit::X_gate(){
+    //Need to add noise here later
+    par("GOD_Xerror") = !par("GOD_Xerror");
+}
+
+void stationaryQubit::CNOT_gate(stationaryQubit *control_qubit){
     //Need to add noise here later
 
     if(control_qubit->par("GOD_Xerror")){

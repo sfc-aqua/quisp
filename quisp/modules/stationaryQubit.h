@@ -92,12 +92,16 @@ class stationaryQubit : public cSimpleModule
          * \brief Two qubit CNOT gate.
          * \param Need to specify the control qubit as an argument.
          */
-        virtual void CNOT(stationaryQubit *control_qubit);
+        virtual void CNOT_gate(stationaryQubit *control_qubit);
         /**
           * \brief Single qubit Hadamard gate
           * \param X error transforms to Z, and vise-versa.
           */
-        virtual void Hadamard();
+        virtual void Hadamard_gate();
+
+        virtual void Z_gate();
+
+        virtual void X_gate();
 
     private:
         /** @name Self address
