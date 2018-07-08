@@ -80,8 +80,8 @@ void SPDC_Controller::initialize()
     checkNeighborsBuffer();
 
     //Notify the timing.
-    //generatePacket = new cMessage("nextPacket");
-    //scheduleAt(simTime(),generatePacket);
+    generatePacket = new cMessage("nextPacket");
+    scheduleAt(simTime(),generatePacket);
 
 }
 
@@ -102,15 +102,23 @@ void SPDC_Controller::handleMessage(cMessage *msg){
         startPump();
     }else if(dynamic_cast<EmitPhotonRequest *>(msg) != nullptr){
         epps->emitPhotons();
+        SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne;
+        scheduleAt(simTime()+max_accepted_rate, st);
+    }else if(dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg)!=nullptr){
+        epps->emitPhotons();
+        SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne;
+        scheduleAt(simTime()+max_accepted_rate, st);
     }
     delete msg;
 }
 
 void SPDC_Controller::startPump(){
-    for(int i=0; i<max_buffer; i++){
-        emt = new  EmitPhotonRequest();
-        scheduleAt(simTime()+timing_buffer+(max_accepted_rate*i), emt);
-    }
+    //for(int i=0; i<max_buffer; i++){
+    //   emt = new  EmitPhotonRequest();
+    //   scheduleAt(simTime()+timing_buffer+(max_accepted_rate*i), emt);
+    // }
+    emt = new  EmitPhotonRequest();
+    scheduleAt(simTime()+timing_buffer+(max_accepted_rate), emt);
 }
 
 EPPStimingNotifier* SPDC_Controller::generateNotifier(double distance_to_neighbor, double c, int destAddr){

@@ -38,6 +38,8 @@ void stationaryQubit::initialize()
     qnic_type = par("qnic_type");
     std = par("std");
     setFree();
+
+    /* e^(t/T1) energy relaxation, e^(t/T2) phase relaxation. Want to use only 1/10 of T1 and T2 in general.*/
 }
 
 /**
@@ -84,7 +86,6 @@ bool stationaryQubit::measure_Z(){
 //Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
 void stationaryQubit::Hadamard_gate(){
     //Need to add noise here later
-
 
     if(par("GOD_Xerror") && !par("GOD_Zerror")){//If only X error is present
         par("GOD_Xerror") = false;

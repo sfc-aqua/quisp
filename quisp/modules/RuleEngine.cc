@@ -34,24 +34,18 @@ void RuleEngine::initialize()
        qnic_burst_trial_counter[i] = 0;
     }
 
-
-    /*tracks the state of them. Where each qubit is entangled to.
-     * struct QubitState{
-            //QubitState(int qubit_address, int qubit_index, int qnic_index, int node_address, bool busy, simtime_t time):addr(node_address,qnic_index, qubit_index), entangled_addr(node_address,qnic_index, qubit_index), isBusy(busy), timestamp(time){}
-            QubitAddr thisQubit_addr;
-            QubitAddr entangled_addr;//The entangled partner recognized. This could be wrong due to an error.
-            QubitAddr entangled_addr_actual;//The actual entangled partner
-            //If entangled_addr != entangled_addr_actual, then operations do not do anything intended.
-            bool isBusy;
-            simtime_t timestamp;
-        };
-     *
-     */
     stable = initializeQubitStateTable(stable, QNIC_E);//state for qubits/qnics with MIM links
     stable_r = initializeQubitStateTable(stable_r, QNIC_R);//MM links
     stable_rp = initializeQubitStateTable(stable_rp, QNIC_RP);//MSM links
 
     tracker = new sentQubitIndexTracker[number_of_qnics_all];//Tracks which qubit was sent first, second and so on per qnic(r,rp)
+
+    /*Initialize resource list by Age for the actual use of qubits in operations*/
+    allResources = new qnicResources[QNIC_N];
+    allResources[QNIC_E] = new EntangledPairs[number_of_qnics];
+    allResources[QNIC_R] = new EntangledPairs[number_of_qnics_r];
+    allResources[QNIC_RP] = new EntangledPairs[number_of_qnics_rp];
+
 }
 
 void RuleEngine::handleMessage(cMessage *msg){
@@ -60,21 +54,19 @@ void RuleEngine::handleMessage(cMessage *msg){
 
         if(dynamic_cast<EmitPhotonRequest *>(msg) != nullptr){//From self.
             EmitPhotonRequest *pk = check_and_cast<EmitPhotonRequest *>(msg);
-            //EV<<"Oi,,,,,,,,,,"<<pk->getQnic_index()<<", "<<pk->getQubit_index()<<", "<<pk->getQnic_type()<<", "<<pk->getKind();
 
             cModule *rtc = getParentModule()->getSubmodule("rt");
             RealTimeController *realtime_controller = check_and_cast<RealTimeController *>(rtc);
 
             if(burstTrial_outdated(pk->getTrial(), pk->getQnic_address())){//Terminate emission if trial is over already (e.g. the neighbor ran out of free qubits and the BSA already returned the results)
-                //Terminate bursting if this trial has finished already.
-                delete msg;
+                delete msg;//Terminate bursting if this trial has finished already.
                 return;
             }else{
                 //Index the qnic and qubit index to the tracker.
                 int qnic_address = pk->getQnic_address();
                 QubitAddr_cons Addr(-1,pk->getQnic_index(),pk->getQubit_index());
                 int nth_shot = tracker[qnic_address].size();
-                tracker[qnic_address].insert(std::make_pair(nth_shot,Addr));//qubit with address Addr was shot in nth time.
+                tracker[qnic_address].insert(std::make_pair(nth_shot,Addr));//qubit with address Addr was shot in nth time. This list is ordered from old to new.
                 int new_nth_shot = tracker[qnic_address].size();
                 EV<<getQNode()->getFullName() <<": Emitted the "<<nth_shot<<" from qnic["<<qnic_address<<"]....tracker["<<qnic_address<<"] now size = "<<new_nth_shot;
             }
@@ -102,9 +94,9 @@ void RuleEngine::handleMessage(cMessage *msg){
             //Also needs to send which qubit was which to the neighbor (not BSA). To update the QubitState table's entangled address.
             incrementBurstTrial(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index());
             EV<<"(if internal)The finished qnic["<<pk->getInternal_qnic_index()<<"] with address = "<<pk->getInternal_qnic_address()<<" has emitted tracker["<<pk->getInternal_qnic_address()<<"].size() = "<<tracker[pk->getInternal_qnic_address()].size()<<" photons \n";
-            //endSimulation();
             freeFailedQubits(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index(), pk_result);
-            clearTrackerTable(pk->getSrcAddr(), pk->getInternal_qnic_address());
+            clearTrackerTable(pk->getSrcAddr(), pk->getInternal_qnic_address());//Clear tracker every end of burst trial. This keeps which qubit fired first, second, third and so on.
+
 
             //incrementBurstTrial(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index());
             if(pk->getInternal_qnic_index()==-1){//MIM, or the other node without internnal HoM of MM
@@ -145,7 +137,7 @@ void RuleEngine::handleMessage(cMessage *msg){
 
         else if(dynamic_cast<EPPStimingNotifier *>(msg) != nullptr){
            bubble("EPPS");
-           //EPPStimingNotifier *pk = check_and_cast<EPPStimingNotifier *>(msg);
+           EPPStimingNotifier *pk = check_and_cast<EPPStimingNotifier *>(msg);
         }
     delete msg;
 }
@@ -282,7 +274,6 @@ void RuleEngine::shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk){
         else
             emt->setKind(STATIONARYQUBIT_PULSE_BEGIN);//First photon
         scheduleAt(simTime()+pk->getTiming(), emt);
-
     }else{
         if(countFreeQubits_inQnic(stable, pk->getQnic_index())==0)
             emt->setKind(STATIONARYQUBIT_PULSE_END);//last one
@@ -373,7 +364,7 @@ RuleEngine::QubitStateTable RuleEngine::setQubitBusy_inQnic(QubitStateTable tabl
        return table;
 }
 
-//Something is wrong here....
+
 RuleEngine::QubitStateTable RuleEngine::setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index){
     for(auto it = table.cbegin(); it != table.cend(); ++it){
            if(it->second.isBusy == true && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index){
@@ -449,6 +440,15 @@ void RuleEngine::freeFailedQubits(int destAddr, int internal_qnic_address, int i
         }else{
             //Keep the entangled qubit
             EV<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
+            //Add this as an availabel resource
+            //allResources[qnic_type][qnic_index] = ;
+            QubitAddr Resource_Addr;
+            Resource_Addr.node_address = parentAddress;
+            Resource_Addr.qnic_index = qnic_index;
+            Resource_Addr.qubit_index = it->second.qubit_index;
+            allResources[qnic_type][qnic_index].insert(std::make_pair(destAddr/*QNode IP address*/,Resource_Addr));
+            EV<<"There are "<<allResources[qnic_type][qnic_index].count(destAddr)<<" resources between this and "<<destAddr;
+            //endSimulation();
         }
     }
 

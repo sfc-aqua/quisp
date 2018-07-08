@@ -39,6 +39,9 @@ struct QubitAddr{
     int qubit_index;
 };
 
+
+
+
 struct QubitState{
     //QubitState(int qubit_address, int qubit_index, int qnic_index, int node_address, bool busy, simtime_t time):addr(node_address,qnic_index, qubit_index), entangled_addr(node_address,qnic_index, qubit_index), isBusy(busy), timestamp(time){}
 
@@ -49,6 +52,12 @@ struct QubitState{
     bool isBusy;
     simtime_t timestamp;
 };
+
+/*For resource management*/
+//typedef std::list<QubitAddr> byAge;
+typedef std::multimap<int, QubitAddr> EntangledPairs;//entangled Node address -> list of qubits from new to old
+typedef EntangledPairs* qnicResources;//For each qnic. If the number of "qnic" is 3, then the size is 3.
+/*For resource management over.*/
 
 /** \class RuleEngine RuleEngine.h
  *  \todo Documentation of the class header.
@@ -78,6 +87,8 @@ class RuleEngine : public cSimpleModule
         RealTimeController *realtime_controller;
         int* qnic_burst_trial_counter;
         typedef std::map<int,bool> trial_tracker;//trial index, false or true (that trial is over or not)
+        qnicResources* allResources; //Size will be defined in initialization. If 3 qnic types, then size is 3.
+
     protected:
         virtual void initialize() override;
         virtual void finish() override;
