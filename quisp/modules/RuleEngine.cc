@@ -91,14 +91,31 @@ void RuleEngine::handleMessage(cMessage *msg){
             BSMtimingNotifier *pk = check_and_cast<BSMtimingNotifier  *>(msg);
             bubble("trial over is set to true");
             //Set qubits free according to results
-            //Also needs to send which qubit was which to the neighbor (not BSA). To update the QubitState table's entangled address.
+            //Also needs to send which qubit was which to the neighbor (not BSA but the neighboring QNode). To update the QubitState table's entangled address.
             incrementBurstTrial(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index());
             EV<<"(if internal)The finished qnic["<<pk->getInternal_qnic_index()<<"] with address = "<<pk->getInternal_qnic_address()<<" has emitted tracker["<<pk->getInternal_qnic_address()<<"].size() = "<<tracker[pk->getInternal_qnic_address()].size()<<" photons \n";
-            freeFailedQubits(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index(), pk_result);
-            clearTrackerTable(pk->getSrcAddr(), pk->getInternal_qnic_address());//Clear tracker every end of burst trial. This keeps which qubit fired first, second, third and so on.
+            //Updates free/busy of qubits, and also adds successfully entangled qubits as resources.
+            freeFailedQubits_and_AddAsResource(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index(), pk_result);
+            clearTrackerTable(pk->getSrcAddr(), pk->getInternal_qnic_address());//Clear tracker every end of burst trial. This keeps which qubit was fired first, second, third and so on only for that trial.
 
+            int qnic_address, qnic_type;
+            int qnic_index, neighborQNodeAddress;
+            if(pk->getInternal_qnic_address()==-1){//destination hom is outside this node.
+                   Interface_inf inf = getInterface_toNeighbor(pk->getSrcAddr());
+                   qnic_index = inf.qnic.index;
+                   qnic_address = inf.qnic.address;
+                   qnic_type = QNIC_E;
+                   //neighborQNodeAddress = inf.neighborQNode_address;
+             }else{//destination hom is in the qnic in this node. This gets invoked when the request from internal hom is send from the same node.
+                   qnic_index = pk->getInternal_qnic_index();
+                   qnic_address = pk->getInternal_qnic_address();
+                   qnic_type = QNIC_R;
+             }
+            for (std::multimap<int, QubitAddr>::iterator it =  allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); it++)
+                                       EV<< it->first << " :: " << it->second.node_address<<", "<<it->second.qnic_index<<","<<it->second.qubit_index << "\n";
+            EV<< "****************************************\n";
 
-            //incrementBurstTrial(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index());
+            //Schedule next burst
             if(pk->getInternal_qnic_index()==-1){//MIM, or the other node without internnal HoM of MM
                 EV<<"This BSA request is non-internal\n";
                 scheduleFirstPhotonEmission(pk, QNIC_E);
@@ -115,7 +132,6 @@ void RuleEngine::handleMessage(cMessage *msg){
                 delete msg;
                 return;
             }
-
             if(pk->getInternal_hom()==0){//for MIM
                 shootPhoton(pk);
             }else{//for MM
@@ -134,7 +150,6 @@ void RuleEngine::handleMessage(cMessage *msg){
                 scheduleFirstPhotonEmission(pk, QNIC_R);
             }
         }
-
         else if(dynamic_cast<EPPStimingNotifier *>(msg) != nullptr){
            bubble("EPPS");
            EPPStimingNotifier *pk = check_and_cast<EPPStimingNotifier *>(msg);
@@ -154,6 +169,19 @@ Interface_inf RuleEngine::getInterface_toNeighbor(int destAddr){
         inf = (*it).second;//store gate index connected to the destination (BSA) node by refering to the neighbor table.
     return inf;
 }
+
+Interface_inf RuleEngine::getInterface_toNeighbor_Internal(int local_qnic_address){
+    Interface_inf inf;
+
+    for (auto i = ntable.begin(); i != ntable.end(); i++){
+        if (i == ntable.end())
+            error("Interface to neighbor not found in neighbor table prepared by the Hardware Manager.... This should probably not happen now.");//Neighbor not found! This should not happen unless you simulate broken links in real time.
+        if(i->second.qnic.address == local_qnic_address)
+            inf = (*i).second;
+    }
+    return inf;
+}
+
 
 
 void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type){
@@ -402,13 +430,14 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
 
 
 //Only for MIM and MM
-void RuleEngine::freeFailedQubits(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result){
+void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result){
     int list_size = pk_result->getList_of_failedArraySize();
-
-    int qnic_index, qnic_address;
+    int qnic_index, qnic_address,neighborQNodeAddress = -1;
     QNIC_type qnic_type;
+
     if(internal_qnic_index==-1){//destination hom is outside this node.
            Interface_inf inf = getInterface_toNeighbor(destAddr);
+           neighborQNodeAddress = inf.neighborQNode_address;//Because we need the address of the neighboring QNode, not BSA!
            qnic_index = inf.qnic.index;
            qnic_address = inf.qnic.address;
            qnic_type = QNIC_E;
@@ -416,6 +445,7 @@ void RuleEngine::freeFailedQubits(int destAddr, int internal_qnic_address, int i
            qnic_index = internal_qnic_index;
            qnic_address = internal_qnic_address;
            qnic_type = QNIC_R;
+           neighborQNodeAddress = getInterface_toNeighbor_Internal(qnic_address).neighborQNode_address;
      }
 
     int num_emitted_in_this_burstTrial = tracker[qnic_address].size();
@@ -440,18 +470,22 @@ void RuleEngine::freeFailedQubits(int destAddr, int internal_qnic_address, int i
         }else{
             //Keep the entangled qubit
             EV<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
-            //Add this as an availabel resource
-            //allResources[qnic_type][qnic_index] = ;
+            //Add this as an available resource
             QubitAddr Resource_Addr;
             Resource_Addr.node_address = parentAddress;
             Resource_Addr.qnic_index = qnic_index;
             Resource_Addr.qubit_index = it->second.qubit_index;
-            allResources[qnic_type][qnic_index].insert(std::make_pair(destAddr/*QNode IP address*/,Resource_Addr));
-            EV<<"There are "<<allResources[qnic_type][qnic_index].count(destAddr)<<" resources between this and "<<destAddr;
-            //endSimulation();
+            allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,Resource_Addr));
+            EV<<"There are "<<allResources[qnic_type][qnic_index].count(neighborQNodeAddress)<<" resources between this and "<<destAddr;
+
+            /*
+            for (std::multimap<int, QubitAddr>::iterator it =  allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); it++)
+                           EV<< it->first << " :: " << it->second.node_address<<", "<<it->second.qnic_index<<","<<it->second.qubit_index << "\n";
+            EV<< "****************************************\n";
+            */
+
         }
     }
-
 
     //Any qubit that has been shot while BSA result is actually on the way to the node, needs to be freed as well.
     if(num_emitted_in_this_burstTrial > list_size){
