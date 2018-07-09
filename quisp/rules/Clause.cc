@@ -10,7 +10,7 @@
 namespace quisp {
 namespace rules {
 
-int FidelityClause::check() { return 0; }
+int FidelityClause::check() const { return 0; }
 
 Clause *EXAMPLE_CLAUSE = new FidelityClause(42);
 

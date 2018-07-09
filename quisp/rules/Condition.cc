@@ -10,7 +10,11 @@
 namespace quisp {
 namespace rules {
 
-int Condition::check() { return 0; }
+int Condition::check() const {
+    for (std::list<Clause*>::const_iterator clause = clauses.cbegin(), end = clauses.cend(); clause != end; clause++)
+        if ((*clause)->check()) return 1;
+    return 0;
+}
 
 } // namespace rules
 } // namespace quisp

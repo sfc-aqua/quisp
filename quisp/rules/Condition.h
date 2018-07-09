@@ -19,10 +19,10 @@ namespace rules {
  */
 class Condition {
     private:
-        std::list<Clause> clauses;
+        std::list<Clause*> clauses;
 
     public:
-        int check();
+        int check() const;
 };
 
 } // namespace rules

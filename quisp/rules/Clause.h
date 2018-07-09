@@ -22,13 +22,13 @@ class Clause {
 
     public:
         Clause(int t) { target = t; };
-        virtual int check() = 0;
+        virtual int check() const = 0;
 };
 
 class FidelityClause : public Clause {
     public:
         FidelityClause(int t) : Clause(t) {};
-        int check() override;
+        int check() const override;
 };
 
 class XErrClause : public Clause {};
