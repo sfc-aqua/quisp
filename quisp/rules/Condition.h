@@ -7,6 +7,7 @@
 #ifndef QUISP_RULES_CONDITION_H_
 #define QUISP_RULES_CONDITION_H_
 
+#include "Clause.h"
 #include <omnetpp.h>
 
 namespace quisp {
@@ -16,7 +17,13 @@ namespace rules {
  *
  *  \brief Condition
  */
-class Condition {};
+class Condition {
+    private:
+        std::list<Clause> clauses;
+
+    public:
+        int check();
+};
 
 } // namespace rules
 } // namespace quisp

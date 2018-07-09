@@ -10,5 +10,7 @@
 namespace quisp {
 namespace rules {
 
+int Condition::check() { return 0; }
+
 } // namespace rules
 } // namespace quisp
