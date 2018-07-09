@@ -39,18 +39,14 @@ struct QubitAddr{
     int qubit_index;
 };
 
-
-
-
 struct QubitState{
     //QubitState(int qubit_address, int qubit_index, int qnic_index, int node_address, bool busy, simtime_t time):addr(node_address,qnic_index, qubit_index), entangled_addr(node_address,qnic_index, qubit_index), isBusy(busy), timestamp(time){}
-
     QubitAddr thisQubit_addr;
-    QubitAddr entangled_addr;//The entangled partner recognized. This could be wrong due to an error.
-    QubitAddr entangled_addr_actual;//The actual entangled partner
+    //QubitAddr entangled_addr;//The entangled partner recognized. This could be wrong due to an error.
+    //QubitAddr entangled_addr_actual;//The actual entangled partner
     //If entangled_addr != entangled_addr_actual, then operations do not do anything intended.
     bool isBusy;
-    simtime_t timestamp;
+    simtime_t timestamp;//When the qubit became busy (emitted photon).
 };
 
 /*For resource management*/
@@ -81,7 +77,8 @@ class RuleEngine : public cSimpleModule
         typedef std::map<int, QubitState> QubitStateTable;
         typedef std::map<int, QubitAddr_cons> sentQubitIndexTracker;//nth shot -> node/qnic/qubit index (node addr not needed actually)
         //Although qnic index is in QubitAddr, lest make int qnic_index -> QubisState to lessen the search
-        QubitStateTable stable, stable_r, stable_rp;
+        //QubitStateTable stable, stable_r, stable_rp;
+        QubitStateTable* Busy_OR_Free_QubitState_table;
         sentQubitIndexTracker* tracker;
         HardwareMonitor *hardware_monitor;
         RealTimeController *realtime_controller;
