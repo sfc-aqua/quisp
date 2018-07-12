@@ -483,7 +483,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
             Resource_Addr.qubit_index = it->second.qubit_index;
             allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,Resource_Addr));
             EV<<"There are "<<allResources[qnic_type][qnic_index].count(neighborQNodeAddress)<<" resources between this and "<<destAddr;
-            EV<<"Prediction "<<predictResourceFidelity(qnic_type,qnic_index,neighborQNodeAddress,allResources[qnic_type][qnic_index].count(neighborQNodeAddress))<<";";
+
         }
     }
 

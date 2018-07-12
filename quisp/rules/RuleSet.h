@@ -19,7 +19,7 @@ namespace rules {
  */
 class RuleSet {
     private:
-        Rule rules[];
+        Rule rules[1];
 };
 
 } // namespace rules
