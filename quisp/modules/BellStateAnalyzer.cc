@@ -42,12 +42,16 @@ class BellStateAnalyzer : public cSimpleModule
         int left_photon_origin_qnic_address;
         int left_photon_origin_qnic_type;
         int left_photon_origin_qubit_address;
+        bool left_photon_Xerr;
+        bool left_photon_Zerr;
         cModule *left_statQubit_ptr;
         simtime_t right_arrived_at;
         int right_photon_origin_node_address;
         int right_photon_origin_qnic_address;
         int  right_photon_origin_qnic_type;
         int right_photon_origin_qubit_address;
+        bool right_photon_Xerr;
+        bool right_photon_Zerr;
         cModule *right_statQubit_ptr;
         int count_X=0, count_Y=0, count_Z=0, count_I=0, count_L=0, count_total=0;//for debug
         bool handshake = false;
@@ -86,6 +90,10 @@ void BellStateAnalyzer::initialize()
    right_photon_origin_qnic_address = -1;
    right_photon_origin_qubit_address = -1;
    right_photon_origin_qnic_type = -1;
+   left_photon_Xerr = false;
+   left_photon_Zerr = false;
+   right_photon_Xerr = false;
+   right_photon_Zerr = false;
    left_statQubit_ptr = nullptr;
    right_statQubit_ptr = nullptr;
 }
@@ -112,6 +120,8 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
         left_photon_origin_qubit_address = photon->getStationaryQubitEntangledWith();
         left_photon_origin_qnic_type = photon->getQNICtypeEntangledWith();
         left_statQubit_ptr = photon->getEntangled_with();
+        left_photon_Xerr = photon->getPauliXerr();
+        left_photon_Zerr = photon->getPauliZerr();
         //photon->setGODfree();
         if(photon->getFirst()){
             left_last_photon_detected = false;
@@ -130,6 +140,8 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
         right_photon_origin_qubit_address = photon->getStationaryQubitEntangledWith();
         right_photon_origin_qnic_type = photon->getQNICtypeEntangledWith();
         right_statQubit_ptr = photon->getEntangled_with();
+        right_photon_Xerr = photon->getPauliXerr();
+        right_photon_Zerr = photon->getPauliZerr();
         if(photon->getFirst()){
             right_last_photon_detected = false;
             //send_result = false;
@@ -272,11 +284,15 @@ void BellStateAnalyzer:: GOD_updateEntangledInfoParameters_of_qubits(){
     left_statQubit_ptr->par("GOD_entangled_node_address") = right_statQubit_ptr->par("node_address");
     left_statQubit_ptr->par("GOD_entangled_qnic_address") = right_statQubit_ptr->par("qnic_address");
     left_statQubit_ptr->par("GOD_entangled_qnic_type") = right_statQubit_ptr->par("qnic_type");
+    left_statQubit_ptr->par("GOD_Xerror") = left_photon_Xerr;
+    left_statQubit_ptr->par("GOD_Zerror") = left_photon_Zerr;
 
     right_statQubit_ptr->par("GOD_entangled_stationaryQubit_address") = left_statQubit_ptr->par("stationaryQubit_address");
     right_statQubit_ptr->par("GOD_entangled_node_address") = left_statQubit_ptr->par("node_address");
     right_statQubit_ptr->par("GOD_entangled_qnic_address") = left_statQubit_ptr->par("qnic_address");
     right_statQubit_ptr->par("GOD_entangled_qnic_type") = left_statQubit_ptr->par("qnic_type");
+    right_statQubit_ptr->par("GOD_Xerror") = right_photon_Xerr;
+    right_statQubit_ptr->par("GOD_Zerror") = right_photon_Zerr;
     //endSimulation();
     //We need a GOD to track entangled qubits pair (Not what the software knows but the reality).
     //Updating parameters of other nodes gets really messy, so I will stop here for now.
