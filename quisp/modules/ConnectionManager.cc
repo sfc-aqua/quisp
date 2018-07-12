@@ -76,17 +76,30 @@ void ConnectionManager::handleMessage(cMessage *msg){
            }else{
                //Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
                EV<<"\n"<<local_qnic_address_to_actual_dst<<"|||||||||||||||||||||||||||||||||||||||||||||||||\n";
-               connection_setup_inf inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
+               connection_setup_inf dst_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
+               EV << "DST_INF " << dst_inf.qnic.type << "," << dst_inf.qnic.index << "\n";
+               connection_setup_inf src_inf = hardwaremonitor->return_setupInf(pk->getSrcAddr());
+               EV << "SRC_INF " << src_inf.qnic.type << "," << src_inf.qnic.index << "\n";
                int num_accumulated_nodes = pk->getStack_of_QNodeIndexesArraySize();
                int num_accumulated_costs = pk->getStack_of_linkCostsArraySize();
+               int num_accumulated_pair_info = pk->getStack_of_QNICsArraySize();
 
                //Update information and send it to the next Qnode.
-               pk->setDestAddr(inf.neighbor_address);
+               pk->setDestAddr(dst_inf.neighbor_address);
                pk->setSrcAddr(myAddress);
                pk->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes+1);
                pk->setStack_of_linkCostsArraySize(num_accumulated_costs+1);
                pk->setStack_of_QNodeIndexes(num_accumulated_nodes, myAddress);
-               pk->setStack_of_linkCosts(num_accumulated_costs, inf.quantum_link_cost);
+               pk->setStack_of_linkCosts(num_accumulated_costs, dst_inf.quantum_link_cost);
+               pk->setStack_of_QNICsArraySize(num_accumulated_pair_info+1);
+               QNIC_id_pair pair_info = {
+                   .fst = src_inf.qnic,
+                   .snd = dst_inf.qnic
+               };
+               pk->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
+               pair_info = pk->getStack_of_QNICs(num_accumulated_pair_info);
+               EV << "PAIR_INF " << pair_info.fst.type << "," << pair_info.fst.index << " : " << pair_info.snd.type << "," << pair_info.snd.index << "\n";
+
 
                send(pk,"RouterPort$o");
 

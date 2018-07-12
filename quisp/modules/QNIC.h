@@ -29,11 +29,16 @@ static const char* QNIC_names[QNIC_N] = {
 typedef struct _QNIC_id {
     QNIC_type type;
     int index;
-    int address;
 } QNIC_id;
+
+typedef struct _QNIC_id_pair {
+    QNIC_id fst;
+    QNIC_id snd;
+} QNIC_id_pair;
 
 typedef struct _QNIC : _QNIC_id {
     cModule *pointer;
+    int address;
 } QNIC;
 
 } // namespace modules

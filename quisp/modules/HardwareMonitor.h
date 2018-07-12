@@ -46,9 +46,10 @@ typedef struct _Interface_inf{
 } Interface_inf;
 
 typedef struct _For_connection_setup{
+    QNIC_id qnic;
     int neighbor_address;
     int quantum_link_cost;
-}connection_setup_inf;
+} connection_setup_inf;
 
 /** \class HardwareMonitor HardwareMonitor.h
  *  \todo Documentation of the class header.

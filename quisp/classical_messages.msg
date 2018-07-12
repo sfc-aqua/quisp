@@ -1,13 +1,9 @@
 cplusplus {{
 #include <rules/RuleSet.h>
 #include <modules/QNIC.h>
-
-typedef struct {
-        quisp::modules::QNIC_id fst;
-        quisp::modules::QNIC_id snd;
-} QNIC_node_info;	
+typedef quisp::modules::QNIC_id_pair QNIC_pair_info;
 }}
-struct QNIC_node_info;
+struct QNIC_pair_info;
 
 
 namespace quisp::messages;
@@ -31,9 +27,8 @@ packet ConnectionSetupRequest extends header
 
     int stack_of_QNodeIndexes[];
     int stack_of_linkCosts[];
-    
-    QNIC_node_info stack_of_QNICs[];
-        
+
+    QNIC_pair_info stack_of_QNICs[];
 }
 
 cplusplus {{

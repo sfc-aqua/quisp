@@ -121,11 +121,18 @@ Interface_inf HardwareMonitor::getInterface_inf_fromQnicAddress(int qnic_index, 
 
 connection_setup_inf HardwareMonitor::return_setupInf(int qnic_address){
     Enter_Method("return_setupInf()");
-    connection_setup_inf inf;
-    inf.neighbor_address = -1;
-    inf.quantum_link_cost = -1;
+    connection_setup_inf inf = {
+        .qnic = {
+            .type = QNIC_N,
+            .index = -1,
+        },
+        .neighbor_address = -1,
+        .quantum_link_cost = -1
+    };
     for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
         if(it->second.qnic.address == qnic_address){
+            inf.qnic.type = it->second.qnic.type;
+            inf.qnic.index = it->second.qnic.index;
             inf.neighbor_address = it->second.neighborQNode_address;
             //cModule *node = getModuleByPath("network.HoM");
             inf.quantum_link_cost = it->second.link_cost;
