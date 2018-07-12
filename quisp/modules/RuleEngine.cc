@@ -483,6 +483,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
             Resource_Addr.qubit_index = it->second.qubit_index;
             allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,Resource_Addr));
             EV<<"There are "<<allResources[qnic_type][qnic_index].count(neighborQNodeAddress)<<" resources between this and "<<destAddr;
+            EV<<"Prediction "<<predictResourceFidelity(qnic_type,qnic_index,neighborQNodeAddress,allResources[qnic_type][qnic_index].count(neighborQNodeAddress))<<";";
         }
     }
 
@@ -537,6 +538,10 @@ void RuleEngine::finish(){
     delete qnic_burst_trial_counter;
     delete realtime_controller;
 
+}
+
+double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index) {
+    return uniform(.6,.9);
 }
 
 } // namespace modules

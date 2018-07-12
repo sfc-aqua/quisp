@@ -108,6 +108,8 @@ class RuleEngine : public cSimpleModule
         virtual void scheduleNextEmissionEvent(int qnic_index, int qnic_address, double interval, simtime_t timing, int num_sent, bool internal, int trial);
         virtual void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result);
         virtual void clearTrackerTable(int destAddr, int internal_qnic_address);
+
+        virtual double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
 };
 
 } // namespace modules

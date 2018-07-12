@@ -56,44 +56,31 @@ void stationaryQubit::handleMessage(cMessage *msg){
 bool stationaryQubit::measure_X(){
     //Need to add noise here later
 
-    if(par("GOD_Zerror")){
-        return false;//Wrong measurement outcome
-    }else{
-        return true;//X err does not affect X measurement
-    }
+    return !par("GOD_Zerror");
 }
 
+/**
+ *  Returns true if the measurement outcome was correct
+ */
 bool stationaryQubit::measure_Y(){
     //Need to add noise here later
 
-    if(par("GOD_Zerror") || par("GOD_Xerror")){
-        return false;//Wrong measurement outcome
-    }else{
-        return true;//Y error does not affect the measurement outcome
-    }
+    return !(par("GOD_Zerror") || par("GOD_Xerror"));
 }
 
 bool stationaryQubit::measure_Z(){
     //Need to add noise here later
 
-    if(par("GOD_Xerror")){
-        return false;//Wrong measurement outcome
-    }else{
-        return true;//X error does not affect the measurement outcome
-    }
+    return !par("GOD_Xerror");
 }
 
 //Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
 void stationaryQubit::Hadamard_gate(){
     //Need to add noise here later
 
-    if(par("GOD_Xerror") && !par("GOD_Zerror")){//If only X error is present
-        par("GOD_Xerror") = false;
-        par("GOD_Zerror") = true;
-    }else if(!par("GOD_Xerror") && par("GOD_Zerror")){//If only Z error is present
-        par("GOD_Xerror") = true;
-        par("GOD_Zerror") = false;
-    }
+    bool z = par("GOD_Zerror");
+    par("GOD_Zerror") = par("GOD_Xerror");
+    par("GOD_Xerror") = z;
 }
 
 void stationaryQubit::Z_gate(){
