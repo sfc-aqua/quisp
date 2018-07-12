@@ -102,6 +102,7 @@ class stationaryQubit : public cSimpleModule
         virtual void Z_gate();
 
         virtual void X_gate();
+        virtual void purify(stationaryQubit *resource_qubit);
 
     private:
         /** @name Self address
