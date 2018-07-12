@@ -36,6 +36,11 @@ void HardwareMonitor::initialize(int stage)
   //qtable = initializeQTable(numQnic, qtable);
 }
 
+void HardwareMonitor::handleMessage(cMessage *msg){
+
+}
+
+
 /*
 //Table for tracking which buffer is assigned for what job
 HardwareMonitor::QnicInfo* HardwareMonitor::initializeQTable(int numQnic, QnicInfo *qtable)
@@ -164,9 +169,6 @@ int* HardwareMonitor::checkFreeBuffSet(int qnic_index, int *list_of_free_resourc
 }*/
 
 
-void HardwareMonitor::handleMessage(cMessage *msg){
-
-}
 
 
 //This neighbor table includes all neighbors of qnic, qnic_r and qnic_rp
@@ -242,10 +244,8 @@ neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode){
                 inf.neighborQNode_address = address_one;
             }else{
                 //endSimulation();
-                //error("Something is wrong with tracking the neighbor address");
+                error("Something is wrong with tracking the neighbor address");
             }
-
-
         }else if(thisNode->getModuleType()== SPDCType){
             //error("TO BE IMPLEMENTED");
         }else{

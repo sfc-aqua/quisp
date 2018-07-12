@@ -80,8 +80,8 @@ void SPDC_Controller::initialize()
     checkNeighborsBuffer();
 
     //Notify the timing.
-    //generatePacket = new cMessage("nextPacket");
-    //scheduleAt(simTime(),generatePacket);
+    generatePacket = new cMessage("nextPacket");
+    scheduleAt(simTime(),generatePacket);
 
 }
 
