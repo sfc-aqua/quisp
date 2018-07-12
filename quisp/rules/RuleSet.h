@@ -19,7 +19,7 @@ namespace rules {
  */
 class RuleSet {
     private:
-        std::list<Rule> rules;
+        Rule rules[];
 };
 
 } // namespace rules
