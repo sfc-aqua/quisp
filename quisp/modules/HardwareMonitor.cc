@@ -239,6 +239,7 @@ neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode){
     if(thisNode->getModuleType()!=QNodeType){//Not a Qnode!
 
         if(thisNode->getModuleType()==HoMType){
+            EV<<thisNode->getModuleType()->getFullName()<<" == "<<HoMType->getFullName()<<"\n";
             inf.isQNode=false;
             int address_one = thisNode->getSubmodule("Controller")->par("neighbor_address");
             int address_two = thisNode->getSubmodule("Controller")->par("neighbor_address_two");
@@ -251,7 +252,8 @@ neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode){
                 inf.neighborQNode_address = address_one;
             }else{
                 //endSimulation();
-                error("Something is wrong with tracking the neighbor address");
+                //EV<<"address _one = "<<address_one<<", address_two = "<<address_two;
+                //error("Something is wrong with tracking the neighbor address. It is here.");
             }
         }else if(thisNode->getModuleType()== SPDCType){
             //error("TO BE IMPLEMENTED");

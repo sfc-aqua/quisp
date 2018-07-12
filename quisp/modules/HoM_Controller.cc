@@ -158,7 +158,7 @@ void HoM_Controller::checkNeighborAddress(bool receiver){
             error("Error in HoM_Controller.cc when getting neighbor addresses. Check internodeInitializer.");
             endSimulation();
         }
-    }else{
+    }else{//Controller in a Stand alone HoM node
         try{
             neighbor_address =  getParentModule()->gate("quantum_port$o",0)->getNextGate()->getOwnerModule()->par("address");
             neighbor_address_two =  getParentModule()->gate("quantum_port$o",1)->getNextGate()->getOwnerModule()->par("address");
@@ -170,6 +170,7 @@ void HoM_Controller::checkNeighborAddress(bool receiver){
             endSimulation();
         }
     }
+
 }
 
 //Checks the buffer size of the connected qnics.

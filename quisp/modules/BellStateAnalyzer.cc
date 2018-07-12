@@ -252,7 +252,7 @@ void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg){
     }else{
         count_I++;
     }count_total++;
-    //EV<<"Y%="<<(double)count_Y/(double)count_total<<", X%="<<(double)count_X/(double)count_total<<", Z%="<<(double)count_Z/(double)count_total<<", L%="<<(double)count_L/(double)count_total<<", I% ="<<(double)count_I/(double)count_total<<"\n";
+    EV<<"Y%="<<(double)count_Y/(double)count_total<<", X%="<<(double)count_X/(double)count_total<<", Z%="<<(double)count_Z/(double)count_total<<", L%="<<(double)count_L/(double)count_total<<", I% ="<<(double)count_I/(double)count_total<<"\n";
 }
 
 bool BellStateAnalyzer::isPhotonLost(cMessage *msg){
