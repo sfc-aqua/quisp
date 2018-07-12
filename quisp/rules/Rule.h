@@ -20,7 +20,7 @@ namespace rules {
  */
 class Rule {
     private:
-        std::list<Condition> conditions;
+        Condition condition;
         std::list<Action> actions;
 };
 

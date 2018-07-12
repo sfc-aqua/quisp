@@ -8,6 +8,9 @@
 #define QUISP_RULES_CLAUSE_H_
 
 #include <omnetpp.h>
+#include <modules/QNIC.h>
+
+using namespace quisp::modules;
 
 namespace quisp {
 namespace rules {
@@ -18,16 +21,30 @@ namespace rules {
  */
 class Clause {
     protected:
-        int target; /**< Identifies qubit */
+        int partner; /**< Identifies entanglement partner. */
+        QNIC_type qnic_type;
+        int qnic_id;
+        int resource; /**< Identifies qubit */
 
     public:
-        Clause(int t) { target = t; };
+        Clause(int partner, int resource) : Clause(partner, QNIC_N, -1, resource) {};
+        Clause(int part, QNIC_type qt, int qi, int res) {
+            partner = part;
+            qnic_type = qt;
+            qnic_id = qi;
+            resource = res;
+        };
         virtual int check() const = 0;
 };
 
 class FidelityClause : public Clause {
+    protected:
+        double threshold;
+
     public:
-        FidelityClause(int t) : Clause(t) {};
+        FidelityClause(int partner, int resource, double fidelity) : Clause(partner, resource) {
+            threshold = fidelity;
+        };
         int check() const override;
 };
 

@@ -1,3 +1,6 @@
+cplusplus {{
+#include <rules/RuleSet.h>
+}}
 namespace quisp::messages;
 
 packet deleteThisModule{}
@@ -19,6 +22,16 @@ packet ConnectionSetupRequest extends header
 
     int stack_of_QNodeIndexes[];
     int stack_of_linkCosts[];
+}
+
+cplusplus {{
+    typedef quisp::rules::RuleSet * RuleSetField;
+}}
+class noncobject RuleSetField;
+
+packet ConnectionSetupResponse extends header
+{
+    RuleSetField stack_of_RuleSets[];
 }
 
 packet BSMtimingNotifier extends header
