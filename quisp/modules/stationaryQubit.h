@@ -39,6 +39,10 @@ class stationaryQubit : public cSimpleModule
         /** @name Errors
          *  @{
          */
+        /*The Pauli errors get updated when this stationary qubit emits a photon,
+         * when the emitted photon got an error in the channel and the BSA succeeded,
+         * when a memory error occured due to idle time,
+         * and local operation errors (gates).*/
         bool pauliXerr; /**< Bit flip error */
         bool pauliZerr; /**< Phase error. */
         /* For future use.
