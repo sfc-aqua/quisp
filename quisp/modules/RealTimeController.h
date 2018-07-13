@@ -34,7 +34,7 @@ class RealTimeController : public cSimpleModule
         virtual cModule* getQNode();
     public:
         virtual void EmitPhoton(int qnic_index ,int qubit_index, QNIC_type qnic_type, int pulse);
-        virtual void GUI_setQubitFree(int qnic_index ,int qubit_index, QNIC_type qnic_type);
+        virtual void ReInitialize_StationaryQubit(int qnic_index ,int qubit_index, QNIC_type qnic_type);
 };
 
 } // namespace modules

@@ -23,6 +23,19 @@ Define_Module(stationaryQubit);
  */
 void stationaryQubit::initialize()
 {
+
+    double rand = dblrand();
+
+    double Z_error_ratio = par("emission_Z_error_ratio");//par("name") will be read from .ini or .ned file
+    double X_error_ratio = par("emission_X_error_ratio");
+    double Y_error_ratio = par("emission_Y_error_ratio");
+    double ratio_sum = Z_error_ratio+X_error_ratio+Y_error_ratio;//Get the sum of x:y:z for normalization
+    err.pauli_error_rate = par("emission_error_rate");//This is per photon emission.
+    err.X_error_rate = err.pauli_error_rate * (X_error_ratio/ratio_sum);
+    err.Y_error_rate = err.pauli_error_rate * (Y_error_ratio/ratio_sum);
+    err.Z_error_rate = err.pauli_error_rate * (Z_error_ratio/ratio_sum);
+    setErrorCeilings();
+
     pauliXerr = false;
     pauliZerr = false;
     //nonPaulierr = false;
@@ -42,6 +55,15 @@ void stationaryQubit::initialize()
     /* e^(t/T1) energy relaxation, e^(t/T2) phase relaxation. Want to use only 1/10 of T1 and T2 in general.*/
 }
 
+
+void stationaryQubit::setErrorCeilings(){
+    No_error_ceil =1-err.pauli_error_rate;/* if 0 <= dblrand < fidelity = No error*/
+    X_error_ceil = No_error_ceil + err.X_error_rate; /* if fidelity <= dblrand < fidelity+X error rate = X error*/
+    Z_error_ceil = X_error_ceil + err.Z_error_rate;
+    Y_error_ceil = 1;
+}
+
+
 /**
  * \brief cSimpleModule handleMessage function
  *
@@ -50,7 +72,34 @@ void stationaryQubit::initialize()
 void stationaryQubit::handleMessage(cMessage *msg){
     bubble("Got a photon!!");
     setBusy();
+    setEmissionPauliError();
     send(msg, "tolens_quantum_port$o");
+}
+
+void stationaryQubit::setEmissionPauliError(){
+    if(par("GOD_Xerror") || par("GOD_Zerror")){
+        error("There shouldn't be an error existing before photon emission. This error may have not been reinitialized since last use. Better check!");
+    }
+    double rand = dblrand();//Gives a random double between 0.0 ~ 1.0
+    if(rand < No_error_ceil){
+               //Qubit will end up with no error
+               EV<<"No error :"<<rand<<" < "<<No_error_ceil<<"\n";
+    }else if(No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil!=X_error_ceil)){
+               //X error
+                par("GOD_Xerror") = true;
+                EV<<"Xerror :"<<No_error_ceil<<"<="<<rand<<" < "<<X_error_ceil<<"\n";
+    }else if(X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil!=Z_error_ceil)){
+               //Z error
+                par("GOD_Zerror") = true;
+                EV<<"Zerror :"<<X_error_ceil<<"<="<<rand<<" < "<<Z_error_ceil<<"\n";
+    }else if(Z_error_ceil <= rand && rand < Y_error_ceil && (Z_error_ceil!=Y_error_ceil)){
+               //Y error
+                par("GOD_Xerror") = true;
+                par("GOD_Zerror") = true;
+                EV<<"Yerror :"<<Z_error_ceil<<"<="<<rand<<" < "<<Y_error_ceil<<"\n";
+   }else{
+       error("Either the error ceilings or the random double generator is wrong.");
+   }
 }
 
 bool stationaryQubit::measure_X(){
@@ -117,11 +166,13 @@ void stationaryQubit::setBusy(){
     par("isBusy") = true;
 }
 
+//Re-initialization of this stationary qubit
 void stationaryQubit::setFree(){
     isBusy = false;
     emitted_time = -1;
     par("photon_emitted_at") = emitted_time.dbl();
-
+    par("GOD_Xerror") = false;
+    par("GOD_Zerror") = false;
     // GUI part
     if(hasGUI()){
         getDisplayString().setTagArg("i", 1, "blue");

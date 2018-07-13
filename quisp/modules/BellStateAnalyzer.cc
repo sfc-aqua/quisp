@@ -284,15 +284,24 @@ void BellStateAnalyzer:: GOD_updateEntangledInfoParameters_of_qubits(){
     left_statQubit_ptr->par("GOD_entangled_node_address") = right_statQubit_ptr->par("node_address");
     left_statQubit_ptr->par("GOD_entangled_qnic_address") = right_statQubit_ptr->par("qnic_address");
     left_statQubit_ptr->par("GOD_entangled_qnic_type") = right_statQubit_ptr->par("qnic_type");
-    left_statQubit_ptr->par("GOD_Xerror") = left_photon_Xerr;
-    left_statQubit_ptr->par("GOD_Zerror") = left_photon_Zerr;
+    //left_statQubit_ptr->par("GOD_Xerror") = left_photon_Xerr;
+    //left_statQubit_ptr->par("GOD_Zerror") = left_photon_Zerr;
+    if(left_photon_Xerr)
+        left_statQubit_ptr->par("GOD_Xerror") = !left_statQubit_ptr->par("GOD_Xerror");
+    if(left_photon_Zerr)
+        left_statQubit_ptr->par("GOD_Zerror") = !left_statQubit_ptr->par("GOD_Zerror");
 
     right_statQubit_ptr->par("GOD_entangled_stationaryQubit_address") = left_statQubit_ptr->par("stationaryQubit_address");
     right_statQubit_ptr->par("GOD_entangled_node_address") = left_statQubit_ptr->par("node_address");
     right_statQubit_ptr->par("GOD_entangled_qnic_address") = left_statQubit_ptr->par("qnic_address");
     right_statQubit_ptr->par("GOD_entangled_qnic_type") = left_statQubit_ptr->par("qnic_type");
-    right_statQubit_ptr->par("GOD_Xerror") = right_photon_Xerr;
-    right_statQubit_ptr->par("GOD_Zerror") = right_photon_Zerr;
+    //right_statQubit_ptr->par("GOD_Xerror") = right_photon_Xerr;
+    //right_statQubit_ptr->par("GOD_Zerror") = right_photon_Zerr;
+    if(right_photon_Xerr)
+        right_statQubit_ptr->par("GOD_Xerror") = !right_statQubit_ptr->par("GOD_Xerror");
+    if(right_photon_Zerr)
+        right_statQubit_ptr->par("GOD_Zerror") = !right_statQubit_ptr->par("GOD_Zerror");
+
     //endSimulation();
     //We need a GOD to track entangled qubits pair (Not what the software knows but the reality).
     //Updating parameters of other nodes gets really messy, so I will stop here for now.

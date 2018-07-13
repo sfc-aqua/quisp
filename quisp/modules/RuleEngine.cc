@@ -22,7 +22,7 @@ void RuleEngine::initialize()
     cModule *hm = getParentModule()->getSubmodule("hm");
     hardware_monitor = check_and_cast<HardwareMonitor *>(hm);
     cModule *rt = getParentModule()->getSubmodule("rt");
-    realtime_controller = check_and_cast<RealTimeController *>(rt);//Just for qubit free GUI update
+    realtime_controller = check_and_cast<RealTimeController *>(rt);//Just for qubit color update and Pauli error elimination
     parentAddress = par("address");
     number_of_qnics_all = par("total_number_of_qnics");
     number_of_qnics = par("number_of_qnics");
@@ -468,7 +468,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
                 error("Something is wrong with the tracker....%d th shot not recorded",i);//Neighbor not found! This should not happen unless you simulate broken links in real time.
         if(failed){
             EV<<i<<"th shot has failed.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
-            realtime_controller->GUI_setQubitFree(it->second.qnic_index ,it->second.qubit_index, qnic_type);
+            realtime_controller->ReInitialize_StationaryQubit(it->second.qnic_index ,it->second.qubit_index, qnic_type);//Re-initialize the qubit. Pauli errors will be eliminated, and the color of the qubit in the GUI changes to blue.
             if(qnic_type==QNIC_E)
                 Busy_OR_Free_QubitState_table[QNIC_E] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[QNIC_E], it->second.qnic_index, it->second.qubit_index);
             else
@@ -494,7 +494,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
             sentQubitIndexTracker::iterator it = tracker[qnic_address].find(i);//check ith shot's information (qnic, qubit index).
             if (it == tracker[qnic_address].end())
                 error("Wait.... something is wrong with the tracker....%d th shot not recorded",i);//Neighbor not found! This should not happen unless you simulate broken links in real time.
-            realtime_controller->GUI_setQubitFree(it->second.qnic_index ,it->second.qubit_index, qnic_type);
+            realtime_controller->ReInitialize_StationaryQubit(it->second.qnic_index ,it->second.qubit_index, qnic_type);
             if(qnic_type==QNIC_E)
                 Busy_OR_Free_QubitState_table[QNIC_E] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[QNIC_E], it->second.qnic_index, it->second.qubit_index);
             else

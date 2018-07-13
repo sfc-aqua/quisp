@@ -54,7 +54,7 @@ cModule* RealTimeController::getQNode(){
          return currentModule;
 }
 
-void RealTimeController::GUI_setQubitFree(int qnic_index ,int qubit_index, QNIC_type qnic_type){
+void RealTimeController::ReInitialize_StationaryQubit(int qnic_index ,int qubit_index, QNIC_type qnic_type){
     bool success;
     cModule *qnode = getQNode();//Get the parent QNode that runs this RC.
     try{

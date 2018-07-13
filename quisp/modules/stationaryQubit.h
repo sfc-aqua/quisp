@@ -23,6 +23,16 @@ namespace modules {
  *
  *  \brief stationaryQubit
  */
+
+
+typedef struct _emission_error_model{
+    double pauli_error_rate;//Overall error rate
+    double Z_error_rate;
+    double X_error_rate;
+    double Y_error_rate;
+} emission_error_model;
+
+
 class stationaryQubit : public cSimpleModule
 {
     public:
@@ -37,6 +47,7 @@ class stationaryQubit : public cSimpleModule
         //bool nonPaulierrTwo;
         //@}
 
+
         /** @name Entangled partner address
          *  @{                                  */
         /** Address node, or -1. */
@@ -50,13 +61,25 @@ class stationaryQubit : public cSimpleModule
         simtime_t emitted_time = -1;
         /** Stationary qubit last updated at*/
         simtime_t updated_time = -1;
-
         //@}
 
         /** Stationary Qubit is free or reserved. */
         bool isBusy;
         /** Standard deviation */
         double std;
+
+        /** @name Pauli errors when emitting photons
+        *  @{
+        */
+        /** Error rate when emitting photon*/
+               emission_error_model err;
+               double emit_error_rate;
+               double No_error_ceil;
+               double X_error_ceil;
+               double Y_error_ceil;
+               double Z_error_ceil;
+       //@}
+
 
         virtual bool checkBusy();
         virtual void setFree();
@@ -103,6 +126,7 @@ class stationaryQubit : public cSimpleModule
 
         virtual void X_gate();
 
+
     private:
         /** @name Self address
          *  @{                   */
@@ -113,12 +137,15 @@ class stationaryQubit : public cSimpleModule
         //@}
         PhotonicQubit *photon;
 
+
     protected:
         virtual void initialize();
         virtual void handleMessage(cMessage *msg);
         virtual PhotonicQubit *generateEntangledPhoton();
         virtual void setBusy();
         virtual void setEntangledPartnerInfo(int node_address, int qnic_index, int qubit_index);
+        virtual void setErrorCeilings();
+        virtual void setEmissionPauliError();
 };
 
 } // namespace modules

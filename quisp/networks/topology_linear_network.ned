@@ -238,7 +238,7 @@ network Linear_One_MIM_MM_MSM
         }
         mm[2]: QNode {
             address = index + 100;
-            buffers = 5;
+            buffers = 20;
             nodeType = "EndNode";
             @display("i=device/pc_s");
         }
