@@ -234,5 +234,13 @@ void stationaryQubit::setEntangledPartnerInfo(int node_address, int qnic_index, 
     QNICtypeEntangledWith  = qnic_type;
 }
 
+void stationaryQubit::purify(stationaryQubit * resource_qubit) {
+    resource_qubit->CNOT_gate(this);
+    bool meas = resource_qubit->measure_Z();
+    // communicate, values of measurement
+    // probably need to store ours until receiving the partners'
+    // if agree (truetrue or falsefalse), keep
+}
+
 } // namespace modules
 } // namespace quisp
