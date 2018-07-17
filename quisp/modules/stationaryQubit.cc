@@ -36,13 +36,13 @@ void stationaryQubit::initialize()
     err.Z_error_rate = err.pauli_error_rate * (Z_error_ratio/ratio_sum);
     setErrorCeilings();
 
-    pauliXerr = false;
-    pauliZerr = false;
+    //pauliXerr = false;
+    //pauliZerr = false;
     //nonPaulierr = false;
     //nonPaulierrTwo = false;
-    NodeEntangledWith = -1;
+    /*NodeEntangledWith = -1;
     QNICEntangledWith = -1;
-    QNICtypeEntangledWith = -1;
+    QNICtypeEntangledWith = -1;*/
 
     // Get parameters from omnet
     stationaryQubit_address = par("stationaryQubit_address");
@@ -159,12 +159,11 @@ void stationaryQubit::setBusy(){
     isBusy = true;
     emitted_time = simTime();
     par("photon_emitted_at") = emitted_time.dbl();
-
+    par("isBusy") = true;
     // GUI part
     if(hasGUI()){
         getDisplayString().setTagArg("i", 1, "red");
     }
-    par("isBusy") = true;
 }
 
 //Re-initialization of this stationary qubit
@@ -174,11 +173,12 @@ void stationaryQubit::setFree(){
     par("photon_emitted_at") = emitted_time.dbl();
     par("GOD_Xerror") = false;
     par("GOD_Zerror") = false;
+    par("isBusy") = false;
     // GUI part
     if(hasGUI()){
         getDisplayString().setTagArg("i", 1, "blue");
     }
-    par("isBusy") = false;
+
 }
 
 bool stationaryQubit::checkBusy(){
@@ -228,11 +228,11 @@ void stationaryQubit::emitPhoton(int pulse)
 }
 
 void stationaryQubit::setEntangledPartnerInfo(int node_address, int qnic_index, int qubit_index){
-    //When BSA succeeds, this method gets invoked to store entanged partner information. This will also be send classically to the node afterwards.
-    NodeEntangledWith = node_address;//Entangled pair's node-level address. -1 if not entangled
+    //When BSA succeeds, this method gets invoked to store entangled partner information. This will also be send classically to the node afterwards.
+    /*NodeEntangledWith = node_address;//Entangled pair's node-level address. -1 if not entangled
     QNICEntangledWith = qnic_index;//Entangled pair's QNIC-level address
     stationaryQubitEntangledWith = qubit_index;
-    QNICtypeEntangledWith  = qnic_type;
+    QNICtypeEntangledWith  = qnic_type;*/
 }
 
 void stationaryQubit::purify(stationaryQubit * resource_qubit) {
