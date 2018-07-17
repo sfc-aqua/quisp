@@ -88,8 +88,8 @@ class stationaryQubit : public cSimpleModule
         virtual bool checkBusy();
         virtual void setFree();
 
-        double getFidelity() { return fidelity; };
-        void setFidelity(double f) { fidelity=f; par("fidelity")=f; };
+        double getFidelity() const { return fidelity; };
+        void setFidelity(const double f) { fidelity=f; par("fidelity")=f; };
 
         /**
          * \brief Emit photon.
