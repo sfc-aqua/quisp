@@ -9,6 +9,7 @@
 
 #include <omnetpp.h>
 #include <modules/QNIC.h>
+#include <modules/QUBIT.h>
 
 using namespace quisp::modules;
 
@@ -34,7 +35,17 @@ class Clause {
             qnic_id = qi;
             resource = res;
         };
-        virtual int check() const = 0;
+        void setQnic(QNIC_type qt, int qi) {
+            //if (qt >= QNIC_N) omnetpp::error("Not that many QNIC types.");
+            //if (qi < 0) omnetpp::error("Negative qnic index.");
+            qnic_type = qt;
+            qnic_id = qi;
+        };
+        void checkQnic() const {
+            //if (qnic_type >= QNIC_N) omnetpp::error("Not that many QNIC types.");
+            //if (qnic_id < 0) omnetpp::error("Negative qnic index.");
+        };
+        virtual int check(qnicResources *resources) const = 0;
 };
 
 class FidelityClause : public Clause {
@@ -45,7 +56,7 @@ class FidelityClause : public Clause {
         FidelityClause(int partner, int resource, double fidelity) : Clause(partner, resource) {
             threshold = fidelity;
         };
-        int check() const override;
+        int check(qnicResources *resources) const override;
 };
 
 class XErrClause : public Clause {};

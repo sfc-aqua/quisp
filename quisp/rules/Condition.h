@@ -22,7 +22,7 @@ class Condition {
         std::list<Clause*> clauses;
 
     public:
-        int check() const;
+        int check(qnicResources * resources) const;
 };
 
 } // namespace rules

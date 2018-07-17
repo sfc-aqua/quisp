@@ -10,9 +10,9 @@
 namespace quisp {
 namespace rules {
 
-int Condition::check() const {
+int Condition::check(qnicResources *resources) const {
     for (std::list<Clause*>::const_iterator clause = clauses.cbegin(), end = clauses.cend(); clause != end; clause++)
-        if ((*clause)->check()) return 1;
+        if ((*clause)->check(resources)) return 1;
     return 0;
 }
 
