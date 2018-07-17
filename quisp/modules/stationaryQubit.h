@@ -88,6 +88,9 @@ class stationaryQubit : public cSimpleModule
         virtual bool checkBusy();
         virtual void setFree();
 
+        double getFidelity() { return fidelity; };
+        void setFidelity(double f) { fidelity=f; par("fidelity")=f; };
+
         /**
          * \brief Emit photon.
          * \param pulse is 1 for the beginning of the burst, 2 for the end.
@@ -141,6 +144,7 @@ class stationaryQubit : public cSimpleModule
         int qnic_type;
         //@}
         PhotonicQubit *photon;
+        double fidelity;
 
 
     protected:

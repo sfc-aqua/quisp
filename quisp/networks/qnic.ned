@@ -34,6 +34,8 @@ simple stationaryQubit
         double last_updated_at = default(-1);
         bool isBusy = default(false);
         double std = default(0);
+
+        double fidelity = default(-1.0);
         
         bool GOD_Xerror = false;//Physical error on qubit
         bool GOD_Zerror = false;//Physical error on qubit

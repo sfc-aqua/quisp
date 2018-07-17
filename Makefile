@@ -1,10 +1,14 @@
-.PHONY: all clean run quisp/% doc quisp/.oppbuildspec .lvimrc
+.PHONY: all clean run tags tags quisp/% doc quisp/.oppbuildspec .lvimrc
 
 ifneq (${VIRTUAL_ENV},quisp)
 $(error Get inside the QUISP virtual environment with `source setenv`)
 endif
 
 MODE?=release
+
+MSGFILES:=$(wildcard quisp/*.msg)
+CMSGFILES:=${MSGFILES:%.msg=%_m.cc}
+HMSGFILES:=${MSGFILES:%.msg=%_m.h}
 
 all: quisp/Makefile
 	make -C quisp MODE=${MODE} $@
@@ -29,6 +33,16 @@ run: quisp/quisp
 dbg: quisp/quisp_dbg
 	cd quisp && \
 		gdb quisp_dbg -ex 'run -m -u Qtenv -n . networks/omnetpp.ini'
+
+quisp/%_m.cc quisp/%_m.h: quisp/Makefile
+	make -C quisp MODE=${MODE} ${@F}
+
+msg:
+	make -C quisp MODE=${MODE} ${CMSGFILES:quisp/%=%} ${HMSGFILES:quisp/%=%}
+
+tags: msg
+	find "$$(cd quisp && pwd)" -type f -name '*.cc' -o -name '*.h' -exec 'ctags' '-o' 'tags' '--language-force=c++' '{}' '+'
+	test ! -d .git || mv tags .git/.
 
 doc: Doxyfile
 	doxygen $<

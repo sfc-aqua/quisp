@@ -51,6 +51,7 @@ void stationaryQubit::initialize()
     qnic_type = par("qnic_type");
     std = par("std");
     setFree();
+    setFidelity(-1.);
 
     /* e^(t/T1) energy relaxation, e^(t/T2) phase relaxation. Want to use only 1/10 of T1 and T2 in general.*/
 }
