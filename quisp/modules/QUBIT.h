@@ -8,6 +8,7 @@
 #define QUISP_MODULES_QUBIT_H_
 
 #include <omnetpp.h>
+#include <modules/stationaryQubit.h>
 using namespace omnetpp;
 
 namespace quisp {
@@ -41,8 +42,8 @@ struct QubitState{
 };
 
 /*For resource management*/
-//typedef std::list<QubitAddr> byAge;
-typedef std::multimap<int, QubitAddr> EntangledPairs;//entangled Node address -> list of qubits from new to old
+//typedef std::multimap<int, QubitAddr> EntangledPairs;//entangled Node address -> list of qubits from new to old
+typedef std::multimap<int, stationaryQubit*> EntangledPairs;
 typedef EntangledPairs* qnicResources;//For each qnic. If the number of "qnic" is 3, then the size is 3.
 /*For resource management over.*/
 

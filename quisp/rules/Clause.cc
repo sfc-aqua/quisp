@@ -10,22 +10,22 @@
 namespace quisp {
 namespace rules {
 
-static void getQubit(qnicResources* resources, int partner, QNIC_type qtype, int qid, QubitAddr * result) {
+static stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) {
     // assume that qnic type is ok
-    std::pair<EntangledPairs::iterator,EntangledPairs::iterator> ret = resources[qtype]->equal_range(partner);
-    int real_qid = 0;
-    *result = { .node_address=-1, .qnic_index=-1, .qubit_index=-1 };
-    for (EntangledPairs::iterator it=ret.first; it!=ret.second; ++it,++real_qid) {
-        std::cout << real_qid << '\n';
-        if (real_qid == qid) {
-            *result = it->second;
-            break;
-        }
+    std::pair<EntangledPairs::iterator,EntangledPairs::iterator> ret = resources[qtype][qid].equal_range(partner);
+    int real_res_id = 0;
+    for (EntangledPairs::iterator it=ret.first; it!=ret.second; ++it,++real_res_id) {
+        std::cout << real_res_id << '\n';
+        if (real_res_id == res_id) return it->second;
     }
+    return NULL;
 }
 
 int FidelityClause::check(qnicResources* resources) const {
+    stationaryQubit* qubit = NULL;
     checkQnic();
+    if (qubit = getQubit(resources, qnic_type, qnic_id, partner, resource))
+        return (qubit->getFidelity() >= threshold);
     return 0;
 }
 

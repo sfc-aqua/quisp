@@ -116,8 +116,9 @@ void RuleEngine::handleMessage(cMessage *msg){
                    qnic_address = pk->getInternal_qnic_address();
                    qnic_type = QNIC_R;
              }
-            for (std::multimap<int, QubitAddr>::iterator it =  allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); it++)
-                                       EV<< it->first << " :: " << it->second.node_address<<", "<<it->second.qnic_index<<","<<it->second.qubit_index << "\n";
+
+            for (EntangledPairs::iterator it =  allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); it++)
+                EV << it->first << " => " << it->second << '\n';
             EV<< "****************************************\n";
 
             //Schedule next burst
@@ -477,11 +478,8 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
             //Keep the entangled qubit
             EV<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
             //Add this as an available resource
-            QubitAddr Resource_Addr;
-            Resource_Addr.node_address = parentAddress;
-            Resource_Addr.qnic_index = qnic_index;
-            Resource_Addr.qubit_index = it->second.qubit_index;
-            allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,Resource_Addr));
+            stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
+            allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,qubit));
             EV<<"There are "<<allResources[qnic_type][qnic_index].count(neighborQNodeAddress)<<" resources between this and "<<destAddr;
 
         }
