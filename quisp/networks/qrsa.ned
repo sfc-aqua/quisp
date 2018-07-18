@@ -32,6 +32,11 @@ simple HardwareMonitor
         int number_of_qnics_r;
         int number_of_qnics_rp;
         string ntable = "";
+        bool link_tomography = default(false);
+        int num_measure = default(3000);
+    gates:
+        inout RuleEnginePort;
+        
 }
 
 simple ConnectionManager
@@ -53,6 +58,7 @@ simple RuleEngine
 
     gates:
         inout RouterPort;
+        inout HardwareMonitorPort;
 }
 
 simple RealTimeController
@@ -117,6 +123,7 @@ module quantumRoutingSoft
     connections:
         cm.RouterPort <--> cmPort;
         re.RouterPort <--> rePort;
+        re.HardwareMonitorPort <--> hm.RuleEnginePort;
         
         //for i=0..sizeof(qnics)-1{
         //    rd.dummyQNICLink++ <--> qnics[i];

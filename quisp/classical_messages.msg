@@ -17,6 +17,11 @@ packet header
     int hopCount;
 }
 
+packet LinkTomographyRequest extends header
+{
+    int number_of_measuring_resources;
+}
+
 packet ConnectionSetupRequest extends header
 {
     int actual_destAddr;

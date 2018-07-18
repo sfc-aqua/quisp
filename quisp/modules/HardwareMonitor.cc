@@ -7,6 +7,7 @@
  *  \brief HardwareMonitor
  */
 #include "HardwareMonitor.h"
+#include "classical_messages_m.h"
 #include <sstream>
 #include <string>
 
@@ -24,7 +25,8 @@ void HardwareMonitor::initialize(int stage)
   numQnic = par("number_of_qnics");// number of qnics connected to stand alone HoM or internal hom in the neighbor.
   numQnic_total = numQnic + numQnic_r + numQnic_rp;
   ntable = prepareNeighborTable(ntable, numQnic_total);
-
+  do_link_level_tomography = par("link_tomography");
+  num_measure = par("num_measure");
   std::stringstream ss;
   for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
       ss << it->first << "(d)->(i)" << it->second.qnic.index <<", ";
@@ -34,6 +36,13 @@ void HardwareMonitor::initialize(int stage)
 
   //qtable = new QnicInfo[numQnic];
   //qtable = initializeQTable(numQnic, qtable);
+
+  if(do_link_level_tomography){
+      LinkTomographyRequest *pk = new LinkTomographyRequest;
+      pk->setNumber_of_measuring_resources(num_measure);
+      pk->setKind(6);
+      send(pk, "RuleEnginePort$o");
+  }
 }
 
 void HardwareMonitor::handleMessage(cMessage *msg){

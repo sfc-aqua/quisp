@@ -65,6 +65,8 @@ class HardwareMonitor : public cSimpleModule
         cModuleType *QNodeType =  cModuleType::get("networks.QNode");
         cModuleType *SPDCType =  cModuleType::get("networks.SPDC");
         cModuleType *HoMType =  cModuleType::get("networks.HoM");
+        bool do_link_level_tomography = false;
+        int num_measure;
     public:
         //typedef std::map<int,Interface_inf> Interfaces;//qnic_index -> Interface{qnic_type, initial_fidelity...}
         typedef std::map<int,Interface_inf> NeighborTable;//qnic_index -> Interface{qnic_type, initial_fidelity...}
