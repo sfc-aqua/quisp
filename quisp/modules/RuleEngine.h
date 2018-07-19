@@ -17,6 +17,7 @@
 #include <modules/HardwareMonitor.h>
 #include <modules/HoM_Controller.h>
 #include <modules/QUBIT.h>
+#include <rules/RuleSet.h>
 
 using namespace omnetpp;
 
@@ -53,6 +54,7 @@ class RuleEngine : public cSimpleModule
         int* qnic_burst_trial_counter;
         typedef std::map<int,bool> trial_tracker;//trial index, false or true (that trial is over or not)
         qnicResources* allResources; //Size will be defined in initialization. If 3 qnic types, then size is 3.
+        typedef std::map<std::string, quisp::rules::RuleSet> processes;//process_id -> Rule set
 
     protected:
         virtual void initialize() override;

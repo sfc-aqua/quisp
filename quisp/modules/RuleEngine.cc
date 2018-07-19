@@ -160,6 +160,9 @@ void RuleEngine::handleMessage(cMessage *msg){
            bubble("EPPS");
            EPPStimingNotifier *pk = check_and_cast<EPPStimingNotifier *>(msg);
         }
+        else if(dynamic_cast<LinkTomographyRequest *>(msg) != nullptr){
+            //Need to create rules for this.
+        }
     delete msg;
 }
 

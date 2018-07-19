@@ -27,6 +27,7 @@ void HardwareMonitor::initialize(int stage)
   ntable = prepareNeighborTable(ntable, numQnic_total);
   do_link_level_tomography = par("link_tomography");
   num_measure = par("num_measure");
+  myAddress = par("address");
   std::stringstream ss;
   for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
       ss << it->first << "(d)->(i)" << it->second.qnic.index <<", ";
@@ -38,10 +39,14 @@ void HardwareMonitor::initialize(int stage)
   //qtable = initializeQTable(numQnic, qtable);
 
   if(do_link_level_tomography){
-      LinkTomographyRequest *pk = new LinkTomographyRequest;
-      pk->setNumber_of_measuring_resources(num_measure);
-      pk->setKind(6);
-      send(pk, "RuleEnginePort$o");
+      for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
+          LinkTomographyRequest *pk = new LinkTomographyRequest;
+          pk->setDestAddr(it->second.neighborQNode_address);
+          pk->setSrcAddr(myAddress);
+          pk->setNumber_of_measuring_resources(num_measure);
+          pk->setKind(6);
+          send(pk, "RuleEnginePort$o");
+      }
   }
 }
 
