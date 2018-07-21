@@ -94,10 +94,10 @@ void ConnectionManager::handleMessage(cMessage *msg){
            int * path = new int[hop_count+1];
            for (int i = 0; i<hop_count; i++) {
              path[i] = pk->getStack_of_QNodeIndexes(i);
-             EV << "\n     Qnode on the path => " << path[i];
+             EV << "     Qnode on the path => " << path[i] << std::endl;
            }
            path[hop_count] = myAddress;
-           EV << "\nLast Qnode on the path => " << path[hop_count];
+           EV << "Last Qnode on the path => " << path[hop_count] << std::endl;
 
            // Number of division elements
            int divisions = compute_path_division_size(hop_count);
@@ -126,9 +126,9 @@ void ConnectionManager::handleMessage(cMessage *msg){
            // Go over every division
            for (int i=0; i<divisions; i++) {
              if (swapper[i]>0)
-               EV << "\nDivision: " << link_left[i] << " ---( " << swapper[i] << " )--- " << link_right[i];
+               EV << "Division: " << link_left[i] << " ---( " << swapper[i] << " )--- " << link_right[i] << std::endl;
              else
-               EV << "\nDivision: " << link_left[i] << " -------------- " << link_right[i];
+               EV << "Division: " << link_left[i] << " -------------- " << link_right[i] << std::endl;
            }
 
            //error("Yay!");
