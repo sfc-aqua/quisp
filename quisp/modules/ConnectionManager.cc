@@ -45,6 +45,48 @@ void ConnectionManager::initialize()
   myAddress = par("address");
 }
 
+static int compute_path_division_size (int l /**< number of links (path length, number of nodes -1) */) {
+  if (l > 1) {
+    int hl = (l>>1);
+    return compute_path_division_size(hl) + compute_path_division_size(l-hl) + 1;
+  }
+  return l;
+}
+
+/** Treat subpath [i:...] of length l */
+static int fill_path_division (int * path /**< Nodes on the connection setup path */,
+    int i /**< Left of the subpath to consider */, int l /**< Length of the subpath */,
+    int * link_left /**< Left part of the list of "links" */, int * link_right /**< Right part */,
+    int * swapper /**< Swappers to create those links (might be -1 for real links) */,
+    int fill_start /** [0:fill_start[ is already filled */) {
+  if (l > 1) {
+    int hl = (l>>1);
+    fill_start = fill_path_division (path, i, hl, link_left, link_right, swapper, fill_start);
+    fill_start = fill_path_division (path, i+hl, l-hl, link_left, link_right, swapper, fill_start);
+    swapper[fill_start] = path[i+hl];
+  }
+  if (l > 0) {
+    link_left[fill_start] = path[i];
+    link_right[fill_start] = path[i+l];
+    if (l == 1) swapper[fill_start] = -1;
+    fill_start++;
+  }
+  return fill_start;
+}
+
+#if 0
+int main () {
+  int l = 3;
+  int * path = { 1, 2, 3, 4 };
+  int s = compute_ruleset_size (l);
+  int * ll = new int[s], * lr = new int[s], *sw = new int[s];
+  fill_ruleset (path, 0, l, ll, lr, sw, 0);
+  for (int i=0; i < s; i++)
+    cout << "link " << ll[i] << "," << lr[i] << " swapped by " << sw[i] << endl;
+  return 0;
+}
+#endif
+
 void ConnectionManager::handleMessage(cMessage *msg){
 
     if(dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
