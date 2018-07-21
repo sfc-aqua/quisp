@@ -74,19 +74,6 @@ static int fill_path_division (int * path /**< Nodes on the connection setup pat
   return fill_start;
 }
 
-#if 0
-int main () {
-  int l = 3;
-  int * path = { 1, 2, 3, 4 };
-  int s = compute_ruleset_size (l);
-  int * ll = new int[s], * lr = new int[s], *sw = new int[s];
-  fill_ruleset (path, 0, l, ll, lr, sw, 0);
-  for (int i=0; i < s; i++)
-    cout << "link " << ll[i] << "," << lr[i] << " swapped by " << sw[i] << endl;
-  return 0;
-}
-#endif
-
 void ConnectionManager::handleMessage(cMessage *msg){
 
     if(dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
@@ -95,17 +82,52 @@ void ConnectionManager::handleMessage(cMessage *msg){
        int actual_dst = pk->getActual_destAddr();
 
        if(actual_dst == myAddress){
+           // FIXME: is the destination in the stack? Should I add it manually in the end?
+
            //In Destination node
            //Need to create rule sets. Feel free to change things accordingly.
-           int stack_size = pk->getStack_of_QNodeIndexesArraySize();//Should be the same as pk->getStack_of_linkCostsArraySize()
-           for(int i = 0; i<stack_size; i++){
-               EV<<"\nThis is one of the stacked QNode addresses....."<<pk->getStack_of_QNodeIndexes(i)<<"\n";
-           } EV<<"\nThis is also one of the stacked QNode addresses (this destination node itself)....."<<myAddress<<"\n";
+
+           // stack_size: number of nodes on the path
+           // Should be the same as pk->getStack_of_linkCostsArraySize()
+           // path length is stack_size-1, then.
+           int stack_size = pk->getStack_of_QNodeIndexesArraySize();
+           // Let's store the path in an array to limit indirections
+           int * path = new int[stack_size];
+           for (int i = 0; i<stack_size; i++) {
+             path[i] = pk->getStack_of_QNodeIndexes(i);
+             EV << "\nQnode on the path => " << path[i];
+           }
+
+           // Number of division elements
+           int divisions = compute_path_division_size(stack_size-1);
+           // One division is: A (left node) ---- B (swapper) ---- C (right node)
+           // Sometimes there is no swag rapper, it will be -1 then.
+           // For one division, A and C need to do purification rules,
+           //   and B needs to do swapping rules.
+           int *link_left = new int[divisions],
+               *link_right = new int[divisions],
+               *swapper = new int[divisions];
+           // fill_path_division should yield *exactly* the anticipated number
+           // of divisions.
+           if (fill_path_division(path, 0, stack_size-1,
+                 link_left, link_right, swapper, 0) < divisions)
+             error("Something went wrong in path division computation.");
+
+           /* TODO: Remember you have link costs <3
            for(int i = 0; i<stack_size; i++){
                //The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel but from only 1 channels from Src->BSA and ignoring BSA->Dest).
                //If you need to test with different costs, try changing the value.
                //But we need to implement actual link-tomography for this eventually.
                EV<<"\nThis is one of the stacked link costs....."<<pk->getStack_of_linkCosts(i)<<"\n";
+           }
+           */
+
+           // Go over every division
+           for (int i=0; i<divisions; i++) {
+             if (swapper[i]>0)
+               EV << "\nDivision: " << link_left[i] << " ---( " << swapper[i] << " )--- " << link_right[i];
+             else
+               EV << "\nDivision: " << link_left[i] << " -------------- " << link_right[i];
            }
 
            //error("Yay!");
