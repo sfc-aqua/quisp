@@ -87,19 +87,20 @@ void ConnectionManager::handleMessage(cMessage *msg){
            //In Destination node
            //Need to create rule sets. Feel free to change things accordingly.
 
-           // stack_size: number of nodes on the path
+           // hop_count: number of nodes on the path excluding me (destination node)
            // Should be the same as pk->getStack_of_linkCostsArraySize()
-           // path length is stack_size-1, then.
-           int stack_size = pk->getStack_of_QNodeIndexesArraySize();
+           int hop_count = pk->getStack_of_QNodeIndexesArraySize();
            // Let's store the path in an array to limit indirections
-           int * path = new int[stack_size];
-           for (int i = 0; i<stack_size; i++) {
+           int * path = new int[hop_count+1];
+           for (int i = 0; i<hop_count; i++) {
              path[i] = pk->getStack_of_QNodeIndexes(i);
-             EV << "\nQnode on the path => " << path[i];
+             EV << "\n     Qnode on the path => " << path[i];
            }
+           path[hop_count] = myAddress;
+           EV << "\nLast Qnode on the path => " << path[hop_count];
 
            // Number of division elements
-           int divisions = compute_path_division_size(stack_size-1);
+           int divisions = compute_path_division_size(hop_count);
            // One division is: A (left node) ---- B (swapper) ---- C (right node)
            // Sometimes there is no swag rapper, it will be -1 then.
            // For one division, A and C need to do purification rules,
@@ -109,12 +110,12 @@ void ConnectionManager::handleMessage(cMessage *msg){
                *swapper = new int[divisions];
            // fill_path_division should yield *exactly* the anticipated number
            // of divisions.
-           if (fill_path_division(path, 0, stack_size-1,
+           if (fill_path_division(path, 0, hop_count,
                  link_left, link_right, swapper, 0) < divisions)
              error("Something went wrong in path division computation.");
 
            /* TODO: Remember you have link costs <3
-           for(int i = 0; i<stack_size; i++){
+           for(int i = 0; i<hop_count; i++){
                //The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel but from only 1 channels from Src->BSA and ignoring BSA->Dest).
                //If you need to test with different costs, try changing the value.
                //But we need to implement actual link-tomography for this eventually.
