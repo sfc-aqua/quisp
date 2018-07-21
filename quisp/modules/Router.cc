@@ -132,6 +132,7 @@ void Router::handleMessage(cMessage *msg)
         if (it == rtable.end()) {
             EV << "address " << destAddr << " unreachable, discarding packet " << pk->getName() << endl;
             delete pk;
+            error("Shoudnt happen");
             return;
         }
 

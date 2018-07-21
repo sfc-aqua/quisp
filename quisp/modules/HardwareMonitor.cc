@@ -270,7 +270,7 @@ neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode){
                 //error("Something is wrong with tracking the neighbor address. It is here.");
             }
         }else if(thisNode->getModuleType()== SPDCType){
-            //error("TO BE IMPLEMENTED");
+            error("TO BE IMPLEMENTED");
         }else{
             error("This simulator only recognizes the following network level node types: QNode, EPPS and HoM. Not %s",thisNode->getClassName());
             endSimulation();

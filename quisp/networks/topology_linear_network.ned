@@ -215,7 +215,7 @@ network Linear_One_MIM_MM_MSM
             address =  10000000;
             nodeType = "EndNode";
             @display("i=device/pc;p=362,83");
-            buffers = 15;
+            //buffers = 15;
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
@@ -226,19 +226,19 @@ network Linear_One_MIM_MM_MSM
         repeater: QNode {
         		address = 1234;
         		nodeType="Repeater";
-        		buffers = 25;
+        		//buffers = 25;
 
         		@display("i=device/smallrouter");
         }
         router: QNode {
             address = 3;
             nodeType = "Router";
-            buffers = 30;
-            @display("i=device/router;p=213,52");
+            //buffers = 30;
+            @display("i=device/smallrouter;p=213,52");
         }
         mm[2]: QNode {
             address = index + 100;
-            buffers = 20;
+            //buffers = 20;
             nodeType = "EndNode";
             @display("i=device/pc_s");
         }
@@ -249,7 +249,7 @@ network Linear_One_MIM_MM_MSM
 
         pas: QNode {
             address = 6;
-            buffers = 5;
+            //buffers = 5;
             nodeType = "EndNode";
             @display("i=device/pc_s;p=43,83");
         }
