@@ -131,6 +131,17 @@ void ConnectionManager::handleMessage(cMessage *msg){
                EV << "Division: " << link_left[i] << " -------------- " << link_right[i] << std::endl;
            }
 
+           //Packet returning Rule sets
+           //Rule set includes Objects composed of clauses and actions.
+           //Clauses and actions have functions, like check and
+           /**\todo
+            * Document how to use Rules, and it would be helpful if you could implement the part where it actually uses it.
+            * Dummy non-practical usage example...
+            * (For example, do fidelity check and do swap between two local qubits in a single qnic.)
+            * Create the response
+            * Full 1yr email-support (maybe tele-communication too).
+            * Psychological support. Financial support.
+            */
            //error("Yay!");
            delete msg;
            return;

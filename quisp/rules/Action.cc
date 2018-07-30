@@ -10,5 +10,10 @@
 namespace quisp {
 namespace rules {
 
+    /**\todo
+     * Have purify and swap action.
+     *
+     */
+
 } // namespace rules
 } // namespace quisp
