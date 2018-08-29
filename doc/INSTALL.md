@@ -182,7 +182,7 @@ is good. `make install` might require administrator privileges.
 
 ```sh
 /home/.local/lib λ mkdir eigen-build && cd eigen-build
-/home/.local/lib/eigen-build λ cmake ../eigen-source
+/home/.local/lib/eigen-build λ cmake -DCMAKE_INSTALL_PREFIX=/usr/local ../eigen-source
 /home/.local/lib/eigen-build λ make install
 ```
 
