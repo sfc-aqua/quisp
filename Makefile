@@ -1,4 +1,4 @@
-.PHONY: all clean run tags tags quisp/% doc quisp/.oppbuildspec .lvimrc
+.PHONY: all clean run dbg tags tags quisp/% doc quisp/.oppbuildspec .lvimrc
 
 ifneq (${VIRTUAL_ENV},quisp)
 $(error Get inside the QUISP virtual environment with `source setenv`)
@@ -9,6 +9,14 @@ MODE?=release
 MSGFILES:=$(wildcard quisp/*.msg)
 CMSGFILES:=${MSGFILES:%.msg=%_m.cc}
 HMSGFILES:=${MSGFILES:%.msg=%_m.h}
+
+ifeq (${BATCH},)
+QENV:=Qtenv
+else
+QENV:=Cmdenv
+QCONFIG?=Simple_constant_quantum_cost
+QCONFIG:=-c $(QCONFIG)
+endif
 
 all: quisp/Makefile
 	make -C quisp MODE=${MODE} $@
@@ -28,11 +36,11 @@ quisp/Makefile: quisp/makemakefiles quisp/.oppbuildspec
 
 run: quisp/quisp
 	cd quisp && \
-		./quisp -m -u Qtenv -n . networks/omnetpp.ini
+		./quisp -m -u ${QENV} -n . networks/omnetpp.ini ${QCONFIG}
 
 dbg: quisp/quisp_dbg
 	cd quisp && \
-		gdb quisp_dbg -ex 'run -m -u Qtenv -n . networks/omnetpp.ini'
+		gdb quisp_dbg -ex 'run -m -u ${QENV} -n . networks/omnetpp.ini ${QCONFIG}'
 
 quisp/%_m.cc quisp/%_m.h: quisp/Makefile
 	make -C quisp MODE=${MODE} ${@F}
