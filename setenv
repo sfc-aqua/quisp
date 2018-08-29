@@ -5,22 +5,49 @@ case "$-" in
 *) exit 1;;
 esac
 
+if test -n "${VIRTUAL_ENV}"; then
+  echo >&2 "You are already in a VIRTUAL_ENV: ${VIRTUAL_ENV}."
+  return 1
+fi
+
 __old_pwd="$(pwd)"
-while true; do
-  cd ..
-  __omnetpp_setenv="$(find -L . -maxdepth 2 -type f -name 'setenv' -path '*omnetpp*' 2>/dev/null | head -n1)"
-  if [ -n "${__omnetpp_setenv}" ]; then
-    # __omnetpp_root="$(realpath "$(dirname "${__omnetpp_setenv}")")"
-    __omnetpp_root="$(cd "$(dirname "${__omnetpp_setenv}")" && pwd)"
-    cd "${__old_pwd}"
-    break
-  fi
-  if [ "$(pwd)" = "/" ]; then
-    cd "${__old_pwd}"
-    echo "Could not find OmNET++"
-    return 1
-  fi
-done
+
+if ! test -f "${__old_pwd}/setenv"; then
+  echo >&2 "This does not look like the QUISP directory."
+  return 1
+fi
+
+if which omnetpp >/dev/null 2>/dev/null; then
+eval "activate () {
+  export PATH=\"${__old_pwd}/bin:$PATH\"
+  export HOSTNAME
+  export HOST
+  export VIRTUAL_ENV=\"quisp\"
+
+  deactivate () {
+    export PATH=\"$PATH\"
+    unset VIRTUAL_ENV
+    unset -f deactivate
+  }
+
+  unset -f activate
+}"
+else
+  while true; do
+    cd ..
+    __omnetpp_setenv="$(find -L . -maxdepth 2 -type f -name 'setenv' -path '*omnetpp*' 2>/dev/null | head -n1)"
+    if [ -n "${__omnetpp_setenv}" ]; then
+      # __omnetpp_root="$(realpath "$(dirname "${__omnetpp_setenv}")")"
+      __omnetpp_root="$(cd "$(dirname "${__omnetpp_setenv}")" && pwd)"
+      cd "${__old_pwd}"
+      break
+    fi
+    if [ "$(pwd)" = "/" ]; then
+      cd "${__old_pwd}"
+      echo "Could not find OmNET++"
+      return 1
+    fi
+  done
 
 eval "activate () {
   if [ `uname` = \"Darwin\" ]; then
@@ -42,5 +69,6 @@ eval "activate () {
   }
   unset -f activate
 }"
+fi
 
 activate
