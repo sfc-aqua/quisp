@@ -39,10 +39,6 @@ void RuleEngine::initialize()
     Busy_OR_Free_QubitState_table[QNIC_R] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_R], QNIC_R);
     Busy_OR_Free_QubitState_table[QNIC_RP] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_RP], QNIC_RP);
 
-    /*stable = initializeQubitStateTable(stable, QNIC_E);//state for qubits/qnics with MIM links
-    stable_r = initializeQubitStateTable(stable_r, QNIC_R);//MM links
-    stable_rp = initializeQubitStateTable(stable_rp, QNIC_RP);//MSM links*/
-
     tracker = new sentQubitIndexTracker[number_of_qnics_all];//Tracks which qubit was sent first, second and so on per qnic(r,rp)
 
     /*Initialize resource list by Age for the actual use of qubits in operations*/
@@ -56,10 +52,8 @@ void RuleEngine::initialize()
 void RuleEngine::handleMessage(cMessage *msg){
         header *pk = check_and_cast<header *>(msg);
 
-
         if(dynamic_cast<EmitPhotonRequest *>(msg) != nullptr){//From self.
             EmitPhotonRequest *pk = check_and_cast<EmitPhotonRequest *>(msg);
-
             cModule *rtc = getParentModule()->getSubmodule("rt");
             RealTimeController *realtime_controller = check_and_cast<RealTimeController *>(rtc);
 
@@ -86,7 +80,6 @@ void RuleEngine::handleMessage(cMessage *msg){
               default:
                 bubble("order received!");
             }
-
             realtime_controller->EmitPhoton(pk->getQnic_index(),pk->getQubit_index(),(QNIC_type) pk->getQnic_type(),pk->getKind());
         }
 
