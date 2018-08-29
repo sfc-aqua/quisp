@@ -1,5 +1,25 @@
 # QUISP
 
+**TODO** PROJECT DESCRIPTION
+
+## Installing requirements
+
+QUISP requires OmNET++ and external C++ libraries to work. The full installation
+process is described in [doc/INSTALL.md]().
+
+## Building and running
+
+There are two main ways of working with QUISP. You can either use the Eclipse-like
+graphical interface of OmNET++, for which you will find instructions in
+[doc/USAGE-omnetpp-gui.md](), or you can use the `Makefile` and GNU make,
+by looking at instructions in [doc/USAGE-makefile.md](). Some operations are
+implemented in the Makefile and not explained for the graphical user interface.
+
+## Development tools
+
+A few tools (mainly scripts) can be used to make development a bit easier. Their
+usage is described in [doc/SCRIPTS.md]().
+
 ## Building and running
 
 ### Requirements
@@ -24,15 +44,6 @@ For example:
 ```
 
 ### Libraries
-
-To run the simulation, you need to get Eigen, which is a library for matrix
-calculation in C/C++. This is used for channel errors and memory errors.
-
-Download Eigen (tested with version 3.3.4) on [their website][eigen].
-
-You will find installation information in the `INSTALL` file of their archive.
-
-[eigen]: http://eigen.tuxfamily.org/index.php?title=Main_Page
 
 Then, you need to tell OmNET++ where you put this library. Use the following
 location in the IDE:
