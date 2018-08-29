@@ -20,6 +20,7 @@ implemented in the Makefile and not explained for the graphical user interface.
 A few tools (mainly scripts) can be used to make development a bit easier. Their
 usage is described in [doc/SCRIPTS.md]().
 
+
 ## Building and running
 
 ### Requirements
@@ -41,20 +42,6 @@ For example:
     ├── quisp
     ├── README.md
     └── setenv
-```
-
-### Libraries
-
-Then, you need to tell OmNET++ where you put this library. Use the following
-location in the IDE:
-
-```
-Menu Project > Properties
-LeftTab OMNeT++ > Makemake
-Click on the quisp folder
-RightTab Check Makemake
-Options... > Compile
-Add the path to Eigen in the list
 ```
 
 ### Environment setup
