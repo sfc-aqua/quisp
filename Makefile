@@ -15,7 +15,7 @@ QENV:=Qtenv
 else
 QENV:=Cmdenv
 QCONFIG?=Simple_constant_quantum_cost
-QCONFIG:=-c $(QCONFIG)
+QCFG:=-c $(QCONFIG)
 endif
 
 all: quisp/Makefile
@@ -36,11 +36,11 @@ quisp/Makefile: quisp/makemakefiles quisp/.oppbuildspec
 
 run: quisp/quisp
 	cd quisp && \
-		./quisp -m -u ${QENV} -n . networks/omnetpp.ini ${QCONFIG}
+		./quisp -m -u ${QENV} -n . networks/omnetpp.ini ${QCFG}
 
 dbg: quisp/quisp_dbg
 	cd quisp && \
-		gdb quisp_dbg -ex 'run -m -u ${QENV} -n . networks/omnetpp.ini ${QCONFIG}'
+		gdb quisp_dbg -ex 'run -m -u ${QENV} -n . networks/omnetpp.ini ${QCFG}'
 
 quisp/%_m.cc quisp/%_m.h: quisp/Makefile
 	make -C quisp MODE=${MODE} ${@F}
