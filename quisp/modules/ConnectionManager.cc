@@ -45,6 +45,7 @@ void ConnectionManager::initialize()
   myAddress = par("address");
 }
 
+// might just be 2*l
 static int compute_path_division_size (int l /**< number of links (path length, number of nodes -1) */) {
   if (l > 1) {
     int hl = (l>>1);

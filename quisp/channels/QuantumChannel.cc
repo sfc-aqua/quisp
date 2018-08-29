@@ -78,6 +78,7 @@ void QuantumChannel::initialize(){
 
 }
 
+/** \todo KAAKI Documentation (especially on the transition matrix part) */
 void QuantumChannel::setErrorCeilings(){
     MatrixXd Initial_condition(1,5);//Input state condition of the qubit. The syntax here is symmetric to the one below.
     Matrix<double,1,5> Output_condition;//Output state distribution will be kept because the channel length is static.
