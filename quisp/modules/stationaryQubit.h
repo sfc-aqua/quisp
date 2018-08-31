@@ -9,6 +9,7 @@
 
 #include <PhotonicQubit_m.h>
 
+using namespace Eigen;
 using namespace omnetpp;
 using namespace quisp::messages;
 
@@ -24,6 +25,7 @@ namespace modules {
  *  \brief stationaryQubit
  */
 
+typedef std::complex<double> Complex;
 
 typedef struct _emission_error_model{
     double pauli_error_rate;//Overall error rate
@@ -31,6 +33,14 @@ typedef struct _emission_error_model{
     double X_error_rate;
     double Y_error_rate;
 } emission_error_model;
+
+//Matrices of single qubit errors. Used when conducting tomography.
+typedef struct _single_qubit_errors{
+    Matrix2cd X; //double 2*2 matrix
+    Matrix2cd Y;//complex double 2*2 matrix
+    Matrix2cd Z;
+    Matrix2cd I;
+} single_qubit_error;
 
 
 class stationaryQubit : public cSimpleModule
@@ -61,6 +71,8 @@ class stationaryQubit : public cSimpleModule
         int QNICtypeEntangledWith;
         /** Index of Qubit in qNIC. */
         int stationaryQubitEntangledWith;
+        /** Pointer to the entangled qubit*/
+        stationaryQubit *entangled_partner = nullptr;
         /** Photon emitted at*/
         simtime_t emitted_time = -1;
         /** Stationary qubit last updated at*/
@@ -83,6 +95,8 @@ class stationaryQubit : public cSimpleModule
                double Y_error_ceil;
                double Z_error_ceil;
        //@}
+
+       single_qubit_error Pauli;
 
 
         virtual bool checkBusy();
@@ -119,6 +133,10 @@ class stationaryQubit : public cSimpleModule
         virtual bool measure_Z();
 
         /**
+         * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
+         * */
+        virtual bool measure_Z_density();
+        /**
          * \brief Two qubit CNOT gate.
          * \param Need to specify the control qubit as an argument.
          */
@@ -133,6 +151,11 @@ class stationaryQubit : public cSimpleModule
 
         virtual void X_gate();
         virtual void purify(stationaryQubit *resource_qubit);
+
+        /*GOD parameters*/
+        virtual void setEntangledPartnerInfo(stationaryQubit *partner);
+        virtual void addXerror();
+        virtual void addZerror();
 
 
     private:
@@ -152,9 +175,10 @@ class stationaryQubit : public cSimpleModule
         virtual void handleMessage(cMessage *msg);
         virtual PhotonicQubit *generateEntangledPhoton();
         virtual void setBusy();
-        virtual void setEntangledPartnerInfo(int node_address, int qnic_index, int qubit_index);
         virtual void setErrorCeilings();
         virtual void setEmissionPauliError();
+        virtual void apply_error_due_to_idle_time();
+        virtual Matrix2cd getErrorMatrix(stationaryQubit *qubit);
 };
 
 } // namespace modules
