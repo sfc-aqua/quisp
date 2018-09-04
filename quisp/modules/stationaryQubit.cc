@@ -11,6 +11,7 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include <unsupported/Eigen/KroneckerProduct>
 #include <PhotonicQubit_m.h>
+#include<bitset>
 
 namespace quisp {
 namespace modules {
@@ -39,19 +40,19 @@ void stationaryQubit::initialize()
     err.Z_error_rate = err.pauli_error_rate * (Z_error_ratio/ratio_sum);
     setErrorCeilings();
 
-
+    //Set error matrices. This is used in the process of simulating tomography.
     Pauli.X << 0,1,1,0;
     Pauli.Y << 0,Complex(0,-1),Complex(0,1),0;
     Pauli.Z << 1,0,0,-1;
     Pauli.I << 1,0,0,1;
 
-    //pauliXerr = false;
-    //pauliZerr = false;
-    //nonPaulierr = false;
-    //nonPaulierrTwo = false;
-    /*NodeEntangledWith = -1;
-    QNICEntangledWith = -1;
-    QNICtypeEntangledWith = -1;*/
+    //Set measurement operators. This is used in the process of simulating tomography.
+    meas_op.X_plus << 0.5,0.5,0.5,0.5;
+    meas_op.X_minus << 0.5,-0.5,-0.5,0.5;
+    meas_op.Z_plus << 1,0,0,0;
+    meas_op.Z_minus << 0,0,0,1;
+    meas_op.Y_plus << 0.5,Complex(0,-0.5),Complex(0,0.5),0.5;
+    meas_op.Y_minus << 0.5,Complex(0,0.5),Complex(0,-0.5),0.5;
 
     // Get parameters from omnet
     stationaryQubit_address = par("stationaryQubit_address");
@@ -275,7 +276,7 @@ void stationaryQubit::purify(stationaryQubit * resource_qubit) {
     // if agree (truetrue or falsefalse), keep
 }
 
-void stationaryQubit::apply_error_due_to_idle_time(){
+void stationaryQubit::apply_memory_error(){
     /*Check when the error got updated last time. Errors will be performed depending on the difference between that time and the current time.*/
     simtime_t time_evolution = simTime() - updated_time;
     if(time_evolution > 0){
@@ -308,6 +309,61 @@ Matrix2cd stationaryQubit::getErrorMatrix(stationaryQubit *qubit){
     // Matrix4cd test = kroneckerProduct(Pauli.I,Pauli.Y).eval();
 }
 
+//returns the density matrix of the Bell pair with error. This assumes that this is entangled with another stationary qubit.
+//Measurement output will be based on this matrix, as long as it is still entnagled.
+quantum_state stationaryQubit::getQuantumState(){
+    Vector4cd ideal_Bell_state(1/sqrt(2),0,0,1/sqrt(2));//Assumes that the state is a 2 qubit state |00> + |11>
+
+    Matrix4cd combined_errors = kroneckerProduct(getErrorMatrix(this),getErrorMatrix(entangled_partner)).eval();
+
+    //EV<<"Combined errors  = "<<combined_errors<<"\n";
+    Vector4cd actual_Bell_state = combined_errors*ideal_Bell_state;
+    //EV<<"Current physical state is = "<<actual_Bell_state;
+    Matrix4cd density_matrix = actual_Bell_state*actual_Bell_state.adjoint();
+    //EV<<"dm = "<<density_matrix<<"\n";
+
+    quantum_state q;
+    q.state_in_density_matrix = density_matrix;
+    q.state_in_ket = actual_Bell_state;
+    return q;
+}
+
+measurement_output_probabilities stationaryQubit::getOutputProbabilities(quantum_state state, char meas_basis){
+    Matrix2cd meas_op_plus, meas_op_minus;
+    switch(meas_basis){
+        case 'X':
+            EV<<"X measurement\n";
+            meas_op_plus = meas_op.X_plus;
+            meas_op_minus = meas_op.X_minus;
+            break;
+        case 'Y':
+            EV<<"X measurement\n";
+            meas_op_plus = meas_op.Y_plus;
+            meas_op_minus = meas_op.Y_minus;
+            break;
+        case 'Z':
+            EV<<"X measurement\n";
+            meas_op_plus = meas_op.Z_plus;
+            meas_op_minus = meas_op.Z_minus;
+            break;
+        default:
+            error("Measurement basis not recognized.");
+            break;
+    }
+    measurement_output_probabilities p;
+    Complex Prob = state.state_in_ket.adjoint()*kroneckerProduct(meas_op_plus,meas_op_plus).eval().adjoint()*kroneckerProduct(meas_op_plus,meas_op_plus).eval()*state.state_in_ket;
+    p.probability_plus_plus = Prob.real();
+    Complex Prob2 = state.state_in_ket.adjoint()*kroneckerProduct(meas_op_plus,meas_op_minus).eval().adjoint()*kroneckerProduct(meas_op_plus,meas_op_minus).eval()*state.state_in_ket;
+    p.probability_plus_minus = Prob2.real();
+    Complex Prob3 = state.state_in_ket.adjoint()*kroneckerProduct(meas_op_minus,meas_op_plus).eval().adjoint()*kroneckerProduct(meas_op_minus,meas_op_plus).eval()*state.state_in_ket;
+    p.probability_minus_plus = Prob3.real();
+    Complex Prob4 = state.state_in_ket.adjoint()*kroneckerProduct(meas_op_minus,meas_op_minus).eval().adjoint()*kroneckerProduct(meas_op_minus,meas_op_minus).eval()*state.state_in_ket;
+    p.probability_minus_minus = Prob4.real();
+    return p;
+}
+
+
+
 //Assumes that this qubit is entangled with another one, as Bell pair 00+11. 1st qubit is self, 2nd is partner.
 //When do we perform measurements? I think we can just ignore the success/fail of entanglement attempt, and measure it beforehand anyway. Waiting cause error.
 //How do we know when to measure though?
@@ -320,14 +376,29 @@ bool stationaryQubit::measure_Z_density(){
     //todo Check if entangled state has collapsed already (partner qubit measured already).
 
     //if not, then measure it and get the output (density matrix required)!
-    apply_error_due_to_idle_time();//Noise due to idle time in memory.
-    Vector4cd ideal_Bell_state(1/sqrt(2),0,0,1/sqrt(2));//2 qubits |00> + |11>
-    Matrix4cd combined_errors = kroneckerProduct(getErrorMatrix(this),getErrorMatrix(entangled_partner)).eval();
-    EV<<"Combined errors  = "<<combined_errors<<"\n";
-    Vector4cd actual_Bell_state = combined_errors*ideal_Bell_state;
-    EV<<"Current physical state is = "<<actual_Bell_state;
-    Matrix4cd density_matrix = actual_Bell_state*actual_Bell_state.adjoint();
-    EV<<"dm = "<<density_matrix<<"\n";
+    apply_memory_error();//Noise due to idle time in memory. This updates the par("GOD_Zerror") and par("GOD_Xerror") of this particular qubit.
+    quantum_state current_state = getQuantumState();//Get the density matrix of the Bell pair that involves this particular qubit.
+    measurement_output_probabilities p = getOutputProbabilities(current_state, 'X');
+    EV <<" P(++) = "<<p.probability_plus_plus<<", P(+-) = "<<p.probability_plus_minus<<", P(-+) = "<<p.probability_minus_plus<<", P(--) = "<<p.probability_minus_minus<<"\n";
+    double rand = dblrand();//Gives a random double between 0.0 ~ 1.0
+
+    std::bitset<2> output(0);//by default, output is -- (in binary 00)
+    if(rand < p.probability_plus_plus){
+        //Output is ++
+        output.set(0);//01
+        output.set(1);//11
+        EV<<"Output is ++"<<output<<"\n";
+    }else if(p.probability_plus_plus <= rand && rand < (p.probability_plus_plus+p.probability_plus_minus)){
+        //Output is +-
+        output.set(1);//10
+        EV<<"Output is +-"<<output<<"\n";
+    }else if((p.probability_plus_plus+p.probability_plus_minus) <= rand && rand < (p.probability_plus_plus+p.probability_plus_minus+p.probability_minus_plus)){
+        //Output is -+
+        output.set(0);//01
+        EV<<"Output is -+"<<output<<"\n";
+    }else{
+        EV<<"Output is --"<<output<<"\n";
+    }
 
 }
 

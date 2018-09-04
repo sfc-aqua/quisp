@@ -42,6 +42,37 @@ typedef struct _single_qubit_errors{
     Matrix2cd I;
 } single_qubit_error;
 
+typedef struct _quantum_state{
+    Matrix4cd state_in_density_matrix;
+    Vector4cd state_in_ket;
+}quantum_state;
+
+typedef struct _measurement_output{
+    double probability_plus_plus;//P(+,+)
+    double probability_minus_plus;//P(+,-)
+    double probability_plus_minus;//P(-,+)
+    double probability_minus_minus;//P(-,-)
+}measurement_output_probabilities;
+
+
+//Single qubit
+typedef struct _measurement_operators{
+    Matrix2cd X_plus;
+    Matrix2cd X_minus;
+    Matrix2cd Z_plus;
+    Matrix2cd Z_minus;
+    Matrix2cd Y_plus;
+    Matrix2cd Y_minus;
+}measurement_operators;
+
+typedef struct _possible_states_after_measurement{
+    Matrix2cd X_plus;
+    Matrix2cd X_minus;
+    Matrix2cd Z_plus;
+    Matrix2cd Z_minus;
+    Matrix2cd Y_plus;
+    Matrix2cd Y_minus;
+}projected_states;
 
 class stationaryQubit : public cSimpleModule
 {
@@ -97,6 +128,8 @@ class stationaryQubit : public cSimpleModule
        //@}
 
        single_qubit_error Pauli;
+       measurement_operators meas_op;
+       projected_states proj_states;
 
 
         virtual bool checkBusy();
@@ -170,6 +203,7 @@ class stationaryQubit : public cSimpleModule
         double fidelity;
 
 
+
     protected:
         virtual void initialize();
         virtual void handleMessage(cMessage *msg);
@@ -177,9 +211,12 @@ class stationaryQubit : public cSimpleModule
         virtual void setBusy();
         virtual void setErrorCeilings();
         virtual void setEmissionPauliError();
-        virtual void apply_error_due_to_idle_time();
-        virtual Matrix2cd getErrorMatrix(stationaryQubit *qubit);
+        virtual void  apply_memory_error();
+        virtual Matrix2cd getErrorMatrix(stationaryQubit *qubit);//returns the matrix that represents the errors on the Bell pair. (e.g. XY, XZ and ZI...)
+        virtual quantum_state getQuantumState();//returns the dm of the physical Bell pair. Used for tomography.
+        virtual measurement_output_probabilities getOutputProbabilities(quantum_state state, char meas_basis);
 };
+
 
 } // namespace modules
 } // namespace quisp
