@@ -10,6 +10,8 @@
 namespace quisp {
 namespace rules {
 
+/** \func static stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id)
+ */
 static stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) {
     // assume that qnic type is ok
     std::pair<EntangledPairs::iterator,EntangledPairs::iterator> ret = resources[qtype][qid].equal_range(partner);

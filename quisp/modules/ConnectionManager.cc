@@ -9,10 +9,12 @@
 #include <omnetpp.h>
 #include "RoutingDaemon.h"
 #include "HardwareMonitor.h"
+#include <rules/RuleSet.h>
 #include <classical_messages_m.h>
 
 using namespace omnetpp;
 using namespace quisp::messages;
+using namespace quisp::rules;
 
 namespace quisp {
 namespace modules {
@@ -91,13 +93,25 @@ void ConnectionManager::handleMessage(cMessage *msg){
            // hop_count: number of nodes on the path excluding me (destination node)
            // Should be the same as pk->getStack_of_linkCostsArraySize()
            int hop_count = pk->getStack_of_QNodeIndexesArraySize();
+
            // Let's store the path in an array to limit indirections
            int * path = new int[hop_count+1];
+
+           // Let's also prepare one ruleset for every node
+           // FIXME: maybe it's better to have a map, indexed by node addresses
+           RuleSet ** rulesets = new RuleSet * [hop_count+1];
+
            for (int i = 0; i<hop_count; i++) {
              path[i] = pk->getStack_of_QNodeIndexes(i);
+             // TODO: initialize rulets
+             // The RuleSet class needs to store the address of the node it is
+             //   being sent to.
+             // rulesets[i] = new RuleSet(path[i]);
              EV << "     Qnode on the path => " << path[i] << std::endl;
            }
            path[hop_count] = myAddress;
+           // rulesets[hop_count] = new RuleSet(myAddress);
+
            EV << "Last Qnode on the path => " << path[hop_count] << std::endl;
 
            // Number of division elements
@@ -130,6 +144,27 @@ void ConnectionManager::handleMessage(cMessage *msg){
                EV << "Division: " << link_left[i] << " ---( " << swapper[i] << " )--- " << link_right[i] << std::endl;
              else
                EV << "Division: " << link_left[i] << " -------------- " << link_right[i] << std::endl;
+#if 0
+             /**
+              * \todo Create rules for every node
+              */
+             if (swapper[i]>0) { // This is a swapping relationship
+               // 1. Create swapping rules for swapper[i]
+               // Rule * swaprule = new SwapRule(...);
+               // TODO: IMPLEMENT SwapRule that will have two FidelityClause to
+               // check the fidelity of the qubit, and one SwapAction.
+               // ruleset_of_swapper_i.rules.append(swaprule);
+               // 2. Create swapping tracking rules for link_left[i] and link_right[i]
+               //    Right now, those might be empty. In the end they are used to make sure that the left and right
+               //    nodes are correctly tracking the estimation of the state of the qubits that get swapped.
+             }
+             // Whatever happens, this 'i' line is also a 'link' relationship
+             // 3. Create the purification rules for link_left[i] and link_right[i]
+             // Rule * purifyrule = ...;
+             // Rule * discardrule = ...; // do we need it or is it hardcoded?
+             // ruleset_of_link_left_i.rules.append(purifyrule);
+             // ...
+#endif
            }
 
            //Packet returning Rule sets
