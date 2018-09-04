@@ -22,7 +22,7 @@ network Simple_constant_quantum_cost
 {
     parameters:
         **.Speed_of_light_in_fiber = 205336.986301 km;
-        **.buffers = 30;
+        **.buffers = default(30);
         **.distance = 20 km;
         @display("bgb=746,327");
     types:
@@ -36,22 +36,7 @@ network Simple_constant_quantum_cost
             datarate = uniform(1kbps, 100kbps);
             int test = default(0);
         }
-        channel QuantumChannel extends DatarateChannel
-        {
-            @quantum;
-            double cost = default(1);
-            double distance @unit(km) = default(20km);
-            //delay = uniform(0.01ms, 1s);
-            double distance_of_light_in_fiber_per_sec @unit(km) = default(205336.986301km);
-            delay = this.distance / distance_of_light_in_fiber_per_sec * 1s;
-            datarate = uniform(1kbps, 100kbps);
-            double photon_loss_rate = default(0);//per km
-            double channel_error_rate = default(0);//per km
-            double Z_error_ratio = default(1);
-            double X_error_ratio = default(1);
-            double Y_error_ratio = default(1);
-            int test = default(0);
-        }
+        
     submodules:
         endnode[3]: QNode {
             address = 10000000+index;

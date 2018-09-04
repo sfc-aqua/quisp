@@ -44,7 +44,7 @@ class BellStateAnalyzer : public cSimpleModule
         int left_photon_origin_qubit_address;
         bool left_photon_Xerr;
         bool left_photon_Zerr;
-        cModule *left_statQubit_ptr;
+        stationaryQubit *left_statQubit_ptr;
         simtime_t right_arrived_at;
         int right_photon_origin_node_address;
         int right_photon_origin_qnic_address;
@@ -52,7 +52,7 @@ class BellStateAnalyzer : public cSimpleModule
         int right_photon_origin_qubit_address;
         bool right_photon_Xerr;
         bool right_photon_Zerr;
-        cModule *right_statQubit_ptr;
+        stationaryQubit *right_statQubit_ptr;
         int count_X=0, count_Y=0, count_Z=0, count_I=0, count_L=0, count_total=0;//for debug
         bool handshake = false;
         bool this_trial_done = false;
@@ -119,7 +119,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
         left_photon_origin_qnic_address = photon->getQNICEntangledWith();
         left_photon_origin_qubit_address = photon->getStationaryQubitEntangledWith();
         left_photon_origin_qnic_type = photon->getQNICtypeEntangledWith();
-        left_statQubit_ptr = photon->getEntangled_with();
+        left_statQubit_ptr = check_and_cast<stationaryQubit *>( photon->getEntangled_with());
         left_photon_Xerr = photon->getPauliXerr();
         left_photon_Zerr = photon->getPauliZerr();
         //photon->setGODfree();
@@ -139,7 +139,8 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
         right_photon_origin_qnic_address = photon->getQNICEntangledWith();
         right_photon_origin_qubit_address = photon->getStationaryQubitEntangledWith();
         right_photon_origin_qnic_type = photon->getQNICtypeEntangledWith();
-        right_statQubit_ptr = photon->getEntangled_with();
+        //right_statQubit_ptr = photon->getEntangled_with();
+        right_statQubit_ptr = check_and_cast<stationaryQubit *>( photon->getEntangled_with());
         right_photon_Xerr = photon->getPauliXerr();
         right_photon_Zerr = photon->getPauliZerr();
         if(photon->getFirst()){
@@ -280,52 +281,17 @@ bool BellStateAnalyzer::isPhotonLost(cMessage *msg){
 
 void BellStateAnalyzer:: GOD_updateEntangledInfoParameters_of_qubits(){
     EV<<"Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<" with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"\n";
-    left_statQubit_ptr->par("GOD_entangled_stationaryQubit_address") = right_statQubit_ptr->par("stationaryQubit_address");
-    left_statQubit_ptr->par("GOD_entangled_node_address") = right_statQubit_ptr->par("node_address");
-    left_statQubit_ptr->par("GOD_entangled_qnic_address") = right_statQubit_ptr->par("qnic_address");
-    left_statQubit_ptr->par("GOD_entangled_qnic_type") = right_statQubit_ptr->par("qnic_type");
-    //left_statQubit_ptr->par("GOD_Xerror") = left_photon_Xerr;
-    //left_statQubit_ptr->par("GOD_Zerror") = left_photon_Zerr;
+    left_statQubit_ptr->setEntangledPartnerInfo(right_statQubit_ptr);
     if(left_photon_Xerr)
-        left_statQubit_ptr->par("GOD_Xerror") = !left_statQubit_ptr->par("GOD_Xerror");
+        left_statQubit_ptr->addXerror();
     if(left_photon_Zerr)
-        left_statQubit_ptr->par("GOD_Zerror") = !left_statQubit_ptr->par("GOD_Zerror");
+        left_statQubit_ptr->addZerror();
 
-    right_statQubit_ptr->par("GOD_entangled_stationaryQubit_address") = left_statQubit_ptr->par("stationaryQubit_address");
-    right_statQubit_ptr->par("GOD_entangled_node_address") = left_statQubit_ptr->par("node_address");
-    right_statQubit_ptr->par("GOD_entangled_qnic_address") = left_statQubit_ptr->par("qnic_address");
-    right_statQubit_ptr->par("GOD_entangled_qnic_type") = left_statQubit_ptr->par("qnic_type");
-    //right_statQubit_ptr->par("GOD_Xerror") = right_photon_Xerr;
-    //right_statQubit_ptr->par("GOD_Zerror") = right_photon_Zerr;
+    right_statQubit_ptr->setEntangledPartnerInfo(left_statQubit_ptr);
     if(right_photon_Xerr)
-        right_statQubit_ptr->par("GOD_Xerror") = !right_statQubit_ptr->par("GOD_Xerror");
+        right_statQubit_ptr->addXerror();
     if(right_photon_Zerr)
-        right_statQubit_ptr->par("GOD_Zerror") = !right_statQubit_ptr->par("GOD_Zerror");
-
-    //endSimulation();
-    //We need a GOD to track entangled qubits pair (Not what the software knows but the reality).
-    //Updating parameters of other nodes gets really messy, so I will stop here for now.
-    //getModule(left_photon_origin_node_address);
-   /* cModule *sys = getSystemModule();
-    switch (left_photon_origin_qnic_type) {
-                case EMITTER_QNIC:{
-                    //EV<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n testing\n";
-                    //cModule *qnode = sys->getSubmodule("EndNode", left_photon_origin_node_address);
-                    //
-                    endSimulation();
-                    break;
-                }case RECEIVER_QNIC:{
-                    //EV<<sys->getSubmodule("EndNode", left_photon_origin_node_address)->getSubmodule("qnic_r",left_photon_origin_qnic_address )->getSubmodule("statQubit", left_photon_origin_qubit_address)<<"\n";
-                    break;
-                }case PASSIVE_RECEIVER_QNIC:{
-                    error("This is not implemented yet");
-                    break;
-                }default:
-                  error("Only 3 qnic types are currently recognized....");
-        }
-
-    //EV<<sys->getSubmodule("EndNode", left_photon_origin_node_address)->getSubmodule(name, index)<<" sys name....\n";
-    */
+        right_statQubit_ptr->addZerror();
 }
 
 

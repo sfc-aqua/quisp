@@ -39,10 +39,6 @@ void RuleEngine::initialize()
     Busy_OR_Free_QubitState_table[QNIC_R] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_R], QNIC_R);
     Busy_OR_Free_QubitState_table[QNIC_RP] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_RP], QNIC_RP);
 
-    /*stable = initializeQubitStateTable(stable, QNIC_E);//state for qubits/qnics with MIM links
-    stable_r = initializeQubitStateTable(stable_r, QNIC_R);//MM links
-    stable_rp = initializeQubitStateTable(stable_rp, QNIC_RP);//MSM links*/
-
     tracker = new sentQubitIndexTracker[number_of_qnics_all];//Tracks which qubit was sent first, second and so on per qnic(r,rp)
 
     /*Initialize resource list by Age for the actual use of qubits in operations*/
@@ -56,10 +52,8 @@ void RuleEngine::initialize()
 void RuleEngine::handleMessage(cMessage *msg){
         header *pk = check_and_cast<header *>(msg);
 
-
         if(dynamic_cast<EmitPhotonRequest *>(msg) != nullptr){//From self.
             EmitPhotonRequest *pk = check_and_cast<EmitPhotonRequest *>(msg);
-
             cModule *rtc = getParentModule()->getSubmodule("rt");
             RealTimeController *realtime_controller = check_and_cast<RealTimeController *>(rtc);
 
@@ -86,12 +80,11 @@ void RuleEngine::handleMessage(cMessage *msg){
               default:
                 bubble("order received!");
             }
-
             realtime_controller->EmitPhoton(pk->getQnic_index(),pk->getQubit_index(),(QNIC_type) pk->getQnic_type(),pk->getKind());
         }
 
         else if(dynamic_cast<CombinedBSAresults *>(msg) != nullptr){
-
+            //First, keep all the qubits that were successfully entangled, and reinitialize the failed ones.
             CombinedBSAresults *pk_result = check_and_cast<CombinedBSAresults *>(msg);
             BSMtimingNotifier *pk = check_and_cast<BSMtimingNotifier  *>(msg);
             bubble("trial over is set to true");
@@ -103,6 +96,8 @@ void RuleEngine::handleMessage(cMessage *msg){
             freeFailedQubits_and_AddAsResource(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index(), pk_result);
             clearTrackerTable(pk->getSrcAddr(), pk->getInternal_qnic_address());//Clear tracker every end of burst trial. This keeps which qubit was fired first, second, third and so on only for that trial.
 
+
+            //Second, schedule the next burst by referring to the received timing information.
             int qnic_address, qnic_type;
             int qnic_index, neighborQNodeAddress;
             if(pk->getInternal_qnic_address()==-1){//destination hom is outside this node.
@@ -393,7 +388,7 @@ int RuleEngine::countFreeQubits_inQnic(QubitStateTable table, int qnic_index){
 RuleEngine::QubitStateTable RuleEngine::setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index){
     for(auto it = table.cbegin(); it != table.cend(); ++it){
            if(it->second.isBusy == false && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index){
-                table[it->first].isBusy = true;//it->second.isBusy == true somehow works weird..... it does not properly assign the boolean
+                table[it->first].isBusy = true;
                 break;
             }else if(it->second.isBusy == true && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index){
                 error("Trying to set a busy qubit busy. Only free qubits can do that. Something is wrong...");
@@ -406,7 +401,7 @@ RuleEngine::QubitStateTable RuleEngine::setQubitBusy_inQnic(QubitStateTable tabl
 RuleEngine::QubitStateTable RuleEngine::setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index){
     for(auto it = table.cbegin(); it != table.cend(); ++it){
            if(it->second.isBusy == true && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index){
-                table[it->first].isBusy = false;//it->second.isBusy == true somehow works weird..... it does not properly assign the boolean
+                table[it->first].isBusy = false;
                 break;
             }else if(it->second.isBusy == false && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index){
                 error("Trying to set a free qubit free. Only busy qubits can do that. Something is wrong... ");
@@ -478,13 +473,13 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
             else
                 Busy_OR_Free_QubitState_table[QNIC_R] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], it->second.qnic_index, it->second.qubit_index);
         }else{
-            //Keep the entangled qubit
+            //Keep the entangled qubits
             EV<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
             //Add this as an available resource
             stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
+            qubit->measure_Z_density();
             allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,qubit));
             EV<<"There are "<<allResources[qnic_type][qnic_index].count(neighborQNodeAddress)<<" resources between this and "<<destAddr;
-
         }
     }
 

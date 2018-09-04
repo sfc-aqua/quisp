@@ -16,13 +16,14 @@
 
 
 cplusplus {{ 
+    #include <vector>
+    #include <unsupported/Eigen/MatrixFunctions>
+
 	using namespace omnetpp;
     typedef cModule *GOD_statQubitPtr; 
-        
+    
 }} // C++ typedef
 class noncobject GOD_statQubitPtr; // For tracking the truely entangled ones (Only God knows!). The system may think the qubit is entangled but it may not (darkcount)!
-
-
 
 
 

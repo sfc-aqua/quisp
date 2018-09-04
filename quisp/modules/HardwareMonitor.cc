@@ -14,6 +14,8 @@
 namespace quisp {
 namespace modules {
 
+using namespace rules;
+
 Define_Module(HardwareMonitor);
 
 //Hm is also responsible for calculating the rssi/oka's protocol/fidelity calcu and give it to the rd
@@ -46,6 +48,12 @@ void HardwareMonitor::initialize(int stage)
           pk->setNumber_of_measuring_resources(num_measure);
           pk->setKind(6);
           send(pk, "RuleEnginePort$o");
+          //rules::RuleSet *tomography_rule = new quisp::rules::RuleSet;
+          //tomography_rule->RuleSet->
+          //RuleSet tomo_rules;
+          //tomo_rules.RuleSet[0];
+          FidelityClause *fid = new FidelityClause(0,0,0);
+
       }
   }
 }

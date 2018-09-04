@@ -72,9 +72,9 @@ void QuantumChannel::initialize(){
     err.Y_error_rate = err.pauli_error_rate * (Y_error_ratio/ratio_sum);
     err.Z_error_rate = err.pauli_error_rate * (Z_error_ratio/ratio_sum);
     photon_loss_rate = par("photon_loss_rate");//Photon Loss rate per km.
-
+    EV<< err.X_error_rate << "Y "<< err.Y_error_rate << ", Z "<< err.Z_error_rate<<"\n";
     setErrorCeilings();
-    //EV<<"\nNo_error_ceil = "<<No_error_ceil<<", X_error_ceil = "<< X_error_ceil << ", Z_error_ceil"<<Z_error_ceil<<", Y_error_ceil"<<Y_error_ceil<<"\n";
+    EV<<"\nNo_error_ceil = "<<No_error_ceil<<", X_error_ceil = "<< X_error_ceil << ", Z_error_ceil"<<Z_error_ceil<<", Y_error_ceil"<<Y_error_ceil<<" pauli err rate is "<<err.pauli_error_rate<<"\n";
 
 }
 
