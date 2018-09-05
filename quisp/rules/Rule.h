@@ -26,7 +26,10 @@ class Rule {
     public:
         Rule() {};
         void setCondition (Condition * c) { condition.reset(c); };
+        //const pCondition& getCondition() { return condition; };
         void setAction (Action * a) { action.reset(a); };
+        //const pAction& getAction() { return action; };
+        int checkrun(qnicResources * resources);
 };
 typedef std::unique_ptr<Rule> pRule;
 

@@ -17,14 +17,13 @@ namespace rules {
  *
  * \brief Set of rules for the RuleEngine.
  */
-class RuleSet {
+class RuleSet : public std::list<pRule> {
     private:
-      std::list<pRule> rules;
-      int owner;
-
+        int owner;
     public:
-      RuleSet(int o) { owner = o; }
-      void addRule(Rule * r) { rules.push_back(pRule(r)); };
+        RuleSet(int o) : std::list<pRule> () { owner = o; }
+        void addRule(Rule * r) { push_back(pRule(r)); };
+        void addRule(pRule& r) { push_back(pRule(std::move(r))); };
 };
 
 } // namespace rules

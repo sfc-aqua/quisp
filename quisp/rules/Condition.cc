@@ -12,7 +12,7 @@ namespace quisp {
 namespace rules {
 
 int Condition::check(qnicResources *resources) const {
-    for (auto clause = clauses.cbegin(), end = clauses.cend(); clause != end; clause++)
+    for (auto clause = cbegin(), end = cend(); clause != end; clause++)
         if ((*clause)->check(resources)) return 1;
     return 0;
 }
