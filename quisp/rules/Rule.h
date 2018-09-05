@@ -10,6 +10,7 @@
 #include "Condition.h"
 #include "Action.h"
 #include <omnetpp.h>
+#include <memory>
 
 namespace quisp {
 namespace rules {
@@ -20,13 +21,14 @@ namespace rules {
  */
 class Rule {
     private:
-        Condition* condition;
-        Action* action;
+        pCondition condition;
+        pAction action;
     public:
         Rule() {};
-        void setCondition (Condition* c) { condition = c; };
-        void setAction (Action* a) { action = a; };
+        void setCondition (Condition * c) { condition.reset(c); };
+        void setAction (Action * a) { action.reset(a); };
 };
+typedef std::unique_ptr<Rule> pRule;
 
 } // namespace rules
 } // namespace quisp

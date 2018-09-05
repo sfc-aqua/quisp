@@ -19,12 +19,12 @@ namespace rules {
  */
 class RuleSet {
     private:
-      std::list<Rule*> rules;
+      std::list<pRule> rules;
       int owner;
 
     public:
       RuleSet(int o) { owner = o; }
-      void addRule(Rule* r) { rules.push_back(r); };
+      void addRule(Rule * r) { rules.push_back(pRule(r)); };
 };
 
 } // namespace rules

@@ -10,6 +10,7 @@
 #include <omnetpp.h>
 #include <modules/QNIC.h>
 #include <modules/QUBIT.h>
+#include <memory>
 
 using namespace quisp::modules;
 
@@ -47,6 +48,7 @@ class Clause {
         };
         virtual int check(qnicResources *resources) const = 0;
 };
+typedef std::unique_ptr<Clause> pClause;
 
 class FidelityClause : public Clause {
     protected:

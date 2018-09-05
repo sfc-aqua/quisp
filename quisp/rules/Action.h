@@ -10,6 +10,7 @@
 #include <omnetpp.h>
 #include <modules/QNIC.h>
 #include <modules/QUBIT.h>
+#include <memory>
 
 using namespace quisp::modules;
 
@@ -24,6 +25,7 @@ class Action {
   public:
     virtual void run(qnicResources *resources) = 0;
 };
+typedef std::unique_ptr<Action> pAction;
 
 class SwappingAction : public Action {
     protected:

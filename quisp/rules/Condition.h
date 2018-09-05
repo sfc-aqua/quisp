@@ -9,6 +9,7 @@
 
 #include "Clause.h"
 #include <omnetpp.h>
+#include <memory>
 
 namespace quisp {
 namespace rules {
@@ -19,12 +20,13 @@ namespace rules {
  */
 class Condition {
     private:
-        std::list<Clause*> clauses;
+        std::list<pClause> clauses;
 
     public:
-        void addClause(Clause* c) { clauses.push_back(c); };
+        void addClause(Clause * c) { clauses.push_back(pClause(c)); };
         int check(qnicResources * resources) const;
 };
+typedef std::unique_ptr<Condition> pCondition;
 
 } // namespace rules
 } // namespace quisp

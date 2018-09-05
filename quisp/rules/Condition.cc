@@ -6,12 +6,13 @@
  *  \brief Condition
  */
 #include "Condition.h"
+#include <memory>
 
 namespace quisp {
 namespace rules {
 
 int Condition::check(qnicResources *resources) const {
-    for (std::list<Clause*>::const_iterator clause = clauses.cbegin(), end = clauses.cend(); clause != end; clause++)
+    for (auto clause = clauses.cbegin(), end = clauses.cend(); clause != end; clause++)
         if ((*clause)->check(resources)) return 1;
     return 0;
 }
