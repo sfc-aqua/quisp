@@ -22,6 +22,7 @@ class Condition {
         std::list<Clause*> clauses;
 
     public:
+        void addClause(Clause* c) { clauses.push_back(c); };
         int check(qnicResources * resources) const;
 };
 

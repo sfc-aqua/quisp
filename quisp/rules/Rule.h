@@ -20,8 +20,12 @@ namespace rules {
  */
 class Rule {
     private:
-        Condition condition;
-        std::list<Action> actions;
+        Condition* condition;
+        Action* action;
+    public:
+        Rule() {};
+        void setCondition (Condition* c) { condition = c; };
+        void setAction (Action* a) { action = a; };
 };
 
 } // namespace rules

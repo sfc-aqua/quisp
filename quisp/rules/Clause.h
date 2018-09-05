@@ -56,6 +56,10 @@ class FidelityClause : public Clause {
         FidelityClause(int partner, int resource, double fidelity) : Clause(partner, resource) {
             threshold = fidelity;
         };
+        FidelityClause(int part, QNIC_type qt, int qi, int res, double fidelity)
+        : Clause(part, qt, qi, res) {
+            threshold = fidelity;
+        };
         int check(qnicResources *resources) const override;
 };
 
