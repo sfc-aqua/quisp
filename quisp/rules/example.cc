@@ -30,7 +30,7 @@ using namespace quisp::modules;
 
 RuleSet* build_ruleset_42 () {
   // 1. Create a Rule Set for node 42
-  RuleSet* ruleset_42 = new RuleSet(42);
+  RuleSet* ruleset_42 = new RuleSet(42,1);
 
   // 2. Create a rule for swapping
   Rule* rule_swapping_0_1 = new Rule();
@@ -99,6 +99,7 @@ void run_ruleset(RuleSet * rs) {
     }
 }*/
 
+/*
 int main (int argc, char * argv[]) {
     qnicResources * resources = NULL; // Fictional resources for compilation
 
@@ -115,5 +116,5 @@ int main (int argc, char * argv[]) {
     }
 
     return 0;
-}
+}*/
 

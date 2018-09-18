@@ -78,6 +78,16 @@ class PurifyAction : public Action {
         void run(qnicResources *resources) override;
 };
 
+
+class RandomMeasureAction : public Action {
+    public:
+        RandomMeasureAction(){
+
+        };
+
+        void run(qnicResources *resources) override;
+};
+
 } // namespace rules
 } // namespace quisp
 

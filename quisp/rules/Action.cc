@@ -35,5 +35,10 @@ void PurifyAction::run(qnicResources* resources) {
     // error
 }
 
+void RandomMeasureAction::run(qnicResources* resources) {
+    EV<<"Measuring qubit now.";
+    // error
+}
+
 } // namespace rules
 } // namespace quisp

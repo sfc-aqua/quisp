@@ -17,10 +17,6 @@ packet header
     int hopCount;
 }
 
-packet LinkTomographyRequest extends header
-{
-    int number_of_measuring_resources;
-}
 
 packet ConnectionSetupRequest extends header
 {
@@ -40,6 +36,13 @@ cplusplus {{
     typedef quisp::rules::RuleSet * RuleSetField;
 }}
 class noncobject RuleSetField;
+
+packet LinkTomographyRequest extends header
+{
+    int process_id;
+    int number_of_measuring_resources;
+    RuleSetField RuleSet;
+}
 
 packet ConnectionSetupResponse extends header
 {

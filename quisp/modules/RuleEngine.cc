@@ -14,6 +14,8 @@ namespace modules {
 
 Define_Module(RuleEngine);
 
+using namespace rules;
+
 void RuleEngine::initialize()
 {
     //HardwareMonitor's neighbor table is checked in the initialization stage of the simulation
@@ -46,6 +48,8 @@ void RuleEngine::initialize()
     allResources[QNIC_E] = new EntangledPairs[number_of_qnics];
     allResources[QNIC_R] = new EntangledPairs[number_of_qnics_r];
     allResources[QNIC_RP] = new EntangledPairs[number_of_qnics_rp];
+
+    //running_processes = new RuleSetPtr[QNIC_N];//One process per QNIC for now. No multiplexing.
 
 }
 
@@ -156,7 +160,18 @@ void RuleEngine::handleMessage(cMessage *msg){
            EPPStimingNotifier *pk = check_and_cast<EPPStimingNotifier *>(msg);
         }
         else if(dynamic_cast<LinkTomographyRequest *>(msg) != nullptr){
-            //Need to create rules for this.
+           //Received a tomography rule set.
+           LinkTomographyRequest *pk = check_and_cast<LinkTomographyRequest *>(msg);
+           process p;
+           p.ownner_addr = pk->getRuleSet()->owner;
+           p.working_partner_addr = pk->getRuleSet()->entangled_partner;
+           p.Rule = pk->getRuleSet();
+           int process_id = rp.size();
+           rp.insert(std::make_pair(process_id, p));
+
+           /*for (auto tomography=rs->cbegin(), end=rs->cend(); tomography!=end; tomography++)
+                  (*tomography)->checkrun(resources);*/
+           //error("Hello");
         }
     delete msg;
 }
@@ -478,10 +493,10 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
             //Add this as an available resource
             stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
             //std::bitset<1> test = qubit->measure_density('Z');
-            qubit->measure_density('Z');
+            //qubit->measure_density('Z');
             //EV<<"Outcome is "<<test;
-            allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,qubit));
-            EV<<"There are "<<allResources[qnic_type][qnic_index].count(neighborQNodeAddress)<<" resources between this and "<<destAddr;
+            allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,qubit));//Add qubit as available resource between NeighborQNodeAddress.
+            EV<<"There are "<<allResources[qnic_type][qnic_index].count(neighborQNodeAddress)<<" resources between this and "<<destAddr<<"\n";
         }
     }
 

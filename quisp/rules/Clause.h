@@ -29,6 +29,7 @@ class Clause {
         int resource; /**< Identifies qubit */
 
     public:
+        Clause() {};
         Clause(int partner, int resource) : Clause(partner, QNIC_N, -1, resource) {};
         Clause(int part, QNIC_type qt, int qi, int res) {
             partner = part;
@@ -46,7 +47,7 @@ class Clause {
             //if (qnic_type >= QNIC_N) omnetpp::error("Not that many QNIC types.");
             //if (qnic_id < 0) omnetpp::error("Negative qnic index.");
         };
-        virtual int check(qnicResources *resources) const = 0;
+        virtual bool check(qnicResources *resources) const = 0;
 };
 typedef std::unique_ptr<Clause> pClause;
 
@@ -62,7 +63,19 @@ class FidelityClause : public Clause {
         : Clause(part, qt, qi, res) {
             threshold = fidelity;
         };
-        int check(qnicResources *resources) const override;
+        bool check(qnicResources *resources) const override;
+};
+
+class MeasureCountClause : public Clause {
+    protected:
+        int max_count;
+    public:
+        int current_count;
+        MeasureCountClause(int max) : Clause() {
+            max_count = max;
+            current_count = 0;
+        };
+        bool check(qnicResources *resources) const override;
 };
 
 class XErrClause : public Clause {};

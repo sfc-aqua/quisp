@@ -11,12 +11,18 @@
 namespace quisp {
 namespace rules {
 
-int FidelityClause::check(qnicResources* resources) const {
+bool FidelityClause::check(qnicResources* resources) const {
     stationaryQubit* qubit = NULL;
     checkQnic();
-    if (qubit = getQubit(resources, qnic_type, qnic_id, partner, resource))
+    if(qubit = getQubit(resources, qnic_type, qnic_id, partner, resource)){
         return (qubit->getFidelity() >= threshold);
-    return 0;
+    }
+    return false;
+}
+bool MeasureCountClause::check(qnicResources* resources) const {
+    EV<<"MeasureCountClause invoked.";
+
+    return true;
 }
 
 Clause *EXAMPLE_CLAUSE = new FidelityClause(0,0,.6);

@@ -23,6 +23,7 @@ using namespace omnetpp;
 
 namespace quisp {
 namespace modules {
+using namespace rules;
 
 /** \class RuleEngine RuleEngine.h
  *  \todo Documentation of the class header.
@@ -33,6 +34,15 @@ namespace modules {
  *
  *  \brief RuleEngine
  */
+
+//Process = RuleSet
+typedef struct _process{
+    int ownner_addr;
+    int working_partner_addr;
+    //int process_ID;
+    RuleSet* Rule;
+} process;
+
 class RuleEngine : public cSimpleModule
 {
     public:
@@ -54,7 +64,11 @@ class RuleEngine : public cSimpleModule
         int* qnic_burst_trial_counter;
         typedef std::map<int,bool> trial_tracker;//trial index, false or true (that trial is over or not)
         qnicResources* allResources; //Size will be defined in initialization. If 3 qnic types, then size is 3.
-        typedef std::map<std::string, quisp::rules::RuleSet> processes;//process_id -> Rule set
+
+        //typedef rules::RuleSet* RuleSetPtr;
+        typedef std::map<int, process> running_processes;
+        running_processes rp;
+        //typedef std::map<std::string, quisp::rules::RuleSet> processes;//process_id -> Rule set
 
     protected:
         virtual void initialize() override;

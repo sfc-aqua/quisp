@@ -18,19 +18,11 @@ namespace rules {
  * \brief Set of rules for the RuleEngine.
  */
 
-class RuleSet {
-    public:
-      std::list<pRule> rules;
-      int owner;
-
-      RuleSet(int o) { owner = o; }
-      void addRule(Rule * r) { rules.push_back(pRule(r)); };
-
 class RuleSet : public std::list<pRule> {
-    private:
-        int owner;
     public:
-        RuleSet(int o) : std::list<pRule> () { owner = o; }
+        int owner;
+        int entangled_partner;
+        RuleSet(int o, int e) : std::list<pRule> () { owner = o; entangled_partner = e;}
         void addRule(Rule * r) { push_back(pRule(r)); };
         void addRule(pRule& r) { push_back(pRule(std::move(r))); };
 
