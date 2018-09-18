@@ -367,8 +367,8 @@ measurement_output_probabilities stationaryQubit::getOutputProbabilities(quantum
 //Assumes that this qubit is entangled with another one, as Bell pair 00+11. 1st qubit is self, 2nd is partner.
 //When do we perform measurements? I think we can just ignore the success/fail of entanglement attempt, and measure it beforehand anyway. Waiting cause error.
 //How do we know when to measure though?
-//Return value: True if output is +, False if output is -.
-bool stationaryQubit::measure_Z_density(){
+//Return value: 1 if output is +, 0 if output is -.
+std::bitset<1> stationaryQubit::measure_density(char basis_this_qubit){
     if(entangled_partner == nullptr){
         error("Measuring a qubit that is not entangled with another qubit. Not allowed!");
     }
@@ -378,28 +378,28 @@ bool stationaryQubit::measure_Z_density(){
     //if not, then measure it and get the output (density matrix required)!
     apply_memory_error();//Noise due to idle time in memory. This updates the par("GOD_Zerror") and par("GOD_Xerror") of this particular qubit.
     quantum_state current_state = getQuantumState();//Get the density matrix of the Bell pair that involves this particular qubit.
-    measurement_output_probabilities p = getOutputProbabilities(current_state, 'X');
+    measurement_output_probabilities p = getOutputProbabilities(current_state, basis_this_qubit);
     EV <<" P(++) = "<<p.probability_plus_plus<<", P(+-) = "<<p.probability_plus_minus<<", P(-+) = "<<p.probability_minus_plus<<", P(--) = "<<p.probability_minus_minus<<"\n";
     double rand = dblrand();//Gives a random double between 0.0 ~ 1.0
 
     std::bitset<2> output(0);//by default, output is -- (in binary 00)
     if(rand < p.probability_plus_plus){
         //Output is ++
-        output.set(0);//01
-        output.set(1);//11
+        output.set(0);//00->01
+        output.set(1);//01->11
         EV<<"Output is ++"<<output<<"\n";
     }else if(p.probability_plus_plus <= rand && rand < (p.probability_plus_plus+p.probability_plus_minus)){
         //Output is +-
-        output.set(1);//10
+        output.set(1);//00->10
         EV<<"Output is +-"<<output<<"\n";
     }else if((p.probability_plus_plus+p.probability_plus_minus) <= rand && rand < (p.probability_plus_plus+p.probability_plus_minus+p.probability_minus_plus)){
         //Output is -+
-        output.set(0);//01
+        output.set(0);//00->01
         EV<<"Output is -+"<<output<<"\n";
     }else{
         EV<<"Output is --"<<output<<"\n";
     }
-
+    //return output.test(1);
 }
 
 

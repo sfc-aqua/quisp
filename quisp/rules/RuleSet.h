@@ -18,11 +18,10 @@ namespace rules {
  * \brief Set of rules for the RuleEngine.
  */
 class RuleSet {
-    private:
+    public:
       std::list<pRule> rules;
       int owner;
 
-    public:
       RuleSet(int o) { owner = o; }
       void addRule(Rule * r) { rules.push_back(pRule(r)); };
 };

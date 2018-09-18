@@ -90,3 +90,10 @@ RuleSet* ruleset_42_do_everything() {
 
   return ruleset_42;
 }
+
+/*
+void run_ruleset(RuleSet * rs) {
+    for (auto rule = rs->rules.cbegin(), end = rs->rules.cend(); rule!=end; rule++) {
+        if ((*rule)->condition->check()) { (*rule)->action->run(); break; }
+    }
+}*/

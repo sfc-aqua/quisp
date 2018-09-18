@@ -65,14 +65,6 @@ typedef struct _measurement_operators{
     Matrix2cd Y_minus;
 }measurement_operators;
 
-typedef struct _possible_states_after_measurement{
-    Matrix2cd X_plus;
-    Matrix2cd X_minus;
-    Matrix2cd Z_plus;
-    Matrix2cd Z_minus;
-    Matrix2cd Y_plus;
-    Matrix2cd Y_minus;
-}projected_states;
 
 class stationaryQubit : public cSimpleModule
 {
@@ -129,7 +121,7 @@ class stationaryQubit : public cSimpleModule
 
        single_qubit_error Pauli;
        measurement_operators meas_op;
-       projected_states proj_states;
+       //projected_states proj_states;
 
 
         virtual bool checkBusy();
@@ -168,7 +160,7 @@ class stationaryQubit : public cSimpleModule
         /**
          * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
          * */
-        virtual bool measure_Z_density();
+        virtual std::bitset<1> measure_density(char basis_this_qubit);
         /**
          * \brief Two qubit CNOT gate.
          * \param Need to specify the control qubit as an argument.

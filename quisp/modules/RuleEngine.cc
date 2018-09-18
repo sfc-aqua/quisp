@@ -477,7 +477,9 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
             EV<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
             //Add this as an available resource
             stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
-            qubit->measure_Z_density();
+            //std::bitset<1> test = qubit->measure_density('Z');
+            qubit->measure_density('Z');
+            //EV<<"Outcome is "<<test;
             allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,qubit));
             EV<<"There are "<<allResources[qnic_type][qnic_index].count(neighborQNodeAddress)<<" resources between this and "<<destAddr;
         }

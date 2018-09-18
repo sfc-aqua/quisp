@@ -20,10 +20,9 @@ namespace rules {
  *  \brief Rule
  */
 class Rule {
-    private:
+    public:
         pCondition condition;
         pAction action;
-    public:
         Rule() {};
         void setCondition (Condition * c) { condition.reset(c); };
         void setAction (Action * a) { action.reset(a); };
