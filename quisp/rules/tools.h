@@ -19,7 +19,7 @@ static stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int 
     int real_res_id = 0;
     for (EntangledPairs::iterator it=ret.first; it!=ret.second; ++it,++real_res_id) {
         std::cout << real_res_id << '\n';
-        if (real_res_id == res_id) return it->second;
+        if (real_res_id == res_id) return it->second;//Return the top qubit in that list
     }
     return NULL;
 }

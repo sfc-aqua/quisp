@@ -21,7 +21,13 @@ bool FidelityClause::check(qnicResources* resources) const {
 }
 bool MeasureCountClause::check(qnicResources* resources) const {
     EV<<"MeasureCountClause invoked.\n";
-    return true;
+    if(current_count<max_count){
+        current_count++;//Increment measured counter.
+        EV<<"Measurement count is now "<<current_count<<" < "<<max_count<<"\n";
+        return true;
+    }
+    else
+        return false;
 }
 
 

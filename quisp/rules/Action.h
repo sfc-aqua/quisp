@@ -80,7 +80,7 @@ class PurifyAction : public Action {
 
 class RandomMeasureAction : public Action {
     public:
-        RandomMeasureAction(){
+        RandomMeasureAction(int part, QNIC_type qt, int qi, int res){
 
         };
 

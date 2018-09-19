@@ -542,41 +542,6 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
 
 }
 
-void RuleEngine::traverseThroughAllProcesses(int qnic_type, int qnic_index){
-
-    int testing = rp.size();
-    EV<<"running processes = "<<testing<<"\n";
-
-              if(rp.size()>0){
-                  EV<<"Inside process running\n";
-                  for( auto i = rp.begin(); i != rp.end() ; ++i ) {
-                       RuleSet* process = i->second.RuleSet;
-                       int resource_entangled_with_address = process->entangled_partner;
-                       EV<<"Checking first process...."<<process->size()<<"\n";
-                       if(allResources[qnic_type][qnic_index].count(resource_entangled_with_address)>0){//If a resource exists
-
-                           EV<<" !!! "<<allResources[qnic_type][qnic_index].count(resource_entangled_with_address)<<"Resource found between node "<<resource_entangled_with_address<<"!\n";
-                           auto ret = allResources[qnic_type][qnic_index].equal_range(resource_entangled_with_address);
-                           for (auto i = ret.first; i != ret.second; ++i) {
-                               EV<<"Resource: between node "<<i->first<<", "<<i->second<<"\n";
-                           }
-
-
-                           for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){
-                               EV<<"Running first Condition & Action now\n";
-                               int res = (*rule)->checkrun(allResources);
-                           }
-                           error(" done...\n");
-                       }else{
-                           EV<<"No resource available between "<<resource_entangled_with_address<<"\n";
-                       }
-                   }
-              }else
-                  EV<<"No process running\n";
-
-
-}
-
 
 void RuleEngine::clearTrackerTable(int destAddr,int internal_qnic_address){
     int qnic_address = -1;
@@ -617,6 +582,35 @@ void RuleEngine::finish(){
 double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index) {
     return uniform(.6,.9);
 }
+
+
+void RuleEngine::traverseThroughAllProcesses(int qnic_type, int qnic_index){
+
+    int testing = rp.size();
+    EV<<"running processes = "<<testing<<"\n";
+
+              if(rp.size()>0){
+                  EV<<"Inside process running.\n";
+                  for( auto i = rp.begin(); i != rp.end() ; ++i ) {//Traverse through all processes.
+                       RuleSet* process = i->second.RuleSet;//One Process. From top to bottom.
+                       int resource_entangled_with_address = process->entangled_partner;//
+                       EV<<"Checking first process...."<<process->size()<<"\n";
+                       if(allResources[qnic_type][qnic_index].count(resource_entangled_with_address)>0){//If a resource exists
+
+                           for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){
+                               EV<<"Running first Condition & Action now\n";
+                               int res = (*rule)->checkrun(allResources, qnic_type, qnic_index,resource_entangled_with_address);//Do something on qubits entangled with resource_entangled_with_address.
+                           }
+                           //error(" done...\n");
+                       }else{
+                           EV<<"No resource available between "<<resource_entangled_with_address<<" in this specific QNIC. \n";
+                       }
+                   }
+              }else
+                  EV<<"No process running\n";
+}
+
+
 
 } // namespace modules
 } // namespace quisp

@@ -22,5 +22,6 @@ bool Condition::check(qnicResources *resources) const {
     return satisfying;
 }
 
+
 } // namespace rules
 } // namespace quisp

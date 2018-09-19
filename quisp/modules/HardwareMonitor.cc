@@ -55,10 +55,11 @@ void HardwareMonitor::initialize(int stage)
               /*-One rule-*/
               Rule* Random_measure_tomo = new Rule();//Let's make nodes select measurement basis randomly, because it it easier.
               Condition* total_measurements = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
-              Clause* measure_count_clause = new MeasureCountClause(num_measure);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
+
+              Clause* measure_count_clause = new MeasureCountClause(num_measure,it->second.neighborQNode_address/*Partner node address*/, it->second.qnic.type , it->second.qnic.index, 0/*Top one of the resource list*/);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
               total_measurements->addClause(measure_count_clause);
               Random_measure_tomo->setCondition(total_measurements);
-              quisp::rules::Action* measure = new RandomMeasureAction();//Measure the local resource between it->second.neighborQNode_address.
+              quisp::rules::Action* measure = new RandomMeasureAction(it->second.neighborQNode_address/*Partner node address*/, it->second.qnic.type , it->second.qnic.index, 0/*Which resource to use: Use top one of the resource list*/);//Measure the local resource between it->second.neighborQNode_address.
               Random_measure_tomo->setAction(measure);
               /*---------*/
               /*Add the rule to the RuleSet*/
@@ -68,7 +69,7 @@ void HardwareMonitor::initialize(int stage)
               //send(pk, "RuleEnginePort$o");
               //send(pk, "RuleEnginePort$o");
               send(pk,"RouterPort$o");
-
+              /*
               //For Neighbor
               LinkTomographyRequest *pkt = new LinkTomographyRequest;
               pkt->setDestAddr(it->second.neighborQNode_address);
@@ -79,6 +80,7 @@ void HardwareMonitor::initialize(int stage)
               pkt->setRuleSet(tomography_RuleSet_partner);
               pkt->setKind(6);
               send(pkt,"RouterPort$o");
+              */
           }
       }
   }
@@ -152,10 +154,10 @@ int HardwareMonitor::checkNumFreeBuff(int qnic_index, int qnic_type){
 Interface_inf HardwareMonitor::getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type){
     cModule *local_qnic;
     if (qnic_type>=QNIC_N) error("Only 3 qnic types are currently recognized...."); // avoid segfaults <3
-    local_qnic = getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);
+    local_qnic = getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);//QNIC itself
     Interface_inf inf;
     inf.qnic.pointer = local_qnic;
-    inf.qnic.address = local_qnic->par("self_qnic_address");
+    inf.qnic.address = local_qnic->par("self_qnic_address");//Extract from QNIC parameter
     inf.qnic.index = qnic_index;
     inf.qnic.type = qnic_type;
     inf.buffer_size = local_qnic->par("numBuffer");

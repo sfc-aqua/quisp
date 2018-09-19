@@ -67,15 +67,20 @@ class FidelityClause : public Clause {
 };
 
 class MeasureCountClause : public Clause {
-    protected:
-        int max_count;
     public:
-        int current_count;
-        MeasureCountClause(int max) : Clause() {
+        int max_count;
+        int mutable current_count;
+        MeasureCountClause(int max, int part, QNIC_type qt, int qi, int res) : Clause(part, qt, qi, res) {//May not need this
             max_count = max;
             current_count = 0;
         };
+        MeasureCountClause(int max) : Clause() {
+            max_count = max;
+            current_count = 0;
+         };
         bool check(qnicResources *resources) const override;
+        //void increment(){current_count++;};
+
 };
 
 class XErrClause : public Clause {};
