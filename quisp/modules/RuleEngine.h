@@ -40,7 +40,7 @@ typedef struct _process{
     int ownner_addr;
     int working_partner_addr;
     //int process_ID;
-    RuleSet* Rule;
+    RuleSet* RuleSet;
 } process;
 
 class RuleEngine : public cSimpleModule

@@ -11,6 +11,7 @@
 #include "Action.h"
 #include <omnetpp.h>
 #include <memory>
+#include <stdio.h>
 
 namespace quisp {
 namespace rules {
@@ -29,6 +30,7 @@ class Rule {
         void setAction (Action * a) { action.reset(a); };
         //const pAction& getAction() { return action; };
         int checkrun(qnicResources * resources);
+        int test(qnicResources * resources);
 };
 typedef std::unique_ptr<Rule> pRule;
 

@@ -11,7 +11,7 @@
 namespace quisp {
 namespace rules {
 
-    void SwappingAction::run(qnicResources* resources) {
+int SwappingAction::run(qnicResources* resources) {
         stationaryQubit *lqubit = NULL, *rqubit = NULL;
         lqubit = getQubit(resources,
                 left_qnic_type, left_qnic_id, left_partner, left_resource);
@@ -19,24 +19,25 @@ namespace rules {
                 right_qnic_type, right_qnic_id, right_partner, right_resource);
         if ((lqubit) && (rqubit)) {
             // do swapping on lqubit and rqubit TODO
-            return;
+            return 0;
         }
         // error
     }
 
-void PurifyAction::run(qnicResources* resources) {
+int PurifyAction::run(qnicResources* resources) {
     stationaryQubit *qubit = NULL, *trash_qubit = NULL;
     qubit = getQubit(resources,qnic_type,qnic_id,partner,resource);
     trash_qubit = getQubit(resources,qnic_type,qnic_id,partner,trash_resource);
     if ((qubit) && (trash_qubit)) {
         // do purification where trash_qubit is in the measured pair TODO
-        return;
+        return 0;
     }
     // error
 }
 
-void RandomMeasureAction::run(qnicResources* resources) {
+int RandomMeasureAction::run(qnicResources* resources) {
     EV<<"Measuring qubit now.";
+    return 1000;
     // error
 }
 

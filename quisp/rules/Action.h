@@ -23,7 +23,7 @@ namespace rules {
  */
 class Action {
   public:
-    virtual void run(qnicResources *resources) = 0;
+    virtual int run(qnicResources *resources) = 0;
 };
 typedef std::unique_ptr<Action> pAction;
 
@@ -55,7 +55,7 @@ class SwappingAction : public Action {
             right_resource = rr;
         };
 
-        void run(qnicResources *resources) override;
+        int run(qnicResources *resources) override;
 };
 
 class PurifyAction : public Action {
@@ -74,8 +74,7 @@ class PurifyAction : public Action {
             resource = res;
             trash_resource = tres;
         };
-
-        void run(qnicResources *resources) override;
+        int run(qnicResources *resources) override;
 };
 
 
@@ -85,7 +84,7 @@ class RandomMeasureAction : public Action {
 
         };
 
-        void run(qnicResources *resources) override;
+        int run(qnicResources *resources) override;
 };
 
 } // namespace rules

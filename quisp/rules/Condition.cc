@@ -11,10 +11,15 @@
 namespace quisp {
 namespace rules {
 
-int Condition::check(qnicResources *resources) const {
-    for (auto clause = cbegin(), end = cend(); clause != end; clause++)
-        if ((*clause)->check(resources)) return 1;
-    return 0;
+bool Condition::check(qnicResources *resources) const {
+    bool satisfying = true;
+    for (auto clause = cbegin(), end = cend(); clause != end; clause++){
+        if (!(*clause)->check(resources)){
+            satisfying = false;
+            break;
+        }
+    }
+    return satisfying;
 }
 
 } // namespace rules

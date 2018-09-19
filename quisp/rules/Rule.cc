@@ -10,11 +10,20 @@
 namespace quisp {
 namespace rules {
 
+//you also sometimes need to return feedback information for other nodes.
 int Rule::checkrun(qnicResources * resources) {
     int res = 0;
-    if (res == condition->check(resources))
-        action->run(resources);
+    if (condition->check(resources)){
+        EV<<"All conditions meet. Running Action. \n";
+        res = action->run(resources);
+    }
     return res;
+}
+
+int Rule::test(qnicResources * resources){
+    EV<<"Invoked!!!!!!!!\n";
+    printf("Test");
+    return 0;
 }
 
 } // namespace rules

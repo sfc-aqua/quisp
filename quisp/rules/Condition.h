@@ -22,7 +22,7 @@ class Condition : std::list<pClause> {
     public:
         void addClause(Clause * c) { push_back(pClause(c)); };
         void addClause(pClause& c) { push_back(pClause(std::move(c))); };
-        int check(qnicResources * resources) const;
+        bool check(qnicResources * resources) const;
 };
 typedef std::unique_ptr<Condition> pCondition;
 

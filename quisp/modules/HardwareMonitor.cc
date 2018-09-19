@@ -40,8 +40,9 @@ void HardwareMonitor::initialize(int stage)
   //qtable = new QnicInfo[numQnic];
   //qtable = initializeQTable(numQnic, qtable);
 
-  if(do_link_level_tomography){
+  if(do_link_level_tomography && stage == 1){
       for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
+          EV<<"Generating tomography rules... for node "<<it->second.neighborQNode_address<<"\n";
           LinkTomographyRequest *pk = new LinkTomographyRequest;
           pk->setDestAddr(it->second.neighborQNode_address);
           pk->setSrcAddr(myAddress);
@@ -54,19 +55,22 @@ void HardwareMonitor::initialize(int stage)
           //tomo_rules.RuleSet[0];
           //FidelityClause *fid = new FidelityClause(0,0,0);
 
-          RuleSet* tomography = new RuleSet(myAddress,it->second.neighborQNode_address);//Tomography between this node and it->second.neighborQNode_address.
+          /*Empty RuleSet*/
+          RuleSet* tomography_RuleSet = new RuleSet(myAddress,it->second.neighborQNode_address);//Tomography between this node and it->second.neighborQNode_address.
+          /*-------------*/
+          /*-One rule-*/
           Rule* Random_measure_tomo = new Rule();//Let's make nodes select measurement basis randomly, because it it easier.
           Condition* total_measurements = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
           Clause* measure_count_clause = new MeasureCountClause(num_measure);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
           total_measurements->addClause(measure_count_clause);
           Random_measure_tomo->setCondition(total_measurements);
           quisp::rules::Action* measure = new RandomMeasureAction();//Measure the local resource between it->second.neighborQNode_address.
-          /*for (auto tomogtaphy=rs->cbegin(), end=rs->cend(); tomogtaphy!=end; tomogtaphy++)
-                 (*tomogtaphy)->checkrun(resources);*/
-          pk->setRuleSet(tomography);
-          //int seed = simTime().dbl();
-          //pk->setProcess_id(myAddress+it->second.neighborQNode_address+seed);//just fill in something for now
-          //pass this rule set to rule engine.
+          Random_measure_tomo->setAction(measure);
+          /*---------*/
+          /*Add the rule to the RuleSet*/
+          tomography_RuleSet->addRule(Random_measure_tomo);
+          /*---------------------------*/
+          pk->setRuleSet(tomography_RuleSet);
           send(pk, "RuleEnginePort$o");
       }
   }

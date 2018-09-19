@@ -20,8 +20,7 @@ bool FidelityClause::check(qnicResources* resources) const {
     return false;
 }
 bool MeasureCountClause::check(qnicResources* resources) const {
-    EV<<"MeasureCountClause invoked.";
-
+    EV<<"MeasureCountClause invoked.\n";
     return true;
 }
 
