@@ -497,13 +497,14 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
             stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
             //std::bitset<1> test = qubit->measure_density('Z');
             //qubit->measure_density('Z');
-            int testing = rp.size();
+            /*int testing = rp.size();
             EV<<"running processes = "<<testing<<"\n";
 
             if(rp.size()>0){
                 EV<<"Inside process running\n";
                 for( auto i = rp.begin(); i != rp.end() ; ++i ) {
                      RuleSet* process = i->second.RuleSet;
+                     int resource_entangled_with_address = process->entangled_partner;
                      EV<<"Checking first process...."<<process->size()<<"\n";
 
                      for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){
@@ -514,7 +515,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
                      }
                  }
             }else
-                EV<<"No process running\n";
+                EV<<"No process running\n";*/
             //EV<<"Outcome is "<<test;
             allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,qubit));//Add qubit as available resource between NeighborQNodeAddress.
             EV<<"There are "<<allResources[qnic_type][qnic_index].count(neighborQNodeAddress)<<" resources between this and "<<destAddr<<"\n";
@@ -535,6 +536,45 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
                 Busy_OR_Free_QubitState_table[QNIC_R] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], it->second.qnic_index, it->second.qubit_index);
         }
     }
+
+
+    traverseThroughAllProcesses(qnic_type,qnic_index);//New resource added to QNIC with qnic_type qnic_index.
+
+}
+
+void RuleEngine::traverseThroughAllProcesses(int qnic_type, int qnic_index){
+
+    int testing = rp.size();
+    EV<<"running processes = "<<testing<<"\n";
+
+              if(rp.size()>0){
+                  EV<<"Inside process running\n";
+                  for( auto i = rp.begin(); i != rp.end() ; ++i ) {
+                       RuleSet* process = i->second.RuleSet;
+                       int resource_entangled_with_address = process->entangled_partner;
+                       EV<<"Checking first process...."<<process->size()<<"\n";
+                       if(allResources[qnic_type][qnic_index].count(resource_entangled_with_address)>0){//If a resource exists
+
+                           EV<<" !!! "<<allResources[qnic_type][qnic_index].count(resource_entangled_with_address)<<"Resource found between node "<<resource_entangled_with_address<<"!\n";
+                           auto ret = allResources[qnic_type][qnic_index].equal_range(resource_entangled_with_address);
+                           for (auto i = ret.first; i != ret.second; ++i) {
+                               EV<<"Resource: between node "<<i->first<<", "<<i->second<<"\n";
+                           }
+
+
+                           for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){
+                               EV<<"Running first Condition & Action now\n";
+                               int res = (*rule)->checkrun(allResources);
+                           }
+                           error(" done...\n");
+                       }else{
+                           EV<<"No resource available between "<<resource_entangled_with_address<<"\n";
+                       }
+                   }
+              }else
+                  EV<<"No process running\n";
+
+
 }
 
 

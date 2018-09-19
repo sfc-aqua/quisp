@@ -36,6 +36,7 @@ simple HardwareMonitor
         int num_measure = default(3000);
     gates:
         inout RuleEnginePort;
+        inout RouterPort;
         
 }
 
@@ -81,6 +82,7 @@ module quantumRoutingSoft
         //inout rdPort;//size will be determined by the number of connections defined at the end of this file
         inout cmPort;
         inout rePort;
+        inout hmPort;
         inout qnics[] @loose;
         //inout QNICPort[1];//Maybe more than one if not ENDNODE
 
@@ -124,6 +126,7 @@ module quantumRoutingSoft
         cm.RouterPort <--> cmPort;
         re.RouterPort <--> rePort;
         re.HardwareMonitorPort <--> hm.RuleEnginePort;
+        hm.RouterPort <--> hmPort;
         
         //for i=0..sizeof(qnics)-1{
         //    rd.dummyQNICLink++ <--> qnics[i];

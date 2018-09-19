@@ -63,7 +63,7 @@ class RuleEngine : public cSimpleModule
         RealTimeController *realtime_controller;
         int* qnic_burst_trial_counter;
         typedef std::map<int,bool> trial_tracker;//trial index, false or true (that trial is over or not)
-        qnicResources* allResources; //Size will be defined in initialization. If 3 qnic types, then size is 3.
+        qnicResources* allResources; //Size will be defined in initialization. If 3 qnic types, then size is 3. Type defined in QUBIT.h
 
         //typedef rules::RuleSet* RuleSetPtr;
         typedef std::map<int, process> running_processes;
@@ -92,7 +92,7 @@ class RuleEngine : public cSimpleModule
         virtual void scheduleNextEmissionEvent(int qnic_index, int qnic_address, double interval, simtime_t timing, int num_sent, bool internal, int trial);
         virtual void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result);
         virtual void clearTrackerTable(int destAddr, int internal_qnic_address);
-
+        virtual void traverseThroughAllProcesses(int qnic_type, int qnic_index);
         virtual double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
 };
 

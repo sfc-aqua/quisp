@@ -41,6 +41,7 @@ simple Router
         inout rdPort @loose;
         inout cmPort @loose;
         inout rePort @loose;
+        inout hmPort @loose;
 }
 
 simple Queue

@@ -125,6 +125,10 @@ void Router::handleMessage(cMessage *msg)
             bubble("Connection setup request received");
             send(pk, "cmPort$o");
             return;
+        }else if (destAddr == myAddress && dynamic_cast<LinkTomographyRequest *>(msg)!= nullptr){
+            bubble("Link tomography request received");
+            send(pk, "rePort$o");
+            return;
         }
 
         //Check if packet is reachable

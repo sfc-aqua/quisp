@@ -24,6 +24,7 @@ bool MeasureCountClause::check(qnicResources* resources) const {
     return true;
 }
 
+
 Clause *EXAMPLE_CLAUSE = new FidelityClause(0,0,.6);
 
 } // namespace rules

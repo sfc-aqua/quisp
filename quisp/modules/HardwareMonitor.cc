@@ -42,36 +42,44 @@ void HardwareMonitor::initialize(int stage)
 
   if(do_link_level_tomography && stage == 1){
       for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
-          EV<<"Generating tomography rules... for node "<<it->second.neighborQNode_address<<"\n";
-          LinkTomographyRequest *pk = new LinkTomographyRequest;
-          pk->setDestAddr(it->second.neighborQNode_address);
-          pk->setSrcAddr(myAddress);
-          pk->setNumber_of_measuring_resources(num_measure);
-          pk->setKind(6);
+          if(myAddress > it->second.neighborQNode_address){//You dont want 2 separate tomography processes to run for each link. Not a very good solution, but makes sure that only 1 request per link is generated.
+              EV<<"Generating tomography rules... for node "<<it->second.neighborQNode_address<<"\n";
+              LinkTomographyRequest *pk = new LinkTomographyRequest;
+              pk->setDestAddr(myAddress);
+              pk->setSrcAddr(it->second.neighborQNode_address);
+              pk->setNumber_of_measuring_resources(num_measure);
+              pk->setKind(6);
+              /*Empty RuleSet*/
+              RuleSet* tomography_RuleSet = new RuleSet(myAddress,it->second.neighborQNode_address);//Tomography between this node and it->second.neighborQNode_address.
+              /*-------------*/
+              /*-One rule-*/
+              Rule* Random_measure_tomo = new Rule();//Let's make nodes select measurement basis randomly, because it it easier.
+              Condition* total_measurements = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
+              Clause* measure_count_clause = new MeasureCountClause(num_measure);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
+              total_measurements->addClause(measure_count_clause);
+              Random_measure_tomo->setCondition(total_measurements);
+              quisp::rules::Action* measure = new RandomMeasureAction();//Measure the local resource between it->second.neighborQNode_address.
+              Random_measure_tomo->setAction(measure);
+              /*---------*/
+              /*Add the rule to the RuleSet*/
+              tomography_RuleSet->addRule(Random_measure_tomo);
+              /*---------------------------*/
+              pk->setRuleSet(tomography_RuleSet);
+              //send(pk, "RuleEnginePort$o");
+              //send(pk, "RuleEnginePort$o");
+              send(pk,"RouterPort$o");
 
-          //rules::RuleSet *tomography_rule = new quisp::rules::RuleSet;
-          //tomography_rule->RuleSet->
-          //RuleSet tomo_rules;
-          //tomo_rules.RuleSet[0];
-          //FidelityClause *fid = new FidelityClause(0,0,0);
-
-          /*Empty RuleSet*/
-          RuleSet* tomography_RuleSet = new RuleSet(myAddress,it->second.neighborQNode_address);//Tomography between this node and it->second.neighborQNode_address.
-          /*-------------*/
-          /*-One rule-*/
-          Rule* Random_measure_tomo = new Rule();//Let's make nodes select measurement basis randomly, because it it easier.
-          Condition* total_measurements = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
-          Clause* measure_count_clause = new MeasureCountClause(num_measure);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
-          total_measurements->addClause(measure_count_clause);
-          Random_measure_tomo->setCondition(total_measurements);
-          quisp::rules::Action* measure = new RandomMeasureAction();//Measure the local resource between it->second.neighborQNode_address.
-          Random_measure_tomo->setAction(measure);
-          /*---------*/
-          /*Add the rule to the RuleSet*/
-          tomography_RuleSet->addRule(Random_measure_tomo);
-          /*---------------------------*/
-          pk->setRuleSet(tomography_RuleSet);
-          send(pk, "RuleEnginePort$o");
+              //For Neighbor
+              LinkTomographyRequest *pkt = new LinkTomographyRequest;
+              pkt->setDestAddr(it->second.neighborQNode_address);
+              pkt->setSrcAddr(myAddress);
+              pkt->setNumber_of_measuring_resources(num_measure);
+              RuleSet* tomography_RuleSet_partner = new RuleSet(it->second.neighborQNode_address,myAddress);
+              tomography_RuleSet_partner->addRule(Random_measure_tomo);//Same rule for tmography.
+              pkt->setRuleSet(tomography_RuleSet_partner);
+              pkt->setKind(6);
+              send(pkt,"RouterPort$o");
+          }
       }
   }
 }

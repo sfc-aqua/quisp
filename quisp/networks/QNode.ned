@@ -130,4 +130,5 @@ module QNode
 
         router.rePort <--> qrsa.rePort;
         router.cmPort <--> qrsa.cmPort;
+        router.hmPort <--> qrsa.hmPort;
 }

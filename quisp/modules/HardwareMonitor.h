@@ -23,6 +23,7 @@ typedef struct _neighborInfo{
     bool isQNode;
     cModuleType *type;
     int address;//May be QNode, SPDC, HOM
+    int index;
     int neighborQNode_address;//QNode (May be across SDPC or HOM node)
 } neighborInfo;
 
