@@ -37,6 +37,11 @@ int PurifyAction::run(qnicResources* resources) {
 
 int RandomMeasureAction::run(qnicResources* resources) {
     EV<<"Measuring qubit now.";
+    stationaryQubit *qubit = NULL;
+    qubit = getQubit(resources,qnic_type,qnic_id,partner,resource);
+
+    qubit->measure_density_independent('Z');
+
     return 1000;
     // error
 }

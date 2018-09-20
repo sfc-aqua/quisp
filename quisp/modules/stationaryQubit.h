@@ -119,8 +119,21 @@ class stationaryQubit : public cSimpleModule
                double Z_error_ceil;
        //@}
 
+               /** @name Pauli errors for Memories
+               *  @{
+               */
+               /** Error rate for idle stationary qubits*/
+                      emission_error_model memory_err;
+                      double memory_error_rate;
+                      double memory_No_error_ceil;
+                      double memory_X_error_ceil;
+                      double memory_Y_error_ceil;
+                      double memory_Z_error_ceil;
+              //@}
+
        single_qubit_error Pauli;
        measurement_operators meas_op;
+       Matrix4d Memory_Transition_matrix; /*I,X,Y,Z for single qubit. Unit in μs.*/
        //projected_states proj_states;
 
 
@@ -160,7 +173,12 @@ class stationaryQubit : public cSimpleModule
         /**
          * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
          * */
-        virtual std::bitset<1> measure_density(char basis_this_qubit);
+        virtual std::bitset<1> measure_density(char basis_this_qubit);/*Simultaneous dm calculation*/
+        virtual void measure_density_independent(char measurement_basis);/*Separate dm calculation*/
+
+        /*Applies memory error to the given qubit*/
+        virtual void  apply_memory_error(stationaryQubit *qubit);
+
         /**
          * \brief Two qubit CNOT gate.
          * \param Need to specify the control qubit as an argument.
@@ -203,10 +221,10 @@ class stationaryQubit : public cSimpleModule
         virtual void setBusy();
         virtual void setErrorCeilings();
         virtual void setEmissionPauliError();
-        virtual void  apply_memory_error();
         virtual Matrix2cd getErrorMatrix(stationaryQubit *qubit);//returns the matrix that represents the errors on the Bell pair. (e.g. XY, XZ and ZI...)
         virtual quantum_state getQuantumState();//returns the dm of the physical Bell pair. Used for tomography.
         virtual measurement_output_probabilities getOutputProbabilities(quantum_state state, char meas_basis);
+
 };
 
 

@@ -30,6 +30,7 @@ void stationaryQubit::initialize()
 
     double rand = dblrand();
 
+    /*Photon emission time error rates*/
     double Z_error_ratio = par("emission_Z_error_ratio");//par("name") will be read from .ini or .ned file
     double X_error_ratio = par("emission_X_error_ratio");
     double Y_error_ratio = par("emission_Y_error_ratio");
@@ -39,6 +40,25 @@ void stationaryQubit::initialize()
     err.Y_error_rate = err.pauli_error_rate * (Y_error_ratio/ratio_sum);
     err.Z_error_rate = err.pauli_error_rate * (Z_error_ratio/ratio_sum);
     setErrorCeilings();
+
+    /*Memory error rates*/
+
+    double memory_Z_error_ratio = par("memory_Z_error_ratio");//par("name") will be read from .ini or .ned file
+    double memory_X_error_ratio = par("memory_X_error_ratio");
+    double memory_Y_error_ratio = par("memory_Y_error_ratio");
+    double memory_ratio_sum = Z_error_ratio+X_error_ratio+Y_error_ratio;
+    memory_err.pauli_error_rate = par("memory_error_rate");//This is per μs.
+    memory_err.X_error_rate = memory_err.pauli_error_rate * (memory_X_error_ratio/memory_ratio_sum);
+    memory_err.Y_error_rate = memory_err.pauli_error_rate * (memory_Y_error_ratio/memory_ratio_sum);
+    memory_err.Z_error_rate = memory_err.pauli_error_rate * (memory_Z_error_ratio/memory_ratio_sum);
+
+
+    Memory_Transition_matrix << 1-memory_err.pauli_error_rate, memory_err.X_error_rate,memory_err.Y_error_rate, memory_err.Z_error_rate,
+               memory_err.X_error_rate, memory_err.pauli_error_rate, memory_err.Y_error_rate,memory_err.Z_error_rate,
+               memory_err.Z_error_rate,memory_err.Y_error_rate, memory_err.pauli_error_rate,memory_err.X_error_rate,
+               memory_err.Y_error_rate,memory_err.Z_error_rate, memory_err.X_error_rate, 1-memory_err.pauli_error_rate,
+
+/*なんかおかしい。Qchannelも要確認*/
 
     //Set error matrices. This is used in the process of simulating tomography.
     Pauli.X << 0,1,1,0;
@@ -73,6 +93,7 @@ void stationaryQubit::setErrorCeilings(){
     Z_error_ceil = X_error_ceil + err.Z_error_rate;
     Y_error_ceil = 1;
 }
+
 
 
 /**
@@ -276,13 +297,54 @@ void stationaryQubit::purify(stationaryQubit * resource_qubit) {
     // if agree (truetrue or falsefalse), keep
 }
 
-void stationaryQubit::apply_memory_error(){
+/*Single qubit memory error based on Markov-Chain*/
+void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
     /*Check when the error got updated last time. Errors will be performed depending on the difference between that time and the current time.*/
-    simtime_t time_evolution = simTime() - updated_time;
-    if(time_evolution > 0){
+    double time_evolution = simTime().dbl() - qubit->updated_time.dbl();
+    double time_evolution_microsec  =time_evolution * 1000000;
+    if(time_evolution_microsec > 0){
+        EV<<"\n Memory error applied for time = "<<time_evolution_microsec<<" μs, on qubit "<<qubit<<"in node["<<qubit->par("node_address").str()<<"] \n";
         //Perform Monte-Carlo error simulation on this qubit.
+        MatrixXd Initial_condition(1,4);/*I, X, Y, Z*/
+        if(qubit->par("GOD_Zerror") && qubit->par("GOD_Xerror")){
+            Initial_condition << 0,0,1,0;//Has a Y error
+        }else if(qubit->par("GOD_Zerror") && !qubit->par("GOD_Xerror")){
+            Initial_condition << 0,0,0,1;//Has a Z error
+        }else if(!qubit->par("GOD_Zerror") && qubit->par("GOD_Xerror")){
+            Initial_condition << 0,1,0,0;//Has an X error
+        }else{
+            Initial_condition << 1,0,0,0;//No error
+        }
+        MatrixPower<MatrixXd> Apow(Memory_Transition_matrix);
+        MatrixXd Dynamic_transition_matrix(4,4);
+        Dynamic_transition_matrix = Apow(time_evolution_microsec);
+        MatrixXd Output_condition(1,4);//I, X, Y, Z
+        Output_condition = Initial_condition * Dynamic_transition_matrix;//I,X,Y,Z
+        EV<<"Input was "<<Initial_condition<<"Output is now"<<Output_condition<<"\n";
+        double No_error_ceil = Output_condition(0,0);
+        double X_error_ceil = Output_condition(0,0)+Output_condition(0,1);
+        double Y_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2);
+
+        /*Reinitialize to no error for convenience*/
+        qubit->par("GOD_Zerror") = false;
+        qubit->par("GOD_Xerror") = false;
+
+        double rand = dblrand();//Gives a random double between 0.0 ~ 1.0
+        if(rand < No_error_ceil){
+            //Qubit will end up with no error
+        }else if(No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil!=X_error_ceil)){
+                   //X error
+            qubit->par("GOD_Xerror") = true;
+        }else if(Y_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil!=Z_error_ceil)){
+                   //Z error
+            qubit->par("GOD_Zerror") = true;
+            qubit->par("GOD_Xerror") = true;
+        }else{
+            qubit->par("GOD_Zerror") = true;
+         }
     }
-    updated_time = simTime();//Update last updated_time.
+    EV<<Memory_Transition_matrix<<"\n";
+    qubit->updated_time = simTime();//Update parameter, updated_time, to now.
 }
 
 
@@ -372,11 +434,14 @@ std::bitset<1> stationaryQubit::measure_density(char basis_this_qubit){
     if(entangled_partner == nullptr){
         error("Measuring a qubit that is not entangled with another qubit. Not allowed!");
     }
+    /*if(entangled_partner->emitted_time=-1 && single_qubit_dm == null){
+        error("Something is wrong.");
+    }*/
 
     //todo Check if entangled state has collapsed already (partner qubit measured already).
 
     //if not, then measure it and get the output (density matrix required)!
-    apply_memory_error();//Noise due to idle time in memory. This updates the par("GOD_Zerror") and par("GOD_Xerror") of this particular qubit.
+    apply_memory_error(this);//Noise due to idle time in memory. This updates the par("GOD_Zerror") and par("GOD_Xerror") of this particular qubit.
     quantum_state current_state = getQuantumState();//Get the density matrix of the Bell pair that involves this particular qubit.
     measurement_output_probabilities p = getOutputProbabilities(current_state, basis_this_qubit);
     EV <<" P(++) = "<<p.probability_plus_plus<<", P(+-) = "<<p.probability_plus_minus<<", P(-+) = "<<p.probability_minus_plus<<", P(--) = "<<p.probability_minus_minus<<"\n";
@@ -400,6 +465,18 @@ std::bitset<1> stationaryQubit::measure_density(char basis_this_qubit){
         EV<<"Output is --"<<output<<"\n";
     }
     //return output.test(1);
+}
+
+void stationaryQubit::measure_density_independent(char measurement_basis){
+    if(entangled_partner == nullptr){
+            error("Measuring a qubit that is not entangled with another qubit. Probably not what you want!");
+    }
+    apply_memory_error(this);//Add memory error depending on the idle time.
+    apply_memory_error(entangled_partner);//Also do the same on the partner!
+
+    quantum_state current_state = getQuantumState();
+    EV<<"current state is "<<current_state.state_in_ket<<"\n";
+
 }
 
 

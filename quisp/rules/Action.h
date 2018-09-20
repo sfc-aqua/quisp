@@ -79,9 +79,18 @@ class PurifyAction : public Action {
 
 
 class RandomMeasureAction : public Action {
+    protected:
+        int partner; /**< Identifies entanglement partner. */
+        QNIC_type qnic_type;
+        int qnic_id;
+        int resource; /**< Identifies qubit */
+
     public:
         RandomMeasureAction(int part, QNIC_type qt, int qi, int res){
-
+            partner = part;
+            qnic_type = qt;
+            qnic_id = qi;
+            resource = res;
         };
 
         int run(qnicResources *resources) override;

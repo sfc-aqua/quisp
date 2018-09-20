@@ -1,6 +1,6 @@
 /** \file Clause.cc
  *
- *  \authors cldurand
+ *  \authors takaaki matsuo, cldurand
  *  \date 2018/07/03
  *
  *  \brief Clause
@@ -13,7 +13,7 @@ namespace rules {
 
 bool FidelityClause::check(qnicResources* resources) const {
     stationaryQubit* qubit = NULL;
-    checkQnic();
+    checkQnic();//This is not doing anything...
     if(qubit = getQubit(resources, qnic_type, qnic_id, partner, resource)){
         return (qubit->getFidelity() >= threshold);
     }
