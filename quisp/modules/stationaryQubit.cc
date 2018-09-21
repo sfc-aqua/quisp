@@ -46,19 +46,26 @@ void stationaryQubit::initialize()
     double memory_Z_error_ratio = par("memory_Z_error_ratio");//par("name") will be read from .ini or .ned file
     double memory_X_error_ratio = par("memory_X_error_ratio");
     double memory_Y_error_ratio = par("memory_Y_error_ratio");
-    double memory_ratio_sum = Z_error_ratio+X_error_ratio+Y_error_ratio;
+    double memory_ratio_sum = memory_Z_error_ratio+memory_X_error_ratio+memory_Y_error_ratio;
     memory_err.pauli_error_rate = par("memory_error_rate");//This is per μs.
     memory_err.X_error_rate = memory_err.pauli_error_rate * (memory_X_error_ratio/memory_ratio_sum);
     memory_err.Y_error_rate = memory_err.pauli_error_rate * (memory_Y_error_ratio/memory_ratio_sum);
     memory_err.Z_error_rate = memory_err.pauli_error_rate * (memory_Z_error_ratio/memory_ratio_sum);
 
+    EV<<"Err rate = "<<memory_err.pauli_error_rate<<"\n";
+    EV<<"Ratio sum = "<<memory_ratio_sum<<"\n";
+    EV<<"I error rate (mem) = "<<1-memory_err.pauli_error_rate<<"\n";
+    EV<<"X error rate (mem) = "<<memory_err.X_error_rate<<"\n";
+    EV<<"Y error rate (mem) = "<<memory_err.Y_error_rate<<"\n";
+    EV<<"Z error rate (mem) = "<<memory_err.Z_error_rate<<"\n";
 
-    Memory_Transition_matrix << 1-memory_err.pauli_error_rate, memory_err.X_error_rate,memory_err.Y_error_rate, memory_err.Z_error_rate,
-               memory_err.X_error_rate, memory_err.pauli_error_rate, memory_err.Y_error_rate,memory_err.Z_error_rate,
-               memory_err.Z_error_rate,memory_err.Y_error_rate, memory_err.pauli_error_rate,memory_err.X_error_rate,
+    Memory_Transition_matrix << 1-memory_err.pauli_error_rate, memory_err.X_error_rate,memory_err.Z_error_rate, memory_err.Y_error_rate,
+               memory_err.X_error_rate, 1-memory_err.pauli_error_rate, memory_err.Y_error_rate,memory_err.Z_error_rate,
+               memory_err.Z_error_rate,memory_err.Y_error_rate, 1-memory_err.pauli_error_rate,memory_err.X_error_rate,
                memory_err.Y_error_rate,memory_err.Z_error_rate, memory_err.X_error_rate, 1-memory_err.pauli_error_rate,
 
-/*なんかおかしい。Qchannelも要確認*/
+    EV<<"Memory_Transition_matrix = "<< Memory_Transition_matrix<<"\n";
+
 
     //Set error matrices. This is used in the process of simulating tomography.
     Pauli.X << 0,1,1,0;
@@ -305,25 +312,26 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
     if(time_evolution_microsec > 0){
         EV<<"\n Memory error applied for time = "<<time_evolution_microsec<<" μs, on qubit "<<qubit<<"in node["<<qubit->par("node_address").str()<<"] \n";
         //Perform Monte-Carlo error simulation on this qubit.
-        MatrixXd Initial_condition(1,4);/*I, X, Y, Z*/
+        MatrixXd Initial_condition(1,4);/*I, X, Z, Y*/
         if(qubit->par("GOD_Zerror") && qubit->par("GOD_Xerror")){
-            Initial_condition << 0,0,1,0;//Has a Y error
+            Initial_condition << 0,0,0,1;//Has a Y error
         }else if(qubit->par("GOD_Zerror") && !qubit->par("GOD_Xerror")){
-            Initial_condition << 0,0,0,1;//Has a Z error
+            Initial_condition << 0,0,1,0;//Has a Z error
         }else if(!qubit->par("GOD_Zerror") && qubit->par("GOD_Xerror")){
             Initial_condition << 0,1,0,0;//Has an X error
         }else{
             Initial_condition << 1,0,0,0;//No error
         }
-        MatrixPower<MatrixXd> Apow(Memory_Transition_matrix);
-        MatrixXd Dynamic_transition_matrix(4,4);
+        MatrixPower<Matrix4d> Apow(Memory_Transition_matrix);
+        Matrix4d Dynamic_transition_matrix;
         Dynamic_transition_matrix = Apow(time_evolution_microsec);
-        MatrixXd Output_condition(1,4);//I, X, Y, Z
+        EV<<"TM^"<<time_evolution_microsec<<" = "<< Dynamic_transition_matrix<<"\n";
+        MatrixXd Output_condition(1,4);//I, X, Z, Y
         Output_condition = Initial_condition * Dynamic_transition_matrix;//I,X,Y,Z
-        EV<<"Input was "<<Initial_condition<<"Output is now"<<Output_condition<<"\n";
+        EV<<"\n Input (I,X,Z,Y) was "<<Initial_condition<<"\n Output (I,X,Z,Y) is now"<<Output_condition<<"\n";
         double No_error_ceil = Output_condition(0,0);
         double X_error_ceil = Output_condition(0,0)+Output_condition(0,1);
-        double Y_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2);
+        double Z_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2);
 
         /*Reinitialize to no error for convenience*/
         qubit->par("GOD_Zerror") = false;
@@ -335,12 +343,13 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
         }else if(No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil!=X_error_ceil)){
                    //X error
             qubit->par("GOD_Xerror") = true;
-        }else if(Y_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil!=Z_error_ceil)){
+        }else if(X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil!=Z_error_ceil)){
                    //Z error
             qubit->par("GOD_Zerror") = true;
             qubit->par("GOD_Xerror") = true;
         }else{
             qubit->par("GOD_Zerror") = true;
+            qubit->par("GOD_Xerror") = true;
          }
     }
     EV<<Memory_Transition_matrix<<"\n";

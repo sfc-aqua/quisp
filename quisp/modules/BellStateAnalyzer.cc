@@ -279,11 +279,12 @@ bool BellStateAnalyzer::isPhotonLost(cMessage *msg){
 }
 
 
+/*Error on flying qubit with a successful BSA propagates to its original stationary qubit. */
 void BellStateAnalyzer:: GOD_updateEntangledInfoParameters_of_qubits(){
     EV<<"Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<" with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"\n";
     left_statQubit_ptr->setEntangledPartnerInfo(right_statQubit_ptr);
-    if(left_photon_Xerr)
-        left_statQubit_ptr->addXerror();
+    if(left_photon_Xerr)//If Photon had an X error
+        left_statQubit_ptr->addXerror();//Add X error to the stationary qubit.
     if(left_photon_Zerr)
         left_statQubit_ptr->addZerror();
 
