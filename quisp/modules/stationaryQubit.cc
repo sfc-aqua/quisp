@@ -74,12 +74,23 @@ void stationaryQubit::initialize()
     Pauli.I << 1,0,0,1;
 
     //Set measurement operators. This is used in the process of simulating tomography.
-    meas_op.X_plus << 0.5,0.5,0.5,0.5;
-    meas_op.X_minus << 0.5,-0.5,-0.5,0.5;
-    meas_op.Z_plus << 1,0,0,0;
-    meas_op.Z_minus << 0,0,0,1;
-    meas_op.Y_plus << 0.5,Complex(0,-0.5),Complex(0,0.5),0.5;
-    meas_op.Y_minus << 0.5,Complex(0,0.5),Complex(0,-0.5),0.5;
+
+    meas_op.X_basis.plus << 0.5,0.5,0.5,0.5;
+    meas_op.X_basis.minus << 0.5,-0.5,-0.5,0.5;
+    meas_op.X_basis.plus_ket << 1/sqrt(2), 1/sqrt(2);
+    meas_op.X_basis.minus_ket << 1/sqrt(2), -1/sqrt(2);
+    meas_op.X_basis.basis = 'X';
+    meas_op.Z_basis.plus << 1,0,0,0;
+    meas_op.Z_basis.minus << 0,0,0,1;
+    meas_op.Z_basis.plus_ket << 1, 0;
+    meas_op.Z_basis.minus_ket << 0, 1;
+    meas_op.Z_basis.basis = 'Z';
+    meas_op.Y_basis.plus << 0.5,Complex(0,-0.5),Complex(0,0.5),0.5;
+    meas_op.Y_basis.minus << 0.5,Complex(0,0.5),Complex(0,-0.5),0.5;
+    meas_op.Y_basis.plus_ket << 1/sqrt(2), Complex(0,1/sqrt(2));
+    meas_op.Y_basis.minus_ket << 1/sqrt(2), -Complex(0,1/sqrt(2));
+    meas_op.Y_basis.basis = 'Y';
+    meas_op.identity << 1,0,0,1;
 
     // Get parameters from omnet
     stationaryQubit_address = par("stationaryQubit_address");
@@ -213,6 +224,8 @@ void stationaryQubit::setFree(){
     isBusy = false;
     emitted_time = -1;
     updated_time = -1;
+    partner_measured = false;
+    Density_Matrix_Collapsed << -1,-1,-1,-1;
     par("photon_emitted_at") = emitted_time.dbl();
     par("last_updated_at") = updated_time.dbl();
     par("GOD_Xerror") = false;
@@ -310,7 +323,7 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
     double time_evolution = simTime().dbl() - qubit->updated_time.dbl();
     double time_evolution_microsec  =time_evolution * 1000000;
     if(time_evolution_microsec > 0){
-        EV<<"\n Memory error applied for time = "<<time_evolution_microsec<<" μs, on qubit "<<qubit<<"in node["<<qubit->par("node_address").str()<<"] \n";
+        //EV<<"\n Memory error applied for time = "<<time_evolution_microsec<<" μs, on qubit "<<qubit<<"in node["<<qubit->par("node_address").str()<<"] \n";
         //Perform Monte-Carlo error simulation on this qubit.
         MatrixXd Initial_condition(1,4);/*I, X, Z, Y*/
         if(qubit->par("GOD_Zerror") && qubit->par("GOD_Xerror")){
@@ -325,10 +338,10 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
         MatrixPower<Matrix4d> Apow(Memory_Transition_matrix);
         Matrix4d Dynamic_transition_matrix;
         Dynamic_transition_matrix = Apow(time_evolution_microsec);
-        EV<<"TM^"<<time_evolution_microsec<<" = "<< Dynamic_transition_matrix<<"\n";
+        //EV<<"TM^"<<time_evolution_microsec<<" = "<< Dynamic_transition_matrix<<"\n";
         MatrixXd Output_condition(1,4);//I, X, Z, Y
         Output_condition = Initial_condition * Dynamic_transition_matrix;//I,X,Y,Z
-        EV<<"\n Input (I,X,Z,Y) was "<<Initial_condition<<"\n Output (I,X,Z,Y) is now"<<Output_condition<<"\n";
+        //EV<<"\n Input (I,X,Z,Y) was "<<Initial_condition<<"\n Output (I,X,Z,Y) is now"<<Output_condition<<"\n";
         double No_error_ceil = Output_condition(0,0);
         double X_error_ceil = Output_condition(0,0)+Output_condition(0,1);
         double Z_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2);
@@ -352,8 +365,8 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
             qubit->par("GOD_Xerror") = true;
          }
     }
-    EV<<Memory_Transition_matrix<<"\n";
     qubit->updated_time = simTime();//Update parameter, updated_time, to now.
+    qubit->par("last_updated_at") = simTime().dbl();//For GUI
 }
 
 
@@ -399,6 +412,7 @@ quantum_state stationaryQubit::getQuantumState(){
     return q;
 }
 
+/*
 measurement_output_probabilities stationaryQubit::getOutputProbabilities(quantum_state state, char meas_basis){
     Matrix2cd meas_op_plus, meas_op_minus;
     switch(meas_basis){
@@ -432,6 +446,110 @@ measurement_output_probabilities stationaryQubit::getOutputProbabilities(quantum
     p.probability_minus_minus = Prob4.real();
     return p;
 }
+*/
+
+void stationaryQubit::measure_density_independent(char measurement_basis){
+    if(entangled_partner == nullptr){
+            error("Measuring a qubit that is not entangled with another qubit. Probably not what you want!");
+    }
+    if(partner_measured){
+        //This qubit is not entangled anymore.
+        //Its single qubit state will be stored in Density_Matrix_Collapsed.
+
+    }else{//Still entangled. After measurement, we need to update parameters, Density_Matrix_Collapsed and partner_measured, of the partner qubit.
+        apply_memory_error(this);//Add memory error depending on the idle time.
+        apply_memory_error(entangled_partner);//Also do the same on the partner!
+        quantum_state current_state = getQuantumState();
+        EV<<"Current entangled state is "<<current_state.state_in_ket<<"\n";
+        measurement_operator this_measurement = Random_Measurement_Basis_Selection();
+
+        Complex Prob_plus = current_state.state_in_ket.adjoint()*kroneckerProduct(this_measurement.plus,meas_op.identity).eval().adjoint()*kroneckerProduct(this_measurement.plus,meas_op.identity).eval()*current_state.state_in_ket;
+        Complex Prob_minus = current_state.state_in_ket.adjoint()*kroneckerProduct(this_measurement.minus,meas_op.identity).eval().adjoint()*kroneckerProduct(this_measurement.minus,meas_op.identity).eval()*current_state.state_in_ket;
+        /*ConjugateTranspose[Bell].ConjugateTranspose[Zp].Zp.Bell
+          Tr[Belldm.ConjugateTranspose[Zp].Zp]
+          Are they the same?*/
+
+        EV<<"Measurement basis = "<<this_measurement.basis<<"P(+) = "<<Prob_plus.real()<<", P(-) = "<<Prob_minus.real()<<"\n";
+        double dbl = dblrand();
+        char Output;
+        Vector2cd ms;
+        if(dbl < Prob_plus.real()){
+            //Measurement output was plus
+            Output = '+';
+            ms = this_measurement.plus_ket;
+        }else{//Otherwise, it was negative.
+            Output = '-';
+            ms = this_measurement.minus_ket;
+        }
+
+        //Now we have to calculate the density matrix of a single qubit that used to be entangled with this.
+        Matrix2cd partners_dm, normalized_partners_dm;
+        partners_dm = kroneckerProduct(ms.adjoint(),meas_op.identity).eval()*current_state.state_in_density_matrix*kroneckerProduct(ms.adjoint(),meas_op.identity).eval().adjoint() ;
+        normalized_partners_dm = partners_dm/partners_dm.trace();
+        EV<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). Partner's dm is now = "<<normalized_partners_dm<<"\n";
+        entangled_partner->Density_Matrix_Collapsed = normalized_partners_dm;
+        entangled_partner->partner_measured = true;
+        //todo dmを上書きするときエラーを消したほうがいい？ その時のdm自体にエラーが乗っているはず。その時のdmはどういうエラーが乗ってた時？その後に別のエラーがのったらどう計算する？
+
+    }
+}
+
+
+measurement_operator stationaryQubit::Random_Measurement_Basis_Selection(){
+    measurement_operator this_measurement;
+    double dbl = dblrand();//Random double value for random basis selection.
+    if(dbl < (1/3)){//X measurement!
+        this_measurement.plus = meas_op.X_basis.plus;
+        this_measurement.minus = meas_op.X_basis.minus;
+        this_measurement.basis = meas_op.X_basis.basis;
+        this_measurement.plus_ket = meas_op.X_basis.plus_ket;
+        this_measurement.minus_ket = meas_op.X_basis.minus_ket;
+    }else if(dbl >= (1/3) && dbl < (2/3)){
+        this_measurement.plus = meas_op.Z_basis.plus;
+        this_measurement.minus = meas_op.Z_basis.minus;
+        this_measurement.basis = meas_op.Z_basis.basis;
+        this_measurement.plus_ket = meas_op.Z_basis.plus_ket;
+        this_measurement.minus_ket = meas_op.Z_basis.minus_ket;
+    }else{
+        this_measurement.plus = meas_op.Y_basis.plus;
+        this_measurement.minus = meas_op.Y_basis.minus;
+        this_measurement.basis = meas_op.Y_basis.basis;
+        this_measurement.plus_ket = meas_op.Y_basis.plus_ket;
+        this_measurement.minus_ket = meas_op.Y_basis.minus_ket;
+    }
+    return this_measurement;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -439,13 +557,13 @@ measurement_output_probabilities stationaryQubit::getOutputProbabilities(quantum
 //When do we perform measurements? I think we can just ignore the success/fail of entanglement attempt, and measure it beforehand anyway. Waiting cause error.
 //How do we know when to measure though?
 //Return value: 1 if output is +, 0 if output is -.
-std::bitset<1> stationaryQubit::measure_density(char basis_this_qubit){
+/*std::bitset<1> stationaryQubit::measure_density(char basis_this_qubit){
     if(entangled_partner == nullptr){
         error("Measuring a qubit that is not entangled with another qubit. Not allowed!");
     }
-    /*if(entangled_partner->emitted_time=-1 && single_qubit_dm == null){
-        error("Something is wrong.");
-    }*/
+    //if(entangled_partner->emitted_time=-1 && single_qubit_dm == null){
+    //    error("Something is wrong.");
+    }
 
     //todo Check if entangled state has collapsed already (partner qubit measured already).
 
@@ -474,20 +592,7 @@ std::bitset<1> stationaryQubit::measure_density(char basis_this_qubit){
         EV<<"Output is --"<<output<<"\n";
     }
     //return output.test(1);
-}
-
-void stationaryQubit::measure_density_independent(char measurement_basis){
-    if(entangled_partner == nullptr){
-            error("Measuring a qubit that is not entangled with another qubit. Probably not what you want!");
-    }
-    apply_memory_error(this);//Add memory error depending on the idle time.
-    apply_memory_error(entangled_partner);//Also do the same on the partner!
-
-    quantum_state current_state = getQuantumState();
-    EV<<"current state is "<<current_state.state_in_ket<<"\n";
-
-}
-
+}*/
 
 
 

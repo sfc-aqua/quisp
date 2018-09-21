@@ -54,15 +54,20 @@ typedef struct _measurement_output{
     double probability_minus_minus;//P(-,-)
 }measurement_output_probabilities;
 
+typedef struct _measurement_operator{
+    Matrix2cd plus;
+    Matrix2cd minus;
+    Vector2cd plus_ket;
+    Vector2cd minus_ket;
+    char basis;
+}measurement_operator;
 
 //Single qubit
 typedef struct _measurement_operators{
-    Matrix2cd X_plus;
-    Matrix2cd X_minus;
-    Matrix2cd Z_plus;
-    Matrix2cd Z_minus;
-    Matrix2cd Y_plus;
-    Matrix2cd Y_minus;
+    measurement_operator X_basis;
+    measurement_operator Y_basis;
+    measurement_operator Z_basis;
+    Matrix2cd identity;
 }measurement_operators;
 
 
@@ -135,7 +140,8 @@ class stationaryQubit : public cSimpleModule
        measurement_operators meas_op;
        Matrix4d Memory_Transition_matrix; /*I,X,Y,Z for single qubit. Unit in μs.*/
        //projected_states proj_states;
-
+       Matrix2cd Density_Matrix_Collapsed;//Used when partner has been measured.
+       bool partner_measured;
 
         virtual bool checkBusy();
         virtual void setFree();
@@ -173,7 +179,7 @@ class stationaryQubit : public cSimpleModule
         /**
          * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
          * */
-        virtual std::bitset<1> measure_density(char basis_this_qubit);/*Simultaneous dm calculation*/
+        //virtual std::bitset<1> measure_density(char basis_this_qubit);/*Simultaneous dm calculation*/
         virtual void measure_density_independent(char measurement_basis);/*Separate dm calculation*/
 
         /*Applies memory error to the given qubit*/
@@ -223,7 +229,8 @@ class stationaryQubit : public cSimpleModule
         virtual void setEmissionPauliError();
         virtual Matrix2cd getErrorMatrix(stationaryQubit *qubit);//returns the matrix that represents the errors on the Bell pair. (e.g. XY, XZ and ZI...)
         virtual quantum_state getQuantumState();//returns the dm of the physical Bell pair. Used for tomography.
-        virtual measurement_output_probabilities getOutputProbabilities(quantum_state state, char meas_basis);
+        virtual measurement_operator Random_Measurement_Basis_Selection();
+        //virtual measurement_output_probabilities getOutputProbabilities(quantum_state state, char meas_basis);
 
 };
 

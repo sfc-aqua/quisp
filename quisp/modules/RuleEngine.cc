@@ -486,37 +486,16 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
         if(failed){
             EV<<i<<"th shot has failed.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
             realtime_controller->ReInitialize_StationaryQubit(it->second.qnic_index ,it->second.qubit_index, qnic_type);//Re-initialize the qubit. Pauli errors will be eliminated, and the color of the qubit in the GUI changes to blue.
-            if(qnic_type==QNIC_E)
+            /*if(qnic_type==QNIC_E)
                 Busy_OR_Free_QubitState_table[QNIC_E] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[QNIC_E], it->second.qnic_index, it->second.qubit_index);
             else
-                Busy_OR_Free_QubitState_table[QNIC_R] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], it->second.qnic_index, it->second.qubit_index);
+                Busy_OR_Free_QubitState_table[QNIC_R] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], it->second.qnic_index, it->second.qubit_index);*/
+            Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], it->second.qnic_index, it->second.qubit_index);
         }else{
             //Keep the entangled qubits
             EV<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
             //Add this as an available resource
             stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
-            //std::bitset<1> test = qubit->measure_density('Z');
-            //qubit->measure_density('Z');
-            /*int testing = rp.size();
-            EV<<"running processes = "<<testing<<"\n";
-
-            if(rp.size()>0){
-                EV<<"Inside process running\n";
-                for( auto i = rp.begin(); i != rp.end() ; ++i ) {
-                     RuleSet* process = i->second.RuleSet;
-                     int resource_entangled_with_address = process->entangled_partner;
-                     EV<<"Checking first process...."<<process->size()<<"\n";
-
-                     for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){
-                         EV<<"Running first Condition & Action now\n";
-                         int res = (*rule)->checkrun(allResources);
-                         EV<<"EV = "<<res<<"\n";
-                         error("Hey...\n");
-                     }
-                 }
-            }else
-                EV<<"No process running\n";*/
-            //EV<<"Outcome is "<<test;
             allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,qubit));//Add qubit as available resource between NeighborQNodeAddress.
             EV<<"There are "<<allResources[qnic_type][qnic_index].count(neighborQNodeAddress)<<" resources between this and "<<destAddr<<"\n";
         }
@@ -585,7 +564,6 @@ double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, 
 
 
 void RuleEngine::traverseThroughAllProcesses(int qnic_type, int qnic_index){
-
     int testing = rp.size();
     EV<<"running processes = "<<testing<<"\n";
 
