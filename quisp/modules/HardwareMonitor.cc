@@ -101,18 +101,15 @@ void HardwareMonitor::handleMessage(cMessage *msg){
         }if(my_qnic_index == -1){
             error("2. Something is wrong when finding out local qnic address from neighbor address in ntable.");
         }
-
         //For this and partner node.
-        SendLinkTomographyRuleSet(myAddress,partner_address, my_qnic_type, my_qnic_index);
-        SendLinkTomographyRuleSet(partner_address,myAddress, partner_qnic_type, partner_qnic_index);
-
+        sendLinkTomographyRuleSet(myAddress,partner_address, my_qnic_type, my_qnic_index);
+        sendLinkTomographyRuleSet(partner_address,myAddress, partner_qnic_type, partner_qnic_index);
     }
 
 }
 
-void HardwareMonitor::SendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index){
-
-    LinkTomographyRuleSet *pk = new LinkTomographyRuleSet;
+void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index){
+            LinkTomographyRuleSet *pk = new LinkTomographyRuleSet;
             pk->setDestAddr(my_address);
             pk->setSrcAddr(partner_address);
             pk->setNumber_of_measuring_resources(num_measure);
@@ -137,9 +134,6 @@ void HardwareMonitor::SendLinkTomographyRuleSet(int my_address, int partner_addr
             //send(pk, "RuleEnginePort$o");
             //send(pk, "RuleEnginePort$o");
             send(pk,"RouterPort$o");
-
-
-
 }
 
 

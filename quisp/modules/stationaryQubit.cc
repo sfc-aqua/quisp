@@ -458,14 +458,37 @@ void stationaryQubit::measure_density_independent(char measurement_basis){
     if(partner_measured){
         //This qubit is not entangled anymore.
         //Its single qubit state will be stored in Density_Matrix_Collapsed.
+
         apply_memory_error(this);
+        if(par("GOD_Xerror").boolValue() != GOD_dm_Xerror){
+            //Another X error to the dm.
+            Density_Matrix_Collapsed = Pauli.X*Density_Matrix_Collapsed*Pauli.X.adjoint();
+        }
+        if (par("GOD_Zerror").boolValue() != GOD_dm_Zerror){
+            //Another Z error to the dm.
+            Density_Matrix_Collapsed = Pauli.Z*Density_Matrix_Collapsed*Pauli.Z.adjoint();
+        }
+
+
+        measurement_operator this_measurement = Random_Measurement_Basis_Selection();
+        Complex Prob_plus = (Density_Matrix_Collapsed*this_measurement.plus.adjoint()*this_measurement.plus).trace();
+        Complex Prob_minus = (Density_Matrix_Collapsed*this_measurement.minus.adjoint()*this_measurement.minus).trace();
+        double dbl = dblrand();
+        char Output;
+        if(dbl < Prob_plus.real()){
+            Output = '+';
+        }else{
+            Output = '-';
+        }
+        EV<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). \n";
+
 
 
     }else{//Still entangled. After measurement, we need to update parameters, Density_Matrix_Collapsed and partner_measured, of the partner qubit.
         apply_memory_error(this);//Add memory error depending on the idle time.
         apply_memory_error(entangled_partner);//Also do the same on the partner!
         quantum_state current_state = getQuantumState();
-        EV<<"Current entangled state is "<<current_state.state_in_ket<<"\n";
+        //EV<<"Current entangled state is "<<current_state.state_in_ket<<"\n";
         measurement_operator this_measurement = Random_Measurement_Basis_Selection();
 
         Complex Prob_plus = current_state.state_in_ket.adjoint()*kroneckerProduct(this_measurement.plus,meas_op.identity).eval().adjoint()*kroneckerProduct(this_measurement.plus,meas_op.identity).eval()*current_state.state_in_ket;
@@ -474,7 +497,7 @@ void stationaryQubit::measure_density_independent(char measurement_basis){
           Tr[Belldm.ConjugateTranspose[Zp].Zp]
           Are they the same?*/
 
-        EV<<"Measurement basis = "<<this_measurement.basis<<"P(+) = "<<Prob_plus.real()<<", P(-) = "<<Prob_minus.real()<<"\n";
+        //EV<<"Measurement basis = "<<this_measurement.basis<<"P(+) = "<<Prob_plus.real()<<", P(-) = "<<Prob_minus.real()<<"\n";
         double dbl = dblrand();
         char Output;
         Vector2cd ms;
