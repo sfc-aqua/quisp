@@ -48,6 +48,7 @@ class Clause {
             //if (qnic_id < 0) omnetpp::error("Negative qnic index.");
         };
         virtual bool check(qnicResources *resources) const = 0;
+        virtual bool checkTerminate(qnicResources *resources) const = 0;
 };
 typedef std::unique_ptr<Clause> pClause;
 
@@ -64,6 +65,7 @@ class FidelityClause : public Clause {
             threshold = fidelity;
         };
         bool check(qnicResources *resources) const override;
+        bool checkTerminate(qnicResources *resources) const override {return 0;} ;
 };
 
 class MeasureCountClause : public Clause {
@@ -79,9 +81,10 @@ class MeasureCountClause : public Clause {
             current_count = 0;
          };
         bool check(qnicResources *resources) const override;
+        bool checkTerminate(qnicResources *resources) const override;
         //void increment(){current_count++;};
-
 };
+
 
 class XErrClause : public Clause {};
 

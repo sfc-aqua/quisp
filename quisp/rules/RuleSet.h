@@ -26,6 +26,7 @@ class RuleSet : public std::list<pRule> {
         void addRule(Rule * r) { push_back(pRule(r)); };
         void addRule(pRule& r) { push_back(pRule(std::move(r))); };
         int getSize() {return this->size();};
+        void destroyThis() {EV<<"Destroying this RuleSet. \n "; delete this; };
 
 };
 

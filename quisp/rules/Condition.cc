@@ -22,6 +22,17 @@ bool Condition::check(qnicResources *resources) const {
     return satisfying;
 }
 
+bool Condition::checkTerminate(qnicResources *resources) const {
+    bool satisfying = true;
+    for (auto clause = cbegin(), end = cend(); clause != end; clause++){
+        if (!(*clause)->checkTerminate(resources)){
+            satisfying = false;
+            break;
+        }
+    }
+    return satisfying;
+}
+
 
 } // namespace rules
 } // namespace quisp

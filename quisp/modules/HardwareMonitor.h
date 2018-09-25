@@ -13,6 +13,7 @@
 #include <omnetpp.h>
 #include <modules/stationaryQubit.h>
 #include <modules/QNIC.h>
+#include "classical_messages_m.h"
 
 using namespace omnetpp;
 
@@ -44,6 +45,8 @@ typedef struct _Interface_inf{
     int buffer_size;
     double link_cost;
     int neighborQNode_address;
+    int neighborQNode_qnic_type;
+    QNIC neighbor_qnic;
 } Interface_inf;
 
 typedef struct _For_connection_setup{
@@ -88,6 +91,7 @@ class HardwareMonitor : public cSimpleModule
         virtual cModule* getQNode();
         virtual neighborInfo findNeighborAddress(cModule *qnic_pointer);
         virtual Interface_inf getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type);
+        virtual void sendLinkTomographyRuleSet(int my_address,int partner_address, QNIC_type qnic_type, int qnic_index);
 
         //virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
 };

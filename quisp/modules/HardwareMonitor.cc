@@ -44,49 +44,101 @@ void HardwareMonitor::initialize(int stage)
       for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
           if(myAddress > it->second.neighborQNode_address){//You dont want 2 separate tomography processes to run for each link. Not a very good solution, but makes sure that only 1 request per link is generated.
               EV<<"Generating tomography rules... for node "<<it->second.neighborQNode_address<<"\n";
-              LinkTomographyRequest *pk = new LinkTomographyRequest;
-              pk->setDestAddr(myAddress);
-              pk->setSrcAddr(it->second.neighborQNode_address);
-              pk->setNumber_of_measuring_resources(num_measure);
-              pk->setKind(6);
-              /*Empty RuleSet*/
-              RuleSet* tomography_RuleSet = new RuleSet(myAddress,it->second.neighborQNode_address);//Tomography between this node and it->second.neighborQNode_address.
-              /*-------------*/
-              /*-One rule-*/
-              Rule* Random_measure_tomo = new Rule();//Let's make nodes select measurement basis randomly, because it it easier.
-              Condition* total_measurements = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
 
-              Clause* measure_count_clause = new MeasureCountClause(num_measure,it->second.neighborQNode_address/*Partner node address*/, it->second.qnic.type , it->second.qnic.index, 0/*Top one of the resource list*/);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
-              total_measurements->addClause(measure_count_clause);
-              Random_measure_tomo->setCondition(total_measurements);
-              quisp::rules::Action* measure = new RandomMeasureAction(it->second.neighborQNode_address/*Partner node address*/, it->second.qnic.type , it->second.qnic.index, 0/*Which resource to use: Use top one of the resource list*/);//Measure the local resource between it->second.neighborQNode_address.
-              Random_measure_tomo->setAction(measure);
-              /*---------*/
-              /*Add the rule to the RuleSet*/
-              tomography_RuleSet->addRule(Random_measure_tomo);
-              /*---------------------------*/
-              pk->setRuleSet(tomography_RuleSet);
-              //send(pk, "RuleEnginePort$o");
-              //send(pk, "RuleEnginePort$o");
+              LinkTomographyRequest *pk = new LinkTomographyRequest;
+              pk->setDestAddr(it->second.neighborQNode_address);
+              pk->setSrcAddr(myAddress);
+              pk->setKind(6);
               send(pk,"RouterPort$o");
-              /*
-              //For Neighbor
-              LinkTomographyRequest *pkt = new LinkTomographyRequest;
-              pkt->setDestAddr(it->second.neighborQNode_address);
-              pkt->setSrcAddr(myAddress);
-              pkt->setNumber_of_measuring_resources(num_measure);
-              RuleSet* tomography_RuleSet_partner = new RuleSet(it->second.neighborQNode_address,myAddress);
-              tomography_RuleSet_partner->addRule(Random_measure_tomo);//Same rule for tmography.
-              pkt->setRuleSet(tomography_RuleSet_partner);
-              pkt->setKind(6);
-              send(pkt,"RouterPort$o");
-              */
           }
       }
   }
+
 }
 
 void HardwareMonitor::handleMessage(cMessage *msg){
+    if(dynamic_cast<LinkTomographyRequest *>(msg) != nullptr){
+        LinkTomographyRequest *request = check_and_cast<LinkTomographyRequest *>(msg);
+
+
+        LinkTomographyAck *pk = new LinkTomographyAck;
+        pk->setSrcAddr(myAddress);
+        pk->setDestAddr(request->getSrcAddr());
+        pk->setKind(6);
+        QNIC_type qnic_type;
+        int qnic_index = -1;
+        for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
+            if(it->second.neighborQNode_address == request->getSrcAddr()){
+                qnic_type = it->second.qnic.type;
+                qnic_index = it->second.qnic.index;
+                break;
+            }
+        }if(qnic_index == -1){
+            error("1. Something is wrong when finding out local qnic address from neighbor address in ntable.");
+        }
+        pk->setQnic_index(qnic_index);
+        pk->setQnic_type(qnic_type);
+
+        send(pk,"RouterPort$o");
+
+    }else if(dynamic_cast<LinkTomographyAck *>(msg) != nullptr){
+
+        LinkTomographyAck *ack = check_and_cast<LinkTomographyAck *>(msg);
+
+        int partner_address = ack->getSrcAddr();
+        QNIC_type partner_qnic_type = ack->getQnic_type();
+        int partner_qnic_index = ack->getQnic_index();
+
+        QNIC_type my_qnic_type;
+        int my_qnic_index = -1;
+
+        for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
+            if(it->second.neighborQNode_address == ack->getSrcAddr()){
+                my_qnic_type = it->second.qnic.type;
+                my_qnic_index = it->second.qnic.index;
+                break;
+            }
+        }if(my_qnic_index == -1){
+            error("2. Something is wrong when finding out local qnic address from neighbor address in ntable.");
+        }
+
+        //For this and partner node.
+        SendLinkTomographyRuleSet(myAddress,partner_address, my_qnic_type, my_qnic_index);
+        SendLinkTomographyRuleSet(partner_address,myAddress, partner_qnic_type, partner_qnic_index);
+
+    }
+
+}
+
+void HardwareMonitor::SendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index){
+
+    LinkTomographyRuleSet *pk = new LinkTomographyRuleSet;
+            pk->setDestAddr(my_address);
+            pk->setSrcAddr(partner_address);
+            pk->setNumber_of_measuring_resources(num_measure);
+            pk->setKind(6);
+
+            //Empty RuleSet
+            RuleSet* tomography_RuleSet = new RuleSet(my_address,partner_address);//Tomography between this node and the sender of Ack.
+            //-------------
+            //-First rule-
+            Rule* Random_measure_tomo = new Rule();//Let's make nodes select measurement basis randomly, because it it easier.
+            Condition* total_measurements = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
+            Clause* measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type , qnic_index, 0);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
+            total_measurements->addClause(measure_count_clause);
+            Random_measure_tomo->setCondition(total_measurements);
+            quisp::rules::Action* measure = new RandomMeasureAction(partner_address, qnic_type , qnic_index, 0);//Measure the local resource between it->second.neighborQNode_address.
+            Random_measure_tomo->setAction(measure);
+            //---------
+            //Add the rule to the RuleSet
+            tomography_RuleSet->addRule(Random_measure_tomo);
+            //---------------------------
+            pk->setRuleSet(tomography_RuleSet);
+            //send(pk, "RuleEnginePort$o");
+            //send(pk, "RuleEnginePort$o");
+            send(pk,"RouterPort$o");
+
+
 
 }
 
@@ -262,9 +314,9 @@ neighborInfo  HardwareMonitor::findNeighborAddress(cModule *qnic_pointer){
     //EV<<"gt = "<<gt->getName()<<"\n";
     cGate *neighbor_gt = gt->getNextGate();
     //EV<<"neighbor_gt = "<<neighbor_gt->getName()<<"\n";
-    cModule *neighbor_node = neighbor_gt->getOwnerModule();//HoM, EPPS, QNode
+    cModule *neighbor_node = neighbor_gt->getOwnerModule();//Ownner could be HoM, EPPS, QNode
     //EV<<"neighbor_node = "<<neighbor_node->getName()<<"\n";
-    neighborInfo neighbor_is_QNode = checkIfQNode(neighbor_node);//Check if it is QNode
+    neighborInfo neighbor_is_QNode = checkIfQNode(neighbor_node);
     return neighbor_is_QNode;
 }
 
@@ -285,7 +337,7 @@ cModule* HardwareMonitor::getQNode(){
 
 neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode){
 
-    neighborInfo inf;
+    neighborInfo inf;//Return this
     if(thisNode->getModuleType()!=QNodeType){//Not a Qnode!
 
         if(thisNode->getModuleType()==HoMType){

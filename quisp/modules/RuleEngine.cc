@@ -159,22 +159,26 @@ void RuleEngine::handleMessage(cMessage *msg){
            bubble("EPPS");
            EPPStimingNotifier *pk = check_and_cast<EPPStimingNotifier *>(msg);
         }
-        else if(dynamic_cast<LinkTomographyRequest *>(msg) != nullptr){
+        else if(dynamic_cast<LinkTomographyRuleSet *>(msg) != nullptr){
            //Received a tomography rule set.
-           LinkTomographyRequest *pk = check_and_cast<LinkTomographyRequest *>(msg);
+           LinkTomographyRuleSet *pk = check_and_cast<LinkTomographyRuleSet *>(msg);
            process p;
            p.ownner_addr = pk->getRuleSet()->owner;
            p.working_partner_addr = pk->getRuleSet()->entangled_partner;
            p.RuleSet = pk->getRuleSet();
-           int process_id = rp.size();
+           int process_id = rp.size();//This is temporary because it will not be unique when processes have been deleted.
 
-           rp.insert(std::make_pair(process_id, p));
-           int testing = rp.size();
-           EV<<"New process arrived !"<<testing<<"\n";
            EV<<"Process size is ...."<<p.RuleSet->size()<<"\n";
-           /*for (auto tomography=rs->cbegin(), end=rs->cend(); tomography!=end; tomography++)
-                  (*tomography)->checkrun(resources);*/
-           //error("Hello");
+           if(p.RuleSet->size()>0){
+               rp.insert(std::make_pair(process_id, p));
+               EV<<"New process arrived !\n";
+               //error("die");
+           }else{
+               error("Empty rule set...");
+           }
+
+
+
         }
     delete msg;
 }
@@ -472,11 +476,11 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
      }
 
     int num_emitted_in_this_burstTrial = tracker[qnic_address].size();
-    EV<<"qnic["<<qnic_index<<"] with type = "<<qnic_type<<"address "<<qnic_address<<" has emitted"<<num_emitted_in_this_burstTrial<<" photons. \n";
-    EV<<"num emitted from qnic["<<qnic_address<<"] is "<<num_emitted_in_this_burstTrial;
-    for(auto it = tracker[qnic_address].cbegin(); it != tracker[qnic_address].cend(); ++it){
+    //EV<<"qnic["<<qnic_index<<"] with type = "<<qnic_type<<"address "<<qnic_address<<" has emitted"<<num_emitted_in_this_burstTrial<<" photons. \n";
+    //EV<<"num emitted from qnic["<<qnic_address<<"] is "<<num_emitted_in_this_burstTrial;
+    /*for(auto it = tracker[qnic_address].cbegin(); it != tracker[qnic_address].cend(); ++it){
             EV<<it->first<<"th shot was from qnic["<<it->second.qnic_index<<"] qubit["<<it->second.qubit_index<<"] \n ???????????????????????????????????";
-    }
+    }*/
 
     for(int i=0; i<list_size; i++){
         bool failed = pk_result->getList_of_failed(i);
@@ -484,7 +488,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
         if (it == tracker[qnic_address].end())
                 error("Something is wrong with the tracker....%d th shot not recorded",i);//Neighbor not found! This should not happen unless you simulate broken links in real time.
         if(failed){
-            EV<<i<<"th shot has failed.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
+            //EV<<i<<"th shot has failed.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
             realtime_controller->ReInitialize_StationaryQubit(it->second.qnic_index ,it->second.qubit_index, qnic_type);//Re-initialize the qubit. Pauli errors will be eliminated, and the color of the qubit in the GUI changes to blue.
             /*if(qnic_type==QNIC_E)
                 Busy_OR_Free_QubitState_table[QNIC_E] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[QNIC_E], it->second.qnic_index, it->second.qubit_index);
@@ -493,11 +497,11 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
             Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], it->second.qnic_index, it->second.qubit_index);
         }else{
             //Keep the entangled qubits
-            EV<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
+            //EV<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
             //Add this as an available resource
             stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
             allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,qubit));//Add qubit as available resource between NeighborQNodeAddress.
-            EV<<"There are "<<allResources[qnic_type][qnic_index].count(neighborQNodeAddress)<<" resources between this and "<<destAddr<<"\n";
+            //EV<<"There are "<<allResources[qnic_type][qnic_index].count(neighborQNodeAddress)<<" resources between this and "<<destAddr<<"\n";
         }
     }
 
@@ -564,29 +568,42 @@ double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, 
 
 
 void RuleEngine::traverseThroughAllProcesses(int qnic_type, int qnic_index){
-    int testing = rp.size();
+    int testing = rp.size();//Number of running processes (in all QNICs).
     EV<<"running processes = "<<testing<<"\n";
 
               if(rp.size()>0){
                   EV<<"Inside process running.\n";
-                  for( auto i = rp.begin(); i != rp.end() ; ++i ) {//Traverse through all processes.
-                       RuleSet* process = i->second.RuleSet;//One Process. From top to bottom.
-                       int resource_entangled_with_address = process->entangled_partner;//
-                       EV<<"Checking first process...."<<process->size()<<"\n";
-                       if(allResources[qnic_type][qnic_index].count(resource_entangled_with_address)>0){//If a resource exists
 
-                           for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){
-                               EV<<"Running first Condition & Action now\n";
-                               int res = (*rule)->checkrun(allResources, qnic_type, qnic_index,resource_entangled_with_address);//Do something on qubits entangled with resource_entangled_with_address.
-                           }
-                           //error(" done...\n");
-                       }else{
-                           EV<<"No resource available between "<<resource_entangled_with_address<<" in this specific QNIC. \n";
-                       }
-                   }
-              }else
+                  for (auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){
+                      next_it = it; ++next_it;
+
+                      RuleSet* process = it->second.RuleSet;//One Process. From top to bottom.
+                      int resource_entangled_with_address = process->entangled_partner;//
+                      EV<<"Checking first process.... process "<<process->size()<<"\n";
+                      if(allResources[qnic_type][qnic_index].count(resource_entangled_with_address)>0){//If a resource exists
+                          for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){
+                              EV<<"Running first Condition & Action now\n";
+
+                              /*-loop-*/
+                              int res = (*rule)->checkrun(allResources, qnic_type, qnic_index,resource_entangled_with_address);//Do something on qubits entangled with resource_entangled_with_address.
+                              /*-----*/
+
+                              int done = (*rule)->checkTerminate(allResources, qnic_type, qnic_index,resource_entangled_with_address);
+                              //Delete RuleSet if done
+                              if(done){
+                                  process->destroyThis();
+                                  rp.erase(it);
+                                  break;
+                              }
+                          }
+                      }
+                  }
+              }else{
                   EV<<"No process running\n";
+              }
+
 }
+
 
 
 

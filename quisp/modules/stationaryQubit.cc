@@ -224,7 +224,10 @@ void stationaryQubit::setFree(){
     isBusy = false;
     emitted_time = -1;
     updated_time = -1;
+    /**/
     partner_measured = false;
+    GOD_dm_Zerror = false;
+    GOD_dm_Xerror = false;
     Density_Matrix_Collapsed << -1,-1,-1,-1;
     par("photon_emitted_at") = emitted_time.dbl();
     par("last_updated_at") = updated_time.dbl();
@@ -455,6 +458,8 @@ void stationaryQubit::measure_density_independent(char measurement_basis){
     if(partner_measured){
         //This qubit is not entangled anymore.
         //Its single qubit state will be stored in Density_Matrix_Collapsed.
+        apply_memory_error(this);
+
 
     }else{//Still entangled. After measurement, we need to update parameters, Density_Matrix_Collapsed and partner_measured, of the partner qubit.
         apply_memory_error(this);//Add memory error depending on the idle time.
@@ -489,7 +494,9 @@ void stationaryQubit::measure_density_independent(char measurement_basis){
         EV<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). Partner's dm is now = "<<normalized_partners_dm<<"\n";
         entangled_partner->Density_Matrix_Collapsed = normalized_partners_dm;
         entangled_partner->partner_measured = true;
-        //todo dmを上書きするときエラーを消したほうがいい？ その時のdm自体にエラーが乗っているはず。その時のdmはどういうエラーが乗ってた時？その後に別のエラーがのったらどう計算する？
+        //Save what error it had, when this density matrix was calculated. Error may get updated in the future, so we need to track what error has been considered already in the dm.
+        entangled_partner->GOD_dm_Xerror = entangled_partner->par("GOD_Xerror");
+        entangled_partner->GOD_dm_Zerror = entangled_partner->par("GOD_Zerror");
 
     }
 }

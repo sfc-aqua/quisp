@@ -31,6 +31,8 @@ class Rule {
         //const pAction& getAction() { return action; };
         int checkrun(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
         int checkrun(qnicResources * resources);
+        int checkTerminate(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
+        int checkTerminate(qnicResources * resources);
         int test(qnicResources * resources);
 };
 typedef std::unique_ptr<Rule> pRule;

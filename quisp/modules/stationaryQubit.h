@@ -142,6 +142,8 @@ class stationaryQubit : public cSimpleModule
        //projected_states proj_states;
        Matrix2cd Density_Matrix_Collapsed;//Used when partner has been measured.
        bool partner_measured;
+       bool GOD_dm_Xerror;
+       bool GOD_dm_Zerror;
 
         virtual bool checkBusy();
         virtual void setFree();

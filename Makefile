@@ -1,62 +1,158 @@
-.PHONY: all clean run dbg tags tags quisp/% doc quisp/.oppbuildspec .lvimrc
+#
+# OMNeT++/OMNEST Makefile for kaaki_master_quisp
+#
+# This file was generated with the command:
+#  opp_makemake -f --deep -O out -I/Users/takaakimatsuo/Downloads/eigen3 -I.
+#
 
-ifneq (${VIRTUAL_ENV},quisp)
-$(error Get inside the QUISP virtual environment with `source setenv`)
-endif
+# Name of target to be created (-o option)
+TARGET = kaaki_master_quisp$(D)$(EXE_SUFFIX)
+TARGET_DIR = .
 
-MODE?=release
+# User interface (uncomment one) (-u option)
+USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LIBS)
+#USERIF_LIBS = $(CMDENV_LIBS)
+#USERIF_LIBS = $(TKENV_LIBS)
+#USERIF_LIBS = $(QTENV_LIBS)
 
-MSGFILES:=$(wildcard quisp/*.msg)
-CMSGFILES:=${MSGFILES:%.msg=%_m.cc}
-HMSGFILES:=${MSGFILES:%.msg=%_m.h}
+# C++ include paths (with -I)
+INCLUDE_PATH = -I/Users/takaakimatsuo/Downloads/eigen3 -I.
 
-ifeq (${BATCH},)
-QENV:=Qtenv
+# Additional object and library files to link with
+EXTRA_OBJS =
+
+# Additional libraries (-L, -l options)
+LIBS =
+
+# Output directory
+PROJECT_OUTPUT_DIR = out
+PROJECTRELATIVE_PATH =
+O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
+
+# Object files for local .cc, .msg and .sm files
+OBJS = \
+    $O/quisp/channels/QuantumChannel.o \
+    $O/quisp/modules/Application.o \
+    $O/quisp/modules/BellStateAnalyzer.o \
+    $O/quisp/modules/ConnectionManager.o \
+    $O/quisp/modules/dummyModule.o \
+    $O/quisp/modules/EntangledPhotonPairSource.o \
+    $O/quisp/modules/HardwareMonitor.o \
+    $O/quisp/modules/HoM_Controller.o \
+    $O/quisp/modules/QNIC_photonic_switch.o \
+    $O/quisp/modules/Queue.o \
+    $O/quisp/modules/RealTimeController.o \
+    $O/quisp/modules/ResourceManager.o \
+    $O/quisp/modules/Router.o \
+    $O/quisp/modules/RoutingDaemon.o \
+    $O/quisp/modules/RuleEngine.o \
+    $O/quisp/modules/SPDC_Controller.o \
+    $O/quisp/modules/stationaryQubit.o \
+    $O/quisp/rules/Action.o \
+    $O/quisp/rules/Clause.o \
+    $O/quisp/rules/Condition.o \
+    $O/quisp/rules/example.o \
+    $O/quisp/rules/Rule.o \
+    $O/quisp/rules/RuleSet.o \
+    $O/quisp/classical_messages_m.o \
+    $O/quisp/PhotonicQubit_m.o
+
+# Message files
+MSGFILES = \
+    quisp/classical_messages.msg \
+    quisp/PhotonicQubit.msg
+
+# SM files
+SMFILES =
+
+#------------------------------------------------------------------------------
+
+# Pull in OMNeT++ configuration (Makefile.inc)
+
+ifneq ("$(OMNETPP_CONFIGFILE)","")
+CONFIGFILE = $(OMNETPP_CONFIGFILE)
 else
-QENV:=Cmdenv
-QCONFIG?=Simple_constant_quantum_cost
-QCFG:=-c $(QCONFIG)
+ifneq ("$(OMNETPP_ROOT)","")
+CONFIGFILE = $(OMNETPP_ROOT)/Makefile.inc
+else
+CONFIGFILE = $(shell opp_configfilepath)
+endif
 endif
 
-all: quisp/Makefile
-	make -C quisp MODE=${MODE} $@
+ifeq ("$(wildcard $(CONFIGFILE))","")
+$(error Config file '$(CONFIGFILE)' does not exist -- add the OMNeT++ bin directory to the path so that opp_configfilepath can be found, or set the OMNETPP_CONFIGFILE variable to point to Makefile.inc)
+endif
 
-clean: quisp/Makefile
-	make -C quisp MODE=${MODE} $@
-	rm $<
+include $(CONFIGFILE)
 
-quisp/quisp: quisp/Makefile
-	make -C quisp MODE=release all
+# Simulation kernel and user interface libraries
+OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
 
-quisp/quisp_dbg: quisp/Makefile
-	make -C quisp MODE=debug all
+COPTS = $(CFLAGS) $(IMPORT_DEFINES)  $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
+MSGCOPTS = $(INCLUDE_PATH)
+SMCOPTS =
 
-quisp/Makefile: quisp/makemakefiles quisp/.oppbuildspec
-	make -C quisp -f makemakefiles all MMOPT="$$(get_oppbuildspec quisp/.oppbuildspec)"
+# we want to recompile everything if COPTS changes,
+# so we store COPTS into $COPTS_FILE and have object
+# files depend on it (except when "make depend" was called)
+COPTS_FILE = $O/.last-copts
+ifneq ("$(COPTS)","$(shell cat $(COPTS_FILE) 2>/dev/null || echo '')")
+$(shell $(MKPATH) "$O" && echo "$(COPTS)" >$(COPTS_FILE))
+endif
 
-run: quisp/quisp
-	cd quisp && \
-		./quisp -m -u ${QENV} -n . networks/omnetpp.ini ${QCFG}
+#------------------------------------------------------------------------------
+# User-supplied makefile fragment(s)
+# >>>
+# <<<
+#------------------------------------------------------------------------------
 
-dbg: quisp/quisp_dbg
-	cd quisp && \
-		gdb quisp_dbg -ex 'run -m -u ${QENV} -n . networks/omnetpp.ini ${QCFG}'
+# Main target
+all: $(TARGET_DIR)/$(TARGET)
 
-quisp/%_m.cc quisp/%_m.h: quisp/Makefile
-	make -C quisp MODE=${MODE} ${@F}
+$(TARGET_DIR)/% :: $O/%
+	@mkdir -p $(TARGET_DIR)
+	$(Q)$(LN) $< $@
+ifeq ($(TOOLCHAIN_NAME),clangc2)
+	$(Q)-$(LN) $(<:%.dll=%.lib) $(@:%.dll=%.lib)
+endif
 
-msg:
-	make -C quisp MODE=${MODE} ${CMSGFILES:quisp/%=%} ${HMSGFILES:quisp/%=%}
+$O/$(TARGET): $(OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)
+	@$(MKPATH) $O
+	@echo Creating executable: $@
+	$(Q)$(CXX) $(LDFLAGS) -o $O/$(TARGET) $(OBJS) $(EXTRA_OBJS) $(AS_NEEDED_OFF) $(WHOLE_ARCHIVE_ON) $(LIBS) $(WHOLE_ARCHIVE_OFF) $(OMNETPP_LIBS)
 
-tags: msg
-	find "$$(cd quisp && pwd)" -type f -name '*.cc' -o -name '*.h' -exec 'ctags' '-o' 'tags' '--language-force=c++' '{}' '+'
-	test ! -d .git || mv tags .git/.
+.PHONY: all clean cleanall depend msgheaders smheaders
 
-doc: Doxyfile
-	doxygen $<
+.SUFFIXES: .cc
 
-quisp/.oppbuildspec: quisp/.oppbuildspec.template
-	test -f $@ || cp $< $@
+$O/%.o: %.cc $(COPTS_FILE) | msgheaders smheaders
+	@$(MKPATH) $(dir $@)
+	$(qecho) "$<"
+	$(Q)$(CXX) -c $(CXXFLAGS) $(COPTS) -o $@ $<
 
-.lvimrc: quisp/.oppbuildspec
-	test -f $@ || make_lvimrc $$(get_oppbuildspec $<) > $@
+%_m.cc %_m.h: %.msg
+	$(qecho) MSGC: $<
+	$(Q)$(MSGC) -s _m.cc $(MSGCOPTS) $?
+
+%_sm.cc %_sm.h: %.sm
+	$(qecho) SMC: $<
+	$(Q)$(SMC) -c++ -suffix cc $(SMCOPTS) $?
+
+msgheaders: $(MSGFILES:.msg=_m.h)
+
+smheaders: $(SMFILES:.sm=_sm.h)
+
+clean:
+	$(qecho) Cleaning $(TARGET)
+	$(Q)-rm -rf $O
+	$(Q)-rm -f $(TARGET_DIR)/$(TARGET)
+	$(Q)-rm -f $(TARGET_DIR)/$(TARGET:%.dll=%.lib)
+	$(Q)-rm -f $(call opp_rwildcard, . , *_m.cc *_m.h *_sm.cc *_sm.h)
+
+cleanall:
+	$(Q)$(MAKE) -s clean MODE=release
+	$(Q)$(MAKE) -s clean MODE=debug
+	$(Q)-rm -rf $(PROJECT_OUTPUT_DIR)
+
+# include all dependencies
+-include $(OBJS:%.o=%.d)

@@ -127,6 +127,14 @@ void Router::handleMessage(cMessage *msg)
             return;
         }else if (destAddr == myAddress && dynamic_cast<LinkTomographyRequest *>(msg)!= nullptr){
             bubble("Link tomography request received");
+            send(pk, "hmPort$o");
+            return;
+        }else if (destAddr == myAddress && dynamic_cast<LinkTomographyAck *>(msg)!= nullptr){
+            bubble("Link tomography ack received");
+            send(pk, "hmPort$o");
+            return;
+        }else if (destAddr == myAddress && dynamic_cast<LinkTomographyRuleSet *>(msg)!= nullptr){
+            bubble("Link tomography rule set received");
             send(pk, "rePort$o");
             return;
         }
@@ -136,7 +144,7 @@ void Router::handleMessage(cMessage *msg)
         if (it == rtable.end()) {
             EV << "address " << destAddr << " unreachable, discarding packet " << pk->getName() << endl;
             delete pk;
-            error("Shoudnt happen");
+            error("Shoudn't happen");
             return;
         }
 

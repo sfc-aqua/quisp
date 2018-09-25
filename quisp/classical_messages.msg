@@ -4,6 +4,7 @@ cplusplus {{
 typedef quisp::modules::QNIC_id_pair QNIC_pair_info;
 }}
 struct QNIC_pair_info;
+struct QNIC_type;
 
 
 namespace quisp::messages;
@@ -34,14 +35,25 @@ packet ConnectionSetupRequest extends header
 
 cplusplus {{
     typedef quisp::rules::RuleSet * RuleSetField;
+   
 }}
 class noncobject RuleSetField;
 
-packet LinkTomographyRequest extends header
+packet LinkTomographyRuleSet extends header
 {
     int process_id;
     int number_of_measuring_resources;
     RuleSetField RuleSet;
+}
+
+packet LinkTomographyRequest extends header
+{
+}
+
+packet LinkTomographyAck extends header
+{
+	QNIC_type qnic_type;
+	int qnic_index;
 }
 
 packet ConnectionSetupResponse extends header

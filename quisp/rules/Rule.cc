@@ -23,7 +23,7 @@ int Rule::checkrun(qnicResources * resources, int qnic_type, int qnic_index, int
 
     int res = 0;
     if (condition->check(resources)){
-        EV<<"All conditions meet. Running Action. \n";
+        EV<<"All conditions met. Running Action. \n";
         res = action->run(resources);
     }
     return res;
@@ -32,11 +32,36 @@ int Rule::checkrun(qnicResources * resources, int qnic_type, int qnic_index, int
 int Rule::checkrun(qnicResources * resources) {
     int res = 0;
     if (condition->check(resources)){
-        EV<<"All conditions meet. Running Action. \n";
+        EV<<"All conditions met. Running Action. \n";
         res = action->run(resources);
     }
     return res;
 }
+
+int Rule::checkTerminate(qnicResources * resources) {
+    int res = 0;
+    if (condition->checkTerminate(resources)){
+        EV<<"Termination conditions met. Delete this RuleSet. \n";
+        int res = 1;
+    }else{
+        EV<<"Termination conditions not yet fulfilled.\n ";
+    }
+    return res;
+}
+
+int Rule::checkTerminate(qnicResources * resources, int qnic_type, int qnic_index, int resource_entangled_with_address) {
+    int res = 0;
+    if (condition->checkTerminate(resources)){
+        EV<<"Termination conditions met. Delete this RuleSet. \n";
+        int res = 1;
+    }else{
+        EV<<"Termination conditions not yet fulfilled.\n ";
+    }
+    return res;
+}
+
+
+
 
 int Rule::test(qnicResources * resources){
     EV<<"Invoked!!!!!!!!\n";
