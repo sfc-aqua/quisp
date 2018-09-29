@@ -6,10 +6,10 @@
  *
  *  \brief HardwareMonitor
  */
-#include "HardwareMonitor.h"
-#include "classical_messages_m.h"
-#include <sstream>
-#include <string>
+//#include "HardwareMonitor.h"
+//#include "classical_messages_m.h"
+//#include <sstream>
+//#include <string>
 
 namespace quisp {
 namespace modules {
@@ -22,10 +22,12 @@ Define_Module(HardwareMonitor);
 void HardwareMonitor::initialize(int stage)
 {
   EV<<"HardwareMonitor booted\n";
+
   numQnic_rp = par("number_of_qnics_rp");// number of qnics connected to epps.
   numQnic_r = par("number_of_qnics_r");// number of qnics connected to internal hom.
   numQnic = par("number_of_qnics");// number of qnics connected to stand alone HoM or internal hom in the neighbor.
   numQnic_total = numQnic + numQnic_r + numQnic_rp;
+  all_temporal_tomography_output_holder = new Temporal_Tomography_Output_Holder[numQnic_total];//Assumes link tomography only between neighbors.
   ntable = prepareNeighborTable(ntable, numQnic_total);
   do_link_level_tomography = par("link_tomography");
   num_measure = par("num_measure");
@@ -104,8 +106,62 @@ void HardwareMonitor::handleMessage(cMessage *msg){
         //For this and partner node.
         sendLinkTomographyRuleSet(myAddress,partner_address, my_qnic_type, my_qnic_index);
         sendLinkTomographyRuleSet(partner_address,myAddress, partner_qnic_type, partner_qnic_index);
+    }else if (dynamic_cast<LinkTomographyResult *>(msg) != nullptr){
+        LinkTomographyResult *result = check_and_cast<LinkTomographyResult *>(msg);
+        QNIC local_qnic = search_QNIC_from_Neighbor_QNode_address(result->getPartner_address());
+        auto it = all_temporal_tomography_output_holder[local_qnic.index].find(result->getCount_id());
+        if (it != all_temporal_tomography_output_holder[local_qnic.index].end()){
+            EV<<"Data already found.";
+            tomography_outcome temp = it->second;
+            if(result->getSrcAddr() == myAddress){
+                temp.my_basis = result->getBasis();
+                temp.my_output_is_plus = result->getOutput_is_plus();
+            }else{
+                temp.partner_basis = result->getBasis();
+                temp.partner_output_is_plus = result->getOutput_is_plus();
+            }it->second = temp;
+        }else{
+            EV<<"Fresh data";
+            tomography_outcome temp;
+            if(result->getSrcAddr() == myAddress){
+                temp.my_basis = result->getBasis();
+                temp.my_output_is_plus = result->getOutput_is_plus();
+            }else{
+                temp.partner_basis = result->getBasis();
+                temp.partner_output_is_plus = result->getOutput_is_plus();
+            }
+            all_temporal_tomography_output_holder[local_qnic.index].insert(std::make_pair(result->getCount_id(), temp));
+        }
     }
 
+    delete msg;
+
+}
+
+void HardwareMonitor::finish(){
+    EV<<"This is just a test!\n";
+    EV<<"numQnic_total = "<<numQnic_total;
+    for(int i=0; i<numQnic_total; i++){
+        EV<<"\n \n \n \n \n QNIC["<<i<<"] \n";
+        for(auto it =  all_temporal_tomography_output_holder[i].cbegin(); it != all_temporal_tomography_output_holder[i].cend(); ++it){
+            EV <<"Count["<< it->first << "] = " << it->second.my_basis << ", " << it->second.my_output_is_plus << ", " << it->second.partner_basis << ", "  << it->second.partner_output_is_plus << " " << "\n";
+        }
+    }
+}
+
+//Excludes Hom, Epps and other intermediate nodes.
+QNIC HardwareMonitor::search_QNIC_from_Neighbor_QNode_address(int neighbor_address){
+    QNIC qnic;
+    for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
+
+        if(it->second.neighborQNode_address == neighbor_address){
+            qnic = it->second.qnic;
+            break;
+        }if(it == ntable.end()){
+            error("Something is wrong when looking for QNIC info from neighbor QNode address. Tomography is also only available between neighbor.");
+        }
+    }
+    return qnic;
 }
 
 void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index){
@@ -124,7 +180,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
             Clause* measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type , qnic_index, 0);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
             total_measurements->addClause(measure_count_clause);
             Random_measure_tomo->setCondition(total_measurements);
-            quisp::rules::Action* measure = new RandomMeasureAction(partner_address, qnic_type , qnic_index, 0);//Measure the local resource between it->second.neighborQNode_address.
+            quisp::rules::Action* measure = new RandomMeasureAction(partner_address, qnic_type , qnic_index, 0, my_address);//Measure the local resource between it->second.neighborQNode_address.
             Random_measure_tomo->setAction(measure);
             //---------
             //Add the rule to the RuleSet

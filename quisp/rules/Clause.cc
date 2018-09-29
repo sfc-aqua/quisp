@@ -20,25 +20,29 @@ bool FidelityClause::check(qnicResources* resources) const {
     return false;
 }
 bool MeasureCountClause::check(qnicResources* resources) const {
-    EV<<"MeasureCountClause invoked.\n";
+    EV<<"MeasureCountClause invoked!!!! \n";
     if(current_count<max_count){
         current_count++;//Increment measured counter.
         EV<<"Measurement count is now "<<current_count<<" < "<<max_count<<"\n";
         return true;
     }
-    else
+    else{
+        EV<<"Count is enough";
         return false;
+    }
 }
 
 bool MeasureCountClause::checkTerminate(qnicResources* resources) const {
     EV<<"Tomography termination clause invoked.\n";
-    if(current_count>=max_count){
-        EV<<"Current count = "<<current_count<<" < max "<<max_count<<"\n";
-        return true;
+    bool done = false;
+    if(current_count >=max_count){
+        EV<<"TRUE: Current count = "<<current_count<<" >=  "<<max_count<<"(max)\n";
+        done = true;
     }
-    else
-        return false;
+    return done;
 }
+
+
 
 
 Clause *EXAMPLE_CLAUSE = new FidelityClause(0,0,.6);

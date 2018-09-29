@@ -56,6 +56,17 @@ packet LinkTomographyAck extends header
 	int qnic_index;
 }
 
+packet LinkTomographyResult extends header
+{
+	bool Output_is_plus;
+	char Basis;
+	int count_id;
+	int partner_address;
+}
+
+packet ConditionNotSatisfied{
+}
+
 packet ConnectionSetupResponse extends header
 {
     RuleSetField stack_of_RuleSets[];

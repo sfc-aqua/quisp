@@ -9,11 +9,14 @@
 #ifndef QUISP_MODULES_HARDWAREMONITOR_H_
 #define QUISP_MODULES_HARDWAREMONITOR_H_
 
+/*
 #include <vector>
 #include <omnetpp.h>
 #include <modules/stationaryQubit.h>
 #include <modules/QNIC.h>
 #include "classical_messages_m.h"
+*/
+
 
 using namespace omnetpp;
 
@@ -55,6 +58,13 @@ typedef struct _For_connection_setup{
     int quantum_link_cost;
 } connection_setup_inf;
 
+typedef struct _tomogrphy_outcome{
+    char my_basis;
+    bool my_output_is_plus;
+    char partner_basis;
+    bool partner_output_is_plus;
+} tomography_outcome;
+
 /** \class HardwareMonitor HardwareMonitor.h
  *  \todo Documentation of the class header.
  *
@@ -71,6 +81,7 @@ class HardwareMonitor : public cSimpleModule
         cModuleType *HoMType =  cModuleType::get("networks.HoM");
         bool do_link_level_tomography = false;
         int num_measure;
+
     public:
         //typedef std::map<int,Interface_inf> Interfaces;//qnic_index -> Interface{qnic_type, initial_fidelity...}
         typedef std::map<int,Interface_inf> NeighborTable;//qnic_index -> Interface{qnic_type, initial_fidelity...}
@@ -82,8 +93,13 @@ class HardwareMonitor : public cSimpleModule
         virtual connection_setup_inf return_setupInf(int qnic_address);
         //virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, QNIC_type qnic_type);//returns the set of free resources
         //virtual int checkNumFreeBuff(int qnic_index, QNIC_type qnic_type);//returns the number of free qubits
+        typedef std::map<int,tomography_outcome> Temporal_Tomography_Output_Holder;//measurement_count_id -> outcome. For single qnic
+        //typedef std::map<int,Temporal_Tomography_Output_Holder> All_Temporal_Tomography_Output_Holder;//qnic_index -> tomography data. For all qnics.
+        Temporal_Tomography_Output_Holder *all_temporal_tomography_output_holder;
+
     protected:
         virtual void initialize(int stage) override;
+        virtual void finish() override;
         virtual void handleMessage(cMessage *msg) override;
         virtual int numInitStages() const override {return 2;};
         virtual NeighborTable prepareNeighborTable(NeighborTable ntable, int numQnic);
@@ -92,6 +108,7 @@ class HardwareMonitor : public cSimpleModule
         virtual neighborInfo findNeighborAddress(cModule *qnic_pointer);
         virtual Interface_inf getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type);
         virtual void sendLinkTomographyRuleSet(int my_address,int partner_address, QNIC_type qnic_type, int qnic_index);
+        virtual QNIC search_QNIC_from_Neighbor_QNode_address(int neighbor_address);
 
         //virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
 };

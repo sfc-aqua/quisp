@@ -137,6 +137,10 @@ void Router::handleMessage(cMessage *msg)
             bubble("Link tomography rule set received");
             send(pk, "rePort$o");
             return;
+        }else if (destAddr == myAddress && dynamic_cast<LinkTomographyResult *>(msg)!= nullptr){
+            bubble("Link tomography result received");
+            send(pk, "hmPort$o");
+            return;
         }
 
         //Check if packet is reachable

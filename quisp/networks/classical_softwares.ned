@@ -42,6 +42,8 @@ simple Router
         inout cmPort @loose;
         inout rePort @loose;
         inout hmPort @loose;
+
+        input fromRuleSet @directIn;//A little bit cheating but why not.
 }
 
 simple Queue

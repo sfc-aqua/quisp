@@ -17,13 +17,16 @@ using namespace quisp::modules;
 namespace quisp {
 namespace rules {
 
+
 /** \class Action Action.h
  *
  *  \brief Action
  */
 class Action {
   public:
-    virtual int run(qnicResources *resources) = 0;
+    virtual cPacket* run(qnicResources *resources) = 0;
+    //virtual stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id);
+
 };
 typedef std::unique_ptr<Action> pAction;
 
@@ -55,7 +58,7 @@ class SwappingAction : public Action {
             right_resource = rr;
         };
 
-        int run(qnicResources *resources) override;
+        cPacket* run(qnicResources *resources) override;
 };
 
 class PurifyAction : public Action {
@@ -74,7 +77,7 @@ class PurifyAction : public Action {
             resource = res;
             trash_resource = tres;
         };
-        int run(qnicResources *resources) override;
+        cPacket* run(qnicResources *resources) override;
 };
 
 
@@ -84,16 +87,22 @@ class RandomMeasureAction : public Action {
         QNIC_type qnic_type;
         int qnic_id;
         int resource; /**< Identifies qubit */
+        int src;
+        int dst;
+        int mutable current_count;
 
     public:
-        RandomMeasureAction(int part, QNIC_type qt, int qi, int res){
+        RandomMeasureAction(int part, QNIC_type qt, int qi, int res, int srcAddr){
             partner = part;
+            dst = part;
             qnic_type = qt;
             qnic_id = qi;
             resource = res;
+            src = srcAddr;
+            current_count = 0;
         };
 
-        int run(qnicResources *resources) override;
+        cPacket* run(qnicResources *resources) override;
 };
 
 } // namespace rules

@@ -6,12 +6,13 @@
  *  \brief Rule
  */
 #include "Rule.h"
+#include "classical_messages_m.h"
 
 namespace quisp {
 namespace rules {
 
 //you also sometimes need to return feedback information for other nodes.
-int Rule::checkrun(qnicResources * resources, int qnic_type, int qnic_index, int resource_entangled_with_address) {
+cPacket* Rule::checkrun(qnicResources * resources, int qnic_type, int qnic_index, int resource_entangled_with_address) {
 
     EntangledPairs temp_resource_list;
 
@@ -21,43 +22,64 @@ int Rule::checkrun(qnicResources * resources, int qnic_type, int qnic_index, int
         temp_resource_list.insert(std::make_pair(i->first, i->second));//Copy all related ones to temporary list.
     }
 
-    int res = 0;
+    cPacket *pk = nullptr;
     if (condition->check(resources)){
         EV<<"All conditions met. Running Action. \n";
-        res = action->run(resources);
+        pk = action->run(resources);
     }
-    return res;
+    return pk;
 }
 
-int Rule::checkrun(qnicResources * resources) {
-    int res = 0;
+cPacket* Rule::checkrun(EntangledPairs resources, int resource_entangled_with_address) {
+    /*EntangledPairs temp_resource_list;
+
+    auto ret = resources.equal_range(resource_entangled_with_address);//Find resources in the qnic entangled with resource_entangled_with_address
+    for (auto i = ret.first; i != ret.second; ++i) {
+        EV<<"Resource: between node "<<i->first<<", "<<i->second<<"\n";
+        temp_resource_list.insert(std::make_pair(i->first, i->second));//Copy all related ones to temporary list.
+    }*/
+
+    cPacket *pk = nullptr;
+    /*if (condition->check(resources)){
+        EV<<"All conditions met. Running Action. \n";
+        pk = action->run(resources);
+    }*/
+    return pk;
+}
+
+cPacket* Rule::checkrun(qnicResources * resources) {
+    cPacket *pk = nullptr;
+    EV<<"condition->check(resources) = "<< condition->check(resources);
     if (condition->check(resources)){
         EV<<"All conditions met. Running Action. \n";
-        res = action->run(resources);
+        pk = action->run(resources);
+    }else{
+        EV<<"Condition did not meet.";
+        pk = new ConditionNotSatisfied;
     }
-    return res;
+    return pk;
 }
 
-int Rule::checkTerminate(qnicResources * resources) {
-    int res = 0;
+bool Rule::checkTerminate(qnicResources * resources) {
+    bool done = false;
     if (condition->checkTerminate(resources)){
         EV<<"Termination conditions met. Delete this RuleSet. \n";
-        int res = 1;
+        done = true;
     }else{
         EV<<"Termination conditions not yet fulfilled.\n ";
     }
-    return res;
+    return done;
 }
 
-int Rule::checkTerminate(qnicResources * resources, int qnic_type, int qnic_index, int resource_entangled_with_address) {
-    int res = 0;
+bool Rule::checkTerminate(qnicResources * resources, int qnic_type, int qnic_index, int resource_entangled_with_address) {
+    bool done = false;
     if (condition->checkTerminate(resources)){
-        EV<<"Termination conditions met. Delete this RuleSet. \n";
-        int res = 1;
+        done = true;
+        EV<<"Termination conditions met. Delete this RuleSet. done = "<<done<<"\n";
     }else{
         EV<<"Termination conditions not yet fulfilled.\n ";
     }
-    return res;
+       return done;
 }
 
 

@@ -451,15 +451,21 @@ measurement_output_probabilities stationaryQubit::getOutputProbabilities(quantum
 }
 */
 
-void stationaryQubit::measure_density_independent(char measurement_basis){
+measurement_outcome stationaryQubit::measure_density_independent(){
     if(entangled_partner == nullptr){
             error("Measuring a qubit that is not entangled with another qubit. Probably not what you want!");
     }
+    measurement_operator this_measurement = Random_Measurement_Basis_Selection();
+    char Output;
+    char Output_is_plus;
+
     if(partner_measured){
         //This qubit is not entangled anymore.
         //Its single qubit state will be stored in Density_Matrix_Collapsed.
 
         apply_memory_error(this);
+
+        /*Adjust stored density matrix*/
         if(par("GOD_Xerror").boolValue() != GOD_dm_Xerror){
             //Another X error to the dm.
             Density_Matrix_Collapsed = Pauli.X*Density_Matrix_Collapsed*Pauli.X.adjoint();
@@ -469,27 +475,24 @@ void stationaryQubit::measure_density_independent(char measurement_basis){
             Density_Matrix_Collapsed = Pauli.Z*Density_Matrix_Collapsed*Pauli.Z.adjoint();
         }
 
-
-        measurement_operator this_measurement = Random_Measurement_Basis_Selection();
         Complex Prob_plus = (Density_Matrix_Collapsed*this_measurement.plus.adjoint()*this_measurement.plus).trace();
         Complex Prob_minus = (Density_Matrix_Collapsed*this_measurement.minus.adjoint()*this_measurement.minus).trace();
         double dbl = dblrand();
-        char Output;
+
         if(dbl < Prob_plus.real()){
             Output = '+';
+            Output_is_plus = true;
         }else{
             Output = '-';
+            Output_is_plus = false;
         }
         EV<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). \n";
-
-
 
     }else{//Still entangled. After measurement, we need to update parameters, Density_Matrix_Collapsed and partner_measured, of the partner qubit.
         apply_memory_error(this);//Add memory error depending on the idle time.
         apply_memory_error(entangled_partner);//Also do the same on the partner!
         quantum_state current_state = getQuantumState();
         //EV<<"Current entangled state is "<<current_state.state_in_ket<<"\n";
-        measurement_operator this_measurement = Random_Measurement_Basis_Selection();
 
         Complex Prob_plus = current_state.state_in_ket.adjoint()*kroneckerProduct(this_measurement.plus,meas_op.identity).eval().adjoint()*kroneckerProduct(this_measurement.plus,meas_op.identity).eval()*current_state.state_in_ket;
         Complex Prob_minus = current_state.state_in_ket.adjoint()*kroneckerProduct(this_measurement.minus,meas_op.identity).eval().adjoint()*kroneckerProduct(this_measurement.minus,meas_op.identity).eval()*current_state.state_in_ket;
@@ -499,15 +502,17 @@ void stationaryQubit::measure_density_independent(char measurement_basis){
 
         //EV<<"Measurement basis = "<<this_measurement.basis<<"P(+) = "<<Prob_plus.real()<<", P(-) = "<<Prob_minus.real()<<"\n";
         double dbl = dblrand();
-        char Output;
+
         Vector2cd ms;
         if(dbl < Prob_plus.real()){
             //Measurement output was plus
             Output = '+';
             ms = this_measurement.plus_ket;
+            Output_is_plus = true;
         }else{//Otherwise, it was negative.
             Output = '-';
             ms = this_measurement.minus_ket;
+            Output_is_plus = false;
         }
 
         //Now we have to calculate the density matrix of a single qubit that used to be entangled with this.
@@ -520,27 +525,36 @@ void stationaryQubit::measure_density_independent(char measurement_basis){
         //Save what error it had, when this density matrix was calculated. Error may get updated in the future, so we need to track what error has been considered already in the dm.
         entangled_partner->GOD_dm_Xerror = entangled_partner->par("GOD_Xerror");
         entangled_partner->GOD_dm_Zerror = entangled_partner->par("GOD_Zerror");
-
     }
+    measurement_outcome o;
+    o.basis =this_measurement.basis;
+    o.outcome_is_plus = Output_is_plus;
+    return o;
 }
 
 
 measurement_operator stationaryQubit::Random_Measurement_Basis_Selection(){
+
     measurement_operator this_measurement;
     double dbl = dblrand();//Random double value for random basis selection.
-    if(dbl < (1/3)){//X measurement!
+    EV<<"Random dbl = "<<dbl<<"! \n ";
+
+    if(dbl <( (double)1/(double)3)){//X measurement!
+        EV<<"X measurement\n";
         this_measurement.plus = meas_op.X_basis.plus;
         this_measurement.minus = meas_op.X_basis.minus;
         this_measurement.basis = meas_op.X_basis.basis;
         this_measurement.plus_ket = meas_op.X_basis.plus_ket;
         this_measurement.minus_ket = meas_op.X_basis.minus_ket;
-    }else if(dbl >= (1/3) && dbl < (2/3)){
+    }else if(dbl >= ( (double)1/(double)3) && dbl < ( (double)2/(double)3)){
+        EV<<"Z measurement\n";
         this_measurement.plus = meas_op.Z_basis.plus;
         this_measurement.minus = meas_op.Z_basis.minus;
         this_measurement.basis = meas_op.Z_basis.basis;
         this_measurement.plus_ket = meas_op.Z_basis.plus_ket;
         this_measurement.minus_ket = meas_op.Z_basis.minus_ket;
     }else{
+        EV<<"Y measurement\n";
         this_measurement.plus = meas_op.Y_basis.plus;
         this_measurement.minus = meas_op.Y_basis.minus;
         this_measurement.basis = meas_op.Y_basis.basis;

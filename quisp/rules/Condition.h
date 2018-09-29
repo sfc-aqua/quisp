@@ -11,8 +11,10 @@
 #include <omnetpp.h>
 #include <memory>
 
+
 namespace quisp {
 namespace rules {
+
 
 /** \class Condition Condition.h
  *

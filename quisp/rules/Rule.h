@@ -11,6 +11,7 @@
 #include "Action.h"
 #include <omnetpp.h>
 #include <memory>
+#include <modules/RuleEngine.h>
 #include <stdio.h>
 
 namespace quisp {
@@ -29,10 +30,11 @@ class Rule {
         //const pCondition& getCondition() { return condition; };
         void setAction (Action * a) { action.reset(a); };
         //const pAction& getAction() { return action; };
-        int checkrun(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
-        int checkrun(qnicResources * resources);
-        int checkTerminate(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
-        int checkTerminate(qnicResources * resources);
+        cPacket* checkrun(EntangledPairs resources, int resource_entangled_with_address);
+        cPacket* checkrun(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
+        cPacket* checkrun(qnicResources * resources);
+        bool checkTerminate(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
+        bool checkTerminate(qnicResources * resources);
         int test(qnicResources * resources);
 };
 typedef std::unique_ptr<Rule> pRule;

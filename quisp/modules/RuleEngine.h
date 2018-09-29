@@ -9,14 +9,14 @@
 #ifndef QUISP_MODULES_RULEENGINE_H_
 #define QUISP_MODULES_RULEENGINE_H_
 
-#include <vector>
-#include <omnetpp.h>
+//#include <vector>
+//#include <omnetpp.h>
 #include <classical_messages_m.h>
-#include <modules/stationaryQubit.h>
-#include <modules/RealTimeController.h>
-#include <modules/HardwareMonitor.h>
-#include <modules/HoM_Controller.h>
-#include <modules/QUBIT.h>
+//#include <modules/stationaryQubit.h>
+//#include <modules/RealTimeController.h>
+//#include <modules/HardwareMonitor.h>
+//#include <modules/HoM_Controller.h>
+//#include <modules/QUBIT.h>
 #include <rules/RuleSet.h>
 
 using namespace omnetpp;
@@ -45,6 +45,7 @@ typedef struct _process{
 
 class RuleEngine : public cSimpleModule
 {
+    //friend class Action;
     public:
         int parentAddress;//Parent QNode's address
         EmitPhotonRequest *emt;
@@ -64,6 +65,12 @@ class RuleEngine : public cSimpleModule
         int* qnic_burst_trial_counter;
         typedef std::map<int,bool> trial_tracker;//trial index, false or true (that trial is over or not)
         qnicResources* allResources; //Size will be defined in initialization. If 3 qnic types, then size is 3. Type defined in QUBIT.h
+        /*
+         * DEFINED in QNIC.h
+         * typedef std::multimap<int, stationaryQubit*> EntangledPairs;//entangled Node address -> pointer to that local qubit
+         * typedef EntangledPairs* qnicResources;//For each qnic. If the number of "qnic" is 3, then the size is 3.
+         * For resource management over.
+         * */
 
         //typedef rules::RuleSet* RuleSetPtr;
         typedef std::map<int, process> running_processes;
@@ -80,7 +87,7 @@ class RuleEngine : public cSimpleModule
         virtual QubitStateTable setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
         virtual QubitStateTable setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
         virtual QubitStateTable initializeQubitStateTable(QubitStateTable temp, QNIC_type qnic_type);
-        virtual void scheduleFirstPhotonEmission( BSMtimingNotifier *pk, QNIC_type qnic_type);
+        virtual void scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type);
         virtual void shootPhoton(SchedulePhotonTransmissionsOnebyOne * pk);
         //virtual int getQNICjob_index_for_this_qnic(int qnic_index, QNIC_type qnic_type);
         virtual void incrementBurstTrial(int destAddr, int internal_qnic_address, int internal_qnic_index);
@@ -94,6 +101,7 @@ class RuleEngine : public cSimpleModule
         virtual void clearTrackerTable(int destAddr, int internal_qnic_address);
         virtual void traverseThroughAllProcesses(int qnic_type, int qnic_index);
         virtual double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
+        virtual void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type);
 };
 
 } // namespace modules

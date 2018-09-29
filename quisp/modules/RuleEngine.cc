@@ -6,8 +6,12 @@
  *
  *  \brief RuleEngine
  */
+
+/*
 #include "RuleEngine.h"
 #include <modules/HardwareMonitor.h>
+*/
+
 
 namespace quisp {
 namespace modules {
@@ -172,6 +176,8 @@ void RuleEngine::handleMessage(cMessage *msg){
            if(p.RuleSet->size()>0){
                rp.insert(std::make_pair(process_id, p));
                EV<<"New process arrived !\n";
+
+               //traverseThroughAllProcesses(int qnic_type, int qnic_index);
                //error("die");
            }else{
                error("Empty rule set...");
@@ -489,12 +495,9 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
                 error("Something is wrong with the tracker....%d th shot not recorded",i);//Neighbor not found! This should not happen unless you simulate broken links in real time.
         if(failed){
             //EV<<i<<"th shot has failed.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
-            realtime_controller->ReInitialize_StationaryQubit(it->second.qnic_index ,it->second.qubit_index, qnic_type);//Re-initialize the qubit. Pauli errors will be eliminated, and the color of the qubit in the GUI changes to blue.
-            /*if(qnic_type==QNIC_E)
-                Busy_OR_Free_QubitState_table[QNIC_E] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[QNIC_E], it->second.qnic_index, it->second.qubit_index);
-            else
-                Busy_OR_Free_QubitState_table[QNIC_R] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], it->second.qnic_index, it->second.qubit_index);*/
-            Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], it->second.qnic_index, it->second.qubit_index);
+            //realtime_controller->ReInitialize_StationaryQubit(it->second.qnic_index ,it->second.qubit_index, qnic_type);//Re-initialize the qubit. Pauli errors will be eliminated, and the color of the qubit in the GUI changes to blue.
+            //Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], it->second.qnic_index, it->second.qubit_index);
+            freeResource(it->second.qnic_index, it->second.qubit_index, qnic_type);
         }else{
             //Keep the entangled qubits
             //EV<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
@@ -512,17 +515,20 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
             sentQubitIndexTracker::iterator it = tracker[qnic_address].find(i);//check ith shot's information (qnic, qubit index).
             if (it == tracker[qnic_address].end())
                 error("Wait.... something is wrong with the tracker....%d th shot not recorded",i);//Neighbor not found! This should not happen unless you simulate broken links in real time.
-            realtime_controller->ReInitialize_StationaryQubit(it->second.qnic_index ,it->second.qubit_index, qnic_type);
-            if(qnic_type==QNIC_E)
-                Busy_OR_Free_QubitState_table[QNIC_E] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[QNIC_E], it->second.qnic_index, it->second.qubit_index);
-            else
-                Busy_OR_Free_QubitState_table[QNIC_R] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], it->second.qnic_index, it->second.qubit_index);
+            //realtime_controller->ReInitialize_StationaryQubit(it->second.qnic_index ,it->second.qubit_index, qnic_type);
+            //Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], it->second.qnic_index, it->second.qubit_index);
+            freeResource(it->second.qnic_index, it->second.qubit_index, qnic_type);
         }
     }
 
 
     traverseThroughAllProcesses(qnic_type,qnic_index);//New resource added to QNIC with qnic_type qnic_index.
 
+}
+
+void RuleEngine::freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type){
+    realtime_controller->ReInitialize_StationaryQubit(qnic_index ,qubit_index, qnic_type);
+    Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit_index);
 }
 
 
@@ -571,37 +577,52 @@ void RuleEngine::traverseThroughAllProcesses(int qnic_type, int qnic_index){
     int testing = rp.size();//Number of running processes (in all QNICs).
     EV<<"running processes = "<<testing<<"\n";
 
-              if(rp.size()>0){
-                  EV<<"Inside process running.\n";
+    if(rp.size()>0){
+        for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){
+            next_it = it; ++next_it;
+            RuleSet* process = it->second.RuleSet;//One Process. From top to bottom.
+            int resource_entangled_with_address = process->entangled_partner;//
+            EV<<"Checking first process.... process "<<process->size()<<"\n";
+            if(allResources[qnic_type][qnic_index].count(resource_entangled_with_address)>0){//If a resource exists
+                for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){
+                    bool process_done;
+                    EV<<"Running first Condition & Action now\n";
+                    bool terminate_this_rule = false;
 
-                  for (auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){
-                      next_it = it; ++next_it;
-
-                      RuleSet* process = it->second.RuleSet;//One Process. From top to bottom.
-                      int resource_entangled_with_address = process->entangled_partner;//
-                      EV<<"Checking first process.... process "<<process->size()<<"\n";
-                      if(allResources[qnic_type][qnic_index].count(resource_entangled_with_address)>0){//If a resource exists
-                          for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){
-                              EV<<"Running first Condition & Action now\n";
-
-                              /*-loop-*/
-                              int res = (*rule)->checkrun(allResources, qnic_type, qnic_index,resource_entangled_with_address);//Do something on qubits entangled with resource_entangled_with_address.
-                              /*-----*/
-
-                              int done = (*rule)->checkTerminate(allResources, qnic_type, qnic_index,resource_entangled_with_address);
-                              //Delete RuleSet if done
-                              if(done){
-                                  process->destroyThis();
-                                  rp.erase(it);
-                                  break;
-                              }
-                          }
-                      }
-                  }
-              }else{
-                  EV<<"No process running\n";
-              }
-
+                    while(true){
+                        cPacket *pk = (*rule)->checkrun(allResources, qnic_type, qnic_index,resource_entangled_with_address);//Do something on qubits entangled with resource_entangled_with_address.
+                        if(pk!=nullptr){
+                            /*Feedback to another node required*/
+                            if (dynamic_cast<LinkTomographyResult *>(pk)!= nullptr){
+                                //The cPacket *pk is a single packet forwarded to the neighbor. But this node's HardwareMonitor also needs to store the result.
+                                LinkTomographyResult *pk_t = check_and_cast<LinkTomographyResult *>(pk);
+                                LinkTomographyResult *pk_for_self = pk_t->dup();
+                                pk_for_self->setPartner_address(pk_t->getDestAddr());
+                                pk_for_self->setDestAddr(pk_t->getSrcAddr());
+                                send(pk,"RouterPort$o");
+                                send(pk_for_self,"RouterPort$o");
+                            }
+                        }
+                        process_done = (*rule)->checkTerminate(allResources, qnic_type, qnic_index,resource_entangled_with_address);//The entire process is done. e.g. enough measurement for tomography.
+                        if(process_done){//Delete rule set if done
+                            process->destroyThis();//Destroy rule set object
+                            rp.erase(it);//Erase rule set from map.
+                            terminate_this_rule = true;//Flag to get out from outer loop
+                            break;//get out from this for loop.
+                        }
+                        if(dynamic_cast<ConditionNotSatisfied *>(pk)!= nullptr){
+                            break;//Condition does not meet. Go to next rule. e.g. Fidelity is good enough by doing purification. Next could be swap.
+                        }
+                    }//While
+                    if(process_done){
+                        break;
+                    }
+                }//For
+            }//If
+        }//For loop
+   }else{
+       EV<<"No process running\n";
+   }
 }
 
 

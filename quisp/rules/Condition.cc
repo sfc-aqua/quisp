@@ -12,6 +12,7 @@ namespace quisp {
 namespace rules {
 
 bool Condition::check(qnicResources *resources) const {
+    EV<<"In condition...\n";
     bool satisfying = true;
     for (auto clause = cbegin(), end = cend(); clause != end; clause++){
         if (!(*clause)->check(resources)){

@@ -70,6 +70,11 @@ typedef struct _measurement_operators{
     Matrix2cd identity;
 }measurement_operators;
 
+typedef struct _measurement_outcome{
+    char basis;
+    bool outcome_is_plus;
+}measurement_outcome;
+
 
 class stationaryQubit : public cSimpleModule
 {
@@ -182,7 +187,7 @@ class stationaryQubit : public cSimpleModule
          * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
          * */
         //virtual std::bitset<1> measure_density(char basis_this_qubit);/*Simultaneous dm calculation*/
-        virtual void measure_density_independent(char measurement_basis);/*Separate dm calculation*/
+        virtual measurement_outcome measure_density_independent();/*Separate dm calculation*/
 
         /*Applies memory error to the given qubit*/
         virtual void  apply_memory_error(stationaryQubit *qubit);

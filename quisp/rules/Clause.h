@@ -17,6 +17,7 @@ using namespace quisp::modules;
 namespace quisp {
 namespace rules {
 
+
 /** \class Clause Clause.h
  *
  *  \brief Clause
@@ -49,7 +50,9 @@ class Clause {
         };
         virtual bool check(qnicResources *resources) const = 0;
         virtual bool checkTerminate(qnicResources *resources) const = 0;
+        //virtual stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) const = 0;
 };
+
 typedef std::unique_ptr<Clause> pClause;
 
 class FidelityClause : public Clause {
