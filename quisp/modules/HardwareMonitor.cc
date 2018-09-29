@@ -6,10 +6,10 @@
  *
  *  \brief HardwareMonitor
  */
-//#include "HardwareMonitor.h"
-//#include "classical_messages_m.h"
-//#include <sstream>
-//#include <string>
+#include "HardwareMonitor.h"
+#include "classical_messages_m.h"
+#include <sstream>
+#include <string>
 
 namespace quisp {
 namespace modules {

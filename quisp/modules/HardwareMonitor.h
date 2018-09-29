@@ -9,13 +9,13 @@
 #ifndef QUISP_MODULES_HARDWAREMONITOR_H_
 #define QUISP_MODULES_HARDWAREMONITOR_H_
 
-/*
+
 #include <vector>
 #include <omnetpp.h>
 #include <modules/stationaryQubit.h>
 #include <modules/QNIC.h>
 #include "classical_messages_m.h"
-*/
+
 
 
 using namespace omnetpp;

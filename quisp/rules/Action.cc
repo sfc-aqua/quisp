@@ -6,10 +6,10 @@
  *  \brief Action
  */
 #include "Action.h"
-#//include "../modules/RuleEngine.h"
+//#include "../modules/RuleEngine.h"
 #include "tools.h"
 #include <omnetpp.h>
-#//include "classical_messages_m.h"
+#include "classical_messages_m.h"
 
 
 namespace quisp {

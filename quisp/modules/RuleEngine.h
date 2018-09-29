@@ -9,15 +9,16 @@
 #ifndef QUISP_MODULES_RULEENGINE_H_
 #define QUISP_MODULES_RULEENGINE_H_
 
-//#include <vector>
-//#include <omnetpp.h>
-#include <classical_messages_m.h>
-//#include <modules/stationaryQubit.h>
-//#include <modules/RealTimeController.h>
-//#include <modules/HardwareMonitor.h>
-//#include <modules/HoM_Controller.h>
-//#include <modules/QUBIT.h>
+#include "classical_messages_m.h"
 #include <rules/RuleSet.h>
+#include <vector>
+#include <omnetpp.h>
+#include <modules/stationaryQubit.h>
+#include <modules/RealTimeController.h>
+#include <modules/HardwareMonitor.h>
+#include <modules/HoM_Controller.h>
+#include <modules/QUBIT.h>
+
 
 using namespace omnetpp;
 

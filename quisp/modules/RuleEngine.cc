@@ -7,10 +7,10 @@
  *  \brief RuleEngine
  */
 
-/*
+
 #include "RuleEngine.h"
 #include <modules/HardwareMonitor.h>
-*/
+
 
 
 namespace quisp {

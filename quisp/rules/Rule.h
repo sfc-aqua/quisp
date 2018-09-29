@@ -11,7 +11,7 @@
 #include "Action.h"
 #include <omnetpp.h>
 #include <memory>
-#include <modules/RuleEngine.h>
+//#include <modules/RuleEngine.h>
 #include <stdio.h>
 
 namespace quisp {
