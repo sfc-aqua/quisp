@@ -8,6 +8,8 @@
 #include "Rule.h"
 #include "classical_messages_m.h"
 
+//#include <modules/RuleEngine.h>
+
 namespace quisp {
 namespace rules {
 
@@ -29,6 +31,47 @@ cPacket* Rule::checkrun(qnicResources * resources, int qnic_type, int qnic_index
     }
     return pk;
 }
+
+
+cPacket* Rule::checkrun(cModule *re, qnicResources * resources, int qnic_type, int qnic_index, int resource_entangled_with_address) {
+
+    EntangledPairs temp_resource_list;
+
+    auto ret = resources[qnic_type][qnic_index].equal_range(resource_entangled_with_address);
+    for (auto i = ret.first; i != ret.second; ++i) {
+        EV<<"Resource: between node "<<i->first<<", "<<i->second<<"\n";
+        temp_resource_list.insert(std::make_pair(i->first, i->second));//Copy all related ones to temporary list.
+    }
+
+    cPacket *pk = nullptr;
+    if (condition->check(resources)){
+        EV<<"All conditions met. Running Action. \n";
+        pk = action->run(re, resources);
+    }
+    return pk;
+}
+
+
+
+
+/*
+cPacket* Rule::checkrun(cModule * re, qnicResources * resources, int qnic_type, int qnic_index, int resource_entangled_with_address) {
+
+    EntangledPairs temp_resource_list;
+
+    auto ret = resources[qnic_type][qnic_index].equal_range(resource_entangled_with_address);
+    for (auto i = ret.first; i != ret.second; ++i) {
+        EV<<"Resource: between node "<<i->first<<", "<<i->second<<"\n";
+        temp_resource_list.insert(std::make_pair(i->first, i->second));//Copy all related ones to temporary list.
+    }
+
+    cPacket *pk = nullptr;
+    if (condition->check(resources)){
+        EV<<"All conditions met. Running Action. \n";
+        pk = action->run(resources);
+    }
+    return pk;
+}*/
 
 cPacket* Rule::checkrun(EntangledPairs resources, int resource_entangled_with_address) {
     /*EntangledPairs temp_resource_list;

@@ -65,6 +65,13 @@ typedef struct _tomogrphy_outcome{
     bool partner_output_is_plus;
 } tomography_outcome;
 
+typedef struct _output_count{
+    int plus_plus;
+    int plus_minus;
+    int minus_plus;
+    int minus_minus;
+}output_count;
+
 /** \class HardwareMonitor HardwareMonitor.h
  *  \todo Documentation of the class header.
  *
@@ -87,6 +94,8 @@ class HardwareMonitor : public cSimpleModule
         typedef std::map<int,Interface_inf> NeighborTable;//qnic_index -> Interface{qnic_type, initial_fidelity...}
         NeighborTable ntable;
         typedef std::map<int, stationaryQubitInfo> QnicInfo;  // stationary qubit index -> state
+        typedef std::map<std::string, output_count> raw_data;//basis combination -> raw output count e.g "XX" -> {plus_plus = 56, plus_minus = 55, minus_plus = 50, minus_minus = 50}, "XY" -> {....
+        raw_data tomography_data;
         QnicInfo *qtable;
         virtual NeighborTable passNeighborTable();
         virtual int checkNumBuff(int qnic_index, QNIC_type qnic_type);//returns the total number of qubits

@@ -98,7 +98,7 @@ void stationaryQubit::initialize()
     qnic_address = par("qnic_address");
     qnic_type = par("qnic_type");
     std = par("std");
-    setFree();
+    setFree(false);
     setFidelity(-1.);
 
     /* e^(t/T1) energy relaxation, e^(t/T2) phase relaxation. Want to use only 1/10 of T1 and T2 in general.*/
@@ -220,7 +220,8 @@ void stationaryQubit::setBusy(){
 
 //Re-initialization of this stationary qubit
 //This is called at the beginning of the simulation (in initialization() above), and whenever it is reinitialized via the RealTimeController.
-void stationaryQubit::setFree(){
+void stationaryQubit::setFree(bool consumed){
+
     isBusy = false;
     emitted_time = -1;
     updated_time = -1;
@@ -239,9 +240,18 @@ void stationaryQubit::setFree(){
     par("GOD_entangled_qnic_address") = -1;
     par("GOD_entangled_qnic_type") = -1;
     entangled_partner = nullptr;
+    EV<<"!!!!!!!!!!!!!! Freeing this qubit!!!"<<this<<"\n";
     // GUI part
     if(hasGUI()){
-        getDisplayString().setTagArg("i", 1, "blue");
+        if(consumed){
+            bubble("Consumed!");
+            getDisplayString().setTagArg("i", 1, "yellow");
+        }
+        else{
+            bubble("Failed to entangle!");
+            getDisplayString().setTagArg("i", 1, "blue");
+        }
+
     }
 }
 
@@ -452,7 +462,9 @@ measurement_output_probabilities stationaryQubit::getOutputProbabilities(quantum
 */
 
 measurement_outcome stationaryQubit::measure_density_independent(){
-    if(entangled_partner == nullptr){
+    if(entangled_partner == nullptr && Density_Matrix_Collapsed(0,0).real() ==-1){
+            EV<<entangled_partner<<"\n";
+            EV<<Density_Matrix_Collapsed<<"\n";
             error("Measuring a qubit that is not entangled with another qubit. Probably not what you want!");
     }
     measurement_operator this_measurement = Random_Measurement_Basis_Selection();
@@ -468,12 +480,16 @@ measurement_outcome stationaryQubit::measure_density_independent(){
         /*Adjust stored density matrix*/
         if(par("GOD_Xerror").boolValue() != GOD_dm_Xerror){
             //Another X error to the dm.
+            error("NO error for now!");
             Density_Matrix_Collapsed = Pauli.X*Density_Matrix_Collapsed*Pauli.X.adjoint();
         }
         if (par("GOD_Zerror").boolValue() != GOD_dm_Zerror){
             //Another Z error to the dm.
+            error("NO error for now!");
             Density_Matrix_Collapsed = Pauli.Z*Density_Matrix_Collapsed*Pauli.Z.adjoint();
         }
+
+        std::cout<<"Not entangled anymore. Density matrix is "<<Density_Matrix_Collapsed<<"\n";
 
         Complex Prob_plus = (Density_Matrix_Collapsed*this_measurement.plus.adjoint()*this_measurement.plus).trace();
         Complex Prob_minus = (Density_Matrix_Collapsed*this_measurement.minus.adjoint()*this_measurement.minus).trace();
@@ -486,13 +502,21 @@ measurement_outcome stationaryQubit::measure_density_independent(){
             Output = '-';
             Output_is_plus = false;
         }
-        EV<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). \n";
+        std::cout<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). \n";
 
     }else{//Still entangled. After measurement, we need to update parameters, Density_Matrix_Collapsed and partner_measured, of the partner qubit.
         apply_memory_error(this);//Add memory error depending on the idle time.
         apply_memory_error(entangled_partner);//Also do the same on the partner!
         quantum_state current_state = getQuantumState();
-        //EV<<"Current entangled state is "<<current_state.state_in_ket<<"\n";
+        EV<<"Current entangled state is "<<current_state.state_in_ket<<"\n";
+
+        if(this->par("GOD_Xerror") || this->par("GOD_Zerror")){
+            error("This is supposed to be a tomography without error. really?");
+        }else{
+
+        }
+
+        std::cout<<"Entangled state is "<<current_state.state_in_ket<<"\n";
 
         Complex Prob_plus = current_state.state_in_ket.adjoint()*kroneckerProduct(this_measurement.plus,meas_op.identity).eval().adjoint()*kroneckerProduct(this_measurement.plus,meas_op.identity).eval()*current_state.state_in_ket;
         Complex Prob_minus = current_state.state_in_ket.adjoint()*kroneckerProduct(this_measurement.minus,meas_op.identity).eval().adjoint()*kroneckerProduct(this_measurement.minus,meas_op.identity).eval()*current_state.state_in_ket;
@@ -500,7 +524,7 @@ measurement_outcome stationaryQubit::measure_density_independent(){
           Tr[Belldm.ConjugateTranspose[Zp].Zp]
           Are they the same?*/
 
-        //EV<<"Measurement basis = "<<this_measurement.basis<<"P(+) = "<<Prob_plus.real()<<", P(-) = "<<Prob_minus.real()<<"\n";
+        std::cout<<"Measurement basis = "<<this_measurement.basis<<"P(+) = "<<Prob_plus.real()<<", P(-) = "<<Prob_minus.real()<<"\n";
         double dbl = dblrand();
 
         Vector2cd ms;

@@ -25,6 +25,7 @@ namespace rules {
 class Action {
   public:
     virtual cPacket* run(qnicResources *resources) = 0;
+    virtual cPacket* run(cModule *re, qnicResources *resources) = 0;
     //virtual stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id);
 
 };
@@ -59,6 +60,7 @@ class SwappingAction : public Action {
         };
 
         cPacket* run(qnicResources *resources) override;
+        cPacket* run(cModule *re, qnicResources *resources) override;
 };
 
 class PurifyAction : public Action {
@@ -78,6 +80,7 @@ class PurifyAction : public Action {
             trash_resource = tres;
         };
         cPacket* run(qnicResources *resources) override;
+        cPacket* run(cModule *re, qnicResources *resources) override;
 };
 
 
@@ -101,8 +104,8 @@ class RandomMeasureAction : public Action {
             src = srcAddr;
             current_count = 0;
         };
-
         cPacket* run(qnicResources *resources) override;
+        cPacket* run(cModule *re, qnicResources *resources) override;
 };
 
 } // namespace rules

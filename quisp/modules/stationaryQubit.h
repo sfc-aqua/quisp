@@ -151,7 +151,7 @@ class stationaryQubit : public cSimpleModule
        bool GOD_dm_Zerror;
 
         virtual bool checkBusy();
-        virtual void setFree();
+        virtual void setFree(bool consumed);
 
         double getFidelity() const { return fidelity; };
         void setFidelity(const double f) { fidelity=f; par("fidelity")=f; };

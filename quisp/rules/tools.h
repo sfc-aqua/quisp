@@ -7,6 +7,10 @@
  */
 #ifndef QUISP_RULES_TOOLS_H_
 #define QUISP_RULES_TOOLS_H_
+//#include <vector>
+
+#include <modules/RuleEngine.h>
+
 
 namespace quisp {
 namespace rules {
@@ -16,15 +20,62 @@ namespace rules {
 static stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) {
     // assume that qnic type is ok
     std::pair<EntangledPairs::iterator,EntangledPairs::iterator> ret = resources[qtype][qid].equal_range(partner);//Find all resource in qytpe/qid entangled with partner.
+    //stationaryQubit *use_this_qubit;
+
     int real_res_id = 0;
     for (EntangledPairs::iterator it=ret.first; it!=ret.second; ++it,++real_res_id) {
-        std::cout << real_res_id << '\n';
+        //std::cout << real_res_id << '\n';
         if (real_res_id == res_id){
-            return it->second;//Returns the top qubit in that list, if res_id = 0
+            stationaryQubit *pt = it->second;
+            //RuleEngine re;
+            //re.freeResource(qid, it->second->par("stationaryQubit_address"), qtype);
+            //re.JustATest();
+            return pt;
+
+            //use_this_qubit = it->second;
+            //resources[qtype][qid].erase(it);
+            //break;//Returns the top qubit in that list, if res_id = 0
         }
     }
+    //resources[qtype][qid].insert(std::make_pair(-1000/*QNode IP address*/,NULL));
+
+
     return NULL;
 }
+
+
+
+
+
+static stationaryQubit* getQubit(cModule *re, qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) {
+    // assume that qnic type is ok
+    std::pair<EntangledPairs::iterator,EntangledPairs::iterator> ret = resources[qtype][qid].equal_range(partner);//Find all resource in qytpe/qid entangled with partner.
+    //stationaryQubit *use_this_qubit;
+
+    int real_res_id = 0;
+    for (EntangledPairs::iterator it=ret.first; it!=ret.second; ++it,++real_res_id) {
+        //std::cout << real_res_id << '\n';
+        if (real_res_id == res_id){
+            stationaryQubit *pt = it->second;
+            //rule_engine->JustATest();
+            return pt;
+
+            //use_this_qubit = it->second;
+            //resources[qtype][qid].erase(it);
+            //break;//Returns the top qubit in that list, if res_id = 0
+        }
+    }
+    //resources[qtype][qid].insert(std::make_pair(-1000/*QNode IP address*/,NULL));
+
+
+    return NULL;
+}
+
+
+/*
+static void freeConsumedQubit(resources,qnic_type,qnic_id,partner,resource){
+
+}*/
 
 } // namespace rules
 } // namespace quisp

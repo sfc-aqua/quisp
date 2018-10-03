@@ -22,6 +22,22 @@ Define_Module(HardwareMonitor);
 void HardwareMonitor::initialize(int stage)
 {
   EV<<"HardwareMonitor booted\n";
+  output_count initial;
+  initial.minus_minus=0;
+  initial.minus_plus=0;
+  initial.plus_minus=0;
+  initial.plus_plus=0;
+
+
+  tomography_data.insert(std::make_pair("XX",initial));
+  tomography_data.insert(std::make_pair("XY",initial));
+  tomography_data.insert(std::make_pair("XZ",initial));
+  tomography_data.insert(std::make_pair("ZX",initial));
+  tomography_data.insert(std::make_pair("ZY",initial));
+  tomography_data.insert(std::make_pair("ZZ",initial));
+  tomography_data.insert(std::make_pair("YX",initial));
+  tomography_data.insert(std::make_pair("YY",initial));
+  tomography_data.insert(std::make_pair("YZ",initial));
 
   numQnic_rp = par("number_of_qnics_rp");// number of qnics connected to epps.
   numQnic_r = par("number_of_qnics_r");// number of qnics connected to internal hom.
@@ -139,13 +155,44 @@ void HardwareMonitor::handleMessage(cMessage *msg){
 }
 
 void HardwareMonitor::finish(){
-    EV<<"This is just a test!\n";
+    //EV<<"This is just a test!\n";
     EV<<"numQnic_total = "<<numQnic_total;
     for(int i=0; i<numQnic_total; i++){
         EV<<"\n \n \n \n \n QNIC["<<i<<"] \n";
         for(auto it =  all_temporal_tomography_output_holder[i].cbegin(); it != all_temporal_tomography_output_holder[i].cend(); ++it){
             EV <<"Count["<< it->first << "] = " << it->second.my_basis << ", " << it->second.my_output_is_plus << ", " << it->second.partner_basis << ", "  << it->second.partner_output_is_plus << " " << "\n";
+            std::string basis_combination = "";
+            basis_combination+=it->second.my_basis;
+            basis_combination+=it->second.partner_basis;
+            if(tomography_data.count(basis_combination)!=1){
+                EV<<it->second.my_basis<<", "<<it->second.partner_basis<<" = "<<basis_combination<<"\n";
+                error("Basis combination for tomography not found\n");
+            }
+            if(it->second.my_output_is_plus && it->second.partner_output_is_plus){
+                            tomography_data[basis_combination].plus_plus++;
+                            EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].plus_plus<<"\n";
+            }
+            else if(it->second.my_output_is_plus && !it->second.partner_output_is_plus){
+                            tomography_data[basis_combination].plus_minus++;
+                            EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].plus_minus<<"\n";
+            }
+            else if(!it->second.my_output_is_plus && it->second.partner_output_is_plus){
+                            tomography_data[basis_combination].minus_plus++;
+                            EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].minus_plus<<"\n";
+            }
+            else if(!it->second.my_output_is_plus && !it->second.partner_output_is_plus){
+                            tomography_data[basis_combination].minus_minus++;
+                            EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].minus_minus<<"\n";
+            }
+            else
+                 error("This should not happen though..... ?");
         }
+    }
+    for(auto elem : tomography_data)
+    {
+       //std::cout << elem.first << ", C(++)=" << elem.second.plus_minus << ", C(+-)=" << elem.second.plus_minus<< ", C(-+)=" << elem.second.minus_plus << ", C(--)=" << elem.second.minus_minus << "\n";
+       EV << elem.first << ", C(++)=" << elem.second.plus_plus << ", C(+-)=" << elem.second.plus_minus<< ", C(-+)=" << elem.second.minus_plus << ", C(--)=" << elem.second.minus_minus << "\n";
+
     }
 }
 

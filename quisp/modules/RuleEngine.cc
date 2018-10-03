@@ -522,14 +522,16 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
     }
 
 
-    traverseThroughAllProcesses(qnic_type,qnic_index);//New resource added to QNIC with qnic_type qnic_index.
+    traverseThroughAllProcesses(this,qnic_type,qnic_index);//New resource added to QNIC with qnic_type qnic_index.
 
 }
 
 void RuleEngine::freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type){
-    realtime_controller->ReInitialize_StationaryQubit(qnic_index ,qubit_index, qnic_type);
+    realtime_controller->ReInitialize_StationaryQubit(qnic_index ,qubit_index, qnic_type, false);
     Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit_index);
 }
+
+
 
 
 void RuleEngine::clearTrackerTable(int destAddr,int internal_qnic_address){
@@ -573,7 +575,7 @@ double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, 
 }
 
 
-void RuleEngine::traverseThroughAllProcesses(int qnic_type, int qnic_index){
+void RuleEngine::traverseThroughAllProcesses(RuleEngine *re, int qnic_type, int qnic_index){
     int testing = rp.size();//Number of running processes (in all QNICs).
     EV<<"running processes = "<<testing<<"\n";
 
@@ -590,7 +592,11 @@ void RuleEngine::traverseThroughAllProcesses(int qnic_type, int qnic_index){
                     bool terminate_this_rule = false;
 
                     while(true){
-                        cPacket *pk = (*rule)->checkrun(allResources, qnic_type, qnic_index,resource_entangled_with_address);//Do something on qubits entangled with resource_entangled_with_address.
+                        if(allResources[qnic_type][qnic_index].count(resource_entangled_with_address)==0){
+                            break;//No more resource left for now.
+                        }
+                        cPacket *pk = (*rule)->checkrun(re, allResources, qnic_type, qnic_index,resource_entangled_with_address);//Do something on qubits entangled with resource_entangled_with_address.
+
                         if(pk!=nullptr){
                             /*Feedback to another node required*/
                             if (dynamic_cast<LinkTomographyResult *>(pk)!= nullptr){
@@ -603,6 +609,7 @@ void RuleEngine::traverseThroughAllProcesses(int qnic_type, int qnic_index){
                                 send(pk_for_self,"RouterPort$o");
                             }
                         }
+
                         process_done = (*rule)->checkTerminate(allResources, qnic_type, qnic_index,resource_entangled_with_address);//The entire process is done. e.g. enough measurement for tomography.
                         if(process_done){//Delete rule set if done
                             process->destroyThis();//Destroy rule set object
@@ -610,9 +617,11 @@ void RuleEngine::traverseThroughAllProcesses(int qnic_type, int qnic_index){
                             terminate_this_rule = true;//Flag to get out from outer loop
                             break;//get out from this for loop.
                         }
+
                         if(dynamic_cast<ConditionNotSatisfied *>(pk)!= nullptr){
                             break;//Condition does not meet. Go to next rule. e.g. Fidelity is good enough by doing purification. Next could be swap.
                         }
+
                     }//While
                     if(process_done){
                         break;
@@ -623,6 +632,23 @@ void RuleEngine::traverseThroughAllProcesses(int qnic_type, int qnic_index){
    }else{
        EV<<"No process running\n";
    }
+
+}
+
+void RuleEngine::freeConsumedResource(int qnic_index, stationaryQubit *qubit, QNIC_type qnic_type){
+    realtime_controller->ReInitialize_StationaryQubit(qnic_index ,qubit->par("stationaryQubit_address"), qnic_type, true);
+    Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit->par("stationaryQubit_address"));
+
+    for (auto it =  allResources[qnic_type][qnic_index].cbegin(), next_it =  allResources[qnic_type][qnic_index].cbegin(); it !=  allResources[qnic_type][qnic_index].cend(); it = next_it)
+    {
+      next_it = it; ++next_it;
+      if (it->second == qubit){
+          //std::cout<<"Let's delete this qubit!"<<it->second<<"\n";
+          allResources[qnic_type][qnic_index].erase(it);    // or "it = m.erase(it)" since C++11
+          break;
+      }
+    }
+
 }
 
 

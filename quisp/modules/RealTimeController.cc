@@ -35,7 +35,7 @@ void RealTimeController::EmitPhoton(int qnic_index ,int qubit_index, QNIC_type q
         stationaryQubit *q  = check_and_cast<stationaryQubit *>(qubit);
         q->emitPhoton(pulse);
     }catch(std::exception& e){
-        error("Some error occured in RealTimeController. Maybe the qnic/statQubit couldnt be found. Have you changed the namings?");
+        error("Some error occurred in RealTimeController. Here!. Maybe the qnic/statQubit couldnt be found. Have you changed the namings?");
     }
 }
 
@@ -54,7 +54,7 @@ cModule* RealTimeController::getQNode(){
          return currentModule;
 }
 
-void RealTimeController::ReInitialize_StationaryQubit(int qnic_index ,int qubit_index, QNIC_type qnic_type){
+void RealTimeController::ReInitialize_StationaryQubit(int qnic_index ,int qubit_index, QNIC_type qnic_type, bool consumed){
     bool success;
     cModule *qnode = getQNode();//Get the parent QNode that runs this RC.
     try{
@@ -62,7 +62,7 @@ void RealTimeController::ReInitialize_StationaryQubit(int qnic_index ,int qubit_
         if (qnic_type>=QNIC_N) error("Only 3 qnic types are currently recognized...."); // avoid segfaults <3
         qubit = qnode->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit", qubit_index);
         stationaryQubit *q  = check_and_cast<stationaryQubit *>(qubit);
-        q->setFree();
+        q->setFree(consumed);
     }catch(std::exception& e){
             error("Some error occured in RealTimeController. Maybe the qnic/statQubit couldnt be found. Have you changed the namings?");
     }
