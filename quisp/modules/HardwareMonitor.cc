@@ -10,6 +10,8 @@
 #include "classical_messages_m.h"
 #include <sstream>
 #include <string>
+#include <unsupported/Eigen/MatrixFunctions>
+#include <unsupported/Eigen/KroneckerProduct>
 
 namespace quisp {
 namespace modules {
@@ -27,7 +29,12 @@ void HardwareMonitor::initialize(int stage)
   initial.minus_plus=0;
   initial.plus_minus=0;
   initial.plus_plus=0;
+  initial.total_count=0;
 
+  Pauli.X << 0,1,1,0;
+  Pauli.Y << 0,Complex(0,-1),Complex(0,1),0;
+  Pauli.Z << 1,0,0,-1;
+  Pauli.I << 1,0,0,1;
 
   tomography_data.insert(std::make_pair("XX",initial));
   tomography_data.insert(std::make_pair("XY",initial));
@@ -168,6 +175,7 @@ void HardwareMonitor::finish(){
                 EV<<it->second.my_basis<<", "<<it->second.partner_basis<<" = "<<basis_combination<<"\n";
                 error("Basis combination for tomography not found\n");
             }
+            tomography_data[basis_combination].total_count++;
             if(it->second.my_output_is_plus && it->second.partner_output_is_plus){
                             tomography_data[basis_combination].plus_plus++;
                             EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].plus_plus<<"\n";
@@ -194,6 +202,63 @@ void HardwareMonitor::finish(){
        EV << elem.first << ", C(++)=" << elem.second.plus_plus << ", C(+-)=" << elem.second.plus_minus<< ", C(-+)=" << elem.second.minus_plus << ", C(--)=" << elem.second.minus_minus << "\n";
 
     }
+    reconstruct_Density_Matrix();
+}
+
+
+void HardwareMonitor::reconstruct_Density_Matrix(){
+    //II
+       double S00 = 1.0;
+       double S01 = (double)tomography_data["XX"].plus_plus/(double)tomography_data["XX"].total_count - (double)tomography_data["XX"].plus_minus/(double)tomography_data["XX"].total_count + (double)tomography_data["XX"].minus_plus/(double)tomography_data["XX"].total_count - (double)tomography_data["XX"].minus_minus/(double)tomography_data["XX"].total_count;
+       double S02 = (double)tomography_data["YY"].plus_plus/(double)tomography_data["YY"].total_count - (double)tomography_data["YY"].plus_minus/(double)tomography_data["YY"].total_count + (double)tomography_data["YY"].minus_plus/(double)tomography_data["YY"].total_count - (double)tomography_data["YY"].minus_minus/(double)tomography_data["YY"].total_count;
+       double S03 = (double)tomography_data["ZZ"].plus_plus/(double)tomography_data["ZZ"].total_count - (double)tomography_data["ZZ"].plus_minus/(double)tomography_data["ZZ"].total_count + (double)tomography_data["ZZ"].minus_plus/(double)tomography_data["ZZ"].total_count - (double)tomography_data["ZZ"].minus_minus/(double)tomography_data["ZZ"].total_count;
+       //XX
+       double S10 = (double)tomography_data["XX"].plus_plus/(double)tomography_data["XX"].total_count + (double)tomography_data["XX"].plus_minus/(double)tomography_data["XX"].total_count - (double)tomography_data["XX"].minus_plus/(double)tomography_data["XX"].total_count - (double)tomography_data["XX"].minus_minus/(double)tomography_data["XX"].total_count;
+       double S11 = (double)tomography_data["XX"].plus_plus/(double)tomography_data["XX"].total_count - (double)tomography_data["XX"].plus_minus/(double)tomography_data["XX"].total_count - (double)tomography_data["XX"].minus_plus/(double)tomography_data["XX"].total_count + (double)tomography_data["XX"].minus_minus/(double)tomography_data["XX"].total_count;
+       double S12 = (double)tomography_data["XY"].plus_plus/(double)tomography_data["XY"].total_count - (double)tomography_data["XY"].plus_minus/(double)tomography_data["XY"].total_count - (double)tomography_data["XY"].minus_plus/(double)tomography_data["XY"].total_count + (double)tomography_data["XY"].minus_minus/(double)tomography_data["XY"].total_count;
+       double S13 = (double)tomography_data["XZ"].plus_plus/(double)tomography_data["XZ"].total_count - (double)tomography_data["XZ"].plus_minus/(double)tomography_data["XZ"].total_count - (double)tomography_data["XZ"].minus_plus/(double)tomography_data["XZ"].total_count + (double)tomography_data["XZ"].minus_minus/(double)tomography_data["XZ"].total_count;
+       //YY
+       double S20 = (double)tomography_data["YY"].plus_plus/(double)tomography_data["YY"].total_count + (double)tomography_data["YY"].plus_minus/(double)tomography_data["YY"].total_count - (double)tomography_data["YY"].minus_plus/(double)tomography_data["YY"].total_count - (double)tomography_data["YY"].minus_minus/(double)tomography_data["YY"].total_count;
+       double S21 = (double)tomography_data["YX"].plus_plus/(double)tomography_data["YX"].total_count - (double)tomography_data["YX"].plus_minus/(double)tomography_data["YX"].total_count - (double)tomography_data["YX"].minus_plus/(double)tomography_data["YX"].total_count + (double)tomography_data["YX"].minus_minus/(double)tomography_data["YX"].total_count;
+       double S22 = (double)tomography_data["YY"].plus_plus/(double)tomography_data["YY"].total_count - (double)tomography_data["YY"].plus_minus/(double)tomography_data["YY"].total_count - (double)tomography_data["YY"].minus_plus/(double)tomography_data["YY"].total_count + (double)tomography_data["YY"].minus_minus/(double)tomography_data["YY"].total_count;
+       double S23 = (double)tomography_data["YZ"].plus_plus/(double)tomography_data["YZ"].total_count - (double)tomography_data["YZ"].plus_minus/(double)tomography_data["YZ"].total_count - (double)tomography_data["YZ"].minus_plus/(double)tomography_data["YZ"].total_count + (double)tomography_data["YZ"].minus_minus/(double)tomography_data["YZ"].total_count;
+       //ZZ
+       double S30 = (double)tomography_data["ZZ"].plus_plus/(double)tomography_data["ZZ"].total_count + (double)tomography_data["ZZ"].plus_minus/(double)tomography_data["ZZ"].total_count - (double)tomography_data["ZZ"].minus_plus/(double)tomography_data["ZZ"].total_count - (double)tomography_data["ZZ"].minus_minus/(double)tomography_data["ZZ"].total_count;
+       double S31 = (double)tomography_data["ZX"].plus_plus/(double)tomography_data["ZX"].total_count - (double)tomography_data["ZX"].plus_minus/(double)tomography_data["ZX"].total_count - (double)tomography_data["ZX"].minus_plus/(double)tomography_data["ZX"].total_count + (double)tomography_data["ZX"].minus_minus/(double)tomography_data["ZX"].total_count;
+       double S32 = (double)tomography_data["ZY"].plus_plus/(double)tomography_data["ZY"].total_count - (double)tomography_data["ZY"].plus_minus/(double)tomography_data["ZY"].total_count - (double)tomography_data["ZY"].minus_plus/(double)tomography_data["ZY"].total_count + (double)tomography_data["ZY"].minus_minus/(double)tomography_data["ZY"].total_count;
+       double S33 = (double)tomography_data["ZZ"].plus_plus/(double)tomography_data["ZZ"].total_count - (double)tomography_data["ZZ"].plus_minus/(double)tomography_data["ZZ"].total_count - (double)tomography_data["ZZ"].minus_plus/(double)tomography_data["ZZ"].total_count + (double)tomography_data["ZZ"].minus_minus/(double)tomography_data["ZZ"].total_count;
+
+
+
+    Matrix4cd density_matrix_reconstructed =
+            S01*(double)1/(double)4*kroneckerProduct(Pauli.I,Pauli.X).eval() +
+            S02*(double)1/(double)4*kroneckerProduct(Pauli.I,Pauli.Y).eval() +
+            S03*(double)1/(double)4*kroneckerProduct(Pauli.I,Pauli.Z).eval() +
+            S10*(double)1/(double)4*kroneckerProduct(Pauli.X,Pauli.I).eval() +
+            S11*(double)1/(double)4*kroneckerProduct(Pauli.X,Pauli.X).eval() +
+            S12*(double)1/(double)4*kroneckerProduct(Pauli.X,Pauli.Y).eval() +
+            S13*(double)1/(double)4*kroneckerProduct(Pauli.X,Pauli.Z).eval() +
+            S20*(double)1/(double)4*kroneckerProduct(Pauli.Y,Pauli.I).eval() +
+            S21*(double)1/(double)4*kroneckerProduct(Pauli.Y,Pauli.X).eval() +
+            S22*(double)1/(double)4*kroneckerProduct(Pauli.Y,Pauli.Y).eval() +
+            S23*(double)1/(double)4*kroneckerProduct(Pauli.Y,Pauli.Z).eval() +
+            S30*(double)1/(double)4*kroneckerProduct(Pauli.Z,Pauli.I).eval() +
+            S31*(double)1/(double)4*kroneckerProduct(Pauli.Z,Pauli.X).eval() +
+            S32*(double)1/(double)4*kroneckerProduct(Pauli.Z,Pauli.Y).eval() +
+            S33*(double)1/(double)4*kroneckerProduct(Pauli.Z,Pauli.Z).eval() +
+            S00*(double)1/(double)5*kroneckerProduct(Pauli.I,Pauli.I).eval() * S00 * (double)4/(double)5*kroneckerProduct(Pauli.I,Pauli.I).eval();
+
+    EV<<"DM = "<<density_matrix_reconstructed<<"\n";
+
+    Vector4cd Bellpair;
+    Bellpair << 1/sqrt(2),0,0, 1/sqrt(2);
+    Matrix4cd density_matrix_ideal = Bellpair*Bellpair.adjoint();
+    double fidelity = (density_matrix_reconstructed.real()* density_matrix_ideal.real() ).trace();
+
+
+    EV<<"F = "<<fidelity<<"\n";
+
+
 }
 
 //Excludes Hom, Epps and other intermediate nodes.
@@ -240,25 +305,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 }
 
 
-/*
-//Table for tracking which buffer is assigned for what job
-HardwareMonitor::QnicInfo* HardwareMonitor::initializeQTable(int numQnic, QnicInfo *qtable)
-{
-    for(int i=0; i<numQnic; i++){//per qnic
-        for(int x=0; x<checkNumBuff(i,false); x++){//per stationary qubit in the qnic
-            stationaryQubitInfo inf;
-                 inf.isBusy = false;
-                 inf.assigned_job = -1;//Job is from 0 ~ n.
-                 inf.qnic_index = i;
-                 inf.qubit_index = x;
-                 inf.entangled_inf.buffer_index = -1;
-                 inf.entangled_inf.node_address = -1;
-                 inf.entangled_inf.qnic_index = -1;
-            qtable[i][x] = inf; //[qnic_index][qubit_index] = inf
-        }
-    }
-    return qtable;
-}*/
+
 
 int HardwareMonitor::checkNumBuff(int qnic_index, QNIC_type qnic_type){
     Enter_Method("checkNumBuff()");
@@ -269,36 +316,6 @@ int HardwareMonitor::checkNumBuff(int qnic_index, QNIC_type qnic_type){
     return qnode->par("numBuffer");
 }
 
-/*
-//Not in HM.....
-int HardwareMonitor::checkNumFreeBuff(int qnic_index, int qnic_type){
-    //qnic_type 0 = qnic, 1 = qnic_r, 2 = qnic_rp
-    int num_free_resources = 0;
-    Enter_Method("checkNumFreeBuff()");
-    cModule *qnode = nullptr;
-    switch (qnic_type) {
-      //for when connection manager receives an BSMtimingNotifier
-      case EMITTER_QNIC:
-        qnode = getQNode()->getSubmodule("qnic", qnic_index); break;
-      //for when connection manager receives an EPPStimingNotifier
-      case RECEIVER_QNIC:
-        qnode = getQNode()->getSubmodule("qnic_r", qnic_index); break;
-      //for when connection manager receives an EPPStimingNotifier
-      case PASSIVE_RECEIVER_QNIC:
-        qnode = getQNode()->getSubmodule("qnic_rp", qnic_index); break;
-      default:
-        error("Only 3 qnic types are currently recognized....");
-    }
-
-    int maxBuff = qnode->par("numBuffer");
-    for(int i=0; i<maxBuff; i++){
-        cModule *qubit = qnode->getSubmodule("statQubit", i);
-        if(!qubit->par("isBusy")){
-            num_free_resources++;
-        }
-    }
-    return num_free_resources;
-}*/
 
 Interface_inf HardwareMonitor::getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type){
     cModule *local_qnic;
@@ -341,38 +358,6 @@ connection_setup_inf HardwareMonitor::return_setupInf(int qnic_address){
     return inf;
 }
 
-
-/*
-//Not in HM......
-int* HardwareMonitor::checkFreeBuffSet(int qnic_index, int *list_of_free_resources, int qnic_type){
-    if(qnic_type<0 || qnic_type >2){
-        error("Only 3 qnic types are currently recognized....");
-    }
-
-    int index = 0;//index for array
-    for(int i=0; i<checkNumBuff(qnic_index,qnic_type); i++){//Traverse through all qubits
-        try{
-        cModule *qnic = nullptr;
-        if(qnic_type==0)
-            qnic = getQNode()->getSubmodule("qnic", qnic_index);//for qnic, which is connected to stand-alone HoM
-        else if (qnic_type==1)
-            qnic = getQNode()->getSubmodule("qnic_r", qnic_index);//for qnic with internal hom
-        else
-            qnic = getQNode()->getSubmodule("qnic_rp", qnic_index);//for when connection manager receives an EPPStimingNotifier
-        cModule *qubit = qnic->getSubmodule("statQubit", i);
-        stationaryQubit *q = check_and_cast<stationaryQubit *>(qubit);
-            if(!q->checkBusy()){//If free qubit
-                list_of_free_resources[i] = index;//store the index (i) of qubit in the list
-                index++;
-            }
-        }catch(std::exception& e){
-                error("statQubit not found.");
-                endSimulation();
-        }
-    }
-    //EV<<"index is ....."<<index<<"\n";
-    return list_of_free_resources;
-}*/
 
 
 

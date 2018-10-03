@@ -66,6 +66,7 @@ typedef struct _tomogrphy_outcome{
 } tomography_outcome;
 
 typedef struct _output_count{
+    int total_count;
     int plus_plus;
     int plus_minus;
     int minus_plus;
@@ -97,6 +98,7 @@ class HardwareMonitor : public cSimpleModule
         typedef std::map<std::string, output_count> raw_data;//basis combination -> raw output count e.g "XX" -> {plus_plus = 56, plus_minus = 55, minus_plus = 50, minus_minus = 50}, "XY" -> {....
         raw_data tomography_data;
         QnicInfo *qtable;
+        single_qubit_error Pauli;
         virtual NeighborTable passNeighborTable();
         virtual int checkNumBuff(int qnic_index, QNIC_type qnic_type);//returns the total number of qubits
         virtual connection_setup_inf return_setupInf(int qnic_address);
@@ -118,7 +120,7 @@ class HardwareMonitor : public cSimpleModule
         virtual Interface_inf getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type);
         virtual void sendLinkTomographyRuleSet(int my_address,int partner_address, QNIC_type qnic_type, int qnic_index);
         virtual QNIC search_QNIC_from_Neighbor_QNode_address(int neighbor_address);
-
+        virtual void reconstruct_Density_Matrix();
         //virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
 };
 
