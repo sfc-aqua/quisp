@@ -313,12 +313,15 @@ void stationaryQubit::setEntangledPartnerInfo(stationaryQubit *partner){
 
 /*Add another X error. If an X error already exists, then they cancel out*/
 void stationaryQubit::addXerror(){
-    par("GOD_Xerror") = !par("GOD_Xerror");/*Switches true to false or false to true*/
+    //error("Huh...?");
+    this->par("GOD_Xerror") = !this->par("GOD_Xerror");/*Switches true to false or false to true*/
+    //this->par("GOD_Xerror") = true;
 }
 
 /*Add another Z error. If an Z error already exists, then they cancel out*/
 void stationaryQubit::addZerror(){
-    par("GOD_Zerror") = !par("GOD_Zerror");/*Switches true to false or false to true*/
+    this->par("GOD_Zerror") = !this->par("GOD_Zerror");/*Switches true to false or false to true*/
+    //this->par("GOD_Zerror") = true;
 }
 
 
@@ -330,6 +333,10 @@ void stationaryQubit::purify(stationaryQubit * resource_qubit) {
     // if agree (truetrue or falsefalse), keep
 }
 
+
+
+
+//TODO: Need to fix this. This eliminates the channel errors....
 /*Single qubit memory error based on Markov-Chain*/
 void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
     /*Check when the error got updated last time. Errors will be performed depending on the difference between that time and the current time.*/
@@ -360,22 +367,21 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
         double Z_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2);
 
         /*Reinitialize to no error for convenience*/
-        qubit->par("GOD_Zerror") = false;
-        qubit->par("GOD_Xerror") = false;
+        /*qubit->par("GOD_Zerror") = false;
+        qubit->par("GOD_Xerror") = false;*///BAD IDEA!
 
         double rand = dblrand();//Gives a random double between 0.0 ~ 1.0
         if(rand < No_error_ceil){
             //Qubit will end up with no error
         }else if(No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil!=X_error_ceil)){
                    //X error
-            qubit->par("GOD_Xerror") = true;
+            qubit->addXerror();
         }else if(X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil!=Z_error_ceil)){
                    //Z error
-            qubit->par("GOD_Zerror") = true;
-            qubit->par("GOD_Xerror") = true;
+            qubit->addZerror();
         }else{
-            qubit->par("GOD_Zerror") = true;
-            qubit->par("GOD_Xerror") = true;
+            qubit->addZerror();
+            qubit->addXerror();
          }
     }
     qubit->updated_time = simTime();//Update parameter, updated_time, to now.
@@ -475,17 +481,17 @@ measurement_outcome stationaryQubit::measure_density_independent(){
         //This qubit is not entangled anymore.
         //Its single qubit state will be stored in Density_Matrix_Collapsed.
 
-        apply_memory_error(this);
+        //apply_memory_error(this);
 
         /*Adjust stored density matrix*/
-        if(par("GOD_Xerror").boolValue() != GOD_dm_Xerror){
+        if(this->par("GOD_Xerror").boolValue() != GOD_dm_Xerror){
             //Another X error to the dm.
             error("NO error for now!");
             Density_Matrix_Collapsed = Pauli.X*Density_Matrix_Collapsed*Pauli.X.adjoint();
         }
-        if (par("GOD_Zerror").boolValue() != GOD_dm_Zerror){
+        if (this->par("GOD_Zerror").boolValue() != GOD_dm_Zerror){
             //Another Z error to the dm.
-            error("NO error for now!");
+            //error("NO error for now!");
             Density_Matrix_Collapsed = Pauli.Z*Density_Matrix_Collapsed*Pauli.Z.adjoint();
         }
 
@@ -505,13 +511,13 @@ measurement_outcome stationaryQubit::measure_density_independent(){
         std::cout<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). \n";
 
     }else{//Still entangled. After measurement, we need to update parameters, Density_Matrix_Collapsed and partner_measured, of the partner qubit.
-        apply_memory_error(this);//Add memory error depending on the idle time.
-        apply_memory_error(entangled_partner);//Also do the same on the partner!
+        //apply_memory_error(this);//Add memory error depending on the idle time.
+        //apply_memory_error(entangled_partner);//Also do the same on the partner!
         quantum_state current_state = getQuantumState();
         EV<<"Current entangled state is "<<current_state.state_in_ket<<"\n";
 
         if(this->par("GOD_Xerror") || this->par("GOD_Zerror")){
-            error("This is supposed to be a tomography without error. really?");
+            //error("This is supposed to be a tomography without error. really?");
         }else{
 
         }
