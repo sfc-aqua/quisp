@@ -60,14 +60,19 @@ class BellStateAnalyzer : public cSimpleModule
         bool this_trial_done = false;
         double BSAsuccess_rate = 0.5;
         int left_count, right_count = 0;
+        int DEBUG_darkcount_left = 0;
+        int DEBUG_darkcount_right = 0;
+        int DEBUG_darkcount_both = 0;
     protected:
         virtual void initialize();
+        virtual void finish();
         virtual void handleMessage(cMessage *msg);
         virtual bool isPhotonLost(cMessage *msg);
         virtual void forDEBUG_countErrorTypes(cMessage *msg);
         virtual void sendBSAresult(bool result, bool last);
         virtual void initializeVariables();
-        virtual void  GOD_updateEntangledInfoParameters_of_qubits();
+        virtual void GOD_setCompletelyMixedDensityMatrix();
+        virtual void GOD_updateEntangledInfoParameters_of_qubits();
 };
 
 Define_Module(BellStateAnalyzer);
@@ -181,19 +186,27 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
     }else if((left_arrived_at != -1 && right_arrived_at != -1) && std::abs(difference)<=(required_precision)){
         //Both arrived perfectly fine
         bool lost = isPhotonLost(msg);
-        if(!lost){
+
 
             double rand = dblrand();//Even if we have 2 photons, whether we success entangling the qubits or not is probablistic.
             double darkcount_left = dblrand();
             double darkcount_right = dblrand();
             if(rand < BSAsuccess_rate || ( !right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability) || ( right_photon_lost && !left_photon_lost && darkcount_right < darkcount_probability) || ( right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability && darkcount_right < darkcount_probability)){
-                if(!right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability){
-                    //Dark count!
-                    error("Dark count :)");
-                }else if(right_photon_lost && !left_photon_lost && darkcount_right < darkcount_probability){
-                    error("Dark count :)");
-                }else if( right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability && darkcount_right < darkcount_probability){
-                    error("Dark count :)");
+                if(!right_photon_lost && (left_photon_lost && darkcount_left < darkcount_probability)){
+                    //error("Dark count :)");
+                    DEBUG_darkcount_left++;
+                    GOD_setCompletelyMixedDensityMatrix();
+                    sendBSAresult(false, send_result);
+                }else if(!left_photon_lost && (right_photon_lost && darkcount_right < darkcount_probability)){
+                    //error("Dark count :)");
+                    DEBUG_darkcount_right++;
+                    GOD_setCompletelyMixedDensityMatrix();
+                    sendBSAresult(false, send_result);
+                }else if((left_photon_lost && darkcount_left < darkcount_probability) &&  (right_photon_lost &&  darkcount_right < darkcount_probability)){
+                    //error("Dark count :)");
+                    DEBUG_darkcount_both++;
+                    GOD_setCompletelyMixedDensityMatrix();
+                    sendBSAresult(false, send_result);
                 }else{
                     bubble("Success...!");
                     GOD_updateEntangledInfoParameters_of_qubits();
@@ -206,12 +219,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
                 EV<<"rand = "<<rand<<" <"<<BSAsuccess_rate;
                 sendBSAresult(true, send_result);//just failed because only 1 detector clicked while both reached
             }
-        }else{
-            bubble("Photon lost!");
-            sendBSAresult(true, send_result);
-            //If Dark count...
 
-        }
         initializeVariables();
 
     }else if((left_arrived_at != -1 && right_arrived_at != -1) && std::abs(difference)>(required_precision)){
@@ -275,6 +283,13 @@ void BellStateAnalyzer::sendBSAresult(bool result,bool sendresults){
     }
 }
 
+void BellStateAnalyzer::finish(){
+
+    std::cout<<"darkcount_count_left = "<<DEBUG_darkcount_left<<", darkcount_count_right ="<<DEBUG_darkcount_right<<", darkcount_count_both = "<<DEBUG_darkcount_both<<"\n";
+}
+
+
+
 void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg){
     PhotonicQubit *q = check_and_cast<PhotonicQubit *>(msg);
     if(q->getPauliXerr() && q->getPauliZerr()){
@@ -299,6 +314,11 @@ bool BellStateAnalyzer::isPhotonLost(cMessage *msg){
         return false;
     }
     delete msg;
+}
+
+void BellStateAnalyzer::GOD_setCompletelyMixedDensityMatrix(){
+    left_statQubit_ptr->setCompletelyMixedDensityMatrix();
+    right_statQubit_ptr->setCompletelyMixedDensityMatrix();
 }
 
 

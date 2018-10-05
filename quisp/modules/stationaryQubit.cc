@@ -66,7 +66,7 @@ void stationaryQubit::initialize()
 
     EV<<"Memory_Transition_matrix = "<< Memory_Transition_matrix<<" done \n";
 
-    std::cout<<Memory_Transition_matrix<<"\n";
+    //std::cout<<Memory_Transition_matrix<<"\n";
     //endSimulation();
 
     //Set error matrices. This is used in the process of simulating tomography.
@@ -229,6 +229,7 @@ void stationaryQubit::setFree(bool consumed){
     updated_time = -1;
     /**/
     partner_measured = false;
+    completely_mixed = false;
     GOD_dm_Zerror = false;
     GOD_dm_Xerror = false;
     Density_Matrix_Collapsed << -1,-1,-1,-1;
@@ -302,6 +303,18 @@ void stationaryQubit::emitPhoton(int pulse)
     scheduleAt(simTime()+abso,pk); //cannot send back in time, so only positive lag
 }
 
+void stationaryQubit::setCompletelyMixedDensityMatrix(){
+
+    Density_Matrix_Collapsed<<(double)1/(double)2,0,0,(double)1/(double)2;
+    completely_mixed = true;
+    if(hasGUI()){
+        bubble("Completely mixed. darkcount");
+        getDisplayString().setTagArg("i", 1, "white");
+    }
+    //error("Heh?");
+
+}
+
 void stationaryQubit::setEntangledPartnerInfo(stationaryQubit *partner){
     //When BSA succeeds, this method gets invoked to store entangled partner information. This will also be sent classically to the partner node afterwards.
     entangled_partner = partner;
@@ -349,13 +362,13 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
 
     double time_evolution = simTime().dbl() - qubit->updated_time.dbl();
-    double time_evolution_microsec  =time_evolution * 1000000;
+    double time_evolution_microsec  = time_evolution * 1000000;
     if(time_evolution_microsec > 0){
         //EV<<"\n Memory error applied for time = "<<time_evolution_microsec<<" μs, on qubit "<<qubit<<"in node["<<qubit->par("node_address").str()<<"] \n";
         //Perform Monte-Carlo error simulation on this qubit.
         bool Xerr = qubit->par("GOD_Xerror");
         bool Zerr = qubit->par("GOD_Zerror");
-        std::cout<<"\n\n\n\n First it was "<<Xerr<<","<<Zerr<<"\n";
+        //std::cout<<"\n\n\n\n First it was "<<Xerr<<","<<Zerr<<"\n";
 
         MatrixXd Initial_condition(1,4);//I, X, Z, Y
         if(Zerr && Xerr){
@@ -367,7 +380,7 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
         }else{
             Initial_condition << 1,0,0,0;//No error
         }
-        std::cout<<"Init Condition = "<<Initial_condition<<"\n";
+        //std::cout<<"Init Condition = "<<Initial_condition<<"\n";
         MatrixPower<Matrix4d> Apow(Memory_Transition_matrix);
         Matrix4d Dynamic_transition_matrix;
         Dynamic_transition_matrix = Apow(time_evolution_microsec);
@@ -379,12 +392,12 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
            Q_to_the_distance = Apow(distance);
            Output_condition = Initial_condition * Q_to_the_distance;
            */
-        std::cout<<"Transition matrix μs"<<Memory_Transition_matrix<<"\n";
-        std::cout<<"μs = "<<time_evolution_microsec<<"\n";
-        std::cout<<"Transition matrix = "<<Dynamic_transition_matrix<<"\n";
+        //std::cout<<"Transition matrix μs"<<Memory_Transition_matrix<<"\n";
+        //std::cout<<"μs = "<<time_evolution_microsec<<"\n";
+        //std::cout<<"Transition matrix = "<<Dynamic_transition_matrix<<"\n";
 
         Output_condition = Initial_condition*Dynamic_transition_matrix;//I,X,Y,Z
-        std::cout<<"Output Condition = "<<Output_condition<<"\n";
+        //std::cout<<"Output Condition = "<<Output_condition<<"\n";
         //EV<<"\n Input (I,X,Z,Y) was "<<Initial_condition<<"\n Output (I,X,Z,Y) is now"<<Output_condition<<"\n";
         double No_error_ceil = Output_condition(0,0);
         double X_error_ceil = Output_condition(0,0)+Output_condition(0,1);
@@ -393,7 +406,7 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
         double rand = dblrand();//Gives a random double between 0.0 ~ 1.0
         if(rand < No_error_ceil){
             //Qubit will end up with no error
-            std::cout<<"No additional error"<<Xerr<<","<<Zerr<<"\n";
+            //std::cout<<"No additional error"<<Xerr<<","<<Zerr<<"\n";
         }else if(No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil!=X_error_ceil)){
             //X error
             //std::cout<<"Additional X error"<<Xerr<<","<<Zerr<<"\n";
@@ -482,8 +495,7 @@ measurement_outcome stationaryQubit::measure_density_independent(){
     char Output;
     char Output_is_plus;
 
-
-    if(partner_measured){
+    if(partner_measured || completely_mixed){
         //This qubit is not entangled anymore.
         //Its single qubit state will be stored in Density_Matrix_Collapsed.
 

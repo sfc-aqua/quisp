@@ -147,6 +147,7 @@ class stationaryQubit : public cSimpleModule
        //projected_states proj_states;
        Matrix2cd Density_Matrix_Collapsed;//Used when partner has been measured.
        bool partner_measured;
+       bool completely_mixed;
        bool GOD_dm_Xerror;
        bool GOD_dm_Zerror;
 
@@ -210,6 +211,7 @@ class stationaryQubit : public cSimpleModule
 
         /*GOD parameters*/
         virtual void setEntangledPartnerInfo(stationaryQubit *partner);
+        virtual void setCompletelyMixedDensityMatrix();
         virtual void addXerror();
         virtual void addZerror();
 
