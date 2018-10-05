@@ -64,8 +64,10 @@ void stationaryQubit::initialize()
                memory_err.Z_error_rate,memory_err.Y_error_rate, 1-memory_err.pauli_error_rate,memory_err.X_error_rate,
                memory_err.Y_error_rate,memory_err.Z_error_rate, memory_err.X_error_rate, 1-memory_err.pauli_error_rate,
 
-    EV<<"Memory_Transition_matrix = "<< Memory_Transition_matrix<<"\n";
+    EV<<"Memory_Transition_matrix = "<< Memory_Transition_matrix<<" done \n";
 
+    std::cout<<Memory_Transition_matrix<<"\n";
+    //endSimulation();
 
     //Set error matrices. This is used in the process of simulating tomography.
     Pauli.X << 0,1,1,0;
@@ -314,13 +316,15 @@ void stationaryQubit::setEntangledPartnerInfo(stationaryQubit *partner){
 /*Add another X error. If an X error already exists, then they cancel out*/
 void stationaryQubit::addXerror(){
     //error("Huh...?");
-    this->par("GOD_Xerror") = !this->par("GOD_Xerror");/*Switches true to false or false to true*/
+    bool Xerr = this->par("GOD_Xerror");
+    this->par("GOD_Xerror") = !Xerr;/*Switches true to false or false to true*/
     //this->par("GOD_Xerror") = true;
 }
 
 /*Add another Z error. If an Z error already exists, then they cancel out*/
 void stationaryQubit::addZerror(){
-    this->par("GOD_Zerror") = !this->par("GOD_Zerror");/*Switches true to false or false to true*/
+    bool Zerr = this->par("GOD_Zerror");
+    this->par("GOD_Zerror") = !Zerr;/*Switches true to false or false to true*/
     //this->par("GOD_Zerror") = true;
 }
 
@@ -340,48 +344,83 @@ void stationaryQubit::purify(stationaryQubit * resource_qubit) {
 /*Single qubit memory error based on Markov-Chain*/
 void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
     /*Check when the error got updated last time. Errors will be performed depending on the difference between that time and the current time.*/
+    if(memory_error_rate==0)
+        return;
+
+
     double time_evolution = simTime().dbl() - qubit->updated_time.dbl();
     double time_evolution_microsec  =time_evolution * 1000000;
     if(time_evolution_microsec > 0){
         //EV<<"\n Memory error applied for time = "<<time_evolution_microsec<<" μs, on qubit "<<qubit<<"in node["<<qubit->par("node_address").str()<<"] \n";
         //Perform Monte-Carlo error simulation on this qubit.
-        MatrixXd Initial_condition(1,4);/*I, X, Z, Y*/
-        if(qubit->par("GOD_Zerror") && qubit->par("GOD_Xerror")){
+        bool Xerr = qubit->par("GOD_Xerror");
+        bool Zerr = qubit->par("GOD_Zerror");
+        std::cout<<"\n\n\n\n First it was "<<Xerr<<","<<Zerr<<"\n";
+
+        MatrixXd Initial_condition(1,4);//I, X, Z, Y
+        if(Zerr && Xerr){
             Initial_condition << 0,0,0,1;//Has a Y error
-        }else if(qubit->par("GOD_Zerror") && !qubit->par("GOD_Xerror")){
+        }else if(Zerr && !Xerr){
             Initial_condition << 0,0,1,0;//Has a Z error
-        }else if(!qubit->par("GOD_Zerror") && qubit->par("GOD_Xerror")){
+        }else if(!Zerr && Xerr){
             Initial_condition << 0,1,0,0;//Has an X error
         }else{
             Initial_condition << 1,0,0,0;//No error
         }
+        std::cout<<"Init Condition = "<<Initial_condition<<"\n";
         MatrixPower<Matrix4d> Apow(Memory_Transition_matrix);
         Matrix4d Dynamic_transition_matrix;
         Dynamic_transition_matrix = Apow(time_evolution_microsec);
         //EV<<"TM^"<<time_evolution_microsec<<" = "<< Dynamic_transition_matrix<<"\n";
         MatrixXd Output_condition(1,4);//I, X, Z, Y
-        Output_condition = Initial_condition * Dynamic_transition_matrix;//I,X,Y,Z
+
+        /*
+        MatrixPower<MatrixXd> Apow(Transition_matrix);
+           Q_to_the_distance = Apow(distance);
+           Output_condition = Initial_condition * Q_to_the_distance;
+           */
+        std::cout<<"Transition matrix μs"<<Memory_Transition_matrix<<"\n";
+        std::cout<<"μs = "<<time_evolution_microsec<<"\n";
+        std::cout<<"Transition matrix = "<<Dynamic_transition_matrix<<"\n";
+
+        Output_condition = Initial_condition*Dynamic_transition_matrix;//I,X,Y,Z
+        std::cout<<"Output Condition = "<<Output_condition<<"\n";
         //EV<<"\n Input (I,X,Z,Y) was "<<Initial_condition<<"\n Output (I,X,Z,Y) is now"<<Output_condition<<"\n";
         double No_error_ceil = Output_condition(0,0);
         double X_error_ceil = Output_condition(0,0)+Output_condition(0,1);
         double Z_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2);
 
-        /*Reinitialize to no error for convenience*/
-        /*qubit->par("GOD_Zerror") = false;
-        qubit->par("GOD_Xerror") = false;*///BAD IDEA!
-
         double rand = dblrand();//Gives a random double between 0.0 ~ 1.0
         if(rand < No_error_ceil){
             //Qubit will end up with no error
+            std::cout<<"No additional error"<<Xerr<<","<<Zerr<<"\n";
         }else if(No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil!=X_error_ceil)){
-                   //X error
-            qubit->addXerror();
+            //X error
+            //std::cout<<"Additional X error"<<Xerr<<","<<Zerr<<"\n";
+            //qubit->addXerror();
+            //Xerr = qubit->par("GOD_Xerror");
+            //Zerr = qubit->par("GOD_Zerror");
+            //std::cout<<"Now "<<Xerr<<","<<Zerr<<"\n";
+            qubit->par("GOD_Xerror") = true;
+            qubit->par("GOD_Zerror") = false;
         }else if(X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil!=Z_error_ceil)){
-                   //Z error
-            qubit->addZerror();
+            //Z error
+            //std::cout<<"Additional Z error"<<Xerr<<","<<Zerr<<"\n";
+            //qubit->addZerror();
+            //Xerr = qubit->par("GOD_Xerror");
+            //Zerr = qubit->par("GOD_Zerror");
+            //std::cout<<"Now "<<Xerr<<","<<Zerr<<"\n";
+            qubit->par("GOD_Xerror") = false;
+            qubit->par("GOD_Zerror") = true;
         }else{
-            qubit->addZerror();
-            qubit->addXerror();
+            //std::cout<<"Additional Y error"<<Xerr<<","<<Zerr<<"\n";
+            //qubit->addZerror();
+            //qubit->addXerror();
+            //Xerr = qubit->par("GOD_Xerror");
+            //Zerr = qubit->par("GOD_Zerror");
+            //std::cout<<"Now "<<Xerr<<","<<Zerr<<"\n";
+            qubit->par("GOD_Xerror") = true;
+            qubit->par("GOD_Zerror") = true;
          }
     }
     qubit->updated_time = simTime();//Update parameter, updated_time, to now.
@@ -431,41 +470,7 @@ quantum_state stationaryQubit::getQuantumState(){
     return q;
 }
 
-/*
-measurement_output_probabilities stationaryQubit::getOutputProbabilities(quantum_state state, char meas_basis){
-    Matrix2cd meas_op_plus, meas_op_minus;
-    switch(meas_basis){
-        case 'X':
-            EV<<"X measurement\n";
-            meas_op_plus = meas_op.X_plus;
-            meas_op_minus = meas_op.X_minus;
-            break;
-        case 'Y':
-            EV<<"X measurement\n";
-            meas_op_plus = meas_op.Y_plus;
-            meas_op_minus = meas_op.Y_minus;
-            break;
-        case 'Z':
-            EV<<"X measurement\n";
-            meas_op_plus = meas_op.Z_plus;
-            meas_op_minus = meas_op.Z_minus;
-            break;
-        default:
-            error("Measurement basis not recognized.");
-            break;
-    }
-    measurement_output_probabilities p;
-    Complex Prob = state.state_in_ket.adjoint()*kroneckerProduct(meas_op_plus,meas_op_plus).eval().adjoint()*kroneckerProduct(meas_op_plus,meas_op_plus).eval()*state.state_in_ket;
-    p.probability_plus_plus = Prob.real();
-    Complex Prob2 = state.state_in_ket.adjoint()*kroneckerProduct(meas_op_plus,meas_op_minus).eval().adjoint()*kroneckerProduct(meas_op_plus,meas_op_minus).eval()*state.state_in_ket;
-    p.probability_plus_minus = Prob2.real();
-    Complex Prob3 = state.state_in_ket.adjoint()*kroneckerProduct(meas_op_minus,meas_op_plus).eval().adjoint()*kroneckerProduct(meas_op_minus,meas_op_plus).eval()*state.state_in_ket;
-    p.probability_minus_plus = Prob3.real();
-    Complex Prob4 = state.state_in_ket.adjoint()*kroneckerProduct(meas_op_minus,meas_op_minus).eval().adjoint()*kroneckerProduct(meas_op_minus,meas_op_minus).eval()*state.state_in_ket;
-    p.probability_minus_minus = Prob4.real();
-    return p;
-}
-*/
+
 
 measurement_outcome stationaryQubit::measure_density_independent(){
     if(entangled_partner == nullptr && Density_Matrix_Collapsed(0,0).real() ==-1){
@@ -473,29 +478,33 @@ measurement_outcome stationaryQubit::measure_density_independent(){
             EV<<Density_Matrix_Collapsed<<"\n";
             error("Measuring a qubit that is not entangled with another qubit. Probably not what you want!");
     }
-    measurement_operator this_measurement = Random_Measurement_Basis_Selection();
+    measurement_operator this_measurement = Random_Measurement_Basis_Selection();//Select basis randomly
     char Output;
     char Output_is_plus;
+
 
     if(partner_measured){
         //This qubit is not entangled anymore.
         //Its single qubit state will be stored in Density_Matrix_Collapsed.
 
-        //apply_memory_error(this);
+        apply_memory_error(this);//Before starting the calculation, update the error due to memory.
 
-        /*Adjust stored density matrix*/
-        if(this->par("GOD_Xerror").boolValue() != GOD_dm_Xerror){
+        bool Xerr = this->par("GOD_Xerror");
+        bool Zerr = this->par("GOD_Zerror");
+
+        /*Update stored density matrix according to new error*/
+        if(Xerr != GOD_dm_Xerror){
             //Another X error to the dm.
-            error("NO error for now!");
+            //error("NO error for now!");
             Density_Matrix_Collapsed = Pauli.X*Density_Matrix_Collapsed*Pauli.X.adjoint();
         }
-        if (this->par("GOD_Zerror").boolValue() != GOD_dm_Zerror){
+        if (Zerr != GOD_dm_Zerror){
             //Another Z error to the dm.
             //error("NO error for now!");
             Density_Matrix_Collapsed = Pauli.Z*Density_Matrix_Collapsed*Pauli.Z.adjoint();
         }
 
-        std::cout<<"Not entangled anymore. Density matrix is "<<Density_Matrix_Collapsed<<"\n";
+        //std::cout<<"Not entangled anymore. Density matrix is "<<Density_Matrix_Collapsed<<"\n";
 
         Complex Prob_plus = (Density_Matrix_Collapsed*this_measurement.plus.adjoint()*this_measurement.plus).trace();
         Complex Prob_minus = (Density_Matrix_Collapsed*this_measurement.minus.adjoint()*this_measurement.minus).trace();
@@ -508,29 +517,25 @@ measurement_outcome stationaryQubit::measure_density_independent(){
             Output = '-';
             Output_is_plus = false;
         }
-        std::cout<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). \n";
+        //std::cout<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). \n";
 
-    }else{//Still entangled. After measurement, we need to update parameters, Density_Matrix_Collapsed and partner_measured, of the partner qubit.
-        //apply_memory_error(this);//Add memory error depending on the idle time.
-        //apply_memory_error(entangled_partner);//Also do the same on the partner!
+    }else{
+        //Still entangled. After measurement, we need to update parameters, Density_Matrix_Collapsed and partner_measured, of the partner qubit.
+        apply_memory_error(this);//Add memory error depending on the idle time.
+        apply_memory_error(entangled_partner);//Also do the same on the partner!
+
         quantum_state current_state = getQuantumState();
         EV<<"Current entangled state is "<<current_state.state_in_ket<<"\n";
 
-        if(this->par("GOD_Xerror") || this->par("GOD_Zerror")){
-            //error("This is supposed to be a tomography without error. really?");
-        }else{
+        bool Xerr = this->par("GOD_Xerror");
+        bool Zerr = this->par("GOD_Zerror");
 
-        }
-
-        std::cout<<"Entangled state is "<<current_state.state_in_ket<<"\n";
+        //std::cout<<"Entangled state is "<<current_state.state_in_ket<<"\n";
 
         Complex Prob_plus = current_state.state_in_ket.adjoint()*kroneckerProduct(this_measurement.plus,meas_op.identity).eval().adjoint()*kroneckerProduct(this_measurement.plus,meas_op.identity).eval()*current_state.state_in_ket;
         Complex Prob_minus = current_state.state_in_ket.adjoint()*kroneckerProduct(this_measurement.minus,meas_op.identity).eval().adjoint()*kroneckerProduct(this_measurement.minus,meas_op.identity).eval()*current_state.state_in_ket;
-        /*ConjugateTranspose[Bell].ConjugateTranspose[Zp].Zp.Bell
-          Tr[Belldm.ConjugateTranspose[Zp].Zp]
-          Are they the same?*/
 
-        std::cout<<"Measurement basis = "<<this_measurement.basis<<"P(+) = "<<Prob_plus.real()<<", P(-) = "<<Prob_minus.real()<<"\n";
+        //std::cout<<"Measurement basis = "<<this_measurement.basis<<"P(+) = "<<Prob_plus.real()<<", P(-) = "<<Prob_minus.real()<<"\n";
         double dbl = dblrand();
 
         Vector2cd ms;

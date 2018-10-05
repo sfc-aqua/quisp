@@ -28,7 +28,7 @@ namespace modules {
 class BellStateAnalyzer : public cSimpleModule
 {
     private:
-        double darkcount_rate;
+        double darkcount_probability;
         double loss_rate;
         double error_rate;
         bool left_clicked;
@@ -52,6 +52,8 @@ class BellStateAnalyzer : public cSimpleModule
         int right_photon_origin_qubit_address;
         bool right_photon_Xerr;
         bool right_photon_Zerr;
+        bool right_photon_lost;
+        bool left_photon_lost;
         stationaryQubit *right_statQubit_ptr;
         int count_X=0, count_Y=0, count_Z=0, count_I=0, count_L=0, count_total=0;//for debug
         bool handshake = false;
@@ -72,7 +74,7 @@ Define_Module(BellStateAnalyzer);
 
 void BellStateAnalyzer::initialize()
 {
-   darkcount_rate = par("darkcount_rate");
+   darkcount_probability = par("darkcount_probability");
    loss_rate = par("loss_rate");
    error_rate = par("error_rate");
    //duration = par("duration");
@@ -96,6 +98,8 @@ void BellStateAnalyzer::initialize()
    right_photon_Zerr = false;
    left_statQubit_ptr = nullptr;
    right_statQubit_ptr = nullptr;
+   right_photon_lost = false;
+   left_photon_lost = false;
 }
 
 void BellStateAnalyzer::handleMessage(cMessage *msg){
@@ -122,6 +126,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
         left_statQubit_ptr = check_and_cast<stationaryQubit *>( photon->getEntangled_with());
         left_photon_Xerr = photon->getPauliXerr();
         left_photon_Zerr = photon->getPauliZerr();
+        left_photon_lost = photon->getPhotonLost();
         //photon->setGODfree();
         if(photon->getFirst()){
             left_last_photon_detected = false;
@@ -143,6 +148,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
         right_statQubit_ptr = check_and_cast<stationaryQubit *>( photon->getEntangled_with());
         right_photon_Xerr = photon->getPauliXerr();
         right_photon_Zerr = photon->getPauliZerr();
+        right_photon_lost = photon->getPhotonLost();
         if(photon->getFirst()){
             right_last_photon_detected = false;
             //send_result = false;
@@ -178,10 +184,21 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
         if(!lost){
 
             double rand = dblrand();//Even if we have 2 photons, whether we success entangling the qubits or not is probablistic.
-            if(rand < BSAsuccess_rate){
-                bubble("Success...!");
-                GOD_updateEntangledInfoParameters_of_qubits();
-                sendBSAresult(false, send_result);//succeeded because both reached, and both clicked
+            double darkcount_left = dblrand();
+            double darkcount_right = dblrand();
+            if(rand < BSAsuccess_rate || ( !right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability) || ( right_photon_lost && !left_photon_lost && darkcount_right < darkcount_probability) || ( right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability && darkcount_right < darkcount_probability)){
+                if(!right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability){
+                    //Dark count!
+                    error("Dark count :)");
+                }else if(right_photon_lost && !left_photon_lost && darkcount_right < darkcount_probability){
+                    error("Dark count :)");
+                }else if( right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability && darkcount_right < darkcount_probability){
+                    error("Dark count :)");
+                }else{
+                    bubble("Success...!");
+                    GOD_updateEntangledInfoParameters_of_qubits();
+                    sendBSAresult(false, send_result);//succeeded because both reached, and both clicked
+                }
 
             }//we also need else if for darkcount....
             else{
@@ -226,6 +243,12 @@ void BellStateAnalyzer::initializeVariables(){
     right_photon_origin_qnic_address = -1;
     right_photon_origin_qubit_address = -1;
     right_photon_origin_qnic_type = -1;
+    left_photon_lost = false;
+    left_photon_lost = false;
+    right_photon_Xerr = false;
+    right_photon_Zerr = false;
+    left_photon_Xerr = false;
+    left_photon_Zerr = false;
     left_count = 0;
     right_count = 0;
     left_statQubit_ptr = nullptr;

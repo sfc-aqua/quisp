@@ -20,7 +20,7 @@ simple BellStateAnalyzer
 {
     parameters:
         //@class(quisp::modules::BellStateAnalyzer);
-        double darkcount_rate = default(0);
+        double darkcount_probability = default(0);
         double loss_rate = default(0);
         double error_rate = default(0);
         double duration = default(0);
@@ -63,7 +63,7 @@ simple HoM_Controller
 module interHoM {
      parameters:
         int address;
-        double internal_hom_darkcount_rate = default(0);
+        double internal_hom_darkcount_probability = default(0);
         double internal_hom_loss_rate = default(0);
         double internal_hom_error_rate = default(0);
         double internal_hom_required_precision = default(1.5e-9);
@@ -89,7 +89,7 @@ module interHoM {
         BSA: BellStateAnalyzer {
             parameters:
                 address = address;//share the same address within all inner modules
-                darkcount_rate = internal_hom_darkcount_rate;
+                darkcount_probability = internal_hom_darkcount_probability;
                 loss_rate = internal_hom_loss_rate;
         		    error_rate = internal_hom_error_rate;
         		    required_precision = internal_hom_required_precision;
@@ -116,7 +116,7 @@ simple dummyModule {
 module HoM
 {
     parameters:
-        double hom_darkcount_rate = default(0);
+        double hom_darkcount_probability = default(0);
         double hom_loss_rate = default(0);
         double hom_error_rate = default(0);
         double hom_required_precision = default(1.5e-9);
@@ -135,7 +135,7 @@ module HoM
         BSA: BellStateAnalyzer {
             parameters:
                 address = address;//share the same address within all inner modules
-                darkcount_rate = hom_darkcount_rate;
+                darkcount_probability = hom_darkcount_probability;
                 loss_rate = hom_loss_rate;
         		    error_rate = hom_error_rate;
         		    required_precision = hom_required_precision;
