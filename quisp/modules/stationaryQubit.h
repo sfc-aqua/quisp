@@ -34,6 +34,15 @@ typedef struct _emission_error_model{
     double Y_error_rate;
 } emission_error_model;
 
+typedef struct _memory_error_model{
+    double pauli_error_rate;//Overall error rate
+    double Z_error_rate;
+    double X_error_rate;
+    double Y_error_rate;
+    double excitation_error_rate;
+    double relaxation_error_rate;
+} memory_error_model;
+
 //Matrices of single qubit errors. Used when conducting tomography.
 typedef struct _single_qubit_errors{
     Matrix2cd X; //double 2*2 matrix
@@ -133,21 +142,23 @@ class stationaryQubit : public cSimpleModule
                *  @{
                */
                /** Error rate for idle stationary qubits*/
-                      emission_error_model memory_err;
+                      memory_error_model memory_err;
                       double memory_error_rate;
                       double memory_No_error_ceil;
                       double memory_X_error_ceil;
                       double memory_Y_error_ceil;
                       double memory_Z_error_ceil;
+                      double memory_Excitation_error_ceil;
+                      double memory_Relaxation_error_ceil;
               //@}
 
        single_qubit_error Pauli;
        measurement_operators meas_op;
-       Matrix4d Memory_Transition_matrix; /*I,X,Y,Z for single qubit. Unit in μs.*/
+       MatrixXd Memory_Transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
        //projected_states proj_states;
        Matrix2cd Density_Matrix_Collapsed;//Used when partner has been measured.
        bool partner_measured;
-       bool completely_mixed;
+       bool completely_mixed_OR_excited_OR_relaxed;
        bool GOD_dm_Xerror;
        bool GOD_dm_Zerror;
 
@@ -212,6 +223,8 @@ class stationaryQubit : public cSimpleModule
         /*GOD parameters*/
         virtual void setEntangledPartnerInfo(stationaryQubit *partner);
         virtual void setCompletelyMixedDensityMatrix();
+        virtual void setRelaxedDensityMatrix();
+        virtual void setExcitedDensityMatrix();
         virtual void addXerror();
         virtual void addZerror();
 

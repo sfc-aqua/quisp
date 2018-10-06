@@ -39,6 +39,9 @@ simple stationaryQubit
         
         bool GOD_Xerror = false;//Physical error on qubit
         bool GOD_Zerror = false;//Physical error on qubit
+        bool GOD_EXerror = false;//Physical error on qubit
+        bool GOD_REerror = false;//Physical error on qubit
+        bool GOD_CMerror = false;//Physical error on qubit
         
         double emission_error_rate = default(0.01);// 1% per shot by default
         double emission_Z_error_ratio = default(1);
@@ -49,6 +52,8 @@ simple stationaryQubit
         double memory_Z_error_ratio = default(1);
         double memory_X_error_ratio = default(1);
         double memory_Y_error_ratio = default(1);
+        double memory_energy_excitation_ratio = default(1);
+        double memory_energy_relaxation_ratio = default(1);
        
         
     gates:
