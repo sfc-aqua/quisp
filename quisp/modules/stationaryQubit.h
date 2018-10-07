@@ -162,8 +162,12 @@ class stationaryQubit : public cSimpleModule
        bool GOD_dm_Xerror;
        bool GOD_dm_Zerror;
 
-        virtual bool checkBusy();
-        virtual void setFree(bool consumed);
+
+
+       virtual bool checkBusy();
+       virtual void setFree(bool consumed);
+       virtual void Lock();/*In use. E.g. waiting for purification result.*/
+       virtual void Unlock();
 
         double getFidelity() const { return fidelity; };
         void setFidelity(const double f) { fidelity=f; par("fidelity")=f; };
@@ -239,6 +243,7 @@ class stationaryQubit : public cSimpleModule
         //@}
         PhotonicQubit *photon;
         double fidelity;
+        bool locked;
 
 
 

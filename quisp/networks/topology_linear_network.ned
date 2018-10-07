@@ -82,10 +82,10 @@ network Linear_One_MIM
             @display("i=device/pc");
         }
     connections:
-        source.port++ <--> ClassicalChannel {  distance = 20km; } <--> HoM.port++;
-        HoM.port++ <--> ClassicalChannel{  distance = 20km; } <--> target.port++;
-        source.quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> HoM.quantum_port++;
-        HoM.quantum_port++ <--> QuantumChannel{  distance = 20km; } <--> target.quantum_port++;
+        source.port++ <--> ClassicalChannel {  distance = 10km; } <--> HoM.port++;
+        HoM.port++ <--> ClassicalChannel{  distance = 10km; } <--> target.port++;
+        source.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM.quantum_port++;
+        HoM.quantum_port++ <--> QuantumChannel{  distance = 10km; } <--> target.quantum_port++;
 
 }
 

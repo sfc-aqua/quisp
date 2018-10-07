@@ -127,8 +127,8 @@ void HardwareMonitor::handleMessage(cMessage *msg){
             error("2. Something is wrong when finding out local qnic address from neighbor address in ntable.");
         }
         //For this and partner node.
-        sendLinkTomographyRuleSet(myAddress,partner_address, my_qnic_type, my_qnic_index);
-        sendLinkTomographyRuleSet(partner_address,myAddress, partner_qnic_type, partner_qnic_index);
+        sendLinkTomographyRuleSet(myAddress,partner_address, my_qnic_type, my_qnic_index,0);
+        sendLinkTomographyRuleSet(partner_address,myAddress, partner_qnic_type, partner_qnic_index,0);
     }else if (dynamic_cast<LinkTomographyResult *>(msg) != nullptr){
         LinkTomographyResult *result = check_and_cast<LinkTomographyResult *>(msg);
         QNIC local_qnic = search_QNIC_from_Neighbor_QNode_address(result->getPartner_address());
@@ -282,7 +282,7 @@ QNIC HardwareMonitor::search_QNIC_from_Neighbor_QNode_address(int neighbor_addre
     return qnic;
 }
 
-void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index){
+void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, int num_purification){
             LinkTomographyRuleSet *pk = new LinkTomographyRuleSet;
             pk->setDestAddr(my_address);
             pk->setSrcAddr(partner_address);
@@ -291,6 +291,18 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
             //Empty RuleSet
             RuleSet* tomography_RuleSet = new RuleSet(my_address,partner_address);//Tomography between this node and the sender of Ack.
+
+
+            for(int i=0; i<num_purification; i++){
+                /*Rule* X_Purification = new Rule();
+                Condition* Purify_to_measure = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
+                Clause* measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type , qnic_index, 0);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
+                total_measurements->addClause(measure_count_clause);
+                X_Purification->setCondition(total_measurements);
+                quisp::rules::Action* Purify_X = new PurifyXAction(partner_address, qnic_type , qnic_index, 0, my_address);//Measure the local resource between it->second.neighborQNode_address.
+                Random_measure_tomo->setAction(measure);*/
+            }
+
             //-------------
             //-First rule-
             Rule* Random_measure_tomo = new Rule();//Let's make nodes select measurement basis randomly, because it it easier.

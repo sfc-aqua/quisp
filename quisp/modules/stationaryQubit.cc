@@ -48,6 +48,15 @@ void stationaryQubit::initialize()
     double memory_Y_error_ratio = par("memory_Y_error_ratio");
     double memory_excitation_error_ratio = par("memory_energy_excitation_ratio");
     double memory_relaxation_error_ratio = par("memory_energy_relaxation_ratio");
+
+    if(memory_Z_error_ratio == 0 && memory_X_error_ratio == 0 && memory_Y_error_ratio == 0 && memory_excitation_error_ratio == 0 && memory_relaxation_error_ratio == 0){
+        memory_Z_error_ratio = 1;
+        memory_X_error_ratio = 1;
+        memory_Y_error_ratio = 1;
+        memory_excitation_error_ratio = 1;
+        memory_relaxation_error_ratio = 1;
+    }
+
     //EV<<"memory_excitation_error_ratio = "<<memory_excitation_error_ratio<<", memory_relaxation_error_ratio"<<memory_relaxation_error_ratio<<"\n";
     double memory_ratio_sum = memory_Z_error_ratio+memory_X_error_ratio+memory_Y_error_ratio + memory_excitation_error_ratio + memory_relaxation_error_ratio;
     memory_err.pauli_error_rate = par("memory_error_rate");//This is per μs.
@@ -233,6 +242,7 @@ void stationaryQubit::setBusy(){
 //This is called at the beginning of the simulation (in initialization() above), and whenever it is reinitialized via the RealTimeController.
 void stationaryQubit::setFree(bool consumed){
 
+    locked = false;
     isBusy = false;
     emitted_time = -1;
     updated_time = -1;
@@ -270,9 +280,19 @@ void stationaryQubit::setFree(bool consumed){
     }
 }
 
+
 bool stationaryQubit::checkBusy(){
     Enter_Method("checkBusy()");
-    return !!isBusy;
+    return isBusy;
+}
+
+/*To avoid disturbing this qubit.*/
+void stationaryQubit::Lock(){
+    locked = true;
+}
+
+void stationaryQubit::Unlock(){
+    locked = false;
 }
 
 /**
@@ -340,6 +360,18 @@ void stationaryQubit::setExcitedDensityMatrix(){
     par("GOD_CMerror")=false;
     par("GOD_Xerror")=false;
     par("GOD_Zerror")=false;
+
+    /*
+    stationaryQubit *partner = this->entangled_partner;
+    partner->Density_Matrix_Collapsed<<1,0,0,0;//Is this correct?
+    partner->completely_mixed_OR_excited_OR_relaxed = true;
+    partner->par("GOD_EXerror")=true;
+    partner->par("GOD_REerror")=false;
+    partner->par("GOD_CMerror")=false;
+    partner->par("GOD_Xerror")=false;
+    partner->par("GOD_Zerror")=false;
+     */
+
     if(hasGUI()){
         bubble("Completely mixed. darkcount");
         getDisplayString().setTagArg("i", 1, "white");
@@ -398,19 +430,24 @@ void stationaryQubit::purify(stationaryQubit * resource_qubit) {
 
 
 
-//TODO: Need to fix this. This eliminates the channel errors....
-/*Single qubit memory error based on Markov-Chain*/
+
+
+//Single qubit memory error based on Markov-Chain
 void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
-    /*Check when the error got updated last time. Errors will be performed depending on the difference between that time and the current time.*/
+    //Check when the error got updated last time. Errors will be performed depending on the difference between that time and the current time.
     if(memory_error_rate==0 || completely_mixed_OR_excited_OR_relaxed)//If no memory error occurs, or if the state is completely mixed, skip this memory error simulation.
         return;
 
 
     double time_evolution = simTime().dbl() - qubit->updated_time.dbl();
     double time_evolution_microsec  = time_evolution * 1000000;
+    //std::cout<<"time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
+    //        endSimulation();
+
     if(time_evolution_microsec > 0){
         //EV<<"\n Memory error applied for time = "<<time_evolution_microsec<<" μs, on qubit "<<qubit<<"in node["<<qubit->par("node_address").str()<<"] \n";
         //Perform Monte-Carlo error simulation on this qubit.
+        std::cout<<"time_evolution_microsec "<<time_evolution_microsec<<"\n";
         bool Xerr = qubit->par("GOD_Xerror");
         bool Zerr = qubit->par("GOD_Zerror");
         bool EXerr = qubit->par("GOD_EXerror");
@@ -431,61 +468,65 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
         }else{
             Initial_condition << 1,0,0,0,0,0;//No error
         }
-        //std::cout<<"Init Condition = "<<Initial_condition<<"\n";
+
+        std::cout<<"Init Condition = "<<Initial_condition<<"\n";
         MatrixPower<MatrixXd> Apow(Memory_Transition_matrix);
         MatrixXd Dynamic_transition_matrix(6,6);
         Dynamic_transition_matrix = Apow(time_evolution_microsec);
-        //std::cout<<"TM = "<< Memory_Transition_matrix<<"\n";
-        //std::cout<<"TM^"<<time_evolution_microsec<<" = "<< Dynamic_transition_matrix<<"\n";
+
+        std::cout<<"Memory_Transition_matrix"<<Memory_Transition_matrix<<"\n";
+        std::cout<<"TM^"<<time_evolution_microsec<<" = "<< Dynamic_transition_matrix<<"\n";
+        //endSimulation();
+
         MatrixXd Output_condition(1,6);//I, X, Z, Y
 
-        /*
-        MatrixPower<MatrixXd> Apow(Transition_matrix);
-           Q_to_the_distance = Apow(distance);
-           Output_condition = Initial_condition * Q_to_the_distance;
-           */
-        //std::cout<<"Transition matrix μs"<<Memory_Transition_matrix<<"\n";
-        //std::cout<<"μs = "<<time_evolution_microsec<<"\n";
-        //std::cout<<"Transition matrix = "<<Dynamic_transition_matrix<<"\n";
-
         Output_condition = Initial_condition*Dynamic_transition_matrix;//I,X,Y,Z
-        //std::cout<<"Output Condition = "<<Output_condition<<"\n";
-        //EV<<"\n Input (I,X,Z,Y) was "<<Initial_condition<<"\n Output (I,X,Z,Y) is now"<<Output_condition<<"\n";
+        std::cout<<"Output Condition = "<<Output_condition<<"\n";
+        EV<<"\n Input (I,X,Z,Y) was "<<Initial_condition<<"\n Output (I,X,Z,Y) is now"<<Output_condition<<"\n";
         double No_error_ceil = Output_condition(0,0);
         double X_error_ceil = Output_condition(0,0)+Output_condition(0,1);
         double Z_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2);
         double Y_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2)+Output_condition(0,3);
         double EX_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2)+Output_condition(0,3)+Output_condition(0,4);
 
+        EV<<"No ceil = "<<No_error_ceil<<", "<<X_error_ceil<<", "<<Z_error_ceil<<","<<Y_error_ceil<<", "<<EX_error_ceil<<", "<<1;
         double rand = dblrand();//Gives a random double between 0.0 ~ 1.0
         if(rand < No_error_ceil){
             //Qubit will end up with no error
             qubit->par("GOD_Xerror") = false;
             qubit->par("GOD_Zerror") = false;
+
         }else if(No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil!=X_error_ceil)){
             //X error
             qubit->par("GOD_Xerror") = true;
             qubit->par("GOD_Zerror") = false;
+            error("WTF?");
         }else if(X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil!=Z_error_ceil)){
             //Z error
             qubit->par("GOD_Xerror") = false;
             qubit->par("GOD_Zerror") = true;
+            error("WTF?");
         }else if (Z_error_ceil <= rand && rand < Y_error_ceil && (Z_error_ceil!=Y_error_ceil)){
             //Y error
             qubit->par("GOD_Xerror") = true;
             qubit->par("GOD_Zerror") = true;
+            error("WTF?");
          }else if(Y_error_ceil <= rand && rand < EX_error_ceil && (Y_error_ceil!=EX_error_ceil)){
              //Excitation error
-             setExcitedDensityMatrix();
+             //setExcitedDensityMatrix();
+             error("WTF?");
          }else{
              //Relaxation error
-             setRelaxedDensityMatrix();
+             //setRelaxedDensityMatrix();
+             error("WTF?");
          }
 
     }
     qubit->updated_time = simTime();//Update parameter, updated_time, to now.
     qubit->par("last_updated_at") = simTime().dbl();//For GUI
 }
+
+
 
 Matrix2cd stationaryQubit::getErrorMatrix(stationaryQubit *qubit){
     Matrix2cd error;

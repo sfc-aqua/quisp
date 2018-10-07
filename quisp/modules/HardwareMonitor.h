@@ -118,7 +118,7 @@ class HardwareMonitor : public cSimpleModule
         virtual cModule* getQNode();
         virtual neighborInfo findNeighborAddress(cModule *qnic_pointer);
         virtual Interface_inf getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type);
-        virtual void sendLinkTomographyRuleSet(int my_address,int partner_address, QNIC_type qnic_type, int qnic_index);
+        virtual void sendLinkTomographyRuleSet(int my_address,int partner_address, QNIC_type qnic_type, int qnic_index, int num_purification);
         virtual QNIC search_QNIC_from_Neighbor_QNode_address(int neighbor_address);
         virtual void reconstruct_Density_Matrix();
         //virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
