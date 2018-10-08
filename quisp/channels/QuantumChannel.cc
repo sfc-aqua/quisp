@@ -145,15 +145,15 @@ void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t& result
         MatrixXd Output_condition(1,5);
         Output_condition = Initial_condition * Q_to_the_distance;
 
-        std::cout<<"Q_to_the_distance"<<Q_to_the_distance<<"\n";
-        std::cout<<"Output_condition = "<<Output_condition<<"\n";
+        //std::cout<<"Q_to_the_distance"<<Q_to_the_distance<<"\n";
+        //std::cout<<"Output_condition = "<<Output_condition<<"\n";
         No_error_ceil = Output_condition(0,0);
         X_error_ceil = Output_condition(0,0)+Output_condition(0,1);
         Z_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2);
         Y_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2)+Output_condition(0,3);
         Lost_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2)+Output_condition(0,3) + Output_condition(0,4);
 
-        std::cout<<"NO error ceil = "<<No_error_ceil<<", X = "<<X_error_ceil<<"Z, "<<Z_error_ceil<<", Y = "<<Y_error_ceil<<", Lost = "<<Lost_ceil<<"\n";
+        //std::cout<<"NO error ceil = "<<No_error_ceil<<", X = "<<X_error_ceil<<"Z, "<<Z_error_ceil<<", Y = "<<Y_error_ceil<<", Lost = "<<Lost_ceil<<"\n";
 
 
         double rand = dblrand();//Gives a random double between 0.0 ~ 1.0

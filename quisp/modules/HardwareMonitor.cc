@@ -36,20 +36,27 @@ void HardwareMonitor::initialize(int stage)
   Pauli.Z << 1,0,0,-1;
   Pauli.I << 1,0,0,1;
 
-  tomography_data.insert(std::make_pair("XX",initial));
-  tomography_data.insert(std::make_pair("XY",initial));
-  tomography_data.insert(std::make_pair("XZ",initial));
-  tomography_data.insert(std::make_pair("ZX",initial));
-  tomography_data.insert(std::make_pair("ZY",initial));
-  tomography_data.insert(std::make_pair("ZZ",initial));
-  tomography_data.insert(std::make_pair("YX",initial));
-  tomography_data.insert(std::make_pair("YY",initial));
-  tomography_data.insert(std::make_pair("YZ",initial));
 
   numQnic_rp = par("number_of_qnics_rp");// number of qnics connected to epps.
   numQnic_r = par("number_of_qnics_r");// number of qnics connected to internal hom.
   numQnic = par("number_of_qnics");// number of qnics connected to stand alone HoM or internal hom in the neighbor.
   numQnic_total = numQnic + numQnic_r + numQnic_rp;
+
+  tomography_data = new raw_data[numQnic_total];//Raw count table for tomography per link/qnic
+  for(int i=0; i<numQnic_total; i++){
+      tomography_data[i].insert(std::make_pair("XX",initial));
+      tomography_data[i].insert(std::make_pair("XY",initial));
+      tomography_data[i].insert(std::make_pair("XZ",initial));
+      tomography_data[i].insert(std::make_pair("ZX",initial));
+      tomography_data[i].insert(std::make_pair("ZY",initial));
+      tomography_data[i].insert(std::make_pair("ZZ",initial));
+      tomography_data[i].insert(std::make_pair("YX",initial));
+      tomography_data[i].insert(std::make_pair("YY",initial));
+      tomography_data[i].insert(std::make_pair("YZ",initial));
+  }
+  std::cout<<"numQnic_total"<<numQnic_total<<"\n";
+
+
   all_temporal_tomography_output_holder = new Temporal_Tomography_Output_Holder[numQnic_total];//Assumes link tomography only between neighbors.
   ntable = prepareNeighborTable(ntable, numQnic_total);
   do_link_level_tomography = par("link_tomography");
@@ -167,67 +174,70 @@ void HardwareMonitor::finish(){
     for(int i=0; i<numQnic_total; i++){
         EV<<"\n \n \n \n \n QNIC["<<i<<"] \n";
         for(auto it =  all_temporal_tomography_output_holder[i].cbegin(); it != all_temporal_tomography_output_holder[i].cend(); ++it){
-            EV <<"Count["<< it->first << "] = " << it->second.my_basis << ", " << it->second.my_output_is_plus << ", " << it->second.partner_basis << ", "  << it->second.partner_output_is_plus << " " << "\n";
+            //EV <<"Count["<< it->first << "] = " << it->second.my_basis << ", " << it->second.my_output_is_plus << ", " << it->second.partner_basis << ", "  << it->second.partner_output_is_plus << " " << "\n";
             std::string basis_combination = "";
             basis_combination+=it->second.my_basis;
             basis_combination+=it->second.partner_basis;
-            if(tomography_data.count(basis_combination)!=1){
-                EV<<it->second.my_basis<<", "<<it->second.partner_basis<<" = "<<basis_combination<<"\n";
+            if(tomography_data[i].count(basis_combination)!=1){
+                //EV<<it->second.my_basis<<", "<<it->second.partner_basis<<" = "<<basis_combination<<"\n";
                 error("Basis combination for tomography not found\n");
             }
-            tomography_data[basis_combination].total_count++;
+            tomography_data[i][basis_combination].total_count++;
             if(it->second.my_output_is_plus && it->second.partner_output_is_plus){
-                            tomography_data[basis_combination].plus_plus++;
-                            EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].plus_plus<<"\n";
+                            tomography_data[i][basis_combination].plus_plus++;
+                            //EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].plus_plus<<"\n";
             }
             else if(it->second.my_output_is_plus && !it->second.partner_output_is_plus){
-                            tomography_data[basis_combination].plus_minus++;
-                            EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].plus_minus<<"\n";
+                            tomography_data[i][basis_combination].plus_minus++;
+                            //EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].plus_minus<<"\n";
             }
             else if(!it->second.my_output_is_plus && it->second.partner_output_is_plus){
-                            tomography_data[basis_combination].minus_plus++;
-                            EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].minus_plus<<"\n";
+                            tomography_data[i][basis_combination].minus_plus++;
+                            //EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].minus_plus<<"\n";
             }
             else if(!it->second.my_output_is_plus && !it->second.partner_output_is_plus){
-                            tomography_data[basis_combination].minus_minus++;
-                            EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].minus_minus<<"\n";
+                            tomography_data[i][basis_combination].minus_minus++;
+                            //EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].minus_minus<<"\n";
             }
             else
                  error("This should not happen though..... ?");
+
         }
+        std::cout<<"i = "<<i<<"\n";
+        reconstruct_Density_Matrix(i);
     }
-    for(auto elem : tomography_data)
+    /*for(auto elem : tomography_data)
     {
        //std::cout << elem.first << ", C(++)=" << elem.second.plus_minus << ", C(+-)=" << elem.second.plus_minus<< ", C(-+)=" << elem.second.minus_plus << ", C(--)=" << elem.second.minus_minus << "\n";
        EV << elem.first<<", total = "<<elem.second.total_count << ", C(++)=" << elem.second.plus_plus << ", C(+-)=" << elem.second.plus_minus<< ", C(-+)=" << elem.second.minus_plus << ", C(--)=" << elem.second.minus_minus << "\n";
 
-    }
-    reconstruct_Density_Matrix();
+    }*/
+
 }
 
 
-void HardwareMonitor::reconstruct_Density_Matrix(){
+void HardwareMonitor::reconstruct_Density_Matrix(int qnic_id){
     //II
        double S00 = 1.0;
-       double S01 = (double)tomography_data["XX"].plus_plus/(double)tomography_data["XX"].total_count - (double)tomography_data["XX"].plus_minus/(double)tomography_data["XX"].total_count + (double)tomography_data["XX"].minus_plus/(double)tomography_data["XX"].total_count - (double)tomography_data["XX"].minus_minus/(double)tomography_data["XX"].total_count;
-       double S02 = (double)tomography_data["YY"].plus_plus/(double)tomography_data["YY"].total_count - (double)tomography_data["YY"].plus_minus/(double)tomography_data["YY"].total_count + (double)tomography_data["YY"].minus_plus/(double)tomography_data["YY"].total_count - (double)tomography_data["YY"].minus_minus/(double)tomography_data["YY"].total_count;
-       double S03 = (double)tomography_data["ZZ"].plus_plus/(double)tomography_data["ZZ"].total_count - (double)tomography_data["ZZ"].plus_minus/(double)tomography_data["ZZ"].total_count + (double)tomography_data["ZZ"].minus_plus/(double)tomography_data["ZZ"].total_count - (double)tomography_data["ZZ"].minus_minus/(double)tomography_data["ZZ"].total_count;
+       double S01 = (double)tomography_data[qnic_id]["XX"].plus_plus/(double)tomography_data[qnic_id]["XX"].total_count - (double)tomography_data[qnic_id]["XX"].plus_minus/(double)tomography_data[qnic_id]["XX"].total_count + (double)tomography_data[qnic_id]["XX"].minus_plus/(double)tomography_data[qnic_id]["XX"].total_count - (double)tomography_data[qnic_id]["XX"].minus_minus/(double)tomography_data[qnic_id]["XX"].total_count;
+       double S02 = (double)tomography_data[qnic_id]["YY"].plus_plus/(double)tomography_data[qnic_id]["YY"].total_count - (double)tomography_data[qnic_id]["YY"].plus_minus/(double)tomography_data[qnic_id]["YY"].total_count + (double)tomography_data[qnic_id]["YY"].minus_plus/(double)tomography_data[qnic_id]["YY"].total_count - (double)tomography_data[qnic_id]["YY"].minus_minus/(double)tomography_data[qnic_id]["YY"].total_count;
+       double S03 = (double)tomography_data[qnic_id]["ZZ"].plus_plus/(double)tomography_data[qnic_id]["ZZ"].total_count - (double)tomography_data[qnic_id]["ZZ"].plus_minus/(double)tomography_data[qnic_id]["ZZ"].total_count + (double)tomography_data[qnic_id]["ZZ"].minus_plus/(double)tomography_data[qnic_id]["ZZ"].total_count - (double)tomography_data[qnic_id]["ZZ"].minus_minus/(double)tomography_data[qnic_id]["ZZ"].total_count;
        //XX
-       double S10 = (double)tomography_data["XX"].plus_plus/(double)tomography_data["XX"].total_count + (double)tomography_data["XX"].plus_minus/(double)tomography_data["XX"].total_count - (double)tomography_data["XX"].minus_plus/(double)tomography_data["XX"].total_count - (double)tomography_data["XX"].minus_minus/(double)tomography_data["XX"].total_count;
-       double S11 = (double)tomography_data["XX"].plus_plus/(double)tomography_data["XX"].total_count - (double)tomography_data["XX"].plus_minus/(double)tomography_data["XX"].total_count - (double)tomography_data["XX"].minus_plus/(double)tomography_data["XX"].total_count + (double)tomography_data["XX"].minus_minus/(double)tomography_data["XX"].total_count;
-       double S12 = (double)tomography_data["XY"].plus_plus/(double)tomography_data["XY"].total_count - (double)tomography_data["XY"].plus_minus/(double)tomography_data["XY"].total_count - (double)tomography_data["XY"].minus_plus/(double)tomography_data["XY"].total_count + (double)tomography_data["XY"].minus_minus/(double)tomography_data["XY"].total_count;
-       double S13 = (double)tomography_data["XZ"].plus_plus/(double)tomography_data["XZ"].total_count - (double)tomography_data["XZ"].plus_minus/(double)tomography_data["XZ"].total_count - (double)tomography_data["XZ"].minus_plus/(double)tomography_data["XZ"].total_count + (double)tomography_data["XZ"].minus_minus/(double)tomography_data["XZ"].total_count;
+       double S10 = (double)tomography_data[qnic_id]["XX"].plus_plus/(double)tomography_data[qnic_id]["XX"].total_count + (double)tomography_data[qnic_id]["XX"].plus_minus/(double)tomography_data[qnic_id]["XX"].total_count - (double)tomography_data[qnic_id]["XX"].minus_plus/(double)tomography_data[qnic_id]["XX"].total_count - (double)tomography_data[qnic_id]["XX"].minus_minus/(double)tomography_data[qnic_id]["XX"].total_count;
+       double S11 = (double)tomography_data[qnic_id]["XX"].plus_plus/(double)tomography_data[qnic_id]["XX"].total_count - (double)tomography_data[qnic_id]["XX"].plus_minus/(double)tomography_data[qnic_id]["XX"].total_count - (double)tomography_data[qnic_id]["XX"].minus_plus/(double)tomography_data[qnic_id]["XX"].total_count + (double)tomography_data[qnic_id]["XX"].minus_minus/(double)tomography_data[qnic_id]["XX"].total_count;
+       double S12 = (double)tomography_data[qnic_id]["XY"].plus_plus/(double)tomography_data[qnic_id]["XY"].total_count - (double)tomography_data[qnic_id]["XY"].plus_minus/(double)tomography_data[qnic_id]["XY"].total_count - (double)tomography_data[qnic_id]["XY"].minus_plus/(double)tomography_data[qnic_id]["XY"].total_count + (double)tomography_data[qnic_id]["XY"].minus_minus/(double)tomography_data[qnic_id]["XY"].total_count;
+       double S13 = (double)tomography_data[qnic_id]["XZ"].plus_plus/(double)tomography_data[qnic_id]["XZ"].total_count - (double)tomography_data[qnic_id]["XZ"].plus_minus/(double)tomography_data[qnic_id]["XZ"].total_count - (double)tomography_data[qnic_id]["XZ"].minus_plus/(double)tomography_data[qnic_id]["XZ"].total_count + (double)tomography_data[qnic_id]["XZ"].minus_minus/(double)tomography_data[qnic_id]["XZ"].total_count;
        //YY
-       double S20 = (double)tomography_data["YY"].plus_plus/(double)tomography_data["YY"].total_count + (double)tomography_data["YY"].plus_minus/(double)tomography_data["YY"].total_count - (double)tomography_data["YY"].minus_plus/(double)tomography_data["YY"].total_count - (double)tomography_data["YY"].minus_minus/(double)tomography_data["YY"].total_count;
-       double S21 = (double)tomography_data["YX"].plus_plus/(double)tomography_data["YX"].total_count - (double)tomography_data["YX"].plus_minus/(double)tomography_data["YX"].total_count - (double)tomography_data["YX"].minus_plus/(double)tomography_data["YX"].total_count + (double)tomography_data["YX"].minus_minus/(double)tomography_data["YX"].total_count;
-       double S22 = (double)tomography_data["YY"].plus_plus/(double)tomography_data["YY"].total_count - (double)tomography_data["YY"].plus_minus/(double)tomography_data["YY"].total_count - (double)tomography_data["YY"].minus_plus/(double)tomography_data["YY"].total_count + (double)tomography_data["YY"].minus_minus/(double)tomography_data["YY"].total_count;
-       double S23 = (double)tomography_data["YZ"].plus_plus/(double)tomography_data["YZ"].total_count - (double)tomography_data["YZ"].plus_minus/(double)tomography_data["YZ"].total_count - (double)tomography_data["YZ"].minus_plus/(double)tomography_data["YZ"].total_count + (double)tomography_data["YZ"].minus_minus/(double)tomography_data["YZ"].total_count;
+       double S20 = (double)tomography_data[qnic_id]["YY"].plus_plus/(double)tomography_data[qnic_id]["YY"].total_count + (double)tomography_data[qnic_id]["YY"].plus_minus/(double)tomography_data[qnic_id]["YY"].total_count - (double)tomography_data[qnic_id]["YY"].minus_plus/(double)tomography_data[qnic_id]["YY"].total_count - (double)tomography_data[qnic_id]["YY"].minus_minus/(double)tomography_data[qnic_id]["YY"].total_count;
+       double S21 = (double)tomography_data[qnic_id]["YX"].plus_plus/(double)tomography_data[qnic_id]["YX"].total_count - (double)tomography_data[qnic_id]["YX"].plus_minus/(double)tomography_data[qnic_id]["YX"].total_count - (double)tomography_data[qnic_id]["YX"].minus_plus/(double)tomography_data[qnic_id]["YX"].total_count + (double)tomography_data[qnic_id]["YX"].minus_minus/(double)tomography_data[qnic_id]["YX"].total_count;
+       double S22 = (double)tomography_data[qnic_id]["YY"].plus_plus/(double)tomography_data[qnic_id]["YY"].total_count - (double)tomography_data[qnic_id]["YY"].plus_minus/(double)tomography_data[qnic_id]["YY"].total_count - (double)tomography_data[qnic_id]["YY"].minus_plus/(double)tomography_data[qnic_id]["YY"].total_count + (double)tomography_data[qnic_id]["YY"].minus_minus/(double)tomography_data[qnic_id]["YY"].total_count;
+       double S23 = (double)tomography_data[qnic_id]["YZ"].plus_plus/(double)tomography_data[qnic_id]["YZ"].total_count - (double)tomography_data[qnic_id]["YZ"].plus_minus/(double)tomography_data[qnic_id]["YZ"].total_count - (double)tomography_data[qnic_id]["YZ"].minus_plus/(double)tomography_data[qnic_id]["YZ"].total_count + (double)tomography_data[qnic_id]["YZ"].minus_minus/(double)tomography_data[qnic_id]["YZ"].total_count;
        //ZZ
-       double S30 = (double)tomography_data["ZZ"].plus_plus/(double)tomography_data["ZZ"].total_count + (double)tomography_data["ZZ"].plus_minus/(double)tomography_data["ZZ"].total_count - (double)tomography_data["ZZ"].minus_plus/(double)tomography_data["ZZ"].total_count - (double)tomography_data["ZZ"].minus_minus/(double)tomography_data["ZZ"].total_count;
-       double S31 = (double)tomography_data["ZX"].plus_plus/(double)tomography_data["ZX"].total_count - (double)tomography_data["ZX"].plus_minus/(double)tomography_data["ZX"].total_count - (double)tomography_data["ZX"].minus_plus/(double)tomography_data["ZX"].total_count + (double)tomography_data["ZX"].minus_minus/(double)tomography_data["ZX"].total_count;
-       double S32 = (double)tomography_data["ZY"].plus_plus/(double)tomography_data["ZY"].total_count - (double)tomography_data["ZY"].plus_minus/(double)tomography_data["ZY"].total_count - (double)tomography_data["ZY"].minus_plus/(double)tomography_data["ZY"].total_count + (double)tomography_data["ZY"].minus_minus/(double)tomography_data["ZY"].total_count;
-       double S33 = (double)tomography_data["ZZ"].plus_plus/(double)tomography_data["ZZ"].total_count - (double)tomography_data["ZZ"].plus_minus/(double)tomography_data["ZZ"].total_count - (double)tomography_data["ZZ"].minus_plus/(double)tomography_data["ZZ"].total_count + (double)tomography_data["ZZ"].minus_minus/(double)tomography_data["ZZ"].total_count;
-       double S = (double)tomography_data["XX"].plus_plus/(double)tomography_data["XX"].total_count + (double)tomography_data["XX"].plus_minus/(double)tomography_data["XX"].total_count + (double)tomography_data["XX"].minus_plus/(double)tomography_data["XX"].total_count + (double)tomography_data["XX"].minus_minus/(double)tomography_data["XX"].total_count;
+       double S30 = (double)tomography_data[qnic_id]["ZZ"].plus_plus/(double)tomography_data[qnic_id]["ZZ"].total_count + (double)tomography_data[qnic_id]["ZZ"].plus_minus/(double)tomography_data[qnic_id]["ZZ"].total_count - (double)tomography_data[qnic_id]["ZZ"].minus_plus/(double)tomography_data[qnic_id]["ZZ"].total_count - (double)tomography_data[qnic_id]["ZZ"].minus_minus/(double)tomography_data[qnic_id]["ZZ"].total_count;
+       double S31 = (double)tomography_data[qnic_id]["ZX"].plus_plus/(double)tomography_data[qnic_id]["ZX"].total_count - (double)tomography_data[qnic_id]["ZX"].plus_minus/(double)tomography_data[qnic_id]["ZX"].total_count - (double)tomography_data[qnic_id]["ZX"].minus_plus/(double)tomography_data[qnic_id]["ZX"].total_count + (double)tomography_data[qnic_id]["ZX"].minus_minus/(double)tomography_data[qnic_id]["ZX"].total_count;
+       double S32 = (double)tomography_data[qnic_id]["ZY"].plus_plus/(double)tomography_data[qnic_id]["ZY"].total_count - (double)tomography_data[qnic_id]["ZY"].plus_minus/(double)tomography_data[qnic_id]["ZY"].total_count - (double)tomography_data[qnic_id]["ZY"].minus_plus/(double)tomography_data[qnic_id]["ZY"].total_count + (double)tomography_data[qnic_id]["ZY"].minus_minus/(double)tomography_data[qnic_id]["ZY"].total_count;
+       double S33 = (double)tomography_data[qnic_id]["ZZ"].plus_plus/(double)tomography_data[qnic_id]["ZZ"].total_count - (double)tomography_data[qnic_id]["ZZ"].plus_minus/(double)tomography_data[qnic_id]["ZZ"].total_count - (double)tomography_data[qnic_id]["ZZ"].minus_plus/(double)tomography_data[qnic_id]["ZZ"].total_count + (double)tomography_data[qnic_id]["ZZ"].minus_minus/(double)tomography_data[qnic_id]["ZZ"].total_count;
+       double S = (double)tomography_data[qnic_id]["XX"].plus_plus/(double)tomography_data[qnic_id]["XX"].total_count + (double)tomography_data[qnic_id]["XX"].plus_minus/(double)tomography_data[qnic_id]["XX"].total_count + (double)tomography_data[qnic_id]["XX"].minus_plus/(double)tomography_data[qnic_id]["XX"].total_count + (double)tomography_data[qnic_id]["XX"].minus_minus/(double)tomography_data[qnic_id]["XX"].total_count;
 
 
        EV<<S00<<", "<<S01<<", "<<S02<<", "<<S03<<"\n";
@@ -262,6 +272,7 @@ void HardwareMonitor::reconstruct_Density_Matrix(){
     double fidelity = (density_matrix_reconstructed.real()* density_matrix_ideal.real() ).trace();
     //double Xerr = (density_matrix_reconstructed.real()* (density_matrix_ideal.real()) ).trace();
 
+    EV<<"FOR QNIC["<<qnic_id<<"] \n";
     EV<<"F = "<<fidelity<<"\n";
 
     Vector4cd Bellpair_X;

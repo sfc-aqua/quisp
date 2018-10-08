@@ -96,7 +96,7 @@ class HardwareMonitor : public cSimpleModule
         NeighborTable ntable;
         typedef std::map<int, stationaryQubitInfo> QnicInfo;  // stationary qubit index -> state
         typedef std::map<std::string, output_count> raw_data;//basis combination -> raw output count e.g "XX" -> {plus_plus = 56, plus_minus = 55, minus_plus = 50, minus_minus = 50}, "XY" -> {....
-        raw_data tomography_data;
+        raw_data *tomography_data;
         QnicInfo *qtable;
         single_qubit_error Pauli;
         virtual NeighborTable passNeighborTable();
@@ -120,7 +120,7 @@ class HardwareMonitor : public cSimpleModule
         virtual Interface_inf getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type);
         virtual void sendLinkTomographyRuleSet(int my_address,int partner_address, QNIC_type qnic_type, int qnic_index, int num_purification);
         virtual QNIC search_QNIC_from_Neighbor_QNode_address(int neighbor_address);
-        virtual void reconstruct_Density_Matrix();
+        virtual void reconstruct_Density_Matrix(int qnic_id);
         //virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
 };
 
