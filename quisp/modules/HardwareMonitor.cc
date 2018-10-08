@@ -264,6 +264,30 @@ void HardwareMonitor::reconstruct_Density_Matrix(){
 
     EV<<"F = "<<fidelity<<"\n";
 
+    Vector4cd Bellpair_X;
+    Bellpair_X << 0,1/sqrt(2), 1/sqrt(2),0;
+    Matrix4cd density_matrix_X = Bellpair_X*Bellpair_X.adjoint();
+    double Xerr_rate = (density_matrix_reconstructed.real()* density_matrix_X.real() ).trace();
+    EV<<"Xerr = "<<Xerr_rate<<"\n";
+
+    Vector4cd Bellpair_Z;
+    Bellpair_Z << 1/sqrt(2),0,0,-1/sqrt(2);
+    Matrix4cd density_matrix_Z = Bellpair_Z*Bellpair_Z.adjoint();
+    double Zerr_rate = (density_matrix_reconstructed.real()* density_matrix_Z.real() ).trace();
+    Complex checkZ = Bellpair_Z.adjoint()*density_matrix_reconstructed*Bellpair_Z;
+    EV<<"Zerr = "<<Zerr_rate<<" or, "<<checkZ.real()<<"+"<<checkZ.imag()<<"\n";
+
+    Vector4cd Bellpair_Y;
+    Bellpair_Y << 0,Complex(0,1/sqrt(2)),Complex(0,-1/sqrt(2)),0;
+    Matrix4cd density_matrix_Y = Bellpair_Y*Bellpair_Y.adjoint();
+    double Yerr_rate = (density_matrix_reconstructed.real()* density_matrix_Y.real() ).trace();
+    EV<<"Yerr = "<<Yerr_rate<<"\n";
+
+    Vector4cd Bellpair_Y2;
+    Bellpair_Y2 << 0,Complex(0,-1/sqrt(2)),Complex(0,1/sqrt(2)),0;
+    Matrix4cd density_matrix_Y2 = Bellpair_Y2*Bellpair_Y2.adjoint();
+    double Yerr_rate2 = (density_matrix_reconstructed.real()* density_matrix_Y2.real() ).trace();
+    EV<<"Yerr = "<<Yerr_rate2<<"\n";
 
 }
 

@@ -13,6 +13,7 @@
 namespace quisp {
 namespace rules {
 
+/*
 //you also sometimes need to return feedback information for other nodes.
 cPacket* Rule::checkrun(qnicResources * resources, int qnic_type, int qnic_index, int resource_entangled_with_address) {
 
@@ -30,7 +31,7 @@ cPacket* Rule::checkrun(qnicResources * resources, int qnic_type, int qnic_index
         pk = action->run(resources);
     }
     return pk;
-}
+}*/
 
 
 cPacket* Rule::checkrun(cModule *re, qnicResources * resources, int qnic_type, int qnic_index, int resource_entangled_with_address) {
@@ -73,23 +74,25 @@ cPacket* Rule::checkrun(cModule * re, qnicResources * resources, int qnic_type, 
     return pk;
 }*/
 
+/*
 cPacket* Rule::checkrun(EntangledPairs resources, int resource_entangled_with_address) {
-    /*EntangledPairs temp_resource_list;
+    //EntangledPairs temp_resource_list;
 
-    auto ret = resources.equal_range(resource_entangled_with_address);//Find resources in the qnic entangled with resource_entangled_with_address
-    for (auto i = ret.first; i != ret.second; ++i) {
-        EV<<"Resource: between node "<<i->first<<", "<<i->second<<"\n";
-        temp_resource_list.insert(std::make_pair(i->first, i->second));//Copy all related ones to temporary list.
-    }*/
+    //auto ret = resources.equal_range(resource_entangled_with_address);//Find resources in the qnic entangled with resource_entangled_with_address
+    //for (auto i = ret.first; i != ret.second; ++i) {
+    //    EV<<"Resource: between node "<<i->first<<", "<<i->second<<"\n";
+     //   temp_resource_list.insert(std::make_pair(i->first, i->second));//Copy all related ones to temporary list.
+    //}
 
     cPacket *pk = nullptr;
-    /*if (condition->check(resources)){
-        EV<<"All conditions met. Running Action. \n";
-        pk = action->run(resources);
-    }*/
+    //if (condition->check(resources)){
+    //    EV<<"All conditions met. Running Action. \n";
+    //    pk = action->run(resources);
+    //}
     return pk;
-}
+}*/
 
+/*
 cPacket* Rule::checkrun(qnicResources * resources) {
     cPacket *pk = nullptr;
     EV<<"condition->check(resources) = "<< condition->check(resources);
@@ -101,8 +104,9 @@ cPacket* Rule::checkrun(qnicResources * resources) {
         pk = new ConditionNotSatisfied;
     }
     return pk;
-}
+}*/
 
+/*
 bool Rule::checkTerminate(qnicResources * resources) {
     bool done = false;
     if (condition->checkTerminate(resources)){
@@ -112,7 +116,7 @@ bool Rule::checkTerminate(qnicResources * resources) {
         EV<<"Termination conditions not yet fulfilled.\n ";
     }
     return done;
-}
+}*/
 
 bool Rule::checkTerminate(qnicResources * resources, int qnic_type, int qnic_index, int resource_entangled_with_address) {
     bool done = false;
@@ -127,12 +131,12 @@ bool Rule::checkTerminate(qnicResources * resources, int qnic_type, int qnic_ind
 
 
 
-
+/*
 int Rule::test(qnicResources * resources){
     EV<<"Invoked!!!!!!!!\n";
     printf("Test");
     return 0;
-}
+}*/
 
 } // namespace rules
 } // namespace quisp

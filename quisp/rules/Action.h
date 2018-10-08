@@ -24,7 +24,7 @@ namespace rules {
  */
 class Action {
   public:
-    virtual cPacket* run(qnicResources *resources) = 0;
+    //virtual cPacket* run(qnicResources *resources) = 0;
     virtual cPacket* run(cModule *re, qnicResources *resources) = 0;
     //virtual stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id);
 
@@ -59,7 +59,7 @@ class SwappingAction : public Action {
             right_resource = rr;
         };
 
-        cPacket* run(qnicResources *resources) override;
+        //cPacket* run(qnicResources *resources) override;
         cPacket* run(cModule *re, qnicResources *resources) override;
 };
 
@@ -70,16 +70,20 @@ class PurifyAction : public Action {
         int qnic_id;
         int resource; /**< Identifies qubit */
         int trash_resource;
+        int static_action_id;//Used to make the lock_id unique, together with purification_count.
+        int mutable purification_count;//Used for locked_id in stationaryQubit. You unlock the qubit when purification is successful.
 
     public:
         PurifyAction(int part, QNIC_type qt, int qi, int res, int tres) {
             partner = part;
             qnic_type = qt;
             qnic_id = qi;
-            resource = res;
-            trash_resource = tres;
+            resource = res;/*The one to purify*/
+            trash_resource = tres;/*The one to consume to purify*/
+            purification_count = 0;
+            static_action_id = omnetpp::intuniform(0,0,100000);
         };
-        cPacket* run(qnicResources *resources) override;
+        //cPacket* run(qnicResources *resources) override;
         cPacket* run(cModule *re, qnicResources *resources) override;
 };
 
@@ -104,7 +108,7 @@ class RandomMeasureAction : public Action {
             src = srcAddr;
             current_count = 0;
         };
-        cPacket* run(qnicResources *resources) override;
+        //cPacket* run(qnicResources *resources) override;
         cPacket* run(cModule *re, qnicResources *resources) override;
 };
 

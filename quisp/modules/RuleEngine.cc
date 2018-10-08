@@ -607,6 +607,9 @@ void RuleEngine::traverseThroughAllProcesses(RuleEngine *re, int qnic_type, int 
                                 pk_for_self->setDestAddr(pk_t->getSrcAddr());
                                 send(pk,"RouterPort$o");
                                 send(pk_for_self,"RouterPort$o");
+                            }else if (dynamic_cast<Error *>(pk)!= nullptr){
+                                Error *err = check_and_cast<Error *>(pk);
+                                error(err->getError_text());
                             }
                         }
 

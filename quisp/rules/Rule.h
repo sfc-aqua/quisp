@@ -29,14 +29,14 @@ class Rule {
         //const pCondition& getCondition() { return condition; };
         void setAction (Action * a) { action.reset(a); };
         //const pAction& getAction() { return action; };
-        cPacket* checkrun(EntangledPairs resources, int resource_entangled_with_address);
-        cPacket* checkrun(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
+        //cPacket* checkrun(EntangledPairs resources, int resource_entangled_with_address);
+        //cPacket* checkrun(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
 
         cPacket* checkrun(cModule *re, qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
-        cPacket* checkrun(qnicResources * resources);
+        //cPacket* checkrun(qnicResources * resources);
         bool checkTerminate(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
-        bool checkTerminate(qnicResources * resources);
-        int test(qnicResources * resources);
+        //bool checkTerminate(qnicResources * resources);
+        //int test(qnicResources * resources);
 };
 typedef std::unique_ptr<Rule> pRule;
 

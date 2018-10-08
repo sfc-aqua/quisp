@@ -15,6 +15,39 @@
 namespace quisp {
 namespace rules {
 
+/*
+static stationaryQubit* getPurifiedQubit_fromTop(qnicResources* resources, QNIC_type qtype, int qid, int partner, int num_purified) {
+    std::pair<EntangledPairs::iterator,EntangledPairs::iterator> ret = resources[qtype][qid].equal_range(partner);//Find all resource in qytpe/qid entangled with partner.
+    int real_res_id = 0;
+    for (EntangledPairs::iterator it=ret.first; it!=ret.second; ++it,++real_res_id) {
+        //std::cout << real_res_id << '\n';
+        if (!it->second->isLocked() && it->second->numpurified == num_purified){
+            stationaryQubit *pt = it->second;
+            return pt;
+        }
+    }
+    return NULL;
+}*/
+
+static stationaryQubit* getUnLockedQubit_fromTop(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) {
+    std::pair<EntangledPairs::iterator,EntangledPairs::iterator> ret = resources[qtype][qid].equal_range(partner);//Find all resource in qytpe/qid entangled with partner.
+    int real_res_id = 0;
+    for (EntangledPairs::iterator it=ret.first; it!=ret.second; ++it) {
+        //std::cout << real_res_id << '\n';
+        if (!it->second->isLocked()){
+            if(real_res_id == res_id){
+                stationaryQubit *pt = it->second;
+                return pt;
+            }else{
+                real_res_id++;
+            }
+        }
+    }
+    return nullptr;
+}
+
+
+
 /** \func static stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id)*/
 
 static stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) {
@@ -38,9 +71,7 @@ static stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int 
         }
     }
     //resources[qtype][qid].insert(std::make_pair(-1000/*QNode IP address*/,NULL));
-
-
-    return NULL;
+    return nullptr;
 }
 
 
@@ -68,7 +99,7 @@ static stationaryQubit* getQubit(cModule *re, qnicResources* resources, QNIC_typ
     //resources[qtype][qid].insert(std::make_pair(-1000/*QNode IP address*/,NULL));
 
 
-    return NULL;
+    return nullptr;
 }
 
 

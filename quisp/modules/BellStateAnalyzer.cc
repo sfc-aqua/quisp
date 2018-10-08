@@ -191,7 +191,9 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
             double rand = dblrand();//Even if we have 2 photons, whether we success entangling the qubits or not is probablistic.
             double darkcount_left = dblrand();
             double darkcount_right = dblrand();
-            if(rand < BSAsuccess_rate || ( !right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability) || ( right_photon_lost && !left_photon_lost && darkcount_right < darkcount_probability) || ( right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability && darkcount_right < darkcount_probability)){
+
+
+            if((rand < BSAsuccess_rate && !right_photon_lost && !left_photon_lost) || ( !right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability) || ( right_photon_lost && !left_photon_lost && darkcount_right < darkcount_probability) || ( right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability && darkcount_right < darkcount_probability)){
                 if(!right_photon_lost && (left_photon_lost && darkcount_left < darkcount_probability)){
                     //error("Dark count :)");
                     DEBUG_darkcount_left++;

@@ -136,3 +136,9 @@ packet CombinedBSAresults_epps extends header
 {
     bool list_of_failed[];
 }
+
+packet Error extends header
+{
+    string error_text;
+}
+
