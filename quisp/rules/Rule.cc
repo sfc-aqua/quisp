@@ -1,6 +1,6 @@
 /** \file Rule.cc
  *
- *  \authors cldurand
+ *  \authors cldurand,takaakimatsuo
  *  \date 2018/06/25
  *
  *  \brief Rule

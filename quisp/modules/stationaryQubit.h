@@ -157,6 +157,7 @@ class stationaryQubit : public cSimpleModule
        MatrixXd Memory_Transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
        //projected_states proj_states;
        Matrix2cd Density_Matrix_Collapsed;//Used when partner has been measured.
+       int num_purified;
        bool partner_measured;
        bool completely_mixed_OR_excited_OR_relaxed;
        bool GOD_dm_Xerror;

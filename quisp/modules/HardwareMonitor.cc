@@ -42,6 +42,10 @@ void HardwareMonitor::initialize(int stage)
   numQnic = par("number_of_qnics");// number of qnics connected to stand alone HoM or internal hom in the neighbor.
   numQnic_total = numQnic + numQnic_r + numQnic_rp;
 
+  /*This is used to keep your own tomography data, and also to match and store the received partner's tomography data*/
+   all_temporal_tomography_output_holder = new Temporal_Tomography_Output_Holder[numQnic_total];//Assumes link tomography only between neighbors.
+
+  /*Once all_temporal_tomography_output_holder is filled in, those data are summarized into basis based measurement outcome table. This accumulates the number of ++, +-, -+ and -- for each basis combination.*/
   tomography_data = new raw_data[numQnic_total];//Raw count table for tomography per link/qnic
   for(int i=0; i<numQnic_total; i++){
       tomography_data[i].insert(std::make_pair("XX",initial));
@@ -54,12 +58,13 @@ void HardwareMonitor::initialize(int stage)
       tomography_data[i].insert(std::make_pair("YY",initial));
       tomography_data[i].insert(std::make_pair("YZ",initial));
   }
-  std::cout<<"numQnic_total"<<numQnic_total<<"\n";
+  //std::cout<<"numQnic_total"<<numQnic_total<<"\n";
 
 
-  all_temporal_tomography_output_holder = new Temporal_Tomography_Output_Holder[numQnic_total];//Assumes link tomography only between neighbors.
+   /*This keeps which node is connected to which local qnic.*/
   ntable = prepareNeighborTable(ntable, numQnic_total);
   do_link_level_tomography = par("link_tomography");
+  num_purification_tomography = par("initial_purification");
   num_measure = par("num_measure");
   myAddress = par("address");
   std::stringstream ss;
@@ -69,14 +74,10 @@ void HardwareMonitor::initialize(int stage)
   std::string s = ss.str();
   par("ntable") = s;
 
-  //qtable = new QnicInfo[numQnic];
-  //qtable = initializeQTable(numQnic, qtable);
-
   if(do_link_level_tomography && stage == 1){
       for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
           if(myAddress > it->second.neighborQNode_address){//You dont want 2 separate tomography processes to run for each link. Not a very good solution, but makes sure that only 1 request per link is generated.
               EV<<"Generating tomography rules... for node "<<it->second.neighborQNode_address<<"\n";
-
               LinkTomographyRequest *pk = new LinkTomographyRequest;
               pk->setDestAddr(it->second.neighborQNode_address);
               pk->setSrcAddr(myAddress);
@@ -85,14 +86,13 @@ void HardwareMonitor::initialize(int stage)
           }
       }
   }
-
 }
 
 void HardwareMonitor::handleMessage(cMessage *msg){
     if(dynamic_cast<LinkTomographyRequest *>(msg) != nullptr){
+        /*Received a tomography request from neighbor*/
         LinkTomographyRequest *request = check_and_cast<LinkTomographyRequest *>(msg);
-
-
+        /*Prepare an acknowledgement*/
         LinkTomographyAck *pk = new LinkTomographyAck;
         pk->setSrcAddr(myAddress);
         pk->setDestAddr(request->getSrcAddr());
@@ -114,9 +114,9 @@ void HardwareMonitor::handleMessage(cMessage *msg){
         send(pk,"RouterPort$o");
 
     }else if(dynamic_cast<LinkTomographyAck *>(msg) != nullptr){
-
+        /*Received an acknowledgement for tomography from neighbor.*/
         LinkTomographyAck *ack = check_and_cast<LinkTomographyAck *>(msg);
-
+        /*Create and send RuleSets*/
         int partner_address = ack->getSrcAddr();
         QNIC_type partner_qnic_type = ack->getQnic_type();
         int partner_qnic_index = ack->getQnic_index();
@@ -133,10 +133,12 @@ void HardwareMonitor::handleMessage(cMessage *msg){
         }if(my_qnic_index == -1){
             error("2. Something is wrong when finding out local qnic address from neighbor address in ntable.");
         }
-        //For this and partner node.
-        sendLinkTomographyRuleSet(myAddress,partner_address, my_qnic_type, my_qnic_index,0);
-        sendLinkTomographyRuleSet(partner_address,myAddress, partner_qnic_type, partner_qnic_index,0);
+        //RuleSets sent for this node and the partner node.
+        sendLinkTomographyRuleSet(myAddress, partner_address, my_qnic_type, my_qnic_index,num_purification_tomography/*Number of purification is first set to 0*/);
+        sendLinkTomographyRuleSet(partner_address,myAddress, partner_qnic_type, partner_qnic_index,num_purification_tomography);
+
     }else if (dynamic_cast<LinkTomographyResult *>(msg) != nullptr){
+        /*Link tomography measurement result/basis from neighbor received.*/
         LinkTomographyResult *result = check_and_cast<LinkTomographyResult *>(msg);
         QNIC local_qnic = search_QNIC_from_Neighbor_QNode_address(result->getPartner_address());
         auto it = all_temporal_tomography_output_holder[local_qnic.index].find(result->getCount_id());
@@ -163,9 +165,7 @@ void HardwareMonitor::handleMessage(cMessage *msg){
             all_temporal_tomography_output_holder[local_qnic.index].insert(std::make_pair(result->getCount_id(), temp));
         }
     }
-
     delete msg;
-
 }
 
 void HardwareMonitor::finish(){
@@ -203,16 +203,9 @@ void HardwareMonitor::finish(){
                  error("This should not happen though..... ?");
 
         }
-        std::cout<<"i = "<<i<<"\n";
+        //For each qnic or link, reconstruct the dm.
         reconstruct_Density_Matrix(i);
     }
-    /*for(auto elem : tomography_data)
-    {
-       //std::cout << elem.first << ", C(++)=" << elem.second.plus_minus << ", C(+-)=" << elem.second.plus_minus<< ", C(-+)=" << elem.second.minus_plus << ", C(--)=" << elem.second.minus_minus << "\n";
-       EV << elem.first<<", total = "<<elem.second.total_count << ", C(++)=" << elem.second.plus_plus << ", C(+-)=" << elem.second.plus_minus<< ", C(-+)=" << elem.second.minus_plus << ", C(--)=" << elem.second.minus_minus << "\n";
-
-    }*/
-
 }
 
 
@@ -328,33 +321,48 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
             RuleSet* tomography_RuleSet = new RuleSet(my_address,partner_address);//Tomography between this node and the sender of Ack.
 
 
-            for(int i=0; i<num_purification; i++){
-                /*Rule* X_Purification = new Rule();
-                Condition* Purify_to_measure = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
+            if(num_purification>0){/*RuleSet including purification*/
+                for(int i=0; i<num_purification; i++){
+                    /*Rule* X_Purification = new Rule();
+                    Condition* Purify_to_measure = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
+                    Clause* measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type , qnic_index, 0);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
+                    total_measurements->addClause(measure_count_clause);
+                    X_Purification->setCondition(total_measurements);
+                    quisp::rules::Action* Purify_X = new PurifyXAction(partner_address, qnic_type , qnic_index, 0, my_address);//Measure the local resource between it->second.neighborQNode_address.
+                    Random_measure_tomo->setAction(measure);*/
+                }
+                Rule* Random_measure_tomo = new Rule();//Let's make nodes select measurement basis randomly, because it it easier.
+                Condition* total_measurements = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
+                Clause* measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type , qnic_index, 0);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
+                Clause* purification_count_clause = new PurificationCountClause(partner_address, qnic_type , qnic_index, num_purification);
+                total_measurements->addClause(measure_count_clause);
+                Random_measure_tomo->setCondition(total_measurements);
+                quisp::rules::Action* measure = new RandomMeasureAction(partner_address, qnic_type , qnic_index, 0, my_address);//Measure the local resource between it->second.neighborQNode_address.
+                Random_measure_tomo->setAction(measure);
+                //---------
+                //Add the rule to the RuleSet
+                tomography_RuleSet->addRule(Random_measure_tomo);
+                //---------------------------
+                pk->setRuleSet(tomography_RuleSet);
+                send(pk,"RouterPort$o");
+
+            }else{//RuleSet with no purification. Pure measurement only link level tomography.
+                //-------------
+                //-First rule-
+                Rule* Random_measure_tomo = new Rule();//Let's make nodes select measurement basis randomly, because it it easier.
+                Condition* total_measurements = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
                 Clause* measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type , qnic_index, 0);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
                 total_measurements->addClause(measure_count_clause);
-                X_Purification->setCondition(total_measurements);
-                quisp::rules::Action* Purify_X = new PurifyXAction(partner_address, qnic_type , qnic_index, 0, my_address);//Measure the local resource between it->second.neighborQNode_address.
-                Random_measure_tomo->setAction(measure);*/
+                Random_measure_tomo->setCondition(total_measurements);
+                quisp::rules::Action* measure = new RandomMeasureAction(partner_address, qnic_type , qnic_index, 0, my_address);//Measure the local resource between it->second.neighborQNode_address.
+                Random_measure_tomo->setAction(measure);
+                //---------
+                //Add the rule to the RuleSet
+                tomography_RuleSet->addRule(Random_measure_tomo);
+                //---------------------------
+                pk->setRuleSet(tomography_RuleSet);
+                send(pk,"RouterPort$o");
             }
-
-            //-------------
-            //-First rule-
-            Rule* Random_measure_tomo = new Rule();//Let's make nodes select measurement basis randomly, because it it easier.
-            Condition* total_measurements = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
-            Clause* measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type , qnic_index, 0);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
-            total_measurements->addClause(measure_count_clause);
-            Random_measure_tomo->setCondition(total_measurements);
-            quisp::rules::Action* measure = new RandomMeasureAction(partner_address, qnic_type , qnic_index, 0, my_address);//Measure the local resource between it->second.neighborQNode_address.
-            Random_measure_tomo->setAction(measure);
-            //---------
-            //Add the rule to the RuleSet
-            tomography_RuleSet->addRule(Random_measure_tomo);
-            //---------------------------
-            pk->setRuleSet(tomography_RuleSet);
-            //send(pk, "RuleEnginePort$o");
-            //send(pk, "RuleEnginePort$o");
-            send(pk,"RouterPort$o");
 }
 
 

@@ -1,6 +1,6 @@
 /** \file Action.cc
  *
- *  \authors cldurand
+ *  \authors cldurand,takaakimatsuo
  *  \date 2018/06/25
  *
  *  \brief Action
@@ -66,7 +66,7 @@ cPacket* PurifyAction::run(cModule *re, qnicResources* resources) {
         }else{
             // do purification where trash_qubit is in the measured pair TODO
             qubit->Lock(static_action_id+purification_count);
-            trash_qubit->Lock(static_action_id+purification_count);//You may not need this because this will be trashed soo anyway.
+            //trash_qubit->Lock(static_action_id+purification_count);//You may not need this because this will be trashed soon anyway.
             purification_count++;
             bool measurement_outcome_error = qubit->purify(trash_qubit);//Only error propagation. No density matrix calculation.
 
@@ -74,8 +74,6 @@ cPacket* PurifyAction::run(cModule *re, qnicResources* resources) {
             RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
             rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);
             /*Deleting done*/
-
-
             return 0;
         }
     }else{

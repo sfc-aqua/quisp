@@ -1,5 +1,5 @@
 /** \file Rule.h
- *  \authors cldurand
+ *  \authors cldurand, takaakimatsuo
  *  \date 2018/06/25
  *
  *  \brief Rule
@@ -22,21 +22,37 @@ namespace rules {
  */
 class Rule {
     public:
+        int rule_identifier;
         pCondition condition;
         pAction action;
         Rule() {};
+        Rule(int id) {rule_identifier = id;};
+        typedef std::map<int, stationaryQubit*> AvailableResourceForThisStage;
+        AvailableResourceForThisStage rc;
         void setCondition (Condition * c) { condition.reset(c); };
-        //const pCondition& getCondition() { return condition; };
         void setAction (Action * a) { action.reset(a); };
-        //const pAction& getAction() { return action; };
-        //cPacket* checkrun(EntangledPairs resources, int resource_entangled_with_address);
-        //cPacket* checkrun(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
+        void eraseResource(stationaryQubit * qubit){
+            bool erased = false;
+            for (auto it =  rc.cbegin(), next_it =  rc.cbegin(); it !=  rc.cend(); it = next_it){
+                next_it = it; ++next_it;
+                if (it->second == qubit){
+                    rc.erase(it);
+                    erased = true;
+                    break;
+                }
+            }
+            if(!erased){
+                std::cout<<"Trying to erase an un-queued resource.....! \n";
+            }
+        };
+        void addResource(stationaryQubit * qubit){
+            int index = rc.size();
+            rc.insert(std::make_pair(index,qubit));
+        }
 
         cPacket* checkrun(cModule *re, qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
-        //cPacket* checkrun(qnicResources * resources);
         bool checkTerminate(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
-        //bool checkTerminate(qnicResources * resources);
-        //int test(qnicResources * resources);
+
 };
 typedef std::unique_ptr<Rule> pRule;
 

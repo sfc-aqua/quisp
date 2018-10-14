@@ -81,6 +81,7 @@ class RuleEngine : public cSimpleModule
         virtual void freeConsumedResource(int qnic_index, stationaryQubit *qubit, QNIC_type qnic_type);
         virtual void JustATest(){EV<<"Hello there\n."; endSimulation(); };
 
+
     protected:
         virtual void initialize() override;
         virtual void finish() override;

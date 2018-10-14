@@ -1,5 +1,5 @@
 /** \file Action.h
- *  \authors cldurand
+ *  \authors cldurand,takaakimatsuo
  *  \date 2018/06/25
  *
  *  \brief Action

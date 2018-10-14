@@ -1,5 +1,5 @@
 /** \file Clause.h
- *  \authors cldurand
+ *  \authors cldurand,takaakimatsuo
  *  \date 2018/07/03
  *
  *  \brief Clause
@@ -37,6 +37,11 @@ class Clause {
             qnic_type = qt;
             qnic_id = qi;
             resource = res;
+        };
+        Clause(int part, QNIC_type qt, int qi) {
+                    partner = part;
+                    qnic_type = qt;
+                    qnic_id = qi;
         };
         void setQnic(QNIC_type qt, int qi) {
             //if (qt >= QNIC_N) omnetpp::error("Not that many QNIC types.");
@@ -83,6 +88,21 @@ class MeasureCountClause : public Clause {
             max_count = max;
             current_count = 0;
          };
+        bool check(qnicResources *resources) const override;
+        bool checkTerminate(qnicResources *resources) const override;
+        //void increment(){current_count++;};
+};
+
+class PurificationCountClause : public Clause {
+    public:
+        int num_purify_must;
+        //int mutable current_count;
+        PurificationCountClause(int part, QNIC_type qt, int qi, int n_purify) : Clause(part, qt, qi) {//May not need this
+            //max_count = max;
+            //current_count = 0;
+            num_purify_must = n_purify;
+        };
+
         bool check(qnicResources *resources) const override;
         bool checkTerminate(qnicResources *resources) const override;
         //void increment(){current_count++;};

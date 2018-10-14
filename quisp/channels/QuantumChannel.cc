@@ -1,7 +1,7 @@
 /** \file QuantumChannel.cc
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
- *  \authors cldurand,takaakimatsuo
+ *  \authors takaakimatsuo
  *
  *  \brief QuantumChannel
  */

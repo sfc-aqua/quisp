@@ -241,7 +241,7 @@ void stationaryQubit::setBusy(){
 //Re-initialization of this stationary qubit
 //This is called at the beginning of the simulation (in initialization() above), and whenever it is reinitialized via the RealTimeController.
 void stationaryQubit::setFree(bool consumed){
-
+    num_purified = 0;
     locked = false;
     locked_id = -1;
     isBusy = false;

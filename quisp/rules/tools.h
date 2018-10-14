@@ -1,6 +1,6 @@
 /** \file tools.h
  *
- *  \authors cldurand
+ *  \authors cldurand,takaakimatsuo
  *  \date 2018/09/04
  *
  *  \brief tools
@@ -74,7 +74,16 @@ static stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int 
     return nullptr;
 }
 
-
+static stationaryQubit* getQubitPurified(qnicResources* resources, QNIC_type qtype, int qid, int partner, int num_purified_must){
+    std::pair<EntangledPairs::iterator,EntangledPairs::iterator> ret = resources[qtype][qid].equal_range(partner);//Find all resource in qytpe/qid entangled with partner.
+    for (EntangledPairs::iterator it=ret.first; it!=ret.second; ++it) {
+        if(it->second->num_purified == num_purified_must && !it->second->isLocked()){
+            stationaryQubit *pt = it->second;
+            return pt;
+        }
+    }
+    return nullptr;
+}
 
 
 

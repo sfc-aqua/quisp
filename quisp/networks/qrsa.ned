@@ -33,6 +33,7 @@ simple HardwareMonitor
         int number_of_qnics_rp;
         string ntable = "";
         bool link_tomography = default(false);
+        int initial_purification = default(0);
         int num_measure = default(3000);
     gates:
         inout RuleEnginePort;

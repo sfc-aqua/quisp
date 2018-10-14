@@ -1,6 +1,6 @@
 /** \file Clause.cc
  *
- *  \authors takaaki matsuo, cldurand
+ *  \authors cldurand,,takaakimatsuo
  *  \date 2018/07/03
  *
  *  \brief Clause
@@ -19,6 +19,7 @@ bool FidelityClause::check(qnicResources* resources) const {
     }
     return false;
 }
+
 bool MeasureCountClause::check(qnicResources* resources) const {
     EV<<"MeasureCountClause invoked!!!! \n";
     if(current_count<max_count){
@@ -32,6 +33,8 @@ bool MeasureCountClause::check(qnicResources* resources) const {
     }
 }
 
+
+
 bool MeasureCountClause::checkTerminate(qnicResources* resources) const {
     EV<<"Tomography termination clause invoked.\n";
     bool done = false;
@@ -40,6 +43,23 @@ bool MeasureCountClause::checkTerminate(qnicResources* resources) const {
         done = true;
     }
     return done;
+}
+
+
+bool PurificationCountClause::check(qnicResources* resources) const {
+    stationaryQubit* qubit = NULL;
+    //checkQnic();//This is not doing anything...
+
+    qubit = getQubitPurified(resources, qnic_type, qnic_id, partner, num_purify_must);
+    if(qubit != nullptr){
+        return true;//There is a qubit that has been purified "num_purify_must" times.
+    }else{
+        return false;
+    }
+}
+
+bool PurificationCountClause::checkTerminate(qnicResources* resources) const {
+        return false;
 }
 
 
