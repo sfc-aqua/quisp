@@ -15,19 +15,6 @@
 namespace quisp {
 namespace rules {
 
-/*
-cPacket* SwappingAction::run(qnicResources* resources) {
-        stationaryQubit *lqubit = NULL, *rqubit = NULL;
-        lqubit = getQubit(resources,
-                left_qnic_type, left_qnic_id, left_partner, left_resource);
-        rqubit = getQubit(resources,
-                right_qnic_type, right_qnic_id, right_partner, right_resource);
-        if ((lqubit) && (rqubit)) {
-            // do swapping on lqubit and rqubit TODO
-            return 0;
-        }
-        // error
-}*/
 
 cPacket* SwappingAction::run(cModule *re, qnicResources* resources) {
         stationaryQubit *lqubit = NULL, *rqubit = NULL;
@@ -42,17 +29,6 @@ cPacket* SwappingAction::run(cModule *re, qnicResources* resources) {
         // error
 }
 
-/*
-cPacket* PurifyAction::run(qnicResources* resources) {
-    stationaryQubit *qubit = NULL, *trash_qubit = NULL;
-    qubit = getQubit(resources,qnic_type,qnic_id,partner,resource);
-    trash_qubit = getQubit(resources,qnic_type,qnic_id,partner,trash_resource);
-    if ((qubit) && (trash_qubit)) {
-        // do purification where trash_qubit is in the measured pair TODO
-        return 0;
-    }
-    // error
-}*/
 
 cPacket* PurifyAction::run(cModule *re, qnicResources* resources) {
     stationaryQubit *qubit = NULL, *trash_qubit = NULL;
@@ -65,15 +41,15 @@ cPacket* PurifyAction::run(cModule *re, qnicResources* resources) {
             return pk;
         }else{
             // do purification where trash_qubit is in the measured pair TODO
-            qubit->Lock(static_action_id+purification_count);
+            qubit->Lock(ruleset_id, rule_id);
             //trash_qubit->Lock(static_action_id+purification_count);//You may not need this because this will be trashed soon anyway.
-            purification_count++;
+            /*purification_count++;
             bool measurement_outcome_error = qubit->purify(trash_qubit);//Only error propagation. No density matrix calculation.
 
-            /*Delete measured resource from the tracked list of resources.*/
+            //Delete measured resource from the tracked list of resources.
             RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
             rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);
-            /*Deleting done*/
+            //Deleting done*/
             return 0;
         }
     }else{
@@ -129,7 +105,8 @@ cPacket* RandomMeasureAction::run(qnicResources* resources) {
 cPacket* RandomMeasureAction::run(cModule *re, qnicResources* resources) {
     EV<<"Measuring qubit now.\n";
     stationaryQubit *qubit = NULL;
-    qubit = getQubit(/*re,*/ resources,qnic_type,qnic_id,partner,resource);
+    //qubit = getQubit(/*re,*/ resources,qnic_type,qnic_id,partner,resource);
+    qubit = getUnLockedQubit_fromTop(resources,qnic_type,qnic_id,partner,resource);
 
     if(qubit==nullptr){
         Error *pk = new Error;

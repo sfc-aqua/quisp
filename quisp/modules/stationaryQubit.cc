@@ -243,7 +243,8 @@ void stationaryQubit::setBusy(){
 void stationaryQubit::setFree(bool consumed){
     num_purified = 0;
     locked = false;
-    locked_id = -1;
+    locked_ruleset_id = -1;
+    locked_rule_id = -1;
     isBusy = false;
     emitted_time = -1;
     updated_time = -1;
@@ -288,9 +289,10 @@ bool stationaryQubit::checkBusy(){
 }
 
 /*To avoid disturbing this qubit.*/
-void stationaryQubit::Lock(int id){
+void stationaryQubit::Lock(int ruleset_id, int rule_id){
     locked = true;
-    locked_id = id;//Used to identify what this qubit is locked for.
+    locked_ruleset_id = ruleset_id;//Used to identify what this qubit is locked for.
+    locked_rule_id = rule_id;
 }
 
 void stationaryQubit::Unlock(){

@@ -25,6 +25,7 @@ class RuleSet : public std::list<pRule> {
         RuleSet(int o, int e) : std::list<pRule> () { owner = o; entangled_partner = e;}
         void addRule(Rule * r) { push_back(pRule(r)); };
         void addRule(pRule& r) { push_back(pRule(std::move(r))); };
+        void finalize();
         int getSize() {return this->size();};
         void destroyThis() {EV<<"Destroying this RuleSet. \n "; delete this; };
 

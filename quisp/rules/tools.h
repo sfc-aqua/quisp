@@ -15,6 +15,11 @@
 namespace quisp {
 namespace rules {
 
+/*For RuleSets*/
+//typedef std::map<int,stationaryQubit*> resources;//index -> qubit. List of available resource for a particular stage/Rule in this RuleSet.
+//typedef std::map<int, resources> AvailableResourceForEachStage;//Rule index -> resources. List of all resources for all stages/Rules in this RuleSet.
+//AvailableResourceForEachStage rc;
+
 /*
 static stationaryQubit* getPurifiedQubit_fromTop(qnicResources* resources, QNIC_type qtype, int qid, int partner, int num_purified) {
     std::pair<EntangledPairs::iterator,EntangledPairs::iterator> ret = resources[qtype][qid].equal_range(partner);//Find all resource in qytpe/qid entangled with partner.

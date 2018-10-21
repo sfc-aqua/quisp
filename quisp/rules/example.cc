@@ -28,6 +28,7 @@ using namespace quisp::modules;
  *   - (42) gets to (1) by qnic id 31
  */
 
+/*
 RuleSet* build_ruleset_42 () {
   // 1. Create a Rule Set for node 42
   RuleSet* ruleset_42 = new RuleSet(42,1);
@@ -89,8 +90,7 @@ RuleSet* build_ruleset_42 () {
   ruleset_42->addRule(rule_purification_42_1);
 
   return ruleset_42;
-}
-
+}*/
 
 /*
 void run_ruleset(RuleSet * rs) {

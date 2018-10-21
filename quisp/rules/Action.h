@@ -12,6 +12,8 @@
 #include <modules/QUBIT.h>
 #include <memory>
 
+
+
 using namespace quisp::modules;
 
 namespace quisp {
@@ -22,12 +24,14 @@ namespace rules {
  *
  *  \brief Action
  */
+//typedef std::unique_ptr<class Rule> pRule;
+
 class Action {
   public:
     //virtual cPacket* run(qnicResources *resources) = 0;
+    //pRule thisRule;
     virtual cPacket* run(cModule *re, qnicResources *resources) = 0;
     //virtual stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id);
-
 };
 typedef std::unique_ptr<Action> pAction;
 
@@ -43,6 +47,7 @@ class SwappingAction : public Action {
         QNIC_type right_qnic_type;
         int right_qnic_id;
         int right_resource;
+
 
     public:
         SwappingAction(
@@ -70,18 +75,23 @@ class PurifyAction : public Action {
         int qnic_id;
         int resource; /**< Identifies qubit */
         int trash_resource;
-        int static_action_id;//Used to make the lock_id unique, together with purification_count.
+        int rule_id;//Used to make the lock_id unique, together with purification_count.
+        int ruleset_id;
         int mutable purification_count;//Used for locked_id in stationaryQubit. You unlock the qubit when purification is successful.
 
     public:
-        PurifyAction(int part, QNIC_type qt, int qi, int res, int tres) {
+        PurifyAction(int part, QNIC_type qt, int qi, int res, int tres, int rs_id, int r_id) {
             partner = part;
             qnic_type = qt;
             qnic_id = qi;
-            resource = res;/*The one to purify*/
+            resource = res;/*The one to purify. Index from top to bottom.*/
             trash_resource = tres;/*The one to consume to purify*/
             purification_count = 0;
-            static_action_id = omnetpp::intuniform(0,0,100000);
+            rule_id = r_id;
+            ruleset_id = rs_id;
+        };
+        PurifyAction(){
+
         };
         //cPacket* run(qnicResources *resources) override;
         cPacket* run(cModule *re, qnicResources *resources) override;
@@ -111,6 +121,8 @@ class RandomMeasureAction : public Action {
         //cPacket* run(qnicResources *resources) override;
         cPacket* run(cModule *re, qnicResources *resources) override;
 };
+
+
 
 } // namespace rules
 } // namespace quisp
