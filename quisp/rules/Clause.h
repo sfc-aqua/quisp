@@ -80,6 +80,22 @@ class FidelityClause : public Clause {
         bool checkTerminate(std::map<int,stationaryQubit*>) const override {return 0;};
 };
 
+
+
+class NoClause : public Clause {
+
+
+    public:
+        NoClause() : Clause() {
+
+        };
+        bool check(qnicResources *resources) const override {return true;};
+        bool checkTerminate(qnicResources *resources) const override {return false;} ;
+        bool check(std::map<int,stationaryQubit*>) const override {return true;};
+        bool checkTerminate(std::map<int,stationaryQubit*>) const override {return false;};
+};
+
+
 class MeasureCountClause : public Clause {
     public:
         int max_count;

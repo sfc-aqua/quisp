@@ -89,6 +89,8 @@ class HardwareMonitor : public cSimpleModule
         cModuleType *HoMType =  cModuleType::get("networks.HoM");
         bool do_link_level_tomography = false;
         int num_purification_tomography = 0;
+        bool X_Purification = false;
+        bool Z_Purification = false;
         int num_measure;
 
     public:
@@ -119,7 +121,7 @@ class HardwareMonitor : public cSimpleModule
         virtual cModule* getQNode();
         virtual neighborInfo findNeighborAddress(cModule *qnic_pointer);
         virtual Interface_inf getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type);
-        virtual void sendLinkTomographyRuleSet(int my_address,int partner_address, QNIC_type qnic_type, int qnic_index, int num_purification, unsigned long rule_id);
+        virtual void sendLinkTomographyRuleSet(int my_address,int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);
         virtual QNIC search_QNIC_from_Neighbor_QNode_address(int neighbor_address);
         virtual void reconstruct_Density_Matrix(int qnic_id);
         virtual unsigned long createUniqueId();

@@ -47,11 +47,11 @@ network Tomography_Linear_One_MM_MIM
         }
 
     connections:
-        EndNode[0].port++ <--> ClassicalChannel {  distance = 100km; } <--> repeater.port++;
+        EndNode[0].port++ <--> ClassicalChannel {  distance = 10km; } <--> repeater.port++;
         repeater.port++ <--> ClassicalChannel {  distance = 10km; } <--> HoM.port++;
         HoM.port++ <--> ClassicalChannel{distance = 10km;} <--> EndNode[1].port++;
 
-        EndNode[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 100km; } <--> repeater.quantum_port++;
+        EndNode[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 10km; } <--> repeater.quantum_port++;
         repeater.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM.quantum_port++;
         HoM.quantum_port++ <--> QuantumChannel{distance = 10km;} <--> EndNode[1].quantum_port++;
 }

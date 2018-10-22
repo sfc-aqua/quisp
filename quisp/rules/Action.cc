@@ -124,6 +124,9 @@ void Action::removeResource_fromRule(stationaryQubit *qubit){
     //std::cout<<"[Action] After: "<<(*rule_resources).size()<<"\n";
 }
 
+cPacket* PurifyAction::run(cModule *re) {
+
+}
 
 
 cPacket* RandomMeasureAction::run(cModule *re) {
@@ -140,20 +143,13 @@ cPacket* RandomMeasureAction::run(cModule *re) {
         return pk;
     }else{
 
-        //std::cout<<"Measuring qubit \n";
         measurement_outcome o = qubit->measure_density_independent();
         current_count++;
 
         //Delete measured resource from the tracked list of resources.
-        removeResource_fromRule(qubit);
-        //std::cout<<"freed qubit = Node["<<qubit->node_address<<"], qnic["<<qubit->qnic_address<<"]\n";
+        removeResource_fromRule(qubit);//Remove from resource list in this Rule.
         RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
-        //std::cout<<"Can we delete this ?"<<qubit<<qubit<<", isBusy = "<<qubit->isBusy<<"\n";
-        //std::cout<<"qnic index = "<<qnic_id<<"but";
-        //std::cout<<qubit->qnic_address<<"\n";
-        rule_engine->freeConsumedResource(qnic_id, qubit, qnic_type);
-        //std::cout<<"Freeing"<<qubit<<"\n";
-
+        rule_engine->freeConsumedResource(qnic_id, qubit, qnic_type);//Remove from entangled resource list.
         //Deleting done
 
         LinkTomographyResult *pk = new LinkTomographyResult;

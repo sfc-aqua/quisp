@@ -34,6 +34,8 @@ simple HardwareMonitor
         string ntable = "";
         bool link_tomography = default(false);
         int initial_purification = default(0);
+        bool X_purification = default(false);
+        bool Z_purification = default(false);
         int num_measure = default(3000);
     gates:
         inout RuleEnginePort;
