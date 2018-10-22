@@ -428,10 +428,13 @@ RuleEngine::QubitStateTable RuleEngine::setQubitBusy_inQnic(QubitStateTable tabl
 
 RuleEngine::QubitStateTable RuleEngine::setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index){
     for(auto it = table.cbegin(); it != table.cend(); ++it){
+        //std::cout<<it->first<<" table = "<<table[it->first].isBusy<<"\n";
            if(it->second.isBusy == true && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index){
                 table[it->first].isBusy = false;
                 break;
             }else if(it->second.isBusy == false && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index){
+                //std::cout<<"isBusy = "<<table[it->first].isBusy<<"\n";
+                //std::cout<<"Busy = "<<(it->second.isBusy==false)<<" && "<<(it->second.thisQubit_addr.qnic_index == qnic_index)<<" && "<<(it->second.thisQubit_addr.qubit_index == qubit_index)<<"\n";
                 error("Trying to set a free qubit free. Only busy qubits can do that. Something is wrong... ");
             }
     }return table;
@@ -487,7 +490,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
     /*for(auto it = tracker[qnic_address].cbegin(); it != tracker[qnic_address].cend(); ++it){
             EV<<it->first<<"th shot was from qnic["<<it->second.qnic_index<<"] qubit["<<it->second.qubit_index<<"] \n ???????????????????????????????????";
     }*/
-
+    int success_num = 0;
     for(int i=0; i<list_size; i++){
         bool failed = pk_result->getList_of_failed(i);
         sentQubitIndexTracker::iterator it = tracker[qnic_address].find(i);//check ith shot's information (qnic, qubit index).
@@ -503,7 +506,10 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
             //EV<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
             //Add this as an available resource
             stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
+            //std::cout<<"Available resource"<<qubit<<" isBusy = "<<qubit->isBusy<<"\n";
+
             allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,qubit));//Add qubit as available resource between NeighborQNodeAddress.
+            success_num++;
             //EV<<"There are "<<allResources[qnic_type][qnic_index].count(neighborQNodeAddress)<<" resources between this and "<<destAddr<<"\n";
         }
     }
@@ -520,9 +526,9 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
             freeResource(it->second.qnic_index, it->second.qubit_index, qnic_type);
         }
     }
-
-
-    traverseThroughAllProcesses(this,qnic_type,qnic_index);//New resource added to QNIC with qnic_type qnic_index.
+    //std::cout<<"success num = "<<success_num<<"\n";
+    ResourceAllocation(qnic_type, qnic_index);
+    traverseThroughAllProcesses2();//New resource added to QNIC with qnic_type qnic_index.
 
 }
 
@@ -572,6 +578,107 @@ void RuleEngine::finish(){
 
 double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index) {
     return uniform(.6,.9);
+}
+
+//Invoked whenever a new resource (entangled with neighbor) has been created.
+//Allocates those resources to a particular ruleset, from top to bottom (all of it).
+void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
+
+    if(!(rp.size()>0)){// If no ruleset running, do nothing.
+        return;
+    }
+
+    for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){//In a particular RuleSet
+        next_it = it; ++next_it;
+        RuleSet* process = it->second.RuleSet;//One Process. From top to bottom.
+        int ruleset_id = process->ruleset_id;
+        int resource_entangled_with_address = process->entangled_partner;
+
+        if(process->empty()){
+            error("RuleSet with no Rule found. Probably not what you want!");
+        }
+
+        int assigned = 0;
+        for (auto it =  allResources[qnic_type][qnic_index].cbegin(), next_it =  allResources[qnic_type][qnic_index].cbegin(); it !=  allResources[qnic_type][qnic_index].cend(); it = next_it){
+             next_it = it; ++next_it;
+             if(!it->second->isLocked() && resource_entangled_with_address == it->first){
+                 //Free resource that has not been assigned to any ruleset.
+                 int index = process->front()->resources.size();
+                 process->front()->resources.insert(std::make_pair(index,it->second));//Assign resource to the 1st Rule.
+                 int rule_id = process->front()->rule_index;
+                 it->second->Lock(ruleset_id, rule_id);
+                 assigned++;
+             }
+        }
+        //std::cout<<parentAddress<<"Assigned = "<<assigned<<"\n";
+    }
+
+}
+
+
+
+void RuleEngine::traverseThroughAllProcesses2(){
+
+    int number_of_process = rp.size();//Number of running processes (in all QNICs).
+    EV<<"running processes = "<<number_of_process<<"\n";
+
+    if(number_of_process==0){
+        return;
+    }
+
+    for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){
+            next_it = it; ++next_it;
+            RuleSet* process = it->second.RuleSet;//One Process. From top to bottom.
+            EV<<"Checking first process.... process "<<process->size()<<"\n";
+            for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){
+
+                    bool process_done = false;
+                    //std::cout<<parentAddress<<": Running first Condition & Action now\n";
+                    bool terminate_this_rule = false;
+
+                    while(true){
+                        if(!((*rule)->resources.size()>0)){
+                            break;//No more resource left for now.
+                        }
+                        cPacket *pk = (*rule)->checkrun(this);//Do something on qubits entangled with resource_entangled_with_address.
+
+                        if(pk!=nullptr){
+                            //Feedback to another node required
+                            if (dynamic_cast<LinkTomographyResult *>(pk)!= nullptr){
+                                //The cPacket *pk is a single packet forwarded to the neighbor. But this node's HardwareMonitor also needs to store the result.
+                                LinkTomographyResult *pk_t = check_and_cast<LinkTomographyResult *>(pk);
+                                LinkTomographyResult *pk_for_self = pk_t->dup();
+                                pk_for_self->setPartner_address(pk_t->getDestAddr());
+                                pk_for_self->setDestAddr(pk_t->getSrcAddr());
+                                send(pk,"RouterPort$o");
+                                send(pk_for_self,"RouterPort$o");
+                            }else if (dynamic_cast<Error *>(pk)!= nullptr){
+                                Error *err = check_and_cast<Error *>(pk);
+                                error(err->getError_text());
+                            }
+                        }
+
+                        process_done = (*rule)->checkTerminate();//The entire process is done. e.g. enough measurement for tomography.
+                        if(process_done){//Delete rule set if done
+                            process->destroyThis();//Destroy ruleset object
+                            rp.erase(it);//Erase rule set from map.
+                            terminate_this_rule = true;//Flag to get out from outer loop
+                            break;//get out from this for loop.
+                        }
+
+                        if(dynamic_cast<ConditionNotSatisfied *>(pk)!= nullptr){
+                            break;//Condition does not meet. Go to next rule. e.g. Fidelity is good enough by doing purification. Next could be swap.
+                        }
+
+                    }//While
+                    if(process_done){
+                        break;
+                    }
+            }//For
+
+    }//For loop
+
+
 }
 
 
@@ -639,6 +746,7 @@ void RuleEngine::traverseThroughAllProcesses(RuleEngine *re, int qnic_type, int 
 }
 
 void RuleEngine::freeConsumedResource(int qnic_index, stationaryQubit *qubit, QNIC_type qnic_type){
+
     realtime_controller->ReInitialize_StationaryQubit(qnic_index ,qubit->par("stationaryQubit_address"), qnic_type, true);
     Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit->par("stationaryQubit_address"));
 

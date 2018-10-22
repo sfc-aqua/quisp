@@ -79,6 +79,7 @@ class RuleEngine : public cSimpleModule
         //typedef std::map<std::string, quisp::rules::RuleSet> processes;//process_id -> Rule set
         virtual void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type);
         virtual void freeConsumedResource(int qnic_index, stationaryQubit *qubit, QNIC_type qnic_type);
+        virtual void ResourceAllocation(int qnic_type, int qnic_index);
         virtual void JustATest(){EV<<"Hello there\n."; endSimulation(); };
 
 
@@ -105,6 +106,7 @@ class RuleEngine : public cSimpleModule
         virtual void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result);
         virtual void clearTrackerTable(int destAddr, int internal_qnic_address);
         virtual void traverseThroughAllProcesses(RuleEngine *re, int qnic_type, int qnic_index);
+        virtual void traverseThroughAllProcesses2();
         virtual double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
 
 };

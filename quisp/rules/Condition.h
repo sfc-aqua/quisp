@@ -25,7 +25,9 @@ class Condition : std::list<pClause> {
         void addClause(Clause * c) { push_back(pClause(c)); };
         void addClause(pClause& c) { push_back(pClause(std::move(c))); };
         bool check(qnicResources * resources) const;
+        bool check(std::map<int,stationaryQubit*>resources) const;
         bool checkTerminate(qnicResources * resources) const;
+        bool checkTerminate(std::map<int,stationaryQubit*> resources) const;
 };
 typedef std::unique_ptr<Condition> pCondition;
 

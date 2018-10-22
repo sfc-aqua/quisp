@@ -28,9 +28,11 @@ namespace rules {
 
 class Action {
   public:
-    //virtual cPacket* run(qnicResources *resources) = 0;
-    //pRule thisRule;
+    std::map<int,stationaryQubit*> *rule_resources;
     virtual cPacket* run(cModule *re, qnicResources *resources) = 0;
+    virtual cPacket* run(cModule *re) = 0;
+    virtual stationaryQubit* getResource_fromTop(int required_index);
+    virtual void removeResource_fromRule(stationaryQubit *qubit);
     //virtual stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id);
 };
 typedef std::unique_ptr<Action> pAction;
@@ -120,6 +122,7 @@ class RandomMeasureAction : public Action {
         };
         //cPacket* run(qnicResources *resources) override;
         cPacket* run(cModule *re, qnicResources *resources) override;
+        cPacket* run(cModule *re) override;
 };
 
 

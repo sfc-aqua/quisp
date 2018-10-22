@@ -234,8 +234,6 @@ class stationaryQubit : public cSimpleModule
         virtual void addXerror();
         virtual void addZerror();
 
-
-    private:
         /** @name Self address
          *  @{                   */
         int stationaryQubit_address;
@@ -243,6 +241,8 @@ class stationaryQubit : public cSimpleModule
         int qnic_address;
         int qnic_type;
         //@}
+    private:
+
         PhotonicQubit *photon;
         double fidelity;
         bool locked;

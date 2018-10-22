@@ -54,7 +54,9 @@ class Clause {
             //if (qnic_id < 0) omnetpp::error("Negative qnic index.");
         };
         virtual bool check(qnicResources *resources) const = 0;
+        virtual bool check(std::map<int,stationaryQubit*>) const = 0;
         virtual bool checkTerminate(qnicResources *resources) const = 0;
+        virtual bool checkTerminate(std::map<int,stationaryQubit*>) const = 0;
         //virtual stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) const = 0;
 };
 
@@ -74,6 +76,8 @@ class FidelityClause : public Clause {
         };
         bool check(qnicResources *resources) const override;
         bool checkTerminate(qnicResources *resources) const override {return 0;} ;
+        bool check(std::map<int,stationaryQubit*>) const override;
+        bool checkTerminate(std::map<int,stationaryQubit*>) const override {return 0;};
 };
 
 class MeasureCountClause : public Clause {
@@ -90,6 +94,8 @@ class MeasureCountClause : public Clause {
          };
         bool check(qnicResources *resources) const override;
         bool checkTerminate(qnicResources *resources) const override;
+        bool check(std::map<int,stationaryQubit*>) const override;
+        bool checkTerminate(std::map<int,stationaryQubit*>) const override;
         //void increment(){current_count++;};
 };
 
@@ -105,6 +111,7 @@ class PurificationCountClause : public Clause {
 
         bool check(qnicResources *resources) const override;
         bool checkTerminate(qnicResources *resources) const override;
+        bool check(std::map<int,stationaryQubit*>) const override;
         //void increment(){current_count++;};
 };
 

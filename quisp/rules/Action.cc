@@ -61,46 +61,6 @@ cPacket* PurifyAction::run(cModule *re, qnicResources* resources) {
 }
 
 
-/*
-cPacket* PurifyAction::run(cModule *re, qnicResources* resources) {
-    stationaryQubit *qubit = NULL, *trash_qubit = NULL;
-    qubit = getQubit(resources,qnic_type,qnic_id,partner,resource);
-    trash_qubit = getQubit(resources,qnic_type,qnic_id,partner,trash_resource);
-    if ((qubit) && (trash_qubit)) {
-        // do purification where trash_qubit is in the measured pair TODO
-        return 0;
-    }
-    // error
-}*/
-
-
-/*
-cPacket* RandomMeasureAction::run(qnicResources* resources) {
-    EV<<"Measuring qubit now.\n";
-    stationaryQubit *qubit = NULL;
-    qubit = getQubit(resources,qnic_type,qnic_id,partner,resource);
-
-    if(qubit==nullptr){
-           Error *pk = new Error;
-           pk->setError_text("Qubit not found for measurement.");
-           return pk;
-    }else{
-        measurement_outcome o = qubit->measure_density_independent();
-        current_count++;
-
-        //freeConsumedQubit(resources,qnic_type,qnic_id,partner,resource);
-
-        LinkTomographyResult *pk = new LinkTomographyResult;
-        pk->setSrcAddr(src);
-        pk->setDestAddr(dst);
-        pk->setCount_id(current_count);
-        pk->setPartner_address(src);//Partner's partner is self/src
-        pk->setKind(6);
-        pk->setOutput_is_plus(o.outcome_is_plus);
-        pk->setBasis(o.basis);
-        return pk;
-    }
-}*/
 
 cPacket* RandomMeasureAction::run(cModule *re, qnicResources* resources) {
     EV<<"Measuring qubit now.\n";
@@ -133,6 +93,82 @@ cPacket* RandomMeasureAction::run(cModule *re, qnicResources* resources) {
         return pk;
     }
 }
+
+
+
+stationaryQubit* Action::getResource_fromTop(int required_index){
+    int resource_index = 0;
+    stationaryQubit *pt = nullptr;
+    for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
+        if(resource_index == required_index){
+            //std::cout<<"Rule: Let's use this qubit!"<<it->second<<", isBusy = "<<it->second->isBusy<<"\n";
+            pt = it->second;
+            break;
+        }else{
+            resource_index++;
+        }
+    }
+    return pt;
+}
+
+void Action::removeResource_fromRule(stationaryQubit *qubit){
+    //std::cout<<"[Action] Before: "<<(*rule_resources).size()<<"\n";
+    for (auto it =  (*rule_resources).begin(), next_it =  (*rule_resources).begin(); it !=  (*rule_resources).end(); it = next_it){
+          next_it = it; ++next_it;
+          if (it->second == qubit){
+              //std::cout<<"Rule: Let's delete this qubit!"<<it->second<<", isBusy = "<<it->second->isBusy<<"\n";
+              (*rule_resources).erase(it);    // or "it = m.erase(it)" since C++11
+              break;
+          }
+    }
+    //std::cout<<"[Action] After: "<<(*rule_resources).size()<<"\n";
+}
+
+
+
+cPacket* RandomMeasureAction::run(cModule *re) {
+    EV<<"Measuring qubit now.\n";
+    stationaryQubit *qubit = nullptr;
+    //qubit = getQubit(/*re,*/ resources,qnic_type,qnic_id,partner,resource);
+    qubit = getResource_fromTop(resource);
+
+
+
+    if(qubit==nullptr){
+        Error *pk = new Error;
+        pk->setError_text("Qubit not found for measurement.");
+        return pk;
+    }else{
+
+        //std::cout<<"Measuring qubit \n";
+        measurement_outcome o = qubit->measure_density_independent();
+        current_count++;
+
+        //Delete measured resource from the tracked list of resources.
+        removeResource_fromRule(qubit);
+        //std::cout<<"freed qubit = Node["<<qubit->node_address<<"], qnic["<<qubit->qnic_address<<"]\n";
+        RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
+        //std::cout<<"Can we delete this ?"<<qubit<<qubit<<", isBusy = "<<qubit->isBusy<<"\n";
+        //std::cout<<"qnic index = "<<qnic_id<<"but";
+        //std::cout<<qubit->qnic_address<<"\n";
+        rule_engine->freeConsumedResource(qnic_id, qubit, qnic_type);
+        //std::cout<<"Freeing"<<qubit<<"\n";
+
+        //Deleting done
+
+        LinkTomographyResult *pk = new LinkTomographyResult;
+        pk->setSrcAddr(src);
+        pk->setDestAddr(dst);
+        pk->setCount_id(current_count);
+        pk->setPartner_address(src);//Partner's partner is self/src
+        pk->setKind(6);
+        pk->setOutput_is_plus(o.outcome_is_plus);
+        pk->setBasis(o.basis);
+        return pk;
+    }
+}
+
+
 
 /*
 stationaryQubit* Action::getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) {

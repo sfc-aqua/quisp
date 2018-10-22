@@ -29,12 +29,13 @@ class Rule {
         int rule_index;
         pCondition condition;
         pAction action;
+        std::map<int,stationaryQubit*> resources;
         //std::unique_ptr<Rule> next_rule;
         Rule() {};
         Rule(int rs_index, int r_index) {ruleset_id = rs_index; rule_index = r_index;};
 
-        void setCondition (Condition * c) { condition.reset(c); };
-        void setAction (Action * a) {action.reset(a); };
+        void setCondition (Condition * c);
+        void setAction (Action * a);
         void eraseResource(stationaryQubit * qubit){
             /*bool erased = false;
             for (auto it =  rc.cbegin(), next_it =  rc.cbegin(); it !=  rc.cend(); it = next_it){
@@ -55,6 +56,8 @@ class Rule {
         }
 
         cPacket* checkrun(cModule *re, qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
+        cPacket* checkrun(cModule *re);
+        bool checkTerminate();
         bool checkTerminate(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
 
 };

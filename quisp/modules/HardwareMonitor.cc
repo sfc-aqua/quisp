@@ -88,6 +88,18 @@ void HardwareMonitor::initialize(int stage)
   }
 }
 
+unsigned long HardwareMonitor::createUniqueId(){
+    std::string time = SimTime().str();
+    std::string address = std::to_string(myAddress);
+    std::string random = std::to_string(intuniform(0,10000000));
+    std::string hash_seed = address+time+random;
+    std::hash<std::string> hash_fn;
+    size_t  t = hash_fn(hash_seed);
+    unsigned long RuleSet_id = static_cast<long>(t);
+    std::cout<<"Hash is "<<hash_seed<<", t = "<<t<<", long = "<<RuleSet_id<<"\n";
+    return RuleSet_id;
+}
+
 void HardwareMonitor::handleMessage(cMessage *msg){
     if(dynamic_cast<LinkTomographyRequest *>(msg) != nullptr){
         /*Received a tomography request from neighbor*/
@@ -134,7 +146,8 @@ void HardwareMonitor::handleMessage(cMessage *msg){
             error("2. Something is wrong when finding out local qnic address from neighbor address in ntable.");
         }
         //RuleSets sent for this node and the partner node.
-        int RuleSet_id = intuniform(0,1000000);
+
+        long RuleSet_id = createUniqueId();
         sendLinkTomographyRuleSet(myAddress, partner_address, my_qnic_type, my_qnic_index,num_purification_tomography, RuleSet_id);
         sendLinkTomographyRuleSet(partner_address,myAddress, partner_qnic_type, partner_qnic_index,num_purification_tomography, RuleSet_id);
 
@@ -311,15 +324,16 @@ QNIC HardwareMonitor::search_QNIC_from_Neighbor_QNode_address(int neighbor_addre
     return qnic;
 }
 
-void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, int num_purification, int RuleSet_id){
+void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, int num_purification, unsigned long RuleSet_id){
             LinkTomographyRuleSet *pk = new LinkTomographyRuleSet;
             pk->setDestAddr(my_address);
             pk->setSrcAddr(partner_address);
             pk->setNumber_of_measuring_resources(num_measure);
             pk->setKind(6);
 
+
             //Empty RuleSet
-            RuleSet* tomography_RuleSet = new RuleSet(my_address,partner_address);//Tomography between this node and the sender of Ack.
+            RuleSet* tomography_RuleSet = new RuleSet(RuleSet_id, my_address,partner_address);//Tomography between this node and the sender of Ack.
             std::cout<<"Creating rules now\n";
 
             int rule_index = 0;
