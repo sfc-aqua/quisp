@@ -36,6 +36,17 @@ using namespace rules;
  *  \brief RuleEngine
  */
 
+typedef struct _process_identifier{
+    unsigned long ruleset_id;
+    int rule_id;
+    int index;
+}process_id;
+
+struct purification_result{
+    process_id id;
+    bool outcome;
+};
+
 //Process = RuleSet
 typedef struct _process{
     int ownner_addr;
@@ -56,6 +67,8 @@ class RuleEngine : public cSimpleModule
         int number_of_qnics_r;
         int number_of_qnics_rp;
         typedef std::map<int, QubitState> QubitStateTable;
+        typedef std::multimap<int, purification_result> PurificationTable;
+        PurificationTable Purification_table;
         typedef std::map<int, QubitAddr_cons> sentQubitIndexTracker;//nth shot -> node/qnic/qubit index (node addr not needed actually)
         //Although qnic index is in QubitAddr, lest make int qnic_index -> QubisState to lessen the search
         //QubitStateTable stable, stable_r, stable_rp;
@@ -105,7 +118,7 @@ class RuleEngine : public cSimpleModule
         virtual void scheduleNextEmissionEvent(int qnic_index, int qnic_address, double interval, simtime_t timing, int num_sent, bool internal, int trial);
         virtual void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result);
         virtual void clearTrackerTable(int destAddr, int internal_qnic_address);
-        virtual void traverseThroughAllProcesses(RuleEngine *re, int qnic_type, int qnic_index);
+        //virtual void traverseThroughAllProcesses(RuleEngine *re, int qnic_type, int qnic_index);
         virtual void traverseThroughAllProcesses2();
         virtual double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
 

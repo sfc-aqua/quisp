@@ -83,6 +83,7 @@ class PurifyAction : public Action {
         bool X;
         bool Z;
         int num_purify;
+        int action_index;
     public:
         PurifyAction(int part, QNIC_type qt, int qi, int res, int tres, int rs_id, int r_id) {
             partner = part;
@@ -93,6 +94,7 @@ class PurifyAction : public Action {
             purification_count = 0;
             rule_id = r_id;
             ruleset_id = rs_id;
+            action_index = 0;
         };
         PurifyAction(unsigned long RuleSet_id, int rule_index,bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res, int tres){
             partner =part;
@@ -106,6 +108,7 @@ class PurifyAction : public Action {
             num_purify = num_purification;
             X = X_purification;
             Z = Z_purification;
+            action_index = 0;
         };
         PurifyAction(){
 

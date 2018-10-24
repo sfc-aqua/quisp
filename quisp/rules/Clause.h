@@ -53,9 +53,9 @@ class Clause {
             //if (qnic_type >= QNIC_N) omnetpp::error("Not that many QNIC types.");
             //if (qnic_id < 0) omnetpp::error("Negative qnic index.");
         };
-        virtual bool check(qnicResources *resources) const = 0;
+        //virtual bool check(qnicResources *resources) const = 0;
         virtual bool check(std::map<int,stationaryQubit*>) const = 0;
-        virtual bool checkTerminate(qnicResources *resources) const = 0;
+        //virtual bool checkTerminate(qnicResources *resources) const = 0;
         virtual bool checkTerminate(std::map<int,stationaryQubit*>) const = 0;
         //virtual stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) const = 0;
 };
@@ -74,10 +74,21 @@ class FidelityClause : public Clause {
         : Clause(part, qt, qi, res) {
             threshold = fidelity;
         };
-        bool check(qnicResources *resources) const override;
-        bool checkTerminate(qnicResources *resources) const override {return 0;} ;
+        //bool check(qnicResources *resources) const override;
+        //bool checkTerminate(qnicResources *resources) const override {return 0;} ;
         bool check(std::map<int,stationaryQubit*>) const override;
-        bool checkTerminate(std::map<int,stationaryQubit*>) const override {return 0;};
+        bool checkTerminate(std::map<int,stationaryQubit*>) const override {return false;};
+};
+
+class EnoughResourceClause : public Clause {
+    protected:
+        int num_resource_required;
+    public:
+        EnoughResourceClause(double num_res) : Clause() {
+            num_resource_required = num_res;
+        };
+        bool check(std::map<int,stationaryQubit*>) const override;
+        bool checkTerminate(std::map<int,stationaryQubit*>) const override {return false;};
 };
 
 
@@ -89,8 +100,8 @@ class NoClause : public Clause {
         NoClause() : Clause() {
 
         };
-        bool check(qnicResources *resources) const override {return true;};
-        bool checkTerminate(qnicResources *resources) const override {return false;} ;
+        //bool check(qnicResources *resources) const override {return true;};
+        //bool checkTerminate(qnicResources *resources) const override {return false;} ;
         bool check(std::map<int,stationaryQubit*>) const override {return true;};
         bool checkTerminate(std::map<int,stationaryQubit*>) const override {return false;};
 };
@@ -108,8 +119,8 @@ class MeasureCountClause : public Clause {
             max_count = max;
             current_count = 0;
          };
-        bool check(qnicResources *resources) const override;
-        bool checkTerminate(qnicResources *resources) const override;
+        //bool check(qnicResources *resources) const override;
+        //bool checkTerminate(qnicResources *resources) const override;
         bool check(std::map<int,stationaryQubit*>) const override;
         bool checkTerminate(std::map<int,stationaryQubit*>) const override;
         //void increment(){current_count++;};
@@ -125,8 +136,8 @@ class PurificationCountClause : public Clause {
             num_purify_must = n_purify;
         };
 
-        bool check(qnicResources *resources) const override;
-        bool checkTerminate(qnicResources *resources) const override;
+        //bool check(qnicResources *resources) const override;
+        //bool checkTerminate(qnicResources *resources) const override;
         bool check(std::map<int,stationaryQubit*>) const override;
         //void increment(){current_count++;};
 };

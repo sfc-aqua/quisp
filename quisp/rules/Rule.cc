@@ -24,12 +24,12 @@ void Rule::setAction (Action * a) {
 }
 cPacket* Rule::checkrun(cModule *re){
     cPacket *pk = nullptr;
-    //std::cout<<"\n\n\n\n\n Before: "<<resources.size()<<"\n";
     if (condition->check(resources)){
-           //std::cout<<"All conditions met. Running Action. \n";
+        //std::cout<<"Condition met!.\n";
            pk = action->run(re);
     }else{
         //std::cout<<"Condition did not meet \n";
+        pk = new ConditionNotSatisfied;
     }
     //std::cout<<"After: "<<resources.size()<<"\n";
     return pk;
@@ -46,7 +46,7 @@ bool Rule::checkTerminate() {
        return done;
 }
 
-
+/*
 cPacket* Rule::checkrun(cModule *re, qnicResources * resources, int qnic_type, int qnic_index, int resource_entangled_with_address) {
     EntangledPairs temp_resource_list;
 
@@ -63,10 +63,10 @@ cPacket* Rule::checkrun(cModule *re, qnicResources * resources, int qnic_type, i
     }
     return pk;
 }
+*/
 
 
-
-
+/*
 bool Rule::checkTerminate(qnicResources * resources, int qnic_type, int qnic_index, int resource_entangled_with_address) {
     bool done = false;
     if (condition->checkTerminate(resources)){
@@ -77,7 +77,7 @@ bool Rule::checkTerminate(qnicResources * resources, int qnic_type, int qnic_ind
     }
        return done;
 }
-
+*/
 
 
 } // namespace rules

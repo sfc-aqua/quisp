@@ -11,6 +11,7 @@
 namespace quisp {
 namespace rules {
 
+/*
 bool Condition::check(qnicResources *resources) const {
     EV<<"In condition...\n";
     bool satisfying = true;
@@ -22,6 +23,7 @@ bool Condition::check(qnicResources *resources) const {
     }
     return satisfying;
 }
+*/
 
 bool Condition::check(std::map<int,stationaryQubit*> resources) const {
     EV<<"In condition...\n";
@@ -32,9 +34,11 @@ bool Condition::check(std::map<int,stationaryQubit*> resources) const {
             break;
         }
     }
+    std::cout<<"satisfying? = "<<satisfying<<" false = "<<false<<" true = "<<true<<"\n";
     return satisfying;
 }
 
+/*
 bool Condition::checkTerminate(qnicResources *resources) const {
     bool satisfying = true;
     for (auto clause = cbegin(), end = cend(); clause != end; clause++){
@@ -44,13 +48,13 @@ bool Condition::checkTerminate(qnicResources *resources) const {
         }
     }
     return satisfying;
-}
+}*/
 
 bool Condition::checkTerminate(std::map<int,stationaryQubit*> resources) const {
-    bool satisfying = true;
+    bool satisfying = false;
     for (auto clause = cbegin(), end = cend(); clause != end; clause++){
-        if (!(*clause)->checkTerminate(resources)){
-            satisfying = false;
+        if ((*clause)->checkTerminate(resources)){
+            satisfying = true;
             break;
         }
     }

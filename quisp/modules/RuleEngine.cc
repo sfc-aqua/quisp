@@ -182,9 +182,9 @@ void RuleEngine::handleMessage(cMessage *msg){
            }else{
                error("Empty rule set...");
            }
-
-
-
+        }
+        else if(dynamic_cast<PurificationResult *>(msg) != nullptr){
+            error("Received");
         }
     delete msg;
 }
@@ -601,12 +601,13 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
         int assigned = 0;
         for (auto it =  allResources[qnic_type][qnic_index].cbegin(), next_it =  allResources[qnic_type][qnic_index].cbegin(); it !=  allResources[qnic_type][qnic_index].cend(); it = next_it){
              next_it = it; ++next_it;
-             if(!it->second->isLocked() && resource_entangled_with_address == it->first){
+             if(!it->second->isAllocated() && resource_entangled_with_address == it->first){
                  //Free resource that has not been assigned to any ruleset.
                  int index = process->front()->resources.size();
                  process->front()->resources.insert(std::make_pair(index,it->second));//Assign resource to the 1st Rule.
                  int rule_id = process->front()->rule_index;
-                 it->second->Lock(ruleset_id, rule_id);
+                 //it->second->Lock(ruleset_id, rule_id);
+                 it->second->Allocate();
                  assigned++;
              }
         }
@@ -640,6 +641,7 @@ void RuleEngine::traverseThroughAllProcesses2(){
                         if(!((*rule)->resources.size()>0)){
                             break;//No more resource left for now.
                         }
+                        //std::cout<<"module["<<parentAddress<<"]\n";
                         cPacket *pk = (*rule)->checkrun(this);//Do something on qubits entangled with resource_entangled_with_address.
 
                         if(pk!=nullptr){
@@ -652,23 +654,48 @@ void RuleEngine::traverseThroughAllProcesses2(){
                                 pk_for_self->setDestAddr(pk_t->getSrcAddr());
                                 send(pk,"RouterPort$o");
                                 send(pk_for_self,"RouterPort$o");
+                            }else if(dynamic_cast<PurificationResult *>(pk)!= nullptr){
+                                //error("error");
+                                PurificationResult *pkt = check_and_cast<PurificationResult *>(pk);
+                                process_id purification_id;
+                                purification_result pr;
+                                pkt->setSrcAddr(parentAddress);
+                                purification_id.ruleset_id = pkt->getRuleset_id();
+                                purification_id.rule_id = pkt->getRule_id();
+                                purification_id.index = pkt->getAction_index();
+                                pr.id = purification_id;
+                                pr.outcome = pkt->getOutput_is_plus();
+                                Purification_table.insert(std::make_pair(purification_id.ruleset_id, pr));
+                                //delete pk;
+                                send(pkt,"RouterPort$o");
+
                             }else if (dynamic_cast<Error *>(pk)!= nullptr){
                                 Error *err = check_and_cast<Error *>(pk);
                                 error(err->getError_text());
+                                delete pk;
+                            }else if(dynamic_cast<ConditionNotSatisfied *>(pk)!= nullptr){
+                                //Condition does not meet. Go to next rule. e.g. Fidelity is good enough by doing purification. Next could be swap.
+                                delete pk;
+                                break;
+                            }else{
+                                delete pk;
+                                //error("Unknown return packet from action.");
                             }
+                        }else{
+                            error("Pk nullptr");
                         }
 
+                        std::cout<<"Is it done?";
                         process_done = (*rule)->checkTerminate();//The entire process is done. e.g. enough measurement for tomography.
                         if(process_done){//Delete rule set if done
+                            std::cout<<"!!!!!!!!!!!!!!!!!!!!! TERMINATING!!!!!!!!!!!!!!!!!!!!!!!!!";
                             process->destroyThis();//Destroy ruleset object
                             rp.erase(it);//Erase rule set from map.
                             terminate_this_rule = true;//Flag to get out from outer loop
                             break;//get out from this for loop.
                         }
 
-                        if(dynamic_cast<ConditionNotSatisfied *>(pk)!= nullptr){
-                            break;//Condition does not meet. Go to next rule. e.g. Fidelity is good enough by doing purification. Next could be swap.
-                        }
+
 
                     }//While
                     if(process_done){
@@ -681,7 +708,7 @@ void RuleEngine::traverseThroughAllProcesses2(){
 
 }
 
-
+/*
 void RuleEngine::traverseThroughAllProcesses(RuleEngine *re, int qnic_type, int qnic_index){
     int testing = rp.size();//Number of running processes (in all QNICs).
     EV<<"running processes = "<<testing<<"\n";
@@ -705,7 +732,7 @@ void RuleEngine::traverseThroughAllProcesses(RuleEngine *re, int qnic_type, int 
                         cPacket *pk = (*rule)->checkrun(re, allResources, qnic_type, qnic_index,resource_entangled_with_address);//Do something on qubits entangled with resource_entangled_with_address.
 
                         if(pk!=nullptr){
-                            /*Feedback to another node required*/
+                            //Feedback to another node required
                             if (dynamic_cast<LinkTomographyResult *>(pk)!= nullptr){
                                 //The cPacket *pk is a single packet forwarded to the neighbor. But this node's HardwareMonitor also needs to store the result.
                                 LinkTomographyResult *pk_t = check_and_cast<LinkTomographyResult *>(pk);
@@ -743,7 +770,7 @@ void RuleEngine::traverseThroughAllProcesses(RuleEngine *re, int qnic_type, int 
        EV<<"No process running\n";
    }
 
-}
+}*/
 
 void RuleEngine::freeConsumedResource(int qnic_index, stationaryQubit *qubit, QNIC_type qnic_type){
 

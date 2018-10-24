@@ -64,6 +64,14 @@ packet LinkTomographyResult extends header
 	int partner_address;
 }
 
+packet PurificationResult extends header
+{
+	bool Output_is_plus;
+	unsigned long ruleset_id;
+	int rule_id;
+	int action_index;
+}
+
 packet ConditionNotSatisfied{
 }
 

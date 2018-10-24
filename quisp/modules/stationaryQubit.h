@@ -167,9 +167,12 @@ class stationaryQubit : public cSimpleModule
 
        virtual bool checkBusy();
        virtual void setFree(bool consumed);
-       virtual void Lock(int ruleset_id, int rule_id);/*In use. E.g. waiting for purification result.*/
+       virtual void Lock(int ruleset_id, int rule_id, int action_id);/*In use. E.g. waiting for purification result.*/
        virtual void Unlock();
        virtual bool isLocked();
+       virtual void Allocate();
+       virtual void Deallocate();
+       virtual bool isAllocated();
 
         double getFidelity() const { return fidelity; };
         void setFidelity(const double f) { fidelity=f; par("fidelity")=f; };
@@ -246,8 +249,10 @@ class stationaryQubit : public cSimpleModule
         PhotonicQubit *photon;
         double fidelity;
         bool locked;
-        int locked_ruleset_id;
+        unsigned long locked_ruleset_id;
         int locked_rule_id;
+        int action_index;
+        bool allocated;
 
 
 

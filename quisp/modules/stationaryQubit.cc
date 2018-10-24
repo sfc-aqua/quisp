@@ -245,7 +245,9 @@ void stationaryQubit::setFree(bool consumed){
     locked = false;
     locked_ruleset_id = -1;
     locked_rule_id = -1;
+    action_index = 0;
     isBusy = false;
+    allocated = false;
     emitted_time = -1;
     updated_time = -1;
     /**/
@@ -289,10 +291,16 @@ bool stationaryQubit::checkBusy(){
 }
 
 /*To avoid disturbing this qubit.*/
-void stationaryQubit::Lock(int ruleset_id, int rule_id){
+void stationaryQubit::Lock(int ruleset_id, int rule_id, int action_id){
     locked = true;
     locked_ruleset_id = ruleset_id;//Used to identify what this qubit is locked for.
     locked_rule_id = rule_id;
+    action_index = action_id;
+
+    if(hasGUI()){
+        bubble("Locked!");
+        getDisplayString().setTagArg("i", 1, "green");
+    }
 }
 
 void stationaryQubit::Unlock(){
@@ -302,6 +310,20 @@ void stationaryQubit::Unlock(){
 bool stationaryQubit::isLocked(){
     return locked;
 }
+
+
+void stationaryQubit::Allocate(){
+    allocated = true;
+}
+
+void stationaryQubit::Deallocate(){
+    allocated = false;
+}
+
+bool stationaryQubit::isAllocated(){
+    return allocated;
+}
+
 
 /**
  * \brief Generate photon entangled with the memory
@@ -437,7 +459,7 @@ void stationaryQubit::addZerror(){
 
 
 bool stationaryQubit::purify(stationaryQubit * resource_qubit) {
-    resource_qubit->CNOT_gate(this);
+    resource_qubit->CNOT_gate(this/*controlled qubit*/);
     bool meas = resource_qubit->measure_Z();
     return meas;
     // communicate, values of measurement

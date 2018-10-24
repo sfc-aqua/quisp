@@ -55,10 +55,10 @@ class Rule {
             //rc.insert(std::make_pair(index,qubit));
         }
 
-        cPacket* checkrun(cModule *re, qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
+        //cPacket* checkrun(cModule *re, qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
         cPacket* checkrun(cModule *re);
         bool checkTerminate();
-        bool checkTerminate(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
+        //bool checkTerminate(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
 
 };
 

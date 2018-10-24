@@ -343,10 +343,10 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
             if(num_purification_tomography>0){/*RuleSet including purification*/
 
                 Rule* Purification = new Rule(RuleSet_id, rule_index);
-                Condition* No_condition = new Condition();
-                Clause* No_clause = new NoClause();
-                No_condition->addClause(No_clause);
-                Purification->setCondition(No_condition);
+                Condition* Purification_condition = new Condition();
+                Clause* resource_clause = new EnoughResourceClause(num_purification_tomography+1);
+                Purification_condition->addClause(resource_clause);
+                Purification->setCondition(Purification_condition);
                 Action* purify_action = new PurifyAction(RuleSet_id,rule_index,X_Purification,Z_Purification, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
                 Purification->setAction(purify_action);
                 rule_index++;
@@ -372,7 +372,9 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                 Rule* Random_measure_tomo = new Rule(RuleSet_id, 0);//Let's make nodes select measurement basis randomly, because it it easier.
                 Condition* total_measurements = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
                 Clause* measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type , qnic_index, 0);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
+                Clause* resource_clause = new EnoughResourceClause(1);
                 total_measurements->addClause(measure_count_clause);
+                total_measurements->addClause(resource_clause);
                 Random_measure_tomo->setCondition(total_measurements);
                 quisp::rules::Action* measure = new RandomMeasureAction(partner_address, qnic_type , qnic_index, 0, my_address);//Measure the local resource between it->second.neighborQNode_address.
                 Random_measure_tomo->setAction(measure);

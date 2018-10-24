@@ -11,6 +11,8 @@
 namespace quisp {
 namespace rules {
 
+
+/*
 bool FidelityClause::check(qnicResources* resources) const {
     stationaryQubit* qubit = NULL;
     checkQnic();//This is not doing anything...
@@ -18,9 +20,9 @@ bool FidelityClause::check(qnicResources* resources) const {
         return (qubit->getFidelity() >= threshold);
     }
     return false;
-}
+}*/
 
-bool FidelityClause::check(std::map<int,stationaryQubit*>) const {
+bool FidelityClause::check(std::map<int,stationaryQubit*> resource) const {
     stationaryQubit* qubit = nullptr;
     /*checkQnic();//This is not doing anything...
     if(qubit = getQubit(resources, qnic_type, qnic_id, partner, resource)){
@@ -29,7 +31,24 @@ bool FidelityClause::check(std::map<int,stationaryQubit*>) const {
     return false;*/
 }
 
+bool EnoughResourceClause::check(std::map<int,stationaryQubit*> resource) const{
+    std::cout<<"!!In enough clause \n";
+    bool enough = false;
 
+    int num_free = 0;
+    for (auto it=resource.begin(); it!=resource.end(); ++it) {
+           if(!it->second->isLocked()){
+               num_free++;
+           }
+           if(num_free >= num_resource_required){
+               enough = true;
+           }
+    }
+    std::cout<<"Enough = "<<enough<<"\n";
+    return enough;
+}
+
+/*
 bool MeasureCountClause::check(qnicResources* resources) const {
     //EV<<"MeasureCountClause invoked!!!! \n";
     if(current_count<max_count){
@@ -41,16 +60,16 @@ bool MeasureCountClause::check(qnicResources* resources) const {
         EV<<"Count is enough";
         return false;
     }
-}
+}*/
 
 bool MeasureCountClause::check(std::map<int,stationaryQubit*> resources) const {
     //std::cout<<"MeasureCountClause invoked!!!! \n";
     if(current_count<max_count){
            current_count++;//Increment measured counter.
-           //std::cout<<"Measurement count is now "<<current_count<<" < "<<max_count<<"\n";
+           std::cout<<"Measurement count is now "<<current_count<<" < "<<max_count<<"\n";
            return true;
     }else{
-           //std::cout<<"Count is enough\n";
+           std::cout<<"Count is enough\n";
            return false;
     }
 }
@@ -65,7 +84,7 @@ bool MeasureCountClause::checkTerminate(std::map<int,stationaryQubit*> resources
     return done;
 }
 
-
+/*
 bool MeasureCountClause::checkTerminate(qnicResources* resources) const {
     EV<<"Tomography termination clause invoked.\n";
     bool done = false;
@@ -74,9 +93,9 @@ bool MeasureCountClause::checkTerminate(qnicResources* resources) const {
         done = true;
     }
     return done;
-}
+}*/
 
-
+/*
 bool PurificationCountClause::check(qnicResources* resources) const {
     stationaryQubit* qubit = NULL;
     //checkQnic();//This is not doing anything...
@@ -87,10 +106,10 @@ bool PurificationCountClause::check(qnicResources* resources) const {
     }else{
         return false;
     }
-}
+}*/
 
 
-bool PurificationCountClause::check(std::map<int,stationaryQubit*>) const {
+bool PurificationCountClause::check(std::map<int,stationaryQubit*> resource) const {
     stationaryQubit* qubit = nullptr;
     //checkQnic();//This is not doing anything...
 
@@ -103,9 +122,10 @@ bool PurificationCountClause::check(std::map<int,stationaryQubit*>) const {
     }*/
 }
 
+/*
 bool PurificationCountClause::checkTerminate(qnicResources* resources) const {
         return false;
-}
+}*/
 
 
 
