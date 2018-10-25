@@ -26,9 +26,9 @@ cPacket* Rule::checkrun(cModule *re){
     cPacket *pk = nullptr;
     if (condition->check(resources)){
         //std::cout<<"Condition met!.\n";
-           std::cout<<"before: check num = "<<action->checkNumResource()<<"\n";
+           //std::cout<<"before: check num = "<<action->checkNumResource()<<"\n";
            pk = action->run(re);
-           std::cout<<"after: check num = "<<action->checkNumResource()<<"\n";
+           //std::cout<<"after: check num = "<<action->checkNumResource()<<"\n";
     }else{
         //std::cout<<"Condition did not meet \n";
         pk = new ConditionNotSatisfied;

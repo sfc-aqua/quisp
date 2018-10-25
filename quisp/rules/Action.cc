@@ -149,7 +149,7 @@ cPacket* PurifyAction::run(cModule *re) {
     }
     bool meas = trash_qubit->purify(qubit);//Error propagation only. Not based on density matrix
     qubit->Lock(ruleset_id, rule_id, action_index);
-    std::cout<<"Locked"<<qubit<<", trashed"<<trash_qubit<<"\n";
+    //std::cout<<"Locked"<<qubit<<", trashed"<<trash_qubit<<"\n";
 
     //Delete measured resource from the tracked list of resources.
    removeResource_fromRule(trash_qubit);//Remove from resource list in this Rule.
@@ -172,7 +172,7 @@ cPacket* PurifyAction::run(cModule *re) {
 
 cPacket* RandomMeasureAction::run(cModule *re) {
 
-    std::cout<<"Measuring qubit now.\n";
+    //std::cout<<"Measuring qubit now.\n";
     stationaryQubit *qubit = nullptr;
     //qubit = getQubit(/*re,*/ resources,qnic_type,qnic_id,partner,resource);
     qubit = getResource_fromTop(resource);

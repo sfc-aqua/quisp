@@ -470,9 +470,9 @@ void stationaryQubit::addZerror(){
 }
 
 
-bool stationaryQubit::purify(stationaryQubit * resource_qubit) {
-    resource_qubit->CNOT_gate(this/*controlled qubit*/);
-    bool meas = resource_qubit->measure_Z();
+bool stationaryQubit::purify(stationaryQubit * resource_qubit/*Controlled*/) {
+    this->CNOT_gate(resource_qubit/*controlled qubit*/);
+    bool meas = this->measure_Z();
     return meas;
     // communicate, values of measurement
     // probably need to store ours until receiving the partners'
