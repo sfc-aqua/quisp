@@ -245,7 +245,7 @@ void stationaryQubit::setFree(bool consumed){
     locked = false;
     locked_ruleset_id = -1;
     locked_rule_id = -1;
-    action_index = 0;
+    action_index = -1;
     isBusy = false;
     allocated = false;
     emitted_time = -1;
@@ -299,12 +299,20 @@ void stationaryQubit::Lock(int ruleset_id, int rule_id, int action_id){
 
     if(hasGUI()){
         bubble("Locked!");
-        getDisplayString().setTagArg("i", 1, "green");
+        getDisplayString().setTagArg("i", 1, "purple");
     }
 }
 
 void stationaryQubit::Unlock(){
     locked = false;
+    locked_ruleset_id = -1;//Used to identify what this qubit is locked for.
+    locked_rule_id = -1;
+    action_index = -1;
+
+    if(hasGUI()){
+            bubble("Unlocked!");
+            getDisplayString().setTagArg("i", 1, "pink");
+    }
 }
 
 bool stationaryQubit::isLocked(){
@@ -314,6 +322,10 @@ bool stationaryQubit::isLocked(){
 
 void stationaryQubit::Allocate(){
     allocated = true;
+    if(hasGUI()){
+                bubble("Allocated!");
+                getDisplayString().setTagArg("i", 1, "purple");
+    }
 }
 
 void stationaryQubit::Deallocate(){

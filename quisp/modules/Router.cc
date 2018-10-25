@@ -142,12 +142,9 @@ void Router::handleMessage(cMessage *msg)
             send(pk, "hmPort$o");
             return;
         }else if(destAddr == myAddress && dynamic_cast<PurificationResult *>(msg)!= nullptr){
-            error("Hello");
             bubble("Purification result received");
             send(pk,"rePort$o");
             return;
-        }else if(dynamic_cast<PurificationResult *>(msg)!= nullptr){
-            error("...");
         }
 
         //Check if packet is reachable

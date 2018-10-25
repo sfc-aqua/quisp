@@ -34,6 +34,7 @@ class Action {
     virtual cPacket* run(cModule *re, qnicResources *resources) = 0;
     virtual cPacket* run(cModule *re) = 0;
     virtual stationaryQubit* getResource_fromTop(int required_index);
+    virtual int checkNumResource();
     virtual void removeResource_fromRule(stationaryQubit *qubit);
     //virtual stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id);
 };
@@ -83,7 +84,7 @@ class PurifyAction : public Action {
         bool X;
         bool Z;
         int num_purify;
-        int action_index;
+        int action_index = 0;//To track how many times this particular action has been invoked.
     public:
         PurifyAction(int part, QNIC_type qt, int qi, int res, int tres, int rs_id, int r_id) {
             partner = part;
@@ -94,7 +95,7 @@ class PurifyAction : public Action {
             purification_count = 0;
             rule_id = r_id;
             ruleset_id = rs_id;
-            action_index = 0;
+            //action_index++;
         };
         PurifyAction(unsigned long RuleSet_id, int rule_index,bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res, int tres){
             partner =part;
@@ -108,7 +109,7 @@ class PurifyAction : public Action {
             num_purify = num_purification;
             X = X_purification;
             Z = Z_purification;
-            action_index = 0;
+            //action_index++;
         };
         PurifyAction(){
 

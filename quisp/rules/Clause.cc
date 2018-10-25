@@ -32,7 +32,7 @@ bool FidelityClause::check(std::map<int,stationaryQubit*> resource) const {
 }
 
 bool EnoughResourceClause::check(std::map<int,stationaryQubit*> resource) const{
-    std::cout<<"!!In enough clause \n";
+    //std::cout<<"!!In enough clause \n";
     bool enough = false;
 
     int num_free = 0;
@@ -44,7 +44,7 @@ bool EnoughResourceClause::check(std::map<int,stationaryQubit*> resource) const{
                enough = true;
            }
     }
-    std::cout<<"Enough = "<<enough<<"\n";
+    //std::cout<<"Enough = "<<enough<<"\n";
     return enough;
 }
 
@@ -69,7 +69,7 @@ bool MeasureCountClause::check(std::map<int,stationaryQubit*> resources) const {
            std::cout<<"Measurement count is now "<<current_count<<" < "<<max_count<<"\n";
            return true;
     }else{
-           std::cout<<"Count is enough\n";
+           //std::cout<<"Count is enough\n";
            return false;
     }
 }

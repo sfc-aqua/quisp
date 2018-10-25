@@ -34,7 +34,7 @@ bool Condition::check(std::map<int,stationaryQubit*> resources) const {
             break;
         }
     }
-    std::cout<<"satisfying? = "<<satisfying<<" false = "<<false<<" true = "<<true<<"\n";
+    //std::cout<<"satisfying? = "<<satisfying<<" false = "<<false<<" true = "<<true<<"\n";
     return satisfying;
 }
 

@@ -91,6 +91,21 @@ void RuleEngine::handleMessage(cMessage *msg){
             realtime_controller->EmitPhoton(pk->getQnic_index(),pk->getQubit_index(),(QNIC_type) pk->getQnic_type(),pk->getKind());
         }
 
+        else if(dynamic_cast<PurificationResult *>(msg) != nullptr){
+            PurificationResult *pkt = check_and_cast<PurificationResult *>(msg);
+            process_id purification_id;
+            purification_result pr;
+            purification_id.ruleset_id = pkt->getRuleset_id();
+            purification_id.rule_id = pkt->getRule_id();
+            purification_id.index = pkt->getAction_index();
+            pr.id = purification_id;
+            pr.outcome = pkt->getOutput_is_plus();
+
+            check_Purification_Agreement(pr);
+            //delete pkt;
+
+        }
+
         else if(dynamic_cast<CombinedBSAresults *>(msg) != nullptr){
             //First, keep all the qubits that were successfully entangled, and reinitialize the failed ones.
             CombinedBSAresults *pk_result = check_and_cast<CombinedBSAresults *>(msg);
@@ -183,13 +198,98 @@ void RuleEngine::handleMessage(cMessage *msg){
                error("Empty rule set...");
            }
         }
-        else if(dynamic_cast<PurificationResult *>(msg) != nullptr){
-            error("Received");
-        }
     delete msg;
 }
 
 
+
+
+
+
+
+void RuleEngine::check_Purification_Agreement(purification_result pr){
+
+    auto ret = Purification_table.equal_range(pr.id.ruleset_id);//Find all resource in qytpe/qid entangled with partner.
+
+    for (auto it=ret.first; it!=ret.second; it++) {
+        if(it->second.id.rule_id == pr.id.rule_id && it->second.id.index == pr.id.index){
+            if(it->second.outcome == pr.outcome){
+                //Outcomes agreed. Keep the entangled pair.
+
+                Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
+            }else{
+                //Discard
+                Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
+            }
+            Purification_table.erase(it);
+            return;
+        }
+    }
+}
+
+
+void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int index){
+    bool ok = false;
+    for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){//In a particular RuleSet
+            next_it = it; ++next_it;
+            if(it->second.RuleSet->ruleset_id){//Find the corresponding ruleset.
+                RuleSet* process = it->second.RuleSet;//One Process. From top to bottom.
+                for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){//Traverse through rules
+                    if((*rule)->rule_index == rule_id){//Find the corresponding rule.
+                        for (auto qubit=(*rule)->resources.begin(); qubit!=(*rule)->resources.end(); ++qubit) {
+                            if(qubit->second->action_index == index){
+                                //Correct resource found! Need to unlock and stage up the resource to the next rule.
+                                qubit->second->Unlock();
+                                std::cout<<"Unlock "<<qubit->second<<"\n";
+                                stationaryQubit *q = qubit->second;
+                                (*rule)->resources.erase(qubit);//Erase this from resource list
+                                rule++;
+                                if(rule==end){
+                                    error("Rule came to end after operation (e.g. purification) success");
+                                }
+                                int rsc_index = (*rule)->resources.size();
+                                (*rule)->resources.insert(std::make_pair(rsc_index, q));
+                                ok = true;
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+    }
+    if(!ok){
+        error("Resource in rule not found....");
+    }
+}
+
+
+void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int index){
+    bool ok = false;
+    for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){//In a particular RuleSet
+            next_it = it; ++next_it;
+            if(it->second.RuleSet->ruleset_id){//Find the corresponding ruleset.
+                RuleSet* process = it->second.RuleSet;//One Process. From top to bottom.
+                for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){//Traverse through rules
+                    if((*rule)->rule_index == rule_id){//Find the corresponding rule.
+                        for (auto qubit=(*rule)->resources.begin(); qubit!=(*rule)->resources.end(); ++qubit) {
+                            if(qubit->second->action_index == index){
+                                //Correct resource found! Need to unlock and stage up the resource to the next rule.
+                                //qubit->second->Unlock();
+                                std::cout<<"Discard "<<qubit->second<<"\n";
+                                QNIC_type qt = (QNIC_type)qubit->second->qnic_type;
+                                freeConsumedResource(qubit->second->qnic_address, qubit->second, qt);//Remove from entangled resource list.
+                                (*rule)->resources.erase(qubit);//Erase this from resource list                                                               ok = true;
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+    }
+    if(!ok){
+        error("Resource in rule not found....");
+    }
+}
 
 
 Interface_inf RuleEngine::getInterface_toNeighbor(int destAddr){

@@ -244,14 +244,15 @@ class stationaryQubit : public cSimpleModule
         int qnic_address;
         int qnic_type;
         //@}
-    private:
-
-        PhotonicQubit *photon;
-        double fidelity;
         bool locked;
         unsigned long locked_ruleset_id;
         int locked_rule_id;
         int action_index;
+
+    private:
+
+        PhotonicQubit *photon;
+        double fidelity;
         bool allocated;
 
 

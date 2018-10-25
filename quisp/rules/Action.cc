@@ -95,7 +95,10 @@ cPacket* RandomMeasureAction::run(cModule *re, qnicResources* resources) {
     }
 }
 
-
+int Action::checkNumResource(){
+    //std::cout << "Num resource = " << (*rule_resources).size()<<"\n";
+    return (*rule_resources).size();
+}
 
 //required_index: 0 is the top one, 1 is the 2nd top one, and so on.
 stationaryQubit* Action::getResource_fromTop(int required_index){
@@ -129,6 +132,7 @@ void Action::removeResource_fromRule(stationaryQubit *qubit){
 }
 
 cPacket* PurifyAction::run(cModule *re) {
+    std::cout<<"Purification!\n";
     stationaryQubit *qubit = nullptr;
     stationaryQubit *trash_qubit = nullptr;
     qubit = getResource_fromTop(resource);
@@ -145,12 +149,15 @@ cPacket* PurifyAction::run(cModule *re) {
     }
     bool meas = trash_qubit->purify(qubit);//Error propagation only. Not based on density matrix
     qubit->Lock(ruleset_id, rule_id, action_index);
+    std::cout<<"Locked"<<qubit<<", trashed"<<trash_qubit<<"\n";
 
     //Delete measured resource from the tracked list of resources.
    removeResource_fromRule(trash_qubit);//Remove from resource list in this Rule.
    RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
    rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);//Remove from entangled resource list.
    //Deleting done
+
+
 
    PurificationResult *pk = new PurificationResult;
    pk->setDestAddr(partner);
@@ -164,7 +171,8 @@ cPacket* PurifyAction::run(cModule *re) {
 
 
 cPacket* RandomMeasureAction::run(cModule *re) {
-    EV<<"Measuring qubit now.\n";
+
+    std::cout<<"Measuring qubit now.\n";
     stationaryQubit *qubit = nullptr;
     //qubit = getQubit(/*re,*/ resources,qnic_type,qnic_id,partner,resource);
     qubit = getResource_fromTop(resource);
