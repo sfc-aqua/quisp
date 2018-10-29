@@ -188,17 +188,22 @@ void RuleEngine::handleMessage(cMessage *msg){
            int process_id = rp.size();//This is temporary because it will not be unique when processes have been deleted.
 
            EV<<"Process size is ...."<<p.RuleSet->size()<<"\n";
+
            if(p.RuleSet->size()>0){
                rp.insert(std::make_pair(process_id, p));
                EV<<"New process arrived !\n";
 
                //traverseThroughAllProcesses(int qnic_type, int qnic_index);
                //error("die");
+
            }else{
                error("Empty rule set...");
            }
         }
-    delete msg;
+        //traverseThroughAllProcesses2();
+        delete msg;
+
+
 }
 
 
@@ -597,17 +602,18 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
         if (it == tracker[qnic_address].end())
                 error("Something is wrong with the tracker....%d th shot not recorded",i);//Neighbor not found! This should not happen unless you simulate broken links in real time.
         if(failed){
+            //std::cout<<"node["<<parentAddress<<"] failed!\n";
             //EV<<i<<"th shot has failed.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
             //realtime_controller->ReInitialize_StationaryQubit(it->second.qnic_index ,it->second.qubit_index, qnic_type);//Re-initialize the qubit. Pauli errors will be eliminated, and the color of the qubit in the GUI changes to blue.
             //Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], it->second.qnic_index, it->second.qubit_index);
             freeResource(it->second.qnic_index, it->second.qubit_index, qnic_type);
         }else{
+            //std::cout<<"node["<<parentAddress<<"] success!\n";
             //Keep the entangled qubits
             //EV<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
             //Add this as an available resource
             stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
             //std::cout<<"Available resource"<<qubit<<" isBusy = "<<qubit->isBusy<<"\n";
-
             allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,qubit));//Add qubit as available resource between NeighborQNodeAddress.
             success_num++;
             //EV<<"There are "<<allResources[qnic_type][qnic_index].count(neighborQNodeAddress)<<" resources between this and "<<destAddr<<"\n";
@@ -785,10 +791,10 @@ void RuleEngine::traverseThroughAllProcesses2(){
                             error("Pk nullptr");
                         }
 
-                        std::cout<<"Is it done?";
+                        //std::cout<<"Is it done?";
                         process_done = (*rule)->checkTerminate();//The entire process is done. e.g. enough measurement for tomography.
                         if(process_done){//Delete rule set if done
-                            std::cout<<"!!!!!!!!!!!!!!!!!!!!! TERMINATING!!!!!!!!!!!!!!!!!!!!!!!!!";
+                            //std::cout<<"!!!!!!!!!!!!!!!!!!!!! TERMINATING!!!!!!!!!!!!!!!!!!!!!!!!!";
                             process->destroyThis();//Destroy ruleset object
                             rp.erase(it);//Erase rule set from map.
                             terminate_this_rule = true;//Flag to get out from outer loop

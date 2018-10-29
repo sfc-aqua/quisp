@@ -112,7 +112,9 @@ network Star_MSM
         }
         channel QuantumChannel extends DatarateChannel
         {
-            double cost = default(1);
+            double cost = default(1.0);
+            double fidelity = default(1.0);
+            double bellpair_per_sec = default(1.0);
             double distance @unit(km) = default(20km);
             //delay = uniform(0.01ms, 1s);
             double distance_of_light_in_fiber_per_sec @unit(km) = default(205336.986301km);

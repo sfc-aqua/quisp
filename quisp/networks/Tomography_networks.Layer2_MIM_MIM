@@ -1,0 +1,2 @@
+repeater[0]<-->QuantumChannel{cost=0.126817;distance=10km;fidelity=0.887995;bellpair_per_sec=10;}<-->HoM[0] F=0.887995 X=0.0335738 Z=0.00416204 Y=0.0742693
+repeater[0]<-->QuantumChannel{cost=0.118856;distance=10km;fidelity=0.917255;bellpair_per_sec=10;}<-->HoM[1] F=0.917255 X=0.0306617 Z=0.0271895 Y=0.0248938

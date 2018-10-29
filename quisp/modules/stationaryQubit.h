@@ -254,11 +254,14 @@ class stationaryQubit : public cSimpleModule
         PhotonicQubit *photon;
         double fidelity;
         bool allocated;
-
+        int DEBUG_memory_X_count;
+        int DEBUG_memory_Y_count;
+        int DEBUG_memory_Z_count;
 
 
     protected:
         virtual void initialize();
+        virtual void finish();
         virtual void handleMessage(cMessage *msg);
         virtual PhotonicQubit *generateEntangledPhoton();
         virtual void setBusy();

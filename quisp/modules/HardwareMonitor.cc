@@ -12,6 +12,8 @@
 #include <string>
 #include <unsupported/Eigen/MatrixFunctions>
 #include <unsupported/Eigen/KroneckerProduct>
+#include <iostream>
+#include <fstream>
 
 namespace quisp {
 namespace modules {
@@ -77,6 +79,7 @@ void HardwareMonitor::initialize(int stage)
   par("ntable") = s;
 
   if(do_link_level_tomography && stage == 1){
+
       for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
           if(myAddress > it->second.neighborQNode_address){//You dont want 2 separate tomography processes to run for each link. Not a very good solution, but makes sure that only 1 request per link is generated.
               EV<<"Generating tomography rules... for node "<<it->second.neighborQNode_address<<"\n";
@@ -185,6 +188,14 @@ void HardwareMonitor::handleMessage(cMessage *msg){
 }
 
 void HardwareMonitor::finish(){
+
+
+    std::string file_name =  std::string("Tomography_")+std::string(getSimulation()->getNetworkType()->getFullName());
+
+    std::ofstream tomography_stats(file_name,std::ios_base::app);
+    std::cout<<"Opened new file to write.\n";
+
+
     //EV<<"This is just a test!\n";
     EV<<"numQnic_total = "<<numQnic_total;
     for(int i=0; i<numQnic_total; i++){
@@ -219,13 +230,53 @@ void HardwareMonitor::finish(){
                  error("This should not happen though..... ?");
 
         }
-        //For each qnic or link, reconstruct the dm.
-        reconstruct_Density_Matrix(i);
+        //For each qnic/link, reconstruct the dm.
+        Matrix4cd density_matrix_reconstructed = reconstruct_Density_Matrix(i);
+
+        //todo: Will need to clean this up in a separate function
+        Vector4cd Bellpair;
+        Bellpair << 1/sqrt(2), 0, 0, 1/sqrt(2);
+        Matrix4cd density_matrix_ideal = Bellpair*Bellpair.adjoint();
+        double fidelity = (density_matrix_reconstructed.real()* density_matrix_ideal.real() ).trace();
+
+        Vector4cd Bellpair_X;
+        Bellpair_X << 0,1/sqrt(2), 1/sqrt(2),0;
+        Matrix4cd density_matrix_X = Bellpair_X*Bellpair_X.adjoint();
+        double Xerr_rate = (density_matrix_reconstructed.real()* density_matrix_X.real() ).trace();
+        EV<<"Xerr = "<<Xerr_rate<<"\n";
+
+        Vector4cd Bellpair_Z;
+        Bellpair_Z << 1/sqrt(2),0,0,-1/sqrt(2);
+        Matrix4cd density_matrix_Z = Bellpair_Z*Bellpair_Z.adjoint();
+        double Zerr_rate = (density_matrix_reconstructed.real()* density_matrix_Z.real() ).trace();
+        Complex checkZ = Bellpair_Z.adjoint()*density_matrix_reconstructed*Bellpair_Z;
+        EV<<"Zerr = "<<Zerr_rate<<" or, "<<checkZ.real()<<"+"<<checkZ.imag()<<"\n";
+
+        Vector4cd Bellpair_Y;
+        Bellpair_Y << 0,Complex(0,1/sqrt(2)),Complex(0,-1/sqrt(2)),0;
+        Matrix4cd density_matrix_Y = Bellpair_Y*Bellpair_Y.adjoint();
+        double Yerr_rate = (density_matrix_reconstructed.real()* density_matrix_Y.real() ).trace();
+        EV<<"Yerr = "<<Yerr_rate<<"\n";
+
+        connection_setup_inf inf = return_setupInf(i);
+        double bellpairs_per_sec = 10;
+        double link_cost =(double)1/(fidelity*fidelity*bellpairs_per_sec);
+
+        Interface_inf interface = getInterface_inf_fromQnicAddress(inf.qnic.index,inf.qnic.type);
+        cModule *this_node = this->getParentModule()->getParentModule();
+        cModule *neighbor_node = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
+        cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
+        double dis = channel->par("distance");
+        std::cout<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<bellpairs_per_sec<<";}<-->"<<neighbor_node->getFullName()<< " F="<<fidelity<<" X="<<Xerr_rate<<" Z="<<Zerr_rate<<" Y="<<Yerr_rate<<endl;
+        tomography_stats<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<bellpairs_per_sec<<";}<-->"<<neighbor_node->getFullName()<< " F="<<fidelity<<" X="<<Xerr_rate<<" Z="<<Zerr_rate<<" Y="<<Yerr_rate<<endl;
     }
+    tomography_stats.close();
+    std::cout<<"Closed file to write.\n";
 }
 
 
-void HardwareMonitor::reconstruct_Density_Matrix(int qnic_id){
+
+Matrix4cd HardwareMonitor::reconstruct_Density_Matrix(int qnic_id){
     //II
        double S00 = 1.0;
        double S01 = (double)tomography_data[qnic_id]["XX"].plus_plus/(double)tomography_data[qnic_id]["XX"].total_count - (double)tomography_data[qnic_id]["XX"].plus_minus/(double)tomography_data[qnic_id]["XX"].total_count + (double)tomography_data[qnic_id]["XX"].minus_plus/(double)tomography_data[qnic_id]["XX"].total_count - (double)tomography_data[qnic_id]["XX"].minus_minus/(double)tomography_data[qnic_id]["XX"].total_count;
@@ -274,7 +325,8 @@ void HardwareMonitor::reconstruct_Density_Matrix(int qnic_id){
             S*kroneckerProduct(Pauli.I,Pauli.I).eval());
 
     EV<<"DM = "<<density_matrix_reconstructed<<"\n";
-
+    return density_matrix_reconstructed;
+    /*
     Vector4cd Bellpair;
     Bellpair << 1/sqrt(2), 0, 0, 1/sqrt(2);
     Matrix4cd density_matrix_ideal = Bellpair*Bellpair.adjoint();
@@ -303,12 +355,40 @@ void HardwareMonitor::reconstruct_Density_Matrix(int qnic_id){
     double Yerr_rate = (density_matrix_reconstructed.real()* density_matrix_Y.real() ).trace();
     EV<<"Yerr = "<<Yerr_rate<<"\n";
 
+    tomography_stats << "F = "<<fidelity<<" X = "<<Xerr_rate<<" Z ="<<Zerr_rate<<" Y = "<<Yerr_rate<<endl;
+
+    double bellpairs_per_sec = 10;
+    double link_cost =(double)1/(fidelity*fidelity*bellpairs_per_sec);
+    writeToFile_Topology_with_LinkCost(qnic_id, link_cost, fidelity, bellpairs_per_sec);
+
     Vector4cd Bellpair_Y2;
     Bellpair_Y2 << 0,Complex(0,-1/sqrt(2)),Complex(0,1/sqrt(2)),0;
     Matrix4cd density_matrix_Y2 = Bellpair_Y2*Bellpair_Y2.adjoint();
     double Yerr_rate2 = (density_matrix_reconstructed.real()* density_matrix_Y2.real() ).trace();
-    EV<<"Yerr = "<<Yerr_rate2<<"\n";
+    EV<<"Yerr = "<<Yerr_rate2<<"\n";*/
 
+
+}
+
+void HardwareMonitor::writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec){
+
+    connection_setup_inf inf = return_setupInf(qnic_id);
+    Interface_inf interface = getInterface_inf_fromQnicAddress(inf.qnic.index,inf.qnic.type);
+    //if(myAddress > inf.neighbor_address)
+    cModule *this_node = this->getParentModule()->getParentModule();
+    cModule *neighbor_node = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
+    cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
+    double dis = channel->par("distance");
+    if(neighbor_node->getModuleType()!=QNodeType && neighbor_node->getModuleType()!=HoMType && neighbor_node->getModuleType()!=SPDCType)
+        error("Module Type not recognized when writing to file...");
+
+    if(neighbor_node->getModuleType()==QNodeType){
+        if(myAddress > inf.neighbor_address){
+            std::cout<<"\n"<<this_node->getFullName()<<"<--> QuantumChannel{ cost = "<<link_cost<<"; distance = "<<dis<<"km; fidelity = "<<fidelity<<"; bellpair_per_sec = "<<bellpair_per_sec<< ";} <-->"<<neighbor_node->getFullName()<<"\n";
+        }
+    }else{
+        std::cout<<"\n"<<this_node->getFullName()<<"<--> QuantumChannel{ cost = "<<link_cost<<"; distance = "<<dis<<"km; fidelity = "<<fidelity<<"; bellpair_per_sec = "<<bellpair_per_sec<< ";} <-->"<<neighbor_node->getFullName()<<"\n";
+    }
 }
 
 //Excludes Hom, Epps and other intermediate nodes.
@@ -486,6 +566,8 @@ neighborInfo  HardwareMonitor::findNeighborAddress(cModule *qnic_pointer){
     return neighbor_is_QNode;
 }
 
+
+
 cModule* HardwareMonitor::getQNode(){
          cModule *currentModule = getParentModule();//We know that Connection manager is not the QNode, so start from the parent.
          try{
@@ -500,6 +582,8 @@ cModule* HardwareMonitor::getQNode(){
          }
          return currentModule;
 }
+
+
 
 neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode){
 

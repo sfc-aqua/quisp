@@ -1,0 +1,312 @@
+
+**.buffers = uniform(100,100)
+**.num_measure = 30000 #max measurement for tomography accumulation
+
+**.emission_error_rate = 0 # per shot.
+**.emission_Z_error_ratio = 0 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.emission_X_error_ratio = 0 #ratio. Not the error rate!!
+**.emission_Y_error_ratio = 0 #ratio. Not the error rate!!
+
+**.channel_error_rate = 0.005 #per km. Max = 1 = 100%
+**.photon_loss_ratio = 0 # per km. 1% = 0.01
+**.Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.X_error_ratio = 1 #ratio. Not the error rate!!
+**.Y_error_ratio = 1 #ratio. Not the error rate!!
+
+**.memory_error_rate = 0.0001 #per μs
+**.memory_X_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Y_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+
+**.hom_photon_detection_per_sec = 1000000000
+**.hom_darkcount_probability = 0.0 #1%
+
+
+EndNode[0]<-->QuantumChannel{cost=0.126245;distance=1km;fidelity=0.890004;bellpair_per_sec=10;}<-->HoM[0] F=0.890004 X=0.0428579 Z=0.0350642 Y=0.0320736
+EndNode[1]<-->QuantumChannel{cost=0.12394;distance=10km;fidelity=0.898243;bellpair_per_sec=10;}<-->HoM[9] F=0.898243 X=0.0345142 Z=0.0357561 Y=0.0314864
+repeater[0]<-->QuantumChannel{cost=0.126245;distance=19km;fidelity=0.890004;bellpair_per_sec=10;}<-->HoM[0] F=0.890004 X=0.0428579 Z=0.0350642 Y=0.0320736
+repeater[0]<-->QuantumChannel{cost=0.121891;distance=2km;fidelity=0.905764;bellpair_per_sec=10;}<-->HoM[1] F=0.905764 X=0.0397183 Z=0.0279713 Y=0.0265468
+repeater[1]<-->QuantumChannel{cost=0.121891;distance=18km;fidelity=0.905764;bellpair_per_sec=10;}<-->HoM[1] F=0.905764 X=0.0397183 Z=0.0279713 Y=0.0265468
+repeater[1]<-->QuantumChannel{cost=0.120483;distance=3km;fidelity=0.91104;bellpair_per_sec=10;}<-->HoM[2] F=0.91104 X=0.0243379 Z=0.0310539 Y=0.0335679
+repeater[2]<-->QuantumChannel{cost=0.120483;distance=17km;fidelity=0.91104;bellpair_per_sec=10;}<-->HoM[2] F=0.91104 X=0.0243379 Z=0.0310539 Y=0.0335679
+repeater[2]<-->QuantumChannel{cost=0.120319;distance=4km;fidelity=0.911659;bellpair_per_sec=10;}<-->HoM[3] F=0.911659 X=0.0312668 Z=0.0286845 Y=0.0283897
+repeater[3]<-->QuantumChannel{cost=0.120319;distance=16km;fidelity=0.911659;bellpair_per_sec=10;}<-->HoM[3] F=0.911659 X=0.0312668 Z=0.0286845 Y=0.0283897
+repeater[3]<-->QuantumChannel{cost=0.122773;distance=5km;fidelity=0.902504;bellpair_per_sec=10;}<-->HoM[4] F=0.902504 X=0.033356 Z=0.0312668 Y=0.0328731
+repeater[4]<-->QuantumChannel{cost=0.122773;distance=15km;fidelity=0.902504;bellpair_per_sec=10;}<-->HoM[4] F=0.902504 X=0.033356 Z=0.0312668 Y=0.0328731
+repeater[4]<-->QuantumChannel{cost=0.121303;distance=6km;fidelity=0.907953;bellpair_per_sec=10;}<-->HoM[5] F=0.907953 X=0.0338627 Z=0.0354144 Y=0.0227696
+repeater[5]<-->QuantumChannel{cost=0.121303;distance=14km;fidelity=0.907953;bellpair_per_sec=10;}<-->HoM[5] F=0.907953 X=0.0338627 Z=0.0354144 Y=0.0227696
+repeater[5]<-->QuantumChannel{cost=0.122996;distance=7km;fidelity=0.901684;bellpair_per_sec=10;}<-->HoM[6] F=0.901684 X=0.033085 Z=0.0297268 Y=0.0355037
+repeater[6]<-->QuantumChannel{cost=0.122996;distance=13km;fidelity=0.901684;bellpair_per_sec=10;}<-->HoM[6] F=0.901684 X=0.033085 Z=0.0297268 Y=0.0355037
+repeater[6]<-->QuantumChannel{cost=0.122715;distance=8km;fidelity=0.902715;bellpair_per_sec=10;}<-->HoM[7] F=0.902715 X=0.0300986 Z=0.0312085 Y=0.0359781
+repeater[7]<-->QuantumChannel{cost=0.122715;distance=12km;fidelity=0.902715;bellpair_per_sec=10;}<-->HoM[7] F=0.902715 X=0.0300986 Z=0.0312085 Y=0.0359781
+repeater[7]<-->QuantumChannel{cost=0.123798;distance=9km;fidelity=0.898758;bellpair_per_sec=10;}<-->HoM[8] F=0.898758 X=0.0368437 Z=0.0308451 Y=0.0335535
+repeater[8]<-->QuantumChannel{cost=0.123798;distance=11km;fidelity=0.898758;bellpair_per_sec=10;}<-->HoM[8] F=0.898758 X=0.0368437 Z=0.0308451 Y=0.0335535
+repeater[8]<-->QuantumChannel{cost=0.12394;distance=10km;fidelity=0.898243;bellpair_per_sec=10;}<-->HoM[9] F=0.898243 X=0.0345142 Z=0.0357561 Y=0.0314864
+
+**.buffers = uniform(100,100)
+**.num_measure = 100000 #max measurement for tomography accumulation
+
+**.emission_error_rate = 0 # per shot.
+**.emission_Z_error_ratio = 0 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.emission_X_error_ratio = 0 #ratio. Not the error rate!!
+**.emission_Y_error_ratio = 0 #ratio. Not the error rate!!
+
+**.channel_error_rate = 0.005 #per km. Max = 1 = 100%
+**.photon_loss_ratio = 0 # per km. 1% = 0.01
+**.Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.X_error_ratio = 1 #ratio. Not the error rate!!
+**.Y_error_ratio = 1 #ratio. Not the error rate!!
+
+**.memory_error_rate = 0.0001 #per μs
+**.memory_X_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Y_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+
+**.hom_photon_detection_per_sec = 1000000000
+**.hom_darkcount_probability = 0.0 #1%
+
+EndNode[0]<-->QuantumChannel{cost=0.125403;distance=1km;fidelity=0.892989;bellpair_per_sec=10;}<-->HoM[0] F=0.892989 X=0.0325078 Z=0.0360693 Y=0.0384342
+EndNode[1]<-->QuantumChannel{cost=0.12284;distance=10km;fidelity=0.902256;bellpair_per_sec=10;}<-->HoM[9] F=0.902256 X=0.032807 Z=0.030195 Y=0.0347424
+repeater[0]<-->QuantumChannel{cost=0.125403;distance=19km;fidelity=0.892989;bellpair_per_sec=10;}<-->HoM[0] F=0.892989 X=0.0325078 Z=0.0360693 Y=0.0384342
+repeater[0]<-->QuantumChannel{cost=0.123539;distance=2km;fidelity=0.899702;bellpair_per_sec=10;}<-->HoM[1] F=0.899702 X=0.0319108 Z=0.0346436 Y=0.0337439
+repeater[1]<-->QuantumChannel{cost=0.123539;distance=18km;fidelity=0.899702;bellpair_per_sec=10;}<-->HoM[1] F=0.899702 X=0.0319108 Z=0.0346436 Y=0.0337439
+repeater[1]<-->QuantumChannel{cost=0.122696;distance=3km;fidelity=0.902784;bellpair_per_sec=10;}<-->HoM[2] F=0.902784 X=0.0333994 Z=0.03182 Y=0.0319965
+repeater[2]<-->QuantumChannel{cost=0.122696;distance=17km;fidelity=0.902784;bellpair_per_sec=10;}<-->HoM[2] F=0.902784 X=0.0333994 Z=0.03182 Y=0.0319965
+repeater[2]<-->QuantumChannel{cost=0.122001;distance=4km;fidelity=0.905354;bellpair_per_sec=10;}<-->HoM[3] F=0.905354 X=0.030818 Z=0.0311112 Y=0.0327167
+repeater[3]<-->QuantumChannel{cost=0.122001;distance=16km;fidelity=0.905354;bellpair_per_sec=10;}<-->HoM[3] F=0.905354 X=0.030818 Z=0.0311112 Y=0.0327167
+repeater[3]<-->QuantumChannel{cost=0.122032;distance=5km;fidelity=0.90524;bellpair_per_sec=10;}<-->HoM[4] F=0.90524 X=0.0304007 Z=0.031518 Y=0.0328415
+repeater[4]<-->QuantumChannel{cost=0.122032;distance=15km;fidelity=0.90524;bellpair_per_sec=10;}<-->HoM[4] F=0.90524 X=0.0304007 Z=0.031518 Y=0.0328415
+repeater[4]<-->QuantumChannel{cost=0.123016;distance=6km;fidelity=0.901611;bellpair_per_sec=10;}<-->HoM[5] F=0.901611 X=0.0288101 Z=0.0338354 Y=0.0357439
+repeater[5]<-->QuantumChannel{cost=0.123016;distance=14km;fidelity=0.901611;bellpair_per_sec=10;}<-->HoM[5] F=0.901611 X=0.0288101 Z=0.0338354 Y=0.0357439
+repeater[5]<-->QuantumChannel{cost=0.124493;distance=7km;fidelity=0.896247;bellpair_per_sec=10;}<-->HoM[6] F=0.896247 X=0.0292957 Z=0.0335604 Y=0.0408971
+repeater[6]<-->QuantumChannel{cost=0.124493;distance=13km;fidelity=0.896247;bellpair_per_sec=10;}<-->HoM[6] F=0.896247 X=0.0292957 Z=0.0335604 Y=0.0408971
+repeater[6]<-->QuantumChannel{cost=0.122918;distance=8km;fidelity=0.901971;bellpair_per_sec=10;}<-->HoM[7] F=0.901971 X=0.0301117 Z=0.0344965 Y=0.0334204
+repeater[7]<-->QuantumChannel{cost=0.122918;distance=12km;fidelity=0.901971;bellpair_per_sec=10;}<-->HoM[7] F=0.901971 X=0.0301117 Z=0.0344965 Y=0.0334204
+repeater[7]<-->QuantumChannel{cost=0.12436;distance=9km;fidelity=0.896727;bellpair_per_sec=10;}<-->HoM[8] F=0.896727 X=0.0347696 Z=0.0365761 Y=0.031927
+repeater[8]<-->QuantumChannel{cost=0.12436;distance=11km;fidelity=0.896727;bellpair_per_sec=10;}<-->HoM[8] F=0.896727 X=0.0347696 Z=0.0365761 Y=0.031927
+repeater[8]<-->QuantumChannel{cost=0.12284;distance=10km;fidelity=0.902256;bellpair_per_sec=10;}<-->HoM[9] F=0.902256 X=0.032807 Z=0.030195 Y=0.0347424
+
+
+**.buffers = uniform(100,100)
+**.num_measure = 100000 #max measurement for tomography accumulation
+
+**.emission_error_rate = 0 # per shot.
+**.emission_Z_error_ratio = 0 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.emission_X_error_ratio = 0 #ratio. Not the error rate!!
+**.emission_Y_error_ratio = 0 #ratio. Not the error rate!!
+
+**.channel_error_rate = 0.005 #per km. Max = 1 = 100%
+**.photon_loss_ratio = 0 # per km. 1% = 0.01
+**.Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.X_error_ratio = 1 #ratio. Not the error rate!!
+**.Y_error_ratio = 1 #ratio. Not the error rate!!
+
+**.memory_error_rate = 0.0005 #per μs
+**.memory_X_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Y_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+
+**.hom_photon_detection_per_sec = 1000000000
+**.hom_darkcount_probability = 0.0 #1%
+
+
+EndNode[0]<-->QuantumChannel{cost=0.130723;distance=1km;fidelity=0.87463;bellpair_per_sec=10;}<-->HoM[0] F=0.87463 X=0.0434332 Z=0.039878 Y=0.0420586
+EndNode[1]<-->QuantumChannel{cost=0.12843;distance=10km;fidelity=0.882403;bellpair_per_sec=10;}<-->HoM[9] F=0.882403 X=0.039257 Z=0.035935 Y=0.0424051
+repeater[0]<-->QuantumChannel{cost=0.130723;distance=19km;fidelity=0.87463;bellpair_per_sec=10;}<-->HoM[0] F=0.87463 X=0.0434332 Z=0.039878 Y=0.0420586
+repeater[0]<-->QuantumChannel{cost=0.12906;distance=2km;fidelity=0.880246;bellpair_per_sec=10;}<-->HoM[1] F=0.880246 X=0.0384804 Z=0.0417243 Y=0.039549
+repeater[1]<-->QuantumChannel{cost=0.12906;distance=18km;fidelity=0.880246;bellpair_per_sec=10;}<-->HoM[1] F=0.880246 X=0.0384804 Z=0.0417243 Y=0.039549
+repeater[1]<-->QuantumChannel{cost=0.123694;distance=3km;fidelity=0.899138;bellpair_per_sec=10;}<-->HoM[2] F=0.899138 X=0.0348425 Z=0.0344455 Y=0.0315735
+repeater[2]<-->QuantumChannel{cost=0.123694;distance=17km;fidelity=0.899138;bellpair_per_sec=10;}<-->HoM[2] F=0.899138 X=0.0348425 Z=0.0344455 Y=0.0315735
+repeater[2]<-->QuantumChannel{cost=0.124986;distance=4km;fidelity=0.894476;bellpair_per_sec=10;}<-->HoM[3] F=0.894476 X=0.0367627 Z=0.0348971 Y=0.0338646
+repeater[3]<-->QuantumChannel{cost=0.124986;distance=16km;fidelity=0.894476;bellpair_per_sec=10;}<-->HoM[3] F=0.894476 X=0.0367627 Z=0.0348971 Y=0.0338646
+repeater[3]<-->QuantumChannel{cost=0.126415;distance=5km;fidelity=0.889406;bellpair_per_sec=10;}<-->HoM[4] F=0.889406 X=0.0372895 Z=0.0374582 Y=0.0358463
+repeater[4]<-->QuantumChannel{cost=0.126415;distance=15km;fidelity=0.889406;bellpair_per_sec=10;}<-->HoM[4] F=0.889406 X=0.0372895 Z=0.0374582 Y=0.0358463
+repeater[4]<-->QuantumChannel{cost=0.127033;distance=6km;fidelity=0.88724;bellpair_per_sec=10;}<-->HoM[5] F=0.88724 X=0.0388814 Z=0.0382203 Y=0.0356578
+repeater[5]<-->QuantumChannel{cost=0.127033;distance=14km;fidelity=0.88724;bellpair_per_sec=10;}<-->HoM[5] F=0.88724 X=0.0388814 Z=0.0382203 Y=0.0356578
+repeater[5]<-->QuantumChannel{cost=0.12764;distance=7km;fidelity=0.88513;bellpair_per_sec=10;}<-->HoM[6] F=0.88513 X=0.0409836 Z=0.0386022 Y=0.0352846
+repeater[6]<-->QuantumChannel{cost=0.12764;distance=13km;fidelity=0.88513;bellpair_per_sec=10;}<-->HoM[6] F=0.88513 X=0.0409836 Z=0.0386022 Y=0.0352846
+repeater[6]<-->QuantumChannel{cost=0.129111;distance=8km;fidelity=0.880071;bellpair_per_sec=10;}<-->HoM[7] F=0.880071 X=0.0387872 Z=0.0414956 Y=0.039646
+repeater[7]<-->QuantumChannel{cost=0.129111;distance=12km;fidelity=0.880071;bellpair_per_sec=10;}<-->HoM[7] F=0.880071 X=0.0387872 Z=0.0414956 Y=0.039646
+repeater[7]<-->QuantumChannel{cost=0.130185;distance=9km;fidelity=0.876435;bellpair_per_sec=10;}<-->HoM[8] F=0.876435 X=0.0403833 Z=0.0407539 Y=0.0424278
+repeater[8]<-->QuantumChannel{cost=0.130185;distance=11km;fidelity=0.876435;bellpair_per_sec=10;}<-->HoM[8] F=0.876435 X=0.0403833 Z=0.0407539 Y=0.0424278
+repeater[8]<-->QuantumChannel{cost=0.12843;distance=10km;fidelity=0.882403;bellpair_per_sec=10;}<-->HoM[9] F=0.882403 X=0.039257 Z=0.035935 Y=0.0424051
+
+**.buffers = uniform(100,100)
+**.num_measure = 100000 #max measurement for tomography accumulation
+
+**.emission_error_rate = 0 # per shot.
+**.emission_Z_error_ratio = 0 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.emission_X_error_ratio = 0 #ratio. Not the error rate!!
+**.emission_Y_error_ratio = 0 #ratio. Not the error rate!!
+
+**.channel_error_rate = 0.005 #per km. Max = 1 = 100%
+**.photon_loss_ratio = 0 # per km. 1% = 0.01
+**.Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.X_error_ratio = 1 #ratio. Not the error rate!!
+**.Y_error_ratio = 1 #ratio. Not the error rate!!
+
+**.memory_error_rate = 0.001 #per μs
+**.memory_X_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Y_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+
+**.hom_photon_detection_per_sec = 1000000000
+**.hom_darkcount_probability = 0.0 #1%
+
+
+EndNode[0]<-->QuantumChannel{cost=0.156259;distance=1km;fidelity=0.799978;bellpair_per_sec=10;}<-->HoM[0] F=0.799978 X=0.0650295 Z=0.0655132 Y=0.0694791
+EndNode[1]<-->QuantumChannel{cost=0.132437;distance=10km;fidelity=0.86895;bellpair_per_sec=10;}<-->HoM[9] F=0.86895 X=0.0456675 Z=0.0397965 Y=0.0455859
+repeater[0]<-->QuantumChannel{cost=0.156259;distance=19km;fidelity=0.799978;bellpair_per_sec=10;}<-->HoM[0] F=0.799978 X=0.0650295 Z=0.0655132 Y=0.0694791
+repeater[0]<-->QuantumChannel{cost=0.153518;distance=2km;fidelity=0.807086;bellpair_per_sec=10;}<-->HoM[1] F=0.807086 X=0.0676066 Z=0.0595453 Y=0.0657623
+repeater[1]<-->QuantumChannel{cost=0.153518;distance=18km;fidelity=0.807086;bellpair_per_sec=10;}<-->HoM[1] F=0.807086 X=0.0676066 Z=0.0595453 Y=0.0657623
+repeater[1]<-->QuantumChannel{cost=0.128074;distance=3km;fidelity=0.883628;bellpair_per_sec=10;}<-->HoM[2] F=0.883628 X=0.0410693 Z=0.039805 Y=0.0354981
+repeater[2]<-->QuantumChannel{cost=0.128074;distance=17km;fidelity=0.883628;bellpair_per_sec=10;}<-->HoM[2] F=0.883628 X=0.0410693 Z=0.039805 Y=0.0354981
+repeater[2]<-->QuantumChannel{cost=0.127628;distance=4km;fidelity=0.88517;bellpair_per_sec=10;}<-->HoM[3] F=0.88517 X=0.0427859 Z=0.0367038 Y=0.0353405
+repeater[3]<-->QuantumChannel{cost=0.127628;distance=16km;fidelity=0.88517;bellpair_per_sec=10;}<-->HoM[3] F=0.88517 X=0.0427859 Z=0.0367038 Y=0.0353405
+repeater[3]<-->QuantumChannel{cost=0.130494;distance=5km;fidelity=0.875396;bellpair_per_sec=10;}<-->HoM[4] F=0.875396 X=0.0429419 Z=0.0424445 Y=0.0392179
+repeater[4]<-->QuantumChannel{cost=0.130494;distance=15km;fidelity=0.875396;bellpair_per_sec=10;}<-->HoM[4] F=0.875396 X=0.0429419 Z=0.0424445 Y=0.0392179
+repeater[4]<-->QuantumChannel{cost=0.144865;distance=6km;fidelity=0.830841;bellpair_per_sec=10;}<-->HoM[5] F=0.830841 X=0.0523744 Z=0.0559529 Y=0.0608315
+repeater[5]<-->QuantumChannel{cost=0.144865;distance=14km;fidelity=0.830841;bellpair_per_sec=10;}<-->HoM[5] F=0.830841 X=0.0523744 Z=0.0559529 Y=0.0608315
+repeater[5]<-->QuantumChannel{cost=0.144683;distance=7km;fidelity=0.831363;bellpair_per_sec=10;}<-->HoM[6] F=0.831363 X=0.0549887 Z=0.0570378 Y=0.0566108
+repeater[6]<-->QuantumChannel{cost=0.144683;distance=13km;fidelity=0.831363;bellpair_per_sec=10;}<-->HoM[6] F=0.831363 X=0.0549887 Z=0.0570378 Y=0.0566108
+repeater[6]<-->QuantumChannel{cost=0.130623;distance=8km;fidelity=0.874963;bellpair_per_sec=10;}<-->HoM[7] F=0.874963 X=0.0407117 Z=0.0447698 Y=0.0395555
+repeater[7]<-->QuantumChannel{cost=0.130623;distance=12km;fidelity=0.874963;bellpair_per_sec=10;}<-->HoM[7] F=0.874963 X=0.0407117 Z=0.0447698 Y=0.0395555
+repeater[7]<-->QuantumChannel{cost=0.134139;distance=9km;fidelity=0.86342;bellpair_per_sec=10;}<-->HoM[8] F=0.86342 X=0.0447326 Z=0.047047 Y=0.0448007
+repeater[8]<-->QuantumChannel{cost=0.134139;distance=11km;fidelity=0.86342;bellpair_per_sec=10;}<-->HoM[8] F=0.86342 X=0.0447326 Z=0.047047 Y=0.0448007
+repeater[8]<-->QuantumChannel{cost=0.132437;distance=10km;fidelity=0.86895;bellpair_per_sec=10;}<-->HoM[9] F=0.86895 X=0.0456675 Z=0.0397965 Y=0.0455859
+
+
+**.buffers = uniform(100,100)
+**.num_measure = 100000 #max measurement for tomography accumulation
+
+**.emission_error_rate = 0 # per shot.
+**.emission_Z_error_ratio = 0 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.emission_X_error_ratio = 0 #ratio. Not the error rate!!
+**.emission_Y_error_ratio = 0 #ratio. Not the error rate!!
+
+**.channel_error_rate = 0.005 #per km. Max = 1 = 100%
+**.photon_loss_ratio = 0 # per km. 1% = 0.01
+**.Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.X_error_ratio = 1 #ratio. Not the error rate!!
+**.Y_error_ratio = 1 #ratio. Not the error rate!!
+
+**.memory_error_rate = 0.002 #per μs
+**.memory_X_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Y_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+
+**.hom_photon_detection_per_sec = 1000000000
+**.hom_darkcount_probability = 0.0 #1%
+
+
+EndNode[0]<-->QuantumChannel{cost=0.190673;distance=1km;fidelity=0.724195;bellpair_per_sec=10;}<-->HoM[0] F=0.724195 X=0.0964937 Z=0.0877027 Y=0.0916083
+EndNode[1]<-->QuantumChannel{cost=0.170513;distance=10km;fidelity=0.765811;bellpair_per_sec=10;}<-->HoM[9] F=0.765811 X=0.0802948 Z=0.0770066 Y=0.0768878
+repeater[0]<-->QuantumChannel{cost=0.190673;distance=19km;fidelity=0.724195;bellpair_per_sec=10;}<-->HoM[0] F=0.724195 X=0.0964937 Z=0.0877027 Y=0.0916083
+repeater[0]<-->QuantumChannel{cost=0.129091;distance=2km;fidelity=0.880141;bellpair_per_sec=10;}<-->HoM[1] F=0.880141 X=0.0384173 Z=0.0396519 Y=0.0417903
+repeater[1]<-->QuantumChannel{cost=0.129091;distance=18km;fidelity=0.880141;bellpair_per_sec=10;}<-->HoM[1] F=0.880141 X=0.0384173 Z=0.0396519 Y=0.0417903
+repeater[1]<-->QuantumChannel{cost=0.138649;distance=3km;fidelity=0.849261;bellpair_per_sec=10;}<-->HoM[2] F=0.849261 X=0.0503062 Z=0.0483265 Y=0.0521067
+repeater[2]<-->QuantumChannel{cost=0.138649;distance=17km;fidelity=0.849261;bellpair_per_sec=10;}<-->HoM[2] F=0.849261 X=0.0503062 Z=0.0483265 Y=0.0521067
+repeater[2]<-->QuantumChannel{cost=0.207344;distance=4km;fidelity=0.694472;bellpair_per_sec=10;}<-->HoM[3] F=0.694472 X=0.0981987 Z=0.106996 Y=0.100333
+repeater[3]<-->QuantumChannel{cost=0.207344;distance=16km;fidelity=0.694472;bellpair_per_sec=10;}<-->HoM[3] F=0.694472 X=0.0981987 Z=0.106996 Y=0.100333
+repeater[3]<-->QuantumChannel{cost=0.143757;distance=5km;fidelity=0.834038;bellpair_per_sec=10;}<-->HoM[4] F=0.834038 X=0.0562025 Z=0.0573849 Y=0.0523746
+repeater[4]<-->QuantumChannel{cost=0.143757;distance=15km;fidelity=0.834038;bellpair_per_sec=10;}<-->HoM[4] F=0.834038 X=0.0562025 Z=0.0573849 Y=0.0523746
+repeater[4]<-->QuantumChannel{cost=0.143327;distance=6km;fidelity=0.835288;bellpair_per_sec=10;}<-->HoM[5] F=0.835288 X=0.0532763 Z=0.0584611 Y=0.0529748
+repeater[5]<-->QuantumChannel{cost=0.143327;distance=14km;fidelity=0.835288;bellpair_per_sec=10;}<-->HoM[5] F=0.835288 X=0.0532763 Z=0.0584611 Y=0.0529748
+repeater[5]<-->QuantumChannel{cost=0.145593;distance=7km;fidelity=0.828763;bellpair_per_sec=10;}<-->HoM[6] F=0.828763 X=0.0595461 Z=0.0568351 Y=0.054856
+repeater[6]<-->QuantumChannel{cost=0.145593;distance=13km;fidelity=0.828763;bellpair_per_sec=10;}<-->HoM[6] F=0.828763 X=0.0595461 Z=0.0568351 Y=0.054856
+repeater[6]<-->QuantumChannel{cost=0.14735;distance=8km;fidelity=0.823805;bellpair_per_sec=10;}<-->HoM[7] F=0.823805 X=0.0562497 Z=0.0580766 Y=0.0618691
+repeater[7]<-->QuantumChannel{cost=0.14735;distance=12km;fidelity=0.823805;bellpair_per_sec=10;}<-->HoM[7] F=0.823805 X=0.0562497 Z=0.0580766 Y=0.0618691
+repeater[7]<-->QuantumChannel{cost=0.150725;distance=9km;fidelity=0.814529;bellpair_per_sec=10;}<-->HoM[8] F=0.814529 X=0.0582189 Z=0.0665531 Y=0.0606986
+repeater[8]<-->QuantumChannel{cost=0.150725;distance=11km;fidelity=0.814529;bellpair_per_sec=10;}<-->HoM[8] F=0.814529 X=0.0582189 Z=0.0665531 Y=0.0606986
+repeater[8]<-->QuantumChannel{cost=0.170513;distance=10km;fidelity=0.765811;bellpair_per_sec=10;}<-->HoM[9] F=0.765811 X=0.0802948 Z=0.0770066 Y=0.0768878
+
+**.buffers = uniform(100,100)
+**.num_measure = 100000 #max measurement for tomography accumulation
+
+**.emission_error_rate = 0 # per shot.
+**.emission_Z_error_ratio = 0 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.emission_X_error_ratio = 0 #ratio. Not the error rate!!
+**.emission_Y_error_ratio = 0 #ratio. Not the error rate!!
+
+**.channel_error_rate = 0.005 #per km. Max = 1 = 100%
+**.photon_loss_ratio = 0 # per km. 1% = 0.01
+**.Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.X_error_ratio = 1 #ratio. Not the error rate!!
+**.Y_error_ratio = 1 #ratio. Not the error rate!!
+
+**.memory_error_rate = 0.005 #per μs
+**.memory_X_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Y_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+
+**.hom_photon_detection_per_sec = 1000000000
+**.hom_darkcount_probability = 0.0 #1%
+
+
+
+
+EndNode[0]<-->QuantumChannel{cost=0.171493;distance=1km;fidelity=0.763619;bellpair_per_sec=10;}<-->HoM[0] F=0.763619 X=0.0760638 Z=0.0814059 Y=0.0789117
+EndNode[1]<-->QuantumChannel{cost=0.163083;distance=10km;fidelity=0.783061;bellpair_per_sec=10;}<-->HoM[9] F=0.783061 X=0.0714625 Z=0.0734572 Y=0.0720188
+repeater[0]<-->QuantumChannel{cost=0.171493;distance=19km;fidelity=0.763619;bellpair_per_sec=10;}<-->HoM[0] F=0.763619 X=0.0760638 Z=0.0814059 Y=0.0789117
+repeater[0]<-->QuantumChannel{cost=0.137322;distance=2km;fidelity=0.853355;bellpair_per_sec=10;}<-->HoM[1] F=0.853355 X=0.0460984 Z=0.0466805 Y=0.053866
+repeater[1]<-->QuantumChannel{cost=0.137322;distance=18km;fidelity=0.853355;bellpair_per_sec=10;}<-->HoM[1] F=0.853355 X=0.0460984 Z=0.0466805 Y=0.053866
+repeater[1]<-->QuantumChannel{cost=0.142676;distance=3km;fidelity=0.83719;bellpair_per_sec=10;}<-->HoM[2] F=0.83719 X=0.0511707 Z=0.0571695 Y=0.0544701
+repeater[2]<-->QuantumChannel{cost=0.142676;distance=17km;fidelity=0.83719;bellpair_per_sec=10;}<-->HoM[2] F=0.83719 X=0.0511707 Z=0.0571695 Y=0.0544701
+repeater[2]<-->QuantumChannel{cost=0.145062;distance=4km;fidelity=0.830278;bellpair_per_sec=10;}<-->HoM[3] F=0.830278 X=0.0589948 Z=0.052017 Y=0.0587102
+repeater[3]<-->QuantumChannel{cost=0.145062;distance=16km;fidelity=0.830278;bellpair_per_sec=10;}<-->HoM[3] F=0.830278 X=0.0589948 Z=0.052017 Y=0.0587102
+repeater[3]<-->QuantumChannel{cost=0.155434;distance=5km;fidelity=0.802097;bellpair_per_sec=10;}<-->HoM[4] F=0.802097 X=0.067968 Z=0.0623923 Y=0.0675427
+repeater[4]<-->QuantumChannel{cost=0.155434;distance=15km;fidelity=0.802097;bellpair_per_sec=10;}<-->HoM[4] F=0.802097 X=0.067968 Z=0.0623923 Y=0.0675427
+repeater[4]<-->QuantumChannel{cost=0.164965;distance=6km;fidelity=0.778582;bellpair_per_sec=10;}<-->HoM[5] F=0.778582 X=0.0744117 Z=0.0775531 Y=0.069453
+repeater[5]<-->QuantumChannel{cost=0.164965;distance=14km;fidelity=0.778582;bellpair_per_sec=10;}<-->HoM[5] F=0.778582 X=0.0744117 Z=0.0775531 Y=0.069453
+repeater[5]<-->QuantumChannel{cost=0.174838;distance=7km;fidelity=0.756279;bellpair_per_sec=10;}<-->HoM[6] F=0.756279 X=0.0813839 Z=0.0785153 Y=0.0838218
+repeater[6]<-->QuantumChannel{cost=0.174838;distance=13km;fidelity=0.756279;bellpair_per_sec=10;}<-->HoM[6] F=0.756279 X=0.0813839 Z=0.0785153 Y=0.0838218
+repeater[6]<-->QuantumChannel{cost=0.17276;distance=8km;fidelity=0.760813;bellpair_per_sec=10;}<-->HoM[7] F=0.760813 X=0.0799167 Z=0.0810509 Y=0.0782195
+repeater[7]<-->QuantumChannel{cost=0.17276;distance=12km;fidelity=0.760813;bellpair_per_sec=10;}<-->HoM[7] F=0.760813 X=0.0799167 Z=0.0810509 Y=0.0782195
+repeater[7]<-->QuantumChannel{cost=0.185242;distance=9km;fidelity=0.734735;bellpair_per_sec=10;}<-->HoM[8] F=0.734735 X=0.0865957 Z=0.0864675 Y=0.092202
+repeater[8]<-->QuantumChannel{cost=0.185242;distance=11km;fidelity=0.734735;bellpair_per_sec=10;}<-->HoM[8] F=0.734735 X=0.0865957 Z=0.0864675 Y=0.092202
+repeater[8]<-->QuantumChannel{cost=0.163083;distance=10km;fidelity=0.783061;bellpair_per_sec=10;}<-->HoM[9] F=0.783061 X=0.0714625 Z=0.0734572 Y=0.0720188
+
+
+**.buffers = uniform(100,100)
+**.num_measure = 100000 #max measurement for tomography accumulation
+
+**.emission_error_rate = 0 # per shot.
+**.emission_Z_error_ratio = 0 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.emission_X_error_ratio = 0 #ratio. Not the error rate!!
+**.emission_Y_error_ratio = 0 #ratio. Not the error rate!!
+
+**.channel_error_rate = 0.005 #per km. Max = 1 = 100%
+**.photon_loss_ratio = 0 # per km. 1% = 0.01
+**.Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.X_error_ratio = 1 #ratio. Not the error rate!!
+**.Y_error_ratio = 1 #ratio. Not the error rate!!
+
+**.memory_error_rate = 0.01 #per μs
+**.memory_X_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Y_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+
+**.hom_photon_detection_per_sec = 1000000000
+**.hom_darkcount_probability = 0.0 #1%
+
+
+EndNode[0]<-->QuantumChannel{cost=0.228425;distance=1km;fidelity=0.66165;bellpair_per_sec=10;}<-->HoM[0] F=0.66165 X=0.112324 Z=0.118283 Y=0.107743
+EndNode[1]<-->QuantumChannel{cost=0.178887;distance=10km;fidelity=0.74767;bellpair_per_sec=10;}<-->HoM[9] F=0.74767 X=0.0857085 Z=0.0836594 Y=0.0829618
+repeater[0]<-->QuantumChannel{cost=0.228425;distance=19km;fidelity=0.66165;bellpair_per_sec=10;}<-->HoM[0] F=0.66165 X=0.112324 Z=0.118283 Y=0.107743
+repeater[0]<-->QuantumChannel{cost=0.140008;distance=2km;fidelity=0.845129;bellpair_per_sec=10;}<-->HoM[1] F=0.845129 X=0.0496266 Z=0.0514532 Y=0.0537908
+repeater[1]<-->QuantumChannel{cost=0.140008;distance=18km;fidelity=0.845129;bellpair_per_sec=10;}<-->HoM[1] F=0.845129 X=0.0496266 Z=0.0514532 Y=0.0537908
+repeater[1]<-->QuantumChannel{cost=0.152255;distance=3km;fidelity=0.810428;bellpair_per_sec=10;}<-->HoM[2] F=0.810428 X=0.0643002 Z=0.0600738 Y=0.0651975
+repeater[2]<-->QuantumChannel{cost=0.152255;distance=17km;fidelity=0.810428;bellpair_per_sec=10;}<-->HoM[2] F=0.810428 X=0.0643002 Z=0.0600738 Y=0.0651975
+repeater[2]<-->QuantumChannel{cost=0.151752;distance=4km;fidelity=0.81177;bellpair_per_sec=10;}<-->HoM[3] F=0.81177 X=0.0631058 Z=0.0591135 Y=0.0660107
+repeater[3]<-->QuantumChannel{cost=0.151752;distance=16km;fidelity=0.81177;bellpair_per_sec=10;}<-->HoM[3] F=0.81177 X=0.0631058 Z=0.0591135 Y=0.0660107
+repeater[3]<-->QuantumChannel{cost=0.173235;distance=5km;fidelity=0.75977;bellpair_per_sec=10;}<-->HoM[4] F=0.75977 X=0.0769608 Z=0.0803872 Y=0.0828818
+repeater[4]<-->QuantumChannel{cost=0.173235;distance=15km;fidelity=0.75977;bellpair_per_sec=10;}<-->HoM[4] F=0.75977 X=0.0769608 Z=0.0803872 Y=0.0828818
+repeater[4]<-->QuantumChannel{cost=0.183004;distance=6km;fidelity=0.739213;bellpair_per_sec=10;}<-->HoM[5] F=0.739213 X=0.0939252 Z=0.0806065 Y=0.0862557
+repeater[5]<-->QuantumChannel{cost=0.183004;distance=14km;fidelity=0.739213;bellpair_per_sec=10;}<-->HoM[5] F=0.739213 X=0.0939252 Z=0.0806065 Y=0.0862557
+repeater[5]<-->QuantumChannel{cost=0.20022;distance=7km;fidelity=0.706719;bellpair_per_sec=10;}<-->HoM[6] F=0.706719 X=0.0991866 Z=0.0942164 Y=0.0998783
+repeater[6]<-->QuantumChannel{cost=0.20022;distance=13km;fidelity=0.706719;bellpair_per_sec=10;}<-->HoM[6] F=0.706719 X=0.0991866 Z=0.0942164 Y=0.0998783
+repeater[6]<-->QuantumChannel{cost=0.197147;distance=8km;fidelity=0.712204;bellpair_per_sec=10;}<-->HoM[7] F=0.712204 X=0.0985649 Z=0.0936419 Y=0.0955888
+repeater[7]<-->QuantumChannel{cost=0.197147;distance=12km;fidelity=0.712204;bellpair_per_sec=10;}<-->HoM[7] F=0.712204 X=0.0985649 Z=0.0936419 Y=0.0955888
+repeater[7]<-->QuantumChannel{cost=0.216454;distance=9km;fidelity=0.6797;bellpair_per_sec=10;}<-->HoM[8] F=0.6797 X=0.109074 Z=0.101527 Y=0.109698
+repeater[8]<-->QuantumChannel{cost=0.216454;distance=11km;fidelity=0.6797;bellpair_per_sec=10;}<-->HoM[8] F=0.6797 X=0.109074 Z=0.101527 Y=0.109698
+repeater[8]<-->QuantumChannel{cost=0.178887;distance=10km;fidelity=0.74767;bellpair_per_sec=10;}<-->HoM[9] F=0.74767 X=0.0857085 Z=0.0836594 Y=0.0829618
