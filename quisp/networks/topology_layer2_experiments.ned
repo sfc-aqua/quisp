@@ -47,13 +47,13 @@ network Layer2_MIM_MIM
         }
 
     connections:
-        EndNode[0].port++ <--> ClassicalChannel {  distance = 10km; } <--> HoM[0].port++;
-        HoM[0].port++ <--> ClassicalChannel {  distance = 10km; } <--> repeater[0].port++;
+        EndNode[0].port++ <--> ClassicalChannel {  distance = 5km; } <--> HoM[0].port++;
+        HoM[0].port++ <--> ClassicalChannel {  distance = 15km; } <--> repeater[0].port++;
         repeater[0].port++ <--> ClassicalChannel {  distance = 10km; } <--> HoM[1].port++;
         HoM[1].port++ <--> ClassicalChannel{distance = 10km;} <--> EndNode[1].port++;
 
-        EndNode[0].quantum_port++ <--> QuantumChannel {  distance = 10km; } <-->HoM[0].quantum_port++;
-        HoM[0].quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> repeater[0].quantum_port++;
+        EndNode[0].quantum_port++ <--> QuantumChannel {  distance = 5km; } <-->HoM[0].quantum_port++;
+        HoM[0].quantum_port++ <--> QuantumChannel {  distance = 15km; } <--> repeater[0].quantum_port++;
         repeater[0].quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM[1].quantum_port++;
         HoM[1].quantum_port++ <--> QuantumChannel{distance = 10km;} <--> EndNode[1].quantum_port++;
 }

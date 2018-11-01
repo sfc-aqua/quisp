@@ -319,6 +319,7 @@ bool BellStateAnalyzer::isPhotonLost(cMessage *msg){
 }
 
 void BellStateAnalyzer::GOD_setCompletelyMixedDensityMatrix(){
+    //error("Hrtr");
     left_statQubit_ptr->setCompletelyMixedDensityMatrix();
     right_statQubit_ptr->setCompletelyMixedDensityMatrix();
 }

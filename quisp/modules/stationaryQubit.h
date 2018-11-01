@@ -155,11 +155,15 @@ class stationaryQubit : public cSimpleModule
        single_qubit_error Pauli;
        measurement_operators meas_op;
        MatrixXd Memory_Transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
+       MatrixXd Memory_Transition_matrix_ns; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in ns.*/
+       MatrixXd Memory_Transition_matrix_ms; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in ns.*/
+       //MatrixPower<MatrixXd> Apow(MatrixXd);
        //projected_states proj_states;
        Matrix2cd Density_Matrix_Collapsed;//Used when partner has been measured.
        int num_purified;
        bool partner_measured;
-       bool completely_mixed_OR_excited_OR_relaxed;
+       bool completely_mixed;
+       bool excited_or_relaxed;
        bool GOD_dm_Xerror;
        bool GOD_dm_Zerror;
 

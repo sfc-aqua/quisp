@@ -212,19 +212,19 @@ void HardwareMonitor::finish(){
             tomography_data[i][basis_combination].total_count++;
             if(it->second.my_output_is_plus && it->second.partner_output_is_plus){
                             tomography_data[i][basis_combination].plus_plus++;
-                            //EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].plus_plus<<"\n";
+                            //std::cout<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[i][basis_combination].plus_plus<<"\n";
             }
             else if(it->second.my_output_is_plus && !it->second.partner_output_is_plus){
                             tomography_data[i][basis_combination].plus_minus++;
-                            //EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].plus_minus<<"\n";
+                            //std::cout<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[i][basis_combination].plus_minus<<"\n";
             }
             else if(!it->second.my_output_is_plus && it->second.partner_output_is_plus){
                             tomography_data[i][basis_combination].minus_plus++;
-                            //EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].minus_plus<<"\n";
+                            //std::cout<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[i][basis_combination].minus_plus<<"\n";
             }
             else if(!it->second.my_output_is_plus && !it->second.partner_output_is_plus){
                             tomography_data[i][basis_combination].minus_minus++;
-                            //EV<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[basis_combination].minus_minus<<"\n";
+                            //std::cout<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[i][basis_combination].minus_minus<<"\n";
             }
             else
                  error("This should not happen though..... ?");

@@ -81,7 +81,7 @@ void stationaryQubit::initialize()
                memory_err.Y_error_rate,memory_err.Z_error_rate, memory_err.X_error_rate, 1-memory_err.pauli_error_rate,memory_err.excitation_error_rate,memory_err.relaxation_error_rate,
                0,0,0,0, 1-memory_err.relaxation_error_rate, memory_err.relaxation_error_rate,
                0,0,0,0,memory_err.excitation_error_rate,1-memory_err.excitation_error_rate;
-    EV<<"Memory_Transition_matrix = \n "<< Memory_Transition_matrix<<" done \n";
+    //std::cout<<"Memory_Transition_matrix = \n "<< Memory_Transition_matrix<<" done \n";
 
 
     //std::cout<<Memory_Transition_matrix<<"\n";
@@ -256,10 +256,11 @@ void stationaryQubit::setFree(bool consumed){
     updated_time = -1;
     /**/
     partner_measured = false;
-    completely_mixed_OR_excited_OR_relaxed = false;
+    completely_mixed = false;
+    excited_or_relaxed = false;
     GOD_dm_Zerror = false;
     GOD_dm_Xerror = false;
-    Density_Matrix_Collapsed << -1,-1,-1,-1;
+    Density_Matrix_Collapsed << -111,-111,-111,-111;
     par("photon_emitted_at") = emitted_time.dbl();
     par("last_updated_at") = updated_time.dbl();
     par("GOD_Xerror") = false;
@@ -384,12 +385,16 @@ void stationaryQubit::emitPhoton(int pulse)
 //This gets direcltly invoked when darkcount happened in BellStateAnalyzer.cc.
 void stationaryQubit::setCompletelyMixedDensityMatrix(){
     Density_Matrix_Collapsed<<(double)1/(double)2,0,0,(double)1/(double)2;
-    completely_mixed_OR_excited_OR_relaxed = true;
+    completely_mixed = true;
+    excited_or_relaxed = false;
+    entangled_partner = nullptr;
     par("GOD_CMerror")=true;
     par("GOD_EXerror")=false;
     par("GOD_REerror")=false;
     par("GOD_Xerror")=false;
     par("GOD_Zerror")=false;
+    GOD_dm_Xerror = false;
+    GOD_dm_Zerror = false;
     if(hasGUI()){
         bubble("Completely mixed. darkcount");
         getDisplayString().setTagArg("i", 1, "white");
@@ -400,43 +405,40 @@ void stationaryQubit::setCompletelyMixedDensityMatrix(){
 //This gets invoked in memory error simulation
 void stationaryQubit::setExcitedDensityMatrix(){
     Density_Matrix_Collapsed<<1,0,0,0;
-    completely_mixed_OR_excited_OR_relaxed = true;
+    completely_mixed = false;
+    excited_or_relaxed = true;
+
     par("GOD_EXerror")=true;
     par("GOD_REerror")=false;
     par("GOD_CMerror")=false;
     par("GOD_Xerror")=false;
     par("GOD_Zerror")=false;
-
-    /*
-    stationaryQubit *partner = this->entangled_partner;
-    partner->Density_Matrix_Collapsed<<1,0,0,0;//Is this correct?
-    partner->completely_mixed_OR_excited_OR_relaxed = true;
-    partner->par("GOD_EXerror")=true;
-    partner->par("GOD_REerror")=false;
-    partner->par("GOD_CMerror")=false;
-    partner->par("GOD_Xerror")=false;
-    partner->par("GOD_Zerror")=false;
-     */
+    GOD_dm_Xerror = false;
+    GOD_dm_Zerror = false;
 
     if(hasGUI()){
         bubble("Completely mixed. darkcount");
         getDisplayString().setTagArg("i", 1, "white");
     }
 
-    if(this->entangled_partner!=nullptr){
+    if(this->entangled_partner!=nullptr){//If it used to be entangled...
             entangled_partner->setCompletelyMixedDensityMatrix();
+            entangled_partner = nullptr;
     }//else it is already not entangled. e.g. excited -> relaxed.
 }
 
 void stationaryQubit::setRelaxedDensityMatrix(){
 
     Density_Matrix_Collapsed<<0,0,0,1;
-    completely_mixed_OR_excited_OR_relaxed = true;
+    completely_mixed = false;
+    excited_or_relaxed = true;
     par("GOD_EXerror")=false;
     par("GOD_REerror")=true;
     par("GOD_CMerror")=false;
     par("GOD_Xerror")=false;
     par("GOD_Zerror")=false;
+    GOD_dm_Xerror = false;
+    GOD_dm_Zerror = false;
     if(hasGUI()){
         bubble("Completely mixed. darkcount");
         getDisplayString().setTagArg("i", 1, "white");
@@ -444,6 +446,7 @@ void stationaryQubit::setRelaxedDensityMatrix(){
 
     if(this->entangled_partner!=nullptr){
         entangled_partner->setCompletelyMixedDensityMatrix();
+        entangled_partner = nullptr;
     }//else it is already not entangled. e.g. excited -> relaxed.
 }
 
@@ -489,18 +492,19 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
     //std::cout<<"memory_err = "<<memory_err.pauli_error_rate<<"\n";
     //Check when the error got updated last time. Errors will be performed depending on the difference between that time and the current time.
-    if(memory_err.pauli_error_rate==0){//If no memory error occurs, or if the state is completely mixed, skip this memory error simulation.
-        error("memory error is set to 0. If on purpose, that is fine. Comment this out.");
+    if(qubit->memory_err.pauli_error_rate==0){//If no memory error occurs, or if the state is completely mixed, skip this memory error simulation.
+        //error("memory error is set to 0. If on purpose, that is fine. Comment this out.");
         return;
     }
-    if(completely_mixed_OR_excited_OR_relaxed){
-        error("Not fully implemented yet");
+    if(qubit->completely_mixed){
+        return;
     }
 
-    double time_evolution = simTime().dbl() - qubit->updated_time.dbl();
-    double time_evolution_microsec  = time_evolution * 1000000;
 
-    std::cout<<"time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
+    double time_evolution = simTime().dbl() - qubit->updated_time.dbl();
+    double time_evolution_microsec  = time_evolution * 1000000 /** 100*/;
+
+    //std::cout<<"time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
     //        endSimulation();
 
     if(time_evolution_microsec > 0){
@@ -516,33 +520,75 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
         MatrixXd Initial_condition(1,6);//I, X, Z, Y
         if(Zerr && Xerr){
             Initial_condition << 0,0,0,1,0,0;//Has a Y error
-            std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
+            //std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
             //error("err Y");
         }else if(Zerr && !Xerr){
             Initial_condition << 0,0,1,0,0,0;//Has a Z error
-            std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
+            //std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
             //error("err Z");
         }else if(!Zerr && Xerr){
             Initial_condition << 0,1,0,0,0,0;//Has an X error
-            std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
+            //std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
             //error("err X");
         }else if(EXerr){
             Initial_condition << 0,0,0,0,1,0;//Has an excitation error
-            error("err EX");
+            //error("err EX");
         }else if(REerr){
             Initial_condition << 0,0,0,0,0,1;//Has an relaxation error
-            error("err RE");
+            //error("err RE");
         }else{
             Initial_condition << 1,0,0,0,0,0;//No error
         }
 
-        //std::cout<<"Init Condition = "<<Initial_condition<<"\n";
-        MatrixPower<MatrixXd> Apow(Memory_Transition_matrix);
-        MatrixXd Dynamic_transition_matrix(6,6);
-        Dynamic_transition_matrix = Apow(time_evolution_microsec);
+        bool skip_exponentiation = false;
+        for(int i = 0; i<Memory_Transition_matrix.cols(); i++){
+            std::cout<<"Memory_Transition_matrix(0,i) = "<<Memory_Transition_matrix(0,i)<<"\n";
+            if(Memory_Transition_matrix(0,i) == 1){
+                skip_exponentiation = true; //Do not to the exponentiation! Eigen will mess up the exponentiation anyway...
+                break;
+            }
+        }
 
-        std::cout<<"Memory_Transition_matrix"<<Memory_Transition_matrix<<"\n";
+        MatrixXd Dynamic_transition_matrix(6,6);
+        Dynamic_transition_matrix << -1,-1,-1,-1,-1,-1
+                                     -1,-1,-1,-1,-1,-1,
+                                     -1,-1,-1,-1,-1,-1,
+                                     -1,-1,-1,-1,-1,-1;
+
+        if(!skip_exponentiation){
+        //std::cout<<"Init Condition = "<<Initial_condition<<"\n";
+        //MatrixPower<MatrixXd> Apow(qubit->Memory_Transition_matrix);
+            MatrixPower<MatrixXd> Apow(Memory_Transition_matrix);
+            Dynamic_transition_matrix = Apow(time_evolution_microsec);
+        }
+        else{
+            Dynamic_transition_matrix = Memory_Transition_matrix;
+        }
+        //Dynamic_transition_matrix = Memory_Transition_matrix.pow(time_evolution_microsec);
+
+        std::cout<<"Memory_Transition_matrix"<<qubit->Memory_Transition_matrix<<"\n";
         std::cout<<"Memory_Transition_matrix^"<<time_evolution_microsec<<" = "<<Dynamic_transition_matrix ;
+
+        for(int r = 0; r<Dynamic_transition_matrix.rows(); r++){
+            double col_sum = 0;
+            for(int i = 0; i<Dynamic_transition_matrix.cols(); i++){
+               //std::cout<<"Dynamic_transition_matrix(0,i) = "<<Dynamic_transition_matrix(0,i)<<"\n";
+               col_sum += Dynamic_transition_matrix(r,i);
+            }
+            if(col_sum > 1.01 || col_sum < 0.99){
+                std::cout<<"col_sum = "<<col_sum<<"\n";
+                error("Eh....");
+            }
+        }
+
+        if( std::isnan(Dynamic_transition_matrix(0,0))){
+            //std::cout<<"!!!!!Check out this\n";
+            //std::cout<<qubit->Memory_Transition_matrix.pow(time_evolution_microsec);
+            error("Heh....");
+        }
+
+
+
         //if(node_address == 3)
          //   std::cout<<"node["<<node_address<<"] TM^"<<time_evolution_microsec<<" = "<< Dynamic_transition_matrix<<"\n";
         //if(node_address == 3){
@@ -554,7 +600,7 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
         Output_condition = Initial_condition*Dynamic_transition_matrix;//I,X,Y,Z
         //std::cout<<"Output Condition = "<<Output_condition<<"\n";
-        std::cout<<"\n Input (I,X,Z,Y) was "<<Initial_condition<<"\n Output (I,X,Z,Y) is now"<<Output_condition<<"\n";
+        //std::cout<<"\n Input (I,X,Z,Y) was "<<Initial_condition<<"\n Output (I,X,Z,Y) is now"<<Output_condition<<"\n";
         double No_error_ceil = Output_condition(0,0);
         double X_error_ceil = Output_condition(0,0)+Output_condition(0,1);
         double Z_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2);
@@ -565,12 +611,14 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
         std::cout<<"dbl = "<<rand<<" No ceil = "<<No_error_ceil<<", "<<X_error_ceil<<", "<<Z_error_ceil<<","<<Y_error_ceil<<", "<<EX_error_ceil<<", "<<1<<"\n";
         if(rand < No_error_ceil){
+            std::cout<<"NO err\n";
             //Qubit will end up with no error
             qubit->par("GOD_Xerror") = false;
             qubit->par("GOD_Zerror") = false;
 
         }else if(No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil!=X_error_ceil)){
             //X error
+            std::cout<<"X err\n";
             qubit->par("GOD_Xerror") = true;
             qubit->par("GOD_Zerror") = false;
             DEBUG_memory_X_count++;
@@ -578,25 +626,29 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
         }else if(X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil!=Z_error_ceil)){
             //Z error
+            std::cout<<"Z err\n";
             qubit->par("GOD_Xerror") = false;
             qubit->par("GOD_Zerror") = true;
             DEBUG_memory_Z_count++;
 
         }else if (Z_error_ceil <= rand && rand < Y_error_ceil && (Z_error_ceil!=Y_error_ceil)){
             //Y error
+            std::cout<<"Y err\n";
             qubit->par("GOD_Xerror") = true;
             qubit->par("GOD_Zerror") = true;
             DEBUG_memory_Y_count++;
 
          }else if(Y_error_ceil <= rand && rand < EX_error_ceil && (Y_error_ceil!=EX_error_ceil)){
              //Excitation error
-             //setExcitedDensityMatrix();
-             error("not implemented");
+             std::cout<<"Ex err\n";
+             qubit->setExcitedDensityMatrix();
+             //error("not implemented");
 
          }else{
              //Relaxation error
-             //setRelaxedDensityMatrix();
-             error("not implemented");
+             std::cout<<"Re err\n";
+             qubit->setRelaxedDensityMatrix();
+             //error("not implemented");
          }
 
     }
@@ -656,6 +708,12 @@ Matrix2cd stationaryQubit::getErrorMatrix(stationaryQubit *qubit){
 //returns the density matrix of the Bell pair with error. This assumes that this is entangled with another stationary qubit.
 //Measurement output will be based on this matrix, as long as it is still entnagled.
 quantum_state stationaryQubit::getQuantumState(){
+    if(this->excited_or_relaxed || entangled_partner->excited_or_relaxed){
+        error("Wrong");
+    }
+
+
+    //If Pauli errors
     Vector4cd ideal_Bell_state(1/sqrt(2),0,0,1/sqrt(2));//Assumes that the state is a 2 qubit state |00> + |11>
 
     Matrix4cd combined_errors = kroneckerProduct(getErrorMatrix(this),getErrorMatrix(entangled_partner)).eval();
@@ -673,7 +731,184 @@ quantum_state stationaryQubit::getQuantumState(){
 }
 
 
+measurement_outcome stationaryQubit::measure_density_independent(){
+    if(this->entangled_partner == nullptr && this->Density_Matrix_Collapsed(0,0).real() ==-111){
+            EV<<entangled_partner<<"\n";
+            EV<<Density_Matrix_Collapsed<<"\n";
+            error("Measuring a qubit that is not entangled with another qubit. Probably not what you want! Check whether address for each node is unique!!!");
+    }
+    measurement_operator this_measurement = Random_Measurement_Basis_Selection();//Select basis randomly
+    char Output;
+    char Output_is_plus;
 
+
+    apply_memory_error(this);//Add memory error depending on the idle time. If excited/relaxed, this will immediately break entanglement, leaving the other qubit as completely mixed.
+    if(this->entangled_partner != nullptr){//This becomes nullptr if this qubit got excited/relaxed or measured.
+        if(this->partner_measured)
+            error("Entangled partner not nullptr but partner already measured....? Probably wrong.");
+        if(this->completely_mixed || this->excited_or_relaxed)
+            error("Entangled but completely mixed / Excited / Relaxed ? Probably wrong.");
+        apply_memory_error(entangled_partner);//Also do the same on the partner if it is still entangled! This could break the entanglement due to relaxation/excitation error!
+    }
+
+    if(this->partner_measured || this->completely_mixed || this->excited_or_relaxed){//The case when the density matrix is completely local to this qubit.
+
+        if(this->Density_Matrix_Collapsed(0,0).real() == -111){//We always need some kind of density matrix inside this if statement.
+            error("Single qubit density matrix not stored properly after partner's measurement, excitation/relaxation error.");
+        }
+        bool Xerr = this->par("GOD_Xerror");
+        bool Zerr = this->par("GOD_Zerror");
+        //This qubit's density matrix was created when the partner measured his own.
+        //Because this qubit can be measured after that, we need to update the stored density matrix according to new errors occurred due to memory error.
+
+        if(Xerr != GOD_dm_Xerror){//Another X error to the dm.
+           //error("NO");
+           Density_Matrix_Collapsed = Pauli.X*Density_Matrix_Collapsed*Pauli.X.adjoint();
+        }
+        if (Zerr != GOD_dm_Zerror){//Another Z error to the dm.
+           //error("NO!");
+           Density_Matrix_Collapsed = Pauli.Z*Density_Matrix_Collapsed*Pauli.Z.adjoint();
+        }
+
+        std::cout<<"Not entangled anymore. Density matrix is "<<Density_Matrix_Collapsed<<"\n";
+
+        Complex Prob_plus = (Density_Matrix_Collapsed*this_measurement.plus.adjoint()*this_measurement.plus).trace();
+        Complex Prob_minus = (Density_Matrix_Collapsed*this_measurement.minus.adjoint()*this_measurement.minus).trace();
+        double dbl = dblrand();
+        if(dbl < Prob_plus.real()){
+            Output = '+';
+            Output_is_plus = true;
+         }else{
+            Output = '-';
+            Output_is_plus = false;
+         }
+         std::cout<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). \n";
+    }else if(!this->partner_measured && !this->completely_mixed && !this->excited_or_relaxed && this->entangled_partner!=nullptr){
+        //error("Entangled....Should not happen here.");
+        quantum_state current_state = getQuantumState();//This is assuming that this is some other qubit is entangled. Only Pauli errors are assumed.
+        EV<<"Current entangled state is "<<current_state.state_in_ket<<"\n";
+
+        bool Xerr = this->par("GOD_Xerror");
+        bool Zerr = this->par("GOD_Zerror");
+                //std::cout<<"Entangled state is "<<current_state.state_in_ket<<"\n";
+
+        Complex Prob_plus = current_state.state_in_ket.adjoint()*kroneckerProduct(this_measurement.plus,meas_op.identity).eval().adjoint()*kroneckerProduct(this_measurement.plus,meas_op.identity).eval()*current_state.state_in_ket;
+        Complex Prob_minus = current_state.state_in_ket.adjoint()*kroneckerProduct(this_measurement.minus,meas_op.identity).eval().adjoint()*kroneckerProduct(this_measurement.minus,meas_op.identity).eval()*current_state.state_in_ket;
+
+        //std::cout<<"Measurement basis = "<<this_measurement.basis<<"P(+) = "<<Prob_plus.real()<<", P(-) = "<<Prob_minus.real()<<"\n";
+        double dbl = dblrand();
+
+        Vector2cd ms;
+        if(dbl < Prob_plus.real()){//Measurement output was plus
+            Output = '+';
+            ms = this_measurement.plus_ket;
+            Output_is_plus = true;
+        }else{//Otherwise, it was negative.
+            Output = '-';
+            ms = this_measurement.minus_ket;
+            Output_is_plus = false;
+        }
+        //Now we have to calculate the density matrix of a single qubit that used to be entangled with this.
+        Matrix2cd partners_dm, normalized_partners_dm;
+        partners_dm = kroneckerProduct(ms.adjoint(),meas_op.identity).eval()*current_state.state_in_density_matrix*kroneckerProduct(ms.adjoint(),meas_op.identity).eval().adjoint() ;
+        normalized_partners_dm = partners_dm/partners_dm.trace();
+        EV<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). Partner's dm is now = "<<normalized_partners_dm<<"\n";
+        entangled_partner->Density_Matrix_Collapsed = normalized_partners_dm;
+        entangled_partner->partner_measured = true;//We actually do not need this as long as deleting entangled_partner completely is totally fine.
+        entangled_partner->entangled_partner = nullptr;//Break entanglement.
+        //Save what error it had, when this density matrix was calculated. Error may get updated in the future, so we need to track what error has been considered already in the dm.
+        entangled_partner->GOD_dm_Xerror = entangled_partner->par("GOD_Xerror");
+        entangled_partner->GOD_dm_Zerror = entangled_partner->par("GOD_Zerror");
+    }else{
+        error("Check condition in measure func.");
+    }
+    measurement_outcome o;
+    o.basis =this_measurement.basis;
+    o.outcome_is_plus = Output_is_plus;
+    return o;
+
+    /*
+    if(this->entangled_partner != nullptr && !this->completely_mixed && !this->excited_or_relaxed && !entangled_partner->completely_mixed && !entangled_partner->excited_or_relaxed){
+        //error("NO");
+        //todo: This is probably not right when entangled_partner is excited/relaxed
+        quantum_state current_state = getQuantumState();//This is assuming that only Pauli errors will occur....
+        EV<<"Current entangled state is "<<current_state.state_in_ket<<"\n";
+
+        bool Xerr = this->par("GOD_Xerror");
+        bool Zerr = this->par("GOD_Zerror");
+
+        //std::cout<<"Entangled state is "<<current_state.state_in_ket<<"\n";
+
+        Complex Prob_plus = current_state.state_in_ket.adjoint()*kroneckerProduct(this_measurement.plus,meas_op.identity).eval().adjoint()*kroneckerProduct(this_measurement.plus,meas_op.identity).eval()*current_state.state_in_ket;
+        Complex Prob_minus = current_state.state_in_ket.adjoint()*kroneckerProduct(this_measurement.minus,meas_op.identity).eval().adjoint()*kroneckerProduct(this_measurement.minus,meas_op.identity).eval()*current_state.state_in_ket;
+
+        //std::cout<<"Measurement basis = "<<this_measurement.basis<<"P(+) = "<<Prob_plus.real()<<", P(-) = "<<Prob_minus.real()<<"\n";
+        double dbl = dblrand();
+
+        Vector2cd ms;
+        if(dbl < Prob_plus.real()){
+            //Measurement output was plus
+            Output = '+';
+            ms = this_measurement.plus_ket;
+            Output_is_plus = true;
+        }else{//Otherwise, it was negative.
+            Output = '-';
+            ms = this_measurement.minus_ket;
+            Output_is_plus = false;
+        }
+
+        //Now we have to calculate the density matrix of a single qubit that used to be entangled with this.
+        Matrix2cd partners_dm, normalized_partners_dm;
+        partners_dm = kroneckerProduct(ms.adjoint(),meas_op.identity).eval()*current_state.state_in_density_matrix*kroneckerProduct(ms.adjoint(),meas_op.identity).eval().adjoint() ;
+        normalized_partners_dm = partners_dm/partners_dm.trace();
+        EV<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). Partner's dm is now = "<<normalized_partners_dm<<"\n";
+        entangled_partner->Density_Matrix_Collapsed = normalized_partners_dm;
+        entangled_partner->partner_measured = true;
+        //Save what error it had, when this density matrix was calculated. Error may get updated in the future, so we need to track what error has been considered already in the dm.
+        entangled_partner->GOD_dm_Xerror = entangled_partner->par("GOD_Xerror");
+        entangled_partner->GOD_dm_Zerror = entangled_partner->par("GOD_Zerror");
+    }else{
+                bool Xerr = this->par("GOD_Xerror");
+                bool Zerr = this->par("GOD_Zerror");
+
+                //This qubit's density matrix was created when the partner measured his own.
+                //Because this qubit can be measured after that, we need to update the stored density matrix according to new errors occurred due to memory error.
+
+                if(Xerr != GOD_dm_Xerror){
+                    //Another X error to the dm.
+                    //error("NO error for now!");
+                    Density_Matrix_Collapsed = Pauli.X*Density_Matrix_Collapsed*Pauli.X.adjoint();
+                }
+                if (Zerr != GOD_dm_Zerror){
+                    //Another Z error to the dm.
+                    //error("NO error for now!");
+                    Density_Matrix_Collapsed = Pauli.Z*Density_Matrix_Collapsed*Pauli.Z.adjoint();
+                }
+
+                //std::cout<<"Not entangled anymore. Density matrix is "<<Density_Matrix_Collapsed<<"\n";
+
+                Complex Prob_plus = (Density_Matrix_Collapsed*this_measurement.plus.adjoint()*this_measurement.plus).trace();
+                Complex Prob_minus = (Density_Matrix_Collapsed*this_measurement.minus.adjoint()*this_measurement.minus).trace();
+                double dbl = dblrand();
+
+                if(dbl < Prob_plus.real()){
+                    Output = '+';
+                    Output_is_plus = true;
+                }else{
+                    Output = '-';
+                    Output_is_plus = false;
+                }
+                //std::cout<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). \n";
+
+    }
+    measurement_outcome o;
+    o.basis =this_measurement.basis;
+    o.outcome_is_plus = Output_is_plus;
+    return o;*/
+}
+
+
+/*
 measurement_outcome stationaryQubit::measure_density_independent(){
     if(entangled_partner == nullptr && Density_Matrix_Collapsed(0,0).real() ==-1){
             EV<<entangled_partner<<"\n";
@@ -684,19 +919,23 @@ measurement_outcome stationaryQubit::measure_density_independent(){
     char Output;
     char Output_is_plus;
 
-    if(partner_measured || completely_mixed_OR_excited_OR_relaxed){
+    //apply_memory_error(this);//Before starting the calculation, update the error due to memory.
+    //if(!(partner_measured || completely_mixed || excited_or_relaxed)){
+    //    apply_memory_error(entangled_partner);//Also do the same on the partner!
+    //}
+
+    if(partner_measured || completely_mixed || excited_or_relaxed){
         //This qubit is not entangled anymore.
         //Its single qubit state will be stored in Density_Matrix_Collapsed.
-
 
         apply_memory_error(this);//Before starting the calculation, update the error due to memory.
 
         bool Xerr = this->par("GOD_Xerror");
         bool Zerr = this->par("GOD_Zerror");
 
-        /*This qubit's density matrix was created when the partner measured his own.
-         *Because this qubit can be measured after that, we need to update the stored density matrix according to new errors occurred due to memory error.
-         */
+        //This qubit's density matrix was created when the partner measured his own.
+        //Because this qubit can be measured after that, we need to update the stored density matrix according to new errors occurred due to memory error.
+
         if(Xerr != GOD_dm_Xerror){
             //Another X error to the dm.
             //error("NO error for now!");
@@ -728,10 +967,8 @@ measurement_outcome stationaryQubit::measure_density_independent(){
 
         apply_memory_error(this);//Add memory error depending on the idle time.
         apply_memory_error(entangled_partner);//Also do the same on the partner!
-        //this->par("GOD_Xerror") = true;
-        //this->par("GOD_Zerror") = false;
-
-        quantum_state current_state = getQuantumState();
+        //todo: This is probably not right when entangled_partner is excited/relaxed
+        quantum_state current_state = getQuantumState();//This is assuming that only Pauli errors will occur....
         EV<<"Current entangled state is "<<current_state.state_in_ket<<"\n";
 
         bool Xerr = this->par("GOD_Xerror");
@@ -773,6 +1010,7 @@ measurement_outcome stationaryQubit::measure_density_independent(){
     o.outcome_is_plus = Output_is_plus;
     return o;
 }
+*/
 
 void stationaryQubit::finish(){
     /*std::cout<<"---Node["<<node_address<<"] qubit["<<stationaryQubit_address<<"]---\n";
