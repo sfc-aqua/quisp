@@ -62,6 +62,7 @@ packet LinkTomographyResult extends header
 	char Basis;
 	int count_id;
 	int partner_address;
+	simtime_t finish = -1;
 }
 
 packet PurificationResult extends header

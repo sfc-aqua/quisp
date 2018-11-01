@@ -37,6 +37,7 @@ simple HardwareMonitor
         bool X_purification = default(false);
         bool Z_purification = default(false);
         int num_measure = default(3000);
+        string tomography_output_filename = default("default");
     gates:
         inout RuleEnginePort;
         inout RouterPort;

@@ -758,6 +758,10 @@ void RuleEngine::traverseThroughAllProcesses2(){
                                 LinkTomographyResult *pk_for_self = pk_t->dup();
                                 pk_for_self->setPartner_address(pk_t->getDestAddr());
                                 pk_for_self->setDestAddr(pk_t->getSrcAddr());
+                                //std::cout<<"time = "<<pk_t->getFinish()<<"\n";
+                                /*if(pk_t->getFinish()!=-1){
+                                    error("It is...");
+                                }*/
                                 send(pk,"RouterPort$o");
                                 send(pk_for_self,"RouterPort$o");
                             }else if(dynamic_cast<PurificationResult *>(pk)!= nullptr){

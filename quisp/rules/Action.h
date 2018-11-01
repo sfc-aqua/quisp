@@ -129,9 +129,11 @@ class RandomMeasureAction : public Action {
         int src;
         int dst;
         int mutable current_count;
+        int mutable max_count;
+        simtime_t start;
 
     public:
-        RandomMeasureAction(int part, QNIC_type qt, int qi, int res, int srcAddr){
+        RandomMeasureAction(int part, QNIC_type qt, int qi, int res, int srcAddr, int max){
             partner = part;
             dst = part;
             qnic_type = qt;
@@ -139,6 +141,8 @@ class RandomMeasureAction : public Action {
             resource = res;
             src = srcAddr;
             current_count = 0;
+            max_count = max;
+            start = simTime();
         };
         //cPacket* run(qnicResources *resources) override;
         cPacket* run(cModule *re, qnicResources *resources) override;

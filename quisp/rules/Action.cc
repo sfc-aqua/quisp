@@ -91,6 +91,9 @@ cPacket* RandomMeasureAction::run(cModule *re, qnicResources* resources) {
         pk->setKind(6);
         pk->setOutput_is_plus(o.outcome_is_plus);
         pk->setBasis(o.basis);
+        if(current_count==max_count){
+            pk->setFinish(simTime()-start);
+        }
         return pk;
     }
 }
@@ -202,6 +205,9 @@ cPacket* RandomMeasureAction::run(cModule *re) {
         pk->setKind(6);
         pk->setOutput_is_plus(o.outcome_is_plus);
         pk->setBasis(o.basis);
+        if(current_count==max_count){
+                    pk->setFinish(simTime()-start);
+        }
         return pk;
     }
 }

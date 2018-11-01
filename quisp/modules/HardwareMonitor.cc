@@ -26,6 +26,7 @@ Define_Module(HardwareMonitor);
 void HardwareMonitor::initialize(int stage)
 {
   EV<<"HardwareMonitor booted\n";
+
   output_count initial;
   initial.minus_minus=0;
   initial.minus_plus=0;
@@ -46,9 +47,10 @@ void HardwareMonitor::initialize(int stage)
 
   /*This is used to keep your own tomography data, and also to match and store the received partner's tomography data*/
    all_temporal_tomography_output_holder = new Temporal_Tomography_Output_Holder[numQnic_total];//Assumes link tomography only between neighbors.
-
+   all_temporal_tomography_runningtime_holder = new simtime_t[numQnic_total];
   /*Once all_temporal_tomography_output_holder is filled in, those data are summarized into basis based measurement outcome table. This accumulates the number of ++, +-, -+ and -- for each basis combination.*/
   tomography_data = new raw_data[numQnic_total];//Raw count table for tomography per link/qnic
+
   for(int i=0; i<numQnic_total; i++){
       tomography_data[i].insert(std::make_pair("XX",initial));
       tomography_data[i].insert(std::make_pair("XY",initial));
@@ -59,11 +61,13 @@ void HardwareMonitor::initialize(int stage)
       tomography_data[i].insert(std::make_pair("YX",initial));
       tomography_data[i].insert(std::make_pair("YY",initial));
       tomography_data[i].insert(std::make_pair("YZ",initial));
+      all_temporal_tomography_runningtime_holder[i] = -1;
   }
   //std::cout<<"numQnic_total"<<numQnic_total<<"\n";
 
 
    /*This keeps which node is connected to which local qnic.*/
+  tomography_output_filename = par("tomography_output_filename").str();
   ntable = prepareNeighborTable(ntable, numQnic_total);
   do_link_level_tomography = par("link_tomography");
   num_purification_tomography = par("initial_purification");
@@ -183,6 +187,10 @@ void HardwareMonitor::handleMessage(cMessage *msg){
             }
             all_temporal_tomography_output_holder[local_qnic.index].insert(std::make_pair(result->getCount_id(), temp));
         }
+        if(result->getFinish()!=-1){
+            if(all_temporal_tomography_runningtime_holder[local_qnic.index] < result->getFinish())
+                all_temporal_tomography_runningtime_holder[local_qnic.index] = result->getFinish();
+        }
     }
     delete msg;
 }
@@ -190,8 +198,16 @@ void HardwareMonitor::handleMessage(cMessage *msg){
 void HardwareMonitor::finish(){
 
 
-    std::string file_name =  std::string("Tomography_")+std::string(getSimulation()->getNetworkType()->getFullName());
+    //std::string file_name =  std::string("Tomography_")+std::string(getSimulation()->getNetworkType()->getFullName());
 
+    std::string file_name = tomography_output_filename;
+    std::string df = "\"default\"";
+    if(file_name.compare(df)==0){
+        std::cout<<df<<"=="<<file_name<<"\n";
+        file_name =  std::string("Tomography_")+std::string(getSimulation()->getNetworkType()->getFullName());
+    }else{
+        std::cout<<df<<"!="<<file_name<<"\n";
+    }
     std::ofstream tomography_stats(file_name,std::ios_base::app);
     std::cout<<"Opened new file to write.\n";
 
@@ -269,7 +285,9 @@ void HardwareMonitor::finish(){
         double dis = channel->par("distance");
         std::cout<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<bellpairs_per_sec<<";}<-->"<<neighbor_node->getFullName()<< " F="<<fidelity<<" X="<<Xerr_rate<<" Z="<<Zerr_rate<<" Y="<<Yerr_rate<<endl;
         tomography_stats<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<bellpairs_per_sec<<";}<-->"<<neighbor_node->getFullName()<< " F="<<fidelity<<" X="<<Xerr_rate<<" Z="<<Zerr_rate<<" Y="<<Yerr_rate<<endl;
+        tomography_stats<<"time ="<<all_temporal_tomography_runningtime_holder[i]<<"\n";
     }
+
     tomography_stats.close();
     std::cout<<"Closed file to write.\n";
 }
@@ -437,7 +455,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                 Clause* measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type , qnic_index, 0);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
                 total_measurements->addClause(measure_count_clause);
                 Random_measure_tomo->setCondition(total_measurements);
-                quisp::rules::Action* measure = new RandomMeasureAction(partner_address, qnic_type , qnic_index, 0, my_address);//Measure the local resource between it->second.neighborQNode_address.
+                quisp::rules::Action* measure = new RandomMeasureAction(partner_address, qnic_type , qnic_index, 0, my_address,num_measure);//Measure the local resource between it->second.neighborQNode_address.
                 Random_measure_tomo->setAction(measure);
                 //---------
                 //Add the rule to the RuleSet
@@ -456,7 +474,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                 total_measurements->addClause(measure_count_clause);
                 total_measurements->addClause(resource_clause);
                 Random_measure_tomo->setCondition(total_measurements);
-                quisp::rules::Action* measure = new RandomMeasureAction(partner_address, qnic_type , qnic_index, 0, my_address);//Measure the local resource between it->second.neighborQNode_address.
+                quisp::rules::Action* measure = new RandomMeasureAction(partner_address, qnic_type , qnic_index, 0, my_address,num_measure);//Measure the local resource between it->second.neighborQNode_address.
                 Random_measure_tomo->setAction(measure);
                 //---------
                 //Add the rule to the RuleSet

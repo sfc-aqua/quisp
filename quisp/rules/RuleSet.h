@@ -23,10 +23,11 @@ class RuleSet : public std::list<pRule> {
     public:
         int owner;
         int entangled_partner;
+        simtime_t started_at;
         unsigned long ruleset_id;
         //AvailableResourceForEachStage rc;//Defined in tools.h
-        RuleSet(long id, int o, int e) : std::list<pRule> () { ruleset_id = id; owner = o; entangled_partner = e;}
-        RuleSet(int o, int e) : std::list<pRule> () { ruleset_id = createUniqueId(owner); owner = o; entangled_partner = e;}
+        RuleSet(long id, int o, int e) : std::list<pRule> () { ruleset_id = id; owner = o; entangled_partner = e; started_at = simTime();}
+        RuleSet(int o, int e) : std::list<pRule> () { ruleset_id = createUniqueId(owner); owner = o; entangled_partner = e; started_at = simTime();}
         void addRule(Rule * r) { push_back(pRule(r)); };
         void addRule(pRule& r) { push_back(pRule(std::move(r))); };
         void finalize();

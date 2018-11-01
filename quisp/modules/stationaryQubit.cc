@@ -542,7 +542,7 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
         bool skip_exponentiation = false;
         for(int i = 0; i<Memory_Transition_matrix.cols(); i++){
-            std::cout<<"Memory_Transition_matrix(0,i) = "<<Memory_Transition_matrix(0,i)<<"\n";
+            //std::cout<<"Memory_Transition_matrix(0,i) = "<<Memory_Transition_matrix(0,i)<<"\n";
             if(Memory_Transition_matrix(0,i) == 1){
                 skip_exponentiation = true; //Do not to the exponentiation! Eigen will mess up the exponentiation anyway...
                 break;
@@ -566,8 +566,8 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
         }
         //Dynamic_transition_matrix = Memory_Transition_matrix.pow(time_evolution_microsec);
 
-        std::cout<<"Memory_Transition_matrix"<<qubit->Memory_Transition_matrix<<"\n";
-        std::cout<<"Memory_Transition_matrix^"<<time_evolution_microsec<<" = "<<Dynamic_transition_matrix ;
+        //std::cout<<"Memory_Transition_matrix"<<qubit->Memory_Transition_matrix<<"\n";
+        //std::cout<<"Memory_Transition_matrix^"<<time_evolution_microsec<<" = "<<Dynamic_transition_matrix ;
 
         for(int r = 0; r<Dynamic_transition_matrix.rows(); r++){
             double col_sum = 0;
@@ -576,7 +576,7 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
                col_sum += Dynamic_transition_matrix(r,i);
             }
             if(col_sum > 1.01 || col_sum < 0.99){
-                std::cout<<"col_sum = "<<col_sum<<"\n";
+                //std::cout<<"col_sum = "<<col_sum<<"\n";
                 error("Eh....");
             }
         }
@@ -609,16 +609,16 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
         double rand = dblrand();//Gives a random double between 0.0 ~ 1.0
 
-        std::cout<<"dbl = "<<rand<<" No ceil = "<<No_error_ceil<<", "<<X_error_ceil<<", "<<Z_error_ceil<<","<<Y_error_ceil<<", "<<EX_error_ceil<<", "<<1<<"\n";
+        //std::cout<<"dbl = "<<rand<<" No ceil = "<<No_error_ceil<<", "<<X_error_ceil<<", "<<Z_error_ceil<<","<<Y_error_ceil<<", "<<EX_error_ceil<<", "<<1<<"\n";
         if(rand < No_error_ceil){
-            std::cout<<"NO err\n";
+            //std::cout<<"NO err\n";
             //Qubit will end up with no error
             qubit->par("GOD_Xerror") = false;
             qubit->par("GOD_Zerror") = false;
 
         }else if(No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil!=X_error_ceil)){
             //X error
-            std::cout<<"X err\n";
+            //std::cout<<"X err\n";
             qubit->par("GOD_Xerror") = true;
             qubit->par("GOD_Zerror") = false;
             DEBUG_memory_X_count++;
@@ -626,27 +626,27 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
         }else if(X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil!=Z_error_ceil)){
             //Z error
-            std::cout<<"Z err\n";
+            //std::cout<<"Z err\n";
             qubit->par("GOD_Xerror") = false;
             qubit->par("GOD_Zerror") = true;
             DEBUG_memory_Z_count++;
 
         }else if (Z_error_ceil <= rand && rand < Y_error_ceil && (Z_error_ceil!=Y_error_ceil)){
             //Y error
-            std::cout<<"Y err\n";
+            //std::cout<<"Y err\n";
             qubit->par("GOD_Xerror") = true;
             qubit->par("GOD_Zerror") = true;
             DEBUG_memory_Y_count++;
 
          }else if(Y_error_ceil <= rand && rand < EX_error_ceil && (Y_error_ceil!=EX_error_ceil)){
              //Excitation error
-             std::cout<<"Ex err\n";
+             //std::cout<<"Ex err\n";
              qubit->setExcitedDensityMatrix();
              //error("not implemented");
 
          }else{
              //Relaxation error
-             std::cout<<"Re err\n";
+             //std::cout<<"Re err\n";
              qubit->setRelaxedDensityMatrix();
              //error("not implemented");
          }
@@ -770,7 +770,7 @@ measurement_outcome stationaryQubit::measure_density_independent(){
            Density_Matrix_Collapsed = Pauli.Z*Density_Matrix_Collapsed*Pauli.Z.adjoint();
         }
 
-        std::cout<<"Not entangled anymore. Density matrix is "<<Density_Matrix_Collapsed<<"\n";
+        //std::cout<<"Not entangled anymore. Density matrix is "<<Density_Matrix_Collapsed<<"\n";
 
         Complex Prob_plus = (Density_Matrix_Collapsed*this_measurement.plus.adjoint()*this_measurement.plus).trace();
         Complex Prob_minus = (Density_Matrix_Collapsed*this_measurement.minus.adjoint()*this_measurement.minus).trace();
@@ -782,7 +782,7 @@ measurement_outcome stationaryQubit::measure_density_independent(){
             Output = '-';
             Output_is_plus = false;
          }
-         std::cout<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). \n";
+         //std::cout<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). \n";
     }else if(!this->partner_measured && !this->completely_mixed && !this->excited_or_relaxed && this->entangled_partner!=nullptr){
         //error("Entangled....Should not happen here.");
         quantum_state current_state = getQuantumState();//This is assuming that this is some other qubit is entangled. Only Pauli errors are assumed.
