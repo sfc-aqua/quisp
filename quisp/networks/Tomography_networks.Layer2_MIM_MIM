@@ -1,8 +1,0 @@
-EndNode[0]<-->QuantumChannel{cost=0.1336;distance=5km;fidelity=0.865159;bellpair_per_sec=10;}<-->HoM[0] F=0.865159 X=0.0463972 Z=0.0395166 Y=0.0489271
-time =0.092850521932
-EndNode[1]<-->QuantumChannel{cost=0.133369;distance=10km;fidelity=0.865911;bellpair_per_sec=10;}<-->HoM[1] F=0.865911 X=0.0472918 Z=0.0447979 Y=0.0419991
-time =0.064544619696
-repeater[0]<-->QuantumChannel{cost=0.1336;distance=15km;fidelity=0.865159;bellpair_per_sec=10;}<-->HoM[0] F=0.865159 X=0.0463972 Z=0.0395166 Y=0.0489271
-time =0.092850521932
-repeater[0]<-->QuantumChannel{cost=0.133369;distance=10km;fidelity=0.865911;bellpair_per_sec=10;}<-->HoM[1] F=0.865911 X=0.0472918 Z=0.0447979 Y=0.0419991
-time =0.064544619696

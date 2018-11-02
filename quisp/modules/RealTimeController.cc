@@ -17,6 +17,7 @@ Define_Module(RealTimeController);
 void RealTimeController::initialize()
 {
   EV<<"RealTimeController booted\n";
+  myAddress = par("address");
 }
 
 void RealTimeController::handleMessage(cMessage *msg){
@@ -55,6 +56,8 @@ cModule* RealTimeController::getQNode(){
 }
 
 void RealTimeController::ReInitialize_StationaryQubit(int qnic_index ,int qubit_index, QNIC_type qnic_type, bool consumed){
+    if(myAddress==2)
+        std::cout<<"node["<<myAddress<<"] ";
     bool success;
     cModule *qnode = getQNode();//Get the parent QNode that runs this RC.
     try{
@@ -62,7 +65,11 @@ void RealTimeController::ReInitialize_StationaryQubit(int qnic_index ,int qubit_
         if (qnic_type>=QNIC_N) error("Only 3 qnic types are currently recognized...."); // avoid segfaults <3
         qubit = qnode->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit", qubit_index);
         stationaryQubit *q  = check_and_cast<stationaryQubit *>(qubit);
+        if(myAddress==2)
+            std::cout<<"Setting free "<<q<<"\n";
         q->setFree(consumed);
+        if(myAddress==2)
+            std::cout<<q<<" X="<<q->par("GOD_Xerror").str()<<" Z="<<q->par("GOD_Zerror").str()<<"\n";
     }catch(std::exception& e){
             error("Some error occured in RealTimeController. Maybe the qnic/statQubit couldnt be found. Have you changed the namings?");
     }

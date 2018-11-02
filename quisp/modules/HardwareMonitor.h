@@ -73,6 +73,12 @@ typedef struct _output_count{
     int minus_minus;
 }output_count;
 
+typedef struct _link_cost{
+    simtime_t tomography_time;
+    int tomography_measurements;
+    double Bellpair_per_sec;
+}link_cost;
+
 /** \class HardwareMonitor HardwareMonitor.h
  *  \todo Documentation of the class header.
  *
@@ -110,7 +116,7 @@ class HardwareMonitor : public cSimpleModule
         typedef std::map<int,tomography_outcome> Temporal_Tomography_Output_Holder;//measurement_count_id -> outcome. For single qnic
         //typedef std::map<int,Temporal_Tomography_Output_Holder> All_Temporal_Tomography_Output_Holder;//qnic_index -> tomography data. For all qnics.
         Temporal_Tomography_Output_Holder *all_temporal_tomography_output_holder;
-        simtime_t *all_temporal_tomography_runningtime_holder;
+        link_cost *all_temporal_tomography_runningtime_holder;
         std::string tomography_output_filename;
 
     protected:

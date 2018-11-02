@@ -47,7 +47,7 @@ void HardwareMonitor::initialize(int stage)
 
   /*This is used to keep your own tomography data, and also to match and store the received partner's tomography data*/
    all_temporal_tomography_output_holder = new Temporal_Tomography_Output_Holder[numQnic_total];//Assumes link tomography only between neighbors.
-   all_temporal_tomography_runningtime_holder = new simtime_t[numQnic_total];
+   all_temporal_tomography_runningtime_holder = new link_cost[numQnic_total];
   /*Once all_temporal_tomography_output_holder is filled in, those data are summarized into basis based measurement outcome table. This accumulates the number of ++, +-, -+ and -- for each basis combination.*/
   tomography_data = new raw_data[numQnic_total];//Raw count table for tomography per link/qnic
 
@@ -61,7 +61,9 @@ void HardwareMonitor::initialize(int stage)
       tomography_data[i].insert(std::make_pair("YX",initial));
       tomography_data[i].insert(std::make_pair("YY",initial));
       tomography_data[i].insert(std::make_pair("YZ",initial));
-      all_temporal_tomography_runningtime_holder[i] = -1;
+      all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec = -1;
+      all_temporal_tomography_runningtime_holder[i].tomography_measurements = -1;
+      all_temporal_tomography_runningtime_holder[i].tomography_time = -1;
   }
   //std::cout<<"numQnic_total"<<numQnic_total<<"\n";
 
@@ -188,8 +190,11 @@ void HardwareMonitor::handleMessage(cMessage *msg){
             all_temporal_tomography_output_holder[local_qnic.index].insert(std::make_pair(result->getCount_id(), temp));
         }
         if(result->getFinish()!=-1){
-            if(all_temporal_tomography_runningtime_holder[local_qnic.index] < result->getFinish())
-                all_temporal_tomography_runningtime_holder[local_qnic.index] = result->getFinish();
+            if(all_temporal_tomography_runningtime_holder[local_qnic.index].tomography_time < result->getFinish()){
+                all_temporal_tomography_runningtime_holder[local_qnic.index].Bellpair_per_sec = (double)result->getMax_count()/result->getFinish().dbl();
+                all_temporal_tomography_runningtime_holder[local_qnic.index].tomography_measurements = result->getMax_count();
+                all_temporal_tomography_runningtime_holder[local_qnic.index].tomography_time = result->getFinish();
+            }
         }
     }
     delete msg;
@@ -208,7 +213,10 @@ void HardwareMonitor::finish(){
     }else{
         std::cout<<df<<"!="<<file_name<<"\n";
     }
+    std::string file_name_dm = file_name+std::string("_dm");
+
     std::ofstream tomography_stats(file_name,std::ios_base::app);
+    std::ofstream tomography_dm(file_name_dm,std::ios_base::app);
     std::cout<<"Opened new file to write.\n";
 
 
@@ -276,19 +284,27 @@ void HardwareMonitor::finish(){
 
         connection_setup_inf inf = return_setupInf(i);
         double bellpairs_per_sec = 10;
-        double link_cost =(double)1/(fidelity*fidelity*bellpairs_per_sec);
+        double link_cost =(double)1/(fidelity*fidelity*all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec);
 
         Interface_inf interface = getInterface_inf_fromQnicAddress(inf.qnic.index,inf.qnic.type);
         cModule *this_node = this->getParentModule()->getParentModule();
         cModule *neighbor_node = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
         cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
         double dis = channel->par("distance");
+
+        tomography_dm<<this_node->getFullName()<<"<--->"<<neighbor_node->getFullName()<<"\n";
+        tomography_dm<<"REAL\n";
+        tomography_dm<<density_matrix_reconstructed.real()<<"\n";
+        tomography_dm<<"IMAGINARY\n";
+        tomography_dm<<density_matrix_reconstructed.imag()<<"\n";
+
         std::cout<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<bellpairs_per_sec<<";}<-->"<<neighbor_node->getFullName()<< " F="<<fidelity<<" X="<<Xerr_rate<<" Z="<<Zerr_rate<<" Y="<<Yerr_rate<<endl;
-        tomography_stats<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<bellpairs_per_sec<<";}<-->"<<neighbor_node->getFullName()<< " F="<<fidelity<<" X="<<Xerr_rate<<" Z="<<Zerr_rate<<" Y="<<Yerr_rate<<endl;
-        tomography_stats<<"time ="<<all_temporal_tomography_runningtime_holder[i]<<"\n";
+        tomography_stats<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec<<";tomography_time="<<all_temporal_tomography_runningtime_holder[i].tomography_time<<";tomography_measurements="<<all_temporal_tomography_runningtime_holder[i].tomography_measurements<<";}<-->"<<neighbor_node->getFullName()<< " F="<<fidelity<<" X="<<Xerr_rate<<" Z="<<Zerr_rate<<" Y="<<Yerr_rate<<endl;
+
     }
 
     tomography_stats.close();
+    tomography_dm.close();
     std::cout<<"Closed file to write.\n";
 }
 

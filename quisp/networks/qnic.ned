@@ -21,8 +21,9 @@ simple stationaryQubit
     parameters:
         int stationaryQubit_address;
         int node_address;
-        int qnic_address;
+        int qnic_address;//Unique
         int qnic_type;
+        int qnic_index;//Not unique
         
         int GOD_entangled_stationaryQubit_address = default(-1);
         int GOD_entangled_node_address = default(-1);
@@ -54,7 +55,7 @@ simple stationaryQubit
         double memory_Y_error_ratio = default(1);
         double memory_energy_excitation_ratio = default(1);
         double memory_energy_relaxation_ratio = default(1);
-       
+       double memory_complitely_mixed_ratio = default(1);
         
     gates:
         inout tolens_quantum_port;
@@ -80,6 +81,7 @@ module QNIC
 {
     parameters:
         int self_qnic_address;//Buffer identifier/address
+        int self_qnic_index;
         int parent_node_address;
         int neighbor_node_address = default(-1);
         //int neighbor_qnode_address = default(-1);
@@ -101,6 +103,7 @@ module QNIC
             stationaryQubit_address = index;
             node_address = parent_node_address;
             qnic_address = self_qnic_address;
+            qnic_index = self_qnic_index;
             qnic_type = self_qnic_type;
             xPosition_Graphics = 70 + 65*index;  // use submodule index to generate different IDs
             //@display("p=$xPosition_Graphics,40,,circle");

@@ -87,7 +87,7 @@ class RuleEngine : public cSimpleModule
          * */
 
         //typedef rules::RuleSet* RuleSetPtr;
-        typedef std::map<int, process> running_processes;
+        typedef std::map<int, process> running_processes;//index -> process
         running_processes rp;
         //typedef std::map<std::string, quisp::rules::RuleSet> processes;//process_id -> Rule set
         virtual void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type);
