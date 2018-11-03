@@ -157,7 +157,7 @@ void stationaryQubit::handleMessage(cMessage *msg){
 
 void stationaryQubit::setEmissionPauliError(){
     if(par("GOD_Xerror") || par("GOD_Zerror")){
-        std::cout<<"node["<<node_address<<"] qnic["<<qnic_address<<"] Emitting from "<<this<<"X="<<par("GOD_Xerror").str()<<"Z="<<par("GOD_Zerror").str()<<"\n";
+        //std::cout<<"node["<<node_address<<"] qnic["<<qnic_address<<"] Emitting from "<<this<<"X="<<par("GOD_Xerror").str()<<"Z="<<par("GOD_Zerror").str()<<"\n";
         error("There shouldn't be an error existing before photon emission. This error may have not been reinitialized since last use. Better check!");
     }
     double rand = dblrand();//Gives a random double between 0.0 ~ 1.0
@@ -512,9 +512,6 @@ bool stationaryQubit::purify(stationaryQubit * resource_qubit/*Controlled*/) {
 
 //Single qubit memory error based on Markov-Chain
 void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
-    if(stationaryQubit_address==11 && node_address==2){
-        std::cout<<"Error on "<<this<<"\n";
-    }
     //std::cout<<"memory_err = "<<memory_err.pauli_error_rate<<"\n";
     //Check when the error got updated last time. Errors will be performed depending on the difference between that time and the current time.
     if(qubit->memory_err.pauli_error_rate==0){//If no memory error occurs, or if the state is completely mixed, skip this memory error simulation.
@@ -615,7 +612,7 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
         if( std::isnan(Dynamic_transition_matrix(0,0))){
             //std::cout<<"!!!!!Check out this\n";
             //std::cout<<qubit->Memory_Transition_matrix.pow(time_evolution_microsec);
-            error("Heh....");
+            error("Transition maatrix is NaN. This is Eigen's fault.");
         }
 
 

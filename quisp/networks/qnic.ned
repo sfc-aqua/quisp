@@ -80,12 +80,12 @@ simple QNIC_photonic_switch
 module QNIC
 {
     parameters:
+        int numBuffer = default(7);
         int self_qnic_address;//Buffer identifier/address
         int self_qnic_index;
         int parent_node_address;
         int neighbor_node_address = default(-1);
         //int neighbor_qnode_address = default(-1);
-        int numBuffer = default(7);
         int self_qnic_type;
         bool receiver = default(false);
         double emission_std = default(0);

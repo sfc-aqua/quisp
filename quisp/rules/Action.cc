@@ -80,7 +80,7 @@ cPacket* RandomMeasureAction::run(cModule *re, qnicResources* resources) {
 
         /*Delete measured resource from the tracked list of resources.*/
         RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
-        std::cout<<"node["<<qubit->node_address<<"]Measure calling freeConsumedResource"<<qubit<<"\n";
+        //std::cout<<"node["<<qubit->node_address<<"]Measure calling freeConsumedResource"<<qubit<<"\n";
         rule_engine->freeConsumedResource(qnic_id, qubit, qnic_type);
         /*Deleting done*/
 
@@ -112,7 +112,7 @@ stationaryQubit* Action::getResource_fromTop(int required_index){
         if(it->second->isLocked()){
             //Ignore locked resource
         }else if(resource_index == required_index && !it->second->isLocked()){
-            std::cout<<"node["<<it->second->node_address<<"] Rule: Let's use this qubit!"<<it->second<<", isLocked = "<<it->second->isLocked()<<"\n";
+            //std::cout<<"node["<<it->second->node_address<<"] Rule: Let's use this qubit!"<<it->second<<", isLocked = "<<it->second->isLocked()<<"\n";
             pt = it->second;
             break;
         }else{
@@ -152,16 +152,16 @@ cPacket* PurifyAction::run(cModule *re) {
         return pk;
     }
     bool meas = trash_qubit->purify(qubit);//Error propagation only. Not based on density matrix
-    std::cout<<"node["<<qubit->node_address<<"][before]Kept "<<qubit<<" locked="<<qubit->isLocked()<<", trashed"<<trash_qubit<<" locked="<<trash_qubit->isLocked()<<"\n";
+    //std::cout<<"node["<<qubit->node_address<<"][before]Kept "<<qubit<<" locked="<<qubit->isLocked()<<", trashed"<<trash_qubit<<" locked="<<trash_qubit->isLocked()<<"\n";
     qubit->Lock(ruleset_id, rule_id, action_index);
-    std::cout<<"node["<<qubit->node_address<<"]after]Kept "<<qubit<<" locked="<<qubit->isLocked()<<", trashed"<<trash_qubit<<" locked="<<trash_qubit->isLocked()<<"\n";
+    //std::cout<<"node["<<qubit->node_address<<"]after]Kept "<<qubit<<" locked="<<qubit->isLocked()<<", trashed"<<trash_qubit<<" locked="<<trash_qubit->isLocked()<<"\n";
 
     //Delete measured resource from the tracked list of resources.
-    std::cout<<"node["<<qubit->node_address<<"]Purify Locked:"<<qubit<<"\n";
-    std::cout<<"node["<<qubit->node_address<<"]Purify consumed:"<<trash_qubit<<"\n";
+    //std::cout<<"node["<<qubit->node_address<<"]Purify Locked:"<<qubit<<"\n";
+    //std::cout<<"node["<<qubit->node_address<<"]Purify consumed:"<<trash_qubit<<"\n";
    removeResource_fromRule(trash_qubit);//Remove from resource list in this Rule.
    RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
-   std::cout<<"node["<<qubit->node_address<<"]Purification calling freeConsumedResource"<<trash_qubit<<"\n";
+   //std::cout<<"node["<<qubit->node_address<<"]Purification calling freeConsumedResource"<<trash_qubit<<"\n";
    rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);//Remove from entangled resource list.
    //Deleting done
 
