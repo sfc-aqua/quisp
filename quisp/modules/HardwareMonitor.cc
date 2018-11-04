@@ -165,9 +165,9 @@ void HardwareMonitor::handleMessage(cMessage *msg){
     }else if (dynamic_cast<LinkTomographyResult *>(msg) != nullptr){
         /*Link tomography measurement result/basis from neighbor received.*/
         LinkTomographyResult *result = check_and_cast<LinkTomographyResult *>(msg);
-        QNIC local_qnic = search_QNIC_from_Neighbor_QNode_address(result->getPartner_address());
-        auto it = all_temporal_tomography_output_holder[local_qnic.index].find(result->getCount_id());
-        if (it != all_temporal_tomography_output_holder[local_qnic.index].end()){
+        QNIC local_qnic = search_QNIC_from_Neighbor_QNode_address(result->getPartner_address());//Get QNIC info from neighbor address.
+        auto it = all_temporal_tomography_output_holder[local_qnic.address].find(result->getCount_id());
+        if (it != all_temporal_tomography_output_holder[local_qnic.address].end()){
             EV<<"Data already found.";
             tomography_outcome temp = it->second;
             if(result->getSrcAddr() == myAddress){
@@ -187,13 +187,13 @@ void HardwareMonitor::handleMessage(cMessage *msg){
                 temp.partner_basis = result->getBasis();
                 temp.partner_output_is_plus = result->getOutput_is_plus();
             }
-            all_temporal_tomography_output_holder[local_qnic.index].insert(std::make_pair(result->getCount_id(), temp));
+            all_temporal_tomography_output_holder[local_qnic.address].insert(std::make_pair(result->getCount_id(), temp));
         }
         if(result->getFinish()!=-1){
-            if(all_temporal_tomography_runningtime_holder[local_qnic.index].tomography_time < result->getFinish()){
-                all_temporal_tomography_runningtime_holder[local_qnic.index].Bellpair_per_sec = (double)result->getMax_count()/result->getFinish().dbl();
-                all_temporal_tomography_runningtime_holder[local_qnic.index].tomography_measurements = result->getMax_count();
-                all_temporal_tomography_runningtime_holder[local_qnic.index].tomography_time = result->getFinish();
+            if(all_temporal_tomography_runningtime_holder[local_qnic.address].tomography_time < result->getFinish()){
+                all_temporal_tomography_runningtime_holder[local_qnic.address].Bellpair_per_sec = (double)result->getMax_count()/result->getFinish().dbl();
+                all_temporal_tomography_runningtime_holder[local_qnic.address].tomography_measurements = result->getMax_count();
+                all_temporal_tomography_runningtime_holder[local_qnic.address].tomography_time = result->getFinish();
             }
         }
     }
@@ -298,7 +298,7 @@ void HardwareMonitor::finish(){
         tomography_dm<<"IMAGINARY\n";
         tomography_dm<<density_matrix_reconstructed.imag()<<"\n";
 
-        std::cout<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<bellpairs_per_sec<<";}<-->"<<neighbor_node->getFullName()<< " F="<<fidelity<<" X="<<Xerr_rate<<" Z="<<Zerr_rate<<" Y="<<Yerr_rate<<endl;
+        std::cout<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<bellpairs_per_sec<<";}<-->"<<neighbor_node->getFullName()<< "; F="<<fidelity<<"; X="<<Xerr_rate<<"; Z="<<Zerr_rate<<"; Y="<<Yerr_rate<<endl;
         tomography_stats<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec<<";tomography_time="<<all_temporal_tomography_runningtime_holder[i].tomography_time<<";tomography_measurements="<<all_temporal_tomography_runningtime_holder[i].tomography_measurements<<";}<-->"<<neighbor_node->getFullName()<< " F="<<fidelity<<" X="<<Xerr_rate<<" Z="<<Zerr_rate<<" Y="<<Yerr_rate<<endl;
 
     }

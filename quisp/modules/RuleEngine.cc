@@ -621,8 +621,8 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
     if(internal_qnic_index==-1){//destination hom is outside this node.
            Interface_inf inf = getInterface_toNeighbor(destAddr);
            neighborQNodeAddress = inf.neighborQNode_address;//Because we need the address of the neighboring QNode, not BSA!
-           qnic_index = inf.qnic.index;
-           qnic_address = inf.qnic.address;
+           qnic_index = inf.qnic.index;/*Only unique inside the same qnic_type.*/
+           qnic_address = inf.qnic.address;/*Unique address*/
            qnic_type = QNIC_E;
      }else{//destination hom is in the qnic in this node. This gets invoked when the request from internal hom is send from the same node.
            qnic_index = internal_qnic_index;
@@ -653,7 +653,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
         }else{
             //std::cout<<"node["<<parentAddress<<"] success!\n";
             //Keep the entangled qubits
-            //EV<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
+            std::cout<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"] node addr["<<it->first<<"] \n";
             //Add this as an available resource
             stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
             //std::cout<<"node["<<parentAddress<<"] qnic["<<qnic_address<<"] entanglement success"<<qubit<<"\n";
@@ -929,13 +929,12 @@ void RuleEngine::traverseThroughAllProcesses(RuleEngine *re, int qnic_type, int 
 
 }*/
 
-void RuleEngine::freeConsumedResource(int qnic_index, stationaryQubit *qubit, QNIC_type qnic_type){
+void RuleEngine::freeConsumedResource(int qnic_index/*Not the address!!!*/, stationaryQubit *qubit, QNIC_type qnic_type){
 
     realtime_controller->ReInitialize_StationaryQubit(qnic_index ,qubit->par("stationaryQubit_address"), qnic_type, true);
     Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit->par("stationaryQubit_address"));
 
-    for (auto it =  allResources[qnic_type][qnic_index].cbegin(), next_it =  allResources[qnic_type][qnic_index].cbegin(); it !=  allResources[qnic_type][qnic_index].cend(); it = next_it)
-    {
+    for (auto it =  allResources[qnic_type][qnic_index].cbegin(), next_it =  allResources[qnic_type][qnic_index].cbegin(); it !=  allResources[qnic_type][qnic_index].cend(); it = next_it){
       next_it = it; ++next_it;
       if (it->second == qubit){
           //std::cout<<"Let's delete this qubit!"<<it->second<<"\n";
@@ -943,7 +942,6 @@ void RuleEngine::freeConsumedResource(int qnic_index, stationaryQubit *qubit, QN
           return;
       }
     }
-
 }
 
 
