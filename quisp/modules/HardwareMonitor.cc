@@ -70,6 +70,7 @@ void HardwareMonitor::initialize(int stage)
 
    /*This keeps which node is connected to which local qnic.*/
   tomography_output_filename = par("tomography_output_filename").str();
+  file_dir_name= par("file_dir_name").str();
   ntable = prepareNeighborTable(ntable, numQnic_total);
   do_link_level_tomography = par("link_tomography");
   num_purification_tomography = par("initial_purification");
@@ -213,6 +214,7 @@ void HardwareMonitor::finish(){
     }else{
         std::cout<<df<<"!="<<file_name<<"\n";
     }
+
     std::string file_name_dm = file_name+std::string("_dm");
 
     std::ofstream tomography_stats(file_name,std::ios_base::app);
@@ -291,6 +293,12 @@ void HardwareMonitor::finish(){
         cModule *neighbor_node = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
         cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
         double dis = channel->par("distance");
+
+        if(this_node->getModuleType() == QNodeType && neighbor_node->getModuleType() == QNodeType){
+            if(myAddress > inf.neighbor_address){
+                return;
+            }
+        }
 
         tomography_dm<<this_node->getFullName()<<"<--->"<<neighbor_node->getFullName()<<"\n";
         tomography_dm<<"REAL\n";

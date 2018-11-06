@@ -32,10 +32,51 @@ typedef struct _emission_error_model{
     double Z_error_rate;
     double X_error_rate;
     double Y_error_rate;
+
+    double No_error_ceil;
+    double X_error_ceil;
+    double Y_error_ceil;
+    double Z_error_ceil;
 } emission_error_model;
 
-typedef struct _memory_error_model{
+typedef struct _gate_error_model{
     double pauli_error_rate;//Overall error rate
+    double Z_error_rate;
+    double X_error_rate;
+    double Y_error_rate;
+
+    double No_error_ceil;
+    double Z_error_ceil;
+    double X_error_ceil;
+    double Y_error_ceil;
+} gate_error_model;
+
+typedef struct _two_qubit_gate_error_model{
+    double pauli_error_rate;//Overall error rate
+    double IZ_error_rate;
+    double ZI_error_rate;
+    double ZZ_error_rate;
+    double IY_error_rate;
+    double YI_error_rate;
+    double YY_error_rate;
+    double IX_error_rate;
+    double XI_error_rate;
+    double XX_error_rate;
+
+    double No_error_ceil;
+    double IZ_error_ceil;
+    double ZI_error_ceil;
+    double ZZ_error_ceil;
+    double IY_error_ceil;
+    double YI_error_ceil;
+    double YY_error_ceil;
+    double IX_error_ceil;
+    double XI_error_ceil;
+    double XX_error_ceil;
+} two_qubit_gate_error_model;
+
+typedef struct _memory_error_model{
+    double error_rate;//Overall error rate
     double Z_error_rate;
     double X_error_rate;
     double Y_error_rate;
@@ -131,12 +172,17 @@ class stationaryQubit : public cSimpleModule
         *  @{
         */
         /** Error rate when emitting photon*/
-               emission_error_model err;
-               double emit_error_rate;
+               emission_error_model emission_error;
+               gate_error_model Hgate_error;
+               gate_error_model Xgate_error;
+               gate_error_model Zgate_error;
+               two_qubit_gate_error_model CNOTgate_error;
+               gate_error_model Measurement_error;
+              /* double emit_error_rate;
                double No_error_ceil;
                double X_error_ceil;
                double Y_error_ceil;
-               double Z_error_ceil;
+               double Z_error_ceil;*/
        //@}
 
                /** @name Pauli errors for Memories
@@ -218,6 +264,8 @@ class stationaryQubit : public cSimpleModule
         /*Applies memory error to the given qubit*/
         virtual void  apply_memory_error(stationaryQubit *qubit);
 
+        virtual void apply_single_qubit_gate_error(gate_error_model gate, stationaryQubit *qubit);
+        virtual void apply_two_qubit_gate_error(two_qubit_gate_error_model gate, stationaryQubit *first_qubit, stationaryQubit *second_qubit);
         /**
          * \brief Two qubit CNOT gate.
          * \param Need to specify the control qubit as an argument.
@@ -271,11 +319,13 @@ class stationaryQubit : public cSimpleModule
         virtual void handleMessage(cMessage *msg);
         virtual PhotonicQubit *generateEntangledPhoton();
         virtual void setBusy();
-        virtual void setErrorCeilings();
+        //virtual void setErrorCeilings();
         virtual void setEmissionPauliError();
         virtual Matrix2cd getErrorMatrix(stationaryQubit *qubit);//returns the matrix that represents the errors on the Bell pair. (e.g. XY, XZ and ZI...)
         virtual quantum_state getQuantumState();//returns the dm of the physical Bell pair. Used for tomography.
         virtual measurement_operator Random_Measurement_Basis_Selection();
+        virtual gate_error_model SetSingleQubitGateErrorCeilings(std::string gate_name);
+        virtual two_qubit_gate_error_model SetTwoQubitGateErrorCeilings(std::string gate_name);
         //virtual measurement_output_probabilities getOutputProbabilities(quantum_state state, char meas_basis);
 
 };

@@ -194,17 +194,17 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
 
 
             if((rand < BSAsuccess_rate && !right_photon_lost && !left_photon_lost) || ( !right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability) || ( right_photon_lost && !left_photon_lost && darkcount_right < darkcount_probability) || ( right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability && darkcount_right < darkcount_probability)){
-                if(!right_photon_lost && (left_photon_lost && darkcount_left < darkcount_probability)){
+                if(!right_photon_lost && (left_photon_lost && darkcount_left <= darkcount_probability)){
                     //error("Dark count :)");
                     DEBUG_darkcount_left++;
                     GOD_setCompletelyMixedDensityMatrix();
                     sendBSAresult(false, send_result);
-                }else if(!left_photon_lost && (right_photon_lost && darkcount_right < darkcount_probability)){
+                }else if(!left_photon_lost && (right_photon_lost && darkcount_right <= darkcount_probability)){
                     //error("Dark count :)");
                     DEBUG_darkcount_right++;
                     GOD_setCompletelyMixedDensityMatrix();
                     sendBSAresult(false, send_result);
-                }else if((left_photon_lost && darkcount_left < darkcount_probability) &&  (right_photon_lost &&  darkcount_right < darkcount_probability)){
+                }else if((left_photon_lost && darkcount_left <= darkcount_probability) &&  (right_photon_lost &&  darkcount_right <= darkcount_probability)){
                     //error("Dark count :)");
                     DEBUG_darkcount_both++;
                     GOD_setCompletelyMixedDensityMatrix();

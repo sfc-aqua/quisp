@@ -118,6 +118,7 @@ class HardwareMonitor : public cSimpleModule
         Temporal_Tomography_Output_Holder *all_temporal_tomography_output_holder;
         link_cost *all_temporal_tomography_runningtime_holder;
         std::string tomography_output_filename;
+        std::string file_dir_name;
 
     protected:
         virtual void initialize(int stage) override;

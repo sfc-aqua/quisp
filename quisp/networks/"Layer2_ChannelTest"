@@ -1,0 +1,13 @@
+
+
+photon loss/total emission = 34573/(76636+76946) = 0.22% = 0.05^5
+Darkcount probability = 0.01 = 34573*0.01 = 345.7
+total measurements = 60000.
+Completely mixed rate = 345.7/60000
+
+EndNode[0]<-->QuantumChannel{cost=1.55787e-05;distance=20km;fidelity=0.50011;bellpair_per_sec=256648;tomography_time=0.233783475135;tomography_measurements=60000;}<-->repeater[0] F=0.50011 X=0.49989 Z=0.00351572 Y=-0.00351572
+EndNode[1]<-->QuantumChannel{cost=1.25805e-06;distance=5km;fidelity=0.995693;bellpair_per_sec=801775;tomography_time=0.074833978472;tomography_measurements=60000;}<-->repeater[1] F=0.995693 X=0.00150389 Z=0.00114824 Y=0.00165495
+repeater[0]<-->QuantumChannel{cost=1.17028e-05;distance=5km;fidelity=0.49989;bellpair_per_sec=341949;tomography_time=0.175464749617;tomography_measurements=60000;}<-->HoM[0] F=0.49989 X=0.00886098 Z=0.50011 Y=-0.00886098
+repeater[1]<-->QuantumChannel{cost=1.17028e-05;distance=15km;fidelity=0.49989;bellpair_per_sec=341949;tomography_time=0.175464749617;tomography_measurements=60000;}<-->HoM[0] F=0.49989 X=0.00886098 Z=0.50011 Y=-0.00886098
+repeater[1]<-->QuantumChannel{cost=1.18323e-05;distance=15km;fidelity=0.496732;bellpair_per_sec=342520;tomography_time=0.175172352023;tomography_measurements=60000;}<-->HoM[1] F=0.496732 X=-0.00296983 Z=0.503268 Y=0.00296983
+repeater[2]<-->QuantumChannel{cost=1.18323e-05;distance=5km;fidelity=0.496732;bellpair_per_sec=342520;tomography_time=0.175172352023;tomography_measurements=60000;}<-->HoM[1] F=0.496732 X=-0.00296983 Z=0.503268 Y=0.00296983

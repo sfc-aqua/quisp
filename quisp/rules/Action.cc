@@ -195,7 +195,7 @@ cPacket* RandomMeasureAction::run(cModule *re) {
         measurement_outcome o = qubit->measure_density_independent();
         current_count++;
 
-        std::cout<<"Measuring "<<qubit<<" in node["<<qubit->node_address<<"] qnic["<<qubit->qnic_index<<"] qnic_type["<<qubit->qnic_type<<"] \n";
+        EV<<"Measuring "<<qubit<<" in node["<<qubit->node_address<<"] qnic["<<qubit->qnic_index<<"] qnic_type["<<qubit->qnic_type<<"] \n";
         //Delete measured resource from the tracked list of resources.
         removeResource_fromRule(qubit);//Remove from resource list in this Rule.
         RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);

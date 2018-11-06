@@ -94,7 +94,7 @@ void RuleEngine::handleMessage(cMessage *msg){
         else if(dynamic_cast<PurificationResult *>(msg) != nullptr){
 
             PurificationResult *pkt = check_and_cast<PurificationResult *>(msg);
-            std::cout<<"Presult from node["<<pkt->getSrcAddr()<<"]\n";
+            //std::cout<<"Presult from node["<<pkt->getSrcAddr()<<"]\n";
             process_id purification_id;
             purification_result pr;
             purification_id.ruleset_id = pkt->getRuleset_id();
@@ -114,7 +114,7 @@ void RuleEngine::handleMessage(cMessage *msg){
             }if(my_qnic_index == -1){
                 error("2. Something is wrong when finding out local qnic address from neighbor address in ntable.");
             }
-            std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
+            //std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
             check_Purification_Agreement(pr);
             //delete pkt;
 
@@ -228,8 +228,8 @@ void RuleEngine::handleMessage(cMessage *msg){
 
 void RuleEngine::check_Purification_Agreement(purification_result pr){
 
-    std::cout<<"check_Purification_Agreement: "<<pr.id.ruleset_id<<"\n";
-    std::cout<<"rp size = "<<rp.size()<<"\n";
+    //std::cout<<"check_Purification_Agreement: "<<pr.id.ruleset_id<<"\n";
+    //std::cout<<"rp size = "<<rp.size()<<"\n";
 
     bool ruleset_running = false;
     for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){
@@ -323,7 +323,7 @@ void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, int rule_
                                 //std::cout<<"node["<<qubit->second->node_address<<"]"<<qubit->second<<" X = "<<qubit->second->par("GOD_Xerror").str()<<" Z = "<<qubit->second->par("GOD_Zerror").str()<<"\n";
                                 //std::cout<<"Rule id = "<<qubit->second->rs<<"\n";
                                 //std::cout<<"Freeing qnic["<<qubit->second->qnic_index<<"]"<<"qnic type="<<qt<<" btw addr="<<qubit->second->qnic_address<<"\n";
-                                /*ここおかしいかも。qnic_index!!*/
+
                                 freeConsumedResource(qubit->second->qnic_index, qubit->second, qt);//Remove from entangled resource list.
                                 (*rule)->resources.erase(qubit);//Erase this from resource list                                                               ok = true;
                                 return;
@@ -653,7 +653,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
         }else{
             //std::cout<<"node["<<parentAddress<<"] success!\n";
             //Keep the entangled qubits
-            std::cout<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"] node addr["<<it->first<<"] \n";
+            EV<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"] node addr["<<it->first<<"] \n";
             //Add this as an available resource
             stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
             //std::cout<<"node["<<parentAddress<<"] qnic["<<qnic_address<<"] entanglement success"<<qubit<<"\n";

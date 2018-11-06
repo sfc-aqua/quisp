@@ -32,12 +32,35 @@ channel QuantumChannel extends DatarateChannel
 }
 
 //I am not using this though..... All delays caused by internal connections are considered negligible in the simulation.
-channel QuantumChannel_internal extends QuantumChannel
+channel XQuantumChannel extends QuantumChannel
 {
-            distance @unit(cm) = default(1cm);
+            //distance @unit(cm) = default(1cm);
+            distance @unit(km) = default(20km);
             photon_loss_ratio = default(0);//per km
-            channel_error_rate = default(0);//per km
-            Z_error_ratio = default(1);
+            channel_error_rate = default(1);//per km
+            Z_error_ratio = default(0);
             X_error_ratio = default(1);
+            Y_error_ratio = default(0);
+}
+
+channel ZQuantumChannel extends QuantumChannel
+{
+            //distance @unit(cm) = default(1cm);
+            distance @unit(km) = default(20km);
+            photon_loss_ratio = default(0);//per km
+            channel_error_rate = default(1);//per km
+            Z_error_ratio = default(1);
+            X_error_ratio = default(0);
+            Y_error_ratio = default(0);
+}
+
+channel YQuantumChannel extends QuantumChannel
+{
+            //distance @unit(cm) = default(1cm);
+            distance @unit(km) = default(20km);
+            photon_loss_ratio = default(0);//per km
+            channel_error_rate = default(1);//per km
+            Z_error_ratio = default(0);
+            X_error_ratio = default(0);
             Y_error_ratio = default(1);
 }
