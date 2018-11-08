@@ -66,7 +66,7 @@ bool MeasureCountClause::check(std::map<int,stationaryQubit*> resources) const {
     //std::cout<<"MeasureCountClause invoked!!!! \n";
     if(current_count<max_count){
            current_count++;//Increment measured counter.
-           EV<<"Measurement count is now "<<current_count<<" < "<<max_count<<"\n";
+           std::cout<<"Measurement count is now "<<current_count<<" < "<<max_count<<"\n";
            return true;
     }else{
            //std::cout<<"Count is enough\n";

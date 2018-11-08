@@ -36,6 +36,7 @@ class HoM_Controller : public cSimpleModule
         cMessage *generatePacket;
         double speed_of_light_in_channel;
         cPar *c;
+        int time_out_count;
     public:
         int neighbor_address;
         int neighbor_address_two;
@@ -61,6 +62,8 @@ class HoM_Controller : public cSimpleModule
 
         bool handshake = false;
         double BSA_timeout = 1e-5;
+        bool auto_resend_BSANotifier;
+        double current_trial_id;
 
     protected:
         virtual void initialize(int stage) override;

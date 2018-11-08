@@ -92,6 +92,11 @@ packet BSMtimingNotifier extends header
     int internal_qnic_address = -1;
 }
 
+packet BSAtimeoutChecker extends header
+{
+    double trial_id;
+}
+
 packet EPPStimingNotifier extends header
 {
     simtime_t timing_at;
@@ -116,7 +121,7 @@ packet SchedulePhotonTransmissionsOnebyOne extends header
 {
     int qnic_index = -1;
     int qnic_address;
-        int num_sent = 0;
+    int num_sent = 0;
     int number_of_qubits_to_send;
     int trial;
     double interval;

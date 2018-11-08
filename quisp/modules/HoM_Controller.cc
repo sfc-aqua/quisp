@@ -20,7 +20,10 @@ HoM_Controller::HoM_Controller()
 
 void HoM_Controller::initialize(int stage)
 {
+    time_out_count = 0;
+    current_trial_id = dblrand();
     handshake = false;
+    auto_resend_BSANotifier = true;
     BSA_timeout = 1e-6;
     address = par("address");
     receiver = par("receiver");
@@ -52,6 +55,7 @@ void HoM_Controller::internodeInitializer(){
 
     accepted_burst_interval = (double)1/(double)photon_detection_per_sec;
     generatePacket = new cMessage("nextPacket");
+    //scheduleAt(simTime()+1,generatePacket);
     scheduleAt(simTime(),generatePacket);
 }
 
@@ -68,6 +72,7 @@ void HoM_Controller::standaloneInitializer(){
 
     accepted_burst_interval = (double)1/(double)photon_detection_per_sec;
     generatePacket = new cMessage("nextPacket");
+    //scheduleAt(simTime()+1,generatePacket);
     scheduleAt(simTime(),generatePacket);
 }
 
@@ -108,6 +113,7 @@ void HoM_Controller::handleMessage(cMessage *msg){
         sendNotifiers();
         //Create timeout
     }else if(dynamic_cast<BSAresult *>(msg) != nullptr){
+        auto_resend_BSANotifier = false;//Photon is arriving. No need to auto reschedule next round. Wait for the last photon fron either node.
         bubble("BSAresult accumulated");
         BSAresult *pk = check_and_cast<BSAresult *>(msg);
         pushToBSAresults(pk->getEntangled());
@@ -123,7 +129,7 @@ void HoM_Controller::handleMessage(cMessage *msg){
         }else{
 
         }*/
-    }else if(dynamic_cast<BSAfinish *>(msg) != nullptr){
+    }else if(dynamic_cast<BSAfinish *>(msg) != nullptr){//Last photon from either node arrived.
         bubble("BSAresult accumulated");
         BSAfinish *pk = check_and_cast<BSAfinish *>(msg);
         pushToBSAresults(pk->getEntangled());
@@ -135,8 +141,18 @@ void HoM_Controller::handleMessage(cMessage *msg){
         bubble("done");
         sendBSAresultsToNeighbors();//memory leak
         clearBSAresults();
+        auto_resend_BSANotifier = true;
+        current_trial_id = dblrand();
         //Schedule a checker with a time-out t, to see if both actually sent something.
         //Worst case is, when both have no free qubit, and no qubits get transmitted. In that case, this module needs to recognize that problem, and reschedule/resend the request after a cetrain time.
+    }else if(dynamic_cast<BSAtimeoutChecker*>(msg) != nullptr){
+        std::cout<<"timeout check at"<<simTime()<<"\n";
+        BSAtimeoutChecker *pk = check_and_cast<BSAtimeoutChecker *>(msg);
+        if(auto_resend_BSANotifier == true && pk->getTrial_id() == current_trial_id){
+            //No photon came from both nodes. All of the resources must have been busy that time.
+            //error("there you go..");
+        }
+        //error("Timeout");
     }
     delete msg;
 }
@@ -348,6 +364,11 @@ void HoM_Controller::sendBSAresultsToNeighbors(){
         }
         send(pk,"toRouter_port");
         send(pkt,"toRouter_port");
+
+        BSAtimeoutChecker *timeout = new BSAtimeoutChecker;//This is used to emit the next round's timing in case no photon arrived.
+        timeout->setTrial_id(current_trial_id);
+        std::cout<<"now = "<<simTime()<<"time = "<<time<<"\n";
+        scheduleAt(simTime()+2*(1.1*time), timeout);
 
     }else{//For SPDC type link
         CombinedBSAresults_epps *pk, *pkt;

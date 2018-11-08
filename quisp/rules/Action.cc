@@ -168,6 +168,7 @@ cPacket* PurifyAction::run(cModule *re) {
 
    PurificationResult *pk = new PurificationResult;
    pk->setDestAddr(partner);
+   pk->setKind(7);
    pk->setAction_index(action_index);
    pk->setRule_id(rule_id);
    pk->setRuleset_id(ruleset_id);
