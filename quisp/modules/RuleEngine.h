@@ -122,6 +122,7 @@ class RuleEngine : public cSimpleModule
         virtual void traverseThroughAllProcesses2();
         virtual double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
         virtual void check_Purification_Agreement(purification_result pr);
+        virtual void storeCheck_Purification_Agreement(purification_result pr);
         virtual void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int index);
         virtual void Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int index);
 

@@ -228,7 +228,11 @@ two_qubit_gate_error_model stationaryQubit::SetTwoQubitGateErrorCeilings(std::st
     gate.IY_error_ceil = gate.ZZ_error_ceil + gate.IY_error_rate;
     gate.YI_error_ceil = gate.IY_error_ceil + gate.YI_error_rate;
     gate.YY_error_ceil = gate.YI_error_ceil + gate.YY_error_rate;
+    std::cout<<"[CNOT] No="<<gate.No_error_ceil<<", IX="<<gate.IX_error_ceil<<", XI="<<gate.XI_error_ceil<<", XX="<<gate.XX_error_ceil<<"\n";
+    std::cout<<"IZ="<<gate.IZ_error_ceil<<", ZI="<<gate.ZI_error_ceil<<", ZZ="<<gate.ZZ_error_ceil<<"\n";
+    std::cout<<"IY="<<gate.IY_error_ceil<<", YI="<<gate.YI_error_ceil<<", YY="<<gate.YY_error_ceil<<"\n";
     return gate;
+
 }
 
 /**
@@ -323,6 +327,7 @@ void stationaryQubit::X_gate(){
 void stationaryQubit::CNOT_gate(stationaryQubit *control_qubit){
     //Need to add noise here later
     apply_two_qubit_gate_error(CNOTgate_error, this, control_qubit);
+    std::cout<<"this X err = "<<this->par("GOD_Xerror").boolValue()<<"\n";
     if(control_qubit->par("GOD_Xerror")){
         par("GOD_Xerror") = !par("GOD_Xerror");//X error propagates from control to target. If an X error is already present, then it cancels out.
     }
@@ -390,7 +395,6 @@ void stationaryQubit::setFree(bool consumed){
             bubble("Failed to entangle!");
             getDisplayString().setTagArg("i", 1, "blue");
         }
-
     }
 }
 
@@ -454,7 +458,6 @@ bool stationaryQubit::isAllocated(){
 PhotonicQubit *stationaryQubit::generateEntangledPhoton(){
     Enter_Method("generateEntangledPhoton()");
     photon = new PhotonicQubit("Photon");
-
     //To simulate the actual physical entangled partner, not what the system thinks!!! we need this.
     photon->setNodeEntangledWith(node_address);//This photon is entangled with.... node_address = node's index
     photon->setQNICEntangledWith(qnic_address);//qnic_address != qnic_index. qnic_index is not unique because there are 3 types.
@@ -599,6 +602,14 @@ bool stationaryQubit::purify(stationaryQubit * resource_qubit/*Controlled*/) {
     return meas;
 }
 
+bool stationaryQubit::purifyZ(stationaryQubit * resource_qubit/*Target*/) {
+    apply_memory_error(this);//This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
+    apply_memory_error(resource_qubit);
+    /*Target qubit*/resource_qubit->CNOT_gate(this/*controlled qubit*/);
+    this->Hadamard_gate();
+    bool meas = this->measure_Z();
+    return meas;
+}
 
 
 //Single qubit memory error based on Markov-Chain
@@ -800,8 +811,6 @@ quantum_state stationaryQubit::getQuantumState(){
     if(this->excited_or_relaxed || entangled_partner->excited_or_relaxed){
         error("Wrong");
     }
-
-
     //If Pauli errors
     Vector4cd ideal_Bell_state(1/sqrt(2),0,0,1/sqrt(2));//Assumes that the state is a 2 qubit state |00> + |11>
 
@@ -854,33 +863,45 @@ void stationaryQubit::apply_two_qubit_gate_error(two_qubit_gate_error_model gate
                 //Do nothing
     }else if(gate.No_error_ceil < rand && rand <= gate.IX_error_ceil && (gate.No_error_ceil!=gate.IX_error_ceil)){
                 //IX error
+            error("IX");
             first_qubit->addXerror();
     }else if(gate.IX_error_ceil < rand && rand <= gate.XI_error_ceil && (gate.IX_error_ceil!=gate.XI_error_ceil)){
                 //XI error
+            error("XI");
+            second_qubit->addXerror();
+    }else if(gate.XI_error_ceil < rand && rand <= gate.XX_error_ceil && (gate.XI_error_ceil!=gate.XX_error_ceil)){
+                //XX error
+            std::cout<<"rand = "<<rand<<"\n";
+            error("XX");
+            first_qubit->addXerror();
             second_qubit->addXerror();
     }else if(gate.XX_error_ceil < rand && rand <= gate.IZ_error_ceil && (gate.XX_error_ceil!=gate.IZ_error_ceil)){
-                //XX error
-            first_qubit->addXerror();
-            second_qubit->addXerror();
-    }else if(gate.IZ_error_ceil < rand && rand <= gate.ZI_error_ceil && (gate.IZ_error_ceil!=gate.ZI_error_ceil)){
                 //IZ error
+            error("IZ");
+            std::cout<<"[b]first qubit->X"<< first_qubit->par("GOD_Xerr").boolValue()<<"\n";
             first_qubit->addZerror();
-    }else if(gate.ZI_error_ceil < rand && rand <= gate.ZZ_error_ceil && (gate.ZI_error_ceil!=gate.ZZ_error_ceil)){
+            std::cout<<"[a]first qubit->X"<< first_qubit->par("GOD_Xerr").boolValue()<<"\n";
+    }else if(gate.IZ_error_ceil < rand && rand <= gate.ZI_error_ceil && (gate.IZ_error_ceil!=gate.ZI_error_ceil)){
                 //ZI error
+            error("ZI");
+            second_qubit->addZerror();
+    }else if(gate.ZI_error_ceil < rand && rand <= gate.ZZ_error_ceil && (gate.ZI_error_ceil!=gate.ZZ_error_ceil)){
+                //ZZ error
+            error("ZZ");
+            first_qubit->addZerror();
             second_qubit->addZerror();
     }else if(gate.ZZ_error_ceil < rand && rand <= gate.IY_error_ceil && (gate.ZZ_error_ceil!=gate.IY_error_ceil)){
-                //ZZ error
-            first_qubit->addZerror();
-            second_qubit->addZerror();
-    }else if(gate.IY_error_ceil < rand && rand <= gate.YI_error_ceil && (gate.IY_error_ceil!=gate.YI_error_ceil)){
                 //IY error
+            error("IY");
             first_qubit->addXerror();
             first_qubit->addZerror();
-    }else if(gate.YI_error_ceil < rand && rand <= gate.YY_error_ceil && (gate.YI_error_ceil!=gate.YY_error_ceil)){
+    }else if(gate.IY_error_ceil < rand && rand <= gate.YI_error_ceil && (gate.IY_error_ceil!=gate.YI_error_ceil)){
                 //YI error
+            error("YI");
             second_qubit->addXerror();
             second_qubit->addZerror();
     }else{
+            error("YY");
                 //YY error
             first_qubit->addXerror();
             first_qubit->addZerror();

@@ -16,6 +16,7 @@ namespace quisp {
 namespace rules {
 
 
+/*
 cPacket* SwappingAction::run(cModule *re, qnicResources* resources) {
         stationaryQubit *lqubit = NULL, *rqubit = NULL;
         lqubit = getQubit(resources,
@@ -27,9 +28,9 @@ cPacket* SwappingAction::run(cModule *re, qnicResources* resources) {
             return 0;
         }
         // error
-}
+}*/
 
-
+/*
 cPacket* PurifyAction::run(cModule *re, qnicResources* resources) {
     stationaryQubit *qubit = NULL, *trash_qubit = NULL;
     qubit = getUnLockedQubit_fromTop(resources,qnic_type,qnic_id,partner,resource);
@@ -49,7 +50,7 @@ cPacket* PurifyAction::run(cModule *re, qnicResources* resources) {
             //Delete measured resource from the tracked list of resources.
             RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
             rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);
-            //Deleting done*/
+            //Deleting done
             return 0;
         }
     }else{
@@ -58,14 +59,14 @@ cPacket* PurifyAction::run(cModule *re, qnicResources* resources) {
         return pk;
     }
     // error
-}
+}*/
 
 
-
+/*
 cPacket* RandomMeasureAction::run(cModule *re, qnicResources* resources) {
     EV<<"Measuring qubit now.\n";
     stationaryQubit *qubit = NULL;
-    //qubit = getQubit(/*re,*/ resources,qnic_type,qnic_id,partner,resource);
+    //qubit = getQubit(resources,qnic_type,qnic_id,partner,resource);
     //qubit = getUnLockedQubit_fromTop(resources,qnic_type,qnic_id,partner,resource);
     qubit = getResource_fromTop(resource);
 
@@ -78,11 +79,11 @@ cPacket* RandomMeasureAction::run(cModule *re, qnicResources* resources) {
         measurement_outcome o = qubit->measure_density_independent();
         current_count++;
 
-        /*Delete measured resource from the tracked list of resources.*/
+        //Delete measured resource from the tracked list of resources.
         RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
         //std::cout<<"node["<<qubit->node_address<<"]Measure calling freeConsumedResource"<<qubit<<"\n";
         rule_engine->freeConsumedResource(qnic_id, qubit, qnic_type);
-        /*Deleting done*/
+        //Deleting done
 
         LinkTomographyResult *pk = new LinkTomographyResult;
         pk->setSrcAddr(src);
@@ -97,7 +98,7 @@ cPacket* RandomMeasureAction::run(cModule *re, qnicResources* resources) {
         }
         return pk;
     }
-}
+}*/
 
 int Action::checkNumResource(){
     //std::cout << "Num resource = " << (*rule_resources).size()<<"\n";
@@ -157,24 +158,21 @@ cPacket* PurifyAction::run(cModule *re) {
     //std::cout<<"node["<<qubit->node_address<<"]after]Kept "<<qubit<<" locked="<<qubit->isLocked()<<", trashed"<<trash_qubit<<" locked="<<trash_qubit->isLocked()<<"\n";
 
     //Delete measured resource from the tracked list of resources.
-    //std::cout<<"node["<<qubit->node_address<<"]Purify Locked:"<<qubit<<"\n";
-    //std::cout<<"node["<<qubit->node_address<<"]Purify consumed:"<<trash_qubit<<"\n";
-   removeResource_fromRule(trash_qubit);//Remove from resource list in this Rule.
-   RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
-   //std::cout<<"node["<<qubit->node_address<<"]Purification calling freeConsumedResource"<<trash_qubit<<"\n";
-   rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);//Remove from entangled resource list.
-   //Deleting done
+    removeResource_fromRule(trash_qubit);//Remove from resource list in this Rule.
+    RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
+    //std::cout<<"node["<<qubit->node_address<<"]Purification calling freeConsumedResource"<<trash_qubit<<"\n";
+    rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);//Remove from entangled resource list.
+    //Deleting done
 
-
-   PurificationResult *pk = new PurificationResult;
-   pk->setDestAddr(partner);
-   pk->setKind(7);
-   pk->setAction_index(action_index);
-   pk->setRule_id(rule_id);
-   pk->setRuleset_id(ruleset_id);
-   pk->setOutput_is_plus(meas);
-   action_index++;
-   return pk;
+    PurificationResult *pk = new PurificationResult;
+    pk->setDestAddr(partner);
+    pk->setKind(7);
+    pk->setAction_index(action_index);
+    pk->setRule_id(rule_id);
+    pk->setRuleset_id(ruleset_id);
+    pk->setOutput_is_plus(meas);
+    action_index++;
+    return pk;
 }
 
 

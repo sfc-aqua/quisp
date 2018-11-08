@@ -281,6 +281,7 @@ class stationaryQubit : public cSimpleModule
 
         virtual void X_gate();
         virtual bool purify(stationaryQubit *resource_qubit);
+        virtual bool purifyZ(stationaryQubit * resource_qubit);
 
         /*GOD parameters*/
         virtual void setEntangledPartnerInfo(stationaryQubit *partner);

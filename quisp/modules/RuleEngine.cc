@@ -92,34 +92,7 @@ void RuleEngine::handleMessage(cMessage *msg){
             realtime_controller->EmitPhoton(pk->getQnic_index(),pk->getQubit_index(),(QNIC_type) pk->getQnic_type(),pk->getKind());
         }
 
-        else if(dynamic_cast<PurificationResult *>(msg) != nullptr){
-            std::cout<<"!!!!Purification result reveid!!!\n";
-            PurificationResult *pkt = check_and_cast<PurificationResult *>(msg);
-            //std::cout<<"Presult from node["<<pkt->getSrcAddr()<<"]\n";
-            process_id purification_id;
-            purification_result pr;
-            purification_id.ruleset_id = pkt->getRuleset_id();
-            purification_id.rule_id = pkt->getRule_id();
-            purification_id.index = pkt->getAction_index();
-            pr.id = purification_id;
-            pr.outcome = pkt->getOutput_is_plus();
 
-            /*QNIC_type my_qnic_type;
-            int my_qnic_index = -1;
-            for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
-                if(it->second.neighborQNode_address == pkt->getSrcAddr()){
-                    my_qnic_type = it->second.qnic.type;
-                    my_qnic_index = it->second.qnic.index;
-                    break;
-                }
-            }if(my_qnic_index == -1){
-                error("2. Something is wrong when finding out local qnic address from neighbor address in ntable.");
-            }*/
-            //std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
-            check_Purification_Agreement(pr);
-            //delete pkt;
-
-        }
 
         else if(dynamic_cast<CombinedBSAresults *>(msg) != nullptr){
             //First, keep all the qubits that were successfully entangled, and reinitialize the failed ones.
@@ -213,6 +186,20 @@ void RuleEngine::handleMessage(cMessage *msg){
                error("Empty rule set...");
            }
         }
+        else if(dynamic_cast<PurificationResult *>(msg) != nullptr){
+                   std::cout<<"!!!!Purification result reveid!!!\n";
+                   PurificationResult *pkt = check_and_cast<PurificationResult *>(msg);
+                   //std::cout<<"Presult from node["<<pkt->getSrcAddr()<<"]\n";
+                   process_id purification_id;
+                   purification_result pr;
+                   purification_id.ruleset_id = pkt->getRuleset_id();
+                   purification_id.rule_id = pkt->getRule_id();
+                   purification_id.index = pkt->getAction_index();
+                   pr.id = purification_id;
+                   pr.outcome = pkt->getOutput_is_plus();
+                   //std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
+                   storeCheck_Purification_Agreement(pr);
+        }
 
 
         for(int i=0; i<number_of_qnics; i++){
@@ -230,6 +217,49 @@ void RuleEngine::handleMessage(cMessage *msg){
 }
 
 
+
+void RuleEngine::storeCheck_Purification_Agreement(purification_result pr){
+
+    std::cout<<"check_Purification_Agreement: "<<pr.id.ruleset_id<<"\n";
+    std::cout<<"rp size = "<<rp.size()<<"\n";
+
+    bool ruleset_running = false;
+    for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){
+               next_it = it; ++next_it;
+               RuleSet* process = it->second.RuleSet;//One Process. From top to bottom.
+               if(process->ruleset_id == pr.id.ruleset_id){
+                   ruleset_running = true;
+                   break;
+               }
+    }
+    if(rp.size()==0 || !ruleset_running){
+        //Probably process already finished. Delete the table and ignore the result.
+        return;
+    }else{
+        auto ret = Purification_table.equal_range(pr.id.ruleset_id);//Find all resource in qytpe/qid entangled with partner.
+        //If the RuleSet has been deleted already, do not do anything.
+
+        for (auto it=ret.first; it!=ret.second; it++) {
+            if(it->second.id.rule_id == pr.id.rule_id && it->second.id.index == pr.id.index){
+                //std::cout<<"Rule_id="<<pr.id.rule_id<<", index="<<pr.id.index<<"\n";
+                //std::cout<<"node["<<parentAddress<<"] Rule found: Discard/Keep purification.\n";
+                if(it->second.outcome == pr.outcome){
+                    //Outcomes agreed. Keep the entangled pair.
+                    std::cout<<"Unlocking and upgrading!\n";
+                    Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
+                }else{
+                    //Discard
+                    //std::cout<<"node["<<parentAddress<<"] discaard ";
+                    std::cout<<"Unlocking and discarding!\n";
+                    Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
+                }
+                Purification_table.erase(it);
+                return;
+           }
+        }
+        Purification_table.insert(std::make_pair(pr.id.ruleset_id, pr));//Otherwise, if data has not been found, store it.
+    }
+}
 
 
 
@@ -256,17 +286,16 @@ void RuleEngine::check_Purification_Agreement(purification_result pr){
         auto ret = Purification_table.equal_range(pr.id.ruleset_id);//Find all resource in qytpe/qid entangled with partner.
         //If the RuleSet has been deleted already, do not do anything.
 
-
         for (auto it=ret.first; it!=ret.second; it++) {
             if(it->second.id.rule_id == pr.id.rule_id && it->second.id.index == pr.id.index){
                 //std::cout<<"Rule_id="<<pr.id.rule_id<<", index="<<pr.id.index<<"\n";
                 //std::cout<<"node["<<parentAddress<<"] Rule found: Discard/Keep purification.\n";
                 if(it->second.outcome == pr.outcome){
-                //Outcomes agreed. Keep the entangled pair.
+                    //Outcomes agreed. Keep the entangled pair.
                     std::cout<<"Unlocking and upgrading!\n";
                     Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
                 }else{
-                //Discard
+                    //Discard
                     //std::cout<<"node["<<parentAddress<<"] discaard ";
                     std::cout<<"Unlocking and discarding!\n";
                     Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
@@ -827,17 +856,20 @@ void RuleEngine::traverseThroughAllProcesses2(){
                             }else if(dynamic_cast<PurificationResult *>(pk)!= nullptr){
                                 //error("error");
                                 PurificationResult *pkt = check_and_cast<PurificationResult *>(pk);
-                                process_id purification_id;
-                                purification_result pr;
+                                //process_id purification_id;
+                                //purification_result pr;
                                 pkt->setSrcAddr(parentAddress);
-                                purification_id.ruleset_id = pkt->getRuleset_id();
+                                /*purification_id.ruleset_id = pkt->getRuleset_id();
                                 purification_id.rule_id = pkt->getRule_id();
                                 purification_id.index = pkt->getAction_index();
                                 pr.id = purification_id;
                                 pr.outcome = pkt->getOutput_is_plus();
                                 Purification_table.insert(std::make_pair(purification_id.ruleset_id, pr));//What about it the partner's result is already there?
-                                //delete pk;
+                                */
+                                PurificationResult *pk_for_self = pkt->dup();
+                                pk_for_self->setDestAddr(parentAddress);
                                 send(pkt,"RouterPort$o");
+                                send(pk_for_self,"RouterPort$o");
 
                             }else if (dynamic_cast<Error *>(pk)!= nullptr){
                                 Error *err = check_and_cast<Error *>(pk);
