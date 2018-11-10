@@ -109,6 +109,8 @@ int Action::checkNumResource(){
 stationaryQubit* Action::getResource_fromTop(int required_index){
     int resource_index = 0;
     stationaryQubit *pt = nullptr;
+
+
     for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
         if(it->second->isLocked()){
             //Ignore locked resource
@@ -140,8 +142,23 @@ cPacket* PurifyAction::run(cModule *re) {
     std::cout<<"Purification!\n";
     stationaryQubit *qubit = nullptr;
     stationaryQubit *trash_qubit = nullptr;
+
+     for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
+         if(it->second->node_address==2 || it->second->node_address == 1){
+            if(it->second->isLocked())
+                std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[*resources] = "<<it->second<<"\n";
+            else
+                std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[resources] = "<<it->second<<"\n";
+         }
+        }
+
     qubit = getResource_fromTop(resource);
     trash_qubit = getResource_fromTop(trash_resource);
+
+    std::cout<<"~~qubit ->"<<qubit<<"\n ~~trash = "<<trash_qubit<<"\n";
+
+
+
     if(qubit == trash_qubit){
         Error *pk = new Error;
         pk->setError_text("Qubit and Trash_qubit must be different.");
@@ -163,6 +180,18 @@ cPacket* PurifyAction::run(cModule *re) {
     //std::cout<<"node["<<qubit->node_address<<"]Purification calling freeConsumedResource"<<trash_qubit<<"\n";
     rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);//Remove from entangled resource list.
     //Deleting done
+    for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
+        if(it->second->node_address==2  || it->second->node_address == 1 ){
+                if(it->second->isLocked())
+                    std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[*resources] = "<<it->second<<"\n";
+                else
+                    std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[resources] = "<<it->second<<"\n";
+        }
+            }
+
+
+    std::cout<<"                    \n\n Purification performed for this->"<<qubit<<" in node["<<qubit->node_address<<"] and its entangled one ->"<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+    //std::cout<<"                    \ OR -  this->"<<qubit<<" in node["<<qubit->node_address<<"] and its entangled one ->"<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
 
     PurificationResult *pk = new PurificationResult;
     pk->setDestAddr(partner);
@@ -171,6 +200,7 @@ cPacket* PurifyAction::run(cModule *re) {
     pk->setRule_id(rule_id);
     pk->setRuleset_id(ruleset_id);
     pk->setOutput_is_plus(meas);
+    pk->setEntangled_with(qubit);
     action_index++;
     return pk;
 }
@@ -181,6 +211,18 @@ cPacket* RandomMeasureAction::run(cModule *re) {
     //std::cout<<"Measuring qubit now.\n";
     stationaryQubit *qubit = nullptr;
     //qubit = getQubit(/*re,*/ resources,qnic_type,qnic_id,partner,resource);
+
+    for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
+            if(it->second->node_address==2 || it->second->node_address == 1){
+               if(it->second->isLocked())
+                   std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[*resources] = "<<it->second<<"\n";
+               else
+                   std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[resources] = "<<it->second<<"\n";
+            }
+           }
+
+
+
     qubit = getResource_fromTop(resource);
 
 
@@ -201,6 +243,19 @@ cPacket* RandomMeasureAction::run(cModule *re) {
         //std::cout<<"Measure calling freeConsumedResource"<<qubit<<"\n";
         rule_engine->freeConsumedResource(qnic_id, qubit, qnic_type);//Remove from entangled resource list.
         //Deleting done
+
+
+
+        for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
+                if(it->second->node_address==2 || it->second->node_address == 1){
+                   if(it->second->isLocked())
+                       std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[*resources] = "<<it->second<<"\n";
+                   else
+                       std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[resources] = "<<it->second<<"\n";
+                }
+               }
+
+
 
         LinkTomographyResult *pk = new LinkTomographyResult;
         pk->setSrcAddr(src);

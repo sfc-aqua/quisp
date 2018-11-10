@@ -146,7 +146,7 @@ void HoM_Controller::handleMessage(cMessage *msg){
         //Schedule a checker with a time-out t, to see if both actually sent something.
         //Worst case is, when both have no free qubit, and no qubits get transmitted. In that case, this module needs to recognize that problem, and reschedule/resend the request after a cetrain time.
     }else if(dynamic_cast<BSAtimeoutChecker*>(msg) != nullptr){
-        std::cout<<"timeout check at"<<simTime()<<"\n";
+        //std::cout<<"timeout check at"<<simTime()<<"\n";
         BSAtimeoutChecker *pk = check_and_cast<BSAtimeoutChecker *>(msg);
         if(auto_resend_BSANotifier == true && pk->getTrial_id() == current_trial_id){
             //No photon came from both nodes. All of the resources must have been busy that time.
@@ -367,7 +367,7 @@ void HoM_Controller::sendBSAresultsToNeighbors(){
 
         BSAtimeoutChecker *timeout = new BSAtimeoutChecker;//This is used to emit the next round's timing in case no photon arrived.
         timeout->setTrial_id(current_trial_id);
-        std::cout<<"now = "<<simTime()<<"time = "<<time<<"\n";
+        //std::cout<<"now = "<<simTime()<<"time = "<<time<<"\n";
         scheduleAt(simTime()+2*(1.1*time), timeout);
 
     }else{//For SPDC type link

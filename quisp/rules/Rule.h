@@ -30,10 +30,12 @@ class Rule {
         pCondition condition;
         pAction action;
         std::map<int,stationaryQubit*> resources;
+        int mutable number_of_resources_allocated_in_total = 0;
         //std::unique_ptr<Rule> next_rule;
         Rule() {};
         Rule(int rs_index, int r_index) {ruleset_id = rs_index; rule_index = r_index;};
 
+        void addResource(stationaryQubit *qubit);
         void setCondition (Condition * c);
         void setAction (Action * a);
         void eraseResource(stationaryQubit * qubit){
@@ -50,10 +52,7 @@ class Rule {
                 std::cout<<"Trying to erase an un-queued resource.....! \n";
             }*/
         };
-        void addResource(stationaryQubit * qubit){
-            //int index = rc.size();
-            //rc.insert(std::make_pair(index,qubit));
-        }
+
 
         //cPacket* checkrun(cModule *re, qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
         cPacket* checkrun(cModule *re);

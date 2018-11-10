@@ -1,3 +1,14 @@
+cplusplus {{ 
+    #include <vector>
+    #include <unsupported/Eigen/MatrixFunctions>
+
+	using namespace omnetpp;
+    typedef cModule *GOD_statQubitPtr; 
+    
+}} // C++ typedef
+class noncobject GOD_statQubitPtr; // For tracking the truely entangled ones (Only God knows!). The system may think the qubit is entangled but it may not (darkcount)!
+
+
 cplusplus {{
 #include <rules/RuleSet.h>
 #include <modules/QNIC.h>
@@ -72,6 +83,7 @@ packet PurificationResult extends header
 	unsigned long ruleset_id;
 	int rule_id;
 	int action_index;
+	GOD_statQubitPtr entangled_with;//For Debugging purposes.
 }
 
 packet ConditionNotSatisfied{
