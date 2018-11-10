@@ -174,6 +174,8 @@ cPacket* PurifyAction::run(cModule *re) {
     qubit->Lock(ruleset_id, rule_id, action_index);
     //std::cout<<"node["<<qubit->node_address<<"]after]Kept "<<qubit<<" locked="<<qubit->isLocked()<<", trashed"<<trash_qubit<<" locked="<<trash_qubit->isLocked()<<"\n";
 
+    if(trash_qubit->entangled_partner!=nullptr)//Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density matrix since we are only tracking errors.
+        trash_qubit->entangled_partner->entangled_partner=nullptr;//Break entanglement.
     //Delete measured resource from the tracked list of resources.
     removeResource_fromRule(trash_qubit);//Remove from resource list in this Rule.
     RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
@@ -215,9 +217,9 @@ cPacket* RandomMeasureAction::run(cModule *re) {
     for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
             if(it->second->node_address==2 || it->second->node_address == 1){
                if(it->second->isLocked())
-                   std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[*resources] = "<<it->second<<"\n";
+                   std::cout<<"Measurement: node["<<it->second->node_address<<"]"<<ruleset_id<<"[*resources] = "<<it->second<<"\n";
                else
-                   std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[resources] = "<<it->second<<"\n";
+                   std::cout<<"Measurement: node["<<it->second->node_address<<"]"<<ruleset_id<<"[resources] = "<<it->second<<"\n";
             }
            }
 
@@ -249,9 +251,9 @@ cPacket* RandomMeasureAction::run(cModule *re) {
         for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
                 if(it->second->node_address==2 || it->second->node_address == 1){
                    if(it->second->isLocked())
-                       std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[*resources] = "<<it->second<<"\n";
+                       std::cout<<"Measurement: node["<<it->second->node_address<<"]"<<ruleset_id<<"[*resources] = "<<it->second<<"\n";
                    else
-                       std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[resources] = "<<it->second<<"\n";
+                       std::cout<<"Measurement: node["<<it->second->node_address<<"]"<<ruleset_id<<"[resources] = "<<it->second<<"\n";
                 }
                }
 

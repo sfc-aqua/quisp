@@ -332,8 +332,9 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int
                                 if(rule==end){
                                     error("Rule came to end after operation (e.g. purification) success");
                                 }
-                                int rsc_index = (*rule)->resources.size();
-                                (*rule)->resources.insert(std::make_pair(rsc_index, q));
+                                //int rsc_index = (*rule)->resources.size();
+                                //(*rule)->resources.insert(std::make_pair(rsc_index, q));
+                                (*rule)->addResource(q);
                                 ok = true;
                                 return;
                             }
@@ -710,9 +711,11 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
 
             if(qubit->entangled_partner!=nullptr){
                 if(qubit->entangled_partner->entangled_partner==nullptr){
+                    std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
                     error("1. Entanglement tracking is not doing its job.");
                 }
                 if(qubit->entangled_partner->entangled_partner != qubit){
+                    std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
                     error("2. Entanglement tracking is not doing its job.");
                 }
             }
