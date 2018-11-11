@@ -945,8 +945,6 @@ void RuleEngine::traverseThroughAllProcesses2(){
                             break;//get out from this for loop.
                         }
 
-
-
                     }//While
                     if(process_done){
                         break;

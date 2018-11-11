@@ -66,6 +66,72 @@ network Layer2_ChannelTest
 
 
 
+network Layer2_Star
+{
+    parameters:
+        **.Speed_of_light_in_fiber = 205336.986301 km;
+
+    submodules:
+        //EndNode[2]: QNode {
+        EndNode[6]:QNode{
+            address = 100+index;
+            nodeType = "EndNode";
+            @display("i=device/pc;");
+            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
+            //emission_timing_uncertainty = 10;
+        }
+
+        //repeater[4]: QNode {
+        repeater[4]:QNode{
+            address = 10000+sizeof(EndNode) + index;
+            nodeType = "Repeater";
+            //buffers = 25;
+            @display("i=device/smallrouter");
+        }
+
+        //HoM[3]: HoM {
+        HoM[4]: HoM {
+            address = 100000+sizeof(EndNode)+ sizeof(repeater)+ index;
+            @display("i=device/bsm");
+        }
+
+    connections:
+        EndNode[0].port++ <--> ClassicalChannel {  distance = 20km; } <--> repeater[0].port++;//MM    
+        repeater[0].port++<--> ClassicalChannel {  distance = 5km; } <--> HoM[0].port++ ;//MIM
+        repeater[1].port++ <--> ClassicalChannel {  distance = 15km; } <--> HoM[0].port++;
+        	repeater[1].port++ <--> ClassicalChannel {  distance = 15km; } <--> HoM[1].port++;
+        repeater[2].port++ <--> ClassicalChannel {  distance = 5km; } <--> HoM[1].port++;
+        repeater[1].port++ <--> ClassicalChannel {  distance = 5km; } <--> EndNode[1].port++;
+        
+        EndNode[2].port++ <--> ClassicalChannel {  distance = 2km; } <--> repeater[0].port++;
+        EndNode[3].port++ <--> ClassicalChannel {  distance = 20km; } <--> repeater[0].port++;
+        
+        repeater[3].port++ <--> ClassicalChannel {  distance = 20km; } <--> repeater[0].port++;
+		repeater[3].port++ <--> ClassicalChannel {  distance = 15km; } <--> HoM[2].port++;
+		repeater[3].port++ <--> ClassicalChannel {  distance = 15km; } <--> HoM[3].port++;
+		EndNode[4].port++ <--> ClassicalChannel {  distance = 15km; } <--> HoM[2].port++;
+		EndNode[5].port++ <--> ClassicalChannel {  distance = 15km; } <--> HoM[3].port++;
+	
+		EndNode[0].quantum_port++ <--> QuantumChannel {  distance = 20km; channel_error_rate = 0.5; photon_loss_ratio = 0; Z_error_ratio = 0; X_error_ratio = 1; Y_error_ratio = 0;} <--> repeater[0].quantum_port_receiver++;//MM	
+        repeater[0].quantum_port++<--> QuantumChannel {  distance = 5km; channel_error_rate = 0.5; photon_loss_ratio = 0; Z_error_ratio = 1; X_error_ratio = 0; Y_error_ratio = 0; } <--> HoM[0].quantum_port++;//MIM
+        repeater[1].quantum_port++ <--> QuantumChannel {  distance = 15km; channel_error_rate = 0.5; photon_loss_ratio = 0; Z_error_ratio = 1; X_error_ratio = 0; Y_error_ratio = 0; } <--> HoM[0].quantum_port++;
+        repeater[1].quantum_port++ <--> QuantumChannel {  distance = 15km; channel_error_rate = 0.5; photon_loss_ratio = 0; Z_error_ratio = 1; X_error_ratio = 0; Y_error_ratio = 0; } <--> HoM[1].quantum_port++;
+        repeater[2].quantum_port++ <--> QuantumChannel {  distance = 5km; channel_error_rate = 0.5; photon_loss_ratio = 0; Z_error_ratio = 1; X_error_ratio = 0; Y_error_ratio = 0; } <--> HoM[1].quantum_port++;
+		repeater[1].quantum_port_receiver++ <--> QuantumChannel {  distance = 5km; channel_error_rate = 0.05; photon_loss_ratio = 1; Z_error_ratio = 0; X_error_ratio = 0; Y_error_ratio = 0; } <--> EndNode[1].quantum_port++;
+		
+		EndNode[2].quantum_port++ <--> QuantumChannel {  distance = 2km; } <--> repeater[0].quantum_port_receiver++;
+        EndNode[3].quantum_port_receiver++ <--> QuantumChannel {  distance = 20km; } <--> repeater[0].quantum_port++;
+		
+		repeater[3].quantum_port_receiver++ <--> QuantumChannel {  distance = 20km; } <--> repeater[0].quantum_port++;
+		repeater[3].quantum_port++ <--> QuantumChannel {  distance = 15km; } <--> HoM[2].quantum_port++;
+		repeater[3].quantum_port++ <--> QuantumChannel {  distance = 15km; } <--> HoM[3].quantum_port++;
+		EndNode[4].quantum_port++ <--> QuantumChannel {  distance = 15km; } <--> HoM[2].quantum_port++;
+		EndNode[5].quantum_port++ <--> QuantumChannel {  distance = 15km; } <--> HoM[3].quantum_port++;
+
+}
+
+
+
 network Layer2_MM_MIM_MIM_MIM_MM
 {
     parameters:
@@ -100,7 +166,6 @@ network Layer2_MM_MIM_MIM_MIM_MM
         repeater[0].port++<--> ClassicalChannel {  distance = 5km; } <--> HoM[0].port++ ;//MIM
         repeater[1].port++ <--> ClassicalChannel {  distance = 15km; } <--> HoM[0].port++;
     	
-		
 		EndNode[0].quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> repeater[0].quantum_port_receiver++;//MM	
         repeater[0].quantum_port++<--> QuantumChannel {  distance = 5km; } <--> HoM[0].quantum_port++ ;//MIM
         repeater[1].quantum_port++ <--> QuantumChannel {  distance = 15km; } <--> HoM[0].quantum_port++;

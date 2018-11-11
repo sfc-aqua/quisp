@@ -69,3 +69,7 @@ network = networks.Linear_One_MIM
 
 source<-->QuantumChannel{cost=4.87224e-06;distance=10km;fidelity=0.916157;bellpair_per_sec=244530;tomography_time=0.245369072304;tomography_measurements=60000;}<-->HoM F=0.916157 X=0.0290418 Z=0.0269393 Y=0.0278616
 target<-->QuantumChannel{cost=4.87224e-06;distance=10km;fidelity=0.916157;bellpair_per_sec=244530;tomography_time=0.245369072304;tomography_measurements=60000;}<-->HoM F=0.916157 X=0.0290418 Z=0.0269393 Y=0.0278616
+source<-->QuantumChannel{cost=2.52383e-05;distance=10km;fidelity=0.403039;bellpair_per_sec=243919;tomography_time=0.245983777488;tomography_measurements=60000;}<-->HoM F=0.403039 X=0.20331 Z=0.193262 Y=0.200388
+target<-->QuantumChannel{cost=2.52383e-05;distance=10km;fidelity=0.403039;bellpair_per_sec=243919;tomography_time=0.245983777488;tomography_measurements=60000;}<-->HoM F=0.403039 X=0.20331 Z=0.193262 Y=0.200388
+source<-->QuantumChannel{cost=2.52383e-05;distance=10km;fidelity=0.403039;bellpair_per_sec=243919;tomography_time=0.245983777488;tomography_measurements=60000;}<-->HoM F=0.403039 X=0.20331 Z=0.193262 Y=0.200388
+target<-->QuantumChannel{cost=2.52383e-05;distance=10km;fidelity=0.403039;bellpair_per_sec=243919;tomography_time=0.245983777488;tomography_measurements=60000;}<-->HoM F=0.403039 X=0.20331 Z=0.193262 Y=0.200388

@@ -44,7 +44,7 @@ cPacket* PurifyAction::run(cModule *re, qnicResources* resources) {
             // do purification where trash_qubit is in the measured pair TODO
             //qubit->Lock(ruleset_id, rule_id);
             //trash_qubit->Lock(static_action_id+purification_count);//You may not need this because this will be trashed soon anyway.
-            /*purification_count++;
+            //purification_count++;
             bool measurement_outcome_error = qubit->purify(trash_qubit);//Only error propagation. No density matrix calculation.
 
             //Delete measured resource from the tracked list of resources.
@@ -143,6 +143,7 @@ cPacket* PurifyAction::run(cModule *re) {
     stationaryQubit *qubit = nullptr;
     stationaryQubit *trash_qubit = nullptr;
 
+    /*
      for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
          if(it->second->node_address==2 || it->second->node_address == 1){
             if(it->second->isLocked())
@@ -151,6 +152,7 @@ cPacket* PurifyAction::run(cModule *re) {
                 std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[resources] = "<<it->second<<"\n";
          }
         }
+    */
 
     qubit = getResource_fromTop(resource);
     trash_qubit = getResource_fromTop(trash_resource);
@@ -182,6 +184,8 @@ cPacket* PurifyAction::run(cModule *re) {
     //std::cout<<"node["<<qubit->node_address<<"]Purification calling freeConsumedResource"<<trash_qubit<<"\n";
     rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);//Remove from entangled resource list.
     //Deleting done
+
+    /*
     for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
         if(it->second->node_address==2  || it->second->node_address == 1 ){
                 if(it->second->isLocked())
@@ -190,10 +194,7 @@ cPacket* PurifyAction::run(cModule *re) {
                     std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[resources] = "<<it->second<<"\n";
         }
             }
-
-
-    std::cout<<"                    \n\n Purification performed for this->"<<qubit<<" in node["<<qubit->node_address<<"] and its entangled one ->"<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
-    //std::cout<<"                    \ OR -  this->"<<qubit<<" in node["<<qubit->node_address<<"] and its entangled one ->"<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+    */
 
     PurificationResult *pk = new PurificationResult;
     pk->setDestAddr(partner);
@@ -214,7 +215,7 @@ cPacket* RandomMeasureAction::run(cModule *re) {
     stationaryQubit *qubit = nullptr;
     //qubit = getQubit(/*re,*/ resources,qnic_type,qnic_id,partner,resource);
 
-    for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
+    /*for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
             if(it->second->node_address==2 || it->second->node_address == 1){
                if(it->second->isLocked())
                    std::cout<<"Measurement: node["<<it->second->node_address<<"]"<<ruleset_id<<"[*resources] = "<<it->second<<"\n";
@@ -222,7 +223,7 @@ cPacket* RandomMeasureAction::run(cModule *re) {
                    std::cout<<"Measurement: node["<<it->second->node_address<<"]"<<ruleset_id<<"[resources] = "<<it->second<<"\n";
             }
            }
-
+    */
 
 
     qubit = getResource_fromTop(resource);
@@ -248,7 +249,7 @@ cPacket* RandomMeasureAction::run(cModule *re) {
 
 
 
-        for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
+       /* for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
                 if(it->second->node_address==2 || it->second->node_address == 1){
                    if(it->second->isLocked())
                        std::cout<<"Measurement: node["<<it->second->node_address<<"]"<<ruleset_id<<"[*resources] = "<<it->second<<"\n";
@@ -256,7 +257,7 @@ cPacket* RandomMeasureAction::run(cModule *re) {
                        std::cout<<"Measurement: node["<<it->second->node_address<<"]"<<ruleset_id<<"[resources] = "<<it->second<<"\n";
                 }
                }
-
+        */
 
 
         LinkTomographyResult *pk = new LinkTomographyResult;

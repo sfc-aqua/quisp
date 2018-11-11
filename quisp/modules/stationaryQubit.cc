@@ -204,6 +204,10 @@ two_qubit_gate_error_model stationaryQubit::SetTwoQubitGateErrorCeilings(std::st
 
     double ratio_sum =  IXratio + XIratio + XXratio + IZratio + ZIratio + ZZratio + IYratio + YIratio + YYratio;
 
+    if(ratio_sum == 0){
+      error("Fix this!");
+    }
+
     gate.IX_error_rate = gate.pauli_error_rate * (IXratio/ratio_sum);
     gate.XI_error_rate = gate.pauli_error_rate * (XIratio/ratio_sum);
     gate.XX_error_rate = gate.pauli_error_rate * (XXratio/ratio_sum);
