@@ -286,7 +286,10 @@ void HardwareMonitor::finish(){
 
         connection_setup_inf inf = return_setupInf(i);
         double bellpairs_per_sec = 10;
-        double link_cost =(double)1/(fidelity*fidelity*all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec);
+        double link_cost =(double)100000000/(fidelity*fidelity*all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec);
+        if(link_cost<1){
+            link_cost = 1;
+        }
 
         Interface_inf interface = getInterface_inf_fromQnicAddress(inf.qnic.index,inf.qnic.type);
         cModule *this_node = this->getParentModule()->getParentModule();
@@ -294,11 +297,11 @@ void HardwareMonitor::finish(){
         cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
         double dis = channel->par("distance");
 
-        if(this_node->getModuleType() == QNodeType && neighbor_node->getModuleType() == QNodeType){
+        /*if(this_node->getModuleType() == QNodeType && neighbor_node->getModuleType() == QNodeType){
             if(myAddress > inf.neighbor_address){
                 return;
             }
-        }
+        }*/
 
         tomography_dm<<this_node->getFullName()<<"<--->"<<neighbor_node->getFullName()<<"\n";
         tomography_dm<<"REAL\n";
@@ -525,7 +528,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                 send(pk,"RouterPort$o");
             }
 }
-
 
 
 

@@ -73,3 +73,4 @@ repeater[7]<-->QuantumChannel{cost=3.29068e-06;distance=12km;fidelity=0.863618;b
 repeater[7]<-->QuantumChannel{cost=2.97166e-06;distance=9km;fidelity=0.868008;bellpair_per_sec=446636;tomography_time=0.134337545554;tomography_measurements=60000;}<-->HoM[8] F=0.868008 X=0.039133 Z=0.0467951 Y=0.0460642
 repeater[8]<-->QuantumChannel{cost=2.97166e-06;distance=11km;fidelity=0.868008;bellpair_per_sec=446636;tomography_time=0.134337545554;tomography_measurements=60000;}<-->HoM[8] F=0.868008 X=0.039133 Z=0.0467951 Y=0.0460642
 repeater[8]<-->QuantumChannel{cost=2.77201e-06;distance=10km;fidelity=0.859267;bellpair_per_sec=488595;tomography_time=0.122801115208;tomography_measurements=60000;}<-->HoM[9] F=0.859267 X=0.045037 Z=0.0495218 Y=0.0461741
+EndNode[0]<-->QuantumChannel{cost=nan;distance=1km;fidelity=nan;bellpair_per_sec=-1;tomography_time=-1;tomography_measurements=-1;}<-->HoM[0] F=nan X=nan Z=nan Y=nan
