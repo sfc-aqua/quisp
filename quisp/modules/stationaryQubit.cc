@@ -414,13 +414,13 @@ bool stationaryQubit::checkBusy(){
 }
 
 /*To avoid disturbing this qubit.*/
-void stationaryQubit::Lock(unsigned long ruleset_id, int rule_id, int action_id){
+void stationaryQubit::Lock(unsigned long rs_id, int rule_id, int action_id){
 
-    if(ruleset_id == -1 || rule_id == -1 || action_id == -1){
+    if(rs_id == -1 || rule_id == -1 || action_id == -1){
         error("ruleset_id || rule_id || action_id == -1");
     }
     locked = true;
-    locked_ruleset_id = ruleset_id;//Used to identify what this qubit is locked for.
+    locked_ruleset_id = rs_id;//Used to identify what this qubit is locked for.
     locked_rule_id = rule_id;
     action_index = action_id;
     std::cout<<"*******************"<<this<<"in node["<<this->node_address<<"]Locked. Rsid="<<locked_ruleset_id<<" rid="<<locked_rule_id<<" aid="<<action_index<<"\n";
