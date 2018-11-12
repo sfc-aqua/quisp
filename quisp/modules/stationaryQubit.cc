@@ -969,7 +969,7 @@ void stationaryQubit::apply_two_qubit_gate_error(two_qubit_gate_error_model gate
 
 measurement_outcome stationaryQubit::measure_density_independent(){
    //std::cout<<"\n\n\n\n\n\n\n\nMEASURING!!!\n";
-    std::cout<<"---measured "<<this<<" in node["<<node_address<<"]\n";
+    //std::cout<<"---measured "<<this<<" in node["<<node_address<<"]\n";
     if(this->entangled_partner == nullptr && this->Density_Matrix_Collapsed(0,0).real() ==-111){
             EV<<entangled_partner<<"\n";
             EV<<Density_Matrix_Collapsed<<"\n";

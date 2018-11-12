@@ -78,7 +78,7 @@ bool MeasureCountClause::checkTerminate(std::map<int,stationaryQubit*> resources
     EV<<"Tomography termination clause invoked.\n";
     bool done = false;
     if(current_count >=max_count){
-        EV<<"TRUE: Current count = "<<current_count<<" >=  "<<max_count<<"(max)\n";
+        //EV<<"TRUE: Current count = "<<current_count<<" >=  "<<max_count<<"(max)\n";
         done = true;
     }
     return done;
