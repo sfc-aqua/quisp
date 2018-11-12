@@ -88,9 +88,9 @@ simple stationaryQubit
         double CNOTgate_YI_error_ratio = default(1);
         double CNOTgate_YY_error_ratio = default(1);
         
-        int ruleset_id = default(-1);
-        int rule_id = default(-1);
-        int action_index = default(-1);
+        //int ruleset_id = default(-1);
+        //int rule_id = default(-1);
+        //int action_index = default(-1);
         
         
     gates:

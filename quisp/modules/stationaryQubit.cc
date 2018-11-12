@@ -364,9 +364,9 @@ void stationaryQubit::setFree(bool consumed){
     locked_rule_id = -1;
     action_index = -1;
 
-    this->par("ruleset_id") = locked_ruleset_id;
-    this->par("rule_id") = locked_rule_id;
-    this->par("action_index") = action_index;
+    //this->par("ruleset_id") = locked_ruleset_id;
+    //this->par("rule_id") = locked_rule_id;
+    //this->par("action_index") = action_index;
 
     isBusy = false;
     allocated = false;
@@ -426,9 +426,9 @@ void stationaryQubit::Lock(unsigned long ruleset_id, int rule_id, int action_id)
     std::cout<<"*******************"<<this<<"in node["<<this->node_address<<"]Locked. Rsid="<<locked_ruleset_id<<" rid="<<locked_rule_id<<" aid="<<action_index<<"\n";
 
 
-    this->par("ruleset_id") = locked_ruleset_id;
-    this->par("rule_id") = locked_rule_id;
-    this->par("action_index") = action_index;
+    //this->par("ruleset_id") = locked_ruleset_id;
+    //this->par("rule_id") = locked_rule_id;
+    //this->par("action_index") = action_index;
 
 
     if(hasGUI()){
@@ -444,9 +444,9 @@ void stationaryQubit::Unlock(){
     action_index = -1;
 
 
-    this->par("ruleset_id") = locked_ruleset_id;
-    this->par("rule_id") = locked_rule_id;
-    this->par("action_index") = action_index;
+    //this->par("ruleset_id") = locked_ruleset_id;
+    //this->par("rule_id") = locked_rule_id;
+    //this->par("action_index") = action_index;
 
 
     if(hasGUI()){
