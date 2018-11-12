@@ -174,13 +174,13 @@ void RuleEngine::handleMessage(cMessage *msg){
            process p;
            p.ownner_addr = pk->getRuleSet()->owner;
            p.working_partner_addr = pk->getRuleSet()->entangled_partner;
-           p.RuleSet = pk->getRuleSet();
+           p.Rs = pk->getRuleSet();
            int process_id = rp.size();//This is temporary because it will not be unique when processes have been deleted.
-           EV<<"Ruleset arrived id="<<p.RuleSet->ruleset_id<<"\n";
-           EV<<"Process size is ...."<<p.RuleSet->size()<<"\n";
+           EV<<"Ruleset arrived id="<<p.Rs->ruleset_id<<"\n";
+           EV<<"Process size is ...."<<p.Rs->size()<<"\n";
            //todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
            //ResourceAllocation();
-           if(p.RuleSet->size()>0){
+           if(p.Rs->size()>0){
                rp.insert(std::make_pair(process_id, p));
                EV<<"New process arrived !\n";
            }else{
@@ -228,7 +228,7 @@ void RuleEngine::storeCheck_Purification_Agreement(purification_result pr){
     bool ruleset_running = false;
     for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){
                next_it = it; ++next_it;
-               RuleSet* process = it->second.RuleSet;//One Process. From top to bottom.
+               RuleSet* process = it->second.Rs;//One Process. From top to bottom.
                if(process->ruleset_id == pr.id.ruleset_id){
                    ruleset_running = true;
                    break;
@@ -317,8 +317,8 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int
     bool ok = false;
     for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){//In a particular RuleSet
             next_it = it; ++next_it;
-            if(it->second.RuleSet->ruleset_id == ruleset_id){//Find the corresponding ruleset.
-                RuleSet* process = it->second.RuleSet;//One Process. From top to bottom.
+            if(it->second.Rs->ruleset_id == ruleset_id){//Find the corresponding ruleset.
+                RuleSet* process = it->second.Rs;//One Process. From top to bottom.
                 for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){//Traverse through rules
                     if((*rule)->rule_index == rule_id){//Find the corresponding rule.
                         for (auto qubit=(*rule)->resources.begin(); qubit!=(*rule)->resources.end(); ++qubit) {
@@ -353,8 +353,8 @@ void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, int rule_
     bool ok = false;
     for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){//In a particular RuleSet
             next_it = it; ++next_it;
-            if(it->second.RuleSet->ruleset_id == ruleset_id){//Find the corresponding ruleset.
-                RuleSet* process = it->second.RuleSet;//One Process. From top to bottom.
+            if(it->second.Rs->ruleset_id == ruleset_id){//Find the corresponding ruleset.
+                RuleSet* process = it->second.Rs;//One Process. From top to bottom.
                 for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){//Traverse through rules
                     if((*rule)->rule_index == rule_id){//Find the corresponding rule.
                         for (auto qubit=(*rule)->resources.begin(); qubit!=(*rule)->resources.end(); ++qubit) {
@@ -803,7 +803,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
 
     for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){//In a particular RuleSet
         next_it = it; ++next_it;
-        RuleSet* process = it->second.RuleSet;//One Process. From top to bottom.
+        RuleSet* process = it->second.Rs;//One Process. From top to bottom.
         unsigned long ruleset_id = process->ruleset_id;
         int resource_entangled_with_address = process->entangled_partner;
 
@@ -867,7 +867,7 @@ void RuleEngine::traverseThroughAllProcesses2(){
 
     for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){
             next_it = it; ++next_it;
-            RuleSet* process = it->second.RuleSet;//One Process. From top to bottom.
+            RuleSet* process = it->second.Rs;//One Process. From top to bottom.
             EV<<"Checking first process.... process "<<process->size()<<"\n";
             for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){
 

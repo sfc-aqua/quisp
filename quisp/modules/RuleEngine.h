@@ -52,7 +52,7 @@ typedef struct _process{
     int ownner_addr;
     int working_partner_addr;
     //int process_ID;
-    RuleSet* RuleSet;
+    RuleSet* Rs;
 } process;
 
 class RuleEngine : public cSimpleModule
