@@ -77,7 +77,7 @@ module QNode
                 parent_node_address = address;
                 self_qnic_address = index;
                 self_qnic_index = index;
-                numBuffer = default(buffers);//number of buffers for each qnic
+                numBuffer = default(int(buffers));//number of buffers for each qnic
                 receiver = false;
                 emission_std = emission_timing_std;
                 self_qnic_type = 0;
@@ -89,7 +89,7 @@ module QNode
         		    	parent_node_address = address;
                 self_qnic_address = index + sizeof(quantum_port);
                 self_qnic_index = index;
-                numBuffer = default(buffers);//number of buffers for each qnic
+                numBuffer = default(int(buffers));//number of buffers for each qnic
                 receiver = true;
                 passive = false;
                 self_qnic_type = 1;
@@ -100,7 +100,7 @@ module QNode
         		    	parent_node_address = address;
                 self_qnic_address = index + sizeof(quantum_port) + sizeof(quantum_port_receiver);
                 self_qnic_index = index;
-                numBuffer = default(buffers);//number of buffers for each qnic
+                numBuffer = default(int(buffers));//number of buffers for each qnic
                 receiver = true;
                 passive = true;
                 self_qnic_type = 2;

@@ -648,7 +648,7 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
     double time_evolution = simTime().dbl() - qubit->updated_time.dbl();
     double time_evolution_microsec  = time_evolution * 1000000 /** 100*/;
-    std::cout<<"time = "<<time_evolution_microsec<<"\n";
+    //std::cout<<"time = "<<time_evolution_microsec<<"\n";
     if(time_evolution_microsec > 0){
         //EV<<"\n Memory error applied for time = "<<time_evolution_microsec<<" μs, on qubit "<<qubit<<"in node["<<qubit->par("node_address").str()<<"] \n";
         //Perform Monte-Carlo error simulation on this qubit.
@@ -668,33 +668,33 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
         MatrixXd Initial_condition(1,7);//I, X, Z, Y, Ex, Re, Cm
          if(EXerr){
-             std::cout<<"[Init] = EX\n";
+             //std::cout<<"[Init] = EX\n";
              Initial_condition << 0,0,0,0,1,0,0;//Has an excitation error
                     //error("err EX");
          }else if(REerr){
-             std::cout<<"[Init] = RE\n";
+             //std::cout<<"[Init] = RE\n";
              Initial_condition << 0,0,0,0,0,1,0;//Has an relaxation error
                     //error("err RE");
         }else if(CMerr){
-             std::cout<<"[Init] = CM\n";
+             //std::cout<<"[Init] = CM\n";
              Initial_condition << 0,0,0,0,0,0,1;//Has an relaxation e
         }else if(Zerr && Xerr){
              Initial_condition << 0,0,0,1,0,0,0;//Has a Y error
-            std::cout<<"[Init] = Y\n";
+            //std::cout<<"[Init] = Y\n";
             //std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
             //error("err Y");
         }else if(Zerr && !Xerr){
-             std::cout<<"[Init] = Z\n";
+             //std::cout<<"[Init] = Z\n";
              Initial_condition << 0,0,1,0,0,0,0;//Has a Z error
             //std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
             //error("err Z");
         }else if(!Zerr && Xerr){
-             std::cout<<"[Init] = X\n";
+             //std::cout<<"[Init] = X\n";
              Initial_condition << 0,1,0,0,0,0,0;//Has an X error
              //std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
              //error("err X");
         }else{
-             std::cout<<"[Init] = I\n";
+             //std::cout<<"[Init] = I\n";
              Initial_condition << 1,0,0,0,0,0,0;//No error
         }
 
@@ -763,14 +763,14 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
         //std::cout<<"dbl = "<<rand<<" No ceil = "<<No_error_ceil<<", "<<X_error_ceil<<", "<<Z_error_ceil<<","<<Y_error_ceil<<", "<<EX_error_ceil<<", "<<RE_error_ceil<<", 1"<<"\n";
         if(rand < No_error_ceil){
-            std::cout<<"NO err\n";
+            //std::cout<<"NO err\n";
             //Qubit will end up with no error
             qubit->par("GOD_Xerror") = false;
             qubit->par("GOD_Zerror") = false;
 
         }else if(No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil!=X_error_ceil)){
             //X error
-            std::cout<<"X err\n";
+            //std::cout<<"X err\n";
             qubit->par("GOD_Xerror") = true;
             qubit->par("GOD_Zerror") = false;
             DEBUG_memory_X_count++;
@@ -778,29 +778,29 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
         }else if(X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil!=Z_error_ceil)){
             //Z error
-            std::cout<<"Z err\n";
+            //std::cout<<"Z err\n";
             qubit->par("GOD_Xerror") = false;
             qubit->par("GOD_Zerror") = true;
             DEBUG_memory_Z_count++;
 
         }else if (Z_error_ceil <= rand && rand < Y_error_ceil && (Z_error_ceil!=Y_error_ceil)){
             //Y error
-            std::cout<<"Y err\n";
+            //std::cout<<"Y err\n";
             qubit->par("GOD_Xerror") = true;
             qubit->par("GOD_Zerror") = true;
             DEBUG_memory_Y_count++;
 
          }else if(Y_error_ceil <= rand && rand < EX_error_ceil && (Y_error_ceil!=EX_error_ceil)){
              //Excitation error
-             std::cout<<"Ex err\n";
+             //std::cout<<"Ex err\n";
              qubit->setExcitedDensityMatrix();//Also sets the partner completely mixed if it used to be entangled.
          }else if(EX_error_ceil <= rand && rand < RE_error_ceil && (EX_error_ceil!=RE_error_ceil)){
              //Excitation error
-             std::cout<<"Re err\n";
+             //std::cout<<"Re err\n";
              qubit->setRelaxedDensityMatrix();//Also sets the partner completely mixed if it used to be entangled.
          }else{
              //Memory completely mixed error
-             std::cout<<"Cm err\n";
+             //std::cout<<"Cm err\n";
              if(qubit->entangled_partner!=nullptr){//If this qubit still used to be entangled with another qubit.
                  qubit->entangled_partner->updated_time = simTime();
                  qubit->entangled_partner->par("last_updated_at") = simTime().dbl();//For GUI
@@ -1051,7 +1051,7 @@ measurement_outcome stationaryQubit::measure_density_independent(){
            Density_Matrix_Collapsed = Pauli.Z*Density_Matrix_Collapsed*Pauli.Z.adjoint();
         }
 
-        std::cout<<"Not entangled anymore. Density matrix is "<<Density_Matrix_Collapsed<<"\n";
+        //std::cout<<"Not entangled anymore. Density matrix is "<<Density_Matrix_Collapsed<<"\n";
 
         Complex Prob_plus = (Density_Matrix_Collapsed*this_measurement.plus.adjoint()*this_measurement.plus).trace();
         Complex Prob_minus = (Density_Matrix_Collapsed*this_measurement.minus.adjoint()*this_measurement.minus).trace();
