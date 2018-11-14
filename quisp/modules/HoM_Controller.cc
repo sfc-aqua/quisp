@@ -214,7 +214,7 @@ void HoM_Controller::checkNeighborBuffer(bool receiver){
 
 void HoM_Controller::updateIDE_Parameter(bool receiver){
     try{
-        photon_detection_per_sec = par("photon_detection_per_sec");
+        photon_detection_per_sec = (int)par("photon_detection_per_sec");
         if(photon_detection_per_sec <= 0){
             error("Photon detection per sec for HoM must be more than 0.");
         }
