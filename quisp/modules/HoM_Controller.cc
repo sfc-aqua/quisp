@@ -231,7 +231,9 @@ void HoM_Controller::updateIDE_Parameter(bool receiver){
         }
     }
     catch(std::exception& e){
-        error("photon_detection_per_sec is missing as a HoM_Controller parameter. Or maybe you should specify **.Speed_of_light_in_fiber = (number)km in .ini file.");
+        error(e.what());
+        //std::cout<<"E="<<e.what()<<"\n";
+        //error("photon_detection_per_sec is missing as a HoM_Controller parameter. Or maybe you should specify **.Speed_of_light_in_fiber = (number)km in .ini file.");
     }
 }
 
