@@ -1,0 +1,2 @@
+source<-->QuantumChannel{cost=519.52;distance=10km;fidelity=0.867123;bellpair_per_sec=255998;tomography_time=1.171883352032;tomography_measurements=300000;actualmeas=300000;}<-->HoM F=0.867123 X=0.0453863 Z=0.0433445 Y=0.0441466
+target<-->QuantumChannel{cost=519.52;distance=10km;fidelity=0.867123;bellpair_per_sec=255998;tomography_time=1.171883352032;tomography_measurements=300000;actualmeas=300000;}<-->HoM F=0.867123 X=0.0453863 Z=0.0433445 Y=0.0441466
