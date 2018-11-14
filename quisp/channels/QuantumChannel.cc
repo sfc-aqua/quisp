@@ -40,7 +40,7 @@ class QuantumChannel : public cDatarateChannel
         channel_error_model err;
         double photon_loss_rate;
         double distance = 0; //in km
-        int less = 0, more = 0;
+        //int less = 0, more = 0;
     private:
        double No_error_ceil;
        double X_error_ceil;
@@ -195,11 +195,11 @@ void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t& result
 
 
         double rand = dblrand();//Gives a random double between 0.0 ~ 1.0
-        if(rand<0.5){
+       /* if(rand<0.5){
             less++;
         }else{
             more++;
-        }
+        }*/
         //double rand = std::rand()/(RAND_MAX + 1.);
         if(rand < No_error_ceil){
             //Qubit will end up with no error
@@ -220,8 +220,8 @@ void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t& result
         }else{
             //Photon was lost
             DEBUG_darkcount_count++;
-            std::cout<<"less = "<<less<<", more = "<<more<<"\n";
-            std::cout<<"dbl="<<rand<<" count = "<<DEBUG_darkcount_count<<"\n";
+            //std::cout<<"less = "<<less<<", more = "<<more<<"\n";
+            //std::cout<<"dbl="<<rand<<" count = "<<DEBUG_darkcount_count<<"\n";
             q->setPhotonLost(true);
         }
         q->setError_random_for_debug(rand);//For debugging purpose

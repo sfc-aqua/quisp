@@ -31,8 +31,8 @@ class BellStateAnalyzer : public cSimpleModule
         double darkcount_probability;
         double loss_rate;
         double error_rate;
-        bool left_clicked;
-        bool right_click;
+        //bool left_clicked;
+        //bool right_click;
         bool left_last_photon_detected;
         bool right_last_photon_detected;
         bool send_result;
@@ -56,7 +56,7 @@ class BellStateAnalyzer : public cSimpleModule
         bool left_photon_lost;
         stationaryQubit *right_statQubit_ptr;
         int count_X=0, count_Y=0, count_Z=0, count_I=0, count_L=0, count_total=0;//for debug
-        bool handshake = false;
+        //bool handshake = false;
         bool this_trial_done = false;
         double BSAsuccess_rate = 0.5;
         int left_count, right_count = 0;
@@ -185,7 +185,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
         return;
     }else if((left_arrived_at != -1 && right_arrived_at != -1) && std::abs(difference)<=(required_precision)){
         //Both arrived perfectly fine
-        bool lost = isPhotonLost(msg);
+        //bool lost = isPhotonLost(msg);
 
 
             double rand = dblrand();//Even if we have 2 photons, whether we success entangling the qubits or not is probablistic.

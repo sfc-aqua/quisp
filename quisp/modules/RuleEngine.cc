@@ -705,7 +705,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
         }else{
             //std::cout<<"node["<<parentAddress<<"] success!\n";
             //Keep the entangled qubits
-            std::cout<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"] node addr["<<it->first<<"] \n";
+            //std::cout<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"] node addr["<<it->first<<"] \n";
             //Add this as an available resource
             stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
 

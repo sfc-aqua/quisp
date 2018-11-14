@@ -90,6 +90,40 @@ network Linear_One_MIM
 }
 
 
+network Linear_One_MIM_biasedDistance
+{
+    parameters:
+        **.Speed_of_light_in_fiber = 205336.986301 km;
+        //**.HoM_handshake = false;
+
+    submodules:
+        source: QNode {
+            address = 1;
+            nodeType = "EndNode";
+            @display("i=device/pc");
+            //buffers = 15;
+            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
+            //emission_timing_uncertainty = 10;
+        }
+        HoM: HoM {
+            address = 2;
+            @display("i=device/bsm");
+        }
+        target: QNode {
+            address = 3;
+            nodeType = "EndNode";
+            //buffers = 20;
+            @display("i=device/pc");
+        }
+    connections:
+        source.port++ <--> ClassicalChannel {  distance = 7km; } <--> HoM.port++;
+        HoM.port++ <--> ClassicalChannel{  distance = 10km; } <--> target.port++;
+        source.quantum_port++ <--> QuantumChannel {  distance = 7km; } <--> HoM.quantum_port++;
+        HoM.quantum_port++ <--> QuantumChannel{  distance = 10km; } <--> target.quantum_port++;
+
+}
+
+
 
 network Linear_One_MM
 {

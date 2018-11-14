@@ -223,8 +223,10 @@ void HardwareMonitor::finish(){
 
 
     //EV<<"This is just a test!\n";
+
     EV<<"numQnic_total = "<<numQnic_total;
     for(int i=0; i<numQnic_total; i++){
+        int meas_total = 0;
         EV<<"\n \n \n \n \n QNIC["<<i<<"] \n";
         for(auto it =  all_temporal_tomography_output_holder[i].cbegin(); it != all_temporal_tomography_output_holder[i].cend(); ++it){
             //EV <<"Count["<< it->first << "] = " << it->second.my_basis << ", " << it->second.my_output_is_plus << ", " << it->second.partner_basis << ", "  << it->second.partner_output_is_plus << " " << "\n";
@@ -236,6 +238,7 @@ void HardwareMonitor::finish(){
                 error("Basis combination for tomography not found\n");
             }
             tomography_data[i][basis_combination].total_count++;
+            meas_total++;
             if(it->second.my_output_is_plus && it->second.partner_output_is_plus){
                             tomography_data[i][basis_combination].plus_plus++;
                             //std::cout<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[i][basis_combination].plus_plus<<"\n";
@@ -310,7 +313,7 @@ void HardwareMonitor::finish(){
         tomography_dm<<density_matrix_reconstructed.imag()<<"\n";
 
         std::cout<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<bellpairs_per_sec<<";}<-->"<<neighbor_node->getFullName()<< "; F="<<fidelity<<"; X="<<Xerr_rate<<"; Z="<<Zerr_rate<<"; Y="<<Yerr_rate<<endl;
-        tomography_stats<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec<<";tomography_time="<<all_temporal_tomography_runningtime_holder[i].tomography_time<<";tomography_measurements="<<all_temporal_tomography_runningtime_holder[i].tomography_measurements<<";}<-->"<<neighbor_node->getFullName()<< " F="<<fidelity<<" X="<<Xerr_rate<<" Z="<<Zerr_rate<<" Y="<<Yerr_rate<<endl;
+        tomography_stats<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec<<";tomography_time="<<all_temporal_tomography_runningtime_holder[i].tomography_time<<";tomography_measurements="<<all_temporal_tomography_runningtime_holder[i].tomography_measurements<<";actualmeas="<<meas_total<<";}<-->"<<neighbor_node->getFullName()<< " F="<<fidelity<<" X="<<Xerr_rate<<" Z="<<Zerr_rate<<" Y="<<Yerr_rate<<endl;
 
     }
 

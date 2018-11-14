@@ -163,6 +163,11 @@ gate_error_model stationaryQubit::SetSingleQubitGateErrorCeilings(std::string ga
     double Zratio = par(Zerror_ratio_par_name.c_str());
     double Yratio = par(Yerror_ratio_par_name.c_str());
     double ratio_sum =  Xratio + Zratio + Yratio;
+    if(ratio_sum == 0){
+        Xratio = 1;
+        Zratio = 1;
+        Yratio = 1;
+    }
     gate.X_error_rate = gate.pauli_error_rate * (Xratio/ratio_sum);
     gate.Y_error_rate = gate.pauli_error_rate * (Yratio/ratio_sum);
     gate.Z_error_rate = gate.pauli_error_rate * (Zratio/ratio_sum);
@@ -205,7 +210,16 @@ two_qubit_gate_error_model stationaryQubit::SetTwoQubitGateErrorCeilings(std::st
     double ratio_sum =  IXratio + XIratio + XXratio + IZratio + ZIratio + ZZratio + IYratio + YIratio + YYratio;
 
     if(ratio_sum == 0){
-      error("Fix this!");
+      //Dummy up ratios.
+        IXratio = 1;
+        XIratio = 1;
+        XXratio = 1;
+        IZratio = 1;
+        ZIratio = 1;
+        ZZratio = 1;
+        IYratio = 1;
+        YIratio = 1;
+        YYratio = 1;
     }
 
     gate.IX_error_rate = gate.pauli_error_rate * (IXratio/ratio_sum);
@@ -364,10 +378,6 @@ void stationaryQubit::setFree(bool consumed){
     locked_rule_id = -1;
     action_index = -1;
 
-    //this->par("ruleset_id") = locked_ruleset_id;
-    //this->par("rule_id") = locked_rule_id;
-    //this->par("action_index") = action_index;
-
     isBusy = false;
     allocated = false;
     emitted_time = -1;
@@ -426,11 +436,6 @@ void stationaryQubit::Lock(unsigned long rs_id, int rule_id, int action_id){
     std::cout<<"*******************"<<this<<"in node["<<this->node_address<<"]Locked. Rsid="<<locked_ruleset_id<<" rid="<<locked_rule_id<<" aid="<<action_index<<"\n";
 
 
-    //this->par("ruleset_id") = locked_ruleset_id;
-    //this->par("rule_id") = locked_rule_id;
-    //this->par("action_index") = action_index;
-
-
     if(hasGUI()){
         bubble("Locked!");
         getDisplayString().setTagArg("i", 1, "purple");
@@ -442,12 +447,6 @@ void stationaryQubit::Unlock(){
     locked_ruleset_id = -1;//Used to identify what this qubit is locked for.
     locked_rule_id = -1;
     action_index = -1;
-
-
-    //this->par("ruleset_id") = locked_ruleset_id;
-    //this->par("rule_id") = locked_rule_id;
-    //this->par("action_index") = action_index;
-
 
     if(hasGUI()){
             bubble("Unlocked!");
@@ -560,6 +559,9 @@ void stationaryQubit::setExcitedDensityMatrix(){
     }
 
     if(this->entangled_partner!=nullptr){//If it used to be entangled...
+            //error("What?");
+            this->entangled_partner->updated_time = simTime();
+            this->entangled_partner->par("last_updated_at") = simTime().dbl();//For GUI
             this->entangled_partner->setCompletelyMixedDensityMatrix();//This also eliminates the entanglement information.
     }//else it is already not entangled. e.g. excited -> relaxed.
 
@@ -583,13 +585,9 @@ void stationaryQubit::setRelaxedDensityMatrix(){
     }
 
     if(this->entangled_partner!=nullptr){//Still entangled
-        /*if(entangled_partner->entangled_partner == nullptr){//This actually could happen when doing purification
-            error("setRelaxedDensityMatrix(). Mistracking entanglement somewhere.");
-        }*/
+        this->entangled_partner->updated_time = simTime();
+        this->entangled_partner->par("last_updated_at") = simTime().dbl();//For GUI
         this->entangled_partner->setCompletelyMixedDensityMatrix();
-        /*this->entangled_partner->entangled_partner = nullptr;
-        this->entangled_partner = nullptr;*/
-        //entangled_partner->entangled_partner = nullptr;
     }//else it is already not entangled. e.g. excited -> relaxed.
 }
 
@@ -650,7 +648,7 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
     double time_evolution = simTime().dbl() - qubit->updated_time.dbl();
     double time_evolution_microsec  = time_evolution * 1000000 /** 100*/;
-
+    std::cout<<"time = "<<time_evolution_microsec<<"\n";
     if(time_evolution_microsec > 0){
         //EV<<"\n Memory error applied for time = "<<time_evolution_microsec<<" μs, on qubit "<<qubit<<"in node["<<qubit->par("node_address").str()<<"] \n";
         //Perform Monte-Carlo error simulation on this qubit.
@@ -670,33 +668,33 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
         MatrixXd Initial_condition(1,7);//I, X, Z, Y, Ex, Re, Cm
          if(EXerr){
-             //std::cout<<"[Init] = EX\n";
+             std::cout<<"[Init] = EX\n";
              Initial_condition << 0,0,0,0,1,0,0;//Has an excitation error
                     //error("err EX");
          }else if(REerr){
-             //std::cout<<"[Init] = RE\n";
+             std::cout<<"[Init] = RE\n";
              Initial_condition << 0,0,0,0,0,1,0;//Has an relaxation error
                     //error("err RE");
         }else if(CMerr){
-             //std::cout<<"[Init] = CM\n";
+             std::cout<<"[Init] = CM\n";
              Initial_condition << 0,0,0,0,0,0,1;//Has an relaxation e
         }else if(Zerr && Xerr){
              Initial_condition << 0,0,0,1,0,0,0;//Has a Y error
-            //std::cout<<"[Init] = Y\n";
+            std::cout<<"[Init] = Y\n";
             //std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
             //error("err Y");
         }else if(Zerr && !Xerr){
-             //std::cout<<"[Init] = Z\n";
+             std::cout<<"[Init] = Z\n";
              Initial_condition << 0,0,1,0,0,0,0;//Has a Z error
             //std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
             //error("err Z");
         }else if(!Zerr && Xerr){
-             //std::cout<<"[Init] = X\n";
+             std::cout<<"[Init] = X\n";
              Initial_condition << 0,1,0,0,0,0,0;//Has an X error
              //std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
              //error("err X");
         }else{
-             //std::cout<<"[Init] = I\n";
+             std::cout<<"[Init] = I\n";
              Initial_condition << 1,0,0,0,0,0,0;//No error
         }
 
@@ -765,14 +763,14 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
         //std::cout<<"dbl = "<<rand<<" No ceil = "<<No_error_ceil<<", "<<X_error_ceil<<", "<<Z_error_ceil<<","<<Y_error_ceil<<", "<<EX_error_ceil<<", "<<RE_error_ceil<<", 1"<<"\n";
         if(rand < No_error_ceil){
-            //std::cout<<"NO err\n";
+            std::cout<<"NO err\n";
             //Qubit will end up with no error
             qubit->par("GOD_Xerror") = false;
             qubit->par("GOD_Zerror") = false;
 
         }else if(No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil!=X_error_ceil)){
             //X error
-            //std::cout<<"X err\n";
+            std::cout<<"X err\n";
             qubit->par("GOD_Xerror") = true;
             qubit->par("GOD_Zerror") = false;
             DEBUG_memory_X_count++;
@@ -780,21 +778,21 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
         }else if(X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil!=Z_error_ceil)){
             //Z error
-            //std::cout<<"Z err\n";
+            std::cout<<"Z err\n";
             qubit->par("GOD_Xerror") = false;
             qubit->par("GOD_Zerror") = true;
             DEBUG_memory_Z_count++;
 
         }else if (Z_error_ceil <= rand && rand < Y_error_ceil && (Z_error_ceil!=Y_error_ceil)){
             //Y error
-            //std::cout<<"Y err\n";
+            std::cout<<"Y err\n";
             qubit->par("GOD_Xerror") = true;
             qubit->par("GOD_Zerror") = true;
             DEBUG_memory_Y_count++;
 
          }else if(Y_error_ceil <= rand && rand < EX_error_ceil && (Y_error_ceil!=EX_error_ceil)){
              //Excitation error
-             //std::cout<<"Ex err\n";
+             std::cout<<"Ex err\n";
              qubit->setExcitedDensityMatrix();//Also sets the partner completely mixed if it used to be entangled.
          }else if(EX_error_ceil <= rand && rand < RE_error_ceil && (EX_error_ceil!=RE_error_ceil)){
              //Excitation error
@@ -802,8 +800,10 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
              qubit->setRelaxedDensityMatrix();//Also sets the partner completely mixed if it used to be entangled.
          }else{
              //Memory completely mixed error
-             //std::cout<<"Cm err\n";
+             std::cout<<"Cm err\n";
              if(qubit->entangled_partner!=nullptr){//If this qubit still used to be entangled with another qubit.
+                 qubit->entangled_partner->updated_time = simTime();
+                 qubit->entangled_partner->par("last_updated_at") = simTime().dbl();//For GUI
                  qubit->entangled_partner->setCompletelyMixedDensityMatrix();//Break entanglement with partner. Overwrite its density matrix.
              }
              qubit->setCompletelyMixedDensityMatrix();
@@ -895,16 +895,20 @@ void stationaryQubit::apply_single_qubit_gate_error(gate_error_model gate, stati
 
     if(rand <= gate.No_error_ceil){
                 //Do nothing
+        std::cout<<"Single qubit gate I error\n";
     }else if(gate.No_error_ceil < rand && rand <= gate.X_error_ceil && (gate.No_error_ceil!=gate.X_error_ceil)){
                 //X error
         qubit->addXerror();
+        std::cout<<"Single qubit gate X error\n";
     }else if(gate.X_error_ceil < rand && rand <= gate.Z_error_ceil && (gate.X_error_ceil!=gate.Z_error_ceil)){
                 //Z error
         qubit->addZerror();
+        std::cout<<"Single qubit gate Z error\n";
     }else{
                 //Y error
         qubit->addZerror();
         qubit->addXerror();
+        std::cout<<"Single qubit gate Y error\n";
     }
 }
 
@@ -971,8 +975,8 @@ measurement_outcome stationaryQubit::measure_density_independent(){
    //std::cout<<"\n\n\n\n\n\n\n\nMEASURING!!!\n";
     //std::cout<<"---measured "<<this<<" in node["<<node_address<<"]\n";
     if(this->entangled_partner == nullptr && this->Density_Matrix_Collapsed(0,0).real() ==-111){
-            EV<<entangled_partner<<"\n";
-            EV<<Density_Matrix_Collapsed<<"\n";
+            //EV<<entangled_partner<<"\n";
+            std::cout<<Density_Matrix_Collapsed<<"\n";
             std::cout<<"Measuring"<<this<<"\n";
             error("Measuring a qubit that is not entangled with another qubit. Probably not what you want! Check whether address for each node is unique!!!");
     }
@@ -983,7 +987,7 @@ measurement_outcome stationaryQubit::measure_density_independent(){
 
 
     apply_memory_error(this);//Add memory error depending on the idle time. If excited/relaxed, this will immediately break entanglement, leaving the other qubit as completely mixed.
-    apply_single_qubit_gate_error(Measurement_error, this);
+    apply_single_qubit_gate_error(Measurement_error, this);//Measurement gate error
     if(this->entangled_partner != nullptr){//This becomes nullptr if this qubit got excited/relaxed or measured.
         if(this->entangled_partner->entangled_partner == nullptr){
             std::cout<<"Entanglement not tracked well between partners."<<this<<" in node["<<node_address<<"]\n";
@@ -1024,27 +1028,6 @@ measurement_outcome stationaryQubit::measure_density_independent(){
     }
 
 
-    /*
-    std::cout<<"---CHECK: "<<this<<" in node["<<node_address<<"]---\n";
-    std::cout<<"par cm = "<<this->par("GOD_CMerror").boolValue()<<", completely_mixed = "<<this->completely_mixed<<"\n";
-    std::cout<<"par re= "<<this->par("GOD_REerror").boolValue()<<", par cm = "<<this->par("GOD_EXerror").boolValue()<<", re/ex = "<<this->excited_or_relaxed<<"\n";
-    std::cout<<"------------------------\n";
-    */
-
-    /*
-    if(this->entangled_partner!=nullptr){
-
-        std::cout<<"IMPORTANT: entangled\n";
-        std::cout<<"-|-|-CHECK: "<<this->entangled_partner<<" in node["<<this->entangled_partner->node_address<<"]-|-|-\n";
-        std::cout<<"par cm = "<<this->entangled_partner->par("GOD_CMerror").boolValue()<<", completely_mixed = "<<this->entangled_partner->completely_mixed<<"\n";
-        std::cout<<"par re= "<<this->entangled_partner->par("GOD_REerror").boolValue()<<", par cm = "<<this->entangled_partner->par("GOD_EXerror").boolValue()<<", re/ex = "<<this->entangled_partner->excited_or_relaxed<<"\n";
-        std::cout<<"-|-|--|-|--|-|--|-|-\n";
-
-        //Matrix4cd combined_errors = kroneckerProduct(getErrorMatrix(this),getErrorMatrix(entangled_partner)).eval();
-
-    }else{
-        //std::cout<<"IMPORTANT: not entangled\n";
-    }*/
 
     if(this->partner_measured || this->completely_mixed || this->excited_or_relaxed){//The case when the density matrix is completely local to this qubit.
 
@@ -1068,7 +1051,7 @@ measurement_outcome stationaryQubit::measure_density_independent(){
            Density_Matrix_Collapsed = Pauli.Z*Density_Matrix_Collapsed*Pauli.Z.adjoint();
         }
 
-        //std::cout<<"Not entangled anymore. Density matrix is "<<Density_Matrix_Collapsed<<"\n";
+        std::cout<<"Not entangled anymore. Density matrix is "<<Density_Matrix_Collapsed<<"\n";
 
         Complex Prob_plus = (Density_Matrix_Collapsed*this_measurement.plus.adjoint()*this_measurement.plus).trace();
         Complex Prob_minus = (Density_Matrix_Collapsed*this_measurement.minus.adjoint()*this_measurement.minus).trace();
@@ -1084,7 +1067,7 @@ measurement_outcome stationaryQubit::measure_density_independent(){
     }else if(!this->partner_measured && !this->completely_mixed && !this->excited_or_relaxed && this->entangled_partner!=nullptr){
         //error("Entangled....Should not happen here.");
 
-        std::cout<<"[Entangled]: "<<this<<" in node["<<node_address<<"]\n";
+        //std::cout<<"[Entangled]: "<<this<<" in node["<<node_address<<"]\n";
 
         /*
         std::cout<<"????CHECK: "<<this->entangled_partner<<" in node["<<this->entangled_partner->node_address<<"]????????????\n";

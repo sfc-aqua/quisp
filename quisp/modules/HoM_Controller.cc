@@ -55,8 +55,8 @@ void HoM_Controller::internodeInitializer(){
 
     accepted_burst_interval = (double)1/(double)photon_detection_per_sec;
     generatePacket = new cMessage("nextPacket");
-    //scheduleAt(simTime()+1,generatePacket);
-    scheduleAt(simTime(),generatePacket);
+    scheduleAt(simTime()+par("Initial_notification_timing_buffer"),generatePacket);
+    //scheduleAt(simTime(),generatePacket);
 }
 
 //Initialization of the stand-alone HoM module.
@@ -72,8 +72,8 @@ void HoM_Controller::standaloneInitializer(){
 
     accepted_burst_interval = (double)1/(double)photon_detection_per_sec;
     generatePacket = new cMessage("nextPacket");
-    //scheduleAt(simTime()+1,generatePacket);
-    scheduleAt(simTime(),generatePacket);
+    scheduleAt(simTime()+par("Initial_notification_timing_buffer"),generatePacket);
+    //scheduleAt(simTime(),generatePacket);
 }
 
 //This is invoked only once at the begining of the simulation.
