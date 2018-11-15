@@ -895,20 +895,20 @@ void stationaryQubit::apply_single_qubit_gate_error(gate_error_model gate, stati
 
     if(rand <= gate.No_error_ceil){
                 //Do nothing
-        std::cout<<"Single qubit gate I error\n";
+        //std::cout<<"Single qubit gate I error\n";
     }else if(gate.No_error_ceil < rand && rand <= gate.X_error_ceil && (gate.No_error_ceil!=gate.X_error_ceil)){
                 //X error
         qubit->addXerror();
-        std::cout<<"Single qubit gate X error\n";
+        //std::cout<<"Single qubit gate X error\n";
     }else if(gate.X_error_ceil < rand && rand <= gate.Z_error_ceil && (gate.X_error_ceil!=gate.Z_error_ceil)){
                 //Z error
         qubit->addZerror();
-        std::cout<<"Single qubit gate Z error\n";
+        //std::cout<<"Single qubit gate Z error\n";
     }else{
                 //Y error
         qubit->addZerror();
         qubit->addXerror();
-        std::cout<<"Single qubit gate Y error\n";
+        //std::cout<<"Single qubit gate Y error\n";
     }
 }
 
