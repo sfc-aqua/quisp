@@ -1,0 +1,358 @@
+Cannot exec '../quisp -m -u Cmdenv -n .. omnetpp.ini -c Layer2_Simple_MIM_MM_5000': No such file or directory
+[H[JThis is the Z Shell configuration function for new users,
+zsh-newuser-install.
+You are seeing this message because you have no zsh startup files
+(the files .zshenv, .zprofile, .zshrc, .zlogin in the directory
+~).  This function can help you with a few settings that should
+make your use of the shell easier.
+
+You can:
+
+(q)  Quit and do nothing.  The function will be run again next time.
+
+(0)  Exit, creating the file ~/.zshrc containing just a comment.
+     That will prevent this function being run again.
+
+(1)  Continue to the main menu.
+
+(2)  Populate your ~/.zshrc with the configuration recommended
+     by the system administrator and exit (you will need to edit
+     the file by hand, if so desired).
+
+--- Type one of the keys in parentheses --- 
+
+Aborting.
+The function will be run again next time.  To prevent this, execute:
+  touch ~/.zshrc
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004h[?1l>[?2004l
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004h.../quisp -m -u Cmdenv -n .. omnetpp.ini -c Layer2_Simple_MIM_MM_5000[?1l>[?2004l
+OMNeT++ Discrete Event Simulation  (C) 1992-2018 Andras Varga, OpenSim Ltd.
+Version: 5.4.1, build: 180629-5e28390, edition: Academic Public License -- NOT FOR COMMERCIAL USE
+See the license for distribution terms and warranty disclaimer
+
+Setting up Cmdenv...
+
+Loading NED files from ..:  13
+
+<!> Error: No such config: Layer2_Simple_MIM_MM_5000
+
+End.
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hlls[?1l>[?2004l
+channels.ned             package.ned  simple_constant_quantum_cost.ned
+classical_softwares.ned  qnic.ned     topology_complex_network.ned
+EPPS.ned                 QNode.ned    topology_linear_network.ned
+HoM.ned                  qrsa.ned     topology_star_network.ned
+omnetpp.ini              screenlog.0  twonodes.ned
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hccd c  ccd ..[?1l>[?2004l
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hlls[?1l>[?2004l
+channels                 Makefile       out                 quisp
+classical_messages_m.cc  makemakefiles  PhotonicQubit_m.cc  rules
+classical_messages_m.h   modules        PhotonicQubit_m.h
+classical_messages.msg   networks       PhotonicQubit.msg
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hccd networks[1m/[0m[0m [?1l>[?2004l
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hlls[?1l>[?2004l
+channels.ned             package.ned  simple_constant_quantum_cost.ned
+classical_softwares.ned  qnic.ned     topology_complex_network.ned
+EPPS.ned                 QNode.ned    topology_linear_network.ned
+HoM.ned                  qrsa.ned     topology_star_network.ned
+omnetpp.ini              screenlog.0  twonodes.ned
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hlscd networks[11Dls         [9Dcd ..ls   ../quisp -m -u Cmdenv -n .. omnetpp.ini -c Layer2_Simple_MIM_MM_5000[68Dls                                                                  [66Dcd ..ls   cd networks[11Dls         [9D  .../quisp -m -u Cmdenv -n .. omnetpp.ini -c Layer2_Simple_MIM_MM_5000[?1l>[?2004l
+OMNeT++ Discrete Event Simulation  (C) 1992-2018 Andras Varga, OpenSim Ltd.
+Version: 5.4.1, build: 180629-5e28390, edition: Academic Public License -- NOT FOR COMMERCIAL USE
+See the license for distribution terms and warranty disclaimer
+
+Setting up Cmdenv...
+
+Loading NED files from ..:  13
+
+<!> Error: No such config: Layer2_Simple_MIM_MM_5000
+
+End.
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004h[?1l>[?2004l
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004h[?1l>[?2004l
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hlls[?1l>[?2004l
+channels.ned             package.ned  simple_constant_quantum_cost.ned
+classical_softwares.ned  qnic.ned     topology_complex_network.ned
+EPPS.ned                 QNode.ned    topology_linear_network.ned
+HoM.ned                  qrsa.ned     topology_star_network.ned
+omnetpp.ini              screenlog.0  twonodes.ned
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hggit branch[?1l>[?2004l
+* [32mmaster[m
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hffor remote in `git branch -r`; do git branch --track ${remote#origin/} $remo [Ktte; done[?1l>[?2004l
+fatal: it does not make sense to create 'HEAD' manually
+error: unknown switch `>'
+usage: git branch [<options>] [-r | -a] [--merged | --no-merged]
+   or: git branch [<options>] [-l] [-f] <branch-name> [<start-point>]
+   or: git branch [<options>] [-r] (-d | -D) <branch-name>...
+   or: git branch [<options>] (-m | -M) [<old-branch>] <new-branch>
+   or: git branch [<options>] [-r | -a] [--points-at]
+
+Generic options
+    -v, --verbose         show hash and subject, give twice for upstream branch
+    -q, --quiet           suppress informational messages
+    -t, --track           set up tracking mode (see git-pull(1))
+    --set-upstream        change upstream info
+    -u, --set-upstream-to <upstream>
+                          change the upstream info
+    --unset-upstream      Unset the upstream info
+    --color[=<when>]      use colored output
+    -r, --remotes         act on remote-tracking branches
+    --contains <commit>   print only branches that contain the commit
+    --abbrev[=<n>]        use <n> digits to display SHA-1s
+
+Specific git-branch actions:
+    -a, --all             list both remote-tracking and local branches
+    -d, --delete          delete fully merged branch
+    -D                    delete branch (even if not merged)
+    -m, --move            move/rename a branch and its reflog
+    -M                    move/rename a branch, even if target exists
+    --list                list branch names
+    -l, --create-reflog   create the branch's reflog
+    --edit-description    edit the description for the branch
+    -f, --force           force creation, move/rename, deletion
+    --merged <commit>     print only branches that are merged
+    --no-merged <commit>  print only branches that are not merged
+    --column[=<style>]    list branches in columns
+    --sort <key>          field name to sort on
+    --points-at <object>  print only branches of the object
+
+fatal: A branch named 'master' already exists.
+Branch LinkLayerProtocol set up to track remote branch LinkLayerProtocol from origin.
+Branch dev-kaaki set up to track remote branch dev-kaaki from origin.
+fatal: A branch named 'master' already exists.
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hggit p ferc  tch --all[?1l>[?2004l
+Fetching origin
+g [1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hggit pull --all[?1l>[?2004l
+Fetching origin
+Already up-to-date.
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004h[?1l>[?2004l
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hlls[?1l>[?2004l
+channels.ned             package.ned  simple_constant_quantum_cost.ned
+classical_softwares.ned  qnic.ned     topology_complex_network.ned
+EPPS.ned                 QNode.ned    topology_linear_network.ned
+HoM.ned                  qrsa.ned     topology_star_network.ned
+omnetpp.ini              screenlog.0  twonodes.ned
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hggit checkout LinkLayerProtocol[1m [0m[0m [?1l>[?2004l
+Switched to branch 'LinkLayerProtocol'
+Your branch is up-to-date with 'origin/LinkLayerProtocol'.
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004h[?1l>[?2004l
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hlls[?1l>[?2004l
+channels.ned             qrsa.ned
+check_list               screenlog.0
+classical_softwares.ned  simple_constant_quantum_cost.ned
+EPPS.ned                 topology_complex_network.ned
+HoM.ned                  topology_layer2_experiments.ned
+omnetpp.ini              topology_linear_network.ned
+package.ned              topology_star_network.ned
+qnic.ned                 twonodes.ned
+QNode.ned
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hccd kaaki     c  sscreen -ls[?1l>[?2004l
+There are screens on:
+        19853.LinkLayer5000     (11/14/2018 11:53:59 PM)        (Attached)
+        17950.pts-0.s0  (11/14/2018 11:29:50 PM)        (Detached)
+2 Sockets in /var/run/screen/S-kaaki.
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004h[?1l>[?2004l
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004h[?1l>[?2004l
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004h[?1l>[?2004l
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hffor remote in `git branch -r`; do git branch --track ${remote#origin/} $remo [Ktte; doneMscreen -ls[K[1B[KM[14C[10Dls        [8Dgit checkout LinkLayerProtocol[30Dls                            [28Dgit pull --all[10Dfetch --all[15Dfor remote in `git branch -r`; do git branch --track ${remote#origin/} $remote; done[KM[15P[11C[K[1B[KM[14C[10Dls        [8D../quisp -m -u Cmdenv -n .. omnetpp.ini -c Layer2_Simple_MIM_MM_5000[68Dls                                                                  [66Dcd networks[11Dls         [9D../quisp -m -u Cmdenv -n .. omnetpp.ini -c Layer2_Simple_MIM_MM_5000[?1l>[?2004l[1BOMNeT++ Discrete Event Simulation  (C) 1992-2018 Andras Varga, OpenSim Ltd.
+Version: 5.4.1, build: 180629-5e28390, edition: Academic Public License -- NOT FOR COMMERCIAL USE
+See the license for distribution terms and warranty disclaimer
+
+Setting up Cmdenv...
+
+Loading NED files from ..:  14
+
+Preparing for running configuration Layer2_Simple_MIM_MM_5000, run #0...
+Scenario: $0=34, $repetition=0
+Assigned runID=Layer2_Simple_MIM_MM_5000-0-20181114-23:55:53-20032
+Setting up network "Layer2_Simple_MIM_MM"...
+
+<!> Error: Cannot evaluate parameter 'buffers': Cannot cast 100 from type double to integer (note: no implicit conversion from double to int) -- in module (omnetpp::cModule) Layer2_Simple_MIM_MM.EndNode1[0] (id=2), during network setup
+
+Run statistics: total 31, errors 1, skipped 30
+
+End.
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hvvim omnetpp.ini[1m [0m[0m [?1l>[?2004l
+[?1049h[?1h=[1;25r[34l[34h[?25h[23m[24m[0m[H[J[?25l[25;1H"omnetpp.ini" 2873L, 94464C[1;1H[34m# This file is shared by all tictoc simulations.
+# Lines beginning with `#' are comments
+
+#Pattern syntax:
+
+#? : matches any character except dot (.)
+#* : matches zero or more characters except dot (.)
+#** : matches zero or more characters (any character)
+#{a-f} : set: matches a character in the range a-f
+#{^a-f}: negated set: matches a character NOT in the range a-f
+#{38..150} : numeric range: any number (i.e. sequence of digits) in the range 388[12;1H..150, inclusive; both limits are optional
+#[38..150] : index range: any number in square brackets in the range 38..150, inn[14;1Hclusive; both limits are optional
+#backslash (\) : takes away the special meaning of the subsequent character
+
+#opp_makemake -f --deep -O out -I/Users/takaakimatsuo/Downloads/eigen3 -I.
+#opp_makemake -f --deep -O out -I/home/kaaki/eigen3 -I.
+#make
+#in networks (or whereever the .ini file is)
+#../quisp -m -u Cmdenv -n .. omnetpp.ini -c Linear_Single_MIM
+#../quisp -m -u Cmdenv -n .. omnetpp.ini -c Layer2_Simple_MIM_MM
+#../quisp -m -u Cmdenv -n .. omnetpp.ini -c Link_Tomography
+#../quisp -m -u Cmdenv -n .. omnetpp.ini -c LinkTomography_Linear_Single_MIM_wit[0m[24;1H[1m[34m@                                                                               [0m[25;63H1,1[11CTop[1;1H[34h[?25h[?25l[25;63H2[2;1H[34h[?25h[?25l[25;1H[K[25;1H/[34h[?25h_[?25l[34h[?25h5[?25l[34h[?25h0[?25l[34h[?25h0[?25l[34h[?25h0[?25l[34h[?25h[?25l[1;24r[1;1H[3M[1;25r[21;1H[34m#../quisp -m -u Cmdenv -n .. omnetpp.ini -c LinkTomography_Linear_Single_MIM_witt[22;1Hh_darkcount
+#../quisp -m -u Cmdenv -n .. omnetpp.ini -c Layer2_Star_allErr
+#./quisp -m -u Cmdenv -n .. omnetpp.ini -c Layer2_Simple_MIM_MM_5000[0m[25;1H[K[25;63H24,64[10C0%[24;64H[34h[?25h[?25l[25;66H1 [24;1H[34h[?25h[?25l[1;24r[1;1H[2M[1;25r[23;1H[34m# valgrind --leak-check=full ../quisp -m -u Cmdenv -n .. omnetpp.ini -c Linear_SS[24;1Hingle_MIM[0m[25;63H[K[25;63H25,1[11C0%[23;1H[34h[?25h[?25l[1;24r[1;1H[2M[1;25r[23;1H[34m# valgrind --leak-check=full ../quisp -m -u Cmdenv -n .. omnetpp.ini -c Tomograpp[24;1Hhy_Linear_One_MM_MIM[0m[25;63H[K[25;63H26,1[11C0%[23;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[25;63H[K[25;63H27,0-1[9C0%[24;1H[34h[?25h[?25l[25;63H[K[25;1H/[34h[?25h_[?25l[34h[?25h5[?25l[34h[?25h0[?25l[34h[?25h0[?25l[34h[?25h0[?25l[34h[?25h[?25l[23m[24m[0m[H[J[2;1H[32m**.internal_hom_photon_detection_per_sec =[0m [31m1000000000[0m #integer
+[32m**.internal_hom_darkcount_probability =[0m [31m0.01[0m #[31m1[0m%
+
+[32m**.link_tomography =[0m true
+[32m**.initial_purification =[0m [31m0[0m
+[32m**.X_purification =[0m false[12;1H[35m[Config Layer2_Simple_MIM_MM_5000][0m
+[32mnetwork =[0m Layer2_Simple_MIM_MM
+[34m#seed-set = ${0..33}[0m
+[32mseed-set =[0m ${[31m34[0m..[31m64[0m}
+[34m#seed-set = ${65..99}
+#seed-set = ${81..99}[0m
+
+[32m**.tomography_output_filename =[0m "Layer2_Simple_MIM_MM_5000"
+[32m**.buffers =[0m uniform([31m100[0m, [31m100[0m)
+[32m**.num_measure =[0m [31m5000[0m #max measurement for tomography accumulation
+
+[32m**.emission_error_rate =[0m [31m0[0m # per shot.
+[32m**.emission_Z_error_ratio =[0m [31m0[0m #ratio. Not the error rate!! By default the ratio[1m[34m@                                                                               [0m[25;63H641,29[8C22%[12;29H[34h[?25h[?25l[25;65H2[13;29H[34h[?25h[?25l[25;68H8[13;28H[34h[?25h[?25l[25;68H7[13;27H[34h[?25h[?25l[25;68H6[13;26H[34h[?25h[?25l[25;68H5[13;25H[34h[?25h[?25l[25;68H4[13;24H[34h[?25h[?25l[25;68H3[13;23H[34h[?25h[?25l[25;68H2[13;22H[34h[?25h[?25l[25;68H1[13;21H[34h[?25h[?25l[25;68H0[13;20H[34h[?25h[?25l[25;67H19[13;19H[34h[?25h[?25l[25;68H8[13;18H[34h[?25h[?25l[25;68H7[13;17H[34h[?25h[?25l[25;68H6[13;16H[34h[?25h[?25l[25;68H5[13;15H[34h[?25h[?25l[25;68H4[13;14H[34h[?25h[?25l[25;68H3[13;13H[34h[?25h[?25l[25;68H2[13;12H[34h[?25h[?25l[25;68H1[13;11H[34h[?25h[?25l[25;68H0[13;10H[34h[?25h[?25l[25;67H9 [13;9H[34h[?25h[?25l[25;67H8[13;8H[34h[?25h[?25l[25;67H7[13;7H[34h[?25h[?25l[25;67H6[13;6H[34h[?25h[?25l[25;67H5[13;5H[34h[?25h[?25l[25;67H4[13;4H[34h[?25h[?25l[25;65H3[14;4H[34h[?25h[?25l[25;65H4[15;4H[34h[?25h[?25l[25;65H5[16;4H[34h[?25h[?25l[25;67H3[16;3H[34h[?25h[?25l[25;67H2[16;2H[34h[?25h[?25l[25;65H4[15;2H[34h[?25h[?25l[25;67H1[15;1H[34h[?25h[?25l[25;1H[1m-- INSERT --[0m[25;63H[K[25;63H644,1[9C22%[15;1H[34h[?25h[?25l[34m#seed-set = ${34..64}[0m[25;67H2[15;2H[34h[?25h[?25l[25;65H5[16;2H[34h[?25h[?25l[25;65H6[17;2H[34h[?25h[?25l[25;65H7,1[18;1H[34h[?25h[?25ls[25;67H2[18;2H[34h[?25h[?25le[25;67H3[18;3H[34h[?25h[?25le[25;67H4[18;4H[34h[?25h[?25ld[25;67H5[18;5H[34h[?25h[?25l-[25;67H6[18;6H[34h[?25h[?25ls[25;67H7[18;7H[34h[?25h[?25le[25;67H8[18;8H[34h[?25h[?25lt[25;67H9[18;9H[34h[?25h[?25l[25;67H10[18;10H[34h[?25h[?25l[32mseed-set =[0m[25;68H1[18;11H[34h[?25h[?25l[25;68H2[18;12H[34h[?25h[?25l$[25;68H3[18;13H[34h[?25h[?25l{[25;68H4[18;14H[34h[?25h[?25l}[46m{}[0m[25;68H5[18;15H[34h[?25h[?25l[25;68H4[18;14H[34h[?25h[?25l[31m[46m0[0m}[31m0[0m[46m}[0m[25;68H5[18;15H[34h[?25h[?25l[46m/[0m}/[46m}[0m[25;68H6[18;16H[34h[?25h[?25l}[46m }[0m[18;16H[K[25;68H5[18;15H[34h[?25h[?25l[46m.[0m}.[46m}[0m[25;68H6[18;16H[34h[?25h[?25l[46m.[0m}.[46m}[0m[25;68H7[18;17H[34h[?25h[?25l[31m[46m9[0m}[31m9[0m[46m}[0m[25;68H8[18;18H[34h[?25h[?25l[31m[46m9[0m}[31m9[0m[46m}[0m[25;68H9[18;19H[34h[?25h[?25l{[5C}[25;65H8[19;19H[34h[?25h[?25l[25;65H9[20;19H[34h[?25h[?25l[25;64H50[21;19H[34h[?25h[?25l[25;67H20[21;20H[34h[?25h[?25l[25;64H49[20;20H[34h[?25h[?25lm[46m([8C)[0m[25;68H1[20;21H[34h[?25h[?25l([31m[46m1[0m[31m0[0m[1C, [31m10[0m[1C)[46m [20;20H([0m[31m1[0m[7C[46m)[0m[20;30H[K[25;68H0[20;20H[34h[?25h[?25l[25;68H1[20;21H[34h[?25h[?25l[46m1[0m00, [31m10[0m[1C)[46m [0m[20;20H1[20;29H[K[25;68H0[20;20H[34h[?25h[?25l100, [31m10[0m[1C)[20;28H[K[25;67H19[20;19H[34h[?25h[?25l100, [31m10[0m[1C)[20;27H[K[25;68H8[20;18H[34h[?25h[?25l[25;68H9[20;19H[34h[?25h[?25l00, [31m10[0m[1C)[20;26H[K[25;68H8[20;18H[34h[?25h[?25l[25;68H9[20;19H[34h[?25h[?25l, [31m10[0m[1C)[20;25H[K[25;68H8[20;18H[34h[?25h[?25l0, [31m10[0m[1C)[20;24H[K[25;68H7[20;17H[34h[?25h[?25l[25;68H8[20;18H[34h[?25h[?25l, [31m10[0m[1C)[20;23H[K[25;68H7[20;17H[34h[?25h[?25l[25;68H8[20;18H[34h[?25h[?25l [31m10[0m[1C)[20;22H[K[25;68H7[20;17H[34h[?25h[?25l[25;68H8[20;18H[34h[?25h[?25l100)[20;21H[K[25;68H7[20;17H[34h[?25h[?25l100)[20;20H[K[25;68H6[20;16H[34h[?25h[?25l100)[20;19H[K[25;68H5[20;15H[34h[?25h[?25l[31m100[0m)[20;18H[K[25;68H4[20;14H[34h[?25h[?25l[25;68H5[20;15H[34h[?25h[?25l[25;68H6[20;16H[34h[?25h[?25l[25;68H7[20;17H[34h[?25h[?25l[25;68H8[20;18H[34h[?25h[?25l[20;17H[K[25;68H7[20;17H[34h[?25h[25;1H[K[?25l[25;63H649,16[8C22%[20;16H[34h[?25h[?25l[25;63H[K[25;1H:[34h[?25hw[?25l[34h[?25hq[?25l[34h[?25h[?25l"omnetpp.ini" 2873L, 94470C written
+[?1l>[34h[?25h[?1049l[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hvim omnetpp.ini[15D../quisp -m -u Cmdenv -n .. omnetpp.ini -c Layer2_Simple_MIM_MM_5000[68Dscreen -ls                                                          [58D[10Dls        [8Dscreen -ls[10D../quisp -m -u Cmdenv -n .. omnetpp.ini -c Layer2_Simple_MIM_MM_5000[?1l>[?2004l
+OMNeT++ Discrete Event Simulation  (C) 1992-2018 Andras Varga, OpenSim Ltd.
+Version: 5.4.1, build: 180629-5e28390, edition: Academic Public License -- NOT FOR COMMERCIAL USE
+See the license for distribution terms and warranty disclaimer
+
+Setting up Cmdenv...
+
+Loading NED files from ..:  14
+
+Preparing for running configuration Layer2_Simple_MIM_MM_5000, run #0...
+Scenario: $0=0, $repetition=0
+Assigned runID=Layer2_Simple_MIM_MM_5000-0-20181114-23:56:43-20074
+Setting up network "Layer2_Simple_MIM_MM"...
+Initializing...
+
+<!> Error: Unknown parameter 'photon_loss_rate' -- in channel (quisp::channels::QuantumChannel) Layer2_Simple_MIM_MM.EndNode1[0].quantum_port_receiver$o[0].channel (id=12), during network initialization
+
+Run statistics: total 100, errors 1, skipped 99
+
+End.
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004h[?1l>[?2004l
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hlls[?1l>[?2004l
+channels.ned             qrsa.ned
+check_list               screenlog.0
+classical_softwares.ned  simple_constant_quantum_cost.ned
+EPPS.ned                 topology_complex_network.ned
+HoM.ned                  topology_layer2_experiments.ned
+omnetpp.ini              topology_linear_network.ned
+package.ned              topology_star_network.ned
+qnic.ned                 twonodes.ned
+QNode.ned
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hccd ..[?1l>[?2004l
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hlls[?1l>[?2004l
+channels                 Makefile       out                 quisp
+classical_messages_m.cc  makemakefiles  PhotonicQubit_m.cc  rules
+classical_messages_m.h   modules        PhotonicQubit_m.h
+classical_messages.msg   networks       PhotonicQubit.msg
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hccd channels[1m/[0m[0m [?1l>[?2004l
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hlls[?1l>[?2004l
+QuantumChannel.cc
+[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hvvim QuantumChannel.cc[1m [0m[0m [?1l>[?2004l
+[?1049h[?1h=[1;25r[34l[34h[?25h[23m[24m[0m[H[J[?25l[25;1H"QuantumChannel.cc" 235L, 9430C[1;1H[34m/** \file QuantumChannel.cc
+ *  \todo clean Clean code when it is simple.
+ *  \todo doc Write doxygen documentation.
+ *  \authors takaakimatsuo
+ *
+ *  \brief QuantumChannel
+ */[0m
+[35m#include [0m[31m<vector>[0m
+[35m#include [0m[31m<omnetpp.h>[0m
+[35m#include [0m[31m<unsupported/Eigen/MatrixFunctions>[0m
+[34m//#include <Eigen/Dense>[0m
+[35m#include [0m[31m<PhotonicQubit_m.h>[0m
+
+
+[33musing[0m [32mnamespace[0m Eigen;
+[33musing[0m [32mnamespace[0m omnetpp;
+[33musing[0m [32mnamespace[0m quisp::messages;
+
+[32mnamespace[0m quisp {
+[32mnamespace[0m channels {
+
+[34m/*The sum of Z,X and Y error rate equates to pauli_error_rate. Value could potenn[23;1Htially between 0 ~ 1. */[0m
+[32mtypedef[0m [32mstruct[0m _channel_error_model{[25;63H1,1[11CTop[1;1H[34h[?25h[?25l[25;63H2[2;1H[34h[?25h[?25l[25;63H3[3;1H[34h[?25h[?25l[25;63H4[4;1H[34h[?25h[?25l[25;63H5[5;1H[34h[?25h[?25l[25;63H6[6;1H[34h[?25h[?25l[25;63H7[7;1H[34h[?25h[?25l[25;63H8[8;1H[34h[?25h[?25l[25;63H9[9;1H[34h[?25h[?25l[25;63H10,1[10;1H[34h[?25h[?25l[25;64H1[11;1H[34h[?25h[?25l[25;64H2[12;1H[34h[?25h[?25l[25;64H3,0-1[13;1H[34h[?25h[?25l[25;64H4[14;1H[34h[?25h[?25l[25;64H5,1  [15;1H[34h[?25h[?25l[25;64H6[16;1H[34h[?25h[?25l[25;64H7[17;1H[34h[?25h[?25l[25;64H8,0-1[18;1H[34h[?25h[?25l[25;64H9,1  [19;1H[34h[?25h[?25l[25;63H20[20;1H[34h[?25h[?25l[25;64H1,0-1[21;1H[34h[?25h[?25l[25;64H2,1  [22;1H[34h[?25h[?25l[25;64H3[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H[32mdouble[0m pauli_error_rate;[34m//Overall error rate[0m[25;1H[K[25;63H24,1[11C0%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H[32mdouble[0m Z_error_rate;[25;63H[K[25;63H25,1[11C0%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H[32mdouble[0m X_error_rate;[25;63H[K[25;63H26,1[11C1%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H[32mdouble[0m Y_error_rate;[25;63H[K[25;63H27,1[11C1%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[19;36H[46m{[24;1H}[0m channel_error_model;[25;63H[K[25;63H28,1[11C2%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[18;36H{[23;1H}[25;63H[K[25;63H29,0-1[9C2%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[25;63H[K[25;63H30,0-1[9C3%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[25;63H[K[25;63H31,0-1[9C3%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;1H[34m/** \class QuantumChannel QuantumChannel.cc[0m[25;63H[K[25;63H32,1[11C4%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;1H[34m *  \todo Documentation of the class header.[0m[25;63H[K[25;63H33,1[11C4%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;1H[34m *[0m[25;63H[K[25;63H34,1[11C5%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;1H[34m *  \brief QuantumChannel[0m[25;63H[K[25;63H35,1[11C5%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;1H[34m */[0m[25;63H[K[25;63H36,1[11C6%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;1H[32mclass[0m QuantumChannel : [33mpublic[0m cDatarateChannel[25;63H[K[25;63H37,1[11C6%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;1H{[25;63H[K[25;63H38,1[11C7%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H[33mpublic[0m:[25;63H[K[25;63H39,1[11C7%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;9Hchannel_error_model err;[25;63H[K[25;63H40,1[11C8%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;9H[32mdouble[0m photon_loss_rate;[25;63H[K[25;63H41,1[11C8%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;9H[32mdouble[0m distance = [31m0[0m; [34m//in km[0m[25;63H[K[25;63H42,1[11C8%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;9H[34m//int less = 0, more = 0;[0m[25;63H[K[25;63H43,1[11C9%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H[33mprivate[0m:[25;63H[K[25;63H44,1[11C9%[24;1H[34h[?25h[?25l[1;24r[1;1H[2M[1;25r[23;8H[32mdouble[0m No_error_ceil;[24;8H[32mdouble[0m X_error_ceil;[25;63H[K[25;63H45,1[10C10%[23;1H[34h[?25h[?25l[25;64H6[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;8H[32mdouble[0m Y_error_ceil;[25;63H[K[25;63H47,1[10C10%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;8H[32mdouble[0m Z_error_ceil;[25;63H[K[25;63H48,1[10C11%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;8H[32mdouble[0m Lost_ceil;[25;63H[K[25;63H49,1[10C11%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;8H[32mint[0m DEBUG_darkcount_count = [31m0[0m;[25;63H[K[25;63H50,1[10C12%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;8HMatrixXd Q_to_the_distance;[25;63H[K[25;63H51,1[10C12%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;8H[32mvirtual[0m [32mvoid[0m setTransitionMatrix();[25;63H[K[25;63H52,1[10C13%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;8H[32mvirtual[0m [32mvoid[0m initialize();[25;63H[K[25;63H53,1[10C13%[24;1H[34h[?25h[?25l[1;24r[1;1H[2M[1;25r[23;8H[32mvirtual[0m [32mvoid[0m processMessage(cMessage *msg, simtime_t t, result_t& result))[24;1H;[25;63H[K[25;63H54,1[10C14%[23;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H[33mpublic[0m:[25;63H[K[25;63H55,1[10C15%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;8HQuantumChannel();[25;63H[K[25;63H56,1[10C15%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[25;63H[K[25;63H57,0-1[8C16%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[3;1H[46m{[24;1H}[0m;[25;63H[K[25;63H58,1[10C16%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[2;1H{[23;1H}[25;63H[K[25;63H59,0-1[8C16%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;1HDefine_Channel(QuantumChannel)[25;63H[K[25;63H60,1[10C17%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[25;63H[K[25;63H61,0-1[8C17%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;1HQuantumChannel::QuantumChannel()[25;63H[K[25;63H62,1[10C18%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;1H{[25;63H[K[25;63H63,1[10C18%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[25;63H[K[25;63H64,0-1[8C19%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[22;1H[46m{
+
+}[0m[25;63H[K[25;63H65,1[10C19%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[21;1H{
+
+}[25;63H[K[25;63H66,0-1[8C20%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;1H[32mvoid[0m QuantumChannel::initialize(){[25;63H[K[25;63H67,1[10C20%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5HcDatarateChannel::initialize();[25;63H[K[25;63H68,1[10C21%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5HQ_to_the_distance([31m5[0m,[31m5[0m);[25;63H[K[25;63H69,1[10C21%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5Hdistance = par([31m"distance"[0m);[34m//in km[0m[25;63H[K[25;63H70,1[10C22%[24;1H[34h[?25h[?25l[1;24r[1;1H[2M[1;25r[23;5H[32mdouble[0m Z_error_ratio = par([31m"Z_error_ratio"[0m);[34m//par("name") will be read from  [24;1H.ini or .ned file[0m[25;63H[K[25;63H71,1[10C23%[23;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H[32mdouble[0m X_error_ratio = par([31m"X_error_ratio"[0m);[25;63H[K[25;63H72,1[10C23%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H[32mdouble[0m Y_error_ratio = par([31m"Y_error_ratio"[0m);[25;63H[K[25;63H73,1[10C23%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H[32mdouble[0m Loss_error_ratio = par([31m"photon_loss_ratio"[0m);[25;63H[K[25;63H74,1[10C24%[24;1H[34h[?25h[?25l[1;24r[1;1H[3M[1;25r[22;5H[33mif[0m(Z_error_ratio==[31m0[0m && X_error_ratio==[31m0[0m && Y_error_ratio==[31m0[0m && Loss_error_raa[23;1Htio==[31m0[0m){[24;9HZ_error_ratio=[31m1[0m;[34m//To avoid bug.[0m[25;63H[K[25;63H75,1[10C25%[22;1H[34h[?25h[?25l[25;64H6[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;9HX_error_ratio=[31m1[0m;[25;63H[K[25;63H77,1[10C25%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;9HY_error_ratio=[31m1[0m;[25;63H[K[25;63H78,1[10C26%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;9HLoss_error_ratio=[31m1[0m;[25;63H[K[25;63H79,1[10C26%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H}[25;63H[K[25;63H80,1[10C27%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[25;63H[K[25;63H81,0-1[8C27%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[25;63H[K[25;63H82,0-1[8C28%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[25;63H[K[25;63H83,0-1[8C28%[24;1H[34h[?25h[?25l[1;24r[1;1H[2M[1;25r[23;5H[32mdouble[0m ratio_sum = Z_error_ratio + X_error_ratio + Y_error_ratio + Loss_erroo[24;1Hr_ratio;[34m//Get the sum of x:y:z for normalization[0m[25;63H[K[25;63H84,1[10C29%[23;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5Herr.pauli_error_rate = par([31m"channel_error_rate"[0m);[34m//This is per km.[0m[25;63H[K[25;63H85,1[10C29%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5Herr.X_error_rate = err.pauli_error_rate * (X_error_ratio/ratio_sum);[25;63H[K[25;63H86,1[10C30%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5Herr.Y_error_rate = err.pauli_error_rate * (Y_error_ratio/ratio_sum);[25;63H[K[25;63H87,1[10C30%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5Herr.Z_error_rate = err.pauli_error_rate * (Z_error_ratio/ratio_sum);[25;63H[K[25;63H88,1[10C31%[24;1H[34h[?25h[?25l[1;24r[1;1H[2M[1;25r[23;5Hphoton_loss_rate = err.pauli_error_rate * (Loss_error_ratio/ratio_sum);[34m//Phoo[24;1Hton Loss rate per km.[0m[25;63H[K[25;63H89,1[10C32%[23;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[25;63H[K[25;63H90,0-1[8C32%[24;1H[34h[?25h[?25l[1;24r[1;1H[2M[1;25r[23;5H[32mint[0m num_err_type = [31m0[0m;
+    [33mif[0m(X_error_ratio !=[31m0[0m){[25;63H[K[25;63H91,1[10C33%[23;1H[34h[?25h[?25l[25;64H2[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;9Hnum_err_type++;[25;63H[K[25;63H93,1[10C33%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H}[25;63H[K[25;63H94,1[10C34%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H[33mif[0m(Z_error_ratio !=[31m0[0m){[25;63H[K[25;63H95,1[10C34%[24;1H[34h[?25h[?25l[1;24r[1;1H[2M[1;25r[23;9Hnum_err_type++;
+    }[25;63H[K[25;63H96,1[10C35%[23;1H[34h[?25h[?25l[25;64H7[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H[33mif[0m(Y_error_ratio !=[31m0[0m){[25;63H[K[25;63H98,1[10C35%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;9Hnum_err_type++;[25;63H[K[25;63H99,1[10C36%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H}[25;63H[K[25;63H100,1[9C36%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[25;63H[K[25;63H101,0-1[7C37%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H[33mif[0m(([31m1[0m-err.pauli_error_rate) < [32mdouble[0m([31m1[0m)/[32mdouble[0m(num_err_type)){[25;63H[K[25;63H102,1[9C37%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;9H[34m//error("Error rate inaccurate.");[0m[25;63H[K[25;63H103,1[9C38%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;9Hstd::cout<<[31m"Inaccurate error rate [0m[35m\n[0m[31m"[0m;[25;63H[K[25;63H104,1[9C38%[24;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[24;5H}[25;63H[K[25;63H105,1[9C38%[24;1H[34h[?25h[?25l[1;24r[1;1H[2M[1;25r[24;5H[34m//std::cout<<"Sum of errors must be ... = "<<err.X_error_rate+err.Y_error_ra[0m[24;1H[1m[34m@                                                                               [0m[25;63H[K[25;63H106,0-1[7C39%[23;1H[34h[?25h[?25l[1;24r[24;1H
+[1;25r[23;1H    [34m//std::cout<<"Sum of errors must be ... = "<<err.X_error_rate+err.Y_error_raa[24;1Hte+err.Z_error_rate+photon_loss_rate<<"\n";[0m[25;63H[K[25;63H107,1[9C39%[23;1H[34h[?25h[?25l[1;24r[1;1H[3M[1;25r[22;5H[34m//std::cout<<"Channel err:"<<err.pauli_error_rate<<" X = " <<err.X_error_ratt[23;1He << "Y = "<< err.Y_error_rate << ", Z = "<< err.Z_error_rate<<",Loss"<<photon_ll[24;1Hoss_rate<<"\n";[0m[25;63H[K[25;63H108,1[9C40%[22;1H[34h[?25h[?25l[1;24r[1;1H[2M[1;25r[23;5HMatrixXd Transition_matrix([31m5[0m,[31m5[0m);[25;63H[K[25;63H109,1[9C41%[23;1H[34h[?25h[?25l[25;64H10,0-1[24;1H[34h[?25h[?25l[25;63H[K[25;1H:[34h[?25hq[?25l[34h[?25h[?25l[25;1H[K[25;1H[?1l>[34h[?25h[?1049l[1m[3m%[23m[1m[0m                                                                                [0m[23m[24m[Js0% [K[?1h=[?2004hvim QuantumChannel.cc[21D                     [21Dvim QuantumChannel.cc[21Dls                   [19Dcd channels[11Dls         [9Dcd ..ls   ../quisp -m -u Cmdenv -n .. omnetpp.ini -c Layer2_Simple_MIM_MM_5000[68Dvim[24P[13C                                                    [53D[15D../quisp -m -u Cmdenv -n .. omnetpp.ini -c Layer2_Simple_MIM_MM_5000[68Dscreen -ls                                                          [58D[10Dls        [8Dgit checkout LinkLayerProtocol[30Dls                            [28Dgit pull --all[10Dfetch --all[15Dfor remote in `git branch -r`; do git branch --track ${remote#origin/} $remote; done[KM[15P[11C[K[1B[KM[14C[10Dls        [8Dl  eexit[?1l>[?2004l[1B
