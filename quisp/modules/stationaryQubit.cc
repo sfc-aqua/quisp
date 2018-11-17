@@ -345,7 +345,7 @@ void stationaryQubit::X_gate(){
 void stationaryQubit::CNOT_gate(stationaryQubit *control_qubit){
     //Need to add noise here later
     apply_two_qubit_gate_error(CNOTgate_error, this, control_qubit);
-    std::cout<<"this X err = "<<this->par("GOD_Xerror").boolValue()<<"\n";
+    //std::cout<<"this X err = "<<this->par("GOD_Xerror").boolValue()<<"\n";
     if(control_qubit->par("GOD_Xerror")){
         par("GOD_Xerror") = !par("GOD_Xerror");//X error propagates from control to target. If an X error is already present, then it cancels out.
     }
@@ -433,7 +433,7 @@ void stationaryQubit::Lock(unsigned long rs_id, int rule_id, int action_id){
     locked_ruleset_id = rs_id;//Used to identify what this qubit is locked for.
     locked_rule_id = rule_id;
     action_index = action_id;
-    std::cout<<"*******************"<<this<<"in node["<<this->node_address<<"]Locked. Rsid="<<locked_ruleset_id<<" rid="<<locked_rule_id<<" aid="<<action_index<<"\n";
+    //std::cout<<"*******************"<<this<<"in node["<<this->node_address<<"]Locked. Rsid="<<locked_ruleset_id<<" rid="<<locked_rule_id<<" aid="<<action_index<<"\n";
 
 
     if(hasGUI()){

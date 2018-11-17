@@ -139,7 +139,7 @@ void Action::removeResource_fromRule(stationaryQubit *qubit){
 }
 
 cPacket* PurifyAction::run(cModule *re) {
-    std::cout<<"Purification!\n";
+    //std::cout<<"Purification!\n";
     stationaryQubit *qubit = nullptr;
     stationaryQubit *trash_qubit = nullptr;
 
