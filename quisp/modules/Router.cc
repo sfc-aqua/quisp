@@ -145,14 +145,18 @@ void Router::handleMessage(cMessage *msg)
             bubble("Purification result received");
             send(pk,"rePort$o");
             return;
+        }else if(destAddr == myAddress && dynamic_cast<DoublePurificationResult *>(msg)!= nullptr){
+            bubble("DoublePurification result received");
+            send(pk,"rePort$o");
+            return;
         }
 
         //Check if packet is reachable
         RoutingTable::iterator it = rtable.find(destAddr);
         if (it == rtable.end()) {
-            EV << "address " << destAddr << " unreachable, discarding packet " << pk->getName() << endl;
+            std::cout <<"In Node["<<myAddress<<"]Address... " << destAddr << " unreachable, discarding packet " << pk->getName() << endl;
             delete pk;
-            error("Shoudn't happen");
+            error("Router couldn't find the path. Shoudn't happen. Or maybe the router does not understand the packet.");
             return;
         }
 

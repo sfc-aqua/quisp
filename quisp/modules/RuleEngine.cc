@@ -202,6 +202,22 @@ void RuleEngine::handleMessage(cMessage *msg){
                    //std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
                    //std::cout<<"Locked one is "<<pkt->getEntangled_with()<<"in node["<<q->node_address<<"] \n";
                    storeCheck_Purification_Agreement(pr);
+        }else if(dynamic_cast<DoublePurificationResult *>(msg) != nullptr){
+            //std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
+            DoublePurificationResult *pkt = check_and_cast<DoublePurificationResult *>(msg);
+            //std::cout<<"Presult from node["<<pkt->getSrcAddr()<<"]\n";
+            process_id purification_id;
+            Doublepurification_result pr;
+            purification_id.ruleset_id = pkt->getRuleset_id();
+            purification_id.rule_id = pkt->getRule_id();
+            purification_id.index = pkt->getAction_index();
+            pr.id = purification_id;
+            pr.Xpurification_outcome = pkt->getXOutput_is_plus();
+            pr.Zpurification_outcome = pkt->getZOutput_is_plus();
+            stationaryQubit *q = check_and_cast<stationaryQubit *>(pkt->getEntangled_with());
+            //std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
+            //std::cout<<"Locked one is "<<pkt->getEntangled_with()<<"in node["<<q->node_address<<"] \n";
+            storeCheck_DoublePurification_Agreement(pr);
         }
 
         for(int i=0; i<number_of_qnics; i++){
@@ -262,6 +278,50 @@ void RuleEngine::storeCheck_Purification_Agreement(purification_result pr){
         //New data.
         //std::cout<<"New data arrived. Need to keep the outcome of rulset_id="<<pr.id.ruleset_id<<" Rule_id="<<pr.id.rule_id<<", index="<<pr.id.index<<"\n";
         Purification_table.insert(std::make_pair(pr.id.ruleset_id, pr));//Otherwise, if data has not been found, store it.
+    }
+}
+
+
+
+void RuleEngine::storeCheck_DoublePurification_Agreement(Doublepurification_result pr){
+
+    bool ruleset_running = false;
+    for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){
+               next_it = it; ++next_it;
+               RuleSet* process = it->second.Rs;//One Process. From top to bottom.
+               if(process->ruleset_id == pr.id.ruleset_id){
+                   ruleset_running = true;
+                   break;
+               }
+    }
+    if(rp.size()==0 || !ruleset_running){
+        //Probably process already finished. Delete the table and ignore the result.
+        return;
+    }else{
+        auto ret = DoublePurification_table.equal_range(pr.id.ruleset_id);//Find all resource in qytpe/qid entangled with partner.
+        //If the RuleSet has been deleted already, do not do anything.
+
+        for (auto it=ret.first; it!=ret.second; it++) {
+            if(it->second.id.rule_id == pr.id.rule_id && it->second.id.index == pr.id.index){
+                //std::cout<<"Rule_id="<<pr.id.rule_id<<", index="<<pr.id.index<<"\n";
+                //std::cout<<"node["<<parentAddress<<"] Rule found: Discard/Keep purification.\n";
+                if((it->second.Xpurification_outcome == pr.Xpurification_outcome) && (it->second.Zpurification_outcome == pr.Zpurification_outcome)){
+                    //Outcomes agreed. Keep the entangled pair.
+                    //std::cout<<"Unlocking and upgrading!\n";
+                    Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
+                }else{
+                    //Discard
+                    //std::cout<<"node["<<parentAddress<<"] discaard ";
+                    //std::cout<<"Unlocking and discarding!\n";
+                    Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
+                }
+                DoublePurification_table.erase(it);
+                return;
+           }
+        }
+        //New data.
+        //std::cout<<"New data arrived. Need to keep the outcome of rulset_id="<<pr.id.ruleset_id<<" Rule_id="<<pr.id.rule_id<<", index="<<pr.id.index<<"\n";
+        DoublePurification_table.insert(std::make_pair(pr.id.ruleset_id, pr));//Otherwise, if data has not been found, store it.
     }
 }
 
@@ -422,8 +482,7 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
     cModule *qnic_pointer;
 
     switch (qnic_type) {
-        case QNIC_E:
-            {
+        case QNIC_E:{
                 Interface_inf inf = getInterface_toNeighbor(destAddr);
                 qnic_index = inf.qnic.index;
                 qnic_address = inf.qnic.address;
@@ -897,25 +956,19 @@ void RuleEngine::traverseThroughAllProcesses2(){
                                 send(pk,"RouterPort$o");
                                 send(pk_for_self,"RouterPort$o");
                             }else if(dynamic_cast<PurificationResult *>(pk)!= nullptr){
-                                //error("error");
                                 PurificationResult *pkt = check_and_cast<PurificationResult *>(pk);
-                                //process_id purification_id;
-                                //purification_result pr;
                                 pkt->setSrcAddr(parentAddress);
-                                /*purification_id.ruleset_id = pkt->getRuleset_id();
-                                purification_id.rule_id = pkt->getRule_id();
-                                purification_id.index = pkt->getAction_index();
-                                pr.id = purification_id;
-                                pr.outcome = pkt->getOutput_is_plus();
-                                Purification_table.insert(std::make_pair(purification_id.ruleset_id, pr));//What about it the partner's result is already there?
-                                */
                                 PurificationResult *pk_for_self = pkt->dup();
                                 pk_for_self->setDestAddr(parentAddress);
-                                //std::cout<<"1. Presult sending."<<pkt->getRuleset_id()<<", "<<pkt->getRule_id()<<", "<<pkt->getAction_index()<<", "<<pkt->getEntangled_with()<<" from node["<<parentAddress<<"]\n";
-                                //std::cout<<"2. Presult sending."<<pk_for_self->getRuleset_id()<<", "<<pk_for_self->getRule_id()<<", "<<pk_for_self->getAction_index()<<", "<<pkt->getEntangled_with()<<" from node["<<parentAddress<<"]\n";
                                 send(pkt,"RouterPort$o");
                                 send(pk_for_self,"RouterPort$o");
-
+                            }else if(dynamic_cast<DoublePurificationResult *>(pk)!= nullptr){
+                                DoublePurificationResult *pkt = check_and_cast<DoublePurificationResult *>(pk);
+                                pkt->setSrcAddr(parentAddress);
+                                DoublePurificationResult *pk_for_self = pkt->dup();
+                                pk_for_self->setDestAddr(parentAddress);
+                                send(pkt,"RouterPort$o");
+                                send(pk_for_self,"RouterPort$o");
                             }else if (dynamic_cast<Error *>(pk)!= nullptr){
                                 Error *err = check_and_cast<Error *>(pk);
                                 error(err->getError_text());

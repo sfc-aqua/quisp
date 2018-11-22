@@ -16,90 +16,6 @@ namespace quisp {
 namespace rules {
 
 
-/*
-cPacket* SwappingAction::run(cModule *re, qnicResources* resources) {
-        stationaryQubit *lqubit = NULL, *rqubit = NULL;
-        lqubit = getQubit(resources,
-                left_qnic_type, left_qnic_id, left_partner, left_resource);
-        rqubit = getQubit(resources,
-                right_qnic_type, right_qnic_id, right_partner, right_resource);
-        if ((lqubit) && (rqubit)) {
-            // do swapping on lqubit and rqubit TODO
-            return 0;
-        }
-        // error
-}*/
-
-/*
-cPacket* PurifyAction::run(cModule *re, qnicResources* resources) {
-    stationaryQubit *qubit = NULL, *trash_qubit = NULL;
-    qubit = getUnLockedQubit_fromTop(resources,qnic_type,qnic_id,partner,resource);
-    trash_qubit = getUnLockedQubit_fromTop(resources,qnic_type,qnic_id,partner,trash_resource);
-    if ((qubit) && (trash_qubit)) {
-        if(qubit== trash_qubit){
-            Error *pk = new Error;
-            pk->setError_text("Qubit and Trash qubit are the same for purification. Something must be wrong.");
-            return pk;
-        }else{
-            // do purification where trash_qubit is in the measured pair TODO
-            //qubit->Lock(ruleset_id, rule_id);
-            //trash_qubit->Lock(static_action_id+purification_count);//You may not need this because this will be trashed soon anyway.
-            //purification_count++;
-            bool measurement_outcome_error = qubit->purify(trash_qubit);//Only error propagation. No density matrix calculation.
-
-            //Delete measured resource from the tracked list of resources.
-            RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
-            rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);
-            //Deleting done
-            return 0;
-        }
-    }else{
-        Error *pk = new Error;
-        pk->setError_text("Qubits not found for purification.");
-        return pk;
-    }
-    // error
-}*/
-
-
-/*
-cPacket* RandomMeasureAction::run(cModule *re, qnicResources* resources) {
-    EV<<"Measuring qubit now.\n";
-    stationaryQubit *qubit = NULL;
-    //qubit = getQubit(resources,qnic_type,qnic_id,partner,resource);
-    //qubit = getUnLockedQubit_fromTop(resources,qnic_type,qnic_id,partner,resource);
-    qubit = getResource_fromTop(resource);
-
-    if(qubit==nullptr){
-        Error *pk = new Error;
-        pk->setError_text("Qubit not found for measurement.");
-        return pk;
-    }else{
-
-        measurement_outcome o = qubit->measure_density_independent();
-        current_count++;
-
-        //Delete measured resource from the tracked list of resources.
-        RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
-        //std::cout<<"node["<<qubit->node_address<<"]Measure calling freeConsumedResource"<<qubit<<"\n";
-        rule_engine->freeConsumedResource(qnic_id, qubit, qnic_type);
-        //Deleting done
-
-        LinkTomographyResult *pk = new LinkTomographyResult;
-        pk->setSrcAddr(src);
-        pk->setDestAddr(dst);
-        pk->setCount_id(current_count);
-        pk->setPartner_address(src);//Partner's partner is self/src
-        pk->setKind(6);
-        pk->setOutput_is_plus(o.outcome_is_plus);
-        pk->setBasis(o.basis);
-        if(current_count==max_count){
-            pk->setFinish(simTime()-start);
-        }
-        return pk;
-    }
-}*/
-
 int Action::checkNumResource(){
     //std::cout << "Num resource = " << (*rule_resources).size()<<"\n";
     return (*rule_resources).size();
@@ -138,28 +54,14 @@ void Action::removeResource_fromRule(stationaryQubit *qubit){
     //std::cout<<"[Action] After: "<<(*rule_resources).size()<<"\n";
 }
 
+//Either Z or X purification.
 cPacket* PurifyAction::run(cModule *re) {
     //std::cout<<"Purification!\n";
     stationaryQubit *qubit = nullptr;
     stationaryQubit *trash_qubit = nullptr;
 
-    /*
-     for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
-         if(it->second->node_address==2 || it->second->node_address == 1){
-            if(it->second->isLocked())
-                std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[*resources] = "<<it->second<<"\n";
-            else
-                std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[resources] = "<<it->second<<"\n";
-         }
-        }
-    */
-
     qubit = getResource_fromTop(resource);
     trash_qubit = getResource_fromTop(trash_resource);
-
-    //std::cout<<"~~qubit ->"<<qubit<<"\n ~~trash = "<<trash_qubit<<"\n";
-
-
 
     if(qubit == trash_qubit){
         Error *pk = new Error;
@@ -171,7 +73,12 @@ cPacket* PurifyAction::run(cModule *re) {
         pk->setError_text("Not enough resource (Qubit and Trash_qubit) found. This should have been checked as a condition clause.");
         return pk;
     }
-    bool meas = trash_qubit->purify(qubit);//Error propagation only. Not based on density matrix
+    bool meas = false;
+    if(X && !Z)
+        meas = trash_qubit->Xpurify(qubit);//Error propagation only. Not based on density matrix
+    else if (!X && Z)
+        meas = trash_qubit->Zpurify(qubit);//Error propagation only. Not based on density matrix
+
     //std::cout<<"node["<<qubit->node_address<<"][before]Kept "<<qubit<<" locked="<<qubit->isLocked()<<", trashed"<<trash_qubit<<" locked="<<trash_qubit->isLocked()<<"\n";
     qubit->Lock(ruleset_id, rule_id, action_index);
     //std::cout<<"node["<<qubit->node_address<<"]after]Kept "<<qubit<<" locked="<<qubit->isLocked()<<", trashed"<<trash_qubit<<" locked="<<trash_qubit->isLocked()<<"\n";
@@ -185,17 +92,6 @@ cPacket* PurifyAction::run(cModule *re) {
     rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);//Remove from entangled resource list.
     //Deleting done
 
-    /*
-    for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
-        if(it->second->node_address==2  || it->second->node_address == 1 ){
-                if(it->second->isLocked())
-                    std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[*resources] = "<<it->second<<"\n";
-                else
-                    std::cout<<"node["<<it->second->node_address<<"]"<<ruleset_id<<"[resources] = "<<it->second<<"\n";
-        }
-            }
-    */
-
     PurificationResult *pk = new PurificationResult;
     pk->setDestAddr(partner);
     pk->setKind(7);
@@ -203,6 +99,64 @@ cPacket* PurifyAction::run(cModule *re) {
     pk->setRule_id(rule_id);
     pk->setRuleset_id(ruleset_id);
     pk->setOutput_is_plus(meas);
+    pk->setEntangled_with(qubit);
+    action_index++;
+    return pk;
+}
+
+
+
+//Either Z and X purification, simultaneously.
+cPacket* DoublePurifyAction::run(cModule *re) {
+
+    //std::cout<<"DoublePurification!\n";
+    stationaryQubit *qubit = nullptr;
+    stationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
+
+    qubit = getResource_fromTop(resource);
+    trash_qubit_X = getResource_fromTop(trash_resource_X);
+    trash_qubit_Z = getResource_fromTop(trash_resource_Z);
+
+    if(qubit == trash_qubit_X || qubit == trash_qubit_Z || trash_qubit_Z == trash_qubit_X){
+        Error *pk = new Error;
+        pk->setError_text("Qubit and Trash_qubit must be different.");
+        return pk;
+    }
+    if(qubit==nullptr || trash_qubit_Z == nullptr || trash_qubit_X == nullptr){
+        Error *pk = new Error;
+        pk->setError_text("Not enough resource (Qubit and Trash_qubit) found. This should have been checked as a condition clause.");
+        return pk;
+    }
+    bool meas_X, meas_Z = false;
+
+    meas_X = trash_qubit_X->Xpurify(qubit);//Error propagation only. Not based on density matrix
+    meas_Z = trash_qubit_Z->Zpurify(qubit);//Error propagation only. Not based on density matrix
+
+    //std::cout<<"node["<<qubit->node_address<<"][before]Kept "<<qubit<<" locked="<<qubit->isLocked()<<", trashed"<<trash_qubit<<" locked="<<trash_qubit->isLocked()<<"\n";
+    qubit->Lock(ruleset_id, rule_id, action_index);
+    //std::cout<<"node["<<qubit->node_address<<"]after]Kept "<<qubit<<" locked="<<qubit->isLocked()<<", trashed"<<trash_qubit<<" locked="<<trash_qubit->isLocked()<<"\n";
+
+    if(trash_qubit_Z->entangled_partner!=nullptr)//Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density matrix since we are only tracking errors.
+        trash_qubit_Z->entangled_partner->entangled_partner=nullptr;//Break entanglement.
+    if(trash_qubit_X->entangled_partner!=nullptr)//Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density matrix since we are only tracking errors.
+            trash_qubit_X->entangled_partner->entangled_partner=nullptr;//Break entanglement.
+    //Delete measured resource from the tracked list of resources.
+    removeResource_fromRule(trash_qubit_X);//Remove from resource list in this Rule.
+    removeResource_fromRule(trash_qubit_Z);//Remove from resource list in this Rule.
+    RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
+    //std::cout<<"node["<<qubit->node_address<<"]Purification calling freeConsumedResource"<<trash_qubit<<"\n";
+    rule_engine->freeConsumedResource(qnic_id, trash_qubit_X, qnic_type);//Remove from entangled resource list.
+    rule_engine->freeConsumedResource(qnic_id, trash_qubit_Z, qnic_type);
+    //Deleting done
+
+    DoublePurificationResult *pk = new DoublePurificationResult;
+    pk->setDestAddr(partner);
+    pk->setKind(7);
+    pk->setAction_index(action_index);
+    pk->setRule_id(rule_id);
+    pk->setRuleset_id(ruleset_id);
+    pk->setXOutput_is_plus(meas_X);
+    pk->setZOutput_is_plus(meas_Z);
     pk->setEntangled_with(qubit);
     action_index++;
     return pk;

@@ -471,30 +471,34 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
             int rule_index = 0;
 
-            if(num_purification_tomography>0){/*RuleSet including purification*/
+            if(num_purification_tomography>0){/*RuleSet including purification. CUrrently, not looping.*/
+
+                //X or Z purification
+                if((X_Purification && !Z_Purification)  || (!X_Purification && Z_Purification)){
+                    Rule* Purification = new Rule(RuleSet_id, rule_index);
+                    Condition* Purification_condition = new Condition();
+                    Clause* resource_clause = new EnoughResourceClause(2);
+                    Purification_condition->addClause(resource_clause);
+                    Purification->setCondition(Purification_condition);
+                    Action* purify_action = new PurifyAction(RuleSet_id,rule_index,X_Purification,Z_Purification, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
+                    Purification->setAction(purify_action);
+                    rule_index++;
+                    tomography_RuleSet->addRule(Purification);
+                }else{//X, Z double purification
+
+                    Rule* Purification = new Rule(RuleSet_id, rule_index);
+                    Condition* Purification_condition = new Condition();
+                    Clause* resource_clause = new EnoughResourceClause(3);
+                    Purification_condition->addClause(resource_clause);
+                    Purification->setCondition(Purification_condition);
+                    Action* purify_action = new DoublePurifyAction(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
+                    Purification->setAction(purify_action);
+                    rule_index++;
+                    tomography_RuleSet->addRule(Purification);
+
+                }
 
 
-                Rule* Purification = new Rule(RuleSet_id, rule_index);
-                Condition* Purification_condition = new Condition();
-                Clause* resource_clause = new EnoughResourceClause(num_purification_tomography+1);
-                Purification_condition->addClause(resource_clause);
-                Purification->setCondition(Purification_condition);
-                Action* purify_action = new PurifyAction(RuleSet_id,rule_index,X_Purification,Z_Purification, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
-                Purification->setAction(purify_action);
-                rule_index++;
-                tomography_RuleSet->addRule(Purification);
-
-                /*
-                Rule* PurificationZ = new Rule(RuleSet_id, rule_index);
-                Condition* PurificationZ_condition = new Condition();
-                Clause* resource_clause = new EnoughResourceClause(num_purification_tomography+1);
-                PurificationZ_condition->addClause(resource_clause);
-                PurificationZ->setCondition(Purification_condition);
-                Action* purifyZ_action = new PurifyAction(RuleSet_id,rule_index,X_Purification,Z_Purification, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
-                Purification->setAction(purify_action);
-                rule_index++;
-                tomography_RuleSet->addRule(Purification);
-                */
 
                 Rule* Random_measure_tomo = new Rule(RuleSet_id, rule_index);//Let's make nodes select measurement basis randomly, because it it easier.
                 Condition* total_measurements = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.

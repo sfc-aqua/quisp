@@ -618,7 +618,7 @@ void stationaryQubit::addZerror(){
 }
 
 // Only tracks error propagation. If two booleans (Alice and Bob) agree (truetrue or falsefalse), keep the purified ebit.
-bool stationaryQubit::purify(stationaryQubit * resource_qubit/*Controlled*/) {
+bool stationaryQubit::Xpurify(stationaryQubit * resource_qubit/*Controlled*/) {
     apply_memory_error(this);//This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
     apply_memory_error(resource_qubit);
     /*Target qubit*/this->CNOT_gate(resource_qubit/*controlled qubit*/);
@@ -626,7 +626,7 @@ bool stationaryQubit::purify(stationaryQubit * resource_qubit/*Controlled*/) {
     return meas;
 }
 
-bool stationaryQubit::purifyZ(stationaryQubit * resource_qubit/*Target*/) {
+bool stationaryQubit::Zpurify(stationaryQubit * resource_qubit/*Target*/) {
     apply_memory_error(this);//This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
     apply_memory_error(resource_qubit);
     /*Target qubit*/resource_qubit->CNOT_gate(this/*controlled qubit*/);

@@ -121,49 +121,34 @@ class PurifyAction : public Action {
 
 
 
-class PurifyZAction : public Action {
+class DoublePurifyAction : public Action {
     protected:
         int partner; /**< Identifies entanglement partner. */
         QNIC_type qnic_type;
         int qnic_id;
         int resource; /**< Identifies qubit */
-        int trash_resource;
+        int trash_resource_Z;
+        int trash_resource_X;
         int mutable purification_count;//Used for locked_id in stationaryQubit. You unlock the qubit when purification is successful.
         bool X;
         bool Z;
         int num_purify;
         int action_index = 0;//To track how many times this particular action has been invoked.
     public:
-        PurifyZAction(int part, QNIC_type qt, int qi, int res, int tres, int rs_id, int r_id) {
-            partner = part;
-            qnic_type = qt;
-            qnic_id = qi;
-            resource = res;/*The one to purify. Index from top to bottom.*/
-            trash_resource = tres;/*The one to consume to purify*/
-            purification_count = 0;
-            rule_id = r_id;
-            ruleset_id = rs_id;
-            //action_index++;
+        DoublePurifyAction(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z){
+                   partner =part;
+                   qnic_type = qt;
+                   qnic_id = qi;
+                   resource = res;
+                   trash_resource_X = tres_X;
+                   trash_resource_Z = tres_Z;
+                   rule_id = rule_index;
+                   ruleset_id = RuleSet_id;
+                   //action_index++;
         };
-        PurifyZAction(unsigned long RuleSet_id, int rule_index,bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res, int tres){
-            partner =part;
-            qnic_type = qt;
-            qnic_id = qi;
-            resource = res;
-            trash_resource = tres;
-            purification_count = num_purification;
-            rule_id = rule_index;
-            ruleset_id = RuleSet_id;
-            num_purify = num_purification;
-            X = X_purification;
-            Z = Z_purification;
-            //action_index++;
-        };
-        PurifyZAction(){
+        DoublePurifyAction(){
 
         };
-        //cPacket* run(qnicResources *resources) override;
-        //cPacket* run(cModule *re, qnicResources *resources) override;
         cPacket* run(cModule *re) override;
 };
 

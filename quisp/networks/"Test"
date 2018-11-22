@@ -18,3 +18,73 @@ EndNode1[0]<-->QuantumChannel{cost=1168.48;distance=20km;fidelity=0.892289;bellp
 EndNode2[0]<-->QuantumChannel{cost=723.958;distance=10km;fidelity=0.889416;bellpair_per_sec=174613;tomography_time=0.1718082398;tomography_measurements=30000;actualmeas=30000;}<-->HoM1[0] F=0.889416 X=0.0212201 Z=0.070289 Y=0.0190752
 Repeater1[0]<-->QuantumChannel{cost=1168.48;distance=20km;fidelity=0.892289;bellpair_per_sec=107490;tomography_time=0.27909567936;tomography_measurements=30000;actualmeas=30000;}<-->EndNode1[0] F=0.892289 X=0.012673 Z=0.0724844 Y=0.0225532
 Repeater1[0]<-->QuantumChannel{cost=723.958;distance=10km;fidelity=0.889416;bellpair_per_sec=174613;tomography_time=0.1718082398;tomography_measurements=30000;actualmeas=30000;}<-->HoM1[0] F=0.889416 X=0.0212201 Z=0.070289 Y=0.0190752
+EndNode1[0]<-->QuantumChannel{cost=25593.3;distance=20km;fidelity=0.954913;bellpair_per_sec=4284.95;tomography_time=10.50186812475;tomography_measurements=45000;actualmeas=45000;}<-->Repeater1[0] F=0.954913 X=-0.00409339 Z=0.0450869 Y=0.00409339
+EndNode2[0]<-->QuantumChannel{cost=25301.8;distance=10km;fidelity=0.951761;bellpair_per_sec=4363.07;tomography_time=10.313835264648;tomography_measurements=45000;actualmeas=45000;}<-->HoM1[0] F=0.951761 X=0.00034694 Z=0.0482393 Y=-0.00034694
+Repeater1[0]<-->QuantumChannel{cost=25593.3;distance=20km;fidelity=0.954913;bellpair_per_sec=4284.95;tomography_time=10.50186812475;tomography_measurements=45000;actualmeas=45000;}<-->EndNode1[0] F=0.954913 X=-0.00409339 Z=0.0450869 Y=0.00409339
+Repeater1[0]<-->QuantumChannel{cost=25301.8;distance=10km;fidelity=0.951761;bellpair_per_sec=4363.07;tomography_time=10.313835264648;tomography_measurements=45000;actualmeas=45000;}<-->HoM1[0] F=0.951761 X=0.00034694 Z=0.0482393 Y=-0.00034694
+EndNode1[0]<-->QuantumChannel{cost=33291.4;distance=20km;fidelity=0.824157;bellpair_per_sec=4422.3;tomography_time=10.175703057595;tomography_measurements=45000;actualmeas=45000;}<-->Repeater1[0] F=0.824157 X=0.00272808 Z=0.175843 Y=-0.00272808
+EndNode2[0]<-->QuantumChannel{cost=33341.8;distance=10km;fidelity=0.819949;bellpair_per_sec=4461.05;tomography_time=10.087311276712;tomography_measurements=45000;actualmeas=45000;}<-->HoM1[0] F=0.819949 X=0.000724783 Z=0.180051 Y=-0.000724783
+Repeater1[0]<-->QuantumChannel{cost=33291.4;distance=20km;fidelity=0.824157;bellpair_per_sec=4422.3;tomography_time=10.175703057595;tomography_measurements=45000;actualmeas=45000;}<-->EndNode1[0] F=0.824157 X=0.00272808 Z=0.175843 Y=-0.00272808
+Repeater1[0]<-->QuantumChannel{cost=33341.8;distance=10km;fidelity=0.819949;bellpair_per_sec=4461.05;tomography_time=10.087311276712;tomography_measurements=45000;actualmeas=45000;}<-->HoM1[0] F=0.819949 X=0.000724783 Z=0.180051 Y=-0.000724783
+EndNode1[0]<-->QuantumChannel{cost=25593.3;distance=20km;fidelity=0.954913;bellpair_per_sec=4284.95;tomography_time=10.50186812475;tomography_measurements=45000;actualmeas=45000;}<-->Repeater1[0] F=0.954913 X=-0.00409339 Z=0.0450869 Y=0.00409339
+EndNode2[0]<-->QuantumChannel{cost=25301.8;distance=10km;fidelity=0.951761;bellpair_per_sec=4363.07;tomography_time=10.313835264648;tomography_measurements=45000;actualmeas=45000;}<-->HoM1[0] F=0.951761 X=0.00034694 Z=0.0482393 Y=-0.00034694
+Repeater1[0]<-->QuantumChannel{cost=25593.3;distance=20km;fidelity=0.954913;bellpair_per_sec=4284.95;tomography_time=10.50186812475;tomography_measurements=45000;actualmeas=45000;}<-->EndNode1[0] F=0.954913 X=-0.00409339 Z=0.0450869 Y=0.00409339
+Repeater1[0]<-->QuantumChannel{cost=25301.8;distance=10km;fidelity=0.951761;bellpair_per_sec=4363.07;tomography_time=10.313835264648;tomography_measurements=45000;actualmeas=45000;}<-->HoM1[0] F=0.951761 X=0.00034694 Z=0.0482393 Y=-0.00034694
+EndNode1[0]<-->QuantumChannel{cost=25593.3;distance=20km;fidelity=0.954913;bellpair_per_sec=4284.95;tomography_time=10.50186812475;tomography_measurements=45000;actualmeas=45000;}<-->Repeater1[0] F=0.954913 X=-0.00409339 Z=0.0450869 Y=0.00409339
+EndNode2[0]<-->QuantumChannel{cost=25301.8;distance=10km;fidelity=0.951761;bellpair_per_sec=4363.07;tomography_time=10.313835264648;tomography_measurements=45000;actualmeas=45000;}<-->HoM1[0] F=0.951761 X=0.00034694 Z=0.0482393 Y=-0.00034694
+Repeater1[0]<-->QuantumChannel{cost=25593.3;distance=20km;fidelity=0.954913;bellpair_per_sec=4284.95;tomography_time=10.50186812475;tomography_measurements=45000;actualmeas=45000;}<-->EndNode1[0] F=0.954913 X=-0.00409339 Z=0.0450869 Y=0.00409339
+Repeater1[0]<-->QuantumChannel{cost=25301.8;distance=10km;fidelity=0.951761;bellpair_per_sec=4363.07;tomography_time=10.313835264648;tomography_measurements=45000;actualmeas=45000;}<-->HoM1[0] F=0.951761 X=0.00034694 Z=0.0482393 Y=-0.00034694
+
+network = Layer2_Simple_MIM_MM
+seed-set = 0
+**.num_measure = 30000
+**.buffers = 100
+**.tomography_output_filename = "test"
+
+# Error on stationary qubit 
+**.emission_error_rate = 0.1 #0% per shot. (Error on stationary qubit that emitted the photon.)
+**.emission_Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.emission_X_error_ratio = 1 #ratio. Not the error rate!!
+**.emission_Y_error_ratio = 1 #ratio. Not the error rate!!
+
+# Error on optical qubit in a channel
+**.channel_error_rate = 0.0 #per km. Max = 1 = 100%
+**.photon_loss_ratio = 1 # per km. 1% = 0.01
+**.Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.X_error_ratio = 1 #ratio. Not the error rate!!
+**.Y_error_ratio = 1 #ratio. Not the error rate!!
+
+**.memory_error_rate = 0.00 #per μs
+**.memory_X_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Y_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.memory_energy_excitation_ratio = 1
+**.memory_energy_relaxation_ratio = 1
+**.memory_complitely_mixed_ratio = 1
+
+**.link_tomography = true
+**.initial_purification = 1
+**.X_purification = true
+**.Z_purification = true
+
+Z purification only
+EndNode1[0]<-->QuantumChannel{cost=46725.7;distance=20km;fidelity=0.857162;bellpair_per_sec=2912.86;tomography_time=10.29917183255;tomography_measurements=30000;actualmeas=30000;}<-->Repeater1[0] F=0.857162 X=0.120768 Z=0.00192913 Y=0.0201407
+EndNode2[0]<-->QuantumChannel{cost=47183;distance=10km;fidelity=0.848405;bellpair_per_sec=2944.47;tomography_time=10.188574138408;tomography_measurements=30000;actualmeas=30000;}<-->HoM1[0] F=0.848405 X=0.132663 Z=0.0168721 Y=0.00205921
+Repeater1[0]<-->QuantumChannel{cost=46725.7;distance=20km;fidelity=0.857162;bellpair_per_sec=2912.86;tomography_time=10.29917183255;tomography_measurements=30000;actualmeas=30000;}<-->EndNode1[0] F=0.857162 X=0.120768 Z=0.00192913 Y=0.0201407
+Repeater1[0]<-->QuantumChannel{cost=47183;distance=10km;fidelity=0.848405;bellpair_per_sec=2944.47;tomography_time=10.188574138408;tomography_measurements=30000;actualmeas=30000;}<-->HoM1[0] F=0.848405 X=0.132663 Z=0.0168721 Y=0.00205921
+X purification only
+EndNode1[0]<-->QuantumChannel{cost=47797.2;distance=20km;fidelity=0.847507;bellpair_per_sec=2912.8;tomography_time=10.29936674328;tomography_measurements=30000;actualmeas=30000;}<-->Repeater1[0] F=0.847507 X=0.00509044 Z=0.131491 Y=0.0159117
+EndNode2[0]<-->QuantumChannel{cost=46697.8;distance=10km;fidelity=0.852785;bellpair_per_sec=2944.59;tomography_time=10.188184144952;tomography_measurements=30000;actualmeas=30000;}<-->HoM1[0] F=0.852785 X=0.0041434 Z=0.129508 Y=0.0135637
+Repeater1[0]<-->QuantumChannel{cost=47797.2;distance=20km;fidelity=0.847507;bellpair_per_sec=2912.8;tomography_time=10.29936674328;tomography_measurements=30000;actualmeas=30000;}<-->EndNode1[0] F=0.847507 X=0.00509044 Z=0.131491 Y=0.0159117
+Repeater1[0]<-->QuantumChannel{cost=46697.8;distance=10km;fidelity=0.852785;bellpair_per_sec=2944.59;tomography_time=10.188184144952;tomography_measurements=30000;actualmeas=30000;}<-->HoM1[0] F=0.852785 X=0.0041434 Z=0.129508 Y=0.0135637
+No purification
+EndNode1[0]<-->QuantumChannel{cost=51158;distance=20km;fidelity=0.811928;bellpair_per_sec=2965.18;tomography_time=10.117427739325;tomography_measurements=30000;actualmeas=30000;}<-->Repeater1[0] F=0.811928 X=0.0669404 Z=0.0639173 Y=0.0572145
+EndNode2[0]<-->QuantumChannel{cost=50589;distance=10km;fidelity=0.81409;bellpair_per_sec=2982.62;tomography_time=10.05825631724;tomography_measurements=30000;actualmeas=30000;}<-->HoM1[0] F=0.81409 X=0.0637698 Z=0.0597456 Y=0.0623942
+Repeater1[0]<-->QuantumChannel{cost=51158;distance=20km;fidelity=0.811928;bellpair_per_sec=2965.18;tomography_time=10.117427739325;tomography_measurements=30000;actualmeas=30000;}<-->EndNode1[0] F=0.811928 X=0.0669404 Z=0.0639173 Y=0.0572145
+Repeater1[0]<-->QuantumChannel{cost=50589;distance=10km;fidelity=0.81409;bellpair_per_sec=2982.62;tomography_time=10.05825631724;tomography_measurements=30000;actualmeas=30000;}<-->HoM1[0] F=0.81409 X=0.0637698 Z=0.0597456 Y=0.0623942
+XZ purification
+EndNode1[0]<-->QuantumChannel{cost=44258.8;distance=20km;fidelity=0.89304;bellpair_per_sec=2833.08;tomography_time=10.58918192179;tomography_measurements=30000;actualmeas=30000;}<-->Repeater1[0] F=0.89304 X=0.0858696 Z=0.00729253 Y=0.0137982
+EndNode2[0]<-->QuantumChannel{cost=42407.5;distance=10km;fidelity=0.90161;bellpair_per_sec=2900.81;tomography_time=10.34192769348;tomography_measurements=30000;actualmeas=30000;}<-->HoM1[0] F=0.90161 X=0.0726874 Z=0.0137958 Y=0.0119066
+Repeater1[0]<-->QuantumChannel{cost=44258.8;distance=20km;fidelity=0.89304;bellpair_per_sec=2833.08;tomography_time=10.58918192179;tomography_measurements=30000;actualmeas=30000;}<-->EndNode1[0] F=0.89304 X=0.0858696 Z=0.00729253 Y=0.0137982
+Repeater1[0]<-->QuantumChannel{cost=42407.5;distance=10km;fidelity=0.90161;bellpair_per_sec=2900.81;tomography_time=10.34192769348;tomography_measurements=30000;actualmeas=30000;}<-->HoM1[0] F=0.90161 X=0.0726874 Z=0.0137958 Y=0.0119066
+
