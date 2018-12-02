@@ -32,11 +32,13 @@ typedef struct _emission_error_model{
     double Z_error_rate;
     double X_error_rate;
     double Y_error_rate;
+    double Loss_error_rate;
 
     double No_error_ceil;
     double X_error_ceil;
     double Y_error_ceil;
     double Z_error_ceil;
+    double Loss_error_ceil;
 } emission_error_model;
 
 typedef struct _gate_error_model{
@@ -168,6 +170,7 @@ class stationaryQubit : public cSimpleModule
         /** Standard deviation */
         double std;
 
+        double emission_success_probability;
         /** @name Pauli errors when emitting photons
         *  @{
         */
@@ -303,6 +306,7 @@ class stationaryQubit : public cSimpleModule
         unsigned long locked_ruleset_id;
         int locked_rule_id;
         int action_index;
+
 
     private:
 

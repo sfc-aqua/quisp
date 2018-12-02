@@ -34,14 +34,17 @@ void stationaryQubit::initialize()
     double Z_error_ratio = par("emission_Z_error_ratio");//par("name") will be read from .ini or .ned file
     double X_error_ratio = par("emission_X_error_ratio");
     double Y_error_ratio = par("emission_Y_error_ratio");
+    emission_success_probability = par("emission_success_probability");
     double ratio_sum = Z_error_ratio+X_error_ratio+Y_error_ratio;//Get the sum of x:y:z for normalization
     emission_error.pauli_error_rate = par("emission_error_rate");//This is per photon emission.
     emission_error.X_error_rate = emission_error.pauli_error_rate * (X_error_ratio/ratio_sum);
     emission_error.Y_error_rate = emission_error.pauli_error_rate * (Y_error_ratio/ratio_sum);
     emission_error.Z_error_rate = emission_error.pauli_error_rate * (Z_error_ratio/ratio_sum);
+    //emission_error.Loss_error_rate = emission_error.pauli_error_rate * (emission_loss_ratio/ratio_sum);
     emission_error.No_error_ceil =1-emission_error.pauli_error_rate;/* if 0 <= dblrand < fidelity = No error*/
     emission_error.X_error_ceil = emission_error.No_error_ceil + emission_error.X_error_rate; /* if fidelity <= dblrand < fidelity+X error rate = X error*/
     emission_error.Z_error_ceil = emission_error.X_error_ceil + emission_error.Z_error_rate;
+    //emission_error.Y_error_ceil = emission_error.Z_error_ceil+emission_error.Y_error_rate;
     emission_error.Y_error_ceil = 1;
 
     //setErrorCeilings();
@@ -262,7 +265,14 @@ void stationaryQubit::handleMessage(cMessage *msg){
     bubble("Got a photon!!");
     setBusy();
     setEmissionPauliError();
-    send(msg, "tolens_quantum_port$o");
+    double rand = dblrand();
+    if(rand>emission_success_probability){
+        PhotonicQubit *pk = check_and_cast<PhotonicQubit *>(msg);
+        pk->setPhotonLost(true);
+        send(pk, "tolens_quantum_port$o");
+    }else{
+        send(msg, "tolens_quantum_port$o");
+    }
 }
 
 void stationaryQubit::setEmissionPauliError(){
@@ -619,6 +629,7 @@ void stationaryQubit::addZerror(){
 
 // Only tracks error propagation. If two booleans (Alice and Bob) agree (truetrue or falsefalse), keep the purified ebit.
 bool stationaryQubit::Xpurify(stationaryQubit * resource_qubit/*Controlled*/) {
+    //std::cout<<"X puri\n";
     apply_memory_error(this);//This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
     apply_memory_error(resource_qubit);
     /*Target qubit*/this->CNOT_gate(resource_qubit/*controlled qubit*/);
@@ -627,6 +638,7 @@ bool stationaryQubit::Xpurify(stationaryQubit * resource_qubit/*Controlled*/) {
 }
 
 bool stationaryQubit::Zpurify(stationaryQubit * resource_qubit/*Target*/) {
+    //std::cout<<"Z puri\n";
     apply_memory_error(this);//This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
     apply_memory_error(resource_qubit);
     /*Target qubit*/resource_qubit->CNOT_gate(this/*controlled qubit*/);
