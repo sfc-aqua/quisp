@@ -181,8 +181,9 @@ cPacket* RandomMeasureAction::run(cModule *re) {
 
 
     qubit = getResource_fromTop(resource);
-
-
+	
+	if(qubit->getIndex() == 71 && qubit->node_address == 3)
+		std::cout<<"===Action "<<qubit<<" in node["<<qubit->node_address<<"] selected to be measred \n";
 
     if(qubit==nullptr){
         Error *pk = new Error;

@@ -767,7 +767,9 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
             //std::cout<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"] node addr["<<it->first<<"] \n";
             //Add this as an available resource
             stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
-
+			if(qubit->getIndex() == 71 && qubit->node_address == 3){
+				std::cout<<"+++++++++++++++++++++++++"<<qubit<<"in node["<<qubit->node_address<<"] added as a resource++++++++++++++++++++\n";
+			}
             if(qubit->entangled_partner!=nullptr){
                 if(qubit->entangled_partner->entangled_partner==nullptr){
                     std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";

@@ -324,6 +324,7 @@ bool BellStateAnalyzer::isPhotonLost(cMessage *msg){
 
 void BellStateAnalyzer::GOD_setCompletelyMixedDensityMatrix(){
     //error("Hrtr");
+	std::cout<<"Darkcount CM "<<left_statQubit_ptr<<", "<<right_statQubit_ptr<<"\n";
     left_statQubit_ptr->setCompletelyMixedDensityMatrix();
     right_statQubit_ptr->setCompletelyMixedDensityMatrix();
 }
@@ -331,6 +332,14 @@ void BellStateAnalyzer::GOD_setCompletelyMixedDensityMatrix(){
 
 /*Error on flying qubit with a successful BSA propagates to its original stationary qubit. */
 void BellStateAnalyzer:: GOD_updateEntangledInfoParameters_of_qubits(){
+	
+	if(left_statQubit_ptr->getIndex() == 71 && left_statQubit_ptr->node_address == 3)
+		std::cout<<"###BSA detected entangling "<<left_statQubit_ptr<<" in node["<<left_statQubit_ptr<<"], "<<right_statQubit_ptr<<" in node ["<<right_statQubit_ptr->node_address<<"]\n";	
+	if(right_statQubit_ptr->getIndex() == 71 && right_statQubit_ptr->node_address == 3)
+		std::cout<<"###BSA detected entangling "<<left_statQubit_ptr<<" in node["<<left_statQubit_ptr<<"], "<<right_statQubit_ptr<<" in node ["<<right_statQubit_ptr->node_address<<"]\n";	
+	std::cout<<"###BSA detected entangling "<<left_statQubit_ptr<<" in node["<<left_statQubit_ptr<<"], "<<right_statQubit_ptr<<" in node ["<<right_statQubit_ptr->node_address<<"]\n";	
+
+
     EV<<"Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<" with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"\n";
     left_statQubit_ptr->setEntangledPartnerInfo(right_statQubit_ptr);
     if(left_photon_Xerr)//If Photon had an X error
