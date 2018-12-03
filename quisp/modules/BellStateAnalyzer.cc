@@ -199,15 +199,18 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
                 if(!right_photon_lost && (left_photon_lost && darkcount_left <= darkcount_probability)){
                     //error("Dark count :)");
                     DEBUG_darkcount_left++;
+    				std::cout<<"CM Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
                     GOD_setCompletelyMixedDensityMatrix();
                     sendBSAresult(false, send_result);
                 }else if(!left_photon_lost && (right_photon_lost && darkcount_right <= darkcount_probability)){
                     //error("Dark count :)");
+    				std::cout<<"CM Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
                     DEBUG_darkcount_right++;
                     GOD_setCompletelyMixedDensityMatrix();
                     sendBSAresult(false, send_result);
                 }else if((left_photon_lost && darkcount_left <= darkcount_probability) &&  (right_photon_lost &&  darkcount_right <= darkcount_probability)){
                     //error("Dark count :)");
+    				std::cout<<"CM Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
                     DEBUG_darkcount_both++;
                     GOD_setCompletelyMixedDensityMatrix();
                     sendBSAresult(false, send_result);
@@ -221,8 +224,11 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
             }//we also need else if for darkcount....
             else{
                 bubble("Failed...!");
-                EV<<"rand = "<<rand<<" <"<<BSAsuccess_rate;
-                sendBSAresult(true, send_result);//just failed because only 1 detector clicked while both reached
+                //EV<<"rand = "<<rand<<" <"<<BSAsuccess_rate;
+                
+    		  std::cout<<"Failed Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
+				
+				sendBSAresult(true, send_result);//just failed because only 1 detector clicked while both reached
             }DEBUG_total++;
 
         initializeVariables();
@@ -272,14 +278,16 @@ void BellStateAnalyzer::sendBSAresult(bool result,bool sendresults){
     //result could be false positive (actually ok but recognized as ng),
     //false negative (actually ng but recognized as ok) due to darkcount
     //true positive and true negative is no problem.
-    //EV<<"send?="<<sendresults<<"___________________________________\n";
+    //std::cout<<"send?="<<sendresults<<"___________________________________\n";
     if(!sendresults){
         BSAresult *pk = new BSAresult;
+    	std::cout<<"send result to HoM___\n";
         pk->setEntangled(result);
         send(pk, "toHoMController_port");
     }else{//Was the last photon. End pulse detected.
         BSAfinish *pk = new BSAfinish();
         pk->setKind(7);
+    	std::cout<<"send last result to HoM___\n";
         pk->setEntangled(result);
         send(pk, "toHoMController_port");
         bubble("trial done now");
@@ -333,14 +341,9 @@ void BellStateAnalyzer::GOD_setCompletelyMixedDensityMatrix(){
 /*Error on flying qubit with a successful BSA propagates to its original stationary qubit. */
 void BellStateAnalyzer:: GOD_updateEntangledInfoParameters_of_qubits(){
 	
-	if(left_statQubit_ptr->getIndex() == 71 && left_statQubit_ptr->node_address == 3)
-		std::cout<<"###BSA detected entangling "<<left_statQubit_ptr<<" in node["<<left_statQubit_ptr<<"], "<<right_statQubit_ptr<<" in node ["<<right_statQubit_ptr->node_address<<"]\n";	
-	if(right_statQubit_ptr->getIndex() == 71 && right_statQubit_ptr->node_address == 3)
-		std::cout<<"###BSA detected entangling "<<left_statQubit_ptr<<" in node["<<left_statQubit_ptr<<"], "<<right_statQubit_ptr<<" in node ["<<right_statQubit_ptr->node_address<<"]\n";	
-	std::cout<<"###BSA detected entangling "<<left_statQubit_ptr<<" in node["<<left_statQubit_ptr<<"], "<<right_statQubit_ptr<<" in node ["<<right_statQubit_ptr->node_address<<"]\n";	
 
 
-    EV<<"Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<" with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"\n";
+    std::cout<<"Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
     left_statQubit_ptr->setEntangledPartnerInfo(right_statQubit_ptr);
     if(left_photon_Xerr)//If Photon had an X error
         left_statQubit_ptr->addXerror();//Add X error to the stationary qubit.
