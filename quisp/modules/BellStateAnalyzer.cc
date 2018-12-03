@@ -58,11 +58,13 @@ class BellStateAnalyzer : public cSimpleModule
         int count_X=0, count_Y=0, count_Z=0, count_I=0, count_L=0, count_total=0;//for debug
         //bool handshake = false;
         bool this_trial_done = false;
-        double BSAsuccess_rate = 0.5;
+        double BSAsuccess_rate = 0.5 * 0.8 * 0.8; //detector probability = 0.8
         int left_count, right_count = 0;
         int DEBUG_darkcount_left = 0;
         int DEBUG_darkcount_right = 0;
         int DEBUG_darkcount_both = 0;
+        int DEBUG_success = 0;
+        int DEBUG_total = 0;
     protected:
         virtual void initialize();
         virtual void finish();
@@ -211,6 +213,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
                     sendBSAresult(false, send_result);
                 }else{
                     bubble("Success...!");
+                    DEBUG_success++;
                     GOD_updateEntangledInfoParameters_of_qubits();
                     sendBSAresult(false, send_result);//succeeded because both reached, and both clicked
                 }
@@ -220,7 +223,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
                 bubble("Failed...!");
                 EV<<"rand = "<<rand<<" <"<<BSAsuccess_rate;
                 sendBSAresult(true, send_result);//just failed because only 1 detector clicked while both reached
-            }
+            }DEBUG_total++;
 
         initializeVariables();
 
@@ -286,7 +289,8 @@ void BellStateAnalyzer::sendBSAresult(bool result,bool sendresults){
 }
 
 void BellStateAnalyzer::finish(){
-
+    std::cout<<"total = "<<DEBUG_total<<"\n";
+    std::cout<<"Success = "<<DEBUG_success<<"\n";
     std::cout<<"darkcount_count_left = "<<DEBUG_darkcount_left<<", darkcount_count_right ="<<DEBUG_darkcount_right<<", darkcount_count_both = "<<DEBUG_darkcount_both<<"\n";
 }
 

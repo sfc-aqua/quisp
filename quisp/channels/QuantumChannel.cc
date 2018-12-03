@@ -49,7 +49,6 @@ class QuantumChannel : public cDatarateChannel
        double Lost_ceil;
        int DEBUG_darkcount_count = 0;
        MatrixXd Q_to_the_distance;
-       virtual void setTransitionMatrix();
        virtual void initialize();
        virtual void processMessage(cMessage *msg, simtime_t t, result_t& result);
     public:
@@ -68,7 +67,9 @@ void QuantumChannel::initialize(){
     cDatarateChannel::initialize();
     Q_to_the_distance(5,5);
     distance = par("distance");//in km
-    double Z_error_ratio = par("Z_error_ratio");//par("name") will be read from .ini or .ned file
+
+
+    /*double Z_error_ratio = par("Z_error_ratio");//par("name") will be read from .ini or .ned file
     double X_error_ratio = par("X_error_ratio");
     double Y_error_ratio = par("Y_error_ratio");
     double Loss_error_ratio = par("photon_loss_ratio");
@@ -87,22 +88,30 @@ void QuantumChannel::initialize(){
     err.Y_error_rate = err.pauli_error_rate * (Y_error_ratio/ratio_sum);
     err.Z_error_rate = err.pauli_error_rate * (Z_error_ratio/ratio_sum);
     photon_loss_rate = err.pauli_error_rate * (Loss_error_ratio/ratio_sum);//Photon Loss rate per km.
+    */
 
+    photon_loss_rate = par("channel_Loss_error_rate");
+    err.X_error_rate = par("channel_X_error_rate");
+    err.Y_error_rate = par("channel_Y_error_rate");
+    err.Z_error_rate = par("channel_Z_error_rate");
+    err.pauli_error_rate =  err.X_error_rate +  err.Y_error_rate +  err.Z_error_rate + photon_loss_rate;
+
+    /*
     int num_err_type = 0;
-    if(X_error_ratio !=0){
+    if(err.X_error_rate !=0){
         num_err_type++;
     }
-    if(Z_error_ratio !=0){
+    if(err.Z_error_rate !=0){
         num_err_type++;
     }
-    if(Y_error_ratio !=0){
+    if(err.Y_error_rate !=0){
         num_err_type++;
     }
 
     if((1-err.pauli_error_rate) < double(1)/double(num_err_type)){
         //error("Error rate inaccurate.");
         std::cout<<"Inaccurate error rate \n";
-    }
+    }*/
 
     //std::cout<<"Sum of errors must be ... = "<<err.X_error_rate+err.Y_error_rate+err.Z_error_rate+photon_loss_rate<<"\n";
     //std::cout<<"Channel err:"<<err.pauli_error_rate<<" X = " <<err.X_error_rate << "Y = "<< err.Y_error_rate << ", Z = "<< err.Z_error_rate<<",Loss"<<photon_loss_rate<<"\n";
@@ -120,39 +129,11 @@ void QuantumChannel::initialize(){
     std::cout<<"Transition mat = "<<Q_to_the_distance<<"\n";
 
 
-    //setTransitionMatrix();
     //std::cout<<"\nNo_error_ceil = "<<No_error_ceil<<", X_error_ceil = "<< X_error_ceil << ", Z_error_ceil"<<Z_error_ceil<<", Y_error_ceil"<<Y_error_ceil<<" pauli err rate is "<<err.pauli_error_rate<<"\n";
     //std::cout<<" 1-err.pauli_error_rate" <<1-err.pauli_error_rate<<"err.X_error_rate"<<err.X_error_rate<<"err.Z_error_rate"<<err.Z_error_rate<<"err.Y_error_rate"<<err.Y_error_rate<<"photon_loss_rate"<<photon_loss_rate<<"\n";
 }
 
 
-/** \todo KAAKI Documentation (especially on the transition matrix part) */
-/*This somehow works weird*/
-void QuantumChannel::setTransitionMatrix(){
-    //MatrixXd Initial_condition(1,5);//Input state condition of the qubit. The syntax here is symmetric to the one below.
-    //Matrix<double,1,5> Output_condition;//Output state distribution will be kept because the channel length is static.
-
-    //Initial_condition << 1,0,0,0,0;// I, X, Z, Y, Photon Lost
-
-    MatrixXd Transition_matrix(5,5);
-
-    Transition_matrix << 1-err.pauli_error_rate, err.X_error_rate,err.Z_error_rate,err.Y_error_rate,photon_loss_rate,
-                err.X_error_rate, 1-err.pauli_error_rate, err.Y_error_rate,err.Z_error_rate,photon_loss_rate,
-                err.Z_error_rate,err.Y_error_rate, 1-err.pauli_error_rate,err.X_error_rate, photon_loss_rate,
-                err.Y_error_rate,err.Z_error_rate, err.X_error_rate, 1-err.pauli_error_rate, photon_loss_rate,
-                0,0,0,0,1;
-
-    std::cout<<"Transition mat per km = \n"<<Transition_matrix<<"\n";
-    MatrixPower<MatrixXd> Apow(Transition_matrix);
-    Q_to_the_distance = Apow(distance);
-    std::cout<<"Transition mat = "<<Q_to_the_distance<<"\n";
-    /*Output_condition = Initial_condition * Q_to_the_distance;
-    //EV<<Output_condition;
-    No_error_ceil = Output_condition(0,0);
-    X_error_ceil = Output_condition(0,0)+Output_condition(0,1);
-    Z_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2);
-    Y_error_ceil = Output_condition(0,0)+Output_condition(0,1)+Output_condition(0,2)+Output_condition(0,3);*/
-}
 
 
 void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t& result)

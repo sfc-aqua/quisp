@@ -171,11 +171,14 @@ class stationaryQubit : public cSimpleModule
         double std;
 
         double emission_success_probability;
+        int numemitted;
+        //emission_error_model emission_error;
         /** @name Pauli errors when emitting photons
         *  @{
         */
         /** Error rate when emitting photon*/
-               emission_error_model emission_error;
+
+
                gate_error_model Hgate_error;
                gate_error_model Xgate_error;
                gate_error_model Zgate_error;
@@ -294,6 +297,7 @@ class stationaryQubit : public cSimpleModule
         virtual void addXerror();
         virtual void addZerror();
 
+
         /** @name Self address
          *  @{                   */
         int stationaryQubit_address;
@@ -325,7 +329,7 @@ class stationaryQubit : public cSimpleModule
         virtual PhotonicQubit *generateEntangledPhoton();
         virtual void setBusy();
         //virtual void setErrorCeilings();
-        virtual void setEmissionPauliError();
+        //virtual void setEmissionPauliError();
         virtual Matrix2cd getErrorMatrix(stationaryQubit *qubit);//returns the matrix that represents the errors on the Bell pair. (e.g. XY, XZ and ZI...)
         virtual quantum_state getQuantumState();//returns the dm of the physical Bell pair. Used for tomography.
         virtual measurement_operator Random_Measurement_Basis_Selection();

@@ -46,11 +46,9 @@ simple stationaryQubit
         
         
         double emission_success_probability = default(1);
-        
-        double emission_error_rate = default(0);// 1% per shot by default
-        double emission_Z_error_ratio = default(1);
-        double emission_X_error_ratio = default(1);
-        double emission_Y_error_ratio = default(1);
+        double emission_Z_error_rate = default(0);// 1% per shot by default
+        double emission_X_error_rate = default(0);
+        double emission_Y_error_rate = default(0);
         
         
         double memory_error_rate = default(0);// 10% per μs by default

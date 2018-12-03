@@ -31,22 +31,28 @@ void stationaryQubit::initialize()
     double rand = dblrand();
 
     /*Photon emission time error rates*/
-    double Z_error_ratio = par("emission_Z_error_ratio");//par("name") will be read from .ini or .ned file
-    double X_error_ratio = par("emission_X_error_ratio");
-    double Y_error_ratio = par("emission_Y_error_ratio");
+
+    /*
     emission_success_probability = par("emission_success_probability");
-    double ratio_sum = Z_error_ratio+X_error_ratio+Y_error_ratio;//Get the sum of x:y:z for normalization
-    emission_error.pauli_error_rate = par("emission_error_rate");//This is per photon emission.
-    emission_error.X_error_rate = emission_error.pauli_error_rate * (X_error_ratio/ratio_sum);
-    emission_error.Y_error_rate = emission_error.pauli_error_rate * (Y_error_ratio/ratio_sum);
-    emission_error.Z_error_rate = emission_error.pauli_error_rate * (Z_error_ratio/ratio_sum);
-    //emission_error.Loss_error_rate = emission_error.pauli_error_rate * (emission_loss_ratio/ratio_sum);
-    emission_error.No_error_ceil =1-emission_error.pauli_error_rate;/* if 0 <= dblrand < fidelity = No error*/
-    emission_error.X_error_ceil = emission_error.No_error_ceil + emission_error.X_error_rate; /* if fidelity <= dblrand < fidelity+X error rate = X error*/
+    emission_error.X_error_rate = par("emission_Z_error_rate");//par("name") will be read from .ini or .ned file
+    emission_error.X_error_rate =  par("emission_X_error_rate");
+    emission_error.Z_error_rate = par("emission_Y_error_rate");
+    emission_error.pauli_error_rate = emission_error.Y_error_rate + emission_error.Z_error_rate + emission_error.X_error_rate;
+
+
+    emission_error.No_error_ceil =1-emission_error.pauli_error_rate;// if 0 <= dblrand < fidelity = No error
+    emission_error.X_error_ceil = emission_error.No_error_ceil + emission_error.X_error_rate; // if fidelity <= dblrand < fidelity+X error rate = X error
     emission_error.Z_error_ceil = emission_error.X_error_ceil + emission_error.Z_error_rate;
-    //emission_error.Y_error_ceil = emission_error.Z_error_ceil+emission_error.Y_error_rate;
     emission_error.Y_error_ceil = 1;
 
+
+    std::cout<<"emission_error.No_error_ceil = "<<emission_error.No_error_ceil<<"\n";
+    std::cout<<"emission_error.X_error_ceil = "<<emission_error.X_error_ceil<<"\n";
+    std::cout<<"emission_error.Y_error_ceil = "<<emission_error.Y_error_ceil<<"\n";
+    std::cout<<"emission_error.Z_error_ceil = "<<emission_error.Z_error_ceil<<"\n";
+    */
+    emission_success_probability = par("emission_success_probability");
+    //numemitted = 0;
     //setErrorCeilings();
 
     /*Memory error rates*/
@@ -146,13 +152,29 @@ void stationaryQubit::initialize()
     /* e^(t/T1) energy relaxation, e^(t/T2) phase relaxation. Want to use only 1/10 of T1 and T2 in general.*/
 }
 
-/*
-void stationaryQubit::setErrorCeilings(){
-    No_error_ceil =1-err.pauli_error_rate;// if 0 <= dblrand < fidelity = No error
-    X_error_ceil = No_error_ceil + err.X_error_rate; //if fidelity <= dblrand < fidelity+X error rate = X error
-    Z_error_ceil = X_error_ceil + err.Z_error_rate;
-    Y_error_ceil = 1;
-}*/
+void stationaryQubit::finish(){
+    //std::cout<<"emitted "<<numemitted<<"¥n";
+}
+
+/**
+ * \brief cSimpleModule handleMessage function
+ *
+ * \param msg is the message
+ */
+void stationaryQubit::handleMessage(cMessage *msg){
+    bubble("Got a photon!!");
+    setBusy();
+    //numemitted++;
+    //setEmissionPauliError();
+    double rand = dblrand();
+    if(rand<(1-emission_success_probability)){
+        PhotonicQubit *pk = check_and_cast<PhotonicQubit *>(msg);
+        pk->setPhotonLost(true);
+        send(pk, "tolens_quantum_port$o");
+    }else{
+        send(msg, "tolens_quantum_port$o");
+    }
+}
 
 
 gate_error_model stationaryQubit::SetSingleQubitGateErrorCeilings(std::string gate_name){
@@ -256,25 +278,8 @@ two_qubit_gate_error_model stationaryQubit::SetTwoQubitGateErrorCeilings(std::st
 
 }
 
-/**
- * \brief cSimpleModule handleMessage function
- *
- * \param msg is the message
- */
-void stationaryQubit::handleMessage(cMessage *msg){
-    bubble("Got a photon!!");
-    setBusy();
-    setEmissionPauliError();
-    double rand = dblrand();
-    if(rand>emission_success_probability){
-        PhotonicQubit *pk = check_and_cast<PhotonicQubit *>(msg);
-        pk->setPhotonLost(true);
-        send(pk, "tolens_quantum_port$o");
-    }else{
-        send(msg, "tolens_quantum_port$o");
-    }
-}
 
+/*
 void stationaryQubit::setEmissionPauliError(){
     if(par("GOD_Xerror") || par("GOD_Zerror")){
         //std::cout<<"node["<<node_address<<"] qnic["<<qnic_address<<"] Emitting from "<<this<<"X="<<par("GOD_Xerror").str()<<"Z="<<par("GOD_Zerror").str()<<"\n";
@@ -298,9 +303,15 @@ void stationaryQubit::setEmissionPauliError(){
                 par("GOD_Zerror") = true;
                 //EV<<"Yerror :"<<Z_error_ceil<<"<="<<rand<<" < "<<Y_error_ceil<<"\n";
    }else{
+       std::cout<<rand<<"\n";
+       std::cout<<"emission_error.No_error_ceil = "<<emission_error.No_error_ceil<<"\n";
+       std::cout<<"emission_error.X_error_ceil = "<<emission_error.X_error_ceil<<"\n";
+       std::cout<<"emission_error.Y_error_ceil = "<<emission_error.Y_error_ceil<<"\n";
+       std::cout<<"emission_error.Z_error_ceil = "<<emission_error.Z_error_ceil<<"\n";
        error("Either the error ceilings or the random double generator is wrong.");
    }
 }
+*/
 
 bool stationaryQubit::measure_X(){
     //Need to add noise here later
@@ -1139,13 +1150,7 @@ measurement_outcome stationaryQubit::measure_density_independent(){
 
 
 
-void stationaryQubit::finish(){
-    /*std::cout<<"---Node["<<node_address<<"] qubit["<<stationaryQubit_address<<"]---\n";
-    std::cout<<"DEBUG_memory_X_count == "<<DEBUG_memory_X_count++<<"\n";
-    std::cout<<"DEBUG_memory_Y_count == "<<DEBUG_memory_Y_count++<<"\n";
-    std::cout<<"DEBUG_memory_Z_count == "<<DEBUG_memory_Z_count++<<"\n";
-    std::cout<<"-------------------\n";*/
-}
+
 
 measurement_operator stationaryQubit::Random_Measurement_Basis_Selection(){
 
