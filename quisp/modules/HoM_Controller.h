@@ -33,7 +33,7 @@ class HoM_Controller : public cSimpleModule
         int address;
         int photon_detection_per_sec;
         std::vector<const char *> gates_here;
-        cMessage *generatePacket;
+        //cMessage *generatePacket;
         double speed_of_light_in_channel;
         cPar *c;
         int time_out_count;

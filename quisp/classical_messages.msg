@@ -121,6 +121,8 @@ packet BSAtimeoutChecker extends header
     double trial_id;
 }
 
+packet BSAstart extends header{}
+
 packet EPPStimingNotifier extends header
 {
     simtime_t timing_at;

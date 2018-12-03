@@ -54,7 +54,7 @@ void HoM_Controller::internodeInitializer(){
     updateIDE_Parameter(true);
 
     accepted_burst_interval = (double)1/(double)photon_detection_per_sec;
-    generatePacket = new cMessage("nextPacket");
+    BSAstart *generatePacket = new BSAstart;
     scheduleAt(simTime()+par("Initial_notification_timing_buffer"),generatePacket);
     //scheduleAt(simTime(),generatePacket);
 }
@@ -71,7 +71,7 @@ void HoM_Controller::standaloneInitializer(){
     updateIDE_Parameter(false);
 
     accepted_burst_interval = (double)1/(double)photon_detection_per_sec;
-    generatePacket = new cMessage("nextPacket");
+    BSAstart *generatePacket = new BSAstart;
     scheduleAt(simTime()+par("Initial_notification_timing_buffer"),generatePacket);
     //scheduleAt(simTime(),generatePacket);
 }
@@ -110,11 +110,15 @@ void HoM_Controller::sendNotifiers(){
 
 void HoM_Controller::handleMessage(cMessage *msg){
 	std::cout<<"HoMReceiving result\n";
-	std::cout<<msg<<"\n"; //Omnet somehow bugs without this... it receives a msg correctly from BellStateAnalyzer, but very rarely does not recognize the type. VERY weird.
-    if(msg == generatePacket){
+	std::cout<<msg<<", bsa? ="<<(bool)( dynamic_cast<BSAresult *>(msg) != nullptr)<<"\n"; //Omnet somehow bugs without this... it receives a msg correctly from BellStateAnalyzer, but very rarely does not recognize the type. VERY weird.
+    
+	if(dynamic_cast<BSAstart *>(msg) != nullptr){
+		std::cout<<"Generate packet\n";
         sendNotifiers();
+		delete msg;
+		return;
         //Create timeout
-    }else if(dynamic_cast<BSAresult *>(msg) != nullptr){
+    } else if(dynamic_cast<BSAresult *>(msg) != nullptr){
 		std::cout<<"BSAresult\n";
         auto_resend_BSANotifier = false;//Photon is arriving. No need to auto reschedule next round. Wait for the last photon fron either node.
         bubble("BSAresult accumulated");
@@ -383,10 +387,10 @@ void HoM_Controller::sendBSAresultsToNeighbors(){
         send(pk,"toRouter_port");
         send(pkt,"toRouter_port");
 
-        BSAtimeoutChecker *timeout = new BSAtimeoutChecker;//This is used to emit the next round's timing in case no photon arrived.
-        timeout->setTrial_id(current_trial_id);
+        //BSAtimeoutChecker *timeout = new BSAtimeoutChecker;//This is used to emit the next round's timing in case no photon arrived.
+        //timeout->setTrial_id(current_trial_id);
         //std::cout<<"now = "<<simTime()<<"time = "<<time<<"\n";
-        scheduleAt(simTime()+2*(1.1*time), timeout);
+        //scheduleAt(simTime()+2*(1.1*time), timeout);
 
     }else{//For SPDC type link
         CombinedBSAresults_epps *pk, *pkt;
