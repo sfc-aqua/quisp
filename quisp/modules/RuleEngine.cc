@@ -76,7 +76,7 @@ void RuleEngine::handleMessage(cMessage *msg){
                 int nth_shot = tracker[qnic_address].size();
                 tracker[qnic_address].insert(std::make_pair(nth_shot,Addr));//qubit with address Addr was shot in nth time. This list is ordered from old to new.
                 int new_nth_shot = tracker[qnic_address].size();
-                std::cout<<getQNode()->getFullName() <<": Emitted the "<<nth_shot<<" from qnic["<<qnic_address<<"]....tracker["<<qnic_address<<"] now size = "<<new_nth_shot<<"\n";
+                //std::cout<<getQNode()->getFullName() <<": Emitted the "<<nth_shot<<" from qnic["<<qnic_address<<"]....tracker["<<qnic_address<<"] now size = "<<new_nth_shot<<"\n";
             }
             // switch: Only bubble messages
             switch (pk->getKind()) {
@@ -769,18 +769,18 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
             stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
             if(qubit->entangled_partner!=nullptr){
                 if(qubit->entangled_partner->entangled_partner==nullptr){
-                    std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+                    //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
                     error("1. Entanglement tracking is not doing its job.");
                 }
                 if(qubit->entangled_partner->entangled_partner != qubit){
-                    std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+                    //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
                     error("2. Entanglement tracking is not doing its job.");
                 }
             }
-            std::cout<<qubit<<" in node["<<parentAddress<<"] qnic["<<qnic_address<<"] entanglement success"<<qubit<<"\n";
+            //std::cout<<qubit<<" in node["<<parentAddress<<"] qnic["<<qnic_address<<"] entanglement success"<<qubit<<"\n";
             //std::cout<<"Available resource"<<qubit<<" isBusy = "<<qubit->isBusy<<"\n";
 			if(qubit->entangled_partner==nullptr && qubit->Density_Matrix_Collapsed(0,0).real() ==-111){
-				std::cout<<qubit<<", node["<<qubit->node_address<<"\n";
+				//std::cout<<qubit<<", node["<<qubit->node_address<<"\n";
 				error("Ebit succeed. but wrong");
 			}
             allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,qubit));//Add qubit as available resource between NeighborQNodeAddress.
@@ -891,7 +891,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
                  }
                  }*/
 				 if(it->second->entangled_partner==nullptr && it->second->Density_Matrix_Collapsed(0,0).real() ==-111){
-						std::cout<<it->second<<", node["<<it->second->node_address<<"\n";
+						//std::cout<<it->second<<", node["<<it->second->node_address<<"\n";
 						error("Fresh ebit wrong");
 				
 				}

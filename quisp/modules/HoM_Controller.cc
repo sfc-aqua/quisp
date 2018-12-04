@@ -109,22 +109,22 @@ void HoM_Controller::sendNotifiers(){
 
 
 void HoM_Controller::handleMessage(cMessage *msg){
-	std::cout<<"HoMReceiving result\n";
-	std::cout<<msg<<", bsa? ="<<(bool)( dynamic_cast<BSAresult *>(msg) != nullptr)<<"\n"; //Omnet somehow bugs without this... it receives a msg correctly from BellStateAnalyzer, but very rarely does not recognize the type. VERY weird.
+	//std::cout<<"HoMReceiving result\n";
+	//std::cout<<msg<<", bsa? ="<<(bool)( dynamic_cast<BSAresult *>(msg) != nullptr)<<"\n"; //Omnet somehow bugs without this... it receives a msg correctly from BellStateAnalyzer, but very rarely does not recognize the type. VERY weird.
     
 	if(dynamic_cast<BSAstart *>(msg) != nullptr){
-		std::cout<<"Generate packet\n";
+		//std::cout<<"Generate packet\n";
         sendNotifiers();
 		delete msg;
 		return;
         //Create timeout
     } else if(dynamic_cast<BSAresult *>(msg) != nullptr){
-		std::cout<<"BSAresult\n";
+		//std::cout<<"BSAresult\n";
         auto_resend_BSANotifier = false;//Photon is arriving. No need to auto reschedule next round. Wait for the last photon fron either node.
         bubble("BSAresult accumulated");
         BSAresult *pk = check_and_cast<BSAresult *>(msg);
 		bool entangled = pk->getEntangled();
-		std::cout<<"Accumulating "<<entangled<<"\n";
+		//std::cout<<"Accumulating "<<entangled<<"\n";
         int prev = getStoredBSAresultsSize();
         pushToBSAresults(entangled);
         int aft = getStoredBSAresultsSize();
@@ -140,7 +140,7 @@ void HoM_Controller::handleMessage(cMessage *msg){
 
         }*/
     }else if(dynamic_cast<BSAfinish *>(msg) != nullptr){//Last photon from either node arrived.
-		std::cout<<"BSAfinish\n";
+		//std::cout<<"BSAfinish\n";
         bubble("BSAresult accumulated");
         BSAfinish *pk = check_and_cast<BSAfinish *>(msg);
         pushToBSAresults(pk->getEntangled());
@@ -157,7 +157,7 @@ void HoM_Controller::handleMessage(cMessage *msg){
         //Schedule a checker with a time-out t, to see if both actually sent something.
         //Worst case is, when both have no free qubit, and no qubits get transmitted. In that case, this module needs to recognize that problem, and reschedule/resend the request after a cetrain time.
     }else if(dynamic_cast<BSAtimeoutChecker*>(msg) != nullptr){
-		std::cout<<"BSAtimeout\n";
+		//std::cout<<"BSAtimeout\n";
         //std::cout<<"timeout check at"<<simTime()<<"\n";
         BSAtimeoutChecker *pk = check_and_cast<BSAtimeoutChecker *>(msg);
         if(auto_resend_BSANotifier == true && pk->getTrial_id() == current_trial_id){
@@ -380,7 +380,7 @@ void HoM_Controller::sendBSAresultsToNeighbors(){
         for(auto it : results ){
            int index = it.first;
            bool entangled = it.second;
-		   std::cout<<index<<" th, entangled = "<<entangled<<"\n";
+		   //std::cout<<index<<" th, entangled = "<<entangled<<"\n";
            pk->setList_of_failed(index, entangled);
            pkt->setList_of_failed(index, entangled);
         }

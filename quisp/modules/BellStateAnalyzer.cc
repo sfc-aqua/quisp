@@ -199,18 +199,18 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
                 if(!right_photon_lost && (left_photon_lost && darkcount_left <= darkcount_probability)){
                     //error("Dark count :)");
                     DEBUG_darkcount_left++;
-    				std::cout<<"CM Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
+    				//std::cout<<"CM Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
                     GOD_setCompletelyMixedDensityMatrix();
                     sendBSAresult(false, send_result);
                 }else if(!left_photon_lost && (right_photon_lost && darkcount_right <= darkcount_probability)){
                     //error("Dark count :)");
-    				std::cout<<"CM Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
+    				//std::cout<<"CM Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
                     DEBUG_darkcount_right++;
                     GOD_setCompletelyMixedDensityMatrix();
                     sendBSAresult(false, send_result);
                 }else if((left_photon_lost && darkcount_left <= darkcount_probability) &&  (right_photon_lost &&  darkcount_right <= darkcount_probability)){
                     //error("Dark count :)");
-    				std::cout<<"CM Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
+    				//std::cout<<"CM Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
                     DEBUG_darkcount_both++;
                     GOD_setCompletelyMixedDensityMatrix();
                     sendBSAresult(false, send_result);
@@ -226,7 +226,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
                 bubble("Failed...!");
                 //EV<<"rand = "<<rand<<" <"<<BSAsuccess_rate;
                 
-    		  std::cout<<"Failed Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
+    		  //std::cout<<"Failed Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
 				
 				sendBSAresult(true, send_result);//just failed because only 1 detector clicked while both reached
             }DEBUG_total++;
@@ -281,13 +281,13 @@ void BellStateAnalyzer::sendBSAresult(bool result,bool sendresults){
     //std::cout<<"send?="<<sendresults<<"___________________________________\n";
     if(!sendresults){
         BSAresult *pk = new BSAresult;
-    	std::cout<<"send result to HoM___\n";
+    	//std::cout<<"send result to HoM___\n";
         pk->setEntangled(result);
         send(pk, "toHoMController_port");
     }else{//Was the last photon. End pulse detected.
         BSAfinish *pk = new BSAfinish();
         pk->setKind(7);
-    	std::cout<<"send last result to HoM___\n";
+    	//std::cout<<"send last result to HoM___\n";
         pk->setEntangled(result);
         send(pk, "toHoMController_port");
         bubble("trial done now");
@@ -332,7 +332,7 @@ bool BellStateAnalyzer::isPhotonLost(cMessage *msg){
 
 void BellStateAnalyzer::GOD_setCompletelyMixedDensityMatrix(){
     //error("Hrtr");
-	std::cout<<"Darkcount CM "<<left_statQubit_ptr<<", "<<right_statQubit_ptr<<"\n";
+	//std::cout<<"Darkcount CM "<<left_statQubit_ptr<<", "<<right_statQubit_ptr<<"\n";
     left_statQubit_ptr->setCompletelyMixedDensityMatrix();
     right_statQubit_ptr->setCompletelyMixedDensityMatrix();
 }
@@ -343,7 +343,7 @@ void BellStateAnalyzer:: GOD_updateEntangledInfoParameters_of_qubits(){
 	
 
 
-    std::cout<<"Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
+    //std::cout<<"Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
     left_statQubit_ptr->setEntangledPartnerInfo(right_statQubit_ptr);
     if(left_photon_Xerr)//If Photon had an X error
         left_statQubit_ptr->addXerror();//Add X error to the stationary qubit.
