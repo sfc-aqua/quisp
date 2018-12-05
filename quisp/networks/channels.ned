@@ -22,12 +22,6 @@ channel QuantumChannel extends DatarateChannel
             //delay = uniform(0.01ms, 1s);
             double Speed_of_light_in_fiber @unit(km) = default(208189.206944km);
             delay = this.distance / Speed_of_light_in_fiber * 1s;
-            //datarate = uniform(1kbps, 100kbps);
-            //double photon_loss_ratio = default(1);//per km
-            //double channel_error_rate = default(0);//per km
-            //double Z_error_ratio = default(1);
-            //double X_error_ratio = default(1);
-            //double Y_error_ratio = default(1);
             double channel_Loss_error_rate = default(0);
             double channel_X_error_rate = default(0);
             double channel_Z_error_rate = default(0);
