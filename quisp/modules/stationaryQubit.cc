@@ -666,8 +666,8 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 	if(qubit->entangled_partner==nullptr && qubit->Density_Matrix_Collapsed(0,0).real()==-111)
 		error("THis must not happen in apply memory error");   
  
-	if(qubit->getIndex() == 71 && qubit->node_address == 3)
-		std::cout<<"Applying memory error to "<<qubit<<" in node["<<qubit->node_address<<"]\n";
+	//if(qubit->getIndex() == 71 && qubit->node_address == 3)
+	//	std::cout<<"Applying memory error to "<<qubit<<" in node["<<qubit->node_address<<"]\n";
     //std::cout<<"memory_err = "<<memory_err.pauli_error_rate<<"\n";
     //Check when the error got updated last time. Errors will be performed depending on the difference between that time and the current time.
     if(qubit->memory_err.error_rate==0){//If no memory error occurs, or if the state is completely mixed, skip this memory error simulation.
@@ -697,43 +697,43 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 
         MatrixXd Initial_condition(1,7);//I, X, Z, Y, Ex, Re, Cm
          if(EXerr){
-			if(qubit->getIndex() == 71 && qubit->node_address == 3)
-				std::cout<<"[Init] = EX\n";
+			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
+			//	std::cout<<"[Init] = EX\n";
              Initial_condition << 0,0,0,0,1,0,0;//Has an excitation error
                     //error("err EX");
          }else if(REerr){
              
-			if(qubit->getIndex() == 71 && qubit->node_address == 3)
-				std::cout<<"[Init] = RE\n";
+			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
+			//	std::cout<<"[Init] = RE\n";
              Initial_condition << 0,0,0,0,0,1,0;//Has an relaxation error
                     //error("err RE");
         }else if(CMerr){
-			if(qubit->getIndex() == 71 && qubit->node_address == 3)
-             	std::cout<<"[Init] = CM\n";
+			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
+            // 	std::cout<<"[Init] = CM\n";
              Initial_condition << 0,0,0,0,0,0,1;//Has an relaxation e
         }else if(Zerr && Xerr){
              Initial_condition << 0,0,0,1,0,0,0;//Has a Y error
-			if(qubit->getIndex() == 71 && qubit->node_address == 3)    
-				std::cout<<"[Init] = Y\n";
+			//if(qubit->getIndex() == 71 && qubit->node_address == 3)    
+			//	std::cout<<"[Init] = Y\n";
             //std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
             //error("err Y");
         }else if(Zerr && !Xerr){
-			if(qubit->getIndex() == 71 && qubit->node_address == 3) 
-				std::cout<<"[Init] = Z\n";
+			//if(qubit->getIndex() == 71 && qubit->node_address == 3) 
+			//	std::cout<<"[Init] = Z\n";
              Initial_condition << 0,0,1,0,0,0,0;//Has a Z error
             //std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
             //error("err Z");
         }else if(!Zerr && Xerr){
              
-			if(qubit->getIndex() == 71 && qubit->node_address == 3)
-				std::cout<<"[Init] = X\n";
+			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
+			//	std::cout<<"[Init] = X\n";
              Initial_condition << 0,1,0,0,0,0,0;//Has an X error
              //std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
              //error("err X");
         }else{
              
-			if(qubit->getIndex() == 71 && qubit->node_address == 3)
-				std::cout<<"[Init] = I\n";
+			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
+			//	std::cout<<"[Init] = I\n";
              Initial_condition << 1,0,0,0,0,0,0;//No error
         }
 
@@ -803,8 +803,8 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
         //std::cout<<"dbl = "<<rand<<" No ceil = "<<No_error_ceil<<", "<<X_error_ceil<<", "<<Z_error_ceil<<","<<Y_error_ceil<<", "<<EX_error_ceil<<", "<<RE_error_ceil<<", 1"<<"\n";
         if(rand < No_error_ceil){
             
-			if(qubit->getIndex() == 71 && qubit->node_address == 3)
-				std::cout<<"NO err\n";
+			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
+			//	std::cout<<"NO err\n";
             //Qubit will end up with no error
             qubit->par("GOD_Xerror") = false;
             qubit->par("GOD_Zerror") = false;
@@ -812,8 +812,8 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
         }else if(No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil!=X_error_ceil)){
             //X error
             
-			if(qubit->getIndex() == 71 && qubit->node_address == 3)
-				std::cout<<"X err\n";
+			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
+			//	std::cout<<"X err\n";
             qubit->par("GOD_Xerror") = true;
             qubit->par("GOD_Zerror") = false;
             DEBUG_memory_X_count++;
@@ -822,16 +822,16 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
         }else if(X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil!=Z_error_ceil)){
             //Z error
             
-			if(qubit->getIndex() == 71 && qubit->node_address == 3)
-				std::cout<<"Z err\n";
+			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
+			//	std::cout<<"Z err\n";
             qubit->par("GOD_Xerror") = false;
             qubit->par("GOD_Zerror") = true;
             DEBUG_memory_Z_count++;
 
         }else if (Z_error_ceil <= rand && rand < Y_error_ceil && (Z_error_ceil!=Y_error_ceil)){
             //Y error
-			if(qubit->getIndex() == 71 && qubit->node_address == 3)
-            	std::cout<<"Y err\n";
+			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
+            //	std::cout<<"Y err\n";
             qubit->par("GOD_Xerror") = true;
             qubit->par("GOD_Zerror") = true;
             DEBUG_memory_Y_count++;
@@ -839,20 +839,20 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
          }else if(Y_error_ceil <= rand && rand < EX_error_ceil && (Y_error_ceil!=EX_error_ceil)){
              //Excitation error
              
-			if(qubit->getIndex() == 71 && qubit->node_address == 3)
-				std::cout<<"Ex err\n";
+			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
+			//	std::cout<<"Ex err\n";
              qubit->setExcitedDensityMatrix();//Also sets the partner completely mixed if it used to be entangled.
          }else if(EX_error_ceil <= rand && rand < RE_error_ceil && (EX_error_ceil!=RE_error_ceil)){
              //Excitation error
              
-			if(qubit->getIndex() == 71 && qubit->node_address == 3)
-				std::cout<<"Re err\n";
+			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
+			//	std::cout<<"Re err\n";
              qubit->setRelaxedDensityMatrix();//Also sets the partner completely mixed if it used to be entangled.
          }else{
              //Memory completely mixed error
              
-			if(qubit->getIndex() == 71 && qubit->node_address == 3)
-				std::cout<<"Cm err\n";
+			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
+			//	std::cout<<"Cm err\n";
              if(qubit->entangled_partner!=nullptr){//If this qubit still used to be entangled with another qubit.
                  qubit->entangled_partner->updated_time = simTime();
                  qubit->entangled_partner->par("last_updated_at") = simTime().dbl();//For GUI
@@ -1026,8 +1026,8 @@ void stationaryQubit::apply_two_qubit_gate_error(two_qubit_gate_error_model gate
 measurement_outcome stationaryQubit::measure_density_independent(){
    //std::cout<<"\n\n\n\n\n\n\n\nMEASURING!!!\n";
   	
-    if(this->getIndex() == 71 && this->node_address == 3)
-		std::cout<<"---measuring "<<this<<" in node["<<node_address<<"]\n";
+    //if(this->getIndex() == 71 && this->node_address == 3)
+	//	std::cout<<"---measuring "<<this<<" in node["<<node_address<<"]\n";
     if(this->entangled_partner == nullptr && this->Density_Matrix_Collapsed(0,0).real() ==-111){
             //EV<<entangled_partner<<"\n";
             std::cout<<Density_Matrix_Collapsed<<"\n";
