@@ -310,6 +310,7 @@ class stationaryQubit : public cSimpleModule
         unsigned long locked_ruleset_id;
         int locked_rule_id;
         int action_index;
+        bool no_density_matrix_nullptr_entangled_partner_ok;
 
 
     private:

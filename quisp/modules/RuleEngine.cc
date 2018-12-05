@@ -102,7 +102,7 @@ void RuleEngine::handleMessage(cMessage *msg){
             //Set qubits free according to results
             //Also needs to send which qubit was which to the neighbor (not BSA but the neighboring QNode). To update the QubitState table's entangled address.
             incrementBurstTrial(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index());
-            EV<<"(if internal)The finished qnic["<<pk->getInternal_qnic_index()<<"] with address = "<<pk->getInternal_qnic_address()<<" has emitted tracker["<<pk->getInternal_qnic_address()<<"].size() = "<<tracker[pk->getInternal_qnic_address()].size()<<" photons \n";
+            //std::cout<<"(if internal)The finished qnic["<<pk->getInternal_qnic_index()<<"] with address = "<<pk->getInternal_qnic_address()<<" has emitted tracker["<<pk->getInternal_qnic_address()<<"].size() = "<<tracker[pk->getInternal_qnic_address()].size()<<" photons \n";
             //Updates free/busy of qubits, and also adds successfully entangled qubits as resources.
             freeFailedQubits_and_AddAsResource(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index(), pk_result);
             clearTrackerTable(pk->getSrcAddr(), pk->getInternal_qnic_address());//Clear tracker every end of burst trial. This keeps which qubit was fired first, second, third and so on only for that trial.
@@ -122,6 +122,7 @@ void RuleEngine::handleMessage(cMessage *msg){
                    qnic_address = pk->getInternal_qnic_address();
                    qnic_type = QNIC_R;
              }
+
 
             for (EntangledPairs::iterator it =  allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); it++)
                 EV << it->first << " => " << it->second << '\n';
@@ -742,11 +743,13 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
            neighborQNodeAddress = getInterface_toNeighbor_Internal(qnic_address).neighborQNode_address;
      }
 
+    std::cout<<"This result is for qnic["<<qnic_address<<"]\n";
+
     int num_emitted_in_this_burstTrial = tracker[qnic_address].size();
     //EV<<"qnic["<<qnic_index<<"] with type = "<<qnic_type<<"address "<<qnic_address<<" has emitted"<<num_emitted_in_this_burstTrial<<" photons. \n";
     //EV<<"num emitted from qnic["<<qnic_address<<"] is "<<num_emitted_in_this_burstTrial;
     /*for(auto it = tracker[qnic_address].cbegin(); it != tracker[qnic_address].cend(); ++it){
-            EV<<it->first<<"th shot was from qnic["<<it->second.qnic_index<<"] qubit["<<it->second.qubit_index<<"] \n ???????????????????????????????????";
+            std::cout<<"??????????????????????????????????? node["<<parentAddress<<"]    "<<it->first<<"th shot was from qnic["<<it->second.qnic_index<<"] qubit["<<it->second.qubit_index<<"] \n ";
     }*/
     int success_num = 0;
     for(int i=0; i<list_size; i++){
@@ -756,7 +759,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
                 error("Something is wrong with the tracker....%d th shot not recorded",i);//Neighbor not found! This should not happen unless you simulate broken links in real time.
         if(failed){
             //std::cout<<"node["<<parentAddress<<"] failed!\n";
-            //EV<<i<<"th shot has failed.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
+            //std::cout<<i<<"th shot has failed.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"]\n";
             //realtime_controller->ReInitialize_StationaryQubit(it->second.qnic_index ,it->second.qubit_index, qnic_type);//Re-initialize the qubit. Pauli errors will be eliminated, and the color of the qubit in the GUI changes to blue.
             //Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], it->second.qnic_index, it->second.qubit_index);
 
@@ -764,7 +767,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
         }else{
             //std::cout<<"node["<<parentAddress<<"] success!\n";
             //Keep the entangled qubits
-            //std::cout<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"] node addr["<<it->first<<"] \n";
+            std::cout<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"] node addr["<<it->first<<"] \n";
             //Add this as an available resource
             stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
             if(qubit->entangled_partner!=nullptr){
@@ -779,9 +782,13 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
             }
             //std::cout<<qubit<<" in node["<<parentAddress<<"] qnic["<<qnic_address<<"] entanglement success"<<qubit<<"\n";
             //std::cout<<"Available resource"<<qubit<<" isBusy = "<<qubit->isBusy<<"\n";
-			if(qubit->entangled_partner==nullptr && qubit->Density_Matrix_Collapsed(0,0).real() ==-111){
-				//std::cout<<qubit<<", node["<<qubit->node_address<<"\n";
-				error("Ebit succeed. but wrong");
+
+
+			if(qubit->entangled_partner==nullptr && qubit->Density_Matrix_Collapsed(0,0).real() ==-111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok){
+				std::cout<<qubit<<", node["<<qubit->node_address<<"] from qnic["<<qubit->qnic_index<<"]\n";
+				//std::cout<<(bool)(qubit->entangled_partner==nullptr)<<" Entangled if ("<<false<<")\n";
+				//std::cout<<qubit->Density_Matrix_Collapsed<<"\n";
+				error("RuleEngine. Ebit succeed. but wrong");
 			}
             allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress/*QNode IP address*/,qubit));//Add qubit as available resource between NeighborQNodeAddress.
             success_num++;
@@ -890,7 +897,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
                      std::cout<<"node["<<parentAddress<<"]"<<ruleset_id<< "{resource}"<<it->second<<"\n";
                  }
                  }*/
-				 if(it->second->entangled_partner==nullptr && it->second->Density_Matrix_Collapsed(0,0).real() ==-111){
+				 if(it->second->entangled_partner==nullptr && it->second->Density_Matrix_Collapsed(0,0).real() ==-111 && !it->second->no_density_matrix_nullptr_entangled_partner_ok){
 						//std::cout<<it->second<<", node["<<it->second->node_address<<"\n";
 						error("Fresh ebit wrong");
 				

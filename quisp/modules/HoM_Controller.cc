@@ -380,7 +380,7 @@ void HoM_Controller::sendBSAresultsToNeighbors(){
         for(auto it : results ){
            int index = it.first;
            bool entangled = it.second;
-		   //std::cout<<index<<" th, entangled = "<<entangled<<"\n";
+		   std::cout<<index<<" th, entangled = "<<entangled<<"\n";
            pk->setList_of_failed(index, entangled);
            pkt->setList_of_failed(index, entangled);
         }
