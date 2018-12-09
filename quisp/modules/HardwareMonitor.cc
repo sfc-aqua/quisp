@@ -313,7 +313,7 @@ void HardwareMonitor::finish(){
         tomography_dm<<density_matrix_reconstructed.imag()<<"\n";
 
         std::cout<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<bellpairs_per_sec<<";}<-->"<<neighbor_node->getFullName()<< "; F="<<fidelity<<"; X="<<Xerr_rate<<"; Z="<<Zerr_rate<<"; Y="<<Yerr_rate<<endl;
-        tomography_stats<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec<<";tomography_time="<<all_temporal_tomography_runningtime_holder[i].tomography_time<<";tomography_measurements="<<all_temporal_tomography_runningtime_holder[i].tomography_measurements<<";actualmeas="<<meas_total<<";}<-->"<<neighbor_node->getFullName()<< " F="<<fidelity<<" X="<<Xerr_rate<<" Z="<<Zerr_rate<<" Y="<<Yerr_rate<<endl;
+        tomography_stats<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec<<";tomography_time="<<all_temporal_tomography_runningtime_holder[i].tomography_time<<";tomography_measurements="<<all_temporal_tomography_runningtime_holder[i].tomography_measurements<<";actualmeas="<<meas_total<<";}<-->"<<neighbor_node->getFullName()<< "; F="<<fidelity<<"; X="<<Xerr_rate<<"; Z="<<Zerr_rate<<"; Y="<<Yerr_rate<<endl;
 
     }
 

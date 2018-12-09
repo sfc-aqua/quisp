@@ -57,32 +57,41 @@ void stationaryQubit::initialize()
 
     /*Memory error rates*/
 
+	/*
     double memory_Z_error_ratio = par("memory_Z_error_ratio");//par("name") will be read from .ini or .ned file
     double memory_X_error_ratio = par("memory_X_error_ratio");
     double memory_Y_error_ratio = par("memory_Y_error_ratio");
     double memory_excitation_error_ratio = par("memory_energy_excitation_ratio");
     double memory_relaxation_error_ratio = par("memory_energy_relaxation_ratio");
-    double memory_complitely_mixed_ratio = par("memory_complitely_mixed_ratio");
+    double memory_completely_mixed_ratio = par("memory_completely_mixed_ratio");
 
-    if(memory_Z_error_ratio == 0 && memory_X_error_ratio == 0 && memory_Y_error_ratio == 0 && memory_excitation_error_ratio == 0 && memory_relaxation_error_ratio == 0 && memory_complitely_mixed_ratio ==0){
+    if(memory_Z_error_ratio == 0 && memory_X_error_ratio == 0 && memory_Y_error_ratio == 0 && memory_excitation_error_ratio == 0 && memory_relaxation_error_ratio == 0 && memory_completely_mixed_ratio ==0){
         memory_Z_error_ratio = 1;
         memory_X_error_ratio = 1;
         memory_Y_error_ratio = 1;
         memory_excitation_error_ratio = 1;
         memory_relaxation_error_ratio = 1;
-        memory_complitely_mixed_ratio = 1;
+        memory_completely_mixed_ratio = 1;
     }
 
     //EV<<"memory_excitation_error_ratio = "<<memory_excitation_error_ratio<<", memory_relaxation_error_ratio"<<memory_relaxation_error_ratio<<"\n";
-    double memory_ratio_sum = memory_Z_error_ratio+memory_X_error_ratio+memory_Y_error_ratio + memory_excitation_error_ratio + memory_relaxation_error_ratio + memory_complitely_mixed_ratio;
+    double memory_ratio_sum = memory_Z_error_ratio+memory_X_error_ratio+memory_Y_error_ratio + memory_excitation_error_ratio + memory_relaxation_error_ratio + memory_completely_mixed_ratio;
     memory_err.error_rate = par("memory_error_rate");//This is per μs.
     memory_err.X_error_rate = memory_err.error_rate * (memory_X_error_ratio/memory_ratio_sum);
     memory_err.Y_error_rate = memory_err.error_rate * (memory_Y_error_ratio/memory_ratio_sum);
     memory_err.Z_error_rate = memory_err.error_rate * (memory_Z_error_ratio/memory_ratio_sum);
     memory_err.excitation_error_rate = memory_err.error_rate * (memory_excitation_error_ratio/memory_ratio_sum);
     memory_err.relaxation_error_rate = memory_err.error_rate * (memory_relaxation_error_ratio/memory_ratio_sum);
-    memory_err.complitely_mixed_rate = memory_err.error_rate * (memory_complitely_mixed_ratio/memory_ratio_sum);
+    memory_err.completely_mixed_rate = memory_err.error_rate * (memory_completely_mixed_ratio/memory_ratio_sum);
+	*/
 
+    memory_err.X_error_rate = (double)par("memory_X_error_rate").doubleValue();
+    memory_err.Y_error_rate = (double)par("memory_Y_error_rate").doubleValue();
+    memory_err.Z_error_rate = (double)par("memory_Z_error_rate").doubleValue();
+    memory_err.excitation_error_rate = (double)par("memory_error_rate").doubleValue();
+    memory_err.relaxation_error_rate = (double)par("memory_error_rate").doubleValue();
+    memory_err.completely_mixed_rate = (double)par("memory_completely_mixed_rate").doubleValue();
+	memory_err.error_rate = memory_err.X_error_rate + memory_err.Y_error_rate + memory_err.Z_error_rate + memory_err.excitation_error_rate + memory_err.relaxation_error_rate + memory_err.completely_mixed_rate; //This is per μs.
     /*EV<<"Err rate = "<<memory_err.pauli_error_rate<<"\n";
     EV<<"Ratio sum = "<<memory_ratio_sum<<"\n";
     EV<<"I error rate (mem) = "<<1-memory_err.pauli_error_rate<<"\n";
@@ -92,14 +101,14 @@ void stationaryQubit::initialize()
     EV<<"Excitation error rate (mem) = "<<memory_err.excitation_error_rate<<"\n";
     EV<<"Relaxation error rate (mem) = "<<memory_err.relaxation_error_rate<<"\n";*/
     Memory_Transition_matrix = MatrixXd::Zero(7,7);
-    Memory_Transition_matrix << 1-memory_err.error_rate, memory_err.X_error_rate,memory_err.Z_error_rate, memory_err.Y_error_rate, memory_err.excitation_error_rate, memory_err.relaxation_error_rate,memory_err.complitely_mixed_rate,
-               memory_err.X_error_rate, 1-memory_err.error_rate, memory_err.Y_error_rate,memory_err.Z_error_rate,memory_err.excitation_error_rate,memory_err.relaxation_error_rate,memory_err.complitely_mixed_rate,
-               memory_err.Z_error_rate,memory_err.Y_error_rate, 1-memory_err.error_rate,memory_err.X_error_rate,memory_err.excitation_error_rate,memory_err.relaxation_error_rate,memory_err.complitely_mixed_rate,
-               memory_err.Y_error_rate,memory_err.Z_error_rate, memory_err.X_error_rate, 1-memory_err.error_rate,memory_err.excitation_error_rate,memory_err.relaxation_error_rate,memory_err.complitely_mixed_rate,
-               0,0,0,0, 1-memory_err.relaxation_error_rate-memory_err.complitely_mixed_rate, memory_err.relaxation_error_rate,memory_err.complitely_mixed_rate,
-               0,0,0,0,memory_err.excitation_error_rate,1-memory_err.excitation_error_rate-memory_err.complitely_mixed_rate,memory_err.complitely_mixed_rate,
+    Memory_Transition_matrix << 1-memory_err.error_rate, memory_err.X_error_rate,memory_err.Z_error_rate, memory_err.Y_error_rate, memory_err.excitation_error_rate, memory_err.relaxation_error_rate,memory_err.completely_mixed_rate,
+               memory_err.X_error_rate, 1-memory_err.error_rate, memory_err.Y_error_rate,memory_err.Z_error_rate,memory_err.excitation_error_rate,memory_err.relaxation_error_rate,memory_err.completely_mixed_rate,
+               memory_err.Z_error_rate,memory_err.Y_error_rate, 1-memory_err.error_rate,memory_err.X_error_rate,memory_err.excitation_error_rate,memory_err.relaxation_error_rate,memory_err.completely_mixed_rate,
+               memory_err.Y_error_rate,memory_err.Z_error_rate, memory_err.X_error_rate, 1-memory_err.error_rate,memory_err.excitation_error_rate,memory_err.relaxation_error_rate,memory_err.completely_mixed_rate,
+               0,0,0,0, 1-memory_err.relaxation_error_rate-memory_err.completely_mixed_rate, memory_err.relaxation_error_rate,memory_err.completely_mixed_rate,
+               0,0,0,0,memory_err.excitation_error_rate,1-memory_err.excitation_error_rate-memory_err.completely_mixed_rate,memory_err.completely_mixed_rate,
                0,0,0,0,memory_err.excitation_error_rate,memory_err.relaxation_error_rate,1-memory_err.excitation_error_rate-memory_err.relaxation_error_rate;
-    //std::cout<<"Memory_Transition_matrix = \n "<< Memory_Transition_matrix<<" done \n";
+    std::cout<<"Memory_Transition_matrix = \n "<< Memory_Transition_matrix<<" done \n";
 
     Hgate_error = SetSingleQubitGateErrorCeilings("Hgate");
     Xgate_error = SetSingleQubitGateErrorCeilings("Xgate");
@@ -668,7 +677,7 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 		error("THis must not happen in apply memory error");   
  
 	//if(qubit->getIndex() == 71 && qubit->node_address == 3)
-	std::cout<<"Applying memory error to "<<qubit<<" in qnic["<<qubit->qnic_index<<"] in node["<<qubit->node_address<<"]\n";
+	//std::cout<<"Applying memory error to "<<qubit<<" in qnic["<<qubit->qnic_index<<"] in node["<<qubit->node_address<<"]\n";
     //std::cout<<"memory_err = "<<memory_err.pauli_error_rate<<"\n";
     //Check when the error got updated last time. Errors will be performed depending on the difference between that time and the current time.
     if(qubit->memory_err.error_rate==0){//If no memory error occurs, or if the state is completely mixed, skip this memory error simulation.
@@ -699,42 +708,42 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
         MatrixXd Initial_condition(1,7);//I, X, Z, Y, Ex, Re, Cm
          if(EXerr){
 			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
-			 std::cout<<"[Init] = EX\n";
+			 //std::cout<<"[Init] = EX\n";
              Initial_condition << 0,0,0,0,1,0,0;//Has an excitation error
                     //error("err EX");
          }else if(REerr){
              
 			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
-			 std::cout<<"[Init] = RE\n";
+			 //std::cout<<"[Init] = RE\n";
              Initial_condition << 0,0,0,0,0,1,0;//Has an relaxation error
                     //error("err RE");
         }else if(CMerr){
 			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
-             std::cout<<"[Init] = CM\n";
+             //std::cout<<"[Init] = CM\n";
              Initial_condition << 0,0,0,0,0,0,1;//Has an relaxation e
         }else if(Zerr && Xerr){
              Initial_condition << 0,0,0,1,0,0,0;//Has a Y error
 			//if(qubit->getIndex() == 71 && qubit->node_address == 3)    
-			std::cout<<"[Init] = Y\n";
+			//std::cout<<"[Init] = Y\n";
             //std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
             //error("err Y");
         }else if(Zerr && !Xerr){
 			//if(qubit->getIndex() == 71 && qubit->node_address == 3) 
-			 std::cout<<"[Init] = Z\n";
+			 //std::cout<<"[Init] = Z\n";
              Initial_condition << 0,0,1,0,0,0,0;//Has a Z error
             //std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
             //error("err Z");
         }else if(!Zerr && Xerr){
              
 			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
-			 std::cout<<"[Init] = X\n";
+			 //std::cout<<"[Init] = X\n";
              Initial_condition << 0,1,0,0,0,0,0;//Has an X error
              //std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<", time_evolution_microsec"<<time_evolution_microsec<<"\n";
              //error("err X");
         }else{
              
 			//if(qubit->getIndex() == 71 && qubit->node_address == 3)
-			  std::cout<<"[Init] = I\n";
+			  //std::cout<<"[Init] = I\n";
              Initial_condition << 1,0,0,0,0,0,0;//No error
         }
 
@@ -1032,7 +1041,7 @@ measurement_outcome stationaryQubit::measure_density_independent(){
   	
     //if(this->getIndex() == 71 && this->node_address == 3)
 	//	std::cout<<"---measuring "<<this<<" in node["<<node_address<<"]\n";
-    std::cout<<"---measuring "<<this<<" in qnic["<<qnic_index<<"] in node["<<node_address<<"]\n";
+    //std::cout<<"---measuring "<<this<<" in qnic["<<qnic_index<<"] in node["<<node_address<<"]\n";
     if(this->entangled_partner == nullptr && this->Density_Matrix_Collapsed(0,0).real() ==-111){
             //EV<<entangled_partner<<"\n";
             std::cout<<Density_Matrix_Collapsed<<"\n";

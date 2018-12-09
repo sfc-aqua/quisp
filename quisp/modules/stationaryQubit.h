@@ -84,7 +84,7 @@ typedef struct _memory_error_model{
     double Y_error_rate;
     double excitation_error_rate;
     double relaxation_error_rate;
-    double complitely_mixed_rate;
+    double completely_mixed_rate;
 } memory_error_model;
 
 //Matrices of single qubit errors. Used when conducting tomography.

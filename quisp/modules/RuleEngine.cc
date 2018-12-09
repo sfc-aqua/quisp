@@ -743,7 +743,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
            neighborQNodeAddress = getInterface_toNeighbor_Internal(qnic_address).neighborQNode_address;
      }
 
-    std::cout<<"This result is for qnic["<<qnic_address<<"]\n";
+    //std::cout<<"This result is for qnic["<<qnic_address<<"]\n";
 
     int num_emitted_in_this_burstTrial = tracker[qnic_address].size();
     //EV<<"qnic["<<qnic_index<<"] with type = "<<qnic_type<<"address "<<qnic_address<<" has emitted"<<num_emitted_in_this_burstTrial<<" photons. \n";
@@ -767,7 +767,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
         }else{
             //std::cout<<"node["<<parentAddress<<"] success!\n";
             //Keep the entangled qubits
-            std::cout<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"] node addr["<<it->first<<"] \n";
+            //std::cout<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"] node addr["<<it->first<<"] \n";
             //Add this as an available resource
             stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
             if(qubit->entangled_partner!=nullptr){
@@ -798,7 +798,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
 
     //Any qubit that has been shot while BSA result is actually on the way to the node, needs to be freed as well.
     if(num_emitted_in_this_burstTrial > list_size){
-        EV<<num_emitted_in_this_burstTrial<<" shots fired, but only "<<list_size<<" results returned\n";
+        ///EV<<num_emitted_in_this_burstTrial<<" shots fired, but only "<<list_size<<" results returned\n";
         for(int i=list_size; i<num_emitted_in_this_burstTrial; i++){
             sentQubitIndexTracker::iterator it = tracker[qnic_address].find(i);//check ith shot's information (qnic, qubit index).
             if (it == tracker[qnic_address].end())
