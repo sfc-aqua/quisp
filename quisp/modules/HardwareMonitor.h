@@ -97,6 +97,7 @@ class HardwareMonitor : public cSimpleModule
         int num_purification_tomography = 0;
         bool X_Purification = false;
         bool Z_Purification = false;
+        int Purification_type = -1;
         int num_measure;
 
     public:

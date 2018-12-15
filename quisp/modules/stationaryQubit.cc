@@ -1180,8 +1180,8 @@ measurement_outcome stationaryQubit::measure_density_independent(){
         EV<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). Partner's dm is now = "<<normalized_partners_dm<<"\n";
         entangled_partner->Density_Matrix_Collapsed = normalized_partners_dm;
         entangled_partner->partner_measured = true;//We actually do not need this as long as deleting entangled_partner completely is totally fine.
-		if(entangled_partner->getIndex() == 71 && entangled_partner->node_address == 3)
-			std::cout<<"-------------------"<<entangled_partner<<" in node["<<entangled_partner->node_address<<"] overwritten dm.\n";
+		//if(entangled_partner->getIndex() == 71 && entangled_partner->node_address == 3)
+		//	std::cout<<"-------------------"<<entangled_partner<<" in node["<<entangled_partner->node_address<<"] overwritten dm.\n";
         entangled_partner->entangled_partner = nullptr;//Break entanglement.
         //Save what error it had, when this density matrix was calculated. Error may get updated in the future, so we need to track what error has been considered already in the dm.
         entangled_partner->GOD_dm_Xerror = entangled_partner->par("GOD_Xerror");

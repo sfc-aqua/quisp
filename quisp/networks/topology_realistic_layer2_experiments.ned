@@ -899,7 +899,7 @@ network Realistic_Layer2_MIM_tomography
         repeater[0].port++ <--> ClassicalChannel {  distance = 2km; } <--> HoM[1].port++;
         HoM[1].port++ <--> ClassicalChannel {  distance = 18km; } <--> repeater[1].port++;
 
-        repr[1].port++ <--> ClassicalChannel {  distance = 3km; } <--> HoM[2].port++;
+        repeater[1].port++ <--> ClassicalChannel {  distance = 3km; } <--> HoM[2].port++;
         HoM[2].port++ <--> ClassicalChannel {  distance = 17km; } <--> repeater[2].port++;
 
         repeater[2].port++ <--> ClassicalChannel {  distance = 4km; } <--> HoM[3].port++;

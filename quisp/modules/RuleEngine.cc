@@ -35,17 +35,19 @@ void RuleEngine::initialize()
     number_of_qnics_r = par("number_of_qnics_r");
     number_of_qnics_rp = par("number_of_qnics_rp");
 
+    terminated_qnic = new bool[number_of_qnics_all];
     qnic_burst_trial_counter = new int[number_of_qnics_all];    //if there are 2 qnics, 1 qnic_r, and 2 qnic_rp, then trial_index[0~1] is assigned for qnics, trial_index[2~2] for qnic_r and trial_index[3~4] for qnic_rp....
     for(int i=0; i<number_of_qnics_all; i++){
        qnic_burst_trial_counter[i] = 0;
+       terminated_qnic[i] = false;
     }
 
     Busy_OR_Free_QubitState_table = new QubitStateTable[QNIC_N];
     Busy_OR_Free_QubitState_table[QNIC_E] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_E], QNIC_E);
     Busy_OR_Free_QubitState_table[QNIC_R] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_R], QNIC_R);
     Busy_OR_Free_QubitState_table[QNIC_RP] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_RP], QNIC_RP);
-
     tracker = new sentQubitIndexTracker[number_of_qnics_all];//Tracks which qubit was sent first, second and so on per qnic(r,rp)
+
 
     /*Initialize resource list by Age for the actual use of qubits in operations*/
     allResources = new qnicResources[QNIC_N];
@@ -124,12 +126,15 @@ void RuleEngine::handleMessage(cMessage *msg){
              }
 
 
-            for (EntangledPairs::iterator it =  allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); it++)
-                EV << it->first << " => " << it->second << '\n';
-            EV<< "****************************************\n";
+            //for (EntangledPairs::iterator it =  allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); it++)
+            //    EV << it->first << " => " << it->second << '\n';
+            //EV<< "****************************************\n";
 
-            //Schedule next burst
-            if(pk->getInternal_qnic_index()==-1){//MIM, or the other node without internnal HoM of MM
+            if(terminated_qnic[qnic_address]==true){
+                //std::cout<<"NOT ANY MORE qnic["<<qnic_address<<"] in node["<<parentAddress<<"]";
+                return;
+            }
+            else if(pk->getInternal_qnic_index()==-1){////Schedule next burst. MIM, or the other node without internnal HoM of MM
                 EV<<"This BSA request is non-internal\n";
                 scheduleFirstPhotonEmission(pk, QNIC_E);
             }else{
@@ -177,8 +182,8 @@ void RuleEngine::handleMessage(cMessage *msg){
            p.working_partner_addr = pk->getRuleSet()->entangled_partner;
            p.Rs = pk->getRuleSet();
            int process_id = rp.size();//This is temporary because it will not be unique when processes have been deleted.
-           EV<<"Ruleset arrived id="<<p.Rs->ruleset_id<<"\n";
-           EV<<"Process size is ...."<<p.Rs->size()<<"\n";
+           std::cout<<"Ruleset arrived id="<<p.Rs->ruleset_id<<" partner node="<<p.working_partner_addr<<" node["<<parentAddress<<"\n";
+           std::cout<<"Process size is ...."<<p.Rs->size()<<" node["<<parentAddress<<"\n";
            //todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
            //ResourceAllocation();
            if(p.Rs->size()>0){
@@ -219,6 +224,9 @@ void RuleEngine::handleMessage(cMessage *msg){
             //std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
             //std::cout<<"Locked one is "<<pkt->getEntangled_with()<<"in node["<<q->node_address<<"] \n";
             storeCheck_DoublePurification_Agreement(pr);
+        }else if(dynamic_cast<StopEmitting *>(msg)!= nullptr){
+            StopEmitting *pkt = check_and_cast<StopEmitting *>(msg);
+            terminated_qnic[pkt->getQnic_address()] = true;
         }
 
         for(int i=0; i<number_of_qnics; i++){
@@ -964,6 +972,11 @@ void RuleEngine::traverseThroughAllProcesses2(){
                                 LinkTomographyResult *pk_for_self = pk_t->dup();
                                 pk_for_self->setPartner_address(pk_t->getDestAddr());
                                 pk_for_self->setDestAddr(pk_t->getSrcAddr());
+                                //std::cout<<" pk_t partner->"<<pk_t->getPartner_address()<<"\n";
+                                //std::cout<<" pk_t_self partner->"<<pk_for_self->getPartner_address()<<"\n";
+                                if(pk_t->getPartner_address() == pk_for_self->getPartner_address()){
+                                    error("Wrong");
+                                }
                                 //std::cout<<"time = "<<pk_t->getFinish()<<"\n";
                                 /*if(pk_t->getFinish()!=-1){
                                     error("It is...");

@@ -183,3 +183,8 @@ packet Error extends header
     string error_text;
 }
 
+packet StopEmitting extends header{
+    int qnic_address;
+
+}
+

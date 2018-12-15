@@ -83,6 +83,7 @@ class RuleEngine : public cSimpleModule
         //Although qnic index is in QubitAddr, lest make int qnic_index -> QubisState to lessen the search
         //QubitStateTable stable, stable_r, stable_rp;
         QubitStateTable* Busy_OR_Free_QubitState_table;
+        bool* terminated_qnic;//When you need to intentionally stop the link to make the simulation lighter.
         sentQubitIndexTracker* tracker;
         HardwareMonitor *hardware_monitor;
         RealTimeController *realtime_controller;

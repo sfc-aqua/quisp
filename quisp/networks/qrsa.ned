@@ -36,6 +36,7 @@ simple HardwareMonitor
         int initial_purification = default(0);
         bool X_purification = default(false);
         bool Z_purification = default(false);
+        int Purification_type = default(-1);
         int num_measure = default(3000);
         string tomography_output_filename = default("default");
         string file_dir_name = default("results/");

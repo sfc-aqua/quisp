@@ -76,6 +76,7 @@ void HardwareMonitor::initialize(int stage)
   num_purification_tomography = par("initial_purification");
   X_Purification = par("X_purification");
   Z_Purification = par("Z_purification");
+  Purification_type = par("Purification_type");
   num_measure = par("num_measure");
   myAddress = par("address");
   std::stringstream ss;
@@ -191,11 +192,19 @@ void HardwareMonitor::handleMessage(cMessage *msg){
             all_temporal_tomography_output_holder[local_qnic.address].insert(std::make_pair(result->getCount_id(), temp));
         }
         if(result->getFinish()!=-1){
-            if(all_temporal_tomography_runningtime_holder[local_qnic.address].tomography_time < result->getFinish()){
+            if(all_temporal_tomography_runningtime_holder[local_qnic.address].tomography_time < result->getFinish()){//Pick the slower tomography time MIN(self,partner).
                 all_temporal_tomography_runningtime_holder[local_qnic.address].Bellpair_per_sec = (double)result->getMax_count()/result->getFinish().dbl();
                 all_temporal_tomography_runningtime_holder[local_qnic.address].tomography_measurements = result->getMax_count();
                 all_temporal_tomography_runningtime_holder[local_qnic.address].tomography_time = result->getFinish();
+
+                //std::cout<<"Tomo done "<<local_qnic.address<<", in node["<<myAddress<<"] \n";
+                StopEmitting *pk = new StopEmitting;
+                pk->setQnic_address(local_qnic.address);
+                pk->setDestAddr(myAddress);
+                pk->setSrcAddr(myAddress);
+                send(pk,"RouterPort$o");
             }
+
         }
     }
     delete msg;
@@ -224,10 +233,10 @@ void HardwareMonitor::finish(){
 
     //EV<<"This is just a test!\n";
 
-    EV<<"numQnic_total = "<<numQnic_total;
+    //EV<<"numQnic_total = "<<numQnic_total;
     for(int i=0; i<numQnic_total; i++){
         int meas_total = 0;
-        EV<<"\n \n \n \n \n QNIC["<<i<<"] \n";
+        //std::cout<<"\n \n \n \n \n QNIC["<<i<<"] \n";
         for(auto it =  all_temporal_tomography_output_holder[i].cbegin(); it != all_temporal_tomography_output_holder[i].cend(); ++it){
             //EV <<"Count["<< it->first << "] = " << it->second.my_basis << ", " << it->second.my_output_is_plus << ", " << it->second.partner_basis << ", "  << it->second.partner_output_is_plus << " " << "\n";
             std::string basis_combination = "";
@@ -467,14 +476,45 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
             //Empty RuleSet
             RuleSet* tomography_RuleSet = new RuleSet(RuleSet_id, my_address,partner_address);//Tomography between this node and the sender of Ack.
-            std::cout<<"Creating rules now\n";
+            std::cout<<"Creating rules now RS_id = "<< RuleSet_id<<", partner_address = "<<partner_address<<"\n";
 
             int rule_index = 0;
 
             if(num_purification_tomography>0){/*RuleSet including purification. CUrrently, not looping.*/
 
-                //X or Z purification
-                if((X_Purification && !Z_Purification)  || (!X_Purification && Z_Purification)){
+                if(Purification_type == 2002){
+                    //First stage X purification
+                    Rule* Purification = new Rule(RuleSet_id, rule_index);
+                    Condition* Purification_condition = new Condition();
+                    Clause* resource_clause = new EnoughResourceClause(2);
+                    Purification_condition->addClause(resource_clause);
+                    Purification->setCondition(Purification_condition);
+                    Action* purify_action = new PurifyAction(RuleSet_id,rule_index,true,false, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
+                    Purification->setAction(purify_action);
+                    rule_index++;
+                    tomography_RuleSet->addRule(Purification);
+
+                    //Second stage Z purification (Using X purified resources)
+                    Purification = new Rule(RuleSet_id, rule_index);
+                    Purification_condition = new Condition();
+                    resource_clause = new EnoughResourceClause(2);
+                    Purification_condition->addClause(resource_clause);
+                    Purification->setCondition(Purification_condition);
+                    purify_action = new PurifyAction(RuleSet_id,rule_index,false,true, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
+                    Purification->setAction(purify_action);
+                    rule_index++;
+                    tomography_RuleSet->addRule(Purification);
+                }else if(Purification_type == 1001){//Same as last one. X, Z double purification (purification pumping)
+                    Rule* Purification = new Rule(RuleSet_id, rule_index);
+                    Condition* Purification_condition = new Condition();
+                    Clause* resource_clause = new EnoughResourceClause(3);
+                    Purification_condition->addClause(resource_clause);
+                    Purification->setCondition(Purification_condition);
+                    Action* purify_action = new DoublePurifyAction(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
+                    Purification->setAction(purify_action);
+                    rule_index++;
+                    tomography_RuleSet->addRule(Purification);
+                }else if((X_Purification && !Z_Purification)  || (!X_Purification && Z_Purification)){//X or Z purification
                     Rule* Purification = new Rule(RuleSet_id, rule_index);
                     Condition* Purification_condition = new Condition();
                     Clause* resource_clause = new EnoughResourceClause(2);
@@ -484,7 +524,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                     Purification->setAction(purify_action);
                     rule_index++;
                     tomography_RuleSet->addRule(Purification);
-                }else{//X, Z double purification
+                }else{//X, Z double purification (purification pumping)
 
                     Rule* Purification = new Rule(RuleSet_id, rule_index);
                     Condition* Purification_condition = new Condition();
