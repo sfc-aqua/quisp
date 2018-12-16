@@ -88,8 +88,8 @@ void stationaryQubit::initialize()
     memory_err.X_error_rate = (double)par("memory_X_error_rate").doubleValue();
     memory_err.Y_error_rate = (double)par("memory_Y_error_rate").doubleValue();
     memory_err.Z_error_rate = (double)par("memory_Z_error_rate").doubleValue();
-    memory_err.excitation_error_rate = (double)par("memory_error_rate").doubleValue();
-    memory_err.relaxation_error_rate = (double)par("memory_error_rate").doubleValue();
+    memory_err.excitation_error_rate = (double)par("memory_energy_excitation_rate").doubleValue();
+    memory_err.relaxation_error_rate = (double)par("memory_energy_relaxation_rate").doubleValue();
     memory_err.completely_mixed_rate = (double)par("memory_completely_mixed_rate").doubleValue();
 	memory_err.error_rate = memory_err.X_error_rate + memory_err.Y_error_rate + memory_err.Z_error_rate + memory_err.excitation_error_rate + memory_err.relaxation_error_rate + memory_err.completely_mixed_rate; //This is per μs.
     /*EV<<"Err rate = "<<memory_err.pauli_error_rate<<"\n";
@@ -116,7 +116,7 @@ void stationaryQubit::initialize()
     Measurement_error = SetSingleQubitGateErrorCeilings("Measurement");
     CNOTgate_error = SetTwoQubitGateErrorCeilings("CNOTgate");
 
-    //std::cout<<Memory_Transition_matrix<<"\n";
+    std::cout<<Memory_Transition_matrix<<"\n";
     //endSimulation();
 
     //Set error matrices. This is used in the process of simulating tomography.

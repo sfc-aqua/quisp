@@ -57,14 +57,14 @@ simple stationaryQubit
         double memory_Y_error_ratio = default(1);
         double memory_energy_excitation_ratio = default(1);
         double memory_energy_relaxation_ratio = default(1);
-        double memory_complitely_mixed_ratio = default(1);
+        double memory_completely_mixed_ratio = default(1);
 		
 		
 		double memory_Z_error_rate = default(0);
         double memory_X_error_rate = default(0);
         double memory_Y_error_rate = default(0);
-        double memory_excitation_rate = default(0);
-        double memory_relaxation_rate = default(0);
+        double memory_energy_excitation_rate = default(0);
+        double memory_energy_relaxation_rate = default(0);
         double memory_completely_mixed_rate = default(0);
 		        
 
