@@ -551,7 +551,7 @@ void stationaryQubit::setCompletelyMixedDensityMatrix(){
 	
     this->Density_Matrix_Collapsed<<(double)1/(double)2,0,
                                     0,(double)1/(double)2;
-    std::cout<<"Dm completely mixed "<<this->Density_Matrix_Collapsed<<"\n";
+    //std::cout<<"Dm completely mixed "<<this->Density_Matrix_Collapsed<<"\n";
 	this->completely_mixed = true;
     this->excited_or_relaxed = false;
 
