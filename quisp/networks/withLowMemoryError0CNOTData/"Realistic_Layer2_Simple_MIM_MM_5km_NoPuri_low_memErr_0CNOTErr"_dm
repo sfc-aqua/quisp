@@ -1,100 +1,1100 @@
-EndNode1[0]<-->QuantumChannel{cost=213013;distance=5km;fidelity=0.829501;bellpair_per_sec=682.275;tomography_time=10.259793760925;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.829501; X=0.0622443; Z=0.0651688; Y=0.0430856
-EndNode2[0]<-->QuantumChannel{cost=208344;distance=2.5km;fidelity=0.833448;bellpair_per_sec=690.976;tomography_time=10.130598256117;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.833448; X=0.0342365; Z=0.0708771; Y=0.0614384
-Repeater1[0]<-->QuantumChannel{cost=213013;distance=5km;fidelity=0.829501;bellpair_per_sec=682.275;tomography_time=10.259793760925;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.829501; X=0.0622443; Z=0.0651688; Y=0.0430856
-Repeater1[0]<-->QuantumChannel{cost=208344;distance=2.5km;fidelity=0.833448;bellpair_per_sec=690.976;tomography_time=10.130598256117;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.833448; X=0.0342365; Z=0.0708771; Y=0.0614384
-EndNode1[0]<-->QuantumChannel{cost=218270;distance=5km;fidelity=0.81939;bellpair_per_sec=682.377;tomography_time=10.258253529565;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.81939; X=0.0542299; Z=0.0788291; Y=0.0475513
-EndNode2[0]<-->QuantumChannel{cost=211915;distance=2.5km;fidelity=0.826362;bellpair_per_sec=691.034;tomography_time=10.129754209627;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.826362; X=0.0810227; Z=0.0521431; Y=0.0404726
-Repeater1[0]<-->QuantumChannel{cost=218270;distance=5km;fidelity=0.81939;bellpair_per_sec=682.377;tomography_time=10.258253529565;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.81939; X=0.0542299; Z=0.0788291; Y=0.0475513
-Repeater1[0]<-->QuantumChannel{cost=211915;distance=2.5km;fidelity=0.826362;bellpair_per_sec=691.034;tomography_time=10.129754209627;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.826362; X=0.0810227; Z=0.0521431; Y=0.0404726
-EndNode1[0]<-->QuantumChannel{cost=210747;distance=5km;fidelity=0.834111;bellpair_per_sec=682.009;tomography_time=10.263788736015;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.834111; X=0.061114; Z=0.0549225; Y=0.049852
-EndNode2[0]<-->QuantumChannel{cost=209254;distance=2.5km;fidelity=0.83172;bellpair_per_sec=690.833;tomography_time=10.132696314535;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.83172; X=0.0476575; Z=0.0728553; Y=0.0477673
-Repeater1[0]<-->QuantumChannel{cost=210747;distance=5km;fidelity=0.834111;bellpair_per_sec=682.009;tomography_time=10.263788736015;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.834111; X=0.061114; Z=0.0549225; Y=0.049852
-Repeater1[0]<-->QuantumChannel{cost=209254;distance=2.5km;fidelity=0.83172;bellpair_per_sec=690.833;tomography_time=10.132696314535;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.83172; X=0.0476575; Z=0.0728553; Y=0.0477673
-EndNode1[0]<-->QuantumChannel{cost=219145;distance=5km;fidelity=0.817844;bellpair_per_sec=682.227;tomography_time=10.260515744375;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.817844; X=0.0528881; Z=0.077431; Y=0.0518373
-EndNode2[0]<-->QuantumChannel{cost=218559;distance=2.5km;fidelity=0.813705;bellpair_per_sec=691.032;tomography_time=10.129778325241;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.813705; X=0.0751842; Z=0.0651219; Y=0.0459892
-Repeater1[0]<-->QuantumChannel{cost=219145;distance=5km;fidelity=0.817844;bellpair_per_sec=682.227;tomography_time=10.260515744375;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.817844; X=0.0528881; Z=0.077431; Y=0.0518373
-Repeater1[0]<-->QuantumChannel{cost=218559;distance=2.5km;fidelity=0.813705;bellpair_per_sec=691.032;tomography_time=10.129778325241;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.813705; X=0.0751842; Z=0.0651219; Y=0.0459892
-EndNode1[0]<-->QuantumChannel{cost=206687;distance=5km;fidelity=0.842438;bellpair_per_sec=681.728;tomography_time=10.268024372255;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.842438; X=0.029133; Z=0.0661641; Y=0.0622649
-EndNode2[0]<-->QuantumChannel{cost=202349;distance=2.5km;fidelity=0.845671;bellpair_per_sec=691.027;tomography_time=10.129850672083;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.845671; X=0.0458318; Z=0.0547117; Y=0.0537851
-Repeater1[0]<-->QuantumChannel{cost=206687;distance=5km;fidelity=0.842438;bellpair_per_sec=681.728;tomography_time=10.268024372255;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.842438; X=0.029133; Z=0.0661641; Y=0.0622649
-Repeater1[0]<-->QuantumChannel{cost=202349;distance=2.5km;fidelity=0.845671;bellpair_per_sec=691.027;tomography_time=10.129850672083;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.845671; X=0.0458318; Z=0.0547117; Y=0.0537851
-EndNode1[0]<-->QuantumChannel{cost=222298;distance=5km;fidelity=0.811824;bellpair_per_sec=682.56;tomography_time=10.255509992455;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.811824; X=0.0410066; Z=0.0655097; Y=0.0816601
-EndNode2[0]<-->QuantumChannel{cost=206987;distance=2.5km;fidelity=0.836146;bellpair_per_sec=691.022;tomography_time=10.129923018925;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.836146; X=0.0471027; Z=0.0676514; Y=0.0490999
-Repeater1[0]<-->QuantumChannel{cost=222298;distance=5km;fidelity=0.811824;bellpair_per_sec=682.56;tomography_time=10.255509992455;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.811824; X=0.0410066; Z=0.0655097; Y=0.0816601
-Repeater1[0]<-->QuantumChannel{cost=206987;distance=2.5km;fidelity=0.836146;bellpair_per_sec=691.022;tomography_time=10.129923018925;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.836146; X=0.0471027; Z=0.0676514; Y=0.0490999
-EndNode1[0]<-->QuantumChannel{cost=216501;distance=5km;fidelity=0.823089;bellpair_per_sec=681.782;tomography_time=10.267206124345;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.823089; X=0.07716; Z=0.0463136; Y=0.053437
-EndNode2[0]<-->QuantumChannel{cost=209521;distance=2.5km;fidelity=0.831157;bellpair_per_sec=690.886;tomography_time=10.131924614887;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.831157; X=0.0508226; Z=0.0550118; Y=0.0630085
-Repeater1[0]<-->QuantumChannel{cost=216501;distance=5km;fidelity=0.823089;bellpair_per_sec=681.782;tomography_time=10.267206124345;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.823089; X=0.07716; Z=0.0463136; Y=0.053437
-Repeater1[0]<-->QuantumChannel{cost=209521;distance=2.5km;fidelity=0.831157;bellpair_per_sec=690.886;tomography_time=10.131924614887;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.831157; X=0.0508226; Z=0.0550118; Y=0.0630085
-EndNode1[0]<-->QuantumChannel{cost=211343;distance=5km;fidelity=0.832697;bellpair_per_sec=682.397;tomography_time=10.257964736185;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.832697; X=0.0552229; Z=0.0567562; Y=0.0553235
-EndNode2[0]<-->QuantumChannel{cost=205516;distance=2.5km;fidelity=0.839256;bellpair_per_sec=690.82;tomography_time=10.132889239447;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.839256; X=0.037687; Z=0.076237; Y=0.04682
-Repeater1[0]<-->QuantumChannel{cost=211343;distance=5km;fidelity=0.832697;bellpair_per_sec=682.397;tomography_time=10.257964736185;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.832697; X=0.0552229; Z=0.0567562; Y=0.0553235
-Repeater1[0]<-->QuantumChannel{cost=205516;distance=2.5km;fidelity=0.839256;bellpair_per_sec=690.82;tomography_time=10.132889239447;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.839256; X=0.037687; Z=0.076237; Y=0.04682
-EndNode1[0]<-->QuantumChannel{cost=227383;distance=5km;fidelity=0.802966;bellpair_per_sec=682.099;tomography_time=10.262441033575;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.802966; X=0.0523795; Z=0.0603148; Y=0.0843393
-EndNode2[0]<-->QuantumChannel{cost=217469;distance=2.5km;fidelity=0.815716;bellpair_per_sec=691.076;tomography_time=10.129127203663;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.815716; X=0.0559421; Z=0.0535566; Y=0.0747857
-Repeater1[0]<-->QuantumChannel{cost=227383;distance=5km;fidelity=0.802966;bellpair_per_sec=682.099;tomography_time=10.262441033575;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.802966; X=0.0523795; Z=0.0603148; Y=0.0843393
-Repeater1[0]<-->QuantumChannel{cost=217469;distance=2.5km;fidelity=0.815716;bellpair_per_sec=691.076;tomography_time=10.129127203663;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.815716; X=0.0559421; Z=0.0535566; Y=0.0747857
-EndNode1[0]<-->QuantumChannel{cost=218509;distance=5km;fidelity=0.819033;bellpair_per_sec=682.227;tomography_time=10.260515744375;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.819033; X=0.0596832; Z=0.0656332; Y=0.055651
-EndNode2[0]<-->QuantumChannel{cost=211589;distance=2.5km;fidelity=0.82708;bellpair_per_sec=690.894;tomography_time=10.131804036817;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.82708; X=0.0538437; Z=0.0592216; Y=0.0598549
-Repeater1[0]<-->QuantumChannel{cost=218509;distance=5km;fidelity=0.819033;bellpair_per_sec=682.227;tomography_time=10.260515744375;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.819033; X=0.0596832; Z=0.0656332; Y=0.055651
-Repeater1[0]<-->QuantumChannel{cost=211589;distance=2.5km;fidelity=0.82708;bellpair_per_sec=690.894;tomography_time=10.131804036817;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.82708; X=0.0538437; Z=0.0592216; Y=0.0598549
-EndNode1[0]<-->QuantumChannel{cost=213805;distance=5km;fidelity=0.828192;bellpair_per_sec=681.901;tomography_time=10.265425231835;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.828192; X=0.0548729; Z=0.0556535; Y=0.061282
-EndNode2[0]<-->QuantumChannel{cost=208340;distance=2.5km;fidelity=0.833426;bellpair_per_sec=691.025;tomography_time=10.129874787697;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.833426; X=0.0627124; Z=0.0505946; Y=0.053267
-Repeater1[0]<-->QuantumChannel{cost=213805;distance=5km;fidelity=0.828192;bellpair_per_sec=681.901;tomography_time=10.265425231835;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.828192; X=0.0548729; Z=0.0556535; Y=0.061282
-Repeater1[0]<-->QuantumChannel{cost=208340;distance=2.5km;fidelity=0.833426;bellpair_per_sec=691.025;tomography_time=10.129874787697;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.833426; X=0.0627124; Z=0.0505946; Y=0.053267
-EndNode1[0]<-->QuantumChannel{cost=209390;distance=5km;fidelity=0.836604;bellpair_per_sec=682.345;tomography_time=10.258734851865;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.836604; X=0.0621809; Z=0.0490723; Y=0.0521423
-EndNode2[0]<-->QuantumChannel{cost=223268;distance=2.5km;fidelity=0.805134;bellpair_per_sec=690.935;tomography_time=10.131201146467;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.805134; X=0.0674778; Z=0.0746477; Y=0.0527408
-Repeater1[0]<-->QuantumChannel{cost=209390;distance=5km;fidelity=0.836604;bellpair_per_sec=682.345;tomography_time=10.258734851865;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.836604; X=0.0621809; Z=0.0490723; Y=0.0521423
-Repeater1[0]<-->QuantumChannel{cost=223268;distance=2.5km;fidelity=0.805134;bellpair_per_sec=690.935;tomography_time=10.131201146467;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.805134; X=0.0674778; Z=0.0746477; Y=0.0527408
-EndNode1[0]<-->QuantumChannel{cost=213711;distance=5km;fidelity=0.828141;bellpair_per_sec=682.285;tomography_time=10.259649364235;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.828141; X=0.0442819; Z=0.0692951; Y=0.0582822
-EndNode2[0]<-->QuantumChannel{cost=214651;distance=2.5km;fidelity=0.821037;bellpair_per_sec=691.101;tomography_time=10.128765469453;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.821037; X=0.0642087; Z=0.0633165; Y=0.0514376
-Repeater1[0]<-->QuantumChannel{cost=213711;distance=5km;fidelity=0.828141;bellpair_per_sec=682.285;tomography_time=10.259649364235;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.828141; X=0.0442819; Z=0.0692951; Y=0.0582822
-Repeater1[0]<-->QuantumChannel{cost=214651;distance=2.5km;fidelity=0.821037;bellpair_per_sec=691.101;tomography_time=10.128765469453;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.821037; X=0.0642087; Z=0.0633165; Y=0.0514376
-EndNode1[0]<-->QuantumChannel{cost=227490;distance=5km;fidelity=0.802838;bellpair_per_sec=681.997;tomography_time=10.263981264935;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.802838; X=0.064963; Z=0.0806308; Y=0.0515681
-EndNode2[0]<-->QuantumChannel{cost=208019;distance=2.5km;fidelity=0.834115;bellpair_per_sec=690.948;tomography_time=10.131008221555;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.834115; X=0.0773774; Z=0.0598776; Y=0.0286297
-Repeater1[0]<-->QuantumChannel{cost=227490;distance=5km;fidelity=0.802838;bellpair_per_sec=681.997;tomography_time=10.263981264935;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.802838; X=0.064963; Z=0.0806308; Y=0.0515681
-Repeater1[0]<-->QuantumChannel{cost=208019;distance=2.5km;fidelity=0.834115;bellpair_per_sec=690.948;tomography_time=10.131008221555;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.834115; X=0.0773774; Z=0.0598776; Y=0.0286297
-EndNode1[0]<-->QuantumChannel{cost=218706;distance=5km;fidelity=0.818594;bellpair_per_sec=682.342;tomography_time=10.258782984095;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.818594; X=0.0722469; Z=0.0670104; Y=0.042149
-EndNode2[0]<-->QuantumChannel{cost=219077;distance=2.5km;fidelity=0.812782;bellpair_per_sec=690.963;tomography_time=10.130791181029;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.812782; X=0.0527311; Z=0.0731948; Y=0.0612925
-Repeater1[0]<-->QuantumChannel{cost=218706;distance=5km;fidelity=0.818594;bellpair_per_sec=682.342;tomography_time=10.258782984095;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.818594; X=0.0722469; Z=0.0670104; Y=0.042149
-Repeater1[0]<-->QuantumChannel{cost=219077;distance=2.5km;fidelity=0.812782;bellpair_per_sec=690.963;tomography_time=10.130791181029;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.812782; X=0.0527311; Z=0.0731948; Y=0.0612925
-EndNode1[0]<-->QuantumChannel{cost=215384;distance=5km;fidelity=0.824788;bellpair_per_sec=682.499;tomography_time=10.256424504825;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.824788; X=0.0651325; Z=0.0665164; Y=0.0435631
-EndNode2[0]<-->QuantumChannel{cost=211857;distance=2.5km;fidelity=0.826532;bellpair_per_sec=690.937;tomography_time=10.131177030853;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.826532; X=0.0682044; Z=0.0603097; Y=0.0449535
-Repeater1[0]<-->QuantumChannel{cost=215384;distance=5km;fidelity=0.824788;bellpair_per_sec=682.499;tomography_time=10.256424504825;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.824788; X=0.0651325; Z=0.0665164; Y=0.0435631
-Repeater1[0]<-->QuantumChannel{cost=211857;distance=2.5km;fidelity=0.826532;bellpair_per_sec=690.937;tomography_time=10.131177030853;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.826532; X=0.0682044; Z=0.0603097; Y=0.0449535
-EndNode1[0]<-->QuantumChannel{cost=219841;distance=5km;fidelity=0.816428;bellpair_per_sec=682.425;tomography_time=10.257531546115;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.816428; X=0.0560274; Z=0.0704548; Y=0.0570893
-EndNode2[0]<-->QuantumChannel{cost=213252;distance=2.5km;fidelity=0.823793;bellpair_per_sec=690.987;tomography_time=10.130429446819;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.823793; X=0.0513805; Z=0.0667681; Y=0.0580586
-Repeater1[0]<-->QuantumChannel{cost=219841;distance=5km;fidelity=0.816428;bellpair_per_sec=682.425;tomography_time=10.257531546115;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.816428; X=0.0560274; Z=0.0704548; Y=0.0570893
-Repeater1[0]<-->QuantumChannel{cost=213252;distance=2.5km;fidelity=0.823793;bellpair_per_sec=690.987;tomography_time=10.130429446819;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.823793; X=0.0513805; Z=0.0667681; Y=0.0580586
-EndNode1[0]<-->QuantumChannel{cost=217928;distance=5km;fidelity=0.820147;bellpair_per_sec=682.189;tomography_time=10.261093331135;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.820147; X=0.0570228; Z=0.0672159; Y=0.0556145
-EndNode2[0]<-->QuantumChannel{cost=215655;distance=2.5km;fidelity=0.819233;bellpair_per_sec=690.915;tomography_time=10.131490533835;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.819233; X=0.0640084; Z=0.0714997; Y=0.0452585
-Repeater1[0]<-->QuantumChannel{cost=217928;distance=5km;fidelity=0.820147;bellpair_per_sec=682.189;tomography_time=10.261093331135;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.820147; X=0.0570228; Z=0.0672159; Y=0.0556145
-Repeater1[0]<-->QuantumChannel{cost=215655;distance=2.5km;fidelity=0.819233;bellpair_per_sec=690.915;tomography_time=10.131490533835;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.819233; X=0.0640084; Z=0.0714997; Y=0.0452585
-EndNode1[0]<-->QuantumChannel{cost=219650;distance=5km;fidelity=0.816818;bellpair_per_sec=682.368;tomography_time=10.258397926255;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.816818; X=0.070868; Z=0.053976; Y=0.058338
-EndNode2[0]<-->QuantumChannel{cost=205936;distance=2.5km;fidelity=0.838299;bellpair_per_sec=690.987;tomography_time=10.130429446819;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.838299; X=0.0496105; Z=0.0593389; Y=0.0527517
-Repeater1[0]<-->QuantumChannel{cost=219650;distance=5km;fidelity=0.816818;bellpair_per_sec=682.368;tomography_time=10.258397926255;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.816818; X=0.070868; Z=0.053976; Y=0.058338
-Repeater1[0]<-->QuantumChannel{cost=205936;distance=2.5km;fidelity=0.838299;bellpair_per_sec=690.987;tomography_time=10.130429446819;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.838299; X=0.0496105; Z=0.0593389; Y=0.0527517
-EndNode1[0]<-->QuantumChannel{cost=211867;distance=5km;fidelity=0.83181;bellpair_per_sec=682.163;tomography_time=10.261478388975;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.83181; X=0.0593036; Z=0.053904; Y=0.0549821
-EndNode2[0]<-->QuantumChannel{cost=214679;distance=2.5km;fidelity=0.820998;bellpair_per_sec=691.078;tomography_time=10.129103088049;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.820998; X=0.0569601; Z=0.0680399; Y=0.0540025
-Repeater1[0]<-->QuantumChannel{cost=211867;distance=5km;fidelity=0.83181;bellpair_per_sec=682.163;tomography_time=10.261478388975;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.83181; X=0.0593036; Z=0.053904; Y=0.0549821
-Repeater1[0]<-->QuantumChannel{cost=214679;distance=2.5km;fidelity=0.820998;bellpair_per_sec=691.078;tomography_time=10.129103088049;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.820998; X=0.0569601; Z=0.0680399; Y=0.0540025
-EndNode1[0]<-->QuantumChannel{cost=214235;distance=5km;fidelity=0.827305;bellpair_per_sec=681.99;tomography_time=10.264077529395;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.827305; X=0.0491577; Z=0.0391163; Y=0.0844207
-EndNode2[0]<-->QuantumChannel{cost=221241;distance=2.5km;fidelity=0.808754;bellpair_per_sec=691.038;tomography_time=10.129681862785;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.808754; X=0.0667129; Z=0.0721077; Y=0.0524253
-Repeater1[0]<-->QuantumChannel{cost=214235;distance=5km;fidelity=0.827305;bellpair_per_sec=681.99;tomography_time=10.264077529395;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.827305; X=0.0491577; Z=0.0391163; Y=0.0844207
-Repeater1[0]<-->QuantumChannel{cost=221241;distance=2.5km;fidelity=0.808754;bellpair_per_sec=691.038;tomography_time=10.129681862785;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.808754; X=0.0667129; Z=0.0721077; Y=0.0524253
-EndNode1[0]<-->QuantumChannel{cost=211695;distance=5km;fidelity=0.832148;bellpair_per_sec=682.163;tomography_time=10.261478388975;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.832148; X=0.0502823; Z=0.0628516; Y=0.0547177
-EndNode2[0]<-->QuantumChannel{cost=212089;distance=2.5km;fidelity=0.82608;bellpair_per_sec=690.937;tomography_time=10.131177030853;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.82608; X=0.0510666; Z=0.0570045; Y=0.0658488
-Repeater1[0]<-->QuantumChannel{cost=211695;distance=5km;fidelity=0.832148;bellpair_per_sec=682.163;tomography_time=10.261478388975;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.832148; X=0.0502823; Z=0.0628516; Y=0.0547177
-Repeater1[0]<-->QuantumChannel{cost=212089;distance=2.5km;fidelity=0.82608;bellpair_per_sec=690.937;tomography_time=10.131177030853;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.82608; X=0.0510666; Z=0.0570045; Y=0.0658488
-EndNode1[0]<-->QuantumChannel{cost=220375;distance=5km;fidelity=0.815584;bellpair_per_sec=682.182;tomography_time=10.261189595595;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.815584; X=0.0567849; Z=0.0747941; Y=0.0528375
-EndNode2[0]<-->QuantumChannel{cost=214367;distance=2.5km;fidelity=0.821574;bellpair_per_sec=691.114;tomography_time=10.128572544541;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.821574; X=0.0654557; Z=0.0511087; Y=0.061862
-Repeater1[0]<-->QuantumChannel{cost=220375;distance=5km;fidelity=0.815584;bellpair_per_sec=682.182;tomography_time=10.261189595595;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.815584; X=0.0567849; Z=0.0747941; Y=0.0528375
-Repeater1[0]<-->QuantumChannel{cost=214367;distance=2.5km;fidelity=0.821574;bellpair_per_sec=691.114;tomography_time=10.128572544541;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.821574; X=0.0654557; Z=0.0511087; Y=0.061862
-EndNode1[0]<-->QuantumChannel{cost=225372;distance=5km;fidelity=0.806331;bellpair_per_sec=682.454;tomography_time=10.257098356045;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.806331; X=0.0625824; Z=0.0718823; Y=0.0592038
-EndNode2[0]<-->QuantumChannel{cost=211397;distance=2.5km;fidelity=0.827417;bellpair_per_sec=690.958;tomography_time=10.130863527871;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.827417; X=0.0562148; Z=0.057596; Y=0.0587723
-Repeater1[0]<-->QuantumChannel{cost=225372;distance=5km;fidelity=0.806331;bellpair_per_sec=682.454;tomography_time=10.257098356045;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.806331; X=0.0625824; Z=0.0718823; Y=0.0592038
-Repeater1[0]<-->QuantumChannel{cost=211397;distance=2.5km;fidelity=0.827417;bellpair_per_sec=690.958;tomography_time=10.130863527871;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.827417; X=0.0562148; Z=0.057596; Y=0.0587723
-EndNode1[0]<-->QuantumChannel{cost=225852;distance=5km;fidelity=0.805633;bellpair_per_sec=682.185;tomography_time=10.261141463365;tomography_measurements=7000;actualmeas=7000;}<-->Repeater1[0]; F=0.805633; X=0.0654199; Z=0.0721597; Y=0.0567877
-EndNode2[0]<-->QuantumChannel{cost=207666;distance=2.5km;fidelity=0.834687;bellpair_per_sec=691.173;tomography_time=10.127704382437;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.834687; X=0.0475187; Z=0.0515566; Y=0.0662379
-Repeater1[0]<-->QuantumChannel{cost=225852;distance=5km;fidelity=0.805633;bellpair_per_sec=682.185;tomography_time=10.261141463365;tomography_measurements=7000;actualmeas=7000;}<-->EndNode1[0]; F=0.805633; X=0.0654199; Z=0.0721597; Y=0.0567877
-Repeater1[0]<-->QuantumChannel{cost=207666;distance=2.5km;fidelity=0.834687;bellpair_per_sec=691.173;tomography_time=10.127704382437;tomography_measurements=7000;actualmeas=7000;}<-->HoM1[0]; F=0.834687; X=0.0475187; Z=0.0515566; Y=0.0662379
+EndNode1[0]<--->Repeater1[0]
+REAL
+    0.427665   0.00522771   -0.0033212     0.382166
+  0.00522771    0.0571066   0.00957936 -6.17488e-05
+  -0.0033212   0.00957936    0.0482234    0.0130402
+    0.382166 -6.17488e-05    0.0130402     0.467005
+IMAGINARY
+          0    0.020603 -0.00675181 -0.00630286
+  -0.020603           0   0.0129518  -0.0041877
+ 0.00675181  -0.0129518           0  -0.0109504
+ 0.00630286   0.0041877   0.0109504           0
+EndNode2[0]<--->HoM1[0]
+REAL
+  0.445609 0.00663721 0.00796384   0.381285
+0.00663721  0.0432503 -0.0136009 0.00730334
+0.00796384 -0.0136009  0.0524246 -0.0142708
+  0.381285 0.00730334 -0.0142708   0.458716
+IMAGINARY
+           0    0.0109038   0.00393178  0.000810572
+  -0.0109038            0  -0.00442503   -0.0181363
+ -0.00393178   0.00442503            0  0.000459886
+-0.000810572    0.0181363 -0.000459886            0
+Repeater1[0]<--->EndNode1[0]
+REAL
+    0.427665   -0.0033212   0.00522771     0.382166
+  -0.0033212    0.0482234   0.00957936    0.0130402
+  0.00522771   0.00957936    0.0571066 -6.17488e-05
+    0.382166    0.0130402 -6.17488e-05     0.467005
+IMAGINARY
+          0 -0.00675181    0.020603 -0.00630286
+ 0.00675181           0  -0.0129518  -0.0109504
+  -0.020603   0.0129518           0  -0.0041877
+ 0.00630286   0.0109504   0.0041877           0
+Repeater1[0]<--->HoM1[0]
+REAL
+  0.445609 0.00796384 0.00663721   0.381285
+0.00796384  0.0524246 -0.0136009 -0.0142708
+0.00663721 -0.0136009  0.0432503 0.00730334
+  0.381285 -0.0142708 0.00730334   0.458716
+IMAGINARY
+           0   0.00393178    0.0109038  0.000810572
+ -0.00393178            0   0.00442503  0.000459886
+  -0.0109038  -0.00442503            0   -0.0181363
+-0.000810572 -0.000459886    0.0181363            0
+EndNode1[0]<--->Repeater1[0]
+REAL
+   0.451654  0.00761197  -0.0134472     0.37028
+ 0.00761197   0.0470738  0.00333931 -0.00679823
+ -0.0134472  0.00333931   0.0547074 -0.00209049
+    0.37028 -0.00679823 -0.00209049    0.446565
+IMAGINARY
+          0   0.0103615  -0.0198876 -0.00356412
+ -0.0103615           0 -0.00901866  0.00959956
+  0.0198876  0.00901866           0   0.0122723
+ 0.00356412 -0.00959956  -0.0122723           0
+EndNode2[0]<--->HoM1[0]
+REAL
+    0.41255 -0.00604071  -0.0179097    0.387109
+-0.00604071   0.0694259    0.020275   0.0060198
+ -0.0179097    0.020275   0.0520694  0.00416337
+   0.387109   0.0060198  0.00416337    0.465955
+IMAGINARY
+          0  0.00834437   0.0147164 -0.00437068
+-0.00834437           0 -0.00229599  -0.0209978
+ -0.0147164  0.00229599           0 -0.00457553
+ 0.00437068   0.0209978  0.00457553           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+   0.451654  -0.0134472  0.00761197     0.37028
+ -0.0134472   0.0547074  0.00333931 -0.00209049
+ 0.00761197  0.00333931   0.0470738 -0.00679823
+    0.37028 -0.00209049 -0.00679823    0.446565
+IMAGINARY
+          0  -0.0198876   0.0103615 -0.00356412
+  0.0198876           0  0.00901866   0.0122723
+ -0.0103615 -0.00901866           0  0.00959956
+ 0.00356412  -0.0122723 -0.00959956           0
+Repeater1[0]<--->HoM1[0]
+REAL
+    0.41255  -0.0179097 -0.00604071    0.387109
+ -0.0179097   0.0520694    0.020275  0.00416337
+-0.00604071    0.020275   0.0694259   0.0060198
+   0.387109  0.00416337   0.0060198    0.465955
+IMAGINARY
+          0   0.0147164  0.00834437 -0.00437068
+ -0.0147164           0  0.00229599 -0.00457553
+-0.00834437 -0.00229599           0  -0.0209978
+ 0.00437068  0.00457553   0.0209978           0
+EndNode1[0]<--->Repeater1[0]
+REAL
+   0.464752 -0.00203676  0.00689373    0.389594
+-0.00203676   0.0443864  0.00563099  0.00902139
+ 0.00689373  0.00563099   0.0665796   0.0139731
+   0.389594  0.00902139   0.0139731    0.424282
+IMAGINARY
+           0  -0.00227406  -0.00507379   -0.0110103
+  0.00227406            0   0.00363934    0.0174597
+  0.00507379  -0.00363934            0 -0.000985396
+   0.0110103   -0.0174597  0.000985396            0
+EndNode2[0]<--->HoM1[0]
+REAL
+    0.469281   0.00145107    0.0242139     0.379432
+  0.00145107    0.0535948 -5.48738e-05  -0.00281312
+   0.0242139 -5.48738e-05    0.0418301    0.0212467
+    0.379432  -0.00281312    0.0212467     0.435294
+IMAGINARY
+           0   0.00277512  -0.00580253    0.0121083
+ -0.00277512            0    0.0127325 -0.000607726
+  0.00580253   -0.0127325            0  -0.00405717
+  -0.0121083  0.000607726   0.00405717            0
+Repeater1[0]<--->EndNode1[0]
+REAL
+   0.464752  0.00689373 -0.00203676    0.389594
+ 0.00689373   0.0665796  0.00563099   0.0139731
+-0.00203676  0.00563099   0.0443864  0.00902139
+   0.389594   0.0139731  0.00902139    0.424282
+IMAGINARY
+           0  -0.00507379  -0.00227406   -0.0110103
+  0.00507379            0  -0.00363934 -0.000985396
+  0.00227406   0.00363934            0    0.0174597
+   0.0110103  0.000985396   -0.0174597            0
+Repeater1[0]<--->HoM1[0]
+REAL
+    0.469281    0.0242139   0.00145107     0.379432
+   0.0242139    0.0418301 -5.48738e-05    0.0212467
+  0.00145107 -5.48738e-05    0.0535948  -0.00281312
+    0.379432    0.0212467  -0.00281312     0.435294
+IMAGINARY
+           0  -0.00580253   0.00277512    0.0121083
+  0.00580253            0   -0.0127325  -0.00405717
+ -0.00277512    0.0127325            0 -0.000607726
+  -0.0121083   0.00405717  0.000607726            0
+EndNode1[0]<--->Repeater1[0]
+REAL
+   0.458493  0.00845423   0.0118825    0.370206
+ 0.00845423   0.0421456 0.000525428 -0.00334592
+  0.0118825 0.000525428   0.0625798 -0.00723472
+   0.370206 -0.00334592 -0.00723472    0.436782
+IMAGINARY
+           0  -0.00686292  0.000696876  -0.00698775
+  0.00686292            0   0.00824403    0.0019627
+-0.000696876  -0.00824403            0   -0.0011158
+  0.00698775   -0.0019627    0.0011158            0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.460459 -0.00513911 -0.00199815    0.374291
+-0.00513911   0.0663265   0.0145975    0.013377
+-0.00199815   0.0145975   0.0548469   0.0232114
+   0.374291    0.013377   0.0232114    0.418367
+IMAGINARY
+           0  0.000322543   0.00736595  -0.00404287
+-0.000322543            0  -0.00221583   0.00283813
+ -0.00736595   0.00221583            0  -0.00542458
+  0.00404287  -0.00283813   0.00542458            0
+Repeater1[0]<--->EndNode1[0]
+REAL
+   0.458493   0.0118825  0.00845423    0.370206
+  0.0118825   0.0625798 0.000525428 -0.00723472
+ 0.00845423 0.000525428   0.0421456 -0.00334592
+   0.370206 -0.00723472 -0.00334592    0.436782
+IMAGINARY
+           0  0.000696876  -0.00686292  -0.00698775
+-0.000696876            0  -0.00824403   -0.0011158
+  0.00686292   0.00824403            0    0.0019627
+  0.00698775    0.0011158   -0.0019627            0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.460459 -0.00199815 -0.00513911    0.374291
+-0.00199815   0.0548469   0.0145975   0.0232114
+-0.00513911   0.0145975   0.0663265    0.013377
+   0.374291   0.0232114    0.013377    0.418367
+IMAGINARY
+           0   0.00736595  0.000322543  -0.00404287
+ -0.00736595            0   0.00221583  -0.00542458
+-0.000322543  -0.00221583            0   0.00283813
+  0.00404287   0.00542458  -0.00283813            0
+EndNode1[0]<--->Repeater1[0]
+REAL
+   0.438172  0.00652318   0.0146412    0.388137
+ 0.00652318   0.0564516  -0.0165659 0.000321392
+  0.0146412  -0.0165659   0.0349462  0.00719253
+   0.388137 0.000321392  0.00719253     0.47043
+IMAGINARY
+           0   0.00244027  0.000430341   0.00449845
+ -0.00244027            0    0.0174589    0.0156588
+-0.000430341   -0.0174589            0    -0.019767
+ -0.00449845   -0.0156588     0.019767            0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.439336 0.000709847  0.00442516     0.39548
+0.000709847   0.0446999 -0.00397663 -0.00377156
+ 0.00442516 -0.00397663    0.054917  -0.0170497
+    0.39548 -0.00377156  -0.0170497    0.461047
+IMAGINARY
+           0   0.00880923  -0.00358233    0.0281503
+ -0.00880923            0  0.000512115  0.000864938
+  0.00358233 -0.000512115            0  -0.00880923
+  -0.0281503 -0.000864938   0.00880923            0
+Repeater1[0]<--->EndNode1[0]
+REAL
+   0.438172   0.0146412  0.00652318    0.388137
+  0.0146412   0.0349462  -0.0165659  0.00719253
+ 0.00652318  -0.0165659   0.0564516 0.000321392
+   0.388137  0.00719253 0.000321392     0.47043
+IMAGINARY
+           0  0.000430341   0.00244027   0.00449845
+-0.000430341            0   -0.0174589    -0.019767
+ -0.00244027    0.0174589            0    0.0156588
+ -0.00449845     0.019767   -0.0156588            0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.439336  0.00442516 0.000709847     0.39548
+ 0.00442516    0.054917 -0.00397663  -0.0170497
+0.000709847 -0.00397663   0.0446999 -0.00377156
+    0.39548  -0.0170497 -0.00377156    0.461047
+IMAGINARY
+           0  -0.00358233   0.00880923    0.0281503
+  0.00358233            0 -0.000512115  -0.00880923
+ -0.00880923  0.000512115            0  0.000864938
+  -0.0281503   0.00880923 -0.000864938            0
+EndNode1[0]<--->Repeater1[0]
+REAL
+  0.406667  -0.034316 -0.0273013   0.373157
+ -0.034316  0.0693333 -0.0203268 0.00906232
+-0.0273013 -0.0203268  0.0533333 0.00224057
+  0.373157 0.00906232 0.00224057   0.470667
+IMAGINARY
+          0  0.00799412 -0.00362319 -0.00391642
+-0.00799412           0 -0.00588751  0.00362319
+ 0.00362319  0.00588751           0 -0.00924726
+ 0.00391642 -0.00362319  0.00924726           0
+EndNode2[0]<--->HoM1[0]
+REAL
+    0.448101    -0.024637   -0.0190485     0.384247
+   -0.024637    0.0493671 -0.000998585   -0.0139464
+  -0.0190485 -0.000998585    0.0468354  -0.00581982
+    0.384247   -0.0139464  -0.00581982     0.455696
+IMAGINARY
+          0  0.00786717 -0.00466482  0.00898079
+-0.00786717           0  0.00104428  0.00529534
+ 0.00466482 -0.00104428           0  -0.0148029
+-0.00898079 -0.00529534   0.0148029           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+  0.406667 -0.0273013  -0.034316   0.373157
+-0.0273013  0.0533333 -0.0203268 0.00224057
+ -0.034316 -0.0203268  0.0693333 0.00906232
+  0.373157 0.00224057 0.00906232   0.470667
+IMAGINARY
+          0 -0.00362319  0.00799412 -0.00391642
+ 0.00362319           0  0.00588751 -0.00924726
+-0.00799412 -0.00588751           0  0.00362319
+ 0.00391642  0.00924726 -0.00362319           0
+Repeater1[0]<--->HoM1[0]
+REAL
+    0.448101   -0.0190485    -0.024637     0.384247
+  -0.0190485    0.0468354 -0.000998585  -0.00581982
+   -0.024637 -0.000998585    0.0493671   -0.0139464
+    0.384247  -0.00581982   -0.0139464     0.455696
+IMAGINARY
+          0 -0.00466482  0.00786717  0.00898079
+ 0.00466482           0 -0.00104428  -0.0148029
+-0.00786717  0.00104428           0  0.00529534
+-0.00898079   0.0148029 -0.00529534           0
+EndNode1[0]<--->Repeater1[0]
+REAL
+  0.455224 0.00443829 0.00134134   0.388388
+0.00443829   0.068408  0.0118615 -0.0138102
+0.00134134  0.0118615  0.0621891 -0.0169071
+  0.388388 -0.0138102 -0.0169071   0.414179
+IMAGINARY
+           0    0.0122552 -0.000852201    0.0144115
+  -0.0122552            0     -0.02405  -0.00796734
+ 0.000852201      0.02405            0   -0.0129337
+  -0.0144115   0.00796734    0.0129337            0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.423501 -0.00415815 -0.00701894    0.388073
+-0.00415815   0.0465116 -0.00609292  -0.0018643
+-0.00701894 -0.00609292   0.0673195 -0.00599413
+   0.388073  -0.0018643 -0.00599413    0.462668
+IMAGINARY
+           0   -0.0128064   0.00398033   0.00434505
+   0.0128064            0    0.0245011   -0.0100862
+ -0.00398033   -0.0245011            0 -8.37243e-05
+ -0.00434505    0.0100862  8.37243e-05            0
+Repeater1[0]<--->EndNode1[0]
+REAL
+  0.455224 0.00134134 0.00443829   0.388388
+0.00134134  0.0621891  0.0118615 -0.0169071
+0.00443829  0.0118615   0.068408 -0.0138102
+  0.388388 -0.0169071 -0.0138102   0.414179
+IMAGINARY
+           0 -0.000852201    0.0122552    0.0144115
+ 0.000852201            0      0.02405   -0.0129337
+  -0.0122552     -0.02405            0  -0.00796734
+  -0.0144115    0.0129337   0.00796734            0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.423501 -0.00701894 -0.00415815    0.388073
+-0.00701894   0.0673195 -0.00609292 -0.00599413
+-0.00415815 -0.00609292   0.0465116  -0.0018643
+   0.388073 -0.00599413  -0.0018643    0.462668
+IMAGINARY
+           0   0.00398033   -0.0128064   0.00434505
+ -0.00398033            0   -0.0245011 -8.37243e-05
+   0.0128064    0.0245011            0   -0.0100862
+ -0.00434505  8.37243e-05    0.0100862            0
+EndNode1[0]<--->Repeater1[0]
+REAL
+    0.440915    0.0232854    0.0206332     0.387971
+   0.0232854    0.0508259 -5.02672e-05   -0.0013306
+   0.0206332 -5.02672e-05    0.0597205   0.00847055
+    0.387971   -0.0013306   0.00847055     0.448539
+IMAGINARY
+          0 -0.00294963  -0.0214844  0.00280264
+ 0.00294963           0  0.00948714  -0.0214844
+  0.0214844 -0.00948714           0   0.0276892
+-0.00280264   0.0214844  -0.0276892           0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.439181  -0.0229397 -0.00773196    0.381509
+ -0.0229397    0.049936 -0.00456647  0.00773196
+-0.00773196 -0.00456647   0.0345711   0.0294164
+   0.381509  0.00773196   0.0294164    0.476312
+IMAGINARY
+          0   0.0204723  0.00151835  0.00418133
+ -0.0204723           0   0.0101416  -0.0129108
+-0.00151835  -0.0101416           0   -0.001485
+-0.00418133   0.0129108    0.001485           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+    0.440915    0.0206332    0.0232854     0.387971
+   0.0206332    0.0597205 -5.02672e-05   0.00847055
+   0.0232854 -5.02672e-05    0.0508259   -0.0013306
+    0.387971   0.00847055   -0.0013306     0.448539
+IMAGINARY
+          0  -0.0214844 -0.00294963  0.00280264
+  0.0214844           0 -0.00948714   0.0276892
+ 0.00294963  0.00948714           0  -0.0214844
+-0.00280264  -0.0276892   0.0214844           0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.439181 -0.00773196  -0.0229397    0.381509
+-0.00773196   0.0345711 -0.00456647   0.0294164
+ -0.0229397 -0.00456647    0.049936  0.00773196
+   0.381509   0.0294164  0.00773196    0.476312
+IMAGINARY
+          0  0.00151835   0.0204723  0.00418133
+-0.00151835           0  -0.0101416   -0.001485
+ -0.0204723   0.0101416           0  -0.0129108
+-0.00418133    0.001485   0.0129108           0
+EndNode1[0]<--->Repeater1[0]
+REAL
+  0.470052  0.0166667  0.0112463   0.371326
+ 0.0166667  0.0651042 -0.0159799  0.0157977
+ 0.0112463 -0.0159799  0.0716146  0.0166667
+  0.371326  0.0157977  0.0166667   0.393229
+IMAGINARY
+          0 -0.00564911  0.00297151  -0.0162281
+ 0.00564911           0  0.00819349  -0.0146295
+-0.00297151 -0.00819349           0  0.00823978
+  0.0162281   0.0146295 -0.00823978           0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.421833  0.00778068  0.00122231     0.38108
+ 0.00778068   0.0700809 -0.00942178  -0.0065699
+ 0.00122231 -0.00942178   0.0606469   0.0029145
+    0.38108  -0.0065699   0.0029145    0.447439
+IMAGINARY
+          0 -0.00662651 -0.00934037   0.0176429
+ 0.00662651           0 -0.00261024   0.0106596
+ 0.00934037  0.00261024           0  0.00662651
+ -0.0176429  -0.0106596 -0.00662651           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+  0.470052  0.0112463  0.0166667   0.371326
+ 0.0112463  0.0716146 -0.0159799  0.0166667
+ 0.0166667 -0.0159799  0.0651042  0.0157977
+  0.371326  0.0166667  0.0157977   0.393229
+IMAGINARY
+          0  0.00297151 -0.00564911  -0.0162281
+-0.00297151           0 -0.00819349  0.00823978
+ 0.00564911  0.00819349           0  -0.0146295
+  0.0162281 -0.00823978   0.0146295           0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.421833  0.00122231  0.00778068     0.38108
+ 0.00122231   0.0606469 -0.00942178   0.0029145
+ 0.00778068 -0.00942178   0.0700809  -0.0065699
+    0.38108   0.0029145  -0.0065699    0.447439
+IMAGINARY
+          0 -0.00934037 -0.00662651   0.0176429
+ 0.00934037           0  0.00261024  0.00662651
+ 0.00662651 -0.00261024           0   0.0106596
+ -0.0176429 -0.00662651  -0.0106596           0
+EndNode1[0]<--->Repeater1[0]
+REAL
+   0.445609  -0.0212774   0.0151643      0.3767
+ -0.0212774   0.0576671  0.00201614 -0.00624631
+  0.0151643  0.00201614   0.0576671   0.0135485
+     0.3767 -0.00624631   0.0135485    0.439056
+IMAGINARY
+           0   -0.0373589    0.0121814    -0.012996
+   0.0373589            0  0.000379797   0.00807179
+  -0.0121814 -0.000379797            0   0.00318166
+    0.012996  -0.00807179  -0.00318166            0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.465753 -0.00533973  0.00753063    0.383929
+-0.00533973   0.0561644 -0.00300561 0.000367305
+ 0.00753063 -0.00300561   0.0575342    0.001087
+   0.383929 0.000367305    0.001087    0.420548
+IMAGINARY
+          0  -0.0124956  0.00938311  -0.0190829
+  0.0124956           0   0.0124961 -0.00184542
+-0.00938311  -0.0124961           0  0.00998309
+  0.0190829  0.00184542 -0.00998309           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+   0.445609   0.0151643  -0.0212774      0.3767
+  0.0151643   0.0576671  0.00201614   0.0135485
+ -0.0212774  0.00201614   0.0576671 -0.00624631
+     0.3767   0.0135485 -0.00624631    0.439056
+IMAGINARY
+           0    0.0121814   -0.0373589    -0.012996
+  -0.0121814            0 -0.000379797   0.00318166
+   0.0373589  0.000379797            0   0.00807179
+    0.012996  -0.00318166  -0.00807179            0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.465753  0.00753063 -0.00533973    0.383929
+ 0.00753063   0.0575342 -0.00300561    0.001087
+-0.00533973 -0.00300561   0.0561644 0.000367305
+   0.383929    0.001087 0.000367305    0.420548
+IMAGINARY
+          0  0.00938311  -0.0124956  -0.0190829
+-0.00938311           0  -0.0124961  0.00998309
+  0.0124956   0.0124961           0 -0.00184542
+  0.0190829 -0.00998309  0.00184542           0
+EndNode1[0]<--->Repeater1[0]
+REAL
+   0.395194   0.0216471  0.00713902    0.386269
+  0.0216471   0.0547397 -0.00320458   0.0143664
+ 0.00713902 -0.00320458   0.0614152   0.0173314
+   0.386269   0.0143664   0.0173314    0.488652
+IMAGINARY
+          0   0.0122969   0.0110837 -0.00678182
+ -0.0122969           0 -0.00169276  -0.0110837
+ -0.0110837  0.00169276           0  0.00612411
+ 0.00678182   0.0110837 -0.00612411           0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.434278  -0.0113971     0.00965    0.391416
+ -0.0113971   0.0579897  0.00472273 -0.00365799
+    0.00965  0.00472273   0.0579897 -0.00391581
+   0.391416 -0.00365799 -0.00391581    0.449742
+IMAGINARY
+          0 -0.00230075   -0.015455   0.0132084
+ 0.00230075           0 -0.00300431 -0.00760163
+   0.015455  0.00300431           0   0.0200873
+ -0.0132084  0.00760163  -0.0200873           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+   0.395194  0.00713902   0.0216471    0.386269
+ 0.00713902   0.0614152 -0.00320458   0.0173314
+  0.0216471 -0.00320458   0.0547397   0.0143664
+   0.386269   0.0173314   0.0143664    0.488652
+IMAGINARY
+          0   0.0110837   0.0122969 -0.00678182
+ -0.0110837           0  0.00169276  0.00612411
+ -0.0122969 -0.00169276           0  -0.0110837
+ 0.00678182 -0.00612411   0.0110837           0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.434278     0.00965  -0.0113971    0.391416
+    0.00965   0.0579897  0.00472273 -0.00391581
+ -0.0113971  0.00472273   0.0579897 -0.00365799
+   0.391416 -0.00391581 -0.00365799    0.449742
+IMAGINARY
+          0   -0.015455 -0.00230075   0.0132084
+   0.015455           0  0.00300431   0.0200873
+ 0.00230075 -0.00300431           0 -0.00760163
+ -0.0132084  -0.0200873  0.00760163           0
+EndNode1[0]<--->Repeater1[0]
+REAL
+    0.43364   0.0161346 -0.00446859    0.393766
+  0.0161346   0.0551905  0.00501931   0.0159396
+-0.00446859  0.00501931   0.0591327  -0.0060131
+   0.393766   0.0159396  -0.0060131    0.452037
+IMAGINARY
+          0  -0.0115912   0.0200298 -0.00704393
+  0.0115912           0   0.0095377  0.00426687
+ -0.0200298  -0.0095377           0  -0.0165417
+ 0.00704393 -0.00426687   0.0165417           0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.456284  -0.0136267 -0.00572047    0.365243
+ -0.0136267    0.057377  0.00736847 -0.00383367
+-0.00572047  0.00736847   0.0628415   0.0015248
+   0.365243 -0.00383367   0.0015248    0.423497
+IMAGINARY
+          0 -0.00690555  0.00221154 -0.00063124
+ 0.00690555           0 -0.00125082 -0.00285175
+-0.00221154  0.00125082           0  0.00370453
+ 0.00063124  0.00285175 -0.00370453           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+    0.43364 -0.00446859   0.0161346    0.393766
+-0.00446859   0.0591327  0.00501931  -0.0060131
+  0.0161346  0.00501931   0.0551905   0.0159396
+   0.393766  -0.0060131   0.0159396    0.452037
+IMAGINARY
+          0   0.0200298  -0.0115912 -0.00704393
+ -0.0200298           0  -0.0095377  -0.0165417
+  0.0115912   0.0095377           0  0.00426687
+ 0.00704393   0.0165417 -0.00426687           0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.456284 -0.00572047  -0.0136267    0.365243
+-0.00572047   0.0628415  0.00736847   0.0015248
+ -0.0136267  0.00736847    0.057377 -0.00383367
+   0.365243   0.0015248 -0.00383367    0.423497
+IMAGINARY
+          0  0.00221154 -0.00690555 -0.00063124
+-0.00221154           0  0.00125082  0.00370453
+ 0.00690555 -0.00125082           0 -0.00285175
+ 0.00063124 -0.00370453  0.00285175           0
+EndNode1[0]<--->Repeater1[0]
+REAL
+   0.461538  -0.0184922   -0.029592    0.379423
+ -0.0184922   0.0410256 -0.00700015 -0.00520179
+  -0.029592 -0.00700015   0.0615385  -0.0124357
+   0.379423 -0.00520179  -0.0124357    0.435897
+IMAGINARY
+           0  -0.00806872    0.0133431 -0.000377969
+  0.00806872            0  -0.00715972   0.00885014
+  -0.0133431   0.00715972            0  -0.00498611
+ 0.000377969  -0.00885014   0.00498611            0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.409524  0.00912579   -0.016186     0.37886
+ 0.00912579   0.0612245  0.00638558 -0.00157356
+  -0.016186  0.00638558   0.0544218  -0.0132241
+    0.37886 -0.00157356  -0.0132241     0.47483
+IMAGINARY
+          0 -0.00383547  0.00124974 -0.00732924
+ 0.00383547           0   0.0229738  0.00380076
+-0.00124974  -0.0229738           0  -0.0226797
+ 0.00732924 -0.00380076   0.0226797           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+   0.461538   -0.029592  -0.0184922    0.379423
+  -0.029592   0.0615385 -0.00700015  -0.0124357
+ -0.0184922 -0.00700015   0.0410256 -0.00520179
+   0.379423  -0.0124357 -0.00520179    0.435897
+IMAGINARY
+           0    0.0133431  -0.00806872 -0.000377969
+  -0.0133431            0   0.00715972  -0.00498611
+  0.00806872  -0.00715972            0   0.00885014
+ 0.000377969   0.00498611  -0.00885014            0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.409524   -0.016186  0.00912579     0.37886
+  -0.016186   0.0544218  0.00638558  -0.0132241
+ 0.00912579  0.00638558   0.0612245 -0.00157356
+    0.37886  -0.0132241 -0.00157356     0.47483
+IMAGINARY
+          0  0.00124974 -0.00383547 -0.00732924
+-0.00124974           0  -0.0229738  -0.0226797
+ 0.00383547   0.0229738           0  0.00380076
+ 0.00732924   0.0226797 -0.00380076           0
+EndNode1[0]<--->Repeater1[0]
+REAL
+  0.430894  -0.011405 -0.0117344   0.361104
+ -0.011405  0.0636856 0.00669746  0.0130433
+-0.0117344 0.00669746  0.0528455  0.0192584
+  0.361104  0.0130433  0.0192584   0.452575
+IMAGINARY
+          0   0.0108499   0.0125233 -0.00380629
+ -0.0108499           0 -0.00696684  -0.0246562
+ -0.0125233  0.00696684           0   0.0115001
+ 0.00380629   0.0246562  -0.0115001           0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.436985  0.00426252    0.016258    0.387119
+ 0.00426252   0.0624264   0.0243738 -0.00767147
+   0.016258   0.0243738   0.0435807    0.013571
+   0.387119 -0.00767147    0.013571    0.457008
+IMAGINARY
+          0   0.0233447   0.0062161   0.0117623
+ -0.0233447           0  -0.0185009 -0.00817689
+ -0.0062161   0.0185009           0  -0.0226911
+ -0.0117623  0.00817689   0.0226911           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+  0.430894 -0.0117344  -0.011405   0.361104
+-0.0117344  0.0528455 0.00669746  0.0192584
+ -0.011405 0.00669746  0.0636856  0.0130433
+  0.361104  0.0192584  0.0130433   0.452575
+IMAGINARY
+          0   0.0125233   0.0108499 -0.00380629
+ -0.0125233           0  0.00696684   0.0115001
+ -0.0108499 -0.00696684           0  -0.0246562
+ 0.00380629  -0.0115001   0.0246562           0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.436985    0.016258  0.00426252    0.387119
+   0.016258   0.0435807   0.0243738    0.013571
+ 0.00426252   0.0243738   0.0624264 -0.00767147
+   0.387119    0.013571 -0.00767147    0.457008
+IMAGINARY
+          0   0.0062161   0.0233447   0.0117623
+ -0.0062161           0   0.0185009  -0.0226911
+ -0.0233447  -0.0185009           0 -0.00817689
+ -0.0117623   0.0226911  0.00817689           0
+EndNode1[0]<--->Repeater1[0]
+REAL
+   0.451157 0.000640052  -0.0167497    0.375792
+0.000640052   0.0475578    0.015049 -0.00144355
+ -0.0167497    0.015049    0.066838  -0.0175786
+   0.375792 -0.00144355  -0.0175786    0.434447
+IMAGINARY
+          0 -0.00139419  -0.0091954   0.0108465
+ 0.00139419           0  -0.0146828  -0.0040672
+  0.0091954   0.0146828           0   0.0133305
+ -0.0108465   0.0040672  -0.0133305           0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.427261  0.00375516   0.0177617    0.369793
+ 0.00375516   0.0589777 -0.00428071  -0.0144328
+  0.0177617 -0.00428071   0.0550459 -0.00442094
+   0.369793  -0.0144328 -0.00442094    0.458716
+IMAGINARY
+           0 -0.000376094    0.0125757   -0.0128016
+ 0.000376094            0  -0.00615266  -0.00393373
+  -0.0125757   0.00615266            0   0.00161066
+   0.0128016   0.00393373  -0.00161066            0
+Repeater1[0]<--->EndNode1[0]
+REAL
+   0.451157  -0.0167497 0.000640052    0.375792
+ -0.0167497    0.066838    0.015049  -0.0175786
+0.000640052    0.015049   0.0475578 -0.00144355
+   0.375792  -0.0175786 -0.00144355    0.434447
+IMAGINARY
+          0  -0.0091954 -0.00139419   0.0108465
+  0.0091954           0   0.0146828   0.0133305
+ 0.00139419  -0.0146828           0  -0.0040672
+ -0.0108465  -0.0133305   0.0040672           0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.427261   0.0177617  0.00375516    0.369793
+  0.0177617   0.0550459 -0.00428071 -0.00442094
+ 0.00375516 -0.00428071   0.0589777  -0.0144328
+   0.369793 -0.00442094  -0.0144328    0.458716
+IMAGINARY
+           0    0.0125757 -0.000376094   -0.0128016
+  -0.0125757            0   0.00615266   0.00161066
+ 0.000376094  -0.00615266            0  -0.00393373
+   0.0128016  -0.00161066   0.00393373            0
+EndNode1[0]<--->Repeater1[0]
+REAL
+    0.43734 -0.00290846 -0.00132626    0.379136
+-0.00290846   0.0549872   0.0107847 -0.00132626
+-0.00132626   0.0107847   0.0537084  -0.0116804
+   0.379136 -0.00132626  -0.0116804    0.453964
+IMAGINARY
+          0  0.00426354   0.0290757   -0.024846
+-0.00426354           0  0.00160562 -0.00646932
+ -0.0290757 -0.00160562           0   -0.020221
+   0.024846  0.00646932    0.020221           0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.447368   0.0105954 -0.00153031    0.383111
+  0.0105954   0.0486842   0.0116254   0.0150091
+-0.00153031   0.0116254   0.0644737    0.013153
+   0.383111   0.0150091    0.013153    0.439474
+IMAGINARY
+          0  0.00169207  -0.0117002 -0.00822603
+-0.00169207           0  0.00884714 -0.00771081
+  0.0117002 -0.00884714           0  -0.0197644
+ 0.00822603  0.00771081   0.0197644           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+    0.43734 -0.00132626 -0.00290846    0.379136
+-0.00132626   0.0537084   0.0107847  -0.0116804
+-0.00290846   0.0107847   0.0549872 -0.00132626
+   0.379136  -0.0116804 -0.00132626    0.453964
+IMAGINARY
+          0   0.0290757  0.00426354   -0.024846
+ -0.0290757           0 -0.00160562   -0.020221
+-0.00426354  0.00160562           0 -0.00646932
+   0.024846    0.020221  0.00646932           0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.447368 -0.00153031   0.0105954    0.383111
+-0.00153031   0.0644737   0.0116254    0.013153
+  0.0105954   0.0116254   0.0486842   0.0150091
+   0.383111    0.013153   0.0150091    0.439474
+IMAGINARY
+          0  -0.0117002  0.00169207 -0.00822603
+  0.0117002           0 -0.00884714  -0.0197644
+-0.00169207  0.00884714           0 -0.00771081
+ 0.00822603   0.0197644  0.00771081           0
+EndNode1[0]<--->Repeater1[0]
+REAL
+    0.456077   0.00493616    0.0145351     0.372987
+  0.00493616     0.055355 -0.000530942   0.00378241
+   0.0145351 -0.000530942    0.0577617   0.00252652
+    0.372987   0.00378241   0.00252652     0.430806
+IMAGINARY
+          0   0.0149662  -0.0239984  0.00405418
+ -0.0149662           0  -0.0046473    0.016752
+  0.0239984   0.0046473           0  0.00545537
+-0.00405418   -0.016752 -0.00545537           0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.432285   0.0146112 -0.00489232    0.378512
+  0.0146112   0.0478796 -0.00333902   0.0125206
+-0.00489232 -0.00333902   0.0615595  0.00966067
+   0.378512   0.0125206  0.00966067    0.458276
+IMAGINARY
+           0   -0.0236147    0.0124149  -0.00780533
+   0.0236147            0    0.0203998  0.000374362
+  -0.0124149   -0.0203998            0   -0.0196253
+  0.00780533 -0.000374362    0.0196253            0
+Repeater1[0]<--->EndNode1[0]
+REAL
+    0.456077    0.0145351   0.00493616     0.372987
+   0.0145351    0.0577617 -0.000530942   0.00252652
+  0.00493616 -0.000530942     0.055355   0.00378241
+    0.372987   0.00252652   0.00378241     0.430806
+IMAGINARY
+          0  -0.0239984   0.0149662  0.00405418
+  0.0239984           0   0.0046473  0.00545537
+ -0.0149662  -0.0046473           0    0.016752
+-0.00405418 -0.00545537   -0.016752           0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.432285 -0.00489232   0.0146112    0.378512
+-0.00489232   0.0615595 -0.00333902  0.00966067
+  0.0146112 -0.00333902   0.0478796   0.0125206
+   0.378512  0.00966067   0.0125206    0.458276
+IMAGINARY
+           0    0.0124149   -0.0236147  -0.00780533
+  -0.0124149            0   -0.0203998   -0.0196253
+   0.0236147    0.0203998            0  0.000374362
+  0.00780533    0.0196253 -0.000374362            0
+EndNode1[0]<--->Repeater1[0]
+REAL
+   0.451923   0.0221044  0.00999241    0.376465
+  0.0221044   0.0453297 0.000704146  0.00803162
+ 0.00999241 0.000704146   0.0673077  0.00660053
+   0.376465  0.00803162  0.00660053     0.43544
+IMAGINARY
+         0  0.0125821  0.0146243   0.020071
+-0.0125821          0 -0.0125522 -0.0140153
+-0.0146243  0.0125522          0 -0.0131911
+ -0.020071  0.0140153  0.0131911          0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.473029 -0.00274725 -0.00497603    0.373867
+-0.00274725   0.0580913  0.00937496   0.0036024
+-0.00497603  0.00937496   0.0511757 -0.00274725
+   0.373867   0.0036024 -0.00274725    0.417704
+IMAGINARY
+          0  -0.0097441  0.00959261  0.00253596
+  0.0097441           0   0.0149738  0.00232709
+-0.00959261  -0.0149738           0  -0.0122132
+-0.00253596 -0.00232709   0.0122132           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+   0.451923  0.00999241   0.0221044    0.376465
+ 0.00999241   0.0673077 0.000704146  0.00660053
+  0.0221044 0.000704146   0.0453297  0.00803162
+   0.376465  0.00660053  0.00803162     0.43544
+IMAGINARY
+         0  0.0146243  0.0125821   0.020071
+-0.0146243          0  0.0125522 -0.0131911
+-0.0125821 -0.0125522          0 -0.0140153
+ -0.020071  0.0131911  0.0140153          0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.473029 -0.00497603 -0.00274725    0.373867
+-0.00497603   0.0511757  0.00937496 -0.00274725
+-0.00274725  0.00937496   0.0580913   0.0036024
+   0.373867 -0.00274725   0.0036024    0.417704
+IMAGINARY
+          0  0.00959261  -0.0097441  0.00253596
+-0.00959261           0  -0.0149738  -0.0122132
+  0.0097441   0.0149738           0  0.00232709
+-0.00253596   0.0122132 -0.00232709           0
+EndNode1[0]<--->Repeater1[0]
+REAL
+   0.438762  0.00202805  0.00515358    0.381421
+ 0.00202805   0.0551817    0.006265 -0.00041745
+ 0.00515358    0.006265   0.0740242   0.0121803
+   0.381421 -0.00041745   0.0121803    0.432032
+IMAGINARY
+           0   -0.0165864    0.0240911  0.000920166
+   0.0165864            0    0.0139313  -0.00723719
+  -0.0240911   -0.0139313            0   0.00722311
+-0.000920166   0.00723719  -0.00722311            0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.461942  0.00188917  0.00821037     0.38948
+ 0.00188917   0.0446194 -0.00157063  0.00186519
+ 0.00821037 -0.00157063   0.0577428  0.00692695
+    0.38948  0.00186519  0.00692695    0.435696
+IMAGINARY
+          0   0.0117845  -0.0186204   0.0301072
+ -0.0117845           0 -0.00677806  0.00500169
+  0.0186204  0.00677806           0  0.00183421
+ -0.0301072 -0.00500169 -0.00183421           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+   0.438762  0.00515358  0.00202805    0.381421
+ 0.00515358   0.0740242    0.006265   0.0121803
+ 0.00202805    0.006265   0.0551817 -0.00041745
+   0.381421   0.0121803 -0.00041745    0.432032
+IMAGINARY
+           0    0.0240911   -0.0165864  0.000920166
+  -0.0240911            0   -0.0139313   0.00722311
+   0.0165864    0.0139313            0  -0.00723719
+-0.000920166  -0.00722311   0.00723719            0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.461942  0.00821037  0.00188917     0.38948
+ 0.00821037   0.0577428 -0.00157063  0.00692695
+ 0.00188917 -0.00157063   0.0446194  0.00186519
+    0.38948  0.00692695  0.00186519    0.435696
+IMAGINARY
+          0  -0.0186204   0.0117845   0.0301072
+  0.0186204           0  0.00677806  0.00183421
+ -0.0117845 -0.00677806           0  0.00500169
+ -0.0301072 -0.00183421 -0.00500169           0
+EndNode1[0]<--->Repeater1[0]
+REAL
+    0.422078   0.00443411 -6.01257e-05     0.388953
+  0.00443411    0.0571429   0.00216072      0.01195
+-6.01257e-05   0.00216072    0.0571429    0.0187198
+    0.388953      0.01195    0.0187198     0.463636
+IMAGINARY
+          0  -0.0107052 -0.00218783  -0.0230901
+  0.0107052           0  0.00914586    0.019169
+ 0.00218783 -0.00914586           0  -0.0213702
+  0.0230901   -0.019169   0.0213702           0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.458556  -0.0250292  -0.0154314    0.376479
+ -0.0250292   0.0614973  0.00147883 -0.00885249
+ -0.0154314  0.00147883   0.0494652  0.00821723
+   0.376479 -0.00885249  0.00821723    0.430481
+IMAGINARY
+          0  0.00927077  0.00746411   0.0034169
+-0.00927077           0  0.00528956  -0.0128405
+-0.00746411 -0.00528956           0 -0.00792668
+ -0.0034169   0.0128405  0.00792668           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+    0.422078 -6.01257e-05   0.00443411     0.388953
+-6.01257e-05    0.0571429   0.00216072    0.0187198
+  0.00443411   0.00216072    0.0571429      0.01195
+    0.388953    0.0187198      0.01195     0.463636
+IMAGINARY
+          0 -0.00218783  -0.0107052  -0.0230901
+ 0.00218783           0 -0.00914586  -0.0213702
+  0.0107052  0.00914586           0    0.019169
+  0.0230901   0.0213702   -0.019169           0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.458556  -0.0154314  -0.0250292    0.376479
+ -0.0154314   0.0494652  0.00147883  0.00821723
+ -0.0250292  0.00147883   0.0614973 -0.00885249
+   0.376479  0.00821723 -0.00885249    0.430481
+IMAGINARY
+          0  0.00746411  0.00927077   0.0034169
+-0.00746411           0 -0.00528956 -0.00792668
+-0.00927077  0.00528956           0  -0.0128405
+ -0.0034169  0.00792668   0.0128405           0
+EndNode1[0]<--->Repeater1[0]
+REAL
+    0.406863  -0.00823367    0.0114273     0.394094
+ -0.00823367    0.0612745   -0.0176315 -0.000373963
+   0.0114273   -0.0176315    0.0723039  -0.00021887
+    0.394094 -0.000373963  -0.00021887     0.459559
+IMAGINARY
+          0    0.014482  -0.0113343   -0.005091
+  -0.014482           0  0.00772952  0.00672298
+  0.0113343 -0.00772952           0 -0.00855319
+   0.005091 -0.00672298  0.00855319           0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.415716  -0.0120997 -0.00247207    0.368323
+ -0.0120997   0.0633714  0.00714382  -0.0180759
+-0.00247207  0.00714382   0.0557668  -0.0134295
+   0.368323  -0.0180759  -0.0134295    0.465146
+IMAGINARY
+           0  -0.00720795  0.000446581   0.00506069
+  0.00720795            0    -0.019068   0.00569592
+-0.000446581     0.019068            0     0.012122
+ -0.00506069  -0.00569592    -0.012122            0
+Repeater1[0]<--->EndNode1[0]
+REAL
+    0.406863    0.0114273  -0.00823367     0.394094
+   0.0114273    0.0723039   -0.0176315  -0.00021887
+ -0.00823367   -0.0176315    0.0612745 -0.000373963
+    0.394094  -0.00021887 -0.000373963     0.459559
+IMAGINARY
+          0  -0.0113343    0.014482   -0.005091
+  0.0113343           0 -0.00772952 -0.00855319
+  -0.014482  0.00772952           0  0.00672298
+   0.005091  0.00855319 -0.00672298           0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.415716 -0.00247207  -0.0120997    0.368323
+-0.00247207   0.0557668  0.00714382  -0.0134295
+ -0.0120997  0.00714382   0.0633714  -0.0180759
+   0.368323  -0.0134295  -0.0180759    0.465146
+IMAGINARY
+           0  0.000446581  -0.00720795   0.00506069
+-0.000446581            0     0.019068     0.012122
+  0.00720795    -0.019068            0   0.00569592
+ -0.00506069    -0.012122  -0.00569592            0
+EndNode1[0]<--->Repeater1[0]
+REAL
+      0.475  -0.0076738 -0.00845902    0.384648
+ -0.0076738       0.055 -0.00221771  0.00119349
+-0.00845902 -0.00221771        0.05   0.0070133
+   0.384648  0.00119349   0.0070133        0.42
+IMAGINARY
+          0   0.0363544 -0.00484834  0.00547887
+ -0.0363544           0  0.00611907 -0.00230381
+ 0.00484834 -0.00611907           0 -0.00709564
+-0.00547887  0.00230381  0.00709564           0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.411692  0.00736924   0.0129552    0.384538
+ 0.00736924   0.0547264 -0.00739112  0.00223638
+  0.0129552 -0.00739112   0.0621891 -0.00142473
+   0.384538  0.00223638 -0.00142473    0.471393
+IMAGINARY
+          0  0.00431415   0.0135713   0.0214178
+-0.00431415           0 -0.00583338  -0.0128873
+ -0.0135713  0.00583338           0 -0.00089418
+ -0.0214178   0.0128873  0.00089418           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+      0.475 -0.00845902  -0.0076738    0.384648
+-0.00845902        0.05 -0.00221771   0.0070133
+ -0.0076738 -0.00221771       0.055  0.00119349
+   0.384648   0.0070133  0.00119349        0.42
+IMAGINARY
+          0 -0.00484834   0.0363544  0.00547887
+ 0.00484834           0 -0.00611907 -0.00709564
+ -0.0363544  0.00611907           0 -0.00230381
+-0.00547887  0.00709564  0.00230381           0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.411692   0.0129552  0.00736924    0.384538
+  0.0129552   0.0621891 -0.00739112 -0.00142473
+ 0.00736924 -0.00739112   0.0547264  0.00223638
+   0.384538 -0.00142473  0.00223638    0.471393
+IMAGINARY
+          0   0.0135713  0.00431415   0.0214178
+ -0.0135713           0  0.00583338 -0.00089418
+-0.00431415 -0.00583338           0  -0.0128873
+ -0.0214178  0.00089418   0.0128873           0
+EndNode1[0]<--->Repeater1[0]
+REAL
+  0.442144 -0.0166416 -0.0199429   0.370395
+-0.0166416   0.047503 0.00197368 0.00810084
+-0.0199429 0.00197368  0.0621194 0.00611526
+  0.370395 0.00810084 0.00611526   0.448234
+IMAGINARY
+          0   0.0136733  -0.0153803   0.0124339
+ -0.0136733           0 -0.00268097 -0.00262522
+  0.0153803  0.00268097           0  0.00571732
+ -0.0124339  0.00262522 -0.00571732           0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.432633   0.0145272 -0.00941986    0.385232
+  0.0145272   0.0605686  0.00179685 -0.00382979
+-0.00941986  0.00179685   0.0667491 -0.00964579
+   0.385232 -0.00382979 -0.00964579    0.440049
+IMAGINARY
+          0 -0.00460123  0.00198011   0.0125193
+ 0.00460123           0 -0.00737796 -0.00136661
+-0.00198011  0.00737796           0 -0.00460123
+ -0.0125193  0.00136661  0.00460123           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+  0.442144 -0.0199429 -0.0166416   0.370395
+-0.0199429  0.0621194 0.00197368 0.00611526
+-0.0166416 0.00197368   0.047503 0.00810084
+  0.370395 0.00611526 0.00810084   0.448234
+IMAGINARY
+          0  -0.0153803   0.0136733   0.0124339
+  0.0153803           0  0.00268097  0.00571732
+ -0.0136733 -0.00268097           0 -0.00262522
+ -0.0124339 -0.00571732  0.00262522           0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.432633 -0.00941986   0.0145272    0.385232
+-0.00941986   0.0667491  0.00179685 -0.00964579
+  0.0145272  0.00179685   0.0605686 -0.00382979
+   0.385232 -0.00964579 -0.00382979    0.440049
+IMAGINARY
+          0  0.00198011 -0.00460123   0.0125193
+-0.00198011           0  0.00737796 -0.00460123
+ 0.00460123 -0.00737796           0 -0.00136661
+ -0.0125193  0.00460123  0.00136661           0
+EndNode1[0]<--->Repeater1[0]
+REAL
+   0.43843 0.00762517  0.0128836   0.367225
+0.00762517  0.0649526  0.0016893 0.00771565
+ 0.0128836  0.0016893  0.0568336 -0.0182369
+  0.367225 0.00771565 -0.0182369   0.439783
+IMAGINARY
+          0  -0.0136347  0.00637034   0.0057823
+  0.0136347           0 -0.00641282   0.0197393
+-0.00637034  0.00641282           0 -0.00855853
+ -0.0057823  -0.0197393  0.00855853           0
+EndNode2[0]<--->HoM1[0]
+REAL
+   0.423773 -0.00400289  -0.0186357     0.38491
+-0.00400289   0.0542636 -0.00127877 -0.00949731
+ -0.0186357 -0.00127877   0.0607235  0.00783921
+    0.38491 -0.00949731  0.00783921     0.46124
+IMAGINARY
+         0  0.0150484 -0.0106923  0.0177251
+-0.0150484          0  0.0215419 -0.0174407
+ 0.0106923 -0.0215419          0  0.0118058
+-0.0177251  0.0174407 -0.0118058          0
+Repeater1[0]<--->EndNode1[0]
+REAL
+   0.43843  0.0128836 0.00762517   0.367225
+ 0.0128836  0.0568336  0.0016893 -0.0182369
+0.00762517  0.0016893  0.0649526 0.00771565
+  0.367225 -0.0182369 0.00771565   0.439783
+IMAGINARY
+          0  0.00637034  -0.0136347   0.0057823
+-0.00637034           0  0.00641282 -0.00855853
+  0.0136347 -0.00641282           0   0.0197393
+ -0.0057823  0.00855853  -0.0197393           0
+Repeater1[0]<--->HoM1[0]
+REAL
+   0.423773  -0.0186357 -0.00400289     0.38491
+ -0.0186357   0.0607235 -0.00127877  0.00783921
+-0.00400289 -0.00127877   0.0542636 -0.00949731
+    0.38491  0.00783921 -0.00949731     0.46124
+IMAGINARY
+         0 -0.0106923  0.0150484  0.0177251
+ 0.0106923          0 -0.0215419  0.0118058
+-0.0150484  0.0215419          0 -0.0174407
+-0.0177251 -0.0118058  0.0174407          0
+EndNode1[0]<--->Repeater1[0]
+REAL
+  0.424442  0.0183109   0.013342   0.366737
+ 0.0183109  0.0538765 0.00431612 0.00902638
+  0.013342 0.00431612  0.0683311 0.00932063
+  0.366737 0.00902638 0.00932063   0.453351
+IMAGINARY
+          0   0.0182977  0.00251368   0.0229906
+ -0.0182977           0  -0.0174826   -0.020985
+-0.00251368   0.0174826           0 -0.00237413
+ -0.0229906    0.020985  0.00237413           0
+EndNode2[0]<--->HoM1[0]
+REAL
+    0.44709   0.0136664 -0.00253983    0.391565
+  0.0136664   0.0648148 -0.00935959   0.0012867
+-0.00253983 -0.00935959   0.0489418 0.000118037
+   0.391565   0.0012867 0.000118037    0.439153
+IMAGINARY
+          0  -0.0284754   0.0192744 -0.00279253
+  0.0284754           0  -0.0255807  0.00648515
+ -0.0192744   0.0255807           0  0.00139477
+ 0.00279253 -0.00648515 -0.00139477           0
+Repeater1[0]<--->EndNode1[0]
+REAL
+  0.424442   0.013342  0.0183109   0.366737
+  0.013342  0.0683311 0.00431612 0.00932063
+ 0.0183109 0.00431612  0.0538765 0.00902638
+  0.366737 0.00932063 0.00902638   0.453351
+IMAGINARY
+          0  0.00251368   0.0182977   0.0229906
+-0.00251368           0   0.0174826 -0.00237413
+ -0.0182977  -0.0174826           0   -0.020985
+ -0.0229906  0.00237413    0.020985           0
+Repeater1[0]<--->HoM1[0]
+REAL
+    0.44709 -0.00253983   0.0136664    0.391565
+-0.00253983   0.0489418 -0.00935959 0.000118037
+  0.0136664 -0.00935959   0.0648148   0.0012867
+   0.391565 0.000118037   0.0012867    0.439153
+IMAGINARY
+          0   0.0192744  -0.0284754 -0.00279253
+ -0.0192744           0   0.0255807  0.00139477
+  0.0284754  -0.0255807           0  0.00648515
+ 0.00279253 -0.00139477 -0.00648515           0
