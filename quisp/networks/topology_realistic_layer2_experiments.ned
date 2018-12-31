@@ -451,6 +451,48 @@ network Realistic_Layer2_Simple_MIM_MM_40km
 
 }
 
+
+
+network Realistic_Layer2_Simple_MIM_MM_25km
+{
+    parameters:
+        **.Speed_of_light_in_fiber = 208189.206944 km;
+
+        @display("bgb=707,326");
+    submodules:
+        EndNode1[1]: QNode {
+            address = 1;
+            nodeType = "EndNode";
+            @display("i=device/pc;p=350,157");
+        }
+        EndNode2[1]: QNode {
+            address = 2;
+            nodeType = "EndNode";
+            @display("i=device/pc;p=211,224");
+        }
+        Repeater1[1]: QNode {
+            address = 3;
+            nodeType = "EndNode";
+            @display("i=device/smallrouter;p=220,137");
+        }
+        HoM1[1]: HoM {
+            address = 4;
+            @display("i=device/bsm;p=164,176");
+        }
+
+
+
+    connections:
+        EndNode1[0].port++ <--> ClassicalChannel {  distance = 25km; } <--> Repeater1[0].port++;
+        Repeater1[0].port++ <--> ClassicalChannel {  distance = 12.5km; } <--> HoM1[0].port++;
+        EndNode2[0].port++ <--> ClassicalChannel {  distance = 12.5km; } <--> HoM1[0].port++;
+
+        EndNode1[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 25km; } <--> Repeater1[0].quantum_port++;
+        Repeater1[0].quantum_port++ <--> QuantumChannel {  distance = 12.5km; } <--> HoM1[0].quantum_port++;
+        EndNode2[0].quantum_port++ <--> QuantumChannel {  distance = 12.5km; } <--> HoM1[0].quantum_port++;
+
+}
+
 network Realistic_Layer2_Simple_MIM_MM_30km
 {
     parameters:
