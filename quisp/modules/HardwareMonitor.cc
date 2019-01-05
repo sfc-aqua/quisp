@@ -484,6 +484,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
                 if(Purification_type == 2002){
                     //First stage X purification
+
+					for(int i=0; i<num_purification_tomography; i++){
                     Rule* Purification = new Rule(RuleSet_id, rule_index);
                     Condition* Purification_condition = new Condition();
                     Clause* resource_clause = new EnoughResourceClause(2);
@@ -504,7 +506,9 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                     Purification->setAction(purify_action);
                     rule_index++;
                     tomography_RuleSet->addRule(Purification);
+					}
                 }else if(Purification_type == 1001){//Same as last one. X, Z double purification (purification pumping)
+					for(int i=0; i<num_purification_tomography; i++){
                     Rule* Purification = new Rule(RuleSet_id, rule_index);
                     Condition* Purification_condition = new Condition();
                     Clause* resource_clause = new EnoughResourceClause(3);
@@ -514,6 +518,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                     Purification->setAction(purify_action);
                     rule_index++;
                     tomography_RuleSet->addRule(Purification);
+					}
                 }else if((X_Purification && !Z_Purification)  || (!X_Purification && Z_Purification)){//X or Z purification
                     Rule* Purification = new Rule(RuleSet_id, rule_index);
                     Condition* Purification_condition = new Condition();
