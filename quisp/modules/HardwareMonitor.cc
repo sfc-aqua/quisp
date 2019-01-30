@@ -486,38 +486,38 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                     //First stage X purification
 
 					for(int i=0; i<num_purification_tomography; i++){
-                    Rule* Purification = new Rule(RuleSet_id, rule_index);
-                    Condition* Purification_condition = new Condition();
-                    Clause* resource_clause = new EnoughResourceClause(2);
-                    Purification_condition->addClause(resource_clause);
-                    Purification->setCondition(Purification_condition);
-                    Action* purify_action = new PurifyAction(RuleSet_id,rule_index,true,false, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
-                    Purification->setAction(purify_action);
-                    rule_index++;
-                    tomography_RuleSet->addRule(Purification);
+                        Rule* Purification = new Rule(RuleSet_id, rule_index);
+                        Condition* Purification_condition = new Condition();
+                        Clause* resource_clause = new EnoughResourceClause(2);
+                        Purification_condition->addClause(resource_clause);
+                        Purification->setCondition(Purification_condition);
+                        Action* purify_action = new PurifyAction(RuleSet_id,rule_index,true,false, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
+                        Purification->setAction(purify_action);
+                        rule_index++;
+                        tomography_RuleSet->addRule(Purification);
 
-                    //Second stage Z purification (Using X purified resources)
-                    Purification = new Rule(RuleSet_id, rule_index);
-                    Purification_condition = new Condition();
-                    resource_clause = new EnoughResourceClause(2);
-                    Purification_condition->addClause(resource_clause);
-                    Purification->setCondition(Purification_condition);
-                    purify_action = new PurifyAction(RuleSet_id,rule_index,false,true, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
-                    Purification->setAction(purify_action);
-                    rule_index++;
-                    tomography_RuleSet->addRule(Purification);
+                        //Second stage Z purification (Using X purified resources)
+                        Purification = new Rule(RuleSet_id, rule_index);
+                        Purification_condition = new Condition();
+                        resource_clause = new EnoughResourceClause(2);
+                        Purification_condition->addClause(resource_clause);
+                        Purification->setCondition(Purification_condition);
+                        purify_action = new PurifyAction(RuleSet_id,rule_index,false,true, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
+                        Purification->setAction(purify_action);
+                        rule_index++;
+                        tomography_RuleSet->addRule(Purification);
 					}
                 }else if(Purification_type == 1001){//Same as last one. X, Z double purification (purification pumping)
 					for(int i=0; i<num_purification_tomography; i++){
-                    Rule* Purification = new Rule(RuleSet_id, rule_index);
-                    Condition* Purification_condition = new Condition();
-                    Clause* resource_clause = new EnoughResourceClause(3);
-                    Purification_condition->addClause(resource_clause);
-                    Purification->setCondition(Purification_condition);
-                    Action* purify_action = new DoublePurifyAction(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
-                    Purification->setAction(purify_action);
-                    rule_index++;
-                    tomography_RuleSet->addRule(Purification);
+                        Rule* Purification = new Rule(RuleSet_id, rule_index);
+                        Condition* Purification_condition = new Condition();
+                        Clause* resource_clause = new EnoughResourceClause(3);
+                        Purification_condition->addClause(resource_clause);
+                        Purification->setCondition(Purification_condition);
+                        Action* purify_action = new DoublePurifyAction(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
+                        Purification->setAction(purify_action);
+                        rule_index++;
+                        tomography_RuleSet->addRule(Purification);
 					}
                 }else if((X_Purification && !Z_Purification)  || (!X_Purification && Z_Purification)){//X or Z purification
                     Rule* Purification = new Rule(RuleSet_id, rule_index);
