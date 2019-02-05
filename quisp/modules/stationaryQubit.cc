@@ -1072,6 +1072,12 @@ measurement_outcome stationaryQubit::measure_density_independent(){
         apply_memory_error(this->entangled_partner);//Also do the same on the partner if it is still entangled! This could break the entanglement due to relaxation/excitation error!
     }
 
+    /*-For debugging-*/
+    bool GOD_clean = false;
+    if(!(this->par("GOD_Xerror").boolValue()) && !(this->par("GOD_Zerror").boolValue()) && !(this->par("GOD_CMerror").boolValue()) && !(this->par("GOD_REerror").boolValue()) && !(this->par("GOD_EXerror").boolValue()))
+        GOD_clean = true;
+    /*---------------*/
+
 
     if(this->completely_mixed != this->par("GOD_CMerror").boolValue()){
         error("Cm track wrong\n");
@@ -1192,6 +1198,7 @@ measurement_outcome stationaryQubit::measure_density_independent(){
     measurement_outcome o;
     o.basis =this_measurement.basis;
     o.outcome_is_plus = Output_is_plus;
+    o.GOD_clean = GOD_clean;
     return o;
 
 }

@@ -229,6 +229,7 @@ cPacket* RandomMeasureAction::run(cModule *re) {
         pk->setKind(6);
         pk->setOutput_is_plus(o.outcome_is_plus);
         pk->setBasis(o.basis);
+        pk->setGOD_clean(o.GOD_clean);
         if(current_count==max_count){
                     pk->setFinish(simTime()-start);
                     pk->setMax_count(max_count);

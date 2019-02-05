@@ -175,9 +175,11 @@ void HardwareMonitor::handleMessage(cMessage *msg){
             if(result->getSrcAddr() == myAddress){
                 temp.my_basis = result->getBasis();
                 temp.my_output_is_plus = result->getOutput_is_plus();
+                temp.my_GOD_clean = result->getGOD_clean();
             }else{
                 temp.partner_basis = result->getBasis();
                 temp.partner_output_is_plus = result->getOutput_is_plus();
+                temp.partner_GOD_clean = result->getGOD_clean();
             }it->second = temp;
         }else{
             EV<<"Fresh data";
@@ -185,9 +187,11 @@ void HardwareMonitor::handleMessage(cMessage *msg){
             if(result->getSrcAddr() == myAddress){
                 temp.my_basis = result->getBasis();
                 temp.my_output_is_plus = result->getOutput_is_plus();
+                temp.my_GOD_clean = result->getGOD_clean();
             }else{
                 temp.partner_basis = result->getBasis();
                 temp.partner_output_is_plus = result->getOutput_is_plus();
+                temp.partner_GOD_clean = result->getGOD_clean();
             }
             all_temporal_tomography_output_holder[local_qnic.address].insert(std::make_pair(result->getCount_id(), temp));
         }
@@ -236,6 +240,7 @@ void HardwareMonitor::finish(){
     //EV<<"numQnic_total = "<<numQnic_total;
     for(int i=0; i<numQnic_total; i++){
         int meas_total = 0;
+        int GOD_clean_pair_total = 0;
         //std::cout<<"\n \n \n \n \n QNIC["<<i<<"] \n";
         for(auto it =  all_temporal_tomography_output_holder[i].cbegin(); it != all_temporal_tomography_output_holder[i].cend(); ++it){
             //EV <<"Count["<< it->first << "] = " << it->second.my_basis << ", " << it->second.my_output_is_plus << ", " << it->second.partner_basis << ", "  << it->second.partner_output_is_plus << " " << "\n";
@@ -248,6 +253,11 @@ void HardwareMonitor::finish(){
             }
             tomography_data[i][basis_combination].total_count++;
             meas_total++;
+
+            if(it->second.my_GOD_clean && it->second.partner_GOD_clean){
+                GOD_clean_pair_total++;
+            }
+
             if(it->second.my_output_is_plus && it->second.partner_output_is_plus){
                             tomography_data[i][basis_combination].plus_plus++;
                             //std::cout<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[i][basis_combination].plus_plus<<"\n";
@@ -322,7 +332,7 @@ void HardwareMonitor::finish(){
         tomography_dm<<density_matrix_reconstructed.imag()<<"\n";
 
         std::cout<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<bellpairs_per_sec<<";}<-->"<<neighbor_node->getFullName()<< "; F="<<fidelity<<"; X="<<Xerr_rate<<"; Z="<<Zerr_rate<<"; Y="<<Yerr_rate<<endl;
-        tomography_stats<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec<<";tomography_time="<<all_temporal_tomography_runningtime_holder[i].tomography_time<<";tomography_measurements="<<all_temporal_tomography_runningtime_holder[i].tomography_measurements<<";actualmeas="<<meas_total<<";}<-->"<<neighbor_node->getFullName()<< "; F="<<fidelity<<"; X="<<Xerr_rate<<"; Z="<<Zerr_rate<<"; Y="<<Yerr_rate<<endl;
+        tomography_stats<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec<<";tomography_time="<<all_temporal_tomography_runningtime_holder[i].tomography_time<<";tomography_measurements="<<all_temporal_tomography_runningtime_holder[i].tomography_measurements<<";actualmeas="<<meas_total<<"; GOD_clean_pair_total="<<GOD_clean_pair_total<<";}<-->"<<neighbor_node->getFullName()<< "; F="<<fidelity<<"; X="<<Xerr_rate<<"; Z="<<Zerr_rate<<"; Y="<<Yerr_rate<<endl;
 
     }
 

@@ -75,6 +75,7 @@ packet LinkTomographyResult extends header
 	int partner_address;
 	simtime_t finish = -1;
 	int max_count;
+	bool GOD_clean;
 }
 
 packet PurificationResult extends header

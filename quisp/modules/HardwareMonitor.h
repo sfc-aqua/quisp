@@ -61,8 +61,10 @@ typedef struct _For_connection_setup{
 typedef struct _tomogrphy_outcome{
     char my_basis;
     bool my_output_is_plus;
+    bool my_GOD_clean;
     char partner_basis;
     bool partner_output_is_plus;
+    bool partner_GOD_clean;
 } tomography_outcome;
 
 typedef struct _output_count{
