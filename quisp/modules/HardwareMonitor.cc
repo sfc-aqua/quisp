@@ -529,6 +529,32 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         rule_index++;
                         tomography_RuleSet->addRule(Purification);
 					}
+                }else if(Purification_type == 1221){//Same as last one. X, Z double purification (purification pumping)
+                    for(int i=0; i<num_purification_tomography; i++){
+                        if(i%2==0){
+                            Rule* Purification = new Rule(RuleSet_id, rule_index);
+                            Condition* Purification_condition = new Condition();
+                            Clause* resource_clause = new EnoughResourceClause(3);
+                            Purification_condition->addClause(resource_clause);
+                            Purification->setCondition(Purification_condition);
+                            Action* purify_action = new DoublePurifyAction(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
+                            Purification->setAction(purify_action);
+                            rule_index++;
+                            tomography_RuleSet->addRule(Purification);
+                        }else{
+                            Rule* Purification = new Rule(RuleSet_id, rule_index);
+                            Condition* Purification_condition = new Condition();
+                            Clause* resource_clause = new EnoughResourceClause(3);
+                            Purification_condition->addClause(resource_clause);
+                            Purification->setCondition(Purification_condition);
+                            Action* purify_action = new DoublePurifyAction_inv(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
+                            Purification->setAction(purify_action);
+                            rule_index++;
+                            tomography_RuleSet->addRule(Purification);
+
+                        }
+
+                    }
                 }else if((X_Purification && !Z_Purification)  || (!X_Purification && Z_Purification)){//X or Z purification
                     Rule* Purification = new Rule(RuleSet_id, rule_index);
                     Condition* Purification_condition = new Condition();
