@@ -126,7 +126,7 @@ typedef struct _measurement_operators{
 typedef struct _measurement_outcome{
     char basis;
     bool outcome_is_plus;
-    bool GOD_clean;
+    char GOD_clean;
 }measurement_outcome;
 
 

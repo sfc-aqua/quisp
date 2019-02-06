@@ -1073,11 +1073,22 @@ measurement_outcome stationaryQubit::measure_density_independent(){
     }
 
     /*-For debugging-*/
-    bool GOD_clean = false;
-    if(!(this->par("GOD_Xerror").boolValue()) && !(this->par("GOD_Zerror").boolValue()) && !(this->par("GOD_CMerror").boolValue()) && !(this->par("GOD_REerror").boolValue()) && !(this->par("GOD_EXerror").boolValue()))
-        GOD_clean = true;
-    /*---------------*/
+    char GOD_state = 'F';//Completely mixed
 
+    if(this->par("GOD_EXerror").boolValue())
+        GOD_state = 'E';
+    else if(this->par("GOD_EXerror").boolValue())
+        GOD_state = 'R';
+    else if(this->par("GOD_CMerror").boolValue())
+        GOD_state = 'C';
+    else if(!this->par("GOD_Xerror").boolValue() && this->par("GOD_Zerror").boolValue())//To check stabilizers....
+        GOD_state = 'Z';
+    else if(this->par("GOD_Xerror").boolValue() && !this->par("GOD_Zerror").boolValue())
+        GOD_state = 'X';
+    else if(this->par("GOD_Xerror").boolValue() && this->par("GOD_Zerror").boolValue())
+        GOD_state = 'Y';
+
+    /*---------------*/
 
     if(this->completely_mixed != this->par("GOD_CMerror").boolValue()){
         error("Cm track wrong\n");
@@ -1198,7 +1209,7 @@ measurement_outcome stationaryQubit::measure_density_independent(){
     measurement_outcome o;
     o.basis =this_measurement.basis;
     o.outcome_is_plus = Output_is_plus;
-    o.GOD_clean = GOD_clean;
+    o.GOD_clean = GOD_state;
     return o;
 
 }

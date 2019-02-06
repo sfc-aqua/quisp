@@ -241,6 +241,10 @@ void HardwareMonitor::finish(){
     for(int i=0; i<numQnic_total; i++){
         int meas_total = 0;
         int GOD_clean_pair_total = 0;
+        int GOD_X_pair_total = 0;
+        int GOD_Z_pair_total = 0;
+        int GOD_Y_pair_total = 0;
+
         //std::cout<<"\n \n \n \n \n QNIC["<<i<<"] \n";
         for(auto it =  all_temporal_tomography_output_holder[i].cbegin(); it != all_temporal_tomography_output_holder[i].cend(); ++it){
             //EV <<"Count["<< it->first << "] = " << it->second.my_basis << ", " << it->second.my_output_is_plus << ", " << it->second.partner_basis << ", "  << it->second.partner_output_is_plus << " " << "\n";
@@ -254,8 +258,15 @@ void HardwareMonitor::finish(){
             tomography_data[i][basis_combination].total_count++;
             meas_total++;
 
-            if(it->second.my_GOD_clean && it->second.partner_GOD_clean){
+            EV<<it->second.my_GOD_clean<<","<<it->second.partner_GOD_clean<<"\n";
+            if((it->second.my_GOD_clean =='F' && it->second.partner_GOD_clean == 'F') || (it->second.my_GOD_clean =='X' && it->second.partner_GOD_clean == 'X') || (it->second.my_GOD_clean =='Z' && it->second.partner_GOD_clean == 'Z') || (it->second.my_GOD_clean =='Y' && it->second.partner_GOD_clean == 'Y')){
                 GOD_clean_pair_total++;
+            }else if((it->second.my_GOD_clean =='X' && it->second.partner_GOD_clean == 'F') || (it->second.my_GOD_clean =='F' && it->second.partner_GOD_clean == 'X') ){
+                GOD_X_pair_total++;
+            }else if((it->second.my_GOD_clean =='Z' && it->second.partner_GOD_clean == 'F') || (it->second.my_GOD_clean =='F' && it->second.partner_GOD_clean == 'Z') ){
+                GOD_Z_pair_total++;
+            }else if((it->second.my_GOD_clean =='Y' && it->second.partner_GOD_clean == 'F') || (it->second.my_GOD_clean =='F' && it->second.partner_GOD_clean == 'Y') ){
+                GOD_Y_pair_total++;
             }
 
             if(it->second.my_output_is_plus && it->second.partner_output_is_plus){
@@ -332,7 +343,7 @@ void HardwareMonitor::finish(){
         tomography_dm<<density_matrix_reconstructed.imag()<<"\n";
 
         std::cout<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<bellpairs_per_sec<<";}<-->"<<neighbor_node->getFullName()<< "; F="<<fidelity<<"; X="<<Xerr_rate<<"; Z="<<Zerr_rate<<"; Y="<<Yerr_rate<<endl;
-        tomography_stats<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec<<";tomography_time="<<all_temporal_tomography_runningtime_holder[i].tomography_time<<";tomography_measurements="<<all_temporal_tomography_runningtime_holder[i].tomography_measurements<<";actualmeas="<<meas_total<<"; GOD_clean_pair_total="<<GOD_clean_pair_total<<";}<-->"<<neighbor_node->getFullName()<< "; F="<<fidelity<<"; X="<<Xerr_rate<<"; Z="<<Zerr_rate<<"; Y="<<Yerr_rate<<endl;
+        tomography_stats<<this_node->getFullName()<<"<-->QuantumChannel{cost="<<link_cost<<";distance="<<dis<<"km;fidelity="<<fidelity<<";bellpair_per_sec="<<all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec<<";tomography_time="<<all_temporal_tomography_runningtime_holder[i].tomography_time<<";tomography_measurements="<<all_temporal_tomography_runningtime_holder[i].tomography_measurements<<";actualmeas="<<meas_total<<"; GOD_clean_pair_total="<<GOD_clean_pair_total<<"; GOD_X_pair_total="<<GOD_X_pair_total<<"; GOD_Y_pair_total="<<GOD_Y_pair_total<<"; GOD_Z_pair_total="<<GOD_Z_pair_total<<";}<-->"<<neighbor_node->getFullName()<< "; F="<<fidelity<<"; X="<<Xerr_rate<<"; Z="<<Zerr_rate<<"; Y="<<Yerr_rate<<endl;
 
     }
 
