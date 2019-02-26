@@ -109,6 +109,23 @@ void BellStateAnalyzer::initialize()
    left_photon_lost = false;
 }
 
+
+
+/*
+ * Execute the BSA operation.
+ * Input: msg is a "photon", with a few bits of info of its status.  msg arrives even if photon is lost; this msg will
+ * indicate that.  Photon is assumed to be entangled with a stationary memory somewhere.  Photon has been updated to
+ * include errors from the channel just prior to this call.  The memory does not need to be updated for memory
+ * errors either before or during this operation; memory errors are only applied when gates are applied to that qubit or
+ * when it is measured.
+ * Output: none
+ * Side effects: based on results of the BSA op, the density matrices of the two partner qubits are modified.
+ * If the entanglement succeeds, each d.m. is updated with a pointer to its new entangled partner (our so-called "god channel"),
+ * but the two d.m.s are _not_ merged into a single two-qubit d.m., allowing the sim to continue updating them
+ * individually with errors as necessary.  If entanglement fails, the qubits are left independent.
+ * Called twice: each photon arriving @BSA triggers this.  First one sets things provisionally using variables
+ * local to this object (the BSA itself), second one completes and updates the actual qubits.
+ */
 void BellStateAnalyzer::handleMessage(cMessage *msg){
     PhotonicQubit *photon = check_and_cast<PhotonicQubit *>(msg);
     if(photon->getFirst() && this_trial_done == true){//Next round started
@@ -195,7 +212,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
             double darkcount_right = dblrand();
 
 
-            if((rand < BSAsuccess_rate && !right_photon_lost && !left_photon_lost) || ( !right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability) || ( right_photon_lost && !left_photon_lost && darkcount_right < darkcount_probability) || ( right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability && darkcount_right < darkcount_probability)){
+            if((rand < BSAsuccess_rate && !right_photon_lost && !left_photon_lost) /*No qubit lost*/ || ( !right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability) /*Got rigt, darkcount left*/ || ( right_photon_lost && !left_photon_lost && darkcount_right < darkcount_probability) /*Got left, darkcount right*/ || ( right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability && darkcount_right < darkcount_probability)/*Darkcount right left*/){
                 if(!right_photon_lost && (left_photon_lost && darkcount_left <= darkcount_probability)){
                     //error("Dark count :)");
                     DEBUG_darkcount_left++;

@@ -550,28 +550,28 @@ network Realistic_Layer2_Simple_MIM_MM
         EndNode2[1]: QNode {
             address = 2;
             nodeType = "EndNode";
-            @display("i=device/pc;p=211,224");
+            @display("i=device/pc;p=350,78");
         }
         Repeater1[1]: QNode {
             address = 3;
             nodeType = "EndNode";
             @display("i=device/smallrouter;p=220,137");
         }
-        HoM1[1]: HoM {
+        BSA[1]: HoM {
             address = 4;
-            @display("i=device/bsm;p=164,176");
+            @display("i=device/device;p=269,85");
         }
 
 
 
     connections:
         EndNode1[0].port++ <--> ClassicalChannel {  distance = 20km; } <--> Repeater1[0].port++;
-        Repeater1[0].port++ <--> ClassicalChannel {  distance = 10km; } <--> HoM1[0].port++;
-        EndNode2[0].port++ <--> ClassicalChannel {  distance = 10km; } <--> HoM1[0].port++;
+        Repeater1[0].port++ <--> ClassicalChannel {  distance = 10km; } <--> BSA[0].port++;
+        EndNode2[0].port++ <--> ClassicalChannel {  distance = 10km; } <--> BSA[0].port++;
 
         EndNode1[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 20km; } <--> Repeater1[0].quantum_port++;
-        Repeater1[0].quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM1[0].quantum_port++;
-        EndNode2[0].quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM1[0].quantum_port++;
+        Repeater1[0].quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> BSA[0].quantum_port++;
+        EndNode2[0].quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> BSA[0].quantum_port++;
 
 }
 
@@ -932,7 +932,8 @@ network Realistic_Layer2_MM_MIM_MIM_MIM_MM
 
         //repeater[4]: QNode {
         repeater[2]: QNode {
-            address = 10000+sizeof(EndNode) + index;           nodeType = "Repeater";
+            address = 10000+sizeof(EndNode) + index;
+            nodeType = "Repeater";
             //buffers = 25;
             @display("i=device/smallrouter");
         }
