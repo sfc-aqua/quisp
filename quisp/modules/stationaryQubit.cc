@@ -101,7 +101,8 @@ void stationaryQubit::initialize()
     EV<<"Excitation error rate (mem) = "<<memory_err.excitation_error_rate<<"\n";
     EV<<"Relaxation error rate (mem) = "<<memory_err.relaxation_error_rate<<"\n";*/
     Memory_Transition_matrix = MatrixXd::Zero(7,7);
-    Memory_Transition_matrix << 1-memory_err.error_rate, memory_err.X_error_rate,memory_err.Z_error_rate, memory_err.Y_error_rate, memory_err.excitation_error_rate, memory_err.relaxation_error_rate,memory_err.completely_mixed_rate,
+    Memory_Transition_matrix <<
+               1-memory_err.error_rate, memory_err.X_error_rate,memory_err.Z_error_rate, memory_err.Y_error_rate, memory_err.excitation_error_rate, memory_err.relaxation_error_rate,memory_err.completely_mixed_rate,
                memory_err.X_error_rate, 1-memory_err.error_rate, memory_err.Y_error_rate,memory_err.Z_error_rate,memory_err.excitation_error_rate,memory_err.relaxation_error_rate,memory_err.completely_mixed_rate,
                memory_err.Z_error_rate,memory_err.Y_error_rate, 1-memory_err.error_rate,memory_err.X_error_rate,memory_err.excitation_error_rate,memory_err.relaxation_error_rate,memory_err.completely_mixed_rate,
                memory_err.Y_error_rate,memory_err.Z_error_rate, memory_err.X_error_rate, 1-memory_err.error_rate,memory_err.excitation_error_rate,memory_err.relaxation_error_rate,memory_err.completely_mixed_rate,
