@@ -99,6 +99,20 @@ packet DoublePurificationResult extends header
 	GOD_statQubitPtr entangled_with;//For Debugging purposes.
 }
 
+
+
+packet DS_DoublePurificationResult extends header
+{
+	bool ZOutput_is_plus;
+	bool XOutput_is_plus;
+	bool DS_ZOutput_is_plus;
+	bool DS_XOutput_is_plus;
+	unsigned long ruleset_id;
+	int rule_id;
+	int action_index;
+	GOD_statQubitPtr entangled_with;//For Debugging purposes.
+}
+
 packet ConditionNotSatisfied{
 }
 

@@ -261,19 +261,23 @@ class DoubleSelectionDualAction: public Action {
         int resource; /**< Identifies qubit */
         int trash_resource_Z;
         int trash_resource_X;
+        int doubleselection_trash_resource_Z;
+        int doubleselection_trash_resource_X;
         int mutable purification_count;//Used for locked_id in stationaryQubit. You unlock the qubit when purification is successful.
         bool X;
         bool Z;
         int num_purify;
         int action_index = 0;//To track how many times this particular action has been invoked.
     public:
-        DoubleSelectionDualAction(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z){
+        DoubleSelectionDualAction(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z, int ds_X, int ds_Z){
                    partner =part;
                    qnic_type = qt;
                    qnic_id = qi;
                    resource = res;
                    trash_resource_X = tres_X;
                    trash_resource_Z = tres_Z;
+                   doubleselection_trash_resource_Z = ds_Z;
+                   doubleselection_trash_resource_X = ds_X;
                    rule_id = rule_index;
                    ruleset_id = RuleSet_id;
                    //action_index++;
@@ -285,7 +289,6 @@ class DoubleSelectionDualAction: public Action {
 };
 
 
-
 //https://arxiv.org/abs/0811.2639
 class DoubleSelectionDualAction_inv: public Action {
     protected:
@@ -295,19 +298,23 @@ class DoubleSelectionDualAction_inv: public Action {
         int resource; /**< Identifies qubit */
         int trash_resource_Z;
         int trash_resource_X;
+        int doubleselection_trash_resource_Z;
+        int doubleselection_trash_resource_X;
         int mutable purification_count;//Used for locked_id in stationaryQubit. You unlock the qubit when purification is successful.
         bool X;
         bool Z;
         int num_purify;
         int action_index = 0;//To track how many times this particular action has been invoked.
     public:
-        DoubleSelectionDualAction_inv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z){
+        DoubleSelectionDualAction_inv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z, int ds_X, int ds_Z){
                    partner =part;
                    qnic_type = qt;
                    qnic_id = qi;
                    resource = res;
                    trash_resource_X = tres_X;
                    trash_resource_Z = tres_Z;
+                   doubleselection_trash_resource_Z = ds_Z;
+                   doubleselection_trash_resource_X = ds_X;
                    rule_id = rule_index;
                    ruleset_id = RuleSet_id;
                    //action_index++;
@@ -317,7 +324,6 @@ class DoubleSelectionDualAction_inv: public Action {
         };
         cPacket* run(cModule *re) override;
 };
-
 
 
 class RandomMeasureAction : public Action {

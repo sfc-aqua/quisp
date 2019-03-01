@@ -597,14 +597,14 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                     for(int i=0; i<num_purification_tomography; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
-                        Clause* resource_clause = new EnoughResourceClause(3);
+                        Clause* resource_clause = new EnoughResourceClause(5);
                         Purification_condition->addClause(resource_clause);
                         Purification->setCondition(Purification_condition);
                         if(i%2==0){
-                        	Action* purify_action = new DoubleSelectionDualAction(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
+                        	Action* purify_action = new DoubleSelectionDualAction(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2,3,4);
                         	Purification->setAction(purify_action);
 						}else{
-                        	Action* purify_action = new DoubleSelectionDualAction_inv(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
+                        	Action* purify_action = new DoubleSelectionDualAction_inv(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2,3,4);
                         	Purification->setAction(purify_action);
 						}
                         rule_index++;
