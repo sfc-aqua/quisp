@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for kaaki_master_quisp
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -I/Users/takaakimatsuo/Downloads/eigen3 -I.
+#  opp_makemake -f --deep -O out -I/home/kaaki/eigen3 -I.
 #
 
 # Name of target to be created (-o option)
@@ -16,7 +16,7 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH = -I/Users/takaakimatsuo/Downloads/eigen3 -I.
+INCLUDE_PATH = -I/home/kaaki/eigen3 -I.
 
 # Additional object and library files to link with
 EXTRA_OBJS =
@@ -132,7 +132,7 @@ $O/%.o: %.cc $(COPTS_FILE) | msgheaders smheaders
 
 %_m.cc %_m.h: %.msg
 	$(qecho) MSGC: $<
-	$(Q)$(MSGC) -s _m.cc $(MSGCOPTS) $?
+	$(Q)$(MSGC) -s _m.cc -MD -MP -MF $O/$(basename $@).d $(MSGCOPTS) $?
 
 %_sm.cc %_sm.h: %.sm
 	$(qecho) SMC: $<
