@@ -229,7 +229,6 @@ void RuleEngine::handleMessage(cMessage *msg){
             //std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
             DS_DoublePurificationResult *pkt = check_and_cast<DS_DoublePurificationResult *>(msg);
             //std::cout<<"Presult from node["<<pkt->getSrcAddr()<<"]\n";
-            error("Fix this");
             process_id purification_id;
             Quatropurification_result pr;
             purification_id.ruleset_id = pkt->getRuleset_id();
@@ -381,12 +380,12 @@ void RuleEngine::storeCheck_QuatroPurification_Agreement(Quatropurification_resu
                 //std::cout<<"node["<<parentAddress<<"] Rule found: Discard/Keep purification.\n";
                 if((it->second.Xpurification_outcome == pr.Xpurification_outcome) && (it->second.Zpurification_outcome == pr.Zpurification_outcome) && (it->second.DS_Zpurification_outcome == pr.DS_Zpurification_outcome)  && (it->second.DS_Xpurification_outcome == pr.DS_Xpurification_outcome)){
                     //Outcomes agreed. Keep the entangled pair.
-                    //std::cout<<"Unlocking and upgrading!\n";
+                    std::cout<<"Unlocking and upgrading!\n";
                     Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
                 }else{
                     //Discard
                     //std::cout<<"node["<<parentAddress<<"] discaard ";
-                    //std::cout<<"Unlocking and discarding!\n";
+                    std::cout<<"Unlocking and discarding!\n";
                     Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
                 }
                 QuatroPurification_table.erase(it);
@@ -1060,6 +1059,13 @@ void RuleEngine::traverseThroughAllProcesses2(){
                                 DoublePurificationResult *pkt = check_and_cast<DoublePurificationResult *>(pk);
                                 pkt->setSrcAddr(parentAddress);
                                 DoublePurificationResult *pk_for_self = pkt->dup();
+                                pk_for_self->setDestAddr(parentAddress);
+                                send(pkt,"RouterPort$o");
+                                send(pk_for_self,"RouterPort$o");
+                            }else if(dynamic_cast<DS_DoublePurificationResult *>(pk)!= nullptr){
+                                DS_DoublePurificationResult *pkt = check_and_cast<DS_DoublePurificationResult *>(pk);
+                                pkt->setSrcAddr(parentAddress);
+                                DS_DoublePurificationResult *pk_for_self = pkt->dup();
                                 pk_for_self->setDestAddr(parentAddress);
                                 send(pkt,"RouterPort$o");
                                 send(pk_for_self,"RouterPort$o");

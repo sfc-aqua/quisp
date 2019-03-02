@@ -437,7 +437,7 @@ cPacket* RandomMeasureAction::run(cModule *re) {
 //X purification, Z purification to trash_qubit_X Bell pair.
 cPacket* DoubleSelectionDualAction::run(cModule *re) {
 
-    //std::cout<<"DoubleSelectionPurification!\n";
+    std::cout<<"DoubleSelectionPurification!\n";
     stationaryQubit *qubit = nullptr;
     stationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_Z, *ds_trash_qubit_X = nullptr;
 
