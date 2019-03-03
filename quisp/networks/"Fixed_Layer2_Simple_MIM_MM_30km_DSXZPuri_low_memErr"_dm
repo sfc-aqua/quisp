@@ -1,1100 +1,264 @@
 EndNode1[0]<--->Repeater1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+    0.357482  -0.00741352    0.0182557     0.131426
+ -0.00741352     0.225653    0.0476496 -0.000925838
+   0.0182557    0.0476496     0.171021   0.00933906
+    0.131426 -0.000925838   0.00933906     0.245843
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+           0  -0.00820467    0.0409399    0.0115934
+  0.00820467            0   -0.0075393    0.0215601
+  -0.0409399    0.0075393            0  0.000225943
+  -0.0115934   -0.0215601 -0.000225943            0
 EndNode2[0]<--->HoM1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+    0.296774 -0.000826773    0.0210786      0.11329
+-0.000826773     0.223226    0.0456844  -0.00825811
+   0.0210786    0.0456844     0.207742   0.00595498
+     0.11329  -0.00825811   0.00595498     0.272258
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0   0.0013228   0.0084507  0.00584325
+ -0.0013228           0  -0.0124049   0.0084507
+ -0.0084507   0.0124049           0 -0.00273125
+-0.00584325  -0.0084507  0.00273125           0
 Repeater1[0]<--->EndNode1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+    0.357482    0.0182557  -0.00741352     0.131426
+   0.0182557     0.171021    0.0476496   0.00933906
+ -0.00741352    0.0476496     0.225653 -0.000925838
+    0.131426   0.00933906 -0.000925838     0.245843
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+           0    0.0409399  -0.00820467    0.0115934
+  -0.0409399            0    0.0075393  0.000225943
+  0.00820467   -0.0075393            0    0.0215601
+  -0.0115934 -0.000225943   -0.0215601            0
 Repeater1[0]<--->HoM1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+    0.296774    0.0210786 -0.000826773      0.11329
+   0.0210786     0.207742    0.0456844   0.00595498
+-0.000826773    0.0456844     0.223226  -0.00825811
+     0.11329   0.00595498  -0.00825811     0.272258
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0   0.0084507   0.0013228  0.00584325
+ -0.0084507           0   0.0124049 -0.00273125
+ -0.0013228  -0.0124049           0   0.0084507
+-0.00584325  0.00273125  -0.0084507           0
 EndNode1[0]<--->Repeater1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+   0.304668  0.00407944 -0.00298665    0.118829
+ 0.00407944    0.238329   0.0429896  0.00601695
+-0.00298665   0.0429896    0.194103 0.000162988
+   0.118829  0.00601695 0.000162988    0.262899
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0      0.0105 -0.00641484 -0.00739049
+    -0.0105           0  -0.0133038  -0.0211019
+ 0.00641484   0.0133038           0  0.00359394
+ 0.00739049   0.0211019 -0.00359394           0
 EndNode2[0]<--->HoM1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+  0.282787 -0.0151316 0.00458331   0.107322
+-0.0151316   0.224044  0.0395882  0.0111796
+0.00458331  0.0395882   0.243169 0.00567381
+  0.107322  0.0111796 0.00567381       0.25
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0  -0.0102481  -0.0116107  -0.0115407
+  0.0102481           0  0.00274502 -0.00439916
+  0.0116107 -0.00274502           0   0.0127111
+  0.0115407  0.00439916  -0.0127111           0
 Repeater1[0]<--->EndNode1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+   0.304668 -0.00298665  0.00407944    0.118829
+-0.00298665    0.194103   0.0429896 0.000162988
+ 0.00407944   0.0429896    0.238329  0.00601695
+   0.118829 0.000162988  0.00601695    0.262899
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0 -0.00641484      0.0105 -0.00739049
+ 0.00641484           0   0.0133038  0.00359394
+    -0.0105  -0.0133038           0  -0.0211019
+ 0.00739049 -0.00359394   0.0211019           0
 Repeater1[0]<--->HoM1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+  0.282787 0.00458331 -0.0151316   0.107322
+0.00458331   0.243169  0.0395882 0.00567381
+-0.0151316  0.0395882   0.224044  0.0111796
+  0.107322 0.00567381  0.0111796       0.25
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0  -0.0116107  -0.0102481  -0.0115407
+  0.0116107           0 -0.00274502   0.0127111
+  0.0102481  0.00274502           0 -0.00439916
+  0.0115407  -0.0127111  0.00439916           0
 EndNode1[0]<--->Repeater1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+   0.321918  -0.0014787 -0.00451834    0.100733
+ -0.0014787    0.206849   0.0581511 -0.00391227
+-0.00451834   0.0581511    0.208219  0.00731527
+   0.100733 -0.00391227  0.00731527    0.263014
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0   0.0103022  -0.0129387  0.00285136
+ -0.0103022           0  -0.0240869  0.00194966
+  0.0129387   0.0240869           0   0.0103022
+-0.00285136 -0.00194966  -0.0103022           0
 EndNode2[0]<--->HoM1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+   0.305882 -0.00880709 -0.00292032    0.124611
+-0.00880709    0.207843   0.0374665  -0.0127242
+-0.00292032   0.0374665    0.227451    -0.01685
+   0.124611  -0.0127242    -0.01685    0.258824
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0   0.0010293   0.0116899  -0.0169978
+ -0.0010293           0 -0.00542966 -0.00365533
+ -0.0116899  0.00542966           0  -0.0140083
+  0.0169978  0.00365533   0.0140083           0
 Repeater1[0]<--->EndNode1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+   0.321918 -0.00451834  -0.0014787    0.100733
+-0.00451834    0.208219   0.0581511  0.00731527
+ -0.0014787   0.0581511    0.206849 -0.00391227
+   0.100733  0.00731527 -0.00391227    0.263014
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0  -0.0129387   0.0103022  0.00285136
+  0.0129387           0   0.0240869   0.0103022
+ -0.0103022  -0.0240869           0  0.00194966
+-0.00285136  -0.0103022 -0.00194966           0
 Repeater1[0]<--->HoM1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+   0.305882 -0.00292032 -0.00880709    0.124611
+-0.00292032    0.227451   0.0374665    -0.01685
+-0.00880709   0.0374665    0.207843  -0.0127242
+   0.124611    -0.01685  -0.0127242    0.258824
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0   0.0116899   0.0010293  -0.0169978
+ -0.0116899           0  0.00542966  -0.0140083
+ -0.0010293 -0.00542966           0 -0.00365533
+  0.0169978   0.0140083  0.00365533           0
 EndNode1[0]<--->Repeater1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+    0.328671    0.0114997 -6.14135e-05     0.139358
+   0.0114997     0.237762    0.0417644  -0.00376512
+-6.14135e-05    0.0417644     0.183217   0.00508195
+    0.139358  -0.00376512   0.00508195      0.25035
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+         0  0.0154674 -0.0163515  0.0105617
+-0.0154674          0 -0.0144079 -0.0170709
+ 0.0163515  0.0144079          0 -0.0288364
+-0.0105617  0.0170709  0.0288364          0
 EndNode2[0]<--->HoM1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+   0.310263 -0.00230812 -0.00468077    0.111688
+-0.00230812    0.235084   0.0688312    0.012473
+-0.00468077   0.0688312    0.195704 -0.00028928
+   0.111688    0.012473 -0.00028928     0.25895
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+           0    0.0133258   0.00298887 -0.000982962
+  -0.0133258            0  0.000982962   -0.0272125
+ -0.00298887 -0.000982962            0   0.00344438
+ 0.000982962    0.0272125  -0.00344438            0
 Repeater1[0]<--->EndNode1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+    0.328671 -6.14135e-05    0.0114997     0.139358
+-6.14135e-05     0.183217    0.0417644   0.00508195
+   0.0114997    0.0417644     0.237762  -0.00376512
+    0.139358   0.00508195  -0.00376512      0.25035
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+         0 -0.0163515  0.0154674  0.0105617
+ 0.0163515          0  0.0144079 -0.0288364
+-0.0154674 -0.0144079          0 -0.0170709
+-0.0105617  0.0288364  0.0170709          0
 Repeater1[0]<--->HoM1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+   0.310263 -0.00468077 -0.00230812    0.111688
+-0.00468077    0.195704   0.0688312 -0.00028928
+-0.00230812   0.0688312    0.235084    0.012473
+   0.111688 -0.00028928    0.012473     0.25895
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+           0   0.00298887    0.0133258 -0.000982962
+ -0.00298887            0 -0.000982962   0.00344438
+  -0.0133258  0.000982962            0   -0.0272125
+ 0.000982962  -0.00344438    0.0272125            0
 EndNode1[0]<--->Repeater1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+    0.326873   -0.0151754  -0.00221456     0.123528
+  -0.0151754     0.244186    0.0638946 -0.000898768
+ -0.00221456    0.0638946     0.187339  -0.00661791
+    0.123528 -0.000898768  -0.00661791     0.241602
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0  -0.0148978  -0.0137243  0.00912515
+  0.0148978           0  0.00708433  -0.0118327
+  0.0137243 -0.00708433           0   0.0063788
+-0.00912515   0.0118327  -0.0063788           0
 EndNode2[0]<--->HoM1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+   0.29396  0.0110412 0.00633403  0.0930951
+ 0.0110412   0.220134  0.0466899 0.00307457
+0.00633403  0.0466899   0.232215 -0.0150735
+ 0.0930951 0.00307457 -0.0150735   0.253691
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0   0.0048322 -0.00914622   -0.026132
+ -0.0048322           0   0.0211568  0.00718544
+ 0.00914622  -0.0211568           0  -0.0120217
+   0.026132 -0.00718544   0.0120217           0
 Repeater1[0]<--->EndNode1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+    0.326873  -0.00221456   -0.0151754     0.123528
+ -0.00221456     0.187339    0.0638946  -0.00661791
+  -0.0151754    0.0638946     0.244186 -0.000898768
+    0.123528  -0.00661791 -0.000898768     0.241602
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0  -0.0137243  -0.0148978  0.00912515
+  0.0137243           0 -0.00708433   0.0063788
+  0.0148978  0.00708433           0  -0.0118327
+-0.00912515  -0.0063788   0.0118327           0
 Repeater1[0]<--->HoM1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+   0.29396 0.00633403  0.0110412  0.0930951
+0.00633403   0.232215  0.0466899 -0.0150735
+ 0.0110412  0.0466899   0.220134 0.00307457
+ 0.0930951 -0.0150735 0.00307457   0.253691
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0 -0.00914622   0.0048322   -0.026132
+ 0.00914622           0  -0.0211568  -0.0120217
+ -0.0048322   0.0211568           0  0.00718544
+   0.026132   0.0120217 -0.00718544           0
 EndNode1[0]<--->Repeater1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+  0.302149  0.0202749 -0.0103488   0.124947
+ 0.0202749   0.242731  0.0445448  0.0212446
+-0.0103488  0.0445448   0.182048 0.00151684
+  0.124947  0.0212446 0.00151684   0.273072
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0  0.00260996  -0.0135272    -0.01017
+-0.00260996           0   0.0019939  0.00850212
+  0.0135272  -0.0019939           0   0.0124654
+    0.01017 -0.00850212  -0.0124654           0
 EndNode2[0]<--->HoM1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+  0.331258 0.00197845 0.00313126   0.108394
+0.00197845   0.217933  0.0507536 0.00438754
+0.00313126  0.0507536   0.194271  0.0155654
+  0.108394 0.00438754  0.0155654   0.256538
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0 -0.00361089  0.00625325 -0.00327866
+ 0.00361089           0   0.0103754   0.0245779
+-0.00625325  -0.0103754           0   0.0129943
+ 0.00327866  -0.0245779  -0.0129943           0
 Repeater1[0]<--->EndNode1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+  0.302149 -0.0103488  0.0202749   0.124947
+-0.0103488   0.182048  0.0445448 0.00151684
+ 0.0202749  0.0445448   0.242731  0.0212446
+  0.124947 0.00151684  0.0212446   0.273072
 IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+          0  -0.0135272  0.00260996    -0.01017
+  0.0135272           0  -0.0019939   0.0124654
+-0.00260996   0.0019939           0  0.00850212
+    0.01017  -0.0124654 -0.00850212           0
 Repeater1[0]<--->HoM1[0]
 REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode1[0]<--->Repeater1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-EndNode2[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->EndNode1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-Repeater1[0]<--->HoM1[0]
-REAL
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
-IMAGINARY
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
--nan -nan -nan -nan
+  0.331258 0.00313126 0.00197845   0.108394
+0.00313126   0.194271  0.0507536  0.0155654
+0.00197845  0.0507536   0.217933 0.00438754
+  0.108394  0.0155654 0.00438754   0.256538
+IMAGINARY
+          0  0.00625325 -0.00361089 -0.00327866
+-0.00625325           0  -0.0103754   0.0129943
+ 0.00361089   0.0103754           0   0.0245779
+ 0.00327866  -0.0129943  -0.0245779           0

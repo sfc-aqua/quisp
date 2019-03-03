@@ -505,7 +505,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
                 if(Purification_type == 2002){
                     //First stage X purification
-
 					for(int i=0; i<num_purification_tomography; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
@@ -527,6 +526,26 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         Purification->setAction(purify_action);
                         rule_index++;
                         tomography_RuleSet->addRule(Purification);
+					}
+                }else if(Purification_type == 3003){
+                    //First stage X purification
+					for(int i=0; i<num_purification_tomography; i++){
+                        Rule* Purification = new Rule(RuleSet_id, rule_index);
+                        Condition* Purification_condition = new Condition();
+                        Clause* resource_clause = new EnoughResourceClause(2);
+                        Purification_condition->addClause(resource_clause);
+                        Purification->setCondition(Purification_condition);
+
+                        if(i%2==0){//X purification
+                        	Action* purify_action = new PurifyAction(RuleSet_id,rule_index,true,false, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
+                        	Purification->setAction(purify_action);
+                        }else{//Z purification
+                        	Action* purify_action = new PurifyAction(RuleSet_id,rule_index,false,true, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
+                        	Purification->setAction(purify_action);
+						}
+						rule_index++;
+                        tomography_RuleSet->addRule(Purification);
+
 					}
                 }else if(Purification_type == 1001){//Same as last one. X, Z double purification (purification pumping)
 					for(int i=0; i<num_purification_tomography; i++){

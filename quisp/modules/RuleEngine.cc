@@ -380,12 +380,12 @@ void RuleEngine::storeCheck_QuatroPurification_Agreement(Quatropurification_resu
                 //std::cout<<"node["<<parentAddress<<"] Rule found: Discard/Keep purification.\n";
                 if((it->second.Xpurification_outcome == pr.Xpurification_outcome) && (it->second.Zpurification_outcome == pr.Zpurification_outcome) && (it->second.DS_Zpurification_outcome == pr.DS_Zpurification_outcome)  && (it->second.DS_Xpurification_outcome == pr.DS_Xpurification_outcome)){
                     //Outcomes agreed. Keep the entangled pair.
-                    std::cout<<"Unlocking and upgrading!\n";
+                    //std::cout<<"Unlocking and upgrading!\n";
                     Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
                 }else{
                     //Discard
                     //std::cout<<"node["<<parentAddress<<"] discaard ";
-                    std::cout<<"Unlocking and discarding!\n";
+                    //std::cout<<"Unlocking and discarding!\n";
                     Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
                 }
                 QuatroPurification_table.erase(it);
