@@ -629,6 +629,42 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         rule_index++;
                         tomography_RuleSet->addRule(Purification);
                     }
+                }else if(Purification_type == 5555){//Predefined purification method
+                    for(int i=0; i<2; i++){
+                        Rule* Purification = new Rule(RuleSet_id, rule_index);
+                        Condition* Purification_condition = new Condition();
+                        Clause* resource_clause = new EnoughResourceClause(3);
+                        Purification_condition->addClause(resource_clause);
+                        Purification->setCondition(Purification_condition);
+                        if(i%2==0){
+                            Action* purify_action = new DoubleSelectionAction(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
+                            Purification->setAction(purify_action);
+                        }else{
+                            Action* purify_action = new DoubleSelectionAction_inv(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
+                             Purification->setAction(purify_action);
+                        }
+                        rule_index++;
+                        tomography_RuleSet->addRule(Purification);
+                    }
+
+                    for(int i=0; i<num_purification_tomography; i++){
+                            Rule* Purification = new Rule(RuleSet_id, rule_index);
+                            Condition* Purification_condition = new Condition();
+                            Clause* resource_clause = new EnoughResourceClause(2);
+                            Purification_condition->addClause(resource_clause);
+                            Purification->setCondition(Purification_condition);
+
+                            if(i%2==0){//X purification
+                                Action* purify_action = new PurifyAction(RuleSet_id,rule_index,true,false, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
+                                Purification->setAction(purify_action);
+                            }else{//Z purification
+                                Action* purify_action = new PurifyAction(RuleSet_id,rule_index,false,true, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
+                                Purification->setAction(purify_action);
+                            }
+                            rule_index++;
+                            tomography_RuleSet->addRule(Purification);
+                   }
+
                 }else if((X_Purification && !Z_Purification)  || (!X_Purification && Z_Purification)){//X or Z purification. Out-dated syntax.
                     Rule* Purification = new Rule(RuleSet_id, rule_index);
                     Condition* Purification_condition = new Condition();
