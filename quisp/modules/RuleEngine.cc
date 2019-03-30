@@ -245,6 +245,7 @@ void RuleEngine::handleMessage(cMessage *msg){
             storeCheck_QuatroPurification_Agreement(pr);
         }
         else if(dynamic_cast<DS_DoublePurificationSecondResult *>(msg) != nullptr){
+            error("Here we go");
             //std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
             DS_DoublePurificationSecondResult *pkt = check_and_cast<DS_DoublePurificationSecondResult *>(msg);
             process_id purification_id;
@@ -1098,28 +1099,40 @@ void RuleEngine::traverseThroughAllProcesses2(){
                                 }*/
                                 send(pk,"RouterPort$o");
                                 send(pk_for_self,"RouterPort$o");
-                            }else if(dynamic_cast<PurificationResult *>(pk)!= nullptr){
+                            }
+                            else if(dynamic_cast<PurificationResult *>(pk)!= nullptr){
                                 PurificationResult *pkt = check_and_cast<PurificationResult *>(pk);
                                 pkt->setSrcAddr(parentAddress);
                                 PurificationResult *pk_for_self = pkt->dup();
                                 pk_for_self->setDestAddr(parentAddress);
                                 send(pkt,"RouterPort$o");
                                 send(pk_for_self,"RouterPort$o");
-                            }else if(dynamic_cast<DoublePurificationResult *>(pk)!= nullptr){
+                            }
+                            else if(dynamic_cast<DoublePurificationResult *>(pk)!= nullptr){
                                 DoublePurificationResult *pkt = check_and_cast<DoublePurificationResult *>(pk);
                                 pkt->setSrcAddr(parentAddress);
                                 DoublePurificationResult *pk_for_self = pkt->dup();
                                 pk_for_self->setDestAddr(parentAddress);
                                 send(pkt,"RouterPort$o");
                                 send(pk_for_self,"RouterPort$o");
-                            }else if(dynamic_cast<DS_DoublePurificationResult *>(pk)!= nullptr){
+                            }
+                            else if(dynamic_cast<DS_DoublePurificationResult *>(pk)!= nullptr){
                                 DS_DoublePurificationResult *pkt = check_and_cast<DS_DoublePurificationResult *>(pk);
                                 pkt->setSrcAddr(parentAddress);
                                 DS_DoublePurificationResult *pk_for_self = pkt->dup();
                                 pk_for_self->setDestAddr(parentAddress);
                                 send(pkt,"RouterPort$o");
                                 send(pk_for_self,"RouterPort$o");
-                            }else if (dynamic_cast<Error *>(pk)!= nullptr){
+                            }
+                            else if(dynamic_cast<DS_DoublePurificationSecondResult *>(pk)!= nullptr){
+                                DS_DoublePurificationSecondResult *pkt = check_and_cast<DS_DoublePurificationSecondResult *>(pk);
+                                pkt->setSrcAddr(parentAddress);
+                                DS_DoublePurificationSecondResult *pk_for_self = pkt->dup();
+                                pk_for_self->setDestAddr(parentAddress);
+                                send(pkt,"RouterPort$o");
+                                send(pk_for_self,"RouterPort$o");
+                            }
+                            else if (dynamic_cast<Error *>(pk)!= nullptr){
                                 Error *err = check_and_cast<Error *>(pk);
                                 error(err->getError_text());
                                 delete pk;
@@ -1128,8 +1141,8 @@ void RuleEngine::traverseThroughAllProcesses2(){
                                 delete pk;
                                 break;
                             }else{
+                                error("Unknown return packet from action.");
                                 delete pk;
-                                //error("Unknown return packet from action.");
                             }
                         }else{
                             error("Pk nullptr");
