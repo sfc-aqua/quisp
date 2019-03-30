@@ -153,6 +153,10 @@ void Router::handleMessage(cMessage *msg)
             bubble("DS_DoublePurification result received");
             send(pk,"rePort$o");
             return;
+        }else if(destAddr == myAddress && dynamic_cast<DS_DoublePurificationSecondResult *>(msg)!= nullptr){
+            bubble("DS_DoublePurificationSecond result received");
+            send(pk,"rePort$o");
+            return;
         }else if(destAddr == myAddress && dynamic_cast<StopEmitting *>(msg)!= nullptr){
             send(pk,"rePort$o");
             return;

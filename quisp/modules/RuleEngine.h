@@ -53,6 +53,15 @@ struct Doublepurification_result{
     bool Zpurification_outcome;
 };
 
+
+struct Triplepurification_result{
+    process_id id;
+    bool Xpurification_outcome;
+    bool Zpurification_outcome;
+    bool DS_purification_outcome;
+};
+
+
 struct Quatropurification_result{
     process_id id;
     bool Xpurification_outcome;
@@ -87,7 +96,9 @@ class RuleEngine : public cSimpleModule
         PurificationTable Purification_table;
         typedef std::multimap<int, Doublepurification_result> DoublePurificationTable;
         typedef std::multimap<int, Quatropurification_result> QuatroPurificationTable;
+        typedef std::multimap<int, Triplepurification_result> TriplePurificationTable;
         DoublePurificationTable DoublePurification_table;
+        TriplePurificationTable TriplePurification_table;
         QuatroPurificationTable QuatroPurification_table;
         typedef std::map<int, QubitAddr_cons> sentQubitIndexTracker;//nth shot -> node/qnic/qubit index (node addr not needed actually)
         //Although qnic index is in QubitAddr, lest make int qnic_index -> QubisState to lessen the search
@@ -145,6 +156,7 @@ class RuleEngine : public cSimpleModule
         //virtual void check_Purification_Agreement(purification_result pr);
         virtual void storeCheck_Purification_Agreement(purification_result pr);
         virtual void storeCheck_DoublePurification_Agreement(Doublepurification_result pr);
+        virtual void storeCheck_TriplePurification_Agreement(Triplepurification_result pr);
         virtual void storeCheck_QuatroPurification_Agreement(Quatropurification_result pr);
         virtual void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int index);
         virtual void Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int index);

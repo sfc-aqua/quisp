@@ -244,6 +244,20 @@ void RuleEngine::handleMessage(cMessage *msg){
             //std::cout<<"Locked one is "<<pkt->getEntangled_with()<<"in node["<<q->node_address<<"] \n";
             storeCheck_QuatroPurification_Agreement(pr);
         }
+        else if(dynamic_cast<DS_DoublePurificationSecondResult *>(msg) != nullptr){
+            //std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
+            DS_DoublePurificationSecondResult *pkt = check_and_cast<DS_DoublePurificationSecondResult *>(msg);
+            process_id purification_id;
+            Triplepurification_result pr;
+            purification_id.ruleset_id = pkt->getRuleset_id();
+            purification_id.rule_id = pkt->getRule_id();
+            purification_id.index = pkt->getAction_index();
+            pr.id = purification_id;
+            pr.Xpurification_outcome = pkt->getXOutput_is_plus();
+            pr.Zpurification_outcome = pkt->getZOutput_is_plus();
+            pr.DS_purification_outcome = pkt->getDS_Output_is_plus();
+            storeCheck_TriplePurification_Agreement(pr);
+        }
         else if(dynamic_cast<StopEmitting *>(msg)!= nullptr){
             StopEmitting *pkt = check_and_cast<StopEmitting *>(msg);
             terminated_qnic[pkt->getQnic_address()] = true;
@@ -355,6 +369,42 @@ void RuleEngine::storeCheck_DoublePurification_Agreement(Doublepurification_resu
 }
 
 
+void RuleEngine::storeCheck_TriplePurification_Agreement(Triplepurification_result pr){
+
+    bool ruleset_running = false;
+    for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){
+               next_it = it; ++next_it;
+               RuleSet* process = it->second.Rs;//One Process. From top to bottom.
+               if(process->ruleset_id == pr.id.ruleset_id){
+                   ruleset_running = true;
+                   break;
+               }
+    }
+    if(rp.size()==0 || !ruleset_running){
+        //Probably process already finished. Delete the table and ignore the result.
+        return;
+    }else{
+        auto ret = TriplePurification_table.equal_range(pr.id.ruleset_id);//Find all resource in qytpe/qid entangled with partner.
+        //If the RuleSet has been deleted already, do not do anything.
+
+        for (auto it=ret.first; it!=ret.second; it++) {
+            if(it->second.id.rule_id == pr.id.rule_id && it->second.id.index == pr.id.index){
+                if((it->second.Xpurification_outcome == pr.Xpurification_outcome) && (it->second.Zpurification_outcome == pr.Zpurification_outcome) && (it->second.DS_purification_outcome == pr.DS_purification_outcome)){
+                    //Outcomes agreed. Keep the entangled pair.
+                    Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
+                }else{
+                    //Discard
+                    Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
+                }
+                TriplePurification_table.erase(it);
+                return;
+           }
+        }
+        //New data.
+        //std::cout<<"New data arrived. Need to keep the outcome of rulset_id="<<pr.id.ruleset_id<<" Rule_id="<<pr.id.rule_id<<", index="<<pr.id.index<<"\n";
+        TriplePurification_table.insert(std::make_pair(pr.id.ruleset_id, pr));//Otherwise, if data has not been found, store it.
+    }
+}
 
 void RuleEngine::storeCheck_QuatroPurification_Agreement(Quatropurification_result pr){
 
