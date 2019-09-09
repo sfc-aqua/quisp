@@ -245,7 +245,6 @@ void RuleEngine::handleMessage(cMessage *msg){
             storeCheck_QuatroPurification_Agreement(pr);
         }
         else if(dynamic_cast<DS_DoublePurificationSecondResult *>(msg) != nullptr){
-            error("Here we go");
             //std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
             DS_DoublePurificationSecondResult *pkt = check_and_cast<DS_DoublePurificationSecondResult *>(msg);
             process_id purification_id;

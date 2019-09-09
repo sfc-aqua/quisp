@@ -503,9 +503,9 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
             if(num_purification_tomography>0){/*RuleSet including purification. CUrrently, not looping.*/
 
-                if(Purification_type == 2002){
-                    //First stage X purification
+                if(Purification_type == 2002){//Performs both X and Z purification for each n.
 					for(int i=0; i<num_purification_tomography; i++){
+					    //First stage X purification
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
                         Clause* resource_clause = new EnoughResourceClause(2);
@@ -595,7 +595,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         rule_index++;
                         tomography_RuleSet->addRule(Purification);
                     }
-                }else if(Purification_type == 1021){//Fuji-san's Doouble selection purification
+                }else if(Purification_type == 1021){//Fuji-san's Double selection purification
                     for(int i=0; i<num_purification_tomography; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
@@ -612,7 +612,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         rule_index++;
                         tomography_RuleSet->addRule(Purification);
                     }
-                }else if(Purification_type == 1031){//Fuji-san's Doouble selection purification
+                }else if(Purification_type == 1031){//Fuji-san's Double selection purification
                     for(int i=0; i<num_purification_tomography; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();

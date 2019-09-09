@@ -1195,6 +1195,9 @@ measurement_outcome stationaryQubit::measure_density_independent(){
         Matrix2cd partners_dm, normalized_partners_dm;
         partners_dm = kroneckerProduct(ms.adjoint(),meas_op.identity).eval()*current_state.state_in_density_matrix*kroneckerProduct(ms.adjoint(),meas_op.identity).eval().adjoint() ;
         normalized_partners_dm = partners_dm/partners_dm.trace();
+        EV<<"kroneckerProduct(ms.adjoint(),meas_op.identity).eval() = "<<kroneckerProduct(ms.adjoint(),meas_op.identity).eval()<<"\n";
+        EV<<"dm = "<<current_state.state_in_density_matrix<<"\n";
+        EV<<"State was "<<kroneckerProduct(ms.adjoint(),meas_op.identity).eval()*current_state.state_in_density_matrix<<"\n";
         EV<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). Partner's dm is now = "<<normalized_partners_dm<<"\n";
         entangled_partner->Density_Matrix_Collapsed = normalized_partners_dm;
         entangled_partner->partner_measured = true;//We actually do not need this as long as deleting entangled_partner completely is totally fine.

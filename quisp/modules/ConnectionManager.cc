@@ -33,6 +33,9 @@ class ConnectionManager : public cSimpleModule
     protected:
         virtual void initialize() override;
         virtual void handleMessage(cMessage *msg) override;
+        virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, int right_node);
+
+        virtual unsigned long createUniqueId();
 };
 
 Define_Module(ConnectionManager);
@@ -46,6 +49,22 @@ void ConnectionManager::initialize()
   hardwaremonitor = check_and_cast<HardwareMonitor *>(hm);
   myAddress = par("address");
 }
+
+
+
+unsigned long ConnectionManager::createUniqueId(){
+    std::string time = SimTime().str();
+    std::string address = std::to_string(myAddress);
+    std::string random = std::to_string(intuniform(0,10000000));
+    std::string hash_seed = address+time+random;
+    std::hash<std::string> hash_fn;
+    size_t  t = hash_fn(hash_seed);
+    unsigned long RuleSet_id = static_cast<long>(t);
+    std::cout<<"Hash is "<<hash_seed<<", t = "<<t<<", long = "<<RuleSet_id<<"\n";
+    return RuleSet_id;
+}
+
+
 
 // might just be 2*l
 static int compute_path_division_size (int l /**< number of links (path length, number of nodes -1) */) {
@@ -144,11 +163,13 @@ void ConnectionManager::handleMessage(cMessage *msg){
                EV << "Division: " << link_left[i] << " ---( " << swapper[i] << " )--- " << link_right[i] << std::endl;
              else
                EV << "Division: " << link_left[i] << " -------------- " << link_right[i] << std::endl;
-#if 0
+//#if 0
              /**
               * \todo Create rules for every node
               */
              if (swapper[i]>0) { // This is a swapping relationship
+               RuleSet* withEntanglementSwapping = this->generateRuleSet_EntanglementSwapping(createUniqueId(), swapper[i], link_left[i], link_right[i]);
+
                // 1. Create swapping rules for swapper[i]
                // Rule * swaprule = new SwapRule(...);
                // TODO: IMPLEMENT SwapRule that will have two FidelityClause to
@@ -164,7 +185,7 @@ void ConnectionManager::handleMessage(cMessage *msg){
              // Rule * discardrule = ...; // do we need it or is it hardcoded?
              // ruleset_of_link_left_i.rules.append(purifyrule);
              // ...
-#endif
+//#endif
            }
 
            //Packet returning Rule sets
@@ -178,7 +199,8 @@ void ConnectionManager::handleMessage(cMessage *msg){
             * Full 1yr email-support (maybe tele-communication too).
             * Psychological support. Financial support.
             */
-           //error("Yay!");
+           error("Yay!");
+           //error("Here");
            delete msg;
            return;
        }else{
@@ -219,8 +241,25 @@ void ConnectionManager::handleMessage(cMessage *msg){
        }
 
     }
+}
 
 
+RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, int right_node){
+    /*int rule_index = 0;
+    RuleSet* EntanglementSwapping = new RuleSet(RuleSet_id, owner,left_node,right_node);
+    Rule* SWAP = new Rule(RuleSet_id, rule_index);
+    Condition* SWAP_condition = new Condition();
+    Clause* resource_clause_left = new EnoughResourceClauseLeft(1);
+    Clause* resource_clause_right = new EnoughResourceClauseRight(1);
+    SWAP_condition->addClause(resource_clause_left);
+    SWAP_condition->addClause(resource_clause_right);
+    SWAP->setCondition(SWAP_condition);
+    Action* swap_action = new PurifyAction(RuleSet_id,rule_index,true,false, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
+    Purification->setAction(purify_action);
+    //rule_index++;
+    tomography_RuleSet->addRule(Purification);
+
+    return EntanglementSwapping;*/
 }
 
 } // namespace modules

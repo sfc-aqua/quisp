@@ -38,57 +38,57 @@ network Layer2_Simple_MIM_MM_all_in_one
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=220,137");
         }
         Repeater2[1]: QNode {
             address = 4;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=80,189");
         }
         Repeater3[1]: QNode {
             address = 5;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=66,124");
         }
         Repeater4[1]: QNode {
             address = 6;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=132,36");
         }
         Repeater5[1]: QNode {
             address = 7;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=171,76");
         }
         Repeater6[1]: QNode {
             address = 8;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=314,36");
         }
         Repeater7[1]: QNode {
             address = 9;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=314,36");
         }
         Repeater8[1]: QNode {
             address = 10;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=314,36");
         }
         Repeater9[1]: QNode {
             address = 11;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=386,36");
         }
         Repeater10[1]: QNode {
             address = 12;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=568,44");
         }
         Repeater11[1]: QNode {
             address = 13;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=568,44");
         }
         
@@ -222,7 +222,7 @@ network Layer2_Simple_MIM_MM_7km
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=220,137");
         }
         HoM1[1]: HoM {
@@ -262,7 +262,7 @@ network Layer2_Simple_MIM_MM_10km
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=220,137");
         }
         HoM1[1]: HoM {
@@ -304,7 +304,7 @@ network Layer2_Simple_MIM_MM_15km
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=220,137");
         }
         HoM1[1]: HoM {
@@ -344,7 +344,7 @@ network Layer2_Simple_MIM_MM_50km
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=220,137");
         }
         HoM1[1]: HoM {
@@ -385,7 +385,7 @@ network Layer2_Simple_MIM_MM_40km
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=220,137");
         }
         HoM1[1]: HoM {
@@ -425,7 +425,7 @@ network Layer2_Simple_MIM_MM_30km
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=220,137");
         }
         HoM1[1]: HoM {
@@ -467,7 +467,7 @@ network Layer2_Simple_MIM_MM
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=220,137");
         }
         HoM1[1]: HoM {
@@ -510,7 +510,7 @@ network Layer2_Simple_MIM_MM_same
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "EndNode";
+            nodeType = "Repeater";
             @display("i=device/smallrouter;p=220,137");
         }
         HoM1[1]: HoM {

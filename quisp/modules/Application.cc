@@ -32,6 +32,7 @@ class Application : public cSimpleModule
 
         int* Addresses_of_other_EndNodes = new int[1];
         int num_of_other_EndNodes;
+        bool EndToEndConnection;
     protected:
         virtual void initialize() override;
         virtual void handleMessage(cMessage *msg) override;
@@ -57,6 +58,8 @@ Application::Application()
  *
  * If we're not in and end node, this module is not necessary.
  */
+
+
 void Application::initialize()
 {
     cGate *toRouterGate = gate("toRouter");
@@ -66,10 +69,11 @@ void Application::initialize()
         scheduleAt(simTime(),msg);
     }else{
         myAddress = getParentModule()->par("address");
+        EndToEndConnection = par("EndToEndConnection");
         Addresses_of_other_EndNodes = storeEndNodeAddresses();
 
         //cModule *qnode = getQNode();
-        if(myAddress == 10000000){//hard-coded for now
+        if(myAddress == 1 && EndToEndConnection){//hard-coded for now
             int endnode_destination_address = getOneRandomEndNodeAddress();
             EV<<"Connection setup request will be sent from"<<myAddress<<" to "<<endnode_destination_address<<"\n";
             ConnectionSetupRequest *pk = new ConnectionSetupRequest();
@@ -82,6 +86,7 @@ void Application::initialize()
         }
     }
 }
+
 
 void Application::handleMessage(cMessage *msg){
 

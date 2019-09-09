@@ -14,7 +14,6 @@ void RuleSet::finalize() {
     for (auto rule=this->cbegin(), end=this->cend(); rule!=end; rule++){
 
     }
-
 }
 
 } // namespace rules
