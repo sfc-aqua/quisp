@@ -19,3 +19,7 @@ implemented in the Makefile and not explained for the graphical user interface.
 
 A few tools (mainly scripts) can be used to make development a bit easier.
 Look around in the `bin` folder of this project.
+
+## Others
+Kaaki's latest version used for the master's thesis is accessible in the LinkLayerProtocol branch.
+(Master is quite old now...)
