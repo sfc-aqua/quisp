@@ -36,3 +36,6 @@ the best source is
 * Jones et al., "Design and analysis of communication protocols for
   quantum repeater networks", New Journal of Physics 18(8), 083015,
   2016.
+
+As of this writing, a paper is being written detailing the simulation
+of non-Pauli errors while working in the error basis.

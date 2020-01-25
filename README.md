@@ -23,7 +23,7 @@ Long-term goals of the simulator:
   boundaries and heterogeneity at the physical and logical levels
 * support 1G, 2G and 3G quantum networks, utilizing either purify-and-swap (1G)
   or quantum error corrected (QEC) (2G and 3G) protocols for managing
-  errors.
+  errors
 * Internetworking protocols for connecting different types of networks
 * Various applications running in complex traffic patterns
 
@@ -37,8 +37,8 @@ in the _error basis_, in which we maintain a description of errors the
 states have incurred rather than the full state.  However, unlike QEC
 simulators, QuISP supports non-Pauli errors, in a limited fashion.
 
-If you are unfamiliar with the research literature, see "Learning
-more", below.
+If you are unfamiliar with the research literature or the terminology
+above, see "Learning more", below.
 
 ## Installation requirements
 
