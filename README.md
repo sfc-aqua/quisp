@@ -5,8 +5,8 @@ simulation of quantum repeater networks, which will be the ultimate
 foundation of the coming Quantum Internet.  QuISP's goal is to
 simulate a full Quantum Internet consisting of up to 100 networks of
 up to 100 nodes each.  Its focus is on protocol design and emergent
-network behavior, while keeping the physical layer as realistic as
-possible.
+behavior of complex, heterogeneous networks, while keeping the
+physical layer as realistic as possible.
 
 QuISP is a product of the Advancing Quantum Architecture (AQUA)
 research group headed by Prof. Rodney Van Meter, at Keio University's
@@ -24,6 +24,8 @@ Long-term goals of the simulator:
 * support 1G, 2G and 3G quantum networks, utilizing either purify-and-swap (1G)
   or quantum error corrected (QEC) (2G and 3G) protocols for managing
   errors
+* Distinct link architectures: memory-to-memory (MM), midpoint
+  interference (MIM), and midpoint source (MSM)
 * Internetworking protocols for connecting different types of networks
 * Various applications running in complex traffic patterns
 
@@ -36,6 +38,13 @@ simulators for large-scale error correction, QuISP operates primarily
 in the _error basis_, in which we maintain a description of errors the
 states have incurred rather than the full state.  However, unlike QEC
 simulators, QuISP supports non-Pauli errors, in a limited fashion.
+
+QuISP is almost endlessly configurable; for example, it is possible to
+set not only different lengths for different links in the network, but
+also different gate error rates and memory lifetimes on individual
+qubits.  Non-Pauli errors that are at least partially supported in the
+current release include qubit loss, relaxation to ground state,
+excitation to excited state, and complete mixing.
 
 If you are unfamiliar with the research literature or the terminology
 above, see "Learning more", below.
@@ -62,3 +71,14 @@ Look around in the `bin` folder of this project.
 
 See [doc/References.md](doc/References.md) for more information on the
 research underlying QuISP.
+
+## LICENSE
+
+The release license is TBD.  QuISP depends on Omnet++, which has its
+own semi-commercial license, and on Eigen, which is MPL2 (Mozilla).
+
+## FAQ
+
+See [Frequently Asked Questions (FAQ)](doc/FAQ.md) for help on
+installation and other questions (after you have read
+[doc/INSTALL.md](doc/INSTALL.md), of course!).

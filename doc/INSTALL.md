@@ -8,6 +8,9 @@ installation on Linux. Every shell sample will look like this:
 HELLO WORLD
 ```
 
+You type the part after the lambda character (beginning with "echo" in
+the example above).
+
 ## QUISP
 
 You can get the source for quisp and put it pretty much anywhere you want.
