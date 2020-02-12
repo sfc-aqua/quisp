@@ -212,3 +212,7 @@ usr/
     └── share/
         └── eigen3/
 ```
+
+## If you prefer using docker
+
+See instruction [here](./Build_on_docker.md)
