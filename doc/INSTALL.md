@@ -237,8 +237,8 @@ here, you can peruse the [Frequently Asked Questions
 
 There are two main ways of working with QUISP. You can either use the
 Eclipse-like graphical interface of OmNET++, for which you will find
-instructions in [USAGE-omnetpp-gui.md](doc/USAGE-omnetpp-gui.md),
+instructions in [doc/USAGE-omnetpp-gui.md](USAGE-omnetpp-gui.md),
 or you can use the `Makefile` and GNU make, by looking at instructions
-in [USAGE-makefile.md](doc/USAGE-makefile.md). Some operations are
+in [doc/USAGE-makefile.md](USAGE-makefile.md). Some operations are
 implemented in the Makefile and not explained for the graphical user
 interface.
