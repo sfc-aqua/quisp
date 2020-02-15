@@ -32,12 +32,13 @@ Long-term goals of the simulator:
 Because these protocols can result in hundreds of qubits in a single
 entangled state, and the entire system may consist of up to a million
 qubits, simulation at the physical Hamiltonian level or even just
-above that at the unitary level is infeasible.  We cannot calculate
-and store full density matrices for such states.  Instead, like
-simulators for large-scale error correction, QuISP operates primarily
-in the _error basis_, in which we maintain a description of errors the
-states have incurred rather than the full state.  However, unlike QEC
-simulators, QuISP supports non-Pauli errors, in a limited fashion.
+above that at the unitary (gate, e.g. CNOT) level is infeasible.  We
+cannot calculate and store full density matrices for such states.
+Instead, like simulators for large-scale error correction, QuISP
+operates primarily in the _error basis_, in which we maintain a
+description of errors the states have incurred rather than the full
+state.  However, unlike QEC simulators, QuISP supports non-Pauli
+errors, in a limited fashion.
 
 QuISP is almost endlessly configurable; for example, it is possible to
 set not only different lengths for different links in the network, but
@@ -51,16 +52,21 @@ above, see "Learning more", below.
 
 ## Installation requirements
 
-QUISP requires OmNET++ and external C++ libraries to work. The full installation
-process is described in [doc/INSTALL.md](doc/INSTALL.md).
+QUISP requires [OmNET++](https://omnetpp.org/) and an external C++
+library, [Eigen](http://eigen.tuxfamily.org/), to work. The full
+installation process is described in [doc/INSTALL.md](doc/INSTALL.md).
+To contribute to QuISP development, you will also need to be familiar
+with at least the basics of [git](https://git-scm.com/).
 
 ## Building and running
 
-There are two main ways of working with QUISP. You can either use the Eclipse-like
-graphical interface of OmNET++, for which you will find instructions in
-[doc/USAGE-omnetpp-gui.md](doc/USAGE-omnetpp-gui.md), or you can use the `Makefile` and GNU make,
-by looking at instructions in [doc/USAGE-makefile.md](doc/USAGE-makefile.md). Some operations are
-implemented in the Makefile and not explained for the graphical user interface.
+There are two main ways of working with QUISP. You can either use the
+Eclipse-like graphical interface of OmNET++, for which you will find
+instructions in [doc/USAGE-omnetpp-gui.md](doc/USAGE-omnetpp-gui.md),
+or you can use the `Makefile` and GNU make, by looking at instructions
+in [doc/USAGE-makefile.md](doc/USAGE-makefile.md). Some operations are
+implemented in the Makefile and not explained for the graphical user
+interface.
 
 ## Development tools
 
