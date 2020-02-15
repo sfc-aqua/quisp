@@ -1,5 +1,15 @@
 # INSTALLATION
 
+Welcome to the installation instructions for installing QuISP.  In
+theory, QuISP runs anywhere you can get OmNET++ to run, including Mac,
+Windows, and Linux.  The notes here assume you are working on Linux.
+If you prefer to do this inside a container, we support working with
+[https://www.docker.com/](Docker); see the instructions
+[here](./Build_on_docker.md).
+
+
+## Notation
+
 These installation instructions are interlaced with one example of running the
 installation on Linux. Every shell sample will look like this:
 
@@ -37,10 +47,10 @@ home/
 
 ## OmNET++
 
-Get the release of OmNET++ 5.2 on their website and uncompress it in the folder
-of your choice. To remain general the example uncompresses it in a local
-libraries folder, far from the quisp project and from standard installation
-folders.
+Get the release of OmNET++ 5.2 from [https://omnetpp.org/](their
+website) and uncompress it in the folder of your choice. To remain
+general, this example uncompresses it in a local libraries folder, far
+from the quisp project and from standard installation folders.
 
 ```
 home/
@@ -132,7 +142,7 @@ home/
 To run the simulations, you need to get Eigen, which is a library for matrix
 calculation in C/C++. This is used for channel errors and memory errors.
 
-Download Eigen (tested with version 3.3.4) on [their website][eigen].
+Download Eigen (tested with version 3.3.4) from [their website][eigen].
 
 [eigen]: http://eigen.tuxfamily.org/index.php?title=Main_Page
 
@@ -213,6 +223,8 @@ usr/
         └── eigen3/
 ```
 
-## If you prefer using docker
+## Help Me!!!
 
-See instruction [here](./Build_on_docker.md)
+If you are having trouble with the install and the answers aren't
+here, you can peruse the [Frequently Asked Questions
+(FAQ)](doc/FAQ.md).
