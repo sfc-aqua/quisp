@@ -30,6 +30,8 @@ classical message) colors derive from the message kind, an internal
 field related to the message definition.  Modulo 8, the colors you see
 are:
 
+![MM_demo](img/demo_1.png)
+
 ```
 0 = RED
 1 = GREEN
