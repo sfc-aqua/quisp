@@ -52,11 +52,22 @@ above, see "Learning more", below.
 
 ## Installation requirements
 
-QUISP requires [OmNET++](https://omnetpp.org/) and an external C++
-library, [Eigen](http://eigen.tuxfamily.org/), to work. The full
-installation process is described in [doc/INSTALL.md](doc/INSTALL.md).
-To contribute to QuISP development, you will also need to be familiar
-with at least the basics of [git](https://git-scm.com/).
+The full installation process is described in
+[doc/INSTALL.md](doc/INSTALL.md).  The main software tools you will
+need are:
+
+* QUISP requires [OmNET++](https://omnetpp.org/) and
+* an external C++ library, [Eigen](http://eigen.tuxfamily.org/), to
+  work.
+* To contribute to QuISP development, you will also need to be
+  familiar with at least the basics of [git](https://git-scm.com/).
+* We recommend the use of [Doxygen](http://www.doxygen.nl/) for source
+  code comments, but the Doxygen tools are not required unless you
+  want to build the source code documentation.
+
+Depending on your local setup and how you intend to use QuISP, you may
+also need various tools (a C++ compiler, make, an X Windows server,
+Docker, etc.), documented in the installation notes.
 
 ## Building and running
 
@@ -68,6 +79,12 @@ in [doc/USAGE-makefile.md](doc/USAGE-makefile.md). Some operations are
 implemented in the Makefile and not explained for the graphical user
 interface.
 
+## Moving into useful work
+
+Once you have gotten this far, you should be able to run some of the
+most basic demos.  Next, you'll want to learn how to create your own
+test networks, and how to extend the source code for your own uses.
+
 ## Development tools
 
 A few tools (mainly scripts) can be used to make development a bit easier.
@@ -76,7 +93,9 @@ Look around in the `bin` folder of this project.
 ## Learning more
 
 See [doc/References.md](doc/References.md) for more information on the
-research underlying QuISP.
+research underlying QuISP.  [Takaaki Matsuo's master's
+thesis](https://arxiv.org/abs/1908.10758) is the best source of
+information on the simulator itself.
 
 ## LICENSE
 
