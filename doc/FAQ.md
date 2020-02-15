@@ -9,15 +9,17 @@ To be filled in...
     - A: Welcome to the club.  Getting OMNeT++ to run is the biggest
   hassle.  Once you have that done, everything else is smooth.  There
   _are_ a lot of dependencies on other free software packages, as well
-  as on Java.  See [doc/INSTALL.md](doc/INSTALL.md) for additional
-  info on troubleshooting.
+  as on Java.  The easiest install may be on a clean Ubuntu
+  distribution, which can be done using Docker if you don't have such
+  a machine handy.  See [doc/INSTALL.md](doc/INSTALL.md) for
+  additional info on troubleshooting.
 * Q: Wow, OMNeT++ runs!!! Exciting! ...now what?
     - A: We definitely need better notes on adding QuISP into OMNeT++ and running
   your first QuISP sims.
 * Q: Okay, I got the basic first QuISP demo running.  What the heck
   are these .ini and .ned files, and how do I create my own?
     - A: Yup...  See, of course, [the OMNeT++
-  documentation])https://doc.omnetpp.org/omnetpp/manual/), but we
+  documentation](https://doc.omnetpp.org/omnetpp/manual/), but we
   should have more of our own description here, too.
 * Q: There are a bunch of parameters in the .ini file that aren't
   described in the OMNeT++ documentation.  What are they?
