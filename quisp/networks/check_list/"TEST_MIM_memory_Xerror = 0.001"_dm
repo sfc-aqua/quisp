@@ -1,0 +1,286 @@
+source<--->HoM
+REAL
+   0.416254  0.00167517  0.00419701    0.418297
+ 0.00167517   0.0832209   0.0817028 -0.00996454
+ 0.00419701   0.0817028   0.0851702 -0.00744269
+   0.418297 -0.00996454 -0.00744269    0.415355
+IMAGINARY
+          0  0.00258681 -0.00289961  -0.0075032
+-0.00258681           0 -0.00855805 -0.00016238
+ 0.00289961  0.00855805           0  0.00137137
+  0.0075032  0.00016238 -0.00137137           0
+target<--->HoM
+REAL
+   0.416254  0.00419701  0.00167517    0.418297
+ 0.00419701   0.0851702   0.0817028 -0.00744269
+ 0.00167517   0.0817028   0.0832209 -0.00996454
+   0.418297 -0.00744269 -0.00996454    0.415355
+IMAGINARY
+          0 -0.00289961  0.00258681  -0.0075032
+ 0.00289961           0  0.00855805  0.00137137
+-0.00258681 -0.00855805           0 -0.00016238
+  0.0075032 -0.00137137  0.00016238           0
+source<--->HoM
+REAL
+          1 -0.00194158  0.00209212 -0.00147142
+-0.00194158           0 -0.00371223  -0.0049061
+ 0.00209212 -0.00371223           0 -0.00724088
+-0.00147142  -0.0049061 -0.00724088           0
+IMAGINARY
+           0   0.00137851  3.27043e-05  0.000293539
+ -0.00137851            0  -0.00044786  -0.00884657
+-3.27043e-05   0.00044786            0   0.00175863
+-0.000293539   0.00884657  -0.00175863            0
+target<--->HoM
+REAL
+          1  0.00209212 -0.00194158 -0.00147142
+ 0.00209212           0 -0.00371223 -0.00724088
+-0.00194158 -0.00371223           0  -0.0049061
+-0.00147142 -0.00724088  -0.0049061           0
+IMAGINARY
+           0  3.27043e-05   0.00137851  0.000293539
+-3.27043e-05            0   0.00044786   0.00175863
+ -0.00137851  -0.00044786            0  -0.00884657
+-0.000293539  -0.00175863   0.00884657            0
+source<--->HoM
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+target<--->HoM
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+source<--->HoM
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+target<--->HoM
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+source<--->HoM
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+target<--->HoM
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+source<--->HoM
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+target<--->HoM
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+source<--->HoM
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+target<--->HoM
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+source<--->HoM
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+target<--->HoM
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+source<--->HoM
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+target<--->HoM
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+source<--->HoM
+REAL
+   0.497167  0.00113223  0.00407141  0.00267568
+ 0.00113223    0.502833   -0.011069   0.0064202
+ 0.00407141   -0.011069           0 -0.00682767
+ 0.00267568   0.0064202 -0.00682767           0
+IMAGINARY
+           0  -0.00262238   0.00264348  -0.00527026
+  0.00262238            0  -6.3478e-05 -0.000199983
+ -0.00264348   6.3478e-05            0    0.0068985
+  0.00527026  0.000199983   -0.0068985            0
+target<--->HoM
+REAL
+   0.497167  0.00407141  0.00113223  0.00267568
+ 0.00407141           0   -0.011069 -0.00682767
+ 0.00113223   -0.011069    0.502833   0.0064202
+ 0.00267568 -0.00682767   0.0064202           0
+IMAGINARY
+           0   0.00264348  -0.00262238  -0.00527026
+ -0.00264348            0   6.3478e-05    0.0068985
+  0.00262238  -6.3478e-05            0 -0.000199983
+  0.00527026   -0.0068985  0.000199983            0
+source<--->HoM
+REAL
+    0.497006  -0.00436068  -0.00308473  -0.00310346
+ -0.00436068     0.502994  -0.00662999  0.000838548
+ -0.00308473  -0.00662999            0 -0.000880406
+ -0.00310346  0.000838548 -0.000880406            0
+IMAGINARY
+           0  -0.00532299 -7.66636e-05   0.00351901
+  0.00532299            0   0.00096876 -7.66636e-05
+ 7.66636e-05  -0.00096876            0   0.00884952
+ -0.00351901  7.66636e-05  -0.00884952            0
+target<--->HoM
+REAL
+    0.497006  -0.00308473  -0.00436068  -0.00310346
+ -0.00308473            0  -0.00662999 -0.000880406
+ -0.00436068  -0.00662999     0.502994  0.000838548
+ -0.00310346 -0.000880406  0.000838548            0
+IMAGINARY
+           0 -7.66636e-05  -0.00532299   0.00351901
+ 7.66636e-05            0  -0.00096876   0.00884952
+  0.00532299   0.00096876            0 -7.66636e-05
+ -0.00351901  -0.00884952  7.66636e-05            0
+source<--->HoM
+REAL
+   0.497167  0.00113223  0.00407141  0.00267568
+ 0.00113223    0.502833   -0.011069   0.0064202
+ 0.00407141   -0.011069           0 -0.00682767
+ 0.00267568   0.0064202 -0.00682767           0
+IMAGINARY
+           0  -0.00262238   0.00264348  -0.00527026
+  0.00262238            0  -6.3478e-05 -0.000199983
+ -0.00264348   6.3478e-05            0    0.0068985
+  0.00527026  0.000199983   -0.0068985            0
+target<--->HoM
+REAL
+   0.497167  0.00407141  0.00113223  0.00267568
+ 0.00407141           0   -0.011069 -0.00682767
+ 0.00113223   -0.011069    0.502833   0.0064202
+ 0.00267568 -0.00682767   0.0064202           0
+IMAGINARY
+           0   0.00264348  -0.00262238  -0.00527026
+ -0.00264348            0   6.3478e-05    0.0068985
+  0.00262238  -6.3478e-05            0 -0.000199983
+  0.00527026   -0.0068985  0.000199983            0
+source<--->HoM
+REAL
+    0.497006  -0.00436068  -0.00308473  -0.00310346
+ -0.00436068     0.502994  -0.00662999  0.000838548
+ -0.00308473  -0.00662999            0 -0.000880406
+ -0.00310346  0.000838548 -0.000880406            0
+IMAGINARY
+           0  -0.00532299 -7.66636e-05   0.00351901
+  0.00532299            0   0.00096876 -7.66636e-05
+ 7.66636e-05  -0.00096876            0   0.00884952
+ -0.00351901  7.66636e-05  -0.00884952            0
+target<--->HoM
+REAL
+    0.497006  -0.00308473  -0.00436068  -0.00310346
+ -0.00308473            0  -0.00662999 -0.000880406
+ -0.00436068  -0.00662999     0.502994  0.000838548
+ -0.00310346 -0.000880406  0.000838548            0
+IMAGINARY
+           0 -7.66636e-05  -0.00532299   0.00351901
+ 7.66636e-05            0  -0.00096876   0.00884952
+  0.00532299   0.00096876            0 -7.66636e-05
+ -0.00351901  -0.00884952  7.66636e-05            0

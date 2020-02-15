@@ -9,20 +9,22 @@
 #ifndef QUISP_MODULES_RULEENGINE_H_
 #define QUISP_MODULES_RULEENGINE_H_
 
+#include "classical_messages_m.h"
+#include <rules/RuleSet.h>
 #include <vector>
 #include <omnetpp.h>
-#include <classical_messages_m.h>
 #include <modules/stationaryQubit.h>
 #include <modules/RealTimeController.h>
 #include <modules/HardwareMonitor.h>
 #include <modules/HoM_Controller.h>
 #include <modules/QUBIT.h>
-#include <rules/RuleSet.h>
+
 
 using namespace omnetpp;
 
 namespace quisp {
 namespace modules {
+using namespace rules;
 
 /** \class RuleEngine RuleEngine.h
  *  \todo Documentation of the class header.
@@ -33,8 +35,54 @@ namespace modules {
  *
  *  \brief RuleEngine
  */
+
+typedef struct _process_identifier{
+    unsigned long ruleset_id;
+    int rule_id;
+    int index;
+}process_id;
+
+struct purification_result{
+    process_id id;
+    bool outcome;
+};
+
+struct Doublepurification_result{
+    process_id id;
+    bool Xpurification_outcome;
+    bool Zpurification_outcome;
+};
+
+
+struct Triplepurification_result{
+    process_id id;
+    bool Xpurification_outcome;
+    bool Zpurification_outcome;
+    bool DS_purification_outcome;
+};
+
+
+struct Quatropurification_result{
+    process_id id;
+    bool Xpurification_outcome;
+    bool Zpurification_outcome;
+    bool DS_Xpurification_outcome;
+    bool DS_Zpurification_outcome;
+};
+
+
+
+//Process = RuleSet
+typedef struct _process{
+    int ownner_addr;
+    int working_partner_addr;
+    //int process_ID;
+    RuleSet* Rs;
+} process;
+
 class RuleEngine : public cSimpleModule
 {
+    //friend class Action;
     public:
         int parentAddress;//Parent QNode's address
         EmitPhotonRequest *emt;
@@ -44,17 +92,41 @@ class RuleEngine : public cSimpleModule
         int number_of_qnics_r;
         int number_of_qnics_rp;
         typedef std::map<int, QubitState> QubitStateTable;
+        typedef std::multimap<int, purification_result> PurificationTable;
+        PurificationTable Purification_table;
+        typedef std::multimap<int, Doublepurification_result> DoublePurificationTable;
+        typedef std::multimap<int, Quatropurification_result> QuatroPurificationTable;
+        typedef std::multimap<int, Triplepurification_result> TriplePurificationTable;
+        DoublePurificationTable DoublePurification_table;
+        TriplePurificationTable TriplePurification_table;
+        QuatroPurificationTable QuatroPurification_table;
         typedef std::map<int, QubitAddr_cons> sentQubitIndexTracker;//nth shot -> node/qnic/qubit index (node addr not needed actually)
         //Although qnic index is in QubitAddr, lest make int qnic_index -> QubisState to lessen the search
         //QubitStateTable stable, stable_r, stable_rp;
         QubitStateTable* Busy_OR_Free_QubitState_table;
+        bool* terminated_qnic;//When you need to intentionally stop the link to make the simulation lighter.
         sentQubitIndexTracker* tracker;
         HardwareMonitor *hardware_monitor;
         RealTimeController *realtime_controller;
         int* qnic_burst_trial_counter;
         typedef std::map<int,bool> trial_tracker;//trial index, false or true (that trial is over or not)
-        qnicResources* allResources; //Size will be defined in initialization. If 3 qnic types, then size is 3.
-        typedef std::map<std::string, quisp::rules::RuleSet> processes;//process_id -> Rule set
+        qnicResources* allResources; //Size will be defined in initialization. If 3 qnic types, then size is 3. Type defined in QUBIT.h
+        /*
+         * DEFINED in QNIC.h
+         * typedef std::multimap<int, stationaryQubit*> EntangledPairs;//entangled Node address -> pointer to that local qubit
+         * typedef EntangledPairs* qnicResources;//For each qnic. If the number of "qnic" is 3, then the size is 3.
+         * For resource management over.
+         * */
+
+        //typedef rules::RuleSet* RuleSetPtr;
+        typedef std::map<int, process> running_processes;//index -> process
+        running_processes rp;
+        //typedef std::map<std::string, quisp::rules::RuleSet> processes;//process_id -> Rule set
+        virtual void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type);
+        virtual void freeConsumedResource(int qnic_index, stationaryQubit *qubit, QNIC_type qnic_type);
+        virtual void ResourceAllocation(int qnic_type, int qnic_index);
+        virtual void JustATest(){EV<<"Hello there\n."; endSimulation(); };
+
 
     protected:
         virtual void initialize() override;
@@ -66,7 +138,7 @@ class RuleEngine : public cSimpleModule
         virtual QubitStateTable setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
         virtual QubitStateTable setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
         virtual QubitStateTable initializeQubitStateTable(QubitStateTable temp, QNIC_type qnic_type);
-        virtual void scheduleFirstPhotonEmission( BSMtimingNotifier *pk, QNIC_type qnic_type);
+        virtual void scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type);
         virtual void shootPhoton(SchedulePhotonTransmissionsOnebyOne * pk);
         //virtual int getQNICjob_index_for_this_qnic(int qnic_index, QNIC_type qnic_type);
         virtual void incrementBurstTrial(int destAddr, int internal_qnic_address, int internal_qnic_index);
@@ -78,8 +150,17 @@ class RuleEngine : public cSimpleModule
         virtual void scheduleNextEmissionEvent(int qnic_index, int qnic_address, double interval, simtime_t timing, int num_sent, bool internal, int trial);
         virtual void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result);
         virtual void clearTrackerTable(int destAddr, int internal_qnic_address);
-
+        //virtual void traverseThroughAllProcesses(RuleEngine *re, int qnic_type, int qnic_index);
+        virtual void traverseThroughAllProcesses2();
         virtual double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
+        //virtual void check_Purification_Agreement(purification_result pr);
+        virtual void storeCheck_Purification_Agreement(purification_result pr);
+        virtual void storeCheck_DoublePurification_Agreement(Doublepurification_result pr);
+        virtual void storeCheck_TriplePurification_Agreement(Triplepurification_result pr);
+        virtual void storeCheck_QuatroPurification_Agreement(Quatropurification_result pr);
+        virtual void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int index);
+        virtual void Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int index);
+
 };
 
 } // namespace modules

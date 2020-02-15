@@ -21,8 +21,9 @@ package networks;
 module QNode
 {
     parameters:
+        int bufferSize = default(10);
         int address = default(0);
-        int buffers; //default is defined as 10 in .ini file but can be changed independently in .ned file
+        int buffers = default(10); //default is defined as 10 in .ini file but can be changed independently in .ned file
         @display("bgl=4");
         //int numQNIC = 1;
 
@@ -75,7 +76,8 @@ module QNode
             parameters:
                 parent_node_address = address;
                 self_qnic_address = index;
-                numBuffer = buffers;//number of buffers for each qnic
+                self_qnic_index = index;
+                numBuffer = default(int(buffers));//number of buffers for each qnic
                 receiver = false;
                 emission_std = emission_timing_std;
                 self_qnic_type = 0;
@@ -86,7 +88,8 @@ module QNode
         		parameters:
         		    	parent_node_address = address;
                 self_qnic_address = index + sizeof(quantum_port);
-                numBuffer = buffers;//number of buffers for each qnic
+                self_qnic_index = index;
+                numBuffer = default(int(buffers));//number of buffers for each qnic
                 receiver = true;
                 passive = false;
                 self_qnic_type = 1;
@@ -96,7 +99,8 @@ module QNode
         		parameters:
         		    	parent_node_address = address;
                 self_qnic_address = index + sizeof(quantum_port) + sizeof(quantum_port_receiver);
-                numBuffer = buffers;//number of buffers for each qnic
+                self_qnic_index = index;
+                numBuffer = default(int(buffers));//number of buffers for each qnic
                 receiver = true;
                 passive = true;
                 self_qnic_type = 2;
@@ -130,4 +134,5 @@ module QNode
 
         router.rePort <--> qrsa.rePort;
         router.cmPort <--> qrsa.cmPort;
+        router.hmPort <--> qrsa.hmPort;
 }

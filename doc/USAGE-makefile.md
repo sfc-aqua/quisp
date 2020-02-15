@@ -1,5 +1,24 @@
 # USAGE IN COMMAND LINE USING MAKE
 
+We are working with the following installation tree.  You are assumed
+to have just come from [doc/INSTALL.md](INSTALL.md).
+
+```
+home/
+├── projects/
+│   └── quisp/
+│       ├── .git/
+│       ├── setenv*
+│       └── quisp/
+└── .local/
+    └── lib/
+        ├── omnetpp-5.2/
+        │   ├── setenv*
+        │   └── bin/
+        │       └── omnetpp*
+        └── eigen-source/
+```
+
 Every time you want to use the Makefile, you need to setup the environment
 using scripts from the quisp project.
 

@@ -1,0 +1,6 @@
+source<-->QuantumChannel{cost=1644.82;distance=7km;fidelity=0.496665;bellpair_per_sec=246465;tomography_time=0.121721249177;tomography_measurements=30000;actualmeas=30000;}<-->HoM F=0.496665 X=0.00348253 Z=0.503335 Y=-0.00348253
+target<-->QuantumChannel{cost=1644.82;distance=10km;fidelity=0.496665;bellpair_per_sec=246465;tomography_time=0.121721249177;tomography_measurements=30000;actualmeas=30000;}<-->HoM F=0.496665 X=0.00348253 Z=0.503335 Y=-0.00348253
+source<-->QuantumChannel{cost=6401.78;distance=7km;fidelity=0.251752;bellpair_per_sec=246465;tomography_time=0.121721249177;tomography_measurements=30000;actualmeas=30000;}<-->HoM F=0.251752 X=0.248396 Z=0.258422 Y=0.241431
+target<-->QuantumChannel{cost=6401.78;distance=10km;fidelity=0.251752;bellpair_per_sec=246465;tomography_time=0.121721249177;tomography_measurements=30000;actualmeas=30000;}<-->HoM F=0.251752 X=0.248396 Z=0.258422 Y=0.241431
+source<-->QuantumChannel{cost=6401.78;distance=7km;fidelity=0.251752;bellpair_per_sec=246465;tomography_time=0.121721249177;tomography_measurements=30000;actualmeas=30000;}<-->HoM F=0.251752 X=0.248396 Z=0.258422 Y=0.241431
+target<-->QuantumChannel{cost=6401.78;distance=10km;fidelity=0.251752;bellpair_per_sec=246465;tomography_time=0.121721249177;tomography_measurements=30000;actualmeas=30000;}<-->HoM F=0.251752 X=0.248396 Z=0.258422 Y=0.241431

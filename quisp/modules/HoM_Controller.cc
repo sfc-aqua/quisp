@@ -20,7 +20,10 @@ HoM_Controller::HoM_Controller()
 
 void HoM_Controller::initialize(int stage)
 {
+    time_out_count = 0;
+    current_trial_id = dblrand();
     handshake = false;
+    auto_resend_BSANotifier = true;
     BSA_timeout = 1e-6;
     address = par("address");
     receiver = par("receiver");
@@ -51,8 +54,9 @@ void HoM_Controller::internodeInitializer(){
     updateIDE_Parameter(true);
 
     accepted_burst_interval = (double)1/(double)photon_detection_per_sec;
-    generatePacket = new cMessage("nextPacket");
-    scheduleAt(simTime(),generatePacket);
+    BSAstart *generatePacket = new BSAstart;
+    scheduleAt(simTime()+par("Initial_notification_timing_buffer"),generatePacket);
+    //scheduleAt(simTime(),generatePacket);
 }
 
 //Initialization of the stand-alone HoM module.
@@ -67,8 +71,9 @@ void HoM_Controller::standaloneInitializer(){
     updateIDE_Parameter(false);
 
     accepted_burst_interval = (double)1/(double)photon_detection_per_sec;
-    generatePacket = new cMessage("nextPacket");
-    scheduleAt(simTime(),generatePacket);
+    BSAstart *generatePacket = new BSAstart;
+    scheduleAt(simTime()+par("Initial_notification_timing_buffer"),generatePacket);
+    //scheduleAt(simTime(),generatePacket);
 }
 
 //This is invoked only once at the begining of the simulation.
@@ -104,18 +109,29 @@ void HoM_Controller::sendNotifiers(){
 
 
 void HoM_Controller::handleMessage(cMessage *msg){
-    if(msg == generatePacket){
+	//std::cout<<"HoMReceiving result\n";
+	//std::cout<<msg<<", bsa? ="<<(bool)( dynamic_cast<BSAresult *>(msg) != nullptr)<<"\n"; //Omnet somehow bugs without this... it receives a msg correctly from BellStateAnalyzer, but very rarely does not recognize the type. VERY weird.
+    
+	if(dynamic_cast<BSAstart *>(msg) != nullptr){
+		//std::cout<<"Generate packet\n";
         sendNotifiers();
+		delete msg;
+		return;
         //Create timeout
-    }else if(dynamic_cast<BSAresult *>(msg) != nullptr){
+    } else if(dynamic_cast<BSAresult *>(msg) != nullptr){
+		//std::cout<<"BSAresult\n";
+        auto_resend_BSANotifier = false;//Photon is arriving. No need to auto reschedule next round. Wait for the last photon fron either node.
         bubble("BSAresult accumulated");
         BSAresult *pk = check_and_cast<BSAresult *>(msg);
-        pushToBSAresults(pk->getEntangled());
-        int stored = getStoredBSAresultsSize();
-        char moge[sizeof(stored)];
-
-        sprintf(moge, "%d", stored);
-        bubble(moge);
+		bool entangled = pk->getEntangled();
+		//std::cout<<"Accumulating "<<entangled<<"\n";
+        int prev = getStoredBSAresultsSize();
+        pushToBSAresults(entangled);
+        int aft = getStoredBSAresultsSize();
+		if(prev+1 != aft){
+			error("Nahnah nah!");
+		}
+	
         /*if(getStoredBSAresultsSize() == max_buffer && handshake==true){
             bubble("All results stored!");
             sendBSAresultsToNeighbors();
@@ -123,7 +139,8 @@ void HoM_Controller::handleMessage(cMessage *msg){
         }else{
 
         }*/
-    }else if(dynamic_cast<BSAfinish *>(msg) != nullptr){
+    }else if(dynamic_cast<BSAfinish *>(msg) != nullptr){//Last photon from either node arrived.
+		//std::cout<<"BSAfinish\n";
         bubble("BSAresult accumulated");
         BSAfinish *pk = check_and_cast<BSAfinish *>(msg);
         pushToBSAresults(pk->getEntangled());
@@ -135,9 +152,22 @@ void HoM_Controller::handleMessage(cMessage *msg){
         bubble("done");
         sendBSAresultsToNeighbors();//memory leak
         clearBSAresults();
+        auto_resend_BSANotifier = true;
+        current_trial_id = dblrand();
         //Schedule a checker with a time-out t, to see if both actually sent something.
         //Worst case is, when both have no free qubit, and no qubits get transmitted. In that case, this module needs to recognize that problem, and reschedule/resend the request after a cetrain time.
-    }
+    }else if(dynamic_cast<BSAtimeoutChecker*>(msg) != nullptr){
+		//std::cout<<"BSAtimeout\n";
+        //std::cout<<"timeout check at"<<simTime()<<"\n";
+        BSAtimeoutChecker *pk = check_and_cast<BSAtimeoutChecker *>(msg);
+        if(auto_resend_BSANotifier == true && pk->getTrial_id() == current_trial_id){
+            //No photon came from both nodes. All of the resources must have been busy that time.
+            //error("there you go..");
+        }
+        //error("Timeout");
+    }else{
+		std::cout<<"Wait what?\n";
+	}
     delete msg;
 }
 
@@ -198,7 +228,10 @@ void HoM_Controller::checkNeighborBuffer(bool receiver){
 
 void HoM_Controller::updateIDE_Parameter(bool receiver){
     try{
-        photon_detection_per_sec = par("photon_detection_per_sec");
+        photon_detection_per_sec = (int)par("photon_detection_per_sec");
+        if(photon_detection_per_sec <= 0){
+            error("Photon detection per sec for HoM must be more than 0.");
+        }
         par("neighbor_address") = neighbor_address;
         par("neighbor_address_two") = neighbor_address_two;
         par("distance_to_neighbor") = distance_to_neighbor;
@@ -212,7 +245,9 @@ void HoM_Controller::updateIDE_Parameter(bool receiver){
         }
     }
     catch(std::exception& e){
-        error("photon_detection_per_sec is missing as a HoM_Controller parameter. Or maybe you should specify **.Speed_of_light_in_fiber = (number)km in .ini file.");
+        error(e.what());
+        //std::cout<<"E="<<e.what()<<"\n";
+        //error("photon_detection_per_sec is missing as a HoM_Controller parameter. Or maybe you should specify **.Speed_of_light_in_fiber = (number)km in .ini file.");
     }
 }
 
@@ -297,7 +332,12 @@ cModule* HoM_Controller::getQNode(){
 
 
 void HoM_Controller::pushToBSAresults(bool attempt_success){
+	int prev = getStoredBSAresultsSize();
     results[getStoredBSAresultsSize()] = attempt_success;
+	int aft = getStoredBSAresultsSize();
+	if(prev+1 != aft){
+		error("Not working correctly");
+	}
 }
 int HoM_Controller::getStoredBSAresultsSize(){
     return results.size();
@@ -340,11 +380,17 @@ void HoM_Controller::sendBSAresultsToNeighbors(){
         for(auto it : results ){
            int index = it.first;
            bool entangled = it.second;
+		   //std::cout<<index<<" th, entangled = "<<entangled<<"\n";
            pk->setList_of_failed(index, entangled);
            pkt->setList_of_failed(index, entangled);
         }
         send(pk,"toRouter_port");
         send(pkt,"toRouter_port");
+
+        //BSAtimeoutChecker *timeout = new BSAtimeoutChecker;//This is used to emit the next round's timing in case no photon arrived.
+        //timeout->setTrial_id(current_trial_id);
+        //std::cout<<"now = "<<simTime()<<"time = "<<time<<"\n";
+        //scheduleAt(simTime()+2*(1.1*time), timeout);
 
     }else{//For SPDC type link
         CombinedBSAresults_epps *pk, *pkt;

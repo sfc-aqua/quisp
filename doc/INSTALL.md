@@ -1,5 +1,19 @@
 # INSTALLATION
 
+Welcome to the installation instructions for installing QuISP.  In
+theory, QuISP runs anywhere you can get OmNET++ to run, including Mac,
+Windows, and Linux.  The notes here assume you are working on Linux.
+If you prefer to do this inside a container, we support working with
+[https://www.docker.com/](Docker); see the instructions
+[here](./Build_on_docker.md).
+
+This document walks you through downloading QuISP, then installing and
+building the related software.  Importing QuISP itself into OmNET++
+and building and executing it can be done in two distinct ways,
+documented separately (scroll down to the end of this document).
+
+## Notation
+
 These installation instructions are interlaced with one example of running the
 installation on Linux. Every shell sample will look like this:
 
@@ -7,6 +21,9 @@ installation on Linux. Every shell sample will look like this:
 /the/current/directory λ echo HELLO WORLD
 HELLO WORLD
 ```
+
+You type the part after the lambda character (beginning with "echo" in
+the example above).
 
 ## QUISP
 
@@ -34,10 +51,10 @@ home/
 
 ## OmNET++
 
-Get the release of OmNET++ 5.2 on their website and uncompress it in the folder
-of your choice. To remain general the example uncompresses it in a local
-libraries folder, far from the quisp project and from standard installation
-folders.
+Get the release of OmNET++ 5.2 from [https://omnetpp.org/](their
+website) and uncompress it in the folder of your choice. To remain
+general, this example uncompresses it in a local libraries folder, far
+from the quisp project and from standard installation folders.
 
 ```
 home/
@@ -129,7 +146,7 @@ home/
 To run the simulations, you need to get Eigen, which is a library for matrix
 calculation in C/C++. This is used for channel errors and memory errors.
 
-Download Eigen (tested with version 3.3.4) on [their website][eigen].
+Download Eigen (tested with version 3.3.4) from [their website][eigen].
 
 [eigen]: http://eigen.tuxfamily.org/index.php?title=Main_Page
 
@@ -209,3 +226,19 @@ usr/
     └── share/
         └── eigen3/
 ```
+
+## Help Me!!!
+
+If you are having trouble with the install and the answers aren't
+here, you can peruse the [Frequently Asked Questions
+(FAQ)](doc/FAQ.md).
+
+## Next Step: QuISP!
+
+There are two main ways of working with QUISP. You can either use the
+Eclipse-like graphical interface of OmNET++, for which you will find
+instructions in [doc/USAGE-omnetpp-gui.md](USAGE-omnetpp-gui.md),
+or you can use the `Makefile` and GNU make, by looking at instructions
+in [doc/USAGE-makefile.md](USAGE-makefile.md). Some operations are
+implemented in the Makefile and not explained for the graphical user
+interface.

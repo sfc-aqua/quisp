@@ -9,10 +9,12 @@
 #include <omnetpp.h>
 #include "RoutingDaemon.h"
 #include "HardwareMonitor.h"
+#include <rules/RuleSet.h>
 #include <classical_messages_m.h>
 
 using namespace omnetpp;
 using namespace quisp::messages;
+using namespace quisp::rules;
 
 namespace quisp {
 namespace modules {
@@ -31,6 +33,9 @@ class ConnectionManager : public cSimpleModule
     protected:
         virtual void initialize() override;
         virtual void handleMessage(cMessage *msg) override;
+        virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, int right_node);
+
+        virtual unsigned long createUniqueId();
 };
 
 Define_Module(ConnectionManager);
@@ -44,6 +49,22 @@ void ConnectionManager::initialize()
   hardwaremonitor = check_and_cast<HardwareMonitor *>(hm);
   myAddress = par("address");
 }
+
+
+
+unsigned long ConnectionManager::createUniqueId(){
+    std::string time = SimTime().str();
+    std::string address = std::to_string(myAddress);
+    std::string random = std::to_string(intuniform(0,10000000));
+    std::string hash_seed = address+time+random;
+    std::hash<std::string> hash_fn;
+    size_t  t = hash_fn(hash_seed);
+    unsigned long RuleSet_id = static_cast<long>(t);
+    std::cout<<"Hash is "<<hash_seed<<", t = "<<t<<", long = "<<RuleSet_id<<"\n";
+    return RuleSet_id;
+}
+
+
 
 // might just be 2*l
 static int compute_path_division_size (int l /**< number of links (path length, number of nodes -1) */) {
@@ -91,13 +112,25 @@ void ConnectionManager::handleMessage(cMessage *msg){
            // hop_count: number of nodes on the path excluding me (destination node)
            // Should be the same as pk->getStack_of_linkCostsArraySize()
            int hop_count = pk->getStack_of_QNodeIndexesArraySize();
+
            // Let's store the path in an array to limit indirections
            int * path = new int[hop_count+1];
+
+           // Let's also prepare one ruleset for every node
+           // FIXME: maybe it's better to have a map, indexed by node addresses
+           RuleSet ** rulesets = new RuleSet * [hop_count+1];
+
            for (int i = 0; i<hop_count; i++) {
              path[i] = pk->getStack_of_QNodeIndexes(i);
+             // TODO: initialize rulets
+             // The RuleSet class needs to store the address of the node it is
+             //   being sent to.
+             // rulesets[i] = new RuleSet(path[i]);
              EV << "     Qnode on the path => " << path[i] << std::endl;
            }
            path[hop_count] = myAddress;
+           // rulesets[hop_count] = new RuleSet(myAddress);
+
            EV << "Last Qnode on the path => " << path[hop_count] << std::endl;
 
            // Number of division elements
@@ -130,6 +163,29 @@ void ConnectionManager::handleMessage(cMessage *msg){
                EV << "Division: " << link_left[i] << " ---( " << swapper[i] << " )--- " << link_right[i] << std::endl;
              else
                EV << "Division: " << link_left[i] << " -------------- " << link_right[i] << std::endl;
+//#if 0
+             /**
+              * \todo Create rules for every node
+              */
+             if (swapper[i]>0) { // This is a swapping relationship
+               RuleSet* withEntanglementSwapping = this->generateRuleSet_EntanglementSwapping(createUniqueId(), swapper[i], link_left[i], link_right[i]);
+
+               // 1. Create swapping rules for swapper[i]
+               // Rule * swaprule = new SwapRule(...);
+               // TODO: IMPLEMENT SwapRule that will have two FidelityClause to
+               // check the fidelity of the qubit, and one SwapAction.
+               // ruleset_of_swapper_i.rules.append(swaprule);
+               // 2. Create swapping tracking rules for link_left[i] and link_right[i]
+               //    Right now, those might be empty. In the end they are used to make sure that the left and right
+               //    nodes are correctly tracking the estimation of the state of the qubits that get swapped.
+             }
+             // Whatever happens, this 'i' line is also a 'link' relationship
+             // 3. Create the purification rules for link_left[i] and link_right[i]
+             // Rule * purifyrule = ...;
+             // Rule * discardrule = ...; // do we need it or is it hardcoded?
+             // ruleset_of_link_left_i.rules.append(purifyrule);
+             // ...
+//#endif
            }
 
            //Packet returning Rule sets
@@ -143,7 +199,8 @@ void ConnectionManager::handleMessage(cMessage *msg){
             * Full 1yr email-support (maybe tele-communication too).
             * Psychological support. Financial support.
             */
-           //error("Yay!");
+           error("Yay!");
+           //error("Here");
            delete msg;
            return;
        }else{
@@ -184,8 +241,25 @@ void ConnectionManager::handleMessage(cMessage *msg){
        }
 
     }
+}
 
 
+RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, int right_node){
+    /*int rule_index = 0;
+    RuleSet* EntanglementSwapping = new RuleSet(RuleSet_id, owner,left_node,right_node);
+    Rule* SWAP = new Rule(RuleSet_id, rule_index);
+    Condition* SWAP_condition = new Condition();
+    Clause* resource_clause_left = new EnoughResourceClauseLeft(1);
+    Clause* resource_clause_right = new EnoughResourceClauseRight(1);
+    SWAP_condition->addClause(resource_clause_left);
+    SWAP_condition->addClause(resource_clause_right);
+    SWAP->setCondition(SWAP_condition);
+    Action* swap_action = new PurifyAction(RuleSet_id,rule_index,true,false, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
+    Purification->setAction(purify_action);
+    //rule_index++;
+    tomography_RuleSet->addRule(Purification);
+
+    return EntanglementSwapping;*/
 }
 
 } // namespace modules

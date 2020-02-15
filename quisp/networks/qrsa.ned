@@ -33,9 +33,16 @@ simple HardwareMonitor
         int number_of_qnics_rp;
         string ntable = "";
         bool link_tomography = default(false);
+        int initial_purification = default(0);
+        bool X_purification = default(false);
+        bool Z_purification = default(false);
+        int Purification_type = default(-1);
         int num_measure = default(3000);
+        string tomography_output_filename = default("default");
+        string file_dir_name = default("results/");
     gates:
         inout RuleEnginePort;
+        inout RouterPort;
         
 }
 
@@ -81,6 +88,7 @@ module quantumRoutingSoft
         //inout rdPort;//size will be determined by the number of connections defined at the end of this file
         inout cmPort;
         inout rePort;
+        inout hmPort;
         inout qnics[] @loose;
         //inout QNICPort[1];//Maybe more than one if not ENDNODE
 
@@ -124,6 +132,7 @@ module quantumRoutingSoft
         cm.RouterPort <--> cmPort;
         re.RouterPort <--> rePort;
         re.HardwareMonitorPort <--> hm.RuleEnginePort;
+        hm.RouterPort <--> hmPort;
         
         //for i=0..sizeof(qnics)-1{
         //    rd.dummyQNICLink++ <--> qnics[i];

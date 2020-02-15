@@ -1,5 +1,5 @@
 /** \file Condition.h
- *  \authors cldurand
+ *  \authors cldurand,takaakimatsuo
  *  \date 2018/06/25
  *
  *  \brief Condition
@@ -9,21 +9,27 @@
 
 #include "Clause.h"
 #include <omnetpp.h>
+#include <memory>
+
 
 namespace quisp {
 namespace rules {
+
 
 /** \class Condition Condition.h
  *
  *  \brief Condition
  */
-class Condition {
-    private:
-        std::list<Clause*> clauses;
-
+class Condition : std::list<pClause> {
     public:
-        int check(qnicResources * resources) const;
+        void addClause(Clause * c) { push_back(pClause(c)); };
+        void addClause(pClause& c) { push_back(pClause(std::move(c))); };
+        //bool check(qnicResources * resources) const;
+        bool check(std::map<int,stationaryQubit*>resources) const;
+        //bool checkTerminate(qnicResources * resources) const;
+        bool checkTerminate(std::map<int,stationaryQubit*> resources) const;
 };
+typedef std::unique_ptr<Condition> pCondition;
 
 } // namespace rules
 } // namespace quisp

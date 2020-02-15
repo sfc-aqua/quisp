@@ -19,6 +19,43 @@ import ned.DatarateChannel;
 import ned.IdealChannel;
 
 
+
+network Tomography_Linear_One_MM_MIM
+{
+    parameters:
+        **.Speed_of_light_in_fiber = 205336.986301 km;
+
+    submodules:
+        EndNode[2]: QNode {
+            address = index;
+            nodeType = "EndNode";
+            @display("i=device/pc;");
+            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
+            //emission_timing_uncertainty = 10;
+        }
+
+        repeater: QNode {
+            address = 1234;
+            nodeType = "Repeater";
+            //buffers = 25;
+            @display("i=device/smallrouter");
+        }
+
+        HoM: HoM {
+            address = 2;
+            @display("i=device/bsm");
+        }
+
+    connections:
+        EndNode[0].port++ <--> ClassicalChannel {  distance = 10km; } <--> repeater.port++;
+        repeater.port++ <--> ClassicalChannel {  distance = 10km; } <--> HoM.port++;
+        HoM.port++ <--> ClassicalChannel{distance = 10km;} <--> EndNode[1].port++;
+
+        EndNode[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 10km; } <--> repeater.quantum_port++;
+        repeater.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM.quantum_port++;
+        HoM.quantum_port++ <--> QuantumChannel{distance = 10km;} <--> EndNode[1].quantum_port++;
+}
+
 network Linear_One_MIM
 {
     parameters:
@@ -45,10 +82,44 @@ network Linear_One_MIM
             @display("i=device/pc");
         }
     connections:
-        source.port++ <--> ClassicalChannel{distance = 40km;} <--> HoM.port++;
-        HoM.port++ <--> ClassicalChannel <--> target.port++;
-        source.quantum_port++ <--> QuantumChannel{distance = 40km;}  <--> HoM.quantum_port++;
-        HoM.quantum_port++ <--> QuantumChannel <--> target.quantum_port++;
+        source.port++ <--> ClassicalChannel {  distance = 10km; } <--> HoM.port++;
+        HoM.port++ <--> ClassicalChannel{  distance = 10km; } <--> target.port++;
+        source.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM.quantum_port++;
+        HoM.quantum_port++ <--> QuantumChannel{  distance = 10km; } <--> target.quantum_port++;
+
+}
+
+
+network Linear_One_MIM_biasedDistance
+{
+    parameters:
+        **.Speed_of_light_in_fiber = 205336.986301 km;
+        //**.HoM_handshake = false;
+
+    submodules:
+        source: QNode {
+            address = 1;
+            nodeType = "EndNode";
+            @display("i=device/pc");
+            //buffers = 15;
+            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
+            //emission_timing_uncertainty = 10;
+        }
+        HoM: HoM {
+            address = 2;
+            @display("i=device/bsm");
+        }
+        target: QNode {
+            address = 3;
+            nodeType = "EndNode";
+            //buffers = 20;
+            @display("i=device/pc");
+        }
+    connections:
+        source.port++ <--> ClassicalChannel {  distance = 7km; } <--> HoM.port++;
+        HoM.port++ <--> ClassicalChannel{  distance = 10km; } <--> target.port++;
+        source.quantum_port++ <--> QuantumChannel {  distance = 7km; } <--> HoM.quantum_port++;
+        HoM.quantum_port++ <--> QuantumChannel{  distance = 10km; } <--> target.quantum_port++;
 
 }
 
@@ -69,8 +140,8 @@ network Linear_One_MM
         }
 
     connections:
-        EndNode[0].port++ <--> ClassicalChannel {  distance = 40km; cost=40; } <--> EndNode[1].port++;
-        EndNode[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 40km; cost=20; } <--> EndNode[1].quantum_port++;
+        EndNode[0].port++ <--> ClassicalChannel {  distance = 100km;} <--> EndNode[1].port++;
+        EndNode[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 100km;} <--> EndNode[1].quantum_port++;
 }
 
 network Linear_One_MM_bufferGap
@@ -181,7 +252,7 @@ network Linear_One_MIM_MM_MSM
 
         @display("bgb=441,236");
 
-        types:
+    types:
         channel ClassicalChannel extends DatarateChannel
         {
             double cost = default(100);
@@ -193,7 +264,7 @@ network Linear_One_MIM_MM_MSM
             int test = default(0);
             @defaultname(ClassicalChannel);
         }
-        
+
         //channel QuantumChannel extends DatarateChannel
         //{
         //    double cost = default(1);
@@ -212,7 +283,7 @@ network Linear_One_MIM_MM_MSM
        // }
     submodules:
         source: QNode {
-            address =  10000000;
+            address = 10000000;
             nodeType = "EndNode";
             @display("i=device/pc;p=362,83");
             //buffers = 15;
@@ -224,11 +295,11 @@ network Linear_One_MIM_MM_MSM
             @display("i=device/bsm;p=289,83");
         }
         repeater: QNode {
-        		address = 1234;
-        		nodeType="Repeater";
+            address = 1234;
+            nodeType = "Repeater";
         		//buffers = 25;
 
-        		@display("i=device/smallrouter");
+            @display("i=device/smallrouter");
         }
         router: QNode {
             address = 3;
@@ -256,14 +327,14 @@ network Linear_One_MIM_MM_MSM
     connections:
         source.port++ <--> ClassicalChannel <--> repeater.port++;
         repeater.port++ <--> ClassicalChannel <--> HoM.port++;
-        HoM.port++ <--> ClassicalChannel{ distance = 90km; } <--> router.port++;
+        HoM.port++ <--> ClassicalChannel {  distance = 90km; } <--> router.port++;
         mm[0].port++ <--> ClassicalChannel {  distance = 40km; } <--> router.port++;
         mm[1].port++ <--> ClassicalChannel {  distance = 40km; } <--> router.port++;
         epps.port++ <--> ClassicalChannel <--> router.port++;
         epps.port++ <--> ClassicalChannel <--> pas.port++;
         source.quantum_port++ <--> QuantumChannel <--> repeater.quantum_port_receiver++;
         repeater.quantum_port++ <--> QuantumChannel <--> HoM.quantum_port++;
-        HoM.quantum_port++ <--> QuantumChannel{ distance = 90km; } <--> router.quantum_port++;
+        HoM.quantum_port++ <--> QuantumChannel {  distance = 90km; } <--> router.quantum_port++;
         mm[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 40km; } <--> router.quantum_port++;
         mm[1].quantum_port++ <--> QuantumChannel {  distance = 40km; } <--> router.quantum_port_receiver++;
         router.quantum_port_receiver_passive++ <--> QuantumChannel <--> epps.quantum_port++;

@@ -1,7 +1,7 @@
 /** \file Router.cc
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
- *  \authors cldurand,takaakimatsuo
+ *  \authors takaakimatsuo
  *
  *  \brief Router
  */
@@ -125,14 +125,49 @@ void Router::handleMessage(cMessage *msg)
             bubble("Connection setup request received");
             send(pk, "cmPort$o");
             return;
+        }else if (destAddr == myAddress && dynamic_cast<LinkTomographyRequest *>(msg)!= nullptr){
+            bubble("Link tomography request received");
+            send(pk, "hmPort$o");
+            return;
+        }else if (destAddr == myAddress && dynamic_cast<LinkTomographyAck *>(msg)!= nullptr){
+            bubble("Link tomography ack received");
+            send(pk, "hmPort$o");
+            return;
+        }else if (destAddr == myAddress && dynamic_cast<LinkTomographyRuleSet *>(msg)!= nullptr){
+            bubble("Link tomography rule set received");
+            send(pk, "rePort$o");
+            return;
+        }else if (destAddr == myAddress && dynamic_cast<LinkTomographyResult *>(msg)!= nullptr){
+            bubble("Link tomography result received");
+            send(pk, "hmPort$o");
+            return;
+        }else if(destAddr == myAddress && dynamic_cast<PurificationResult *>(msg)!= nullptr){
+            bubble("Purification result received");
+            send(pk,"rePort$o");
+            return;
+        }else if(destAddr == myAddress && dynamic_cast<DoublePurificationResult *>(msg)!= nullptr){
+            bubble("DoublePurification result received");
+            send(pk,"rePort$o");
+            return;
+        }else if(destAddr == myAddress && dynamic_cast<DS_DoublePurificationResult *>(msg)!= nullptr){
+            bubble("DS_DoublePurification result received");
+            send(pk,"rePort$o");
+            return;
+        }else if(destAddr == myAddress && dynamic_cast<DS_DoublePurificationSecondResult *>(msg)!= nullptr){
+            bubble("DS_DoublePurificationSecond result received");
+            send(pk,"rePort$o");
+            return;
+        }else if(destAddr == myAddress && dynamic_cast<StopEmitting *>(msg)!= nullptr){
+            send(pk,"rePort$o");
+            return;
         }
 
         //Check if packet is reachable
         RoutingTable::iterator it = rtable.find(destAddr);
         if (it == rtable.end()) {
-            EV << "address " << destAddr << " unreachable, discarding packet " << pk->getName() << endl;
+            std::cout <<"In Node["<<myAddress<<"]Address... " << destAddr << " unreachable, discarding packet " << pk->getName() << endl;
             delete pk;
-            error("Shoudnt happen");
+            error("Router couldn't find the path. Shoudn't happen. Or maybe the router does not understand the packet.");
             return;
         }
 

@@ -11,8 +11,8 @@
 
 #include <vector>
 #include <omnetpp.h>
-#include <classical_messages_m.h>
 #include <PhotonicQubit_m.h>
+#include <classical_messages_m.h>
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -33,9 +33,10 @@ class HoM_Controller : public cSimpleModule
         int address;
         int photon_detection_per_sec;
         std::vector<const char *> gates_here;
-        cMessage *generatePacket;
+        //cMessage *generatePacket;
         double speed_of_light_in_channel;
         cPar *c;
+        int time_out_count;
     public:
         int neighbor_address;
         int neighbor_address_two;
@@ -61,6 +62,8 @@ class HoM_Controller : public cSimpleModule
 
         bool handshake = false;
         double BSA_timeout = 1e-5;
+        bool auto_resend_BSANotifier;
+        double current_trial_id;
 
     protected:
         virtual void initialize(int stage) override;

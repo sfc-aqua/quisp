@@ -1,20 +1,66 @@
 /** \file Condition.cc
  *
- *  \authors cldurand
+ *  \authors cldurand,takaakimatsuo
  *  \date 2018/06/25
  *
  *  \brief Condition
  */
 #include "Condition.h"
+#include <memory>
 
 namespace quisp {
 namespace rules {
 
-int Condition::check(qnicResources *resources) const {
-    for (std::list<Clause*>::const_iterator clause = clauses.cbegin(), end = clauses.cend(); clause != end; clause++)
-        if ((*clause)->check(resources)) return 1;
-    return 0;
+/*
+bool Condition::check(qnicResources *resources) const {
+    EV<<"In condition...\n";
+    bool satisfying = true;
+    for (auto clause = cbegin(), end = cend(); clause != end; clause++){
+        if (!(*clause)->check(resources)){
+            satisfying = false;
+            break;
+        }
+    }
+    return satisfying;
 }
+*/
+
+bool Condition::check(std::map<int,stationaryQubit*> resources) const {
+    EV<<"In condition...\n";
+    bool satisfying = true;
+    for (auto clause = cbegin(), end = cend(); clause != end; clause++){
+        if (!(*clause)->check(resources)){
+            satisfying = false;
+            break;
+        }
+    }
+    //std::cout<<"satisfying? = "<<satisfying<<" false = "<<false<<" true = "<<true<<"\n";
+    return satisfying;
+}
+
+/*
+bool Condition::checkTerminate(qnicResources *resources) const {
+    bool satisfying = true;
+    for (auto clause = cbegin(), end = cend(); clause != end; clause++){
+        if (!(*clause)->checkTerminate(resources)){
+            satisfying = false;
+            break;
+        }
+    }
+    return satisfying;
+}*/
+
+bool Condition::checkTerminate(std::map<int,stationaryQubit*> resources) const {
+    bool satisfying = false;
+    for (auto clause = cbegin(), end = cend(); clause != end; clause++){
+        if ((*clause)->checkTerminate(resources)){
+            satisfying = true;
+            break;
+        }
+    }
+    return satisfying;
+}
+
 
 } // namespace rules
 } // namespace quisp

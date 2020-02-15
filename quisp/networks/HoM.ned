@@ -20,7 +20,7 @@ simple BellStateAnalyzer
 {
     parameters:
         //@class(quisp::modules::BellStateAnalyzer);
-        double darkcount_rate = default(0);
+        double darkcount_probability = default(0);
         double loss_rate = default(0);
         double error_rate = default(0);
         double duration = default(0);
@@ -41,6 +41,7 @@ simple HoM_Controller
         int address;
         volatile double Speed_of_light_in_fiber @unit(km);//per sec
         int photon_detection_per_sec = default(10000);
+        double Initial_notification_timing_buffer @unit(s) = default(0);
         //rate can be up to 1 billion photons per second by default
         //interval will be 1photon/ns
         int neighbor_address = default(-1);
@@ -48,7 +49,7 @@ simple HoM_Controller
         double distance_to_neighbor = default(-1);//in km
         double distance_to_neighbor_two = default(-1);//in km
         double max_neighbor_distance = default(-1);
-        double max_buffer = default(-1);
+        int max_buffer = default(-1);
         double emission_variance = default(0);//in seconds. Photons will be shot towards HoM with 100% accuracy
         bool receiver = default(false);
         bool passive = default(false);
@@ -63,7 +64,7 @@ simple HoM_Controller
 module interHoM {
      parameters:
         int address;
-        double internal_hom_darkcount_rate = default(0);
+        double internal_hom_darkcount_probability = default(0);
         double internal_hom_loss_rate = default(0);
         double internal_hom_error_rate = default(0);
         double internal_hom_required_precision = default(1.5e-9);
@@ -89,7 +90,7 @@ module interHoM {
         BSA: BellStateAnalyzer {
             parameters:
                 address = address;//share the same address within all inner modules
-                darkcount_rate = internal_hom_darkcount_rate;
+                darkcount_probability = internal_hom_darkcount_probability;
                 loss_rate = internal_hom_loss_rate;
         		    error_rate = internal_hom_error_rate;
         		    required_precision = internal_hom_required_precision;
@@ -116,7 +117,7 @@ simple dummyModule {
 module HoM
 {
     parameters:
-        double hom_darkcount_rate = default(0);
+        double hom_darkcount_probability = default(0);
         double hom_loss_rate = default(0);
         double hom_error_rate = default(0);
         double hom_required_precision = default(1.5e-9);
@@ -135,7 +136,7 @@ module HoM
         BSA: BellStateAnalyzer {
             parameters:
                 address = address;//share the same address within all inner modules
-                darkcount_rate = hom_darkcount_rate;
+                darkcount_probability = hom_darkcount_probability;
                 loss_rate = hom_loss_rate;
         		    error_rate = hom_error_rate;
         		    required_precision = hom_required_precision;

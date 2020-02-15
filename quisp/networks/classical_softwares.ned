@@ -21,6 +21,7 @@ simple Application
         int address;
         volatile double sendIaTime @unit(s) = default(exponential(1s)); // time between generating packets
         string Other_endnodes_table = "";
+        bool EndToEndConnection = default(false);
     gates:
         input fromRouter @loose;
         output toRouter @loose;
@@ -41,6 +42,9 @@ simple Router
         inout rdPort @loose;
         inout cmPort @loose;
         inout rePort @loose;
+        inout hmPort @loose;
+
+        input fromRuleSet @directIn;//A little bit cheating but why not.
 }
 
 simple Queue

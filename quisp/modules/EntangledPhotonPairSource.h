@@ -32,7 +32,7 @@ typedef struct _entangledPhotons {
 class EntangledPhotonPairSource : public cSimpleModule
 {
     private:
-        int myAddress;
+        //int myAddress;
         double error_rate;
         double emission_std;
         double Y_error_ratio;

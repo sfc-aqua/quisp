@@ -1,9 +1,21 @@
+cplusplus {{ 
+    #include <vector>
+    #include <unsupported/Eigen/MatrixFunctions>
+
+	using namespace omnetpp;
+    typedef cModule *GOD_statQubitPtr; 
+    
+}} // C++ typedef
+class noncobject GOD_statQubitPtr; // For tracking the truely entangled ones (Only God knows!). The system may think the qubit is entangled but it may not (darkcount)!
+
+
 cplusplus {{
 #include <rules/RuleSet.h>
 #include <modules/QNIC.h>
 typedef quisp::modules::QNIC_id_pair QNIC_pair_info;
 }}
 struct QNIC_pair_info;
+struct QNIC_type;
 
 
 namespace quisp::messages;
@@ -17,10 +29,6 @@ packet header
     int hopCount;
 }
 
-packet LinkTomographyRequest extends header
-{
-    int number_of_measuring_resources;
-}
 
 packet ConnectionSetupRequest extends header
 {
@@ -38,8 +46,87 @@ packet ConnectionSetupRequest extends header
 
 cplusplus {{
     typedef quisp::rules::RuleSet * RuleSetField;
+   
 }}
 class noncobject RuleSetField;
+
+packet LinkTomographyRuleSet extends header
+{
+    int process_id;
+    int number_of_measuring_resources;
+    RuleSetField RuleSet;
+}
+
+packet LinkTomographyRequest extends header
+{
+}
+
+packet LinkTomographyAck extends header
+{
+	QNIC_type qnic_type;
+	int qnic_index;
+}
+
+packet LinkTomographyResult extends header
+{
+	bool Output_is_plus;
+	char Basis;
+	int count_id;
+	int partner_address;
+	simtime_t finish = -1;
+	int max_count;
+	char GOD_clean;
+}
+
+packet PurificationResult extends header
+{
+	bool Output_is_plus;
+	unsigned long ruleset_id;
+	int rule_id;
+	int action_index;
+	GOD_statQubitPtr entangled_with;//For Debugging purposes.
+}
+
+
+
+packet DoublePurificationResult extends header
+{
+	bool ZOutput_is_plus;
+	bool XOutput_is_plus;
+	unsigned long ruleset_id;
+	int rule_id;
+	int action_index;
+	GOD_statQubitPtr entangled_with;//For Debugging purposes.
+}
+
+
+
+packet DS_DoublePurificationResult extends header
+{
+	bool ZOutput_is_plus;
+	bool XOutput_is_plus;
+	bool DS_ZOutput_is_plus;
+	bool DS_XOutput_is_plus;
+	unsigned long ruleset_id;
+	int rule_id;
+	int action_index;
+	GOD_statQubitPtr entangled_with;//For Debugging purposes.
+}
+
+
+packet DS_DoublePurificationSecondResult extends header
+{
+	bool ZOutput_is_plus;
+	bool XOutput_is_plus;
+	bool DS_Output_is_plus;
+	unsigned long ruleset_id;
+	int rule_id;
+	int action_index;
+	GOD_statQubitPtr entangled_with;//For Debugging purposes.
+}
+
+packet ConditionNotSatisfied{
+}
 
 packet ConnectionSetupResponse extends header
 {
@@ -55,6 +142,13 @@ packet BSMtimingNotifier extends header
     int internal_qnic_index = -1;
     int internal_qnic_address = -1;
 }
+
+packet BSAtimeoutChecker extends header
+{
+    double trial_id;
+}
+
+packet BSAstart extends header{}
 
 packet EPPStimingNotifier extends header
 {
@@ -80,7 +174,7 @@ packet SchedulePhotonTransmissionsOnebyOne extends header
 {
     int qnic_index = -1;
     int qnic_address;
-        int num_sent = 0;
+    int num_sent = 0;
     int number_of_qubits_to_send;
     int trial;
     double interval;
@@ -110,3 +204,14 @@ packet CombinedBSAresults_epps extends header
 {
     bool list_of_failed[];
 }
+
+packet Error extends header
+{
+    string error_text;
+}
+
+packet StopEmitting extends header{
+    int qnic_address;
+
+}
+

@@ -1,35 +1,136 @@
 /** \file Clause.cc
  *
- *  \authors cldurand
+ *  \authors cldurand,,takaakimatsuo
  *  \date 2018/07/03
  *
  *  \brief Clause
  */
 #include "Clause.h"
+#include "tools.h"
 
 namespace quisp {
 namespace rules {
 
-static stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) {
-    // assume that qnic type is ok
-    std::pair<EntangledPairs::iterator,EntangledPairs::iterator> ret = resources[qtype][qid].equal_range(partner);
-    int real_res_id = 0;
-    for (EntangledPairs::iterator it=ret.first; it!=ret.second; ++it,++real_res_id) {
-        std::cout << real_res_id << '\n';
-        if (real_res_id == res_id) return it->second;
-    }
-    return NULL;
-}
 
-int FidelityClause::check(qnicResources* resources) const {
+/*
+bool FidelityClause::check(qnicResources* resources) const {
     stationaryQubit* qubit = NULL;
-    checkQnic();
-    if (qubit = getQubit(resources, qnic_type, qnic_id, partner, resource))
+    checkQnic();//This is not doing anything...
+    if(qubit = getQubit(resources, qnic_type, qnic_id, partner, resource)){
         return (qubit->getFidelity() >= threshold);
-    return 0;
+    }
+    return false;
+}*/
+
+bool FidelityClause::check(std::map<int,stationaryQubit*> resource) const {
+    stationaryQubit* qubit = nullptr;
+    /*checkQnic();//This is not doing anything...
+    if(qubit = getQubit(resources, qnic_type, qnic_id, partner, resource)){
+        return (qubit->getFidelity() >= threshold);
+    }
+    return false;*/
 }
 
-Clause *EXAMPLE_CLAUSE = new FidelityClause(0,0,.6);
+bool EnoughResourceClause::check(std::map<int,stationaryQubit*> resource) const{
+    //std::cout<<"!!In enough clause \n";
+    bool enough = false;
+
+    int num_free = 0;
+    for (auto it=resource.begin(); it!=resource.end(); ++it) {
+           if(!it->second->isLocked()){
+               num_free++;
+           }
+           if(num_free >= num_resource_required){
+               enough = true;
+           }
+    }
+    //std::cout<<"Enough = "<<enough<<"\n";
+    return enough;
+}
+
+/*
+bool MeasureCountClause::check(qnicResources* resources) const {
+    //EV<<"MeasureCountClause invoked!!!! \n";
+    if(current_count<max_count){
+        current_count++;//Increment measured counter.
+        EV<<"Measurement count is now "<<current_count<<" < "<<max_count<<"\n";
+        return true;
+    }
+    else{
+        EV<<"Count is enough";
+        return false;
+    }
+}*/
+
+bool MeasureCountClause::check(std::map<int,stationaryQubit*> resources) const {
+    //std::cout<<"MeasureCountClause invoked!!!! \n";
+    if(current_count<max_count){
+           current_count++;//Increment measured counter.
+           //std::cout<<"Measurement count is now "<<current_count<<" < "<<max_count<<"\n";
+           return true;
+    }else{
+           //std::cout<<"Count is enough\n";
+           return false;
+    }
+}
+
+bool MeasureCountClause::checkTerminate(std::map<int,stationaryQubit*> resources) const {
+    EV<<"Tomography termination clause invoked.\n";
+    bool done = false;
+    if(current_count >=max_count){
+        //EV<<"TRUE: Current count = "<<current_count<<" >=  "<<max_count<<"(max)\n";
+        done = true;
+    }
+    return done;
+}
+
+/*
+bool MeasureCountClause::checkTerminate(qnicResources* resources) const {
+    EV<<"Tomography termination clause invoked.\n";
+    bool done = false;
+    if(current_count >=max_count){
+        EV<<"TRUE: Current count = "<<current_count<<" >=  "<<max_count<<"(max)\n";
+        done = true;
+    }
+    return done;
+}*/
+
+/*
+bool PurificationCountClause::check(qnicResources* resources) const {
+    stationaryQubit* qubit = NULL;
+    //checkQnic();//This is not doing anything...
+
+    qubit = getQubitPurified(resources, qnic_type, qnic_id, partner, num_purify_must);
+    if(qubit != nullptr){
+        return true;//There is a qubit that has been purified "num_purify_must" times.
+    }else{
+        return false;
+    }
+}*/
+
+
+bool PurificationCountClause::check(std::map<int,stationaryQubit*> resource) const {
+    stationaryQubit* qubit = nullptr;
+    //checkQnic();//This is not doing anything...
+
+    /*
+    qubit = getQubitPurified(resources, qnic_type, qnic_id, partner, num_purify_must);
+    if(qubit != nullptr){
+        return true;//There is a qubit that has been purified "num_purify_must" times.
+    }else{
+        return false;
+    }*/
+}
+
+/*
+bool PurificationCountClause::checkTerminate(qnicResources* resources) const {
+        return false;
+}*/
+
+
+
+
+//Clause *EXAMPLE_CLAUSE = new FidelityClause(0,0,.6);
 
 } // namespace rules
 } // namespace quisp
