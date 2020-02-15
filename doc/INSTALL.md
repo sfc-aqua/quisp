@@ -7,9 +7,10 @@ If you prefer to do this inside a container, we support working with
 [https://www.docker.com/](Docker); see the instructions
 [here](./Build_on_docker.md).
 
-This document walks you through installing and building the related
-software, then QuISP itself is documented separately (scroll down to
-the end of this document).
+This document walks you through downloading QuISP, then installing and
+building the related software.  Importing QuISP itself into OmNET++
+and building and executing it can be done in two distinct ways,
+documented separately (scroll down to the end of this document).
 
 ## Notation
 
@@ -236,8 +237,8 @@ here, you can peruse the [Frequently Asked Questions
 
 There are two main ways of working with QUISP. You can either use the
 Eclipse-like graphical interface of OmNET++, for which you will find
-instructions in [doc/USAGE-omnetpp-gui.md](doc/USAGE-omnetpp-gui.md),
+instructions in [USAGE-omnetpp-gui.md](doc/USAGE-omnetpp-gui.md),
 or you can use the `Makefile` and GNU make, by looking at instructions
-in [doc/USAGE-makefile.md](doc/USAGE-makefile.md). Some operations are
+in [USAGE-makefile.md](doc/USAGE-makefile.md). Some operations are
 implemented in the Makefile and not explained for the graphical user
 interface.
