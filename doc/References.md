@@ -24,6 +24,8 @@ networks to a full Quantum Internet, see these three:
 * Wehner et al., "Quantum internet: A vision for the road ahead",
   Science 362, 6412, 2018.
 
+At the moment, only first generation (1G) protocols have been implemented.
+
 ## Specific design decisions
 
 In addition to Takaaki's thesis, the design decisions incorporated
