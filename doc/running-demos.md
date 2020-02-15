@@ -77,15 +77,60 @@ thesis.
 
 ### `.ini` file
 
-Especially `omnetpp.ini`.  This is the main file that drives your
-simulation scenarios.  Works in conjunction with one (or more?) .ned
-file(s).
+See especially the default file `omnetpp.ini`.  This is the main file
+that drives your simulation scenarios.  Works in conjunction with one
+`.ned` file(s).
+
+`.ini` files can be created by hand, or edited using the OmNET++
+built-in editor.  The files are described in Ch. 3 of the OmNET++ User
+Guide, available [here](https://omnetpp.org/documentation/).
+
+For the examples here, find and open `quisp_tutorial.ini`.  This simple
+example contains five `Config` statements, each of which specifies a
+`network`.  There are no other parameters in this simple tutorial, but
+for a complex experiment, this file will be very long and will
+specify values for many of the parameters in Appendix A.2.1 of
+Matsuo's master's thesis.
 
 ### `.ned` file
 
-Describes a network topology and hardware configuration.  Referenced
-from the .ini file?
+Describes a network topology and hardware configuration.  Each `.ned`
+file contains one or more `network` blocks, listing all of the nodes
+and links.
+
+`.ned` files can be created by hand, or edited using the OmNET++
+built-in editor.  The files are described in Ch. 2 of the OmNET++ User
+Guide, available [here](https://omnetpp.org/documentation/).
+
+Find the file `topology_linear_network.ned`.  It should contain four
+of the five demo networks listed above.  Inside a network block, you
+will find nodes of type `repeater`, `HoM`, etc.  The definitions of
+_those_ network types are automatically found from _other_ .ned
+files; in this case, files named `qnic.ned`, `qrsa.ned`,
+`QNode.ned`, and `channels.ned`.  Those define, among other things,
+default values for parameters that you may override in the .ini file,
+e.g. the default X gate error rate is set to zero in `qnic.ned`:
+
+```
+        double Xgate_error_rate = default(0);
+```
+
+This nested referencing of `.ned` files from first the `.ini` file and
+then from other `.ned` files, with the automatic searching of
+directories for corresponding network and module names and overriding
+of the parameters, complicates sharing and archiving of experimental
+parameter sets, but allows for referencing that makes for sharing of
+parameters and for much less verbose individual files.
 
 ### `.msg` file
 
-Describes the format and contents of the messages 
+Describes the format and contents of the messages exchanged.  At the
+moment, you will find one for classical messages
+(`classical_messages.msg`) and one for quantum messages
+(`PhotonicQubit.msg`).
+
+### `.cc` and `.h` files
+
+You know what these are.  There is a modest number of C++ files that
+are specific to QuISP.
+
