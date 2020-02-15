@@ -6,13 +6,13 @@ of questions we frequently ask ourselves.
 To be filled in...
 
 * Q: I can't get it to install!!!
-  - A: Welcome to the club.  Getting OMNeT++ to run is the biggest
+  -- A: Welcome to the club.  Getting OMNeT++ to run is the biggest
   hassle.  Once you have that done, everything else is smooth.  There
   _are_ a lot of dependencies on other free software packages, as well
   as on Java.  See [doc/INSTALL.md](doc/INSTALL.md) for additional
   info on troubleshooting.
 * Q: Wow, OMNeT++ runs!!! Exciting! ...now what?
-  - We definitely need better notes on adding QuISP into OMNeT++ and running
+  - A: We definitely need better notes on adding QuISP into OMNeT++ and running
   your first QuISP sims.
 * Q: Okay, I got the basic first QuISP demo running.  What the heck
   are these .ini and .ned files, and how do I create my own?
@@ -30,7 +30,7 @@ To be filled in...
   sophisticated and rich, i.e. complicated, so you'll have a bit of
   learning to do, but hopefully our existing code serves as a good
   guide to what you'll need.  See also, of course, [the OMNeT++
-  documentation])https://doc.omnetpp.org/omnetpp/manual/).
+  documentation](https://doc.omnetpp.org/omnetpp/manual/).
 * Q: Can I change the generation of RuleSets without changing C++
   code?
   - A: At the moment, no.
