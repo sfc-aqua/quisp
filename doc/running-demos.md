@@ -22,15 +22,13 @@ individual photons, classical physical signals (e.g., synchronization
 pulses), and larger, digital classical messages all via different
 types of packets.  You will see these flowing between nodes, along
 with labels that tell you what they are.
-
+![MM_demo](img/demo_1.png)
 According to [one old
 message](https://groups.google.com/forum/#!topic/omnetpp/5p1ufXvpDwA)
 on the OmNET++ mailing list from a decade ago, the "packet" (photon or
 classical message) colors derive from the message kind, an internal
 field related to the message definition.  Modulo 8, the colors you see
 are:
-
-![MM_demo](img/demo_1.png)
 
 ```
 0 = RED
