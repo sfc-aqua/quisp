@@ -81,9 +81,10 @@ interface.
 
 ## Moving into useful work
 
-Once you have gotten this far, you should be able to run some of the
-most basic demos.  Next, you'll want to learn how to create your own
-test networks, and how to extend the source code for your own uses.
+Once you have gotten this far, you should be able to [run some of the
+most basic demos](doc/running-demos.md).  Next, you'll want to learn
+how to create your own test networks, and how to extend the source
+code for your own uses.
 
 ## Development tools
 
