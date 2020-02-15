@@ -1,6 +1,7 @@
-# RUNNING THE OMNET++ GUI
+# Running the OmNET++ GUI
 
-We are working with the following installation tree.
+We are working with the following installation tree.  You are assumed
+to have just come from [doc/INSTALL.md](INSTALL.md).
 
 ```
 home/
@@ -39,8 +40,9 @@ wizard. As a root directory of the project, select the quisp folder.
 In the list of suggested projects, check the only project that appears then
 click `Finish`.
 
-Once you did this, the GUI created two folders `.metadata` for the workspace and
-`.settings` for the project, that are ignored by the git repository.
+When you did this, the GUI created two folders, `.metadata` for the
+workspace and `.settings` for the project, that are ignored by the git
+repository.
 
 ```
 home/
