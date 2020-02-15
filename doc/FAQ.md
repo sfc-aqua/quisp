@@ -11,7 +11,7 @@ To be filled in...
   _are_ a lot of dependencies on other free software packages, as well
   as on Java.  The easiest install may be on a clean Ubuntu
   distribution, which can be done using Docker if you don't have such
-  a machine handy.  See [doc/INSTALL.md](doc/INSTALL.md) for
+  a machine handy.  See [doc/INSTALL.md](INSTALL.md) for
   additional info on troubleshooting.
 * Q: Wow, OMNeT++ runs!!! Exciting! ...now what?
     - A: We definitely need better notes on adding QuISP into OMNeT++ and running
