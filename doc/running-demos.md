@@ -72,6 +72,9 @@ simulator.  It is an ASCII text file.  This is the only file type that
 is _completely_ unique to QuISP; the rest come from or extend standard
 OmNET++ files.
 
+This file is described in Appendix A.2.2 of Takaaki Matsuo's master's
+thesis.
+
 ### `.ini` file
 
 Especially `omnetpp.ini`.  This is the main file that drives your
@@ -82,3 +85,7 @@ file(s).
 
 Describes a network topology and hardware configuration.  Referenced
 from the .ini file?
+
+### `.msg` file
+
+Describes the format and contents of the messages 
