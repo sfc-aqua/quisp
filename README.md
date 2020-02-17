@@ -162,3 +162,27 @@ code for your own uses.
 A few tools (mainly scripts) can be used to make development a bit easier.
 Look around in the `bin` folder of this project.
 
+## Is QuISP right for me?
+
+Fundamentally, the point of QuISP is that *networks are much more than
+point-to-point connections*.
+
+If you want to know about the behavior of systems and networks, to
+study behavior of links that are too complex for simple analytic
+equations (esp. those with multiple qubits per link) or to contribute
+to the design of network protocols, QuISP is the simulator for you.
+If you're trying to adjust detector window timing v. entanglement
+fidelity, or figure out what Q factor your cavity needs to be, or
+understand dispersion in a fiber, it might not be.
+
+## License
+
+We hope to release QuISP as open source QuISP on March 1, under a
+commercial-friendly (not copyleft) license.  There are options for the
+license: MIT, Apache, Mozilla, BSD...most likely BSD.  QuISP builds on
+OMNeT++.  OMNeT++ itself is a [custom
+license](https://omnetpp.org/intro/license), open source and free for
+academic use, but a license fee required for commercial organizations.
+QuISP also requires the linear algebra library Eigen, where license is
+MPL2, and so [probably not an
+issue](http://eigen.tuxfamily.org/index.php?title=Main_Page#License).
