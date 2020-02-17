@@ -15,10 +15,10 @@ Shonan Fujisawa Campus, Fujisawa, Japan.
 
 ## Research questions
 
-Research questions we hope to answer:
-
 A simulator is one or more of three things: a time machine, an X-ray
 machine, or a telescope.
+
+Research questions we hope to answer:
 
 * Emergent behavior
     - Classical networks exhibit _congestion collapse_;
@@ -75,7 +75,7 @@ above, see "Learning more", below.
 
 ## Current status
 
-Most of the _infrastructure_ here is up and running, though the sets
+Most of the _infrastructure_ is up and running, though the sets
 of actual experiments (interesting simulations) you can do are fairly
 limited still.
 
@@ -174,6 +174,10 @@ to the design of network protocols, QuISP is the simulator for you.
 If you're trying to adjust detector window timing v. entanglement
 fidelity, or figure out what Q factor your cavity needs to be, or
 understand dispersion in a fiber, it might not be.
+
+## Learning more
+
+See the [references](doc/References.md).
 
 ## License
 
