@@ -15,7 +15,26 @@ Shonan Fujisawa Campus, Fujisawa, Japan.
 
 Research questions we hope to answer:
 
-(To be filled in.)
+A simulator is one or more of three things: a time machine, an X-ray
+machine, or a telescope.
+
+* Emergent behavior
+    - classical networks exhibit _congestion collapse_;
+      are quantum networks subject to the same thing?
+    - Will the dynamics of large networks prevent us from making
+      end-to-end connections under realistic scenarios, even when a
+      naive model suggests it should be possible?
+    - Are there other unexpected behaviors in large-scale networks?
+* Protocol design
+    - Testing of detailed protocol designs to validate correct
+      operation.
+    - Are there interactions between the classical and quantum
+      portions of the network?
+* Connection architecture and performance prediction
+    - All three proposed network generations exhibit complex behavior
+      that makes analytic prediction of performance difficult with
+      realistic parameters; simulation, of course, will require the
+      best effort we can make at validation, as well.
 
 Long-term goals of the simulator:  
 
