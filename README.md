@@ -13,13 +13,15 @@ research group headed by Prof. Rodney Van Meter, at Keio University's
 Shonan Fujisawa Campus, Fujisawa, Japan.
 [http://aqua.sfc.wide.ad.jp](http://aqua.sfc.wide.ad.jp)
 
+## Research questions
+
 Research questions we hope to answer:
 
 A simulator is one or more of three things: a time machine, an X-ray
 machine, or a telescope.
 
 * Emergent behavior
-    - classical networks exhibit _congestion collapse_;
+    - Classical networks exhibit _congestion collapse_;
       are quantum networks subject to the same thing?
     - Will the dynamics of large networks prevent us from making
       end-to-end connections under realistic scenarios, even when a
@@ -36,7 +38,9 @@ machine, or a telescope.
       realistic parameters; simulation, of course, will require the
       best effort we can make at validation, as well.
 
-Long-term goals of the simulator:  
+## Simulation goals
+
+We have a number of long-term goals for the simulator:  
 
 * Complex network topologies, including the notion of network
   boundaries and heterogeneity at the physical and logical levels
@@ -68,6 +72,54 @@ excitation to excited state, and complete mixing.
 
 If you are unfamiliar with the research literature or the terminology
 above, see "Learning more", below.
+
+## Current status
+
+Most of the _infrastructure_ here is up and running, though the sets
+of actual experiments (interesting simulations) you can do are fairly
+limited still.
+
+Working infrastructure:
+
+* All of the basic OMNeT++ functionality, such as events,
+  visualization, logging, analysis, etc.
+* Complex network topologies, defining per link parameters including
+  length, channel error rates, numbers of qubit memories, gate error
+  rates, etc.  (You will see the included demonstration networks in
+  the documentation linked below.)
+* A complete internal model of the software architecture for a
+  repeater, including a connection manager, the RuleSet execution
+  engine, real-time tracking of quantum states, etc.
+
+Besides the obvious joys of the endless network configurability, here
+are the key quantum protocols that are implemented:
+
+* various purification protocols:  Single round
+  of X purification, alternating X/Z purification, etc.  Extending
+  these to test your own custom purification protocol is pretty
+  straightforward.
+* tomography: when the simulation boots, it assumes that the software
+  at each end of each link knows _nothing_ about the link, so it
+  begins by performing tomography on the links.  This is actually
+  problematic, because it turns out to take a long time for tomography
+  to converge, which means a lot of boot-up time in the simulation
+  before other interesting things start to happen.  We are
+  working on a way to pre-calculate this, so that you can choose to
+  either include tomography or not; it sort of works, but may be a
+  bit kludgy.
+
+networking protocols:
+
+* basics of RuleSet creation & distribution
+* framework for a routing protocol
+
+missing essential features:
+
+* entanglement swapping (we hope to have this done before release)
+* resource allocation & multiplexing (we need at least
+  something crude here, or we can't have multiple connections running
+  that require access to the same links)
+* some mechanism for establishing traffic patterns
 
 ## Installation requirements
 
