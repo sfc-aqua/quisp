@@ -157,6 +157,19 @@ void ConnectionManager::handleMessage(cMessage *msg){
            }
            */
 
+           //Change int to RuleSet*
+           std::map<std::string, int> dictionary = {};
+           for (int i=0; i<divisions; i++) {
+               if(swapper[0]>0){
+                  dictionary[std::to_string(link_left[i])] = 0;
+                  dictionary[std::to_string(swapper[i])] = 0;
+                  dictionary[std::to_string(link_right[i])] = 0;
+               }
+           }
+
+           for (std::map<std::string, int> ::iterator it=dictionary.begin(); it!=dictionary.end(); ++it)
+             EV << it->first << " => " << it->second << '\n';
+
            // Go over every division
            for (int i=0; i<divisions; i++) {
              if (swapper[i]>0)

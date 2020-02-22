@@ -96,7 +96,7 @@ class HardwareMonitor : public cSimpleModule
         cModuleType *SPDCType =  cModuleType::get("networks.SPDC");
         cModuleType *HoMType =  cModuleType::get("networks.HoM");
         bool do_link_level_tomography = false;
-        int num_purification_tomography = 0;
+        int num_purification = 0;
         bool X_Purification = false;
         bool Z_Purification = false;
         int Purification_type = -1;

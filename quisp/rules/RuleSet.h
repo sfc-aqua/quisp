@@ -28,9 +28,18 @@ class RuleSet : public std::list<pRule> {
         simtime_t started_at;
         unsigned long ruleset_id;
         //AvailableResourceForEachStage rc;//Defined in tools.h
-        RuleSet(long id, int o, int e) : std::list<pRule> () { ruleset_id = id; owner = o; entangled_partner = e; started_at = simTime();}
-        RuleSet(long id, int o, int l,int r) : std::list<pRule> () { ruleset_id = id; owner = o; entangled_partner_left = l; entangled_partner_right = r; started_at = simTime();}
-        RuleSet(int o, int e) : std::list<pRule> () { ruleset_id = createUniqueId(owner); owner = o; entangled_partner = e; started_at = simTime();}
+        RuleSet(long id, int o, int e) : std::list<pRule> () {
+            ruleset_id = id; owner = o; entangled_partner = e; started_at = simTime();
+        }
+
+        RuleSet(long id, int o, int l,int r) : std::list<pRule> () {
+            ruleset_id = id; owner = o; entangled_partner_left = l; entangled_partner_right = r; started_at = simTime();
+        }
+
+        RuleSet(int o, int e) : std::list<pRule> () {
+            ruleset_id = createUniqueId(owner); owner = o; entangled_partner = e; started_at = simTime();
+        }
+
         void addRule(Rule * r) { push_back(pRule(r)); };
         void addRule(pRule& r) { push_back(pRule(std::move(r))); };
         void finalize();

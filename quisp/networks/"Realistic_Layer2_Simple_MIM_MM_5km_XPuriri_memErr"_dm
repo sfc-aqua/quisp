@@ -42,3 +42,135 @@ IMAGINARY
  0.0357143          0  0.0833333  -0.136905
  -0.220238 -0.0833333          0  0.0357143
   0.166667   0.136905 -0.0357143          0
+EndNode1[0]<--->Repeater1[0]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+EndNode2[0]<--->HoM1[0]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+Repeater1[0]<--->EndNode1[0]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+Repeater1[0]<--->HoM1[0]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+EndNode1[0]<--->Repeater1[0]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+EndNode2[0]<--->HoM1[0]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+Repeater1[0]<--->EndNode1[0]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+Repeater1[0]<--->HoM1[0]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+EndNode1[0]<--->Repeater1[0]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+EndNode2[0]<--->HoM1[0]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+Repeater1[0]<--->EndNode1[0]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+Repeater1[0]<--->HoM1[0]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan

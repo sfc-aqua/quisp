@@ -1,0 +1,66 @@
+EndNode[0]<--->HoM[0]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+EndNode[1]<--->HoM[1]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+EndNode[2]<--->HoM[2]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+Router[0]<--->HoM[0]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+Router[0]<--->HoM[1]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+Router[0]<--->HoM[2]
+REAL
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+IMAGINARY
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
+nan nan nan nan
