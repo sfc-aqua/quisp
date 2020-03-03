@@ -134,3 +134,7 @@ moment, you will find one for classical messages
 You know what these are.  There is a modest number of C++ files that
 are specific to QuISP.
 
+### Next steps
+
+When you are ready to start contributing, you can start reading the
+code, as [we have done](doc/code-spelunking.md).

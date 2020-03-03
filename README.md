@@ -37,6 +37,13 @@ Research questions we hope to answer:
       that makes analytic prediction of performance difficult with
       realistic parameters; simulation, of course, will require the
       best effort we can make at validation, as well.
+* Dynamic behavior
+    - Are networks stable as conditions change?
+    - When a topology change occurs, how do the protocols respond?
+    - Network traffic will be dynamic; can our multiplexing and
+      resource management protocols adapt so that new connections
+      are given service in a reasonable time, and ongoing connections
+      continue to receive expected levels?
 
 ## Simulation goals
 
@@ -157,6 +164,9 @@ most basic demos](doc/running-demos.md).  Next, you'll want to learn
 how to create your own test networks, and how to extend the source
 code for your own uses.
 
+When you are ready to start contributing, you can start reading the
+code, as [we have done](doc/code-spelunking.md).
+
 ## Development tools
 
 A few tools (mainly scripts) can be used to make development a bit easier.
@@ -181,10 +191,10 @@ See the [references](doc/References.md).
 
 ## License
 
-We hope to release QuISP as open source QuISP on March 1, under a
-commercial-friendly (not copyleft) license.  There are options for the
-license: MIT, Apache, Mozilla, BSD...most likely BSD.  QuISP builds on
-OMNeT++.  OMNeT++ itself is a [custom
+We expect to release QuISP as open source QuISP the week of March 16,
+2020, under a commercial-friendly (not copyleft) license.  There are
+options for the license: MIT, Apache, Mozilla, BSD...most likely BSD.
+QuISP builds on OMNeT++.  OMNeT++ itself is a [custom
 license](https://omnetpp.org/intro/license), open source and free for
 academic use, but a license fee required for commercial organizations.
 QuISP also requires the linear algebra library Eigen, where license is
