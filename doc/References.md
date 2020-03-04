@@ -26,6 +26,12 @@ networks to a full Quantum Internet, see these three:
 
 At the moment, only first generation (1G) protocols have been implemented.
 
+Also, as of this writing, the [Quantum Internet Research Group
+(QIRG)](https://datatracker.ietf.org/rg/qirg/about/) is working on a
+document titled, ["Architectural Principles for a Quantum
+Internet"](https://datatracker.ietf.org/doc/draft-irtf-qirg-principles/)
+that will be of tremendous use.
+
 ## Specific design decisions
 
 In addition to Takaaki's thesis, the design decisions incorporated
@@ -40,7 +46,8 @@ the best source is
   2016.
 
 As of this writing, a paper is being written detailing the simulation
-of non-Pauli errors while working in the error basis.
+of non-Pauli errors while working in the error basis.  (There is some
+description of this in Takaaki's thesis, above.)
 
 *TODO*: add a reference on match-and-action software defined
  networking (SDN).

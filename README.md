@@ -101,20 +101,19 @@ Working infrastructure:
 Besides the obvious joys of the endless network configurability, here
 are the key quantum protocols that are implemented:
 
-* various purification protocols:  Single round
+* various *purification protocols*:  Single round
   of X purification, alternating X/Z purification, etc.  Extending
   these to test your own custom purification protocol is pretty
   straightforward.
-* tomography: when the simulation boots, it assumes that the software
+* *tomography*: when the simulation boots, it assumes that the software
   at each end of each link knows _nothing_ about the link, so it
   begins by performing tomography on the links.  This is actually
   problematic, because it turns out to take a long time for tomography
   to converge, which means a lot of boot-up time in the simulation
   before other interesting things start to happen.  We are
   working on a way to pre-calculate this, so that you can choose to
-  either include tomography or not; it sort of works, but may be a
-  bit kludgy.
-* teleportation, with limitations on source and destination
+  either include tomography or not.
+* *entanglement swapping*, with limitations on source and destination.
 
 networking protocols:
 
