@@ -3,10 +3,23 @@
 There are several hundred pages of documentation [available on the OMNeT++ website](https://omnetpp.org/documentation/).  You'll want to
 begin finding your way around in that.
 
+In OMNeT++, practically all of the work is triggered via `cMessage`s,
+passed from object to object, and network packets are `cPacket`s (see
+Ch. 5 of the OMNeT++ manual).
+
+This document is just to get you started; more complete documentation
+will be coming eventually.  There is some information on the code
+structure (which naturally will gradually go out of date) in Appendix
+A of [Takaaki's master's thesis](https://arxiv.org/abs/1908.10758).
+
 ## Finding the "Application" that runs
 
-To get oriented, see the [API for
+If almost all of the action is triggered a `cMessage`, almost all of
+the hardware and software components are known as `module`s.  To get
+oriented, see the [API for
 cSimpleModule](https://doc.omnetpp.org/omnetpp/api/classomnetpp_1_1cSimpleModule.html).
+See Sec. 4.4 of the OMNeT++ manual, "Adding Functionality to
+cSimpleModule".
 
 Each `module` is loaded and an instance of the object instantiated
 based on being listed in a `.ned` file.  In `networks/QNode.ned`, you
@@ -53,8 +66,4 @@ connection setup proceeds in an event response fashion.  (At the
 moment, loss of classical messages is not included, so there is no
 need to monitor and retry the setup.)
 
-See Sec. 4.4 of the OMNeT++ manual.
-
-## Looking at the tomography code
-
-(To be filled in.)
+## Our first RuleSet: Looking at the tomography code

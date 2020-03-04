@@ -1,11 +1,11 @@
 # QUISP
 
 The Quantum Internet Simulation Package (QuISP) is an event-driven
-simulation of quantum repeater networks, which will be the ultimate
-foundation of the coming Quantum Internet.  QuISP's goal is to
-simulate a full Quantum Internet consisting of up to 100 networks of
-up to 100 nodes each.  Its focus is on protocol design and emergent
-behavior of complex, heterogeneous networks, while keeping the
+simulation of quantum repeater networks, which will be the foundation
+of the coming Quantum Internet.  QuISP's goal is to simulate a full
+Quantum Internet consisting of up to 100 networks of up to 100 nodes
+each.  Its focus is on protocol design and emergent behavior of
+complex, heterogeneous networks at large scale, while keeping the
 physical layer as realistic as possible.
 
 QuISP is a product of the Advancing Quantum Architecture (AQUA)
@@ -114,19 +114,21 @@ are the key quantum protocols that are implemented:
   working on a way to pre-calculate this, so that you can choose to
   either include tomography or not; it sort of works, but may be a
   bit kludgy.
+* teleportation, with limitations on source and destination
 
 networking protocols:
 
 * basics of RuleSet creation & distribution
 * framework for a routing protocol
 
-missing essential features:
+missing essential features (we hope to have some of these done before
+release, others will be in progress):
 
-* entanglement swapping (we hope to have this done before release)
+* more general entanglement swapping 
 * resource allocation & multiplexing (we need at least
   something crude here, or we can't have multiple connections running
   that require access to the same links)
-* some mechanism for establishing traffic patterns
+* more general mechanism for establishing traffic patterns
 
 ## Installation requirements
 
