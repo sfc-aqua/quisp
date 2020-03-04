@@ -11,14 +11,17 @@ This document is just to get you started; more complete documentation
 will be coming eventually.  There is some information on the code
 structure (which naturally will gradually go out of date) in Appendix
 A of [Takaaki's master's thesis](https://arxiv.org/abs/1908.10758).
+Most importantly, once you have a grasp of the basic lay of the land
+in the code, you'll want to start looking at the [software design
+documents](software-design.md).
 
 ## Finding the "Application" that runs
 
-If almost all of the action is triggered a `cMessage`, almost all of
-the hardware and software components are known as `module`s.  To get
-oriented, see the [API for
+If almost all of the action is triggered via a `cMessage`, almost all
+of the hardware and software components are known as `module`s.  To
+get oriented, see the [API for
 cSimpleModule](https://doc.omnetpp.org/omnetpp/api/classomnetpp_1_1cSimpleModule.html).
-See Sec. 4.4 of the OMNeT++ manual, "Adding Functionality to
+Also see Sec. 4.4 of the OMNeT++ manual, "Adding Functionality to
 cSimpleModule".
 
 Each `module` is loaded and an instance of the object instantiated
@@ -70,10 +73,10 @@ need to monitor and retry the setup.)
 
 In QuISP, there is a big, and important, distinction between the
 _software_ for a quantum repeater, and the simulation of the
-_hardware_.  The 
+_hardware_.
 
 In `quisp/networks/qrsa.ned`, you'll find the definitions of the key
-components:
+software components:
 
 ```
 simple RoutingDaemon
@@ -105,7 +108,38 @@ simple RealTimeController
 }
 ```
 
-Those five `simple` objects are configured into one software system,
+The `RoutingDaemon` should be obvious.
+
+The `HardwareMonitor` performs tomography (below) and keeps track of
+the link's condition, information that is (or should be) fed to the
+`RoutingDaemon`.
+
+The `ConnectionManager` handles incoming requests for connections,
+either in end nodes or in those that are being transitted.  (The
+process for this is described in our [Internet
+Draft](https://datatracker.ietf.org/doc/draft-van-meter-qirg-quantum-connection-setup/).)
+It should consult with the routing daemon to find the next hop toward
+the destination, and with the hardware monitor to collect detailed
+information about the links and memories that it packages into the
+request before forwarding on the outbound setup request.  On the
+return setup instructions, it should collect the RuleSets and give
+them to the RuleEngine.
+
+The `RuleEngine` is the heart of the event-driven action.  When
+classical messages or photons arrive, or timers expire, the RE is
+responsible for updating the repeater's software's understanding of
+the qubits' state, for executing the actions for each rule whose
+Condition (Match) clause is met, etc.
+
+The `RealTimeController` is device drivers; it's the interface to the
+classical control of the quantum devices.  In the simulation, it ties
+pretty directly to the simulation of the qubits themselves.
+
+_(add the software architecture figure here)_
+
+(This figure should look familiar, it is used in multiple places.)
+
+Those five `simple` objects are grouped into one software system,
 
 ```
 module quantumRoutingSoft
@@ -117,8 +151,6 @@ module quantumRoutingSoft
 which is used as a `submodule` in `module QNode`, found in
 `quisp/networks/QNode.ned`, as described near the top of this
 document.
-
-_(add the software architecture figure here)_
 
 ## Our first RuleSet: Looking at the tomography code
 
@@ -174,3 +206,19 @@ network= Realistic_Layer2_Simple_MIM_MM_10km
 **.Purification_type = 1001
 ```
 
+Then you'll see in `HardwareMonitor.cc`:
+
+```
+void HardwareMonitor::initialize(int stage)
+{
+...
+  do_link_level_tomography = par("link_tomography");
+...
+}
+```
+
+This function also sets up data structures to hold the tomography
+data, which is a key part of HM's responsibility.
+
+*(next: follow that to the connection to RuleSets; how is it initiated
+ only from one end?)*
