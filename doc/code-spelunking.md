@@ -135,7 +135,7 @@ The `RealTimeController` is device drivers; it's the interface to the
 classical control of the quantum devices.  In the simulation, it ties
 pretty directly to the simulation of the qubits themselves.
 
-_(add the software architecture figure here)_
+![software architecture for a full-stack quantum repeater](img/Router%20software%20arch.png)
 
 (This figure should look familiar, it is used in multiple places.)
 
@@ -214,11 +214,86 @@ void HardwareMonitor::initialize(int stage)
 ...
   do_link_level_tomography = par("link_tomography");
 ...
-}
 ```
 
 This function also sets up data structures to hold the tomography
 data, which is a key part of HM's responsibility.
 
+A little bit later in that function, the code checks each neighbor,
+and if it has the higher address, does this:
+
+```
+              LinkTomographyRequest *pk = new LinkTomographyRequest;
+              pk->setDestAddr(it->second.neighborQNode_address);
+              pk->setSrcAddr(myAddress);
+              pk->setKind(6);
+              send(pk,"RouterPort$o");
+```
+
+(Yes, as of the moment, that packet Kind is hard-coded to 6.  Ugh.)
+
+That sends the initial packet to the neighbor, who will receive it and
+respond, then we will set up a set of rules.  Receiving:
+
+```
+          }
+      }
+  }
+}
+
+unsigned long HardwareMonitor::createUniqueId(){
+    std::string time = SimTime().str();
+    std::string address = std::to_string(myAddress);
+    std::string random = std::to_string(intuniform(0,10000000));
+    std::string hash_seed = address+time+random;
+    std::hash<std::string> hash_fn;
+    size_t  t = hash_fn(hash_seed);
+    unsigned long RuleSet_id = static_cast<long>(t);
+    std::cout<<"Hash is "<<hash_seed<<", t = "<<t<<", long = "<<RuleSet_id<<"\n";
+    return RuleSet_id;
+}
+
+void HardwareMonitor::handleMessage(cMessage *msg){
+    if(dynamic_cast<LinkTomographyRequest *>(msg) != nullptr){
+        /*Received a tomography request from neighbor*/
+        LinkTomographyRequest *request = check_and_cast<LinkTomographyRequest *>(msg);
+        /*Prepare an acknowledgement*/
+        LinkTomographyAck *pk = new LinkTomographyAck;
+        pk->setSrcAddr(myAddress);
+        pk->setDestAddr(request->getSrcAddr());
+        pk->setKind(6);
+```
+
+Back at the first node, the reception of that will kick off the
+creation of the RuleSet.  Chunks of that aren't great code, with some
+hard-coded constants, but it works.  (Add that to the work items
+list!)
+
+```
+void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long RuleSet_id){
+            LinkTomographyRuleSet *pk = new LinkTomographyRuleSet;
+...
+                        Rule* Purification = new Rule(RuleSet_id, rule_index);
+                        Condition* Purification_condition = new Condition();
+                        Clause* resource_clause = new EnoughResourceClause(2);
+...
+        //RuleSets sent for this node and the partner node.
+
+        long RuleSet_id = createUniqueId();
+        sendLinkTomographyRuleSet(myAddress, partner_address, my_qnic_type, my_qnic_index, RuleSet_id);
+        sendLinkTomographyRuleSet(partner_address,myAddress, partner_qnic_type, partner_qnic_index, RuleSet_id);
+```
+
+There is a lot of similar code, depending on choice of purification
+scheme; ultimately, this should be more flexible, cleaner code, too.
+(Another item for the work list!)
+
+
 *(next: follow that to the connection to RuleSets; how is it initiated
  only from one end?)*
+
+
+
+## Next
+
+Now go look at the [software design documents](software-design.md).

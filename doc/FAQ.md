@@ -3,8 +3,6 @@
 At this point, since all of our users are AQUA members, this is a set
 of questions we frequently ask ourselves.
 
-To be filled in...
-
 * Q: I can't get it to install!!!
     - A: Welcome to the club.  Getting OMNeT++ to run is the biggest
   hassle.  Once you have that done, everything else is smooth.  There
@@ -16,6 +14,13 @@ To be filled in...
 * Q: Wow, OMNeT++ runs!!! Exciting! ...now what?
     - A: We definitely need better notes on adding QuISP into OMNeT++ and running
   your first QuISP sims.
+* Q: I tried to build QuISP from inside OMNeT++, and it bombs with
+  some error about cocoa?!?
+    - A: Ah, yes, the famous lack of hot chocolate.  You need to run
+    OMNeT++ from the command line, not the Finder (on a Mac), and you
+    need to run `. setenv` to get some environment variables set
+    properly.  n.b.: there are probably multiple `setenv` files
+    floating around, and I'm not certain which you need.
 * Q: Okay, I got the basic first QuISP demo running.  What the heck
   are these .ini and .ned files, and how do I create my own?
     - A: Yup...  See, of course, [the OMNeT++
@@ -33,6 +38,11 @@ To be filled in...
   learning to do, but hopefully our existing code serves as a good
   guide to what you'll need.  See also, of course, [the OMNeT++
   documentation](https://doc.omnetpp.org/omnetpp/manual/).
+  There are a lot of [software design documents](software-design.md),
+  which are potentially all suspect, as the code is evolving faster
+  than the designs, and many elements of the desired design are still
+  far from being implemented.  But all of this should help you help
+  yourself, and help us!
 * Q: Can I change the generation of RuleSets without changing C++
   code?
     - A: At the moment, no.
