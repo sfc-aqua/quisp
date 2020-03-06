@@ -1,28 +1,28 @@
-Authors of QuISP (Quantum Internet Simulation Package)
+# Authors of QuISP (Quantum Internet Simulation Package)
 
-Coders & Designers:
+## Coders & Designers:
 
-Takaaki Matsuo
-Clement Durand
-Ryosuke Satoh
+* Takaaki Matsuo
+* Clement Durand
+* Ryosuke Satoh
 
-Senior Advisors:
+## Senior Advisors:
 
-Rod Van Meter
-Shigeya Suzuki
+* Rod Van Meter
+* Shigeya Suzuki
 
-Kibbitzing & pre-coding design work:
+## Kibbitzing & pre-coding design work:
 
-Shota Nagayama
-Takahiko Satoh
+* Shota Nagayama
+* Takahiko Satoh
 
-Alpha users and testers:
+## Alpha users and testers:
 
-Nozomi Tatetani
-Makoto Nakai
-Sara Metwalli
+* Nozomi Tatetani
+* Makoto Nakai
+* Sara Metwalli
 
-Developers of earlier-generation simulators (no direct code overap):
+## Developers of earlier-generation simulators (no direct code overap):
 
-Thaddeus Ladd
-Luciano Aparicio
+* Thaddeus Ladd
+* Luciano Aparicio
