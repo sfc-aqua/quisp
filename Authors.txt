@@ -4,6 +4,7 @@ Coders & Designers:
 
 Takaaki Matsuo
 Clement Durand
+Ryosuke Satoh
 
 Senior Advisors:
 
@@ -15,8 +16,13 @@ Kibbitzing & pre-coding design work:
 Shota Nagayama
 Takahiko Satoh
 
-Alpha users:
+Alpha users and testers:
 
-Ryosuke Sato
 Nozomi Tatetani
 Makoto Nakai
+Sara Metwalli
+
+Developers of earlier-generation simulators (no direct code overap):
+
+Thaddeus Ladd
+Luciano Aparicio
