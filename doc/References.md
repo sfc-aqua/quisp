@@ -2,6 +2,13 @@
 
 QuISP builds upon and contributes to the research literature on quantum repeaters.
 
+## Orientation
+
+If you're not familiar with quantum networking at all, at IETF 104,
+Tracy Northup and Rod Van Meter did a [two-hour
+tutorial](https://www.youtube.com/watch?v=9nfaYAU92tY&feature=youtu.be),
+which is uploaded to the IETF YouTube channel.
+
 ## The bible
 
 The most important document on QuISP design and use is
