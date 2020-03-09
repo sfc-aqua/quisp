@@ -20,10 +20,12 @@ This is the simple form, with three basic phases:
 1. When the request arrives at the Responder, the Responder uses that information to create a complete [RuleSet](RuleSet) for every node.
 1. The RuleSets are set back along the original path, with each node removing its RuleSet from the message, then forwarding on until it returns to the Initiator.
 
-![FlatPath Setup Processing.PNG](https://bitbucket.org/repo/R4A77B/images/4214376166-FlatPath%20Setup%20Processing.PNG)
+![FlatPath-Setup-Processing.png](img/FlatPath-Setup-Processing.png)
+
 # Message Sequence for Routers #
 
-![Router software arch.PNG](https://bitbucket.org/repo/R4A77B/images/3492678423-Router%20software%20arch.PNG)
+![Router software arch.png](img/Router%20software%20arch.png)
+
 1. ConnectionManager receives PathSetupRequest from end node or another repeater or router
 2. ConnectionManager requests NextHop from RoutingDaemon based on destination address
 3. ConnectionManager receives NextHop address and link info from RoutingDaemon
