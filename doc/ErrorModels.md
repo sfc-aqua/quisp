@@ -2,7 +2,8 @@
 
 *Note: This file contains some important background thoughts on how to
 handle non-Pauli errors.  This grew to become our "error basis"
-representation.  At the time of this writing, the best
+representation.  However, this description does not exactly correspond
+to the current implementation.  At the time of this writing, the best
 documentation is Sec. 5.3 of [Takaaki's master's
 thesis](https://arxiv.org/abs/1908.10758).*
 
