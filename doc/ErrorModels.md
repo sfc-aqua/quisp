@@ -1,5 +1,11 @@
 # Math: Error Models #
 
+*Note: This file contains some important background thoughts on how to
+handle non-Pauli errors.  This grew to become our "error basis"
+representation.  At the time of this writing, the best
+documentation is Sec. 5.3 of [Takaaki's master's
+thesis](https://arxiv.org/abs/1908.10758).*
+
 We have two main ways of representing errors: tracking Pauli frame
 errors introduced using Monte Carlo methods, or using a more
 physically grounded model with density matrices and operator sums.
@@ -13,8 +19,9 @@ For simulation of large-scale entangled states, full density matrix
 representation is impossible.  Instead, the simplest, most common
 approach is the Monte Carlo approach, using randomly introduced X, Y,
 or Z errors.  This is the approach Shota took in his surface code
-sims, which was then used in Satoh & Kaori's network coding paper and
-Kaaki's network coding paper.
+sims, which was then used in [Satoh & Kaori's network coding
+paper](https://arxiv.org/abs/1508.02141) and [Takaaki's network coding
+paper](https://arxiv.org/abs/1710.04827).
 
 The disadvantage is that it can't easily represent asymmetric
 (non-unitary) error processes or multi-qubit error processes.
@@ -24,10 +31,11 @@ The disadvantage is that it can't easily represent asymmetric
 All we need for this is three parameters, normalized to some time
 constant:
 
+```
     XFlipProbability
     YFlipProbability
     ZFlipProbability
-
+```
 
 ## The Physical/Mathematical Models ##
 
@@ -48,8 +56,8 @@ This is the equivalent to the bit flip channel, but for the phase
 instead.  This is known as _phase damping_.
 
 In phase damping, we have $$|+\rangle\rightarrow |-\rangle$$ and vice
-versa.  The time constant here is $$T_2$$.  See Eqs. 8.12-8.14 in my
-book.
+versa.  The time constant here is $$T_2$$.  See Eqs. 8.12-8.14 in Rod
+Van Meter's book, _Quantum Networking_.
 
 ### Energy Relaxation ###
 
@@ -57,8 +65,8 @@ An asymmetric channel in which $$|1\rangle\rightarrow |0\rangle$$ is
 more likely to happen than $$|0\rangle\rightarrow |1\rangle$$.
 
 This is tied to $$T_1$$, the energy relaxation time.  See
-Eqs. 8.6-8.10 in my book for the representation known as generalized
-amplitude damping.
+Eqs. 8.6-8.10 in Van Meter's book for the representation known as
+generalized amplitude damping.
 
 The other parameter we need for a relatively complete picture of
 energy relaxation is the Boltzmann polarization, the fraction of
@@ -92,9 +100,11 @@ We can initialize an error channel as if it is a combination of all of
 the above types, by specifying just three parameters when calling a
 single, unified initializer.
 
+```
     BoltzmannPolarization (0.0 to 1.0, but usually 0.5 to 1.0)
     EnergyRelaxationT1
     PhaseDampingT2
+```
 
 _(Do we need a null value for input sometimes?)_
 
