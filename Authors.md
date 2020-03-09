@@ -22,6 +22,12 @@
 * Makoto Nakai
 * Sara Metwalli
 
+## Documentation
+
+* Rod Van Meter
+* Ryosuke Satoh
+* Sara Metwalli
+
 ## Developers of earlier-generation simulators (no direct code overap):
 
 * Thaddeus Ladd

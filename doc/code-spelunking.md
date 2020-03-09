@@ -28,13 +28,13 @@ and
 
 The later is useful for finding all of the known rule types.  doxygen
 is a command-line tool for generating the docs; if you need to update
-it, just type
+it (or if the above link fails with file not found), just type
 
-```
-doxygen
-```
+``` doxygen ```
+
 from your top-level repository directory, and it will build all of the
-docs in `doc/html`, all browsable through an ordinary Internet browser.
+docs in `doc/html` (assuming you have the doxygen tools installed),
+all browsable through an ordinary Internet browser.
 
 
 ## Finding the "Application" that runs
@@ -299,10 +299,16 @@ scheme; ultimately, this should be more flexible, cleaner code, too.
 
 Note that two RuleSets are created, and one is "sent" to yourself.
 
-*(next: follow that to the connection to RuleSets; how is it initiated
- only from one end?)*
+The next step is to look at `RuleEngine.cc` and see how messages are
+handled there, in (naturally enough)
+`RuleEngine::handleMessage(cMessage *msg)`.  Currently, that function
+is rather messy, and due for a rewrite.
 
+This source file also contains functions for locking and unlocking
+resources.
 
+This isn't really enough detail yet, but hopefully this document has
+gotten you oriented to finding your way around inside the source code.
 
 ## Next
 

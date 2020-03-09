@@ -10,8 +10,9 @@ physical layer as realistic as possible.
 
 QuISP is a product of the Advancing Quantum Architecture (AQUA)
 research group headed by Prof. Rodney Van Meter, at Keio University's
-Shonan Fujisawa Campus, Fujisawa, Japan.
-[http://aqua.sfc.wide.ad.jp](http://aqua.sfc.wide.ad.jp)
+Shonan Fujisawa Campus, Fujisawa, Japan.  See 
+[http://aqua.sfc.wide.ad.jp](http://aqua.sfc.wide.ad.jp) and the list
+of [Authors](Authors.md).
 
 ## Research questions
 
