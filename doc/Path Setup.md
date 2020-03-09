@@ -1,5 +1,13 @@
 # Path Setup #
 
+*Note: this file is an early design document, but should correspond well
+to the existing implementation for single networks.  Internetworking
+(recursive) connections and networks are not yet handled.  The Flat
+Path setup should also correspond fairly closely to the [Internet Draft
+by Van Meter &
+Matsuo](https://tools.ietf.org/html/draft-van-meter-qirg-quantum-connection-setup-01)
+(which, as of this writing, has expired, but will be revived).
+
 # Basic Idea #
 
 The basic concept is that the path creation is triggered by an

@@ -1,5 +1,13 @@
 # Flat Path (Single Network) Setup Processing #
 
+*Note: this file is an early design document, but should correspond well
+to the existing implementation for single networks.  Internetworking
+(recursive) connections and networks are not yet handled.  The Flat
+Path setup should also correspond fairly closely to the [Internet Draft
+by Van Meter &
+Matsuo](https://tools.ietf.org/html/draft-van-meter-qirg-quantum-connection-setup-01)
+(which, as of this writing, has expired, but will be revived).
+
 This page contains pseudocode for the processing at each repeater node during both the outbound and return phases of the connection setup. The contents of the messages themselves are specified separately.
 
 See the top [Path Setup](Path Setup) page for links to the more complex recursive setup and to network-specific information.
