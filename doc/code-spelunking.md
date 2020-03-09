@@ -11,9 +11,24 @@ This document is just to get you started; more complete documentation
 will be coming eventually.  There is some information on the code
 structure (which naturally will gradually go out of date) in Appendix
 A of [Takaaki's master's thesis](https://arxiv.org/abs/1908.10758).
+
 Most importantly, once you have a grasp of the basic lay of the land
 in the code, you'll want to start looking at the [software design
 documents](software-design.md).
+
+You can also browse the doxygen-generated [source code
+documentation](html/index.html), if you have that installed and
+compiled.  If you have it, you can see
+
+![class definitions](img/doxygen-example-class.png)
+
+and
+
+![class inheritance](img/doxygen-example-class.png).
+
+The later is useful for finding all of the known rule types.
+
+
 
 ## Finding the "Application" that runs
 
@@ -233,26 +248,10 @@ and if it has the higher address, does this:
 (Yes, as of the moment, that packet Kind is hard-coded to 6.  Ugh.)
 
 That sends the initial packet to the neighbor, who will receive it and
-respond, then we will set up a set of rules.  Receiving:
+respond, then we will set up a set of rules.  The receiver sends an
+ACK:
 
 ```
-          }
-      }
-  }
-}
-
-unsigned long HardwareMonitor::createUniqueId(){
-    std::string time = SimTime().str();
-    std::string address = std::to_string(myAddress);
-    std::string random = std::to_string(intuniform(0,10000000));
-    std::string hash_seed = address+time+random;
-    std::hash<std::string> hash_fn;
-    size_t  t = hash_fn(hash_seed);
-    unsigned long RuleSet_id = static_cast<long>(t);
-    std::cout<<"Hash is "<<hash_seed<<", t = "<<t<<", long = "<<RuleSet_id<<"\n";
-    return RuleSet_id;
-}
-
 void HardwareMonitor::handleMessage(cMessage *msg){
     if(dynamic_cast<LinkTomographyRequest *>(msg) != nullptr){
         /*Received a tomography request from neighbor*/
@@ -262,12 +261,15 @@ void HardwareMonitor::handleMessage(cMessage *msg){
         pk->setSrcAddr(myAddress);
         pk->setDestAddr(request->getSrcAddr());
         pk->setKind(6);
+...
+        send(pk,"RouterPort$o");
 ```
 
 Back at the first node, the reception of that will kick off the
-creation of the RuleSet.  Chunks of that aren't great code, with some
-hard-coded constants, but it works.  (Add that to the work items
-list!)
+creation of the RuleSet.  The same `handleMessage()` function is the
+handler for that ACK, back at the initiator.  Chunks of that aren't
+great code, with some hard-coded constants, but it works.  (Add that
+to the work items list!)
 
 ```
 void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long RuleSet_id){
@@ -288,6 +290,7 @@ There is a lot of similar code, depending on choice of purification
 scheme; ultimately, this should be more flexible, cleaner code, too.
 (Another item for the work list!)
 
+Note that two RuleSets are created, and one is "sent" to yourself.
 
 *(next: follow that to the connection to RuleSets; how is it initiated
  only from one end?)*
