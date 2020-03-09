@@ -39,43 +39,43 @@ as a service via the web, and possibly to open source the simulator.
 
 # Orientation #
 
-- [Research Questions](Research Questions)
-- [Terminology](Terminology)
-- [Quantum State Representations](Quantum State Representations)
-- [The story for a first SIGCOMM paper](The Story)
+- [Research Questions](Research%20Questions.md)
+- [Terminology](Terminology.md)
+- [Quantum State Representations](Quantum%20State%20Representations.md)
+- [The story for a first SIGCOMM paper](The%20Story.md)
 
 # Decisions #
 
-- [Major Design Decisions](Major%20Design%20Decisions)
-- [Major Functionality Descriptions](Major%20Functionality%20Descriptions)
+- [Major Design Decisions](Major%20Design%20Decisions.md)
+- [Major Functionality Descriptions](Major%20Functionality%20Descriptions.md)
 
 # Nodes and Links #
 
-- [Router Architecture](Router Architecture) (with links to hardware modules)
-- [Router Software Architecture](Router Software Architecture) (with links to software modules)
-- [Repeater](Repeater)
-- [End Node](End Node)
-- [BSA Node](BSA Node) (Bell State Analyzer)
-- [EPPS](EPPS) (Entangled Photon Pair Source)
-- [Channel](Channel)
+- [Router Architecture](Router%20Architecture.md) (with links to hardware modules)
+- [Router Software Architecture](Router%20Software%20Architecture) (with links to software modules.md)
+- [Repeater](Repeater.md)
+- [End Node](End%20Node.md)
+- [BSA Node](BSA%20Node.md) (Bell State Analyzer)
+- [EPPS](EPPS.md) (Entangled Photon Pair Source)
+- [Channel](Channel.md)
 
 # Networks, Protocols and Operations #
 
-- [Path Setup](Path Setup)
-- [Rule Sets](RuleSet)
-- [Routing](Routing)
-- [Resource Allocation](Resource Allocation)
-- [Distributed Tomography and State Monitoring](Distributed Tomography and State Monitoring)
+- [Path Setup](Path%20Setup.md)
+- [Rule Sets](RuleSet.md)
+- [Routing](Routing.md)
+- [Resource Allocation](Resource%20Allocation.md)
+- [Distributed Tomography and State Monitoring](Distributed%20Tomography%20and%20State%20Monitoring.md)
 
 # Simulation #
 
-- [SimulatorSourceStructure](SimulatorSourceStructure)
-- [InitialRequirements](InitialRequirements)
+- [SimulatorSourceStructure](SimulatorSourceStructure.md)
+- [InitialRequirements](InitialRequirements.md)
 - [Datasets](Datasets) we intend to collect to write papers with (reach topology and workload discussions through here)
-- [Link Simulation Example](SimLink)
-- [Simlating Errors](SimErrors)
+- [Link Simulation Example](SimLink.md)
+- [Simlating Errors](SimErrors.md)
 
 # Other #
 
-- [References](References)
+- [References](References.md)
 - [[Open Issues Bucket]]
