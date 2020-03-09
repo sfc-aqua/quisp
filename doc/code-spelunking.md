@@ -16,7 +16,7 @@ Most importantly, once you have a grasp of the basic lay of the land
 in the code, you'll want to start looking at the [software design
 documents](software-design.md).
 
-You can also browse the doxygen-generated [source code
+You can also browse the [doxygen](http://www.doxygen.nl/)-generated [source code
 documentation](html/index.html), if you have that installed and
 compiled.  If you have it, you can see
 
@@ -24,10 +24,17 @@ compiled.  If you have it, you can see
 
 and
 
-![class inheritance](img/doxygen-example-class.png).
+![class inheritance](img/doxygen-example-rules.png).
 
-The later is useful for finding all of the known rule types.
+The later is useful for finding all of the known rule types.  doxygen
+is a command-line tool for generating the docs; if you need to update
+it, just type
 
+```
+doxygen
+```
+from your top-level repository directory, and it will build all of the
+docs in `doc/html`, all browsable through an ordinary Internet browser.
 
 
 ## Finding the "Application" that runs
