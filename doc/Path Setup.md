@@ -6,7 +6,7 @@ to the existing implementation for single networks.  Internetworking
 Path setup should also correspond fairly closely to the [Internet Draft
 by Van Meter &
 Matsuo](https://tools.ietf.org/html/draft-van-meter-qirg-quantum-connection-setup-01)
-(which, as of this writing, has expired, but will be revived).
+(which, as of this writing, has expired, but will be revived).*
 
 # Basic Idea #
 
