@@ -52,7 +52,7 @@ as a service via the web, and possibly to open source the simulator.
 # Nodes and Links #
 
 - [Router Architecture](Router%20Architecture.md) (with links to hardware modules)
-- [Router Software Architecture](Router%20Software%20Architecture) (with links to software modules.md)
+- [Router Software Architecture](Router%20Software%20Architecture.md) (with links to software modules)
 - [Repeater](Repeater.md)
 - [End Node](End%20Node.md)
 - [BSA Node](BSA%20Node.md) (Bell State Analyzer)
