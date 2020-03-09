@@ -18,3 +18,64 @@ Also, these designs document a dream: the initial releases are _far_
 from completing all of this!  Especially, as of this writing, only
 first-generation (1G) repeaters are implemented _at all_.  2G and 3G
 are Future Work.
+
+# Welcome to the QUISP project.
+
+Our goals are
+
+1. to determine if it is *possible* to build a
+quantum Internet (defined as a global network of networks utilizing
+very distinct technical approaches);
+1. to assess the *robustness* of such an internetwork in the face of evolving
+technology, deployment, and workload;
+1. to establish some key *design decisions* that will help us build a robust, long-lived network; and
+1. finally, to feed back what we have learned to the
+experimental community to guide future development.
+
+The simulator also serves as a platform for future development of
+increasingly real-world source code, and for simulations of evolving
+technologies and approaches.  We hope to make the simulator available
+as a service via the web, and possibly to open source the simulator.
+
+# Orientation #
+
+- [Research Questions](Research Questions)
+- [Terminology](Terminology)
+- [Quantum State Representations](Quantum State Representations)
+- [The story for a first SIGCOMM paper](The Story)
+
+# Decisions #
+
+- [Major Design Decisions](Major%20Design%20Decisions)
+- [Major Functionality Descriptions](Major%20Functionality%20Descriptions)
+
+# Nodes and Links #
+
+- [Router Architecture](Router Architecture) (with links to hardware modules)
+- [Router Software Architecture](Router Software Architecture) (with links to software modules)
+- [Repeater](Repeater)
+- [End Node](End Node)
+- [BSA Node](BSA Node) (Bell State Analyzer)
+- [EPPS](EPPS) (Entangled Photon Pair Source)
+- [Channel](Channel)
+
+# Networks, Protocols and Operations #
+
+- [Path Setup](Path Setup)
+- [Rule Sets](RuleSet)
+- [Routing](Routing)
+- [Resource Allocation](Resource Allocation)
+- [Distributed Tomography and State Monitoring](Distributed Tomography and State Monitoring)
+
+# Simulation #
+
+- [SimulatorSourceStructure](SimulatorSourceStructure)
+- [InitialRequirements](InitialRequirements)
+- [Datasets](Datasets) we intend to collect to write papers with (reach topology and workload discussions through here)
+- [Link Simulation Example](SimLink)
+- [Simlating Errors](SimErrors)
+
+# Other #
+
+- [References](References)
+- [[Open Issues Bucket]]
