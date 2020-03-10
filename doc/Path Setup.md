@@ -14,18 +14,18 @@ The basic concept is that the path creation is triggered by an
 application at the Initiator, information is accumulated on an
 outbound pass, then the RuleSet is created at the Responder.  RuleSets
 are installed on the return pass.  See
-[FlatPathSetup Processing](FlatPathSetup Processing) for details.
+[FlatPathSetup Processing](FlatPathSetup%20Processing.md) for details.
 
 # Easy and Hard #
 
-- [FlatPathSetup Processing](FlatPathSetup Processing)
-- [Recursive Path Setup](Recursive Path Setup) (including inter-networking)
+- [FlatPathSetup Processing](FlatPathSetup%20Processing.md)
+- [Recursive Path Setup](Recursive%20Path%20Setup.md) (including inter-networking)
 
 # Network Types #
 
-- [Dur-Briegel Path Setup](Dur-Briegel Path Setup)
-- [Fowler Path Setup](Fowler Path Setup)
-- [Jiang Path Setup](Jiang Path Setup)
+- [Dur-Briegel Path Setup](Dur-Briegel%20Path%20Setup.md)
+- [Fowler Path Setup](Fowler%20Path%20Setup.md)
+- [Jiang Path Setup](Jiang%20Path%20Setup.md)
 
 # Path Setup protocol #
 
