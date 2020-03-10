@@ -60,6 +60,10 @@ BLACK	Purification results (classical message)
 (These color assignments seem to be artifacts of the coding; grep for
 `setKind()` in the source code.)
 
+## Finding and interpreting the results
+
+**kaaki, help fill this in!!!***
+
 ## Important file types you will encounter
 
 As you are leaping through the sources, you will encounter many file
