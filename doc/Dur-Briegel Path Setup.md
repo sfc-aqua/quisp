@@ -14,6 +14,9 @@ but that's an artifact of the coding, not a reference to the full
 Quantum Recursive Network Architecture (QRNA) (see
 [References](References.md)).
 
+For detailed example RuleSets for a three-hop path, see
+[Dur-Briegel_Example_RuleSets](Dur-Briegel_Example_RuleSets.md).
+
 FindMidpoint() splits the HopStack into two halves, Left and Right,
 with the "middle" estimated according to latency.
 
