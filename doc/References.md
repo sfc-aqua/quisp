@@ -56,5 +56,9 @@ As of this writing, a paper is being written detailing the simulation
 of non-Pauli errors while working in the error basis.  (There is some
 description of this in Takaaki's thesis, above.)
 
+For more discussion of the Quantum Recursive Network Architecture, our
+proposed architecture for the entire Quantum Internet, see [Recursive
+Quantum Repeater Networks](https://arxiv.org/abs/1105.1238).
+
 *TODO*: add a reference on match-and-action software defined
  networking (SDN).

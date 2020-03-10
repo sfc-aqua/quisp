@@ -1,7 +1,18 @@
-# Setting Up Paths Recursively: the Dur-Briegel Case #
+# Setting Up Multi-hop Paths: the Dur-Briegel Case #
 
-This is the purify-and-swap path setup algorithm, designed for use as
-part of the full recursive Quantum Internet.
+*Note: this file is an early design document, and the concept names
+(e.g. "SubClause") have evolved somewhat.  Internetworking (recursive)
+connections and networks are not yet handled.  The Flat Path setup
+should also correspond fairly closely to the [Internet Draft by Van
+Meter &
+Matsuo](https://tools.ietf.org/html/draft-van-meter-qirg-quantum-connection-setup-01)
+(which, as of this writing, has expired, but will be revived).*
+
+This is the purify-and-swap path setup algorithm for multiple hops.
+It breaks down the path and uses a recursive algorithm in its setup,
+but that's an artifact of the coding, not a reference to the full
+Quantum Recursive Network Architecture (QRNA) (see
+[References](References.md)).
 
 FindMidpoint() splits the HopStack into two halves, Left and Right,
 with the "middle" estimated according to latency.

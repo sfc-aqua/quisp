@@ -1,3 +1,20 @@
+# Dur-Briegel RuleSet Creation
+
+*Note: this file is an early design document, and the concept names
+(e.g. "SubClause", as well as the notions of static and dynamic Rules)
+have evolved somewhat.  Internetworking (recursive) connections and
+networks are not yet handled.  The Flat Path setup should also
+correspond fairly closely to the [Internet Draft by Van Meter &
+Matsuo](https://tools.ietf.org/html/draft-van-meter-qirg-quantum-connection-setup-01)
+(which, as of this writing, has expired, but will be revived).*
+
+This document describes RuleSets for a single swapping operation.  For
+building a multi-hop path, see [Setting Up Multi-hop Paths: the
+Dur-Briegel Case](Dur-Briegel%20Path%20Setup.md).
+
+*At the moment, you are on your own to extend this to more than two
+hops.*
+
 ## *Static-Static:* Example Simple, Static Purify-and-Swap Ruleset ##
 
 This basic set of RuleSets for a three-hop chain gives the key ideas for a set of RuleSets that *do not* adapt their behavior based on current estimated fidelity, and don't model memory decoherence, and don't allow varying choices of entanglement swapping (irrelevant anyway since it's only two hops):
@@ -111,7 +128,9 @@ Bob:
 
 Hoo, boy, writing this up will be fun...
 
-# Open Issues #
+## Open Issues ##
 
-1. Shigeya would prefer to use a callback specified in the SendMsg, rather than a separate line in the Action clause.
+1. It has been suggested that it might be better to use a callback
+specified in the SendMsg, rather than a separate line in the Action
+clause.
 
