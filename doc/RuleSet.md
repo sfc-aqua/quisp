@@ -1,5 +1,17 @@
 A set of rules for operating a repeater to support a connection.
 
+*Note: This document contains some important, early thoughts on the
+design of RuleSets.  However, this description does not exactly
+correspond to the current implementation.  At the time of this
+writing, the best documentation is [Takaaki's master's
+thesis](https://arxiv.org/abs/1908.10758) and the shorter
+_Phys. Rev. A_ [paper](https://arxiv.org/abs/1904.08605) on the
+topic.*
+
+*In particular, the notion of "dynamic function placement" has not yet
+appeared in any of our work, and is probably not well explained here,
+anyway.*
+
 RuleSets are created by the [Connection Manager](Connection Manager) and given to the [Rule Engine](Rule Engine).  See the [Router Software Modules](Router-Software-Modules-no-HW-Executive.jpg).
 
 
