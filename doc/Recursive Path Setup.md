@@ -1,5 +1,18 @@
 # Setting Up Paths Recursively: the Internetworking Case #
 
+*Note: this file is an early design document (dating from 2016).
+Internetworking (recursive) connections and networks are not yet
+handled.  The Flat Path setup should correspond fairly closely to
+the [Internet Draft by Van Meter &
+Matsuo](https://tools.ietf.org/html/draft-van-meter-qirg-quantum-connection-setup-01)
+(which, as of this writing, has expired, but will be revived).*
+
+This is the purify-and-swap path setup algorithm for multiple hops,
+and crossing network borders.  It breaks down the path and uses a
+recursive algorithm in its setup, as we would expect in the full
+Quantum Recursive Network Architecture (QRNA) (see
+[References](References.md)).
+
 Goals:
 
 * Keep Initiators & Repeaters simple & stupid
@@ -19,7 +32,7 @@ Goals:
 
 # Example #
 
-![Quisp Internet example](https://bitbucket.org/repo/R4A77B/images/114693855-Recursive%20Path%20Setup.PNG)
+![Quisp Internet example](Recursive-Path-Setup.png)
 
 Three-network internetwork
 
