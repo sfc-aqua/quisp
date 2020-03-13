@@ -121,14 +121,25 @@ networking protocols:
 * basics of RuleSet creation & distribution
 * framework for a routing protocol
 
-missing essential features (we hope to have some of these done before
-release, others will be in progress):
+missing essential features (these will be done before
+release 0.2.0, the first projected stable release):
 
 * more general entanglement swapping 
-* resource allocation & multiplexing (we need at least
-  something crude here, or we can't have multiple connections running
-  that require access to the same links)
+* fully blocking circuit switching
+* random pairwise traffic pattern (flat distribution)
+
+Upcoming features in near-term releases:
+
+* resource allocation & multiplexing
 * more general mechanism for establishing traffic patterns
+* MSM links
+* graph states at the link level
+* multi-party states at the application level
+
+Mid-term to long-term release features:
+
+* 2G networks, esp. Jiang style
+* full quantum internetworking
 
 ## Installation requirements
 
