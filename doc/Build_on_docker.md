@@ -4,7 +4,7 @@ This is instruction for installing omnetpp and quisp on docker.
 This on MacOS Catalina (10.15.3) and Mojave(10.14).
 
 ## TL;DR
-- Install docker to your host OS
+- Install docker to your host machine
 - Install XQuartz and socat
 - clone kaaki_quisp_master
 - `sh docker_build.sh`
@@ -91,7 +91,8 @@ Enter on the **xterm** (not your default terminal)
 > xhost <your ip address>
 ```
 
-\<your ip address> is your host ip address you checked previously.
+\<your ip address> is your host ip address you checked previously.  
+
 If you have trouble with using `xhost`, and [see](./xhost_trouble_shooting.md).
 
 Finally, open your **terminal** again, and
@@ -100,7 +101,7 @@ Finally, open your **terminal** again, and
 $ socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"
 ```
 
-## start your docker container
+## 4.Start your docker container
 
 Open the file which has Dockerfile (in kaaki_quisp_master)
 
@@ -114,3 +115,86 @@ You can run your container and **in the container**, run
 ```
 
 You can use omnetpp and quisp on docker container.
+
+## 5.Set up your OMNET++
+After the logo shows up, you will see the following tab. You can just press "Launch" button. 
+
+![Setup](https://user-images.githubusercontent.com/45162150/74584459-e7b2a000-5015-11ea-95a0-cd811ed9b25d.png)
+
+
+This is what the home screen looks like.
+
+![](https://i.imgur.com/0eTDAQi.png)
+
+
+If you go to [File] → [Open Projects from File System...], you would see the following image.
+
+![](https://i.imgur.com/LE63EJE.png)
+
+
+You will go to the following image.  Then, you have to put "/root/mdoels/quisp" as the "import source", and press "Select All" on the right side and the "Finish" on the bottom.
+![](https://i.imgur.com/iEbayjS.png)
+
+
+Now go back to the previous page.
+The page will now look like this.
+You will see the "networks" and "quisp" on the left side.
+
+
+![](https://i.imgur.com/RuGLKXJ.png)
+
+Then, you have to right click on the "quisp" and go to [Properties] (which is the VERY BOTTOM tab)
+
+
+![](https://i.imgur.com/MITpLz4.png)
+
+
+This is what the "Properties" page looks like. Next, you should click the "Makemake".
+
+
+![](https://i.imgur.com/2njDPBi.png)
+
+
+Then, you have to click ①~③ in the following image.
+
+![](https://i.imgur.com/Zwqql8b.png)
+
+
+You will go to the following page, so you should click the "Compile" tab.
+
+![](https://i.imgur.com/wdeH3pC.png)
+
+After you click the "Compile" tab, You will see the following page.
+
+![](https://i.imgur.com/CTB85mk.png)
+
+Then, you should click the small icon which is pointed by an arrow, 
+
+![](https://i.imgur.com/Up47pD1.png)
+
+and you should put "usr/bin/eigen3" in the blank and Press "OK".
+
+Then, you will go back to the "Compile" tab, so press "OK"
+
+![](https://i.imgur.com/0TnZxmR.png)
+
+
+After that, you will go back to its previous page, so press "Apply and Close" button.
+
+![](https://i.imgur.com/TH3yLUM.png)
+
+
+Now press the green "Run" button on the top of the page and you will see the simulation screen (if you click "OK" or "Proceed" for the random pop-ups)
+
+## 6.Run a Simulation
+If you see the following image, you came to right place. You can press "OK" if any random pop-ups show up.
+
+![](https://i.imgur.com/lzsxTqa.png)
+
+Click the "Set Up an Unconfigured Network".
+
+![](https://i.imgur.com/cdi34vk.png)
+
+You can choose what simulation you would like to perform.
+
+![](https://i.imgur.com/oPfFUGR.png)
