@@ -181,3 +181,11 @@ Enjoy the simulated results!!
 ![](https://i.imgur.com/ht6bIH1.jpg)
 
 
+## Running interesting simulations
+
+You should now be ready to simulate quantum networks!  Two places
+you can go:
+
+* Go to [running demos](running-demos.md).
+* Just return to [the top-level readme](../README.md) and check
+  options from there.
