@@ -102,26 +102,23 @@ Working infrastructure:
 Besides the obvious joys of the endless network configurability, here
 are the key quantum protocols that are implemented:
 
+* basics of RuleSet creation & distribution
 * various *purification protocols*:  Single round
   of X purification, alternating X/Z purification, etc.  Extending
   these to test your own custom purification protocol is pretty
   straightforward.
 * *tomography*: when the simulation boots, it assumes that the software
   at each end of each link knows _nothing_ about the link, so it
-  begins by performing tomography on the links.  This is actually
+  begins by performing tomography on the links.  (This is actually
   problematic, because it turns out to take a long time for tomography
   to converge, which means a lot of boot-up time in the simulation
   before other interesting things start to happen.  We are
   working on a way to pre-calculate this, so that you can choose to
-  either include tomography or not.
+  either include tomography or not.)
 * *entanglement swapping*, with limitations on source and destination.
 
-networking protocols:
 
-* basics of RuleSet creation & distribution
-* framework for a routing protocol
-
-missing essential features (these will be done before
+Missing essential features (these will be done before
 release 0.2.0, the first projected stable release):
 
 * more general entanglement swapping 
