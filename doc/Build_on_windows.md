@@ -1,4 +1,4 @@
-# Installating Omnetpp GUI and Native Quisp on Windows OS
+# Installing Omnetpp GUI and Native Quisp on Windows OS
 
 ## TL;DR
 * Before You Start
@@ -9,7 +9,7 @@
 
 
 ## Before You Start
-Before you begin installing OMNeT++ and Quisp, make sure you have a C++ compiler on computer. If you do, skip to step 1, if you don't, head to [this](https://www.tutorialspoint.com/How-do-I-set-up-C-Cplusplus-on-Eclipse-in-Windows) link and get your compiler set up and then come back and go to step 1!
+Before you begin installing OMNeT++ and Quisp, make sure you have a C++ compiler on your computer. If you do, skip to step 1, if you don't, head to [this](https://www.tutorialspoint.com/How-do-I-set-up-C-Cplusplus-on-Eclipse-in-Windows) link and get your compiler set up and then come back and go to step 1!
 
 
 ## 1- OMNeT++ Installation
@@ -79,9 +79,9 @@ For more information on Eigen, please visit [this](http://eigen.tuxfamily.org/in
 
 ## 3- Cloning and Building Quisp
 
-To clone and build Quisp, one your terminal (perferapply Cygwin) and type the follwoing commands:
+To clone and build Quisp, open your terminal (perferapply Cygwin) and type the following commands:
 ```
-$ git clone https://<username>@bitbucket.org/sfc-aqua/kaaki_master_quisp.git
+$ git clone https://github.com/sfc-aqua/quisp.git
 ```
 The last command will take a while to build the docker (around 15 mins).
 
@@ -99,7 +99,7 @@ From File >> Open Projects from File System
 ![](https://i.imgur.com/2aMxfLB.jpg)
 
 
-Click *Directroy* and choose the location where Quisp was cloned (usually it will be in the omnet directroy)
+Click *Directory* and choose the location where Quisp was cloned (usually it will be in the omnet directory)
 
 
 ![](https://i.imgur.com/gTIq3ow.jpg)
