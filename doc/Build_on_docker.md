@@ -58,7 +58,7 @@ Next, let's build the docker container on your Mac.
 ***!!!!!<CHANGE WHEN THIS BECOME OSS>***
 ```zsh
 $ git clone https://github.com/sfc-aqua/quisp.git
-$ cd kaaki_master_quisp
+$ cd quisp
 $ sh docker_build.sh
 ```
 Hopefully, you can build your docker container successfully.
