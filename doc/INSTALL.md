@@ -4,7 +4,7 @@ Welcome to the installation instructions for installing QuISP.  In
 theory, QuISP runs anywhere you can get OmNET++ to run, including Mac,
 Windows, and Linux.  The notes here assume you are working on Linux.
 If you prefer to do this inside a container, we support working with
-[https://www.docker.com/](Docker); see the instructions
+[Docker](https://www.docker.com/); see the instructions
 [here](./Build_on_docker.md).
 
 This document walks you through downloading QuISP, then installing and
