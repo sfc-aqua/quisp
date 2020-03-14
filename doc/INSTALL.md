@@ -13,6 +13,10 @@ building the related software.  Importing QuISP itself into OmNET++
 and building and executing it can be done in two distinct ways,
 documented separately (scroll down to the end of this document).
 
+You should assume that reading the instructions, installing from
+source, and getting QuISP to run will take you two to four hours the
+first time.
+
 ## Notation
 
 These installation instructions are interlaced with one example of running the
