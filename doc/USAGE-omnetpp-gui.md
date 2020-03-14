@@ -100,7 +100,12 @@ for example.
 
 ## Running interesting simulations
 
-You should now be ready to simulate quantum networks!  The best source
-of info for "now what?" is the [Windows install
-doc](Build_on_windows.md).  Follow that, skip the basic instructions
-and pick up where it starts working with the examples.
+You should now be ready to simulate quantum networks!  Three places
+you can go:
+
+* Go to [running demos](running-demos.md).
+* One good source of info for "now what?" is the [Windows install
+  doc](Build_on_windows.md).  Follow that, skip the basic instructions
+  and pick up where it starts working with the examples.
+* Just return to [the top-level readme](../README.md) and check
+  options from there.
