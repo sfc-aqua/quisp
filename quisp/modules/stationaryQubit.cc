@@ -151,6 +151,7 @@ void stationaryQubit::initialize()
     qnic_address = par("qnic_address");
     qnic_type = par("qnic_type");
     qnic_index = par("qnic_index");
+    alloc_flag = par("alloc_flag");
     std = par("std");
     setFree(false);
     setFidelity(-1.);
