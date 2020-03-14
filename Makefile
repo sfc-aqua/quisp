@@ -6,7 +6,7 @@
 #
 
 # Name of target to be created (-o option)
-TARGET = kaaki_master_quisp$(D)$(EXE_SUFFIX)
+TARGET = quisp$(D)$(EXE_SUFFIX)
 TARGET_DIR = .
 
 # User interface (uncomment one) (-u option)
@@ -16,7 +16,7 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH = -I/home/kaaki/eigen3 -I.
+INCLUDE_PATH = -I/usr/include/eigen3 -I./quisp -I.
 
 # Additional object and library files to link with
 EXTRA_OBJS =
