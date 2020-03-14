@@ -1,7 +1,12 @@
 # Running the OmNET++ GUI
 
 We are working with the following installation tree.  You are assumed
-to have just come from [doc/INSTALL.md](INSTALL.md).
+to have just come from [doc/INSTALL.md](INSTALL.md).  These
+instructions are geared toward native installation on a UNIX-like
+system (e.g., Mac or Linux).  What is here should be of some use on
+all platforms, but if you are working on Docker, you will need [docker
+install doc](Build_on_docker.md).  If you are on Windows, see the
+[Windows install doc](Build_on_windows.md).
 
 ```
 home/
@@ -93,20 +98,9 @@ home/
 Now you should be able to build the project with `Ctrl+B` or `Project > Build all`
 for example.
 
-## Configure running
+## Running interesting simulations
 
-You need to create a new Launch Configuration. Manage the configurations with
-the `Run > Run Configurations...` menu. Click `OMNet++ Simulation` in the list
-of configuration types, then click the `New launch configuration` button on
-top of the list.
-
-You can configure it with the following parameters:
-
-```
-Name: networks
-Executable: Other: /quisp/quisp
-Working dir: /quisp/networks
-Ini file(s): omnetpp.ini
-```
-
-Then you should be able to run the project and select topologies.
+You should now be ready to simulate quantum networks!  The best source
+of info for "now what?" is the [Windows install
+doc](Build_on_windows.md).  Follow that, skip the basic instructions
+and pick up where it starts working with the examples.
