@@ -103,7 +103,7 @@ $ socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"
 
 ## 4.Start your docker container
 
-Open the file which has Dockerfile (in kaaki_quisp_master)
+Open the file which has Dockerfile (in quisp)
 
 ```zsh 
 $ sh quisp_docker.sh
