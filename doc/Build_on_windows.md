@@ -79,7 +79,7 @@ For more information on Eigen, please visit [this](http://eigen.tuxfamily.org/in
 
 ## 3- Cloning and Building Quisp
 
-To clone and build Quisp, open your terminal (perferapply Cygwin) and type the following commands:
+To clone and build Quisp, open your terminal (preferably Cygwin) and type the following commands:
 ```
 $ git clone https://github.com/sfc-aqua/quisp.git
 ```
