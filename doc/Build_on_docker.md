@@ -6,7 +6,7 @@ This on MacOS Catalina (10.15.3) and Mojave(10.14).
 ## TL;DR
 - Install docker to your host machine
 - Install XQuartz and socat
-- clone kaaki_quisp_master
+- clone quisp
 - `sh docker_build.sh`
 - Somewhere in your host OS, run `socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"`
 - Add your host machine IP address to xterm with `xhost` command.
