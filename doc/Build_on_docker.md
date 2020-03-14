@@ -98,7 +98,7 @@ If you have trouble with using `xhost`, and [see](./xhost_trouble_shooting.md).
 Finally, open your **terminal** again, and
 
 ```zsh
-$ socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"
+$ socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"&
 ```
 
 ## 4.Start your docker container
@@ -172,7 +172,7 @@ Then, you should click the small icon which is pointed by an arrow,
 
 ![](https://i.imgur.com/Up47pD1.png)
 
-and you should put "usr/bin/eigen3" in the blank and Press "OK".
+and you should put "usr/include/eigen3" in the blank and Press "OK".
 
 Then, you will go back to the "Compile" tab, so press "OK"
 
