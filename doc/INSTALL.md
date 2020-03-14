@@ -51,10 +51,10 @@ home/
 
 ## OmNET++
 
-Get the release of OmNET++ 5.2 from [https://omnetpp.org/](their
-website) and uncompress it in the folder of your choice. To remain
-general, this example uncompresses it in a local libraries folder, far
-from the quisp project and from standard installation folders.
+Get the release of OmNET++ 5.2 from [their website](https://omnetpp.org/) and uncompress it in the folder of your
+choice. To remain general, this example uncompresses it in a local
+libraries folder, far from the quisp project and from standard
+installation folders.
 
 ```
 home/
