@@ -8,6 +8,7 @@ simple stationaryQubit
         int qnic_address;//Unique
         int qnic_type;
         int qnic_index;//Not unique
+        bool alloc_flag;
         
         int GOD_entangled_stationaryQubit_address = default(-1);
         int GOD_entangled_node_address = default(-1);
@@ -123,7 +124,7 @@ module QNIC
         bool passive = default(false);
         @display("bgb=612,194");
         int burst_trial_counter = default(0);
-        bool self_alloc_flag;
+        bool self_alloc_flag = false;
         
     gates:
         inout qnic_quantum_port @loose;//One quantum port for every qnic in a node
