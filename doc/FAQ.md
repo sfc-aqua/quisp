@@ -33,7 +33,7 @@ of questions we frequently ask ourselves.
   described in the OMNeT++ documentation.  What are they?
     - A: Probably, you're looking at the quantum-specific parameters.
   At the moment, the best source of information on them is [Takaaki
-  Matsuo's mster's thesis](https://arxiv.org/abs/1908.10758).
+  Matsuo's master's thesis](https://arxiv.org/abs/1908.10758).
 * Q: QuISP is fantastic, but I want Feature X, which doesn't
   seem to be included...?
     - A: Time to start looking at the C++ code!  OMNeT++ is very
