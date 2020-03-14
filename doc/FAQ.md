@@ -21,6 +21,9 @@ of questions we frequently ask ourselves.
     need to run `. setenv` to get some environment variables set
     properly.  n.b.: there are probably multiple `setenv` files
     floating around, and I'm not certain which you need.
+* Q: I tried to start omnetpp, and I got this:
+![setenv error](img/omnetpp-error-no-setenv.png)
+    - A: Same as above.  Do `. setenv` and try again, and it might work.
 * Q: Okay, I got the basic first QuISP demo running.  What the heck
   are these .ini and .ned files, and how do I create my own?
     - A: Yup...  See, of course, [the OMNeT++
