@@ -141,4 +141,4 @@ are specific to QuISP.
 ### Next steps
 
 When you are ready to start contributing, you can start reading the
-code, as [we have done](doc/code-spelunking.md).
+code, as [we have done](code-spelunking.md).

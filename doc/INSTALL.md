@@ -4,13 +4,18 @@ Welcome to the installation instructions for installing QuISP.  In
 theory, QuISP runs anywhere you can get OmNET++ to run, including Mac,
 Windows, and Linux.  The notes here assume you are working on Linux.
 If you prefer to do this inside a container, we support working with
-[https://www.docker.com/](Docker); see the instructions
-[here](./Build_on_docker.md).
+[Docker](https://www.docker.com/); see the instructions
+[here](./Build_on_docker.md).  If you are on Windows, see the
+[Windows install doc](Build_on_windows.md).
 
 This document walks you through downloading QuISP, then installing and
 building the related software.  Importing QuISP itself into OmNET++
 and building and executing it can be done in two distinct ways,
 documented separately (scroll down to the end of this document).
+
+You should assume that reading the instructions, installing from
+source, and getting QuISP to run will take you two to four hours the
+first time.
 
 ## Notation
 
@@ -31,7 +36,7 @@ You can get the source for quisp and put it pretty much anywhere you want.
 
 ```sh
 /home λ mkdir projects && cd projects
-/home/projects λ git clone git@bitbucket.org:sfc-aqua/kaaki_master_quisp.git quisp
+/home/projects λ git clone https://github.com/sfc-aqua/quisp.git
 Cloning into 'quisp'...
 remote: Counting objects: 1222, done.
 remote: Compressing objects: 100% (1006/1006), done.

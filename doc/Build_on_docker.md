@@ -6,7 +6,7 @@ This on MacOS Catalina (10.15.3) and Mojave(10.14).
 ## TL;DR
 - Install docker to your host machine
 - Install XQuartz and socat
-- clone kaaki_quisp_master
+- clone quisp
 - `sh docker_build.sh`
 - Somewhere in your host OS, run `socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"`
 - Add your host machine IP address to xterm with `xhost` command.
@@ -58,7 +58,7 @@ Next, let's build the docker container on your Mac.
 ***!!!!!<CHANGE WHEN THIS BECOME OSS>***
 ```zsh
 $ git clone https://github.com/sfc-aqua/quisp.git
-$ cd kaaki_master_quisp
+$ cd quisp
 $ sh docker_build.sh
 ```
 Hopefully, you can build your docker container successfully.
@@ -98,12 +98,12 @@ If you have trouble with using `xhost`, and [see](./xhost_trouble_shooting.md).
 Finally, open your **terminal** again, and
 
 ```zsh
-$ socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"
+$ socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"&
 ```
 
 ## 4.Start your docker container
 
-Open the file which has Dockerfile (in kaaki_quisp_master)
+Open the file which has Dockerfile (in quisp)
 
 ```zsh 
 $ sh quisp_docker.sh
@@ -172,7 +172,7 @@ Then, you should click the small icon which is pointed by an arrow,
 
 ![](https://i.imgur.com/Up47pD1.png)
 
-and you should put "usr/bin/eigen3" in the blank and Press "OK".
+and you should put "usr/include/eigen3" in the blank and Press "OK".
 
 Then, you will go back to the "Compile" tab, so press "OK"
 

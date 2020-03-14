@@ -21,6 +21,9 @@ of questions we frequently ask ourselves.
     need to run `. setenv` to get some environment variables set
     properly.  n.b.: there are probably multiple `setenv` files
     floating around, and I'm not certain which you need.
+* Q: I tried to start omnetpp, and I got this:
+![setenv error](img/omnetpp-error-no-setenv.png)
+    - A: Same as above.  Do `. setenv` and try again, and it might work.
 * Q: Okay, I got the basic first QuISP demo running.  What the heck
   are these .ini and .ned files, and how do I create my own?
     - A: Yup...  See, of course, [the OMNeT++
@@ -30,7 +33,7 @@ of questions we frequently ask ourselves.
   described in the OMNeT++ documentation.  What are they?
     - A: Probably, you're looking at the quantum-specific parameters.
   At the moment, the best source of information on them is [Takaaki
-  Matsuo's mster's thesis](https://arxiv.org/abs/1908.10758).
+  Matsuo's master's thesis](https://arxiv.org/abs/1908.10758).
 * Q: QuISP is fantastic, but I want Feature X, which doesn't
   seem to be included...?
     - A: Time to start looking at the C++ code!  OMNeT++ is very
