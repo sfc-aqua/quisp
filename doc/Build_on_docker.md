@@ -57,7 +57,7 @@ Next, let's build the docker container on your Mac.
 (This might take a lot of time. Probably, about 15 min)
 ***!!!!!<CHANGE WHEN THIS BECOME OSS>***
 ```zsh
-$ git clone https://<username>@bitbucket.org/sfc-aqua/kaaki_master_quisp.git
+$ git clone https://github.com/sfc-aqua/quisp.git
 $ cd kaaki_master_quisp
 $ sh docker_build.sh
 ```
@@ -155,7 +155,7 @@ This is what the "Properties" page looks like. Next, you should click the "Makem
 ![](https://i.imgur.com/2njDPBi.png)
 
 
-Then, you have to click ①~③ in the following image.
+Then, you have to click \UTF{2460}~\UTF{2462} in the following image.
 
 ![](https://i.imgur.com/Zwqql8b.png)
 
