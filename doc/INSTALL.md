@@ -31,7 +31,7 @@ You can get the source for quisp and put it pretty much anywhere you want.
 
 ```sh
 /home λ mkdir projects && cd projects
-/home/projects λ git clone git@bitbucket.org:sfc-aqua/kaaki_master_quisp.git quisp
+/home/projects λ git clone https://github.com/sfc-aqua/quisp.git
 Cloning into 'quisp'...
 remote: Counting objects: 1222, done.
 remote: Compressing objects: 100% (1006/1006), done.
