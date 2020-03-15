@@ -12,7 +12,7 @@ home/
 │       └── quisp/
 └── .local/
     └── lib/
-        ├── omnetpp-5.2/
+        ├── omnetpp-5.6.1/
         │   ├── setenv*
         │   └── bin/
         │       └── omnetpp*
@@ -43,8 +43,8 @@ If you source the `setenv` file of OmNET++ before, the quisp script will detect
 it and find OmNET++ in the PATH variable.
 
 ```sh
-/home/.local/lib/omnetpp-5.2 λ source setenv && cd /home/projects/quisp
-/home/.local/lib/omnetpp-5.2
+/home/.local/lib/omnetpp-5.6.1 λ source setenv && cd /home/projects/quisp
+/home/.local/lib/omnetpp-5.6.1
 /home/projects/quisp λ source setenv
 (quisp) /home/projects/quisp λ echo $VIRTUAL_ENV
 quisp
@@ -57,7 +57,7 @@ folder, the `setenv` script will find it and you will not need to setup the
 OmNET++ environment yourself.
 
 ```sh
-/home/projects λ ln -s /home/.local/lib/omnetpp-5.2 omnetpp
+/home/projects λ ln -s /home/.local/lib/omnetpp-5.6.1 omnetpp
 /home/projects λ cd quisp
 /home/projects/quisp λ source setenv
 (quisp) /home/projects/quisp λ echo $VIRTUAL_ENV
@@ -118,7 +118,7 @@ Loading NED files from .:  13
 
 Loading images from './bitmaps': *: 0
 Loading images from './images': *: 0
-Loading images from '/tmp/tmp.home/home/.local/lib/omnetpp-5.2/images': *: 0  abstract/*: 90  background/*: 4  block/*: 320  device/*: 195  logo/*: 1  maps/*: 9  misc/*: 70  msg/*: 55  old/*:
+Loading images from '/tmp/tmp.home/home/.local/lib/omnetpp-5.6.1/images': *: 0  abstract/*: 90  background/*: 4  block/*: 320  device/*: 195  logo/*: 1  maps/*: 9  misc/*: 70  msg/*: 55  old/*:
 111  status/*: 28
 
 [New Thread 0x7fffe7402700 (LWP 2420)]

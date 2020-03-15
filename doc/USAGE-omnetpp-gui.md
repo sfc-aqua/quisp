@@ -17,7 +17,7 @@ home/
 │       └── quisp/
 └── .local/
     └── lib/
-        ├── omnetpp-5.2/
+        ├── omnetpp-5.6.1/
         │   ├── setenv*
         │   └── bin/
         │       └── omnetpp*
@@ -27,9 +27,9 @@ home/
 To run the OmNET++ GUI, you need to use their `setenv` script.
 
 ```
-/home/.local/lib/omnetpp-5.2 λ source setenv
-/home/.local/lib/omnetpp-5.2
-/home/.local/lib/omnetpp-5.2 λ omnetpp
+/home/.local/lib/omnetpp-5.6.1 λ source setenv
+/home/.local/lib/omnetpp-5.6.1
+/home/.local/lib/omnetpp-5.6.1 λ omnetpp
 Starting the OMNeT++ IDE...
 ```
 
