@@ -80,7 +80,7 @@ void Application::initialize()
 	// one connection, at random.
         if(EndToEndConnection){//hard-coded for now
             int endnode_destination_address = getOneRandomEndNodeAddress();
-            EV<<"Connection setup request will be sent from"<<myAddress<<" to "<<endnode_destination_address<<"\n";
+            EV<<"Connection setup request will be sent from "<<myAddress<<" to "<<endnode_destination_address<<"\n";
             ConnectionSetupRequest *pk = new ConnectionSetupRequest();
             pk->setActual_srcAddr(myAddress);
             pk->setActual_destAddr(endnode_destination_address);
