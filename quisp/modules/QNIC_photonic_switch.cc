@@ -35,6 +35,9 @@ class QNIC_photonic_switch : public cSimpleModule
         virtual void checkQubitNumber();
         virtual void checkAndsetNeighborAddress();
         virtual cModule* getQNode();
+        virtual void Allocate();
+        virtual void Deallocate();
+        virtual bool isAllocated();
 
     public:
         QNIC_photonic_switch();
@@ -53,6 +56,7 @@ void QNIC_photonic_switch::initialize()
     //Check wether this QNIC's output is connected to a single neighbor for debugging purpose.
     checkGateNumber();
     checkAndsetNeighborAddress();
+    par("is_allocated") = false;
 }
 
 void QNIC_photonic_switch::checkAndsetNeighborAddress(){
@@ -111,6 +115,18 @@ cModule* QNIC_photonic_switch::getQNode(){
 
 void QNIC_photonic_switch::checkQubitNumber(){
 
+}
+
+void QNIC_photonic_switch::Allocate(){
+    par("is_allocated") = true;
+}
+
+void QNIC_photonic_switch::Deallocate(){
+    par("is_allocated") = false;
+}
+
+bool QNIC_photonic_switch::isAllocated(){
+    return par("is_allocated");
 }
 
 } // namespace modules
