@@ -35,13 +35,13 @@ class QNIC_photonic_switch : public cSimpleModule
         virtual void checkQubitNumber();
         virtual void checkAndsetNeighborAddress();
         virtual cModule* getQNode();
-        virtual void Allocate();
-        virtual void Deallocate();
-        virtual bool isAllocated();
 
     public:
         QNIC_photonic_switch();
         int getAddress();
+        virtual void Allocate();
+        virtual void Deallocate();
+        virtual bool isAllocated();
 };
 
 Define_Module(QNIC_photonic_switch);
