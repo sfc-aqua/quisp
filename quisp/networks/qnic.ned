@@ -8,7 +8,6 @@ simple stationaryQubit
         int qnic_address;//Unique
         int qnic_type;
         int qnic_index;//Not unique
-        bool alloc_flag;
         
         int GOD_entangled_stationaryQubit_address = default(-1);
         int GOD_entangled_node_address = default(-1);
@@ -124,7 +123,6 @@ module QNIC
         bool passive = default(false);
         @display("bgb=612,194");
         int burst_trial_counter = default(0);
-        bool self_alloc_flag = false;
         
     gates:
         inout qnic_quantum_port @loose;//One quantum port for every qnic in a node
@@ -138,7 +136,6 @@ module QNIC
             qnic_address = self_qnic_address;
             qnic_index = self_qnic_index;
             qnic_type = self_qnic_type;
-            alloc_flag = self_alloc_flag;
             xPosition_Graphics = 70 + 65*index;  // use submodule index to generate different IDs
             //@display("p=$xPosition_Graphics,40,,circle");
             @display("t=Id $stationaryQubit_address;i=block/circle,blue;"); // modify display string
