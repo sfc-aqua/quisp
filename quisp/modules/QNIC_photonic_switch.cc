@@ -56,7 +56,7 @@ void QNIC_photonic_switch::initialize()
     //Check wether this QNIC's output is connected to a single neighbor for debugging purpose.
     checkGateNumber();
     checkAndsetNeighborAddress();
-    getParentModule()->par("is_allocated") = false;
+    Deallocate();
 }
 
 void QNIC_photonic_switch::checkAndsetNeighborAddress(){
@@ -119,10 +119,12 @@ void QNIC_photonic_switch::checkQubitNumber(){
 
 void QNIC_photonic_switch::Allocate(){
     getParentModule()->par("is_allocated") = true;
+    EV<<"QNIC is allocated!!\n";
 }
 
 void QNIC_photonic_switch::Deallocate(){
     getParentModule()->par("is_allocated") = false;
+    EV<<"QNIC is deallocated!!\n";
 }
 
 bool QNIC_photonic_switch::isAllocated(){
