@@ -28,7 +28,7 @@ namespace rules {
 
 class Action {
   public:
-    std::map<int,stationaryQubit*> *rule_resources;
+    std::multimap<int,stationaryQubit*> *rule_resources;
     unsigned long ruleset_id;
     int rule_id;//Used to make the lock_id unique, together with purification_count.
     //virtual cPacket* run(cModule *re, qnicResources *resources) = 0;

@@ -179,10 +179,10 @@ void RuleEngine::handleMessage(cMessage *msg){
            //std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
            process p;
            p.ownner_addr = pk->getRuleSet()->owner;
-           p.working_partner_addr = pk->getRuleSet()->entangled_partner;
+        //    p.working_partner_addr = pk->getRuleSet()->entangled_partner;
            p.Rs = pk->getRuleSet();
            int process_id = rp.size();//This is temporary because it will not be unique when processes have been deleted.
-           std::cout<<"Ruleset arrived id="<<p.Rs->ruleset_id<<" partner node="<<p.working_partner_addr<<" node["<<parentAddress<<"\n";
+        //    std::cout<<"Ruleset arrived id="<<p.Rs->ruleset_id<<" partner node="<<p.working_partner_addr<<" node["<<parentAddress<<"\n";
            std::cout<<"Process size is ...."<<p.Rs->size()<<" node["<<parentAddress<<"\n";
            //todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
            //ResourceAllocation();
@@ -503,28 +503,32 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int
             next_it = it; ++next_it;
             if(it->second.Rs->ruleset_id == ruleset_id){//Find the corresponding ruleset.
                 RuleSet* process = it->second.Rs;//One Process. From top to bottom.
-                for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){//Traverse through rules
-                    if((*rule)->rule_index == rule_id){//Find the corresponding rule.
-                        for (auto qubit=(*rule)->resources.begin(); qubit!=(*rule)->resources.end(); ++qubit) {
-                            if(qubit->second->action_index == index){
-                                //Correct resource found! Need to unlock and stage up the resource to the next rule.
-                                qubit->second->Unlock();
-                                //std::cout<<"[Upgrade Unlock] "<<qubit->second<<" in node["<<qubit->second->node_address<<"]\n";
-                                stationaryQubit *q = qubit->second;
-                                (*rule)->resources.erase(qubit);//Erase this from resource list
-                                rule++;
-                                if(rule==end){
-                                    error("Rule came to end after operation (e.g. purification) success");
+                int partner_size = process->entangled_partner.size();
+                for (int i=0; i<partner_size; i++){
+                    int address_entangled_with = process->entangled_partner[i];
+                    for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){//Traverse through rules
+                        if((*rule)->rule_index == rule_id){//Find the corresponding rule.
+                            for (auto qubit=(*rule)->resources.begin(); qubit!=(*rule)->resources.end(); ++qubit) {
+                                if(qubit->second->action_index == index){
+                                    //Correct resource found! Need to unlock and stage up the resource to the next rule.
+                                    qubit->second->Unlock();
+                                    //std::cout<<"[Upgrade Unlock] "<<qubit->second<<" in node["<<qubit->second->node_address<<"]\n";
+                                    stationaryQubit *q = qubit->second;
+                                    (*rule)->resources.erase(qubit);//Erase this from resource list
+                                    rule++;
+                                    if(rule==end){
+                                        error("Rule came to end after operation (e.g. purification) success");
+                                    }
+                                    //int rsc_index = (*rule)->resources.size();
+                                    //(*rule)->resources.insert(std::make_pair(rsc_index, q));
+                                    (*rule)->addResource(address_entangled_with, q);
+                                    ok = true;
+                                    return;
                                 }
-                                //int rsc_index = (*rule)->resources.size();
-                                //(*rule)->resources.insert(std::make_pair(rsc_index, q));
-                                (*rule)->addResource(q);
-                                ok = true;
-                                return;
                             }
-                        }
                     }
                 }
+            }
             }
     }
     if(!ok){
@@ -997,55 +1001,54 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
         next_it = it; ++next_it;
         RuleSet* process = it->second.Rs;//One Process. From top to bottom.
         unsigned long ruleset_id = process->ruleset_id;
-        int resource_entangled_with_address = process->entangled_partner;
+        int partner_size = process->entangled_partner.size();
+        std::vector<Rule*> rule_ptr = process->getRule_ptr();
+        for (int i=0; i<partner_size;i++){
+            int resource_entangled_with_address = process->entangled_partner[i];
 
-        if(process->empty()){
-            error("RuleSet with no Rule found. Probably not what you want!");
-        }
+            if(process->empty()){
+                error("RuleSet with no Rule found. Probably not what you want!");
+            }
 
-
-
-        int assigned = 0;
-        for (auto it =  allResources[qnic_type][qnic_index].cbegin(), next_it =  allResources[qnic_type][qnic_index].cbegin(); it !=  allResources[qnic_type][qnic_index].cend(); it = next_it){
-             next_it = it; ++next_it;
-             if(!it->second->isAllocated() && resource_entangled_with_address == it->first){
-                 //Free resource that has not been assigned to any ruleset.
-                 //int index = process->front()->resources.size();//Bad idea. Could result in duplicate index when rscs are consumed.
-                 //int index = process->front()->number_of_resources_allocated_in_total;
-                 int num_rsc_bf = process->front()->resources.size();
-
-                 /*if(parentAddress == 1 || parentAddress == 2){
-                     std::cout<<"size = "<<process->front()->resources.size()<<"\n";
-                 for (auto it=process->front()->resources.begin(); it!=process->front()->resources.end(); ++it) {
-                     std::cout<<"node["<<parentAddress<<"]"<<ruleset_id<< "{resource}"<<it->second<<"\n";
-                 }
-                 }*/
-				 if(it->second->entangled_partner==nullptr && it->second->Density_Matrix_Collapsed(0,0).real() ==-111 && !it->second->no_density_matrix_nullptr_entangled_partner_ok){
-						//std::cout<<it->second<<", node["<<it->second->node_address<<"\n";
-						error("Fresh ebit wrong");
-				
-				}
-                 process->front()->addResource(it->second);
-                 //process->front()->resources.insert(std::make_pair(index,it->second));//Assign resource to the 1st Rule.
-                 //process->front()->number_of_resources_allocated_in_total++;
-                 int num_rsc_af = process->front()->resources.size();
-                 if(num_rsc_af != num_rsc_bf+1){
-                     error("Resource is not added properly. This happens when an element in the map has the same key as the one that needed to be added.");
-                 }
-                 /*if(parentAddress == 1 || parentAddress == 2){
-                     std::cout<<"node["<<parentAddress<<"]"<<ruleset_id<< "||||||||||| Added resource "<<it->second<<"\n";
-                 }*/
-                 //int rule_id = process->front()->rule_index;
-                 //it->second->Lock(ruleset_id, rule_id);
-                 /*if(parentAddress == 1 || parentAddress == 2){
-                     std::cout<<"size = "<<process->front()->resources.size()<<"\n";
-                 for (auto it=process->front()->resources.begin(); it!=process->front()->resources.end(); ++it) {
-                                    std::cout<<"node["<<parentAddress<<"]"<<ruleset_id<< "|resource|"<<it->second<<"\n";
-                  }
-                 }*/
-                 it->second->Allocate();
-                 assigned++;
-             }
+            int assigned = 0;
+            for (auto it =  allResources[qnic_type][qnic_index].cbegin(), next_it =  allResources[qnic_type][qnic_index].cbegin(); it !=  allResources[qnic_type][qnic_index].cend(); it = next_it){
+                next_it = it; ++next_it;
+                if(!it->second->isAllocated() && resource_entangled_with_address == it->first){
+                    
+                    //Free resource that has not been assigned to any ruleset.
+                    //int index = process->front()->resources.size();//Bad idea. Could result in duplicate index when rscs are consumed.
+                    //int index = process->front()->number_of_resources_allocated_in_total;
+                    int num_rsc_bf = process->front()->resources.size();
+                    if(it->second->entangled_partner==nullptr && it->second->Density_Matrix_Collapsed(0,0).real() ==-111 && !it->second->no_density_matrix_nullptr_entangled_partner_ok){
+                            //std::cout<<it->second<<", node["<<it->second->node_address<<"\n";
+                            error("Fresh ebit wrong");
+                    
+                    }
+                    
+                    if (rule_ptr.size() != partner_size){
+                        process->front()->addResource(resource_entangled_with_address, it->second);
+                    }else{
+                        rule_ptr.at(i)->addResource(resource_entangled_with_address, it->second);
+                        //rule
+                    }
+                    
+                    
+                    int num_rsc_af = process->front()->resources.size();
+                    if(num_rsc_af != num_rsc_bf+1){
+                        error("Resource is not added properly. This happens when an element in the map has the same key as the one that needed to be added.");
+                    }
+                    //int rule_id = process->front()->rule_index;
+                    //it->second->Lock(ruleset_id, rule_id);
+                    /*if(parentAddress == 1 || parentAddress == 2){
+                        std::cout<<"size = "<<process->front()->resources.size()<<"\n";
+                    for (auto it=process->front()->resources.begin(); it!=process->front()->resources.end(); ++it) {
+                                        std::cout<<"node["<<parentAddress<<"]"<<ruleset_id<< "|resource|"<<it->second<<"\n";
+                    }
+                    }*/
+                    it->second->Allocate();
+                    assigned++;
+                }
+            }
         }
         //std::cout<<parentAddress<<"Assigned = "<<assigned<<"\n";
     }

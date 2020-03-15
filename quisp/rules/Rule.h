@@ -29,13 +29,13 @@ class Rule {
         int rule_index;
         pCondition condition;
         pAction action;
-        std::map<int,stationaryQubit*> resources;
+        std::multimap<int,stationaryQubit*> resources;
         int mutable number_of_resources_allocated_in_total = 0;
         //std::unique_ptr<Rule> next_rule;
         Rule() {};
         Rule(int rs_index, int r_index) {ruleset_id = rs_index; rule_index = r_index;};
 
-        void addResource(stationaryQubit *qubit);
+        void addResource(int address_entangled_with,stationaryQubit *qubit);
         void setCondition (Condition * c);
         void setAction (Action * a);
         void eraseResource(stationaryQubit * qubit){
