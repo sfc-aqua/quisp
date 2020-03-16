@@ -60,5 +60,7 @@ For more discussion of the Quantum Recursive Network Architecture, our
 proposed architecture for the entire Quantum Internet, see [Recursive
 Quantum Repeater Networks](https://arxiv.org/abs/1105.1238).
 
+For references on synthetic network topologies, see [Background on topology creation](Background%20on%20topology%20creation.md).
+
 *TODO*: add a reference on match-and-action software defined
  networking (SDN).
