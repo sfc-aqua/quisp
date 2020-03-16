@@ -8,7 +8,9 @@ beam splitters separate entities in the simulator.
 
 ## Photon Number States ##
 
-When you see  $$|0\rangle$$, $$|1\rangle$$, $$|2\rangle$$, etc. in a
+When you see  <img src="https://latex.codecogs.com/gif.latex?$$|0\rangle$$" title="$$|0\rangle$$" />, 
+<img src="https://latex.codecogs.com/gif.latex?$$|1\rangle$$" title="$$|1\rangle$$" />, 
+<img src="https://latex.codecogs.com/gif.latex?$$|2\rangle$$" title="$$|2\rangle$$" />, etc. in a
 paper on quantum optics, be aware that it likely represents a photon
 number state, also called Fock state, I believe.  The 0, 1, 2
 represents the number of photons in a particular place and time
@@ -25,7 +27,7 @@ See:
 
 ## Polarization States ##
 
-When you see $$|H\rangle$$ and $$|V\rangle$$ states, they refer to the
+When you see <img src="https://latex.codecogs.com/gif.latex?$$|H\rangle$$" title="$$|H\rangle$$" /> and <img src="https://latex.codecogs.com/gif.latex?$$|V\rangle$$" title="$$|V\rangle$$" /> states, they refer to the
 polarization of a photon.  It's important to realize, though, that
 they represent the polarization of photon in a particular place and at
 a fixed time.  Weihs and Zeilinger refer to it as spin representing an
@@ -36,29 +38,23 @@ after state being a four-basis representation at the two output ports.
 
 Based on Eqs. 1.21 & 1.21 of W&Z, in the basis
 
-$$\left(\begin{matrix}
-a_H \\ b_H \\ a_V \\ b_V
-\end{matrix}\right)$$
+<img src="https://latex.codecogs.com/gif.latex?$$\left(\begin{matrix}&space;a_H&space;\\&space;b_H&space;\\&space;a_V&space;\\&space;b_V&space;\end{matrix}\right)$$" title="$$\left(\begin{matrix} a_H \\ b_H \\ a_V \\ b_V \end{matrix}\right)$$" />
 
 the unitary is
 
-$$\left(\begin{matrix}
-t_H & ir_H & 0 & 0 \\
-ir_H & t_H & 0 & 0 \\
-0 & 0 & t_V & ir_V \\
-0 & 0 & ir_V & t_V
-\end{matrix}\right)$$
+<img src="https://latex.codecogs.com/gif.latex?$$\left(\begin{matrix}&space;t_H&space;&&space;ir_H&space;&&space;0&space;&&space;0&space;\\&space;ir_H&space;&&space;t_H&space;&&space;0&space;&&space;0&space;\\&space;0&space;&&space;0&space;&&space;t_V&space;&&space;ir_V&space;\\&space;0&space;&&space;0&space;&&space;ir_V&space;&&space;t_V&space;\end{matrix}\right)$$" title="$$\left(\begin{matrix} t_H & ir_H & 0 & 0 \\ ir_H & t_H & 0 & 0 \\ 0 & 0 & t_V & ir_V \\ 0 & 0 & ir_V & t_V \end{matrix}\right)$$" />
 
-where $$t$$ is the transmission amplitude and $$r$$ is the reflection
+where <img src="https://latex.codecogs.com/gif.latex?$$t$$" title="$$t$$" /> is the transmission amplitude and 
+$$r$$ is the reflection
 amplitude.
 
 n.b.: I'm not positive that the sign of the terms is actually right;
-there should be a relative phase shift of $$\pi$$ for one term, or
-$$\pm\pi/2$$ for both.  Is that what this actually does?  Satoh and I
-think that this produces $$\pi/2$$ difference in the states.  We don't
+there should be a relative phase shift of <img src="https://latex.codecogs.com/gif.latex?$$\pi$$" title="$$\pi$$" /> for one term, or
+<img src="https://latex.codecogs.com/gif.latex?$$\pm\pi/2$$" title="$$\pm\pi/2$$" /> for both.  Is that what this actually does?  Satoh and I
+think that this produces <img src="https://latex.codecogs.com/gif.latex?$$\pi/2$$" title="$$\pi/2$$" /> difference in the states.  We don't
 quite understand yet.  (Wikipedia says that even for the quantum
 mechanical one, the phase difference between reflected and transmitted
-beams should be $$\pi$$.)
+beams should be <img src="https://latex.codecogs.com/gif.latex?$$\pi$$" title="$$\pi$$" />.)
 
 ## Reconciling with Classical Beam Splitters and Interferometry ##
 
