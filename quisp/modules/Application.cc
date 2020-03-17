@@ -73,9 +73,14 @@ void Application::initialize()
         Addresses_of_other_EndNodes = storeEndNodeAddresses();
 
         //cModule *qnode = getQNode();
-        if(myAddress == 1 && EndToEndConnection){//hard-coded for now
+        // if(myAddress == 1 && EndToEndConnection){//hard-coded for now
+	// 20/3/15: upgrade from "exactly one connection" to
+	// "let's all mambo!"  Each EndNode makes exactly one connection.
+	// that means that some nodes will be receivers of more than
+	// one connection, at random.
+        if(EndToEndConnection){//hard-coded for now
             int endnode_destination_address = getOneRandomEndNodeAddress();
-            EV<<"Connection setup request will be sent from"<<myAddress<<" to "<<endnode_destination_address<<"\n";
+            EV<<"Connection setup request will be sent from "<<myAddress<<" to "<<endnode_destination_address<<"\n";
             ConnectionSetupRequest *pk = new ConnectionSetupRequest();
             pk->setActual_srcAddr(myAddress);
             pk->setActual_destAddr(endnode_destination_address);

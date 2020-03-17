@@ -306,6 +306,7 @@ class stationaryQubit : public cSimpleModule
         int qnic_address;
         int qnic_type;
         int qnic_index;
+
         //@}
         bool locked;
         unsigned long locked_ruleset_id;
