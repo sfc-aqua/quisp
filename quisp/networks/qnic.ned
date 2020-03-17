@@ -8,12 +8,12 @@ simple stationaryQubit
         int qnic_address;//Unique
         int qnic_type;
         int qnic_index;//Not unique
-        
+
         int GOD_entangled_stationaryQubit_address = default(-1);
         int GOD_entangled_node_address = default(-1);
         int GOD_entangled_qnic_address = default(-1);
         int GOD_entangled_qnic_type = default(-1);
-        
+
         int xPosition_Graphics;
         double photon_emitted_at = default(-1);
         double last_updated_at = default(-1);
@@ -21,20 +21,20 @@ simple stationaryQubit
         double std = default(0);
 
         double fidelity = default(-1.0);
-        
+
         bool GOD_Xerror = false;//Physical error on qubit
         bool GOD_Zerror = false;//Physical error on qubit
         bool GOD_EXerror = false;//Physical error on qubit
         bool GOD_REerror = false;//Physical error on qubit
         bool GOD_CMerror = false;//Physical error on qubit
-        
-        
+
+
         double emission_success_probability = default(1);
         double emission_Z_error_rate = default(0);// 1% per shot by default
         double emission_X_error_rate = default(0);
         double emission_Y_error_rate = default(0);
-        
-        
+
+
         double memory_error_rate = default(0);// 10% per μs by default
         double memory_Z_error_ratio = default(1);
         double memory_X_error_ratio = default(1);
@@ -42,36 +42,36 @@ simple stationaryQubit
         double memory_energy_excitation_ratio = default(1);
         double memory_energy_relaxation_ratio = default(1);
         double memory_completely_mixed_ratio = default(1);
-		
-		
+
+
 		double memory_Z_error_rate = default(0);
         double memory_X_error_rate = default(0);
         double memory_Y_error_rate = default(0);
         double memory_energy_excitation_rate = default(0);
         double memory_energy_relaxation_rate = default(0);
         double memory_completely_mixed_rate = default(0);
-		        
+
 
         double Hgate_error_rate = default(0);
         double Hgate_X_error_ratio = default(1);
         double Hgate_Y_error_ratio = default(1);
         double Hgate_Z_error_ratio = default(1);
-        
+
         double Measurement_error_rate = default(0);
         double Measurement_X_error_ratio = default(1);
         double Measurement_Y_error_ratio = default(1);
         double Measurement_Z_error_ratio = default(1);
-        
+
         double Xgate_error_rate = default(0);
         double Xgate_X_error_ratio = default(1);
         double Xgate_Y_error_ratio = default(1);
         double Xgate_Z_error_ratio = default(1);
-        
+
         double Zgate_error_rate = default(0);
         double Zgate_X_error_ratio = default(1);
         double Zgate_Y_error_ratio = default(1);
         double Zgate_Z_error_ratio = default(1);
-        
+
         double CNOTgate_error_rate = default(0);
         double CNOTgate_IZ_error_ratio = default(1);
         double CNOTgate_ZI_error_ratio = default(1);
@@ -82,12 +82,12 @@ simple stationaryQubit
         double CNOTgate_IY_error_ratio = default(1);
         double CNOTgate_YI_error_ratio = default(1);
         double CNOTgate_YY_error_ratio = default(1);
-        
+
         //int ruleset_id = default(-1);
         //int rule_id = default(-1);
         //int action_index = default(-1);
-        
-        
+
+
     gates:
         inout tolens_quantum_port;
 }
@@ -123,7 +123,9 @@ module QNIC
         bool passive = default(false);
         @display("bgb=612,194");
         int burst_trial_counter = default(0);
-        
+
+        bool is_allocated = default(false);
+
     gates:
         inout qnic_quantum_port @loose;//One quantum port for every qnic in a node
         output toParentRouter @loose;//If not used, this still needs to be connected somewhere!!

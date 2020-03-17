@@ -32,8 +32,18 @@ class ConnectionManager : public cSimpleModule
         HardwareMonitor *hardwaremonitor;
     protected:
         virtual void initialize() override;
+
         virtual void handleMessage(cMessage *msg) override;
-        virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, int right_node);
+        virtual void responder_alloc_req_handler(ConnectionSetupRequest *pk);
+        virtual void intermediate_alloc_req_handler(ConnectionSetupRequest *pk);
+        virtual void initiator_alloc_res_handler(ConnectionSetupResponse *pk);
+        virtual void intermediate_alloc_res_handler(ConnectionSetupResponse *pk);
+      
+        virtual void initiator_reject_req_handler(RejectConnectionSetupRequest *pk);
+        virtual void intermediate_reject_req_handler(RejectConnectionSetupRequest *pk);
+
+        virtual RuleSet **generate_RuleSet(int *, int*, int*);
+        virtual RuleSet *generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, int right_node);
 
         virtual unsigned long createUniqueId();
 };
@@ -99,11 +109,48 @@ static int fill_path_division (int * path /**< Nodes on the connection setup pat
 void ConnectionManager::handleMessage(cMessage *msg){
 
     if(dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
-       ConnectionSetupRequest *pk = check_and_cast<ConnectionSetupRequest *>(msg);
+        ConnectionSetupRequest *pk = check_and_cast<ConnectionSetupRequest *>(msg);
+        int actual_dst = pk->getActual_destAddr();
 
-       int actual_dst = pk->getActual_destAddr();
+        if(actual_dst == myAddress){
+           // terminate relaying Request & start relaying ConnectionSetupResponse
+           responder_alloc_req_handler(pk);
+        }else{
+           // relay Request to the next node
+           // OR
+           // stop relaying and generate RejectConnectionSetupRequest
+           intermediate_alloc_req_handler(pk);
 
-       if(actual_dst == myAddress){
+        }
+    }else if(dynamic_cast<ConnectionSetupResponse *>(msg)!= nullptr){
+        ConnectionSetupResponse *pk = check_and_cast<ConnectionSetupResponse *>(msg);
+        int actual_src = pk->getActual_srcAddr();
+
+        if(actual_src == myAddress){
+            // terminate relaying
+            initiator_alloc_res_handler(pk);
+        }else{
+            // relay Response
+            intermediate_alloc_res_handler(pk);
+        }
+        send(pk);
+    }else if(dynamic_cast<RejectConnectionSetupRequest *>(msg)!= nullptr){
+        RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
+        int actual_src = pk->getActual_srcAddr();
+
+        if(actual_src == myAddress){
+          // terminate relaying
+          initiator_reject_req_handler(pk);
+        }else{
+          // relay RejectConnectionSetupRequest 
+          intermediate_reject_req_handler(pk);
+        }
+    }
+    delete msg;
+    return;
+}
+
+void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
            // FIXME: is the destination in the stack? Should I add it manually in the end?
 
            //In Destination node
@@ -156,7 +203,6 @@ void ConnectionManager::handleMessage(cMessage *msg){
                EV<<"\nThis is one of the stacked link costs....."<<pk->getStack_of_linkCosts(i)<<"\n";
            }
            */
-
            //Change int to RuleSet*
            std::map<std::string, int> dictionary = {};
            for (int i=0; i<divisions; i++) {
@@ -200,7 +246,6 @@ void ConnectionManager::handleMessage(cMessage *msg){
              // ...
 //#endif
            }
-
            //Packet returning Rule sets
            //Rule set includes Objects composed of clauses and actions.
            //Clauses and actions have functions, like check and
@@ -211,51 +256,74 @@ void ConnectionManager::handleMessage(cMessage *msg){
             * Create the response
             * Full 1yr email-support (maybe tele-communication too).
             * Psychological support. Financial support.
-            */
-           error("Yay!");
-           //error("Here");
-           delete msg;
-           return;
-       }else{
-           int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst);
-           if(local_qnic_address_to_actual_dst==-1){//is not found
-               error("QNIC to destination not found");
-           }else{
-               //Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
-               EV<<"\n"<<local_qnic_address_to_actual_dst<<"|||||||||||||||||||||||||||||||||||||||||||||||||\n";
-               connection_setup_inf dst_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
-               EV << "DST_INF " << dst_inf.qnic.type << "," << dst_inf.qnic.index << "\n";
-               connection_setup_inf src_inf = hardwaremonitor->return_setupInf(pk->getSrcAddr());
-               EV << "SRC_INF " << src_inf.qnic.type << "," << src_inf.qnic.index << "\n";
-               int num_accumulated_nodes = pk->getStack_of_QNodeIndexesArraySize();
-               int num_accumulated_costs = pk->getStack_of_linkCostsArraySize();
-               int num_accumulated_pair_info = pk->getStack_of_QNICsArraySize();
+            */           
+  ConnectionSetupResponse *res_pk = check_and_cast<ConnectionSetupResponse *>(msg);
+        
+  res_pk->setDestAddr(src_inf);
+  res_pk->setSrcAddr(myAddress);
+  res_pk->setStack_of_QNICsArraySize(num_rulesets);
+  QNIC_id_pair pair_info = {
+      .fst = src_inf.qnic,
+      .snd = dst_inf.qnic
+  };
+  res_pk->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
 
-               //Update information and send it to the next Qnode.
-               pk->setDestAddr(dst_inf.neighbor_address);
-               pk->setSrcAddr(myAddress);
-               pk->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes+1);
-               pk->setStack_of_linkCostsArraySize(num_accumulated_costs+1);
-               pk->setStack_of_QNodeIndexes(num_accumulated_nodes, myAddress);
-               pk->setStack_of_linkCosts(num_accumulated_costs, dst_inf.quantum_link_cost);
-               pk->setStack_of_QNICsArraySize(num_accumulated_pair_info+1);
-               QNIC_id_pair pair_info = {
-                   .fst = src_inf.qnic,
-                   .snd = dst_inf.qnic
-               };
-               pk->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
-               pair_info = pk->getStack_of_QNICs(num_accumulated_pair_info);
-               EV << "PAIR_INF " << pair_info.fst.type << "," << pair_info.fst.index << " : " << pair_info.snd.type << "," << pair_info.snd.index << "\n";
+  res_pk->setStack_of_RuleSets()
+  
+  pair_info = res_pk->getStack_of_QNICs(num_accumulated_pair_info);
+  EV << "PAIR_INF " << pair_info.fst.type << "," << pair_info.fst.index << " : " << pair_info.snd.type << "," << pair_info.snd.index << "\n";
 
-
-               send(pk,"RouterPort$o");
-
-           }
-       }
-
-    }
 }
 
+RuleSet **ConnectionManager::generate_RuleSet( int *stack_of_QNodeIndexes,
+                                          int *stack_of_linkCosts,
+                                          QNIC_pair_info *stack_of_QNICs){
+}
+
+void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *pk){
+  int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst);
+  if(local_qnic_address_to_actual_dst==-1){//is not found
+      error("QNIC to destination not found");
+  }else{
+      // Use the QNIC address to find the next hop QNode,
+      // by asking the Hardware Monitor (neighbor table).
+      EV<<"\n"<<local_qnic_address_to_actual_dst<<"|||||||||||||||||||||||||||||||||||||||||||||||||\n";
+      connection_setup_inf dst_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
+      EV << "DST_INF " << dst_inf.qnic.type << "," << dst_inf.qnic.index << "\n";
+      connection_setup_inf src_inf = hardwaremonitor->return_setupInf(pk->getSrcAddr());
+      EV << "SRC_INF " << src_inf.qnic.type << "," << src_inf.qnic.index << "\n";
+      int num_accumulated_nodes = pk->getStack_of_QNodeIndexesArraySize();
+      int num_accumulated_costs = pk->getStack_of_linkCostsArraySize();
+      int num_accumulated_pair_info = pk->getStack_of_QNICsArraySize();
+
+      //Update information and send it to the next Qnode.
+      pk->setDestAddr(dst_inf.neighbor_address);
+      pk->setSrcAddr(myAddress);
+      pk->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes+1);
+      pk->setStack_of_linkCostsArraySize(num_accumulated_costs+1);
+      pk->setStack_of_QNodeIndexes(num_accumulated_nodes, myAddress);
+      pk->setStack_of_linkCosts(num_accumulated_costs, dst_inf.quantum_link_cost);
+      pk->setStack_of_QNICsArraySize(num_accumulated_pair_info+1);
+      QNIC_id_pair pair_info = {
+          .fst = src_inf.qnic,
+          .snd = dst_inf.qnic
+      };
+      pk->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
+      pair_info = pk->getStack_of_QNICs(num_accumulated_pair_info);
+      EV << "PAIR_INF " << pair_info.fst.type << "," << pair_info.fst.index << " : " << pair_info.snd.type << "," << pair_info.snd.index << "\n";
+
+
+      send(pk,"RouterPort$o");
+  }
+}
+
+void ConnectionManager::responder_reject_req_handler(RejectConnectionSetupRequest *pk){
+
+}
+
+void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupRequest *pk){
+
+}
 
 RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, int right_node){
     /*int rule_index = 0;

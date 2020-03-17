@@ -1,10 +1,10 @@
-cplusplus {{ 
+cplusplus {{
     #include <vector>
     #include <unsupported/Eigen/MatrixFunctions>
 
 	using namespace omnetpp;
-    typedef cModule *GOD_statQubitPtr; 
-    
+    typedef cModule *GOD_statQubitPtr;
+
 }} // C++ typedef
 class noncobject GOD_statQubitPtr; // For tracking the truely entangled ones (Only God knows!). The system may think the qubit is entangled but it may not (darkcount)!
 
@@ -44,9 +44,21 @@ packet ConnectionSetupRequest extends header
     QNIC_pair_info stack_of_QNICs[];
 }
 
+packet RejectConnectionSetupRequest extends header
+{
+    int actual_destAddr;
+    int actual_srcAddr;
+
+    int stack_of_QNodeIndexes[];
+    int stack_of_linkCosts[];
+
+    QNIC_pair_info stack_of_QNICs[];
+}
+
+
 cplusplus {{
     typedef quisp::rules::RuleSet * RuleSetField;
-   
+
 }}
 class noncobject RuleSetField;
 
@@ -214,4 +226,3 @@ packet StopEmitting extends header{
     int qnic_address;
 
 }
-
