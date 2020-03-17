@@ -94,8 +94,6 @@ void RuleEngine::handleMessage(cMessage *msg){
             realtime_controller->EmitPhoton(pk->getQnic_index(),pk->getQubit_index(),(QNIC_type) pk->getQnic_type(),pk->getKind());
         }
 
-
-
         else if(dynamic_cast<CombinedBSAresults *>(msg) != nullptr){
             //First, keep all the qubits that were successfully entangled, and reinitialize the failed ones.
             CombinedBSAresults *pk_result = check_and_cast<CombinedBSAresults *>(msg);
@@ -108,7 +106,6 @@ void RuleEngine::handleMessage(cMessage *msg){
             //Updates free/busy of qubits, and also adds successfully entangled qubits as resources.
             freeFailedQubits_and_AddAsResource(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index(), pk_result);
             clearTrackerTable(pk->getSrcAddr(), pk->getInternal_qnic_address());//Clear tracker every end of burst trial. This keeps which qubit was fired first, second, third and so on only for that trial.
-
 
             //Second, schedule the next burst by referring to the received timing information.
             int qnic_address, qnic_type;

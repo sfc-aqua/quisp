@@ -52,9 +52,10 @@ class SwappingAction : public Action {
         QNIC_type right_qnic_type;
         int right_qnic_id;
         int right_resource;
-
+        int action_index = 0;
 
     public:
+        // constructor of entanglement swapping
         SwappingAction(
                 int lp, QNIC_type lqt, int lqi, int lr,
                 int rp, QNIC_type rqt, int rqi, int rr
@@ -71,6 +72,7 @@ class SwappingAction : public Action {
 
         //cPacket* run(qnicResources *resources) override;
         //cPacket* run(cModule *re, qnicResources *resources) override;
+        cPacket* run(cModule *re) override;
 };
 
 class PurifyAction : public Action {

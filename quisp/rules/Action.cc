@@ -39,13 +39,30 @@ stationaryQubit* Action::getResource_fromTop(int required_index){
 }
 
 void Action::removeResource_fromRule(stationaryQubit *qubit){
-    for (auto it =  (*rule_resources).begin(), next_it =  (*rule_resources).begin(); it !=  (*rule_resources).end(); it = next_it){
+    for (auto it =  (*rule_resources).begin(), next_it = (*rule_resources).begin(); it != (*rule_resources).end(); it = next_it){
           next_it = it; ++next_it;
           if (it->second == qubit){
               (*rule_resources).erase(it);
               break;
           }
     }
+}
+
+cPacket* SwappingAction::run(cModule *re){
+    bool isSuccess = false
+
+    stationaryQubit *qubit = nullptr;
+
+
+    SwappingResult *pk = new SwappingResult;
+    pk->setDestAddr(left_partner); // FIXME
+    pk->setKind(2);
+    pk->setAction_index(action_index);
+    pk->setRule_id(rule_id);
+    pk->setRuleset_id(ruleset_id);
+    pk->setIsSuccess();
+    action_index++;
+    return pk;
 }
 
 //Either Z or X purification.

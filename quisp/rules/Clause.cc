@@ -51,6 +51,46 @@ bool EnoughResourceClause::check(std::multimap<int,stationaryQubit*> resource) c
     return enough;
 }
 
+bool EnoughResourceClauseLeft::check(std::multimap<int,stationaryQubit*> resource) const{
+    //std::cout<<"!!In enough clause \n";
+    bool enough = false;
+    int num_free = 0;
+
+    for (std::multimap<int, stationaryQubit*>::iterator it=resource.begin(); it!=resource.end(); ++it) {
+        if (it->first == partner_left){
+            if(!it->second->isLocked()){// here must have loop
+               num_free++;
+            }
+            if(num_free >= num_resource_required_left){
+               enough = true;
+            }
+        }
+
+    }
+    //std::cout<<"Enough = "<<enough<<"\n";
+    return enough;
+}
+
+bool EnoughResourceClauseRight::check(std::multimap<int,stationaryQubit*> resource) const{
+    //std::cout<<"!!In enough clause \n";
+    bool enough = false;
+    int num_free = 0;
+
+    for (std::multimap<int, stationaryQubit*>::iterator it=resource.begin(); it!=resource.end(); ++it) {
+        if (it->first == partner_right){
+            if(!it->second->isLocked()){// here must have loop
+               num_free++;
+            }
+            if(num_free >= num_resource_required_right){
+               enough = true;
+            }
+        }
+
+    }
+    //std::cout<<"Enough = "<<enough<<"\n";
+    return enough;
+}
+
 
 /*
 bool MeasureCountClause::check(qnicResources* resources) const {
