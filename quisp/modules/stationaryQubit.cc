@@ -494,8 +494,8 @@ bool stationaryQubit::isLocked(){
 void stationaryQubit::Allocate(){
     allocated = true;
     if(hasGUI()){
-                bubble("Allocated!");
-                getDisplayString().setTagArg("i", 1, "purple");
+        bubble("Allocated!");
+        getDisplayString().setTagArg("i", 1, "purple");
     }
 }
 
