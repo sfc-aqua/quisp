@@ -58,7 +58,7 @@ class ConnectionManager : public cSimpleModule
 
         // virtual RuleSet **generate_RuleSet(int *, int*, int*);
         virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, QNIC_type lqnic_type, int lqnic_index, int lres, int right_node, QNIC_type rqnic_type, int rqnic_index, int rres);
-        virtual swap_table EntanglementSwappingConfig(int swapper_address, std::vector<int> path);
+        virtual swap_table EntanglementSwappingConfig(int swapper_address, std::vector<int> path, QNIC_id_pair qnic_pair_info, int num_resources);
         virtual unsigned long createUniqueId();
 };
 
@@ -173,7 +173,9 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
     }
     path.push_back(myAddress);
     int divisions = compute_path_division_size(hop_count);
-    int *swapper = new int[divisions];
+    int *link_left = new int[divisions],
+        *link_right = new int[divisions],
+        *swapper = new int[divisions];
     // fill_path_division should yield *exactly* the anticipated number of divisions.
     if (fill_path_division(path, 0, hop_count,link_left, link_right, swapper, 0) < divisions){
       error("Something went wrong in path division computation.");
@@ -186,7 +188,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
           EV<<"\nThis is one of the stacked link costs....."<<pk->getStack_of_linkCosts(i)<<"\n";
       }
       */
-    // getting swappers index as vector(This might be redundant FXIME)
+    // getting swappers index as vector(This might be redundant FIXME)
     std::vector<int> swappers = {};
     for(int i=0; i<divisions;i++){
       EV<<"swapper"<<swapper[i]<<"\n";
@@ -194,6 +196,16 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
         swappers.push_back(swapper[i]);
       }
     }
+    //HACK This may be also not good way
+    std::map<int, QNIC_type> qnic_types;
+    int qnic_array_size = pk->getStack_of_QNICsArraySize();
+    QNIC_id_pair qnic_pairs;
+    for(int i=0; i<qnic_array_size; i++){
+      qnic_pairs = pk->getStack_of_QNICs(i);
+      EV<<"left:"<<qnic_pairs.fst.index <<"right:"<<qnic_pairs.snd.index<<"\n";
+      // EV<<"left_type:"<<qnic_pairs.fst.type<<"right:"<<qnic_pairs.snd.type<<"\n";
+    }
+
     // create Ruleset for all nodes!
     int inter_midiate_node = pk->getStack_of_QNodeIndexesArraySize();
     for(int i=0; i<=inter_midiate_node;i++){
@@ -203,8 +215,9 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
         EV<<"Im swapper!"<<path.at(i)<<"\n";
         // generate Swapping RuleSet
         // here we have to check the order of entanglement swapping
+        int n_resource = 1; // this may have to be told by CSrequest packet.
         swap_table swap_config; // swapping configurations for path[i]
-        swap_config = EntanglementSwappingConfig(path.at(i), path);
+        swap_config = EntanglementSwappingConfig(path.at(i), path, qnic_pairs, n_resource);
         // RuleSet* swapping_rule = new generateRuleSet_EntanglementSwapping(createUniqueId(), path[i], );
       }else{
         EV<<"Im not swapper!"<<path[i]<<"\n";
@@ -232,7 +245,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
  * output <node_address, order>
  * node_address might be better using qnic index
 */
-swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, std::vector<int> path, QNIC_type* qnic_info){
+swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, std::vector<int> path, QNIC_pair_info qnic_pair_info, int num_resources){
   auto iter = std::find(path.begin(), path.end(), swapper_address);
   size_t index = std::distance(path.begin(), iter);
   EV<<"distance!"<<index<<"\n";
@@ -260,7 +273,7 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
   }else{
       // Use the QNIC address to find the next hop QNode,
       // by asking the Hardware Monitor (neighbor table).
-      EV<<"\n"<<local_qnic_address_to_actual_dst<<"\n";
+      EV<<"\n"<<"TOOOOOOOOOOOOOOOOOOOOOO   "<<local_qnic_address_to_actual_dst<<"\n";
       connection_setup_inf dst_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
       EV << "DST_INF " << dst_inf.qnic.type << "," << dst_inf.qnic.index << "\n";
       connection_setup_inf src_inf = hardwaremonitor->return_setupInf(pk->getSrcAddr());
@@ -271,6 +284,7 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
 
       //Update information and send it to the next Qnode.
       pk->setDestAddr(dst_inf.neighbor_address);
+      EV<<"NEXT DESTINATION!!!!!!!!!!!!!!!!!!!!!!!"<<dst_inf.neighbor_address<<"\n";
       pk->setSrcAddr(myAddress);
       pk->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes+1);
       pk->setStack_of_linkCostsArraySize(num_accumulated_costs+1);
