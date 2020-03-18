@@ -1,3 +1,5 @@
+# Rule Sets
+
 A set of rules for operating a repeater to support a connection.
 
 *Note: This document contains some important, early thoughts on the
@@ -12,10 +14,10 @@ topic.*
 appeared in any of our work, and is probably not well explained here,
 anyway.*
 
-RuleSets are created by the [Connection Manager](Connection Manager) and given to the [Rule Engine](Rule Engine).  See the [Router Software Modules](Router-Software-Modules-no-HW-Executive.jpg).
+RuleSets are created by the [Connection Manager](Connection%20Manager.md) and given to the [Rule Engine](Rule%20Engine.md).  See the [Router Software Modules](Router-Software-Modules-no-HW-Executive.jpg).
 
 
-# Strategies for Building Consistent RuleSets #
+## Strategies for Building Consistent RuleSets ##
 
 * *Function placement*: dynamic or static
 * *Action decision*: state- (decoherence-)sensitive dynamic, or static
@@ -65,9 +67,9 @@ principles:
 
 # Example RuleSets #
 
-* [[Dur-Briegel Example RuleSets]]
-* [[Jiang Example RuleSets]]
-* [[Fowler Example RuleSets]]
+* [Dur-Briegel Example RuleSets](Dur-Briegel_Example_RuleSets.md)
+* [Jiang Example RuleSets](Jiang%20Example%20RuleSets.md)
+* [Fowler Example RuleSets](Fowler%20Example%20RuleSets.md)
 
 # Specification #
 
