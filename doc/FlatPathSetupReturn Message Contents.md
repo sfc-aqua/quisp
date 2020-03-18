@@ -11,7 +11,7 @@ This is the "flat" version, without recursion.
     * (any other identifying information? port #, etc.?)
     * TargetFidelity
 * RuleSetStack
-    * ordered list of [RuleSets](RuleSet)
+    * ordered list of [RuleSets](RuleSet.md)
 
 Here, "Initiator" and "Responder" correspond to the original request and are opposite to the direction of propagation of this message; the ultimate quantum communication will be adirectional.
 
