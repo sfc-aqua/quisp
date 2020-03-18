@@ -124,7 +124,7 @@ module QNIC
         @display("bgb=612,194");
         int burst_trial_counter = default(0);
 
-        bool is_allocated = default(false);
+        bool is_reserved = default(false);
 
     gates:
         inout qnic_quantum_port @loose;//One quantum port for every qnic in a node
