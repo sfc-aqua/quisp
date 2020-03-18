@@ -142,7 +142,7 @@ packet ConditionNotSatisfied{
 
 packet ConnectionSetupResponse extends header
 {
-    RuleSetField stack_of_RuleSets[];
+    RuleSetField RuleSet;
 }
 
 packet BSMtimingNotifier extends header
@@ -225,4 +225,14 @@ packet Error extends header
 packet StopEmitting extends header{
     int qnic_address;
 
+}
+
+packet SwappingResult extends header{
+    unsigned int RuleSet_id;
+    int Rule_id;
+    int action_index;
+    
+    int operation_type;
+    int new_left_partner;
+    int new_right_partner;
 }

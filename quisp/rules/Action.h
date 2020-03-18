@@ -56,10 +56,9 @@ class SwappingAction : public Action {
 
     public:
         // constructor of entanglement swapping
-        SwappingAction(
-                int lp, QNIC_type lqt, int lqi, int lr,
-                int rp, QNIC_type rqt, int rqi, int rr
-                ) {
+        SwappingAction(unsigned long RuleSet_id, int rule_index, int lp, QNIC_type lqt, int lqi, int lr, int rp, QNIC_type rqt, int rqi, int rr) {
+            ruleset_id = RuleSet_id;
+            rule_id = rule_index;
             left_partner = lp;
             left_qnic_type = lqt;
             left_qnic_id = lqi;

@@ -49,18 +49,16 @@ void Action::removeResource_fromRule(stationaryQubit *qubit){
 }
 
 cPacket* SwappingAction::run(cModule *re){
-    bool isSuccess = false
 
     stationaryQubit *qubit = nullptr;
 
 
     SwappingResult *pk = new SwappingResult;
-    pk->setDestAddr(left_partner); // FIXME
+    pk->setDestAddr(left_partner); // FIXME and right partner
     pk->setKind(2);
     pk->setAction_index(action_index);
     pk->setRule_id(rule_id);
-    pk->setRuleset_id(ruleset_id);
-    pk->setIsSuccess();
+    pk->setRuleSet_id(ruleset_id);
     action_index++;
     return pk;
 }

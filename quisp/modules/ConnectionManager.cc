@@ -30,6 +30,7 @@ class ConnectionManager : public cSimpleModule
         int myAddress;
         RoutingDaemon *routingdaemon;
         HardwareMonitor *hardwaremonitor;
+
     protected:
         virtual void initialize() override;
 
@@ -39,10 +40,10 @@ class ConnectionManager : public cSimpleModule
         virtual void initiator_alloc_res_handler(ConnectionSetupResponse *pk);
         virtual void intermediate_alloc_res_handler(ConnectionSetupResponse *pk);
       
-        virtual void initiator_reject_req_handler(RejectConnectionSetupRequest *pk);
+        virtual void responder_reject_req_handler(RejectConnectionSetupRequest *pk);
         virtual void intermediate_reject_req_handler(RejectConnectionSetupRequest *pk);
 
-        virtual RuleSet **generate_RuleSet(int *, int*, int*);
+        // virtual RuleSet **generate_RuleSet(int *, int*, int*);
         virtual RuleSet *generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, int right_node);
 
         virtual unsigned long createUniqueId();
@@ -61,20 +62,38 @@ void ConnectionManager::initialize()
 }
 
 
+void ConnectionManager::handleMessage(cMessage *msg){
 
-unsigned long ConnectionManager::createUniqueId(){
-    std::string time = SimTime().str();
-    std::string address = std::to_string(myAddress);
-    std::string random = std::to_string(intuniform(0,10000000));
-    std::string hash_seed = address+time+random;
-    std::hash<std::string> hash_fn;
-    size_t  t = hash_fn(hash_seed);
-    unsigned long RuleSet_id = static_cast<long>(t);
-    std::cout<<"Hash is "<<hash_seed<<", t = "<<t<<", long = "<<RuleSet_id<<"\n";
-    return RuleSet_id;
+    if(dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
+        ConnectionSetupRequest *pk = check_and_cast<ConnectionSetupRequest *>(msg);
+        int actual_dst = pk->getActual_destAddr();
+
+        if(actual_dst == myAddress){
+          // terminate relaying Request & start relaying ConnectionSetupResponse
+          responder_alloc_req_handler(pk);
+          delete msg;
+          return;
+        }else{
+           // relay Request to the next node
+           // OR
+           // stop relaying and generate RejectConnectionSetupRequest
+           intermediate_alloc_req_handler(pk);
+        }
+    }else if(dynamic_cast<RejectConnectionSetupRequest *>(msg)!= nullptr){
+        RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
+        int actual_src = pk->getActual_srcAddr();
+
+        if(actual_src == myAddress){
+          // terminate relaying
+          responder_reject_req_handler(pk);
+        }else{
+          // relay RejectConnectionSetupRequest 
+          intermediate_reject_req_handler(pk);
+        }
+    }
+    delete msg;
+    return;
 }
-
-
 
 // might just be 2*l
 static int compute_path_division_size (int l /**< number of links (path length, number of nodes -1) */) {
@@ -106,188 +125,100 @@ static int fill_path_division (int * path /**< Nodes on the connection setup pat
   return fill_start;
 }
 
-void ConnectionManager::handleMessage(cMessage *msg){
+void ConnectionManager::initiator_alloc_res_handler(ConnectionSetupResponse *pk){
 
-    if(dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
-        ConnectionSetupRequest *pk = check_and_cast<ConnectionSetupRequest *>(msg);
-        int actual_dst = pk->getActual_destAddr();
-
-        if(actual_dst == myAddress){
-           // terminate relaying Request & start relaying ConnectionSetupResponse
-           responder_alloc_req_handler(pk);
-        }else{
-           // relay Request to the next node
-           // OR
-           // stop relaying and generate RejectConnectionSetupRequest
-           intermediate_alloc_req_handler(pk);
-
-        }
-    }else if(dynamic_cast<ConnectionSetupResponse *>(msg)!= nullptr){
-        ConnectionSetupResponse *pk = check_and_cast<ConnectionSetupResponse *>(msg);
-        int actual_src = pk->getActual_srcAddr();
-
-        if(actual_src == myAddress){
-            // terminate relaying
-            initiator_alloc_res_handler(pk);
-        }else{
-            // relay Response
-            intermediate_alloc_res_handler(pk);
-        }
-        send(pk);
-    }else if(dynamic_cast<RejectConnectionSetupRequest *>(msg)!= nullptr){
-        RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
-        int actual_src = pk->getActual_srcAddr();
-
-        if(actual_src == myAddress){
-          // terminate relaying
-          initiator_reject_req_handler(pk);
-        }else{
-          // relay RejectConnectionSetupRequest 
-          intermediate_reject_req_handler(pk);
-        }
-    }
-    delete msg;
-    return;
 }
 
-void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
-           // FIXME: is the destination in the stack? Should I add it manually in the end?
-
-           //In Destination node
-           //Need to create rule sets. Feel free to change things accordingly.
-
-           // hop_count: number of nodes on the path excluding me (destination node)
-           // Should be the same as pk->getStack_of_linkCostsArraySize()
-           int hop_count = pk->getStack_of_QNodeIndexesArraySize();
-
-           // Let's store the path in an array to limit indirections
-           int * path = new int[hop_count+1];
-
-           // Let's also prepare one ruleset for every node
-           // FIXME: maybe it's better to have a map, indexed by node addresses
-           RuleSet ** rulesets = new RuleSet * [hop_count+1];
-
-           for (int i = 0; i<hop_count; i++) {
-             path[i] = pk->getStack_of_QNodeIndexes(i);
-             // TODO: initialize rulets
-             // The RuleSet class needs to store the address of the node it is
-             //   being sent to.
-             // rulesets[i] = new RuleSet(path[i]);
-             EV << "     Qnode on the path => " << path[i] << std::endl;
-           }
-           path[hop_count] = myAddress;
-           // rulesets[hop_count] = new RuleSet(myAddress);
-
-           EV << "Last Qnode on the path => " << path[hop_count] << std::endl;
-
-           // Number of division elements
-           int divisions = compute_path_division_size(hop_count);
-           // One division is: A (left node) ---- B (swapper) ---- C (right node)
-           // Sometimes there is no swag rapper, it will be -1 then.
-           // For one division, A and C need to do purification rules,
-           //   and B needs to do swapping rules.
-           int *link_left = new int[divisions],
-               *link_right = new int[divisions],
-               *swapper = new int[divisions];
-           // fill_path_division should yield *exactly* the anticipated number
-           // of divisions.
-           if (fill_path_division(path, 0, hop_count,
-                 link_left, link_right, swapper, 0) < divisions)
-             error("Something went wrong in path division computation.");
-
-           /* TODO: Remember you have link costs <3
-           for(int i = 0; i<hop_count; i++){
-               //The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel but from only 1 channels from Src->BSA and ignoring BSA->Dest).
-               //If you need to test with different costs, try changing the value.
-               //But we need to implement actual link-tomography for this eventually.
-               EV<<"\nThis is one of the stacked link costs....."<<pk->getStack_of_linkCosts(i)<<"\n";
-           }
-           */
-           //Change int to RuleSet*
-           std::map<std::string, int> dictionary = {};
-           for (int i=0; i<divisions; i++) {
-               if(swapper[0]>0){
-                  dictionary[std::to_string(link_left[i])] = 0;
-                  dictionary[std::to_string(swapper[i])] = 0;
-                  dictionary[std::to_string(link_right[i])] = 0;
-               }
-           }
-
-           for (std::map<std::string, int> ::iterator it=dictionary.begin(); it!=dictionary.end(); ++it)
-             EV << it->first << " => " << it->second << '\n';
-
-           // Go over every division
-           for (int i=0; i<divisions; i++) {
-             if (swapper[i]>0)
-               EV << "Division: " << link_left[i] << " ---( " << swapper[i] << " )--- " << link_right[i] << std::endl;
-             else
-               EV << "Division: " << link_left[i] << " -------------- " << link_right[i] << std::endl;
-//#if 0
-             /**
-              * \todo Create rules for every node
-              */
-             if (swapper[i]>0) { // This is a swapping relationship
-               RuleSet* withEntanglementSwapping = this->generateRuleSet_EntanglementSwapping(createUniqueId(), swapper[i], link_left[i], link_right[i]);
-
-               // 1. Create swapping rules for swapper[i]
-               // Rule * swaprule = new SwapRule(...);
-               // TODO: IMPLEMENT SwapRule that will have two FidelityClause to
-               // check the fidelity of the qubit, and one SwapAction.
-               // ruleset_of_swapper_i.rules.append(swaprule);
-               // 2. Create swapping tracking rules for link_left[i] and link_right[i]
-               //    Right now, those might be empty. In the end they are used to make sure that the left and right
-               //    nodes are correctly tracking the estimation of the state of the qubits that get swapped.
-             }
-             // Whatever happens, this 'i' line is also a 'link' relationship
-             // 3. Create the purification rules for link_left[i] and link_right[i]
-             // Rule * purifyrule = ...;
-             // Rule * discardrule = ...; // do we need it or is it hardcoded?
-             // ruleset_of_link_left_i.rules.append(purifyrule);
-             // ...
-//#endif
-           }
-           //Packet returning Rule sets
-           //Rule set includes Objects composed of clauses and actions.
-           //Clauses and actions have functions, like check and
-           /**\todo
-            * Document how to use Rules, and it would be helpful if you could implement the part where it actually uses it.
-            * Dummy non-practical usage example...
-            * (For example, do fidelity check and do swap between two local qubits in a single qnic.)
-            * Create the response
-            * Full 1yr email-support (maybe tele-communication too).
-            * Psychological support. Financial support.
-            */           
-  ConnectionSetupResponse *res_pk = check_and_cast<ConnectionSetupResponse *>(msg);
-        
-  res_pk->setDestAddr(src_inf);
-  res_pk->setSrcAddr(myAddress);
-  res_pk->setStack_of_QNICsArraySize(num_rulesets);
-  QNIC_id_pair pair_info = {
-      .fst = src_inf.qnic,
-      .snd = dst_inf.qnic
-  };
-  res_pk->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
-
-  res_pk->setStack_of_RuleSets()
+void ConnectionManager::intermediate_alloc_res_handler(ConnectionSetupResponse *pk){
   
-  pair_info = res_pk->getStack_of_QNICs(num_accumulated_pair_info);
-  EV << "PAIR_INF " << pair_info.fst.type << "," << pair_info.fst.index << " : " << pair_info.snd.type << "," << pair_info.snd.index << "\n";
-
 }
 
-RuleSet **ConnectionManager::generate_RuleSet( int *stack_of_QNodeIndexes,
-                                          int *stack_of_linkCosts,
-                                          QNIC_pair_info *stack_of_QNICs){
+/**request handler
+ * Procedure of this function.
+ * 0. The destination is the same as me.
+ * 1. get Swapper information with getter.
+ * 2. generate ruleset for entanglement swapping
+ * 3. return connection setup response.
+*/
+void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){ 
+    int hop_count = pk->getStack_of_QNodeIndexesArraySize(); // the number of steps
+    int * path = new int[hop_count+1]; // path pointer elements?
+    RuleSet ** rulesets = new RuleSet * [hop_count+1];
+    for (int i = 0; i<hop_count; i++) {
+      path[i] = pk->getStack_of_QNodeIndexes(i);
+      // rulesets[i] = new RuleSet(path[i]);
+      EV << "     Qnode on the path => " << path[i] << std::endl;
+    }
+    path[hop_count] = myAddress;
+    EV << "Last Qnode on the path => " << path[hop_count] << std::endl;
+    int divisions = compute_path_division_size(hop_count);
+    // One division is: A (left node) ---- B (swapper) ---- C (right node)
+    // Sometimes there is no swag rapper, it will be -1 then.
+    // For one division, A and C need to do purification rules, and B needs to do swapping rules.
+    int *link_left = new int[divisions],
+        *link_right = new int[divisions],
+        *swapper = new int[divisions];
+    // fill_path_division should yield *exactly* the anticipated number of divisions.
+    if (fill_path_division(path, 0, hop_count,link_left, link_right, swapper, 0) < divisions){
+      error("Something went wrong in path division computation.");
+    }
+
+      /* TODO: Remember you have link costs <3
+      for(int i = 0; i<hop_count; i++){
+          //The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel but from only 1 channels from Src->BSA and ignoring BSA->Dest).
+          //If you need to test with different costs, try changing the value.
+          //But we need to implement actual link-tomography for this eventually.
+          EV<<"\nThis is one of the stacked link costs....."<<pk->getStack_of_linkCosts(i)<<"\n";
+      }
+      */
+    // Go over every division
+    for (int i=0; i<divisions; i++) {
+      if (swapper[i]>0)
+        EV << "Division: " << link_left[i] << " ---( " << swapper[i] << " )--- " << link_right[i] << std::endl;
+      else
+        EV << "Division: " << link_left[i] << " -------------- " << link_right[i] << std::endl;
+//#if 0
+      /**
+      * \todo Create rules for every node
+      */
+    if (swapper[i]>0) { // This is a swapping relationship
+      RuleSet* withEntanglementSwapping = this->generateRuleSet_EntanglementSwapping(createUniqueId(), swapper[i], link_left[i], link_right[i]);
+
+      // 1. Create swapping rules for swapper[i]
+      // Rule * swaprule = new SwapRule(...);
+      // TODO: IMPLEMENT SwapRule that will have two FidelityClause to
+      // check the fidelity of the qubit, and one SwapAction.
+      // ruleset_of_swapper_i.rules.append(swaprule);
+      // 2. Create swapping tracking rules for link_left[i] and link_right[i]
+      //    Right now, those might be empty. In the end they are used to make sure that the left and right
+      //    nodes are correctly tracking the estimation of the state of the qubits that get swapped.
+    }
+      // Whatever happens, this 'i' line is also a 'link' relationship
+      // 3. Create the purification rules for link_left[i] and link_right[i]
+      // Rule * purifyrule = ...;
+      // Rule * discardrule = ...; // do we need it or is it hardcoded?
+      // ruleset_of_link_left_i.rules.append(purifyrule);
+      // ...
+//#endif
+    } 
+
+    // ConnectionSetupResponse *res_pk = new ConnectionSetupResponse;
 }
+
+// RuleSet **ConnectionManager::generate_RuleSet( int *stack_of_QNodeIndexes,
+//                                           int *stack_of_linkCosts,
+//                                           QNIC_pair_info *stack_of_QNICs){
+// }
 
 void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *pk){
+  int actual_dst = pk->getActual_destAddr();
   int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst);
   if(local_qnic_address_to_actual_dst==-1){//is not found
       error("QNIC to destination not found");
   }else{
       // Use the QNIC address to find the next hop QNode,
       // by asking the Hardware Monitor (neighbor table).
-      EV<<"\n"<<local_qnic_address_to_actual_dst<<"|||||||||||||||||||||||||||||||||||||||||||||||||\n";
+      EV<<"\n"<<local_qnic_address_to_actual_dst<<"\n";
       connection_setup_inf dst_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
       EV << "DST_INF " << dst_inf.qnic.type << "," << dst_inf.qnic.index << "\n";
       connection_setup_inf src_inf = hardwaremonitor->return_setupInf(pk->getSrcAddr());
@@ -311,8 +242,6 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
       pk->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
       pair_info = pk->getStack_of_QNICs(num_accumulated_pair_info);
       EV << "PAIR_INF " << pair_info.fst.type << "," << pair_info.fst.index << " : " << pair_info.snd.type << "," << pair_info.snd.index << "\n";
-
-
       send(pk,"RouterPort$o");
   }
 }
@@ -343,5 +272,18 @@ RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned int Ru
     return EntanglementSwapping;*/
 }
 
+unsigned long ConnectionManager::createUniqueId(){
+    std::string time = SimTime().str();
+    std::string address = std::to_string(myAddress);
+    std::string random = std::to_string(intuniform(0,10000000));
+    std::string hash_seed = address+time+random;
+    std::hash<std::string> hash_fn;
+    size_t  t = hash_fn(hash_seed);
+    unsigned long RuleSet_id = static_cast<long>(t);
+    std::cout<<"Hash is "<<hash_seed<<", t = "<<t<<", long = "<<RuleSet_id<<"\n";
+    return RuleSet_id;
+}
+
 } // namespace modules
 } // namespace quisp
+
