@@ -70,6 +70,7 @@ void ConnectionManager::handleMessage(cMessage *msg){
 
         if(actual_dst == myAddress){
           // terminate relaying Request & start relaying ConnectionSetupResponse
+          // Here actual counter part got packet
           responder_alloc_req_handler(pk);
           delete msg;
           return;
@@ -143,13 +144,14 @@ void ConnectionManager::intermediate_alloc_res_handler(ConnectionSetupResponse *
 void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){ 
     int hop_count = pk->getStack_of_QNodeIndexesArraySize(); // the number of steps
     int * path = new int[hop_count+1]; // path pointer elements?
-    RuleSet ** rulesets = new RuleSet * [hop_count+1];
+
+    // path from source to destination
     for (int i = 0; i<hop_count; i++) {
       path[i] = pk->getStack_of_QNodeIndexes(i);
-      // rulesets[i] = new RuleSet(path[i]);
       EV << "     Qnode on the path => " << path[i] << std::endl;
     }
     path[hop_count] = myAddress;
+
     EV << "Last Qnode on the path => " << path[hop_count] << std::endl;
     int divisions = compute_path_division_size(hop_count);
     // One division is: A (left node) ---- B (swapper) ---- C (right node)
@@ -162,7 +164,6 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
     if (fill_path_division(path, 0, hop_count,link_left, link_right, swapper, 0) < divisions){
       error("Something went wrong in path division computation.");
     }
-
       /* TODO: Remember you have link costs <3
       for(int i = 0; i<hop_count; i++){
           //The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel but from only 1 channels from Src->BSA and ignoring BSA->Dest).
@@ -177,7 +178,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
         EV << "Division: " << link_left[i] << " ---( " << swapper[i] << " )--- " << link_right[i] << std::endl;
       else
         EV << "Division: " << link_left[i] << " -------------- " << link_right[i] << std::endl;
-//#if 0
+    }
       /**
       * \todo Create rules for every node
       */
@@ -199,8 +200,6 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
       // Rule * discardrule = ...; // do we need it or is it hardcoded?
       // ruleset_of_link_left_i.rules.append(purifyrule);
       // ...
-//#endif
-    } 
 
     // ConnectionSetupResponse *res_pk = new ConnectionSetupResponse;
 }
@@ -254,9 +253,12 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
 
 }
 
-RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, int right_node){
-    /*int rule_index = 0;
-    RuleSet* EntanglementSwapping = new RuleSet(RuleSet_id, owner,left_node,right_node);
+RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner,\
+int left_node, QNIC_type lqnic_type, int lqnic_index, int lres, \
+int right_node, QNIC_type rqnic_type, int rqnic_index, int rres){
+    int rule_index = 0;
+    std::vector<int> partners = {left_node, right_node}
+    RuleSet* EntanglementSwapping = new RuleSet(RuleSet_id, owner, partners);
     Rule* SWAP = new Rule(RuleSet_id, rule_index);
     Condition* SWAP_condition = new Condition();
     Clause* resource_clause_left = new EnoughResourceClauseLeft(1);
@@ -264,12 +266,12 @@ RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned int Ru
     SWAP_condition->addClause(resource_clause_left);
     SWAP_condition->addClause(resource_clause_right);
     SWAP->setCondition(SWAP_condition);
-    Action* swap_action = new PurifyAction(RuleSet_id,rule_index,true,false, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
+    Action* swap_action = new SwappingAction(RuleSet_id,rule_index,true,false, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
     Purification->setAction(purify_action);
     //rule_index++;
     tomography_RuleSet->addRule(Purification);
 
-    return EntanglementSwapping;*/
+    return EntanglementSwapping;
 }
 
 unsigned long ConnectionManager::createUniqueId(){
