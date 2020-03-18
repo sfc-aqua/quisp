@@ -253,8 +253,8 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
 
 }
 
-RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner,\
-int left_node, QNIC_type lqnic_type, int lqnic_index, int lres, \
+RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner,
+int left_node, QNIC_type lqnic_type, int lqnic_index, int lres,
 int right_node, QNIC_type rqnic_type, int rqnic_index, int rres){
     int rule_index = 0;
     std::vector<int> partners = {left_node, right_node}
@@ -266,10 +266,10 @@ int right_node, QNIC_type rqnic_type, int rqnic_index, int rres){
     SWAP_condition->addClause(resource_clause_left);
     SWAP_condition->addClause(resource_clause_right);
     SWAP->setCondition(SWAP_condition);
-    Action* swap_action = new SwappingAction(RuleSet_id,rule_index,true,false, num_purification_tomography, partner_address, qnic_type , qnic_index,0,1);
-    Purification->setAction(purify_action);
-    //rule_index++;
-    tomography_RuleSet->addRule(Purification);
+    Action* swap_action = new SwappingAction(RuleSet_id,rule_inde, left_node, lqnic_type, lqnic_index, lres, right_node, rqnic_type, rqnic_index, rres);
+    SWAP->setAction(swap_action);
+    rule_index++;
+    EntanglementSwapping->addRule(Purification);
 
     return EntanglementSwapping;
 }
