@@ -78,8 +78,13 @@ void Application::initialize()
 	// "let's all mambo!"  Each EndNode makes exactly one connection.
 	// that means that some nodes will be receivers of more than
 	// one connection, at random.
-        if(EndToEndConnection){//hard-coded for now
-            int endnode_destination_address = getOneRandomEndNodeAddress();
+        // myaddress==1 for debugging
+        if(myAddress==1 && EndToEndConnection){//hard-coded for now
+            // int endnode_destination_address = getOneRandomEndNodeAddress();
+            int endnode_destination_address = 9; // for debug
+            if(endnode_destination_address == myAddress){
+                error("This must not happen, src and dst must be different!");
+            }
             EV<<"Connection setup request will be sent from "<<myAddress<<" to "<<endnode_destination_address<<"\n";
             ConnectionSetupRequest *pk = new ConnectionSetupRequest();
             pk->setActual_srcAddr(myAddress);

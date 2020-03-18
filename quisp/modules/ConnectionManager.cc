@@ -19,10 +19,22 @@ using namespace quisp::rules;
 namespace quisp {
 namespace modules {
 
+
+  typedef struct swapping_rule_table{
+    int left_partner;
+    QNIC_type lqnic;
+    int lqnic_index;
+    int lres;
+    int right_partner;
+    QNIC_type rqnic;
+    int rqnic_index;
+    int rres;
+  }swap_table;
+
 /** \class ConnectionManager ConnectionManager.cc
  *  \todo Documentation of the class header.
  *
- *  \brief ConnectionManager
+ *f  \brief ConnectionManager
  */
 class ConnectionManager : public cSimpleModule
 {
@@ -37,6 +49,7 @@ class ConnectionManager : public cSimpleModule
         virtual void handleMessage(cMessage *msg) override;
         virtual void responder_alloc_req_handler(ConnectionSetupRequest *pk);
         virtual void intermediate_alloc_req_handler(ConnectionSetupRequest *pk);
+
         virtual void initiator_alloc_res_handler(ConnectionSetupResponse *pk);
         virtual void intermediate_alloc_res_handler(ConnectionSetupResponse *pk);
       
@@ -44,8 +57,8 @@ class ConnectionManager : public cSimpleModule
         virtual void intermediate_reject_req_handler(RejectConnectionSetupRequest *pk);
 
         // virtual RuleSet **generate_RuleSet(int *, int*, int*);
-        virtual RuleSet *generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, int right_node);
-
+        virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, QNIC_type lqnic_type, int lqnic_index, int lres, int right_node, QNIC_type rqnic_type, int rqnic_index, int rres);
+        virtual swap_table EntanglementSwappingConfig(int swapper_address, std::vector<int> path);
         virtual unsigned long createUniqueId();
 };
 
@@ -80,6 +93,18 @@ void ConnectionManager::handleMessage(cMessage *msg){
            // stop relaying and generate RejectConnectionSetupRequest
            intermediate_alloc_req_handler(pk);
         }
+    }else if(dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr){
+      ConnectionSetupResponse *pk = check_and_cast<ConnectionSetupResponse *>(msg);
+      int actual_src = pk->getActual_srcAddr();
+
+      if(actual_src == myAddress){
+        initiator_alloc_res_handler(pk);
+        delete msg;
+        return;
+      }else{
+        intermediate_alloc_res_handler(pk);
+      }
+
     }else if(dynamic_cast<RejectConnectionSetupRequest *>(msg)!= nullptr){
         RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
         int actual_src = pk->getActual_srcAddr();
@@ -92,8 +117,6 @@ void ConnectionManager::handleMessage(cMessage *msg){
           intermediate_reject_req_handler(pk);
         }
     }
-    delete msg;
-    return;
 }
 
 // might just be 2*l
@@ -106,7 +129,7 @@ static int compute_path_division_size (int l /**< number of links (path length, 
 }
 
 /** Treat subpath [i:...] of length l */
-static int fill_path_division (int * path /**< Nodes on the connection setup path */,
+static int fill_path_division (std::vector<int> path /**< Nodes on the connection setup path */,
     int i /**< Left of the subpath to consider */, int l /**< Length of the subpath */,
     int * link_left /**< Left part of the list of "links" */, int * link_right /**< Right part */,
     int * swapper /**< Swappers to create those links (might be -1 for real links) */,
@@ -115,11 +138,11 @@ static int fill_path_division (int * path /**< Nodes on the connection setup pat
     int hl = (l>>1);
     fill_start = fill_path_division (path, i, hl, link_left, link_right, swapper, fill_start);
     fill_start = fill_path_division (path, i+hl, l-hl, link_left, link_right, swapper, fill_start);
-    swapper[fill_start] = path[i+hl];
+    swapper[fill_start] = path.at(i+hl);
   }
   if (l > 0) {
-    link_left[fill_start] = path[i];
-    link_right[fill_start] = path[i+l];
+    link_left[fill_start] = path.at(i);
+    link_right[fill_start] = path.at(i+l);
     if (l == 1) swapper[fill_start] = -1;
     fill_start++;
   }
@@ -143,23 +166,14 @@ void ConnectionManager::intermediate_alloc_res_handler(ConnectionSetupResponse *
 */
 void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){ 
     int hop_count = pk->getStack_of_QNodeIndexesArraySize(); // the number of steps
-    int * path = new int[hop_count+1]; // path pointer elements?
-
+    std::vector<int> path; // path pointer elements?
     // path from source to destination
     for (int i = 0; i<hop_count; i++) {
-      path[i] = pk->getStack_of_QNodeIndexes(i);
-      EV << "     Qnode on the path => " << path[i] << std::endl;
+      path.push_back(pk->getStack_of_QNodeIndexes(i));
     }
-    path[hop_count] = myAddress;
-
-    EV << "Last Qnode on the path => " << path[hop_count] << std::endl;
+    path.push_back(myAddress);
     int divisions = compute_path_division_size(hop_count);
-    // One division is: A (left node) ---- B (swapper) ---- C (right node)
-    // Sometimes there is no swag rapper, it will be -1 then.
-    // For one division, A and C need to do purification rules, and B needs to do swapping rules.
-    int *link_left = new int[divisions],
-        *link_right = new int[divisions],
-        *swapper = new int[divisions];
+    int *swapper = new int[divisions];
     // fill_path_division should yield *exactly* the anticipated number of divisions.
     if (fill_path_division(path, 0, hop_count,link_left, link_right, swapper, 0) < divisions){
       error("Something went wrong in path division computation.");
@@ -172,28 +186,36 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
           EV<<"\nThis is one of the stacked link costs....."<<pk->getStack_of_linkCosts(i)<<"\n";
       }
       */
-    // Go over every division
-    for (int i=0; i<divisions; i++) {
-      if (swapper[i]>0)
-        EV << "Division: " << link_left[i] << " ---( " << swapper[i] << " )--- " << link_right[i] << std::endl;
-      else
-        EV << "Division: " << link_left[i] << " -------------- " << link_right[i] << std::endl;
+    // getting swappers index as vector(This might be redundant FXIME)
+    std::vector<int> swappers = {};
+    for(int i=0; i<divisions;i++){
+      EV<<"swapper"<<swapper[i]<<"\n";
+      if(swapper[i]>0){
+        swappers.push_back(swapper[i]);
+      }
     }
-      /**
-      * \todo Create rules for every node
-      */
-    if (swapper[i]>0) { // This is a swapping relationship
-      RuleSet* withEntanglementSwapping = this->generateRuleSet_EntanglementSwapping(createUniqueId(), swapper[i], link_left[i], link_right[i]);
+    // create Ruleset for all nodes!
+    int inter_midiate_node = pk->getStack_of_QNodeIndexesArraySize();
+    for(int i=0; i<=inter_midiate_node;i++){
+      auto itr = std::find(swappers.begin(), swappers.end(), path.at(i));
+      size_t index = std::distance( swappers.begin(), itr );
+      if(index != swappers.size()){
+        EV<<"Im swapper!"<<path.at(i)<<"\n";
+        // generate Swapping RuleSet
+        // here we have to check the order of entanglement swapping
+        swap_table swap_config; // swapping configurations for path[i]
+        swap_config = EntanglementSwappingConfig(path.at(i), path);
+        // RuleSet* swapping_rule = new generateRuleSet_EntanglementSwapping(createUniqueId(), path[i], );
+      }else{
+        EV<<"Im not swapper!"<<path[i]<<"\n";
+      }
 
-      // 1. Create swapping rules for swapper[i]
-      // Rule * swaprule = new SwapRule(...);
-      // TODO: IMPLEMENT SwapRule that will have two FidelityClause to
-      // check the fidelity of the qubit, and one SwapAction.
-      // ruleset_of_swapper_i.rules.append(swaprule);
+    }
+
+    error("here!");
       // 2. Create swapping tracking rules for link_left[i] and link_right[i]
       //    Right now, those might be empty. In the end they are used to make sure that the left and right
       //    nodes are correctly tracking the estimation of the state of the qubits that get swapped.
-    }
       // Whatever happens, this 'i' line is also a 'link' relationship
       // 3. Create the purification rules for link_left[i] and link_right[i]
       // Rule * purifyrule = ...;
@@ -201,8 +223,29 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
       // ruleset_of_link_left_i.rules.append(purifyrule);
       // ...
 
-    // ConnectionSetupResponse *res_pk = new ConnectionSetupResponse;
+    ConnectionSetupResponse *pkr = new ConnectionSetupResponse;
+
 }
+
+/* order_of_EntanglementSwapping
+ *  This function is for selecting the order of entanglment swapping
+ * output <node_address, order>
+ * node_address might be better using qnic index
+*/
+swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, std::vector<int> path, QNIC_type* qnic_info){
+  auto iter = std::find(path.begin(), path.end(), swapper_address);
+  size_t index = std::distance(path.begin(), iter);
+  EV<<"distance!"<<index<<"\n";
+  if(index == 0 || index == path.size()){
+    error("This shouldn't happen. node was recognized as swapper with some reason.");
+  }
+  int left_node = path.at(index-1);
+  int right_node = path.at(index+1);
+  EV<<"Connection is "<<left_node<<"----"<<swapper_address<<"----"<<right_node<<"\n";
+  swap_table swap_setting;
+  return swap_setting;
+}
+
 
 // RuleSet **ConnectionManager::generate_RuleSet( int *stack_of_QNodeIndexes,
 //                                           int *stack_of_linkCosts,
@@ -257,19 +300,19 @@ RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned int Ru
 int left_node, QNIC_type lqnic_type, int lqnic_index, int lres,
 int right_node, QNIC_type rqnic_type, int rqnic_index, int rres){
     int rule_index = 0;
-    std::vector<int> partners = {left_node, right_node}
+    std::vector<int> partners = {left_node, right_node};
     RuleSet* EntanglementSwapping = new RuleSet(RuleSet_id, owner, partners);
-    Rule* SWAP = new Rule(RuleSet_id, rule_index);
-    Condition* SWAP_condition = new Condition();
-    Clause* resource_clause_left = new EnoughResourceClauseLeft(1);
-    Clause* resource_clause_right = new EnoughResourceClauseRight(1);
-    SWAP_condition->addClause(resource_clause_left);
-    SWAP_condition->addClause(resource_clause_right);
-    SWAP->setCondition(SWAP_condition);
-    Action* swap_action = new SwappingAction(RuleSet_id,rule_inde, left_node, lqnic_type, lqnic_index, lres, right_node, rqnic_type, rqnic_index, rres);
-    SWAP->setAction(swap_action);
+    Rule* SwappingRule = new Rule(RuleSet_id, rule_index);
+    Condition* Swap_condition = new Condition();
+    Clause* resource_clause_left = new EnoughResourceClauseLeft(left_node, 1);
+    Clause* resource_clause_right = new EnoughResourceClauseRight(right_node, 1);
+    Swap_condition->addClause(resource_clause_left);
+    Swap_condition->addClause(resource_clause_right);
+    SwappingRule->setCondition(Swap_condition);
+    quisp::rules::Action* swap_action = new SwappingAction(RuleSet_id, rule_index, left_node, lqnic_type, lqnic_index, lres, right_node, rqnic_type, rqnic_index, rres);
+    SwappingRule->setAction(swap_action);
+    EntanglementSwapping->addRule(SwappingRule);
     rule_index++;
-    EntanglementSwapping->addRule(Purification);
 
     return EntanglementSwapping;
 }

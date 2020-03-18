@@ -255,11 +255,6 @@ void RuleEngine::handleMessage(cMessage *msg){
             pr.DS_purification_outcome = pkt->getDS_Output_is_plus();
             storeCheck_TriplePurification_Agreement(pr);
         }
-        else if(dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr){
-            // if node got response from end node.
-            ConnectionSetupResponse *pkt = check_and_cast<ConnectionSetupResponse *>(msg);
-            process_id swapping_id;
-        }
         else if(dynamic_cast<StopEmitting *>(msg)!= nullptr){
             StopEmitting *pkt = check_and_cast<StopEmitting *>(msg);
             terminated_qnic[pkt->getQnic_address()] = true;
@@ -949,8 +944,6 @@ void RuleEngine::freeResource(int qnic_index/*The actual index. Not address. Thi
 }
 
 
-
-
 void RuleEngine::clearTrackerTable(int destAddr,int internal_qnic_address){
     int qnic_address = -1;
         if(internal_qnic_address==-1){//destination hom is outside this node.
@@ -984,7 +977,6 @@ cModule* RuleEngine::getQNode(){
 void RuleEngine::finish(){
     delete qnic_burst_trial_counter;
     delete realtime_controller;
-
 }
 
 double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index) {

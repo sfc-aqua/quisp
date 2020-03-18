@@ -142,6 +142,7 @@ packet ConditionNotSatisfied{
 
 packet ConnectionSetupResponse extends header
 {
+    int actual_srcAddr;
     RuleSetField RuleSet;
 }
 
@@ -231,7 +232,7 @@ packet SwappingResult extends header{
     unsigned int RuleSet_id;
     int Rule_id;
     int action_index;
-    
+
     int operation_type;
     int new_left_partner;
     int new_right_partner;
