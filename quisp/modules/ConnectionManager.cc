@@ -9,6 +9,7 @@
 #include <omnetpp.h>
 #include "RoutingDaemon.h"
 #include "HardwareMonitor.h"
+#include "RuleEngine.h"
 #include <rules/RuleSet.h>
 #include <classical_messages_m.h>
 
@@ -57,8 +58,9 @@ class ConnectionManager : public cSimpleModule
         virtual void intermediate_reject_req_handler(RejectConnectionSetupRequest *pk);
 
         // virtual RuleSet **generate_RuleSet(int *, int*, int*);
-        virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, QNIC_type lqnic_type, int lqnic_index, int lres, int right_node, QNIC_type rqnic_type, int rqnic_index, int rres);
-        virtual swap_table EntanglementSwappingConfig(int swapper_address, std::vector<int> path, QNIC_id_pair qnic_pair_info, int num_resources);
+        // virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, QNIC_type lqnic_type, int lqnic_index, int lres, int right_node, QNIC_type rqnic_type, int rqnic_index, int rres);
+        virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, swap_table conf);
+        virtual swap_table EntanglementSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources);
         virtual unsigned long createUniqueId();
 };
 
@@ -99,6 +101,7 @@ void ConnectionManager::handleMessage(cMessage *msg){
 
       if(actual_src == myAddress){
         initiator_alloc_res_handler(pk);
+        error("here!");
         delete msg;
         return;
       }else{
@@ -150,11 +153,13 @@ static int fill_path_division (std::vector<int> path /**< Nodes on the connectio
 }
 
 void ConnectionManager::initiator_alloc_res_handler(ConnectionSetupResponse *pk){
-
+  // maybe here return ack?
 }
 
 void ConnectionManager::intermediate_alloc_res_handler(ConnectionSetupResponse *pk){
-  
+  // do rule
+  RuleSet* swapping_rule = pk->getRuleSet();
+
 }
 
 /**request handler
@@ -196,35 +201,45 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
       }
     }
     //HACK This may be also not good way
-    std::map<int, QNIC_type> qnic_types;
     int qnic_array_size = pk->getStack_of_QNICsArraySize();
+    std::vector<QNIC_pair_info> qnics = {};
     QNIC_id_pair qnic_pairs;
     for(int i=0; i<qnic_array_size; i++){
       qnic_pairs = pk->getStack_of_QNICs(i);
-      EV<<"left:"<<qnic_pairs.fst.index <<"right:"<<qnic_pairs.snd.index<<"\n";
-      // EV<<"left_type:"<<qnic_pairs.fst.type<<"right:"<<qnic_pairs.snd.type<<"\n";
+      qnics.push_back(qnic_pairs);
     }
+    // node pairs! FIXME: really bad coding
+    // Ummm... thinking good way
 
     // create Ruleset for all nodes!
     int num_resource = pk->getNumber_of_required_Bellpairs();
     int inter_midiate_node = pk->getStack_of_QNodeIndexesArraySize();
     for(int i=0; i<=inter_midiate_node;i++){
       auto itr = std::find(swappers.begin(), swappers.end(), path.at(i));
-      size_t index = std::distance( swappers.begin(), itr );
+      size_t index = std::distance(swappers.begin(), itr);
       if(index != swappers.size()){
         EV<<"Im swapper!"<<path.at(i)<<"\n";
         // generate Swapping RuleSet
         // here we have to check the order of entanglement swapping
         swap_table swap_config; // swapping configurations for path[i]
-        swap_config = EntanglementSwappingConfig(path.at(i), path, qnic_pairs, num_resource);
-        // RuleSet* swapping_rule = new generateRuleSet_EntanglementSwapping(createUniqueId(), path[i], );
+        swap_config = EntanglementSwappingConfig(path.at(i), path, qnics, num_resource);
+        RuleSet* swapping_rule = generateRuleSet_EntanglementSwapping(createUniqueId(), path[i], swap_config);
+        ConnectionSetupResponse *pkr = new ConnectionSetupResponse;
+        pkr->setDestAddr(path.at(i));
+        pkr->setSrcAddr(myAddress);
+        pkr->setKind(2);
+        pkr->setRuleSet(swapping_rule);
+        send(pkr,"RouterPort$o");
       }else{
         EV<<"Im not swapper!"<<path[i]<<"\n";
+        ConnectionSetupResponse *pkr = new ConnectionSetupResponse;
+        pkr->setDestAddr(path.at(i));
+        pkr->setSrcAddr(myAddress);
+        pkr->setKind(2);
+        pkr->setActual_srcAddr(path.at(0));
+        send(pkr,"RouterPort$o");
       }
-
     }
-
-    error("here!");
       // 2. Create swapping tracking rules for link_left[i] and link_right[i]
       //    Right now, those might be empty. In the end they are used to make sure that the left and right
       //    nodes are correctly tracking the estimation of the state of the qubits that get swapped.
@@ -235,7 +250,8 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
       // ruleset_of_link_left_i.rules.append(purifyrule);
       // ...
 
-    ConnectionSetupResponse *pkr = new ConnectionSetupResponse;
+ 
+
 
 }
 
@@ -244,7 +260,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
  * output <node_address, order>
  * node_address might be better using qnic index
 */
-swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, std::vector<int> path, QNIC_pair_info qnic_pair_info, int num_resources){
+swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources){
   // 1.recognize partner. (which node is left partner, right partner)
   // currently, if the number of node in path is decided every other node.
   // the number of nodes is even,
@@ -258,17 +274,10 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   // node1 ------------- node3 ------------- node5 ------------- node7
   // node1 ------2------ node3 ------2------ node5 ------------- node7
   swap_table swap_setting;
-
   int left_partner;
   int right_partner;
-  int duration = 0;
-  // always take neigbor nodes recursively.
-  if(path.size() % 2　== 0){
-    // i. take even node from top to bottom.
-
-  }else{
-  }
-
+  QNIC_type lqnic_type, rqnic_type;
+  int lqnic_index, rqnic_index;
   // actual configurations
   // If the counterparts are decided, the order will automatically be determined.
   auto iter = std::find(path.begin(), path.end(), swapper_address);
@@ -276,11 +285,25 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   if(index == 0 || index == path.size()){
     error("This shouldn't happen. node was recognized as swapper with some reason.");
   }
-  int left_partner = path.at(index-1);
-  int right_partner = path.at(index+1);
-  swap_setting.left_partner = left_node;
+  // FIXME more dynamically
+  if(index % 2 != 0){
+    left_partner = path.at(index-1);
+    right_partner = path.at(index+1);
+  }else if(index % 2 == 0){
+    left_partner = path.at(0);
+    // QNIC_type lqnic_type = 
+    right_partner = path.at(path.size()-1);
+  }else{
+    error("under construction!");
+  }
+  swap_setting.left_partner = left_partner;
+  swap_setting.lqnic_type = lqnic_type;
+  swap_setting.lqnic_index = lqnic_index;
   swap_setting.lres = num_resources;
-  swap_setting.right_partner = right_node;
+
+  swap_setting.right_partner = right_partner;
+  swap_setting.rqnic_type = rqnic_type;
+  swap_setting.rqnic_index = rqnic_index;
   swap_setting.rres = num_resources;
 return swap_setting;
 
@@ -310,7 +333,7 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
       EV<<"Source : "<<pk->getSrcAddr()<<"actual_dst : "<<local_qnic_address_to_actual_dst<<"\n";
       connection_setup_inf dst_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
       EV << "DST_INF " << dst_inf.qnic.type << "," << dst_inf.qnic.index << "\n";
-      connection_setup_inf src_inf = hardwaremonitor->return_setupInf(src_qnic_address);
+      connection_setup_inf src_inf = hardwaremonitor->return_setupInf(src_qnic_address);// here may be wrong
       EV << "SRC_INF " << src_inf.qnic.type << "," << src_inf.qnic.index << "\n";
       int num_accumulated_nodes = pk->getStack_of_QNodeIndexesArraySize();
       int num_accumulated_costs = pk->getStack_of_linkCostsArraySize();
@@ -344,20 +367,18 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
 
 }
 
-RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner,
-int left_node, QNIC_type lqnic_type, int lqnic_index, int lres,
-int right_node, QNIC_type rqnic_type, int rqnic_index, int rres){
+RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, swap_table conf){
     int rule_index = 0;
-    std::vector<int> partners = {left_node, right_node};
+    std::vector<int> partners = {conf.left_partner, conf.right_partner};
     RuleSet* EntanglementSwapping = new RuleSet(RuleSet_id, owner, partners);
     Rule* SwappingRule = new Rule(RuleSet_id, rule_index);
     Condition* Swap_condition = new Condition();
-    Clause* resource_clause_left = new EnoughResourceClauseLeft(left_node, 1);
-    Clause* resource_clause_right = new EnoughResourceClauseRight(right_node, 1);
+    Clause* resource_clause_left = new EnoughResourceClauseLeft(conf.left_partner, 1);
+    Clause* resource_clause_right = new EnoughResourceClauseRight(conf.right_partner, 1);
     Swap_condition->addClause(resource_clause_left);
     Swap_condition->addClause(resource_clause_right);
     SwappingRule->setCondition(Swap_condition);
-    quisp::rules::Action* swap_action = new SwappingAction(RuleSet_id, rule_index, left_node, lqnic_type, lqnic_index, lres, right_node, rqnic_type, rqnic_index, rres);
+    quisp::rules::Action* swap_action = new SwappingAction(RuleSet_id, rule_index, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lres, conf.right_partner, conf.rqnic_type, conf.rqnic_index, conf.rres);
     SwappingRule->setAction(swap_action);
     EntanglementSwapping->addRule(SwappingRule);
     rule_index++;
