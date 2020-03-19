@@ -680,7 +680,7 @@ network Realistic_Layer2_Star_Sep
         @display("bgb=707,326");
     submodules:
         Router1[1]: QNode {
-            address = 15;
+            address = 1;
             nodeType = "Router";
             @display("i=device/router;p=350,157");
         }
@@ -747,7 +747,7 @@ network Realistic_Layer2_Star_Sep
             @display("i=device/pc;p=109,246");
         }
         EndNode6[1]: QNode {
-            address = 1;
+            address = 15;
             nodeType = "EndNode";
             @display("i=device/pc;p=503,263");
         }

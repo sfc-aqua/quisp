@@ -22,6 +22,7 @@ simple Application
         volatile double sendIaTime @unit(s) = default(exponential(1s)); // time between generating packets
         string Other_endnodes_table = "";
         bool EndToEndConnection = default(false);
+        int NumberOfResources = default(1);
     gates:
         input fromRouter @loose;
         output toRouter @loose;

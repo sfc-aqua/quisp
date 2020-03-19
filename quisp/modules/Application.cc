@@ -33,6 +33,8 @@ class Application : public cSimpleModule
         int* Addresses_of_other_EndNodes = new int[1];
         int num_of_other_EndNodes;
         bool EndToEndConnection;
+        int number_of_resources;
+
     protected:
         virtual void initialize() override;
         virtual void handleMessage(cMessage *msg) override;
@@ -70,6 +72,8 @@ void Application::initialize()
     }else{
         myAddress = getParentModule()->par("address");
         EndToEndConnection = par("EndToEndConnection");
+        number_of_resources = par("NumberOfResources");
+
         Addresses_of_other_EndNodes = storeEndNodeAddresses();
 
         //cModule *qnode = getQNode();
@@ -79,9 +83,9 @@ void Application::initialize()
 	// that means that some nodes will be receivers of more than
 	// one connection, at random.
         // myaddress==1 for debugging
-        if(myAddress==1 && EndToEndConnection){//hard-coded for now
+        if(myAddress==9 && EndToEndConnection){//hard-coded for now
             // int endnode_destination_address = getOneRandomEndNodeAddress();
-            int endnode_destination_address = 9; // for debug
+            int endnode_destination_address = 15; // for debug
             if(endnode_destination_address == myAddress){
                 error("This must not happen, src and dst must be different!");
             }
@@ -91,6 +95,7 @@ void Application::initialize()
             pk->setActual_destAddr(endnode_destination_address);
             pk->setDestAddr(myAddress);
             pk->setSrcAddr(myAddress);
+            pk->setNumber_of_required_Bellpairs(number_of_resources); //required bell pairs
             pk->setKind(7);
             scheduleAt(simTime(),pk);
         }
