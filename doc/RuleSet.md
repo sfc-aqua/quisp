@@ -12,7 +12,7 @@ topic.*
 appeared in any of our work, and is probably not well explained here,
 anyway.*
 
-RuleSets are created by the [Connection Manager](Connection Manager) and given to the [Rule Engine](Rule Engine).  See the [Router Software Modules](Router-Software-Modules-no-HW-Executive.jpg).
+RuleSets are created by the [Connection Manager](Connection%20Manager.md) and given to the [Rule Engine](Rule Engine).  See the [Router Software Modules](Router-Software-Modules-no-HW-Executive.jpg).
 
 
 # Strategies for Building Consistent RuleSets #
