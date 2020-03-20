@@ -71,11 +71,15 @@ struct Quatropurification_result{
 };
 
 
+struct swapping_result{
+    process_id id;
+    int new_partner;
+    int operation_type;
+}
 
 //Process = RuleSet
 typedef struct _process{
     int ownner_addr;
-    int working_partner_addr;
     //int process_ID;
     RuleSet* Rs;
 } process;
@@ -161,6 +165,8 @@ class RuleEngine : public cSimpleModule
         virtual void storeCheck_QuatroPurification_Agreement(Quatropurification_result pr);
         virtual void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int index);
         virtual void Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int index);
+
+        virtual void updateResources_EntanglementSwapping(swapping_result swapr);
 
 };
 

@@ -176,10 +176,8 @@ void RuleEngine::handleMessage(cMessage *msg){
            //std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
            process p;
            p.ownner_addr = pk->getRuleSet()->owner;
-        //    p.working_partner_addr = pk->getRuleSet()->entangled_partner;
            p.Rs = pk->getRuleSet();
            int process_id = rp.size();//This is temporary because it will not be unique when processes have been deleted.
-        //    std::cout<<"Ruleset arrived id="<<p.Rs->ruleset_id<<" partner node="<<p.working_partner_addr<<" node["<<parentAddress<<"\n";
            std::cout<<"Process size is ...."<<p.Rs->size()<<" node["<<parentAddress<<"\n";
            //todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
            //ResourceAllocation();
@@ -254,6 +252,18 @@ void RuleEngine::handleMessage(cMessage *msg){
             pr.Zpurification_outcome = pkt->getZOutput_is_plus();
             pr.DS_purification_outcome = pkt->getDS_Output_is_plus();
             storeCheck_TriplePurification_Agreement(pr);
+        }
+        else if(dynamic_cast<SwappingResult *>(msg) != nullptr){
+            SwappingResult *pkt = check_and_cast<SwappingResult *>(msg);
+            process_id swapping_id;
+            swapping_id.ruleset_id = pkt->getRuleSet_id(); // just in case
+            swapping_id.rule_id = pkt->getRule_id();
+
+            swapping_result swapr;
+            swapr.id = swapping_id;
+            swapr.new_partner = pkt->getNew_partner();
+            swapr.operation_type = pkt->getOperation_type();
+            updateResources_EntanglementSwapping(swapr);            
         }
         else if(dynamic_cast<StopEmitting *>(msg)!= nullptr){
             StopEmitting *pkt = check_and_cast<StopEmitting *>(msg);
@@ -847,6 +857,27 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
 }
 
 
+void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
+    // swapper believe previous BSM was succeeded.
+    int operation_type = swapr.operation_type;
+
+    // This might not work here?
+    int num_emitted_in_this_burstTrial = tracker[qnic_address].size();
+    stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
+    if(qubit->entangled_partner!=nullptr){
+        if(qubit->entangled_partner->entangled_partner==nullptr){
+            //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+            error("1. Entanglement tracking is not doing its job.");
+        }
+        if(qubit->entangled_partner->entangled_partner != qubit){
+            //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+            error("2. Entanglement tracking is not doing its job.");
+        }
+    }
+    // create resources between new partner.
+    allResources[qnic_type][qnic_index].insert(std::make_pair(swapr.new_partner/*QNode IP address*/,qubit));//Add qubit as available resource between NeighborQNodeAddress.
+}
+
 
 //Only for MIM and MM
 void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result){
@@ -1016,7 +1047,6 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
                     if(it->second->entangled_partner==nullptr && it->second->Density_Matrix_Collapsed(0,0).real() ==-111 && !it->second->no_density_matrix_nullptr_entangled_partner_ok){
                             //std::cout<<it->second<<", node["<<it->second->node_address<<"\n";
                             error("Fresh ebit wrong");
-                    
                     }
                     
                     if (rule_ptr.size() != partner_size){
@@ -1025,7 +1055,6 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
                         rule_ptr.at(i)->addResource(resource_entangled_with_address, it->second);
                         //rule
                     }
-                    
                     
                     int num_rsc_af = process->front()->resources.size();
                     if(num_rsc_af != num_rsc_bf+1){
@@ -1048,7 +1077,6 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
     }
 
 }
-
 
 
 void RuleEngine::traverseThroughAllProcesses2(){
