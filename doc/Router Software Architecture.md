@@ -11,7 +11,7 @@ For more details on the hardware, see the
 
 There are five major modules:
 
-1. [Connection Manager](Connection Manager): One per system.
+1. [Connection Manager](Connection%20Manager.md): One per system.
 1. [Rule Engine](Rule Engine): One per system. The heart of the online operation, creating end-to-end entanglement.
 1. [Routing Daemon](Routing Daemon): One per system.
 1. [Hardware Configuration Manager/Monitor](HardwareConfigManager_Methods): One per system.

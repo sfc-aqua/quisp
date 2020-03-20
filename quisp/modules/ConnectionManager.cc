@@ -1,7 +1,7 @@
 /** \file ConnectionManager.cc
  *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
- *  \authors cldurand,takaakimatsuo
+ *  \authors cldurand,takaakimatsuo,cocori,rdv
  *
  *  \brief ConnectionManager
  */
@@ -35,7 +35,26 @@ namespace modules {
 /** \class ConnectionManager ConnectionManager.cc
  *  \todo Documentation of the class header.
  *
- *f  \brief ConnectionManager
+ *  \brief ConnectionManager
+ *
+ * The ConnectionManager is one of the five key modules in the
+ * software for a quantum repeater/router (qrsa).  It is responsible for
+ * managing the connections: initiating ConnectionSetupRequests,
+ * behaving as responder for a ConnectionSetupRequest (which involves
+ * actually creating the RuleSets), and handling the requests and
+ * responses as the move along the path at setup time.
+ *
+ * It communicates with the RuleEngine, which is responsible for
+ * actually executing the Rules as it is notified of events, but
+ * the ConnectionManager has _nothing_ to do with the actual
+ * processing of the quantum states as they evolve.
+ *
+ * You will see member functions for the roles as initiator, responder,
+ * and intermediate node.  The main tasks are to respond to ConnectionSetupRequest,
+ * ConnectionSetupResponse, RejectConnectionSetupRequest, and ConnectionTeardown messages.
+ *
+ * It is also responsible for the end-to-end reservation of resources,
+ * as dictated by the multiplexing (muxing) discpline in use.
  */
 class ConnectionManager : public cSimpleModule
 {
@@ -77,6 +96,11 @@ void ConnectionManager::initialize()
 }
 
 
+/**
+ * The catch-all handler for messages received.  Needs to confirm the packet
+ * type and call the appropriate lower-level handler.
+ * \param msg pointer to the cMessage itself
+ */
 void ConnectionManager::handleMessage(cMessage *msg){
 
     if(dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
@@ -152,22 +176,51 @@ static int fill_path_division (std::vector<int> path /**< Nodes on the connectio
   return fill_start;
 }
 
+/**
+ *  This function is called to handle the ConnectionSetupResponse at the initiator.
+ * \param pk pointer to the ConnectionSetupRequest packet itself
+ * \returns nothing
+ *
+ * The only job here is to unpack the RuleSets, feed them to the RuleEngine, and
+ * start the connection running.  Probably should also let the Application know
+ * that the setup is complete and running.
+ *
+ * \todo Where should timeouts and error handling happen?
+ **/
 void ConnectionManager::initiator_alloc_res_handler(ConnectionSetupResponse *pk){
   // maybe here return ack?
 }
 
+/**
+ *  This function is called to handle the ConnectionSetupResponse at an "intermediate"
+ *  node, one that is neither the initiator nor the responder.
+ * \param pk pointer to the ConnectionSetupRequest packet itself
+ * \returns nothing
+ *
+ * The only job here is to unpack the RuleSets, feed them to the RuleEngine, and
+ * start the connection running.
+ **/
 void ConnectionManager::intermediate_alloc_res_handler(ConnectionSetupResponse *pk){
   // do rule
   RuleSet* swapping_rule = pk->getRuleSet();
 
 }
 
-/**request handler
- * Procedure of this function.
- * 0. The destination is the same as me.
- * 1. get Swapper information with getter.
- * 2. generate ruleset for entanglement swapping
- * 3. return connection setup response.
+/**
+ * This function is called to handle the ConnectionSetupRequest at the responder.
+ *  This is where much of the work happens, and there is the potential for new value
+ *  if you have a better way to do this.
+ *  \param pk pointer to the ConnectionSetupRequest packet itself
+ *  \returns nothing
+ *
+ * The procedure:  
+ * \verbatim
+ * 1. figure out swapping order & partners by calling EntanglementSwappingConfig
+ * 2. generate all the RuleSets by calling generateRuleSet_EntanglementSwapping
+ * 3. return ConnectionSetupResponse to each node in this connection.
+ * \endverbatim
+ * \todo Always room to make this better.  Ideally should be
+ * a _configurable choice_, or even a _policy_ implementation.
 */
 void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){ 
     int hop_count = pk->getStack_of_QNodeIndexesArraySize(); // the number of steps
@@ -255,7 +308,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
 
 }
 
-/** EntanglementSwappingConfig
+/** 
  *  This function is for selecting the order of entanglement swapping
  * \param swapper_address node address; could be any intermediate in the path (not an end point)
  * \param path list of node addresses in the path
@@ -267,7 +320,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
 swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources){
   /// 
   /// 1.recognize partner. (which node is left partner, right partner)
-  /// currently, we choose every other node in the path to do swapping in the first round.
+  /// Currently, we choose every other node in the path to do swapping in the first round.
   /// in the examples below, the number in parantheses is the round
   /// of swapping, and designates which nodes are swapping.
   /// if the number of hops is a power of two, we get something like
@@ -343,6 +396,12 @@ return swap_setting;
 //                                           QNIC_pair_info *stack_of_QNICs){
 // }
 
+/**
+ *  This function is called to handle the ConnectionSetupRequest at an "intermediate"
+ *  node, one that is neither the initiator nor the responder.
+ * \param pk pointer to the ConnectionSetupRequest packet itself
+ * \returns nothing
+ **/
 void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *pk){
   int actual_dst = pk->getActual_destAddr();
   int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst);
@@ -382,14 +441,46 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
   }
 }
 
+/**
+ *  This function is called during the handling of ConnectionSetupRequest at the responder.
+ * \param pk pointer to the ConnectionSetupRequest packet itself
+ * \returns nothing
+ * \todo needs to be filled in!
+ * This function is called when we discover that we can't fulfill the connection request,
+ * primarily due to resource reservation conflicts.
+ **/
 void ConnectionManager::responder_reject_req_handler(RejectConnectionSetupRequest *pk){
 
 }
 
+/**
+ *  This function is called during the handling of ConnectionSetupRequest at an
+ *  intermediate node (not the initator or responder).
+ * \param pk pointer to the ConnectionSetupRequest packet itself
+ * \returns nothing
+ * \todo needs to be filled in!
+ * This function is called when we discover that we can't fulfill the connection request,
+ * primarily due to resource reservation conflicts.
+ **/
 void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupRequest *pk){
 
 }
 
+/**
+ *  This function is called during the handling of ConnectionSetupRequest at the responder.
+ * \param RuleSet_id the unique identifier for this RuleSet (== connection)
+ * \param owner address of the intermediate node we are generating this RuleSet for
+ * \param conf the swap_table listing the order and partners
+ * \returns the newly-created RuleSet for ES at the given intermediate node.
+ * 
+ *  This is where much of the work happens, and there is the potential for new value
+ *  if you have a better way to do this.
+ *  Called once per intermediate node to create rules for that node, which will
+ *  later be distributed to that node using a ConnectionSetupResponse.
+ *  \todo
+ * \todo Room for endless intelligence and improvements here.  Ideally should be
+ * a _configurable choice_, or even a _policy_ implementation.
+ **/
 RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, swap_table conf){
     int rule_index = 0;
     std::vector<int> partners = {conf.left_partner, conf.right_partner};
