@@ -13,7 +13,7 @@ correspond to the current implementation.*
 
 ## Software Structure ##
 
-![Rule Engine block diagram](https://bitbucket.org/repo/R4A77B/images/2551915264-Rule%20Engine.PNG)
+![Rule Engine block diagram](img/Rule%20Engine.png)
 
 There are five important data structures.  One really important one not yet shown in the figure:
 
@@ -101,7 +101,7 @@ Types of events:
     2. Connection teardown
 
 ## Communications ##
-![Paths on phys topology.PNG](https://bitbucket.org/repo/R4A77B/images/2133835455-Paths%20on%20phys%20topology.PNG)
+![Paths on phys topology.PNG](Paths%20on%20phys%20topology.png)
 
 Scalability of communications to/from the RE is a serious concern.  Worst
 case is purify-and-swap networks, in which a router *or* repeater may
