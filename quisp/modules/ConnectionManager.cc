@@ -255,24 +255,47 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
 
 }
 
-/* order_of_EntanglementSwapping
- *  This function is for selecting the order of entanglment swapping
- * output <node_address, order>
- * node_address might be better using qnic index
-*/
+/** EntanglementSwappingConfig
+ *  This function is for selecting the order of entanglement swapping
+ * \param swapper_address node address; could be any intermediate in the path (not an end point)
+ * \param path list of node addresses in the path
+ * \param qnics index and type of QNICs at each node in the path
+ * \param num_resources the duration of the requested connection, in Bell pairs
+ * \returns a swap_table
+ * \todo node_address might be better using qnic index
+ **/
 swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources){
-  // 1.recognize partner. (which node is left partner, right partner)
-  // currently, if the number of node in path is decided every other node.
-  // the number of nodes is even,
-  // node1 -1- node2 -1- node3 -1- node4 -1- node5 --- node6
-  // node1 ------------- node3 ------------- node5 --- node6
-  // node1 ------2------ node3 ------2------ node5 --- node6　when the number of nodes become 4, we have to decide which first.
-  // node1 -----------3----------- node4 -3- node5 --- node6
-  // node1 ------------------------------------------- node6
-  //  the number of nodes is odd,
-  // node1 -1- node2 -1- node3 -1- node4 -1- node5 -1- node6 -1- node7
-  // node1 ------------- node3 ------------- node5 ------------- node7
-  // node1 ------2------ node3 ------2------ node5 ------------- node7
+  /// 
+  /// 1.recognize partner. (which node is left partner, right partner)
+  /// currently, we choose every other node in the path to do swapping in the first round.
+  /// in the examples below, the number in parantheses is the round
+  /// of swapping, and designates which nodes are swapping.
+  /// if the number of hops is a power of two, we get something like
+  /// \verbatim
+  /// node1 --- node2(1) --- node3 --- node4(1) --- node5
+  /// node1 ---------------- node3 ---------------- node5
+  /// node1 ---------------- node3(2) ------------- node5
+  /// node1 --------------------------------------- node5
+  /// \endverbatim
+  /// if the number of hops is not a power of two, at some stage
+  /// the number of hops will become become odd as we proceed,
+  /// forcing us to decide which to do first.  In this version
+  /// of the code, we just give priority starting from the left
+  /// (start of our list)
+  /// \verbatim
+  /// node1 --- node2(1) --- node3 --- node4(1) --- node5 --- node6
+  /// node1 ---------------- node3 ---------------- node5 --- node6
+  /// node1 ---------------- node3(2) ------------- node5 --- node6
+  /// node1 --------------------------------------- node5 --- node6
+  /// node1 ------------------------------------ node5(3) --- node6
+  /// node1 ------------------------------------------------- node6
+  /// \endverbatim
+  /// \todo hypothetically, with no purification, all of the intermediate
+  /// nodes could swap asynchronously and essentially simultaneously.
+  /// In fact, that's probably what we want, to minimize decoherence.
+  /// But, the condition clause will have to be extended in order to support
+  /// "when part of this connection" rather than "when entangled with this node"
+  /// and you have to be careful of not creating the wrong result by accident.
   swap_table swap_setting;
   int left_partner;
   int right_partner;
