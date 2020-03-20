@@ -110,8 +110,9 @@ void Application::handleMessage(cMessage *msg){
         delete msg;
     }else if(dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
         send(msg, "toRouter");
-    }
-    else{
+    }else if(dynamic_cast<ConnectionSetupResponse *>(msg)!= nullptr){
+        send(msg, "toRouter");
+    }else{
         delete msg;
         error("Application not recognizing this packet");
     }

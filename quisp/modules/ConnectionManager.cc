@@ -121,16 +121,13 @@ void ConnectionManager::handleMessage(cMessage *msg){
         }
     }else if(dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr){
       ConnectionSetupResponse *pk = check_and_cast<ConnectionSetupResponse *>(msg);
-      int actual_src = pk->getActual_srcAddr();
-
-      if(actual_src == myAddress){
-        initiator_alloc_res_handler(pk);
-        error("here!");
-        delete msg;
-        return;
-      }else{
-        intermediate_alloc_res_handler(pk);
-      }
+      // if(actual_src == myAddress){
+      initiator_alloc_res_handler(pk);
+      delete msg;
+      return;
+      // }else{
+      //   intermediate_alloc_res_handler(pk); // not using stack. If we use stack structure, we need.
+      // }
 
     }else if(dynamic_cast<RejectConnectionSetupRequest *>(msg)!= nullptr){
         RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
@@ -189,6 +186,16 @@ static int fill_path_division (std::vector<int> path /**< Nodes on the connectio
  **/
 void ConnectionManager::initiator_alloc_res_handler(ConnectionSetupResponse *pk){
   // maybe here return ack?
+  InternalRuleSetForwarding *pk_internal = new InternalRuleSetForwarding;
+  // for forwarding rulesets to rule engine.
+  EV<<"GGGGOOOOOOOOOTTTTTTT";
+  // pk_internal->setDestAddr(pk->getDestAddr());
+  // pk_internal->setSrcAddr(pk->getDestAddr());
+  // pk_internal->setKind(1);
+  // pk_internal->setRuleset_id(pk->getRuleset_id());
+  // pk_internal->setRuleSet(pk->getRuleSet());
+  // send(pk_internal,"RouterPort$o");
+  EV<<"sent ruleset Internal!++++++++++++++++++++++++++++++++++\n";
 }
 
 /**
@@ -202,7 +209,6 @@ void ConnectionManager::initiator_alloc_res_handler(ConnectionSetupResponse *pk)
  **/
 void ConnectionManager::intermediate_alloc_res_handler(ConnectionSetupResponse *pk){
   // do rule
-  RuleSet* swapping_rule = pk->getRuleSet();
 
 }
 

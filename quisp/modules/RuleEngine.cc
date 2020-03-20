@@ -256,7 +256,7 @@ void RuleEngine::handleMessage(cMessage *msg){
         else if(dynamic_cast<SwappingResult *>(msg) != nullptr){
             SwappingResult *pkt = check_and_cast<SwappingResult *>(msg);
             process_id swapping_id;
-            swapping_id.ruleset_id = pkt->getRuleSet_id(); // just in case
+            swapping_id.ruleset_id = pkt->getRuleset_id(); // just in case
             swapping_id.rule_id = pkt->getRule_id();
 
             swapping_result swapr;
@@ -264,6 +264,9 @@ void RuleEngine::handleMessage(cMessage *msg){
             swapr.new_partner = pkt->getNew_partner();
             swapr.operation_type = pkt->getOperation_type();
             updateResources_EntanglementSwapping(swapr);            
+        }
+        else if(dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr){
+            error("got RuleSet!");
         }
         else if(dynamic_cast<StopEmitting *>(msg)!= nullptr){
             StopEmitting *pkt = check_and_cast<StopEmitting *>(msg);
@@ -860,22 +863,23 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
 void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
     // swapper believe previous BSM was succeeded.
     int operation_type = swapr.operation_type;
+    error("HEY HERE!");
 
-    // This might not work here?
-    int num_emitted_in_this_burstTrial = tracker[qnic_address].size();
-    stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
-    if(qubit->entangled_partner!=nullptr){
-        if(qubit->entangled_partner->entangled_partner==nullptr){
-            //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
-            error("1. Entanglement tracking is not doing its job.");
-        }
-        if(qubit->entangled_partner->entangled_partner != qubit){
-            //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
-            error("2. Entanglement tracking is not doing its job.");
-        }
-    }
-    // create resources between new partner.
-    allResources[qnic_type][qnic_index].insert(std::make_pair(swapr.new_partner/*QNode IP address*/,qubit));//Add qubit as available resource between NeighborQNodeAddress.
+    // // This might not work here?
+    // int num_emitted_in_this_burstTrial = tracker[qnic_address].size();
+    // stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
+    // if(qubit->entangled_partner!=nullptr){
+    //     if(qubit->entangled_partner->entangled_partner==nullptr){
+    //         //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+    //         error("1. Entanglement tracking is not doing its job.");
+    //     }
+    //     if(qubit->entangled_partner->entangled_partner != qubit){
+    //         //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+    //         error("2. Entanglement tracking is not doing its job.");
+    //     }
+    // }
+    // // create resources between new partner.
+    // allResources[qnic_type][qnic_index].insert(std::make_pair(swapr.new_partner/*QNode IP address*/,qubit));//Add qubit as available resource between NeighborQNodeAddress.
 }
 
 
@@ -1155,6 +1159,14 @@ void RuleEngine::traverseThroughAllProcesses2(){
                                 pk_for_self->setDestAddr(parentAddress);
                                 send(pkt,"RouterPort$o");
                                 send(pk_for_self,"RouterPort$o");
+                            }
+                             else if(dynamic_cast<SwappingResult *>(pk)!= nullptr){
+                                SwappingResult *pkt = check_and_cast<SwappingResult *>(pk);
+                                // pkt->setSrcAddr(parentAddress);
+                                // DS_DoublePurificationSecondResult *pk_for_self = pkt->dup();
+                                // pk_for_self->setDestAddr(parentAddress);
+                                // send(pkt,"RouterPort$o");
+                                // send(pk_for_self,"RouterPort$o");
                             }
                             else if (dynamic_cast<Error *>(pk)!= nullptr){
                                 Error *err = check_and_cast<Error *>(pk);

@@ -75,7 +75,7 @@ struct swapping_result{
     process_id id;
     int new_partner;
     int operation_type;
-}
+};
 
 //Process = RuleSet
 typedef struct _process{

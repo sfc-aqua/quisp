@@ -129,6 +129,9 @@ void Router::handleMessage(cMessage *msg)
             bubble("Connection setup response received");
             send(pk, "cmPort$o");
             return;
+        }else if(destAddr == myAddress && dynamic_cast<InternalRuleSetForwarding *>(msg)!= nullptr){
+            bubble("Internal RuleSet Forwarding packet received");
+            send(pk, "rePort$o");
         }else if (destAddr == myAddress && dynamic_cast<LinkTomographyRequest *>(msg)!= nullptr){
             bubble("Link tomography request received");
             send(pk, "hmPort$o");
