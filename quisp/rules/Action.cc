@@ -49,17 +49,51 @@ void Action::removeResource_fromRule(stationaryQubit *qubit){
 }
 
 cPacket* SwappingAction::run(cModule *re){
+    float success_probability = 1.0;
 
-    stationaryQubit *qubit = nullptr;
+    stationaryQubit *left_qubit = nullptr;
+    stationaryQubit *right_qubit = nullptr;
 
+    left_qubit = getResource_fromTop(left_resource);
+    right_qubit = getResource_fromTop(right_resource);
 
+    if(left_qubit == nullptr|| right_qubit==nullptr){
+        Error *pk = new Error;
+        pk->setError_text("Not enough resource found!");
+        return pk;
+    }
+    if(left_qnic_id <0 || right_qnic_id < 0){
+        Error *pk = new Error;
+        pk->setError_text("QNICs are not found!");
+        return pk;
+    }
+
+    // actual swapping operations
+    stationaryQubit *right_partner_qubit = right_qubit->entangled_partner;
+    stationaryQubit *left_partner_qubit = left_qubit->entangled_partner;
+    // just swapping pointer.
+    // swapper have no way to know this swapping is success or not.
+    if(std::rand()/RAND_MAX < success_probability){
+        right_partner_qubit->entangled_partner = left_partner_qubit;
+        left_partner_qubit->entangled_partner = right_partner_qubit;
+
+        removeResource_fromRule(left_qubit);
+        removeResource_fromRule(right_qubit);
+    }else{
+        removeResource_fromRule(right_qubit);
+        removeResource_fromRule(right_partner_qubit);
+        removeResource_fromRule(right_qubit);
+        removeResource_fromRule(right_partner_qubit);
+    }
+    
     SwappingResult *pk = new SwappingResult;
     pk->setDestAddr(left_partner); // FIXME and right partner
-    pk->setKind(2);
+    pk->setKind(4);
     pk->setAction_index(action_index);
     pk->setRule_id(rule_id);
     pk->setRuleSet_id(ruleset_id);
-    action_index++;
+    pk->setOperation_type(1);// this corresponds to the result of measurement
+    pk->setNew_partner(right_partner);
     return pk;
 }
 

@@ -821,7 +821,7 @@ connection_setup_inf HardwareMonitor::return_setupInf(int qnic_address){
             inf.neighbor_address = it->second.neighborQNode_address;
             //cModule *node = getModuleByPath("network.HoM");
             inf.quantum_link_cost = it->second.link_cost;
-            // break;
+            break;
         }
         EV<<"This is ntable: "<<it->first<<":"<<it->second.qnic.address<<"\n";
     }
