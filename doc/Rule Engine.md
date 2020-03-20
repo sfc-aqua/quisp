@@ -101,7 +101,7 @@ Types of events:
     2. Connection teardown
 
 ## Communications ##
-![Paths on phys topology.PNG](Paths%20on%20phys%20topology.png)
+![Paths on phys topology.PNG](img/Paths%20on%20phys%20topology.png)
 
 Scalability of communications to/from the RE is a serious concern.  Worst
 case is purify-and-swap networks, in which a router *or* repeater may
