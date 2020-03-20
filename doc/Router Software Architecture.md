@@ -1,3 +1,6 @@
+
+*Note: this file is an early design document, but might be updated as the version goes up.*
+
 # Quantum Router (Repeater) Software Architecture #
 
 A router has multiple hardware elements, but a single software
@@ -5,7 +8,8 @@ controller. This page describes the architecture of that software.
 For more details on the hardware, see the 
 [Router Architecture](Router Architecture) page.
 
-![Router software arch.PNG](https://bitbucket.org/repo/R4A77B/images/716978964-Router%20software%20arch.PNG)
+<!--![Router software arch.PNG](https://bitbucket.org/repo/R4A77B/images/716978964-Router%20software%20arch.PNG)-->
+![Router software arch.PNG](img/716978964-Router%20software%20arch.PNG)
 
 # Software Modules #
 
