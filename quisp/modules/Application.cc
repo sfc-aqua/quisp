@@ -115,6 +115,10 @@ void Application::handleMessage(cMessage *msg){
         send(msg, "toRouter");
     }else if(dynamic_cast<ConnectionSetupResponse *>(msg)!= nullptr){
         send(msg, "toRouter");
+    }
+    else if(dynamic_cast<InternalRuleSetForwarding *>(msg)!= nullptr){
+        bubble("internal rulesetforwarding packet arrived to application!");
+        send(msg, "toRouter");
     }else{
         delete msg;
         error("Application not recognizing this packet");

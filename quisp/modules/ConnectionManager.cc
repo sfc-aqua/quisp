@@ -121,13 +121,11 @@ void ConnectionManager::handleMessage(cMessage *msg){
         }
     }else if(dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr){
       ConnectionSetupResponse *pk = check_and_cast<ConnectionSetupResponse *>(msg);
-      // if(actual_src == myAddress){
+      // int actual_dst = pk->getActual_destAddr();
       initiator_alloc_res_handler(pk);
       delete msg;
       return;
-      // }else{
-      //   intermediate_alloc_res_handler(pk); // not using stack. If we use stack structure, we need.
-      // }
+
 
     }else if(dynamic_cast<RejectConnectionSetupRequest *>(msg)!= nullptr){
         RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
@@ -185,16 +183,15 @@ static int fill_path_division (std::vector<int> path /**< Nodes on the connectio
  * \todo Where should timeouts and error handling happen?
  **/
 void ConnectionManager::initiator_alloc_res_handler(ConnectionSetupResponse *pk){
-  // maybe here return ack?
-  InternalRuleSetForwarding *pk_internal = new InternalRuleSetForwarding;
-  // for forwarding rulesets to rule engine.
-  // pk_internal->setDestAddr(pk->getDestAddr());
-  // pk_internal->setSrcAddr(pk->getDestAddr());
-  // pk_internal->setKind(1);
-  // pk_internal->setRuleset_id(pk->getRuleset_id());
-  // pk_internal->setRuleSet(pk->getRuleSet());
-  // send(pk_internal,"RouterPort$o");
-  EV<<"sent ruleset Internal!++++++++++++++++++++++++++++++++++\n";
+  // here return ack?
+  EV<<"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+  InternalRuleSetForwarding *pkt = new InternalRuleSetForwarding;
+  EV<<"This is dest addr!"<<pk->getDestAddr()<<"\n";
+  pkt->setDestAddr(pk->getDestAddr());
+  pkt->setSrcAddr(pk->getDestAddr());
+  pkt->setKind(4);
+  pkt->setRuleSet(pk->getRuleSet());
+  send(pkt, "RouterPort$o");
 }
 
 /**
@@ -287,6 +284,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
         pkr->setSrcAddr(myAddress);
         pkr->setKind(2);
         pkr->setRuleSet(swapping_rule);
+        pkr->setActual_srcAddr(path.at(0));
         send(pkr,"RouterPort$o");
       }else{
         EV<<"Im not swapper!"<<path.at(i)<<"\n";
