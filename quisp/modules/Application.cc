@@ -35,6 +35,8 @@ class Application : public cSimpleModule
         bool EndToEndConnection;
         int number_of_resources;
 
+        int num_measure;
+
     protected:
         virtual void initialize() override;
         virtual void handleMessage(cMessage *msg) override;
@@ -73,6 +75,7 @@ void Application::initialize()
         myAddress = getParentModule()->par("address");
         EndToEndConnection = par("EndToEndConnection");
         number_of_resources = par("NumberOfResources");
+        num_measure = par("num_measure");
 
         Addresses_of_other_EndNodes = storeEndNodeAddresses();
 

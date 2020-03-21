@@ -23,6 +23,8 @@ simple Application
         string Other_endnodes_table = "";
         bool EndToEndConnection = default(false);
         int NumberOfResources = default(1);
+
+        int num_measure = default(7000); // temporary
     gates:
         input fromRouter @loose;
         output toRouter @loose;

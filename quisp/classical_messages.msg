@@ -35,6 +35,8 @@ packet ConnectionSetupRequest extends header
     int actual_destAddr;
     int actual_srcAddr;
 
+    int num_measure;
+
     int number_of_required_Bellpairs;
     double required_fidelity;
 

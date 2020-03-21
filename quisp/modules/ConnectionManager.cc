@@ -76,9 +76,9 @@ class ConnectionManager : public cSimpleModule
         virtual void responder_reject_req_handler(RejectConnectionSetupRequest *pk);
         virtual void intermediate_reject_req_handler(RejectConnectionSetupRequest *pk);
 
-        // virtual RuleSet **generate_RuleSet(int *, int*, int*);
         // virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, QNIC_type lqnic_type, int lqnic_index, int lres, int right_node, QNIC_type rqnic_type, int rqnic_index, int rres);
-        virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, swap_table conf);
+        virtual RuleSet* generateRuleSet_Tomography(unsigned long RuleSet_id, int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index);
+        virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned long RuleSet_id,int owner, swap_table conf);
         virtual swap_table EntanglementSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources);
         virtual unsigned long createUniqueId();
 };
@@ -188,7 +188,6 @@ void ConnectionManager::initiator_alloc_res_handler(ConnectionSetupResponse *pk)
   // maybe here return ack?
   InternalRuleSetForwarding *pk_internal = new InternalRuleSetForwarding;
   // for forwarding rulesets to rule engine.
-  EV<<"GGGGOOOOOOOOOTTTTTTT";
   // pk_internal->setDestAddr(pk->getDestAddr());
   // pk_internal->setSrcAddr(pk->getDestAddr());
   // pk_internal->setKind(1);
@@ -282,7 +281,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
         // here we have to check the order of entanglement swapping
         swap_table swap_config; // swapping configurations for path[i]
         swap_config = EntanglementSwappingConfig(path.at(i), path, qnics, num_resource);
-        RuleSet* swapping_rule = generateRuleSet_EntanglementSwapping(createUniqueId(), path[i], swap_config);
+        RuleSet* swapping_rule = generateRuleSet_EntanglementSwapping(createUniqueId(), path.at(i), swap_config);
         ConnectionSetupResponse *pkr = new ConnectionSetupResponse;
         pkr->setDestAddr(path.at(i));
         pkr->setSrcAddr(myAddress);
@@ -290,28 +289,27 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
         pkr->setRuleSet(swapping_rule);
         send(pkr,"RouterPort$o");
       }else{
-        EV<<"Im not swapper!"<<path[i]<<"\n";
-        ConnectionSetupResponse *pkr = new ConnectionSetupResponse;
-        pkr->setDestAddr(path.at(i));
-        pkr->setSrcAddr(myAddress);
-        pkr->setKind(2);
-        pkr->setActual_srcAddr(path.at(0));
-        send(pkr,"RouterPort$o");
+        EV<<"Im not swapper!"<<path.at(i)<<"\n";
+        int num_measure = pk->getNum_measure();
+        RuleSet* tomography_ruleset = nullptr;
+        if(i == 0){// if this is initiater
+          tomography_ruleset = generateRuleSet_Tomography(createUniqueId(), path.at(i), path.at(path.size()-1), num_measure, QNIC_E, 0);
+        }else{ // if this is responder
+          tomography_ruleset = generateRuleSet_Tomography(createUniqueId(), path.at(i), path.at(0), num_measure, QNIC_E, 0);
+        }
+        if(tomography_ruleset != nullptr){
+          ConnectionSetupResponse *pkr = new ConnectionSetupResponse;
+          pkr->setDestAddr(path.at(i));
+          pkr->setSrcAddr(myAddress);
+          pkr->setKind(2);
+          pkr->setRuleSet(tomography_ruleset);
+          pkr->setActual_srcAddr(path.at(0));
+          send(pkr,"RouterPort$o");
+        }else{
+          error("Something occured when the node %d creating ruleset", myAddress);
+        }
       }
     }
-      // 2. Create swapping tracking rules for link_left[i] and link_right[i]
-      //    Right now, those might be empty. In the end they are used to make sure that the left and right
-      //    nodes are correctly tracking the estimation of the state of the qubits that get swapped.
-      // Whatever happens, this 'i' line is also a 'link' relationship
-      // 3. Create the purification rules for link_left[i] and link_right[i]
-      // Rule * purifyrule = ...;
-      // Rule * discardrule = ...; // do we need it or is it hardcoded?
-      // ruleset_of_link_left_i.rules.append(purifyrule);
-      // ...
-
- 
-
-
 }
 
 /** 
@@ -487,7 +485,7 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
  * \todo Room for endless intelligence and improvements here.  Ideally should be
  * a _configurable choice_, or even a _policy_ implementation.
  **/
-RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, swap_table conf){
+RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned long RuleSet_id,int owner, swap_table conf){
     int rule_index = 0;
     std::vector<int> partners = {conf.left_partner, conf.right_partner};
     RuleSet* EntanglementSwapping = new RuleSet(RuleSet_id, owner, partners);
@@ -504,6 +502,30 @@ RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned int Ru
     rule_index++;
 
     return EntanglementSwapping;
+}
+
+RuleSet* ConnectionManager::generateRuleSet_Tomography(unsigned long RuleSet_id, int owner, int partner, int num_of_measure, QNIC_type qnic_type, int qnic_index){
+  // tomography ruleset
+  int rule_index = 0;
+  RuleSet* tomography = new RuleSet(RuleSet_id, owner, partner);
+  Rule* Random_measure_tomography = new Rule(RuleSet_id, rule_index);
+
+  Condition* measurement_condition = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
+  Clause* count_clause = new MeasureCountClause(num_of_measure, partner, qnic_type , qnic_index, 0);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
+  Clause* resource_clause = new EnoughResourceClause(partner, 1);
+
+  measurement_condition->addClause(count_clause);
+  measurement_condition->addClause(resource_clause);
+
+  Random_measure_tomography->setCondition(measurement_condition);
+
+  quisp::rules::Action* measurement_action = new RandomMeasureAction(partner, qnic_type , qnic_index, 0, owner, num_of_measure);//Measure the local resource between it->second.neighborQNode_address.
+  Random_measure_tomography->setAction(measurement_action);
+  //Add the rule to the RuleSet
+  tomography->addRule(Random_measure_tomography);
+  tomography->finalize();
+
+  return tomography;
 }
 
 unsigned long ConnectionManager::createUniqueId(){
