@@ -133,6 +133,10 @@ void Router::handleMessage(cMessage *msg)
             bubble("Internal RuleSet Forwarding packet received");
             send(pk, "rePort$o");
             return;
+        }else if(destAddr == myAddress && dynamic_cast<InternalRuleSetForwarding_Application *>(msg)!= nullptr){
+            bubble("Internal RuleSet Forwarding Application packet received");
+            send(pk, "rePort$o");
+            return;
         }else if (destAddr == myAddress && dynamic_cast<LinkTomographyRequest *>(msg)!= nullptr){
             bubble("Link tomography request received");
             send(pk, "hmPort$o");

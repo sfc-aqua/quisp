@@ -91,7 +91,7 @@ cPacket* SwappingAction::run(cModule *re){
     pk->setKind(4);
     pk->setAction_index(action_index);
     pk->setRule_id(rule_id);
-    pk->setRuleset_id(ruleset_id);
+    pk->setRuleSet_id(ruleset_id);
     pk->setOperation_type(1);// this corresponds to the result of measurement
     pk->setNew_partner(right_partner);
     return pk;

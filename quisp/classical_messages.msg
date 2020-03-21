@@ -145,8 +145,10 @@ packet ConditionNotSatisfied{
 packet ConnectionSetupResponse extends header
 {
     int actual_srcAddr;
-    unsigned long ruleset_id;
+    int actual_destAddr;
+    unsigned long RuleSet_id;
     RuleSetField RuleSet;
+    int application_type;
 }
 
 packet BSMtimingNotifier extends header
@@ -232,7 +234,7 @@ packet StopEmitting extends header{
 }
 
 packet SwappingResult extends header{
-    unsigned long ruleset_id;
+    unsigned long RuleSet_id;
     int Rule_id;
     int action_index;
 
@@ -241,8 +243,16 @@ packet SwappingResult extends header{
 }
 
 packet InternalRuleSetForwarding extends header{
-    unsigned long ruleset_id;
+    unsigned long RuleSet_id;
     int Rule_id;
+
+    RuleSetField RuleSet;
+}
+
+packet InternalRuleSetForwarding_Application extends header{
+    unsigned long RuleSet_id;
+    int Rule_id;
+    int application_type;
 
     RuleSetField RuleSet;
 }

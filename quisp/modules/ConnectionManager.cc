@@ -121,10 +121,20 @@ void ConnectionManager::handleMessage(cMessage *msg){
         }
     }else if(dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr){
       ConnectionSetupResponse *pk = check_and_cast<ConnectionSetupResponse *>(msg);
-      // int actual_dst = pk->getActual_destAddr();
-      initiator_alloc_res_handler(pk);
-      delete msg;
-      return;
+      int actual_dst = pk->getActual_destAddr(); // initiator
+      int actual_src = pk->getActual_srcAddr(); // responder
+      // initiator_alloc_res_handler(pk);
+      if(actual_dst == myAddress || actual_src == myAddress){
+        // not swapper (FIXME: This might be hardcoding)
+        initiator_alloc_res_handler(pk);
+        delete msg;
+        return;
+      }else{// swapper
+        // currently, destinations are separeted. (Not accumurated.)
+        intermediate_alloc_res_handler(pk);
+        delete msg;
+        return;
+      }
 
 
     }else if(dynamic_cast<RejectConnectionSetupRequest *>(msg)!= nullptr){
@@ -182,16 +192,16 @@ static int fill_path_division (std::vector<int> path /**< Nodes on the connectio
  *
  * \todo Where should timeouts and error handling happen?
  **/
-void ConnectionManager::initiator_alloc_res_handler(ConnectionSetupResponse *pk){
+void ConnectionManager::intermediate_alloc_res_handler(ConnectionSetupResponse *pk){
   // here return ack?
-  EV<<"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-  InternalRuleSetForwarding *pkt = new InternalRuleSetForwarding;
-  EV<<"This is dest addr!"<<pk->getDestAddr()<<"\n";
-  pkt->setDestAddr(pk->getDestAddr());
-  pkt->setSrcAddr(pk->getDestAddr());
-  pkt->setKind(4);
-  pkt->setRuleSet(pk->getRuleSet());
-  send(pkt, "RouterPort$o");
+  InternalRuleSetForwarding *pk_internal = new InternalRuleSetForwarding;
+  pk_internal->setDestAddr(pk->getDestAddr());
+  pk_internal->setSrcAddr(pk->getDestAddr());
+  pk_internal->setKind(4); // if here is setKind(1), packet is gonna go to App automatically.
+
+  pk_internal->setRuleSet_id(pk->getRuleSet_id());
+  pk_internal->setRuleSet(pk->getRuleSet());
+  send(pk_internal, "RouterPort$o");
 }
 
 /**
@@ -203,8 +213,18 @@ void ConnectionManager::initiator_alloc_res_handler(ConnectionSetupResponse *pk)
  * The only job here is to unpack the RuleSets, feed them to the RuleEngine, and
  * start the connection running.
  **/
-void ConnectionManager::intermediate_alloc_res_handler(ConnectionSetupResponse *pk){
-  // do rule
+void ConnectionManager::initiator_alloc_res_handler(ConnectionSetupResponse *pk){
+  // forward swapping rule
+  // FIXME HACK This might not be better.
+  InternalRuleSetForwarding_Application *pk_internal = new InternalRuleSetForwarding_Application;
+  pk_internal->setDestAddr(pk->getDestAddr());
+  pk_internal->setSrcAddr(pk->getDestAddr()); // Should be original Src here?
+  pk_internal->setKind(4); // if here is setKind(1), packet is gonna go to App automatically.
+
+  pk_internal->setRuleSet_id(pk->getRuleSet_id());
+  pk_internal->setRuleSet(pk->getRuleSet());
+  pk_internal->setApplication_type(pk->getApplication_type());
+  send(pk_internal, "RouterPort$o");
 
 }
 
@@ -284,7 +304,6 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
         pkr->setSrcAddr(myAddress);
         pkr->setKind(2);
         pkr->setRuleSet(swapping_rule);
-        pkr->setActual_srcAddr(path.at(0));
         send(pkr,"RouterPort$o");
       }else{
         EV<<"Im not swapper!"<<path.at(i)<<"\n";
@@ -302,6 +321,8 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
           pkr->setKind(2);
           pkr->setRuleSet(tomography_ruleset);
           pkr->setActual_srcAddr(path.at(0));
+          pkr->setActual_destAddr(path.at(path.size()-1));
+          pkr->setApplication_type(0); // this is not application but for checking Eswapping done properly.
           send(pkr,"RouterPort$o");
         }else{
           error("Something occured when the node %d creating ruleset", myAddress);

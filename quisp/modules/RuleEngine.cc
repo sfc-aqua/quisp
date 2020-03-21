@@ -189,20 +189,20 @@ void RuleEngine::handleMessage(cMessage *msg){
            }
         }
         else if(dynamic_cast<PurificationResult *>(msg) != nullptr){
-                   //std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
-                   PurificationResult *pkt = check_and_cast<PurificationResult *>(msg);
-                   //std::cout<<"Presult from node["<<pkt->getSrcAddr()<<"]\n";
-                   process_id purification_id;
-                   purification_result pr;
-                   purification_id.ruleset_id = pkt->getRuleset_id();
-                   purification_id.rule_id = pkt->getRule_id();
-                   purification_id.index = pkt->getAction_index();
-                   pr.id = purification_id;
-                   pr.outcome = pkt->getOutput_is_plus();
-                   //stationaryQubit *q = check_and_cast<stationaryQubit *>(pkt->getEntangled_with());
-                   //std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
-                   //std::cout<<"Locked one is "<<pkt->getEntangled_with()<<"in node["<<q->node_address<<"] \n";
-                   storeCheck_Purification_Agreement(pr);
+            //std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
+            PurificationResult *pkt = check_and_cast<PurificationResult *>(msg);
+            //std::cout<<"Presult from node["<<pkt->getSrcAddr()<<"]\n";
+            process_id purification_id;
+            purification_result pr;
+            purification_id.ruleset_id = pkt->getRuleset_id();
+            purification_id.rule_id = pkt->getRule_id();
+            purification_id.index = pkt->getAction_index();
+            pr.id = purification_id;
+            pr.outcome = pkt->getOutput_is_plus();
+            //stationaryQubit *q = check_and_cast<stationaryQubit *>(pkt->getEntangled_with());
+            //std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
+            //std::cout<<"Locked one is "<<pkt->getEntangled_with()<<"in node["<<q->node_address<<"] \n";
+            storeCheck_Purification_Agreement(pr);
         }else if(dynamic_cast<DoublePurificationResult *>(msg) != nullptr){
             //std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
             DoublePurificationResult *pkt = check_and_cast<DoublePurificationResult *>(msg);
@@ -256,7 +256,7 @@ void RuleEngine::handleMessage(cMessage *msg){
         else if(dynamic_cast<SwappingResult *>(msg) != nullptr){
             SwappingResult *pkt = check_and_cast<SwappingResult *>(msg);
             process_id swapping_id;
-            swapping_id.ruleset_id = pkt->getRuleset_id(); // just in case
+            swapping_id.ruleset_id = pkt->getRuleSet_id(); // just in case
             swapping_id.rule_id = pkt->getRule_id();
 
             swapping_result swapr;
@@ -266,7 +266,20 @@ void RuleEngine::handleMessage(cMessage *msg){
             updateResources_EntanglementSwapping(swapr);            
         }
         else if(dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr){
-            error("got RuleSet!");
+            InternalRuleSetForwarding *pkt = check_and_cast<InternalRuleSetForwarding *>(msg);
+            process_id swapping_id;
+            swapping_id.ruleset_id = pkt->getRuleSet_id(); // just in case
+            // updateResources_EntanglementSwapping(swapr);
+            EV<<"got internal swapping ruleset!\n";
+
+        }
+        else if(dynamic_cast<InternalRuleSetForwarding_Application *>(msg) != nullptr){
+            InternalRuleSetForwarding_Application *pkt = check_and_cast<InternalRuleSetForwarding_Application *>(msg);
+            if(pkt->getApplication_type() == 0){
+                EV<<"got application!!!!!!!!!!!!!!!!! at "<<parentAddress<<"\n";
+            }else{
+                error("This application is not recognized yet");
+            }
         }
         else if(dynamic_cast<StopEmitting *>(msg)!= nullptr){
             StopEmitting *pkt = check_and_cast<StopEmitting *>(msg);
