@@ -814,7 +814,6 @@ connection_setup_inf HardwareMonitor::return_setupInf(int qnic_address){
         .quantum_link_cost = -1
     };
     for(auto it = ntable.cbegin(); it != ntable.cend(); ++it){
-        
         if(it->second.qnic.address == qnic_address){
             inf.qnic.type = it->second.qnic.type;
             inf.qnic.index = it->second.qnic.index;
@@ -823,7 +822,7 @@ connection_setup_inf HardwareMonitor::return_setupInf(int qnic_address){
             inf.quantum_link_cost = it->second.link_cost;
             break;
         }
-        EV<<"This is ntable: "<<it->first<<":"<<it->second.qnic.address<<"\n";
+        // EV<<"This is ntable: "<<it->first<<":"<<it->second.qnic.address<<"\n";
     }
     return inf;
 }

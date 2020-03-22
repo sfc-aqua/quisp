@@ -168,8 +168,8 @@ static int fill_path_division (std::vector<int> path /**< Nodes on the connectio
     int fill_start /** [0:fill_start[ is already filled */) {
   if (l > 1) {
     int hl = (l>>1);
-    fill_start = fill_path_division (path, i, hl, link_left, link_right, swapper, fill_start);
-    fill_start = fill_path_division (path, i+hl, l-hl, link_left, link_right, swapper, fill_start);
+    fill_start = fill_path_division(path, i, hl, link_left, link_right, swapper, fill_start);
+    fill_start = fill_path_division(path, i+hl, l-hl, link_left, link_right, swapper, fill_start);
     swapper[fill_start] = path.at(i+hl);
   }
   if (l > 0) {
@@ -275,16 +275,42 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
         swappers.push_back(swapper[i]);
       }
     }
-    //HACK This may be also not good way
+
+    // Taking qnic information of responder node.
+    int actual_dst = pk->getActual_dstAddr();
+    int actual_src = pk->getActual_srcAddr(); //initiator address (to get input qnic)
+    int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst); // This must be -1
+    int local_qnic_address_to_actual_src = routingdaemon->return_QNIC_address_to_destAddr(actual_src); // TODO: premise only oneconnection allowed btw, two nodes.
+    if(local_qnic_address_to_actual_dst != -1){
+      error("something error happen!");
+    }else if(local_qnic_address_to_actual_src == -1){
+      error("This shouldn't happen!");
+    }
+    connection_setup_inf dst_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
+    connection_setup_inf src_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_src);
+    QNIC_id_pair pair_info = {
+          .fst = src_inf.qnic,
+          .snd = dst_inf.qnic
+    };
     int qnic_array_size = pk->getStack_of_QNICsArraySize();
+    pk->setStack_of_QNICsArraySize(qnic_array_size+1);
+    pk->setStack_of_QNICs(qnic_array_size, pair_info);
+
+    //HACK This may be also not good way
     std::vector<QNIC_pair_info> qnics = {};
     QNIC_id_pair qnic_pairs;
-    for(int i=0; i<qnic_array_size; i++){
+    for(int i=0; i<qnic_array_size+1; i++){
       qnic_pairs = pk->getStack_of_QNICs(i);
       qnics.push_back(qnic_pairs);
+      EV<<"qnic index"<<qnic_pairs.fst.index<<":::"<<qnic_pairs.snd.index<<"\n";
+    }
+    if(qnics.at(0).fst.index != -1 || qnics.at(qnics.size()-1).snd.index != -1){
+      error("Qnic index of initiator and responder must be -1 in current scheme. ");
     }
     // node pairs! FIXME: really bad coding
     // Ummm... thinking good way
+    // Here qunic processing
+    // Have to add destination qnic info (destination is the same as myAddress. So qnic index must be -1 because self return is not allowed.)
 
     // create Ruleset for all nodes!
     int num_resource = pk->getNumber_of_required_Bellpairs();
@@ -310,9 +336,9 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
         int num_measure = pk->getNum_measure();
         RuleSet* tomography_ruleset = nullptr;
         if(i == 0){// if this is initiater
-          tomography_ruleset = generateRuleSet_Tomography(createUniqueId(), path.at(i), path.at(path.size()-1), num_measure, QNIC_E, 0);
+          tomography_ruleset = generateRuleSet_Tomography(createUniqueId(), path.at(i), path.at(path.size()-1), num_measure, qnics.at(qnics.size()-1).fst.type, qnics.at(qnics.size()-1).fst.index);
         }else{ // if this is responder
-          tomography_ruleset = generateRuleSet_Tomography(createUniqueId(), path.at(i), path.at(0), num_measure, QNIC_E, 0);
+          tomography_ruleset = generateRuleSet_Tomography(createUniqueId(), path.at(i), path.at(0), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index);
         }
         if(tomography_ruleset != nullptr){
           ConnectionSetupResponse *pkr = new ConnectionSetupResponse;
@@ -379,19 +405,38 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   int lqnic_index, rqnic_index;
   // actual configurations
   // If the counterparts are decided, the order will automatically be determined.
+
   auto iter = std::find(path.begin(), path.end(), swapper_address);
   size_t index = std::distance(path.begin(), iter);
   if(index == 0 || index == path.size()){
-    error("This shouldn't happen. node was recognized as swapper with some reason.");
+    error("This shouldn't happen. Endnode was recognized as swapper with some reason.");
   }
-  // FIXME more dynamically
+  // FIXME more dynamically using recursive function or ...
   if(index % 2 != 0){
     left_partner = path.at(index-1);
+    auto iter = std::find(path.begin(), path.end(), left_partner);
+    size_t left_index = std::distance(path.begin(), iter); // index of left partner
+    lqnic_type = qnics.at(left_index).snd.type; // left partner must be second TODO: detail description of this.
+    lqnic_index = qnics.at(left_index).snd.index;
+
     right_partner = path.at(index+1);
+    auto iter = std::find(path.begin(), path.end(), right_partner);
+    size_t right_index = std::distance(path.begin(), iter); // index of left partner
+    rqnic_type = qnics.at(right_index).fst.type; // right partner must be first 
+    rqnic_index = qnics.at(right_index).fst.index;
+
   }else if(index % 2 == 0){
     left_partner = path.at(0);
+    auto iter = std::find(path.begin(), path.end(), left_partner);
+    size_t left_index = std::distance(path.begin(), iter); // index of left partner
+    lqnic_type = qnics.at(left_index).snd.type;
+    lqnic_index = qnics.at(left_index).snd.index;
     // QNIC_type lqnic_type = 
     right_partner = path.at(path.size()-1);
+    auto iter = std::find(path.begin(), path.end(), right_partner);
+    size_t right_index = std::distance(path.begin(), iter); // index of left partner
+    rqnic_type = qnics.at(right_index).fst.type;
+    rqnic_index = qnics.at(right_index).fst.index; 
   }else{
     error("under construction!");
   }
@@ -426,19 +471,22 @@ return swap_setting;
  * \returns nothing
  **/
 void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *pk){
-  int actual_dst = pk->getActual_destAddr();
+  int actual_dst = pk->getActual_destAddr();// responder address
+  int actual_src = pk->getActual_srcAddr(); //initiator address (to get input qnic)
   int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst);
+  int local_qnic_address_to_actual_src = routingdaemon->return_QNIC_address_to_destAddr(actual_src); // TODO: premise only oneconnection allowed btw, two nodes.
   // TODO here need to check
-  int src_qnic_address = routingdaemon->return_QNIC_address_to_destAddr(pk->getSrcAddr());
   if(local_qnic_address_to_actual_dst==-1){//is not found
-      error("QNIC to destination not found");
+    error("QNIC to destination not found");
+  }else if(myAddress != actual_src && local_qnic_address_to_actual_src==-1){
+    error("QNIC to source not found");
   }else{
       // Use the QNIC address to find the next hop QNode,
       // by asking the Hardware Monitor (neighbor table).
-      EV<<"Source : "<<pk->getSrcAddr()<<"actual_dst : "<<local_qnic_address_to_actual_dst<<"\n";
+      EV<<"Source : "<<pk->getSrcAddr()<<" qnic_for_actual_dst : "<<local_qnic_address_to_actual_dst<<"\n";
       connection_setup_inf dst_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
       EV << "DST_INF " << dst_inf.qnic.type << "," << dst_inf.qnic.index << "\n";
-      connection_setup_inf src_inf = hardwaremonitor->return_setupInf(src_qnic_address);// here may be wrong
+      connection_setup_inf src_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_src);
       EV << "SRC_INF " << src_inf.qnic.type << "," << src_inf.qnic.index << "\n";
       int num_accumulated_nodes = pk->getStack_of_QNodeIndexesArraySize();
       int num_accumulated_costs = pk->getStack_of_linkCostsArraySize();
@@ -446,7 +494,6 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
 
       //Update information and send it to the next Qnode.
       pk->setDestAddr(dst_inf.neighbor_address);
-      EV<<"NEXT DESTINATION!!!!!!!!!!!!!!!!!!!!!!!"<<dst_inf.neighbor_address<<"\n";
       pk->setSrcAddr(myAddress);
       pk->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes+1);
       pk->setStack_of_linkCostsArraySize(num_accumulated_costs+1);
