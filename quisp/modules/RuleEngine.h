@@ -74,6 +74,9 @@ struct Quatropurification_result{
 struct swapping_result{
     process_id id;
     int new_partner;
+    int new_partner_qnic_index;
+    int new_partner_qnic_address;
+    QNIC_type new_partner_qnic_type;
     int operation_type;
 };
 

@@ -255,25 +255,20 @@ void RuleEngine::handleMessage(cMessage *msg){
         }
         else if(dynamic_cast<SwappingResult *>(msg) != nullptr){
             SwappingResult *pkt = check_and_cast<SwappingResult *>(msg);
-
-            int new_partner = pkt->getNew_partner();
-            int new_partner_qnic = pkt->getNew_partner_qnic();
-            QNIC_type new_partner_qnic_type = pkt->getNew_partner_qnic_type();
-            int operation_type = pkt->getOperation_type();
-            int source = pkt->getSrcAddr();
-            EV<<"This packet from (6?)"<<source<<"\n";
-            EV<<"This node :"<<parentAddress<<" new partner :"<<new_partner<<" new partner's qnic :"<<new_partner_qnic<<" new partner's qnic type: "<<new_partner_qnic_type<<"\n";
-            EV<<"operation type"<<operation_type<<"\n";
-            error("got Swapping result Yay!!");
-            // process_id swapping_id;
-            // swapping_id.ruleset_id = pkt->getRuleSet_id(); // just in case
-            // swapping_id.rule_id = pkt->getRule_id();
-
-            // swapping_result swapr;
-            // swapr.id = swapping_id;
-            // swapr.new_partner = pkt->getNew_partner();
-            // swapr.operation_type = pkt->getOperation_type();
-            // updateResources_EntanglementSwapping(swapr);            
+            // here next add resources
+            process_id swapping_id;
+            swapping_id.ruleset_id = pkt->getRuleSet_id(); // just in case
+            swapping_id.rule_id = pkt->getRule_id();
+            swapping_id.index = pkt->getAction_index();
+            
+            swapping_result swapr; // result of entanglement swapping
+            swapr.id = swapping_id;
+            swapr.new_partner = pkt->getNew_partner();
+            swapr.new_partner_qnic_index = pkt->getNew_partner_qnic_index();
+            swapr.new_partner_qnic_address = pkt->getNew_partner_qnic_address();
+            swapr.new_partner_qnic_type = pkt->getNew_partner_qnic_type();
+            swapr.operation_type = pkt->getOperation_type();
+            updateResources_EntanglementSwapping(swapr); 
         }
         else if(dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr){
             InternalRuleSetForwarding *pkt = check_and_cast<InternalRuleSetForwarding *>(msg);
@@ -900,24 +895,37 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
 
 void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
     // swapper believe previous BSM was succeeded.
-    int operation_type = swapr.operation_type;
-    error("HEY HERE!");
+    // initialize
 
-    // // This might not work here?
-    // int num_emitted_in_this_burstTrial = tracker[qnic_address].size();
-    // stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type],qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
-    // if(qubit->entangled_partner!=nullptr){
-    //     if(qubit->entangled_partner->entangled_partner==nullptr){
-    //         //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
-    //         error("1. Entanglement tracking is not doing its job.");
-    //     }
-    //     if(qubit->entangled_partner->entangled_partner != qubit){
-    //         //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
-    //         error("2. Entanglement tracking is not doing its job.");
-    //     }
-    // }
-    // // create resources between new partner.
-    // allResources[qnic_type][qnic_index].insert(std::make_pair(swapr.new_partner/*QNode IP address*/,qubit));//Add qubit as available resource between NeighborQNodeAddress.
+    int new_partner = swapr.new_partner;
+    int new_partner_qnic_index = swapr.new_partner_qnic_index;  
+    int new_partner_qnic_address = swapr.new_partner_qnic_address;// is this good? bad?
+    QNIC_type new_partner_qnic_type = swapr.new_partner_qnic_type;
+    int operation_type = swapr.operation_type;
+    // What is error condition here?
+
+    // Swapper doesn't know this is success or fail. Is this correct?
+    // TODO how to apply correct operation? is this the role of real time contoroller?
+    // FIXME here is just one resource, but this should be loop
+    // TODO resources for entanglement swapping in swapper should be free
+    sentQubitIndexTracker::iterator it = tracker[new_partner_qnic_address].find(0); // what is qnic address?
+    stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[new_partner_qnic_type], new_partner_qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
+    if(qubit->entangled_partner!=nullptr){
+        if(qubit->entangled_partner->entangled_partner==nullptr){
+            //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+            error("1. Entanglement tracking is not doing its job.");
+        }
+        if(qubit->entangled_partner->entangled_partner != qubit){
+            //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+            error("2. Entanglement tracking is not doing its job.");
+        }
+    }
+    allResources[new_partner_qnic_type][new_partner_qnic_index].insert(std::make_pair(new_partner/*QNode IP address*/,qubit));
+    // ResourceAllocation is only for neigbor. need to create other resource allocation?
+    ResourceAllocation(new_partner_qnic_type, new_partner_qnic_index);
+    traverseThroughAllProcesses2();//New resource added to QNIC with qnic_type qnic_index.
+
+    error("HEY HERE!");
 }
 
 
@@ -1087,7 +1095,8 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
                     //int index = process->front()->number_of_resources_allocated_in_total;
                     int num_rsc_bf = process->front()->resources.size();
                     if(it->second->entangled_partner==nullptr && it->second->Density_Matrix_Collapsed(0,0).real() ==-111 && !it->second->no_density_matrix_nullptr_entangled_partner_ok){
-                            //std::cout<<it->second<<", node["<<it->second->node_address<<"\n";
+                            // std::cout<<it->second->entangled_partner<<", node["<<it->second->node_address<<"\n";
+                            EV<<"entangled_partner!: "<<it->second->entangled_partner<<"\n"; 
                             error("Fresh ebit wrong");
                     }
                     
@@ -1210,7 +1219,9 @@ void RuleEngine::traverseThroughAllProcesses2(){
                                 pkt_for_left->setSrcAddr(parentAddress);
                                 pkt_for_left->setOperation_type(pkt->getOperation_type_left());
                                 pkt_for_left->setNew_partner(pkt->getNew_partner_left());
-                                pkt_for_left->setNew_partner_qnic(pkt->getNew_partner_qnic_left());
+                                pkt_for_left->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
+                                pkt_for_left->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
+                                pkt_for_left->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
 
                                 // packet for right node
                                 SwappingResult *pkt_for_right = new SwappingResult;
@@ -1218,7 +1229,10 @@ void RuleEngine::traverseThroughAllProcesses2(){
                                 pkt_for_right->setSrcAddr(parentAddress);
                                 pkt_for_right->setOperation_type(pkt->getOperation_type_right());
                                 pkt_for_right->setNew_partner(pkt->getNew_partner_right());
-                                pkt_for_right->setNew_partner_qnic(pkt->getNew_partner_qnic_right());
+                                pkt_for_right->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
+                                pkt_for_right->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
+                                pkt_for_right->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
+
                                 send(pkt_for_left,"RouterPort$o");
                                 send(pkt_for_right,"RouterPort$o");
                             }

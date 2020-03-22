@@ -242,11 +242,13 @@ packet SwappingResult extends header{
     int right_Dest;
 
     int new_partner_left;
-    int new_partner_qnic_left;
+    int new_partner_qnic_index_left;
+    int new_partner_qnic_address_left;
     QNIC_type new_partner_qnic_type_left;
 
     int new_partner_right;
-    int new_partner_qnic_right;
+    int new_partner_qnic_index_right;
+    int new_partner_qnic_address_right;
     QNIC_type new_partner_qnic_type_right;
 
     int operation_type_left;
@@ -254,7 +256,8 @@ packet SwappingResult extends header{
 
     int operation_type; // when this would reach the destination
     int new_partner;
-    int new_partner_qnic;
+    int new_partner_qnic_index;
+    int new_partner_qnic_address;
     QNIC_type new_partner_qnic_type;
 }
 

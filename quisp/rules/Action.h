@@ -46,27 +46,31 @@ class SwappingAction : public Action {
         int left_partner;
         QNIC_type left_qnic_type;
         int left_qnic_id;
+        int left_qnic_address;
         int left_resource;
         // Second partner
         int right_partner;
         QNIC_type right_qnic_type;
         int right_qnic_id;
+        int right_qnic_address;
         int right_resource;
         int action_index = 0;
 
     public:
         // constructor of entanglement swapping
-        SwappingAction(unsigned long RuleSet_id, int rule_index, int lp, QNIC_type lqt, int lqi, int lr, int rp, QNIC_type rqt, int rqi, int rr) {
+        SwappingAction(unsigned long RuleSet_id, int rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr) {
             ruleset_id = RuleSet_id;
             rule_id = rule_index;
 
             left_partner = lp;
             left_qnic_type = lqt;
             left_qnic_id = lqi;
+            left_qnic_address = lqad;
             left_resource = lr;
             right_partner = rp;
             right_qnic_type = rqt;
             right_qnic_id = rqi;
+            right_qnic_address = rqad;
             right_resource = rr;
         };
 

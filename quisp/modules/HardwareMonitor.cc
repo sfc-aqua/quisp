@@ -817,12 +817,12 @@ connection_setup_inf HardwareMonitor::return_setupInf(int qnic_address){
         if(it->second.qnic.address == qnic_address){
             inf.qnic.type = it->second.qnic.type;
             inf.qnic.index = it->second.qnic.index;
+            inf.qnic.address = it->second.qnic.address;
             inf.neighbor_address = it->second.neighborQNode_address;
             //cModule *node = getModuleByPath("network.HoM");
             inf.quantum_link_cost = it->second.link_cost;
             break;
         }
-        // EV<<"This is ntable: "<<it->first<<":"<<it->second.qnic.address<<"\n";
     }
     return inf;
 }

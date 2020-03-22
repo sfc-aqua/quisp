@@ -25,10 +25,12 @@ namespace modules {
     int left_partner;
     QNIC_type lqnic_type;
     int lqnic_index;
+    int lqnic_address;
     int lres;
     int right_partner;
     QNIC_type rqnic_type;
     int rqnic_index;
+    int rqnic_address;
     int rres;
   }swap_table;
 
@@ -403,6 +405,7 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   int right_partner;
   QNIC_type lqnic_type, rqnic_type;
   int lqnic_index, rqnic_index;
+  int lqnic_address, rqnic_address;
   // actual configurations
   // If the counterparts are decided, the order will automatically be determined.
 
@@ -416,31 +419,37 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
     left_partner = path.at(index-1);
     lqnic_type = qnics.at(index-1).snd.type; // left partner must be second TODO: detail description of this.
     lqnic_index = qnics.at(index-1).snd.index;
+    lqnic_address = qnics.at(index-1).snd.address;
 
     right_partner = path.at(index+1);
     rqnic_type = qnics.at(index+1).fst.type; // right partner must be first 
     rqnic_index = qnics.at(index+1).fst.index;
+    rqnic_address = qnics.at(index+1).fst.address;
 
   }else if(index % 2 == 0){
     left_partner = path.at(0);
     lqnic_type = qnics.at(0).snd.type;
     lqnic_index = qnics.at(0).snd.index;
+    lqnic_address = qnics.at(0).snd.address;
 
     // QNIC_type lqnic_type = 
     right_partner = path.at(path.size()-1);
     rqnic_type = qnics.at(path.size()-1).fst.type;
     rqnic_index = qnics.at(path.size()-1).fst.index; 
+    lqnic_address = qnics.at(path.size()-1).fst.address;
   }else{
     error("this must not happen index must be positive");
   }
   swap_setting.left_partner = left_partner;
   swap_setting.lqnic_type = lqnic_type;
   swap_setting.lqnic_index = lqnic_index;
+  swap_setting.lqnic_address = lqnic_address;
   swap_setting.lres = num_resources;
 
   swap_setting.right_partner = right_partner;
   swap_setting.rqnic_type = rqnic_type;
   swap_setting.rqnic_index = rqnic_index;
+  swap_setting.rqnic_address = rqnic_address;
   swap_setting.rres = num_resources;
 return swap_setting;
 
@@ -555,7 +564,7 @@ RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned long R
     Swap_condition->addClause(resource_clause_left);
     Swap_condition->addClause(resource_clause_right);
     SwappingRule->setCondition(Swap_condition);
-    quisp::rules::Action* swap_action = new SwappingAction(RuleSet_id, rule_index, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lres, conf.right_partner, conf.rqnic_type, conf.rqnic_index, conf.rres);
+    quisp::rules::Action* swap_action = new SwappingAction(RuleSet_id, rule_index, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner, conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres);
     SwappingRule->setAction(swap_action);
     EntanglementSwapping->addRule(SwappingRule);
     rule_index++;
