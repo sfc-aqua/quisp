@@ -255,26 +255,42 @@ void RuleEngine::handleMessage(cMessage *msg){
         }
         else if(dynamic_cast<SwappingResult *>(msg) != nullptr){
             SwappingResult *pkt = check_and_cast<SwappingResult *>(msg);
-            process_id swapping_id;
-            swapping_id.ruleset_id = pkt->getRuleSet_id(); // just in case
-            swapping_id.rule_id = pkt->getRule_id();
+            error("got Swapping result Yay!!");
+            // process_id swapping_id;
+            // swapping_id.ruleset_id = pkt->getRuleSet_id(); // just in case
+            // swapping_id.rule_id = pkt->getRule_id();
 
-            swapping_result swapr;
-            swapr.id = swapping_id;
-            swapr.new_partner = pkt->getNew_partner();
-            swapr.operation_type = pkt->getOperation_type();
-            updateResources_EntanglementSwapping(swapr);            
+            // swapping_result swapr;
+            // swapr.id = swapping_id;
+            // swapr.new_partner = pkt->getNew_partner();
+            // swapr.operation_type = pkt->getOperation_type();
+            // updateResources_EntanglementSwapping(swapr);            
         }
         else if(dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr){
             InternalRuleSetForwarding *pkt = check_and_cast<InternalRuleSetForwarding *>(msg);
-            process_id swapping_id;
-            swapping_id.ruleset_id = pkt->getRuleSet_id(); // just in case
-            // updateResources_EntanglementSwapping(swapr);
-            EV<<"got internal swapping ruleset!\n";
-
+            // add actual process
+            process p;
+            p.ownner_addr = pkt->getRuleSet()->owner;
+            p.Rs = pkt->getRuleSet();
+            //  here swappers got swapping ruleset with internal packet
+            // What we have to do here is 
+            // 1. Add process (RuleSet) of swapping to running process
+            // 2. Run it
+            // (3. ) Update resources (This is task of swapping result packet)
+            int process_id = rp.size();//This is temporary because it will not be unique when processes have been deleted.
+            std::cout<<"Process size is ...."<<p.Rs->size()<<" node["<<parentAddress<<"\n";
+            //todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
+            //ResourceAllocation();
+            if(p.Rs->size()>0){
+                rp.insert(std::make_pair(process_id, p));
+                EV<<"New process arrived !\n";
+            }else{
+                error("Empty rule set...");
+            }
         }
         else if(dynamic_cast<InternalRuleSetForwarding_Application *>(msg) != nullptr){
             InternalRuleSetForwarding_Application *pkt = check_and_cast<InternalRuleSetForwarding_Application *>(msg);
+            //FIXME This is really naive implementation. 
             if(pkt->getApplication_type() == 0){
                 EV<<"got application!!!!!!!!!!!!!!!!! at "<<parentAddress<<"\n";
             }else{
@@ -1175,11 +1191,27 @@ void RuleEngine::traverseThroughAllProcesses2(){
                             }
                              else if(dynamic_cast<SwappingResult *>(pk)!= nullptr){
                                 SwappingResult *pkt = check_and_cast<SwappingResult *>(pk);
-                                // pkt->setSrcAddr(parentAddress);
-                                // DS_DoublePurificationSecondResult *pk_for_self = pkt->dup();
-                                // pk_for_self->setDestAddr(parentAddress);
-                                // send(pkt,"RouterPort$o");
-                                // send(pk_for_self,"RouterPort$o");
+                                // here this packet goes to two destination.
+                                // one is left node the other is right node.
+                                // only swapper knows which is left and right, but qnodes don't
+
+                                // packet for left node
+                                SwappingResult *pkt_for_left = new SwappingResult;
+                                pkt_for_left->setDestAddr(pkt->getLeft_Dest());
+                                pkt_for_left->setSrcAddr(parentAddress);
+                                pkt_for_left->setOperation_type(pkt->getOperation_type_left());
+                                pkt_for_left->setNew_partner(pkt->getNew_partner_left());
+                                pkt_for_left->setNew_partner_qnic(pkt->getNew_partner_qnic_left());
+
+                                // packet for right node
+                                SwappingResult *pkt_for_right = new SwappingResult;
+                                pkt_for_right->setDestAddr(pkt->getRight_Dest());
+                                pkt_for_right->setSrcAddr(parentAddress);
+                                pkt_for_right->setOperation_type(pkt->getOperation_type_right());
+                                pkt_for_right->setNew_partner(pkt->getNew_partner_right());
+                                pkt_for_right->setNew_partner_qnic(pkt->getNew_partner_qnic_right());
+                                send(pkt_for_left,"RouterPort$o");
+                                send(pkt_for_right,"RouterPort$o");
                             }
                             else if (dynamic_cast<Error *>(pk)!= nullptr){
                                 Error *err = check_and_cast<Error *>(pk);

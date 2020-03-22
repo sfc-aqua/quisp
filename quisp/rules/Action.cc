@@ -85,15 +85,26 @@ cPacket* SwappingAction::run(cModule *re){
         removeResource_fromRule(right_qubit);
         removeResource_fromRule(right_partner_qubit);
     }
-    
+    // Currently, this function is able to return only one packet, but this action have to return 
+    //  two nodes (left partner and right partner). once return information to rule engine, then, duplicate it.
     SwappingResult *pk = new SwappingResult;
-    pk->setDestAddr(left_partner); // FIXME and right partner
+    // no destination here. In RuleEngine, it's set.
     pk->setKind(4);
-    pk->setAction_index(action_index);
-    pk->setRule_id(rule_id);
     pk->setRuleSet_id(ruleset_id);
-    pk->setOperation_type(1);// this corresponds to the result of measurement
-    pk->setNew_partner(right_partner);
+    pk->setRule_id(rule_id);
+    pk->setAction_index(action_index);
+
+    // FIXME: These operations are corresponds to the result of operation.
+    pk->setOperation_type_left(1); // operation type for left node
+    pk->setOperation_type_right(1); // operation type for right node
+    // These information are cropped in the RuleEngine.
+    pk->setLeft_Dest(left_partner); // this might not require but just in case
+    pk->setRight_Dest(right_partner);
+
+    pk->setNew_partner_left(right_partner);
+    pk->setNew_partner_qnic_left(right_qnic_id);
+    pk->setNew_partner_right(left_partner);
+    pk->setNew_partner_qnic_right(left_qnic_id);
     return pk;
 }
 

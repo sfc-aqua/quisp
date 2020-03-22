@@ -238,8 +238,19 @@ packet SwappingResult extends header{
     int Rule_id;
     int action_index;
 
-    int operation_type;
+    int left_Dest;
+    int right_Dest;
+
+    int new_partner_left;
+    int new_partner_qnic_left;
+    int new_partner_right;
+    int new_partner_qnic_right;
+    int operation_type_left;
+    int operation_type_right;
+
+    int operation_type; // when this would reach the destination
     int new_partner;
+    int new_partner_qnic;
 }
 
 packet InternalRuleSetForwarding extends header{

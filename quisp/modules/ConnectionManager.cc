@@ -277,7 +277,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
     }
 
     // Taking qnic information of responder node.
-    int actual_dst = pk->getActual_dstAddr();
+    int actual_dst = pk->getActual_destAddr();
     int actual_src = pk->getActual_srcAddr(); //initiator address (to get input qnic)
     int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst); // This must be -1
     int local_qnic_address_to_actual_src = routingdaemon->return_QNIC_address_to_destAddr(actual_src); // TODO: premise only oneconnection allowed btw, two nodes.
@@ -414,27 +414,27 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   // FIXME more dynamically using recursive function or ...
   if(index % 2 != 0){
     left_partner = path.at(index-1);
-    auto iter = std::find(path.begin(), path.end(), left_partner);
-    size_t left_index = std::distance(path.begin(), iter); // index of left partner
+    auto iter_left = std::find(path.begin(), path.end(), left_partner);
+    size_t left_index = std::distance(path.begin(), iter_left); // index of left partner
     lqnic_type = qnics.at(left_index).snd.type; // left partner must be second TODO: detail description of this.
     lqnic_index = qnics.at(left_index).snd.index;
 
     right_partner = path.at(index+1);
-    auto iter = std::find(path.begin(), path.end(), right_partner);
-    size_t right_index = std::distance(path.begin(), iter); // index of left partner
+    auto iter_right = std::find(path.begin(), path.end(), right_partner);
+    size_t right_index = std::distance(path.begin(), iter_right); // index of left partner
     rqnic_type = qnics.at(right_index).fst.type; // right partner must be first 
     rqnic_index = qnics.at(right_index).fst.index;
 
   }else if(index % 2 == 0){
     left_partner = path.at(0);
-    auto iter = std::find(path.begin(), path.end(), left_partner);
-    size_t left_index = std::distance(path.begin(), iter); // index of left partner
+    auto iter_left = std::find(path.begin(), path.end(), left_partner);
+    size_t left_index = std::distance(path.begin(), iter_left); // index of left partner
     lqnic_type = qnics.at(left_index).snd.type;
     lqnic_index = qnics.at(left_index).snd.index;
     // QNIC_type lqnic_type = 
     right_partner = path.at(path.size()-1);
-    auto iter = std::find(path.begin(), path.end(), right_partner);
-    size_t right_index = std::distance(path.begin(), iter); // index of left partner
+    auto iter_right = std::find(path.begin(), path.end(), right_partner);
+    size_t right_index = std::distance(path.begin(), iter_right); // index of left partner
     rqnic_type = qnics.at(right_index).fst.type;
     rqnic_index = qnics.at(right_index).fst.index; 
   }else{
