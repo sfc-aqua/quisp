@@ -255,6 +255,15 @@ void RuleEngine::handleMessage(cMessage *msg){
         }
         else if(dynamic_cast<SwappingResult *>(msg) != nullptr){
             SwappingResult *pkt = check_and_cast<SwappingResult *>(msg);
+
+            int new_partner = pkt->getNew_partner();
+            int new_partner_qnic = pkt->getNew_partner_qnic();
+            QNIC_type new_partner_qnic_type = pkt->getNew_partner_qnic_type();
+            int operation_type = pkt->getOperation_type();
+            int source = pkt->getSrcAddr();
+            EV<<"This packet from (6?)"<<source<<"\n";
+            EV<<"This node :"<<parentAddress<<" new partner :"<<new_partner<<" new partner's qnic :"<<new_partner_qnic<<" new partner's qnic type: "<<new_partner_qnic_type<<"\n";
+            EV<<"operation type"<<operation_type<<"\n";
             error("got Swapping result Yay!!");
             // process_id swapping_id;
             // swapping_id.ruleset_id = pkt->getRuleSet_id(); // just in case

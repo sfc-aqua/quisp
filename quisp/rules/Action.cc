@@ -103,8 +103,10 @@ cPacket* SwappingAction::run(cModule *re){
 
     pk->setNew_partner_left(right_partner);
     pk->setNew_partner_qnic_left(right_qnic_id);
+    pk->setNew_partner_qnic_type_left(right_qnic_type);
     pk->setNew_partner_right(left_partner);
     pk->setNew_partner_qnic_right(left_qnic_id);
+    pk->setNew_partner_qnic_type_right(left_qnic_type);
     return pk;
 }
 

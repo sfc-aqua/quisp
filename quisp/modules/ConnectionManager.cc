@@ -414,31 +414,24 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   // FIXME more dynamically using recursive function or ...
   if(index % 2 != 0){
     left_partner = path.at(index-1);
-    auto iter_left = std::find(path.begin(), path.end(), left_partner);
-    size_t left_index = std::distance(path.begin(), iter_left); // index of left partner
-    lqnic_type = qnics.at(left_index).snd.type; // left partner must be second TODO: detail description of this.
-    lqnic_index = qnics.at(left_index).snd.index;
+    lqnic_type = qnics.at(index-1).snd.type; // left partner must be second TODO: detail description of this.
+    lqnic_index = qnics.at(index-1).snd.index;
 
     right_partner = path.at(index+1);
-    auto iter_right = std::find(path.begin(), path.end(), right_partner);
-    size_t right_index = std::distance(path.begin(), iter_right); // index of left partner
-    rqnic_type = qnics.at(right_index).fst.type; // right partner must be first 
-    rqnic_index = qnics.at(right_index).fst.index;
+    rqnic_type = qnics.at(index+1).fst.type; // right partner must be first 
+    rqnic_index = qnics.at(index+1).fst.index;
 
   }else if(index % 2 == 0){
     left_partner = path.at(0);
-    auto iter_left = std::find(path.begin(), path.end(), left_partner);
-    size_t left_index = std::distance(path.begin(), iter_left); // index of left partner
-    lqnic_type = qnics.at(left_index).snd.type;
-    lqnic_index = qnics.at(left_index).snd.index;
+    lqnic_type = qnics.at(0).snd.type;
+    lqnic_index = qnics.at(0).snd.index;
+
     // QNIC_type lqnic_type = 
     right_partner = path.at(path.size()-1);
-    auto iter_right = std::find(path.begin(), path.end(), right_partner);
-    size_t right_index = std::distance(path.begin(), iter_right); // index of left partner
-    rqnic_type = qnics.at(right_index).fst.type;
-    rqnic_index = qnics.at(right_index).fst.index; 
+    rqnic_type = qnics.at(path.size()-1).fst.type;
+    rqnic_index = qnics.at(path.size()-1).fst.index; 
   }else{
-    error("under construction!");
+    error("this must not happen index must be positive");
   }
   swap_setting.left_partner = left_partner;
   swap_setting.lqnic_type = lqnic_type;

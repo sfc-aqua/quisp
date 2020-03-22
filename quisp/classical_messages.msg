@@ -243,14 +243,19 @@ packet SwappingResult extends header{
 
     int new_partner_left;
     int new_partner_qnic_left;
+    QNIC_type new_partner_qnic_type_left;
+
     int new_partner_right;
     int new_partner_qnic_right;
+    QNIC_type new_partner_qnic_type_right;
+
     int operation_type_left;
     int operation_type_right;
 
     int operation_type; // when this would reach the destination
     int new_partner;
     int new_partner_qnic;
+    QNIC_type new_partner_qnic_type;
 }
 
 packet InternalRuleSetForwarding extends header{
