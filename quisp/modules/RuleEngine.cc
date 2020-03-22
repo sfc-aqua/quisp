@@ -29,6 +29,10 @@ void RuleEngine::initialize()
     hardware_monitor = check_and_cast<HardwareMonitor *>(hm);
     cModule *rt = getParentModule()->getSubmodule("rt");
     realtime_controller = check_and_cast<RealTimeController *>(rt);//Just for qubit color update and Pauli error elimination
+    // TODO CHECK: Is this doable?
+    cModule *rd = getParentModule()->getSubmodule("rd"); 
+    routingdaemon = check_and_cast<RoutingDaemon *>(rd);
+
     parentAddress = par("address");
     number_of_qnics_all = par("total_number_of_qnics");
     number_of_qnics = par("number_of_qnics");
@@ -892,40 +896,54 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
     }
 }
 
-
 void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
     // swapper believe previous BSM was succeeded.
-    // initialize
-
+    // These are new partner's info
     int new_partner = swapr.new_partner;
     int new_partner_qnic_index = swapr.new_partner_qnic_index;  
-    int new_partner_qnic_address = swapr.new_partner_qnic_address;// is this good? bad?
+    int new_partner_qnic_address = swapr.new_partner_qnic_address;// this is not nessesary?
     QNIC_type new_partner_qnic_type = swapr.new_partner_qnic_type;
     int operation_type = swapr.operation_type;
-    // What is error condition here?
+    EV<<"new_partner: "<<new_partner<<"\n";
+    EV<<"new_partner_qnic_index "<<new_partner_qnic_index<<"\n";
+    EV<<"new_partner_qnic_address: "<<new_partner_qnic_address<<"\n";
+    EV<<"new_partnerqnic_type "<<new_partner_qnic_type<<"\n";
+
+    // neigbor address should be swapper address
+    // node1 --- node6 --- node15
+    // node6 is swapper and this is the source of swapping result.
+    // qnic interface from node1 to node15 and node1 to node6 must be the same.
+    // initialize
+
+    int qnic_address = routingdaemon->return_QNIC_address_to_destAddr(new_partner);
+    connection_setup_inf inf = hardware_monitor->return_setupInf(qnic_address);
+    int qnic_index = inf.qnic.index;
+    QNIC_type qnic_type =inf.qnic.type;
 
     // Swapper doesn't know this is success or fail. Is this correct?
     // TODO how to apply correct operation? is this the role of real time contoroller?
     // FIXME here is just one resource, but this should be loop
     // TODO resources for entanglement swapping in swapper should be free
-    sentQubitIndexTracker::iterator it = tracker[new_partner_qnic_address].find(0); // what is qnic address?
-    stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[new_partner_qnic_type], new_partner_qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
-    if(qubit->entangled_partner!=nullptr){
-        if(qubit->entangled_partner->entangled_partner==nullptr){
-            //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
-            error("1. Entanglement tracking is not doing its job.");
+    int tracker_size = tracker[qnic_address].size();
+    for(int i = 0; i<tracker_size; i++){
+        sentQubitIndexTracker::iterator it = tracker[qnic_address].find(i); // what is qnic address?
+        stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
+        if(qubit->entangled_partner!=nullptr){
+            if(qubit->entangled_partner->entangled_partner==nullptr){
+                //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+                error("1. Entanglement tracking is not doing its job.");
+            }
+            if(qubit->entangled_partner->entangled_partner != qubit){
+                //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+                error("2. Entanglement tracking is not doing its job.");
+            }
         }
-        if(qubit->entangled_partner->entangled_partner != qubit){
-            //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
-            error("2. Entanglement tracking is not doing its job.");
-        }
+        allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner/*QNode IP address*/,qubit));
     }
-    allResources[new_partner_qnic_type][new_partner_qnic_index].insert(std::make_pair(new_partner/*QNode IP address*/,qubit));
     // ResourceAllocation is only for neigbor. need to create other resource allocation?
-    ResourceAllocation(new_partner_qnic_type, new_partner_qnic_index);
+    ResourceAllocation(qnic_type, qnic_index);
     traverseThroughAllProcesses2();//New resource added to QNIC with qnic_type qnic_index.
-
-    error("HEY HERE!");
+    // error("HEY HERE!");
 }
 
 
@@ -1078,8 +1096,10 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
         unsigned long ruleset_id = process->ruleset_id;
         int partner_size = process->entangled_partner.size();
         std::vector<Rule*> rule_ptr = process->getRule_ptr();
+        EV<<"parent Address"<<parentAddress<<"\n";
         for (int i=0; i<partner_size;i++){
             int resource_entangled_with_address = process->entangled_partner[i];
+            EV<<"resource_entangled_with_address is !!"<<resource_entangled_with_address<<"\n";
 
             if(process->empty()){
                 error("RuleSet with no Rule found. Probably not what you want!");
@@ -1096,7 +1116,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
                     int num_rsc_bf = process->front()->resources.size();
                     if(it->second->entangled_partner==nullptr && it->second->Density_Matrix_Collapsed(0,0).real() ==-111 && !it->second->no_density_matrix_nullptr_entangled_partner_ok){
                             // std::cout<<it->second->entangled_partner<<", node["<<it->second->node_address<<"\n";
-                            EV<<"entangled_partner!: "<<it->second->entangled_partner<<"\n"; 
+                            // EV<<"entangled_partner!: "<<it->second->entangled_partner<<"\n"; 
                             error("Fresh ebit wrong");
                     }
                     
@@ -1232,6 +1252,12 @@ void RuleEngine::traverseThroughAllProcesses2(){
                                 pkt_for_right->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
                                 pkt_for_right->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
                                 pkt_for_right->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
+
+                                // check
+                                // EV<<"left node should be 1: "<<pkt->getLeft_Dest()<<" right node should be 15: "<<pkt->getRight_Dest()<<"\n";
+                                // if(parentAddress == 6){
+                                //     error("here! check!");
+                                // }
 
                                 send(pkt_for_left,"RouterPort$o");
                                 send(pkt_for_right,"RouterPort$o");

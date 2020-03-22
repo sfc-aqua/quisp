@@ -16,6 +16,7 @@
 #include <modules/stationaryQubit.h>
 #include <modules/RealTimeController.h>
 #include <modules/HardwareMonitor.h>
+#include <modules/RoutingDaemon.h>
 #include <modules/HoM_Controller.h>
 #include <modules/QUBIT.h>
 
@@ -114,6 +115,7 @@ class RuleEngine : public cSimpleModule
         bool* terminated_qnic;//When you need to intentionally stop the link to make the simulation lighter.
         sentQubitIndexTracker* tracker;
         HardwareMonitor *hardware_monitor;
+        RoutingDaemon *routingdaemon;
         RealTimeController *realtime_controller;
         int* qnic_burst_trial_counter;
         typedef std::map<int,bool> trial_tracker;//trial index, false or true (that trial is over or not)

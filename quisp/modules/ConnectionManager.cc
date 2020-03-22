@@ -410,12 +410,12 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   // If the counterparts are decided, the order will automatically be determined.
 
   auto iter = std::find(path.begin(), path.end(), swapper_address);
-  size_t index = std::distance(path.begin(), iter);
+  size_t index = std::distance(path.begin(), iter); // index of swapper in the path
   if(index == 0 || index == path.size()){
     error("This shouldn't happen. Endnode was recognized as swapper with some reason.");
   }
   // FIXME more dynamically using recursive function or ...
-  if(index % 2 != 0){
+  if(path.at(index) == 7||path.at(index)==6){
     left_partner = path.at(index-1);
     lqnic_type = qnics.at(index-1).snd.type; // left partner must be second TODO: detail description of this.
     lqnic_index = qnics.at(index-1).snd.index;
@@ -426,7 +426,7 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
     rqnic_index = qnics.at(index+1).fst.index;
     rqnic_address = qnics.at(index+1).fst.address;
 
-  }else if(index % 2 == 0){
+  }else if(path.at(index)==1){
     left_partner = path.at(0);
     lqnic_type = qnics.at(0).snd.type;
     lqnic_index = qnics.at(0).snd.index;
@@ -558,9 +558,10 @@ RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned long R
     std::vector<int> partners = {conf.left_partner, conf.right_partner};
     RuleSet* EntanglementSwapping = new RuleSet(RuleSet_id, owner, partners);
     Rule* SwappingRule = new Rule(RuleSet_id, rule_index);
+    EntanglementSwapping->setRule_ptr(SwappingRule);
     Condition* Swap_condition = new Condition();
-    Clause* resource_clause_left = new EnoughResourceClauseLeft(conf.left_partner, 1);
-    Clause* resource_clause_right = new EnoughResourceClauseRight(conf.right_partner, 1);
+    Clause* resource_clause_left = new EnoughResourceClause(conf.left_partner, conf.lres);
+    Clause* resource_clause_right = new EnoughResourceClause(conf.right_partner, conf.rres);
     Swap_condition->addClause(resource_clause_left);
     Swap_condition->addClause(resource_clause_right);
     SwappingRule->setCondition(Swap_condition);
