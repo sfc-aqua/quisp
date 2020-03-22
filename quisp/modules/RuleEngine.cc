@@ -271,6 +271,7 @@ void RuleEngine::handleMessage(cMessage *msg){
             swapr.new_partner_qnic_index = pkt->getNew_partner_qnic_index();
             swapr.new_partner_qnic_address = pkt->getNew_partner_qnic_address();
             swapr.new_partner_qnic_type = pkt->getNew_partner_qnic_type();
+            swapr.measured_qubit_index = pkt->getMeasured_qubit_index();
             swapr.operation_type = pkt->getOperation_type();
             updateResources_EntanglementSwapping(swapr); 
         }
@@ -904,10 +905,10 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
     int new_partner_qnic_address = swapr.new_partner_qnic_address;// this is not nessesary?
     QNIC_type new_partner_qnic_type = swapr.new_partner_qnic_type;
     int operation_type = swapr.operation_type;
-    EV<<"new_partner: "<<new_partner<<"\n";
-    EV<<"new_partner_qnic_index "<<new_partner_qnic_index<<"\n";
-    EV<<"new_partner_qnic_address: "<<new_partner_qnic_address<<"\n";
-    EV<<"new_partnerqnic_type "<<new_partner_qnic_type<<"\n";
+    // EV<<"new_partner: "<<new_partner<<"\n";
+    // EV<<"new_partner_qnic_index "<<new_partner_qnic_index<<"\n";
+    // EV<<"new_partner_qnic_address: "<<new_partner_qnic_address<<"\n";
+    // EV<<"new_partnerqnic_type "<<new_partner_qnic_type<<"\n";
 
     // neigbor address should be swapper address
     // node1 --- node6 --- node15
@@ -924,21 +925,38 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
     // TODO how to apply correct operation? is this the role of real time contoroller?
     // FIXME here is just one resource, but this should be loop
     // TODO resources for entanglement swapping in swapper should be free
-    int tracker_size = tracker[qnic_address].size();
-    for(int i = 0; i<tracker_size; i++){
-        sentQubitIndexTracker::iterator it = tracker[qnic_address].find(i); // what is qnic address?
-        stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
-        if(qubit->entangled_partner!=nullptr){
-            if(qubit->entangled_partner->entangled_partner==nullptr){
-                //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
-                error("1. Entanglement tracking is not doing its job.");
-            }
-            if(qubit->entangled_partner->entangled_partner != qubit){
-                //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
-                error("2. Entanglement tracking is not doing its job.");
-            }
-            allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner/*QNode IP address*/,qubit));
+    // Update tracker first get index from Swapping result maybe... get qubit index from swapping result
+    int qubit_index = getOneFreeQubit_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index);
+    int index = swapr.measured_qubit_index;
+    EV<<"This is index!"<<index<<":"<<qubit_index<<"\n";
+    if(index != qubit_index){
+        EV<<"index: "<<index<<": qubit index: "<<qubit_index<<"\n";
+        error("indexes are different!");
+    }
+    // sentQubitIndexTracker::iterator it = tracker[qnic_address].find(qubit_index);
+    // if (it != tracker[qnic_address].end()) {
+    //     tracker[qnic_address].erase(it);
+    // }else{
+    //     EV<<"parent address : "<<parentAddress<<"\n";
+    //     error("resource not found but it's measured, it's wrong");
+    // }
+    // QubitAddr_cons Addr(new_partner, new_partner_qnic_index, qubit_index);
+    // tracker[qnic_address].insert(std::make_pair(qubit_index, Addr));
+    // error("check");
+    // once erace old info and insert it.
+    // tracker[qnic_address] = Addr; //qubit with address Addr was shot in nth time. This list is ordered from old to new.
+    stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit",qubit_index));
+    if(qubit->entangled_partner!=nullptr){
+        if(qubit->entangled_partner->entangled_partner==nullptr){
+            //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+            error("1. Entanglement tracking is not doing its job.");
         }
+        if(qubit->entangled_partner->entangled_partner != qubit){
+            //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+            error("2. Entanglement tracking is not doing its job.");
+        }
+        allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner/*QNode IP address*/,qubit));
+    // freeResource(it->second.qnic_index, it->second.qubit_index, qnic_type);
     }
     // ResourceAllocation is only for neigbor. need to create other resource allocation?
     ResourceAllocation(qnic_type, qnic_index);
@@ -1238,6 +1256,7 @@ void RuleEngine::traverseThroughAllProcesses2(){
                                 pkt_for_left->setDestAddr(pkt->getLeft_Dest());
                                 pkt_for_left->setSrcAddr(parentAddress);
                                 pkt_for_left->setOperation_type(pkt->getOperation_type_left());
+                                pkt_for_left->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
                                 pkt_for_left->setNew_partner(pkt->getNew_partner_left());
                                 pkt_for_left->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
                                 pkt_for_left->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
@@ -1248,6 +1267,7 @@ void RuleEngine::traverseThroughAllProcesses2(){
                                 pkt_for_right->setDestAddr(pkt->getRight_Dest());
                                 pkt_for_right->setSrcAddr(parentAddress);
                                 pkt_for_right->setOperation_type(pkt->getOperation_type_right());
+                                pkt_for_right->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
                                 pkt_for_right->setNew_partner(pkt->getNew_partner_right());
                                 pkt_for_right->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
                                 pkt_for_right->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());

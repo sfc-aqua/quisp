@@ -77,6 +77,7 @@ struct swapping_result{
     int new_partner;
     int new_partner_qnic_index;
     int new_partner_qnic_address;
+    int measured_qubit_index;
     QNIC_type new_partner_qnic_type;
     int operation_type;
 };

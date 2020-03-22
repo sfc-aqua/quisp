@@ -244,11 +244,13 @@ packet SwappingResult extends header{
     int new_partner_left;
     int new_partner_qnic_index_left;
     int new_partner_qnic_address_left;
+    int measured_qubit_index_left;
     QNIC_type new_partner_qnic_type_left;
 
     int new_partner_right;
     int new_partner_qnic_index_right;
     int new_partner_qnic_address_right;
+    int measured_qubit_index_right;
     QNIC_type new_partner_qnic_type_right;
 
     int operation_type_left;
@@ -258,6 +260,7 @@ packet SwappingResult extends header{
     int new_partner;
     int new_partner_qnic_index;
     int new_partner_qnic_address;
+    int measured_qubit_index;
     QNIC_type new_partner_qnic_type;
 }
 

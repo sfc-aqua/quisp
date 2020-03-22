@@ -22,7 +22,6 @@ int Action::checkNumResource(){
 
 //required_index: 0 is the top one, 1 is the 2nd top one, and so on.
 stationaryQubit* Action::getResource_fromTop(int required_index){
-    int resource_index = 0;
     stationaryQubit *pt = nullptr;
 
     for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
@@ -62,7 +61,7 @@ cPacket* SwappingAction::run(cModule *re){
         pk->setError_text("Not enough resource found!");
         return pk;
     }
-    if(left_qnic_id <0 || right_qnic_id < 0){
+    if(left_qnic_id < 0 || right_qnic_id < 0){
         Error *pk = new Error;
         pk->setError_text("QNICs are not found!");
         return pk;
@@ -74,8 +73,8 @@ cPacket* SwappingAction::run(cModule *re){
     // just swapping pointer.
     // swapper have no way to know this swapping is success or not.
     if(std::rand()/RAND_MAX < success_probability){
-        right_partner_qubit->entangled_partner = left_partner_qubit;
-        left_partner_qubit->entangled_partner = right_partner_qubit;
+        right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
+        left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
 
         removeResource_fromRule(left_qubit);
         removeResource_fromRule(right_qubit);
@@ -105,11 +104,13 @@ cPacket* SwappingAction::run(cModule *re){
     pk->setNew_partner_qnic_index_left(right_qnic_id);
     pk->setNew_partner_qnic_type_left(right_qnic_type);
     pk->setNew_partner_qnic_address_left(right_qnic_address);
+    pk->setMeasured_qubit_index_left(resource_index); // here is wrong;
 
     pk->setNew_partner_right(left_partner);
     pk->setNew_partner_qnic_index_right(left_qnic_id);
     pk->setNew_partner_qnic_type_right(left_qnic_type);
     pk->setNew_partner_qnic_address_right(left_qnic_address);
+    pk->setMeasured_qubit_index_right(resource_index);
     return pk;
 }
 

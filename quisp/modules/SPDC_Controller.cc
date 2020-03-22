@@ -117,7 +117,7 @@ void SPDC_Controller::startPump(){
     //   emt = new  EmitPhotonRequest();
     //   scheduleAt(simTime()+timing_buffer+(max_accepted_rate*i), emt);
     // }
-    emt = new  EmitPhotonRequest();
+    emt = new EmitPhotonRequest();
     scheduleAt(simTime()+timing_buffer+(max_accepted_rate), emt);
 }
 
