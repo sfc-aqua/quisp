@@ -22,6 +22,7 @@ int Action::checkNumResource(){
 
 //required_index: 0 is the top one, 1 is the 2nd top one, and so on.
 stationaryQubit* Action::getResource_fromTop(int required_index){
+    int resource_index = 0;
     stationaryQubit *pt = nullptr;
 
     for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
@@ -72,13 +73,45 @@ cPacket* SwappingAction::run(cModule *re){
     stationaryQubit *left_partner_qubit = left_qubit->entangled_partner;
     // just swapping pointer.
     // swapper have no way to know this swapping is success or not.
+    // bell measurement
+    left_qubit->Hadamard_gate();
+    right_qubit->CNOT_gate(left_qubit);
+    int lindex = left_qubit->stationaryQubit_address;
+    int rindex = right_qubit->stationaryQubit_address;
+
+    bool left_measure = left_qubit->measure_Z();
+    bool right_measure = right_qubit->measure_Z();
+
+    int operation_type_left, operation_type_right;
+    EV<<"measurement result left!"<<left_measure<<"\n";
+    EV<<"measurement result right!"<<right_measure<<"\n";
+    EV<<"check num resource"<<this->checkNumResource()<<"\n";
+
+    if(!left_measure && !right_measure){
+        EV<<"operation type 0, operation left I, operation right I\n";
+        operation_type_left = 0;
+        operation_type_right = 0;
+    }else if(!left_measure && right_measure){
+        EV<<"operation type 1, operation left I, operation right X\n";
+        operation_type_left = 0;
+        operation_type_right = 1;
+    }else if(left_measure && !right_measure){
+        EV<<"operation type 2, operation left Z, operation right I\n";
+        operation_type_left = 2;
+        operation_type_right = 0;
+    }else if(left_measure && right_measure){
+        EV<<"operation type 3, operation left Z, operation right X\n";
+        operation_type_left = 2;
+        operation_type_right = 1;
+    }
+
     if(std::rand()/RAND_MAX < success_probability){
         right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
         left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
 
         removeResource_fromRule(left_qubit);
         removeResource_fromRule(right_qubit);
-    }else{
+    }else{// this might be wrong
         removeResource_fromRule(right_qubit);
         removeResource_fromRule(right_partner_qubit);
         removeResource_fromRule(right_qubit);
@@ -94,8 +127,8 @@ cPacket* SwappingAction::run(cModule *re){
     pk->setAction_index(action_index);
 
     // FIXME: These operations are corresponds to the result of operation.
-    pk->setOperation_type_left(1); // operation type for left node
-    pk->setOperation_type_right(1); // operation type for right node
+    pk->setOperation_type_left(operation_type_left); // operation type for left node
+    pk->setOperation_type_right(operation_type_right); // operation type for right node
     // These information are cropped in the RuleEngine.
     pk->setLeft_Dest(left_partner); // this might not require but just in case
     pk->setRight_Dest(right_partner);
@@ -104,13 +137,13 @@ cPacket* SwappingAction::run(cModule *re){
     pk->setNew_partner_qnic_index_left(right_qnic_id);
     pk->setNew_partner_qnic_type_left(right_qnic_type);
     pk->setNew_partner_qnic_address_left(right_qnic_address);
-    pk->setMeasured_qubit_index_left(resource_index); // here is wrong;
+    pk->setMeasured_qubit_index_left(lindex); // here is wrong;
 
     pk->setNew_partner_right(left_partner);
     pk->setNew_partner_qnic_index_right(left_qnic_id);
     pk->setNew_partner_qnic_type_right(left_qnic_type);
     pk->setNew_partner_qnic_address_right(left_qnic_address);
-    pk->setMeasured_qubit_index_right(resource_index);
+    pk->setMeasured_qubit_index_right(rindex);
     return pk;
 }
 

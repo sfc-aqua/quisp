@@ -79,7 +79,7 @@ class ConnectionManager : public cSimpleModule
         virtual void intermediate_reject_req_handler(RejectConnectionSetupRequest *pk);
 
         // virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, QNIC_type lqnic_type, int lqnic_index, int lres, int right_node, QNIC_type rqnic_type, int rqnic_index, int rres);
-        virtual RuleSet* generateRuleSet_Tomography(unsigned long RuleSet_id, int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index);
+        virtual RuleSet* generateRuleSet_Tomography(unsigned long RuleSet_id, int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index, int num_resources);
         virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned long RuleSet_id,int owner, swap_table conf);
         virtual swap_table EntanglementSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources);
         virtual unsigned long createUniqueId();
@@ -316,8 +316,8 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
 
     // create Ruleset for all nodes!
     int num_resource = pk->getNumber_of_required_Bellpairs();
-    int inter_midiate_node = pk->getStack_of_QNodeIndexesArraySize();
-    for(int i=0; i<=inter_midiate_node;i++){
+    int intermediate_node = pk->getStack_of_QNodeIndexesArraySize();
+    for(int i=0; i<=intermediate_node;i++){
       auto itr = std::find(swappers.begin(), swappers.end(), path.at(i));
       size_t index = std::distance(swappers.begin(), itr);
       if(index != swappers.size()){
@@ -338,9 +338,9 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
         int num_measure = pk->getNum_measure();
         RuleSet* tomography_ruleset = nullptr;
         if(i == 0){// if this is initiater
-          tomography_ruleset = generateRuleSet_Tomography(createUniqueId(), path.at(i), path.at(path.size()-1), num_measure, qnics.at(qnics.size()-1).fst.type, qnics.at(qnics.size()-1).fst.index);
+          tomography_ruleset = generateRuleSet_Tomography(createUniqueId(), path.at(i), path.at(path.size()-1), num_measure, qnics.at(qnics.size()-1).fst.type, qnics.at(qnics.size()-1).fst.index, num_resource);
         }else{ // if this is responder
-          tomography_ruleset = generateRuleSet_Tomography(createUniqueId(), path.at(i), path.at(0), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index);
+          tomography_ruleset = generateRuleSet_Tomography(createUniqueId(), path.at(i), path.at(0), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
         }
         if(tomography_ruleset != nullptr){
           ConnectionSetupResponse *pkr = new ConnectionSetupResponse;
@@ -415,7 +415,7 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
     error("This shouldn't happen. Endnode was recognized as swapper with some reason.");
   }
   // FIXME more dynamically using recursive function or ...
-  if(path.at(index) == 7||path.at(index)==6){
+  if(index % 2 == 1){
     left_partner = path.at(index-1);
     lqnic_type = qnics.at(index-1).snd.type; // left partner must be second TODO: detail description of this.
     lqnic_index = qnics.at(index-1).snd.index;
@@ -426,7 +426,7 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
     rqnic_index = qnics.at(index+1).fst.index;
     rqnic_address = qnics.at(index+1).fst.address;
 
-  }else if(path.at(index)==1){
+  }else if(index % 2 == 0){
     left_partner = path.at(0);
     lqnic_type = qnics.at(0).snd.type;
     lqnic_index = qnics.at(0).snd.index;
@@ -573,7 +573,7 @@ RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned long R
     return EntanglementSwapping;
 }
 
-RuleSet* ConnectionManager::generateRuleSet_Tomography(unsigned long RuleSet_id, int owner, int partner, int num_of_measure, QNIC_type qnic_type, int qnic_index){
+RuleSet* ConnectionManager::generateRuleSet_Tomography(unsigned long RuleSet_id, int owner, int partner, int num_of_measure, QNIC_type qnic_type, int qnic_index, int num_resources){
   // tomography ruleset
   int rule_index = 0;
   RuleSet* tomography = new RuleSet(RuleSet_id, owner, partner);
@@ -581,7 +581,7 @@ RuleSet* ConnectionManager::generateRuleSet_Tomography(unsigned long RuleSet_id,
 
   Condition* measurement_condition = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
   Clause* count_clause = new MeasureCountClause(num_of_measure, partner, qnic_type , qnic_index, 0);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
-  Clause* resource_clause = new EnoughResourceClause(partner, 1);
+  Clause* resource_clause = new EnoughResourceClause(partner, num_resources);
 
   measurement_condition->addClause(count_clause);
   measurement_condition->addClause(resource_clause);

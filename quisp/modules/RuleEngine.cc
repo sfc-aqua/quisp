@@ -302,6 +302,22 @@ void RuleEngine::handleMessage(cMessage *msg){
             //FIXME This is really naive implementation. 
             if(pkt->getApplication_type() == 0){
                 EV<<"got application!!!!!!!!!!!!!!!!! at "<<parentAddress<<"\n";
+                           //Received a tomography rule set.
+                InternalRuleSetForwarding_Application *pk = check_and_cast<InternalRuleSetForwarding_Application *>(msg);
+                //std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
+                process p;
+                p.ownner_addr = pkt->getRuleSet()->owner;
+                p.Rs = pkt->getRuleSet();
+                int process_id = rp.size();//This is temporary because it will not be unique when processes have been deleted.
+                std::cout<<"Process size is ...."<<p.Rs->size()<<" node["<<parentAddress<<"\n";
+                //todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
+                //ResourceAllocation();
+                if(p.Rs->size()>0){
+                    rp.insert(std::make_pair(process_id, p));
+                    EV<<"New process arrived !\n";
+                }else{
+                    error("Empty rule set...");
+                }
             }else{
                 error("This application is not recognized yet");
             }
@@ -920,32 +936,44 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
     connection_setup_inf inf = hardware_monitor->return_setupInf(qnic_address);
     int qnic_index = inf.qnic.index;
     QNIC_type qnic_type =inf.qnic.type;
+    int qubit_index = swapr.measured_qubit_index;
+
 
     // Swapper doesn't know this is success or fail. Is this correct?
     // TODO how to apply correct operation? is this the role of real time contoroller?
     // FIXME here is just one resource, but this should be loop
     // TODO resources for entanglement swapping in swapper should be free
     // Update tracker first get index from Swapping result maybe... get qubit index from swapping result
-    int qubit_index = getOneFreeQubit_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index);
-    int index = swapr.measured_qubit_index;
-    EV<<"This is index!"<<index<<":"<<qubit_index<<"\n";
-    if(index != qubit_index){
-        EV<<"index: "<<index<<": qubit index: "<<qubit_index<<"\n";
-        error("indexes are different!");
+       
+    sentQubitIndexTracker::iterator it = tracker[qnic_address].find(qubit_index);
+    // check entangled partners
+    if(it == tracker[qnic_address].end()){
+        EV<<"this is index"<<index<<"\n";
+        error("Qubit couldn't be found!");
+    }else{
+        // once erase this
+        tracker[qnic_address].erase(it);
+        QubitAddr_cons Addr(new_partner, new_partner_qnic_index, qubit_index); 
+        tracker[qnic_address].insert(std::make_pair(qubit_index, Addr));
     }
-    // sentQubitIndexTracker::iterator it = tracker[qnic_address].find(qubit_index);
-    // if (it != tracker[qnic_address].end()) {
-    //     tracker[qnic_address].erase(it);
-    // }else{
-    //     EV<<"parent address : "<<parentAddress<<"\n";
-    //     error("resource not found but it's measured, it's wrong");
-    // }
-    // QubitAddr_cons Addr(new_partner, new_partner_qnic_index, qubit_index);
-    // tracker[qnic_address].insert(std::make_pair(qubit_index, Addr));
-    // error("check");
-    // once erace old info and insert it.
-    // tracker[qnic_address] = Addr; //qubit with address Addr was shot in nth time. This list is ordered from old to new.
-    stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit",qubit_index));
+    //qubit with address Addr was shot in nth time. This list is ordered from old to new.
+    stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit",it->second.qubit_index));
+    if(operation_type==0){
+        // nothing   
+    }else if(operation_type == 1){
+        // do X
+        qubit->X_gate();
+    }else if(operation_type == 2){
+        qubit->Z_gate();
+    }else{
+        error("something error happened! This operation type doesn't recorded!");
+    }
+    allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner/*QNode IP address*/,qubit));
+    if(parentAddress== 1 && qubit->entangled_partner->node_address != 1){
+        EV<<"cocori\n";
+        EV<<"qubit of this node"<<qubit->node_address<<"qubit of entangled"<<qubit->entangled_partner->node_address<<"\n";
+        error("This would be success!");
+    }
     if(qubit->entangled_partner!=nullptr){
         if(qubit->entangled_partner->entangled_partner==nullptr){
             //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
@@ -955,10 +983,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
             //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
             error("2. Entanglement tracking is not doing its job.");
         }
-        allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner/*QNode IP address*/,qubit));
-    // freeResource(it->second.qnic_index, it->second.qubit_index, qnic_type);
     }
-    // ResourceAllocation is only for neigbor. need to create other resource allocation?
     ResourceAllocation(qnic_type, qnic_index);
     traverseThroughAllProcesses2();//New resource added to QNIC with qnic_type qnic_index.
     // error("HEY HERE!");
@@ -1117,7 +1142,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
         EV<<"parent Address"<<parentAddress<<"\n";
         for (int i=0; i<partner_size;i++){
             int resource_entangled_with_address = process->entangled_partner[i];
-            EV<<"resource_entangled_with_address is !!"<<resource_entangled_with_address<<"\n";
+            // EV<<"resource_entangled_with_address is !!"<<resource_entangled_with_address<<"\n";
 
             if(process->empty()){
                 error("RuleSet with no Rule found. Probably not what you want!");

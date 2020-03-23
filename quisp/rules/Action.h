@@ -31,7 +31,7 @@ class Action {
     std::multimap<int,stationaryQubit*> *rule_resources;
     unsigned long ruleset_id;
     int rule_id;//Used to make the lock_id unique, together with purification_count.
-    int resource_index = 0;// for check the index of resource. 
+    // int resource_index = 0;// for check the index of resource. 
     //virtual cPacket* run(cModule *re, qnicResources *resources) = 0;
     virtual cPacket* run(cModule *re) = 0;
     virtual stationaryQubit* getResource_fromTop(int required_index);
