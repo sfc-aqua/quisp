@@ -35,9 +35,6 @@ bool Condition::check(std::multimap<int,stationaryQubit*> resources) const {
         }
     }
     //std::cout<<"satisfying? = "<<satisfying<<" false = "<<false<<" true = "<<true<<"\n";
-    if(satisfying){
-        EV<<"Condition!!!!\n";
-    }
     return satisfying;
 }
 

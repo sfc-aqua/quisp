@@ -308,7 +308,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
     for(int i=0; i<qnic_array_size+1; i++){
       qnic_pairs = pk->getStack_of_QNICs(i);
       qnics.push_back(qnic_pairs);
-      EV<<"qnic index"<<qnic_pairs.fst.index<<":::"<<qnic_pairs.snd.index<<"\n";
+      // EV<<"qnic index"<<qnic_pairs.fst.index<<":::"<<qnic_pairs.snd.index<<"\n";
     }
     if(qnics.at(0).fst.index != -1 || qnics.at(qnics.size()-1).snd.index != -1){
       error("Qnic index of initiator and responder must be -1 in current scheme. ");
@@ -455,6 +455,10 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   // if(swapper_address == 6&& left_partner==1&&right_partner==15){
   //   error("good!");
   // }
+  if(self_rqnic_type == QNIC_RP|| self_lqnic_type == QNIC_RP || rqnic_type == QNIC_RP||lqnic_type == QNIC_RP){
+    error("MSM link not implemented");
+    
+  }
   swap_setting.left_partner = left_partner;
   swap_setting.lqnic_type = lqnic_type;
   swap_setting.lqnic_index = lqnic_index;

@@ -262,10 +262,6 @@ void RuleEngine::handleMessage(cMessage *msg){
             // here next add resources
             int src = pkt->getSrcAddr();
             int dest = pkt->getDestAddr();
-            if(src == 7 || src == 1){
-                EV<<"src"<<src<<":"<<dest<<"\n";
-                error("got here");
-            }
             process_id swapping_id;
             swapping_id.ruleset_id = pkt->getRuleSet_id(); // just in case
             swapping_id.rule_id = pkt->getRule_id();
@@ -888,13 +884,13 @@ RuleEngine::QubitStateTable RuleEngine::setQubitFree_inQnic(QubitStateTable tabl
                 table[it->first].isBusy = false;
                 break;
             }else if(it->second.isBusy == false && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index){
-                if(it->second.isBusy){
-                    EV<<"yes";
-                }else{
-                    EV<<"no";
-                }
-                EV<<"check: "<< it->second.thisQubit_addr.qnic_index <<"=="<<qnic_index <<"\n";
-                EV<<"check: "<< it->second.thisQubit_addr.qubit_index <<"=="<<qubit_index <<"\n";
+                // if(it->second.isBusy){
+                //     EV<<"yes";
+                // }else{
+                //     EV<<"no";
+                // }
+                // EV<<"check: "<< it->second.thisQubit_addr.qnic_index <<"=="<<qnic_index <<"\n";
+                // EV<<"check: "<< it->second.thisQubit_addr.qubit_index <<"=="<<qubit_index <<"\n";
                 //std::cout<<"isBusy = "<<table[it->first].isBusy<<"\n";
                 //std::cout<<"Busy = "<<(it->second.isBusy==false)<<" && "<<(it->second.thisQubit_addr.qnic_index == qnic_index)<<" && "<<(it->second.thisQubit_addr.qubit_index == qubit_index)<<"\n";
                 error("Trying to set a free qubit free. Only busy qubits can do that. Something is wrong... ");
@@ -958,10 +954,10 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
 
     //qubit with address Addr was shot in nth time. This list is ordered from old to new.
     stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit",qubit_index));
-    if(parentAddress == 27 && qubit->entangled_partner->node_address == 15){
-        EV<<parentAddress<<" is entangled with "<<qubit->entangled_partner->node_address<<" !!\n";
-        error("Did it!");
-    }
+    // if(parentAddress == 27 && qubit->entangled_partner->node_address == 15){
+    //     EV<<parentAddress<<" is entangled with "<<qubit->entangled_partner->node_address<<" !!\n";
+    //     error("Did it!");
+    // }
     // check
     if(operation_type==0){
         // nothing   
@@ -1169,9 +1165,6 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
             for (auto it =  allResources[qnic_type][qnic_index].cbegin(), next_it = allResources[qnic_type][qnic_index].cbegin(); it !=  allResources[qnic_type][qnic_index].cend(); it = next_it){
                 next_it = it; ++next_it;
 
-                if(parentAddress == 7){
-                    EV<<"par!!"<<it->first<<"\n";
-                }
                 if(!it->second->isAllocated() && resource_entangled_with_address == it->first){
                     //Free resource that has not been assigned to any ruleset.
                     //int index = process->front()->resources.size();//Bad idea. Could result in duplicate index when rscs are consumed.
@@ -1230,11 +1223,6 @@ void RuleEngine::traverseThroughAllProcesses2(){
                     bool process_done = false;
                     //std::cout<<parentAddress<<": Running first Condition & Action now\n";
                     bool terminate_this_rule = false;
-
-                    EV<<"current node"<<parentAddress<<"\n";
-                    if(process->entangled_partner.size() == 2){
-                        EV<<"left is"<< process->entangled_partner.at(0)<<"right"<<process->entangled_partner.at(1)<<"\n";
-                    }
 
                     while(true){
                         if(!((*rule)->resources.size()>0)){
@@ -1297,7 +1285,7 @@ void RuleEngine::traverseThroughAllProcesses2(){
                             }
                              else if(dynamic_cast<SwappingResult *>(pk)!= nullptr){
                                 SwappingResult *pkt = check_and_cast<SwappingResult *>(pk);
-                                EV<<"done swapping!"<<"\n";
+                                EV<<"done swapping at "<<parentAddress<<"\n";
                                 // here this packet goes to two destination.
                                 // one is left node the other is right node.
                                 // only swapper knows which is left and right, but qnodes don't
