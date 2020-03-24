@@ -328,25 +328,6 @@ void RuleEngine::handleMessage(cMessage *msg){
                 error("This application is not recognized yet");
             }
         }
-        else if(dynamic_cast<InternalResourceFreeRequest *>(msg) != nullptr){
-            InternalResourceFreeRequest *pkt = check_and_cast<InternalResourceFreeRequest *>(msg);
-            int left_partner_address = pkt->getLeft_partner_address();
-            int right_partner_address = pkt->getRight_partner_address();
-            int left_qubit_index = pkt->getQubit_index_left();
-            int right_qubit_index = pkt->getQubit_index_right();
-
-
-            int left_qnic_address = routingdaemon->return_QNIC_address_to_destAddr(left_partner_address);
-            connection_setup_inf left_inf = hardware_monitor->return_setupInf(left_qnic_address);
-            int right_qnic_address = routingdaemon->return_QNIC_address_to_destAddr(right_partner_address);
-            connection_setup_inf right_inf = hardware_monitor->return_setupInf(right_qnic_address);
-
-            // EV<<"left free\n";
-            // freeResource(left_inf.qnic.index, left_qubit_index, left_inf.qnic.type);
-            // EV<<"right free\n";
-            // freeResource(right_inf.qnic.index, right_qubit_index, right_inf.qnic.type);
-
-        }
         else if(dynamic_cast<StopEmitting *>(msg)!= nullptr){
             StopEmitting *pkt = check_and_cast<StopEmitting *>(msg);
             terminated_qnic[pkt->getQnic_address()] = true;
@@ -907,6 +888,13 @@ RuleEngine::QubitStateTable RuleEngine::setQubitFree_inQnic(QubitStateTable tabl
                 table[it->first].isBusy = false;
                 break;
             }else if(it->second.isBusy == false && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index){
+                if(it->second.isBusy){
+                    EV<<"yes";
+                }else{
+                    EV<<"no";
+                }
+                EV<<"check: "<< it->second.thisQubit_addr.qnic_index <<"=="<<qnic_index <<"\n";
+                EV<<"check: "<< it->second.thisQubit_addr.qubit_index <<"=="<<qubit_index <<"\n";
                 //std::cout<<"isBusy = "<<table[it->first].isBusy<<"\n";
                 //std::cout<<"Busy = "<<(it->second.isBusy==false)<<" && "<<(it->second.thisQubit_addr.qnic_index == qnic_index)<<" && "<<(it->second.thisQubit_addr.qubit_index == qubit_index)<<"\n";
                 error("Trying to set a free qubit free. Only busy qubits can do that. Something is wrong... ");
@@ -996,7 +984,6 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
             error("2. Entanglement tracking is not doing its job.");
         }
     }
-
     ResourceAllocation(qnic_type, qnic_index);
     traverseThroughAllProcesses2();//New resource added to QNIC with qnic_type qnic_index.
 }
@@ -1140,18 +1127,18 @@ double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, 
 
 void RuleEngine::dynamic_ResourceAllocation(int qnic_type, int qnic_index){
 
-    if(!(rp.size()>0)){// If no ruleset running, do nothing.
-        return;
-    }
-    for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){
-        next_it = it; ++next_it;
-        RuleSet* process = it->second.Rs;//One Process. From top to bottom.
-        unsigned long ruleset_id = process->ruleset_id;
-        int partner_size = process->entangled_partner.size();
-        for (int i=0; i<partner_size;i++){
+//     if(!(rp.size()>0)){// If no ruleset running, do nothing.
+//         return;
+//     }
+//     for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){
+//         next_it = it; ++next_it;
+//         RuleSet* process = it->second.Rs;//One Process. From top to bottom.
+//         unsigned long ruleset_id = process->ruleset_id;
+//         int partner_size = process->entangled_partner.size();
+//         for (int i=0; i<partner_size;i++){
 
-        }
-    }
+//         }
+//     }
 
 }
 
@@ -1217,7 +1204,6 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
                     }*/
                     it->second->Allocate();
                     assigned++;
-                    EV<<"assigned!"<<assigned<<"\n";
                 }
             }
         }
@@ -1343,18 +1329,9 @@ void RuleEngine::traverseThroughAllProcesses2(){
                                 // if(parentAddress == 6){
                                 //     error("here! check!");
                                 // }
-                                InternalResourceFreeRequest *pkt_for_self = new InternalResourceFreeRequest;
-                                pkt_for_self->setDestAddr(parentAddress);
-                                pkt_for_self->setSrcAddr(parentAddress);
-                                pkt_for_self->setKind(5);
-                                pkt_for_self->setQubit_index_left(pkt->getMeasured_qubit_index_left());
-                                pkt_for_self->setQubit_index_right(pkt->getMeasured_qubit_index_right());
-                                pkt_for_self->setLeft_partner_address(pkt->getLeft_Dest());
-                                pkt_for_self->setRight_partner_address(pkt->getRight_Dest());
 
                                 send(pkt_for_left,"RouterPort$o");
                                 send(pkt_for_right,"RouterPort$o");
-                                send(pkt_for_self, "RouterPort$o");
                             }
                             else if (dynamic_cast<Error *>(pk)!= nullptr){
                                 Error *err = check_and_cast<Error *>(pk);

@@ -58,9 +58,14 @@ class SwappingAction : public Action {
         int right_resource;
         int action_index = 0;
 
+        int self_left_qnic_id;
+        int self_right_qnic_id;
+        QNIC_type self_left_qnic_type;
+        QNIC_type self_right_qnic_type;
+
     public:
         // constructor of entanglement swapping
-        SwappingAction(unsigned long RuleSet_id, int rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr) {
+        SwappingAction(unsigned long RuleSet_id, int rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr, int slqi, QNIC_type slqt, int srqi, QNIC_type srqt) {
             ruleset_id = RuleSet_id;
             rule_id = rule_index;
 
@@ -74,6 +79,11 @@ class SwappingAction : public Action {
             right_qnic_id = rqi;
             right_qnic_address = rqad;
             right_resource = rr;
+
+            self_left_qnic_id  = slqi;
+            self_right_qnic_id  = srqi;
+            self_left_qnic_type = slqt;
+            self_right_qnic_type = srqt;
         };
 
         //cPacket* run(qnicResources *resources) override;

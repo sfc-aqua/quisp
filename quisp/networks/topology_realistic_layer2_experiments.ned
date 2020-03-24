@@ -746,7 +746,7 @@ network Realistic_Layer2_Star_Sep
             nodeType = "EndNode";
             @display("i=device/pc;p=109,246");
         }
-        EndNode6[1]: QNode {
+        EndNode15[1]: QNode {
             address = 15;
             nodeType = "EndNode";
             @display("i=device/pc;p=503,263");
@@ -807,7 +807,7 @@ network Realistic_Layer2_Star_Sep
             nodeType = "EndNode";
             @display("i=device/pc;p=34,77");
         }
-        EndNode10[1]: QNode {
+        EndNode27[1]: QNode {
             address = 27;
             nodeType = "EndNode";
             @display("i=device/pc;p=13,208");
@@ -836,7 +836,7 @@ network Realistic_Layer2_Star_Sep
         Router2[0].port++ <--> ClassicalChannel {  distance = 5km; } <--> EndNode4[0].port++;
         Router2[0].port++ <--> ClassicalChannel {  distance = 5km; } <--> EndNode5[0].port++;
 
-        Router4[0].port++ <--> ClassicalChannel {  distance = 20km; } <--> EndNode6[0].port++;
+        Router4[0].port++ <--> ClassicalChannel {  distance = 20km; } <--> EndNode15[0].port++;
 
         Router3[0].port++ <--> ClassicalChannel {  distance = 7km; } <--> HoM4[0].port++;
         Router3[0].port++ <--> ClassicalChannel {  distance = 8km; } <--> HoM5[0].port++;
@@ -851,7 +851,7 @@ network Realistic_Layer2_Star_Sep
         EndNode7[0].port++ <--> ClassicalChannel {  distance = 7km; } <--> Repeater2[0].port++;
         EndNode8[0].port++ <--> ClassicalChannel {  distance = 8km; } <--> Repeater3[0].port++;
         EndNode9[0].port++ <--> ClassicalChannel {  distance = 9km; } <--> Repeater4[0].port++;
-        EndNode10[0].port++ <--> ClassicalChannel {  distance = 10km; } <--> Repeater5[0].port++;
+        EndNode27[0].port++ <--> ClassicalChannel {  distance = 10km; } <--> Repeater5[0].port++;
 
 
 
@@ -878,7 +878,7 @@ network Realistic_Layer2_Star_Sep
         Router2[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 5km; } <--> EndNode3[0].quantum_port++;
         Router2[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 5km; } <--> EndNode4[0].quantum_port++;
         Router2[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 5km; } <--> EndNode5[0].quantum_port++;
-        Router4[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 20km; } <--> EndNode6[0].quantum_port++;
+        Router4[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 20km; } <--> EndNode15[0].quantum_port++;
 
         Router3[0].quantum_port++ <--> QuantumChannel {  distance = 7km; } <--> HoM4[0].quantum_port++;
         Router3[0].quantum_port++ <--> QuantumChannel {  distance = 8km; } <--> HoM5[0].quantum_port++;
@@ -893,7 +893,7 @@ network Realistic_Layer2_Star_Sep
         EndNode7[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 7km; } <--> Repeater2[0].quantum_port++;
         EndNode8[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 8km; } <--> Repeater3[0].quantum_port++;
         EndNode9[0].quantum_port++ <--> QuantumChannel {  distance = 9km; } <--> Repeater4[0].quantum_port_receiver++;
-        EndNode10[0].quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> Repeater5[0].quantum_port_receiver++;
+        EndNode27[0].quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> Repeater5[0].quantum_port_receiver++;
 }
 
 

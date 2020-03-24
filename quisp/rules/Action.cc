@@ -71,6 +71,7 @@ void Action::removeResource_fromRule(stationaryQubit *qubit){
     }
 }
 
+// TODO: completely mixed
 cPacket* SwappingAction::run(cModule *re){
     float success_probability = 1.0;
 
@@ -107,9 +108,6 @@ cPacket* SwappingAction::run(cModule *re){
     bool right_measure = right_qubit->measure_Z();
 
     int operation_type_left, operation_type_right;
-    EV<<"measurement result left!"<<left_measure<<"\n";
-    EV<<"measurement result right!"<<right_measure<<"\n";
-    EV<<"check num resource"<<this->checkNumResource()<<"\n";
 
     if(!left_measure && !right_measure){
         EV<<"operation type 0, operation left I, operation right I\n";
@@ -128,20 +126,27 @@ cPacket* SwappingAction::run(cModule *re){
         operation_type_left = 2;
         operation_type_right = 1;
     }
-
+    RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
     if(std::rand()/RAND_MAX < success_probability){
         right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
         left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
 
-        removeResource_fromRule(left_qubit);
-        removeResource_fromRule(right_qubit);
     }else{// this might be wrong
-
-        removeResource_fromRule(right_qubit);
-        removeResource_fromRule(right_partner_qubit);
-        removeResource_fromRule(right_qubit);
-        removeResource_fromRule(right_partner_qubit);
+        // removeResource_fromRule(left_partner_qubit);
+        // removeResource_fromRule(right_partner_qubit);
+        // TODO CHECK is this correct?
+        // rule_engine->freeConsumedResource(left_qnic_id, right_partner_qubit, right_qnic_type);
+        // rule_engine->freeConsumedResource(right_qnic_id, left_partner_qubit, left_qnic_type);
+        left_partner_qubit->isBusy = false;
+        right_partner_qubit->isBusy = false;
     }
+    removeResource_fromRule(left_qubit);
+    removeResource_fromRule(right_qubit);
+    // This might not be good
+    left_qubit->isBusy = false;
+    right_qubit->isBusy = false;
+    // rule_engine->freeConsumedResource(self_left_qnic_id, right_qubit, self_left_qnic_type);
+    // rule_engine->freeConsumedResource(self_right_qnic_id, left_qubit, self_right_qnic_type);
     // Currently, this function is able to return only one packet, but this action have to return 
     //  two nodes (left partner and right partner). once return information to rule engine, then, duplicate it.
     SwappingResult *pk = new SwappingResult;

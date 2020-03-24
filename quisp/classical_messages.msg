@@ -278,13 +278,3 @@ packet InternalRuleSetForwarding_Application extends header{
 
     RuleSetField RuleSet;
 }
-
-packet InternalResourceFreeRequest extends header{
-    unsigned long RuleSet_id;
-    int Rule_id;
-
-    int qubit_index_left;
-    int qubit_index_right;
-    int left_partner_address;
-    int right_partner_address;
-}
