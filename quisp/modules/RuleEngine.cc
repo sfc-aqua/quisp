@@ -80,7 +80,7 @@ void RuleEngine::handleMessage(cMessage *msg){
                 int qnic_address = pk->getQnic_address();
                 QubitAddr_cons Addr(-1,pk->getQnic_index(),pk->getQubit_index());
                 int nth_shot = tracker[qnic_address].size();
-                tracker[qnic_address].insert(std::make_pair(nth_shot,Addr));//qubit with address Addr was shot in nth time. This list is ordered from old to new.
+                tracker[qnic_address].insert(std::make_pair(nth_shot, Addr));//qubit with address Addr was shot in nth time. This list is ordered from old to new.
                 int new_nth_shot = tracker[qnic_address].size();
                 //std::cout<<getQNode()->getFullName() <<": Emitted the "<<nth_shot<<" from qnic["<<qnic_address<<"]....tracker["<<qnic_address<<"] now size = "<<new_nth_shot<<"\n";
             }
@@ -970,12 +970,11 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
 
     //qubit with address Addr was shot in nth time. This list is ordered from old to new.
     stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit",qubit_index));
-    if(qubit->entangled_partner->node_address != new_partner){
-        EV<<"partner"<<qubit->entangled_partner->node_address <<":"<<new_partner<<"\n";
-        error("This should not happen");
+    if(parentAddress == 27 && qubit->entangled_partner->node_address == 15){
+        EV<<parentAddress<<" is entangled with "<<qubit->entangled_partner->node_address<<" !!\n";
+        error("Did it!");
     }
     // check
-    EV<<"parent desu!"<<parentAddress<<":"<<qubit->entangled_partner->node_address <<":"<<new_partner<<"\n";
     if(operation_type==0){
         // nothing   
     }else if(operation_type == 1){
@@ -1008,6 +1007,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
     int list_size = pk_result->getList_of_failedArraySize();
     int qnic_index, qnic_address,neighborQNodeAddress = -1;
     QNIC_type qnic_type;
+
 
     if(internal_qnic_index==-1){//destination hom is outside this node.
            Interface_inf inf = getInterface_toNeighbor(destAddr);

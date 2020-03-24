@@ -86,7 +86,7 @@ void Application::initialize()
 	// that means that some nodes will be receivers of more than
 	// one connection, at random.
         // myaddress==1 for debugging
-        if(myAddress==9 && EndToEndConnection){//hard-coded for now
+        if(myAddress==27 && EndToEndConnection){//hard-coded for now
             // int endnode_destination_address = getOneRandomEndNodeAddress();
             int endnode_destination_address = 15; // for debug
             if(endnode_destination_address == myAddress){
