@@ -11,11 +11,11 @@ A router has multiple hardware elements, but a single software controller. This 
 
 There are five major modules:
 
-1. [Connection Manager](/Connection%20Manager.md): One per system.
-2. [Rule Engine](/Rule%20Engine.md): One per system. The heart of the online operation, creating end-to-end entanglement.
-3. [Routing Daemon](/Routing%20Daemon.md): One per system.
-4. [Hardware Configuration Manager/Monitor](/HardwareConfigManager_Methods.md): One per system.
-5. [Real-Time Hardware Controllers](/Real-Time%20Hardware%20Controller.md): One per independent quantum hardware module. These are our device drivers.
+1. [Connection Manager](Connection%20Manager.md): One per system.
+2. [Rule Engine](Rule%20Engine.md): One per system. The heart of the online operation, creating end-to-end entanglement.
+3. [Routing Daemon](Routing%20Daemon.md): One per system.
+4. [Hardware Configuration Manager/Monitor](HardwareConfigManager_Methods.md): One per system.
+5. [Real-Time Hardware Controllers](Real-Time%20Hardware%20Controller.md): One per independent quantum hardware module. These are our device drivers.
 
 In addition, to complete the simulation, there are [Hardware Element Simulation](Hardware Element Simulation) to simulate the individual hardware modules (and accompanying quantum states), [Workloads](Workloads) and drivers of the entire simulation.
 
@@ -23,11 +23,11 @@ In addition, to complete the simulation, there are [Hardware Element Simulation]
 
 Whether internal communications are to be done through pipes or some more direct API is TBD.
 
-1. CM-RE: [RuleSet](/RuleSet.md).
-1. RE-RTHC: [Physical Gate](/Physical%20Gate.md).
-1. HM-RTHC: [Physical Gate](/Physical%20Gate.md).
-1. RD-HM: [Link State](/Link%20State.md).
-1. CM-RD: [Route Request](/Route%20Request).
+1. CM-RE: [RuleSet](RuleSet.md).
+1. RE-RTHC: [Physical Gate](Physical%20Gate.md).
+1. HM-RTHC: [Physical Gate](Physical%20Gate.md).
+1. RD-HM: [Link State](Link%20State.md).
+1. CM-RD: [Route Request](Route%20Request).
 
 # External Communications #
 
