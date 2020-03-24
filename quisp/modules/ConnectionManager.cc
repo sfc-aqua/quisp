@@ -123,7 +123,7 @@ void ConnectionManager::handleMessage(cMessage *msg){
            // relay Request to the next node
            // OR
            // stop relaying and generate RejectConnectionSetupRequest
-           intermediate_alloc_req_handler(pk);
+          intermediate_alloc_req_handler(pk);
         }
     }else if(dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr){
       ConnectionSetupResponse *pk = check_and_cast<ConnectionSetupResponse *>(msg);
@@ -145,15 +145,20 @@ void ConnectionManager::handleMessage(cMessage *msg){
 
     }else if(dynamic_cast<RejectConnectionSetupRequest *>(msg)!= nullptr){
         RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
-        int actual_src = pk->getActual_srcAddr();
-
-        if(actual_src == myAddress){
-          // terminate relaying
-          responder_reject_req_handler(pk);
-        }else{
-          // relay RejectConnectionSetupRequest 
-          intermediate_reject_req_handler(pk);
-        }
+        // int actual_src = pk->getActual_srcAddr();
+        intermediate_reject_req_handler(pk);
+        delete msg;
+        return;
+        // if(actual_src == myAddress){
+        //   // terminate relaying
+        //   responder_reject_req_handler(pk);
+        //   delete myAddress
+        //   return
+        // }else{
+        //   // relay RejectConnectionSetupRequest 
+        //   
+        //   delete
+        // }
     }
 }
 
@@ -457,7 +462,6 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   // }
   if(self_rqnic_type == QNIC_RP|| self_lqnic_type == QNIC_RP || rqnic_type == QNIC_RP||lqnic_type == QNIC_RP){
     error("MSM link not implemented");
-    
   }
   swap_setting.left_partner = left_partner;
   swap_setting.lqnic_type = lqnic_type;
@@ -513,26 +517,35 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
       EV << "DST_INF " << dst_inf.qnic.type << "," << dst_inf.qnic.index << "\n";
       connection_setup_inf src_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_src);
       EV << "SRC_INF " << src_inf.qnic.type << "," << src_inf.qnic.index << "\n";
-      int num_accumulated_nodes = pk->getStack_of_QNodeIndexesArraySize();
-      int num_accumulated_costs = pk->getStack_of_linkCostsArraySize();
-      int num_accumulated_pair_info = pk->getStack_of_QNICsArraySize();
+      if(!dst_inf.qnic.isReserved){
+        
+        int num_accumulated_nodes = pk->getStack_of_QNodeIndexesArraySize();
+        int num_accumulated_costs = pk->getStack_of_linkCostsArraySize();
+        int num_accumulated_pair_info = pk->getStack_of_QNICsArraySize();
 
-      //Update information and send it to the next Qnode.
-      pk->setDestAddr(dst_inf.neighbor_address);
-      pk->setSrcAddr(myAddress);
-      pk->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes+1);
-      pk->setStack_of_linkCostsArraySize(num_accumulated_costs+1);
-      pk->setStack_of_QNodeIndexes(num_accumulated_nodes, myAddress);
-      pk->setStack_of_linkCosts(num_accumulated_costs, dst_inf.quantum_link_cost);
-      pk->setStack_of_QNICsArraySize(num_accumulated_pair_info+1);
-      QNIC_id_pair pair_info = {
-          .fst = src_inf.qnic,
-          .snd = dst_inf.qnic
-      };
-      pk->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
-      pair_info = pk->getStack_of_QNICs(num_accumulated_pair_info);
-      EV << "PAIR_INF " << pair_info.fst.type << "," << pair_info.fst.index << " : " << pair_info.snd.type << "," << pair_info.snd.index << "\n";
-      send(pk,"RouterPort$o");
+        //Update information and send it to the next Qnode.
+        pk->setDestAddr(dst_inf.neighbor_address);
+        pk->setSrcAddr(myAddress);
+        pk->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes+1);
+        pk->setStack_of_linkCostsArraySize(num_accumulated_costs+1);
+        pk->setStack_of_QNodeIndexes(num_accumulated_nodes, myAddress);
+        pk->setStack_of_linkCosts(num_accumulated_costs, dst_inf.quantum_link_cost);
+        pk->setStack_of_QNICsArraySize(num_accumulated_pair_info+1);
+        QNIC_id_pair pair_info = {
+            .fst = src_inf.qnic,
+            .snd = dst_inf.qnic
+        };
+        pk->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
+        pair_info = pk->getStack_of_QNICs(num_accumulated_pair_info);
+        dst_inf.qnic.isReserved = true;
+        src_inf.qnic.isReserved = true;
+        send(pk,"RouterPort$o");
+      }else{// TODO after connection expired, this goes to false
+        RejectConnectionSetupRequest *pkt = new RejectConnectionSetupRequest;
+        pkt->setDestAddr(pk->getSrcAddr());
+        pkt->setSrcAddr(pk->getDestAddr());
+        send(pkt, "RouterPort$o");
+      }
   }
 }
 
@@ -558,7 +571,9 @@ void ConnectionManager::responder_reject_req_handler(RejectConnectionSetupReques
  * primarily due to resource reservation conflicts.
  **/
 void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupRequest *pk){
-
+  int reject_node = pk->getSrcAddr();
+  EV<<"Connection was rejected by "<<reject_node<<"\n";
+  error("Connection Setup was rejected!");
 }
 
 /**

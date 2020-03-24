@@ -48,13 +48,6 @@ packet ConnectionSetupRequest extends header
 
 packet RejectConnectionSetupRequest extends header
 {
-    int actual_destAddr;
-    int actual_srcAddr;
-
-    int stack_of_QNodeIndexes[];
-    int stack_of_linkCosts[];
-
-    QNIC_pair_info stack_of_QNICs[];
 }
 
 

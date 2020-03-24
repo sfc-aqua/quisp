@@ -956,7 +956,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
     stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit",qubit_index));
     // if(parentAddress == 27 && qubit->entangled_partner->node_address == 15){
     //     EV<<parentAddress<<" is entangled with "<<qubit->entangled_partner->node_address<<" !!\n";
-    //     error("Did it!");
+    //     error("Did it! Currently, no application implemeted. So, after resource consumed, simulation will end.");
     // }
     // check
     if(operation_type==0){
@@ -968,6 +968,14 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
         qubit->Z_gate();
     }else{
         error("something error happened! This operation type doesn't recorded!");
+    }
+
+    if(qubit->entangled_partner==nullptr && qubit->Density_Matrix_Collapsed(0,0).real() ==-111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok){
+        std::cout<<qubit<<", node["<<qubit->node_address<<"] from qnic["<<qubit->qnic_index<<"]\n";
+        //std::cout<<(bool)(qubit->entangled_partner==nullptr)<<" Entangled if ("<<false<<")\n";
+        //std::cout<<qubit->Density_Matrix_Collapsed<<"\n";
+        EV<<"This is node"<<qubit->entangled_partner<<"\n";
+        error("RuleEngine. Ebit succeed. but wrong");
     }
     allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner/*QNode IP address*/,qubit));
     if(qubit->entangled_partner!=nullptr){
@@ -1171,8 +1179,6 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
                     //int index = process->front()->number_of_resources_allocated_in_total;
                     int num_rsc_bf = process->front()->resources.size();
                     if(it->second->entangled_partner==nullptr && it->second->Density_Matrix_Collapsed(0,0).real() ==-111 && !it->second->no_density_matrix_nullptr_entangled_partner_ok){
-                        // EV<<"info"<<it->second->qnic_index<<":"<<it->second->stationaryQubit_address<<"\n";
-                        // EV<<"parent"<<parentAddress<<"\n";
                         error("Fresh ebit wrong");
                     }
 

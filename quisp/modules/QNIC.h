@@ -30,6 +30,7 @@ typedef struct _QNIC_id {
     QNIC_type type;
     int index;
     int address;
+    bool isReserved;
 } QNIC_id;
 
 typedef struct _QNIC_id_pair {
