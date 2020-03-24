@@ -2,7 +2,7 @@
 
 *Note: This is an old design document, which we expect to still be useful, but it may or may not correspond well to the current implementation.*
 
-![Hardware and software blocks in a router](img/Hardware-classical-quantum-modules-20160128.jpg)
+![Hardware and software blocks in a router](img/Hardware-classical-quatnum-modules-20200320.jpg)
 
 Note that the above figure says "LC", but the correct term is "QNIC".
 
