@@ -440,6 +440,9 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   }else{
     error("this must not happen index must be positive");
   }
+  // if(swapper_address == 6&& left_partner==1&&right_partner==15){
+  //   error("good!");
+  // }
   swap_setting.left_partner = left_partner;
   swap_setting.lqnic_type = lqnic_type;
   swap_setting.lqnic_index = lqnic_index;
@@ -451,9 +454,7 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   swap_setting.rqnic_index = rqnic_index;
   swap_setting.rqnic_address = rqnic_address;
   swap_setting.rres = num_resources;
-return swap_setting;
-
- 
+  return swap_setting; 
 }
 
 
@@ -560,8 +561,8 @@ RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned long R
     Rule* SwappingRule = new Rule(RuleSet_id, rule_index);
     EntanglementSwapping->setRule_ptr(SwappingRule);
     Condition* Swap_condition = new Condition();
-    Clause* resource_clause_left = new EnoughResourceClause(conf.left_partner, conf.lres);
-    Clause* resource_clause_right = new EnoughResourceClause(conf.right_partner, conf.rres);
+    Clause* resource_clause_left = new EnoughResourceClauseLeft(conf.left_partner, conf.lres);
+    Clause* resource_clause_right = new EnoughResourceClauseRight(conf.right_partner, conf.rres);
     Swap_condition->addClause(resource_clause_left);
     Swap_condition->addClause(resource_clause_right);
     SwappingRule->setCondition(Swap_condition);

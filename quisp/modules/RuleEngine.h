@@ -135,6 +135,7 @@ class RuleEngine : public cSimpleModule
         //typedef std::map<std::string, quisp::rules::RuleSet> processes;//process_id -> Rule set
         virtual void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type);
         virtual void freeConsumedResource(int qnic_index, stationaryQubit *qubit, QNIC_type qnic_type);
+        virtual void dynamic_ResourceAllocation(int qnic_type, int qnic_index);
         virtual void ResourceAllocation(int qnic_type, int qnic_index);
         virtual void JustATest(){EV<<"Hello there\n."; endSimulation(); };
 

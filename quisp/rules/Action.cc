@@ -38,6 +38,29 @@ stationaryQubit* Action::getResource_fromTop(int required_index){
     return pt;
 }
 
+stationaryQubit* Action::getResource_fromTop_with_partner(int required_index, int partner){
+    // here
+    int resource_index = 0;
+    stationaryQubit *pt = nullptr;
+    // EV<<"===========================================\n";
+    // for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
+    //     EV<<"hey!"<<it->first<<"\n";
+    // }
+    // EV<<"===========================================\n";
+
+    for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
+        if(it->second->isLocked()){
+        //Ignore locked resource
+        }else if(it->first == partner && !it->second->isLocked()){
+            pt = it->second;
+            break;
+        }else{
+            resource_index++;
+        }
+    }
+    return pt;
+}
+
 void Action::removeResource_fromRule(stationaryQubit *qubit){
     for (auto it =  (*rule_resources).begin(), next_it = (*rule_resources).begin(); it != (*rule_resources).end(); it = next_it){
           next_it = it; ++next_it;
@@ -54,12 +77,12 @@ cPacket* SwappingAction::run(cModule *re){
     stationaryQubit *left_qubit = nullptr;
     stationaryQubit *right_qubit = nullptr;
 
-    left_qubit = getResource_fromTop(left_resource);
-    right_qubit = getResource_fromTop(right_resource);
+    left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
+    right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
 
-    if(left_qubit == nullptr|| right_qubit==nullptr){
+    if(left_qubit == nullptr || right_qubit==nullptr){
         Error *pk = new Error;
-        pk->setError_text("Not enough resource found!");
+        pk->setError_text("Not enough resource found! This shouldn't happen!");
         return pk;
     }
     if(left_qnic_id < 0 || right_qnic_id < 0){
@@ -76,6 +99,7 @@ cPacket* SwappingAction::run(cModule *re){
     // bell measurement
     left_qubit->Hadamard_gate();
     right_qubit->CNOT_gate(left_qubit);
+
     int lindex = left_qubit->stationaryQubit_address;
     int rindex = right_qubit->stationaryQubit_address;
 
@@ -112,6 +136,7 @@ cPacket* SwappingAction::run(cModule *re){
         removeResource_fromRule(left_qubit);
         removeResource_fromRule(right_qubit);
     }else{// this might be wrong
+
         removeResource_fromRule(right_qubit);
         removeResource_fromRule(right_partner_qubit);
         removeResource_fromRule(right_qubit);

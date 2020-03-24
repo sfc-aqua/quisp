@@ -65,7 +65,11 @@ bool EnoughResourceClauseLeft::check(std::multimap<int,stationaryQubit*> resourc
                enough = true;
             }
         }
-
+    }
+    if(enough){
+        EV<<"You have enough resource between"<<partner_left<<"\n";
+    }else{
+        EV<<"You don't have enough resource between"<<partner_left<<"\n";
     }
     //std::cout<<"Enough = "<<enough<<"\n";
     return enough;
@@ -76,6 +80,16 @@ bool EnoughResourceClauseRight::check(std::multimap<int,stationaryQubit*> resour
     bool enough = false;
     int num_free = 0;
 
+    if(partner_right == 1){
+        EV<<"=========================\n";
+        for (std::multimap<int, stationaryQubit*>::iterator it=resource.begin(); it!=resource.end(); ++it) {
+            EV<<"hey "<<it->first<<"\n";
+        }
+        EV<<"==========================\n";
+
+    }
+    
+
     for (std::multimap<int, stationaryQubit*>::iterator it=resource.begin(); it!=resource.end(); ++it) {
         if (it->first == partner_right){
             if(!it->second->isLocked()){// here must have loop
@@ -85,7 +99,11 @@ bool EnoughResourceClauseRight::check(std::multimap<int,stationaryQubit*> resour
                enough = true;
             }
         }
-
+    }
+    if(enough){
+        EV<<"You have enough resource between"<<partner_right<<"\n";
+    }else{
+        EV<<"You don't have enough resource between"<<partner_right<<"\n";
     }
     //std::cout<<"Enough = "<<enough<<"\n";
     return enough;
