@@ -88,7 +88,7 @@ class ConnectionManager : public cSimpleModule
         // virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, QNIC_type lqnic_type, int lqnic_index, int lres, int right_node, QNIC_type rqnic_type, int rqnic_index, int rres);
         virtual RuleSet* generateRuleSet_Tomography(unsigned long RuleSet_id, int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index, int num_resources);
         virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned long RuleSet_id,int owner, swap_table conf);
-        virtual swap_table EntanglementSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources);
+        virtual swap_table EntanglementSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners, std::vector<QNIC_pair_info> qnics, int num_resources);
 
         virtual void reserve_qnic(int node_address, int qnic_address);
         virtual void release_qnic(int node_address, int qnic_address);
@@ -285,63 +285,67 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
     bool isReserved = isQnic_busy(myAddress, src_inf.qnic.address);
     if(!isReserved){
       int hop_count = pk->getStack_of_QNodeIndexesArraySize(); // the number of steps
-    std::vector<int> path; // path pointer elements?
-    // path from source to destination
-    for (int i = 0; i<hop_count; i++) {
-      path.push_back(pk->getStack_of_QNodeIndexes(i));
-    }
-    path.push_back(myAddress);
-    int divisions = compute_path_division_size(hop_count);
-    int *link_left = new int[divisions],
-        *link_right = new int[divisions],
-        *swapper = new int[divisions];
-    // fill_path_division should yield *exactly* the anticipated number of divisions.
-    if (fill_path_division(path, 0, hop_count,link_left, link_right, swapper, 0) < divisions){
-      error("Something went wrong in path division computation.");
-    }
-
-    for(int i=0; i<divisions; i++){
-      if(swapper[i] > 0){
-        EV<<link_left[i]<<"---------------"<<swapper[i]<<"----------------"<<link_right[i]<<"\n";
+      std::vector<int> path; // path pointer elements?
+      // path from source to destination
+      for (int i = 0; i<hop_count; i++) {
+        path.push_back(pk->getStack_of_QNodeIndexes(i));
       }
-    }
-    /* TODO: Remember you have link costs <3
-    for(int i = 0; i<hop_count; i++){
-        //The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel but from only 1 channels from Src->BSA and ignoring BSA->Dest).
-        //If you need to test with different costs, try changing the value.
-        //But we need to implement actual link-tomography for this eventually.
-        EV<<"\nThis is one of the stacked link costs....."<<pk->getStack_of_linkCosts(i)<<"\n";
-    }
-    */
-    // getting swappers index as vector(This might be redundant FIXME)
-    std::vector<int> swappers = {};
-    for(int i=0; i<divisions;i++){
-      if(swapper[i]>0){
-        swappers.push_back(swapper[i]);
+      path.push_back(myAddress);
+      int divisions = compute_path_division_size(hop_count);
+      int *link_left = new int[divisions],
+          *link_right = new int[divisions],
+          *swapper = new int[divisions];
+      // fill_path_division should yield *exactly* the anticipated number of divisions.
+      if (fill_path_division(path, 0, hop_count,link_left, link_right, swapper, 0) < divisions){
+        error("Something went wrong in path division computation.");
       }
-    }
+      std::map<int, std::vector<int>> swapping_partners;
+      for(int i=0; i<divisions; i++){
+        std::vector<int> partners;
+        if(swapper[i] > 0){
+          EV<<link_left[i]<<"---------------"<<swapper[i]<<"----------------"<<link_right[i]<<"\n";
+          partners.push_back(link_left[i]);
+          partners.push_back(link_right[i]);
+          swapping_partners.insert(std::make_pair(swapper[i], partners));
+        }
+      }
+      /* TODO: Remember you have link costs <3
+      for(int i = 0; i<hop_count; i++){
+          //The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel but from only 1 channels from Src->BSA and ignoring BSA->Dest).
+          //If you need to test with different costs, try changing the value.
+          //But we need to implement actual link-tomography for this eventually.
+          EV<<"\nThis is one of the stacked link costs....."<<pk->getStack_of_linkCosts(i)<<"\n";
+      }
+      */
+      // getting swappers index as vector(This might be redundant FIXME)
+      std::vector<int> swappers = {};
+      for(int i=0; i<divisions;i++){
+        if(swapper[i]>0){
+          swappers.push_back(swapper[i]);
+        }
+      }
 
-    if(local_qnic_address_to_actual_dst != -1){
-      error("something error happen!");
-    }else if(local_qnic_address_to_actual_src == -1){
-      error("This shouldn't happen!");
-    }
-    int qnic_array_size = pk->getStack_of_QNICsArraySize();
-    pk->setStack_of_QNICsArraySize(qnic_array_size+1);
-    pk->setStack_of_QNICs(qnic_array_size, pair_info);
+      if(local_qnic_address_to_actual_dst != -1){
+        error("something error happen!");
+      }else if(local_qnic_address_to_actual_src == -1){
+        error("This shouldn't happen!");
+      }
+      int qnic_array_size = pk->getStack_of_QNICsArraySize();
+      pk->setStack_of_QNICsArraySize(qnic_array_size+1);
+      pk->setStack_of_QNICs(qnic_array_size, pair_info);
 
-    //HACK This may be also not good way
-    std::vector<QNIC_pair_info> qnics = {};
-    QNIC_id_pair qnic_pairs;
-    for(int i=0; i<qnic_array_size+1; i++){
-      qnic_pairs = pk->getStack_of_QNICs(i);
-      qnics.push_back(qnic_pairs);
-      // EV<<"qnic index"<<qnic_pairs.fst.index<<":::"<<qnic_pairs.snd.index<<"\n";
-    }
+      //HACK This may be also not good way
+      std::vector<QNIC_pair_info> qnics = {};
+      QNIC_id_pair qnic_pairs;
+      for(int i=0; i<qnic_array_size+1; i++){
+        qnic_pairs = pk->getStack_of_QNICs(i);
+        qnics.push_back(qnic_pairs);
+        // EV<<"qnic index"<<qnic_pairs.fst.index<<":::"<<qnic_pairs.snd.index<<"\n";
+      }
 
-    if(qnics.at(0).fst.index != -1 || qnics.at(qnics.size()-1).snd.index != -1){
-      error("Qnic index of initiator and responder must be -1 in current scheme. ");
-    }
+      if(qnics.at(0).fst.index != -1 || qnics.at(qnics.size()-1).snd.index != -1){
+        error("Qnic index of initiator and responder must be -1 in current scheme. ");
+      }
     // node pairs! FIXME: really bad coding
     // Ummm... thinking good way
     // Here qunic processing
@@ -358,13 +362,15 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
         // generate Swapping RuleSet
         // here we have to check the order of entanglement swapping
         swap_table swap_config; // swapping configurations for path[i]
-        swap_config = EntanglementSwappingConfig(path.at(i), path, qnics, num_resource);
+        swap_config = EntanglementSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
         RuleSet* swapping_rule = generateRuleSet_EntanglementSwapping(createUniqueId(), path.at(i), swap_config);
         ConnectionSetupResponse *pkr = new ConnectionSetupResponse;
         pkr->setDestAddr(path.at(i));
         pkr->setSrcAddr(myAddress);
         pkr->setKind(2);
         pkr->setRuleSet(swapping_rule);
+        pkr->setActual_srcAddr(path.at(0));
+        pkr->setActual_destAddr(path.at(path.size()-1));
         send(pkr,"RouterPort$o");
       }else{
         EV<<"Im not swapper!"<<path.at(i)<<"\n";
@@ -390,6 +396,9 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
           }
         }
       }
+      if(actual_dst != myAddress){
+        reserve_qnic(myAddress, src_inf.qnic.address);
+      }
     }else{
         RejectConnectionSetupRequest *pkt = new RejectConnectionSetupRequest;
         pkt->setKind(6);
@@ -408,7 +417,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
  * \returns a swap_table
  * \todo node_address might be better using qnic index
  **/
-swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources){
+swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, std::vector<int> path,  std::map<int, std::vector<int>> swapping_partners, std::vector<QNIC_pair_info> qnics, int num_resources){
   /// 
   /// 1.recognize partner. (which node is left partner, right partner)
   /// Currently, we choose every other node in the path to do swapping in the first round.
@@ -456,38 +465,68 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   if(index == 0 || index == path.size()){
     error("This shouldn't happen. Endnode was recognized as swapper with some reason.");
   }
-  // FIXME more dynamically using recursive function or ...
-  if(index % 2 == 1){
-    left_partner = path.at(index-1);
-    lqnic_type = qnics.at(index-1).snd.type; // left partner must be second TODO: detail description of this.
-    lqnic_index = qnics.at(index-1).snd.index;
-    lqnic_address = qnics.at(index-1).snd.address;
-
-    right_partner = path.at(index+1);
-    rqnic_type = qnics.at(index+1).fst.type; // right partner must be first 
-    rqnic_index = qnics.at(index+1).fst.index;
-    rqnic_address = qnics.at(index+1).fst.address;
-
-  }else if(index % 2 == 0){
-    left_partner = path.at(0);
-    lqnic_type = qnics.at(0).snd.type;
-    lqnic_index = qnics.at(0).snd.index;
-    lqnic_address = qnics.at(0).snd.address;
-
-    // QNIC_type lqnic_type = 
-    right_partner = path.at(path.size()-1);
-    rqnic_type = qnics.at(path.size()-1).fst.type;
-    rqnic_index = qnics.at(path.size()-1).fst.index; 
-    lqnic_address = qnics.at(path.size()-1).fst.address;
-
-  }else{
-    error("this must not happen index must be positive");
-  }
-
   self_lqnic_index = qnics.at(index).fst.index;
   self_lqnic_type = qnics.at(index).fst.type;
   self_rqnic_index = qnics.at(index).snd.index;
   self_rqnic_type = qnics.at(index).snd.type;
+  // FIXME more dynamically using recursive function or ...
+  // auto it = std::find(swapping_partners.begin(), swapping_partners.end(), swapper_address);
+  auto it = swapping_partners.find(swapper_address);
+  if(it != swapping_partners.end() && it->second.size() == 2){
+    left_partner = it->second.at(0);
+    right_partner = it->second.at(1);
+  }else{
+    error("Error occured. Swapper is not recognized as swapper, or the number of partners is wrong (must be 2)");
+  }
+
+  auto iter_left = std::find(path.begin(), path.end(), left_partner);
+  if(iter_left != path.end()){
+    size_t index_left = std::distance(path.begin(), iter_left); 
+    lqnic_type = qnics.at(index_left).snd.type; // left partner must be second TODO: detail description of this.
+    lqnic_index = qnics.at(index_left).snd.index;
+    lqnic_address = qnics.at(index_left).snd.address;
+  }else{
+    error("nodes are not found in path");
+  }
+
+  auto iter_right = std::find(path.begin(), path.end(), right_partner);
+  if(iter_right != path.end()){
+    size_t index_right = std::distance(path.begin(), iter_right);
+    rqnic_type = qnics.at(index_right).fst.type; // right partner must be first 
+    rqnic_index = qnics.at(index_right).fst.index;
+    rqnic_address = qnics.at(index_right).fst.address;
+  }else{
+    error("nodes are not found in path");
+  }
+
+  // if(index % 2 == 1){
+  //   left_partner = path.at(index-1);
+  //   lqnic_type = qnics.at(index-1).snd.type; // left partner must be second TODO: detail description of this.
+  //   lqnic_index = qnics.at(index-1).snd.index;
+  //   lqnic_address = qnics.at(index-1).snd.address;
+
+  //   right_partner = path.at(index+1);
+  //   rqnic_type = qnics.at(index+1).fst.type; // right partner must be first 
+  //   rqnic_index = qnics.at(index+1).fst.index;
+  //   rqnic_address = qnics.at(index+1).fst.address;
+
+  // }else if(index % 2 == 0){
+  //   left_partner = path.at(0);
+  //   lqnic_type = qnics.at(0).snd.type;
+  //   lqnic_index = qnics.at(0).snd.index;
+  //   lqnic_address = qnics.at(0).snd.address;
+
+  //   // QNIC_type lqnic_type = 
+  //   right_partner = path.at(path.size()-1);
+  //   rqnic_type = qnics.at(path.size()-1).fst.type;
+  //   rqnic_index = qnics.at(path.size()-1).fst.index; 
+  //   lqnic_address = qnics.at(path.size()-1).fst.address;
+
+  // }else{
+  //   error("this must not happen index must be positive");
+  // }
+
+
   // if(swapper_address == 6&& left_partner==1&&right_partner==15){
   //   error("good!");
   // }

@@ -981,11 +981,11 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
     if(qubit->entangled_partner!=nullptr){
         if(qubit->entangled_partner->entangled_partner==nullptr){
             //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
-            error("1. Entanglement tracking is not doing its job.");
+            error("1. Entanglement tracking is not doing its job. in update resource E.S.");
         }
         if(qubit->entangled_partner->entangled_partner != qubit){
             //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
-            error("2. Entanglement tracking is not doing its job.");
+            error("2. Entanglement tracking is not doing its job. in update resource E.S.");
         }
     }
     ResourceAllocation(qnic_type, qnic_index);
