@@ -87,19 +87,36 @@ void Application::initialize()
 	// one connection, at random.
         // myaddress==1 for debugging
         if(EndToEndConnection){//hard-coded for now
-            int endnode_destination_address = getOneRandomEndNodeAddress();
-            if(endnode_destination_address == myAddress){
-                error("This must not happen, src and dst must be different!");
-            }
-            EV<<"Connection setup request will be sent from "<<myAddress<<" to "<<endnode_destination_address<<"\n";
-            ConnectionSetupRequest *pk = new ConnectionSetupRequest();
-            pk->setActual_srcAddr(myAddress);
-            pk->setActual_destAddr(endnode_destination_address);
-            pk->setDestAddr(myAddress);
-            pk->setSrcAddr(myAddress);
-            pk->setNumber_of_required_Bellpairs(2); //required bell pairs
-            pk->setKind(7);
-            scheduleAt(simTime(),pk);
+	    int endnode_destination_address;
+	    int tp = par("TrafficPattern");
+	    switch (tp){
+	    case 1:		// just one connection
+		if(myAddress == 1){ //hard-coded for now
+		    while ((endnode_destination_address = getOneRandomEndNodeAddress()) == myAddress);
+		    EV<<"Just one lonely connection setup request will be sent from"<<myAddress<<" to "<<endnode_destination_address<<"\n";
+		    ConnectionSetupRequest *pk = new ConnectionSetupRequest();
+		    pk->setActual_srcAddr(myAddress);
+		    pk->setActual_destAddr(endnode_destination_address);
+		    pk->setDestAddr(myAddress);
+		    pk->setSrcAddr(myAddress);
+		    pk->setKind(7);
+		    scheduleAt(simTime(),pk);
+		}
+		break;
+	    case 2:		// let's all mambo!
+		    while ((endnode_destination_address = getOneRandomEndNodeAddress()) == myAddress);
+
+		EV<<"My connection setup request will be sent from "<<myAddress<<" to "<<endnode_destination_address<<"\n";
+		ConnectionSetupRequest *pk = new ConnectionSetupRequest();
+		pk->setActual_srcAddr(myAddress);
+		pk->setActual_destAddr(endnode_destination_address);
+		pk->setDestAddr(myAddress);
+		pk->setSrcAddr(myAddress);
+		pk->setNumber_of_required_Bellpairs(2); //required bell pairs
+		pk->setKind(7);
+		scheduleAt(simTime(),pk);
+		break;
+	    }
         }
     }
 }
