@@ -78,6 +78,7 @@ void Application::initialize()
         num_measure = par("num_measure");
 
         Addresses_of_other_EndNodes = storeEndNodeAddresses();
+        int tp = par("TrafficPattern");
 
         //cModule *qnode = getQNode();
         // if(myAddress == 1 && EndToEndConnection){//hard-coded for now
@@ -88,35 +89,37 @@ void Application::initialize()
         // myaddress==1 for debugging
         if(EndToEndConnection){//hard-coded for now
 	    int endnode_destination_address;
-	    int tp = par("TrafficPattern");
-	    switch (tp){
-	    case 1:		// just one connection
-		if(myAddress == 1){ //hard-coded for now
-		    while ((endnode_destination_address = getOneRandomEndNodeAddress()) == myAddress);
-		    EV<<"Just one lonely connection setup request will be sent from"<<myAddress<<" to "<<endnode_destination_address<<"\n";
-		    ConnectionSetupRequest *pk = new ConnectionSetupRequest();
-		    pk->setActual_srcAddr(myAddress);
-		    pk->setActual_destAddr(endnode_destination_address);
-		    pk->setDestAddr(myAddress);
-		    pk->setSrcAddr(myAddress);
-		    pk->setKind(7);
-		    scheduleAt(simTime(),pk);
-		}
-		break;
-	    case 2:		// let's all mambo!
-		    while ((endnode_destination_address = getOneRandomEndNodeAddress()) == myAddress);
 
-		EV<<"My connection setup request will be sent from "<<myAddress<<" to "<<endnode_destination_address<<"\n";
-		ConnectionSetupRequest *pk = new ConnectionSetupRequest();
-		pk->setActual_srcAddr(myAddress);
-		pk->setActual_destAddr(endnode_destination_address);
-		pk->setDestAddr(myAddress);
-		pk->setSrcAddr(myAddress);
-		pk->setNumber_of_required_Bellpairs(2); //required bell pairs
-		pk->setKind(7);
-		scheduleAt(simTime(),pk);
-		break;
-	    }
+            switch (tp){
+                case 1:		// just one connection
+                    if(myAddress == 27){ //hard-coded for now
+                        // while ((endnode_destination_address = getOneRandomEndNodeAddress()) == myAddress);
+                        endnode_destination_address = getOneRandomEndNodeAddress();
+                        EV<<"Just one lonely connection setup request will be sent from"<<myAddress<<" to "<<endnode_destination_address<<"\n";
+                        ConnectionSetupRequest *pk = new ConnectionSetupRequest();
+                        pk->setActual_srcAddr(myAddress);
+                        pk->setActual_destAddr(endnode_destination_address);
+                        pk->setDestAddr(myAddress);
+                        pk->setSrcAddr(myAddress);
+                        pk->setNumber_of_required_Bellpairs(2);
+                        pk->setKind(7);
+                        scheduleAt(simTime(),pk);
+                    }
+                    break;
+                case 2:		// let's all mambo!
+                    // while ((endnode_destination_address = getOneRandomEndNodeAddress()) == myAddress);
+                    endnode_destination_address = getOneRandomEndNodeAddress();
+                    EV<<"My connection setup request will be sent from "<<myAddress<<" to "<<endnode_destination_address<<"\n";
+                    ConnectionSetupRequest *pk = new ConnectionSetupRequest();
+                    pk->setActual_srcAddr(myAddress);
+                    pk->setActual_destAddr(endnode_destination_address);
+                    pk->setDestAddr(myAddress);
+                    pk->setSrcAddr(myAddress);
+                    pk->setNumber_of_required_Bellpairs(2); //required bell pairs
+                    pk->setKind(7);
+                    scheduleAt(simTime(),pk);
+                    break;
+                }
         }
     }
 }

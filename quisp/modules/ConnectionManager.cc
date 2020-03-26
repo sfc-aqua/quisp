@@ -11,6 +11,7 @@
 #include "HardwareMonitor.h"
 #include "RuleEngine.h"
 #include <rules/RuleSet.h>
+#include <modules/QNIC.h>
 #include <classical_messages_m.h>
 
 using namespace omnetpp;
@@ -21,7 +22,7 @@ namespace quisp {
 namespace modules {
 
 
-  typedef struct swapping_rule_table{
+  typedef struct swapping_rule_table{ // This is a little bit redundunt
     int left_partner;
     QNIC_type lqnic_type;
     int lqnic_index;
@@ -66,6 +67,8 @@ class ConnectionManager : public cSimpleModule
 {
     private:
         int myAddress;
+        int num_of_qnics;
+        QNIC_reservation_table qnic_table;
         RoutingDaemon *routingdaemon;
         HardwareMonitor *hardwaremonitor;
 
@@ -86,6 +89,11 @@ class ConnectionManager : public cSimpleModule
         virtual RuleSet* generateRuleSet_Tomography(unsigned long RuleSet_id, int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index, int num_resources);
         virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned long RuleSet_id,int owner, swap_table conf);
         virtual swap_table EntanglementSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources);
+
+        virtual void reserve_qnic(int node_address, int qnic_address);
+        virtual void release_qnic(int node_address, int qnic_address);
+        virtual bool isQnic_busy(int node_address, int qnic_address);
+
         virtual unsigned long createUniqueId();
 };
 
@@ -99,6 +107,15 @@ void ConnectionManager::initialize()
   cModule *hm = getParentModule()->getSubmodule("hm");
   hardwaremonitor = check_and_cast<HardwareMonitor *>(hm);
   myAddress = par("address");
+  num_of_qnics = par("total_number_of_qnics");
+  
+  for(int i=0; i<num_of_qnics ; i++){
+    std::map<int, bool> one_qnic;
+    // qnic address
+    one_qnic.insert(std::make_pair(i, false));
+    // qnode address
+    qnic_table.insert(std::make_pair(myAddress, one_qnic));
+  }
 }
 
 
@@ -136,13 +153,11 @@ void ConnectionManager::handleMessage(cMessage *msg){
         delete msg;
         return;
       }else{// swapper
-        // currently, destinations are separeted. (Not accumurated.)
+        // currently, destinations are separated. (Not accumulated.)
         intermediate_alloc_res_handler(pk);
         delete msg;
         return;
       }
-
-
     }else if(dynamic_cast<RejectConnectionSetupRequest *>(msg)!= nullptr){
         RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
         // int actual_src = pk->getActual_srcAddr();
@@ -256,7 +271,20 @@ void ConnectionManager::initiator_alloc_res_handler(ConnectionSetupResponse *pk)
  * a _configurable choice_, or even a _policy_ implementation.
 */
 void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){ 
-    int hop_count = pk->getStack_of_QNodeIndexesArraySize(); // the number of steps
+    // Taking qnic information of responder node.
+    int actual_dst = pk->getActual_destAddr();
+    int actual_src = pk->getActual_srcAddr(); //initiator address (to get input qnic)
+    int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst); // This must be -1
+    int local_qnic_address_to_actual_src = routingdaemon->return_QNIC_address_to_destAddr(actual_src); // TODO: premise only oneconnection allowed btw, two nodes.
+    connection_setup_inf dst_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
+    connection_setup_inf src_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_src);
+    QNIC_id_pair pair_info = {
+          .fst = src_inf.qnic,
+          .snd = dst_inf.qnic
+    };
+    bool isReserved = isQnic_busy(myAddress, src_inf.qnic.address);
+    if(!isReserved){
+      int hop_count = pk->getStack_of_QNodeIndexesArraySize(); // the number of steps
     std::vector<int> path; // path pointer elements?
     // path from source to destination
     for (int i = 0; i<hop_count; i++) {
@@ -271,14 +299,20 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
     if (fill_path_division(path, 0, hop_count,link_left, link_right, swapper, 0) < divisions){
       error("Something went wrong in path division computation.");
     }
-      /* TODO: Remember you have link costs <3
-      for(int i = 0; i<hop_count; i++){
-          //The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel but from only 1 channels from Src->BSA and ignoring BSA->Dest).
-          //If you need to test with different costs, try changing the value.
-          //But we need to implement actual link-tomography for this eventually.
-          EV<<"\nThis is one of the stacked link costs....."<<pk->getStack_of_linkCosts(i)<<"\n";
+
+    for(int i=0; i<divisions; i++){
+      if(swapper[i] > 0){
+        EV<<link_left[i]<<"---------------"<<swapper[i]<<"----------------"<<link_right[i]<<"\n";
       }
-      */
+    }
+    /* TODO: Remember you have link costs <3
+    for(int i = 0; i<hop_count; i++){
+        //The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel but from only 1 channels from Src->BSA and ignoring BSA->Dest).
+        //If you need to test with different costs, try changing the value.
+        //But we need to implement actual link-tomography for this eventually.
+        EV<<"\nThis is one of the stacked link costs....."<<pk->getStack_of_linkCosts(i)<<"\n";
+    }
+    */
     // getting swappers index as vector(This might be redundant FIXME)
     std::vector<int> swappers = {};
     for(int i=0; i<divisions;i++){
@@ -287,22 +321,11 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
       }
     }
 
-    // Taking qnic information of responder node.
-    int actual_dst = pk->getActual_destAddr();
-    int actual_src = pk->getActual_srcAddr(); //initiator address (to get input qnic)
-    int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst); // This must be -1
-    int local_qnic_address_to_actual_src = routingdaemon->return_QNIC_address_to_destAddr(actual_src); // TODO: premise only oneconnection allowed btw, two nodes.
     if(local_qnic_address_to_actual_dst != -1){
       error("something error happen!");
     }else if(local_qnic_address_to_actual_src == -1){
       error("This shouldn't happen!");
     }
-    connection_setup_inf dst_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
-    connection_setup_inf src_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_src);
-    QNIC_id_pair pair_info = {
-          .fst = src_inf.qnic,
-          .snd = dst_inf.qnic
-    };
     int qnic_array_size = pk->getStack_of_QNICsArraySize();
     pk->setStack_of_QNICsArraySize(qnic_array_size+1);
     pk->setStack_of_QNICs(qnic_array_size, pair_info);
@@ -315,6 +338,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
       qnics.push_back(qnic_pairs);
       // EV<<"qnic index"<<qnic_pairs.fst.index<<":::"<<qnic_pairs.snd.index<<"\n";
     }
+
     if(qnics.at(0).fst.index != -1 || qnics.at(qnics.size()-1).snd.index != -1){
       error("Qnic index of initiator and responder must be -1 in current scheme. ");
     }
@@ -361,10 +385,17 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
           pkr->setActual_destAddr(path.at(path.size()-1));
           pkr->setApplication_type(0); // this is not application but for checking Eswapping done properly.
           send(pkr,"RouterPort$o");
-        }else{
-          error("Something occured when the node %d creating ruleset", myAddress);
+          }else{
+            error("Something occured when the node %d creating ruleset", myAddress);
+          }
         }
       }
+    }else{
+        RejectConnectionSetupRequest *pkt = new RejectConnectionSetupRequest;
+        pkt->setKind(6);
+        pkt->setDestAddr(pk->getActual_srcAddr());
+        pkt->setSrcAddr(myAddress);
+        send(pkt, "RouterPort$o");
     }
 }
 
@@ -483,11 +514,6 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   return swap_setting; 
 }
 
-
-
-
-
-
 // RuleSet **ConnectionManager::generate_RuleSet( int *stack_of_QNodeIndexes,
 //                                           int *stack_of_linkCosts,
 //                                           QNIC_pair_info *stack_of_QNICs){
@@ -517,7 +543,13 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
       EV << "DST_INF " << dst_inf.qnic.type << "," << dst_inf.qnic.index << "\n";
       connection_setup_inf src_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_src);
       EV << "SRC_INF " << src_inf.qnic.type << "," << src_inf.qnic.index << "\n";
-      if(!dst_inf.qnic.isReserved){
+      // if(reservation){
+      //   EV<<"reserved!"<<myAddress<<":"<<local_qnic_address_to_actual_dst<<"\n";
+      // }else{
+      //   EV<<"not reserved!"<<myAddress<<":"<<local_qnic_address_to_actual_dst<<"\n";
+      // }
+      bool isReserved = isQnic_busy(myAddress, src_inf.qnic.address);
+      if(!isReserved){
         
         int num_accumulated_nodes = pk->getStack_of_QNodeIndexesArraySize();
         int num_accumulated_costs = pk->getStack_of_linkCostsArraySize();
@@ -537,16 +569,52 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
         };
         pk->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
         pair_info = pk->getStack_of_QNICs(num_accumulated_pair_info);
-        dst_inf.qnic.isReserved = true;
-        src_inf.qnic.isReserved = true;
+        // no at use find
+        if(actual_src != myAddress){
+          reserve_qnic(myAddress, src_inf.qnic.address);
+        }
         send(pk,"RouterPort$o");
       }else{// TODO after connection expired, this goes to false
         RejectConnectionSetupRequest *pkt = new RejectConnectionSetupRequest;
-        pkt->setDestAddr(pk->getSrcAddr());
-        pkt->setSrcAddr(pk->getDestAddr());
+        pkt->setKind(6);
+        pkt->setDestAddr(pk->getActual_srcAddr());
+        pkt->setSrcAddr(myAddress);
         send(pkt, "RouterPort$o");
       }
   }
+}
+// This is not good way. This property should be held in qnic property.
+void ConnectionManager::reserve_qnic(int node_address, int qnic_address){
+  auto it = qnic_table.find(node_address);
+  if(it != qnic_table.end()){
+    auto iter = it->second.find(qnic_address);
+    if(iter != it->second.end()){
+      iter->second = true;
+    }
+  }
+}
+
+void ConnectionManager::release_qnic (int node_address, int qnic_address){
+  auto it = qnic_table.find(node_address);
+  if(it != qnic_table.end()){
+    auto iter = it->second.find(qnic_address);
+    if(iter != it->second.end()){
+      iter->second = false;
+    }
+  }
+
+}
+
+bool ConnectionManager::isQnic_busy(int node_address, int qnic_address){
+  bool isReserved = false;
+  auto it = qnic_table.find(node_address);
+  if(it != qnic_table.end()){
+    auto iter = it->second.find(qnic_address);
+    if(iter != it->second.end()){
+      isReserved = iter->second;
+    }
+  }
+  return isReserved;
 }
 
 /**
@@ -573,7 +641,7 @@ void ConnectionManager::responder_reject_req_handler(RejectConnectionSetupReques
 void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupRequest *pk){
   int reject_node = pk->getSrcAddr();
   EV<<"Connection was rejected by "<<reject_node<<"\n";
-  error("Connection Setup was rejected!");
+  // here we have to implement when the rejection packet received.
 }
 
 /**

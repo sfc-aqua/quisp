@@ -43,6 +43,8 @@ typedef struct _QNIC : _QNIC_id{
     int address;
 } QNIC;
 
+// Table to check the qnic is reserved or not.
+typedef std::map<int, std::map<int, bool>> QNIC_reservation_table;
 } // namespace modules
 } // namespace quisp
 

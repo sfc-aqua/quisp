@@ -129,6 +129,10 @@ void Router::handleMessage(cMessage *msg)
             bubble("Connection setup response received");
             send(pk, "cmPort$o");
             return;
+        }else if (destAddr == myAddress && dynamic_cast<RejectConnectionSetupRequest *>(msg)!= nullptr){
+            bubble("Reject connection setup response received");
+            send(pk, "cmPort$o");
+            return;
         }else if(destAddr == myAddress && dynamic_cast<InternalRuleSetForwarding *>(msg)!= nullptr){
             bubble("Internal RuleSet Forwarding packet received");
             send(pk, "rePort$o");
