@@ -856,8 +856,6 @@ network Realistic_Layer2_Star_Sep
 
 
 
-
-
         Router1[0].quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> Router2[0].quantum_port_receiver++;
         Router3[0].quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> Router1[0].quantum_port_receiver++;
         Router3[0].quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM1[0].quantum_port++;
@@ -869,7 +867,7 @@ network Realistic_Layer2_Star_Sep
         Router5[0].quantum_port++ <--> QuantumChannel {  distance = 25km; } <--> Router1[0].quantum_port_receiver++;
         Router4[0].quantum_port++ <--> QuantumChannel {  distance = 40km; } <--> Router3[0].quantum_port_receiver++;
 
-        Repeater1[0].quantum_port++ <--> QuantumChannel {  distance = 25km; } <--> Router1[0].quantum_port++;
+        Repeater1[0].quantum_port++ <--> QuantumChannel {  distance = 25km; } <--> Router1[0].quantum_port_receiver++;
         Repeater1[0].quantum_port++ <--> QuantumChannel {  distance = 25km; } <--> HoM2[0].quantum_port++;
         EndNode1[0].quantum_port++ <--> QuantumChannel {  distance = 25km; } <--> HoM2[0].quantum_port++;
         HoM3[0].quantum_port++ <--> QuantumChannel {  distance = 25km; } <--> Router1[0].quantum_port++;
