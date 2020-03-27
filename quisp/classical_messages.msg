@@ -48,6 +48,9 @@ packet ConnectionSetupRequest extends header
 
 packet RejectConnectionSetupRequest extends header
 {
+    int actual_destAddr;
+    int actual_srcAddr;
+    int number_of_required_Bellpairs;
 }
 
 

@@ -83,7 +83,7 @@ class ConnectionManager : public cSimpleModule
         virtual void intermediate_alloc_res_handler(ConnectionSetupResponse *pk);
       
         virtual void responder_reject_req_handler(RejectConnectionSetupRequest *pk);
-        virtual void intermediate_reject_req_handler(RejectConnectionSetupRequest *pk);
+        virtual void initiator_reject_req_handler(RejectConnectionSetupRequest *pk);
 
         // virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, QNIC_type lqnic_type, int lqnic_index, int lres, int right_node, QNIC_type rqnic_type, int rqnic_index, int rres);
         virtual RuleSet* generateRuleSet_Tomography(unsigned long RuleSet_id, int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index, int num_resources);
@@ -160,13 +160,15 @@ void ConnectionManager::handleMessage(cMessage *msg){
       }
     }else if(dynamic_cast<RejectConnectionSetupRequest *>(msg)!= nullptr){
         RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
-        // int actual_src = pk->getActual_srcAddr();
-        intermediate_reject_req_handler(pk);
-        delete msg;
-        return;
+        int actual_src = pk->getActual_srcAddr();
+        if(actual_src == myAddress){
+          initiator_reject_req_handler(pk);
+          delete msg;
+          return;
+        }
         // if(actual_src == myAddress){
         //   // terminate relaying
-        //   responder_reject_req_handler(pk);
+        //   
         //   delete myAddress
         //   return
         // }else{
@@ -404,6 +406,9 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
         pkt->setKind(6);
         pkt->setDestAddr(pk->getActual_srcAddr());
         pkt->setSrcAddr(myAddress);
+        pkt->setActual_destAddr(pk->getActual_destAddr());
+        pkt->setActual_srcAddr(pk->getActual_srcAddr());
+        pkt->setNumber_of_required_Bellpairs(pk->getNumber_of_required_Bellpairs());
         send(pkt, "RouterPort$o");
     }
 }
@@ -618,6 +623,9 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
         pkt->setKind(6);
         pkt->setDestAddr(pk->getActual_srcAddr());
         pkt->setSrcAddr(myAddress);
+        pkt->setActual_destAddr(pk->getActual_destAddr());
+        pkt->setActual_srcAddr(pk->getActual_srcAddr());
+        pkt->setNumber_of_required_Bellpairs(pk->getNumber_of_required_Bellpairs());
         send(pkt, "RouterPort$o");
       }
   }
@@ -677,9 +685,18 @@ void ConnectionManager::responder_reject_req_handler(RejectConnectionSetupReques
  * This function is called when we discover that we can't fulfill the connection request,
  * primarily due to resource reservation conflicts.
  **/
-void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupRequest *pk){
+void ConnectionManager::initiator_reject_req_handler(RejectConnectionSetupRequest *pk){
   int reject_node = pk->getSrcAddr();
-  EV<<"Connection was rejected by "<<reject_node<<"\n";
+  EV<<"Connection was rejected by "<<reject_node<<"at"<<myAddress<<"\n";
+  // this might be better handled in application
+  ConnectionSetupRequest *pkt = new ConnectionSetupRequest;
+  pkt->setActual_srcAddr(myAddress);
+  pkt->setActual_destAddr(pk->getActual_destAddr());
+  pkt->setDestAddr(myAddress);
+  pkt->setSrcAddr(myAddress);
+  pkt->setNumber_of_required_Bellpairs(pk->getNumber_of_required_Bellpairs());
+  pkt->setKind(7);
+  scheduleAt(simTime()+exponential(0.001),pkt);
   // here we have to implement when the rejection packet received.
 }
 

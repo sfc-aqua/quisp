@@ -101,7 +101,7 @@ void Application::initialize()
                         pk->setActual_destAddr(endnode_destination_address);
                         pk->setDestAddr(myAddress);
                         pk->setSrcAddr(myAddress);
-                        pk->setNumber_of_required_Bellpairs(2);
+                        pk->setNumber_of_required_Bellpairs(number_of_resources);
                         pk->setKind(7);
                         scheduleAt(simTime(),pk);
                     }
@@ -115,7 +115,7 @@ void Application::initialize()
                     pk->setActual_destAddr(endnode_destination_address);
                     pk->setDestAddr(myAddress);
                     pk->setSrcAddr(myAddress);
-                    pk->setNumber_of_required_Bellpairs(2); //required bell pairs
+                    pk->setNumber_of_required_Bellpairs(number_of_resources); //required bell pairs
                     pk->setKind(7);
                     scheduleAt(simTime(),pk);
                     break;
