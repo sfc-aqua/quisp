@@ -155,7 +155,7 @@ need are:
 
 Depending on your local setup and how you intend to use QuISP, you may
 also need various tools (a C++ compiler, make, an X Windows server,
-Docker, etc.), documented in the installation notes.
+Docker, ffmpeg for making videos, etc.), documented in the installation notes.
 
 ## Building and running
 
