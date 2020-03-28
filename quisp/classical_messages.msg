@@ -145,6 +145,8 @@ packet ConnectionSetupResponse extends header
     unsigned long RuleSet_id;
     RuleSetField RuleSet;
     int application_type;
+    
+    int stack_of_QNodeIndexes[];
 }
 
 packet BSMtimingNotifier extends header

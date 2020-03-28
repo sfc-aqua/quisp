@@ -304,7 +304,7 @@ void RuleEngine::handleMessage(cMessage *msg){
             //FIXME This is really naive implementation. 
             if(pkt->getApplication_type() == 0){
                 EV<<"got application!!!!!!!!!!!!!!!!! at "<<parentAddress<<"\n";
-                           //Received a tomography rule set.
+                //Received a tomography rule set.
                 InternalRuleSetForwarding_Application *pk = check_and_cast<InternalRuleSetForwarding_Application *>(msg);
                 //std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
                 process p;
@@ -320,6 +320,7 @@ void RuleEngine::handleMessage(cMessage *msg){
                 }else{
                     error("Empty rule set...");
                 }
+                
             }else{
                 error("This application is not recognized yet");
             }

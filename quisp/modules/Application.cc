@@ -117,7 +117,8 @@ void Application::initialize()
                     pk->setSrcAddr(myAddress);
                     pk->setNumber_of_required_Bellpairs(number_of_resources); //required bell pairs
                     pk->setKind(7);
-                    scheduleAt(simTime(),pk);
+                    // to avoid conflict
+                    scheduleAt(simTime()+exponential(0.00001*myAddress),pk);
                     break;
                 }
         }
@@ -134,6 +135,22 @@ void Application::handleMessage(cMessage *msg){
         send(msg, "toRouter");
     }else if(dynamic_cast<ConnectionSetupResponse *>(msg)!= nullptr){
         send(msg, "toRouter");
+    }else if(dynamic_cast<RejectConnectionSetupRequest *>(msg) != nullptr){
+        RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
+        int actual_src = pk->getActual_srcAddr();
+        if(actual_src == myAddress){
+            int reject_node = pk->getSrcAddr();
+            EV<<"Connection was rejected by "<<reject_node<<"at"<<myAddress<<"\n";
+            // this might be better handled in application
+            ConnectionSetupRequest *pkt = new ConnectionSetupRequest;
+            pkt->setActual_srcAddr(myAddress);
+            pkt->setActual_destAddr(pk->getActual_destAddr()); // This might not good way
+            pkt->setDestAddr(myAddress);
+            pkt->setSrcAddr(myAddress);
+            pkt->setNumber_of_required_Bellpairs(number_of_resources);
+            pkt->setKind(7);
+            scheduleAt(simTime()+exponential(0.001),pkt);
+        }
     }
     else if(dynamic_cast<InternalRuleSetForwarding *>(msg)!= nullptr){
         bubble("internal rulesetforwarding packet arrived to application!");
