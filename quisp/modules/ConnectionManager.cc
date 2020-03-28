@@ -126,6 +126,7 @@ void ConnectionManager::handleMessage(cMessage *msg){
     if(dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
         ConnectionSetupRequest *pk = check_and_cast<ConnectionSetupRequest *>(msg);
         int actual_dst = pk->getActual_destAddr();
+        int actual_src = pk->getActual_srcAddr();
 
         if(actual_dst == myAddress){
           // terminate relaying Request & start relaying ConnectionSetupResponse
@@ -134,10 +135,25 @@ void ConnectionManager::handleMessage(cMessage *msg){
           delete msg;
           return;
         }else{
+          int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst);
+          connection_setup_inf dst_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
+          bool isReserved = isQnic_busy(dst_inf.qnic.address);
+          if(actual_src == myAddress && !isReserved || actual_src != myAddress){
+            intermediate_alloc_req_handler(pk);
+          }else if(actual_src == myAddress && isReserved){
+            // Reject for self
+            RejectConnectionSetupRequest *pkt = new RejectConnectionSetupRequest;
+            pkt->setKind(6);
+            pkt->setDestAddr(pk->getActual_srcAddr());
+            pkt->setSrcAddr(myAddress);
+            pkt->setActual_destAddr(pk->getActual_destAddr());
+            pkt->setActual_srcAddr(pk->getActual_srcAddr());
+            pkt->setNumber_of_required_Bellpairs(pk->getNumber_of_required_Bellpairs());
+            send(pkt, "RouterPort$o");
+          }
            // relay Request to the next node
            // OR
            // stop relaying and generate RejectConnectionSetupRequest
-          intermediate_alloc_req_handler(pk);
         }
     }else if(dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr){
       ConnectionSetupResponse *pk = check_and_cast<ConnectionSetupResponse *>(msg);
@@ -402,6 +418,8 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
       if(actual_dst != myAddress){
         reserve_qnic(src_inf.qnic.address);
         reserve_qnic(dst_inf.qnic.address);
+      }else{
+        reserve_qnic(src_inf.qnic.address);
       }
     }else{
         RejectConnectionSetupRequest *pkt = new RejectConnectionSetupRequest;
@@ -696,7 +714,7 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
   int local_qnic_address_to_actual_src = routingdaemon->return_QNIC_address_to_destAddr(actual_src);
   connection_setup_inf dst_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
   connection_setup_inf src_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_src);
-  if(myAddress != actual_dst){
+  if(myAddress != actual_dst && myAddress != actual_src){
     release_qnic(dst_inf.qnic.address);
     release_qnic(src_inf.qnic.address);
   }
