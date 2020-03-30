@@ -2,7 +2,7 @@
 
 ## Included Demos
 
-QuISP is delivered with a lot of working network files, most
+QuISP is delivered with a lot of working network files, most of them
 configurations from Takaaki Matsuo's master's thesis.  You will want
 to start instead from a set of basic demos:
 
@@ -10,7 +10,8 @@ to start instead from a set of basic demos:
 
 <img src="img/Linear_One_MM.png" width="200" />
 
-- two nodes connected via a single MIM (memory-interference-memory) link
+- two nodes connected via a single MIM (memory-interference-memory)
+  link; "HoM" is a Bell state analyzer in the middle of the link
 
 <img src="img/Linear_One_MIM.png" width="400" />
 
@@ -18,7 +19,7 @@ to start instead from a set of basic demos:
   source-memory) link~~ _(will be added after MSM links work)_
 - ~~three different link architectures demo:  (MM, MIM, MSM)~~ _(will
   be added after MSM links work)_
-- straight line: three or four hops of one type of link (n.b.: not very useful until we have entanglement swapping!) (might have to make this one?)
+- straight line: three or four hops of one type of link (might have to make this one?)
 - many nodes in a complex configuration (adapted from the topology
 of a real ISP; only center portion of the network shown)
 ![Tutorial_ISP_1239-center](img/Tutorial_ISP_1239-center.png)
