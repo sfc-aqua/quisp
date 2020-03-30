@@ -6,10 +6,14 @@ QuISP is delivered with a lot of working network files, most
 configurations from Takaaki Matsuo's master's thesis.  You will want
 to start instead from a set of basic demos:
 
-- two nodes: a single link
-- three link demo:  (MM, MIM, MSM) 
+- two nodes connected via a single MM (memory-to-memory) link
+![Linear_One_MM](img/Linear_One_MM.png)
+- ~~three different link architectures demo:  (MM, MIM, MSM)~~ (will
+  be added after MSM links work)
 - straight line: three or four hops of one type of link (n.b.: not very useful until we have entanglement swapping!) (might have to make this one?)
-- big demo: many nodes in a complex config (based on real ISP) `./quisp/networks/check_list/Tomography_networks.ispMap_1239_node_23_48_hetero_distance
+- big demo: many nodes in a complex config (adapted from the topology
+of a real ISP; only center portion of the network shown)
+![Tutorial_ISP_1239-center](img/Tutorial_ISP_1239-center.png)
 
 ## Opening a Simulation
 
