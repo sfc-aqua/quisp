@@ -1123,7 +1123,6 @@ cModule* RuleEngine::getQNode(){
 
 void RuleEngine::finish(){
     delete qnic_burst_trial_counter;
-    delete realtime_controller;
 }
 
 double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index) {
