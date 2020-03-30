@@ -19,7 +19,7 @@ that document regardless of your platform.)
 
 You should see a screen almost like this in the OMNeT++ IDE.
 
-![ide-opening-tutorial.png](ide-opening-tutorial.png)
+![ide-opening-tutorial.png](img/ide-opening-tutorial.png)
 
 In the upper left panel, each of the subdirectories is probably
 closed.  Click on `networks` and scroll down until you find
