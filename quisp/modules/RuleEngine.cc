@@ -284,7 +284,7 @@ void RuleEngine::handleMessage(cMessage *msg){
             p.ownner_addr = pkt->getRuleSet()->owner;
             // for check
             p.Rs = pkt->getRuleSet();
-            //  here swappers got swapping ruleset with internal packet
+            // here swappers got swapping ruleset with internal packet
             // What we have to do here is 
             // 1. Add process (RuleSet) of swapping to running process
             // 2. Run it

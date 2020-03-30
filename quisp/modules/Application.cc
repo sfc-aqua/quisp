@@ -82,10 +82,10 @@ void Application::initialize()
 
         //cModule *qnode = getQNode();
         // if(myAddress == 1 && EndToEndConnection){//hard-coded for now
-	// 20/3/15: upgrade from "exactly one connection" to
-	// "let's all mambo!"  Each EndNode makes exactly one connection.
-	// that means that some nodes will be receivers of more than
-	// one connection, at random.
+        // 20/3/15: upgrade from "exactly one connection" to
+        // "let's all mambo!"  Each EndNode makes exactly one connection.
+        // that means that some nodes will be receivers of more than
+        // one connection, at random.
         // myaddress==1 for debugging
         if(EndToEndConnection){//hard-coded for now
 	    int endnode_destination_address;
@@ -120,7 +120,7 @@ void Application::initialize()
                     // to avoid conflict
                     scheduleAt(simTime()+exponential(0.00001*myAddress),pk);
                     break;
-                }
+            }
         }
     }
 }
@@ -139,6 +139,7 @@ void Application::handleMessage(cMessage *msg){
         RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
         int actual_src = pk->getActual_srcAddr();
         if(actual_src == myAddress){
+            float recon_try = std::rand()/RAND_MAX;
             int reject_node = pk->getSrcAddr();
             EV<<"Connection was rejected by "<<reject_node<<"at"<<myAddress<<"\n";
             // this might be better handled in application
@@ -149,7 +150,7 @@ void Application::handleMessage(cMessage *msg){
             pkt->setSrcAddr(myAddress);
             pkt->setNumber_of_required_Bellpairs(number_of_resources);
             pkt->setKind(7);
-            scheduleAt(simTime()+exponential(0.001),pkt);
+            scheduleAt(simTime(),pkt);
         }
     }
     else if(dynamic_cast<InternalRuleSetForwarding *>(msg)!= nullptr){

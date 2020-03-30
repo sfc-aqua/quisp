@@ -174,11 +174,13 @@ void ConnectionManager::handleMessage(cMessage *msg){
     }else if(dynamic_cast<RejectConnectionSetupRequest *>(msg)!= nullptr){
         RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
         int actual_src = pk->getActual_srcAddr();
-        if(actual_src != myAddress){
-          intermediate_reject_req_handler(pk);
-          delete msg;
-          return;
-        }
+        // if(actual_src != myAddress){
+        intermediate_reject_req_handler(pk);
+        delete msg;
+        return;
+        // }else{
+        //   // initiator_reject_req_
+        // }
         // if(actual_src == myAddress){
         //   // terminate relaying
         //   
@@ -717,6 +719,10 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
   if(myAddress != actual_dst && myAddress != actual_src){
     release_qnic(dst_inf.qnic.address);
     release_qnic(src_inf.qnic.address);
+  }else if(myAddress == actual_dst){
+    release_qnic(src_inf.qnic.address);
+  }else if(myAddress == actual_src){
+    release_qnic(dst_inf.qnic.address);
   }
 }
 
