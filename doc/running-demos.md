@@ -11,6 +11,21 @@ to start instead from a set of basic demos:
 - straight line: three or four hops of one type of link (n.b.: not very useful until we have entanglement swapping!) (might have to make this one?)
 - big demo: many nodes in a complex config (based on real ISP) `./quisp/networks/check_list/Tomography_networks.ispMap_1239_node_23_48_hetero_distance
 
+## Opening a Simulation
+
+(If you arrived here from [Build on Windows](Build_on_windows.md),
+some of this will look redundant; if not, we encoourage you to skim
+that document regardless of your platform.)
+
+You should see a screen almost like this in the OMNeT++ IDE.
+
+![ide-opening-tutorial.png](ide-opening-tutorial.png)
+
+In the upper left panel, each of the subdirectories is probably
+closed.  Click on `networks` and scroll down until you find
+`quisp_tutorial.ini`.  Click on it, and your screen should look much
+like the one above.
+
 ## What the Heck am I Looking At?
 
 If you are running a simulation properly, you will see two or more
