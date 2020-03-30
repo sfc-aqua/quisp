@@ -14,7 +14,7 @@ to start instead from a set of basic demos:
 ## Opening a Simulation
 
 (If you arrived here from [Build on Windows](Build_on_windows.md),
-some of this will look redundant; if not, we encoourage you to skim
+some of this will look redundant; if not, we encourage you to skim
 that document regardless of your platform.)
 
 You should see a screen almost like this in the OMNeT++ IDE.
@@ -22,9 +22,16 @@ You should see a screen almost like this in the OMNeT++ IDE.
 ![ide-opening-tutorial.png](img/ide-opening-tutorial.png)
 
 In the upper left panel, each of the subdirectories is probably
-closed.  Click on `networks` and scroll down until you find
+closed, like this:
+
+![project-explorer-networks-closed.png](img/project-explorer-networks-closed.png)
+
+Click on `networks` and scroll down until you find
 `quisp_tutorial.ini`.  Click on it, and your screen should look much
-like the one above.
+like the one above.  The upper middle panel has several tabs; when you
+click on `quisp_tutorial.ini`, it should open a tab for that file, and
+you should be able to see the set of networks included in this
+tutorial.
 
 ## What the Heck am I Looking At?
 
