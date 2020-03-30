@@ -174,12 +174,13 @@ void ConnectionManager::handleMessage(cMessage *msg){
     }else if(dynamic_cast<RejectConnectionSetupRequest *>(msg)!= nullptr){
         RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
         int actual_src = pk->getActual_srcAddr();
-        // if(actual_src != myAddress){
-        intermediate_reject_req_handler(pk);
-        delete msg;
-        return;
-        // }else{
-        //   // initiator_reject_req_
+        // Umm... this might be bug.
+        if(actual_src != myAddress){
+          intermediate_reject_req_handler(pk);
+          delete msg;
+          return;
+        }
+        // //   // initiator_reject_req_
         // }
         // if(actual_src == myAddress){
         //   // terminate relaying
@@ -660,7 +661,7 @@ void ConnectionManager::reserve_qnic(int qnic_address){
     it->second = true;
   }else{
     EV<<"qnic_address"<<qnic_address<<"\n";
-    error("qnic not found or not reserved");
+    error("qnic not found or already reserved");
   }
 }
 
@@ -669,7 +670,7 @@ void ConnectionManager::release_qnic (int qnic_address){
   if(it != qnic_res_table.end() && it->second){
     it->second = false;
   }else{
-    error("qnic not found");
+    error("qnic not found or not reserved");
   }
 
 }
