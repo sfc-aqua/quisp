@@ -7,11 +7,19 @@ configurations from Takaaki Matsuo's master's thesis.  You will want
 to start instead from a set of basic demos:
 
 - two nodes connected via a single MM (memory-to-memory) link
-![Linear_One_MM](img/Linear_One_MM.png)
-- ~~three different link architectures demo:  (MM, MIM, MSM)~~ (will
-  be added after MSM links work)
+
+<img src="img/Linear_One_MM.png" width="200" />
+
+- two nodes connected via a single MIM (memory-interference-memory) link
+
+<img src="img/Linear_One_MIM.png" width="400" />
+
+- ~~two nodes connected via a single MSM (memory-entangled photon pair
+  source-memory) link~~ _(will be added after MSM links work)_
+- ~~three different link architectures demo:  (MM, MIM, MSM)~~ _(will
+  be added after MSM links work)_
 - straight line: three or four hops of one type of link (n.b.: not very useful until we have entanglement swapping!) (might have to make this one?)
-- big demo: many nodes in a complex config (adapted from the topology
+- many nodes in a complex configuration (adapted from the topology
 of a real ISP; only center portion of the network shown)
 ![Tutorial_ISP_1239-center](img/Tutorial_ISP_1239-center.png)
 
@@ -28,7 +36,7 @@ You should see a screen almost like this in the OMNeT++ IDE.
 In the upper left panel, each of the subdirectories is probably
 closed, like this:
 
-![project-explorer-networks-closed.png](img/project-explorer-networks-closed.png)
+<img src="img/project-explorer-networks-closed.png" width="400" />
 
 Click on `networks` and scroll down until you find
 `quisp_tutorial.ini`.  Click on it, and your screen should look much
