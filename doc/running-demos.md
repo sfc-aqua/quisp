@@ -58,23 +58,6 @@ pulses), and larger, digital classical messages all via different
 types of packets.  You will see these flowing between nodes, along
 with labels that tell you what they are.
 ![MM_demo](img/demo_1.png)
-According to [one old
-message](https://groups.google.com/forum/#!topic/omnetpp/5p1ufXvpDwA)
-on the OmNET++ mailing list from a decade ago, the "packet" (photon or
-classical message) colors derive from the message kind, an internal
-field related to the message definition.  Modulo 8, the colors you see
-are:
-
-```
-0 = RED
-1 = GREEN
-2 = BLUE
-3 = WHITE
-4 = YELLOW
-5 = CYAN
-6 = MAGENTA
-7 = BLACK
-```
 
 As of this writing, the colors (message kinds) assigned are as
 follows:
@@ -90,8 +73,26 @@ MAGENTA	Link tomography results (memory measurement results?); also RejectConnec
 BLACK	Purification results (classical message); also ConnectionSetupRequest
 ```
 
-(These color assignments seem to be artifacts of the coding; grep for
-`setKind()` in the source code.)
+(These color assignments are artifacts of the coding; grep for
+`setKind()` in the source code.
+According to [one old message](https://groups.google.com/forum/#!topic/omnetpp/5p1ufXvpDwA)
+on the OmNET++ mailing list from a decade ago, the "packet" (photon or
+classical message) colors derive from the message kind, an internal
+field related to the message definition.  Modulo 8, the colors you see
+are:
+
+```
+0 = RED
+1 = GREEN
+2 = BLUE
+3 = WHITE
+4 = YELLOW
+5 = CYAN
+6 = MAGENTA
+7 = BLACK
+```
+This packet "kind" is used in some demultiplexing, so we are choosing the assigned
+kinds to make the animation as clear as possible.)
 
 ## Finding and interpreting the results
 
