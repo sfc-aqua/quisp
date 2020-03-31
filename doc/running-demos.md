@@ -26,13 +26,19 @@ to start instead from a set of basic demos:
 - twelve hops in a straight line
 
 <center>
-<img src="img/linear-spiral.png" width="400" />
+<img src="img/linear-spiral.png" width="600" />
 </center>
 
 - a star topology with three links
 
 <center>
 <img src="img/three-link-star.png" width="400" />
+</center>
+
+- core with arms: a moderately realistic near-term network
+
+<center>
+<img src="img/core-and-arms.png" width="600" />
 </center>
 
 - many nodes in a complex configuration (adapted from the topology
