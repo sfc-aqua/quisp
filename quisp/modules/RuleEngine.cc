@@ -1298,6 +1298,7 @@ void RuleEngine::traverseThroughAllProcesses2(){
 
                                 // packet for left node
                                 SwappingResult *pkt_for_left = new SwappingResult;
+				pkt_for_left->setKind(5); // cyan
                                 pkt_for_left->setDestAddr(pkt->getLeft_Dest());
                                 pkt_for_left->setSrcAddr(parentAddress);
                                 pkt_for_left->setOperation_type(pkt->getOperation_type_left());
@@ -1309,6 +1310,7 @@ void RuleEngine::traverseThroughAllProcesses2(){
 
                                 // packet for right node
                                 SwappingResult *pkt_for_right = new SwappingResult;
+				pkt_for_right->setKind(5); // cyan
                                 pkt_for_right->setDestAddr(pkt->getRight_Dest());
                                 pkt_for_right->setSrcAddr(parentAddress);
                                 pkt_for_right->setOperation_type(pkt->getOperation_type_right());

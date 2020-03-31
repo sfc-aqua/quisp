@@ -152,7 +152,8 @@ cPacket* SwappingAction::run(cModule *re){
     //  two nodes (left partner and right partner). once return information to rule engine, then, duplicate it.
     SwappingResult *pk = new SwappingResult;
     // no destination here. In RuleEngine, it's set.
-    pk->setKind(4);
+    // this setKind() doesn't seem to have any effect; set instead in void RuleEngine::traverseThroughAllProcesses2()
+    pk->setKind(5);
     pk->setRuleSet_id(ruleset_id);
     pk->setRule_id(rule_id);
     pk->setAction_index(action_index);
