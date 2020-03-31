@@ -17,7 +17,13 @@ of [Authors](Authors.md).
 ## Research questions
 
 A simulator is one or more of three things: a time machine, an X-ray
-machine, or a telescope.
+machine, or a telescope.  It can be used to look into the future or
+the past, look at the internals of an object that are otherwise
+inaccessible, or look at objects of a far vaster scale than can be
+built in a laboratory.  QuISP is, perhaps, most importantly a
+telescope: we are looking at large-scale quantum networks and
+ultimately the Quantum Internet, but we do also pause to look at the
+micro (local) behavior of protocols, as well.
 
 Research questions we hope to answer:
 
