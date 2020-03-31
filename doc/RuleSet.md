@@ -16,7 +16,6 @@ anyway.*
 
 RuleSets are created by the [Connection Manager](Connection%20Manager.md) and given to the [Rule Engine](Rule%20Engine.md).  See the [Router Software Modules](Router-Software-Modules-no-HW-Executive.jpg).
 
-
 ## Strategies for Building Consistent RuleSets ##
 
 * *Function placement*: dynamic or static

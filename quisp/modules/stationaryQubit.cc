@@ -494,8 +494,8 @@ bool stationaryQubit::isLocked(){
 void stationaryQubit::Allocate(){
     allocated = true;
     if(hasGUI()){
-                bubble("Allocated!");
-                getDisplayString().setTagArg("i", 1, "purple");
+        bubble("Allocated!");
+        getDisplayString().setTagArg("i", 1, "purple");
     }
 }
 
@@ -675,7 +675,7 @@ bool stationaryQubit::Zpurify(stationaryQubit * resource_qubit/*Target*/) {
 //Single qubit memory error based on Markov-Chain
 void stationaryQubit::apply_memory_error(stationaryQubit *qubit){
 	if(qubit->entangled_partner==nullptr && qubit->Density_Matrix_Collapsed(0,0).real()==-111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok)
-		error("THis must not happen in apply memory error");   
+		error("This must not happen in apply memory error");   
  
 	//if(qubit->getIndex() == 71 && qubit->node_address == 3)
 	//std::cout<<"Applying memory error to "<<qubit<<" in qnic["<<qubit->qnic_index<<"] in node["<<qubit->node_address<<"]\n";

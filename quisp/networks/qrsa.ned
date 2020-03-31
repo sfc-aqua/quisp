@@ -34,6 +34,11 @@ simple ConnectionManager
 {
     parameters:
         int address;
+        int number_of_qnics;
+        int number_of_qnics_r;
+        int number_of_qnics_rp;
+        int total_number_of_qnics;
+
     gates:
         inout RouterPort;
 }
@@ -94,6 +99,10 @@ module quantumRoutingSoft
         cm: ConnectionManager {
             parameters:
                 address = address;//share the same address within all inner modules
+                number_of_qnics = number_of_qnics;
+                number_of_qnics_r = number_of_qnics_r;
+                number_of_qnics_rp = number_of_qnics_rp;
+                total_number_of_qnics = number_of_qnics +  number_of_qnics_r + number_of_qnics_rp;
                 @display("p=227,148");
         }
         rt: RealTimeController {

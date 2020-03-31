@@ -38,14 +38,145 @@ stationaryQubit* Action::getResource_fromTop(int required_index){
     return pt;
 }
 
+stationaryQubit* Action::getResource_fromTop_with_partner(int required_index, int partner){
+    // here
+    int resource_index = 0;
+    stationaryQubit *pt = nullptr;
+    // EV<<"===========================================\n";
+    // for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
+    //     EV<<"hey!"<<it->first<<"\n";
+    // }
+    // EV<<"===========================================\n";
+
+    for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
+        if(it->second->isLocked()){
+        //Ignore locked resource
+        }else if(it->first == partner && !it->second->isLocked()){
+            pt = it->second;
+            break;
+        }else{
+            resource_index++;
+        }
+    }
+    return pt;
+}
+
 void Action::removeResource_fromRule(stationaryQubit *qubit){
-    for (auto it =  (*rule_resources).begin(), next_it =  (*rule_resources).begin(); it !=  (*rule_resources).end(); it = next_it){
+    for (auto it =  (*rule_resources).begin(), next_it = (*rule_resources).begin(); it != (*rule_resources).end(); it = next_it){
           next_it = it; ++next_it;
           if (it->second == qubit){
               (*rule_resources).erase(it);
               break;
           }
     }
+}
+
+// TODO: completely mixed
+cPacket* SwappingAction::run(cModule *re){
+    float success_probability = 1.0;
+
+    stationaryQubit *left_qubit = nullptr;
+    stationaryQubit *right_qubit = nullptr;
+
+    left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
+    right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
+
+    if(left_qubit == nullptr || right_qubit==nullptr){
+        Error *pk = new Error;
+        pk->setError_text("Not enough resource found! This shouldn't happen!");
+        return pk;
+    }
+    if(left_qnic_id < 0 || right_qnic_id < 0){
+        Error *pk = new Error;
+        pk->setError_text("QNICs are not found!");
+        return pk;
+    }
+
+    // actual swapping operations
+    stationaryQubit *right_partner_qubit = right_qubit->entangled_partner;
+    stationaryQubit *left_partner_qubit = left_qubit->entangled_partner;
+    // just swapping pointer.
+    // swapper have no way to know this swapping is success or not.
+    // bell measurement
+    left_qubit->Hadamard_gate();
+    right_qubit->CNOT_gate(left_qubit);
+
+    // TODO This is a little bit cheating. This must be tracked!
+    int lindex = left_partner_qubit->stationaryQubit_address;
+    int rindex = right_partner_qubit->stationaryQubit_address;
+
+    bool left_measure = left_qubit->measure_Z();
+    bool right_measure = right_qubit->measure_Z();
+
+    int operation_type_left, operation_type_right;
+
+    if(!left_measure && !right_measure){
+        EV<<"operation type 0, operation left I, operation right I\n";
+        operation_type_left = 0;
+        operation_type_right = 0;
+    }else if(!left_measure && right_measure){
+        EV<<"operation type 1, operation left I, operation right X\n";
+        operation_type_left = 0;
+        operation_type_right = 1;
+    }else if(left_measure && !right_measure){
+        EV<<"operation type 2, operation left Z, operation right I\n";
+        operation_type_left = 2;
+        operation_type_right = 0;
+    }else if(left_measure && right_measure){
+        EV<<"operation type 3, operation left Z, operation right X\n";
+        operation_type_left = 2;
+        operation_type_right = 1;
+    }
+    RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
+    if(std::rand()/RAND_MAX < success_probability){
+        right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
+        left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
+
+    }else{// this might be wrong
+        // removeResource_fromRule(left_partner_qubit);
+        // removeResource_fromRule(right_partner_qubit);
+        // TODO CHECK is this correct?
+        // rule_engine->freeConsumedResource(left_qnic_id, right_partner_qubit, right_qnic_type);
+        // rule_engine->freeConsumedResource(right_qnic_id, left_partner_qubit, left_qnic_type);
+        left_partner_qubit->isBusy = false;
+        right_partner_qubit->isBusy = false;
+    }
+    removeResource_fromRule(left_qubit);
+    removeResource_fromRule(right_qubit);
+    // This might not be good
+    left_qubit->isBusy = false;
+    right_qubit->isBusy = false;
+    // rule_engine->freeConsumedResource(self_left_qnic_id, right_qubit, self_left_qnic_type);
+    // rule_engine->freeConsumedResource(self_right_qnic_id, left_qubit, self_right_qnic_type);
+    // Currently, this function is able to return only one packet, but this action have to return 
+    //  two nodes (left partner and right partner). once return information to rule engine, then, duplicate it.
+    SwappingResult *pk = new SwappingResult;
+    // no destination here. In RuleEngine, it's set.
+    // this setKind() doesn't seem to have any effect; set instead in void RuleEngine::traverseThroughAllProcesses2()
+    pk->setKind(5);
+    pk->setRuleSet_id(ruleset_id);
+    pk->setRule_id(rule_id);
+    pk->setAction_index(action_index);
+
+    // FIXME: These operations are corresponds to the result of operation.
+    pk->setOperation_type_left(operation_type_left); // operation type for left node
+    pk->setOperation_type_right(operation_type_right); // operation type for right node
+    // These information are cropped in the RuleEngine.
+    pk->setLeft_Dest(left_partner); // this might not require but just in case
+    pk->setRight_Dest(right_partner);
+
+    pk->setNew_partner_left(right_partner);
+    pk->setNew_partner_qnic_index_left(right_qnic_id);
+    pk->setNew_partner_qnic_type_left(right_qnic_type);
+    pk->setNew_partner_qnic_address_left(right_qnic_address);
+    pk->setMeasured_qubit_index_left(lindex); // here is wrong;
+
+    pk->setNew_partner_right(left_partner);
+    pk->setNew_partner_qnic_index_right(left_qnic_id);
+    pk->setNew_partner_qnic_type_right(left_qnic_type);
+    pk->setNew_partner_qnic_address_right(left_qnic_address);
+    pk->setMeasured_qubit_index_right(rindex);
+    return pk;
 }
 
 //Either Z or X purification.

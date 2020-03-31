@@ -15,10 +15,12 @@ namespace quisp {
 namespace rules {
 
 
-void Rule::addResource(stationaryQubit *qubit){
-    int index = number_of_resources_allocated_in_total;
-    resources.insert(std::make_pair(index,qubit));//Assign resource to the 1st Rule.
-    number_of_resources_allocated_in_total++;
+void Rule::addResource(int address_entangled_with, stationaryQubit *qubit){
+    // int index = number_of_resources_allocated_in_total;
+    // this index must be entangled partner (this must be updated)
+    resources.insert(std::make_pair(address_entangled_with, qubit));//Assign resource to the 1st Rule.
+    // number_of_resources_allocated_in_total++;
+    // EV<<"This is current resource!"
 }
 
 void Rule::setCondition (Condition * c) {

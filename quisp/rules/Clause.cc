@@ -22,7 +22,7 @@ bool FidelityClause::check(qnicResources* resources) const {
     return false;
 }*/
 
-bool FidelityClause::check(std::map<int,stationaryQubit*> resource) const {
+bool FidelityClause::check(std::multimap<int,stationaryQubit*> resource) const {
     stationaryQubit* qubit = nullptr;
     /*checkQnic();//This is not doing anything...
     if(qubit = getQubit(resources, qnic_type, qnic_id, partner, resource)){
@@ -31,22 +31,75 @@ bool FidelityClause::check(std::map<int,stationaryQubit*> resource) const {
     return false;*/
 }
 
-bool EnoughResourceClause::check(std::map<int,stationaryQubit*> resource) const{
+bool EnoughResourceClause::check(std::multimap<int,stationaryQubit*> resource) const{
     //std::cout<<"!!In enough clause \n";
     bool enough = false;
-
     int num_free = 0;
-    for (auto it=resource.begin(); it!=resource.end(); ++it) {
-           if(!it->second->isLocked()){
+
+    for (std::multimap<int, stationaryQubit*>::iterator it=resource.begin(); it!=resource.end(); ++it) {
+        if (it->first == partner){
+            if(!it->second->isLocked()){// here must have loop
                num_free++;
-           }
-           if(num_free >= num_resource_required){
+            }
+            if(num_free >= num_resource_required){
                enough = true;
-           }
+            }
+        }
+
     }
     //std::cout<<"Enough = "<<enough<<"\n";
     return enough;
 }
+
+bool EnoughResourceClauseLeft::check(std::multimap<int,stationaryQubit*> resource) const{
+    //std::cout<<"!!In enough clause \n";
+    bool enough = false;
+    int num_free = 0;
+
+    for (std::multimap<int, stationaryQubit*>::iterator it=resource.begin(); it!=resource.end(); ++it) {
+        if (it->first == partner_left){
+            if(!it->second->isLocked()){// here must have loop
+               num_free++;
+            }
+            if(num_free >= num_resource_required_left){
+               enough = true;
+            }
+        }
+    }
+    if(enough){
+        EV<<"You have enough resource between "<<partner_left<<"\n";
+    }else{
+        EV<<"You don't have enough resource between "<<partner_left<<"\n";
+    }
+    //std::cout<<"Enough = "<<enough<<"\n";
+    return enough;
+}
+
+bool EnoughResourceClauseRight::check(std::multimap<int,stationaryQubit*> resource) const{
+    //std::cout<<"!!In enough clause \n";
+    bool enough = false;
+    int num_free = 0;
+
+
+    for (std::multimap<int, stationaryQubit*>::iterator it=resource.begin(); it!=resource.end(); ++it) {
+        if (it->first == partner_right){
+            if(!it->second->isLocked()){// here must have loop
+               num_free++;
+            }
+            if(num_free >= num_resource_required_right){
+               enough = true;
+            }
+        }
+    }
+    if(enough){
+        EV<<"You have enough resource between "<<partner_right<<"\n";
+    }else{
+        EV<<"You don't have enough resource between "<<partner_right<<"\n";
+    }
+    //std::cout<<"Enough = "<<enough<<"\n";
+    return enough;
+}
+
 
 /*
 bool MeasureCountClause::check(qnicResources* resources) const {
@@ -62,7 +115,7 @@ bool MeasureCountClause::check(qnicResources* resources) const {
     }
 }*/
 
-bool MeasureCountClause::check(std::map<int,stationaryQubit*> resources) const {
+bool MeasureCountClause::check(std::multimap<int,stationaryQubit*> resources) const {
     //std::cout<<"MeasureCountClause invoked!!!! \n";
     if(current_count<max_count){
            current_count++;//Increment measured counter.
@@ -74,7 +127,7 @@ bool MeasureCountClause::check(std::map<int,stationaryQubit*> resources) const {
     }
 }
 
-bool MeasureCountClause::checkTerminate(std::map<int,stationaryQubit*> resources) const {
+bool MeasureCountClause::checkTerminate(std::multimap<int,stationaryQubit*> resources) const {
     EV<<"Tomography termination clause invoked.\n";
     bool done = false;
     if(current_count >=max_count){
@@ -109,7 +162,7 @@ bool PurificationCountClause::check(qnicResources* resources) const {
 }*/
 
 
-bool PurificationCountClause::check(std::map<int,stationaryQubit*> resource) const {
+bool PurificationCountClause::check(std::multimap<int,stationaryQubit*> resource) const {
     stationaryQubit* qubit = nullptr;
     //checkQnic();//This is not doing anything...
 

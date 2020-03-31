@@ -1,10 +1,10 @@
-cplusplus {{ 
+cplusplus {{
     #include <vector>
     #include <unsupported/Eigen/MatrixFunctions>
 
 	using namespace omnetpp;
-    typedef cModule *GOD_statQubitPtr; 
-    
+    typedef cModule *GOD_statQubitPtr;
+
 }} // C++ typedef
 class noncobject GOD_statQubitPtr; // For tracking the truely entangled ones (Only God knows!). The system may think the qubit is entangled but it may not (darkcount)!
 
@@ -35,6 +35,8 @@ packet ConnectionSetupRequest extends header
     int actual_destAddr;
     int actual_srcAddr;
 
+    int num_measure;
+
     int number_of_required_Bellpairs;
     double required_fidelity;
 
@@ -44,9 +46,17 @@ packet ConnectionSetupRequest extends header
     QNIC_pair_info stack_of_QNICs[];
 }
 
+packet RejectConnectionSetupRequest extends header
+{
+    int actual_destAddr;
+    int actual_srcAddr;
+    int number_of_required_Bellpairs;
+}
+
+
 cplusplus {{
     typedef quisp::rules::RuleSet * RuleSetField;
-   
+
 }}
 class noncobject RuleSetField;
 
@@ -130,7 +140,13 @@ packet ConditionNotSatisfied{
 
 packet ConnectionSetupResponse extends header
 {
-    RuleSetField stack_of_RuleSets[];
+    int actual_srcAddr;
+    int actual_destAddr;
+    unsigned long RuleSet_id;
+    RuleSetField RuleSet;
+    int application_type;
+    
+    int stack_of_QNodeIndexes[];
 }
 
 packet BSMtimingNotifier extends header
@@ -215,3 +231,48 @@ packet StopEmitting extends header{
 
 }
 
+packet SwappingResult extends header{
+    unsigned long RuleSet_id;
+    int Rule_id;
+    int action_index;
+
+    int left_Dest;
+    int right_Dest;
+
+    int new_partner_left;
+    int new_partner_qnic_index_left;
+    int new_partner_qnic_address_left;
+    int measured_qubit_index_left;
+    QNIC_type new_partner_qnic_type_left;
+
+    int new_partner_right;
+    int new_partner_qnic_index_right;
+    int new_partner_qnic_address_right;
+    int measured_qubit_index_right;
+    QNIC_type new_partner_qnic_type_right;
+
+    int operation_type_left;
+    int operation_type_right;
+
+    int operation_type; // when this would reach the destination
+    int new_partner;
+    int new_partner_qnic_index;
+    int new_partner_qnic_address;
+    int measured_qubit_index;
+    QNIC_type new_partner_qnic_type;
+}
+
+packet InternalRuleSetForwarding extends header{
+    unsigned long RuleSet_id;
+    int Rule_id;
+
+    RuleSetField RuleSet;
+}
+
+packet InternalRuleSetForwarding_Application extends header{
+    unsigned long RuleSet_id;
+    int Rule_id;
+    int application_type;
+
+    RuleSetField RuleSet;
+}

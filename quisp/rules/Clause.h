@@ -43,6 +43,7 @@ class Clause {
                     qnic_type = qt;
                     qnic_id = qi;
         };
+
         void setQnic(QNIC_type qt, int qi) {
             //if (qt >= QNIC_N) omnetpp::error("Not that many QNIC types.");
             //if (qi < 0) omnetpp::error("Negative qnic index.");
@@ -54,9 +55,9 @@ class Clause {
             //if (qnic_id < 0) omnetpp::error("Negative qnic index.");
         };
         //virtual bool check(qnicResources *resources) const = 0;
-        virtual bool check(std::map<int,stationaryQubit*>) const = 0;
+        virtual bool check(std::multimap<int,stationaryQubit*>) const = 0;
         //virtual bool checkTerminate(qnicResources *resources) const = 0;
-        virtual bool checkTerminate(std::map<int,stationaryQubit*>) const = 0;
+        virtual bool checkTerminate(std::multimap<int,stationaryQubit*>) const = 0;
         //virtual stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) const = 0;
 };
 
@@ -76,19 +77,52 @@ class FidelityClause : public Clause {
         };
         //bool check(qnicResources *resources) const override;
         //bool checkTerminate(qnicResources *resources) const override {return 0;} ;
-        bool check(std::map<int,stationaryQubit*>) const override;
-        bool checkTerminate(std::map<int,stationaryQubit*>) const override {return false;};
+        bool check(std::multimap<int,stationaryQubit*>) const override;
+        bool checkTerminate(std::multimap<int,stationaryQubit*>) const override {return false;};
 };
 
 class EnoughResourceClause : public Clause {
     protected:
         int num_resource_required;
+        int partner;
     public:
-        EnoughResourceClause(double num_res) : Clause() {
+        EnoughResourceClause(int part, int num_res) : Clause() {
             num_resource_required = num_res;
+            partner = part;
         };
-        bool check(std::map<int,stationaryQubit*>) const override;
-        bool checkTerminate(std::map<int,stationaryQubit*>) const override {return false;};
+        bool check(std::multimap<int,stationaryQubit*>) const override;
+        bool checkTerminate(std::multimap<int,stationaryQubit*>) const override {return false;};
+};
+
+/**EnoughResourceClauseLeft is for checking if node have enough resource to left node.
+ *  This is for entanglement swapping.
+*/
+class EnoughResourceClauseLeft : public Clause {
+    protected:
+        int num_resource_required_left;
+        int partner_left;
+    public:
+        EnoughResourceClauseLeft(int part_left, int num_res_left) : Clause(){
+            num_resource_required_left = num_res_left;
+            partner_left = part_left;
+        }
+
+    bool check(std::multimap<int,stationaryQubit*>) const override;
+    bool checkTerminate(std::multimap<int,stationaryQubit*>) const override {return false;};
+};
+
+class EnoughResourceClauseRight : public Clause {
+    protected:
+        int num_resource_required_right;
+        int partner_right;
+    public:
+        EnoughResourceClauseRight(int part_right, int num_res_right) : Clause() {
+            num_resource_required_right = num_res_right;
+            partner_right = part_right;
+        }
+
+    bool check(std::multimap<int,stationaryQubit*>) const override;
+    bool checkTerminate(std::multimap<int,stationaryQubit*>) const override {return false;};
 };
 
 
@@ -102,8 +136,8 @@ class NoClause : public Clause {
         };
         //bool check(qnicResources *resources) const override {return true;};
         //bool checkTerminate(qnicResources *resources) const override {return false;} ;
-        bool check(std::map<int,stationaryQubit*>) const override {return true;};
-        bool checkTerminate(std::map<int,stationaryQubit*>) const override {return false;};
+        bool check(std::multimap<int,stationaryQubit*>) const override {return true;};
+        bool checkTerminate(std::multimap<int,stationaryQubit*>) const override {return false;};
 };
 
 
@@ -121,8 +155,8 @@ class MeasureCountClause : public Clause {
          };
         //bool check(qnicResources *resources) const override;
         //bool checkTerminate(qnicResources *resources) const override;
-        bool check(std::map<int,stationaryQubit*>) const override;
-        bool checkTerminate(std::map<int,stationaryQubit*>) const override;
+        bool check(std::multimap<int,stationaryQubit*>) const override;
+        bool checkTerminate(std::multimap<int,stationaryQubit*>) const override;
         //void increment(){current_count++;};
 };
 
@@ -138,7 +172,7 @@ class PurificationCountClause : public Clause {
 
         //bool check(qnicResources *resources) const override;
         //bool checkTerminate(qnicResources *resources) const override;
-        bool check(std::map<int,stationaryQubit*>) const override;
+        bool check(std::multimap<int,stationaryQubit*>) const override;
         //void increment(){current_count++;};
 };
 

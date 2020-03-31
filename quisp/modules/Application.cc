@@ -33,6 +33,10 @@ class Application : public cSimpleModule
         int* Addresses_of_other_EndNodes = new int[1];
         int num_of_other_EndNodes;
         bool EndToEndConnection;
+        int number_of_resources;
+
+        int num_measure;
+
     protected:
         virtual void initialize() override;
         virtual void handleMessage(cMessage *msg) override;
@@ -70,19 +74,53 @@ void Application::initialize()
     }else{
         myAddress = getParentModule()->par("address");
         EndToEndConnection = par("EndToEndConnection");
+        number_of_resources = par("NumberOfResources");
+        num_measure = par("num_measure");
+
         Addresses_of_other_EndNodes = storeEndNodeAddresses();
+        int tp = par("TrafficPattern");
 
         //cModule *qnode = getQNode();
-        if(myAddress == 1 && EndToEndConnection){//hard-coded for now
-            int endnode_destination_address = getOneRandomEndNodeAddress();
-            EV<<"Connection setup request will be sent from"<<myAddress<<" to "<<endnode_destination_address<<"\n";
-            ConnectionSetupRequest *pk = new ConnectionSetupRequest();
-            pk->setActual_srcAddr(myAddress);
-            pk->setActual_destAddr(endnode_destination_address);
-            pk->setDestAddr(myAddress);
-            pk->setSrcAddr(myAddress);
-            pk->setKind(7);
-            scheduleAt(simTime(),pk);
+        // if(myAddress == 1 && EndToEndConnection){//hard-coded for now
+        // 20/3/15: upgrade from "exactly one connection" to
+        // "let's all mambo!"  Each EndNode makes exactly one connection.
+        // that means that some nodes will be receivers of more than
+        // one connection, at random.
+        // myaddress==1 for debugging
+        if(EndToEndConnection){//hard-coded for now
+	    int endnode_destination_address;
+
+            switch (tp){
+                case 1:		// just one connection
+                    if(myAddress == 27){ //hard-coded for now
+                        // while ((endnode_destination_address = getOneRandomEndNodeAddress()) == myAddress);
+                        endnode_destination_address = getOneRandomEndNodeAddress();
+                        EV<<"Just one lonely connection setup request will be sent from"<<myAddress<<" to "<<endnode_destination_address<<"\n";
+                        ConnectionSetupRequest *pk = new ConnectionSetupRequest();
+                        pk->setActual_srcAddr(myAddress);
+                        pk->setActual_destAddr(endnode_destination_address);
+                        pk->setDestAddr(myAddress);
+                        pk->setSrcAddr(myAddress);
+                        pk->setNumber_of_required_Bellpairs(number_of_resources);
+                        pk->setKind(7);
+                        scheduleAt(simTime(),pk);
+                    }
+                    break;
+                case 2:		// let's all mambo!
+                    // while ((endnode_destination_address = getOneRandomEndNodeAddress()) == myAddress);
+                    endnode_destination_address = getOneRandomEndNodeAddress();
+                    EV<<"My connection setup request will be sent from "<<myAddress<<" to "<<endnode_destination_address<<"\n";
+                    ConnectionSetupRequest *pk = new ConnectionSetupRequest();
+                    pk->setActual_srcAddr(myAddress);
+                    pk->setActual_destAddr(endnode_destination_address);
+                    pk->setDestAddr(myAddress);
+                    pk->setSrcAddr(myAddress);
+                    pk->setNumber_of_required_Bellpairs(number_of_resources); //required bell pairs
+                    pk->setKind(7);
+                    // to avoid conflict
+                    scheduleAt(simTime()+exponential(0.00001*myAddress),pk);
+                    break;
+            }
         }
     }
 }
@@ -95,8 +133,30 @@ void Application::handleMessage(cMessage *msg){
         delete msg;
     }else if(dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
         send(msg, "toRouter");
+    }else if(dynamic_cast<ConnectionSetupResponse *>(msg)!= nullptr){
+        send(msg, "toRouter");
+    }else if(dynamic_cast<RejectConnectionSetupRequest *>(msg) != nullptr){
+        RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
+        int actual_src = pk->getActual_srcAddr();
+        if(actual_src == myAddress){
+            float recon_try = std::rand()/RAND_MAX;
+            int reject_node = pk->getSrcAddr();
+            EV<<"Connection was rejected by "<<reject_node<<"at"<<myAddress<<"\n";
+            // this might be better handled in application
+            ConnectionSetupRequest *pkt = new ConnectionSetupRequest;
+            pkt->setActual_srcAddr(myAddress);
+            pkt->setActual_destAddr(pk->getActual_destAddr()); // This might not good way
+            pkt->setDestAddr(myAddress);
+            pkt->setSrcAddr(myAddress);
+            pkt->setNumber_of_required_Bellpairs(number_of_resources);
+            pkt->setKind(7);
+            scheduleAt(simTime(),pkt);
+        }
     }
-    else{
+    else if(dynamic_cast<InternalRuleSetForwarding *>(msg)!= nullptr){
+        bubble("internal rulesetforwarding packet arrived to application!");
+        send(msg, "toRouter");
+    }else{
         delete msg;
         error("Application not recognizing this packet");
     }

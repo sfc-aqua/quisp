@@ -39,6 +39,9 @@ class QNIC_photonic_switch : public cSimpleModule
     public:
         QNIC_photonic_switch();
         int getAddress();
+        virtual void Reserve();
+        virtual void ReleaseReservation();
+        virtual bool isReserved();
 };
 
 Define_Module(QNIC_photonic_switch);
@@ -53,6 +56,7 @@ void QNIC_photonic_switch::initialize()
     //Check wether this QNIC's output is connected to a single neighbor for debugging purpose.
     checkGateNumber();
     checkAndsetNeighborAddress();
+    ReleaseReservation();
 }
 
 void QNIC_photonic_switch::checkAndsetNeighborAddress(){
@@ -111,6 +115,32 @@ cModule* QNIC_photonic_switch::getQNode(){
 
 void QNIC_photonic_switch::checkQubitNumber(){
 
+}
+
+/**
+ * At the moment, the only multiplexing scheme supported is circuit switching
+ * managed at the QNIC level, so we have put a single reservation boolean
+ * here associated with the QNIC.
+ * On processing of a ConnectionSetupRequest, this flag is checked and if
+ * available set.  If the QNIC is already reserved (e.g., competing
+ * reservations are flowing in the network, and part of the path is
+ * already reserved), then the ConnectionManager should fail this request
+ * and send a RejectConnectionSetupRequest message.
+ * \todo extend this to support other muxing styles (long-term research project,
+ * but should build on Aparicio)
+ */
+void QNIC_photonic_switch::Reserve(){
+    getParentModule()->par("is_reserved") = true;
+    EV<<"QNIC reserved!!\n";
+}
+
+void QNIC_photonic_switch::ReleaseReservation(){
+    getParentModule()->par("is_reserved") = false;
+    EV<<"QNIC reservation released!!\n";
+}
+
+bool QNIC_photonic_switch::isReserved(){
+    return getParentModule()->par("is_reserved");
 }
 
 } // namespace modules

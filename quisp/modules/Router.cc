@@ -107,10 +107,10 @@ void Router::handleMessage(cMessage *msg)
         //check the header of the received package
         header *pk = check_and_cast<header *>(msg);
         int destAddr = pk->getDestAddr();//read destination from the packet
-        int who_are_you = pk->getKind();//read the type of packet
+        int who_are_you = pk->getKind();//read the type of packet // This might be better fixed
         //bubble("Message kind "<<message_type<<" received");
-        EV<<"destAddr ===="<<destAddr;
-        if (destAddr == myAddress && who_are_you == 1) {//If destination is this node: Path selection
+        EV<<"destAddr ==== "<<destAddr;
+        if (destAddr == myAddress && who_are_you == 1) {//If destination is this node: Path selection 
             send(pk, "toApp");//send to Application locally
             return;
         }else if (destAddr == myAddress && dynamic_cast<BSMtimingNotifier *>(msg) != nullptr) {//Timing for BSM
@@ -124,6 +124,26 @@ void Router::handleMessage(cMessage *msg)
         }else if (destAddr == myAddress && dynamic_cast<ConnectionSetupRequest *>(msg)!= nullptr){
             bubble("Connection setup request received");
             send(pk, "cmPort$o");
+            return;
+        }else if (destAddr == myAddress && dynamic_cast<ConnectionSetupResponse *>(msg)!= nullptr){
+            bubble("Connection setup response received");
+            send(pk, "cmPort$o");
+            return;
+        }else if (destAddr == myAddress && dynamic_cast<RejectConnectionSetupRequest *>(msg)!= nullptr){
+            bubble("Reject connection setup response received");
+            send(pk, "cmPort$o");
+            return;
+        }else if(destAddr == myAddress && dynamic_cast<InternalRuleSetForwarding *>(msg)!= nullptr){
+            bubble("Internal RuleSet Forwarding packet received");
+            send(pk, "rePort$o");
+            return;
+        }else if(destAddr == myAddress && dynamic_cast<InternalRuleSetForwarding_Application *>(msg)!= nullptr){
+            bubble("Internal RuleSet Forwarding Application packet received");
+            send(pk, "rePort$o");
+            return;
+        }else if(destAddr == myAddress && dynamic_cast<SwappingResult *>(msg)!= nullptr){
+            bubble("Swapping Result packet received");
+            send(pk, "rePort$o");
             return;
         }else if (destAddr == myAddress && dynamic_cast<LinkTomographyRequest *>(msg)!= nullptr){
             bubble("Link tomography request received");

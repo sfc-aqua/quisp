@@ -81,15 +81,13 @@ follows:
 
 ```
 RED	Just a photon in a burst. Not the beginning, nor the end.
-GREEN	(not used?)
-BLUE	(not used?)
 WHITE	First or last photon in a burst (STATIONARY_PULSE_BOUND)
-YELLOW	SPDC (symmetric parametric down conversion) control (sync
-pulses, basically; classical physical signal)
-CYAN	BSA (Bell state analysis) results (classical message)
-MAGENTA	Link tomography results (memory measurement results?)
-(classical message)
-BLACK	Purification results (classical message)
+YELLOW	physical layer control (sync pulses, basically; classical physical signal)
+GREEN	(reserved)
+BLUE	ConnectionSetupResponse
+CYAN	BSA (Bell state analysis) results (classical message); also entanglement swapping results (classical message)
+MAGENTA	Link tomography results (memory measurement results?); also RejectConnectionSetup
+BLACK	Purification results (classical message); also ConnectionSetupRequest
 ```
 
 (These color assignments seem to be artifacts of the coding; grep for

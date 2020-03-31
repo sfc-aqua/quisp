@@ -508,7 +508,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 					    //First stage X purification
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
-                        Clause* resource_clause = new EnoughResourceClause(2);
+                        Clause* resource_clause = new EnoughResourceClause(partner_address, 2);
                         Purification_condition->addClause(resource_clause);
                         Purification->setCondition(Purification_condition);
                         Action* purify_action = new PurifyAction(RuleSet_id,rule_index,true,false, num_purification, partner_address, qnic_type , qnic_index,0,1);
@@ -519,7 +519,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         //Second stage Z purification (Using X purified resources)
                         Purification = new Rule(RuleSet_id, rule_index);
                         Purification_condition = new Condition();
-                        resource_clause = new EnoughResourceClause(2);
+                        resource_clause = new EnoughResourceClause(partner_address, 2);
                         Purification_condition->addClause(resource_clause);
                         Purification->setCondition(Purification_condition);
                         purify_action = new PurifyAction(RuleSet_id,rule_index,false,true, num_purification, partner_address, qnic_type , qnic_index,0,1);
@@ -532,7 +532,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 					for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
-                        Clause* resource_clause = new EnoughResourceClause(2);
+                        Clause* resource_clause = new EnoughResourceClause(partner_address, 2);
                         Purification_condition->addClause(resource_clause);
                         Purification->setCondition(Purification_condition);
 
@@ -551,7 +551,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 					for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
-                        Clause* resource_clause = new EnoughResourceClause(3);
+                        Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
                         Purification_condition->addClause(resource_clause);
                         Purification->setCondition(Purification_condition);
                         Action* purify_action = new DoublePurifyAction(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
@@ -564,7 +564,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         if(i%2==0){
                             Rule* Purification = new Rule(RuleSet_id, rule_index);
                             Condition* Purification_condition = new Condition();
-                            Clause* resource_clause = new EnoughResourceClause(3);
+                            Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
                             Purification_condition->addClause(resource_clause);
                             Purification->setCondition(Purification_condition);
                             Action* purify_action = new DoublePurifyAction(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
@@ -574,7 +574,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         }else{
                             Rule* Purification = new Rule(RuleSet_id, rule_index);
                             Condition* Purification_condition = new Condition();
-                            Clause* resource_clause = new EnoughResourceClause(3);
+                            Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
                             Purification_condition->addClause(resource_clause);
                             Purification->setCondition(Purification_condition);
                             Action* purify_action = new DoublePurifyAction_inv(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
@@ -587,7 +587,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                     for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
-                        Clause* resource_clause = new EnoughResourceClause(3);
+                        Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
                         Purification_condition->addClause(resource_clause);
                         Purification->setCondition(Purification_condition);
                         Action* purify_action = new DoubleSelectionAction(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
@@ -599,7 +599,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                     for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
-                        Clause* resource_clause = new EnoughResourceClause(3);
+                        Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
                         Purification_condition->addClause(resource_clause);
                         Purification->setCondition(Purification_condition);
                         if(i%2==0){
@@ -616,7 +616,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                     for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
-                        Clause* resource_clause = new EnoughResourceClause(5);
+                        Clause* resource_clause = new EnoughResourceClause(partner_address, 5);
                         Purification_condition->addClause(resource_clause);
                         Purification->setCondition(Purification_condition);
                         if(i%2==0){
@@ -633,7 +633,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                     for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
-                        Clause* resource_clause = new EnoughResourceClause(4);
+                        Clause* resource_clause = new EnoughResourceClause(partner_address, 4);
                         Purification_condition->addClause(resource_clause);
                         Purification->setCondition(Purification_condition);
                         if(i%2==0){
@@ -651,7 +651,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                     for(int i=0; i<2; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
-                        Clause* resource_clause = new EnoughResourceClause(3);
+                        Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
                         Purification_condition->addClause(resource_clause);
                         Purification->setCondition(Purification_condition);
                         if(i%2==0){
@@ -668,7 +668,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                     for(int i=0; i<num_purification; i++){
                             Rule* Purification = new Rule(RuleSet_id, rule_index);
                             Condition* Purification_condition = new Condition();
-                            Clause* resource_clause = new EnoughResourceClause(2);
+                            Clause* resource_clause = new EnoughResourceClause(partner_address, 2);
                             Purification_condition->addClause(resource_clause);
                             Purification->setCondition(Purification_condition);
 
@@ -685,7 +685,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 				}else if(Purification_type == 5556){//Predefined purification method
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
-                        Clause* resource_clause = new EnoughResourceClause(3);
+                        Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
                         Purification_condition->addClause(resource_clause);
                         Purification->setCondition(Purification_condition);
                         Action* purify_action = new DoubleSelectionAction(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
@@ -696,7 +696,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                     for(int i=0; i<num_purification; i++){
                             Rule* Purification = new Rule(RuleSet_id, rule_index);
                             Condition* Purification_condition = new Condition();
-                            Clause* resource_clause = new EnoughResourceClause(2);
+                            Clause* resource_clause = new EnoughResourceClause(partner_address, 2);
                             Purification_condition->addClause(resource_clause);
                             Purification->setCondition(Purification_condition);
 
@@ -714,7 +714,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                 }else if((X_Purification && !Z_Purification)  || (!X_Purification && Z_Purification)){//X or Z purification. Out-dated syntax.
                     Rule* Purification = new Rule(RuleSet_id, rule_index);
                     Condition* Purification_condition = new Condition();
-                    Clause* resource_clause = new EnoughResourceClause(2);
+                    Clause* resource_clause = new EnoughResourceClause(partner_address, 2);
                     Purification_condition->addClause(resource_clause);
                     Purification->setCondition(Purification_condition);
                     Action* purify_action = new PurifyAction(RuleSet_id,rule_index,X_Purification,Z_Purification, num_purification, partner_address, qnic_type , qnic_index,0,1);
@@ -725,7 +725,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 					error("syntax outdate or purification id not recognized.");
                     Rule* Purification = new Rule(RuleSet_id, rule_index);
                     Condition* Purification_condition = new Condition();
-                    Clause* resource_clause = new EnoughResourceClause(3);
+                    Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
                     Purification_condition->addClause(resource_clause);
                     Purification->setCondition(Purification_condition);
                     Action* purify_action = new DoublePurifyAction(RuleSet_id,rule_index,partner_address, qnic_type,qnic_index,0,1,2);
@@ -757,7 +757,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                 Rule* Random_measure_tomo = new Rule(RuleSet_id, 0);//Let's make nodes select measurement basis randomly, because it it easier.
                 Condition* total_measurements = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
                 Clause* measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type , qnic_index, 0);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
-                Clause* resource_clause = new EnoughResourceClause(1);
+                Clause* resource_clause = new EnoughResourceClause(partner_address, 1);
                 total_measurements->addClause(measure_count_clause);
                 total_measurements->addClause(resource_clause);
                 Random_measure_tomo->setCondition(total_measurements);
@@ -817,6 +817,7 @@ connection_setup_inf HardwareMonitor::return_setupInf(int qnic_address){
         if(it->second.qnic.address == qnic_address){
             inf.qnic.type = it->second.qnic.type;
             inf.qnic.index = it->second.qnic.index;
+            inf.qnic.address = it->second.qnic.address;
             inf.neighbor_address = it->second.neighborQNode_address;
             //cModule *node = getModuleByPath("network.HoM");
             inf.quantum_link_cost = it->second.link_cost;

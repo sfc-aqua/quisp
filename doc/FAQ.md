@@ -3,6 +3,8 @@
 At this point, since all of our users are AQUA members, this is a set
 of questions we frequently ask ourselves.
 
+## Installation and getting it to run
+
 * Q: I can't get it to install!!!
     - A: Welcome to the club.  Getting OMNeT++ to run is the biggest
   hassle.  Once you have that done, everything else is smooth.  There
@@ -11,9 +13,6 @@ of questions we frequently ask ourselves.
   distribution, which can be done using Docker if you don't have such
   a machine handy.  See [doc/INSTALL.md](INSTALL.md) for
   additional info on troubleshooting.
-* Q: Wow, OMNeT++ runs!!! Exciting! ...now what?
-    - A: We definitely need better notes on adding QuISP into OMNeT++ and running
-  your first QuISP sims.
 * Q: I tried to build QuISP from inside OMNeT++, and it bombs with
   some error about cocoa?!?
     - A: Ah, yes, the famous lack of hot chocolate.  You need to run
@@ -24,6 +23,18 @@ of questions we frequently ask ourselves.
 * Q: I tried to start omnetpp, and I got this:
 ![setenv error](img/omnetpp-error-no-setenv.png)
     - A: Same as above.  Do `. setenv` and try again, and it might work.
+* Q: I get a Java error about a null pointer when I try to run
+`quisp_tutorial.ini`or anything other than `omnetpp.ini`.
+    - A: You might need to go to the Run menu and pick "Run As OMNeT++
+    Simulation".
+![Java nullpointer error](img/java-nullpointer-fix.png)
+
+
+## Now what?
+
+* Q: Wow, OMNeT++ runs!!! Exciting! ...now what?
+    - A: We definitely need better notes on adding QuISP into OMNeT++ and running
+  your first QuISP sims.
 * Q: Okay, I got the basic first QuISP demo running.  What the heck
   are these .ini and .ned files, and how do I create my own?
     - A: Yup...  See, of course, [the OMNeT++

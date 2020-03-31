@@ -17,6 +17,38 @@ namespace modules {
 
 Define_Module(RoutingDaemon);
 
+/** 
+ *  \todo Documentation of the class header.
+ *
+ *  \brief RoutingDaemon
+ *
+ * The RoutingDaemon is one of the five key modules in the
+ * software for a quantum repeater/router (qrsa).  It will be responsible for
+ * running dynamic routing protocols, such as qOSPF, qBGP, etc.
+ *
+ * It communicates with other RoutingDaemons, in other nodes on the network,
+ * as in the classical Internet.  Internally, its role is to keep track of the
+ * QNICs and the links by communicating with the HardwareMonitor, and to provide
+ * information to the ConnectionManager when requested.  (There is also one
+ * place where the RuleEngine needs access to information maintained by the RD.)
+ *
+ * The above is the intended design.
+ *
+ * \todo In fact, the RoutingDaemon as it exists today uses special, internal
+ * OMNeT++ magic to directly access the network topology, as stored in the
+ * simulator, rather than dynamically discovering it.  That should be corrected.
+ *
+ * At the moment, the RD is independent of the end-to-end reservation of resources,
+ * as dictated by the multiplexing (muxing) discpline in use.  This means that
+ * it always returns a single, best path to connect to the requested node.  A
+ * consequence is that ConnectionSetupRequest can fail if the resource management
+ * discipline is fully blocking, as in circuit switching, which is the first
+ * discipline we are implementing.
+ *
+ * \todo Also, this code is built as a Module, via the Define_Module call;
+ * the other important modules are classes.  That distinction needs to be
+ * addressed.
+ */
 void RoutingDaemon::initialize(int stage)
 {
 
@@ -96,6 +128,14 @@ void RoutingDaemon::initialize(int stage)
        delete topo;
 }
 
+/**
+ * This is the only routine, at the moment, with any outside contact.
+ * Rather than exchanging a message with those who need this information (ConnectionManager, mainly,
+ * and in one case RuleEngine), this is a direct call that they make.
+ * 
+ * \todo Decide if this is really the right way to do this.  Likely also
+ * hooked up in the issue of module v. class.
+ */
 int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr){
     Enter_Method("return_QNIC_address_to_destAddr");
     RoutingTable::iterator it = qrtable.find(destAddr);
@@ -106,6 +146,12 @@ int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr){
     return it->second.address;
 }
 
+/**
+ * Once we begin using dynamic routing protocols, this is where the messages
+ * will be handled.  This perhaps will also be how we communicate with the
+ * other important daemons in the qrsa.
+ * \todo Handle dynamic routing protocol messages.
+ **/
 void RoutingDaemon::handleMessage(cMessage *msg){
 
 }
