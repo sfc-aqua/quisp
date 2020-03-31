@@ -56,7 +56,7 @@ home/
 
 ## OmNET++
 
-Get the release of OmNET++ 5.2 from [their website](https://omnetpp.org/) and uncompress it in the folder of your
+Get the release of OmNET++ 5.6.1 from [their website](https://omnetpp.org/) and uncompress it in the folder of your
 choice. To remain general, this example uncompresses it in a local
 libraries folder, far from the quisp project and from standard
 installation folders.
@@ -67,12 +67,12 @@ home/
 │   └── quisp/
 │       └── .git/
 └── downloads/
-    └── omnetpp-5.2-src-linux.tgz
+    └── omnetpp-5.6.1-src-linux.tgz
 ```
 
 ```sh
 /home λ mkdir -p .local/lib && cd .local/lib
-/home/.local/lib λ tar -xzf /home/downloads/omnetpp-5.2-src-linux.tgz
+/home/.local/lib λ tar -xzf /home/downloads/omnetpp-5.6.1-src-linux.tgz
 ```
 
 At this point there is no `omnetpp` binary because you still need to build from
@@ -84,10 +84,10 @@ home/
 │   └── quisp/
 │       └── .git/
 ├── downloads/
-│   └── omnetpp-5.2-src-linux.tgz
+│   └── omnetpp-5.6.1-src-linux.tgz
 └── .local/
     └── lib/
-        └── omnetpp-5.2/
+        └── omnetpp-5.6.1/
             ├── configure*
             ├── INSTALL
             ├── Makefile
@@ -105,10 +105,10 @@ source release. Here is a quick version of it on linux.
 Compiling OmNET++ takes time. Be patient.
 
 ```sh
-/home/.local/lib/omnetpp-5.2 λ source setenv
-/home/.local/lib/omnetpp-5.2
+/home/.local/lib/omnetpp-5.6.1 λ source setenv
+/home/.local/lib/omnetpp-5.6.1
 
-/home/.local/lib/omnetpp-5.2 λ ./configure
+/home/.local/lib/omnetpp-5.6.1 λ ./configure
 checking build system type... x86_64-unknown-linux-gnu
 checking host system type... x86_64-unknown-linux-gnu
 configure: -----------------------------------------------
@@ -120,9 +120,9 @@ checking for gcc... gcc
 
 ...
 
-Your PATH contains /tmp/tmp.home/home/.local/lib/omnetpp-5.2/bin. Good!
+Your PATH contains /tmp/tmp.home/home/.local/lib/omnetpp-5.6.1/bin. Good!
 
-/home/.local/lib/omnetpp-5.2 λ make -j9
+/home/.local/lib/omnetpp-5.6.1 λ make -j9
 make -s MODE=release
 ***** Configuration: MODE=release, TOOLCHAIN_NAME=gcc, LIB_SUFFIX=.so ****
 ===== Checking environment =====
@@ -141,7 +141,7 @@ file `omnetpp`.
 home/
 └── .local/
     └── lib/
-        └── omnetpp-5.2/
+        └── omnetpp-5.6.1/
             └── bin/
                 └── omnetpp*
 ```
@@ -162,7 +162,7 @@ home/
 │       └── .git/
 ├── .local/
 │   └── lib/
-│       └── omnetpp-5.2/
+│       └── omnetpp-5.6.1/
 │           ├── setenv*
 │           └── bin/
 │               └── omnetpp*
@@ -182,7 +182,7 @@ home/
 │       └── .git/
 ├── .local/
 │   └── lib/
-│       ├── omnetpp-5.2/
+│       ├── omnetpp-5.6.1/
 │       │   ├── setenv*
 │       │   └── bin/
 │       │       └── omnetpp*
@@ -215,7 +215,7 @@ home/
 │       └── .git/
 └── .local/
     └── lib/
-        ├── omnetpp-5.2/
+        ├── omnetpp-5.6.1/
         │   ├── setenv*
         │   └── bin/
         │       └── omnetpp*

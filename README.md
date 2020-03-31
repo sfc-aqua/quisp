@@ -17,7 +17,13 @@ of [Authors](Authors.md).
 ## Research questions
 
 A simulator is one or more of three things: a time machine, an X-ray
-machine, or a telescope.
+machine, or a telescope.  It can be used to look into the future or
+the past, look at the internals of an object that are otherwise
+inaccessible, or look at objects of a far vaster scale than can be
+built in a laboratory.  QuISP is, perhaps, most importantly a
+telescope: we are looking at large-scale quantum networks and
+ultimately the Quantum Internet, but we do also pause to look at the
+micro (local) behavior of protocols, as well.
 
 Research questions we hope to answer:
 
@@ -48,7 +54,7 @@ Research questions we hope to answer:
 
 ## Simulation goals
 
-We have a number of long-term goals for the simulator:  
+We have a number of long-term goals for development of the simulator:  
 
 * Complex network topologies, including the notion of network
   boundaries and heterogeneity at the physical and logical levels
@@ -56,7 +62,7 @@ We have a number of long-term goals for the simulator:
   or quantum error corrected (QEC) (2G and 3G) protocols for managing
   errors
 * Distinct link architectures: memory-to-memory (MM), midpoint
-  interference (MIM), and midpoint source (MSM)
+  interference (MIM), and midpoint source (MSM), sneakernet, satellite
 * Internetworking protocols for connecting different types of networks
 * Various applications running in complex traffic patterns
 
@@ -68,7 +74,7 @@ cannot calculate and store full density matrices for such states.
 Instead, like simulators for large-scale error correction, QuISP
 operates primarily in the _error basis_, in which we maintain a
 description of errors the states have incurred rather than the full
-state.  However, unlike QEC simulators, QuISP supports non-Pauli
+state.  However, unlike most QEC simulators, QuISP supports non-Pauli
 errors, in a limited fashion.
 
 QuISP is almost endlessly configurable; for example, it is possible to
@@ -80,6 +86,13 @@ excitation to excited state, and complete mixing.
 
 If you are unfamiliar with the research literature or the terminology
 above, see "Learning more", below.
+
+In addition, we aim to make simulations run on QuISP _completely
+reproducible_, to the extent humanly possible.  It will be possible
+for others to verify work done using QuISP if they have the name of
+the QuISP release, version numbers for supporting software, the `.ini`
+file, any changed `.ned` files, and the seed for the pseudo-random
+number generator.
 
 ## Current status
 
@@ -104,7 +117,8 @@ are the key quantum protocols that are implemented:
 
 * basics of RuleSet creation & distribution
 * various *purification protocols*:  Single round
-  of X purification, alternating X/Z purification, etc.  Extending
+  of X purification, alternating X/Z purification, etc.  Currently
+* implemented only over a single hop.  Extending
   these to test your own custom purification protocol is pretty
   straightforward.
 * *tomography*: when the simulation boots, it assumes that the software
@@ -115,19 +129,16 @@ are the key quantum protocols that are implemented:
   before other interesting things start to happen.  We are
   working on a way to pre-calculate this, so that you can choose to
   either include tomography or not.)
-* *entanglement swapping*, with limitations on source and destination.
+* *entanglement swapping*.
 
+Current generic networking-level status:
 
-Missing essential features (these will be done before
-release 0.2.0, the first projected stable release):
-
-* more general entanglement swapping 
 * fully blocking circuit switching
 * random pairwise traffic pattern (flat distribution)
 
 Upcoming features in near-term releases:
 
-* resource allocation & multiplexing
+* more general resource allocation & multiplexing
 * more general mechanism for establishing traffic patterns
 * MSM links
 * graph states at the link level
@@ -155,7 +166,7 @@ need are:
 
 Depending on your local setup and how you intend to use QuISP, you may
 also need various tools (a C++ compiler, make, an X Windows server,
-Docker, etc.), documented in the installation notes.
+Docker, ffmpeg for making videos, etc.), documented in the installation notes.
 
 ## Building and running
 
@@ -201,10 +212,10 @@ See the [references](doc/References.md).
 
 ## License
 
-We expect to release QuISP as open source QuISP the week of March 16,
-2020, under a commercial-friendly (not copyleft) license.  There are
-options for the license: MIT, Apache, Mozilla, BSD...most likely BSD.
-QuISP builds on OMNeT++.  OMNeT++ itself is a [custom
+QuISP is being released in March 2020, and we will apply a
+commercial-friendly (not copyleft) license.  There are options for the
+license: MIT, Apache, Mozilla, BSD...most likely BSD.  QuISP builds on
+OMNeT++.  OMNeT++ itself is a [custom
 license](https://omnetpp.org/intro/license), open source and free for
 academic use, but a license fee required for commercial organizations.
 QuISP also requires the linear algebra library Eigen, where license is

@@ -2,14 +2,49 @@
 
 ## Included Demos
 
-QuISP is delivered with a lot of working network files, most
+QuISP is delivered with a lot of working network files, most of them
 configurations from Takaaki Matsuo's master's thesis.  You will want
 to start instead from a set of basic demos:
 
-- two nodes: a single link
-- three link demo:  (MM, MIM, MSM) 
-- straight line: three or four hops of one type of link (n.b.: not very useful until we have entanglement swapping!) (might have to make this one?)
-- big demo: many nodes in a complex config (based on real ISP) `./quisp/networks/check_list/Tomography_networks.ispMap_1239_node_23_48_hetero_distance
+- two nodes connected via a single MM (memory-to-memory) link
+
+<img src="img/Linear_One_MM.png" width="200" />
+
+- two nodes connected via a single MIM (memory-interference-memory)
+  link; "HoM" is a Bell state analyzer in the middle of the link
+
+<img src="img/Linear_One_MIM.png" width="400" />
+
+- ~~two nodes connected via a single MSM (memory-entangled photon pair
+  source-memory) link~~ _(will be added after MSM links work)_
+- ~~three different link architectures demo:  (MM, MIM, MSM)~~ _(will
+  be added after MSM links work)_
+- straight line: three or four hops of one type of link (might have to make this one?)
+- many nodes in a complex configuration (adapted from the topology
+of a real ISP; only center portion of the network shown)
+![Tutorial_ISP_1239-center](img/Tutorial_ISP_1239-center.png)
+
+## Opening a Simulation
+
+(If you arrived here from [Build on Windows](Build_on_windows.md),
+some of this will look redundant; if not, we encourage you to skim
+that document regardless of your platform.)
+
+You should see a screen almost like this in the OMNeT++ IDE.
+
+![ide-opening-tutorial.png](img/ide-opening-tutorial.png)
+
+In the upper left panel, each of the subdirectories is probably
+closed, like this:
+
+<img src="img/project-explorer-networks-closed.png" width="400" />
+
+Click on `networks` and scroll down until you find
+`quisp_tutorial.ini`.  Click on it, and your screen should look much
+like the one above.  The upper middle panel has several tabs; when you
+click on `quisp_tutorial.ini`, it should open a tab for that file, and
+you should be able to see the set of networks included in this
+tutorial.
 
 ## What the Heck am I Looking At?
 

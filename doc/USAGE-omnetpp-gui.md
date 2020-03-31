@@ -17,7 +17,7 @@ home/
 │       └── quisp/
 └── .local/
     └── lib/
-        ├── omnetpp-5.2/
+        ├── omnetpp-5.6.1/
         │   ├── setenv*
         │   └── bin/
         │       └── omnetpp*
@@ -27,9 +27,9 @@ home/
 To run the OmNET++ GUI, you need to use their `setenv` script.
 
 ```
-/home/.local/lib/omnetpp-5.2 λ source setenv
-/home/.local/lib/omnetpp-5.2
-/home/.local/lib/omnetpp-5.2 λ omnetpp
+/home/.local/lib/omnetpp-5.6.1 λ source setenv
+/home/.local/lib/omnetpp-5.6.1
+/home/.local/lib/omnetpp-5.6.1 λ omnetpp
 Starting the OMNeT++ IDE...
 ```
 
@@ -77,6 +77,9 @@ To this list you should add one folder. With the local Eigen installation in
 this example you should add `/home/.local/lib/eigen-source`, and with the system
 installation you should add `/usr/local/share/eigen3`.
 
+If you're using Mac OSX, you should put `Users/<home directory>/.local/lib/eigen-source` or
+`/usr/local/share/eigen3`
+
 Then, in the category `C/C++ Build`, click `Manage configurations` and make the
 release configuration active.
 
@@ -96,7 +99,7 @@ home/
 ```
 
 Now you should be able to build the project with `Ctrl+B` or `Project > Build all`
-for example.
+for example. If you got a message ' fatal error: 'PhotonicQubit_m.h' file not found `  during the build, you should add './quisp' to the Include Path in the Makemake Options →Compile
 
 ## Running interesting simulations
 
