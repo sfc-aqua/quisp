@@ -8,18 +8,33 @@ to start instead from a set of basic demos:
 
 - two nodes connected via a single MM (memory-to-memory) link
 
+<center>
 <img src="img/Linear_One_MM.png" width="200" />
+</center>
 
 - two nodes connected via a single MIM (memory-interference-memory)
   link; "HoM" is a Bell state analyzer in the middle of the link
 
+<center>
 <img src="img/Linear_One_MIM.png" width="400" />
+</center>
 
 - ~~two nodes connected via a single MSM (memory-entangled photon pair
   source-memory) link~~ _(will be added after MSM links work)_
 - ~~three different link architectures demo:  (MM, MIM, MSM)~~ _(will
   be added after MSM links work)_
-- straight line: three or four hops of one type of link (might have to make this one?)
+- twelve hops in a straight line
+
+<center>
+<img src="img/linear-spiral.png" width="400" />
+</center>
+
+- a star topology with three links
+
+<center>
+<img src="img/three-link-star.png" width="400" />
+</center>
+
 - many nodes in a complex configuration (adapted from the topology
 of a real ISP; only center portion of the network shown)
 ![Tutorial_ISP_1239-center](img/Tutorial_ISP_1239-center.png)
