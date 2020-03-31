@@ -1,6 +1,6 @@
 package networks;
 
- 
+
 
 import ned.DatarateChannel;
 import ned.IdealChannel;
@@ -16,92 +16,92 @@ network Realistic_Layer2_Simple_MIM_MM_all_in_one
         EndNode1[1]: QNode {
             address = 1;
             nodeType = "EndNode";
-            @display("i=device/pc;p=350,157");
+            @display("i=device/pc;p=314,124");
         }
         EndNode2[1]: QNode {
             address = 2;
             nodeType = "EndNode";
-            @display("i=device/pc;p=407,231");
+            @display("i=device/pc;p=42,190");
         }
         Repeater1[1]: QNode {
             address = 3;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=220,137");
+            @display("i=device/smallrouter;p=378,137");
         }
         Repeater2[1]: QNode {
             address = 4;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=80,189");
+            @display("i=device/smallrouter;p=275,209");
         }
         Repeater3[1]: QNode {
             address = 5;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=66,124");
+            @display("i=device/smallrouter;p=187,201");
         }
         Repeater4[1]: QNode {
             address = 6;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=132,36");
+            @display("i=device/smallrouter;p=105,68");
         }
         Repeater5[1]: QNode {
             address = 7;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=171,76");
+            @display("i=device/smallrouter;p=179,36");
         }
         Repeater6[1]: QNode {
             address = 8;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=314,36");
+            @display("i=device/smallrouter;p=350,36");
         }
         Repeater7[1]: QNode {
             address = 9;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=314,36");
+            @display("i=device/smallrouter;p=424,42");
         }
         Repeater8[1]: QNode {
             address = 10;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=314,36");
+            @display("i=device/smallrouter;p=563,143");
         }
         Repeater9[1]: QNode {
             address = 11;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=386,36");
+            @display("i=device/smallrouter;p=505,241");
         }
         Repeater10[1]: QNode {
             address = 12;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=568,44");
+            @display("i=device/smallrouter;p=232,273");
         }
         Repeater11[1]: QNode {
             address = 13;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=568,44");
+            @display("i=device/smallrouter;p=140,273");
         }
 
         HoM1[1]: HoM {
             address = 14;
-            @display("i=device/bsm;p=171,231");
+            @display("i=device/bsm;p=389,195");
         }
         HoM2[1]: HoM {
             address = 15;
-            @display("i=device/bsm;p=66,51");
+            @display("i=device/bsm;p=105,137");
         }
         HoM3[1]: HoM {
             address = 16;
-            @display("i=device/bsm;p=235,37");
+            @display("i=device/bsm;p=275,30");
         }
         HoM4[1]: HoM {
             address = 17;
-            @display("i=device/bsm;p=235,37");
+            @display("i=device/bsm;p=523,68");
         }
         HoM5[1]: HoM {
             address = 18;
-            @display("i=device/bsm;p=472,37");
+            @display("i=device/bsm;p=350,273");
         }
         HoM6[1]: HoM {
             address = 19;
-            @display("i=device/bsm;p=557,125");
+            @display("i=device/bsm;p=66,241");
         }
 
 
