@@ -89,13 +89,15 @@ void Application::initialize()
         // myaddress==1 for debugging
         if(EndToEndConnection){//hard-coded for now
 	    int endnode_destination_address;
+	    int ia;
 
             switch (tp){
                 case 1:		// just one connection
-                    if(myAddress == 27){ //hard-coded for now
+		    ia = par("LoneInitiatorAddress");
+                    if(myAddress == ia){
                         // while ((endnode_destination_address = getOneRandomEndNodeAddress()) == myAddress);
                         endnode_destination_address = getOneRandomEndNodeAddress();
-                        EV<<"Just one lonely connection setup request will be sent from"<<myAddress<<" to "<<endnode_destination_address<<"\n";
+                        EV<<"Just one lonely connection setup request will be sent from "<<myAddress<<" to "<<endnode_destination_address<<"\n";
                         ConnectionSetupRequest *pk = new ConnectionSetupRequest();
                         pk->setActual_srcAddr(myAddress);
                         pk->setActual_destAddr(endnode_destination_address);
