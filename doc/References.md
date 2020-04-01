@@ -19,6 +19,8 @@ The most important document on QuISP design and use is
 	Available as [arXiv:1908.10758
 	[quant-ph]](https://arxiv.org/abs/1908.10758)
 
+See also [Van Meter's Virtual March Meeting 2020 talk](https://virtualmarchmeeting.com/presentations/ruleset-based-operation-of-the-quantum-internet).
+
 ## General references
 
 If you need to know about generations and stages of development,

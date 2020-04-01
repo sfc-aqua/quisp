@@ -136,6 +136,14 @@ Current generic networking-level status:
 * fully blocking circuit switching
 * random pairwise traffic pattern (flat distribution)
 
+In-progress work:
+
+* entanglement swapping is a relatively new feature, and taking data
+  using it is still not fully implemented
+* although the connection setup protocol works, the teardown on
+  completion of a connection still needs a little love
+* the set of demo networks is still being polished
+
 Upcoming features in near-term releases:
 
 * more general resource allocation & multiplexing
@@ -209,6 +217,10 @@ understand dispersion in a fiber, it might not be.
 ## Learning more
 
 See the [references](doc/References.md).
+
+## Contributing
+
+First, join the [QuISP Slack team](https://aqua-quisp.slack.com).
 
 ## License
 
