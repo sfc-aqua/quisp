@@ -6,14 +6,15 @@ QuISP is delivered with a lot of working network files, most of them
 configurations from Takaaki Matsuo's master's thesis.  You will want
 to start instead from a set of basic demos:
 
-- two nodes connected via a single MM (memory-to-memory) link
+- **two nodes connected via a single MM (memory-to-memory) link**
 
 <center>
 <img src="img/Linear_One_MM.png" width="200" />
 </center>
 
-- two nodes connected via a single MIM (memory-interference-memory)
-  link; "HoM" is a Bell state analyzer in the middle of the link
+- **two nodes connected via a single MIM (memory-interference-memory)
+  link**\
+  "HoM" is a Bell state analyzer in the middle of the link
 
 <center>
 <img src="img/Linear_One_MIM.png" width="400" />
@@ -23,26 +24,28 @@ to start instead from a set of basic demos:
   source-memory) link~~ _(will be added after MSM links work)_
 - ~~three different link architectures demo:  (MM, MIM, MSM)~~ _(will
   be added after MSM links work)_
-- twelve hops in a straight line
+- **twelve hops in a straight line**
 
 <center>
 <img src="img/linear-spiral.png" width="600" />
 </center>
 
-- a star topology with three links
+- **star topology with three links**
 
 <center>
 <img src="img/three-link-star.png" width="400" />
 </center>
 
-- core with arms: a moderately realistic near-term network
+- **core with arms**: a moderately realistic near-term network\
+  This network was used for much of the entanglement swapping development.
 
 <center>
 <img src="img/core-and-arms.png" width="600" />
 </center>
 
-- many nodes in a complex configuration (adapted from the topology
-of a real ISP; only center portion of the network shown)
+- **many nodes in a complex configuration**\
+  (adapted from the topology of a real ISP; only center portion of the
+  network shown)
 ![Tutorial_ISP_1239-center](img/Tutorial_ISP_1239-center.png)
 
 ## Opening a Simulation
