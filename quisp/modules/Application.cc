@@ -92,7 +92,13 @@ void Application::initialize()
 	    int ia;
 
             switch (tp){
-                case 1:		// just one connection
+	    default:
+		    error("Invalid TrafficPattern specified.");
+		    break;
+	    case 0:
+		    EV << "EndToEndConnection is set. but no traffic pattern specified; proceeding with no traffic\n";
+		    break;
+	    case 1:		// just one connection
 		    ia = par("LoneInitiatorAddress");
                     if(myAddress == ia){
                         // while ((endnode_destination_address = getOneRandomEndNodeAddress()) == myAddress);
@@ -108,7 +114,7 @@ void Application::initialize()
                         scheduleAt(simTime(),pk);
                     }
                     break;
-                case 2:		// let's all mambo!
+	    case 2:		// let's all mambo!
                     // while ((endnode_destination_address = getOneRandomEndNodeAddress()) == myAddress);
                     endnode_destination_address = getOneRandomEndNodeAddress();
                     EV<<"My connection setup request will be sent from "<<myAddress<<" to "<<endnode_destination_address<<"\n";
