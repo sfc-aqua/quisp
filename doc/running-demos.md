@@ -86,6 +86,11 @@ Pick one of the following:
 2 Every node picks a random partner
 ```
 
+Make sure you check the "Use this value for all similar parameters"
+tick box, or you'll have to set it for every individual node in the
+network.  This value is read and used inside the "application" running
+on each EndNode, in `modules/Application.cc`.
+
 ## What the Heck am I Looking At?
 
 If you are running a simulation properly, you will see two or more
