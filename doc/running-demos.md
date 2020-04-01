@@ -67,6 +67,25 @@ click on `quisp_tutorial.ini`, it should open a tab for that file, and
 you should be able to see the set of networks included in this
 tutorial.
 
+After you pick a network from the drop-down menu, the simulator will
+ask you to set some parameters.  Generally, these parameters are
+written into the `.ned` file (for fixed things related to the network
+itself) or the `.ini` file (for parameters for specific experimental
+runs), but we have set them up to be selected by you here.
+
+One it will ask you for is TrafficPattern (n.b.: there is also the
+parameter EndToEndConnection, which must be set to true):
+
+![TrafficPattern selector](img/setting-the-traffic-patttern.png)
+
+Pick one of the following:
+
+```
+0 No application traffic
+1 A single connection from the node specified LoneInitiatorAddress to a random node
+2 Every node picks a random partner
+```
+
 ## What the Heck am I Looking At?
 
 If you are running a simulation properly, you will see two or more
