@@ -76,7 +76,7 @@ runs), but we have set them up to be selected by you here.
 One it will ask you for is TrafficPattern (n.b.: there is also the
 parameter EndToEndConnection, which must be set to true):
 
-![TrafficPattern selector](img/setting-the-traffic-patttern.png)
+![TrafficPattern selector](img/setting-the-traffic-pattern.png)
 
 Pick one of the following:
 
