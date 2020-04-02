@@ -1,3 +1,4 @@
+<a href="https://aqua-quisp.slack.com/" rel="nofollow"><img src="https://img.shields.io/badge/join-us%20on%20slack-gray.svg?colorB=red&amp;logo=slack&amp;longCache=true" alt="Slack Widget"></a>
 # QUISP
 
 The Quantum Internet Simulation Package (QuISP) is an event-driven
