@@ -119,7 +119,7 @@ are the key quantum protocols that are implemented:
 * basics of RuleSet creation & distribution
 * various *purification protocols*:  Single round
   of X purification, alternating X/Z purification, etc.  Currently
-* implemented only over a single hop.  Extending
+  implemented only over a single hop.  Extending
   these to test your own custom purification protocol is pretty
   straightforward.
 * *tomography*: when the simulation boots, it assumes that the software
@@ -178,6 +178,8 @@ also need various tools (a C++ compiler, make, an X Windows server,
 Docker, ffmpeg for making videos, etc.), documented in the installation notes.
 
 ## Building and running
+
+First see [doc/INSTALL.md](doc/INSTALL.md), then follow the instructions below.
 
 There are two main ways of working with QUISP. You can either use the
 Eclipse-like graphical interface of OmNET++, for which you will find
