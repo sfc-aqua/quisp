@@ -33,6 +33,11 @@
 * Thaddeus Ladd
 * Luciano Aparicio
 
+## Web design:
+
+* Makoto Nakai
+* Poramet Pathumsoot
+
 ## Special thanks
 
 In alphabetic order by family name, people we have worked with or are
