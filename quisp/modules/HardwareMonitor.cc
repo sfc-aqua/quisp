@@ -487,7 +487,44 @@ QNIC HardwareMonitor::search_QNIC_from_Neighbor_QNode_address(int neighbor_addre
 
 
 /**
-  * A complex function defining RuleSets for purification and tomography on the link.
+A complex function defining RuleSets for purification and tomography
+on the link.  This function creates one rule per purification.  As the
+work proceeds, a resource gets promoted from rule to rule (on
+purification success), so if you ask for three rounds of purification,
+it will emit three purification rules.
+
+For example, with 2002, the first instance of "first stage X
+purification" (Rule0) includes allocating the resources from the base
+pair pool, executing the purification circuit (including measurement),
+exchanging the result messages, comparing and either promoting or
+discarding, so a one-way classical messaging latency is incurred here.
+
+Then, the "second stage Z purification" (Rule1, the first time through
+the loop) begins by drawing two Bell pairs that have each been
+promoted by the first X purification (rule 0).  An additional one-way
+latency is incurred here.
+
+These actions are alternated initial_purification times, for a total
+of 2n rules (and 2n times the one-way latency).  Note that the
+semantics of initial_purification vary depending on the
+purification_type.  In the descriptions below, $n$ is
+initial_purification.
+
+Pumping doesn't really work because of the way resources are
+controlled as they are promoted from rule to rule.  At the moment,
+base Bell pairs (those created directly by the link) exist in a pool,
+ordered by age.  Over in Action.cc, you will find
+Action::getResource_fromTop().  This selects the oldest Bell pair.  At
+the moment, only the first rule (Rule0) draws from this pool; however,
+pumping would require that later rules also be able to draw from the
+pool.
+
+A purification scheme must be characterized by both the circuit being
+executed, and the scheduling discipline for selecting the inputs to
+the circuit.  The scheduling discipline in theory can be pumping,
+symmetric tree (perfect binary tree), or banded, and should also
+specify how the resources are sorted.  Currently, this is hard-coded
+to select oldest first, and is geared toward symmetric tree.
   **/
 void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long RuleSet_id){
             LinkTomographyRuleSet *pk = new LinkTomographyRuleSet;
@@ -507,14 +544,24 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
                 if(Purification_type == 2002){//Performs both X and Z purification for each n.
 			/// # Purification_type 2002: #
-			/// - name: (short title or description)
+			/// - name: Ss-Sp / perfect binary tree, even rounds
 			/// - rounds: 2n
 			/// - input Bell pairs per round: 2
-			/// - total Bell pairs: (commonly n+1 or 2^n)
-			/// - circuit: <reference a figure>
-			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// - total Bell pairs: 2^(2n)
+			/// - circuit: Fig. 6.3 in Takaaki's master's thesis
+			/// - scheduling: symmetric tree
 			/// ## description: ##
-			/// (description goes here)
+			/// Ss-Sp is single selection, single error purification.
+			/// Between rounds, Hadamard gates are applied
+			/// to switch basis, creating alternating
+			/// rounds of X and Z purification.
+			///
+			/// The only difference between 2002 and 3003
+			/// is the semantics of initial_purification.
+			/// Here, each iteration results in two rules,
+			/// guaranteeing an even number of rounds.
+			///
+			/// X always goes first.
 					for(int i=0; i<num_purification; i++){
 					    //First stage X purification
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
@@ -540,14 +587,24 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 					}
                 }else if(Purification_type == 3003){
 			/// # Purification_type 3003: #
-			/// - name: (short title or description)
-			/// - rounds: 2n
+			/// - name: Ss-Sp / perfect binary tree, odd or even rounds
+			/// - rounds: n
 			/// - input Bell pairs per round: 2
-			/// - total Bell pairs: (commonly n+1 or 2^n)
-			/// - circuit: <reference a figure>
-			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// - total Bell pairs: 2^n
+			/// - circuit: Fig. 6.3 in Takaaki's master's thesis
+			/// - scheduling: perfect binary (symmetric) tree
 			/// ## description: ##
-			/// (description goes here)
+			/// Ss-Sp is single selection, single error purification.
+			/// Between rounds, Hadamard gates are applied
+			/// to switch basis, creating alternating
+			/// rounds of X and Z purification.
+			///
+			/// The only difference between 2002 and 3003
+			/// is the semantics of initial_purification.
+			/// Here, each iteration results in one rule,
+			/// X for even-numbered rounds (counting from zero),
+			/// Z for odd-numbered ones, so it is possible to
+			/// do XZX or XZXZX (but not ZXZ or ZXZXZ).
                     //First stage X purification
 					for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
