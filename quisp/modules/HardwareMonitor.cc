@@ -486,7 +486,9 @@ QNIC HardwareMonitor::search_QNIC_from_Neighbor_QNode_address(int neighbor_addre
 }
 
 
-
+/**
+  * A complex function defining RuleSets for purification and tomography on the link.
+  **/
 void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long RuleSet_id){
             LinkTomographyRuleSet *pk = new LinkTomographyRuleSet;
             pk->setDestAddr(my_address);
@@ -504,6 +506,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
             if(num_purification>0){/*RuleSet including purification. CUrrently, not looping.*/
 
                 if(Purification_type == 2002){//Performs both X and Z purification for each n.
+			/// # Purification_type 2002: #
+			/// - name: (short title or description)
+			/// - rounds: 2n
+			/// - input Bell pairs per round: 2
+			/// - total Bell pairs: (commonly n+1 or 2^n)
+			/// - circuit: <reference a figure>
+			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// ## description: ##
+			/// (description goes here)
 					for(int i=0; i<num_purification; i++){
 					    //First stage X purification
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
@@ -528,6 +539,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         tomography_RuleSet->addRule(Purification);
 					}
                 }else if(Purification_type == 3003){
+			/// # Purification_type 3003: #
+			/// - name: (short title or description)
+			/// - rounds: 2n
+			/// - input Bell pairs per round: 2
+			/// - total Bell pairs: (commonly n+1 or 2^n)
+			/// - circuit: <reference a figure>
+			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// ## description: ##
+			/// (description goes here)
                     //First stage X purification
 					for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
@@ -548,6 +568,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
 					}
                 }else if(Purification_type == 1001){//Same as last one. X, Z double purification (purification pumping)
+			/// # Purification_type 1001: #
+			/// - name: (short title or description)
+			/// - rounds: 2n
+			/// - input Bell pairs per round: 2
+			/// - total Bell pairs: (commonly n+1 or 2^n)
+			/// - circuit: <reference a figure>
+			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// ## description: ##
+			/// (description goes here)
 					for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
@@ -560,6 +589,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         tomography_RuleSet->addRule(Purification);
 					}
                 }else if(Purification_type == 1221){//Same as last one. X, Z double purification
+			/// # Purification_type 1221: #
+			/// - name: (short title or description)
+			/// - rounds: 2n
+			/// - input Bell pairs per round: 2
+			/// - total Bell pairs: (commonly n+1 or 2^n)
+			/// - circuit: <reference a figure>
+			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// ## description: ##
+			/// (description goes here)
                     for(int i=0; i<num_purification; i++){
                         if(i%2==0){
                             Rule* Purification = new Rule(RuleSet_id, rule_index);
@@ -584,6 +622,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         }
                     }
                 }else if(Purification_type == 1011){//Fuji-san's Doouble selection purification
+			/// # Purification_type 1011: #
+			/// - name: (short title or description)
+			/// - rounds: 2n
+			/// - input Bell pairs per round: 2
+			/// - total Bell pairs: (commonly n+1 or 2^n)
+			/// - circuit: <reference a figure>
+			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// ## description: ##
+			/// (description goes here)			
                     for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
@@ -596,6 +643,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         tomography_RuleSet->addRule(Purification);
                     }
                 }else if(Purification_type == 1021){//Fuji-san's Double selection purification
+			/// # Purification_type 1021: #
+			/// - name: (short title or description)
+			/// - rounds: 2n
+			/// - input Bell pairs per round: 2
+			/// - total Bell pairs: (commonly n+1 or 2^n)
+			/// - circuit: <reference a figure>
+			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// ## description: ##
+			/// (description goes here)
                     for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
@@ -613,6 +669,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         tomography_RuleSet->addRule(Purification);
                     }
                 }else if(Purification_type == 1031){//Fuji-san's Double selection purification
+			/// # Purification_type 1031: #
+			/// - name: (short title or description)
+			/// - rounds: 2n
+			/// - input Bell pairs per round: 2
+			/// - total Bell pairs: (commonly n+1 or 2^n)
+			/// - circuit: <reference a figure>
+			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// ## description: ##
+			/// (description goes here)
                     for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
@@ -630,6 +695,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         tomography_RuleSet->addRule(Purification);
                     }
                 }else if(Purification_type == 1061){//Fuji-san's Doouble selection purification
+			/// # Purification_type 1061: #
+			/// - name: (short title or description)
+			/// - rounds: 2n
+			/// - input Bell pairs per round: 2
+			/// - total Bell pairs: (commonly n+1 or 2^n)
+			/// - circuit: <reference a figure>
+			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// ## description: ##
+			/// (description goes here)
                     for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
@@ -648,6 +722,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                     }
                 }
                 else if(Purification_type == 5555){//Predefined purification method
+			/// # Purification_type 5555: #
+			/// - name: (short title or description)
+			/// - rounds: 2n
+			/// - input Bell pairs per round: 2
+			/// - total Bell pairs: (commonly n+1 or 2^n)
+			/// - circuit: <reference a figure>
+			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// ## description: ##
+			/// (description goes here)
                     for(int i=0; i<2; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
@@ -712,6 +795,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                    }
 
                 }else if((X_Purification && !Z_Purification)  || (!X_Purification && Z_Purification)){//X or Z purification. Out-dated syntax.
+			/// # Purification_type default: #
+			/// - name: (short title or description) (obsolete)
+			/// - rounds: 2n
+			/// - input Bell pairs per round: 2
+			/// - total Bell pairs: (commonly n+1 or 2^n)
+			/// - circuit: <reference a figure>
+			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// ## description: ##
+			/// uses X_Purification and Z_purification booleans, but is obsolete
                     Rule* Purification = new Rule(RuleSet_id, rule_index);
                     Condition* Purification_condition = new Condition();
                     Clause* resource_clause = new EnoughResourceClause(partner_address, 2);
