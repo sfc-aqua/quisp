@@ -236,7 +236,7 @@ usr/
 
 If you are having trouble with the install and the answers aren't
 here, you can peruse the [Frequently Asked Questions
-(FAQ)](doc/FAQ.md).
+(FAQ)](FAQ.md).
 
 ## Next Step: QuISP!
 
