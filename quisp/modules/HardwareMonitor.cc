@@ -690,7 +690,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                     }
                 }else if(Purification_type == 1011){//
 			/// # Purification_type 1011: #
-			/// - name: Ds-Sp: Fuji-san's Double selection purification
+			/// - name: Ds-Sp: Fujii-san's Double selection purification
 			/// - rounds: n
 			/// - input Bell pairs per round: 3
 			/// - total Bell pairs: 3^n
@@ -713,9 +713,9 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         rule_index++;
                         tomography_RuleSet->addRule(Purification);
                     }
-                }else if(Purification_type == 1021){//Fuji-san's Double selection purification
+                }else if(Purification_type == 1021){//Fujii-san's Double selection purification
 			/// # Purification_type 1021: #
-			/// - name: Ds-Sp: Fuji-san's Double selection purification (alternating)
+			/// - name: Ds-Sp: Fujii-san's Double selection purification (alternating)
 			/// - rounds: n
 			/// - input Bell pairs per round: 3
 			/// - total Bell pairs: 3^n

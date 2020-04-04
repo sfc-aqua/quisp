@@ -131,8 +131,8 @@ excellent project for someone!):
 2002    Ss-Sp / perfect binary tree, even rounds
 3003    Ss-Sp / perfect binary tree, odd or even rounds
 1221    Ss-Dp XZ, ZX alternating
-1011    Ds-Sp: Fuji-san's Double selection purification
-1021    Ds-Sp: Fuji-san's Double selection purification (alternating)
+1011    Ds-Sp: Fujii-san's Double selection purification
+1021    Ds-Sp: Fujii-san's Double selection purification (alternating)
 1031    Ds-Dp: full double selection purification (alternating)
 1061    half double selection, half single selection
 5555    Switching (B)
