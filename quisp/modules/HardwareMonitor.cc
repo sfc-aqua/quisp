@@ -540,7 +540,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
             int rule_index = 0;
 
-            if(num_purification>0){/*RuleSet including purification. CUrrently, not looping.*/
+            if(num_purification>0){
 
                 if(Purification_type == 2002){//Performs both X and Z purification for each n.
 			/// # Purification_type 2002: #
@@ -624,16 +624,21 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         tomography_RuleSet->addRule(Purification);
 
 					}
-                }else if(Purification_type == 1001){//Same as last one. X, Z double purification (purification pumping)
+                }else if(Purification_type == 1001){
 			/// # Purification_type 1001: #
-			/// - name: (short title or description)
-			/// - rounds: 2n
-			/// - input Bell pairs per round: 2
-			/// - total Bell pairs: (commonly n+1 or 2^n)
-			/// - circuit: <reference a figure>
-			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// - name: Ss-Dp XZ Purification
+			/// - rounds: n
+			/// - input Bell pairs per round: 3
+			/// - total Bell pairs: 3^n
+			/// - circuit: Fig. 12 in arXiv:1904.08605
+			/// - scheduling: symmetric tree
 			/// ## description: ##
-			/// (description goes here)
+			/// Both X and Z purification in a single action.  If A
+			/// is the pair being purified, and C and E are tools,
+			/// CNOT(A,C), MEAS(C), CNOT(E,A), MEAS(E)
+			/// then select after comparing outcomes.
+			/// Note that bases are not flipped between rounds.
+			/// Similar to 1221.
 					for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
@@ -645,16 +650,19 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         rule_index++;
                         tomography_RuleSet->addRule(Purification);
 					}
-                }else if(Purification_type == 1221){//Same as last one. X, Z double purification
+                }else if(Purification_type == 1221){
 			/// # Purification_type 1221: #
-			/// - name: (short title or description)
-			/// - rounds: 2n
-			/// - input Bell pairs per round: 2
-			/// - total Bell pairs: (commonly n+1 or 2^n)
-			/// - circuit: <reference a figure>
-			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// - name: Ss-Dp XZ, ZX alternating
+			/// - rounds: n
+			/// - input Bell pairs per round: 3
+			/// - total Bell pairs: 3^n
+			/// - circuit: *almost* Fig. 12 from arXiv:1904.08605, but order
+			/// of CNOTs reversed in alternating rounds
+			/// - scheduling: symmetric tree
 			/// ## description: ##
-			/// (description goes here)
+			/// Almost the same as 1001, but first round
+			/// is XZ, second round is ZX.  Results in better alternating
+			/// error suppression, but still not great.
                     for(int i=0; i<num_purification; i++){
                         if(i%2==0){
                             Rule* Purification = new Rule(RuleSet_id, rule_index);
@@ -678,16 +686,20 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                             tomography_RuleSet->addRule(Purification);
                         }
                     }
-                }else if(Purification_type == 1011){//Fuji-san's Doouble selection purification
+                }else if(Purification_type == 1011){//
 			/// # Purification_type 1011: #
-			/// - name: (short title or description)
-			/// - rounds: 2n
-			/// - input Bell pairs per round: 2
-			/// - total Bell pairs: (commonly n+1 or 2^n)
-			/// - circuit: <reference a figure>
-			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// - name: Ds-Sp: Fuji-san's Double selection purification
+			/// - rounds: n
+			/// - input Bell pairs per round: 3
+			/// - total Bell pairs: 3^n
+			/// - circuit: Fig. 13 in arXiv:1904.08605
+			/// - scheduling: symmetric tree
 			/// ## description: ##
-			/// (description goes here)			
+			/// Similar to 1001 and 1221 except that the control and target
+			/// of the first CNOT are flipped, corresponding to Fujii-san's
+			/// paper (PRA 80, 042308).
+			/// Every round is identical.
+			/// Note there is no basis change between rounds.
                     for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
@@ -701,14 +713,18 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                     }
                 }else if(Purification_type == 1021){//Fuji-san's Double selection purification
 			/// # Purification_type 1021: #
-			/// - name: (short title or description)
-			/// - rounds: 2n
-			/// - input Bell pairs per round: 2
-			/// - total Bell pairs: (commonly n+1 or 2^n)
-			/// - circuit: <reference a figure>
-			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// - name: Ds-Sp: Fuji-san's Double selection purification (alternating)
+			/// - rounds: n
+			/// - input Bell pairs per round: 3
+			/// - total Bell pairs: 3^n
+			/// - circuit: *almost* Fig. 13 in arXiv:1904.08605, except that
+			/// the order of the CNOTs alternates between rounds
+			/// - scheduling: symmetric tree
 			/// ## description: ##
-			/// (description goes here)
+			/// Similar to 1011, almost corresponding to Fujii-san's
+			/// paper (PRA 80, 042308).
+			/// Note there is no basis change between rounds, but that the first round is
+			/// XZ, second is ZX.
                     for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
@@ -725,16 +741,19 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         rule_index++;
                         tomography_RuleSet->addRule(Purification);
                     }
-                }else if(Purification_type == 1031){//Fuji-san's Double selection purification
+                }else if(Purification_type == 1031){
 			/// # Purification_type 1031: #
-			/// - name: (short title or description)
-			/// - rounds: 2n
-			/// - input Bell pairs per round: 2
-			/// - total Bell pairs: (commonly n+1 or 2^n)
-			/// - circuit: <reference a figure>
-			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// - name: Ds-Dp: full double selection purification (alternating)
+			/// - rounds: n
+			/// - input Bell pairs per round: 5
+			/// - total Bell pairs: 5^n
+			/// - circuit: Fig. 14 in arXiv:1904.08605, except that
+			/// the order of the CNOTs alternates between rounds
+			/// - scheduling: symmetric tree
 			/// ## description: ##
-			/// (description goes here)
+			/// A combination of 1001 and 1011 (Figs. 12 & 13).  Resource requirements are high;
+			/// two rounds of this requires 25 Bell pairs.  With a low base Bell pair generation
+			/// rate and realistic memory decoherence, this will be impractical.
                     for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
@@ -751,16 +770,19 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         rule_index++;
                         tomography_RuleSet->addRule(Purification);
                     }
-                }else if(Purification_type == 1061){//Fuji-san's Doouble selection purification
+                }else if(Purification_type == 1061){
 			/// # Purification_type 1061: #
-			/// - name: (short title or description)
-			/// - rounds: 2n
-			/// - input Bell pairs per round: 2
-			/// - total Bell pairs: (commonly n+1 or 2^n)
-			/// - circuit: <reference a figure>
-			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// - name: half double selection, half single selection
+			/// - rounds: n
+			/// - input Bell pairs per round: 4
+			/// - total Bell pairs: 4^n
+			/// - circuit: no figure available
+			/// - scheduling: symmetric tree
 			/// ## description: ##
-			/// (description goes here)
+			/// Does double selection on X, single selection on Z
+			/// Switches bases between rounds.
+			/// Investigated for possibly highly asymmetric X/Z error rates in base Bell pairs.
+			/// Initial results weren't very promised, not extensively used.
                     for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
@@ -777,17 +799,18 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         rule_index++;
                         tomography_RuleSet->addRule(Purification);
                     }
-                }
-                else if(Purification_type == 5555){//Predefined purification method
+                }else if(Purification_type == 5555){//Predefined purification method
 			/// # Purification_type 5555: #
-			/// - name: (short title or description)
-			/// - rounds: 2n
-			/// - input Bell pairs per round: 2
-			/// - total Bell pairs: (commonly n+1 or 2^n)
-			/// - circuit: <reference a figure>
-			/// - scheduling: (commonly pumping, symmetric tree, or banded)
+			/// - name: Switching (B)
+			/// - rounds: n
+			/// - input Bell pairs per round: 3 in first two rounds, then 2
+			/// - total Bell pairs: (complicated)
+			/// - circuit: Fig. 21, case B in arXiv:1904.08605
+			/// - scheduling: symmetric tree (*)
 			/// ## description: ##
-			/// (description goes here)
+			/// Two rounds of Ds-Sp, then Ss-Sp.
+			/// The point of this was to show that you don't have to stick with one scheme,
+			/// but can use different schemes in different rounds.
                     for(int i=0; i<2; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
@@ -822,7 +845,18 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                             rule_index++;
                             tomography_RuleSet->addRule(Purification);
                    }
-				}else if(Purification_type == 5556){//Predefined purification method
+		}else if(Purification_type == 5556){//Predefined purification method
+			/// # Purification_type 5556: #
+			/// - name: Switching (A)
+			/// - rounds: n
+			/// - input Bell pairs per round: 3 in first round, then 2
+			/// - total Bell pairs: (complicated)
+			/// - circuit: Fig. 21, case A in arXiv:1904.08605
+			/// - scheduling: symmetric tree (*)
+			/// ## description: ##
+			/// One round of Ds-Sp, then Ss-Sp.
+			/// The point of this was to show that you don't have to stick with one scheme,
+			/// but can use different schemes in different rounds.
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();
                         Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
@@ -853,14 +887,16 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
                 }else if((X_Purification && !Z_Purification)  || (!X_Purification && Z_Purification)){//X or Z purification. Out-dated syntax.
 			/// # Purification_type default: #
-			/// - name: (short title or description) (obsolete)
-			/// - rounds: 2n
-			/// - input Bell pairs per round: 2
-			/// - total Bell pairs: (commonly n+1 or 2^n)
+			/// - name: Boolean-driven (obsolete)
+			/// - rounds: 1
+			/// - input Bell pairs: 2 or 3
+			/// - total Bell pairs: 2 or 3
 			/// - circuit: <reference a figure>
 			/// - scheduling: (commonly pumping, symmetric tree, or banded)
 			/// ## description: ##
-			/// uses X_Purification and Z_purification booleans, but is obsolete
+			/// uses X_Purification and Z_purification booleans, but is obsolete.
+			/// Creates a single purification only, or a single round of double purification.
+			/// Use of this for new work is deprecated.
                     Rule* Purification = new Rule(RuleSet_id, rule_index);
                     Condition* Purification_condition = new Condition();
                     Clause* resource_clause = new EnoughResourceClause(partner_address, 2);
