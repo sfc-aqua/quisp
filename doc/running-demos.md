@@ -144,6 +144,9 @@ else    (default case code exists, but is deprecated)
 the chosen link purification scheme; for most, the number of rounds
 of purification is either this value or twice this value.
 
+For a simple example, set purification_type to 2002, and
+initial_purification to 1.
+
 Purification is too complicated to detail here, but is defined by both
 the _purification circuit_ to be executed and the _scheduling discipline_
 used too select Bell pairs for use from among the available resources
