@@ -562,6 +562,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 			/// guaranteeing an even number of rounds.
 			///
 			/// X always goes first.
+			/// ![](../img/PhysRevA.100.052320-Fig11.png)
 					for(int i=0; i<num_purification; i++){
 					    //First stage X purification
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
@@ -639,6 +640,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 			/// then select after comparing outcomes.
 			/// Note that bases are not flipped between rounds.
 			/// Similar to 1221.
+			/// ![](../img/PhysRevA.100.052320-Fig12.png)
 					for(int i=0; i<num_purification; i++){
                         Rule* Purification = new Rule(RuleSet_id, rule_index);
                         Condition* Purification_condition = new Condition();

@@ -76,6 +76,14 @@ written into the `.ned` file (for fixed things related to the network
 itself) or the `.ini` file (for parameters for specific experimental
 runs), but we have set them up to be selected by you here.
 
+For these demonstration simulations, there are four parameters to be
+set interactively:
+
+* application traffic pattern
+* link-level tomography true/false
+* choice of link-level purification scheme (11 options at the moment)
+* number of rounds of purification (for most schemes)
+
 One it will ask you for is TrafficPattern (n.b.: there is also the
 parameter EndToEndConnection, which must be set to true):
 
@@ -93,6 +101,67 @@ Make sure you check the "Use this value for all similar parameters"
 tick box, or you'll have to set it for every individual node in the
 network.  This value is read and used inside the "application" running
 on each EndNode, in `modules/Application.cc`.
+
+A set of parameters controls purification and tomography; they are
+moderately complex because purification itself is rather complex.  See
+Sections 2.8.3, 2.8.4, and 4.3 of [Takaaki's master's
+thesis](https://arxiv.org/abs/1908.10758), our [Phys. Rev. A
+paper](https://arxiv.org/abs/1904.08605) and your friendly
+neighborhood purification specialist.
+
+The parameters of interest are:
+```
+        bool link_tomography;
+        int initial_purification;
+        int Purification_type;
+        int num_measure = default(3000);
+```
+
+The `link_tomography` boolean is pretty straightforward.  When on,
+`num_measure` measurements will be taken and used to output the `_dm`
+file.
+
+`Purification_type` affects a large switch statement, picking from
+among the different kinds of purification schemes for the _link_
+(n.b.: purification beyond a single hop is not yet supported -- an
+excellent project for someone!):
+
+```
+1001    Ss-Dp XZ Purification
+2002    Ss-Sp / perfect binary tree, even rounds
+3003    Ss-Sp / perfect binary tree, odd or even rounds
+1221    Ss-Dp XZ, ZX alternating
+1011    Ds-Sp: Fuji-san's Double selection purification
+1021    Ds-Sp: Fuji-san's Double selection purification (alternating)
+1031    Ds-Dp: full double selection purification (alternating)
+1061    half double selection, half single selection
+5555    Switching (B)
+5556    Switching (A)
+else    (default case code exists, but is deprecated)
+```
+
+`initial_purification` is a number whose effect varies depending on
+the chosen link purification scheme; for most, the number of rounds
+of purification is either this value or twice this value.
+
+Purification is too complicated to detail here, but is defined by both
+the _purification circuit_ to be executed and the _scheduling discipline_
+used too select Bell pairs for use from among the available resources
+(at the moment, all schemes implemented use only perfect trees;
+pumping and banding are not supported).
+
+The corresponding code contains _extensive_ comments and technical
+justification and detailed descriptions of the options.  It is in the
+file `HardwareMonitor.cc`, when you are ready to dig into code, since
+it was all developed for the HM to characterize links.  Look for the
+function `HardwareMonitor::sendLinkTomographyRuleSet`.  You can read
+[the online copy](https://github.com/sfc-aqua/quisp/blob/master/quisp/modules/HardwareMonitor.cc)
+or, better, generate the doxygen documentation and read locally on
+your machine; the additional formatting is valuable, _circuit images_
+are included, and it is the best way to ensure that the document you are
+reading corresponds to the code you are executing.  If you are already
+reading this document locally, [this link](html/classquisp_1_1modules_1_1_hardware_monitor.html) _may_ take
+you there.
 
 ## What the Heck am I Looking At?
 
