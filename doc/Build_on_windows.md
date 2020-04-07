@@ -3,7 +3,7 @@
 ## TL;DR
 * Before You Start
 * OMNeT++ Installation
-* Insall Needed Tools for the GUI
+* Install Needed Tools for the GUI
 * Cloning and Building Quisp 
 * Running A Simulation
 
