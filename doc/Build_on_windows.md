@@ -1,4 +1,4 @@
-# Installing Omnetpp GUI and Native QuISP on Windows OS
+# Installating Omnetpp GUI and Native Quisp on Windows OS
 
 ## TL;DR
 * Before You Start
@@ -9,7 +9,7 @@
 
 
 ## Before You Start
-Before you begin installing OMNeT++ and Quisp, make sure you have a C++ compiler on your computer. If you do, skip to step 1, if you don't, head to [this](https://www.tutorialspoint.com/How-do-I-set-up-C-Cplusplus-on-Eclipse-in-Windows) link and get your compiler set up and then come back and go to step 1!
+Before you begin installing OMNeT++ and Quisp, make sure you have a C++ compiler on computer. If you do, skip to step 1, if you don't, head to [this](https://www.tutorialspoint.com/How-do-I-set-up-C-Cplusplus-on-Eclipse-in-Windows) link and get your compiler set up and then come back and go to step 1!
 
 
 ## 1- OMNeT++ Installation
@@ -18,7 +18,9 @@ OMNeT++ is an extensible, modular, component-based C++ simulation library and fr
 
 OMNeT++ will be downloaded as a zip file. Once the download is complete, extract the file, you should see these files in the extracted directory.
 
-![](https://i.imgur.com/YuSTF1u.png)
+
+![](img/7.png)
+
 
 
 
@@ -44,14 +46,14 @@ $ ./aloha
 
 By default, the samples will run using the graphical Qtenv environment. You should see the following GUI windows.
 
-![](https://i.imgur.com/77vk5iY.jpg)
 
+![](img/9.jpg)
 
 **Click OK**
 
 
-![](https://i.imgur.com/HqdskWt.jpg)
 
+![](img/10.jpg)
 
 
 Yay!! your installation was successful!!
@@ -64,8 +66,8 @@ $ omnetpp
 ###### Whenever you want to run omnetpp, you will need to run from the mingwenv console.
 
 
-![](https://i.imgur.com/5ROa7qu.jpg)
 
+![](img/8.jpg)
 
 ## 2- Install Needed Tools for the GUI
 To run the simulation GUI, you will need to install *Eigen*.
@@ -79,9 +81,9 @@ For more information on Eigen, please visit [this](http://eigen.tuxfamily.org/in
 
 ## 3- Cloning and Building Quisp
 
-To clone and build Quisp, open your terminal (preferably Cygwin) and type the following commands:
+To clone and build Quisp, one your terminal (use the mingwenv console to clone the repo) and type the follwoing commands:
 ```
-$ git clone https://github.com/sfc-aqua/quisp.git
+$ git clone https://<username>@bitbucket.org/sfc-aqua/kaaki_master_quisp.git
 ```
 The last command will take a while to build the docker (around 15 mins).
 
@@ -90,75 +92,75 @@ The last command will take a while to build the docker (around 15 mins).
 *Launch* omnetpp from mingwenv console
 
 
-![](https://i.imgur.com/ZU98fNh.jpg)
 
+![](img/11.jpg)
 
 From File >> Open Projects from File System
 
 
-![](https://i.imgur.com/2aMxfLB.jpg)
+
+![](img/12.jpg)
+
+Click *Directroy* and choose the location where Quisp was cloned (usually it will be in the omnet directroy)
 
 
-Click *Directory* and choose the location where Quisp was cloned (usually it will be in the omnet directory)
 
-
-![](https://i.imgur.com/gTIq3ow.jpg)
-
+![](img/13.jpg)
 
 Select both files and click *Finish*
 
 
-![](https://i.imgur.com/IviUq2n.jpg)
 
+![](img/14.jpg)
 
 That will make *kaaki-quisp-master* and *quisp* appear in your **Project Explorer** 
 
 Select quisp, right-click on it and choose *properties*.
 
 
-![](https://i.imgur.com/8HK3ddW.jpg)
 
+![](img/16.jpg)
 
 In the screen that shows up, expand OMNeT++, click on Makemake.
 Select quisp from the middle and on the right-habd side, choose Makemake and then click on options. 
 
 
-![](https://i.imgur.com/JSHw1cO.jpg)
 
+![](img/17.jpg)
 
 In the compile tab, click the add button ![](https://i.imgur.com/pvVkc8f.jpg)
 and then choose the directroy for **Eigen** and click OK
 
 
-![](https://i.imgur.com/koTDUzd.jpg)
 
+![](img/171.jpg)
 
 In the *Project Explorer* right-click on quisp and choose *Run As* > *OMNeT++ Simulation*.
 
 
-![](https://i.imgur.com/hGuJE1u.jpg)
 
+![](img/18.jpg)
 
 
 The following window will pop up, and it will take up to 2 mins to get the simulation set up.
 
 
-![](https://i.imgur.com/KIjrKvB.jpg)
 
+![](img/19.jpg)
 
 
 Test the simulation by choosing a *Config name*
 
 
-![](https://i.imgur.com/h3zut9d.jpg)
 
+![](img/20.jpg)
 
 
 And Voilà !!! 
 
 
-![](https://i.imgur.com/mH7C1gH.jpg)
 
+![](img/22.jpg)
 
 
 ## 5- Running A Simulation
@@ -166,19 +168,21 @@ And Voilà !!!
 From File > Set Up an Unconfigured Network...
 
 
-![](https://i.imgur.com/0jFI8hB.jpg)
 
+![](img/23.jpg)
 
 
 Choose a network and click OK.
 
-![](https://i.imgur.com/dUOFO2n.jpg)
-
+![](img/24.jpg)
 
 
 Enjoy the simulated results!!
 
-![](https://i.imgur.com/ht6bIH1.jpg)
+
+![](img/25.jpg)
+
+
 
 
 ## Running interesting simulations
