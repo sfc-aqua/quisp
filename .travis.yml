@@ -17,8 +17,9 @@ services:
 
 before_install:
 - sh docker_build.sh
+- cd test
 
-script: sh ./test/test_docker_run.sh
+script: sh test_docker_run.sh
 branches:
   only:
     - master
