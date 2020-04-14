@@ -27,7 +27,7 @@ before_install:
  - cd omnetpp
  - sudo ./configure WITH_OSG=no WITH_QTENV=no
  - cd bin
- - sudo make -C ../ -j $(nproc) MODE=release base
+ - sudo make -C /home/travis/build/sfc-aqua/quisp/omnetpp/ -j $(nproc) MODE=release base
  - sudo rm -r doc out test samples misc config.log config.status
  - echo "Build Omnet success"
  - echo "Building Googletest" 
