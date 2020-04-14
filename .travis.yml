@@ -17,7 +17,7 @@ env:
     - PATH=/home/travis/build/sfc-aqua/quisp/omnetpp/bin:$PATH
 before_install:
  - sudo apt-get -y update
- - sudo apt-get install -y qt5-default libqt5opengl5-dev libgtk-3-0 libwebkitgtk-3.0-0 default-jre osgearth libeigen3-dev cmake
+ - sudo apt-get install -y qt5-default libqt5opengl5-dev libgtk-3-0 libwebkitgtk-3.0-0 default-jre osgearth libeigen3-dev cmake source
  - echo "Building Omnetpp"
  - sudo wget https://github.com/omnetpp/omnetpp/releases/download/omnetpp-${OMNETPP_VERSION}/omnetpp-${OMNETPP_VERSION}-src-linux.tgz --referer=https://omnetpp.org/ -O omnetpp-src-linux.tgz --progress=dot:giga
  - tar xf omnetpp-src-linux.tgz
