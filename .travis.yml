@@ -27,7 +27,7 @@ before_install:
  - cd omnetpp
  - ls
  - sudo ./configure WITH_OSG=no WITH_QTENV=no
- - sudo make -j 12
+ - sudo make
  - sudo rm -r doc out test samples misc config.log config.status
  - echo "Build Omnet success"
  - echo "Building Googletest" 
