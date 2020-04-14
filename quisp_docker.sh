@@ -9,7 +9,7 @@ else
     xterm -e "$(xhost $IP)"
 fi
 socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\" &
-docker run --rm -it -v "$(pwd):/root/quisp" -u "$(id -u):$(id -g)" -u=0 -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY="$IP:0" quisp
+docker run --rm -it -v "$(pwd):/root/quisp" -u "$(id -u):$(id -g)" --name quisp -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY="$IP:0" quisp
 trap "lsof -i:6000 -t|xargs kill" 0
 
 
