@@ -16,7 +16,8 @@ services:
   - docker
 
 before_install:
-- docker pull carlad/sinatra
+- sh docker_build.sh
+- sh quisp_docker.sh
 - docker run -d -p 127.0.0.1:80:4567 carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec foreman start;"
 - docker ps -a
 - docker run carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec rake test"
