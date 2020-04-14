@@ -1,4 +1,3 @@
-#include"quisp/modules/RuleEngine.h"
 #include<gtest/gtest.h>
 
 TEST(TestCaseName, TestName){

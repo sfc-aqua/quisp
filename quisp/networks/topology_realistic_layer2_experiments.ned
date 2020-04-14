@@ -676,7 +676,6 @@ network Realistic_Layer2_Star_Sep
 {
     parameters:
         **.Speed_of_light_in_fiber = 208189.206944 km;
-	**.LoneInitiatorAddress = 27;
 
         @display("bgb=707,326");
     submodules:

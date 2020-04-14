@@ -1,0 +1,48 @@
+language: cpp
+
+jobs:
+  include:
+
+  - os: linux
+    dist: trusty
+    compiler: gcc
+    env:
+      - COMPILER=g++9.2
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test']
+        packages: [g++9.2, valgrind]
+
+before_install:
+ - sudo apt-get -y update
+ - sudo apt-get install -y -no-install-recommends qt5-default libqt5opengl5-dev libgtk-3-0 libwebkitgtk-3.0-0 default-jre osgearth libeigen3-dev cmake g++
+ - echo "Building Omnetpp"
+ - export VERSION = 5.6.1
+ - sudo wget https://github.com/omnetpp/omnetpp/releases/download/omnetpp-$VERSION/omnetpp-$VERSION-src-linux.tgz \
+         --referer=https://omnetpp.org/ -O omnetpp-src-linux.tgz --progress=dot:giga && \
+         tar xf omnetpp-src-linux.tgz && rm omnetpp-src-linux.tgz
+ - sudo mkdir omnetpp
+ - mv omnetpp-$VERSION omnetpp
+ - sudo export PATH /root/omnetpp/bin:$PATH
+ - cd omnetpp 
+ - ./configure WITH_OSG=no
+ - make -j $(nproc) MODE=release base
+ - rm -r doc out test samples misc config.log config.status
+ - echo "Build Omnet success"
+ - echo "Building Googletest" 
+ - sudo wget https://github.com/google/googletest/archive/release-1.10.0.tar.gz
+ - sudo tar xf release-1.10.0.tar.gz
+ - cd googletest-release-1.10.0
+ - mkdir build
+ - cd build
+ - sudo cmake -DBUILD_SHARED_LIBS=0 ..
+ - sudo make
+ - sudo cp -a include/gtest /usr/include
+ - sudo cp -a libgtest_main.so libgtest.so /usr/lib/
+ - which valgrind
+ - cd "${TRAVIS_BUILD_DIR}"
+script: sh ./test/test.sh
+branches:
+  only:
+    - master
+    - Unittest

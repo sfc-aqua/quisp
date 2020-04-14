@@ -47,7 +47,7 @@ RUN chmod 755 /root/clibrary && \
     cd /root/clibrary/googletest &&\
     mkdir build && chmod 755 build &&\
     cd /root/clibrary/googletest/build &&\
-    cmake .. &&\
+    cmake .. -DBUILD_SHARED_LIBS=0 &&\
     make
 ENV GTEST_ROOT /root/clibrary/googletest/build/googletest/:$PATH
 RUN echo 'PS1="quisp:\w\$ "' >> /root/.bashrc && chmod +x /root/.bashrc && \
