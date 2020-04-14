@@ -7,6 +7,6 @@ make -C ../quisp BATCH=true QCONFIG=../quisp/network/ all
 cd ../quisp && ./out/clang-release/quisp  -u Cmdenv -c Test_Realistic_Layer2_Simple  -f ./networks/test.ini > ../test/testresults.txt
 echo "here at $(pwd)"
 # On docker
-clang++ -std=c++11 ./test/quisp_test.cpp -I../omnetpp/include -L../clibrary/googletest/build/lib/ -pthread -lgtest_main -lgtest
+clang++ -std=c++11 ./quisp_test.cpp -I../../omnetpp/include -L../../clibrary/googletest/build/lib/ -pthread -lgtest_main -lgtest
 # remove used results
 echo "test done"
