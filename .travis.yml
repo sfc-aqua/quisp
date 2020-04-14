@@ -17,9 +17,8 @@ services:
 
 before_install:
 - sh docker_build.sh
-- sh ./test/test_docker_run.sh
 
-script: quisp exec google test
+script: sh ./test/test_docker_run.sh
 branches:
   only:
     - master
