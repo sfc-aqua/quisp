@@ -17,6 +17,8 @@ services:
 
 before_install:
 - sh docker_build.sh
+- $(pwd)
+- ls
 
 script: sh test_docker_run.sh
 branches:
