@@ -22,7 +22,7 @@ before_install:
  - sudo mkdir omnetpp
  - sudo mv omnetpp-5.6.1/* omnetpp
  - cd omnetpp
- - ./configure WITH_OSG=no
+ - sudo ./configure WITH_OSG=no
  - make -j $(nproc) MODE=release base
  - sudo rm -r doc out test samples misc config.log config.status
  - echo "Build Omnet success"
