@@ -25,7 +25,7 @@ before_install:
  - sudo mkdir omnetpp
  - sudo mv omnetpp-${OMNETPP_VERSION}/* omnetpp
  - cd omnetpp
- - sudo sh setenv
+ - sudo source setenv
  - sudo ./configure WITH_OSG=no WITH_QTENV=no
  - make -j $(nproc) MODE=release base
  - sudo rm -r doc out test samples misc config.log config.status
