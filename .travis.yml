@@ -17,9 +17,8 @@ services:
 
 before_install:
 - sh docker_build.sh
-- sh ./test/test_docker_run.sh
 
-script: docker run -d -p 127.0.0.1:80:4567 carlad/sinatra /bin/sh -c "sh test/test.sh"
+script: docker exec -it quisp bash && sh ./test/test_docker_run.sh
 branches:
   only:
     - master
