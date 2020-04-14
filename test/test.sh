@@ -9,3 +9,4 @@ echo "here at $(pwd)"
 # On docker
 clang++ -std=c++11 ./test/quisp_test.cpp -L../clibrary/googletest/build/lib/ -pthread -lgtest_main -lgtest
 # remove used results
+echo "test done"
