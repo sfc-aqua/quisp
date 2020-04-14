@@ -25,7 +25,7 @@ before_install:
  - sudo mkdir omnetpp
  - sudo mv omnetpp-${OMNETPP_VERSION}/* omnetpp
  - echo "PATH=/home/travis/build/sfc-aqua/quisp/omnetpp/bin:$PATH" >> $HOME/.bash_profile 
- - ls
+ - cd ../omnetpp
  - sudo ./configure WITH_OSG=no WITH_QTENV=no
  - sudo make
  - sudo rm -r doc out test samples misc config.log config.status
