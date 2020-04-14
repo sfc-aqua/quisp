@@ -20,10 +20,8 @@ before_install:
  - tar xf omnetpp-src-linux.tgz
  - sudo rm omnetpp-src-linux.tgz
  - sudo mkdir omnetpp
- - sudo mv omnetpp-5.6.1 omnetpp
+ - sudo mv omnetpp-5.6.1/* omnetpp
  - cd omnetpp
- - ls
- - pwd
  - ./configure WITH_OSG=no
  - make -j $(nproc) MODE=release base
  - sudo rm -r doc out test samples misc config.log config.status
