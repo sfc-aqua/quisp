@@ -18,7 +18,7 @@ before_install:
  - echo "Building Omnetpp"
  - sudo wget https://github.com/omnetpp/omnetpp/releases/download/omnetpp-5.6.1/omnetpp-5.6.1-src-linux.tgz --referer=https://omnetpp.org/ -O omnetpp-src-linux.tgz --progress=dot:giga
  - tar xf omnetpp-src-linux.tgz
- - rm omnetpp-src-linux.tgz
+ - sudo rm omnetpp-src-linux.tgz
  - sudo mkdir omnetpp
  - mv omnetpp-5.6.1 omnetpp
  - sudo export PATH /root/omnetpp/bin:$PATH
