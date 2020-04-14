@@ -11,10 +11,9 @@ jobs:
     addons:
       apt:
         sources: ['ubuntu-toolchain-r-test']
-        packages: [g++-9.2, valgrind]
 
 before_install:
- - sudo apt-get -qq update
+ - sudo apt-get -y update
  - sudo apt-get install -y -no-install-recommends qt5-default libqt5opengl5-dev libgtk-3-0 libwebkitgtk-3.0-0 default-jre osgearth libeigen3-dev cmake g++
  - echo "Building Omnetpp"
  - export VERSION = 5.6.1
