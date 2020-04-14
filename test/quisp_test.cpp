@@ -1,5 +1,7 @@
 #include<gtest/gtest.h>
 
-TEST(TestCaseName, TestName){
-    EXPECT_EQ(1, 1);
+TEST(NoError, Test){
+    float fidelity;
+    fidelity = 1.0
+    EXPECT_EQ(fidelity, 1.0);
 }
