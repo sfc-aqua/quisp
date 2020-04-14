@@ -27,6 +27,7 @@ before_install:
  - cd omnetpp
  - echo "PATH=/home/travis/build/sfc-aqua/quisp/omnetpp/bin:$PATH" >> $HOME/.bash_profile 
  - sudo ./configure WITH_OSG=no WITH_QTENV=no
+ - pwd
  - sudo make
  - sudo rm -r doc out test samples misc config.log config.status
  - echo "Build Omnet success"
