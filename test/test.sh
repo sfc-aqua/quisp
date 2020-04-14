@@ -1,5 +1,6 @@
 #!/bin/sh
 # run the result_test.ini in the network. This is not an unit test.
+pwd
 make -C ../quisp cleanall
 make -C ../quisp BATCH=true QCONFIG=../quisp/network/ all
 # These are creating all simulations HACK
