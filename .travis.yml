@@ -21,7 +21,6 @@ before_install:
  - sudo rm omnetpp-src-linux.tgz
  - sudo mkdir omnetpp
  - sudo mv omnetpp-5.6.1 omnetpp
- - sudo export PATH /root/omnetpp/bin:$PATH
  - cd omnetpp 
  - ./configure WITH_OSG=no
  - make -j $(nproc) MODE=release base
