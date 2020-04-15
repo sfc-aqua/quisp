@@ -7,7 +7,6 @@ THIS IS NOT A UNITTEST!
 The details of each test, see quisp/quisp/network/test.ini
 """
 import unittest
-import math
 # This test is done on the docker container.
 RESULT_FILE_PATH = "./testresults.txt"
 
@@ -334,26 +333,25 @@ class TestQuispResult(unittest.TestCase):
         """
         Test 9
         with MemoryCompletelyMixed
-        with 5556 purification
         """
-        test_number = 9  # TEST3
+        test_number = 9  # TEST9
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1.0,
-                              "Xerror": 0.0,
-                              "Zerror": 0.0,
-                              "Yerror": 0.0},
-                             {"Fidelity": 1.0,
-                              "Xerror": 0.0,
-                              "Zerror": 0.0,
-                              "Yerror": 0.0},
-                             {"Fidelity": 1.0,
-                              "Xerror": 0.0,
-                              "Zerror": 0.0,
-                              "Yerror": 0.0},
-                             {"Fidelity": 1.0,
-                              "Xerror": 0.0,
-                              "Zerror": 0.0,
-                              "Yerror": 0.0}]
+        estimated_results = [{"Fidelity": 2.662890e-01,
+                              "Xerror": 2.278130e-01,
+                              "Zerror": 2.546770e-01,
+                              "Yerror": 2.512210e-01},
+                             {"Fidelity": 2.402990e-01,
+                              "Xerror": 2.459760e-01,
+                              "Zerror": 2.740240e-01,
+                              "Yerror": 2.397010e-01},
+                             {"Fidelity": 2.662890e-01,
+                              "Xerror": 2.278130e-01,
+                              "Zerror": 2.546770e-01,
+                              "Yerror": 2.512210e-01},
+                             {"Fidelity": 2.402990e-01,
+                              "Xerror": 2.459760e-01,
+                              "Zerror": 2.740240e-01,
+                              "Yerror": 2.397010e-01}]
         for res, es in zip(results, estimated_results):
             self.evaluation(res, es, neq=True)
 
@@ -365,22 +363,22 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 10  # TEST10
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 0.50896,
-                              "Xerror": -0.000373404,
-                              "Zerror": 0.49104,
-                              "Yerror": 0.000373404},
-                             {"Fidelity": 0.508261,
-                              "Xerror": 0.00953022,
-                              "Zerror": 0.491739,
-                              "Yerror": -0.00953022},
-                             {"Fidelity": 0.50896,
-                              "Xerror": -0.000373404,
-                              "Zerror": 0.49104,
-                              "Yerror": 0.000373404},
-                             {"Fidelity": 0.508261,
-                              "Xerror": 0.00953022,
-                              "Zerror": 0.491739,
-                              "Yerror": -0.00953022}]
+        estimated_results = [{"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0}]
         for res, es in zip(results, estimated_results):
             self.evaluation(res, es, neq=True)
 
@@ -449,16 +447,6 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 13  # TEST13
         results = self.return_test_result(test_number)
-        # print("=======")
-        # print("test", test_number)
-        # print("estimated_results = [", end="")
-        # for res in results:
-        #     print('{"Fidelity": %d,' % res["Fidelity"])
-        #     print('"Xerror": %d,' % res["Xerror"])
-        #     print('"Zerror": %d,' % res["Zerror"])
-        #     print('"Yerror": %d},' % res["Yerror"])
-        # print("]")
-        # print("=======")
         estimated_results = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
@@ -475,6 +463,609 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_14(self):
+        """
+        Test 14
+        with Measurement Error X
+        with 1221 purification
+        """
+        test_number = 14  # TEST14
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1.000000e+00,
+                              "Xerror": 0.000000e+00,
+                              "Zerror": 0.000000e+00,
+                              "Yerror": 0.000000e+00},
+                             {"Fidelity": 9.993500e-01,
+                              "Xerror": 6.501950e-04,
+                              "Zerror": 6.501950e-04,
+                              "Yerror": -6.501950e-04},
+                             {"Fidelity": 1.000000e+00,
+                              "Xerror": 0.000000e+00,
+                              "Zerror": 0.000000e+00,
+                              "Yerror": 0.000000e+00},
+                             {"Fidelity": 9.993500e-01,
+                              "Xerror": 6.501950e-04,
+                              "Zerror": 6.501950e-04,
+                              "Yerror": -6.501950e-04}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_15(self):
+        """
+        Test 15
+        with Measurement Error Y
+        with 3003 purification
+        """
+        test_number = 15  # TEST13
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 9.993220e-01,
+                              "Xerror": 6.775070e-04,
+                              "Zerror": -6.775070e-04,
+                              "Yerror": 6.775070e-04},
+                             {"Fidelity": 9.993550e-01,
+                              "Xerror": -6.451610e-04,
+                              "Zerror": 6.451610e-04,
+                              "Yerror": 6.451610e-04},
+                             {"Fidelity": 9.993220e-01,
+                              "Xerror": 6.775070e-04,
+                              "Zerror": -6.775070e-04,
+                              "Yerror": 6.775070e-04},
+                             {"Fidelity": 9.993550e-01,
+                              "Xerror": -6.451610e-04,
+                              "Zerror": 6.451610e-04,
+                              "Yerror": 6.451610e-04}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_16(self):
+        """
+        Test 16
+        with Measurement Error Z
+        with 1221 purification
+        """
+        test_number = 16  # TEST13
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 9.993670e-01,
+                              "Xerror": 6.329110e-04,
+                              "Zerror": 6.329110e-04,
+                              "Yerror": -6.329110e-04},
+                             {"Fidelity": 9.987260e-01,
+                              "Xerror": 1.273890e-03,
+                              "Zerror": 1.273890e-03,
+                              "Yerror": -1.273890e-03},
+                             {"Fidelity": 9.993670e-01,
+                              "Xerror": 6.329110e-04,
+                              "Zerror": 6.329110e-04,
+                              "Yerror": -6.329110e-04},
+                             {"Fidelity": 9.987260e-01,
+                              "Xerror": 1.273890e-03,
+                              "Zerror": 1.273890e-03,
+                              "Yerror": -1.273890e-03}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_17(self):
+        """
+        Test 17
+        with H gate Error X
+        with 1221 purification
+        """
+        test_number = 17  # TEST13
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1.000000e+00,
+                              "Xerror": 0.000000e+00,
+                              "Zerror": 0.000000e+00,
+                              "Yerror": 0.000000e+00},
+                             {"Fidelity": 1.000000e+00,
+                              "Xerror": 0.000000e+00,
+                              "Zerror": 0.000000e+00,
+                              "Yerror": 0.000000e+00},
+                             {"Fidelity": 1.000000e+00,
+                              "Xerror": 0.000000e+00,
+                              "Zerror": 0.000000e+00,
+                              "Yerror": 0.000000e+00},
+                             {"Fidelity": 1.000000e+00,
+                              "Xerror": 0.000000e+00,
+                              "Zerror": 0.000000e+00,
+                              "Yerror": 0.000000e+00}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_18(self):
+        """
+        Test 18
+        with H gate Y error
+        with 1011 purification
+        """
+        test_number = 18  # TEST13
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_19(self):
+        """
+        Test 19
+        with MemError Z
+        with 1011 purification
+        """
+        test_number = 19  # TEST13
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_20(self):
+        """
+        Test 20
+        with X gate X error
+        with 2002 purification
+        """
+        test_number = 20  # TEST13
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_21(self):
+        """
+        Test 21
+        with X gate Y error
+        with 2002 purification
+        """
+        test_number = 21  # TEST13
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_22(self):
+        """
+        Test 22
+        with X gate Z error
+        with 2002 purification
+        """
+        test_number = 22  # TEST13
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_23(self):
+        """
+        Test 23
+        with Z gate X error
+        with 3003 purification
+        """
+        test_number = 23  # TEST13
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_24(self):
+        """
+        Test 24
+        with Z gate Y error
+        with  3003 purification
+        """
+        test_number = 24  # TEST13
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_25(self):
+        """
+        Test 25
+        with Z gate Z error
+        with 3003 purification
+        """
+        test_number = 25  # TEST25
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_26(self):
+        """
+        Test 26
+        with CNOT IZ error
+        with 1221 purification
+        """
+        test_number = 26  # TEST26
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_27(self):
+        """
+        Test 27
+        with CNOT ZI error
+        with 1221 purification
+        """
+        test_number = 27  # TEST27
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_28(self):
+        """
+        Test 28
+        with CNOT ZZ error
+        with 1221 purification
+        """
+        test_number = 28  # TEST28
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 9.987330e-01,
+                              "Xerror": -1.267430e-03,
+                              "Zerror": 1.267430e-03,
+                              "Yerror": 1.267430e-03},
+                             {"Fidelity": 9.987220e-01,
+                              "Xerror": 4.976000e-05,
+                              "Zerror": 1.278260e-03,
+                              "Yerror": -4.976000e-05},
+                             {"Fidelity": 9.987330e-01,
+                              "Xerror": -1.267430e-03,
+                              "Zerror": 1.267430e-03,
+                              "Yerror": 1.267430e-03},
+                             {"Fidelity": 9.987220e-01,
+                              "Xerror": 4.976000e-05,
+                              "Zerror": 1.278260e-03,
+                              "Yerror": -4.976000e-05}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+    
+    def test_29(self):
+        """
+        Test 29
+        with CNOT ZX error
+        with 1221 purification
+        """
+        test_number = 29  # TEST29
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 9.987200e-01,
+                              "Xerror": 1.279630e-03,
+                              "Zerror": 7.368330e-06,
+                              "Yerror": -7.368330e-06},
+                             {"Fidelity": 1.000000e+00,
+                              "Xerror": 0.000000e+00,
+                              "Zerror": 0.000000e+00,
+                              "Yerror": 0.000000e+00},
+                             {"Fidelity": 9.987200e-01,
+                              "Xerror": 1.279630e-03,
+                              "Zerror": 7.368330e-06,
+                              "Yerror": -7.368330e-06},
+                             {"Fidelity": 1.000000e+00,
+                              "Xerror": 0.000000e+00,
+                              "Zerror": 0.000000e+00,
+                              "Yerror": 0.000000e+00}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_30(self):
+        """
+        Test 30
+        with CNOT XI error
+        with 1221 purification
+        """
+        test_number = 30  # TEST30
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 9.987200e-01,
+                              "Xerror": 1.279630e-03,
+                              "Zerror": 7.368330e-06,
+                              "Yerror": -7.368330e-06},
+                             {"Fidelity": 1.000000e+00,
+                              "Xerror": 0.000000e+00,
+                              "Zerror": 0.000000e+00,
+                              "Yerror": 0.000000e+00},
+                             {"Fidelity": 9.987200e-01,
+                              "Xerror": 1.279630e-03,
+                              "Zerror": 7.368330e-06,
+                              "Yerror": -7.368330e-06},
+                             {"Fidelity": 1.000000e+00,
+                              "Xerror": 0.000000e+00,
+                              "Zerror": 0.000000e+00,
+                              "Yerror": 0.000000e+00}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+    
+    def test_31(self):
+        """
+        Test 31
+        with CNOT XX error
+        with 1221 purification
+        """
+        test_number = 31  # TEST31
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1.000000e+00,
+                              "Xerror": 0.000000e+00,
+                              "Zerror": 0.000000e+00,
+                              "Yerror": 0.000000e+00},
+                             {"Fidelity": 9.980290e-01,
+                              "Xerror": 1.970690e-03,
+                              "Zerror": 6.853480e-04,
+                              "Yerror": -6.853480e-04},
+                             {"Fidelity": 1.000000e+00,
+                              "Xerror": 0.000000e+00,
+                              "Zerror": 0.000000e+00,
+                              "Yerror": 0.000000e+00},
+                             {"Fidelity": 9.980290e-01,
+                              "Xerror": 1.970690e-03,
+                              "Zerror": 6.853480e-04,
+                              "Yerror": -6.853480e-04}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+    
+    def test_32(self):
+        """
+        Test 32
+        with CNOT IY error
+        with 1221 purification
+        """
+        test_number = 32  # TEST32
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+
+    def test_33(self):
+        """
+        Test 33
+        with CNOT IY error
+        with 1221 purification
+        """
+        test_number = 33  # TEST33
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+    
+    def test_34(self):
+        """
+        Test 34
+        with CNOT YI error
+        with 1221 purification
+        """
+        test_number = 34  # TEST34
+        results = self.return_test_result(test_number)
+        estimated_results = [{"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0},
+                             {"Fidelity": 1,
+                              "Xerror": 0,
+                              "Zerror": 0,
+                              "Yerror": 0}]
+        for res, es in zip(results, estimated_results):
+            self.evaluation(res, es, neq=True)
+    
+    def test_35(self):
+        """
+        Test 35
+        with CNOT YY error
+        with 1221 purification
+        """
+        test_number = 35  # TEST35
+        results = self.return_test_result(test_number)
+        # print("=======")
+        # print("estimated_results = [", end="")
+        # for res in results:
+        #     print('{"Fidelity": %e,' % res["Fidelity"])
+        #     print('"Xerror": %e,' % res["Xerror"])
+        #     print('"Zerror": %e,' % res["Zerror"])
+        #     print('"Yerror": %e},' % res["Yerror"])
+        # print("]")
+        # print("=======")
+        estimated_results = [{"Fidelity": 9.987330e-01,
+                              "Xerror": -1.267430e-03,
+                              "Zerror": 1.267430e-03,
+                              "Yerror": 1.267430e-03},
+                             {"Fidelity": 9.967510e-01,
+                              "Xerror": 2.020450e-03,
+                              "Zerror": 1.963610e-03,
+                              "Yerror": -7.351080e-04},
+                             {"Fidelity": 9.987330e-01,
+                              "Xerror": -1.267430e-03,
+                              "Zerror": 1.267430e-03,
+                              "Yerror": 1.267430e-03},
+                             {"Fidelity": 9.967510e-01,
+                              "Xerror": 2.020450e-03,
+                              "Zerror": 1.963610e-03,
+                              "Yerror": -7.351080e-04}]
         for res, es in zip(results, estimated_results):
             self.evaluation(res, es, neq=True)
 
