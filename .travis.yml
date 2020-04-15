@@ -1,25 +1,15 @@
-language: cpp
-
-jobs:
-  include:
-
-  - os: linux
-    dist: trusty
-    compiler: gcc
-    env:
-      - COMPILER=g++-9.2
-    addons:
-      apt:
-        sources: ['ubuntu-toolchain-r-test']
+# This is not unittest, only build and result test
+# language is python because using python unittest to check result
+# simulator itself is c++
+language: python
 
 services:
   - docker
 
 before_install:
 - sh docker_build.sh
-- ls
 
-script: sh test_docker_run.sh
+script: sh test_docker_run.sh && cd test && python -m unittest discover && rm testresults.txt && echo "test done"
 branches:
   only:
     - master
