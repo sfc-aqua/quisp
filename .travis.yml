@@ -1,4 +1,4 @@
-language: cpp
+language: python
 
 jobs:
   include:
@@ -14,7 +14,8 @@ jobs:
 
 services:
   - docker
-
+python:
+  - "3.6"
 before_install:
 - sh docker_build.sh
 
