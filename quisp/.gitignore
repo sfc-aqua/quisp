@@ -7,7 +7,6 @@ out/
 .oppbuildspec
 .oppfeaturestate
 quisp.dSYM/
-Makefile
 
 PhotonicQubit_m.cc
 PhotonicQubit_m.h
