@@ -1,7 +1,16 @@
-# This is not unittest, only build and result test
-# language is python because using python unittest to check result
-# simulator itself is c++
 language: cpp
+
+jobs:
+  include:
+
+  - os: linux
+    dist: trusty
+    compiler: gcc
+    env:
+      - COMPILER=g++-9.2
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test']
 
 services:
   - docker
@@ -9,7 +18,7 @@ services:
 before_install:
 - sh docker_build.sh
 
-script: sh test_docker_run.sh && cd test && python -m unittest discover && rm testresults.txt && echo "test done"
+script: sh test_docker_run.sh && python -m unittest discover && rm test/testresults.txt && echo "Test done"
 branches:
   only:
     - master
