@@ -2,6 +2,8 @@
 # run the result_test.ini in the network. This is not an unit test.
 echo "test start"
 cd /root/quisp/quisp/networks
+cd ../
+ls
 make -C ../ cleanall
 make -C ../ BATCH=true QCONFIG=/root/quisp/quisp/network/* -j $(nproc) all
 # These are creating all simulations HACK
