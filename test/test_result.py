@@ -34,7 +34,7 @@ class TestQuispResult(unittest.TestCase):
         """
         setUp function is responsible for collecting test result and reform it.
         """
-        f = open(RESULT_FILE_PATH)  
+        f = open(RESULT_FILE_PATH)
         data = f.read()
         f.close()
         lines = data.split('\n')
@@ -75,7 +75,7 @@ class TestQuispResult(unittest.TestCase):
 
     def return_test_result(self, test_index):
         return self.all_result.get(test_index)
-    
+
     def evaluation(self, result, estimated, neq=False, rtol=1e-05, etol=1e-08):
         """
         Arg:
@@ -94,9 +94,10 @@ class TestQuispResult(unittest.TestCase):
                 if not neq:
                     self.assertEqual(actual, est)
                 else:
-                    self.assertEqual(True, math.isclose(actual, est,
-                                                        rel_tol=rtol,
-                                                        abs_tol=etol))
+                    self.assertAlmostEqual(actual, est)
+                    # self.assertEqual(True, math.isclose(actual, est,
+                    #                                     rel_tol=rtol,
+                    #                                     abs_tol=etol))
 
     def test_0(self):
         """
