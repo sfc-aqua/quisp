@@ -9,7 +9,7 @@ The details of each test, see quisp/quisp/network/test.ini
 import unittest
 import math
 # This test is done on the docker container.
-RESULT_FILE_PATH = "/root/quisp/test/testresults.txt"
+RESULT_FILE_PATH = "./testresults.txt"
 
 
 class TestQuispResult(unittest.TestCase):
