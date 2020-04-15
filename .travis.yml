@@ -18,7 +18,7 @@ services:
 before_install:
 - sh docker_build.sh
 
-script: sh test_docker_run.sh && python -m unittest discover && rm test/testresults.txt && echo "Test done"
+script: sh test_docker_run.sh
 branches:
   only:
     - master
