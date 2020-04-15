@@ -25,6 +25,6 @@ done
 # g++ -std=c++11 -o /root/quisp/test/quisp_test /root/quisp/test/quisp_test.cpp -I/rooot/omnetpp/include -I/usr/include/eigen3 -I/root/clibrary/googletest/googletest/include -L/root/clibrary/googletest/build/lib/ -pthread -lgtest_main -lgtest
 # This is just testing result! not each function!
 # remove used results
-cd /root/quisp/quisp/test
+cd /root/quisp/test
 python -m unittest discover
 echo "Test done"
