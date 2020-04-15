@@ -153,7 +153,7 @@ class TestQuispResult(unittest.TestCase):
         #     print(res["Xerror"])
         #     print(res["Zerror"])
         #     print(res["Yerror"])
-        estimated_results = [{"Fidelity": 1.489214,
+        estimated_results = [{"Fidelity": 0.489214,
                               "Xerror": -0.00894144,
                               "Zerror": 0.510786,
                               "Yerror": 0.00894144},
