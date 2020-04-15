@@ -1,7 +1,7 @@
 # This is not unittest, only build and result test
 # language is python because using python unittest to check result
 # simulator itself is c++
-language: python
+language: cpp
 
 services:
   - docker
