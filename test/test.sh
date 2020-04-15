@@ -11,7 +11,7 @@ if [ -e /root/quisp/test/testresults.txt ];then
 fi
 # Actual test part
 # Experiments=("Test0" "Test1" "Test2")
-NUM_TEST=3
+NUM_TEST=14
 # ===
 # This "init" and "next" is identifier of the experiments
 # for((i=0; i<${#Experiments[@]}; i++)); do
