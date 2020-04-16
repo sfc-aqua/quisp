@@ -1,0 +1,22 @@
+language: cpp
+
+jobs:
+  include:
+
+  - os: linux
+    dist: trusty
+    compiler: gcc
+    env:
+      - COMPILER=g++-9.2
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test']
+
+services:
+  - docker
+install: travis_wait sh docker_build.sh && sh docker_run_test.sh 
+script: cd test && sudo python -m unittest discover &&sudo rm testresults.txt && echo "test done"
+branches:
+  only:
+    - master
+    - Unittest
