@@ -128,7 +128,7 @@ Select quisp from the middle and on the right-habd side, choose Makemake and the
 
 ![](img/17.jpg)
 
-In the compile tab, click the add button ![](https://i.imgur.com/pvVkc8f.jpg)
+In the compile tab, click the add button ![](img/bu.jpg)
 and then choose the directroy for **Eigen** and click OK
 
 
