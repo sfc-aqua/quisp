@@ -10,8 +10,67 @@ This on MacOS Catalina (10.15.3) and Mojave(10.14).
 - `sh docker_build.sh`
 - Somewhere in your host OS, run `socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"`
 - Add your host machine IP address to xterm with `xhost` command.
-- Run docker with `sh quisp_docker.sh`
+- Run docker with `sh docker_run.sh`
 - Run `omnetpp` command on the docker container
+
+---
+
+## Easier way (Beta)
+
+This is just a beta version. If it's not working properly, please tell us as an issue.
+If you can't build with this process, please refer latter part.
+
+1. Open your terminal and run
+
+```zsh
+$ git clone https://github.com/sfc-aqua/quisp.git
+```
+
+You can download quisp from github.
+Enter quisp with `cd quisp`
+2. Run shell script
+
+```zsh
+$ sh docker_tools.sh
+```
+
+After you could successfully install related tools, please reboot your laptop. (Maybe just rebooting your terminal is enough.)
+
+3. Build docker container
+
+Open terminal and move to the `quisp/`, 
+
+```zsh
+$ sh docker_build.sh
+```
+
+You can see there is docker image called quisp with `docker images`.
+
+4. Run docker container
+
+OK, now you can enter container.
+
+```zsh
+$ sh docker_run_beta.sh
+```
+
+5. Try quisp!
+
+If all process were success, you can see
+
+```zsh
+quisp:/root/quisp$
+```
+
+Open omnet with
+
+```zsh
+quisp:/root/quisp$ omnetpp
+```
+
+Enjoy quisp!
+
+---
 
 ## 1. Install docker
 
@@ -24,6 +83,8 @@ $ brew cask install docker
 ```
 on your terminal.
 After you successfully installed Docker desktop app, open docker and sign in it with your docker hub account.
+
+
 
 #### Assign more CPUs to docker
 
