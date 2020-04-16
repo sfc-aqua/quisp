@@ -1,5 +1,5 @@
 # QUISP
-
+![travis](https://travis-ci.com/sfc-aqua/quisp.svg?branch=master)  
 The Quantum Internet Simulation Package (QuISP) is an event-driven
 simulation of quantum repeater networks, which will be the foundation
 of the coming Quantum Internet.  QuISP's goal is to simulate a full
