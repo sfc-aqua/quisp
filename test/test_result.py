@@ -120,7 +120,7 @@ class TestQuispResult(unittest.TestCase):
         test_number = 1  # TEST1
         results = self.return_test_result(test_number)
         # these are prepared for all connections
-        estimated_results = [{"Fidelity": 0.476815,
+        expected_outcome = [{"Fidelity": 0.476815,
                               "Xerror": 0.523185,
                               "Zerror": 0.00651815,
                               "Yerror": -0.00651815},
@@ -136,7 +136,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0.486001,
                               "Zerror": 0.0127393,
                               "Yerror": -0.0127393}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_2(self):
@@ -147,7 +147,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 2  # TEST2
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 0.489214,
+        expected_outcome = [{"Fidelity": 0.489214,
                               "Xerror": -0.00894144,
                               "Zerror": 0.510786,
                               "Yerror": 0.00894144},
@@ -163,7 +163,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": -0.00553946,
                               "Zerror": 0.496426,
                               "Yerror": 0.00553946}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
         
     def test_3(self):
@@ -175,7 +175,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 3  # TEST3
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 0.508346,
+        expected_outcome = [{"Fidelity": 0.508346,
                               "Xerror": 0.491654,
                               "Zerror": 0.0121146,
                               "Yerror": -0.0121146},
@@ -191,7 +191,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0.515074,
                               "Zerror": -0.00771101,
                               "Yerror": 0.00771101}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_4(self):
@@ -203,7 +203,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 4  # TEST4
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 0.499229,
+        expected_outcome = [{"Fidelity": 0.499229,
                               "Xerror": 0.500771,
                               "Zerror": -0.00856277,
                               "Yerror": 0.00856277},
@@ -219,7 +219,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0.497318,
                               "Zerror": -0.00521319,
                               "Yerror": 0.00521319}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
         
     def test_5(self):
@@ -230,7 +230,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 5  # TEST5
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 0.257418,
+        expected_outcome = [{"Fidelity": 0.257418,
                               "Xerror": 0.234406,
                               "Zerror": 0.273832,
                               "Yerror": 0.234344},
@@ -246,7 +246,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0.267682,
                               "Zerror": 0.250084,
                               "Yerror": 0.241921}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_6(self):
@@ -257,7 +257,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 6  # TEST6
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 0.515494,
+        expected_outcome = [{"Fidelity": 0.515494,
                               "Xerror": -0.0173436,
                               "Zerror": 0.484506,
                               "Yerror": 0.0173436},
@@ -273,7 +273,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": -0.0238174,
                               "Zerror": 0.484505,
                               "Yerror": 0.0238174}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_7(self):
@@ -284,7 +284,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 7  # TEST7
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 0.47398,
+        expected_outcome = [{"Fidelity": 0.47398,
                               "Xerror": 0.0148775,
                               "Zerror": 0.52602,
                               "Yerror": -0.0148775},
@@ -300,7 +300,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": -0.00279713,
                               "Zerror": 0.511726,
                               "Yerror": 0.00279713}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_8(self):
@@ -310,7 +310,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 8  # TEST8
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 0.505806,
+        expected_outcome = [{"Fidelity": 0.505806,
                               "Xerror": -0.0117037,
                               "Zerror": 0.494194,
                               "Yerror": 0.0117037},
@@ -326,7 +326,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0.00313725,
                               "Zerror": 0.516863,
                               "Yerror": -0.00313725}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_9(self):
@@ -336,7 +336,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 9  # TEST9
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 2.662890e-01,
+        expected_outcome = [{"Fidelity": 2.662890e-01,
                               "Xerror": 2.278130e-01,
                               "Zerror": 2.546770e-01,
                               "Yerror": 2.512210e-01},
@@ -352,7 +352,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 2.459760e-01,
                               "Zerror": 2.740240e-01,
                               "Yerror": 2.397010e-01}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_10(self):
@@ -363,7 +363,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 10  # TEST10
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -379,7 +379,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_11(self):
@@ -391,7 +391,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 11  # TEST11
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -407,7 +407,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_12(self):
@@ -419,7 +419,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 12  # TEST12
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -435,7 +435,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_13(self):
@@ -447,7 +447,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 13  # TEST13
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -463,7 +463,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_14(self):
@@ -474,7 +474,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 14  # TEST14
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1.000000e+00,
+        expected_outcome = [{"Fidelity": 1.000000e+00,
                               "Xerror": 0.000000e+00,
                               "Zerror": 0.000000e+00,
                               "Yerror": 0.000000e+00},
@@ -490,7 +490,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 6.501950e-04,
                               "Zerror": 6.501950e-04,
                               "Yerror": -6.501950e-04}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_15(self):
@@ -501,7 +501,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 15  # TEST13
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 9.993220e-01,
+        expected_outcome = [{"Fidelity": 9.993220e-01,
                               "Xerror": 6.775070e-04,
                               "Zerror": -6.775070e-04,
                               "Yerror": 6.775070e-04},
@@ -517,7 +517,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": -6.451610e-04,
                               "Zerror": 6.451610e-04,
                               "Yerror": 6.451610e-04}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_16(self):
@@ -528,7 +528,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 16  # TEST13
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 9.993670e-01,
+        expected_outcome = [{"Fidelity": 9.993670e-01,
                               "Xerror": 6.329110e-04,
                               "Zerror": 6.329110e-04,
                               "Yerror": -6.329110e-04},
@@ -544,7 +544,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 1.273890e-03,
                               "Zerror": 1.273890e-03,
                               "Yerror": -1.273890e-03}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_17(self):
@@ -555,7 +555,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 17  # TEST13
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1.000000e+00,
+        expected_outcome = [{"Fidelity": 1.000000e+00,
                               "Xerror": 0.000000e+00,
                               "Zerror": 0.000000e+00,
                               "Yerror": 0.000000e+00},
@@ -571,7 +571,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0.000000e+00,
                               "Zerror": 0.000000e+00,
                               "Yerror": 0.000000e+00}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_18(self):
@@ -582,7 +582,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 18  # TEST13
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -598,7 +598,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_19(self):
@@ -609,7 +609,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 19  # TEST13
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -625,7 +625,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_20(self):
@@ -636,7 +636,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 20  # TEST13
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -652,7 +652,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_21(self):
@@ -663,7 +663,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 21  # TEST13
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -679,7 +679,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_22(self):
@@ -690,7 +690,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 22  # TEST13
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -706,7 +706,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_23(self):
@@ -717,7 +717,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 23  # TEST13
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -733,7 +733,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_24(self):
@@ -744,7 +744,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 24  # TEST13
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -760,7 +760,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_25(self):
@@ -771,7 +771,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 25  # TEST25
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -787,7 +787,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_26(self):
@@ -798,7 +798,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 26  # TEST26
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -814,7 +814,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_27(self):
@@ -825,7 +825,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 27  # TEST27
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -841,7 +841,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_28(self):
@@ -852,7 +852,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 28  # TEST28
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 9.987330e-01,
+        expected_outcome = [{"Fidelity": 9.987330e-01,
                               "Xerror": -1.267430e-03,
                               "Zerror": 1.267430e-03,
                               "Yerror": 1.267430e-03},
@@ -868,7 +868,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 4.976000e-05,
                               "Zerror": 1.278260e-03,
                               "Yerror": -4.976000e-05}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
     
     def test_29(self):
@@ -879,7 +879,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 29  # TEST29
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 9.987200e-01,
+        expected_outcome = [{"Fidelity": 9.987200e-01,
                               "Xerror": 1.279630e-03,
                               "Zerror": 7.368330e-06,
                               "Yerror": -7.368330e-06},
@@ -895,7 +895,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0.000000e+00,
                               "Zerror": 0.000000e+00,
                               "Yerror": 0.000000e+00}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
     def test_30(self):
@@ -906,7 +906,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 30  # TEST30
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 9.987200e-01,
+        expected_outcome = [{"Fidelity": 9.987200e-01,
                               "Xerror": 1.279630e-03,
                               "Zerror": 7.368330e-06,
                               "Yerror": -7.368330e-06},
@@ -922,7 +922,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0.000000e+00,
                               "Zerror": 0.000000e+00,
                               "Yerror": 0.000000e+00}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
     
     def test_31(self):
@@ -933,7 +933,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 31  # TEST31
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1.000000e+00,
+        expected_outcome = [{"Fidelity": 1.000000e+00,
                               "Xerror": 0.000000e+00,
                               "Zerror": 0.000000e+00,
                               "Yerror": 0.000000e+00},
@@ -949,7 +949,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 1.970690e-03,
                               "Zerror": 6.853480e-04,
                               "Yerror": -6.853480e-04}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
     
     def test_32(self):
@@ -960,7 +960,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 32  # TEST32
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -976,7 +976,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
     
     def test_33(self):
@@ -987,7 +987,7 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 33  # TEST34
         results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
+        expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0},
@@ -1003,7 +1003,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 0,
                               "Zerror": 0,
                               "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
     
     def test_34(self):
@@ -1015,7 +1015,7 @@ class TestQuispResult(unittest.TestCase):
         test_number = 34  # TEST35
         results = self.return_test_result(test_number)
         # print("=======")
-        # print("estimated_results = [", end="")
+        # print("expected_outcome = [", end="")
         # for res in results:
         #     print('{"Fidelity": %e,' % res["Fidelity"])
         #     print('"Xerror": %e,' % res["Xerror"])
@@ -1023,7 +1023,7 @@ class TestQuispResult(unittest.TestCase):
         #     print('"Yerror": %e},' % res["Yerror"])
         # print("]")
         # print("=======")
-        estimated_results = [{"Fidelity": 9.987330e-01,
+        expected_outcome = [{"Fidelity": 9.987330e-01,
                               "Xerror": -1.267430e-03,
                               "Zerror": 1.267430e-03,
                               "Yerror": 1.267430e-03},
@@ -1039,7 +1039,7 @@ class TestQuispResult(unittest.TestCase):
                               "Xerror": 2.020450e-03,
                               "Zerror": 1.963610e-03,
                               "Yerror": -7.351080e-04}]
-        for res, es in zip(results, estimated_results):
+        for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
 
 
