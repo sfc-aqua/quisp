@@ -73,9 +73,9 @@ as a service via the web, and possibly to open source the simulator.
 - [InitialRequirements](InitialRequirements.md)
 - [Datasets](Datasets) we intend to collect to write papers with (reach topology and workload discussions through here)
 - [Link Simulation Example](SimLink.md)
-- [Simlating Errors](SimErrors.md)
+- [Simulating Errors](ErrorModels.md)
 
 # Other #
 
 - [References](References.md)
-- [[Open Issues Bucket]]
+- See also the [Open Issues](https://github.com/sfc-aqua/quisp/issues) on github.

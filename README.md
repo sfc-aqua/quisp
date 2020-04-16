@@ -198,6 +198,8 @@ code for your own uses.
 When you are ready to start contributing, you can start reading the
 code, as [we have done](doc/code-spelunking.md).
 
+You will also want to look at some of the [software design documents](doc/software-design.md).
+
 ## Development tools
 
 A few tools (mainly scripts) can be used to make development a bit easier.

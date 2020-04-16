@@ -70,6 +70,14 @@ click on `quisp_tutorial.ini`, it should open a tab for that file, and
 you should be able to see the set of networks included in this
 tutorial.
 
+You are still looking at the OMNeT++ IDE.  To run QuISP itself,
+right-click on the `quisp_tutorial.ini` or click the triangle in the
+green circle at the top (which you will need to do will vary depending
+on what OMNeT++ thinks your current project is).  You may need to do
+"run as OMNeT++ Simulation", as below.
+
+<img src="img/run-as.png" width="400" />
+
 After you pick a network from the drop-down menu, the simulator will
 ask you to set some parameters.  Generally, these parameters are
 written into the `.ned` file (for fixed things related to the network
