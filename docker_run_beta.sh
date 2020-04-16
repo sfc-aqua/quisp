@@ -2,7 +2,7 @@
 IP=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}')
 if [ -z "$DISPLAY" ]
 then
-    echo "Can't detect X11 desplay. If you can't detect where is your display, check ./doc/xhost_trouble_shooting.md"
+    echo "Can't detect X11 display. If you don't know how to resolve this, please check"
     exit 1
 else
     # xterm

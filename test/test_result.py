@@ -978,14 +978,14 @@ class TestQuispResult(unittest.TestCase):
                               "Yerror": 0}]
         for res, es in zip(results, estimated_results):
             self.evaluation(res, es, neq=True)
-
+    
     def test_33(self):
         """
         Test 33
-        with CNOT IY error
+        with CNOT YI error
         with 1221 purification
         """
-        test_number = 33  # TEST33
+        test_number = 33  # TEST34
         results = self.return_test_result(test_number)
         estimated_results = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -1009,37 +1009,10 @@ class TestQuispResult(unittest.TestCase):
     def test_34(self):
         """
         Test 34
-        with CNOT YI error
-        with 1221 purification
-        """
-        test_number = 34  # TEST34
-        results = self.return_test_result(test_number)
-        estimated_results = [{"Fidelity": 1,
-                              "Xerror": 0,
-                              "Zerror": 0,
-                              "Yerror": 0},
-                             {"Fidelity": 1,
-                              "Xerror": 0,
-                              "Zerror": 0,
-                              "Yerror": 0},
-                             {"Fidelity": 1,
-                              "Xerror": 0,
-                              "Zerror": 0,
-                              "Yerror": 0},
-                             {"Fidelity": 1,
-                              "Xerror": 0,
-                              "Zerror": 0,
-                              "Yerror": 0}]
-        for res, es in zip(results, estimated_results):
-            self.evaluation(res, es, neq=True)
-    
-    def test_35(self):
-        """
-        Test 35
         with CNOT YY error
         with 1221 purification
         """
-        test_number = 35  # TEST35
+        test_number = 34  # TEST35
         results = self.return_test_result(test_number)
         # print("=======")
         # print("estimated_results = [", end="")

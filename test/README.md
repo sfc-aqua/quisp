@@ -32,3 +32,43 @@ Python 3.6 is verified.
 We intend to fix to be able to run them without docker.
 
 If you don't like to install these tools, just commit and you can check it when you create pull requests.
+
+## Test list
+Test list in test.ini file
+| TEST CASE| CONTENS | REMARKS |
+| -------- | -------- | -------- |
+| Test0     | No error case     |      |
+| Test1     | Channel X error test     |      |
+| Test2     | Channel Z error test     |with hom darkcount|
+| Test3     | Channel Y error test     |      |
+| Test4     | Memory X error test     |purification 3003|
+| Test5     | Memory Y error test     |with hom darkcount|
+| Test6     | Memory Z error test     |with hom darkcount|
+| Test7     | Memory energy excite error test |with hom darkcount purification 1031|
+| Test8     | Memory energy relaxation error test      |      |
+| Test9     | Memory completely mixed test      |      |
+| Test10     | internal_hom_loss test     |purification 2002|
+| Test11     | internal_hom_error test     |WARNING: This feature has not been implemented yet. If you have error with this test, you might have to change test. purification 1221|
+| Test12     | hom_loss_error test     | not internal  purification 1031|
+| Test13     | hom error test     |  not internal  with hom darkcount|
+| Test14     | Measurement error X test     |purification 1221|
+| Test15     | Measurement error Y test|purification 3003|
+| Test16     | Measurement error Z test|purification 3003|
+| Test17     | H gate X error test|purification 1001|
+| Test18     | H gate Y error test|purification 1001|
+| Test19     | H gate Z error test|purification 1011|
+| Test20     | X gate X error test|purification 2002|
+| Test21     | X gate Y error test|purification 2002|
+| Test22     | X gate Z error test|purification 2002|
+| Test23     | Z gate X error test|purification 3003|
+| Test24     | Z gate Y error test|purification 3003|
+| Test25     | Z gate Z error test|purification 3003|
+| Test26     | CNOT gate IZ error test|purification 1221|
+| Test27     | CNOT gate ZI error test|purification 1221|
+| Test28     | CNOT gate ZZ error test|purification 1221|
+| Test29     | CNOT gate IX error test|purification 1221|
+| Test30     | CNOT gate XI error test|purification 1221|
+| Test31     | CNOT gate XX error test|purification 1221|
+| Test32     | CNOT gate IY error test|purification 1221|
+| Test33     | CNOT gate YI error test|purification 1221|
+| Test34     | CNOT gate YY error test|purification 1221|

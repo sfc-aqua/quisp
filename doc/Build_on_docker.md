@@ -17,8 +17,7 @@ This on MacOS Catalina (10.15.3) and Mojave(10.14).
 
 ## Easier way (Beta)
 
-This is just a beta version. If it's not working properly, please tell us as an issue.
-If you can't build with this process, please refer latter part.
+This is just a beta version of a newer, more automated (and hopefully more robust) installation process. If it doesn't work properly for you, please open an issue on Github and/or contact us via Slack. You can also skip down lower in this file for the older, manual installation instructions.
 
 1. Open your terminal and run
 
@@ -34,7 +33,7 @@ Enter quisp with `cd quisp`
 $ sh docker_tools.sh
 ```
 
-After you could successfully install related tools, please reboot your laptop. (Maybe just rebooting your terminal is enough.)
+After you have successfully installed the related tools, please reboot your laptop. (Maybe just rebooting your terminal is enough.)
 
 3. Build docker container
 
@@ -44,11 +43,11 @@ Open terminal and move to the `quisp/`,
 $ sh docker_build.sh
 ```
 
-You can see there is docker image called quisp with `docker images`.
+A docker image called quisp should have been created. You can check with the command `docker images`.
 
 4. Run docker container
 
-OK, now you can enter container.
+OK, now you can enter the container.
 
 ```zsh
 $ sh docker_run_beta.sh
@@ -56,7 +55,7 @@ $ sh docker_run_beta.sh
 
 5. Try quisp!
 
-If all process were success, you can see
+If all of the processing completed successfully, you should see
 
 ```zsh
 quisp:/root/quisp$
