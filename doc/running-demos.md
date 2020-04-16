@@ -158,7 +158,7 @@ purification, followed by one round of Z purification.
 
 Purification is too complicated to detail here, but is defined by both
 the _purification circuit_ to be executed and the _scheduling discipline_
-used too select Bell pairs for use from among the available resources
+used to select Bell pairs for use from among the available resources
 (at the moment, all schemes implemented use only perfect trees;
 pumping and banding are not supported).
 

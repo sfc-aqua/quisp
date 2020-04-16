@@ -33,13 +33,17 @@ of questions we frequently ask ourselves.
 ## Now what?
 
 * Q: Wow, OMNeT++ runs!!! Exciting! ...now what?
-    - A: We definitely need better notes on adding QuISP into OMNeT++ and running
-  your first QuISP sims.
+    - A: See [the basic installation
+    notes](INSTALL.md) if you haven't, which will show you how to add
+    QuISP into OMNeT++, and run your first QuISP sims.  At the bottom
+    of that you will find links to further build instructions, or you
+    can skip straight to the [running demos](running-demos.md) if
+    you've already gotten QuISP installed.
 * Q: Okay, I got the basic first QuISP demo running.  What the heck
   are these .ini and .ned files, and how do I create my own?
     - A: Yup...  See, of course, [the OMNeT++
-  documentation](https://doc.omnetpp.org/omnetpp/manual/), but we
-  should have more of our own description here, too.
+  documentation](https://doc.omnetpp.org/omnetpp/manual/).  There is a
+  _very_ brief description at the [running demos](running-demos.md) doc.
 * Q: There are a bunch of parameters in the .ini file that aren't
   described in the OMNeT++ documentation.  What are they?
     - A: Probably, you're looking at the quantum-specific parameters.
