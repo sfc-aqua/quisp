@@ -58,7 +58,6 @@ network Three_HoM_star
         }
         Router[1]: QNode {
             address = index;
-            nodeType = "EndNode";
             //@display("p=246,56");
             @display("i=device/server");
         }
