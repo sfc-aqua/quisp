@@ -230,6 +230,8 @@ cPacket* PurifyAction::run(cModule *re) {
 
 
 //Double error purification
+/**
+ **/
 cPacket* DoublePurifyAction::run(cModule *re) {
     stationaryQubit *qubit = nullptr;
     stationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
@@ -464,7 +466,9 @@ cPacket* DoubleSelectionAction_inv::run(cModule *re) {
     return pk;
 }
 
-
+/**
+ * Used for both link and E2E tomography, and perhaps later for applications.
+ */
 cPacket* RandomMeasureAction::run(cModule *re) {
 
     stationaryQubit *qubit = nullptr;

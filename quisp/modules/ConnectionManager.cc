@@ -395,7 +395,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk){
         EV<<"Im not swapper!"<<path.at(i)<<"\n";
         int num_measure = pk->getNum_measure();
         RuleSet* tomography_ruleset = nullptr;
-        if(i == 0){// if this is initiater
+        if(i == 0){// if this is initiator
           tomography_ruleset = generateRuleSet_Tomography(createUniqueId(), path.at(i), path.at(path.size()-1), num_measure, qnics.at(qnics.size()-1).fst.type, qnics.at(qnics.size()-1).fst.index, num_resource);
         }else{ // if this is responder
           tomography_ruleset = generateRuleSet_Tomography(createUniqueId(), path.at(i), path.at(0), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
@@ -762,6 +762,18 @@ RuleSet* ConnectionManager::generateRuleSet_EntanglementSwapping(unsigned long R
     return EntanglementSwapping;
 }
 
+/**
+ * This function is for end-to-end tomography.
+ * Called during connection setup, these RuleSets are distributed to the EndNodes.
+ * At the moment (20/4/17), this is done for all E2E connections, in lieu of
+ * a true application.
+ * 
+ * Our experience is that 3000 measurements in total is needed for good tomography,
+ * but here we are limiting to the requested connection duration, num_resources.
+ * At each end, the measurement basis is chosen randomly (X, Y, or Z).
+ * There are 3*3 = 9 patterns of measurements. So each combination will be performed e.g. 3000/9 times,
+ * statistically.
+ */
 RuleSet* ConnectionManager::generateRuleSet_Tomography(unsigned long RuleSet_id, int owner, int partner, int num_of_measure, QNIC_type qnic_type, int qnic_index, int num_resources){
   // tomography ruleset
   int rule_index = 0;
@@ -769,7 +781,7 @@ RuleSet* ConnectionManager::generateRuleSet_Tomography(unsigned long RuleSet_id,
   Rule* Random_measure_tomography = new Rule(RuleSet_id, rule_index);
 
   Condition* measurement_condition = new Condition();//Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
-  Clause* count_clause = new MeasureCountClause(num_of_measure, partner, qnic_type , qnic_index, 0);//3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
+  Clause* count_clause = new MeasureCountClause(num_of_measure, partner, qnic_type , qnic_index, 0);
   Clause* resource_clause = new EnoughResourceClause(partner, num_resources);
 
   measurement_condition->addClause(count_clause);

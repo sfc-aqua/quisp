@@ -168,32 +168,6 @@ void Application::handleMessage(cMessage *msg){
         delete msg;
         error("Application not recognizing this packet");
     }
-
-
-
-    /*if(msg == generatePacket){
-        header *pk = new header("PathRequest");
-        pk->setSrcAddr(1);//packet source setting
-        pk->setDestAddr(3);//packet destination setting
-        pk->setKind(1);
-        send(pk, "toRouter");//send to port out. connected to local routing module (routing.localIn).
-        scheduleAt(simTime() + sendIATime->doubleValue(), generatePacket);
-        //scheduleAt(simTime() + 10, generatePacket);//In 10 seconds, another msg send gets invoked
-    }
-    else if(msg->getKind()==1 && strcmp("PathRequest", msg->getName())==0){
-        BubbleText("Path Request received!");
-
-        EV << "Deleting path request\n";
-    }
-    else{//A message was reached from another node to here
-        delete msg;
-        //cModule *mod = getSimulation()->getModule(4);
-        //int ad = mod->par("address");
-        //QNode *aa = check_and_cast<QNode*>(mod);//Cast not working
-        //EV<<"------------------------------"<<mod->getModuleType()<<"\n";
-
-        EV << "Deleting msg\n";
-    }*/
 }
 
 int* Application::storeEndNodeAddresses(){

@@ -258,6 +258,7 @@ void RuleEngine::handleMessage(cMessage *msg){
             storeCheck_TriplePurification_Agreement(pr);
         }
         else if(dynamic_cast<SwappingResult *>(msg) != nullptr){
+	    // we were waiting to receive notification of the swapping result, it has arrived!
             SwappingResult *pkt = check_and_cast<SwappingResult *>(msg);
             // here next add resources
             int src = pkt->getSrcAddr();
@@ -923,8 +924,12 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
     }
 }
 
+/**
+ * On receipt of notification of swapping success, update the status of the state
+ * involves updating our local understanding of who we are entangled with
+ */
 void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
-    // swapper believe previous BSM was succeeded.
+    // swapper has told us that BSM succeeded.
     // These are new partner's info
     int new_partner = swapr.new_partner;
     int new_partner_qnic_index = swapr.new_partner_qnic_index;  
@@ -932,7 +937,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
     QNIC_type new_partner_qnic_type = swapr.new_partner_qnic_type;
     int operation_type = swapr.operation_type;
 
-    // neigbor address should be swapper address
+    // neighbor address should be swapper address
     // node1 --- node6 --- node15
     // node6 is swapper and this is the source of swapping result.
     // qnic interface from node1 to node15 and node1 to node6 must be the same.
@@ -944,9 +949,9 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
     QNIC_type qnic_type =inf.qnic.type;
     int qubit_index = swapr.measured_qubit_index;
 
-    // First, the qubit used for swapping must be free.s
+    // First, the qubit used for swapping must be free.
     // Swapper doesn't know this is success or fail. Is this correct?
-    // TODO how to apply correct operation? is this the role of real time contoroller?
+    // TODO how to apply correct operation? is this the role of real time controller?
     // FIXME here is just one resource, but this should be loop
     // TODO resources for entanglement swapping in swapper should be free
     // Update tracker first get index from Swapping result maybe... get qubit index from swapping result
@@ -955,11 +960,6 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
 
     //qubit with address Addr was shot in nth time. This list is ordered from old to new.
     stationaryQubit * qubit = check_and_cast<stationaryQubit*>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit",qubit_index));
-    // if(parentAddress == 27 && qubit->entangled_partner->node_address == 15){
-    //     EV<<parentAddress<<" is entangled with "<<qubit->entangled_partner->node_address<<" !!\n";
-    //     error("Did it! Currently, no application implemeted. So, after resource consumed, simulation will end.");
-    // }
-    // check
     if(operation_type==0){
         // nothing   
     }else if(operation_type == 1){
@@ -968,27 +968,26 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr){
     }else if(operation_type == 2){
         qubit->Z_gate();
     }else{
-        error("something error happened! This operation type doesn't recorded!");
+        error("some error happened! Unknown operation type requested after entanglement swapping!");
     }
 
+    // just some error checking for debugging purposes
     if(qubit->entangled_partner==nullptr && qubit->Density_Matrix_Collapsed(0,0).real() ==-111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok){
         std::cout<<qubit<<", node["<<qubit->node_address<<"] from qnic["<<qubit->qnic_index<<"]\n";
-        //std::cout<<(bool)(qubit->entangled_partner==nullptr)<<" Entangled if ("<<false<<")\n";
-        //std::cout<<qubit->Density_Matrix_Collapsed<<"\n";
         EV<<"This is node"<<qubit->entangled_partner<<"\n";
         error("RuleEngine. Ebit succeed. but wrong");
     }
     allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner/*QNode IP address*/,qubit));
     if(qubit->entangled_partner!=nullptr){
         if(qubit->entangled_partner->entangled_partner==nullptr){
-            //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
             error("1. Entanglement tracking is not doing its job. in update resource E.S.");
         }
         if(qubit->entangled_partner->entangled_partner != qubit){
-            //std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
             error("2. Entanglement tracking is not doing its job. in update resource E.S.");
         }
     }
+
+    // okay, off to the next thing.
     ResourceAllocation(qnic_type, qnic_index);
     traverseThroughAllProcesses2();//New resource added to QNIC with qnic_type qnic_index.
 }
@@ -1290,6 +1289,7 @@ void RuleEngine::traverseThroughAllProcesses2(){
                                 send(pk_for_self,"RouterPort$o");
                             }
                              else if(dynamic_cast<SwappingResult *>(pk)!= nullptr){
+				     // pk came from the Rule Action, now we need to notify partners
                                 SwappingResult *pkt = check_and_cast<SwappingResult *>(pk);
                                 EV<<"done swapping at "<<parentAddress<<"\n";
                                 // here this packet goes to two destination.
