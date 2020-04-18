@@ -586,8 +586,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
                         rule_index++;
                         tomography_RuleSet->addRule(Purification);
 					}
-                }else if(Purifi
-                         cation_type == 3003){
+                }else if(Purification_type == 3003){
 			/// # Purification_type 3003: #
 			/// - name: Ss-Sp / perfect binary tree, odd or even rounds
 			/// - rounds: n
