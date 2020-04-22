@@ -83,7 +83,7 @@ For more information on Eigen, please visit [this](http://eigen.tuxfamily.org/in
 
 To clone and build Quisp, one your terminal (use the mingwenv console to clone the repo) and type the follwoing commands:
 ```
-$ git clone https://<username>@bitbucket.org/sfc-aqua/kaaki_master_quisp.git
+$ git clone https://github.com/sfc-aqua/quisp.git
 ```
 The last command will take a while to build the docker (around 15 mins).
 
