@@ -85,7 +85,6 @@ To clone and build Quisp, one your terminal (use the mingwenv console to clone t
 ```
 $ git clone https://github.com/sfc-aqua/quisp.git
 ```
-The last command will take a while to build the docker (around 15 mins).
 
 ## 4- Set up OMNeT for the Simulation
 
@@ -113,7 +112,7 @@ Select both files and click *Finish*
 
 ![](img/14.jpg)
 
-That will make *kaaki-quisp-master* and *quisp* appear in your **Project Explorer** 
+That will make *quisp* and *quisp* appear in your **Project Explorer** 
 
 Select quisp, right-click on it and choose *properties*.
 
