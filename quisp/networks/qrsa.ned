@@ -57,6 +57,14 @@ simple RuleEngine
         int number_of_qnics_r;
         int number_of_qnics_rp;
         int total_number_of_qnics;
+        // # of resources system hasbeen recognized
+        @signal[recog_res](type="int");
+        @statistic[recog_res](title="recognized number of resource"; record=vector, max; interpolationmode=sample-hold);
+        // # of resources in the physically generated
+        // @signal[actual_res](type="int");
+        // @statistic[actual_res](title="actual number of resource"; record=vector, max; interpolationmode=sample-hold);
+
+
 
     gates:
         inout RouterPort;

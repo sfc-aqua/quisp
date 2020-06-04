@@ -37,6 +37,8 @@ class HoM_Controller : public cSimpleModule
         double speed_of_light_in_channel;
         cPar *c;
         int time_out_count;
+        int success_count = 0;
+        simsignal_t actual_resSignal;
     public:
         int neighbor_address;
         int neighbor_address_two;
