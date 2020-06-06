@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<contributor name="org.eclipse.cdt"/>
+<contributor name="org.eclipse.platform"/>
+<contributor name="org.eclipse.ui.intro"/>
+<contributor name="org.omnetpp.doc"/>
+<contributor name="org.eclipse.egit.doc"/>
+<contributor name="org.eclipse.cdt.doc.user"/>
+<contributor name="org.eclipse.ui.intro.universal"/>
+</root>

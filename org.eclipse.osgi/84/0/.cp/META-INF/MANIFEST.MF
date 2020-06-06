@@ -1,0 +1,2765 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: org.eclipse.cdt.doc.user; singleton:=true
+Built-By: ?
+Require-Bundle: org.eclipse.help,org.eclipse.ui.cheatsheets,org.eclips
+ e.ui.intro,org.eclipse.ui.intro.universal
+Bundle-ManifestVersion: 2
+Bundle-ActivationPolicy: lazy
+Eclipse-SourceReferences: scm:git:git://git.eclipse.org/gitroot/cdt/or
+ g.eclipse.cdt.git;path="doc/org.eclipse.cdt.doc.user";commitId=c4a4fb
+ e1d8afe2d183dfdb4314ab582361405948
+Bundle-Vendor: %providerName
+Bundle-Name: %pluginName
+Bundle-Version: 5.4.300.201910171407
+Bundle-Localization: plugin
+Created-By: Apache Maven 3.6.0
+Build-Jdk: 1.8.0_222
+
+Name: images/makefile_editor_prefs.png
+SHA-256-Digest: f2ITUaOaP4LD4iFdcBXdE6SFSKjaOk40FRtUJq6j6Ew=
+
+Name: tasks/cdt_t_rem_wtch_brk.htm
+SHA-256-Digest: k5nZcDKIrich5BbKrUH6vqM5jI0UykJXUVpyEkEpS3Y=
+
+Name: reference/cdt_u_pref_multi_cfg.htm
+SHA-256-Digest: qONCbCairhUtDyIZO/Jqw+z2DnkSD71Cp5OF+TmoDTI=
+
+Name: images/cdt_w_debug_configurations_02.png
+SHA-256-Digest: 7I/cpQHouYF3DhqiefkXFt8QFuXd33kyFWDML4xoNMg=
+
+Name: images/makefile.gif
+SHA-256-Digest: bpFoFIsw4BshmYZw5dMbyi8HixyLSy/U4KRyrK2IEaE=
+
+Name: reference/cdt_u_c_file_types.htm
+SHA-256-Digest: kDUa6R9QRHR89VWFCAK0C0+Kdshs9zlJvkC3X94w6Z8=
+
+Name: images/icon_back.png
+SHA-256-Digest: DB2b0xpKDeOjTLoeS4bDc27cwIrY5lWyrhYTyi9nWII=
+
+Name: images/cdt82/CDT_OSResources.png
+SHA-256-Digest: 74MH6AbabEaBDgC/MPuY1ejiYi/Y6PbSZ+hIwMFivoU=
+
+Name: images/80/Debugconfig.jpg
+SHA-256-Digest: 3ERF3t5ZX/nsHdwny9cGSsioW4WoWKd/saAKTzGcVus=
+
+Name: concepts/cdt_c_editor.htm
+SHA-256-Digest: PAbFm+AmABiIM3CK+OMP/aYo11hsVcy3A4P5K6Luq60=
+
+Name: images/super_co.gif
+SHA-256-Digest: A1xRqZhmIbqGKjlmOGzrMhxcveUh3MHmorVUdFKL6rM=
+
+Name: images/icon_breakpoint_disable.gif
+SHA-256-Digest: 5FeG0JtRDaAuzugMlYPV1Ll+/NMBCtM03K8nNmyJ1Mc=
+
+Name: images/cdt82/OrganizeIncludes.png
+SHA-256-Digest: 4gmPY38B13J7aGtg7N/GMqG6XamskcSnkcsIhSLnULE=
+
+Name: images/icon_reg_enable.png
+SHA-256-Digest: DLYOlJMJAEm99TiNScep46lawIiVC5TInTnvcndGpEk=
+
+Name: images/cdt81/visualizersnapshot.png
+SHA-256-Digest: gDBtXzMVa7QRiMvV/aqPOFRbzfpNfA2zojH9/QZGEzA=
+
+Name: images/70/CDT70_NewIcons70.png
+SHA-256-Digest: D/7AY4iUVqStVryaB2DkacJXgniQlUBQr82CoEhjsYY=
+
+Name: images/icon_con_min.png
+SHA-256-Digest: qkP2J+zYCDyw6N1qWipPF+zrcS5R/27L1x8poBVA9DQ=
+
+Name: images/cdt83/IndexerHeaderVariantsPref.png
+SHA-256-Digest: 15YjqJRMHMGI8dC11akZ/7yBvdD1i3oMHOb3X1qM9M0=
+
+Name: tasks/cdt_t_sd.htm
+SHA-256-Digest: Wm6IzK6/hBV9YTRZiB7hY/H3f5+sUqC4cpxEtTXkfB0=
+
+Name: images/cdt_restart.png
+SHA-256-Digest: /Iz9N1ZsrHil1HRijgVQLFLOLbTEe6jyzl99QtJHI2M=
+
+Name: images/cdt_file_steps.png
+SHA-256-Digest: xu0WX+WMvVxAPIe8V+78jEn/y2aHBf3Yb9azFKllt0w=
+
+Name: reference/cdt_o_run_dbg_pages.htm
+SHA-256-Digest: j1yl+TbwMcoDPP0dieE0rtTEBy9ye1qfzLaUsCdFNgs=
+
+Name: images/console_build.png
+SHA-256-Digest: MvHk1yaDAWvl92fXO2OLdO3ElAvIjLoVrXAKE11S99U=
+
+Name: concepts/cdt_c_open_declarations.htm
+SHA-256-Digest: EX7YaReEVhc3KcuzfDY0tuxAGcDhFtAdC836NFp8v34=
+
+Name: reference/cdt_u_dbg_brkpt_actions.htm
+SHA-256-Digest: QmujgG4aWhqZk7MKBKwreNm2aqTRtk+J0i6JLTcicx8=
+
+Name: concepts/cdt_c_brkpnts.htm
+SHA-256-Digest: mf+VRpqj6ZDBZP/fcHB5Y+oaoWH7gedzGGLGt84b/Sc=
+
+Name: images/window_customize_perspective.png
+SHA-256-Digest: OPAgPkx4hbtaDYHKxu1w1UL+BpIAEChHDzchlaktMNM=
+
+Name: tasks/cdt_t_filtererror.htm
+SHA-256-Digest: ft5KOaEDzBMfxsIVbNwCjtvS1dYaQSZkawYscNiGTm8=
+
+Name: reference/cdt_u_prop_general_sd_providers.htm
+SHA-256-Digest: mKLtniRSraUqGHkoYWHKSBLkO9swj0AM1r7UQMI1ByU=
+
+Name: tasks/cdt_t_proj_error_parser.htm
+SHA-256-Digest: fhpRTEdUeXVj7OassutGopabqJkRDrr0NivRjTiPS1I=
+
+Name: images/run_debug_main.png
+SHA-256-Digest: S9iwbFqYVHuAEDxU0yJnM68pMr1Udrb1BKA9JQ0VD90=
+
+Name: images/icon_ext_tools.png
+SHA-256-Digest: vCe7ouN6BaWJMPJnjh0l6l9wsDu8axmGABpetHtUsh0=
+
+Name: tasks/cdt_t_debug_exes.htm
+SHA-256-Digest: uAYyWWFamFfSDyT5nC2KVUdhStYylKfhyNAVVISjmEs=
+
+Name: images/cdt_t_proj_new_with_template_2.png
+SHA-256-Digest: 88xzyTo/7V68rSFl4RGMgcBrDuOdseZC5Z1ad0pkOFA=
+
+Name: images/80/WithInferior.png
+SHA-256-Digest: udVUi8wrhde7o/1nKSK75fLDxb2lN+XIaFVHwHRyzGg=
+
+Name: reference/cdt_u_prop_general_pns_src.htm
+SHA-256-Digest: GbVpkYc73MJTBpDqTi+etOTstrHph7HZOXsXEBIdqUc=
+
+Name: images/icon_show_prev_reference.png
+SHA-256-Digest: nF03pyNU77CdQtpwaCVp0TZrnk5U77/ci1r/St9xWJ0=
+
+Name: images/project_new_file_name.png
+SHA-256-Digest: iFslscOMLvGVS+exsD+rZOoGyxGn/3l7oujDPleY088=
+
+Name: reference/cdt_u_toolbar.htm
+SHA-256-Digest: olluV3ZQyvtnJbbd9bleJXYHiDAifEAAOWgtzs3x4+c=
+
+Name: reference/cdt_u_dbg_src_path_mapping.htm
+SHA-256-Digest: lIRholnvCLmHUPE+bP09Zvjf7L8cSgd6WcE1cY6e6Bg=
+
+Name: images/icon_create_c_class.png
+SHA-256-Digest: BB4cLUPV2s6vlKko8Wo1y/TfnmqQIXawkGN7enRDZN0=
+
+Name: reference/cdt_u_pref_prop_pages.htm
+SHA-256-Digest: e2J8jHEiFHernm3OZpJkV5B5l1CdsVIF+PCxXVJgbaQ=
+
+Name: images/60/CDT6.0_open_declaration.png
+SHA-256-Digest: jQZ2ugaRfpRpwrInOLs+Ggr9TUylM8KkfZUyWdixXTI=
+
+Name: images/icon_load_all_modules.png
+SHA-256-Digest: exNBzMjcKJD+pO4ktEZ6pSzaWvn3sk/j4HlZrcR0E3o=
+
+Name: images/cdt_w_basic03a.png
+SHA-256-Digest: n1+OMYPUKUnJ76uonth/DlkGb8WcWEj70F8FsRrKDdk=
+
+Name: images/80/CDTCamelCaseCompletionDemo.png
+SHA-256-Digest: mAf/4rCHBodcgQ6dONmxFDU/7tIuadhe3xP+cytoDj8=
+
+Name: images/80/Bug-333113-LastMakeTarget.png
+SHA-256-Digest: qiP/kPc566Sxa6N9mFCdKcqo5NIvURZTeY6ptKQwj1M=
+
+Name: images/80/Cdt_t_toggle_member.png
+SHA-256-Digest: /6U2BDQgiBHNCwu3SU4mNK37iEz6Bt4fdIiOOl/J1WA=
+
+Name: images/icon_debugt_obj.gif
+SHA-256-Digest: vBW3YaOD23I7i8brHnXZlNMlNpWWkMQ3ArR0K/NEQm4=
+
+Name: images/method_private_obj.gif
+SHA-256-Digest: vNQbQwb/JLfvYiLP6iaIPKfRxq7VOQf2VEktEtYXyeU=
+
+Name: images/prop_refs.png
+SHA-256-Digest: /VuU4FkBCk7v7PVP8uy+Cn5/wcVAjShxqBf+VRKzU3U=
+
+Name: images/cdt_pref_brk_action_properties.png
+SHA-256-Digest: 1+qNMfqsr6zwlaydRylXo4ksnLtRFEB1/9/OBeDOopA=
+
+Name: images/project_new_cppfile.png
+SHA-256-Digest: 5+5ndM52cV5bxgiFyFG/bqjLLlJzHTaUZge0NJtZAtU=
+
+Name: concepts/cdt_c_whatsnew_80.htm
+SHA-256-Digest: ykQ+vTyZrqQxcBTknmRmxqTg9bsUiapN7wQ8LmZCJVw=
+
+Name: images/cdt81/cdt_debug_variabletypebasedonrttipref.png
+SHA-256-Digest: WRn/t5EF0BNyHje12uRgu8GZS7LNA+01CWkZr2V4ajc=
+
+Name: images/cdt_pref-multi-cfg.png
+SHA-256-Digest: gAkuDnGdHjbRIVU/F9UHsPIjio8+i1OQKJrYmsvIMrI=
+
+Name: images/cdt_w_import02.png
+SHA-256-Digest: Y+1AN3TiYoy311Bf3KJijgsOTyVGZF2G0+edZBGBmmE=
+
+Name: index/_1_Lucene50_0.pos
+SHA-256-Digest: xYy1fxXTh5MHvEJWBclWap0cfYjgv7vw9FK09h/O1kc=
+
+Name: images/prop_cbuild_selbldvar.png
+SHA-256-Digest: y94WZzu83XVHGrbHRAzeb+gk7ueguuj+ZDLKT5ofSM8=
+
+Name: images/run_debug_debugger_advopt.png
+SHA-256-Digest: vfEe1j3yP90l1YfC8hKI3MW89ZOH+XpYZKZ6DSZs+Ow=
+
+Name: tasks/cdt_t_proj_new_with_template.htm
+SHA-256-Digest: 9zxrDjBDip1jp4HtaYlQ7Y6BV6qDdjVEIeiP6JWOGd8=
+
+Name: images/icon_home.png
+SHA-256-Digest: 8Xwi1t7csviWa5V8WoAUQna6Hcwj7U3iJKLsH6k03WU=
+
+Name: images/icon_repeat_search.png
+SHA-256-Digest: 0Cd+ubSK6lhK509zRGLaYB7yidq96b6ySo7gW1nwdUk=
+
+Name: images/progress_stop.gif
+SHA-256-Digest: TE802GttkNpbgC/xdSDietf/MIWlKLif9tcmG5fQa94=
+
+Name: reference/cdt_u_pref_build_vars.htm
+SHA-256-Digest: ti4SIJ+73+NZNqMF3gkIUg0rIdJ89elKGJWvTtfxieA=
+
+Name: images/cdt_autobuild.png
+SHA-256-Digest: 2z54pv/osj5j6fRjTnn2pd/uRAKF862ri6XbCQnYF88=
+
+Name: images/prop_bin.png
+SHA-256-Digest: n6A1t0jbf/Er7Cx95Si1ECTAjJLscz7gUljHxF4n6Pc=
+
+Name: images/cdt82/BpFilter.png
+SHA-256-Digest: ZpYxFvm8UmCUgsAjdKT2bhdaPKM7tQaR9habUe7ywqw=
+
+Name: images/icon_manage_cfg.png
+SHA-256-Digest: iHcbB62VY+aKTLADklt2oE+PjMxU1g6BJNmF0MhHpUE=
+
+Name: images/editor_save_actions_preferences.png
+SHA-256-Digest: Eu9uXPoYzlTk9fg8Xh0anL6R39OE3kOWohndGT8bbFQ=
+
+Name: images/cdt82/CDT_NewExecutableDialog_Remote.png
+SHA-256-Digest: hqMqNd1LHmyRIKAdPbNES+uFR7PsFakRtCG9pMi9sbI=
+
+Name: images/80/GlobalBuildConsole.jpg
+SHA-256-Digest: f0ftj0G4eq1Q9AZkauJfM8z5/PWkYI22hsfT2Oh3hJE=
+
+Name: images/cdt83/DialectLanguageStandard.png
+SHA-256-Digest: xC89nVQW5ixyZCo9zKxw5U6kj2iVVTddaKysLN+L2Xs=
+
+Name: images/cdt_file_inc.png
+SHA-256-Digest: ICMO+ZKCfTQlp6keql+BSxYnx5Qps7fUpo4AbaoJIWo=
+
+Name: images/prop_datavolumes.png
+SHA-256-Digest: +wmIYo/imte6F/z8H+1I4ullQ1jVzpfJehy8OWxuoR4=
+
+Name: reference/cdt_u_fprop_resource.htm
+SHA-256-Digest: NlH8iuyfoQz2/VskdEBxdRo+PWZnLPkysZmKkAD0dC4=
+
+Name: reference/cdt_u_prop_general_pns_libpath.htm
+SHA-256-Digest: odS6xi0qXB7SIYHqfUBxeZ6zVXjOqjtB5S9jEXnu1LU=
+
+Name: images/cdt_inline_rename.png
+SHA-256-Digest: QbVycyenAAONdU91ZE1qJmE4v4M2tjzrBj5q1B26zpY=
+
+Name: images/icon_db_step_mode.png
+SHA-256-Digest: DqxCgxQeoadjvNeW7oYp++hHvuhY/TVwEfFytFsBj4o=
+
+Name: concepts/cdt_c_makefile.htm
+SHA-256-Digest: NpEyTwmv885sf8JlH6AdVigXVNRD8xOVl/UgohYFuoY=
+
+Name: images/run_debug_source.png
+SHA-256-Digest: sXJeCXWjz5yt47IFnTgLKy6547AbfkED/MAh5Wv9Hv8=
+
+Name: reference/cdt_u_m_project.htm
+SHA-256-Digest: S4LvjcqkkQ+HvTytaPj4g5hXRexzwrWKqYmcqVa6Lk8=
+
+Name: images/60/CDT6.0_OO_callh2.png
+SHA-256-Digest: gFkEIQJvcyy4b//ZO+MNxIW5X5Fo+q4O1MUpKMJS05g=
+
+Name: images/ngref.gif
+SHA-256-Digest: p8nYMHu5g0kIeN5qeTjfn+nhZCIminnhQDIBs/DpiIo=
+
+Name: images/icon_ws_chars.png
+SHA-256-Digest: l31aXsuQCA8l48V8u3t5NzDup7Kdh2WfXGX96eVit4o=
+
+Name: images/cdt_w_basic02.png
+SHA-256-Digest: hAD31/v+GXG3uLNMzJUZa5SG/qCirfhl6IDVsgjUu6w=
+
+Name: images/cdt81/corepath.png
+SHA-256-Digest: yGEWVz2GN4kgfriHo+s7RkF5t34SEVk79knohpPoYmY=
+
+Name: images/70/CDT70_Templates.png
+SHA-256-Digest: YE/CY20IBLQqRtRf0Q7UQX8uvDDfZt2KrSbl1Qca508=
+
+Name: images/searchView.png
+SHA-256-Digest: Y2xchkBzGFVR2+hWwHAGXPIIiv1SPQ5r5rc9TQTaGFU=
+
+Name: images/60/refactor_varname.png
+SHA-256-Digest: gGjMM+2iRjabaZ34NMokfFul/yqgevDDIHrShrlI8sY=
+
+Name: images/cdt82/CDT_NewExecutableDialog_Local.png
+SHA-256-Digest: uBx19yKgZr+NrX8h07uiMLD/g2m9IiHN+RSPo7YWrFo=
+
+Name: concepts/cdt_c_whatsnew_81.htm
+SHA-256-Digest: qW5OOiA0ToB6ps/eDb5zliuvmD3aQVIkin0dOjBvFDI=
+
+Name: reference/cdt_u_dbg_breadcrumb.htm
+SHA-256-Digest: cYE9jwIvpStvonoTZp2hRYAfr6rL0FW9HjpIYQJygpc=
+
+Name: reference/cdt_u_m_refactor.htm
+SHA-256-Digest: Khfd0rCoeH51XDvQp/pgj5KKZTm+kDA0XE8apyeF4Xk=
+
+Name: images/ngtasks.gif
+SHA-256-Digest: ubDk2JFEXzFLZSlSbPC61CVVfkSu399DkN+5tq2Rb50=
+
+Name: images/cdt_fold_toolsett.png
+SHA-256-Digest: Ba6J4Uy9mx6UVn3ykYaCHrvPo0QUsPYd1gYX38yHnLw=
+
+Name: concepts/cdt_c_before_you_begin.htm
+SHA-256-Digest: OBQg8AL7OfnBXHyQJul0l/IZyo/bNmDfXT/4S4C5FNA=
+
+Name: reference/cdt_u_scanner_cfg_disc.htm
+SHA-256-Digest: dAhkafsBKEOfV4DnqH4ZIWIfhHhk/Mgq0T36MEvihAI=
+
+Name: reference/cdt_u_indexer_preference.html
+SHA-256-Digest: 9+vQt37M23CG6Rrzw/F6u6kEA+Vprywk1/NmV0PQW1Q=
+
+Name: images/icon_db_terminate_relaunch.png
+SHA-256-Digest: 7oTuNmdaryX+zi490fXQIe1Qq1q/fna+vSCf5uAPXPc=
+
+Name: images/icon_db_stack_frame.png
+SHA-256-Digest: sDl+hzFaxaM9mkxWGgNOYHl/2/GKk0B3a5MPRHK3PYI=
+
+Name: images/cdt_update_search_results.png
+SHA-256-Digest: c35bc/lloKYXYZ4o3N3OS4VW9IlEfORMSIUsa3bjW6w=
+
+Name: images/cdt82/PropertyPageSettingsScannerDiscovery.png
+SHA-256-Digest: n46JgNjj8fI9Ux4y4jKQmXJhyL7OGXyG+eV0UhjjM8A=
+
+Name: help.css
+SHA-256-Digest: 2RJp+z5UTkXxJ3shzT4RQR8Nq/DX118wGbskTSCpmpw=
+
+Name: concepts/cdt_c_indexer_prog_bar.htm
+SHA-256-Digest: WGwSRoAy+BPIAWJOrWbI5a37dkttRE0viFmbh3NRj1c=
+
+Name: intro/swt/overview.properties
+SHA-256-Digest: 5QqpNqlCWvI88mV3AHxJGIIGoQXtFEX32BzsOP/z8Yw=
+
+Name: tasks/cdt_o_run_config.htm
+SHA-256-Digest: 7TsxJ0semUK069l/rN0zM94sDEpUL0ItjkpdwGU93wQ=
+
+Name: reference/cdt_u_m_edit.htm
+SHA-256-Digest: GVBNkuZM0xgLA9BNwQFSLeGp/kV0saqR770BcLke/Oc=
+
+Name: tasks/cdt_t_add_watch.htm
+SHA-256-Digest: LmJJwTCU+lFNudg29ikKg+H/e0SoywxsHLBhRAv0ZDg=
+
+Name: images/scanner_discovery/sd_console_view.png
+SHA-256-Digest: 37Oi2IRbu/MetpYK+/rQByEfuGQw+WYNL2Clc1KD6Vg=
+
+Name: images/cdt_t_proj_new_with_template_1.png
+SHA-256-Digest: ZFHBcEyUJz/dITITaqIvGzFuE4xJR6N31w8IQ5nR2LE=
+
+Name: images/icon_show_callees.png
+SHA-256-Digest: 2fzNrrRqaB3xaG/mIq/LoLAVPiNWgh51I6YJuSZhAF0=
+
+Name: images/cdt82/CDT-DSF-GDB-RevBPAction-dialog.png
+SHA-256-Digest: UUKwD99N7xIohwN0dODaEpsUTMebyzJbf5jZBmpMJvE=
+
+Name: tasks/cdt_t_convert_cdt_proj.htm
+SHA-256-Digest: FXHhjUqlitOSZVrpL1VoiGkJHKikquRs5WpRqv1AOw0=
+
+Name: images/prop_lang.png
+SHA-256-Digest: HZdjKab3Fi3lb5PhLRnLYh/p2mZdBUPAuF1liQCJXE4=
+
+Name: reference/cdt_u_prop_manage_rendialog.htm
+SHA-256-Digest: 0/3aeSDCuI5SoY2Z4k+ZIQlkCI9yscUzW+YLmBAW/Zc=
+
+Name: images/icon_annotation_next.png
+SHA-256-Digest: 8cKBqysTAg1oaiOwgEMr5o3L9DDO5rhVni6+T0wFXm4=
+
+Name: reference/cdt_u_run_dbg_main.htm
+SHA-256-Digest: E7iJe2By/8yUK6KED2KZeDDvmhX42jKRJKwRL7WCSQY=
+
+Name: tasks/cdt_t_autosave.htm
+SHA-256-Digest: BBxhAPSzcWiPPpy3JBg6LPsmFb/8y3iVdy0mOsJWuqA=
+
+Name: images/icon_print.png
+SHA-256-Digest: hXytAmcoC061UQd7GEiv+XFjBkIIhKSPhejtrEGIDrI=
+
+Name: images/manage_defined_symbols.png
+SHA-256-Digest: JSgyZPKmgMgq9SqA9LnJom8Uq6NDnfOQVbcf488S2m4=
+
+Name: images/icon_menu.png
+SHA-256-Digest: Cvon9tA4tk5qKtEq8/xolPL6hHOaW7IJWxspbgfduX0=
+
+Name: images/fields_co.gif
+SHA-256-Digest: U9t3Mtwms5BCVOOKfH7Hd9Oo3Qj7F3MN9KiSKsi6bXA=
+
+Name: intro/swt/tutorial.properties
+SHA-256-Digest: MHJipVnhVDmCDMNH+YZQclrTCQS8TOoOxIa3gssnKc0=
+
+Name: images/run_debug_common.png
+SHA-256-Digest: 6jm9gDEs/z0QMZ8gKO7fDdKqQo4Cmc98Z422FUbSQDU=
+
+Name: reference/cdt_u_prop_builders.htm
+SHA-256-Digest: d5sJ6S47xvMzoyoxvtmrLReGzQ73jm0ouGUTbTvmxBA=
+
+Name: images/icon_run_to_line.png
+SHA-256-Digest: Jot4eCTZL9/aJDq5TunBaoGrEy6B71pZYZhgN/fnwhU=
+
+Name: images/icon_resume_signal.png
+SHA-256-Digest: rB/vhFJZ980Z7slH6a3wiisuA9IfLXT09hzVEkS1a2o=
+
+Name: tasks/cdt_t_toggle.htm
+SHA-256-Digest: qTcC8/Od1do9A3EhVNNOmSWVccjSXChcyL1xByTRPNU=
+
+Name: images/run_config.png
+SHA-256-Digest: v1aFmh51sy8vkL24R0J9Imw98XvPkkbjNjGhZnm+LB8=
+
+Name: images/80/CDTConsoleStart.jpg
+SHA-256-Digest: yu24DVrZRV/cbUTDROok8qiLhWjRiIEpkFFKdTATJSM=
+
+Name: images/pref_traditional_memory_prefs.png
+SHA-256-Digest: fiqryJ0x2zs6ZjQHM5MCn2RdTElkVbHT3sbckkXkzvw=
+
+Name: reference/cdt_u_console_pref.htm
+SHA-256-Digest: 8R1ZYdl17VA7cNEsDvmh4oG7UlAKo9w/2qoBHZitIXk=
+
+Name: reference/cdt_u_fprop_toolsettings.htm
+SHA-256-Digest: WTCDEYdsHxJQn5X+1UI8Q1IuUFaXX+INWdWyuu4p2NE=
+
+Name: reference/cdt_u_icons.htm
+SHA-256-Digest: BiG/cZ3v3/mvXBavTdUQhATFqzg2ecwFtrTifxybfBg=
+
+Name: images/open_declaration_error.png
+SHA-256-Digest: lWwQbrGF8d63UbbvNhyUq32X0ZzuAn0RkjzeCM9jjkY=
+
+Name: images/icon_con_scroll_lock.png
+SHA-256-Digest: OkYp/t11UwjHMw4ZMtvs9V8DnsH1l+/2yJpiopIgdJY=
+
+Name: images/icon_save_output_file.png
+SHA-256-Digest: yneq+oTkLlVm0jZSwKWkhlN4HfU/IVA8H56+4znTNYQ=
+
+Name: images/icon_reg_display_array.png
+SHA-256-Digest: M7pH3SINz3sSUtyXqb/+Kyfhv6hOkmYSc0fv0LW/sFY=
+
+Name: tasks/cdt_t_imp_code_temp.htm
+SHA-256-Digest: fA5H8PLIfOrkZronMje0BSlcZbku7Sk7By1XbraJScI=
+
+Name: images/cdt_t_proj_new_with_template_4.png
+SHA-256-Digest: HNC2dNYv8djvHZfWZs2lSBUXmox5KNFWhhm65C4KTZA=
+
+Name: images/60/MTV.png
+SHA-256-Digest: ocJj9Hn1TZYkan5hzmGquAHrAuZft7msxfNBhdSnab4=
+
+Name: images/icon_reg_change_value.png
+SHA-256-Digest: mXuxVh8aI6RXeTquGgsMWgw43HQcvFk+OxsOQgJ3Crs=
+
+Name: images/icon_con_terminate.png
+SHA-256-Digest: GcVhz+tw/NVPa7nx5ABeBbvW1P5EKqu8/2SkbpaowB4=
+
+Name: images/function_obj.gif
+SHA-256-Digest: QCNrDQOaBrQi1OU3NkvbEGeWW1+MZZnYshbFcvF2C88=
+
+Name: images/cdt81/cdt_n_and_n_8_1_add_breakpoint_dialog.png
+SHA-256-Digest: bcdW5PBKnkO54cSuBN62odZyPhWDiGKNbtviFNNdiCU=
+
+Name: images/btn_import_executables.png
+SHA-256-Digest: WyYKg2y0GukWrs0OBSQbBAowJGKU7HIuklxJHeZy9Xs=
+
+Name: reference/cdt_o_dbg_view.htm
+SHA-256-Digest: 8dmsXw/K8LBq3dXZvpndljwGBrfUWZ05oXG6qGG3Ddc=
+
+Name: index/_1_Lucene50_0.tim
+SHA-256-Digest: qKaU8v5mkVrpYbYuBTbZ5qM/0nD0gxWsEZ3/8nXNdX8=
+
+Name: index/_1_Lucene50_0.tip
+SHA-256-Digest: CJt1Ype/ZvOQw6+nKAL3KxlXF9BkOGnpIxa5AEzOY0g=
+
+Name: concepts/cdt_o_concepts.htm
+SHA-256-Digest: bI9IMtYG3bVMv0YMpByAsKLpiwPTFpTQBNZHUztUVtM=
+
+Name: images/cdt81/timeoutadvanced.png
+SHA-256-Digest: KD7H15ZRW6E2w526MseZn10jf+nXh/9jXmojMpazL2M=
+
+Name: images/icon_show_next_reference.png
+SHA-256-Digest: AJAb2+vjzSMd6vtDtJvHS3DxHdR+xfcO8s+gKyYd0I0=
+
+Name: images/icon_show_type_names.png
+SHA-256-Digest: LfxYxr9JBNNpRL4gINOuo1OqvdClYrlhecHcd/d4j6E=
+
+Name: images/scanner_discovery/sd_prop_entries.png
+SHA-256-Digest: fOQEunrClLSAxNaEyN0UD342JlUF3XV3+zwMJAvrq8I=
+
+Name: images/cdt_dlg_edit_build_var.png
+SHA-256-Digest: 5hkCXnCJlkFw1KX+IeC93Y7gVqVCijYbG74W59ZbmuI=
+
+Name: images/new_proj_wz_name.png
+SHA-256-Digest: OlhxNka5urxJDs0lSv+UE4kF34ZnYMNf3HKYgvJ5URQ=
+
+Name: images/view_problem.png
+SHA-256-Digest: 6oxs2xdnEHhCHuYqmE2zByUMFt7+MwNZCsb53zROCWo=
+
+Name: images/mfile_build.PNG
+SHA-256-Digest: SIfCPIAlyuC818RgGp+DxlUwnk5Ogn1em+/XkQvyWTk=
+
+Name: reference/cdt_u_prop_build_settings_binparser.htm
+SHA-256-Digest: Z5ISEevrzuZH7xClRQs79bfZ59EJps8Bel4hIdWV1iM=
+
+Name: images/editor_scalability_preferences.png
+SHA-256-Digest: 2OOq82Bvj3fAwnUQCzKJdAHR5ziITPXUAH5gTDRkNN4=
+
+Name: images/prop_builders.png
+SHA-256-Digest: 5uQ7yDm0+JeoA1Al4MFzsIbkMlNdFGJ2rYlfTK+bKOw=
+
+Name: tasks/cdt_t_discovery.htm
+SHA-256-Digest: va/uTgREfGrikabG+IuKtQlNSqQKK044x7vlq9mJIqA=
+
+Name: images/80/RenameInWorkspace.png
+SHA-256-Digest: ZOV2NEJxyMZQPWc9XumatCTcQh+DyNeh6NJqLI0g/UM=
+
+Name: images/c_object_file.png
+SHA-256-Digest: mX58yiDPZGdjLDMaDth4J1bdsK2OvN0Ya6BFFPmp9a4=
+
+Name: images/cdt_w_debug_configurations_01.png
+SHA-256-Digest: LpWYLuVaNbKfY4ikSl0je7iCRWiZ4WAyzJ1rftCaG84=
+
+Name: concepts/cdt_c_dbg_info.htm
+SHA-256-Digest: 9Z0g1g92dIsvBQ5+lYAEBSLA+m1BkW+xvj6V2OXWIWE=
+
+Name: concepts/cdt_c_whatsnew.htm
+SHA-256-Digest: TpBtojkGq1tlxG+B8dkSTgE/mUXrutYYv8pis562nK0=
+
+Name: images/scanner_discovery/sd_prop_add_lse_kinds_dropdown.png
+SHA-256-Digest: al3jV1oi0iQu3T5j69H69WW7mPi8DhsOuXlG4w6rB4E=
+
+Name: tasks/cdt_t_run_arg.htm
+SHA-256-Digest: GHH6RVLge097VX2KmJaSJPY/BXVeB0w2xI6NWigfLos=
+
+Name: images/prop_builders_newbldr.png
+SHA-256-Digest: 0VQNhlApmA5PrPPqBXnKptnSvFXrnFqQGNaGHHnvXzo=
+
+Name: images/icon_db_terminate_all2.png
+SHA-256-Digest: hohkHBH8Pv9caU6mMaVvBDf+gBDJW7vNuvwlfk6fZOA=
+
+Name: images/cdt82/CDT-DSF-GDB-MulticoreVisualizer-selecting_loadMeter
+ s_refresh_speed.png
+SHA-256-Digest: mYORY/AkWBQUztbUVVEFz+LhD1lFbX1YJ0wo8dtnync=
+
+Name: images/enum_obj.gif
+SHA-256-Digest: S0WyHBJV3knjy7XT5/1YBNfPWvNBRzzlAGPKoS1/ez4=
+
+Name: reference/cdt_u_makefile_settings_pref.htm
+SHA-256-Digest: KKghcaV+41V85Bk0uQsAKsX0csY+TKIrDmuHCS3I1SE=
+
+Name: images/cdt_file_sym.png
+SHA-256-Digest: cq4DwhplgxGVs46pgwxkB8Vm22V5EkX8Q0Ips+mkcwE=
+
+Name: images/public_co.gif
+SHA-256-Digest: 9Nqz3U+MCwOAWMIvEVuGd5Asa7WFMR0hbFUeZAwrErw=
+
+Name: reference/cdt_u_newproj_parser_binary.htm
+SHA-256-Digest: mV02qUsSEVDjUBq3HCcSCoijkMhdMmdDhpRfi0C7wFo=
+
+Name: images/cdt81/charsetdebug.png
+SHA-256-Digest: i8XrqQZrunxcs5iQWZBO/91y4p9sQTfSKgBz7560GiE=
+
+Name: images/view_projects.png
+SHA-256-Digest: 9aFHYmefgkv6rXDm/rn9KWce2NyUvA3OO5SvSRfcaig=
+
+Name: images/cdt82/CDT_DebugNewExecutableMenu.png
+SHA-256-Digest: PseY9gWudLoDCePY4yFeT2bJBqWYZN9kTQSMtw+GmEo=
+
+Name: contexts_CDT_make.xml
+SHA-256-Digest: Kv2jRULFNc+tm++NiurEJzf0i7obTQZq1u0Z0simOmE=
+
+Name: images/update_managed_build20.png
+SHA-256-Digest: 7g1qT7BRKYp+tNgAobS+BLUB3OSAgaqHWmMpsB+i6JA=
+
+Name: images/cdt_update_install_sites.png
+SHA-256-Digest: +RJ8pk5JfOD/rHDUiyG2x5Y8kbXpcSJdehPtPlNz9OE=
+
+Name: images/new_proj_convert.png
+SHA-256-Digest: yhfca0ecubtpOrjNVDcbxf3ruHuKkd/0ktjpneRzBNQ=
+
+Name: images/icon_reset_mem_monitor.png
+SHA-256-Digest: Qxj8mV+GlE0W8AwS3F82CgcFjUFfzV03VYRj0EDNfQc=
+
+Name: images/prop_container.png
+SHA-256-Digest: JmzA/clyXNQ+aDXe5Il6PeF/kmRNOljNwby2w5u5pAM=
+
+Name: images/cdt82/CDT_Debug_ExitCode.png
+SHA-256-Digest: ONLkT3aZ3an6ObN+nSqmY0Q4sowD5hO9UaoBG/cupOY=
+
+Name: images/cdt_w_importBrandon04run.png
+SHA-256-Digest: FZEjxNowopoEWJPyvLbJO+Ge5jqd0mgq6YybG2uA2BQ=
+
+Name: reference/cdt_u_mfile_rcbs.htm
+SHA-256-Digest: nR7LOF641lgY5KP8LayC+eMP3CHQGdH4L9jGmS3ihb8=
+
+Name: images/cdt82/MakeEditorContentAssistAutoVars.png
+SHA-256-Digest: SZ7YfOLg1ccFsnbcakRAXVsDQWup2fFGkSNZehDM0lU=
+
+Name: images/cdt81/cdt_debug_variabletypebasedonrtti.png
+SHA-256-Digest: OWcNLV56ebetLXDkot6AVAkwFHCgDM+ADzjMawO2wXg=
+
+Name: images/prop_symb.png
+SHA-256-Digest: IWXMRVl9ntSVFM6v3ovYiQWDZXY49Vp+Z2j+0YA/IBU=
+
+Name: reference/cdt_u_prop_general_idx.htm
+SHA-256-Digest: FpTGLVwf2PsPtRuLeDdul7SoRM9o12kxa4s0m81vPd0=
+
+Name: images/debug_src_pref.png
+SHA-256-Digest: BpRfC7P3FLJXPAIswSa0TDcXmKNkaZknZUxK+/AAwwo=
+
+Name: reference/cdt_u_editor_view.htm
+SHA-256-Digest: Ne5VeBLycb/TDPbEAoM7pMH2bJgtHD9ghZzubDdEipY=
+
+Name: images/cdt81/cdt_n_and_n_8_1_editor_gutter_menu.png
+SHA-256-Digest: kWOvABQAVYqhmZjsTqt1hyrNNGH/0pRyr+s4xbPqRc0=
+
+Name: images/cdt81/console81.png
+SHA-256-Digest: 0+q1Lum+xuY9oRSpK78ervZzaIpLg383kcXMhA254nQ=
+
+Name: getting_started/cdt_w_debug.htm
+SHA-256-Digest: qL82vjVgmTBexy6/uO1u2gXxppyD7VIFkWopaGgOOrQ=
+
+Name: images/60/refactor_after.png
+SHA-256-Digest: XW5IIwe0Tjs5YnvmDOrsEjkkZ2RS1dcCvaKt/OskAcA=
+
+Name: images/cdt_t_proj_new_with_template_3.png
+SHA-256-Digest: 7nESUyPMUNCPSHp8aXpkczXyhhc0EKxXYGu/rTSUEak=
+
+Name: images/cdt_new_brk_action.png
+SHA-256-Digest: NgcCLG8eO42Fy4b70fveYH1cWZwQflCXdn6H4zeDSFA=
+
+Name: images/cdt_w_basic04.png
+SHA-256-Digest: bV/kK20U4lyNcrG2vS8v/XNtQ/vYhV5PY891lsB9TJc=
+
+Name: images/code_style_preferences.png
+SHA-256-Digest: dlRhwpSG1T2dfrzzxnz1S76RS1k0lj58YkdhF5dKKlU=
+
+Name: images/run_debug_debugger.png
+SHA-256-Digest: WB7+fvGVlFu87CQKIijwQGcUwPbrLZN3Gn2GvCfzBPw=
+
+Name: images/icon_open_element.png
+SHA-256-Digest: 2C52/Iq9fMDt16RhDpTHdzlg4IoEQfLj7I7TF5pQ5Ak=
+
+Name: images/icon_search.png
+SHA-256-Digest: Cv4OhDKkMkShUxdvwHo2LY8P0GWCsUYhXWX/HpqShAA=
+
+Name: images/icon_db_copy_stack.png
+SHA-256-Digest: VBPpiV/iEWobu/7EAapcQtGC2/Kj4SAt9YKC2JJjh4k=
+
+Name: images/prop_cbuild.png
+SHA-256-Digest: eVbSiFGc9i3SC2EgGUmfCW73I/hJ6DpTU+cR/f6Uttg=
+
+Name: images/cdt81/parallelbuild.png
+SHA-256-Digest: g621bYYyU2umc1qQZ4FNxt27PgQMpKJflADbFuQOTUM=
+
+Name: images/namespace_obj.gif
+SHA-256-Digest: brSEd4DH9XDZUDu4TVdTmJyifmKHOcJJyk1mMm4NB1M=
+
+Name: images/80/CodeStyle.png
+SHA-256-Digest: +gVZRa5Ow6KtWSegRv8uTSTNNJuUIM0pd21S26xoZoQ=
+
+Name: images/struct_obj.gif
+SHA-256-Digest: y39f2AczaX08uvi4WTOzJRRLbMpFRwtaclwJ3G2uXdg=
+
+Name: images/projects_properties.png
+SHA-256-Digest: emJgdUDp3HVnrEQJosDZ/r9AMnf1WwH3MGgccO/iV/M=
+
+Name: images/icon_new.png
+SHA-256-Digest: XIKBQhRZXppVJxoeUNQc0uLwxCP2tFSaUpjJrl4usGs=
+
+Name: reference/cdt_u_debug.htm
+SHA-256-Digest: LHody95L+T7GIY2+8jDhtIVmRD34bfKBx5SFPeE6FXU=
+
+Name: images/field_private_obj.gif
+SHA-256-Digest: OE6PMPp1Hn+bIdTAArZf2xHwnHYcDdyB0LpVHqu1g3c=
+
+Name: images/template_obj.gif
+SHA-256-Digest: /Bs+X3GY0lULURXsjm6jJX0LRW6mlnKPQXK7/+ZXNW0=
+
+Name: intro/css/graphics/c_dev_hov.png
+SHA-256-Digest: bnQb8+ZyKSXBo5i6YCG5jVH4KTo9aTDNYGh+yJ/wXmg=
+
+Name: reference/cdt_u_prop_general_exp.htm
+SHA-256-Digest: C8p2ChiqBX34dXxDN8TpJ7fO2RNQZdwbHxXnYS7Mapk=
+
+Name: images/icon_db_terminate.png
+SHA-256-Digest: bnHrblvPGKRz1kfdAWFxp9F46FZAVoroXZU7k8exFCE=
+
+Name: images/60/CDT6.0_block_mode.png
+SHA-256-Digest: ty0CkUOtoWgwiZWvM9P4MIPazvoK1bEDKgf6iDikx0o=
+
+Name: images/cdt_t_proj_new_with_template_6.png
+SHA-256-Digest: 51j9btUlRd0koKAbj6PIadIZhrquw+kZfwCA5v36LZg=
+
+Name: reference/cdt_u_tasks_view.htm
+SHA-256-Digest: K6Sz33AM6iGzZGKmeOUWr7hAxjd+GECXS3xjmIwbDE0=
+
+Name: images/run_environment.png
+SHA-256-Digest: SnP4Y7Td90hMXBGtOzGlBquIEBPP5FBIJMGKaIL5ehg=
+
+Name: images/run_common_folder.png
+SHA-256-Digest: P98M534bzMPwdKQg27FXFXFODpBJWXPaHk9l+gdCJYs=
+
+Name: images/cdt81/debugpreferences.png
+SHA-256-Digest: OpPLEjZtUfUlvSUDXotSDg0TF8yTYfCStIzuDFWvSgc=
+
+Name: index/segments_1
+SHA-256-Digest: /55NDCst32ufbiEaPs/qkv3j3iI/9qWtm1AbQYWqgAg=
+
+Name: images/task_binary_pref.png
+SHA-256-Digest: 6a3wkfdNi4kSFq9OCgGLvNpAwUa05E9WWedUNyhQbIY=
+
+Name: images/mprop_refactoring_history.png
+SHA-256-Digest: r2v/uXg15MsKHTXcBc7zfkXwXARycOZ9dmnqSB4JVzo=
+
+Name: images/icon_info.gif
+SHA-256-Digest: 8vYkikSahO1wW9fF/PwVd7+T4PqG9sRk18VFhvomda8=
+
+Name: images/icon_db_stepover.png
+SHA-256-Digest: TV5ZkRdI0dhufEmJLJSTIP99gTXvtArue+8iZi57lPs=
+
+Name: images/cdt_dlg_define_build_var.png
+SHA-256-Digest: hk78rq24YPiEPJLUnaVn5QFyqXevP8UFUxOpCo/Yv0Q=
+
+Name: images/cdt_w_importBrandon03.png
+SHA-256-Digest: JTGWKBRLipl1+Ql6QcZ2HtVIBrLWIpp2X9Qf+yvOBl8=
+
+Name: images/icon_db_use_step_filters.png
+SHA-256-Digest: fk9OkwDLs6/bejEqGQ0c1QdawiCyaVaIIxXagfnyEvw=
+
+Name: reference/cdt_u_mem_view_pref.htm
+SHA-256-Digest: QkUTB7DsU7Epmz9mMZiJcPI5etiBfSaVAxIdnHyYWzQ=
+
+Name: images/70/CDT70_Refactoringhistory.png
+SHA-256-Digest: RXsoCfDzlIf+IHCGvxpUzW92ZRSO4R0kecfzv9p2QSI=
+
+Name: images/icon_clear_console.png
+SHA-256-Digest: 3dPnfNc7KGnjfpxoc6shcUiGpDVKGBMf2jRjh3mdHgA=
+
+Name: tasks/cdt_t_proj_new.htm
+SHA-256-Digest: y29nQA/CtI/7dq5s1bNPj8B+dKb+nI8E4edeVXy5ckU=
+
+Name: images/icon_thread3.gif
+SHA-256-Digest: JRjgykjfIfjxBYOFyW7iKPiBd61lVxOlEQ8nFKJpALc=
+
+Name: images/80/CDTGlobalBuildConsole.jpg
+SHA-256-Digest: f0ftj0G4eq1Q9AZkauJfM8z5/PWkYI22hsfT2Oh3hJE=
+
+Name: reference/cdt_u_prop_resource.htm
+SHA-256-Digest: Y6Vwdx7InPLqEQFuDF0d9STkwGuxiznNyvsxTwH3FJs=
+
+Name: images/cdt_dsfgdb_preferences_page.png
+SHA-256-Digest: cxEHNQE9dppvDemodTb6T9dFpZum/0sIrJj8B+XOwvQ=
+
+Name: images/view_debug_breadcrumb.png
+SHA-256-Digest: 3rNiNOaMzblE03qeA3qAmukYSMYyw5ECJCmMQMgnqe0=
+
+Name: images/prop_lib.png
+SHA-256-Digest: Cx1SxhgMw2r87ny50Rx8baFEMvwAIrXRFJEWkWfEaIE=
+
+Name: images/cdt_set_src_folder.png
+SHA-256-Digest: sRNpeNI7uACXXmZJBcweMG3ogmMhTfZwOmVl6xl6Zxg=
+
+Name: tasks/cdt_t_new_make.htm
+SHA-256-Digest: SKY5WxHwzEWWhTWhrPStajwV3DZOzy9zau61WKKknpI=
+
+Name: tasks/cdt_t_add_custom_persp.htm
+SHA-256-Digest: rh4KLT5c4Xdcn8iFmmGNrVy6/ELWJZxc+gG5NzJq/zI=
+
+Name: images/cdt81/cppcheck_config_2.png
+SHA-256-Digest: Rn+y6dqpKa6WUOeLEYNUJcPKkKbUKOcbOU2iJ4eumgg=
+
+Name: images/prop_general.png
+SHA-256-Digest: 0UMV+z81Bctv/Vejtu8ekcT5I3nTbUDZM+Ss3gQJ4zY=
+
+Name: images/icon_error.gif
+SHA-256-Digest: xqh7qiZmhGUJObhx/GWY+5/kYQ+n+NqEvqjjIwthbJc=
+
+Name: images/view_debug_prefs.png
+SHA-256-Digest: sRdu1fZgYyxTLpdocS3SrVnxn0dc0aHQ93URwgTLNfs=
+
+Name: tasks/cdt_t_new_run_config.htm
+SHA-256-Digest: uc2c3nUVxejMTz2f4xWAas2IrDCN/FvZTrHmoo1P8LY=
+
+Name: images/cdt_pref_build_vars.png
+SHA-256-Digest: GGZjjUe+PbBNWgIiSAThjpw5lPrhqYVwUW0OZLT4p+E=
+
+Name: images/80/LaunchDefaultGdb.png
+SHA-256-Digest: zAmpZKmvyNwTsPIrM08EHKsCO2bBjigP5lTXg1LKB+0=
+
+Name: images/prop_ftypes.png
+SHA-256-Digest: MMk5j4szhbvCGkt19PJ9cRF2tpnts8vgzhXBS8/4vIk=
+
+Name: reference/cdt_u_pref_wizard_defaults.htm
+SHA-256-Digest: NJT4N+0RNcABWqMtcAeS/oRrel6VBxkc4/7e6C7fdk0=
+
+Name: reference/cdt_u_prop_general_sd_entries.htm
+SHA-256-Digest: i/XnMGZTkY5RldgKxiyd0rsLiKnBr8xEDyj9slYymMM=
+
+Name: images/project_rename.png
+SHA-256-Digest: 6XCPZecl48QRppfrEtDPqVraXO8BWSyee8yFkGWU8Ko=
+
+Name: tasks/cdt_t_addrmv_brk_action.htm
+SHA-256-Digest: enIxSLZPsTB0mhmT3OJsqMIJXfVMBfwlE3QEyH3d6SM=
+
+Name: reference/cdt_o_menu.htm
+SHA-256-Digest: k6DIl4+o5PpF4ISkPkjmOK9a8Jzo674prVGd/QKqsVo=
+
+Name: reference/cdt_u_properties_view.htm
+SHA-256-Digest: SGGguDrMAzEMOD+vw1p4RHKpAYLLx2R60734j7nsfJk=
+
+Name: reference/cdt_u_newproj_discovery_options.htm
+SHA-256-Digest: VRM6hvfk74LHRqEgikoRmTJi5fgFxkCJTBe27aOXp7U=
+
+Name: images/icon_prev_error.png
+SHA-256-Digest: W5lkpsiSfX8cZl8+vRr4ERC+GQSzEGwXQaZQhJMr+/I=
+
+Name: reference/cdt_u_prop_general_pns_ref.htm
+SHA-256-Digest: axOgKsHGbqK6g9Q5IzF+JwdQBfm9hmTvG2X9yVKAhhw=
+
+Name: images/icon_next.png
+SHA-256-Digest: mCm0heW09LonkQWJuG2o8AslxFxr/cfmKh/EmvbBLXw=
+
+Name: concepts/cdt_o_edit.htm
+SHA-256-Digest: CfxCiPVh0uFct4tc8VHGCNe2IOnlcKbRsFOUr036nEQ=
+
+Name: reference/cdt_u_run_dbg_dbg.htm
+SHA-256-Digest: Q4IThZ68EEyKuHtpQnbHK3adMWWnsXa7QqZUFABdgCc=
+
+Name: images/ngconcepts.gif
+SHA-256-Digest: mkuiceAQCMsd/YE93M1nMjCRP/oCmquhQv/fuPOgUHw=
+
+Name: images/icon_last_edit_loc.png
+SHA-256-Digest: gZHPpVWLQ4OhYbxEAA5W9qzw+RTQ+VK/AsL78tli69A=
+
+Name: reference/cdt_u_search_view.htm
+SHA-256-Digest: /qUvbtiQY17DRmNC0yWiAEtmLW+uKdaopuaT+ztaKBM=
+
+Name: reference/cdt_o_proj_prop_pages.htm
+SHA-256-Digest: N7bx/T5YQbVcYLg9duS34s1RWBrQMIPAznTzh4O9aD8=
+
+Name: images/make_settings_prefs.png
+SHA-256-Digest: tVDUgxd5hkZYqP/LP0r/fCESx56uswmT/Fiw34inHK0=
+
+Name: images/80/Bug-302720-ResetErrorParser.png
+SHA-256-Digest: r9gHZgYouaRg4vhX4PlPHcUywp4P6JeGLRf6qPv1LDA=
+
+Name: images/code_templates_new.png
+SHA-256-Digest: 20m8qt+2rduDAyCnyQhVHP1DFx/H+LB1LrZiwIhbPiw=
+
+Name: reference/cdt_o_views.htm
+SHA-256-Digest: Andc+jpTZthX5HXLLATZwt54td8iZgfCEFEs7Y07rmw=
+
+Name: images/new_proj_wz_config.png
+SHA-256-Digest: wobqGqxrymvvRo+fkr+RDEok3PahRQuecpQontb4Udo=
+
+Name: images/view_dissassembly.png
+SHA-256-Digest: jwy2gAaw9PpcSiEQuGFKyCgGrCwtXXB0m0mZZcIfhQM=
+
+Name: tasks/cdt_t_jumperror.htm
+SHA-256-Digest: gPIcBbdYJ5uAGl1eCQOAhkiR9HrcPO/M0Qjulbdmvbg=
+
+Name: reference/cdt_u_dbg_src.htm
+SHA-256-Digest: dpgSa5vhcMrI1CGTTIPYJB2Bv28rGAOJwD77tz3rKK0=
+
+Name: images/static_co.gif
+SHA-256-Digest: 0LXdNYUUBiF7bFE+KUtXVH5ieB3KuBUVSE+npLsuzec=
+
+Name: reference/cdt_o_prop_folder.htm
+SHA-256-Digest: DMm1kA/1ly7PnezrzyqdxNuaAlrjlrJo/P+wjGC1KZ4=
+
+Name: tasks/cdt_t_create_make_target.htm
+SHA-256-Digest: SwMAxOJfgmUfSVpeY7TdktQyah1cM6yCGOjRv4i170M=
+
+Name: images/icon_create_file.png
+SHA-256-Digest: dBgKp6C6BYsx9Qp0xOkAqvL3J17FIhUzTsOWX5KAe40=
+
+Name: images/70/CDT70_BuildSelected.png
+SHA-256-Digest: ufF6m5SmgIifBwNdtBXzBm7tQsZOgMgoXgfgyflu8vk=
+
+Name: images/cdt_t_proj_new_with_template_5.png
+SHA-256-Digest: hPvgN0lzCVTAxQXwuHmtb3Xz1M1vps/2JBnv7fbVCcw=
+
+Name: images/icon_warning.gif
+SHA-256-Digest: gzKy9Wn+dK2aYGv8rk5DF43qYCL5b2/3KEQ/hKAfhaM=
+
+Name: images/class_obj.gif
+SHA-256-Digest: b5j2rlHFh5m6vKkHEkFKvZK7vGJMsiU/XDRPhsC9VaA=
+
+Name: images/cdt83/BuiltInDetectors-FLAGS.png
+SHA-256-Digest: OB5XWPbG+JqYgOz0qGJITgCCKb6qmlLinRtwBUCY2ug=
+
+Name: images/80/UserAndCores.jpg
+SHA-256-Digest: QKia4NUG8gkXUBV4fZQSgFr6NZbYurC8lpzU48F0h3A=
+
+Name: images/cdt_debug_run01.png
+SHA-256-Digest: aHu3KEq9COuMUZQBXLwGTN8COyEydSv2x0u/gISFFX8=
+
+Name: images/cdt81/multiselectruncontrol.png
+SHA-256-Digest: hgCcMvzoUtiYLR1q9QOZhiyFy3/u4s4WTWrITRCQgMM=
+
+Name: images/cdt82/StepIntoSelction.png
+SHA-256-Digest: 6uE/19pEzN02ePE7ylfwaden62jJR6wS1DqENG0+7kA=
+
+Name: index/_1.fnm
+SHA-256-Digest: 1ISmF1pgP8QzRvLqBCo7ZgPn/+fp4qGOJ+XF4EJhAuk=
+
+Name: images/icon_reg_copy_registers.png
+SHA-256-Digest: qCHmUZnPQYmmrKMdD3pIRfUg4eAFeGY2y3VKSIyfjG0=
+
+Name: tasks/cdt_t_manualbuild.htm
+SHA-256-Digest: YEjjVBh24xAjJahz8MumhPNVuGdRSFAcTryVu0ey+Js=
+
+Name: images/view_make_targets.png
+SHA-256-Digest: 66Ls2m83xo+NpiEzE2+n39jUBdm9bVzTujA8obtSBTQ=
+
+Name: images/contentAssist_example.png
+SHA-256-Digest: cBvhUuK2wHvtEl+dT7WS1JAdxht4mD7Jn+aLOgcUYfA=
+
+Name: reference/cdt_u_fileprop_steps.htm
+SHA-256-Digest: xFuERUxlVy64mytaNofQ3cXac1hx1A/M/uqWUEn7Avc=
+
+Name: images/project_new_makefile.png
+SHA-256-Digest: OJlub2bXH9XMcnuTquoJsdOPhro01A+AV8AJm1R4+Ro=
+
+Name: reference/cdt_u_project_explorer_view.htm
+SHA-256-Digest: ysgKHfk/JBjz14kbjFZ11InOSfhyjPNz8THY9WFjz2o=
+
+Name: images/history_list.gif
+SHA-256-Digest: v/zSbvQkgn9opgBo9dKbEwXvu2cXbT4oPgH+SQ8qw0M=
+
+Name: tasks/cdt_t_convert_mbs20_proj.htm
+SHA-256-Digest: +KaEc+cfLo0lJ2wkqCQhNPSTKVMeRHAQlz3H2r7CDDU=
+
+Name: images/icon_build_make_target.png
+SHA-256-Digest: XLbcCCe2QKPmChlaw3IY1p4OILYAN8oUxpOvn4lWNFs=
+
+Name: images/icon_new_make_target.png
+SHA-256-Digest: +j5fkFpdSySjoEuhhiubg4xP2iAI31o/sez6E8FxrnQ=
+
+Name: tasks/cdt_t_cbuild_pref.htm
+SHA-256-Digest: ZelvtpKjfGggwjBMxjJ1g7/TuysLpS+Fvg5eWiTAHoM=
+
+Name: images/icon_db_terminate_all.png
+SHA-256-Digest: 6YJTRqoZYLldEDLIiTMcc74KiEy213TMeGyUcnejXDo=
+
+Name: images/c_ovr.gif
+SHA-256-Digest: j7stxEFcElqAfjowT5f6ksn28dXiEubedBboTQslzU8=
+
+Name: images/60/CDT6.0_OO_indexer_preferences.png
+SHA-256-Digest: k7x9VgyhDV9oHgSgduKQ6nP4zabU0lKT/pQ+fLl9xwU=
+
+Name: images/cdt81/multiselect.png
+SHA-256-Digest: qDlkW37IhppzuGYAWLi2onxx7FJpw0dlnBplF7emNro=
+
+Name: concepts/cdt_c_whatsnew_70.htm
+SHA-256-Digest: 8t193EsySnOC6ewVEX9OKsv6Ws44tN8Pzjzv5qfznbs=
+
+Name: reference/cdt_u_outline_view.htm
+SHA-256-Digest: aGdnYL5Np8KgvO8HQMbHliHc/XWrBI4LiYLtq/Cb37Q=
+
+Name: images/cdt_update_jar_verification.png
+SHA-256-Digest: wl09lT+eNjGk3DS77ss6jCMF6fUMrNTc+16h9Du5TXE=
+
+Name: reference/cdt_u_prop_general_pns_lib.htm
+SHA-256-Digest: uNaJsdwYnGI0u9aA3Ah5CT9TgLgRsg8/tzhxx9zl9I4=
+
+Name: images/icon_db_stepreturn.png
+SHA-256-Digest: 9zVLtkEBqJ2NXyrDaQkEUgkbw7xpQn1o24DQOiMes0U=
+
+Name: tasks/cdt_t_proj_referenced_configs.htm
+SHA-256-Digest: 7vpE9rOd5k697uJn6UDjk3I2fehEZTjDr1RqMTyaupk=
+
+Name: images/cdt_update_location.png
+SHA-256-Digest: TXKKvf/lALvVsV6iWPhhF/JefD28QV0i4AXxOrFwZSA=
+
+Name: reference/cdt_u_environment_pref.htm
+SHA-256-Digest: qO/3WQvrRLp/d9KcN713V1G9BQ2g/lpgykkgsz8q20c=
+
+Name: images/icon_remove.png
+SHA-256-Digest: M4a2mAANA81aSGTncRKc8WyC1z4yrrc4ULsukuBL98Q=
+
+Name: images/view_memory.png
+SHA-256-Digest: qcWhMDgfF2K8oOfdrHsxFD9MMlgugQ3xJWBgL6B0/P8=
+
+Name: images/view_registers.png
+SHA-256-Digest: xXZb1XAL2jycPNVrBevVuWzKX/hW0bFVE0Y69oRvuaQ=
+
+Name: images/scanner_discovery/sd_prop_add_lse_paths_dropdown.png
+SHA-256-Digest: SkBO6H2zPARL20avtX069nABxV1Seyw0ykZKMzwU18g=
+
+Name: images/prop_crefs.png
+SHA-256-Digest: 1ZtY43ct/sndbsKpIhTK1b7wbveqIBLbiQcwy6KUVQI=
+
+Name: images/run_debug_arguments.png
+SHA-256-Digest: rncWugUSjCDVOW8nuqnOnBmueWB0HOL5GXPUVn4caZg=
+
+Name: reference/cdt_o_ceditor_pref.htm
+SHA-256-Digest: YJz//o+G5n6gj0zk00sQWE7i4kPOauSRVZMgCigzBE8=
+
+Name: images/nokiaCopyright.png
+SHA-256-Digest: /KxJ7P6A/fuMOPihXOimvI8mtYWCLsEqrJOa9NZa7VM=
+
+Name: reference/cdt_u_newproj_platf.htm
+SHA-256-Digest: 6SNsrjdO5f2dvy0oMmpTs1etwC//yaNxNYBaTW7VRdA=
+
+Name: tasks/cdt_o_tasks.htm
+SHA-256-Digest: G8uVunogAe9bwkqHIwCXXNUad1DWtT0X21Kr7/cPFXU=
+
+Name: tasks/cdt_t_run_env.htm
+SHA-256-Digest: S+AZlNsQsuKsG17MB6MviUB0Go712/sPWMiRVOoHYK8=
+
+Name: reference/cdt_u_c_editor_gen.htm
+SHA-256-Digest: WI8VfcmdaoHUIhgsTsvNvcHQzqy1j8yarW+1SziHSO8=
+
+Name: images/cdt81/cppcheck_config_1.png
+SHA-256-Digest: 61aLwOR7A6Q1M6mzGygCz6iHbMKs9InO6g99ywoxHJg=
+
+Name: images/view_debug.png
+SHA-256-Digest: MyaJlOP8OxBXWB+86CT2kk6G7nFEz2iGYbDkE3p9eGk=
+
+Name: images/cdt_w_basic07.png
+SHA-256-Digest: 6iQBcgzBXFApd27qPhrUCCx35BwaIU9fHfJx10xLR/g=
+
+Name: images/cdt81/largearray.png
+SHA-256-Digest: s3kPeIiBtOsVEGtqbqV3BD5EXVhGWpph2znYUKRzASY=
+
+Name: images/run_debug_environment.png
+SHA-256-Digest: YxyxPy3WSd7FxWLhTZh0WhwYOEwcWklEu0LYITAKF+k=
+
+Name: images/cdt81/cdt_debug_nohiding.png
+SHA-256-Digest: 1/pw798IyGIpCzpYp71CwZ4M4FIITb92eDd3K5A/jcU=
+
+Name: tasks/cdt_t_format_app.htm
+SHA-256-Digest: eT5jh/pjE1wLL3wZRqLzCrLlY4eC1S27qJbLnpplhPo=
+
+Name: concepts/cdt_o_build_conc.htm
+SHA-256-Digest: RFtSabHyJKHVc5dZCqzrithXFSiV5i+7FIUANnU87GA=
+
+Name: reference/cdt_u_mfile_build.htm
+SHA-256-Digest: btjkb1QWkNb6rLhjlwvJnVnQ+IfAc4M2I/a5BFxZBr8=
+
+Name: images/view_appearance_prefs.png
+SHA-256-Digest: 0AGKCYT4iqkSd38pvLCvxz0kFBU0ap/4m1kvSl74YtQ=
+
+Name: images/contentAssist_adv_preferences.png
+SHA-256-Digest: 2sUm5i8jdNah171VWPalBrWTne6Cir+Eqe/qIL5Jr40=
+
+Name: reference/cdt_o_mproj_pref_macro.htm
+SHA-256-Digest: zABH/rk0nXRvR3DDrwzkcNcbvJTMGHPq/gnxC6FTASo=
+
+Name: images/warning_co.gif
+SHA-256-Digest: /h8GlulVNJkQvPIISuZCRPi688o6pLQDZlYfQVEv2nI=
+
+Name: images/include_obj.gif
+SHA-256-Digest: SDeuyWcwmAMjzyHzETe6HF1/LhQk4FyD4mjBBIYJbFg=
+
+Name: contexts_CDT_LAUNCH.xml
+SHA-256-Digest: VxM8efdLJtZcwuL81Piq4N7lu3DCgqBQulWWIfxizOE=
+
+Name: images/icon_collapse_all.png
+SHA-256-Digest: IMb7UapFXW8uHGolpjRfIk/SrXji/ObQvAbqXUyTpD0=
+
+Name: images/builder_settings.png
+SHA-256-Digest: 3L5jMJU6aEIBXcrQbM3okKyiC1PJiMrArdeR0fL+8Gw=
+
+Name: images/workbench_prop.png
+SHA-256-Digest: nXSfs/KaF/qyN22x6lFznhLdk7vaNmW8xHBAoy/a5X4=
+
+Name: images/pref_panel_build.png
+SHA-256-Digest: whyccMk5KCLsJJlANaVf/qRVmUek2T2D2uFWWQ0k8A8=
+
+Name: reference/cdt_u_prop_refactoring_history.htm
+SHA-256-Digest: MnA7rj10Kur0sJEAsNiw8Ea6SYY1pGcRFwsYVcblxVY=
+
+Name: images/typedef_obj.gif
+SHA-256-Digest: AYar1qn5tUGUyCF9vjF/24DkqkiQfw65Samk8ZxGOv8=
+
+Name: META-INF/maven/org.eclipse.cdt/org.eclipse.cdt.doc.user/pom.prop
+ erties
+SHA-256-Digest: EoIMb+iElKi2ugzh1lRHspFYY00d+TTOvvVGD7j9yRw=
+
+Name: images/editor_folding_preferences.png
+SHA-256-Digest: cIUrbFjWh7ShwkIKsZi6LNI32AEP6L5kDtaGYUIP7xY=
+
+Name: images/icon_con_disp_console.png
+SHA-256-Digest: Lpc004DQyhpYrWeUDH8FBnxMtU2qirWZLdml0jV+7Mw=
+
+Name: reference/cdt_u_prop_build_toolchain.htm
+SHA-256-Digest: 0kmKcS/WWPZxeuZ3k9BinIHo6ML9ZjMQ1fyxS/cJJzo=
+
+Name: images/new_make-builder.png
+SHA-256-Digest: Jndk/8JcTs8+5D/2zBWrWs4ZyrU7N2IKesR+x7SH4dU=
+
+Name: images/prop_variables.png
+SHA-256-Digest: jhqOuFJvI2GI3VzuBDPJ5BDqQfUW9hxmfR2P7Sbhziw=
+
+Name: images/icon_next_error.png
+SHA-256-Digest: 2HDRtefnTLLqenUF2puPxnq8ZyNKufpy1xlK3onExpw=
+
+Name: tasks/cdt_t_search.htm
+SHA-256-Digest: a2WwWrCU2TYz0L42HGs/T7VlSfx9MiuTsd9PtXhWy90=
+
+Name: getting_started/cdt_o_tutorial.htm
+SHA-256-Digest: opfP1Ns5atxEEsp6AOuMJea0sxhO1rMXeWaGuxL8HIY=
+
+Name: images/view_console.png
+SHA-256-Digest: RHeMCiYIb3a/XRdSX6Py4+AvRqJmiLamksmIY084ChY=
+
+Name: images/pref_panel_code_templates.png
+SHA-256-Digest: NzpWLTl0PkbRAP1BllHNFGc1EbUFHrrgJpG6rVexh9g=
+
+Name: images/field_protected_obj.gif
+SHA-256-Digest: t0M6xE2YqOxwmWjFaFnKErF9sgIGkhTBz8U2Ev4pkII=
+
+Name: images/icon_annotation_prev.png
+SHA-256-Digest: 7wVyvSuD7dZaH1CYnZ9niyqHHhSY5FNcDPWeDBfi7UI=
+
+Name: images/field_obj.gif
+SHA-256-Digest: IpWIs93dnlCmqIfLLBburbh5QAnc9C/XR2rgLqVTXjE=
+
+Name: reference/cdt_u_dbg_view.htm
+SHA-256-Digest: 7CBu5b4l0KQF+TWZJ8ikCniJBZBAqXZOJ6j7Fv6EZdw=
+
+Name: images/enumerator_obj.gif
+SHA-256-Digest: NEyO7gg9NvbL6S3sK/NuQCEjZj72ebYFCSVYjNsShUc=
+
+Name: images/cdt_t_toggle_selection3.png
+SHA-256-Digest: lo++jXaTQDMa9dXi/8IHuFcYvlVmVapdqIE5k5uzVm4=
+
+Name: reference/cdt_u_make_targets_view.htm
+SHA-256-Digest: ZQ/ankK9coOqAicF97l/DjhXLIA+EABX8B5woCcyJQA=
+
+Name: tasks/cdt_t_controldebug.htm
+SHA-256-Digest: elVIzKVym0u48YAN7i+WNwtYj4+ftrpgNdYtW4g4W6g=
+
+Name: images/70/CDT70_RegexErrorParser.png
+SHA-256-Digest: 90Ni9+UxNW7a6GRqnqRc5sxNRVgBPUB4bT3oHo7J7qE=
+
+Name: images/cdt_update_install_new_sites.png
+SHA-256-Digest: 5t7MTfUPLzgNradcE9OGOZbBrJRAIK2NNraE/wFLQfQ=
+
+Name: images/new_make_disc_options.png
+SHA-256-Digest: THsMSq2ZEtnj1Ty7s8JO7EbltTetj5N6vKIOHGT7iYM=
+
+Name: images/70/CDT70_BuildPreferences.png
+SHA-256-Digest: PJ5HfJeo2zkQO+QXuk0K4oVRZ2RKdG/06EuK9Val9rE=
+
+Name: images/scanner_cfg_disc.png
+SHA-256-Digest: rdViGr9aYvE/3NaV8kqI4zn7Z7m6yARa7IUNSSnIv0U=
+
+Name: images/60/EPM-multi.png
+SHA-256-Digest: 9Rg0AMGAvqbyTGZWfiktDAgncIqzda6lGSp9ISMHvmw=
+
+Name: reference/cdt_u_pref_task_tags.htm
+SHA-256-Digest: jxxVRaLXWfFOMpHWtSCdoYFORQ+ZCRwLCpaYxblNiTY=
+
+Name: concepts/cdt_c_whatsnew_82.htm
+SHA-256-Digest: VdOpZL0dYvROtNZkLmdQeLXwy2Jw9tA6uf/xTeltQKY=
+
+Name: images/icon_previous.png
+SHA-256-Digest: 22j8d34h0yl4mdwtxZsdc+3QWiEdSfOj6VHMlYTdTI4=
+
+Name: images/view_properties.png
+SHA-256-Digest: Rrm26Vi1csZAEoUBp+Ec0wH4AcPtz3z1Smuyf1C88Yg=
+
+Name: tasks/cdt_t_run_config.htm
+SHA-256-Digest: lolBYCKfb5ncLBAWs+Fj5I6N4GDsJzNJ5tJ3e99XWVs=
+
+Name: images/icon_con_rem_all_term.png
+SHA-256-Digest: lbeVIG3BKcmU83yxT+cICJxLRutKX/RMSc1oEjP/Mz0=
+
+Name: images/icon_build_sel.png
+SHA-256-Digest: C6L4hJpB61EVWcmdMZ8IulUOZjACcApqpFkeFUrwuMY=
+
+Name: images/code_templates.png
+SHA-256-Digest: kMM1XW3BWSe7Op8vZEjiNQSpvIKqeN6/tJP+oCGBkpo=
+
+Name: tasks/cdt_t_set_src_fold.htm
+SHA-256-Digest: +MFogiBA5QFIHTKpcM8saUBKvGt7ZiyDIWosb4Z7h5I=
+
+Name: images/60/CDT6.0_macro_hover.png
+SHA-256-Digest: E0ytKveq4zDSZFrYmedYCjP5U0/mnwScN3R2se1NjdA=
+
+Name: images/view_include_browser.png
+SHA-256-Digest: SFquMTiV84kxBjmkw/FM+HZE6YVvK8v7zyhVq9iJWXY=
+
+Name: images/icon_create_folder.png
+SHA-256-Digest: i2jGaSMeD+u4kLZ27+irphwxRetcZsAKaE21TeHYG60=
+
+Name: images/view_executables.png
+SHA-256-Digest: nEx6q0+Jc7bwxTDx2IOXER31btzYtqsrZ90wK0mIIUE=
+
+Name: reference/cdt_u_m_run.htm
+SHA-256-Digest: apkhoCnIk/FOintVrC1qYZDRPFv2APLxwb58ne6CGPo=
+
+Name: images/cdt_file_toolsett.png
+SHA-256-Digest: 0ApX+L7i/uHeYbobnF0vDVYqivPK4jz+NCEe9hj1LmA=
+
+Name: contexts_CDT_DEBUGGER_MI.xml
+SHA-256-Digest: vHGVLFA9uTD8nSQjEKw3omuqEqWIA24uuAxGZUf/XNA=
+
+Name: images/outlineView.png
+SHA-256-Digest: ulMmXQgoZovdlr8jTvUp5FgQwA6fkvKve0be1eXfzlc=
+
+Name: images/cdt_w_importBrandon04run2.png
+SHA-256-Digest: kQ4fU1yYwnfacoObZvRXaFsYGD3B3U/ZVx+gA22CYj8=
+
+Name: getting_started/cdt_w_newcpp.htm
+SHA-256-Digest: J7IFqCCfyyeaIiSHJwakrcRo6DZeUkh+7OeWRNwvrEA=
+
+Name: tasks/cdt_t_proj_platf.htm
+SHA-256-Digest: R56KMsg1v6ZeF8IuejjnPTXNLNyirjXfqZDuhZGrkSg=
+
+Name: images/file_new_conv.png
+SHA-256-Digest: OkSH+z+XsSm+Ij/O89ou2TD6VQIyUI+5BHREV51lZa8=
+
+Name: images/editor_c_codetemplates_use.png
+SHA-256-Digest: 0D25AvbalcLg453p88ABSQ7jlmx8xEOEPwentfYZIgo=
+
+Name: reference/cdt_u_registersview.htm
+SHA-256-Digest: sH2zQIiv1BwTmiYuB0+IAkINse5LE0F6/HinGU4mZ4w=
+
+Name: reference/cdt_u_mfile_tool_settings.htm
+SHA-256-Digest: XckLIkvFaEvSjC6iHvGc9rZgRNGRd29d9UN5GjLet4k=
+
+Name: tasks/cdt_t_add_build_var.htm
+SHA-256-Digest: 7dC+ArsZj9kOoX5CX+Vy9BudjPRIsB1xixTs4x+94v4=
+
+Name: images/cdt_pref_file_types.png
+SHA-256-Digest: bsubx5wpzLCI4Cd7SC13tbKKNbHJj6xoW++UV3kD6Dk=
+
+Name: images/icon_show_selected.png
+SHA-256-Digest: ZzOmk0dU5ju68Ff7PqFNIuuK+GCLqzGRz8OKiGisMx4=
+
+Name: images/cdt_debug_hover_modes.png
+SHA-256-Digest: JKFgm4fmC57NjYQ91uWO9rCY2y7IxGdd7t8aEcGR238=
+
+Name: images/cdt_select_type.png
+SHA-256-Digest: ABL1m38WQUN7Ajctcydr2FcnYoqEnOl1mbpLLm+8DKA=
+
+Name: images/indexer_preference_page.png
+SHA-256-Digest: q8cGuCegzLLYsks7DU31snSsC6+k3Qmr8n3zF3uTFPw=
+
+Name: images/ref-79.gif
+SHA-256-Digest: Sx8GrPuKU6fnHJrrjUeNpA1KO5SkjklEWgGgHE8Ez2o=
+
+Name: images/icon_save.png
+SHA-256-Digest: VAcixLeaNDAMvpjN8oXhRir7BGM7n11H+QBUl2CZ3Ho=
+
+Name: images/debug_src_path_mapping.png
+SHA-256-Digest: 73/k3SSa5lY5mKS8MA6kXi63FwrtL5ZPANBUOZ4Ktbs=
+
+Name: images/cdt82/CDT-DSF-GDB-RevBPAction-create.png
+SHA-256-Digest: TfIKdl39FbhqeqNv1N7pu7RClS0fgNIMbRBnFi2h+Ak=
+
+Name: images/path_inherit_co.gif
+SHA-256-Digest: 1X4LjFUncCABXd5qHdq2diYZDW7fW9Ipr6JTJYfiuMM=
+
+Name: images/method_public_obj.gif
+SHA-256-Digest: YwjqX7p/XpifZ+PpuzNm8MtMkKty6Divf/gTrKWqxIc=
+
+Name: images/80/RemoteDelegates.jpg
+SHA-256-Digest: /b1VUHkwFbwXKaP8zXxpna2zzLmyR7iXEtW5Mwj/8DI=
+
+Name: images/editor_general_preferences.png
+SHA-256-Digest: mObCjCZWCo0EB/09G/yfMs8eCSaGXb7R8PnMXOHFyGk=
+
+Name: images/80/FullPrettyPrint.png
+SHA-256-Digest: oDbKPLXmfofY6ZdQxFfiEH68dEn/T3IQwBunkXtMkb8=
+
+Name: images/60/CDT6.0_outline_group_methods2.png
+SHA-256-Digest: Iai5x0+G2tUE5m4liiKS+8VJkdl2gTH7IVeGEDrXhOM=
+
+Name: images/70/CDT70_ImportIncludes.png
+SHA-256-Digest: bKt6PAuGqvMBSEuwm9MheGPmntJwi+aoT85R8XcFyOI=
+
+Name: images/60/CDT_6.0_delete.png
+SHA-256-Digest: q5O65o3Dvwp/JF8upeN4yVmTp3JtB7V9vqjyCqytYqI=
+
+Name: images/ng00_07.gif
+SHA-256-Digest: qWvcESo78Qk5j0/tsMk0S4iHQC5hWzzYX+dcr2t+It0=
+
+Name: index/_1.si
+SHA-256-Digest: 8TrwNoiqOyXZIdnVSKzWhTP1AfFzVJ5oMY+3A2EDiJg=
+
+Name: images/discovery_preferences.png
+SHA-256-Digest: 4uz+o0H6uDih+crytQk11sR1S5TRUsbuA7h7WTvXU4g=
+
+Name: META-INF/maven/org.eclipse.cdt/org.eclipse.cdt.doc.user/pom.xml
+SHA-256-Digest: KNIBB1f4if/wRlZTzmg90bg7Gn5rDFw9IFAmsdVNyco=
+
+Name: images/cdt81/cunittest_view.png
+SHA-256-Digest: 2acrVoLtuECkFEQO5NEQ4uww287n/8CFa1DqnuuuO3c=
+
+Name: tasks/cdt_t_proj_rename.htm
+SHA-256-Digest: PMwvuR8JrVUB9lx40zVTmoj0gwpeCDCKjzXXIu3drLc=
+
+Name: images/icon_copy_to_clipboard.png
+SHA-256-Digest: GxrTN/AJpzrUqHCubY86VyBx3C+lzAUJJGE/yjScsNA=
+
+Name: topics_Tasks.xml
+SHA-256-Digest: M6T4YavZD18C09VfcEBpTN5Whe29pvdUkpnZQjpRzFQ=
+
+Name: images/cdt81/code_style.png
+SHA-256-Digest: bveE/mYBgdJACxxF+RUaM9jQsyePano0raXt/wpf9T8=
+
+Name: concepts/cdt_c_search.htm
+SHA-256-Digest: gB7n28nl43A96QMZsjeK04bx1OTUIaUFrJB7/WyYPAQ=
+
+Name: images/contentAssist_preferences.png
+SHA-256-Digest: gcbY/3rmWu7xSu38wJ8wiwwVYMVQSIi3GY10nV+5O+w=
+
+Name: images/60/refactorExtractLocalVar.png
+SHA-256-Digest: 0z0nmi+uk65NlqeLeGndyZhZTIwKl7RkjpdElYXviyo=
+
+Name: tasks/cdt_o_debug.htm
+SHA-256-Digest: tv6jRT2EJMqgbIvWpIMV+kn7OgRg7WHKFVgMOXLBxNQ=
+
+Name: images/cdt_pref_brk_action.png
+SHA-256-Digest: dyk5Mw4yaUlg+UZma9BdXPVkCnWUl+vRVkK/VScpKlE=
+
+Name: reference/cdt_o_ref.htm
+SHA-256-Digest: zC6h5OdA5Lp3rr1KvhaD88aYtYpTu5Qd+5jfe9gGZrc=
+
+Name: images/80/NoPrettyPrint.png
+SHA-256-Digest: 6rM4v13piZfBy33SvMbbv5ewc8DckTy5UEbwGu0DzVk=
+
+Name: reference/cdt_u_prop_all.htm
+SHA-256-Digest: h2opd0vB9Ykp9qFpx3AJVoN/Ye5z5H8+pwkn2xRbWQA=
+
+Name: tasks/cdt_t_refactoring.htm
+SHA-256-Digest: gwY8V8vNkFp0kYW0fJuQ0ib7a7vspshrfk5Q7yxjfx0=
+
+Name: images/c_paths.png
+SHA-256-Digest: PkjCT5TKw39g+ZsS/ClhzQfRb6nbBjN/Ef9Fe/MPzEM=
+
+Name: reference/cdt_u_new_proj_wiz.htm
+SHA-256-Digest: G0Wj9bRumqUIqCwunvTCNBkiRYs3tjX/8SIBmxicFbQ=
+
+Name: images/alphab_sort_co.gif
+SHA-256-Digest: W7Gh+XIuXDA/Jidjs0Nks7A7r17AyDclPnGzNBTnIn0=
+
+Name: concepts/cdt_c_whatsnew_83.htm
+SHA-256-Digest: /ATTj4uE2t64q4GILv2O3tJmCdlCbED1r0Zg/EjN6qw=
+
+Name: images/cdt_ca_no_completions.png
+SHA-256-Digest: e17tInSSbHBphGKFljeAaacWB2s/SovdJaRBoUvXpP4=
+
+Name: images/btn_columns.png
+SHA-256-Digest: fQjNQ5BYhvuEQ4473N69OfcGJKUYn/7lmWvWa9frYcM=
+
+Name: reference/cdt_u_prop_build_settings_steps.htm
+SHA-256-Digest: QiQ+QtIiJ2NPw1Km0zCrGPMOB5LovtYcM+cCbycQ8Kg=
+
+Name: tasks/cdt_t_shift_code.htm
+SHA-256-Digest: gG1vhjJWWG4UIjcy6L+xo3wnjgC537QqbBvHNkjt4ns=
+
+Name: getting_started/make_example.htm
+SHA-256-Digest: 5+kfGUw0cL1iqOORZsSs5VU0duGpJYWucl7gha6Tlho=
+
+Name: reference/cdt_u_prop_general_doc.htm
+SHA-256-Digest: AbeMYBzlntaLCl6wH6WyyfI1HBcJod2esj5I2pxFqrg=
+
+Name: images/cdt_t_toggle_selection2.png
+SHA-256-Digest: NJd/f268ohfLlOb0klC6QjN8gewyZcBHvJ2a0w4QgEI=
+
+Name: images/cdt81/pin_view_call_hierarchy.png
+SHA-256-Digest: 54hydiX1swm8309g+McxVD046AYf/SR4Y5sdUNJgzDM=
+
+Name: images/cdt83/CDT_RegMultiProcess1.png
+SHA-256-Digest: 20qLPTuez28QjbGNjU7cdZnemBGlBN6hDzhQOBJWTIQ=
+
+Name: images/cdt82/CDT_GroupExpr.png
+SHA-256-Digest: UPAGTxXTTuy52pa9Q0fnSPoQbDMR1tMYit66cHZbwS4=
+
+Name: images/cdt81/auto_hover.png
+SHA-256-Digest: 128mm+B+OrMGBGhJuJaJmTx+/pYeF5uqqSTckMyGxm4=
+
+Name: images/80/PinCloneDebug.png
+SHA-256-Digest: 8MThDDVwrJnR/4LJt4tKpysEJnPhQZ1KFGcS6VEmACo=
+
+Name: tasks/cdt_t_run_main.htm
+SHA-256-Digest: SNg+nVOHZSarb1UD8zaKXWEMTDZ6aHpuY65Vx03akAI=
+
+Name: reference/cdt_u_m_search.htm
+SHA-256-Digest: YG0EnmCMjWMWEpA3k5tNcqVprXdNuhK5t3kjzbpDPiY=
+
+Name: images/create_make_target.png
+SHA-256-Digest: LbeqzC1ONcdkePz9yt96Uf61LqMbRJ/2ZEXouvPn69k=
+
+Name: images/prop_tool.png
+SHA-256-Digest: QxYQbHpclUqBjif3H3oe9Bx9avjCuxW9CWj8LOAGrEU=
+
+Name: reference/cdt_u_c_editor_typing.htm
+SHA-256-Digest: 80DE9jgMJqA9XouJtzvq9nYiqGynATQM5DDG7afp4nY=
+
+Name: images/file_menu.png
+SHA-256-Digest: oTcsZ3Jmy66Y4VcAtC6uedDYTo3sdbp93kpcGga2DBI=
+
+Name: images/setting_nav.gif
+SHA-256-Digest: 81KotVZm3btHL0kspLUmnlD4P/8MN6GP5sRxRks1q3I=
+
+Name: images/cdt82/CYGWIN_HOME.png
+SHA-256-Digest: No0FwaB4hMYaKcScghWdtz72p75TGH5rHIoxAy1TGOg=
+
+Name: images/mpref_macro.PNG
+SHA-256-Digest: AOiPyNbia/htMEQw6SvFgya1XdnMpUXfHytwUTRtaYE=
+
+Name: images/cdt_menubar.png
+SHA-256-Digest: J7lqS6txnUt9L8WVJs1EIS/9MsnbJhSUidUBbuQ0hlw=
+
+Name: tasks/cdt_t_run_dbg.htm
+SHA-256-Digest: fTHcm+6bc/agRR7BtAYZlwxQAtsUkwKGPElzTKZI1Y8=
+
+Name: images/80/CDTExpandSelection.png
+SHA-256-Digest: gP7zJKHz89CGgIcWE/oqlPHlyBMi7YaLw+wCSg3mhxM=
+
+Name: images/mark_occurrences.png
+SHA-256-Digest: bv3fb//ODOpOf8YaFWGSnrUzcOuAjG3EhAsXpRasRKo=
+
+Name: images/60/CDT6.0_OO_syntax_preferences.png
+SHA-256-Digest: nX6S2nbnjJfCjV1UYBWECQrMMYF5K5g1eUQCk5CLxeU=
+
+Name: images/task_binary_parser.png
+SHA-256-Digest: N1NYUQFYBHGpOa1xSf1S1X52vOCpzBrL7pPlUNYyoj8=
+
+Name: reference/cdt_u_new_proj_wiz_config.htm
+SHA-256-Digest: B4chGHZ9ifZeMEvgFun05U/10YeJ6coDzqDTtxF+xqw=
+
+Name: reference/cdt_u_run_dbg_comm.htm
+SHA-256-Digest: 4Tbn5sraSjgbJR9UXRWBijPCJv8TJd2hy80FBCZcgCs=
+
+Name: reference/cdt_u_pref_wizard_toolchains.htm
+SHA-256-Digest: AxNF5e31uN1lhlGvfCTMzAUHA8QN08whNO1Lfb0Ry50=
+
+Name: images/cdt81/timeoutpreferences.png
+SHA-256-Digest: mdiTJSjyfV7QuiynG8V1aEnKTKyO925poHqUyM2srYk=
+
+Name: reference/cdt_u_prop_build_settings_errparser.htm
+SHA-256-Digest: 6L4d1g+upa71E7dYY7zUeeDLAMcWn0QwqQqxrPju3D4=
+
+Name: images/cdt_w_newmake02.png
+SHA-256-Digest: 59whJYwUFCzUcfeX9GiB+TypBHE+i+kSNcgfPAeWGSs=
+
+Name: reference/cdt_u_run_dbg_launch_group.htm
+SHA-256-Digest: A1BCRv8LP0RZYz0uzbXDlfJ6fjm5XJ47wEGnG5cqtyA=
+
+Name: concepts/cdt_c_comments.htm
+SHA-256-Digest: l1qvS1c0DH4vEEOZXr521cD383R38hMqH/7zyF509WQ=
+
+Name: images/cdt_pref-prop-pages.png
+SHA-256-Digest: CkYRj3pdMGO16N5zZnPFRRc+a9mNXyDQTwlZNkImoqo=
+
+Name: images/icon_hide_variables_more.png
+SHA-256-Digest: kInAUg82gAlh/EMHdszl09ssIy3HmApraL0KuzXDdhs=
+
+Name: reference/cdt_u_c_editor_con_assist.htm
+SHA-256-Digest: +7r4CjyZifWqdZNOaQvaqlFwT3tST47osgiw/b7ObyU=
+
+Name: concepts/cdt_c_indexer.htm
+SHA-256-Digest: 5KUE9cX9/gzanwwPUykkXBkJvroXGwo/Bd/eHV+TNng=
+
+Name: images/cdt82/ConsoleWrapLinePreference.png
+SHA-256-Digest: Tt8MuKdpORPZNRsZ9hS7EkNmDAXstk91VWaUdaLjF0k=
+
+Name: images/run_common.png
+SHA-256-Digest: 1w8MePKzmieKBDhwB8fHhh5o6RK2IKplBS49Vx/QaBA=
+
+Name: reference/cdt_u_fileprop_sym.htm
+SHA-256-Digest: GOwvUFSH/kUDFgVG3DmO1VgwIyEuNn+NVhARCKPFcTk=
+
+Name: images/cdt_open_element.png
+SHA-256-Digest: a05LisTDsKmnuRXlrSF1RaW1ZYSf7COnVkXKe6pL+xs=
+
+Name: images/cdt_debug_exes05.png
+SHA-256-Digest: 09tX14G6ShoCsagfb6i9qT+JmEzXIss3cuf0iZO/YcQ=
+
+Name: images/icon_add_mem_monitor.png
+SHA-256-Digest: idRyeUV8RLEXzuTokhafJhJ10Qzwx3bDWvy6+C8U1mA=
+
+Name: images/cdt81/cdt_debug_varsinappplicationfield.png
+SHA-256-Digest: eh9QL4Za87MnUwrvUsm7pPRKuLtF6dETW1KaWJfsySo=
+
+Name: images/cdt_pref_build_console.png
+SHA-256-Digest: C7bSMj/Z0wU42BLhhSmKw6K1rtFOtxAzTR12gmhj6Bs=
+
+Name: images/cdt83/CDT_RegisterStack1.png
+SHA-256-Digest: ng+31ZzHqhUsBmdAYhxIUdoMs2NZp5hEmR7gRxt/wC4=
+
+Name: images/convert_proj.png
+SHA-256-Digest: IwkH1TbuFNVTBEy46YLKuPhwhqVLwhk+G6UTBM2Jg/0=
+
+Name: images/scanner_discovery/sd_prop_add_include.png
+SHA-256-Digest: Ht8GlxiI3gEl6jS2iN3c3EqhJGi9ofXM54B1UxQhjJI=
+
+Name: reference/cdt_u_console_view.htm
+SHA-256-Digest: BpOPVVBpdta7v/hl1Db1vpNcbh0uiCJngu6pIHcguqQ=
+
+Name: topics_Concepts.xml
+SHA-256-Digest: gEf75bNNo+e73XA5sJs1xu8pjCoSipzvNwCaxuiDSd4=
+
+Name: images/70/CDT70_NonStopDebugging.png
+SHA-256-Digest: aWaE+MkSyY5rCUTiCv3jeQaT4wpEvk2NQr02SqlUFaY=
+
+Name: images/c_element_filters.png
+SHA-256-Digest: /nOehFa6VVIvOFW4XrS2Gll4G+LhR8hoUAD+p8e1zJo=
+
+Name: images/icon_show_error.png
+SHA-256-Digest: Cj5Ji69X8aAmJ5k5PFdWaxJ2kEaCMC/m0IDSKauhXWg=
+
+Name: intro/cdtTutorial.xml
+SHA-256-Digest: 8Ohzl/RWGoGxwfe1Cd7OJG7DQcOvAkyPXJzF5+uTAhE=
+
+Name: topics_Getting_Started.xml
+SHA-256-Digest: 8ymyqvpE8q+LzLY3jc972/kxASMqMVx/qEsWfeU+Sck=
+
+Name: images/80/CDTOverrideMarkers.png
+SHA-256-Digest: jckV/sjW8oDOTqZsB9rcOPAU4OiRf56KNZi27VflnOY=
+
+Name: images/icon_menu_white.png
+SHA-256-Digest: 8JXY9qEzKhU3eQ45A504bMDOhp86Fdy67WaBvgeJ/D8=
+
+Name: reference/cdt_u_c_editor_mark_occurrences.htm
+SHA-256-Digest: 1+I+OPJESmYoKmeKdtMHPHbbG4MUOXQtdOw6lP7aAwk=
+
+Name: tasks/cdt_t_debug_prog.htm
+SHA-256-Digest: 7KiExXb4ElhacTMGO6nbZ0UE+v7JIxT0xjtvbKLInTU=
+
+Name: images/view_table_rendering.png
+SHA-256-Digest: j+A4Gmuc0p6sZKUlWpfd5jSPP531d8qTTsyv5sOv/MY=
+
+Name: images/cdt82/CygwinProvider.png
+SHA-256-Digest: 1o/u86G/fKRb2lm4Wr0hnliUQpmm8m1L4OZJnRXyHvs=
+
+Name: images/ng00_04a.gif
+SHA-256-Digest: 3O9wGk848Dcqc5xYZCPtKvjPiBQY9bkP3IL+ENigJis=
+
+Name: images/cdt82/CDT-DSF-GDB-MulticoreVisualizer-Selection.png
+SHA-256-Digest: IpApq36UiDx2+sHd1nYgPAsXl5xwiKwmeLHOIltK9tg=
+
+Name: reference/cdt_u_c_pref.htm
+SHA-256-Digest: ey1M6ONlxc7s415FnGxu+sZNhqB2GbNUZkoaCmf7Iw4=
+
+Name: tasks/cdt_o_builderrors.htm
+SHA-256-Digest: PmE/Oufrq6W7A99zw5uQM8HGqlrgDhBffzkMYLhzt1o=
+
+Name: images/cdt_error_workbench.png
+SHA-256-Digest: WzrSZzJnCPgu0W5AhuUZ/rT82E0Wmyd6P9ruBAfmFCw=
+
+Name: tasks/cdt_t_prvw_hide_files.htm
+SHA-256-Digest: 8gnggx403sTW8+8Q/qi/hFDL1upGeacs5H4ji4IdvgE=
+
+Name: images/ng00_05a.gif
+SHA-256-Digest: WJ621ttEUMzUMt7f2uAQNK8CODClIolAFEbnzlpBkBQ=
+
+Name: images/ng03_04.gif
+SHA-256-Digest: kOioKos29SRWVd+axZ2pzsfdjAcPtZRcTod5TvN+jmU=
+
+Name: images/cdt_w_binparser01.png
+SHA-256-Digest: kus2VoF9AqXZeWtJ6JmhhkcuoSCR0ZXkmtPxA4iSzrU=
+
+Name: reference/cdt_o_mproj_pref.htm
+SHA-256-Digest: x3E0scvqISY0ecUbu9pCJObRuwel5yyKRzM2+4y5auw=
+
+Name: images/icon_pin_memory.png
+SHA-256-Digest: Y7Jm4SdTyuNkrb6gvK5UvKviB69LaGmCpxPoaDEPZB8=
+
+Name: images/icon_forward.png
+SHA-256-Digest: Rkc9cR0Xy7mnMaDlYAbb2FyaQBQ9KkPGTMW5TTySO0A=
+
+Name: images/new_proj_wz_toolchain.png
+SHA-256-Digest: 1JK6MKdAjMQ5jrfIrcVIVvJT+VaciU8/B83npDMuNx8=
+
+Name: tasks/cdt_t_cust_cpp_editor.htm
+SHA-256-Digest: 3xmjxDX0yJf0+fpHcXQfY9Y2/SKnKtxw2c0pwKo9wr0=
+
+Name: reference/cdt_u_c_editor_folding.htm
+SHA-256-Digest: wEO16IdOyr0X/lvhpU4LqvhTLm3vmL5xZe1XdhlgNzg=
+
+Name: images/prop_rundeb.png
+SHA-256-Digest: 1unroYog2mt52tXxGdBwAkp5Fip5fuAxCndwbQrN5io=
+
+Name: images/cdt83/CDT_MemMultiProcess.png
+SHA-256-Digest: DB6anFZfx8uraFYSM9ZOJZVV60bil7pq0qm0VfIzvoo=
+
+Name: images/sub_co.gif
+SHA-256-Digest: ETz38yM822zLsEuX8FGWbrvWi0N368KK5PhYzlaSQMo=
+
+Name: images/70/CDT70_ConsoleProblemHighlighting.png
+SHA-256-Digest: PCcaupohCOnWnhvDb5FKfC3utI84BEz8QYyCArjmxtk=
+
+Name: reference/cdt_u_prop_build_settings_tool.htm
+SHA-256-Digest: ghuJv3yboR+cahqvS3n5ROeJjctTXK2eDY8CTXU/tOs=
+
+Name: reference/cdt_u_c_editor_scalability.htm
+SHA-256-Digest: ZQ8UrApTV6L1A2jkUZkPAzDBQFolxPCyLI3lKV26RHg=
+
+Name: images/icon_link_with_editor.png
+SHA-256-Digest: cnq5qrzM3qwo1TVqkmysLNzFTr36BUWhZ/pOgYPHgfc=
+
+Name: reference/cdt_u_make_targets_pref.htm
+SHA-256-Digest: 5EFIbyZo/Okb9rkudi0ix1RUaA/g+wuKZ8MAV2tcIeA=
+
+Name: tasks/cdt_t_run_com.htm
+SHA-256-Digest: FjvSuC8140xsZUJG694zqH0LuVkNBhEMmQvN59XdPww=
+
+Name: reference/cdt_u_pref_build.htm
+SHA-256-Digest: rP6D7l1+uysplkTapSYgMU+khMFQp82KfHoU64GsRqQ=
+
+Name: images/cdt82/CDT-DSF-GDB-MulticoreVisualizer-Filtering.png
+SHA-256-Digest: atHg21Ru7Kz3r/AsIjHUsUwdQ1QDtODRVzrYQ8YfFZc=
+
+Name: images/cdt81/fasttracepointselection.png
+SHA-256-Digest: H8GbTwh5pT6ESAAyGGCla+s4tU41TR+BSCAyDyyZwtk=
+
+Name: images/prop_outloc.png
+SHA-256-Digest: N0hpcj/C0X+3Ii3H0ISgx3iJ2Tx44PeYdOyySeF0Fu4=
+
+Name: reference/cdt_u_m_source.htm
+SHA-256-Digest: Zpsp+DdSKfBON2B22OOWkU04FlTkXjxnr/VZGP1/bS4=
+
+Name: images/cdt81/collectstring.png
+SHA-256-Digest: kK+Qy+haz+QxIClkq/69/m3TFkGyj+fkGTZsrAeq0I8=
+
+Name: tasks/cdt_o_brkpnts_watch.htm
+SHA-256-Digest: 9ZGAvcK2GWlg81R6BgANovLu3i5PY/iw8FrqSAieWuY=
+
+Name: images/70/CDT70_LastMakeTarget.png
+SHA-256-Digest: o3fdEzwYfXP2jQ53PzDYPIohK3cukTHrv8xV/DNqg3Y=
+
+Name: images/refresh_nav.gif
+SHA-256-Digest: lK3PYkVLOp2+k/8XtInMStq6VyXAavJ71Y8wpnMdJiA=
+
+Name: images/cdt81/sd90providers.png
+SHA-256-Digest: x8ThEKwLnuB4v/MxOw8AFD40PuENoFB/yLT4NmhsU54=
+
+Name: reference/cdt_u_type_hierarchy_view.htm
+SHA-256-Digest: R154VWmNH0ezT0KqS0mk/FCXjhlfEquW9fy7FeWahEU=
+
+Name: images/cdt_w_indexer.png
+SHA-256-Digest: 3aKVKHXcfZ5yACsbPXFXtoJVYPFZXk82IQKsh9/GrC4=
+
+Name: images/error_co.gif
+SHA-256-Digest: XHSAZl3YOLES7udJPZ4d2/Oqalcardq22/1HjZFeQGY=
+
+Name: images/editor_typing_preferences.png
+SHA-256-Digest: LVPSNCRIYz6O12LM6N/DdOdiDbw5PP/sZf/q9pgZQd0=
+
+Name: tasks/cdt_o_build_task.htm
+SHA-256-Digest: wvj5EWOPEHr1qPVLB2epuesjm22cQqnQgoTjl9DYdrw=
+
+Name: reference/cdt_u_modules_view.htm
+SHA-256-Digest: xai3j+2+yeEZOVyu65JXHfIVEMwa70TqSkQmkinP9uA=
+
+Name: tasks/cdt_o_run.htm
+SHA-256-Digest: MhNoiUtFqrl8hBvLhdyTmlonlGHT1Xesu7DyPedc9HY=
+
+Name: getting_started/cdt_w_build.htm
+SHA-256-Digest: 0MLrn0iSZ5CF3uhDdgtB98siUnc9q649qUxyB96xz0U=
+
+Name: images/cdt82/MINGW_HOME.png
+SHA-256-Digest: iHB068eISO8AJ/HXBNsLaIiFVxzoLUH2mPXTthL2Lso=
+
+Name: images/icon_db_restart.png
+SHA-256-Digest: SyKINNmD+dHwTYtwMLz13xIkix9mtK7Vt7aObZUBURc=
+
+Name: images/prop_resource.png
+SHA-256-Digest: 9bVhShwJMnWMcUmNMlAFCtvIxGd1wlxxUkf4U5BvM1E=
+
+Name: tasks/cdt_o_proj_files.htm
+SHA-256-Digest: r3cYVyyMHaowXQsbPmjH3vke5GhZJU8HXuTk4/rMcfs=
+
+Name: tasks/cdt_t_format_app_run.htm
+SHA-256-Digest: FXm0108k7XRoE/SOKGRlXByoeRv7emxAri3hiJDjvGo=
+
+Name: images/mpref_discovopts.png
+SHA-256-Digest: GHbmuUH6toHwveFjzXu2OrNdbrrQjpFO3HTj9FasDhQ=
+
+Name: images/icon_nav_forward.png
+SHA-256-Digest: 4A+dSbScElOVU4HjdvoYypMAw/z5WFN2z51IVNtTnbs=
+
+Name: tasks/cdt_t_expressions.htm
+SHA-256-Digest: ErySY0lXg+zvbuuOW1MEYYjBV1rGpfcIvoSzrY9nPcM=
+
+Name: concepts/cdt_o_home.htm
+SHA-256-Digest: KohXWAYDGrPN7OszUiDmq/H1NuQHQ0YciURhdANP8Mk=
+
+Name: images/define_obj.gif
+SHA-256-Digest: 3UDHsHXgK71LhLZuTdKZSr3zfstYZGGp1l0RRNc0t54=
+
+Name: images/cdt_update_install_new.png
+SHA-256-Digest: Nw987R+JqMnRzC3rKe7Lk8MWwOr4/wYedtycvrkT3gc=
+
+Name: images/mpref.png
+SHA-256-Digest: GRq3+95ZuyDv2VBDRrKBAd1g9a6hLX9fK/geFv+CpTY=
+
+Name: reference/cdt_u_prop_ref.htm
+SHA-256-Digest: W4RSPACKCvBEWZlf5awQ8GwtjdDA3LgK8wTvmXLrfSs=
+
+Name: images/cdt_buildenv_selectvar.png
+SHA-256-Digest: K+ya+tQWCkAFaCidkcSlZBpj5WMzFTrpdneS41gBbpA=
+
+Name: intro/cdtWhatsnew.xml
+SHA-256-Digest: 39YtV7ofNYwh3pCqwuClNvcjSG9TbR9pzruYj/bByt0=
+
+Name: reference/cdt_u_call_hierarchy_view.htm
+SHA-256-Digest: 8v/7upNwNLDb1ueSPGA6BheFru0cV0iFSNdddOiuYZk=
+
+Name: images/icon_run.png
+SHA-256-Digest: t1vtK8E2eY5gjg2pr5dVgD8662dNhKcOSHyFuHpWc5Y=
+
+Name: images/icon_con_max.png
+SHA-256-Digest: cBOAnmaJ7ZwY6H9wJkCLVi+tKfBN55zm5Fiw3eCYoTc=
+
+Name: images/view_environment_prefs.png
+SHA-256-Digest: ivzcIdNdhjmVILp30pbQcRROOwbmYGKdjZWhmvHuCMY=
+
+Name: reference/cdt_u_prop_build_discovery.htm
+SHA-256-Digest: 9TPI7+sWYorp+cgoCW58vS9ZFwH04cFaDZRQgucsaEE=
+
+Name: images/editor_color_preferences.png
+SHA-256-Digest: 95H6TQK3ENFiftR7R5EUNFHl3Dt/ZaZyl+1btqD+WIk=
+
+Name: images/cdt81/cunittest_launch.png
+SHA-256-Digest: DJT2e9ufdHMlIasJNlh7WFdhKikUm8XV1b5YtVV3+Ig=
+
+Name: images/mpref_toolchain.png
+SHA-256-Digest: i7GhIVGx7kHJW4bWslBXlH/Z9kcbTWrpzxG7R7lu0bo=
+
+Name: images/new_proj_convert_candidate.png
+SHA-256-Digest: QlurQqUajcku9ukj38LgaGM+i6BJPw1un5iNEz7irCs=
+
+Name: reference/cdt_u_prop_general.htm
+SHA-256-Digest: kBbcqGJT0khQljeUpuTDFywk8l/1VnB0+Byu2dEcgt8=
+
+Name: images/icon_db_debug.png
+SHA-256-Digest: huvuJr9pahpBDPwSoJkRjozWP1rpeHTStW47rbAeD90=
+
+Name: index/write.lock
+SHA-256-Digest: 47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+
+Name: images/cdt83/CDT_RegisterStack2.png
+SHA-256-Digest: WRqWVKIU3XBkpaRkWeKMbk4qnNrGOtS4xjztQlN7EQ0=
+
+Name: reference/cdt_u_prop_data_volumes.htm
+SHA-256-Digest: KemUC5kzvTrkvZe19T3G9RWbXq4TZiwqi4Qxy0bhST8=
+
+Name: images/icon_show_prev_search.png
+SHA-256-Digest: 0zmdyuTFwCcQgcc1khUgCXYKRSYfskPKWwByIYO+yiY=
+
+Name: images/icon_con_pin.png
+SHA-256-Digest: zFiWuszya/eZmuWhepM09v3p0WsMxD6CsnG7Q/Jgl64=
+
+Name: concepts/cdt_c_projects.htm
+SHA-256-Digest: bS1D4QC8Z5pPNJZNKvPSp6IkCnSLXkWRh8Rlf1px2lc=
+
+Name: concepts/cdt_c_over_cdt.htm
+SHA-256-Digest: 82Co6cncaUdJG2kvn1+4hPVbedzDOThEjIV+vgLLN2k=
+
+Name: images/prop_cfgs.png
+SHA-256-Digest: LY/Xx2GYNQLhe5SjhAAoK7FL1Xcqn9eX7tamaxdtZYA=
+
+Name: images/cdt_update_license_agreement.png
+SHA-256-Digest: 9i/BuGrZFI/G/Nq8PDX0LZq8F1F2wMJWyOQTmxUpvgY=
+
+Name: images/icon_wset_del.png
+SHA-256-Digest: hNWHbe4ZOzSPrWWqjGVEcqT31ICiFZ4xmiORKEpb134=
+
+Name: reference/cdt_u_appearance_pref.htm
+SHA-256-Digest: 0iv7bs6ETovtQ0WR1hbdl4G25OiyfAeQXhP2OHJbOyY=
+
+Name: reference/cdt_u_pref_build_error_parsers.htm
+SHA-256-Digest: 3IvX/cr9D2tMTltUnCwVSMpaWm7fc1mU8BpF3dEygc4=
+
+Name: tasks/cdt_t_add_codetemp.htm
+SHA-256-Digest: /jyYNSGyYYQN3BoE0l2JSaxM9DeMixi9xTXEijzm/eA=
+
+Name: toc.xml
+SHA-256-Digest: nYsvchEfTlc9T/3msHCS0msCwiKjCiLPtxSZolzT+b8=
+
+Name: images/cdt_w_importBrandon01.png
+SHA-256-Digest: tToVLa3OL8CWNpKJZOp+6Y/EAJM1/FKjyC2qXAB0UDI=
+
+Name: reference/cdt_u_m_window.htm
+SHA-256-Digest: zy/rGPImoiiWGWAj4TbWXU9jBz95bylhxAIDtgZqajk=
+
+Name: reference/cdt_u_prop_general_pns_sym.htm
+SHA-256-Digest: FdQBj2QJ1dArucHD0zjxFgUPswKovq563AiEBeSFGag=
+
+Name: concepts/cdt_c_indexer_fullindexer.htm
+SHA-256-Digest: i/aeCw0SmKTjfmewiBi45pWtSR85s4Ggzmy49o/eZqI=
+
+Name: images/icon_wset_add.png
+SHA-256-Digest: 5ph1NvNLwERPzoALX/y8e78AAP6hqKIG0LyINzPc0eM=
+
+Name: getting_started/cdt_w_import.htm
+SHA-256-Digest: GSlZJpVsRRXwG7GwDzqLmtasacBi15y2c00LzE6ksv0=
+
+Name: images/70/CDT70_ProjectContextMenu.png
+SHA-256-Digest: 4Ar7JXS7rSOW8AIPEcNt19GAajv7Vi1eMxlhAq/QMUk=
+
+Name: images/method_protected_obj.gif
+SHA-256-Digest: HuKCrofG5/ALTFCsDuCY5QMW1haktF+58Bi0XZkYz/U=
+
+Name: images/view_signals.png
+SHA-256-Digest: WooA9clpSqTmgU1t4PNEUQt27VnZwSpA2ePU5WAq0lg=
+
+Name: images/cdt82/CDT-DSF-GDB-MulticoreVisualizer-LoadMeters-enabling
+ 2.png
+SHA-256-Digest: g/dfVOr8ZgFFat9EpEDp8GsowL/3sM0SVY8pl272A/s=
+
+Name: images/installed_ovr.gif
+SHA-256-Digest: O3HQB0r9XpoTe4KyPxq9IZB03zZxcio4fBpzNGu4No0=
+
+Name: images/icon_toggle_memory_monitor.png
+SHA-256-Digest: ISUav/K5tZRLa9yBwgzMCEVZLbi/ee/RHP4bOfXWQdM=
+
+Name: tasks/cdt_t_new_cpp.htm
+SHA-256-Digest: +F/8qfvK7M9D4i1qL4vJZaS2jCIhhk3G4BkMC+LN0d4=
+
+Name: concepts/cdt_o_nav.htm
+SHA-256-Digest: axIqube3n1T6y4iq1NnZUxyd1ZCSHL2bUi31H0ENAZU=
+
+Name: images/icon_hide_inactive_includes.png
+SHA-256-Digest: Ogn3KrRjR3f+4AbyQin9AlOXsis97wR+3/nZ6niFSz8=
+
+Name: reference/cdt_u_newproj_parser_error.htm
+SHA-256-Digest: WHKSfiwX2P21K+KF89zzyQtEuhSEDJVJkHcMXTw/r80=
+
+Name: getting_started/cdt_w_install_cdt.htm
+SHA-256-Digest: J9iiYgZvFh/XjxTqpztW4s/IFxm65xjLXHuSXTu54aA=
+
+Name: images/60/CDT6.0_group_methods_prefernce2.png
+SHA-256-Digest: Kg1yeWrvjmu3yFBZB9PV1vBL/7wCVw7p/iooSDO3BuY=
+
+Name: images/cdt_pref-wizard-toolchains.png
+SHA-256-Digest: QSFlIKI0lpetEIum9Ny5HmsvyIFvbX3JoYAeGeI1Nh8=
+
+Name: images/icon_thread1.gif
+SHA-256-Digest: u4H2klKej0/bFISUrC9UO+EU9P8gHbS9oiJflKdr97Q=
+
+Name: reference/cdt_u_view_executables.htm
+SHA-256-Digest: nBVhytAEl/SNEOzKGU/r2I/NwrQLAnUCfjwoZEYOs+c=
+
+Name: tasks/cdt_t_registers.htm
+SHA-256-Digest: CPP4TXb1dNRkHjA1ybf+NLSygmoYErqvqmqcM4OLnow=
+
+Name: reference/cdt_u_fileprop_lang_mapp.htm
+SHA-256-Digest: xVsKfAla2iYj0aB+VnQgDJeRkGlEQgjzdgJgkeMEc1k=
+
+Name: images/cdt_update_install_cdt_site.png
+SHA-256-Digest: +BmUbLDb+srF9FCn7h7GVyEoKoWhcLCS89WvOXaD/Es=
+
+Name: images/icon_up.png
+SHA-256-Digest: PL3V6jna6sdFelAIXb6HK3dDSOXUXYGO7sB1Q5+XhDg=
+
+Name: reference/cdt_u_pref_build_scanner_discovery.htm
+SHA-256-Digest: Q/nvV4EyDy+f2Xcwp3zReyJuxgM3JMn53kvF3z/2zho=
+
+Name: images/icon_db_resume.png
+SHA-256-Digest: oqaLUSPZQ0z4tk7d9YPZUI3gyEpz7TmOLLAlrDC8QS4=
+
+Name: images/scanner_discovery/sd_bop_options.png
+SHA-256-Digest: YmSsLPdvCq88QS4NkHnPnQcZ/qD7r+akcJPB9tWLXF0=
+
+Name: index/indexed_dependencies
+SHA-256-Digest: r19y4vLtN+H5PemkmxsZpiAIQJbOQxMIzFgWkT/ULsk=
+
+Name: concepts/cdt_c_views.htm
+SHA-256-Digest: YZaChglhFnVwnOcHwcn1Mhp259h/ZgJP8vDMv39zjMA=
+
+Name: images/c_exe_obj.png
+SHA-256-Digest: Na4NGt2R3rvgvc9AeSulySvQUULLZePFYN2P+zTFQ+k=
+
+Name: images/view_project_explorer.png
+SHA-256-Digest: SC+wEEkg+7MflQWtod3Tq1fRalhQNw6v25O3eW9AeNs=
+
+Name: images/80/MultiProducerConsumer.png
+SHA-256-Digest: 7dY1KvWqqr97pD0EOkj+NrEgK1ueCCBUxnAcSMB31vc=
+
+Name: images/prop_artifact.png
+SHA-256-Digest: 9Pd2iKX/9PdQCQRkMzCAmBid4Esa35jJy8IwtxgTf3s=
+
+Name: images/makefile_editor_folding_prefs.png
+SHA-256-Digest: P8wYho31mIlK6BJuVOEngHiXrTkN6o//nrQ65GhuNDM=
+
+Name: images/view_call_hierarchy.png
+SHA-256-Digest: kpMXNuaUsf3DghdpxthOxKr0dvmN7a80BxWzcsqQVzg=
+
+Name: images/icon_build_all.png
+SHA-256-Digest: h+QHomO6GD1OpcbcHDK8AEJrpQEYvVnU6YkQVO3VASw=
+
+Name: images/cdt_w_viewMenu.png
+SHA-256-Digest: yQyBmaqmeDmytTuhRGTP3B/O7ZISdOowjt3xZv7fh40=
+
+Name: concepts/cdt_c_outlineview.htm
+SHA-256-Digest: /RvStMLmUmvrhXIs1QhXGv7i4Ejb+VMBBHC/6v3Z8pw=
+
+Name: reference/cdt_u_problems_view.htm
+SHA-256-Digest: lZeSHAxJ1o++PGT7YOCVxdRMmZFBlkLYBxFHXKion7g=
+
+Name: images/editor_mark_preferences.png
+SHA-256-Digest: t6nGGz1mj/2xnMOX3paUqr/zyj743M2SJbXPM6MrZ5A=
+
+Name: reference/cdt_u_c_editor_color.htm
+SHA-256-Digest: xGbDOXslCNMQalOll/1j52srCh/UBFEzxYcn0Q+RZqo=
+
+Name: index/_1_Lucene50_0.doc
+SHA-256-Digest: NaE2l9rRGbl9Cf0VHKG1kRF8sY3fC9nmRtGHWHrsERk=
+
+Name: contexts_CDT_DEBUGGER.xml
+SHA-256-Digest: Z0u1Efy69CPzuE0R8AM9MVcK1e0GwmIKAR3y8s1TKj0=
+
+Name: images/run_debug_launch_group_edit.png
+SHA-256-Digest: 1M5dkKQ6s0kd8ZP34XX7Nbgw7mOx27q3Z6JvWORyBOs=
+
+Name: images/new_make-error_parser.png
+SHA-256-Digest: 8EnXK06x6loYkJDiRLo6sGxTF2GGFtJssc+npJGLETo=
+
+Name: images/cdt83/CDT_RegMultiProcess2.png
+SHA-256-Digest: mum6wwAhOHcfTqVFocg9p6kwVzI0tJ5tjnLfFPkKAXM=
+
+Name: index/_1.fdx
+SHA-256-Digest: u0MAlcHu3cqhK/nzWLV8fvVDDF+cX6G206uNYqfHaXc=
+
+Name: images/80/AutoAttachOption.png
+SHA-256-Digest: Fq6g2J4ubWYeekV5jMgJkqkkQp2eO2g6NZLINp/7YW4=
+
+Name: images/edited_ovr.gif
+SHA-256-Digest: PZVeTzU0xtKDMluciS9E9/sjzRU81ra0PvoNIqXdBr4=
+
+Name: tasks/cdt_t_proj_parser.htm
+SHA-256-Digest: vsjuYlb7e7Da84yk+9ucmnxYrUDnbrDpcMBoh0bsb2E=
+
+Name: images/prop_inc.png
+SHA-256-Digest: Fe1MEY7vDDm+zTcxyfHAkM9aIfh3kHKnaxrOa/T/N/Q=
+
+Name: images/cdt_buildenv_newenvvar.png
+SHA-256-Digest: luoY0CJe0ZRuYBaFnuL7up74vc4MSavK65rc23Eagf8=
+
+Name: images/cdt81/sd90entries.png
+SHA-256-Digest: F55A/hrEsFnNTTkgh8MC/BxNlVFXKbQycrTY8zc4jbA=
+
+Name: index/_1.fdt
+SHA-256-Digest: T/HzIjXxvNXx55ybqikWEWDHsXETjMnaNZttBDo1y5w=
+
+Name: images/cdt82/CDT_FloatingPointMemory.png
+SHA-256-Digest: U+4If9DE4BIi6ZxSBpKLAeilJP3XiJN4UUzKmW0K+Hw=
+
+Name: images/cdt81/cdt_debug_hidingpref.png
+SHA-256-Digest: 4l3/gL/x3s6fcP34PM0hArGiBf028IHf1rkHHB8ww98=
+
+Name: images/cdt_w_importBrandon02.png
+SHA-256-Digest: UHsnTCPT10uZH1o5XKTBVKyt1B8UJ8EB71eVK+nu4kg=
+
+Name: images/run_arguments.png
+SHA-256-Digest: LMCjDEgdLJWQwz8cVGZTXTo59VfFDgk/Xxe63S0Pp4E=
+
+Name: reference/cdt_u_prop_manage_dialog.htm
+SHA-256-Digest: w5Ff9GpjFMKQdYJ3xJ77bXzMSzX5RvbfjlR91+ujnIo=
+
+Name: tasks/cdt_t_open_declarations.htm
+SHA-256-Digest: MuWnAky9VSQRIFUlIUVr9GeCAVpI88OMMT0hN5KaCBQ=
+
+Name: notices.html
+SHA-256-Digest: Byv6oMs5rmTqqYvpJY8uu9PmHHHvHhKBaD2ZL85aZPw=
+
+Name: reference/cdt_u_fileprop_toolsettings.htm
+SHA-256-Digest: 2yVGY2/XSc4Q6UHRVkK1pTvLAWK3Pmujumu3IMm7YVg=
+
+Name: images/prop_file_lang.png
+SHA-256-Digest: 4BczHD2GcshBAt5mq0sLhcp0p8f5brTGgY/9l18C+a8=
+
+Name: images/icon_db_terminate_remove.png
+SHA-256-Digest: Rszt0zR6qyRBvCHbesg5wF6s545xWsnWL3Pt2i96FpQ=
+
+Name: getting_started/hw_example.htm
+SHA-256-Digest: ubkFgW2CWpRwBoYLhB2iLwWr70dEZphqLO+jM8UVbtI=
+
+Name: images/80/Bug_307211.png
+SHA-256-Digest: nhC5XeEF6+CBPzY+Gu/a6lI8fJn6mEM88S4phCgh7zo=
+
+Name: index/_1.nvd
+SHA-256-Digest: kuoFv9wNS1nXF1AWaCvdRDNA0w4Rom598gC4AvOB5cA=
+
+Name: images/cdt_pref_task_tags.png
+SHA-256-Digest: to2aCBN/NrBVs0uAvD5JPmu3QT500I5/D20f8nznyG0=
+
+Name: images/command_link.png
+SHA-256-Digest: NkTwRCqru4TqRh8aC1xBM6Kz8ARV9Hrhc8or60trLQU=
+
+Name: images/icon_pin.png
+SHA-256-Digest: LjowCxsu54wjo89CmopyZqcUx1gPuAyIrYYpLiw4Rm0=
+
+Name: tasks/cdt_t_show_proj_files.htm
+SHA-256-Digest: j+ZWXojwqjsYLM81Z8Ba+AA9vPM43xG8f7ZeXFGfsJc=
+
+Name: concepts/cdt_c_discovery_options.htm
+SHA-256-Digest: rACcPOVkgyE+4xjHMkQMqr15nu+4E/B5s71JfJgJQAo=
+
+Name: images/cdt_w_newmake03.png
+SHA-256-Digest: POsDpqSYO5Dw9JEEDIeUbmAfrCjy9QgS8HDxpTuBwBA=
+
+Name: images/view_modules.png
+SHA-256-Digest: LvmnvPRwgERBcQgjRkJ9R+cyVe5m07v5hIZ2UQ6vfBw=
+
+Name: reference/cdt_o_prop_file.htm
+SHA-256-Digest: /fkw6Y6l86Sqo7DZxd1mcg9bOv+viWgYGo2KMA2dqpw=
+
+Name: images/prop_libpath.png
+SHA-256-Digest: gm/UOfMgBtuZw4ITXo+z6OAC4rZ3r/wwoo1loG+Uo40=
+
+Name: images/scanner_discovery/sd_project_explorer.png
+SHA-256-Digest: Oboi4rY0uVpbOXQy9HrSBkRh976LWgUU2s2gnxBrjms=
+
+Name: index/_1.nvm
+SHA-256-Digest: 9IoFJR8SHdR8Oc1fnkzssAeiEICOR74kB7Gdlq801rE=
+
+Name: images/80/MultiAttachDialog.png
+SHA-256-Digest: E0++cOLaK5tTmtcMNL9xgP8RCfhFckFuvIb9B6dcWIw=
+
+Name: images/prop_tree.png
+SHA-256-Digest: ax15hlOWc2zqrBiY9gn4bnGUMemA4XxcYU/x3/zMSc4=
+
+Name: images/cdt82/CDT-DSF-GDB-MulticoreVisualizer-LoadMeters.png
+SHA-256-Digest: xFS7LmWtEgFofrgdbnVbJo2pjpSuhC7r7rnNSBCWtPM=
+
+Name: images/60/RenameInFile.png
+SHA-256-Digest: Qrxo7ZxeSvc/O359Z5lrQ2n5UR2aWdm6eKzNxEKME30=
+
+Name: images/btn_restart.png
+SHA-256-Digest: lNs3e8UJmARH4qeLp0HzCBomBozh9fFmUYfuQBjZNmU=
+
+Name: images/prop_error.png
+SHA-256-Digest: 5HY7Wp9JLONFuKV5QfpsUA1nDfDOu1Na4aEqLsQhrWg=
+
+Name: images/cdt_w_basic19.png
+SHA-256-Digest: 6kXPtVyghwN9a6wPH2uWwuyq1vwvZ9kii1Y/fnTwbjI=
+
+Name: reference/cdt_u_code_temp.htm
+SHA-256-Digest: 7ewkHfm8ymn39xmuqPJLKHcNd/FNj84Pwnz7pmvY/lc=
+
+Name: reference/cdt_u_cproj_view.htm
+SHA-256-Digest: 0+zcbmHPlGVLVoQ56qW3sKQSgGqx4/QzffKtChKmxgI=
+
+Name: images/create_make_target_win.png
+SHA-256-Digest: YUbwvYp8AMEu9nxwcYwkehEA/3NxX+5JVrlRURdoIRk=
+
+Name: tasks/cdt_t_format_app_gen_config.htm
+SHA-256-Digest: g8TvLusa9bl3QxG59UsPSmniQj/De887bcZzC59hliU=
+
+Name: images/icon_db_launch_instance.png
+SHA-256-Digest: wFTRUoHkUXI0x32PWCQ/kMDD7/mbM8hQRsTXj1HKlVo=
+
+Name: reference/cdt_u_prop_cfg_dialog.htm
+SHA-256-Digest: aZ+DXCpEly7R7eMDb82qhc6nwNu2mtMcDijPaeWa4lk=
+
+Name: tasks/cdt_t_rename.htm
+SHA-256-Digest: bvnSP6QcYVbKfzp+QdjTCp6bWCTrLAwRwbdcku9o7t8=
+
+Name: images/new_make-behavior.png
+SHA-256-Digest: vESdsK9gkOIlg5hZD70bcP/5WUK2hY4t+H4ahEDquTw=
+
+Name: concepts/cdt_o_dbg_concepts.htm
+SHA-256-Digest: DBEOrqgOmnCDQ6ePTNp0A79Mk+MADkhSriHYcKNPy2s=
+
+Name: images/codetemplates_example.png
+SHA-256-Digest: Uw22zNOdZIzew20InYyNB9+JUWdrrGZ8Su00K4B7A+w=
+
+Name: intro/css/sample.css
+SHA-256-Digest: kevxXcCyecpVKN5oYIe9bx3EWubmul2ObBp8jwNImw0=
+
+Name: images/icon_thread2.gif
+SHA-256-Digest: z1vk5ENFe2ut3SYb6I3mItpnUlySEG5HxFweS2CTB/o=
+
+Name: images/view_add_mapping.png
+SHA-256-Digest: jxr/odzdXNrQe0I3sDUppuuKi5uNpyeeP2ZSr8uT858=
+
+Name: reference/cdt_u_c_code_style_pref.htm
+SHA-256-Digest: zanWyvQW+JRQIgEGMwiFsgQI9nzqZfCIUU+8W3yknsY=
+
+Name: images/icon_link_mem_rendering.png
+SHA-256-Digest: 5ietX5wq6S+DuyIX9s/oEQLgZIBg9M6sSyIBL9/8EUU=
+
+Name: images/ngback.gif
+SHA-256-Digest: +0TTHJN2y9zj14cvWM2QzzPRHDZG6CP0/BbVSTt0GGI=
+
+Name: intro/css/graphics/c_dev.png
+SHA-256-Digest: bnQb8+ZyKSXBo5i6YCG5jVH4KTo9aTDNYGh+yJ/wXmg=
+
+Name: tasks/cdt_o_con_assist.htm
+SHA-256-Digest: aZmI/nTws03hrWE2M87LJ8CeOVvUZHftfQV28y5ydKk=
+
+Name: plugin.xml
+SHA-256-Digest: Q3S3jMd4hY1gJAnVfdyPJYgw8zjqc6Xg850TOMeUGEo=
+
+Name: concepts/cdt_c_templates.htm
+SHA-256-Digest: XNjU7xlAbzt5FwT9c7NxNRNIZys+1gtTd/9bAy50l64=
+
+Name: images/cdt_w_viewMenuFilters2.png
+SHA-256-Digest: wUJZ8cmIcd1wldw4eCQYOcAwtaEwI1vpe7OThquUl6E=
+
+Name: reference/cdt_u_c_editor_hov.htm
+SHA-256-Digest: zAgcfAgpWN4ZcrlkS3uWp6L1tkF2nRi+JCFwkFcvdWs=
+
+Name: images/cdt_w_basic13.png
+SHA-256-Digest: CCFEodxpZTzzL/vXIL6h69+DXC9v8hItbR0O8qu6FNo=
+
+Name: images/icon_reg_create_watch_expr.png
+SHA-256-Digest: l/4VIreKubU20BQaevyctDXvQBvsDIVLHulOzARgjVE=
+
+Name: images/view_language_mappings_prefs.png
+SHA-256-Digest: CcvkxlPwOsIyefUDyR/S00/Iv65NlUVtWoqfLTnJt0M=
+
+Name: images/60/CDT6.0_OO_editor.png
+SHA-256-Digest: PJ6b4Y2zwYaPwIYkyS2+orQx9LUKyUvAqchm86k77N8=
+
+Name: images/find_replace_dialog.png
+SHA-256-Digest: qvQOwH+IuxzgvhaqGcc8wcVuSp248j9q32IYJK2yu1w=
+
+Name: reference/cdt_u_prop_build_settings_artifact.htm
+SHA-256-Digest: QlA+BjFbzyzoeypKgTrJLyVz/trIKXCZ2F+/qIJGLgQ=
+
+Name: topics_Reference.xml
+SHA-256-Digest: ikrCm4IfOX7s6NmCEmEiLssN2vMpngVwNcui+3DpK0k=
+
+Name: images/prop_builders_editbldr.png
+SHA-256-Digest: SjJaIv+BkFM46g2GvU5hlquLPtABYpE/1ojlwhLIeqs=
+
+Name: images/icon_expand_all.png
+SHA-256-Digest: 0Ip8QFYeNutmLEED4ij80EHukFbC3wxJwt/KopQeCVI=
+
+Name: book.css
+SHA-256-Digest: ZXzXiafZAIs1rF/DvD5DTgkDYrJ0hkLe22YDFh8ezEo=
+
+Name: images/cdt81/anonymous.png
+SHA-256-Digest: uRpd0GVWMt4bbNN15Pl38xluTnH3s1wjI0/L1LZ78Uc=
+
+Name: images/container_obj.gif
+SHA-256-Digest: kJFZqJC8iJbhwR0+YIM0asmogNfA0JCPXhCuDK6lFXc=
+
+Name: intro/cdtIntro.xml
+SHA-256-Digest: IoYIm7qCTkcud3Jcr+703Y5VsOJ3t9ZTONRmz+qhvkU=
+
+Name: tasks/cdt_t_comment_out.htm
+SHA-256-Digest: +GxJYPibmFooQFk8jxJ18fnP3E9Gojz2CQHGqFA2vH0=
+
+Name: getting_started/cdt_w_newproj.htm
+SHA-256-Digest: uXMdqzDHQ7nYF7zz0Ul4WyJfShPuvq9PyAKjeekrzHA=
+
+Name: images/60/New_cdtwsconfig_wsContextMenu.png
+SHA-256-Digest: Ps4YZtJK5orSXJhMhfq4DXLWTr1v72hRju+8jSoAoqg=
+
+Name: images/dprop_make_discovery_file.png
+SHA-256-Digest: AsJsOMZN4ba3e6iTconzV8XBN1yRT4VXeCXsxwixAA0=
+
+Name: reference/cdt_u_prop_manage_newdialog.htm
+SHA-256-Digest: rPqt6aSI5isFwIf/gKPNvVWGwQGahX/YIlCMXCVLWm0=
+
+Name: getting_started/cdt_w_newmake.htm
+SHA-256-Digest: RUP2fBLXvR3GgeUATTdUrrBgrShBmLho/T0K4C5j4Ms=
+
+Name: images/indexedFile.gif
+SHA-256-Digest: 7+5/iU1yJwwMfoochkBNBY4qzzF8Il3/jE2CixWrcxM=
+
+Name: images/80/RenameRefactoring.png
+SHA-256-Digest: O0PWnfuIrE8QeNiRxOb0UQ6VHjuyiyKuAgrBlQkAfC8=
+
+Name: images/update_managed_build.png
+SHA-256-Digest: 3JHD1pkTHX+cySkE1ivwTzqdYEw7Pcg1IpXz01Pa6ag=
+
+Name: tasks/cdt_t_endis_able_brk_wtch.htm
+SHA-256-Digest: K2fOZxfM+7ZE6cnIFdO7767L555Aq4e1BMNED8xqWZg=
+
+Name: tasks/cdt_t_variables.htm
+SHA-256-Digest: 4FeWnc5kubgycPph6335qB3/UML5Bl44qNDWmm4dRbQ=
+
+Name: reference/cdt_u_prop_general_scanner_discovery.htm
+SHA-256-Digest: PtXgP7IHkwJ6e8LCCqFT3xkdiB2vP9i0sr8rj3u+L5c=
+
+Name: images/80/CDTNameResolutionFix.png
+SHA-256-Digest: d18qsdEwk/S4LQExHDz/mOjxKkwfUv89d590UlRWJVU=
+
+Name: images/60/CDT6.0_inactive_code_outline.png
+SHA-256-Digest: fZnk2FgfRYi3dBJwsbr4U+iidd7RIyMy+VN2bpNc7a8=
+
+Name: images/prop_cbuild2.png
+SHA-256-Digest: Xtae4eX2X92Eaf04sjrdQAfreN+GbJFCGSdUFY0mtsA=
+
+Name: reference/cdt_u_properties.htm
+SHA-256-Digest: oIh61bhuHckEXwnkWtfxpiwMSFfC8JCE9dQxv1zYQCA=
+
+Name: images/icon_debug.png
+SHA-256-Digest: cRTvwEN+oN4afC9wShkGNXWf6k3hpUtZc2PpR4uOrHk=
+
+Name: images/cdt_debug_exes02.png
+SHA-256-Digest: GpfLOuenenceZsp5u/xlaEoh2hwtNU6QxTDDdmE47kk=
+
+Name: images/cdt82/StepIntoSelectionHyperLink.png
+SHA-256-Digest: HToQKWh6rdny8r0msCS+EG3EX9ZB9wTBGmfWB0eW5J0=
+
+Name: images/scanner_discovery/sd_prop_providers.png
+SHA-256-Digest: 3Tqeg0nCqwt2biyxtfTd0RHsmEgDJynCAbA320QAejs=
+
+Name: reference/cdt_u_c_editor_con_assist_adv.htm
+SHA-256-Digest: aLW+/5zqRXuirEG8CBZ04Re5MI3aV6aJMPoUppM4wkw=
+
+Name: reference/cdt_u_dbg_pref.htm
+SHA-256-Digest: 3AtphLQ/F/+Rl+wyIElOfrHmLgYsX6HEP4yiCj2VWg8=
+
+Name: images/icon_breakpoint_obj.gif
+SHA-256-Digest: bki7miwcAhDl55p73XY2WBXO1A5EATJ1q9fOA+16hmo=
+
+Name: images/60/refactor_before.png
+SHA-256-Digest: RI6yAHLCuuTTBkEIN69Yu+la9KYBWIf9DaWjBjDCoHo=
+
+Name: reference/cdt_u_prop_general_pns_out.htm
+SHA-256-Digest: n0aP3zWQbR/ZTLV97m7Mv2+bgkYkq5VZrLnj6xsDidg=
+
+Name: images/add_breakpoint.png
+SHA-256-Digest: mm+UJXW+GG3A9ys91kHtEDGFDsN1L52V3BIINy0pr4Y=
+
+Name: reference/cdt_u_c_editor_save_actions.htm
+SHA-256-Digest: 4+YLqKIUeP9smUxx8azfvyE6lGLZcgPvNOf+FwZNIcw=
+
+Name: reference/cdt_u_run_dbg_srce.htm
+SHA-256-Digest: GRauyiCjN7QcBssPevBbg6MS/blnjsklf83yj9pC+dU=
+
+Name: images/icon_reg_cast_to_type.png
+SHA-256-Digest: 7PFWjRUj9t8eMi3a63xTwWYjJOITgT4jhha9/Dwa/D0=
+
+Name: images/trans.gif
+SHA-256-Digest: kcHF74uy4Cq7io7QO2m9r73jKyJ2iLblD4M1+2NEFuo=
+
+Name: images/new_proj_wz_type.png
+SHA-256-Digest: rf6Fm+v+MO8ldAPnkE9R7qhTqlH3tswp0olmQioc1wQ=
+
+Name: reference/cdt_u_prop_build_environment.htm
+SHA-256-Digest: KJ0yfdpNb1nUb5Pucd5S9XBRMa3WwBkAgG5FdCliano=
+
+Name: images/show_view.png
+SHA-256-Digest: 4QWpurx6Zmu0/KJhKU2AwyeNqyqIsyxFP7jlNs6wE0M=
+
+Name: getting_started/cdt_w_prepare_workbench.htm
+SHA-256-Digest: Javo3ojucZibYgVSTyza21jqtjuIiFpn8YzlazTGCLc=
+
+Name: images/cdt_pref_new_task_tag_dlg.png
+SHA-256-Digest: HA4/zuT+KCCImx7gx8ewAtvgSOIu47If35NlQi/Pg9c=
+
+Name: images/icon_create_cproject.png
+SHA-256-Digest: yuAoHCNFTQ+WWpiFB/nqrV+Txc++ouXZpedB3D2r8cI=
+
+Name: images/debug_pref.png
+SHA-256-Digest: gkZaQrpovXov3xJbAyWxMvssHLVn1VzWHfXHdcdwDvQ=
+
+Name: images/field_public_obj.gif
+SHA-256-Digest: tvuHy31ROch0M3o91nWQ15x/IL5qPTLO2vjzMXj8QN8=
+
+Name: cheatsheets/cs_cdt_basic.xml
+SHA-256-Digest: yJ1nDXvIU8cs0+MqAemZuSfYSvNH1bYo5SeTPxwSacY=
+
+Name: images/cdt_t_toggle_selection.png
+SHA-256-Digest: Z9MLBc7XLZaGYaPldwRbxT2uWegkgV8PMtEKN/izXZU=
+
+Name: images/c_file_obj.gif
+SHA-256-Digest: suuNfHv99PasbDU+DIhTu+U+AfZTZqnhrbyCE7HuDA0=
+
+Name: images/60/PV-extloc.png
+SHA-256-Digest: MBdLFE/eHcPUz/C0fnQWNNwW/bVLo6ZG8QahQ1si8Es=
+
+Name: cheatsheets/cs_cdt_import_project.xml
+SHA-256-Digest: 3Sk0eO+x6Eum8gvW/P99x7Q7KKMmgcynZuDdGbK7+0E=
+
+Name: images/pref_panel_edit_template_dlg.png
+SHA-256-Digest: ihhzdJwJbz3tYjFWat7E9HbOoBn6lOHdnjN2AdxBlAM=
+
+Name: images/openDeclaration.png
+SHA-256-Digest: Ql+s/bz7QxHjPUsOtOrLQSQcWCyxxfwRLg+3zsPIvco=
+
+Name: concepts/cdt_c_content_assist.htm
+SHA-256-Digest: MAu67Kbu5JDyS3zW8y9AHHGG5Qxu6rIN+t0g5gWTt+4=
+
+Name: images/hierarchy_co.gif
+SHA-256-Digest: C18ImFuRinbcmuJBV/+QLD/g0vhWy5KP0ttuF4tEO0c=
+
+Name: images/scanner_discovery/sd_specs_detector_options.png
+SHA-256-Digest: DJ9YgPAhn64W2u1c71CZG45/yFWeJT+CUbsdWLGPytM=
+
+Name: images/prop_mng_dialog.png
+SHA-256-Digest: KI3eQc7ZEFU3gmCdr7o8CdskQZoaVakhDzxhCnyVhyI=
+
+Name: reference/cdt_u_views.htm
+SHA-256-Digest: 55wWbDjodGNvSN7sJxJNTEvhM1idiUqUOKZ8NEoKhIY=
+
+Name: images/cdt_w_basic12.png
+SHA-256-Digest: 12SW3RPtAppor1xU7R4XR2aen22QIiiighk98JfS96A=
+
+Name: images/new_project_wizard.png
+SHA-256-Digest: /1u+Dgei+iMbf+Em2dQlI47hhhrgRLBA4AHmOlFUxQM=
+
+Name: reference/cdt_u_fileprop_lng.htm
+SHA-256-Digest: J3zS4KbXv7GQPYlvqV9tHBj/0+EueZS3bWzMVM06OK0=
+
+Name: reference/cdt_u_language_mapping_pref.htm
+SHA-256-Digest: ednH8icDPhfo9JMzYuhybMFF0wiMg7G+Csgm9ZOY6Zg=
+
+Name: concepts/cdt_c_proj_file_views.htm
+SHA-256-Digest: qYyPkrTM0/epnIeS6xzccL/Jh2EZ23nodtjUB8qponU=
+
+Name: images/cdt_w_viewMenuFilters.png
+SHA-256-Digest: /jMCro3JHpPe4Mn1Vg9hnT1VKPA6exhSwIOwKblSZw0=
+
+Name: reference/cdt_u_discovery_preferences.htm
+SHA-256-Digest: W5+qxDUnxhqgftwjOWcyc49qdINTJM4xwTeFBuQmQI4=
+
+Name: images/80/Noprojectdebug.png
+SHA-256-Digest: Ge19876E2Z4b8Xi2G8felgCHZSTMvNfAb/SK7og2FDw=
+
+Name: images/prop_builders_imprtlnchcnfg.png
+SHA-256-Digest: r3h9E8fswsJJvannLNwvCg565+EsllBQHRpW22VdH30=
+
+Name: reference/cdt_u_open_element.htm
+SHA-256-Digest: II3zpz3Fi9A2EAxGN4RPE9qDcecoTOj4x166J7X8pcY=
+
+Name: concepts/cdt_c_whatsnew_60.htm
+SHA-256-Digest: Q+DT62hQmfBmcAAo2cpoUCEGAFi43IOWD8Iwf/gjuDg=
+
+Name: images/60/MTV-DND.png
+SHA-256-Digest: G4Rlp+04xiGxTYrTBpIhA5OnKgCMk5Gic0JJ5gnhesE=
+
+Name: images/union_obj.gif
+SHA-256-Digest: MFSKrg/FJD8UfZ/LXVNOZBIdRHH/PPuPxd9JCUhTGBQ=
+
+Name: images/cdt_debug_exes01.png
+SHA-256-Digest: YxVMOg4TZxpO4zO3/PPNRvVPev3ISMgvUiPuyMx1Ld4=
+
+Name: images/cdt_update_find-install.png
+SHA-256-Digest: AAq9ynUcAxNapimStjFtdSfn95wIuEFiUVt250czmKc=
+
+Name: images/run_debugger.png
+SHA-256-Digest: 7CCZvGZiqBUP/xj1SMI999qmt1VfW6Vbu4OtAJrDMXI=
+
+Name: images/icon_nav_back.png
+SHA-256-Digest: U7SdcJSsEpLfx9/3Jp6qTVHMCvkBO7P6yV+H+w+h0yA=
+
+Name: getting_started/cdt_w_existing_code.htm
+SHA-256-Digest: ns0z6qqJ6eN8EWiT0wFiGCAN3NDEG+UMvHuBWJO41JU=
+
+Name: images/icon_open_console.png
+SHA-256-Digest: T2uuOXN+ZpMndx/ViXX3LID+Z7P8rP/chH/dGTYMTsY=
+
+Name: images/60/New_cdtwsconfig_wsProperties.png
+SHA-256-Digest: l8q67rdAjFs3quKnGyks2lkcm1iE+XPb3x0ol5g4zTw=
+
+Name: images/icon_disconnect.gif
+SHA-256-Digest: PF5Pb+5qllsPAeJcgZRDeSZoKVeC0AEzjz52kZmrKMQ=
+
+Name: images/namespace_declared_obj.png
+SHA-256-Digest: rayKvtZmpZkLvytGx/YQmGmHzcTgAZ5/ooI5pSYLoc0=
+
+Name: reference/cdt_u_new_proj_wiz_type.htm
+SHA-256-Digest: h8vKQcwLKaxCfH2J2vBi4OjLI+VhIgUZIXd/pBgtBmk=
+
+Name: tasks/cdt_t_add_brkpnts.htm
+SHA-256-Digest: uI4kxWnA55ipLl0dqyI5+GX8IEy29cE1FNzdWuMt5i8=
+
+Name: images/icon_show_logical_struct.png
+SHA-256-Digest: 3BVypYTo6pJ5iS5+oijrhYPEMtturYn5Hk2gy913kNg=
+
+Name: images/cdt83/CDT_ThreadOrder.png
+SHA-256-Digest: GB8RgcJSihQjmNxq2Gt9b27fbJ6gW1tmqIJ4DI8+st4=
+
+Name: images/cdt_menu_toggle_comments.png
+SHA-256-Digest: 7IlUZevH8HbK7neH0WE6Jv/aStBOQ2Ps5TJahBrdom4=
+
+Name: images/fileprop_language_mappings.png
+SHA-256-Digest: ZQTEcwGWMf/fhVc+YOkWi23eRJ0qF7fQ9N+/0BMsIRk=
+
+Name: tasks/cdt_t_build_process.htm
+SHA-256-Digest: 7lViJzaLoUXSpKpB87q9JXyUEbop7ipC6bcF1qNrYzg=
+
+Name: images/cdt83/CDT_GdbinitVarSubstitution.png
+SHA-256-Digest: NZiO0Xq91IhN7rxjBi3LHda0qoyzkgyPLPQEXrdUXD0=
+
+Name: images/icon_resume_at_line.png
+SHA-256-Digest: ZyJ7dcgwY8c7qIT6MDl4gqXtKwlniZQo21SObINWNfU=
+
+Name: images/new_make-binary_parser.png
+SHA-256-Digest: 0MD70HXTwPQbjKB4TeYgBXkjff5sZBTlwoV6v5h+g3w=
+
+Name: reference/cdt_u_prop_general_lng.htm
+SHA-256-Digest: Y/zC25DjlKlYTAVSJlYxbzaHUtyQITyrcAZfAVSZGEY=
+
+Name: getting_started/cdt_w_basic.htm
+SHA-256-Digest: IbtfV67jZucgIhpntQ6b3jRHaRhZI8tDQVRJpistXfU=
+
+Name: images/80/Bug-339015-MakeTargetView-SrcRoots.png
+SHA-256-Digest: c3glzTptvECHLT3QyviSShKngoiUlnuCpXWcE1g2bec=
+
+Name: tasks/cdt_t_proj_paths.htm
+SHA-256-Digest: c/yLfwVqcBfKxk8T+yQnjCNK2qKgJ3yVevxOGCMG8Sk=
+
+Name: images/prop_steps.png
+SHA-256-Digest: cXLqWNq5bAIdi80T3I0id6pADOa6dMGwi2kwmnN/aPQ=
+
+Name: images/intl_07.gif
+SHA-256-Digest: t+buKmZp8sjqsJpn+UvqHf540lEn8m7Oj+A8B77zyqA=
+
+Name: images/icon_edit_make_target.png
+SHA-256-Digest: tWEoR7FbekDVHKCtcjTDShUSNoLBfNSA/xqGQYPdS6A=
+
+Name: images/icon_db_stepinto.png
+SHA-256-Digest: 8SbCwPz8dcInmwBFdKAk9ql01l/Vluwv3uQD7OcQekk=
+
+Name: images/icon_reg_disable.png
+SHA-256-Digest: 6HN3emeY/4GrC4o5W/4eC1JLkacCPzNVZZKtahee0LU=
+
+Name: reference/cdt_u_navigator_view.htm
+SHA-256-Digest: SaPJ6SY6Igcw+QVQ9tLC+Oyy2Z7sXRbJAJcp767HzTo=
+
+Name: reference/cdt_u_new_proj_wiz_toolchain.htm
+SHA-256-Digest: Vsy09II84cSrSpHlWBDBSOA5IP4OXZfqPsOpLNKW4Js=
+
+Name: images/c_cpp_preferences.png
+SHA-256-Digest: zRsYHS7fh8b7S6gkCrs5xMeIlAPSZqPcuXzSb9kSRk0=
+
+Name: index/indexed_contributions
+SHA-256-Digest: fS4r+4NvmiYRe6RpJInJPhvlV8VSiOe1kIQnmjhHD9w=
+
+Name: concepts/cdt_o_code_entry.htm
+SHA-256-Digest: SU9DE2J7hZ9Ar6Q0wzzZiu0KsnotMnyMSsWCypu/TCI=
+
+Name: reference/cdt_u_m_file.htm
+SHA-256-Digest: VZH5twwBhhJmwdjZai4Ozubwsb6vrKNqkneAed2zCEY=
+
+Name: images/icon_new_memory_view.png
+SHA-256-Digest: dR4Ep9dh90ow8TMsKuE8LpwZZqlYjDgEZ5X+mSkXy1Y=
+
+Name: images/Idea.jpg
+SHA-256-Digest: DokrObt7ttlxM17Fzy/Qj+XtX9/0XU55vmn9Do8CEQ8=
+
+Name: images/icon_switch_mem_monitor.png
+SHA-256-Digest: EIvH1qwstUoP6XXANAzpPHnzNWQMkBBwvmdpnQVxOt4=
+
+Name: images/intl_05.gif
+SHA-256-Digest: M125XuP3Rt9rpwpCXvwpSZ0hf5QSYxJ61GOB8e1Fv0s=
+
+Name: tasks/cdt_t_memory.htm
+SHA-256-Digest: rfsRDETI+ROUkBJLowd/0oLodx/m6C0uYsNz2/a+rhs=
+
+Name: images/icon_db_drop_to_frame.png
+SHA-256-Digest: yNd/TG0DVr/qXdSEsKqn3MwNIuAuoH8uT3n5jGCc0Ns=
+
+Name: images/icon_show_callers.png
+SHA-256-Digest: 7HB9AzvsO2cs20PN0NVRO53lzOnz6y8MOtRVQKE8CP0=
+
+Name: reference/cdt_u_newproj_def_symb.htm
+SHA-256-Digest: xbuO8cGEC40EeZlqG+FWtKCE/6Gv9fea8P3oTqFQU/s=
+
+Name: images/editor_hover_preferences.png
+SHA-256-Digest: FOvj2QMOesjtxqiBJRYrhr5qoAX0ORLijiaxBMkTDCk=
+
+Name: images/cdt_rename_dialog.png
+SHA-256-Digest: NZ+UN1sNvOs6CZxMTjtgvz6bRNRBuIl93YdnZBgBAjg=
+
+Name: images/70/CDT70_Surroundwith.png
+SHA-256-Digest: o+io+EH9Ny02dR1SctkmbncKneQF+bzI6/mkN5iM5ck=
+
+Name: images/icon_hide_make_targets.png
+SHA-256-Digest: cavcKmYR1nUg0HbgKsPpXCS6x4BG6MbdiW8Gogiz2dk=
+
+Name: images/cdt_debug_bp_filter.png
+SHA-256-Digest: EYD6kF9U3OHDTQqyLrwbahwrtHzXM6cDTFHFlXd96cc=
+
+Name: images/prop_exp.png
+SHA-256-Digest: fPPGAmiPdoTh7Ae1ltoI/8OXN26TK//lNrsNQzeAM+A=
+
+Name: reference/cdt_u_prop_general_pns_inc.htm
+SHA-256-Digest: Catod56j3oEaGxVtCytXulAOFajzgVJI7JZrEmJL60A=
+
+Name: images/mfile_build_rcbs.png
+SHA-256-Digest: 2E4hJJORZhwECo7kqWBTW3Q0pJxszmGIGPTXjmWqLvw=
+
+Name: images/inactive_co.gif
+SHA-256-Digest: NfVfg3tQUwkmpxMFDBL1CQJKj5kvP76yGD4Jsz0FMQI=
+
+Name: images/next.gif
+SHA-256-Digest: E2sfZwxXd0G770m+JsdziFqJKCnNwI33lAdw43OYFD8=
+
+Name: images/icon_show_history_list.png
+SHA-256-Digest: CJ5i/ZV/4/hYHsVk/jblcPhhxMuQ99d1LyMkNAs/2hk=
+
+Name: reference/cdt_u_find_replace.htm
+SHA-256-Digest: DOpSV+DHM2u0nE+D6USckp34xodhrtnh/DV9MvQUXgo=
+
+Name: tasks/cdt_o_write_code.htm
+SHA-256-Digest: DsGDVDXEDBa+CEQPni7p/1uwYTLXEAo8Taf5ANnrmQk=
+
+Name: reference/cdt_u_dissassembly_view.htm
+SHA-256-Digest: Pz3xJNDZEsh6AMP8FSwSY26kshAFQU9IwMzE6jo6wRo=
+
+Name: reference/cdt_u_newproj_behavior.htm
+SHA-256-Digest: jPr+jDXjYR8t+34BKfAyFz4VchMJqx3G9zrrYMEbzdg=
+
+Name: reference/cdt_u_memoryview.htm
+SHA-256-Digest: LNWF+APY3E9gQFcNjJ0NwSf5ryA9oanw+SscJZpSQRQ=
+
+Name: intro/swt/whatsnew.properties
+SHA-256-Digest: mimqn98L9HXvNbAWFxY0VYLJVMPnRZhQwpxSQH9aiOg=
+
+Name: contexts_CDT.xml
+SHA-256-Digest: 4jhMdCnLCX6gGr1PBRMUsY5NMqewvG+tVCC6E75P6ig=
+
+Name: images/70/CDT70_SaveLog.png
+SHA-256-Digest: AuWP6tyLRGy3314rX27QSJBB18NBcTTQoxYn5obGtRo=
+
+Name: reference/cdt_u_make_settings_pref.htm
+SHA-256-Digest: 1p00AdtJIl2WGLgSsXHjl3HeWvdAPY49pG2QMEJzUzo=
+
+Name: images/80/NameStyle.png
+SHA-256-Digest: 4GMOHPkrJBWzfSJwaRMm9nMFtEDkeSMwAEnydhHBpXE=
+
+Name: images/cdt81/cdt_debug_withhiding.png
+SHA-256-Digest: sGdnTsnlBSv1ukK4pMu2L/ziNtM9t46B8xYZDRYHJis=
+
+Name: images/icon_db_suspend.png
+SHA-256-Digest: d8S67rQO3BgSNR3XDGNEY9K27D4sEH3USdbxUaRZdD0=
+
+Name: index/indexed_docs
+SHA-256-Digest: Gam5RD6Gi1mkzs8dhDduQMz9mdaMUbpS6WJ8tOshoUc=
+
+Name: concepts/cdt_c_over_dbg.htm
+SHA-256-Digest: ivWLdeeV8Yg70ewjdP9DdqYZfUp9hiOW+KkxhyJ8tC8=
+
+Name: images/cdt_debug_exes03.png
+SHA-256-Digest: l8101At1JR/FbXUoAxuYk1NETILIb9rYswETJJCC3cI=
+
+Name: images/cdt81/frameworks.png
+SHA-256-Digest: WtsA84vJtGWNewHFrwsEhjS6Bgv5L5PNEraIg4IhLno=
+
+Name: images/customize_perspective.png
+SHA-256-Digest: eEmsKhIeUFO0spCOGL9qW+Z4Fn95rE/yxUP1W5sZW6Y=
+
+Name: images/rh03_04.gif
+SHA-256-Digest: SCetiEfD5/VeKKodnAL9FRMmRdiI7SOaIJ2tNsfH/8U=
+
+Name: images/cdt81/extrawarnings.png
+SHA-256-Digest: TenzOma4wULHwN6Aif43Vd90ANsoklthyjB3IEyYHNc=
+
+Name: images/back.gif
+SHA-256-Digest: qKAqb2sSZCDzAORVLB0fWh/NB9S9ihd+IGPnFfXlh5M=
+
+Name: reference/cdt_u_run_dbg_arg.htm
+SHA-256-Digest: lNkEk0wWwDMnxufy/zKIBWUKX563zBZv5estUEzJVaQ=
+
+Name: images/icon_hide_sys_includes.png
+SHA-256-Digest: XmI2xrMOtId6ukOfnxxMKW2NtrH4iM97cDg2NBuR7R0=
+
+Name: images/80/DefaultGdbPreference.png
+SHA-256-Digest: ZPuuEAITnMQWxTiE/ceoS5PillAS1aXv80jzrzGdFHM=
+
+Name: images/60/Run_debug_launch_group.png
+SHA-256-Digest: IID8VuwGvlNcu4sPEC1BBIsmP7gvs1uK4e2A5mBqOKQ=
+
+Name: images/80/CoreLabels.png
+SHA-256-Digest: IVL1urR04TTP/BYMipYMT220eqZzzDSsPHCXkw74TxA=
+
+Name: images/icon_toggle_split_pane.png
+SHA-256-Digest: cXObcXRC4fER/2GuWwYp0QJHbCYAZaClO76VXLZ+Kd0=
+
+Name: images/prop_mng_add.png
+SHA-256-Digest: 7FoBCNdxZZX90qvE+4SmeJWT0R8sdcGd47nfEP/pQmU=
+
+Name: images/70/CDT70_Outlinegroupmacros.png
+SHA-256-Digest: mI4ty7KEloRd/FP/HcPc09bD4lUVghTiPqs0l2xpKag=
+
+Name: reference/cdt_u_prop_general_pns_hier.htm
+SHA-256-Digest: ZNpewySX+9gU72g44TIL8EOQz98h5qruODenaS67748=
+
+Name: concepts/cdt_c_perspectives.htm
+SHA-256-Digest: qcW72aCQGm6z8xYLDj/iGy3ikH8nTWE2EoCqEW/C/6M=
+
+Name: concepts/cdt_c_build_over.htm
+SHA-256-Digest: RGvQrePwHlCzktw6eNeGDTOLmYWvo/iD1fhyZT3YxoQ=
+
+Name: images/ngnext.gif
+SHA-256-Digest: l/4ZooTlVL7sbkv064tV9yaWKsYACH7U9LwWGGOrNFY=
+
+Name: concepts/cdt_c_scanner_discovery.htm
+SHA-256-Digest: T6nJCwqesLOzJaqXflcYoAaQkFxzC+iyGPvP0o8zEO0=
+
+Name: tasks/cdt_t_autobuild.htm
+SHA-256-Digest: 3++j6HgQRNYZS6/ZdsvhfODYbIECG7C13wmFgqgWIvU=
+
+Name: reference/cdt_u_c_code_templates_pref.htm
+SHA-256-Digest: sDih+k11gLomSdmKQVupSaIxMZWext7lqsmd7dTAnAU=
+
+Name: images/project_new_file.png
+SHA-256-Digest: Qu1q+obVBDLtyAWrLnZ3Cy0uqxUO2Tg6vPyFhT+IE7o=
+
+Name: tasks/cdt_t_disassembly.htm
+SHA-256-Digest: FlbYYpLR5OK4AJQWgfATVAEZl75CiAUR7dCQhSTC1MI=
+
+Name: tasks/cdt_t_proj_build_set.htm
+SHA-256-Digest: 6O618w3ziugocglECbGgaY6Iv2xlNfB75l677x9NndY=
+
+Name: tasks/cdt_t_contentassist.htm
+SHA-256-Digest: yGiEU2lxcBVyuDz2dHc+u+sliZyNr5Zqitbc8l4gUjc=
+
+Name: images/70/CDT70_Codan.png
+SHA-256-Digest: nqkBoH0n8gB7QYZ7QN9ecJYUuzsGAzjua4d4v2oWi18=
+
+Name: reference/cdt_u_search.htm
+SHA-256-Digest: eEnBaocRK8/P051SNsZRhYAQ+R5JVf5UsGp/bVKmN/k=
+
+Name: images/view_editor.png
+SHA-256-Digest: TS2XFabHO1RwSsGD5jVoBToq8PUE63vyO+vC/1Ikxrw=
+
+Name: reference/cdt_u_new_proj_wiz_name.htm
+SHA-256-Digest: ozGwSx6WrFJyOxlcGpNluUZf7K6RoE3LotPGt7x/Pi8=
+
+Name: reference/cdt_u_dsfgdb.htm
+SHA-256-Digest: m8+0oDaoO5m6eH7YyR1BeMKYeAxkzggXCcSRMY7ASBk=
+
+Name: images/cdt_fold_resource.png
+SHA-256-Digest: S+6G12HauzJd54SD8+DjfjJUZB6PPayg9lOtcpr/6U4=
+
+Name: images/prop_index.png
+SHA-256-Digest: zu+08CVcb8Q4wC/kATeO5yNZazXp2Rm/H2MZhYsr1NI=
+
+Name: images/run_debug_launch_group.png
+SHA-256-Digest: IID8VuwGvlNcu4sPEC1BBIsmP7gvs1uK4e2A5mBqOKQ=
+
+Name: plugin.properties
+SHA-256-Digest: S3c6jHWNpNOTCsaIAvi2fmBPB4N8qTjvwoZJThNMvMM=
+
+Name: images/prop_srcloc.png
+SHA-256-Digest: Sy9rqr+RNsHJfWQc7O7RVI1LFAqoFA18JA+FFtwpShk=
+
+Name: images/cdt_pref-wizard-defaults.png
+SHA-256-Digest: l/bGqQvVWbtU8mKpoFEYkqvrWRfn0uRd7bU8xISVyLQ=
+
+Name: images/80/CodeTemplates.png
+SHA-256-Digest: VJnoh2JRJvfd5Uw/Z0VCoHOrFPfj5GNB+G2vL7Eerm8=
+
+Name: tasks/cdt_t_add_brk_action.htm
+SHA-256-Digest: j40eUFe0zsfWMRLNC9FWwHdWXZo1rrfL1n9PKtHAchs=
+
+Name: reference/cdt_u_m_navigate.htm
+SHA-256-Digest: dAgE29pP6yHRreUGbq1TgzqDtw0OSjGP+EfnFiRfM20=
+
+Name: images/60/CDT6.0_OO_search.png
+SHA-256-Digest: XuSJ/eNBC7XRMqNEWoFKO2CQlrlJaRey84rrCs7ZIP4=
+
+Name: images/view_navigator.png
+SHA-256-Digest: FdEmtaF8pebJ1h9oWbfSjeqWELCUxmb+h4p3752vTpg=
+
+Name: reference/cdt_u_run_dbg_env.htm
+SHA-256-Digest: 1NgV0FMwN6ncl1dSSP9ivC4VclQMTx7j7WF20vrhN+0=
+
+Name: reference/cdt_u_create_make_target.htm
+SHA-256-Digest: ZpTab+1Fq3wgbq1PRGO5qBWYzCcNaJah2dIcQaiTLKw=
+
+Name: images/icon_refresh_view_contents.png
+SHA-256-Digest: t1/OMAhM6NSEn+0fGqLv33em3df5RUU1zfw51S+muQA=
+
+Name: images/make_targets.png
+SHA-256-Digest: E85uXPeI2+iedFEYFgKsOqXcdG2ac8nyeVnrkwv/AFA=
+
+Name: reference/cdt_u_prop_build_variables.htm
+SHA-256-Digest: iUhsFYBvgyNGlIcNmoPujd065uAREnIdws5m75wI6pw=
+
+Name: reference/cdt_o_prop_proj.htm
+SHA-256-Digest: HoTNMbIp0ooXnexENnCM/MaOD+q7XmFgsn4hJnT0ARk=
+
+Name: reference/cdt_u_prop_rundebug.htm
+SHA-256-Digest: 3aer/H0giPn26hb/TLTkySGFA3TJB/5jftCmfIhfnUo=
+
+Name: tasks/cdt_t_conv_proj.htm
+SHA-256-Digest: tmMXB+CiWyN8+OjHlDs0wDZbX+RsWRSRKA40zTxA4zw=
+
+Name: images/cdt_w_basic06a.png
+SHA-256-Digest: 1eUnO9eSBye/Jgu2Zx9JixRN8XA1YYohfDrlOmvQxdY=
+
+Name: images/prop_environment.png
+SHA-256-Digest: r1iqnCu04Md/53fzIU0XVBFBNpDfdDpCpEaC7MFp7iI=
+
+Name: images/hammer-icon.png
+SHA-256-Digest: Nj2+B+1sOp+vBLWwCvKdOXPWv/g7KIDUNBlegkVUef8=
+
+Name: reference/cdt_u_newproj_buildset.htm
+SHA-256-Digest: jgx8/eSgQYNbcH5fYvyXcZEC1gxNllzhwicvjK+n2Ao=
+
+Name: reference/cdt_u_include_browser_view.htm
+SHA-256-Digest: VGuT4XwHz99U7yclL+KpJWHnkNhyaCPvj5nqcPEbKZk=
+
+Name: reference/cdt_u_signals_view.htm
+SHA-256-Digest: wrt8vjCmkmJ1OSdiJDiepZkCJQAbS7vPNy3V59RvW6M=
+
+Name: images/cdt82/ConsoleWrapLine.png
+SHA-256-Digest: Kt613LX1mg1YgN0lDnJqMv+M5cWFlUnOlHkJknOFwI4=
+
+Name: images/mfile_info.PNG
+SHA-256-Digest: H+4MM9sMgCYhuuC0TJrd3US4BtZd90a36VMf1WdoJuc=
+
+Name: images/cdt82/MakeEditorBracketMatching.png
+SHA-256-Digest: at/U17cln0P+FVI+sxsE4cFxEqDTAD1gtvG+EzEKeJI=
+
+Name: images/prop_doc.png
+SHA-256-Digest: C9kH7Gn512pGZzev3zqVCFD0w89sRL+zJZOw4f1fUuk=
+
+Name: images/var_declaration_obj.gif
+SHA-256-Digest: zWzViNQfJvwjah2O5FiOpRomwZp/xETUzP1Gkrulh38=
+
+Name: tasks/cdt_t_sel_search.htm
+SHA-256-Digest: Kh2RMWuguwe8rSjK74oDYTHIcjFrCMeroHQ1nSa5DJs=
+
+Name: images/cdt_debug_exes04.png
+SHA-256-Digest: 2gs0lGKmArEc0bHltGA6brlarGg9g8GcyquP+ExYkYA=
+
+Name: images/icon_wset_edit.png
+SHA-256-Digest: 5TOZn7iCPlNyHrfy+C3AuNvJAJDE/F9C4g+WstP4BDg=
+
+Name: about.html
+SHA-256-Digest: 7mbS+ztMDS7S5/aYvJ7U49bPd/pcr0CtAylhJdsaxfA=
+
+Name: images/search.png
+SHA-256-Digest: oSnQj8Vw0LvS5gV5Ekc4XNuGPjS2H/jrmaokoizSblw=
+
+Name: images/cdt_toolbar.png
+SHA-256-Digest: vv7Uvoh6c071QFjg7gdSVksH51HVSo/rb1abG6mX1X4=
+
+Name: reference/cdt_u_fileprop_inc.htm
+SHA-256-Digest: 8ugVnX2Vfih2H7kiemrWa3hDCRpYk8PRjEfBEvNP6gU=
+
+Name: reference/cdt_u_mfile_info.htm
+SHA-256-Digest: HG2zIGKS9ACiRRgnHs3WgqWN6Qtf9qqs9c/ciZgluTc=
+
+Name: images/80/DiscoveryTab.png
+SHA-256-Digest: kPGHWDLC7TJq4UfaQzRxAdRF0lEuthUbqBKHdfdNq7I=
+
+Name: reference/cdt_u_prop_build.htm
+SHA-256-Digest: EQwPpCBh7oyKXv05gnUDnzmCv4ZJyxvF5/gT1D6kh4E=
+
+Name: tasks/cdt_t_run_source.htm
+SHA-256-Digest: 3pbQHTZ1485id+QNGn1M/dejqLsys1Y7AD0QoMg2tsU=
+
+Name: reference/cdt_u_prop_general_typ.htm
+SHA-256-Digest: lIJNh9P0nO9TWxKXgQO7pO8aG11fTL+LHpnLrv6QErE=
+
+Name: tasks/cdt_t_addmaketarget.htm
+SHA-256-Digest: Ss6TOJilcxadFGWQLrzr1zF9ipp32SKwxq+KymbuLiM=
+
+Name: images/scanner_discovery/sd_preferences.png
+SHA-256-Digest: lMM7OU7V71xhgtLnfH+ljNB+T0o13AAFAROnVcJZN+4=
+
+Name: images/prop_mng_rename.png
+SHA-256-Digest: +xt92+4LmlIx1SKactSSwA8UUYfgM2VPiSc277CGDaA=
+
+Name: images/projects_filters.png
+SHA-256-Digest: zxbVetrr8dkvzbSMG6CeHeOO6N2a78xy6++DYDpz6rI=
+
+Name: images/selection_search.png
+SHA-256-Digest: d73848eMcU3i4pp7msvIBTXMr4LbWqYn3XvVDGf64sk=
+
+Name: images/cdt_refactor.png
+SHA-256-Digest: UoBZhNtHG2t+MeqVAHuoduiu4KfRzR+iNsCYviRNkuY=
+
+Name: reference/cdt_u_prop_build_settings_container.htm
+SHA-256-Digest: E0KKuYBD6bS/KofSj9dm8cAvwMzXdRtjMeQUirRoe7Q=
+
