@@ -1,11 +1,3 @@
-package networks;
-
-import ned.DatarateChannel;
-import ned.IdealChannel;
-
-
-
-
 network aparicio_network
 {
     parameters:
@@ -40,94 +32,79 @@ network aparicio_network
             int test = default(0);
         }
     submodules:
-        node[0]: QNode {
-            address = index;
-            nodeType = "EndNode";
-            @display("i=device/pc;p=85,100");
-            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
-            //emission_timing_uncertainty = 10;
-        }
-        node[1]: QNode {
-            address = index;
-            nodeType = "EndNode";
-            @display("i=device/pc;p=85,98");
-            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
-            //emission_timing_uncertainty = 10;
-        }
-        router[0]: QNode {
-            address = index+1000000;
-            @display("i=device/router;p=238,40");
-        }
-
+     
 
 
         A: QNode {
-            address = index;
+            address = 1;
             nodeType = "EndNode";
             @display("i=device/pc;p=135,137");
         }
         B: QNode {
-            address = index;
+            address = 2;
             nodeType = "EndNode";
             @display("i=device/pc;p=135,198");
         }
-        C: QNode {
-            address = index;
+        CC: QNode {
+            address = 3;
             nodeType = "EndNode";
             @display("i=device/pc;p=135,268");
         }
         D: QNode {
-            address = index;
+            address = 4;
             nodeType = "EndNode";
             @display("i=device/pc;p=135,329");
         }
         G: QNode {
-            address = index;
+            address = 5;
             nodeType = "EndNode";
             @display("i=device/pc;p=313,319");
         }
         H: QNode {
-            address = index;
+            address = 6;
             nodeType = "EndNode";
             @display("i=device/pc;p=387,319");
         }
         I: QNode {
-            address = index;
+            address = 7;
             nodeType = "EndNode";
             @display("i=device/pc;p=464,319");
         }
         K: QNode {
-            address = index;
+            address = 8;
             nodeType = "EndNode";
             @display("i=device/pc;p=571,40");
         }
         L: QNode {
-            address = index;
+            address = 10;
             nodeType = "EndNode";
             @display("i=device/pc;p=571,110");
         }
         M: QNode {
-            address = index;
+            address = 11;
             nodeType = "EndNode";
             @display("i=device/pc;p=571,183");
         }
         E: QNode {
-            address = index+1000000;
+            address = 12;
+            nodeType = "Router";
             @display("i=device/router;p=261,208");
         }
         F: QNode {
-            address = index+1000000;
+            address = 13;
+            nodeType = "Router";
             @display("i=device/router;p=352,208");
         }
         J: QNode {
-            address = index+1000000;
+            address = 14;
+            nodeType = "Router";
             @display("i=device/router;p=464,149");
         }
     connections:
 
         A.port++ <--> C <--> E.port++;
         B.port++ <--> C <--> E.port++;
-        C.port++ <--> C <--> E.port++;
+        CC.port++ <--> C <--> E.port++;
         D.port++ <--> C <--> E.port++;
         E.port++ <--> C <--> F.port++;
         F.port++ <--> C <--> G.port++;
@@ -139,7 +116,7 @@ network aparicio_network
         J.port++ <--> C <--> M.port++;
         A.quantum_port++ <--> QuantumChannel <--> E.quantum_port++;
         B.quantum_port++ <--> QuantumChannel <--> E.quantum_port++;
-        C.quantum_port++ <--> QuantumChannel <--> E.quantum_port++;
+        CC.quantum_port++ <--> QuantumChannel <--> E.quantum_port++;
         D.quantum_port++ <--> QuantumChannel <--> E.quantum_port++;
         E.quantum_port++ <--> QuantumChannel <--> F.quantum_port++;
         F.quantum_port++ <--> QuantumChannel <--> G.quantum_port++;
@@ -150,9 +127,4 @@ network aparicio_network
         J.quantum_port++ <--> QuantumChannel <--> L.quantum_port++;
         J.quantum_port++ <--> QuantumChannel <--> M.quantum_port++;
 }
-
-
-
-
-
 
