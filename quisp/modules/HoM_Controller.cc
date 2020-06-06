@@ -43,7 +43,7 @@ void HoM_Controller::initialize(int stage)
         error("Set receiver parameter of HoM to true or false.");
     }
     // resource counters
-    actual_resSignal = registerSignal("actual_res");
+    recog_resSignal = registerSignal("recog_res");
 }
 
 
@@ -338,7 +338,7 @@ void HoM_Controller::pushToBSAresults(bool attempt_success){
     if(attempt_success){
         success_count++;
     }
-    emit(actual_resSignal, success_count);
+    emit(recog_resSignal, success_count);
     results[getStoredBSAresultsSize()] = attempt_success;
 	int aft = getStoredBSAresultsSize();
 	if(prev+1 != aft){

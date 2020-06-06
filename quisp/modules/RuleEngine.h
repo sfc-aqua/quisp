@@ -92,8 +92,8 @@ typedef struct _process{
 class RuleEngine : public cSimpleModule
 {
     private:
-        simsignal_t recog_resSignal;
-        // simsignal_t actual_resSignal;
+        // simsignal_t recog_resSignal;
+        simsignal_t actual_resSignal;
     //friend class Action;
     public:
         int parentAddress;//Parent QNode's address

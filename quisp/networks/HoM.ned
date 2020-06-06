@@ -116,8 +116,8 @@ module HoM
         @display("bgl=2");
         string nodeType = default("HoM");
         bool interHoM = default(false);
-        @signal[actual_res](type="int");
-        @statistic[actual_res](title="actual number of resource"; record=vector, max; interpolationmode=sample-hold);
+        @signal[recog_res](type="int");
+        @statistic[recog_res](title="actual number of resource"; record=vector, max; interpolationmode=sample-hold);
 
     gates:
         inout quantum_port[] @loose;

@@ -38,8 +38,8 @@ void RuleEngine::initialize()
     number_of_qnics = par("number_of_qnics");
     number_of_qnics_r = par("number_of_qnics_r");
     number_of_qnics_rp = par("number_of_qnics_rp");
-    recog_resSignal = registerSignal("recog_res");
-    // actual_resSignal = registerSignal("actual_res");
+    // recog_resSignal = registerSignal("recog_res");
+    actual_resSignal = registerSignal("actual_res");
 
     terminated_qnic = new bool[number_of_qnics_all];
     qnic_burst_trial_counter = new int[number_of_qnics_all];    //if there are 2 qnics, 1 qnic_r, and 2 qnic_rp, then trial_index[0~1] is assigned for qnics, trial_index[2~2] for qnic_r and trial_index[3~4] for qnic_rp....
@@ -577,6 +577,7 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int
                     int address_entangled_with = process->entangled_partner[i];
                     for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){//Traverse through rules
                         if((*rule)->rule_index == rule_id){//Find the corresponding rule.
+                            emit(actual_resSignal, (*rule)->resources.size());
                             for (auto qubit=(*rule)->resources.begin(); qubit!=(*rule)->resources.end(); ++qubit) {
                                 if(qubit->second->action_index == index){
                                     //Correct resource found! Need to unlock and stage up the resource to the next rule.
@@ -1205,7 +1206,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index){
                     }*/
                     it->second->Allocate();
                     assigned++;
-                    emit(recog_resSignal, assigned);
+                    // emit(recog_resSignal, assigned);
                 }
             }
             EV<<"assigned"<<assigned<<"\n";

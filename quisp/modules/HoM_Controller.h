@@ -38,7 +38,7 @@ class HoM_Controller : public cSimpleModule
         cPar *c;
         int time_out_count;
         int success_count = 0;
-        simsignal_t actual_resSignal;
+        simsignal_t recog_resSignal;
     public:
         int neighbor_address;
         int neighbor_address_two;
