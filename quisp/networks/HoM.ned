@@ -15,6 +15,8 @@ simple BellStateAnalyzer
         double required_precision = default(1.5e-9);
         int photon_detection_per_sec = default(10000);
         int address;
+        @signal[Num_Bell_state](type="int");
+        @statistic[Num_Bell_state](title="actual number of resource"; record=vector, max; interpolationmode=sample-hold);
 
         int degree = 2;
     gates:
@@ -116,8 +118,6 @@ module HoM
         @display("bgl=2");
         string nodeType = default("HoM");
         bool interHoM = default(false);
-        @signal[recog_res](type="int");
-        @statistic[recog_res](title="actual number of resource"; record=vector, max; interpolationmode=sample-hold);
 
     gates:
         inout quantum_port[] @loose;

@@ -28,6 +28,11 @@ namespace modules {
 class BellStateAnalyzer : public cSimpleModule
 {
     private:
+        // for performance analysis
+        int n_res = 0;
+        simsignal_t GOD_num_resSignal;
+        
+        // parameters
         double darkcount_probability;
         double loss_rate;
         double error_rate;
@@ -81,6 +86,9 @@ Define_Module(BellStateAnalyzer);
 
 void BellStateAnalyzer::initialize()
 {
+   // performance analysis
+   GOD_num_resSignal = registerSignal("Num_Bell_state");
+   // initialize parameters
    darkcount_probability = par("darkcount_probability");
    loss_rate = par("loss_rate");
    error_rate = par("error_rate");
@@ -358,8 +366,6 @@ void BellStateAnalyzer::GOD_setCompletelyMixedDensityMatrix(){
 /*Error on flying qubit with a successful BSA propagates to its original stationary qubit. */
 void BellStateAnalyzer:: GOD_updateEntangledInfoParameters_of_qubits(){
 	
-
-
     //std::cout<<"Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<right_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
 
     left_statQubit_ptr->setEntangledPartnerInfo(right_statQubit_ptr);
@@ -377,6 +383,8 @@ void BellStateAnalyzer:: GOD_updateEntangledInfoParameters_of_qubits(){
         std::cout<<"Entangling failed\n";
         error("Entangling failed");
     }
+    n_res++;
+    emit(GOD_num_resSignal, n_res);
     //std::cout<<right_statQubit_ptr<<", node["<<right_statQubit_ptr->node_address<<"] from qnic["<<right_statQubit_ptr->qnic_index<<"]\n";
     //std::cout<<(bool)(right_statQubit_ptr->entangled_partner==nullptr)<<" Right Entangled if ("<<false<<")\n";
     //std::cout<<left_statQubit_ptr<<", node["<<left_statQubit_ptr->node_address<<"] from qnic["<<left_statQubit_ptr->qnic_index<<"]\n";

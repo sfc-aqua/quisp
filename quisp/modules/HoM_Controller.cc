@@ -42,8 +42,6 @@ void HoM_Controller::initialize(int stage)
     } else {
         error("Set receiver parameter of HoM to true or false.");
     }
-    // resource counters
-    recog_resSignal = registerSignal("recog_res");
 }
 
 
@@ -335,10 +333,6 @@ cModule* HoM_Controller::getQNode(){
 
 void HoM_Controller::pushToBSAresults(bool attempt_success){
 	int prev = getStoredBSAresultsSize();
-    if(attempt_success){
-        success_count++;
-    }
-    emit(recog_resSignal, success_count);
     results[getStoredBSAresultsSize()] = attempt_success;
 	int aft = getStoredBSAresultsSize();
 	if(prev+1 != aft){
