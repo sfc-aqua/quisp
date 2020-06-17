@@ -119,6 +119,7 @@ __This Action performs local X measurement on 1st leaf qubits neoghboring a succ
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: msg <- A message for the end nodes.
 
 <pre>
+<b>Require: </b> enoughResources == True
 1:	<b>procedure</b> PauliAction(leftResourceList, rightResourceList, indexBellSuccess)
 2:		
 </pre>
