@@ -31,45 +31,7 @@ Time flow of the generation of the RGS:
 2. Send left half of the RGS to the left neighbor. Send right half to the right neoghbor.
 
 
-## 2a. [Includes conditional clauses] ABSA nodes
-
-__Assumptions:__
-* We assume that the arrival of qubits at the ABSA is appropritely synchronized. *[Comment: Need to discuss how to synchronize the distribution of RGS across the link.]*
-* We assume that the arm qubits arrive before their respective neighboring 1st leaf qubits. This is because the measurements on the 1st leaf qubits are conditioned on the outcomes of the Bell measurements on their neoghboring arm qubits. This does not imply that all the arm qubits must arrive before the first 1st leaf qubit arrives.
-
-__Algorithm 1:__ BellResourceConditionClause  [Comment: Is this needed?]
-__This Clause checks if there are enough resources to perform a Bell measurement.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: leftResourceList, rightResourceList <- List of resources for the Rule.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: enoughResources <- A Boolean value.
-
-<pre>
-1:	<b>procedure</b> BellResourceConditionClause(leftResourceList,rightResourceList)
-2:	numRequired <- Number of required resources for the Action
-3:	enoughResources = False
-5:	length = min(length(leftResourceList), length(rightResourceList))
-6:	<b>if</b> length >= numRequired <b>then</b>
-7:		enoughResources = True
-8:	<b>end if</b>
-9:	return enoughResources
-10:	<b>end procedure</b>
-</pre>
-
-__Algorithm 2:__ BellAction()  
-__This Action performs Bell measurements on arm qubits until one succeeds. It then outputs the index of the successful pair of vertices and passes it to the PauliResourceConditionClause.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: leftResourceList, rightResourceList <- List of resources for the Rule.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: indexBell <- Index where successful Bell measurement occured.
-
-<pre>
-<b>Require:</b> BellResourceConditionClause = True
-1: <b>procedure</b> BellAction(leftResourceList, rightResourceList)
-2:	success = False
-3:	indexBell = []
-4:	counter = 0
-5:	outcome = measureBell(leftResourceList, rightResourceList)
-</pre>
-
-
-## 2b. [No conditional clause at the beginning] ABSA nodes
+## 2. [No conditional clause at the beginning] ABSA nodes
 
 __Assumptions:__
 * We assume that the arrival of qubits at the ABSA is appropritely synchronized. *[Comment: Need to discuss how to synchronize the distribution of RGS across the link.]*
@@ -107,7 +69,7 @@ __This Conditional Clasuse checks that at least one of the Bell measurements on 
 1:	<b>procedure</b> BellConditionalCLause(indexBellSuccess)
 2:		enoughResources = False
 3:		<b>if</b> length(indexBellSuccess) > 0 <b>then</b>
-4:			enoughResources = Trues
+4:			enoughResources = True
 5:		<b>end if</b>
 6:		<b>return</b> enoughResources
 7:	<b>end procedure</b>
@@ -120,6 +82,20 @@ __This Action performs local X measurement on 1st leaf qubits neoghboring a succ
 
 <pre>
 <b>Require: </b> enoughResources == True
-1:	<b>procedure</b> PauliAction(leftResourceList, rightResourceList, indexBellSuccess)
-2:		
+1:  <b>procedure</b> PauliAction(leftResourceList, rightResourceList, indexBellSuccess)
+2:    leftOutcomeList = []
+3:    rigthOutcomeList = []
+4:    <b>for</b> each index in length(leftResourceList) <b>do</b>
+5:      resourceLeft = leftResourceList[index]
+6:      resourceRight = rightResourceList[index]
+7:      <b>if</b> index == indexBellSucess[0] <b>then</b>
+8:        basis = X
+9:      <b>end if</b>
+10:      <b>else if</b>
+11:        basis = Z
+12:     <b>end if</b>
+13:     outcomeLeft = measure(resourceLeft, basis)
+14:     outcomeRight = measure(resourceRight, basis)
+15:     leftOutcomeList.append((basis, outcomeLeft.value()))
+16:     rightOutcomeList.append((basis, outcomeRight.value()))
 </pre>
