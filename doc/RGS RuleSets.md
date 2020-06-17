@@ -69,7 +69,7 @@ __This Action performs Bell measurements on arm qubits until one succeeds. It th
 </pre>
 
 
-## 2b. [No conditional clause a the beginning] ABSA nodes
+## 2b. [No conditional clause at the beginning] ABSA nodes
 
 __Assumptions:__
 * We assume that the arrival of qubits at the ABSA is appropritely synchronized. *[Comment: Need to discuss how to synchronize the distribution of RGS across the link.]*
