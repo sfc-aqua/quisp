@@ -98,4 +98,10 @@ __This Action performs local X measurement on 1st leaf qubits neoghboring a succ
 14:     outcomeRight = measure(resourceRight, basis)
 15:     leftOutcomeList.append((basis, outcomeLeft.value()))
 16:     rightOutcomeList.append((basis, outcomeRight.value()))
+17:   <b>end for</b>
+18:   msg.generate()
+19:   <b>return</b> msg
+20: <b>end procedure</b>
 </pre>
+
+[Comment: Give details about the msg variable above. Also these are encoded local Pauli measurements. Need to implement measurements on physical qubits]
