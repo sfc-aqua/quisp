@@ -88,7 +88,7 @@ __This Action performs local X measurement on 1st leaf qubits neoghboring a succ
 4:    <b>for</b> each index in length(leftResourceList) <b>do</b>
 5:      resourceLeft = leftResourceList[index]
 6:      resourceRight = rightResourceList[index]
-7:      <b>if</b> index == indexBellSucess[0] <b>then</b>
+7:      <b>if</b> index == indexBellSuccess[0] <b>then</b>
 8:        basis = X
 9:      <b>end if</b>
 10:      <b>else if</b>
