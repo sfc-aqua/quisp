@@ -1,5 +1,5 @@
 //Date: 2020/6/6
-//Authors: lucho, coscos. lingraj, giuseppe, paul.
+//Authors: lucho, coscos. lingraj, Giuseppe De Falco, paul.
 //
 //Description: This to represent the network used in the paper Multiplexing schemes for quantum repeater networks
 //            presented in Proceedings Volume 8163, Quantum Communications and Quantum Imaging IX; 816308 (2011)
@@ -7,6 +7,10 @@
 //             
 //This file needs "aparicio_network.ini" to run
 
+package networks;
+
+import ned.DatarateChannel;
+import ned.DelayChannel;
 
 network aparicio_network
 {
