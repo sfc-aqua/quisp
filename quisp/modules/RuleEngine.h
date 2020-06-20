@@ -91,6 +91,9 @@ typedef struct _process{
 
 class RuleEngine : public cSimpleModule
 {
+    private:
+        // simsignal_t recog_resSignal;
+        simsignal_t actual_resSignal;
     //friend class Action;
     public:
         int parentAddress;//Parent QNode's address
@@ -132,6 +135,7 @@ class RuleEngine : public cSimpleModule
         typedef std::map<int, process> running_processes;//index -> process
         running_processes rp;
         typedef std::map<int, Rule* > rule_ptr;
+        // int assigned = 0;
         //typedef std::map<std::string, quisp::rules::RuleSet> processes;//process_id -> Rule set
         virtual void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type);
         virtual void freeConsumedResource(int qnic_index, stationaryQubit *qubit, QNIC_type qnic_type);
