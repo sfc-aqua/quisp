@@ -31,21 +31,21 @@ Time flow of the generation of the RGS:
 2. Send left half of the RGS to the left neighbor. Send right half to the right neoghbor.
 
 
-## 2. [No conditional clause at the beginning] ABSA nodes
+## 2. ABSA nodes
 
 __Assumptions:__
 * We assume that the arrival of qubits at the ABSA is appropritely synchronized. *[Comment: Need to discuss how to synchronize the distribution of RGS across the link.]*
 
 __Overview:__  
-The RuleSet for ABSA nodes depends on the order of arrival of qubits from the source nodes. A pair of arm qubits arrive firs tfrom the left and right source nodes followed by their respective 1st-leaft nrighbors as shown below.
+The RuleSet for ABSA nodes depends on the order of arrival of qubits from the source nodes. A pair of arm qubits arrive first from the left and right source nodes followed by their respective 1st-leaft neighbors as shown below.
 
 <center>
-<img src="img/rgs3.png" width="700" />
+<img src="img/rgs3.png" width="400" />
 </center>
 
 Unlike with memory-based repeaters, there are no resources to manage and assign by the ABSA RuleSet Engine for the incoming arm qubits. They simply need to be measured in the Bell basis. The results of these measurements will then generate a resourceList that will be checked by a ConditionalClause and if satisfied the following Action will measure incoming 1st leaf qubits in appropriate Pauli basis.  
 
-__Algorithm 1:__ BellAction(leftResourceList, rightResourceList)  
+__[Rewrite needed] Algorithm 1:__ BellAction(leftResourceList, rightResourceList)  
 __This Action performs Bell measurements on incoming arm qubits. It then outputs the index of all successful measurements and passes it to the PauliResourceConditionClause.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: leftResourceList, rightResourceList  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: indexBellSuccess <- Index where successful Bell measurement occured.  
@@ -65,7 +65,7 @@ __This Action performs Bell measurements on incoming arm qubits. It then outputs
 12:	<b>end procedure</b>
 </pre>
 
-__Algorithm 2:__ BellConditionalClause(indexBellSuccess)  
+__[Rewrite needed] Algorithm 2:__ BellConditionalClause(indexBellSuccess)  
 __This Conditional Clasuse checks that at least one of the Bell measurements on arm qubits succeeded.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: indexBellSuccess <- list of indices of all successful Bell measurements  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: enoughResources <- Boolean value
@@ -80,7 +80,7 @@ __This Conditional Clasuse checks that at least one of the Bell measurements on 
 7:	<b>end procedure</b>
 </pre>
 
-__Algorithm 3:__ PauliAction(leftResourceList, rightResourceList, indexBellSuccess)  
+__[Rewrite needed] Algorithm 3:__ PauliAction(leftResourceList, rightResourceList, indexBellSuccess)  
 __This Action performs local X measurement on 1st leaf qubits neoghboring a successful Bell measurement with the lowest index, and performs local Z measurements on all other 1st leaf qubits.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: leftResourceList, rightResourceList, indexBellSuccess  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: msg <- A message for the end nodes.
