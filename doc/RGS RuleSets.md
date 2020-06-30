@@ -35,7 +35,6 @@ Time flow of the generation of the RGS:
 
 __Assumptions:__
 * We assume that the arrival of qubits at the ABSA is appropritely synchronized. *[Comment: Need to discuss how to synchronize the distribution of RGS across the link.]*
-* We assume that the arm qubits arrive before their respective neighboring 1st leaf qubits. This is because the measurements on the 1st leaf qubits are conditioned on the outcomes of the Bell measurements on their neighboring arm qubits. This does not imply that all the arm qubits must arrive before the first 1st leaf qubit arrives.
 
 __Overview:__  
 Unlike with memory-based repeaters, there are no resources to manage and assign by the ABSA RuleSet Engine for the incoming arm qubits. They simply need to be measured in the Bell basis. The results of these measurements will then generate a resourceList that will be checked by a ConditionalClause and if satisfied the following Action will measure incoming 1st leaf qubits in appropriate Pauli basis.  
