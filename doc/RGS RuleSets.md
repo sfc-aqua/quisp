@@ -37,6 +37,12 @@ __Assumptions:__
 * We assume that the arrival of qubits at the ABSA is appropritely synchronized. *[Comment: Need to discuss how to synchronize the distribution of RGS across the link.]*
 
 __Overview:__  
+The RuleSet for ABSA nodes depends on the order of arrival of qubits from the source nodes. A pair of arm qubits arrive firs tfrom the left and right source nodes followed by their respective 1st-leaft nrighbors as shown below.
+
+<center>
+<img src="img/rgs3.png" width="700" />
+</center>
+
 Unlike with memory-based repeaters, there are no resources to manage and assign by the ABSA RuleSet Engine for the incoming arm qubits. They simply need to be measured in the Bell basis. The results of these measurements will then generate a resourceList that will be checked by a ConditionalClause and if satisfied the following Action will measure incoming 1st leaf qubits in appropriate Pauli basis.  
 
 __Algorithm 1:__ BellAction(leftResourceList, rightResourceList)  
