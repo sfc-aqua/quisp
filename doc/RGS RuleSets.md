@@ -115,5 +115,5 @@ __This Action performs local X measurement on 1st leaf qubits neoghboring a succ
 
 __Final state__
 <center>
-<img src="img/rgs4_corrections.png" width="400" />
+<img src="img/rgs4_correction.png" width="400" />
 </center>
