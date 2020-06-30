@@ -53,4 +53,4 @@ Let's try to run [tutorial](../../quisp/networks/vector_test.ini). Just run the 
 
 ![](../img/emission_succeess_rate=1.0.png)
 ![](../img/emission_succeess_rate=0.75.png)
-![](../img/emission_succeess_rate=0.5.png)
+![](../img/emission_succeess_rate=0.**5**.png)

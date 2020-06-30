@@ -127,8 +127,8 @@ network Linear_One_MM
         }
 
     connections:
-        EndNode[0].port++ <--> ClassicalChannel {  distance = 100km; } <--> EndNode[1].port++;
-        EndNode[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 100km; } <--> EndNode[1].quantum_port++;
+        EndNode[0].port++ <--> ClassicalChannel {  distance = 1km; } <--> EndNode[1].port++;
+        EndNode[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 1km; } <--> EndNode[1].quantum_port++;
 }
 
 network Linear_One_MM_bufferGap

@@ -94,8 +94,16 @@ class RuleEngine : public cSimpleModule
     private:
         // simsignal_t recog_resSignal;
         simsignal_t actual_resSignal;
+        simsignal_t creation_timeSignal;
+        int total_success = 0;
+        std::vector<simtime_t> creation_times;
+        std::string file_name;
     //friend class Action;
     public:
+        // performance analysis
+        simtime_t photon_emitting;
+        
+        // parameters
         int parentAddress;//Parent QNode's address
         EmitPhotonRequest *emt;
         HardwareMonitor::NeighborTable ntable;

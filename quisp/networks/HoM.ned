@@ -18,7 +18,11 @@ simple BellStateAnalyzer
         @signal[Num_Bell_state](type="int");
         @statistic[Num_Bell_state](title="actual number of resource"; record=vector, max; interpolationmode=sample-hold);
 
+        @signal[num_trial](type="int");
+        @statistic[num_trial](title="The average number of BSA trials to generate one Bell pair"; record=vector, mean; interpolationmode=sample-hold);
+
         int degree = 2;
+        string bsa_parf_output_filename = default("bsa_default");
     gates:
         inout fromHoM_quantum_port[];
         output toHoMController_port;
@@ -43,6 +47,10 @@ simple HoM_Controller
         double emission_variance = default(0);//in seconds. Photons will be shot towards HoM with 100% accuracy
         bool receiver = default(false);
         bool passive = default(false);
+
+        // performance
+        @signal[creation_time](type="float");
+        @statistic[creation_time](title="Bell pair creation time"; record=vector; interpolationmode=sample-hold);
     gates:
         input fromRouter_port @loose;
         output toRouter_port @loose;

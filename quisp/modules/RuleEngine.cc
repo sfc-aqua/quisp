@@ -10,7 +10,7 @@
 
 #include "RuleEngine.h"
 #include <modules/HardwareMonitor.h>
-
+#include <fstream>
 
 
 namespace quisp {
@@ -63,6 +63,8 @@ void RuleEngine::initialize()
 
     //running_processes = new RuleSetPtr[QNIC_N];//One process per QNIC for now. No multiplexing.
     // WATCH(assigned);
+    // performance analysis
+    creation_timeSignal = registerSignal("creation_time");
 }
 
 void RuleEngine::handleMessage(cMessage *msg){
@@ -74,6 +76,8 @@ void RuleEngine::handleMessage(cMessage *msg){
             cModule *rtc = getParentModule()->getSubmodule("rt");
             RealTimeController *realtime_controller = check_and_cast<RealTimeController *>(rtc);
 
+            // start time
+            // start_send_photon = simTime();
             if(burstTrial_outdated(pk->getTrial(), pk->getQnic_address())){//Terminate emission if trial is over already (e.g. the neighbor ran out of free qubits and the BSA already returned the results)
                 delete msg;//Terminate bursting if this trial has finished already.
                 return;
@@ -86,6 +90,7 @@ void RuleEngine::handleMessage(cMessage *msg){
                 int new_nth_shot = tracker[qnic_address].size();
                 //std::cout<<getQNode()->getFullName() <<": Emitted the "<<nth_shot<<" from qnic["<<qnic_address<<"]....tracker["<<qnic_address<<"] now size = "<<new_nth_shot<<"\n";
             }
+            photon_emitting = simTime();
             // switch: Only bubble messages
             switch (pk->getKind()) {
               case STATIONARYQUBIT_PULSE_BEGIN:
@@ -101,6 +106,9 @@ void RuleEngine::handleMessage(cMessage *msg){
         }
 
         else if(dynamic_cast<CombinedBSAresults *>(msg) != nullptr){
+            // if(start_send_photon<simTime()){
+            //     emit(creation_timeSignal, simTime()-start_send_photon);
+            // }
             //First, keep all the qubits that were successfully entangled, and reinitialize the failed ones.
             CombinedBSAresults *pk_result = check_and_cast<CombinedBSAresults *>(msg);
             BSMtimingNotifier *pk = check_and_cast<BSMtimingNotifier  *>(msg);
@@ -112,6 +120,13 @@ void RuleEngine::handleMessage(cMessage *msg){
             //Updates free/busy of qubits, and also adds successfully entangled qubits as resources.
             freeFailedQubits_and_AddAsResource(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index(), pk_result);
             clearTrackerTable(pk->getSrcAddr(), pk->getInternal_qnic_address());//Clear tracker every end of burst trial. This keeps which qubit was fired first, second, third and so on only for that trial.
+            
+            // for performance analysis
+            emit(creation_timeSignal, simTime()-photon_emitting);
+            if(parentAddress==1){
+                creation_times.push_back(simTime()-photon_emitting);
+                std::cout<<"time"<<simTime()-photon_emitting<<"\n";
+            }
 
             //Second, schedule the next burst by referring to the received timing information.
             int qnic_address, qnic_type;
@@ -1085,7 +1100,8 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
     //std::cout<<"success num = "<<success_num<<"\n";
     ResourceAllocation(qnic_type, qnic_index);
     traverseThroughAllProcesses2();//New resource added to QNIC with qnic_type qnic_index.
-
+    // total_success = total_success + success_num;
+    // std::cout<<"scu"<<simTime()-start_send_photon<<"\n";
 }
 
 void RuleEngine::freeResource(int qnic_index/*The actual index. Not address. This with qnic_type makes the id unique.*/, int qubit_index, QNIC_type qnic_type){
@@ -1126,6 +1142,15 @@ cModule* RuleEngine::getQNode(){
 
 void RuleEngine::finish(){
     delete qnic_burst_trial_counter;
+
+    // here output file
+    file_name = "test";
+    std::ofstream creation_time_stats(file_name, std::ios_base::app);
+    // creation_time_stats<<"s\n";
+    for(int i = 0; i < creation_times.size(); i++){
+        creation_time_stats<<creation_times[i]<<"\n";
+    }
+    creation_time_stats.close();
 }
 
 double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index) {

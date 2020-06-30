@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <fstream>
 #include <modules/HardwareMonitor.h>
 
 using namespace omnetpp;
@@ -30,7 +31,12 @@ class BellStateAnalyzer : public cSimpleModule
     private:
         // for performance analysis
         int n_res = 0;
+        int trials = 0;
         simsignal_t GOD_num_resSignal;
+        std::string BSA_perf_output_filename;
+        std::vector<simtime_t> creation_time;
+        simsignal_t Average_Num_TrialSignal;
+        std::vector<int> number_of_trials;
         
         // parameters
         double darkcount_probability;
@@ -80,6 +86,9 @@ class BellStateAnalyzer : public cSimpleModule
         virtual void initializeVariables();
         virtual void GOD_setCompletelyMixedDensityMatrix();
         virtual void GOD_updateEntangledInfoParameters_of_qubits();
+
+        // functions for perfomance analysis
+        
 };
 
 Define_Module(BellStateAnalyzer);
@@ -88,6 +97,9 @@ void BellStateAnalyzer::initialize()
 {
    // performance analysis
    GOD_num_resSignal = registerSignal("Num_Bell_state");
+   Average_Num_TrialSignal = registerSignal("num_trial");
+    // external output file
+   BSA_perf_output_filename = par("bsa_parf_output_filename").str();
    // initialize parameters
    darkcount_probability = par("darkcount_probability");
    loss_rate = par("loss_rate");
@@ -136,7 +148,9 @@ void BellStateAnalyzer::initialize()
  */
 void BellStateAnalyzer::handleMessage(cMessage *msg){
     PhotonicQubit *photon = check_and_cast<PhotonicQubit *>(msg);
+    // add time stamp CHECK Is this a right place to put time stamp?
     if(photon->getFirst() && this_trial_done == true){//Next round started
+        // parameters
         this_trial_done = false;
         left_arrived_at = -1;
         right_arrived_at = -1;
@@ -244,6 +258,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
                     DEBUG_success++;
                     GOD_updateEntangledInfoParameters_of_qubits();
                     sendBSAresult(false, send_result);//succeeded because both reached, and both clicked
+                    // initialize the number of trials record
                 }
 
             }//we also need else if for darkcount....
@@ -255,7 +270,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg){
 				
 				sendBSAresult(true, send_result);//just failed because only 1 detector clicked while both reached
             }DEBUG_total++;
-
+        trials++;
         initializeVariables();
 
     }else if((left_arrived_at != -1 && right_arrived_at != -1) && std::abs(difference)>(required_precision)){
@@ -304,6 +319,7 @@ void BellStateAnalyzer::sendBSAresult(bool result,bool sendresults){
     //false negative (actually ng but recognized as ok) due to darkcount
     //true positive and true negative is no problem.
     //std::cout<<"send?="<<sendresults<<"___________________________________\n";
+
     if(!sendresults){
         BSAresult *pk = new BSAresult;
     	//std::cout<<"send result to HoM___\n";
@@ -325,8 +341,26 @@ void BellStateAnalyzer::finish(){
     std::cout<<"total = "<<DEBUG_total<<"\n";
     std::cout<<"Success = "<<DEBUG_success<<"\n";
     std::cout<<"darkcount_count_left = "<<DEBUG_darkcount_left<<", darkcount_count_right ="<<DEBUG_darkcount_right<<", darkcount_count_both = "<<DEBUG_darkcount_both<<"\n";
-}
 
+    std::cout<<"total BSA performance"<<"\n";
+    // filename for recoding bsa performance
+    // std::string file_name = BSA_perf_output_filename;
+    // int file_size = file_name.size();
+    // create file
+    std::string file_name = "num_trials";
+    std::ofstream bsa_stats(file_name, std::ios_base::app);
+
+    // 1. Bell pair creation time (average and std)
+    // receive photons - apply BSM - return result
+    // bsa_stats<<"s\n";
+    for(int i=0 ; i<number_of_trials.size(); i++){
+        bsa_stats<<number_of_trials[i]<<"\n";
+    }
+    // bsa_stats<<"f\n";
+    // 2. The number of bell pairs in total
+
+    bsa_stats.close();
+}
 
 
 void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg){
@@ -365,6 +399,9 @@ void BellStateAnalyzer::GOD_setCompletelyMixedDensityMatrix(){
 
 /*Error on flying qubit with a successful BSA propagates to its original stationary qubit. */
 void BellStateAnalyzer:: GOD_updateEntangledInfoParameters_of_qubits(){
+    emit(Average_Num_TrialSignal, trials);
+    number_of_trials.push_back(trials);
+    trials=0;
 	
     //std::cout<<"Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<right_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
 
