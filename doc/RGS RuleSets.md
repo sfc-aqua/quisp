@@ -110,3 +110,10 @@ __This Action performs local X measurement on 1st leaf qubits neoghboring a succ
 </pre>
 
 [Comment: Give details about the msg variable above. Also these are encoded local Pauli measurements. Need to implement measurements on physical qubits]
+
+## 3. End nodes
+
+__Final state__
+<center>
+<img src="img/rgs4_corrections.png" width="400" />
+</center>
