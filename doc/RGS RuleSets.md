@@ -43,7 +43,7 @@ The RuleSet for ABSA nodes depends on the order of arrival of qubits from the so
 <img src="img/rgs3.png" width="400" />
 </center>
 
-Unlike with memory-based repeaters, there are no resources to manage and assign by the ABSA RuleSet Engine for the incoming arm qubits. They simply need to be measured in the Bell basis. The results of these measurements will then generate a resourceList that will be checked by a ConditionalClause and if satisfied the following Action will measure incoming 1st leaf qubits in appropriate Pauli basis.  
+Unlike with memory-based repeaters, there are no resources to manage and assign by the ABSA RuleSet Engine for the incoming arm qubits. They simply need to be measured in the appropriate bases.
 
 __[Rewrite needed] Algorithm 1:__ BellAction(leftResourceList, rightResourceList)  
 __This Action performs Bell measurements on incoming arm qubits. It then outputs the index of all successful measurements and passes it to the PauliResourceConditionClause.__  
