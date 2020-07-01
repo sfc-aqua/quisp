@@ -95,71 +95,26 @@ __This Action  performs the correct measurements on the two arriving qubits, upd
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: basis, outcomeList, successBell.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis, outcomeList, successBell.
 
-__[Rewrite needed] Algorithm 1:__ BellAction(leftResourceList, rightResourceList)  
-__This Action performs Bell measurements on incoming arm qubits. It then outputs the index of all successful measurements and passes it to the PauliResourceConditionClause.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: leftResourceList, rightResourceList  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: indexBellSuccess <- Index where successful Bell measurement occured.  
-
 <pre>
-1:	<b>procedure</b> BellAction(leftResourceList, rightResourceList)
-2:		indexBellSuccess = []
-3:		<b>for</b> each index in length(leftResourceList) <b>do</b>
-4:			resourceLeft = leftResourceList[index]
-5:			resourceRight = rightResourceList[index]
-6:			outcome = measureBell(resourceLeft, resourceRight)
-7:			<b>if</b> outcome.success() = True <b>then</b>
-8:				indexBellSuccess.append(index)
-9:			<b>end if</b>
-10:		<b>end for</b>
-11:		<b>return</b> indexBellSuccess
-12:	<b>end procedure</b>
+<b>Require:</b> measurementNeeded == True
+1:  <b>procedure</b> measurementAction(basis, outcomeList, successBell)
+2:    resource1 = qubit from left source node
+3:    resource2 = qubit from right source node
+4:    outcome = measure(resource1, resource2, basis)
+5:    outcomeList.append((basis, outcome))
+6:    <b>if</b> basis != Bell <b>then</b>
+7:      basis = Bell
+8:    <b>else if</b> basis == Bell <b>then</b>
+9:      <b>if</b> (outcome.success() == True and successBell == False) <b>then</b>
+10:       basis = X
+11:       successBell = True
+12:     <b>else</b>
+13:       basis = Z
+14:     <b>end if</b>
+15:   <b>end if</b>
+16:   <b>return</b> basis, outcomeList, successBell
+17: <b>end procedure</b>
 </pre>
-
-__[Rewrite needed] Algorithm 2:__ BellConditionalClause(indexBellSuccess)  
-__This Conditional Clasuse checks that at least one of the Bell measurements on arm qubits succeeded.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: indexBellSuccess <- list of indices of all successful Bell measurements  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: enoughResources <- Boolean value
-
-<pre>
-1:	<b>procedure</b> BellConditionalCLause(indexBellSuccess)
-2:		enoughResources = False
-3:		<b>if</b> length(indexBellSuccess) > 0 <b>then</b>
-4:			enoughResources = True
-5:		<b>end if</b>
-6:		<b>return</b> enoughResources
-7:	<b>end procedure</b>
-</pre>
-
-__[Rewrite needed] Algorithm 3:__ PauliAction(leftResourceList, rightResourceList, indexBellSuccess)  
-__This Action performs local X measurement on 1st leaf qubits neoghboring a successful Bell measurement with the lowest index, and performs local Z measurements on all other 1st leaf qubits.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: leftResourceList, rightResourceList, indexBellSuccess  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: msg <- A message for the end nodes.
-
-<pre>
-<b>Require: </b> enoughResources == True
-1:  <b>procedure</b> PauliAction(leftResourceList, rightResourceList, indexBellSuccess)
-2:    leftOutcomeList = []
-3:    rigthOutcomeList = []
-4:    <b>for</b> each index in length(leftResourceList) <b>do</b>
-5:      resourceLeft = leftResourceList[index]
-6:      resourceRight = rightResourceList[index]
-7:      <b>if</b> index == indexBellSuccess[0] <b>then</b>
-8:        basis = X
-9:      <b>end if</b>
-10:      <b>else if</b>
-11:        basis = Z
-12:     <b>end if</b>
-13:     outcomeLeft = measure(resourceLeft, basis)
-14:     outcomeRight = measure(resourceRight, basis)
-15:     leftOutcomeList.append((basis, outcomeLeft.value()))
-16:     rightOutcomeList.append((basis, outcomeRight.value()))
-17:   <b>end for</b>
-18:   msg.generate()
-19:   <b>return</b> msg
-20: <b>end procedure</b>
-</pre>
-
-[Comment: Give details about the msg variable above. Also these are encoded local Pauli measurements. Need to implement measurements on physical qubits]
 
 ## 3. End nodes
 
