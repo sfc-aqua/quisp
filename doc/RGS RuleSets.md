@@ -45,8 +45,8 @@ The RuleSet for ABSA nodes depends on the order of arrival of qubits from the so
 
 __Algorithm 1:__ initialTimeConditionalClause(arrivalTimeList)  
 __This conditional clause checks whether current time is less than the scheduled arrival of first qubit.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: initalTime <- Boolean value
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList <- list of when qubits are scheduled to arrive at the ABSA node.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: initalTime <- Boolean value.
 
 <pre>
 1:  <b>procedure</b> initialTimeConditionalClause(arrivalTimeList)
