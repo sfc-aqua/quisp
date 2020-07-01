@@ -43,7 +43,21 @@ The RuleSet for ABSA nodes depends on the order of arrival of qubits from the so
 <img src="img/rgs3.png" width="400" />
 </center>
 
-Unlike with memory-based repeaters, there are no resources to manage and assign by the ABSA RuleSet Engine for the incoming arm qubits. They simply need to be measured in the appropriate bases.
+__Algorithm 1:__ timeConditionalClause(arrivalTimeList)  
+__This conditional clause checks the current time and whether the ABSA node is required to measure any more qubits.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: measurementNeeded <- Boolean value
+
+<pre>
+1:  <b>procedure</b> timeConditionalClause(arrivalTimeList)
+2:    measurementNeeded = False
+3:    currentTime = time.get()
+4:    <b>if</b> currentTime <= arrivalTimeList[-1] <b>then</b>
+5:      measurementNeeded = True
+6:    <b>end if</b>
+7:    <b>return</b> measurementNeeded
+8:  <b>end procedure</b>
+</pre>
 
 __[Rewrite needed] Algorithm 1:__ BellAction(leftResourceList, rightResourceList)  
 __This Action performs Bell measurements on incoming arm qubits. It then outputs the index of all successful measurements and passes it to the PauliResourceConditionClause.__  
@@ -115,5 +129,5 @@ __This Action performs local X measurement on 1st leaf qubits neoghboring a succ
 
 __Final state__
 <center>
-<img src="img/rgs4_correction.png" width="400" />
+<img src="img/rgs4_correction.png" width="500" />
 </center>
