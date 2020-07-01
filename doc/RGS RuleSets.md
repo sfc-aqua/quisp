@@ -43,7 +43,23 @@ The RuleSet for ABSA nodes depends on the order of arrival of qubits from the so
 <img src="img/rgs3.png" width="400" />
 </center>
 
-__Algorithm 1:__ timeConditionalClause(arrivalTimeList)  
+__Algorithm 1:__ initialTimeConditionalClause(arrivalTimeList)  
+__This conditional clause checks whether current time is less than the scheduled arrival of first qubit.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: initalTime <- Boolean value
+
+<pre>
+1:  <b>procedure</b> initialTimeConditionalClause(arrivalTimeList)
+2:    initialTime = False
+3:    currentTime = time.get()
+4:    <b>if</b> currentTime <= arrivalTimeList[0] <b>then</b>
+5:      initialTime = True
+6:    <b>end if</b>
+7:    <b>return</b> initialTime
+8:  <b>end procedure</b>
+</pre>
+
+__Algorithm 2:__ timeConditionalClause(arrivalTimeList)  
 __This conditional clause checks the current time and whether the ABSA node is required to measure any more qubits.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: measurementNeeded <- Boolean value
