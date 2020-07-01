@@ -59,23 +59,25 @@ __This conditional clause checks whether current time is less than the scheduled
 8:  <b>end procedure</b>
 </pre>
 
-__Algorithm 2:__ initialBasisAction()  
-__This Action is used to set the measurement basis to Bell basis before the arrival of the first arm qubits.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: none  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis <- measurement basis
+__Algorithm 2:__ initializeAction()  
+__This Action is used to set the measurement basis to Bell basis before the arrival of the first arm qubits, initialize the list of measurement outcomes and the counter of successful Bell measurements.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: none.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis <- measurement basis, outcomeList <- list of measurement results, successBell <- Boolean value indicating whether successful Bell measurement has occured yet.
 
 <pre>
 <b>Require:</b> initialTime == True
-1:  <b>procedure</b> initialBasisAction()
+1:  <b>procedure</b> initializeAction()
 2:    basis = Bell
-3:    <b>return</b> basis
-4:  <b>end procedure</b>
+3:    outcomeList = []
+4:    successBell = False
+5:    <b>return</b> basis, outcomeList, successBell
+6:  <b>end procedure</b>
 </pre>
 
 __Algorithm 3:__ timeConditionalClause(arrivalTimeList)  
 __This conditional clause checks the current time and whether the ABSA node is required to measure any more qubits.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: measurementNeeded <- Boolean value
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: measurementNeeded <- Boolean value.
 
 <pre>
 1:  <b>procedure</b> timeConditionalClause(arrivalTimeList)
@@ -87,6 +89,11 @@ __This conditional clause checks the current time and whether the ABSA node is r
 7:    <b>return</b> measurementNeeded
 8:  <b>end procedure</b>
 </pre>
+
+__Algorithm 4:__ measurementAction(basis, outcomeList, successBell)  
+__This Action  performs the correct measurements on the two arriving qubits, updates the outcomeList and basis for the next measurements.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: basis, outcomeList, successBell.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis, outcomeList, successBell.
 
 __[Rewrite needed] Algorithm 1:__ BellAction(leftResourceList, rightResourceList)  
 __This Action performs Bell measurements on incoming arm qubits. It then outputs the index of all successful measurements and passes it to the PauliResourceConditionClause.__  
