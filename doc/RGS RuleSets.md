@@ -59,7 +59,20 @@ __This conditional clause checks whether current time is less than the scheduled
 8:  <b>end procedure</b>
 </pre>
 
-__Algorithm 2:__ timeConditionalClause(arrivalTimeList)  
+__Algorithm 2:__ InitialBasisAction()  
+__This Action is used to set the measurement basis to Bell basis before the arrival of the first arm qubits.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: none  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis <- measurement basis
+
+<pre>
+<b>Require:</b> initialTime == True
+1:  <b>procedure</b> initialBasisAction()
+2:    basis = Bell
+3:    <b>return</b> basis
+4:  <b>end procedure</b>
+</pre>
+
+__Algorithm 3:__ timeConditionalClause(arrivalTimeList)  
 __This conditional clause checks the current time and whether the ABSA node is required to measure any more qubits.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: measurementNeeded <- Boolean value
