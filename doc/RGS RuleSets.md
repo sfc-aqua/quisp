@@ -43,7 +43,7 @@ The RuleSet for ABSA nodes depends on the order of arrival of qubits from the so
 <img src="img/rgs3.png" width="400" />
 </center>
 
-Flowchart summarizing the role of the algorithms detaield below.
+Flowchart summarizing the role of the algorithms detailed below.
 
 <center>
 <img src="img/rgs_flowchart.png" width="300" />
