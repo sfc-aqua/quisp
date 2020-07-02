@@ -43,6 +43,12 @@ The RuleSet for ABSA nodes depends on the order of arrival of qubits from the so
 <img src="img/rgs3.png" width="400" />
 </center>
 
+Flowchart summarizing the role of the algorithms detaield below.
+
+<center>
+<img src="img/rgs_flowchart.png" width="300" />
+</center>
+
 __Algorithm 1:__ initialTimeConditionalClause(arrivalTimeList)  
 __This conditional clause checks whether current time is less than the scheduled arrival of first qubit.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList <- list of when qubits are scheduled to arrive at the ABSA node.  
