@@ -52,7 +52,7 @@ __This conditional clause checks whether current time is less than the scheduled
 1:  <b>procedure</b> initialTimeConditionalClause(arrivalTimeList)
 2:    initialTime = False
 3:    currentTime = time.get()
-4:    <b>if</b> currentTime <= arrivalTimeList[0] <b>then</b>
+4:    <b>if</b> currentTime < arrivalTimeList[0] <b>then</b>
 5:      initialTime = True
 6:    <b>end if</b>
 7:    <b>return</b> initialTime
@@ -60,7 +60,7 @@ __This conditional clause checks whether current time is less than the scheduled
 </pre>
 
 __Algorithm 2:__ initializeAction()  
-__This Action is used to set the measurement basis to Bell basis before the arrival of the first arm qubits, initialize the list of measurement outcomes and the counter of successful Bell measurements.__  
+__This Action is used to set the measurement basis to Bell basis before the arrival of the first arm qubits, initialize the list of measurement outcomes, the Boolean value tracking whether a successful Bell measurement has occurred, and the Boolena variable tracking whether final message has been sent.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: none.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis <- measurement basis, outcomeList <- list of measurement results, successBell <- Boolean value indicating whether successful Bell measurement has occured yet.
 
@@ -70,8 +70,9 @@ __This Action is used to set the measurement basis to Bell basis before the arri
 2:    basis = Bell
 3:    outcomeList = []
 4:    successBell = False
-5:    <b>return</b> basis, outcomeList, successBell
-6:  <b>end procedure</b>
+5:    msgSent = False
+6:    <b>return</b> basis, outcomeList, successBell, msgSent
+7:  <b>end procedure</b>
 </pre>
 
 __Algorithm 3:__ timeConditionalClause(arrivalTimeList)  
@@ -83,7 +84,7 @@ __This conditional clause checks the current time and whether the ABSA node is r
 1:  <b>procedure</b> timeConditionalClause(arrivalTimeList)
 2:    measurementNeeded = False
 3:    currentTime = time.get()
-4:    <b>if</b> currentTime <= arrivalTimeList[end] <b>then</b>
+4:    <b>if</b> arrivalTimeList[0] <= currentTime <= arrivalTimeList[end] <b>then</b>
 5:      measurementNeeded = True
 6:    <b>end if</b>
 7:    <b>return</b> measurementNeeded
@@ -114,6 +115,41 @@ __This Action  performs the correct measurements on the two arriving qubits, upd
 15:   <b>end if</b>
 16:   <b>return</b> basis, outcomeList, successBell
 17: <b>end procedure</b>
+</pre>
+
+__Algorithm 5:__ finalTimeConditionalClause(arrivalTimeList)  
+__This Conditional Clause checks whether current time is larger than the scheduled arrival tiem of the last qubits.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: finalTime <- Boolean value.
+
+<pre>
+1:  <b>procedure</b> finalTimeConditionalClause(arrivalTimeList)
+2:    finalTime = False
+3:    currentTime = time.get()
+4:    <b>if</b> currentTime > arrivalTimeList[end] <b>then</b>
+5:      finalTime = True
+6:    <b>end if</b>
+7:    <b>return</b> finalTime
+8:  <b>end procedure</b>
+</pre>
+
+__Algorithm 6:__ msgAction(outcomeList)
+__This Action creates the final message after all measurements have been performed and sends it to the end nodes.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: outcomeList <- contains information about measurement bases and outcomes.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: msg <- message sent to the end nodes.  
+
+<pre>
+<b>Require:</b> finalTime == True, msgSent == False.
+1:  <b>procedure</b> msgAction(outcomeList)
+2:    self_addr <- address of the ABSA node
+3:    endLeft_addr <- address of the left end node
+4:    endRight_addr <- address of the right end node
+5:    msg.destination = [endLeft_addr, endRight_addr]
+6:    msg.source = self_addr
+7:    msg.data = outcomeList
+8:    msgSent = True
+9:    <b>return</b> msg
+10: <b>end procedure</b>
 </pre>
 
 ## 3. End nodes
