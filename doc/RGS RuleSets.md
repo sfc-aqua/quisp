@@ -66,9 +66,9 @@ __This conditional clause checks whether current time is less than the scheduled
 </pre>
 
 __Algorithm 2:__ initializeAction()  
-__This Action is used to set the measurement basis to Bell basis before the arrival of the first arm qubits, initialize the list of measurement outcomes, the Boolean value tracking whether a successful Bell measurement has occurred, and the Boolena variable tracking whether final message has been sent.__  
+__This Action is used to set the measurement basis to Bell basis before the arrival of the first arm qubits, initialize the list of measurement outcomes, the Boolean value tracking whether a successful Bell measurement has occurred, and the Boolean variable tracking whether final message has been sent.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: none.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis <- measurement basis, outcomeList <- list of measurement results, successBell <- Boolean value indicating whether successful Bell measurement has occured yet.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis <- measurement basis, outcomeList <- list of measurement results, successBell <- Boolean value indicating whether successful Bell measurement has occured yet, msgSent <- Boolean value indicating whether final message has been sent yet.
 
 <pre>
 <b>Require:</b> initialTime == True
