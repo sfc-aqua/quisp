@@ -46,6 +46,8 @@ The RuleSet for ABSA nodes depends on the order of arrival of qubits from the so
 __Indirect Z measurement:__
 
 Local Pauli measurements can be performed in a fault-tolerant manner on logical qubits encoded using a tree graph state as shown in Figure 1.
+An indirect Z measurement can be used even after a failed direct Z measurement or after the qubit to be measured had been lost.
+
 
 __Flowchart:__ summarizing the role of the algorithms detailed below.
 
