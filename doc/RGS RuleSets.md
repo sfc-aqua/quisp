@@ -43,7 +43,11 @@ The RuleSet for ABSA nodes depends on the order of arrival of qubits from the so
 <img src="img/rgs3.png" width="400" />
 </center>
 
-Flowchart summarizing the role of the algorithms detailed below.
+__Indirect Z measurement:__
+
+Local Pauli measurements can be performed in a fault-tolerant manner on logical qubits encoded using a tree graph state as shown in Figure 1.
+
+__Flowchart:__ summarizing the role of the algorithms detailed below.
 
 <center>
 <img src="img/rgs_flowchart.png" width="300" />
