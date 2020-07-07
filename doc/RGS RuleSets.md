@@ -52,6 +52,11 @@ An indirect Z measurement can be used even after a failed direct Z measurement o
 <img src="img/rgs4_indirectZ.png" width="400" />
 </center>
 
+Figure 4 shows an indirect Z measurement. The parity of a failed Z measurement on qubit (i,j) can be inferred from a successful X measurement on any of the qubits on level i+1 that are leafs of qubit (i,j), and subsequent Z measurements (direct or indirect) on their leafs on level i+2. Figure 4 shows a successful inidirect measurement on qubit (i,j) despite two of the attempts having failed on subtree B and subtree C. Parity of the Z measurement on qubit (i,j) is given by the total parity of X and Z measurements on qubits of level i+1 and level i+2.
+
+__Encoded measurements:__
+
+The 1st-leaf qubits of an RGS ar eencoded in a tree structure and therefore have to be measured using encoded Pauli operators as shown in Figure 5.
 
 __Flowchart:__ summarizing the role of the algorithms detailed below.
 
