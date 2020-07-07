@@ -62,6 +62,8 @@ The 1st-leaf qubits of an RGS ar eencoded in a tree structure and therefore have
 <img src="img/rgs5_encoded.png" width="800" />
 </center>
 
+In order for the encoded Z measurement to succeed, all physical qubits of level 1 must be successfully measured in Z basis (either directly or indirectly). The encoded X measurement is successful if at least one of the physical qubits in level 1 is successfully measured in X basis along with all of its level 2 leafs need to be measured in Z basis (either directly or indirectly).
+
 __Flowchart:__ summarizing the role of the algorithms detailed below.
 
 <center>
