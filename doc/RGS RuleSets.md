@@ -58,6 +58,10 @@ __Encoded measurements:__
 
 The 1st-leaf qubits of an RGS ar eencoded in a tree structure and therefore have to be measured using encoded Pauli operators as shown in Figure 5.
 
+<center>
+<img src="img/rgs5_encoded.png" width="800" />
+</center>
+
 __Flowchart:__ summarizing the role of the algorithms detailed below.
 
 <center>
