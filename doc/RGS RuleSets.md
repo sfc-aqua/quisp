@@ -39,11 +39,14 @@ __Assumptions:__
 * We assume that the arrival of qubits at the ABSA is appropritely synchronized. *[Comment: Need to discuss how to synchronize the distribution of RGS across the link.]*
 
 __Overview:__  
-The RuleSet for ABSA nodes depends on the order of arrival of qubits from the source nodes. A pair of arm qubits arrive first from the left and right source nodes followed by their respective 1st-leaft neighbors as shown below.
+The RuleSet for ABSA nodes depends on the order of arrival of qubits from the source nodes. A pair of arm qubits arrive first from the left and right source nodes followed by their respective 1st-leaft neighbors as shown in Figure 3.
 
 <center>
 <img src="img/rgs3_timing.png" width="1000" />
 </center>
+
+The explicit time schedule is also shown in Figure 3.
+Each orange block represents <img src="https://render.githubusercontent.com/render/math?math=N_l"> physical qubits corresponding to a single logical qubit.
 
 __Indirect Z measurement:__
 
