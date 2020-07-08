@@ -10,7 +10,7 @@ We begin with the __repeater graph state (RGS)__:
 
 The RGS is given by <img src="https://render.githubusercontent.com/render/math?math=\Big|G(m,\vec{b})\rangle"> as shown in the Figure 1. It consists of two types of vertices. Orange vertices represent 1st leaf qubits which are encoded using a tree encoding with a branching vector denoted by <img src="https://render.githubusercontent.com/render/math?math=\vec{b}=(b_0,b_1,\ldots,b_n)">.
 The blue vertices represent physical qubits, usually called 2nd leaf qubits or arm qubits.
-Total number of physical qubits for <img src="https://render.githubusercontent.com/render/math?math=\Big|G(m,\vec{b})\rangle"> is <img src="https://render.githubusercontent.com/render/math?math=2m [\sum_{j=0}^n\product_{i=0}^jb_{i}%2B1]">.
+Total number of physical qubits for <img src="https://render.githubusercontent.com/render/math?math=\Big|G(m,\vec{b})\rangle"> is <img src="https://render.githubusercontent.com/render/math?math=N_l=2m [\sum_{j=0}^n\product_{i=0}^jb_{i}%2B1]">.
 The example shown in Figure 1 with m=3 and <img src="https://render.githubusercontent.com/render/math?math=\vec{b}=(3,2)"> contains 60 physical qubits.
 
 The __network link__ is shown in the following figure:
@@ -42,7 +42,7 @@ __Overview:__
 The RuleSet for ABSA nodes depends on the order of arrival of qubits from the source nodes. A pair of arm qubits arrive first from the left and right source nodes followed by their respective 1st-leaft neighbors as shown below.
 
 <center>
-<img src="img/rgs3.png" width="400" />
+<img src="img/rgs3_timing.png" width="1000" />
 </center>
 
 __Indirect Z measurement:__
