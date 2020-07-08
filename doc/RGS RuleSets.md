@@ -5,7 +5,7 @@ Before we dive into individual RuleSets for various types of network nodes we go
 We begin with the __repeater graph state (RGS)__:
 
 <center>
-<img src="img/rgs1.png" width="700" />
+<img src="img/rgs1_rgs.png" width="700" />
 </center>
 
 The RGS is given by <img src="https://render.githubusercontent.com/render/math?math=\Big|G(m,\vec{b})\rangle"> as shown in the Figure 1. It consists of two types of vertices. Orange vertices represent 1st leaf qubits which are encoded using a tree encoding with a branching vector denoted by <img src="https://render.githubusercontent.com/render/math?math=\vec{b}=(b_0,b_1,\ldots,b_n)">.
@@ -16,7 +16,7 @@ The example shown in Figure 1 with m=3 and <img src="https://render.githubuserco
 The __network link__ is shown in the following figure:
 
 <center>
-<img src="img/rgs2.png" width="700" />
+<img src="img/rgs2_link.png" width="700" />
 </center>
 
 Each link consists of three types of nodes:
