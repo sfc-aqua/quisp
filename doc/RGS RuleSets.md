@@ -8,8 +8,10 @@ We begin with the __repeater graph state (RGS)__:
 <img src="img/rgs1.png" width="700" />
 </center>
 
-The RGS is given by <img src="https://render.githubusercontent.com/render/math?math=\Big|G(m,\vec{b})\rangle"> as shown in the figure. It consists of two types of vertices. Orange vertices represent 1st leaf qubits which are encoded using a tree encoding with a branching vector denoted by <img src="https://render.githubusercontent.com/render/math?math=\vec{b}">. In the figure, <img src="https://render.githubusercontent.com/render/math?math=\vec{b}=(3,2)">.
-The blue vertices represent physical qubits, usually called 2nd leaf qubits or arm qubits. Each RGS has <img src="https://render.githubusercontent.com/render/math?math=2m"> 1st leaf qubits and <img src="https://render.githubusercontent.com/render/math?math=2m"> arms qubits.
+The RGS is given by <img src="https://render.githubusercontent.com/render/math?math=\Big|G(m,\vec{b})\rangle"> as shown in the Figure 1. It consists of two types of vertices. Orange vertices represent 1st leaf qubits which are encoded using a tree encoding with a branching vector denoted by <img src="https://render.githubusercontent.com/render/math?math=\vec{b}=(b_0,b_1,\ldots,b_n)">.
+The blue vertices represent physical qubits, usually called 2nd leaf qubits or arm qubits.
+Total number of physical qubits for <img src="https://render.githubusercontent.com/render/math?math=\Big|G(m,\vec{b})\rangle"> is <img src="https://render.githubusercontent.com/render/math?math=2m [\sum_{j=0}^n\product_{i=0}^jb_{i}%2B1]">.
+The example shown in Figure 1 with m=3 and <img src="https://render.githubusercontent.com/render/math?math=\vec{b}=(3,2)"> contains 60 physical qubits.
 
 The __network link__ is shown in the following figure:
 
@@ -18,7 +20,7 @@ The __network link__ is shown in the following figure:
 </center>
 
 Each link consists of three types of nodes:
-* __RGS nodes__ generate the RGS and send one half of the qubits to its neighbor to the right and the other half of the qubits to the left.
+* __RGS node__ generates the photonic RGS using matter qubits and sends one half of the qubits to its neighbor to the right and the other half of the qubits to the left.
 * __Mesurement node__ or __Advanced Bell State Analyzer (ABSA)__ receives one half of a RGS from boths its neighboring RGS nodes. The ABSA then measures the arm qubits in Bell basis. Depending on the outcome of the Bell mesurements the orange qubits are then measured in corresponding Pauli X or Pauli Z basis. The network link is composed of alternative RGS nodes and ABSA nodes.
 * __End nodes__ of the link are the nodes trying to establish a shared entangled pair. [Comment: their precise functionality still needs to be discussed and determined. For now we assume they receive one half of a RGS from the neighboring RGS node.]
 
