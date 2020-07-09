@@ -47,8 +47,8 @@ The RuleSet for ABSA nodes depends on the order of arrival of qubits from the so
 
 The explicit time schedule is also shown in Figure 3.
 Each orange block represents <img src="https://render.githubusercontent.com/render/math?math=N_l"> physical qubits corresponding to a single logical qubit.
-We assume that the physical qubits encoding a logical qubit arrive level-by-level (breadth first), that is qubits of Level 1 arrive one-by-one, then qubits of Level 2 and so.
-[Comment: the other possibility is depth first, where qubits of a whole subtree arrive first.]
+The physical qubits constituting one logical qubit arrive in a way shown in Figure 3.
+
 
 __Indirect Z measurement:__
 
