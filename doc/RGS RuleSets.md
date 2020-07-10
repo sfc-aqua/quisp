@@ -76,19 +76,19 @@ The encoded measurement succeeds if all Level 1 qubits are measured successfully
 Encoded X measurement is performed by measuring all Level 1 qubits in X basis, Level 2 qubits in Z basis, Level 3 qubits in X basis and so on.
 The encoded measurement succeeds if at least one of the Level 1 X measurements is successful and all its Level 2 leafs are successfully measured in Z (either via direct or indirect measurements).
 
-__Flowchart:__ summarizing the role of the algorithms detailed below.
+__[OLD, REMOVE]Flowchart:__ summarizing the role of the algorithms detailed below.
 
 <center>
 <img src="img/rgs_flowchart.png" width="300" />
 </center>
 
-__Algorithm 1:__ initialTimeConditionalClause(arrivalTimeList)  
+__Algorithm 1:__ initializeConditionalClause(arrivalTimeList)  
 __This conditional clause checks whether current time is less than the scheduled arrival of first qubit.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList <- list of when qubits are scheduled to arrive at the ABSA node.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: initalTime <- Boolean value.
 
 <pre>
-1:  <b>procedure</b> initialTimeConditionalClause(arrivalTimeList)
+1:  <b>procedure</b> initializeConditionalClause(arrivalTimeList)
 2:    initialTime = False
 3:    currentTime = time.get()
 4:    <b>if</b> currentTime < arrivalTimeList[0] <b>then</b>
@@ -98,10 +98,10 @@ __This conditional clause checks whether current time is less than the scheduled
 8:  <b>end procedure</b>
 </pre>
 
-__Algorithm 2:__ initializeAction()  
-__This Action is used to set the measurement basis to Bell basis before the arrival of the first arm qubits, initialize the list of measurement outcomes, the Boolean value tracking whether a successful Bell measurement has occurred, and the Boolean variable tracking whether final message has been sent.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: none.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis <- measurement basis, outcomeList <- list of measurement results, successBell <- Boolean value indicating whether successful Bell measurement has occured yet, msgSent <- Boolean value indicating whether final message has been sent yet.
+__Algorithm 2:__ initializeAction(branchingVector)  
+__This Action is used to set the measurement basis to Bell basis before the arrival of the first arm qubits, initialize the list of measurement outcomes, the Boolean value tracking whether a successful Bell measurement has occurred, and creates two tree arrays according to the branching vector used for encoded X and Z measurements.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: branchingVector <- tree array used for encoding 1st-leaf qubits.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis <- measurement basis, outcomeList <- list of measurement results for physical qubits, successBell <- Boolean value indicating whether successful Bell measurement has occured yet, encodedX <- tree array with Pauli bases (see Figure 5), encodedZ <- tree array with Pauli bases (see Figure 5).
 
 <pre>
 <b>Require:</b> initialTime == True
@@ -109,9 +109,10 @@ __This Action is used to set the measurement basis to Bell basis before the arri
 2:    basis = Bell
 3:    outcomeList = []
 4:    successBell = False
-5:    msgSent = False
-6:    <b>return</b> basis, outcomeList, successBell, msgSent
-7:  <b>end procedure</b>
+5:    encodedX <- tree array for encoded X measurement
+6:    encodedZ <- tree array for encoded Z measurement
+7:    <b>return</b> basis, outcomeList, successBell, encodedX, encodedZ
+8:  <b>end procedure</b>
 </pre>
 
 __Algorithm 3:__ timeConditionalClause(arrivalTimeList)  
