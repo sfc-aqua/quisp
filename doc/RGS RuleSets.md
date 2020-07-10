@@ -66,10 +66,15 @@ __Encoded measurements:__
 The 1st-leaf qubits of an RGS ar eencoded in a tree structure and therefore have to be measured using encoded Pauli operators as shown in Figure 5.
 
 <center>
-<img src="img/rgs5_encoded.png" width="800" />
+<img src="img/rgs5_encodedPauli.png" width="1200" />
 </center>
 
-In order for the encoded Z measurement to succeed, all physical qubits of level 1 must be successfully measured in Z basis (either directly or indirectly). The encoded X measurement is successful if at least one of the physical qubits in level 1 is successfully measured in X basis along with all of its level 2 leafs need to be measured in Z basis (either directly or indirectly).
+
+Encoded Z measurement is performed by measuring all Level 1 qubits in Z basis, Level 2 qubits in X basis, Level 3 qubits in Z basis and so on.
+The encoded measurement succeeds if all Level 1 qubits are measured successfully (either via direct or indirect Z measurements).
+
+Encoded X measurement is performed by measuring all Level 1 qubits in X basis, Level 2 qubits in Z basis, Level 3 qubits in X basis and so on.
+The encoded measurement succeeds if at least one of the Level 1 X measurements is successful and all its Level 2 leafs are successfully measured in Z (either via direct or indirect measurements).
 
 __Flowchart:__ summarizing the role of the algorithms detailed below.
 
