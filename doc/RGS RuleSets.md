@@ -126,7 +126,7 @@ __This conditional clause determines whether the ABSA should measure anything.__
 </pre>
 
 __Algorithm 4:__ postBellConditionalClause(outcomeList,successBell)  
-__This conditional clause determines the basis for upcoming encoded Pauli measurement following a Bell measurement.__  
+__This Conditional Clause determines the basis for upcoming encoded Pauli measurement following a Bell measurement.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: outcomeList, successBell.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis <- measurement basis.
 
@@ -141,81 +141,22 @@ __This conditional clause determines the basis for upcoming encoded Pauli measur
 8:  <b>end procedure</b>
 </pre>
 
-__[OLD, REMOVE]Algorithm 3:__ timeConditionalClause(arrivalTimeList)  
-__This conditional clause checks the current time and whether the ABSA node is required to measure any more qubits.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: measurementNeeded <- Boolean value.
-
-<pre>
-1:  <b>procedure</b> timeConditionalClause(arrivalTimeList)
-2:    measurementNeeded = False
-3:    currentTime = time.get()
-4:    <b>if</b> arrivalTimeList[0] <= currentTime <= arrivalTimeList[end] <b>then</b>
-5:      measurementNeeded = True
-6:    <b>end if</b>
-7:    <b>return</b> measurementNeeded
-8:  <b>end procedure</b>
-</pre>
-
-__[OLD,REMOVE]Algorithm 4:__ measurementAction(basis, outcomeList, successBell)  
-__This Action  performs the correct measurements on the two arriving qubits, updates the outcomeList and basis for the next measurements.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: basis, outcomeList, successBell.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis, outcomeList, successBell.
+__Algorithm 5:__ measureAction(outcomeList,basis)  
+__This Action Clause performs measurements on the incoming qubits.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: outcomeList, basis.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ouput: outcomeList. 
 
 <pre>
 <b>Require:</b> measurementNeeded == True
-1:  <b>procedure</b> measurementAction(basis, outcomeList, successBell)
-2:    resource1 = qubit from left source node
-3:    resource2 = qubit from right source node
-4:    outcome = measure(resource1, resource2, basis)
-5:    outcomeList.append((basis, outcome))
-6:    <b>if</b> basis != Bell <b>then</b>
-7:      basis = Bell
-8:    <b>else if</b> basis == Bell <b>then</b>
-9:      <b>if</b> (outcome.success() == True and successBell == False) <b>then</b>
-10:       basis = X
-11:       successBell = True
-12:     <b>else</b>
-13:       basis = Z
-14:     <b>end if</b>
-15:   <b>end if</b>
-16:   <b>return</b> basis, outcomeList, successBell
-17: <b>end procedure</b>
-</pre>
-
-__[OLD,REMOVE]Algorithm 5:__ finalTimeConditionalClause(arrivalTimeList)  
-__This Conditional Clause checks whether current time is larger than the scheduled arrival tiem of the last qubits.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: finalTime <- Boolean value.
-
-<pre>
-1:  <b>procedure</b> finalTimeConditionalClause(arrivalTimeList)
-2:    finalTime = False
-3:    currentTime = time.get()
-4:    <b>if</b> currentTime > arrivalTimeList[end] <b>then</b>
-5:      finalTime = True
-6:    <b>end if</b>
-7:    <b>return</b> finalTime
-8:  <b>end procedure</b>
-</pre>
-
-__[OLD,REMOVE]Algorithm 6:__ msgAction(outcomeList)
-__This Action creates the final message after all measurements have been performed and sends it to the end nodes.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: outcomeList <- contains information about measurement bases and outcomes.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: msg <- message sent to the end nodes.  
-
-<pre>
-<b>Require:</b> finalTime == True, msgSent == False.
-1:  <b>procedure</b> msgAction(outcomeList)
-2:    self_addr <- address of the ABSA node
-3:    endLeft_addr <- address of the left end node
-4:    endRight_addr <- address of the right end node
-5:    msg.destination = [endLeft_addr, endRight_addr]
-6:    msg.source = self_addr
-7:    msg.data = outcomeList
-8:    msgSent = True
-9:    <b>return</b> msg
-10: <b>end procedure</b>
+1:  <b>procedure</b> measureAction(outcomeList, basis)
+2:    <b>for</b> i=0, i&ltlength(basis), i++
+3:      resource1 <- qubit from right source node
+4:      resource2 <- qubit from left source node
+5:      outcome = measure(resource1, resource2, basis[i])
+6:      outcomeList.append((basis,outcome))
+7:    <b>end for</b>
+8:    <b>return</b> outcomeList
+9:  <b>end procedure</b>
 </pre>
 
 ## 3. End nodes
