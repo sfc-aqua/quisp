@@ -76,12 +76,6 @@ The encoded measurement succeeds if all Level 1 qubits are measured successfully
 Encoded X measurement is performed by measuring all Level 1 qubits in X basis, Level 2 qubits in Z basis, Level 3 qubits in X basis and so on.
 The encoded measurement succeeds if at least one of the Level 1 X measurements is successful and all its Level 2 leafs are successfully measured in Z (either via direct or indirect measurements).
 
-__[OLD, REMOVE]Flowchart:__ summarizing the role of the algorithms detailed below.
-
-<center>
-<img src="img/rgs_flowchart.png" width="300" />
-</center>
-
 __Algorithm 1:__ initializeConditionalClause(arrivalTimeList)  
 __This conditional clause checks whether current time is less than the scheduled arrival of first qubit.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList <- list of when qubits are scheduled to arrive at the ABSA node.  
@@ -115,7 +109,39 @@ __This Action is used to set the measurement basis to Bell basis before the arri
 8:  <b>end procedure</b>
 </pre>
 
-__Algorithm 3:__ timeConditionalClause(arrivalTimeList)  
+__Algorithm 3:__ measureConditionalClause(arrivalTime)  
+__This conditional clause determines whether the ABSA should measure anything.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: measurementNeeded <- Boolean value.
+
+<pre>
+1:  <b>procedure</b> measurementConditionalClause(arrivalTime)
+2:    currentTime = time.get()
+3:    measurementNeeded = False
+4:    <b>if</b> arrivalTime[0] <= currentTime <= arrivalTime[end] <b>then</b>
+5:      measurementNeeded = True
+6:    <b>end if</b>
+7:    <b>return</b> measurementNeeded
+8:  <b>end procedure</b>
+</pre>
+
+__Algorithm 4:__ postBellConditionalClause(outcomeList,successBell)  
+__This conditional clause determines the basis for upcoming encoded Pauli measurement following a Bell measurement.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: outcomeList, successBell.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis <- measurement basis.
+
+<pre>
+1:  <b>procedure</b> postBellConditionalClause(outcomeList,successBell)
+2:    <b>if</b> successBell == True or outcomeList[end].success() == False <b>then</b>
+3:      basis = encodedZ
+4:    <b>else</b>
+5:      basis = encodedX
+6:    <b>end if</b>
+7:    <b>return</b> basis
+8:  <b>end procedure</b>
+</pre>
+
+__[OLD, REMOVE]Algorithm 3:__ timeConditionalClause(arrivalTimeList)  
 __This conditional clause checks the current time and whether the ABSA node is required to measure any more qubits.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: measurementNeeded <- Boolean value.
@@ -131,7 +157,7 @@ __This conditional clause checks the current time and whether the ABSA node is r
 8:  <b>end procedure</b>
 </pre>
 
-__Algorithm 4:__ measurementAction(basis, outcomeList, successBell)  
+__[OLD,REMOVE]Algorithm 4:__ measurementAction(basis, outcomeList, successBell)  
 __This Action  performs the correct measurements on the two arriving qubits, updates the outcomeList and basis for the next measurements.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: basis, outcomeList, successBell.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis, outcomeList, successBell.
@@ -157,7 +183,7 @@ __This Action  performs the correct measurements on the two arriving qubits, upd
 17: <b>end procedure</b>
 </pre>
 
-__Algorithm 5:__ finalTimeConditionalClause(arrivalTimeList)  
+__[OLD,REMOVE]Algorithm 5:__ finalTimeConditionalClause(arrivalTimeList)  
 __This Conditional Clause checks whether current time is larger than the scheduled arrival tiem of the last qubits.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: finalTime <- Boolean value.
@@ -173,7 +199,7 @@ __This Conditional Clause checks whether current time is larger than the schedul
 8:  <b>end procedure</b>
 </pre>
 
-__Algorithm 6:__ msgAction(outcomeList)
+__[OLD,REMOVE]Algorithm 6:__ msgAction(outcomeList)
 __This Action creates the final message after all measurements have been performed and sends it to the end nodes.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: outcomeList <- contains information about measurement bases and outcomes.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: msg <- message sent to the end nodes.  
