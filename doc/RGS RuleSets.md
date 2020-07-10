@@ -93,9 +93,9 @@ __This conditional clause checks whether current time is less than the scheduled
 </pre>
 
 __Algorithm 2:__ initializeAction(branchingVector)  
-__This Action is used to set the measurement basis to Bell basis before the arrival of the first arm qubits, initialize the list of measurement outcomes, the Boolean value tracking whether a successful Bell measurement has occurred, and creates two tree arrays according to the branching vector used for encoded X and Z measurements.__  
+__This Action is used to set the measurement basis to Bell basis before the arrival of the first arm qubits, initialize the list of measurement outcomes, the Boolean value tracking whether a successful Bell measurement has occurred, create two tree arrays according to the branching vector used for encoded X and Z measurements, and to set the Boolean value tracking whether the final message has been sent yet.__  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: branchingVector <- tree array used for encoding 1st-leaf qubits.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis <- measurement basis, outcomeList <- list of measurement results for physical qubits, successBell <- Boolean value indicating whether successful Bell measurement has occured yet, encodedX <- tree array with Pauli bases (see Figure 5), encodedZ <- tree array with Pauli bases (see Figure 5).
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis <- measurement basis, outcomeList <- list of measurement results for physical qubits, successBell <- Boolean value indicating whether successful Bell measurement has occured yet, encodedX <- tree array with Pauli bases (see Figure 5), encodedZ <- tree array with Pauli bases (see Figure 5), msgSent <- Boolean value.
 
 <pre>
 <b>Require:</b> initialTime == True
@@ -105,8 +105,9 @@ __This Action is used to set the measurement basis to Bell basis before the arri
 4:    successBell = False
 5:    encodedX <- tree array for encoded X measurement
 6:    encodedZ <- tree array for encoded Z measurement
-7:    <b>return</b> basis, outcomeList, successBell, encodedX, encodedZ
-8:  <b>end procedure</b>
+7:    msgSent = False
+8:    <b>return</b> basis, outcomeList, successBell, encodedX, encodedZ
+9:  <b>end procedure</b>
 </pre>
 
 __Algorithm 3:__ measureConditionalClause(arrivalTime)  
@@ -157,6 +158,38 @@ __This Action Clause performs measurements on the incoming qubits.__
 7:    <b>end for</b>
 8:    <b>return</b> outcomeList
 9:  <b>end procedure</b>
+</pre>
+
+__Algorithm　6:__ finalizeConditionalClause(arrivalTime, msgSent)  
+__This Conditional Clause checks if the final message needs to be sent.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTime, msgSent.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: msgNeeded <- Boolean value.
+
+<pre>
+1:  <b>procedure</b> finalizeConditionalClause(arrivalTime, msgSent)
+2:    currentTime = time.get()
+3:    msgNeeded = False
+4:    <b>if</b> currentTime > arrivalTime[end] && msgSent == False <b>then</b>
+5:      msgNeeded = True
+6:    <b>end if</b>
+7:    <b>return</b> msgNeeded
+8:  <b>end procedure</b>
+</pre>
+
+__Algorithm 7:__ finalizeAction(outcomeList)  
+__This Action sends the final message to the end nodes.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: outcomeList.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: msg <- final message containing the address of the ABSA and measurement outcomes.
+
+<pre>
+<b>Require:</b> msgNeeded == True
+1:  <b>procedure</b> finalizeAction(outcomeList)
+2:    self_addr <- address of the ABSA
+3:    dest_addr <- address of end nodes
+4:    msg = [dest_addr, self_addr, outcomeList]
+5:    msgSent = True
+6:  <b>return</b> msg
+7:  <b>end procedure</b>
 </pre>
 
 ## 3. End nodes
