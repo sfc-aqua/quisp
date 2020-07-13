@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <string>
 #include <fstream>
 #include <modules/HardwareMonitor.h>
 
@@ -37,6 +38,8 @@ class BellStateAnalyzer : public cSimpleModule
         std::vector<simtime_t> creation_time;
         simsignal_t Average_Num_TrialSignal;
         std::vector<int> number_of_trials;
+        int nwidth = 0;
+        int duration=10;
         
         // parameters
         double darkcount_probability;
@@ -347,7 +350,8 @@ void BellStateAnalyzer::finish(){
     // std::string file_name = BSA_perf_output_filename;
     // int file_size = file_name.size();
     // create file
-    std::string file_name = "num_trials";
+    std::string a = std::to_string(duration);
+    std::string file_name = "num_trials" + a;
     std::ofstream bsa_stats(file_name, std::ios_base::app);
 
     // 1. Bell pair creation time (average and std)
@@ -399,9 +403,13 @@ void BellStateAnalyzer::GOD_setCompletelyMixedDensityMatrix(){
 
 /*Error on flying qubit with a successful BSA propagates to its original stationary qubit. */
 void BellStateAnalyzer:: GOD_updateEntangledInfoParameters_of_qubits(){
-    emit(Average_Num_TrialSignal, trials);
-    number_of_trials.push_back(trials);
-    trials=0;
+    nwidth++;
+    if (nwidth == duration){
+        emit(Average_Num_TrialSignal, trials);
+        number_of_trials.push_back(trials);
+        trials=0;
+        nwidth=0;
+    }
 	
     //std::cout<<"Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<right_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
 

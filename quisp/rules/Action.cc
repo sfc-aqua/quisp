@@ -470,13 +470,14 @@ cPacket* RandomMeasureAction::run(cModule *re) {
     stationaryQubit *qubit = nullptr;
 
     qubit = getResource_fromTop(resource);
+    
 	
     if(qubit==nullptr){
         Error *pk = new Error;
         pk->setError_text("Qubit not found for measurement.");
         return pk;
     }else{
-
+        // qubit->T_gate();
         measurement_outcome o = qubit->measure_density_independent();
         current_count++;
 

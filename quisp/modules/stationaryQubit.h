@@ -287,6 +287,7 @@ class stationaryQubit : public cSimpleModule
         virtual void Z_gate();
 
         virtual void X_gate();
+        // virtual void T_gate();
         virtual bool Xpurify(stationaryQubit *resource_qubit);
         virtual bool Zpurify(stationaryQubit * resource_qubit);
 

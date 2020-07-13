@@ -373,6 +373,12 @@ void stationaryQubit::X_gate(){
     par("GOD_Xerror") = !par("GOD_Xerror");
 }
 
+// void stationaryQubit::T_gate(){
+//     apply_single_qubit_gate_error(0.7*Xgate_error, this);
+//     apply_single_qubit_gate_error(0.7*Ygate_error, this);
+//     par("GOD_Xerror") = !par("GOD_Xerror");
+// }
+
 void stationaryQubit::CNOT_gate(stationaryQubit *control_qubit){
     //Need to add noise here later
     apply_two_qubit_gate_error(CNOTgate_error, this, control_qubit);
