@@ -577,7 +577,7 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int
                     int address_entangled_with = process->entangled_partner[i];
                     for (auto rule=process->cbegin(), end=process->cend(); rule!=end; rule++){//Traverse through rules
                         if((*rule)->rule_index == rule_id){//Find the corresponding rule.
-                            emit(actual_resSignal, (*rule)->resources.size());
+                            //emit(actual_resSignal, (*rule)->resources.size());
                             for (auto qubit=(*rule)->resources.begin(); qubit!=(*rule)->resources.end(); ++qubit) {
                                 if(qubit->second->action_index == index){
                                     //Correct resource found! Need to unlock and stage up the resource to the next rule.
