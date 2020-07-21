@@ -27,16 +27,22 @@ Each link consists of three types of nodes:
 
 ## 1. Repeater nodes
 
-Time flow of the generation of the RGS:
+__Assumptions:__
+* We assume that the emissions times are such that the arrival of qubits at the ABSA nodes will be synchronized.*
 
-1. Generate the encoded RGS. *[Comment: need to consider step-by-step generation using matter qubits and operation on them.]*
-2. Send left half of the RGS to the left neighbor. Send right half to the right neoghbor.
+__Overview:__  
+The source node receives the required time of emission of all physical qubits.
+The emission schedule is such that the physical qubits arrive at the neighboring ABSA nodes in a synchrony with physical qubits from another source node.
+This synchronized timing is crucial to the Bell measurements and must be carefully calculated prior to the start of the protocol.
+
+The source node also receives the parameters m describing the number of arms of the RGS and the branching vector for the encoding of 1st leaf qubits.
+It then proceeds to generate the RGS accordingly.
 
 
 ## 2. ABSA nodes
 
 __Assumptions:__
-* We assume that the arrival of qubits at the ABSA is appropritely synchronized. *[Comment: Need to discuss how to synchronize the distribution of RGS across the link.]*
+* We assume that the arrival of qubits at the ABSA is appropriately synchronized. *[Comment: Need to discuss how to synchronize the distribution of RGS across the link.]*
 
 __Overview:__  
 The RuleSet for ABSA nodes depends on the order of arrival of qubits from the source nodes. A pair of arm qubits arrive first from the left and right source nodes followed by their respective 1st-leaft neighbors as shown in Figure 3.
