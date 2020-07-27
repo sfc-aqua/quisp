@@ -200,6 +200,23 @@ __This Action sends the final message to the end nodes.__
 
 ## 3. End nodes
 
+__Overview:__  
+Functionality of the end nodes depends on the purpose of the network link.
+Two main applications that we consider are quantum key distribution (QKD) and entanglement distribution.
+
+__QKD__  
+The purpose of quantum key distributin is to generate a classical random key.
+Therefore the incoming photonic qubits can be measured immediately upon arrival.
+In general, these measurements occur before the arrival of measurement transcripts from all ABSA nodes along the network link.
+This does not compromise the protocol as the correct Pauli frame can be worked out by classical postprocessing.
+
+__Entanglement distribution__  
+In this scenario the goal is to establish an entangled pair between the two end nodes.
+The incoming arm qubits therefore must be stred in a quantum memory. [Comment: How to do this?]
+The 1st-leaf qubits can be measured immediately as they arrive.
+Only one of the 1st-leaf qubits needs to be measured in an encoded Pauli X basis.
+It does not matter which one it is, as long as its arm-qubit neighbor was successfully stored in a quantum memory.
+
 __Final state__
 <center>
 <img src="img/rgs4_correction.png" width="500" />
