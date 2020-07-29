@@ -212,10 +212,26 @@ This does not compromise the protocol as the correct Pauli frame can be worked o
 
 __Entanglement distribution__  
 In this scenario the goal is to establish an entangled pair between the two end nodes.
-The incoming arm qubits therefore must be stred in a quantum memory. [Comment: How to do this?]
-The 1st-leaf qubits can be measured immediately as they arrive.
-Only one of the 1st-leaf qubits needs to be measured in an encoded Pauli X basis.
-It does not matter which one it is, as long as its arm-qubit neighbor was successfully stored in a quantum memory.
+
+1. The incoming arm qubits therefore must be stored in a quantum memory. [Comment: How to do this?]
+2. The 1st-leaf qubits can be measured immediately as they arrive or they can be stored in a quantum memory as well. Only one of the 1st-leaf qubits needs to be measured in an encoded Pauli X basis. It does not matter which one it is, as long as its arm-qubit neighbor was successfully stored in a quantum memory.
+
+Issue:  
+Consider the case where the 1st-leaf qubits are immediately measured upon arrival.
+Following the first successful storing of an arm qubit in a quantum memory, its 1st-leaf neighbor must be measured in an encoded Pauli X basis and the remaining 1st-leaf qubits in encoded Pauli Z basis.
+This means that the arm qubit that will eventually become entangled with an arm qubit at the other end node will be one of the earlier qubits that had arrived at the end node.
+This arm qubit undergoes more decoherence because it has to stay in the memory for longer.
+Consequently the final fidelity of the entangled pair between the end nodes suffers.
+
+Goal:  
+Ideally, we would like the last successfully stored arm qubit to be the one used to establish an entangled link to the other end node.
+
+Potential solution:  
+Store 1st-leaf qubits in quantum memory as well.
+Determine which arm qubit was succesfully loaded last and measure its neighbor in the encoded Pauli X basis and measure the remaining stored qubits in Pauli Z basis.
+If this X measurement fails, move on to the second last successfully stored arm qubit and attempt to measure its 1-st leaf neighbor in the encoded Pauli X basis.
+Continue until the encoded X measurement succeeds.
+
 
 __Final state__
 <center>
