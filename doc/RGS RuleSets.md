@@ -209,6 +209,106 @@ The purpose of quantum key distributin is to generate a classical random key.
 Therefore the incoming photonic qubits can be measured immediately upon arrival.
 In general, these measurements occur before the arrival of measurement transcripts from all ABSA nodes along the network link.
 This does not compromise the protocol as the correct Pauli frame can be worked out by classical postprocessing.
+The protocol used is BBM92, an entanglement-based appraoch where the two parties share a Bell pair and randomly measure their qubits in X and or basis.
+
+__Algorithm 8:__ qkdInitializeConditionalClause(arrivalTimeList)  
+__This Conditional Clause checks whether end nodes need to be initialized.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList. 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: initializeNeeded <- bBoolean variable. 
+
+<pre>
+1:  <b>procedure</b> qkdInitializeConditionalClause(arrivalTimeList)  
+2:    InitializeNeeded = False  
+3:    currentTime = get.time()
+4:    <b>if</b> currentTime < arrivalTimeList[0] <b>then</b>
+5:      initializeNeeded = True
+6:    <b>end if</b>
+7:    <b>return</b> initializeNeeded
+8:  <b>end procedure</b>
+</pre>
+
+__Algorithm 9:__ qkdInitializeAction(m)  
+__This Action initializes the end node by randomly generating a list of measurement bases, picked from X and Z.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: m <- number of arm qubits.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basisList <- list of measurement bases, outcomeList <- list to store measurement outcomes, msgNeeded <- Boolean value.
+
+<pre>
+<b>Require:</b> initializeNeeded == True
+1:  <b>procedure</b> qkdInitializeAction()
+2:    basisList = []
+3:    outcomeList = []
+4:    msgNeeded = True
+5:    <b>for</b> i=0, i&ltm, i++
+6:      basisList.append(random(X,Z))
+7:    <b>end for</b>
+8:    <b>return basisList
+9:  <b>end procedure</b>
+</pre>
+
+__Algorithm 10:__ qkdMeasureConditionalClause(arrivalTimeList, basisList)  
+__This Conditional Clause checks if a measurement is needed at the end node.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: measurementNeeded <- Boolean variable, basis <- basis of measurement. 
+
+<pre>
+1:  <b>procedure</b> qkdMeasureConditionalClause(arrivalTimeList, basisList)
+2:    measurementNeeded = False
+3:    currentTime = get.time()
+4:    index = get_index(currentTime, arrivalTimeList)
+5:    <b>if</b> arrivalTime[0] <= currentTime <= arrivalTime[end] <b>then</b>
+6:      measurementNeeded = True
+7:      basis = basisList[index]
+8:    <b>end if</b>
+9:    <b>return</b> measurementNeeded, basis
+10: <b>end procedure</b>
+</pre>
+
+__Algorithm 11:__ qkdMeasureAction(basis, outcomeList)  
+__This Action Clause measures the incoming qubit.__
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: basis <- measurement basis for incoming qubit, outcomeList <- list of measurement outcomes.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: outcomeList <- list of measurement outcomes.
+
+<pre>
+<b>Require:</b> measurementNeeded == True
+1:  <b>procedure</b> qkdMeasureAction(basis, outcomeList)
+2:    resource <- incoming qubit
+3:    outcome = measure(resource, basis)
+4:    outcomeList.append((basis,outcome))
+5:    <b>return</b> outcomeList
+7:  <b>end procedure</b>
+</pre>
+
+__Algoithm 12:__ qkdFinalizeConditionalClause(arrivalTimeList)  
+__This Conditional Clause checks if all the measurements have been performed.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: arrivalTimeList.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: finalizeNeeded <- Boolean value.  
+
+<pre>
+1:  <b>procedure</b> qkdFinalizeConditionalClause(arrivalTimeList)
+2:    currentTime = get.time()
+3:    finalizeNeeded = False
+4:    <b>if</b> currentTime &gt arrivalTimeList[end] <b>then</b>
+5:      finalizeNeeded = True
+6:    <b>end if</b>
+7:    <b>return</b> finalizeNeeded
+8:  <b>end procedure</b>
+</pre>
+
+__Algorithm 13:__ qkdFinalizeAction(basisList)  
+__This Action sends the measurement bases to the other end node.__  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: outcomeList.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: msg < - list of measurement bases.  
+
+<pre>
+<b>Require:</b> finalizeNeeded == True && msgNeeded == True
+1:  <b>procedure</b> qkdFinalizeAction(basisList)
+2:    self_addr <- address of the current end node
+3:    dest_addr <- address of destination end node
+4:    msg = [dest_addr, self_addr, basisList]
+5:    msgNeeded = False
+6:  <b>return</b> msg
+7:  <b>end procedure</b>
+</pre>
 
 __Entanglement distribution__  
 In this scenario the goal is to establish an entangled pair between the two end nodes.
