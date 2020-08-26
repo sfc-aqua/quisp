@@ -241,7 +241,7 @@ __This Action initializes the end node by randomly generating a list of measurem
 5:    <b>for</b> i=0, i&ltm, i++
 6:      basisList.append(random(X,Z))
 7:    <b>end for</b>
-8:    <b>return basisList
+8:    <b>return</b> basisList
 9:  <b>end procedure</b>
 </pre>
 
