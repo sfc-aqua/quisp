@@ -15,7 +15,9 @@ jobs:
 services:
   - docker
 install: travis_wait sh docker_build.sh && sh docker_run_test.sh 
-script: cd test && sudo python -m unittest discover &&sudo rm testresults.txt && echo "test done"
+script: 
+  - make ci
+  - cd test && sudo python -m unittest discover && sudo rm testresults.txt && echo "test done"
 branches:
   only:
     - master
