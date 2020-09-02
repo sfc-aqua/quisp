@@ -202,12 +202,15 @@ cPacket *PurifyAction::run(cModule *re) {
 
   qubit->Lock(ruleset_id, rule_id, action_index);
 
-  if (trash_qubit->entangled_partner != nullptr) {  // Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density
-                                                    // matrix since we are only tracking errors.
-    trash_qubit->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok =
-        true;  // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored. This is not true if the partner did a
-               // purification, because this does not update the densitymatrix as all we do is track error.
-    trash_qubit->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (trash_qubit->entangled_partner != nullptr) {
+    // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
+    // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
+    trash_qubit->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
+
+    // Break entanglement.
+    trash_qubit->entangled_partner->entangled_partner = nullptr;
   }
   // Delete measured resource from the tracked list of resources.
   removeResource_fromRule(trash_qubit);  // Remove from resource list in this Rule.
@@ -253,20 +256,25 @@ cPacket *DoublePurifyAction::run(cModule *re) {
 
   qubit->Lock(ruleset_id, rule_id, action_index);
 
-  if (trash_qubit_Z->entangled_partner != nullptr) {  // Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density
-                                                      // matrix since we are only tracking errors.
-    trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok =
-        true;  // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored. This is not true if the partner did a
-               // purification, because this does not update the densitymatrix as all we do is track error.
-    trash_qubit_Z->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (trash_qubit_Z->entangled_partner != nullptr) {
+    // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
+    // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
+    trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
+    // Break entanglement.
+    trash_qubit_Z->entangled_partner->entangled_partner = nullptr;
   }
-  if (trash_qubit_X->entangled_partner != nullptr) {  // Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density
-                                                      // matrix since we are only tracking errors.
-    trash_qubit_X->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok =
-        true;  // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored. This is not true if the partner did a
-               // purification, because this does not update the densitymatrix as all we do is track error.
+
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (trash_qubit_X->entangled_partner != nullptr) {
+    // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
+    // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
+    trash_qubit_X->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
     trash_qubit_X->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
   }
+
   // Delete measured resource from the tracked list of resources.
   removeResource_fromRule(trash_qubit_X);  // Remove from resource list in this Rule.
   removeResource_fromRule(trash_qubit_Z);  // Remove from resource list in this Rule.
@@ -314,22 +322,24 @@ cPacket *DoublePurifyAction_inv::run(cModule *re) {
 
   qubit->Lock(ruleset_id, rule_id, action_index);
 
-  if (trash_qubit_Z->entangled_partner != nullptr) {  // Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density
-                                                      // matrix since we are only tracking errors.
-
-    trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok =
-        true;  // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored. This is not true if the partner did a
-               // purification, because this does not update the densitymatrix as all we do is track error.
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (trash_qubit_Z->entangled_partner != nullptr) {
+    // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
+    // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
+    trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
     trash_qubit_Z->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
   }
-  if (trash_qubit_X->entangled_partner != nullptr) {  // Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density
-                                                      // matrix since we are only tracking errors.
 
-    trash_qubit_X->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok =
-        true;  // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored. This is not true if the partner did a
-               // purification, because this does not update the densitymatrix as all we do is track error.
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (trash_qubit_X->entangled_partner != nullptr) {
+    // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
+    // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
+    trash_qubit_X->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
     trash_qubit_X->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
   }
+
   // Delete measured resource from the tracked list of resources.
   removeResource_fromRule(trash_qubit_X);  // Remove from resource list in this Rule.
   removeResource_fromRule(trash_qubit_Z);  // Remove from resource list in this Rule.
@@ -377,21 +387,24 @@ cPacket *DoubleSelectionAction::run(cModule *re) {
 
   qubit->Lock(ruleset_id, rule_id, action_index);
 
-  if (trash_qubit_Z->entangled_partner != nullptr) {  // Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density
-                                                      // matrix since we are only tracking errors.
-
-    trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok =
-        true;  // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored. This is not true if the partner did a
-               // purification, because this does not update the densitymatrix as all we do is track error.
-    trash_qubit_Z->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (trash_qubit_Z->entangled_partner != nullptr) {
+    // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
+    // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
+    trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
+    // Break entanglement.
+    trash_qubit_Z->entangled_partner->entangled_partner = nullptr;
   }
-  if (trash_qubit_X->entangled_partner != nullptr) {  // Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density
-                                                      // matrix since we are only tracking errors.
 
-    trash_qubit_X->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok =
-        true;  // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored. This is not true if the partner did a
-               // purification, because this does not update the densitymatrix as all we do is track error.
-    trash_qubit_X->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (trash_qubit_X->entangled_partner != nullptr) {
+    // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
+    // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
+    trash_qubit_X->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
+    // Break entanglement.
+    trash_qubit_X->entangled_partner->entangled_partner = nullptr;
   }
   // Delete measured resource from the tracked list of resources.
   removeResource_fromRule(trash_qubit_X);  // Remove from resource list in this Rule.
@@ -440,21 +453,24 @@ cPacket *DoubleSelectionAction_inv::run(cModule *re) {
 
   qubit->Lock(ruleset_id, rule_id, action_index);
 
-  if (trash_qubit_Z->entangled_partner != nullptr) {  // Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density
-                                                      // matrix since we are only tracking errors.
-
-    trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok =
-        true;  // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored. This is not true if the partner did a
-               // purification, because this does not update the densitymatrix as all we do is track error.
-    trash_qubit_Z->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (trash_qubit_Z->entangled_partner != nullptr) {
+    // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
+    // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
+    trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
+    // Break entanglement.
+    trash_qubit_Z->entangled_partner->entangled_partner = nullptr;
   }
-  if (trash_qubit_X->entangled_partner != nullptr) {  // Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density
-                                                      // matrix since we are only tracking errors.
 
-    trash_qubit_X->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok =
-        true;  // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored. This is not true if the partner did a
-               // purification, because this does not update the densitymatrix as all we do is track error.
-    trash_qubit_X->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (trash_qubit_X->entangled_partner != nullptr) {
+    // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
+    // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
+    trash_qubit_X->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
+    // Break entanglement.
+    trash_qubit_X->entangled_partner->entangled_partner = nullptr;
   }
   // Delete measured resource from the tracked list of resources.
   removeResource_fromRule(trash_qubit_X);  // Remove from resource list in this Rule.
@@ -544,34 +560,41 @@ cPacket *DoubleSelectionDualAction::run(cModule *re) {
   ds_meas_X = ds_trash_qubit_X->Xpurify(trash_qubit_Z);
 
   qubit->Lock(ruleset_id, rule_id, action_index);
-
-  if (trash_qubit_Z->entangled_partner != nullptr) {  // Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density
-                                                      // matrix since we are only tracking errors.
-    trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok =
-        true;  // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored. This is not true if the partner did a
-               // purification, because this does not update the densitymatrix as all we do is track error.
-    trash_qubit_Z->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (trash_qubit_Z->entangled_partner != nullptr) {
+    // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
+    // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
+    trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
+    // Break entanglement.
+    trash_qubit_Z->entangled_partner->entangled_partner = nullptr;
   }
-  if (trash_qubit_X->entangled_partner != nullptr) {  // Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density
-                                                      // matrix since we are only tracking errors.
-    trash_qubit_X->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok =
-        true;  // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored. This is not true if the partner did a
-               // purification, because this does not update the densitymatrix as all we do is track error.
-    trash_qubit_X->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (trash_qubit_X->entangled_partner != nullptr) {
+    // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
+    // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
+    trash_qubit_X->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
+    // Break entanglement.
+    trash_qubit_X->entangled_partner->entangled_partner = nullptr;
   }
-  if (ds_trash_qubit_X->entangled_partner != nullptr) {  // Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its
-                                                         // density matrix since we are only tracking errors.
-    ds_trash_qubit_X->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok =
-        true;  // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored. This is not true if the partner did a
-               // purification, because this does not update the densitymatrix as all we do is track error.
-    ds_trash_qubit_X->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (ds_trash_qubit_X->entangled_partner != nullptr) {
+    // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
+    // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
+    ds_trash_qubit_X->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
+    // Break entanglement.
+    ds_trash_qubit_X->entangled_partner->entangled_partner = nullptr;
   }
-  if (ds_trash_qubit_Z->entangled_partner != nullptr) {  // Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its
-                                                         // density matrix since we are only tracking errors.
-    ds_trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok =
-        true;  // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored. This is not true if the partner did a
-               // purification, because this does not update the densitymatrix as all we do is track error.
-    ds_trash_qubit_Z->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (ds_trash_qubit_Z->entangled_partner != nullptr) {
+    // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
+    // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
+    ds_trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
+    // Break entanglement.
+    ds_trash_qubit_Z->entangled_partner->entangled_partner = nullptr;
   }
   // Delete measured resource from the tracked list of resources.
   removeResource_fromRule(trash_qubit_X);  // Remove from resource list in this Rule.
