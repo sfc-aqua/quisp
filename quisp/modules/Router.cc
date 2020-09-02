@@ -79,7 +79,7 @@ void Router::initialize(int stage) {
   }
 
   for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all the destinations from the thisNode
-    if (topo->getNode(i) == thisNode) continue;    // skip the node that is running this specific router app
+    if (topo->getNode(i) == thisNode) continue;  // skip the node that is running this specific router app
     // Apply dijkstra to each node to find all shortest paths.
     topo->calculateWeightedSingleShortestPathsTo(topo->getNode(i));  // Overwrites getNumPaths() and so on.
 
@@ -106,11 +106,11 @@ void Router::handleMessage(cMessage *msg) {
   // check the header of the received package
   header *pk = check_and_cast<header *>(msg);
   int destAddr = pk->getDestAddr();  // read destination from the packet
-  int who_are_you = pk->getKind();   // read the type of packet // This might be better fixed
+  int who_are_you = pk->getKind();  // read the type of packet // This might be better fixed
   // bubble("Message kind "<<message_type<<" received");
   EV << "destAddr ==== " << destAddr;
   if (destAddr == myAddress && who_are_you == 1) {  // If destination is this node: Path selection
-    send(pk, "toApp");                              // send to Application locally
+    send(pk, "toApp");  // send to Application locally
     return;
   } else if (destAddr == myAddress && dynamic_cast<BSMtimingNotifier *>(msg) != nullptr) {  // Timing for BSM
     bubble("Timing Notifier from HoM (stand-alone or internal) received");

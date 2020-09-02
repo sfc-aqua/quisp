@@ -256,9 +256,13 @@ BSMtimingNotifier *HoM_Controller::generateNotifier(double time, double speed_of
   pk->setDestAddr(destAddr);
   pk->setKind(BSAtimingNotifier_type);
   pk->setInterval(accepted_burst_interval);
-  pk->setAccepted_photons_per_sec(photon_detection_per_sec);  // If very high, all photons can nearly be sent here(to BSA module) from neighboring nodes simultaneously
+
+  // If very high, all photons can nearly be sent here(to BSA module) from neighboring nodes simultaneously
+  pk->setAccepted_photons_per_sec(photon_detection_per_sec);
   double timing = calculateEmissionStartTime(time, distance_to_neighbor, speed_of_light_in_channel);
-  pk->setTiming_at(timing);  // Tell neighboring nodes to shoot photons so that the first one arrives at BSA at the specified timing
+
+  // Tell neighboring nodes to shoot photons so that the first one arrives at BSA at the specified timing
+  pk->setTiming_at(timing);
   return pk;
 }
 
@@ -275,9 +279,13 @@ CombinedBSAresults *HoM_Controller::generateNotifier_c(double time, double speed
   pk->setDestAddr(destAddr);
   pk->setKind(BSAtimingNotifier_type);
   pk->setInterval(accepted_burst_interval);
-  pk->setAccepted_photons_per_sec(photon_detection_per_sec);  // If very high, all photons can nearly be sent here(to BSA module) from neighboring nodes simultaneously
+
+  // If very high, all photons can nearly be sent here(to BSA module) from neighboring nodes simultaneously
+  pk->setAccepted_photons_per_sec(photon_detection_per_sec);
   double timing = calculateEmissionStartTime(time, distance_to_neighbor, speed_of_light_in_channel);
-  pk->setTiming_at(timing);  // Tell neighboring nodes to shoot photons so that the first one arrives at BSA at the specified timing
+
+  // Tell neighboring nodes to shoot photons so that the first one arrives at BSA at the specified timing
+  pk->setTiming_at(timing);
   return pk;
 }
 
@@ -286,10 +294,14 @@ CombinedBSAresults *HoM_Controller::generateNotifier_c(double time, double speed
 double HoM_Controller::calculateEmissionStartTime(double time, double distance_to_node, double c) {
   // distance_to_node is the distance to HoM to self
   double self_timeToTravel = calculateTimeToTravel(distance_to_node, c);
-  if ((self_timeToTravel) != time) {        // If shorter distance, then the node needs to wait a little for the other node with the longer distance
-    return (time - self_timeToTravel) * 2;  // Waiting time
+
+  // If shorter distance, then the node needs to wait a little for the other node with the longer distance
+  if ((self_timeToTravel) != time) {
+    // Waiting time
+    return (time - self_timeToTravel) * 2;
   } else {
-    return 0;  // No need to wait
+    // No need to wait
+    return 0;
   }
 }
 
@@ -304,7 +316,8 @@ void HoM_Controller::BubbleText(const char *txt) {
 }
 
 cModule *HoM_Controller::getQNode() {
-  cModule *currentModule = getParentModule();  // We know that Connection manager is not the QNode, so start from the parent.
+  // We know that Connection manager is not the QNode, so start from the parent.
+  cModule *currentModule = getParentModule();
   try {
     cModuleType *QNodeType = cModuleType::get("networks.QNode");  // Assumes the node in a network has a type QNode
     while (currentModule->getModuleType() != QNodeType) {
@@ -338,8 +351,9 @@ void HoM_Controller::sendBSAresultsToNeighbors() {
     double time = calculateTimeToTravel(max_neighbor_distance, speed_of_light_in_channel);  // When the packet reaches = simitme()+time
     pk = generateNotifier_c(time, speed_of_light_in_channel, distance_to_neighbor, neighbor_address, accepted_burst_interval, photon_detection_per_sec, max_buffer);
     double first_nodes_timing = calculateEmissionStartTime(time, distance_to_neighbor, speed_of_light_in_channel);
-    pk->setTiming_at(first_nodes_timing);  // Tell neighboring nodes to shoot photons so that the first one arrives at BSA at the specified timing
 
+    // Tell neighboring nodes to shoot photons so that the first one arrives at BSA at the specified timing
+    pk->setTiming_at(first_nodes_timing);
     pk->setSrcAddr(address);
     pk->setDestAddr(neighbor_address);
     pk->setList_of_failedArraySize(getStoredBSAresultsSize());

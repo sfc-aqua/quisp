@@ -76,7 +76,9 @@ void RoutingDaemon::initialize(int stage) {
     for (int j = 0; j < topo->getNode(x)->getNumOutLinks(); j++) {  // Traverse through all links from a specific node.
       // thisNode->disable();//You can also disable nodes or channels accordingly to represent broken hardwares
       // EV<<"\n thisNode is "<< topo->getNode(x)->getModule()->getFullName() <<" has "<<topo->getNode(x)->getNumOutLinks()<<" links \n";
-      double channel_cost = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("cost");  // Get assigned cost for each channel written in .ned file
+
+      // Get assigned cost for each channel written in .ned file
+      double channel_cost = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("cost");
 
       // EV<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName()<<" =? "<<"QuantumChannel"<<"\n";
       // if(strcmp(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName(),"QuantumChannel")==0){
@@ -92,7 +94,7 @@ void RoutingDaemon::initialize(int stage) {
   }
 
   for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all the destinations from the thisNode
-    if (topo->getNode(i) == thisNode) continue;    // skip the node that is running this specific router app
+    if (topo->getNode(i) == thisNode) continue;  // skip the node that is running this specific router app
     // Apply dijkstra to each node to find all shortest paths.
     topo->calculateWeightedSingleShortestPathsTo(topo->getNode(i));  // Overwrites getNumPaths() and so on.
 
@@ -102,8 +104,8 @@ void RoutingDaemon::initialize(int stage) {
       error("Path not found. This means that a node is completely separated...Probably not what you want now");
       continue;  // not connected
     }
-
-    cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();  // Returns the next link/gate in the ith shortest paths towards the target node.
+    // Returns the next link/gate in the ith shortest paths towards the target node.
+    cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();
     int gateIndex = parentModuleGate->getIndex();
     QNIC thisqnic;
     int destAddr = topo->getNode(i)->getModule()->par("address");

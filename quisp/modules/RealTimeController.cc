@@ -38,9 +38,11 @@ void RealTimeController::EmitPhoton(int qnic_index, int qubit_index, QNIC_type q
 }
 
 cModule *RealTimeController::getQNode() {
-  cModule *currentModule = getParentModule();  // We know that Connection manager is not the QNode, so start from the parent.
+  // We know that Connection manager is not the QNode, so start from the parent.
+  cModule *currentModule = getParentModule();
   try {
-    cModuleType *QNodeType = cModuleType::get("networks.QNode");  // Assumes the node in a network has a type QNode
+    // Assumes the node in a network has a type QNode
+    cModuleType *QNodeType = cModuleType::get("networks.QNode");
     while (currentModule->getModuleType() != QNodeType) {
       currentModule = currentModule->getParentModule();
     }

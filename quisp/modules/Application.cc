@@ -23,8 +23,7 @@ namespace modules {
 class Application : public cSimpleModule {
  private:
   int myAddress;
-  cMessage *generatePacket; /**< Not the actual packet.
-                              Local message to invoke Events */
+  cMessage *generatePacket; /* Not the actual packet. Local message to invoke Events */
   // cPar *sendIATime;
   // bool isBusy; /**< Already requested a path selection
   //               for a Quantum app */
@@ -229,9 +228,11 @@ void Application::BubbleText(const char *txt) {
 int Application::getAddress() { return myAddress; }
 
 cModule *Application::getQNode() {
-  cModule *currentModule = getParentModule();  // We know that Connection manager is not the QNode, so start from the parent.
+  // We know that Connection manager is not the QNode, so start from the parent.
+  cModule *currentModule = getParentModule();
   try {
-    cModuleType *QNodeType = cModuleType::get("networks.QNode");  // Assumes the node in a network has a type QNode
+    // Assumes the node in a network has a type QNode
+    cModuleType *QNodeType = cModuleType::get("networks.QNode");
     while (currentModule->getModuleType() != QNodeType) currentModule = currentModule->getParentModule();
   } catch (std::exception &e) {
     error("No module with QNode type found. Have you changed the type name in ned file?");

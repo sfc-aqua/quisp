@@ -367,12 +367,15 @@ void stationaryQubit::CNOT_gate(stationaryQubit *control_qubit) {
   // Need to add noise here later
   apply_two_qubit_gate_error(CNOTgate_error, this, control_qubit);
   // std::cout<<"this X err = "<<this->par("GOD_Xerror").boolValue()<<"\n";
+
   if (control_qubit->par("GOD_Xerror")) {
-    par("GOD_Xerror") = !par("GOD_Xerror");  // X error propagates from control to target. If an X error is already present, then it cancels out.
+    // X error propagates from control to target. If an X error is already present, then it cancels out.
+    par("GOD_Xerror") = !par("GOD_Xerror");
   }
 
   if (par("GOD_Zerror")) {
-    control_qubit->par("GOD_Zerror") = !control_qubit->par("GOD_Zerror");  // Z error propagates from target to control. If an Z error is already present, then it cancels out.
+    // Z error propagates from target to control. If an Z error is already present, then it cancels out.
+    control_qubit->par("GOD_Zerror") = !control_qubit->par("GOD_Zerror");
   }
 }
 
@@ -494,9 +497,15 @@ PhotonicQubit *stationaryQubit::generateEntangledPhoton() {
   Enter_Method("generateEntangledPhoton()");
   photon = new PhotonicQubit("Photon");
   // To simulate the actual physical entangled partner, not what the system thinks!!! we need this.
-  photon->setNodeEntangledWith(node_address);                        // This photon is entangled with.... node_address = node's index
-  photon->setQNICEntangledWith(qnic_address);                        // qnic_address != qnic_index. qnic_index is not unique because there are 3 types.
-  photon->setStationaryQubitEntangledWith(stationaryQubit_address);  // stationaryQubit_address = stationaryQubit's index
+
+  // This photon is entangled with.... node_address = node's index
+  photon->setNodeEntangledWith(node_address);
+
+  // qnic_address != qnic_index. qnic_index is not unique because there are 3 types.
+  photon->setQNICEntangledWith(qnic_address);
+
+  // stationaryQubit_address = stationaryQubit's index
+  photon->setStationaryQubitEntangledWith(stationaryQubit_address);
   photon->setQNICtypeEntangledWith(qnic_type);
   photon->setEntangled_with(this);
   return photon;
@@ -570,9 +579,11 @@ void stationaryQubit::setExcitedDensityMatrix() {
   if (this->entangled_partner != nullptr) {  // If it used to be entangled...
     // error("What?");
     this->entangled_partner->updated_time = simTime();
-    this->entangled_partner->par("last_updated_at") = simTime().dbl();  // For GUI
-    this->entangled_partner->setCompletelyMixedDensityMatrix();         // This also eliminates the entanglement information.
-  }                                                                     // else it is already not entangled. e.g. excited -> relaxed.
+    // For GUI
+    this->entangled_partner->par("last_updated_at") = simTime().dbl();
+    // This also eliminates the entanglement information.
+    this->entangled_partner->setCompletelyMixedDensityMatrix();
+  }  // else it is already not entangled. e.g. excited -> relaxed.
 }
 
 void stationaryQubit::setRelaxedDensityMatrix() {
@@ -591,15 +602,18 @@ void stationaryQubit::setRelaxedDensityMatrix() {
     getDisplayString().setTagArg("i", 1, "white");
   }
 
-  if (this->entangled_partner != nullptr) {  // Still entangled
+  // Still entangled
+  if (this->entangled_partner != nullptr) {
     this->entangled_partner->updated_time = simTime();
-    this->entangled_partner->par("last_updated_at") = simTime().dbl();  // For GUI
+    // For GUI
+    this->entangled_partner->par("last_updated_at") = simTime().dbl();
     this->entangled_partner->setCompletelyMixedDensityMatrix();
   }  // else it is already not entangled. e.g. excited -> relaxed.
 }
 
 void stationaryQubit::setEntangledPartnerInfo(stationaryQubit *partner) {
-  // When BSA succeeds, this method gets invoked to store entangled partner information. This will also be sent classically to the partner node afterwards.
+  // When BSA succeeds, this method gets invoked to store entangled partner information.
+  // This will also be sent classically to the partner node afterwards.
   entangled_partner = partner;
 
   par("GOD_entangled_stationaryQubit_address") = partner->par("stationaryQubit_address");
@@ -612,21 +626,24 @@ void stationaryQubit::setEntangledPartnerInfo(stationaryQubit *partner) {
 void stationaryQubit::addXerror() {
   // error("Huh...?");
   bool Xerr = this->par("GOD_Xerror");
-  this->par("GOD_Xerror") = !Xerr; /*Switches true to false or false to true*/
-                                   // this->par("GOD_Xerror") = true;
+  // Switches true to false or false to true
+  this->par("GOD_Xerror") = !Xerr;
+  // this->par("GOD_Xerror") = true;
 }
 
 /*Add another Z error. If an Z error already exists, then they cancel out*/
 void stationaryQubit::addZerror() {
   bool Zerr = this->par("GOD_Zerror");
-  this->par("GOD_Zerror") = !Zerr; /*Switches true to false or false to true*/
-                                   // this->par("GOD_Zerror") = true;
+  // Switches true to false or false to true
+  this->par("GOD_Zerror") = !Zerr;
+  // this->par("GOD_Zerror") = true;
 }
 
 // Only tracks error propagation. If two booleans (Alice and Bob) agree (truetrue or falsefalse), keep the purified ebit.
 bool stationaryQubit::Xpurify(stationaryQubit *resource_qubit /*Controlled*/) {
   // std::cout<<"X puri\n";
-  apply_memory_error(this);  // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
+  // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
+  apply_memory_error(this);
   apply_memory_error(resource_qubit);
   /*Target qubit*/ this->CNOT_gate(resource_qubit /*controlled qubit*/);
   bool meas = this->measure_Z();
@@ -652,7 +669,8 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit) {
   // std::cout<<"Applying memory error to "<<qubit<<" in qnic["<<qubit->qnic_index<<"] in node["<<qubit->node_address<<"]\n";
   // std::cout<<"memory_err = "<<memory_err.pauli_error_rate<<"\n";
   // Check when the error got updated last time. Errors will be performed depending on the difference between that time and the current time.
-  if (qubit->memory_err.error_rate == 0) {  // If no memory error occurs, or if the state is completely mixed, skip this memory error simulation.
+  // If no memory error occurs, or if the state is completely mixed, skip this memory error simulation.
+  if (qubit->memory_err.error_rate == 0) {
     // error("memory error is set to 0. If on purpose, that is fine. Comment this out.");
     return;
   }
@@ -682,20 +700,22 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit) {
       // if(qubit->getIndex() == 71 && qubit->node_address == 3)
       // std::cout<<"[Init] = EX\n";
       Initial_condition << 0, 0, 0, 0, 1, 0, 0;  // Has an excitation error
-                                                 // error("err EX");
+
+      // error("err EX");
     } else if (REerr) {
       // if(qubit->getIndex() == 71 && qubit->node_address == 3)
       // std::cout<<"[Init] = RE\n";
       Initial_condition << 0, 0, 0, 0, 0, 1, 0;  // Has an relaxation error
-                                                 // error("err RE");
+
+      // error("err RE");
     } else if (CMerr) {
       // if(qubit->getIndex() == 71 && qubit->node_address == 3)
       // std::cout<<"[Init] = CM\n";
       Initial_condition << 0, 0, 0, 0, 0, 0, 1;  // Has an relaxation e
     } else if (Zerr && Xerr) {
       Initial_condition << 0, 0, 0, 1, 0, 0, 0;  // Has a Y error
-                                                 // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-                                                 // std::cout<<"[Init] = Y\n";
+      // if(qubit->getIndex() == 71 && qubit->node_address == 3)
+      // std::cout<<"[Init] = Y\n";
       // std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<",
       // time_evolution_microsec"<<time_evolution_microsec<<"\n"; error("err Y");
     } else if (Zerr && !Xerr) {
@@ -726,8 +746,16 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit) {
     }
 
     MatrixXd Dynamic_transition_matrix(7, 7);
-    Dynamic_transition_matrix << -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-        -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1;
+
+    // clang-format off
+    Dynamic_transition_matrix << -1,-1,-1,-1,-1,-1,-1,
+                                 -1,-1,-1,-1,-1,-1,-1,
+                                 -1,-1,-1,-1,-1,-1,-1,
+                                 -1,-1,-1,-1,-1,-1,-1,
+                                 -1,-1,-1,-1,-1,-1,-1,
+                                 -1,-1,-1,-1,-1,-1,-1,
+                                 -1,-1,-1,-1,-1,-1,-1;
+    // clang-format on
 
     if (!skip_exponentiation) {
       // std::cout<<"Init Condition = "<<Initial_condition<<"\n";
@@ -830,12 +858,12 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit) {
       if (qubit->entangled_partner != nullptr) {  // If this qubit still used to be entangled with another qubit.
         qubit->entangled_partner->updated_time = simTime();
         qubit->entangled_partner->par("last_updated_at") = simTime().dbl();  // For GUI
-        qubit->entangled_partner->setCompletelyMixedDensityMatrix();         // Break entanglement with partner. Overwrite its density matrix.
+        qubit->entangled_partner->setCompletelyMixedDensityMatrix();  // Break entanglement with partner. Overwrite its density matrix.
       }
       qubit->setCompletelyMixedDensityMatrix();
     }
   }
-  qubit->updated_time = simTime();                  // Update parameter, updated_time, to now.
+  qubit->updated_time = simTime();  // Update parameter, updated_time, to now.
   qubit->par("last_updated_at") = simTime().dbl();  // For GUI
 }
 
@@ -1005,10 +1033,14 @@ measurement_outcome stationaryQubit::measure_density_independent() {
   char Output;
   char Output_is_plus;
 
-  apply_memory_error(
-      this);  // Add memory error depending on the idle time. If excited/relaxed, this will immediately break entanglement, leaving the other qubit as completely mixed.
-  apply_single_qubit_gate_error(Measurement_error, this);  // Measurement gate error
-  if (this->entangled_partner != nullptr) {                // This becomes nullptr if this qubit got excited/relaxed or measured.
+  // Add memory error depending on the idle time. If excited/relaxed, this will immediately break entanglement, leaving the other qubit as completely mixed.
+  apply_memory_error(this);
+
+  // Measurement gate error
+  apply_single_qubit_gate_error(Measurement_error, this);
+
+  // This becomes nullptr if this qubit got excited/relaxed or measured.
+  if (this->entangled_partner != nullptr) {
     if (this->entangled_partner->entangled_partner == nullptr) {
       std::cout << "Entanglement not tracked well between partners." << this << " in node[" << node_address << "]\n";
       std::cout << "Partner must be " << this->entangled_partner << " in node[" << this->entangled_partner->node_address << "]\n";
@@ -1019,7 +1051,8 @@ measurement_outcome stationaryQubit::measure_density_independent() {
       std::cout << "[Error]" << this << "\n";
       error("Entangled but completely mixed / Excited / Relaxed ? Probably wrong.");
     }
-    apply_memory_error(this->entangled_partner);  // Also do the same on the partner if it is still entangled! This could break the entanglement due to relaxation/excitation error!
+    // Also do the same on the partner if it is still entangled! This could break the entanglement due to relaxation/excitation error!
+    apply_memory_error(this->entangled_partner);
   }
 
   /*-For debugging-*/
@@ -1115,8 +1148,8 @@ measurement_outcome stationaryQubit::measure_density_independent() {
          std::cout<<"par re= "<<this->par("GOD_REerror").boolValue()<<", par cm = "<<this->par("GOD_EXerror").boolValue()<<", re/ex = "<<this->excited_or_relaxed<<"\n";
          std::cout<<"?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!\n";
     */
-
-    quantum_state current_state = getQuantumState();  // This is assuming that this is some other qubit is entangled. Only Pauli errors are assumed.
+    // This is assuming that this is some other qubit is entangled. Only Pauli errors are assumed.
+    quantum_state current_state = getQuantumState();
     EV << "Current entangled state is " << current_state.state_in_ket << "\n";
 
     bool Xerr = this->par("GOD_Xerror");
@@ -1151,11 +1184,16 @@ measurement_outcome stationaryQubit::measure_density_independent() {
     EV << "State was " << kroneckerProduct(ms.adjoint(), meas_op.identity).eval() * current_state.state_in_density_matrix << "\n";
     EV << "\n This qubit was " << this_measurement.basis << "(" << Output << "). Partner's dm is now = " << normalized_partners_dm << "\n";
     entangled_partner->Density_Matrix_Collapsed = normalized_partners_dm;
-    entangled_partner->partner_measured = true;      // We actually do not need this as long as deleting entangled_partner completely is totally fine.
-                                                     // if(entangled_partner->getIndex() == 71 && entangled_partner->node_address == 3)
-                                                     //	std::cout<<"-------------------"<<entangled_partner<<" in node["<<entangled_partner->node_address<<"] overwritten dm.\n";
-    entangled_partner->entangled_partner = nullptr;  // Break entanglement.
-    // Save what error it had, when this density matrix was calculated. Error may get updated in the future, so we need to track what error has been considered already in the dm.
+
+    // We actually do not need this as long as deleting entangled_partner completely is totally fine.
+    entangled_partner->partner_measured = true;
+    // if(entangled_partner->getIndex() == 71 && entangled_partner->node_address == 3)
+    //	std::cout<<"-------------------"<<entangled_partner<<" in node["<<entangled_partner->node_address<<"] overwritten dm.\n";
+
+    // Break entanglement.
+    entangled_partner->entangled_partner = nullptr;
+    // Save what error it had, when this density matrix was calculated.
+    // Error may get updated in the future, so we need to track what error has been considered already in the dm.
     entangled_partner->GOD_dm_Xerror = entangled_partner->par("GOD_Xerror");
     entangled_partner->GOD_dm_Zerror = entangled_partner->par("GOD_Zerror");
   } else {

@@ -375,8 +375,8 @@ void BellStateAnalyzer::GOD_updateEntangledInfoParameters_of_qubits() {
   // with "<<right_statQubit_ptr->getFullName()<<" in "<<right_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
 
   left_statQubit_ptr->setEntangledPartnerInfo(right_statQubit_ptr);
-  if (left_photon_Xerr)               // If Photon had an X error
-    left_statQubit_ptr->addXerror();  // Add X error to the stationary qubit.
+  // If Photon had an X error, Add X error to the stationary qubit.
+  if (left_photon_Xerr) left_statQubit_ptr->addXerror();
   if (left_photon_Zerr) left_statQubit_ptr->addZerror();
 
   right_statQubit_ptr->setEntangledPartnerInfo(left_statQubit_ptr);

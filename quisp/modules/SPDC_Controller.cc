@@ -33,7 +33,7 @@ class SPDC_Controller : public cSimpleModule {
   int neighbor_buffer;
   int neighbor_buffer_two;
   int max_buffer;
-  double distance_to_neighbor;      // in km
+  double distance_to_neighbor;  // in km
   double distance_to_neighbor_two;  // in km
   double accepted_rate_one;
   double accepted_rate_two;
@@ -51,7 +51,7 @@ class SPDC_Controller : public cSimpleModule {
   virtual void initialize() override;
   virtual void handleMessage(cMessage *msg) override;
   virtual cModule *getNextNode(cModule *epps, int index, std::string type);  // Find a module (type) connected through the channel
-  virtual cModule *getNode(std::string type);                                // Find the parent with a specific type
+  virtual cModule *getNode(std::string type);  // Find the parent with a specific type
   virtual void checkNeighborsAddress();
   virtual void checkNeighborsDistance();
   virtual void checkNeighborsHoMCapacity();
@@ -121,8 +121,12 @@ void SPDC_Controller::startPump() {
 EPPStimingNotifier *SPDC_Controller::generateNotifier(double distance_to_neighbor, double c, int destAddr) {
   EPPStimingNotifier *pk = new EPPStimingNotifier();
   double time_to_reach = calculateTimeToTravel(distance_to_neighbor, c);
-  double time_to_travel = calculateTimeToTravel(distance_to_neighbor, speed_of_light_in_channel);  // When the packet reaches = simitme()+time
-  double first_arrival_time = timing_buffer;                                                       // This packet will get received by the node before "time_buffer" seconds.
+
+  // When the packet reaches = simitme()+time
+  double time_to_travel = calculateTimeToTravel(distance_to_neighbor, speed_of_light_in_channel);
+
+  // This packet will get received by the node before "time_buffer" seconds.
+  double first_arrival_time = timing_buffer;
   pk->setTiming_at(first_arrival_time);
   pk->setKind(4);
   pk->setNumber_of_qubits(max_buffer);
@@ -213,7 +217,7 @@ void SPDC_Controller::checkNeighborsHoMCapacity() {
   double pump_rate = (double)1 / (double)frequency;
   EV << "Self's rate is 1/" << frequency << " = " << pump_rate;
   if (pump_rate > max_accepted_rate) {  // If HoM detection rate is faster than pump
-    max_accepted_rate = pump_rate;      // Now frequency is limited by SPDC pump rate
+    max_accepted_rate = pump_rate;  // Now frequency is limited by SPDC pump rate
   }
   par("accepted_burst_interval") = max_accepted_rate;
 }

@@ -38,8 +38,10 @@ void RuleEngine::initialize() {
   actual_resSignal = registerSignal("actual_res");
 
   terminated_qnic = new bool[number_of_qnics_all];
-  qnic_burst_trial_counter = new int[number_of_qnics_all];  // if there are 2 qnics, 1 qnic_r, and 2 qnic_rp, then trial_index[0~1] is assigned for qnics, trial_index[2~2] for
-                                                            // qnic_r and trial_index[3~4] for qnic_rp....
+  // if there are 2 qnics, 1 qnic_r, and 2 qnic_rp,
+  // then trial_index[0~1] is assigned for qnics, trial_index[2~2] for qnic_r and trial_index[3~4] for qnic_rp....
+  qnic_burst_trial_counter = new int[number_of_qnics_all];
+
   for (int i = 0; i < number_of_qnics_all; i++) {
     qnic_burst_trial_counter[i] = 0;
     terminated_qnic[i] = false;
@@ -49,7 +51,9 @@ void RuleEngine::initialize() {
   Busy_OR_Free_QubitState_table[QNIC_E] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_E], QNIC_E);
   Busy_OR_Free_QubitState_table[QNIC_R] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_R], QNIC_R);
   Busy_OR_Free_QubitState_table[QNIC_RP] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_RP], QNIC_RP);
-  tracker = new sentQubitIndexTracker[number_of_qnics_all];  // Tracks which qubit was sent first, second and so on per qnic(r,rp)
+
+  // Tracks which qubit was sent first, second and so on per qnic(r,rp)
+  tracker = new sentQubitIndexTracker[number_of_qnics_all];
 
   /*Initialize resource list by Age for the actual use of qubits in operations*/
   allResources = new qnicResources[QNIC_N];
@@ -70,17 +74,19 @@ void RuleEngine::handleMessage(cMessage *msg) {
     cModule *rtc = getParentModule()->getSubmodule("rt");
     RealTimeController *realtime_controller = check_and_cast<RealTimeController *>(rtc);
 
-    if (burstTrial_outdated(
-            pk->getTrial(),
-            pk->getQnic_address())) {  // Terminate emission if trial is over already (e.g. the neighbor ran out of free qubits and the BSA already returned the results)
-      delete msg;                      // Terminate bursting if this trial has finished already.
+    // Terminate emission if trial is over already (e.g. the neighbor ran out of free qubits and the BSA already returned the results)
+    if (burstTrial_outdated(pk->getTrial(), pk->getQnic_address())) {
+      // Terminate bursting if this trial has finished already.
+      delete msg;
       return;
     } else {
       // Index the qnic and qubit index to the tracker.
       int qnic_address = pk->getQnic_address();
       QubitAddr_cons Addr(-1, pk->getQnic_index(), pk->getQubit_index());
       int nth_shot = tracker[qnic_address].size();
-      tracker[qnic_address].insert(std::make_pair(nth_shot, Addr));  // qubit with address Addr was shot in nth time. This list is ordered from old to new.
+
+      // qubit with address Addr was shot in nth time. This list is ordered from old to new.
+      tracker[qnic_address].insert(std::make_pair(nth_shot, Addr));
       int new_nth_shot = tracker[qnic_address].size();
       // std::cout<<getQNode()->getFullName() <<": Emitted the "<<nth_shot<<" from qnic["<<qnic_address<<"]....tracker["<<qnic_address<<"] now size = "<<new_nth_shot<<"\n";
     }
@@ -113,9 +119,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // tracker["<<pk->getInternal_qnic_address()<<"].size() = "<<tracker[pk->getInternal_qnic_address()].size()<<" photons \n"; Updates free/busy of qubits, and also adds
     // successfully entangled qubits as resources.
     freeFailedQubits_and_AddAsResource(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index(), pk_result);
-    clearTrackerTable(
-        pk->getSrcAddr(),
-        pk->getInternal_qnic_address());  // Clear tracker every end of burst trial. This keeps which qubit was fired first, second, third and so on only for that trial.
+
+    // Clear tracker every end of burst trial. This keeps which qubit was fired first, second, third and so on only for that trial.
+    clearTrackerTable(pk->getSrcAddr(), pk->getInternal_qnic_address());
 
     // Second, schedule the next burst by referring to the received timing information.
     int qnic_address, qnic_type;
@@ -139,7 +145,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     if (terminated_qnic[qnic_address] == true) {
       // std::cout<<"NOT ANY MORE qnic["<<qnic_address<<"] in node["<<parentAddress<<"]";
       return;
-    } else if (pk->getInternal_qnic_index() == -1) {  ////Schedule next burst. MIM, or the other node without internnal HoM of MM
+    } else if (pk->getInternal_qnic_index() == -1) {  // Schedule next burst. MIM, or the other node without internal HoM of MM
       EV << "This BSA request is non-internal\n";
       scheduleFirstPhotonEmission(pk, QNIC_E);
     } else {
@@ -151,7 +157,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
   else if (dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg) != nullptr) {
     SchedulePhotonTransmissionsOnebyOne *pk = check_and_cast<SchedulePhotonTransmissionsOnebyOne *>(msg);
     EV << getQNode()->getFullName() << ": Photon shooting is from qnic[" << pk->getQnic_index() << "] with address=" << pk->getQnic_address();
-    if (burstTrial_outdated(pk->getTrial(), pk->getQnic_address())) {  // Terminate emission if trial is over already (the neighbor ran out of free qubits)
+
+    // Terminate emission if trial is over already (the neighbor ran out of free qubits)
+    if (burstTrial_outdated(pk->getTrial(), pk->getQnic_address())) {
       delete msg;
       return;
     }
@@ -162,7 +170,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     }
   }
 
-  else if (dynamic_cast<BSMtimingNotifier *>(msg) != nullptr && dynamic_cast<CombinedBSAresults *>(msg) == nullptr) {  // Bell pair generation timing syncronization from HoM
+  // Bell pair generation timing syncronization from HoM
+  else if (dynamic_cast<BSMtimingNotifier *>(msg) != nullptr && dynamic_cast<CombinedBSAresults *>(msg) == nullptr) {
     bubble("timing received");
     BSMtimingNotifier *pk = check_and_cast<BSMtimingNotifier *>(msg);
     if (pk->getInternal_qnic_index() == -1) {  // MIM, or the other node without internnal HoM of MM
@@ -356,7 +365,8 @@ void RuleEngine::storeCheck_Purification_Agreement(purification_result pr) {
     // Probably process already finished. Delete the table and ignore the result.
     return;
   } else {
-    auto ret = Purification_table.equal_range(pr.id.ruleset_id);  // Find all resource in qytpe/qid entangled with partner.
+    // Find all resource in qytpe/qid entangled with partner.
+    auto ret = Purification_table.equal_range(pr.id.ruleset_id);
     // If the RuleSet has been deleted already, do not do anything.
 
     for (auto it = ret.first; it != ret.second; it++) {
@@ -398,7 +408,8 @@ void RuleEngine::storeCheck_DoublePurification_Agreement(Doublepurification_resu
     // Probably process already finished. Delete the table and ignore the result.
     return;
   } else {
-    auto ret = DoublePurification_table.equal_range(pr.id.ruleset_id);  // Find all resource in qytpe/qid entangled with partner.
+    // Find all resource in qytpe/qid entangled with partner.
+    auto ret = DoublePurification_table.equal_range(pr.id.ruleset_id);
     // If the RuleSet has been deleted already, do not do anything.
 
     for (auto it = ret.first; it != ret.second; it++) {
@@ -558,12 +569,12 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int
     next_it = it;
     ++next_it;
     if (it->second.Rs->ruleset_id == ruleset_id) {  // Find the corresponding ruleset.
-      RuleSet *process = it->second.Rs;             // One Process. From top to bottom.
+      RuleSet *process = it->second.Rs;  // One Process. From top to bottom.
       int partner_size = process->entangled_partner.size();
       for (int i = 0; i < partner_size; i++) {
         int address_entangled_with = process->entangled_partner[i];
         for (auto rule = process->cbegin(), end = process->cend(); rule != end; rule++) {  // Traverse through rules
-          if ((*rule)->rule_index == rule_id) {                                            // Find the corresponding rule.
+          if ((*rule)->rule_index == rule_id) {  // Find the corresponding rule.
             // emit(actual_resSignal, (*rule)->resources.size());
             for (auto qubit = (*rule)->resources.begin(); qubit != (*rule)->resources.end(); ++qubit) {
               if (qubit->second->action_index == index) {
@@ -598,10 +609,10 @@ void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, int rule_
   for (auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it) {  // In a particular RuleSet
     next_it = it;
     ++next_it;
-    if (it->second.Rs->ruleset_id == ruleset_id) {                                       // Find the corresponding ruleset.
-      RuleSet *process = it->second.Rs;                                                  // One Process. From top to bottom.
+    if (it->second.Rs->ruleset_id == ruleset_id) {  // Find the corresponding ruleset.
+      RuleSet *process = it->second.Rs;  // One Process. From top to bottom.
       for (auto rule = process->cbegin(), end = process->cend(); rule != end; rule++) {  // Traverse through rules
-        if ((*rule)->rule_index == rule_id) {                                            // Find the corresponding rule.
+        if ((*rule)->rule_index == rule_id) {  // Find the corresponding rule.
           for (auto qubit = (*rule)->resources.begin(); qubit != (*rule)->resources.end(); ++qubit) {
             // std::cout<<".....node["<<qubit->second->node_address<<" qnic["<<qubit->second->qnic_index<<"]" << qubit->second<<"\n";
             if (qubit->second->action_index == index) {
@@ -633,10 +644,10 @@ void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, int rule_
 Interface_inf RuleEngine::getInterface_toNeighbor(int destAddr) {
   Interface_inf inf;
   HardwareMonitor::NeighborTable::iterator it = ntable.find(destAddr);
+
+  // Neighbor not found! This should not happen unless you simulate broken links in real time.
   if (it == ntable.end())
-    error("Interface to neighbor not found in neighbor table prepared by the Hardware Manager.... This should probably not happen now.");  // Neighbor not found! This should not
-                                                                                                                                           // happen unless you simulate broken
-                                                                                                                                           // links in real time.
+    error("Interface to neighbor not found in neighbor table prepared by the Hardware Manager.... This should probably not happen now.");
   else
     inf = (*it).second;  // store gate index connected to the destination (BSA) node by refering to the neighbor table.
   return inf;
@@ -645,10 +656,9 @@ Interface_inf RuleEngine::getInterface_toNeighbor(int destAddr) {
 Interface_inf RuleEngine::getInterface_toNeighbor_Internal(int local_qnic_address) {
   Interface_inf inf;
   for (auto i = ntable.begin(); i != ntable.end(); i++) {
-    if (i == ntable.end())
-      error("Interface to neighbor not found in neighbor table prepared by the Hardware Manager.... This should probably not happen now.");  // Neighbor not found! This should not
-                                                                                                                                             // happen unless you simulate broken
-                                                                                                                                             // links in real time.
+    // Neighbor not found! This should not happen unless you simulate broken links in real time.
+    if (i == ntable.end()) error("Interface to neighbor not found in neighbor table prepared by the Hardware Manager.... This should probably not happen now.");
+
     if (i->second.qnic.address == local_qnic_address) inf = (*i).second;
   }
   return inf;
@@ -656,7 +666,7 @@ Interface_inf RuleEngine::getInterface_toNeighbor_Internal(int local_qnic_addres
 
 void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type) {
   SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne;
-  if (ntable.empty())                                // Just do this once, unless the network changes during the simulation.
+  if (ntable.empty())  // Just do this once, unless the network changes during the simulation.
     ntable = hardware_monitor->passNeighborTable();  // Get neighbor table from Hardware Manager: neighbor address--> Interface_inf.
 
   int destAddr = pk->getSrcAddr();  // The destination is where the request is generated (source of stand-alone or internal BSA node).
@@ -678,7 +688,7 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
       qnic_index = pk->getInternal_qnic_index();  // If the BSA node is in this node, then obviously it is not in the neighbor table, 'cause it is inside it self. In that case, the
                                                   // gate index is stored in the packet.
       numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], qnic_index);  // Same as above, except the table is managed independently.
-      st->setInternal_hom(1);                                                               // Mark request that the request is for internal BSA node. Default is 0.
+      st->setInternal_hom(1);  // Mark request that the request is for internal BSA node. Default is 0.
       break;
     case QNIC_RP:
       error("This is not implemented yet");
@@ -734,7 +744,7 @@ void RuleEngine::shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk) {
     scheduleAt(simTime() + pk->getTiming(), emt);
   } else {
     if (countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], pk->getQnic_index()) == 0)  // If no more free qubit
-      emt->setKind(STATIONARYQUBIT_PULSE_END);                                                    // last one
+      emt->setKind(STATIONARYQUBIT_PULSE_END);  // last one
     else
       emt->setKind(0);  // Just a photon in a burst. Not the beginning, nor the end.
     scheduleAt(simTime() + pk->getInterval(), emt);
@@ -979,8 +989,8 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
   if (internal_qnic_index == -1) {  // destination hom is outside this node.
     Interface_inf inf = getInterface_toNeighbor(destAddr);
     neighborQNodeAddress = inf.neighborQNode_address;  // Because we need the address of the neighboring QNode, not BSA!
-    qnic_index = inf.qnic.index;                       /*Only unique inside the same qnic_type.*/
-    qnic_address = inf.qnic.address;                   /*Unique address*/
+    qnic_index = inf.qnic.index; /*Only unique inside the same qnic_type.*/
+    qnic_address = inf.qnic.address; /*Unique address*/
     qnic_type = QNIC_E;
   } else {  // destination hom is in the qnic in this node. This gets invoked when the request from internal hom is send from the same node.
     qnic_index = internal_qnic_index;
@@ -1037,8 +1047,9 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
         // std::cout<<qubit->Density_Matrix_Collapsed<<"\n";
         error("RuleEngine. Ebit succeed. but wrong");
       }
-      allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress /*QNode IP address*/, qubit));  // Add qubit as available resource between
-                                                                                                                     // NeighborQNodeAddress.
+
+      // Add qubit as available resource between NeighborQNodeAddress.
+      allResources[qnic_type][qnic_index].insert(std::make_pair(neighborQNodeAddress /*QNode IP address*/, qubit));
       success_num++;
       // EV<<"There are "<<allResources[qnic_type][qnic_index].count(neighborQNodeAddress)<<" resources between this and "<<destAddr<<"\n";
     }
@@ -1049,9 +1060,10 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
     /// EV<<num_emitted_in_this_burstTrial<<" shots fired, but only "<<list_size<<" results returned\n";
     for (int i = list_size; i < num_emitted_in_this_burstTrial; i++) {
       sentQubitIndexTracker::iterator it = tracker[qnic_address].find(i);  // check ith shot's information (qnic, qubit index).
-      if (it == tracker[qnic_address].end())
-        error("Wait.... something is wrong with the tracker....%d th shot not recorded",
-              i);  // Neighbor not found! This should not happen unless you simulate broken links in real time.
+
+      // Neighbor not found! This should not happen unless you simulate broken links in real time.
+      if (it == tracker[qnic_address].end()) error("Wait.... something is wrong with the tracker....%d th shot not recorded", i);
+
       // realtime_controller->ReInitialize_StationaryQubit(it->second.qnic_index ,it->second.qubit_index, qnic_type);
       // Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], it->second.qnic_index, it->second.qubit_index);
       freeResource(it->second.qnic_index, it->second.qubit_index, qnic_type);
@@ -1310,12 +1322,12 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
         // std::cout<<"Is it done?";
         process_done = (*rule)->checkTerminate();  // The entire process is done. e.g. enough measurement for tomography.
-        if (process_done) {                        // Delete rule set if done
+        if (process_done) {  // Delete rule set if done
           // std::cout<<"!!!!!!!!!!!!!!!!!!!!! TERMINATING!!!!!!!!!!!!!!!!!!!!!!!!!";
           std::cout << "RuleSet_id=" << process->ruleset_id << "\n";
           // todo:Also need to deallocate resources!!!!!!!!!!!!not implemented yet.
-          process->destroyThis();      // Destroy ruleset object
-          rp.erase(it);                // Erase rule set from map.
+          process->destroyThis();  // Destroy ruleset object
+          rp.erase(it);  // Erase rule set from map.
           terminate_this_rule = true;  // Flag to get out from outer loop
           std::cout << "node[" << parentAddress << "]:RuleSet deleted.\n";
           break;  // get out from this for loop.

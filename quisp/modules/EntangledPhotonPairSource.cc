@@ -61,9 +61,11 @@ void EntangledPhotonPairSource::BubbleText(const char *txt) {
 }
 
 cModule *EntangledPhotonPairSource::getSPDCNode() {
-  cModule *currentModule = getParentModule();  // We know that Connection manager is not the SPDC, so start from the parent.
+  // We know that Connection manager is not the SPDC, so start from the parent.
+  cModule *currentModule = getParentModule();
   try {
-    cModuleType *QNodeType = cModuleType::get("networks.SPDC");  // Assumes the node in a network has a type SPDC
+    // Assumes the node in a network has a type SPDC
+    cModuleType *QNodeType = cModuleType::get("networks.SPDC");
     while (currentModule->getModuleType() != QNodeType) {
       currentModule = currentModule->getParentModule();
     }

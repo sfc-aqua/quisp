@@ -155,7 +155,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   } else if (dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr) {
     ConnectionSetupResponse *pk = check_and_cast<ConnectionSetupResponse *>(msg);
     int actual_dst = pk->getActual_destAddr();  // initiator
-    int actual_src = pk->getActual_srcAddr();   // responder
+    int actual_src = pk->getActual_srcAddr();  // responder
     // initiator_alloc_res_handler(pk);
     if (actual_dst == myAddress || actual_src == myAddress) {
       // not swapper (FIXME: This might be hardcoding)
@@ -258,7 +258,7 @@ void ConnectionManager::initiator_alloc_res_handler(ConnectionSetupResponse *pk)
   InternalRuleSetForwarding_Application *pk_internal = new InternalRuleSetForwarding_Application;
   pk_internal->setDestAddr(pk->getDestAddr());
   pk_internal->setSrcAddr(pk->getDestAddr());  // Should be original Src here?
-  pk_internal->setKind(4);                     // if here is setKind(1), packet is gonna go to App automatically.
+  pk_internal->setKind(4);  // if here is setKind(1), packet is gonna go to App automatically.
 
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
   pk_internal->setRuleSet(pk->getRuleSet());
@@ -285,7 +285,7 @@ void ConnectionManager::initiator_alloc_res_handler(ConnectionSetupResponse *pk)
 void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk) {
   // Taking qnic information of responder node.
   int actual_dst = pk->getActual_destAddr();
-  int actual_src = pk->getActual_srcAddr();                                                           // initiator address (to get input qnic)
+  int actual_src = pk->getActual_srcAddr();  // initiator address (to get input qnic)
   int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst);  // This must be -1
   int local_qnic_address_to_actual_src = routingdaemon->return_QNIC_address_to_destAddr(actual_src);  // TODO: premise only oneconnection allowed btw, two nodes.
   connection_setup_inf dst_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
@@ -294,8 +294,12 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk) 
   bool isReserved_src = isQnic_busy(src_inf.qnic.address);
   bool isReserved_dst = isQnic_busy(dst_inf.qnic.address);
   if (!isReserved_src && !isReserved_dst) {
-    int hop_count = pk->getStack_of_QNodeIndexesArraySize();  // the number of steps
-    std::vector<int> path;                                    // path pointer elements?
+    // the number of steps
+    int hop_count = pk->getStack_of_QNodeIndexesArraySize();
+
+    // path pointer elements?
+    std::vector<int> path;
+
     // path from source to destination
     for (int i = 0; i < hop_count; i++) {
       path.push_back(pk->getStack_of_QNodeIndexes(i));
@@ -502,7 +506,9 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   auto iter_left = std::find(path.begin(), path.end(), left_partner);
   if (iter_left != path.end()) {
     size_t index_left = std::distance(path.begin(), iter_left);
-    lqnic_type = qnics.at(index_left).snd.type;  // left partner must be second TODO: detail description of this.
+
+    // left partner must be second TODO: detail description of this.
+    lqnic_type = qnics.at(index_left).snd.type;
     lqnic_index = qnics.at(index_left).snd.index;
     lqnic_address = qnics.at(index_left).snd.address;
   } else {
@@ -512,7 +518,9 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   auto iter_right = std::find(path.begin(), path.end(), right_partner);
   if (iter_right != path.end()) {
     size_t index_right = std::distance(path.begin(), iter_right);
-    rqnic_type = qnics.at(index_right).fst.type;  // right partner must be first
+
+    // right partner must be first
+    rqnic_type = qnics.at(index_right).fst.type;
     rqnic_index = qnics.at(index_right).fst.index;
     rqnic_address = qnics.at(index_right).fst.address;
   } else {
@@ -585,9 +593,12 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
  **/
 void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *pk) {
   int actual_dst = pk->getActual_destAddr();  // responder address
-  int actual_src = pk->getActual_srcAddr();   // initiator address (to get input qnic)
+  int actual_src = pk->getActual_srcAddr();  // initiator address (to get input qnic)
   int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst);
-  int local_qnic_address_to_actual_src = routingdaemon->return_QNIC_address_to_destAddr(actual_src);  // TODO: premise only oneconnection allowed btw, two nodes.
+
+  // TODO: premise only oneconnection allowed btw, two nodes.
+  int local_qnic_address_to_actual_src = routingdaemon->return_QNIC_address_to_destAddr(actual_src);
+
   // TODO here need to check
   if (local_qnic_address_to_actual_dst == -1) {  // is not found
     error("QNIC to destination not found");
@@ -695,7 +706,7 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
   // here we have to implement when the rejection packet received.
   // free reserved qnics
   int actual_dst = pk->getActual_destAddr();  // responder address
-  int actual_src = pk->getActual_srcAddr();   // initiator address (to get input qnic)
+  int actual_src = pk->getActual_srcAddr();  // initiator address (to get input qnic)
   // Currently, sending path and returning path are same, but for future, this might not good way
   int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst);
   int local_qnic_address_to_actual_src = routingdaemon->return_QNIC_address_to_destAddr(actual_src);
@@ -755,10 +766,11 @@ RuleSet *ConnectionManager::generateRuleSet_Tomography(unsigned long RuleSet_id,
   RuleSet *tomography = new RuleSet(RuleSet_id, owner, partner);
   Rule *Random_measure_tomography = new Rule(RuleSet_id, rule_index);
 
-  Condition *measurement_condition = new Condition();  // Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
-  Clause *count_clause =
-      new MeasureCountClause(num_of_measure, partner, qnic_type, qnic_index,
-                             0);  // 3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
+  // Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
+  Condition *measurement_condition = new Condition();
+
+  // 3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
+  Clause *count_clause = new MeasureCountClause(num_of_measure, partner, qnic_type, qnic_index, 0);
   Clause *resource_clause = new EnoughResourceClause(partner, num_resources);
 
   measurement_condition->addClause(count_clause);
@@ -766,9 +778,10 @@ RuleSet *ConnectionManager::generateRuleSet_Tomography(unsigned long RuleSet_id,
 
   Random_measure_tomography->setCondition(measurement_condition);
 
-  quisp::rules::Action *measurement_action =
-      new RandomMeasureAction(partner, qnic_type, qnic_index, 0, owner, num_of_measure);  // Measure the local resource between it->second.neighborQNode_address.
+  // Measure the local resource between it->second.neighborQNode_address.
+  quisp::rules::Action *measurement_action = new RandomMeasureAction(partner, qnic_type, qnic_index, 0, owner, num_of_measure);
   Random_measure_tomography->setAction(measurement_action);
+
   // Add the rule to the RuleSet
   tomography->addRule(Random_measure_tomography);
   tomography->finalize();
