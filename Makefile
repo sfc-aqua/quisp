@@ -1,4 +1,4 @@
-SRCS=./quisp/modules/*.cc ./quisp/rules/*.cc
+SRCS=./quisp/modules/*.cc ./quisp/modules/*.h ./quisp/rules/*.cc ./quisp/rules/*.h
 
 format:
 	clang-format -i $(SRCS)
