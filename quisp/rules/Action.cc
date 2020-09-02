@@ -156,7 +156,7 @@ cPacket *SwappingAction::run(cModule *re) {
   pk->setAction_index(action_index);
 
   // FIXME: These operations are corresponds to the result of operation.
-  pk->setOperation_type_left(operation_type_left);    // operation type for left node
+  pk->setOperation_type_left(operation_type_left);  // operation type for left node
   pk->setOperation_type_right(operation_type_right);  // operation type for right node
   // These information are cropped in the RuleEngine.
   pk->setLeft_Dest(left_partner);  // this might not require but just in case
@@ -372,7 +372,7 @@ cPacket *DoubleSelectionAction::run(cModule *re) {
   }
   bool meas_X, meas_Z = false;
 
-  meas_X = trash_qubit_X->Xpurify(qubit);          // Error propagation only. Not based on density matrix
+  meas_X = trash_qubit_X->Xpurify(qubit);  // Error propagation only. Not based on density matrix
   meas_Z = trash_qubit_Z->Zpurify(trash_qubit_X);  // Error propagation only. Not based on density matrix
 
   qubit->Lock(ruleset_id, rule_id, action_index);
@@ -435,7 +435,7 @@ cPacket *DoubleSelectionAction_inv::run(cModule *re) {
   }
   bool meas_X, meas_Z = false;
 
-  meas_Z = trash_qubit_Z->Zpurify(qubit);          // Error propagation only. Not based on density matrix
+  meas_Z = trash_qubit_Z->Zpurify(qubit);  // Error propagation only. Not based on density matrix
   meas_X = trash_qubit_X->Xpurify(trash_qubit_Z);  // Error propagation only. Not based on density matrix
 
   qubit->Lock(ruleset_id, rule_id, action_index);
@@ -574,8 +574,8 @@ cPacket *DoubleSelectionDualAction::run(cModule *re) {
     ds_trash_qubit_Z->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
   }
   // Delete measured resource from the tracked list of resources.
-  removeResource_fromRule(trash_qubit_X);     // Remove from resource list in this Rule.
-  removeResource_fromRule(trash_qubit_Z);     // Remove from resource list in this Rule.
+  removeResource_fromRule(trash_qubit_X);  // Remove from resource list in this Rule.
+  removeResource_fromRule(trash_qubit_Z);  // Remove from resource list in this Rule.
   removeResource_fromRule(ds_trash_qubit_X);  // Remove from resource list in this Rule.
   removeResource_fromRule(ds_trash_qubit_Z);  // Remove from resource list in this Rule.
   RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
@@ -661,8 +661,8 @@ cPacket *DoubleSelectionDualAction_inv::run(cModule *re) {
     ds_trash_qubit_Z->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
   }
   // Delete measured resource from the tracked list of resources.
-  removeResource_fromRule(trash_qubit_X);     // Remove from resource list in this Rule.
-  removeResource_fromRule(trash_qubit_Z);     // Remove from resource list in this Rule.
+  removeResource_fromRule(trash_qubit_X);  // Remove from resource list in this Rule.
+  removeResource_fromRule(trash_qubit_Z);  // Remove from resource list in this Rule.
   removeResource_fromRule(ds_trash_qubit_X);  // Remove from resource list in this Rule.
   removeResource_fromRule(ds_trash_qubit_Z);  // Remove from resource list in this Rule.
   RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
@@ -738,8 +738,8 @@ cPacket *DoubleSelectionDualActionSecond::run(cModule *re) {
     ds_trash_qubit_X->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
   }
   // Delete measured resource from the tracked list of resources.
-  removeResource_fromRule(trash_qubit_X);     // Remove from resource list in this Rule.
-  removeResource_fromRule(trash_qubit_Z);     // Remove from resource list in this Rule.
+  removeResource_fromRule(trash_qubit_X);  // Remove from resource list in this Rule.
+  removeResource_fromRule(trash_qubit_Z);  // Remove from resource list in this Rule.
   removeResource_fromRule(ds_trash_qubit_X);  // Remove from resource list in this Rule.
 
   RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
@@ -815,8 +815,8 @@ cPacket *DoubleSelectionDualActionSecond_inv::run(cModule *re) {
     ds_trash_qubit_Z->entangled_partner->entangled_partner = nullptr;  // Break entanglement.
   }
   // Delete measured resource from the tracked list of resources.
-  removeResource_fromRule(trash_qubit_X);     // Remove from resource list in this Rule.
-  removeResource_fromRule(trash_qubit_Z);     // Remove from resource list in this Rule.
+  removeResource_fromRule(trash_qubit_X);  // Remove from resource list in this Rule.
+  removeResource_fromRule(trash_qubit_Z);  // Remove from resource list in this Rule.
   removeResource_fromRule(ds_trash_qubit_Z);  // Remove from resource list in this Rule.
 
   RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
