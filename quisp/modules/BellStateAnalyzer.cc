@@ -312,33 +312,33 @@ void BellStateAnalyzer::initializeVariables() {
   right_statQubit_ptr = nullptr;
 }
 
-void BellStateAnalyzer::sendBSAresult(bool result,bool sendresults){
-  //result could be false positive (actually ok but recognized as ng),
-  //false negative (actually ng but recognized as ok) due to darkcount
-  //true positive and true negative is no problem.
-  //std::cout<<"send?="<<sendresults<<"___________________________________\n";
-  if(!sendresults){
+void BellStateAnalyzer::sendBSAresult(bool result, bool sendresults) {
+  // result could be false positive (actually ok but recognized as ng),
+  // false negative (actually ng but recognized as ok) due to darkcount
+  // true positive and true negative is no problem.
+  // std::cout<<"send?="<<sendresults<<"___________________________________\n";
+  if (!sendresults) {
     BSAresult *pk = new BSAresult;
-    //std::cout<<"send result to HoM___\n";
+    // std::cout<<"send result to HoM___\n";
     pk->setEntangled(result);
     send(pk, "toHoMController_port");
-  }else{//Was the last photon. End pulse detected.
+  } else {  // Was the last photon. End pulse detected.
     BSAfinish *pk = new BSAfinish();
     pk->setKind(7);
-    //std::cout<<"send last result to HoM___\n";
+    // std::cout<<"send last result to HoM___\n";
     pk->setEntangled(result);
     send(pk, "toHoMController_port");
     bubble("trial done now");
     this_trial_done = true;
-    //EV<<"!!!!!!!!!!!!!!!over!!!!!!!!!!!this_trial_done == "<<this_trial_done<<"\n";
+    // EV<<"!!!!!!!!!!!!!!!over!!!!!!!!!!!this_trial_done == "<<this_trial_done<<"\n";
   }
 }
 
-void BellStateAnalyzer::finish(){
-  std::cout<<"total = "<<DEBUG_total<<"\n";
-  std::cout<<"Success = "<<DEBUG_success<<"\n";
-  std::cout<<"darkcount_count_left = "<<DEBUG_darkcount_left<<", darkcount_count_right ="<<DEBUG_darkcount_right<<", darkcount_count_both = "<<DEBUG_darkcount_both<<"\n";
-
+void BellStateAnalyzer::finish() {
+  std::cout << "total = " << DEBUG_total << "\n";
+  std::cout << "Success = " << DEBUG_success << "\n";
+  std::cout << "darkcount_count_left = " << DEBUG_darkcount_left << ", darkcount_count_right =" << DEBUG_darkcount_right << ", darkcount_count_both = " << DEBUG_darkcount_both
+            << "\n";
   std::cout<<"total BSA performance"<<"\n";
   // filename for recoding bsa performance
   // std::string file_name = BSA_perf_output_filename;
@@ -356,21 +356,18 @@ void BellStateAnalyzer::finish(){
   }
   // bsa_stats<<"f\n";
   // 2. The number of bell pairs in total
-
   bsa_stats.close();
 }
 
-void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg){
+void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg) {
   PhotonicQubit *q = check_and_cast<PhotonicQubit *>(msg);
-  if(q->getPauliXerr() && q->getPauliZerr()){
+  if (q->getPauliXerr() && q->getPauliZerr()) {
     count_Y++;
-  }else if(q->getPauliXerr() && !q->getPauliZerr()){
-    count_X++;
-  }else if(!q->getPauliXerr() && q->getPauliZerr()){
+  } else if (q->getPauliXerr() && !q->getPauliZerr()) {
     count_Z++;
-  }else if(q->getPhotonLost()){
+  } else if (!q->getPauliXerr() && q->getPauliZerr()) {
     count_L++;
-  }else{
+  } else {
     count_I++;
   }
   count_total++;
@@ -395,6 +392,7 @@ void BellStateAnalyzer::GOD_setCompletelyMixedDensityMatrix() {
   right_statQubit_ptr->setCompletelyMixedDensityMatrix();
 }
 
+/*Error on flying qubit with a successful BSA propagates to its original stationary qubit. */
 void BellStateAnalyzer::GOD_updateEntangledInfoParameters_of_qubits() {
   // std::cout<<"Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"]
   // with "<<right_statQubit_ptr->getFullName()<<" in "<<right_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
