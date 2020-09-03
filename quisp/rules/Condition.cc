@@ -25,17 +25,17 @@ bool Condition::check(qnicResources *resources) const {
 }
 */
 
-bool Condition::check(std::multimap<int,stationaryQubit*> resources) const {
-    EV<<"In condition...\n";
-    bool satisfying = true;
-    for (auto clause = cbegin(), end = cend(); clause != end; clause++){
-        if (!(*clause)->check(resources)){
-            satisfying = false;
-            break;
-        }
+bool Condition::check(std::multimap<int, stationaryQubit*> resources) const {
+  EV << "In condition...\n";
+  bool satisfying = true;
+  for (auto clause = cbegin(), end = cend(); clause != end; clause++) {
+    if (!(*clause)->check(resources)) {
+      satisfying = false;
+      break;
     }
-    //std::cout<<"satisfying? = "<<satisfying<<" false = "<<false<<" true = "<<true<<"\n";
-    return satisfying;
+  }
+  // std::cout<<"satisfying? = "<<satisfying<<" false = "<<false<<" true = "<<true<<"\n";
+  return satisfying;
 }
 
 /*
@@ -50,17 +50,16 @@ bool Condition::checkTerminate(qnicResources *resources) const {
     return satisfying;
 }*/
 
-bool Condition::checkTerminate(std::multimap<int,stationaryQubit*> resources) const {
-    bool satisfying = false;
-    for (auto clause = cbegin(), end = cend(); clause != end; clause++){
-        if ((*clause)->checkTerminate(resources)){
-            satisfying = true;
-            break;
-        }
+bool Condition::checkTerminate(std::multimap<int, stationaryQubit*> resources) const {
+  bool satisfying = false;
+  for (auto clause = cbegin(), end = cend(); clause != end; clause++) {
+    if ((*clause)->checkTerminate(resources)) {
+      satisfying = true;
+      break;
     }
-    return satisfying;
+  }
+  return satisfying;
 }
 
-
-} // namespace rules
-} // namespace quisp
+}  // namespace rules
+}  // namespace quisp
