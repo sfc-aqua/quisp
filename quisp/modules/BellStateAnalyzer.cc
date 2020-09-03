@@ -321,21 +321,21 @@ void BellStateAnalyzer::sendBSAresult(bool result,bool sendresults){
     //true positive and true negative is no problem.
     //std::cout<<"send?="<<sendresults<<"___________________________________\n";
 
-    if(!sendresults){
-        BSAresult *pk = new BSAresult;
-    	//std::cout<<"send result to HoM___\n";
-        pk->setEntangled(result);
-        send(pk, "toHoMController_port");
-    }else{//Was the last photon. End pulse detected.
-        BSAfinish *pk = new BSAfinish();
-        pk->setKind(7);
-    	//std::cout<<"send last result to HoM___\n";
-        pk->setEntangled(result);
-        send(pk, "toHoMController_port");
-        bubble("trial done now");
-        this_trial_done = true;
-        //EV<<"!!!!!!!!!!!!!!!over!!!!!!!!!!!this_trial_done == "<<this_trial_done<<"\n";
-    }
+  if(!sendresults){
+      BSAresult *pk = new BSAresult;
+    //std::cout<<"send result to HoM___\n";
+      pk->setEntangled(result);
+      send(pk, "toHoMController_port");
+  }else{//Was the last photon. End pulse detected.
+      BSAfinish *pk = new BSAfinish();
+      pk->setKind(7);
+    //std::cout<<"send last result to HoM___\n";
+      pk->setEntangled(result);
+      send(pk, "toHoMController_port");
+      bubble("trial done now");
+      this_trial_done = true;
+      //EV<<"!!!!!!!!!!!!!!!over!!!!!!!!!!!this_trial_done == "<<this_trial_done<<"\n";
+  }
 }
 
 void BellStateAnalyzer::finish(){
@@ -366,19 +366,19 @@ void BellStateAnalyzer::finish(){
 
 
 void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg){
-    PhotonicQubit *q = check_and_cast<PhotonicQubit *>(msg);
-    if(q->getPauliXerr() && q->getPauliZerr()){
-        count_Y++;
-    }else if(q->getPauliXerr() && !q->getPauliZerr()){
-        count_X++;
-    }else if(!q->getPauliXerr() && q->getPauliZerr()){
-        count_Z++;
-    }else if(q->getPhotonLost()){
-        count_L++;
-    }else{
-        count_I++;
-    }count_total++;
-    EV<<"Y%="<<(double)count_Y/(double)count_total<<", X%="<<(double)count_X/(double)count_total<<", Z%="<<(double)count_Z/(double)count_total<<", L%="<<(double)count_L/(double)count_total<<", I% ="<<(double)count_I/(double)count_total<<"\n";
+  PhotonicQubit *q = check_and_cast<PhotonicQubit *>(msg);
+  if(q->getPauliXerr() && q->getPauliZerr()){
+      count_Y++;
+  }else if(q->getPauliXerr() && !q->getPauliZerr()){
+      count_X++;
+  }else if(!q->getPauliXerr() && q->getPauliZerr()){
+      count_Z++;
+  }else if(q->getPhotonLost()){
+      count_L++;
+  }else{
+      count_I++;
+  }count_total++;
+  EV<<"Y%="<<(double)count_Y/(double)count_total<<", X%="<<(double)count_X/(double)count_total<<", Z%="<<(double)count_Z/(double)count_total<<", L%="<<(double)count_L/(double)count_total<<", I% ="<<(double)count_I/(double)count_total<<"\n";
 }
 
 bool BellStateAnalyzer::isPhotonLost(cMessage *msg) {

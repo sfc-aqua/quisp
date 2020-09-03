@@ -1081,16 +1081,16 @@ void RuleEngine::freeResource(int qnic_index /*The actual index. Not address. Th
 }
 
 void RuleEngine::clearTrackerTable(int destAddr,int internal_qnic_address){
-    int qnic_address = -1;
-        if(internal_qnic_address==-1){//destination hom is outside this node.
-            Interface_inf inf = getInterface_toNeighbor(destAddr);
-            qnic_address = inf.qnic.address;
-        }else{//destination hom is in the qnic in this node. This gets invoked when the request from internal hom is send from the same node.
-            qnic_address = internal_qnic_address;
-        }
-     if(qnic_address == -1)
-         error("Failed clearing tracker of a qnic. This should not happen.");
-     tracker[qnic_address].clear();
+  int qnic_address = -1;
+  if(internal_qnic_address==-1){//destination hom is outside this node.
+      Interface_inf inf = getInterface_toNeighbor(destAddr);
+      qnic_address = inf.qnic.address;
+  }else{//destination hom is in the qnic in this node. This gets invoked when the request from internal hom is send from the same node.
+      qnic_address = internal_qnic_address;
+  }
+  if(qnic_address == -1)
+      error("Failed clearing tracker of a qnic. This should not happen.");
+  tracker[qnic_address].clear();
 }
 
 void RuleEngine::finish(){
