@@ -1080,16 +1080,15 @@ void RuleEngine::freeResource(int qnic_index /*The actual index. Not address. Th
   Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit_index);
 }
 
-void RuleEngine::clearTrackerTable(int destAddr,int internal_qnic_address){
+void RuleEngine::clearTrackerTable(int destAddr, int internal_qnic_address) {
   int qnic_address = -1;
-  if(internal_qnic_address==-1){//destination hom is outside this node.
-      Interface_inf inf = getInterface_toNeighbor(destAddr);
-      qnic_address = inf.qnic.address;
-  }else{//destination hom is in the qnic in this node. This gets invoked when the request from internal hom is send from the same node.
-      qnic_address = internal_qnic_address;
+  if (internal_qnic_address == -1) {  // destination hom is outside this node.
+    Interface_inf inf = getInterface_toNeighbor(destAddr);
+    qnic_address = inf.qnic.address;
+  } else {  // destination hom is in the qnic in this node. This gets invoked when the request from internal hom is send from the same node.
+    qnic_address = internal_qnic_address;
   }
-  if(qnic_address == -1)
-      error("Failed clearing tracker of a qnic. This should not happen.");
+  if (qnic_address == -1) error("Failed clearing tracker of a qnic. This should not happen.");
   tracker[qnic_address].clear();
 }
 
@@ -1112,6 +1111,7 @@ cModule *RuleEngine::getQNode() {
     while (currentModule->getModuleType() != QNodeType) {
       currentModule = currentModule->getParentModule();
     }
+    return currentModule;
   } catch (std::exception &e) {
     error("No module with QNode type found. Have you changed the type name in ned file?");
     endSimulation();

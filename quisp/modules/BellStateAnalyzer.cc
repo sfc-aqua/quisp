@@ -66,10 +66,10 @@ class BellStateAnalyzer : public cSimpleModule {
   bool right_photon_lost;
   bool left_photon_lost;
   stationaryQubit *right_statQubit_ptr;
-  int count_X = 0, count_Y = 0, count_Z = 0, count_I = 0, count_L = 0, count_total = 0;//for debug
+  int count_X = 0, count_Y = 0, count_Z = 0, count_I = 0, count_L = 0, count_total = 0;  // for debug
   //bool handshake = false;
   bool this_trial_done = false;
-  double BSAsuccess_rate = 0.5 * 0.8 * 0.8; // detector probability = 0.8
+  double BSAsuccess_rate = 0.5 * 0.8 * 0.8;  // detector probability = 0.8
   int left_count, right_count = 0;
   int DEBUG_darkcount_left = 0;
   int DEBUG_darkcount_right = 0;
@@ -313,69 +313,69 @@ void BellStateAnalyzer::initializeVariables() {
 }
 
 void BellStateAnalyzer::sendBSAresult(bool result,bool sendresults){
-    //result could be false positive (actually ok but recognized as ng),
-    //false negative (actually ng but recognized as ok) due to darkcount
-    //true positive and true negative is no problem.
-    //std::cout<<"send?="<<sendresults<<"___________________________________\n";
-
+  //result could be false positive (actually ok but recognized as ng),
+  //false negative (actually ng but recognized as ok) due to darkcount
+  //true positive and true negative is no problem.
+  //std::cout<<"send?="<<sendresults<<"___________________________________\n";
   if(!sendresults){
-      BSAresult *pk = new BSAresult;
+    BSAresult *pk = new BSAresult;
     //std::cout<<"send result to HoM___\n";
-      pk->setEntangled(result);
-      send(pk, "toHoMController_port");
+    pk->setEntangled(result);
+    send(pk, "toHoMController_port");
   }else{//Was the last photon. End pulse detected.
-      BSAfinish *pk = new BSAfinish();
-      pk->setKind(7);
+    BSAfinish *pk = new BSAfinish();
+    pk->setKind(7);
     //std::cout<<"send last result to HoM___\n";
-      pk->setEntangled(result);
-      send(pk, "toHoMController_port");
-      bubble("trial done now");
-      this_trial_done = true;
-      //EV<<"!!!!!!!!!!!!!!!over!!!!!!!!!!!this_trial_done == "<<this_trial_done<<"\n";
+    pk->setEntangled(result);
+    send(pk, "toHoMController_port");
+    bubble("trial done now");
+    this_trial_done = true;
+    //EV<<"!!!!!!!!!!!!!!!over!!!!!!!!!!!this_trial_done == "<<this_trial_done<<"\n";
   }
 }
 
 void BellStateAnalyzer::finish(){
-    std::cout<<"total = "<<DEBUG_total<<"\n";
-    std::cout<<"Success = "<<DEBUG_success<<"\n";
-    std::cout<<"darkcount_count_left = "<<DEBUG_darkcount_left<<", darkcount_count_right ="<<DEBUG_darkcount_right<<", darkcount_count_both = "<<DEBUG_darkcount_both<<"\n";
+  std::cout<<"total = "<<DEBUG_total<<"\n";
+  std::cout<<"Success = "<<DEBUG_success<<"\n";
+  std::cout<<"darkcount_count_left = "<<DEBUG_darkcount_left<<", darkcount_count_right ="<<DEBUG_darkcount_right<<", darkcount_count_both = "<<DEBUG_darkcount_both<<"\n";
 
-    std::cout<<"total BSA performance"<<"\n";
-    // filename for recoding bsa performance
-    // std::string file_name = BSA_perf_output_filename;
-    // int file_size = file_name.size();
-    // create file
-    std::string a = std::to_string(duration);
-    std::string file_name = "num_trials" + a;
-    std::ofstream bsa_stats(file_name, std::ios_base::app);
+  std::cout<<"total BSA performance"<<"\n";
+  // filename for recoding bsa performance
+  // std::string file_name = BSA_perf_output_filename;
+  // int file_size = file_name.size();
+  // create file
+  std::string a = std::to_string(duration);
+  std::string file_name = "num_trials" + a;
+  std::ofstream bsa_stats(file_name, std::ios_base::app);
 
-    // 1. Bell pair creation time (average and std)
-    // receive photons - apply BSM - return result
-    // bsa_stats<<"s\n";
-    for(int i=0 ; i<number_of_trials.size(); i++){
-        bsa_stats<<number_of_trials[i]<<"\n";
-    }
-    // bsa_stats<<"f\n";
-    // 2. The number of bell pairs in total
+  // 1. Bell pair creation time (average and std)
+  // receive photons - apply BSM - return result
+  // bsa_stats<<"s\n";
+  for(int i=0 ; i<number_of_trials.size(); i++){
+      bsa_stats<<number_of_trials[i]<<"\n";
+  }
+  // bsa_stats<<"f\n";
+  // 2. The number of bell pairs in total
 
-    bsa_stats.close();
+  bsa_stats.close();
 }
-
 
 void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg){
   PhotonicQubit *q = check_and_cast<PhotonicQubit *>(msg);
   if(q->getPauliXerr() && q->getPauliZerr()){
-      count_Y++;
+    count_Y++;
   }else if(q->getPauliXerr() && !q->getPauliZerr()){
-      count_X++;
+    count_X++;
   }else if(!q->getPauliXerr() && q->getPauliZerr()){
-      count_Z++;
+    count_Z++;
   }else if(q->getPhotonLost()){
-      count_L++;
+    count_L++;
   }else{
-      count_I++;
-  }count_total++;
-  EV<<"Y%="<<(double)count_Y/(double)count_total<<", X%="<<(double)count_X/(double)count_total<<", Z%="<<(double)count_Z/(double)count_total<<", L%="<<(double)count_L/(double)count_total<<", I% ="<<(double)count_I/(double)count_total<<"\n";
+    count_I++;
+  }
+  count_total++;
+  EV << "Y%=" << (double)count_Y / (double)count_total << ", X%=" << (double)count_X / (double)count_total << ", Z%=" << (double)count_Z / (double)count_total
+     << ", L%=" << (double)count_L / (double)count_total << ", I% =" << (double)count_I / (double)count_total << "\n";
 }
 
 bool BellStateAnalyzer::isPhotonLost(cMessage *msg) {
