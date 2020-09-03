@@ -26,70 +26,69 @@ namespace modules {
  *
  *  \brief BellStateAnalyzer
  */
-class BellStateAnalyzer : public cSimpleModule
-{
-  private:
-    // for performance analysis
-    int n_res = 0;
-    int trials = 0;
-    simsignal_t GOD_num_resSignal;
-    std::string BSA_perf_output_filename;
-    std::vector<simtime_t> creation_time;
-    simsignal_t Average_Num_TrialSignal;
-    std::vector<int> number_of_trials;
-    int nwidth = 0;
-    int duration=1;
-    
-    // parameters
-    double darkcount_probability;
-    double loss_rate;
-    double error_rate;
-    //bool left_clicked;
-    //bool right_click;
-    bool left_last_photon_detected;
-    bool right_last_photon_detected;
-    bool send_result;
-    double required_precision;//1.5ns
-    simtime_t left_arrived_at;
-    int left_photon_origin_node_address;
-    int left_photon_origin_qnic_address;
-    int left_photon_origin_qnic_type;
-    int left_photon_origin_qubit_address;
-    bool left_photon_Xerr;
-    bool left_photon_Zerr;
-    stationaryQubit *left_statQubit_ptr;
-    simtime_t right_arrived_at;
-    int right_photon_origin_node_address;
-    int right_photon_origin_qnic_address;
-    int  right_photon_origin_qnic_type;
-    int right_photon_origin_qubit_address;
-    bool right_photon_Xerr;
-    bool right_photon_Zerr;
-    bool right_photon_lost;
-    bool left_photon_lost;
-    stationaryQubit *right_statQubit_ptr;
-    int count_X=0, count_Y=0, count_Z=0, count_I=0, count_L=0, count_total=0;//for debug
-    //bool handshake = false;
-    bool this_trial_done = false;
-    double BSAsuccess_rate = 0.5 * 0.8 * 0.8; //detector probability = 0.8
-    int left_count, right_count = 0;
-    int DEBUG_darkcount_left = 0;
-    int DEBUG_darkcount_right = 0;
-    int DEBUG_darkcount_both = 0;
-    int DEBUG_success = 0;
-    int DEBUG_total = 0;
-  protected:
-    virtual void initialize();
-    virtual void finish();
-    virtual void handleMessage(cMessage *msg);
-    virtual bool isPhotonLost(cMessage *msg);
-    virtual void forDEBUG_countErrorTypes(cMessage *msg);
-    virtual void sendBSAresult(bool result, bool last);
-    virtual void initializeVariables();
-    virtual void GOD_setCompletelyMixedDensityMatrix();
-    virtual void GOD_updateEntangledInfoParameters_of_qubits();
+class BellStateAnalyzer : public cSimpleModule　{
+ private:
+  // for performance analysis
+  int n_res = 0;
+  int trials = 0;
+  simsignal_t GOD_num_resSignal;
+  std::string BSA_perf_output_filename;
+  std::vector<simtime_t> creation_time;
+  simsignal_t Average_Num_TrialSignal;
+  std::vector<int> number_of_trials;
+  int nwidth = 0;
+  int duration=1;
+  
+  // parameters
+  double darkcount_probability;
+  double loss_rate;
+  double error_rate;
+  //bool left_clicked;
+  //bool right_click;
+  bool left_last_photon_detected;
+  bool right_last_photon_detected;
+  bool send_result;
+  double required_precision;//1.5ns
+  simtime_t left_arrived_at;
+  int left_photon_origin_node_address;
+  int left_photon_origin_qnic_address;
+  int left_photon_origin_qnic_type;
+  int left_photon_origin_qubit_address;
+  bool left_photon_Xerr;
+  bool left_photon_Zerr;
+  stationaryQubit *left_statQubit_ptr;
+  simtime_t right_arrived_at;
+  int right_photon_origin_node_address;
+  int right_photon_origin_qnic_address;
+  int  right_photon_origin_qnic_type;
+  int right_photon_origin_qubit_address;
+  bool right_photon_Xerr;
+  bool right_photon_Zerr;
+  bool right_photon_lost;
+  bool left_photon_lost;
+  stationaryQubit *right_statQubit_ptr;
+  int count_X=0, count_Y=0, count_Z=0, count_I=0, count_L=0, count_total=0;//for debug
+  //bool handshake = false;
+  bool this_trial_done = false;
+  double BSAsuccess_rate = 0.5 * 0.8 * 0.8; //detector probability = 0.8
+  int left_count, right_count = 0;
+  int DEBUG_darkcount_left = 0;
+  int DEBUG_darkcount_right = 0;
+  int DEBUG_darkcount_both = 0;
+  int DEBUG_success = 0;
+  int DEBUG_total = 0;
+ protected:
+  virtual void initialize();
+  virtual void finish();
+  virtual void handleMessage(cMessage *msg);
+  virtual bool isPhotonLost(cMessage *msg);
+  virtual void forDEBUG_countErrorTypes(cMessage *msg);
+  virtual void sendBSAresult(bool result, bool last);
+  virtual void initializeVariables();
+  virtual void GOD_setCompletelyMixedDensityMatrix();
+  virtual void GOD_updateEntangledInfoParameters_of_qubits();
 
-    // functions for perfomance analysis
+  // functions for perfomance analysis
     
 };
 
