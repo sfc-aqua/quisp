@@ -67,7 +67,7 @@ class BellStateAnalyzer : public cSimpleModule {
   bool left_photon_lost;
   stationaryQubit *right_statQubit_ptr;
   int count_X = 0, count_Y = 0, count_Z = 0, count_I = 0, count_L = 0, count_total = 0;  // for debug
-  //bool handshake = false;
+  // bool handshake = false;
   bool this_trial_done = false;
   double BSAsuccess_rate = 0.5 * 0.8 * 0.8;  // detector probability = 0.8
   int left_count, right_count = 0;
@@ -364,8 +364,10 @@ void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg) {
   if (q->getPauliXerr() && q->getPauliZerr()) {
     count_Y++;
   } else if (q->getPauliXerr() && !q->getPauliZerr()) {
-    count_Z++;
+    count_X++;
   } else if (!q->getPauliXerr() && q->getPauliZerr()) {
+    count_Z++;
+  } else if (q->getPhotonLost()) {
     count_L++;
   } else {
     count_I++;
