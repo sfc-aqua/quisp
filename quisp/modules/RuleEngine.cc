@@ -1092,8 +1092,8 @@ void RuleEngine::clearTrackerTable(int destAddr, int internal_qnic_address) {
   tracker[qnic_address].clear();
 }
 
-void RuleEngine::finish(){
-    delete qnic_burst_trial_counter;
+void RuleEngine::finish() {
+  delete qnic_burst_trial_counter;
 
   //   // here output file
   //   std::string file_name = "test";
