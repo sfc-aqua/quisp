@@ -9,6 +9,7 @@
 
 #include "RuleEngine.h"
 #include <modules/HardwareMonitor.h>
+#include <fstream>
 
 namespace quisp {
 namespace modules {
@@ -1079,17 +1080,29 @@ void RuleEngine::freeResource(int qnic_index /*The actual index. Not address. Th
   Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit_index);
 }
 
-<<<<<<< HEAD
+void RuleEngine::clearTrackerTable(int destAddr,int internal_qnic_address){
+    int qnic_address = -1;
+        if(internal_qnic_address==-1){//destination hom is outside this node.
+            Interface_inf inf = getInterface_toNeighbor(destAddr);
+            qnic_address = inf.qnic.address;
+        }else{//destination hom is in the qnic in this node. This gets invoked when the request from internal hom is send from the same node.
+            qnic_address = internal_qnic_address;
+        }
+     if(qnic_address == -1)
+         error("Failed clearing tracker of a qnic. This should not happen.");
+     tracker[qnic_address].clear();
+}
+
 void RuleEngine::finish(){
     delete qnic_burst_trial_counter;
 
-    // here output file
-    file_name = "test";
-    std::ofstream creation_time_stats(file_name, std::ios_base::app);
-    // creation_time_stats<<"s\n";
-    for(int i = 0; i < creation_times.size(); i++){
-        creation_time_stats<<creation_times[i]<<"\n";
->>>>>>> afcf3157e0773cbc60cf8ba5d999fc73ccaac8b8
+  //   // here output file
+  //   std::string file_name = "test";
+  //   std::ofstream creation_time_stats(file_name, std::ios_base::app);
+  //   // creation_time_stats<<"s\n";
+  //   for(int i = 0; i < creation_times.size(); i++){
+  //       creation_time_stats<<creation_times[i]<<"\n";
+  // }
 }
 
 cModule *RuleEngine::getQNode() {
@@ -1105,8 +1118,6 @@ cModule *RuleEngine::getQNode() {
   }
   return currentModule;
 }
-
-void RuleEngine::finish() { delete qnic_burst_trial_counter; }
 
 double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index) { return uniform(.6, .9); }
 
