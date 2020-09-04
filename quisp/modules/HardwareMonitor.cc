@@ -724,7 +724,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
           Purification_condition->addClause(resource_clause);
           Purification->setCondition(Purification_condition);
-          Action* purify_action = new DoublePurifyAction_inv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          Action* purify_action = new DoublePurifyActionInv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
           rule_index++;
           tomography_RuleSet->addRule(Purification);
@@ -777,7 +777,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           Action* purify_action = new DoubleSelectionAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         } else {
-          Action* purify_action = new DoubleSelectionAction_inv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          Action* purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         }
         rule_index++;
@@ -806,7 +806,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           Action* purify_action = new DoubleSelectionDualAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
           Purification->setAction(purify_action);
         } else {
-          Action* purify_action = new DoubleSelectionDualAction_inv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
+          Action* purify_action = new DoubleSelectionDualActionInv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
           Purification->setAction(purify_action);
         }
         rule_index++;
@@ -835,7 +835,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           Action* purify_action = new DoubleSelectionDualActionSecond(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
           Purification->setAction(purify_action);
         } else {
-          Action* purify_action = new DoubleSelectionDualActionSecond_inv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
+          Action* purify_action = new DoubleSelectionDualActionSecondInv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
           Purification->setAction(purify_action);
         }
         rule_index++;
@@ -863,7 +863,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           Action* purify_action = new DoubleSelectionAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         } else {
-          Action* purify_action = new DoubleSelectionAction_inv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          Action* purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         }
         rule_index++;

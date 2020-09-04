@@ -1,11 +1,11 @@
-/** \file stationaryQubit.h
+/** \file StationaryQubit.h
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/14
  *
- *  \brief stationaryQubit
+ *  \brief StationaryQubit
  */
-#ifndef QUISP_MODULES_STATIONARYQUBIT_H_
-#define QUISP_MODULES_STATIONARYQUBIT_H_
+#ifndef QUISP_MODULES_StationaryQubit_H_
+#define QUISP_MODULES_StationaryQubit_H_
 
 #include <PhotonicQubit_m.h>
 
@@ -20,14 +20,14 @@ namespace modules {
 #define STATIONARYQUBIT_PULSE_END 0x02
 #define STATIONARYQUBIT_PULSE_BOUND (STATIONARYQUBIT_PULSE_BEGIN | STATIONARYQUBIT_PULSE_END)
 
-/** \class stationaryQubit stationaryQubit.h
+/** \class StationaryQubit StationaryQubit.h
  *
- *  \brief stationaryQubit
+ *  \brief StationaryQubit
  */
 
 typedef std::complex<double> Complex;
 
-typedef struct _emission_error_model {
+typedef struct {
   double pauli_error_rate;  // Overall error rate
   double Z_error_rate;
   double X_error_rate;
@@ -41,7 +41,7 @@ typedef struct _emission_error_model {
   double Loss_error_ceil;
 } emission_error_model;
 
-typedef struct _gate_error_model {
+typedef struct {
   double pauli_error_rate;  // Overall error rate
   double Z_error_rate;
   double X_error_rate;
@@ -53,7 +53,7 @@ typedef struct _gate_error_model {
   double Y_error_ceil;
 } gate_error_model;
 
-typedef struct _two_qubit_gate_error_model {
+typedef struct {
   double pauli_error_rate;  // Overall error rate
   double IZ_error_rate;
   double ZI_error_rate;
@@ -77,7 +77,7 @@ typedef struct _two_qubit_gate_error_model {
   double XX_error_ceil;
 } two_qubit_gate_error_model;
 
-typedef struct _memory_error_model {
+typedef struct {
   double error_rate;  // Overall error rate
   double Z_error_rate;
   double X_error_rate;
@@ -88,26 +88,26 @@ typedef struct _memory_error_model {
 } memory_error_model;
 
 // Matrices of single qubit errors. Used when conducting tomography.
-typedef struct _single_qubit_errors {
+typedef struct {
   Matrix2cd X;  // double 2*2 matrix
   Matrix2cd Y;  // complex double 2*2 matrix
   Matrix2cd Z;
   Matrix2cd I;
 } single_qubit_error;
 
-typedef struct _quantum_state {
+typedef struct {
   Matrix4cd state_in_density_matrix;
   Vector4cd state_in_ket;
 } quantum_state;
 
-typedef struct _measurement_output {
+typedef struct {
   double probability_plus_plus;  // P(+,+)
   double probability_minus_plus;  // P(+,-)
   double probability_plus_minus;  // P(-,+)
   double probability_minus_minus;  // P(-,-)
 } measurement_output_probabilities;
 
-typedef struct _measurement_operator {
+typedef struct {
   Matrix2cd plus;
   Matrix2cd minus;
   Vector2cd plus_ket;
@@ -116,20 +116,20 @@ typedef struct _measurement_operator {
 } measurement_operator;
 
 // Single qubit
-typedef struct _measurement_operators {
+typedef struct {
   measurement_operator X_basis;
   measurement_operator Y_basis;
   measurement_operator Z_basis;
   Matrix2cd identity;
 } measurement_operators;
 
-typedef struct _measurement_outcome {
+typedef struct {
   char basis;
   bool outcome_is_plus;
   char GOD_clean;
 } measurement_outcome;
 
-class stationaryQubit : public cSimpleModule {
+class StationaryQubit : public cSimpleModule {
  public:
   /** @name Errors
    *  @{
@@ -154,9 +154,9 @@ class stationaryQubit : public cSimpleModule {
   int QNICEntangledWith;
   int QNICtypeEntangledWith;
   /** Index of Qubit in qNIC. */
-  int stationaryQubitEntangledWith;
+  int StationaryQubitEntangledWith;
   /** Pointer to the entangled qubit*/
-  stationaryQubit *entangled_partner = nullptr;
+  StationaryQubit *entangled_partner = nullptr;
   /** Photon emitted at*/
   simtime_t emitted_time = -1;
   /** Stationary qubit last updated at*/
@@ -266,15 +266,15 @@ class stationaryQubit : public cSimpleModule {
   virtual measurement_outcome measure_density_independent(); /*Separate dm calculation*/
 
   /*Applies memory error to the given qubit*/
-  virtual void apply_memory_error(stationaryQubit *qubit);
+  virtual void apply_memory_error(StationaryQubit *qubit);
 
-  virtual void apply_single_qubit_gate_error(gate_error_model gate, stationaryQubit *qubit);
-  virtual void apply_two_qubit_gate_error(two_qubit_gate_error_model gate, stationaryQubit *first_qubit, stationaryQubit *second_qubit);
+  virtual void apply_single_qubit_gate_error(gate_error_model gate, StationaryQubit *qubit);
+  virtual void apply_two_qubit_gate_error(two_qubit_gate_error_model gate, StationaryQubit *first_qubit, StationaryQubit *second_qubit);
   /**
    * \brief Two qubit CNOT gate.
    * \param Need to specify the control qubit as an argument.
    */
-  virtual void CNOT_gate(stationaryQubit *control_qubit);
+  virtual void CNOT_gate(StationaryQubit *control_qubit);
   /**
    * \brief Single qubit Hadamard gate
    * \param X error transforms to Z, and vise-versa.
@@ -284,11 +284,11 @@ class stationaryQubit : public cSimpleModule {
   virtual void Z_gate();
 
   virtual void X_gate();
-  virtual bool Xpurify(stationaryQubit *resource_qubit);
-  virtual bool Zpurify(stationaryQubit *resource_qubit);
+  virtual bool Xpurify(StationaryQubit *resource_qubit);
+  virtual bool Zpurify(StationaryQubit *resource_qubit);
 
   /*GOD parameters*/
-  virtual void setEntangledPartnerInfo(stationaryQubit *partner);
+  virtual void setEntangledPartnerInfo(StationaryQubit *partner);
   virtual void setCompletelyMixedDensityMatrix();
   virtual void setRelaxedDensityMatrix();
   virtual void setExcitedDensityMatrix();
@@ -326,7 +326,7 @@ class stationaryQubit : public cSimpleModule {
   virtual void setBusy();
   // virtual void setErrorCeilings();
   // virtual void setEmissionPauliError();
-  virtual Matrix2cd getErrorMatrix(stationaryQubit *qubit);  // returns the matrix that represents the errors on the Bell pair. (e.g. XY, XZ and ZI...)
+  virtual Matrix2cd getErrorMatrix(StationaryQubit *qubit);  // returns the matrix that represents the errors on the Bell pair. (e.g. XY, XZ and ZI...)
   virtual quantum_state getQuantumState();  // returns the dm of the physical Bell pair. Used for tomography.
   virtual measurement_operator Random_Measurement_Basis_Selection();
   virtual gate_error_model SetSingleQubitGateErrorCeilings(std::string gate_name);
@@ -337,4 +337,4 @@ class stationaryQubit : public cSimpleModule {
 }  // namespace modules
 }  // namespace quisp
 
-#endif /* QUISP_MODULES_STATIONARYQUBIT_H_ */
+#endif /* QUISP_MODULES_StationaryQubit_H_ */

@@ -212,7 +212,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     purification_id.index = pkt->getAction_index();
     pr.id = purification_id;
     pr.outcome = pkt->getOutput_is_plus();
-    // stationaryQubit *q = check_and_cast<stationaryQubit *>(pkt->getEntangled_with());
+    // StationaryQubit *q = check_and_cast<StationaryQubit *>(pkt->getEntangled_with());
     // std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
     // std::cout<<"Locked one is "<<pkt->getEntangled_with()<<"in node["<<q->node_address<<"] \n";
     storeCheck_Purification_Agreement(pr);
@@ -228,7 +228,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pr.id = purification_id;
     pr.Xpurification_outcome = pkt->getXOutput_is_plus();
     pr.Zpurification_outcome = pkt->getZOutput_is_plus();
-    // stationaryQubit *q = check_and_cast<stationaryQubit *>(pkt->getEntangled_with());
+    // StationaryQubit *q = check_and_cast<StationaryQubit *>(pkt->getEntangled_with());
     // std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
     // std::cout<<"Locked one is "<<pkt->getEntangled_with()<<"in node["<<q->node_address<<"] \n";
     storeCheck_DoublePurification_Agreement(pr);
@@ -246,7 +246,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pr.Zpurification_outcome = pkt->getZOutput_is_plus();
     pr.DS_Xpurification_outcome = pkt->getDS_XOutput_is_plus();
     pr.DS_Zpurification_outcome = pkt->getDS_ZOutput_is_plus();
-    // stationaryQubit *q = check_and_cast<stationaryQubit *>(pkt->getEntangled_with());
+    // StationaryQubit *q = check_and_cast<StationaryQubit *>(pkt->getEntangled_with());
     // std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
     // std::cout<<"Locked one is "<<pkt->getEntangled_with()<<"in node["<<q->node_address<<"] \n";
     storeCheck_QuatroPurification_Agreement(pr);
@@ -581,7 +581,7 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int
                 // Correct resource found! Need to unlock and stage up the resource to the next rule.
                 qubit->second->Unlock();
                 // std::cout<<"[Upgrade Unlock] "<<qubit->second<<" in node["<<qubit->second->node_address<<"]\n";
-                stationaryQubit *q = qubit->second;
+                StationaryQubit *q = qubit->second;
                 (*rule)->resources.erase(qubit);  // Erase this from resource list
                 rule++;
                 if (rule == end) {
@@ -941,7 +941,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // we need to free swapper resources consumed for entanglement swapping.
 
   // qubit with address Addr was shot in nth time. This list is ordered from old to new.
-  stationaryQubit *qubit = check_and_cast<stationaryQubit *>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit", qubit_index));
+  StationaryQubit *qubit = check_and_cast<StationaryQubit *>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit", qubit_index));
   // if(parentAddress == 27 && qubit->entangled_partner->node_address == 15){
   //     EV<<parentAddress<<" is entangled with "<<qubit->entangled_partner->node_address<<" !!\n";
   //     error("Did it! Currently, no application implemeted. So, after resource consumed, simulation will end.");
@@ -1027,7 +1027,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
       // Keep the entangled qubits
       // std::cout<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"] node addr["<<it->first<<"] \n";
       // Add this as an available resource
-      stationaryQubit *qubit = check_and_cast<stationaryQubit *>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit", it->second.qubit_index));
+      StationaryQubit *qubit = check_and_cast<StationaryQubit *>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit", it->second.qubit_index));
       if (qubit->entangled_partner != nullptr) {
         if (qubit->entangled_partner->entangled_partner == nullptr) {
           // std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
@@ -1342,7 +1342,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
   }  // For loop
 }
 
-void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, stationaryQubit *qubit, QNIC_type qnic_type) {
+void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, StationaryQubit *qubit, QNIC_type qnic_type) {
   realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit->par("stationaryQubit_address"), qnic_type, true);
   Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit->par("stationaryQubit_address"));
 

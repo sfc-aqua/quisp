@@ -1,6 +1,6 @@
 package networks;
 
-simple stationaryQubit
+simple StationaryQubit
 {
     parameters:
         // performance analysis
@@ -175,7 +175,7 @@ module QNIC
         //inout dummyRoutingDaemonLink @loose;
 
     submodules:
-        statQubit[numBuffer]: stationaryQubit {
+        statQubit[numBuffer]: StationaryQubit {
             stationaryQubit_address = index;
             node_address = parent_node_address;
             qnic_address = self_qnic_address;

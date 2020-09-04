@@ -34,14 +34,14 @@ static stationaryQubit* getPurifiedQubit_fromTop(qnicResources* resources, QNIC_
     return NULL;
 }*/
 
-static stationaryQubit* getUnLockedQubit_fromTop(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) {
+static StationaryQubit* getUnLockedQubit_fromTop(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) {
   std::pair<EntangledPairs::iterator, EntangledPairs::iterator> ret = resources[qtype][qid].equal_range(partner);  // Find all resource in qytpe/qid entangled with partner.
   int real_res_id = 0;
   for (EntangledPairs::iterator it = ret.first; it != ret.second; ++it) {
     // std::cout << real_res_id << '\n';
     if (!it->second->isLocked()) {
       if (real_res_id == res_id) {
-        stationaryQubit* pt = it->second;
+        StationaryQubit* pt = it->second;
         return pt;
       } else {
         real_res_id++;
@@ -53,7 +53,7 @@ static stationaryQubit* getUnLockedQubit_fromTop(qnicResources* resources, QNIC_
 
 /** \func static stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id)*/
 
-static stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) {
+static StationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) {
   // assume that qnic type is ok
   std::pair<EntangledPairs::iterator, EntangledPairs::iterator> ret = resources[qtype][qid].equal_range(partner);  // Find all resource in qytpe/qid entangled with partner.
   // stationaryQubit *use_this_qubit;
@@ -62,7 +62,7 @@ static stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int 
   for (EntangledPairs::iterator it = ret.first; it != ret.second; ++it, ++real_res_id) {
     // std::cout << real_res_id << '\n';
     if (real_res_id == res_id) {
-      stationaryQubit* pt = it->second;
+      StationaryQubit* pt = it->second;
       // RuleEngine re;
       // re.freeResource(qid, it->second->par("stationaryQubit_address"), qtype);
       // re.JustATest();
@@ -77,18 +77,18 @@ static stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int 
   return nullptr;
 }
 
-static stationaryQubit* getQubitPurified(qnicResources* resources, QNIC_type qtype, int qid, int partner, int num_purified_must) {
+static StationaryQubit* getQubitPurified(qnicResources* resources, QNIC_type qtype, int qid, int partner, int num_purified_must) {
   std::pair<EntangledPairs::iterator, EntangledPairs::iterator> ret = resources[qtype][qid].equal_range(partner);  // Find all resource in qytpe/qid entangled with partner.
   for (EntangledPairs::iterator it = ret.first; it != ret.second; ++it) {
     if (it->second->num_purified == num_purified_must && !it->second->isLocked()) {
-      stationaryQubit* pt = it->second;
+      StationaryQubit* pt = it->second;
       return pt;
     }
   }
   return nullptr;
 }
 
-static stationaryQubit* getQubit(cModule* re, qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) {
+static StationaryQubit* getQubit(cModule* re, qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id) {
   // assume that qnic type is ok
   std::pair<EntangledPairs::iterator, EntangledPairs::iterator> ret = resources[qtype][qid].equal_range(partner);  // Find all resource in qytpe/qid entangled with partner.
   // stationaryQubit *use_this_qubit;
@@ -97,7 +97,7 @@ static stationaryQubit* getQubit(cModule* re, qnicResources* resources, QNIC_typ
   for (EntangledPairs::iterator it = ret.first; it != ret.second; ++it, ++real_res_id) {
     // std::cout << real_res_id << '\n';
     if (real_res_id == res_id) {
-      stationaryQubit* pt = it->second;
+      StationaryQubit* pt = it->second;
       // rule_engine->JustATest();
       return pt;
 

@@ -4,7 +4,7 @@
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/04/01
  *
- *  \brief HoM_Controller
+ *  \brief HoMController
  */
 #ifndef QUISP_MODULES_HOM_CONTROLLER_H_
 #define QUISP_MODULES_HOM_CONTROLLER_H_
@@ -20,14 +20,14 @@ using namespace quisp::messages;
 namespace quisp {
 namespace modules {
 
-/** \class HoM_Controller HoM_Controller.h
+/** \class HoMController HoM_Controller.h
  *  \todo Documentation of the class header.
  *  \note How about if two nodes have imbalanced buffers?
  *        Maybe use unused qnic (which is ought to be used for another path)?
  *
- *  \brief HoM_Controller
+ *  \brief HoMController
  */
-class HoM_Controller : public cSimpleModule {
+class HoMController : public cSimpleModule {
  private:
   int address;
   int photon_detection_per_sec;
@@ -91,7 +91,7 @@ class HoM_Controller : public cSimpleModule {
   // virtual void  finish();
  public:
   virtual void setMax_buffer(int buffer);
-  HoM_Controller();
+  HoMController();
 };
 
 }  // namespace modules
