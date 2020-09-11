@@ -1,6 +1,9 @@
 include ./quisp/Makefile
 
-SRCS=./quisp/modules/*.cc ./quisp/rules/*.cc 
+# you can pass the file path you want to check as SRCS environment variable. see the example below.
+# $ SRCS=./quisp/modules/Application.cc make tidy # checks only Application.cc
+# $ make tidy # checks all sources
+SRCS?=./quisp/modules/*.cc ./quisp/rules/*.cc 
 HEADERS=./quisp/modules/*.h ./quisp/rules/*.h
 
 tidy:
