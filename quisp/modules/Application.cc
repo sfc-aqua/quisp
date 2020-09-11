@@ -1,5 +1,4 @@
 /** \file Application.cc
- *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/14
@@ -93,17 +92,21 @@ void Application::handleMessage(cMessage *msg) {
   if (dynamic_cast<deleteThisModule *>(msg) != nullptr) {
     deleteModule();
     delete msg;
-  } else if (dynamic_cast<ConnectionSetupRequest *>(msg) != nullptr) {
+    return;
+  }
+
+  if (dynamic_cast<ConnectionSetupRequest *>(msg) != nullptr || dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr) {
     send(msg, "toRouter");
-  } else if (dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr) {
-    send(msg, "toRouter");
-  } else if (dynamic_cast<RejectConnectionSetupRequest *>(msg) != nullptr) {
+    return;
+  }
+
+  if (dynamic_cast<RejectConnectionSetupRequest *>(msg) != nullptr) {
     RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
-    int actual_src = pk->getActual_srcAddr();
-    if (actual_src == myAddress) {
-      float recon_try = std::rand() / RAND_MAX;
-      int reject_node = pk->getSrcAddr();
-      EV << "Connection was rejected by " << reject_node << "at" << myAddress << "\n";
+
+    if (myAddress == pk->getActual_srcAddr()) {
+      int node_rejected = pk->getSrcAddr();
+      EV << "Connection was rejected by " << node_rejected << " at " << myAddress << "\n";
+
       // this might be better handled in application
       ConnectionSetupRequest *pkt = new ConnectionSetupRequest;
       pkt->setActual_srcAddr(myAddress);
@@ -114,37 +117,17 @@ void Application::handleMessage(cMessage *msg) {
       pkt->setKind(7);
       scheduleAt(simTime(), pkt);
     }
-  } else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
-    bubble("internal rulesetforwarding packet arrived to application!");
+    return;
+  }
+
+  if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
+    bubble("InternalRuleSetForwarding packet arrived to application!");
     send(msg, "toRouter");
-  } else {
-    delete msg;
-    error("Application not recognizing this packet");
+    return;
   }
 
-  /*if(msg == generatePacket){
-      header *pk = new header("PathRequest");
-      pk->setSrcAddr(1);//packet source setting
-      pk->setDestAddr(3);//packet destination setting
-      pk->setKind(1);
-      send(pk, "toRouter");//send to port out. connected to local routing module (routing.localIn).
-      scheduleAt(simTime() + sendIATime->doubleValue(), generatePacket);
-      //scheduleAt(simTime() + 10, generatePacket);//In 10 seconds, another msg send gets invoked
-  }
-  else if(msg->getKind()==1 && strcmp("PathRequest", msg->getName())==0){
-      BubbleText("Path Request received!");
-
-      EV << "Deleting path request\n";
-  }
-  else{//A message was reached from another node to here
-      delete msg;
-      //cModule *mod = getSimulation()->getModule(4);
-      //int ad = mod->par("address");
-      //QNode *aa = check_and_cast<QNode*>(mod);//Cast not working
-      //EV<<"------------------------------"<<mod->getModuleType()<<"\n";
-
-      EV << "Deleting msg\n";
-  }*/
+  delete msg;
+  error("Application not recognizing this packet");
 }
 
 int *Application::storeEndNodeAddresses() {
