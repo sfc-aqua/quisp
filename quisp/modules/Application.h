@@ -32,7 +32,7 @@ class Application : public cSimpleModule {
 
   virtual void initialize() override;
   virtual void handleMessage(cMessage *msg) override;
-  virtual void bubbleText(const char *txt);
+
   virtual int *storeEndNodeAddresses();
   virtual int getOneRandomEndNodeAddress();
   virtual cModule *getQNode();

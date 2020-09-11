@@ -23,10 +23,8 @@ Application::Application() {}
  */
 
 void Application::initialize() {
-  cGate *toRouterGate = gate("toRouter");
-
   // Since we only need this module in EndNode, delete it otherwise.
-  if (!toRouterGate->isConnected()) {
+  if (!gate("toRouter")->isConnected()) {
     deleteThisModule *msg = new deleteThisModule;
     scheduleAt(simTime(), msg);
     return;
@@ -146,8 +144,8 @@ int *Application::storeEndNodeAddresses() {
     addr = (int)node->getModule()->par("address");
     EV_DEBUG << "End node address is " << addr << "\n";
 
-    if ((int)addr != my_address) {  // ignore myself
-      other_end_node_addresses[index] = (int)addr;
+    if (addr != my_address) {  // ignore myself
+      other_end_node_addresses[index] = addr;
       index++;
     }
   }
@@ -166,14 +164,6 @@ int *Application::storeEndNodeAddresses() {
 int Application::getOneRandomEndNodeAddress() {
   int random_index = intuniform(0, num_of_other_end_nodes - 1);
   return other_end_node_addresses[random_index];
-}
-
-void Application::bubbleText(const char *txt) {
-  if (hasGUI()) {
-    char text[32];
-    sprintf(text, "%s", txt);
-    bubble(text);
-  }
 }
 
 int Application::getAddress() { return my_address; }
