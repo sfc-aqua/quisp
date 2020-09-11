@@ -36,7 +36,7 @@ using namespace rules;
  *  \brief RuleEngine
  */
 
-typedef struct _process_identifier {
+typedef struct {
   unsigned long ruleset_id;
   int rule_id;
   int index;
@@ -79,7 +79,7 @@ struct swapping_result {
 };
 
 // Process = RuleSet
-typedef struct _process {
+typedef struct {
   int ownner_addr;
   // int process_ID;
   RuleSet* Rs;
@@ -121,7 +121,7 @@ class RuleEngine : public cSimpleModule {
   qnicResources* allResources;  // Size will be defined in initialization. If 3 qnic types, then size is 3. Type defined in QUBIT.h
   /*
    * DEFINED in QNIC.h
-   * typedef std::multimap<int, stationaryQubit*> EntangledPairs;//entangled Node address -> pointer to that local qubit
+   * typedef std::multimap<int, StationaryQubit*> EntangledPairs;//entangled Node address -> pointer to that local qubit
    * typedef EntangledPairs* qnicResources;//For each qnic. If the number of "qnic" is 3, then the size is 3.
    * For resource management over.
    * */
@@ -133,7 +133,7 @@ class RuleEngine : public cSimpleModule {
   // int assigned = 0;
   // typedef std::map<std::string, quisp::rules::RuleSet> processes;//process_id -> Rule set
   virtual void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type);
-  virtual void freeConsumedResource(int qnic_index, stationaryQubit* qubit, QNIC_type qnic_type);
+  virtual void freeConsumedResource(int qnic_index, StationaryQubit* qubit, QNIC_type qnic_type);
   virtual void dynamic_ResourceAllocation(int qnic_type, int qnic_index);
   virtual void ResourceAllocation(int qnic_type, int qnic_index);
   virtual void JustATest() {

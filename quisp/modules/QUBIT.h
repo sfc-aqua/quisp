@@ -43,7 +43,7 @@ struct QubitState {
 
 /*For resource management*/
 // typedef std::multimap<int, QubitAddr> EntangledPairs;//entangled Node address -> list of qubits from new to old
-typedef std::multimap<int, stationaryQubit*> EntangledPairs;  // entangled Node address -> pointer to that local qubit
+typedef std::multimap<int, StationaryQubit*> EntangledPairs;  // entangled Node address -> pointer to that local qubit
 typedef EntangledPairs* qnicResources;  // For each qnic. If the number of "qnic" is 3, then the size is 3.
 /*For resource management over.*/
 

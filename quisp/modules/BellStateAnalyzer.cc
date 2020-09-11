@@ -48,7 +48,7 @@ class BellStateAnalyzer : public cSimpleModule {
   int left_photon_origin_qubit_address;
   bool left_photon_Xerr;
   bool left_photon_Zerr;
-  stationaryQubit *left_statQubit_ptr;
+  StationaryQubit *left_statQubit_ptr;
   simtime_t right_arrived_at;
   int right_photon_origin_node_address;
   int right_photon_origin_qnic_address;
@@ -58,7 +58,7 @@ class BellStateAnalyzer : public cSimpleModule {
   bool right_photon_Zerr;
   bool right_photon_lost;
   bool left_photon_lost;
-  stationaryQubit *right_statQubit_ptr;
+  StationaryQubit *right_statQubit_ptr;
   int count_X = 0, count_Y = 0, count_Z = 0, count_I = 0, count_L = 0, count_total = 0;  // for debug
   // bool handshake = false;
   bool this_trial_done = false;
@@ -152,7 +152,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     left_photon_origin_qnic_address = photon->getQNICEntangledWith();
     left_photon_origin_qubit_address = photon->getStationaryQubitEntangledWith();
     left_photon_origin_qnic_type = photon->getQNICtypeEntangledWith();
-    left_statQubit_ptr = check_and_cast<stationaryQubit *>(photon->getEntangled_with());
+    left_statQubit_ptr = check_and_cast<StationaryQubit *>(photon->getEntangled_with());
     left_photon_Xerr = photon->getPauliXerr();
     left_photon_Zerr = photon->getPauliZerr();
     left_photon_lost = photon->getPhotonLost();
@@ -174,7 +174,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     right_photon_origin_qubit_address = photon->getStationaryQubitEntangledWith();
     right_photon_origin_qnic_type = photon->getQNICtypeEntangledWith();
     // right_statQubit_ptr = photon->getEntangled_with();
-    right_statQubit_ptr = check_and_cast<stationaryQubit *>(photon->getEntangled_with());
+    right_statQubit_ptr = check_and_cast<StationaryQubit *>(photon->getEntangled_with());
     right_photon_Xerr = photon->getPauliXerr();
     right_photon_Zerr = photon->getPauliZerr();
     right_photon_lost = photon->getPhotonLost();

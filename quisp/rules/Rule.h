@@ -27,7 +27,7 @@ class Rule {
   int rule_index;
   pCondition condition;
   pAction action;
-  std::multimap<int, stationaryQubit *> resources;
+  std::multimap<int, StationaryQubit *> resources;
   int mutable number_of_resources_allocated_in_total = 0;
   // std::unique_ptr<Rule> next_rule;
   Rule(){};
@@ -36,10 +36,10 @@ class Rule {
     rule_index = r_index;
   };
 
-  void addResource(int address_entangled_with, stationaryQubit *qubit);
+  void addResource(int address_entangled_with, StationaryQubit *qubit);
   void setCondition(Condition *c);
   void setAction(Action *a);
-  void eraseResource(stationaryQubit *qubit){
+  void eraseResource(StationaryQubit *qubit){
       /*bool erased = false;
       for (auto it =  rc.cbegin(), next_it =  rc.cbegin(); it !=  rc.cend(); it = next_it){
           next_it = it; ++next_it;
