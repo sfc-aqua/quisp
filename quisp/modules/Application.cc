@@ -46,7 +46,7 @@ void Application::initialize() {
   int traffic_pattern = par("TrafficPattern");
 
   if (traffic_pattern == 0) {
-    EV << "EndToEndConnection is set true. but no traffic pattern specified; proceeding with no traffic\n";
+    EV_INFO << "EndToEndConnection is set true. but no traffic pattern specified; proceeding with no traffic\n";
     return;
   }
 
@@ -55,7 +55,7 @@ void Application::initialize() {
     int initiator_address = par("LoneInitiatorAddress");
     if (myAddress == initiator_address) {
       int endnode_dest_addr = getOneRandomEndNodeAddress();
-      EV << "Just one lonely connection setup request will be sent from " << myAddress << " to " << endnode_dest_addr << "\n";
+      EV_INFO << "Just one lonely connection setup request will be sent from " << myAddress << " to " << endnode_dest_addr << "\n";
       ConnectionSetupRequest *pk = createConnectionSetupRequest(endnode_dest_addr, number_of_resources);
       scheduleAt(simTime(), pk);
     }
@@ -67,7 +67,7 @@ void Application::initialize() {
   // this means that some nodes will be receivers of more than one connection, at random.
   if (traffic_pattern == 2) {
     int endnode_dest_addr = getOneRandomEndNodeAddress();
-    EV << "My connection setup request will be sent from " << myAddress << " to " << endnode_dest_addr << "\n";
+    EV_INFO << "My connection setup request will be sent from " << myAddress << " to " << endnode_dest_addr << "\n";
     ConnectionSetupRequest *pk = createConnectionSetupRequest(endnode_dest_addr, number_of_resources);
     // delay to avoid conflict
     scheduleAt(simTime() + exponential(0.00001 * myAddress), pk);
@@ -105,7 +105,7 @@ void Application::handleMessage(cMessage *msg) {
 
     if (myAddress == pk->getActual_srcAddr()) {
       int node_rejected = pk->getSrcAddr();
-      EV << "Connection was rejected by " << node_rejected << " at " << myAddress << "\n";
+      EV_INFO << "Connection was rejected by " << node_rejected << " at " << myAddress << "\n";
 
       // this might be better handled in application
       ConnectionSetupRequest *pkt = new ConnectionSetupRequest;
@@ -144,11 +144,10 @@ int *Application::storeEndNodeAddresses() {
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);
     addr = (int)node->getModule()->par("address");
-    EV << "End node address is " << addr << "\n";
+    EV_DEBUG << "End node address is " << addr << "\n";
 
     if ((int)addr != myAddress) {  // ignore myself
       other_end_node_addresses[index] = (int)addr;
-      EV << "Is it still " << addr << "\n";
       index++;
     }
   }
