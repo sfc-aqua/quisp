@@ -24,6 +24,23 @@ simple BellStateAnalyzer
         output toHoMController_port;
 }
 
+simple ABSA
+{
+    parameters:
+        int address;
+    submodules:
+        BSA: BellStateAnalyzer {
+            parameters:
+                address = address;//share the same address within all inner modules
+                darkcount_probability = hom_darkcount_probability;
+                loss_rate = hom_loss_rate;
+                error_rate = hom_error_rate;
+                required_precision = hom_required_precision;
+                photon_detection_per_sec = hom_photon_detection_per_sec;
+                @display("p=207.855,120.689995");
+        }
+}
+
 simple HoMController
 {
     parameters:
