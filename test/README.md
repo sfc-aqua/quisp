@@ -72,3 +72,26 @@ Test list in test.ini file
 | Test32     | CNOT gate IY error test|purification 1221|
 | Test33     | CNOT gate YI error test|purification 1221|
 | Test34     | CNOT gate YY error test|purification 1221|
+
+## Notes
+
+If you look in detail at the Travis CI test output, you may see messages like:
+
+```$ sh docker_run_lint.sh
+...
+Error while processing /root/quisp/quisp/rules/example.cc.
+4735/root/quisp/quisp/modules/Application.cc:9:10: error: 'classical_messages_m.h' file not found [clang-diagnostic-error]
+4736#include <classical_messages_m.h>
+4737         ^
+...
+/root/quisp/quisp/modules/stationaryQubit.h:10:10: error: 'PhotonicQubit_m.h' file not found [clang-diagnostic-error]
+4789Suppressed 14962 warnings (14962 in non-user code).
+4790Use -header-filter=.* to display errors from all non-system headers. Use -system-headers to display errors from system headers as well.
+4791The command "sh docker_run_lint.sh" exited with 0.
+```
+
+These errors occur only during the lint phase, because the appropriate
+.msg file has not been compiled.  These errors can be safely ignored
+(except that they may cause lint to miss some errors in the code).
+When the system is actually compiled for the functional tests in the
+list above, the .msg files are compiled and incorporated properly.
