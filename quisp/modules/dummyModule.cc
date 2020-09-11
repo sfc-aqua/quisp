@@ -6,10 +6,10 @@
  *
  *  \brief dummyModule
  */
-#include <vector>
-#include <omnetpp.h>
-#include <classical_messages_m.h>
 #include <PhotonicQubit_m.h>
+#include <classical_messages_m.h>
+#include <omnetpp.h>
+#include <vector>
 
 using namespace omnetpp;
 
@@ -21,17 +21,16 @@ namespace modules {
  *
  *  \brief dummyModule
  */
-class dummyModule : public cSimpleModule
-{
-    protected:
-        virtual void initialize() override;
-        virtual void handleMessage(cMessage *msg) override;
+class dummyModule : public cSimpleModule {
+ protected:
+  virtual void initialize() override;
+  virtual void handleMessage(cMessage *msg) override;
 };
 
 Define_Module(dummyModule);
 
 void dummyModule::initialize() {}
-void dummyModule::handleMessage(cMessage *msg){ delete msg; }
+void dummyModule::handleMessage(cMessage *msg) { delete msg; }
 
-} // namespace modules
-} // namespace quisp
+}  // namespace modules
+}  // namespace quisp

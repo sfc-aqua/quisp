@@ -11,14 +11,9 @@ namespace modules {
 
 Define_Module(ResourceManager);
 
-void ResourceManager::initialize()
-{
-  EV<<"ResourceManager booted\n";
-}
+void ResourceManager::initialize() { EV << "ResourceManager booted\n"; }
 
-void ResourceManager::handleMessage(cMessage *msg){
+void ResourceManager::handleMessage(cMessage *msg) {}
 
-}
-
-} // namespace modules
-} // namespace quisp
+}  // namespace modules
+}  // namespace quisp
