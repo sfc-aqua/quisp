@@ -24,7 +24,7 @@ simple BellStateAnalyzer
         output toHoMController_port;
 }
 
-simple ABSA
+module ABSA
 {
     parameters:
         int address;
