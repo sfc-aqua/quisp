@@ -14,7 +14,7 @@ using namespace quisp::messages;
 namespace quisp {
 namespace modules {
 
-Application::Application() { generatePacket = nullptr; }
+Application::Application() {}
 
 /**
  * \brief Initialize module.
@@ -32,7 +32,7 @@ void Application::initialize() {
     return;
   }
 
-  myAddress = getParentModule()->par("address");
+  my_address = getParentModule()->par("address");
   is_e2e_connection = par("EndToEndConnection");
   number_of_resources = par("NumberOfResources");
   num_measure = par("num_measure");
@@ -53,9 +53,9 @@ void Application::initialize() {
   // just one connection
   if (traffic_pattern == 1) {
     int initiator_address = par("LoneInitiatorAddress");
-    if (myAddress == initiator_address) {
+    if (my_address == initiator_address) {
       int endnode_dest_addr = getOneRandomEndNodeAddress();
-      EV_INFO << "Just one lonely connection setup request will be sent from " << myAddress << " to " << endnode_dest_addr << "\n";
+      EV_INFO << "Just one lonely connection setup request will be sent from " << my_address << " to " << endnode_dest_addr << "\n";
       ConnectionSetupRequest *pk = createConnectionSetupRequest(endnode_dest_addr, number_of_resources);
       scheduleAt(simTime(), pk);
     }
@@ -67,10 +67,10 @@ void Application::initialize() {
   // this means that some nodes will be receivers of more than one connection, at random.
   if (traffic_pattern == 2) {
     int endnode_dest_addr = getOneRandomEndNodeAddress();
-    EV_INFO << "My connection setup request will be sent from " << myAddress << " to " << endnode_dest_addr << "\n";
+    EV_INFO << "My connection setup request will be sent from " << my_address << " to " << endnode_dest_addr << "\n";
     ConnectionSetupRequest *pk = createConnectionSetupRequest(endnode_dest_addr, number_of_resources);
     // delay to avoid conflict
-    scheduleAt(simTime() + exponential(0.00001 * myAddress), pk);
+    scheduleAt(simTime() + exponential(0.00001 * my_address), pk);
     return;
   }
 
@@ -79,10 +79,10 @@ void Application::initialize() {
 
 ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr, int num_of_required_resources) {
   ConnectionSetupRequest *pk = new ConnectionSetupRequest();
-  pk->setActual_srcAddr(myAddress);
+  pk->setActual_srcAddr(my_address);
   pk->setActual_destAddr(dest_addr);
-  pk->setDestAddr(myAddress);
-  pk->setSrcAddr(myAddress);
+  pk->setDestAddr(my_address);
+  pk->setSrcAddr(my_address);
   pk->setNumber_of_required_Bellpairs(num_of_required_resources);
   pk->setKind(7);
   return pk;
@@ -103,16 +103,16 @@ void Application::handleMessage(cMessage *msg) {
   if (dynamic_cast<RejectConnectionSetupRequest *>(msg) != nullptr) {
     RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
 
-    if (myAddress == pk->getActual_srcAddr()) {
+    if (my_address == pk->getActual_srcAddr()) {
       int node_rejected = pk->getSrcAddr();
-      EV_INFO << "Connection was rejected by " << node_rejected << " at " << myAddress << "\n";
+      EV_INFO << "Connection was rejected by " << node_rejected << " at " << my_address << "\n";
 
       // this might be better handled in application
       ConnectionSetupRequest *pkt = new ConnectionSetupRequest;
-      pkt->setActual_srcAddr(myAddress);
+      pkt->setActual_srcAddr(my_address);
       pkt->setActual_destAddr(pk->getActual_destAddr());  // This might not good way
-      pkt->setDestAddr(myAddress);
-      pkt->setSrcAddr(myAddress);
+      pkt->setDestAddr(my_address);
+      pkt->setSrcAddr(my_address);
       pkt->setNumber_of_required_Bellpairs(number_of_resources);
       pkt->setKind(7);
       scheduleAt(simTime(), pkt);
@@ -146,7 +146,7 @@ int *Application::storeEndNodeAddresses() {
     addr = (int)node->getModule()->par("address");
     EV_DEBUG << "End node address is " << addr << "\n";
 
-    if ((int)addr != myAddress) {  // ignore myself
+    if ((int)addr != my_address) {  // ignore myself
       other_end_node_addresses[index] = (int)addr;
       index++;
     }
@@ -176,7 +176,7 @@ void Application::bubbleText(const char *txt) {
   }
 }
 
-int Application::getAddress() { return myAddress; }
+int Application::getAddress() { return my_address; }
 
 cModule *Application::getQNode() {
   // We know that Application is not the QNode, so start from the parent.

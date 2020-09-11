@@ -22,10 +22,7 @@ namespace modules {
  */
 class Application : public cSimpleModule {
  private:
-  int myAddress;
-
-  /* Not the actual packet. Local message to invoke Events */
-  cMessage *generatePacket;
+  int my_address;
 
   int *other_end_node_addresses;
   int num_of_other_end_nodes;
