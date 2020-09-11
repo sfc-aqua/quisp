@@ -132,17 +132,23 @@ void Application::handleMessage(cMessage *msg) {
 
 int *Application::storeEndNodeAddresses() {
   cTopology *topo = new cTopology("topo");
-  topo->extractByParameter("nodeType", getParentModule()->par("nodeType").str().c_str());  // like topo.extractByParameter("nodeType","EndNode")
+
+  // like topo.extractByParameter("nodeType","EndNode")
+  topo->extractByParameter("nodeType", getParentModule()->par("nodeType").str().c_str());
+
   num_of_other_end_nodes = topo->getNumNodes() - 1;
   other_end_node_addresses = new int[num_of_other_end_nodes];
 
   int index = 0;
+  int addr;
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);
-    EV << "\n\n\nEnd node address is " << node->getModule()->par("address").str() << "\n";
-    if ((int)node->getModule()->par("address") != myAddress) {  // ignore self
-      other_end_node_addresses[index] = (int)node->getModule()->par("address");
-      EV << "\n Is it still " << node->getModule()->par("address").str() << "\n";
+    addr = (int)node->getModule()->par("address");
+    EV << "End node address is " << addr << "\n";
+
+    if ((int)addr != myAddress) {  // ignore myself
+      other_end_node_addresses[index] = (int)addr;
+      EV << "Is it still " << addr << "\n";
       index++;
     }
   }
@@ -174,17 +180,19 @@ void Application::bubbleText(const char *txt) {
 int Application::getAddress() { return myAddress; }
 
 cModule *Application::getQNode() {
-  // We know that Connection manager is not the QNode, so start from the parent.
-  cModule *currentModule = getParentModule();
+  // We know that Application is not the QNode, so start from the parent.
+  cModule *current_module = getParentModule();
   try {
     // Assumes the node in a network has a type QNode
-    cModuleType *QNodeType = cModuleType::get("networks.QNode");
-    while (currentModule->getModuleType() != QNodeType) currentModule = currentModule->getParentModule();
+    const cModuleType *qnode_type = cModuleType::get("networks.QNode");
+    while (current_module->getModuleType() != qnode_type) {
+      current_module = current_module->getParentModule();
+    }
   } catch (std::exception &e) {
     error("No module with QNode type found. Have you changed the type name in ned file?");
     endSimulation();
   }
-  return currentModule;
+  return current_module;
 }
 
 }  // namespace modules
