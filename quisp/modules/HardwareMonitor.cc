@@ -647,6 +647,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// X for even-numbered rounds (counting from zero),
       /// Z for odd-numbered ones, so it is possible to
       /// do XZX or XZXZX (but not ZXZ or ZXZXZ).
+      /// ![](../img/PhysRevA.100.052320-Fig11.png)
       // First stage X purification
       for (int i = 0; i < num_purification; i++) {
         Rule* Purification = new Rule(RuleSet_id, rule_index);
@@ -694,7 +695,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         rule_index++;
         tomography_RuleSet->addRule(Purification);
       }
-    } else if (Purification_type == 1221) {
+    } else if (Purification_type ==1221
+               ) {
       /// # Purification_type 1221: #
       /// - name: Ss-Dp XZ, ZX alternating
       /// - rounds: n
@@ -707,6 +709,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// Almost the same as 1001, but first round
       /// is XZ, second round is ZX.  Results in better alternating
       /// error suppression, but still not great.
+      /// ![](../img/PhysRevA.100.052320-Fig12.png)
       for (int i = 0; i < num_purification; i++) {
         if (i % 2 == 0) {
           Rule* Purification = new Rule(RuleSet_id, rule_index);
@@ -744,6 +747,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// paper (PRA 80, 042308).
       /// Every round is identical.
       /// Note there is no basis change between rounds.
+      /// ![](../img/arxiv.1904.08605-Fig13.png)
       for (int i = 0; i < num_purification; i++) {
         Rule* Purification = new Rule(RuleSet_id, rule_index);
         Condition* Purification_condition = new Condition();
@@ -767,6 +771,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// ## description: ##
       /// Similar to 1011, almost corresponding to Fujii-san's paper (PRA 80, 042308).
       /// Note there is no basis change between rounds, but that the first round is XZ, second is ZX.
+      /// ![](../img/arxiv.1904.08605-Fig13.png)
       for (int i = 0; i < num_purification; i++) {
         Rule* Purification = new Rule(RuleSet_id, rule_index);
         Condition* Purification_condition = new Condition();
@@ -796,6 +801,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// A combination of 1001 and 1011 (Figs. 12 & 13).  Resource requirements are high;
       /// two rounds of this requires 25 Bell pairs.  With a low base Bell pair generation
       /// rate and realistic memory decoherence, this will be impractical.
+      /// ![](../img/arxiv.1904.08605-Fig14.png)
       for (int i = 0; i < num_purification; i++) {
         Rule* Purification = new Rule(RuleSet_id, rule_index);
         Condition* Purification_condition = new Condition();
