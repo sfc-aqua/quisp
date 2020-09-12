@@ -98,26 +98,6 @@ void Application::handleMessage(cMessage *msg) {
     return;
   }
 
-  if (dynamic_cast<RejectConnectionSetupRequest *>(msg) != nullptr) {
-    RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
-
-    if (my_address == pk->getActual_srcAddr()) {
-      int node_rejected = pk->getSrcAddr();
-      EV_INFO << "Connection was rejected by " << node_rejected << " at " << my_address << "\n";
-
-      // this might be better handled in application
-      ConnectionSetupRequest *pkt = new ConnectionSetupRequest;
-      pkt->setActual_srcAddr(my_address);
-      pkt->setActual_destAddr(pk->getActual_destAddr());  // This might not good way
-      pkt->setDestAddr(my_address);
-      pkt->setSrcAddr(my_address);
-      pkt->setNumber_of_required_Bellpairs(number_of_resources);
-      pkt->setKind(7);
-      scheduleAt(simTime(), pkt);
-    }
-    return;
-  }
-
   if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
     bubble("InternalRuleSetForwarding packet arrived to application!");
     send(msg, "toRouter");
