@@ -1,11 +1,8 @@
 package networks;
 
-simple StationaryQubit
+simple stationaryQubit
 {
     parameters:
-        // performance analysis
-        @signal[update_timing](type="float");
-        @statistic[update_timing](title="actual number of resource"; record=vector, max; interpolationmode=sample-hold);
 	// these are configured at boot time
         int stationaryQubit_address;
         int node_address;
@@ -175,7 +172,7 @@ module QNIC
         //inout dummyRoutingDaemonLink @loose;
 
     submodules:
-        statQubit[numBuffer]: StationaryQubit {
+        statQubit[numBuffer]: stationaryQubit {
             stationaryQubit_address = index;
             node_address = parent_node_address;
             qnic_address = self_qnic_address;

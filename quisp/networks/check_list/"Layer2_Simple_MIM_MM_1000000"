@@ -1,0 +1,68 @@
+
+[Config Layer2_Simple_MIM_MM]
+network = Layer2_Simple_MIM_MM
+#seed-1-mt = ${}
+#repeat = 10
+#seed-set = ${0..10}
+#seed-set = ${11..20}
+#seed-set = ${21..30}
+#seed-set = ${31..40}
+#seed-set = ${0..99}
+#seed-set = ${90..99}
+seed-set = 0
+
+**.tomography_output_filename = "Layer2_Simple_MIM_MM_1000000"
+**.buffers = uniform(100, 100)
+**.num_measure = 1000000 #max measurement for tomography accumulation
+
+**.emission_error_rate = 0 # per shot.
+**.emission_Z_error_ratio = 0 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.emission_X_error_ratio = 0 #ratio. Not the error rate!!
+**.emission_Y_error_ratio = 0 #ratio. Not the error rate!!
+
+**.channel_error_rate = 0.005 #per km. Max = 1 = 100%
+**.photon_loss_ratio = 1 # per km. 1% = 0.01
+**.Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.X_error_ratio = 1 #ratio. Not the error rate!!
+**.Y_error_ratio = 1 #ratio. Not the error rate!!
+
+**.memory_error_rate = 0.01 #per μs
+**.memory_X_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Y_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.memory_energy_excitation_ratio = 1
+**.memory_energy_relaxation_ratio = 1
+**.memory_complitely_mixed_ratio = 1
+
+#Error on Target, Error on Controlled
+**.CNOTgate_error_rate = 0.02
+**.CNOTgate_IZ_error_ratio = 1 #checked
+**.CNOTgate_ZI_error_ratio = 1 #checked
+**.CNOTgate_ZZ_error_ratio = 1 #checked
+**.CNOTgate_IX_error_ratio = 1 #checked
+**.CNOTgate_XI_error_ratio = 1 #checked
+**.CNOTgate_XX_error_ratio = 1 #checked
+**.CNOTgate_IY_error_ratio = 1 #checked
+**.CNOTgate_YI_error_ratio = 1 #checked
+**.CNOTgate_YY_error_ratio = 1 #checked
+
+**.Measurement_error_rate = 0.01
+**.Measurement_X_error_ratio = 1
+**.Measurement_Y_error_ratio = 1
+**.Measurement_Z_error_ratio = 1
+
+**.hom_photon_detection_per_sec = 1000000000
+**.hom_darkcount_probability = 0.01 #1%
+
+**.internal_hom_photon_detection_per_sec = 1000000000
+**.internal_hom_darkcount_probability = 0.01 #1%
+
+**.link_tomography = true
+**.initial_purification = 0
+**.X_purification = false
+
+
+EndNode1[0]<-->QuantumChannel{cost=4011.35;distance=20km;fidelity=0.315559;bellpair_per_sec=250351;tomography_time=3.994393060485;tomography_measurements=1000000;actualmeas=1000000;}<-->Repeater1[0] F=0.315559 X=0.229107 Z=0.228973 Y=0.226361
+EndNode2[0]<-->QuantumChannel{cost=1998.11;distance=10km;fidelity=0.31632;bellpair_per_sec=500179;tomography_time=1.999283480752;tomography_measurements=1000000;actualmeas=1000000;}<-->HoM1[0] F=0.31632 X=0.228798 Z=0.228219 Y=0.226662
+Repeater1[0]<-->QuantumChannel{cost=4011.35;distance=20km;fidelity=0.315559;bellpair_per_sec=250351;tomography_time=3.994393060485;tomography_measurements=1000000;actualmeas=1000000;}<-->EndNode1[0] F=0.315559 X=0.229107 Z=0.228973 Y=0.226361
+Repeater1[0]<-->QuantumChannel{cost=1998.11;distance=10km;fidelity=0.31632;bellpair_per_sec=500179;tomography_time=1.999283480752;tomography_measurements=1000000;actualmeas=1000000;}<-->HoM1[0] F=0.31632 X=0.228798 Z=0.228219 Y=0.226662

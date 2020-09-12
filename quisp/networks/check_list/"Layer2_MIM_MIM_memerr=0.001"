@@ -1,0 +1,4 @@
+EndNode[0]<-->QuantumChannel{cost=0.000737961;distance=5km;fidelity=0.524071;bellpair_per_sec=4933.86;tomography_time=6.080430311805;tomography_measurements=30000;}<-->HoM[0] F=0.524071 X=0.475929 Z=-0.0061764 Y=0.0061764
+EndNode[1]<-->QuantumChannel{cost=0.000718804;distance=10km;fidelity=0.528658;bellpair_per_sec=4977.83;tomography_time=6.026719340688;tomography_measurements=30000;}<-->HoM[1] F=0.528658 X=0.471342 Z=0.00457246 Y=-0.00457246
+repeater[0]<-->QuantumChannel{cost=0.000737961;distance=15km;fidelity=0.524071;bellpair_per_sec=4933.86;tomography_time=6.080430311805;tomography_measurements=30000;}<-->HoM[0] F=0.524071 X=0.475929 Z=-0.0061764 Y=0.0061764
+repeater[0]<-->QuantumChannel{cost=0.000718804;distance=10km;fidelity=0.528658;bellpair_per_sec=4977.83;tomography_time=6.026719340688;tomography_measurements=30000;}<-->HoM[1] F=0.528658 X=0.471342 Z=0.00457246 Y=-0.00457246

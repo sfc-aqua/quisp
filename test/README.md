@@ -72,4 +72,3 @@ Test list in test.ini file
 | Test32     | CNOT gate IY error test|purification 1221|
 | Test33     | CNOT gate YI error test|purification 1221|
 | Test34     | CNOT gate YY error test|purification 1221|
-

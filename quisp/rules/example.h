@@ -1,11 +1,11 @@
 #ifndef _quisp_rules_example_h
 #define _quisp_rules_example_h
-#include <modules/QNIC.h>
-#include "Action.h"
-#include "Clause.h"
-#include "Condition.h"
-#include "Rule.h"
 #include "RuleSet.h"
+#include "Rule.h"
+#include "Condition.h"
+#include "Clause.h"
+#include "Action.h"
+#include <modules/QNIC.h>
 
 #if 0
 NOTES:

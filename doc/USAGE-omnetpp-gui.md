@@ -73,18 +73,12 @@ Then you need to specify how to find the Eigen library. Click `Options...` below
 `Makemake`, then in the `Compile` tab you will have a category called
 `Include directories`.
 
-To this list, you should add one folder.  
-  
-Following is how we mostly configure our directory structure for Eigen3. However, this is just our recommendation; While our 'recommended' way helps you to build your project smoothly, you can change it as long as you know what you're doing.  
-For Eigen3, it's fine to install it anywhere. The core of the matter is **including Eigen3's location from OmNET++ correctly.**
+To this list you should add one folder. With the local Eigen installation in
+this example you should add `/home/.local/lib/eigen-source`, and with the system
+installation you should add `/usr/local/share/eigen3`.
 
-> With the local Eigen installation in
-> this example you can add `/home/.local/lib/eigen-source`, and with the system
-> installation you can add `/usr/local/share/eigen3`.
-
-> If you're using Mac OSX, you can put `/Users/<home directory>/.local/lib/eigen-source` or
-> `/usr/local/share/eigen3`
-
+If you're using Mac OSX, you should put `/Users/<home directory>/.local/lib/eigen-source` or
+`/usr/local/share/eigen3`
 
 Then, in the category `C/C++ Build`, click `Manage configurations` and make the
 release configuration active.

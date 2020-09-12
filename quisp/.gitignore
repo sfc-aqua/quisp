@@ -12,8 +12,3 @@ PhotonicQubit_m.cc
 PhotonicQubit_m.h
 classical_messages_m.cc
 classical_messages_m.h
-
-/networks/*
-/networks/.gitignore
-!networks/*.ned
-!networks/*.ini

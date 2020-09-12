@@ -13,40 +13,39 @@ using namespace omnetpp;
 namespace quisp {
 namespace modules {
 
-typedef enum : int {
-  QNIC_E, /**< Emitter QNIC          */
-  QNIC_R, /**< Receiver QNIC         */
-  QNIC_RP, /**< Passive Receiver QNIC */
-  QNIC_N, /** Just to make the size of the array = the number of qnics*/
+typedef enum _QNIC_type:int {
+    QNIC_E,  /**< Emitter QNIC          */
+    QNIC_R,  /**< Receiver QNIC         */
+    QNIC_RP, /**< Passive Receiver QNIC */
+    QNIC_N, /** Just to make the size of the array = the number of qnics*/
 } QNIC_type;
 
 static const char* QNIC_names[QNIC_N] = {
-    [QNIC_E] = "qnic",
-    [QNIC_R] = "qnic_r",
-    [QNIC_RP] = "qnic_rp",
+    [QNIC_E]="qnic",
+    [QNIC_R]="qnic_r",
+    [QNIC_RP]="qnic_rp",
 };
 
-typedef struct {
-  QNIC_type type;
-  int index;
-  int address;
-  bool isReserved;
+typedef struct _QNIC_id {
+    QNIC_type type;
+    int index;
+    int address;
+    bool isReserved;
 } QNIC_id;
 
-typedef struct {
-  QNIC_id fst;
-  QNIC_id snd;
+typedef struct _QNIC_id_pair {
+    QNIC_id fst;
+    QNIC_id snd;
 } QNIC_id_pair;
 
-typedef struct : QNIC_id {
-  cModule* pointer;  // Pointer to that particular QNIC.
-  int address;
+typedef struct _QNIC : _QNIC_id{
+    cModule *pointer;//Pointer to that particular QNIC.
+    int address;
 } QNIC;
 
 // Table to check the qnic is reserved or not.
 typedef std::map<int, std::map<int, bool>> QNIC_reservation_table;
+} // namespace modules
+} // namespace quisp
 
-}  // namespace modules
-}  // namespace quisp
-
-#endif  // QUISP_MODULES_QNIC_H_
+#endif//QUISP_MODULES_QNIC_H_

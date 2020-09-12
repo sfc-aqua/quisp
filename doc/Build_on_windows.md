@@ -83,26 +83,17 @@ For more information on Eigen, please visit [this](http://eigen.tuxfamily.org/in
 
 To clone and build Quisp, one your terminal (use the mingwenv console to clone the repo) and type the follwoing commands:
 ```
-$ git clone https://github.com/sfc-aqua/quisp.git
+$ git clone https://<username>@bitbucket.org/sfc-aqua/kaaki_master_quisp.git
 ```
+The last command will take a while to build the docker (around 15 mins).
 
 ## 4- Set up OMNeT for the Simulation
 
-*Execute* the command `omnetpp` from mingwenv console. When the dialogue comes up, select your workspace and click *Launch*.  
-  
-*Warning: Setting workspace as `<Directory where you extracted omnetpp>\omnetpp-5.x.x\quisp` is highly recommended.*
+*Launch* omnetpp from mingwenv console
 
 
 
-<img src="img/11-fix.jpg"  width="50%" height="50%">
-
-
-
-When you see this dialogue, just click *OK*.
-
-<img src="img/install-inet.png"  width="50%" height="50%">
-
-
+![](img/11.jpg)
 
 From File >> Open Projects from File System
 
@@ -110,19 +101,19 @@ From File >> Open Projects from File System
 
 ![](img/12.jpg)
 
-Click *Directroy* and find the location where Quisp was cloned (usually it will be in the omnet directroy). Select the `quisp` directory under the cloned `quisp`. So it should be `<Directory where you cloned quisp>\quisp\quisp`
+Click *Directroy* and choose the location where Quisp was cloned (usually it will be in the omnet directroy)
 
 
 
 ![](img/13.jpg)
 
-Select `quisp` and click *Finish*
+Select both files and click *Finish*
 
 
 
-<img src="img/14-fix.png"  width="50%" height="50%">
+![](img/14.jpg)
 
-That will make *quisp* and *quisp* appear in your **Project Explorer** 
+That will make *kaaki-quisp-master* and *quisp* appear in your **Project Explorer** 
 
 Select quisp, right-click on it and choose *properties*.
 

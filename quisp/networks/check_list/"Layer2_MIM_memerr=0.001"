@@ -1,0 +1,77 @@
+
+[Config MIM_memory_error_test]
+network = networks.Linear_One_MIM
+**.tomography_output_filename = "Layer2_MIM_memerr=0.001"
+**.buffers = uniform(50,50)
+**.num_measure = 60000 #max measurement for tomography accumulation
+
+**.emission_error_rate = 0 # per shot. Max is 1.
+**.emission_Z_error_ratio = 0 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.emission_X_error_ratio = 0 #ratio. Not the error rate!!
+**.emission_Y_error_ratio = 0 #ratio. Not the error rate!!
+
+**.channel_error_rate = 0.0 #per km. Max depens on the number of error types.
+**.photon_loss_ratio = 0 # per km. 1% = 0.01
+**.Z_error_ratio = 0 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.X_error_ratio = 0 #ratio. Not the error rate!!
+**.Y_error_ratio = 0 #ratio. Not the error rate!!
+
+**.memory_error_rate = 0.0005 #per μs
+**.memory_X_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Y_error_ratio = 0 #ratio. Not the error rate!!
+**.memory_Z_error_ratio = 0 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.memory_energy_excitation_ratio = 0
+**.memory_energy_relaxation_ratio = 0
+**.memory_complitely_mixed_ratio = 0
+
+**.hom_photon_detection_per_sec = 10000000
+**.hom_darkcount_probability = 0 #1%
+
+**.link_tomography = true
+**.initial_purification = 0
+
+
+source<-->QuantumChannel{cost=4.95844e-06;distance=10km;fidelity=0.908224;bellpair_per_sec=244494;tomography_time=2.454044726064;tomography_measurements=600000;}<-->HoM F=0.908224 X=0.0917759 Z=-0.00100622 Y=0.00100622
+target<-->QuantumChannel{cost=4.95844e-06;distance=10km;fidelity=0.908224;bellpair_per_sec=244494;tomography_time=2.454044726064;tomography_measurements=600000;}<-->HoM F=0.908224 X=0.0917759 Z=-0.00100622 Y=0.00100622
+
+
+
+[Config MIM_memory_error_test]
+network = networks.Linear_One_MIM
+**.tomography_output_filename = "Layer2_MIM_memerr=0.001"
+**.buffers = uniform(50,50)
+**.num_measure = 60000 #max measurement for tomography accumulation
+
+**.emission_error_rate = 0 # per shot. Max is 1.
+**.emission_Z_error_ratio = 0 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.emission_X_error_ratio = 0 #ratio. Not the error rate!!
+**.emission_Y_error_ratio = 0 #ratio. Not the error rate!!
+
+**.channel_error_rate = 0.0 #per km. Max depens on the number of error types.
+**.photon_loss_ratio = 0 # per km. 1% = 0.01
+**.Z_error_ratio = 0 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.X_error_ratio = 0 #ratio. Not the error rate!!
+**.Y_error_ratio = 0 #ratio. Not the error rate!!
+
+**.memory_error_rate = 0.0005 #per μs
+**.memory_X_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Y_error_ratio = 1 #ratio. Not the error rate!!
+**.memory_Z_error_ratio = 1 #ratio. Not the error rate!! By default the ratio is 1:1:1
+**.memory_energy_excitation_ratio = 1
+**.memory_energy_relaxation_ratio = 1
+**.memory_complitely_mixed_ratio = 1
+
+**.hom_photon_detection_per_sec = 10000000
+**.hom_darkcount_probability = 0 #1%
+
+**.link_tomography = true
+**.initial_purification = 0
+
+source<-->QuantumChannel{cost=4.87224e-06;distance=10km;fidelity=0.916157;bellpair_per_sec=244530;tomography_time=0.245369072304;tomography_measurements=60000;}<-->HoM F=0.916157 X=0.0290418 Z=0.0269393 Y=0.0278616
+target<-->QuantumChannel{cost=4.87224e-06;distance=10km;fidelity=0.916157;bellpair_per_sec=244530;tomography_time=0.245369072304;tomography_measurements=60000;}<-->HoM F=0.916157 X=0.0290418 Z=0.0269393 Y=0.0278616
+source<-->QuantumChannel{cost=2.52383e-05;distance=10km;fidelity=0.403039;bellpair_per_sec=243919;tomography_time=0.245983777488;tomography_measurements=60000;}<-->HoM F=0.403039 X=0.20331 Z=0.193262 Y=0.200388
+target<-->QuantumChannel{cost=2.52383e-05;distance=10km;fidelity=0.403039;bellpair_per_sec=243919;tomography_time=0.245983777488;tomography_measurements=60000;}<-->HoM F=0.403039 X=0.20331 Z=0.193262 Y=0.200388
+source<-->QuantumChannel{cost=2.52383e-05;distance=10km;fidelity=0.403039;bellpair_per_sec=243919;tomography_time=0.245983777488;tomography_measurements=60000;}<-->HoM F=0.403039 X=0.20331 Z=0.193262 Y=0.200388
+target<-->QuantumChannel{cost=2.52383e-05;distance=10km;fidelity=0.403039;bellpair_per_sec=243919;tomography_time=0.245983777488;tomography_measurements=60000;}<-->HoM F=0.403039 X=0.20331 Z=0.193262 Y=0.200388
+source<-->QuantumChannel{cost=409.973;distance=10km;fidelity=1;bellpair_per_sec=243918;tomography_time=0.245983977488;tomography_measurements=60000;actualmeas=60000;}<-->HoM F=1 X=0 Z=0 Y=0
+target<-->QuantumChannel{cost=409.973;distance=10km;fidelity=1;bellpair_per_sec=243918;tomography_time=0.245983977488;tomography_measurements=60000;actualmeas=60000;}<-->HoM F=1 X=0 Z=0 Y=0
