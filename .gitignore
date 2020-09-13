@@ -2,6 +2,7 @@
 /doc/html/
 *.orig
 .lvimrc
+.last-copts
 
 ### generated on docker
 org.eclipse*
