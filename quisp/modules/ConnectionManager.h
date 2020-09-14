@@ -70,33 +70,33 @@ class ConnectionManager : public cSimpleModule {
   int myAddress;
   int num_of_qnics;
   std::map<int, bool> qnic_res_table;
-  RoutingDaemon *routingdaemon;
-  HardwareMonitor *hardwaremonitor;
+  RoutingDaemon *routing_daemon;
+  HardwareMonitor *hardware_monitor;
 
   virtual void initialize() override;
-
   virtual void handleMessage(cMessage *msg) override;
+
   void responder_alloc_req_handler(ConnectionSetupRequest *pk);
   void intermediate_alloc_req_handler(ConnectionSetupRequest *pk);
 
-  void initiator_alloc_res_handler(ConnectionSetupResponse *pk);
-  void intermediate_alloc_res_handler(ConnectionSetupResponse *pk);
+  void storeRuleSetForApplication(ConnectionSetupResponse *pk);
+  void storeRuleSet(ConnectionSetupResponse *pk);
 
   void responder_reject_req_handler(RejectConnectionSetupRequest *pk);
   void intermediate_reject_req_handler(RejectConnectionSetupRequest *pk);
 
-  // virtual RuleSet* generateRuleSet_EntanglementSwapping(unsigned int RuleSet_id,int owner, int left_node, QNIC_type lqnic_type, int lqnic_index, int lres, int right_node,
-  // QNIC_type rqnic_type, int rqnic_index, int rres);
-  RuleSet *generateRuleSet_Tomography(unsigned long RuleSet_id, int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index, int num_resources);
-  RuleSet *generateRuleSet_EntanglementSwapping(unsigned long RuleSet_id, int owner, swap_table conf);
+  RuleSet *generateTomographyRuleSet(unsigned long RuleSet_id, int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index, int num_resources);
+  RuleSet *generateEntanglementSwappingRuleSet(unsigned long RuleSet_id, int owner, swap_table conf);
   swap_table EntanglementSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners, std::vector<QNIC_pair_info> qnics,
                                         int num_resources);
 
-  void reserve_qnic(int qnic_address);
-  void release_qnic(int qnic_address);
-  bool isQnic_busy(int qnic_address);
+  void reserveQnic(int qnic_address);
+  void releaseQnic(int qnic_address);
+  bool isQnicBusy(int qnic_address);
 
   unsigned long createUniqueId();
+  static int computePathDivisionSize(int l);
+  static int fillPathDivision(std::vector<int> path, int i, int l, int *link_left, int *link_right, int *swapper, int fill_start);
 };
 
 Define_Module(ConnectionManager);
