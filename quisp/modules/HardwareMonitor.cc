@@ -41,11 +41,11 @@ void HardwareMonitor::initialize(int stage) {
   Pauli.Z << 1, 0, 0, -1;
   Pauli.I << 1, 0, 0, 1;
 
-  numQnic_rp = par("number_of_qnics_rp"); // number of qnics connected to epps.
+  numQnic_rp = par("number_of_qnics_rp");  // number of qnics connected to epps.
   numQnic_r =
-      par("number_of_qnics_r"); // number of qnics connected to internal hom.
-  numQnic = par("number_of_qnics"); // number of qnics connected to stand alone
-                                    // HoM or internal hom in the neighbor.
+      par("number_of_qnics_r");  // number of qnics connected to internal hom.
+  numQnic = par("number_of_qnics");  // number of qnics connected to stand alone
+                                     // HoM or internal hom in the neighbor.
   numQnic_total = numQnic + numQnic_r + numQnic_rp;
 
   /* This is used to keep your own tomography data, and also to match and store
@@ -146,8 +146,9 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
       }
     }
     if (qnic_index == -1) {
-      error("1. Something is wrong when finding out local qnic address from "
-            "neighbor address in ntable.");
+      error(
+          "1. Something is wrong when finding out local qnic address from "
+          "neighbor address in ntable.");
     }
     pk->setQnic_index(qnic_index);
     pk->setQnic_type(qnic_type);
@@ -173,8 +174,9 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
       }
     }
     if (my_qnic_index == -1) {
-      error("2. Something is wrong when finding out local qnic address from "
-            "neighbor address in ntable.");
+      error(
+          "2. Something is wrong when finding out local qnic address from "
+          "neighbor address in ntable.");
     }
 
     // RuleSets sent for this node and the partner node.
@@ -701,8 +703,9 @@ QNIC HardwareMonitor::search_QNIC_from_Neighbor_QNode_address(
       break;
     }
     if (it == ntable.end()) {
-      error("Something is wrong when looking for QNIC info from neighbor QNode "
-            "address. Tomography is also only available between neighbor.");
+      error(
+          "Something is wrong when looking for QNIC info from neighbor QNode "
+          "address. Tomography is also only available between neighbor.");
     }
   }
   return qnic;
@@ -762,7 +765,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address,
   // Empty RuleSet
   RuleSet *tomography_RuleSet = new RuleSet(
       RuleSet_id, my_address,
-      partner_address); // Tomography between this node and the sender of Ack.
+      partner_address);  // Tomography between this node and the sender of Ack.
   std::cout << "Creating rules now RS_id = " << RuleSet_id
             << ", partner_address = " << partner_address << "\n";
 
@@ -770,7 +773,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address,
 
   if (num_purification > 0) {
     if (Purification_type ==
-        2002) { // Performs both X and Z purification for each n.
+        2002) {  // Performs both X and Z purification for each n.
       /// # Purification_type 2002: #
       /// - name: Ss-Sp / perfect binary tree, even rounds
       /// - rounds: 2n
@@ -964,7 +967,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address,
         tomography_RuleSet->addRule(Purification);
       }
     } else if (Purification_type ==
-               1021) { // Fujii-san's Double selection purification
+               1021) {  // Fujii-san's Double selection purification
       /// # Purification_type 1021: #
       /// - name: Ds-Sp: Fujii-san's Double selection purification (alternating)
       /// - rounds: n
@@ -1067,7 +1070,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address,
         rule_index++;
         tomography_RuleSet->addRule(Purification);
       }
-    } else if (Purification_type == 5555) { // Predefined purification method
+    } else if (Purification_type == 5555) {  // Predefined purification method
       /// # Purification_type 5555: #
       /// - name: Switching (B)
       /// - rounds: n
@@ -1107,12 +1110,12 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address,
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
 
-        if (i % 2 == 0) { // X purification
+        if (i % 2 == 0) {  // X purification
           Action *purify_action = new PurifyAction(
               RuleSet_id, rule_index, true, false, num_purification,
               partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
-        } else { // Z purification
+        } else {  // Z purification
           Action *purify_action = new PurifyAction(
               RuleSet_id, rule_index, false, true, num_purification,
               partner_address, qnic_type, qnic_index, 0, 1);
@@ -1121,7 +1124,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address,
         rule_index++;
         tomography_RuleSet->addRule(Purification);
       }
-    } else if (Purification_type == 5556) { // Predefined purification method
+    } else if (Purification_type == 5556) {  // Predefined purification method
       /// # Purification_type 5556: #
       /// - name: Switching (A)
       /// - rounds: n
@@ -1171,7 +1174,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address,
 
     } else if ((X_Purification && !Z_Purification) ||
                (!X_Purification &&
-                Z_Purification)) { // X or Z purification. Out-dated syntax.
+                Z_Purification)) {  // X or Z purification. Out-dated syntax.
       /// # Purification_type default: #
       /// - name: Boolean-driven (obsolete)
       /// - rounds: 1
@@ -1194,7 +1197,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address,
       Purification->setAction(purify_action);
       rule_index++;
       tomography_RuleSet->addRule(Purification);
-    } else { // X, Z double purification
+    } else {  // X, Z double purification
       error("syntax outdate or purification id not recognized.");
       Rule *Purification = new Rule(RuleSet_id, rule_index);
       Condition *Purification_condition = new Condition();
@@ -1234,8 +1237,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address,
     pk->setRuleSet(tomography_RuleSet);
     send(pk, "RouterPort$o");
 
-  } else { // RuleSet with no purification. Pure measurement only link level
-           // tomography.
+  } else {  // RuleSet with no purification. Pure measurement only link level
+            // tomography.
     //-------------
     //-First rule-
 
@@ -1273,25 +1276,24 @@ int HardwareMonitor::checkNumBuff(int qnic_index, QNIC_type qnic_type) {
 
   cModule *qnode = nullptr;
   if (qnic_type >= QNIC_N)
-    error("Only 3 qnic types are currently recognized...."); // avoid segfaults
-                                                             // <3
+    error("Only 3 qnic types are currently recognized....");  // avoid segfaults
+                                                              // <3
   qnode = getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);
   return qnode->par("numBuffer");
 }
 
-Interface_inf
-HardwareMonitor::getInterface_inf_fromQnicAddress(int qnic_index,
-                                                  QNIC_type qnic_type) {
+Interface_inf HardwareMonitor::getInterface_inf_fromQnicAddress(
+    int qnic_index, QNIC_type qnic_type) {
   cModule *local_qnic;
   if (qnic_type >= QNIC_N)
-    error("Only 3 qnic types are currently recognized...."); // avoid segfaults
-                                                             // <3
+    error("Only 3 qnic types are currently recognized....");  // avoid segfaults
+                                                              // <3
   local_qnic = getQNode()->getSubmodule(QNIC_names[qnic_type],
-                                        qnic_index); // QNIC itself
+                                        qnic_index);  // QNIC itself
   Interface_inf inf;
   inf.qnic.pointer = local_qnic;
   inf.qnic.address =
-      local_qnic->par("self_qnic_address"); // Extract from QNIC parameter
+      local_qnic->par("self_qnic_address");  // Extract from QNIC parameter
   inf.qnic.index = qnic_index;
   inf.qnic.type = qnic_type;
   inf.buffer_size = local_qnic->par("numBuffer");
@@ -1332,8 +1334,8 @@ connection_setup_inf HardwareMonitor::return_setupInf(int qnic_address) {
 }
 
 // This neighbor table includes all neighbors of qnic, qnic_r and qnic_rp
-HardwareMonitor::NeighborTable
-HardwareMonitor::prepareNeighborTable(NeighborTable ntable, int total_numQnic) {
+HardwareMonitor::NeighborTable HardwareMonitor::prepareNeighborTable(
+    NeighborTable ntable, int total_numQnic) {
   // Get the parent QNode that runs this connection manager.
   cModule *qnode = getQNode();
 
@@ -1343,7 +1345,7 @@ HardwareMonitor::prepareNeighborTable(NeighborTable ntable, int total_numQnic) {
     Interface_inf inf = getInterface_inf_fromQnicAddress(index, QNIC_E);
     neighborInfo n_inf = findNeighborAddress(inf.qnic.pointer);
     int neighborNodeAddress =
-        n_inf.address; // get the address of the Node nearby.
+        n_inf.address;  // get the address of the Node nearby.
     inf.neighborQNode_address = n_inf.neighborQNode_address;
     ntable[neighborNodeAddress] = inf;
   }
@@ -1351,7 +1353,7 @@ HardwareMonitor::prepareNeighborTable(NeighborTable ntable, int total_numQnic) {
     Interface_inf inf = getInterface_inf_fromQnicAddress(index, QNIC_R);
     neighborInfo n_inf = findNeighborAddress(inf.qnic.pointer);
     int neighborNodeAddress =
-        n_inf.address; // get the address of the Node nearby.
+        n_inf.address;  // get the address of the Node nearby.
     inf.neighborQNode_address = n_inf.neighborQNode_address;
     ntable[neighborNodeAddress] = inf;
   }
@@ -1359,7 +1361,7 @@ HardwareMonitor::prepareNeighborTable(NeighborTable ntable, int total_numQnic) {
     Interface_inf inf = getInterface_inf_fromQnicAddress(index, QNIC_RP);
     neighborInfo n_inf = findNeighborAddress(inf.qnic.pointer);
     int neighborNodeAddress =
-        n_inf.address; // get the address of the Node nearby.
+        n_inf.address;  // get the address of the Node nearby.
     inf.neighborQNode_address = n_inf.neighborQNode_address;
     ntable[neighborNodeAddress] = inf;
   }
@@ -1392,8 +1394,9 @@ cModule *HardwareMonitor::getQNode() {
     }
     return currentModule;
   } catch (std::exception &e) {
-    error("No module with QNode type found. Have you changed the type name in "
-          "ned file?");
+    error(
+        "No module with QNode type found. Have you changed the type name in "
+        "ned file?");
     endSimulation();
   }
   return currentModule;
@@ -1402,7 +1405,7 @@ cModule *HardwareMonitor::getQNode() {
 neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode) {
   // Return this
   neighborInfo inf;
-  if (thisNode->getModuleType() != QNodeType) { // Not a Qnode!
+  if (thisNode->getModuleType() != QNodeType) {  // Not a Qnode!
 
     if (thisNode->getModuleType() == HoMType) {
       EV << thisNode->getModuleType()->getFullName()
@@ -1430,9 +1433,10 @@ neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode) {
     } else if (thisNode->getModuleType() == SPDCType) {
       error("TO BE IMPLEMENTED");
     } else {
-      error("This simulator only recognizes the following network level node "
-            "types: QNode, EPPS and HoM. Not %s",
-            thisNode->getClassName());
+      error(
+          "This simulator only recognizes the following network level node "
+          "types: QNode, EPPS and HoM. Not %s",
+          thisNode->getClassName());
       endSimulation();
     }
   } else {
@@ -1449,5 +1453,5 @@ HardwareMonitor::NeighborTable HardwareMonitor::passNeighborTable() {
   return ntable;
 }
 
-} // namespace modules
-} // namespace quisp
+}  // namespace modules
+}  // namespace quisp
