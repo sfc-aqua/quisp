@@ -126,69 +126,68 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     int actual_src = pk->getActual_srcAddr();
 
     if (actual_dst == myAddress) {
-      // terminate relaying Request & start relaying ConnectionSetupResponse
-      // Here actual counter part got packet
+      // got ConnectionSetupRequest and return the response
       responder_alloc_req_handler(pk);
       delete msg;
       return;
-    } else {
-      int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst);
-      connection_setup_inf dst_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
-      bool isReserved = isQnic_busy(dst_inf.qnic.address);
-      if (actual_src == myAddress && !isReserved || actual_src != myAddress) {
-        intermediate_alloc_req_handler(pk);
-      } else if (actual_src == myAddress && isReserved) {
-        // Reject for self
-        RejectConnectionSetupRequest *pkt = new RejectConnectionSetupRequest;
-        pkt->setKind(6);
-        pkt->setDestAddr(pk->getActual_srcAddr());
-        pkt->setSrcAddr(myAddress);
-        pkt->setActual_destAddr(pk->getActual_destAddr());
-        pkt->setActual_srcAddr(pk->getActual_srcAddr());
-        pkt->setNumber_of_required_Bellpairs(pk->getNumber_of_required_Bellpairs());
-        send(pkt, "RouterPort$o");
-      }
-      // relay Request to the next node
-      // OR
-      // stop relaying and generate RejectConnectionSetupRequest
     }
-  } else if (dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr) {
-    ConnectionSetupResponse *pk = check_and_cast<ConnectionSetupResponse *>(msg);
-    int actual_dst = pk->getActual_destAddr();  // initiator
-    int actual_src = pk->getActual_srcAddr();  // responder
-    // initiator_alloc_res_handler(pk);
-    if (actual_dst == myAddress || actual_src == myAddress) {
-      // not swapper (FIXME: This might be hardcoding)
-      initiator_alloc_res_handler(pk);
-      delete msg;
+
+    int local_qnic_address_to_actual_dst = routingdaemon->return_QNIC_address_to_destAddr(actual_dst);
+    connection_setup_inf dst_inf = hardwaremonitor->return_setupInf(local_qnic_address_to_actual_dst);
+    bool is_qnic_available = isQnic_busy(dst_inf.qnic.address);
+    bool requested_by_myself = actual_src == myAddress;
+
+    if (requested_by_myself) {
+      if (is_qnic_available) {
+        // reserve the qnic and relay the request to the next node
+        intermediate_alloc_req_handler(pk);
+        return;
+      }
+
+      // cannot accept this request because the qnic is unavailable, so reject it.
+      RejectConnectionSetupRequest *pkt = new RejectConnectionSetupRequest;
+      pkt->setKind(6);
+      pkt->setDestAddr(pk->getActual_srcAddr());
+      pkt->setSrcAddr(myAddress);
+      pkt->setActual_destAddr(pk->getActual_destAddr());
+      pkt->setActual_srcAddr(pk->getActual_srcAddr());
+      pkt->setNumber_of_required_Bellpairs(pk->getNumber_of_required_Bellpairs());
+      send(pkt, "RouterPort$o");
       return;
-    } else {  // swapper
+    }
+
+    // got ConnectionSetupRequest as the intermediate node
+    // reserve the qnic and relay the request to the next node
+    intermediate_alloc_req_handler(pk);
+    return;
+  }
+
+  if (dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr) {
+    ConnectionSetupResponse *pk = check_and_cast<ConnectionSetupResponse *>(msg);
+    int initiator_addr = pk->getActual_destAddr();
+    int responder_addr = pk->getActual_srcAddr();
+
+    if (initiator_addr == myAddress || responder_addr == myAddress) {
+      // this node is not a swapper
+      initiator_alloc_res_handler(pk);
+    } else {
+      // this node is a swapper (intermediate node)
       // currently, destinations are separated. (Not accumulated.)
       intermediate_alloc_res_handler(pk);
-      delete msg;
-      return;
     }
-  } else if (dynamic_cast<RejectConnectionSetupRequest *>(msg) != nullptr) {
+    delete msg;
+    return;
+  }
+
+  if (dynamic_cast<RejectConnectionSetupRequest *>(msg) != nullptr) {
     RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
     int actual_src = pk->getActual_srcAddr();
     // Umm... this might be bug.
     if (actual_src != myAddress) {
       intermediate_reject_req_handler(pk);
       delete msg;
-      return;
     }
-    // //   // initiator_reject_req_
-    // }
-    // if(actual_src == myAddress){
-    //   // terminate relaying
-    //
-    //   delete myAddress
-    //   return
-    // }else{
-    //   // relay RejectConnectionSetupRequest
-    //
-    //   delete
-    // }
+    return;
   }
 }
 
