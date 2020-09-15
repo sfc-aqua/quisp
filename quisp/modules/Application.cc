@@ -1,13 +1,11 @@
 /** \file Application.cc
- *  \todo clean Clean code when it is simple.
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/14
  *
  *  \brief Application
  */
-#include <classical_messages_m.h>
-#include <omnetpp.h>
+#include "Application.h"
 #include <vector>
 
 using namespace omnetpp;
@@ -16,41 +14,7 @@ using namespace quisp::messages;
 namespace quisp {
 namespace modules {
 
-/** \class Application Application.cc
- *
- *  \brief Application
- */
-class Application : public cSimpleModule {
- private:
-  int myAddress;
-  cMessage *generatePacket; /* Not the actual packet. Local message to invoke Events */
-  // cPar *sendIATime;
-  // bool isBusy; /**< Already requested a path selection
-  //               for a Quantum app */
-
-  int *Addresses_of_other_EndNodes = new int[1];
-  int num_of_other_EndNodes;
-  bool EndToEndConnection;
-  int number_of_resources;
-
-  int num_measure;
-
- protected:
-  virtual void initialize() override;
-  virtual void handleMessage(cMessage *msg) override;
-  virtual void BubbleText(const char *txt);
-  virtual int *storeEndNodeAddresses();
-  virtual int getOneRandomEndNodeAddress();
-  virtual cModule *getQNode();
-
- public:
-  Application();
-  int getAddress();
-};
-
-Define_Module(Application);
-
-Application::Application() { generatePacket = nullptr; }
+Application::Application() {}
 
 /**
  * \brief Initialize module.
@@ -59,186 +23,145 @@ Application::Application() { generatePacket = nullptr; }
  */
 
 void Application::initialize() {
-  cGate *toRouterGate = gate("toRouter");
-  if (!toRouterGate->isConnected()) {
-    // Since we only need this module in EndNode, delete it otherwise.
+  // Since we only need this module in EndNode, delete it otherwise.
+  if (!gate("toRouter")->isConnected()) {
     deleteThisModule *msg = new deleteThisModule;
     scheduleAt(simTime(), msg);
-  } else {
-    myAddress = getParentModule()->par("address");
-    EndToEndConnection = par("EndToEndConnection");
-    number_of_resources = par("NumberOfResources");
-    num_measure = par("num_measure");
-
-    Addresses_of_other_EndNodes = storeEndNodeAddresses();
-    int tp = par("TrafficPattern");
-
-    // cModule *qnode = getQNode();
-    // if(myAddress == 1 && EndToEndConnection){//hard-coded for now
-    // 20/3/15: upgrade from "exactly one connection" to
-    // "let's all mambo!"  Each EndNode makes exactly one connection.
-    // that means that some nodes will be receivers of more than
-    // one connection, at random.
-    // myaddress==1 for debugging
-    if (EndToEndConnection) {  // hard-coded for now
-      int endnode_destination_address;
-      int ia;
-
-      switch (tp) {
-        default:
-          error("Invalid TrafficPattern specified.");
-          break;
-        case 0:
-          EV << "EndToEndConnection is set. but no traffic pattern specified; proceeding with no traffic\n";
-          break;
-        case 1:  // just one connection
-          ia = par("LoneInitiatorAddress");
-          if (myAddress == ia) {
-            // while ((endnode_destination_address = getOneRandomEndNodeAddress()) == myAddress);
-            endnode_destination_address = getOneRandomEndNodeAddress();
-            EV << "Just one lonely connection setup request will be sent from " << myAddress << " to " << endnode_destination_address << "\n";
-            ConnectionSetupRequest *pk = new ConnectionSetupRequest();
-            pk->setActual_srcAddr(myAddress);
-            pk->setActual_destAddr(endnode_destination_address);
-            pk->setDestAddr(myAddress);
-            pk->setSrcAddr(myAddress);
-            pk->setNumber_of_required_Bellpairs(number_of_resources);
-            pk->setKind(7);
-            scheduleAt(simTime(), pk);
-          }
-          break;
-        case 2:  // let's all mambo!
-          // while ((endnode_destination_address = getOneRandomEndNodeAddress()) == myAddress);
-          endnode_destination_address = getOneRandomEndNodeAddress();
-          EV << "My connection setup request will be sent from " << myAddress << " to " << endnode_destination_address << "\n";
-          ConnectionSetupRequest *pk = new ConnectionSetupRequest();
-          pk->setActual_srcAddr(myAddress);
-          pk->setActual_destAddr(endnode_destination_address);
-          pk->setDestAddr(myAddress);
-          pk->setSrcAddr(myAddress);
-          pk->setNumber_of_required_Bellpairs(number_of_resources);  // required bell pairs
-          pk->setKind(7);
-          // to avoid conflict
-          scheduleAt(simTime() + exponential(0.00001 * myAddress), pk);
-          break;
-      }
-    }
+    return;
   }
+
+  my_address = getParentModule()->par("address");
+  is_e2e_connection = par("EndToEndConnection");
+  number_of_resources = par("NumberOfResources");
+  num_measure = par("num_measure");
+
+  other_end_node_addresses = storeEndNodeAddresses();
+
+  if (!is_e2e_connection) {
+    return;
+  }
+
+  int traffic_pattern = par("TrafficPattern");
+
+  if (traffic_pattern == 0) {
+    EV_INFO << "EndToEndConnection is set true. but no traffic pattern specified; proceeding with no traffic\n";
+    return;
+  }
+
+  // just one connection
+  if (traffic_pattern == 1) {
+    int initiator_address = par("LoneInitiatorAddress");
+    if (my_address == initiator_address) {
+      int endnode_dest_addr = getOneRandomEndNodeAddress();
+      EV_INFO << "Just one lonely connection setup request will be sent from " << my_address << " to " << endnode_dest_addr << "\n";
+      ConnectionSetupRequest *pk = createConnectionSetupRequest(endnode_dest_addr, number_of_resources);
+      scheduleAt(simTime(), pk);
+    }
+    return;
+  }
+
+  // let's all mambo!
+  // Each EndNode makes exactly one connection.
+  // this means that some nodes will be receivers of more than one connection, at random.
+  if (traffic_pattern == 2) {
+    int endnode_dest_addr = getOneRandomEndNodeAddress();
+    EV_INFO << "My connection setup request will be sent from " << my_address << " to " << endnode_dest_addr << "\n";
+    ConnectionSetupRequest *pk = createConnectionSetupRequest(endnode_dest_addr, number_of_resources);
+    // delay to avoid conflict
+    scheduleAt(simTime() + exponential(0.00001 * my_address), pk);
+    return;
+  }
+
+  error("Invalid TrafficPattern specified.");
+}
+
+ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr, int num_of_required_resources) {
+  ConnectionSetupRequest *pk = new ConnectionSetupRequest();
+  pk->setActual_srcAddr(my_address);
+  pk->setActual_destAddr(dest_addr);
+  pk->setDestAddr(my_address);
+  pk->setSrcAddr(my_address);
+  pk->setNumber_of_required_Bellpairs(num_of_required_resources);
+  pk->setKind(7);
+  return pk;
 }
 
 void Application::handleMessage(cMessage *msg) {
   if (dynamic_cast<deleteThisModule *>(msg) != nullptr) {
     deleteModule();
     delete msg;
-  } else if (dynamic_cast<ConnectionSetupRequest *>(msg) != nullptr) {
-    send(msg, "toRouter");
-  } else if (dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr) {
-    send(msg, "toRouter");
-  } else if (dynamic_cast<RejectConnectionSetupRequest *>(msg) != nullptr) {
-    RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
-    int actual_src = pk->getActual_srcAddr();
-    if (actual_src == myAddress) {
-      float recon_try = std::rand() / RAND_MAX;
-      int reject_node = pk->getSrcAddr();
-      EV << "Connection was rejected by " << reject_node << "at" << myAddress << "\n";
-      // this might be better handled in application
-      ConnectionSetupRequest *pkt = new ConnectionSetupRequest;
-      pkt->setActual_srcAddr(myAddress);
-      pkt->setActual_destAddr(pk->getActual_destAddr());  // This might not good way
-      pkt->setDestAddr(myAddress);
-      pkt->setSrcAddr(myAddress);
-      pkt->setNumber_of_required_Bellpairs(number_of_resources);
-      pkt->setKind(7);
-      scheduleAt(simTime(), pkt);
-    }
-  } else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
-    bubble("internal rulesetforwarding packet arrived to application!");
-    send(msg, "toRouter");
-  } else {
-    delete msg;
-    error("Application not recognizing this packet");
+    return;
   }
 
-  /*if(msg == generatePacket){
-      header *pk = new header("PathRequest");
-      pk->setSrcAddr(1);//packet source setting
-      pk->setDestAddr(3);//packet destination setting
-      pk->setKind(1);
-      send(pk, "toRouter");//send to port out. connected to local routing module (routing.localIn).
-      scheduleAt(simTime() + sendIATime->doubleValue(), generatePacket);
-      //scheduleAt(simTime() + 10, generatePacket);//In 10 seconds, another msg send gets invoked
+  if (dynamic_cast<ConnectionSetupRequest *>(msg) != nullptr || dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr) {
+    send(msg, "toRouter");
+    return;
   }
-  else if(msg->getKind()==1 && strcmp("PathRequest", msg->getName())==0){
-      BubbleText("Path Request received!");
 
-      EV << "Deleting path request\n";
+  if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
+    bubble("InternalRuleSetForwarding packet arrived to application!");
+    send(msg, "toRouter");
+    return;
   }
-  else{//A message was reached from another node to here
-      delete msg;
-      //cModule *mod = getSimulation()->getModule(4);
-      //int ad = mod->par("address");
-      //QNode *aa = check_and_cast<QNode*>(mod);//Cast not working
-      //EV<<"------------------------------"<<mod->getModuleType()<<"\n";
 
-      EV << "Deleting msg\n";
-  }*/
+  delete msg;
+  error("Application not recognizing this packet");
 }
 
 int *Application::storeEndNodeAddresses() {
   cTopology *topo = new cTopology("topo");
-  topo->extractByParameter("nodeType", getParentModule()->par("nodeType").str().c_str());  // like topo.extractByParameter("nodeType","EndNode")
-  num_of_other_EndNodes = topo->getNumNodes() - 1;
-  Addresses_of_other_EndNodes = new int[num_of_other_EndNodes];
+
+  // like topo.extractByParameter("nodeType","EndNode")
+  topo->extractByParameter("nodeType", getParentModule()->par("nodeType").str().c_str());
+
+  num_of_other_end_nodes = topo->getNumNodes() - 1;
+  other_end_node_addresses = new int[num_of_other_end_nodes];
 
   int index = 0;
+  int addr;
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);
-    EV << "\n\n\nEnd node address is " << node->getModule()->par("address").str() << "\n";
-    if ((int)node->getModule()->par("address") != myAddress) {  // ignore self
-      Addresses_of_other_EndNodes[index] = (int)node->getModule()->par("address");
-      EV << "\n Is it still " << node->getModule()->par("address").str() << "\n";
+    addr = (int)node->getModule()->par("address");
+    EV_DEBUG << "End node address is " << addr << "\n";
+
+    if (addr != my_address) {  // ignore myself
+      other_end_node_addresses[index] = addr;
       index++;
     }
   }
 
   // Just so that we can see the data from the IDE
   std::stringstream ss;
-  for (int i = 0; i < num_of_other_EndNodes; i++) {
-    ss << Addresses_of_other_EndNodes[i] << ", ";
+  for (int i = 0; i < num_of_other_end_nodes; i++) {
+    ss << other_end_node_addresses[i] << ", ";
   }
   std::string s = ss.str();
   par("Other_endnodes_table") = s;
   delete topo;
-  return Addresses_of_other_EndNodes;
+  return other_end_node_addresses;
 }
 
 int Application::getOneRandomEndNodeAddress() {
-  int random_index = intuniform(0, num_of_other_EndNodes - 1);
-  return Addresses_of_other_EndNodes[random_index];
+  int random_index = intuniform(0, num_of_other_end_nodes - 1);
+  return other_end_node_addresses[random_index];
 }
 
-void Application::BubbleText(const char *txt) {
-  if (hasGUI()) {
-    char text[32];
-    sprintf(text, "%s", txt);
-    bubble(text);
-  }
-}
-
-int Application::getAddress() { return myAddress; }
+int Application::getAddress() { return my_address; }
 
 cModule *Application::getQNode() {
-  // We know that Connection manager is not the QNode, so start from the parent.
-  cModule *currentModule = getParentModule();
+  // We know that Application is not the QNode, so start from the parent.
+  cModule *current_module = getParentModule();
   try {
     // Assumes the node in a network has a type QNode
-    cModuleType *QNodeType = cModuleType::get("networks.QNode");
-    while (currentModule->getModuleType() != QNodeType) currentModule = currentModule->getParentModule();
+    const cModuleType *qnode_type = cModuleType::get("networks.QNode");
+    while (current_module->getModuleType() != qnode_type) {
+      current_module = current_module->getParentModule();
+    }
   } catch (std::exception &e) {
     error("No module with QNode type found. Have you changed the type name in ned file?");
     endSimulation();
   }
-  return currentModule;
+  return current_module;
 }
 
 }  // namespace modules
