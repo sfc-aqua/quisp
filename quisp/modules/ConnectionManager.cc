@@ -291,8 +291,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk) 
         // generate Swapping RuleSet
         // here we have to check the order of entanglement swapping
         swap_table swap_config;  // swapping configurations for path[i]
-        swap_config = EntanglementSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
-
+        swap_config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
         RuleSet *swapping_rule = generateEntanglementSwappingRuleSet(createUniqueId(), path.at(i), swap_config);
         ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
         pkr->setDestAddr(path.at(i));
@@ -357,21 +356,21 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk) 
  * \returns a swap_table
  * \todo node_address might be better using qnic index
  **/
-swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners,
-                                                         std::vector<QNIC_pair_info> qnics, int num_resources) {
+swap_table ConnectionManager::generateSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners,
+                                                     std::vector<QNIC_pair_info> qnics, int num_resources) {
   ///
   /// 1.recognize partner. (which node is left partner, right partner)
   /// Currently, we choose every other node in the path to do swapping in the first round.
-  /// in the examples below, the number in parantheses is the round
-  /// of swapping, and designates which nodes are swapping.
-  /// if the number of hops is a power of two, we get something like
+  /// In the examples below, the number in parentheses is the round of swapping,
+  /// and designates which nodes are swapping.
+  /// If the number of hops is a power of two, we get something like
   /// \verbatim
   /// node1 --- node2(1) --- node3 --- node4(1) --- node5
   /// node1 ---------------- node3 ---------------- node5
   /// node1 ---------------- node3(2) ------------- node5
   /// node1 --------------------------------------- node5
   /// \endverbatim
-  /// if the number of hops is not a power of two, at some stage
+  /// If the number of hops is not a power of two, at some stage
   /// the number of hops will become become odd as we proceed,
   /// forcing us to decide which to do first.  In this version
   /// of the code, we just give priority starting from the left
@@ -390,15 +389,7 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   /// But, the condition clause will have to be extended in order to support
   /// "when part of this connection" rather than "when entangled with this node"
   /// and you have to be careful of not creating the wrong result by accident.
-  swap_table swap_setting;
-  int left_partner;
-  int right_partner;
-  QNIC_type lqnic_type, rqnic_type;
-  int lqnic_index, rqnic_index;
-  int lqnic_address, rqnic_address;
-  int self_lqnic_index, self_rqnic_index;
-  QNIC_type self_lqnic_type, self_rqnic_type;
-  // actual configurations
+
   // If the counterparts are decided, the order will automatically be determined.
 
   auto iter = std::find(path.begin(), path.end(), swapper_address);
@@ -406,95 +397,58 @@ swap_table ConnectionManager::EntanglementSwappingConfig(int swapper_address, st
   if (index == 0 || index == path.size()) {
     error("This shouldn't happen. Endnode was recognized as swapper with some reason.");
   }
-  self_lqnic_index = qnics.at(index).fst.index;
-  self_lqnic_type = qnics.at(index).fst.type;
-  self_rqnic_index = qnics.at(index).snd.index;
-  self_rqnic_type = qnics.at(index).snd.type;
+  QNIC_id left_self_qnic = qnics.at(index).fst;
+  QNIC_id right_self_qnic = qnics.at(index).snd;
+
   // FIXME more dynamically using recursive function or ...
   // auto it = std::find(swapping_partners.begin(), swapping_partners.end(), swapper_address);
   auto it = swapping_partners.find(swapper_address);
-  if (it != swapping_partners.end() && it->second.size() == 2) {
-    left_partner = it->second.at(0);
-    right_partner = it->second.at(1);
-  } else {
-    error("Error occured. Swapper is not recognized as swapper, or the number of partners is wrong (must be 2)");
+  if (it == swapping_partners.end() || it->second.size() != 2) {
+    error("Swapper is not recognized as swapper, or the number of partners is wrong (must be 2)");
   }
+  int left_partner = it->second.at(0);
+  int right_partner = it->second.at(1);
 
   auto iter_left = std::find(path.begin(), path.end(), left_partner);
-  if (iter_left != path.end()) {
-    size_t index_left = std::distance(path.begin(), iter_left);
-
-    // left partner must be second TODO: detail description of this.
-    lqnic_type = qnics.at(index_left).snd.type;
-    lqnic_index = qnics.at(index_left).snd.index;
-    lqnic_address = qnics.at(index_left).snd.address;
-  } else {
-    error("nodes are not found in path");
-  }
-
   auto iter_right = std::find(path.begin(), path.end(), right_partner);
-  if (iter_right != path.end()) {
-    size_t index_right = std::distance(path.begin(), iter_right);
-
-    // right partner must be first
-    rqnic_type = qnics.at(index_right).fst.type;
-    rqnic_index = qnics.at(index_right).fst.index;
-    rqnic_address = qnics.at(index_right).fst.address;
-  } else {
-    error("nodes are not found in path");
+  if (iter_left == path.end()) {
+    error("left nodes are not found in path");
+  }
+  if (iter_right == path.end()) {
+    error("right nodes are not found in path");
   }
 
-  // if(index % 2 == 1){
-  //   left_partner = path.at(index-1);
-  //   lqnic_type = qnics.at(index-1).snd.type; // left partner must be second TODO: detail description of this.
-  //   lqnic_index = qnics.at(index-1).snd.index;
-  //   lqnic_address = qnics.at(index-1).snd.address;
+  size_t left_partner_index = std::distance(path.begin(), iter_left);
+  size_t right_partner_index = std::distance(path.begin(), iter_right);
 
-  //   right_partner = path.at(index+1);
-  //   rqnic_type = qnics.at(index+1).fst.type; // right partner must be first
-  //   rqnic_index = qnics.at(index+1).fst.index;
-  //   rqnic_address = qnics.at(index+1).fst.address;
+  // left partner must be second
+  // right partner must be first
+  // TODO: detail description of this.
+  QNIC_id left_partner_qnic = qnics.at(left_partner_index).snd;
+  QNIC_id right_partner_qnic = qnics.at(right_partner_index).fst;
 
-  // }else if(index % 2 == 0){
-  //   left_partner = path.at(0);
-  //   lqnic_type = qnics.at(0).snd.type;
-  //   lqnic_index = qnics.at(0).snd.index;
-  //   lqnic_address = qnics.at(0).snd.address;
-
-  //   // QNIC_type lqnic_type =
-  //   right_partner = path.at(path.size()-1);
-  //   rqnic_type = qnics.at(path.size()-1).fst.type;
-  //   rqnic_index = qnics.at(path.size()-1).fst.index;
-  //   lqnic_address = qnics.at(path.size()-1).fst.address;
-
-  // }else{
-  //   error("this must not happen index must be positive");
-  // }
-
-  // if(swapper_address == 6&& left_partner==1&&right_partner==15){
-  //   error("good!");
-  // }
-  if (self_rqnic_type == QNIC_RP || self_lqnic_type == QNIC_RP || rqnic_type == QNIC_RP || lqnic_type == QNIC_RP) {
+  if (right_self_qnic.type == QNIC_RP || left_self_qnic.type == QNIC_RP || right_partner_qnic.type == QNIC_RP || left_partner_qnic.type == QNIC_RP) {
     error("MSM link not implemented");
   }
-  swap_setting.left_partner = left_partner;
-  swap_setting.lqnic_type = lqnic_type;
-  swap_setting.lqnic_index = lqnic_index;
-  swap_setting.lqnic_address = lqnic_address;
-  swap_setting.lres = num_resources;
 
-  swap_setting.right_partner = right_partner;
-  swap_setting.rqnic_type = rqnic_type;
-  swap_setting.rqnic_index = rqnic_index;
-  swap_setting.rqnic_address = rqnic_address;
-  swap_setting.rres = num_resources;
+  swap_table config;
+  config.left_partner = left_partner;
+  config.lqnic_type = left_partner_qnic.type;
+  config.lqnic_index = left_partner_qnic.index;
+  config.lqnic_address = left_partner_qnic.address;
+  config.lres = num_resources;
 
-  swap_setting.self_left_qnic_index = self_lqnic_index;
-  swap_setting.self_right_qnic_index = self_rqnic_index;
-  swap_setting.self_left_qnic_type = self_lqnic_type;
-  swap_setting.self_right_qnic_type = self_rqnic_type;
+  config.right_partner = right_partner;
+  config.rqnic_type = right_partner_qnic.type;
+  config.rqnic_index = right_partner_qnic.index;
+  config.rqnic_address = right_partner_qnic.address;
+  config.rres = num_resources;
 
-  return swap_setting;
+  config.self_left_qnic_index = left_self_qnic.index;
+  config.self_right_qnic_index = right_self_qnic.index;
+  config.self_left_qnic_type = left_self_qnic.type;
+  config.self_right_qnic_type = right_self_qnic.type;
+  return config;
 }
 
 /**
