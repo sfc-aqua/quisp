@@ -67,7 +67,7 @@ typedef struct {  // This is a little bit redundant
  */
 class ConnectionManager : public cSimpleModule {
  private:
-  int myAddress;
+  int my_address;
   int num_of_qnics;
   std::map<int, bool> qnic_res_table;
   RoutingDaemon *routing_daemon;

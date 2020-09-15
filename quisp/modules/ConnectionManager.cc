@@ -18,7 +18,7 @@ namespace modules {
 void ConnectionManager::initialize() {
   routing_daemon = check_and_cast<RoutingDaemon *>(getParentModule()->getSubmodule("rd"));
   hardware_monitor = check_and_cast<HardwareMonitor *>(getParentModule()->getSubmodule("hm"));
-  myAddress = par("address");
+  my_address = par("address");
   num_of_qnics = par("total_number_of_qnics");
 
   for (int i = 0; i < num_of_qnics; i++) {
@@ -37,7 +37,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     int actual_dst = pk->getActual_destAddr();
     int actual_src = pk->getActual_srcAddr();
 
-    if (actual_dst == myAddress) {
+    if (actual_dst == my_address) {
       // got ConnectionSetupRequest and return the response
       responder_alloc_req_handler(pk);
       delete msg;
@@ -47,7 +47,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
     connection_setup_inf dst_inf = hardware_monitor->return_setupInf(local_qnic_address_to_actual_dst);
     bool is_qnic_available = isQnicBusy(dst_inf.qnic.address);
-    bool requested_by_myself = actual_src == myAddress;
+    bool requested_by_myself = actual_src == my_address;
 
     if (requested_by_myself) {
       if (is_qnic_available) {
@@ -60,7 +60,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
       RejectConnectionSetupRequest *pkt = new RejectConnectionSetupRequest;
       pkt->setKind(6);
       pkt->setDestAddr(pk->getActual_srcAddr());
-      pkt->setSrcAddr(myAddress);
+      pkt->setSrcAddr(my_address);
       pkt->setActual_destAddr(pk->getActual_destAddr());
       pkt->setActual_srcAddr(pk->getActual_srcAddr());
       pkt->setNumber_of_required_Bellpairs(pk->getNumber_of_required_Bellpairs());
@@ -79,7 +79,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     int initiator_addr = pk->getActual_destAddr();
     int responder_addr = pk->getActual_srcAddr();
 
-    if (initiator_addr == myAddress || responder_addr == myAddress) {
+    if (initiator_addr == my_address || responder_addr == my_address) {
       // this node is not a swapper
       storeRuleSetForApplication(pk);
     } else {
@@ -95,7 +95,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
     int actual_src = pk->getActual_srcAddr();
     // Umm... this might be bug.
-    if (actual_src != myAddress) {
+    if (actual_src != my_address) {
       intermediate_reject_req_handler(pk);
       delete msg;
     }
@@ -213,7 +213,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk) 
     for (int i = 0; i < hop_count; i++) {
       path.push_back(pk->getStack_of_QNodeIndexes(i));
     }
-    path.push_back(myAddress);
+    path.push_back(my_address);
     int divisions = computePathDivisionSize(hop_count);
     int *link_left = new int[divisions], *link_right = new int[divisions], *swapper = new int[divisions];
     // fillPathDivision should yield *exactly* the anticipated number of divisions.
@@ -271,7 +271,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk) 
     // node pairs! FIXME: really bad coding
     // Ummm... thinking good way
     // Here qunic processing
-    // Have to add destination qnic info (destination is the same as myAddress. So qnic index must be -1 because self return is not allowed.)
+    // Have to add destination qnic info (destination is the same as my_address. So qnic index must be -1 because self return is not allowed.)
 
     // create Ruleset for all nodes!
     int num_resource = pk->getNumber_of_required_Bellpairs();
@@ -288,7 +288,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk) 
         RuleSet *swapping_rule = generateEntanglementSwappingRuleSet(createUniqueId(), path.at(i), swap_config);
         ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
         pkr->setDestAddr(path.at(i));
-        pkr->setSrcAddr(myAddress);
+        pkr->setSrcAddr(my_address);
         pkr->setKind(2);
         pkr->setRuleSet(swapping_rule);
         pkr->setActual_srcAddr(path.at(0));
@@ -307,7 +307,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk) 
         if (tomography_ruleset != nullptr) {
           ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Tomography)");
           pkr->setDestAddr(path.at(i));
-          pkr->setSrcAddr(myAddress);
+          pkr->setSrcAddr(my_address);
           pkr->setKind(2);
           pkr->setRuleSet(tomography_ruleset);
           pkr->setActual_srcAddr(path.at(0));
@@ -318,11 +318,11 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk) 
           pkr->setApplication_type(0);  // this is not application but for checking Eswapping done properly.
           send(pkr, "RouterPort$o");
         } else {
-          error("Something occured when the node %d creating ruleset", myAddress);
+          error("Something occured when the node %d creating ruleset", my_address);
         }
       }
     }
-    if (actual_dst != myAddress) {
+    if (actual_dst != my_address) {
       reserveQnic(src_inf.qnic.address);
       reserveQnic(dst_inf.qnic.address);
     } else {
@@ -332,7 +332,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk) 
     RejectConnectionSetupRequest *pkt = new RejectConnectionSetupRequest("RejectConnSetup(by responder)");
     pkt->setKind(6);
     pkt->setDestAddr(pk->getActual_srcAddr());
-    pkt->setSrcAddr(myAddress);
+    pkt->setSrcAddr(my_address);
     pkt->setActual_destAddr(pk->getActual_destAddr());
     pkt->setActual_srcAddr(pk->getActual_srcAddr());
     pkt->setNumber_of_required_Bellpairs(pk->getNumber_of_required_Bellpairs());
@@ -461,7 +461,7 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
   // TODO here need to check
   if (local_qnic_address_to_actual_dst == -1) {  // is not found
     error("QNIC to destination not found");
-  } else if (myAddress != actual_src && local_qnic_address_to_actual_src == -1) {
+  } else if (my_address != actual_src && local_qnic_address_to_actual_src == -1) {
     error("QNIC to source not found");
   } else {
     // Use the QNIC address to find the next hop QNode,
@@ -472,9 +472,9 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
     connection_setup_inf src_inf = hardware_monitor->return_setupInf(local_qnic_address_to_actual_src);
     EV << "SRC_INF " << src_inf.qnic.type << "," << src_inf.qnic.index << "\n";
     // if(reservation){
-    //   EV<<"reserved!"<<myAddress<<":"<<local_qnic_address_to_actual_dst<<"\n";
+    //   EV<<"reserved!"<<my_address<<":"<<local_qnic_address_to_actual_dst<<"\n";
     // }else{
-    //   EV<<"not reserved!"<<myAddress<<":"<<local_qnic_address_to_actual_dst<<"\n";
+    //   EV<<"not reserved!"<<my_address<<":"<<local_qnic_address_to_actual_dst<<"\n";
     // }
     bool isReserved_src = isQnicBusy(src_inf.qnic.address);
     bool isReserved_dst = isQnicBusy(dst_inf.qnic.address);
@@ -485,16 +485,16 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
 
       // Update information and send it to the next Qnode.
       pk->setDestAddr(dst_inf.neighbor_address);
-      pk->setSrcAddr(myAddress);
+      pk->setSrcAddr(my_address);
       pk->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes + 1);
       pk->setStack_of_linkCostsArraySize(num_accumulated_costs + 1);
-      pk->setStack_of_QNodeIndexes(num_accumulated_nodes, myAddress);
+      pk->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
       pk->setStack_of_linkCosts(num_accumulated_costs, dst_inf.quantum_link_cost);
       pk->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
       QNIC_id_pair pair_info = {.fst = src_inf.qnic, .snd = dst_inf.qnic};
       pk->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
       pair_info = pk->getStack_of_QNICs(num_accumulated_pair_info);
-      if (actual_src != myAddress) {
+      if (actual_src != my_address) {
         reserveQnic(src_inf.qnic.address);
         reserveQnic(dst_inf.qnic.address);
       }
@@ -503,7 +503,7 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
       RejectConnectionSetupRequest *pkt = new RejectConnectionSetupRequest("RejectConnSetup(by intermediate node)");
       pkt->setKind(6);
       pkt->setDestAddr(pk->getActual_srcAddr());
-      pkt->setSrcAddr(myAddress);
+      pkt->setSrcAddr(my_address);
       pkt->setActual_destAddr(pk->getActual_destAddr());
       pkt->setActual_srcAddr(pk->getActual_srcAddr());
       pkt->setNumber_of_required_Bellpairs(pk->getNumber_of_required_Bellpairs());
@@ -567,16 +567,16 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
   int local_qnic_address_to_actual_src = routing_daemon->return_QNIC_address_to_destAddr(actual_src);
   connection_setup_inf dst_inf = hardware_monitor->return_setupInf(local_qnic_address_to_actual_dst);
   connection_setup_inf src_inf = hardware_monitor->return_setupInf(local_qnic_address_to_actual_src);
-  if (myAddress != actual_dst && myAddress != actual_src) {
+  if (my_address != actual_dst && my_address != actual_src) {
     releaseQnic(dst_inf.qnic.address);
     releaseQnic(src_inf.qnic.address);
     return;
   }
 
-  if (myAddress == actual_dst) {
+  if (my_address == actual_dst) {
     releaseQnic(src_inf.qnic.address);
   }
-  if (myAddress == actual_src) {
+  if (my_address == actual_src) {
     releaseQnic(dst_inf.qnic.address);
   }
 }
@@ -653,7 +653,7 @@ RuleSet *ConnectionManager::generateTomographyRuleSet(unsigned long ruleset_id, 
 
 unsigned long ConnectionManager::createUniqueId() {
   std::string time = SimTime().str();
-  std::string address = std::to_string(myAddress);
+  std::string address = std::to_string(my_address);
   std::string random = std::to_string(intuniform(0, 10000000));
   std::string hash_seed = address + time + random;
   std::hash<std::string> hash_fn;
