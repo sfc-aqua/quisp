@@ -24,7 +24,7 @@ using namespace quisp::rules;
 namespace quisp {
 namespace modules {
 
-typedef struct swapping_rule_table {  // This is a little bit redundant
+typedef struct {  // This is a little bit redundant
   int left_partner;
   QNIC_type lqnic_type;
   int lqnic_index;
@@ -39,7 +39,7 @@ typedef struct swapping_rule_table {  // This is a little bit redundant
   QNIC_type self_left_qnic_type;
   int self_right_qnic_index;
   QNIC_type self_right_qnic_type;
-} swap_table;
+} SwappingConfig;
 
 /** \class ConnectionManager ConnectionManager.cc
  *  \todo Documentation of the class header.
@@ -63,7 +63,7 @@ typedef struct swapping_rule_table {  // This is a little bit redundant
  * ConnectionSetupResponse, RejectConnectionSetupRequest, and ConnectionTeardown messages.
  *
  * It is also responsible for the end-to-end reservation of resources,
- * as dictated by the multiplexing (muxing) discpline in use.
+ * as dictated by the multiplexing (muxing) discipline in use.
  */
 class ConnectionManager : public cSimpleModule {
  private:
@@ -85,10 +85,10 @@ class ConnectionManager : public cSimpleModule {
   void responder_reject_req_handler(RejectConnectionSetupRequest *pk);
   void intermediate_reject_req_handler(RejectConnectionSetupRequest *pk);
 
-  RuleSet *generateTomographyRuleSet(unsigned long RuleSet_id, int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index, int num_resources);
-  RuleSet *generateEntanglementSwappingRuleSet(unsigned long RuleSet_id, int owner, swap_table conf);
-  swap_table generateSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners, std::vector<QNIC_pair_info> qnics,
-                                    int num_resources);
+  RuleSet *generateTomographyRuleSet(unsigned long ruleset_id, int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index, int num_resources);
+  RuleSet *generateEntanglementSwappingRuleSet(unsigned long ruleset_id, int owner, SwappingConfig conf);
+  SwappingConfig generateSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners, std::vector<QNIC_pair_info> qnics,
+                                        int num_resources);
 
   void reserveQnic(int qnic_address);
   void releaseQnic(int qnic_address);

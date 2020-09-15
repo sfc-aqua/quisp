@@ -141,35 +141,28 @@ int ConnectionManager::fillPathDivision(std::vector<int> path, int i, int l, int
 }
 
 /**
- *  This function is called to handle the ConnectionSetupResponse at the intermediate node.
- * \param pk pointer to the ConnectionSetupRequest packet itself
- * \returns nothing
+ * This function is called to handle the ConnectionSetupResponse at the intermediate node.
+ * The only job here is to unpack the RuleSets, feed them to the RuleEngine via Router, and start the connection running.
+ * Probably should also let the Application know that the setup is complete and running.
  *
- * The only job here is to unpack the RuleSets, feed them to the RuleEngine, and
- * start the connection running.  Probably should also let the Application know
- * that the setup is complete and running.
- *
+ * \param pk the received ConnectionSetupResponse.
  * \todo Where should timeouts and error handling happen?
  **/
 void ConnectionManager::storeRuleSet(ConnectionSetupResponse *pk) {
   InternalRuleSetForwarding *pk_internal = new InternalRuleSetForwarding("InternalRuleSetForwarding");
   pk_internal->setDestAddr(pk->getDestAddr());
   pk_internal->setSrcAddr(pk->getDestAddr());
-
   pk_internal->setKind(4);
-
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
   pk_internal->setRuleSet(pk->getRuleSet());
   send(pk_internal, "RouterPort$o");
 }
 
 /**
- *  This function is called to handle the ConnectionSetupResponse at an end node
- * \param pk pointer to the ConnectionSetupRequest packet itself
- * \returns nothing
+ * This method is called to handle the ConnectionSetupResponse at an end node.
+ * The only job here is to unpack the RuleSets, feed them to the RuleEngine via Router, and start the connection running.
+ * \param pk the received ConnectionSetupResponse.
  *
- * The only job here is to unpack the RuleSets, feed them to the RuleEngine,
- * and start the connection running.
  **/
 void ConnectionManager::storeRuleSetForApplication(ConnectionSetupResponse *pk) {
   InternalRuleSetForwarding_Application *pk_internal = new InternalRuleSetForwarding_Application("InternalRuleSetForwardingApplication");
@@ -290,7 +283,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk) 
         EV << "Im swapper!" << path.at(i) << "\n";
         // generate Swapping RuleSet
         // here we have to check the order of entanglement swapping
-        swap_table swap_config;  // swapping configurations for path[i]
+        SwappingConfig swap_config;  // swapping configurations for path[i]
         swap_config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
         RuleSet *swapping_rule = generateEntanglementSwappingRuleSet(createUniqueId(), path.at(i), swap_config);
         ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
@@ -353,11 +346,11 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk) 
  * \param path list of node addresses in the path
  * \param qnics index and type of QNICs at each node in the path
  * \param num_resources the duration of the requested connection, in Bell pairs
- * \returns a swap_table
+ * \returns a SwappingConfig
  * \todo node_address might be better using qnic index
  **/
-swap_table ConnectionManager::generateSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners,
-                                                     std::vector<QNIC_pair_info> qnics, int num_resources) {
+SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners,
+                                                         std::vector<QNIC_pair_info> qnics, int num_resources) {
   ///
   /// 1.recognize partner. (which node is left partner, right partner)
   /// Currently, we choose every other node in the path to do swapping in the first round.
@@ -431,7 +424,7 @@ swap_table ConnectionManager::generateSwappingConfig(int swapper_address, std::v
     error("MSM link not implemented");
   }
 
-  swap_table config;
+  SwappingConfig config;
   config.left_partner = left_partner;
   config.lqnic_type = left_partner_qnic.type;
   config.lqnic_index = left_partner_qnic.index;
@@ -521,31 +514,27 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
 // This is not good way. This property should be held in qnic property.
 void ConnectionManager::reserveQnic(int qnic_address) {
   auto it = qnic_res_table.find(qnic_address);
-  if (it != qnic_res_table.end() && !it->second) {
-    it->second = true;
-  } else {
-    EV << "qnic_address" << qnic_address << "\n";
-    error("qnic not found or already reserved");
+  if (it == qnic_res_table.end() || it->second) {
+    error("qnic(addr: %d) not found or already reserved", qnic_address);
   }
+  it->second = true;
 }
 
 void ConnectionManager::releaseQnic(int qnic_address) {
   auto it = qnic_res_table.find(qnic_address);
-  if (it != qnic_res_table.end() && it->second) {
-    it->second = false;
-  } else {
-    error("qnic not found or not reserved");
+  if (it == qnic_res_table.end() || !it->second) {
+    error("qnic(addr: %d) not found or not reserved", qnic_address);
   }
+  it->second = false;
 }
 
 bool ConnectionManager::isQnicBusy(int qnic_address) {
   bool isReserved = false;
   auto it = qnic_res_table.find(qnic_address);
-  if (it != qnic_res_table.end()) {
-    isReserved = it->second;
-  } else {
-    error("address not found");
+  if (it == qnic_res_table.end()) {
+    error("address: %d not found", qnic_address);
   }
+  isReserved = it->second;
   return isReserved;
 }
 
@@ -596,7 +585,7 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
  *  This function is called during the handling of ConnectionSetupRequest at the responder.
  * \param RuleSet_id the unique identifier for this RuleSet (== connection)
  * \param owner address of the intermediate node we are generating this RuleSet for
- * \param conf the swap_table listing the order and partners
+ * \param conf the SwappingConfig listing the order and partners
  * \returns the newly-created RuleSet for ES at the given intermediate node.
  *
  *  This is where much of the work happens, and there is the potential for new value
@@ -607,53 +596,56 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
  * \todo Room for endless intelligence and improvements here.  Ideally should be
  * a _configurable choice_, or even a _policy_ implementation.
  **/
-RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(unsigned long RuleSet_id, int owner, swap_table conf) {
+RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(unsigned long ruleset_id, int owner, SwappingConfig conf) {
   int rule_index = 0;
-  std::vector<int> partners = {conf.left_partner, conf.right_partner};
-  RuleSet *EntanglementSwapping = new RuleSet(RuleSet_id, owner, partners);
-  Rule *SwappingRule = new Rule(RuleSet_id, rule_index);
-  EntanglementSwapping->setRule_ptr(SwappingRule);
-  Condition *Swap_condition = new Condition();
+
   Clause *resource_clause_left = new EnoughResourceClauseLeft(conf.left_partner, conf.lres);
   Clause *resource_clause_right = new EnoughResourceClauseRight(conf.right_partner, conf.rres);
-  Swap_condition->addClause(resource_clause_left);
-  Swap_condition->addClause(resource_clause_right);
-  SwappingRule->setCondition(Swap_condition);
-  quisp::rules::Action *swap_action = new SwappingAction(RuleSet_id, rule_index, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres,
-                                                         conf.right_partner, conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, conf.self_left_qnic_index,
-                                                         conf.self_left_qnic_type, conf.self_right_qnic_index, conf.self_right_qnic_type);
-  SwappingRule->setAction(swap_action);
-  EntanglementSwapping->addRule(SwappingRule);
-  rule_index++;
 
-  return EntanglementSwapping;
+  Condition *condition = new Condition();
+  condition->addClause(resource_clause_left);
+  condition->addClause(resource_clause_right);
+
+  quisp::rules::Action *action = new SwappingAction(ruleset_id, rule_index, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner,
+                                                    conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type,
+                                                    conf.self_right_qnic_index, conf.self_right_qnic_type);
+
+  Rule *rule = new Rule(ruleset_id, rule_index);
+  rule->setCondition(condition);
+  rule->setAction(action);
+
+  std::vector<int> partners = {conf.left_partner, conf.right_partner};
+
+  RuleSet *ruleset = new RuleSet(ruleset_id, owner, partners);
+  ruleset->addRule(rule);
+  ruleset->setRule_ptr(rule);
+
+  return ruleset;
 }
 
-RuleSet *ConnectionManager::generateTomographyRuleSet(unsigned long RuleSet_id, int owner, int partner, int num_of_measure, QNIC_type qnic_type, int qnic_index,
+RuleSet *ConnectionManager::generateTomographyRuleSet(unsigned long ruleset_id, int owner, int partner, int num_of_measure, QNIC_type qnic_type, int qnic_index,
                                                       int num_resources) {
-  // tomography ruleset
   int rule_index = 0;
-  RuleSet *tomography = new RuleSet(RuleSet_id, owner, partner);
-  Rule *Random_measure_tomography = new Rule(RuleSet_id, rule_index);
-
-  // Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
-  Condition *measurement_condition = new Condition();
+  RuleSet *tomography = new RuleSet(ruleset_id, owner, partner);
+  Rule *rule = new Rule(ruleset_id, rule_index);
 
   // 3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
   Clause *count_clause = new MeasureCountClause(num_of_measure, partner, qnic_type, qnic_index, 0);
   Clause *resource_clause = new EnoughResourceClause(partner, num_resources);
 
-  measurement_condition->addClause(count_clause);
-  measurement_condition->addClause(resource_clause);
+  // Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
+  Condition *condition = new Condition();
+  condition->addClause(count_clause);
+  condition->addClause(resource_clause);
 
-  Random_measure_tomography->setCondition(measurement_condition);
+  rule->setCondition(condition);
 
   // Measure the local resource between it->second.neighborQNode_address.
-  quisp::rules::Action *measurement_action = new RandomMeasureAction(partner, qnic_type, qnic_index, 0, owner, num_of_measure);
-  Random_measure_tomography->setAction(measurement_action);
+  quisp::rules::Action *action = new RandomMeasureAction(partner, qnic_type, qnic_index, 0, owner, num_of_measure);
+  rule->setAction(action);
 
   // Add the rule to the RuleSet
-  tomography->addRule(Random_measure_tomography);
+  tomography->addRule(rule);
   tomography->finalize();
 
   return tomography;
@@ -666,9 +658,8 @@ unsigned long ConnectionManager::createUniqueId() {
   std::string hash_seed = address + time + random;
   std::hash<std::string> hash_fn;
   size_t t = hash_fn(hash_seed);
-  unsigned long RuleSet_id = static_cast<long>(t);
-  std::cout << "Hash is " << hash_seed << ", t = " << t << ", long = " << RuleSet_id << "\n";
-  return RuleSet_id;
+  unsigned long ruleset_id = static_cast<long>(t);
+  return ruleset_id;
 }
 
 }  // namespace modules
