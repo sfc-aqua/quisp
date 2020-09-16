@@ -152,7 +152,7 @@ int ConnectionManager::fillPathDivision(std::vector<int> path, int i, int l, int
  * \todo Where should timeouts and error handling happen?
  **/
 void ConnectionManager::storeRuleSet(ConnectionSetupResponse *pk) {
-  InternalRuleSetForwarding *pk_internal = new InternalRuleSetForwarding;
+  InternalRuleSetForwarding *pk_internal = new InternalRuleSetForwarding("InternalRuleSetForwarding");
   pk_internal->setDestAddr(pk->getDestAddr());
   pk_internal->setSrcAddr(pk->getDestAddr());
 
@@ -172,7 +172,7 @@ void ConnectionManager::storeRuleSet(ConnectionSetupResponse *pk) {
  * and start the connection running.
  **/
 void ConnectionManager::storeRuleSetForApplication(ConnectionSetupResponse *pk) {
-  InternalRuleSetForwarding_Application *pk_internal = new InternalRuleSetForwarding_Application;
+  InternalRuleSetForwarding_Application *pk_internal = new InternalRuleSetForwarding_Application("InternalRuleSetForwardingApplication");
   pk_internal->setDestAddr(pk->getDestAddr());
   pk_internal->setSrcAddr(pk->getDestAddr());  // Should be original Src here?
   pk_internal->setKind(4);
@@ -292,8 +292,9 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk) 
         // here we have to check the order of entanglement swapping
         swap_table swap_config;  // swapping configurations for path[i]
         swap_config = EntanglementSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
+
         RuleSet *swapping_rule = generateEntanglementSwappingRuleSet(createUniqueId(), path.at(i), swap_config);
-        ConnectionSetupResponse *pkr = new ConnectionSetupResponse;
+        ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
         pkr->setDestAddr(path.at(i));
         pkr->setSrcAddr(myAddress);
         pkr->setKind(2);
@@ -312,7 +313,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk) 
           tomography_ruleset = generateTomographyRuleSet(createUniqueId(), path.at(i), path.at(0), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
         }
         if (tomography_ruleset != nullptr) {
-          ConnectionSetupResponse *pkr = new ConnectionSetupResponse;
+          ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Tomography)");
           pkr->setDestAddr(path.at(i));
           pkr->setSrcAddr(myAddress);
           pkr->setKind(2);
@@ -336,7 +337,7 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *pk) 
       reserveQnic(src_inf.qnic.address);
     }
   } else {
-    RejectConnectionSetupRequest *pkt = new RejectConnectionSetupRequest;
+    RejectConnectionSetupRequest *pkt = new RejectConnectionSetupRequest("RejectConnSetup(by responder)");
     pkt->setKind(6);
     pkt->setDestAddr(pk->getActual_srcAddr());
     pkt->setSrcAddr(myAddress);
@@ -552,7 +553,7 @@ void ConnectionManager::intermediate_alloc_req_handler(ConnectionSetupRequest *p
       }
       send(pk, "RouterPort$o");
     } else {  // TODO after connection expired, this goes to false
-      RejectConnectionSetupRequest *pkt = new RejectConnectionSetupRequest;
+      RejectConnectionSetupRequest *pkt = new RejectConnectionSetupRequest("RejectConnSetup(by intermediate node)");
       pkt->setKind(6);
       pkt->setDestAddr(pk->getActual_srcAddr());
       pkt->setSrcAddr(myAddress);

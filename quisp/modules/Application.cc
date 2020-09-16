@@ -25,7 +25,7 @@ Application::Application() {}
 void Application::initialize() {
   // Since we only need this module in EndNode, delete it otherwise.
   if (!gate("toRouter")->isConnected()) {
-    deleteThisModule *msg = new deleteThisModule;
+    deleteThisModule *msg = new deleteThisModule("DeleteThisModule");
     scheduleAt(simTime(), msg);
     return;
   }
@@ -76,7 +76,7 @@ void Application::initialize() {
 }
 
 ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr, int num_of_required_resources) {
-  ConnectionSetupRequest *pk = new ConnectionSetupRequest();
+  ConnectionSetupRequest *pk = new ConnectionSetupRequest("ConnSetupRequest");
   pk->setActual_srcAddr(my_address);
   pk->setActual_destAddr(dest_addr);
   pk->setDestAddr(my_address);

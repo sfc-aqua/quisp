@@ -311,12 +311,12 @@ void BellStateAnalyzer::sendBSAresult(bool result, bool sendresults) {
   // true positive and true negative is no problem.
   // std::cout<<"send?="<<sendresults<<"___________________________________\n";
   if (!sendresults) {
-    BSAresult *pk = new BSAresult;
+    BSAresult *pk = new BSAresult("BsaResult");
     // std::cout<<"send result to HoM___\n";
     pk->setEntangled(result);
     send(pk, "toHoMController_port");
   } else {  // Was the last photon. End pulse detected.
-    BSAfinish *pk = new BSAfinish();
+    BSAfinish *pk = new BSAfinish("BsaFinish");
     pk->setKind(7);
     // std::cout<<"send last result to HoM___\n";
     pk->setEntangled(result);
