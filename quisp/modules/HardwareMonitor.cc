@@ -95,7 +95,7 @@ void HardwareMonitor::initialize(int stage) {
       // Not a very good solution, but makes sure that only 1 request per link is generated.
       if (myAddress > it->second.neighborQNode_address) {
         EV << "Generating tomography rules... for node " << it->second.neighborQNode_address << "\n";
-        LinkTomographyRequest *pk = new LinkTomographyRequest;
+        LinkTomographyRequest *pk = new LinkTomographyRequest("LinkTomographyRequest");
         pk->setDestAddr(it->second.neighborQNode_address);
         pk->setSrcAddr(myAddress);
         pk->setKind(6);
@@ -122,7 +122,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     /*Received a tomography request from neighbor*/
     LinkTomographyRequest *request = check_and_cast<LinkTomographyRequest *>(msg);
     /*Prepare an acknowledgement*/
-    LinkTomographyAck *pk = new LinkTomographyAck;
+    LinkTomographyAck *pk = new LinkTomographyAck("LinkTomographyAck");
     pk->setSrcAddr(myAddress);
     pk->setDestAddr(request->getSrcAddr());
     pk->setKind(6);
@@ -213,7 +213,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
 
         // std::cout<<"Tomo done "<<local_qnic.address<<", in
         // node["<<myAddress<<"] \n";
-        StopEmitting *pk = new StopEmitting;
+        StopEmitting *pk = new StopEmitting("StopEmitting");
         pk->setQnic_address(local_qnic.address);
         pk->setDestAddr(myAddress);
         pk->setSrcAddr(myAddress);
@@ -586,7 +586,7 @@ specify how the resources are sorted.  Currently, this is hard-coded
 to select oldest first, and is geared toward symmetric tree.
   **/
 void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long RuleSet_id) {
-  LinkTomographyRuleSet *pk = new LinkTomographyRuleSet;
+  LinkTomographyRuleSet *pk = new LinkTomographyRuleSet("LinkTomographyRuleSet");
   pk->setDestAddr(my_address);
   pk->setSrcAddr(partner_address);
   pk->setNumber_of_measuring_resources(num_measure);

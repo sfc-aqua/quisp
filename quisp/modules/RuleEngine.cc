@@ -665,7 +665,7 @@ Interface_inf RuleEngine::getInterface_toNeighbor_Internal(int local_qnic_addres
 }
 
 void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type) {
-  SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne;
+  SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne(First)");
   if (ntable.empty())  // Just do this once, unless the network changes during the simulation.
     ntable = hardware_monitor->passNeighborTable();  // Get neighbor table from Hardware Manager: neighbor address--> Interface_inf.
 
@@ -727,7 +727,7 @@ void RuleEngine::shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk) {
   }
 
   int qubit_index;
-  emt = new EmitPhotonRequest();
+  emt = new EmitPhotonRequest("EmitPhotonRequest(internal)");
   qubit_index = getOneFreeQubit_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], pk->getQnic_index());
   Busy_OR_Free_QubitState_table[QNIC_R] = setQubitBusy_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], pk->getQnic_index(), qubit_index);
   emt->setQubit_index(qubit_index);
@@ -759,7 +759,7 @@ void RuleEngine::shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk) {
     return;
   }
 
-  emt = new EmitPhotonRequest();
+  emt = new EmitPhotonRequest("EmitPhotonRequest");
   int qubit_index = getOneFreeQubit_inQnic(Busy_OR_Free_QubitState_table[QNIC_E], pk->getQnic_index());
   Busy_OR_Free_QubitState_table[QNIC_E] = setQubitBusy_inQnic(Busy_OR_Free_QubitState_table[QNIC_E], pk->getQnic_index(), qubit_index);
   emt->setQubit_index(qubit_index);
@@ -785,7 +785,7 @@ void RuleEngine::shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk) {
 }
 
 void RuleEngine::scheduleNextEmissionEvent(int qnic_index, int qnic_address, double interval, simtime_t timing, int num_sent, bool internal, int trial) {
-  SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne;
+  SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne");
   st->setQnic_index(qnic_index);
   st->setQnic_address(qnic_address);
   st->setInterval(interval);
@@ -1273,7 +1273,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
             // only swapper knows which is left and right, but qnodes don't
 
             // packet for left node
-            SwappingResult *pkt_for_left = new SwappingResult;
+            SwappingResult *pkt_for_left = new SwappingResult("SwappingResult(Left)");
             pkt_for_left->setKind(5);  // cyan
             pkt_for_left->setDestAddr(pkt->getLeft_Dest());
             pkt_for_left->setSrcAddr(parentAddress);
@@ -1285,7 +1285,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
             pkt_for_left->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
 
             // packet for right node
-            SwappingResult *pkt_for_right = new SwappingResult;
+            SwappingResult *pkt_for_right = new SwappingResult("SwappingResult(Right)");
             pkt_for_right->setKind(5);  // cyan
             pkt_for_right->setDestAddr(pkt->getRight_Dest());
             pkt_for_right->setSrcAddr(parentAddress);

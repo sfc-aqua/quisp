@@ -49,7 +49,7 @@ void HoMController::internodeInitializer() {
   updateIDE_Parameter(true);
 
   accepted_burst_interval = (double)1 / (double)photon_detection_per_sec;
-  BSAstart *generatePacket = new BSAstart;
+  BSAstart *generatePacket = new BSAstart("BsaStart");
   scheduleAt(simTime() + par("Initial_notification_timing_buffer"), generatePacket);
   // scheduleAt(simTime(),generatePacket);
 }
@@ -66,7 +66,7 @@ void HoMController::standaloneInitializer() {
   updateIDE_Parameter(false);
 
   accepted_burst_interval = (double)1 / (double)photon_detection_per_sec;
-  BSAstart *generatePacket = new BSAstart;
+  BSAstart *generatePacket = new BSAstart("BsaStart");
   scheduleAt(simTime() + par("Initial_notification_timing_buffer"), generatePacket);
   // scheduleAt(simTime(),generatePacket);
 }
@@ -246,7 +246,7 @@ void HoMController::updateIDE_Parameter(bool receiver) {
 // Generates a BSA timing notifier. This is also called only once for the same reason as sendNotifiers().
 BSMtimingNotifier *HoMController::generateNotifier(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
                                                    int photon_detection_per_sec, int max_buffer) {
-  BSMtimingNotifier *pk = new BSMtimingNotifier();
+  BSMtimingNotifier *pk = new BSMtimingNotifier("BsmTimingNotifier");
   // pk->setNumber_of_qubits(max_buffer);
   if (handshake == false)
     pk->setNumber_of_qubits(-1);  // if -1, neighbors will keep shooting photons anyway.
@@ -269,7 +269,7 @@ BSMtimingNotifier *HoMController::generateNotifier(double time, double speed_of_
 // Generates a packet that includes the BSA timing notifier and the BSA entanglement attempt results.
 CombinedBSAresults *HoMController::generateNotifier_c(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
                                                       int photon_detection_per_sec, int max_buffer) {
-  CombinedBSAresults *pk = new CombinedBSAresults();
+  CombinedBSAresults *pk = new CombinedBSAresults("CombinedBsaResults");
   // pk->setNumber_of_qubits(max_buffer);
   if (handshake == false)
     pk->setNumber_of_qubits(-1);  // if -1, neighbors will keep shooting photons anyway.
