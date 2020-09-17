@@ -39,7 +39,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 
     if (actual_dst == my_address) {
       // got ConnectionSetupRequest and return the response
-      responder_alloc_req_handler(req);
+      respondToRequest(req);
       delete msg;
       return;
     }
@@ -181,10 +181,10 @@ void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
 
 /**
  * This function is called to handle the ConnectionSetupRequest at the responder.
- *  This is where much of the work happens, and there is the potential for new value
- *  if you have a better way to do this.
- *  \param pk pointer to the ConnectionSetupRequest packet itself
- *  \returns nothing
+ * This is where much of the work happens, and there is the potential for new value
+ * if you have a better way to do this.
+ * \param pk pointer to the ConnectionSetupRequest packet itself
+ * \returns nothing
  *
  * The procedure:
  * \verbatim
@@ -195,7 +195,7 @@ void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
  * \todo Always room to make this better.  Ideally should be
  * a _configurable choice_, or even a _policy_ implementation.
  */
-void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *req) {
+void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   // Taking qnic information of responder node.
   int actual_dst = req->getActual_destAddr();
   int actual_src = req->getActual_srcAddr();  // initiator address (to get input qnic)
@@ -293,32 +293,32 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *req)
   // Here qnic processing
   // Have to add destination qnic info (destination is the same as my_address. So qnic index must be -1 because self return is not allowed.)
 
-  // create Ruleset for all nodes!
+  // create RuleSet for all nodes!
   int num_resource = req->getNumber_of_required_Bellpairs();
   int intermediate_node_size = req->getStack_of_QNodeIndexesArraySize();
   for (int i = 0; i <= intermediate_node_size; i++) {
     auto itr = std::find(swappers.begin(), swappers.end(), path.at(i));
     size_t index = std::distance(swappers.begin(), itr);
     if (index != swappers.size()) {
-      EV << "Im swapper!" << path.at(i) << "\n";
+      EV_DEBUG << "Im swapper!" << path.at(i) << "\n";
       // generate Swapping RuleSet
       // here we have to check the order of entanglement swapping
 
       // swapping configurations for path[i]
       SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
-      RuleSet *swapping_rule = generateEntanglementSwappingRuleSet(path.at(i), config);
+      RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
 
       ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
       pkr->setDestAddr(path.at(i));
       pkr->setSrcAddr(my_address);
       pkr->setKind(2);
-      pkr->setRuleSet(swapping_rule);
+      pkr->setRuleSet(rule);
       pkr->setActual_srcAddr(path.at(0));
       pkr->setActual_destAddr(path.at(path.size() - 1));
       send(pkr, "RouterPort$o");
 
     } else {
-      EV << "Im not swapper!" << path.at(i) << "\n";
+      EV_DEBUG << "Im not swapper!" << path.at(i) << "\n";
       int num_measure = req->getNum_measure();
 
       RuleSet *ruleset;
