@@ -46,7 +46,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 
     int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
     connection_setup_inf dst_inf = hardware_monitor->return_setupInf(local_qnic_address_to_actual_dst);
-    bool is_qnic_available = isQnicBusy(dst_inf.qnic.address);
+    bool is_qnic_available = !isQnicBusy(dst_inf.qnic.address);
     bool requested_by_myself = actual_src == my_address;
 
     if (requested_by_myself) {
