@@ -456,59 +456,58 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
 }
 
 /**
- *  This function is called to handle the ConnectionSetupRequest at an "intermediate"
- *  node, one that is neither the initiator nor the responder.
- * \param pk pointer to the ConnectionSetupRequest packet itself
+ *  This function is called to handle the ConnectionSetupRequest at an intermediate or initiator node.
+ * \param req pointer to the ConnectionSetupRequest packet itself
  * \returns nothing
  **/
-void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *pk) {
-  int actual_dst = pk->getActual_destAddr();  // responder address
-  int actual_src = pk->getActual_srcAddr();  // initiator address (to get input qnic)
-  int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
-  int local_qnic_address_to_actual_src = routing_daemon->return_QNIC_address_to_destAddr(actual_src);
+void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
+  int responder_addr = req->getActual_destAddr();  // responder address
+  int initiator_addr = req->getActual_srcAddr();  // initiator address (to get input qnic)
+  int dst_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(responder_addr);
+  int src_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
 
-  if (local_qnic_address_to_actual_dst == -1) {  // is not found
+  if (dst_qnic_addr == -1) {  // is not found
     error("QNIC to destination not found");
   }
 
-  if (my_address != actual_src && local_qnic_address_to_actual_src == -1) {
+  if (my_address != initiator_addr && src_qnic_addr == -1) {
     error("QNIC to source not found");
   }
 
   // Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
-  connection_setup_inf dst_inf = hardware_monitor->return_setupInf(local_qnic_address_to_actual_dst);
-  connection_setup_inf src_inf = hardware_monitor->return_setupInf(local_qnic_address_to_actual_src);
+  connection_setup_inf dst_inf = hardware_monitor->return_setupInf(dst_qnic_addr);
+  connection_setup_inf src_inf = hardware_monitor->return_setupInf(src_qnic_addr);
 
   bool is_src_qnic_reserved = isQnicBusy(src_inf.qnic.address);
   bool is_dst_qnic_reserved = isQnicBusy(dst_inf.qnic.address);
 
   if (is_src_qnic_reserved || is_dst_qnic_reserved) {
-    rejectRequest(pk);
+    rejectRequest(req);
     return;
   }
 
-  int num_accumulated_nodes = pk->getStack_of_QNodeIndexesArraySize();
-  int num_accumulated_costs = pk->getStack_of_linkCostsArraySize();
-  int num_accumulated_pair_info = pk->getStack_of_QNICsArraySize();
+  int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
+  int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
+  int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();
 
   // Update information and send it to the next Qnode.
-  pk->setDestAddr(dst_inf.neighbor_address);
-  pk->setSrcAddr(my_address);
-  pk->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes + 1);
-  pk->setStack_of_linkCostsArraySize(num_accumulated_costs + 1);
-  pk->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
-  pk->setStack_of_linkCosts(num_accumulated_costs, dst_inf.quantum_link_cost);
-  pk->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
+  req->setDestAddr(dst_inf.neighbor_address);
+  req->setSrcAddr(my_address);
+  req->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes + 1);
+  req->setStack_of_linkCostsArraySize(num_accumulated_costs + 1);
+  req->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
+  req->setStack_of_linkCosts(num_accumulated_costs, dst_inf.quantum_link_cost);
+  req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
 
   QNIC_id_pair pair_info = {.fst = src_inf.qnic, .snd = dst_inf.qnic};
-  pk->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
-  pair_info = pk->getStack_of_QNICs(num_accumulated_pair_info);
-  if (actual_src != my_address) {
+  req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
+  pair_info = req->getStack_of_QNICs(num_accumulated_pair_info);
+  if (my_address != initiator_addr) {
     reserveQnic(src_inf.qnic.address);
   }
   reserveQnic(dst_inf.qnic.address);
 
-  send(pk, "RouterPort$o");
+  send(req, "RouterPort$o");
 }
 
 // This is not good way. This property should be held in qnic property.
