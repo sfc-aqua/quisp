@@ -87,8 +87,8 @@ class ConnectionManager : public cSimpleModule {
 
   void rejectRequest(ConnectionSetupRequest *req);
 
-  RuleSet *generateTomographyRuleSet(unsigned long ruleset_id, int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index, int num_resources);
-  RuleSet *generateEntanglementSwappingRuleSet(unsigned long ruleset_id, int owner, SwappingConfig conf);
+  RuleSet *generateTomographyRuleSet(int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index, int num_resources);
+  RuleSet *generateEntanglementSwappingRuleSet(int owner, SwappingConfig conf);
   SwappingConfig generateSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners, std::vector<QNIC_pair_info> qnics,
                                         int num_resources);
 

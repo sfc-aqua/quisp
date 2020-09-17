@@ -228,10 +228,8 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *req)
   // the number of steps
   int hop_count = req->getStack_of_QNodeIndexesArraySize();
 
-  // path pointer elements?
-  std::vector<int> path;
-
   // path from source to destination
+  std::vector<int> path;
   for (int i = 0; i < hop_count; i++) {
     path.push_back(req->getStack_of_QNodeIndexes(i));
   }
@@ -308,9 +306,9 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *req)
 
       // swapping configurations for path[i]
       SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
-      RuleSet *swapping_rule = generateEntanglementSwappingRuleSet(createUniqueId(), path.at(i), config);
+      RuleSet *swapping_rule = generateEntanglementSwappingRuleSet(path.at(i), config);
 
-      ConnectionSetupResponse *pkr = new ConnectionSetupResponse;
+      ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
       pkr->setDestAddr(path.at(i));
       pkr->setSrcAddr(my_address);
       pkr->setKind(2);
@@ -322,18 +320,16 @@ void ConnectionManager::responder_alloc_req_handler(ConnectionSetupRequest *req)
     } else {
       EV << "Im not swapper!" << path.at(i) << "\n";
       int num_measure = req->getNum_measure();
-      RuleSet *ruleset;
 
-      unsigned long ruleset_id = createUniqueId();
+      RuleSet *ruleset;
       int owner = path.at(i);
       if (i == 0) {  // if this is initiator
-        ruleset = generateTomographyRuleSet(ruleset_id, owner, path.at(path.size() - 1), num_measure, qnics.at(qnics.size() - 1).fst.type, qnics.at(qnics.size() - 1).fst.index,
-                                            num_resource);
+        ruleset = generateTomographyRuleSet(owner, path.at(path.size() - 1), num_measure, qnics.at(qnics.size() - 1).fst.type, qnics.at(qnics.size() - 1).fst.index, num_resource);
       } else {  // if this is responder
-        ruleset = generateTomographyRuleSet(ruleset_id, owner, path.at(0), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
+        ruleset = generateTomographyRuleSet(owner, path.at(0), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
       }
 
-      ConnectionSetupResponse *pkr = new ConnectionSetupResponse;
+      ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Tomography)");
       pkr->setDestAddr(path.at(i));
       pkr->setSrcAddr(my_address);
       pkr->setKind(2);
@@ -615,7 +611,8 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
  * \todo Room for endless intelligence and improvements here.  Ideally should be
  * a _configurable choice_, or even a _policy_ implementation.
  **/
-RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(unsigned long ruleset_id, int owner, SwappingConfig conf) {
+RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, SwappingConfig conf) {
+  unsigned long ruleset_id = createUniqueId();
   int rule_index = 0;
 
   Clause *resource_clause_left = new EnoughResourceClauseLeft(conf.left_partner, conf.lres);
@@ -642,8 +639,9 @@ RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(unsigned long ru
   return ruleset;
 }
 
-RuleSet *ConnectionManager::generateTomographyRuleSet(unsigned long ruleset_id, int owner, int partner, int num_of_measure, QNIC_type qnic_type, int qnic_index,
-                                                      int num_resources) {
+RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, int num_of_measure, QNIC_type qnic_type, int qnic_index, int num_resources) {
+  unsigned long ruleset_id = createUniqueId();
+
   int rule_index = 0;
   RuleSet *tomography = new RuleSet(ruleset_id, owner, partner);
   Rule *rule = new Rule(ruleset_id, rule_index);
