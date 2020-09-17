@@ -77,7 +77,7 @@ class ConnectionManager : public cSimpleModule {
   virtual void handleMessage(cMessage *msg) override;
 
   void responder_alloc_req_handler(ConnectionSetupRequest *pk);
-  void intermediate_alloc_req_handler(ConnectionSetupRequest *pk);
+  void relayRequestToNextHop(ConnectionSetupRequest *pk);
 
   void storeRuleSetForApplication(ConnectionSetupResponse *pk);
   void storeRuleSet(ConnectionSetupResponse *pk);
