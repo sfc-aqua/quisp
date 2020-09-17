@@ -11,43 +11,49 @@
 namespace quisp {
 namespace modules {
 
-Queue::Queue() { endTransmissionEvent = nullptr; }
-
 void Queue::initialize() {
   queue.setName("queue");
-  endTransmissionEvent = new cMessage("endTxEvent");
 
-  if (par("useCutThroughSwitching")) gate("line$i")->setDeliverOnReceptionStart(true);
+  end_transmission_event = new cMessage("endTxEvent");
 
-  frameCapacity = par("frameCapacity");
+  if (par("useCutThroughSwitching")) {
+    gate("line$i")->setDeliverOnReceptionStart(true);
+  }
 
-  qlenSignal = registerSignal("qlen");
-  busySignal = registerSignal("busy");
-  queueingTimeSignal = registerSignal("queueingTime");
-  dropSignal = registerSignal("drop");
+  frame_capacity = par("frameCapacity");
 
-  txBytesSignal = registerSignal("txBytes");
-  rxBytesSignal = registerSignal("rxBytes");
+  qlen_signal = registerSignal("qlen");
+  busy_signal = registerSignal("busy");
+  queuing_time_signal = registerSignal("queueingTime");
+  drop_signal = registerSignal("drop");
 
-  emit(qlenSignal, queue.getLength());
-  emit(busySignal, false);
-  isBusy = false;
+  tx_bytes_signal = registerSignal("txBytes");
+  rx_bytes_signal = registerSignal("rxBytes");
+
+  emit(qlen_signal, queue.getLength());
+  emit(busy_signal, false);
+  is_busy = false;
 }
 
 void Queue::startTransmitting(cMessage *msg) {
-  EV << "Starting transmission of " << msg << endl;
-  isBusy = true;
-  int64_t numBytes = check_and_cast<cPacket *>(msg)->getByteLength();
+  EV_INFO << "Starting transmission of " << msg << endl;
+  is_busy = true;
+  int64_t num_bytes = check_and_cast<cPacket *>(msg)->getByteLength();
 
-  EV << "here.....1\n";
+  EV_DEBUG << "here.....1\n";
   send(msg, "line$o");  // inout gate's output
-  EV << "here.....2\n";
-  emit(txBytesSignal, (long)numBytes);
-  EV << "here.....3\n";
+
+  EV_DEBUG << "here.....2\n";
+  emit(tx_bytes_signal, (long)num_bytes);
+
+  EV_DEBUG << "here.....3\n";
+
   // Schedule an event for the time when last bit will leave the gate.
-  simtime_t endTransmission = gate("line$o")->getTransmissionChannel()->getTransmissionFinishTime();
-  EV << "Transmission will end in " << endTransmission << "\n";
-  scheduleAt(endTransmission, endTransmissionEvent);  // pass End tansmission message when it ends
+  simtime_t transmission_finish_time = gate("line$o")->getTransmissionChannel()->getTransmissionFinishTime();
+  EV_INFO << "Transmission will end in " << transmission_finish_time << "\n";
+
+  // pass end_transmission_event when it ends
+  scheduleAt(transmission_finish_time, end_transmission_event);
 }
 
 void Queue::handleMessage(cMessage *msg) {
@@ -55,53 +61,62 @@ void Queue::handleMessage(cMessage *msg) {
     bubble("Queue received a message!\n");
   }
 
-  if (msg == endTransmissionEvent) {  // update busy status
+  if (msg == end_transmission_event) {  // update busy status
     // Transmission finished, we can start next one.
-    EV << "Transmission finished.\n";
-    isBusy = false;
-    if (queue.isEmpty()) {
-      emit(busySignal, false);
-    } else {
-      msg = (cMessage *)queue.pop();
-      emit(queueingTimeSignal, simTime() - msg->getTimestamp());
-      emit(qlenSignal, queue.getLength());
-      startTransmitting(msg);
-    }
-  } else if (msg->arrivedOn("line$i")) {
-    // pass up
-    emit(rxBytesSignal, (long)check_and_cast<cPacket *>(msg)->getByteLength());
-    send(msg, "out");
-  } else {  // arrived on gate "in"
-    EV << "Arrived on gate Queue in.....";
+    EV_INFO << "Transmission finished.\n";
+    is_busy = false;
 
-    if (endTransmissionEvent->isScheduled()) {
-      EV << "currrently busy! queue it up\n";
-      // We are currently busy, so just queue up the packet.
-      if (frameCapacity && queue.getLength() >= frameCapacity) {
-        EV << "Received " << msg << " but transmitter busy and queue full: discarding\n";
-        emit(dropSignal, (long)check_and_cast<cPacket *>(msg)->getByteLength());
-        delete msg;
-      } else {
-        EV << "Received " << msg << " but transmitter busy: queueing up\n";
-        msg->setTimestamp();
-        queue.insert(msg);
-        emit(qlenSignal, queue.getLength());
-      }
-    } else {
-      // We are idle, so we can start transmitting right away.
-      EV << "\nReceived " << msg << endl;
-      emit(queueingTimeSignal, SIMTIME_ZERO);
-      startTransmitting(msg);
-      emit(busySignal, true);
+    if (queue.isEmpty()) {
+      emit(busy_signal, false);
+      return;
     }
+
+    msg = (cMessage *)queue.pop();
+    emit(queuing_time_signal, simTime() - msg->getTimestamp());
+    emit(qlen_signal, queue.getLength());
+    startTransmitting(msg);
+    return;
   }
+
+  if (msg->arrivedOn("line$i")) {
+    emit(rx_bytes_signal, (long)check_and_cast<cPacket *>(msg)->getByteLength());
+    send(msg, "out");
+    return;
+  }
+
+  // arrived on gate "in"
+  EV_INFO << "Arrived on gate Queue in.....";
+
+  if (end_transmission_event->isScheduled()) {
+    EV_INFO << "Currently busy! queue it up\n";
+
+    // We are currently busy, so just queue up the packet.
+    if (queue.getLength() >= frame_capacity) {
+      EV_INFO << "Received " << msg << " but transmitter busy and queue full: discarding\n";
+      emit(drop_signal, (long)check_and_cast<cPacket *>(msg)->getByteLength());
+      delete msg;
+      return;
+    }
+
+    EV_INFO << "Received " << msg << " but transmitter busy: queuing up\n";
+    msg->setTimestamp();
+    queue.insert(msg);
+    emit(qlen_signal, queue.getLength());
+    return;
+  }
+
+  // We are idle, so we can start transmitting right away.
+  EV_INFO << "Received " << msg << endl;
+  emit(queuing_time_signal, SIMTIME_ZERO);
+  startTransmitting(msg);
+  emit(busy_signal, true);
 }
 
-void Queue::finish() { delete endTransmissionEvent; }
+void Queue::finish() { delete end_transmission_event; }
 
 void Queue::refreshDisplay() const {
-  getDisplayString().setTagArg("t", 0, isBusy ? "transmitting" : "idle");
-  getDisplayString().setTagArg("i", 1, isBusy ? (queue.getLength() >= 3 ? "red" : "yellow") : "");
+  getDisplayString().setTagArg("t", 0, is_busy ? "transmitting" : "idle");
+  getDisplayString().setTagArg("i", 1, is_busy ? (queue.getLength() >= 3 ? "red" : "yellow") : "");
 }
 
 }  // namespace modules

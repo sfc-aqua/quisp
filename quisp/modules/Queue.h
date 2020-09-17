@@ -26,22 +26,17 @@ namespace modules {
  */
 class Queue : public cSimpleModule {
  private:
-  long frameCapacity;
+  long frame_capacity;
   cQueue queue;
-  cMessage *endTransmissionEvent;
-  bool isBusy;
+  cMessage *end_transmission_event;
+  bool is_busy;
 
-  simsignal_t qlenSignal;
-  simsignal_t busySignal;
-  simsignal_t queueingTimeSignal;
-  simsignal_t dropSignal;
-  simsignal_t txBytesSignal;
-  simsignal_t rxBytesSignal;
-
- public:
-  Queue();
-
- protected:
+  simsignal_t qlen_signal;
+  simsignal_t busy_signal;
+  simsignal_t queuing_time_signal;
+  simsignal_t drop_signal;
+  simsignal_t tx_bytes_signal;
+  simsignal_t rx_bytes_signal;
   virtual void initialize() override;
   virtual void finish() override;
   virtual void handleMessage(cMessage *msg) override;
