@@ -18,12 +18,12 @@ cache:
 
 before_install:
   -  |
-    image=`sha1sum quisp/Dockerfile`
+    image=`sha1sum Dockerfile`
     docker load -i docker_images/${image}.tar || true
 
 after_install:
   -  |
-    image=`sha1sum quisp/Dockerfile`
+    image=`sha1sum Dockerfile`
     docker save -o docker_images/$(image).tar `docker images quisp -q`
   
 services:
