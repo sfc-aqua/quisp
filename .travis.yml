@@ -12,6 +12,20 @@ jobs:
       apt:
         sources: ['ubuntu-toolchain-r-test']
 
+cache:
+  directories:
+    - docker_images
+
+before_install:
+  -  |
+    image=`sha1sum quisp/Dockerfile`
+    docker load -i docker_images/${image}.tar || true
+
+after_install:
+  -  |
+    image=`sha1sum quisp/Dockerfile`
+    docker save -o docker_images/$(image).tar `docker images quisp -q`
+  
 services:
   - docker
 install: travis_wait sh docker_build.sh
