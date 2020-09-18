@@ -39,7 +39,7 @@ OBJS = \
     $O/modules/EntangledPhotonPairSource.o \
     $O/modules/HardwareMonitor.o \
     $O/modules/HoM_Controller.o \
-    $O/modules/QNIC_photonic_switch.o \
+    $O/modules/PhotonicSwitch.o \
     $O/modules/Queue.o \
     $O/modules/RealTimeController.o \
     $O/modules/ResourceManager.o \

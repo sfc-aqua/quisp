@@ -26,25 +26,18 @@ namespace modules {
  */
 class PhotonicSwitch : public cSimpleModule {
  private:
-  int myAddress;
-  cMessage *generatePacket;  // Not the actual packet. Local message to invoke Events
-  cPar *sendIATime;
-  bool isBusy;  // Already requested a path selection for a Quantum app
+  int my_address;
+  bool is_busy;  // Already requested a path selection for a Quantum app
+
  protected:
   virtual void initialize() override;
   virtual void handleMessage(cMessage *msg) override;
-  virtual void BubbleText(const char *txt);
-  virtual void checkGateNumber();
-  virtual void checkQubitNumber();
-  virtual void checkAndsetNeighborAddress();
+  virtual void ensureCorrespondingNeighborAddress();
   virtual cModule *getQNode();
-
- public:
-  PhotonicSwitch();
+  void reserve();
+  void release();
+  bool isReserved();
   int getAddress();
-  virtual void Reserve();
-  virtual void ReleaseReservation();
-  virtual bool isReserved();
 };
 }  // namespace modules
 }  // namespace quisp
