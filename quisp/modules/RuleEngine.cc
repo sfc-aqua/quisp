@@ -644,7 +644,7 @@ void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, int rule_
 
 Interface_inf RuleEngine::getInterface_toNeighbor(int destAddr) {
   Interface_inf inf;
-  HardwareMonitor::NeighborTable::iterator it = ntable.find(destAddr);
+  auto it = ntable.find(destAddr);
 
   // Neighbor not found! This should not happen unless you simulate broken links in real time.
   if (it == ntable.end())

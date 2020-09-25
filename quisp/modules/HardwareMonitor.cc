@@ -1098,7 +1098,7 @@ connection_setup_inf HardwareMonitor::return_setupInf(int qnic_address) {
 }
 
 // This neighbor table includes all neighbors of qnic, qnic_r and qnic_rp
-HardwareMonitor::NeighborTable HardwareMonitor::prepareNeighborTable(NeighborTable ntable, int total_numQnic) {
+NeighborTable HardwareMonitor::prepareNeighborTable(NeighborTable ntable, int total_numQnic) {
   // Get the parent QNode that runs this connection manager.
   cModule *qnode = getQNode();
 
@@ -1204,7 +1204,7 @@ neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode) {
   return inf;
 }
 
-HardwareMonitor::NeighborTable HardwareMonitor::passNeighborTable() {
+NeighborTable HardwareMonitor::passNeighborTable() {
   Enter_Method("passNeighborTable()");
   return ntable;
 }

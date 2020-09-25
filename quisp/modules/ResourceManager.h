@@ -22,10 +22,6 @@ namespace modules {
  *  \brief ResourceManager
  */
 class ResourceManager : public cSimpleModule {
- private:
-  typedef std::map<int, HardwareMonitor::QnicInfo> AllocationTable;
-  AllocationTable *vqnics;
-
  protected:
   virtual void initialize() override;
   virtual void handleMessage(cMessage *msg) override;

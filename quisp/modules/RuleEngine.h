@@ -93,7 +93,7 @@ class RuleEngine : public cSimpleModule {
  public:
   int parentAddress;  // Parent QNode's address
   EmitPhotonRequest* emt;
-  HardwareMonitor::NeighborTable ntable;
+  NeighborTable ntable;
   int number_of_qnics_all;  // qnic,qnic_r,_qnic_rp
   int number_of_qnics;
   int number_of_qnics_r;
@@ -136,10 +136,6 @@ class RuleEngine : public cSimpleModule {
   virtual void freeConsumedResource(int qnic_index, StationaryQubit* qubit, QNIC_type qnic_type);
   virtual void dynamic_ResourceAllocation(int qnic_type, int qnic_index);
   virtual void ResourceAllocation(int qnic_type, int qnic_index);
-  virtual void JustATest() {
-    EV << "Hello there\n.";
-    endSimulation();
-  };
 
  protected:
   virtual void initialize() override;

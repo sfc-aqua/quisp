@@ -20,25 +20,25 @@ using namespace omnetpp;
 namespace quisp {
 namespace modules {
 
-typedef struct {
+struct neighborInfo {
   bool isQNode;
   cModuleType *type;
   int address;  // May be QNode, SPDC, HOM
   int index;
   int neighborQNode_address;  // QNode (May be across SDPC or HOM node)
-} neighborInfo;
+};
 
 typedef QNIC_id entangledWith;
 
-typedef struct {
+struct stationaryQubitInfo {
   int qnic_index;
   int qubit_index;
   bool isBusy;  // Reserved or free to use
   int assigned_job;  // Maybe useful for bufferspace multiplexing and so on. Indicates which job this qubit is assigned for if isBusy is true.
   entangledWith entangled_inf;
-} stationaryQubitInfo;
+};
 
-typedef struct {
+struct Interface_inf {
   // QubitAddr(int node_addr, int qnic_index, int qubit_index):node_address(node_addr),qnic_index(qnic_index),qubit_index(qubit_index){}
   QNIC qnic;
   double initial_fidelity = -1; /*Oka's protocol?*/
@@ -47,36 +47,42 @@ typedef struct {
   int neighborQNode_address;
   int neighborQNode_qnic_type;
   QNIC neighbor_qnic;
-} Interface_inf;
+};
 
-typedef struct {
+struct connection_setup_inf {
   QNIC_id qnic;
   int neighbor_address;
   int quantum_link_cost;
-} connection_setup_inf;
+};
 
-typedef struct {
+struct tomography_outcome {
   char my_basis;
   bool my_output_is_plus;
   char my_GOD_clean;
   char partner_basis;
   bool partner_output_is_plus;
   char partner_GOD_clean;
-} tomography_outcome;
+};
 
-typedef struct {
+struct output_count {
   int total_count;
   int plus_plus;
   int plus_minus;
   int minus_plus;
   int minus_minus;
-} output_count;
+};
 
-typedef struct {
+struct link_cost {
   simtime_t tomography_time;
   int tomography_measurements;
   double Bellpair_per_sec;
-} link_cost;
+};
+
+// qnic_index -> Interface{qnic_type, initial_fidelity...}
+typedef std::map<int, Interface_inf> NeighborTable;
+
+// basis combination -> raw output count e.g "XX" -> {plus_plus = 56, plus_minus = 55, minus_plus = 50, minus_minus = 50}, "XY" -> {....
+typedef std::map<std::string, output_count> raw_data;
 
 /** \class HardwareMonitor HardwareMonitor.h
  *  \todo Documentation of the class header.
@@ -99,18 +105,16 @@ class HardwareMonitor : public cSimpleModule {
   int num_measure;
 
  public:
-  // typedef std::map<int,Interface_inf> Interfaces;//qnic_index -> Interface{qnic_type, initial_fidelity...}
-  typedef std::map<int, Interface_inf> NeighborTable;  // qnic_index -> Interface{qnic_type, initial_fidelity...}
   NeighborTable ntable;
-  typedef std::map<int, stationaryQubitInfo> QnicInfo;  // stationary qubit index -> state
-  typedef std::map<std::string, output_count>
-      raw_data;  // basis combination -> raw output count e.g "XX" -> {plus_plus = 56, plus_minus = 55, minus_plus = 50, minus_minus = 50}, "XY" -> {....
   raw_data *tomography_data;
-  QnicInfo *qtable;
+
   single_qubit_error Pauli;
-  virtual NeighborTable passNeighborTable();
-  virtual int checkNumBuff(int qnic_index, QNIC_type qnic_type);  // returns the total number of qubits
-  virtual connection_setup_inf return_setupInf(int qnic_address);
+  NeighborTable passNeighborTable();
+
+  // returns the total number of qubits
+  int checkNumBuff(int qnic_index, QNIC_type qnic_type);
+  connection_setup_inf return_setupInf(int qnic_address);
+
   // virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, QNIC_type qnic_type);//returns the set of free resources
   // virtual int checkNumFreeBuff(int qnic_index, QNIC_type qnic_type);//returns the number of free qubits
   typedef std::map<int, tomography_outcome> Temporal_Tomography_Output_Holder;  // measurement_count_id -> outcome. For single qnic
