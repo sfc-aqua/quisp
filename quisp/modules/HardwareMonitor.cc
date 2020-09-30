@@ -21,6 +21,7 @@ namespace quisp {
 namespace modules {
 
 using namespace rules;
+using std::unique_ptr;
 
 Define_Module(HardwareMonitor);
 
@@ -74,7 +75,7 @@ void HardwareMonitor::initialize(int stage) {
   /*This keeps which node is connected to which local qnic.*/
   tomography_output_filename = par("tomography_output_filename").str();
   file_dir_name = par("file_dir_name").str();
-  ntable = prepareNeighborTable(ntable, numQnic_total);
+  prepareNeighborTable(numQnic_total);
   do_link_level_tomography = par("link_tomography");
   num_purification = par("initial_purification");
   X_Purification = par("X_purification");
@@ -117,60 +118,60 @@ unsigned long HardwareMonitor::createUniqueId() {
   return RuleSet_id;
 }
 
+unique_ptr<Interface_inf> HardwareMonitor::findInterfaceInfoByNeighborAddr(int neighbor_address) {
+  for (auto it = ntable.cbegin(); it != ntable.cend(); ++it) {
+    if (it->second.neighborQNode_address == neighbor_address) {
+      return unique_ptr<Interface_inf>(new Interface_inf(it->second));
+    }
+  }
+  return nullptr;
+}
+
 void HardwareMonitor::handleMessage(cMessage *msg) {
   if (dynamic_cast<LinkTomographyRequest *>(msg) != nullptr) {
-    /*Received a tomography request from neighbor*/
+    /* Received a tomography request from neighbor */
     LinkTomographyRequest *request = check_and_cast<LinkTomographyRequest *>(msg);
-    /*Prepare an acknowledgement*/
+
+    auto info = findInterfaceInfoByNeighborAddr(request->getSrcAddr());
+    if (info == nullptr) {
+      error("1. Something is wrong when finding out local qnic address from neighbor address in ntable.");
+    }
+
+    /*Prepare an acknowledgment*/
     LinkTomographyAck *pk = new LinkTomographyAck("LinkTomographyAck");
     pk->setSrcAddr(myAddress);
     pk->setDestAddr(request->getSrcAddr());
     pk->setKind(6);
-    QNIC_type qnic_type;
-    int qnic_index = -1;
-    for (auto it = ntable.cbegin(); it != ntable.cend(); ++it) {
-      if (it->second.neighborQNode_address == request->getSrcAddr()) {
-        qnic_type = it->second.qnic.type;
-        qnic_index = it->second.qnic.index;
-        break;
-      }
-    }
-    if (qnic_index == -1) {
-      error("1. Something is wrong when finding out local qnic address from neighbor address in ntable.");
-    }
-    pk->setQnic_index(qnic_index);
-    pk->setQnic_type(qnic_type);
+    pk->setQnic_index(info->qnic.index);
+    pk->setQnic_type(info->qnic.type);
 
     send(pk, "RouterPort$o");
+    return;
+  }
 
-  } else if (dynamic_cast<LinkTomographyAck *>(msg) != nullptr) {
-    /*Received an acknowledgement for tomography from neighbor.*/
+  if (dynamic_cast<LinkTomographyAck *>(msg) != nullptr) {
+    /*Received an acknowledgment for tomography from neighbor.*/
     LinkTomographyAck *ack = check_and_cast<LinkTomographyAck *>(msg);
+
     /*Create and send RuleSets*/
     int partner_address = ack->getSrcAddr();
-    QNIC_type partner_qnic_type = ack->getQnic_type();
-    int partner_qnic_index = ack->getQnic_index();
 
-    QNIC_type my_qnic_type;
-    int my_qnic_index = -1;
-
-    for (auto it = ntable.cbegin(); it != ntable.cend(); ++it) {
-      if (it->second.neighborQNode_address == ack->getSrcAddr()) {
-        my_qnic_type = it->second.qnic.type;
-        my_qnic_index = it->second.qnic.index;
-        break;
-      }
-    }
-    if (my_qnic_index == -1) {
+    auto my_qnic_info = findInterfaceInfoByNeighborAddr(partner_address);
+    if (my_qnic_info == nullptr) {
       error("2. Something is wrong when finding out local qnic address from neighbor address in ntable.");
     }
 
     // RuleSets sent for this node and the partner node.
     long RuleSet_id = createUniqueId();
-    sendLinkTomographyRuleSet(myAddress, partner_address, my_qnic_type, my_qnic_index, RuleSet_id);
-    sendLinkTomographyRuleSet(partner_address, myAddress, partner_qnic_type, partner_qnic_index, RuleSet_id);
+    sendLinkTomographyRuleSet(myAddress, partner_address, my_qnic_info->qnic.type, my_qnic_info->qnic.index, RuleSet_id);
 
-  } else if (dynamic_cast<LinkTomographyResult *>(msg) != nullptr) {
+    QNIC_type partner_qnic_type = ack->getQnic_type();
+    int partner_qnic_index = ack->getQnic_index();
+    sendLinkTomographyRuleSet(partner_address, myAddress, partner_qnic_type, partner_qnic_index, RuleSet_id);
+    return;
+  }
+
+  if (dynamic_cast<LinkTomographyResult *>(msg) != nullptr) {
     /*Link tomography measurement result/basis from neighbor received.*/
     LinkTomographyResult *result = check_and_cast<LinkTomographyResult *>(msg);
 
@@ -204,6 +205,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
       }
       all_temporal_tomography_output_holder[local_qnic.address].insert(std::make_pair(result->getCount_id(), temp));
     }
+
     if (result->getFinish() != -1) {
       // Pick the slower tomography time MIN(self,partner).
       if (all_temporal_tomography_runningtime_holder[local_qnic.address].tomography_time < result->getFinish()) {
@@ -220,8 +222,8 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
         send(pk, "RouterPort$o");
       }
     }
+    return;
   }
-  delete msg;
 }
 
 void HardwareMonitor::finish() {
@@ -530,19 +532,15 @@ void HardwareMonitor::writeToFile_Topology_with_LinkCost(int qnic_id, double lin
 
 // Excludes Hom, Epps and other intermediate nodes.
 QNIC HardwareMonitor::search_QNIC_from_Neighbor_QNode_address(int neighbor_address) {
-  QNIC qnic;
   for (auto it = ntable.cbegin(); it != ntable.cend(); ++it) {
     if (it->second.neighborQNode_address == neighbor_address) {
-      qnic = it->second.qnic;
-      break;
-    }
-    if (it == ntable.end()) {
-      error(
-          "Something is wrong when looking for QNIC info from neighbor QNode "
-          "address. Tomography is also only available between neighbor.");
+      return it->second.qnic;
     }
   }
-  return qnic;
+
+  error(
+      "Something is wrong when looking for QNIC info from neighbor QNode "
+      "address. Tomography is also only available between neighbor.");
 }
 
 /**
@@ -1052,9 +1050,11 @@ int HardwareMonitor::checkNumBuff(int qnic_index, QNIC_type qnic_type) {
 }
 
 Interface_inf HardwareMonitor::getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type) {
-  cModule *local_qnic;
-  if (qnic_type >= QNIC_N) error("Only 3 qnic types are currently recognized....");  // avoid segfaults <3
-  local_qnic = getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);  // QNIC itself
+  if (qnic_type >= QNIC_N) {
+    error("Only 3 qnic types are currently recognized....");
+  }
+  // QNIC itself
+  cModule *local_qnic = getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);
   Interface_inf inf;
   inf.qnic.pointer = local_qnic;
   inf.qnic.address = local_qnic->par("self_qnic_address");  // Extract from QNIC parameter
@@ -1098,48 +1098,45 @@ connection_setup_inf HardwareMonitor::return_setupInf(int qnic_address) {
 }
 
 // This neighbor table includes all neighbors of qnic, qnic_r and qnic_rp
-NeighborTable HardwareMonitor::prepareNeighborTable(NeighborTable ntable, int total_numQnic) {
+void HardwareMonitor::prepareNeighborTable(int total_numQnic) {
   // Get the parent QNode that runs this connection manager.
   cModule *qnode = getQNode();
 
-  // Travese through all local qnics to check where they are connected to. HoM
+  // Traverse through all local qnics to check where they are connected to. HoM
   // and EPPS will be ignored in this case.
   for (int index = 0; index < numQnic; index++) {
     Interface_inf inf = getInterface_inf_fromQnicAddress(index, QNIC_E);
-    neighborInfo n_inf = findNeighborAddress(inf.qnic.pointer);
-    int neighborNodeAddress = n_inf.address;  // get the address of the Node nearby.
-    inf.neighborQNode_address = n_inf.neighborQNode_address;
+    auto n_inf = findNeighborAddress(inf.qnic.pointer);
+    int neighborNodeAddress = n_inf->address;  // get the address of the Node nearby.
+    inf.neighborQNode_address = n_inf->neighborQNode_address;
     ntable[neighborNodeAddress] = inf;
   }
   for (int index = 0; index < numQnic_r; index++) {
     Interface_inf inf = getInterface_inf_fromQnicAddress(index, QNIC_R);
-    neighborInfo n_inf = findNeighborAddress(inf.qnic.pointer);
-    int neighborNodeAddress = n_inf.address;  // get the address of the Node nearby.
-    inf.neighborQNode_address = n_inf.neighborQNode_address;
+    auto n_inf = findNeighborAddress(inf.qnic.pointer);
+    int neighborNodeAddress = n_inf->address;  // get the address of the Node nearby.
+    inf.neighborQNode_address = n_inf->neighborQNode_address;
     ntable[neighborNodeAddress] = inf;
   }
   for (int index = 0; index < numQnic_rp; index++) {
     Interface_inf inf = getInterface_inf_fromQnicAddress(index, QNIC_RP);
-    neighborInfo n_inf = findNeighborAddress(inf.qnic.pointer);
-    int neighborNodeAddress = n_inf.address;  // get the address of the Node nearby.
-    inf.neighborQNode_address = n_inf.neighborQNode_address;
+    auto n_inf = findNeighborAddress(inf.qnic.pointer);
+    int neighborNodeAddress = n_inf->address;  // get the address of the Node nearby.
+    inf.neighborQNode_address = n_inf->neighborQNode_address;
     ntable[neighborNodeAddress] = inf;
   }
-  return ntable;
 }
 
 // This method finds out the address of the neighboring node with respect to the
 // local unique qnic addres.
-neighborInfo HardwareMonitor::findNeighborAddress(cModule *qnic_pointer) {
+unique_ptr<neighborInfo> HardwareMonitor::findNeighborAddress(cModule *qnic_pointer) {
   // qnic_quantum_port$o is connected to the node's outermost quantum_port
-  cGate *gt = qnic_pointer->gate("qnic_quantum_port$o")->getNextGate();
-  // EV<<"gt = "<<gt->getName()<<"\n";
-  cGate *neighbor_gt = gt->getNextGate();
-  // EV<<"neighbor_gt = "<<neighbor_gt->getName()<<"\n";
-  // Ownner could be HoM, EPPS, QNode
-  cModule *neighbor_node = neighbor_gt->getOwnerModule();
-  // EV<<"neighbor_node = "<<neighbor_node->getName()<<"\n";
-  neighborInfo neighbor_is_QNode = checkIfQNode(neighbor_node);
+  cGate *gate = qnic_pointer->gate("qnic_quantum_port$o")->getNextGate();
+  cGate *neighbor_gate = gate->getNextGate();
+
+  // Owner could be HoM, EPPS, QNode
+  cModule *neighbor_node = neighbor_gate->getOwnerModule();
+  auto neighbor_is_QNode = checkIfQNode(neighbor_node);
   return neighbor_is_QNode;
 }
 
@@ -1162,46 +1159,49 @@ cModule *HardwareMonitor::getQNode() {
   return currentModule;
 }
 
-neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode) {
-  // Return this
-  neighborInfo inf;
-  if (thisNode->getModuleType() != QNodeType) {  // Not a Qnode!
+unique_ptr<neighborInfo> HardwareMonitor::checkIfQNode(cModule *thisNode) {
+  auto inf = unique_ptr<neighborInfo>(new neighborInfo());
+  inf->type = thisNode->getModuleType();
+  inf->address = thisNode->par("address");
 
-    if (thisNode->getModuleType() == HoMType) {
-      EV << thisNode->getModuleType()->getFullName() << " == " << HoMType->getFullName() << "\n";
-      inf.isQNode = false;
-      int address_one = thisNode->getSubmodule("Controller")->par("neighbor_address");
-      int address_two = thisNode->getSubmodule("Controller")->par("neighbor_address_two");
-      int myaddress = par("address");
-      EV << "\n myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << thisNode->getSubmodule("Controller")->getFullName()
-         << "\n";
-      // endSimulation();
-      if (address_one == myaddress) {
-        inf.neighborQNode_address = address_two;
-      } else if (address_two == myaddress) {
-        inf.neighborQNode_address = address_one;
-      } else {
-        // endSimulation();
-        // EV<<"address _one = "<<address_one<<", address_two = "<<address_two;
-        // error("Something is wrong with tracking the neighbor address. It is
-        // here.");
-      }
-    } else if (thisNode->getModuleType() == SPDCType) {
-      error("TO BE IMPLEMENTED");
-    } else {
-      error(
-          "This simulator only recognizes the following network level node "
-          "types: QNode, EPPS and HoM. Not %s",
-          thisNode->getClassName());
-      endSimulation();
-    }
-  } else {
-    inf.isQNode = true;
-    inf.neighborQNode_address = thisNode->par("address");
+  cModuleType *type = thisNode->getModuleType();
+
+  if (type == QNodeType) {
+    inf->isQNode = true;
+    inf->neighborQNode_address = thisNode->par("address");
+
+    inf->type = thisNode->getModuleType();
+    inf->address = thisNode->par("address");
+    return inf;
   }
-  inf.type = thisNode->getModuleType();
-  inf.address = thisNode->par("address");
-  return inf;
+
+  if (type == SPDCType) {
+    error("TO BE IMPLEMENTED");
+  }
+
+  if (type == HoMType) {
+    EV << thisNode->getModuleType()->getFullName() << " == " << HoMType->getFullName() << "\n";
+    inf->isQNode = false;
+    int address_one = thisNode->getSubmodule("Controller")->par("neighbor_address");
+    int address_two = thisNode->getSubmodule("Controller")->par("neighbor_address_two");
+    int myaddress = par("address");
+    EV << "myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << thisNode->getSubmodule("Controller")->getFullName()
+       << "\n";
+
+    if (address_one == myaddress) {
+      inf->neighborQNode_address = address_two;
+    } else if (address_two == myaddress) {
+      inf->neighborQNode_address = address_one;
+    }
+
+    return inf;
+  }
+
+  error(
+      "This simulator only recognizes the following network level node "
+      "types: QNode, EPPS and HoM. Not %s",
+      thisNode->getClassName());
+  endSimulation();
 }
 
 NeighborTable HardwareMonitor::passNeighborTable() {

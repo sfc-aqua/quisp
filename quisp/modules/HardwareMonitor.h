@@ -16,6 +16,7 @@
 #include "classical_messages_m.h"
 
 using namespace omnetpp;
+using std::unique_ptr;
 
 namespace quisp {
 namespace modules {
@@ -104,6 +105,8 @@ class HardwareMonitor : public cSimpleModule {
   int Purification_type = -1;
   int num_measure;
 
+  unique_ptr<Interface_inf> findInterfaceInfoByNeighborAddr(int neighbor_address);
+
  public:
   NeighborTable ntable;
   raw_data *tomography_data;
@@ -129,10 +132,10 @@ class HardwareMonitor : public cSimpleModule {
   virtual void finish() override;
   virtual void handleMessage(cMessage *msg) override;
   virtual int numInitStages() const override { return 2; };
-  virtual NeighborTable prepareNeighborTable(NeighborTable ntable, int numQnic);
-  virtual neighborInfo checkIfQNode(cModule *thisNode);
+  virtual void prepareNeighborTable(int numQnic);
+  virtual unique_ptr<neighborInfo> checkIfQNode(cModule *thisNode);
   virtual cModule *getQNode();
-  virtual neighborInfo findNeighborAddress(cModule *qnic_pointer);
+  virtual unique_ptr<neighborInfo> findNeighborAddress(cModule *qnic_pointer);
   virtual Interface_inf getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type);
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);
   virtual QNIC search_QNIC_from_Neighbor_QNode_address(int neighbor_address);
