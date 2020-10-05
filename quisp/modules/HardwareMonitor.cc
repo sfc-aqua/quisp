@@ -51,7 +51,7 @@ void HardwareMonitor::initialize(int stage) {
   all_temporal_tomography_output_holder = new Temporal_Tomography_Output_Holder[numQnic_total];
   all_temporal_tomography_runningtime_holder = new link_cost[numQnic_total];
   /* Once all_temporal_tomography_output_holder is filled in, those data are summarized into basis based measurement outcome table.
-   *  This accumulates the number of ++, +-, -+ and -- for each basis combination.*/
+   * This accumulates the number of ++, +-, -+ and -- for each basis combination.*/
 
   // Raw count table for tomography per link/qnic
   tomography_data = new raw_data[numQnic_total];
@@ -118,10 +118,11 @@ unsigned long HardwareMonitor::createUniqueId() {
   return RuleSet_id;
 }
 
-unique_ptr<Interface_inf> HardwareMonitor::findInterfaceInfoByNeighborAddr(int neighbor_address) {
+unique_ptr<Interface_inf> HardwareMonitor::findInterfaceByNeighborAddr(int neighbor_address) {
   for (auto it = ntable.cbegin(); it != ntable.cend(); ++it) {
     if (it->second.neighborQNode_address == neighbor_address) {
-      return unique_ptr<Interface_inf>(new Interface_inf(it->second));
+      // return unique_ptr<Interface_inf>(new Interface_inf(it->second));
+      return std::make_unique<Interface_inf>(it->second);
     }
   }
   return nullptr;
@@ -132,7 +133,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     /* Received a tomography request from neighbor */
     LinkTomographyRequest *request = check_and_cast<LinkTomographyRequest *>(msg);
 
-    auto info = findInterfaceInfoByNeighborAddr(request->getSrcAddr());
+    auto info = findInterfaceByNeighborAddr(request->getSrcAddr());
     if (info == nullptr) {
       error("1. Something is wrong when finding out local qnic address from neighbor address in ntable.");
     }
@@ -156,7 +157,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     /*Create and send RuleSets*/
     int partner_address = ack->getSrcAddr();
 
-    auto my_qnic_info = findInterfaceInfoByNeighborAddr(partner_address);
+    auto my_qnic_info = findInterfaceByNeighborAddr(partner_address);
     if (my_qnic_info == nullptr) {
       error("2. Something is wrong when finding out local qnic address from neighbor address in ntable.");
     }
@@ -330,14 +331,16 @@ void HardwareMonitor::finish() {
     double Yerr_rate = (density_matrix_reconstructed.real() * density_matrix_Y.real()).trace();
     EV << "Yerr = " << Yerr_rate << "\n";
 
-    connection_setup_inf inf = return_setupInf(i);
     double bellpairs_per_sec = 10;
     double link_cost = (double)100000000 / (fidelity * fidelity * all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec);
     if (link_cost < 1) {
       link_cost = 1;
     }
-
-    Interface_inf interface = getInterface_inf_fromQnicAddress(inf.qnic.index, inf.qnic.type);
+    auto info = return_setupInf(i);
+    if (info == nullptr) {
+      error("info not found");
+    }
+    Interface_inf interface = getInterface_inf_fromQnicAddress(info->qnic.index, info->qnic.type);
     cModule *this_node = this->getParentModule()->getParentModule();
     cModule *neighbor_node = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
     cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
@@ -507,9 +510,11 @@ Matrix4cd HardwareMonitor::reconstruct_Density_Matrix(int qnic_id) {
 }
 
 void HardwareMonitor::writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec) {
-  connection_setup_inf inf = return_setupInf(qnic_id);
-  Interface_inf interface = getInterface_inf_fromQnicAddress(inf.qnic.index, inf.qnic.type);
-  // if(myAddress > inf.neighbor_address)
+  auto info = return_setupInf(qnic_id);
+  if (info == nullptr) {
+    error("qnic info not found");
+  }
+  Interface_inf interface = getInterface_inf_fromQnicAddress(info->qnic.index, info->qnic.type);
   cModule *this_node = this->getParentModule()->getParentModule();
   cModule *neighbor_node = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
   cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
@@ -518,7 +523,7 @@ void HardwareMonitor::writeToFile_Topology_with_LinkCost(int qnic_id, double lin
     error("Module Type not recognized when writing to file...");
 
   if (neighbor_node->getModuleType() == QNodeType) {
-    if (myAddress > inf.neighbor_address) {
+    if (myAddress > info->neighbor_address) {
       std::cout << "\n"
                 << this_node->getFullName() << "<--> QuantumChannel{ cost = " << link_cost << "; distance = " << dis << "km; fidelity = " << fidelity
                 << "; bellpair_per_sec = " << bellpair_per_sec << ";} <-->" << neighbor_node->getFullName() << "\n";
@@ -1044,7 +1049,9 @@ int HardwareMonitor::checkNumBuff(int qnic_index, QNIC_type qnic_type) {
   Enter_Method("checkNumBuff()");
 
   cModule *qnode = nullptr;
-  if (qnic_type >= QNIC_N) error("Only 3 qnic types are currently recognized....");  // avoid segfaults <3
+  if (qnic_type >= QNIC_N) {
+    error("Only 3 qnic types are currently recognized....");
+  }
   qnode = getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);
   return qnode->par("numBuffer");
 }
@@ -1074,27 +1081,20 @@ Interface_inf HardwareMonitor::getInterface_inf_fromQnicAddress(int qnic_index, 
   return inf;
 }
 
-connection_setup_inf HardwareMonitor::return_setupInf(int qnic_address) {
+std::unique_ptr<connection_setup_inf> HardwareMonitor::return_setupInf(int qnic_address) {
   Enter_Method("return_setupInf()");
-  connection_setup_inf inf = {.qnic =
-                                  {
-                                      .type = QNIC_N,
-                                      .index = -1,
-                                  },
-                              .neighbor_address = -1,
-                              .quantum_link_cost = -1};
   for (auto it = ntable.cbegin(); it != ntable.cend(); ++it) {
     if (it->second.qnic.address == qnic_address) {
-      inf.qnic.type = it->second.qnic.type;
-      inf.qnic.index = it->second.qnic.index;
-      inf.qnic.address = it->second.qnic.address;
-      inf.neighbor_address = it->second.neighborQNode_address;
-      // cModule *node = getModuleByPath("network.HoM");
-      inf.quantum_link_cost = it->second.link_cost;
-      break;
+      auto info = std::make_unique<connection_setup_inf>();
+      info->qnic.type = it->second.qnic.type;
+      info->qnic.index = it->second.qnic.index;
+      info->qnic.address = it->second.qnic.address;
+      info->neighbor_address = it->second.neighborQNode_address;
+      info->quantum_link_cost = it->second.link_cost;
+      return info;
     }
   }
-  return inf;
+  return nullptr;
 }
 
 // This neighbor table includes all neighbors of qnic, qnic_r and qnic_rp
@@ -1156,11 +1156,10 @@ cModule *HardwareMonitor::getQNode() {
         "ned file?");
     endSimulation();
   }
-  return currentModule;
 }
 
 unique_ptr<neighborInfo> HardwareMonitor::checkIfQNode(cModule *thisNode) {
-  auto inf = unique_ptr<neighborInfo>(new neighborInfo());
+  auto inf = std::make_unique<neighborInfo>();
   inf->type = thisNode->getModuleType();
   inf->address = thisNode->par("address");
 
@@ -1201,7 +1200,6 @@ unique_ptr<neighborInfo> HardwareMonitor::checkIfQNode(cModule *thisNode) {
       "This simulator only recognizes the following network level node "
       "types: QNode, EPPS and HoM. Not %s",
       thisNode->getClassName());
-  endSimulation();
 }
 
 NeighborTable HardwareMonitor::passNeighborTable() {

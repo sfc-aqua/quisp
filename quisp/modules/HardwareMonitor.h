@@ -16,7 +16,6 @@
 #include "classical_messages_m.h"
 
 using namespace omnetpp;
-using std::unique_ptr;
 
 namespace quisp {
 namespace modules {
@@ -105,7 +104,7 @@ class HardwareMonitor : public cSimpleModule {
   int Purification_type = -1;
   int num_measure;
 
-  unique_ptr<Interface_inf> findInterfaceInfoByNeighborAddr(int neighbor_address);
+  std::unique_ptr<Interface_inf> findInterfaceByNeighborAddr(int neighbor_address);
 
  public:
   NeighborTable ntable;
@@ -116,7 +115,7 @@ class HardwareMonitor : public cSimpleModule {
 
   // returns the total number of qubits
   int checkNumBuff(int qnic_index, QNIC_type qnic_type);
-  connection_setup_inf return_setupInf(int qnic_address);
+  std::unique_ptr<connection_setup_inf> return_setupInf(int qnic_address);
 
   // virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, QNIC_type qnic_type);//returns the set of free resources
   // virtual int checkNumFreeBuff(int qnic_index, QNIC_type qnic_type);//returns the number of free qubits
@@ -133,9 +132,9 @@ class HardwareMonitor : public cSimpleModule {
   virtual void handleMessage(cMessage *msg) override;
   virtual int numInitStages() const override { return 2; };
   virtual void prepareNeighborTable(int numQnic);
-  virtual unique_ptr<neighborInfo> checkIfQNode(cModule *thisNode);
+  virtual std::unique_ptr<neighborInfo> checkIfQNode(cModule *thisNode);
   virtual cModule *getQNode();
-  virtual unique_ptr<neighborInfo> findNeighborAddress(cModule *qnic_pointer);
+  virtual std::unique_ptr<neighborInfo> findNeighborAddress(cModule *qnic_pointer);
   virtual Interface_inf getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type);
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);
   virtual QNIC search_QNIC_from_Neighbor_QNode_address(int neighbor_address);

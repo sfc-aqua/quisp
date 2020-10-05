@@ -927,9 +927,12 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // initialize
 
   int qnic_address = routingdaemon->return_QNIC_address_to_destAddr(new_partner);
-  connection_setup_inf inf = hardware_monitor->return_setupInf(qnic_address);
-  int qnic_index = inf.qnic.index;
-  QNIC_type qnic_type = inf.qnic.type;
+  auto info = hardware_monitor->return_setupInf(qnic_address);
+  if (info == nullptr) {
+    error("qnic(addr: %d) info not found", qnic_address);
+  }
+  int qnic_index = info->qnic.index;
+  QNIC_type qnic_type = info->qnic.type;
   int qubit_index = swapr.measured_qubit_index;
 
   // First, the qubit used for swapping must be free.s
