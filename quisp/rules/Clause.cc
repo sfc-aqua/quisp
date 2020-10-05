@@ -159,23 +159,99 @@ bool PurificationCountClause::check(qnicResources* resources) const {
 
 bool PurificationCountClause::check(std::multimap<int, StationaryQubit*> resource) const {
   StationaryQubit* qubit = nullptr;
-  // checkQnic();//This is not doing anything...
-
-  /*
-  qubit = getQubitPurified(resources, qnic_type, qnic_id, partner, num_purify_must);
-  if(qubit != nullptr){
-      return true;//There is a qubit that has been purified "num_purify_must" times.
-  }else{
-      return false;
-  }*/
 }
 
-/*
-bool PurificationCountClause::checkTerminate(qnicResources* resources) const {
-        return false;
-}*/
+//ABSA clauses start here
+//Algorithm 1 Clause
+//do we need a list if we are only using the 1st index?
+bool initConditionalClause::check(std::arrivalTime<int){
+  initTime = false;
+  //get current time
+  currentTime = simTime();
+  if (currentTime < arrivalTime){
+    initTime = true;
+  }
+  return initTime;
+}
+  
+//Algorithm 3 Clause
+//Is arrival time a list? why two values?
+bool MeasureConditionalClause::check(std::arrivalTime<int){
+  //how to get current time?
+  currentTime = simTime();
+  measurementNeeded = false;
+  if (arrivalTime <= currentTime){
+    measurementNeeded = true;
+  }
+  return measurementNeeded;
+}
+  
+//Algorithm 4 Clause
+//what is the size of the list?
+//What are the content of the list? ints? bools?
+//Can we represent the basis are ints, e.g. 1 >> encodeX?
+int postBellConditionalClause::check(int *outList, std::successBell<bool){
+  //basis = "encodeX";
+  basis = 1;
+  if (successBell == true or outList[-1] == false){
+    //basis = "encodeZ";
+    basis = 2;
+  }
+  return basis;
+}
+  
+  
+ //Algorithm 6 Clause
+bool finalConditionalClause::check(std::arrivalTime<int, std::msgSent<bool){
+  //get current time
+  currentTime = simTime();
+  msgNeeded = false;
+  if (currentTime> arrivalTime and msgSent == false){
+    msgNeeded = true;
+  }
+  return msgNeeded;
+}
+  
+ 
+//Algorithm 8 Clause
+bool qkdInitConditionalClause(int *arrivalTime){
+  initNeeded = false;
+  //get current time
+  currentTime = ;
+  if (currentTime < arrivalTime[0]){
+    initNeeded = true;
+  }
+  return initNeeded;
+}
+  
+  
 
-// Clause *EXAMPLE_CLAUSE = new FidelityClause(0,0,.6);
+//Algorithm 10 Clause
+//needs to be divided into two clause >> multiple returns
+//If we have only two meaurement basis, can we just use true and false for them
+bool *qkdMeasureConditionClause(int *arrivalTimeList, *basisList){
+  measurementNeeded = false;
+  //get current time
+  currentTime = ;
+  //get_index??
+  index = get_index(currentTime, int *arrivalTimeList);
+  if (arrivalTimeList[0] <= currentTime and currentTime <= arrivalTimeList[-1]){
+    measurementNeeded = true;
+    basis = basisList[index];
+  }
+  return measurementNeeded, basis;
+}
+  
+  
+//Algorithm 12 Clause
+bool qkdFinalConditionClause(int *Algorithm){
+  currentTime = ;
+  finalNeeded = false;
+  if(currentTime > arrivalTimeList[-1]){
+    finalNeeded = true;
+  }
+  return finalNeeded;
+}
 
 }  // namespace rules
 }  // namespace quisp
