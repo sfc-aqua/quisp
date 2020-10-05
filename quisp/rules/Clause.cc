@@ -190,7 +190,7 @@ bool MeasureConditionalClause::check(std::arrivalTime<int){
 //what is the size of the list?
 //What are the content of the list? ints? bools?
 //Can we represent the basis are ints, e.g. 1 >> encodeX?
-int postBellConditionalClause::check(int *outList, std::successBell<bool){
+int postBellConditionalClause::check(std::outList<int*, std::successBell<bool){
   //basis = "encodeX";
   basis = 1;
   if (successBell == true or outList[-1] == false){
@@ -214,7 +214,7 @@ bool finalConditionalClause::check(std::arrivalTime<int, std::msgSent<bool){
   
  
 //Algorithm 8 Clause
-bool qkdInitConditionalClause(int *arrivalTime){
+bool qkdInitConditionalClause(std::arrivalTime<int*){
   initNeeded = false;
   //get current time
   currentTime = ;
@@ -229,7 +229,7 @@ bool qkdInitConditionalClause(int *arrivalTime){
 //Algorithm 10 Clause
 //needs to be divided into two clause >> multiple returns
 //If we have only two meaurement basis, can we just use true and false for them
-bool *qkdMeasureConditionClause(int *arrivalTimeList, *basisList){
+bool *qkdMeasureConditionClause(std::arrivalTimeList<int*, *basisList){
   measurementNeeded = false;
   //get current time
   currentTime = ;
@@ -244,7 +244,7 @@ bool *qkdMeasureConditionClause(int *arrivalTimeList, *basisList){
   
   
 //Algorithm 12 Clause
-bool qkdFinalConditionClause(int *Algorithm){
+bool qkdFinalConditionClause(std::Algorithm<int*){
   currentTime = ;
   finalNeeded = false;
   if(currentTime > arrivalTimeList[-1]){
