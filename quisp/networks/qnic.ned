@@ -135,7 +135,7 @@ simple StationaryQubit
         inout tolens_quantum_port;
 }
 
-simple QNIC_photonic_switch
+simple PhotonicSwitch
 {
     parameters:
         int address;
@@ -186,7 +186,7 @@ module QNIC
             @display("t=Id $stationaryQubit_address;i=block/circle,blue;"); // modify display string
             std = emission_std;
         }
-        lens: QNIC_photonic_switch {
+        lens: PhotonicSwitch {
             address = self_qnic_address;
             @display("i=block/dispatch;");
         }
