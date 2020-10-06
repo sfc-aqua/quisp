@@ -12,9 +12,23 @@ jobs:
       apt:
         sources: ['ubuntu-toolchain-r-test']
 
+cache:
+  directories:
+    - docker_images
+
+before_install:
+  -  |
+    IMAGE=`sha1sum Dockerfile | cut -d ' ' -f 1`
+    echo $image
+    docker load -i docker_images/${IMAGE}.tar || true
+  
 services:
   - docker
-install: travis_wait sh docker_build.sh
+
+install: 
+  - travis_wait sh docker_build.sh
+  - docker save -o docker_images/`sha1sum Dockerfile | cut -d ' ' -f 1`.tar quisp:latest
+
 script: 
   - sh docker_run_lint.sh 
   - sh docker_run_test.sh 
