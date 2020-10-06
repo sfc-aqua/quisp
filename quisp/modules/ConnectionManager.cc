@@ -45,7 +45,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     }
 
     int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
-    auto dst_inf = hardware_monitor->return_setupInf(local_qnic_address_to_actual_dst);
+    auto dst_inf = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
     bool is_qnic_available = !isQnicBusy(dst_inf->qnic.address);
     bool requested_by_myself = actual_src == my_address;
 
@@ -213,7 +213,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   }
 
   auto dst_info = std::make_unique<connection_setup_inf>(NULL_CONNECTION_SETUP_INFO);
-  auto src_info = hardware_monitor->return_setupInf(local_qnic_address_to_actual_src);
+  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
 
   if (src_info == nullptr) {
     error("src_info not found");
@@ -476,8 +476,8 @@ void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
   }
 
   // Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
-  auto dst_info = hardware_monitor->return_setupInf(dst_qnic_addr);
-  auto src_info = hardware_monitor->return_setupInf(src_qnic_addr);
+  auto dst_info = hardware_monitor->findConnectionInfoByQnicAddr(dst_qnic_addr);
+  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(src_qnic_addr);
 
   int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
   int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
@@ -576,8 +576,8 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
   // Currently, sending path and returning path are same, but for future, this might not good way
   int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
   int local_qnic_address_to_actual_src = routing_daemon->return_QNIC_address_to_destAddr(actual_src);
-  auto dst_info = hardware_monitor->return_setupInf(local_qnic_address_to_actual_dst);
-  auto src_info = hardware_monitor->return_setupInf(local_qnic_address_to_actual_src);
+  auto dst_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
+  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
   if (my_address != actual_dst && my_address != actual_src) {
     releaseQnic(dst_info->qnic.address);
     releaseQnic(src_info->qnic.address);

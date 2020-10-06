@@ -818,7 +818,7 @@ RuleEngine::QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTabl
 
   int index = 0;
   for (int i = 0; i < qnics; i++) {
-    for (int x = 0; x < hardware_monitor->checkNumBuff(i, qnic_type); x++) {
+    for (int x = 0; x < hardware_monitor->getQnicNumQubits(i, qnic_type); x++) {
       QubitAddr this_qubit = {parentAddress, i, x};
       // QubitAddr entangled_qubit = {-1, -1, -1};//Entangled address. The system may miss-track the actual entangled partner.  Initialized as -1 'cause no entangled qubits in the
       // beginning QubitAddr actual = {-1, -1, -1};//Entangled address. This is the true physically entangled partner. If there!=actual, then any operation on the qubit is a mess!
@@ -927,7 +927,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // initialize
 
   int qnic_address = routingdaemon->return_QNIC_address_to_destAddr(new_partner);
-  auto info = hardware_monitor->return_setupInf(qnic_address);
+  auto info = hardware_monitor->findConnectionInfoByQnicAddr(qnic_address);
   if (info == nullptr) {
     error("qnic(addr: %d) info not found", qnic_address);
   }

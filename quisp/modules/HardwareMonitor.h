@@ -85,10 +85,13 @@ struct link_cost {
   double Bellpair_per_sec;
 };
 
-// qnic_index -> Interface{qnic_type, initial_fidelity...}
+// qnic_index -> Interface_inf
 typedef std::map<int, Interface_inf> NeighborTable;
 
-// basis combination -> raw output count e.g "XX" -> {plus_plus = 56, plus_minus = 55, minus_plus = 50, minus_minus = 50}, "XY" -> {....
+// basis combination -> raw output count
+// e.g.
+// "XX" -> {plus_plus = 56, plus_minus = 55, minus_plus = 50, minus_minus = 50},
+// "XY" -> {....
 typedef std::map<std::string, output_count> raw_data;
 
 /** \class HardwareMonitor HardwareMonitor.h
@@ -99,8 +102,16 @@ typedef std::map<std::string, output_count> raw_data;
 
 class HardwareMonitor : public cSimpleModule {
  private:
-  int myAddress;
-  int numQnic, numQnic_r, numQnic_rp, numQnic_total;
+  int my_address;
+
+  // number of qnics connected to stand alone HoM or internal hom in the neighbor.
+  int num_qnic;
+  // number of qnics connected to internal hom.
+  int num_qnic_r;
+  // number of qnics connected to epps.
+  int num_qnic_rp;
+  int num_qnic_total;
+
   cModuleType *QNodeType = cModuleType::get("networks.QNode");
   cModuleType *SPDCType = cModuleType::get("networks.SPDC");
   cModuleType *HoMType = cModuleType::get("networks.HoM");
@@ -112,17 +123,17 @@ class HardwareMonitor : public cSimpleModule {
   int num_measure;
 
   std::unique_ptr<Interface_inf> findInterfaceByNeighborAddr(int neighbor_address);
+  cModule *getQnic(int qnic_index, QNIC_type qnic_type);
 
  public:
-  NeighborTable ntable;
+  NeighborTable neighbor_table;
   raw_data *tomography_data;
 
   single_qubit_error Pauli;
   NeighborTable passNeighborTable();
 
-  // returns the total number of qubits
-  int checkNumBuff(int qnic_index, QNIC_type qnic_type);
-  std::unique_ptr<connection_setup_inf> return_setupInf(int qnic_address);
+  int getQnicNumQubits(int qnic_index, QNIC_type qnic_type);
+  std::unique_ptr<connection_setup_inf> findConnectionInfoByQnicAddr(int qnic_address);
 
   // virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, QNIC_type qnic_type);//returns the set of free resources
   // virtual int checkNumFreeBuff(int qnic_index, QNIC_type qnic_type);//returns the number of free qubits
@@ -138,11 +149,12 @@ class HardwareMonitor : public cSimpleModule {
   virtual void finish() override;
   virtual void handleMessage(cMessage *msg) override;
   virtual int numInitStages() const override { return 2; };
-  virtual void prepareNeighborTable(int numQnic);
+  virtual void prepareNeighborTable();
+
   virtual std::unique_ptr<neighborInfo> createNeighborInfo(const cModule &thisNode);
   virtual cModule *getQNode();
-  virtual std::unique_ptr<neighborInfo> findNeighborAddress(cModule *qnic_pointer);
-  virtual Interface_inf getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type);
+  virtual std::unique_ptr<neighborInfo> getNeighbor(cModule *qnic_pointer);
+  virtual Interface_inf getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);
   virtual QNIC search_QNIC_from_Neighbor_QNode_address(int neighbor_address);
   virtual Matrix4cd reconstruct_Density_Matrix(int qnic_id);
