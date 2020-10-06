@@ -23,8 +23,6 @@ namespace modules {
 using namespace rules;
 using std::unique_ptr;
 
-Define_Module(HardwareMonitor);
-
 // Hm is also responsible for calculating the rssi/oka's protocol/fidelity calcu and give it to the rd
 void HardwareMonitor::initialize(int stage) {
   EV << "HardwareMonitor booted\n";
@@ -75,7 +73,6 @@ void HardwareMonitor::initialize(int stage) {
   /*This keeps which node is connected to which local qnic.*/
   tomography_output_filename = par("tomography_output_filename").str();
   file_dir_name = par("file_dir_name").str();
-  prepareNeighborTable(numQnic_total);
   do_link_level_tomography = par("link_tomography");
   num_purification = par("initial_purification");
   X_Purification = par("X_purification");
@@ -83,12 +80,11 @@ void HardwareMonitor::initialize(int stage) {
   Purification_type = par("Purification_type");
   num_measure = par("num_measure");
   myAddress = par("address");
-  std::stringstream ss;
-  for (auto it = ntable.cbegin(); it != ntable.cend(); ++it) {
-    ss << it->first << "(d)->(i)" << it->second.qnic.index << ", ";
+
+  if (stage == 1) {
+    prepareNeighborTable(numQnic_total);
+    WATCH_MAP(ntable);
   }
-  std::string s = ss.str();
-  par("ntable") = s;
 
   if (do_link_level_tomography && stage == 1) {
     for (auto it = ntable.cbegin(); it != ntable.cend(); ++it) {
@@ -1128,16 +1124,16 @@ void HardwareMonitor::prepareNeighborTable(int total_numQnic) {
 }
 
 // This method finds out the address of the neighboring node with respect to the
-// local unique qnic addres.
-unique_ptr<neighborInfo> HardwareMonitor::findNeighborAddress(cModule *qnic_pointer) {
+// local unique qnic address.
+unique_ptr<neighborInfo> HardwareMonitor::findNeighborAddress(cModule *qnic_module) {
   // qnic_quantum_port$o is connected to the node's outermost quantum_port
-  cGate *gate = qnic_pointer->gate("qnic_quantum_port$o")->getNextGate();
+  cGate *gate = qnic_module->gate("qnic_quantum_port$o")->getNextGate();
   cGate *neighbor_gate = gate->getNextGate();
 
   // Owner could be HoM, EPPS, QNode
-  cModule *neighbor_node = neighbor_gate->getOwnerModule();
-  auto neighbor_is_QNode = checkIfQNode(neighbor_node);
-  return neighbor_is_QNode;
+  const cModule *neighbor_node = neighbor_gate->getOwnerModule();
+  auto neighbor_info = createNeighborInfo(*neighbor_node);
+  return neighbor_info;
 }
 
 cModule *HardwareMonitor::getQNode() {
@@ -1158,34 +1154,35 @@ cModule *HardwareMonitor::getQNode() {
   }
 }
 
-unique_ptr<neighborInfo> HardwareMonitor::checkIfQNode(cModule *thisNode) {
-  auto inf = std::make_unique<neighborInfo>();
-  inf->type = thisNode->getModuleType();
-  inf->address = thisNode->par("address");
+unique_ptr<neighborInfo> HardwareMonitor::createNeighborInfo(const cModule &thisNode) {
+  cModuleType *type = thisNode.getModuleType();
 
-  cModuleType *type = thisNode->getModuleType();
+  auto inf = std::make_unique<neighborInfo>();
+  inf->type = type;
+  inf->address = thisNode.par("address");
 
   if (type == QNodeType) {
-    inf->isQNode = true;
-    inf->neighborQNode_address = thisNode->par("address");
-
-    inf->type = thisNode->getModuleType();
-    inf->address = thisNode->par("address");
+    inf->neighborQNode_address = thisNode.par("address");
+    inf->address = thisNode.par("address");
     return inf;
   }
 
-  if (type == SPDCType) {
-    error("TO BE IMPLEMENTED");
-  }
-
   if (type == HoMType) {
-    EV << thisNode->getModuleType()->getFullName() << " == " << HoMType->getFullName() << "\n";
-    inf->isQNode = false;
-    int address_one = thisNode->getSubmodule("Controller")->par("neighbor_address");
-    int address_two = thisNode->getSubmodule("Controller")->par("neighbor_address_two");
+    EV << thisNode.getModuleType()->getFullName() << " == " << HoMType->getFullName() << "\n";
+    cModule *controller = thisNode.getSubmodule("Controller");
+    if (controller == nullptr) {
+      error("HoM Controller not found");
+    }
+
+    int address_one = controller->par("neighbor_address");
+    int address_two = controller->par("neighbor_address_two");
     int myaddress = par("address");
-    EV << "myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << thisNode->getSubmodule("Controller")->getFullName()
-       << "\n";
+
+    EV << "myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << controller->getFullName() << "\n";
+
+    if (address_one == -1 && address_two == -1) {
+      error("HoM Controller is not initialized properly");
+    }
 
     if (address_one == myaddress) {
       inf->neighborQNode_address = address_two;
@@ -1196,10 +1193,14 @@ unique_ptr<neighborInfo> HardwareMonitor::checkIfQNode(cModule *thisNode) {
     return inf;
   }
 
+  if (type == SPDCType) {
+    error("TO BE IMPLEMENTED");
+  }
+
   error(
       "This simulator only recognizes the following network level node "
       "types: QNode, EPPS and HoM. Not %s",
-      thisNode->getClassName());
+      thisNode.getClassName());
 }
 
 NeighborTable HardwareMonitor::passNeighborTable() {
@@ -1209,3 +1210,14 @@ NeighborTable HardwareMonitor::passNeighborTable() {
 
 }  // namespace modules
 }  // namespace quisp
+
+namespace std {
+std::stringstream &operator<<(std::stringstream &os, const quisp::modules::neighborInfo &v) {
+  os << "neighborInfo(addr: " << v.address << ", neighborQNodeAddr: " << v.neighborQNode_address;
+  return os;
+}
+std::basic_ostream<char> &operator<<(std::basic_ostream<char> &os, const quisp::modules::Interface_inf &v) {
+  os << "InterfaceInf(neighborQNodeAddr: " << v.neighborQNode_address << ", qnic.addr: " << v.qnic.address << ")";
+  return os;
+}
+}  // namespace std

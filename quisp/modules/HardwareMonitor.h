@@ -21,10 +21,9 @@ namespace quisp {
 namespace modules {
 
 struct neighborInfo {
-  bool isQNode;
+  // QNode, SPDC, HOM
   cModuleType *type;
-  int address;  // May be QNode, SPDC, HOM
-  int index;
+  int address;
   int neighborQNode_address;  // QNode (May be across SDPC or HOM node)
 };
 
@@ -54,6 +53,14 @@ struct connection_setup_inf {
   int neighbor_address;
   int quantum_link_cost;
 };
+
+const connection_setup_inf NULL_CONNECTION_SETUP_INFO{.qnic =
+                                                          {
+                                                              .type = QNIC_N,
+                                                              .index = -1,
+                                                          },
+                                                      .neighbor_address = -1,
+                                                      .quantum_link_cost = -1};
 
 struct tomography_outcome {
   char my_basis;
@@ -132,7 +139,7 @@ class HardwareMonitor : public cSimpleModule {
   virtual void handleMessage(cMessage *msg) override;
   virtual int numInitStages() const override { return 2; };
   virtual void prepareNeighborTable(int numQnic);
-  virtual std::unique_ptr<neighborInfo> checkIfQNode(cModule *thisNode);
+  virtual std::unique_ptr<neighborInfo> createNeighborInfo(const cModule &thisNode);
   virtual cModule *getQNode();
   virtual std::unique_ptr<neighborInfo> findNeighborAddress(cModule *qnic_pointer);
   virtual Interface_inf getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type);
@@ -145,7 +152,14 @@ class HardwareMonitor : public cSimpleModule {
   // simtime_t tomography_time;
 };
 
+Define_Module(HardwareMonitor);
+
 }  // namespace modules
 }  // namespace quisp
+
+namespace std {
+std::stringstream &operator<<(std::stringstream &os, const quisp::modules::neighborInfo &v);
+std::basic_ostream<char> &operator<<(std::basic_ostream<char> &os, const quisp::modules::Interface_inf &v);
+}  // namespace std
 
 #endif /* QUISP_MODULES_HARDWAREMONITOR_H_ */

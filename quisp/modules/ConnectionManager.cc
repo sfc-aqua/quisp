@@ -212,11 +212,9 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     error("This shouldn't happen!");
   }
 
-  auto dst_info = hardware_monitor->return_setupInf(local_qnic_address_to_actual_dst);
+  auto dst_info = std::make_unique<connection_setup_inf>(NULL_CONNECTION_SETUP_INFO);
   auto src_info = hardware_monitor->return_setupInf(local_qnic_address_to_actual_src);
-  if (dst_info == nullptr) {
-    error("dst_info not found");
-  }
+
   if (src_info == nullptr) {
     error("src_info not found");
   }
@@ -500,13 +498,7 @@ void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
   bool is_initiator = my_address == initiator_addr;
 
   if (is_initiator) {
-    src_info = std::unique_ptr<connection_setup_inf>(new connection_setup_inf{.qnic =
-                                                                                  {
-                                                                                      .type = QNIC_N,
-                                                                                      .index = -1,
-                                                                                  },
-                                                                              .neighbor_address = -1,
-                                                                              .quantum_link_cost = -1});
+    src_info = std::make_unique<connection_setup_inf>(NULL_CONNECTION_SETUP_INFO);
   } else {
     if (src_info == nullptr) {
       error("source qnic not found");
