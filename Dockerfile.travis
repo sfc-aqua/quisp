@@ -1,0 +1,20 @@
+FROM omnetpp/omnetpp:u18.04-5.6.2
+
+RUN apt-get update -y && apt install -y --no-install-recommends libeigen3-dev cmake g++ clang-format clang-tidy
+
+# Google test need HACK
+ARG GTEST_VERSION
+RUN mkdir -p /root/clibrary
+WORKDIR /root/clibrary
+RUN chmod 755 /root/clibrary && \
+    wget https://github.com/google/googletest/archive/release-${GTEST_VERSION}.tar.gz -O gtest.tar.gz --progress=bar &&\
+    tar -zxvf gtest.tar.gz &&\
+    rm gtest.tar.gz &&\
+    mv /root/clibrary/googletest-release-${GTEST_VERSION} /root/clibrary/googletest &&\
+    chmod 755 /root/clibrary/googletest &&\
+    cd /root/clibrary/googletest &&\
+    mkdir build && chmod 755 build &&\
+    cd /root/clibrary/googletest/build &&\
+    cmake .. -DBUILD_SHARED_LIBS=0 &&\
+    make
+ENV GTEST_ROOT /root/clibrary/googletest/build/googletest/:$PATH
