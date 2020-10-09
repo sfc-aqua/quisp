@@ -18,7 +18,7 @@ using namespace quisp::messages;
 namespace quisp {
 namespace modules {
 
-typedef struct _entangledPhotons {
+typedef struct {
   PhotonicQubit* qubitOne;
   PhotonicQubit* qubitTwo;
 } entangledPhotons;

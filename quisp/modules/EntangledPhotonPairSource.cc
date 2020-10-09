@@ -27,7 +27,7 @@ void EntangledPhotonPairSource::handleMessage(cMessage *msg) { send(msg, "to_qua
 
 PhotonicQubit *EntangledPhotonPairSource::generateEntangledPhotons() {
   Enter_Method("generateEntangledPhotons()");
-  PhotonicQubit *photon_one = new PhotonicQubit();
+  PhotonicQubit *photon_one = new PhotonicQubit("Photon");
   return photon_one;
   // PhotonicQubit *photon_two = new PhotonicQubit();
   // photon_one->addPar("gate") = 0;

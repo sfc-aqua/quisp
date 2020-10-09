@@ -1,6 +1,6 @@
 package networks;
 
-simple stationaryQubit
+simple StationaryQubit
 {
     parameters:
         // performance analysis
@@ -135,7 +135,7 @@ simple stationaryQubit
         inout tolens_quantum_port;
 }
 
-simple QNIC_photonic_switch
+simple PhotonicSwitch
 {
     parameters:
         int address;
@@ -175,7 +175,7 @@ module QNIC
         //inout dummyRoutingDaemonLink @loose;
 
     submodules:
-        statQubit[numBuffer]: stationaryQubit {
+        statQubit[numBuffer]: StationaryQubit {
             stationaryQubit_address = index;
             node_address = parent_node_address;
             qnic_address = self_qnic_address;
@@ -186,7 +186,7 @@ module QNIC
             @display("t=Id $stationaryQubit_address;i=block/circle,blue;"); // modify display string
             std = emission_std;
         }
-        lens: QNIC_photonic_switch {
+        lens: PhotonicSwitch {
             address = self_qnic_address;
             @display("i=block/dispatch;");
         }

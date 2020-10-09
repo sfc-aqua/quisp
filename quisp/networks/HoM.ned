@@ -28,10 +28,10 @@ simple BellStateAnalyzer
         output toHoMController_port;
 }
 
-simple HoM_Controller
+simple HoMController
 {
     parameters:
-        //@class(quisp::modules::HoM_Controller);
+        //@class(quisp::modules::HoMController);
         int address;
         volatile double Speed_of_light_in_fiber @unit(km);//per sec
         int photon_detection_per_sec = default(10000);
@@ -77,7 +77,7 @@ module interHoM {
         inout quantum_port[] @loose;
         output toRouter @loose;
      submodules:
-        Controller: HoM_Controller {
+        Controller: HoMController {
             parameters:
                 address = address;
                 @display("p=103.55499,121.435");
@@ -155,7 +155,7 @@ module HoM
                 address = 0;
                 @display("p=281.61,55.874996");
         }
-        Controller: HoM_Controller {
+        Controller: HoMController {
             parameters:
                 address = address;
                 photon_detection_per_sec = hom_photon_detection_per_sec;

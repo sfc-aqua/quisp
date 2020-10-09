@@ -20,7 +20,7 @@ using namespace omnetpp;
 namespace quisp {
 namespace modules {
 
-typedef struct _neighborInfo {
+typedef struct {
   bool isQNode;
   cModuleType *type;
   int address;  // May be QNode, SPDC, HOM
@@ -30,7 +30,7 @@ typedef struct _neighborInfo {
 
 typedef QNIC_id entangledWith;
 
-typedef struct _stationaryQubitInfo {
+typedef struct {
   int qnic_index;
   int qubit_index;
   bool isBusy;  // Reserved or free to use
@@ -38,7 +38,7 @@ typedef struct _stationaryQubitInfo {
   entangledWith entangled_inf;
 } stationaryQubitInfo;
 
-typedef struct _Interface_inf {
+typedef struct {
   // QubitAddr(int node_addr, int qnic_index, int qubit_index):node_address(node_addr),qnic_index(qnic_index),qubit_index(qubit_index){}
   QNIC qnic;
   double initial_fidelity = -1; /*Oka's protocol?*/
@@ -49,13 +49,13 @@ typedef struct _Interface_inf {
   QNIC neighbor_qnic;
 } Interface_inf;
 
-typedef struct _For_connection_setup {
+typedef struct {
   QNIC_id qnic;
   int neighbor_address;
   int quantum_link_cost;
 } connection_setup_inf;
 
-typedef struct _tomogrphy_outcome {
+typedef struct {
   char my_basis;
   bool my_output_is_plus;
   char my_GOD_clean;
@@ -64,7 +64,7 @@ typedef struct _tomogrphy_outcome {
   char partner_GOD_clean;
 } tomography_outcome;
 
-typedef struct _output_count {
+typedef struct {
   int total_count;
   int plus_plus;
   int plus_minus;
@@ -72,7 +72,7 @@ typedef struct _output_count {
   int minus_minus;
 } output_count;
 
-typedef struct _link_cost {
+typedef struct {
   simtime_t tomography_time;
   int tomography_measurements;
   double Bellpair_per_sec;

@@ -7,12 +7,14 @@
  *  \brief HardwareMonitor
  */
 #include "HardwareMonitor.h"
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <unsupported/Eigen/KroneckerProduct>
 #include <unsupported/Eigen/MatrixFunctions>
+
 #include "classical_messages_m.h"
 
 namespace quisp {
@@ -48,8 +50,7 @@ void HardwareMonitor::initialize(int stage) {
   all_temporal_tomography_output_holder = new Temporal_Tomography_Output_Holder[numQnic_total];
   all_temporal_tomography_runningtime_holder = new link_cost[numQnic_total];
   /* Once all_temporal_tomography_output_holder is filled in, those data are summarized into basis based measurement outcome table.
-   * This accumulates the number of ++, +-, -+ and --
-   * for each basis combination.*/
+   *  This accumulates the number of ++, +-, -+ and -- for each basis combination.*/
 
   // Raw count table for tomography per link/qnic
   tomography_data = new raw_data[numQnic_total];
@@ -94,7 +95,7 @@ void HardwareMonitor::initialize(int stage) {
       // Not a very good solution, but makes sure that only 1 request per link is generated.
       if (myAddress > it->second.neighborQNode_address) {
         EV << "Generating tomography rules... for node " << it->second.neighborQNode_address << "\n";
-        LinkTomographyRequest* pk = new LinkTomographyRequest;
+        LinkTomographyRequest *pk = new LinkTomographyRequest("LinkTomographyRequest");
         pk->setDestAddr(it->second.neighborQNode_address);
         pk->setSrcAddr(myAddress);
         pk->setKind(6);
@@ -116,12 +117,12 @@ unsigned long HardwareMonitor::createUniqueId() {
   return RuleSet_id;
 }
 
-void HardwareMonitor::handleMessage(cMessage* msg) {
-  if (dynamic_cast<LinkTomographyRequest*>(msg) != nullptr) {
+void HardwareMonitor::handleMessage(cMessage *msg) {
+  if (dynamic_cast<LinkTomographyRequest *>(msg) != nullptr) {
     /*Received a tomography request from neighbor*/
-    LinkTomographyRequest* request = check_and_cast<LinkTomographyRequest*>(msg);
+    LinkTomographyRequest *request = check_and_cast<LinkTomographyRequest *>(msg);
     /*Prepare an acknowledgement*/
-    LinkTomographyAck* pk = new LinkTomographyAck;
+    LinkTomographyAck *pk = new LinkTomographyAck("LinkTomographyAck");
     pk->setSrcAddr(myAddress);
     pk->setDestAddr(request->getSrcAddr());
     pk->setKind(6);
@@ -142,9 +143,9 @@ void HardwareMonitor::handleMessage(cMessage* msg) {
 
     send(pk, "RouterPort$o");
 
-  } else if (dynamic_cast<LinkTomographyAck*>(msg) != nullptr) {
+  } else if (dynamic_cast<LinkTomographyAck *>(msg) != nullptr) {
     /*Received an acknowledgement for tomography from neighbor.*/
-    LinkTomographyAck* ack = check_and_cast<LinkTomographyAck*>(msg);
+    LinkTomographyAck *ack = check_and_cast<LinkTomographyAck *>(msg);
     /*Create and send RuleSets*/
     int partner_address = ack->getSrcAddr();
     QNIC_type partner_qnic_type = ack->getQnic_type();
@@ -169,9 +170,9 @@ void HardwareMonitor::handleMessage(cMessage* msg) {
     sendLinkTomographyRuleSet(myAddress, partner_address, my_qnic_type, my_qnic_index, RuleSet_id);
     sendLinkTomographyRuleSet(partner_address, myAddress, partner_qnic_type, partner_qnic_index, RuleSet_id);
 
-  } else if (dynamic_cast<LinkTomographyResult*>(msg) != nullptr) {
+  } else if (dynamic_cast<LinkTomographyResult *>(msg) != nullptr) {
     /*Link tomography measurement result/basis from neighbor received.*/
-    LinkTomographyResult* result = check_and_cast<LinkTomographyResult*>(msg);
+    LinkTomographyResult *result = check_and_cast<LinkTomographyResult *>(msg);
 
     // Get QNIC info from neighbor address.
     QNIC local_qnic = search_QNIC_from_Neighbor_QNode_address(result->getPartner_address());
@@ -210,8 +211,9 @@ void HardwareMonitor::handleMessage(cMessage* msg) {
         all_temporal_tomography_runningtime_holder[local_qnic.address].tomography_measurements = result->getMax_count();
         all_temporal_tomography_runningtime_holder[local_qnic.address].tomography_time = result->getFinish();
 
-        // std::cout<<"Tomo done "<<local_qnic.address<<", in node["<<myAddress<<"] \n";
-        StopEmitting* pk = new StopEmitting;
+        // std::cout<<"Tomo done "<<local_qnic.address<<", in
+        // node["<<myAddress<<"] \n";
+        StopEmitting *pk = new StopEmitting("StopEmitting");
         pk->setQnic_address(local_qnic.address);
         pk->setDestAddr(myAddress);
         pk->setSrcAddr(myAddress);
@@ -223,7 +225,8 @@ void HardwareMonitor::handleMessage(cMessage* msg) {
 }
 
 void HardwareMonitor::finish() {
-  // std::string file_name =  std::string("Tomography_")+std::string(getSimulation()->getNetworkType()->getFullName());
+  // std::string file_name =
+  // std::string("Tomography_")+std::string(getSimulation()->getNetworkType()->getFullName());
 
   std::string file_name = tomography_output_filename;
   std::string df = "\"default\"";
@@ -252,13 +255,15 @@ void HardwareMonitor::finish() {
 
     // std::cout<<"\n \n \n \n \n QNIC["<<i<<"] \n";
     for (auto it = all_temporal_tomography_output_holder[i].cbegin(); it != all_temporal_tomography_output_holder[i].cend(); ++it) {
-      // EV <<"Count["<< it->first << "] = " << it->second.my_basis << ", " << it->second.my_output_is_plus << ", " << it->second.partner_basis << ", "  <<
-      // it->second.partner_output_is_plus << " " << "\n";
+      // EV <<"Count["<< it->first << "] = " << it->second.my_basis << ", " <<
+      // it->second.my_output_is_plus << ", " << it->second.partner_basis << ",
+      // "  << it->second.partner_output_is_plus << " " << "\n";
       std::string basis_combination = "";
       basis_combination += it->second.my_basis;
       basis_combination += it->second.partner_basis;
       if (tomography_data[i].count(basis_combination) != 1) {
-        // EV<<it->second.my_basis<<", "<<it->second.partner_basis<<" = "<<basis_combination<<"\n";
+        // EV<<it->second.my_basis<<", "<<it->second.partner_basis<<" =
+        // "<<basis_combination<<"\n";
         error("Basis combination for tomography not found\n");
       }
       tomography_data[i][basis_combination].total_count++;
@@ -278,16 +283,20 @@ void HardwareMonitor::finish() {
 
       if (it->second.my_output_is_plus && it->second.partner_output_is_plus) {
         tomography_data[i][basis_combination].plus_plus++;
-        // std::cout<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[i][basis_combination].plus_plus<<"\n";
+        // std::cout<<"basis_combination(++)="<<basis_combination <<" is now
+        // "<<tomography_data[i][basis_combination].plus_plus<<"\n";
       } else if (it->second.my_output_is_plus && !it->second.partner_output_is_plus) {
         tomography_data[i][basis_combination].plus_minus++;
-        // std::cout<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[i][basis_combination].plus_minus<<"\n";
+        // std::cout<<"basis_combination(++)="<<basis_combination <<" is now
+        // "<<tomography_data[i][basis_combination].plus_minus<<"\n";
       } else if (!it->second.my_output_is_plus && it->second.partner_output_is_plus) {
         tomography_data[i][basis_combination].minus_plus++;
-        // std::cout<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[i][basis_combination].minus_plus<<"\n";
+        // std::cout<<"basis_combination(++)="<<basis_combination <<" is now
+        // "<<tomography_data[i][basis_combination].minus_plus<<"\n";
       } else if (!it->second.my_output_is_plus && !it->second.partner_output_is_plus) {
         tomography_data[i][basis_combination].minus_minus++;
-        // std::cout<<"basis_combination(++)="<<basis_combination <<" is now "<<tomography_data[i][basis_combination].minus_minus<<"\n";
+        // std::cout<<"basis_combination(++)="<<basis_combination <<" is now
+        // "<<tomography_data[i][basis_combination].minus_minus<<"\n";
       } else
         error("This should not happen though..... ?");
     }
@@ -327,14 +336,14 @@ void HardwareMonitor::finish() {
     }
 
     Interface_inf interface = getInterface_inf_fromQnicAddress(inf.qnic.index, inf.qnic.type);
-    cModule* this_node = this->getParentModule()->getParentModule();
-    cModule* neighbor_node = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
-    cChannel* channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
+    cModule *this_node = this->getParentModule()->getParentModule();
+    cModule *neighbor_node = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
+    cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
     double dis = channel->par("distance");
 
-    /*if(this_node->getModuleType() == QNodeType && neighbor_node->getModuleType() == QNodeType){
-        if(myAddress > inf.neighbor_address){
-            return;
+    /*if(this_node->getModuleType() == QNodeType &&
+    neighbor_node->getModuleType() == QNodeType){ if(myAddress >
+    inf.neighbor_address){ return;
         }
     }*/
 
@@ -452,8 +461,10 @@ Matrix4cd HardwareMonitor::reconstruct_Density_Matrix(int qnic_id) {
   Vector4cd Bellpair;
   Bellpair << 1/sqrt(2), 0, 0, 1/sqrt(2);
   Matrix4cd density_matrix_ideal = Bellpair*Bellpair.adjoint();
-  double fidelity = (density_matrix_reconstructed.real()* density_matrix_ideal.real() ).trace();
-  //double Xerr = (density_matrix_reconstructed.real()* (density_matrix_ideal.real()) ).trace();
+  double fidelity = (density_matrix_reconstructed.real()*
+  density_matrix_ideal.real() ).trace();
+  //double Xerr = (density_matrix_reconstructed.real()*
+  (density_matrix_ideal.real()) ).trace();
 
   EV<<"FOR QNIC["<<qnic_id<<"] \n";
   EV<<"F = "<<fidelity<<"\n";
@@ -461,42 +472,45 @@ Matrix4cd HardwareMonitor::reconstruct_Density_Matrix(int qnic_id) {
   Vector4cd Bellpair_X;
   Bellpair_X << 0,1/sqrt(2), 1/sqrt(2),0;
   Matrix4cd density_matrix_X = Bellpair_X*Bellpair_X.adjoint();
-  double Xerr_rate = (density_matrix_reconstructed.real()* density_matrix_X.real() ).trace();
-  EV<<"Xerr = "<<Xerr_rate<<"\n";
+  double Xerr_rate = (density_matrix_reconstructed.real()*
+  density_matrix_X.real() ).trace(); EV<<"Xerr = "<<Xerr_rate<<"\n";
 
   Vector4cd Bellpair_Z;
   Bellpair_Z << 1/sqrt(2),0,0,-1/sqrt(2);
   Matrix4cd density_matrix_Z = Bellpair_Z*Bellpair_Z.adjoint();
-  double Zerr_rate = (density_matrix_reconstructed.real()* density_matrix_Z.real() ).trace();
-  Complex checkZ = Bellpair_Z.adjoint()*density_matrix_reconstructed*Bellpair_Z;
-  EV<<"Zerr = "<<Zerr_rate<<" or, "<<checkZ.real()<<"+"<<checkZ.imag()<<"\n";
+  double Zerr_rate = (density_matrix_reconstructed.real()*
+  density_matrix_Z.real() ).trace(); Complex checkZ =
+  Bellpair_Z.adjoint()*density_matrix_reconstructed*Bellpair_Z; EV<<"Zerr =
+  "<<Zerr_rate<<" or, "<<checkZ.real()<<"+"<<checkZ.imag()<<"\n";
 
   Vector4cd Bellpair_Y;
   Bellpair_Y << 0,Complex(0,1/sqrt(2)),Complex(0,-1/sqrt(2)),0;
   Matrix4cd density_matrix_Y = Bellpair_Y*Bellpair_Y.adjoint();
-  double Yerr_rate = (density_matrix_reconstructed.real()* density_matrix_Y.real() ).trace();
-  EV<<"Yerr = "<<Yerr_rate<<"\n";
+  double Yerr_rate = (density_matrix_reconstructed.real()*
+  density_matrix_Y.real() ).trace(); EV<<"Yerr = "<<Yerr_rate<<"\n";
 
-  tomography_stats << "F = "<<fidelity<<" X = "<<Xerr_rate<<" Z ="<<Zerr_rate<<" Y = "<<Yerr_rate<<endl;
+  tomography_stats << "F = "<<fidelity<<" X = "<<Xerr_rate<<" Z ="<<Zerr_rate<<"
+  Y = "<<Yerr_rate<<endl;
 
   double bellpairs_per_sec = 10;
   double link_cost =(double)1/(fidelity*fidelity*bellpairs_per_sec);
-  writeToFile_Topology_with_LinkCost(qnic_id, link_cost, fidelity, bellpairs_per_sec);
+  writeToFile_Topology_with_LinkCost(qnic_id, link_cost, fidelity,
+  bellpairs_per_sec);
 
   Vector4cd Bellpair_Y2;
   Bellpair_Y2 << 0,Complex(0,-1/sqrt(2)),Complex(0,1/sqrt(2)),0;
   Matrix4cd density_matrix_Y2 = Bellpair_Y2*Bellpair_Y2.adjoint();
-  double Yerr_rate2 = (density_matrix_reconstructed.real()* density_matrix_Y2.real() ).trace();
-  EV<<"Yerr = "<<Yerr_rate2<<"\n";*/
+  double Yerr_rate2 = (density_matrix_reconstructed.real()*
+  density_matrix_Y2.real() ).trace(); EV<<"Yerr = "<<Yerr_rate2<<"\n";*/
 }
 
 void HardwareMonitor::writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec) {
   connection_setup_inf inf = return_setupInf(qnic_id);
   Interface_inf interface = getInterface_inf_fromQnicAddress(inf.qnic.index, inf.qnic.type);
   // if(myAddress > inf.neighbor_address)
-  cModule* this_node = this->getParentModule()->getParentModule();
-  cModule* neighbor_node = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
-  cChannel* channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
+  cModule *this_node = this->getParentModule()->getParentModule();
+  cModule *neighbor_node = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
+  cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
   double dis = channel->par("distance");
   if (neighbor_node->getModuleType() != QNodeType && neighbor_node->getModuleType() != HoMType && neighbor_node->getModuleType() != SPDCType)
     error("Module Type not recognized when writing to file...");
@@ -523,7 +537,9 @@ QNIC HardwareMonitor::search_QNIC_from_Neighbor_QNode_address(int neighbor_addre
       break;
     }
     if (it == ntable.end()) {
-      error("Something is wrong when looking for QNIC info from neighbor QNode address. Tomography is also only available between neighbor.");
+      error(
+          "Something is wrong when looking for QNIC info from neighbor QNode "
+          "address. Tomography is also only available between neighbor.");
     }
   }
   return qnic;
@@ -570,14 +586,15 @@ specify how the resources are sorted.  Currently, this is hard-coded
 to select oldest first, and is geared toward symmetric tree.
   **/
 void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long RuleSet_id) {
-  LinkTomographyRuleSet* pk = new LinkTomographyRuleSet;
+  LinkTomographyRuleSet *pk = new LinkTomographyRuleSet("LinkTomographyRuleSet");
   pk->setDestAddr(my_address);
   pk->setSrcAddr(partner_address);
   pk->setNumber_of_measuring_resources(num_measure);
   pk->setKind(6);
 
   // Empty RuleSet
-  RuleSet* tomography_RuleSet = new RuleSet(RuleSet_id, my_address, partner_address);  // Tomography between this node and the sender of Ack.
+  RuleSet *tomography_RuleSet = new RuleSet(RuleSet_id, my_address,
+                                            partner_address);  // Tomography between this node and the sender of Ack.
   std::cout << "Creating rules now RS_id = " << RuleSet_id << ", partner_address = " << partner_address << "\n";
 
   int rule_index = 0;
@@ -606,12 +623,12 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// ![](../img/PhysRevA.100.052320-Fig11.png)
       for (int i = 0; i < num_purification; i++) {
         // First stage X purification
-        Rule* Purification = new Rule(RuleSet_id, rule_index);
-        Condition* Purification_condition = new Condition();
-        Clause* resource_clause = new EnoughResourceClause(partner_address, 2);
+        Rule *Purification = new Rule(RuleSet_id, rule_index);
+        Condition *Purification_condition = new Condition();
+        Clause *resource_clause = new EnoughResourceClause(partner_address, 2);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
-        Action* purify_action = new PurifyAction(RuleSet_id, rule_index, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+        Action *purify_action = new PurifyAction(RuleSet_id, rule_index, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
         Purification->setAction(purify_action);
         rule_index++;
         tomography_RuleSet->addRule(Purification);
@@ -647,21 +664,22 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// X for even-numbered rounds (counting from zero),
       /// Z for odd-numbered ones, so it is possible to
       /// do XZX or XZXZX (but not ZXZ or ZXZXZ).
+      /// ![](../img/PhysRevA.100.052320-Fig11.png)
       // First stage X purification
       for (int i = 0; i < num_purification; i++) {
-        Rule* Purification = new Rule(RuleSet_id, rule_index);
-        Condition* Purification_condition = new Condition();
-        Clause* resource_clause = new EnoughResourceClause(partner_address, 2);
+        Rule *Purification = new Rule(RuleSet_id, rule_index);
+        Condition *Purification_condition = new Condition();
+        Clause *resource_clause = new EnoughResourceClause(partner_address, 2);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
 
         if (i % 2 == 0) {
           // X purification
-          Action* purify_action = new PurifyAction(RuleSet_id, rule_index, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          Action *purify_action = new PurifyAction(RuleSet_id, rule_index, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         } else {
           // Z purification
-          Action* purify_action = new PurifyAction(RuleSet_id, rule_index, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          Action *purify_action = new PurifyAction(RuleSet_id, rule_index, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         }
         rule_index++;
@@ -684,12 +702,12 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// Similar to 1221.
       /// ![](../img/PhysRevA.100.052320-Fig12.png)
       for (int i = 0; i < num_purification; i++) {
-        Rule* Purification = new Rule(RuleSet_id, rule_index);
-        Condition* Purification_condition = new Condition();
-        Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
+        Rule *Purification = new Rule(RuleSet_id, rule_index);
+        Condition *Purification_condition = new Condition();
+        Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
-        Action* purify_action = new DoublePurifyAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
+        Action *purify_action = new DoublePurifyAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
         Purification->setAction(purify_action);
         rule_index++;
         tomography_RuleSet->addRule(Purification);
@@ -707,24 +725,25 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// Almost the same as 1001, but first round
       /// is XZ, second round is ZX.  Results in better alternating
       /// error suppression, but still not great.
+      /// ![](../img/PhysRevA.100.052320-Fig12.png)
       for (int i = 0; i < num_purification; i++) {
         if (i % 2 == 0) {
-          Rule* Purification = new Rule(RuleSet_id, rule_index);
-          Condition* Purification_condition = new Condition();
-          Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
+          Rule *Purification = new Rule(RuleSet_id, rule_index);
+          Condition *Purification_condition = new Condition();
+          Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
           Purification_condition->addClause(resource_clause);
           Purification->setCondition(Purification_condition);
-          Action* purify_action = new DoublePurifyAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          Action *purify_action = new DoublePurifyAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
           rule_index++;
           tomography_RuleSet->addRule(Purification);
         } else {
-          Rule* Purification = new Rule(RuleSet_id, rule_index);
-          Condition* Purification_condition = new Condition();
-          Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
+          Rule *Purification = new Rule(RuleSet_id, rule_index);
+          Condition *Purification_condition = new Condition();
+          Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
           Purification_condition->addClause(resource_clause);
           Purification->setCondition(Purification_condition);
-          Action* purify_action = new DoublePurifyAction_inv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          Action *purify_action = new DoublePurifyActionInv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
           rule_index++;
           tomography_RuleSet->addRule(Purification);
@@ -744,13 +763,14 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// paper (PRA 80, 042308).
       /// Every round is identical.
       /// Note there is no basis change between rounds.
+      /// ![](../img/arxiv.1904.08605-Fig13.png)
       for (int i = 0; i < num_purification; i++) {
-        Rule* Purification = new Rule(RuleSet_id, rule_index);
-        Condition* Purification_condition = new Condition();
-        Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
+        Rule *Purification = new Rule(RuleSet_id, rule_index);
+        Condition *Purification_condition = new Condition();
+        Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
-        Action* purify_action = new DoubleSelectionAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
+        Action *purify_action = new DoubleSelectionAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
         Purification->setAction(purify_action);
         rule_index++;
         tomography_RuleSet->addRule(Purification);
@@ -765,19 +785,21 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// the order of the CNOTs alternates between rounds
       /// - scheduling: symmetric tree
       /// ## description: ##
-      /// Similar to 1011, almost corresponding to Fujii-san's paper (PRA 80, 042308).
-      /// Note there is no basis change between rounds, but that the first round is XZ, second is ZX.
+      /// Similar to 1011, almost corresponding to Fujii-san's paper (PRA 80,
+      /// 042308). Note there is no basis change between rounds, but that the
+      /// first round is XZ, second is ZX.
+      /// ![](../img/arxiv.1904.08605-Fig13.png)
       for (int i = 0; i < num_purification; i++) {
-        Rule* Purification = new Rule(RuleSet_id, rule_index);
-        Condition* Purification_condition = new Condition();
-        Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
+        Rule *Purification = new Rule(RuleSet_id, rule_index);
+        Condition *Purification_condition = new Condition();
+        Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
         if (i % 2 == 0) {
-          Action* purify_action = new DoubleSelectionAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          Action *purify_action = new DoubleSelectionAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         } else {
-          Action* purify_action = new DoubleSelectionAction_inv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          Action *purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         }
         rule_index++;
@@ -793,20 +815,22 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// the order of the CNOTs alternates between rounds
       /// - scheduling: symmetric tree
       /// ## description: ##
-      /// A combination of 1001 and 1011 (Figs. 12 & 13).  Resource requirements are high;
-      /// two rounds of this requires 25 Bell pairs.  With a low base Bell pair generation
-      /// rate and realistic memory decoherence, this will be impractical.
+      /// A combination of 1001 and 1011 (Figs. 12 & 13).  Resource requirements
+      /// are high; two rounds of this requires 25 Bell pairs.  With a low base
+      /// Bell pair generation rate and realistic memory decoherence, this will
+      /// be impractical.
+      /// ![](../img/arxiv.1904.08605-Fig14.png)
       for (int i = 0; i < num_purification; i++) {
-        Rule* Purification = new Rule(RuleSet_id, rule_index);
-        Condition* Purification_condition = new Condition();
-        Clause* resource_clause = new EnoughResourceClause(partner_address, 5);
+        Rule *Purification = new Rule(RuleSet_id, rule_index);
+        Condition *Purification_condition = new Condition();
+        Clause *resource_clause = new EnoughResourceClause(partner_address, 5);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
         if (i % 2 == 0) {
-          Action* purify_action = new DoubleSelectionDualAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
+          Action *purify_action = new DoubleSelectionDualAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
           Purification->setAction(purify_action);
         } else {
-          Action* purify_action = new DoubleSelectionDualAction_inv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
+          Action *purify_action = new DoubleSelectionDualActionInv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
           Purification->setAction(purify_action);
         }
         rule_index++;
@@ -823,19 +847,20 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// ## description: ##
       /// Does double selection on X, single selection on Z
       /// Switches bases between rounds.
-      /// Investigated for possibly highly asymmetric X/Z error rates in base Bell pairs.
-      /// Initial results weren't very promised, not extensively used.
+      /// Investigated for possibly highly asymmetric X/Z error rates in base
+      /// Bell pairs. Initial results weren't very promised, not extensively
+      /// used.
       for (int i = 0; i < num_purification; i++) {
-        Rule* Purification = new Rule(RuleSet_id, rule_index);
-        Condition* Purification_condition = new Condition();
-        Clause* resource_clause = new EnoughResourceClause(partner_address, 4);
+        Rule *Purification = new Rule(RuleSet_id, rule_index);
+        Condition *Purification_condition = new Condition();
+        Clause *resource_clause = new EnoughResourceClause(partner_address, 4);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
         if (i % 2 == 0) {
-          Action* purify_action = new DoubleSelectionDualActionSecond(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
+          Action *purify_action = new DoubleSelectionDualActionSecond(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
           Purification->setAction(purify_action);
         } else {
-          Action* purify_action = new DoubleSelectionDualActionSecond_inv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
+          Action *purify_action = new DoubleSelectionDualActionSecondInv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
           Purification->setAction(purify_action);
         }
         rule_index++;
@@ -851,19 +876,19 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// - scheduling: symmetric tree (*)
       /// ## description: ##
       /// Two rounds of Ds-Sp, then Ss-Sp.
-      /// The point of this was to show that you don't have to stick with one scheme,
-      /// but can use different schemes in different rounds.
+      /// The point of this was to show that you don't have to stick with one
+      /// scheme, but can use different schemes in different rounds.
       for (int i = 0; i < 2; i++) {
-        Rule* Purification = new Rule(RuleSet_id, rule_index);
-        Condition* Purification_condition = new Condition();
-        Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
+        Rule *Purification = new Rule(RuleSet_id, rule_index);
+        Condition *Purification_condition = new Condition();
+        Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
         if (i % 2 == 0) {
-          Action* purify_action = new DoubleSelectionAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          Action *purify_action = new DoubleSelectionAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         } else {
-          Action* purify_action = new DoubleSelectionAction_inv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          Action *purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         }
         rule_index++;
@@ -871,17 +896,17 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       }
 
       for (int i = 0; i < num_purification; i++) {
-        Rule* Purification = new Rule(RuleSet_id, rule_index);
-        Condition* Purification_condition = new Condition();
-        Clause* resource_clause = new EnoughResourceClause(partner_address, 2);
+        Rule *Purification = new Rule(RuleSet_id, rule_index);
+        Condition *Purification_condition = new Condition();
+        Clause *resource_clause = new EnoughResourceClause(partner_address, 2);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
 
         if (i % 2 == 0) {  // X purification
-          Action* purify_action = new PurifyAction(RuleSet_id, rule_index, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          Action *purify_action = new PurifyAction(RuleSet_id, rule_index, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         } else {  // Z purification
-          Action* purify_action = new PurifyAction(RuleSet_id, rule_index, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          Action *purify_action = new PurifyAction(RuleSet_id, rule_index, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         }
         rule_index++;
@@ -897,32 +922,32 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// - scheduling: symmetric tree (*)
       /// ## description: ##
       /// One round of Ds-Sp, then Ss-Sp.
-      /// The point of this was to show that you don't have to stick with one scheme,
-      /// but can use different schemes in different rounds.
-      Rule* Purification = new Rule(RuleSet_id, rule_index);
-      Condition* Purification_condition = new Condition();
-      Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
+      /// The point of this was to show that you don't have to stick with one
+      /// scheme, but can use different schemes in different rounds.
+      Rule *Purification = new Rule(RuleSet_id, rule_index);
+      Condition *Purification_condition = new Condition();
+      Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
       Purification_condition->addClause(resource_clause);
       Purification->setCondition(Purification_condition);
-      Action* purify_action = new DoubleSelectionAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      Action *purify_action = new DoubleSelectionAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
       Purification->setAction(purify_action);
       rule_index++;
       tomography_RuleSet->addRule(Purification);
 
       for (int i = 0; i < num_purification; i++) {
-        Rule* Purification = new Rule(RuleSet_id, rule_index);
-        Condition* Purification_condition = new Condition();
-        Clause* resource_clause = new EnoughResourceClause(partner_address, 2);
+        Rule *Purification = new Rule(RuleSet_id, rule_index);
+        Condition *Purification_condition = new Condition();
+        Clause *resource_clause = new EnoughResourceClause(partner_address, 2);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
 
         if (i % 2 == 0) {
           // X purification
-          Action* purify_action = new PurifyAction(RuleSet_id, rule_index, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          Action *purify_action = new PurifyAction(RuleSet_id, rule_index, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         } else {
           // Z purification
-          Action* purify_action = new PurifyAction(RuleSet_id, rule_index, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          Action *purify_action = new PurifyAction(RuleSet_id, rule_index, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         }
         rule_index++;
@@ -939,43 +964,45 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// - scheduling: (commonly pumping, symmetric tree, or banded)
       /// ## description: ##
       /// uses X_Purification and Z_purification booleans, but is obsolete.
-      /// Creates a single purification only, or a single round of double purification.
-      /// Use of this for new work is deprecated.
-      Rule* Purification = new Rule(RuleSet_id, rule_index);
-      Condition* Purification_condition = new Condition();
-      Clause* resource_clause = new EnoughResourceClause(partner_address, 2);
+      /// Creates a single purification only, or a single round of double
+      /// purification. Use of this for new work is deprecated.
+      Rule *Purification = new Rule(RuleSet_id, rule_index);
+      Condition *Purification_condition = new Condition();
+      Clause *resource_clause = new EnoughResourceClause(partner_address, 2);
       Purification_condition->addClause(resource_clause);
       Purification->setCondition(Purification_condition);
-      Action* purify_action = new PurifyAction(RuleSet_id, rule_index, X_Purification, Z_Purification, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      Action *purify_action = new PurifyAction(RuleSet_id, rule_index, X_Purification, Z_Purification, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
       Purification->setAction(purify_action);
       rule_index++;
       tomography_RuleSet->addRule(Purification);
     } else {  // X, Z double purification
       error("syntax outdate or purification id not recognized.");
-      Rule* Purification = new Rule(RuleSet_id, rule_index);
-      Condition* Purification_condition = new Condition();
-      Clause* resource_clause = new EnoughResourceClause(partner_address, 3);
+      Rule *Purification = new Rule(RuleSet_id, rule_index);
+      Condition *Purification_condition = new Condition();
+      Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
       Purification_condition->addClause(resource_clause);
       Purification->setCondition(Purification_condition);
-      Action* purify_action = new DoublePurifyAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      Action *purify_action = new DoublePurifyAction(RuleSet_id, rule_index, partner_address, qnic_type, qnic_index, 0, 1, 2);
       Purification->setAction(purify_action);
       rule_index++;
       tomography_RuleSet->addRule(Purification);
     }
 
     // Let's make nodes select measurement basis randomly, because it it easier.
-    Rule* Random_measure_tomo = new Rule(RuleSet_id, rule_index);
+    Rule *Random_measure_tomo = new Rule(RuleSet_id, rule_index);
 
-    // Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
-    Condition* total_measurements = new Condition();
+    // Technically, there is no condition because an available resource is
+    // guaranteed whenever the rule is ran.
+    Condition *total_measurements = new Condition();
 
-    // 3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
-    Clause* measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type, qnic_index, 0);
+    // 3000 measurements in total. There are 3*3 = 9 patterns of measurements.
+    // So each combination must perform 3000/9 measurements.
+    Clause *measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type, qnic_index, 0);
     total_measurements->addClause(measure_count_clause);
     Random_measure_tomo->setCondition(total_measurements);
 
     // Measure the local resource between it->second.neighborQNode_address.
-    quisp::rules::Action* measure = new RandomMeasureAction(partner_address, qnic_type, qnic_index, 0, my_address, num_measure);
+    quisp::rules::Action *measure = new RandomMeasureAction(partner_address, qnic_type, qnic_index, 0, my_address, num_measure);
     Random_measure_tomo->setAction(measure);
     //---------
     // Add the rule to the RuleSet
@@ -984,24 +1011,26 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
     pk->setRuleSet(tomography_RuleSet);
     send(pk, "RouterPort$o");
 
-  } else {  // RuleSet with no purification. Pure measurement only link level tomography.
+  } else {  // RuleSet with no purification. Pure measurement only link level
+            // tomography.
     //-------------
     //-First rule-
 
     // Let's make nodes select measurement basis randomly, because it it easier.
-    Rule* Random_measure_tomo = new Rule(RuleSet_id, 0);
+    Rule *Random_measure_tomo = new Rule(RuleSet_id, 0);
     // Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
-    Condition* total_measurements = new Condition();
+    Condition *total_measurements = new Condition();
 
-    // 3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
-    Clause* measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type, qnic_index, 0);
-    Clause* resource_clause = new EnoughResourceClause(partner_address, 1);
+    // 3000 measurements in total. There are 3*3 = 9 patterns of measurements.
+    // So each combination must perform 3000/9 measurements.
+    Clause *measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type, qnic_index, 0);
+    Clause *resource_clause = new EnoughResourceClause(partner_address, 1);
     total_measurements->addClause(measure_count_clause);
     total_measurements->addClause(resource_clause);
     Random_measure_tomo->setCondition(total_measurements);
 
     // Measure the local resource between it->second.neighborQNode_address.
-    quisp::rules::Action* measure = new RandomMeasureAction(partner_address, qnic_type, qnic_index, 0, my_address, num_measure);
+    quisp::rules::Action *measure = new RandomMeasureAction(partner_address, qnic_type, qnic_index, 0, my_address, num_measure);
     Random_measure_tomo->setAction(measure);
     //---------
     // Add the rule to the RuleSet
@@ -1016,14 +1045,14 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 int HardwareMonitor::checkNumBuff(int qnic_index, QNIC_type qnic_type) {
   Enter_Method("checkNumBuff()");
 
-  cModule* qnode = nullptr;
+  cModule *qnode = nullptr;
   if (qnic_type >= QNIC_N) error("Only 3 qnic types are currently recognized....");  // avoid segfaults <3
   qnode = getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);
   return qnode->par("numBuffer");
 }
 
 Interface_inf HardwareMonitor::getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type) {
-  cModule* local_qnic;
+  cModule *local_qnic;
   if (qnic_type >= QNIC_N) error("Only 3 qnic types are currently recognized....");  // avoid segfaults <3
   local_qnic = getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);  // QNIC itself
   Interface_inf inf;
@@ -1033,10 +1062,13 @@ Interface_inf HardwareMonitor::getInterface_inf_fromQnicAddress(int qnic_index, 
   inf.qnic.type = qnic_type;
   inf.buffer_size = local_qnic->par("numBuffer");
 
-  // Just read link cost from channel parameter for now as a dummy (or as an initialization).
-  // int cost = local_qnic->gate("qnic_quantum_port$o")->getNextGate()->getChannel()->par("cost");//This is false because the channel may only be between the node and HOM.
+  // Just read link cost from channel parameter for now as a dummy (or as an
+  // initialization). int cost =
+  // local_qnic->gate("qnic_quantum_port$o")->getNextGate()->getChannel()->par("cost");//This
+  // is false because the channel may only be between the node and HOM.
 
-  // Dummy it up. This cost must be the cost based on the neighboring QNode (excluding SPDC and HOM nodes)
+  // Dummy it up. This cost must be the cost based on the neighboring QNode
+  // (excluding SPDC and HOM nodes)
   inf.link_cost = 1;
 
   return inf;
@@ -1068,9 +1100,10 @@ connection_setup_inf HardwareMonitor::return_setupInf(int qnic_address) {
 // This neighbor table includes all neighbors of qnic, qnic_r and qnic_rp
 HardwareMonitor::NeighborTable HardwareMonitor::prepareNeighborTable(NeighborTable ntable, int total_numQnic) {
   // Get the parent QNode that runs this connection manager.
-  cModule* qnode = getQNode();
+  cModule *qnode = getQNode();
 
-  // Travese through all local qnics to check where they are connected to. HoM and EPPS will be ignored in this case.
+  // Travese through all local qnics to check where they are connected to. HoM
+  // and EPPS will be ignored in this case.
   for (int index = 0; index < numQnic; index++) {
     Interface_inf inf = getInterface_inf_fromQnicAddress(index, QNIC_E);
     neighborInfo n_inf = findNeighborAddress(inf.qnic.pointer);
@@ -1095,38 +1128,41 @@ HardwareMonitor::NeighborTable HardwareMonitor::prepareNeighborTable(NeighborTab
   return ntable;
 }
 
-// This method finds out the address of the neighboring node with respect to the local unique qnic addres.
-neighborInfo HardwareMonitor::findNeighborAddress(cModule* qnic_pointer) {
+// This method finds out the address of the neighboring node with respect to the
+// local unique qnic addres.
+neighborInfo HardwareMonitor::findNeighborAddress(cModule *qnic_pointer) {
   // qnic_quantum_port$o is connected to the node's outermost quantum_port
-  cGate* gt = qnic_pointer->gate("qnic_quantum_port$o")->getNextGate();
+  cGate *gt = qnic_pointer->gate("qnic_quantum_port$o")->getNextGate();
   // EV<<"gt = "<<gt->getName()<<"\n";
-  cGate* neighbor_gt = gt->getNextGate();
+  cGate *neighbor_gt = gt->getNextGate();
   // EV<<"neighbor_gt = "<<neighbor_gt->getName()<<"\n";
   // Ownner could be HoM, EPPS, QNode
-  cModule* neighbor_node = neighbor_gt->getOwnerModule();
+  cModule *neighbor_node = neighbor_gt->getOwnerModule();
   // EV<<"neighbor_node = "<<neighbor_node->getName()<<"\n";
   neighborInfo neighbor_is_QNode = checkIfQNode(neighbor_node);
   return neighbor_is_QNode;
 }
 
-cModule* HardwareMonitor::getQNode() {
+cModule *HardwareMonitor::getQNode() {
   // We know that Connection manager is not the QNode, so start from the parent.
-  cModule* currentModule = getParentModule();
+  cModule *currentModule = getParentModule();
   try {
     // Assumes the node in a network has a type QNode
-    cModuleType* QNodeType = cModuleType::get("networks.QNode");
+    cModuleType *QNodeType = cModuleType::get("networks.QNode");
     while (currentModule->getModuleType() != QNodeType) {
       currentModule = currentModule->getParentModule();
     }
     return currentModule;
-  } catch (std::exception& e) {
-    error("No module with QNode type found. Have you changed the type name in ned file?");
+  } catch (std::exception &e) {
+    error(
+        "No module with QNode type found. Have you changed the type name in "
+        "ned file?");
     endSimulation();
   }
   return currentModule;
 }
 
-neighborInfo HardwareMonitor::checkIfQNode(cModule* thisNode) {
+neighborInfo HardwareMonitor::checkIfQNode(cModule *thisNode) {
   // Return this
   neighborInfo inf;
   if (thisNode->getModuleType() != QNodeType) {  // Not a Qnode!
@@ -1147,12 +1183,16 @@ neighborInfo HardwareMonitor::checkIfQNode(cModule* thisNode) {
       } else {
         // endSimulation();
         // EV<<"address _one = "<<address_one<<", address_two = "<<address_two;
-        // error("Something is wrong with tracking the neighbor address. It is here.");
+        // error("Something is wrong with tracking the neighbor address. It is
+        // here.");
       }
     } else if (thisNode->getModuleType() == SPDCType) {
       error("TO BE IMPLEMENTED");
     } else {
-      error("This simulator only recognizes the following network level node types: QNode, EPPS and HoM. Not %s", thisNode->getClassName());
+      error(
+          "This simulator only recognizes the following network level node "
+          "types: QNode, EPPS and HoM. Not %s",
+          thisNode->getClassName());
       endSimulation();
     }
   } else {

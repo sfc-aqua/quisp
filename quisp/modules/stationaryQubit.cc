@@ -1,8 +1,8 @@
-/** \file stationaryQubit.cc
+/** \file StationaryQubit.cc
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/14
  *
- *  \brief stationaryQubit
+ *  \brief StationaryQubit
  */
 #include "stationaryQubit.h"
 #include <PhotonicQubit_m.h>
@@ -16,15 +16,15 @@
 namespace quisp {
 namespace modules {
 
-Define_Module(stationaryQubit);
+Define_Module(StationaryQubit);
 
 /**
- * \brief Initialize stationaryQubit
+ * \brief Initialize StationaryQubit
  *
  * Omnet called method to initialize objects.
  *
  */
-void stationaryQubit::initialize() {
+void StationaryQubit::initialize() {
   double rand = dblrand();
 
   /*Photon emission time error rates*/
@@ -155,7 +155,7 @@ memory_err.completely_mixed_rate = memory_err.error_rate * (memory_completely_mi
   /* e^(t/T1) energy relaxation, e^(t/T2) phase relaxation. Want to use only 1/10 of T1 and T2 in general.*/
 }
 
-void stationaryQubit::finish() {
+void StationaryQubit::finish() {
   // std::cout<<"emitted "<<numemitted<<"¥n";
 }
 
@@ -164,7 +164,7 @@ void stationaryQubit::finish() {
  *
  * \param msg is the message
  */
-void stationaryQubit::handleMessage(cMessage *msg) {
+void StationaryQubit::handleMessage(cMessage *msg) {
   bubble("Got a photon!!");
   setBusy();
   // numemitted++;
@@ -179,7 +179,7 @@ void stationaryQubit::handleMessage(cMessage *msg) {
   }
 }
 
-gate_error_model stationaryQubit::SetSingleQubitGateErrorCeilings(std::string gate_name) {
+gate_error_model StationaryQubit::SetSingleQubitGateErrorCeilings(std::string gate_name) {
   gate_error_model gate;
   std::string error_rate_par_name = std::string(gate_name) + std::string("_error_rate");
   std::string Xerror_ratio_par_name = std::string(gate_name) + std::string("_X_error_ratio");
@@ -205,7 +205,7 @@ gate_error_model stationaryQubit::SetSingleQubitGateErrorCeilings(std::string ga
   return gate;
 }
 
-two_qubit_gate_error_model stationaryQubit::SetTwoQubitGateErrorCeilings(std::string gate_name) {
+two_qubit_gate_error_model StationaryQubit::SetTwoQubitGateErrorCeilings(std::string gate_name) {
   two_qubit_gate_error_model gate;
   std::string error_rate_par_name = std::string(gate_name) + std::string("_error_rate");
 
@@ -280,7 +280,7 @@ two_qubit_gate_error_model stationaryQubit::SetTwoQubitGateErrorCeilings(std::st
 }
 
 /*
-void stationaryQubit::setEmissionPauliError(){
+void StationaryQubit::setEmissionPauliError(){
     if(par("GOD_Xerror") || par("GOD_Zerror")){
         //std::cout<<"node["<<node_address<<"] qnic["<<qnic_address<<"] Emitting from "<<this<<"X="<<par("GOD_Xerror").str()<<"Z="<<par("GOD_Zerror").str()<<"\n";
         error("There shouldn't be an error existing before photon emission. This error may have not been reinitialized since last use. Better check!");
@@ -313,7 +313,7 @@ void stationaryQubit::setEmissionPauliError(){
 }
 */
 
-bool stationaryQubit::measure_X() {
+bool StationaryQubit::measure_X() {
   // Need to add noise here later
   apply_single_qubit_gate_error(Measurement_error, this);
   return !par("GOD_Zerror");
@@ -322,7 +322,7 @@ bool stationaryQubit::measure_X() {
 /**
  *  Returns true if the measurement outcome was correct
  */
-bool stationaryQubit::measure_Y() {
+bool StationaryQubit::measure_Y() {
   // Need to add noise here later
   apply_single_qubit_gate_error(Measurement_error, this);
   bool error = true;
@@ -336,14 +336,14 @@ bool stationaryQubit::measure_Y() {
   // return !(par("GOD_Zerror") || par("GOD_Xerror"));
 }
 
-bool stationaryQubit::measure_Z() {
+bool StationaryQubit::measure_Z() {
   // Need to add noise here later
   apply_single_qubit_gate_error(Measurement_error, this);
   return !par("GOD_Xerror");
 }
 
 // Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
-void stationaryQubit::Hadamard_gate() {
+void StationaryQubit::Hadamard_gate() {
   // Need to add noise here later
   apply_single_qubit_gate_error(Hgate_error, this);
   bool z = par("GOD_Zerror");
@@ -351,19 +351,19 @@ void stationaryQubit::Hadamard_gate() {
   par("GOD_Xerror") = z;
 }
 
-void stationaryQubit::Z_gate() {
+void StationaryQubit::Z_gate() {
   // Need to add noise here later
   apply_single_qubit_gate_error(Zgate_error, this);
   par("GOD_Zerror") = !par("GOD_Zerror");
 }
 
-void stationaryQubit::X_gate() {
+void StationaryQubit::X_gate() {
   // Need to add noise here later
   apply_single_qubit_gate_error(Xgate_error, this);
   par("GOD_Xerror") = !par("GOD_Xerror");
 }
 
-void stationaryQubit::CNOT_gate(stationaryQubit *control_qubit) {
+void StationaryQubit::CNOT_gate(StationaryQubit *control_qubit) {
   // Need to add noise here later
   apply_two_qubit_gate_error(CNOTgate_error, this, control_qubit);
   // std::cout<<"this X err = "<<this->par("GOD_Xerror").boolValue()<<"\n";
@@ -380,7 +380,7 @@ void stationaryQubit::CNOT_gate(stationaryQubit *control_qubit) {
 }
 
 // This is invoked whenever a photon is emitted out from this particular qubit.
-void stationaryQubit::setBusy() {
+void StationaryQubit::setBusy() {
   isBusy = true;
   emitted_time = simTime();
   updated_time = simTime();  // Should be no error at this time.
@@ -395,7 +395,7 @@ void stationaryQubit::setBusy() {
 
 // Re-initialization of this stationary qubit
 // This is called at the beginning of the simulation (in initialization() above), and whenever it is reinitialized via the RealTimeController.
-void stationaryQubit::setFree(bool consumed) {
+void StationaryQubit::setFree(bool consumed) {
   num_purified = 0;
   locked = false;
   locked_ruleset_id = -1;
@@ -441,13 +441,13 @@ void stationaryQubit::setFree(bool consumed) {
   }
 }
 
-bool stationaryQubit::checkBusy() {
+bool StationaryQubit::checkBusy() {
   Enter_Method("checkBusy()");
   return isBusy;
 }
 
 /*To avoid disturbing this qubit.*/
-void stationaryQubit::Lock(unsigned long rs_id, int rule_id, int action_id) {
+void StationaryQubit::Lock(unsigned long rs_id, int rule_id, int action_id) {
   if (rs_id == -1 || rule_id == -1 || action_id == -1) {
     error("ruleset_id || rule_id || action_id == -1");
   }
@@ -463,7 +463,7 @@ void stationaryQubit::Lock(unsigned long rs_id, int rule_id, int action_id) {
   }
 }
 
-void stationaryQubit::Unlock() {
+void StationaryQubit::Unlock() {
   locked = false;
   locked_ruleset_id = -1;  // Used to identify what this qubit is locked for.
   locked_rule_id = -1;
@@ -475,9 +475,9 @@ void stationaryQubit::Unlock() {
   }
 }
 
-bool stationaryQubit::isLocked() { return locked; }
+bool StationaryQubit::isLocked() { return locked; }
 
-void stationaryQubit::Allocate() {
+void StationaryQubit::Allocate() {
   allocated = true;
   if (hasGUI()) {
     bubble("Allocated!");
@@ -485,15 +485,15 @@ void stationaryQubit::Allocate() {
   }
 }
 
-void stationaryQubit::Deallocate() { allocated = false; }
+void StationaryQubit::Deallocate() { allocated = false; }
 
-bool stationaryQubit::isAllocated() { return allocated; }
+bool StationaryQubit::isAllocated() { return allocated; }
 
 /**
  * \brief Generate photon entangled with the memory
  * \warning Shouldn't we destroy a possibly existing photon object before? <- No, I dont think so...
  */
-PhotonicQubit *stationaryQubit::generateEntangledPhoton() {
+PhotonicQubit *StationaryQubit::generateEntangledPhoton() {
   Enter_Method("generateEntangledPhoton()");
   photon = new PhotonicQubit("Photon");
   // To simulate the actual physical entangled partner, not what the system thinks!!! we need this.
@@ -504,7 +504,7 @@ PhotonicQubit *stationaryQubit::generateEntangledPhoton() {
   // qnic_address != qnic_index. qnic_index is not unique because there are 3 types.
   photon->setQNICEntangledWith(qnic_address);
 
-  // stationaryQubit_address = stationaryQubit's index
+  // stationaryQubit_address = StationaryQubit's index
   photon->setStationaryQubitEntangledWith(stationaryQubit_address);
   photon->setQNICtypeEntangledWith(qnic_type);
   photon->setEntangled_with(this);
@@ -518,7 +518,7 @@ PhotonicQubit *stationaryQubit::generateEntangledPhoton() {
  *
  * The stationary qubit shouldn't be already busy.
  */
-void stationaryQubit::emitPhoton(int pulse) {
+void StationaryQubit::emitPhoton(int pulse) {
   Enter_Method("emitPhoton()");
   if (checkBusy()) {
     error("Requested a photon emission to a busy qubit... this should not happen!");
@@ -534,7 +534,7 @@ void stationaryQubit::emitPhoton(int pulse) {
 }
 
 // This gets direcltly invoked when darkcount happened in BellStateAnalyzer.cc.
-void stationaryQubit::setCompletelyMixedDensityMatrix() {
+void StationaryQubit::setCompletelyMixedDensityMatrix() {
   this->Density_Matrix_Collapsed << (double)1 / (double)2, 0, 0, (double)1 / (double)2;
   // std::cout<<"Dm completely mixed "<<this->Density_Matrix_Collapsed<<"\n";
   this->completely_mixed = true;
@@ -558,7 +558,7 @@ void stationaryQubit::setCompletelyMixedDensityMatrix() {
 }
 
 // This gets invoked in memory error simulation or by BellStateAnalyzer if photonLoss + darkcount.
-void stationaryQubit::setExcitedDensityMatrix() {
+void StationaryQubit::setExcitedDensityMatrix() {
   Density_Matrix_Collapsed << 1, 0, 0, 0;  // Overwrite density matrix
   completely_mixed = false;
   excited_or_relaxed = true;  // It is excited
@@ -586,7 +586,7 @@ void stationaryQubit::setExcitedDensityMatrix() {
   }  // else it is already not entangled. e.g. excited -> relaxed.
 }
 
-void stationaryQubit::setRelaxedDensityMatrix() {
+void StationaryQubit::setRelaxedDensityMatrix() {
   Density_Matrix_Collapsed << 0, 0, 0, 1;
   completely_mixed = false;
   excited_or_relaxed = true;
@@ -611,7 +611,7 @@ void stationaryQubit::setRelaxedDensityMatrix() {
   }  // else it is already not entangled. e.g. excited -> relaxed.
 }
 
-void stationaryQubit::setEntangledPartnerInfo(stationaryQubit *partner) {
+void StationaryQubit::setEntangledPartnerInfo(StationaryQubit *partner) {
   // When BSA succeeds, this method gets invoked to store entangled partner information.
   // This will also be sent classically to the partner node afterwards.
   entangled_partner = partner;
@@ -623,7 +623,7 @@ void stationaryQubit::setEntangledPartnerInfo(stationaryQubit *partner) {
 }
 
 /*Add another X error. If an X error already exists, then they cancel out*/
-void stationaryQubit::addXerror() {
+void StationaryQubit::addXerror() {
   // error("Huh...?");
   bool Xerr = this->par("GOD_Xerror");
   // Switches true to false or false to true
@@ -632,7 +632,7 @@ void stationaryQubit::addXerror() {
 }
 
 /*Add another Z error. If an Z error already exists, then they cancel out*/
-void stationaryQubit::addZerror() {
+void StationaryQubit::addZerror() {
   bool Zerr = this->par("GOD_Zerror");
   // Switches true to false or false to true
   this->par("GOD_Zerror") = !Zerr;
@@ -640,7 +640,7 @@ void stationaryQubit::addZerror() {
 }
 
 // Only tracks error propagation. If two booleans (Alice and Bob) agree (truetrue or falsefalse), keep the purified ebit.
-bool stationaryQubit::Xpurify(stationaryQubit *resource_qubit /*Controlled*/) {
+bool StationaryQubit::Xpurify(StationaryQubit *resource_qubit /*Controlled*/) {
   // std::cout<<"X puri\n";
   // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
   apply_memory_error(this);
@@ -650,7 +650,7 @@ bool stationaryQubit::Xpurify(stationaryQubit *resource_qubit /*Controlled*/) {
   return meas;
 }
 
-bool stationaryQubit::Zpurify(stationaryQubit *resource_qubit /*Target*/) {
+bool StationaryQubit::Zpurify(StationaryQubit *resource_qubit /*Target*/) {
   // std::cout<<"Z puri\n";
   apply_memory_error(this);  // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
   apply_memory_error(resource_qubit);
@@ -661,7 +661,7 @@ bool stationaryQubit::Zpurify(stationaryQubit *resource_qubit /*Target*/) {
 }
 
 // Single qubit memory error based on Markov-Chain
-void stationaryQubit::apply_memory_error(stationaryQubit *qubit) {
+void StationaryQubit::apply_memory_error(StationaryQubit *qubit) {
   if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok)
     error("This must not happen in apply memory error");
 
@@ -867,7 +867,7 @@ void stationaryQubit::apply_memory_error(stationaryQubit *qubit) {
   qubit->par("last_updated_at") = simTime().dbl();  // For GUI
 }
 
-Matrix2cd stationaryQubit::getErrorMatrix(stationaryQubit *qubit) {
+Matrix2cd StationaryQubit::getErrorMatrix(StationaryQubit *qubit) {
   Matrix2cd err;
 
   if (qubit->par("GOD_CMerror") || qubit->par("GOD_REerror") || qubit->par("GOD_REerror")) {
@@ -902,7 +902,7 @@ Matrix2cd stationaryQubit::getErrorMatrix(stationaryQubit *qubit) {
 
 // returns the density matrix of the Bell pair with error. This assumes that this is entangled with another stationary qubit.
 // Measurement output will be based on this matrix, as long as it is still entnagled.
-quantum_state stationaryQubit::getQuantumState() {
+quantum_state StationaryQubit::getQuantumState() {
   if (this->excited_or_relaxed || this->entangled_partner->excited_or_relaxed) {
     error("Wrong");
   }
@@ -936,7 +936,7 @@ quantum_state stationaryQubit::getQuantumState() {
   return q;
 }
 
-void stationaryQubit::apply_single_qubit_gate_error(gate_error_model gate, stationaryQubit *qubit) {
+void StationaryQubit::apply_single_qubit_gate_error(gate_error_model gate, StationaryQubit *qubit) {
   if (gate.pauli_error_rate == 0) {
     return;
   }
@@ -961,7 +961,7 @@ void stationaryQubit::apply_single_qubit_gate_error(gate_error_model gate, stati
   }
 }
 
-void stationaryQubit::apply_two_qubit_gate_error(two_qubit_gate_error_model gate, stationaryQubit *first_qubit, stationaryQubit *second_qubit) {
+void StationaryQubit::apply_two_qubit_gate_error(two_qubit_gate_error_model gate, StationaryQubit *first_qubit, StationaryQubit *second_qubit) {
   if (gate.pauli_error_rate == 0) {
     return;
   }
@@ -1016,7 +1016,7 @@ void stationaryQubit::apply_two_qubit_gate_error(two_qubit_gate_error_model gate
   }
 }
 
-measurement_outcome stationaryQubit::measure_density_independent() {
+measurement_outcome StationaryQubit::measure_density_independent() {
   // std::cout<<"\n\n\n\n\n\n\n\nMEASURING!!!\n";
 
   // if(this->getIndex() == 71 && this->node_address == 3)
@@ -1206,7 +1206,7 @@ measurement_outcome stationaryQubit::measure_density_independent() {
   return o;
 }
 
-measurement_operator stationaryQubit::Random_Measurement_Basis_Selection() {
+measurement_operator StationaryQubit::Random_Measurement_Basis_Selection() {
   measurement_operator this_measurement;
   double dbl = dblrand();  // Random double value for random basis selection.
   EV << "Random dbl = " << dbl << "! \n ";
@@ -1240,7 +1240,7 @@ measurement_operator stationaryQubit::Random_Measurement_Basis_Selection() {
 // When do we perform measurements? I think we can just ignore the success/fail of entanglement attempt, and measure it beforehand anyway. Waiting cause error.
 // How do we know when to measure though?
 // Return value: 1 if output is +, 0 if output is -.
-/*std::bitset<1> stationaryQubit::measure_density(char basis_this_qubit){
+/*std::bitset<1> StationaryQubit::measure_density(char basis_this_qubit){
     if(entangled_partner == nullptr){
         error("Measuring a qubit that is not entangled with another qubit. Not allowed!");
     }

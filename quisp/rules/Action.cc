@@ -17,9 +17,9 @@ namespace rules {
 int Action::checkNumResource() { return (*rule_resources).size(); }
 
 // required_index: 0 is the top one, 1 is the 2nd top one, and so on.
-stationaryQubit *Action::getResource_fromTop(int required_index) {
+StationaryQubit *Action::getResource_fromTop(int required_index) {
   int resource_index = 0;
-  stationaryQubit *pt = nullptr;
+  StationaryQubit *pt = nullptr;
 
   for (auto it = (*rule_resources).begin(); it != (*rule_resources).end(); ++it) {
     if (it->second->isLocked()) {
@@ -34,10 +34,10 @@ stationaryQubit *Action::getResource_fromTop(int required_index) {
   return pt;
 }
 
-stationaryQubit *Action::getResource_fromTop_with_partner(int required_index, int partner) {
+StationaryQubit *Action::getResource_fromTop_with_partner(int required_index, int partner) {
   // here
   int resource_index = 0;
-  stationaryQubit *pt = nullptr;
+  StationaryQubit *pt = nullptr;
   // EV<<"===========================================\n";
   // for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
   //     EV<<"hey!"<<it->first<<"\n";
@@ -57,7 +57,7 @@ stationaryQubit *Action::getResource_fromTop_with_partner(int required_index, in
   return pt;
 }
 
-void Action::removeResource_fromRule(stationaryQubit *qubit) {
+void Action::removeResource_fromRule(StationaryQubit *qubit) {
   for (auto it = (*rule_resources).begin(), next_it = (*rule_resources).begin(); it != (*rule_resources).end(); it = next_it) {
     next_it = it;
     ++next_it;
@@ -72,8 +72,8 @@ void Action::removeResource_fromRule(stationaryQubit *qubit) {
 cPacket *SwappingAction::run(cModule *re) {
   float success_probability = 1.0;
 
-  stationaryQubit *left_qubit = nullptr;
-  stationaryQubit *right_qubit = nullptr;
+  StationaryQubit *left_qubit = nullptr;
+  StationaryQubit *right_qubit = nullptr;
 
   left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
   right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
@@ -90,8 +90,8 @@ cPacket *SwappingAction::run(cModule *re) {
   }
 
   // actual swapping operations
-  stationaryQubit *right_partner_qubit = right_qubit->entangled_partner;
-  stationaryQubit *left_partner_qubit = left_qubit->entangled_partner;
+  StationaryQubit *right_partner_qubit = right_qubit->entangled_partner;
+  StationaryQubit *left_partner_qubit = left_qubit->entangled_partner;
   // just swapping pointer.
   // swapper have no way to know this swapping is success or not.
   // bell measurement
@@ -178,8 +178,8 @@ cPacket *SwappingAction::run(cModule *re) {
 
 // Either Z or X purification.
 cPacket *PurifyAction::run(cModule *re) {
-  stationaryQubit *qubit = nullptr;
-  stationaryQubit *trash_qubit = nullptr;
+  StationaryQubit *qubit = nullptr;
+  StationaryQubit *trash_qubit = nullptr;
 
   qubit = getResource_fromTop(resource);
   trash_qubit = getResource_fromTop(trash_resource);
@@ -232,8 +232,8 @@ cPacket *PurifyAction::run(cModule *re) {
 
 // Double error purification
 cPacket *DoublePurifyAction::run(cModule *re) {
-  stationaryQubit *qubit = nullptr;
-  stationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
+  StationaryQubit *qubit = nullptr;
+  StationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
 
   qubit = getResource_fromTop(resource);
   trash_qubit_X = getResource_fromTop(trash_resource_X);
@@ -297,9 +297,9 @@ cPacket *DoublePurifyAction::run(cModule *re) {
 }
 
 // Inveerted double error purification.
-cPacket *DoublePurifyAction_inv::run(cModule *re) {
-  stationaryQubit *qubit = nullptr;
-  stationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
+cPacket *DoublePurifyActionInv::run(cModule *re) {
+  StationaryQubit *qubit = nullptr;
+  StationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
 
   qubit = getResource_fromTop(resource);
   trash_qubit_X = getResource_fromTop(trash_resource_X);
@@ -363,8 +363,8 @@ cPacket *DoublePurifyAction_inv::run(cModule *re) {
 
 // Double selection single error (X error) purification.
 cPacket *DoubleSelectionAction::run(cModule *re) {
-  stationaryQubit *qubit = nullptr;
-  stationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
+  StationaryQubit *qubit = nullptr;
+  StationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
 
   qubit = getResource_fromTop(resource);
   trash_qubit_X = getResource_fromTop(trash_resource_X);
@@ -428,9 +428,9 @@ cPacket *DoubleSelectionAction::run(cModule *re) {
 }
 
 // Double selection single error (Z error) purification
-cPacket *DoubleSelectionAction_inv::run(cModule *re) {
-  stationaryQubit *qubit = nullptr;
-  stationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
+cPacket *DoubleSelectionActionInv::run(cModule *re) {
+  StationaryQubit *qubit = nullptr;
+  StationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
 
   qubit = getResource_fromTop(resource);
   trash_qubit_X = getResource_fromTop(trash_resource_X);
@@ -494,7 +494,7 @@ cPacket *DoubleSelectionAction_inv::run(cModule *re) {
 }
 
 cPacket *RandomMeasureAction::run(cModule *re) {
-  stationaryQubit *qubit = nullptr;
+  StationaryQubit *qubit = nullptr;
 
   qubit = getResource_fromTop(resource);
 
@@ -531,8 +531,8 @@ cPacket *RandomMeasureAction::run(cModule *re) {
 
 // X purification, Z purification to trash_qubit_X Bell pair.
 cPacket *DoubleSelectionDualAction::run(cModule *re) {
-  stationaryQubit *qubit = nullptr;
-  stationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_Z, *ds_trash_qubit_X = nullptr;
+  StationaryQubit *qubit = nullptr;
+  StationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_Z, *ds_trash_qubit_X = nullptr;
 
   qubit = getResource_fromTop(resource);
   trash_qubit_X = getResource_fromTop(trash_resource_X);
@@ -624,9 +624,9 @@ cPacket *DoubleSelectionDualAction::run(cModule *re) {
 }
 
 // Double selection double error (ZX error) purification
-cPacket *DoubleSelectionDualAction_inv::run(cModule *re) {
-  stationaryQubit *qubit = nullptr;
-  stationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_Z, *ds_trash_qubit_X = nullptr;
+cPacket *DoubleSelectionDualActionInv::run(cModule *re) {
+  StationaryQubit *qubit = nullptr;
+  StationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_Z, *ds_trash_qubit_X = nullptr;
 
   qubit = getResource_fromTop(resource);
   trash_qubit_X = getResource_fromTop(trash_resource_X);
@@ -712,8 +712,8 @@ cPacket *DoubleSelectionDualAction_inv::run(cModule *re) {
 
 // X purification, Z purification to trash_qubit_X Bell pair.
 cPacket *DoubleSelectionDualActionSecond::run(cModule *re) {
-  stationaryQubit *qubit = nullptr;
-  stationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_X = nullptr;
+  StationaryQubit *qubit = nullptr;
+  StationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_X = nullptr;
 
   qubit = getResource_fromTop(resource);
   trash_qubit_X = getResource_fromTop(trash_resource_X);
@@ -787,9 +787,9 @@ cPacket *DoubleSelectionDualActionSecond::run(cModule *re) {
 }
 
 // Double selection double error (ZX error) purification
-cPacket *DoubleSelectionDualActionSecond_inv::run(cModule *re) {
-  stationaryQubit *qubit = nullptr;
-  stationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_Z = nullptr;
+cPacket *DoubleSelectionDualActionSecondInv::run(cModule *re) {
+  StationaryQubit *qubit = nullptr;
+  StationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_Z = nullptr;
 
   qubit = getResource_fromTop(resource);
   trash_qubit_X = getResource_fromTop(trash_resource_X);

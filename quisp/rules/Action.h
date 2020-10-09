@@ -25,17 +25,17 @@ namespace rules {
 
 class Action {
  public:
-  std::multimap<int, stationaryQubit*>* rule_resources;
+  std::multimap<int, StationaryQubit*>* rule_resources;
   unsigned long ruleset_id;
   int rule_id;  // Used to make the lock_id unique, together with purification_count.
   // int resource_index = 0;// for check the index of resource.
   // virtual cPacket* run(cModule *re, qnicResources *resources) = 0;
   virtual cPacket* run(cModule* re) = 0;
-  virtual stationaryQubit* getResource_fromTop(int required_index);
-  virtual stationaryQubit* getResource_fromTop_with_partner(int required_index, int partner);
+  virtual StationaryQubit* getResource_fromTop(int required_index);
+  virtual StationaryQubit* getResource_fromTop_with_partner(int required_index, int partner);
   virtual int checkNumResource();
-  virtual void removeResource_fromRule(stationaryQubit* qubit);
-  // virtual stationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id);
+  virtual void removeResource_fromRule(StationaryQubit* qubit);
+  // virtual StationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id);
 };
 typedef std::unique_ptr<Action> pAction;
 
@@ -96,7 +96,7 @@ class PurifyAction : public Action {
   int qnic_id;
   int resource; /**< Identifies qubit */
   int trash_resource;
-  int mutable purification_count;  // Used for locked_id in stationaryQubit. You unlock the qubit when purification is successful.
+  int mutable purification_count;  // Used for locked_id in StationaryQubit. You unlock the qubit when purification is successful.
   bool X;
   bool Z;
   int num_purify;
@@ -143,7 +143,7 @@ class DoublePurifyAction : public Action {
   int resource; /**< Identifies qubit */
   int trash_resource_Z;
   int trash_resource_X;
-  int mutable purification_count;  // Used for locked_id in stationaryQubit. You unlock the qubit when purification is successful.
+  int mutable purification_count;  // Used for locked_id in StationaryQubit. You unlock the qubit when purification is successful.
   bool X;
   bool Z;
   int num_purify;
@@ -166,7 +166,7 @@ class DoublePurifyAction : public Action {
   cPacket* run(cModule* re) override;
 };
 
-class DoublePurifyAction_inv : public Action {
+class DoublePurifyActionInv : public Action {
  protected:
   int partner; /**< Identifies entanglement partner. */
   QNIC_type qnic_type;
@@ -174,13 +174,13 @@ class DoublePurifyAction_inv : public Action {
   int resource; /**< Identifies qubit */
   int trash_resource_Z;
   int trash_resource_X;
-  int mutable purification_count;  // Used for locked_id in stationaryQubit. You unlock the qubit when purification is successful.
+  int mutable purification_count;  // Used for locked_id in StationaryQubit. You unlock the qubit when purification is successful.
   bool X;
   bool Z;
   int num_purify;
   int action_index = 0;  // To track how many times this particular action has been invoked.
  public:
-  DoublePurifyAction_inv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z) {
+  DoublePurifyActionInv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z) {
     partner = part;
     qnic_type = qt;
     qnic_id = qi;
@@ -191,7 +191,7 @@ class DoublePurifyAction_inv : public Action {
     ruleset_id = RuleSet_id;
     // action_index++;
   };
-  DoublePurifyAction_inv(){
+  DoublePurifyActionInv(){
 
   };
   cPacket* run(cModule* re) override;
@@ -206,7 +206,7 @@ class DoubleSelectionAction : public Action {
   int resource; /**< Identifies qubit */
   int trash_resource_Z;
   int trash_resource_X;
-  int mutable purification_count;  // Used for locked_id in stationaryQubit. You unlock the qubit when purification is successful.
+  int mutable purification_count;  // Used for locked_id in StationaryQubit. You unlock the qubit when purification is successful.
   bool X;
   bool Z;
   int num_purify;
@@ -230,7 +230,7 @@ class DoubleSelectionAction : public Action {
 };
 
 // https://arxiv.org/abs/0811.2639
-class DoubleSelectionAction_inv : public Action {
+class DoubleSelectionActionInv : public Action {
  protected:
   int partner; /**< Identifies entanglement partner. */
   QNIC_type qnic_type;
@@ -238,13 +238,13 @@ class DoubleSelectionAction_inv : public Action {
   int resource; /**< Identifies qubit */
   int trash_resource_Z;
   int trash_resource_X;
-  int mutable purification_count;  // Used for locked_id in stationaryQubit. You unlock the qubit when purification is successful.
+  int mutable purification_count;  // Used for locked_id in StationaryQubit. You unlock the qubit when purification is successful.
   bool X;
   bool Z;
   int num_purify;
   int action_index = 0;  // To track how many times this particular action has been invoked.
  public:
-  DoubleSelectionAction_inv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z) {
+  DoubleSelectionActionInv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z) {
     partner = part;
     qnic_type = qt;
     qnic_id = qi;
@@ -255,7 +255,7 @@ class DoubleSelectionAction_inv : public Action {
     ruleset_id = RuleSet_id;
     // action_index++;
   };
-  DoubleSelectionAction_inv(){
+  DoubleSelectionActionInv(){
 
   };
   cPacket* run(cModule* re) override;
@@ -272,7 +272,7 @@ class DoubleSelectionDualAction : public Action {
   int trash_resource_X;
   int doubleselection_trash_resource_Z;
   int doubleselection_trash_resource_X;
-  int mutable purification_count;  // Used for locked_id in stationaryQubit. You unlock the qubit when purification is successful.
+  int mutable purification_count;  // Used for locked_id in StationaryQubit. You unlock the qubit when purification is successful.
   bool X;
   bool Z;
   int num_purify;
@@ -298,7 +298,7 @@ class DoubleSelectionDualAction : public Action {
 };
 
 // https://arxiv.org/abs/0811.2639
-class DoubleSelectionDualAction_inv : public Action {
+class DoubleSelectionDualActionInv : public Action {
  protected:
   int partner; /**< Identifies entanglement partner. */
   QNIC_type qnic_type;
@@ -308,13 +308,13 @@ class DoubleSelectionDualAction_inv : public Action {
   int trash_resource_X;
   int doubleselection_trash_resource_Z;
   int doubleselection_trash_resource_X;
-  int mutable purification_count;  // Used for locked_id in stationaryQubit. You unlock the qubit when purification is successful.
+  int mutable purification_count;  // Used for locked_id in StationaryQubit. You unlock the qubit when purification is successful.
   bool X;
   bool Z;
   int num_purify;
   int action_index = 0;  // To track how many times this particular action has been invoked.
  public:
-  DoubleSelectionDualAction_inv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z, int ds_X, int ds_Z) {
+  DoubleSelectionDualActionInv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z, int ds_X, int ds_Z) {
     partner = part;
     qnic_type = qt;
     qnic_id = qi;
@@ -327,14 +327,14 @@ class DoubleSelectionDualAction_inv : public Action {
     ruleset_id = RuleSet_id;
     // action_index++;
   };
-  DoubleSelectionDualAction_inv(){
+  DoubleSelectionDualActionInv(){
 
   };
   cPacket* run(cModule* re) override;
 };
 
 // https://arxiv.org/abs/0811.2639
-class DoubleSelectionDualActionSecond_inv : public Action {
+class DoubleSelectionDualActionSecondInv : public Action {
  protected:
   int partner; /**< Identifies entanglement partner. */
   QNIC_type qnic_type;
@@ -343,13 +343,13 @@ class DoubleSelectionDualActionSecond_inv : public Action {
   int trash_resource_Z;
   int trash_resource_X;
   int doubleselection_trash_resource_Z;
-  int mutable purification_count;  // Used for locked_id in stationaryQubit. You unlock the qubit when purification is successful.
+  int mutable purification_count;  // Used for locked_id in StationaryQubit. You unlock the qubit when purification is successful.
   bool X;
   bool Z;
   int num_purify;
   int action_index = 0;  // To track how many times this particular action has been invoked.
  public:
-  DoubleSelectionDualActionSecond_inv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z, int ds_Z) {
+  DoubleSelectionDualActionSecondInv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z, int ds_Z) {
     partner = part;
     qnic_type = qt;
     qnic_id = qi;
@@ -361,7 +361,7 @@ class DoubleSelectionDualActionSecond_inv : public Action {
     ruleset_id = RuleSet_id;
     // action_index++;
   };
-  DoubleSelectionDualActionSecond_inv(){
+  DoubleSelectionDualActionSecondInv(){
 
   };
   cPacket* run(cModule* re) override;
@@ -377,7 +377,7 @@ class DoubleSelectionDualActionSecond : public Action {
   int trash_resource_Z;
   int trash_resource_X;
   int doubleselection_trash_resource_X;
-  int mutable purification_count;  // Used for locked_id in stationaryQubit. You unlock the qubit when purification is successful.
+  int mutable purification_count;  // Used for locked_id in StationaryQubit. You unlock the qubit when purification is successful.
   bool X;
   bool Z;
   int num_purify;

@@ -99,11 +99,11 @@ void SPDC_Controller::handleMessage(cMessage *msg) {
     startPump();
   } else if (dynamic_cast<EmitPhotonRequest *>(msg) != nullptr) {
     epps->emitPhotons();
-    SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne;
+    SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne");
     scheduleAt(simTime() + max_accepted_rate, st);
   } else if (dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg) != nullptr) {
     epps->emitPhotons();
-    SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne;
+    SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne");
     scheduleAt(simTime() + max_accepted_rate, st);
   }
   delete msg;
@@ -114,12 +114,12 @@ void SPDC_Controller::startPump() {
   //   emt = new  EmitPhotonRequest();
   //   scheduleAt(simTime()+timing_buffer+(max_accepted_rate*i), emt);
   // }
-  emt = new EmitPhotonRequest();
+  emt = new EmitPhotonRequest("EmitPhotonRequest");
   scheduleAt(simTime() + timing_buffer + (max_accepted_rate), emt);
 }
 
 EPPStimingNotifier *SPDC_Controller::generateNotifier(double distance_to_neighbor, double c, int destAddr) {
-  EPPStimingNotifier *pk = new EPPStimingNotifier();
+  EPPStimingNotifier *pk = new EPPStimingNotifier("EppsTimingNotifier");
   double time_to_reach = calculateTimeToTravel(distance_to_neighbor, c);
 
   // When the packet reaches = simitme()+time
