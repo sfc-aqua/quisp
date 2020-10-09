@@ -9,6 +9,7 @@
 
 #include "RuleEngine.h"
 #include <modules/HardwareMonitor.h>
+#include <fstream>
 
 namespace quisp {
 namespace modules {
@@ -1091,6 +1092,18 @@ void RuleEngine::clearTrackerTable(int destAddr, int internal_qnic_address) {
   tracker[qnic_address].clear();
 }
 
+void RuleEngine::finish() {
+  delete qnic_burst_trial_counter;
+
+  //   // here output file
+  //   std::string file_name = "test";
+  //   std::ofstream creation_time_stats(file_name, std::ios_base::app);
+  //   // creation_time_stats<<"s\n";
+  //   for(int i = 0; i < creation_times.size(); i++){
+  //       creation_time_stats<<creation_times[i]<<"\n";
+  // }
+}
+
 cModule *RuleEngine::getQNode() {
   cModule *currentModule = getParentModule();  // We know that Connection manager is not the QNode, so start from the parent.
   try {
@@ -1105,8 +1118,6 @@ cModule *RuleEngine::getQNode() {
   }
   return currentModule;
 }
-
-void RuleEngine::finish() { delete qnic_burst_trial_counter; }
 
 double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index) { return uniform(.6, .9); }
 

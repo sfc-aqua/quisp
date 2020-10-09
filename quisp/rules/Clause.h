@@ -75,6 +75,14 @@ class FidelityClause : public Clause {
   bool checkTerminate(std::multimap<int, StationaryQubit*>) const override { return false; };
 };
 
+// class TimeClause: public Clause{
+//     public:
+//         simtime_t arrivalTime;
+//         simtime_t currentTime;
+//         bool initial_time;
+
+// }
+
 class EnoughResourceClause : public Clause {
  protected:
   int num_resource_required;

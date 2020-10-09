@@ -64,6 +64,9 @@ simple RuleEngine
         @signal[actual_res](type="int");
         @statistic[actual_res](title="actual number of resource"; record=vector, max; interpolationmode=sample-hold);
 
+        // creation time
+        @signal[creation_time](type="simtime_t");
+        @statistic[creation_time](title="link established time"; record=vector; interpolationmode=sample-hold);
 
 
     gates:

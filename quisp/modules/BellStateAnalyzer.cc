@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fstream>
 #include <vector>
 
 using namespace omnetpp;
@@ -29,8 +30,14 @@ class BellStateAnalyzer : public cSimpleModule {
  private:
   // for performance analysis
   int n_res = 0;
+  int trials = 0;
   simsignal_t GOD_num_resSignal;
-
+  std::string BSA_perf_output_filename;
+  std::vector<simtime_t> creation_time;
+  simsignal_t average_num_trialSignal;
+  std::vector<int> number_of_trials;
+  int nwidth = 0;
+  int duration = 1;
   // parameters
   double darkcount_probability;
   double loss_rate;
@@ -332,6 +339,25 @@ void BellStateAnalyzer::finish() {
   std::cout << "Success = " << DEBUG_success << "\n";
   std::cout << "darkcount_count_left = " << DEBUG_darkcount_left << ", darkcount_count_right =" << DEBUG_darkcount_right << ", darkcount_count_both = " << DEBUG_darkcount_both
             << "\n";
+  std::cout << "total BSA performance"
+            << "\n";
+  // filename for recoding bsa performance
+  // std::string file_name = BSA_perf_output_filename;
+  // int file_size = file_name.size();
+  // create file
+  std::string time_duration = std::to_string(duration);
+  std::string file_name = "num_trials" + time_duration;
+  std::ofstream bsa_stats(file_name, std::ios_base::app);
+
+  // 1. Bell pair creation time (average and std)
+  // receive photons - apply BSM - return result
+  // bsa_stats<<"s\n";
+  for (int i = 0; i < number_of_trials.size(); i++) {
+    bsa_stats << number_of_trials[i] << "\n";
+  }
+  // bsa_stats<<"f\n";
+  // 2. The number of bell pairs in total
+  bsa_stats.close();
 }
 
 void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg) {

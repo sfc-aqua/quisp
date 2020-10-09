@@ -69,10 +69,10 @@ network Linear_One_MIM
             @display("i=device/pc");
         }
     connections:
-        source.port++ <--> ClassicalChannel {  distance = 10km; } <--> HoM.port++;
-        HoM.port++ <--> ClassicalChannel {  distance = 10km; } <--> target.port++;
-        source.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM.quantum_port++;
-        HoM.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> target.quantum_port++;
+        source.port++ <--> ClassicalChannel {  distance = 1km; } <--> HoM.port++;
+        HoM.port++ <--> ClassicalChannel {  distance = 1km; } <--> target.port++;
+        source.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> HoM.quantum_port++;
+        HoM.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> target.quantum_port++;
 
 }
 
@@ -127,8 +127,8 @@ network Linear_One_MM
         }
 
     connections:
-        EndNode[0].port++ <--> ClassicalChannel {  distance = 100km; } <--> EndNode[1].port++;
-        EndNode[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 100km; } <--> EndNode[1].quantum_port++;
+        EndNode[0].port++ <--> ClassicalChannel {  distance = 1km; } <--> EndNode[1].port++;
+        EndNode[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 1km; } <--> EndNode[1].quantum_port++;
 }
 
 network Linear_One_MM_bufferGap

@@ -4,8 +4,8 @@ simple StationaryQubit
 {
     parameters:
         // performance analysis
-        @signal[update_timing](type="float");
-        @statistic[update_timing](title="actual number of resource"; record=vector, max; interpolationmode=sample-hold);
+        // @signal[update_timing](type="float");
+        // @statistic[update_timing](title="actual number of resource"; record=vector, max; interpolationmode=sample-hold);
 	// these are configured at boot time
         int stationaryQubit_address;
         int node_address;
