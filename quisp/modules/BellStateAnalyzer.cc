@@ -34,7 +34,7 @@ class BellStateAnalyzer : public cSimpleModule {
   simsignal_t GOD_num_resSignal;
   std::string BSA_perf_output_filename;
   std::vector<simtime_t> creation_time;
-  simsignal_t Average_Num_TrialSignal;
+  simsignal_t average_num_trialSignal;
   std::vector<int> number_of_trials;
   int nwidth = 0;
   int duration = 1;
@@ -345,8 +345,8 @@ void BellStateAnalyzer::finish() {
   // std::string file_name = BSA_perf_output_filename;
   // int file_size = file_name.size();
   // create file
-  std::string a = std::to_string(duration);
-  std::string file_name = "num_trials" + a;
+  std::string time_duration = std::to_string(duration);
+  std::string file_name = "num_trials" + time_duration;
   std::ofstream bsa_stats(file_name, std::ios_base::app);
 
   // 1. Bell pair creation time (average and std)
