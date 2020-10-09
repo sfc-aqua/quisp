@@ -21,7 +21,6 @@ namespace quisp {
 namespace modules {
 
 using namespace rules;
-using std::unique_ptr;
 
 // HardwareMonitor is also responsible for calculating the rssi/oka's protocol/fidelity calculate and give it to the RoutingDaemon
 void HardwareMonitor::initialize(int stage) {
@@ -116,7 +115,7 @@ unsigned long HardwareMonitor::createUniqueId() {
   return ruleset_id;
 }
 
-unique_ptr<Interface_inf> HardwareMonitor::findInterfaceByNeighborAddr(int neighbor_address) {
+std::unique_ptr<Interface_inf> HardwareMonitor::findInterfaceByNeighborAddr(int neighbor_address) {
   for (auto it = neighbor_table.cbegin(); it != neighbor_table.cend(); ++it) {
     if (it->second.neighborQNode_address == neighbor_address) {
       // return unique_ptr<Interface_inf>(new Interface_inf(it->second));
@@ -1124,7 +1123,7 @@ void HardwareMonitor::prepareNeighborTable() {
 
 // This method finds out the address of the neighboring node with respect to the
 // local unique qnic address.
-unique_ptr<neighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module) {
+std::unique_ptr<neighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module) {
   // qnic_quantum_port$o is connected to the node's outermost quantum_port
   cGate *gate = qnic_module->gate("qnic_quantum_port$o")->getNextGate();
   cGate *neighbor_gate = gate->getNextGate();
@@ -1155,7 +1154,7 @@ cModule *HardwareMonitor::getQNode() {
   }
 }
 
-unique_ptr<neighborInfo> HardwareMonitor::createNeighborInfo(const cModule &thisNode) {
+std::unique_ptr<neighborInfo> HardwareMonitor::createNeighborInfo(const cModule &thisNode) {
   cModuleType *type = thisNode.getModuleType();
 
   auto inf = std::make_unique<neighborInfo>();
