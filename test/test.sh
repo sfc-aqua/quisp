@@ -16,9 +16,11 @@ NUM_TEST=35
 # This "init" and "next" is identifier of the experiments
 # for((i=0; i<${#Experiments[@]}; i++)); do
 for((i=0; i<$NUM_TEST; i++)); do
+echo "start test $i"
 echo "init$i" >> /root/quisp/test/testresults.txt 
 /root/quisp/quisp/out/clang-release/quisp  -u Cmdenv --cmdenv-express-mode=true -c "Test$i" -f /root/quisp/quisp/networks/test.ini | grep "fidelity" | tr ";" "\n" | tr "{" "\n"| tr "}" "\n"|sed s/"<-->"/"\n"/g>> /root/quisp/test/testresults.txt
 echo "next">>/root/quisp/test/testresults.txt
+echo "finish test $i"
 done
 # ==== 
 # On docker
