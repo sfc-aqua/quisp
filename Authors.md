@@ -5,6 +5,7 @@
 * Takaaki Matsuo
 * Clement Durand
 * Ryosuke Satoh
+* Kentaro 'zigen' Teramoto
 
 ## Senior Advisors:
 
