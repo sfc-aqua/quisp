@@ -26,8 +26,10 @@
 
 * Rod Van Meter
 * Ryosuke Satoh
+* Samuel 'Hyensoo' Choi
 * Sara Metwalli
 * Makoto Nakai
+
 
 ## Developers of earlier-generation simulators (no direct code overap):
 
