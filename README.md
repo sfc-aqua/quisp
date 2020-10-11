@@ -226,9 +226,11 @@ See the [references](doc/References.md).
 
 First, join the [QuISP Slack team](https://aqua-quisp.slack.com).
 
+Please also refer to the [code of conduct](CODE_OF_CONDUCT.md).
+
 ## License
 
-QuISP is being released in March 2020, and we will apply a
+QuISP was released on April 5, 2020, and we will apply a
 commercial-friendly (not copyleft) license.  There are options for the
 license: MIT, Apache, Mozilla, BSD...most likely BSD.  QuISP builds on
 OMNeT++.  OMNeT++ itself is a [custom
