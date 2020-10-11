@@ -230,10 +230,10 @@ Please also refer to the [code of conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
-QuISP was released on April 5, 2020, and we will apply a
-commercial-friendly (not copyleft) license.  There are options for the
-license: MIT, Apache, Mozilla, BSD...most likely BSD.  QuISP builds on
-OMNeT++.  OMNeT++ itself is a [custom
+QuISP was initially released on April 5, 2020, and is
+[licensed](LICENSE) under the [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause).
+
+QuISP builds on OMNeT++.  OMNeT++ itself is a [custom
 license](https://omnetpp.org/intro/license), open source and free for
 academic use, but a license fee required for commercial organizations.
 QuISP also requires the linear algebra library Eigen, where license is
