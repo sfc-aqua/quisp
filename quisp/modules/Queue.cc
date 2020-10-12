@@ -91,7 +91,7 @@ void Queue::handleMessage(cMessage *msg) {
     EV_INFO << "Currently busy! queue it up\n";
 
     // We are currently busy, so just queue up the packet.
-    if (queue.getLength() >= frame_capacity) {
+    if (frame_capacity && queue.getLength() >= frame_capacity) {
       EV_INFO << "Received " << msg << " but transmitter busy and queue full: discarding\n";
       emit(drop_signal, (long)check_and_cast<cPacket *>(msg)->getByteLength());
       delete msg;
