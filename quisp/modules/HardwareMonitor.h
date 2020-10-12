@@ -20,24 +20,14 @@ using namespace omnetpp;
 namespace quisp {
 namespace modules {
 
-struct neighborInfo {
+struct NeighborInfo {
   // QNode, SPDC, HOM
   cModuleType *type;
   int address;
   int neighborQNode_address;  // QNode (May be across SDPC or HOM node)
 };
 
-typedef QNIC_id entangledWith;
-
-struct stationaryQubitInfo {
-  int qnic_index;
-  int qubit_index;
-  bool isBusy;  // Reserved or free to use
-  int assigned_job;  // Maybe useful for bufferspace multiplexing and so on. Indicates which job this qubit is assigned for if isBusy is true.
-  entangledWith entangled_inf;
-};
-
-struct Interface_inf {
+struct InterfaceInfo {
   // QubitAddr(int node_addr, int qnic_index, int qubit_index):node_address(node_addr),qnic_index(qnic_index),qubit_index(qubit_index){}
   QNIC qnic;
   double initial_fidelity = -1; /*Oka's protocol?*/
@@ -48,19 +38,19 @@ struct Interface_inf {
   QNIC neighbor_qnic;
 };
 
-struct connection_setup_inf {
+struct ConnectionSetupInfo {
   QNIC_id qnic;
   int neighbor_address;
   int quantum_link_cost;
 };
 
-const connection_setup_inf NULL_CONNECTION_SETUP_INFO{.qnic =
-                                                          {
-                                                              .type = QNIC_N,
-                                                              .index = -1,
-                                                          },
-                                                      .neighbor_address = -1,
-                                                      .quantum_link_cost = -1};
+const ConnectionSetupInfo NULL_CONNECTION_SETUP_INFO{.qnic =
+                                                         {
+                                                             .type = QNIC_N,
+                                                             .index = -1,
+                                                         },
+                                                     .neighbor_address = -1,
+                                                     .quantum_link_cost = -1};
 
 struct tomography_outcome {
   char my_basis;
@@ -85,8 +75,8 @@ struct link_cost {
   double Bellpair_per_sec;
 };
 
-// qnic_index -> Interface_inf
-typedef std::map<int, Interface_inf> NeighborTable;
+// qnic_index -> InterfaceInfo
+typedef std::map<int, InterfaceInfo> NeighborTable;
 
 // basis combination -> raw output count
 // e.g.
@@ -122,7 +112,7 @@ class HardwareMonitor : public cSimpleModule {
   int Purification_type = -1;
   int num_measure;
 
-  std::unique_ptr<Interface_inf> findInterfaceByNeighborAddr(int neighbor_address);
+  std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(int neighbor_address);
   cModule *getQnic(int qnic_index, QNIC_type qnic_type);
 
  public:
@@ -133,7 +123,7 @@ class HardwareMonitor : public cSimpleModule {
   NeighborTable passNeighborTable();
 
   int getQnicNumQubits(int qnic_index, QNIC_type qnic_type);
-  std::unique_ptr<connection_setup_inf> findConnectionInfoByQnicAddr(int qnic_address);
+  std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address);
 
   // virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, QNIC_type qnic_type);//returns the set of free resources
   // virtual int checkNumFreeBuff(int qnic_index, QNIC_type qnic_type);//returns the number of free qubits
@@ -151,10 +141,10 @@ class HardwareMonitor : public cSimpleModule {
   virtual int numInitStages() const override { return 2; };
   virtual void prepareNeighborTable();
 
-  virtual std::unique_ptr<neighborInfo> createNeighborInfo(const cModule &thisNode);
+  virtual std::unique_ptr<NeighborInfo> createNeighborInfo(const cModule &thisNode);
   virtual cModule *getQNode();
-  virtual std::unique_ptr<neighborInfo> getNeighbor(cModule *qnic_pointer);
-  virtual Interface_inf getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
+  virtual std::unique_ptr<NeighborInfo> getNeighbor(cModule *qnic_pointer);
+  virtual InterfaceInfo getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);
   virtual QNIC search_QNIC_from_Neighbor_QNode_address(int neighbor_address);
   virtual Matrix4cd reconstruct_Density_Matrix(int qnic_id);
@@ -170,8 +160,8 @@ Define_Module(HardwareMonitor);
 }  // namespace quisp
 
 namespace std {
-std::stringstream &operator<<(std::stringstream &os, const quisp::modules::neighborInfo &v);
-std::basic_ostream<char> &operator<<(std::basic_ostream<char> &os, const quisp::modules::Interface_inf &v);
+std::stringstream &operator<<(std::stringstream &os, const quisp::modules::NeighborInfo &v);
+std::basic_ostream<char> &operator<<(std::basic_ostream<char> &os, const quisp::modules::InterfaceInfo &v);
 }  // namespace std
 
 #endif /* QUISP_MODULES_HARDWAREMONITOR_H_ */

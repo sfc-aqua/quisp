@@ -212,7 +212,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     error("This shouldn't happen!");
   }
 
-  auto dst_info = std::make_unique<connection_setup_inf>(NULL_CONNECTION_SETUP_INFO);
+  auto dst_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
   auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
 
   if (src_info == nullptr) {
@@ -498,7 +498,7 @@ void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
   bool is_initiator = my_address == initiator_addr;
 
   if (is_initiator) {
-    src_info = std::make_unique<connection_setup_inf>(NULL_CONNECTION_SETUP_INFO);
+    src_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
   } else {
     if (src_info == nullptr) {
       error("source qnic not found");

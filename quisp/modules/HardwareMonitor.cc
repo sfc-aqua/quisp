@@ -115,11 +115,11 @@ unsigned long HardwareMonitor::createUniqueId() {
   return ruleset_id;
 }
 
-std::unique_ptr<Interface_inf> HardwareMonitor::findInterfaceByNeighborAddr(int neighbor_address) {
+std::unique_ptr<InterfaceInfo> HardwareMonitor::findInterfaceByNeighborAddr(int neighbor_address) {
   for (auto it = neighbor_table.cbegin(); it != neighbor_table.cend(); ++it) {
     if (it->second.neighborQNode_address == neighbor_address) {
-      // return unique_ptr<Interface_inf>(new Interface_inf(it->second));
-      return std::make_unique<Interface_inf>(it->second);
+      // return unique_ptr<InterfaceInfo>(new InterfaceInfo(it->second));
+      return std::make_unique<InterfaceInfo>(it->second);
     }
   }
   return nullptr;
@@ -337,7 +337,7 @@ void HardwareMonitor::finish() {
     if (info == nullptr) {
       error("info not found");
     }
-    Interface_inf interface = getQnicInterfaceByQnicAddr(info->qnic.index, info->qnic.type);
+    InterfaceInfo interface = getQnicInterfaceByQnicAddr(info->qnic.index, info->qnic.type);
     cModule *this_node = this->getParentModule()->getParentModule();
     cModule *neighbor_node = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
     cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
@@ -511,7 +511,7 @@ void HardwareMonitor::writeToFile_Topology_with_LinkCost(int qnic_id, double lin
   if (info == nullptr) {
     error("qnic info not found");
   }
-  Interface_inf interface = getQnicInterfaceByQnicAddr(info->qnic.index, info->qnic.type);
+  InterfaceInfo interface = getQnicInterfaceByQnicAddr(info->qnic.index, info->qnic.type);
   cModule *this_node = this->getParentModule()->getParentModule();
   cModule *neighbor_node = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
   cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
@@ -1059,9 +1059,9 @@ cModule *HardwareMonitor::getQnic(int qnic_index, QNIC_type qnic_type) {
   return qnic;
 }
 
-Interface_inf HardwareMonitor::getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type) {
+InterfaceInfo HardwareMonitor::getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type) {
   cModule *local_qnic = getQnic(qnic_index, qnic_type);
-  Interface_inf inf;
+  InterfaceInfo inf;
   inf.qnic.pointer = local_qnic;
   inf.qnic.address = local_qnic->par("self_qnic_address");
   inf.qnic.index = qnic_index;
@@ -1079,10 +1079,10 @@ Interface_inf HardwareMonitor::getQnicInterfaceByQnicAddr(int qnic_index, QNIC_t
   return inf;
 }
 
-std::unique_ptr<connection_setup_inf> HardwareMonitor::findConnectionInfoByQnicAddr(int qnic_address) {
+std::unique_ptr<ConnectionSetupInfo> HardwareMonitor::findConnectionInfoByQnicAddr(int qnic_address) {
   for (auto it = neighbor_table.cbegin(); it != neighbor_table.cend(); ++it) {
     if (it->second.qnic.address == qnic_address) {
-      auto info = std::make_unique<connection_setup_inf>();
+      auto info = std::make_unique<ConnectionSetupInfo>();
       info->qnic.type = it->second.qnic.type;
       info->qnic.index = it->second.qnic.index;
       info->qnic.address = it->second.qnic.address;
@@ -1099,21 +1099,21 @@ void HardwareMonitor::prepareNeighborTable() {
   // Traverse through all local qnics to check where they are connected to.
   // HoM and EPPS will be ignored in this case.
   for (int index = 0; index < num_qnic; index++) {
-    Interface_inf inf = getQnicInterfaceByQnicAddr(index, QNIC_E);
+    InterfaceInfo inf = getQnicInterfaceByQnicAddr(index, QNIC_E);
     auto n_inf = getNeighbor(inf.qnic.pointer);
     int neighborNodeAddress = n_inf->address;  // get the address of the Node nearby.
     inf.neighborQNode_address = n_inf->neighborQNode_address;
     neighbor_table[neighborNodeAddress] = inf;
   }
   for (int index = 0; index < num_qnic_r; index++) {
-    Interface_inf inf = getQnicInterfaceByQnicAddr(index, QNIC_R);
+    InterfaceInfo inf = getQnicInterfaceByQnicAddr(index, QNIC_R);
     auto n_inf = getNeighbor(inf.qnic.pointer);
     int neighborNodeAddress = n_inf->address;  // get the address of the Node nearby.
     inf.neighborQNode_address = n_inf->neighborQNode_address;
     neighbor_table[neighborNodeAddress] = inf;
   }
   for (int index = 0; index < num_qnic_rp; index++) {
-    Interface_inf inf = getQnicInterfaceByQnicAddr(index, QNIC_RP);
+    InterfaceInfo inf = getQnicInterfaceByQnicAddr(index, QNIC_RP);
     auto n_inf = getNeighbor(inf.qnic.pointer);
     int neighborNodeAddress = n_inf->address;  // get the address of the Node nearby.
     inf.neighborQNode_address = n_inf->neighborQNode_address;
@@ -1123,7 +1123,7 @@ void HardwareMonitor::prepareNeighborTable() {
 
 // This method finds out the address of the neighboring node with respect to the
 // local unique qnic address.
-std::unique_ptr<neighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module) {
+std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module) {
   // qnic_quantum_port$o is connected to the node's outermost quantum_port
   cGate *gate = qnic_module->gate("qnic_quantum_port$o")->getNextGate();
   cGate *neighbor_gate = gate->getNextGate();
@@ -1154,10 +1154,10 @@ cModule *HardwareMonitor::getQNode() {
   }
 }
 
-std::unique_ptr<neighborInfo> HardwareMonitor::createNeighborInfo(const cModule &thisNode) {
+std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule &thisNode) {
   cModuleType *type = thisNode.getModuleType();
 
-  auto inf = std::make_unique<neighborInfo>();
+  auto inf = std::make_unique<NeighborInfo>();
   inf->type = type;
   inf->address = thisNode.par("address");
 
@@ -1212,11 +1212,11 @@ NeighborTable HardwareMonitor::passNeighborTable() {
 }  // namespace quisp
 
 namespace std {
-std::stringstream &operator<<(std::stringstream &os, const quisp::modules::neighborInfo &v) {
+std::stringstream &operator<<(std::stringstream &os, const quisp::modules::NeighborInfo &v) {
   os << "neighborInfo(addr: " << v.address << ", neighborQNodeAddr: " << v.neighborQNode_address;
   return os;
 }
-std::basic_ostream<char> &operator<<(std::basic_ostream<char> &os, const quisp::modules::Interface_inf &v) {
+std::basic_ostream<char> &operator<<(std::basic_ostream<char> &os, const quisp::modules::InterfaceInfo &v) {
   os << "InterfaceInf(neighborQNodeAddr: " << v.neighborQNode_address << ", qnic.addr: " << v.qnic.address << ")";
   return os;
 }
