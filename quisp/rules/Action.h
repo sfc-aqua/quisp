@@ -430,6 +430,106 @@ class RandomMeasureAction : public Action {
   cPacket* run(cModule* re) override;
 };
 
+//ABSA actions start here
+//what is the difference between action:----, and action:run?
+//Action 2
+class initializeAction: public Action {
+ protected:
+  int basis;
+  int* outComeList;
+  bool BellSucc;
+  bool msgS;
+ public:
+  initializeAction(int basis, int* outComeList, bool BellSucc, bool msgS) {
+    //basis {bell:0, x=1, z:1}
+    basis = 0;
+    BellSucc = false;
+    msgS = false;
+  };
+  initializeAction(){
+
+  };
+  ret run(int basis, int* outComeList, bool BellSucc, bool msgS) override;
+};
+
+//Action5
+class measureAction: public Action {
+ protected:
+  int* outComeList;
+  int* basis;
+ public:
+  measureAction(int* outComeList, int* basis) {
+  StationaryQubit *left_qubit = nullptr;
+  StationaryQubit *right_qubit = nullptr;
+  };
+  measureAction(){
+
+  };
+  outComeList* run(int* outComeList, int* basis) override;
+};
+
+//Action 7
+class finalizeAction: public Action {
+ protected:
+  int* msg;
+ public:
+  finalizeAction(int* outComeList, int* msg) {
+  int absaAdd = left_partner_qubit->stationaryQubit_address;
+  int endnodeAdd = right_partner_qubit->stationaryQubit_address;
+  };
+  finalizeAction(){
+
+  };
+  msg* run(int* outComeList, int* msg) override;
+};
+
+//Action 9
+class qkdInitializeAction: public Action {
+ protected:
+  int* outComeList;
+  int m; //number of arms in 1st leaf
+ public:
+  qkdInitializeAction(int m, int* basis) {
+  //What to add here?
+  };
+  qkdInitializeAction(){
+
+  };
+  basis* run(int m, int* basis) override;
+};
+
+//Action 11
+class qkdMeasureAction: public Action {
+ protected:
+  int* outComeList;
+  int* basis; //number of arms in 1st leaf
+ public:
+  qkdMeasureAction(int* outComeList, int* basis) {
+  StationaryQubit *incomeQubit = nullptr;
+  outcome = meausre(incomeQubit,basis); //This needs to be turned into if-else statements
+  };
+  qkdMeasureAction(){
+
+  };
+  outComeList* run(int* outComeList, int* basis) override;
+};
+
+//Action 13
+class qkdFinalizeAction: public Action {
+ protected:
+  int absaAdd = left_partner_qubit->stationaryQubit_address;
+  int endnodeAdd = right_partner_qubit->stationaryQubit_address;
+  bool msgNeed = false;
+ public:
+  qkdFinalizeAction(int* basis, int absaAdd, int endnodeAdd, bool msgNeed) {
+    //what to be added here
+  };
+  qkdFinalizeAction(){
+
+  };
+  msg* run(int* basis, int absaAdd, int endnodeAdd, bool msgNeed) override;
+};
+  
 }  // namespace rules
 }  // namespace quisp
 
