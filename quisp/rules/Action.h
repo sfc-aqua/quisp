@@ -442,9 +442,10 @@ class initializeAction: public Action {
  public:
   initializeAction(int basis, int* outComeList, bool BellSucc, bool msgS) {
     //basis {bell:0, x=1, z:1}
-    basis = 0;
-    BellSucc = false;
-    msgS = false;
+    int basis = 0;
+    bool BellSucc = false;
+    bool msgS = false;
+    bool initTime = true;
   };
   initializeAction(){
 
@@ -461,6 +462,7 @@ class measureAction: public Action {
   measureAction(int* outComeList, int* basis) {
   StationaryQubit *left_qubit = nullptr;
   StationaryQubit *right_qubit = nullptr;
+  bool measureNeeded = true;
   };
   measureAction(){
 
@@ -476,6 +478,7 @@ class finalizeAction: public Action {
   finalizeAction(int* outComeList, int* msg) {
   int absaAdd = left_partner_qubit->stationaryQubit_address;
   int endnodeAdd = right_partner_qubit->stationaryQubit_address;
+  bool msgNeed = true;
   };
   finalizeAction(){
 
@@ -490,7 +493,7 @@ class qkdInitializeAction: public Action {
   int m; //number of arms in 1st leaf
  public:
   qkdInitializeAction(int m, int* basis) {
-  //What to add here?
+  bool initNeeded = true;
   };
   qkdInitializeAction(){
 
@@ -506,8 +509,8 @@ class qkdMeasureAction: public Action {
  public:
   qkdMeasureAction(int* outComeList, int* basis) {
   StationaryQubit *incomeQubit = nullptr;
-  outcome = meausre(incomeQubit,basis); //This needs to be turned into if-else statements
-  };
+  measureNeeded = true;
+   };
   qkdMeasureAction(){
 
   };
@@ -523,6 +526,8 @@ class qkdFinalizeAction: public Action {
  public:
   qkdFinalizeAction(int* basis, int absaAdd, int endnodeAdd, bool msgNeed) {
     //what to be added here
+    bool finalizaNeeded = true;
+    bool msgNeed = true;
   };
   qkdFinalizeAction(){
 
