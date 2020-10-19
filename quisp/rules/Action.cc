@@ -10,8 +10,9 @@
 #include <omnetpp.h>
 #include "classical_messages_m.h"
 #include "tools.h"
+#include "stationaryQubit.h"
 #include <tuple>
-using std::vector; 
+#include <vector>; 
 namespace quisp {
 namespace rules {
 
@@ -863,13 +864,12 @@ cPacket *DoubleSelectionDualActionSecondInv::run(cModule *re) {
   return pk;
 }
 
-  
- //ABSA actions start here
- //Action 2
+//ABSA actions starts here 
+//Action 2
 //Needs to be modified, muliptle returns
 ret Action::initializeAction() {
-  basis = "bell"; //is there a way to specifiy bell state?
-  outcomeList; // what type?
+  int basis = 3; //is there a way to specifiy bell state?
+  vector<tuple<int, int, int>> outcomeList;
   bool successBell  = false;
   bool msgSent = false;
   //encodeX and Z?
@@ -886,8 +886,17 @@ StationaryQubit *Action::measureAction(*outcomeList,*basis){
   for(int i=0; i<sizeof(outcomeList);i++){
     left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
     right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
-    outcome = measure(resource1,resource2,basis[i]) //need tp define meausre
-    tuple<,> item( , ); // waht are the types? 
+    if (basis[i] == 1){
+      bool outcome_right = right_qubit -> measure_X();
+      bool outcome_left = left_qubit -> measure_X(); 
+    } else if (basis[i] == 2){
+      bool outcome_right = right_qubit -> measure_Z();
+      bool outcome_left = left_qubit -> measure_Z(); 
+    } else if (basis[i] == 3){
+      bool outcome_right = right_qubit -> measure_Bell();
+      bool outcome_left = left_qubit -> measure_Bell(); 
+    }
+    tuple<int,int,int> item(basis,outcome_right, outcome_left); // waht are the types? 
     outcomeList[i] = item;//need to have a specific type
   }
   return outcomeList;
@@ -897,7 +906,10 @@ StationaryQubit *Action::measureAction(*outcomeList,*basis){
 msg Action::finalizeAction(*outcomeList){
   int absaAdd = left_partner_qubit->stationaryQubit_address;
   int endnodeAdd = right_partner_qubit->stationaryQubit_address;
-  msg = [endnodeAdd,absaAdd,outcomeList]; //This is invalid syntax
+  int* msg[sizeof(outcomeList)] //snce we only need a list of basis used
+  for(int i = 0; sizeof(outcomeList); i++){
+    msg[i] = get<0>(outcomeList);
+  }
   bool msgSent = true;
   return msg;
 }
@@ -907,31 +919,32 @@ msg Action::finalizeAction(*outcomeList){
 //what type is basis list?
 int* Action::qkdInitializeAction(){
   int* basisList = []; // can we know the length in advance?
-  outcomeList = []; //what type
+  //outcomeList = []; //what type
   bool msgNeeded = true;
   for(int i=0; i<m, i++){ //what is m?
     //can we append items by index?
-    int randBasis = rand()%2+1; //if 1 >X, 2>Z
+    int randBasis = rand()%3+1; //if 1 >X, 2>Z, 3 > Bell
     basisList[i] = randBasis;
     }
   return basisList;
 }
 
+
 //Action 11
-vector* Action::qkdMeasureAction(int* basis, *outcomeList){
+vector* Action::qkdMeasureAction(int* basis, vector* outcomeList){
   StationaryQubit *incomeQubit = nullptr;
   outcome = meausre(incomeQubit,basis);
   tuple<int,int> item(basis,outcome);
-  std::vector<tuple> outcomeList;
-  outcomeList.pushback(item);
+  vector<tuple<int, int, int>> outcomeList;
+  outcomeList.insert(item);
   return outcomeList;
 }
 
 //Action 13
-msg Action::qkdFinalizeAction(int* basisList){
+msg* Action::qkdFinalizeAction(int* basisList){
   int absaAdd = left_partner_qubit->stationaryQubit_address;
   int endnodeAdd = right_partner_qubit->stationaryQubit_address;
-  msg = [endnodeAdd, absaAdd, basisList]; //this syntax is invalid
+  int* msg = basisList //this syntax is invalid
   bool msgNeeded = false;
   return msg;
 }
