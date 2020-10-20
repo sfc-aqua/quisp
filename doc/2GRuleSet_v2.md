@@ -91,7 +91,7 @@ Generate light-matter Bell pairs  <br>
 </pre>
 
 Send Photonic qubits to BSA
-![test](Visual/Slide6.PNG "BSA receieve photonic qubits")
+![test](Visual/Slide6.PNG "BSA receive photonic qubits")
 
 **Algorithm 2:** SendPhotonicQubitAction(arrivalTimeList)  
 **Check if the logical qubit is ready before the arrival of first photonic qubit or not**  
@@ -266,7 +266,7 @@ qc.draw(output='mpl')
 8:  <b>end procedure</b>
 </pre>
 
-The cool hexagon is logical qubit
+The cool hexagon is a logical qubit
 ![test](Visual/Slide10.png "Logical Bell pair")
 
 
