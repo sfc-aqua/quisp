@@ -43,7 +43,7 @@ qc.draw(output='mpl')
 
 The setting of link-layer should look like this.
 
-![test](Visual/Slide4.png "Setting of protocol")
+![test](Visual/Slide4.PNG "Setting of protocol")
 
 The hexagon is memory (matter) qubit.
 
@@ -71,7 +71,7 @@ I will begin from very basic so that I don't miss anything easily.
 | 16        | A7        | Receive message and perform operation          |                              |                                               |
 
 Generate light-matter Bell pairs  <br>
-![test](Visual/Slide5.png "Produce light matter entanglement")
+![test](Visual/Slide5.PNG "Produce light matter entanglement")
 
 **Algorithm 1:** GenerateLightMatterBellpairAction(arrivalTimeList)  
 **Genrate light-matter Bell pair**  
@@ -91,7 +91,7 @@ Generate light-matter Bell pairs  <br>
 </pre>
 
 Send Photonic qubits to BSA
-![test](Visual/Slide6.png "BSA receieve photonic qubits")
+![test](Visual/Slide6.PNG "BSA receieve photonic qubits")
 
 **Algorithm 2:** SendPhotonicQubitAction(arrivalTimeList)  
 **Check if the logical qubit is ready before the arrival of first photonic qubit or not**  
@@ -112,7 +112,7 @@ Send Photonic qubits to BSA
 </pre>
 
 Bell measurement on photonic qubits
-![test](Visual/Slide7.png "Bell measurement")
+![test](Visual/Slide7.PNG "Bell measurement")
 
 **Algorithm 3:** BellMeasurement(arrivalTimeList)  
 **Measure photonic qubits using Bell basis**  
@@ -148,7 +148,7 @@ Bell measurement on photonic qubits
 </pre>
 
 Encode logical qubit for the protocol
-![test](Visual/Slide8.png "non-local CNOT gate")
+![test](Visual/Slide8.PNG "non-local CNOT gate")
 
 **Algorithm 4:** EncodingAction(state, protocol)  
 **Encode the state using Steane code according to instruction**  
