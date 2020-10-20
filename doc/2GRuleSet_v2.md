@@ -64,11 +64,11 @@ I will begin from very basic so that I don't miss anything easily.
 | 10        | A4        | Encode logical qubit in state $\|+\rangle$     |                              | Encode logical qubit in state $\|0\rangle$    |
 | 11        | A5        | Prepare non-local CNOT                         |                              | Prepare non-local CNOT                        |
 | 12        | A5        | Local CNOT on memory qubit and matter qubit    |                              |                                               |
-| 11        | A5        | Measure on Z- basis and Send Classical message |                              |                                               |
-| 12        | A6        |                                                |                              | Receive message, Perform non-local CNOT       |
-| 14        | A6        |                                                |                              | Local CNOT on memory qubit and matter qubit   |
-| 15        | A6        |                                                |                              | Measure on X-basis and Send classical message |
-| 16        | A7        | Receive message and perform operation          |                              |                                               |
+| 13        | A5        | Measure on Z- basis and Send Classical message |                              |                                               |
+| 14        | A6        |                                                |                              | Receive message, Perform non-local CNOT       |
+| 15        | A6        |                                                |                              | Local CNOT on memory qubit and matter qubit   |
+| 16        | A6        |                                                |                              | Measure on X-basis and Send classical message |
+| 17        | A7        | Receive message and perform operation          |                              |                                               |
 
 Generate light-matter Bell pairs  <br>
 ![test](Visual/Slide5.PNG "Produce light matter entanglement")
