@@ -45,8 +45,8 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     }
 
     int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
-    connection_setup_inf dst_inf = hardware_monitor->return_setupInf(local_qnic_address_to_actual_dst);
-    bool is_qnic_available = !isQnicBusy(dst_inf.qnic.address);
+    auto dst_inf = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
+    bool is_qnic_available = !isQnicBusy(dst_inf->qnic.address);
     bool requested_by_myself = actual_src == my_address;
 
     if (requested_by_myself) {
@@ -212,12 +212,16 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     error("This shouldn't happen!");
   }
 
-  connection_setup_inf dst_inf = hardware_monitor->return_setupInf(local_qnic_address_to_actual_dst);
-  connection_setup_inf src_inf = hardware_monitor->return_setupInf(local_qnic_address_to_actual_src);
-  QNIC_id_pair pair_info = {.fst = src_inf.qnic, .snd = dst_inf.qnic};
+  auto dst_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
+  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
 
-  bool is_src_qnic_reserved = isQnicBusy(src_inf.qnic.address);
-  bool is_dst_qnic_reserved = isQnicBusy(dst_inf.qnic.address);
+  if (src_info == nullptr) {
+    error("src_info not found");
+  }
+  QNIC_id_pair pair_info = {.fst = src_info->qnic, .snd = dst_info->qnic};
+
+  bool is_src_qnic_reserved = isQnicBusy(src_info->qnic.address);
+  bool is_dst_qnic_reserved = isQnicBusy(dst_info->qnic.address);
 
   // qnic already reserved, cannot respond to the request
   if (is_src_qnic_reserved || is_dst_qnic_reserved) {
@@ -344,10 +348,10 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   }
 
   if (actual_dst != my_address) {
-    reserveQnic(src_inf.qnic.address);
-    reserveQnic(dst_inf.qnic.address);
+    reserveQnic(src_info->qnic.address);
+    reserveQnic(dst_info->qnic.address);
   } else {
-    reserveQnic(src_inf.qnic.address);
+    reserveQnic(src_info->qnic.address);
   }
 }
 
@@ -456,7 +460,8 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
 }
 
 /**
- *  This function is called to handle the ConnectionSetupRequest at an intermediate or initiator node.
+ *  This method is called to handle the ConnectionSetupRequest at an intermediate or initiator node.
+ *  This method reserves requested qnics and then send the request to next hop.
  * \param req pointer to the ConnectionSetupRequest packet itself
  * \returns nothing
  **/
@@ -466,46 +471,53 @@ void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
   int dst_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(responder_addr);
   int src_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
 
-  if (dst_qnic_addr == -1) {  // is not found
+  if (dst_qnic_addr == -1) {
     error("QNIC to destination not found");
   }
 
-  if (my_address != initiator_addr && src_qnic_addr == -1) {
-    error("QNIC to source not found");
-  }
-
   // Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
-  connection_setup_inf dst_inf = hardware_monitor->return_setupInf(dst_qnic_addr);
-  connection_setup_inf src_inf = hardware_monitor->return_setupInf(src_qnic_addr);
-
-  bool is_src_qnic_reserved = isQnicBusy(src_inf.qnic.address);
-  bool is_dst_qnic_reserved = isQnicBusy(dst_inf.qnic.address);
-
-  if (is_src_qnic_reserved || is_dst_qnic_reserved) {
-    rejectRequest(req);
-    return;
-  }
+  auto dst_info = hardware_monitor->findConnectionInfoByQnicAddr(dst_qnic_addr);
+  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(src_qnic_addr);
 
   int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
   int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
   int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();
 
   // Update information and send it to the next Qnode.
-  req->setDestAddr(dst_inf.neighbor_address);
+  req->setDestAddr(dst_info->neighbor_address);
   req->setSrcAddr(my_address);
   req->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes + 1);
   req->setStack_of_linkCostsArraySize(num_accumulated_costs + 1);
   req->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
-  req->setStack_of_linkCosts(num_accumulated_costs, dst_inf.quantum_link_cost);
+  req->setStack_of_linkCosts(num_accumulated_costs, dst_info->quantum_link_cost);
   req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
 
-  QNIC_id_pair pair_info = {.fst = src_inf.qnic, .snd = dst_inf.qnic};
-  req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
-  pair_info = req->getStack_of_QNICs(num_accumulated_pair_info);
-  if (my_address != initiator_addr) {
-    reserveQnic(src_inf.qnic.address);
+  bool is_dst_qnic_reserved = isQnicBusy(dst_info->qnic.address);
+  bool is_src_qnic_reserved = false;
+
+  bool is_initiator = my_address == initiator_addr;
+
+  if (is_initiator) {
+    src_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
+  } else {
+    if (src_info == nullptr) {
+      error("source qnic not found");
+    }
+    is_src_qnic_reserved = isQnicBusy(src_info->qnic.address);
   }
-  reserveQnic(dst_inf.qnic.address);
+
+  if (is_src_qnic_reserved || is_dst_qnic_reserved) {
+    rejectRequest(req);
+    return;
+  }
+
+  QNIC_id_pair pair_info = {.fst = src_info->qnic, .snd = dst_info->qnic};
+  req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
+
+  if (!is_initiator) {
+    reserveQnic(src_info->qnic.address);
+  }
+  reserveQnic(dst_info->qnic.address);
 
   send(req, "RouterPort$o");
 }
@@ -564,19 +576,19 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
   // Currently, sending path and returning path are same, but for future, this might not good way
   int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
   int local_qnic_address_to_actual_src = routing_daemon->return_QNIC_address_to_destAddr(actual_src);
-  connection_setup_inf dst_inf = hardware_monitor->return_setupInf(local_qnic_address_to_actual_dst);
-  connection_setup_inf src_inf = hardware_monitor->return_setupInf(local_qnic_address_to_actual_src);
+  auto dst_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
+  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
   if (my_address != actual_dst && my_address != actual_src) {
-    releaseQnic(dst_inf.qnic.address);
-    releaseQnic(src_inf.qnic.address);
+    releaseQnic(dst_info->qnic.address);
+    releaseQnic(src_info->qnic.address);
     return;
   }
 
   if (my_address == actual_dst) {
-    releaseQnic(src_inf.qnic.address);
+    releaseQnic(src_info->qnic.address);
   }
   if (my_address == actual_src) {
-    releaseQnic(dst_inf.qnic.address);
+    releaseQnic(dst_info->qnic.address);
   }
 }
 

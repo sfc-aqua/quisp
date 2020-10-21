@@ -20,25 +20,14 @@ using namespace omnetpp;
 namespace quisp {
 namespace modules {
 
-typedef struct {
-  bool isQNode;
+struct NeighborInfo {
+  // QNode, SPDC, HOM
   cModuleType *type;
-  int address;  // May be QNode, SPDC, HOM
-  int index;
+  int address;
   int neighborQNode_address;  // QNode (May be across SDPC or HOM node)
-} neighborInfo;
+};
 
-typedef QNIC_id entangledWith;
-
-typedef struct {
-  int qnic_index;
-  int qubit_index;
-  bool isBusy;  // Reserved or free to use
-  int assigned_job;  // Maybe useful for bufferspace multiplexing and so on. Indicates which job this qubit is assigned for if isBusy is true.
-  entangledWith entangled_inf;
-} stationaryQubitInfo;
-
-typedef struct {
+struct InterfaceInfo {
   // QubitAddr(int node_addr, int qnic_index, int qubit_index):node_address(node_addr),qnic_index(qnic_index),qubit_index(qubit_index){}
   QNIC qnic;
   double initial_fidelity = -1; /*Oka's protocol?*/
@@ -47,36 +36,53 @@ typedef struct {
   int neighborQNode_address;
   int neighborQNode_qnic_type;
   QNIC neighbor_qnic;
-} Interface_inf;
+};
 
-typedef struct {
+struct ConnectionSetupInfo {
   QNIC_id qnic;
   int neighbor_address;
   int quantum_link_cost;
-} connection_setup_inf;
+};
 
-typedef struct {
+const ConnectionSetupInfo NULL_CONNECTION_SETUP_INFO{.qnic =
+                                                         {
+                                                             .type = QNIC_N,
+                                                             .index = -1,
+                                                         },
+                                                     .neighbor_address = -1,
+                                                     .quantum_link_cost = -1};
+
+struct tomography_outcome {
   char my_basis;
   bool my_output_is_plus;
   char my_GOD_clean;
   char partner_basis;
   bool partner_output_is_plus;
   char partner_GOD_clean;
-} tomography_outcome;
+};
 
-typedef struct {
+struct output_count {
   int total_count;
   int plus_plus;
   int plus_minus;
   int minus_plus;
   int minus_minus;
-} output_count;
+};
 
-typedef struct {
+struct link_cost {
   simtime_t tomography_time;
   int tomography_measurements;
   double Bellpair_per_sec;
-} link_cost;
+};
+
+// qnic_index -> InterfaceInfo
+typedef std::map<int, InterfaceInfo> NeighborTable;
+
+// basis combination -> raw output count
+// e.g.
+// "XX" -> {plus_plus = 56, plus_minus = 55, minus_plus = 50, minus_minus = 50},
+// "XY" -> {....
+typedef std::map<std::string, output_count> raw_data;
 
 /** \class HardwareMonitor HardwareMonitor.h
  *  \todo Documentation of the class header.
@@ -86,8 +92,16 @@ typedef struct {
 
 class HardwareMonitor : public cSimpleModule {
  private:
-  int myAddress;
-  int numQnic, numQnic_r, numQnic_rp, numQnic_total;
+  int my_address;
+
+  // number of qnics connected to stand alone HoM or internal hom in the neighbor.
+  int num_qnic;
+  // number of qnics connected to internal hom.
+  int num_qnic_r;
+  // number of qnics connected to epps.
+  int num_qnic_rp;
+  int num_qnic_total;
+
   cModuleType *QNodeType = cModuleType::get("networks.QNode");
   cModuleType *SPDCType = cModuleType::get("networks.SPDC");
   cModuleType *HoMType = cModuleType::get("networks.HoM");
@@ -98,19 +112,19 @@ class HardwareMonitor : public cSimpleModule {
   int Purification_type = -1;
   int num_measure;
 
+  std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(int neighbor_address);
+  cModule *getQnic(int qnic_index, QNIC_type qnic_type);
+
  public:
-  // typedef std::map<int,Interface_inf> Interfaces;//qnic_index -> Interface{qnic_type, initial_fidelity...}
-  typedef std::map<int, Interface_inf> NeighborTable;  // qnic_index -> Interface{qnic_type, initial_fidelity...}
-  NeighborTable ntable;
-  typedef std::map<int, stationaryQubitInfo> QnicInfo;  // stationary qubit index -> state
-  typedef std::map<std::string, output_count>
-      raw_data;  // basis combination -> raw output count e.g "XX" -> {plus_plus = 56, plus_minus = 55, minus_plus = 50, minus_minus = 50}, "XY" -> {....
+  NeighborTable neighbor_table;
   raw_data *tomography_data;
-  QnicInfo *qtable;
+
   single_qubit_error Pauli;
-  virtual NeighborTable passNeighborTable();
-  virtual int checkNumBuff(int qnic_index, QNIC_type qnic_type);  // returns the total number of qubits
-  virtual connection_setup_inf return_setupInf(int qnic_address);
+  NeighborTable passNeighborTable();
+
+  int getQnicNumQubits(int qnic_index, QNIC_type qnic_type);
+  std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address);
+
   // virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, QNIC_type qnic_type);//returns the set of free resources
   // virtual int checkNumFreeBuff(int qnic_index, QNIC_type qnic_type);//returns the number of free qubits
   typedef std::map<int, tomography_outcome> Temporal_Tomography_Output_Holder;  // measurement_count_id -> outcome. For single qnic
@@ -125,11 +139,12 @@ class HardwareMonitor : public cSimpleModule {
   virtual void finish() override;
   virtual void handleMessage(cMessage *msg) override;
   virtual int numInitStages() const override { return 2; };
-  virtual NeighborTable prepareNeighborTable(NeighborTable ntable, int numQnic);
-  virtual neighborInfo checkIfQNode(cModule *thisNode);
+  virtual void prepareNeighborTable();
+
+  virtual std::unique_ptr<NeighborInfo> createNeighborInfo(const cModule &thisNode);
   virtual cModule *getQNode();
-  virtual neighborInfo findNeighborAddress(cModule *qnic_pointer);
-  virtual Interface_inf getInterface_inf_fromQnicAddress(int qnic_index, QNIC_type qnic_type);
+  virtual std::unique_ptr<NeighborInfo> getNeighbor(cModule *qnic_pointer);
+  virtual InterfaceInfo getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);
   virtual QNIC search_QNIC_from_Neighbor_QNode_address(int neighbor_address);
   virtual Matrix4cd reconstruct_Density_Matrix(int qnic_id);
@@ -139,7 +154,14 @@ class HardwareMonitor : public cSimpleModule {
   // simtime_t tomography_time;
 };
 
+Define_Module(HardwareMonitor);
+
 }  // namespace modules
 }  // namespace quisp
+
+namespace std {
+std::stringstream &operator<<(std::stringstream &os, const quisp::modules::NeighborInfo &v);
+std::basic_ostream<char> &operator<<(std::basic_ostream<char> &os, const quisp::modules::InterfaceInfo &v);
+}  // namespace std
 
 #endif /* QUISP_MODULES_HARDWAREMONITOR_H_ */

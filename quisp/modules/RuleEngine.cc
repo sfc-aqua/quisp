@@ -128,7 +128,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     int qnic_address, qnic_type;
     int qnic_index, neighborQNodeAddress;
     if (pk->getInternal_qnic_address() == -1) {  // destination hom is outside this node.
-      Interface_inf inf = getInterface_toNeighbor(pk->getSrcAddr());
+      InterfaceInfo inf = getInterface_toNeighbor(pk->getSrcAddr());
       qnic_index = inf.qnic.index;
       qnic_address = inf.qnic.address;
       qnic_type = QNIC_E;
@@ -642,9 +642,9 @@ void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, int rule_
   }
 }
 
-Interface_inf RuleEngine::getInterface_toNeighbor(int destAddr) {
-  Interface_inf inf;
-  HardwareMonitor::NeighborTable::iterator it = ntable.find(destAddr);
+InterfaceInfo RuleEngine::getInterface_toNeighbor(int destAddr) {
+  InterfaceInfo inf;
+  auto it = ntable.find(destAddr);
 
   // Neighbor not found! This should not happen unless you simulate broken links in real time.
   if (it == ntable.end())
@@ -654,8 +654,8 @@ Interface_inf RuleEngine::getInterface_toNeighbor(int destAddr) {
   return inf;
 }
 
-Interface_inf RuleEngine::getInterface_toNeighbor_Internal(int local_qnic_address) {
-  Interface_inf inf;
+InterfaceInfo RuleEngine::getInterface_toNeighbor_Internal(int local_qnic_address) {
+  InterfaceInfo inf;
   for (auto i = ntable.begin(); i != ntable.end(); i++) {
     // Neighbor not found! This should not happen unless you simulate broken links in real time.
     if (i == ntable.end()) error("Interface to neighbor not found in neighbor table prepared by the Hardware Manager.... This should probably not happen now.");
@@ -668,7 +668,7 @@ Interface_inf RuleEngine::getInterface_toNeighbor_Internal(int local_qnic_addres
 void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type) {
   SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne(First)");
   if (ntable.empty())  // Just do this once, unless the network changes during the simulation.
-    ntable = hardware_monitor->passNeighborTable();  // Get neighbor table from Hardware Manager: neighbor address--> Interface_inf.
+    ntable = hardware_monitor->passNeighborTable();  // Get neighbor table from Hardware Manager: neighbor address--> InterfaceInfo.
 
   int destAddr = pk->getSrcAddr();  // The destination is where the request is generated (source of stand-alone or internal BSA node).
   int qnic_index, qnic_address;
@@ -677,7 +677,7 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
 
   switch (qnic_type) {
     case QNIC_E: {
-      Interface_inf inf = getInterface_toNeighbor(destAddr);
+      InterfaceInfo inf = getInterface_toNeighbor(destAddr);
       qnic_index = inf.qnic.index;
       qnic_address = inf.qnic.address;
     }  // inf is not defined beyound this point
@@ -818,7 +818,7 @@ RuleEngine::QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTabl
 
   int index = 0;
   for (int i = 0; i < qnics; i++) {
-    for (int x = 0; x < hardware_monitor->checkNumBuff(i, qnic_type); x++) {
+    for (int x = 0; x < hardware_monitor->getQnicNumQubits(i, qnic_type); x++) {
       QubitAddr this_qubit = {parentAddress, i, x};
       // QubitAddr entangled_qubit = {-1, -1, -1};//Entangled address. The system may miss-track the actual entangled partner.  Initialized as -1 'cause no entangled qubits in the
       // beginning QubitAddr actual = {-1, -1, -1};//Entangled address. This is the true physically entangled partner. If there!=actual, then any operation on the qubit is a mess!
@@ -892,7 +892,7 @@ RuleEngine::QubitStateTable RuleEngine::setQubitFree_inQnic(QubitStateTable tabl
 void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, int internal_qnic_index) {
   int qnic_address = -1, qnic_index, qnic_type;
   if (internal_qnic_address == -1) {  // destination hom is outside this node.
-    Interface_inf inf = getInterface_toNeighbor(destAddr);
+    InterfaceInfo inf = getInterface_toNeighbor(destAddr);
     qnic_index = inf.qnic.index;
     qnic_address = inf.qnic.address;
     qnic_type = QNIC_E;
@@ -927,9 +927,12 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // initialize
 
   int qnic_address = routingdaemon->return_QNIC_address_to_destAddr(new_partner);
-  connection_setup_inf inf = hardware_monitor->return_setupInf(qnic_address);
-  int qnic_index = inf.qnic.index;
-  QNIC_type qnic_type = inf.qnic.type;
+  auto info = hardware_monitor->findConnectionInfoByQnicAddr(qnic_address);
+  if (info == nullptr) {
+    error("qnic(addr: %d) info not found", qnic_address);
+  }
+  int qnic_index = info->qnic.index;
+  QNIC_type qnic_type = info->qnic.type;
   int qubit_index = swapr.measured_qubit_index;
 
   // First, the qubit used for swapping must be free.s
@@ -988,7 +991,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
   QNIC_type qnic_type;
 
   if (internal_qnic_index == -1) {  // destination hom is outside this node.
-    Interface_inf inf = getInterface_toNeighbor(destAddr);
+    InterfaceInfo inf = getInterface_toNeighbor(destAddr);
     neighborQNodeAddress = inf.neighborQNode_address;  // Because we need the address of the neighboring QNode, not BSA!
     qnic_index = inf.qnic.index; /*Only unique inside the same qnic_type.*/
     qnic_address = inf.qnic.address; /*Unique address*/
@@ -1083,7 +1086,7 @@ void RuleEngine::freeResource(int qnic_index /*The actual index. Not address. Th
 void RuleEngine::clearTrackerTable(int destAddr, int internal_qnic_address) {
   int qnic_address = -1;
   if (internal_qnic_address == -1) {  // destination hom is outside this node.
-    Interface_inf inf = getInterface_toNeighbor(destAddr);
+    InterfaceInfo inf = getInterface_toNeighbor(destAddr);
     qnic_address = inf.qnic.address;
   } else {  // destination hom is in the qnic in this node. This gets invoked when the request from internal hom is send from the same node.
     qnic_address = internal_qnic_address;
