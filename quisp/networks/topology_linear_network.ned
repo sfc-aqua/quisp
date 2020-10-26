@@ -1,11 +1,10 @@
 package networks;
 
- 
-
 import ned.DatarateChannel;
 import ned.IdealChannel;
 
-
+import modules.*;
+import channels.*;
 
 network Tomography_Linear_One_MM_MIM
 {

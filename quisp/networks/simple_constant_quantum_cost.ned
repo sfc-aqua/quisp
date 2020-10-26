@@ -1,5 +1,8 @@
-import ned.DatarateChannel;
 package networks;
+
+import ned.DatarateChannel;
+import modules.*;
+import channels.*;
 
 //
 // TODO auto-generated type
