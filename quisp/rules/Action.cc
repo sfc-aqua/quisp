@@ -878,28 +878,40 @@ ret Action::initializeAction() {
 
 
 //Action 5
-//what type are the outcome list and the basis
-StationaryQubit *Action::measureAction(*outcomeList,*basis){
-  StationaryQubit *left_qubit = nullptr;
-  StationaryQubit *right_qubit = nullptr;
-  //can outcmeList be a vector?
-  for(int i=0; i<sizeof(outcomeList);i++){
-    left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
-    right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
-    if (basis[i] == 1){
-      bool outcome_right = right_qubit -> measure_X();
-      bool outcome_left = left_qubit -> measure_X(); 
-    } else if (basis[i] == 2){
-      bool outcome_right = right_qubit -> measure_Z();
-      bool outcome_left = left_qubit -> measure_Z(); 
-    } else if (basis[i] == 3){
-      bool outcome_right = right_qubit -> measure_Bell();
-      bool outcome_left = left_qubit -> measure_Bell(); 
+cPacket* measureAction::run(cModule *re) const{
+    // all condition must be satisfied when this function is called.
+    // So we don't need additoinal conditions here
+    for(int i=0; basis.size(); i++){
+        // This function takes resource (bell pair)
+        // between partners
+        left_resource = getResource_fromTop_with_partner(left_resource, left_partner);
+        right_resource = getResource_fromTop_with_partner(right_resource, right_partner);
+        bool left_measure;
+        bool right_measure;
+        if(basis.at(i) == "Z"){
+            left_measure = left_resource -> measure_Z();
+            right_measure = right_resource -> measue_Z();
+        }else if(basis.at(i) == "X"){
+            left_measure = left_resource -> measure_X();
+            right_measure = right_resource -> measue_X();   
+        }
+        // here I'm not sure how to combine two outcomes?
+        // just taking AND or OR? 
+        outcomeList.insert(std::make_pair(basis[i],left_measure))
+        outcomeList.insert(std::make_pair(basis[i],right_measure))
     }
-    tuple<int,int,int> item(basis,outcome_right, outcome_left); // waht are the types? 
-    outcomeList[i] = item;//need to have a specific type
-  }
-  return outcomeList;
+    // prepare packet
+    if msgSent:
+        // finalize measurement and return packets to endnode?
+        AbsaResult *pk = new AbsaResult;
+        pk->setLeftDest(left_node)
+        ...
+    else:
+        // return result to myself
+        AbsaResult *pk = new AbsaResult;
+        pk->setDestination(myself)
+    // This paket goes to RuleEngine.cc l1230
+    return pk
 }
 
 //Action 7
