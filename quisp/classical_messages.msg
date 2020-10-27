@@ -276,3 +276,11 @@ packet InternalRuleSetForwarding_Application extends header{
 
     RuleSetField RuleSet;
 }
+
+packet ConnectionSetupRequest extends header
+{
+    int actual_destAddr;
+    int actual_srcAddr;
+    // like this?
+    std::map<int, bool> outcomeList;
+}
