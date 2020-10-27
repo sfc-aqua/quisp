@@ -180,6 +180,12 @@ void Router::handleMessage(cMessage *msg) {
     send(pk, "rePort$o");
     return;
   }
+  else if (destAddr == myAddress && dynamic_cast<AbsaResult *>(msg) != nullptr) {
+    bubble("SecondGenSetupRequest received");
+    // forward this packet to RuleEngine Port.
+    send(pk, "rePort$o");
+    return;
+   }
 
   // Check if packet is reachable
   RoutingTable::iterator it = rtable.find(destAddr);
