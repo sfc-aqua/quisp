@@ -12,7 +12,7 @@
 #include "tools.h"
 #include "stationaryQubit.h"
 #include <tuple>
-#include <vector>; 
+#include <map>
 namespace quisp {
 namespace rules {
 
@@ -867,9 +867,12 @@ cPacket *DoubleSelectionDualActionSecondInv::run(cModule *re) {
 //ABSA actions starts here 
 //Action 2
 //Needs to be modified, muliptle returns
+//Action 2
+//Needs to be modified, muliptle returns
 ret Action::initializeAction() {
   int basis = 3; //is there a way to specifiy bell state?
-  vector<tuple<int, int, int>> outcomeList;
+  //the key is the name of qubit while the values are the basis and outcomes
+  std::map<int, tuple<int, int, int>> outcomeList;
   bool successBell  = false;
   bool msgSent = false;
   //encodeX and Z?
@@ -878,49 +881,40 @@ ret Action::initializeAction() {
 
 
 //Action 5
-cPacket* measureAction::run(cModule *re) const{
-    // all condition must be satisfied when this function is called.
-    // So we don't need additoinal conditions here
-    for(int i=0; basis.size(); i++){
-        // This function takes resource (bell pair)
-        // between partners
-        left_resource = getResource_fromTop_with_partner(left_resource, left_partner);
-        right_resource = getResource_fromTop_with_partner(right_resource, right_partner);
-        bool left_measure;
-        bool right_measure;
-        if(basis.at(i) == "Z"){
-            left_measure = left_resource -> measure_Z();
-            right_measure = right_resource -> measue_Z();
-        }else if(basis.at(i) == "X"){
-            left_measure = left_resource -> measure_X();
-            right_measure = right_resource -> measue_X();   
-        }
-        // here I'm not sure how to combine two outcomes?
-        // just taking AND or OR? 
-        outcomeList.insert(std::make_pair(basis[i],left_measure))
-        outcomeList.insert(std::make_pair(basis[i],right_measure))
+//what type are the outcome list and the basis
+StationaryQubit *Action::measureAction(*outcomeList,*basis){
+  StationaryQubit *left_qubit = nullptr;
+  StationaryQubit *right_qubit = nullptr;
+  for(int i=0; i<sizeof(basis);i++){
+    left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
+    right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
+    if (basis[i] == 1){
+      bool outcome_right = right_qubit -> measure_X();
+      bool outcome_left = left_qubit -> measure_X(); 
+    } else if (basis[i] == 2){
+      bool outcome_right = right_qubit -> measure_Z();
+      bool outcome_left = left_qubit -> measure_Z(); 
+    } else if (basis[i] == 3){
+      bool outcome_right = right_qubit -> measure_Bell();
+      bool outcome_left = left_qubit -> measure_Bell(); 
     }
-    // prepare packet
-    if msgSent:
-        // finalize measurement and return packets to endnode?
-        AbsaResult *pk = new AbsaResult;
-        pk->setLeftDest(left_node)
-        ...
-    else:
-        // return result to myself
-        AbsaResult *pk = new AbsaResult;
-        pk->setDestination(myself)
-    // This paket goes to RuleEngine.cc l1230
-    return pk
+    tuple<int,int,int> item(basis,outcome_right, outcome_left);
+    outcomeList.insert(std::make_pair(i, item));
+  }
+  return outcomeList;
 }
 
 //Action 7
 msg Action::finalizeAction(*outcomeList){
   int absaAdd = left_partner_qubit->stationaryQubit_address;
   int endnodeAdd = right_partner_qubit->stationaryQubit_address;
-  int* msg[sizeof(outcomeList)] //snce we only need a list of basis used
-  for(int i = 0; sizeof(outcomeList); i++){
-    msg[i] = get<0>(outcomeList);
+  int* msg[outcomeList.size()] //snce we only need a list of basis used
+  std::map<int, tuple<int, int, int>::iterator it = outcomeList.begin();
+  int i = 0;
+  while(it !=outcomeList.end()){
+    tuple <int, int, int> val = it->second;
+    msg[i] = std::get<0>(val);
+    i++;
   }
   bool msgSent = true;
   return msg;
@@ -946,9 +940,9 @@ int* Action::qkdInitializeAction(){
 vector* Action::qkdMeasureAction(int* basis, vector* outcomeList){
   StationaryQubit *incomeQubit = nullptr;
   outcome = meausre(incomeQubit,basis);
-  tuple<int,int> item(basis,outcome);
-  vector<tuple<int, int, int>> outcomeList;
-  outcomeList.insert(item);
+  //tuple<int,int> item(basis,outcome);
+  std::map<int, tuple<int, int, int>> outcomeList;
+  outcomeList.insert(std::make_pair(basis,outcome));
   return outcomeList;
 }
 
