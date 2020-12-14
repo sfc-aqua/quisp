@@ -1268,28 +1268,36 @@ void RuleEngine::traverseThroughAllProcesses2() {
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } else if (dynamic_cast<DoublePurificationResult *>(pk) != nullptr) {
+          } 
+          
+          else if (dynamic_cast<DoublePurificationResult *>(pk) != nullptr) {
             DoublePurificationResult *pkt = check_and_cast<DoublePurificationResult *>(pk);
             pkt->setSrcAddr(parentAddress);
             DoublePurificationResult *pk_for_self = pkt->dup();
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } else if (dynamic_cast<DS_DoublePurificationResult *>(pk) != nullptr) {
+          } 
+          
+          else if (dynamic_cast<DS_DoublePurificationResult *>(pk) != nullptr) {
             DS_DoublePurificationResult *pkt = check_and_cast<DS_DoublePurificationResult *>(pk);
             pkt->setSrcAddr(parentAddress);
             DS_DoublePurificationResult *pk_for_self = pkt->dup();
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } else if (dynamic_cast<DS_DoublePurificationSecondResult *>(pk) != nullptr) {
+          } 
+          
+          else if (dynamic_cast<DS_DoublePurificationSecondResult *>(pk) != nullptr) {
             DS_DoublePurificationSecondResult *pkt = check_and_cast<DS_DoublePurificationSecondResult *>(pk);
             pkt->setSrcAddr(parentAddress);
             DS_DoublePurificationSecondResult *pk_for_self = pkt->dup();
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } else if (dynamic_cast<SwappingResult *>(pk) != nullptr) {
+          } 
+          
+          else if (dynamic_cast<SwappingResult *>(pk) != nullptr) {
             SwappingResult *pkt = check_and_cast<SwappingResult *>(pk);
             EV << "done swapping at " << parentAddress << "\n";
             // here this packet goes to two destination.
@@ -1328,7 +1336,36 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
             send(pkt_for_left, "RouterPort$o");
             send(pkt_for_right, "RouterPort$o");
-          } else if (dynamic_cast<Error *>(pk) != nullptr) {
+          } 
+ 
+            else if (dynamic_cast<ABSAResults *>(pk) != nullptr) {
+            ABSAResults *pkt = check_and_cast<ABSAResults *>(pk);
+            EV << "done ABSA at " << parentAddress << "\n";
+            ABSAResults *pkt_for_left = new ABSAResults;
+            pkt_for_left->setKind(5);  // cyan
+            pkt_for_left->setDestAddr(pkt->getLeft_Dest());
+            pkt_for_left->setSrcAddr(parentAddress);
+            pkt_for_left->setOperation_type(pkt->getOperation_type_left());
+            pkt_for_left->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
+            pkt_for_left->setNew_partner(pkt->getNew_partner_left());
+            pkt_for_left->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
+            pkt_for_left->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
+            pkt_for_left->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
+            ABSAResults *pkt_for_right = new ABSAResults;
+            pkt_for_right->setKind(5);  // cyan
+            pkt_for_right->setDestAddr(pkt->getRight_Dest());
+            pkt_for_right->setSrcAddr(parentAddress);
+            pkt_for_right->setOperation_type(pkt->getOperation_type_right());
+            pkt_for_right->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
+            pkt_for_right->setNew_partner(pkt->getNew_partner_right());
+            pkt_for_right->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
+            pkt_for_right->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
+            pkt_for_right->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
+            send(pkt_for_left, "RouterPort$o");
+            send(pkt_for_right, "RouterPort$o");
+          } 
+          
+          else if (dynamic_cast<Error *>(pk) != nullptr) {
             Error *err = check_and_cast<Error *>(pk);
             error(err->getError_text());
             delete pk;
