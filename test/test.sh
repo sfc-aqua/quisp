@@ -1,9 +1,9 @@
 #!/bin/bash
 # run the result_test.ini in the network. This is not an unit test.
 echo "test start"
-cd /root/quisp/quisp/networks
-make -C ../ cleanall
-make -C ../ BATCH=true QCONFIG=/root/quisp/quisp/network/* -j $(nproc) all
+cd /root/quisp/quisp/
+make cleanall
+make BATCH=true QCONFIG=/root/quisp/quisp/networks/* -j $(nproc) all
 # These are creating all simulations HACK
 # if we set quisp as ./quisp/..., may be error because of existance of the same name binary 
 if [ -e /root/quisp/test/testresults.txt ];then
