@@ -32,22 +32,21 @@ O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 # Object files for local .cc, .msg and .sm files
 OBJS = \
     $O/channels/QuantumChannel.o \
-    $O/modules/Application.o \
-    $O/modules/BellStateAnalyzer.o \
-    $O/modules/ConnectionManager.o \
+    $O/modules/Application/Application.o \
+    $O/modules/PhysicalConnection/BSA/BellStateAnalyzer.o \
+    $O/modules/QRSA/ConnectionManager/ConnectionManager.o \
     $O/modules/dummyModule.o \
-    $O/modules/EntangledPhotonPairSource.o \
-    $O/modules/HardwareMonitor.o \
-    $O/modules/HoM_Controller.o \
-    $O/modules/PhotonicSwitch.o \
-    $O/modules/Queue.o \
-    $O/modules/RealTimeController.o \
-    $O/modules/ResourceManager.o \
-    $O/modules/Router.o \
-    $O/modules/RoutingDaemon.o \
-    $O/modules/RuleEngine.o \
-    $O/modules/SPDC_Controller.o \
-    $O/modules/stationaryQubit.o \
+    $O/modules/PhysicalConnection/EPPS/EntangledPhotonPairSource.o \
+    $O/modules/QRSA/HardwareMonitor/HardwareMonitor.o \
+    $O/modules/PhysicalConnection/BSA/HoMController.o \
+    $O/modules/QNIC/PhotonicSwitch/PhotonicSwitch.o \
+    $O/modules/Common/Queue.o \
+    $O/modules/QRSA/RealTimeController/RealTimeController.o \
+    $O/modules/Common/Router.o \
+    $O/modules/QRSA/RoutingDaemon/RoutingDaemon.o \
+    $O/modules/QRSA/RuleEngine/RuleEngine.o \
+    $O/modules/PhysicalConnection/EPPS/SPDC_Controller.o \
+    $O/modules/QNIC/StationaryQubit/StationaryQubit.o \
     $O/rules/Action.o \
     $O/rules/Clause.o \
     $O/rules/Condition.o \
