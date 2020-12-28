@@ -100,7 +100,7 @@ __This conditional clause checks whether current time is less than the scheduled
 
 __Algorithm 2:__ initializeAction(branchingVector)  
 __This Action is used to set the measurement basis to Bell basis before the arrival of the first arm qubits, initialize the list of measurement outcomes, the Boolean value tracking whether a successful Bell measurement has occurred, create two tree arrays according to the branching vector used for encoded X and Z measurements, and to set the Boolean value tracking whether the final message has been sent yet.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: branchingVector <- tree array used for encoding 1st-leaf qubits.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: branchingVector <- list consisting of branching numbers used for encoding 1st-leaf qubits.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basis <- measurement basis, outcomeList <- list of measurement results for physical qubits, successBell <- Boolean value indicating whether successful Bell measurement has occured yet, encodedX <- tree array with Pauli bases (see Figure 5), encodedZ <- tree array with Pauli bases (see Figure 5), msgSent <- Boolean value.
 
 <pre>
@@ -229,7 +229,7 @@ __This Conditional Clause checks whether end nodes need to be initialized.__
 
 __Algorithm 9:__ qkdInitializeAction(m)  
 __This Action initializes the end node by randomly generating a list of measurement bases, picked from X and Z.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: m <- number of arm qubits (see Figure 1).  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: m <- integer number of arm qubits (see Figure 1).  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basisList <- list of measurement bases, outcomeList <- list to store measurement outcomes, msgNeeded <- Boolean value.
 
 <pre>
