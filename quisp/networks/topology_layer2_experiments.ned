@@ -1,9 +1,10 @@
 package networks;
- 
 
 import ned.DatarateChannel;
 import ned.IdealChannel;
 
+import channels.*;
+import modules.*;
 
 network Layer2_Simple_MIM_MM_all_in_one
 {

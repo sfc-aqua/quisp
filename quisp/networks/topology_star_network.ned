@@ -3,6 +3,8 @@ package networks;
 import ned.DatarateChannel;
 import ned.IdealChannel;
 
+import modules.*;
+import channels.*;
 
 network Three_HoM_star
 {

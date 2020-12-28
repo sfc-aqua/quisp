@@ -9,7 +9,7 @@
 #define QUISP_RULES_TOOLS_H_
 //#include <vector>
 
-#include <modules/RuleEngine.h>
+#include <modules/QRSA/RuleEngine/RuleEngine.h>
 //#include <modules/stationaryQubit.h>
 
 namespace quisp {

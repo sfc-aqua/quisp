@@ -1,6 +1,8 @@
 package networks;
 
 import ned.DatarateChannel;
+import modules.*;
+import channels.*;
 
 network twonodes
 {
