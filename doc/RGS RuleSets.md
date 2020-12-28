@@ -105,12 +105,12 @@ __This Action is used to set the measurement basis to Bell basis before the arri
 
 <pre>
 <b>Require:</b> initialTime == True
-1:  <b>procedure</b> initializeAction()
+1:  <b>procedure</b> initializeAction(branchingVector)
 2:    basis = Bell
 3:    outcomeList = []
 4:    successBell = False
-5:    encodedX <- tree array for encoded X measurement
-6:    encodedZ <- tree array for encoded Z measurement
+5:    encodedX <- tree array for encoded X measurement, structure derived from branchingVector
+6:    encodedZ <- tree array for encoded Z measurement, structure derived from branchingVector
 7:    msgSent = False
 8:    <b>return</b> basis, outcomeList, successBell, encodedX, encodedZ
 9:  <b>end procedure</b>
@@ -229,12 +229,12 @@ __This Conditional Clause checks whether end nodes need to be initialized.__
 
 __Algorithm 9:__ qkdInitializeAction(m)  
 __This Action initializes the end node by randomly generating a list of measurement bases, picked from X and Z.__  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: m <- number of arm qubits.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Input: m <- number of arm qubits (see Figure 1).  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Output: basisList <- list of measurement bases, outcomeList <- list to store measurement outcomes, msgNeeded <- Boolean value.
 
 <pre>
 <b>Require:</b> initializeNeeded == True
-1:  <b>procedure</b> qkdInitializeAction()
+1:  <b>procedure</b> qkdInitializeAction(m)
 2:    basisList = []
 3:    outcomeList = []
 4:    msgNeeded = True
@@ -331,9 +331,3 @@ Store 1st-leaf qubits in quantum memory as well.
 Determine which arm qubit was succesfully loaded last and measure its neighbor in the encoded Pauli X basis and measure the remaining stored qubits in Pauli Z basis.
 If this X measurement fails, move on to the second last successfully stored arm qubit and attempt to measure its 1-st leaf neighbor in the encoded Pauli X basis.
 Continue until the encoded X measurement succeeds.
-
-
-__Final state__
-<center>
-<img src="img/rgs4_correction.png" width="500" />
-</center>
