@@ -130,6 +130,15 @@ void BellStateAnalyzer::initialize() {
  * individually with errors as necessary.  If entanglement fails, the qubits are left independent.
  * Called twice: each photon arriving @BSA triggers this.  First one sets things provisionally using variables
  * local to this object (the BSA itself), second one completes and updates the actual qubits.
+ *
+ * This function treats the physical detector setup as a black box. It
+ * checks whether left & right photons arrived, and whether left &
+ * right get dark counts. If (received | darkcount) on both the left
+ * and the right, then the BSA declares “entanglement succeeded”,
+ * with the actual resulting density matrix depending on the details.
+ * Further modeling of the necessary Pauli frame fixups is not
+ * handled; those are assumed to be propagated along with the ACKs for
+ * entanglement success/failure.
  */
 void BellStateAnalyzer::handleMessage(cMessage *msg) {
   PhotonicQubit *photon = check_and_cast<PhotonicQubit *>(msg);
@@ -306,6 +315,12 @@ void BellStateAnalyzer::initializeVariables() {
 }
 
 void BellStateAnalyzer::sendBSAresult(bool result, bool sendresults) {
+  // result is true if entanglement succeeded.
+  // sendresults is true if this is the last pulse in a train and it's
+  // time to send the accumulated results to neighbors; this is
+  // flagged at the physical level so it come through here, but the
+  // sending is done a couple of layers higher in the software stack.
+  // 
   // result could be false positive (actually ok but recognized as ng),
   // false negative (actually ng but recognized as ok) due to darkcount
   // true positive and true negative is no problem.
