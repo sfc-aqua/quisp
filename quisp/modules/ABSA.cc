@@ -176,7 +176,7 @@ void ABSANode::handleMessage(cMessage *msg) {
     double darkcount_left = dblrand();
     double darkcount_right = dblrand();
     if ((rand < BSAsuccess_rate && !right_photon_lost && !left_photon_lost) /*No qubit lost*/ ||
-        (!right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability) /*Got rigt, darkcount left*/ ||
+        (!right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability) /*Got right, darkcount left*/ ||
         (right_photon_lost && !left_photon_lost && darkcount_right < darkcount_probability) /*Got left, darkcount right*/ ||
         (right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability && darkcount_right < darkcount_probability) /*Darkcount right left*/) {
       if (!right_photon_lost && (left_photon_lost && darkcount_left <= darkcount_probability)) {
