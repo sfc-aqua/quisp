@@ -3,7 +3,7 @@
  *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *
- *  \brief BellStateAnalyzer
+ *  \brief BellStateAnalyzer (the quantum/photonic+detector hardware simulation)
  */
 #include <PhotonicQubit_m.h>
 #include <classical_messages_m.h>

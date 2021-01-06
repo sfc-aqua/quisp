@@ -4,7 +4,7 @@
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/04/01
  *
- *  \brief HoMController
+ *  \brief HoMController (the classical control HW+SW)
  */
 #include "HoM_Controller.h"
 
