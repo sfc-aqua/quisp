@@ -3,7 +3,7 @@
 
 # Quantum Router (Repeater) Software Architecture #
 
-A router has multiple hardware elements, but a single software controller. This page describes the architecture of that software. For more details on the hardware, see the  [Router Architecture](/Router Architecture) page.
+A router has multiple hardware elements, but a single software controller. This page describes the architecture of that software. For more details on the hardware, see the [Router Architecture](Router%20Architecture.md) page.
 
 ![Router software arch.PNG](img/716978964-Router%20software%20arch.PNG)
 
