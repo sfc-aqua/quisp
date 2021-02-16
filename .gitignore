@@ -205,3 +205,6 @@ $RECYCLE.BIN/
 *.app
 
 
+inet/
+quisp/.vscode/
+quisp/modules/.vs/
