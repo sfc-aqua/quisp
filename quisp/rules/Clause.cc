@@ -161,52 +161,53 @@ bool PurificationCountClause::check(std::multimap<int, StationaryQubit*> resourc
   StationaryQubit* qubit = nullptr;
 }
 
-//ABSA clauses start here
+/ABSA clauses start here
 //Algorithm 1 Clause
-//do we need a list if we are only using the 1st index?
-bool initConditionalClause::check(std::arrivalTime<int){
-  initTime = false;
+bool initConditionalClause::check(std::arrivalTimeList<int*){
+  bool initTime = false;
   //get current time
-  currentTime = simTime();
-  if (currentTime < arrivalTime){
+  int currentTime = simTime();
+  if (currentTime < arrivalTimeList[0]){
     initTime = true;
   }
   return initTime;
 }
   
 //Algorithm 3 Clause
-//Is arrival time a list? why two values?
-bool MeasureConditionalClause::check(std::arrivalTime<int){
-  //how to get current time?
-  currentTime = simTime();
-  measurementNeeded = false;
-  if (arrivalTime <= currentTime){
+bool MeasureConditionalClause::check(std::arrivalTimeList<int*){
+  int currentTime = simTime();
+  bool measurementNeeded = false;
+  if (arrivalTimeList[0] <= currentTime && currentTime <= arrivalTimeList[-1]){
     measurementNeeded = true;
   }
   return measurementNeeded;
 }
   
 //Algorithm 4 Clause
-//what is the size of the list?
-//What are the content of the list? ints? bools?
-//Can we represent the basis are ints, e.g. 1 >> encodeX?
-int postBellConditionalClause::check(std::outList<int*, std::successBell<bool){
-  //basis = "encodeX";
-  basis = 1;
-  if (successBell == true or outList[-1] == false){
-    //basis = "encodeZ";
-    basis = 2;
+int postBellConditionalClause::check(std::map<int, tuple<int, int, int>> *outcomeList, std::successBell<bool){
+  int basis; //x
+  std::map<int, tuple<int, int, int>::iterator itr;
+  itr = outcomeList.end();
+  --itr;
+  //itr-> first == is the key
+  //itr->second == is the value
+  //need to checck if the measurement is successful or not
+  if (successBell == true or itr->second.successful() == false){
+    basis = 2; //z
+  }
+  else{
+    basis = 1;
   }
   return basis;
 }
   
   
  //Algorithm 6 Clause
-bool finalConditionalClause::check(std::arrivalTime<int, std::msgSent<bool){
+bool finalConditionalClause::check(std::arrivalTimeList<int*, std::msgSent<bool){
   //get current time
-  currentTime = simTime();
-  msgNeeded = false;
-  if (currentTime> arrivalTime and msgSent == false){
+  int currentTime = simTime();
+  bool msgNeeded = false;
+  if (currentTime > arrivalTimeList[-1] && msgSent == false){
     msgNeeded = true;
   }
   return msgNeeded;
@@ -214,11 +215,10 @@ bool finalConditionalClause::check(std::arrivalTime<int, std::msgSent<bool){
   
  
 //Algorithm 8 Clause
-bool qkdInitConditionalClause(std::arrivalTime<int*){
-  initNeeded = false;
-  //get current time
-  currentTime = ;
-  if (currentTime < arrivalTime[0]){
+bool qkdInitConditionalClause(std::arrivalTimeList<int*){
+  bool initNeeded = false;
+  int currentTime = simTime();
+  if (currentTime < arrivalTimeList[0]){
     initNeeded = true;
   }
   return initNeeded;
@@ -226,27 +226,32 @@ bool qkdInitConditionalClause(std::arrivalTime<int*){
   
   
 
-//Algorithm 10 Clause
+//Algorithm 10A Clause
 //needs to be divided into two clause >> multiple returns
-//If we have only two meaurement basis, can we just use true and false for them
-bool *qkdMeasureConditionClause(std::arrivalTimeList<int*, *basisList){
-  measurementNeeded = false;
-  //get current time
-  currentTime = ;
-  //get_index??
-  index = get_index(currentTime, int *arrivalTimeList);
+bool qkdMeasureConditionClause(std::arrivalTimeList<int*, std::basisList<int*){
+  bool measurementNeeded = false;
+  int currentTime = simTime();
   if (arrivalTimeList[0] <= currentTime and currentTime <= arrivalTimeList[-1]){
     measurementNeeded = true;
-    basis = basisList[index];
   }
-  return measurementNeeded, basis;
+  return measurementNeeded;
 }
   
+//Algorithm 10B Clause
+int qkdBasisConditionClause(std::arrivalTimeList<int*, std::basisList<int*){
+  int currentTime = simTime();
+  int basis;
+  int index = get_index(currentTime, int *arrivalTimeList);
+  if (arrivalTimeList[0] <= currentTime and currentTime <= arrivalTimeList[-1]){
+    basis = basisList[index];
+  }
+  return basis;
+}
   
 //Algorithm 12 Clause
-bool qkdFinalConditionClause(std::Algorithm<int*){
-  currentTime = ;
-  finalNeeded = false;
+bool qkdFinalConditionClause(std::arrivalTimeList<int*){
+  int currentTime = simTime();
+  bool finalNeeded = false;
   if(currentTime > arrivalTimeList[-1]){
     finalNeeded = true;
   }
