@@ -171,8 +171,8 @@ class PurificationCountClause : public Clause {
 
 class XErrClause : public Clause {};
   
-//ABSA cluases start here
-//Algorithm 1
+//ABSA clauses start here
+  //Algorithm 1
 class initConditionalClause : public Clause {
  protected:
  	int qubit_arrival_time;
@@ -186,6 +186,21 @@ class initConditionalClause : public Clause {
   bool checkTerminate(std::arrivalTime<int) const override { return false; };
 };
 
+//do we need both?
+class arrivalTimeClause : public Clause{
+ public:
+  bool initialTime;
+  simtime_t currentTime;
+  std::vector<simtime_t> arrivalTimeList;
+  // maybe here we need qnic type and index as well to identify the qubit
+  arrivalTimeClause(bool initialTime, simtime_t currentTime, std::vector<simtime_t> arrivalTimeList){
+  initialTime = initialTime;
+  currentTime = currentTime;
+  arrivalTimeList = arrivalTimeList;
+  };
+  virtual check() const override;
+  virtual checkTerminate() const override {return false;};
+};
 
 //how will clause 1 and 3 differ in the h file?
 //Algorithm 3
