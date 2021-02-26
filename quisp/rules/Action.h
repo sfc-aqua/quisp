@@ -431,43 +431,91 @@ class RandomMeasureAction : public Action {
 };
 
 //ABSA actions start here
+
+
 //what is the difference between action:----, and action:run?
 //Action 2
-class initializeAction: public Action {
+class initializeBasisAction: public Action {
  protected:
   int basis;
-  int* outComeList;
-  bool BellSucc;
-  bool msgS;
  public:
-  initializeAction(int basis, int* outComeList, bool BellSucc, bool msgS) {
+  initializeBasisAction() {
     //basis {bell:0, x=1, z:1}
     int basis = 0;
-    bool BellSucc = false;
-    bool msgS = false;
-    bool initTime = true;
   };
-  initializeAction(){
+  initializeBasisAction(){
 
   };
-  ret run(int basis, int* outComeList, bool BellSucc, bool msgS) override;
+  ret run() override;
+};
+
+class initializeBellAction: public Action {
+ protected:
+  bool BellSucc;
+ public:
+  initializeBellAction() {
+    bool BellSucc = false;
+  };
+  initializeBellAction(){
+
+  };
+  ret run() override;
+};
+
+class initializeEncode: public Action {
+ protected:
+  std::map<int, vector<int>> encodedTree;
+ public:
+  initializeEncode(int encode,int* bv) {
+
+  };
+  initializeEncode(){
+
+  };
+  ret run(int encode,int* bv) override;
+};
+
+class initializeMsgAction: public Action {
+ protected:
+
+  bool msgS;
+ public:
+  initializeMsgAction() {
+    bool msgS = false;
+
+  };
+  initializeMsgAction(){
+
+  };
+  ret run() override;
 };
 
 //Action5
-class measureAction: public Action {
- protected:
-  int* outComeList;
-  int* basis;
+class measureAction : public Action{
+ protected: 
+  Mbasis basis; // Here I created Mbasis structure but just int is totaly fine. 
+  std::vector<Mbasis> basisList;
+  std::map<int, bool> outcomeList; // int* is also fine
+  bool successBell;
+  std::vector<int> encodedX;
+  std::vector<int> encodedZ;
+  bool msgSend = False;
  public:
-  measureAction(int* outComeList, int* basis) {
-  StationaryQubit *left_qubit = nullptr;
-  StationaryQubit *right_qubit = nullptr;
-  bool measureNeeded = true;
+// constructor
+  measureAction(Mbasis basis,
+                std::map<int, bool> outcomeList,
+                bool successBell,
+                std::vector<int> encodedX,
+                std::vector<int> encodedZ,
+                bool msgSend){
+  basis = basis;
+  outcomeList = outcomeList;
+  successBell = successBell;
+  encodedX = encodedX;
+  encodedZ = encodedZ;
+  msgSend = msgSend;
   };
-  measureAction(){
-
-  };
-  outComeList* run(int* outComeList, int* basis) override;
+ cPacket* run(cModule* re)override;
 };
 
 //Action 7
@@ -534,7 +582,7 @@ class qkdFinalizeAction: public Action {
   };
   msg* run(int* basis, int absaAdd, int endnodeAdd, bool msgNeed) override;
 };
-  
+
 }  // namespace rules
 }  // namespace quisp
 
