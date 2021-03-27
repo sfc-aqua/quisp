@@ -309,7 +309,10 @@ class StationaryQubit : public cSimpleModule {
   int locked_rule_id;
   int action_index;
   bool no_density_matrix_nullptr_entangled_partner_ok;
-
+  
+  virtual Matrix2cd getErrorMatrix(StationaryQubit *qubit);  // returns the matrix that represents the errors on the Bell pair. (e.g. XY, XZ and ZI...)
+  virtual measurement_operator Random_Measurement_Basis_Selection();
+  
  private:
   PhotonicQubit *photon;
   double fidelity;
@@ -326,9 +329,9 @@ class StationaryQubit : public cSimpleModule {
   virtual void setBusy();
   // virtual void setErrorCeilings();
   // virtual void setEmissionPauliError();
-  virtual Matrix2cd getErrorMatrix(StationaryQubit *qubit);  // returns the matrix that represents the errors on the Bell pair. (e.g. XY, XZ and ZI...)
+  
   virtual quantum_state getQuantumState();  // returns the dm of the physical Bell pair. Used for tomography.
-  virtual measurement_operator Random_Measurement_Basis_Selection();
+  
   virtual gate_error_model SetSingleQubitGateErrorCeilings(std::string gate_name);
   virtual two_qubit_gate_error_model SetTwoQubitGateErrorCeilings(std::string gate_name);
   // virtual measurement_output_probabilities getOutputProbabilities(quantum_state state, char meas_basis);
