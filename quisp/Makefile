@@ -1,19 +1,13 @@
 #
-# OMNeT++/OMNEST Makefile for quisp
+# OMNeT++/OMNEST Makefile for $(LIB_PREFIX)quisp
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -I/usr/local/share/eigen3 -I/usr/local/include/eigen3 -I/usr/include/eigen3 -I.
+#  opp_makemake -f --mode debug --deep -O out -I/usr/local/share/eigen3 -I/usr/local/include/eigen3 -I/usr/include/eigen3 -I. --make-so
 #
 
 # Name of target to be created (-o option)
-TARGET = quisp$(D)$(EXE_SUFFIX)
+TARGET = $(LIB_PREFIX)quisp$(D)$(SHARED_LIB_SUFFIX)
 TARGET_DIR = .
-
-# User interface (uncomment one) (-u option)
-USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LIBS)
-#USERIF_LIBS = $(CMDENV_LIBS)
-#USERIF_LIBS = $(TKENV_LIBS)
-#USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
 INCLUDE_PATH = -I/usr/local/share/eigen3 -I/usr/local/include/eigen3 -I/usr/include/eigen3 -I.
@@ -65,6 +59,11 @@ MSGFILES = \
 # SM files
 SMFILES =
 
+# Default mode (-M option); can be overridden with make MODE=debug (or =release)
+ifndef MODE
+MODE = debug
+endif
+
 #------------------------------------------------------------------------------
 
 # Pull in OMNeT++ configuration (Makefile.inc)
@@ -86,7 +85,7 @@ endif
 include $(CONFIGFILE)
 
 # Simulation kernel and user interface libraries
-OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
+OMNETPP_LIBS = -loppenvir$D $(KERNEL_LIBS) $(SYS_LIBS)
 
 COPTS = $(CFLAGS) $(IMPORT_DEFINES)  $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
 MSGCOPTS = $(INCLUDE_PATH)
@@ -139,8 +138,9 @@ endif
 
 $O/$(TARGET): $(OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)
 	@$(MKPATH) $O
-	@echo Creating executable: $@
-	$(Q)$(CXX) $(LDFLAGS) -o $O/$(TARGET) $(OBJS) $(EXTRA_OBJS) $(AS_NEEDED_OFF) $(WHOLE_ARCHIVE_ON) $(LIBS) $(WHOLE_ARCHIVE_OFF) $(OMNETPP_LIBS)
+	@echo Creating shared library: $@
+	$(Q)$(SHLIB_LD) -o $O/$(TARGET) $(OBJS) $(EXTRA_OBJS) $(AS_NEEDED_OFF) $(WHOLE_ARCHIVE_ON) $(LIBS) $(WHOLE_ARCHIVE_OFF) $(OMNETPP_LIBS) $(LDFLAGS)
+	$(Q)$(SHLIB_POSTPROCESS) $O/$(TARGET)
 
 .PHONY: all clean cleanall depend msgheaders smheaders
 
