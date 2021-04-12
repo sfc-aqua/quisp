@@ -1,0 +1,17 @@
+%description:
+Test Application
+
+%network: ApplicationTestNet
+%inifile: ./modules/libs/_defaults.ini
+
+#debug-on-errors = true
+#debugger-attach-on-error = true
+
+
+%activity:
+cPacket *pk = new cPacket();
+pk->setName("ACK");
+pk->setByteLength(64);
+EV << "name: " << pk->getName() << endl;
+EV << "length: " << pk->getByteLength() << endl;
+delete pk;
