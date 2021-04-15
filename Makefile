@@ -31,7 +31,7 @@ makefile-exe:
 	cd quisp && opp_makemake -f --deep -O out $(INCLUDES)
 
 makefile-so: 
-	cd quisp && opp_makemake -f --deep -O out $(INCLUDES) --make-so
+	cd quisp && opp_makemake -f --deep -O out -M debug $(INCLUDES) --make-so
 
 checkmakefile:
 	@if [ ! -f $(QUISP_MAKEFILE) ]; then \
