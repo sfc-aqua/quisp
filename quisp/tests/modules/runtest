@@ -1,0 +1,29 @@
+#! /bin/sh
+#
+# usage: runtest [<testfile>...]
+# without args, runs all *.test files in the current directory
+#
+
+DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+MAKE="make -j6 MODE=debug"
+
+TESTFILES=$*
+MAKEFRAG=$DIR/../../makefrag
+if [ "x$TESTFILES" = "x" ]; then TESTFILES=$DIR/*.test; fi
+if [ ! -d $DIR/work ];  then mkdir $DIR/work; fi
+rm -rf $DIR/work/lib
+cp -pPR $DIR/lib $DIR/work/       # OSX dos not support cp -a
+export NEDPATH=$DIR/work/lib:$DIR/../../networks:$DIR/../../modules
+EXTRA_INCLUDES="-I../../../modules/Application"
+EXTRA_LIBS="-L../../../ -lquisp_dbg"
+OPT="--debugger-attach-on-error=true"
+
+opp_test gen -w $DIR/work -v --args $OPT -- $TESTFILES || exit 1
+echo
+(cd $DIR/work; opp_makemake -f -o work --deep --no-deep-includes -i $MAKEFRAG --deep $EXTRA_INCLUDES $EXTRA_LIBS; $MAKE) || exit 1
+echo
+opp_test run -w $DIR/work -p work_dbg -vv --args $OPT -- $TESTFILES || exit 1
+echo
+echo Results can be found in ./work
+
+
