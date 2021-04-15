@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for quisp
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -I/usr/include/eigen3 -I.
+#  opp_makemake -f --deep -O out -I/usr/local/share/eigen3 -I/usr/local/include/eigen3 -I/usr/include/eigen3 -I.
 #
 
 # Name of target to be created (-o option)
@@ -16,7 +16,7 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH = -I/usr/include/eigen3 -I.
+INCLUDE_PATH = -I/usr/local/share/eigen3 -I/usr/local/include/eigen3 -I/usr/include/eigen3 -I.
 
 # Additional object and library files to link with
 EXTRA_OBJS =
@@ -32,27 +32,28 @@ O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 # Object files for local .cc, .msg and .sm files
 OBJS = \
     $O/channels/QuantumChannel.o \
-    $O/modules/Application/Application.o \
-    $O/modules/PhysicalConnection/BSA/BellStateAnalyzer.o \
-    $O/modules/QRSA/ConnectionManager/ConnectionManager.o \
     $O/modules/dummyModule.o \
-    $O/modules/PhysicalConnection/EPPS/EntangledPhotonPairSource.o \
-    $O/modules/QRSA/HardwareMonitor/HardwareMonitor.o \
-    $O/modules/PhysicalConnection/BSA/HoMController.o \
-    $O/modules/QNIC/PhotonicSwitch/PhotonicSwitch.o \
+    $O/modules/Application/Application.o \
     $O/modules/Common/Queue.o \
-    $O/modules/QRSA/RealTimeController/RealTimeController.o \
     $O/modules/Common/Router.o \
+    $O/modules/PhysicalConnection/BSA/BellStateAnalyzer.o \
+    $O/modules/PhysicalConnection/BSA/HoMController.o \
+    $O/modules/PhysicalConnection/EPPS/EntangledPhotonPairSource.o \
+    $O/modules/PhysicalConnection/EPPS/SPDC_Controller.o \
+    $O/modules/QNIC/PhotonicSwitch/PhotonicSwitch.o \
+    $O/modules/QNIC/StationaryQubit/StationaryQubit.o \
+    $O/modules/QRSA/ConnectionManager/ConnectionManager.o \
+    $O/modules/QRSA/HardwareMonitor/HardwareMonitor.o \
+    $O/modules/QRSA/RealTimeController/RealTimeController.o \
     $O/modules/QRSA/RoutingDaemon/RoutingDaemon.o \
     $O/modules/QRSA/RuleEngine/RuleEngine.o \
-    $O/modules/PhysicalConnection/EPPS/SPDC_Controller.o \
-    $O/modules/QNIC/StationaryQubit/StationaryQubit.o \
     $O/rules/Action.o \
     $O/rules/Clause.o \
     $O/rules/Condition.o \
     $O/rules/example.o \
     $O/rules/Rule.o \
     $O/rules/RuleSet.o \
+    $O/tests/modules/work/Application/test.o \
     $O/classical_messages_m.o \
     $O/PhotonicQubit_m.o
 
@@ -104,6 +105,24 @@ endif
 # >>>
 # inserted from file 'makefrag':
 CXXFLAGS = -std=c++14
+
+# you can pass the file path you want to check as SRCS environment variable. see the example below.
+# $ SRCS=./quisp/modules/Application.cc make tidy # checks only Application.cc
+# $ make tidy # checks all sources
+SRCS?=./modules/*.cc ./rules/*.cc
+HEADERS=./modules/*.h ./rules/*.h
+
+default: all
+
+format:
+	clang-format -i $(SRCS) $(HEADERS)
+
+tidy:
+	clang-tidy -header-filter="./quisp/(rules|modules)/.*.h" $(SRCS) -- $(COPTS:-I.=-I./quisp)
+
+ci: msgheaders
+	@clang-format $(SRCS) $(HEADERS) -output-replacements-xml | grep -c "<replacement " -q ; if [ $$? -ne 1 ]; then echo "error: run make format and then push it again"; exit 1; fi
+	@clang-tidy -warnings-as-errors="*" -header-filter="./(rules|modules)/.*.h" $(SRCS) -- $(COPTS:-I.=-I./quisp)
 
 # <<<
 #------------------------------------------------------------------------------

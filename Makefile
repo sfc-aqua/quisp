@@ -1,19 +1,39 @@
-include ./quisp/Makefile
+OPP_BUILD_SPEC_FILE=./quisp/.oppbuildspec
 
+ifneq (,$(wildcard $(OPP_BUILD_SPEC_FILE)))
+# this need GNU Make 4.2 or later
+# see also https://lists.gnu.org/archive/html/info-gnu/2016-05/msg00013.html
+OPP_BUILD_SPEC=$(file < $(OPP_BUILD_SPEC_FILE))
+INCLUDES=$(filter -I%,$(OPP_BUILD_SPEC))
+endif
+$(warning $(MAKE))
 
-# you can pass the file path you want to check as SRCS environment variable. see the example below.
-# $ SRCS=./quisp/modules/Application.cc make tidy # checks only Application.cc
-# $ make tidy # checks all sources
-SRCS?=./quisp/modules/*.cc ./quisp/rules/*.cc 
-HEADERS=./quisp/modules/*.h ./quisp/rules/*.h
+.PHONY: all tidy format ci makefile-exe makefile-lib checkmakefile
 
-tidy:
-	clang-tidy -header-filter="./quisp/(rules|modules)/.*.h" $(SRCS) -- $(COPTS:-I.=-I./quisp)
+all: makefile-exe
+	$(MAKE) -C quisp -j
 
-format:
-	clang-format -i $(SRCS) $(HEADERS)
+ci: quisp/Makefile
+	$(MAKE) -C quisp ci
 
-ci: 
-	@make -C ./quisp msgheaders
-	@clang-format $(SRCS) $(HEADERS) -output-replacements-xml | grep -c "<replacement " -q ; if [ $$? -ne 1 ]; then echo "error: run make format and then push it again"; exit 1; fi
-	@clang-tidy -warnings-as-errors="*" -header-filter="./quisp/(rules|modules)/.*.h" $(SRCS) -- $(COPTS:-I.=-I./quisp)
+format: quisp/Makefile
+	$(MAKE) -C quisp format
+
+tidy: quisp/Makefile
+	$(MAKE) -C quisp format
+
+makefile-exe:
+	cd quisp && opp_makemake -f --deep -O out $(INCLUDES)
+
+makefile-so: 
+	cd quisp && opp_makemake -f --deep -O out $(INCLUDES) --make-so
+
+checkmakefile:
+	@if [ ! -f $(QUISP_MAKEFILE) ]; then \
+	echo; \
+	echo '===================================================================================================='; \
+	echo 'quisp/Makefile does not exist. Please use "make makefile-exe" or "make makefile-lib" to generate it!'; \
+	echo '===================================================================================================='; \
+	echo; \
+	exit 1; \
+	fi
