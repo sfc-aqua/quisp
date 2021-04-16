@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for $(LIB_PREFIX)quisp
 #
 # This file was generated with the command:
-#  opp_makemake -f --mode debug --deep -O out -I/usr/local/share/eigen3 -I/usr/local/include/eigen3 -I/usr/include/eigen3 -I. --make-so
+#  opp_makemake -f --deep -O out -M debug -I/usr/local/share/eigen3 -I/usr/local/include/eigen3 -I/usr/include/eigen3 -I. --make-so
 #
 
 # Name of target to be created (-o option)
@@ -47,7 +47,6 @@ OBJS = \
     $O/rules/example.o \
     $O/rules/Rule.o \
     $O/rules/RuleSet.o \
-    $O/tests/modules/work/Application/test.o \
     $O/classical_messages_m.o \
     $O/PhotonicQubit_m.o
 
