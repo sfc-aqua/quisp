@@ -1,11 +1,39 @@
 %description:
 Test Application
 
-%network: ApplicationTestNet
-%inifile: ./modules/libs/_defaults.ini
+%file: test.ned
+import modules.Application.Application;
+import test.MockRouter;
+module MockQNode {
+    submodules:
+        router: MockRouter {
 
-#debug-on-errors = true
-#debugger-attach-on-error = true
+        }
+        app: Application {
+            @display("p=170,95");
+            TrafficPattern = 0;
+            LoneInitiatorAddress = 0;
+        }
+    connections:
+        router.fromApp <-- app.toRouter;
+        router.toApp --> app.fromRouter;
+}
+network ApplicationTestNet
+{
+    submodules:
+        qnode: MockQNode {
+            address = 1;
+        }
+}
+
+%inifile: omnetpp.ini
+[General]
+network = ApplicationTestNet
+cmdenv-express-mode = true
+cmdenv-log-prefix = ""
+
+debug-on-errors = false
+debugger-attach-on-error = false
 
 
 %activity:

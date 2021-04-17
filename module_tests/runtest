@@ -15,13 +15,19 @@ if [ "x$TESTFILES" = "x" ]; then TESTFILES=$DIR/*.test; fi
 if [ ! -d $WORK_DIR ];  then mkdir $WORK_DIR; fi
 rm -rf $WORK_DIR/lib
 cp -pPR $DIR/lib $WORK_DIR       # OSX dos not support cp -a
-export NEDPATH=$WORK_DIR/lib:$QUISP_DIR/networks:$QUISP_DIR/modules
-EXTRA_INCLUDES="-I$QUISP_DIR/modules/Application"
+NEDPATH=$WORK_DIR/lib:$QUISP_DIR/networks:$QUISP_DIR/modules
+for t in $TESTFILES
+do
+    NEDPATH=$NEDPATH:$WORK_DIR/`basename "$t" .test`
+done
+export NEDPATH
+EXTRA_INCLUDES="-I$WORKDIR/lib -I$QUISP_DIR/modules/Application"
 EXTRA_LIBS=" -L$QUISP_DIR -lquisp_dbg"
 OPT="--debugger-attach-on-error=true"
 
 opp_test gen -w $WORK_DIR -v --args $OPT -- $TESTFILES || exit 1
 echo
+echo opp_makemake -f -o work --deep --no-deep-includes -i $MAKEFRAG --deep $EXTRA_INCLUDES $EXTRA_LIBS; $MAKE
 (cd $DIR/work; opp_makemake -f -o work --deep --no-deep-includes -i $MAKEFRAG --deep $EXTRA_INCLUDES $EXTRA_LIBS; $MAKE) || exit 1
 echo
 opp_test run -w $WORK_DIR -p work_dbg -vv --args $OPT -- $TESTFILES || exit 1
