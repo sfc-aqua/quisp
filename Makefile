@@ -1,21 +1,12 @@
-OPP_BUILD_SPEC_FILE=./quisp/.oppbuildspec
-
-# if INCLUDES env is not set and there's .oppbuildspec file, 
-# it attempts to load INCLUDES var from .oppbuildspec file.
-ifeq (,$(INCLUDES))
-ifneq (,$(wildcard $(OPP_BUILD_SPEC_FILE)))
-OPP_BUILD_SPEC=$(shell cat $(OPP_BUILD_SPEC_FILE))
-INCLUDES=$(filter -I%,$(OPP_BUILD_SPEC))
-endif
-endif
-
-ifeq (,$(INCLUDES))
-$(error 'no INCLUDES specified. set up the project with OMNetIDE++ or provide INCLUDES env var')
-endif
-
 .PHONY: all tidy format ci makefile-exe makefile-lib checkmakefile
 
 all: makefile-exe
+	$(MAKE) -C quisp -j
+
+exe: makefile-exe
+	$(MAKE) -C quisp -j
+
+lib: makefile-lib
 	$(MAKE) -C quisp -j
 
 ci: quisp/Makefile
@@ -28,10 +19,10 @@ tidy: quisp/Makefile
 	$(MAKE) -C quisp format
 
 makefile-exe:
-	cd quisp && opp_makemake -f --deep -O out $(INCLUDES)
+	cd quisp && opp_makemake -f --deep -O out -i ./makefrag
 
-makefile-so: 
-	cd quisp && opp_makemake -f --deep -O out -M debug $(INCLUDES) --make-so
+makefile-lib: 
+	cd quisp && opp_makemake -f --deep -O out -i ./makefrag -M debug  --make-so
 
 checkmakefile:
 	@if [ ! -f $(QUISP_MAKEFILE) ]; then \
