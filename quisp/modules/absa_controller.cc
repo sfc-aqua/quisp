@@ -41,7 +41,7 @@ void ABSAController::internodeInitializer() {
   updateIDE_Parameter(true);
 
   accepted_burst_interval = (double)1 / (double)photon_detection_per_sec;
-  ABSAstart *generatePacket = new ABSAstart;
+  BSAstart *generatePacket = new BSAstart;
   scheduleAt(simTime() + par("Initial_notification_timing_buffer"), generatePacket);
 }
 
@@ -57,7 +57,7 @@ void ABSAController::standaloneInitializer() {
   updateIDE_Parameter(false);
 
   accepted_burst_interval = (double)1 / (double)photon_detection_per_sec;
-  ABSAstart *generatePacket = new ABSAstart;
+  BSAstart *generatePacket = new BSAstart;
   scheduleAt(simTime() + par("Initial_notification_timing_buffer"), generatePacket);
 }
 
@@ -93,15 +93,15 @@ void ABSAController::sendNotifiers() {
 
 void ABSAController::handleMessage(cMessage *msg) {
 
-  if (dynamic_cast<ABSAstart *>(msg) != nullptr) {
+  if (dynamic_cast<BSAstart *>(msg) != nullptr) {
     sendNotifiers();
     delete msg;
     return;
     // Create timeout
-  } else if (dynamic_cast<ABSAresult *>(msg) != nullptr) {
+  } else if (dynamic_cast<BSAresult *>(msg) != nullptr) {
     auto_resend_ABSANotifier = false;  // Photon is arriving. No need to auto reschedule next round. Wait for the last photon fron either node.
     bubble("ABSAresult accumulated");
-    ABSAresult *pk = check_and_cast<ABSAresult *>(msg);
+    BSAresult *pk = check_and_cast<BSAresult *>(msg);
     bool entangled = pk->getEntangled();
     int prev = getStoredABSAresultsSize();
     pushToABSAresults(entangled);
@@ -110,9 +110,9 @@ void ABSAController::handleMessage(cMessage *msg) {
       error("Nahnah nah!");
     }
 
-  } else if (dynamic_cast<ABSAfinish *>(msg) != nullptr) {  // Last photon from either node arrived.
+  } else if (dynamic_cast<BSAfinish *>(msg) != nullptr) {  // Last photon from either node arrived.
     bubble("ABSAresult accumulated");
-    ABSAfinish *pk = check_and_cast<ABSAfinish *>(msg);
+    BSAfinish *pk = check_and_cast<BSAfinish *>(msg);
     pushToABSAresults(pk->getEntangled());
     int stored = getStoredABSAresultsSize();
     char moge[sizeof(stored)];
@@ -127,8 +127,8 @@ void ABSAController::handleMessage(cMessage *msg) {
     // Schedule a checker with a time-out t, to see if both actually sent something.
     // Worst case is, when both have no free qubit, and no qubits get transmitted. In that case, this module needs to recognize that problem, and reschedule/resend the request
     // after a cetrain time.
-  } else if (dynamic_cast<ABSAtimeoutChecker *>(msg) != nullptr) {
-    ABSAtimeoutChecker *pk = check_and_cast<ABSAtimeoutChecker *>(msg);
+  } else if (dynamic_cast<BSAtimeoutChecker *>(msg) != nullptr) {
+    BSAtimeoutChecker *pk = check_and_cast<BSAtimeoutChecker *>(msg);
     if (auto_resend_ABSANotifier == true && pk->getTrial_id() == current_trial_id) {
       // No photon came from both nodes. All of the resources must have been busy that time.
     }
@@ -236,9 +236,9 @@ BSMtimingNotifier *ABSAController::generateNotifier(double time, double speed_of
 }
 
 // Generates a packet that includes the ABSA timing notifier and the ABSA entanglement attempt results.
-CombinedABSAresults *ABSAController::generateNotifier_c(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
+CombinedBSAresults *ABSAController::generateNotifier_c(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
                                                       int photon_detection_per_sec, int max_buffer) {
-  CombinedABSAresults *pk = new CombinedABSAresults();
+  CombinedBSAresults *pk = new CombinedBSAresults();
   if (handshake == false)
     pk->setNumber_of_qubits(-1);  // if -1, neighbors will keep shooting photons anyway.
   else
@@ -314,7 +314,7 @@ void ABSAController::clearABSAresults() { results.clear(); }
 // This should be simplified more.
 void ABSAController::sendABSAresultsToNeighbors() {
   if (!passive) {
-    CombinedABSAresults *pk, *pkt;
+    CombinedBSAresults *pk, *pkt;
 
     double time = calculateTimeToTravel(max_neighbor_distance, speed_of_light_in_channel);  // When the packet reaches = simitme()+time
     pk = generateNotifier_c(time, speed_of_light_in_channel, distance_to_neighbor, neighbor_address, accepted_burst_interval, photon_detection_per_sec, max_buffer);
@@ -351,9 +351,9 @@ void ABSAController::sendABSAresultsToNeighbors() {
     send(pkt, "toRouter_port");
 
   } else {  // For SPDC type link
-    CombinedABSAresults_epps *pk, *pkt;
-    pk = new CombinedABSAresults_epps();
-    pkt = new CombinedABSAresults_epps();
+    CombinedBSAresults_epps *pk, *pkt;
+    pk = new CombinedBSAresults_epps();
+    pkt = new CombinedBSAresults_epps();
 
     pk->setSrcAddr(address);
     pk->setDestAddr(neighbor_address);
