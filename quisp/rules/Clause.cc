@@ -161,7 +161,8 @@ bool PurificationCountClause::check(std::multimap<int, StationaryQubit*> resourc
   StationaryQubit* qubit = nullptr;
 }
 
-/ABSA clauses start here
+
+//ABSA clauses start here
 //Algorithm 1 Clause
 bool initConditionalClause::check(std::arrivalTimeList<int*){
   bool initTime = false;
@@ -192,7 +193,8 @@ int postBellConditionalClause::check(std::map<int, tuple<int, int, int>> *outcom
   //itr-> first == is the key
   //itr->second == is the value
   //need to checck if the measurement is successful or not
-  if (successBell == true or itr->second.successful() == false){
+ // if (successBell == true or itr->second.successful() == false){
+  if (successBell == true){
     basis = 2; //z
   }
   else{
@@ -236,7 +238,7 @@ bool qkdMeasureConditionClause(std::arrivalTimeList<int*, std::basisList<int*){
   }
   return measurementNeeded;
 }
-  
+
 //Algorithm 10B Clause
 int qkdBasisConditionClause(std::arrivalTimeList<int*, std::basisList<int*){
   int currentTime = simTime();
@@ -257,6 +259,7 @@ bool qkdFinalConditionClause(std::arrivalTimeList<int*){
   }
   return finalNeeded;
 }
+
 
 }  // namespace rules
 }  // namespace quisp
