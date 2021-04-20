@@ -171,19 +171,18 @@ class PurificationCountClause : public Clause {
 
 class XErrClause : public Clause {};
   
-//ABSA clauses start here
-  //Algorithm 1
+//ABSA cluases start here
+//Algorithm 1
 class initConditionalClause : public Clause {
  protected:
- 	int qubit_arrival_time;
+    int qubit_arrival_time;
 
  public:
   initConditionalClause(int arrivalTime) : Clause() {
     qubit_arrival_time = arrivalTime;
 
   };
-  bool check(std::arrivalTime<int) const override;
-  bool checkTerminate(std::arrivalTime<int) const override { return false; };
+  bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
 //do we need both?
@@ -198,47 +197,44 @@ class arrivalTimeClause : public Clause{
   currentTime = currentTime;
   arrivalTimeList = arrivalTimeList;
   };
-  virtual check() const override;
-  virtual checkTerminate() const override {return false;};
+  bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
 //how will clause 1 and 3 differ in the h file?
 //Algorithm 3
 class MeasureConditionalClause : public Clause {
  protected:
- 	int qubit_arrival_time;
+    int qubit_arrival_time;
 
  public:
     MeasureConditionalClause(int arrivalTime) : Clause() {
     qubit_arrival_time = arrivalTime;
 
   };
-  bool check(std::arrivalTime<int) const override;
-  bool checkTerminate(std::arrivalTime<int) const override { return false; };
+    bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
 //Algorithm 4
 class postBellConditionalClause : public Clause {
  protected:
- 	StationaryQubit* resources;
- 	bool bellSuccess;
+    StationaryQubit* resources;
+    bool bellSuccess;
 
  public:
-    postBellConditionalClause(int *outList, bool success) : Clause() {
+    postBellConditionalClause(StationaryQubit* outList, bool success) : Clause() {
     resources = outList;
     bellSuccess = success;
 
   };
-  bool check(int *outList, std::successBell<bool) const override;
-  bool checkTerminate(int *outList, std::successBell<bool) const override { return false; };
+    bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
 
 //Algorithm 6
 class finalConditionalClause : public Clause {
  protected:
- 	int qubit_arrival_time;
- 	bool msg_sent;
+    int qubit_arrival_time;
+    bool msg_sent;
 
  public:
     finalConditionalClause(int arrivalTime, bool msgSent) : Clause() {
@@ -246,23 +242,21 @@ class finalConditionalClause : public Clause {
     msg_sent = msgSent;
 
   };
-  bool check(std::arrivalTime<int, std::msgSent<bool) const override;
-  bool checkTerminate(std::arrivalTime<int, std::msgSent<bool) const override { return false; };
+    bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
 
 //Algorithm 8 
 class qkdInitConditionalClause : public Clause {
  protected:
- 	int* qubit_arrival_time;
+    int* qubit_arrival_time;
 
  public:
     qkdInitConditionalClause(int* arrivalTime) : Clause() {
     qubit_arrival_time = arrivalTime;
 
   };
-  bool check(std::arrivalTime<int *) const override;
-  bool checkTerminate(std::arrivalTime<int *) const override { return false; };
+    bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
 
@@ -270,30 +264,28 @@ class qkdInitConditionalClause : public Clause {
 //Needs to be modified
 class qkdMeasureConditionClause : public Clause {
  protected:
- 	int* qubit_arrival_time;
- 	//what type will the basis list be?
+    int* qubit_arrival_time;
+    //what type will the basis list be?
 
  public:
-    qkdMeasureConditionClause(int *arrivalTimeList, *basisList) : Clause() {
-    qubit_arrival_time = arrivalTime;
+    qkdMeasureConditionClause(int *arrivalTimeList,int *basisList) : Clause() {
+    qubit_arrival_time = arrivalTimeList;
 
   };
-  bool check(std::arrivalTimeList<int*, *basisList) const override;
-  bool checkTerminate(std::arrivalTimeList<int*, *basisList) const override { return false; };
+    bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
 //Algorithm 12
 class qkdFinalConditionClause : public Clause {
  protected:
- 	int* algo;
+    int* algo;
 
  public:
     qkdFinalConditionClause(int *Algorithm) : Clause() {
     algo = Algorithm;
 
   };
-  bool check(std::Algorithm<int *) const override;
-  bool checkTerminate(std::Algorithm<int *) const override { return false; };
+    bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
 }  // namespace rules
