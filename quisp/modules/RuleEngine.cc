@@ -285,18 +285,18 @@ void RuleEngine::handleMessage(cMessage *msg) {
     updateResources_EntanglementSwapping(swapr);
   } 
   
-  else if (dynamic_cast<ABSAResults *>(msg) != nullptr) {
-    ABSAResults *pkt = check_and_cast<ABSAResults *>(msg);
+  else if (dynamic_cast<BSAresult *>(msg) != nullptr) {
+      ABSAResult *pkt = check_and_cast<ABSAResult *>(msg);
     // here next add resources
     int src = pkt->getSrcAddr();
     int dest = pkt->getDestAddr();
-    process_id swapping_id;
+    process_id ABSA_id;
     //swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
     //swapping_id.rule_id = pkt->getRule_id();
     //swapping_id.index = pkt->getAction_index();
 
     absa_result absar;  // result of entanglement swapping
-    //swapr.id = swapping_id;
+    //absar.id = swapping_id;
     absar.new_partner = pkt->getNew_partner();
     absar.new_partner_qnic_index = pkt->getNew_partner_qnic_index();
     absar.new_partner_qnic_address = pkt->getNew_partner_qnic_address();
@@ -1337,11 +1337,11 @@ void RuleEngine::traverseThroughAllProcesses2() {
             send(pkt_for_left, "RouterPort$o");
             send(pkt_for_right, "RouterPort$o");
           } 
- 
-            else if (dynamic_cast<ABSAResults *>(pk) != nullptr) {
-            ABSAResults *pkt = check_and_cast<ABSAResults *>(pk);
+ /*
+            else if (dynamic_cast<ABSAResult *>(pk) != nullptr) {
+                ABSAResult *pkt = check_and_cast<ABSAResult *>(pk);
             EV << "done ABSA at " << parentAddress << "\n";
-            ABSAResults *pkt_for_left = new ABSAResults;
+            BSAresult *pkt_for_left = new BSAresult;
             pkt_for_left->setKind(5);  // cyan
             pkt_for_left->setDestAddr(pkt->getLeft_Dest());
             pkt_for_left->setSrcAddr(parentAddress);
@@ -1350,8 +1350,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
             pkt_for_left->setNew_partner(pkt->getNew_partner_left());
             pkt_for_left->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
             pkt_for_left->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
-            pkt_for_left->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
-            ABSAResults *pkt_for_right = new ABSAResults;
+            /pkt_for_left->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
+            ABSAResult *pkt_for_right = new ABSAResult;
             pkt_for_right->setKind(5);  // cyan
             pkt_for_right->setDestAddr(pkt->getRight_Dest());
             pkt_for_right->setSrcAddr(parentAddress);
@@ -1364,7 +1364,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
             send(pkt_for_left, "RouterPort$o");
             send(pkt_for_right, "RouterPort$o");
           } 
-          
+  */
           else if (dynamic_cast<Error *>(pk) != nullptr) {
             Error *err = check_and_cast<Error *>(pk);
             error(err->getError_text());
