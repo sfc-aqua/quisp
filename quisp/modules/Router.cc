@@ -180,7 +180,7 @@ void Router::handleMessage(cMessage *msg) {
     send(pk, "rePort$o");
     return;
   }
-  else if (destAddr == myAddress && dynamic_cast<AbsaResult *>(msg) != nullptr) {
+  else if (destAddr == myAddress && dynamic_cast<BSAresult *>(msg) != nullptr) {
     bubble("SecondGenSetupRequest received");
     // forward this packet to RuleEngine Port.
     send(pk, "rePort$o");
