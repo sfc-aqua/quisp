@@ -41,7 +41,7 @@ class ABSAController : public cSimpleModule {
   double max_neighbor_distance;  // in km
   double accepted_burst_interval;  // in s
 
-  int BSAtimingNotifier_type = 4;
+  int ABSAtimingNotifier_type = 4;
   int PathSelection_type = 1;
   int PhotonicQubit_type = 100;
 
@@ -49,13 +49,13 @@ class ABSAController : public cSimpleModule {
   int qnic_index = -1;
   int qnic_address = -1;
 
-  int* BSAresults;
-  typedef std::map<int, bool> ABSAresultTable;  // BSA trial index --> success or failure
-  BSAresultTable results;
+  int* ABSAresults;
+  typedef std::map<int, bool> ABSAresultTable;
+  ABSAresultTable results;
 
   bool handshake = false;
-  double BSA_timeout = 1e-5;
-  bool auto_resend_BSANotifier;
+  double ABSA_timeout = 1e-5;
+  bool auto_resend_ABSANotifier;
   double current_trial_id;
 
  protected:
@@ -69,7 +69,7 @@ class ABSAController : public cSimpleModule {
   virtual double calculateTimeToTravel(double distance, double c);
   virtual BSMtimingNotifier* generateNotifier(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
                                               int photon_detection_per_sec, int max_buffer);
-  virtual CombinedABSAresults* generateNotifier_c(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
+  virtual CombinedBSAresults* generateNotifier_c(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
                                                  int photon_detection_per_sec, int max_buffer);
   virtual cModule* getQNode();
   virtual void checkNeighborAddress(bool receiver);
