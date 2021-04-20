@@ -78,6 +78,16 @@ struct swapping_result {
   int operation_type;
 };
 
+struct absa_result {
+  process_id id;
+  int new_partner;
+  int new_partner_qnic_index;
+  int new_partner_qnic_address;
+  int measured_qubit_index;
+  QNIC_type new_partner_qnic_type;
+  int operation_type;
+};
+
 // Process = RuleSet
 typedef struct {
   int ownner_addr;
