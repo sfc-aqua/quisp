@@ -2,44 +2,86 @@
 Test Application
 
 %file: test.ned
+import ned.DatarateChannel;
 import modules.Application.Application;
-import test.MockRouter;
-module MockQNode {
-    submodules:
-        router: MockRouter {
+import modules.QNode;
 
-        }
+simple MockRouter {
+    gates:
+        input fromApp;
+        output toApp;
+}
+module MockQNode {
+
+    parameters:
+        // Application needs the parent node's address
+        int address;
+        string nodeType;
+
+    submodules:
+        router: MockRouter;
+
         app: Application {
-            @display("p=170,95");
-            TrafficPattern = 0;
-            LoneInitiatorAddress = 0;
+            TrafficPattern = 1;
+            LoneInitiatorAddress = 1;
+            address = address;
+            NumberOfResources = 1;
         }
     connections:
         router.fromApp <-- app.toRouter;
         router.toApp --> app.fromRouter;
 }
+
 network ApplicationTestNet
 {
     submodules:
-        qnode: MockQNode {
+        mockQNode: MockQNode {
             address = 1;
+            nodeType = "none";
         }
 }
 
 %inifile: omnetpp.ini
+
 [General]
 network = ApplicationTestNet
-cmdenv-express-mode = true
-cmdenv-log-prefix = ""
+**.app.TrafficPattern = 1
+**.app.LoneInitiatorAddress = 1
+**.qrsa.hm.link_tomography = false
+**.qrsa.hm.initial_purification = 0
+**.qrsa.hm.Purification_type = 0
 
-debug-on-errors = false
-debugger-attach-on-error = false
+%includes:
+#include <classical_messages_m.h>
 
-
-%activity:
-cPacket *pk = new cPacket();
-pk->setName("ACK");
-pk->setByteLength(64);
-EV << "name: " << pk->getName() << endl;
-EV << "length: " << pk->getByteLength() << endl;
-delete pk;
+%file: mock_router.cc
+#include <omnetpp.h>
+#include <classical_messages_m.h>
+using namespace omnetpp;
+namespace Application {
+class MockRouter: public cSimpleModule
+{
+    public:
+        MockRouter() : cSimpleModule(65536) {}
+        virtual void initialize() {
+            int my_address = 1;
+            int dest_addr = 2;
+            ConnectionSetupRequest *p = new ConnectionSetupRequest("ConnSetupRequest");
+            p->setActual_srcAddr(my_address);
+            p->setActual_destAddr(dest_addr);
+            p->setDestAddr(my_address);
+            p->setSrcAddr(my_address);
+            p->setNumber_of_required_Bellpairs(3);
+            p->setKind(7);
+            send(p, "toApp");
+        }
+        virtual void activity(){
+            while(true) {
+                auto msg = receive();
+                EV_INFO << "got message" << std::endl;
+                delete msg;
+            }
+        }
+};
+Define_Module(MockRouter);
+}; //namespace
