@@ -3,6 +3,9 @@
 all: makefile-exe
 	$(MAKE) -C quisp -j
 
+run-module-test:
+	cd module_tests && ./runtest
+
 exe: makefile-exe
 	$(MAKE) -C quisp -j
 

@@ -3,6 +3,7 @@
 *.orig
 .lvimrc
 .last-copts
+.cmdenv-log
 
 ### generated on docker
 org.eclipse*
