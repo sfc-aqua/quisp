@@ -1,5 +1,5 @@
 %description:
-Test Application
+Application module should send back the ConnectionSetupReq and InternalRuleSetForwarding to the router
 
 %file: test.ned
 import ned.DatarateChannel;
@@ -62,11 +62,15 @@ namespace Application {
 class MockRouter: public cSimpleModule
 {
     public:
+        int my_address = 1;
+        int dest_addr = 2;
         MockRouter() : cSimpleModule(65536) {}
         virtual void initialize() {
-            int my_address = 1;
-            int dest_addr = 2;
-            ConnectionSetupRequest *p = new ConnectionSetupRequest("ConnSetupRequest");
+            sendConnectionSetupRequest();
+            sendInternalRuleSetForwarding();
+        }
+        void sendConnectionSetupRequest() {
+            auto *p = new ConnectionSetupRequest();
             p->setActual_srcAddr(my_address);
             p->setActual_destAddr(dest_addr);
             p->setDestAddr(my_address);
@@ -75,13 +79,22 @@ class MockRouter: public cSimpleModule
             p->setKind(7);
             send(p, "toApp");
         }
+        void sendInternalRuleSetForwarding() {
+            auto *p = new InternalRuleSetForwarding();
+            send(p, "toApp");
+        }
         virtual void activity(){
             while(true) {
                 auto msg = receive();
-                EV_INFO << "got message" << std::endl;
+                EV_INFO << "RECEIVE MESSAGE: " << msg << std::endl;
                 delete msg;
             }
         }
 };
 Define_Module(MockRouter);
 }; //namespace
+
+%contains: test.out
+RECEIVE MESSAGE: (quisp::messages::ConnectionSetupRequest)
+%contains: test.out
+RECEIVE MESSAGE: (quisp::messages::InternalRuleSetForwarding)
