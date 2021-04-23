@@ -7,8 +7,9 @@
 #ifndef QUISP_MODULES_QUBIT_H_
 #define QUISP_MODULES_QUBIT_H_
 
-#include <modules/stationaryQubit.h>
 #include <omnetpp.h>
+
+#include "modules/QNIC/StationaryQubit/StationaryQubit.h"
 using namespace omnetpp;
 
 namespace quisp {

@@ -4,6 +4,8 @@ import ned.DatarateChannel;
 import ned.DelayChannel;
 import ned.IdealChannel;
 
+import modules.*;
+import channels.*;
 
 network ispMap_1239_node_23_48_hetero_distance
 {

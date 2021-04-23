@@ -6,10 +6,8 @@
  *
  *  \brief dummyModule
  */
-#include <PhotonicQubit_m.h>
-#include <classical_messages_m.h>
+
 #include <omnetpp.h>
-#include <vector>
 
 using namespace omnetpp;
 

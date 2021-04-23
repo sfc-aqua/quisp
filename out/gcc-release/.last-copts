@@ -1,1 +1,0 @@
--O3 -DNDEBUG=1 -MMD -MP -MF .d  -fPIC  -fno-stack-protector -DHAVE_SWAPCONTEXT -DXMLPARSER=expat -DWITH_PARSIM -DWITH_NETBUILDER -DWITH_OSGEARTH   -I/home/kaaki/eigen3 -I. -I/home/kaaki/omnetpp-5.4.1/include
