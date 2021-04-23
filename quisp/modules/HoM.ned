@@ -10,28 +10,7 @@ import modules.Common.Router;
 import modules.Common.Queue;
 
 
-<<<<<<< HEAD:quisp/networks/HoM.ned
-module ABSA
-{
-    parameters:
-        int address;
-    submodules:
-        BSA: BellStateAnalyzer {
-            parameters:
-                address = address;//share the same address within all inner modules
-                darkcount_probability = hom_darkcount_probability;
-                loss_rate = hom_loss_rate;
-                error_rate = hom_error_rate;
-                required_precision = hom_required_precision;
-                photon_detection_per_sec = hom_photon_detection_per_sec;
-                @display("p=207.855,120.689995");
-        }
-}
-
-simple HoMController
-=======
 module interHoM
->>>>>>> ccc456e74f3afa2410816ff09a3c27d55cfe584a:quisp/modules/HoM.ned
 {
     parameters:
         int address;
