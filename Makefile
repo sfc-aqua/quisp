@@ -6,6 +6,9 @@ all: makefile-exe
 run-module-test:
 	cd module_tests && ./runtest
 
+run-unit-test: lib
+	$(MAKE) -C quisp run-unit-test
+
 exe: makefile-exe
 	$(MAKE) -C quisp -j
 
@@ -21,11 +24,17 @@ format: quisp/Makefile
 tidy: quisp/Makefile
 	$(MAKE) -C quisp format
 
+googletest:
+	git submoudle update --init
+
 makefile-exe:
 	cd quisp && opp_makemake -f --deep -O out -i ./makefrag
 
-makefile-lib: 
+makefile-lib:
 	cd quisp && opp_makemake -f --deep -O out -i ./makefrag -M debug  --make-so
+
+clean:
+	$(RM) quisp/out quisp/Makefile quisp/quisp quisp/quisp_dbg quisp/run_unit_test quisp/libquisp*
 
 checkmakefile:
 	@if [ ! -f $(QUISP_MAKEFILE) ]; then \
