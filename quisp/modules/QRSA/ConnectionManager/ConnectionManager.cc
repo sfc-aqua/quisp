@@ -21,6 +21,12 @@ void ConnectionManager::initialize() {
   my_address = par("address");
   num_of_qnics = par("total_number_of_qnics");
 
+  is_absa_connection = par("ABSAconnection");
+
+  // if (is_absa_connection){
+  //   // check if there are ABSA nodes
+  // }
+
   for (int i = 0; i < num_of_qnics; i++) {
     // qnode address
     qnic_res_table.insert(std::make_pair(i, false));
@@ -33,10 +39,11 @@ void ConnectionManager::initialize() {
  */
 void ConnectionManager::handleMessage(cMessage *msg) {
   if (dynamic_cast<ConnectionSetupRequest *>(msg) != nullptr) {
+    // This is a classical pakcet for connection setup request
     ConnectionSetupRequest *req = check_and_cast<ConnectionSetupRequest *>(msg);
+    // destination address and source address
     int actual_dst = req->getActual_destAddr();
     int actual_src = req->getActual_srcAddr();
-
     if (actual_dst == my_address) {
       // got ConnectionSetupRequest and return the response
       respondToRequest(req);
@@ -55,7 +62,6 @@ void ConnectionManager::handleMessage(cMessage *msg) {
         relayRequestToNextHop(req);
         return;
       }
-
       // cannot accept this request because the qnic is unavailable.
       rejectRequest(req);
       return;
@@ -196,162 +202,174 @@ void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
  * a _configurable choice_, or even a _policy_ implementation.
  */
 void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
-  // Taking qnic information of responder node.
-  int actual_dst = req->getActual_destAddr();
-  int actual_src = req->getActual_srcAddr();  // initiator address (to get input qnic)
+  // absa
+  if (is_absa_connection){
+    int actual_dst = req->getActual_destAddr();
+    int actual_src = req->getActual_srcAddr();
+    // here absa version of response
+    // vector for rgs source node
+    std::map<int, std::vector<int>> rgs_nodes;
+    // vector for rgs measurement node
+    std::map<int, std::vector<int>> measurement_nodes;
+    
 
-  // This must be -1
-  int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
-  if (local_qnic_address_to_actual_dst != -1) {
-    error("something error happen!");
-  }
+  }else{
+    // Taking qnic information of responder node.
+    int actual_dst = req->getActual_destAddr();
+    int actual_src = req->getActual_srcAddr();  // initiator address (to get input qnic)
 
-  // TODO: premise only one connection allowed btw, two nodes.
-  int local_qnic_address_to_actual_src = routing_daemon->return_QNIC_address_to_destAddr(actual_src);
-  if (local_qnic_address_to_actual_src == -1) {
-    error("This shouldn't happen!");
-  }
-
-  auto dst_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
-  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
-
-  if (src_info == nullptr) {
-    error("src_info not found");
-  }
-  QNIC_id_pair pair_info = {.fst = src_info->qnic, .snd = dst_info->qnic};
-
-  bool is_src_qnic_reserved = isQnicBusy(src_info->qnic.address);
-  bool is_dst_qnic_reserved = isQnicBusy(dst_info->qnic.address);
-
-  // qnic already reserved, cannot respond to the request
-  if (is_src_qnic_reserved || is_dst_qnic_reserved) {
-    rejectRequest(req);
-    return;
-  }
-
-  // the number of steps
-  int hop_count = req->getStack_of_QNodeIndexesArraySize();
-
-  // path from source to destination
-  std::vector<int> path;
-  for (int i = 0; i < hop_count; i++) {
-    path.push_back(req->getStack_of_QNodeIndexes(i));
-  }
-  path.push_back(my_address);
-
-  int divisions = computePathDivisionSize(hop_count);
-  int *link_left = new int[divisions], *link_right = new int[divisions], *swapper = new int[divisions];
-
-  // fillPathDivision should yield *exactly* the anticipated number of divisions.
-  if (fillPathDivision(path, 0, hop_count, link_left, link_right, swapper, 0) < divisions) {
-    error("Something went wrong in path division computation.");
-  }
-
-  std::map<int, std::vector<int>> swapping_partners;
-  for (int i = 0; i < divisions; i++) {
-    std::vector<int> partners;
-    if (swapper[i] > 0) {
-      EV_DEBUG << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
-      partners.push_back(link_left[i]);
-      partners.push_back(link_right[i]);
-      swapping_partners.insert(std::make_pair(swapper[i], partners));
+    // This must be -1
+    int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
+    if (local_qnic_address_to_actual_dst != -1) {
+      error("something error happen!");
     }
-  }
 
-  /* TODO: Remember you have link costs <3
-   * The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel
-    * but from only 1 channels from Src->BSA and ignoring BSA->Dest).
-   * If you need to test with different costs, try changing the value.
-   * But we need to implement actual link-tomography for this eventually.
-
-   for(int i = 0; i<hop_count; i++){
-       EV<<"\nThis is one of the stacked link costs....."<<pk->getStack_of_linkCosts(i)<<"\n";
-   }
-   */
-  // getting swappers index as vector(This might be redundant FIXME)
-  std::vector<int> swappers = {};
-  for (int i = 0; i < divisions; i++) {
-    if (swapper[i] > 0) {
-      swappers.push_back(swapper[i]);
+    // TODO: premise only one connection allowed btw, two nodes.
+    int local_qnic_address_to_actual_src = routing_daemon->return_QNIC_address_to_destAddr(actual_src);
+    if (local_qnic_address_to_actual_src == -1) {
+      error("This shouldn't happen!");
     }
-  }
 
-  int qnic_array_size = req->getStack_of_QNICsArraySize();
-  req->setStack_of_QNICsArraySize(qnic_array_size + 1);
-  req->setStack_of_QNICs(qnic_array_size, pair_info);
+    auto dst_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
+    auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
 
-  // HACK This may be also not good way
-  std::vector<QNIC_pair_info> qnics = {};
-  QNIC_id_pair qnic_pairs;
-  for (int i = 0; i < qnic_array_size + 1; i++) {
-    qnic_pairs = req->getStack_of_QNICs(i);
-    qnics.push_back(qnic_pairs);
-  }
+    if (src_info == nullptr) {
+      error("src_info not found");
+    }
+    QNIC_id_pair pair_info = {.fst = src_info->qnic, .snd = dst_info->qnic};
 
-  if (qnics.at(0).fst.index != -1 || qnics.at(qnics.size() - 1).snd.index != -1) {
-    error("Qnic index of initiator and responder must be -1 in current scheme. ");
-  }
+    bool is_src_qnic_reserved = isQnicBusy(src_info->qnic.address);
+    bool is_dst_qnic_reserved = isQnicBusy(dst_info->qnic.address);
 
-  // node pairs! FIXME: really bad coding
-  // Umm... thinking good way
-  // Here qnic processing
-  // Have to add destination qnic info (destination is the same as my_address. So qnic index must be -1 because self return is not allowed.)
+    // qnic already reserved, cannot respond to the request
+    if (is_src_qnic_reserved || is_dst_qnic_reserved) {
+      rejectRequest(req);
+      return;
+    }
 
-  // create RuleSet for all nodes!
-  int num_resource = req->getNumber_of_required_Bellpairs();
-  int intermediate_node_size = req->getStack_of_QNodeIndexesArraySize();
-  for (int i = 0; i <= intermediate_node_size; i++) {
-    auto itr = std::find(swappers.begin(), swappers.end(), path.at(i));
-    size_t index = std::distance(swappers.begin(), itr);
-    if (index != swappers.size()) {
-      EV_DEBUG << "Im swapper!" << path.at(i) << "\n";
-      // generate Swapping RuleSet
-      // here we have to check the order of entanglement swapping
+    // the number of steps
+    int hop_count = req->getStack_of_QNodeIndexesArraySize();
 
-      // swapping configurations for path[i]
-      SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
-      RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
+    // path from source to destination
+    std::vector<int> path;
+    for (int i = 0; i < hop_count; i++) {
+      path.push_back(req->getStack_of_QNodeIndexes(i));
+    }
+    path.push_back(my_address);
 
-      ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
-      pkr->setDestAddr(path.at(i));
-      pkr->setSrcAddr(my_address);
-      pkr->setKind(2);
-      pkr->setRuleSet(rule);
-      pkr->setActual_srcAddr(path.at(0));
-      pkr->setActual_destAddr(path.at(path.size() - 1));
-      send(pkr, "RouterPort$o");
+    int divisions = computePathDivisionSize(hop_count);
+    int *link_left = new int[divisions], *link_right = new int[divisions], *swapper = new int[divisions];
 
-    } else {
-      EV_DEBUG << "Im not swapper!" << path.at(i) << "\n";
-      int num_measure = req->getNum_measure();
-
-      RuleSet *ruleset;
-      int owner = path.at(i);
-      if (i == 0) {  // if this is initiator
-        ruleset = generateTomographyRuleSet(owner, path.at(path.size() - 1), num_measure, qnics.at(qnics.size() - 1).fst.type, qnics.at(qnics.size() - 1).fst.index, num_resource);
-      } else {  // if this is responder
-        ruleset = generateTomographyRuleSet(owner, path.at(0), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
+    // fillPathDivision should yield *exactly* the anticipated number of divisions.
+    if (fillPathDivision(path, 0, hop_count, link_left, link_right, swapper, 0) < divisions) {
+      error("Something went wrong in path division computation.");
+    }
+      std::map<int, std::vector<int>> swapping_partners;
+      for (int i = 0; i < divisions; i++) {
+        std::vector<int> partners;
+        if (swapper[i] > 0) {
+          EV_DEBUG << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
+          partners.push_back(link_left[i]);
+          partners.push_back(link_right[i]);
+          swapping_partners.insert(std::make_pair(swapper[i], partners));
+        }
       }
 
-      ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Tomography)");
-      pkr->setDestAddr(path.at(i));
-      pkr->setSrcAddr(my_address);
-      pkr->setKind(2);
-      pkr->setRuleSet(ruleset);
-      pkr->setActual_srcAddr(path.at(0));
-      pkr->setActual_destAddr(path.at(path.size() - 1));
+    /* TODO: Remember you have link costs <3
+    * The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel
+      * but from only 1 channels from Src->BSA and ignoring BSA->Dest).
+    * If you need to test with different costs, try changing the value.
+    * But we need to implement actual link-tomography for this eventually.
 
-      // this is not application but for checking swapping done properly.
-      pkr->setApplication_type(0);
-      send(pkr, "RouterPort$o");
+    for(int i = 0; i<hop_count; i++){
+        EV<<"\nThis is one of the stacked link costs....."<<pk->getStack_of_linkCosts(i)<<"\n";
     }
-  }
+    */
+    // getting swappers index as vector(This might be redundant FIXME)
+    std::vector<int> swappers = {};
+    for (int i = 0; i < divisions; i++) {
+      if (swapper[i] > 0) {
+        swappers.push_back(swapper[i]);
+      }
+    }
 
-  if (actual_dst != my_address) {
-    reserveQnic(src_info->qnic.address);
-    reserveQnic(dst_info->qnic.address);
-  } else {
-    reserveQnic(src_info->qnic.address);
+    int qnic_array_size = req->getStack_of_QNICsArraySize();
+    req->setStack_of_QNICsArraySize(qnic_array_size + 1);
+    req->setStack_of_QNICs(qnic_array_size, pair_info);
+
+    // HACK This may be also not good way
+    std::vector<QNIC_pair_info> qnics = {};
+    QNIC_id_pair qnic_pairs;
+    for (int i = 0; i < qnic_array_size + 1; i++) {
+      qnic_pairs = req->getStack_of_QNICs(i);
+      qnics.push_back(qnic_pairs);
+    }
+
+    if (qnics.at(0).fst.index != -1 || qnics.at(qnics.size() - 1).snd.index != -1) {
+      error("Qnic index of initiator and responder must be -1 in current scheme. ");
+    }
+
+    // node pairs! FIXME: really bad coding
+    // Umm... thinking good way
+    // Here qnic processing
+    // Have to add destination qnic info (destination is the same as my_address. So qnic index must be -1 because self return is not allowed.)
+
+    // create RuleSet for all nodes!
+    int num_resource = req->getNumber_of_required_Bellpairs();
+    int intermediate_node_size = req->getStack_of_QNodeIndexesArraySize();
+    for (int i = 0; i <= intermediate_node_size; i++) {
+      auto itr = std::find(swappers.begin(), swappers.end(), path.at(i));
+      size_t index = std::distance(swappers.begin(), itr);
+      if (index != swappers.size()) {
+        EV_DEBUG << "Im swapper!" << path.at(i) << "\n";
+        // generate Swapping RuleSet
+        // here we have to check the order of entanglement swapping
+
+        // swapping configurations for path[i]
+        SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
+        RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
+
+        ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
+        pkr->setDestAddr(path.at(i));
+        pkr->setSrcAddr(my_address);
+        pkr->setKind(2);
+        pkr->setRuleSet(rule);
+        pkr->setActual_srcAddr(path.at(0));
+        pkr->setActual_destAddr(path.at(path.size() - 1));
+        send(pkr, "RouterPort$o");
+
+      } else {
+        EV_DEBUG << "Im not swapper!" << path.at(i) << "\n";
+        int num_measure = req->getNum_measure();
+
+        RuleSet *ruleset;
+        int owner = path.at(i);
+        if (i == 0) {  // if this is initiator
+          ruleset = generateTomographyRuleSet(owner, path.at(path.size() - 1), num_measure, qnics.at(qnics.size() - 1).fst.type, qnics.at(qnics.size() - 1).fst.index, num_resource);
+        } else {  // if this is responder
+          ruleset = generateTomographyRuleSet(owner, path.at(0), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
+        }
+
+        ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Tomography)");
+        pkr->setDestAddr(path.at(i));
+        pkr->setSrcAddr(my_address);
+        pkr->setKind(2);
+        pkr->setRuleSet(ruleset);
+        pkr->setActual_srcAddr(path.at(0));
+        pkr->setActual_destAddr(path.at(path.size() - 1));
+
+        // this is not application but for checking swapping done properly.
+        pkr->setApplication_type(0);
+        send(pkr, "RouterPort$o");
+      }
+    }
+
+    if (actual_dst != my_address) {
+      reserveQnic(src_info->qnic.address);
+      reserveQnic(dst_info->qnic.address);
+    } else {
+      reserveQnic(src_info->qnic.address);
+    }
   }
 }
 

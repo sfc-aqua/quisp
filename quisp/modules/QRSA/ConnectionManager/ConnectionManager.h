@@ -73,6 +73,8 @@ class ConnectionManager : public cSimpleModule {
   RoutingDaemon *routing_daemon;
   HardwareMonitor *hardware_monitor;
 
+  bool is_absa_connection;
+
   virtual void initialize() override;
   virtual void handleMessage(cMessage *msg) override;
 

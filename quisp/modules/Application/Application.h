@@ -27,6 +27,7 @@ class Application : public cSimpleModule {
   int *other_end_node_addresses;
   int num_of_other_end_nodes;
   bool is_e2e_connection;
+  bool is_absa_connection;
   int number_of_resources;
   int num_measure;
 

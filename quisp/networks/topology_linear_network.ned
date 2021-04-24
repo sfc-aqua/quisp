@@ -11,11 +11,12 @@ network Tomography_Linear_One_MM_MIM
     parameters:
         **.Speed_of_light_in_fiber = 205336.986301 km;
 
+        @display("bgb=340,218");
     submodules:
         EndNode[2]: QNode {
             address = index;
             nodeType = "EndNode";
-            @display("i=device/pc;");
+            @display("i=device/pc;p=144,37");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
@@ -29,7 +30,7 @@ network Tomography_Linear_One_MM_MIM
 
         HoM: HoM {
             address = 2;
-            @display("i=device/bsm");
+            @display("i=device/bsm;p=130,158");
         }
 
     connections:

@@ -93,6 +93,7 @@ void RoutingDaemon::initialize(int stage) {
     }
   }
 
+  std::cout<<"topos"<<topo->getNumNodes()<<std::endl;
   for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all the destinations from the thisNode
     if (topo->getNode(i) == thisNode) continue;  // skip the node that is running this specific router app
     // Apply dijkstra to each node to find all shortest paths.

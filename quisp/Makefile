@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for quisp
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -I/usr/include/eigen3 -I.
+#  opp_makemake -f --deep -O out -I. -I/usr/include/eigen3
 #
 
 # Name of target to be created (-o option)
@@ -16,7 +16,7 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH = -I/usr/include/eigen3 -I.
+INCLUDE_PATH = -I. -I/usr/include/eigen3
 
 # Additional object and library files to link with
 EXTRA_OBJS =
@@ -32,21 +32,23 @@ O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 # Object files for local .cc, .msg and .sm files
 OBJS = \
     $O/channels/QuantumChannel.o \
-    $O/modules/Application/Application.o \
-    $O/modules/PhysicalConnection/BSA/BellStateAnalyzer.o \
-    $O/modules/QRSA/ConnectionManager/ConnectionManager.o \
     $O/modules/dummyModule.o \
-    $O/modules/PhysicalConnection/EPPS/EntangledPhotonPairSource.o \
-    $O/modules/QRSA/HardwareMonitor/HardwareMonitor.o \
-    $O/modules/PhysicalConnection/BSA/HoMController.o \
-    $O/modules/QNIC/PhotonicSwitch/PhotonicSwitch.o \
+    $O/modules/Application/Application.o \
     $O/modules/Common/Queue.o \
-    $O/modules/QRSA/RealTimeController/RealTimeController.o \
     $O/modules/Common/Router.o \
+    $O/modules/PhysicalConnection/BSA/ABSA.o \
+    $O/modules/PhysicalConnection/BSA/ABSA_controller.o \
+    $O/modules/PhysicalConnection/BSA/BellStateAnalyzer.o \
+    $O/modules/PhysicalConnection/BSA/HoMController.o \
+    $O/modules/PhysicalConnection/EPPS/EntangledPhotonPairSource.o \
+    $O/modules/PhysicalConnection/EPPS/SPDC_Controller.o \
+    $O/modules/QNIC/PhotonicSwitch/PhotonicSwitch.o \
+    $O/modules/QNIC/StationaryQubit/StationaryQubit.o \
+    $O/modules/QRSA/ConnectionManager/ConnectionManager.o \
+    $O/modules/QRSA/HardwareMonitor/HardwareMonitor.o \
+    $O/modules/QRSA/RealTimeController/RealTimeController.o \
     $O/modules/QRSA/RoutingDaemon/RoutingDaemon.o \
     $O/modules/QRSA/RuleEngine/RuleEngine.o \
-    $O/modules/PhysicalConnection/EPPS/SPDC_Controller.o \
-    $O/modules/QNIC/StationaryQubit/StationaryQubit.o \
     $O/rules/Action.o \
     $O/rules/Clause.o \
     $O/rules/Condition.o \

@@ -67,8 +67,8 @@ void Application::initialize() {
     int endnode_dest_addr = getOneRandomEndNodeAddress();
     EV_INFO << "My connection setup request will be sent from " << my_address << " to " << endnode_dest_addr << "\n";
     ConnectionSetupRequest *pk = createConnectionSetupRequest(endnode_dest_addr, number_of_resources);
-    // delay to avoid conflict
     scheduleAt(simTime() + exponential(0.00001 * my_address), pk);
+    // delay to avoid conflict
     return;
   }
 

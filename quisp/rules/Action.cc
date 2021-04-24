@@ -10,7 +10,7 @@
 #include <omnetpp.h>
 #include "classical_messages_m.h"
 #include "tools.h"
-#include "../modules/stationaryQubit.h"
+#include "../modules/QNIC/StationaryQubit/StationaryQubit.h"
 #include <tuple>
 #include <map>
 #include <iostream>
@@ -871,189 +871,191 @@ cPacket *DoubleSelectionDualActionSecondInv::run(cModule *re) {
   return pk;
 }
 
-//ABSA actions starts here 
-vector<int> slicing(vector<int>& arr, int X, int Y)
-{
-
-    // Starting and Ending iterators
-    auto start = arr.begin() + X;
-    auto end = arr.begin() + Y + 1;
-
-    // To store the sliced vector
-    vector<int> result(Y - X + 1);
-
-    // Copy vector using copy function()
-    copy(start, end, result.begin());
-
-    // Return the final sliced vector
-    return result;
-}
 
 
-//Action 2A for the basis
-int initializeBasisAction() {
-  int basis = 3; //bell
-  return basis;
-}
+// //ABSA actions starts here 
+// vector<int> slicing(vector<int>& arr, int X, int Y)
+// {
 
-//Action 2B for the bell
-bool initializeBellAction() {
-  bool successBell  = false;
-  return successBell;
-}
+//     // Starting and Ending iterators
+//     auto start = arr.begin() + X;
+//     auto end = arr.begin() + Y + 1;
 
-//Action 2C for the encodes
-//std::outcomeList<int*, std::successBell<bool
-//encode is like m?
-std::map<int, vector<int>> initializeEncode(int encode,int* bv){
-  //case encodex
-  //int arr[] = { 2,3,2 };
-  //int encode = 1;
-  int e[2];
-  if(encode == 1){
-     e[0] = 1;
-     e[1] = 2;
-  }
-  else{
-      e[0] = 2;
-      e[1] = 1;
-  }
-  std::vector < int > vecOfint(bv, bv + sizeof(bv) / sizeof(int));
-    //for (int str: vecOfStr){
-    //  std::cout << str << std::endl;}
-  std::map<int, vector<int>> encodedTree;
-  std::vector<int> vec(0);
-  for (int i=0; i<vecOfint.size(); i++){
-    if (i == 0){
-      int s = vecOfint[0];
-      std::cout << e[0];
-//      std::vector<int> vec(s, e[0]);
-      vec.resize(s, e[0]);
-    }
+//     // To store the sliced vector
+//     vector<int> result(Y - X + 1);
 
-    else if (i%2 == 0){
-      std::vector<int> temp = slicing(vecOfint, 0, i+1);
-      auto multi = std::accumulate(begin(temp), end(temp), 1, std::multiplies<int>());
-      //std::vector<int> vec(multi, e[0]);
-      vec.resize(multi, e[0]);
-    }
+//     // Copy vector using copy function()
+//     copy(start, end, result.begin());
 
-    else{
-      std::vector<int> temp = slicing(vecOfint, 0, i+1);
-      auto multi = std::accumulate(begin(temp), end(temp), 1, std::multiplies<int>());
-      //std:vector<int> vec(multi, e[1]);
-      vec.resize(multi, e[1]);
-    }
-
-    encodedTree.insert(std::make_pair(i+1, vec));
-  }
-  return encodedTree;
-}
-
-//Action 2D for the msg
-bool initializeMsgAction(){
-  bool msgSent = false;
-  return msgSent;
-}
+//     // Return the final sliced vector
+//     return result;
+// }
 
 
-//Action 5
-std::map<int, tuple<int, bool, bool>> measureAction(int* basis){
-  StationaryQubit* left_qubit = nullptr;
-  StationaryQubit* right_qubit = nullptr;
-  //the key is the name of qubit while the values are the basis and outcomes
-  std::map<int, tuple<int, bool, bool>> outcomeList;
-  for(int i=0; i<sizeof(basis);i++){
-    left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
-    right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
-    bool outcome_right, outcome_left;
-    if (basis[i] == 1){
-      outcome_right = right_qubit -> measure_X();
-      outcome_left = left_qubit -> measure_X();
-    } else if (basis[i] == 2){
-      outcome_right = right_qubit -> measure_Z();
-      outcome_left = left_qubit -> measure_Z();
-    } else if (basis[i] == 3){
-      left_qubit->Hadamard_gate();
-      right_qubit->CNOT_gate(left_qubit);
-      outcome_left = left_qubit->measure_Z();
-      outcome_right = right_qubit->measure_Z();
-    }
-    tuple<int,bool,bool> item;
-    item = make_tuple(basis[i], outcome_right, outcome_left);
-    outcomeList.insert(pair<int, tuple<int, bool, bool>>(i, item));
-    outcomeList.insert(std::make_pair(i, item));
-  }
-  return outcomeList;
-}
+// //Action 2A for the basis
+// int initializeBasisAction() {
+//   int basis = 3; //bell
+//   return basis;
+// }
 
-//Action 7
-int* finalizeAction(std::map<int, tuple<int, bool, bool>> outcomeList){
-  //int absaAdd = left_partner_qubit->stationaryQubit_address;
-  //int endnodeAdd = right_partner_qubit->stationaryQubit_address;
-  int size = outcomeList.size();
-  int msg[size]; //snce we only need a list of basis used
-  //std::map<int, tuple<int, bool, bool>::iterator it = outcomeList.begin();
-  int i = 0;
-  for(auto it= outcomeList.begin(); it != outcomeList.end(); ++it){
-      tuple <int, int, int> val = it->second;
-          msg[i] = std::get<0>(val);
-          i++;
-      }
-  bool msgSent = true;
-  return msg;
-}
+// //Action 2B for the bell
+// bool initializeBellAction() {
+//   bool successBell  = false;
+//   return successBell;
+// }
+
+// //Action 2C for the encodes
+// //std::outcomeList<int*, std::successBell<bool
+// //encode is like m?
+// std::map<int, vector<int>> initializeEncode(int encode,int* bv){
+//   //case encodex
+//   //int arr[] = { 2,3,2 };
+//   //int encode = 1;
+//   int e[2];
+//   if(encode == 1){
+//      e[0] = 1;
+//      e[1] = 2;
+//   }
+//   else{
+//       e[0] = 2;
+//       e[1] = 1;
+//   }
+//   std::vector < int > vecOfint(bv, bv + sizeof(bv) / sizeof(int));
+//     //for (int str: vecOfStr){
+//     //  std::cout << str << std::endl;}
+//   std::map<int, vector<int>> encodedTree;
+//   std::vector<int> vec(0);
+//   for (int i=0; i<vecOfint.size(); i++){
+//     if (i == 0){
+//       int s = vecOfint[0];
+//       std::cout << e[0];
+// //      std::vector<int> vec(s, e[0]);
+//       vec.resize(s, e[0]);
+//     }
+
+//     else if (i%2 == 0){
+//       std::vector<int> temp = slicing(vecOfint, 0, i+1);
+//       auto multi = std::accumulate(begin(temp), end(temp), 1, std::multiplies<int>());
+//       //std::vector<int> vec(multi, e[0]);
+//       vec.resize(multi, e[0]);
+//     }
+
+//     else{
+//       std::vector<int> temp = slicing(vecOfint, 0, i+1);
+//       auto multi = std::accumulate(begin(temp), end(temp), 1, std::multiplies<int>());
+//       //std:vector<int> vec(multi, e[1]);
+//       vec.resize(multi, e[1]);
+//     }
+
+//     encodedTree.insert(std::make_pair(i+1, vec));
+//   }
+//   return encodedTree;
+// }
+
+// //Action 2D for the msg
+// bool initializeMsgAction(){
+//   bool msgSent = false;
+//   return msgSent;
+// }
 
 
-//Action 9
-int* qkdInitializeAction(int m){
-  int* basisList;
-  bool msgNeeded = true;
-  for(int i=0; i<m; i++){
-     int randBasis = rand()%3+1; //if 1 >X, 2>Z, 3 > bell
-     basisList[i] = randBasis;
-    }
-  return basisList;
-}
+// //Action 5
+// std::map<int, tuple<int, bool, bool>> measureAction(int* basis){
+//   StationaryQubit* left_qubit = nullptr;
+//   StationaryQubit* right_qubit = nullptr;
+//   //the key is the name of qubit while the values are the basis and outcomes
+//   std::map<int, tuple<int, bool, bool>> outcomeList;
+//   for(int i=0; i<sizeof(basis);i++){
+//     left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
+//     right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
+//     bool outcome_right, outcome_left;
+//     if (basis[i] == 1){
+//       outcome_right = right_qubit -> measure_X();
+//       outcome_left = left_qubit -> measure_X();
+//     } else if (basis[i] == 2){
+//       outcome_right = right_qubit -> measure_Z();
+//       outcome_left = left_qubit -> measure_Z();
+//     } else if (basis[i] == 3){
+//       left_qubit->Hadamard_gate();
+//       right_qubit->CNOT_gate(left_qubit);
+//       outcome_left = left_qubit->measure_Z();
+//       outcome_right = right_qubit->measure_Z();
+//     }
+//     tuple<int,bool,bool> item;
+//     item = make_tuple(basis[i], outcome_right, outcome_left);
+//     outcomeList.insert(pair<int, tuple<int, bool, bool>>(i, item));
+//     outcomeList.insert(std::make_pair(i, item));
+//   }
+//   return outcomeList;
+// }
+
+// //Action 7
+// int* finalizeAction(std::map<int, tuple<int, bool, bool>> outcomeList){
+//   //int absaAdd = left_partner_qubit->stationaryQubit_address;
+//   //int endnodeAdd = right_partner_qubit->stationaryQubit_address;
+//   int size = outcomeList.size();
+//   int msg[size]; //snce we only need a list of basis used
+//   //std::map<int, tuple<int, bool, bool>::iterator it = outcomeList.begin();
+//   int i = 0;
+//   for(auto it= outcomeList.begin(); it != outcomeList.end(); ++it){
+//       tuple <int, int, int> val = it->second;
+//           msg[i] = std::get<0>(val);
+//           i++;
+//       }
+//   bool msgSent = true;
+//   return msg;
+// }
 
 
-//Action 11
-std::map<int, tuple<int, bool, bool>> qkdMeasureAction(int* basis, std::map<int, tuple<int, bool, bool>> outcomeList){
-  //StationaryQubit *incomeQubit = nullptr;
-  StationaryQubit* left_qubit = nullptr;
-  StationaryQubit* right_qubit = nullptr;
-  for(int i=0; i<sizeof(basis);i++){
-      left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
-      right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
-          bool outcome_right, outcome_left;
-          if (basis[i] == 1){
-            outcome_right = right_qubit -> measure_X();
-            outcome_left = left_qubit -> measure_X();
-          } else if (basis[i] == 2){
-            outcome_right = right_qubit -> measure_Z();
-            outcome_left = left_qubit -> measure_Z();
-          } else if (basis[i] == 3){
-            left_qubit->Hadamard_gate();
-            right_qubit->CNOT_gate(left_qubit);
-            outcome_left = left_qubit->measure_Z();
-            outcome_right = right_qubit->measure_Z();
-          }
-          tuple<int,bool,bool> item;
-          item = make_tuple(basis[i], outcome_right, outcome_left);
-          outcomeList.insert(pair<int, tuple<int, bool, bool>>(i, item));
-          //outcomeList.insert(std::make_pair(i, item));
-  }
-  return outcomeList;
-}
+// //Action 9
+// int* qkdInitializeAction(int m){
+//   int* basisList;
+//   bool msgNeeded = true;
+//   for(int i=0; i<m; i++){
+//      int randBasis = rand()%3+1; //if 1 >X, 2>Z, 3 > bell
+//      basisList[i] = randBasis;
+//     }
+//   return basisList;
+// }
 
-//Action 13
-int* qkdFinalizeAction(int* basis){
-  //int absaAdd = left_partner_qubit->stationaryQubit_address;
-  //int endnodeAdd = right_partner_qubit->stationaryQubit_address;
-  //int* msg = *basisList; //this syntax is invalid
-  bool msgNeeded = false;
-  return basis;
-}
+
+// //Action 11
+// std::map<int, tuple<int, bool, bool>> qkdMeasureAction(int* basis, std::map<int, tuple<int, bool, bool>> outcomeList){
+//   //StationaryQubit *incomeQubit = nullptr;
+//   StationaryQubit* left_qubit = nullptr;
+//   StationaryQubit* right_qubit = nullptr;
+//   for(int i=0; i<sizeof(basis);i++){
+//       left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
+//       right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
+//           bool outcome_right, outcome_left;
+//           if (basis[i] == 1){
+//             outcome_right = right_qubit -> measure_X();
+//             outcome_left = left_qubit -> measure_X();
+//           } else if (basis[i] == 2){
+//             outcome_right = right_qubit -> measure_Z();
+//             outcome_left = left_qubit -> measure_Z();
+//           } else if (basis[i] == 3){
+//             left_qubit->Hadamard_gate();
+//             right_qubit->CNOT_gate(left_qubit);
+//             outcome_left = left_qubit->measure_Z();
+//             outcome_right = right_qubit->measure_Z();
+//           }
+//           tuple<int,bool,bool> item;
+//           item = make_tuple(basis[i], outcome_right, outcome_left);
+//           outcomeList.insert(pair<int, tuple<int, bool, bool>>(i, item));
+//           //outcomeList.insert(std::make_pair(i, item));
+//   }
+//   return outcomeList;
+// }
+
+// //Action 13
+// int* qkdFinalizeAction(int* basis){
+//   //int absaAdd = left_partner_qubit->stationaryQubit_address;
+//   //int endnodeAdd = right_partner_qubit->stationaryQubit_address;
+//   //int* msg = *basisList; //this syntax is invalid
+//   bool msgNeeded = false;
+//   return basis;
+// }
 
 }  // namespace rules
 }  // namespace quisp

@@ -1,4 +1,4 @@
-/** \file ABSANode.cc
+/** \file ABSA.cc
 This file explains the behaviour of the ABSA node
 */
 
@@ -9,7 +9,7 @@ This file explains the behaviour of the ABSA node
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <modules/HardwareMonitor.h>
+#include <modules/QRSA/HardwareMonitor/HardwareMonitor.h>
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -17,9 +17,9 @@ using namespace quisp::messages;
 namespace quisp {
 namespace modules {
 
-/** \class ABSANode */
+/** \class ABSA */
 
-class ABSANode : public cSimpleModule
+class ABSA : public cSimpleModule
 {
 	/* check if we need the same parameters, less or more */
 private:
@@ -40,7 +40,7 @@ private:
         int left_photon_origin_qubit_address;
         bool left_photon_Xerr;
         bool left_photon_Zerr;
-        stationaryQubit *left_statQubit_ptr;
+        StationaryQubit *left_statQubit_ptr;
         simtime_t right_arrived_at;
         int right_photon_origin_node_address;
         int right_photon_origin_qnic_address;
@@ -50,7 +50,7 @@ private:
         bool right_photon_Zerr;
         bool right_photon_lost;
         bool left_photon_lost;
-        stationaryQubit *right_statQubit_ptr;
+        StationaryQubit *right_statQubit_ptr;
         int count_X=0, count_Y=0, count_Z=0, count_I=0, count_L=0, count_total=0;//for debug
         bool this_trial_done = false;
         double ABSAsuccess_rate = 0.5 * 0.8 * 0.8; //detector probability = 0.8
@@ -70,14 +70,14 @@ private:
         virtual void initializeVariables();
         virtual void GOD_setCompletelyMixedDensityMatrix();
         virtual void GOD_updateEntangledInfoParameters_of_qubits();
-        virtual void PauliCorrection(); //what are potential inputs
+        // virtual void PauliCorrection(); //what are potential inputs
         virtual void singleQubitMeasure(StationaryQubit * qubit); //How to add the qubit pointer
         
 };
 
-Define_Module(ABSANode);
+Define_Module(ABSA);
 
-void ABSANode::initialize()
+void ABSA::initialize()
 {
    GOD_num_resSignal = registerSignal("Num_ABSA");
    darkcount_probability = par("darkcount_probability");
@@ -107,7 +107,7 @@ void ABSANode::initialize()
    left_photon_lost = false;
 }
 
-void ABSANode::handleMessage(cMessage *msg) {
+void ABSA::handleMessage(cMessage *msg) {
   PhotonicQubit *photon = check_and_cast<PhotonicQubit *>(msg);
   if (photon->getFirst() && this_trial_done == true) {  // Next round started
     this_trial_done = false;
@@ -175,33 +175,33 @@ void ABSANode::handleMessage(cMessage *msg) {
     double rand = dblrand();  // Even if we have 2 photons, whether we success entangling the qubits or not is probablistic.
     double darkcount_left = dblrand();
     double darkcount_right = dblrand();
-    if ((rand < BSAsuccess_rate && !right_photon_lost && !left_photon_lost) /*No qubit lost*/ ||
+    if ((rand < ABSAsuccess_rate && !right_photon_lost && !left_photon_lost) /*No qubit lost*/ ||
         (!right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability) /*Got right, darkcount left*/ ||
         (right_photon_lost && !left_photon_lost && darkcount_right < darkcount_probability) /*Got left, darkcount right*/ ||
         (right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability && darkcount_right < darkcount_probability) /*Darkcount right left*/) {
       if (!right_photon_lost && (left_photon_lost && darkcount_left <= darkcount_probability)) {
         DEBUG_darkcount_left++;
         GOD_setCompletelyMixedDensityMatrix();
-        sendBSAresult(false, send_result);
+        sendABSAresult(false, send_result);
       } else if (!left_photon_lost && (right_photon_lost && darkcount_right <= darkcount_probability)) {
         DEBUG_darkcount_right++;
         GOD_setCompletelyMixedDensityMatrix();
-        sendBSAresult(false, send_result);
+        sendABSAresult(false, send_result);
       } else if ((left_photon_lost && darkcount_left <= darkcount_probability) && (right_photon_lost && darkcount_right <= darkcount_probability)) {
         DEBUG_darkcount_both++;
         GOD_setCompletelyMixedDensityMatrix();
-        sendBSAresult(false, send_result);
+        sendABSAresult(false, send_result);
       } else {
         bubble("Success...!");
         DEBUG_success++;
         GOD_updateEntangledInfoParameters_of_qubits();
-        sendBSAresult(false, send_result);  // succeeded because both reached, and both clicked
+        sendABSAresult(false, send_result);  // succeeded because both reached, and both clicked
       }
 
     }
     else {
       bubble("Failed...!");
-      sendBSAresult(true, send_result);  // just failed because only 1 detector clicked while both reached
+      sendABSAresult(true, send_result);  // just failed because only 1 detector clicked while both reached
     }
     DEBUG_total++;
 
@@ -211,7 +211,7 @@ void ABSANode::handleMessage(cMessage *msg) {
     // Both qubits arrived, but the timing was bad.
     bubble("Emission Timing Failed");
     initializeVariables();
-    sendBSAresult(true, send_result);
+    sendABSAresult(true, send_result);
   } else {
     bubble("Waiting...");
     // Just waiting for the other qubit to arrive.
@@ -220,7 +220,7 @@ void ABSANode::handleMessage(cMessage *msg) {
   delete msg;
 }
 
-void ABSANode::initializeVariables() {
+void ABSA::initializeVariables() {
   left_arrived_at = -1;
   left_photon_origin_node_address = -1;
   left_photon_origin_qnic_address = -1;
@@ -243,7 +243,7 @@ void ABSANode::initializeVariables() {
   right_statQubit_ptr = nullptr;
 }
 
-void ABSANode::sendBSAresult(bool result, bool sendresults) {
+void ABSA::sendABSAresult(bool result, bool sendresults) {
   // result could be false positive (actually ok but recognized as ng),
   // false negative (actually ng but recognized as ok) due to darkcount
   // true positive and true negative is no problem.
@@ -261,14 +261,14 @@ void ABSANode::sendBSAresult(bool result, bool sendresults) {
   }
 }
 
-void ABSANode::finish() {
+void ABSA::finish() {
   std::cout << "total = " << DEBUG_total << "\n";
   std::cout << "Success = " << DEBUG_success << "\n";
   std::cout << "darkcount_count_left = " << DEBUG_darkcount_left << ", darkcount_count_right =" << DEBUG_darkcount_right << ", darkcount_count_both = " << DEBUG_darkcount_both
             << "\n";
 }
 
-void ABSANode::forDEBUG_countErrorTypes(cMessage *msg) {
+void ABSA::forDEBUG_countErrorTypes(cMessage *msg) {
   PhotonicQubit *q = check_and_cast<PhotonicQubit *>(msg);
   if (q->getPauliXerr() && q->getPauliZerr()) {
     count_Y++;
@@ -286,7 +286,7 @@ void ABSANode::forDEBUG_countErrorTypes(cMessage *msg) {
      << ", L%=" << (double)count_L / (double)count_total << ", I% =" << (double)count_I / (double)count_total << "\n";
 }
 
-bool ABSANode::isPhotonLost(cMessage *msg) {
+bool ABSA::isPhotonLost(cMessage *msg) {
   PhotonicQubit *q = check_and_cast<PhotonicQubit *>(msg);
   if (q->getPhotonLost()) {
     return true;  // Lost
@@ -296,12 +296,12 @@ bool ABSANode::isPhotonLost(cMessage *msg) {
   delete msg;
 }
 
-void ABSANode::GOD_setCompletelyMixedDensityMatrix() {
+void ABSA::GOD_setCompletelyMixedDensityMatrix() {
   left_statQubit_ptr->setCompletelyMixedDensityMatrix();
   right_statQubit_ptr->setCompletelyMixedDensityMatrix();
 }
 
-void ABSANode::GOD_updateEntangledInfoParameters_of_qubits() {
+void ABSA::GOD_updateEntangledInfoParameters_of_qubits() {
 
   left_statQubit_ptr->setEntangledPartnerInfo(right_statQubit_ptr);
   // If Photon had an X error, Add X error to the stationary qubit.
@@ -318,7 +318,7 @@ void ABSANode::GOD_updateEntangledInfoParameters_of_qubits() {
   n_res++;
   emit(GOD_num_resSignal, n_res);
 }
-void ABSANode::singleQubitMeasure(StationaryQubit * qubit){
+void ABSA::singleQubitMeasure(StationaryQubit * qubit){
 
 }
 
