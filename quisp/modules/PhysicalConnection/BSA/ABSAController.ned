@@ -16,8 +16,6 @@ simple ABSAController
         double max_neighbor_distance = default(-1);
         int max_buffer = default(-1);
         double emission_variance = default(0);//in seconds. Photons will be shot towards HoM with 100% accuracy
-        bool receiver = default(false);
-        bool passive = default(false);
 
         // performance
         @signal[creation_time](type="float");

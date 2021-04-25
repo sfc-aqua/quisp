@@ -28,7 +28,7 @@ module ABSANode
         string nodeType = default("ABSA");
 
     gates:
-        inout absa_port[] @loose;
+        inout quantum_absa_port[] @loose;
         inout port[] @loose;
 
     submodules:
@@ -69,8 +69,8 @@ module ABSANode
             nic[i].line <--> port[i];
         }
 
-        for i=0..sizeof(absa_port)-1 {
-            absa_port[i] <--> ABSA.fromABSA_quantum_port++;
+        for i=0..sizeof(quantum_absa_port)-1 {
+            quantum_absa_port[i] <--> ABSA.fromABSA_quantum_port++;
         }
 
         Controller.toRouter_port --> router.fromApp;

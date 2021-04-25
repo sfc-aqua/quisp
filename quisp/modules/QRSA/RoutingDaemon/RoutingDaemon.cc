@@ -76,15 +76,15 @@ void RoutingDaemon::initialize(int stage) {
     for (int j = 0; j < topo->getNode(x)->getNumOutLinks(); j++) {  // Traverse through all links from a specific node.
       // thisNode->disable();//You can also disable nodes or channels accordingly to represent broken hardwares
       // EV<<"\n thisNode is "<< topo->getNode(x)->getModule()->getFullName() <<" has "<<topo->getNode(x)->getNumOutLinks()<<" links \n";
-
       // Get assigned cost for each channel written in .ned file
       double channel_cost = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("cost");
 
       // EV<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName()<<" =? "<<"QuantumChannel"<<"\n";
       // if(strcmp(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName(),"QuantumChannel")==0){
+      // EV<<"\n Channel Name!!!!!!"<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName()<<"\n";
+      // FIXME or NOTE: gate must have name "quantum" in this implementation
       if (strstr(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName(), "quantum")) {
         // Otherwise, keep the quantum channels and set the weight
-        // EV<<"\n Quantum Channel!!!!!! cost is"<<channel_cost<<"\n";
         topo->getNode(x)->getLinkOut(j)->setWeight(channel_cost);  // Set channel weight
       } else {
         // Ignore classical link in quantum routing table
@@ -93,7 +93,6 @@ void RoutingDaemon::initialize(int stage) {
     }
   }
 
-  std::cout<<"topos"<<topo->getNumNodes()<<std::endl;
   for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all the destinations from the thisNode
     if (topo->getNode(i) == thisNode) continue;  // skip the node that is running this specific router app
     // Apply dijkstra to each node to find all shortest paths.
@@ -113,7 +112,7 @@ void RoutingDaemon::initialize(int stage) {
     thisqnic.address = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
     thisqnic.type = (QNIC_type)(int)parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_type");
     thisqnic.index = parentModuleGate->getPreviousGate()->getOwnerModule()->getIndex();
-    ;
+    
     thisqnic.pointer = parentModuleGate->getPreviousGate()->getOwnerModule();
 
     qrtable[destAddr] = thisqnic;  // Store gate index per destination from this node

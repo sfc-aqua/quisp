@@ -1193,12 +1193,17 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
     return inf;
   }
 
+  if (type == ABSAType){
+    error("TO BE IMPLEMENTED");
+  }
+
   if (type == SPDCType) {
     error("TO BE IMPLEMENTED");
   }
 
+
   error(
-      "This simulator only recognizes the following network level node "
+      "node "
       "types: QNode, EPPS and HoM. Not %s",
       thisNode.getClassName());
 }

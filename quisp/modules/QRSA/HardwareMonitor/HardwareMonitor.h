@@ -106,6 +106,7 @@ class HardwareMonitor : public cSimpleModule {
   cModuleType *QNodeType = cModuleType::get("modules.QNode");
   cModuleType *SPDCType = cModuleType::get("modules.SPDC");
   cModuleType *HoMType = cModuleType::get("modules.HoM");
+  cModuleType *ABSAType = cModuleType::get("modules.ABSANode");
   bool do_link_level_tomography = false;
   int num_purification = 0;
   bool X_Purification = false;

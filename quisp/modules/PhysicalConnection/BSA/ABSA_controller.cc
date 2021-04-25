@@ -14,22 +14,7 @@ void ABSAController::initialize(int stage) {
   auto_resend_ABSANotifier = true;
   ABSA_timeout = 1e-6;
   address = par("address");
-  receiver = par("receiver");
-  passive = par("passive");
   /** \todo This code looks awefully simplifiable */
-  if (passive) {
-    // Nothing to do. EPPS will take care of entanglement creation.
-    // max_buffer also stays unknown, until this gets a message about that info from epps.
-    // Therefore, if passive, max_buffer has to be update manually every time when you get a packet from epps.
-    // It still needs to know who is the neighbor of this internal ABSA
-    checkNeighborAddress(true);
-  } else if (receiver) {
-    internodeInitializer();  // Other parameter settings
-  } else if (!receiver) {
-    standaloneInitializer();  // Other parameter settings
-  } else {
-    error("Set receiver parameter of ABSA to true or false.");
-  }
 }
 
 // Initialization of the ABSA module inside a QNode.
@@ -48,8 +33,8 @@ void ABSAController::internodeInitializer() {
 // Initialization of the stand-alone ABSA module.
 void ABSAController::standaloneInitializer() {
   // Just in case, check if the 2 quantum port of the node
-  if (getParentModule()->gateSize("quantum_port") != 2) {
-    error("No more or less than 2 neighbors are allowed for ABSA.", getParentModule()->gateSize("quantum_port"));
+  if (getParentModule()->gateSize("quantum_absa_port") != 2) {
+    error("No more or less than 2 neighbors are allowed for ABSA.", getParentModule()->gateSize("quantum_absa_port"));
     endSimulation();
   }
   checkNeighborAddress(false);

@@ -21,7 +21,7 @@ module RGS_source
 
     gates:
         inout port[];//size will be determined by the number of connections defined at the end of this file
-        inout rgs_source_port[] @loose; //rgs source node only send qubits
+        inout quantum_rgs_source_port[] @loose; //rgs source node only send qubits
 
     submodules:
         app: Application {
@@ -53,7 +53,7 @@ module RGS_source
                 number_of_qnics_r = 0;
                 number_of_qnics_rp = 0;
         }
-        qnic[sizeof(rgs_source_port)]: QNIC {//number of QNIC is the same as number of classical queue/NIC
+        qnic[sizeof(quantum_rgs_source_port)]: QNIC {//number of QNIC is the same as number of classical queue/NIC
             parameters:
                 parent_node_address = address;
                 self_qnic_address = index;
@@ -69,8 +69,8 @@ module RGS_source
             router.fromQueue[i] <-- queue[i].out;
             queue[i].line <--> port[i];
         }
-        for i=0..sizeof(rgs_source_port)-1 {
-            qnic[i].qnic_quantum_port <--> rgs_source_port[i];
+        for i=0..sizeof(quantum_rgs_source_port)-1 {
+            qnic[i].qnic_quantum_port <--> quantum_rgs_source_port[i];
         		//qnic[i].dummyRoutingDaemonLink <--> qrsa.qnics++;
         }
         router.rePort <--> qrsa.rePort;

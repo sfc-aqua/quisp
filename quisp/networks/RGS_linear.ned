@@ -55,8 +55,8 @@ network RGS_linear_simple
         ABSANode.port++ <--> ClassicalChannel {  distance = 1km; } <--> RGSsource2.port++;
         RGSsource2.port++ <--> ClassicalChannel {  distance = 1km; } <--> EndNode2.port++;
 
-        EndNode1.quantum_port_receiver++ <--> QuantumChannel {  distance = 1km; } <--> RGSsource1.rgs_source_port++;
-        RGSsource1.rgs_source_port++ <--> QuantumChannel {  distance = 1km; } <--> ABSANode.absa_port++;
-        ABSANode.absa_port++ <--> QuantumChannel {  distance = 1km; } <--> RGSsource2.rgs_source_port++;
-        RGSsource2.rgs_source_port++ <--> ClassicalChannel {  distance = 1km; } <--> EndNode2.quantum_port_receiver++;
+        EndNode1.quantum_port_receiver++ <--> QuantumChannel {  distance = 1km; } <--> RGSsource1.quantum_rgs_source_port++;
+        RGSsource1.quantum_rgs_source_port++ <--> QuantumChannel {  distance = 1km; } <--> ABSANode.quantum_absa_port++;
+        ABSANode.quantum_absa_port++ <--> QuantumChannel {  distance = 1km; } <--> RGSsource2.quantum_rgs_source_port++;
+        RGSsource2.quantum_rgs_source_port++ <--> QuantumChannel {  distance = 1km; } <--> EndNode2.quantum_port_receiver++;
 }
