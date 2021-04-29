@@ -17,14 +17,14 @@ network RGS_linear_simple
         EndNode1: QNode {
             address = 1;
             nodeType = "EndNode";
-            @display("i=device/pc;p=502,47");
+            @display("i=device/pc;p=495,127");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
         EndNode2: QNode {
             address = 2;
             nodeType = "EndNode";
-            @display("i=device/pc;");
+            @display("i=device/pc;p=38,127");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
@@ -33,20 +33,20 @@ network RGS_linear_simple
             address = 3;
             nodeType = "RGS";
             //buffers = 25;
-            @display("i=device/smallrouter;p=420,201");
+            @display("i=device/smallrouter;p=391,126");
         }
 
         RGSsource2: RGS_source {
             address = 4;
             nodeType = "RGS";
             //buffers = 25;
-            @display("i=device/smallrouter;p=169,201");
+            @display("i=device/smallrouter;p=137,126");
         }
 
         ABSANode: ABSANode {
             address = 5;
             nodeType = "ABSA";
-            @display("i=device/smallrouter;p=311,201");
+            @display("i=device/smallrouter;p=264,126");
         }
 
     connections:

@@ -1157,6 +1157,7 @@ cModule *HardwareMonitor::getQNode() {
 std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule &thisNode) {
   cModuleType *type = thisNode.getModuleType();
 
+
   auto inf = std::make_unique<NeighborInfo>();
   inf->type = type;
   inf->address = thisNode.par("address");
@@ -1165,6 +1166,11 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
     inf->neighborQNode_address = thisNode.par("address");
     inf->address = thisNode.par("address");
     return inf;
+  }
+
+  if (type == ABSAType){
+    // This should be treated almost the same as the QNodeType
+    error("TO BE IMPLEMENTED");
   }
 
   if (type == HoMType) {
@@ -1193,9 +1199,6 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
     return inf;
   }
 
-  if (type == ABSAType){
-    error("TO BE IMPLEMENTED");
-  }
 
   if (type == SPDCType) {
     error("TO BE IMPLEMENTED");

@@ -16,7 +16,7 @@ module RGS_source
         @display("bgl=4");
 
         string includeInTopo = "yes";
-        string nodeType = default("none");
+        string nodeType = default("RGS");
         double emission_timing_std = default(0);//in seconds
 
     gates:
