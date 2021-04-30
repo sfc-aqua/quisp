@@ -30,7 +30,7 @@ googletest/CMakeLists.txt:
 	git submoudle update --init
 
 googletest/build: googletest/CMakeLists.txt
-	cmake ./googletest -B ./googletest/build
+	mkdir -p googletest/build && cd googletest/build && cmake ..
 
 googletest/build/lib: googletest/build
 	make -C googletest/build

@@ -48,7 +48,7 @@ $(O)/$(TEST_MAIN_OBJ): $(TEST_MAIN_SRC)
 $(TARGET_DIR)/run_unit_test: $(O)/$(TEST_OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE) $(O)/$(TEST_MAIN_OBJ)
 	@$(MKPATH) $O
 	@echo Creating test executable:
-	$(Q)$(CXX) $(LDFLAGS) -o $(TARGET_DIR)/run_unit_test $(O)/$(TEST_OBJS) $(OBJS) $(O)/$(TEST_MAIN_OBJ) $(EXTRA_OBJS) $(LIBS) $(TEST_LIBS) $(OMNETPP_LIBS)
+	$(Q)$(CXX) $(LDFLAGS) -lpthread -o $(TARGET_DIR)/run_unit_test $(O)/$(TEST_OBJS) $(OBJS) $(O)/$(TEST_MAIN_OBJ) $(EXTRA_OBJS) $(LIBS) $(TEST_LIBS) $(OMNETPP_LIBS)
 
 run-unit-test: $(TARGET_DIR)/run_unit_test
 	$(TARGET_DIR)/run_unit_test
