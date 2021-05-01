@@ -1,0 +1,38 @@
+#! /bin/sh
+#
+# usage: runtest [<testfile>...]
+# without args, runs all *.test files in the current directory
+#
+set -eu
+
+DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+MAKE="make -j MODE=debug"
+QUISP_DIR=$DIR/../quisp
+WORK_DIR=$DIR/work
+
+TESTFILES=$*
+MAKEFRAG=$QUISP_DIR/makefrag
+if [ "x$TESTFILES" = "x" ]; then TESTFILES=`find $DIR -name '*.test' -type f `; fi
+echo $TESTFILES
+if [ ! -d $WORK_DIR ];  then mkdir $WORK_DIR; fi
+rm -rf $WORK_DIR/lib
+cp -pPR $DIR/lib $WORK_DIR       # OSX dos not support cp -a
+NEDPATH=$WORK_DIR/lib:$QUISP_DIR/networks:$QUISP_DIR/modules
+for t in $TESTFILES
+do
+    NEDPATH=$NEDPATH:$WORK_DIR/`basename "$t" .test`
+done
+export NEDPATH
+EXTRA_INCLUDES="-I$WORK_DIR/lib -I$QUISP_DIR/modules/Application -I$QUISP_DIR"
+EXTRA_LIBS=" -L$QUISP_DIR -lquisp_dbg"
+OPT="--debugger-attach-on-error=true"
+
+opp_test gen -w $WORK_DIR -v --args $OPT -- $TESTFILES || exit 1
+echo
+(cd $WORK_DIR; opp_makemake -f -o work --deep --no-deep-includes -i $MAKEFRAG --deep $EXTRA_INCLUDES $EXTRA_LIBS; $MAKE -C $WORK_DIR) || exit 1
+echo
+opp_test run -w $WORK_DIR -p work_dbg -vv --args $OPT -- $TESTFILES || exit 1
+echo
+echo Results can be found in ./work
+
+
