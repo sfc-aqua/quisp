@@ -21,6 +21,7 @@ network RGS_linear_simple
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
+
         EndNode2: QNode {
             address = 2;
             nodeType = "EndNode";

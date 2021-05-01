@@ -429,7 +429,7 @@ void StationaryQubit::setFree(bool consumed) {
   par("GOD_entangled_qnic_address") = -1;
   par("GOD_entangled_qnic_type") = -1;
   entangled_partner = nullptr;
-  EV << "!!!!!!!!!!!!!! Freeing this qubit!!!" << this << "\n";
+  // EV << "!!!!!!!!!!!!!! Freeing this qubit!!!" << this << "\n";
   // GUI part
   if (hasGUI()) {
     if (consumed) {

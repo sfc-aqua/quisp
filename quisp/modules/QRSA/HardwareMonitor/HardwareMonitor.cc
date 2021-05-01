@@ -1170,7 +1170,15 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
 
   if (type == ABSAType){
     // This should be treated almost the same as the QNodeType
-    error("TO BE IMPLEMENTED");
+    inf->neighborQNode_address = thisNode.par("address");
+    inf->address = thisNode.par("address");
+    return inf;
+  }
+
+  if (type == RGSsourceType){
+    inf->neighborQNode_address = thisNode.par("address");
+    inf->address = thisNode.par("address");
+    return inf;
   }
 
   if (type == HoMType) {
@@ -1203,8 +1211,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
   if (type == SPDCType) {
     error("TO BE IMPLEMENTED");
   }
-
-
+  
   error(
       "node "
       "types: QNode, EPPS and HoM. Not %s",
