@@ -9,10 +9,7 @@
 #ifndef QUISP_MODULES_REALTIMECONTROLLER_H_
 #define QUISP_MODULES_REALTIMECONTROLLER_H_
 
-#include <classical_messages_m.h>
-#include <modules/QNIC.h>
-#include <omnetpp.h>
-#include <vector>
+#include "IRealTimeController.h"
 
 using namespace omnetpp;
 
@@ -24,7 +21,7 @@ namespace modules {
  *
  *  \brief RealTimeController
  */
-class RealTimeController : public cSimpleModule {
+class RealTimeController : public IRealTimeController {
  private:
   int myAddress;
 

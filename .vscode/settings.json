@@ -1,7 +1,22 @@
 {
     "cSpell.words": [
+        "CONFIGFILE",
+        "CXXFLAGS",
         "Datarate",
+        "LDFLAGS",
+        "MKPATH",
+        "OBJS",
+        "OMNETPP",
+        "SRCS",
+        "cflags",
+        "eigen",
+        "googletest",
+        "ifneq",
         "inout",
+        "lgtest",
+        "msgheaders",
+        "qecho",
+        "quisp",
         "submodules"
     ]
 }
