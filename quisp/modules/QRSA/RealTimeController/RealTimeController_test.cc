@@ -7,12 +7,13 @@ class RTCTestTarget : public quisp::modules::RealTimeController {
  public:
   using quisp::modules::RealTimeController::initialize;
   using quisp::modules::RealTimeController::par;
-  RTCTestTarget() {
+  RTCTestTarget() : RealTimeController() {
     omnetpp::cParImpl* p = new omnetpp::cIntParImpl();
     const char* name = "address";
     p->setName(name);
     p->setIntValue(123);
     this->addPar(p);
+    this->setName("rtc_test_target");
   }
 };
 
