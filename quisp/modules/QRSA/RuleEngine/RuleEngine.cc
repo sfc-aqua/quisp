@@ -25,7 +25,7 @@ void RuleEngine::initialize() {
   cModule *hm = getParentModule()->getSubmodule("hm");
   hardware_monitor = check_and_cast<HardwareMonitor *>(hm);
   cModule *rt = getParentModule()->getSubmodule("rt");
-  realtime_controller = check_and_cast<RealTimeController *>(rt);  // Just for qubit color update and Pauli error elimination
+  realtime_controller = check_and_cast<IRealTimeController *>(rt);  // Just for qubit color update and Pauli error elimination
   // TODO CHECK: Is this doable?
   cModule *rd = getParentModule()->getSubmodule("rd");
   routingdaemon = check_and_cast<RoutingDaemon *>(rd);
@@ -73,7 +73,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   if (dynamic_cast<EmitPhotonRequest *>(msg) != nullptr) {  // From self.
     EmitPhotonRequest *pk = check_and_cast<EmitPhotonRequest *>(msg);
     cModule *rtc = getParentModule()->getSubmodule("rt");
-    RealTimeController *realtime_controller = check_and_cast<RealTimeController *>(rtc);
+    IRealTimeController *realtime_controller = check_and_cast<IRealTimeController *>(rtc);
 
     // Terminate emission if trial is over already (e.g. the neighbor ran out of free qubits and the BSA already returned the results)
     if (burstTrial_outdated(pk->getTrial(), pk->getQnic_address())) {

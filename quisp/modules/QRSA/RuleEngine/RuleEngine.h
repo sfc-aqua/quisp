@@ -17,7 +17,7 @@
 #include "classical_messages_m.h"
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
-#include "modules/QRSA/RealTimeController/RealTimeController.h"
+#include "modules/QRSA/RealTimeController/IRealTimeController.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
 #include "modules/QUBIT.h"
 
@@ -126,7 +126,7 @@ class RuleEngine : public cSimpleModule {
   sentQubitIndexTracker *tracker;
   HardwareMonitor *hardware_monitor;
   RoutingDaemon *routingdaemon;
-  RealTimeController *realtime_controller;
+  IRealTimeController *realtime_controller;
   int *qnic_burst_trial_counter;
   typedef std::map<int, bool> trial_tracker;  // trial index, false or true (that trial is over or not)
   qnicResources *allResources;  // Size will be defined in initialization. If 3 qnic types, then size is 3. Type defined in QUBIT.h
