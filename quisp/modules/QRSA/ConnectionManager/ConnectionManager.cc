@@ -16,6 +16,8 @@ namespace quisp {
 namespace modules {
 
 void ConnectionManager::initialize() {
+
+  std::cout<<"connection manager booted"<<std::endl;
   routing_daemon = check_and_cast<RoutingDaemon *>(getParentModule()->getSubmodule("rd"));
   hardware_monitor = check_and_cast<HardwareMonitor *>(getParentModule()->getSubmodule("hm"));
   my_address = par("address");
@@ -44,6 +46,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     // destination address and source address
     int actual_dst = req->getActual_destAddr();
     int actual_src = req->getActual_srcAddr();
+    std::cout<<"source: "<<actual_src<< " destination: "<<actual_dst<<std::endl;
     if (actual_dst == my_address) {
       // got ConnectionSetupRequest and return the response
       respondToRequest(req);
@@ -52,12 +55,21 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     }
 
     int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
+
     auto dst_inf = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
+    if (dst_inf != nullptr){
+      std::cout<<"proper pointer"<<std::endl;
+    }else{
+      error("dst inf is null");
+    }
     bool is_qnic_available = !isQnicBusy(dst_inf->qnic.address);
     bool requested_by_myself = actual_src == my_address;
-
+    std::cout<<"destination: "<<dst_inf->qnic.address<<std::endl;
+    
     if (requested_by_myself) {
+      std::cout<<"requested by myself"<<std::endl;
       if (is_qnic_available) {
+        std::cout<<"qnic available"<<std::endl;
         // reserve the qnic and relay the request to the next node
         relayRequestToNextHop(req);
         return;
@@ -207,11 +219,13 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     int actual_dst = req->getActual_destAddr();
     int actual_src = req->getActual_srcAddr();
     // here absa version of response
+    // 1. get the intermediate ABSA and source nodes
     // vector for rgs source node
     std::map<int, std::vector<int>> rgs_nodes;
     // vector for rgs measurement node
     std::map<int, std::vector<int>> measurement_nodes;
-    
+    // 2. 
+    std::cout<<"request arrived!"<<"\n";
 
   }else{
     // Taking qnic information of responder node.
@@ -488,7 +502,6 @@ void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
   int initiator_addr = req->getActual_srcAddr();  // initiator address (to get input qnic)
   int dst_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(responder_addr);
   int src_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
-
   if (dst_qnic_addr == -1) {
     error("QNIC to destination not found");
   }
@@ -496,7 +509,10 @@ void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
   // Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
   auto dst_info = hardware_monitor->findConnectionInfoByQnicAddr(dst_qnic_addr);
   auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(src_qnic_addr);
-
+  
+  if (dst_info == nullptr || src_info == nullptr){
+    error("dst_info or src_info cannot be found");
+  }
   int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
   int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
   int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();
@@ -509,6 +525,7 @@ void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
   req->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
   req->setStack_of_linkCosts(num_accumulated_costs, dst_info->quantum_link_cost);
   req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
+
 
   bool is_dst_qnic_reserved = isQnicBusy(dst_info->qnic.address);
   bool is_src_qnic_reserved = false;
@@ -596,6 +613,9 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
   int local_qnic_address_to_actual_src = routing_daemon->return_QNIC_address_to_destAddr(actual_src);
   auto dst_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
   auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
+  if (dst_info == nullptr || src_info == nullptr){
+    error("dst_info or src_info cannot be found");
+  }
   if (my_address != actual_dst && my_address != actual_src) {
     releaseQnic(dst_info->qnic.address);
     releaseQnic(src_info->qnic.address);

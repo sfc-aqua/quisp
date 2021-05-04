@@ -18,6 +18,7 @@ Define_Module(RuleEngine);
 using namespace rules;
 
 void RuleEngine::initialize() {
+  std::cout<<"RuleEngine Booted"<<std::endl;
   // HardwareMonitor's neighbor table is checked in the initialization stage of the simulation
   // This assumes the topology never changes throughout the simulation.
   // If dynamic change in topology is required, recoding this is needed.
@@ -37,6 +38,7 @@ void RuleEngine::initialize() {
   // recog_resSignal = registerSignal("recog_res");
   actual_resSignal = registerSignal("actual_res");
 
+
   terminated_qnic = new bool[number_of_qnics_all];
   // if there are 2 qnics, 1 qnic_r, and 2 qnic_rp,
   // then trial_index[0~1] is assigned for qnics, trial_index[2~2] for qnic_r and trial_index[3~4] for qnic_rp....
@@ -46,7 +48,6 @@ void RuleEngine::initialize() {
     qnic_burst_trial_counter[i] = 0;
     terminated_qnic[i] = false;
   }
-
   Busy_OR_Free_QubitState_table = new QubitStateTable[QNIC_N];
   Busy_OR_Free_QubitState_table[QNIC_E] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_E], QNIC_E);
   Busy_OR_Free_QubitState_table[QNIC_R] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_R], QNIC_R);

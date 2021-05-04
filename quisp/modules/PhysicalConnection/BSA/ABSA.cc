@@ -9,7 +9,6 @@ This file explains the behaviour of the ABSA node
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <modules/QRSA/HardwareMonitor/HardwareMonitor.h>
 
 using namespace omnetpp;
 using namespace quisp::messages;

@@ -49,7 +49,9 @@ module RGS_source
                 address = address;
                 //@display("p=110.05918,124.85208;is=vl");
                 @display("p=171,33");
-                number_of_qnics = sizeof(quantum_port);
+                number_of_qnics = sizeof(quantum_rgs_source_port);
+                //number_of_qnics = 0;
+                //number_of_qnics_r = sizeof(quantum_rgs_source_port);
                 number_of_qnics_r = 0;
                 number_of_qnics_rp = 0;
         }

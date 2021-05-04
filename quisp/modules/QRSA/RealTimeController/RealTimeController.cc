@@ -17,6 +17,7 @@ Define_Module(RealTimeController);
 
 void RealTimeController::initialize() {
   EV << "RealTimeController booted\n";
+  std::cout<<"RealTimeController booted"<<std::endl;
   myAddress = par("address");
 }
 

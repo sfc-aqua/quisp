@@ -42,6 +42,7 @@ void HardwareMonitor::initialize(int stage) {
   num_qnic_r = par("number_of_qnics_r");
   num_qnic = par("number_of_qnics");
   num_qnic_total = num_qnic + num_qnic_r + num_qnic_rp;
+  std::cout<<"num_qnics"<<num_qnic_total<<std::endl;
 
   /* This is used to keep your own tomography data, and also to match and store the received partner's tomography data */
   // Assumes link tomography only between neighbors.
@@ -68,7 +69,7 @@ void HardwareMonitor::initialize(int stage) {
     all_temporal_tomography_runningtime_holder[i].tomography_measurements = -1;
     all_temporal_tomography_runningtime_holder[i].tomography_time = -1;
   }
-
+  
   /*This keeps which node is connected to which local qnic.*/
   tomography_output_filename = par("tomography_output_filename").str();
   file_dir_name = par("file_dir_name").str();
@@ -79,7 +80,7 @@ void HardwareMonitor::initialize(int stage) {
   Purification_type = par("Purification_type");
   num_measure = par("num_measure");
   my_address = par("address");
-
+  
   if (stage == 0) {
     return;
   }
@@ -1096,6 +1097,7 @@ std::unique_ptr<ConnectionSetupInfo> HardwareMonitor::findConnectionInfoByQnicAd
 
 // This neighbor table includes all neighbors of qnic, qnic_r and qnic_rp
 void HardwareMonitor::prepareNeighborTable() {
+  std::cout<<"neighbor table preparation"<<std::endl;
   // Traverse through all local qnics to check where they are connected to.
   // HoM and EPPS will be ignored in this case.
   for (int index = 0; index < num_qnic; index++) {
