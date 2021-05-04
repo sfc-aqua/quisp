@@ -510,9 +510,6 @@ void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
   auto dst_info = hardware_monitor->findConnectionInfoByQnicAddr(dst_qnic_addr);
   auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(src_qnic_addr);
   
-  if (dst_info == nullptr || src_info == nullptr){
-    error("dst_info or src_info cannot be found");
-  }
   int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
   int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
   int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();
@@ -613,9 +610,7 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
   int local_qnic_address_to_actual_src = routing_daemon->return_QNIC_address_to_destAddr(actual_src);
   auto dst_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
   auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
-  if (dst_info == nullptr || src_info == nullptr){
-    error("dst_info or src_info cannot be found");
-  }
+
   if (my_address != actual_dst && my_address != actual_src) {
     releaseQnic(dst_info->qnic.address);
     releaseQnic(src_info->qnic.address);

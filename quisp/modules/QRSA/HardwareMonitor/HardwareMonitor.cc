@@ -1141,7 +1141,7 @@ cModule *HardwareMonitor::getQNode() {
   cModule *currentModule = getParentModule();
   try {
     // Assumes the node in a network has a type QNode
-    while (currentModule->getModuleType() != QNodeType && currentModule->getModuleType() != ABSAType && currentModule->getModuleType() != RGSsourceType) {
+    while (currentModule->getModuleType() != QNodeType && currentModule->getModuleType() != RGSsourceType) {
       currentModule = currentModule->getParentModule();
     }
     return currentModule;
@@ -1167,24 +1167,17 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
     return inf;
   }
 
-  if (type == ABSAType){
-    // This should be treated almost the same as the QNodeType
-    inf->neighborQNode_address = thisNode.par("address");
-    inf->address = thisNode.par("address");
-    return inf;
-  }
-
   if (type == RGSsourceType){
     inf->neighborQNode_address = thisNode.par("address");
     inf->address = thisNode.par("address");
     return inf;
   }
 
-  if (type == HoMType) {
+  if (type == HoMType || type == ABSAType) {
     EV_DEBUG << thisNode.getModuleType()->getFullName() << " == " << HoMType->getFullName() << "\n";
     cModule *controller = thisNode.getSubmodule("Controller");
     if (controller == nullptr) {
-      error("HoM Controller not found");
+      error("HoM Controller or ABSA Controller not found");
     }
 
     int address_one = controller->par("neighbor_address");
@@ -1192,9 +1185,9 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
     int myaddress = par("address");
 
     EV_DEBUG << "myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << controller->getFullName() << "\n";
-
+    EV<<address_one<<":"<<address_two<<"\n";
     if (address_one == -1 && address_two == -1) {
-      error("HoM Controller is not initialized properly");
+      error("HoM Controller or ABSA Controller is not initialized properly");
     }
 
     if (address_one == myaddress) {

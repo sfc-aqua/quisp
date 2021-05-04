@@ -159,12 +159,29 @@ packet BSMtimingNotifier extends header
     int internal_qnic_address = -1;
 }
 
+packet ABSMtimingNotifier extends header
+{
+    simtime_t timing_at;
+    int accepted_photons_per_sec;
+    double interval;
+    int number_of_qubits;
+    int internal_qnic_index = -1;
+    int internal_qnic_address = -1;
+}
+
 packet BSAtimeoutChecker extends header
 {
     double trial_id;
 }
 
+packet ABSAtimeoutChecker extends header
+{
+    double trial_id;
+}
+
 packet BSAstart extends header{}
+
+packet ABSAstart extends header{}
 
 packet EPPStimingNotifier extends header
 {
@@ -204,7 +221,18 @@ packet BSAresult extends header
 
 }
 
+packet ABSAresult extends header
+{
+    bool entangled;
+
+}
+
 packet BSAfinish extends header{
+    bool entangled;
+
+}
+
+packet ABSAfinish extends header{
     bool entangled;
 
 }
@@ -214,6 +242,12 @@ packet CombinedBSAresults extends BSMtimingNotifier
 {
     bool list_of_failed[];
 }
+
+packet CombinedABSAresults extends BSMtimingNotifier
+{
+    bool list_of_failed[];
+}
+
 
 //Used for MSM. BSA results are sent back to EPPS. EPPS will generate the next order based on that.
 packet CombinedBSAresults_epps extends header
@@ -262,37 +296,6 @@ packet SwappingResult extends header{
     QNIC_type new_partner_qnic_type;
 }
 
-
-packet ABSAResult extends header{
-    unsigned long RuleSet_id;
-    int Rule_id;
-    int action_index;
-
-    int left_Dest;
-    int right_Dest;
-
-    int new_partner_left;
-    int new_partner_qnic_index_left;
-    int new_partner_qnic_address_left;
-    int measured_qubit_index_left;
-    QNIC_type new_partner_qnic_type_left;
-
-    int new_partner_right;
-    int new_partner_qnic_index_right;
-    int new_partner_qnic_address_right;
-    int measured_qubit_index_right;
-    QNIC_type new_partner_qnic_type_right;
-
-    int operation_type_left;
-    int operation_type_right;
-
-    int operation_type; // when this would reach the destination
-    int new_partner;
-    int new_partner_qnic_index;
-    int new_partner_qnic_address;
-    int measured_qubit_index;
-    QNIC_type new_partner_qnic_type;
-}
 
 packet InternalRuleSetForwarding extends header{
     unsigned long RuleSet_id;

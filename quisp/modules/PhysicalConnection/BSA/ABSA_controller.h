@@ -62,19 +62,18 @@ class ABSAController : public cSimpleModule {
   virtual void initialize(int stage) override;
   virtual int numInitStages() const override { return 1; };
   virtual void standaloneInitializer();
-  virtual void internodeInitializer();
   virtual void handleMessage(cMessage* msg) override;
   virtual void BubbleText(const char* txt);
   virtual double calculateEmissionStartTime(double timing, double distance_to_node, double c);
   virtual double calculateTimeToTravel(double distance, double c);
-  virtual BSMtimingNotifier* generateNotifier(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
+  virtual ABSMtimingNotifier* generateNotifier(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
                                               int photon_detection_per_sec, int max_buffer);
-  virtual CombinedBSAresults* generateNotifier_c(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
+  virtual CombinedABSAresults* generateNotifier_c(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
                                                  int photon_detection_per_sec, int max_buffer);
   virtual cModule* getQNode();
-  virtual void checkNeighborAddress(bool receiver);
-  virtual void checkNeighborBuffer(bool receiver);
-  virtual void updateIDE_Parameter(bool receiver);
+  virtual void checkNeighborAddress();
+  virtual void checkNeighborBuffer();
+  virtual void updateIDE_Parameter();
   virtual void sendNotifiers();
   virtual void pushToABSAresults(bool attempt_success);
   virtual int getStoredABSAresultsSize();

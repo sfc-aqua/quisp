@@ -293,26 +293,26 @@ void RuleEngine::handleMessage(cMessage *msg) {
     updateResources_EntanglementSwapping(swapr);
   } 
   
-  else if (dynamic_cast<BSAresult *>(msg) != nullptr) {
-      ABSAResult *pkt = check_and_cast<ABSAResult *>(msg);
-    // here next add resources
-    int src = pkt->getSrcAddr();
-    int dest = pkt->getDestAddr();
-    process_id ABSA_id;
-    //swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
-    //swapping_id.rule_id = pkt->getRule_id();
-    //swapping_id.index = pkt->getAction_index();
+  // else if (dynamic_cast<ABSAresult *>(msg) != nullptr) {
+  //   ABSAResult *pkt = check_and_cast<ABSAResult *>(msg);
+  //   // here next add resources
+  //   int src = pkt->getSrcAddr();
+  //   int dest = pkt->getDestAddr();
+  //   process_id ABSA_id;
+  //   //swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
+  //   //swapping_id.rule_id = pkt->getRule_id();
+  //   //swapping_id.index = pkt->getAction_index();
 
-    absa_result absar;  // result of entanglement swapping
-    //absar.id = swapping_id;
-    absar.new_partner = pkt->getNew_partner();
-    absar.new_partner_qnic_index = pkt->getNew_partner_qnic_index();
-    absar.new_partner_qnic_address = pkt->getNew_partner_qnic_address();
-    absar.new_partner_qnic_type = pkt->getNew_partner_qnic_type();
-    absar.measured_qubit_index = pkt->getMeasured_qubit_index();
-    absar.operation_type = pkt->getOperation_type();
-    //updateResources_EntanglementSwapping(absar);
-  } 
+  //   absa_result absar;  // result of entanglement swapping
+  //   //absar.id = swapping_id;
+  //   absar.new_partner = pkt->getNew_partner();
+  //   absar.new_partner_qnic_index = pkt->getNew_partner_qnic_index();
+  //   absar.new_partner_qnic_address = pkt->getNew_partner_qnic_address();
+  //   absar.new_partner_qnic_type = pkt->getNew_partner_qnic_type();
+  //   absar.measured_qubit_index = pkt->getMeasured_qubit_index();
+  //   absar.operation_type = pkt->getOperation_type();
+  //   //updateResources_EntanglementSwapping(absar);
+  // } 
   
   else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
     InternalRuleSetForwarding *pkt = check_and_cast<InternalRuleSetForwarding *>(msg);
