@@ -42,7 +42,6 @@ void HardwareMonitor::initialize(int stage) {
   num_qnic_r = par("number_of_qnics_r");
   num_qnic = par("number_of_qnics");
   num_qnic_total = num_qnic + num_qnic_r + num_qnic_rp;
-  std::cout<<"num_qnics"<<num_qnic_total<<std::endl;
 
   /* This is used to keep your own tomography data, and also to match and store the received partner's tomography data */
   // Assumes link tomography only between neighbors.
@@ -1052,7 +1051,6 @@ cModule *HardwareMonitor::getQnic(int qnic_index, QNIC_type qnic_type) {
   if (qnic_type >= QNIC_N) {
     error("invalid qnic type: %d", qnic_type);
   }
-
   cModule *qnic = getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);
   if (qnic == nullptr) {
     error("qnic(index: %d) not found.", qnic_index);
@@ -1097,7 +1095,6 @@ std::unique_ptr<ConnectionSetupInfo> HardwareMonitor::findConnectionInfoByQnicAd
 
 // This neighbor table includes all neighbors of qnic, qnic_r and qnic_rp
 void HardwareMonitor::prepareNeighborTable() {
-  std::cout<<"neighbor table preparation"<<std::endl;
   // Traverse through all local qnics to check where they are connected to.
   // HoM and EPPS will be ignored in this case.
   for (int index = 0; index < num_qnic; index++) {
@@ -1144,7 +1141,7 @@ cModule *HardwareMonitor::getQNode() {
   cModule *currentModule = getParentModule();
   try {
     // Assumes the node in a network has a type QNode
-    while (currentModule->getModuleType() != QNodeType) {
+    while (currentModule->getModuleType() != QNodeType && currentModule->getModuleType() != ABSAType && currentModule->getModuleType() != RGSsourceType) {
       currentModule = currentModule->getParentModule();
     }
     return currentModule;

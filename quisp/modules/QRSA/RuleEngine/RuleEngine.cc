@@ -44,14 +44,20 @@ void RuleEngine::initialize() {
   // then trial_index[0~1] is assigned for qnics, trial_index[2~2] for qnic_r and trial_index[3~4] for qnic_rp....
   qnic_burst_trial_counter = new int[number_of_qnics_all];
 
+
   for (int i = 0; i < number_of_qnics_all; i++) {
     qnic_burst_trial_counter[i] = 0;
     terminated_qnic[i] = false;
   }
+  
+  // here has error
   Busy_OR_Free_QubitState_table = new QubitStateTable[QNIC_N];
+  std::cout<<"qnic_e"<<QNIC_E<<std::endl;
   Busy_OR_Free_QubitState_table[QNIC_E] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_E], QNIC_E);
+  std::cout<<"here"<<std::endl;
   Busy_OR_Free_QubitState_table[QNIC_R] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_R], QNIC_R);
   Busy_OR_Free_QubitState_table[QNIC_RP] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_RP], QNIC_RP);
+
 
   // Tracks which qubit was sent first, second and so on per qnic(r,rp)
   tracker = new sentQubitIndexTracker[number_of_qnics_all];
@@ -64,6 +70,7 @@ void RuleEngine::initialize() {
 
   // running_processes = new RuleSetPtr[QNIC_N];//One process per QNIC for now. No multiplexing.
   // WATCH(assigned);
+  std::cout<<"Rule Engine Initialized"<<std::endl;
 }
 
 void RuleEngine::handleMessage(cMessage *msg) {
@@ -825,7 +832,9 @@ void RuleEngine::scheduleNextEmissionEvent(int qnic_index, int qnic_address, dou
 }
 
 RuleEngine::QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTable table, QNIC_type qnic_type) {
+  std::cout<<"Qubit state table initialization"<<std::endl;
   int qnics = -1;
+  std::cout<<"qnic type"<<qnic_type<<std::endl;
   switch (qnic_type) {
     case QNIC_E:
       qnics = number_of_qnics;
@@ -841,6 +850,9 @@ RuleEngine::QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTabl
   }
 
   int index = 0;
+  std::cout<<"num_qnics"<<qnics<<std::endl;
+
+  // std::cout<<"numq"<<hardware_monitor->getQnicNumQubits(i, qnic_type)<<std::endl;
   for (int i = 0; i < qnics; i++) {
     for (int x = 0; x < hardware_monitor->getQnicNumQubits(i, qnic_type); x++) {
       QubitAddr this_qubit = {parentAddress, i, x};

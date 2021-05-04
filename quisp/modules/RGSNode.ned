@@ -12,7 +12,7 @@ module RGS_source
     parameters:
         int bufferSize = default(10);
         int address = default(0);
-        int buffers = default(10); //default is defined as 10 in .ini file but can be changed independently in .ned file
+        int buffers = default(20); //default is defined as 10 in .ini file but can be changed independently in .ned file
         @display("bgl=4");
 
         string includeInTopo = "yes";
@@ -51,7 +51,6 @@ module RGS_source
                 @display("p=171,33");
                 number_of_qnics = sizeof(quantum_rgs_source_port);
                 //number_of_qnics = 0;
-                //number_of_qnics_r = sizeof(quantum_rgs_source_port);
                 number_of_qnics_r = 0;
                 number_of_qnics_rp = 0;
         }

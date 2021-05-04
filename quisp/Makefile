@@ -31,6 +31,7 @@ O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
 OBJS = \
+    $O/unit_test_main.o \
     $O/channels/QuantumChannel.o \
     $O/modules/dummyModule.o \
     $O/modules/Application/Application.o \
@@ -47,6 +48,7 @@ OBJS = \
     $O/modules/QRSA/ConnectionManager/ConnectionManager.o \
     $O/modules/QRSA/HardwareMonitor/HardwareMonitor.o \
     $O/modules/QRSA/RealTimeController/RealTimeController.o \
+    $O/modules/QRSA/RealTimeController/RealTimeController_test.o \
     $O/modules/QRSA/RoutingDaemon/RoutingDaemon.o \
     $O/modules/QRSA/RuleEngine/RuleEngine.o \
     $O/rules/Action.o \
@@ -107,11 +109,20 @@ endif
 # inserted from file 'makefrag':
 CXXFLAGS = -std=c++14
 
+OBJS := $(filter-out %_test.o,$(OBJS))
+OBJS := $(filter-out %unit_test_main.o,$(OBJS))
+
 # you can pass the file path you want to check as SRCS environment variable. see the example below.
 # $ SRCS=./quisp/modules/Application.cc make tidy # checks only Application.cc
 # $ make tidy # checks all sources
-SRCS?=./modules/*.cc ./rules/*.cc
-HEADERS=./modules/*.h ./rules/*.h
+SRCS?=$(shell find . -type f -name "*.cc" -print)
+HEADERS=$(shell find . -type f -name "*.h" -print)
+TEST_SRCS=$(filter %_test.cc,$(SRCS))
+TEST_OBJS=$(TEST_SRCS:.cc=.o)
+TEST_INCLUDE=-I../googletest/googletest/include/
+TEST_LIBS=-L../googletest/build/lib -lgtest
+TEST_MAIN_SRC=unit_test_main.cc
+TEST_MAIN_OBJ=$(O)/unit_test_main.o
 
 # check eigen3 is in PKG_CONFIG_PATH
 PKG_CONFIG_STATUS=$(shell pkg-config eigen3 --cflags 2>/dev/null 1>&2; echo $$?)
@@ -133,6 +144,23 @@ tidy:
 ci: msgheaders
 	@clang-format $(SRCS) $(HEADERS) -output-replacements-xml | grep -c "<replacement " -q ; if [ $$? -ne 1 ]; then echo "error: run make format and then push it again"; exit 1; fi
 	@clang-tidy -warnings-as-errors="*" -header-filter="./(rules|modules)/.*.h" $(SRCS) -- $(COPTS:-I.=-I./quisp)
+
+$(O)/$(TEST_OBJS): $(TEST_SRCS)
+	@$(MKPATH) $(dir $@)
+	$(qecho) "$<"
+	$(Q)$(CXX) -c $(CXXFLAGS) $(COPTS) $(TEST_INCLUDE) -o $@ $<
+
+$(O)/$(TEST_MAIN_OBJ): $(TEST_MAIN_SRC)
+	@$(MKPATH) $(dir $@)
+	$(Q)$(CXX) -c $(TEST_INCLUDE) -o $@ $< $(CXXFLAGS)
+
+$(TARGET_DIR)/run_unit_test: $(O)/$(TEST_OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE) $(O)/$(TEST_MAIN_OBJ)
+	@$(MKPATH) $O
+	@echo Creating test executable:
+	$(Q)$(CXX) $(LDFLAGS) -lpthread -o $(TARGET_DIR)/run_unit_test $(O)/$(TEST_OBJS) $(OBJS) $(O)/$(TEST_MAIN_OBJ) $(EXTRA_OBJS) $(LIBS) $(TEST_LIBS) $(OMNETPP_LIBS)
+
+run-unit-test: $(TARGET_DIR)/run_unit_test
+	$(TARGET_DIR)/run_unit_test
 
 # <<<
 #------------------------------------------------------------------------------
