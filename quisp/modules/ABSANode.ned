@@ -42,22 +42,10 @@ module ABSANode
                 fromQueue[sizeof(port)];
                 toQueue[sizeof(port)];
         }
-        queue[sizeof(port)]: Queue {
+        nic[sizeof(port)]: Queue {
             parameters:
-                address = index;
-                //buffer = 8;
-                //@display("p=198,43");
-                @display("p=79,61");
-        }
-        qrsa: quantumRoutingSoft {
-            parameters:
-                address = address;
-                //@display("p=110.05918,124.85208;is=vl");
-                @display("p=335,61");
-                number_of_qnics = sizeof(quantum_rgs_source_port);
-                //number_of_qnics = 0;
-                number_of_qnics_r = 0;
-                number_of_qnics_rp = 0;
+                address = 0;
+                @display("p=281.61,55.874996");
         }
         Controller: ABSAController {
             parameters:
@@ -77,19 +65,14 @@ module ABSANode
         }
     connections:
         for i=0..sizeof(port)-1 {
-            router.toQueue[i] --> queue[i].in;//Each routing port is connected to its own queue
-            router.fromQueue[i] <-- queue[i].out;
-            queue[i].line <--> port[i];
+            router.toQueue[i] --> nic[i].in;//Each routing port is connected to its own queue
+            router.fromQueue[i] <-- nic[i].out;
+            nic[i].line <--> port[i];
         }
 
         for i=0..sizeof(quantum_absa_port)-1 {
             quantum_absa_port[i] <--> ABSA.fromABSA_quantum_port++;
         }
-
-        router.rePort <--> qrsa.rePort;
-        router.cmPort <--> qrsa.cmPort;
-        router.hmPort <--> qrsa.hmPort;
-
         Controller.toRouter_port --> router.fromApp;
         router.toApp --> Controller.fromRouter_port;
         ABSA.toABSAController_port --> Controller.fromABSA_port;
