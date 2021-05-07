@@ -1161,13 +1161,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
   inf->type = type;
   inf->address = thisNode.par("address");
 
-  if (type == QNodeType) {
-    inf->neighborQNode_address = thisNode.par("address");
-    inf->address = thisNode.par("address");
-    return inf;
-  }
-
-  if (type == RGSsourceType){
+  if (type == QNodeType || type == RGSsourceType) {
     inf->neighborQNode_address = thisNode.par("address");
     inf->address = thisNode.par("address");
     return inf;

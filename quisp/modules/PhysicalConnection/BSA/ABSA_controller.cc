@@ -105,8 +105,6 @@ void ABSAController::handleMessage(cMessage *msg) {
     if (auto_resend_ABSANotifier == true && pk->getTrial_id() == current_trial_id) {
       // No photon came from both nodes. All of the resources must have been busy that time.
     }
-  } else {
-    std::cout << "Wait what?\n";
   }
   delete msg;
 }

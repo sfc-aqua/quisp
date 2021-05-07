@@ -18,7 +18,7 @@ Define_Module(RuleEngine);
 using namespace rules;
 
 void RuleEngine::initialize() {
-  std::cout<<"RuleEngine Booted"<<std::endl;
+  // std::cout<<"RuleEngine Booted"<<std::endl;
   // HardwareMonitor's neighbor table is checked in the initialization stage of the simulation
   // This assumes the topology never changes throughout the simulation.
   // If dynamic change in topology is required, recoding this is needed.
@@ -52,9 +52,7 @@ void RuleEngine::initialize() {
   
   // here has error
   Busy_OR_Free_QubitState_table = new QubitStateTable[QNIC_N];
-  std::cout<<"qnic_e"<<QNIC_E<<std::endl;
   Busy_OR_Free_QubitState_table[QNIC_E] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_E], QNIC_E);
-  std::cout<<"here"<<std::endl;
   Busy_OR_Free_QubitState_table[QNIC_R] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_R], QNIC_R);
   Busy_OR_Free_QubitState_table[QNIC_RP] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_RP], QNIC_RP);
 
@@ -70,7 +68,6 @@ void RuleEngine::initialize() {
 
   // running_processes = new RuleSetPtr[QNIC_N];//One process per QNIC for now. No multiplexing.
   // WATCH(assigned);
-  std::cout<<"Rule Engine Initialized"<<std::endl;
 }
 
 void RuleEngine::handleMessage(cMessage *msg) {
@@ -189,10 +186,23 @@ void RuleEngine::handleMessage(cMessage *msg) {
       EV << "This BSA request is internal\n";
       scheduleFirstPhotonEmission(pk, QNIC_R);
     }
-  } else if (dynamic_cast<EPPStimingNotifier *>(msg) != nullptr) {
+  } 
+  
+  else if (dynamic_cast<EPPStimingNotifier *>(msg) != nullptr) {
     bubble("EPPS");
     EPPStimingNotifier *pk = check_and_cast<EPPStimingNotifier *>(msg);
-  } else if (dynamic_cast<LinkTomographyRuleSet *>(msg) != nullptr) {
+  } 
+  
+  else if (dynamic_cast<ABSMtimingNotifier *>(msg) != nullptr){
+    bubble("ABSA timing notifier!");
+    ABSMtimingNotifier *pk = check_and_cast<ABSMtimingNotifier *>(msg);
+    // 1. Start generating Grpah State
+    // scheduleFirstPhotonEmissionForABSA(pk);
+    // 2. Decide when to start bursting photon emission
+
+  } 
+  
+  else if (dynamic_cast<LinkTomographyRuleSet *>(msg) != nullptr) {
     // Received a tomography rule set.
     LinkTomographyRuleSet *pk = check_and_cast<LinkTomographyRuleSet *>(msg);
     // std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
@@ -209,7 +219,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
     } else {
       error("Empty rule set...");
     }
-  } else if (dynamic_cast<PurificationResult *>(msg) != nullptr) {
+  }
+
+  else if (dynamic_cast<PurificationResult *>(msg) != nullptr) {
     // std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
     PurificationResult *pkt = check_and_cast<PurificationResult *>(msg);
     // std::cout<<"Presult from node["<<pkt->getSrcAddr()<<"]\n";

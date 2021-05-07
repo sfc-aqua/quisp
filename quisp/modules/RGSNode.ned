@@ -24,11 +24,6 @@ module RGS_source
         inout quantum_rgs_source_port[] @loose; //rgs source node only send qubits
 
     submodules:
-        app: Application {
-            parameters:
-                address = address;//share the same address within all inner modules
-                @display("p=30,43");
-        }
         router: Router {
             parameters:
                 address = address;

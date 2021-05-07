@@ -4,6 +4,8 @@ import ned.DatarateChannel;
 import ned.DelayChannel;
 import ned.IdealChannel;
 
+import modules.Application.Application;
+import modules.QRSA.quantumRoutingSoft;
 import modules.PhysicalConnection.BSA.*;
 import modules.QNIC.PhotonicSwitch.*;
 import modules.Common.Router;
@@ -15,7 +17,7 @@ module ABSANode
         int bufferSize = default(10);
         int address = default(0);
         int buffers = default(10); //default is defined as 10 in .ini file but can be changed independently in .ned file
-        @display("bgl=4");
+        @display("bgl=4;bgb=443,333");
 
         double absa_darkcount_probability = default(0);
         double absa_loss_rate = default(0);
@@ -32,6 +34,37 @@ module ABSANode
         inout port[] @loose;
 
     submodules:
+        router: Router {
+            parameters:
+                address = address;
+                @display("p=214,61");
+            gates:
+                fromQueue[sizeof(port)];
+                toQueue[sizeof(port)];
+        }
+        queue[sizeof(port)]: Queue {
+            parameters:
+                address = index;
+                //buffer = 8;
+                //@display("p=198,43");
+                @display("p=79,61");
+        }
+        qrsa: quantumRoutingSoft {
+            parameters:
+                address = address;
+                //@display("p=110.05918,124.85208;is=vl");
+                @display("p=335,61");
+                number_of_qnics = sizeof(quantum_rgs_source_port);
+                //number_of_qnics = 0;
+                number_of_qnics_r = 0;
+                number_of_qnics_rp = 0;
+        }
+        Controller: ABSAController {
+            parameters:
+                address = address;
+                photon_detection_per_sec = absa_photon_detection_per_sec;
+                @display("p=214,190");
+        }
         ABSA: ABSA {
             parameters:
                 address = address;//share the same address within all inner modules
@@ -40,41 +73,25 @@ module ABSANode
                 error_rate = absa_error_rate;
                 required_precision = absa_required_precision;
                 photon_detection_per_sec = absa_photon_detection_per_sec;
-                @display("p=207.855,120.689995");
-        }
-        router: Router {
-            parameters:
-                address = address;
-                @display("p=157,40");
-            gates:
-                fromQueue[sizeof(port)];
-                toQueue[sizeof(port)];
-        }
-        nic[sizeof(port)]: Queue {
-            parameters:
-                address = 0;
-                @display("p=281.61,55.874996");
-        }
-        Controller: ABSAController {
-            parameters:
-                address = address;
-                photon_detection_per_sec = absa_photon_detection_per_sec;
-                @display("p=103.55499,121.435");
+                @display("p=335,190");
         }
     connections:
-
         for i=0..sizeof(port)-1 {
-            router.toQueue[i] --> nic[i].in;//Each routing port is connected to its own queue
-            router.fromQueue[i] <-- nic[i].out;
-            nic[i].line <--> port[i];
+            router.toQueue[i] --> queue[i].in;//Each routing port is connected to its own queue
+            router.fromQueue[i] <-- queue[i].out;
+            queue[i].line <--> port[i];
         }
 
         for i=0..sizeof(quantum_absa_port)-1 {
             quantum_absa_port[i] <--> ABSA.fromABSA_quantum_port++;
         }
 
+        router.rePort <--> qrsa.rePort;
+        router.cmPort <--> qrsa.cmPort;
+        router.hmPort <--> qrsa.hmPort;
+
         Controller.toRouter_port --> router.fromApp;
         router.toApp --> Controller.fromRouter_port;
         ABSA.toABSAController_port --> Controller.fromABSA_port;
-        
+
 }

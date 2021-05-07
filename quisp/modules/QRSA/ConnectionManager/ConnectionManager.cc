@@ -16,8 +16,6 @@ namespace quisp {
 namespace modules {
 
 void ConnectionManager::initialize() {
-
-  std::cout<<"connection manager booted"<<std::endl;
   routing_daemon = check_and_cast<RoutingDaemon *>(getParentModule()->getSubmodule("rd"));
   hardware_monitor = check_and_cast<HardwareMonitor *>(getParentModule()->getSubmodule("hm"));
   my_address = par("address");
@@ -46,7 +44,6 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     // destination address and source address
     int actual_dst = req->getActual_destAddr();
     int actual_src = req->getActual_srcAddr();
-    std::cout<<"source: "<<actual_src<< " destination: "<<actual_dst<<std::endl;
     if (actual_dst == my_address) {
       // got ConnectionSetupRequest and return the response
       respondToRequest(req);
@@ -57,19 +54,14 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
 
     auto dst_inf = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
-    if (dst_inf != nullptr){
-      std::cout<<"proper pointer"<<std::endl;
-    }else{
+    if (dst_inf == nullptr){
       error("dst inf is null");
     }
     bool is_qnic_available = !isQnicBusy(dst_inf->qnic.address);
     bool requested_by_myself = actual_src == my_address;
-    std::cout<<"destination: "<<dst_inf->qnic.address<<std::endl;
     
     if (requested_by_myself) {
-      std::cout<<"requested by myself"<<std::endl;
       if (is_qnic_available) {
-        std::cout<<"qnic available"<<std::endl;
         // reserve the qnic and relay the request to the next node
         relayRequestToNextHop(req);
         return;
@@ -214,80 +206,101 @@ void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
  * a _configurable choice_, or even a _policy_ implementation.
  */
 void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
-  // absa
-  if (is_absa_connection){
-    int actual_dst = req->getActual_destAddr();
-    int actual_src = req->getActual_srcAddr();
-    // here absa version of response
-    // 1. get the intermediate ABSA and source nodes
-    // vector for rgs source node
-    std::map<int, std::vector<int>> rgs_nodes;
-    // vector for rgs measurement node
-    std::map<int, std::vector<int>> measurement_nodes;
-    // 2. 
-    std::cout<<"request arrived!"<<"\n";
+  // get the information for actual destination
+  int actual_dst = req->getActual_destAddr();
+  int actual_src = req->getActual_srcAddr();
 
-  }else{
-    // Taking qnic information of responder node.
-    int actual_dst = req->getActual_destAddr();
-    int actual_src = req->getActual_srcAddr();  // initiator address (to get input qnic)
+  // This must be -1
+  int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
+  if (local_qnic_address_to_actual_dst != -1) {
+    error("something error happen!");
+  }
 
-    // This must be -1
-    int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
-    if (local_qnic_address_to_actual_dst != -1) {
-      error("something error happen!");
-    }
+  // TODO: premise only one connection allowed btw, two nodes.
+  int local_qnic_address_to_actual_src = routing_daemon->return_QNIC_address_to_destAddr(actual_src);
+  if (local_qnic_address_to_actual_src == -1) {
+    error("This shouldn't happen!");
+  }
 
-    // TODO: premise only one connection allowed btw, two nodes.
-    int local_qnic_address_to_actual_src = routing_daemon->return_QNIC_address_to_destAddr(actual_src);
-    if (local_qnic_address_to_actual_src == -1) {
-      error("This shouldn't happen!");
-    }
+  auto dst_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
+  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
 
-    auto dst_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
-    auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
-
-    if (src_info == nullptr) {
+  if (src_info == nullptr) {
       error("src_info not found");
     }
-    QNIC_id_pair pair_info = {.fst = src_info->qnic, .snd = dst_info->qnic};
 
-    bool is_src_qnic_reserved = isQnicBusy(src_info->qnic.address);
-    bool is_dst_qnic_reserved = isQnicBusy(dst_info->qnic.address);
+  QNIC_id_pair pair_info = {.fst = src_info->qnic, .snd = dst_info->qnic};
 
-    // qnic already reserved, cannot respond to the request
-    if (is_src_qnic_reserved || is_dst_qnic_reserved) {
-      rejectRequest(req);
-      return;
+  bool is_src_qnic_reserved = isQnicBusy(src_info->qnic.address);
+  bool is_dst_qnic_reserved = isQnicBusy(dst_info->qnic.address);
+
+  // qnic already reserved, cannot respond to the request
+  if (is_src_qnic_reserved || is_dst_qnic_reserved) {
+    rejectRequest(req);
+    return;
+  }
+
+  // the number of steps
+  int hop_count = req->getStack_of_QNodeIndexesArraySize();
+
+  // path from source to destination
+  std::vector<int> path;
+  for (int i = 0; i < hop_count; i++) {
+    path.push_back(req->getStack_of_QNodeIndexes(i));
+  }
+  path.push_back(my_address);
+
+  // Those are common functions for both ordinal ES based connection and ABSA based connection
+
+  if (is_absa_connection){
+    // here absa version of response
+    // 1. get the intermediate ABSA and source nodes
+    // vector for rgs source node and measurement node
+    std::vector<int> rgs_nodes;
+    std::vector<int> measurement_nodes;
+    // 2. 
+    EV<<"Request has been arrived!"<<"\n";
+    // What the path info should be like?
+    // Premise: Assume there are only absa connections (odd components are source and even components are absa)
+
+    // eliminate first and the final nodes (End nodes)
+    // TODO currently, HoM things cannot be recognized as node
+    // ABSA should a one node
+    for (int i = 0; i < path.size(); i++){
+      EV<<"Node: "<<path[i]<<"\n";
+      if (i % 2 == 0){
+        // EV<<" measurement node"<<path[i]<<"\n";
+        measurement_nodes.push_back(path[i]);
+      }else{
+        // EV<<"rgs source"<<path[i]<<"\n";
+        rgs_nodes.push_back(path[i]);
+      }
     }
+    error("yay!");
 
-    // the number of steps
-    int hop_count = req->getStack_of_QNodeIndexesArraySize();
+  }else{
 
-    // path from source to destination
-    std::vector<int> path;
-    for (int i = 0; i < hop_count; i++) {
-      path.push_back(req->getStack_of_QNodeIndexes(i));
-    }
-    path.push_back(my_address);
+      int divisions = computePathDivisionSize(hop_count);
+      int *link_left = new int[divisions], *link_right = new int[divisions], *swapper = new int[divisions];
 
-    int divisions = computePathDivisionSize(hop_count);
-    int *link_left = new int[divisions], *link_right = new int[divisions], *swapper = new int[divisions];
+      // fillPathDivision should yield *exactly* the anticipated number of divisions.
+      if (fillPathDivision(path, 0, hop_count, link_left, link_right, swapper, 0) < divisions) {
+        error("Something went wrong in path division computation.");
+      }
 
-    // fillPathDivision should yield *exactly* the anticipated number of divisions.
-    if (fillPathDivision(path, 0, hop_count, link_left, link_right, swapper, 0) < divisions) {
-      error("Something went wrong in path division computation.");
-    }
       std::map<int, std::vector<int>> swapping_partners;
       for (int i = 0; i < divisions; i++) {
         std::vector<int> partners;
         if (swapper[i] > 0) {
+          EV << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n"; 
           EV_DEBUG << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
           partners.push_back(link_left[i]);
           partners.push_back(link_right[i]);
           swapping_partners.insert(std::make_pair(swapper[i], partners));
         }
       }
+
+      error("yay");
 
     /* TODO: Remember you have link costs <3
     * The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel
@@ -695,6 +708,13 @@ RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, in
   tomography->finalize();
 
   return tomography;
+}
+
+RuleSet *ConnectionManager::generateABSARuleSet(int owner, int partner, int num_of_measure){
+  unsigned long ruleset_id = createUniqueId();
+  RuleSet *absa = new RuleSet(ruleset_id, owner, partner);
+
+  return absa;
 }
 
 unsigned long ConnectionManager::createUniqueId() {

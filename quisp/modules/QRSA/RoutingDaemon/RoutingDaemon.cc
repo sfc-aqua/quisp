@@ -50,11 +50,10 @@ Define_Module(RoutingDaemon);
  * addressed.
  */
 void RoutingDaemon::initialize(int stage) {
+
   EV << "Routing Daemon booted\n";
 
-  EV << "Routing table initialized \n";
   myAddress = getParentModule()->par("address");
-
   // Topology creation for routing table
   cTopology *topo = new cTopology("topo");
   cMsgPar *yes = new cMsgPar();
@@ -109,6 +108,7 @@ void RoutingDaemon::initialize(int stage) {
     int gateIndex = parentModuleGate->getIndex();
     QNIC thisqnic;
     int destAddr = topo->getNode(i)->getModule()->par("address");
+    std::string nodetype = topo->getNode(i)->getModule()->par("nodeType");
     thisqnic.address = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
     thisqnic.type = (QNIC_type)(int)parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_type");
     thisqnic.index = parentModuleGate->getPreviousGate()->getOwnerModule()->getIndex();
