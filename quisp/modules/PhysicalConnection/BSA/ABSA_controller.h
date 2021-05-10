@@ -27,7 +27,6 @@ class ABSAController : public cSimpleModule {
   // cMessage *generatePacket;
   double speed_of_light_in_channel;
   cPar* c;
-  int time_out_count;
   int success_count = 0;
   // simsignal_t recog_resSignal;
  public:
@@ -54,14 +53,12 @@ class ABSAController : public cSimpleModule {
   ABSAresultTable results;
 
   bool handshake = false;
-  double ABSA_timeout = 1e-5;
   bool auto_resend_ABSANotifier;
   double current_trial_id;
 
  protected:
   virtual void initialize(int stage) override;
   virtual int numInitStages() const override { return 1; };
-  virtual void standaloneInitializer();
   virtual void handleMessage(cMessage* msg) override;
   virtual void BubbleText(const char* txt);
   virtual double calculateEmissionStartTime(double timing, double distance_to_node, double c);

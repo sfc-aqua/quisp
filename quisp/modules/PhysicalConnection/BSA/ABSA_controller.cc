@@ -8,50 +8,51 @@ Define_Module(ABSAController);
 ABSAController::ABSAController() {}
 
 void ABSAController::initialize(int stage) {
-  // Controller for ABSA measurement node
-  time_out_count = 0;
+  EV<<"ABSA controller booted"<<"\n";
+
   current_trial_id = dblrand();
   handshake = false;
   auto_resend_ABSANotifier = true;
-  ABSA_timeout = 1e-6;
+  // address of absa measurement node
   address = par("address");
-  standaloneInitializer();
-}
-
-// Initialization of the stand-alone ABSA module.
-void ABSAController::standaloneInitializer() {
-  // Just in case, check if the 2 quantum port of the node
+  
+  // ABSA must be connected two RGS source nodes
   if (getParentModule()->gateSize("quantum_absa_port") != 2) {
     error("No more or less than 2 neighbors are allowed for ABSA.", getParentModule()->gateSize("quantum_absa_port"));
     endSimulation();
   }
+  // Checking Neighbor information
   checkNeighborAddress();
   checkNeighborBuffer();
   updateIDE_Parameter();
 
+  // Should be parametrized?
   accepted_burst_interval = (double)1 / (double)photon_detection_per_sec;
+
+  // Packet to start absa process
   ABSAstart *generatePacket = new ABSAstart;
+
+  // emit the packets
   scheduleAt(simTime() + par("Initial_notification_timing_buffer"), generatePacket);
 }
 
-// This is invoked only once at the begining of the simulation.
-// This method sends 2 classical ABSA timing notifiers to neighbors (or to itself).
-// During the simulation, this method is not needed because this information is piggybacked when the node returns the results of entanglement attempt.
+// sending notifiers to neighbors
 void ABSAController::sendNotifiers() {
+  // calculate time to travel
+  // TODO: we would have to think about generation time of graph state
   double time = calculateTimeToTravel(max_neighbor_distance, speed_of_light_in_channel);  // When the packet reaches = simitme()+time
+  
+  // generate timing notifier for first node
   ABSMtimingNotifier *pk = generateNotifier(time, speed_of_light_in_channel, distance_to_neighbor, neighbor_address, accepted_burst_interval, photon_detection_per_sec, max_buffer);
   double first_nodes_timing = calculateEmissionStartTime(time, distance_to_neighbor, speed_of_light_in_channel);
   pk->setTiming_at(first_nodes_timing);  // Tell neighboring nodes to shoot photons so that the first one arrives at ABSA at the specified timing
-  if (receiver) {
-    pk->setInternal_qnic_index(qnic_index);
-    pk->setInternal_qnic_address(qnic_address);
-  }
 
-  ABSMtimingNotifier *pkt =
-      generateNotifier(time, speed_of_light_in_channel, distance_to_neighbor_two, neighbor_address_two, accepted_burst_interval, photon_detection_per_sec, max_buffer);
+  // generate timing notifier for second node
+  ABSMtimingNotifier *pkt = generateNotifier(time, speed_of_light_in_channel, distance_to_neighbor_two, neighbor_address_two, accepted_burst_interval, photon_detection_per_sec, max_buffer);
   double second_nodes_timing = calculateEmissionStartTime(time, distance_to_neighbor_two, speed_of_light_in_channel);
   pkt->setTiming_at(second_nodes_timing);  // Tell neighboring nodes to shoot photons so that the first one arrives at ABSA at the specified timing
   // If you want some uncertainty in timing calculation, maybe second_nodes_timing+uniform(-n,n) helps
+
   try {
     send(pk, "toRouter_port");  // send to port out. connected to local routing module (routing.localIn).
     send(pkt, "toRouter_port");
@@ -64,13 +65,14 @@ void ABSAController::sendNotifiers() {
   }
 }
 
+// handling message
 void ABSAController::handleMessage(cMessage *msg) {
 
   if (dynamic_cast<ABSAstart *>(msg) != nullptr) {
+    // when the absa process start, first  ABSA sends notifiers to neighbors
     sendNotifiers();
     delete msg;
     return;
-    // Create timeout
   } else if (dynamic_cast<ABSAresult *>(msg) != nullptr) {
     auto_resend_ABSANotifier = false;  // Photon is arriving. No need to auto reschedule next round. Wait for the last photon fron either node.
     bubble("ABSAresult accumulated");
@@ -82,7 +84,6 @@ void ABSAController::handleMessage(cMessage *msg) {
     if (prev + 1 != aft) {
       error("Nahnah nah!");
     }
-
   } else if (dynamic_cast<ABSAfinish *>(msg) != nullptr) {  // Last photon from either node arrived.
     bubble("ABSAresult accumulated");
     BSAfinish *pk = check_and_cast<BSAfinish *>(msg);
@@ -110,7 +111,6 @@ void ABSAController::handleMessage(cMessage *msg) {
 }
 
 // This method checks the address of the neighbors.
-// If it is a receiver, meaning that it is a internode, then it checks one neighbor address and stores its own QNode address.
 void ABSAController::checkNeighborAddress() {
   try {
     neighbor_address = getParentModule()->gate("quantum_absa_port$o", 0)->getNextGate()->getOwnerModule()->par("address");
@@ -268,10 +268,6 @@ void ABSAController::sendABSAresultsToNeighbors() {
     pk->setDestAddr(neighbor_address);
     pk->setList_of_failedArraySize(getStoredABSAresultsSize());
     pk->setKind(5);
-    if (receiver) {
-      pk->setInternal_qnic_index(qnic_index);
-      pk->setInternal_qnic_address(qnic_address);
-    }
 
     pkt = generateNotifier_c(time, speed_of_light_in_channel, distance_to_neighbor_two, neighbor_address_two, accepted_burst_interval, photon_detection_per_sec, max_buffer);
     double second_nodes_timing = calculateEmissionStartTime(time, distance_to_neighbor_two, speed_of_light_in_channel);

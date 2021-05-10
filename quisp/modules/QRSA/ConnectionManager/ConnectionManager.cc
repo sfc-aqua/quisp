@@ -256,8 +256,9 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     // here absa version of response
     // 1. get the intermediate ABSA and source nodes
     // vector for rgs source node and measurement node
+    // TODO: treat measurement node as a ordinal qnode
+    // So far, ABSA measurement is the same as HoM
     std::vector<int> rgs_nodes;
-    std::vector<int> measurement_nodes;
     // 2. 
     EV<<"Request has been arrived!"<<"\n";
     // What the path info should be like?
@@ -266,17 +267,11 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     // eliminate first and the final nodes (End nodes)
     // TODO currently, HoM things cannot be recognized as node
     // ABSA should a one node
-    for (int i = 0; i < path.size(); i++){
-      EV<<"Node: "<<path[i]<<"\n";
-      if (i % 2 == 0){
-        // EV<<" measurement node"<<path[i]<<"\n";
-        measurement_nodes.push_back(path[i]);
-      }else{
-        // EV<<"rgs source"<<path[i]<<"\n";
-        rgs_nodes.push_back(path[i]);
-      }
+    for (int i = 1; i < path.size()-1; i++){
+      // loop for path except end nodes
+      rgs_nodes.push_back(path[i]);
     }
-    error("yay!");
+
 
   }else{
 
@@ -299,8 +294,6 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
           swapping_partners.insert(std::make_pair(swapper[i], partners));
         }
       }
-
-      error("yay");
 
     /* TODO: Remember you have link costs <3
     * The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel
@@ -710,9 +703,12 @@ RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, in
   return tomography;
 }
 
-RuleSet *ConnectionManager::generateABSARuleSet(int owner, int partner, int num_of_measure){
+RuleSet *ConnectionManager::generateRGSsourceRuleSet(int owner, int partner, int num_of_measure){
   unsigned long ruleset_id = createUniqueId();
+  
+  int rule_index = 0;
   RuleSet *absa = new RuleSet(ruleset_id, owner, partner);
+  Rule *rule = new Rule(ruleset_id, rule_index);
 
   return absa;
 }

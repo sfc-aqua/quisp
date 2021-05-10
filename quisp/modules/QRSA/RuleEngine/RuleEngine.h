@@ -89,6 +89,11 @@ struct absa_result {
   int operation_type;
 };
 
+// structure for graph state information
+struct graph_info {
+
+};
+
 // Process = RuleSet
 typedef struct {
   int ownner_addr;
@@ -153,6 +158,7 @@ class RuleEngine : public cSimpleModule {
   virtual void finish() override;
   virtual void handleMessage(cMessage *msg) override;
   virtual cModule *getQNode();
+  virtual cModule *getRGSsource();
   virtual int countFreeQubits_inQnic(QubitStateTable table, int qnic_index);
   virtual int getOneFreeQubit_inQnic(QubitStateTable table, int qnic_index);
   virtual QubitStateTable setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
@@ -182,6 +188,7 @@ class RuleEngine : public cSimpleModule {
   virtual void Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int index);
 
   virtual void updateResources_EntanglementSwapping(swapping_result swapr);
+  virtual void generateInternalGraphState(std::vector<int> num_qubits);
 };
 
 }  // namespace modules

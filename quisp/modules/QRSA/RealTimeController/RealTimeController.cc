@@ -39,6 +39,23 @@ void RealTimeController::EmitPhoton(int qnic_index, int qubit_index, QNIC_type q
   }
 }
 
+void RealTimeController::EmitPhotonForRGS(int qnic_index, int qubit_index, QNIC_type qnic_type){
+  Enter_Method("EmitPhotonForRGS()");
+  cModule *rgs_source = getRGSsource();
+
+  try {
+    // EV<<"EmitPhoton for qnic["<<qnic_index<<"] and qubit["<<qubit_index<<"]\n\n\n";
+    cModule *qubit = nullptr;
+    if (qnic_type >= QNIC_N) error("Only 3 qnic types are currently recognized....");  // avoid segfaults <3
+    qubit = rgs_source->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit", qubit_index);
+    StationaryQubit *q = check_and_cast<StationaryQubit *>(qubit);
+    q->emitPhoton(STATIONARYQUBIT_PULSE_BOUND);
+  } catch (std::exception &e) {
+    error("Some error occurred in RealTimeController. Here!. Maybe the qnic/statQubit couldnt be found. Have you changed the namings?");
+  }
+
+}
+
 cModule *RealTimeController::getQNode() {
   // We know that Connection manager is not the QNode, so start from the parent.
   cModule *currentModule = getParentModule();
@@ -55,6 +72,25 @@ cModule *RealTimeController::getQNode() {
   }
   return currentModule;
 }
+
+cModule *RealTimeController::getRGSsource() {
+  // We know that Connection manager is not the QNode, so start from the parent.
+  cModule *currentModule = getParentModule();
+  try {
+    // Assumes the node in a network has a type QNode
+    cModuleType *RGSsourceType = cModuleType::get("modules.RGS_source");
+    while (currentModule->getModuleType() != RGSsourceType) {
+      currentModule = currentModule->getParentModule();
+    }
+    return currentModule;
+  } catch (std::exception &e) {
+    error("No module with QNode type found. Have you changed the type name in ned file?");
+    endSimulation();
+  }
+  return currentModule;
+}
+
+
 
 void RealTimeController::ReInitialize_StationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed) {
   bool success;

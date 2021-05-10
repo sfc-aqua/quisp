@@ -194,9 +194,12 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } 
   
   else if (dynamic_cast<ABSMtimingNotifier *>(msg) != nullptr){
-    bubble("ABSA timing notifier!");
+    bubble("ABSA timing notified!");
     ABSMtimingNotifier *pk = check_and_cast<ABSMtimingNotifier *>(msg);
     // 1. Start generating Grpah State
+    std::vector<int> num_qubits = {10, 10};
+    generateInternalGraphState(num_qubits);
+    error("yay");
     // scheduleFirstPhotonEmissionForABSA(pk);
     // 2. Decide when to start bursting photon emission
 
@@ -757,6 +760,33 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
   }
 }
 
+void RuleEngine::generateInternalGraphState(std::vector<int> req_qubits){
+  EV<<"Start generating graph state"<<"\n";
+
+  // The number of qubits in each qnic
+  // [10, 10, ..., 9] ... the number of qubits for each qnic.
+  if (req_qubits.size() != number_of_qnics){
+    error("The size of required qubits must be the same as the number of qnics");
+  }
+  QNIC_type qnic_type = QNIC_E;
+  for (int qnic_index=0; qnic_index<number_of_qnics; qnic_index++){
+    // get the instance of qnic
+    cModule *qnic = getRGSsource()->getSubmodule(QNIC_names[qnic_type], qnic_index);
+    int num_qubits = qnic->par("numBuffer");
+
+    if (num_qubits < req_qubits.at(qnic_index)){
+      error("Not enough qubits found");
+    }
+    std::cout<<"req qubits"<<req_qubits.at(qnic_index)<<std::endl;
+    // loop for qubits
+    for (int qubit_index = 0; qubit_index < req_qubits.at(qnic_index); qubit_index++){
+      std::cout<<"qubit index"<<qubit_index<<std::endl;
+      realtime_controller->EmitPhotonForRGS(qnic_index, qubit_index, qnic_type);
+    }
+  }
+  error("stop");
+}
+
 bool RuleEngine::burstTrial_outdated(int this_trial, int qnic_address) {
   bool stop_emitting = false;
   if (this_trial != qnic_burst_trial_counter[qnic_address]) {
@@ -862,7 +892,6 @@ RuleEngine::QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTabl
   }
 
   int index = 0;
-  std::cout<<"num_qnics"<<qnics<<std::endl;
 
   // std::cout<<"numq"<<hardware_monitor->getQnicNumQubits(i, qnic_type)<<std::endl;
   for (int i = 0; i < qnics; i++) {
@@ -1165,6 +1194,21 @@ cModule *RuleEngine::getQNode() {
     return currentModule;
   } catch (std::exception &e) {
     error("No module with QNode type found. Have you changed the type name in ned file?");
+    endSimulation();
+  }
+  return currentModule;
+}
+
+cModule *RuleEngine::getRGSsource(){
+  cModule *currentModule = getParentModule();
+  try {
+    cModuleType *RGSsourceType = cModuleType::get("modules.RGS_source");
+    while (currentModule->getModuleType() != RGSsourceType){
+      currentModule = currentModule->getParentModule();
+    }
+    return currentModule;
+  } catch (std::exception &e){
+    error("No module with RGS source type found.");
     endSimulation();
   }
   return currentModule;

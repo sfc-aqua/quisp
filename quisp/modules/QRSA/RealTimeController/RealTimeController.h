@@ -29,9 +29,11 @@ class RealTimeController : public IRealTimeController {
   virtual void initialize() override;
   virtual void handleMessage(cMessage* msg) override;
   virtual cModule* getQNode();
+  virtual cModule* getRGSsource();
 
  public:
   virtual void EmitPhoton(int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse);
+  virtual void EmitPhotonForRGS(int qnic_index, int qubit_index, QNIC_type);
   virtual void ReInitialize_StationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed);
 };
 

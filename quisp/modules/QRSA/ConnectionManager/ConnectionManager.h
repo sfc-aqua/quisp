@@ -94,7 +94,7 @@ class ConnectionManager : public cSimpleModule {
 
   RuleSet *generateTomographyRuleSet(int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index, int num_resources);
   RuleSet *generateEntanglementSwappingRuleSet(int owner, SwappingConfig conf);
-  RuleSet *generateABSARuleSet(int owner, int partner, int num_of_measure);
+  RuleSet *generateRGSsourceRuleSet(int owner, int partner, int num_of_measure);
   SwappingConfig generateSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners, std::vector<QNIC_pair_info> qnics,
                                         int num_resources);
 
