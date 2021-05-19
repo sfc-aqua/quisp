@@ -15,7 +15,6 @@ class IRealTimeController : public cSimpleModule {
  protected:
   virtual void initialize() = 0;
   virtual void handleMessage(cMessage* msg) = 0;
-  virtual cModule* getQNode() = 0;
 
  public:
   virtual void EmitPhoton(int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse) = 0;
