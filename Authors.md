@@ -32,9 +32,10 @@
 * Samuel 'Hyensoo' Choi
 * Sara Metwalli
 * Makoto Nakai
+* Naphan Benchasattabuse
 
 
-## Developers of earlier-generation simulators (no direct code overap):
+## Developers of earlier-generation simulators (no direct code overlap):
 
 * Thaddeus Ladd
 * Luciano Aparicio
