@@ -7,6 +7,7 @@
         "MKPATH",
         "OBJS",
         "OMNETPP",
+        "Qubit",
         "SRCS",
         "cflags",
         "eigen",
@@ -16,6 +17,7 @@
         "lgtest",
         "msgheaders",
         "qecho",
+        "qnic",
         "quisp",
         "submodules"
     ]
