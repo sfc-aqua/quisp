@@ -1,9 +1,7 @@
 #ifndef QUISP_MODULES_IREALTIMECONTROLLER_H_
 #define QUISP_MODULES_IREALTIMECONTROLLER_H_
 
-#include <classical_messages_m.h>
 #include <modules/QNIC.h>
-#include <vector>
 
 namespace quisp {
 namespace modules {

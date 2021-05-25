@@ -7,7 +7,7 @@
  *  \brief RealTimeController
  */
 #include "RealTimeController.h"
-#include "utils/ComponentProvider.h"
+#include <utils/ComponentProvider.h>
 
 namespace quisp {
 namespace modules {
@@ -23,21 +23,13 @@ void RealTimeController::handleMessage(cMessage *msg) {}
 
 void RealTimeController::EmitPhoton(int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse) {
   Enter_Method("EmitPhoton()");
-  try {
-    auto *q = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
-    q->emitPhoton(pulse);
-  } catch (std::exception &e) {
-    error("Some error occurred in RealTimeController. Here!. Maybe the qnic/statQubit couldnt be found. Have you changed the namings?");
-  }
+  auto *q = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
+  q->emitPhoton(pulse);
 }
 
 void RealTimeController::ReInitialize_StationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed) {
-  try {
-    auto *q = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
-    q->setFree(consumed);
-  } catch (std::exception &e) {
-    error("Some error occured in RealTimeController. Maybe the qnic/statQubit couldnt be found. Have you changed the namings?");
-  }
+  auto *q = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
+  q->setFree(consumed);
 }
 }  // namespace modules
 }  // namespace quisp

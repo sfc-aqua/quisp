@@ -9,10 +9,8 @@
 #ifndef QUISP_MODULES_REALTIMECONTROLLER_H_
 #define QUISP_MODULES_REALTIMECONTROLLER_H_
 
+#include <utils/ComponentProvider.h>
 #include "IRealTimeController.h"
-#include "utils/ComponentProvider.h"
-
-using namespace omnetpp;
 
 namespace quisp {
 namespace modules {

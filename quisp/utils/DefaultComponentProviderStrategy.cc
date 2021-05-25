@@ -1,4 +1,4 @@
-#include "utils/DefaultComponentProviderStrategy.h"
+#include "DefaultComponentProviderStrategy.h"
 
 namespace quisp {
 namespace utils {

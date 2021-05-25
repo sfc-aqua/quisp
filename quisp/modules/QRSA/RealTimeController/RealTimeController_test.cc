@@ -1,7 +1,7 @@
-#include "modules/QRSA/RealTimeController/RealTimeController.h"
-#include "gtest/gtest.h"
-#include "omnetpp.h"
-#include "utils/IComponentProviderStrategy.h"
+#include "RealTimeController.h"
+#include <gtest/gtest.h>
+#include <omnetpp.h>
+#include <utils/IComponentProviderStrategy.h>
 
 namespace {
 

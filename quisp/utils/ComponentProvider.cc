@@ -1,4 +1,4 @@
-#include "utils/ComponentProvider.h"
+#include "ComponentProvider.h"
 
 namespace quisp {
 namespace utils {

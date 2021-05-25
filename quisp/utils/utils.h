@@ -1,9 +1,9 @@
 #ifndef QUISP_UTILS_H_
 #define QUISP_UTILS_H_
 
-#include "modules/QNIC.h"
-#include "modules/QNIC/StationaryQubit/StationaryQubit.h"
-#include "omnetpp.h"
+#include <modules/QNIC.h>
+#include <modules/QNIC/StationaryQubit/StationaryQubit.h>
+#include <omnetpp.h>
 
 namespace quisp {
 namespace utils {

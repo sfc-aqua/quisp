@@ -1,7 +1,7 @@
 #ifndef QUISP_UTILS_ICOMPONENTPROVIDER_STRATEGY_H_
 #define QUISP_UTILS_ICOMPONENTPROVIDER_STRATEGY_H_
 
-#include "utils/utils.h"
+#include "utils.h"
 
 namespace quisp {
 namespace utils {

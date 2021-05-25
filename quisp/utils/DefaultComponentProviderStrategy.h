@@ -1,8 +1,8 @@
 #ifndef QUISP_UTILS_DEFAULT_COMPONENT_PROVIDER_STRATEGY_H_
 #define QUISP_UTILS_DEFAULT_COMPONENT_PROVIDER_STRATEGY_H_
 
-#include "utils/IComponentProviderStrategy.h"
-#include "utils/utils.h"
+#include "IComponentProviderStrategy.h"
+#include "utils.h"
 
 namespace quisp {
 namespace utils {
