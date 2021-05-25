@@ -11,17 +11,16 @@ namespace utils {
 class ComponentProvider {
  public:
   ComponentProvider(omnetpp::cModule *_module);
-  ~ComponentProvider();
 
   omnetpp::cModule *getQNode();
   StationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type);
 
-  void setStrategy(IComponentProviderStrategy *_strategy);
+  void setStrategy(std::unique_ptr<IComponentProviderStrategy> _strategy);
 
   omnetpp::cModule *module;
 
  private:
-  IComponentProviderStrategy *strategy = nullptr;
+  std::unique_ptr<IComponentProviderStrategy> strategy = nullptr;
   void ensureStrategy();
 };
 
