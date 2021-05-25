@@ -1,14 +1,11 @@
-#ifndef QUISP_MODULES_DEFAULT_COMPONENT_PROVIDER_STRATEGY_H_
-#define QUISP_MODULES_DEFAULT_COMPONENT_PROVIDER_STRATEGY_H_
-#include "IComponentProviderStrategy.h"
-#include "modules/QNIC.h"
-#include "modules/QNIC/StationaryQubit/StationaryQubit.h"
-#include "omnetpp.h"
+#ifndef QUISP_UTILS_DEFAULT_COMPONENT_PROVIDER_STRATEGY_H_
+#define QUISP_UTILS_DEFAULT_COMPONENT_PROVIDER_STRATEGY_H_
 
-using omnetpp::cModule;
+#include "utils/IComponentProviderStrategy.h"
+#include "utils/utils.h"
 
 namespace quisp {
-namespace modules {
+namespace utils {
 
 class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
  public:
@@ -21,6 +18,6 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
   cModule *self;
 };
 
-}  // namespace modules
+}  // namespace utils
 }  // namespace quisp
 #endif

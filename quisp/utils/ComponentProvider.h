@@ -1,13 +1,12 @@
-#ifndef QUISP_MODULES_UTILS_COMPONENTPROVIDER_H_
-#define QUISP_MODULES_UTILS_COMPONENTPROVIDER_H_
-#include "omnetpp.h"
+#ifndef QUISP_UTILS_COMPONENTPROVIDER_H_
+#define QUISP_UTILS_COMPONENTPROVIDER_H_
 
-#include "DefaultComponentProviderStrategy.h"
-#include "IComponentProviderStrategy.h"
-#include "modules/QNIC/StationaryQubit/StationaryQubit.h"
+#include "utils/DefaultComponentProviderStrategy.h"
+#include "utils/IComponentProviderStrategy.h"
+#include "utils/utils.h"
 
 namespace quisp {
-namespace modules {
+namespace utils {
 
 class ComponentProvider {
  public:
@@ -26,6 +25,6 @@ class ComponentProvider {
   void ensureStrategy();
 };
 
-} /* namespace modules */
+}  // namespace utils
 } /* namespace quisp */
-#endif /* QUISP_MODULES_UTILS_COMPONENTPROVIDER_H_ */
+#endif /* QUISP_UTILS_COMPONENTPROVIDER_H_ */

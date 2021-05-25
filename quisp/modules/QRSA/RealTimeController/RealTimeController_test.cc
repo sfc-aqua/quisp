@@ -1,10 +1,13 @@
-#include "RealTimeController.h"
+#include "modules/QRSA/RealTimeController/RealTimeController.h"
 #include "gtest/gtest.h"
-#include "modules/QNIC/StationaryQubit/StationaryQubit.h"
-#include "modules/Utils/IComponentProviderStrategy.h"
-#include "omnetpp/cmodule.h"
+#include "omnetpp.h"
+#include "utils/IComponentProviderStrategy.h"
 
 namespace {
+
+using namespace omnetpp;
+using namespace quisp::utils;
+using namespace quisp::modules;
 
 class TestComponentProviderStrategy : public IComponentProviderStrategy {
   omnetpp::cModule* getQNode() override { return nullptr; }

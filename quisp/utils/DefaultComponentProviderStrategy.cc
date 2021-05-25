@@ -1,11 +1,7 @@
-#include "DefaultComponentProviderStrategy.h"
-#include "modules/QNIC/StationaryQubit/StationaryQubit.h"
-#include "omnetpp.h"
-#include "omnetpp/cexception.h"
-#include "omnetpp/cmodule.h"
+#include "utils/DefaultComponentProviderStrategy.h"
 
 namespace quisp {
-namespace modules {
+namespace utils {
 
 DefaultComponentProviderStrategy::DefaultComponentProviderStrategy(cModule *_self) : self(_self) {}
 
@@ -29,5 +25,5 @@ StationaryQubit *DefaultComponentProviderStrategy::getStationaryQubit(int qnic_i
   return check_and_cast<StationaryQubit *>(qubit);
 }
 
-}  // namespace modules
+}  // namespace utils
 }  // namespace quisp

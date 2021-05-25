@@ -7,15 +7,13 @@
  *  \brief RealTimeController
  */
 #include "RealTimeController.h"
-
-#include "modules/QNIC/StationaryQubit/StationaryQubit.h"
-#include "modules/Utils/ComponentProvider.h"
+#include "utils/ComponentProvider.h"
 
 namespace quisp {
 namespace modules {
 
 Define_Module(RealTimeController);
-RealTimeController::RealTimeController() : provider(ComponentProvider{this}) {}
+RealTimeController::RealTimeController() : provider(utils::ComponentProvider{this}) {}
 void RealTimeController::initialize() {
   EV << "RealTimeController booted\n";
   myAddress = par("address");

@@ -3,10 +3,7 @@
 
 #include <classical_messages_m.h>
 #include <modules/QNIC.h>
-#include <omnetpp.h>
 #include <vector>
-
-using namespace omnetpp;
 
 namespace quisp {
 namespace modules {

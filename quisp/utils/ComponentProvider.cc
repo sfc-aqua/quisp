@@ -1,15 +1,7 @@
-#include "ComponentProvider.h"
-#include "classical_messages_m.h"
-#include "modules/QNIC.h"
-#include "modules/QNIC/StationaryQubit/StationaryQubit.h"
-#include "modules/Utils/DefaultComponentProviderStrategy.h"
-#include "modules/Utils/IComponentProviderStrategy.h"
-#include "omnetpp/cmodule.h"
-
-using omnetpp::cModule;
+#include "utils/ComponentProvider.h"
 
 namespace quisp {
-namespace modules {
+namespace utils {
 
 ComponentProvider::ComponentProvider(cModule *_module) : module(_module) {}
 
@@ -34,5 +26,5 @@ void ComponentProvider::ensureStrategy() {
   if (strategy != nullptr) return;
   strategy = new DefaultComponentProviderStrategy{module};
 }
-} /* namespace modules */
+}  // namespace utils
 } /* namespace quisp */

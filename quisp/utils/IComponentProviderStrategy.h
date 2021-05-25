@@ -1,13 +1,10 @@
-#ifndef QUISP_MODULES_ICOMPONENTPROVIDER_STRATEGY_H_
-#define QUISP_MODULES_ICOMPONENTPROVIDER_STRATEGY_H_
-#include "modules/QNIC.h"
-#include "modules/QNIC/StationaryQubit/StationaryQubit.h"
-#include "omnetpp/cmodule.h"
+#ifndef QUISP_UTILS_ICOMPONENTPROVIDER_STRATEGY_H_
+#define QUISP_UTILS_ICOMPONENTPROVIDER_STRATEGY_H_
 
-using omnetpp::cModule;
+#include "utils/utils.h"
 
 namespace quisp {
-namespace modules {
+namespace utils {
 
 class IComponentProviderStrategy {
  public:
@@ -17,6 +14,6 @@ class IComponentProviderStrategy {
   virtual StationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) = 0;
 };
 
-}  // namespace modules
+}  // namespace utils
 }  // namespace quisp
 #endif
