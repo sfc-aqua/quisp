@@ -31,7 +31,7 @@ class RTCTestTarget : public quisp::modules::RealTimeController {
 
 TEST(RealTimeControllerTest, Init) {
   RTCTestTarget c{};
-  // c.initialize();
-  // ASSERT_EQ(c.par("address").intValue(), 123);
+  c.initialize();
+  ASSERT_EQ(c.par("address").intValue(), 123);
 }
 }  // namespace

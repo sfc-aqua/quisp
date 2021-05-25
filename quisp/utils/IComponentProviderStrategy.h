@@ -10,6 +10,7 @@ namespace utils {
 class IComponentProviderStrategy {
  public:
   IComponentProviderStrategy() {}
+  virtual ~IComponentProviderStrategy() {}
   virtual cModule *getQNode() = 0;
   virtual StationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) = 0;
 };

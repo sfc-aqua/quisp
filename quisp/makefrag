@@ -43,7 +43,7 @@ $(O)/$(TEST_OBJS): $(TEST_SRCS)
 
 $(O)/$(TEST_MAIN_OBJ): $(TEST_MAIN_SRC)
 	@$(MKPATH) $(dir $@)
-	$(Q)$(CXX) -c $(TEST_INCLUDE) -o $@ $< $(CXXFLAGS)
+	$(Q)$(CXX) -c $(TEST_INCLUDE) $(COPTS) -o $@ $< $(CXXFLAGS)
 
 $(TARGET_DIR)/run_unit_test: $(TARGET_DIR)/$(TARGET) $(O)/$(TEST_OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE) $(O)/$(TEST_MAIN_OBJ)
 	@$(MKPATH) $O
