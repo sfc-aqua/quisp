@@ -54,6 +54,7 @@ void RoutingDaemon::initialize(int stage) {
   EV << "Routing Daemon booted\n";
 
   myAddress = getParentModule()->par("address");
+
   // Topology creation for routing table
   cTopology *topo = new cTopology("topo");
   cMsgPar *yes = new cMsgPar();
@@ -103,18 +104,17 @@ void RoutingDaemon::initialize(int stage) {
       error("Path not found. This means that a node is completely separated...Probably not what you want now");
       continue;  // not connected
     }
-    // Returns the next link/gate in the ith shortest paths towards the target node.
-    cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();
-    int gateIndex = parentModuleGate->getIndex();
-    QNIC thisqnic;
     int destAddr = topo->getNode(i)->getModule()->par("address");
     std::string nodetype = topo->getNode(i)->getModule()->par("nodeType");
+    // EV<<"destination addr: "<<destAddr<<"\n";
+    // nbtable[myAddress].push_back(destAddr);
+    // Returns the next link/gate in the ith shortest paths towards the target node.
+    cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();
+    QNIC thisqnic;
     thisqnic.address = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
     thisqnic.type = (QNIC_type)(int)parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_type");
     thisqnic.index = parentModuleGate->getPreviousGate()->getOwnerModule()->getIndex();
-    
     thisqnic.pointer = parentModuleGate->getPreviousGate()->getOwnerModule();
-
     qrtable[destAddr] = thisqnic;  // Store gate index per destination from this node
     // EV<<"\n Quantum: "<<topo->getNode(i)->getModule()->getFullName()<<"\n";
     // EV <<"\n  Quantum: Towards node address " << destAddr << " use qnic with address = "<<parentModuleGate->getPreviousGate()->getOwnerModule()->getFullName()<<"\n";
@@ -137,7 +137,7 @@ int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr) {
   Enter_Method("return_QNIC_address_to_destAddr");
   RoutingTable::iterator it = qrtable.find(destAddr);
   if (it == qrtable.end()) {
-    EV << "Quantum: address " << destAddr << " unreachable from this node  \n";
+    EV << "Quantum: address " << destAddr << " unreachable from this node\n";
     return -1;
   }
   return it->second.address;

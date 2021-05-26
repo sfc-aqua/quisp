@@ -37,21 +37,31 @@ module ABSANode
         router: Router {
             parameters:
                 address = address;
-                @display("p=214,61");
+                @display("p=188,55");
             gates:
                 fromQueue[sizeof(port)];
                 toQueue[sizeof(port)];
         }
-        nic[sizeof(port)]: Queue {
+        queue[sizeof(port)]: Queue {
             parameters:
-                address = 0;
-                @display("p=281.61,55.874996");
+                address = index;
+                //buffer = 8;
+                //@display("p=198,43");
+                @display("p=68,122");
+        }
+        qrsa: quantumRoutingSoft {
+            parameters:
+                address = address;
+                @display("p=104,55");
+                number_of_qnics = 0;
+                number_of_qnics_r = 0;
+                number_of_qnics_rp = 0;
         }
         Controller: ABSAController {
             parameters:
                 address = address;
                 photon_detection_per_sec = absa_photon_detection_per_sec;
-                @display("p=214,190");
+                @display("p=188,190");
         }
         ABSA: ABSA {
             parameters:
@@ -65,9 +75,9 @@ module ABSANode
         }
     connections:
         for i=0..sizeof(port)-1 {
-            router.toQueue[i] --> nic[i].in;//Each routing port is connected to its own queue
-            router.fromQueue[i] <-- nic[i].out;
-            nic[i].line <--> port[i];
+            router.toQueue[i] --> queue[i].in;//Each routing port is connected to its own queue
+            router.fromQueue[i] <-- queue[i].out;
+            queue[i].line <--> port[i];
         }
 
         for i=0..sizeof(quantum_absa_port)-1 {
@@ -76,5 +86,9 @@ module ABSANode
         Controller.toRouter_port --> router.fromApp;
         router.toApp --> Controller.fromRouter_port;
         ABSA.toABSAController_port --> Controller.fromABSA_port;
+
+        router.rePort <--> qrsa.rePort;
+        router.cmPort <--> qrsa.cmPort;
+        router.hmPort <--> qrsa.hmPort;
 
 }

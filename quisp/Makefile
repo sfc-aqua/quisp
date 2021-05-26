@@ -50,6 +50,7 @@ OBJS = \
     $O/modules/QRSA/RealTimeController/RealTimeController.o \
     $O/modules/QRSA/RealTimeController/RealTimeController_test.o \
     $O/modules/QRSA/RoutingDaemon/RoutingDaemon.o \
+    $O/modules/QRSA/RoutingDaemon/RoutingDaemon_test.o \
     $O/modules/QRSA/RuleEngine/RuleEngine.o \
     $O/rules/Action.o \
     $O/rules/Clause.o \

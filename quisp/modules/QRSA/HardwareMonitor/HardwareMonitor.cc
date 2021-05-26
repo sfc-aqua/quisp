@@ -68,7 +68,7 @@ void HardwareMonitor::initialize(int stage) {
     all_temporal_tomography_runningtime_holder[i].tomography_measurements = -1;
     all_temporal_tomography_runningtime_holder[i].tomography_time = -1;
   }
-  
+
   /*This keeps which node is connected to which local qnic.*/
   tomography_output_filename = par("tomography_output_filename").str();
   file_dir_name = par("file_dir_name").str();
@@ -79,7 +79,7 @@ void HardwareMonitor::initialize(int stage) {
   Purification_type = par("Purification_type");
   num_measure = par("num_measure");
   my_address = par("address");
-  
+
   if (stage == 0) {
     return;
   }
@@ -1156,7 +1156,6 @@ cModule *HardwareMonitor::getQNode() {
 std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule &thisNode) {
   cModuleType *type = thisNode.getModuleType();
 
-
   auto inf = std::make_unique<NeighborInfo>();
   inf->type = type;
   inf->address = thisNode.par("address");
@@ -1179,7 +1178,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
     int myaddress = par("address");
 
     EV_DEBUG << "myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << controller->getFullName() << "\n";
-    EV<<address_one<<":"<<address_two<<"\n";
+    EV << address_one << ":" << address_two << "\n";
     if (address_one == -1 && address_two == -1) {
       error("HoM Controller or ABSA Controller is not initialized properly");
     }
@@ -1193,11 +1192,10 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
     return inf;
   }
 
-
   if (type == SPDCType) {
     error("TO BE IMPLEMENTED");
   }
-  
+
   error(
       "node "
       "types: QNode, EPPS and HoM. Not %s",

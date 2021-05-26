@@ -270,9 +270,10 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     for (int i = 1; i < path.size()-1; i++){
       // loop for path except end nodes
       rgs_nodes.push_back(path[i]);
+      EV<<"node: "<<path[i]<<"\n"; 
     }
 
-
+    error("responder");
   }else{
 
       int divisions = computePathDivisionSize(hop_count);
@@ -506,28 +507,38 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
 void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
   int responder_addr = req->getActual_destAddr();  // responder address
   int initiator_addr = req->getActual_srcAddr();  // initiator address (to get input qnic)
-  int dst_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(responder_addr);
-  int src_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
-  if (dst_qnic_addr == -1) {
-    error("QNIC to destination not found");
-  }
-
-  // Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
-  auto dst_info = hardware_monitor->findConnectionInfoByQnicAddr(dst_qnic_addr);
-  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(src_qnic_addr);
   
+  // here is the problem when the connection setup is ABSA
+  // ABSA needs to be recognized as a QNode
+  // if (! is_absa_connection){
+    int dst_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(responder_addr);
+    int src_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
+    if (dst_qnic_addr == -1) {
+      error("QNIC to destination not found");
+    }
+
+    // Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
+    auto dst_info = hardware_monitor->findConnectionInfoByQnicAddr(dst_qnic_addr);
+    auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(src_qnic_addr);
+    // Update information and send it to the next Qnode.
+    req->setDestAddr(dst_info->neighbor_address);
+
+  // }else{
+    // directly get ABSA address
+    // int dst_address = 
+  // }
+  // Should be done more clear way
   int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
   int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
   int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();
 
-  // Update information and send it to the next Qnode.
-  req->setDestAddr(dst_info->neighbor_address);
   req->setSrcAddr(my_address);
   req->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes + 1);
   req->setStack_of_linkCostsArraySize(num_accumulated_costs + 1);
   req->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
   req->setStack_of_linkCosts(num_accumulated_costs, dst_info->quantum_link_cost);
   req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
+
 
 
   bool is_dst_qnic_reserved = isQnicBusy(dst_info->qnic.address);

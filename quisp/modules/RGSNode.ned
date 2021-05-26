@@ -13,7 +13,7 @@ module RGS_source
         int bufferSize = default(10);
         int address = default(0);
         int buffers = default(20); //default is defined as 10 in .ini file but can be changed independently in .ned file
-        @display("bgl=4");
+        @display("bgl=4;bgb=551,332");
 
         string includeInTopo = "yes";
         string nodeType = default("RGS");

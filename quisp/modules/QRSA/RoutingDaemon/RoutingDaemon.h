@@ -28,6 +28,10 @@ class RoutingDaemon : public cSimpleModule {
   typedef std::map<int, QNIC> RoutingTable;  // destaddr -> {gate_index (We need this to access qnic, but it is not unique because we have 3 types of qnics), qnic_address (unique)}
   RoutingTable qrtable;
 
+  // // This might not good way, but for ABSA, it doesn't need qnic but qrsa
+  // typedef std::map<int, std::vector<int>> NeighborAddresses;
+  // NeighborAddresses nbtable;
+
  protected:
   virtual void initialize(int stage) override;
   virtual void handleMessage(cMessage *msg) override;
