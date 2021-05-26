@@ -10,8 +10,8 @@ SRCS?=$(shell find . -type f -name "*.cc" -print)
 HEADERS=$(shell find . -type f -name "*.h" -print)
 TEST_SRCS=$(filter %_test.cc,$(SRCS))
 TEST_OBJS=$(TEST_SRCS:.cc=.o)
-TEST_INCLUDE=-I../googletest/googletest/include/
-TEST_LIBS=-L../googletest/build/lib -lgtest
+TEST_INCLUDE=-I../googletest/googletest/include/ -I../googletest/googlemock/include/
+TEST_LIBS=-L../googletest/build/lib -lgtest -lgmock
 TEST_MAIN_SRC=unit_test_main.cc
 TEST_MAIN_OBJ=$(O)/unit_test_main.o
 
