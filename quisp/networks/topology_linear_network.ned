@@ -81,30 +81,32 @@ network Linear_One_MSM
         **.Speed_of_light_in_fiber = 205336.986301 km;
         //**.HoM_handshake = false;
 
+        @display("bgb=294,138");
     submodules:
         source: QNode {
             address = 1;
             nodeType = "EndNode";
-            @display("i=device/pc");
+            @display("i=device/pc;p=235,69");
             //buffers = 15;
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
-        HoM: HoM {
+        EPPS: SPDC {
             address = 2;
-            @display("i=device/bsm");
+            @display("i=device/bsm;p=131,69");
         }
         target: QNode {
             address = 3;
             nodeType = "EndNode";
             //buffers = 20;
-            @display("i=device/pc");
+            @display("i=device/pc;p=32,69");
         }
     connections:
-        source.port++ <--> ClassicalChannel {  distance = 1km; } <--> HoM.port++;
-        HoM.port++ <--> ClassicalChannel {  distance = 1km; } <--> target.port++;
-        source.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> HoM.quantum_port++;
-        HoM.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> target.quantum_port++;
+        source.port++ <--> ClassicalChannel {  distance = 1km; } <--> EPPS.port++;
+        EPPS.port++ <--> ClassicalChannel {  distance = 1km; } <--> target.port++;
+
+        source.quantum_port_receiver++ <--> QuantumChannel {  distance = 1km; } <--> EPPS.quantum_port++;
+        EPPS.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> target.quantum_port_receiver++;
 
 }
 
@@ -188,40 +190,6 @@ network Linear_One_MM_bufferGap
         Small.port++ <--> ClassicalChannel {  distance = 12.3km; } <--> Big.port++;
         Small.quantum_port_receiver++ <--> QuantumChannel {  distance = 12.3km; } <--> Big.quantum_port++;
 }
-
-
-network Linear_One_MSM
-{
-    parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
-
-        @display("bgb=281,95");
-    submodules:
-        source: QNode {
-            address = 1;
-            nodeType = "EndNode";
-            @display("i=device/pc;p=240,48");
-
-            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
-            //emission_timing_uncertainty = 10;
-        }
-        epps: SPDC {//needs to check the buffersize, and tell each node how many photon arrivals to expect.
-            address = 2;
-            @display("i=device/epps;p=132,48");
-        }
-        target: QNode {
-            address = 3;
-            nodeType = "EndNode";
-            @display("i=device/pc");
-        }
-    connections:
-        source.port++ <--> ClassicalChannel {  distance = 40km; } <--> epps.port++;
-        epps.port++ <--> ClassicalChannel {  distance = 20km; } <--> target.port++;
-        source.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 40km; } <--> epps.quantum_port++;
-        epps.quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> target.quantum_port_receiver_passive++;
-}
-
-
 
 
 
