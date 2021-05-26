@@ -20,4 +20,5 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
 
 }  // namespace utils
 }  // namespace quisp
-#endif
+
+#endif /* QUISP_UTILS_DEFAULT_COMPONENT_PROVIDER_STRATEGY_H_ */

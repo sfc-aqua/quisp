@@ -17,4 +17,5 @@ class IComponentProviderStrategy {
 
 }  // namespace utils
 }  // namespace quisp
-#endif
+
+#endif /* QUISP_UTILS_ICOMPONENTPROVIDER_STRATEGY_H_ */

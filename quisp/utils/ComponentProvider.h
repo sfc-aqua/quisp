@@ -25,5 +25,6 @@ class ComponentProvider {
 };
 
 }  // namespace utils
-} /* namespace quisp */
+} // namespace quisp
+
 #endif /* QUISP_UTILS_COMPONENTPROVIDER_H_ */
