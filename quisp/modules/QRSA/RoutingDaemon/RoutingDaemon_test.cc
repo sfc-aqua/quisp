@@ -3,11 +3,11 @@
 
 namespace {
 
-class RoutingDaemonTestTarget : public quisp::modules::RoutingDaemon {
+class RDTestTarget : public quisp::modules::RoutingDaemon {
  public:
   using quisp::modules::RoutingDaemon::initialize;
   using quisp::modules::RoutingDaemon::par;
-  RoutingDaemonTestTarget() : RealTimeController() {
+  RDTestTarget() : RoutingDaemon() {
     omnetpp::cParImpl* p = new omnetpp::cIntParImpl();
     const char* name = "address";
     p->setName(name);
@@ -17,9 +17,9 @@ class RoutingDaemonTestTarget : public quisp::modules::RoutingDaemon {
   }
 };
 
-TEST(RoutingDaemonTest, Init) {
-  RTCTestTarget c{};
+TEST(RoutingDaemonTest, InitTest) {
+  RDTestTarget c{};
   c.initialize();
   ASSERT_EQ(c.par("address").intValue(), 123);
-}
+ }
 }  // namespace

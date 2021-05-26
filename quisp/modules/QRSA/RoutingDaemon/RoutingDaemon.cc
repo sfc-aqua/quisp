@@ -106,20 +106,34 @@ void RoutingDaemon::initialize(int stage) {
     }
     int destAddr = topo->getNode(i)->getModule()->par("address");
     std::string nodetype = topo->getNode(i)->getModule()->par("nodeType");
-    // EV<<"destination addr: "<<destAddr<<"\n";
-    // nbtable[myAddress].push_back(destAddr);
-    // Returns the next link/gate in the ith shortest paths towards the target node.
-    cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();
-    QNIC thisqnic;
-    thisqnic.address = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
-    thisqnic.type = (QNIC_type)(int)parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_type");
-    thisqnic.index = parentModuleGate->getPreviousGate()->getOwnerModule()->getIndex();
-    thisqnic.pointer = parentModuleGate->getPreviousGate()->getOwnerModule();
-    qrtable[destAddr] = thisqnic;  // Store gate index per destination from this node
-    // EV<<"\n Quantum: "<<topo->getNode(i)->getModule()->getFullName()<<"\n";
-    // EV <<"\n  Quantum: Towards node address " << destAddr << " use qnic with address = "<<parentModuleGate->getPreviousGate()->getOwnerModule()->getFullName()<<"\n";
-    if (!strstr(parentModuleGate->getFullName(), "quantum")) {
-      error("Quantum routing table referring to classical gates...");
+    std::string this_nodetype = thisNode->getModule()->par("nodeType");
+    if(nodetype=="ABSA"|| this_nodetype == "ABSA"){
+      EV_DEBUG<<"node type: "<<nodetype<<"\n";
+      EV_DEBUG<<"Address"<<myAddress<<"\n";
+      // error("why");
+      // FIXME should be better way
+      // prepare dummy qnic
+      QNIC dummyQnic;
+      qrtable[destAddr] = dummyQnic;
+      return;
+    }else{
+      // EV<<"destination addr: "<<destAddr<<"\n";
+      // nbtable[myAddress].push_back(destAddr);
+      // Returns the next link/gate in the ith shortest paths towards the target node.
+      EV_DEBUG<<"node type: "<<nodetype<<"\n";
+      EV_DEBUG<<"Address"<<myAddress<<"\n";
+      QNIC thisqnic;
+      cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();
+      thisqnic.address = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
+      thisqnic.type = (QNIC_type)(int)parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_type");
+      thisqnic.index = parentModuleGate->getPreviousGate()->getOwnerModule()->getIndex();
+      thisqnic.pointer = parentModuleGate->getPreviousGate()->getOwnerModule();
+      qrtable[destAddr] = thisqnic;  // Store gate index per destination from this node
+      // EV<<"\n Quantum: "<<topo->getNode(i)->getModule()->getFullName()<<"\n";
+      // EV <<"\n  Quantum: Towards node address " << destAddr << " use qnic with address = "<<parentModuleGate->getPreviousGate()->getOwnerModule()->getFullName()<<"\n";
+      if (!strstr(parentModuleGate->getFullName(), "quantum")) {
+          error("Quantum routing table referring to classical gates...");
+      }
     }
   }
   delete topo;

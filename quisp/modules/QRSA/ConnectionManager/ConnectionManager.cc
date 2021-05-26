@@ -510,7 +510,7 @@ void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
   
   // here is the problem when the connection setup is ABSA
   // ABSA needs to be recognized as a QNode
-  // if (! is_absa_connection){
+  if (!is_absa_connection){
     int dst_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(responder_addr);
     int src_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
     if (dst_qnic_addr == -1) {
@@ -523,10 +523,10 @@ void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
     // Update information and send it to the next Qnode.
     req->setDestAddr(dst_info->neighbor_address);
 
-  // }else{
+  }else{
     // directly get ABSA address
-    // int dst_address = 
-  // }
+    // int dst_address = RoutingDaemon->return_dst_address_()
+  }
   // Should be done more clear way
   int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
   int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
