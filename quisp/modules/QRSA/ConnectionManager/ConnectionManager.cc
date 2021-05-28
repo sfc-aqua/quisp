@@ -52,6 +52,10 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 
     int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
     auto dst_inf = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
+    if (dst_inf == nullptr){
+      EV<<"local qnic address to actual dst"<<local_qnic_address_to_actual_dst<<"\n";
+      error("dst inf is null");
+    }
     bool is_qnic_available = !isQnicBusy(dst_inf->qnic.address);
     bool requested_by_myself = actual_src == my_address;
 
@@ -564,7 +568,6 @@ void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
   int initiator_addr = req->getActual_srcAddr();  // initiator address (to get input qnic)
   int dst_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(responder_addr);
   int src_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
-
   if (dst_qnic_addr == -1) {
     error("QNIC to destination not found");
   }
@@ -572,7 +575,6 @@ void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
   // Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
   auto dst_info = hardware_monitor->findConnectionInfoByQnicAddr(dst_qnic_addr);
   auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(src_qnic_addr);
-
   int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
   int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
   int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();

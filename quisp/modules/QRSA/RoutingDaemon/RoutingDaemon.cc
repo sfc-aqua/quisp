@@ -54,9 +54,9 @@ void RoutingDaemon::initialize(int stage) {
 
   EV << "Routing table initialized \n";
   myAddress = getParentModule()->par("address");
-
   // Topology creation for routing table
   cTopology *topo = new cTopology("topo");
+  // veryfication?
   cMsgPar *yes = new cMsgPar();
   yes->setStringValue("yes");
   topo->extractByParameter("includeInTopo", yes->str().c_str());  // Any node that has a parameter includeInTopo will be included in routing
