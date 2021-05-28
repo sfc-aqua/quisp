@@ -13,6 +13,7 @@ module quantumRoutingSoft
         int number_of_qnics;
         int number_of_qnics_r;
         int number_of_qnics_rp;
+        bool simultanious_ES;
     gates:
         //inout rdPort;//size will be determined by the number of connections defined at the end of this file
         inout cmPort;
@@ -43,6 +44,7 @@ module quantumRoutingSoft
                 number_of_qnics_r = number_of_qnics_r;
                 number_of_qnics_rp = number_of_qnics_rp;
                 total_number_of_qnics = number_of_qnics +  number_of_qnics_r + number_of_qnics_rp;
+                simultanious_ES = simultanious_ES;
                 @display("p=227,148");
         }
         rt: RealTimeController {
