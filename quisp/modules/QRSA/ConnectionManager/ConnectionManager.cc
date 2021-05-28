@@ -20,6 +20,7 @@ void ConnectionManager::initialize() {
   hardware_monitor = check_and_cast<HardwareMonitor *>(getParentModule()->getSubmodule("hm"));
   my_address = par("address");
   num_of_qnics = par("total_number_of_qnics");
+  simultaneous_ES = false
 
   is_absa_connection = par("ABSAconnection");
 
@@ -296,7 +297,19 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
           swapping_partners.insert(std::make_pair(swapper[i], partners));
         }
       }
-
+      /*
+      std::map<int, std::vector<int>> simultaneous_swapping_partners;
+      for (int i = 0; i < divisions; i++) {
+        std::vector<int> partners;
+        if (swapper[i] > 0) {
+          EV << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n"; 
+          EV_DEBUG << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
+          partners.push_back(link_left[i]);
+          partners.push_back(link_right[i]);
+          simultaneous_swapping_partners.insert(std::make_pair(swapper[i], partners));
+        }
+      }
+      */
     /* TODO: Remember you have link costs <3
     * The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel
       * but from only 1 channels from Src->BSA and ignoring BSA->Dest).
@@ -350,8 +363,14 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
         // here we have to check the order of entanglement swapping
 
         // swapping configurations for path[i]
-        SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
-        RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
+        if (!simultaneousES){
+          SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
+          RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
+        }
+        else if(simultaneousES){
+          // SwappingConfig config = generateSimultaneousSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
+          RuleSet *rule = generateSimultaneousEntanglementSwappingRuleSet(path.at(i), path);
+        }
 
         ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
         pkr->setDestAddr(path.at(i));
@@ -441,6 +460,70 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
   /// and you have to be careful of not creating the wrong result by accident.
 
   // If the counterparts are decided, the order will automatically be determined.
+
+  auto iter = std::find(path.begin(), path.end(), swapper_address);
+  size_t index = std::distance(path.begin(), iter);  // index of swapper in the path
+  if (index == 0 || index == path.size()) {
+    error("This shouldn't happen. Endnode was recognized as swapper with some reason.");
+  }
+  QNIC_id left_self_qnic = qnics.at(index).fst;
+  QNIC_id right_self_qnic = qnics.at(index).snd;
+
+  // FIXME more dynamically using recursive function or ...
+  // auto it = std::find(swapping_partners.begin(), swapping_partners.end(), swapper_address);
+  auto it = swapping_partners.find(swapper_address);
+  if (it == swapping_partners.end() || it->second.size() != 2) {
+    error("Swapper is not recognized as swapper, or the number of partners is wrong (must be 2)");
+  }
+  int left_partner = it->second.at(0);
+  int right_partner = it->second.at(1);
+
+  auto iter_left = std::find(path.begin(), path.end(), left_partner);
+  auto iter_right = std::find(path.begin(), path.end(), right_partner);
+  if (iter_left == path.end()) {
+    error("left nodes are not found in path");
+  }
+  if (iter_right == path.end()) {
+    error("right nodes are not found in path");
+  }
+
+  size_t left_partner_index = std::distance(path.begin(), iter_left);
+  size_t right_partner_index = std::distance(path.begin(), iter_right);
+
+  // left partner must be second
+  // right partner must be first
+  // TODO: detail description of this.
+  QNIC_id left_partner_qnic = qnics.at(left_partner_index).snd;
+  QNIC_id right_partner_qnic = qnics.at(right_partner_index).fst;
+
+  if (right_self_qnic.type == QNIC_RP || left_self_qnic.type == QNIC_RP || right_partner_qnic.type == QNIC_RP || left_partner_qnic.type == QNIC_RP) {
+    error("MSM link not implemented");
+  }
+
+  SwappingConfig config;
+  config.left_partner = left_partner;
+  config.lqnic_type = left_partner_qnic.type;
+  config.lqnic_index = left_partner_qnic.index;
+  config.lqnic_address = left_partner_qnic.address;
+  config.lres = num_resources;
+
+  config.right_partner = right_partner;
+  config.rqnic_type = right_partner_qnic.type;
+  config.rqnic_index = right_partner_qnic.index;
+  config.rqnic_address = right_partner_qnic.address;
+  config.rres = num_resources;
+
+  config.self_left_qnic_index = left_self_qnic.index;
+  config.self_right_qnic_index = right_self_qnic.index;
+  config.self_left_qnic_type = left_self_qnic.type;
+  config.self_right_qnic_type = right_self_qnic.type;
+  return config;
+}
+
+SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners,
+                                                         std::vector<QNIC_pair_info> qnics, int num_resources) {
+  
+  // Set the left and right partner to be initiator and responder.
 
   auto iter = std::find(path.begin(), path.end(), swapper_address);
   size_t index = std::distance(path.begin(), iter);  // index of swapper in the path
@@ -656,7 +739,37 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
  * \todo Room for endless intelligence and improvements here.  Ideally should be
  * a _configurable choice_, or even a _policy_ implementation.
  **/
+
+
 RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, SwappingConfig conf) {
+  unsigned long ruleset_id = createUniqueId();
+  int rule_index = 0;
+
+  Clause *resource_clause_left = new EnoughResourceClauseLeft(conf.left_partner, conf.lres);
+  Clause *resource_clause_right = new EnoughResourceClauseRight(conf.right_partner, conf.rres);
+
+  Condition *condition = new Condition();
+  condition->addClause(resource_clause_left);
+  condition->addClause(resource_clause_right);
+
+  quisp::rules::Action *action = new SwappingAction(ruleset_id, rule_index, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner,
+                                                    conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type,
+                                                    conf.self_right_qnic_index, conf.self_right_qnic_type);
+
+  Rule *rule = new Rule(ruleset_id, rule_index);
+  rule->setCondition(condition);
+  rule->setAction(action);
+
+  std::vector<int> partners = {conf.left_partner, conf.right_partner};
+
+  RuleSet *ruleset = new RuleSet(ruleset_id, owner, partners);
+  ruleset->addRule(rule);
+  ruleset->setRule_ptr(rule);
+
+  return ruleset;
+}
+
+RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int owner, SimultaneousSwappingConfig conf) {
   unsigned long ruleset_id = createUniqueId();
   int rule_index = 0;
 

@@ -309,6 +309,27 @@ void RuleEngine::handleMessage(cMessage *msg) {
     swapr.operation_type = pkt->getOperation_type();
     updateResources_EntanglementSwapping(swapr);
   } 
+
+  else if (dynamic_cast<SimultaneousSwappingResult *>(msg) != nullptr) {
+    SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(msg);
+    // here next add resources
+    int src = pkt->getSrcAddr();
+    int dest = pkt->getDestAddr();
+    process_id swapping_id;
+    swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
+    swapping_id.rule_id = pkt->getRule_id();
+    swapping_id.index = pkt->getAction_index();
+
+    swapping_result swapr;  // result of entanglement swapping
+    swapr.id = swapping_id;
+    swapr.new_partner = pkt->getNew_partner();
+    swapr.new_partner_qnic_index = pkt->getNew_partner_qnic_index();
+    swapr.new_partner_qnic_address = pkt->getNew_partner_qnic_address();
+    swapr.new_partner_qnic_type = pkt->getNew_partner_qnic_type();
+    swapr.measured_qubit_index = pkt->getMeasured_qubit_index();
+    swapr.operation_type = pkt->getOperation_type();
+    updateResources_EntanglementSwapping(swapr);
+  } 
   
   // else if (dynamic_cast<ABSAresult *>(msg) != nullptr) {
   //   ABSAResult *pkt = check_and_cast<ABSAResult *>(msg);
@@ -1421,7 +1442,48 @@ void RuleEngine::traverseThroughAllProcesses2() {
             send(pkt_for_left, "RouterPort$o");
             send(pkt_for_right, "RouterPort$o");
           } 
+          else if (dynamic_cast<SimultaneousSwappingResult *>(pk) != nullptr) {
+            SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(pk);
+            EV << "done swapping at " << parentAddress << "\n";
+            // here this packet goes to two destination.
+            // one is left node the other is right node.
+            // only swapper knows which is left and right, but qnodes don't
+
+            // packet for left node
+            SimultaneousSwappingResult *pkt_for_initiator = new SimultaneousSwappingResult("SimultaneousSwappingResult(Left)");
+            pkt_for_left->setKind(5);  // cyan
+            pkt_for_left->setDestAddr(pkt->getLeft_Dest());
+            pkt_for_left->setSrcAddr(parentAddress);
+            pkt_for_left->setOperation_type(pkt->getOperation_type_left());
+            pkt_for_left->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
+            pkt_for_left->setNew_partner(pkt->getNew_partner_left());
+            pkt_for_left->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
+            pkt_for_left->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
+            pkt_for_left->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
+
+            // packet for right node
+            SimultaneousSwappingResult *pkt_for_responder = new SimultaneousSwappingResult("SimultaneousSwappingResult(Right)");
+            pkt_for_right->setKind(5);  // cyan
+            pkt_for_right->setDestAddr(pkt->getRight_Dest());
+            pkt_for_right->setSrcAddr(parentAddress);
+            pkt_for_right->setOperation_type(pkt->getOperation_type_right());
+            pkt_for_right->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
+            pkt_for_right->setNew_partner(pkt->getNew_partner_right());
+            pkt_for_right->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
+            pkt_for_right->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
+            pkt_for_right->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
+
+            // check
+            // EV<<"left node should be 1: "<<pkt->getLeft_Dest()<<" right node should be 15: "<<pkt->getRight_Dest()<<"\n";
+            // if(parentAddress == 6){
+            //     error("here! check!");
+            // }
+
+            send(pkt_for_initiator, "RouterPort$o");
+            send(pkt_for_responder, "RouterPort$o");
+          } 
  /*
+ 
             else if (dynamic_cast<ABSAResult *>(pk) != nullptr) {
                 ABSAResult *pkt = check_and_cast<ABSAResult *>(pk);
             EV << "done ABSA at " << parentAddress << "\n";
