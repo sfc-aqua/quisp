@@ -55,6 +55,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 
     auto dst_inf = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
     if (dst_inf == nullptr){
+      EV<<"local qnic address to actual dst"<<local_qnic_address_to_actual_dst<<"\n";
       error("dst inf is null");
     }
     bool is_qnic_available = !isQnicBusy(dst_inf->qnic.address);
@@ -338,9 +339,11 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     // create RuleSet for all nodes!
     int num_resource = req->getNumber_of_required_Bellpairs();
     int intermediate_node_size = req->getStack_of_QNodeIndexesArraySize();
+    // generate the rulesets for intermediate swappers
     for (int i = 0; i <= intermediate_node_size; i++) {
       auto itr = std::find(swappers.begin(), swappers.end(), path.at(i));
       size_t index = std::distance(swappers.begin(), itr);
+      
       if (index != swappers.size()) {
         EV_DEBUG << "Im swapper!" << path.at(i) << "\n";
         // generate Swapping RuleSet
@@ -510,23 +513,19 @@ void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
   
   // here is the problem when the connection setup is ABSA
   // ABSA needs to be recognized as a QNode
-  if (!is_absa_connection){
-    int dst_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(responder_addr);
-    int src_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
-    if (dst_qnic_addr == -1) {
-      error("QNIC to destination not found");
-    }
 
-    // Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
-    auto dst_info = hardware_monitor->findConnectionInfoByQnicAddr(dst_qnic_addr);
-    auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(src_qnic_addr);
-    // Update information and send it to the next Qnode.
-    req->setDestAddr(dst_info->neighbor_address);
-
-  }else{
-    // directly get ABSA address
-    // int dst_address = RoutingDaemon->return_dst_address_()
+  int dst_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(responder_addr);
+  int src_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
+  if (dst_qnic_addr == -1) {
+    error("QNIC to destination not found");
   }
+
+  // Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
+  auto dst_info = hardware_monitor->findConnectionInfoByQnicAddr(dst_qnic_addr);
+  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(src_qnic_addr);
+  // Update information and send it to the next Qnode.
+  req->setDestAddr(dst_info->neighbor_address);
+
   // Should be done more clear way
   int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
   int num_accumulated_costs = req->getStack_of_linkCostsArraySize();

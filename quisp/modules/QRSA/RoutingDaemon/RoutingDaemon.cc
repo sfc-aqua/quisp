@@ -50,13 +50,11 @@ Define_Module(RoutingDaemon);
  * addressed.
  */
 void RoutingDaemon::initialize(int stage) {
-
   EV << "Routing Daemon booted\n";
-
   myAddress = getParentModule()->par("address");
-
   // Topology creation for routing table
   cTopology *topo = new cTopology("topo");
+  // veryfication?
   cMsgPar *yes = new cMsgPar();
   yes->setStringValue("yes");
   topo->extractByParameter("includeInTopo", yes->str().c_str());  // Any node that has a parameter includeInTopo will be included in routing
@@ -108,13 +106,10 @@ void RoutingDaemon::initialize(int stage) {
     std::string nodetype = topo->getNode(i)->getModule()->par("nodeType");
     std::string this_nodetype = thisNode->getModule()->par("nodeType");
     if(nodetype=="ABSA"|| this_nodetype == "ABSA"){
-      EV_DEBUG<<"node type: "<<nodetype<<"\n";
-      EV_DEBUG<<"Address"<<myAddress<<"\n";
-      // error("why");
+      // EV_DEBUG<<"node type: "<<nodetype<<"\n";
+      // EV_DEBUG<<"Address"<<myAddress<<"\n";
       // FIXME should be better way
       // prepare dummy qnic
-      QNIC dummyQnic;
-      qrtable[destAddr] = dummyQnic;
       return;
     }else{
       // EV<<"destination addr: "<<destAddr<<"\n";

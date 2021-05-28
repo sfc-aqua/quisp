@@ -1,5 +1,11 @@
 #include "RoutingDamon.h"
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+#include <omnetpp.h>
+#include <utils/IComponentProviderStrategy.h>
+#include "modules/QNIC.h"
+#include "modules/QNIC/StationaryQubit/StationaryQubit.h"
+#include "omnetpp/csimulation.h"
 
 namespace {
 

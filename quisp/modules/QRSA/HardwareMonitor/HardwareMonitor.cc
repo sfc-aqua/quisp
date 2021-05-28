@@ -1160,13 +1160,13 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
   inf->type = type;
   inf->address = thisNode.par("address");
 
-  if (type == QNodeType || type == RGSsourceType) {
+  if (type == QNodeType || type == RGSsourceType || type == ABSAType) {
     inf->neighborQNode_address = thisNode.par("address");
     inf->address = thisNode.par("address");
     return inf;
   }
 
-  if (type == HoMType || type == ABSAType) {
+  if (type == HoMType) {
     EV_DEBUG << thisNode.getModuleType()->getFullName() << " == " << HoMType->getFullName() << "\n";
     cModule *controller = thisNode.getSubmodule("Controller");
     if (controller == nullptr) {

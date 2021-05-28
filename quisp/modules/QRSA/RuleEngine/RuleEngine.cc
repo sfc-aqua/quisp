@@ -198,6 +198,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     ABSMtimingNotifier *pk = check_and_cast<ABSMtimingNotifier *>(msg);
     // 1. Start generating Grpah State
     std::vector<int> num_qubits = {10, 10};
+    // number of qubits,
+    // shapes
     generateInternalGraphState(num_qubits);
     error("yay");
     // scheduleFirstPhotonEmissionForABSA(pk);
@@ -784,7 +786,7 @@ void RuleEngine::generateInternalGraphState(std::vector<int> req_qubits){
       realtime_controller->EmitPhotonForRGS(qnic_index, qubit_index, qnic_type);
     }
   }
-  error("stop");
+  error("stop, not implemented further");
 }
 
 bool RuleEngine::burstTrial_outdated(int this_trial, int qnic_address) {
