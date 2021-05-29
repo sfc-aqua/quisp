@@ -1,5 +1,5 @@
-#ifndef QUISP_MODULES_IHARDWAREMONITOR_H_
-#define QUISP_MODULES_IHARDWAREMONITOR_H_
+#ifndef QUISP_MODULES_I_HARDWAREMONITOR_H_
+#define QUISP_MODULES_I_HARDWAREMONITOR_H_
 #include <memory>
 #include "modules/QNIC.h"
 #include "omnetpp/csimplemodule.h"

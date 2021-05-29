@@ -1,6 +1,7 @@
 #include "ComponentProvider.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
+#include "omnetpp/cmodule.h"
 
 namespace quisp {
 namespace utils {
@@ -10,6 +11,24 @@ ComponentProvider::ComponentProvider(cModule *_module) : module(_module) {}
 cModule *ComponentProvider::getQNode() {
   ensureStrategy();
   return strategy->getQNode();
+}
+
+cModule *ComponentProvider::getNeighborNode(cModule *qnic) {
+  ensureStrategy();
+  return strategy->getNeighborNode(qnic);
+}
+
+bool ComponentProvider::isHoMNodeType(const cModuleType *const type) {
+  ensureStrategy();
+  return strategy->isHoMNodeType(type);
+}
+bool ComponentProvider::isSPDCNodeType(const cModuleType *const type) {
+  ensureStrategy();
+  return strategy->isSPDCNodeType(type);
+}
+bool ComponentProvider::isQNodeType(const cModuleType *const type) {
+  ensureStrategy();
+  return strategy->isQNodeType(type);
 }
 
 StationaryQubit *ComponentProvider::getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) {

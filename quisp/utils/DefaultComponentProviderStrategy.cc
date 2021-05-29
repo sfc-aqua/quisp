@@ -1,6 +1,7 @@
 #include "DefaultComponentProviderStrategy.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
+#include "omnetpp/cexception.h"
 #include "omnetpp/cmodule.h"
 
 namespace quisp {
@@ -17,6 +18,12 @@ cModule *DefaultComponentProviderStrategy::getQNode() {
     }
   }
   return currentModule;
+}
+cModule *DefaultComponentProviderStrategy::getNeighborNode(cModule *qnic) {
+  if (qnic == nullptr) throw cRuntimeError("failed to get neighbor node. given qnic is nullptr");
+  auto *neighbor_node = qnic->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
+  if (neighbor_node == nullptr) throw cRuntimeError("failed to get neighbor node. neighbor node is nullptr");
+  return neighbor_node;
 }
 
 StationaryQubit *DefaultComponentProviderStrategy::getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) {
@@ -45,5 +52,9 @@ cModule *DefaultComponentProviderStrategy::getQRSA() {
   }
   return qrsa;
 }
+
+bool DefaultComponentProviderStrategy::isHoMNodeType(const cModuleType *const type) { return type == HoMType; }
+bool DefaultComponentProviderStrategy::isQNodeType(const cModuleType *const type) { return type == QNodeType; }
+bool DefaultComponentProviderStrategy::isSPDCNodeType(const cModuleType *const type) { return type == SPDCType; }
 }  // namespace utils
 }  // namespace quisp
