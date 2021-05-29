@@ -44,6 +44,7 @@ namespace modules {
 class ConnectionManager : public IConnectionManager {
  public:
   ConnectionManager();
+  utils::ComponentProvider provider;
 
  private:
   int my_address;
@@ -51,7 +52,6 @@ class ConnectionManager : public IConnectionManager {
   std::map<int, bool> qnic_res_table;
   IRoutingDaemon *routing_daemon;
   IHardwareMonitor *hardware_monitor;
-  utils::ComponentProvider provider;
 
   void initialize() override;
   void handleMessage(cMessage *msg) override;

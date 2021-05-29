@@ -11,6 +11,7 @@
 
 #include "IHardwareMonitor.h"
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
+#include "utils/ComponentProvider.h"
 
 namespace quisp {
 namespace modules {
@@ -30,6 +31,9 @@ class HardwareMonitor : public IHardwareMonitor {
   std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(int neighbor_address) override;
   std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address) override;
 
+ protected:
+  utils::ComponentProvider provider;
+
  private:
   int my_address;
 
@@ -41,9 +45,6 @@ class HardwareMonitor : public IHardwareMonitor {
   int num_qnic_rp;
   int num_qnic_total;
 
-  cModuleType *QNodeType = cModuleType::get("modules.QNode");
-  cModuleType *SPDCType = cModuleType::get("modules.SPDC");
-  cModuleType *HoMType = cModuleType::get("modules.HoM");
   bool do_link_level_tomography = false;
   int num_purification = 0;
   bool X_Purification = false;
@@ -73,7 +74,6 @@ class HardwareMonitor : public IHardwareMonitor {
   void prepareNeighborTable();
 
   virtual std::unique_ptr<NeighborInfo> createNeighborInfo(const cModule &thisNode);
-  virtual cModule *getQNode();
   virtual std::unique_ptr<NeighborInfo> getNeighbor(cModule *qnic_pointer);
   virtual InterfaceInfo getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);

@@ -16,13 +16,15 @@
 #include <unsupported/Eigen/MatrixFunctions>
 
 #include "classical_messages_m.h"
+#include "omnetpp/cexception.h"
+#include "utils/ComponentProvider.h"
 
 namespace quisp {
 namespace modules {
 
 using namespace rules;
 
-HardwareMonitor::HardwareMonitor() {}
+HardwareMonitor::HardwareMonitor() : provider(utils::ComponentProvider{this}) {}
 HardwareMonitor::~HardwareMonitor() {}
 
 // HardwareMonitor is also responsible for calculating the rssi/oka's protocol/fidelity calculate and give it to the RoutingDaemon
@@ -515,14 +517,16 @@ void HardwareMonitor::writeToFile_Topology_with_LinkCost(int qnic_id, double lin
     error("qnic info not found");
   }
   InterfaceInfo interface = getQnicInterfaceByQnicAddr(info->qnic.index, info->qnic.type);
-  cModule *this_node = this->getParentModule()->getParentModule();
-  cModule *neighbor_node = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
+  cModule *const this_node = provider.getQNode();
+  cModule *const neighbor_node = provider.getNeighborNode(interface.qnic.pointer);
+  const cModuleType *const neighbor_node_type = neighbor_node->getModuleType();
   cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
   double dis = channel->par("distance");
-  if (neighbor_node->getModuleType() != QNodeType && neighbor_node->getModuleType() != HoMType && neighbor_node->getModuleType() != SPDCType)
+  if (provider.isQNodeType(neighbor_node_type) && provider.isHoMNodeType(neighbor_node_type) && provider.isSPDCNodeType(neighbor_node_type)) {
     error("Module Type not recognized when writing to file...");
+  }
 
-  if (neighbor_node->getModuleType() == QNodeType) {
+  if (provider.isQNodeType(neighbor_node_type)) {
     if (my_address > info->neighbor_address) {
       std::cout << "\n"
                 << this_node->getFullName() << "<--> QuantumChannel{ cost = " << link_cost << "; distance = " << dis << "km; fidelity = " << fidelity
@@ -543,7 +547,7 @@ QNIC HardwareMonitor::search_QNIC_from_Neighbor_QNode_address(int neighbor_addre
     }
   }
 
-  error(
+  throw cRuntimeError(
       "Something is wrong when looking for QNIC info from neighbor QNode "
       "address. Tomography is also only available between neighbor.");
 }
@@ -1055,7 +1059,7 @@ cModule *HardwareMonitor::getQnic(int qnic_index, QNIC_type qnic_type) {
     error("invalid qnic type: %d", qnic_type);
   }
 
-  cModule *qnic = getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);
+  cModule *qnic = provider.getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index);
   if (qnic == nullptr) {
     error("qnic(index: %d) not found.", qnic_index);
   }
@@ -1140,23 +1144,6 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module)
   return neighbor_info;
 }
 
-cModule *HardwareMonitor::getQNode() {
-  // We know that Connection manager is not the QNode, so start from the parent.
-  cModule *currentModule = getParentModule();
-  try {
-    // Assumes the node in a network has a type QNode
-    while (currentModule->getModuleType() != QNodeType) {
-      currentModule = currentModule->getParentModule();
-    }
-    return currentModule;
-  } catch (std::exception &e) {
-    error(
-        "No module with QNode type found. Have you changed the type name in "
-        "ned file?");
-    endSimulation();
-  }
-}
-
 std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule &thisNode) {
   cModuleType *type = thisNode.getModuleType();
 
@@ -1164,14 +1151,13 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
   inf->type = type;
   inf->address = thisNode.par("address");
 
-  if (type == QNodeType) {
+  if (provider.isQNodeType(type)) {
     inf->neighborQNode_address = thisNode.par("address");
     inf->address = thisNode.par("address");
     return inf;
   }
 
-  if (type == HoMType) {
-    EV_DEBUG << thisNode.getModuleType()->getFullName() << " == " << HoMType->getFullName() << "\n";
+  if (provider.isHoMNodeType(type)) {
     cModule *controller = thisNode.getSubmodule("Controller");
     if (controller == nullptr) {
       error("HoM Controller not found");
@@ -1196,7 +1182,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
     return inf;
   }
 
-  if (type == SPDCType) {
+  if (provider.isSPDCNodeType(type)) {
     error("TO BE IMPLEMENTED");
   }
 
