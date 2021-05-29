@@ -8,6 +8,7 @@
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
 #include "omnetpp/csimulation.h"
+#include "test_utils/TestUtils.h"
 
 namespace {
 
@@ -21,15 +22,12 @@ class MockStationaryQubit : public StationaryQubit {
   MOCK_METHOD(void, setFree, (bool consumed), (override));
 };
 
-class TestComponentProviderStrategy : public IComponentProviderStrategy {
+class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
-  TestComponentProviderStrategy() : mockQubit(nullptr) {}
-  TestComponentProviderStrategy(MockStationaryQubit* _qubit) : mockQubit(_qubit) {}
-  ~TestComponentProviderStrategy() { delete mockQubit; }
+  Strategy() : mockQubit(nullptr) {}
+  Strategy(MockStationaryQubit* _qubit) : mockQubit(_qubit) {}
+  ~Strategy() { delete mockQubit; }
   MockStationaryQubit* mockQubit = nullptr;
-  omnetpp::cModule* getQNode() override { return nullptr; }
-  RoutingDaemon* getRoutingDaemon() override { return nullptr; }
-  HardwareMonitor* getHardwareMonitor() override { return nullptr; }
   StationaryQubit* getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override {
     if (mockQubit == nullptr) mockQubit = new MockStationaryQubit();
     return mockQubit;
@@ -47,7 +45,7 @@ class RTCTestTarget : public quisp::modules::RealTimeController {
     p->setIntValue(123);
     this->addPar(p);
     this->setName("rtc_test_target");
-    this->provider.setStrategy(std::make_unique<TestComponentProviderStrategy>(mockQubit));
+    this->provider.setStrategy(std::make_unique<Strategy>(mockQubit));
   }
 };
 
