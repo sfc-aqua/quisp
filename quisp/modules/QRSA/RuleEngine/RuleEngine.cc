@@ -62,6 +62,10 @@ void RuleEngine::initialize() {
 
   // running_processes = new RuleSetPtr[QNIC_N];//One process per QNIC for now. No multiplexing.
   // WATCH(assigned);
+
+  // Vector for store package for simultaneous entanglement swapping
+  std::map<int, std::map<int, SimultaneousSwappingResult>> pk_list;
+
 }
 
 void RuleEngine::handleMessage(cMessage *msg) {
@@ -279,7 +283,69 @@ void RuleEngine::handleMessage(cMessage *msg) {
     swapr.measured_qubit_index = pkt->getMeasured_qubit_index();
     swapr.operation_type = pkt->getOperation_type();
     updateResources_EntanglementSwapping(swapr);
-  } else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
+  } 
+
+  else if (dynamic_cast<SimultaneousSwappingResult *>(msg) != nullptr) {
+    SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(msg);
+    // Add messeage to collection [ruleSetid][index_in_path]
+    int rule_id = pkt->getRuleSet_id();
+    pk_list[rule_id][pkt->getIndex_in_path()] = pkt;
+
+    // Check if all message is here or not
+    if (pk_list[rule_id].size() == pkt->getPath_length_exclude_IR()){
+
+      // optimize correction operation, without global phase consideration
+      int oco_result = pk_list[rule_id][0];
+      for (int i = 1; i=pk_list[rule_id].size(); i++){
+        oco_result ^= pk_list[rule_id][i];
+      }
+
+
+      int src = pkt->getSrcAddr();
+      int dest = pkt->getDestAddr();
+      process_id swapping_id;
+      swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
+      swapping_id.rule_id = pkt->getRule_id();
+      swapping_id.index = pkt->getAction_index();
+
+      swapping_result swapr;  // result of entanglement swapping
+      swapr.id = swapping_id;
+      swapr.new_partner = pkt->getNew_partner();
+      swapr.new_partner_qnic_index = pkt->getNew_partner_qnic_index();
+      swapr.new_partner_qnic_address = pkt->getNew_partner_qnic_address();
+      swapr.new_partner_qnic_type = pkt->getNew_partner_qnic_type();
+      swapr.measured_qubit_index = pkt->getMeasured_qubit_index();
+      swapr.operation_type = oco_result;
+      updateResources_SimultaneousEntanglementSwapping(swapr);
+    }
+
+    // optimize corretion operator
+
+    
+  } 
+  
+  // else if (dynamic_cast<ABSAresult *>(msg) != nullptr) {
+  //   ABSAResult *pkt = check_and_cast<ABSAResult *>(msg);
+  //   // here next add resources
+  //   int src = pkt->getSrcAddr();
+  //   int dest = pkt->getDestAddr();
+  //   process_id ABSA_id;
+  //   //swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
+  //   //swapping_id.rule_id = pkt->getRule_id();
+  //   //swapping_id.index = pkt->getAction_index();
+
+  //   absa_result absar;  // result of entanglement swapping
+  //   //absar.id = swapping_id;
+  //   absar.new_partner = pkt->getNew_partner();
+  //   absar.new_partner_qnic_index = pkt->getNew_partner_qnic_index();
+  //   absar.new_partner_qnic_address = pkt->getNew_partner_qnic_address();
+  //   absar.new_partner_qnic_type = pkt->getNew_partner_qnic_type();
+  //   absar.measured_qubit_index = pkt->getMeasured_qubit_index();
+  //   absar.operation_type = pkt->getOperation_type();
+  //   //updateResources_EntanglementSwapping(absar);
+  // } 
+  
+  else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
     InternalRuleSetForwarding *pkt = check_and_cast<InternalRuleSetForwarding *>(msg);
     // add actual process
     process p;
@@ -953,6 +1019,84 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     qubit->X_gate();
   } else if (operation_type == 2) {
     qubit->Z_gate();
+  } else {
+    error("something error happened! This operation type doesn't recorded!");
+  }
+
+  if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
+    std::cout << qubit << ", node[" << qubit->node_address << "] from qnic[" << qubit->qnic_index << "]\n";
+    // std::cout<<(bool)(qubit->entangled_partner==nullptr)<<" Entangled if ("<<false<<")\n";
+    // std::cout<<qubit->Density_Matrix_Collapsed<<"\n";
+    EV << "This is node" << qubit->entangled_partner << "\n";
+    error("RuleEngine. Ebit succeed. but wrong");
+  }
+  allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner /*QNode IP address*/, qubit));
+  if (qubit->entangled_partner != nullptr) {
+    if (qubit->entangled_partner->entangled_partner == nullptr) {
+      // std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+      error("1. Entanglement tracking is not doing its job. in update resource E.S.");
+    }
+    if (qubit->entangled_partner->entangled_partner != qubit) {
+      // std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
+      error("2. Entanglement tracking is not doing its job. in update resource E.S.");
+    }
+  }
+  ResourceAllocation(qnic_type, qnic_index);
+  traverseThroughAllProcesses2();  // New resource added to QNIC with qnic_type qnic_index.
+}
+
+void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_result swapr) {
+  // swapper believe previous BSM was succeeded.
+  // These are new partner's info
+  int new_partner = swapr.new_partner;
+  int new_partner_qnic_index = swapr.new_partner_qnic_index;
+  int new_partner_qnic_address = swapr.new_partner_qnic_address;  // this is not nessesary?
+  QNIC_type new_partner_qnic_type = swapr.new_partner_qnic_type;
+  int operation_type = swapr.operation_type;
+
+  // neigbor address should be swapper address
+  // node1 --- node6 --- node15
+  // node6 is swapper and this is the source of swapping result.
+  // qnic interface from node1 to node15 and node1 to node6 must be the same.
+  // initialize
+
+  int qnic_address = routingdaemon->return_QNIC_address_to_destAddr(new_partner);
+  auto info = hardware_monitor->findConnectionInfoByQnicAddr(qnic_address);
+  if (info == nullptr) {
+    error("qnic(addr: %d) info not found", qnic_address);
+  }
+  int qnic_index = info->qnic.index;
+  QNIC_type qnic_type = info->qnic.type;
+  int qubit_index = swapr.measured_qubit_index;
+
+  // First, the qubit used for swapping must be free.s
+  // Swapper doesn't know this is success or fail. Is this correct?
+  // TODO how to apply correct operation? is this the role of real time contoroller?
+  // FIXME here is just one resource, but this should be loop
+  // TODO resources for entanglement swapping in swapper should be free
+  // Update tracker first get index from Swapping result maybe... get qubit index from swapping result
+
+  // we need to free swapper resources consumed for entanglement swapping.
+
+  // qubit with address Addr was shot in nth time. This list is ordered from old to new.
+  StationaryQubit *qubit = check_and_cast<StationaryQubit *>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit", qubit_index));
+  // if(parentAddress == 27 && qubit->entangled_partner->node_address == 15){
+  //     EV<<parentAddress<<" is entangled with "<<qubit->entangled_partner->node_address<<" !!\n";
+  //     error("Did it! Currently, no application implemeted. So, after resource consumed, simulation will end.");
+  // }
+  // check
+  if (operation_type == 0) {
+    // nothing
+  } else if (operation_type == 1) {
+    // do Z
+    qubit->Z_gate();
+  } else if (operation_type == 2) {
+    // do X
+    qubit->Z_gate();
+  } else if (operation_type == 3) {
+    // do XZ
+    qubit->Z_gate();
+    qubit->X_gate();
   } else {
     error("something error happened! This operation type doesn't recorded!");
   }
