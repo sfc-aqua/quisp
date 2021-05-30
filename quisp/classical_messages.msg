@@ -323,6 +323,10 @@ packet SimultaneousSwappingResult extends header{
     int new_partner_qnic_address;
     int measured_qubit_index;
     QNIC_type new_partner_qnic_type;
+
+    // Simultaneous EP
+    int index_in_path;
+    int path_length_exclude_IR;
 }
 
 

@@ -39,6 +39,23 @@ typedef struct {  // This is a little bit redundant
   QNIC_type self_left_qnic_type;
   int self_right_qnic_index;
   QNIC_type self_right_qnic_type;
+
+  // simultaneous config
+  int index;
+
+  int initiator;
+  QNIC_type initiator_qnic_type;
+  int initiator_qnic_index;
+  int initiator_qnic_address;
+  int initiator_res;
+
+  int responder;
+  QNIC_type responder_qnic_type;
+  int responder_qnic_index;
+  int responder_qnic_address;
+  int responder_res;
+
+
 } SwappingConfig;
 
 typedef struct {

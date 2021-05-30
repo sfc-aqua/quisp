@@ -368,8 +368,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
           RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
         }
         else if(simultaneousES){
-          // SwappingConfig config = generateSimultaneousSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
-          RuleSet *rule = generateSimultaneousEntanglementSwappingRuleSet(path.at(i), path);
+          SwappingConfig config = generateSimultaneousSwappingConfig(path.at(i), path, qnics, num_resource);
+          RuleSet *rule = generateSimultaneousEntanglementSwappingRuleSet(path.at(i), config, path);
         }
 
         ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
@@ -520,7 +520,7 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
   return config;
 }
 
-SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners,
+SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path,
                                                          std::vector<QNIC_pair_info> qnics, int num_resources) {
   
   // Set the left and right partner to be initiator and responder.
@@ -533,32 +533,20 @@ SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper
   QNIC_id left_self_qnic = qnics.at(index).fst;
   QNIC_id right_self_qnic = qnics.at(index).snd;
 
-  // FIXME more dynamically using recursive function or ...
-  // auto it = std::find(swapping_partners.begin(), swapping_partners.end(), swapper_address);
-  auto it = swapping_partners.find(swapper_address);
-  if (it == swapping_partners.end() || it->second.size() != 2) {
-    error("Swapper is not recognized as swapper, or the number of partners is wrong (must be 2)");
-  }
-  int left_partner = it->second.at(0);
-  int right_partner = it->second.at(1);
+  size_t left_partner_index = std::distance(path.begin(), iter-1);
+  size_t right_partner_index = std::distance(path.begin(), iter+1);
 
-  auto iter_left = std::find(path.begin(), path.end(), left_partner);
-  auto iter_right = std::find(path.begin(), path.end(), right_partner);
-  if (iter_left == path.end()) {
-    error("left nodes are not found in path");
-  }
-  if (iter_right == path.end()) {
-    error("right nodes are not found in path");
-  }
-
-  size_t left_partner_index = std::distance(path.begin(), iter_left);
-  size_t right_partner_index = std::distance(path.begin(), iter_right);
+  int left_partner = path.at(left_partner_index);
+  int right_partner = path.at(right_partner_index);
 
   // left partner must be second
   // right partner must be first
   // TODO: detail description of this.
   QNIC_id left_partner_qnic = qnics.at(left_partner_index).snd;
   QNIC_id right_partner_qnic = qnics.at(right_partner_index).fst;
+
+  QNIC_id initiator_qnic = qnics.at(path.begin()).snd;
+  QNIC_id responder_qnic = qnics.at(path.end()).fst;
 
   if (right_self_qnic.type == QNIC_RP || left_self_qnic.type == QNIC_RP || right_partner_qnic.type == QNIC_RP || left_partner_qnic.type == QNIC_RP) {
     error("MSM link not implemented");
@@ -576,6 +564,22 @@ SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper
   config.rqnic_index = right_partner_qnic.index;
   config.rqnic_address = right_partner_qnic.address;
   config.rres = num_resources;
+
+  // For end nodes
+  config.initiator = path.begin();
+  config.initiator_qnic_type = initiator_qnic.type;
+  config.initiator_qnic_index = initiatorr_qnic.index;
+  config.initiator_qnic_address = initiatorr_qnic.address;
+  config.initiator_res = num_resources;
+
+  config.responder = path.end();
+  config.responder_qnic_type = responder_qnic.type;
+  config.responder_qnic_index = responder_qnic.index;
+  config.responder_qnic_address = responder_qnic.address;
+  config.responder_res = num_resources;
+
+  // Addition info
+  config.index = index;
 
   config.self_left_qnic_index = left_self_qnic.index;
   config.self_right_qnic_index = right_self_qnic.index;
@@ -769,9 +773,11 @@ RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, Swapp
   return ruleset;
 }
 
-RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int owner, SimultaneousSwappingConfig conf) {
+RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int owner, SimultaneousSwappingConfig conf, std::vector<int> path) {
   unsigned long ruleset_id = createUniqueId();
   int rule_index = 0;
+  int index_in_path = conf.index;
+  int path_length_exclude_IR = path.size() - 2;
 
   Clause *resource_clause_left = new EnoughResourceClauseLeft(conf.left_partner, conf.lres);
   Clause *resource_clause_right = new EnoughResourceClauseRight(conf.right_partner, conf.rres);
@@ -780,9 +786,13 @@ RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int 
   condition->addClause(resource_clause_left);
   condition->addClause(resource_clause_right);
 
-  quisp::rules::Action *action = new SwappingAction(ruleset_id, rule_index, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner,
-                                                    conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type,
-                                                    conf.self_right_qnic_index, conf.self_right_qnic_type);
+  quisp::rules::Action *action = new SimultaneousSwappingAction(ruleset_id, rule_index, 
+                                                    conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres,
+                                                    conf.right_partner, conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, 
+                                                    conf.self_left_qnic_index, conf.self_left_qnic_type, conf.self_right_qnic_index, conf.self_right_qnic_type, 
+                                                    conf.initiator, conf.initiator_qnic_type, conf.initiator_qnic_index, conf.initiator_qnic_address, conf.initiator_res,
+                                                    conf.responder, conf.responder_qnic_type, conf.responder_qnic_index, conf.responder_qnic_address, conf.responder_res,
+                                                    index_in_path, path_length_exclude_IR);
 
   Rule *rule = new Rule(ruleset_id, rule_index);
   rule->setCondition(condition);

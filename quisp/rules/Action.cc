@@ -194,6 +194,8 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
   right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
 
+
+
   if (left_qubit == nullptr || right_qubit == nullptr) {
     Error *pk = new Error;
     pk->setError_text("Not enough resource found! This shouldn't happen!");
@@ -205,12 +207,11 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
     return pk;
   }
 
-  // actual swapping operations
-  StationaryQubit *right_partner_qubit = right_qubit->entangled_partner; // <-- Should just set that right qubit of initiator partner with left qubit of responder
+  // actual swapping operations 
+  // Set address to both end nodes qubits, this might be repeated serveral times
+  StationaryQubit *right_partner_qubit = right_qubit->entangled_partner;
   StationaryQubit *left_partner_qubit = left_qubit->entangled_partner;
-  // just swapping pointer.
-  // swapper have no way to know this swapping is success or not.
-  // bell measurement
+
   left_qubit->Hadamard_gate();
   right_qubit->CNOT_gate(left_qubit);
 
@@ -223,22 +224,22 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
 
   int operation_type_left, operation_type_right;
 
-  if (!left_measure && !right_measure) {
+  if (!left_measure && !right_measure) { // 0 0
     EV << "operation type 0, operation left I, operation right I\n";
     operation_type_left = 0;
     operation_type_right = 0;
-  } else if (!left_measure && right_measure) {
+  } else if (!left_measure && right_measure) { // 0 1
     EV << "operation type 1, operation left I, operation right X\n";
     operation_type_left = 0;
     operation_type_right = 1;
-  } else if (left_measure && !right_measure) {
+  } else if (left_measure && !right_measure) { // 1 0
     EV << "operation type 2, operation left Z, operation right I\n";
-    operation_type_left = 2;
-    operation_type_right = 0;
-  } else if (left_measure && right_measure) {
+    operation_type_left = 0;
+    operation_type_right = 2;
+  } else if (left_measure && right_measure) { // 1 1
     EV << "operation type 3, operation left Z, operation right X\n";
-    operation_type_left = 2;
-    operation_type_right = 1;
+    operation_type_left = 0;
+    operation_type_right = 3;
   }
   RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
   if (std::rand() / RAND_MAX < success_probability) {
@@ -263,7 +264,6 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   // rule_engine->freeConsumedResource(self_right_qnic_id, left_qubit, self_right_qnic_type);
   // Currently, this function is able to return only one packet, but this action have to return
   //  two nodes (left partner and right partner). once return information to rule engine, then, duplicate it.
-  SwappingResult *pk = new SwappingResult;
   SimultaneousSwappingResult *pk = new SimultaneousSwappingResult;
   // no destination here. In RuleEngine, it's set.
   // this setKind() doesn't seem to have any effect; set instead in void RuleEngine::traverseThroughAllProcesses2()
@@ -272,24 +272,31 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   pk->setRule_id(rule_id);
   pk->setAction_index(action_index);
 
+  pk->setIndex_in_path(index_in_path);
+  pk->setPath_length_exclude_IR(path_length_exclude_IR);
+
   // FIXME: These operations are corresponds to the result of operation.
   pk->setOperation_type_left(operation_type_left);  // operation type for left node
   pk->setOperation_type_right(operation_type_right);  // operation type for right node
   // These information are cropped in the RuleEngine.
-  pk->setLeft_Dest(left_partner);  // this might not require but just in case
-  pk->setRight_Dest(right_partner);
 
-  pk->setNew_partner_left(right_partner);
-  pk->setNew_partner_qnic_index_left(right_qnic_id);
-  pk->setNew_partner_qnic_type_left(right_qnic_type);
-  pk->setNew_partner_qnic_address_left(right_qnic_address);
-  pk->setMeasured_qubit_index_left(lindex);  // here is wrong;
+  // Change the destination to end nodes instead.
+  pk->setLeft_Dest(initiator);
+  pk->setRight_Dest(responder);
 
-  pk->setNew_partner_right(left_partner);
-  pk->setNew_partner_qnic_index_right(left_qnic_id);
-  pk->setNew_partner_qnic_type_right(left_qnic_type);
-  pk->setNew_partner_qnic_address_right(left_qnic_address);
-  pk->setMeasured_qubit_index_right(rindex);
+  
+  pk->setNew_partner_left(responder);
+  pk->setNew_partner_qnic_index_left(responder_qnic_id);
+  pk->setNew_partner_qnic_type_left(responder_qnic_type);
+  pk->setNew_partner_qnic_address_left(responder_qnic_address);
+  //pk->setMeasured_qubit_index_left(responder_index);  // here is wrong;
+
+  pk->setNew_partner_right(initiator);
+  pk->setNew_partner_qnic_index_right(initiator_qnic_id);
+  pk->setNew_partner_qnic_type_right(initiator_qnic_type);
+  pk->setNew_partner_qnic_address_right(initiator_qnic_address);
+  //pk->setMeasured_qubit_index_right(initiator_index);
+  
   return pk;
 }
 
