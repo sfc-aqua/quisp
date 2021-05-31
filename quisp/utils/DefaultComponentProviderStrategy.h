@@ -16,8 +16,10 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
   bool isHoMNodeType(const cModuleType *const type) override;
   bool isSPDCNodeType(const cModuleType *const type) override;
   StationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override;
+  cModule *getQNIC(int qnic_index, QNIC_type qnic_type) override;
   IRoutingDaemon *getRoutingDaemon() override;
   IHardwareMonitor *getHardwareMonitor() override;
+  IRealTimeController *getRealTimeController() override;
 
  private:
   const cModuleType *const QNodeType = cModuleType::get("modules.QNode");

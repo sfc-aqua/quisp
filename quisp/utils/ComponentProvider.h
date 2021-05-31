@@ -27,8 +27,10 @@ class ComponentProvider {
   bool isHoMNodeType(const cModuleType *const type);
   bool isSPDCNodeType(const cModuleType *const type);
   StationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type);
+  cModule *getQNIC(int qnic_index, QNIC_type qnic_type);
   IRoutingDaemon *getRoutingDaemon();
   IHardwareMonitor *getHardwareMonitor();
+  IRealTimeController *getRealTimeController();
 
   // when a this class instantiated, a strategy class instantiation may fail because
   // the strategy class may depend on other modules instantiated by OMNeT++'s NED file.

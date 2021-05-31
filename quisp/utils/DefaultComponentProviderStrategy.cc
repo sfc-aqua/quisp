@@ -1,8 +1,10 @@
 #include "DefaultComponentProviderStrategy.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
+#include "modules/QRSA/RealTimeController/IRealTimeController.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
 #include "omnetpp/cexception.h"
 #include "omnetpp/cmodule.h"
+#include "utils/utils.h"
 
 namespace quisp {
 namespace utils {
@@ -27,12 +29,20 @@ cModule *DefaultComponentProviderStrategy::getNeighborNode(cModule *qnic) {
 }
 
 StationaryQubit *DefaultComponentProviderStrategy::getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) {
+  auto *qnic = getQNIC(qnic_index, qnic_type);
+  if (qnic == nullptr) {
+    throw cRuntimeError("QNIC not found. index: %d, type: %d", qnic_index, qnic_type);
+  }
+  auto *qubit = qnic->getSubmodule("statQubit", qubit_index);
+  return check_and_cast<StationaryQubit *>(qubit);
+}
+
+cModule *DefaultComponentProviderStrategy::getQNIC(int qnic_index, QNIC_type qnic_type) {
   if (qnic_type > QNIC_N) {
     throw cRuntimeError("got invalid qnic type: %d", qnic_type);
   }
   auto qnode = getQNode();
-  auto qubit = qnode->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit", qubit_index);
-  return check_and_cast<StationaryQubit *>(qubit);
+  return qnode->getSubmodule(QNIC_names[qnic_type], qnic_index);
 }
 
 IRoutingDaemon *DefaultComponentProviderStrategy::getRoutingDaemon() {
@@ -42,6 +52,10 @@ IRoutingDaemon *DefaultComponentProviderStrategy::getRoutingDaemon() {
 IHardwareMonitor *DefaultComponentProviderStrategy::getHardwareMonitor() {
   auto *qrsa = getQRSA();
   return check_and_cast<IHardwareMonitor *>(qrsa->getSubmodule("hm"));
+}
+modules::IRealTimeController *DefaultComponentProviderStrategy::getRealTimeController() {
+  auto *qrsa = getQRSA();
+  return check_and_cast<IRealTimeController *>(qrsa->getSubmodule("rt"));
 }
 
 cModule *DefaultComponentProviderStrategy::getQRSA() {
