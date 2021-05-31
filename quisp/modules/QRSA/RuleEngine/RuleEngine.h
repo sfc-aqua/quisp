@@ -21,6 +21,7 @@
 #include "modules/QRSA/RealTimeController/IRealTimeController.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
 #include "modules/QUBIT.h"
+#include "utils/ComponentProvider.h"
 
 using namespace omnetpp;
 
@@ -44,6 +45,7 @@ class RuleEngine : public IRuleEngine {
   simsignal_t actual_resSignal;
   // friend class Action;
  public:
+  RuleEngine();
   int parentAddress;  // Parent QNode's address
   EmitPhotonRequest *emt;
   NeighborTable ntable;
@@ -60,8 +62,8 @@ class RuleEngine : public IRuleEngine {
   QubitStateTable *Busy_OR_Free_QubitState_table;
   bool *terminated_qnic;  // When you need to intentionally stop the link to make the simulation lighter.
   sentQubitIndexTracker *tracker;
-  HardwareMonitor *hardware_monitor;
-  RoutingDaemon *routingdaemon;
+  IHardwareMonitor *hardware_monitor;
+  IRoutingDaemon *routingdaemon;
   IRealTimeController *realtime_controller;
   int *qnic_burst_trial_counter;
   qnicResources *allResources;  // Size will be defined in initialization. If 3 qnic types, then size is 3. Type defined in QUBIT.h
@@ -85,7 +87,6 @@ class RuleEngine : public IRuleEngine {
   void initialize() override;
   void finish() override;
   void handleMessage(cMessage *msg) override;
-  cModule *getQNode();
   int countFreeQubits_inQnic(QubitStateTable table, int qnic_index);
   int getOneFreeQubit_inQnic(QubitStateTable table, int qnic_index);
   QubitStateTable setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
@@ -116,7 +117,6 @@ class RuleEngine : public IRuleEngine {
 
   void updateResources_EntanglementSwapping(swapping_result swapr);
 
- private:
   utils::ComponentProvider provider;
 };
 

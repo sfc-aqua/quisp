@@ -9,6 +9,7 @@
 
 #include "RuleEngine.h"
 #include <fstream>
+#include "utils/ComponentProvider.h"
 
 namespace quisp {
 namespace modules {
@@ -17,17 +18,15 @@ Define_Module(RuleEngine);
 
 using namespace rules;
 
+RuleEngine::RuleEngine() : provider(utils::ComponentProvider{this}) {}
+
 void RuleEngine::initialize() {
   // HardwareMonitor's neighbor table is checked in the initialization stage of the simulation
   // This assumes the topology never changes throughout the simulation.
   // If dynamic change in topology is required, recoding this is needed.
-  cModule *hm = getParentModule()->getSubmodule("hm");
-  hardware_monitor = check_and_cast<HardwareMonitor *>(hm);
-  cModule *rt = getParentModule()->getSubmodule("rt");
-  realtime_controller = check_and_cast<IRealTimeController *>(rt);  // Just for qubit color update and Pauli error elimination
-  // TODO CHECK: Is this doable?
-  cModule *rd = getParentModule()->getSubmodule("rd");
-  routingdaemon = check_and_cast<RoutingDaemon *>(rd);
+  hardware_monitor = provider.getHardwareMonitor();
+  realtime_controller = provider.getRealTimeController();
+  routingdaemon = provider.getRoutingDaemon();
 
   parentAddress = par("address");
   number_of_qnics_all = par("total_number_of_qnics");
@@ -71,8 +70,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
   if (dynamic_cast<EmitPhotonRequest *>(msg) != nullptr) {  // From self.
     EmitPhotonRequest *pk = check_and_cast<EmitPhotonRequest *>(msg);
-    cModule *rtc = getParentModule()->getSubmodule("rt");
-    IRealTimeController *realtime_controller = check_and_cast<IRealTimeController *>(rtc);
 
     // Terminate emission if trial is over already (e.g. the neighbor ran out of free qubits and the BSA already returned the results)
     if (burstTrial_outdated(pk->getTrial(), pk->getQnic_address())) {
@@ -156,7 +153,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
   else if (dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg) != nullptr) {
     SchedulePhotonTransmissionsOnebyOne *pk = check_and_cast<SchedulePhotonTransmissionsOnebyOne *>(msg);
-    EV << getQNode()->getFullName() << ": Photon shooting is from qnic[" << pk->getQnic_index() << "] with address=" << pk->getQnic_address();
+    EV << provider.getQNode()->getFullName() << ": Photon shooting is from qnic[" << pk->getQnic_index() << "] with address=" << pk->getQnic_address();
 
     // Terminate emission if trial is over already (the neighbor ran out of free qubits)
     if (burstTrial_outdated(pk->getTrial(), pk->getQnic_address())) {
@@ -699,7 +696,7 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
 
   st->setQnic_index(qnic_index);
   st->setQnic_address(qnic_address);
-  EV << getQNode()->getFullName() << ": First photon shooting is from qnic[" << qnic_index << "] with address=" << qnic_address;
+  EV << provider.getQNode()->getFullName() << ": First photon shooting is from qnic[" << qnic_index << "] with address=" << qnic_address;
   st->setInterval(pk->getInterval());
   st->setTiming(pk->getTiming_at());
   st->setTrial(qnic_burst_trial_counter[qnic_address]);  // Keeps the burst counter. First burst index is 0.
@@ -902,11 +899,10 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
   }
   qnic_burst_trial_counter[qnic_address]++;  // Increment the burst trial counter.
   // You dont need this unless you want to see how many trials have been dealt by each qnic via IDE.
-  cModule *qnode = getQNode();
   switch (qnic_type) {  // if ((qnic_type == QNIC_E) || (qnic_type == QNIC_R)) // if (qnic_type < QNIC_RP)
     case QNIC_E:
     case QNIC_R:
-      qnode->getSubmodule(QNIC_names[qnic_type], qnic_index)->par("burst_trial_counter") = qnic_burst_trial_counter[qnic_address];
+      provider.getQNIC(qnic_index, QNIC_type(qnic_type))->par("burst_trial_counter") = qnic_burst_trial_counter[qnic_address];
   }
 }
 
@@ -944,7 +940,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // we need to free swapper resources consumed for entanglement swapping.
 
   // qubit with address Addr was shot in nth time. This list is ordered from old to new.
-  StationaryQubit *qubit = check_and_cast<StationaryQubit *>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit", qubit_index));
+  StationaryQubit *qubit = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
   // if(parentAddress == 27 && qubit->entangled_partner->node_address == 15){
   //     EV<<parentAddress<<" is entangled with "<<qubit->entangled_partner->node_address<<" !!\n";
   //     error("Did it! Currently, no application implemeted. So, after resource consumed, simulation will end.");
@@ -1030,7 +1026,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
       // Keep the entangled qubits
       // std::cout<<i<<"th shot has succeeded.....that was qubit["<<it->second.qubit_index<<"] in qnic["<<it->second.qnic_index<<"] node addr["<<it->first<<"] \n";
       // Add this as an available resource
-      StationaryQubit *qubit = check_and_cast<StationaryQubit *>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit", it->second.qubit_index));
+      StationaryQubit *qubit = provider.getStationaryQubit(qnic_index, it->second.qubit_index, qnic_type);
       if (qubit->entangled_partner != nullptr) {
         if (qubit->entangled_partner->entangled_partner == nullptr) {
           // std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
@@ -1104,21 +1100,6 @@ void RuleEngine::finish() {
   //   for(int i = 0; i < creation_times.size(); i++){
   //       creation_time_stats<<creation_times[i]<<"\n";
   // }
-}
-
-cModule *RuleEngine::getQNode() {
-  cModule *currentModule = getParentModule();  // We know that Connection manager is not the QNode, so start from the parent.
-  try {
-    cModuleType *QNodeType = cModuleType::get("modules.QNode");  // Assumes the node in a network has a type QNode
-    while (currentModule->getModuleType() != QNodeType) {
-      currentModule = currentModule->getParentModule();
-    }
-    return currentModule;
-  } catch (std::exception &e) {
-    error("No module with QNode type found. Have you changed the type name in ned file?");
-    endSimulation();
-  }
-  return currentModule;
 }
 
 double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index) { return uniform(.6, .9); }
