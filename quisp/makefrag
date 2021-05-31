@@ -35,11 +35,10 @@ ci: msgheaders
 	@clang-format $(SRCS) $(HEADERS) -output-replacements-xml | grep -c "<replacement " -q ; if [ $$? -ne 1 ]; then echo "error: run make format and then push it again"; exit 1; fi
 	@clang-tidy -warnings-as-errors="*" -header-filter="./(.|utils|rules|modules)/.*.h" $(SRCS) -- $(COPTS) $(TEST_INCLUDE)
 
-$(TEST_OBJS):
+$(TEST_OBJS): $O/%.o : %.cc
 	@$(MKPATH) $(dir $@)
-	@echo creating test objects $@
 	$(qecho) "$<"
-	$(Q)$(CXX) -c $(CXXFLAGS) $(COPTS) $(TEST_INCLUDE) -o $@ $(subst $O/,,$(@:.o=.cc))
+	$(Q)$(CXX) -c $(CXXFLAGS) $(COPTS) $(TEST_INCLUDE) -o $@ $<
 
 $(TARGET_DIR)/run_unit_test: $(TARGET_DIR)/$(TARGET) $(TEST_OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)
 	@$(MKPATH) $O
