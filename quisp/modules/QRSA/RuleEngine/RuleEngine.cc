@@ -799,7 +799,7 @@ void RuleEngine::scheduleNextEmissionEvent(int qnic_index, int qnic_address, dou
     scheduleAt(simTime() + interval, st);
 }
 
-RuleEngine::QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTable table, QNIC_type qnic_type) {
+QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTable table, QNIC_type qnic_type) {
   int qnics = -1;
   switch (qnic_type) {
     case QNIC_E:
@@ -853,7 +853,7 @@ int RuleEngine::countFreeQubits_inQnic(QubitStateTable table, int qnic_index) {
   return num_free;
 }
 
-RuleEngine::QubitStateTable RuleEngine::setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index) {
+QubitStateTable RuleEngine::setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index) {
   for (auto it = table.cbegin(); it != table.cend(); ++it) {
     if (it->second.isBusy == false && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index) {
       table[it->first].isBusy = true;
@@ -865,7 +865,7 @@ RuleEngine::QubitStateTable RuleEngine::setQubitBusy_inQnic(QubitStateTable tabl
   return table;
 }
 
-RuleEngine::QubitStateTable RuleEngine::setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index) {
+QubitStateTable RuleEngine::setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index) {
   for (auto it = table.cbegin(); it != table.cend(); ++it) {
     // std::cout<<it->first<<" table = "<<table[it->first].isBusy<<"\n";
     if (it->second.isBusy == true && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index) {
