@@ -292,6 +292,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (dynamic_cast<SwappingResult *>(msg) != nullptr) {
     SwappingResult *pkt = check_and_cast<SwappingResult *>(msg);
     // here next add resources
+    EV<<"Got Swapping result"<<"\n";
     int src = pkt->getSrcAddr();
     int dest = pkt->getDestAddr();
     process_id swapping_id;
@@ -343,7 +344,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // 1. Add process (RuleSet) of swapping to running process
     // 2. Run it
     int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
-    std::cout << "Process size is ...." << p.Rs->size() << " node[" << parentAddress << "\n";
+    // std::cout << "Process size is ...." << p.Rs->size() << " node[" << parentAddress << "\n";
     // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
     // ResourceAllocation();
     if (p.Rs->size() > 0) {
@@ -356,13 +357,13 @@ void RuleEngine::handleMessage(cMessage *msg) {
     InternalRuleSetForwarding_Application *pkt = check_and_cast<InternalRuleSetForwarding_Application *>(msg);
     // FIXME This is really naive implementation.
     if (pkt->getApplication_type() == 0) {
-      EV << "got application!!!!!!!!!!!!!!!!! at " << parentAddress << "\n";
       // Received a tomography rule set.
       InternalRuleSetForwarding_Application *pk = check_and_cast<InternalRuleSetForwarding_Application *>(msg);
       // std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
       process p;
       p.ownner_addr = pkt->getRuleSet()->owner;
       p.Rs = pkt->getRuleSet();
+      EV<<"rule_id"<<p.Rs->ruleset_id;
       int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
       std::cout << "Process size is ...." << p.Rs->size() << " node[" << parentAddress << "\n";
       // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
@@ -993,6 +994,7 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
 void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // swapper believe previous BSM was succeeded.
   // These are new partner's info
+  
   int new_partner = swapr.new_partner;
   int new_partner_qnic_index = swapr.new_partner_qnic_index;
   int new_partner_qnic_address = swapr.new_partner_qnic_address;  // this is not nessesary?
@@ -1031,7 +1033,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // }
   // check
   if (operation_type == 0) {
-    // nothing
+    // do nothing
   } else if (operation_type == 1) {
     // do X
     qubit->X_gate();
@@ -1060,6 +1062,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     }
   }
   ResourceAllocation(qnic_type, qnic_index);
+  DEBUG_flag = true;
   traverseThroughAllProcesses2();  // New resource added to QNIC with qnic_type qnic_index.
 }
 
@@ -1296,7 +1299,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
           // emit(recog_resSignal, assigned);
         }
       }
-      EV << "assigned" << assigned << "\n";
+      // EV << "assigned" << assigned << "\n";
     }
     // std::cout<<parentAddress<<"Assigned = "<<assigned<<"\n";
   }
@@ -1324,6 +1327,10 @@ void RuleEngine::traverseThroughAllProcesses2() {
           break;  // No more resource left for now.
         }
         // std::cout<<"module["<<parentAddress<<"]\n";
+        // Here I got some problems
+        unsigned long r_id = (*rule)->ruleset_id;
+        EV<<"id "<<r_id<<"\n";
+        error("");
         cPacket *pk = (*rule)->checkrun(this);  // Do something on qubits entangled with resource_entangled_with_address.
 
         if (pk != nullptr) {

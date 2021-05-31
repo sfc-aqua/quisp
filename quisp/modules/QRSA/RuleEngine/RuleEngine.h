@@ -141,6 +141,7 @@ class RuleEngine : public cSimpleModule {
    * typedef EntangledPairs* qnicResources;//For each qnic. If the number of "qnic" is 3, then the size is 3.
    * For resource management over.
    * */
+  bool DEBUG_flag=false;
 
   // typedef rules::RuleSet* RuleSetPtr;
   typedef std::map<int, process> running_processes;  // index -> process

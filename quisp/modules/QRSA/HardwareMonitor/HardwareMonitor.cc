@@ -348,7 +348,6 @@ void HardwareMonitor::finish() {
     inf.neighbor_address){ return;
         }
     }*/
-
     tomography_dm << this_node->getFullName() << "<--->" << neighbor_node->getFullName() << "\n";
     tomography_dm << "REAL\n";
     tomography_dm << density_matrix_reconstructed.real() << "\n";
@@ -456,7 +455,6 @@ Matrix4cd HardwareMonitor::reconstruct_Density_Matrix(int qnic_id) {
        S22 * kroneckerProduct(Pauli.Y, Pauli.Y).eval() + S23 * kroneckerProduct(Pauli.Y, Pauli.Z).eval() + S30 * kroneckerProduct(Pauli.Z, Pauli.I).eval() +
        S31 * kroneckerProduct(Pauli.Z, Pauli.X).eval() + S32 * kroneckerProduct(Pauli.Z, Pauli.Y).eval() + S33 * kroneckerProduct(Pauli.Z, Pauli.Z).eval() +
        S * kroneckerProduct(Pauli.I, Pauli.I).eval());
-
   EV << "DM = " << density_matrix_reconstructed << "\n";
   return density_matrix_reconstructed;
   /*

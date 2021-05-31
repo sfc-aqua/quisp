@@ -505,7 +505,7 @@ cPacket *DoubleSelectionActionInv::run(cModule *re) {
 cPacket *RandomMeasureAction::run(cModule *re) {
   StationaryQubit *qubit = nullptr;
 
-  qubit = getResource_fromTop(resource);
+  qubit = getResource_fromTop_with_partner(resource, partner);
 
   if (qubit == nullptr) {
     Error *pk = new Error;
