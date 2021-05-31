@@ -199,6 +199,15 @@ void HoMController::checkNeighborAddress(bool receiver) {
 // Checks the buffer size of the connected qnics.
 void HoMController::checkNeighborBuffer(bool receiver) {
   if (receiver) {
+    EV<<"1\n";
+    neighbor_buffer = getParentModule()->getParentModule()->par("numBuffer");
+    EV<<"2\n";
+    EV<<"getParentModule(): "<<getParentModule()<<"\n";
+    omnetpp::cModule *module_name = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule();
+    EV<<"module name: "<<module_name<<"\n";
+    neighbor_buffer_two = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->par("numBuffer");
+    EV<<"3\n";
+    max_buffer = std::min(neighbor_buffer, neighbor_buffer_two);  // Both nodes should transmit the same amount of photons.
     try {
       neighbor_buffer = getParentModule()->getParentModule()->par("numBuffer");
       neighbor_buffer_two = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->par("numBuffer");
