@@ -707,6 +707,8 @@ RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, Swapp
   unsigned long ruleset_id = createUniqueId();
   int rule_index = 0;
 
+  EV<<"es_rule"<<ruleset_id<<"\n";
+
   Clause *resource_clause_left = new EnoughResourceClauseLeft(conf.left_partner, conf.lres);
   Clause *resource_clause_right = new EnoughResourceClauseRight(conf.right_partner, conf.rres);
 
@@ -765,6 +767,8 @@ RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int 
 
 RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, int num_of_measure, QNIC_type qnic_type, int qnic_index, int num_resources) {
   unsigned long ruleset_id = createUniqueId();
+
+  EV<<"tomo_rule"<<ruleset_id<<"\n";
 
   int rule_index = 0;
   RuleSet *tomography = new RuleSet(ruleset_id, owner, partner);
