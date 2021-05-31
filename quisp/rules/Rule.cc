@@ -30,6 +30,8 @@ void Rule::setAction(Action *a) {
 }
 cPacket *Rule::checkrun(cModule *re) {
   cPacket *pk = nullptr;
+
+  // DEBUG
   if (condition->check(resources)) {
     // std::cout<<"Condition met!.\n";
     // std::cout<<"before: check num = "<<action->checkNumResource()<<"\n";

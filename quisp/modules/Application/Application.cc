@@ -33,7 +33,8 @@ void Application::initialize() {
   my_address = provider.getQNode()->par("address");
   is_e2e_connection = par("EndToEndConnection");
   number_of_resources = par("NumberOfResources");
-  num_measure = par("num_measure");
+  num_measure = par("NumMeasureApp");
+  requiredFidelity = par("RequiredFidelity");
 
   WATCH_VECTOR(other_end_node_addresses);
   storeEndNodeAddresses();
@@ -68,8 +69,7 @@ void Application::initialize() {
     int endnode_dest_addr = getOneRandomEndNodeAddress();
     EV_INFO << "My connection setup request will be sent from " << my_address << " to " << endnode_dest_addr << "\n";
     ConnectionSetupRequest *pk = createConnectionSetupRequest(endnode_dest_addr, number_of_resources);
-    // delay to avoid conflict
-    scheduleAt(simTime() + exponential(0.00001 * my_address), pk);
+    scheduleAt(simTime() + 0.1 * my_address, pk);
     return;
   }
 
@@ -83,6 +83,8 @@ ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr,
   pk->setDestAddr(my_address);
   pk->setSrcAddr(my_address);
   pk->setNumber_of_required_Bellpairs(num_of_required_resources);
+  pk->setRequiredFidelity(requiredFidelity);
+  pk->setNum_measure(num_measure);
   pk->setKind(7);
   return pk;
 }
@@ -100,7 +102,7 @@ void Application::handleMessage(cMessage *msg) {
   }
 
   if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
-    bubble("InternalRuleSetForwarding packet arrived to application!");
+    // bubble("InternalRuleSetForwarding packet arrived to application!");
     send(msg, "toRouter");
     return;
   }

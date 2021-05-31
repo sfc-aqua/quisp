@@ -61,6 +61,15 @@ struct swapping_result {
   int operation_type;
 };
 
+struct photon_transmission_config {
+  int transmission_partner_address;
+  int qnic_index;
+  int qnic_address;
+  QNIC_type qnic_type;
+  simtime_t timing;
+  double interval;
+};
+
 // Process = RuleSet
 typedef struct {
   int ownner_addr;

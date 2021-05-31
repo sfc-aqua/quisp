@@ -33,6 +33,7 @@ class RoutingDaemon : public IRoutingDaemon {
 
  public:
   int return_QNIC_address_to_destAddr(int destAddr) override;
+  int returnNumEndNodes() override;
 };
 
 }  // namespace modules

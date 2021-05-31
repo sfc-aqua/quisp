@@ -9,8 +9,11 @@
 
 #include <modules/QNIC.h>
 #include <modules/QUBIT.h>
+// #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 #include <omnetpp.h>
 #include <memory>
+
+#include "utils/ComponentProvider.h"
 
 using namespace quisp::modules;
 
@@ -491,6 +494,8 @@ class RandomMeasureAction : public Action {
   int dst;
   int mutable current_count;
   int mutable max_count;
+  // std::map<int, int> current_count_with_partner;
+  bool multihopTomo = false;
   simtime_t start;
 
  public:
@@ -505,6 +510,7 @@ class RandomMeasureAction : public Action {
     max_count = max;
     start = simTime();
   };
+
   // cPacket* run(qnicResources *resources) override;
   // cPacket* run(cModule *re, qnicResources *resources) override;
   cPacket* run(cModule* re) override;

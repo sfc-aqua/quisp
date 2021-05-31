@@ -18,6 +18,7 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
   using quisp::modules::ConnectionManager::par;
   ConnectionManagerTestTarget() : quisp::modules::ConnectionManager() {
     setParInt(this, "address", 123);
+    setParInt(this, "total_number_of_qnics", 10);
     this->setName("connection_manager_test_target");
     this->provider.setStrategy(std::make_unique<Strategy>());
   }

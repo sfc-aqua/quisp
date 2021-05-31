@@ -460,7 +460,6 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
   if (right_self_qnic.type == QNIC_RP || left_self_qnic.type == QNIC_RP || right_partner_qnic.type == QNIC_RP || left_partner_qnic.type == QNIC_RP) {
     error("MSM link not implemented");
   }
-
   SwappingConfig config;
   config.left_partner = left_partner;
   config.lqnic_type = left_partner_qnic.type;
@@ -705,8 +704,8 @@ RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, Swapp
   unsigned long ruleset_id = createUniqueId();
   int rule_index = 0;
 
-  Clause *resource_clause_left = new EnoughResourceClauseLeft(conf.left_partner, conf.lres);
-  Clause *resource_clause_right = new EnoughResourceClauseRight(conf.right_partner, conf.rres);
+  Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, conf.lres);
+  Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, conf.rres);
 
   Condition *condition = new Condition();
   condition->addClause(resource_clause_left);
@@ -716,7 +715,7 @@ RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, Swapp
                                                     conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type,
                                                     conf.self_right_qnic_index, conf.self_right_qnic_type);
 
-  Rule *rule = new Rule(ruleset_id, rule_index);
+  Rule *rule = new Rule(ruleset_id, rule_index, "entanglement swapping");
   rule->setCondition(condition);
   rule->setAction(action);
 
@@ -764,12 +763,14 @@ RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int 
 RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, int num_of_measure, QNIC_type qnic_type, int qnic_index, int num_resources) {
   unsigned long ruleset_id = createUniqueId();
 
+  EV << "tomo_rule" << ruleset_id << "\n";
+
   int rule_index = 0;
   RuleSet *tomography = new RuleSet(ruleset_id, owner, partner);
-  Rule *rule = new Rule(ruleset_id, rule_index);
+  Rule *rule = new Rule(ruleset_id, rule_index, "tomography");
 
   // 3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
-  Clause *count_clause = new MeasureCountClause(num_of_measure, partner, qnic_type, qnic_index, 0);
+  Clause *count_clause = new MeasureCountClause(num_of_measure);
   Clause *resource_clause = new EnoughResourceClause(partner, num_resources);
 
   // Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
@@ -780,12 +781,13 @@ RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, in
   rule->setCondition(condition);
 
   // Measure the local resource between it->second.neighborQNode_address.
-  quisp::rules::Action *action = new RandomMeasureAction(partner, qnic_type, qnic_index, 0, owner, num_of_measure);
+  // final argument is multihop tomography flag
+  quisp::rules::Action *action = new RandomMeasureAction(partner, qnic_type, qnic_index, num_resources, owner, num_of_measure);
   rule->setAction(action);
 
   // Add the rule to the RuleSet
   tomography->addRule(rule);
-  tomography->finalize();
+  // tomography->finalize();
 
   return tomography;
 }

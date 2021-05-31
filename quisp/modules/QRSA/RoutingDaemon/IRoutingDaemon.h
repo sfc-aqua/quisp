@@ -11,6 +11,7 @@ namespace modules {
 class IRoutingDaemon : public cSimpleModule {
  public:
   virtual int return_QNIC_address_to_destAddr(int destAddr) = 0;
+  virtual int returnNumEndNodes() = 0;
 };
 }  // namespace modules
 }  // namespace quisp

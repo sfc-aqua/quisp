@@ -75,28 +75,6 @@ class FidelityClause : public Clause {
   bool checkTerminate(std::multimap<int, StationaryQubit*>) const override { return false; };
 };
 
-// class TimeClause: public Clause{
-//     public:
-//         simtime_t arrivalTime;
-//         simtime_t currentTime;
-//         bool initial_time;
-
-// }
-
-class EnoughResourceClause : public Clause {
- protected:
-  int num_resource_required;
-  int partner;
-
- public:
-  EnoughResourceClause(int part, int num_res) : Clause() {
-    num_resource_required = num_res;
-    partner = part;
-  };
-  bool check(std::multimap<int, StationaryQubit*>) const override;
-  bool checkTerminate(std::multimap<int, StationaryQubit*>) const override { return false; };
-};
-
 /**EnoughResourceClauseLeft is for checking if node have enough resource to left node.
  *  This is for entanglement swapping.
  */
@@ -126,6 +104,28 @@ class EnoughResourceClauseRight : public Clause {
     partner_right = part_right;
   }
 
+  bool check(std::multimap<int, StationaryQubit*>) const override;
+  bool checkTerminate(std::multimap<int, StationaryQubit*>) const override { return false; };
+};
+
+// class TimeClause: public Clause{
+//     public:
+//         simtime_t arrivalTime;
+//         simtime_t currentTime;
+//         bool initial_time;
+
+// }
+
+class EnoughResourceClause : public Clause {
+ protected:
+  int num_resource_required;
+  int partner;
+
+ public:
+  EnoughResourceClause(int part, int num_res) : Clause() {
+    num_resource_required = num_res;
+    partner = part;
+  };
   bool check(std::multimap<int, StationaryQubit*>) const override;
   bool checkTerminate(std::multimap<int, StationaryQubit*>) const override { return false; };
 };

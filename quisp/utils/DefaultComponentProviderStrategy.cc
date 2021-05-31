@@ -1,7 +1,7 @@
 #include "DefaultComponentProviderStrategy.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RealTimeController/IRealTimeController.h"
-#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
+#include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
 #include "omnetpp/cexception.h"
 #include "omnetpp/cmodule.h"
 #include "utils/utils.h"
