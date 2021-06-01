@@ -22,6 +22,9 @@ namespace modules {
 
 using namespace rules;
 
+HardwareMonitor::HardwareMonitor() {}
+HardwareMonitor::~HardwareMonitor() {}
+
 // HardwareMonitor is also responsible for calculating the rssi/oka's protocol/fidelity calculate and give it to the RoutingDaemon
 void HardwareMonitor::initialize(int stage) {
   EV_INFO << "HardwareMonitor booted\n";
