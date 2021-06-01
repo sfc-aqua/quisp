@@ -12,10 +12,14 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
   DefaultComponentProviderStrategy(cModule *_self);
   cModule *getQNode() override;
   StationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override;
+  IRoutingDaemon *getRoutingDaemon() override;
+  IHardwareMonitor *getHardwareMonitor() override;
 
  private:
   const cModuleType *const QNodeType = cModuleType::get("modules.QNode");
   cModule *self;
+
+  cModule *getQRSA();
 };
 
 }  // namespace utils

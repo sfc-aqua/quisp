@@ -22,6 +22,8 @@ class ComponentProvider {
 
   omnetpp::cModule *getQNode();
   StationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type);
+  IRoutingDaemon *getRoutingDaemon();
+  IHardwareMonitor *getHardwareMonitor();
 
   // when a this class instantiated, a strategy class instantiation may fail because
   // the strategy class may depend on other modules instantiated by OMNeT++'s NED file.

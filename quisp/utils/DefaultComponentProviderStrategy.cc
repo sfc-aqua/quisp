@@ -1,4 +1,7 @@
 #include "DefaultComponentProviderStrategy.h"
+#include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
+#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
+#include "omnetpp/cmodule.h"
 
 namespace quisp {
 namespace utils {
@@ -25,5 +28,22 @@ StationaryQubit *DefaultComponentProviderStrategy::getStationaryQubit(int qnic_i
   return check_and_cast<StationaryQubit *>(qubit);
 }
 
+IRoutingDaemon *DefaultComponentProviderStrategy::getRoutingDaemon() {
+  auto *qrsa = getQRSA();
+  return check_and_cast<IRoutingDaemon *>(qrsa->getSubmodule("rd"));
+}
+IHardwareMonitor *DefaultComponentProviderStrategy::getHardwareMonitor() {
+  auto *qrsa = getQRSA();
+  return check_and_cast<IHardwareMonitor *>(qrsa->getSubmodule("hm"));
+}
+
+cModule *DefaultComponentProviderStrategy::getQRSA() {
+  auto *qnode = getQNode();
+  auto *qrsa = qnode->getSubmodule("qrsa");
+  if (qrsa == nullptr) {
+    throw cRuntimeError("QRSA module not found.");
+  }
+  return qrsa;
+}
 }  // namespace utils
 }  // namespace quisp
