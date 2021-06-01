@@ -5,6 +5,8 @@
 #include <utils/IComponentProviderStrategy.h>
 #include "modules/QNIC.h"
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
+#include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
+#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
 #include "omnetpp/csimulation.h"
 
 namespace {
@@ -26,6 +28,8 @@ class TestComponentProviderStrategy : public IComponentProviderStrategy {
   ~TestComponentProviderStrategy() { delete mockQubit; }
   MockStationaryQubit* mockQubit = nullptr;
   omnetpp::cModule* getQNode() override { return nullptr; }
+  RoutingDaemon* getRoutingDaemon() override { return nullptr; }
+  HardwareMonitor* getHardwareMonitor() override { return nullptr; }
   StationaryQubit* getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override {
     if (mockQubit == nullptr) mockQubit = new MockStationaryQubit();
     return mockQubit;
