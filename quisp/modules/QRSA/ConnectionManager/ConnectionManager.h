@@ -8,14 +8,7 @@
 #ifndef MODULES_CONNECTIONMANAGER_H_
 #define MODULES_CONNECTIONMANAGER_H_
 
-#include <classical_messages_m.h>
-#include <modules/QNIC.h>
-#include <omnetpp.h>
-#include <rules/RuleSet.h>
-#include <vector>
-#include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
-#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
-#include "modules/QRSA/RuleEngine/RuleEngine.h"
+#include "IConnectionManager.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -23,23 +16,6 @@ using namespace quisp::rules;
 
 namespace quisp {
 namespace modules {
-
-typedef struct {  // This is a little bit redundant
-  int left_partner;
-  QNIC_type lqnic_type;
-  int lqnic_index;
-  int lqnic_address;
-  int lres;
-  int right_partner;
-  QNIC_type rqnic_type;
-  int rqnic_index;
-  int rqnic_address;
-  int rres;
-  int self_left_qnic_index;
-  QNIC_type self_left_qnic_type;
-  int self_right_qnic_index;
-  QNIC_type self_right_qnic_type;
-} SwappingConfig;
 
 /** \class ConnectionManager ConnectionManager.cc
  *  \todo Documentation of the class header.
@@ -65,16 +41,20 @@ typedef struct {  // This is a little bit redundant
  * It is also responsible for the end-to-end reservation of resources,
  * as dictated by the multiplexing (muxing) discipline in use.
  */
-class ConnectionManager : public cSimpleModule {
+class ConnectionManager : public IConnectionManager {
+ public:
+  ConnectionManager();
+
  private:
   int my_address;
   int num_of_qnics;
   std::map<int, bool> qnic_res_table;
-  RoutingDaemon *routing_daemon;
-  HardwareMonitor *hardware_monitor;
+  IRoutingDaemon *routing_daemon;
+  IHardwareMonitor *hardware_monitor;
+  utils::ComponentProvider provider;
 
-  virtual void initialize() override;
-  virtual void handleMessage(cMessage *msg) override;
+  void initialize() override;
+  void handleMessage(cMessage *msg) override;
 
   void respondToRequest(ConnectionSetupRequest *pk);
   void relayRequestToNextHop(ConnectionSetupRequest *pk);
