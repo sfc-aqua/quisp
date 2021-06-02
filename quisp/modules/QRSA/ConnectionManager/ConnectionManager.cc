@@ -23,6 +23,7 @@ void ConnectionManager::initialize() {
   hardware_monitor = provider.getHardwareMonitor();
   my_address = par("address");
   num_of_qnics = par("total_number_of_qnics");
+  simultaneous_ES = true;//par("simultaneous_ES");
 
   for (int i = 0; i < num_of_qnics; i++) {
     // qnode address
@@ -295,33 +296,81 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     error("Qnic index of initiator and responder must be -1 in current scheme. ");
   }
 
-  // node pairs! FIXME: really bad coding
-  // Umm... thinking good way
-  // Here qnic processing
-  // Have to add destination qnic info (destination is the same as my_address. So qnic index must be -1 because self return is not allowed.)
+    // node pairs! FIXME: really bad coding
+    // Umm... thinking good way
+    // Here qnic processing
+    // Have to add destination qnic info (destination is the same as my_address. So qnic index must be -1 because self return is not allowed.)
 
-  // create RuleSet for all nodes!
-  int num_resource = req->getNumber_of_required_Bellpairs();
-  int intermediate_node_size = req->getStack_of_QNodeIndexesArraySize();
-  for (int i = 0; i <= intermediate_node_size; i++) {
-    auto itr = std::find(swappers.begin(), swappers.end(), path.at(i));
-    size_t index = std::distance(swappers.begin(), itr);
-    if (index != swappers.size()) {
-      EV_DEBUG << "Im swapper!" << path.at(i) << "\n";
-      // generate Swapping RuleSet
-      // here we have to check the order of entanglement swapping
+    // create RuleSet for all nodes!
+    int num_resource = req->getNumber_of_required_Bellpairs();
+    int intermediate_node_size = req->getStack_of_QNodeIndexesArraySize();
+    // generate the rulesets for intermediate swappers
+    for (int i = 0; i <= intermediate_node_size; i++) {
+      auto itr = std::find(swappers.begin(), swappers.end(), path.at(i));
+      size_t index = std::distance(swappers.begin(), itr);
+      
+      if (index != swappers.size()) {
+        EV_DEBUG << "Im swapper!" << path.at(i) << "\n";
+        // generate Swapping RuleSet
+        // here we have to check the order of entanglement swapping
+        // swapping configurations for path[i]
 
-      // swapping configurations for path[i]
-      SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
-      RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
 
-      // swapping configurations for path[i]
-      if (!simultaneousES) {
-        SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
-        RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
-      } else if (simultaneousES) {
-        SwappingConfig config = generateSimultaneousSwappingConfig(path.at(i), path, qnics, num_resource);
-        RuleSet *rule = generateSimultaneousEntanglementSwappingRuleSet(path.at(i), config, path);
+        if (!simultaneous_ES){
+          SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
+          RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
+          //error("We F up again");
+          
+          ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
+          pkr->setDestAddr(path.at(i));
+          pkr->setSrcAddr(my_address);
+          pkr->setKind(2);
+          pkr->setRuleSet(rule);
+          pkr->setActual_srcAddr(path.at(0));
+          pkr->setActual_destAddr(path.at(path.size() - 1));
+          send(pkr, "RouterPort$o");
+        }
+        else if(simultaneous_ES){
+          //error("We F up again but in simulES");
+          SwappingConfig config = generateSimultaneousSwappingConfig(path.at(i), path, qnics, num_resource);
+          //error("We F up again but in simulES");
+          RuleSet *rule = generateSimultaneousEntanglementSwappingRuleSet(path.at(i), config, path);
+          
+          ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
+          pkr->setDestAddr(path.at(i));
+          pkr->setSrcAddr(my_address);
+          pkr->setKind(2);
+          pkr->setRuleSet(rule);
+          pkr->setActual_srcAddr(path.at(0));
+          pkr->setActual_destAddr(path.at(path.size() - 1));
+          send(pkr, "RouterPort$o");
+        }
+
+        
+
+      } else {
+        EV_DEBUG << "Im not swapper!" << path.at(i) << "\n";
+        int num_measure = req->getNum_measure();
+
+        RuleSet *ruleset;
+        int owner = path.at(i);
+        if (i == 0) {  // if this is initiator
+          ruleset = generateTomographyRuleSet(owner, path.at(path.size() - 1), num_measure, qnics.at(qnics.size() - 1).fst.type, qnics.at(qnics.size() - 1).fst.index, num_resource);
+        } else {  // if this is responder
+          ruleset = generateTomographyRuleSet(owner, path.at(0), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
+        }
+
+        ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Tomography)");
+        pkr->setDestAddr(path.at(i));
+        pkr->setSrcAddr(my_address);
+        pkr->setKind(2);
+        pkr->setRuleSet(ruleset);
+        pkr->setActual_srcAddr(path.at(0));
+        pkr->setActual_destAddr(path.at(path.size() - 1));
+
+        // this is not application but for checking swapping done properly.
+        pkr->setApplication_type(0);
+        send(pkr, "RouterPort$o");
       }
 
       ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
@@ -493,10 +542,12 @@ SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper
   // TODO: detail description of this.
   QNIC_id left_partner_qnic = qnics.at(left_partner_index).snd;
   QNIC_id right_partner_qnic = qnics.at(right_partner_index).fst;
-
-  QNIC_id initiator_qnic = qnics.at(path.begin()).snd;
-  QNIC_id responder_qnic = qnics.at(path.end()).fst;
-
+  error("There is where 2");
+  size_t initiator_index = std::distance(path.begin(), path.begin());
+  size_t responder_index = std::distance(path.begin(), path.end());
+  QNIC_id initiator_qnic = qnics.at(initiator_index).snd;
+  QNIC_id responder_qnic = qnics.at(responder_index).fst;
+  
   if (right_self_qnic.type == QNIC_RP || left_self_qnic.type == QNIC_RP || right_partner_qnic.type == QNIC_RP || left_partner_qnic.type == QNIC_RP) {
     error("MSM link not implemented");
   }
@@ -513,15 +564,18 @@ SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper
   config.rqnic_index = right_partner_qnic.index;
   config.rqnic_address = right_partner_qnic.address;
   config.rres = num_resources;
+  
+  EV << "ini_index: " << initiator_index << " res_index: " << responder_index << "path size: " << path.size();
+  error("There is where");
 
   // For end nodes
-  config.initiator = path.begin();
+  config.initiator = path.at(initiator_index);
   config.initiator_qnic_type = initiator_qnic.type;
-  config.initiator_qnic_index = initiatorr_qnic.index;
-  config.initiator_qnic_address = initiatorr_qnic.address;
+  config.initiator_qnic_index = initiator_qnic.index;
+  config.initiator_qnic_address = initiator_qnic.address;
   config.initiator_res = num_resources;
 
-  config.responder = path.end();
+  config.responder = path.at(responder_index);
   config.responder_qnic_type = responder_qnic.type;
   config.responder_qnic_index = responder_qnic.index;
   config.responder_qnic_address = responder_qnic.address;
@@ -713,7 +767,7 @@ RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, Swapp
   return ruleset;
 }
 
-RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int owner, SimultaneousSwappingConfig conf, std::vector<int> path) {
+RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int owner, SwappingConfig conf, std::vector<int> path) {
   unsigned long ruleset_id = createUniqueId();
   int rule_index = 0;
   int index_in_path = conf.index;

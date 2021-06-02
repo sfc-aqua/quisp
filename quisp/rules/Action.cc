@@ -272,8 +272,8 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   // These information are cropped in the RuleEngine.
 
   // Change the destination to end nodes instead.
-  pk->setLeft_Dest(initiator);
-  pk->setRight_Dest(responder);
+  pk->setInitiator_Dest(initiator);
+  pk->setResponder_Dest(responder);
 
   
   pk->setNew_partner_left(responder);
