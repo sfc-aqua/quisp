@@ -70,7 +70,7 @@ void RuleEngine::initialize() {
   // WATCH(assigned);
 
   // Vector for store package for simultaneous entanglement swapping
-  std::map<int, std::map<int, SimultaneousSwappingResult>> pk_list;
+
 
 }
 
@@ -318,15 +318,15 @@ void RuleEngine::handleMessage(cMessage *msg) {
     SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(msg);
     // Add messeage to collection [ruleSetid][index_in_path]
     int rule_id = pkt->getRuleSet_id();
-    pk_list[rule_id][pkt->getIndex_in_path()] = pkt;
+    pklist[rule_id][pkt->getIndex_in_path()] = pkt->getOperation_type();
 
     // Check if all message is here or not
-    if (pk_list[rule_id].size() == pkt->getPath_length_exclude_IR()){
+    if (pklist[rule_id].size() == pkt->getPath_length_exclude_IR()){
 
       // optimize correction operation, without global phase consideration
-      int oco_result = pk_list[rule_id][0];
-      for (int i = 1; i=pk_list[rule_id].size(); i++){
-        oco_result ^= pk_list[rule_id][i];
+      int oco_result = pklist[rule_id][0];
+      for (int i = 1; i=pklist[rule_id].size(); i++){
+        oco_result ^= pklist[rule_id][i];
       }
 
 
@@ -1551,27 +1551,27 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
             // packet for left node
             SimultaneousSwappingResult *pkt_for_initiator = new SimultaneousSwappingResult("SimultaneousSwappingResult(Left)");
-            pkt_for_left->setKind(5);  // cyan
-            pkt_for_left->setDestAddr(pkt->getLeft_Dest());
-            pkt_for_left->setSrcAddr(parentAddress);
-            pkt_for_left->setOperation_type(pkt->getOperation_type_left());
-            pkt_for_left->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
-            pkt_for_left->setNew_partner(pkt->getNew_partner_left());
-            pkt_for_left->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
-            pkt_for_left->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
-            pkt_for_left->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
+            pkt_for_initiator->setKind(5);  // cyan
+            pkt_for_initiator->setDestAddr(pkt->getInitiator_Dest());
+            pkt_for_initiator->setSrcAddr(parentAddress);
+            pkt_for_initiator->setOperation_type(pkt->getOperation_type_left());
+            pkt_for_initiator->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
+            pkt_for_initiator->setNew_partner(pkt->getNew_partner_left());
+            pkt_for_initiator->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
+            pkt_for_initiator->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
+            pkt_for_initiator->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
 
             // packet for right node
             SimultaneousSwappingResult *pkt_for_responder = new SimultaneousSwappingResult("SimultaneousSwappingResult(Right)");
-            pkt_for_right->setKind(5);  // cyan
-            pkt_for_right->setDestAddr(pkt->getRight_Dest());
-            pkt_for_right->setSrcAddr(parentAddress);
-            pkt_for_right->setOperation_type(pkt->getOperation_type_right());
-            pkt_for_right->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
-            pkt_for_right->setNew_partner(pkt->getNew_partner_right());
-            pkt_for_right->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
-            pkt_for_right->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
-            pkt_for_right->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
+            pkt_for_responder->setKind(5);  // cyan
+            pkt_for_responder->setDestAddr(pkt->getResponder_Dest());
+            pkt_for_responder->setSrcAddr(parentAddress);
+            pkt_for_responder->setOperation_type(pkt->getOperation_type_right());
+            pkt_for_responder->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
+            pkt_for_responder->setNew_partner(pkt->getNew_partner_right());
+            pkt_for_responder->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
+            pkt_for_responder->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
+            pkt_for_responder->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
 
             // check
             // EV<<"left node should be 1: "<<pkt->getLeft_Dest()<<" right node should be 15: "<<pkt->getRight_Dest()<<"\n";

@@ -137,7 +137,7 @@ class SimultaneousSwappingAction : public Action {
                             int slqi, QNIC_type slqt, int srqi, QNIC_type srqt,
                             int init, QNIC_type initqt, int initqi, int initqad, int initr,
                             int resp, QNIC_type respqt, int respqi, int respqad, int respr,
-                            int, iip, int pleir) {
+                            int iip, int pleir) {
     ruleset_id = RuleSet_id;
     rule_id = rule_index;
 

@@ -301,6 +301,9 @@ packet SimultaneousSwappingResult extends header{
     int Rule_id;
     int action_index;
 
+    int initiator_Dest;
+    int responder_Dest;
+
 
     int new_partner_left;
     int new_partner_qnic_index_left;

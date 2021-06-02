@@ -146,6 +146,12 @@ class RuleEngine : public cSimpleModule {
   typedef std::map<int, process> running_processes;  // index -> process
   running_processes rp;
   typedef std::map<int, Rule *> rule_ptr;
+
+  // Vector for store package for simultaneous entanglement swapping
+  typedef std::map<int, std::map<int, int>> pk_list;
+  pk_list pklist;
+  
+  
   // int assigned = 0;
   // typedef std::map<std::string, quisp::rules::RuleSet> processes;//process_id -> Rule set
   virtual void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type);
@@ -188,6 +194,7 @@ class RuleEngine : public cSimpleModule {
   virtual void Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int index);
 
   virtual void updateResources_EntanglementSwapping(swapping_result swapr);
+  virtual void updateResources_SimultaneousEntanglementSwapping(swapping_result swapr);
   virtual void generateInternalGraphState(std::vector<int> num_qubits);
 };
 
