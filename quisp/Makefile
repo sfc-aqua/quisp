@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for quisp
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -I. -I/usr/include/eigen3
+#  opp_makemake -f --deep -O out -I"D:/University/Graduate/Quisp/eigen3" -I.
 #
 
 # Name of target to be created (-o option)
@@ -16,7 +16,7 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH = -I. -I/usr/include/eigen3
+INCLUDE_PATH = -I"D:/University/Graduate/Quisp/eigen3" -I.
 
 # Additional object and library files to link with
 EXTRA_OBJS =

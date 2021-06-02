@@ -559,11 +559,16 @@ SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper
   // TODO: detail description of this.
   QNIC_id left_partner_qnic = qnics.at(left_partner_index).snd;
   QNIC_id right_partner_qnic = qnics.at(right_partner_index).fst;
-  error("There is where 2");
+  EV << "left_index: " << left_partner_index << " right_index: " << right_partner_index << "path size: " << path.size() << "\n";
+  
   size_t initiator_index = std::distance(path.begin(), path.begin());
   size_t responder_index = std::distance(path.begin(), path.end());
-  QNIC_id initiator_qnic = qnics.at(initiator_index).snd;
-  QNIC_id responder_qnic = qnics.at(responder_index).fst;
+  EV << "ini_index: " << initiator_index << " res_index: " << responder_index << "path size: " << path.size() << "\n";
+  
+  QNIC_id initiator_qnic = qnics.at(0).snd;
+  //error("There is where 2");
+  QNIC_id responder_qnic = qnics.at(responder_index-1).fst;
+  
   
   if (right_self_qnic.type == QNIC_RP || left_self_qnic.type == QNIC_RP || right_partner_qnic.type == QNIC_RP || left_partner_qnic.type == QNIC_RP) {
     error("MSM link not implemented");
@@ -582,8 +587,8 @@ SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper
   config.rqnic_address = right_partner_qnic.address;
   config.rres = num_resources;
   
-  EV << "ini_index: " << initiator_index << " res_index: " << responder_index << "path size: " << path.size();
-  error("There is where");
+  //EV << "ini_index: " << initiator_index << " res_index: " << responder_index << "path size: " << path.size();
+  //error("There is where");
 
   // For end nodes
   config.initiator = path.at(initiator_index);
@@ -591,13 +596,13 @@ SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper
   config.initiator_qnic_index = initiator_qnic.index;
   config.initiator_qnic_address = initiator_qnic.address;
   config.initiator_res = num_resources;
-
-  config.responder = path.at(responder_index);
+  //EV << path << "\n";
+  config.responder = path.at(responder_index-1);
   config.responder_qnic_type = responder_qnic.type;
   config.responder_qnic_index = responder_qnic.index;
   config.responder_qnic_address = responder_qnic.address;
   config.responder_res = num_resources;
-
+   
   // Addition info
   config.index = index;
 
