@@ -720,7 +720,7 @@ RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, Swapp
                                                     conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type,
                                                     conf.self_right_qnic_index, conf.self_right_qnic_type);
 
-  Rule *rule = new Rule(ruleset_id, rule_index);
+  Rule *rule = new Rule(ruleset_id, rule_index, "entanglement swapping");
   rule->setCondition(condition);
   rule->setAction(action);
 
@@ -772,7 +772,7 @@ RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, in
 
   int rule_index = 0;
   RuleSet *tomography = new RuleSet(ruleset_id, owner, partner);
-  Rule *rule = new Rule(ruleset_id, rule_index);
+  Rule *rule = new Rule(ruleset_id, rule_index, "tomography");
 
   // 3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
   Clause *count_clause = new MeasureCountClause(num_of_measure, partner, qnic_type, qnic_index, 0);
@@ -786,7 +786,8 @@ RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, in
   rule->setCondition(condition);
 
   // Measure the local resource between it->second.neighborQNode_address.
-  quisp::rules::Action *action = new RandomMeasureAction(partner, qnic_type, qnic_index, 0, owner, num_of_measure);
+  // final argument is multihop tomography flag
+  quisp::rules::Action *action = new RandomMeasureAction(partner, qnic_type, qnic_index, num_resources, owner, num_of_measure, true);
   rule->setAction(action);
 
   // Add the rule to the RuleSet

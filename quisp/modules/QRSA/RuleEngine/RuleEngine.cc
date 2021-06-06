@@ -1316,8 +1316,6 @@ void RuleEngine::traverseThroughAllProcesses2() {
         // std::cout<<"module["<<parentAddress<<"]\n";
         // Here I got some problems
         unsigned long r_id = (*rule)->ruleset_id;
-        EV<<"id "<<r_id<<"\n";
-        error("");
         cPacket *pk = (*rule)->checkrun(this);  // Do something on qubits entangled with resource_entangled_with_address.
 
         if (pk != nullptr) {
@@ -1477,6 +1475,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
 }
 
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, StationaryQubit *qubit, QNIC_type qnic_type) {
+  // here is the error
   realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit->par("stationaryQubit_address"), qnic_type, true);
   Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit->par("stationaryQubit_address"));
 
