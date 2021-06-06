@@ -25,6 +25,7 @@ class Rule {
  public:
   int ruleset_id;
   int rule_index;
+  std::string name;
   pCondition condition;
   pAction action;
   std::multimap<int, StationaryQubit *> resources;
@@ -34,6 +35,12 @@ class Rule {
   Rule(int rs_index, int r_index) {
     ruleset_id = rs_index;
     rule_index = r_index;
+  };
+
+Rule(int rs_index, int r_index, std::string r_name) {
+    ruleset_id = rs_index;
+    rule_index = r_index;
+    name = r_name;
   };
 
   void addResource(int address_entangled_with, StationaryQubit *qubit);

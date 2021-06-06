@@ -412,6 +412,7 @@ class RandomMeasureAction : public Action {
   int dst;
   int mutable current_count;
   int mutable max_count;
+  bool multihopTomo = false;
   simtime_t start;
 
  public:
@@ -426,6 +427,19 @@ class RandomMeasureAction : public Action {
     max_count = max;
     start = simTime();
   };
+  RandomMeasureAction(int part, QNIC_type qt, int qi, int res, int srcAddr, int max, bool multihop) {
+    partner = part;
+    dst = part;
+    qnic_type = qt;
+    qnic_id = qi;
+    resource = res;
+    src = srcAddr;
+    current_count = 0;
+    max_count = max;
+    multihopTomo = multihop;
+    start = simTime();
+  };
+
   // cPacket* run(qnicResources *resources) override;
   // cPacket* run(cModule *re, qnicResources *resources) override;
   cPacket* run(cModule* re) override;

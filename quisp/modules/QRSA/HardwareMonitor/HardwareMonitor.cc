@@ -25,6 +25,7 @@ using namespace rules;
 // HardwareMonitor is also responsible for calculating the rssi/oka's protocol/fidelity calculate and give it to the RoutingDaemon
 void HardwareMonitor::initialize(int stage) {
   EV_INFO << "HardwareMonitor booted\n";
+  routing_daemon = check_and_cast<RoutingDaemon *>(getParentModule()->getSubmodule("rd"));
 
   output_count initial;
   initial.minus_minus = 0;
@@ -172,9 +173,22 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
   if (dynamic_cast<LinkTomographyResult *>(msg) != nullptr) {
     /*Link tomography measurement result/basis from neighbor received.*/
     LinkTomographyResult *result = check_and_cast<LinkTomographyResult *>(msg);
-
+    multiHop = result->getMultiHopTomography();
+    // tomo_source = result->getDestAddr(); // == myAddress
+    partner = result->getPartner_address();
     // Get QNIC info from neighbor address.
-    QNIC local_qnic = search_QNIC_from_Neighbor_QNode_address(result->getPartner_address());
+    // here is the error
+    int qnic_addr_to_partner = routing_daemon->return_QNIC_address_to_destAddr(result->getPartner_address());
+    auto local_qnic_info = findConnectionInfoByQnicAddr(qnic_addr_to_partner);
+    if(local_qnic_info == nullptr){
+      error("local qnic info should not be null");
+    }
+    InterfaceInfo inter_info = getQnicInterfaceByQnicAddr(local_qnic_info->qnic.index, local_qnic_info->qnic.type);
+    QNIC local_qnic = inter_info.qnic;
+
+    // extended version of temporal output folder
+    // auto it = extendedTemporalTomographyHoler[tomo_dest][local_qnic.address].find(result->getCount_id());
+
     auto it = all_temporal_tomography_output_holder[local_qnic.address].find(result->getCount_id());
     if (it != all_temporal_tomography_output_holder[local_qnic.address].end()) {
       EV << "Data already found.";
@@ -246,6 +260,7 @@ void HardwareMonitor::finish() {
   // EV<<"This is just a test!\n";
 
   // EV<<"num_qnic_total = "<<num_qnic_total;
+  // here all qnics are looked arouned
   for (int i = 0; i < num_qnic_total; i++) {
     int meas_total = 0;
     int GOD_clean_pair_total = 0;
@@ -339,6 +354,7 @@ void HardwareMonitor::finish() {
     }
     InterfaceInfo interface = getQnicInterfaceByQnicAddr(info->qnic.index, info->qnic.type);
     cModule *this_node = this->getParentModule()->getParentModule();
+    // here should be generalized
     cModule *neighbor_node = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
     cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
     double dis = channel->par("distance");
@@ -366,6 +382,128 @@ void HardwareMonitor::finish() {
                      << "; Y=" << Yerr_rate << endl;
   }
 
+  if (multiHop && my_address == tomo_source){
+    for (int i = 0; i < num_qnic_total; i++) {
+      int meas_total = 0;
+      int GOD_clean_pair_total = 0;
+      int GOD_X_pair_total = 0;
+      int GOD_Z_pair_total = 0;
+      int GOD_Y_pair_total = 0;
+
+      for (auto it = all_temporal_tomography_output_holder[i].cbegin(); it != all_temporal_tomography_output_holder[i].cend(); ++it) {
+        std::string basis_combination = "";
+        basis_combination += it->second.my_basis;
+        basis_combination += it->second.partner_basis;
+        if (tomography_data[i].count(basis_combination) != 1) {
+          // EV<<it->second.my_basis<<", "<<it->second.partner_basis<<" =
+          // "<<basis_combination<<"\n";
+          error("Basis combination for tomography not found\n");
+        }
+        tomography_data[i][basis_combination].total_count++;
+        meas_total++;
+
+        EV << it->second.my_GOD_clean << "," << it->second.partner_GOD_clean << "\n";
+        if ((it->second.my_GOD_clean == 'F' && it->second.partner_GOD_clean == 'F') || (it->second.my_GOD_clean == 'X' && it->second.partner_GOD_clean == 'X') ||
+            (it->second.my_GOD_clean == 'Z' && it->second.partner_GOD_clean == 'Z') || (it->second.my_GOD_clean == 'Y' && it->second.partner_GOD_clean == 'Y')) {
+          GOD_clean_pair_total++;
+        } else if ((it->second.my_GOD_clean == 'X' && it->second.partner_GOD_clean == 'F') || (it->second.my_GOD_clean == 'F' && it->second.partner_GOD_clean == 'X')) {
+          GOD_X_pair_total++;
+        } else if ((it->second.my_GOD_clean == 'Z' && it->second.partner_GOD_clean == 'F') || (it->second.my_GOD_clean == 'F' && it->second.partner_GOD_clean == 'Z')) {
+          GOD_Z_pair_total++;
+        } else if ((it->second.my_GOD_clean == 'Y' && it->second.partner_GOD_clean == 'F') || (it->second.my_GOD_clean == 'F' && it->second.partner_GOD_clean == 'Y')) {
+          GOD_Y_pair_total++;
+        }
+
+        if (it->second.my_output_is_plus && it->second.partner_output_is_plus) {
+          tomography_data[i][basis_combination].plus_plus++;
+          // std::cout<<"basis_combination(++)="<<basis_combination <<" is now
+          // "<<tomography_data[i][basis_combination].plus_plus<<"\n";
+        } else if (it->second.my_output_is_plus && !it->second.partner_output_is_plus) {
+          tomography_data[i][basis_combination].plus_minus++;
+          // std::cout<<"basis_combination(++)="<<basis_combination <<" is now
+          // "<<tomography_data[i][basis_combination].plus_minus<<"\n";
+        } else if (!it->second.my_output_is_plus && it->second.partner_output_is_plus) {
+          tomography_data[i][basis_combination].minus_plus++;
+          // std::cout<<"basis_combination(++)="<<basis_combination <<" is now
+          // "<<tomography_data[i][basis_combination].minus_plus<<"\n";
+        } else if (!it->second.my_output_is_plus && !it->second.partner_output_is_plus) {
+          tomography_data[i][basis_combination].minus_minus++;
+          // std::cout<<"basis_combination(++)="<<basis_combination <<" is now
+          // "<<tomography_data[i][basis_combination].minus_minus<<"\n";
+        } else
+          error("This should not happen though..... ?");
+      }
+      // For each qnic/link, reconstruct the dm.
+      Matrix4cd density_matrix_reconstructed = reconstruct_Density_Matrix(i);
+      error("");
+
+      // todo: Will need to clean this up in a separate function
+      Vector4cd Bellpair;
+      Bellpair << 1 / sqrt(2), 0, 0, 1 / sqrt(2);
+      Matrix4cd density_matrix_ideal = Bellpair * Bellpair.adjoint();
+      double fidelity = (density_matrix_reconstructed.real() * density_matrix_ideal.real()).trace();
+
+      Vector4cd Bellpair_X;
+      Bellpair_X << 0, 1 / sqrt(2), 1 / sqrt(2), 0;
+      Matrix4cd density_matrix_X = Bellpair_X * Bellpair_X.adjoint();
+      double Xerr_rate = (density_matrix_reconstructed.real() * density_matrix_X.real()).trace();
+      EV << "Xerr = " << Xerr_rate << "\n";
+
+      Vector4cd Bellpair_Z;
+      Bellpair_Z << 1 / sqrt(2), 0, 0, -1 / sqrt(2);
+      Matrix4cd density_matrix_Z = Bellpair_Z * Bellpair_Z.adjoint();
+      double Zerr_rate = (density_matrix_reconstructed.real() * density_matrix_Z.real()).trace();
+      Complex checkZ = Bellpair_Z.adjoint() * density_matrix_reconstructed * Bellpair_Z;
+      EV << "Zerr = " << Zerr_rate << " or, " << checkZ.real() << "+" << checkZ.imag() << "\n";
+
+      Vector4cd Bellpair_Y;
+      Bellpair_Y << 0, Complex(0, 1 / sqrt(2)), Complex(0, -1 / sqrt(2)), 0;
+      Matrix4cd density_matrix_Y = Bellpair_Y * Bellpair_Y.adjoint();
+      double Yerr_rate = (density_matrix_reconstructed.real() * density_matrix_Y.real()).trace();
+      EV << "Yerr = " << Yerr_rate << "\n";
+
+      double bellpairs_per_sec = 10;
+      double link_cost = (double)100000000 / (fidelity * fidelity * all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec);
+      if (link_cost < 1) {
+        link_cost = 1;
+      }
+      auto info = findConnectionInfoByQnicAddr(i);
+      if (info == nullptr) {
+        error("info not found");
+      }
+      // here
+      InterfaceInfo interface = getQnicInterfaceByQnicAddr(info->qnic.index, info->qnic.type);
+      cModule *this_node = this->getParentModule()->getParentModule();
+      // here should be generalized
+      cModule *neighbor_node = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();
+      cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
+      double dis = channel->par("distance");
+
+      /*if(this_node->getModuleType() == QNodeType &&
+      neighbor_node->getModuleType() == QNodeType){ if(my_address >
+      inf.neighbor_address){ return;
+          }
+      }*/
+      tomography_dm << "this Node "<< "<--->" << "that Node" << "\n";
+      tomography_dm << "REAL\n";
+      tomography_dm << density_matrix_reconstructed.real() << "\n";
+      tomography_dm << "IMAGINARY\n";
+      tomography_dm << density_matrix_reconstructed.imag() << "\n";
+
+      std::cout << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
+                << ";bellpair_per_sec=" << bellpairs_per_sec << ";}<-->" << neighbor_node->getFullName() << "; F=" << fidelity << "; X=" << Xerr_rate << "; Z=" << Zerr_rate
+                << "; Y=" << Yerr_rate << endl;
+      tomography_stats << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
+                      << ";bellpair_per_sec=" << all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec
+                      << ";tomography_time=" << all_temporal_tomography_runningtime_holder[i].tomography_time
+                      << ";tomography_measurements=" << all_temporal_tomography_runningtime_holder[i].tomography_measurements << ";actualmeas=" << meas_total
+                      << "; GOD_clean_pair_total=" << GOD_clean_pair_total << "; GOD_X_pair_total=" << GOD_X_pair_total << "; GOD_Y_pair_total=" << GOD_Y_pair_total
+                      << "; GOD_Z_pair_total=" << GOD_Z_pair_total << ";}<-->" << neighbor_node->getFullName() << "; F=" << fidelity << "; X=" << Xerr_rate << "; Z=" << Zerr_rate
+                      << "; Y=" << Yerr_rate << endl;
+    }
+    }
+    
+
   tomography_stats.close();
   tomography_dm.close();
   std::cout << "Closed file to write.\n";
@@ -374,6 +512,9 @@ void HardwareMonitor::finish() {
 Matrix4cd HardwareMonitor::reconstruct_Density_Matrix(int qnic_id) {
   // II
   double S00 = 1.0;
+  EV<<"tomography_data"<<tomography_data[qnic_id]["XX"].total_count<<"\n";
+  EV<<"tomography_data_pls"<<tomography_data[qnic_id]["XX"].plus_plus<<"\n";
+
   double S01 = (double)tomography_data[qnic_id]["XX"].plus_plus / (double)tomography_data[qnic_id]["XX"].total_count -
                (double)tomography_data[qnic_id]["XX"].plus_minus / (double)tomography_data[qnic_id]["XX"].total_count +
                (double)tomography_data[qnic_id]["XX"].minus_plus / (double)tomography_data[qnic_id]["XX"].total_count -

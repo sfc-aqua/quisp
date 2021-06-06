@@ -521,6 +521,7 @@ cPacket *RandomMeasureAction::run(cModule *re) {
     rule_engine->freeConsumedResource(qnic_id, qubit, qnic_type);  // Remove from entangled resource list.
     // Deleting done
 
+    
     LinkTomographyResult *pk = new LinkTomographyResult;
     pk->setSrcAddr(src);
     pk->setDestAddr(dst);
@@ -533,6 +534,11 @@ cPacket *RandomMeasureAction::run(cModule *re) {
     if (current_count == max_count) {
       pk->setFinish(simTime() - start);
       pk->setMax_count(max_count);
+    }
+    if(multihopTomo){
+      pk->setMultiHopTomography(true);
+    }else{
+      pk->setMultiHopTomography(false);
     }
     return pk;
   }

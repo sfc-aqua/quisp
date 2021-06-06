@@ -15,6 +15,7 @@
 
 #include "classical_messages_m.h"
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
+#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
 
 using namespace omnetpp;
 
@@ -114,6 +115,9 @@ class HardwareMonitor : public cSimpleModule {
   bool Z_Purification = false;
   int Purification_type = -1;
   int num_measure;
+  bool multiHop = false;
+
+  RoutingDaemon *routing_daemon;
 
   std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(int neighbor_address);
   cModule *getQnic(int qnic_index, QNIC_type qnic_type);
@@ -121,6 +125,7 @@ class HardwareMonitor : public cSimpleModule {
  public:
   NeighborTable neighbor_table;
   raw_data *tomography_data;
+  
 
   single_qubit_error Pauli;
   NeighborTable passNeighborTable();
@@ -131,8 +136,10 @@ class HardwareMonitor : public cSimpleModule {
   // virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, QNIC_type qnic_type);//returns the set of free resources
   // virtual int checkNumFreeBuff(int qnic_index, QNIC_type qnic_type);//returns the number of free qubits
   typedef std::map<int, tomography_outcome> Temporal_Tomography_Output_Holder;  // measurement_count_id -> outcome. For single qnic
+  typedef std::map<int, Temporal_Tomography_Output_Holder> ExtendedTemporalTomographyOutputHoler; // qnode id -> tomography_output_holder
   // typedef std::map<int,Temporal_Tomography_Output_Holder> All_Temporal_Tomography_Output_Holder;//qnic_index -> tomography data. For all qnics.
   Temporal_Tomography_Output_Holder *all_temporal_tomography_output_holder;
+  ExtendedTemporalTomographyOutputHoler *extendedTemporalTomographyHoler;
   link_cost *all_temporal_tomography_runningtime_holder;
   std::string tomography_output_filename;
   std::string file_dir_name;
