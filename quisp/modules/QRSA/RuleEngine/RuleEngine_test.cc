@@ -1,20 +1,21 @@
-#include "RealTimeController.h"
+#include "RuleEngine.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <omnetpp.h>
-#include <utils/IComponentProviderStrategy.h>
+#include <test_utils/TestUtils.h>
 #include "modules/QNIC.h"
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
+#include "modules/QRSA/RuleEngine/RuleEngine.h"
 #include "omnetpp/csimulation.h"
-#include "test_utils/TestUtils.h"
 
 namespace {
 
 using namespace omnetpp;
 using namespace quisp::utils;
 using namespace quisp::modules;
+using namespace quisp_test;
 
 class MockStationaryQubit : public StationaryQubit {
  public:
@@ -34,42 +35,34 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
   };
 };
 
-class RTCTestTarget : public quisp::modules::RealTimeController {
+class RuleEngineTestTarget : public quisp::modules::RuleEngine {
  public:
-  using quisp::modules::RealTimeController::initialize;
-  using quisp::modules::RealTimeController::par;
-  RTCTestTarget(MockStationaryQubit* mockQubit) : RealTimeController() {
-    omnetpp::cParImpl* p = new omnetpp::cIntParImpl();
-    const char* name = "address";
-    p->setName(name);
-    p->setIntValue(123);
-    this->addPar(p);
-    this->setName("rtc_test_target");
+  using quisp::modules::RuleEngine::initialize;
+  using quisp::modules::RuleEngine::par;
+  RuleEngineTestTarget(MockStationaryQubit* mockQubit) : quisp::modules::RuleEngine() {
+    setParInt(this, "address", 123);
+    setParInt(this, "number_of_qnics_rp", 0);
+    setParInt(this, "number_of_qnics_r", 0);
+    setParInt(this, "number_of_qnics", 0);
+    setParInt(this, "total_number_of_qnics", 0);
+    // setParBool(this, "link_tomography", false);
+    // setParStr(this, "tomography_output_filename", "test_file");
+    // setParStr(this, "file_dir_name", "out/tests");
+    // setParInt(this, "initial_purification", 0);
+    // setParBool(this, "X_purification", true);
+    // setParBool(this, "Z_purification", true);
+    // setParInt(this, "Purification_type", 0);
+    // setParInt(this, "num_measure", 0);
+
+    this->setName("rule_engine_test_target");
     this->provider.setStrategy(std::make_unique<Strategy>(mockQubit));
   }
 };
 
-TEST(RealTimeControllerTest, Init) {
-  RTCTestTarget c{nullptr};
+TEST(RuleEngineTest, Init) {
+  RuleEngineTestTarget c{nullptr};
   c.initialize();
   ASSERT_EQ(c.par("address").intValue(), 123);
-}
-TEST(RealTimeControllerTest, EmitPhoton) {
-  auto* qubit = new MockStationaryQubit{};
-  RTCTestTarget c{qubit};
-  c.initialize();
-
-  EXPECT_CALL(*qubit, emitPhoton(7)).Times(1);
-  c.EmitPhoton(1, 2, quisp::modules::QNIC_E, 7);
-}
-
-TEST(RealTimeControllerTest, ReInitializeStationaryQubit) {
-  auto* qubit = new MockStationaryQubit{};
-  RTCTestTarget c{qubit};
-  c.initialize();
-
-  EXPECT_CALL(*qubit, setFree(true)).Times(1);
-  c.ReInitialize_StationaryQubit(1, 2, quisp::modules::QNIC_E, true);
 }
 
 }  // namespace

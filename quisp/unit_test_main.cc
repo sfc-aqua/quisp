@@ -19,6 +19,7 @@ int main(int argc, char **argv) {
    * so it will cause segmentation faults or exceptions if there's no simulation env.
    */
   auto *sim = new omnetpp::cSimulation("test_sim", omnetpp::cSimulation::getStaticEnvir());
+  omnetpp::cComponent::clearSignalState();
   omnetpp::cSimulation::setActiveSimulation(sim);
   omnetpp::SimTime::setScaleExp(-3);
   ::testing::InitGoogleTest(&argc, argv);
