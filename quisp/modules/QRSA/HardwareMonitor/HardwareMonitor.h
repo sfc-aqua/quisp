@@ -9,83 +9,12 @@
 #ifndef QUISP_MODULES_HARDWAREMONITOR_H_
 #define QUISP_MODULES_HARDWAREMONITOR_H_
 
-#include <modules/QNIC.h>
-#include <omnetpp.h>
-#include <vector>
-
-#include "classical_messages_m.h"
+#include "IHardwareMonitor.h"
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
-#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
-
-using namespace omnetpp;
+#include "utils/ComponentProvider.h"
 
 namespace quisp {
 namespace modules {
-
-struct NeighborInfo {
-  // QNode, SPDC, HOM
-  cModuleType *type;
-  int address;
-  int neighborQNode_address;  // QNode (May be across SDPC or HOM node)
-};
-
-struct InterfaceInfo {
-  // QubitAddr(int node_addr, int qnic_index, int qubit_index):node_address(node_addr),qnic_index(qnic_index),qubit_index(qubit_index){}
-  QNIC qnic;
-  double initial_fidelity = -1; /*Oka's protocol?*/
-  int buffer_size;
-  double link_cost;
-  int neighborQNode_address;
-  int neighborQNode_qnic_type;
-  QNIC neighbor_qnic;
-};
-
-struct ConnectionSetupInfo {
-  QNIC_id qnic;
-  int neighbor_address;
-  int quantum_link_cost;
-};
-
-const ConnectionSetupInfo NULL_CONNECTION_SETUP_INFO{.qnic =
-                                                         {
-                                                             .type = QNIC_N,
-                                                             .index = -1,
-                                                         },
-                                                     .neighbor_address = -1,
-                                                     .quantum_link_cost = -1};
-
-struct tomography_outcome {
-  int partner_address;
-  char my_basis;
-  bool my_output_is_plus;
-  char my_GOD_clean;
-  char partner_basis;
-  bool partner_output_is_plus;
-  char partner_GOD_clean;
-};
-
-struct output_count {
-  int total_count;
-  int plus_plus;
-  int plus_minus;
-  int minus_plus;
-  int minus_minus;
-};
-
-struct link_cost {
-  simtime_t tomography_time;
-  int tomography_measurements;
-  double Bellpair_per_sec;
-};
-
-// qnic_index -> InterfaceInfo
-typedef std::map<int, InterfaceInfo> NeighborTable;
-
-// basis combination -> raw output count
-// e.g.
-// "XX" -> {plus_plus = 56, plus_minus = 55, minus_plus = 50, minus_minus = 50},
-// "XY" -> {....
-typedef std::map<std::string, output_count> raw_data;
 
 /** \class HardwareMonitor HardwareMonitor.h
  *  \todo Documentation of the class header.
@@ -93,7 +22,18 @@ typedef std::map<std::string, output_count> raw_data;
  *  \brief HardwareMonitor
  */
 
-class HardwareMonitor : public cSimpleModule {
+class HardwareMonitor : public IHardwareMonitor {
+ public:
+  HardwareMonitor();
+  ~HardwareMonitor();
+  NeighborTable passNeighborTable() override;
+  int getQnicNumQubits(int qnic_index, QNIC_type qnic_type) override;
+  std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(int neighbor_address) override;
+  std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address) override;
+
+ protected:
+  utils::ComponentProvider provider;
+
  private:
   int my_address;
 
@@ -105,11 +45,6 @@ class HardwareMonitor : public cSimpleModule {
   int num_qnic_rp;
   int num_qnic_total;
 
-  cModuleType *QNodeType = cModuleType::get("modules.QNode");
-  cModuleType *SPDCType = cModuleType::get("modules.SPDC");
-  cModuleType *HoMType = cModuleType::get("modules.HoM");
-  cModuleType *ABSAType = cModuleType::get("modules.ABSANode");
-  cModuleType *RGSsourceType = cModuleType::get("modules.RGS_source");
   bool do_link_level_tomography = false;
   int num_purification = 0;
   bool X_Purification = false;
@@ -120,19 +55,12 @@ class HardwareMonitor : public cSimpleModule {
 
   RoutingDaemon *routing_daemon;
 
-  std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(int neighbor_address);
   cModule *getQnic(int qnic_index, QNIC_type qnic_type);
-
- public:
   NeighborTable neighbor_table;
   raw_data *tomography_data;
   
 
   single_qubit_error Pauli;
-  NeighborTable passNeighborTable();
-
-  int getQnicNumQubits(int qnic_index, QNIC_type qnic_type);
-  std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address);
 
   // virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, QNIC_type qnic_type);//returns the set of free resources
   // virtual int checkNumFreeBuff(int qnic_index, QNIC_type qnic_type);//returns the number of free qubits
@@ -145,11 +73,11 @@ class HardwareMonitor : public cSimpleModule {
   std::string file_dir_name;
 
  protected:
-  virtual void initialize(int stage) override;
-  virtual void finish() override;
-  virtual void handleMessage(cMessage *msg) override;
-  virtual int numInitStages() const override { return 2; };
-  virtual void prepareNeighborTable();
+  void initialize(int stage) override;
+  void finish() override;
+  void handleMessage(cMessage *msg) override;
+  int numInitStages() const override { return 2; };
+  void prepareNeighborTable();
 
   virtual std::unique_ptr<NeighborInfo> createNeighborInfo(const cModule &thisNode);
   virtual cModule *getQNode();

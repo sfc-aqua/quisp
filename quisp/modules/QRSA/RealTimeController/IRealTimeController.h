@@ -1,12 +1,7 @@
 #ifndef QUISP_MODULES_IREALTIMECONTROLLER_H_
 #define QUISP_MODULES_IREALTIMECONTROLLER_H_
 
-#include <classical_messages_m.h>
 #include <modules/QNIC.h>
-#include <omnetpp.h>
-#include <vector>
-
-using namespace omnetpp;
 
 namespace quisp {
 namespace modules {
@@ -15,8 +10,11 @@ class IRealTimeController : public cSimpleModule {
  protected:
   virtual void initialize() = 0;
   virtual void handleMessage(cMessage* msg) = 0;
+<<<<<<< HEAD
   virtual cModule* getQNode() = 0;
   virtual cModule* getRGSsource() = 0;
+=======
+>>>>>>> bd4fd5195299815cf4a4c38482adc09cd42e3a38
 
  public:
   virtual void EmitPhoton(int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse) = 0;

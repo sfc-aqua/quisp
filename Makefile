@@ -27,7 +27,7 @@ tidy: quisp/Makefile
 	$(MAKE) -C quisp format
 
 googletest/CMakeLists.txt:
-	git submoudle update --init
+	git submodule update --init
 
 googletest/build: googletest/CMakeLists.txt
 	mkdir -p googletest/build && cd googletest/build && cmake ..

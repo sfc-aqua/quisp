@@ -38,7 +38,7 @@ typedef struct {
   QNIC_id snd;
 } QNIC_id_pair;
 
-typedef struct : QNIC_id {
+typedef struct QNIC : QNIC_id {
   cModule* pointer;  // Pointer to that particular QNIC.
   int address;
 } QNIC;

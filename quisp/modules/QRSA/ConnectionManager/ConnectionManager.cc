@@ -7,6 +7,8 @@
  */
 
 #include "ConnectionManager.h"
+#include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
+#include "utils/ComponentProvider.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -14,10 +16,11 @@ using namespace quisp::rules;
 
 namespace quisp {
 namespace modules {
+ConnectionManager::ConnectionManager() : provider(utils::ComponentProvider{this}) {}
 
 void ConnectionManager::initialize() {
-  routing_daemon = check_and_cast<RoutingDaemon *>(getParentModule()->getSubmodule("rd"));
-  hardware_monitor = check_and_cast<HardwareMonitor *>(getParentModule()->getSubmodule("hm"));
+  routing_daemon = provider.getRoutingDaemon();
+  hardware_monitor = provider.getHardwareMonitor();
   my_address = par("address");
   num_of_qnics = par("total_number_of_qnics");
 

@@ -7,7 +7,7 @@
  */
 #include <PhotonicQubit_m.h>
 #include <classical_messages_m.h>
-#include <modules/QRSA/HardwareMonitor/HardwareMonitor.h>
+#include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
 #include <omnetpp.h>
 #include <stdio.h>
 #include <stdlib.h>
