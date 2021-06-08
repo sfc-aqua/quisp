@@ -26,6 +26,7 @@ void ConnectionManager::initialize() {
   // if (is_absa_connection){
   //   // check if there are ABSA nodes
   // }
+  // hey
 
   for (int i = 0; i < num_of_qnics; i++) {
     // qnode address
