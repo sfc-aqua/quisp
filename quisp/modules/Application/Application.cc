@@ -7,6 +7,7 @@
  */
 #include "Application.h"
 #include <vector>
+#include "utils/ComponentProvider.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -14,7 +15,7 @@ using namespace quisp::messages;
 namespace quisp {
 namespace modules {
 
-Application::Application() {}
+Application::Application() : provider(utils::ComponentProvider{this}) {}
 
 /**
  * \brief Initialize module.
@@ -30,7 +31,7 @@ void Application::initialize() {
     return;
   }
 
-  my_address = getParentModule()->par("address");
+  my_address = provider.getQNode()->par("address");
   is_e2e_connection = par("EndToEndConnection");
   number_of_resources = par("NumberOfResources");
   num_measure = par("num_measure");
@@ -147,22 +148,6 @@ int Application::getOneRandomEndNodeAddress() {
 }
 
 int Application::getAddress() { return my_address; }
-
-cModule *Application::getQNode() {
-  // We know that Application is not the QNode, so start from the parent.
-  cModule *current_module = getParentModule();
-  try {
-    // Assumes the node in a network has a type QNode
-    const cModuleType *qnode_type = cModuleType::get("modules.QNode");
-    while (current_module->getModuleType() != qnode_type) {
-      current_module = current_module->getParentModule();
-    }
-  } catch (std::exception &e) {
-    error("No module with QNode type found. Have you changed the type name in ned file?");
-    endSimulation();
-  }
-  return current_module;
-}
 
 }  // namespace modules
 }  // namespace quisp

@@ -9,6 +9,7 @@
 #define MODULES_APPLICATION_H_
 
 #include "IApplication.h"
+#include "utils/ComponentProvider.h"
 
 using namespace omnetpp;
 
@@ -41,6 +42,7 @@ class Application : public IApplication {
  public:
   Application();
   int getAddress();
+  utils::ComponentProvider provider;
 };
 
 Define_Module(Application);
