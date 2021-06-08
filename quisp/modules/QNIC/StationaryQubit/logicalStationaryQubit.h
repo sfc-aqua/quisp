@@ -16,23 +16,19 @@ namespace quisp {
 
         typedef std::complex<double> Complex;
 
-        typedef struct _logical_quantum_state{
+        struct logical_quantum_state {
             MatrixXcd state_in_density_matrix;
             VectorXcd state_in_ket;
-        } logical_quantum_state;
-/*
-        typedef struct _measurement_outcome{
+        };
+
+
+        struct logical_measurement_operator {
+            MatrixXcd plus;            
+            MatrixXcd minus;            
+            VectorXcd plus_ket;            
+            VectorXcd minus_ket;            
             char basis;
-            bool outcome_is_plus;
-        }measurement_outcome;
-*/
-        typedef struct _logical_measurement_operator{
-            MatrixXcd plus;
-            MatrixXcd minus;
-            VectorXcd plus_ket;
-            VectorXcd minus_ket;
-            char basis;
-        }logical_measurement_operator;
+        };
 
         class logicalStationaryQubit  : public cSimpleModule{
             public:
@@ -65,32 +61,32 @@ namespace quisp {
                 MatrixXcd ideal_logical_density_matrix;
             
             protected: 
-                virtual void initialize();
-                virtual void setPhysicalFree(bool consumed);
+                void initialize();
+                void setPhysicalFree(bool consumed);
                 
-                virtual bool checkBusy();
-                virtual void Lock(unsigned long rs_id, int rule_id, int action_id); /*In use. E.g. waiting for purification result.*/
-                virtual void Unlock();
-                virtual bool isLocked();
-                virtual void Allocate();
-                virtual void Deallocate();
-                virtual bool isAllocated();
+                bool checkBusy();
+                void Lock(unsigned long rs_id, int rule_id, int action_id); /*In use. E.g. waiting for purification result.*/
+                void Unlock();
+                bool isLocked();
+                void Allocate();
+                void Deallocate();
+                bool isAllocated();
 
-                virtual void addToLogicalList(StationaryQubit *encode_qubit);
-                virtual void setLogicalCompletelyMixedDensityMatrix();
-                virtual void setLogicalExcitedDensityMatrix();
-                virtual void setLogicalRelaxedDensityMatrix();
-                virtual void setLogicalEntangledPartnerInfo(logicalStationaryQubit *partner);
-                virtual void Hadamard_gate();
-                virtual void Z_gate();
-                virtual void x_gate();
-                virtual void CNOT_gate(logicalStationaryQubit *control_qubit);
-                virtual logical_quantum_state getLogicalQuantumState();
-                virtual logical_quantum_state getIdealLogicalQuantumState();
+                void addToLogicalList(StationaryQubit *encode_qubit);
+                void setLogicalCompletelyMixedDensityMatrix();
+                void setLogicalExcitedDensityMatrix();
+                void setLogicalRelaxedDensityMatrix();
+                void setLogicalEntangledPartnerInfo(logicalStationaryQubit *partner);
+                void Hadamard_gate();
+                void Z_gate();
+                void x_gate();
+                void CNOT_gate(logicalStationaryQubit *control_qubit);
+                logical_quantum_state getLogicalQuantumState();
+                logical_quantum_state getIdealLogicalQuantumState();
                 //virtual measurement_outcome logical_measure_density_independent_v1();
                 //virtual logical_measurement_operator logical_Random_Measurement_Basis_Selection();
-                virtual measurement_outcome logical_measure_density_independent_v2(StationaryQubit *physicalQubit, measurement_operator this_measurement);
-                virtual measurement_outcome logical_readout_v2(StationaryQubit *physicalQubit);
+                measurement_outcome logical_measure_density_independent_v2(StationaryQubit *physicalQubit, measurement_operator this_measurement);
+                measurement_outcome logical_readout_v2(StationaryQubit *physicalQubit);
         };
 
     };
