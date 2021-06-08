@@ -380,11 +380,15 @@ void HardwareMonitor::finish() {
     inf.neighbor_address){ return;
         }
     }*/
+    if(partner_node == nullptr){
+      error("here, partner node is null");
+    }
     tomography_dm << this_node->getFullName() << "<--->" << partner_node->getFullName() << "\n";
     tomography_dm << "REAL\n";
     tomography_dm << density_matrix_reconstructed.real() << "\n";
     tomography_dm << "IMAGINARY\n";
     tomography_dm << density_matrix_reconstructed.imag() << "\n";
+    
 
     std::cout << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
               << ";bellpair_per_sec=" << bellpairs_per_sec << ";}<-->" << partner_node->getFullName() << "; F=" << fidelity << "; X=" << Xerr_rate << "; Z=" << Zerr_rate
