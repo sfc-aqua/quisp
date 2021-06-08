@@ -35,6 +35,7 @@ class RealTimeController : public IRealTimeController {
   utils::ComponentProvider provider;
 };
 
+
 }  // namespace modules
 }  // namespace quisp
 

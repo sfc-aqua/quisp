@@ -26,7 +26,6 @@ void ConnectionManager::initialize() {
   my_address = par("address");
   num_of_qnics = par("total_number_of_qnics");
   simultaneous_es_enabled = par("simultaneousES");
-
   for (int i = 0; i < num_of_qnics; i++) {
     // qnode address
     qnic_res_table.insert(std::make_pair(i, false));
@@ -256,6 +255,24 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   if (fillPathDivision(path, 0, hop_count, link_left, link_right, swapper, 0) < divisions) {
     error("Something went wrong in path division computation.");
   }
+
+  std::map<int, std::vector<int>> swapping_partners;
+  for (int i = 0; i < divisions; i++) {
+    std::vector<int> partners;
+    if (swapper[i] > 0) {
+      EV << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n"; 
+      EV_DEBUG << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
+      partners.push_back(link_left[i]);
+      partners.push_back(link_right[i]);
+      swapping_partners.insert(std::make_pair(swapper[i], partners));
+    }
+  }
+
+    /* TODO: Remember you have link costs <3
+    * The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel
+      * but from only 1 channels from Src->BSA and ignoring BSA->Dest).
+    * If you need to test with different costs, try changing the value.
+    * But we need to implement actual link-tomography for this eventually.
 
   std::map<int, std::vector<int>> swapping_partners;
   for (int i = 0; i < divisions; i++) {

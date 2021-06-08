@@ -42,6 +42,7 @@ const ConnectionSetupInfo NULL_CONNECTION_SETUP_INFO{.qnic =
                                                      .quantum_link_cost = -1};
 
 struct tomography_outcome {
+  int partner_address;
   char my_basis;
   bool my_output_is_plus;
   char my_GOD_clean;

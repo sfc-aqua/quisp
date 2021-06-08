@@ -30,7 +30,7 @@ HardwareMonitor::~HardwareMonitor() {}
 // HardwareMonitor is also responsible for calculating the rssi/oka's protocol/fidelity calculate and give it to the RoutingDaemon
 void HardwareMonitor::initialize(int stage) {
   EV_INFO << "HardwareMonitor booted\n";
-  routing_daemon = check_and_cast<RoutingDaemon *>(getParentModule()->getSubmodule("rd"));
+  routing_daemon = check_and_cast<IRoutingDaemon *>(getParentModule()->getSubmodule("rd"));
 
   output_count initial;
   initial.minus_minus = 0;
@@ -1173,6 +1173,44 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module)
   }
   auto neighbor_info = createNeighborInfo(*neighbor_node);
   return neighbor_info;
+}
+
+cModule *HardwareMonitor::getQNode() {
+  // We know that Connection manager is not the QNode, so start from the parent.
+  cModule *currentModule = getParentModule();
+  cModuleType *QNodeType = cModuleType::get("modules.QNode");
+  try {
+    // Assumes the node in a network has a type QNode
+    while (currentModule->getModuleType() != QNodeType) {
+      currentModule = currentModule->getParentModule();
+    }
+    return currentModule;
+  } catch (std::exception &e) {
+    error(
+        "No module with QNode type found. Have you changed the type name in "
+        "ned file?");
+    endSimulation();
+  }
+}
+
+
+cModule *HardwareMonitor::getQNodeWithAddress(int address){
+  cTopology *topo = new cTopology("topo");
+  // veryfication?
+  cMsgPar *yes = new cMsgPar();
+  yes->setStringValue("yes");
+  topo->extractByParameter("includeInTopo", yes->str().c_str()); 
+  int addr;
+  for (int i = 0; i < topo->getNumNodes(); i++) {
+    cTopology::Node *node = topo->getNode(i);
+    addr = (int)node->getModule()->par("address");
+    EV_DEBUG << "End node address is " << addr << "\n";
+    if (addr == address){
+      return node->getModule();
+    }
+  }
+  delete topo;
+  // return node;
 }
 
 std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule &thisNode) {
