@@ -23,13 +23,6 @@ void ConnectionManager::initialize() {
   hardware_monitor = provider.getHardwareMonitor();
   my_address = par("address");
   num_of_qnics = par("total_number_of_qnics");
-
-  is_absa_connection = par("ABSAconnection");
-
-  // if (is_absa_connection){
-  //   // check if there are ABSA nodes
-  // }
-
   for (int i = 0; i < num_of_qnics; i++) {
     // qnode address
     qnic_res_table.insert(std::make_pair(i, false));
@@ -254,51 +247,25 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   }
   path.push_back(my_address);
 
-  // Those are common functions for both ordinal ES based connection and ABSA based connection
+  int divisions = computePathDivisionSize(hop_count);
+  int *link_left = new int[divisions], *link_right = new int[divisions], *swapper = new int[divisions];
 
-  if (is_absa_connection){
-    // here absa version of response
-    // 1. get the intermediate ABSA and source nodes
-    // vector for rgs source node and measurement node
-    // TODO: treat measurement node as a ordinal qnode
-    // So far, ABSA measurement is the same as HoM
-    std::vector<int> rgs_nodes;
-    // 2. 
-    EV<<"Request has been arrived!"<<"\n";
-    // What the path info should be like?
-    // Premise: Assume there are only absa connections (odd components are source and even components are absa)
+  // fillPathDivision should yield *exactly* the anticipated number of divisions.
+  if (fillPathDivision(path, 0, hop_count, link_left, link_right, swapper, 0) < divisions) {
+    error("Something went wrong in path division computation.");
+  }
 
-    // eliminate first and the final nodes (End nodes)
-    // TODO currently, HoM things cannot be recognized as node
-    // ABSA should a one node
-    for (int i = 1; i < path.size()-1; i++){
-      // loop for path except end nodes
-      rgs_nodes.push_back(path[i]);
-      EV<<"node: "<<path[i]<<"\n"; 
+  std::map<int, std::vector<int>> swapping_partners;
+  for (int i = 0; i < divisions; i++) {
+    std::vector<int> partners;
+    if (swapper[i] > 0) {
+      EV << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n"; 
+      EV_DEBUG << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
+      partners.push_back(link_left[i]);
+      partners.push_back(link_right[i]);
+      swapping_partners.insert(std::make_pair(swapper[i], partners));
     }
-
-    error("responder");
-  }else{
-
-      int divisions = computePathDivisionSize(hop_count);
-      int *link_left = new int[divisions], *link_right = new int[divisions], *swapper = new int[divisions];
-
-      // fillPathDivision should yield *exactly* the anticipated number of divisions.
-      if (fillPathDivision(path, 0, hop_count, link_left, link_right, swapper, 0) < divisions) {
-        error("Something went wrong in path division computation.");
-      }
-
-      std::map<int, std::vector<int>> swapping_partners;
-      for (int i = 0; i < divisions; i++) {
-        std::vector<int> partners;
-        if (swapper[i] > 0) {
-          EV << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n"; 
-          EV_DEBUG << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
-          partners.push_back(link_left[i]);
-          partners.push_back(link_right[i]);
-          swapping_partners.insert(std::make_pair(swapper[i], partners));
-        }
-      }
+  }
 
     /* TODO: Remember you have link costs <3
     * The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel
@@ -397,7 +364,6 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     } else {
       reserveQnic(src_info->qnic.address);
     }
-  }
 }
 
 /**

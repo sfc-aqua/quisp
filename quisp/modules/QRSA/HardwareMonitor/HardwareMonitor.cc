@@ -30,7 +30,7 @@ HardwareMonitor::~HardwareMonitor() {}
 // HardwareMonitor is also responsible for calculating the rssi/oka's protocol/fidelity calculate and give it to the RoutingDaemon
 void HardwareMonitor::initialize(int stage) {
   EV_INFO << "HardwareMonitor booted\n";
-  routing_daemon = check_and_cast<RoutingDaemon *>(getParentModule()->getSubmodule("rd"));
+  routing_daemon = check_and_cast<IRoutingDaemon *>(getParentModule()->getSubmodule("rd"));
 
   output_count initial;
   initial.minus_minus = 0;
@@ -1178,9 +1178,10 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module)
 cModule *HardwareMonitor::getQNode() {
   // We know that Connection manager is not the QNode, so start from the parent.
   cModule *currentModule = getParentModule();
+  cModuleType *QNodeType = cModuleType::get("modules.QNode");
   try {
     // Assumes the node in a network has a type QNode
-    while (currentModule->getModuleType() != QNodeType && currentModule->getModuleType() != RGSsourceType) {
+    while (currentModule->getModuleType() != QNodeType) {
       currentModule = currentModule->getParentModule();
     }
     return currentModule;

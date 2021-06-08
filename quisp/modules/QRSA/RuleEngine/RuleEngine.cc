@@ -188,22 +188,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   else if (dynamic_cast<EPPStimingNotifier *>(msg) != nullptr) {
     bubble("EPPS");
     EPPStimingNotifier *pk = check_and_cast<EPPStimingNotifier *>(msg);
-  } 
-  
-  else if (dynamic_cast<ABSMtimingNotifier *>(msg) != nullptr){
-    bubble("ABSA timing notified!");
-    ABSMtimingNotifier *pk = check_and_cast<ABSMtimingNotifier *>(msg);
-    // 1. Start generating Grpah State
-    std::vector<int> num_qubits = {10, 10};
-    // number of qubits,
-    // shapes
-    generateInternalGraphState(num_qubits);
-    error("yay");
-    // scheduleFirstPhotonEmissionForABSA(pk);
-    // 2. Decide when to start bursting photon emission
-
-  } 
-  
+  }   
   else if (dynamic_cast<LinkTomographyRuleSet *>(msg) != nullptr) {
     // Received a tomography rule set.
     LinkTomographyRuleSet *pk = check_and_cast<LinkTomographyRuleSet *>(msg);
@@ -758,33 +743,6 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
     // error("This needs to be implemented (Is this needed if entangled particles get consumed properly?). When QNIC buffer is all busy in the 1st shot...");
     // All qubits are free when BSAtimingRequest is received by the node.
   }
-}
-
-void RuleEngine::generateInternalGraphState(std::vector<int> req_qubits){
-  EV<<"Start generating graph state"<<"\n";
-
-  // The number of qubits in each qnic
-  // [10, 10, ..., 9] ... the number of qubits for each qnic.
-  if (req_qubits.size() != number_of_qnics){
-    error("The size of required qubits must be the same as the number of qnics");
-  }
-  QNIC_type qnic_type = QNIC_E;
-  for (int qnic_index=0; qnic_index<number_of_qnics; qnic_index++){
-    // get the instance of qnic
-    cModule *qnic = getRGSsource()->getSubmodule(QNIC_names[qnic_type], qnic_index);
-    int num_qubits = qnic->par("numBuffer");
-
-    if (num_qubits < req_qubits.at(qnic_index)){
-      error("Not enough qubits found");
-    }
-    std::cout<<"req qubits"<<req_qubits.at(qnic_index)<<std::endl;
-    // loop for qubits
-    for (int qubit_index = 0; qubit_index < req_qubits.at(qnic_index); qubit_index++){
-      std::cout<<"qubit index"<<qubit_index<<std::endl;
-      realtime_controller->EmitPhotonForRGS(qnic_index, qubit_index, qnic_type);
-    }
-  }
-  error("stop, not implemented further");
 }
 
 bool RuleEngine::burstTrial_outdated(int this_trial, int qnic_address) {

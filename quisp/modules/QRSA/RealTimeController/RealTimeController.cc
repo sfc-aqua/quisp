@@ -13,6 +13,7 @@ namespace quisp {
 namespace modules {
 
 Define_Module(RealTimeController);
+
 RealTimeController::RealTimeController() : provider(utils::ComponentProvider{this}) {}
 void RealTimeController::initialize() {
   EV << "RealTimeController booted\n";
@@ -26,23 +27,6 @@ void RealTimeController::EmitPhoton(int qnic_index, int qubit_index, QNIC_type q
   Enter_Method("EmitPhoton()");
   auto *q = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
   q->emitPhoton(pulse);
-}
-
-cModule *RealTimeController::getRGSsource() {
-  // We know that Connection manager is not the QNode, so start from the parent.
-  cModule *currentModule = getParentModule();
-  try {
-    // Assumes the node in a network has a type QNode
-    cModuleType *RGSsourceType = cModuleType::get("modules.RGS_source");
-    while (currentModule->getModuleType() != RGSsourceType) {
-      currentModule = currentModule->getParentModule();
-    }
-    return currentModule;
-  } catch (std::exception &e) {
-    error("No module with QNode type found. Have you changed the type name in ned file?");
-    endSimulation();
-  }
-  return currentModule;
 }
 
 

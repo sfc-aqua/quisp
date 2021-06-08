@@ -27,23 +27,14 @@ class RealTimeController : public IRealTimeController {
  protected:
   virtual void initialize() override;
   virtual void handleMessage(cMessage* msg) override;
-<<<<<<< HEAD
-  virtual cModule* getQNode();
-  virtual cModule* getRGSsource();
-
- public:
-  virtual void EmitPhoton(int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse);
-  virtual void EmitPhotonForRGS(int qnic_index, int qubit_index, QNIC_type);
-  virtual void ReInitialize_StationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed);
-=======
 
  public:
   RealTimeController();
   void EmitPhoton(int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse) override;
   void ReInitialize_StationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed) override;
   utils::ComponentProvider provider;
->>>>>>> bd4fd5195299815cf4a4c38482adc09cd42e3a38
 };
+
 
 }  // namespace modules
 }  // namespace quisp

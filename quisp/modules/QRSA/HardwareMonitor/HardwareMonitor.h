@@ -53,7 +53,7 @@ class HardwareMonitor : public IHardwareMonitor {
   int num_measure;
   int num_end_nodes;
 
-  RoutingDaemon *routing_daemon;
+  IRoutingDaemon *routing_daemon;
 
   cModule *getQnic(int qnic_index, QNIC_type qnic_type);
   NeighborTable neighbor_table;

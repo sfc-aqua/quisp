@@ -10,6 +10,7 @@ namespace modules {
 
 class IRoutingDaemon : public cSimpleModule {
  public:
+  virtual int returnNumEndNodes() = 0;
   virtual int return_QNIC_address_to_destAddr(int destAddr) = 0;
 };
 }  // namespace modules
