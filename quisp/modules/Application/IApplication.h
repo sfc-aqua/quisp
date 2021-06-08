@@ -12,7 +12,6 @@ namespace modules {
 class IApplication : public cSimpleModule {
  public:
   virtual ~IApplication(){};
-  virtual int getAddress() = 0;
 };
 
 }  // namespace modules

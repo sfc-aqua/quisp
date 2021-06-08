@@ -24,7 +24,7 @@ class Application : public IApplication {
  private:
   int my_address;
 
-  int *other_end_node_addresses;
+  std::vector<int> other_end_node_addresses;
   int num_of_other_end_nodes;
   bool is_e2e_connection;
   int number_of_resources;
@@ -33,15 +33,13 @@ class Application : public IApplication {
   void initialize() override;
   void handleMessage(cMessage *msg) override;
 
-  int *storeEndNodeAddresses();
+  void storeEndNodeAddresses();
   int getOneRandomEndNodeAddress();
-  cModule *getQNode();
 
   ConnectionSetupRequest *createConnectionSetupRequest(int dest_addr, int num_of_required_resources);
 
  public:
   Application();
-  int getAddress();
   utils::ComponentProvider provider;
 };
 
