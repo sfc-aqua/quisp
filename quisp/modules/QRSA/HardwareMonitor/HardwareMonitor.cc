@@ -375,11 +375,15 @@ void HardwareMonitor::finish() {
     inf.neighbor_address){ return;
         }
     }*/
+    if(partner_node == nullptr){
+      error("here, partner node is null");
+    }
     tomography_dm << this_node->getFullName() << "<--->" << partner_node->getFullName() << "\n";
     tomography_dm << "REAL\n";
     tomography_dm << density_matrix_reconstructed.real() << "\n";
     tomography_dm << "IMAGINARY\n";
     tomography_dm << density_matrix_reconstructed.imag() << "\n";
+    
 
     std::cout << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
               << ";bellpair_per_sec=" << bellpairs_per_sec << ";}<-->" << partner_node->getFullName() << "; F=" << fidelity << "; X=" << Xerr_rate << "; Z=" << Zerr_rate
@@ -1183,10 +1187,21 @@ cModule *HardwareMonitor::getQNode() {
 
 cModule *HardwareMonitor::getQNodeWithAddress(int address){
   cTopology *topo = new cTopology("topo");
-  topo->extractByParameter("nodeType", "EndNode");
-  cModule *node = topo->getNode(address)->getModule();
+  // veryfication?
+  cMsgPar *yes = new cMsgPar();
+  yes->setStringValue("yes");
+  topo->extractByParameter("includeInTopo", yes->str().c_str()); 
+  int addr;
+  for (int i = 0; i < topo->getNumNodes(); i++) {
+    cTopology::Node *node = topo->getNode(i);
+    addr = (int)node->getModule()->par("address");
+    EV_DEBUG << "End node address is " << addr << "\n";
+    if (addr == address){
+      return node->getModule();
+    }
+  }
   delete topo;
-  return node;
+  // return node;
 }
 
 std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule &thisNode) {
