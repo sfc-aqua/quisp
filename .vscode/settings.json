@@ -24,7 +24,8 @@
         "qnics",
         "qrtable",
         "quisp",
-        "submodules"
+        "submodules",
+        "topo"
     ],
     "testMate.cpp.test.workingDirectory": "${workspaceFolder}/quisp",
     "testMate.cpp.test.executables": "quisp/run_unit_test",
