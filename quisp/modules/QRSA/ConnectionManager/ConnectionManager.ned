@@ -8,7 +8,7 @@ simple ConnectionManager
         int number_of_qnics_rp;
         int total_number_of_qnics;
         bool ABSAconnection = default(false);
-        bool simultaneous_ES = default(false);
+        bool simultaneousES = default(false);
 
     gates:
         inout RouterPort;

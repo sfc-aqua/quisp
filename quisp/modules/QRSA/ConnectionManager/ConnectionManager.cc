@@ -20,7 +20,7 @@ void ConnectionManager::initialize() {
   hardware_monitor = check_and_cast<HardwareMonitor *>(getParentModule()->getSubmodule("hm"));
   my_address = par("address");
   num_of_qnics = par("total_number_of_qnics");
-  simultaneous_ES = true;//par("simultaneous_ES");
+  simultaneous_ES = par("simultaneousES"); // true;
 
   is_absa_connection = par("ABSAconnection");
 
@@ -367,7 +367,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
         if (!simultaneous_ES){
           SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
           RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
-          //error("We F up again");
+          
           
           ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
           pkr->setDestAddr(path.at(i));
@@ -379,9 +379,9 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
           send(pkr, "RouterPort$o");
         }
         else if(simultaneous_ES){
-          //error("We F up again but in simulES");
+          
           SwappingConfig config = generateSimultaneousSwappingConfig(path.at(i), path, qnics, num_resource);
-          //error("We F up again but in simulES");
+          
           RuleSet *rule = generateSimultaneousEntanglementSwappingRuleSet(path.at(i), config, path);
           
           ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
