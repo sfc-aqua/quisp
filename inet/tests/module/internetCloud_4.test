@@ -1,0 +1,108 @@
+%description:
+Testing InternetCloud datarate
+%#--------------------------------------------------------------------------------------------------------------
+%file: test.ned
+
+import inet.test.moduletest.lib.*;
+import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
+import inet.node.inet.StandardHost;
+import inet.node.internetcloud.InternetCloud;
+import ned.DatarateChannel;
+
+
+network CloudAndHosts
+{
+    parameters:
+        int numSenders;
+
+    types:
+        channel C extends DatarateChannel
+        {
+            delay = 10ms;
+            datarate = 5Mbps;
+        }
+    submodules:
+        configurator: Ipv4NetworkConfigurator {
+            parameters:
+                @display("p=61,163");
+        }
+
+        sender[numSenders]: StandardHost;
+        recip: StandardHost;
+        internet: InternetCloud;
+    connections:
+        recip.pppg++ <--> C <--> internet.pppg++;
+        for i=0..numSenders-1 {
+            sender[i].pppg++ <--> C <--> internet.pppg++;
+        }
+}
+
+
+%#--------------------------------------------------------------------------------------------------------------
+%inifile: omnetpp.ini
+
+[General]
+network = CloudAndHosts
+ned-path = .;../../../../src;../../lib
+
+#omnetpp 5.0 - 5.1 compatibility:
+eventlog-file = "${resultdir}/${configname}-${runnumber}.elog"
+output-scalar-file = "${resultdir}/${configname}-${runnumber}.sca"
+output-vector-file = "${resultdir}/${configname}-${runnumber}.vec"
+snapshot-file = "${resultdir}/${configname}-${runnumber}.sna"
+
+*.sender[*].numApps = 1
+*.sender[*].app[0].typename = "PingApp"
+*.sender[*].app[0].destAddr = "recip"
+*.sender[*].app[0].startTime = 10s
+*.sender[*].app[0].stopTime = 10.5s
+*.sender[*].app[0].sendInterval = 1s
+*.sender[*].app[0].printPing = true
+
+**.internet.ipv4Delayer.typename = "MatrixCloudDelayer"
+**.internet.ipv4Delayer.config = xmldoc("internetCloud.xml")
+
+**.numSenders = 10
+
+%#--------------------------------------------------------------------------------------------------------------
+%file: internetCloud.xml
+
+<internetCloud symmetric="true">
+  <parameters name="good">
+    <traffic src="sender[0]" dest="recip" delay="100ms" datarate="1000bps" drop="false" />
+    <traffic src="sender[1]" dest="recip" delay="100ms" datarate="1200bps" drop="false" />
+    <traffic src="sender[2]" dest="recip" delay="100ms" datarate="1400bps" drop="false" />
+    <traffic src="sender[3]" dest="recip" delay="100ms" datarate="1600bps" drop="false" />
+    <traffic src="sender[4]" dest="recip" delay="100ms" datarate="1800bps" drop="false" />
+    <traffic src="sender[5]" dest="recip" delay="100ms" datarate="2000bps" drop="false" />
+    <traffic src="sender[6]" dest="recip" delay="100ms" datarate="2200bps" drop="false" />
+    <traffic src="sender[7]" dest="recip" delay="100ms" datarate="2400bps" drop="false" />
+    <traffic src="sender[8]" dest="recip" delay="100ms" datarate="2600bps" drop="false" />
+    <traffic src="sender[9]" dest="recip" delay="100ms" datarate="2800bps" drop="false" />
+<!--
+    <traffic src="**" dest="**" delay="10ms+truncnormal(100ms,20ms)" datarate="uniform(100kbps,500kbps)" drop="uniform(0.01, 0.05)" />
+-->
+  </parameters>
+</internetCloud>
+
+%#--------------------------------------------------------------------------------------------------------------
+%#--------------------------------------------------------------------------------------------------------------
+%contains-regex: stdout
+[^C].*
+CloudAndHosts\.sender\[9\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[8\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[7\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[6\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[5\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[4\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[3\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[2\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[1\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[0\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+[^C].*
+%#--------------------------------------------------------------------------------------------------------------
+%not-contains: stdout
+undisposed object:
+%not-contains: stdout
+-- check module destructor
+%#--------------------------------------------------------------------------------------------------------------

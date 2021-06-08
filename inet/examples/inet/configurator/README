@@ -1,0 +1,7 @@
+This example demonstrates the automatic routing table configuration features of
+the IPv4NetworkConfigurator. The example focuses on the basic settings, one by
+one.
+
+In this example, there are 4 nodes connected with each other in a square.
+Each node sends ping packets to all interfaces. Each configuration section
+demonstrates a single automatic routing table configuration feature.

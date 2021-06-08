@@ -1,0 +1,44 @@
+====== inet-4.x ======
+
+2020-01-08  ------ inet-4.2.0 released ------
+
+2019-02-12  Levente Mészáros
+
+	Revised signals and statistics.
+
+2019-02-04  Levente Mészáros
+
+	Cleaned up Enter_Method and Enter_Method_Silent calls.
+
+2019-01-30  Levente Mészáros
+
+	Renamed datarate signal to datarateChanged in rate control algorithms.
+
+2019-01-28  ------ inet-4.1.0 released ------
+
+2018-09-27  Levente Mészáros
+
+	Renamed INITSTAGE_LINK_LAYER to INITSTAGE_NETWORK_INTERFACE_CONFIGURATION.	Renamed INITSTAGE_LINK_LAYER_2 to INITSTAGE_LINK_LAYER.
+
+2018-06-27  ------ inet-4.0.0 released ------
+
+2018-04-13  ------ inet-3.99.3 released ------
+
+2018-01-05  Zoltan Bojthe
+
+	Renamed NF_* signals to use camel case.
+	Renamed signal variables to *Signal.
+
+2017-12-22  ------ inet-3.99.2 released ------
+
+2017-12-20  Zoltan Bojthe
+
+	Renaming:
+	    AARFRateControl -> AarfRateControl
+	    ARFRateControl -> ArfRateControl
+
+2017-11-16  ------ inet-3.99.1 released ------
+
+2017-04-20  Levente Mészáros
+
+	Refactored to use the new Packet API.

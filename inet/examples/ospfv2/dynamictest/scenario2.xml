@@ -1,0 +1,8 @@
+<scenario>
+    <at t="200">
+        <shutdown module="RA"/>
+    </at>
+    <at t="400">
+        <startup module="RA"/>
+    </at>
+</scenario>

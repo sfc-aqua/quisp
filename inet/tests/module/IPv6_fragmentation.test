@@ -1,0 +1,59 @@
+%description:
+Tests that a large datagram gets fragmented and reassembled at the destination.
+
+NClientsEth example network is used, with one client.
+The client sends an 5000 bytes in an UDP datagram to the server.
+It is checked that the server receives the datagram.
+
+%#--------------------------------------------------------------------------------------------------------------
+%inifile: omnetpp.ini
+[General]
+ned-path = ../../../../examples;../../../../src
+network = inet.examples.ipv6.nclients.NClientsEth
+sim-time-limit=15s
+cmdenv-express-mode=false
+
+#omnetpp 5.0 - 5.1 compatibility:
+eventlog-file = "${resultdir}/${configname}-${runnumber}.elog"
+output-scalar-file = "${resultdir}/${configname}-${runnumber}.sca"
+output-vector-file = "${resultdir}/${configname}-${runnumber}.vec"
+snapshot-file = "${resultdir}/${configname}-${runnumber}.sna"
+
+# number of client computers
+*.n = 1
+
+# udp apps
+**.cli[*].numApps = 1
+**.cli[*].app[0].typename = "UdpBasicApp"
+**.cli[*].app[0].destAddresses = "srv"
+**.cli[*].app[0].destPort = 1000
+**.cli[*].app[0].messageLength = 5000B
+
+**.cli[*].app[0].startTime = 10s
+**.cli[*].app[0].stopTime = 11s
+**.cli[*].app[0].sendInterval = 10s
+
+**.srv.numApps = 1
+**.srv.app[0].typename = "UdpSink"
+**.srv.app[0].localPort = 1000
+
+# Ethernet NIC configuration
+**.eth[*].mac.queue.typename = "EtherQosQueue"
+**.eth[*].mac.queue.dataQueue.typename = "DropTailQueue" # in routers
+**.eth[*].mac.queue.dataQueue.packetCapacity = 10  # in routers
+**.eth[*].mac.duplexEnabled = true
+%#--------------------------------------------------------------------------------------------------------------
+%subst: /omnetpp:://
+%#--------------------------------------------------------------------------------------------------------------
+%contains: stdout
+This fragment completes the datagram.
+%#--------------------------------------------------------------------------------------------------------------
+%contains: stdout
+Received packet: (inet::Packet)UdpBasicAppData-0 (5000 B)
+%#--------------------------------------------------------------------------------------------------------------
+%not-contains: stdout
+undisposed object:
+%#--------------------------------------------------------------------------------------------------------------
+%not-contains: stdout
+-- check module destructor
+%#--------------------------------------------------------------------------------------------------------------

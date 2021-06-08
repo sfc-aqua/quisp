@@ -1,0 +1,135 @@
+%description:
+Test the IP fragmentation reassembly buffer (Ipv4FragBuf class)
+
+%includes:
+#include <vector>
+#include "inet/common/packet/Packet.h"
+#include "inet/common/packet/chunk/ByteCountChunk.h"
+#include "inet/networklayer/ipv4/Ipv4FragBuf.h"
+#include "inet/networklayer/ipv4/Ipv4Header_m.h"
+
+%global:
+
+using namespace inet;
+
+struct Frag
+{
+    ushort id;
+    long src;
+    long dest;
+    ushort offset;
+    ushort bytes;
+    bool islast;
+};
+
+typedef std::vector<Frag> FragVector;
+
+bool insertFragment(Ipv4FragBuf& fragbuf, Frag& f)
+{
+/*
+    EV << "insert frag: src=" << f.src
+       << " dest=" << f.dest
+       << " offset=" << f.offset
+       << " id=" << f.id
+       << " bytes=" << f.bytes
+       << " islast=" << f.islast
+       << "\n";
+*/
+    Packet *pk = new Packet("Ipv4");
+    const auto& frag = makeShared<Ipv4Header>();
+    frag->setIdentification(f.id);
+    frag->setSrcAddress(Ipv4Address(f.src));
+    frag->setDestAddress(Ipv4Address(f.dest));
+    frag->setFragmentOffset(f.offset);
+    frag->setMoreFragments(!f.islast);
+    frag->setHeaderLength(B(24));
+    frag->setChunkLength(B(24));
+    frag->setTotalLengthField(B(24 + f.bytes));
+    const auto& payload = makeShared<ByteCountChunk>(B(f.bytes));
+    pk->insertAtFront(payload);
+    pk->insertAtFront(frag);
+    ASSERT(pk->getByteLength() == 24+f.bytes);
+
+    Packet *pk2 = fragbuf.addFragment(pk, 0);
+    delete pk2;
+    return pk2!=NULL;
+}
+
+%activity:
+
+// create a number of fragmented datagrams
+FragVector v;
+Frag f;
+int numdatagrams = 0;
+for (f.src=1024; f.src<1026; f.src++) {
+    for (f.dest=2048; f.dest<2050; f.dest++) {
+        for (f.id=0; f.id<80; f.id++) {
+            numdatagrams++;
+            int n = f.id/10+2;
+            for (int i=0; i<n; i++) {
+                f.offset=i*100;
+                f.bytes=100;
+                f.islast = (i==n-1);
+/*
+                EV << "generate frag: src=" << f.src
+                   << " dest=" << f.dest
+                   << " offset=" << f.offset
+                   << " id=" << f.id
+                   << " bytes=" << f.bytes
+                   << " islast=" << f.islast
+                   << "\n";
+*/
+                v.push_back(f);
+            }
+        }
+    }
+}
+
+// dump
+#if 0
+for (size_t j=0; j<v.size(); j++)
+{
+    Frag& f = v[j];
+    EV << f.src << ">" << f.dest << ":" << f.id << " " << f.offset << " (" << f.bytes << ") " << (f.islast?"LAST":"") << "\n";
+}
+#endif
+
+EV << numdatagrams << " datagrams in " << v.size() << " fragments\n";
+
+// try assemble them, fragments in original order
+Ipv4FragBuf fragbuf1;
+size_t i, num;
+for (i=0, num=0; i<v.size(); i++)
+    if (insertFragment(fragbuf1, v[i]))
+        num++;
+EV << "assembled in original order: " << num << "\n";
+
+// try assemble fragments in reverse order
+Ipv4FragBuf fragbuf2;
+for (i=v.size(), num=0; i>0; i--)
+    if (insertFragment(fragbuf2, v[i-1]))
+        num++;
+EV << "assembled in reverse order: " << num << "\n";
+
+// shuffle fragments
+for (i=0; i<100000; i++)
+{
+    int a = intrand(v.size());
+    int b = intrand(v.size());
+    f = v[a]; v[a] = v[b]; v[b] = f;
+}
+
+// try assemble shuffled fragments
+Ipv4FragBuf fragbuf3;
+for (i=0, num=0; i<v.size(); i++)
+    if (insertFragment(fragbuf3, v[i]))
+        num++;
+EV << "assembled in random order: " << num << "\n";
+
+
+%contains: stdout
+320 datagrams in 1760 fragments
+assembled in original order: 320
+assembled in reverse order: 320
+assembled in random order: 320
+

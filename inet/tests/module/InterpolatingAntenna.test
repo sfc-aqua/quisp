@@ -1,0 +1,99 @@
+%description:
+
+Tests InterpolatingAntenna for a simple configuration.
+
+%file: test.cc
+#include "inet/physicallayer/contract/packetlevel/IAntenna.h"
+
+namespace InterpolatingAntenna {
+
+using namespace inet;
+using namespace inet::physicallayer;
+
+class AntennaTest : public cSimpleModule
+{
+    public:
+        AntennaTest() : cSimpleModule() {}
+
+    protected:
+        virtual int numInitStages() const { return NUM_INIT_STAGES; }
+        virtual void initialize(int stage);
+};
+
+Define_Module(AntennaTest);
+
+void AntennaTest::initialize(int stage)
+{
+    if (stage == INITSTAGE_LAST)
+    {
+        IAntenna *antenna = check_and_cast<IAntenna *>(getSimulation()->getModuleByPath("host.wlan[0].radio.antenna"));
+        EV_INFO << antenna->getGain()->computeGain(Quaternion(EulerAngles::ZERO)) << " "
+                << antenna->getGain()->computeGain(Quaternion(EulerAngles(rad(M_PI / 2), rad(0), rad(0)))) << " "
+                << antenna->getGain()->computeGain(Quaternion(EulerAngles(rad(M_PI), rad(0), rad(0)))) << " "
+                << antenna->getGain()->computeGain(Quaternion(EulerAngles(rad(3 * M_PI / 2), rad(0), rad(0)))) << " "
+                << antenna->getGain()->computeGain(Quaternion(EulerAngles(rad(2 * M_PI), rad(0), rad(0)))) << "\n";
+    }
+}
+
+}
+
+%file: test.ned
+
+import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
+import inet.node.inet.WirelessHost;
+import inet.physicallayer.ieee80211.packetlevel.Ieee80211ScalarRadioMedium;
+
+simple AntennaTest
+{
+//    @class(::inet::physicallayer::InterpolatingAntenna::AntennaTest);
+}
+
+network Test
+{
+    submodules:
+        radioMedium: Ieee80211ScalarRadioMedium;
+        configurator: Ipv4NetworkConfigurator;
+        host: WirelessHost;
+        test: AntennaTest;
+}
+
+%inifile: omnetpp.ini
+[General]
+network = Test
+sim-time-limit = 400us
+ned-path = .;../../../../src
+
+#omnetpp 5.0 - 5.1 compatibility:
+eventlog-file = "${resultdir}/${configname}-${runnumber}.elog"
+output-scalar-file = "${resultdir}/${configname}-${runnumber}.sca"
+output-vector-file = "${resultdir}/${configname}-${runnumber}.vec"
+snapshot-file = "${resultdir}/${configname}-${runnumber}.sna"
+
+# mobility
+**.mobility.constraintAreaMinZ = 0m
+**.mobility.constraintAreaMinX = 0m
+**.mobility.constraintAreaMinY = 0m
+**.mobility.constraintAreaMaxX = 1000m
+**.mobility.constraintAreaMaxY = 1000m
+**.mobility.constraintAreaMaxZ = 0m
+**.mobility.initFromDisplayString = false
+
+# radio medium
+*.radioMedium.backgroundNoise.power = -110dBm
+
+# antenna
+**.antenna.typename = "InterpolatingAntenna"
+**.headingGains = "0 0 180 10 360 0"
+
+%#--------------------------------------------------------------------------------------------------------------
+%# remove colorizing
+%subst: /\x1B\[[0-9;]*m//
+%#--------------------------------------------------------------------------------------------------------------
+%contains: stdout
+1 5.5 10 5.5 1
+%#--------------------------------------------------------------------------------------------------------------
+%not-contains: stdout
+undisposed object:
+%not-contains: stdout
+-- check module destructor
+%#--------------------------------------------------------------------------------------------------------------

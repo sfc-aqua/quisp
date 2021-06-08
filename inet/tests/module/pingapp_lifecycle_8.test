@@ -1,0 +1,75 @@
+%description:
+
+Test node shutdown followed by ping stop.
+
+%inifile: omnetpp.ini
+
+[General]
+network = Test
+ned-path = .;../../../../src;../../lib
+cmdenv-express-mode = false
+
+#omnetpp 5.0 - 5.1 compatibility:
+eventlog-file = "${resultdir}/${configname}-${runnumber}.elog"
+output-scalar-file = "${resultdir}/${configname}-${runnumber}.sca"
+output-vector-file = "${resultdir}/${configname}-${runnumber}.vec"
+snapshot-file = "${resultdir}/${configname}-${runnumber}.sna"
+
+*.host.numApps = 1
+*.host.app[0].typename = "PingApp"
+*.host.app[0].destAddr = "192.168.0.42"
+*.host.app[0].startTime = 0s
+*.host.app[0].stopTime = 6s
+
+*.host.ipv4.configurator.networkConfiguratorModule = ""
+
+**.hasStatus = true
+**.scenarioManager.script = xmldoc("scenario.xml")
+
+%file: test.ned
+
+import inet.test.moduletest.lib.*;
+import inet.node.inet.StandardHost;
+import inet.common.scenario.ScenarioManager;
+
+network Test
+{
+    submodules:
+        scenarioManager: ScenarioManager;
+        host: StandardHost;
+}
+
+%#--------------------------------------------------------------------------------------------------------------
+%file: scenario.xml
+
+<scenario>
+    <at t="3.0">
+        <shutdown module="host"/>
+    </at>
+</scenario>
+
+%#--------------------------------------------------------------------------------------------------------------
+%contains-regex: stdout
+\*\* Event #\d+  t=0   Test\.host\.app\[0\] \(PingApp, id=\d+\)
+Starting up: dest=192\.168\.0\.42  src=<none>seqNo=0
+Sending ping request #0 to lower layer\.
+.*
+\*\* Event #\d+  t=2   Test\.host\.app\[0\] \(PingApp, id=\d+\)
+Sending ping request #2 to lower layer\.
+.*
+\*\* Event #\d+  t=3   Test\.scenarioManager \(ScenarioManager, id=\d+\)
+processing <at> command\.\.\.
+processing <shutdown> command\.\.\.
+Doing stage 0/8 of operation inet::ModuleStopOperation on Test\.host
+Test\.host shutting down
+.*
+Test\.host shut down
+
+<!> No more events
+%#--------------------------------------------------------------------------------------------------------------
+%not-contains: stdout
+undisposed object:
+%#--------------------------------------------------------------------------------------------------------------
+%not-contains: stdout
+-- check module destructor
+%#--------------------------------------------------------------------------------------------------------------

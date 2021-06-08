@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<scenario>
+    <at t="2s">
+        <shutdown module="LSR4"/>
+    </at>
+    <at t="4s">
+        <startup module="LSR4"/>
+    </at>
+</scenario>

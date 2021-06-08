@@ -1,0 +1,95 @@
+%description:
+
+Test for basic UDP application lifecycle handling.
+
+Sequence of operations:
+ - at 0 client initializes to up
+ - at 0 server initializes to up
+ - at 1 server executes shutdown operation
+ - at 2 client executes shutdown operation
+ - simulation stops at 3
+
+%inifile: omnetpp.ini
+
+[General]
+network = Test
+ned-path = .;../../../../src;../../lib
+cmdenv-express-mode = false
+sim-time-limit = 3s
+record-eventlog = true
+
+#omnetpp 5.0 - 5.1 compatibility:
+eventlog-file = "${resultdir}/${configname}-${runnumber}.elog"
+output-scalar-file = "${resultdir}/${configname}-${runnumber}.sca"
+output-vector-file = "${resultdir}/${configname}-${runnumber}.vec"
+snapshot-file = "${resultdir}/${configname}-${runnumber}.sna"
+
+**.hasStatus = true
+**.initialStatus = "up"
+**.scenarioManager.script = xmldoc("scenario.xml")
+
+**.arp.retryCount = 0
+**.arp.retryTimeout = 100ms
+
+# udp apps
+**.numApps = 1
+**.client.app[0].typename = "UdpBasicApp"
+**.client.app[0].startTime = 0s
+**.client.app[0].destAddresses = "10.0.0.2"
+**.client.app[0].destPort = 1000
+**.client.app[0].messageLength = 1000B
+**.client.app[0].sendInterval = 100ms
+
+**.server.app[0].typename = "UdpSink"
+**.server.app[0].localPort = 1000
+
+%file: test.ned
+
+import inet.test.moduletest.lib.*;
+import inet.node.ethernet.Eth10M;
+import inet.node.inet.StandardHost;
+import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
+import inet.common.scenario.ScenarioManager;
+
+network Test
+{
+    submodules:
+        scenarioManager: ScenarioManager;
+        configurator: Ipv4NetworkConfigurator;
+        client: StandardHost;
+        server: StandardHost;
+    connections:
+        client.pppg++ <--> Eth10M <--> server.pppg++;
+}
+
+%file: scenario.xml
+
+<scenario>
+    <at t="1">
+        <shutdown module="server"/>
+    </at>
+    <at t="2">
+        <shutdown module="client"/>
+    </at>
+</scenario>
+
+%contains-regex: stdout
+
+.*
+Test.server shutting down
+.*
+Test.server shut down
+.*
+Test.client shutting down
+.*
+Test.client shut down
+.*
+Test.server.app\[0\]: received 10 packets
+.*
+
+%#--------------------------------------------------------------------------------------------------------------
+%not-contains: stdout
+undisposed object:
+%not-contains: stdout
+-- check module destructor
+%#--------------------------------------------------------------------------------------------------------------

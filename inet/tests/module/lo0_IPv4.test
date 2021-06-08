@@ -1,0 +1,117 @@
+%description:
+Testing loopback interface module
+UDP communication via lo0 interface
+
+%#--------------------------------------------------------------------------------------------------------------
+%file: test.ned
+
+import inet.test.moduletest.lib.*;
+import inet.node.inet.StandardHost;
+
+network LocalUDP
+{
+    submodules:
+        host: StandardHost {
+            parameters:
+                ipv4.configurator.networkConfiguratorModule = "";
+                @display("i=device/pc3");
+        }
+}
+
+%#--------------------------------------------------------------------------------------------------------------
+%inifile: omnetpp.ini
+
+[General]
+ned-path = .;../../../../src;../../lib
+
+#omnetpp 5.0 - 5.1 compatibility:
+eventlog-file = "${resultdir}/${configname}-${runnumber}.elog"
+output-scalar-file = "${resultdir}/${configname}-${runnumber}.sca"
+output-vector-file = "${resultdir}/${configname}-${runnumber}.vec"
+snapshot-file = "${resultdir}/${configname}-${runnumber}.sna"
+
+**.vector-recording=false
+
+network = LocalUDP
+#debug-on-errors = true
+total-stack = 7MiB
+
+# udp app configuration
+**.numApps = 5
+**.app[0].typename = "UdpEchoApp"
+**.app[0].localPort = 100
+
+**.app[*].typename = "UdpBasicApp"
+**.app[*].localPort = 200+index
+**.app[*].destPort = 100
+**.app[*].messageLength = 5000B
+**.app[*].sendInterval = 5s
+**.app[*].destAddresses = "127.0.0.1"
+
+**.app[*].startTime = 60s+uniform(0s,5s)
+**.app[*].stopTime = 1059.99s
+
+%#--------------------------------------------------------------------------------------------------------------
+%#--------------------------------------------------------------------------------------------------------------
+%contains: results/General-0.sca
+scalar LocalUDP.host.lo[0].lo passedUpPk:count 3200
+attr
+
+%contains: results/General-0.sca
+scalar LocalUDP.host.lo[0].lo rcvdPkFromHl:count 3200
+attr
+
+%contains: results/General-0.sca
+scalar LocalUDP.host.app[0] echoedPk:count 800
+attr
+
+%contains: results/General-0.sca
+scalar LocalUDP.host.app[1] packetSent:count 200
+attr
+
+%contains: results/General-0.sca
+scalar LocalUDP.host.app[1] packetReceived:count 200
+attr
+
+%contains: results/General-0.sca
+scalar LocalUDP.host.app[2] packetSent:count 200
+attr
+
+%contains: results/General-0.sca
+scalar LocalUDP.host.app[2] packetReceived:count 200
+attr
+
+%contains: results/General-0.sca
+scalar LocalUDP.host.app[3] packetSent:count 200
+attr
+
+%contains: results/General-0.sca
+scalar LocalUDP.host.app[3] packetReceived:count 200
+attr
+
+%contains: results/General-0.sca
+scalar LocalUDP.host.app[4] packetSent:count 200
+attr
+
+%contains: results/General-0.sca
+scalar LocalUDP.host.app[4] packetReceived:count 200
+attr
+
+%contains: results/General-0.sca
+scalar LocalUDP.host.udp passedUpPk:count 1600
+attr
+
+%contains: results/General-0.sca
+scalar LocalUDP.host.udp packetSent:count 1600
+attr
+
+%contains: results/General-0.sca
+scalar LocalUDP.host.udp packetReceived:count 1600
+attr
+
+%#--------------------------------------------------------------------------------------------------------------
+%not-contains: stdout
+undisposed object:
+%not-contains: stdout
+-- check module destructor
+%#--------------------------------------------------------------------------------------------------------------

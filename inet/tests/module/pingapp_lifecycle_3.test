@@ -1,0 +1,69 @@
+%description:
+
+Test ping stop followed by node startup.
+
+%inifile: omnetpp.ini
+
+[General]
+network = Test
+ned-path = .;../../../../src;../../lib
+cmdenv-express-mode = false
+
+#omnetpp 5.0 - 5.1 compatibility:
+eventlog-file = "${resultdir}/${configname}-${runnumber}.elog"
+output-scalar-file = "${resultdir}/${configname}-${runnumber}.sca"
+output-vector-file = "${resultdir}/${configname}-${runnumber}.vec"
+snapshot-file = "${resultdir}/${configname}-${runnumber}.sna"
+
+*.host.numApps = 1
+*.host.app[0].typename = "PingApp"
+*.host.app[0].destAddr = "192.168.0.42"
+*.host.app[0].startTime = 0s
+*.host.app[0].stopTime = 3.1s
+
+*.host.ipv4.configurator.networkConfiguratorModule = ""
+
+**.hasStatus = true
+**.initialStatus = "down"
+**.scenarioManager.script = xmldoc("scenario.xml")
+
+%file: test.ned
+
+import inet.test.moduletest.lib.*;
+import inet.node.inet.StandardHost;
+import inet.common.scenario.ScenarioManager;
+
+network Test
+{
+    submodules:
+        scenarioManager: ScenarioManager;
+        host: StandardHost;
+}
+
+%file: scenario.xml
+
+<scenario>
+    <at t="6.0">
+        <startup module="host"/>
+    </at>
+</scenario>
+
+%contains-regex: stdout
+
+.*Event #\d+  t=6 .*
+.*
+Test.host starting up
+.*
+Test.host started
+
+<!> No more events
+
+%not-contains: stdout
+Sending ping #
+
+%#--------------------------------------------------------------------------------------------------------------
+%not-contains: stdout
+undisposed object:
+%not-contains: stdout
+-- check module destructor
+%#--------------------------------------------------------------------------------------------------------------
