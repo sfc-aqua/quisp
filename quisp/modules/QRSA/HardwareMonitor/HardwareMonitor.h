@@ -55,6 +55,7 @@ const ConnectionSetupInfo NULL_CONNECTION_SETUP_INFO{.qnic =
                                                      .quantum_link_cost = -1};
 
 struct tomography_outcome {
+  int partner_address;
   char my_basis;
   bool my_output_is_plus;
   char my_GOD_clean;
@@ -115,7 +116,7 @@ class HardwareMonitor : public cSimpleModule {
   bool Z_Purification = false;
   int Purification_type = -1;
   int num_measure;
-  bool multiHop = false;
+  int num_end_nodes;
 
   RoutingDaemon *routing_daemon;
 
@@ -136,10 +137,9 @@ class HardwareMonitor : public cSimpleModule {
   // virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, QNIC_type qnic_type);//returns the set of free resources
   // virtual int checkNumFreeBuff(int qnic_index, QNIC_type qnic_type);//returns the number of free qubits
   typedef std::map<int, tomography_outcome> Temporal_Tomography_Output_Holder;  // measurement_count_id -> outcome. For single qnic
-  typedef std::map<int, Temporal_Tomography_Output_Holder> ExtendedTemporalTomographyOutputHoler; // qnode id -> tomography_output_holder
-  // typedef std::map<int,Temporal_Tomography_Output_Holder> All_Temporal_Tomography_Output_Holder;//qnic_index -> tomography data. For all qnics.
   Temporal_Tomography_Output_Holder *all_temporal_tomography_output_holder;
-  ExtendedTemporalTomographyOutputHoler *extendedTemporalTomographyHoler;
+
+  std::map<int, Temporal_Tomography_Output_Holder *> extendedTemporalTomographyHolder;  // partner -> tomography output folder
   link_cost *all_temporal_tomography_runningtime_holder;
   std::string tomography_output_filename;
   std::string file_dir_name;
@@ -153,6 +153,7 @@ class HardwareMonitor : public cSimpleModule {
 
   virtual std::unique_ptr<NeighborInfo> createNeighborInfo(const cModule &thisNode);
   virtual cModule *getQNode();
+  virtual cModule *getQNodeWithAddress(int address);
   virtual std::unique_ptr<NeighborInfo> getNeighbor(cModule *qnic_pointer);
   virtual InterfaceInfo getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);

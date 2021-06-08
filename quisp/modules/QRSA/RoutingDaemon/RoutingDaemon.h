@@ -39,6 +39,7 @@ class RoutingDaemon : public cSimpleModule {
 
  public:
   virtual int return_QNIC_address_to_destAddr(int destAddr);
+  virtual int returnNumEndNodes();
 };
 
 }  // namespace modules

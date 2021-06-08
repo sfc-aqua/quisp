@@ -86,7 +86,6 @@ packet LinkTomographyResult extends header
 	simtime_t finish = -1;
 	int max_count;
 	char GOD_clean;
-    bool multiHopTomography;
 }
 
 packet PurificationResult extends header

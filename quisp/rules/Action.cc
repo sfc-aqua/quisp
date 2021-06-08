@@ -535,11 +535,6 @@ cPacket *RandomMeasureAction::run(cModule *re) {
       pk->setFinish(simTime() - start);
       pk->setMax_count(max_count);
     }
-    if(multihopTomo){
-      pk->setMultiHopTomography(true);
-    }else{
-      pk->setMultiHopTomography(false);
-    }
     return pk;
   }
 }
