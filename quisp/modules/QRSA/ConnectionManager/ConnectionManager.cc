@@ -23,6 +23,7 @@ void ConnectionManager::initialize() {
   hardware_monitor = provider.getHardwareMonitor();
   my_address = par("address");
   num_of_qnics = par("total_number_of_qnics");
+  bool simultanious_ES = false;
 
   for (int i = 0; i < num_of_qnics; i++) {
     // qnode address
@@ -303,6 +304,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   // create RuleSet for all nodes!
   int num_resource = req->getNumber_of_required_Bellpairs();
   int intermediate_node_size = req->getStack_of_QNodeIndexesArraySize();
+  // generate the rulesets for intermidiate swappers
   for (int i = 0; i <= intermediate_node_size; i++) {
     auto itr = std::find(swappers.begin(), swappers.end(), path.at(i));
     size_t index = std::distance(swappers.begin(), itr);
@@ -312,9 +314,13 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       // here we have to check the order of entanglement swapping
 
       // swapping configurations for path[i]
-      SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
-      RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
-
+      if (!simultaneous_ES){
+        SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
+        RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
+      }else if (simultaneous_ES){
+        RuleSet *rule = generateSimultaneousEntanglementSwappingRuleSet(path.at(i), config);
+      }
+      
       ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
       pkr->setDestAddr(path.at(i));
       pkr->setSrcAddr(my_address);
@@ -611,6 +617,34 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
  * a _configurable choice_, or even a _policy_ implementation.
  **/
 RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, SwappingConfig conf) {
+  unsigned long ruleset_id = createUniqueId();
+  int rule_index = 0;
+
+  Clause *resource_clause_left = new EnoughResourceClauseLeft(conf.left_partner, conf.lres);
+  Clause *resource_clause_right = new EnoughResourceClauseRight(conf.right_partner, conf.rres);
+
+  Condition *condition = new Condition();
+  condition->addClause(resource_clause_left);
+  condition->addClause(resource_clause_right);
+
+  quisp::rules::Action *action = new SwappingAction(ruleset_id, rule_index, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner,
+                                                    conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type,
+                                                    conf.self_right_qnic_index, conf.self_right_qnic_type);
+
+  Rule *rule = new Rule(ruleset_id, rule_index);
+  rule->setCondition(condition);
+  rule->setAction(action);
+
+  std::vector<int> partners = {conf.left_partner, conf.right_partner};
+
+  RuleSet *ruleset = new RuleSet(ruleset_id, owner, partners);
+  ruleset->addRule(rule);
+  ruleset->setRule_ptr(rule);
+
+  return ruleset;
+}
+
+RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int owner, SwappingConfig conf) {
   unsigned long ruleset_id = createUniqueId();
   int rule_index = 0;
 

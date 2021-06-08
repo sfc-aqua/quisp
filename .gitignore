@@ -208,6 +208,11 @@ $RECYCLE.BIN/
 *.app
 
 
+<<<<<<< HEAD
+inet/
+quisp/.vscode/
+quisp/modules/.vs/
+=======
 ### https://raw.github.com/github/gitignore/218a941be92679ce67d0484547e3e142b2f5f6f0/Global/VisualStudioCode.gitignore
 
 .vscode/*
@@ -221,3 +226,4 @@ $RECYCLE.BIN/
 .history/
 
 
+>>>>>>> 869f9d60f79960337a29578e3db5d43b73e6d4e2

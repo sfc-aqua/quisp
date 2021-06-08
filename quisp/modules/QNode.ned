@@ -58,6 +58,7 @@ module QNode
                 number_of_qnics = sizeof(quantum_port);
                 number_of_qnics_r = sizeof(quantum_port_receiver);
                 number_of_qnics_rp = sizeof(quantum_port_receiver_passive);
+                simultanious_ES = simultanious_ES;
         }
         qnic[sizeof(quantum_port)]: QNIC {//number of QNIC is the same as number of classical queue/NIC
             parameters:
