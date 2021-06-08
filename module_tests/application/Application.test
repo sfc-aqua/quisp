@@ -1,0 +1,100 @@
+%description:
+Application module should send back the ConnectionSetupReq and InternalRuleSetForwarding to the router
+
+%file: test.ned
+import ned.DatarateChannel;
+import modules.Application.Application;
+import modules.QNode;
+
+simple MockRouter {
+    gates:
+        input fromApp;
+        output toApp;
+}
+module MockQNode {
+
+    parameters:
+        // Application needs the parent node's address
+        int address;
+        string nodeType;
+
+    submodules:
+        router: MockRouter;
+
+        app: Application {
+            TrafficPattern = 1;
+            LoneInitiatorAddress = 1;
+            address = address;
+            NumberOfResources = 1;
+        }
+    connections:
+        router.fromApp <-- app.toRouter;
+        router.toApp --> app.fromRouter;
+}
+
+network ApplicationTestNet
+{
+    submodules:
+        mockQNode: MockQNode {
+            address = 1;
+            nodeType = "none";
+        }
+}
+
+%inifile: omnetpp.ini
+
+[General]
+network = ApplicationTestNet
+**.app.TrafficPattern = 1
+**.app.LoneInitiatorAddress = 1
+**.qrsa.hm.link_tomography = false
+**.qrsa.hm.initial_purification = 0
+**.qrsa.hm.Purification_type = 0
+
+%includes:
+#include <classical_messages_m.h>
+
+%file: mock_router.cc
+#include <omnetpp.h>
+#include <classical_messages_m.h>
+using namespace omnetpp;
+namespace Application {
+class MockRouter: public cSimpleModule
+{
+    public:
+        int my_address = 1;
+        int dest_addr = 2;
+        MockRouter() : cSimpleModule(65536) {}
+        virtual void initialize() {
+            sendConnectionSetupRequest();
+            sendInternalRuleSetForwarding();
+        }
+        void sendConnectionSetupRequest() {
+            auto *p = new ConnectionSetupRequest();
+            p->setActual_srcAddr(my_address);
+            p->setActual_destAddr(dest_addr);
+            p->setDestAddr(my_address);
+            p->setSrcAddr(my_address);
+            p->setNumber_of_required_Bellpairs(3);
+            p->setKind(7);
+            send(p, "toApp");
+        }
+        void sendInternalRuleSetForwarding() {
+            auto *p = new InternalRuleSetForwarding();
+            send(p, "toApp");
+        }
+        virtual void activity(){
+            while(true) {
+                auto msg = receive();
+                EV_INFO << "RECEIVE MESSAGE: " << msg << std::endl;
+                delete msg;
+            }
+        }
+};
+Define_Module(MockRouter);
+}; //namespace
+
+%contains: test.out
+RECEIVE MESSAGE: (quisp::messages::ConnectionSetupRequest)
+%contains: test.out
+RECEIVE MESSAGE: (quisp::messages::InternalRuleSetForwarding)

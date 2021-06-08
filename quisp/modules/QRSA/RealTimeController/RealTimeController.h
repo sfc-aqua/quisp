@@ -9,12 +9,8 @@
 #ifndef QUISP_MODULES_REALTIMECONTROLLER_H_
 #define QUISP_MODULES_REALTIMECONTROLLER_H_
 
-#include <classical_messages_m.h>
-#include <modules/QNIC.h>
-#include <omnetpp.h>
-#include <vector>
-
-using namespace omnetpp;
+#include <utils/ComponentProvider.h>
+#include "IRealTimeController.h"
 
 namespace quisp {
 namespace modules {
@@ -24,18 +20,19 @@ namespace modules {
  *
  *  \brief RealTimeController
  */
-class RealTimeController : public cSimpleModule {
+class RealTimeController : public IRealTimeController {
  private:
   int myAddress;
 
  protected:
   virtual void initialize() override;
   virtual void handleMessage(cMessage* msg) override;
-  virtual cModule* getQNode();
 
  public:
-  virtual void EmitPhoton(int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse);
-  virtual void ReInitialize_StationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed);
+  RealTimeController();
+  void EmitPhoton(int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse) override;
+  void ReInitialize_StationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed) override;
+  utils::ComponentProvider provider;
 };
 
 }  // namespace modules

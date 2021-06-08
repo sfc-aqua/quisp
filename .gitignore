@@ -3,6 +3,9 @@
 *.orig
 .lvimrc
 .last-copts
+.cmdenv-log
+.cache
+compile_commands.json
 
 ### generated on docker
 org.eclipse*
@@ -205,6 +208,22 @@ $RECYCLE.BIN/
 *.app
 
 
+<<<<<<< HEAD
 inet/
 quisp/.vscode/
 quisp/modules/.vs/
+=======
+### https://raw.github.com/github/gitignore/218a941be92679ce67d0484547e3e142b2f5f6f0/Global/VisualStudioCode.gitignore
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Local History for Visual Studio Code
+.history/
+
+
+>>>>>>> 869f9d60f79960337a29578e3db5d43b73e6d4e2

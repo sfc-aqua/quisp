@@ -1,1 +1,49 @@
 CXXFLAGS = -std=c++14
+
+OBJS := $(filter-out test_util/% %_test.o,$(OBJS))
+OBJS := $(filter-out %unit_test_main.o,$(OBJS))
+
+# you can pass the file path you want to check as SRCS environment variable. see the example below.
+# $ SRCS=./quisp/modules/Application.cc make tidy # checks only Application.cc
+# $ make tidy # checks all sources
+SRCS?=$(shell find . -type f -name "*.cc" -print)
+HEADERS=$(shell find . -type f -name "*.h" -print)
+TEST_SRCS=$(filter %_test.cc,$(SRCS)) $(test_utils/%.cc) ./unit_test_main.cc
+TEST_OBJS=$(foreach obj,$(TEST_SRCS:.cc=.o),$O/$(obj))
+TEST_INCLUDE=-I../googletest/googletest/include/ -I../googletest/googlemock/include/
+
+TEST_LIBS=-L../googletest/build/lib -lgtest -lgmock
+
+# check eigen3 is in PKG_CONFIG_PATH
+PKG_CONFIG_STATUS=$(shell pkg-config eigen3 --cflags 2>/dev/null 1>&2; echo $$?)
+ifneq ('0','$(PKG_CONFIG_STATUS)')
+$(warning 'eigen3 is not found in pkg-config. check you PKG_CONFIG_PATH')
+$(warning 'your PKG_CONFIG_PATH is $(PKG_CONFIG_PATH)')
+endif
+
+INCLUDE_PATH+=-I. $(shell pkg-config eigen3 --cflags)
+
+default: all
+
+format:
+	clang-format -i $(SRCS) $(HEADERS)
+
+tidy:
+	clang-tidy -header-filter="./quisp/(.|utils|rules|modules)/.*.h" $(SRCS) -- $(COPTS) $(TEST_INCLUDE)
+
+ci: msgheaders
+	@clang-format $(SRCS) $(HEADERS) -output-replacements-xml | grep -c "<replacement " -q ; if [ $$? -ne 1 ]; then echo "error: run make format and then push it again"; exit 1; fi
+	@clang-tidy -warnings-as-errors="*" -header-filter="./(.|utils|rules|modules)/.*.h" $(SRCS) -- $(COPTS) $(TEST_INCLUDE)
+
+$(TEST_OBJS): $O/%.o : %.cc
+	@$(MKPATH) $(dir $@)
+	$(qecho) "$<"
+	$(Q)$(CXX) -c $(CXXFLAGS) $(COPTS) $(TEST_INCLUDE) -o $@ $<
+
+$(TARGET_DIR)/run_unit_test: $(TARGET_DIR)/$(TARGET) $(TEST_OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)
+	@$(MKPATH) $O
+	@echo Creating test executable:
+	$(Q)$(CXX) $(LDFLAGS) -lpthread -o $(TARGET_DIR)/run_unit_test $(TEST_OBJS) $(OBJS) $(EXTRA_OBJS) $(LIBS) $(TEST_LIBS) $(OMNETPP_LIBS)
+
+run-unit-test: $(TARGET_DIR)/run_unit_test
+	$(TARGET_DIR)/run_unit_test

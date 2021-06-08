@@ -1,0 +1,42 @@
+{
+    "cSpell.words": [
+        "CONFIGFILE",
+        "CXXFLAGS",
+        "Datarate",
+        "LDFLAGS",
+        "MKPATH",
+        "OBJS",
+        "OMNETPP",
+        "QRSA",
+        "Qubit",
+        "Qubits",
+        "SPDC",
+        "SRCS",
+        "cflags",
+        "eigen",
+        "googletest",
+        "ifneq",
+        "inout",
+        "lgtest",
+        "msgheaders",
+        "qecho",
+        "qnic",
+        "qnics",
+        "qrtable",
+        "quisp",
+        "submodules"
+    ],
+    "testMate.cpp.test.workingDirectory": "${workspaceFolder}/quisp",
+    "testMate.cpp.test.executables": "quisp/run_unit_test",
+    "testMate.cpp.log.logpanel": true,
+    "testMate.cpp.debug.configTemplate": {
+        "type": "lldb",
+        "MIMode": "lldb",
+        "program": "${exec}",
+        "args": "${argsArray}",
+        "cwd": "${cwd}",
+        "env": "${envObj}",
+        "sourceFileMap": "${sourceFileMapObj}",
+        "externalConsole": false
+    }
+}
