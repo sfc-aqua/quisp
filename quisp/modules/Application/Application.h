@@ -8,8 +8,7 @@
 #ifndef MODULES_APPLICATION_H_
 #define MODULES_APPLICATION_H_
 
-#include <classical_messages_m.h>
-#include <omnetpp.h>
+#include "IApplication.h"
 
 using namespace omnetpp;
 
@@ -20,7 +19,7 @@ namespace modules {
  *
  *  \brief Application
  */
-class Application : public cSimpleModule {
+class Application : public IApplication {
  private:
   int my_address;
 
@@ -30,12 +29,12 @@ class Application : public cSimpleModule {
   int number_of_resources;
   int num_measure;
 
-  virtual void initialize() override;
-  virtual void handleMessage(cMessage *msg) override;
+  void initialize() override;
+  void handleMessage(cMessage *msg) override;
 
-  virtual int *storeEndNodeAddresses();
-  virtual int getOneRandomEndNodeAddress();
-  virtual cModule *getQNode();
+  int *storeEndNodeAddresses();
+  int getOneRandomEndNodeAddress();
+  cModule *getQNode();
 
   ConnectionSetupRequest *createConnectionSetupRequest(int dest_addr, int num_of_required_resources);
 
