@@ -263,12 +263,12 @@ network Realistic_Layer3_Simple_MM_MM_5km
 
     connections:
         EndNode1[0].port++ <--> ClassicalChannel {  distance = 5km; } <--> Repeater1[0].port++;
-        Repeater1[0].port++ <--> ClassicalChannel {  distance = 2.5km; } <--> Repeater2[0].port++;
-        Repeater2[0].port++ <--> ClassicalChannel {  distance = 2.5km; } <--> EndNode2[0].port++;
+        Repeater1[0].port++ <--> ClassicalChannel {  distance = 5km; } <--> Repeater2[0].port++;
+        Repeater2[0].port++ <--> ClassicalChannel {  distance = 5km; } <--> EndNode2[0].port++;
 
         EndNode1[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 5km; } <--> Repeater1[0].quantum_port++;
-        Repeater1[0].quantum_port++ <--> QuantumChannel {  distance = 2.5km; } <--> Repeater2[0].quantum_port++;
-        Repeater2[0].quantum_port++ <--> QuantumChannel {  distance = 2.5km; } <--> EndNode2[0].quantum_port_receiver++;
+        Repeater1[0].quantum_port++ <--> QuantumChannel {  distance = 5km; } <--> Repeater2[0].quantum_port_receiver++;
+        Repeater2[0].quantum_port++ <--> QuantumChannel {  distance = 5km; } <--> EndNode2[0].quantum_port_receiver++;
 
 }
 

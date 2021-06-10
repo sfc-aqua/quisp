@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\modules",
+    "\\modules\\QNIC\\StationaryQubit",
+    "\\modules\\QRSA",
+    "\\modules\\QRSA\\ConnectionManager",
+    "\\modules\\QRSA\\RuleEngine",
+    "\\rules"
+  ],
+  "SelectedNode": "\\rules\\Action.cc",
+  "PreviewInSolutionExplorer": false
+}
