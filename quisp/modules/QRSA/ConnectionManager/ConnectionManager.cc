@@ -336,7 +336,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
           
           RuleSet *rule = generateSimultaneousEntanglementSwappingRuleSet(path.at(i), config, path);
           
-          ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
+          ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(SimultaneousSwapping)");
           pkr->setDestAddr(path.at(i));
           pkr->setSrcAddr(my_address);
           pkr->setKind(2);

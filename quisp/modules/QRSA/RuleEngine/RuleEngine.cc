@@ -296,7 +296,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
       // optimize correction operation, without global phase consideration
       int oco_result = pklist[rule_id][0];
-      for (int i = 1; i=pklist[rule_id].size(); i++){
+      for (int i = 1; i<=pklist[rule_id].size(); i++){
         oco_result ^= pklist[rule_id][i];
       }
 
