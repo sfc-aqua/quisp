@@ -16,6 +16,8 @@ simple Application
         int LoneInitiatorAddress;
         int NumberOfResources = default(1);
         int NumMeasureApp=default(7000);
+        // Maybe don't have to set the default here.
+        double RequiredFidelity=default(0.95);
 
     gates:
         input fromRouter @loose;
