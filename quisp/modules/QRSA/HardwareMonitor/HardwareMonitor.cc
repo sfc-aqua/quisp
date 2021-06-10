@@ -1194,7 +1194,29 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
   }
 
   if (type == SPDCType) {
-    error("TO BE IMPLEMENTED");
+    EV << thisNode.getModuleType()->getFullName() << " == " << SPDCType->getFullName() << "\n";
+    cModule *controller = thisNode.getSubmodule("Controller");
+    if (controller == nullptr) {
+      error("SPDC Controller not found");
+    }
+
+    int address_one = controller->par("neighbor_address");
+    int address_two = controller->par("neighbor_address_two");
+    int myaddress = par("address");
+
+    EV << "myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << controller->getFullName() << "\n";
+
+    if (address_one == -1 && address_two == -1) {
+      error("SPDC Controller is not initialized properly");
+    }
+
+    if (address_one == myaddress) {
+      inf->neighborQNode_address = address_two;
+    } else if (address_two == myaddress) {
+      inf->neighborQNode_address = address_one;
+    }
+
+    return inf;
   }
 
   error(

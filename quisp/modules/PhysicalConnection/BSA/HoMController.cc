@@ -199,18 +199,44 @@ void HoMController::checkNeighborAddress(bool receiver) {
 // Checks the buffer size of the connected qnics.
 void HoMController::checkNeighborBuffer(bool receiver) {
   if (receiver) {
-    EV<<"1\n";
-    neighbor_buffer = getParentModule()->getParentModule()->par("numBuffer");
-    EV<<"2\n";
+    EV<<"\n\n\n";
     EV<<"getParentModule(): "<<getParentModule()<<"\n";
-    omnetpp::cModule *module_name = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule();
-    EV<<"module name: "<<module_name<<"\n";
-    neighbor_buffer_two = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->par("numBuffer");
-    EV<<"3\n";
-    max_buffer = std::min(neighbor_buffer, neighbor_buffer_two);  // Both nodes should transmit the same amount of photons.
+    omnetpp::cModule *gate1_owner = getParentModule()->gate("quantum_port$o", 1)->getOwnerModule();
+    omnetpp::cModule *gate2_owner = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getOwnerModule();
+    omnetpp::cModule *gate3_owner = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getOwnerModule();
+    omnetpp::cModule *gate4_owner = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getOwnerModule();
+    omnetpp::cModule *gate5_owner = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule();
+    EV<<"getParentModule()->gate('quantum_port$o', 1): "<< gate1_owner <<"\n";
+    EV<<"getParentModule()->gate('quantum_port$o', 2): "<< gate2_owner <<"\n";
+    EV<<"getParentModule()->gate('quantum_port$o', 3): "<< gate3_owner <<"\n";
+    EV<<"getParentModule()->gate('quantum_port$o', 4): "<< gate4_owner <<"\n";
+    EV<<"getParentModule()->gate('quantum_port$o', 5): "<< gate5_owner <<"\n";
+
+    std::string node_temp = "modules.EntangledPhotonPairSource";
+    const char *array_temp = node_temp.c_str();
+    cModuleType *NodeType_check = cModuleType::get(array_temp);
     try {
       neighbor_buffer = getParentModule()->getParentModule()->par("numBuffer");
-      neighbor_buffer_two = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->par("numBuffer");
+      bool is_SPDC_exists = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->getModuleType() == NodeType_check;
+      if (is_SPDC_exists) {
+          EV<<"currernt module: EntangledPhotonPairSource"<<"\n";
+        std::string node = "modules.interHoM";
+        const char *array = node.c_str();
+        cModuleType *NodeType = cModuleType::get(array);
+        cGate *currentGate = gate5_owner->getParentModule()->gate("quantum_port$o", 1);
+        int loop_counter = 0;
+        while (currentGate->getOwnerModule()->getModuleType() != NodeType) {
+          EV<<loop_counter<<"\n";
+          currentGate = currentGate->getNextGate();
+          loop_counter ++;
+        }
+        EV<<"currentGate: "<<currentGate<<"\n";
+        neighbor_buffer_two = currentGate->getOwnerModule()->getParentModule()->par("numBuffer");
+      } else {
+        neighbor_buffer_two = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->par("numBuffer");
+      }
+      EV<<"neighbor_buffer: "<< neighbor_buffer << "\n";
+      EV<<"neighbor_buffer_two: "<< neighbor_buffer_two << "\n";
       max_buffer = std::min(neighbor_buffer, neighbor_buffer_two);  // Both nodes should transmit the same amount of photons.
     } catch (std::exception &e) {
       error("Error in HoM_Controller.cc. HoM couldnt find parameter numBuffer in the neighbor's qnic.");

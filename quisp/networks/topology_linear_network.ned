@@ -105,8 +105,8 @@ network Linear_One_MSM
         source.port++ <--> ClassicalChannel {  distance = 1km; } <--> EPPS.port++;
         EPPS.port++ <--> ClassicalChannel {  distance = 1km; } <--> target.port++;
 
-        source.quantum_port_receiver++ <--> QuantumChannel {  distance = 1km; } <--> EPPS.quantum_port++;
-        EPPS.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> target.quantum_port_receiver++;
+        source.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 1km; } <--> EPPS.quantum_port++;
+        EPPS.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> target.quantum_port_receiver_passive++;
 
 }
 

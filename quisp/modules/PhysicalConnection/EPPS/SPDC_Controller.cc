@@ -205,11 +205,11 @@ void SPDC_Controller::checkNeighborsBuffer() {
 void SPDC_Controller::checkNeighborsHoMCapacity() {
   cModule *epps_node = getNode("SPDC");
   cModule *neighbor_interHoM_one = getNextNode(epps_node, 0, "interHoM");
-  double temp = neighbor_interHoM_one->getSubmodule("Controller")->par("photon_detection_per_sec");
-  accepted_rate_one = (double)1 / (double)neighbor_interHoM_one->getSubmodule("Controller")->par("photon_detection_per_sec");
+  int temp = neighbor_interHoM_one->getSubmodule("Controller")->par("photon_detection_per_sec");
+  accepted_rate_one = (double)1 / (double)temp;
   cModule *neighbor_interHoM_two = getNextNode(epps_node, 1, "interHoM");
-  double tempt = neighbor_interHoM_two->getSubmodule("Controller")->par("photon_detection_per_sec");
-  accepted_rate_two = (double)1 / (double)neighbor_interHoM_two->getSubmodule("Controller")->par("photon_detection_per_sec");
+  int tempt = neighbor_interHoM_two->getSubmodule("Controller")->par("photon_detection_per_sec");
+  accepted_rate_two = (double)1 / (double)tempt;
 
   EV << tempt << "- - - - -" << accepted_rate_two << ",,,,,,,,,,," << accepted_rate_one << " - - - " << temp << "\n";
   max_accepted_rate = std::max(accepted_rate_one, accepted_rate_two);  // Needs to adjust to the slower device
