@@ -308,6 +308,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
 
     // create RuleSet for all nodes!
     int num_resource = req->getNumber_of_required_Bellpairs();
+    double required_fidelity = req->getRequiredFidelity();
     int intermediate_node_size = req->getStack_of_QNodeIndexesArraySize();
     // generate the rulesets for intermediate swappers
     for (int i = 0; i <= intermediate_node_size; i++) {

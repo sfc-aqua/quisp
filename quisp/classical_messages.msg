@@ -38,7 +38,7 @@ packet ConnectionSetupRequest extends header
     int num_measure;
 
     int number_of_required_Bellpairs;
-    double required_fidelity;
+    double requiredFidelity;
 
     int stack_of_QNodeIndexes[];
     int stack_of_linkCosts[];

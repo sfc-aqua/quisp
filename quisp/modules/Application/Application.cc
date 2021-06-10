@@ -34,6 +34,7 @@ void Application::initialize() {
   is_e2e_connection = par("EndToEndConnection");
   number_of_resources = par("NumberOfResources");
   num_measure = par("NumMeasureApp");
+  requiredFidelity = par("RequiredFidelity");
 
   other_end_node_addresses = storeEndNodeAddresses();
 
@@ -82,6 +83,7 @@ ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr,
   pk->setDestAddr(my_address);
   pk->setSrcAddr(my_address);
   pk->setNumber_of_required_Bellpairs(num_of_required_resources);
+  pk->setRequiredFidelity(requiredFidelity);
   pk->setNum_measure(num_measure);
   pk->setKind(7);
   return pk;

@@ -31,6 +31,8 @@ class Application : public cSimpleModule {
   int number_of_resources;
   int num_measure;
 
+  double requiredFidelity;
+
   virtual void initialize() override;
   virtual void handleMessage(cMessage *msg) override;
 
