@@ -15,6 +15,7 @@ using namespace omnetpp;
 using namespace quisp::utils;
 using namespace quisp::modules;
 using namespace quisp_test;
+using namespace testing;
 
 class MockStationaryQubit : public StationaryQubit {
  public:
@@ -23,32 +24,33 @@ class MockStationaryQubit : public StationaryQubit {
 };
 
 class MockRoutingDaemon : public IRoutingDaemon {
-  public:
-    MOCK_METHOD(int, returnNumEndNodes, (), (override));
+ public:
+  MOCK_METHOD(int, returnNumEndNodes, (), (override));
+  MOCK_METHOD(int, return_QNIC_address_to_destAddr, (int destAddr), (override));
 };
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
   Strategy() : mockQubit(nullptr), routingDaemon(nullptr) {}
-  Strategy(MockStationaryQubit* _qubit, MockRoutingDaemon* _mockrd) : mockQubit(_qubit), routingDaemon(_mockrd){}
-  ~Strategy() { delete mockQubit; }
+  Strategy(MockStationaryQubit* qubit, MockRoutingDaemon* routing_daemon) : mockQubit(qubit), routingDaemon(routing_daemon) {}
+  ~Strategy() {
+    delete mockQubit;
+    delete routingDaemon;
+  }
   MockStationaryQubit* mockQubit = nullptr;
   MockRoutingDaemon* routingDaemon = nullptr;
   StationaryQubit* getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override {
     if (mockQubit == nullptr) mockQubit = new MockStationaryQubit();
     return mockQubit;
   };
-  IRoutingDaemon* getRoutingDaemon() override {
-    return routingDaemon;
-  };
+  IRoutingDaemon* getRoutingDaemon() override { return routingDaemon; };
 };
-
 
 class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
  public:
   using quisp::modules::HardwareMonitor::initialize;
   using quisp::modules::HardwareMonitor::par;
-  HardwareMonitorTestTarget(MockStationaryQubit* mockQubit) : quisp::modules::HardwareMonitor() {
+  HardwareMonitorTestTarget(MockStationaryQubit* mock_qubit, MockRoutingDaemon* routing_daemon) : quisp::modules::HardwareMonitor() {
     setParInt(this, "address", 123);
     setParInt(this, "number_of_qnics_rp", 0);
     setParInt(this, "number_of_qnics_r", 0);
@@ -63,12 +65,16 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
     setParInt(this, "num_measure", 0);
 
     this->setName("hardware_monitor_test_target");
-    // this->provider.setStrategy(std::make_unique<Strategy>(mockQubit));
+    this->provider.setStrategy(std::make_unique<Strategy>(mock_qubit, routing_daemon));
   }
 };
 
 TEST(HardwareMonitorTestTarget, Init) {
-  HardwareMonitorTestTarget c{nullptr};
+  auto* mock_routing_daemon = new MockRoutingDaemon;
+  auto* mock_qubit = new MockStationaryQubit;
+  EXPECT_CALL(*mock_routing_daemon, returnNumEndNodes()).WillOnce(Return(1));
+  HardwareMonitorTestTarget c{mock_qubit, mock_routing_daemon};
+
   c.initialize(0);
   ASSERT_EQ(c.par("address").intValue(), 123);
 }
