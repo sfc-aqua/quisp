@@ -6,7 +6,7 @@
 #include "modules/QNIC.h"
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
-#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
+#include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
 #include "modules/QRSA/RuleEngine/RuleEngine.h"
 #include "omnetpp/csimulation.h"
 
