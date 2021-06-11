@@ -1,22 +1,16 @@
 #
-# OMNeT++/OMNEST Makefile for quisp
+# OMNeT++/OMNEST Makefile for $(LIB_PREFIX)quisp
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -I. -I/usr/include/eigen3
+#  opp_makemake -f --deep -O out -i ./makefrag -M debug --make-so
 #
 
 # Name of target to be created (-o option)
-TARGET = quisp$(D)$(EXE_SUFFIX)
+TARGET = $(LIB_PREFIX)quisp$(D)$(SHARED_LIB_SUFFIX)
 TARGET_DIR = .
 
-# User interface (uncomment one) (-u option)
-USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LIBS)
-#USERIF_LIBS = $(CMDENV_LIBS)
-#USERIF_LIBS = $(TKENV_LIBS)
-#USERIF_LIBS = $(QTENV_LIBS)
-
 # C++ include paths (with -I)
-INCLUDE_PATH = -I. -I/usr/include/eigen3
+INCLUDE_PATH =
 
 # Additional object and library files to link with
 EXTRA_OBJS =
@@ -46,18 +40,24 @@ OBJS = \
     $O/modules/QNIC/PhotonicSwitch/PhotonicSwitch.o \
     $O/modules/QNIC/StationaryQubit/StationaryQubit.o \
     $O/modules/QRSA/ConnectionManager/ConnectionManager.o \
+    $O/modules/QRSA/ConnectionManager/ConnectionManager_test.o \
     $O/modules/QRSA/HardwareMonitor/HardwareMonitor.o \
+    $O/modules/QRSA/HardwareMonitor/HardwareMonitor_test.o \
     $O/modules/QRSA/RealTimeController/RealTimeController.o \
     $O/modules/QRSA/RealTimeController/RealTimeController_test.o \
     $O/modules/QRSA/RoutingDaemon/RoutingDaemon.o \
     $O/modules/QRSA/RoutingDaemon/RoutingDaemon_test.o \
     $O/modules/QRSA/RuleEngine/RuleEngine.o \
+    $O/modules/QRSA/RuleEngine/RuleEngine_test.o \
     $O/rules/Action.o \
     $O/rules/Clause.o \
     $O/rules/Condition.o \
     $O/rules/example.o \
     $O/rules/Rule.o \
     $O/rules/RuleSet.o \
+    $O/test_utils/TestUtils.o \
+    $O/utils/ComponentProvider.o \
+    $O/utils/DefaultComponentProviderStrategy.o \
     $O/classical_messages_m.o \
     $O/PhotonicQubit_m.o
 
@@ -68,6 +68,11 @@ MSGFILES = \
 
 # SM files
 SMFILES =
+
+# Default mode (-M option); can be overridden with make MODE=debug (or =release)
+ifndef MODE
+MODE = debug
+endif
 
 #------------------------------------------------------------------------------
 
@@ -90,7 +95,7 @@ endif
 include $(CONFIGFILE)
 
 # Simulation kernel and user interface libraries
-OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
+OMNETPP_LIBS = -loppenvir$D $(KERNEL_LIBS) $(SYS_LIBS)
 
 COPTS = $(CFLAGS) $(IMPORT_DEFINES)  $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
 MSGCOPTS = $(INCLUDE_PATH)
@@ -107,10 +112,10 @@ endif
 #------------------------------------------------------------------------------
 # User-supplied makefile fragment(s)
 # >>>
-# inserted from file 'makefrag':
+# inserted from file './makefrag':
 CXXFLAGS = -std=c++14
 
-OBJS := $(filter-out %_test.o,$(OBJS))
+OBJS := $(filter-out test_util/% %_test.o,$(OBJS))
 OBJS := $(filter-out %unit_test_main.o,$(OBJS))
 
 # you can pass the file path you want to check as SRCS environment variable. see the example below.
@@ -118,12 +123,11 @@ OBJS := $(filter-out %unit_test_main.o,$(OBJS))
 # $ make tidy # checks all sources
 SRCS?=$(shell find . -type f -name "*.cc" -print)
 HEADERS=$(shell find . -type f -name "*.h" -print)
-TEST_SRCS=$(filter %_test.cc,$(SRCS))
-TEST_OBJS=$(TEST_SRCS:.cc=.o)
-TEST_INCLUDE=-I../googletest/googletest/include/
-TEST_LIBS=-L../googletest/build/lib -lgtest
-TEST_MAIN_SRC=unit_test_main.cc
-TEST_MAIN_OBJ=$(O)/unit_test_main.o
+TEST_SRCS=$(filter %_test.cc,$(SRCS)) $(test_utils/%.cc) ./unit_test_main.cc
+TEST_OBJS=$(foreach obj,$(TEST_SRCS:.cc=.o),$O/$(obj))
+TEST_INCLUDE=-I../googletest/googletest/include/ -I../googletest/googlemock/include/
+
+TEST_LIBS=-L../googletest/build/lib -lgtest -lgmock
 
 # check eigen3 is in PKG_CONFIG_PATH
 PKG_CONFIG_STATUS=$(shell pkg-config eigen3 --cflags 2>/dev/null 1>&2; echo $$?)
@@ -140,25 +144,21 @@ format:
 	clang-format -i $(SRCS) $(HEADERS)
 
 tidy:
-	clang-tidy -header-filter="./quisp/(rules|modules)/.*.h" $(SRCS) -- $(COPTS:-I.=-I./quisp)
+	clang-tidy -header-filter="./quisp/(.|utils|rules|modules)/.*.h" $(SRCS) -- $(COPTS) $(TEST_INCLUDE)
 
 ci: msgheaders
 	@clang-format $(SRCS) $(HEADERS) -output-replacements-xml | grep -c "<replacement " -q ; if [ $$? -ne 1 ]; then echo "error: run make format and then push it again"; exit 1; fi
-	@clang-tidy -warnings-as-errors="*" -header-filter="./(rules|modules)/.*.h" $(SRCS) -- $(COPTS:-I.=-I./quisp)
+	@clang-tidy -warnings-as-errors="*" -header-filter="./(.|utils|rules|modules)/.*.h" $(SRCS) -- $(COPTS) $(TEST_INCLUDE)
 
-$(O)/$(TEST_OBJS): $(TEST_SRCS)
+$(TEST_OBJS): $O/%.o : %.cc
 	@$(MKPATH) $(dir $@)
 	$(qecho) "$<"
 	$(Q)$(CXX) -c $(CXXFLAGS) $(COPTS) $(TEST_INCLUDE) -o $@ $<
 
-$(O)/$(TEST_MAIN_OBJ): $(TEST_MAIN_SRC)
-	@$(MKPATH) $(dir $@)
-	$(Q)$(CXX) -c $(TEST_INCLUDE) -o $@ $< $(CXXFLAGS)
-
-$(TARGET_DIR)/run_unit_test: $(O)/$(TEST_OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE) $(O)/$(TEST_MAIN_OBJ)
+$(TARGET_DIR)/run_unit_test: $(TARGET_DIR)/$(TARGET) $(TEST_OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)
 	@$(MKPATH) $O
 	@echo Creating test executable:
-	$(Q)$(CXX) $(LDFLAGS) -lpthread -o $(TARGET_DIR)/run_unit_test $(O)/$(TEST_OBJS) $(OBJS) $(O)/$(TEST_MAIN_OBJ) $(EXTRA_OBJS) $(LIBS) $(TEST_LIBS) $(OMNETPP_LIBS)
+	$(Q)$(CXX) $(LDFLAGS) -lpthread -o $(TARGET_DIR)/run_unit_test $(TEST_OBJS) $(OBJS) $(EXTRA_OBJS) $(LIBS) $(TEST_LIBS) $(OMNETPP_LIBS)
 
 run-unit-test: $(TARGET_DIR)/run_unit_test
 	$(TARGET_DIR)/run_unit_test
@@ -178,8 +178,9 @@ endif
 
 $O/$(TARGET): $(OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)
 	@$(MKPATH) $O
-	@echo Creating executable: $@
-	$(Q)$(CXX) $(LDFLAGS) -o $O/$(TARGET) $(OBJS) $(EXTRA_OBJS) $(AS_NEEDED_OFF) $(WHOLE_ARCHIVE_ON) $(LIBS) $(WHOLE_ARCHIVE_OFF) $(OMNETPP_LIBS)
+	@echo Creating shared library: $@
+	$(Q)$(SHLIB_LD) -o $O/$(TARGET) $(OBJS) $(EXTRA_OBJS) $(AS_NEEDED_OFF) $(WHOLE_ARCHIVE_ON) $(LIBS) $(WHOLE_ARCHIVE_OFF) $(OMNETPP_LIBS) $(LDFLAGS)
+	$(Q)$(SHLIB_POSTPROCESS) $O/$(TARGET)
 
 .PHONY: all clean cleanall depend msgheaders smheaders
 
