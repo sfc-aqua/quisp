@@ -22,6 +22,13 @@ class MockStationaryQubit : public StationaryQubit {
   MOCK_METHOD(void, setFree, (bool consumed), (override));
 };
 
+
+class MockRoutingDaemon : public RoutingDaemon{
+  public:
+    MOCK_METHOD(int, returnNumEndNodes, (override));
+}
+
+
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
   Strategy() : mockQubit(nullptr) {}

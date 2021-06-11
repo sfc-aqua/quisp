@@ -30,7 +30,7 @@ HardwareMonitor::~HardwareMonitor() {}
 // HardwareMonitor is also responsible for calculating the rssi/oka's protocol/fidelity calculate and give it to the RoutingDaemon
 void HardwareMonitor::initialize(int stage) {
   EV_INFO << "HardwareMonitor booted\n";
-  routing_daemon = check_and_cast<IRoutingDaemon *>(getParentModule()->getSubmodule("rd"));
+  routing_daemon = provider.getRoutingDaemon();
 
   output_count initial;
   initial.minus_minus = 0;
@@ -1191,6 +1191,7 @@ cModule *HardwareMonitor::getQNode() {
         "ned file?");
     endSimulation();
   }
+  return currentModule;
 }
 
 
@@ -1210,7 +1211,6 @@ cModule *HardwareMonitor::getQNodeWithAddress(int address){
     }
   }
   delete topo;
-  // return node;
 }
 
 std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule &thisNode) {
