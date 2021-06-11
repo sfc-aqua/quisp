@@ -1,4 +1,4 @@
-#include "RoutingDamon.h"
+#include "RoutingDaemon.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <omnetpp.h>
@@ -25,7 +25,8 @@ class RDTestTarget : public quisp::modules::RoutingDaemon {
 
 TEST(RoutingDaemonTest, InitTest) {
   RDTestTarget c{};
-  c.initialize();
+  int stage = 1;
+  c.initialize(stage);
   ASSERT_EQ(c.par("address").intValue(), 123);
  }
 }  // namespace
