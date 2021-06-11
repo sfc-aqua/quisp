@@ -169,7 +169,7 @@ int RoutingDaemon::returnNumEndNodes(){
   }
   delete topo;
   return index;
-}
+};
 
 /**
  * Once we begin using dynamic routing protocols, this is where the messages

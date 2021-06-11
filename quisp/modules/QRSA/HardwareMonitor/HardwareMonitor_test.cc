@@ -6,7 +6,7 @@
 #include "modules/QNIC.h"
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
-#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
+#include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
 #include "omnetpp/csimulation.h"
 
 namespace {
@@ -22,24 +22,27 @@ class MockStationaryQubit : public StationaryQubit {
   MOCK_METHOD(void, setFree, (bool consumed), (override));
 };
 
-
-class MockRoutingDaemon : public RoutingDaemon{
+class MockRoutingDaemon : public IRoutingDaemon {
   public:
-    MOCK_METHOD(int, returnNumEndNodes, (override));
-}
-
+    MOCK_METHOD(int, returnNumEndNodes, (), (override));
+};
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
-  Strategy() : mockQubit(nullptr) {}
-  Strategy(MockStationaryQubit* _qubit) : mockQubit(_qubit) {}
+  Strategy() : mockQubit(nullptr), routingDaemon(nullptr) {}
+  Strategy(MockStationaryQubit* _qubit, MockRoutingDaemon* _mockrd) : mockQubit(_qubit), routingDaemon(_mockrd){}
   ~Strategy() { delete mockQubit; }
   MockStationaryQubit* mockQubit = nullptr;
+  MockRoutingDaemon* routingDaemon = nullptr;
   StationaryQubit* getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override {
     if (mockQubit == nullptr) mockQubit = new MockStationaryQubit();
     return mockQubit;
   };
+  IRoutingDaemon* getRoutingDaemon() override {
+    return routingDaemon;
+  };
 };
+
 
 class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
  public:
@@ -60,7 +63,7 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
     setParInt(this, "num_measure", 0);
 
     this->setName("hardware_monitor_test_target");
-    this->provider.setStrategy(std::make_unique<Strategy>(mockQubit));
+    // this->provider.setStrategy(std::make_unique<Strategy>(mockQubit));
   }
 };
 
