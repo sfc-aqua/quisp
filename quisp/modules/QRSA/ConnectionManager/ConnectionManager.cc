@@ -481,7 +481,6 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
   if (right_self_qnic.type == QNIC_RP || left_self_qnic.type == QNIC_RP || right_partner_qnic.type == QNIC_RP || left_partner_qnic.type == QNIC_RP) {
     error("MSM link not implemented");
   }
-
   SwappingConfig config;
   config.left_partner = left_partner;
   config.lqnic_type = left_partner_qnic.type;
@@ -804,12 +803,12 @@ RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, in
 
   // Measure the local resource between it->second.neighborQNode_address.
   // final argument is multihop tomography flag
-  quisp::rules::Action *action = new RandomMeasureAction(partner, qnic_type, qnic_index, num_resources, owner, num_of_measure, true);
+  quisp::rules::Action *action = new RandomMeasureAction(partner, qnic_type, qnic_index, num_resources, owner, num_of_measure);
   rule->setAction(action);
 
   // Add the rule to the RuleSet
   tomography->addRule(rule);
-  tomography->finalize();
+  // tomography->finalize();
 
   return tomography;
 }

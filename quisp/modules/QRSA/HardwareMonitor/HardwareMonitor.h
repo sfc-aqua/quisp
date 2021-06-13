@@ -52,22 +52,23 @@ class HardwareMonitor : public IHardwareMonitor {
   int Purification_type = -1;
   int num_measure;
   int num_end_nodes;
+  std::vector<int> tomography_partners;
 
   IRoutingDaemon *routing_daemon;
 
   cModule *getQnic(int qnic_index, QNIC_type qnic_type);
   NeighborTable neighbor_table;
   raw_data *tomography_data;
+  extended_raw_data *extended_tomography_data;
   
 
   single_qubit_error Pauli;
 
   // virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, QNIC_type qnic_type);//returns the set of free resources
   // virtual int checkNumFreeBuff(int qnic_index, QNIC_type qnic_type);//returns the number of free qubits
-  typedef std::map<int, tomography_outcome> Temporal_Tomography_Output_Holder;  // measurement_count_id -> outcome. For single qnic
   Temporal_Tomography_Output_Holder *all_temporal_tomography_output_holder;
-
-  std::map<int, Temporal_Tomography_Output_Holder *> extendedTemporalTomographyHolder;  // partner -> tomography output folder
+  Extended_Tomography_Outcome *extended_temporal_tomography_output; // qnic address -> partner . count_id . outcome
+  extended_link_cost *extended_tomography_runningtime_holder;
   link_cost *all_temporal_tomography_runningtime_holder;
   std::string tomography_output_filename;
   std::string file_dir_name;
@@ -85,6 +86,7 @@ class HardwareMonitor : public IHardwareMonitor {
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);
   virtual QNIC search_QNIC_from_Neighbor_QNode_address(int neighbor_address);
   virtual Matrix4cd reconstruct_Density_Matrix(int qnic_id);
+  virtual Matrix4cd extended_reconstruct_Density_Matrix(int qnic_id, int partner);
   virtual unsigned long createUniqueId();
   virtual void writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec);
   // virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
