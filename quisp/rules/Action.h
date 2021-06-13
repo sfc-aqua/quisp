@@ -9,9 +9,12 @@
 
 #include <modules/QNIC.h>
 #include <modules/QUBIT.h>
+// #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 #include <omnetpp.h>
 #include <memory>
 #include <vector>
+
+#include "utils/ComponentProvider.h"
 
 using namespace quisp::modules;
 
@@ -60,6 +63,7 @@ class SwappingAction : public Action {
   int self_right_qnic_id;
   QNIC_type self_left_qnic_type;
   QNIC_type self_right_qnic_type;
+
 
  public:
   // constructor of entanglement swapping
@@ -412,6 +416,7 @@ class RandomMeasureAction : public Action {
   int dst;
   int mutable current_count;
   int mutable max_count;
+  // std::map<int, int> current_count_with_partner;
   bool multihopTomo = false;
   simtime_t start;
 
@@ -425,18 +430,6 @@ class RandomMeasureAction : public Action {
     src = srcAddr;
     current_count = 0;
     max_count = max;
-    start = simTime();
-  };
-  RandomMeasureAction(int part, QNIC_type qt, int qi, int res, int srcAddr, int max, bool multihop) {
-    partner = part;
-    dst = part;
-    qnic_type = qt;
-    qnic_id = qi;
-    resource = res;
-    src = srcAddr;
-    current_count = 0;
-    max_count = max;
-    multihopTomo = multihop;
     start = simTime();
   };
 

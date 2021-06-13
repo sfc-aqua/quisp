@@ -15,6 +15,8 @@
 #include <map>
 #include <iostream>
 #include "bits/stdc++.h"
+// #include "utils/ComponentProvider.h"
+
 using namespace std;
 #include <vector>
 using std::begin;
@@ -104,8 +106,8 @@ cPacket *SwappingAction::run(cModule *re) {
   // just swapping pointer.
   // swapper have no way to know this swapping is success or not.
   // bell measurement
-  left_qubit->Hadamard_gate();
   right_qubit->CNOT_gate(left_qubit);
+  left_qubit->Hadamard_gate();
 
   // TODO This is a little bit cheating. This must be tracked!
   int lindex = left_partner_qubit->stationaryQubit_address;
@@ -116,24 +118,25 @@ cPacket *SwappingAction::run(cModule *re) {
 
   int operation_type_left, operation_type_right;
 
-  if (!left_measure && !right_measure) {
+  if (left_measure && right_measure) {
     EV << "operation type 0, operation left I, operation right I\n";
     operation_type_left = 0;
     operation_type_right = 0;
-  } else if (!left_measure && right_measure) {
+  } else if (left_measure && !right_measure) {
     EV << "operation type 1, operation left I, operation right X\n";
     operation_type_left = 0;
     operation_type_right = 1;
-  } else if (left_measure && !right_measure) {
+  } else if (!left_measure && right_measure) {
     EV << "operation type 2, operation left Z, operation right I\n";
     operation_type_left = 2;
     operation_type_right = 0;
-  } else if (left_measure && right_measure) {
+  } else if (!left_measure && !right_measure) {
     EV << "operation type 3, operation left Z, operation right X\n";
     operation_type_left = 2;
     operation_type_right = 1;
   }
-  RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
+  // RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
+  // rule_engine = provider.getRuleEngine();
   if (std::rand() / RAND_MAX < success_probability) {
     right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
     left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
@@ -149,9 +152,13 @@ cPacket *SwappingAction::run(cModule *re) {
   }
   removeResource_fromRule(left_qubit);
   removeResource_fromRule(right_qubit);
+  // free consumed
+  RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
+  rule_engine->freeConsumedResource(self_left_qnic_id, left_qubit, self_left_qnic_type);  // free left
+  rule_engine->freeConsumedResource(self_right_qnic_id, right_qubit, self_right_qnic_type);  // free right
   // This might not be good
-  left_qubit->isBusy = false;
-  right_qubit->isBusy = false;
+  // left_qubit->isBusy = false;
+  // right_qubit->isBusy = false;
   // rule_engine->freeConsumedResource(self_left_qnic_id, right_qubit, self_left_qnic_type);
   // rule_engine->freeConsumedResource(self_right_qnic_id, left_qubit, self_right_qnic_type);
   // Currently, this function is able to return only one packet, but this action have to return
@@ -514,6 +521,9 @@ cPacket *RandomMeasureAction::run(cModule *re) {
   } else {
     measurement_outcome o = qubit->measure_density_independent();
     current_count++;
+
+    EV<<"current count: "<<current_count<<" with partner: "<<partner<<"\n";
+    EV<<"max count"<<max_count<<"\n";
 
     // Delete measured resource from the tracked list of resources.
     removeResource_fromRule(qubit);  // Remove from resource list in this Rule.
