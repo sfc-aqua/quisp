@@ -156,13 +156,8 @@ cPacket *SwappingAction::run(cModule *re) {
   RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
   rule_engine->freeConsumedResource(self_left_qnic_id, left_qubit, self_left_qnic_type);  // free left
   rule_engine->freeConsumedResource(self_right_qnic_id, right_qubit, self_right_qnic_type);  // free right
-  // This might not be good
-  // left_qubit->isBusy = false;
-  // right_qubit->isBusy = false;
-  // rule_engine->freeConsumedResource(self_left_qnic_id, right_qubit, self_left_qnic_type);
-  // rule_engine->freeConsumedResource(self_right_qnic_id, left_qubit, self_right_qnic_type);
-  // Currently, this function is able to return only one packet, but this action have to return
-  //  two nodes (left partner and right partner). once return information to rule engine, then, duplicate it.
+  
+  // result packet
   SwappingResult *pk = new SwappingResult;
   // no destination here. In RuleEngine, it's set.
   // this setKind() doesn't seem to have any effect; set instead in void RuleEngine::traverseThroughAllProcesses2()
@@ -170,8 +165,6 @@ cPacket *SwappingAction::run(cModule *re) {
   pk->setRuleSet_id(ruleset_id);
   pk->setRule_id(rule_id);
   pk->setAction_index(action_index);
-
-  // FIXME: These operations are corresponds to the result of operation.
   pk->setOperation_type_left(operation_type_left);  // operation type for left node
   pk->setOperation_type_right(operation_type_right);  // operation type for right node
   // These information are cropped in the RuleEngine.
@@ -519,19 +512,18 @@ cPacket *RandomMeasureAction::run(cModule *re) {
     pk->setError_text("Qubit not found for measurement.");
     return pk;
   } else {
+
+    EV<<"qubit!!"<<qubit<<"\n";
     measurement_outcome o = qubit->measure_density_independent();
     current_count++;
-
-    EV<<"current count: "<<current_count<<" with partner: "<<partner<<"\n";
-    EV<<"max count"<<max_count<<"\n";
 
     // Delete measured resource from the tracked list of resources.
     removeResource_fromRule(qubit);  // Remove from resource list in this Rule.
     RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
+    EV<<"qnic id"<<qnic_id<<" qubit: "<<qubit<<"qnic type: "<< qnic_type<<"\n";
     rule_engine->freeConsumedResource(qnic_id, qubit, qnic_type);  // Remove from entangled resource list.
     // Deleting done
 
-    
     LinkTomographyResult *pk = new LinkTomographyResult;
     pk->setSrcAddr(src);
     pk->setDestAddr(dst);

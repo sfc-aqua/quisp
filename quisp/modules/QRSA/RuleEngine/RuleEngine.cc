@@ -148,10 +148,10 @@ void RuleEngine::handleMessage(cMessage *msg) {
       // std::cout<<"NOT ANY MORE qnic["<<qnic_address<<"] in node["<<parentAddress<<"]";
       return;
     } else if (pk->getInternal_qnic_index() == -1) {  // Schedule next burst. MIM, or the other node without internal HoM of MM
-      EV << "This BSA request is non-internal\n";
+      EV_DEBUG << "This BSA request is non-internal\n";
       scheduleFirstPhotonEmission(pk, QNIC_E);
     } else {
-      EV << "This BSA request is internal\n";
+      EV_DEBUG << "This BSA request is internal\n";
       scheduleFirstPhotonEmission(pk, QNIC_R);
     }
   }
@@ -177,10 +177,10 @@ void RuleEngine::handleMessage(cMessage *msg) {
     bubble("timing received");
     BSMtimingNotifier *pk = check_and_cast<BSMtimingNotifier *>(msg);
     if (pk->getInternal_qnic_index() == -1) {  // MIM, or the other node without internnal HoM of MM
-      EV << "This BSA request is non-internal\n";
+      EV_DEBUG << "This BSA request is non-internal\n";
       scheduleFirstPhotonEmission(pk, QNIC_E);
     } else {
-      EV << "This BSA request is internal\n";
+      EV_DEBUG << "This BSA request is internal\n";
       scheduleFirstPhotonEmission(pk, QNIC_R);
     }
   } 
@@ -352,6 +352,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   for (int i = 0; i < number_of_qnics_rp; i++) {
     ResourceAllocation(QNIC_RP, i);
   }
+
 
   traverseThroughAllProcesses2();
   delete msg;
@@ -960,11 +961,17 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   }
 
   if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
-    std::cout << qubit << ", node[" << qubit->node_address << "] from qnic[" << qubit->qnic_index << "]\n";
+    // std::cout << qubit << ", node[" << qubit->node_address << "] from qnic[" << qubit->qnic_index << "]\n";
     error("RuleEngine. Ebit succeed. but wrong");
   }
   // add resources
-  allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner /*QNode IP address*/, qubit));
+  if(new_partner == 14){
+    EV<<"parent: "<<parentAddress<<"\n";
+    EV<<"qnic type: "<< qnic_type <<" qnic index: "<<qnic_index<<"\n";
+    EV<<" qubit: "<<qubit->getParentModule()->getParentModule()<<" is entangled with "<<qubit->entangled_partner->getParentModule()->getParentModule()<<"\n";
+    // error("");
+  }
+  allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner, qubit));
 
   // FOR DEBUGGING
   if (qubit->entangled_partner != nullptr) {
@@ -1131,31 +1138,29 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
     next_it = it;
     ++next_it;
     RuleSet *process = it->second.Rs;  // One Process. From top to bottom.
-    // unsigned long ruleset_id = process->ruleset_id;
-    int partner_size = process->entangled_partner.size();
-
     // getting pointer to the rule
     std::vector<Rule *> rule_ptr = process->getRule_ptr();
 
+    int partner_size = process->entangled_partner.size();
     for (int i = 0; i < partner_size; i++) {
-
       // partner that has entanglement with this node
-      int resource_entangled_with_address = process->entangled_partner[i];
+      int resource_entangled_with_address = process->entangled_partner.at(i);
 
       if (process->empty()) {
         error("RuleSet with no Rule found. Probably not what you want!");
       }
 
       int assigned = 0;
-      for (auto it = allResources[qnic_type][qnic_index].cbegin(), next_it = allResources[qnic_type][qnic_index].cbegin(); it != allResources[qnic_type][qnic_index].cend();
-           it = next_it) {
+      for (auto it = allResources[qnic_type][qnic_index].cbegin(), next_it = allResources[qnic_type][qnic_index].cbegin(); it != allResources[qnic_type][qnic_index].cend(); it = next_it) {
         next_it = it;
         ++next_it;
 
         if (!it->second->isAllocated() && resource_entangled_with_address == it->first) {
           int num_rsc_bf = process->front()->resources.size();
-          if (it->second->entangled_partner == nullptr && it->second->Density_Matrix_Collapsed(0, 0).real() == -111 &&
-              !it->second->no_density_matrix_nullptr_entangled_partner_ok) {
+          if (it->second->entangled_partner == nullptr && it->second->Density_Matrix_Collapsed(0, 0).real() == -111 && !it->second->no_density_matrix_nullptr_entangled_partner_ok) { 
+            EV<<"parent: "<<parentAddress<<"\n";
+            EV<<"qnic_type: "<<qnic_type<<" qnic_index: "<<qnic_index<<"\n";
+            EV<<"qubit: "<<it->second<<" is entangled with: "<<it->second->entangled_partner<<"\n";
             error("Fresh ebit wrong");
           }
 
@@ -1383,7 +1388,6 @@ void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, Sta
     next_it = it;
     ++next_it;
     if (it->second == qubit) {
-      // std::cout<<"Let's delete this qubit!"<<it->second<<"\n";
       allResources[qnic_type][qnic_index].erase(it);  // or "it = m.erase(it)" since C++11
       return;
     }

@@ -37,7 +37,7 @@ module QNIC
             qnic_type = self_qnic_type;
             xPosition_Graphics = 70 + 65*index;  // use submodule index to generate different IDs
             //@display("p=$xPosition_Graphics,40,,circle");
-            @display("t=Id $stationaryQubit_address;i=block/circle,blue;p=226.71,143.55"); // modify display string
+            @display("t=Id $stationaryQubit_address;i=block/circle,blue;p=150,100,m,5,60,60"); // modify display string
             std = emission_std;
         }
         lens: PhotonicSwitch {

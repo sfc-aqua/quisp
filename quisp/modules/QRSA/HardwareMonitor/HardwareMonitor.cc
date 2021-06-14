@@ -199,10 +199,10 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     auto ite = extended_temporal_tomography_output[local_qnic.address].find(partner);
     if (ite != extended_temporal_tomography_output[local_qnic.address].end()){
       // partner info found in this output
-      EV<<"Information with partner :"<<partner<<"\n";
 
       auto iter = extended_temporal_tomography_output[local_qnic.address][partner].find(result->getCount_id());
       if(iter != extended_temporal_tomography_output[local_qnic.address][partner].end()){
+        
         EV<<"Tomography data already found. \n";
         tomography_outcome temp = iter->second;
         if (result -> getSrcAddr() == my_address){
@@ -330,7 +330,6 @@ void HardwareMonitor::finish() {
       // iterate for partners
       int partner_address = tomography_partners.at(p);
 
-      // iterate tomography output
       for (auto it = extended_temporal_tomography_output[qnic][partner_address].begin(); it!= extended_temporal_tomography_output[qnic][partner_address].end(); ++it){
         std::string basis_combination = "";
         basis_combination += it->second.my_basis;
@@ -411,16 +410,18 @@ void HardwareMonitor::finish() {
 
       double bellpairs_per_sec = 10;  // FIXME should be sec
       // FIXME should be updated
-      double link_cost = (double)100000000 / (fidelity * fidelity * extended_tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec);
-      if (link_cost < 1) {
-        // here must corresponds to the actual cost based on tomography
+      double denom = fidelity * fidelity * extended_tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec;
+      double link_cost;
+      // TODO currently, it's just placed. consider how to culculate this
+      if (denom != 0){
+        link_cost = (double) 1/ denom;
+      }else{
         link_cost = 1;
       }
       auto info = findConnectionInfoByQnicAddr(qnic);
       if (info == nullptr) {
         error("info not found");
       }
-
       // outputs
       InterfaceInfo interface = getQnicInterfaceByQnicAddr(info->qnic.index, info->qnic.type);
       cModule *this_node = this->getParentModule()->getParentModule();
