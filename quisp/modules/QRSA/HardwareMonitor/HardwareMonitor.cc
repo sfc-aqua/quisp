@@ -185,7 +185,6 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     LinkTomographyResult *result = check_and_cast<LinkTomographyResult *>(msg);
     int partner = result->getPartner_address();
     int source_address = result->getSrcAddr();
-    EV<<"my_address: "<<my_address<<"source_address: "<<source_address<<"\n";
     // Get QNIC info from neighbor address.
     int qnic_addr_to_partner = routing_daemon->return_QNIC_address_to_destAddr(result->getPartner_address());
     auto local_qnic_info = findConnectionInfoByQnicAddr(qnic_addr_to_partner);

@@ -50,7 +50,7 @@ bool EnoughResourceClause::check(std::multimap<int, StationaryQubit*> resource) 
 }
 
 bool EnoughResourceClauseLeft::check(std::multimap<int, StationaryQubit*> resource) const {
-  EV<<"EnoughResourceClauseLeft\n";
+  // EV<<"EnoughResourceClauseLeft\n";
   bool enough = false;
   int num_free = 0;
 
@@ -74,7 +74,7 @@ bool EnoughResourceClauseLeft::check(std::multimap<int, StationaryQubit*> resour
 }
 
 bool EnoughResourceClauseRight::check(std::multimap<int, StationaryQubit*> resource) const {
-  EV<<"EnoughResourceClauseRight\n";
+  // EV<<"EnoughResourceClauseRight\n";
   bool enough = false;
   int num_free = 0;
 
@@ -112,7 +112,6 @@ bool MeasureCountClause::check(qnicResources* resources) const {
 }*/
 
 bool MeasureCountClause::check(std::multimap<int, StationaryQubit*> resources) const {
-  EV<<"MeasureCountClause\n";
   if (current_count < max_count) {
     current_count++;  // Increment measured counter.
     // std::cout<<"Measurement count is now "<<current_count<<" < "<<max_count<<"\n";
@@ -124,8 +123,6 @@ bool MeasureCountClause::check(std::multimap<int, StationaryQubit*> resources) c
 }
 
 bool MeasureCountClause::checkTerminate(std::multimap<int, StationaryQubit*> resources) const {
-  EV << "Tomography termination clause\n";
-  EV<<"current_count: " << current_count <<" >= max count: "<< max_count<<"?\n";
   bool done = false;
   if (current_count >= max_count) {
     // EV<<"TRUE: Current count = "<<current_count<<" >=  "<<max_count<<"(max)\n";

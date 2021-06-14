@@ -263,7 +263,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (dynamic_cast<SwappingResult *>(msg) != nullptr) {
     SwappingResult *pkt = check_and_cast<SwappingResult *>(msg);
     // here next add resources
-    EV<<"Got Swapping result"<<"\n";
     int src = pkt->getSrcAddr();
     int dest = pkt->getDestAddr();
     process_id swapping_id;
@@ -347,7 +346,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
       process p;
       p.ownner_addr = pkt->getRuleSet()->owner;
       p.Rs = pkt->getRuleSet();
-      EV<<"rule_id"<<p.Rs->ruleset_id;
       int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
       std::cout << "Process size is ...." << p.Rs->size() << " node[" << parentAddress << "\n";
       // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
@@ -992,6 +990,13 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     EV<<" qubit: "<<qubit->getParentModule()->getParentModule()<<" is entangled with "<<qubit->entangled_partner->getParentModule()->getParentModule()<<"\n";
     // error("");
   }
+
+  // first delete old record
+  for (auto it = allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); ++it){
+    if(it->second == qubit){
+      allResources[qnic_type][qnic_index].erase(it);
+    }
+  }
   allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner, qubit));
 
   // FOR DEBUGGING
@@ -1244,9 +1249,6 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
         if (!it->second->isAllocated() && resource_entangled_with_address == it->first) {
           int num_rsc_bf = process->front()->resources.size();
           if (it->second->entangled_partner == nullptr && it->second->Density_Matrix_Collapsed(0, 0).real() == -111 && !it->second->no_density_matrix_nullptr_entangled_partner_ok) { 
-            EV<<"parent: "<<parentAddress<<"\n";
-            EV<<"qnic_type: "<<qnic_type<<" qnic_index: "<<qnic_index<<"\n";
-            EV<<"qubit: "<<it->second<<" is entangled with: "<<it->second->entangled_partner<<"\n";
             error("Fresh ebit wrong");
           }
 
