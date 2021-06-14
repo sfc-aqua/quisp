@@ -51,7 +51,6 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 
     auto dst_inf = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
     if (dst_inf == nullptr){
-      EV<<"local qnic address to actual dst"<<local_qnic_address_to_actual_dst<<"\n";
       error("dst inf is null");
     }
     bool is_qnic_available = !isQnicBusy(dst_inf->qnic.address);

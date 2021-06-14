@@ -135,25 +135,24 @@ cPacket *SwappingAction::run(cModule *re) {
     operation_type_left = 2;
     operation_type_right = 1;
   }
-  // RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
-  // rule_engine = provider.getRuleEngine();
+  RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
   if (std::rand() / RAND_MAX < success_probability) {
     right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
     left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
 
   } else {  // this might be wrong
-    // removeResource_fromRule(left_partner_qubit);
-    // removeResource_fromRule(right_partner_qubit);
+    removeResource_fromRule(left_partner_qubit);
+    removeResource_fromRule(right_partner_qubit);
     // TODO CHECK is this correct?
-    // rule_engine->freeConsumedResource(left_qnic_id, right_partner_qubit, right_qnic_type);
-    // rule_engine->freeConsumedResource(right_qnic_id, left_partner_qubit, left_qnic_type);
-    left_partner_qubit->isBusy = false;
-    right_partner_qubit->isBusy = false;
+    rule_engine->freeConsumedResource(left_qnic_id, right_partner_qubit, right_qnic_type);
+    rule_engine->freeConsumedResource(right_qnic_id, left_partner_qubit, left_qnic_type);
+
+    // left_partner_qubit->isBusy = false;
+    // right_partner_qubit->isBusy = false;
   }
   removeResource_fromRule(left_qubit);
   removeResource_fromRule(right_qubit);
   // free consumed
-  RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
   rule_engine->freeConsumedResource(self_left_qnic_id, left_qubit, self_left_qnic_type);  // free left
   rule_engine->freeConsumedResource(self_right_qnic_id, right_qubit, self_right_qnic_type);  // free right
   
@@ -512,15 +511,12 @@ cPacket *RandomMeasureAction::run(cModule *re) {
     pk->setError_text("Qubit not found for measurement.");
     return pk;
   } else {
-
-    EV<<"qubit!!"<<qubit<<"\n";
     measurement_outcome o = qubit->measure_density_independent();
     current_count++;
 
     // Delete measured resource from the tracked list of resources.
     removeResource_fromRule(qubit);  // Remove from resource list in this Rule.
     RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
-    EV<<"qnic id"<<qnic_id<<" qubit: "<<qubit<<"qnic type: "<< qnic_type<<"\n";
     rule_engine->freeConsumedResource(qnic_id, qubit, qnic_type);  // Remove from entangled resource list.
     // Deleting done
 

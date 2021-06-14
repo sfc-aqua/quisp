@@ -1082,14 +1082,17 @@ measurement_outcome StationaryQubit::measure_density_independent() {
               << "!this->par(GOD_EXerror)=" << !this->par("GOD_EXerror").boolValue();
     error("Ex/Re track wrong\n");
   }
-
+  // if there is an entanglement
   if (this->entangled_partner != nullptr) {
+    // This qubit is nullptr
     if (this->entangled_partner->entangled_partner == nullptr) {
       error("Entangled_partner track wrong\n");
     }
+    // check completely mixed tracking
     if (this->entangled_partner->completely_mixed != this->entangled_partner->par("GOD_CMerror").boolValue()) {
       error("Partner Cm track wrong\n");
     }
+    // check excited and relaxation tracking
     if (this->entangled_partner->excited_or_relaxed && !this->entangled_partner->par("GOD_EXerror") && !this->entangled_partner->par("GOD_REerror")) {
       error("Partner Re/Ex track wrong\n");
     }
@@ -1098,8 +1101,9 @@ measurement_outcome StationaryQubit::measure_density_independent() {
     }
   }
 
+  // if the partner qubit is measured, 
   if (this->partner_measured || this->completely_mixed || this->excited_or_relaxed) {  // The case when the density matrix is completely local to this qubit.
-
+    // if this qubit is said to be completely mixed and no set value
     if (this->completely_mixed && !this->par("GOD_CMerror")) {
       error("Mismatch between flags.");
     }
@@ -1134,21 +1138,6 @@ measurement_outcome StationaryQubit::measure_density_independent() {
     }
     // std::cout<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). \n";
   } else if (!this->partner_measured && !this->completely_mixed && !this->excited_or_relaxed && this->entangled_partner != nullptr) {
-    // error("Entangled....Should not happen here.");
-
-    // std::cout<<"[Entangled]: "<<this<<" in node["<<node_address<<"]\n";
-
-    /*
-    std::cout<<"????CHECK: "<<this->entangled_partner<<" in node["<<this->entangled_partner->node_address<<"]????????????\n";
-   std::cout<<"par cm = "<<this->entangled_partner->par("GOD_CMerror").boolValue()<<", completely_mixed = "<<this->entangled_partner->completely_mixed<<"\n";
-   std::cout<<"par re= "<<this->entangled_partner->par("GOD_REerror").boolValue()<<", par cm = "<<this->entangled_partner->par("GOD_EXerror").boolValue()<<", re/ex =
-   "<<this->entangled_partner->excited_or_relaxed<<"\n"; std::cout<<"????????????????\n";
-
-   std::cout<<"?!?!?!CHECK: "<<this<<" in node["<<this->node_address<<"]?!?!?!?!?!?!\n";
-         std::cout<<"par cm = "<<this->par("GOD_CMerror").boolValue()<<", completely_mixed = "<<this->completely_mixed<<"\n";
-         std::cout<<"par re= "<<this->par("GOD_REerror").boolValue()<<", par cm = "<<this->par("GOD_EXerror").boolValue()<<", re/ex = "<<this->excited_or_relaxed<<"\n";
-         std::cout<<"?!?!?!?!?!?!?!?!?!?!?!?!?!?!?!\n";
-    */
     // This is assuming that this is some other qubit is entangled. Only Pauli errors are assumed.
     quantum_state current_state = getQuantumState();
     EV << "Current entangled state is " << current_state.state_in_ket << "\n";

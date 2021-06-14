@@ -274,7 +274,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (dynamic_cast<SwappingResult *>(msg) != nullptr) {
     SwappingResult *pkt = check_and_cast<SwappingResult *>(msg);
     // here next add resources
-    EV<<"Got Swapping result"<<"\n";
     int src = pkt->getSrcAddr();
     int dest = pkt->getDestAddr();
     process_id swapping_id;
@@ -323,7 +322,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
       process p;
       p.ownner_addr = pkt->getRuleSet()->owner;
       p.Rs = pkt->getRuleSet();
-      EV<<"rule_id"<<p.Rs->ruleset_id;
       int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
       std::cout << "Process size is ...." << p.Rs->size() << " node[" << parentAddress << "\n";
       // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
@@ -971,6 +969,13 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     EV<<" qubit: "<<qubit->getParentModule()->getParentModule()<<" is entangled with "<<qubit->entangled_partner->getParentModule()->getParentModule()<<"\n";
     // error("");
   }
+
+  // first delete old record
+  for (auto it = allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); ++it){
+    if(it->second == qubit){
+      allResources[qnic_type][qnic_index].erase(it);
+    }
+  }
   allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner, qubit));
 
   // FOR DEBUGGING
@@ -1158,9 +1163,6 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
         if (!it->second->isAllocated() && resource_entangled_with_address == it->first) {
           int num_rsc_bf = process->front()->resources.size();
           if (it->second->entangled_partner == nullptr && it->second->Density_Matrix_Collapsed(0, 0).real() == -111 && !it->second->no_density_matrix_nullptr_entangled_partner_ok) { 
-            EV<<"parent: "<<parentAddress<<"\n";
-            EV<<"qnic_type: "<<qnic_type<<" qnic_index: "<<qnic_index<<"\n";
-            EV<<"qubit: "<<it->second<<" is entangled with: "<<it->second->entangled_partner<<"\n";
             error("Fresh ebit wrong");
           }
 
@@ -1312,34 +1314,6 @@ void RuleEngine::traverseThroughAllProcesses2() {
             send(pkt_for_left, "RouterPort$o");
             send(pkt_for_right, "RouterPort$o");
           } 
- /*
-            else if (dynamic_cast<ABSAResult *>(pk) != nullptr) {
-                ABSAResult *pkt = check_and_cast<ABSAResult *>(pk);
-            EV << "done ABSA at " << parentAddress << "\n";
-            BSAresult *pkt_for_left = new BSAresult;
-            pkt_for_left->setKind(5);  // cyan
-            pkt_for_left->setDestAddr(pkt->getLeft_Dest());
-            pkt_for_left->setSrcAddr(parentAddress);
-            pkt_for_left->setOperation_type(pkt->getOperation_type_left());
-            pkt_for_left->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
-            pkt_for_left->setNew_partner(pkt->getNew_partner_left());
-            pkt_for_left->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
-            pkt_for_left->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
-            /pkt_for_left->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
-            ABSAResult *pkt_for_right = new ABSAResult;
-            pkt_for_right->setKind(5);  // cyan
-            pkt_for_right->setDestAddr(pkt->getRight_Dest());
-            pkt_for_right->setSrcAddr(parentAddress);
-            pkt_for_right->setOperation_type(pkt->getOperation_type_right());
-            pkt_for_right->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
-            pkt_for_right->setNew_partner(pkt->getNew_partner_right());
-            pkt_for_right->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
-            pkt_for_right->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
-            pkt_for_right->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
-            send(pkt_for_left, "RouterPort$o");
-            send(pkt_for_right, "RouterPort$o");
-          } 
-  */
           else if (dynamic_cast<Error *>(pk) != nullptr) {
             Error *err = check_and_cast<Error *>(pk);
             error(err->getError_text());
