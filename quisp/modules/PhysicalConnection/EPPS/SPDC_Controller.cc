@@ -79,12 +79,12 @@ void SPDC_Controller::initialize() {
   checkNeighborsBuffer();
 
   // Notify the timing.
-  // generatePacket = new cMessage("nextPacket");
-  // scheduleAt(simTime(),generatePacket);
+  EPPSstart *generatePacket = new EPPSstart("EPPSprocess");
+  scheduleAt(simTime(), generatePacket);
 }
 
 void SPDC_Controller::handleMessage(cMessage *msg) {
-  if (msg == generatePacket) {
+  if (dynamic_cast<EPPSstart *>(msg) != nullptr) {
     // Or just emit entangled photons without telling the neighbors?
     // Then the neighbor can analyze the intervaland adjust its emission accordingly.
     EPPStimingNotifier *pk, *pkt;
@@ -95,7 +95,7 @@ void SPDC_Controller::handleMessage(cMessage *msg) {
       send(pkt, "toRouter_port");
     } catch (std::exception &e) {
       error("Error in SPDC_Controller.cc. It does not have port named toRouter_port.");
-      endSimulation();
+      // endSimulation();
     }
     startPump();
   } else if (dynamic_cast<EmitPhotonRequest *>(msg) != nullptr) {

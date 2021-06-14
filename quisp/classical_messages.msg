@@ -166,6 +166,8 @@ packet BSAtimeoutChecker extends header
 
 packet BSAstart extends header{}
 
+packet EPPSstart extends header{}
+
 packet EPPStimingNotifier extends header
 {
     simtime_t timing_at;
