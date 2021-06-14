@@ -245,14 +245,21 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
       temp_result.insert(std::make_pair(result->getCount_id(), temp));
       extended_temporal_tomography_output[local_qnic.address].insert(std::make_pair(partner, temp_result));
       tomography_partners.push_back(partner);
+
+      // initialize link cost
+      link_cost temp_cost;
+      temp_cost.Bellpair_per_sec = -1;
+      temp_cost.tomography_measurements = -1;
+      temp_cost.tomography_time = -1;
+      extended_tomography_runningtime_holder[local_qnic.address].insert(std::make_pair(partner, temp_cost));
     }
 
     if (result->getFinish() != -1) {
       // Pick the slower tomography time MIN(self,partner).
-      if (all_temporal_tomography_runningtime_holder[local_qnic.address].tomography_time < result->getFinish()) {
-        all_temporal_tomography_runningtime_holder[local_qnic.address].Bellpair_per_sec = (double)result->getMax_count() / result->getFinish().dbl();
-        all_temporal_tomography_runningtime_holder[local_qnic.address].tomography_measurements = result->getMax_count();
-        all_temporal_tomography_runningtime_holder[local_qnic.address].tomography_time = result->getFinish();
+      if (extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_time < result->getFinish()){
+        extended_tomography_runningtime_holder[local_qnic.address][partner].Bellpair_per_sec = (double)result->getMax_count() / result->getFinish().dbl();
+        extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_measurements = result->getMax_count();
+        extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_time = result->getFinish();
         // std::cout<<"Tomo done "<<local_qnic.address<<", in
         // node["<<my_address<<"] \n";
         StopEmitting *pk = new StopEmitting("StopEmitting");
@@ -277,7 +284,6 @@ void HardwareMonitor::finish() {
   } else {
     std::cout << df << "!=" << file_name << "\n";
   }
-
   std::string file_name_dm = file_name + std::string("_dm");
   std::ofstream tomography_stats(file_name, std::ios_base::app);
   std::ofstream tomography_dm(file_name_dm, std::ios_base::app);
@@ -306,9 +312,6 @@ void HardwareMonitor::finish() {
       extended_tomography_data[i][part].insert(std::make_pair("YX", initial));
       extended_tomography_data[i][part].insert(std::make_pair("YY", initial));
       extended_tomography_data[i][part].insert(std::make_pair("YZ", initial));
-      extended_tomography_runningtime_holder[i][p].Bellpair_per_sec = -1;
-      extended_tomography_runningtime_holder[i][p].tomography_measurements= -1;
-      extended_tomography_runningtime_holder[i][p].tomography_time = -1;
     }
   }
 
@@ -436,18 +439,16 @@ void HardwareMonitor::finish() {
       tomography_dm << extended_density_matrix_reconstructed.real() << "\n";
       tomography_dm << "IMAGINARY\n";
       tomography_dm << extended_density_matrix_reconstructed.imag() << "\n";
-
-      std::cout << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
-                << ";bellpair_per_sec=" << bellpairs_per_sec << ";}<-->" << partner_node->getFullName() << "; F=" << fidelity << "; X=" << Xerr_rate << "; Z=" << Zerr_rate
-                << "; Y=" << Yerr_rate << endl;
+      
+      // link stats output
       tomography_stats << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
-                      << ";bellpair_per_sec=" << extended_tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec
-                      << ";tomography_time=" << extended_tomography_runningtime_holder[qnic][partner_address].tomography_time
-                      << ";tomography_measurements=" << extended_tomography_runningtime_holder[qnic][partner_address].tomography_measurements << ";actual_meas=" << meas_total
-                      << "; GOD_clean_pair_total=" << GOD_clean_pair_total << "; GOD_X_pair_total=" << GOD_X_pair_total << "; GOD_Y_pair_total=" << GOD_Y_pair_total
-                      << "; GOD_Z_pair_total=" << GOD_Z_pair_total << ";}<-->" << partner_node->getFullName() << "; F=" << fidelity << "; X=" << Xerr_rate << "; Z=" << Zerr_rate
-                      << "; Y=" << Yerr_rate << endl;
-      }
+      << ";bellpair_per_sec=" << extended_tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec
+      << ";tomography_time=" << extended_tomography_runningtime_holder[qnic][partner_address].tomography_time
+      << ";tomography_measurements=" << extended_tomography_runningtime_holder[qnic][partner_address].tomography_measurements << ";actual_meas=" << meas_total
+      << "; GOD_clean_pair_total=" << GOD_clean_pair_total << "; GOD_X_pair_total=" << GOD_X_pair_total << "; GOD_Y_pair_total=" << GOD_Y_pair_total
+      << "; GOD_Z_pair_total=" << GOD_Z_pair_total << ";}<-->" << partner_node->getFullName() << "; F=" << fidelity << "; X=" << Xerr_rate << "; Z=" << Zerr_rate
+      << "; Y=" << Yerr_rate << endl;
+    }
     tomography_stats.close();
     tomography_dm.close();
     std::cout << "Closed file to write.\n";
