@@ -70,6 +70,7 @@ module QNode
                 self_qnic_type = 0;
                 //@display("p=198,124");
                 //@display("p=209,195;b=,,,white");
+                @display("p=300,200,m,5,100,50");
         }
         qnic_r[sizeof(quantum_port_receiver)]: QNIC {
             parameters:
@@ -81,7 +82,8 @@ module QNode
                 passive = false;
                 self_qnic_type = 1;
                 emission_std = emission_timing_std;
-                @display("p=232,173");
+                //@display("p=232,173");
+                @display("p=100, 250,m,5,50,60");
         }
         qnic_rp[sizeof(quantum_port_receiver_passive)]: QNIC {
             parameters:
