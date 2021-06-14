@@ -72,8 +72,8 @@ typedef std::map<int, InterfaceInfo> NeighborTable;
 // "XX" -> {plus_plus = 56, plus_minus = 55, minus_plus = 50, minus_minus = 50},
 // "XY" -> {....
 typedef std::map<std::string, output_count> raw_data;
-typedef std::map<int, link_cost> extended_link_cost;
 typedef std::map<int, std::map<std::string, output_count>> extended_raw_data; // qnic -> partner . basis string . output
+typedef std::map<int, link_cost> extended_link_cost;
 typedef std::map<int, tomography_outcome> Temporal_Tomography_Output_Holder;  // measurement_count_id -> outcome. For single qnic
 typedef std::map<int, std::map<int, tomography_outcome>> Extended_Tomography_Outcome; // partner -> <count_id, outcome>
 
