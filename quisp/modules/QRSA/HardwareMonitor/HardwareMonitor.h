@@ -53,6 +53,9 @@ class HardwareMonitor : public IHardwareMonitor {
   int num_measure;
   int num_end_nodes;
   std::vector<int> tomography_partners;
+  std::vector<int> used_qnics;
+  // in the case of retry connection setup, the partner could be changed.
+  std::multimap<int, int> qnic_partner_map;
   
 
   IRoutingDaemon *routing_daemon;

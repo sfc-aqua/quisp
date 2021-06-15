@@ -184,9 +184,8 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     /*Link tomography measurement result/basis from neighbor received.*/
     LinkTomographyResult *result = check_and_cast<LinkTomographyResult *>(msg);
     int partner = result->getPartner_address();
-    int source_address = result->getSrcAddr();
     // Get QNIC info from neighbor address.
-    int qnic_addr_to_partner = routing_daemon->return_QNIC_address_to_destAddr(result->getPartner_address());
+    int qnic_addr_to_partner = routing_daemon->return_QNIC_address_to_destAddr(partner);
     auto local_qnic_info = findConnectionInfoByQnicAddr(qnic_addr_to_partner);
     if(local_qnic_info == nullptr){
       error("local qnic info should not be null");
@@ -198,10 +197,8 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     auto ite = extended_temporal_tomography_output[local_qnic.address].find(partner);
     if (ite != extended_temporal_tomography_output[local_qnic.address].end()){
       // partner info found in this output
-
       auto iter = extended_temporal_tomography_output[local_qnic.address][partner].find(result->getCount_id());
       if(iter != extended_temporal_tomography_output[local_qnic.address][partner].end()){
-        
         EV<<"Tomography data already found. \n";
         tomography_outcome temp = iter->second;
         if (result -> getSrcAddr() == my_address){
@@ -244,7 +241,8 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
       std::map <int, tomography_outcome> temp_result;
       temp_result.insert(std::make_pair(result->getCount_id(), temp));
       extended_temporal_tomography_output[local_qnic.address].insert(std::make_pair(partner, temp_result));
-      tomography_partners.push_back(partner);
+      // NOTE: if you do buffer based multiplex and tomogrpahy need hack here
+      qnic_partner_map.insert(std::make_pair(local_qnic.address, partner));
 
       // initialize link cost
       link_cost temp_cost;
@@ -299,160 +297,154 @@ void HardwareMonitor::finish() {
   initial.plus_minus = 0;
   initial.plus_plus = 0;
   initial.total_count = 0;
-  for (int i = 0; i<num_qnic_total; i++){
-    for (int p = 0; p<tomography_partners.size(); p++){
-      // here doesn't correspond address
-      int part = tomography_partners.at(p);
-      extended_tomography_data[i][part].insert(std::make_pair("XX", initial));
-      extended_tomography_data[i][part].insert(std::make_pair("XY", initial));
-      extended_tomography_data[i][part].insert(std::make_pair("XZ", initial));
-      extended_tomography_data[i][part].insert(std::make_pair("ZX", initial));
-      extended_tomography_data[i][part].insert(std::make_pair("ZY", initial));
-      extended_tomography_data[i][part].insert(std::make_pair("ZZ", initial));
-      extended_tomography_data[i][part].insert(std::make_pair("YX", initial));
-      extended_tomography_data[i][part].insert(std::make_pair("YY", initial));
-      extended_tomography_data[i][part].insert(std::make_pair("YZ", initial));
-    }
+  for (auto it = qnic_partner_map.begin(); it != qnic_partner_map.end(); ++it){
+    int qnic_id = it->first;
+    int part = it->second;
+    extended_tomography_data[qnic_id][part].insert(std::make_pair("XX", initial));
+    extended_tomography_data[qnic_id][part].insert(std::make_pair("XY", initial));
+    extended_tomography_data[qnic_id][part].insert(std::make_pair("XZ", initial));
+    extended_tomography_data[qnic_id][part].insert(std::make_pair("ZX", initial));
+    extended_tomography_data[qnic_id][part].insert(std::make_pair("ZY", initial));
+    extended_tomography_data[qnic_id][part].insert(std::make_pair("ZZ", initial));
+    extended_tomography_data[qnic_id][part].insert(std::make_pair("YX", initial));
+    extended_tomography_data[qnic_id][part].insert(std::make_pair("YY", initial));
+    extended_tomography_data[qnic_id][part].insert(std::make_pair("YZ", initial));
   }
 
-
-  for (int qnic = 0; qnic<num_qnic_total; qnic++){
+  for (auto it = qnic_partner_map.begin(); it!=qnic_partner_map.end(); it++){
+    int qnic = it->first;
+    int partner_address = it->second;
     // qnic index
     //  - partner address
-    //  - - measurement counts 
-    for (int p = 0; p<tomography_partners.size(); p++){
-
-      // initial variables for this tomography partner
-      int meas_total = 0;  // total number of measurement
-      int GOD_clean_pair_total = 0;  // clean pair?
-      int GOD_X_pair_total = 0;  
-      int GOD_Z_pair_total = 0;
-      int GOD_Y_pair_total = 0;
+    //  - - measurement counts
+    // qnic index
+    // initial variables for this tomography partner
+    int meas_total = 0;  // total number of measurement
+    int GOD_clean_pair_total = 0;  // clean pair?
+    int GOD_X_pair_total = 0;  
+    int GOD_Z_pair_total = 0;
+    int GOD_Y_pair_total = 0;
       
-      // iterate for partners
-      int partner_address = tomography_partners.at(p);
+    for (auto it = extended_temporal_tomography_output[qnic][partner_address].begin(); it!= extended_temporal_tomography_output[qnic][partner_address].end(); it++){
+      std::string basis_combination = "";
+      basis_combination += it->second.my_basis;
+      basis_combination += it->second.partner_basis;
+      if (extended_tomography_data[qnic][partner_address].count(basis_combination) != 1){
+        error("Basis combination for tomography with partner: %s at %d is not found", partner_address, qnic);
+      }
+      extended_tomography_data[qnic][partner_address][basis_combination].total_count++;
+      // the number of total measurement
+      meas_total++;
 
-      for (auto it = extended_temporal_tomography_output[qnic][partner_address].begin(); it!= extended_temporal_tomography_output[qnic][partner_address].end(); ++it){
-        std::string basis_combination = "";
-        basis_combination += it->second.my_basis;
-        basis_combination += it->second.partner_basis;
-        if (extended_tomography_data[qnic][partner_address].count(basis_combination) != 1){
-          error("Basis combination for tomography with partner: %s at %d is not found", partner_address, qnic);
-        }
-        extended_tomography_data[qnic][partner_address][basis_combination].total_count++;
-        // the number of total measurement
-        meas_total++;
+      EV_DEBUG << it->second.my_GOD_clean << "," << it->second.partner_GOD_clean << "\n";
+      // count for ideal state?
+      // clean pair ... no error bell pairs
+      // X pair ... X error bell pairs?
+      // Y pair ... Y error bell pairs?
+      // Z pair ... Z error bell pairs?
+      if ((it->second.my_GOD_clean == 'F' && it->second.partner_GOD_clean == 'F') ||
+          (it->second.my_GOD_clean == 'X' && it->second.partner_GOD_clean == 'X') ||
+          (it->second.my_GOD_clean == 'Z' && it->second.partner_GOD_clean == 'Z') || 
+          (it->second.my_GOD_clean == 'Y' && it->second.partner_GOD_clean == 'Y')) {
+        GOD_clean_pair_total++;
+      } else if ((it->second.my_GOD_clean == 'X' && it->second.partner_GOD_clean == 'F') || 
+                  (it->second.my_GOD_clean == 'F' && it->second.partner_GOD_clean == 'X')) {
+        GOD_X_pair_total++;
+      } else if ((it->second.my_GOD_clean == 'Z' && it->second.partner_GOD_clean == 'F') || 
+                  (it->second.my_GOD_clean == 'F' && it->second.partner_GOD_clean == 'Z')) {
+        GOD_Z_pair_total++;
+      } else if ((it->second.my_GOD_clean == 'Y' && it->second.partner_GOD_clean == 'F') ||
+                  (it->second.my_GOD_clean == 'F' && it->second.partner_GOD_clean == 'Y')) {
+        GOD_Y_pair_total++;
+      } // end if
 
-        EV_DEBUG << it->second.my_GOD_clean << "," << it->second.partner_GOD_clean << "\n";
-        // count for ideal state?
-        // clean pair ... no error bell pairs
-        // X pair ... X error bell pairs?
-        // Y pair ... Y error bell pairs?
-        // Z pair ... Z error bell pairs?
-        if ((it->second.my_GOD_clean == 'F' && it->second.partner_GOD_clean == 'F') ||
-            (it->second.my_GOD_clean == 'X' && it->second.partner_GOD_clean == 'X') ||
-            (it->second.my_GOD_clean == 'Z' && it->second.partner_GOD_clean == 'Z') || 
-            (it->second.my_GOD_clean == 'Y' && it->second.partner_GOD_clean == 'Y')) {
-          GOD_clean_pair_total++;
-        } else if ((it->second.my_GOD_clean == 'X' && it->second.partner_GOD_clean == 'F') || 
-                   (it->second.my_GOD_clean == 'F' && it->second.partner_GOD_clean == 'X')) {
-          GOD_X_pair_total++;
-        } else if ((it->second.my_GOD_clean == 'Z' && it->second.partner_GOD_clean == 'F') || 
-                   (it->second.my_GOD_clean == 'F' && it->second.partner_GOD_clean == 'Z')) {
-          GOD_Z_pair_total++;
-        } else if ((it->second.my_GOD_clean == 'Y' && it->second.partner_GOD_clean == 'F') ||
-                   (it->second.my_GOD_clean == 'F' && it->second.partner_GOD_clean == 'Y')) {
-          GOD_Y_pair_total++;
-        } // end if
-
-        // empirical result
-        if (it->second.my_output_is_plus && it->second.partner_output_is_plus) {
-          // mine: +, partner: +
-          extended_tomography_data[qnic][partner_address][basis_combination].plus_plus++;
-        } else if (it->second.my_output_is_plus && !it->second.partner_output_is_plus) {
-          // mine: +, partner: -
-          extended_tomography_data[qnic][partner_address][basis_combination].plus_minus++;
-        } else if (!it->second.my_output_is_plus && it->second.partner_output_is_plus) {
-          // mine: -, partner: +
-          extended_tomography_data[qnic][partner_address][basis_combination].minus_plus++;
-        } else if (!it->second.my_output_is_plus && !it->second.partner_output_is_plus) {
-          // mine: -, partner: -
-          extended_tomography_data[qnic][partner_address][basis_combination].minus_minus++;
-        } else{
-          error("This should not happen though..... ?");
-        }
-      } // end for
+      // empirical result
+      if (it->second.my_output_is_plus && it->second.partner_output_is_plus) {
+        // mine: +, partner: +
+        extended_tomography_data[qnic][partner_address][basis_combination].plus_plus++;
+      } else if (it->second.my_output_is_plus && !it->second.partner_output_is_plus) {
+        // mine: +, partner: -
+        extended_tomography_data[qnic][partner_address][basis_combination].plus_minus++;
+      } else if (!it->second.my_output_is_plus && it->second.partner_output_is_plus) {
+        // mine: -, partner: +
+        extended_tomography_data[qnic][partner_address][basis_combination].minus_plus++;
+      } else if (!it->second.my_output_is_plus && !it->second.partner_output_is_plus) {
+        // mine: -, partner: -
+        extended_tomography_data[qnic][partner_address][basis_combination].minus_minus++;
+      } else{
+        error("This should not happen though..... ?");
+      }
+    } // end for
       // extended density matrix
-      Matrix4cd extended_density_matrix_reconstructed = extended_reconstruct_Density_Matrix(qnic, partner_address);
+    Matrix4cd extended_density_matrix_reconstructed = extended_reconstruct_Density_Matrix(qnic, partner_address);
 
-      Vector4cd Bellpair;
-      Bellpair << 1 / sqrt(2), 0, 0, 1 / sqrt(2);
-      Matrix4cd density_matrix_ideal = Bellpair * Bellpair.adjoint();
-      double fidelity = (extended_density_matrix_reconstructed.real() * density_matrix_ideal.real()).trace();
+    Vector4cd Bellpair;
+    Bellpair << 1 / sqrt(2), 0, 0, 1 / sqrt(2);
+    Matrix4cd density_matrix_ideal = Bellpair * Bellpair.adjoint();
+    double fidelity = (extended_density_matrix_reconstructed.real() * density_matrix_ideal.real()).trace();
 
-      Vector4cd Bellpair_X;
-      Bellpair_X << 0, 1 / sqrt(2), 1 / sqrt(2), 0;
-      Matrix4cd density_matrix_X = Bellpair_X * Bellpair_X.adjoint();
-      double Xerr_rate = (extended_density_matrix_reconstructed.real() * density_matrix_X.real()).trace();
-      EV << "Xerr = " << Xerr_rate << "\n";
+    Vector4cd Bellpair_X;
+    Bellpair_X << 0, 1 / sqrt(2), 1 / sqrt(2), 0;
+    Matrix4cd density_matrix_X = Bellpair_X * Bellpair_X.adjoint();
+    double Xerr_rate = (extended_density_matrix_reconstructed.real() * density_matrix_X.real()).trace();
+    EV << "Xerr = " << Xerr_rate << "\n";
 
-      Vector4cd Bellpair_Z;
-      Bellpair_Z << 1 / sqrt(2), 0, 0, -1 / sqrt(2);
-      Matrix4cd density_matrix_Z = Bellpair_Z * Bellpair_Z.adjoint();
-      double Zerr_rate = (extended_density_matrix_reconstructed.real() * density_matrix_Z.real()).trace();
-      Complex checkZ = Bellpair_Z.adjoint() * extended_density_matrix_reconstructed * Bellpair_Z;
-      EV << "Zerr = " << Zerr_rate << " or, " << checkZ.real() << "+" << checkZ.imag() << "\n";
+    Vector4cd Bellpair_Z;
+    Bellpair_Z << 1 / sqrt(2), 0, 0, -1 / sqrt(2);
+    Matrix4cd density_matrix_Z = Bellpair_Z * Bellpair_Z.adjoint();
+    double Zerr_rate = (extended_density_matrix_reconstructed.real() * density_matrix_Z.real()).trace();
+    Complex checkZ = Bellpair_Z.adjoint() * extended_density_matrix_reconstructed * Bellpair_Z;
+    EV << "Zerr = " << Zerr_rate << " or, " << checkZ.real() << "+" << checkZ.imag() << "\n";
 
-      Vector4cd Bellpair_Y;
-      Bellpair_Y << 0, Complex(0, 1 / sqrt(2)), Complex(0, -1 / sqrt(2)), 0;
-      Matrix4cd density_matrix_Y = Bellpair_Y * Bellpair_Y.adjoint();
-      double Yerr_rate = (extended_density_matrix_reconstructed.real() * density_matrix_Y.real()).trace();
-      EV << "Yerr = " << Yerr_rate << "\n";
+    Vector4cd Bellpair_Y;
+    Bellpair_Y << 0, Complex(0, 1 / sqrt(2)), Complex(0, -1 / sqrt(2)), 0;
+    Matrix4cd density_matrix_Y = Bellpair_Y * Bellpair_Y.adjoint();
+    double Yerr_rate = (extended_density_matrix_reconstructed.real() * density_matrix_Y.real()).trace();
+    EV << "Yerr = " << Yerr_rate << "\n";
 
 
-      double bellpairs_per_sec = 10;  // FIXME should be sec
-      // FIXME should be updated
-      double denom = fidelity * fidelity * extended_tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec;
-      double link_cost;
-      // TODO currently, it's just placed. consider how to culculate this
-      if (denom != 0){
-        link_cost = (double) 1/ denom;
-      }else{
-        link_cost = 1;
-      }
-      auto info = findConnectionInfoByQnicAddr(qnic);
-      if (info == nullptr) {
-        error("info not found");
-      }
-      // outputs
-      InterfaceInfo interface = getQnicInterfaceByQnicAddr(info->qnic.index, info->qnic.type);
-      cModule *this_node = this->getParentModule()->getParentModule();
-      cModule *partner_node = getQNodeWithAddress(partner_address);
-      cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
-      double dis = channel->par("distance");
-      if(partner_node == nullptr){
-        error("here, partner node is null");
-      }
-      // density matrix output
-      tomography_dm << this_node->getFullName() << "<--->" << partner_node->getFullName() << "\n";
-      tomography_dm << "REAL\n";
-      tomography_dm << extended_density_matrix_reconstructed.real() << "\n";
-      tomography_dm << "IMAGINARY\n";
-      tomography_dm << extended_density_matrix_reconstructed.imag() << "\n";
-      
-      // link stats output
-      tomography_stats << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
-      << ";bellpair_per_sec=" << extended_tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec
-      << ";tomography_time=" << extended_tomography_runningtime_holder[qnic][partner_address].tomography_time
-      << ";tomography_measurements=" << extended_tomography_runningtime_holder[qnic][partner_address].tomography_measurements << ";actual_meas=" << meas_total
-      << "; GOD_clean_pair_total=" << GOD_clean_pair_total << "; GOD_X_pair_total=" << GOD_X_pair_total << "; GOD_Y_pair_total=" << GOD_Y_pair_total
-      << "; GOD_Z_pair_total=" << GOD_Z_pair_total << ";}<-->" << partner_node->getFullName() << "; F=" << fidelity << "; X=" << Xerr_rate << "; Z=" << Zerr_rate
-      << "; Y=" << Yerr_rate << endl;
+    double bellpairs_per_sec = 10;  // FIXME should be sec
+    // FIXME should be updated
+    double denom = fidelity * fidelity * extended_tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec;
+    double link_cost;
+    // TODO currently, it's just placed. consider how to culculate this
+    if (denom != 0){
+      link_cost = (double) 1/ denom;
+    }else{
+      link_cost = 1;
     }
-    tomography_stats.close();
-    tomography_dm.close();
-    std::cout << "Closed file to write.\n";
+    auto info = findConnectionInfoByQnicAddr(qnic);
+    if (info == nullptr) {
+      error("info not found");
+    }
+    // outputs
+    InterfaceInfo interface = getQnicInterfaceByQnicAddr(info->qnic.index, info->qnic.type);
+    cModule *this_node = this->getParentModule()->getParentModule();
+    cModule *partner_node = getQNodeWithAddress(partner_address);
+    cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
+    double dis = channel->par("distance");
+    if(partner_node == nullptr){
+      error("here, partner node is null");
+    }
+    // density matrix output
+    tomography_dm << this_node->getFullName() << "<--->" << partner_node->getFullName() << "\n";
+    tomography_dm << "REAL\n";
+    tomography_dm << extended_density_matrix_reconstructed.real() << "\n";
+    tomography_dm << "IMAGINARY\n";
+    tomography_dm << extended_density_matrix_reconstructed.imag() << "\n";
+    
+    // link stats output
+    tomography_stats << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
+    << ";bellpair_per_sec=" << extended_tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec
+    << ";tomography_time=" << extended_tomography_runningtime_holder[qnic][partner_address].tomography_time
+    << ";tomography_measurements=" << extended_tomography_runningtime_holder[qnic][partner_address].tomography_measurements << ";actual_meas=" << meas_total
+    << "; GOD_clean_pair_total=" << GOD_clean_pair_total << "; GOD_X_pair_total=" << GOD_X_pair_total << "; GOD_Y_pair_total=" << GOD_Y_pair_total
+    << "; GOD_Z_pair_total=" << GOD_Z_pair_total << ";}<-->" << partner_node->getFullName() << "; F=" << fidelity << "; X=" << Xerr_rate << "; Z=" << Zerr_rate
+    << "; Y=" << Yerr_rate << endl;
   }
+  tomography_stats.close();
+  tomography_dm.close();
+  std::cout << "Closed file to write.\n";
 }
 
 Matrix4cd HardwareMonitor::reconstruct_Density_Matrix(int qnic_id) {

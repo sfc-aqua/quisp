@@ -11,11 +11,12 @@ if [ -e /root/quisp/test/testresults.txt ];then
 fi
 # Actual test part
 # Experiments=("Test0" "Test1" "Test2")
-NUM_TEST=35
+NUM_TEST=34
 # ===
 # This "init" and "next" is identifier of the experiments
 # for((i=0; i<${#Experiments[@]}; i++)); do
-for((i=0; i<$NUM_TEST; i++)); do
+for i in `seq 1 $NUM_TEST`
+do
 echo "start test $i"
 echo "init$i" >> /root/quisp/test/testresults.txt 
 /root/quisp/quisp/out/clang-release/quisp  -u Cmdenv --cmdenv-express-mode=true -c "Test$i" -f /root/quisp/quisp/networks/test.ini | grep "fidelity" | tr ";" "\n" | tr "{" "\n"| tr "}" "\n"|sed s/"<-->"/"\n"/g>> /root/quisp/test/testresults.txt
