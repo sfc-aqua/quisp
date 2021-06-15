@@ -37,7 +37,7 @@ class Rule {
     rule_index = r_index;
   };
 
-Rule(int rs_index, int r_index, std::string r_name) {
+  Rule(int rs_index, int r_index, std::string r_name) {
     ruleset_id = rs_index;
     rule_index = r_index;
     name = r_name;

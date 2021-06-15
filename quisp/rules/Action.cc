@@ -144,7 +144,7 @@ cPacket *SwappingAction::run(cModule *re) {
   // free consumed
   rule_engine->freeConsumedResource(self_left_qnic_id, left_qubit, self_left_qnic_type);  // free left
   rule_engine->freeConsumedResource(self_right_qnic_id, right_qubit, self_right_qnic_type);  // free right
-  
+
   // result packet
   SwappingResult *pk = new SwappingResult;
   // no destination here. In RuleEngine, it's set.

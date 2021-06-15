@@ -51,7 +51,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 
     int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
     auto dst_inf = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
-    if (dst_inf == nullptr){
+    if (dst_inf == nullptr) {
       error("dst inf is null");
     }
     bool is_qnic_available = !isQnicBusy(dst_inf->qnic.address);
@@ -259,7 +259,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   for (int i = 0; i < divisions; i++) {
     std::vector<int> partners;
     if (swapper[i] > 0) {
-      EV << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n"; 
+      EV << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
       EV_DEBUG << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
       partners.push_back(link_left[i]);
       partners.push_back(link_right[i]);
@@ -267,11 +267,11 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     }
   }
 
-    /* TODO: Remember you have link costs <3
-    * The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel
-      * but from only 1 channels from Src->BSA and ignoring BSA->Dest).
-    * If you need to test with different costs, try changing the value.
-    * But we need to implement actual link-tomography for this eventually.
+  /* TODO: Remember you have link costs <3
+  * The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel
+    * but from only 1 channels from Src->BSA and ignoring BSA->Dest).
+  * If you need to test with different costs, try changing the value.
+  * But we need to implement actual link-tomography for this eventually.
 
   std::map<int, std::vector<int>> swapping_partners;
   for (int i = 0; i < divisions; i++) {
@@ -325,6 +325,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
 
   // create RuleSet for all nodes!
   int num_resource = req->getNumber_of_required_Bellpairs();
+  double required_fidelity = req->getRequiredFidelity();
   int intermediate_node_size = req->getStack_of_QNodeIndexesArraySize();
   // generate the rulesets for intermediate swappers
   for (int i = 0; i <= intermediate_node_size; i++) {
@@ -362,7 +363,6 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
         pkr->setActual_destAddr(path.at(path.size() - 1));
         send(pkr, "RouterPort$o");
       }
-
     } else {
       EV_DEBUG << "Im not swapper!" << path.at(i) << "\n";
       int num_measure = req->getNum_measure();
@@ -370,9 +370,9 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       RuleSet *ruleset;
       int owner = path.at(i);
       if (i == 0) {  // if this is initiator
-        ruleset = generateTomographyRuleSet(owner, path.at(path.size() - 1), num_measure, qnics.at(qnics.size() - 1).fst.type, qnics.at(qnics.size() - 1).fst.index, num_resource);
+        ruleset = generateTomographyRuleSet(owner, path.at(path.size() - 1), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
       } else {  // if this is responder
-        ruleset = generateTomographyRuleSet(owner, path.at(0), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
+        ruleset = generateTomographyRuleSet(owner, path.at(0), num_measure, qnics.at(qnics.size() - 1).fst.type, qnics.at(qnics.size() - 1).fst.index, num_resource);
       }
 
       ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Tomography)");
@@ -458,7 +458,7 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
   }
   int left_partner = it->second.at(0);
   int right_partner = it->second.at(1);
-
+  EV << "swapping" << left_partner << "<-->" << swapper_address << "<-->" << right_partner << "\n";
   auto iter_left = std::find(path.begin(), path.end(), left_partner);
   auto iter_right = std::find(path.begin(), path.end(), right_partner);
   if (iter_left == path.end()) {
@@ -722,8 +722,6 @@ RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, Swapp
   unsigned long ruleset_id = createUniqueId();
   int rule_index = 0;
 
-  EV<<"es_rule"<<ruleset_id<<"\n";
-
   Clause *resource_clause_left = new EnoughResourceClauseLeft(conf.left_partner, conf.lres);
   Clause *resource_clause_right = new EnoughResourceClauseRight(conf.right_partner, conf.rres);
 
@@ -783,9 +781,8 @@ RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int 
 RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, int num_of_measure, QNIC_type qnic_type, int qnic_index, int num_resources) {
   unsigned long ruleset_id = createUniqueId();
 
-  EV<<"tomo_rule"<<ruleset_id<<"\n";
-
   int rule_index = 0;
+  EV << "owner: " << owner << " partner: " << partner << "\n";
   RuleSet *tomography = new RuleSet(ruleset_id, owner, partner);
   Rule *rule = new Rule(ruleset_id, rule_index, "tomography");
 

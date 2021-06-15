@@ -17,6 +17,10 @@ Define_Module(RealTimeController);
 RealTimeController::RealTimeController() : provider(utils::ComponentProvider{this}) {}
 void RealTimeController::initialize() {
   EV << "RealTimeController booted\n";
+<<<<<<< HEAD
+=======
+  std::cout << "RealTimeController booted" << std::endl;
+>>>>>>> 6b811c52... applied clang-format
   myAddress = par("address");
 }
 

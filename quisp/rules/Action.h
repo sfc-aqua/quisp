@@ -63,7 +63,6 @@ class SwappingAction : public Action {
   QNIC_type self_left_qnic_type;
   QNIC_type self_right_qnic_type;
 
-
  public:
   // constructor of entanglement swapping
   SwappingAction(unsigned long RuleSet_id, int rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr, int slqi,

@@ -375,7 +375,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
     ResourceAllocation(QNIC_RP, i);
   }
 
-
   traverseThroughAllProcesses2();
   delete msg;
 }
@@ -945,7 +944,7 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
 void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // swapper believe previous BSM was succeeded.
   // These are new partner's info
-  
+
   int new_partner = swapr.new_partner;
   int new_partner_qnic_index = swapr.new_partner_qnic_index;
   int new_partner_qnic_address = swapr.new_partner_qnic_address;  // this is not nessesary?
@@ -963,7 +962,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // FIXME here is just one resource, but this should be loop
   // TODO resources for entanglement swapping in swapper should be free
   // Update tracker first get index from Swapping result maybe... get qubit index from swapping result
-  
+
   // we need to free swapper resources consumed for entanglement swapping.
   // qubit with address Addr was shot in nth time. This list is ordered from old to new.
   StationaryQubit *qubit = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
@@ -983,21 +982,19 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     // std::cout << qubit << ", node[" << qubit->node_address << "] from qnic[" << qubit->qnic_index << "]\n";
     error("RuleEngine. Ebit succeed. but wrong");
   }
-  // add resources
-  if(new_partner == 14){
-    EV<<"parent: "<<parentAddress<<"\n";
-    EV<<"qnic type: "<< qnic_type <<" qnic index: "<<qnic_index<<"\n";
-    EV<<" qubit: "<<qubit->getParentModule()->getParentModule()<<" is entangled with "<<qubit->entangled_partner->getParentModule()->getParentModule()<<"\n";
-    // error("");
-  }
-
   // first delete old record
-  for (auto it = allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); ++it){
-    if(it->second == qubit){
+  for (auto it = allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); ++it) {
+    if (it->second == qubit) {
       allResources[qnic_type][qnic_index].erase(it);
     }
   }
   allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner, qubit));
+
+  // check
+  EV << "check resources at " << parentAddress << "\n";
+  for (auto it = allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); ++it) {
+    EV << "partner: " << it->first << " qubit: " << it->second << "\n";
+  }
 
   // FOR DEBUGGING
   if (qubit->entangled_partner != nullptr) {
@@ -1242,13 +1239,15 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
       }
 
       int assigned = 0;
-      for (auto it = allResources[qnic_type][qnic_index].cbegin(), next_it = allResources[qnic_type][qnic_index].cbegin(); it != allResources[qnic_type][qnic_index].cend(); it = next_it) {
+      for (auto it = allResources[qnic_type][qnic_index].cbegin(), next_it = allResources[qnic_type][qnic_index].cbegin(); it != allResources[qnic_type][qnic_index].cend();
+           it = next_it) {
         next_it = it;
         ++next_it;
 
         if (!it->second->isAllocated() && resource_entangled_with_address == it->first) {
           int num_rsc_bf = process->front()->resources.size();
-          if (it->second->entangled_partner == nullptr && it->second->Density_Matrix_Collapsed(0, 0).real() == -111 && !it->second->no_density_matrix_nullptr_entangled_partner_ok) { 
+          if (it->second->entangled_partner == nullptr && it->second->Density_Matrix_Collapsed(0, 0).real() == -111 &&
+              !it->second->no_density_matrix_nullptr_entangled_partner_ok) {
             error("Fresh ebit wrong");
           }
 

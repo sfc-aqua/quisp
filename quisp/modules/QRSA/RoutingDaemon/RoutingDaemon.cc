@@ -143,7 +143,7 @@ int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr) {
   return it->second.address;
 }
 
-int RoutingDaemon::returnNumEndNodes(){
+int RoutingDaemon::returnNumEndNodes() {
   cTopology *topo = new cTopology("topo");
   cMsgPar *yes = new cMsgPar();
   yes->setStringValue("yes");
@@ -153,7 +153,7 @@ int RoutingDaemon::returnNumEndNodes(){
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);
     std::string node_type = node->getModule()->par("nodeType");
-    EV<<"node type"<<node_type<<"\n";
+    EV << "node type" << node_type << "\n";
     if (node_type == "EndNode") {  // ignore myself
       index++;
     }
