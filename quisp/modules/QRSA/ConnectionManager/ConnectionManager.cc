@@ -313,24 +313,23 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       // generate Swapping RuleSet
       // here we have to check the order of entanglement swapping
 
-        // swapping configurations for path[i]
-        if (!simultaneousES){
-          SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
-          RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
-        }
-        else if(simultaneousES){
-          SwappingConfig config = generateSimultaneousSwappingConfig(path.at(i), path, qnics, num_resource);
-          RuleSet *rule = generateSimultaneousEntanglementSwappingRuleSet(path.at(i), config, path);
-        }
+      // swapping configurations for path[i]
+      if (!simultaneousES) {
+        SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
+        RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
+      } else if (simultaneousES) {
+        SwappingConfig config = generateSimultaneousSwappingConfig(path.at(i), path, qnics, num_resource);
+        RuleSet *rule = generateSimultaneousEntanglementSwappingRuleSet(path.at(i), config, path);
+      }
 
-        ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
-        pkr->setDestAddr(path.at(i));
-        pkr->setSrcAddr(my_address);
-        pkr->setKind(2);
-        pkr->setRuleSet(rule);
-        pkr->setActual_srcAddr(path.at(0));
-        pkr->setActual_destAddr(path.at(path.size() - 1));
-        send(pkr, "RouterPort$o");
+      ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
+      pkr->setDestAddr(path.at(i));
+      pkr->setSrcAddr(my_address);
+      pkr->setKind(2);
+      pkr->setRuleSet(rule);
+      pkr->setActual_srcAddr(path.at(0));
+      pkr->setActual_destAddr(path.at(path.size() - 1));
+      send(pkr, "RouterPort$o");
 
     } else {
       EV_DEBUG << "Im not swapper!" << path.at(i) << "\n";
@@ -470,9 +469,7 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
   return config;
 }
 
-SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path,
-                                                         std::vector<QNIC_pair_info> qnics, int num_resources) {
-  
+SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources) {
   // Set the left and right partner to be initiator and responder.
 
   auto iter = std::find(path.begin(), path.end(), swapper_address);
@@ -483,8 +480,8 @@ SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper
   QNIC_id left_self_qnic = qnics.at(index).fst;
   QNIC_id right_self_qnic = qnics.at(index).snd;
 
-  size_t left_partner_index = std::distance(path.begin(), iter-1);
-  size_t right_partner_index = std::distance(path.begin(), iter+1);
+  size_t left_partner_index = std::distance(path.begin(), iter - 1);
+  size_t right_partner_index = std::distance(path.begin(), iter + 1);
 
   int left_partner = path.at(left_partner_index);
   int right_partner = path.at(right_partner_index);
@@ -727,13 +724,11 @@ RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int 
   condition->addClause(resource_clause_left);
   condition->addClause(resource_clause_right);
 
-  quisp::rules::Action *action = new SimultaneousSwappingAction(ruleset_id, rule_index, 
-                                                    conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres,
-                                                    conf.right_partner, conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, 
-                                                    conf.self_left_qnic_index, conf.self_left_qnic_type, conf.self_right_qnic_index, conf.self_right_qnic_type, 
-                                                    conf.initiator, conf.initiator_qnic_type, conf.initiator_qnic_index, conf.initiator_qnic_address, conf.initiator_res,
-                                                    conf.responder, conf.responder_qnic_type, conf.responder_qnic_index, conf.responder_qnic_address, conf.responder_res,
-                                                    index_in_path, path_length_exclude_IR);
+  quisp::rules::Action *action = new SimultaneousSwappingAction(
+      ruleset_id, rule_index, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner, conf.rqnic_type, conf.rqnic_index,
+      conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type, conf.self_right_qnic_index, conf.self_right_qnic_type, conf.initiator,
+      conf.initiator_qnic_type, conf.initiator_qnic_index, conf.initiator_qnic_address, conf.initiator_res, conf.responder, conf.responder_qnic_type, conf.responder_qnic_index,
+      conf.responder_qnic_address, conf.responder_res, index_in_path, path_length_exclude_IR);
 
   Rule *rule = new Rule(ruleset_id, rule_index);
   rule->setCondition(condition);
@@ -777,9 +772,9 @@ RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, in
   return tomography;
 }
 
-RuleSet *ConnectionManager::generateRGSsourceRuleSet(int owner, int partner, int num_of_measure){
+RuleSet *ConnectionManager::generateRGSsourceRuleSet(int owner, int partner, int num_of_measure) {
   unsigned long ruleset_id = createUniqueId();
-  
+
   int rule_index = 0;
   RuleSet *absa = new RuleSet(ruleset_id, owner, partner);
   Rule *rule = new Rule(ruleset_id, rule_index);

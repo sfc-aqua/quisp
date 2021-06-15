@@ -65,7 +65,6 @@ void RuleEngine::initialize() {
 
   // Vector for store package for simultaneous entanglement swapping
   std::map<int, std::map<int, SimultaneousSwappingResult>> pk_list;
-
 }
 
 void RuleEngine::handleMessage(cMessage *msg) {
@@ -283,7 +282,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     swapr.measured_qubit_index = pkt->getMeasured_qubit_index();
     swapr.operation_type = pkt->getOperation_type();
     updateResources_EntanglementSwapping(swapr);
-  } 
+  }
 
   else if (dynamic_cast<SimultaneousSwappingResult *>(msg) != nullptr) {
     SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(msg);
@@ -292,14 +291,12 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pk_list[rule_id][pkt->getIndex_in_path()] = pkt;
 
     // Check if all message is here or not
-    if (pk_list[rule_id].size() == pkt->getPath_length_exclude_IR()){
-
+    if (pk_list[rule_id].size() == pkt->getPath_length_exclude_IR()) {
       // optimize correction operation, without global phase consideration
       int oco_result = pk_list[rule_id][0];
-      for (int i = 1; i=pk_list[rule_id].size(); i++){
+      for (int i = 1; i = pk_list[rule_id].size(); i++) {
         oco_result ^= pk_list[rule_id][i];
       }
-
 
       int src = pkt->getSrcAddr();
       int dest = pkt->getDestAddr();
@@ -321,9 +318,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
     // optimize corretion operator
 
-    
-  } 
-  
+  }
+
   // else if (dynamic_cast<ABSAresult *>(msg) != nullptr) {
   //   ABSAResult *pkt = check_and_cast<ABSAResult *>(msg);
   //   // here next add resources
@@ -343,8 +339,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
   //   absar.measured_qubit_index = pkt->getMeasured_qubit_index();
   //   absar.operation_type = pkt->getOperation_type();
   //   //updateResources_EntanglementSwapping(absar);
-  // } 
-  
+  // }
+
   else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
     InternalRuleSetForwarding *pkt = check_and_cast<InternalRuleSetForwarding *>(msg);
     // add actual process

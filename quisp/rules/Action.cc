@@ -185,8 +185,6 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
   right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
 
-
-
   if (left_qubit == nullptr || right_qubit == nullptr) {
     Error *pk = new Error;
     pk->setError_text("Not enough resource found! This shouldn't happen!");
@@ -198,7 +196,7 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
     return pk;
   }
 
-  // actual swapping operations 
+  // actual swapping operations
   // Set address to both end nodes qubits, this might be repeated serveral times
   StationaryQubit *right_partner_qubit = right_qubit->entangled_partner;
   StationaryQubit *left_partner_qubit = left_qubit->entangled_partner;
@@ -215,19 +213,19 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
 
   int operation_type_left, operation_type_right;
 
-  if (!left_measure && !right_measure) { // 0 0
+  if (!left_measure && !right_measure) {  // 0 0
     EV << "operation type 0, operation left I, operation right I\n";
     operation_type_left = 0;
     operation_type_right = 0;
-  } else if (!left_measure && right_measure) { // 0 1
+  } else if (!left_measure && right_measure) {  // 0 1
     EV << "operation type 1, operation left I, operation right X\n";
     operation_type_left = 0;
     operation_type_right = 1;
-  } else if (left_measure && !right_measure) { // 1 0
+  } else if (left_measure && !right_measure) {  // 1 0
     EV << "operation type 2, operation left Z, operation right I\n";
     operation_type_left = 0;
     operation_type_right = 2;
-  } else if (left_measure && right_measure) { // 1 1
+  } else if (left_measure && right_measure) {  // 1 1
     EV << "operation type 3, operation left Z, operation right X\n";
     operation_type_left = 0;
     operation_type_right = 3;
@@ -275,19 +273,18 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   pk->setLeft_Dest(initiator);
   pk->setRight_Dest(responder);
 
-  
   pk->setNew_partner_left(responder);
   pk->setNew_partner_qnic_index_left(responder_qnic_id);
   pk->setNew_partner_qnic_type_left(responder_qnic_type);
   pk->setNew_partner_qnic_address_left(responder_qnic_address);
-  //pk->setMeasured_qubit_index_left(responder_index);  // here is wrong;
+  // pk->setMeasured_qubit_index_left(responder_index);  // here is wrong;
 
   pk->setNew_partner_right(initiator);
   pk->setNew_partner_qnic_index_right(initiator_qnic_id);
   pk->setNew_partner_qnic_type_right(initiator_qnic_type);
   pk->setNew_partner_qnic_address_right(initiator_qnic_address);
-  //pk->setMeasured_qubit_index_right(initiator_index);
-  
+  // pk->setMeasured_qubit_index_right(initiator_index);
+
   return pk;
 }
 

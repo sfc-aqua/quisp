@@ -127,13 +127,9 @@ class SimultaneousSwappingAction : public Action {
 
  public:
   // constructor of entanglement swapping
-  SimultaneousSwappingAction(unsigned long RuleSet_id, int rule_index, 
-                            int lp, QNIC_type lqt, int lqi, int lqad, int lr, 
-                            int rp, QNIC_type rqt, int rqi, int rqad, int rr, 
-                            int slqi, QNIC_type slqt, int srqi, QNIC_type srqt,
-                            int init, QNIC_type initqt, int initqi, int initqad, int initr,
-                            int resp, QNIC_type respqt, int respqi, int respqad, int respr,
-                            int, iip, int pleir) {
+  SimultaneousSwappingAction(unsigned long RuleSet_id, int rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr, int slqi,
+                             QNIC_type slqt, int srqi, QNIC_type srqt, int init, QNIC_type initqt, int initqi, int initqad, int initr, int resp, QNIC_type respqt, int respqi,
+                             int respqad, int respr, int, iip, int pleir) {
     ruleset_id = RuleSet_id;
     rule_id = rule_index;
 
@@ -148,7 +144,7 @@ class SimultaneousSwappingAction : public Action {
     right_qnic_address = rqad;
     right_resource = rr;
 
-    // initiator and responder 
+    // initiator and responder
     initiator = init;
     initiator_qnic_type = initqt;
     initiator_qnic_id = initqi;
@@ -174,8 +170,6 @@ class SimultaneousSwappingAction : public Action {
   // cPacket* run(cModule *re, qnicResources *resources) override;
   cPacket* run(cModule* re) override;
 };
-
-
 
 class PurifyAction : public Action {
  protected:
