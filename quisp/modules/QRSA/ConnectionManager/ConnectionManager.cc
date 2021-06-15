@@ -50,12 +50,12 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
 
     auto dst_inf = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
-    if (dst_inf == nullptr){
+    if (dst_inf == nullptr) {
       error("dst inf is null");
     }
     bool is_qnic_available = !isQnicBusy(dst_inf->qnic.address);
     bool requested_by_myself = actual_src == my_address;
-    
+
     if (requested_by_myself) {
       if (is_qnic_available) {
         // reserve the qnic and relay the request to the next node
@@ -222,8 +222,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
 
   if (src_info == nullptr) {
-      error("src_info not found");
-    }
+    error("src_info not found");
+  }
 
   QNIC_id_pair pair_info = {.fst = src_info->qnic, .snd = dst_info->qnic};
 
@@ -258,7 +258,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   for (int i = 0; i < divisions; i++) {
     std::vector<int> partners;
     if (swapper[i] > 0) {
-      EV << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n"; 
+      EV << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
       EV_DEBUG << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
       partners.push_back(link_left[i]);
       partners.push_back(link_right[i]);
@@ -266,104 +266,104 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     }
   }
 
-    /* TODO: Remember you have link costs <3
-    * The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel
-      * but from only 1 channels from Src->BSA and ignoring BSA->Dest).
-    * If you need to test with different costs, try changing the value.
-    * But we need to implement actual link-tomography for this eventually.
+  /* TODO: Remember you have link costs <3
+  * The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel
+    * but from only 1 channels from Src->BSA and ignoring BSA->Dest).
+  * If you need to test with different costs, try changing the value.
+  * But we need to implement actual link-tomography for this eventually.
 
-    for(int i = 0; i<hop_count; i++){
-        EV<<"\nThis is one of the stacked link costs....."<<pk->getStack_of_linkCosts(i)<<"\n";
+  for(int i = 0; i<hop_count; i++){
+      EV<<"\nThis is one of the stacked link costs....."<<pk->getStack_of_linkCosts(i)<<"\n";
+  }
+  */
+  // getting swappers index as vector(This might be redundant FIXME)
+  std::vector<int> swappers = {};
+  for (int i = 0; i < divisions; i++) {
+    if (swapper[i] > 0) {
+      swappers.push_back(swapper[i]);
     }
-    */
-    // getting swappers index as vector(This might be redundant FIXME)
-    std::vector<int> swappers = {};
-    for (int i = 0; i < divisions; i++) {
-      if (swapper[i] > 0) {
-        swappers.push_back(swapper[i]);
-      }
-    }
+  }
 
-    int qnic_array_size = req->getStack_of_QNICsArraySize();
-    req->setStack_of_QNICsArraySize(qnic_array_size + 1);
-    req->setStack_of_QNICs(qnic_array_size, pair_info);
+  int qnic_array_size = req->getStack_of_QNICsArraySize();
+  req->setStack_of_QNICsArraySize(qnic_array_size + 1);
+  req->setStack_of_QNICs(qnic_array_size, pair_info);
 
-    // HACK This may be also not good way
-    std::vector<QNIC_pair_info> qnics = {};
-    QNIC_id_pair qnic_pairs;
-    for (int i = 0; i < qnic_array_size + 1; i++) {
-      qnic_pairs = req->getStack_of_QNICs(i);
-      qnics.push_back(qnic_pairs);
-    }
+  // HACK This may be also not good way
+  std::vector<QNIC_pair_info> qnics = {};
+  QNIC_id_pair qnic_pairs;
+  for (int i = 0; i < qnic_array_size + 1; i++) {
+    qnic_pairs = req->getStack_of_QNICs(i);
+    qnics.push_back(qnic_pairs);
+  }
 
-    if (qnics.at(0).fst.index != -1 || qnics.at(qnics.size() - 1).snd.index != -1) {
-      error("Qnic index of initiator and responder must be -1 in current scheme. ");
-    }
+  if (qnics.at(0).fst.index != -1 || qnics.at(qnics.size() - 1).snd.index != -1) {
+    error("Qnic index of initiator and responder must be -1 in current scheme. ");
+  }
 
-    // node pairs! FIXME: really bad coding
-    // Umm... thinking good way
-    // Here qnic processing
-    // Have to add destination qnic info (destination is the same as my_address. So qnic index must be -1 because self return is not allowed.)
+  // node pairs! FIXME: really bad coding
+  // Umm... thinking good way
+  // Here qnic processing
+  // Have to add destination qnic info (destination is the same as my_address. So qnic index must be -1 because self return is not allowed.)
 
-    // create RuleSet for all nodes!
-    int num_resource = req->getNumber_of_required_Bellpairs();
-    double required_fidelity = req->getRequiredFidelity();
-    int intermediate_node_size = req->getStack_of_QNodeIndexesArraySize();
-    // generate the rulesets for intermediate swappers
-    for (int i = 0; i <= intermediate_node_size; i++) {
-      auto itr = std::find(swappers.begin(), swappers.end(), path.at(i));
-      size_t index = std::distance(swappers.begin(), itr);
-      
-      if (index != swappers.size()) {
-        EV_DEBUG << "Im swapper!" << path.at(i) << "\n";
-        // generate Swapping RuleSet
-        // here we have to check the order of entanglement swapping
+  // create RuleSet for all nodes!
+  int num_resource = req->getNumber_of_required_Bellpairs();
+  double required_fidelity = req->getRequiredFidelity();
+  int intermediate_node_size = req->getStack_of_QNodeIndexesArraySize();
+  // generate the rulesets for intermediate swappers
+  for (int i = 0; i <= intermediate_node_size; i++) {
+    auto itr = std::find(swappers.begin(), swappers.end(), path.at(i));
+    size_t index = std::distance(swappers.begin(), itr);
 
-        // swapping configurations for path[i]
-        SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
-        RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
+    if (index != swappers.size()) {
+      EV_DEBUG << "Im swapper!" << path.at(i) << "\n";
+      // generate Swapping RuleSet
+      // here we have to check the order of entanglement swapping
 
-        ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
-        pkr->setDestAddr(path.at(i));
-        pkr->setSrcAddr(my_address);
-        pkr->setKind(2);
-        pkr->setRuleSet(rule);
-        pkr->setActual_srcAddr(path.at(0));
-        pkr->setActual_destAddr(path.at(path.size() - 1));
-        send(pkr, "RouterPort$o");
+      // swapping configurations for path[i]
+      SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
+      RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
 
-      } else {
-        EV_DEBUG << "Im not swapper!" << path.at(i) << "\n";
-        int num_measure = req->getNum_measure();
+      ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
+      pkr->setDestAddr(path.at(i));
+      pkr->setSrcAddr(my_address);
+      pkr->setKind(2);
+      pkr->setRuleSet(rule);
+      pkr->setActual_srcAddr(path.at(0));
+      pkr->setActual_destAddr(path.at(path.size() - 1));
+      send(pkr, "RouterPort$o");
 
-        RuleSet *ruleset;
-        int owner = path.at(i);
-        if (i == 0) {  // if this is initiator
-          ruleset = generateTomographyRuleSet(owner, path.at(path.size() - 1), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
-        } else {  // if this is responder
-          ruleset = generateTomographyRuleSet(owner, path.at(0), num_measure, qnics.at(qnics.size() - 1).fst.type, qnics.at(qnics.size() - 1).fst.index, num_resource);
-        }
-
-        ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Tomography)");
-        pkr->setDestAddr(path.at(i));
-        pkr->setSrcAddr(my_address);
-        pkr->setKind(2);
-        pkr->setRuleSet(ruleset);
-        pkr->setActual_srcAddr(path.at(0));
-        pkr->setActual_destAddr(path.at(path.size() - 1));
-
-        // this is not application but for checking swapping done properly.
-        pkr->setApplication_type(0);
-        send(pkr, "RouterPort$o");
-      }
-    }
-
-    if (actual_dst != my_address) {
-      reserveQnic(src_info->qnic.address);
-      reserveQnic(dst_info->qnic.address);
     } else {
-      reserveQnic(src_info->qnic.address);
+      EV_DEBUG << "Im not swapper!" << path.at(i) << "\n";
+      int num_measure = req->getNum_measure();
+
+      RuleSet *ruleset;
+      int owner = path.at(i);
+      if (i == 0) {  // if this is initiator
+        ruleset = generateTomographyRuleSet(owner, path.at(path.size() - 1), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
+      } else {  // if this is responder
+        ruleset = generateTomographyRuleSet(owner, path.at(0), num_measure, qnics.at(qnics.size() - 1).fst.type, qnics.at(qnics.size() - 1).fst.index, num_resource);
+      }
+
+      ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Tomography)");
+      pkr->setDestAddr(path.at(i));
+      pkr->setSrcAddr(my_address);
+      pkr->setKind(2);
+      pkr->setRuleSet(ruleset);
+      pkr->setActual_srcAddr(path.at(0));
+      pkr->setActual_destAddr(path.at(path.size() - 1));
+
+      // this is not application but for checking swapping done properly.
+      pkr->setApplication_type(0);
+      send(pkr, "RouterPort$o");
     }
+  }
+
+  if (actual_dst != my_address) {
+    reserveQnic(src_info->qnic.address);
+    reserveQnic(dst_info->qnic.address);
+  } else {
+    reserveQnic(src_info->qnic.address);
+  }
 }
 
 /**
@@ -427,7 +427,7 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
   }
   int left_partner = it->second.at(0);
   int right_partner = it->second.at(1);
-
+  EV << "swapping" << left_partner << "<-->" << swapper_address << "<-->" << right_partner << "\n";
   auto iter_left = std::find(path.begin(), path.end(), left_partner);
   auto iter_right = std::find(path.begin(), path.end(), right_partner);
   if (iter_left == path.end()) {
@@ -478,7 +478,7 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
 void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
   int responder_addr = req->getActual_destAddr();  // responder address
   int initiator_addr = req->getActual_srcAddr();  // initiator address (to get input qnic)
-  
+
   // here is the problem when the connection setup is ABSA
   // ABSA needs to be recognized as a QNode
 
@@ -505,8 +505,6 @@ void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
   req->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
   req->setStack_of_linkCosts(num_accumulated_costs, dst_info->quantum_link_cost);
   req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
-
-
 
   bool is_dst_qnic_reserved = isQnicBusy(dst_info->qnic.address);
   bool is_src_qnic_reserved = false;
@@ -628,8 +626,6 @@ RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, Swapp
   unsigned long ruleset_id = createUniqueId();
   int rule_index = 0;
 
-  EV<<"es_rule"<<ruleset_id<<"\n";
-
   Clause *resource_clause_left = new EnoughResourceClauseLeft(conf.left_partner, conf.lres);
   Clause *resource_clause_right = new EnoughResourceClauseRight(conf.right_partner, conf.rres);
 
@@ -657,9 +653,8 @@ RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, Swapp
 RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, int num_of_measure, QNIC_type qnic_type, int qnic_index, int num_resources) {
   unsigned long ruleset_id = createUniqueId();
 
-  EV<<"tomo_rule"<<ruleset_id<<"\n";
-
   int rule_index = 0;
+  EV << "owner: " << owner << " partner: " << partner << "\n";
   RuleSet *tomography = new RuleSet(ruleset_id, owner, partner);
   Rule *rule = new Rule(ruleset_id, rule_index, "tomography");
 
@@ -686,9 +681,9 @@ RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, in
   return tomography;
 }
 
-RuleSet *ConnectionManager::generateRGSsourceRuleSet(int owner, int partner, int num_of_measure){
+RuleSet *ConnectionManager::generateRGSsourceRuleSet(int owner, int partner, int num_of_measure) {
   unsigned long ruleset_id = createUniqueId();
-  
+
   int rule_index = 0;
   RuleSet *absa = new RuleSet(ruleset_id, owner, partner);
   Rule *rule = new Rule(ruleset_id, rule_index);

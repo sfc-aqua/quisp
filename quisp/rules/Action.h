@@ -64,7 +64,6 @@ class SwappingAction : public Action {
   QNIC_type self_left_qnic_type;
   QNIC_type self_right_qnic_type;
 
-
  public:
   // constructor of entanglement swapping
   SwappingAction(unsigned long RuleSet_id, int rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr, int slqi,
@@ -438,71 +437,68 @@ class RandomMeasureAction : public Action {
   cPacket* run(cModule* re) override;
 };
 
-//ABSA actions start here
+// ABSA actions start here
 
-
-//what is the difference between action:----, and action:run?
-//Action 2
-class initializeBasisAction: public Action {
+// what is the difference between action:----, and action:run?
+// Action 2
+class initializeBasisAction : public Action {
  protected:
   int basis;
+
  public:
   initializeBasisAction(int b) {
-    //basis {bell:0, x=1, z:1}
+    // basis {bell:0, x=1, z:1}
     basis = 0;
   };
-  //initializeBasisAction(){
+  // initializeBasisAction(){
 
   //};
   cPacket* run(cModule* re) override;
 };
 
-class initializeBellAction: public Action {
+class initializeBellAction : public Action {
  protected:
   bool BellSucc;
+
  public:
-  initializeBellAction(bool bs) {
-    BellSucc = bs;
-  };
-  //initializeBellAction(){
+  initializeBellAction(bool bs) { BellSucc = bs; };
+  // initializeBellAction(){
 
   //};
   cPacket* run(cModule* re) override;
 };
 
-class initializeEncode: public Action {
+class initializeEncode : public Action {
  protected:
   std::map<int, std::vector<int>> encodedTree;
   int encode;
   int* bv;
+
  public:
-  initializeEncode(int e,int* v) {
-      encode = e;
-      bv = v;
+  initializeEncode(int e, int* v) {
+    encode = e;
+    bv = v;
   };
-  //initializeEncode(){
+  // initializeEncode(){
 
   //};
   cPacket* run(cModule* re) override;
 };
 
-class initializeMsgAction: public Action {
+class initializeMsgAction : public Action {
  protected:
-
   bool msgS;
- public:
-  initializeMsgAction(bool ms) {
-      msgS = ms;
 
-  };
-  //initializeMsgAction(){
+ public:
+  initializeMsgAction(bool ms) { msgS = ms; };
+  // initializeMsgAction(){
 
   //};
   cPacket* run(cModule* re) override;
 };
 
-//Action5
-class measureAction : public Action{
+// Action5
+class measureAction : public Action {
  protected:
   int basis;
   int* basisList;
@@ -512,131 +508,128 @@ class measureAction : public Action{
   std::vector<int> encodedZ;
   bool msgSend = false;
   // First partner
-    int left_partner;
-    QNIC_type left_qnic_type;
-    int left_qnic_id;
-    int left_qnic_address;
-    int left_resource;
-    // Second partner
-    int right_partner;
-    QNIC_type right_qnic_type;
-    int right_qnic_id;
-    int right_qnic_address;
-    int right_resource;
-    int action_index = 0;
+  int left_partner;
+  QNIC_type left_qnic_type;
+  int left_qnic_id;
+  int left_qnic_address;
+  int left_resource;
+  // Second partner
+  int right_partner;
+  QNIC_type right_qnic_type;
+  int right_qnic_id;
+  int right_qnic_address;
+  int right_resource;
+  int action_index = 0;
+
  public:
-// constructor
-  measureAction(int b,
-                std::map<int, std::tuple<int, bool, bool>> ol,
-                bool sb,
-                std::vector<int> ex,
-                std::vector<int> ez,
-                bool ms,
-                int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr){
-  basis = b;
-  outcomeList = ol;
-  successBell = sb;
-  encodedX = ex;
-  encodedZ = ez;
-  msgSend = ms;
-  left_partner = lp;
-      left_qnic_type = lqt;
-      left_qnic_id = lqi;
-      left_qnic_address = lqad;
-      left_resource = lr;
-      right_partner = rp;
-      right_qnic_type = rqt;
-      right_qnic_id = rqi;
-      right_qnic_address = rqad;
-      right_resource = rr;
+  // constructor
+  measureAction(int b, std::map<int, std::tuple<int, bool, bool>> ol, bool sb, std::vector<int> ex, std::vector<int> ez, bool ms, int lp, QNIC_type lqt, int lqi, int lqad, int lr,
+                int rp, QNIC_type rqt, int rqi, int rqad, int rr) {
+    basis = b;
+    outcomeList = ol;
+    successBell = sb;
+    encodedX = ex;
+    encodedZ = ez;
+    msgSend = ms;
+    left_partner = lp;
+    left_qnic_type = lqt;
+    left_qnic_id = lqi;
+    left_qnic_address = lqad;
+    left_resource = lr;
+    right_partner = rp;
+    right_qnic_type = rqt;
+    right_qnic_id = rqi;
+    right_qnic_address = rqad;
+    right_resource = rr;
   };
- cPacket* run(cModule* re)override;
+  cPacket* run(cModule* re) override;
 };
 
-//Action 7
-class finalizeAction: public Action {
+// Action 7
+class finalizeAction : public Action {
  protected:
   int* msg;
+
  public:
   finalizeAction(std::map<int, std::tuple<int, bool, bool>> outcomeList, int* msg) {
-  //int absaAdd = left_partner_qubit->stationaryQubit_address;
-  //int endnodeAdd = right_partner_qubit->stationaryQubit_address;
-  bool msgNeed = true;
+    // int absaAdd = left_partner_qubit->stationaryQubit_address;
+    // int endnodeAdd = right_partner_qubit->stationaryQubit_address;
+    bool msgNeed = true;
   };
-  //finalizeAction(){
+  // finalizeAction(){
 
   //};
   cPacket* run(cModule* re) override;
 };
 
-//Action 9
-class qkdInitializeAction: public Action {
+// Action 9
+class qkdInitializeAction : public Action {
  protected:
   int* outComeList;
-  int m; //number of arms in 1st leaf
+  int m;  // number of arms in 1st leaf
  public:
-  qkdInitializeAction(int m, int* basis) {
-  bool initNeeded = true;
+  qkdInitializeAction(int m, int* basis) { bool initNeeded = true; };
+  // qkdInitializeAction(){
+
+  //};
+  cPacket* run(cModule* re) override;
+};
+
+// Action 11
+class qkdMeasureAction : public Action {
+ protected:
+  std::map<int, std::tuple<int, bool, bool>> outcomeList;
+  int basis;  // number of arms in 1st leaf
+  // First partner
+  int left_partner;
+  QNIC_type left_qnic_type;
+  int left_qnic_id;
+  int left_qnic_address;
+  int left_resource;
+  // Second partner
+  int right_partner;
+  QNIC_type right_qnic_type;
+  int right_qnic_id;
+  int right_qnic_address;
+  int right_resource;
+  int action_index = 0;
+
+ public:
+  qkdMeasureAction(std::map<int, std::tuple<int, bool, bool>> outcomeList, int basis, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad,
+                   int rr) {
+    StationaryQubit* incomeQubit = nullptr;
+    bool measureNeeded = true;
+    left_partner = lp;
+    left_qnic_type = lqt;
+    left_qnic_id = lqi;
+    left_qnic_address = lqad;
+    left_resource = lr;
+    right_partner = rp;
+    right_qnic_type = rqt;
+    right_qnic_id = rqi;
+    right_qnic_address = rqad;
+    right_resource = rr;
   };
-  //qkdInitializeAction(){
+  // qkdMeasureAction(){
 
   //};
   cPacket* run(cModule* re) override;
 };
 
-//Action 11
-class qkdMeasureAction: public Action {
+// Action 13
+class qkdFinalizeAction : public Action {
  protected:
-   std::map<int, std::tuple<int, bool, bool>> outcomeList;
-   int basis; //number of arms in 1st leaf
-   // First partner
-     int left_partner;
-     QNIC_type left_qnic_type;
-     int left_qnic_id;
-     int left_qnic_address;
-     int left_resource;
-     // Second partner
-     int right_partner;
-     QNIC_type right_qnic_type;
-     int right_qnic_id;
-     int right_qnic_address;
-     int right_resource;
-     int action_index = 0;
-
- public:
-  qkdMeasureAction(std::map<int, std::tuple<int, bool, bool>> outcomeList, int basis,  int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr) {
-  StationaryQubit *incomeQubit = nullptr;
-  bool measureNeeded = true;
-  left_partner = lp;
-      left_qnic_type = lqt;
-      left_qnic_id = lqi;
-      left_qnic_address = lqad;
-      left_resource = lr;
-      right_partner = rp;
-      right_qnic_type = rqt;
-      right_qnic_id = rqi;
-      right_qnic_address = rqad;
-      right_resource = rr;
-   };
-  //qkdMeasureAction(){
-
-  //};
-  cPacket* run(cModule* re) override;
-};
-
-//Action 13
-class qkdFinalizeAction: public Action {
- protected:
-  //int absaAdd = left_partner_qubit->stationaryQubit_address;
-  //int endnodeAdd = right_partner_qubit->stationaryQubit_address;
+  // int absaAdd = left_partner_qubit->stationaryQubit_address;
+  // int endnodeAdd = right_partner_qubit->stationaryQubit_address;
   bool msgNeed = false;
+
  public:
   qkdFinalizeAction(int basis, int absaAdd, int endnodeAdd, bool msgNeed) {
-    //what to be added here
+    // what to be added here
     bool finalizaNeeded = true;
     msgNeed = true;
   };
-  //qkdFinalizeAction(){
+  // qkdFinalizeAction(){
 
   //};
   cPacket* run(cModule* re) override;

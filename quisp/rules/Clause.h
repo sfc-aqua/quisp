@@ -178,122 +178,102 @@ class PurificationCountClause : public Clause {
 };
 
 class XErrClause : public Clause {};
-  
-//ABSA cluases start here
-//Algorithm 1
+
+// ABSA cluases start here
+// Algorithm 1
 class initConditionalClause : public Clause {
  protected:
-    int qubit_arrival_time;
+  int qubit_arrival_time;
 
  public:
-  initConditionalClause(int arrivalTime) : Clause() {
-    qubit_arrival_time = arrivalTime;
-
-  };
+  initConditionalClause(int arrivalTime) : Clause() { qubit_arrival_time = arrivalTime; };
   bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
-//do we need both?
-class arrivalTimeClause : public Clause{
+// do we need both?
+class arrivalTimeClause : public Clause {
  public:
   bool initialTime;
   simtime_t currentTime;
   std::vector<simtime_t> arrivalTimeList;
   // maybe here we need qnic type and index as well to identify the qubit
-  arrivalTimeClause(bool initialTime, simtime_t currentTime, std::vector<simtime_t> arrivalTimeList){
-  initialTime = initialTime;
-  currentTime = currentTime;
-  arrivalTimeList = arrivalTimeList;
+  arrivalTimeClause(bool initialTime, simtime_t currentTime, std::vector<simtime_t> arrivalTimeList) {
+    initialTime = initialTime;
+    currentTime = currentTime;
+    arrivalTimeList = arrivalTimeList;
   };
   bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
-//how will clause 1 and 3 differ in the h file?
-//Algorithm 3
+// how will clause 1 and 3 differ in the h file?
+// Algorithm 3
 class MeasureConditionalClause : public Clause {
  protected:
-    int qubit_arrival_time;
+  int qubit_arrival_time;
 
  public:
-    MeasureConditionalClause(int arrivalTime) : Clause() {
-    qubit_arrival_time = arrivalTime;
-
-  };
-    bool check(std::multimap<int, StationaryQubit*>) const override;
+  MeasureConditionalClause(int arrivalTime) : Clause() { qubit_arrival_time = arrivalTime; };
+  bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
-//Algorithm 4
+// Algorithm 4
 class postBellConditionalClause : public Clause {
  protected:
-    StationaryQubit* resources;
-    bool bellSuccess;
+  StationaryQubit* resources;
+  bool bellSuccess;
 
  public:
-    postBellConditionalClause(StationaryQubit* outList, bool success) : Clause() {
+  postBellConditionalClause(StationaryQubit* outList, bool success) : Clause() {
     resources = outList;
     bellSuccess = success;
-
   };
-    bool check(std::multimap<int, StationaryQubit*>) const override;
+  bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
-
-//Algorithm 6
+// Algorithm 6
 class finalConditionalClause : public Clause {
  protected:
-    int qubit_arrival_time;
-    bool msg_sent;
+  int qubit_arrival_time;
+  bool msg_sent;
 
  public:
-    finalConditionalClause(int arrivalTime, bool msgSent) : Clause() {
+  finalConditionalClause(int arrivalTime, bool msgSent) : Clause() {
     qubit_arrival_time = arrivalTime;
     msg_sent = msgSent;
-
   };
-    bool check(std::multimap<int, StationaryQubit*>) const override;
+  bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
-
-//Algorithm 8 
+// Algorithm 8
 class qkdInitConditionalClause : public Clause {
  protected:
-    int* qubit_arrival_time;
+  int* qubit_arrival_time;
 
  public:
-    qkdInitConditionalClause(int* arrivalTime) : Clause() {
-    qubit_arrival_time = arrivalTime;
-
-  };
-    bool check(std::multimap<int, StationaryQubit*>) const override;
+  qkdInitConditionalClause(int* arrivalTime) : Clause() { qubit_arrival_time = arrivalTime; };
+  bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
-
-//Algorithm 10 Clause
-//Needs to be modified
+// Algorithm 10 Clause
+// Needs to be modified
 class qkdMeasureConditionClause : public Clause {
  protected:
-    int* qubit_arrival_time;
-    //what type will the basis list be?
+  int* qubit_arrival_time;
+  // what type will the basis list be?
 
  public:
-    qkdMeasureConditionClause(int *arrivalTimeList,int *basisList) : Clause() {
-    qubit_arrival_time = arrivalTimeList;
-
-  };
-    bool check(std::multimap<int, StationaryQubit*>) const override;
+  qkdMeasureConditionClause(int* arrivalTimeList, int* basisList) : Clause() { qubit_arrival_time = arrivalTimeList; };
+  bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
-//Algorithm 12
+// Algorithm 12
 class qkdFinalConditionClause : public Clause {
  protected:
-    int* algo;
+  int* algo;
 
  public:
-    qkdFinalConditionClause(int *Algorithm) : Clause() {
-    algo = Algorithm;
-
-  };
-    bool check(std::multimap<int, StationaryQubit*>) const override;
+  qkdFinalConditionClause(int* Algorithm) : Clause() { algo = Algorithm; };
+  bool check(std::multimap<int, StationaryQubit*>) const override;
 };
 
 }  // namespace rules

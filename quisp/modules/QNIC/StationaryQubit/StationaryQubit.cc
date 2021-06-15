@@ -1101,7 +1101,7 @@ measurement_outcome StationaryQubit::measure_density_independent() {
     }
   }
 
-  // if the partner qubit is measured, 
+  // if the partner qubit is measured,
   if (this->partner_measured || this->completely_mixed || this->excited_or_relaxed) {  // The case when the density matrix is completely local to this qubit.
     // if this qubit is said to be completely mixed and no set value
     if (this->completely_mixed && !this->par("GOD_CMerror")) {

@@ -64,9 +64,9 @@ class ABSAController : public cSimpleModule {
   virtual double calculateEmissionStartTime(double timing, double distance_to_node, double c);
   virtual double calculateTimeToTravel(double distance, double c);
   virtual ABSMtimingNotifier* generateNotifier(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
-                                              int photon_detection_per_sec, int max_buffer);
+                                               int photon_detection_per_sec, int max_buffer);
   virtual CombinedABSAresults* generateNotifier_c(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
-                                                 int photon_detection_per_sec, int max_buffer);
+                                                  int photon_detection_per_sec, int max_buffer);
   virtual cModule* getQNode();
   virtual void checkNeighborAddress();
   virtual void checkNeighborBuffer();

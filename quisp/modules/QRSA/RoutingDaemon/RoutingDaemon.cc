@@ -105,18 +105,18 @@ void RoutingDaemon::initialize(int stage) {
     int destAddr = topo->getNode(i)->getModule()->par("address");
     std::string nodetype = topo->getNode(i)->getModule()->par("nodeType");
     std::string this_nodetype = thisNode->getModule()->par("nodeType");
-    if(nodetype=="ABSA"|| this_nodetype == "ABSA"){
+    if (nodetype == "ABSA" || this_nodetype == "ABSA") {
       // EV_DEBUG<<"node type: "<<nodetype<<"\n";
       // EV_DEBUG<<"Address"<<myAddress<<"\n";
       // FIXME should be better way
       // prepare dummy qnic
       return;
-    }else{
+    } else {
       // EV<<"destination addr: "<<destAddr<<"\n";
       // nbtable[myAddress].push_back(destAddr);
       // Returns the next link/gate in the ith shortest paths towards the target node.
-      EV_DEBUG<<"node type: "<<nodetype<<"\n";
-      EV_DEBUG<<"Address"<<myAddress<<"\n";
+      EV_DEBUG << "node type: " << nodetype << "\n";
+      EV_DEBUG << "Address" << myAddress << "\n";
       QNIC thisqnic;
       cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();
       thisqnic.address = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
@@ -127,7 +127,7 @@ void RoutingDaemon::initialize(int stage) {
       // EV<<"\n Quantum: "<<topo->getNode(i)->getModule()->getFullName()<<"\n";
       // EV <<"\n  Quantum: Towards node address " << destAddr << " use qnic with address = "<<parentModuleGate->getPreviousGate()->getOwnerModule()->getFullName()<<"\n";
       if (!strstr(parentModuleGate->getFullName(), "quantum")) {
-          error("Quantum routing table referring to classical gates...");
+        error("Quantum routing table referring to classical gates...");
       }
     }
   }
@@ -152,7 +152,7 @@ int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr) {
   return it->second.address;
 }
 
-int RoutingDaemon::returnNumEndNodes(){
+int RoutingDaemon::returnNumEndNodes() {
   cTopology *topo = new cTopology("topo");
   cMsgPar *yes = new cMsgPar();
   yes->setStringValue("yes");
@@ -162,7 +162,7 @@ int RoutingDaemon::returnNumEndNodes(){
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);
     std::string node_type = node->getModule()->par("nodeType");
-    EV<<"node type"<<node_type<<"\n";
+    EV << "node type" << node_type << "\n";
     if (node_type == "EndNode") {  // ignore myself
       index++;
     }

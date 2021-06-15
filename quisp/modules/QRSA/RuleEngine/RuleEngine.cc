@@ -37,24 +37,21 @@ void RuleEngine::initialize() {
   // recog_resSignal = registerSignal("recog_res");
   actual_resSignal = registerSignal("actual_res");
 
-
   terminated_qnic = new bool[number_of_qnics_all];
   // if there are 2 qnics, 1 qnic_r, and 2 qnic_rp,
   // then trial_index[0~1] is assigned for qnics, trial_index[2~2] for qnic_r and trial_index[3~4] for qnic_rp....
   qnic_burst_trial_counter = new int[number_of_qnics_all];
 
-
   for (int i = 0; i < number_of_qnics_all; i++) {
     qnic_burst_trial_counter[i] = 0;
     terminated_qnic[i] = false;
   }
-  
+
   // here has error
   Busy_OR_Free_QubitState_table = new QubitStateTable[QNIC_N];
   Busy_OR_Free_QubitState_table[QNIC_E] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_E], QNIC_E);
   Busy_OR_Free_QubitState_table[QNIC_R] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_R], QNIC_R);
   Busy_OR_Free_QubitState_table[QNIC_RP] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_RP], QNIC_RP);
-
 
   // Tracks which qubit was sent first, second and so on per qnic(r,rp)
   tracker = new sentQubitIndexTracker[number_of_qnics_all];
@@ -183,13 +180,12 @@ void RuleEngine::handleMessage(cMessage *msg) {
       EV_DEBUG << "This BSA request is internal\n";
       scheduleFirstPhotonEmission(pk, QNIC_R);
     }
-  } 
-  
+  }
+
   else if (dynamic_cast<EPPStimingNotifier *>(msg) != nullptr) {
     bubble("EPPS");
     EPPStimingNotifier *pk = check_and_cast<EPPStimingNotifier *>(msg);
-  }   
-  else if (dynamic_cast<LinkTomographyRuleSet *>(msg) != nullptr) {
+  } else if (dynamic_cast<LinkTomographyRuleSet *>(msg) != nullptr) {
     // Received a tomography rule set.
     LinkTomographyRuleSet *pk = check_and_cast<LinkTomographyRuleSet *>(msg);
     // std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
@@ -270,7 +266,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pr.Zpurification_outcome = pkt->getZOutput_is_plus();
     pr.DS_purification_outcome = pkt->getDS_Output_is_plus();
     storeCheck_TriplePurification_Agreement(pr);
-    
+
   } else if (dynamic_cast<SwappingResult *>(msg) != nullptr) {
     SwappingResult *pkt = check_and_cast<SwappingResult *>(msg);
     // here next add resources
@@ -290,8 +286,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     swapr.measured_qubit_index = pkt->getMeasured_qubit_index();
     swapr.operation_type = pkt->getOperation_type();
     updateResources_EntanglementSwapping(swapr);
-  }   
-  else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
+  } else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
     InternalRuleSetForwarding *pkt = check_and_cast<InternalRuleSetForwarding *>(msg);
     // add actual process
     process p;
@@ -350,7 +345,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
   for (int i = 0; i < number_of_qnics_rp; i++) {
     ResourceAllocation(QNIC_RP, i);
   }
-
 
   traverseThroughAllProcesses2();
   delete msg;
@@ -810,7 +804,7 @@ void RuleEngine::scheduleNextEmissionEvent(int qnic_index, int qnic_address, dou
 
 QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTable table, QNIC_type qnic_type) {
   int qnics = -1;
-  std::cout<<"qnic type"<<qnic_type<<std::endl;
+  std::cout << "qnic type" << qnic_type << std::endl;
   switch (qnic_type) {
     case QNIC_E:
       qnics = number_of_qnics;
@@ -924,7 +918,7 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
 void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // swapper believe previous BSM was succeeded.
   // These are new partner's info
-  
+
   int new_partner = swapr.new_partner;
   int new_partner_qnic_index = swapr.new_partner_qnic_index;
   int new_partner_qnic_address = swapr.new_partner_qnic_address;  // this is not nessesary?
@@ -942,7 +936,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // FIXME here is just one resource, but this should be loop
   // TODO resources for entanglement swapping in swapper should be free
   // Update tracker first get index from Swapping result maybe... get qubit index from swapping result
-  
+
   // we need to free swapper resources consumed for entanglement swapping.
   // qubit with address Addr was shot in nth time. This list is ordered from old to new.
   StationaryQubit *qubit = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
@@ -962,21 +956,19 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     // std::cout << qubit << ", node[" << qubit->node_address << "] from qnic[" << qubit->qnic_index << "]\n";
     error("RuleEngine. Ebit succeed. but wrong");
   }
-  // add resources
-  if(new_partner == 14){
-    EV<<"parent: "<<parentAddress<<"\n";
-    EV<<"qnic type: "<< qnic_type <<" qnic index: "<<qnic_index<<"\n";
-    EV<<" qubit: "<<qubit->getParentModule()->getParentModule()<<" is entangled with "<<qubit->entangled_partner->getParentModule()->getParentModule()<<"\n";
-    // error("");
-  }
-
   // first delete old record
-  for (auto it = allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); ++it){
-    if(it->second == qubit){
+  for (auto it = allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); ++it) {
+    if (it->second == qubit) {
       allResources[qnic_type][qnic_index].erase(it);
     }
   }
   allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner, qubit));
+
+  // check
+  EV << "check resources at " << parentAddress << "\n";
+  for (auto it = allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); ++it) {
+    EV << "partner: " << it->first << " qubit: " << it->second << "\n";
+  }
 
   // FOR DEBUGGING
   if (qubit->entangled_partner != nullptr) {
@@ -1156,13 +1148,15 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
       }
 
       int assigned = 0;
-      for (auto it = allResources[qnic_type][qnic_index].cbegin(), next_it = allResources[qnic_type][qnic_index].cbegin(); it != allResources[qnic_type][qnic_index].cend(); it = next_it) {
+      for (auto it = allResources[qnic_type][qnic_index].cbegin(), next_it = allResources[qnic_type][qnic_index].cbegin(); it != allResources[qnic_type][qnic_index].cend();
+           it = next_it) {
         next_it = it;
         ++next_it;
 
         if (!it->second->isAllocated() && resource_entangled_with_address == it->first) {
           int num_rsc_bf = process->front()->resources.size();
-          if (it->second->entangled_partner == nullptr && it->second->Density_Matrix_Collapsed(0, 0).real() == -111 && !it->second->no_density_matrix_nullptr_entangled_partner_ok) { 
+          if (it->second->entangled_partner == nullptr && it->second->Density_Matrix_Collapsed(0, 0).real() == -111 &&
+              !it->second->no_density_matrix_nullptr_entangled_partner_ok) {
             error("Fresh ebit wrong");
           }
 
@@ -1245,8 +1239,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } 
-          
+          }
+
           else if (dynamic_cast<DoublePurificationResult *>(pk) != nullptr) {
             DoublePurificationResult *pkt = check_and_cast<DoublePurificationResult *>(pk);
             pkt->setSrcAddr(parentAddress);
@@ -1254,8 +1248,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } 
-          
+          }
+
           else if (dynamic_cast<DS_DoublePurificationResult *>(pk) != nullptr) {
             DS_DoublePurificationResult *pkt = check_and_cast<DS_DoublePurificationResult *>(pk);
             pkt->setSrcAddr(parentAddress);
@@ -1263,8 +1257,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } 
-          
+          }
+
           else if (dynamic_cast<DS_DoublePurificationSecondResult *>(pk) != nullptr) {
             DS_DoublePurificationSecondResult *pkt = check_and_cast<DS_DoublePurificationSecondResult *>(pk);
             pkt->setSrcAddr(parentAddress);
@@ -1272,8 +1266,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } 
-          
+          }
+
           else if (dynamic_cast<SwappingResult *>(pk) != nullptr) {
             SwappingResult *pkt = check_and_cast<SwappingResult *>(pk);
             EV << "done swapping at " << parentAddress << "\n";
@@ -1313,8 +1307,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
             send(pkt_for_left, "RouterPort$o");
             send(pkt_for_right, "RouterPort$o");
-          } 
-          else if (dynamic_cast<Error *>(pk) != nullptr) {
+          } else if (dynamic_cast<Error *>(pk) != nullptr) {
             Error *err = check_and_cast<Error *>(pk);
             error(err->getError_text());
             delete pk;

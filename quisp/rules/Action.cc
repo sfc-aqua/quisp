@@ -8,13 +8,13 @@
 #include "Action.h"
 //#include "../modules/RuleEngine.h"
 #include <omnetpp.h>
+#include <iostream>
+#include <map>
+#include <tuple>
+#include "../modules/QNIC/StationaryQubit/StationaryQubit.h"
+#include "bits/stdc++.h"
 #include "classical_messages_m.h"
 #include "tools.h"
-#include "../modules/QNIC/StationaryQubit/StationaryQubit.h"
-#include <tuple>
-#include <map>
-#include <iostream>
-#include "bits/stdc++.h"
 // #include "utils/ComponentProvider.h"
 
 using namespace std;
@@ -155,7 +155,7 @@ cPacket *SwappingAction::run(cModule *re) {
   // free consumed
   rule_engine->freeConsumedResource(self_left_qnic_id, left_qubit, self_left_qnic_type);  // free left
   rule_engine->freeConsumedResource(self_right_qnic_id, right_qubit, self_right_qnic_type);  // free right
-  
+
   // result packet
   SwappingResult *pk = new SwappingResult;
   // no destination here. In RuleEngine, it's set.
@@ -870,9 +870,7 @@ cPacket *DoubleSelectionDualActionSecondInv::run(cModule *re) {
   return pk;
 }
 
-
-
-// //ABSA actions starts here 
+// //ABSA actions starts here
 // vector<int> slicing(vector<int>& arr, int X, int Y)
 // {
 
@@ -889,7 +887,6 @@ cPacket *DoubleSelectionDualActionSecondInv::run(cModule *re) {
 //     // Return the final sliced vector
 //     return result;
 // }
-
 
 // //Action 2A for the basis
 // int initializeBasisAction() {
@@ -957,7 +954,6 @@ cPacket *DoubleSelectionDualActionSecondInv::run(cModule *re) {
 //   return msgSent;
 // }
 
-
 // //Action 5
 // std::map<int, tuple<int, bool, bool>> measureAction(int* basis){
 //   StationaryQubit* left_qubit = nullptr;
@@ -1005,7 +1001,6 @@ cPacket *DoubleSelectionDualActionSecondInv::run(cModule *re) {
 //   return msg;
 // }
 
-
 // //Action 9
 // int* qkdInitializeAction(int m){
 //   int* basisList;
@@ -1016,7 +1011,6 @@ cPacket *DoubleSelectionDualActionSecondInv::run(cModule *re) {
 //     }
 //   return basisList;
 // }
-
 
 // //Action 11
 // std::map<int, tuple<int, bool, bool>> qkdMeasureAction(int* basis, std::map<int, tuple<int, bool, bool>> outcomeList){

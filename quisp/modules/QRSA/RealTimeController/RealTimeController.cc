@@ -17,7 +17,7 @@ Define_Module(RealTimeController);
 RealTimeController::RealTimeController() : provider(utils::ComponentProvider{this}) {}
 void RealTimeController::initialize() {
   EV << "RealTimeController booted\n";
-  std::cout<<"RealTimeController booted"<<std::endl;
+  std::cout << "RealTimeController booted" << std::endl;
   myAddress = par("address");
 }
 
@@ -28,8 +28,6 @@ void RealTimeController::EmitPhoton(int qnic_index, int qubit_index, QNIC_type q
   auto *q = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
   q->emitPhoton(pulse);
 }
-
-
 
 void RealTimeController::ReInitialize_StationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed) {
   auto *q = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);

@@ -2,13 +2,13 @@
 This file explains the behaviour of the ABSA node
 */
 
-#include <vector>
-#include <omnetpp.h>
-#include <classical_messages_m.h>
 #include <PhotonicQubit_m.h>
+#include <classical_messages_m.h>
+#include <omnetpp.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
+#include <vector>
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -18,92 +18,90 @@ namespace modules {
 
 /** \class ABSA */
 
-class ABSA : public cSimpleModule
-{
-	/* check if we need the same parameters, less or more */
-private:
-        // for performance analysis
-        int n_res = 0;
-        simsignal_t GOD_num_resSignal;
-        double darkcount_probability;
-        double loss_rate;
-        double error_rate;
-        bool left_last_photon_detected;
-        bool right_last_photon_detected;
-        bool send_result;
-        double required_precision;//1.5ns
-        simtime_t left_arrived_at;
-        int left_photon_origin_node_address;
-        int left_photon_origin_qnic_address;
-        int left_photon_origin_qnic_type;
-        int left_photon_origin_qubit_address;
-        bool left_photon_Xerr;
-        bool left_photon_Zerr;
-        StationaryQubit *left_statQubit_ptr;
-        simtime_t right_arrived_at;
-        int right_photon_origin_node_address;
-        int right_photon_origin_qnic_address;
-        int  right_photon_origin_qnic_type;
-        int right_photon_origin_qubit_address;
-        bool right_photon_Xerr;
-        bool right_photon_Zerr;
-        bool right_photon_lost;
-        bool left_photon_lost;
-        StationaryQubit *right_statQubit_ptr;
-        int count_X=0, count_Y=0, count_Z=0, count_I=0, count_L=0, count_total=0;//for debug
-        bool this_trial_done = false;
-        double ABSAsuccess_rate = 0.5 * 0.8 * 0.8; //detector probability = 0.8
-        int left_count, right_count = 0;
-        int DEBUG_darkcount_left = 0;
-        int DEBUG_darkcount_right = 0;
-        int DEBUG_darkcount_both = 0;
-        int DEBUG_success = 0;
-        int DEBUG_total = 0;
-    protected:
-        virtual void initialize(); // this one handles the variables in the ned file
-        virtual void finish();
-        virtual void handleMessage(cMessage *msg); // the msg is the photons
-        virtual bool isPhotonLost(cMessage *msg);
-        virtual void forDEBUG_countErrorTypes(cMessage *msg);
-        virtual void sendABSAresult(bool result, bool last);
-        virtual void initializeVariables();
-        virtual void GOD_setCompletelyMixedDensityMatrix();
-        virtual void GOD_updateEntangledInfoParameters_of_qubits();
-        // virtual void PauliCorrection(); //what are potential inputs
-        virtual void singleQubitMeasure(StationaryQubit * qubit); //How to add the qubit pointer
-        
+class ABSA : public cSimpleModule {
+  /* check if we need the same parameters, less or more */
+ private:
+  // for performance analysis
+  int n_res = 0;
+  simsignal_t GOD_num_resSignal;
+  double darkcount_probability;
+  double loss_rate;
+  double error_rate;
+  bool left_last_photon_detected;
+  bool right_last_photon_detected;
+  bool send_result;
+  double required_precision;  // 1.5ns
+  simtime_t left_arrived_at;
+  int left_photon_origin_node_address;
+  int left_photon_origin_qnic_address;
+  int left_photon_origin_qnic_type;
+  int left_photon_origin_qubit_address;
+  bool left_photon_Xerr;
+  bool left_photon_Zerr;
+  StationaryQubit *left_statQubit_ptr;
+  simtime_t right_arrived_at;
+  int right_photon_origin_node_address;
+  int right_photon_origin_qnic_address;
+  int right_photon_origin_qnic_type;
+  int right_photon_origin_qubit_address;
+  bool right_photon_Xerr;
+  bool right_photon_Zerr;
+  bool right_photon_lost;
+  bool left_photon_lost;
+  StationaryQubit *right_statQubit_ptr;
+  int count_X = 0, count_Y = 0, count_Z = 0, count_I = 0, count_L = 0, count_total = 0;  // for debug
+  bool this_trial_done = false;
+  double ABSAsuccess_rate = 0.5 * 0.8 * 0.8;  // detector probability = 0.8
+  int left_count, right_count = 0;
+  int DEBUG_darkcount_left = 0;
+  int DEBUG_darkcount_right = 0;
+  int DEBUG_darkcount_both = 0;
+  int DEBUG_success = 0;
+  int DEBUG_total = 0;
+
+ protected:
+  virtual void initialize();  // this one handles the variables in the ned file
+  virtual void finish();
+  virtual void handleMessage(cMessage *msg);  // the msg is the photons
+  virtual bool isPhotonLost(cMessage *msg);
+  virtual void forDEBUG_countErrorTypes(cMessage *msg);
+  virtual void sendABSAresult(bool result, bool last);
+  virtual void initializeVariables();
+  virtual void GOD_setCompletelyMixedDensityMatrix();
+  virtual void GOD_updateEntangledInfoParameters_of_qubits();
+  // virtual void PauliCorrection(); //what are potential inputs
+  virtual void singleQubitMeasure(StationaryQubit *qubit);  // How to add the qubit pointer
 };
 
 Define_Module(ABSA);
 
-void ABSA::initialize()
-{
-   GOD_num_resSignal = registerSignal("Num_ABSA");
-   darkcount_probability = par("darkcount_probability");
-   loss_rate = par("loss_rate");
-   error_rate = par("error_rate");
-   required_precision = par("required_precision");
-   left_arrived_at = -1;
-   right_arrived_at = -1;
-   left_last_photon_detected = false;
-   right_last_photon_detected = false;
-   send_result = false;
-   left_photon_origin_node_address = -1;
-   left_photon_origin_qnic_address = -1;
-   left_photon_origin_qubit_address = -1;
-   left_photon_origin_qnic_type = -1;
-   right_photon_origin_node_address = -1;
-   right_photon_origin_qnic_address = -1;
-   right_photon_origin_qubit_address = -1;
-   right_photon_origin_qnic_type = -1;
-   left_photon_Xerr = false;
-   left_photon_Zerr = false;
-   right_photon_Xerr = false;
-   right_photon_Zerr = false;
-   left_statQubit_ptr = nullptr;
-   right_statQubit_ptr = nullptr;
-   right_photon_lost = false;
-   left_photon_lost = false;
+void ABSA::initialize() {
+  GOD_num_resSignal = registerSignal("Num_ABSA");
+  darkcount_probability = par("darkcount_probability");
+  loss_rate = par("loss_rate");
+  error_rate = par("error_rate");
+  required_precision = par("required_precision");
+  left_arrived_at = -1;
+  right_arrived_at = -1;
+  left_last_photon_detected = false;
+  right_last_photon_detected = false;
+  send_result = false;
+  left_photon_origin_node_address = -1;
+  left_photon_origin_qnic_address = -1;
+  left_photon_origin_qubit_address = -1;
+  left_photon_origin_qnic_type = -1;
+  right_photon_origin_node_address = -1;
+  right_photon_origin_qnic_address = -1;
+  right_photon_origin_qubit_address = -1;
+  right_photon_origin_qnic_type = -1;
+  left_photon_Xerr = false;
+  left_photon_Zerr = false;
+  right_photon_Xerr = false;
+  right_photon_Zerr = false;
+  left_statQubit_ptr = nullptr;
+  right_statQubit_ptr = nullptr;
+  right_photon_lost = false;
+  left_photon_lost = false;
 }
 
 void ABSA::handleMessage(cMessage *msg) {
@@ -197,8 +195,7 @@ void ABSA::handleMessage(cMessage *msg) {
         sendABSAresult(false, send_result);  // succeeded because both reached, and both clicked
       }
 
-    }
-    else {
+    } else {
       bubble("Failed...!");
       sendABSAresult(true, send_result);  // just failed because only 1 detector clicked while both reached
     }
@@ -301,7 +298,6 @@ void ABSA::GOD_setCompletelyMixedDensityMatrix() {
 }
 
 void ABSA::GOD_updateEntangledInfoParameters_of_qubits() {
-
   left_statQubit_ptr->setEntangledPartnerInfo(right_statQubit_ptr);
   // If Photon had an X error, Add X error to the stationary qubit.
   if (left_photon_Xerr) left_statQubit_ptr->addXerror();
@@ -317,10 +313,7 @@ void ABSA::GOD_updateEntangledInfoParameters_of_qubits() {
   n_res++;
   emit(GOD_num_resSignal, n_res);
 }
-void ABSA::singleQubitMeasure(StationaryQubit * qubit){
-
-}
-
+void ABSA::singleQubitMeasure(StationaryQubit *qubit) {}
 
 }  // namespace modules
 }  // namespace quisp

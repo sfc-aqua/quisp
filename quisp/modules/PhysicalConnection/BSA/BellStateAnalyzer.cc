@@ -327,7 +327,7 @@ void BellStateAnalyzer::sendBSAresult(bool result, bool sendresults) {
   // time to send the accumulated results to neighbors; this is
   // flagged at the physical level so it come through here, but the
   // sending is done a couple of layers higher in the software stack.
-  // 
+  //
   // result could be false positive (actually ok but recognized as ng),
   // false negative (actually ng but recognized as ok) due to darkcount
   // true positive and true negative is no problem.

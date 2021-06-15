@@ -25,9 +25,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
   Strategy() : omnetPrimitive(nullptr) {}
   Strategy(MockOmnetPrimitive* primitives) : omnetPrimitive(primitives) {}
-  ~Strategy() {
-    delete omnetPrimitive;
-  }
+  ~Strategy() { delete omnetPrimitive; }
 };
 
 class RoutingDaemonTestTarget : public quisp::modules::RoutingDaemon {
@@ -53,5 +51,5 @@ TEST(RoutingDaemonTest, InitTest) {
   int stage = 1;
   c.initialize(stage);
   ASSERT_EQ(c.par("address").intValue(), 123);
- }
+}
 }  // namespace

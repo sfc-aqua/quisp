@@ -155,10 +155,7 @@ bool PurificationCountClause::check(qnicResources* resources) const {
     }
 }*/
 
-bool PurificationCountClause::check(std::multimap<int, StationaryQubit*> resource) const {
-  StationaryQubit* qubit = nullptr;
-}
-
+bool PurificationCountClause::check(std::multimap<int, StationaryQubit*> resource) const { StationaryQubit* qubit = nullptr; }
 
 // //ABSA clauses start here
 // //Algorithm 1 Clause
@@ -171,7 +168,7 @@ bool PurificationCountClause::check(std::multimap<int, StationaryQubit*> resourc
 //   }
 //   return initTime;
 // }
-  
+
 // //Algorithm 3 Clause
 // bool MeasureConditionalClause::check(std::arrivalTimeList<int*){
 //   int currentTime = simTime();
@@ -181,7 +178,7 @@ bool PurificationCountClause::check(std::multimap<int, StationaryQubit*> resourc
 //   }
 //   return measurementNeeded;
 // }
-  
+
 // //Algorithm 4 Clause
 // int postBellConditionalClause::check(std::map<int, tuple<int, int, int>> *outcomeList, std::successBell<bool){
 //   int basis; //x
@@ -200,8 +197,7 @@ bool PurificationCountClause::check(std::multimap<int, StationaryQubit*> resourc
 //   }
 //   return basis;
 // }
-  
-  
+
 //  //Algorithm 6 Clause
 // bool finalConditionalClause::check(std::arrivalTimeList<int*, std::msgSent<bool){
 //   //get current time
@@ -212,8 +208,7 @@ bool PurificationCountClause::check(std::multimap<int, StationaryQubit*> resourc
 //   }
 //   return msgNeeded;
 // }
-  
- 
+
 // //Algorithm 8 Clause
 // bool qkdInitConditionalClause(std::arrivalTimeList<int*){
 //   bool initNeeded = false;
@@ -223,8 +218,6 @@ bool PurificationCountClause::check(std::multimap<int, StationaryQubit*> resourc
 //   }
 //   return initNeeded;
 // }
-  
-  
 
 // //Algorithm 10A Clause
 // //needs to be divided into two clause >> multiple returns
@@ -247,7 +240,7 @@ bool PurificationCountClause::check(std::multimap<int, StationaryQubit*> resourc
 //   }
 //   return basis;
 // }
-  
+
 // //Algorithm 12 Clause
 // bool qkdFinalConditionClause(std::arrivalTimeList<int*){
 //   int currentTime = simTime();
@@ -257,7 +250,6 @@ bool PurificationCountClause::check(std::multimap<int, StationaryQubit*> resourc
 //   }
 //   return finalNeeded;
 // }
-
 
 }  // namespace rules
 }  // namespace quisp
