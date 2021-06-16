@@ -116,6 +116,16 @@ cPacket *SwappingAction::run(cModule *re) {
   bool left_measure = left_qubit->measure_Z();
   bool right_measure = right_qubit->measure_Z();
 
+  EV<<"Current Resource Map ==== \n";
+  EV<<"Num Resource: "<<checkNumResource()<<"\n";
+  EV<<"Entanglement Swapping with: "<<left_partner<<" and "<<right_partner<<"\n";
+  for (auto it = (*rule_resources).begin(), next_it = (*rule_resources).begin(); it != (*rule_resources).end(); it = next_it) {
+    next_it = it;
+    ++next_it;
+    EV<<"partner: " <<it->first<<" qubit: "<<it->second<<"\n";
+  }
+  EV<<"=====\n";
+
   int operation_type_left, operation_type_right;
 
   if (left_measure && right_measure) {
@@ -136,19 +146,14 @@ cPacket *SwappingAction::run(cModule *re) {
     operation_type_right = 1;
   }
   RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
-  if (std::rand() / RAND_MAX < success_probability) {
+  if ((std::rand() / RAND_MAX) < success_probability) {
     right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
     left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
-
   } else {  // this might be wrong
     removeResource_fromRule(left_partner_qubit);
     removeResource_fromRule(right_partner_qubit);
     // TODO CHECK is this correct?
-    rule_engine->freeConsumedResource(left_qnic_id, right_partner_qubit, right_qnic_type);
-    rule_engine->freeConsumedResource(right_qnic_id, left_partner_qubit, left_qnic_type);
-
-    // left_partner_qubit->isBusy = false;
-    // right_partner_qubit->isBusy = false;
+    // This node can't manipulate partner's qubit
   }
   removeResource_fromRule(left_qubit);
   removeResource_fromRule(right_qubit);

@@ -97,38 +97,6 @@ class EnoughResourceClause : public Clause {
   bool checkTerminate(std::multimap<int, StationaryQubit*>) const override { return false; };
 };
 
-/**EnoughResourceClauseLeft is for checking if node have enough resource to left node.
- *  This is for entanglement swapping.
- */
-class EnoughResourceClauseLeft : public Clause {
- protected:
-  int num_resource_required_left;
-  int partner_left;
-
- public:
-  EnoughResourceClauseLeft(int part_left, int num_res_left) : Clause() {
-    num_resource_required_left = num_res_left;
-    partner_left = part_left;
-  }
-
-  bool check(std::multimap<int, StationaryQubit*>) const override;
-  bool checkTerminate(std::multimap<int, StationaryQubit*>) const override { return false; };
-};
-
-class EnoughResourceClauseRight : public Clause {
- protected:
-  int num_resource_required_right;
-  int partner_right;
-
- public:
-  EnoughResourceClauseRight(int part_right, int num_res_right) : Clause() {
-    num_resource_required_right = num_res_right;
-    partner_right = part_right;
-  }
-
-  bool check(std::multimap<int, StationaryQubit*>) const override;
-  bool checkTerminate(std::multimap<int, StationaryQubit*>) const override { return false; };
-};
 
 class NoClause : public Clause {
  public:

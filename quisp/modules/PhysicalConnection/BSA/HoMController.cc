@@ -134,7 +134,7 @@ void HoMController::handleMessage(cMessage *msg) {
 
     }*/
   } else if (dynamic_cast<BSAfinish *>(msg) != nullptr) {  // Last photon from either node arrived.
-    // std::cout<<"BSAfinish\n";
+    EV<<"BSAfinish\n";
     bubble("BSAresult accumulated");
     BSAfinish *pk = check_and_cast<BSAfinish *>(msg);
     pushToBSAresults(pk->getEntangled());
