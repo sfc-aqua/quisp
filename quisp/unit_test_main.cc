@@ -27,5 +27,7 @@ int main(int argc, char **argv) {
   omnetpp::cSimulation::setActiveSimulation(sim);
   omnetpp::SimTime::setScaleExp(-3);
   ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+  auto result = RUN_ALL_TESTS();
+  sim->setActiveSimulation(nullptr);
+  return result;
 }

@@ -1,7 +1,12 @@
+#pragma once
+
 #include <omnetpp.h>
+#include <omnetpp/cconfiguration.h>
+#include <omnetpp/clcg32.h>
+#include <omnetpp/cmersennetwister.h>
 #include <omnetpp/csimulation.h>
 #include <stdexcept>
-#include "omnetpp/clcg32.h"
+#include "Configuration.h"
 
 using namespace omnetpp;
 using namespace omnetpp::common;
@@ -9,42 +14,42 @@ namespace quisp_test {
 class StaticEnv : public cEnvir {
  protected:
   void unsupported() const { throw std::runtime_error("StaticEnv: Unsupported method called"); }
-  virtual void alert(const char *msg) override { ::printf("\n<!> %s\n\n", msg); }
-  virtual bool askYesNo(const char *msg) override {
+  void alert(const char *msg) override { ::printf("\n<!> %s\n\n", msg); }
+  bool askYesNo(const char *msg) override {
     unsupported();
     return false;
   }
 
  public:
   // constructor, destructor
-  StaticEnv() {}
-  virtual ~StaticEnv() {}
+  StaticEnv();
+  ~StaticEnv() {}
 
   // eventlog callback interface
-  virtual void objectDeleted(cObject *object) override {}
-  virtual void simulationEvent(cEvent *event) override {}
-  virtual void messageScheduled(cMessage *msg) override {}
-  virtual void messageCancelled(cMessage *msg) override {}
-  virtual void beginSend(cMessage *msg) override {}
-  virtual void messageSendDirect(cMessage *msg, cGate *toGate, simtime_t propagationDelay, simtime_t transmissionDelay) override {}
-  virtual void messageSendHop(cMessage *msg, cGate *srcGate) override {}
-  virtual void messageSendHop(cMessage *msg, cGate *srcGate, simtime_t propagationDelay, simtime_t transmissionDelay, bool discard) override {}
-  virtual void endSend(cMessage *msg) override {}
-  virtual void messageCreated(cMessage *msg) override {}
-  virtual void messageCloned(cMessage *msg, cMessage *clone) override {}
-  virtual void messageDeleted(cMessage *msg) override {}
-  virtual void moduleReparented(cModule *module, cModule *oldparent, int oldId) override {}
-  virtual void componentMethodBegin(cComponent *from, cComponent *to, const char *methodFmt, va_list va, bool silent) override {}
-  virtual void componentMethodEnd() override {}
-  virtual void moduleCreated(cModule *newmodule) override {}
-  virtual void moduleDeleted(cModule *module) override {}
-  virtual void gateCreated(cGate *newgate) override {}
-  virtual void gateDeleted(cGate *gate) override {}
-  virtual void connectionCreated(cGate *srcgate) override {}
-  virtual void connectionDeleted(cGate *srcgate) override {}
-  virtual void displayStringChanged(cComponent *component) override {}
-  virtual void undisposedObject(cObject *obj) override;
-  virtual void log(cLogEntry *entry) override {}
+  void objectDeleted(cObject *object) override {}
+  void simulationEvent(cEvent *event) override {}
+  void messageScheduled(cMessage *msg) override {}
+  void messageCancelled(cMessage *msg) override {}
+  void beginSend(cMessage *msg) override {}
+  void messageSendDirect(cMessage *msg, cGate *toGate, simtime_t propagationDelay, simtime_t transmissionDelay) override {}
+  void messageSendHop(cMessage *msg, cGate *srcGate) override {}
+  void messageSendHop(cMessage *msg, cGate *srcGate, simtime_t propagationDelay, simtime_t transmissionDelay, bool discard) override {}
+  void endSend(cMessage *msg) override {}
+  void messageCreated(cMessage *msg) override {}
+  void messageCloned(cMessage *msg, cMessage *clone) override {}
+  void messageDeleted(cMessage *msg) override {}
+  void moduleReparented(cModule *module, cModule *oldparent, int oldId) override {}
+  void componentMethodBegin(cComponent *from, cComponent *to, const char *methodFmt, va_list va, bool silent) override {}
+  void componentMethodEnd() override {}
+  void moduleCreated(cModule *newmodule) override {}
+  void moduleDeleted(cModule *module) override {}
+  void gateCreated(cGate *newgate) override {}
+  void gateDeleted(cGate *gate) override {}
+  void connectionCreated(cGate *srcgate) override {}
+  void connectionDeleted(cGate *srcgate) override {}
+  void displayStringChanged(cComponent *component) override {}
+  void undisposedObject(cObject *obj) override;
+  void log(cLogEntry *entry) override {}
 
   // configuration, model parameters
   virtual void preconfigure(cComponent *component) override {}
@@ -64,20 +69,14 @@ class StaticEnv : public cEnvir {
   virtual void flushXMLDocumentCache() override {}
   virtual void flushXMLParsedContentCache() override {}
   virtual unsigned getExtraStackForEnvir() const override { return 0; }
-  virtual cConfiguration *getConfig() override {
-    unsupported();
-    return nullptr;
-  }
+  virtual cConfiguration *getConfig() override;
   virtual std::string resolveResourcePath(const char *fileName, cComponentType *context) override { return ""; }
   virtual bool isGUI() const override { return false; }
   virtual bool isExpressMode() const override { return false; }
 
   // UI functions (see also protected ones)
   virtual void bubble(cComponent *component, const char *text) override {}
-  virtual std::string gets(const char *prompt, const char *defaultreply = nullptr) override {
-    unsupported();
-    return "";
-  }
+  virtual std::string gets(const char *prompt, const char *defaultreply = nullptr) override;
   virtual cEnvir &flush() {
     ::fflush(stdout);
     return *this;
@@ -86,8 +85,7 @@ class StaticEnv : public cEnvir {
   // RNGs
   virtual int getNumRNGs() const override { return 0; }
   virtual cRNG *getRNG(int k) override {
-    auto *rng = new omnetpp::cLCG32();
-    rng->initialize(0, 0, 0, 0, 0, 0);
+    auto *rng = new omnetpp::cMersenneTwister();
     return rng;
     // return nullptr;
   }
@@ -147,12 +145,4 @@ class StaticEnv : public cEnvir {
   virtual void notifyLifecycleListeners(SimulationLifecycleEventType eventType, cObject *details) override {}
 };
 
-void StaticEnv::undisposedObject(cObject *obj) {
-  if (!cStaticFlag::insideMain()) {
-    ::printf(
-        "<!> WARNING: global object variable (DISCOURAGED) detected: "
-        "(%s)'%s' at %p\n",
-        obj->getClassName(), obj->getFullPath().c_str(), obj);
-  }
-}
 }  // namespace quisp_test
