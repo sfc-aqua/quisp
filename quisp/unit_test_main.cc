@@ -5,7 +5,7 @@
 #include "omnetpp/cownedobject.h"
 #include "omnetpp/csimulation.h"
 #include "omnetpp/simtime.h"
-#include "test_utils/StaticEnv.h"
+#include "test_utils/StaticTestEnv.h"
 
 int main(int argc, char **argv) {
   /**
@@ -15,19 +15,16 @@ int main(int argc, char **argv) {
    * whole cObjects. Sometimes it causes segmentation fault without the _flag var.
    */
   omnetpp::cStaticFlag _flag;
-  auto *env = new quisp_test::StaticEnv;
+  auto *env = new quisp_test::StaticTestEnv;
   omnetpp::cSimulation::setStaticEnvir(env);
   /**
    * setup a simulation and its environment for testing.
    * OMNeT++'s methods expect that all modules are running on a simulation,
    * so it will cause segmentation faults or exceptions if there's no simulation env.
    */
-  auto *sim = new omnetpp::cSimulation("test_sim", omnetpp::cSimulation::getStaticEnvir());
-  omnetpp::cComponent::clearSignalState();
-  omnetpp::cSimulation::setActiveSimulation(sim);
-  omnetpp::SimTime::setScaleExp(-3);
+  env->newSimulation();
   ::testing::InitGoogleTest(&argc, argv);
   auto result = RUN_ALL_TESTS();
-  sim->setActiveSimulation(nullptr);
+  // sim->setActiveSimulation(nullptr);
   return result;
 }

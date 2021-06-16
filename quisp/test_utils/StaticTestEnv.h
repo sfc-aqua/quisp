@@ -10,8 +10,13 @@
 
 using namespace omnetpp;
 using namespace omnetpp::common;
+
 namespace quisp_test {
-class StaticEnv : public cEnvir {
+/**
+ * cEnvir implementation for unit testing based on OMNeT++'s StaticEnv.
+ * ref: https://github.com/omnetpp/omnetpp/blob/308b3b2b4c060b165911237a9bd9470ea010d34c/src/sim/csimulation.cc#L728
+ */
+class StaticTestEnv : public cEnvir {
  protected:
   void unsupported() const { throw std::runtime_error("StaticEnv: Unsupported method called"); }
   void alert(const char *msg) override { ::printf("\n<!> %s\n\n", msg); }
@@ -21,9 +26,8 @@ class StaticEnv : public cEnvir {
   }
 
  public:
-  // constructor, destructor
-  StaticEnv();
-  ~StaticEnv() {}
+  StaticTestEnv();
+  ~StaticTestEnv() {}
 
   // eventlog callback interface
   void objectDeleted(cObject *object) override {}
@@ -87,7 +91,6 @@ class StaticEnv : public cEnvir {
   virtual cRNG *getRNG(int k) override {
     auto *rng = new omnetpp::cMersenneTwister();
     return rng;
-    // return nullptr;
   }
 
   // output vectors
@@ -143,6 +146,8 @@ class StaticEnv : public cEnvir {
   virtual void addLifecycleListener(cISimulationLifecycleListener *listener) override {}
   virtual void removeLifecycleListener(cISimulationLifecycleListener *listener) override {}
   virtual void notifyLifecycleListeners(SimulationLifecycleEventType eventType, cObject *details) override {}
+
+  void newSimulation();
 };
 
 }  // namespace quisp_test
