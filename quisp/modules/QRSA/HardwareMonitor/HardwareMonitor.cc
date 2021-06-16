@@ -238,6 +238,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
         temp.partner_output_is_plus = result->getOutput_is_plus();
         temp.partner_GOD_clean = result->getGOD_clean();
       }
+      // If this partner is new, then initialize tables
       std::map<int, tomography_outcome> temp_result;
       temp_result.insert(std::make_pair(result->getCount_id(), temp));
       extended_temporal_tomography_output[local_qnic.address].insert(std::make_pair(partner, temp_result));
@@ -253,11 +254,14 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     }
 
     if (result->getFinish() != -1) {
+      EV<<"finish? "<<result->getFinish()<<"\n";
       // Pick the slower tomography time MIN(self,partner).
       if (extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_time < result->getFinish()) {
         extended_tomography_runningtime_holder[local_qnic.address][partner].Bellpair_per_sec = (double)result->getMax_count() / result->getFinish().dbl();
         extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_measurements = result->getMax_count();
         extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_time = result->getFinish();
+
+        EV<<"tomo"<<extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_measurements<<"\n";
         // std::cout<<"Tomo done "<<local_qnic.address<<", in
         // node["<<my_address<<"] \n";
         StopEmitting *pk = new StopEmitting("StopEmitting");

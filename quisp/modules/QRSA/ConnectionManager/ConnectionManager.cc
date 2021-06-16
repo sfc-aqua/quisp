@@ -722,8 +722,8 @@ RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, Swapp
   unsigned long ruleset_id = createUniqueId();
   int rule_index = 0;
 
-  Clause *resource_clause_left = new EnoughResourceClauseLeft(conf.left_partner, conf.lres);
-  Clause *resource_clause_right = new EnoughResourceClauseRight(conf.right_partner, conf.rres);
+  Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, conf.lres);
+  Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, conf.rres);
 
   Condition *condition = new Condition();
   condition->addClause(resource_clause_left);
@@ -782,12 +782,11 @@ RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, in
   unsigned long ruleset_id = createUniqueId();
 
   int rule_index = 0;
-  EV << "owner: " << owner << " partner: " << partner << "\n";
   RuleSet *tomography = new RuleSet(ruleset_id, owner, partner);
   Rule *rule = new Rule(ruleset_id, rule_index, "tomography");
 
   // 3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
-  Clause *count_clause = new MeasureCountClause(num_of_measure, partner, qnic_type, qnic_index, 0);
+  Clause *count_clause = new MeasureCountClause(num_of_measure);
   Clause *resource_clause = new EnoughResourceClause(partner, num_resources);
 
   // Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
