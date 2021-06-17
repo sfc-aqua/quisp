@@ -18,4 +18,9 @@ void setParBool(cModule *module, const char *name, const bool val) {
   p->setBoolValue(val);
   module->addPar(p);
 }
+
+cSimulation *prepareSimulation() {
+  auto *env = dynamic_cast<quisp_test::StaticTestEnv *>(cSimulation::getStaticEnvir());
+  return env->newSimulation();
+}
 }  // namespace quisp_test

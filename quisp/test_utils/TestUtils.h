@@ -9,6 +9,7 @@
 #include <utils/IComponentProviderStrategy.h>
 #include <utils/utils.h>
 #include <memory>
+#include "StaticTestEnv.h"
 
 namespace quisp_test {
 using quisp::modules::IHardwareMonitor;
@@ -21,6 +22,7 @@ using quisp::utils::IComponentProviderStrategy;
 void setParInt(cModule *module, const char *name, const int val);
 void setParBool(cModule *module, const char *name, const bool val);
 void setParStr(cModule *module, const char *name, const char *val);
+cSimulation *prepareSimulation();
 
 class TestComponentProviderStrategy : public IComponentProviderStrategy {
  public:

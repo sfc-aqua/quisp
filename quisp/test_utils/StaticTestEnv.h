@@ -2,7 +2,6 @@
 
 #include <omnetpp.h>
 #include <omnetpp/cconfiguration.h>
-#include <omnetpp/clcg32.h>
 #include <omnetpp/cmersennetwister.h>
 #include <omnetpp/csimulation.h>
 #include <stdexcept>
@@ -56,98 +55,99 @@ class StaticTestEnv : public cEnvir {
   void log(cLogEntry *entry) override {}
 
   // configuration, model parameters
-  virtual void preconfigure(cComponent *component) override {}
-  virtual void configure(cComponent *component) override {}
-  virtual void readParameter(cPar *parameter) override { unsupported(); }
-  virtual bool isModuleLocal(cModule *parentmod, const char *modname, int index) override { return true; }
-  virtual cXMLElement *getXMLDocument(const char *filename, const char *xpath = nullptr) override {
+  void preconfigure(cComponent *component) override {}
+  void configure(cComponent *component) override {}
+  void readParameter(cPar *parameter) override { unsupported(); }
+  bool isModuleLocal(cModule *parentmod, const char *modname, int index) override { return true; }
+  cXMLElement *getXMLDocument(const char *filename, const char *xpath = nullptr) override {
     unsupported();
     return nullptr;
   }
-  virtual cXMLElement *getParsedXMLString(const char *content, const char *xpath = nullptr) override {
+  cXMLElement *getParsedXMLString(const char *content, const char *xpath = nullptr) override {
     unsupported();
     return nullptr;
   }
-  virtual void forgetXMLDocument(const char *filename) override {}
-  virtual void forgetParsedXMLString(const char *content) override {}
-  virtual void flushXMLDocumentCache() override {}
-  virtual void flushXMLParsedContentCache() override {}
-  virtual unsigned getExtraStackForEnvir() const override { return 0; }
-  virtual cConfiguration *getConfig() override;
-  virtual std::string resolveResourcePath(const char *fileName, cComponentType *context) override { return ""; }
-  virtual bool isGUI() const override { return false; }
-  virtual bool isExpressMode() const override { return false; }
+  void forgetXMLDocument(const char *filename) override {}
+  void forgetParsedXMLString(const char *content) override {}
+  void flushXMLDocumentCache() override {}
+  void flushXMLParsedContentCache() override {}
+  unsigned getExtraStackForEnvir() const override { return 0; }
+  cConfiguration *getConfig() override;
+  std::string resolveResourcePath(const char *fileName, cComponentType *context) override { return ""; }
+  bool isGUI() const override { return false; }
+  bool isExpressMode() const override { return false; }
 
   // UI functions (see also protected ones)
-  virtual void bubble(cComponent *component, const char *text) override {}
-  virtual std::string gets(const char *prompt, const char *defaultreply = nullptr) override;
-  virtual cEnvir &flush() {
+  void bubble(cComponent *component, const char *text) override {}
+  std::string gets(const char *prompt, const char *defaultreply = nullptr) override;
+  cEnvir &flush() {
     ::fflush(stdout);
     return *this;
   }
 
   // RNGs
-  virtual int getNumRNGs() const override { return 0; }
-  virtual cRNG *getRNG(int k) override {
+  int getNumRNGs() const override { return 0; }
+  cRNG *getRNG(int k) override {
     auto *rng = new omnetpp::cMersenneTwister();
     return rng;
   }
 
   // output vectors
-  virtual void *registerOutputVector(const char *modulename, const char *vectorname) override { return nullptr; }
-  virtual void deregisterOutputVector(void *vechandle) override {}
-  virtual void setVectorAttribute(void *vechandle, const char *name, const char *value) override {}
-  virtual bool recordInOutputVector(void *vechandle, simtime_t t, double value) override { return false; }
+  void *registerOutputVector(const char *modulename, const char *vectorname) override { return nullptr; }
+  void deregisterOutputVector(void *vechandle) override {}
+  void setVectorAttribute(void *vechandle, const char *name, const char *value) override {}
+  bool recordInOutputVector(void *vechandle, simtime_t t, double value) override { return false; }
 
   // output scalars
-  virtual void recordScalar(cComponent *component, const char *name, double value, opp_string_map *attributes = nullptr) override {}
-  virtual void recordStatistic(cComponent *component, const char *name, cStatistic *statistic, opp_string_map *attributes = nullptr) override {}
+  void recordScalar(cComponent *component, const char *name, double value, opp_string_map *attributes = nullptr) override {}
+  void recordStatistic(cComponent *component, const char *name, cStatistic *statistic, opp_string_map *attributes = nullptr) override {}
 
-  virtual void addResultRecorders(cComponent *component, simsignal_t signal, const char *statisticName, cProperty *statisticTemplateProperty) override {}
+  void addResultRecorders(cComponent *component, simsignal_t signal, const char *statisticName, cProperty *statisticTemplateProperty) override {}
 
   // snapshot file
   virtual std::ostream *getStreamForSnapshot() override {
     unsupported();
     return nullptr;
   }
-  virtual void releaseStreamForSnapshot(std::ostream *os) override { unsupported(); }
+  void releaseStreamForSnapshot(std::ostream *os) override { unsupported(); }
 
   // misc
-  virtual int getArgCount() const override {
+  int getArgCount() const override {
     unsupported();
     return 0;
   }
-  virtual char **getArgVector() const override {
+  char **getArgVector() const override {
     unsupported();
     return nullptr;
   }
-  virtual int getParsimProcId() const override { return 0; }
-  virtual int getParsimNumPartitions() const override { return 1; }
-  virtual unsigned long getUniqueNumber() override {
+  int getParsimProcId() const override { return 0; }
+  int getParsimNumPartitions() const override { return 1; }
+  unsigned long getUniqueNumber() override {
     unsupported();
     return 0;
   }
-  virtual bool idle() override { return false; }
-  virtual void refOsgNode(osg::Node *scene) override {}
-  virtual void unrefOsgNode(osg::Node *scene) override {}
-  virtual bool ensureDebugger(cRuntimeError *) override { return false; }
+  bool idle() override { return false; }
+  void refOsgNode(osg::Node *scene) override {}
+  void unrefOsgNode(osg::Node *scene) override {}
+  bool ensureDebugger(cRuntimeError *) override { return false; }
 
-  virtual void getImageSize(const char *imageName, double &outWidth, double &outHeight) override { unsupported(); }
-  virtual void getTextExtent(const cFigure::Font &font, const char *text, double &outWidth, double &outHeight, double &outAscent) override { unsupported(); }
-  virtual void appendToImagePath(const char *directory) override { unsupported(); }
-  virtual void loadImage(const char *fileName, const char *imageName = nullptr) override { unsupported(); }
-  virtual cFigure::Rectangle getSubmoduleBounds(const cModule *submodule) override { return cFigure::Rectangle(NAN, NAN, NAN, NAN); }
-  virtual double getZoomLevel(const cModule *module) override { return NAN; }
-  virtual double getAnimationTime() const override { return 0; }
-  virtual double getAnimationSpeed() const override { return 0; }
-  virtual double getRemainingAnimationHoldTime() const override { return 0; }
+  void getImageSize(const char *imageName, double &outWidth, double &outHeight) override { unsupported(); }
+  void getTextExtent(const cFigure::Font &font, const char *text, double &outWidth, double &outHeight, double &outAscent) override { unsupported(); }
+  void appendToImagePath(const char *directory) override { unsupported(); }
+  void loadImage(const char *fileName, const char *imageName = nullptr) override { unsupported(); }
+  cFigure::Rectangle getSubmoduleBounds(const cModule *submodule) override { return cFigure::Rectangle(NAN, NAN, NAN, NAN); }
+  double getZoomLevel(const cModule *module) override { return NAN; }
+  double getAnimationTime() const override { return 0; }
+  double getAnimationSpeed() const override { return 0; }
+  double getRemainingAnimationHoldTime() const override { return 0; }
 
   // lifecycle listeners
-  virtual void addLifecycleListener(cISimulationLifecycleListener *listener) override {}
-  virtual void removeLifecycleListener(cISimulationLifecycleListener *listener) override {}
-  virtual void notifyLifecycleListeners(SimulationLifecycleEventType eventType, cObject *details) override {}
+  void addLifecycleListener(cISimulationLifecycleListener *listener) override {}
+  void removeLifecycleListener(cISimulationLifecycleListener *listener) override {}
+  void notifyLifecycleListeners(SimulationLifecycleEventType eventType, cObject *details) override {}
 
-  void newSimulation();
+  cSimulation *newSimulation();
+  void resetSimulation();
 };
 
 }  // namespace quisp_test
