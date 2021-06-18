@@ -25,11 +25,11 @@ class Application : public IApplication {
   int my_address;
 
   std::vector<int> other_end_node_addresses;
-  int num_of_other_end_nodes;
   bool is_e2e_connection;
   int number_of_resources;
   int num_measure;
 
+ protected:
   void initialize() override;
   void handleMessage(cMessage *msg) override;
 
