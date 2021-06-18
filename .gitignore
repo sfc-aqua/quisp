@@ -1,3 +1,6 @@
+### direnv https://github.com/direnv/direnv
+.envrc
+
 ### quisp specific
 /doc/html/
 *.orig
@@ -41,7 +44,8 @@ tags
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
