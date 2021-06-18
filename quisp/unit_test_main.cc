@@ -2,8 +2,10 @@
 #include <omnetpp.h>
 #include "omnetpp/ccomponent.h"
 #include "omnetpp/cenvir.h"
+#include "omnetpp/cownedobject.h"
 #include "omnetpp/csimulation.h"
 #include "omnetpp/simtime.h"
+#include "test_utils/StaticEnv.h"
 
 int main(int argc, char **argv) {
   /**
@@ -13,6 +15,8 @@ int main(int argc, char **argv) {
    * whole cObjects. Sometimes it causes segmentation fault without the _flag var.
    */
   omnetpp::cStaticFlag _flag;
+  auto *env = new quisp_test::StaticEnv;
+  omnetpp::cSimulation::setStaticEnvir(env);
   /**
    * setup a simulation and its environment for testing.
    * OMNeT++'s methods expect that all modules are running on a simulation,
