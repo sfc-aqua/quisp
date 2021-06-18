@@ -103,7 +103,7 @@ void Application::handleMessage(cMessage *msg) {
   }
 
   if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
-    bubble("InternalRuleSetForwarding packet arrived to application!");
+    // bubble("InternalRuleSetForwarding packet arrived to application!");
     send(msg, "toRouter");
     return;
   }

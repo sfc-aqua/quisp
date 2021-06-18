@@ -31,10 +31,7 @@ bool FidelityClause::check(std::multimap<int, StationaryQubit*> resource) const 
 }
 
 bool EnoughResourceClause::check(std::multimap<int, StationaryQubit*> resource) const {
-  EV<<"Enough Resource Clause with: "<<partner<<"\n";
-  for(auto it=resource.begin(); it!=resource.end(); ++it){
-    EV<<"partner: "<<it->first<<": Qubit: "<<it->second<<" busy?: "<<it->second->isBusy<<"\n";
-  }
+  // EV<<"Enough Resource Clause with: "<<partner<<"\n";
   bool enough = false;
   int num_free = 0;
 
