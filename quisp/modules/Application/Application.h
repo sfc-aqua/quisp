@@ -21,7 +21,11 @@ namespace modules {
  *  \brief Application
  */
 class Application : public IApplication {
- private:
+ public:
+  Application();
+  ~Application() {}
+
+ protected:
   int my_address;
 
   std::vector<int> other_end_node_addresses;
@@ -29,7 +33,6 @@ class Application : public IApplication {
   int number_of_resources;
   int num_measure;
 
- protected:
   void initialize() override;
   void handleMessage(cMessage *msg) override;
 
@@ -37,9 +40,6 @@ class Application : public IApplication {
   int getOneRandomEndNodeAddress();
 
   ConnectionSetupRequest *createConnectionSetupRequest(int dest_addr, int num_of_required_resources);
-
- public:
-  Application();
   utils::ComponentProvider provider;
 };
 
