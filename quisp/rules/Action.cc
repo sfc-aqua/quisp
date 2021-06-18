@@ -116,15 +116,6 @@ cPacket *SwappingAction::run(cModule *re) {
   bool left_measure = left_qubit->measure_Z();
   bool right_measure = right_qubit->measure_Z();
 
-  EV<<"Current Resource Map ==== \n";
-  EV<<"Num Resource: "<<checkNumResource()<<"\n";
-  EV<<"Entanglement Swapping with: "<<left_partner<<" and "<<right_partner<<"\n";
-  for (auto it = (*rule_resources).begin(), next_it = (*rule_resources).begin(); it != (*rule_resources).end(); it = next_it) {
-    next_it = it;
-    ++next_it;
-    EV<<"partner: " <<it->first<<" qubit: "<<it->second<<"\n";
-  }
-  EV<<"=====\n";
 
   int operation_type_left, operation_type_right;
 

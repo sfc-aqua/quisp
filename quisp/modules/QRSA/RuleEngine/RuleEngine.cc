@@ -21,7 +21,7 @@ using namespace rules;
 RuleEngine::RuleEngine() : provider(utils::ComponentProvider{this}) {}
 
 void RuleEngine::initialize() {
-  // std::cout<<"RuleEngine Booted"<<std::endl;
+  EV<<"RuleEngine booted\n";
   // HardwareMonitor's neighbor table is checked in the initialization stage of the simulation
   // This assumes the topology never changes throughout the simulation.
   // If dynamic change in topology is required, recoding this is needed.
@@ -47,7 +47,6 @@ void RuleEngine::initialize() {
     terminated_qnic[i] = false;
   }
 
-  // here has error
   Busy_OR_Free_QubitState_table = new QubitStateTable[QNIC_N];
   Busy_OR_Free_QubitState_table[QNIC_E] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_E], QNIC_E);
   Busy_OR_Free_QubitState_table[QNIC_R] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_R], QNIC_R);
@@ -137,13 +136,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
       qnic_type = QNIC_R;
     }
 
-    // for (EntangledPairs::iterator it =  allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); it++)
-    //    EV << it->first << " => " << it->second << '\n';
-    // EV<< "****************************************\n";
-
     if (terminated_qnic[qnic_address]) {
       // std::cout<<"NOT ANY MORE qnic["<<qnic_address<<"] in node["<<parentAddress<<"]";
-      error("qnic should not be terminated here, Node: %d, qnic_address: %d", parentAddress, qnic_address);
+      // error("qnic should not be terminated here, Node: %d, qnic_address: %d", parentAddress, qnic_address);
       return;
     } else if (pk->getInternal_qnic_index() == -1) {  // Schedule next burst. MIM, or the other node without internal HoM of MM
       EV_DEBUG << "This BSA request is non-internal\n";
@@ -157,7 +152,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
   else if (dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg) != nullptr) {
     SchedulePhotonTransmissionsOnebyOne *pk = check_and_cast<SchedulePhotonTransmissionsOnebyOne *>(msg);
     EV << provider.getQNode()->getFullName() << ": Photon shooting is from qnic[" << pk->getQnic_index() << "] with address=" << pk->getQnic_address();
-
     // Terminate emission if trial is over already (the neighbor ran out of free qubits)
     if (burstTrial_outdated(pk->getTrial(), pk->getQnic_address())) {
       delete msg;
@@ -186,7 +180,11 @@ void RuleEngine::handleMessage(cMessage *msg) {
   else if (dynamic_cast<EPPStimingNotifier *>(msg) != nullptr) {
     bubble("EPPS");
     EPPStimingNotifier *pk = check_and_cast<EPPStimingNotifier *>(msg);
-  } else if (dynamic_cast<LinkTomographyRuleSet *>(msg) != nullptr) {
+    error("EPPS is not implemented yet");
+
+  } 
+  
+  else if (dynamic_cast<LinkTomographyRuleSet *>(msg) != nullptr) {
     // Received a tomography rule set.
     LinkTomographyRuleSet *pk = check_and_cast<LinkTomographyRuleSet *>(msg);
     // std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
@@ -206,9 +204,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   }
 
   else if (dynamic_cast<PurificationResult *>(msg) != nullptr) {
-    // std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
     PurificationResult *pkt = check_and_cast<PurificationResult *>(msg);
-    // std::cout<<"Presult from node["<<pkt->getSrcAddr()<<"]\n";
     process_id purification_id;
     purification_result pr;
     purification_id.ruleset_id = pkt->getRuleset_id();
@@ -216,14 +212,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
     purification_id.index = pkt->getAction_index();
     pr.id = purification_id;
     pr.outcome = pkt->getOutput_is_plus();
-    // StationaryQubit *q = check_and_cast<StationaryQubit *>(pkt->getEntangled_with());
-    // std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
-    // std::cout<<"Locked one is "<<pkt->getEntangled_with()<<"in node["<<q->node_address<<"] \n";
     storeCheck_Purification_Agreement(pr);
   } else if (dynamic_cast<DoublePurificationResult *>(msg) != nullptr) {
-    // std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
     DoublePurificationResult *pkt = check_and_cast<DoublePurificationResult *>(msg);
-    // std::cout<<"Presult from node["<<pkt->getSrcAddr()<<"]\n";
     process_id purification_id;
     Doublepurification_result pr;
     purification_id.ruleset_id = pkt->getRuleset_id();
@@ -232,9 +223,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pr.id = purification_id;
     pr.Xpurification_outcome = pkt->getXOutput_is_plus();
     pr.Zpurification_outcome = pkt->getZOutput_is_plus();
-    // StationaryQubit *q = check_and_cast<StationaryQubit *>(pkt->getEntangled_with());
-    // std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
-    // std::cout<<"Locked one is "<<pkt->getEntangled_with()<<"in node["<<q->node_address<<"] \n";
     storeCheck_DoublePurification_Agreement(pr);
   } else if (dynamic_cast<DS_DoublePurificationResult *>(msg) != nullptr) {
     // std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
@@ -289,6 +277,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     updateResources_EntanglementSwapping(swapr);
 
     // may need shooting photon here?
+    // Once qubit is freed, send the BSA start again
+    restartBSMtrial();
 
   } else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
     InternalRuleSetForwarding *pkt = check_and_cast<InternalRuleSetForwarding *>(msg);
@@ -313,18 +303,15 @@ void RuleEngine::handleMessage(cMessage *msg) {
     }
   } else if (dynamic_cast<InternalRuleSetForwarding_Application *>(msg) != nullptr) {
     InternalRuleSetForwarding_Application *pkt = check_and_cast<InternalRuleSetForwarding_Application *>(msg);
-    // FIXME This is really naive implementation.
+    // doing end to end tomography
     if (pkt->getApplication_type() == 0) {
       // Received a tomography rule set.
       InternalRuleSetForwarding_Application *pk = check_and_cast<InternalRuleSetForwarding_Application *>(msg);
-      // std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
       process p;
       p.ownner_addr = pkt->getRuleSet()->owner;
       p.Rs = pkt->getRuleSet();
       int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
       std::cout << "Process size is ...." << p.Rs->size() << " node[" << parentAddress << "\n";
-      // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
-      // ResourceAllocation();
       if (p.Rs->size() > 0) {
         rp.insert(std::make_pair(process_id, p));
         EV << "New process arrived !\n";
@@ -355,9 +342,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
 }
 
 void RuleEngine::storeCheck_Purification_Agreement(purification_result pr) {
-  // std::cout<<"storeCheck_Purification_Agreement: "<<pr.id.ruleset_id<<" ";
-  // std::cout<<"rp size = "<<rp.size()<<"\n";
-
   bool ruleset_running = false;
   for (auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it) {
     next_it = it;
@@ -382,12 +366,9 @@ void RuleEngine::storeCheck_Purification_Agreement(purification_result pr) {
         // std::cout<<"node["<<parentAddress<<"] Rule found: Discard/Keep purification.\n";
         if (it->second.outcome == pr.outcome) {
           // Outcomes agreed. Keep the entangled pair.
-          // std::cout<<"Unlocking and upgrading!\n";
           Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
         } else {
           // Discard
-          // std::cout<<"node["<<parentAddress<<"] discaard ";
-          // std::cout<<"Unlocking and discarding!\n";
           Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
         }
         Purification_table.erase(it);
@@ -476,7 +457,6 @@ void RuleEngine::storeCheck_TriplePurification_Agreement(Triplepurification_resu
       }
     }
     // New data.
-    // std::cout<<"New data arrived. Need to keep the outcome of rulset_id="<<pr.id.ruleset_id<<" Rule_id="<<pr.id.rule_id<<", index="<<pr.id.index<<"\n";
     TriplePurification_table.insert(std::make_pair(pr.id.ruleset_id, pr));  // Otherwise, if data has not been found, store it.
   }
 }
@@ -506,12 +486,9 @@ void RuleEngine::storeCheck_QuatroPurification_Agreement(Quatropurification_resu
         if ((it->second.Xpurification_outcome == pr.Xpurification_outcome) && (it->second.Zpurification_outcome == pr.Zpurification_outcome) &&
             (it->second.DS_Zpurification_outcome == pr.DS_Zpurification_outcome) && (it->second.DS_Xpurification_outcome == pr.DS_Xpurification_outcome)) {
           // Outcomes agreed. Keep the entangled pair.
-          // std::cout<<"Unlocking and upgrading!\n";
           Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
         } else {
           // Discard
-          // std::cout<<"node["<<parentAddress<<"] discaard ";
-          // std::cout<<"Unlocking and discarding!\n";
           Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
         }
         QuatroPurification_table.erase(it);
@@ -672,32 +649,24 @@ InterfaceInfo RuleEngine::getInterface_toNeighbor_Internal(int local_qnic_addres
 }
 
 void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type) {
-  SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne(First)");
   if (ntable.empty()) {
     ntable = hardware_monitor->passNeighborTable();  // Get neighbor table from Hardware Manager: neighbor address--> InterfaceInfo.
   } // Just do this once, unless the network changes during the simulation.
-    
 
+  photon_transmission_config ptc;
   int destAddr = pk->getSrcAddr();  // The destination is where the request is generated (source of stand-alone or internal BSA node).
-  int qnic_index, qnic_address;
-  int numFree;
-  cModule *qnic_pointer;
-
+  bool internal = false; // for internal hom?
   switch (qnic_type) {
     case QNIC_E: {
       InterfaceInfo inf = getInterface_toNeighbor(destAddr);
-      qnic_index = inf.qnic.index;
-      qnic_address = inf.qnic.address;
+      ptc.qnic_index = inf.qnic.index;
+      ptc.qnic_address = inf.qnic.address;
     }  // inf is not defined beyound this point
-      numFree =
-          countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[QNIC_E], qnic_index);  // Refer the qubit state table. Check number of free qubits of qnic with index qnic_index.
       break;
     case QNIC_R:
-      qnic_address = pk->getInternal_qnic_address();
-      qnic_index = pk->getInternal_qnic_index();  // If the BSA node is in this node, then obviously it is not in the neighbor table, 'cause it is inside it self. In that case, the
-                                                  // gate index is stored in the packet.
-      numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], qnic_index);  // Same as above, except the table is managed independently.
-      st->setInternal_hom(1);  // Mark request that the request is for internal BSA node. Default is 0.
+      ptc.qnic_index = pk->getInternal_qnic_index();
+      ptc.qnic_address = pk->getInternal_qnic_address();
+      internal = true;
       break;
     case QNIC_RP:
       error("This is not implemented yet");
@@ -705,22 +674,59 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
     default:
       error("Only 3 qnic types are currently recognized....");
   }
+  ptc.timing = pk->getTiming_at();
+  ptc.interval = pk->getInterval();
+  ptc.qnic_type = qnic_type;
+  // store the interface information for the futhter link generation process
+  sendPhotonTransmissionSchedule(ptc);
+}
 
-  st->setQnic_index(qnic_index);
-  st->setQnic_address(qnic_address);
-  EV << provider.getQNode()->getFullName() << ": First photon shooting is from qnic[" << qnic_index << "] with address=" << qnic_address;
-  st->setInterval(pk->getInterval());
-  st->setTiming(pk->getTiming_at());
-  st->setTrial(qnic_burst_trial_counter[qnic_address]);  // Keeps the burst counter. First burst index is 0.
+void RuleEngine::sendPhotonTransmissionSchedule(photon_transmission_config ptc){
+  SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne(First)");
+  st->setQnic_index(ptc.qnic_index);
+  st->setQnic_address(ptc.qnic_address);
+  st->setInterval(ptc.interval);
+  st->setTiming(ptc.timing);
+  st->setTrial(qnic_burst_trial_counter[ptc.qnic_address]);  // Keeps the burst counter. First burst index is 0.
+  
+  bool internal = false;
+  if(ptc.qnic_type == QNIC_R){
+    // Note: just add internal qnic type
+    internal = true;
+  }else if(ptc.qnic_type == QNIC_E){
+    internal = false;
+  }else if(ptc.qnic_type == QNIC_RP){
+    error("Not implemented yet");
+  }else{
+    // for later implementations
+    error("New qnic type detected. Add here.");
+  }
 
+  if (internal){
+    st->setInternal_hom(1);  // Mark request that the request is for internal BSA node.
+  }
+
+  int numFree;
+  numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[ptc.qnic_type], ptc.qnic_index); 
   if (numFree > 0){
     scheduleAt(simTime(), st);
   } else {
-    error("No more free qubits!");
-    // traverseThroughAllProcesses2();
+    // if there are no free qubits, push back it.
+    transmission_interface.insert(std::make_pair(ptc.transmission_partner_address, ptc));
     delete st;
-    // error("This needs to be implemented (Is this needed if entangled particles get consumed properly?). When QNIC buffer is all busy in the 1st shot...");
-    // All qubits are free when BSAtimingRequest is received by the node.
+  }
+}
+
+void RuleEngine::restartBSMtrial(){
+  if(transmission_interface.size()>0){ 
+    for (auto it = transmission_interface.begin(); it!=transmission_interface.end(); ++it){
+      auto interface = it->second;
+      int numfree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[interface.qnic_type], interface.qnic_index);
+      if(numfree > 0){
+        transmission_interface.erase(it);
+        sendPhotonTransmissionSchedule(interface);
+      }
+    }
   }
 }
 
@@ -860,7 +866,7 @@ int RuleEngine::getOneFreeQubit_inQnic(QubitStateTable table, int qnic_index) {
 int RuleEngine::countFreeQubits_inQnic(QubitStateTable table, int qnic_index) {
   int num_free = 0;
   for (auto it = table.cbegin(); it != table.cend(); ++it) {
-    if (it->second.thisQubit_addr.qnic_index == qnic_index && table[it->first].isBusy == false) {
+    if (it->second.thisQubit_addr.qnic_index == qnic_index && !table[it->first].isBusy) {
       num_free++;  // count up free qubits in qnic[qnic_index]
     }
   }
@@ -869,7 +875,7 @@ int RuleEngine::countFreeQubits_inQnic(QubitStateTable table, int qnic_index) {
 
 QubitStateTable RuleEngine::setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index) {
   for (auto it = table.cbegin(); it != table.cend(); ++it) {
-    if (it->second.isBusy == false && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index) {
+    if (!it->second.isBusy && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index) {
       table[it->first].isBusy = true;
       break;
     } else if (it->second.isBusy == true && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index) {
@@ -882,10 +888,10 @@ QubitStateTable RuleEngine::setQubitBusy_inQnic(QubitStateTable table, int qnic_
 QubitStateTable RuleEngine::setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index) {
   for (auto it = table.cbegin(); it != table.cend(); ++it) {
     // std::cout<<it->first<<" table = "<<table[it->first].isBusy<<"\n";
-    if (it->second.isBusy == true && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index) {
+    if (it->second.isBusy && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index) {
       table[it->first].isBusy = false;
       break;
-    } else if (it->second.isBusy == false && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index) {
+    } else if (!it->second.isBusy && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index) {
       error("Trying to set a free qubit free. Only busy qubits can do that. Something is wrong... ");
     }
   }
@@ -931,11 +937,6 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   QNIC_type qnic_type = info->qnic.type;
   int qubit_index = swapr.measured_qubit_index;
 
-  // FIXME here is just one resource, but this should be loop
-  // TODO resources for entanglement swapping in swapper should be free
-  // Update tracker first get index from Swapping result maybe... get qubit index from swapping result
-
-  // we need to free swapper resources consumed for entanglement swapping.
   // qubit with address Addr was shot in nth time. This list is ordered from old to new.
   StationaryQubit *qubit = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
   // check
@@ -952,7 +953,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
 
   if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
     // std::cout << qubit << ", node[" << qubit->node_address << "] from qnic[" << qubit->qnic_index << "]\n";
-    error("RuleEngine. Ebit succeed. but wrong");
+    error("RuleEngine. Entanglement swapping went wrong");
   }
   // first delete old record
   for (auto it = allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); ++it) {
@@ -968,12 +969,6 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     error("qubit is locked");
   }
   allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner, qubit));
-
-  // check
-  EV << "check resources at " << parentAddress << "\n";
-  for (auto it = allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); ++it) {
-    EV << "partner: " << it->first << " qubit: " << it->second << "\n";
-  }
 
   // FOR DEBUGGING
   if (qubit->entangled_partner != nullptr) {
@@ -1043,6 +1038,9 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
       }
 
       if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
+        EV<<"entangle partner null?" << qubit->entangled_partner<<" == nullptr?\n";
+        EV<<"density matrix collapsed?"<< qubit->Density_Matrix_Collapsed(0, 0).real() <<"==-111?\n";
+        EV<<"here should be true"<<qubit->no_density_matrix_nullptr_entangled_partner_ok<<"\n";
         error("RuleEngine. Ebit succeed. but wrong");
       }
       // Add qubit as available resource between NeighborQNodeAddress.
@@ -1084,14 +1082,6 @@ void RuleEngine::clearTrackerTable(int destAddr, int internal_qnic_address) {
 
 void RuleEngine::finish() {
   delete qnic_burst_trial_counter;
-
-  //   // here output file
-  //   std::string file_name = "test";
-  //   std::ofstream creation_time_stats(file_name, std::ios_base::app);
-  //   // creation_time_stats<<"s\n";
-  //   for(int i = 0; i < creation_times.size(); i++){
-  //       creation_time_stats<<creation_times[i]<<"\n";
-  // }
 }
 
 double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index) { return uniform(.6, .9); }
@@ -1117,7 +1107,6 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
   if (!(rp.size() > 0)) {  // If no ruleset running, do nothing.
     return;
   }
-  EV<<"rp size: "<<rp.size()<<"at: "<<parentAddress<<"\n";
   // If there are running rulesets, then try to allocate resource to it
   for (auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it) {  // In a particular RuleSet
     next_it = it;
@@ -1143,27 +1132,16 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
       for (auto it = allResources[qnic_type][qnic_index].cbegin(), next_it = allResources[qnic_type][qnic_index].cbegin(); it != allResources[qnic_type][qnic_index].cend();it = next_it) {
         next_it = it;
         ++next_it;
-        // if (parentAddress == 1 && it->first == 2){
-        //   EV<<"entangled_with: "<<resource_entangled_with_address<<" == partner: "<<it->first<<"?\n";
-        //   EV<<"allocated?: " <<it->second->isAllocated()<<"\n";
-        //   if (it->second->isAllocated()){
-        //     error("it's already allocated somewhere");
-        //   }
-        // }
-        // EV<<"entangled_with: "<<resource_entangled_with_address<<" == partner: "<<it->first<<"?\n";
         if (!it->second->isAllocated() && resource_entangled_with_address == it->first) {
           int num_rsc_bf = process->front()->resources.size();
           if (it->second->entangled_partner == nullptr && it->second->Density_Matrix_Collapsed(0, 0).real() == -111 &&
               !it->second->no_density_matrix_nullptr_entangled_partner_ok) {
             error("Freshing qubit wrong");
           }
-          // here would be problem
-          // if you have one rule for multiple 
           if (rule_ptr_size != partner_size) {
             process->front()->addResource(resource_entangled_with_address, it->second);
           } else {
             process->getRule_ptr(i)->addResource(resource_entangled_with_address, it->second);
-            // rule_ptr.at(i)->addResource(resource_entangled_with_address, it->second);
           }
 
           int num_rsc_af = process->front()->resources.size();
@@ -1189,10 +1167,9 @@ void RuleEngine::traverseThroughAllProcesses2() {
     next_it = it;
     ++next_it;
     RuleSet *process = it->second.Rs;  // One Process. From top to bottom.
-    EV <<"Node: "<<parentAddress<<" Checking first process.... process " << process->size() << "\n";
+    // EV <<"Node: "<<parentAddress<<" Checking first process.... process " << process->size() << "\n";
     for (auto rule = process->cbegin(), end = process->cend(); rule != end; rule++) {
       bool process_done = false;
-      // std::cout<<parentAddress<<": Running first Condition & Action now\n";
       bool terminate_this_rule = false;
 
       while (true) {
@@ -1201,7 +1178,6 @@ void RuleEngine::traverseThroughAllProcesses2() {
         }
 
         cPacket *pk = (*rule)->checkrun(this);  // Do something on qubits entangled with resource_entangled_with_address.
-        EV<<"packet"<<pk<<"\n";
 
         if (pk != nullptr) {
           // Feedback to another node required
@@ -1323,11 +1299,10 @@ void RuleEngine::traverseThroughAllProcesses2() {
   }  // For loop
 }
 
+
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, StationaryQubit *qubit, QNIC_type qnic_type) {
-  // here is the error
   realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit->par("stationaryQubit_address"), qnic_type, true);
   Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit->par("stationaryQubit_address"));
-
   for (auto it = allResources[qnic_type][qnic_index].cbegin(), next_it = allResources[qnic_type][qnic_index].cbegin(); it != allResources[qnic_type][qnic_index].cend();
        it = next_it) {
     next_it = it;

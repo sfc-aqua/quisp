@@ -200,7 +200,7 @@ void Router::handleMessage(cMessage *msg) {
   }
 
   int outGateIndex = (*it).second;
-  EV << "forwarding packet " << pk->getName() << " on gate index " << outGateIndex << endl;
+  // EV << "forwarding packet " << pk->getName() << " on gate index " << outGateIndex << endl;
   pk->setHopCount(pk->getHopCount() + 1);
   send(pk, "toQueue", outGateIndex);
 }
