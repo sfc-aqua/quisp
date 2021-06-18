@@ -113,7 +113,7 @@ void Application::storeEndNodeAddresses() {
   cTopology *topo = new cTopology("topo");
 
   // like topo.extractByParameter("nodeType","EndNode")
-  topo->extractByParameter("nodeType", getParentModule()->par("nodeType").str().c_str());
+  topo->extractByParameter("nodeType", provider.getQNode()->par("nodeType").str().c_str());
 
   int addr;
   for (int i = 0; i < topo->getNumNodes(); i++) {
