@@ -85,7 +85,6 @@ class ConnectionManager : public IConnectionManager {
   static int fillPathDivision(std::vector<int> path, int i, int l, int *link_left, int *link_right, int *swapper, int fill_start);
 };
 
-Define_Module(ConnectionManager);
 }  // namespace modules
 }  // namespace quisp
 #endif /* MODULES_CONNECTIONMANAGER_H_ */

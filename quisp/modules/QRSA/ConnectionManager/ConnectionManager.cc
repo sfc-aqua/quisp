@@ -16,6 +16,8 @@ using namespace quisp::rules;
 
 namespace quisp {
 namespace modules {
+
+Define_Module(ConnectionManager);
 ConnectionManager::ConnectionManager() : provider(utils::ComponentProvider{this}) {}
 
 void ConnectionManager::initialize() {
