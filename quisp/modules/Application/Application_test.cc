@@ -73,8 +73,7 @@ class AppTestTarget : public quisp::modules::Application {
 };
 
 TEST(AppTest, InitSimple) {
-  auto *env = dynamic_cast<quisp_test::StaticTestEnv *>(cSimulation::getStaticEnvir());
-  env->newSimulation();
+  auto *sim = prepareSimulation();
   mock_qnode = new MockQNode{123};
   AppTestTarget app{mock_qnode};
   setParBool(&app, "EndToEndConnection", true);
@@ -82,10 +81,11 @@ TEST(AppTest, InitSimple) {
   setParInt(&app, "num_measure", 1);
   setParInt(&app, "TrafficPattern", 0);
   setParInt(&app, "LoneInitiatorAddress", 0);
-  app.initialize();
+  app.callInitialize();
   ASSERT_EQ(app.getAddress(), 123);
   ASSERT_EQ(app.getOtherEndNodeAdresses().size(), 0);
 }
+
 TEST(AppTest, Init_OneConnection_NoSender) {
   auto *sim = prepareSimulation();
   mock_qnode = new MockQNode{123};
@@ -95,10 +95,9 @@ TEST(AppTest, Init_OneConnection_NoSender) {
   setParInt(&app, "num_measure", 1);
   setParInt(&app, "TrafficPattern", 1);
   setParInt(&app, "LoneInitiatorAddress", 0);
-  app.initialize();
+  app.callInitialize();
   ASSERT_EQ(app.getAddress(), 123);
   ASSERT_EQ(app.getOtherEndNodeAdresses().size(), 0);
-  delete mock_qnode;
 }
 
 TEST(AppTest, Init_OneConnection_Sender) {
@@ -122,6 +121,10 @@ TEST(AppTest, Init_OneConnection_Sender) {
 
   ASSERT_EQ(app->getAddress(), 123);
   ASSERT_EQ(app->getOtherEndNodeAdresses().size(), 1);
+  sim->callInitialize();
+  
+  // auto *event = sim->takeNextEvent();
+  // sim->executeEvent(event);
 }
 
 }  // namespace
