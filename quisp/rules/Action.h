@@ -166,8 +166,6 @@ class SimultaneousSwappingAction : public Action {
     path_length_exclude_IR = pleir;
   };
 
-  // cPacket* run(qnicResources *resources) override;
-  // cPacket* run(cModule *re, qnicResources *resources) override;
   cPacket* run(cModule* re) override;
 };
 

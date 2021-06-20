@@ -23,7 +23,7 @@ void ConnectionManager::initialize() {
   hardware_monitor = provider.getHardwareMonitor();
   my_address = par("address");
   num_of_qnics = par("total_number_of_qnics");
-  simultaneous_ES = par("simultaneousES");  // true;
+  simultaneous_es_enabled = par("simultaneousES");
 
   for (int i = 0; i < num_of_qnics; i++) {
     // qnode address
@@ -315,11 +315,11 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       // here we have to check the order of entanglement swapping
       // swapping configurations for path[i]
 
-      if (!simultaneous_ES) {
+      if (!simultaneous_es_enabled) { 
         SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
         RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
 
-        ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
+        auto *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
         pkr->setDestAddr(path.at(i));
         pkr->setSrcAddr(my_address);
         pkr->setKind(2);
@@ -327,12 +327,11 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
         pkr->setActual_srcAddr(path.at(0));
         pkr->setActual_destAddr(path.at(path.size() - 1));
         send(pkr, "RouterPort$o");
-      } else if (simultaneous_ES) {
+      } else {
         SwappingConfig config = generateSimultaneousSwappingConfig(path.at(i), path, qnics, num_resource);
-
         RuleSet *rule = generateSimultaneousEntanglementSwappingRuleSet(path.at(i), config, path);
 
-        ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(SimultaneousSwapping)");
+        auto *pkr = new ConnectionSetupResponse("ConnSetupResponse(SimultaneousSwapping)");
         pkr->setDestAddr(path.at(i));
         pkr->setSrcAddr(my_address);
         pkr->setKind(2);
@@ -366,40 +365,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       pkr->setApplication_type(0);
       send(pkr, "RouterPort$o");
     }
-    /*
-    ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
-    pkr->setDestAddr(path.at(i));
-    pkr->setSrcAddr(my_address);
-    pkr->setKind(2);
-    pkr->setRuleSet(rule);
-    pkr->setActual_srcAddr(path.at(0));
-    pkr->setActual_destAddr(path.at(path.size() - 1));
-    send(pkr, "RouterPort$o");*/
-
-  } /*else {
-    EV_DEBUG << "Im not swapper!" << path.at(i) << "\n";
-    int num_measure = req->getNum_measure();
-
-    RuleSet *ruleset;
-    int owner = path.at(i);
-    if (i == 0) {  // if this is initiator
-      ruleset = generateTomographyRuleSet(owner, path.at(path.size() - 1), num_measure, qnics.at(qnics.size() - 1).fst.type, qnics.at(qnics.size() - 1).fst.index, num_resource);
-    } else {  // if this is responder
-      ruleset = generateTomographyRuleSet(owner, path.at(0), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
-    }
-
-    ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Tomography)");
-    pkr->setDestAddr(path.at(i));
-    pkr->setSrcAddr(my_address);
-    pkr->setKind(2);
-    pkr->setRuleSet(ruleset);
-    pkr->setActual_srcAddr(path.at(0));
-    pkr->setActual_destAddr(path.at(path.size() - 1));
-
-    // this is not application but for checking swapping done properly.
-    pkr->setApplication_type(0);
-    send(pkr, "RouterPort$o");
-  }*/
+  } 
 
   if (actual_dst != my_address) {
     reserveQnic(src_info->qnic.address);

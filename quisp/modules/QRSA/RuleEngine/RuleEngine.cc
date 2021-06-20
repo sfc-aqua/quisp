@@ -62,8 +62,6 @@ void RuleEngine::initialize() {
 
   // running_processes = new RuleSetPtr[QNIC_N];//One process per QNIC for now. No multiplexing.
   // WATCH(assigned);
-
-  // Vector for store package for simultaneous entanglement swapping
 }
 
 void RuleEngine::handleMessage(cMessage *msg) {
@@ -287,14 +285,14 @@ void RuleEngine::handleMessage(cMessage *msg) {
     SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(msg);
     // Add messeage to collection [ruleSetid][index_in_path]
     int rule_id = pkt->getRuleSet_id();
-    pklist[rule_id][pkt->getIndex_in_path()] = pkt->getOperation_type();
+    simultaneous_es_results[rule_id][pkt->getIndex_in_path()] = pkt->getOperation_type();
 
     // Check if all message is here or not
-    if (pklist[rule_id].size() == pkt->getPath_length_exclude_IR()) {
+    if (simultaneous_es_results[rule_id].size() == pkt->getPath_length_exclude_IR()) {
       // optimize correction operation, without global phase consideration
-      int oco_result = pklist[rule_id][0];
-      for (int i = 1; i <= pklist[rule_id].size(); i++) {
-        oco_result ^= pklist[rule_id][i];
+      int oco_result = simultaneous_es_results[rule_id][0];
+      for (int i = 1; i <= simultaneous_es_results[rule_id].size(); i++) {
+        oco_result ^= simultaneous_es_results[rule_id][i];
       }
 
       int src = pkt->getSrcAddr();
@@ -314,31 +312,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
       swapr.operation_type = oco_result;
       updateResources_SimultaneousEntanglementSwapping(swapr);
     }
-
-    // optimize corretion operator
-
   }
-
-  // else if (dynamic_cast<ABSAresult *>(msg) != nullptr) {
-  //   ABSAResult *pkt = check_and_cast<ABSAResult *>(msg);
-  //   // here next add resources
-  //   int src = pkt->getSrcAddr();
-  //   int dest = pkt->getDestAddr();
-  //   process_id ABSA_id;
-  //   //swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
-  //   //swapping_id.rule_id = pkt->getRule_id();
-  //   //swapping_id.index = pkt->getAction_index();
-
-  //   absa_result absar;  // result of entanglement swapping
-  //   //absar.id = swapping_id;
-  //   absar.new_partner = pkt->getNew_partner();
-  //   absar.new_partner_qnic_index = pkt->getNew_partner_qnic_index();
-  //   absar.new_partner_qnic_address = pkt->getNew_partner_qnic_address();
-  //   absar.new_partner_qnic_type = pkt->getNew_partner_qnic_type();
-  //   absar.measured_qubit_index = pkt->getMeasured_qubit_index();
-  //   absar.operation_type = pkt->getOperation_type();
-  //   //updateResources_EntanglementSwapping(absar);
-  // }
 
   else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
     InternalRuleSetForwarding *pkt = check_and_cast<InternalRuleSetForwarding *>(msg);
@@ -1041,19 +1015,12 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
 }
 
 void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_result swapr) {
-  // swapper believe previous BSM was succeeded.
-  // These are new partner's info
+
   int new_partner = swapr.new_partner;
   int new_partner_qnic_index = swapr.new_partner_qnic_index;
   int new_partner_qnic_address = swapr.new_partner_qnic_address;  // this is not nessesary?
   QNIC_type new_partner_qnic_type = swapr.new_partner_qnic_type;
   int operation_type = swapr.operation_type;
-
-  // neigbor address should be swapper address
-  // node1 --- node6 --- node15
-  // node6 is swapper and this is the source of swapping result.
-  // qnic interface from node1 to node15 and node1 to node6 must be the same.
-  // initialize
 
   int qnic_address = routingdaemon->return_QNIC_address_to_destAddr(new_partner);
   auto info = hardware_monitor->findConnectionInfoByQnicAddr(qnic_address);
@@ -1063,23 +1030,8 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
   int qnic_index = info->qnic.index;
   QNIC_type qnic_type = info->qnic.type;
   int qubit_index = swapr.measured_qubit_index;
-
-  // First, the qubit used for swapping must be free.s
-  // Swapper doesn't know this is success or fail. Is this correct?
-  // TODO how to apply correct operation? is this the role of real time contoroller?
-  // FIXME here is just one resource, but this should be loop
-  // TODO resources for entanglement swapping in swapper should be free
-  // Update tracker first get index from Swapping result maybe... get qubit index from swapping result
-
-  // we need to free swapper resources consumed for entanglement swapping.
-
-  // qubit with address Addr was shot in nth time. This list is ordered from old to new.
   StationaryQubit *qubit = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
-  // if(parentAddress == 27 && qubit->entangled_partner->node_address == 15){
-  //     EV<<parentAddress<<" is entangled with "<<qubit->entangled_partner->node_address<<" !!\n";
-  //     error("Did it! Currently, no application implemeted. So, after resource consumed, simulation will end.");
-  // }
-  // check
+
   if (operation_type == 0) {
     // nothing
   } else if (operation_type == 1) {
@@ -1098,19 +1050,16 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
 
   if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
     std::cout << qubit << ", node[" << qubit->node_address << "] from qnic[" << qubit->qnic_index << "]\n";
-    // std::cout<<(bool)(qubit->entangled_partner==nullptr)<<" Entangled if ("<<false<<")\n";
-    // std::cout<<qubit->Density_Matrix_Collapsed<<"\n";
+
     EV << "This is node" << qubit->entangled_partner << "\n";
     error("RuleEngine. Ebit succeed. but wrong");
   }
   allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner /*QNode IP address*/, qubit));
   if (qubit->entangled_partner != nullptr) {
     if (qubit->entangled_partner->entangled_partner == nullptr) {
-      // std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
       error("1. Entanglement tracking is not doing its job. in update resource E.S.");
     }
     if (qubit->entangled_partner->entangled_partner != qubit) {
-      // std::cout<<qubit<<" in node["<<qubit->node_address<<"] <-> "<<qubit->entangled_partner<<" in node["<<qubit->entangled_partner->node_address<<"]\n";
       error("2. Entanglement tracking is not doing its job. in update resource E.S.");
     }
   }
@@ -1440,9 +1389,6 @@ void RuleEngine::traverseThroughAllProcesses2() {
           } else if (dynamic_cast<SimultaneousSwappingResult *>(pk) != nullptr) {
             SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(pk);
             EV << "done swapping at " << parentAddress << "\n";
-            // here this packet goes to two destination.
-            // one is left node the other is right node.
-            // only swapper knows which is left and right, but qnodes don't
 
             // packet for left node
             SimultaneousSwappingResult *pkt_for_initiator = new SimultaneousSwappingResult("SimultaneousSwappingResult(Left)");
@@ -1468,44 +1414,10 @@ void RuleEngine::traverseThroughAllProcesses2() {
             pkt_for_responder->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
             pkt_for_responder->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
 
-            // check
-            // EV<<"left node should be 1: "<<pkt->getLeft_Dest()<<" right node should be 15: "<<pkt->getRight_Dest()<<"\n";
-            // if(parentAddress == 6){
-            //     error("here! check!");
-            // }
-
             send(pkt_for_initiator, "RouterPort$o");
             send(pkt_for_responder, "RouterPort$o");
           }
-          /*
-
-                     else if (dynamic_cast<ABSAResult *>(pk) != nullptr) {
-                         ABSAResult *pkt = check_and_cast<ABSAResult *>(pk);
-                     EV << "done ABSA at " << parentAddress << "\n";
-                     BSAresult *pkt_for_left = new BSAresult;
-                     pkt_for_left->setKind(5);  // cyan
-                     pkt_for_left->setDestAddr(pkt->getLeft_Dest());
-                     pkt_for_left->setSrcAddr(parentAddress);
-                     pkt_for_left->setOperation_type(pkt->getOperation_type_left());
-                     pkt_for_left->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
-                     pkt_for_left->setNew_partner(pkt->getNew_partner_left());
-                     pkt_for_left->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
-                     pkt_for_left->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
-                     /pkt_for_left->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
-                     ABSAResult *pkt_for_right = new ABSAResult;
-                     pkt_for_right->setKind(5);  // cyan
-                     pkt_for_right->setDestAddr(pkt->getRight_Dest());
-                     pkt_for_right->setSrcAddr(parentAddress);
-                     pkt_for_right->setOperation_type(pkt->getOperation_type_right());
-                     pkt_for_right->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
-                     pkt_for_right->setNew_partner(pkt->getNew_partner_right());
-                     pkt_for_right->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
-                     pkt_for_right->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
-                     pkt_for_right->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
-                     send(pkt_for_left, "RouterPort$o");
-                     send(pkt_for_right, "RouterPort$o");
-                   }
-           */
+          
           else if (dynamic_cast<Error *>(pk) != nullptr) {
             Error *err = check_and_cast<Error *>(pk);
             error(err->getError_text());

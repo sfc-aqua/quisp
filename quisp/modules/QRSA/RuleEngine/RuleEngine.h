@@ -77,8 +77,7 @@ class RuleEngine : public IRuleEngine {
   // typedef rules::RuleSet* RuleSetPtr;
   running_processes rp;
   // Vector for store package for simultaneous entanglement swapping
-  typedef std::map<int, std::map<int, int>> pk_list;
-  pk_list pklist;
+  std::map<int, std::map<int, int>> simultaneous_es_results;
 
   // int assigned = 0;
   // typedef std::map<std::string, quisp::rules::RuleSet> processes;//process_id -> Rule set

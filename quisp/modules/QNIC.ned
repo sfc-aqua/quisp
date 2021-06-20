@@ -43,8 +43,6 @@ module QNIC
             std = emission_std;
         }
 
-    
-
         lens: PhotonicSwitch {
             address = self_qnic_address;
             @display("i=block/dispatch;p=75.240005,117.810005");

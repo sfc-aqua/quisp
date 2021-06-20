@@ -270,7 +270,6 @@ packet SimultaneousSwappingResult extends header{
     int initiator_Dest;
     int responder_Dest;
 
-
     int new_partner_left;
     int new_partner_qnic_index_left;
     int new_partner_qnic_address_left;
