@@ -123,7 +123,6 @@ class RuleEngine : public IRuleEngine {
   void updateResources_EntanglementSwapping(swapping_result swapr);
 
   utils::ComponentProvider provider;
-  virtual void updateResources_EntanglementSwapping(swapping_result swapr);
   virtual void updateResources_SimultaneousEntanglementSwapping(swapping_result swapr);
 };
 

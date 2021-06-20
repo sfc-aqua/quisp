@@ -1079,7 +1079,7 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
   // we need to free swapper resources consumed for entanglement swapping.
 
   // qubit with address Addr was shot in nth time. This list is ordered from old to new.
-  StationaryQubit *qubit = check_and_cast<StationaryQubit *>(getQNode()->getSubmodule(QNIC_names[qnic_type], qnic_index)->getSubmodule("statQubit", qubit_index));
+  StationaryQubit *qubit = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
   // if(parentAddress == 27 && qubit->entangled_partner->node_address == 15){
   //     EV<<parentAddress<<" is entangled with "<<qubit->entangled_partner->node_address<<" !!\n";
   //     error("Did it! Currently, no application implemeted. So, after resource consumed, simulation will end.");

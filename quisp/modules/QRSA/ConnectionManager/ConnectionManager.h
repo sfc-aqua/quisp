@@ -50,6 +50,7 @@ class ConnectionManager : public IConnectionManager {
   int my_address;
   int num_of_qnics;
   std::map<int, bool> qnic_res_table;
+  bool simultaneous_ES;
   IRoutingDaemon *routing_daemon;
   IHardwareMonitor *hardware_monitor;
 

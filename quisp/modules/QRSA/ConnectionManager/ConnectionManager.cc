@@ -372,7 +372,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
         pkr->setApplication_type(0);
         send(pkr, "RouterPort$o");
       }
-
+      /*
       ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
       pkr->setDestAddr(path.at(i));
       pkr->setSrcAddr(my_address);
@@ -380,9 +380,9 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       pkr->setRuleSet(rule);
       pkr->setActual_srcAddr(path.at(0));
       pkr->setActual_destAddr(path.at(path.size() - 1));
-      send(pkr, "RouterPort$o");
+      send(pkr, "RouterPort$o");*/
 
-    } else {
+    } /*else {
       EV_DEBUG << "Im not swapper!" << path.at(i) << "\n";
       int num_measure = req->getNum_measure();
 
@@ -405,8 +405,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       // this is not application but for checking swapping done properly.
       pkr->setApplication_type(0);
       send(pkr, "RouterPort$o");
-    }
-  }
+    }*/
+  
 
   if (actual_dst != my_address) {
     reserveQnic(src_info->qnic.address);
