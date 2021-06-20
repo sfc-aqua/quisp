@@ -510,7 +510,7 @@ SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper
   EV << "ini_index: " << initiator_index << " res_index: " << responder_index << "path size: " << path.size() << "\n";
 
   QNIC_id initiator_qnic = qnics.at(0).snd;
-  // error("There is where 2");
+
   QNIC_id responder_qnic = qnics.at(responder_index - 1).fst;
 
   if (right_self_qnic.type == QNIC_RP || left_self_qnic.type == QNIC_RP || right_partner_qnic.type == QNIC_RP || left_partner_qnic.type == QNIC_RP) {
@@ -530,16 +530,13 @@ SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper
   config.rqnic_address = right_partner_qnic.address;
   config.rres = num_resources;
 
-  // EV << "ini_index: " << initiator_index << " res_index: " << responder_index << "path size: " << path.size();
-  // error("There is where");
-
   // For end nodes
   config.initiator = path.at(initiator_index);
   config.initiator_qnic_type = initiator_qnic.type;
   config.initiator_qnic_index = initiator_qnic.index;
   config.initiator_qnic_address = initiator_qnic.address;
   config.initiator_res = num_resources;
-  // EV << path << "\n";
+
   config.responder = path.at(responder_index - 1);
   config.responder_qnic_type = responder_qnic.type;
   config.responder_qnic_index = responder_qnic.index;

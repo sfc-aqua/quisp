@@ -290,9 +290,10 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // Check if all message is here or not
     if (simultaneous_es_results[rule_id].size() == pkt->getPath_length_exclude_IR()) {
       // optimize correction operation, without global phase consideration
-      int oco_result = simultaneous_es_results[rule_id][0];
-      for (int i = 1; i <= simultaneous_es_results[rule_id].size(); i++) {
-        oco_result ^= simultaneous_es_results[rule_id][i];
+      std::map<int, int>::iterator it;
+      int oco_result = 0;
+      for (it = simultaneous_es_results[rule_id].begin(); it != simultaneous_es_results[rule_id].end(); it++) {  // this may wrong due to using of index, not iterator
+        oco_result ^= it->second;
       }
 
       int src = pkt->getSrcAddr();
