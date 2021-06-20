@@ -317,7 +317,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       // here we have to check the order of entanglement swapping
       // swapping configurations for path[i]
 
-      if (!simultaneous_es_enabled) { 
+      if (!simultaneous_es_enabled) {
         SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
         RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
 
@@ -367,7 +367,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       pkr->setApplication_type(0);
       send(pkr, "RouterPort$o");
     }
-  } 
+  }
 
   if (actual_dst != my_address) {
     reserveQnic(src_info->qnic.address);
