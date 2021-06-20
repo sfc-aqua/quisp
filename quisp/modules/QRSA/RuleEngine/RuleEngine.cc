@@ -64,8 +64,6 @@ void RuleEngine::initialize() {
   // WATCH(assigned);
 
   // Vector for store package for simultaneous entanglement swapping
-
-
 }
 
 void RuleEngine::handleMessage(cMessage *msg) {
@@ -283,7 +281,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     swapr.measured_qubit_index = pkt->getMeasured_qubit_index();
     swapr.operation_type = pkt->getOperation_type();
     updateResources_EntanglementSwapping(swapr);
-  } 
+  }
 
   else if (dynamic_cast<SimultaneousSwappingResult *>(msg) != nullptr) {
     SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(msg);
@@ -292,14 +290,12 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pklist[rule_id][pkt->getIndex_in_path()] = pkt->getOperation_type();
 
     // Check if all message is here or not
-    if (pklist[rule_id].size() == pkt->getPath_length_exclude_IR()){
-
+    if (pklist[rule_id].size() == pkt->getPath_length_exclude_IR()) {
       // optimize correction operation, without global phase consideration
       int oco_result = pklist[rule_id][0];
-      for (int i = 1; i<=pklist[rule_id].size(); i++){
+      for (int i = 1; i <= pklist[rule_id].size(); i++) {
         oco_result ^= pklist[rule_id][i];
       }
-
 
       int src = pkt->getSrcAddr();
       int dest = pkt->getDestAddr();
@@ -321,9 +317,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
     // optimize corretion operator
 
-    
-  } 
-  
+  }
+
   // else if (dynamic_cast<ABSAresult *>(msg) != nullptr) {
   //   ABSAResult *pkt = check_and_cast<ABSAResult *>(msg);
   //   // here next add resources
@@ -343,8 +338,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
   //   absar.measured_qubit_index = pkt->getMeasured_qubit_index();
   //   absar.operation_type = pkt->getOperation_type();
   //   //updateResources_EntanglementSwapping(absar);
-  // } 
-  
+  // }
+
   else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
     InternalRuleSetForwarding *pkt = check_and_cast<InternalRuleSetForwarding *>(msg);
     // add actual process
@@ -1442,8 +1437,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
             send(pkt_for_left, "RouterPort$o");
             send(pkt_for_right, "RouterPort$o");
-          } 
-          else if (dynamic_cast<SimultaneousSwappingResult *>(pk) != nullptr) {
+          } else if (dynamic_cast<SimultaneousSwappingResult *>(pk) != nullptr) {
             SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(pk);
             EV << "done swapping at " << parentAddress << "\n";
             // here this packet goes to two destination.
@@ -1482,36 +1476,36 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
             send(pkt_for_initiator, "RouterPort$o");
             send(pkt_for_responder, "RouterPort$o");
-          } 
- /*
- 
-            else if (dynamic_cast<ABSAResult *>(pk) != nullptr) {
-                ABSAResult *pkt = check_and_cast<ABSAResult *>(pk);
-            EV << "done ABSA at " << parentAddress << "\n";
-            BSAresult *pkt_for_left = new BSAresult;
-            pkt_for_left->setKind(5);  // cyan
-            pkt_for_left->setDestAddr(pkt->getLeft_Dest());
-            pkt_for_left->setSrcAddr(parentAddress);
-            pkt_for_left->setOperation_type(pkt->getOperation_type_left());
-            pkt_for_left->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
-            pkt_for_left->setNew_partner(pkt->getNew_partner_left());
-            pkt_for_left->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
-            pkt_for_left->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
-            /pkt_for_left->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
-            ABSAResult *pkt_for_right = new ABSAResult;
-            pkt_for_right->setKind(5);  // cyan
-            pkt_for_right->setDestAddr(pkt->getRight_Dest());
-            pkt_for_right->setSrcAddr(parentAddress);
-            pkt_for_right->setOperation_type(pkt->getOperation_type_right());
-            pkt_for_right->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
-            pkt_for_right->setNew_partner(pkt->getNew_partner_right());
-            pkt_for_right->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
-            pkt_for_right->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
-            pkt_for_right->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
-            send(pkt_for_left, "RouterPort$o");
-            send(pkt_for_right, "RouterPort$o");
-          } 
-  */
+          }
+          /*
+
+                     else if (dynamic_cast<ABSAResult *>(pk) != nullptr) {
+                         ABSAResult *pkt = check_and_cast<ABSAResult *>(pk);
+                     EV << "done ABSA at " << parentAddress << "\n";
+                     BSAresult *pkt_for_left = new BSAresult;
+                     pkt_for_left->setKind(5);  // cyan
+                     pkt_for_left->setDestAddr(pkt->getLeft_Dest());
+                     pkt_for_left->setSrcAddr(parentAddress);
+                     pkt_for_left->setOperation_type(pkt->getOperation_type_left());
+                     pkt_for_left->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
+                     pkt_for_left->setNew_partner(pkt->getNew_partner_left());
+                     pkt_for_left->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
+                     pkt_for_left->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
+                     /pkt_for_left->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
+                     ABSAResult *pkt_for_right = new ABSAResult;
+                     pkt_for_right->setKind(5);  // cyan
+                     pkt_for_right->setDestAddr(pkt->getRight_Dest());
+                     pkt_for_right->setSrcAddr(parentAddress);
+                     pkt_for_right->setOperation_type(pkt->getOperation_type_right());
+                     pkt_for_right->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
+                     pkt_for_right->setNew_partner(pkt->getNew_partner_right());
+                     pkt_for_right->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
+                     pkt_for_right->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
+                     pkt_for_right->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
+                     send(pkt_for_left, "RouterPort$o");
+                     send(pkt_for_right, "RouterPort$o");
+                   }
+           */
           else if (dynamic_cast<Error *>(pk) != nullptr) {
             Error *err = check_and_cast<Error *>(pk);
             error(err->getError_text());

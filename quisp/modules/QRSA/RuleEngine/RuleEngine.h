@@ -79,8 +79,7 @@ class RuleEngine : public IRuleEngine {
   // Vector for store package for simultaneous entanglement swapping
   typedef std::map<int, std::map<int, int>> pk_list;
   pk_list pklist;
-  
-  
+
   // int assigned = 0;
   // typedef std::map<std::string, quisp::rules::RuleSet> processes;//process_id -> Rule set
   void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type) override;
