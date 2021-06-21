@@ -7,6 +7,7 @@
  */
 #include "Application.h"
 #include <vector>
+#include "utils/ComponentProvider.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -14,14 +15,13 @@ using namespace quisp::messages;
 namespace quisp {
 namespace modules {
 
-Application::Application() {}
+Application::Application() : provider(utils::ComponentProvider{this}) {}
 
 /**
  * \brief Initialize module.
  *
  * If we're not in and end node, this module is not necessary.
  */
-
 void Application::initialize() {
   // Since we only need this module in EndNode, delete it otherwise.
   if (!gate("toRouter")->isConnected()) {
@@ -30,12 +30,13 @@ void Application::initialize() {
     return;
   }
 
-  my_address = getParentModule()->par("address");
+  my_address = provider.getQNode()->par("address");
   is_e2e_connection = par("EndToEndConnection");
   number_of_resources = par("NumberOfResources");
   num_measure = par("num_measure");
 
-  other_end_node_addresses = storeEndNodeAddresses();
+  WATCH_VECTOR(other_end_node_addresses);
+  storeEndNodeAddresses();
 
   if (!is_e2e_connection) {
     return;
@@ -108,60 +109,28 @@ void Application::handleMessage(cMessage *msg) {
   error("Application not recognizing this packet");
 }
 
-int *Application::storeEndNodeAddresses() {
+void Application::storeEndNodeAddresses() {
   cTopology *topo = new cTopology("topo");
 
   // like topo.extractByParameter("nodeType","EndNode")
-  topo->extractByParameter("nodeType", getParentModule()->par("nodeType").str().c_str());
+  topo->extractByParameter("nodeType", provider.getQNode()->par("nodeType").str().c_str());
 
-  num_of_other_end_nodes = topo->getNumNodes() - 1;
-  other_end_node_addresses = new int[num_of_other_end_nodes];
-
-  int index = 0;
   int addr;
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);
     addr = (int)node->getModule()->par("address");
-    EV_DEBUG << "End node address is " << addr << "\n";
 
-    if (addr != my_address) {  // ignore myself
-      other_end_node_addresses[index] = addr;
-      index++;
+    // ignore myself
+    if (addr != my_address) {
+      other_end_node_addresses.push_back(addr);
     }
   }
-
-  // Just so that we can see the data from the IDE
-  std::stringstream ss;
-  for (int i = 0; i < num_of_other_end_nodes; i++) {
-    ss << other_end_node_addresses[i] << ", ";
-  }
-  std::string s = ss.str();
-  par("Other_endnodes_table") = s;
   delete topo;
-  return other_end_node_addresses;
 }
 
 int Application::getOneRandomEndNodeAddress() {
-  int random_index = intuniform(0, num_of_other_end_nodes - 1);
+  int random_index = intuniform(0, other_end_node_addresses.size() - 1);
   return other_end_node_addresses[random_index];
-}
-
-int Application::getAddress() { return my_address; }
-
-cModule *Application::getQNode() {
-  // We know that Application is not the QNode, so start from the parent.
-  cModule *current_module = getParentModule();
-  try {
-    // Assumes the node in a network has a type QNode
-    const cModuleType *qnode_type = cModuleType::get("modules.QNode");
-    while (current_module->getModuleType() != qnode_type) {
-      current_module = current_module->getParentModule();
-    }
-  } catch (std::exception &e) {
-    error("No module with QNode type found. Have you changed the type name in ned file?");
-    endSimulation();
-  }
-  return current_module;
 }
 
 }  // namespace modules
