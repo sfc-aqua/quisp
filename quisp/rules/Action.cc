@@ -238,6 +238,10 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   }
   removeResource_fromRule(left_qubit);
   removeResource_fromRule(right_qubit);
+
+  // free consumed
+  rule_engine->freeConsumedResource(self_left_qnic_id, left_qubit, self_left_qnic_type);  // free left
+  rule_engine->freeConsumedResource(self_right_qnic_id, right_qubit, self_right_qnic_type);  // free right
  
   left_qubit->isBusy = false;
   right_qubit->isBusy = false;

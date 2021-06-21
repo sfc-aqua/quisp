@@ -1055,6 +1055,19 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
     EV << "This is node" << qubit->entangled_partner << "\n";
     error("RuleEngine. Ebit succeed. but wrong");
   }
+  // first delete old record
+  for (auto it = allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); ++it) {
+    if (it->second == qubit) {
+      allResources[qnic_type][qnic_index].erase(it);
+    }
+  }
+  // Make this qubit available for rules
+  if (qubit->isAllocated()) {
+    error("qubit is already allocated");
+  }
+  if (qubit->isLocked()) {
+    error("qubit is locked");
+  }
   allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner /*QNode IP address*/, qubit));
   if (qubit->entangled_partner != nullptr) {
     if (qubit->entangled_partner->entangled_partner == nullptr) {
