@@ -61,7 +61,7 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
  public:
   using quisp::modules::RuleEngine::initialize;
   using quisp::modules::RuleEngine::par;
-  RuleEngineTestTarget(MockStationaryQubit* mockQubit, MockRoutingDaemon* routing_daemon, MockHardwareMonitor hardware_monitor) : quisp::modules::RuleEngine() {
+  RuleEngineTestTarget(MockStationaryQubit* mockQubit, MockRoutingDaemon* routingdaemon, MockHardwareMonitor* hardware_monitor) : quisp::modules::RuleEngine() {
     setParInt(this, "address", 123);
     setParInt(this, "number_of_qnics_rp", 0);
     setParInt(this, "number_of_qnics_r", 0);
@@ -77,7 +77,7 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
     // setParInt(this, "num_measure", 0);
 
     this->setName("rule_engine_test_target");
-    this->provider.setStrategy(std::make_unique<Strategy>(mockQubit, routing_daemon, hardware_monitor));
+    this->provider.setStrategy(std::make_unique<Strategy>(mockQubit, routingdaemon, hardware_monitor));
   }
   private:
     FRIEND_TEST(RuleEngineTest, ESResourceUpdate);
