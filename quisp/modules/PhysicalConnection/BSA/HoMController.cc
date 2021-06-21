@@ -160,8 +160,8 @@ void HoMController::handleMessage(cMessage *msg) {
       // error("there you go..");
     }
     // error("Timeout");
-  } else {
-    std::cout << "Wait what?\n";
+  } else{
+    error("what's this packet?");
   }
   delete msg;
 }

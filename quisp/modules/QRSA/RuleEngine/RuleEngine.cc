@@ -178,7 +178,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
     bubble("EPPS");
     EPPStimingNotifier *pk = check_and_cast<EPPStimingNotifier *>(msg);
     error("EPPS is not implemented yet");
-
   } 
   
   else if (dynamic_cast<LinkTomographyRuleSet *>(msg) != nullptr) {
@@ -314,11 +313,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // for check
     p.Rs = pkt->getRuleSet();
     // here swappers got swapping ruleset with internal packet
-    // What we have to do here is
-    // 1. Add process (RuleSet) of swapping to running process
-    // 2. Run it
     int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
-    // std::cout << "Process size is ...." << p.Rs->size() << " node[" << parentAddress << "\n";
     // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
     // ResourceAllocation();
     if (p.Rs->size() > 0) {
@@ -363,6 +358,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     ResourceAllocation(QNIC_RP, i);
   }
 
+  // restartBSMtrial();
   traverseThroughAllProcesses2();
   delete msg;
 }
@@ -681,6 +677,9 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
 
   photon_transmission_config ptc;
   int destAddr = pk->getSrcAddr();  // The destination is where the request is generated (source of stand-alone or internal BSA node).
+  // if (destAddr == parentAddress){
+  //   error("Destination address must not be the parent address");
+  // }
   bool internal = false; // for internal hom?
   switch (qnic_type) {
     case QNIC_E: {
@@ -704,7 +703,23 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
   ptc.interval = pk->getInterval();
   ptc.qnic_type = qnic_type;
   // store the interface information for the futhter link generation process
-  sendPhotonTransmissionSchedule(ptc);
+  int numFree;
+  numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[ptc.qnic_type], ptc.qnic_index); 
+  if (numFree > 0){
+    sendPhotonTransmissionSchedule(ptc);
+  }else{
+    // generate BSM timing notifier again
+    // Do we have better solution for this?
+    transmission_interface.insert(std::make_pair(ptc.transmission_partner_address, ptc));
+    // InternalBSMtimingNotifier *pk_bsm = new InternalBSMtimingNotifier("Internal wait for BSM");
+    // pk_bsm->setSrcAddr(pk->getSrcAddr());
+    // pk_bsm->setInterval(pk->getInterval());
+    // pk_bsm->setAccepted_photons_per_sec(pk->getAccepted_photons_per_sec());
+    // pk_bsm->setTiming_at(pk->getTiming_at() + (double)0.01);
+    // pk_bsm->setInternal_qnic_index(pk->getInternal_qnic_index());
+    // pk_bsm->setInternal_qnic_address(pk->getInternal_qnic_index());
+    // scheduleAt(simTime()+0.0005, pk_bsm);
+  }
 }
 
 void RuleEngine::sendPhotonTransmissionSchedule(photon_transmission_config ptc){
@@ -737,19 +752,20 @@ void RuleEngine::sendPhotonTransmissionSchedule(photon_transmission_config ptc){
   if (numFree > 0){
     scheduleAt(simTime(), st);
   } else {
-    // if there are no free qubits, push back it.
-    transmission_interface.insert(std::make_pair(ptc.transmission_partner_address, ptc));
     delete st;
   }
 }
 
 void RuleEngine::restartBSMtrial(){
+  // when the number of qubits are different from each other, this would fail
+  // We should start the process from HoM
   if(transmission_interface.size()>0){ 
     for (auto it = transmission_interface.begin(); it!=transmission_interface.end(); ++it){
       auto interface = it->second;
       int numfree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[interface.qnic_type], interface.qnic_index);
       if(numfree > 0){
         transmission_interface.erase(it);
+        interface.timing = simTime() + interface.timing;
         sendPhotonTransmissionSchedule(interface);
       }
     }
