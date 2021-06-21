@@ -1016,7 +1016,6 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
 }
 
 void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_result swapr) {
-
   int new_partner = swapr.new_partner;
   int new_partner_qnic_index = swapr.new_partner_qnic_index;
   int new_partner_qnic_address = swapr.new_partner_qnic_address;  // this is not nessesary?
@@ -1431,7 +1430,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
             send(pkt_for_initiator, "RouterPort$o");
             send(pkt_for_responder, "RouterPort$o");
           }
-          
+
           else if (dynamic_cast<Error *>(pk) != nullptr) {
             Error *err = check_and_cast<Error *>(pk);
             error(err->getError_text());

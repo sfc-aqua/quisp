@@ -232,7 +232,7 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
     right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
     left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
 
-  } else {  
+  } else {
     left_partner_qubit->isBusy = false;
     right_partner_qubit->isBusy = false;
   }
@@ -245,9 +245,9 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
  
   left_qubit->isBusy = false;
   right_qubit->isBusy = false;
-  
+
   auto *pk = new SimultaneousSwappingResult;
-  
+
   pk->setKind(5);
   pk->setRuleSet_id(ruleset_id);
   pk->setRule_id(rule_id);
