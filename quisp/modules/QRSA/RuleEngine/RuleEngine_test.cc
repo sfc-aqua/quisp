@@ -29,11 +29,15 @@ class MockStationaryQubit : public StationaryQubit {
 class MockRoutingDaemon : public RoutingDaemon {
  public:
   MOCK_METHOD(int, return_QNIC_address_to_destAddr, (int destAddr), (override));
+ private:
+  FRIEND_TEST(RuleEngineTest, ESResourceUpdate);
 };
 
-class MockHardwareMonitor : public HardwareMonitor{
+class MockHardwareMonitor : public HardwareMonitor {
   public:
     MOCK_METHOD(std::unique_ptr<ConnectionSetupInfo>, findConnectionInfoByQnicAddr, (int qnic_address), (override));
+  private:
+    FRIEND_TEST(RuleEngineTest, ESResourceUpdate);
 };
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
@@ -73,6 +77,8 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
   }
   private:
     FRIEND_TEST(RuleEngineTest, ESResourceUpdate);
+    friend class MockRoutingDaemon;
+    friend class MockHardwareMonitor;
 };
 
 TEST(RuleEngineTest, Init) {
@@ -83,12 +89,12 @@ TEST(RuleEngineTest, Init) {
 
 TEST(RuleEngineTest, ESResourceUpdate){
   // test for resource update in entanglement swapping
-  auto *routingdaemon = new MockRoutingDaemon;
-  auto *mockHardwareMonitor = new MockHardwareMonitor;
-  auto *mockQubit = new MockStationaryQubit;
+  auto routingdaemon = new MockRoutingDaemon;
+  auto mockHardwareMonitor = new MockHardwareMonitor;
+  auto mockQubit = new MockStationaryQubit;
   RuleEngineTestTarget c{mockQubit, routingdaemon, mockHardwareMonitor};
-  EXPECT_CALL(*routingdaemon, return_QNIC_address_to_destAddr()).WillOnce(Return(2)).WillOnce(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr()).WillOnce(Return(1));
+  EXPECT_CALL(*routingdaemon, return_QNIC_address_to_destAddr(2)).WillOnce(Return(2));
+  EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(3)).WillOnce(Return(1));
   // EXPECT_CALL(*mockQubit, returnNumEndNodes()).WillOnce(Return(1));
   c.initialize();
   swapping_result swapr;
