@@ -2,20 +2,8 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <omnetpp.h>
-#include <omnetpp/ccomponenttype.h>
-#include <omnetpp/cexception.h>
-#include <omnetpp/clog.h>
-#include <omnetpp/csimulation.h>
-#include <test_utils/ModuleType.h>
-#include <test_utils/StaticTestEnv.h>
 #include <test_utils/TestUtils.h>
-#include <utils/IComponentProviderStrategy.h>
-#include <utils/utils.h>
-#include <cstring>
-#include <utility>
-#include "omnetpp/cobject.h"
-#include "omnetpp/cownedobject.h"
-#include "omnetpp/onstartup.h"
+#include "classical_messages_m.h"
 
 namespace {
 
@@ -24,53 +12,13 @@ using namespace quisp::utils;
 using namespace quisp::modules;
 using namespace quisp_test;
 
-class MockQNode : public omnetpp::cModule {
- public:
-  MockQNode(int addr) : omnetpp::cModule() {
-    setParInt(this, "address", addr);
-    setParStr(this, "nodeType", "qnode");
-    setComponentType(new TestModuleType("test qnode"));
-    finalizeParameters();
-  }
-  // virtual ~MockQNode() { setFlag(16, true); }
-};
-
-class StaticGate : public omnetpp::cGate {
- protected:
-  bool deliver(cMessage *msg, simtime_t at) override {
-    std::cout << "deliver called " << msg << std::endl;
-    return true;
-  }
-};
-static StaticGate *static_gate = new StaticGate{};
-class TestGate : public omnetpp::cGate {
- public:
-  TestGate(cModule *mod) {
-    desc = new omnetpp::cGate::Desc;
-    desc->name = new omnetpp::cGate::Name{"toRouter", omnetpp::cGate::Type::OUTPUT};
-    desc->owner = mod;
-    nextGate = static_gate;
-    desc->setOutputGate(this);
-    EVCB.gateCreated(this);
-  }
-  ~TestGate() { EVCB.gateDeleted(this); }
-
- protected:
-  bool deliver(cMessage *msg, simtime_t at) override {
-    std::cout << "deliver called " << msg << std::endl;
-    return true;
-  }
-};
-
-MockQNode *mock_qnode;
-
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
-  Strategy(MockQNode *_qnode) : parent_qnode(_qnode) {}
+  Strategy(TestQNode *_qnode) : parent_qnode(_qnode) {}
   cModule *getQNode() override { return parent_qnode; }
 
  private:
-  MockQNode *parent_qnode;
+  TestQNode *parent_qnode;
 };
 
 class AppTestTarget : public quisp::modules::Application {
@@ -84,87 +32,111 @@ class AppTestTarget : public quisp::modules::Application {
     }
     return toRouterGate;
   };
-  AppTestTarget(MockQNode *parent_qnode) : Application(), toRouterGate(new TestGate(this)) {
+  explicit AppTestTarget(TestQNode *parent_qnode) : Application(), toRouterGate(new TestGate(this)) {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     setComponentType(new TestModuleType("test qnode"));
   }
-  virtual ~AppTestTarget() {}
+  virtual ~AppTestTarget() { EVCB.gateDeleted(toRouterGate); }
   std::vector<int> getOtherEndNodeAdresses() { return this->other_end_node_addresses; }
   int getAddress() { return this->my_address; }
 
-  cGate *toRouterGate;
+  TestGate *toRouterGate;
 };
 
 TEST(AppTest, InitSimple) {
   auto *sim = prepareSimulation();
-  mock_qnode = new MockQNode{123};
-  AppTestTarget app{mock_qnode};
-  setParBool(&app, "EndToEndConnection", true);
-  setParInt(&app, "NumberOfResources", 5);
-  setParInt(&app, "num_measure", 1);
-  setParInt(&app, "TrafficPattern", 0);
-  setParInt(&app, "LoneInitiatorAddress", 0);
-  app.callInitialize();
-  ASSERT_EQ(app.getAddress(), 123);
-  ASSERT_EQ(app.getOtherEndNodeAdresses().size(), 0);
+  auto *mock_qnode = new TestQNode{123};
+  auto *app = new AppTestTarget{mock_qnode};
+  setParBool(app, "EndToEndConnection", true);
+  setParInt(app, "NumberOfResources", 5);
+  setParInt(app, "num_measure", 1);
+  setParInt(app, "TrafficPattern", 0);
+  setParInt(app, "LoneInitiatorAddress", 0);
+
+  sim->registerComponent(app);
+  app->callInitialize();
+
+  ASSERT_EQ(app->getAddress(), mock_qnode->address);
+  ASSERT_EQ(app->getOtherEndNodeAdresses().size(), 0);
 }
 
 TEST(AppTest, Init_OneConnection_NoSender) {
   auto *sim = prepareSimulation();
-  mock_qnode = new MockQNode{123};
-  AppTestTarget app{mock_qnode};
-  setParBool(&app, "EndToEndConnection", true);
-  setParInt(&app, "NumberOfResources", 5);
-  setParInt(&app, "num_measure", 1);
-  setParInt(&app, "TrafficPattern", 1);
-  setParInt(&app, "LoneInitiatorAddress", 0);
-  app.callInitialize();
-  ASSERT_EQ(app.getAddress(), 123);
-  ASSERT_EQ(app.getOtherEndNodeAdresses().size(), 0);
-}
-
-TEST(AppTest, Init_OneConnection_Sender) {
-  auto *sim = prepareSimulation();
-
-  mock_qnode = new MockQNode{123};
-  sim->registerComponent(mock_qnode);
-
-  auto *mock_qnode2 = new MockQNode{456};
-  sim->registerComponent(mock_qnode2);
-
+  auto *mock_qnode = new TestQNode{123};
   auto *app = new AppTestTarget{mock_qnode};
-  sim->registerComponent(app);
   setParBool(app, "EndToEndConnection", true);
   setParInt(app, "NumberOfResources", 5);
   setParInt(app, "num_measure", 1);
   setParInt(app, "TrafficPattern", 1);
+  setParInt(app, "LoneInitiatorAddress", 0);
+
+  sim->registerComponent(app);
+  app->callInitialize();
+
+  ASSERT_EQ(app->getAddress(), mock_qnode->address);
+  ASSERT_EQ(app->getOtherEndNodeAdresses().size(), 0);
+}
+
+TEST(AppTest, Init_OneConnection_Sender) {
+  auto *sim = prepareSimulation();
+  auto *mock_qnode = new TestQNode{123};
+
+  auto *app = new AppTestTarget{mock_qnode};
+  setParBool(app, "EndToEndConnection", true);
+  setParInt(app, "NumberOfResources", 5);
+  setParInt(app, "num_measure", 1);
+  setParInt(app, "TrafficPattern", 1);
+  setParInt(app, "LoneInitiatorAddress", mock_qnode->address);
+  sim->registerComponent(app);
+
+  auto *mock_qnode2 = new TestQNode{456};
+  app->callInitialize();
+
+  ASSERT_EQ(app->getAddress(), mock_qnode->address);
+  ASSERT_EQ(app->getOtherEndNodeAdresses().size(), 1);
+
+  sim->run();
+  // assert app sent one message to "toRouter" gate
+  ASSERT_EQ(app->toRouterGate->messages.size(), 1);
+
+  auto *msg = app->toRouterGate->messages.at(0);
+  ASSERT_NE(msg, nullptr);
+
+  auto *pkt = dynamic_cast<ConnectionSetupRequest *>(msg);
+  ASSERT_EQ(pkt->getActual_srcAddr(), 123);
+  ASSERT_EQ(pkt->getActual_destAddr(), mock_qnode2->address);
+  ASSERT_EQ(pkt->getSrcAddr(), 123);
+  ASSERT_EQ(pkt->getDestAddr(), 123);
+  ASSERT_EQ(pkt->getNumber_of_required_Bellpairs(), 5);
+}
+
+TEST(AppTest, Init_OneConnection_Sender_TrafficPattern2) {
+  auto *sim = prepareSimulation();
+  auto *mock_qnode = new TestQNode{123};
+  auto *mock_qnode2 = new TestQNode{456};
+  auto *app = new AppTestTarget{mock_qnode};
+  setParBool(app, "EndToEndConnection", true);
+  setParInt(app, "NumberOfResources", 5);
+  setParInt(app, "num_measure", 1);
+  setParInt(app, "TrafficPattern", 2);
   setParInt(app, "LoneInitiatorAddress", 123);
-  // app->setLogLevel(LogLevel::LOGLEVEL_DEBUG);
-  // app->callInitialize();
+  sim->registerComponent(app);
 
-  // cSimulation::doneLoadingNedFiles();
-
-  // CodeFragments::executeAll(CodeFragments::STARTUP);
-  sim->setSimulationTimeLimit(10000);
-  sim->callInitialize();
   app->callInitialize();
   ASSERT_EQ(app->getAddress(), 123);
   ASSERT_EQ(app->getOtherEndNodeAdresses().size(), 1);
-  try {
-    while (true) {
-      cEvent *event = sim->takeNextEvent();
-      std::cout << "got event: " << event->getName() << std::endl;
-      ;
-      if (!event) break;
-      sim->executeEvent(event);
-    }
-  } catch (cTerminationException &e) {
-    std::cout << "Finished: " << e.what() << std::endl;
-  } catch (std::exception &e) {
-    std::cout << "ERROR: " << e.what() << std::endl;
-  }
-  // auto *event = sim->takeNextEvent();
-  // sim->executeEvent(event);
+
+  sim->run();
+  ASSERT_EQ(app->toRouterGate->messages.size(), 1);
+
+  auto *msg = app->toRouterGate->messages.at(0);
+  ASSERT_NE(msg, nullptr);
+  auto *pkt = dynamic_cast<ConnectionSetupRequest *>(msg);
+  ASSERT_EQ(pkt->getActual_srcAddr(), 123);
+  ASSERT_EQ(pkt->getActual_destAddr(), mock_qnode2->address);
+  ASSERT_EQ(pkt->getSrcAddr(), 123);
+  ASSERT_EQ(pkt->getDestAddr(), 123);
+  ASSERT_EQ(pkt->getNumber_of_required_Bellpairs(), 5);
 }
 
 }  // namespace
