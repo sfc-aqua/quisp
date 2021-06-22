@@ -2,11 +2,13 @@
 
 #include <omnetpp.h>
 #include "KeyValue.h"
-#include "omnetpp/cconfiguration.h"
-using namespace omnetpp;
-namespace quisp_test {
 
-class Configuration : public cConfiguration {
+namespace quisp_test {
+namespace configuration {
+
+using key_value::TestKeyValue;
+
+class Configuration : public omnetpp::cConfiguration {
  private:
   std::vector<TestKeyValue> kvs;
 
@@ -23,4 +25,5 @@ class Configuration : public cConfiguration {
   virtual const char *substituteVariables(const char *value) const override { return nullptr; };
 };
 
+}  // namespace configuration
 }  // namespace quisp_test

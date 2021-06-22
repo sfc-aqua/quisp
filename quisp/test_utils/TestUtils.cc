@@ -1,26 +1,36 @@
 #include "TestUtils.h"
+#include <omnetpp.h>
+#include "StaticEnv.h"
+
 namespace quisp_test {
+namespace utils {
+
 void setParInt(cModule *module, const char *name, const int val) {
-  omnetpp::cParImpl *p = new omnetpp::cIntParImpl();
+  cParImpl *p = new cIntParImpl();
   p->setName(name);
   p->setIntValue(val);
   module->addPar(p);
 }
 void setParStr(cModule *module, const char *name, const char *val) {
-  omnetpp::cParImpl *p = new omnetpp::cStringParImpl();
+  cParImpl *p = new cStringParImpl();
   p->setName(name);
   p->setStringValue(val);
   module->addPar(p);
 }
 void setParBool(cModule *module, const char *name, const bool val) {
-  omnetpp::cParImpl *p = new omnetpp::cBoolParImpl();
+  cParImpl *p = new cBoolParImpl();
   p->setName(name);
   p->setBoolValue(val);
   module->addPar(p);
 }
 
-cSimulation *prepareSimulation() {
-  auto *env = dynamic_cast<quisp_test::StaticTestEnv *>(cSimulation::getStaticEnvir());
-  return env->newSimulation();
+TestSimulation *prepareSimulation() {
+  using quisp_test::env::StaticEnv;
+  auto *env = dynamic_cast<StaticEnv *>(cSimulation::getStaticEnvir());
+  return dynamic_cast<TestSimulation *>(env->newSimulation());
 }
+
+cEnvir *createStaticEnv() { return new quisp_test::env::StaticEnv; }
+
+}  // namespace utils
 }  // namespace quisp_test

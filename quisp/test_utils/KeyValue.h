@@ -1,9 +1,9 @@
 #pragma once
 
 #include <omnetpp.h>
-#include "omnetpp/cconfigoption.h"
-using namespace omnetpp;
+
 namespace quisp_test {
+namespace key_value {
 
 class TestKeyValue : public omnetpp::cConfiguration::KeyValue {
  public:
@@ -13,4 +13,5 @@ class TestKeyValue : public omnetpp::cConfiguration::KeyValue {
   const char *getBaseDirectory() const override { return ""; };
 };
 
+}  // namespace key_value
 }  // namespace quisp_test

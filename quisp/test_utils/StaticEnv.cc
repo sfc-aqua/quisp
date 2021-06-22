@@ -1,26 +1,28 @@
-
-#include "StaticTestEnv.h"
+#include "StaticEnv.h"
+#include "Simulation.h"
 #include "omnetpp/cconfiguration.h"
 #include "omnetpp/cownedobject.h"
 #include "omnetpp/csimulation.h"
 
 namespace quisp_test {
+namespace env {
+using configuration::Configuration;
 
-StaticTestEnv::StaticTestEnv() {}
+StaticEnv::StaticEnv() {}
 
-cConfiguration *StaticTestEnv::getConfig() { return new Configuration(); }
-std::string StaticTestEnv::gets(const char *prompt, const char *defaultreply) {
+cConfiguration *StaticEnv::getConfig() { return new Configuration(); }
+std::string StaticEnv::gets(const char *prompt, const char *defaultreply) {
   unsupported();
   return "";
 }
-void StaticTestEnv::undisposedObject(cObject *obj) {}
+void StaticEnv::undisposedObject(cObject *obj) {}
 
 /**
  * \brief delete current simulation and then setup new simulation
  */
-cSimulation *StaticTestEnv::newSimulation() {
+cSimulation *StaticEnv::newSimulation() {
   resetSimulation();
-  auto *sim = new cSimulation("test_sim", this);
+  auto *sim = new simulation::TestSimulation("test_sim", this);
   cComponent::clearSignalState();
   cSimulation::setActiveSimulation(sim);
   SimTime::setScaleExp(-3);
@@ -31,7 +33,7 @@ cSimulation *StaticTestEnv::newSimulation() {
 /**
  *  \brief delete all cObjects in cSimulation::defaultList.
  */
-void StaticTestEnv::resetSimulation() {
+void StaticEnv::resetSimulation() {
   using omnetpp::defaultList;
   cSimulation *prev_sim = cSimulation::getActiveSimulation();
   if (prev_sim != nullptr) {
@@ -43,5 +45,5 @@ void StaticTestEnv::resetSimulation() {
     defaultList.removeFromOwnershipTree();
   }
 }
-
+}  // namespace env
 }  // namespace quisp_test

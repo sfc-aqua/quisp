@@ -1,21 +1,18 @@
 #pragma once
 
 #include <omnetpp.h>
-#include <omnetpp/cconfiguration.h>
-#include <omnetpp/cmersennetwister.h>
-#include <omnetpp/csimulation.h>
-#include <stdexcept>
 #include "Configuration.h"
 
-using namespace omnetpp;
-using namespace omnetpp::common;
-
 namespace quisp_test {
+namespace env {
+
+using namespace omnetpp;
+
 /**
  * cEnvir implementation for unit testing based on OMNeT++'s StaticEnv.
  * ref: https://github.com/omnetpp/omnetpp/blob/308b3b2b4c060b165911237a9bd9470ea010d34c/src/sim/csimulation.cc#L728
  */
-class StaticTestEnv : public cEnvir {
+class StaticEnv : public omnetpp::cEnvir {
  protected:
   void unsupported() const { throw std::runtime_error("StaticEnv: Unsupported method called"); }
   void alert(const char *msg) override { ::printf("\n<!> %s\n\n", msg); }
@@ -25,8 +22,8 @@ class StaticTestEnv : public cEnvir {
   }
 
  public:
-  StaticTestEnv();
-  ~StaticTestEnv() {}
+  StaticEnv();
+  ~StaticEnv() {}
 
   // eventlog callback interface
   void objectDeleted(cObject *object) override {}
@@ -150,4 +147,5 @@ class StaticTestEnv : public cEnvir {
   void resetSimulation();
 };
 
+}  // namespace env
 }  // namespace quisp_test

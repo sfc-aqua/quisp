@@ -1,11 +1,13 @@
 #pragma once
 
 #include <omnetpp.h>
+#include <string>
 #include "Configuration.h"
-#include "omnetpp/cconfiguration.h"
-#include "omnetpp/cproperties.h"
-using namespace omnetpp;
+
 namespace quisp_test {
+namespace module_type {
+
+using namespace omnetpp;
 
 class TestModuleType : public cModuleType {
  private:
@@ -13,36 +15,35 @@ class TestModuleType : public cModuleType {
   cConfiguration *cfg;
 
  public:
-  cModule *createModuleObject() override{};
+  TestModuleType(const char *name) : cModuleType(name) {
+    using quisp_test::configuration::Configuration;
+    cfg = new Configuration;
+    props = new cProperties;
+  }
 
+  cModule *createModuleObject() override { return nullptr; };
   void addParametersAndGatesTo(cModule *module) override{};
-
   void applyPatternAssignments(cComponent *component) override{};
-
   void setupGateVectors(cModule *module) override{};
-
   void buildInside(cModule *module) override{};
 
   // methods redefined from cComponentType
   cProperties *getProperties() const override { return props; };
-  cProperties *getParamProperties(const char *paramName) const override{};
-  cProperties *getGateProperties(const char *gateName) const override{};
-  cProperties *getSubmoduleProperties(const char *submoduleName, const char *submoduleType) const override{};
-  cProperties *getConnectionProperties(int connectionId, const char *channelType) const override{};
-  std::string getPackageProperty(const char *name) const override{};
-  const char *getImplementationClassName() const override{};
-  std::string getCxxNamespace() const override{};
-  const char *getSourceFileName() const override{};
-  bool isInnerType() const override{};
-
-  TestModuleType(const char *name) : cModuleType(name) {
-    cfg = new Configuration;
-    props = new cProperties;
-  }
+  cProperties *getParamProperties(const char *paramName) const override { return nullptr; };
+  cProperties *getGateProperties(const char *gateName) const override { return nullptr; };
+  cProperties *getSubmoduleProperties(const char *submoduleName, const char *submoduleType) const override { return nullptr; };
+  cProperties *getConnectionProperties(int connectionId, const char *channelType) const override { return nullptr; };
+  std::string getPackageProperty(const char *name) const override { return std::string("mock package property"); };
+  const char *getImplementationClassName() const override { return "TestModuleType"; };
+  std::string getCxxNamespace() const override { return std::string("mock namespace"); };
+  const char *getSourceFileName() const override { return "no source"; };
+  bool isInnerType() const override { return false; };
 
   std::string str() const override { return "test module type"; };
   std::string getNedSource() const override { return ""; };
   bool isNetwork() const override { return false; };
   bool isSimple() const override { return true; };
 };
+
+}  // namespace module_type
 }  // namespace quisp_test
