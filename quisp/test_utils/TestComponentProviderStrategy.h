@@ -32,5 +32,6 @@ class TestComponentProviderStrategy : public IComponentProviderStrategy {
   virtual IHardwareMonitor *getHardwareMonitor() override { return nullptr; };
   virtual IRealTimeController *getRealTimeController() override { return nullptr; };
 };
+
 }  // namespace strategy
 }  // namespace quisp_test

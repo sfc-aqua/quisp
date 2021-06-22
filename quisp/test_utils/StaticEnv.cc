@@ -45,5 +45,6 @@ void StaticEnv::resetSimulation() {
     defaultList.removeFromOwnershipTree();
   }
 }
+
 }  // namespace env
 }  // namespace quisp_test
