@@ -279,7 +279,43 @@ void RuleEngine::handleMessage(cMessage *msg) {
     swapr.measured_qubit_index = pkt->getMeasured_qubit_index();
     swapr.operation_type = pkt->getOperation_type();
     updateResources_EntanglementSwapping(swapr);
-  } else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
+  }
+
+  else if (dynamic_cast<SimultaneousSwappingResult *>(msg) != nullptr) {
+    SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(msg);
+    // Add messeage to collection [ruleSetid][index_in_path]
+    int rule_id = pkt->getRuleSet_id();
+    simultaneous_es_results[rule_id][pkt->getIndex_in_path()] = pkt->getOperation_type();
+
+    // Check if all message is here or not
+    if (simultaneous_es_results[rule_id].size() == pkt->getPath_length_exclude_IR()) {
+      // optimize correction operation, without global phase consideration
+      std::map<int, int>::iterator it;
+      int oco_result = 0;
+      for (it = simultaneous_es_results[rule_id].begin(); it != simultaneous_es_results[rule_id].end(); it++) {  // this may wrong due to using of index, not iterator
+        oco_result ^= it->second;
+      }
+
+      int src = pkt->getSrcAddr();
+      int dest = pkt->getDestAddr();
+      process_id swapping_id;
+      swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
+      swapping_id.rule_id = pkt->getRule_id();
+      swapping_id.index = pkt->getAction_index();
+
+      swapping_result swapr;  // result of entanglement swapping
+      swapr.id = swapping_id;
+      swapr.new_partner = pkt->getNew_partner();
+      swapr.new_partner_qnic_index = pkt->getNew_partner_qnic_index();
+      swapr.new_partner_qnic_address = pkt->getNew_partner_qnic_address();
+      swapr.new_partner_qnic_type = pkt->getNew_partner_qnic_type();
+      swapr.measured_qubit_index = pkt->getMeasured_qubit_index();
+      swapr.operation_type = oco_result;
+      updateResources_SimultaneousEntanglementSwapping(swapr);
+    }
+  }
+
+  else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
     InternalRuleSetForwarding *pkt = check_and_cast<InternalRuleSetForwarding *>(msg);
     // add actual process
     process p;
@@ -979,6 +1015,71 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   traverseThroughAllProcesses2();  // New resource added to QNIC with qnic_type qnic_index.
 }
 
+void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_result swapr) {
+  int new_partner = swapr.new_partner;
+  int new_partner_qnic_index = swapr.new_partner_qnic_index;
+  int new_partner_qnic_address = swapr.new_partner_qnic_address;  // this is not nessesary?
+  QNIC_type new_partner_qnic_type = swapr.new_partner_qnic_type;
+  int operation_type = swapr.operation_type;
+
+  int qnic_address = routingdaemon->return_QNIC_address_to_destAddr(new_partner);
+  auto info = hardware_monitor->findConnectionInfoByQnicAddr(qnic_address);
+  if (info == nullptr) {
+    error("qnic(addr: %d) info not found", qnic_address);
+  }
+  int qnic_index = info->qnic.index;
+  QNIC_type qnic_type = info->qnic.type;
+  int qubit_index = swapr.measured_qubit_index;
+  StationaryQubit *qubit = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
+
+  if (operation_type == 0) {
+    // nothing
+  } else if (operation_type == 1) {
+    // do Z
+    qubit->Z_gate();
+  } else if (operation_type == 2) {
+    // do X
+    qubit->Z_gate();
+  } else if (operation_type == 3) {
+    // do XZ
+    qubit->Z_gate();
+    qubit->X_gate();
+  } else {
+    error("something error happened! This operation type doesn't recorded!");
+  }
+
+  if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
+    std::cout << qubit << ", node[" << qubit->node_address << "] from qnic[" << qubit->qnic_index << "]\n";
+
+    EV << "This is node" << qubit->entangled_partner << "\n";
+    error("RuleEngine. Ebit succeed. but wrong");
+  }
+  // first delete old record
+  for (auto it = allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); ++it) {
+    if (it->second == qubit) {
+      allResources[qnic_type][qnic_index].erase(it);
+    }
+  }
+  // Make this qubit available for rules
+  if (qubit->isAllocated()) {
+    error("qubit is already allocated");
+  }
+  if (qubit->isLocked()) {
+    error("qubit is locked");
+  }
+  allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner /*QNode IP address*/, qubit));
+  if (qubit->entangled_partner != nullptr) {
+    if (qubit->entangled_partner->entangled_partner == nullptr) {
+      error("1. Entanglement tracking is not doing its job. in update resource E.S.");
+    }
+    if (qubit->entangled_partner->entangled_partner != qubit) {
+      error("2. Entanglement tracking is not doing its job. in update resource E.S.");
+    }
+  }
+  ResourceAllocation(qnic_type, qnic_index);
+  traverseThroughAllProcesses2();  // New resource added to QNIC with qnic_type qnic_index.
+}
+
 // Only for MIM and MM
 void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result) {
   int list_size = pk_result->getList_of_failedArraySize();
@@ -1298,7 +1399,39 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
             send(pkt_for_left, "RouterPort$o");
             send(pkt_for_right, "RouterPort$o");
-          } else if (dynamic_cast<Error *>(pk) != nullptr) {
+          } else if (dynamic_cast<SimultaneousSwappingResult *>(pk) != nullptr) {
+            SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(pk);
+            EV << "done swapping at " << parentAddress << "\n";
+
+            // packet for left node
+            SimultaneousSwappingResult *pkt_for_initiator = new SimultaneousSwappingResult("SimultaneousSwappingResult(Left)");
+            pkt_for_initiator->setKind(5);  // cyan
+            pkt_for_initiator->setDestAddr(pkt->getInitiator_Dest());
+            pkt_for_initiator->setSrcAddr(parentAddress);
+            pkt_for_initiator->setOperation_type(pkt->getOperation_type_left());
+            pkt_for_initiator->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
+            pkt_for_initiator->setNew_partner(pkt->getNew_partner_left());
+            pkt_for_initiator->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
+            pkt_for_initiator->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
+            pkt_for_initiator->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
+
+            // packet for right node
+            SimultaneousSwappingResult *pkt_for_responder = new SimultaneousSwappingResult("SimultaneousSwappingResult(Right)");
+            pkt_for_responder->setKind(5);  // cyan
+            pkt_for_responder->setDestAddr(pkt->getResponder_Dest());
+            pkt_for_responder->setSrcAddr(parentAddress);
+            pkt_for_responder->setOperation_type(pkt->getOperation_type_right());
+            pkt_for_responder->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
+            pkt_for_responder->setNew_partner(pkt->getNew_partner_right());
+            pkt_for_responder->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
+            pkt_for_responder->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
+            pkt_for_responder->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
+
+            send(pkt_for_initiator, "RouterPort$o");
+            send(pkt_for_responder, "RouterPort$o");
+          }
+
+          else if (dynamic_cast<Error *>(pk) != nullptr) {
             Error *err = check_and_cast<Error *>(pk);
             error(err->getError_text());
             delete pk;

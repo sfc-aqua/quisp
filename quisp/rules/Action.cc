@@ -176,6 +176,108 @@ cPacket *SwappingAction::run(cModule *re) {
   return pk;
 }
 
+cPacket *SimultaneousSwappingAction::run(cModule *re) {
+  float success_probability = 1.0;
+
+  StationaryQubit *left_qubit = nullptr;
+  StationaryQubit *right_qubit = nullptr;
+
+  left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
+  right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
+
+  if (left_qubit == nullptr || right_qubit == nullptr) {
+    Error *pk = new Error;
+    pk->setError_text("Not enough resource found! This shouldn't happen!");
+    return pk;
+  }
+  if (left_qnic_id < 0 || right_qnic_id < 0) {
+    Error *pk = new Error;
+    pk->setError_text("QNICs are not found!");
+    return pk;
+  }
+
+  StationaryQubit *right_partner_qubit = right_qubit->entangled_partner;
+  StationaryQubit *left_partner_qubit = left_qubit->entangled_partner;
+
+  left_qubit->Hadamard_gate();
+  right_qubit->CNOT_gate(left_qubit);
+
+  int lindex = left_partner_qubit->stationaryQubit_address;
+  int rindex = right_partner_qubit->stationaryQubit_address;
+
+  bool left_measure = left_qubit->measure_Z();
+  bool right_measure = right_qubit->measure_Z();
+
+  int operation_type_left, operation_type_right;
+
+  if (!left_measure && !right_measure) {  // 0 0
+    EV << "operation type 0, operation left I, operation right I\n";
+    operation_type_left = 0;
+    operation_type_right = 0;
+  } else if (!left_measure && right_measure) {  // 0 1
+    EV << "operation type 1, operation left I, operation right X\n";
+    operation_type_left = 0;
+    operation_type_right = 1;
+  } else if (left_measure && !right_measure) {  // 1 0
+    EV << "operation type 2, operation left Z, operation right I\n";
+    operation_type_left = 0;
+    operation_type_right = 2;
+  } else if (left_measure && right_measure) {  // 1 1
+    EV << "operation type 3, operation left Z, operation right X\n";
+    operation_type_left = 0;
+    operation_type_right = 3;
+  }
+  RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
+  if (std::rand() / RAND_MAX < success_probability) {
+    right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
+    left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
+
+  } else {
+    left_partner_qubit->isBusy = false;
+    right_partner_qubit->isBusy = false;
+  }
+  removeResource_fromRule(left_qubit);
+  removeResource_fromRule(right_qubit);
+
+  // free consumed
+  rule_engine->freeConsumedResource(self_left_qnic_id, left_qubit, self_left_qnic_type);  // free left
+  rule_engine->freeConsumedResource(self_right_qnic_id, right_qubit, self_right_qnic_type);  // free right
+ 
+  left_qubit->isBusy = false;
+  right_qubit->isBusy = false;
+
+  auto *pk = new SimultaneousSwappingResult;
+
+  pk->setKind(5);
+  pk->setRuleSet_id(ruleset_id);
+  pk->setRule_id(rule_id);
+  pk->setAction_index(action_index);
+
+  pk->setIndex_in_path(index_in_path);
+  pk->setPath_length_exclude_IR(path_length_exclude_IR);
+
+  // FIXME: These operations are corresponds to the result of operation.
+  pk->setOperation_type_left(operation_type_left);  // operation type for left node
+  pk->setOperation_type_right(operation_type_right);  // operation type for right node
+  // These information are cropped in the RuleEngine.
+
+  // Change the destination to end nodes instead.
+  pk->setInitiator_Dest(initiator);
+  pk->setResponder_Dest(responder);
+
+  pk->setNew_partner_left(responder);
+  pk->setNew_partner_qnic_index_left(responder_qnic_id);
+  pk->setNew_partner_qnic_type_left(responder_qnic_type);
+  pk->setNew_partner_qnic_address_left(responder_qnic_address);
+
+  pk->setNew_partner_right(initiator);
+  pk->setNew_partner_qnic_index_right(initiator_qnic_id);
+  pk->setNew_partner_qnic_type_right(initiator_qnic_type);
+  pk->setNew_partner_qnic_address_right(initiator_qnic_address);
+
+  return pk;
+}
+
 // Either Z or X purification.
 cPacket *PurifyAction::run(cModule *re) {
   StationaryQubit *qubit = nullptr;

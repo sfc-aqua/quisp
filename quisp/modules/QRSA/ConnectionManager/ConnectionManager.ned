@@ -7,7 +7,7 @@ simple ConnectionManager
         int number_of_qnics_r;
         int number_of_qnics_rp;
         int total_number_of_qnics;
-        bool simultanious_ES;
+        bool simultaneousES = default(false);
 
     gates:
         inout RouterPort;
