@@ -37,6 +37,24 @@ StationaryQubit *DefaultComponentProviderStrategy::getStationaryQubit(int qnic_i
   return check_and_cast<StationaryQubit *>(qubit);
 }
 
+StationaryQubit *DefaultComponentProviderStrategy::getStationaryQubitForLogicalEncoding(int qnic_index, int qubit_index, QNIC_type qnic_type) {
+  auto *qnic = getQNIC(qnic_index, qnic_type);
+  if (qnic == nullptr) {
+    throw cRuntimeError("QNIC not found. index: %d, type: %d", qnic_index, qnic_type);
+  }
+  auto *qubit = qnic->getSubmodule("physicalForLogicalQubit", qubit_index);
+  return check_and_cast<StationaryQubit *>(qubit);
+}
+
+StationaryQubit *DefaultComponentProviderStrategy::getAncillaQubitForDetection(int qnic_index, int qubit_index, QNIC_type qnic_type) {
+  auto *qnic = getQNIC(qnic_index, qnic_type);
+  if (qnic == nullptr) {
+    throw cRuntimeError("QNIC not found. index: %d, type: %d", qnic_index, qnic_type);
+  }
+  auto *qubit = qnic->getSubmodule("detectionQubit", qubit_index);
+  return check_and_cast<StationaryQubit *>(qubit);
+}
+
 cModule *DefaultComponentProviderStrategy::getQNIC(int qnic_index, QNIC_type qnic_type) {
   if (qnic_type > QNIC_N) {
     throw cRuntimeError("got invalid qnic type: %d", qnic_type);

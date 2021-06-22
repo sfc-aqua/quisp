@@ -1053,6 +1053,21 @@ int HardwareMonitor::getQnicNumQubits(int qnic_index, QNIC_type qnic_type) {
   auto qnic = getQnic(qnic_index, qnic_type);
   return qnic->par("numBuffer");
 }
+int HardwareMonitor::getQnicNumPhysicalForLogicalQubits(int qnic_index, QNIC_type qnic_type) {
+  Enter_Method("checkNumBuff()");
+  auto qnic = getQnic(qnic_index, qnic_type);
+  return qnic->par("numLogicalBuffer");
+}
+int HardwareMonitor::getQnicNumAnciallaDetectionQubits(int qnic_index, QNIC_type qnic_type) {
+  Enter_Method("checkNumBuff()");
+  auto qnic = getQnic(qnic_index, qnic_type);
+  return qnic->par("numDetectionAncilla");
+}
+int HardwareMonitor::getQnicNumInternalAncillaQubits(int qnic_index, QNIC_type qnic_type) {
+  Enter_Method("checkNumBuff()");
+  auto qnic = getQnic(qnic_index, qnic_type);
+  return qnic->par("numInternalAncilla");
+}
 
 cModule *HardwareMonitor::getQnic(int qnic_index, QNIC_type qnic_type) {
   if (qnic_type >= QNIC_N) {

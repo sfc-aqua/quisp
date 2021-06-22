@@ -47,9 +47,23 @@ void RuleEngine::initialize() {
   }
 
   Busy_OR_Free_QubitState_table = new QubitStateTable[QNIC_N];
-  Busy_OR_Free_QubitState_table[QNIC_E] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_E], QNIC_E);
-  Busy_OR_Free_QubitState_table[QNIC_R] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_R], QNIC_R);
-  Busy_OR_Free_QubitState_table[QNIC_RP] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_RP], QNIC_RP);
+  Busy_OR_Free_QubitState_table[QNIC_E] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_E], QNIC_E, 0);
+  Busy_OR_Free_QubitState_table[QNIC_R] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_R], QNIC_R, 0);
+  Busy_OR_Free_QubitState_table[QNIC_RP] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_RP], QNIC_RP, 0);
+
+  // For 2G
+  // Encoding qubits
+  Busy_OR_Free_QubitStateForLogical_table = new QubitStateTable[QNIC_N];
+  Busy_OR_Free_QubitStateForLogical_table[QNIC_E] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_E], QNIC_E, 1);
+  Busy_OR_Free_QubitStateForLogical_table[QNIC_R] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_R], QNIC_R, 1);
+  Busy_OR_Free_QubitStateForLogical_table[QNIC_RP] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_RP], QNIC_RP, 1);
+
+  // Detection qubits
+  Busy_OR_Free_QubitStateDetection_table = new QubitStateTable[QNIC_N];
+  Busy_OR_Free_QubitStateDetection_table[QNIC_E] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_E], QNIC_E, 2);
+  Busy_OR_Free_QubitStateDetection_table[QNIC_R] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_R], QNIC_R, 2);
+  Busy_OR_Free_QubitStateDetection_table[QNIC_RP] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_RP], QNIC_RP, 2);
+
 
   // Tracks which qubit was sent first, second and so on per qnic(r,rp)
   tracker = new sentQubitIndexTracker[number_of_qnics_all];
@@ -832,7 +846,7 @@ void RuleEngine::scheduleNextEmissionEvent(int qnic_index, int qnic_address, dou
     scheduleAt(simTime() + interval, st);
 }
 
-QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTable table, QNIC_type qnic_type) {
+QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTable table, QNIC_type qnic_type, int qubit_role) {
   int qnics = -1;
   switch (qnic_type) {
     case QNIC_E:
@@ -850,7 +864,26 @@ QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTable table, QNI
 
   int index = 0;
   for (int i = 0; i < qnics; i++) {
-    for (int x = 0; x < hardware_monitor->getQnicNumQubits(i, qnic_type); x++) {
+
+    int numQubit = -1;
+    switch (qubit_role) {
+      case 0 :
+        numQubit = hardware_monitor->getQnicNumQubits(i, qnic_type);
+        break; 
+      case 1 :
+        numQubit = hardware_monitor->getQnicNumPhysicalForLogicalQubits(i, qnic_type);
+        break;
+      case 2 :
+        numQubit = hardware_monitor->getQnicNumAnciallaDetectionQubits(i, qnic_type);
+        break;
+      case 3 :
+        numQubit = hardware_monitor->getQnicNumInternalAncillaQubits(i, qnic_type);
+        break;
+      default:
+        error("Unregonize qubit role");
+    }
+    
+    for (int x = 0; x < numQubit; x++) {
       QubitAddr this_qubit = {parentAddress, i, x};
       // QubitAddr entangled_qubit = {-1, -1, -1};//Entangled address. The system may miss-track the actual entangled partner.  Initialized as -1 'cause no entangled qubits in the
       // beginning QubitAddr actual = {-1, -1, -1};//Entangled address. This is the true physically entangled partner. If there!=actual, then any operation on the qubit is a mess!

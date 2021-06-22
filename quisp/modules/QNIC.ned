@@ -9,7 +9,12 @@ module QNIC
 {
     parameters:
         
-        int numBuffer = default(7);
+        int numBuffer = default(20);
+
+        // 2G paramters
+        int numLogicalBuffer = default(50);
+        int numDetectionAncilla = default(20);
+        int numInternalAncilla = default(10);
 
         int self_qnic_address;//Buffer identifier/address
         int self_qnic_index;
@@ -42,6 +47,39 @@ module QNIC
             @display("t=Id $stationaryQubit_address;i=block/circle,blue;p=226.71,143.55"); // modify display string
             std = emission_std;
         }
+        physicalForLogicalQubit[numLogicalBuffer]: StationaryQubit {
+            stationaryQubit_address = index;
+            node_address = parent_node_address;
+            qnic_address = self_qnic_address;
+            qnic_index = self_qnic_index;
+            qnic_type = self_qnic_type;
+            xPosition_Graphics = 70 + 65*index;  // use submodule index to generate different IDs
+            //@display("p=$xPosition_Graphics,40,,circle");
+            @display("t=Id $stationaryQubit_address;i=block/circle,blue;p=226.71,143.55"); // modify display string
+            std = emission_std;
+        }
+        detectionQubit[numDetectionAncilla]: StationaryQubit {
+            stationaryQubit_address = index;
+            node_address = parent_node_address;
+            qnic_address = self_qnic_address;
+            qnic_index = self_qnic_index;
+            qnic_type = self_qnic_type;
+            xPosition_Graphics = 70 + 65*index;  // use submodule index to generate different IDs
+            //@display("p=$xPosition_Graphics,40,,circle");
+            @display("t=Id $stationaryQubit_address;i=block/circle,blue;p=226.71,143.55"); // modify display string
+            std = emission_std;
+        }
+        internalQubit[numInternalAncilla]: StationaryQubit {
+            stationaryQubit_address = index;
+            node_address = parent_node_address;
+            qnic_address = self_qnic_address;
+            qnic_index = self_qnic_index;
+            qnic_type = self_qnic_type;
+            xPosition_Graphics = 70 + 65*index;  // use submodule index to generate different IDs
+            //@display("p=$xPosition_Graphics,40,,circle");
+            @display("t=Id $stationaryQubit_address;i=block/circle,blue;p=226.71,143.55"); // modify display string
+            std = emission_std;
+        }
 
         lens: PhotonicSwitch {
             address = self_qnic_address;
@@ -58,6 +96,15 @@ module QNIC
     connections:
         for i=0..numBuffer-1 {
             lens.toqubit_quantum_port++ <--> statQubit[i].tolens_quantum_port; //Put QuantumChannel_internal here if wanted
+        }
+        for i=0..numLogicalBuffer-1 {
+            lens.toqubit_quantum_port++ <--> physicalForLogicalQubit[i].tolens_quantum_port; //Put QuantumChannel_internal here if wanted
+        }
+        for i=0..numDetectionAncilla-1 {
+            lens.toqubit_quantum_port++ <--> detectionQubit[i].tolens_quantum_port; //Put QuantumChannel_internal here if wanted
+        }
+        for i=0..numInternalAncilla-1 {
+            lens.toqubit_quantum_port++ <--> internalQubit[i].tolens_quantum_port; //Put QuantumChannel_internal here if wanted
         }
         //If no HoM is inside the node
         qnic_quantum_port <--> lens.toQNIC_quantum_port if !receiver;

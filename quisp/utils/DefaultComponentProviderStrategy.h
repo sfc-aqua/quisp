@@ -16,6 +16,9 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
   bool isHoMNodeType(const cModuleType *const type) override;
   bool isSPDCNodeType(const cModuleType *const type) override;
   StationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override;
+  StationaryQubit *getStationaryQubitForLogicalEncoding(int qnic_index, int qubit_index, QNIC_type qnic_type) override;  // get physical qubit for logical qubit encoding
+  StationaryQubit *getAncillaQubitForDetection(int qnic_index, int qubit_index, QNIC_type qnic_type) override;  // get physical qubit for error detection
+ 
   cModule *getQNIC(int qnic_index, QNIC_type qnic_type) override;
   IRoutingDaemon *getRoutingDaemon() override;
   IHardwareMonitor *getHardwareMonitor() override;

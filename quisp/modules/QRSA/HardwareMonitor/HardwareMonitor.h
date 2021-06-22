@@ -28,6 +28,9 @@ class HardwareMonitor : public IHardwareMonitor {
   ~HardwareMonitor();
   NeighborTable passNeighborTable() override;
   int getQnicNumQubits(int qnic_index, QNIC_type qnic_type) override;
+  int getQnicNumPhysicalForLogicalQubits(int qnic_index, QNIC_type qnic_type) override;
+  int getQnicNumAnciallaDetectionQubits(int qnic_index, QNIC_type qnic_type) override;
+  int getQnicNumInternalAncillaQubits(int qnic_index, QNIC_type qnic_type) override;
   std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(int neighbor_address) override;
   std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address) override;
 

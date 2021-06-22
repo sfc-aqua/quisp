@@ -60,6 +60,9 @@ class RuleEngine : public IRuleEngine {
   // Although qnic index is in QubitAddr, lest make int qnic_index -> QubisState to lessen the search
   // QubitStateTable stable, stable_r, stable_rp;
   QubitStateTable *Busy_OR_Free_QubitState_table;
+  QubitStateTable *Busy_OR_Free_QubitStateForLogical_table;
+  QubitStateTable *Busy_OR_Free_QubitStateDetection_table;
+  QubitStateTable *Busy_OR_Free_QubitStateForInternal_table;
   bool *terminated_qnic;  // When you need to intentionally stop the link to make the simulation lighter.
   sentQubitIndexTracker *tracker;
   IHardwareMonitor *hardware_monitor;
@@ -94,7 +97,7 @@ class RuleEngine : public IRuleEngine {
   int getOneFreeQubit_inQnic(QubitStateTable table, int qnic_index);
   QubitStateTable setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
   QubitStateTable setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
-  QubitStateTable initializeQubitStateTable(QubitStateTable temp, QNIC_type qnic_type);
+  QubitStateTable initializeQubitStateTable(QubitStateTable temp, QNIC_type qnic_type, int qubit_role);
   void scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type);
   void shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk);
   // virtual int getQNICjob_index_for_this_qnic(int qnic_index, QNIC_type qnic_type);

@@ -79,6 +79,9 @@ class IHardwareMonitor : public cSimpleModule {
   virtual ~IHardwareMonitor(){};
   virtual NeighborTable passNeighborTable() = 0;
   virtual int getQnicNumQubits(int qnic_index, QNIC_type qnic_type) = 0;
+  virtual int getQnicNumPhysicalForLogicalQubits(int qnic_index, QNIC_type qnic_type) = 0;
+  virtual int getQnicNumAnciallaDetectionQubits(int qnic_index, QNIC_type qnic_type) = 0;
+  virtual int getQnicNumInternalAncillaQubits(int qnic_index, QNIC_type qnic_type) = 0;
   virtual std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(int neighbor_address) = 0;
   virtual std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address) = 0;
 };

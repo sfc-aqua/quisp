@@ -36,6 +36,17 @@ StationaryQubit *ComponentProvider::getStationaryQubit(int qnic_index, int qubit
   ensureStrategy();
   return strategy->getStationaryQubit(qnic_index, qubit_index, qnic_type);
 }
+
+StationaryQubit *ComponentProvider::getStationaryQubitForLogicalEncoding(int qnic_index, int qubit_index, QNIC_type qnic_type) {
+  ensureStrategy();
+  return strategy->getStationaryQubitForLogicalEncoding(qnic_index, qubit_index, qnic_type); // get physical qubit for logical qubit encoding
+}
+
+StationaryQubit *ComponentProvider::getAncillaQubitForDetection(int qnic_index, int qubit_index, QNIC_type qnic_type) {
+  ensureStrategy(); 
+  return strategy->getAncillaQubitForDetection(qnic_index, qubit_index, qnic_type); // get physical qubit for error detection
+}
+
 cModule *ComponentProvider::getQNIC(int qnic_index, QNIC_type qnic_type) {
   ensureStrategy();
   return strategy->getQNIC(qnic_index, qnic_type);
