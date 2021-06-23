@@ -1001,12 +1001,6 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     }
   }
   // Make this qubit available for rules
-  if(qubit->isAllocated()){
-    error("qubit is already allocated");
-  }
-  if(qubit->isLocked()){
-    error("qubit is locked");
-  }
   allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner, qubit));
 
   // FOR DEBUGGING
