@@ -8,20 +8,22 @@ namespace gate {
 using omnetpp::cSimulation;
 
 TempGate::TempGate() {}
-bool TempGate::deliver(cMessage *msg, simtime_t at) {
-  std::cout << getName() << "deliver called " << msg << std::endl;
-  return true;
-}
+bool TempGate::deliver(cMessage *msg, simtime_t at) { return true; }
 
-TestGate::TestGate(cModule *mod) {
+TestGate::TestGate(cModule *mod, const char *name) {
   desc = new omnetpp::cGate::Desc;
-  desc->name = new omnetpp::cGate::Name{"toRouter", omnetpp::cGate::Type::OUTPUT};
+  // only for output gate
+  desc->name = new omnetpp::cGate::Name{name, omnetpp::cGate::Type::OUTPUT};
   desc->owner = mod;
+  // output gate needs nextGate to be filled. actually temp_gate do nothing.
   nextGate = &temp_gate;
   desc->setOutputGate(this);
-  EVCB.gateCreated(this);
 }
 
+/**
+ * \brief this method called when a module sent cMessage to this gate.
+ * and then store the msg into `messages`
+ */
 bool TestGate::deliver(cMessage *msg, simtime_t at) {
   messages.push_back(msg->dup());
   return true;

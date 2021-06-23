@@ -10,6 +10,11 @@ using omnetpp::cMessage;
 using omnetpp::cModule;
 using omnetpp::simtime_t;
 
+/**
+ * \brief dumb class for TestGate.
+ * cGate needs `nextGate` or `prevGate` in TestGate to check the gate is output or input.
+ * this class is for filling TestGate's `nextGate` or `prevGate`
+ */
 class TempGate : public omnetpp::cGate {
  public:
   TempGate();
@@ -18,9 +23,13 @@ class TempGate : public omnetpp::cGate {
   bool deliver(cMessage *msg, simtime_t at) override;
 };
 
+/**
+ * \brief this class can store received messages
+ * currently this class only for output gate. we may need to adapt input gate.
+ */
 class TestGate : public omnetpp::cGate {
  public:
-  explicit TestGate(cModule *mod);
+  explicit TestGate(cModule *mod, const char *name);
   std::vector<cMessage *> messages;
 
  protected:
