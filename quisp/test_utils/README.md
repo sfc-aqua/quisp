@@ -39,7 +39,7 @@ class AppTestTarget : public quisp::modules::Application {
   using quisp::modules::Application::par;
   explicit AppTestTarget(TestQNode *parent_qnode)
     : Application(),
-      toRouterGate(new TestGate(this)) {
+      toRouterGate(new TestGate(this, "toRouter")) {
     // set Strategy to provider. then this module can use other component provided by Strategy.
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     // simulation needs ComponentType info for this module
