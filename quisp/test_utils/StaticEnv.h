@@ -9,8 +9,8 @@ namespace env {
 using namespace omnetpp;
 
 /**
- * cEnvir implementation for unit testing based on OMNeT++'s StaticEnv.
- * ref: https://github.com/omnetpp/omnetpp/blob/308b3b2b4c060b165911237a9bd9470ea010d34c/src/sim/csimulation.cc#L728
+ * \brief cEnvir implementation for unit testing based on OMNeT++'s StaticEnv.
+ * \see https://github.com/omnetpp/omnetpp/blob/308b3b2b4c060b165911237a9bd9470ea010d34c/src/sim/csimulation.cc#L728
  */
 class StaticEnv : public omnetpp::cEnvir {
  protected:

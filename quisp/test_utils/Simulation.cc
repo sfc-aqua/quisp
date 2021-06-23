@@ -6,6 +6,9 @@ using namespace omnetpp;
 namespace quisp_test {
 namespace simulation {
 
+/**
+ * \brief simulation class for unit test.
+ */
 TestSimulation::TestSimulation(const char *name, cEnvir *env) : cSimulation(name, env) {}
 
 void TestSimulation::finishNetworkSetup() {
@@ -13,6 +16,9 @@ void TestSimulation::finishNetworkSetup() {
   callInitialize();
 }
 
+/**
+ * \brief run current simulation until it finish
+ */
 void TestSimulation::run() {
   bool finished = false;
   while (!finished) {
@@ -20,6 +26,10 @@ void TestSimulation::run() {
   }
 }
 
+/**
+ * \brief execute one event.
+ * \return finished or not. return true value means simulation finished and no more event.
+ */
 bool TestSimulation::executeNextEvent() {
   try {
     cEvent *event = takeNextEvent();
