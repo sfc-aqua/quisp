@@ -7,6 +7,7 @@
 #include "modules/QNIC.h"
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
+#include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
 #include "modules/QRSA/RuleEngine/RuleEngine.h"
 #include "omnetpp/csimulation.h"
@@ -96,12 +97,13 @@ TEST(RuleEngineTest, ESResourceUpdate){
   auto mockHardwareMonitor = new MockHardwareMonitor;
   auto mockQubit = new MockStationaryQubit;
   RuleEngineTestTarget c{mockQubit, routingdaemon, mockHardwareMonitor};
-
-  // auto info = std::make_unique<ConnectionSetupInfo>();
-  // info.qnic_type = QNIC_E;
-  // info.qnic_index = 1;
+  
+  auto info = std::make_unique<ConnectionSetupInfo>();
+  info->qnic.type = QNIC_E;
+  info->qnic.index = 1;
   EXPECT_CALL(*routingdaemon, return_QNIC_address_to_destAddr(1)).WillOnce(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(std::make_unique<ConnectionSetupInfo>())));;
+  EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(info)));
+  // EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(info)));
   // EXPECT_CALL(*mockQubit, returnNumEndNodes()).WillOnce(Return(*StationaryQubit));
   c.initialize();
   c.setAllResources(1, 1, 2, mockQubit);
