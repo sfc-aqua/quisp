@@ -32,7 +32,7 @@ class AppTestTarget : public quisp::modules::Application {
     }
     return toRouterGate;
   };
-  explicit AppTestTarget(TestQNode *parent_qnode) : Application(), toRouterGate(new TestGate(this)) {
+  explicit AppTestTarget(TestQNode *parent_qnode) : Application(), toRouterGate(new TestGate(this, "toRouter")) {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     setComponentType(new TestModuleType("test qnode"));
   }
