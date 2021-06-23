@@ -15,6 +15,7 @@ simple Application
         int TrafficPattern;
         int LoneInitiatorAddress;
         int NumberOfResources = default(1);
+        int ConnectionGen = default(1);
 
         int num_measure = default(7000); // temporary
     gates:

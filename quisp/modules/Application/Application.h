@@ -32,6 +32,7 @@ class Application : public IApplication {
   bool is_e2e_connection;
   int number_of_resources;
   int num_measure;
+  int connection_generation;
 
   void initialize() override;
   void handleMessage(cMessage *msg) override;
@@ -39,7 +40,7 @@ class Application : public IApplication {
   void storeEndNodeAddresses();
   int getOneRandomEndNodeAddress();
 
-  ConnectionSetupRequest *createConnectionSetupRequest(int dest_addr, int num_of_required_resources);
+  ConnectionSetupRequest *createConnectionSetupRequest(int dest_addr, int num_of_required_resources, int connection_gen);
   utils::ComponentProvider provider;
 };
 

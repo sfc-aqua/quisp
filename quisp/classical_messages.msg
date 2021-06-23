@@ -40,6 +40,8 @@ packet ConnectionSetupRequest extends header
     int number_of_required_Bellpairs;
     double required_fidelity;
 
+    int connection_generation;
+
     int stack_of_QNodeIndexes[];
     int stack_of_linkCosts[];
 
@@ -51,6 +53,7 @@ packet RejectConnectionSetupRequest extends header
     int actual_destAddr;
     int actual_srcAddr;
     int number_of_required_Bellpairs;
+    int connection_generation;
 }
 
 

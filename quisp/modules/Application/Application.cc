@@ -34,6 +34,7 @@ void Application::initialize() {
   is_e2e_connection = par("EndToEndConnection");
   number_of_resources = par("NumberOfResources");
   num_measure = par("num_measure");
+  connection_generation = par("ConnectionGen");
 
   WATCH_VECTOR(other_end_node_addresses);
   storeEndNodeAddresses();
@@ -55,7 +56,7 @@ void Application::initialize() {
     if (my_address == initiator_address) {
       int endnode_dest_addr = getOneRandomEndNodeAddress();
       EV_INFO << "Just one lonely connection setup request will be sent from " << my_address << " to " << endnode_dest_addr << "\n";
-      ConnectionSetupRequest *pk = createConnectionSetupRequest(endnode_dest_addr, number_of_resources);
+      ConnectionSetupRequest *pk = createConnectionSetupRequest(endnode_dest_addr, number_of_resources, connection_generation);
       scheduleAt(simTime(), pk);
     }
     return;
@@ -67,7 +68,7 @@ void Application::initialize() {
   if (traffic_pattern == 2) {
     int endnode_dest_addr = getOneRandomEndNodeAddress();
     EV_INFO << "My connection setup request will be sent from " << my_address << " to " << endnode_dest_addr << "\n";
-    ConnectionSetupRequest *pk = createConnectionSetupRequest(endnode_dest_addr, number_of_resources);
+    ConnectionSetupRequest *pk = createConnectionSetupRequest(endnode_dest_addr, number_of_resources, connection_generation);
     // delay to avoid conflict
     scheduleAt(simTime() + exponential(0.00001 * my_address), pk);
     return;
@@ -76,7 +77,7 @@ void Application::initialize() {
   error("Invalid TrafficPattern specified.");
 }
 
-ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr, int num_of_required_resources) {
+ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr, int num_of_required_resources, int connection_gen) {
   ConnectionSetupRequest *pk = new ConnectionSetupRequest("ConnSetupRequest");
   pk->setActual_srcAddr(my_address);
   pk->setActual_destAddr(dest_addr);
