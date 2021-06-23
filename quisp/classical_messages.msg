@@ -296,8 +296,6 @@ packet SwappingResult extends header{
     QNIC_type new_partner_qnic_type;
 }
 
-<<<<<<< HEAD
-=======
 packet SimultaneousSwappingResult extends header{
     unsigned long RuleSet_id;
     int Rule_id;
@@ -333,7 +331,6 @@ packet SimultaneousSwappingResult extends header{
     int path_length_exclude_IR;
 }
 
->>>>>>> 847b3388f41ca88f30275e6d31e374166adf5f95
 
 packet InternalRuleSetForwarding extends header{
     unsigned long RuleSet_id;

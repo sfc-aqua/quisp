@@ -110,22 +110,27 @@ TEST(RuleEngineTest, ESResourceUpdate){
   c.setAllResources(QNIC_E, 2, 1, mockQubit);
   c.setAllResources(QNIC_E, 3, 1, mockQubit);
   swapping_result swapr;
-  swapr.new_partner = 1;
+  swapr.new_partner = 3;
   swapr.operation_type = 0;
   swapr.new_partner_qnic_address = 1;
   swapr.new_partner_qnic_index = 1;
   swapr.new_partner_qnic_type = QNIC_E;
   swapr.measured_qubit_index = 1;
   c.updateResources_EntanglementSwapping(swapr);
+  auto part = c.allResources[QNIC_E][1].find(1);
+  std::cout<<"here?"<<std::endl;
+  ASSERT_TRUE(part==c.allResources[QNIC_E][1].end());
+  int new_address = part->first;
+  ASSERT_EQ(new_address, swapr.new_partner);
   // assertion1
 
-  swapping_result swapr2;
-  swapr2.new_partner = 1;
-  swapr2.operation_type = 1;
-  swapr2.new_partner_qnic_address = 1;
-  swapr2.new_partner_qnic_index = 1;
-  swapr2.new_partner_qnic_type = QNIC_E;
-  c.updateResources_EntanglementSwapping(swapr2);
+  // swapping_result swapr2;
+  // swapr2.new_partner = 1;
+  // swapr2.operation_type = 1;
+  // swapr2.new_partner_qnic_address = 1;
+  // swapr2.new_partner_qnic_index = 1;
+  // swapr2.new_partner_qnic_type = QNIC_E;
+  // c.updateResources_EntanglementSwapping(swapr2);
   // assertion2
 }
 
