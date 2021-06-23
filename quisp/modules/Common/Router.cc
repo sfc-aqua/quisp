@@ -148,6 +148,10 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Swapping Result packet received");
     send(pk, "rePort$o");
     return;
+  } else if (destAddr == myAddress && dynamic_cast<SimultaneousSwappingResult *>(msg) != nullptr) {
+    bubble("Swapping Result packet received");
+    send(pk, "rePort$o");
+    return;
   } else if (destAddr == myAddress && dynamic_cast<LinkTomographyRequest *>(msg) != nullptr) {
     bubble("Link tomography request received");
     send(pk, "hmPort$o");

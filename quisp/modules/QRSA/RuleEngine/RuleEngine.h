@@ -79,6 +79,9 @@ class RuleEngine : public IRuleEngine {
 
   // typedef rules::RuleSet* RuleSetPtr;
   running_processes rp;
+  // Vector for store package for simultaneous entanglement swapping
+  std::map<int, std::map<int, int>> simultaneous_es_results;
+
   // int assigned = 0;
   // typedef std::map<std::string, quisp::rules::RuleSet> processes;//process_id -> Rule set
   void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type) override;
@@ -123,6 +126,7 @@ class RuleEngine : public IRuleEngine {
   void updateResources_EntanglementSwapping(swapping_result swapr);
 
   utils::ComponentProvider provider;
+  virtual void updateResources_SimultaneousEntanglementSwapping(swapping_result swapr);
 };
 
 }  // namespace modules

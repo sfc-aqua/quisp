@@ -102,13 +102,13 @@ TEST(RuleEngineTest, ESResourceUpdate){
   info->qnic.type = QNIC_E;
   info->qnic.index = 1;
   EXPECT_CALL(*routingdaemon, return_QNIC_address_to_destAddr(1)).WillOnce(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(info)));
+  EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(std::move(info))));
   // EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(info)));
   // EXPECT_CALL(*mockQubit, returnNumEndNodes()).WillOnce(Return(*StationaryQubit));
   c.initialize();
-  c.setAllResources(1, 1, 2, mockQubit);
-  c.setAllResources(1, 2, 2, mockQubit);
-  c.setAllResources(1, 3, 2, mockQubit);
+  c.setAllResources(QNIC_E, 1, 1, mockQubit);
+  c.setAllResources(QNIC_E, 2, 1, mockQubit);
+  c.setAllResources(QNIC_E, 3, 1, mockQubit);
   swapping_result swapr;
   swapr.new_partner = 1;
   swapr.operation_type = 0;

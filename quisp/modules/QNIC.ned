@@ -8,7 +8,9 @@ import modules.interHoM;
 module QNIC
 {
     parameters:
+        
         int numBuffer = default(7);
+
         int self_qnic_address;//Buffer identifier/address
         int self_qnic_index;
         int parent_node_address;
@@ -40,6 +42,7 @@ module QNIC
             @display("t=Id $stationaryQubit_address;i=block/circle,blue;p=150,100,m,5,60,60"); // modify display string
             std = emission_std;
         }
+
         lens: PhotonicSwitch {
             address = self_qnic_address;
             @display("i=block/dispatch;p=75.240005,117.810005");

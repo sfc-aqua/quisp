@@ -50,6 +50,7 @@ class ConnectionManager : public IConnectionManager {
   int my_address;
   int num_of_qnics;
   std::map<int, bool> qnic_res_table;
+  bool simultaneous_es_enabled;
   IRoutingDaemon *routing_daemon;
   IHardwareMonitor *hardware_monitor;
 
@@ -69,9 +70,11 @@ class ConnectionManager : public IConnectionManager {
 
   RuleSet *generateTomographyRuleSet(int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index, int num_resources);
   RuleSet *generateEntanglementSwappingRuleSet(int owner, SwappingConfig conf);
+  RuleSet *generateSimultaneousEntanglementSwappingRuleSet(int owner, SwappingConfig conf, std::vector<int> path);
   RuleSet *generateRGSsourceRuleSet(int owner, int partner, int num_of_measure);
   SwappingConfig generateSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners, std::vector<QNIC_pair_info> qnics,
                                         int num_resources);
+  SwappingConfig generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources);
 
   void reserveQnic(int qnic_address);
   void releaseQnic(int qnic_address);
@@ -82,7 +85,6 @@ class ConnectionManager : public IConnectionManager {
   static int fillPathDivision(std::vector<int> path, int i, int l, int *link_left, int *link_right, int *swapper, int fill_start);
 };
 
-Define_Module(ConnectionManager);
 }  // namespace modules
 }  // namespace quisp
 #endif /* MODULES_CONNECTIONMANAGER_H_ */

@@ -11,6 +11,9 @@ simple MockRouter {
         input fromApp;
         output toApp;
 }
+simple TestApplication extends Application {
+    @class(TestApplication);
+}
 module MockQNode {
 
     parameters:
@@ -21,7 +24,7 @@ module MockQNode {
     submodules:
         router: MockRouter;
 
-        app: Application {
+        app: TestApplication {
             TrafficPattern = 1;
             LoneInitiatorAddress = 1;
             address = address;
@@ -57,8 +60,24 @@ network = ApplicationTestNet
 %file: mock_router.cc
 #include <omnetpp.h>
 #include <classical_messages_m.h>
+#include <modules/Application/Application.h>
+#include <test_utils/TestUtils.h>
 using namespace omnetpp;
 namespace Application {
+class Strategy : public quisp_test::TestComponentProviderStrategy {
+    public:
+    Strategy(cModule *_self): self(_self){}
+    cModule* getQNode() override {return self->getParentModule(); }
+    cModule *self;
+};
+
+class TestApplication: public quisp::modules::Application {
+    public:
+    TestApplication(): quisp::modules::Application() {
+        provider.setStrategy(std::make_unique<Strategy>(this));
+    }
+};
+Define_Module(TestApplication);
 class MockRouter: public cSimpleModule
 {
     public:
