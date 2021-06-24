@@ -26,39 +26,36 @@ class MockStationaryQubit : public StationaryQubit {
   MOCK_METHOD(void, setFree, (bool consumed), (override));
 };
 
-
-
 class MockRoutingDaemon : public RoutingDaemon {
  public:
   MOCK_METHOD(int, return_QNIC_address_to_destAddr, (int destAddr), (override));
 };
 
 class MockHardwareMonitor : public HardwareMonitor {
-  public:
-    MOCK_METHOD(std::unique_ptr<ConnectionSetupInfo>, findConnectionInfoByQnicAddr, (int qnic_address), (override));
-    MOCK_METHOD(int, getQnicNumQubits, (int i, QNIC_type qnic_type), (override));
+ public:
+  MOCK_METHOD(std::unique_ptr<ConnectionSetupInfo>, findConnectionInfoByQnicAddr, (int qnic_address), (override));
+  MOCK_METHOD(int, getQnicNumQubits, (int i, QNIC_type qnic_type), (override));
 };
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
   Strategy() : mockQubit(nullptr), routingDaemon(nullptr), hardwareMonitor(nullptr) {}
-  Strategy(MockStationaryQubit* _qubit,
-           MockRoutingDaemon* routing_daemon,
-           MockHardwareMonitor* hardware_monitor) : mockQubit(_qubit), routingDaemon(routing_daemon), hardwareMonitor(hardware_monitor) {}
-  ~Strategy() { 
+  Strategy(MockStationaryQubit* _qubit, MockRoutingDaemon* routing_daemon, MockHardwareMonitor* hardware_monitor)
+      : mockQubit(_qubit), routingDaemon(routing_daemon), hardwareMonitor(hardware_monitor) {}
+  ~Strategy() {
     delete mockQubit;
     delete routingDaemon;
     delete hardwareMonitor;
   }
   MockStationaryQubit* mockQubit = nullptr;
-  MockRoutingDaemon*  routingDaemon = nullptr;
+  MockRoutingDaemon* routingDaemon = nullptr;
   MockHardwareMonitor* hardwareMonitor = nullptr;
   StationaryQubit* getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override {
     if (mockQubit == nullptr) mockQubit = new MockStationaryQubit();
     return mockQubit;
   };
-  IRoutingDaemon* getRoutingDaemon() override {return routingDaemon;};
-  IHardwareMonitor* getHardwareMonitor() override {return hardwareMonitor;};
+  IRoutingDaemon* getRoutingDaemon() override { return routingDaemon; };
+  IHardwareMonitor* getHardwareMonitor() override { return hardwareMonitor; };
 };
 
 class RuleEngineTestTarget : public quisp::modules::RuleEngine {
@@ -74,16 +71,15 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
     this->setName("rule_engine_test_target");
     this->provider.setStrategy(std::make_unique<Strategy>(mockQubit, routingdaemon, hardware_monitor));
   }
-  protected:
-    // setter function for allResorces[qnic_type][qnic_index]
-    void setAllResources(int qnic_type, int qnic_index, int partner, StationaryQubit* qubit){
-      this->allResources[qnic_type][qnic_index].insert(std::make_pair(partner, qubit));
-    };
 
-  private:
-    FRIEND_TEST(RuleEngineTest, ESResourceUpdate);
-    friend class MockRoutingDaemon;
-    friend class MockHardwareMonitor;
+ protected:
+  // setter function for allResorces[qnic_type][qnic_index]
+  void setAllResources(int qnic_type, int qnic_index, int partner, StationaryQubit* qubit) { this->allResources[qnic_type][qnic_index].insert(std::make_pair(partner, qubit)); };
+
+ private:
+  FRIEND_TEST(RuleEngineTest, ESResourceUpdate);
+  friend class MockRoutingDaemon;
+  friend class MockHardwareMonitor;
 };
 
 // TEST(RuleEngineTest, Init) {
@@ -92,14 +88,14 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
 //   ASSERT_EQ(c.par("address").intValue(), 123);
 // }
 
-TEST(RuleEngineTest, ESResourceUpdate){
+TEST(RuleEngineTest, ESResourceUpdate) {
   // test for resource update in entanglement swapping
-  std::cout<<"Start RuleEngine Test"<<std::endl;
+  std::cout << "Start RuleEngine Test" << std::endl;
   auto routingdaemon = new MockRoutingDaemon;
   auto mockHardwareMonitor = new MockHardwareMonitor;
   auto mockQubit = new MockStationaryQubit;
   RuleEngineTestTarget c{mockQubit, routingdaemon, mockHardwareMonitor};
-  
+
   auto info = std::make_unique<ConnectionSetupInfo>();
   info->qnic.type = QNIC_E;
   info->qnic.index = 0;
@@ -113,21 +109,21 @@ TEST(RuleEngineTest, ESResourceUpdate){
   swapr.measured_qubit_index = 1;
   EXPECT_CALL(*routingdaemon, return_QNIC_address_to_destAddr(swapr.new_partner)).WillOnce(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).Times(2).WillOnce(Return(2)).WillOnce(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).Times(2).WillOnce(Return(2)).WillOnce(Return(1)); 
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).Times(2).WillOnce(Return(2)).WillOnce(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(std::move(info))));
   c.initialize();
   c.setAllResources(QNIC_E, 0, 0, mockQubit);
   c.setAllResources(QNIC_E, 0, 1, mockQubit);
   c.setAllResources(QNIC_E, 0, 2, mockQubit);
   auto part = c.allResources[QNIC_E][0].find(1);
-  ASSERT_TRUE(part!=c.allResources[QNIC_E][0].end());
+  ASSERT_TRUE(part != c.allResources[QNIC_E][0].end());
   // check resource is updated?
   c.updateResources_EntanglementSwapping(swapr);
   auto part_after = c.allResources[QNIC_E][0].find(3);
-  ASSERT_TRUE(part_after!=c.allResources[QNIC_E][0].end());
+  ASSERT_TRUE(part_after != c.allResources[QNIC_E][0].end());
   // old record was deleted properly
   auto part_after_old = c.allResources[QNIC_E][0].find(1);
-  ASSERT_TRUE(part_after_old==c.allResources[QNIC_E][0].end());
+  ASSERT_TRUE(part_after_old == c.allResources[QNIC_E][0].end());
 }
 
 }  // namespace
