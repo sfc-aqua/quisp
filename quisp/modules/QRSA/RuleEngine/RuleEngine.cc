@@ -1002,7 +1002,6 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   }
   // Make this qubit available for rules
   allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner, qubit));
-
   // FOR DEBUGGING
   if (qubit->entangled_partner != nullptr) {
     if (qubit->entangled_partner->entangled_partner == nullptr) {
