@@ -17,11 +17,16 @@ TEST_LIBS=-L../googletest/build/lib -lgtest -lgmock
 # check eigen3 is in PKG_CONFIG_PATH
 PKG_CONFIG_STATUS=$(shell pkg-config eigen3 --cflags 2>/dev/null 1>&2; echo $$?)
 ifneq ('0','$(PKG_CONFIG_STATUS)')
-$(warning 'eigen3 is not found in pkg-config. check you PKG_CONFIG_PATH')
-$(warning 'your PKG_CONFIG_PATH is $(PKG_CONFIG_PATH)')
+ifeq (,$(wildcard $(CURDIR)/../eigen/build/eigen3.pc))
+$(error 'eigen3 is not found. run "make eigen" first)
+endif
+# using quisp/eigen
+PKG_CONFIG_PATH:=$(CURDIR)/../eigen/build/
+INCLUDE_PATH+=-I. $(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config eigen3 --cflags)
+else
+INCLUDE_PATH+=-I. $(shell pkg-config eigen3 --cflags)
 endif
 
-INCLUDE_PATH+=-I. $(shell pkg-config eigen3 --cflags)
 
 default: all
 
@@ -47,3 +52,6 @@ $(TARGET_DIR)/run_unit_test: $(TARGET_DIR)/$(TARGET) $(TEST_OBJS)  $(wildcard $(
 
 run-unit-test: $(TARGET_DIR)/run_unit_test
 	$(TARGET_DIR)/run_unit_test
+
+eigen:
+	make eigen -C $(CURDIR)/..

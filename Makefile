@@ -37,6 +37,16 @@ googletest/build/lib: googletest/build
 
 googletest: googletest/build/lib
 
+
+eigen/CMakeLists.txt:
+	git submodule update --init
+
+eigen/build/eigen3.pc: eigen/CMakeLists.txt
+	cmake ./eigen -B ./eigen/build -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=./eigen/build
+	make -C eigen/build install
+
+eigen: eigen/build/eigen3.pc
+
 makefile-exe:
 	cd quisp && opp_makemake -f --deep -O out -i ./makefrag
 
@@ -46,6 +56,7 @@ makefile-lib:
 clean:
 	$(RM) quisp/Makefile quisp/quisp quisp/quisp_dbg quisp/run_unit_test quisp/libquisp*
 	$(RM) -r quisp/out googletest/build
+	$(RM) -r quisp/out eigen/build
 
 checkmakefile:
 	@if [ ! -f $(QUISP_MAKEFILE) ]; then \
