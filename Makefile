@@ -55,8 +55,12 @@ makefile-lib:
 
 clean:
 	$(RM) quisp/Makefile quisp/quisp quisp/quisp_dbg quisp/run_unit_test quisp/libquisp*
-	$(RM) -r quisp/out googletest/build
-	$(RM) -r quisp/out eigen/build
+	$(RM) -r quisp/out
+
+distclean:
+	git submodule deinit --all
+	make clean
+
 
 checkmakefile:
 	@if [ ! -f $(QUISP_MAKEFILE) ]; then \
