@@ -865,7 +865,7 @@ void RuleEngine::scheduleNextEmissionEvent(int qnic_index, int qnic_address, dou
 
 QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTable table, QNIC_type qnic_type) {
   int qnics = -1;
-  std::cout << "qnic type" << qnic_type << std::endl;
+  // std::cout << "qnic type" << qnic_type << std::endl;
   switch (qnic_type) {
     case QNIC_E:
       qnics = number_of_qnics;
@@ -1010,7 +1010,6 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   }
   // Make this qubit available for rules
   allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner, qubit));
-
   // FOR DEBUGGING
   if (qubit->entangled_partner != nullptr) {
     if (qubit->entangled_partner->entangled_partner == nullptr) {
