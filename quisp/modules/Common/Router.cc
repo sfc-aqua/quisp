@@ -120,10 +120,6 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Timing Notifier from EPPS received");
     send(pk, "rePort$o");  // send to Application locally
     return;
-  } else if (destAddr == myAddress && dynamic_cast<ABSMtimingNotifier *>(msg) != nullptr) {
-    bubble("Timing Notifier from ABSA received");
-    send(pk, "rePort$o");
-    return;
   } else if (destAddr == myAddress && dynamic_cast<ConnectionSetupRequest *>(msg) != nullptr) {
     bubble("Connection setup request received");
     send(pk, "cmPort$o");

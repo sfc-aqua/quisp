@@ -1,16 +1,22 @@
 #
-# OMNeT++/OMNEST Makefile for $(LIB_PREFIX)quisp
+# OMNeT++/OMNEST Makefile for quisp
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -i ./makefrag -M debug --make-so
+#  opp_makemake -f --deep -O out -I. -I/usr/include/eigen3
 #
 
 # Name of target to be created (-o option)
-TARGET = $(LIB_PREFIX)quisp$(D)$(SHARED_LIB_SUFFIX)
+TARGET = quisp$(D)$(EXE_SUFFIX)
 TARGET_DIR = .
 
+# User interface (uncomment one) (-u option)
+USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LIBS)
+#USERIF_LIBS = $(CMDENV_LIBS)
+#USERIF_LIBS = $(TKENV_LIBS)
+#USERIF_LIBS = $(QTENV_LIBS)
+
 # C++ include paths (with -I)
-INCLUDE_PATH =
+INCLUDE_PATH = -I. -I/usr/include/eigen3
 
 # Additional object and library files to link with
 EXTRA_OBJS =
@@ -31,8 +37,6 @@ OBJS = \
     $O/modules/Application/Application.o \
     $O/modules/Common/Queue.o \
     $O/modules/Common/Router.o \
-    $O/modules/PhysicalConnection/BSA/ABSA.o \
-    $O/modules/PhysicalConnection/BSA/ABSA_controller.o \
     $O/modules/PhysicalConnection/BSA/BellStateAnalyzer.o \
     $O/modules/PhysicalConnection/BSA/HoMController.o \
     $O/modules/PhysicalConnection/EPPS/EntangledPhotonPairSource.o \
@@ -46,7 +50,6 @@ OBJS = \
     $O/modules/QRSA/RealTimeController/RealTimeController.o \
     $O/modules/QRSA/RealTimeController/RealTimeController_test.o \
     $O/modules/QRSA/RoutingDaemon/RoutingDaemon.o \
-    $O/modules/QRSA/RoutingDaemon/RoutingDaemon_test.o \
     $O/modules/QRSA/RuleEngine/RuleEngine.o \
     $O/modules/QRSA/RuleEngine/RuleEngine_test.o \
     $O/rules/Action.o \
@@ -69,11 +72,6 @@ MSGFILES = \
 # SM files
 SMFILES =
 
-# Default mode (-M option); can be overridden with make MODE=debug (or =release)
-ifndef MODE
-MODE = debug
-endif
-
 #------------------------------------------------------------------------------
 
 # Pull in OMNeT++ configuration (Makefile.inc)
@@ -95,7 +93,7 @@ endif
 include $(CONFIGFILE)
 
 # Simulation kernel and user interface libraries
-OMNETPP_LIBS = -loppenvir$D $(KERNEL_LIBS) $(SYS_LIBS)
+OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
 
 COPTS = $(CFLAGS) $(IMPORT_DEFINES)  $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
 MSGCOPTS = $(INCLUDE_PATH)
@@ -112,7 +110,7 @@ endif
 #------------------------------------------------------------------------------
 # User-supplied makefile fragment(s)
 # >>>
-# inserted from file './makefrag':
+# inserted from file 'makefrag':
 CXXFLAGS = -std=c++14
 
 OBJS := $(filter-out test_util/% %_test.o,$(OBJS))
@@ -178,9 +176,8 @@ endif
 
 $O/$(TARGET): $(OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)
 	@$(MKPATH) $O
-	@echo Creating shared library: $@
-	$(Q)$(SHLIB_LD) -o $O/$(TARGET) $(OBJS) $(EXTRA_OBJS) $(AS_NEEDED_OFF) $(WHOLE_ARCHIVE_ON) $(LIBS) $(WHOLE_ARCHIVE_OFF) $(OMNETPP_LIBS) $(LDFLAGS)
-	$(Q)$(SHLIB_POSTPROCESS) $O/$(TARGET)
+	@echo Creating executable: $@
+	$(Q)$(CXX) $(LDFLAGS) -o $O/$(TARGET) $(OBJS) $(EXTRA_OBJS) $(AS_NEEDED_OFF) $(WHOLE_ARCHIVE_ON) $(LIBS) $(WHOLE_ARCHIVE_OFF) $(OMNETPP_LIBS)
 
 .PHONY: all clean cleanall depend msgheaders smheaders
 
