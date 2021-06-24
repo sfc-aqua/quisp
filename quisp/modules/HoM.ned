@@ -119,6 +119,5 @@ module HoM
 
         Controller.toRouter_port --> router.fromApp;
         router.toApp --> Controller.fromRouter_port;
-        BSA.toHoMController_port --> Controller.fromBSA_port;
-        
+        BSA.toHoMController_port --> Controller.fromBSA_port;  
 }

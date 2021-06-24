@@ -82,7 +82,6 @@ module QNode
                 passive = false;
                 self_qnic_type = 1;
                 emission_std = emission_timing_std;
-                //@display("p=232,173");
                 @display("p=100, 250,m,5,50,60");
         }
         qnic_rp[sizeof(quantum_port_receiver_passive)]: QNIC {

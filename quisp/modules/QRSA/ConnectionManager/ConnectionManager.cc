@@ -39,7 +39,6 @@ void ConnectionManager::initialize() {
  */
 void ConnectionManager::handleMessage(cMessage *msg) {
   if (dynamic_cast<ConnectionSetupRequest *>(msg) != nullptr) {
-    // This is a classical pakcet for connection setup request
     ConnectionSetupRequest *req = check_and_cast<ConnectionSetupRequest *>(msg);
     // destination address and source address
     int actual_dst = req->getActual_destAddr();
@@ -262,7 +261,6 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   for (int i = 0; i < divisions; i++) {
     std::vector<int> partners;
     if (swapper[i] > 0) {
-      EV << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
       EV_DEBUG << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
       partners.push_back(link_left[i]);
       partners.push_back(link_right[i]);

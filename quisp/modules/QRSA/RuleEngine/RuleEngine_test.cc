@@ -82,11 +82,6 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
   friend class MockHardwareMonitor;
 };
 
-// TEST(RuleEngineTest, Init) {
-//   RuleEngineTestTarget c{nullptr, nullptr, nullptr};
-//   c.initialize();
-//   ASSERT_EQ(c.par("address").intValue(), 123);
-// }
 
 TEST(RuleEngineTest, ESResourceUpdate) {
   // test for resource update in entanglement swapping
