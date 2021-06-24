@@ -4,7 +4,7 @@
 * Before You Start
 * OMNeT++ Installation
 * Install Needed Tools for the GUI
-* Cloning and Building Quisp 
+* Cloning and Building Quisp
 * Running A Simulation
 
 
@@ -35,7 +35,7 @@ $ ./configure
 $ make
 ```
 
-This might take a while to finish executing. 
+This might take a while to finish executing.
 
 **To verify** that the installation has been successful, run the following:
 
@@ -63,33 +63,31 @@ Yay!! your installation was successful!!
 $ omnetpp
 ```
 
-###### Whenever you want to run omnetpp, you will need to run from the mingwenv console.
+*Whenever you want to run omnetpp, you will need to run from the mingwenv console*
 
 
 
 ![](img/8.jpg)
 
-## 2- Install Needed Tools for the GUI
-To run the simulation GUI, you will need to install *Eigen*.
-
-In the mingwenv console, type the following command:
-```
-git clone https://gitlab.com/libeigen/eigen.git
-```
-For more information on Eigen, please visit [this](http://eigen.tuxfamily.org/index.php?title=Main_Page) site.
-
-
-## 3- Cloning and Building Quisp
+## 2-  Cloning and Building Quisp
 
 To clone and build Quisp, one your terminal (use the mingwenv console to clone the repo) and type the follwoing commands:
 ```
 $ git clone https://github.com/sfc-aqua/quisp.git
 ```
 
+## 3-  Install dependencies
+
+To install dependencies (Eigen and Googletest), one your terminal (use the mingwenv console to clone the repo) and type the follwoing commands:
+```
+$ cd quisp
+$ make eigen
+```
+
 ## 4- Set up OMNeT for the Simulation
 
-*Execute* the command `omnetpp` from mingwenv console. When the dialogue comes up, select your workspace and click *Launch*.  
-  
+*Execute* the command `omnetpp` from mingwenv console. When the dialogue comes up, select your workspace and click *Launch*.
+
 *Warning: Setting workspace as `<Directory where you extracted omnetpp>\omnetpp-5.x.x\quisp` is highly recommended.*
 
 
@@ -122,7 +120,7 @@ Select `quisp` and click *Finish*
 
 <img src="img/14-fix.png"  width="50%" height="50%">
 
-That will make *quisp* and *quisp* appear in your **Project Explorer** 
+That will make *quisp* and *quisp* appear in your **Project Explorer**
 
 Select quisp, right-click on it and choose *properties*.
 
@@ -131,18 +129,10 @@ Select quisp, right-click on it and choose *properties*.
 ![](img/16.jpg)
 
 In the screen that shows up, expand OMNeT++, click on Makemake.
-Select quisp from the middle and on the right-habd side, choose Makemake and then click on options. 
-
+Select quisp from the middle and on the right-habd side, choose Makemake and then just click on apply. now we don't need to setup options!
 
 
 ![](img/17.jpg)
-
-In the compile tab, click the add button ![](img/bu.jpg)
-and then choose the directroy for **Eigen** and click OK
-
-
-
-![](img/171.jpg)
 
 In the *Project Explorer* right-click on quisp and choose *Run As* > *OMNeT++ Simulation*.
 
@@ -165,7 +155,7 @@ Test the simulation by choosing a *Config name*
 ![](img/20.jpg)
 
 
-And Voilà !!! 
+And Voilà !!!
 
 
 
