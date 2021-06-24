@@ -481,7 +481,6 @@ void logicalStationaryQubit::ErrorDetectionAndCorrection(std::vector<StationaryQ
   location_errortype.insert(std::pair<int, std::string>(location, "X"));
 
   // Check Z error with commuator of generator X
-  location_bool[3] = {false};
   for (int i = 0; i < Generators.size(); i++) {
     flag = false;
     for (int j = 0; j < encoded_qubits_list.size(); j++) {
@@ -902,6 +901,7 @@ measurement_outcome logicalStationaryQubit::logical_readout_v2(StationaryQubit *
   measurement_outcome o;
   o.basis = this_measurement.basis;
   o.outcome_is_plus = Output_is_plus;
+  return o;
 }
 
 }  // namespace modules

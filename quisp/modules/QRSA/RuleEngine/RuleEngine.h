@@ -70,6 +70,7 @@ class RuleEngine : public IRuleEngine {
   IRealTimeController *realtime_controller;
   int *qnic_burst_trial_counter;
   qnicResources *allResources;  // Size will be defined in initialization. If 3 qnic types, then size is 3. Type defined in QUBIT.h
+  qnicLogicalResources *allLogicalResource;
   /*
    * DEFINED in QNIC.h
    * typedef std::multimap<int, StationaryQubit*> EntangledPairs;//entangled Node address -> pointer to that local qubit

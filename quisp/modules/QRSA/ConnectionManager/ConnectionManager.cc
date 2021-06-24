@@ -306,6 +306,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   // create RuleSet for all nodes!
   int num_resource = req->getNumber_of_required_Bellpairs();
   int intermediate_node_size = req->getStack_of_QNodeIndexesArraySize();
+  int connection_generation = req->getConnection_generation();
   // generate the rulesets for intermediate swappers
   for (int i = 0; i <= intermediate_node_size; i++) {
     auto itr = std::find(swappers.begin(), swappers.end(), path.at(i));

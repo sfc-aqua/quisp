@@ -10,6 +10,7 @@
 #include <omnetpp.h>
 
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
+#include "modules/QNIC/StationaryQubit/logicalStationaryQubit.h"
 using namespace omnetpp;
 
 namespace quisp {
@@ -47,6 +48,8 @@ struct QubitState {
 typedef std::multimap<int, StationaryQubit*> EntangledPairs;  // entangled Node address -> pointer to that local qubit
 typedef EntangledPairs* qnicResources;  // For each qnic. If the number of "qnic" is 3, then the size is 3.
 /*For resource management over.*/
+typedef std::multimap<int, logicalStationaryQubit*> LogicalEntangledPairs;
+typedef LogicalEntangledPairs* qnicLogicalResources;
 
 }  // namespace modules
 }  // namespace quisp
