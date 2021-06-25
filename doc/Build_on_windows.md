@@ -76,15 +76,7 @@ To clone and build Quisp, one your terminal (use the mingwenv console to clone t
 $ git clone https://github.com/sfc-aqua/quisp.git
 ```
 
-## 3-  Install dependencies
-
-To install dependencies (Eigen and Googletest), one your terminal (use the mingwenv console to clone the repo) and type the follwoing commands:
-```
-$ cd quisp
-$ make eigen
-```
-
-## 4- Set up OMNeT for the Simulation
+## 3- Set up OMNeT for the Simulation
 
 *Execute* the command `omnetpp` from mingwenv console. When the dialogue comes up, select your workspace and click *Launch*.
 
@@ -162,7 +154,7 @@ And Voilà !!!
 ![](img/22.jpg)
 
 
-## 5- Running A Simulation
+## 4- Running A Simulation
 
 From File > Set Up an Unconfigured Network...
 
