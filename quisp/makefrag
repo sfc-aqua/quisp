@@ -17,13 +17,15 @@ TEST_LIBS=-L../googletest/build/lib -lgtest -lgmock
 # check eigen3 is in PKG_CONFIG_PATH
 PKG_CONFIG_STATUS=$(shell pkg-config eigen3 --cflags 2>/dev/null 1>&2; echo $$?)
 ifneq ('0','$(PKG_CONFIG_STATUS)')
-$(warning 'eigen3 is not found in pkg-config. check you PKG_CONFIG_PATH')
-$(warning 'your PKG_CONFIG_PATH is $(PKG_CONFIG_PATH)')
+# using quisp/eigen
+INCLUDE_PATH+=-I. -I$(CURDIR)/../eigen/
+else
+INCLUDE_PATH+=-I. $(shell pkg-config eigen3 --cflags)
 endif
 
-INCLUDE_PATH+=-I. $(shell pkg-config eigen3 --cflags)
+INCLUDE_PATH+=-I.
 
-default: all
+default: eigen all
 
 format:
 	clang-format -i $(SRCS) $(HEADERS)
@@ -47,3 +49,22 @@ $(TARGET_DIR)/run_unit_test: $(TARGET_DIR)/$(TARGET) $(TEST_OBJS)  $(wildcard $(
 
 run-unit-test: $(TARGET_DIR)/run_unit_test
 	$(TARGET_DIR)/run_unit_test
+
+.PHONY: eigen
+# check eigen exists and setup eigen if needed.
+eigen:
+	PKG_CONFIG_STATUS=$(shell pkg-config eigen3 --cflags 2>/dev/null 1>&2; echo $$?)
+# check eigen3 exists on pkg-config
+ifneq ('0','$(PKG_CONFIG_STATUS)')
+# check eigen is installed on quisp/eigen
+ifeq (,$(wildcard $(CURDIR)/../eigen/CMakeLists.txt))
+	make eigen -C $(CURDIR)/..
+endif
+	# using quisp/eigen
+	INCLUDE_PATH+=-I$(CURDIR)/../eigen/
+else
+	INCLUDE_PATH+=-I. $(shell pkg-config eigen3 --cflags)
+endif
+
+all: eigen
+

@@ -1,6 +1,6 @@
 # installation omnetpp gui and quisp on docker (For OSX)
 
-This is instruction for installing omnetpp and quisp on docker.  
+This is instruction for installing omnetpp and quisp on docker.
 This on MacOS Catalina (10.15.3) and Mojave(10.14).
 
 ## TL;DR
@@ -37,7 +37,7 @@ After you have successfully installed the related tools, please reboot your lapt
 
 3. Build docker container
 
-Open terminal and move to the `quisp/`, 
+Open terminal and move to the `quisp/`,
 
 ```zsh
 $ sh docker_build.sh
@@ -101,7 +101,7 @@ Download XQuartz from [**here**](https://www.xquartz.org/).
 $ brew install socat
 ```
 
-These are nessesary for building GUI version of omnet.  
+These are nessesary for building GUI version of omnet.
 If you finish installing those tools successfully, **reboot your mac** and check **$DISPLAY** like,
 
 ```zsh
@@ -113,7 +113,7 @@ If you can't see any values in $DISPLAY, uninstall XQuartz and install it again.
 
 ## 3. Build docker container
 
-Next, let's build the docker container on your Mac.  
+Next, let's build the docker container on your Mac.
 (This might take a lot of time. Probably, about 15 min)
 ***!!!!!<CHANGE WHEN THIS BECOME OSS>***
 ```zsh
@@ -151,7 +151,7 @@ Enter on the **xterm** (not your default terminal)
 > xhost <your ip address>
 ```
 
-\<your ip address> is your host ip address you checked previously.  
+\<your ip address> is your host ip address you checked previously.
 
 If you have trouble with using `xhost`, and [see](./xhost_trouble_shooting.md).
 
@@ -165,7 +165,7 @@ $ socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"&
 
 Open the file which has Dockerfile (in quisp)
 
-```zsh 
+```zsh
 $ sh quisp_docker.sh
 ```
 
@@ -177,7 +177,7 @@ You can run your container and **in the container**, run
 You can use omnetpp and quisp on docker container.
 
 ## 5.Set up your OMNET++
-After the logo shows up, you will see the following tab. You can just press "Launch" button. 
+After the logo shows up, you will see the following tab. You can just press "Launch" button.
 
 ![Setup](https://user-images.githubusercontent.com/45162150/74584459-e7b2a000-5015-11ea-95a0-cd811ed9b25d.png)
 
@@ -215,31 +215,7 @@ This is what the "Properties" page looks like. Next, you should click the "Makem
 ![](https://i.imgur.com/2njDPBi.png)
 
 
-Then, you have to click \UTF{2460}~\UTF{2462} in the following image.
-
-![](https://i.imgur.com/Zwqql8b.png)
-
-
-You will go to the following page, so you should click the "Compile" tab.
-
-![](https://i.imgur.com/wdeH3pC.png)
-
-After you click the "Compile" tab, You will see the following page.
-
-![](https://i.imgur.com/CTB85mk.png)
-
-Then, you should click the small icon which is pointed by an arrow, 
-
-![](https://i.imgur.com/Up47pD1.png)
-
-and you should put "usr/include/eigen3" in the blank and Press "OK".
-
-Then, you will go back to the "Compile" tab, so press "OK"
-
-![](https://i.imgur.com/0TnZxmR.png)
-
-
-After that, you will go back to its previous page, so press "Apply and Close" button.
+click "quisp" in the center list and click "Makemake" in "Build" area  on right side (make it same as the screenshot below). and then press "Apply and Close" button.
 
 ![](https://i.imgur.com/TH3yLUM.png)
 
