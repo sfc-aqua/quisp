@@ -121,7 +121,7 @@ Select quisp, right-click on it and choose *properties*.
 ![](img/16.jpg)
 
 In the screen that shows up, expand OMNeT++, click on Makemake.
-Select quisp from the middle and on the right-habd side, choose Makemake and then just click on apply. now we don't need to setup options!
+Select quisp from the middle and on the right-hand side, choose Makemake and then just click on apply. now we don't need to setup options!
 
 
 ![](img/17.jpg)
