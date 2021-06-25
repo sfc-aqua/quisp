@@ -37,20 +37,15 @@ googletest/build/lib: googletest/build
 
 googletest: googletest/build/lib
 
-
 eigen/CMakeLists.txt:
 	git submodule update --init
 
-eigen/build/eigen3.pc: eigen/CMakeLists.txt
-	cmake ./eigen -B ./eigen/build -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=./eigen/build
-	make -C eigen/build install
+eigen: eigen/CMakeLists.txt
 
-eigen: eigen/build/eigen3.pc
-
-makefile-exe:
+makefile-exe: eigen
 	cd quisp && opp_makemake -f --deep -O out -i ./makefrag
 
-makefile-lib:
+makefile-lib: eigen
 	cd quisp && opp_makemake -f --deep -O out -i ./makefrag -M debug  --make-so
 
 clean:
@@ -58,7 +53,7 @@ clean:
 	$(RM) -r quisp/out
 
 distclean:
-	git submodule deinit --all
+	git submodule deinit --all -f
 	make clean
 
 
