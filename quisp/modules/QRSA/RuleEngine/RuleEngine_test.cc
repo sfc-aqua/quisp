@@ -86,31 +86,18 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
     friend class MockHardwareMonitor;
 };
 
-// TEST(RuleEngineTest, Init) {
-//   RuleEngineTestTarget c{nullptr, nullptr, nullptr};
-//   c.initialize();
-//   ASSERT_EQ(c.par("address").intValue(), 123);
-// }
-
 TEST(RuleEngineTest, ESResourceUpdate){
   // test for resource update in entanglement swapping
-  std::cout<<"Start RuleEngine Test"<<std::endl;
+  std::cout << "Start RuleEngine Test" << std::endl;
   auto routingdaemon = new MockRoutingDaemon;
   auto mockHardwareMonitor = new MockHardwareMonitor;
   auto mockQubit = new MockStationaryQubit;
   RuleEngineTestTarget c{mockQubit, routingdaemon, mockHardwareMonitor};
-  
+
   auto info = std::make_unique<ConnectionSetupInfo>();
   info->qnic.type = QNIC_E;
-  info->qnic.index = 1;
-  EXPECT_CALL(*routingdaemon, return_QNIC_address_to_destAddr(1)).WillOnce(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(info)));
-  // EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(info)));
-  // EXPECT_CALL(*mockQubit, returnNumEndNodes()).WillOnce(Return(*StationaryQubit));
-  c.initialize();
-  c.setAllResources(1, 1, 2, mockQubit);
-  c.setAllResources(1, 2, 2, mockQubit);
-  c.setAllResources(1, 3, 2, mockQubit);
+  info->qnic.index = 0;
+
   swapping_result swapr;
   swapr.new_partner = 3;
   swapr.operation_type = 0;
@@ -120,21 +107,21 @@ TEST(RuleEngineTest, ESResourceUpdate){
   swapr.measured_qubit_index = 1;
   EXPECT_CALL(*routingdaemon, return_QNIC_address_to_destAddr(swapr.new_partner)).WillOnce(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).Times(2).WillOnce(Return(2)).WillOnce(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).Times(2).WillOnce(Return(2)).WillOnce(Return(1)); 
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).Times(2).WillOnce(Return(2)).WillOnce(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(std::move(info))));
   c.initialize();
   c.setAllResources(QNIC_E, 0, 0, mockQubit);
   c.setAllResources(QNIC_E, 0, 1, mockQubit);
   c.setAllResources(QNIC_E, 0, 2, mockQubit);
   auto part = c.allResources[QNIC_E][0].find(1);
-  ASSERT_TRUE(part!=c.allResources[QNIC_E][0].end());
+  ASSERT_TRUE(part != c.allResources[QNIC_E][0].end());
   // check resource is updated?
   c.updateResources_EntanglementSwapping(swapr);
   auto part_after = c.allResources[QNIC_E][0].find(3);
-  ASSERT_TRUE(part_after!=c.allResources[QNIC_E][0].end());
+  ASSERT_TRUE(part_after != c.allResources[QNIC_E][0].end());
   // old record was deleted properly
   auto part_after_old = c.allResources[QNIC_E][0].find(1);
-  ASSERT_TRUE(part_after_old==c.allResources[QNIC_E][0].end());
+  ASSERT_TRUE(part_after_old == c.allResources[QNIC_E][0].end());
 }
 
 }  // namespace

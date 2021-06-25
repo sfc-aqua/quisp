@@ -85,6 +85,8 @@ class HardwareMonitor : public IHardwareMonitor {
 
   virtual std::unique_ptr<NeighborInfo> createNeighborInfo(const cModule &thisNode);
   virtual std::unique_ptr<NeighborInfo> getNeighbor(cModule *qnic_pointer);
+  virtual cModule *getQNode();
+  virtual cModule *getQNodeWithAddress(int address);
   virtual InterfaceInfo getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);
   virtual QNIC search_QNIC_from_Neighbor_QNode_address(int neighbor_address);
@@ -92,6 +94,7 @@ class HardwareMonitor : public IHardwareMonitor {
   virtual Matrix4cd extended_reconstruct_Density_Matrix(int qnic_id, int partner);
   virtual unsigned long createUniqueId();
   virtual void writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec);
+
   // virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
   // simtime_t tomography_time;
 };
