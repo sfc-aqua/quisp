@@ -37,6 +37,7 @@ class logicalStationaryQubit : public cSimpleModule {
 
   bool isBusy;
   bool allocated;
+  int encode_size;
 
   std::vector<int> encoding_protocol;
   std::map<int, std::string> location_errortype;
@@ -73,7 +74,7 @@ class logicalStationaryQubit : public cSimpleModule {
   void Deallocate();
   bool isAllocated();
 
-  void addToLogicalList(StationaryQubit *encode_qubit);
+  void addToLogicalList(std::vector<StationaryQubit *> qubits_for_encode);
   void setLogicalCompletelyMixedDensityMatrix();
   void setLogicalExcitedDensityMatrix();
   void setLogicalRelaxedDensityMatrix();
@@ -83,8 +84,10 @@ class logicalStationaryQubit : public cSimpleModule {
   void X_gate();
   void CNOT_gate(std::vector<StationaryQubit *> target_qubit, std::vector<StationaryQubit *> control_qubit);
 
+  void Encode(int code);
+
   // Error management related
-  void ErrorDetectionAndCorrection(std::vector<StationaryQubit *> ancilla_qubit, std::string detection_protocol);
+  void ErrorDetectionAndCorrection(std::vector<StationaryQubit *> ancilla_qubit, int detection_protocol);
   // void errorCorrection(std::map<int, std::string> location_errortype);
   // std::map<int, std::string> errorDetection(std::vector<StationaryQubit *> ancilla_qubit, std::string detection_protocol);
   int bitArrayToInt32(bool arr[], int count);

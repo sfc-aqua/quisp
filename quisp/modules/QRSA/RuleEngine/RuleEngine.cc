@@ -74,6 +74,12 @@ void RuleEngine::initialize() {
   allResources[QNIC_R] = new EntangledPairs[number_of_qnics_r];
   allResources[QNIC_RP] = new EntangledPairs[number_of_qnics_rp];
 
+  // Logical Bell pair
+  allLogicalResources = new qnicLogicalResources[QNIC_N];
+  allLogicalResources[QNIC_E] = new LogicalEntangledPairs[number_of_qnics];
+  allLogicalResources[QNIC_R] = new LogicalEntangledPairs[number_of_qnics_r];
+  allLogicalResources[QNIC_RP] = new LogicalEntangledPairs[number_of_qnics_rp];
+
   // running_processes = new RuleSetPtr[QNIC_N];//One process per QNIC for now. No multiplexing.
   // WATCH(assigned);
 }

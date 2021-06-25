@@ -16,47 +16,9 @@ Define_Module(logicalStationaryQubit);
 
 void logicalStationaryQubit::initialize() {
   // Logical measurement basis
-
-  /*
-  std::vector<int> data;
-  std::ifstream fin("LogicalBellSteane713.txt");
-  int element;
-  while (fin >> element){
-      data.push_back(element);
-  }
-  VectorXcd Measurement_state = data;
-
-  meas_op.X_basis.plus_ket << 1 / sqrt(2), 1 / sqrt(2);
-  meas_op.X_basis.minus_ket << 1 / sqrt(2), -1 / sqrt(2);
-  meas_op.X_basis.plus << 0.5, 0.5, 0.5, 0.5;
-  meas_op.X_basis.minus << 0.5, -0.5, -0.5, 0.5;
-  meas_op.X_basis.basis = 'X';
-
-  meas_op.Z_basis.plus_ket << 1, 0;
-  meas_op.Z_basis.minus_ket << 0, 1;
-  meas_op.Z_basis.plus << 1, 0, 0, 0;
-  meas_op.Z_basis.minus << 0, 0, 0, 1;
-  meas_op.Z_basis.basis = 'Z';
-
-  meas_op.Y_basis.plus_ket << 1 / sqrt(2), Complex(0, 1 / sqrt(2));
-  meas_op.Y_basis.minus_ket << 1 / sqrt(2), -Complex(0, 1 / sqrt(2));
-  meas_op.Y_basis.plus << 0.5, Complex(0, -0.5), Complex(0, 0.5), 0.5;
-  meas_op.Y_basis.minus << 0.5, Complex(0, 0.5), Complex(0, -0.5), 0.5;
-  meas_op.Y_basis.basis = 'Y';
-
-  meas_op.identity << 1, 0, 0, 1;
-
-  */
+  encode_size = 0;
   setPhysicalFree(false);
 
-  /*
-  std::vector<int> encodingProtocol{0, 0, 0};
-  // Set encoding protocol
-  if (encodingProtocol[0] == 0) {
-    encoding_protocol{7, 1, 3};
-  } else {
-    encoding_protocol = encodingProtocol;
-  }*/
 }
 
 void logicalStationaryQubit::setPhysicalFree(bool consumed) {
@@ -99,14 +61,17 @@ void logicalStationaryQubit::setPhysicalFree(bool consumed) {
   }
 }
 
-void logicalStationaryQubit::addToLogicalList(StationaryQubit *encode_qubit) {
+void logicalStationaryQubit::addToLogicalList(std::vector<StationaryQubit *> qubits_for_encode) {
   // Add encode qubit to list of physical qubits used for encode logical qubit
-  if (this->encoded_qubits_list.empty()) {
-    std::vector<StationaryQubit *> encode_list;
-    this->encoded_qubits_list = encode_list;
-  }
 
-  this->encoded_qubits_list.push_back(encode_qubit);
+  // Switch input to [2]
+  auto temp1 = qubits_for_encode[0];
+  auto temp2 = qubits_for_encode[2];
+
+  qubits_for_encode[0] = temp2;
+  qubits_for_encode[2] = temp1;
+
+  this->encoded_qubits_list = qubits_for_encode;
 }
 
 bool logicalStationaryQubit::checkBusy() {
@@ -163,16 +128,22 @@ void logicalStationaryQubit::setLogicalRelaxedDensityMatrix() {}
 // end S1
 
 void logicalStationaryQubit::setLogicalEntangledPartnerInfo(logicalStationaryQubit *partner) {
+
   this->logical_entangled_partner = partner;
   partner->logical_entangled_partner = this;
 
-  // v2
-  std::vector<StationaryQubit *> comb_list;
-  comb_list.reserve(this->encoded_qubits_list.size() + this->logical_entangled_partner->encoded_qubits_list.size());
-  comb_list.insert(comb_list.end(), this->encoded_qubits_list.begin(), this->encoded_qubits_list.end());
-  comb_list.insert(comb_list.end(), this->logical_entangled_partner->encoded_qubits_list.begin(), this->logical_entangled_partner->encoded_qubits_list.end());
-  this->combine_entangled_list = comb_list;
-  // end v2
+  if (combine_entangled_list.size() != this->encode_size) {
+    // v2
+    std::vector<StationaryQubit *> comb_list;
+    comb_list.reserve(this->encoded_qubits_list.size() + this->logical_entangled_partner->encoded_qubits_list.size());
+    comb_list.insert(comb_list.end(), this->encoded_qubits_list.begin(), this->encoded_qubits_list.end());
+    comb_list.insert(comb_list.end(), this->logical_entangled_partner->encoded_qubits_list.begin(), this->logical_entangled_partner->encoded_qubits_list.end());
+    this->combine_entangled_list = comb_list;
+    // end v2
+
+    partner->combine_entangled_list = comb_list;
+  }
+  
 }
 
 // For logical qubit gate,
@@ -213,167 +184,33 @@ void logicalStationaryQubit::CNOT_gate(std::vector<StationaryQubit *> target_qub
     target_qubit[i]->CNOT_gate(control_qubit[i]);  // Target -> Control
   }
 }
-/*
-std::map<int, std::string> logicalStationaryQubit::errorDetection(std::vector<StationaryQubit *> ancilla_qubit, std::string detection_protocol) {
- // Return location and type of error
 
- // Hard code for simple Steane scheme using 6 physical qubits
- // Error detection Z
- // Generator 1
- ancilla_qubit[0]->Hadamard_gate();
- encoded_qubits_list[3]->CNOT_gate(ancilla_qubit[0]); // Target-> Control
- encoded_qubits_list[4]->CNOT_gate(ancilla_qubit[0]);
- encoded_qubits_list[5]->CNOT_gate(ancilla_qubit[0]);
- encoded_qubits_list[6]->CNOT_gate(ancilla_qubit[0]);
- ancilla_qubit[0]->Hadamard_gate();
+void logicalStationaryQubit::Encode(int code) {
 
- // Generator 2
- ancilla_qubit[1]->Hadamard_gate();
- encoded_qubits_list[0]->CNOT_gate(ancilla_qubit[1]);  // Target-> Control
- encoded_qubits_list[2]->CNOT_gate(ancilla_qubit[1]);
- encoded_qubits_list[4]->CNOT_gate(ancilla_qubit[1]);
- encoded_qubits_list[6]->CNOT_gate(ancilla_qubit[1]);
- ancilla_qubit[1]->Hadamard_gate();
+  // Hard code for Steane code
+  encoded_qubits_list[0]->Hadamard_gate();
+  encoded_qubits_list[1]->Hadamard_gate();
+  encoded_qubits_list[3]->Hadamard_gate();
 
- // Generator 3
- ancilla_qubit[2]->Hadamard_gate();
- encoded_qubits_list[1]->CNOT_gate(ancilla_qubit[2]);  // Target-> Control
- encoded_qubits_list[2]->CNOT_gate(ancilla_qubit[2]);
- encoded_qubits_list[5]->CNOT_gate(ancilla_qubit[2]);
- encoded_qubits_list[6]->CNOT_gate(ancilla_qubit[2]);
- ancilla_qubit[2]->Hadamard_gate();
+  encoded_qubits_list[2]->CNOT_gate(encoded_qubits_list[4]);
+  encoded_qubits_list[2]->CNOT_gate(encoded_qubits_list[5]);
 
- // Error detection X Change from CNOT => CZ via Hadamard gate
- // Generator 4
- ancilla_qubit[3]->Hadamard_gate();
- encoded_qubits_list[3]->Hadamard_gate();
- encoded_qubits_list[3]->CNOT_gate(ancilla_qubit[3]);  // Target-> Control
- encoded_qubits_list[3]->Hadamard_gate();
- encoded_qubits_list[4]->Hadamard_gate();
- encoded_qubits_list[4]->CNOT_gate(ancilla_qubit[3]);
- encoded_qubits_list[4]->Hadamard_gate();
- encoded_qubits_list[5]->Hadamard_gate();
- encoded_qubits_list[5]->CNOT_gate(ancilla_qubit[3]);
- encoded_qubits_list[5]->Hadamard_gate();
- encoded_qubits_list[6]->Hadamard_gate();
- encoded_qubits_list[6]->CNOT_gate(ancilla_qubit[3]);
- encoded_qubits_list[6]->Hadamard_gate();
- ancilla_qubit[3]->Hadamard_gate();
+  encoded_qubits_list[0]->CNOT_gate(encoded_qubits_list[2]);
+  encoded_qubits_list[0]->CNOT_gate(encoded_qubits_list[4]);
+  encoded_qubits_list[0]->CNOT_gate(encoded_qubits_list[6]);
 
- // Generator 5
- ancilla_qubit[4]->Hadamard_gate();
- encoded_qubits_list[0]->Hadamard_gate();
- encoded_qubits_list[0]->CNOT_gate(ancilla_qubit[4]);  // Target-> Control
- encoded_qubits_list[0]->Hadamard_gate();
- encoded_qubits_list[2]->Hadamard_gate();
- encoded_qubits_list[2]->CNOT_gate(ancilla_qubit[4]);
- encoded_qubits_list[2]->Hadamard_gate();
- encoded_qubits_list[4]->Hadamard_gate();
- encoded_qubits_list[4]->CNOT_gate(ancilla_qubit[4]);
- encoded_qubits_list[4]->Hadamard_gate();
- encoded_qubits_list[6]->Hadamard_gate();
- encoded_qubits_list[6]->CNOT_gate(ancilla_qubit[4]);
- encoded_qubits_list[6]->Hadamard_gate();
- ancilla_qubit[4]->Hadamard_gate();
+  encoded_qubits_list[1]->CNOT_gate(encoded_qubits_list[2]);
+  encoded_qubits_list[1]->CNOT_gate(encoded_qubits_list[5]);
+  encoded_qubits_list[1]->CNOT_gate(encoded_qubits_list[6]);
 
- // Generator 6
- ancilla_qubit[5]->Hadamard_gate();
- encoded_qubits_list[1]->Hadamard_gate();
- encoded_qubits_list[1]->CNOT_gate(ancilla_qubit[5]);  // Target-> Control
- encoded_qubits_list[1]->Hadamard_gate();
- encoded_qubits_list[2]->Hadamard_gate();
- encoded_qubits_list[2]->CNOT_gate(ancilla_qubit[5]);
- encoded_qubits_list[2]->Hadamard_gate();
- encoded_qubits_list[5]->Hadamard_gate();
- encoded_qubits_list[5]->CNOT_gate(ancilla_qubit[5]);
- encoded_qubits_list[5]->Hadamard_gate();
- encoded_qubits_list[6]->Hadamard_gate();
- encoded_qubits_list[6]->CNOT_gate(ancilla_qubit[5]);
- encoded_qubits_list[6]->Hadamard_gate();
- ancilla_qubit[5]->Hadamard_gate();
+  encoded_qubits_list[3]->CNOT_gate(encoded_qubits_list[4]);
+  encoded_qubits_list[3]->CNOT_gate(encoded_qubits_list[5]);
+  encoded_qubits_list[3]->CNOT_gate(encoded_qubits_list[6]);
 
-
-
- // Should calculate syndrome from GOD_?error of each physcial qubits and return corresponding syndrome to error
- // std::map<int, std::string> location_errortype
- //e.g. location_errortype.insert(pair<int, std::string>(2, "X");
-
- location_errortype.insert(std::pair<int, std::string>(0, "I")); // <-- Just in case...
- // Check commutator (? kind of) with generator
- std::vector<std::vector<int>> Generators{
-   {false, false, false, true, true, true, true}, // G1
-   {false, true, true, false, false, true, true}, // G2
-   {true, false, true, false, true, false, true}  // G3
- };
-
- // Check X error with commuator of generator Z (Luckily that X and Z generator is the same in bool form)
- bool flag;
- bool location_bool[3] = {false};
- for (int i = 0; i < Generators.size(); i++) {
-   flag = false;
-   for (int j = 0; j < encoded_qubits_list.size(); j++) {
-     if (bool(encoded_qubits_list[j]->par("God_Xerror")) != bool(Generators[i][j])) {
-       flag = !flag;
-     }
-   }
-   location_bool[i] = flag;
- }
- // convert commutor flag to location in decimal
- int location = bitArrayToInt32(location_bool, 3); // <- 32?
- // Store result to location_errortype
- location_errortype.insert(std::pair<int, std::string>(location, "X"));
-
- // Check Z error with commuator of generator X
- location_bool[3] = {false};
- for (int i = 0; i < Generators.size(); i++) {
-   flag = false;
-   for (int j = 0; j < encoded_qubits_list.size(); j++) {
-     if (bool(encoded_qubits_list[j]->par("God_Zerror")) != bool(Generators[i][j])) {
-       flag = !flag;
-     }
-   }
-   location_bool[i] = flag;
- }
- // convert commutor flag to location in decimal
- location = bitArrayToInt32(location_bool, 3);
-
- // Store result to location_errortype
- location_errortype.insert(std::pair<int, std::string>(location, "Z"));
-
- std::map<int, std::string>::iterator itr;
- for (itr = location_errortype.begin(); itr != location_errortype.end(); ++itr) {
-   if (itr->second == "X") {
-     encoded_qubits_list[itr->first]->X_gate();
-   }
-   if (itr->second == "Z") {
-     encoded_qubits_list[itr->first]->Z_gate();
-   }
- }
-
-
- return location_errortype;
-
-
+  this->encode_size = 14;
 }
-*/
-/*
-void logicalStationaryQubit::errorCorrection(std::map<int, std::string> location_errortype) {
-  // Apply quantum gate to correct the error
 
-  std::map<int, std::string>::iterator itr;
-  for (itr = location_errortype.begin(); itr != location_errortype.end(); ++itr) {
-
-    if (itr->second == "X") {
-      encoded_qubits_list[itr->first]->X_gate();
-    }
-    if (itr->second == "Z") {
-      encoded_qubits_list[itr->first]->Z_gate();
-    }
-
-  }
-}
-*/
-void logicalStationaryQubit::ErrorDetectionAndCorrection(std::vector<StationaryQubit *> ancilla_qubit, std::string detection_protocol) {
+void logicalStationaryQubit::ErrorDetectionAndCorrection(std::vector<StationaryQubit *> ancilla_qubit, int detection_protocol) {
   // Return location and type of error
 
   // Hard code for simple Steane scheme using 6 physical qubits
@@ -544,16 +381,6 @@ logical_quantum_state logicalStationaryQubit::getLogicalQuantumState() {
 
   MatrixXcd combined_errors = kroneckerProduct(combined_errors_self, combined_errors_partner);
 
-  /*
-              std::vector<std::complex<double> > data;
-
-              std::ifstream fin("LogicalBellSteane713.txt");
-              std::complex<double> element;
-              while (fin >> element){
-                  data.push_back(element);
-              }
-              VectorXcd ideal_logical_Bell_pair = data;
-  */
   VectorXcd ideal_logical_Bell_pair = this->logicalQuantumState.state_in_ket;
   VectorXcd actual_logical_Bell_state = combined_errors * ideal_logical_Bell_pair;
   // EV<<"Current physical state is = "<<actual_Bell_state;
@@ -586,123 +413,7 @@ logical_quantum_state logicalStationaryQubit::getIdealLogicalQuantumState() {
   q.state_in_ket = ideal_logical_Bell_pair;
   return q;
 }
-/*
-        measurement_outcome logicalStationaryQubit::logical_measure_density_independent_v1() {
 
-            // This version will implement the easiest way to measure logical qubit for tomography without decoding.
-            // This method will alter Density_matrix_collasped in the logical partner qubit.
-
-            logical_measurement_operator this_measurement = logical_Random_Measurement_Basis_Selection();  // Select basis randomly
-
-            // Apply memory error and measurement operator error
-            for(int i = 0; i < this->encoded_qubits_list.size(); i++){
-                this->encoded_qubits_list[i]->apply_memory_error(encoded_qubits_list[i]);
-                this->encoded_qubits_list[i]->apply_single_qubit_gate_error(this->encoded_qubits_list[i]->Measurement_error, encoded_qubits_list[i]);
-            }
-            char Output;
-            char Output_is_plus;
-
-            if(this->logical_partner_measured) {
-                MatrixXcd Error_after = this->encoded_qubits_list[0]->Pauli.I;
-
-                for (int j = 0; j < this->encoded_qubits_list.size(); j++){
-                    Matrix2cd Error_on_this_qubit = this->encoded_qubits_list[j]->Pauli.I;
-                    if (this->encoded_qubits_list[j]->par("GOD_Xerror" != GOD_dm_Xerror_list[j])){
-                        Error_on_this_qubit = Error_on_this_qubit*this->encoded_qubits_list[j]->Pauli.X;
-                    }
-                    if (this->encoded_qubits_list[j]->par("GOD_Zerror" != GOD_dm_Xerror_list[j])){
-                        Error_on_this_qubit = Error_on_this_qubit*this->encoded_qubits_list[j]->Pauli.Z;
-                    }
-                    Error_after = kroneckerProduct(Error_after, Error_on_this_qubit);
-                }
-
-                Density_Matrix_Collapsed = Error_after * Density_Matrix_Collapsed * Error_after.adjoint();
-
-                Complex Prob_plus = (Density_Matrix_Collapsed * this_measurement.plus.adjoint() * this_measurement.plus).trace();
-                Complex Prob_minus = (Density_Matrix_Collapsed * this_measurement.minus.adjoint() * this_measurement.minus).trace();
-                double dbl = dblrand();
-                if (dbl < Prob_plus.real()) {
-                    Output = '+';
-                    Output_is_plus = true;
-                } else {
-                    Output = '-';
-                    Output_is_plus = false;
-                }
-
-            } else if(!this->logical_partner_measured){
-
-                logical_quantum_state current_state = getLogicalQuantumState();
-
-                Complex Prob_plus = current_state.state_in_ket.adjoint() * kroneckerProduct(this_measurement.plus, meas_op.identity).eval().adjoint() *
-                        kroneckerProduct(this_measurement.plus, meas_op.identity).eval() * current_state.state_in_ket;
-                Complex Prob_minus = current_state.state_in_ket.adjoint() * kroneckerProduct(this_measurement.minus, meas_op.identity).eval().adjoint() *
-                         kroneckerProduct(this_measurement.minus, meas_op.identity).eval() * current_state.state_in_ket;
-
-                double dbl = dblrand();
-                VectorXcd ms;
-                if (dbl < Prob_plus.real()) {  // Measurement output was plus
-                    Output = '+';
-                    ms = this_measurement.plus_ket;
-                    Output_is_plus = true;
-                } else {  // Otherwise, it was negative.
-                    Output = '-';
-                    ms = this_measurement.minus_ket;
-                    Output_is_plus = false;
-                }
-
-                //Calculate the remaining density matrix for partner
-                MatrixXcd partners_dm, normalized_partners_dm;
-                partners_dm = kroneckerProduct(ms.adjoint(), meas_op.identity).eval() * current_state.state_in_density_matrix * kroneckerProduct(ms.adjoint(),
-   meas_op.identity).eval().adjoint(); normalized_partners_dm = partners_dm / partners_dm.trace();
-
-                //Set calculated density matrix
-                logical_entangled_partner->Density_Matrix_Collapsed = normalized_partners_dm;
-
-                logical_entangled_partner->logical_partner_measured = true;
-                logical_entangled_partner->logical_entangled_partner = nullptr;
-
-                // Save error...?
-                for(int i = 0; i < logical_entangled_partner->encoded_qubits_list.size(); i++){
-                    logical_entangled_partner->encoded_qubits_list[i]->GOD_dm_Xerror = logical_entangled_partner->encoded_qubits_list[i]->par("GOD_Xerror");
-                    logical_entangled_partner->encoded_qubits_list[i]->GOD_dm_Zerror = logical_entangled_partner->encoded_qubits_list[i]->par("GOD_Zerror");
-                }
-            }
-
-        }
-
-        logical_measurement_operator logicalStationaryQubit::logical_Random_Measurement_Basis_Selection() {
-
-            // This function is different from physical level such that the measurement operator will be in logical form.
-
-            measurement_operator this_measurement;
-            double dbl = dblrand();  // Random double value for random basis selection.
-            EV << "Random dbl = " << dbl << "! \n ";
-
-            if (dbl < ((double)1 / (double)3)) {  // X measurement!
-                EV << "X measurement\n";
-                this_measurement.plus = meas_op.X_basis.plus;
-                this_measurement.minus = meas_op.X_basis.minus;
-                this_measurement.basis = meas_op.X_basis.basis;
-                this_measurement.plus_ket = meas_op.X_basis.plus_ket;
-                this_measurement.minus_ket = meas_op.X_basis.minus_ket;
-            } else if (dbl >= ((double)1 / (double)3) && dbl < ((double)2 / (double)3)) {
-                EV << "Z measurement\n";
-                this_measurement.plus = meas_op.Z_basis.plus;
-                this_measurement.minus = meas_op.Z_basis.minus;
-                this_measurement.basis = meas_op.Z_basis.basis;
-                this_measurement.plus_ket = meas_op.Z_basis.plus_ket;
-                this_measurement.minus_ket = meas_op.Z_basis.minus_ket;
-            } else {
-                EV << "Y measurement\n";
-                this_measurement.plus = meas_op.Y_basis.plus;
-                this_measurement.minus = meas_op.Y_basis.minus;
-                this_measurement.basis = meas_op.Y_basis.basis;
-                this_measurement.plus_ket = meas_op.Y_basis.plus_ket;
-                this_measurement.minus_ket = meas_op.Y_basis.minus_ket;
-            }
-            return this_measurement;
-        }
-*/
 measurement_outcome logicalStationaryQubit::logical_measure_density_independent_v2(StationaryQubit *physicalQubit, measurement_operator this_measurement) {
   /*
       After consideration, what original QuISP expected is just 2 physical qubits.
@@ -861,6 +572,7 @@ measurement_outcome logicalStationaryQubit::logical_measure_density_independent_
   // remove physicalQubit from combine_entangled_list
 
   this->combine_entangled_list.erase(combine_entangled_list.begin() + index_qubit);
+  this->logical_entangled_partner->combine_entangled_list = this->combine_entangled_list;
 
   measurement_outcome o;
   o.basis = this_measurement.basis;
@@ -871,6 +583,11 @@ measurement_outcome logicalStationaryQubit::logical_measure_density_independent_
 measurement_outcome logicalStationaryQubit::logical_readout_v2(StationaryQubit *physicalQubit) {
   // Randomly choose basis (call Random_Measurement_Basis_Selection())
   measurement_operator this_measurement = physicalQubit->Random_Measurement_Basis_Selection();
+
+  /*
+  Lock this process, if measure?
+
+  */
 
   for (int i = 0; i < encoded_qubits_list.size(); i++) {
     this->logical_measure_density_independent_v2(this->encoded_qubits_list[i], this_measurement);
