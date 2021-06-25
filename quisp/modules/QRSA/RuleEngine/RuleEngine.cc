@@ -178,8 +178,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     bubble("EPPS");
     EPPStimingNotifier *pk = check_and_cast<EPPStimingNotifier *>(msg);
     error("EPPS is not implemented yet");
-  } 
-  
+  }
+
   else if (dynamic_cast<LinkTomographyRuleSet *>(msg) != nullptr) {
     // Received a tomography rule set.
     LinkTomographyRuleSet *pk = check_and_cast<LinkTomographyRuleSet *>(msg);
@@ -673,21 +673,21 @@ InterfaceInfo RuleEngine::getInterface_toNeighbor_Internal(int local_qnic_addres
 void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type) {
   if (ntable.empty()) {
     ntable = hardware_monitor->passNeighborTable();  // Get neighbor table from Hardware Manager: neighbor address--> InterfaceInfo.
-  } // Just do this once, unless the network changes during the simulation.
+  }  // Just do this once, unless the network changes during the simulation.
 
   photon_transmission_config ptc;
   int destAddr = pk->getSrcAddr();  // The destination is where the request is generated (source of stand-alone or internal BSA node).
   // if (destAddr == parentAddress){
   //   error("Destination address must not be the parent address");
   // }
-  bool internal = false; // for internal hom?
+  bool internal = false;  // for internal hom?
   switch (qnic_type) {
     case QNIC_E: {
       InterfaceInfo inf = getInterface_toNeighbor(destAddr);
       ptc.qnic_index = inf.qnic.index;
       ptc.qnic_address = inf.qnic.address;
     }  // inf is not defined beyound this point
-      break;
+    break;
     case QNIC_R:
       ptc.qnic_index = pk->getInternal_qnic_index();
       ptc.qnic_address = pk->getInternal_qnic_address();
@@ -704,10 +704,10 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
   ptc.qnic_type = qnic_type;
   // store the interface information for the futhter link generation process
   int numFree;
-  numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[ptc.qnic_type], ptc.qnic_index); 
-  if (numFree > 0){
+  numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[ptc.qnic_type], ptc.qnic_index);
+  if (numFree > 0) {
     sendPhotonTransmissionSchedule(ptc);
-  }else{
+  } else {
     // generate BSM timing notifier again
     // Do we have better solution for this?
     transmission_interface.insert(std::make_pair(ptc.transmission_partner_address, ptc));
@@ -722,48 +722,48 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
   }
 }
 
-void RuleEngine::sendPhotonTransmissionSchedule(photon_transmission_config ptc){
+void RuleEngine::sendPhotonTransmissionSchedule(photon_transmission_config ptc) {
   SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne(First)");
   st->setQnic_index(ptc.qnic_index);
   st->setQnic_address(ptc.qnic_address);
   st->setInterval(ptc.interval);
   st->setTiming(ptc.timing);
   st->setTrial(qnic_burst_trial_counter[ptc.qnic_address]);  // Keeps the burst counter. First burst index is 0.
-  
+
   bool internal = false;
-  if(ptc.qnic_type == QNIC_R){
+  if (ptc.qnic_type == QNIC_R) {
     // Note: just add internal qnic type
     internal = true;
-  }else if(ptc.qnic_type == QNIC_E){
+  } else if (ptc.qnic_type == QNIC_E) {
     internal = false;
-  }else if(ptc.qnic_type == QNIC_RP){
+  } else if (ptc.qnic_type == QNIC_RP) {
     error("Not implemented yet");
-  }else{
+  } else {
     // for later implementations
     error("New qnic type detected. Add here.");
   }
 
-  if (internal){
+  if (internal) {
     st->setInternal_hom(1);  // Mark request that the request is for internal BSA node.
   }
 
   int numFree;
-  numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[ptc.qnic_type], ptc.qnic_index); 
-  if (numFree > 0){
+  numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[ptc.qnic_type], ptc.qnic_index);
+  if (numFree > 0) {
     scheduleAt(simTime(), st);
   } else {
     delete st;
   }
 }
 
-void RuleEngine::restartBSMtrial(){
+void RuleEngine::restartBSMtrial() {
   // when the number of qubits are different from each other, this would fail
   // We should start the process from HoM
-  if(transmission_interface.size()>0){ 
-    for (auto it = transmission_interface.begin(); it!=transmission_interface.end(); ++it){
+  if (transmission_interface.size() > 0) {
+    for (auto it = transmission_interface.begin(); it != transmission_interface.end(); ++it) {
       auto interface = it->second;
       int numfree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[interface.qnic_type], interface.qnic_index);
-      if(numfree > 0){
+      if (numfree > 0) {
         transmission_interface.erase(it);
         interface.timing = simTime() + interface.timing;
         sendPhotonTransmissionSchedule(interface);
@@ -1087,7 +1087,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
   int list_size = pk_result->getList_of_failedArraySize();
   int qnic_index, qnic_address, neighborQNodeAddress = -1;
   QNIC_type qnic_type;
-   
+
   // if the HoM is external
   if (internal_qnic_index == -1) {  // destination hom is outside this node.
     InterfaceInfo inf = getInterface_toNeighbor(destAddr);
@@ -1113,7 +1113,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
     auto it = tracker[qnic_address].find(i);  // check ith shot's information (qnic, qubit index).
     if (it == tracker[qnic_address].end())
       error("Something is wrong with the tracker....%d th shot not recorded", i);  // Neighbor not found! This should not happen unless you simulate broken links in real time.
-    
+
     // if the ith BSM failed
     if (failed) {
       // Free failed qubits
@@ -1135,9 +1135,9 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
       }
 
       if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
-        EV<<"entangle partner null?" << qubit->entangled_partner<<" == nullptr?\n";
-        EV<<"density matrix collapsed?"<< qubit->Density_Matrix_Collapsed(0, 0).real() <<"==-111?\n";
-        EV<<"here should be true"<<qubit->no_density_matrix_nullptr_entangled_partner_ok<<"\n";
+        EV << "entangle partner null?" << qubit->entangled_partner << " == nullptr?\n";
+        EV << "density matrix collapsed?" << qubit->Density_Matrix_Collapsed(0, 0).real() << "==-111?\n";
+        EV << "here should be true" << qubit->no_density_matrix_nullptr_entangled_partner_ok << "\n";
         error("RuleEngine. Ebit succeed. but wrong");
       }
       // Add qubit as available resource between NeighborQNodeAddress.
@@ -1150,7 +1150,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
     for (int i = list_size; i < num_emitted_in_this_burstTrial; i++) {
       auto it = tracker[qnic_address].find(i);  // check ith shot's information (qnic, qubit index).
       // Neighbor not found! This should not happen unless you simulate broken links in real time.
-      if (it == tracker[qnic_address].end()){
+      if (it == tracker[qnic_address].end()) {
         error("Wait.... something is wrong with the tracker....%d th shot not recorded", i);
       }
       freeResource(it->second.qnic_index, it->second.qubit_index, qnic_type);
@@ -1177,9 +1177,7 @@ void RuleEngine::clearTrackerTable(int destAddr, int internal_qnic_address) {
   tracker[qnic_address].clear();
 }
 
-void RuleEngine::finish() {
-  delete qnic_burst_trial_counter;
-}
+void RuleEngine::finish() { delete qnic_burst_trial_counter; }
 
 double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index) { return uniform(.6, .9); }
 
@@ -1224,9 +1222,8 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
       }
 
       int assigned = 0;
-      // allResources [qnic_type] [qnic_index] it->first: partner address, it->second: qubit instance
-      // EV<<"my address"<<parentAddress<<"\n";
-      for (auto it = allResources[qnic_type][qnic_index].cbegin(), next_it = allResources[qnic_type][qnic_index].cbegin(); it != allResources[qnic_type][qnic_index].cend();it = next_it) {
+      for (auto it = allResources[qnic_type][qnic_index].cbegin(), next_it = allResources[qnic_type][qnic_index].cbegin(); it != allResources[qnic_type][qnic_index].cend();
+           it = next_it) {
         next_it = it;
         ++next_it;
         if (!it->second->isAllocated() && resource_entangled_with_address == it->first) {
@@ -1408,7 +1405,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
           rp.erase(it);  // Erase rule set from map.
           terminate_this_rule = true;  // Flag to get out from outer loop
           std::cout << "node[" << parentAddress << "]:RuleSet deleted.\n";
-          EV<< "node[" << parentAddress << "]:RuleSet deleted.\n";
+          EV << "node[" << parentAddress << "]:RuleSet deleted.\n";
           break;  // get out from this for loop.
         }
 
@@ -1419,7 +1416,6 @@ void RuleEngine::traverseThroughAllProcesses2() {
     }  // For
   }  // For loop
 }
-
 
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, StationaryQubit *qubit, QNIC_type qnic_type) {
   realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit->par("stationaryQubit_address"), qnic_type, true);

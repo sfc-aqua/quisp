@@ -31,7 +31,6 @@ bool FidelityClause::check(std::multimap<int, StationaryQubit*> resource) const 
 }
 
 bool EnoughResourceClause::check(std::multimap<int, StationaryQubit*> resource) const {
-  // EV<<"Enough Resource Clause with: "<<partner<<"\n";
   bool enough = false;
   int num_free = 0;
 

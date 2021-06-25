@@ -97,7 +97,6 @@ class EnoughResourceClause : public Clause {
   bool checkTerminate(std::multimap<int, StationaryQubit*>) const override { return false; };
 };
 
-
 class NoClause : public Clause {
  public:
   NoClause()

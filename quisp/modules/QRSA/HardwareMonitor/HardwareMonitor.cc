@@ -254,14 +254,14 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     }
 
     if (result->getFinish() != -1) {
-      EV<<"finish? "<<result->getFinish()<<"\n";
+      EV << "finish? " << result->getFinish() << "\n";
       // Pick the slower tomography time MIN(self,partner).
       if (extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_time < result->getFinish()) {
         extended_tomography_runningtime_holder[local_qnic.address][partner].Bellpair_per_sec = (double)result->getMax_count() / result->getFinish().dbl();
         extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_measurements = result->getMax_count();
         extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_time = result->getFinish();
 
-        EV<<"tomo"<<extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_measurements<<"\n";
+        EV << "tomo" << extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_measurements << "\n";
         // std::cout<<"Tomo done "<<local_qnic.address<<", in
         // node["<<my_address<<"] \n";
         StopEmitting *pk = new StopEmitting("StopEmitting");

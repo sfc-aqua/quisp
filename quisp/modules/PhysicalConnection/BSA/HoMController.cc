@@ -134,7 +134,7 @@ void HoMController::handleMessage(cMessage *msg) {
 
     }*/
   } else if (dynamic_cast<BSAfinish *>(msg) != nullptr) {  // Last photon from either node arrived.
-    EV<<"BSAfinish\n";
+    EV << "BSAfinish\n";
     bubble("BSAresult accumulated");
     BSAfinish *pk = check_and_cast<BSAfinish *>(msg);
     pushToBSAresults(pk->getEntangled());
@@ -160,7 +160,7 @@ void HoMController::handleMessage(cMessage *msg) {
       // error("there you go..");
     }
     // error("Timeout");
-  } else{
+  } else {
     error("what's this packet?");
   }
   delete msg;

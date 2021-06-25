@@ -61,7 +61,7 @@ struct swapping_result {
   int operation_type;
 };
 
-struct photon_transmission_config{
+struct photon_transmission_config {
   int transmission_partner_address;
   int qnic_index;
   int qnic_address;

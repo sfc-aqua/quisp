@@ -38,11 +38,6 @@ StationaryQubit *Action::getResource_fromTop_with_partner(int required_index, in
   // here
   int resource_index = 0;
   StationaryQubit *pt = nullptr;
-  // EV<<"===========================================\n";
-  // for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
-  //     EV<<"hey!"<<it->first<<"\n";
-  // }
-  // EV<<"===========================================\n";
 
   for (auto it = (*rule_resources).begin(); it != (*rule_resources).end(); ++it) {
     if (it->second->isLocked()) {
@@ -104,7 +99,6 @@ cPacket *SwappingAction::run(cModule *re) {
 
   bool left_measure = left_qubit->measure_Z();
   bool right_measure = right_qubit->measure_Z();
-
 
   int operation_type_left, operation_type_right;
 
@@ -235,7 +229,7 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   // free consumed
   rule_engine->freeConsumedResource(self_left_qnic_id, left_qubit, self_left_qnic_type);  // free left
   rule_engine->freeConsumedResource(self_right_qnic_id, right_qubit, self_right_qnic_type);  // free right
- 
+
   left_qubit->isBusy = false;
   right_qubit->isBusy = false;
 
