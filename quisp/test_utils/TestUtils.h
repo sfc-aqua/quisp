@@ -1,43 +1,25 @@
-#ifndef QUISP_UTILS_TEST_UTILS_H_
-#define QUISP_UTILS_TEST_UTILS_H_
+#pragma once
 
-#include <modules/QNIC.h>
-#include <modules/QNIC/StationaryQubit/StationaryQubit.h>
-#include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
-#include <modules/QRSA/RealTimeController/IRealTimeController.h>
-#include <modules/QRSA/RoutingDaemon/IRoutingDaemon.h>
-#include <utils/IComponentProviderStrategy.h>
-#include <utils/utils.h>
-#include <memory>
+#include "Gate.h"
+#include "ModuleType.h"
+#include "QNode.h"
+#include "Simulation.h"
+#include "StaticEnv.h"
+#include "TestComponentProviderStrategy.h"
+#include "UtilFunctions.h"
 
 namespace quisp_test {
-using quisp::modules::IHardwareMonitor;
-using quisp::modules::IRealTimeController;
-using quisp::modules::IRoutingDaemon;
-using quisp::modules::QNIC_type;
-using quisp::modules::StationaryQubit;
-using quisp::utils::IComponentProviderStrategy;
 
-void setParInt(cModule *module, const char *name, const int val);
-void setParBool(cModule *module, const char *name, const bool val);
-void setParStr(cModule *module, const char *name, const char *val);
-
-class TestComponentProviderStrategy : public IComponentProviderStrategy {
- public:
-  TestComponentProviderStrategy() {}
-  virtual ~TestComponentProviderStrategy() {}
-  virtual cModule *getQNode() override { return nullptr; };
-  virtual cModule *getNeighborNode(cModule *qnic) override { return nullptr; };
-  virtual bool isQNodeType(const cModuleType *const type) override { return false; };
-  virtual bool isHoMNodeType(const cModuleType *const type) override { return false; };
-  virtual bool isSPDCNodeType(const cModuleType *const type) override { return false; };
-  virtual StationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override { return nullptr; };
-  virtual cModule *getQNIC(int qnic_index, QNIC_type qnic_type) override { return nullptr; };
-  virtual IRoutingDaemon *getRoutingDaemon() override { return nullptr; };
-  virtual IHardwareMonitor *getHardwareMonitor() override { return nullptr; };
-  virtual IRealTimeController *getRealTimeController() override { return nullptr; };
-};
+// use these functions and classes in your unit test.
+using gate::TestGate;
+using module_type::TestModuleType;
+using qnode::TestQNode;
+using strategy::TestComponentProviderStrategy;
+using utils::createStaticEnv;
+using utils::getTestSimulation;
+using utils::prepareSimulation;
+using utils::setParBool;
+using utils::setParInt;
+using utils::setParStr;
 
 }  // namespace quisp_test
-
-#endif /* QUISP_UTILS_TEST_UTILS_H_ */

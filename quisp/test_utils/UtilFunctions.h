@@ -1,0 +1,20 @@
+#pragma once
+
+#include <omnetpp.h>
+#include "Simulation.h"
+
+namespace quisp_test {
+namespace utils {
+
+using omnetpp::cModule;
+using quisp_test::simulation::TestSimulation;
+
+void setParInt(cModule *module, const char *name, const int val);
+void setParBool(cModule *module, const char *name, const bool val);
+void setParStr(cModule *module, const char *name, const char *val);
+TestSimulation *prepareSimulation();
+TestSimulation *getTestSimulation();
+omnetpp::cEnvir *createStaticEnv();
+
+}  // namespace utils
+}  // namespace quisp_test

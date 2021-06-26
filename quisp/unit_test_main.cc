@@ -1,9 +1,8 @@
 #include <gtest/gtest.h>
 #include <omnetpp.h>
-#include "omnetpp/ccomponent.h"
-#include "omnetpp/cenvir.h"
-#include "omnetpp/csimulation.h"
-#include "omnetpp/simtime.h"
+#include <omnetpp/cownedobject.h>
+#include <omnetpp/csimulation.h>
+#include "test_utils/TestUtils.h"
 
 int main(int argc, char **argv) {
   /**
@@ -18,10 +17,8 @@ int main(int argc, char **argv) {
    * OMNeT++'s methods expect that all modules are running on a simulation,
    * so it will cause segmentation faults or exceptions if there's no simulation env.
    */
-  auto *sim = new omnetpp::cSimulation("test_sim", omnetpp::cSimulation::getStaticEnvir());
-  omnetpp::cComponent::clearSignalState();
-  omnetpp::cSimulation::setActiveSimulation(sim);
-  omnetpp::SimTime::setScaleExp(-3);
+  auto *env = quisp_test::createStaticEnv();
+  omnetpp::cSimulation::setStaticEnvir(env);
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

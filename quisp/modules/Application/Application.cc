@@ -118,7 +118,7 @@ void Application::storeEndNodeAddresses() {
   int addr;
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);
-    addr = (int)node->getModule()->par("address");
+    addr = node->getModule()->par("address").intValue();
 
     // ignore myself
     if (addr != my_address) {
