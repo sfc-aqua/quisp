@@ -83,7 +83,6 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
 };
 
 TEST(RuleEngineTest, ESResourceUpdate) {
-  std::cout << "Start RuleEngine Test" << std::endl;
   auto routingdaemon = new MockRoutingDaemon;
   auto mockHardwareMonitor = new MockHardwareMonitor;
   auto mockQubit = new MockStationaryQubit;

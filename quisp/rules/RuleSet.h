@@ -54,7 +54,7 @@ class RuleSet : public std::list<pRule> {
   void addRule(pRule& r) { push_back(pRule(std::move(r))); };
   void setRule_ptr(Rule* r_ptr) { this->entangled_partner_rule.push_back(r_ptr); };
   Rule* getRule_ptr(int i) { return this->entangled_partner_rule.at(i); };
-  int checkRule_ptrSize() { return this->entangled_partner_rule.size(); };
+  int numRules() { return this->entangled_partner_rule.size(); };
   void finalize();
   int getSize() { return this->size(); };
   void destroyThis() {

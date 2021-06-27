@@ -51,9 +51,6 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 
     int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
     auto dst_inf = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
-    if (dst_inf == nullptr) {
-      error("dst inf is null");
-    }
     bool is_qnic_available = !isQnicBusy(dst_inf->qnic.address);
     bool requested_by_myself = actual_src == my_address;
 
@@ -260,23 +257,6 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     std::vector<int> partners;
     if (swapper[i] > 0) {
       EV << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
-      EV_DEBUG << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
-      partners.push_back(link_left[i]);
-      partners.push_back(link_right[i]);
-      swapping_partners.insert(std::make_pair(swapper[i], partners));
-    }
-  }
-
-  /* TODO: Remember you have link costs <3
-  * The link cost is just a dummy variable (constant 1 for now and how it is set in a bad way (read from the channel
-    * but from only 1 channels from Src->BSA and ignoring BSA->Dest).
-  * If you need to test with different costs, try changing the value.
-  * But we need to implement actual link-tomography for this eventually.
-
-  std::map<int, std::vector<int>> swapping_partners;
-  for (int i = 0; i < divisions; i++) {
-    std::vector<int> partners;
-    if (swapper[i] > 0) {
       EV_DEBUG << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
       partners.push_back(link_left[i]);
       partners.push_back(link_right[i]);

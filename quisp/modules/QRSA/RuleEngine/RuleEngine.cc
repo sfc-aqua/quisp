@@ -1210,7 +1210,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
     RuleSet *process = it->second.Rs;  // One Process. From top to bottom.
     // getting pointer to the rule
     // std::vector<Rule *> rule_ptr = process->getRule_ptr();
-    int rule_ptr_size = process->checkRule_ptrSize();
+    int rule_ptr_size = process->numRules();
     int partner_size = process->entangled_partner.size();
     // iterate rules for all possible partners
     for (int i = 0; i < partner_size; i++) {

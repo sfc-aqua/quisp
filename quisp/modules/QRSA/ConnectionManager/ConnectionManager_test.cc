@@ -29,9 +29,4 @@ TEST(ConnectionManagerTest, Init) {
   ASSERT_EQ(c.par("address").intValue(), 123);
 }
 
-// TEST(ConnectionManagerTest, Init_table){
-//   ConnectionManagerTestTarget c;
-//   // c.initialize();
-// }
-
 }  // namespace
