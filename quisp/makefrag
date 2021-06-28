@@ -61,9 +61,10 @@ ifeq (,$(wildcard $(CURDIR)/../eigen/CMakeLists.txt))
 	make eigen -C $(CURDIR)/..
 endif
 	# using quisp/eigen
-	INCLUDE_PATH+=-I$(CURDIR)/../eigen/
+INCLUDE_PATH+=-I$(CURDIR)/../eigen/
 else
-	INCLUDE_PATH+=-I. $(shell pkg-config eigen3 --cflags)
+INCLUDE_PATH+=-I.
+INCLUDE_PATH+=$(shell pkg-config eigen3 --cflags)
 endif
 
 all: eigen
