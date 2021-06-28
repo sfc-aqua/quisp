@@ -257,7 +257,6 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   for (int i = 0; i < divisions; i++) {
     std::vector<int> partners;
     if (swapper[i] > 0) {
-      EV << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
       EV_DEBUG << link_left[i] << "---------------" << swapper[i] << "----------------" << link_right[i] << "\n";
       partners.push_back(link_left[i]);
       partners.push_back(link_right[i]);
@@ -306,7 +305,6 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
 
   // create RuleSet for all nodes!
   int num_resource = req->getNumber_of_required_Bellpairs();
-  double required_fidelity = req->getRequiredFidelity();
   int intermediate_node_size = req->getStack_of_QNodeIndexesArraySize();
   // generate the rulesets for intermediate swappers
   for (int i = 0; i <= intermediate_node_size; i++) {
@@ -351,6 +349,9 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       RuleSet *ruleset;
       int owner = path.at(i);
       if (i == 0) {  // if this is initiator
+        // final element of the path is this node (responder) and first element is initiator node
+        // if owner is the first node, then, 
+        // partner == responder (this node), and the first elements (initiator's) qnic type and index
         ruleset = generateTomographyRuleSet(owner, path.at(path.size() - 1), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
       } else {  // if this is responder
         ruleset = generateTomographyRuleSet(owner, path.at(0), num_measure, qnics.at(qnics.size() - 1).fst.type, qnics.at(qnics.size() - 1).fst.index, num_resource);
@@ -784,7 +785,6 @@ RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, in
 
   // Add the rule to the RuleSet
   tomography->addRule(rule);
-  // tomography->finalize();
 
   return tomography;
 }

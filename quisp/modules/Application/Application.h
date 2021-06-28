@@ -32,7 +32,6 @@ class Application : public IApplication {
   bool is_e2e_connection;
   int number_of_resources;
   int num_measure;
-  double requiredFidelity;
 
   void initialize() override;
   void handleMessage(cMessage *msg) override;

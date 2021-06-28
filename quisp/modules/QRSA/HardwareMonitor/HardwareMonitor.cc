@@ -1302,7 +1302,7 @@ std::unique_ptr<ConnectionSetupInfo> HardwareMonitor::findConnectionInfoByQnicAd
       return info;
     }
   }
-  error("No qnic connection information found at qnic address %d", qnic_address);
+  return nullptr;
 }
 
 // This neighbor table includes all neighbors of qnic, qnic_r and qnic_rp
