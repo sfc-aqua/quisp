@@ -17,6 +17,7 @@ module QNode
         string includeInTopo = "yes";
         string nodeType = default("none");
         double emission_timing_std = default(0);//in seconds
+        bool simultaneous_es_enabled = default(false);
 
     gates:
         inout port[];//size will be determined by the number of connections defined at the end of this file
@@ -58,6 +59,7 @@ module QNode
                 number_of_qnics = sizeof(quantum_port);
                 number_of_qnics_r = sizeof(quantum_port_receiver);
                 number_of_qnics_rp = sizeof(quantum_port_receiver_passive);
+                simultaneous_es_enabled = simultaneous_es_enabled;
         }
         qnic[sizeof(quantum_port)]: QNIC {//number of QNIC is the same as number of classical queue/NIC
             parameters:

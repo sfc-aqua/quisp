@@ -25,7 +25,8 @@ void ConnectionManager::initialize() {
   hardware_monitor = provider.getHardwareMonitor();
   my_address = par("address");
   num_of_qnics = par("total_number_of_qnics");
-  simultaneous_es_enabled = par("simultaneousES");
+  simultaneous_es_enabled = par("simultaneous_es_enabled");
+
   for (int i = 0; i < num_of_qnics; i++) {
     // qnode address
     qnic_res_table.insert(std::make_pair(i, false));
