@@ -54,7 +54,7 @@ void HardwareMonitor::initialize(int stage) {
   /* This is used to keep your own tomography data, and also to match and store the received partner's tomography data */
   // Assumes link tomography only between neighbors.
   all_temporal_tomography_output_holder = new Temporal_Tomography_Output_Holder[num_qnic_total];
-  extended_temporal_tomography_output = new Extended_Tomography_Outcome[num_qnic_total];
+  extended_temporal_tomography_output = new extendedTomographyOutcome[num_qnic_total];
 
   all_temporal_tomography_runningtime_holder = new link_cost[num_qnic_total];
   extended_tomography_runningtime_holder = new extended_link_cost[num_qnic_total];

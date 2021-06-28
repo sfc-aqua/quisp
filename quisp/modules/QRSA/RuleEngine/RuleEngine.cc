@@ -675,22 +675,19 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
     ntable = hardware_monitor->passNeighborTable();  // Get neighbor table from Hardware Manager: neighbor address--> InterfaceInfo.
   }  // Just do this once, unless the network changes during the simulation.
 
-  photon_transmission_config ptc;
+  photonTransmissionConfig transmission_config;
   int destAddr = pk->getSrcAddr();  // The destination is where the request is generated (source of stand-alone or internal BSA node).
-  // if (destAddr == parentAddress){
-  //   error("Destination address must not be the parent address");
-  // }
   bool internal = false;  // for internal hom?
   switch (qnic_type) {
     case QNIC_E: {
       InterfaceInfo inf = getInterface_toNeighbor(destAddr);
-      ptc.qnic_index = inf.qnic.index;
-      ptc.qnic_address = inf.qnic.address;
+      transmission_config.qnic_index = inf.qnic.index;
+      transmission_config.qnic_address = inf.qnic.address;
     }  // inf is not defined beyound this point
     break;
     case QNIC_R:
-      ptc.qnic_index = pk->getInternal_qnic_index();
-      ptc.qnic_address = pk->getInternal_qnic_address();
+      transmission_config.qnic_index = pk->getInternal_qnic_index();
+      transmission_config.qnic_address = pk->getInternal_qnic_address();
       internal = true;
       break;
     case QNIC_RP:
@@ -699,18 +696,17 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
     default:
       error("Only 3 qnic types are currently recognized....");
   }
-  ptc.timing = pk->getTiming_at();
-  ptc.interval = pk->getInterval();
-  ptc.qnic_type = qnic_type;
+  transmission_config.timing = pk->getTiming_at();
+  transmission_config.interval = pk->getInterval();
+  transmission_config.qnic_type = qnic_type;
   // store the interface information for the futhter link generation process
-  int numFree;
-  numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[ptc.qnic_type], ptc.qnic_index);
+  int numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[transmission_config.qnic_type], transmission_config.qnic_index);
   if (numFree > 0) {
-    sendPhotonTransmissionSchedule(ptc);
+    sendPhotonTransmissionSchedule(transmission_config);
   } else {
     // generate BSM timing notifier again
     // Do we have better solution for this?
-    transmission_interface.insert(std::make_pair(ptc.transmission_partner_address, ptc));
+    transmission_interface.insert(std::make_pair(transmission_config.transmission_partner_address, transmission_config));
     // InternalBSMtimingNotifier *pk_bsm = new InternalBSMtimingNotifier("Internal wait for BSM");
     // pk_bsm->setSrcAddr(pk->getSrcAddr());
     // pk_bsm->setInterval(pk->getInterval());
@@ -722,21 +718,21 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
   }
 }
 
-void RuleEngine::sendPhotonTransmissionSchedule(photon_transmission_config ptc) {
+void RuleEngine::sendPhotonTransmissionSchedule(photonTransmissionConfig transmission_config) {
   SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne(First)");
-  st->setQnic_index(ptc.qnic_index);
-  st->setQnic_address(ptc.qnic_address);
-  st->setInterval(ptc.interval);
-  st->setTiming(ptc.timing);
-  st->setTrial(qnic_burst_trial_counter[ptc.qnic_address]);  // Keeps the burst counter. First burst index is 0.
+  st->setQnic_index(transmission_config.qnic_index);
+  st->setQnic_address(transmission_config.qnic_address);
+  st->setInterval(transmission_config.interval);
+  st->setTiming(transmission_config.timing);
+  st->setTrial(qnic_burst_trial_counter[transmission_config.qnic_address]);  // Keeps the burst counter. First burst index is 0.
 
   bool internal = false;
-  if (ptc.qnic_type == QNIC_R) {
+  if (transmission_config.qnic_type == QNIC_R) {
     // Note: just add internal qnic type
     internal = true;
-  } else if (ptc.qnic_type == QNIC_E) {
+  } else if (transmission_config.qnic_type == QNIC_E) {
     internal = false;
-  } else if (ptc.qnic_type == QNIC_RP) {
+  } else if (transmission_config.qnic_type == QNIC_RP) {
     error("Not implemented yet");
   } else {
     // for later implementations
@@ -747,8 +743,7 @@ void RuleEngine::sendPhotonTransmissionSchedule(photon_transmission_config ptc) 
     st->setInternal_hom(1);  // Mark request that the request is for internal BSA node.
   }
 
-  int numFree;
-  numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[ptc.qnic_type], ptc.qnic_index);
+  int numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[transmission_config.qnic_type], transmission_config.qnic_index);
   if (numFree > 0) {
     scheduleAt(simTime(), st);
   } else {
@@ -1261,7 +1256,6 @@ void RuleEngine::traverseThroughAllProcesses2() {
     next_it = it;
     ++next_it;
     RuleSet *process = it->second.Rs;  // One Process. From top to bottom.
-    // EV <<"Node: "<<parentAddress<<" Checking first process.... process " << process->size() << "\n";
     for (auto rule = process->cbegin(), end = process->cend(); rule != end; rule++) {
       bool process_done = false;
       bool terminate_this_rule = false;

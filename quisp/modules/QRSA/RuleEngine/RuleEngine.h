@@ -67,7 +67,7 @@ class RuleEngine : public IRuleEngine {
   IRealTimeController *realtime_controller;
   int *qnic_burst_trial_counter;
   qnicResources *allResources;  // Size will be defined in initialization. If 3 qnic types, then size is 3. Type defined in QUBIT.h
-  std::map<int, photon_transmission_config> transmission_interface;
+  std::map<int, photonTransmissionConfig> transmission_interface;
 
   /*
    * DEFINED in QNIC.h
@@ -99,7 +99,7 @@ class RuleEngine : public IRuleEngine {
   QubitStateTable setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
   QubitStateTable initializeQubitStateTable(QubitStateTable temp, QNIC_type qnic_type);
   void scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type);
-  void sendPhotonTransmissionSchedule(photon_transmission_config ptc);
+  void sendPhotonTransmissionSchedule(photonTransmissionConfig transmission_config);
   void restartBSMtrial();
   void shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk);
   // virtual int getQNICjob_index_for_this_qnic(int qnic_index, QNIC_type qnic_type);

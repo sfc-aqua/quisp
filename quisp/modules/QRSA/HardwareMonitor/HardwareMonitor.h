@@ -69,7 +69,7 @@ class HardwareMonitor : public IHardwareMonitor {
   // virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, QNIC_type qnic_type);//returns the set of free resources
   // virtual int checkNumFreeBuff(int qnic_index, QNIC_type qnic_type);//returns the number of free qubits
   Temporal_Tomography_Output_Holder *all_temporal_tomography_output_holder;
-  Extended_Tomography_Outcome *extended_temporal_tomography_output;  // qnic address -> partner . count_id . outcome
+  extendedTomographyOutcome *extended_temporal_tomography_output;  // qnic address -> partner . count_id . outcome
   extended_link_cost *extended_tomography_runningtime_holder;
   // extended_link_cost *extended_tomography_runningtime_holder;
   link_cost *all_temporal_tomography_runningtime_holder;
