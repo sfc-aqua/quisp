@@ -675,7 +675,7 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
     ntable = hardware_monitor->passNeighborTable();  // Get neighbor table from Hardware Manager: neighbor address--> InterfaceInfo.
   }  // Just do this once, unless the network changes during the simulation.
 
-  photonTransmissionConfig transmission_config;
+  PhotonTransmissionConfig transmission_config;
   int destAddr = pk->getSrcAddr();  // The destination is where the request is generated (source of stand-alone or internal BSA node).
   bool internal = false;  // for internal hom?
   switch (qnic_type) {
@@ -706,7 +706,7 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
   } else {
     // generate BSM timing notifier again
     // Do we have better solution for this?
-    transmission_interface.insert(std::make_pair(transmission_config.transmission_partner_address, transmission_config));
+    photon_transmission_config_with_partner.insert(std::make_pair(transmission_config.transmission_partner_address, transmission_config));
     // InternalBSMtimingNotifier *pk_bsm = new InternalBSMtimingNotifier("Internal wait for BSM");
     // pk_bsm->setSrcAddr(pk->getSrcAddr());
     // pk_bsm->setInterval(pk->getInterval());
@@ -718,7 +718,7 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
   }
 }
 
-void RuleEngine::sendPhotonTransmissionSchedule(photonTransmissionConfig transmission_config) {
+void RuleEngine::sendPhotonTransmissionSchedule(PhotonTransmissionConfig transmission_config) {
   SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne(First)");
   st->setQnic_index(transmission_config.qnic_index);
   st->setQnic_address(transmission_config.qnic_address);
@@ -754,12 +754,12 @@ void RuleEngine::sendPhotonTransmissionSchedule(photonTransmissionConfig transmi
 void RuleEngine::restartBSMtrial() {
   // when the number of qubits are different from each other, this would fail
   // We should start the process from HoM
-  if (transmission_interface.size() > 0) {
-    for (auto it = transmission_interface.begin(); it != transmission_interface.end(); ++it) {
+  if (photon_transmission_config_with_partner.size() > 0) {
+    for (auto it = photon_transmission_config_with_partner.begin(); it != photon_transmission_config_with_partner.end(); ++it) {
       auto interface = it->second;
       int numfree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[interface.qnic_type], interface.qnic_index);
       if (numfree > 0) {
-        transmission_interface.erase(it);
+        photon_transmission_config_with_partner.erase(it);
         interface.timing = simTime() + interface.timing;
         sendPhotonTransmissionSchedule(interface);
       }

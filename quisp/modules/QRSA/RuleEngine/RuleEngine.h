@@ -66,24 +66,14 @@ class RuleEngine : public IRuleEngine {
   IRoutingDaemon *routingdaemon;
   IRealTimeController *realtime_controller;
   int *qnic_burst_trial_counter;
-  qnicResources *allResources;  // Size will be defined in initialization. If 3 qnic types, then size is 3. Type defined in QUBIT.h
-  std::map<int, photonTransmissionConfig> transmission_interface;
-
-  /*
-   * DEFINED in QNIC.h
-   * typedef std::multimap<int, StationaryQubit*> EntangledPairs;//entangled Node address -> pointer to that local qubit
-   * typedef EntangledPairs* qnicResources;//For each qnic. If the number of "qnic" is 3, then the size is 3.
-   * For resource management over.
-   * */
-  bool DEBUG_flag = false;
-
+  qnicResources *allResources; 
+  // <partner address, configs (qnic, timing etc..)>
+  std::map<int, PhotonTransmissionConfig> photon_transmission_config_with_partner;
   // typedef rules::RuleSet* RuleSetPtr;
   running_processes rp;
   // Vector for store package for simultaneous entanglement swapping
   std::map<int, std::map<int, int>> simultaneous_es_results;
 
-  // int assigned = 0;
-  // typedef std::map<std::string, quisp::rules::RuleSet> processes;//process_id -> Rule set
   void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type) override;
   void freeConsumedResource(int qnic_index, StationaryQubit *qubit, QNIC_type qnic_type) override;
   void dynamic_ResourceAllocation(int qnic_type, int qnic_index) override;
@@ -99,7 +89,7 @@ class RuleEngine : public IRuleEngine {
   QubitStateTable setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
   QubitStateTable initializeQubitStateTable(QubitStateTable temp, QNIC_type qnic_type);
   void scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type);
-  void sendPhotonTransmissionSchedule(photonTransmissionConfig transmission_config);
+  void sendPhotonTransmissionSchedule(PhotonTransmissionConfig transmission_config);
   void restartBSMtrial();
   void shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk);
   // virtual int getQNICjob_index_for_this_qnic(int qnic_index, QNIC_type qnic_type);

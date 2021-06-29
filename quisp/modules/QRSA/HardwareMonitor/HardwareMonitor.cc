@@ -53,8 +53,8 @@ void HardwareMonitor::initialize(int stage) {
 
   /* This is used to keep your own tomography data, and also to match and store the received partner's tomography data */
   // Assumes link tomography only between neighbors.
-  all_temporal_tomography_output_holder = new Temporal_Tomography_Output_Holder[num_qnic_total];
-  extended_temporal_tomography_output = new extendedTomographyOutcome[num_qnic_total];
+  all_temporal_tomography_output_holder = new TemporalTomographyOutputHolder[num_qnic_total];
+  extended_temporal_tomography_output = new ExtendedTomographyOutcome[num_qnic_total];
 
   all_temporal_tomography_runningtime_holder = new link_cost[num_qnic_total];
   extended_tomography_runningtime_holder = new extended_link_cost[num_qnic_total];
@@ -1348,24 +1348,6 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module)
   return neighbor_info;
 }
 
-cModule *HardwareMonitor::getQNode() {
-  // We know that Connection manager is not the QNode, so start from the parent.
-  cModule *currentModule = getParentModule();
-  cModuleType *QNodeType = cModuleType::get("modules.QNode");
-  try {
-    // Assumes the node in a network has a type QNode
-    while (currentModule->getModuleType() != QNodeType) {
-      currentModule = currentModule->getParentModule();
-    }
-    return currentModule;
-  } catch (std::exception &e) {
-    error(
-        "No module with QNode type found. Have you changed the type name in "
-        "ned file?");
-    endSimulation();
-  }
-  return currentModule;
-}
 
 cModule *HardwareMonitor::getQNodeWithAddress(int address) {
   cTopology *topo = new cTopology("topo");

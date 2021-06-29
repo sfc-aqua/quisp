@@ -74,8 +74,8 @@ typedef std::map<int, InterfaceInfo> NeighborTable;
 typedef std::map<std::string, output_count> raw_data;
 typedef std::map<int, std::map<std::string, output_count>> extended_raw_data;  // qnic -> partner . basis string . output
 typedef std::map<int, link_cost> extended_link_cost;
-typedef std::map<int, tomography_outcome> Temporal_Tomography_Output_Holder;  // measurement_count_id -> outcome. For single qnic
-typedef std::map<int, std::map<int, tomography_outcome>> extendedTomographyOutcome;  // partner -> <count_id, outcome>
+typedef std::map<int, tomography_outcome> TemporalTomographyOutputHolder;  // measurement_count_id -> outcome. For single qnic
+typedef std::map<int, std::map<int, tomography_outcome>> ExtendedTomographyOutcome;  // partner -> <count_id, outcome>
 
 class IHardwareMonitor : public cSimpleModule {
  public:
