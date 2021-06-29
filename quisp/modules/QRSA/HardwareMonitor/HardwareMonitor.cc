@@ -53,32 +53,10 @@ void HardwareMonitor::initialize(int stage) {
 
   /* This is used to keep your own tomography data, and also to match and store the received partner's tomography data */
   // Assumes link tomography only between neighbors.
-  all_temporal_tomography_output_holder = new TemporalTomographyOutputHolder[num_qnic_total];
-  extended_temporal_tomography_output = new ExtendedTomographyOutcome[num_qnic_total];
-
-  all_temporal_tomography_runningtime_holder = new link_cost[num_qnic_total];
-  extended_tomography_runningtime_holder = new extended_link_cost[num_qnic_total];
-
-  /* Once all_temporal_tomography_output_holder is filled in, those data are summarized into basis based measurement outcome table.
-   * This accumulates the number of ++, +-, -+ and -- for each basis combination.*/
+  temporal_tomography_output = new TomographyOutcome[num_qnic_total];
+  tomography_runningtime_holder = new link_cost_map[num_qnic_total];
 
   // Raw count table for tomography per link/qnic
-  tomography_data = new raw_data[num_qnic_total];
-
-  for (int i = 0; i < num_qnic_total; i++) {
-    tomography_data[i].insert(std::make_pair("XX", initial));
-    tomography_data[i].insert(std::make_pair("XY", initial));
-    tomography_data[i].insert(std::make_pair("XZ", initial));
-    tomography_data[i].insert(std::make_pair("ZX", initial));
-    tomography_data[i].insert(std::make_pair("ZY", initial));
-    tomography_data[i].insert(std::make_pair("ZZ", initial));
-    tomography_data[i].insert(std::make_pair("YX", initial));
-    tomography_data[i].insert(std::make_pair("YY", initial));
-    tomography_data[i].insert(std::make_pair("YZ", initial));
-    all_temporal_tomography_runningtime_holder[i].Bellpair_per_sec = -1;
-    all_temporal_tomography_runningtime_holder[i].tomography_measurements = -1;
-    all_temporal_tomography_runningtime_holder[i].tomography_time = -1;
-  }
 
   /*This keeps which node is connected to which local qnic.*/
   tomography_output_filename = par("tomography_output_filename").str();
@@ -183,9 +161,9 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
   if (dynamic_cast<LinkTomographyResult *>(msg) != nullptr) {
     /*Link tomography measurement result/basis from neighbor received.*/
     LinkTomographyResult *result = check_and_cast<LinkTomographyResult *>(msg);
-    int partner = result->getPartner_address();
+    int partner_addr = result->getPartner_address();
     // Get QNIC info from neighbor address.
-    int qnic_addr_to_partner = routing_daemon->return_QNIC_address_to_destAddr(partner);
+    int qnic_addr_to_partner = routing_daemon->return_QNIC_address_to_destAddr(partner_addr);
     auto local_qnic_info = findConnectionInfoByQnicAddr(qnic_addr_to_partner);
     if (local_qnic_info == nullptr) {
       error("local qnic info should not be null");
@@ -194,13 +172,13 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     QNIC local_qnic = inter_info.qnic;
 
     // 1. find partner
-    auto ite = extended_temporal_tomography_output[local_qnic.address].find(partner);
-    if (ite != extended_temporal_tomography_output[local_qnic.address].end()) {
+    auto partner_outputs_iter = temporal_tomography_output[local_qnic.address].find(partner_addr);
+    if (partner_outputs_iter != temporal_tomography_output[local_qnic.address].end()) {
       // partner info found in this output
-      auto iter = extended_temporal_tomography_output[local_qnic.address][partner].find(result->getCount_id());
-      if (iter != extended_temporal_tomography_output[local_qnic.address][partner].end()) {
+      auto partner_output_iter = temporal_tomography_output[local_qnic.address][partner_addr].find(result->getCount_id());
+      if (partner_output_iter != temporal_tomography_output[local_qnic.address][partner_addr].end()) {
         EV << "Tomography data already found. \n";
-        tomography_outcome temp = iter->second;
+        tomography_outcome temp = partner_output_iter->second;
         if (result->getSrcAddr() == my_address) {
           temp.my_basis = result->getBasis();
           temp.my_output_is_plus = result->getOutput_is_plus();
@@ -210,9 +188,9 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
           temp.partner_output_is_plus = result->getOutput_is_plus();
           temp.partner_GOD_clean = result->getGOD_clean();
         }
-        iter->second = temp;
+        partner_output_iter->second = temp;
       } else {
-        EV << "Fresh tomography data with partner :" << partner << "\n";
+        EV << "Fresh tomography data with partner :" << partner_addr << "\n";
         tomography_outcome temp;
         if (result->getSrcAddr() == my_address) {
           temp.my_basis = result->getBasis();
@@ -223,11 +201,11 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
           temp.partner_output_is_plus = result->getOutput_is_plus();
           temp.partner_GOD_clean = result->getGOD_clean();
         }
-        extended_temporal_tomography_output[local_qnic.address][partner].insert(std::make_pair(result->getCount_id(), temp));
+        temporal_tomography_output[local_qnic.address][partner_addr].insert(std::make_pair(result->getCount_id(), temp));
       }
     } else {
       // no partner info found in this output
-      EV << "No partner information found with partner: " << partner << "\n";
+      EV << "No partner information found with partner: " << partner_addr << "\n";
       tomography_outcome temp;
       if (result->getSrcAddr() == my_address) {
         temp.my_basis = result->getBasis();
@@ -241,29 +219,28 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
       // If this partner is new, then initialize tables
       std::map<int, tomography_outcome> temp_result;
       temp_result.insert(std::make_pair(result->getCount_id(), temp));
-      extended_temporal_tomography_output[local_qnic.address].insert(std::make_pair(partner, temp_result));
+      /* temporal_tomography_output is filled in, those data are summarized into basis based measurement outcome table.
+       * This accumulates the number of ++, +-, -+ and -- for each basis combination.*/
+      temporal_tomography_output[local_qnic.address].insert(std::make_pair(partner_addr, temp_result));
       // NOTE: if you do buffer based multiplex and tomogrpahy need hack here
-      qnic_partner_map.insert(std::make_pair(local_qnic.address, partner));
+      qnic_partner_map.insert(std::make_pair(local_qnic.address, partner_addr));
 
       // initialize link cost
       link_cost temp_cost;
       temp_cost.Bellpair_per_sec = -1;
       temp_cost.tomography_measurements = -1;
       temp_cost.tomography_time = -1;
-      extended_tomography_runningtime_holder[local_qnic.address].insert(std::make_pair(partner, temp_cost));
+      tomography_runningtime_holder[local_qnic.address].insert(std::make_pair(partner_addr, temp_cost));
     }
 
     if (result->getFinish() != -1) {
       EV << "finish? " << result->getFinish() << "\n";
       // Pick the slower tomography time MIN(self,partner).
-      if (extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_time < result->getFinish()) {
-        extended_tomography_runningtime_holder[local_qnic.address][partner].Bellpair_per_sec = (double)result->getMax_count() / result->getFinish().dbl();
-        extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_measurements = result->getMax_count();
-        extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_time = result->getFinish();
+      if (tomography_runningtime_holder[local_qnic.address][partner_addr].tomography_time < result->getFinish()) {
+        tomography_runningtime_holder[local_qnic.address][partner_addr].Bellpair_per_sec = (double)result->getMax_count() / result->getFinish().dbl();
+        tomography_runningtime_holder[local_qnic.address][partner_addr].tomography_measurements = result->getMax_count();
+        tomography_runningtime_holder[local_qnic.address][partner_addr].tomography_time = result->getFinish();
 
-        EV << "tomo" << extended_tomography_runningtime_holder[local_qnic.address][partner].tomography_measurements << "\n";
-        // std::cout<<"Tomo done "<<local_qnic.address<<", in
-        // node["<<my_address<<"] \n";
         StopEmitting *pk = new StopEmitting("StopEmitting");
         pk->setQnic_address(local_qnic.address);
         pk->setDestAddr(my_address);
@@ -292,7 +269,7 @@ void HardwareMonitor::finish() {
   std::cout << "Opened new file to write.\n";
 
   // here generate tomography data storage
-  extended_tomography_data = new extended_raw_data[num_qnic_total];
+  tomography_data = new raw_data[num_qnic_total];
 
   output_count initial;
   initial.minus_minus = 0;
@@ -303,15 +280,15 @@ void HardwareMonitor::finish() {
   for (auto it = qnic_partner_map.begin(); it != qnic_partner_map.end(); ++it) {
     int qnic_id = it->first;
     int part = it->second;
-    extended_tomography_data[qnic_id][part].insert(std::make_pair("XX", initial));
-    extended_tomography_data[qnic_id][part].insert(std::make_pair("XY", initial));
-    extended_tomography_data[qnic_id][part].insert(std::make_pair("XZ", initial));
-    extended_tomography_data[qnic_id][part].insert(std::make_pair("ZX", initial));
-    extended_tomography_data[qnic_id][part].insert(std::make_pair("ZY", initial));
-    extended_tomography_data[qnic_id][part].insert(std::make_pair("ZZ", initial));
-    extended_tomography_data[qnic_id][part].insert(std::make_pair("YX", initial));
-    extended_tomography_data[qnic_id][part].insert(std::make_pair("YY", initial));
-    extended_tomography_data[qnic_id][part].insert(std::make_pair("YZ", initial));
+    tomography_data[qnic_id][part].insert(std::make_pair("XX", initial));
+    tomography_data[qnic_id][part].insert(std::make_pair("XY", initial));
+    tomography_data[qnic_id][part].insert(std::make_pair("XZ", initial));
+    tomography_data[qnic_id][part].insert(std::make_pair("ZX", initial));
+    tomography_data[qnic_id][part].insert(std::make_pair("ZY", initial));
+    tomography_data[qnic_id][part].insert(std::make_pair("ZZ", initial));
+    tomography_data[qnic_id][part].insert(std::make_pair("YX", initial));
+    tomography_data[qnic_id][part].insert(std::make_pair("YY", initial));
+    tomography_data[qnic_id][part].insert(std::make_pair("YZ", initial));
   }
 
   for (auto it = qnic_partner_map.begin(); it != qnic_partner_map.end(); it++) {
@@ -328,14 +305,14 @@ void HardwareMonitor::finish() {
     int GOD_Z_pair_total = 0;
     int GOD_Y_pair_total = 0;
 
-    for (auto it = extended_temporal_tomography_output[qnic][partner_address].begin(); it != extended_temporal_tomography_output[qnic][partner_address].end(); it++) {
+    for (auto it = temporal_tomography_output[qnic][partner_address].begin(); it != temporal_tomography_output[qnic][partner_address].end(); it++) {
       std::string basis_combination = "";
       basis_combination += it->second.my_basis;
       basis_combination += it->second.partner_basis;
-      if (extended_tomography_data[qnic][partner_address].count(basis_combination) != 1) {
+      if (tomography_data[qnic][partner_address].count(basis_combination) != 1) {
         error("Basis combination for tomography with partner: %s at %d is not found", partner_address, qnic);
       }
-      extended_tomography_data[qnic][partner_address][basis_combination].total_count++;
+      tomography_data[qnic][partner_address][basis_combination].total_count++;
       // the number of total measurement
       meas_total++;
 
@@ -354,27 +331,26 @@ void HardwareMonitor::finish() {
         GOD_Z_pair_total++;
       } else if ((it->second.my_GOD_clean == 'Y' && it->second.partner_GOD_clean == 'F') || (it->second.my_GOD_clean == 'F' && it->second.partner_GOD_clean == 'Y')) {
         GOD_Y_pair_total++;
-      }  // end if
+      }
 
       // empirical result
       if (it->second.my_output_is_plus && it->second.partner_output_is_plus) {
         // mine: +, partner: +
-        extended_tomography_data[qnic][partner_address][basis_combination].plus_plus++;
+        tomography_data[qnic][partner_address][basis_combination].plus_plus++;
       } else if (it->second.my_output_is_plus && !it->second.partner_output_is_plus) {
         // mine: +, partner: -
-        extended_tomography_data[qnic][partner_address][basis_combination].plus_minus++;
+        tomography_data[qnic][partner_address][basis_combination].plus_minus++;
       } else if (!it->second.my_output_is_plus && it->second.partner_output_is_plus) {
         // mine: -, partner: +
-        extended_tomography_data[qnic][partner_address][basis_combination].minus_plus++;
+        tomography_data[qnic][partner_address][basis_combination].minus_plus++;
       } else if (!it->second.my_output_is_plus && !it->second.partner_output_is_plus) {
         // mine: -, partner: -
-        extended_tomography_data[qnic][partner_address][basis_combination].minus_minus++;
+        tomography_data[qnic][partner_address][basis_combination].minus_minus++;
       } else {
         error("This should not happen though..... ?");
       }
     }  // end for
-       // extended density matrix
-    Matrix4cd extended_density_matrix_reconstructed = extended_reconstruct_density_matrix(qnic, partner_address);
+    Matrix4cd extended_density_matrix_reconstructed = reconstruct_density_matrix(qnic, partner_address);
 
     Vector4cd Bellpair;
     Bellpair << 1 / sqrt(2), 0, 0, 1 / sqrt(2);
@@ -402,7 +378,7 @@ void HardwareMonitor::finish() {
 
     double bellpairs_per_sec = 10;  // FIXME should be sec
     // FIXME should be updated
-    double denom = fidelity * fidelity * extended_tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec;
+    double denom = fidelity * fidelity * tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec;
     double link_cost;
     // TODO currently, it's just placed. consider how to culculate this
     if (denom != 0) {
@@ -432,9 +408,9 @@ void HardwareMonitor::finish() {
 
     // link stats output
     tomography_stats << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
-                     << ";bellpair_per_sec=" << extended_tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec
-                     << ";tomography_time=" << extended_tomography_runningtime_holder[qnic][partner_address].tomography_time
-                     << ";tomography_measurements=" << extended_tomography_runningtime_holder[qnic][partner_address].tomography_measurements << ";actual_meas=" << meas_total
+                     << ";bellpair_per_sec=" << tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec
+                     << ";tomography_time=" << tomography_runningtime_holder[qnic][partner_address].tomography_time
+                     << ";tomography_measurements=" << tomography_runningtime_holder[qnic][partner_address].tomography_measurements << ";actual_meas=" << meas_total
                      << "; GOD_clean_pair_total=" << GOD_clean_pair_total << "; GOD_X_pair_total=" << GOD_X_pair_total << "; GOD_Y_pair_total=" << GOD_Y_pair_total
                      << "; GOD_Z_pair_total=" << GOD_Z_pair_total << ";}<-->" << partner_node->getFullName() << "; F=" << fidelity << "; X=" << Xerr_rate << "; Z=" << Zerr_rate
                      << "; Y=" << Yerr_rate << endl;
@@ -444,257 +420,92 @@ void HardwareMonitor::finish() {
   std::cout << "Closed file to write.\n";
 }
 
-Matrix4cd HardwareMonitor::reconstruct_Density_Matrix(int qnic_id) {
+Matrix4cd HardwareMonitor::reconstruct_density_matrix(int qnic_id, int partner) {
   // II
+  auto data = tomography_data[qnic_id][partner];
   double S00 = 1.0;
-  double S01 = (double)tomography_data[qnic_id]["XX"].plus_plus / (double)tomography_data[qnic_id]["XX"].total_count -
-               (double)tomography_data[qnic_id]["XX"].plus_minus / (double)tomography_data[qnic_id]["XX"].total_count +
-               (double)tomography_data[qnic_id]["XX"].minus_plus / (double)tomography_data[qnic_id]["XX"].total_count -
-               (double)tomography_data[qnic_id]["XX"].minus_minus / (double)tomography_data[qnic_id]["XX"].total_count;
-  double S02 = (double)tomography_data[qnic_id]["YY"].plus_plus / (double)tomography_data[qnic_id]["YY"].total_count -
-               (double)tomography_data[qnic_id]["YY"].plus_minus / (double)tomography_data[qnic_id]["YY"].total_count +
-               (double)tomography_data[qnic_id]["YY"].minus_plus / (double)tomography_data[qnic_id]["YY"].total_count -
-               (double)tomography_data[qnic_id]["YY"].minus_minus / (double)tomography_data[qnic_id]["YY"].total_count;
-  double S03 = (double)tomography_data[qnic_id]["ZZ"].plus_plus / (double)tomography_data[qnic_id]["ZZ"].total_count -
-               (double)tomography_data[qnic_id]["ZZ"].plus_minus / (double)tomography_data[qnic_id]["ZZ"].total_count +
-               (double)tomography_data[qnic_id]["ZZ"].minus_plus / (double)tomography_data[qnic_id]["ZZ"].total_count -
-               (double)tomography_data[qnic_id]["ZZ"].minus_minus / (double)tomography_data[qnic_id]["ZZ"].total_count;
-  // XX
-  double S10 = (double)tomography_data[qnic_id]["XX"].plus_plus / (double)tomography_data[qnic_id]["XX"].total_count +
-               (double)tomography_data[qnic_id]["XX"].plus_minus / (double)tomography_data[qnic_id]["XX"].total_count -
-               (double)tomography_data[qnic_id]["XX"].minus_plus / (double)tomography_data[qnic_id]["XX"].total_count -
-               (double)tomography_data[qnic_id]["XX"].minus_minus / (double)tomography_data[qnic_id]["XX"].total_count;
-  double S11 = (double)tomography_data[qnic_id]["XX"].plus_plus / (double)tomography_data[qnic_id]["XX"].total_count -
-               (double)tomography_data[qnic_id]["XX"].plus_minus / (double)tomography_data[qnic_id]["XX"].total_count -
-               (double)tomography_data[qnic_id]["XX"].minus_plus / (double)tomography_data[qnic_id]["XX"].total_count +
-               (double)tomography_data[qnic_id]["XX"].minus_minus / (double)tomography_data[qnic_id]["XX"].total_count;
-  double S12 = (double)tomography_data[qnic_id]["XY"].plus_plus / (double)tomography_data[qnic_id]["XY"].total_count -
-               (double)tomography_data[qnic_id]["XY"].plus_minus / (double)tomography_data[qnic_id]["XY"].total_count -
-               (double)tomography_data[qnic_id]["XY"].minus_plus / (double)tomography_data[qnic_id]["XY"].total_count +
-               (double)tomography_data[qnic_id]["XY"].minus_minus / (double)tomography_data[qnic_id]["XY"].total_count;
-  double S13 = (double)tomography_data[qnic_id]["XZ"].plus_plus / (double)tomography_data[qnic_id]["XZ"].total_count -
-               (double)tomography_data[qnic_id]["XZ"].plus_minus / (double)tomography_data[qnic_id]["XZ"].total_count -
-               (double)tomography_data[qnic_id]["XZ"].minus_plus / (double)tomography_data[qnic_id]["XZ"].total_count +
-               (double)tomography_data[qnic_id]["XZ"].minus_minus / (double)tomography_data[qnic_id]["XZ"].total_count;
-  // YY
-  double S20 = (double)tomography_data[qnic_id]["YY"].plus_plus / (double)tomography_data[qnic_id]["YY"].total_count +
-               (double)tomography_data[qnic_id]["YY"].plus_minus / (double)tomography_data[qnic_id]["YY"].total_count -
-               (double)tomography_data[qnic_id]["YY"].minus_plus / (double)tomography_data[qnic_id]["YY"].total_count -
-               (double)tomography_data[qnic_id]["YY"].minus_minus / (double)tomography_data[qnic_id]["YY"].total_count;
-  double S21 = (double)tomography_data[qnic_id]["YX"].plus_plus / (double)tomography_data[qnic_id]["YX"].total_count -
-               (double)tomography_data[qnic_id]["YX"].plus_minus / (double)tomography_data[qnic_id]["YX"].total_count -
-               (double)tomography_data[qnic_id]["YX"].minus_plus / (double)tomography_data[qnic_id]["YX"].total_count +
-               (double)tomography_data[qnic_id]["YX"].minus_minus / (double)tomography_data[qnic_id]["YX"].total_count;
-  double S22 = (double)tomography_data[qnic_id]["YY"].plus_plus / (double)tomography_data[qnic_id]["YY"].total_count -
-               (double)tomography_data[qnic_id]["YY"].plus_minus / (double)tomography_data[qnic_id]["YY"].total_count -
-               (double)tomography_data[qnic_id]["YY"].minus_plus / (double)tomography_data[qnic_id]["YY"].total_count +
-               (double)tomography_data[qnic_id]["YY"].minus_minus / (double)tomography_data[qnic_id]["YY"].total_count;
-  double S23 = (double)tomography_data[qnic_id]["YZ"].plus_plus / (double)tomography_data[qnic_id]["YZ"].total_count -
-               (double)tomography_data[qnic_id]["YZ"].plus_minus / (double)tomography_data[qnic_id]["YZ"].total_count -
-               (double)tomography_data[qnic_id]["YZ"].minus_plus / (double)tomography_data[qnic_id]["YZ"].total_count +
-               (double)tomography_data[qnic_id]["YZ"].minus_minus / (double)tomography_data[qnic_id]["YZ"].total_count;
-  // ZZ
-  double S30 = (double)tomography_data[qnic_id]["ZZ"].plus_plus / (double)tomography_data[qnic_id]["ZZ"].total_count +
-               (double)tomography_data[qnic_id]["ZZ"].plus_minus / (double)tomography_data[qnic_id]["ZZ"].total_count -
-               (double)tomography_data[qnic_id]["ZZ"].minus_plus / (double)tomography_data[qnic_id]["ZZ"].total_count -
-               (double)tomography_data[qnic_id]["ZZ"].minus_minus / (double)tomography_data[qnic_id]["ZZ"].total_count;
-  double S31 = (double)tomography_data[qnic_id]["ZX"].plus_plus / (double)tomography_data[qnic_id]["ZX"].total_count -
-               (double)tomography_data[qnic_id]["ZX"].plus_minus / (double)tomography_data[qnic_id]["ZX"].total_count -
-               (double)tomography_data[qnic_id]["ZX"].minus_plus / (double)tomography_data[qnic_id]["ZX"].total_count +
-               (double)tomography_data[qnic_id]["ZX"].minus_minus / (double)tomography_data[qnic_id]["ZX"].total_count;
-  double S32 = (double)tomography_data[qnic_id]["ZY"].plus_plus / (double)tomography_data[qnic_id]["ZY"].total_count -
-               (double)tomography_data[qnic_id]["ZY"].plus_minus / (double)tomography_data[qnic_id]["ZY"].total_count -
-               (double)tomography_data[qnic_id]["ZY"].minus_plus / (double)tomography_data[qnic_id]["ZY"].total_count +
-               (double)tomography_data[qnic_id]["ZY"].minus_minus / (double)tomography_data[qnic_id]["ZY"].total_count;
-  double S33 = (double)tomography_data[qnic_id]["ZZ"].plus_plus / (double)tomography_data[qnic_id]["ZZ"].total_count -
-               (double)tomography_data[qnic_id]["ZZ"].plus_minus / (double)tomography_data[qnic_id]["ZZ"].total_count -
-               (double)tomography_data[qnic_id]["ZZ"].minus_plus / (double)tomography_data[qnic_id]["ZZ"].total_count +
-               (double)tomography_data[qnic_id]["ZZ"].minus_minus / (double)tomography_data[qnic_id]["ZZ"].total_count;
-  double S = (double)tomography_data[qnic_id]["XX"].plus_plus / (double)tomography_data[qnic_id]["XX"].total_count +
-             (double)tomography_data[qnic_id]["XX"].plus_minus / (double)tomography_data[qnic_id]["XX"].total_count +
-             (double)tomography_data[qnic_id]["XX"].minus_plus / (double)tomography_data[qnic_id]["XX"].total_count +
-             (double)tomography_data[qnic_id]["XX"].minus_minus / (double)tomography_data[qnic_id]["XX"].total_count;
-
-  EV << S00 << ", " << S01 << ", " << S02 << ", " << S03 << "\n";
-  EV << S10 << ", " << S11 << ", " << S12 << ", " << S13 << "\n";
-  EV << S20 << ", " << S21 << ", " << S22 << ", " << S23 << "\n";
-  EV << S30 << ", " << S31 << ", " << S32 << ", " << S33 << "\n";
-
-  Matrix4cd density_matrix_reconstructed =
-      (double)1 / (double)4 *
-      (S01 * kroneckerProduct(Pauli.I, Pauli.X).eval() + S02 * kroneckerProduct(Pauli.I, Pauli.Y).eval() + S03 * kroneckerProduct(Pauli.I, Pauli.Z).eval() +
-       S10 * kroneckerProduct(Pauli.X, Pauli.I).eval() + S11 * kroneckerProduct(Pauli.X, Pauli.X).eval() + S12 * kroneckerProduct(Pauli.X, Pauli.Y).eval() +
-       S13 * kroneckerProduct(Pauli.X, Pauli.Z).eval() + S20 * kroneckerProduct(Pauli.Y, Pauli.I).eval() + S21 * kroneckerProduct(Pauli.Y, Pauli.X).eval() +
-       S22 * kroneckerProduct(Pauli.Y, Pauli.Y).eval() + S23 * kroneckerProduct(Pauli.Y, Pauli.Z).eval() + S30 * kroneckerProduct(Pauli.Z, Pauli.I).eval() +
-       S31 * kroneckerProduct(Pauli.Z, Pauli.X).eval() + S32 * kroneckerProduct(Pauli.Z, Pauli.Y).eval() + S33 * kroneckerProduct(Pauli.Z, Pauli.Z).eval() +
-       S * kroneckerProduct(Pauli.I, Pauli.I).eval());
-  EV << "DM = " << density_matrix_reconstructed << "\n";
-  return density_matrix_reconstructed;
-  /*
-  Vector4cd Bellpair;
-  Bellpair << 1/sqrt(2), 0, 0, 1/sqrt(2);
-  Matrix4cd density_matrix_ideal = Bellpair*Bellpair.adjoint();
-  double fidelity = (density_matrix_reconstructed.real()*
-  density_matrix_ideal.real() ).trace();
-  //double Xerr = (density_matrix_reconstructed.real()*
-  (density_matrix_ideal.real()) ).trace();
-
-  EV<<"FOR QNIC["<<qnic_id<<"] \n";
-  EV<<"F = "<<fidelity<<"\n";
-
-  Vector4cd Bellpair_X;
-  Bellpair_X << 0,1/sqrt(2), 1/sqrt(2),0;
-  Matrix4cd density_matrix_X = Bellpair_X*Bellpair_X.adjoint();
-  double Xerr_rate = (density_matrix_reconstructed.real()*
-  density_matrix_X.real() ).trace(); EV<<"Xerr = "<<Xerr_rate<<"\n";
-
-  Vector4cd Bellpair_Z;
-  Bellpair_Z << 1/sqrt(2),0,0,-1/sqrt(2);
-  Matrix4cd density_matrix_Z = Bellpair_Z*Bellpair_Z.adjoint();
-  double Zerr_rate = (density_matrix_reconstructed.real()*
-  density_matrix_Z.real() ).trace(); Complex checkZ =
-  Bellpair_Z.adjoint()*density_matrix_reconstructed*Bellpair_Z; EV<<"Zerr =
-  "<<Zerr_rate<<" or, "<<checkZ.real()<<"+"<<checkZ.imag()<<"\n";
-
-  Vector4cd Bellpair_Y;
-  Bellpair_Y << 0,Complex(0,1/sqrt(2)),Complex(0,-1/sqrt(2)),0;
-  Matrix4cd density_matrix_Y = Bellpair_Y*Bellpair_Y.adjoint();
-  double Yerr_rate = (density_matrix_reconstructed.real()*
-  density_matrix_Y.real() ).trace(); EV<<"Yerr = "<<Yerr_rate<<"\n";
-
-  tomography_stats << "F = "<<fidelity<<" X = "<<Xerr_rate<<" Z ="<<Zerr_rate<<"
-  Y = "<<Yerr_rate<<endl;
-
-  double bellpairs_per_sec = 10;
-  double link_cost =(double)1/(fidelity*fidelity*bellpairs_per_sec);
-  writeToFile_Topology_with_LinkCost(qnic_id, link_cost, fidelity,
-  bellpairs_per_sec);
-
-  Vector4cd Bellpair_Y2;
-  Bellpair_Y2 << 0,Complex(0,-1/sqrt(2)),Complex(0,1/sqrt(2)),0;
-  Matrix4cd density_matrix_Y2 = Bellpair_Y2*Bellpair_Y2.adjoint();
-  double Yerr_rate2 = (density_matrix_reconstructed.real()*
-  density_matrix_Y2.real() ).trace(); EV<<"Yerr = "<<Yerr_rate2<<"\n";*/
-}
-
-Matrix4cd HardwareMonitor::extended_reconstruct_density_matrix(int qnic_id, int partner) {
-  // II
-  auto tommography_data_with_partner = extended_tomography_data[qnic_id][partner];
-  double S00 = 1.0;
-  double S01 = (double)tommography_data_with_partner["XX"].plus_plus / (double)tommography_data_with_partner["XX"].total_count -
-               (double)tommography_data_with_partner["XX"].plus_minus / (double)tommography_data_with_partner["XX"].total_count +
-               (double)tommography_data_with_partner["XX"].minus_plus / (double)tommography_data_with_partner["XX"].total_count -
-               (double)tommography_data_with_partner["XX"].minus_minus / (double)tommography_data_with_partner["XX"].total_count;
+  double S01 = (double)data["XX"].plus_plus / (double)data["XX"].total_count - (double)data["XX"].plus_minus / (double)data["XX"].total_count +
+               (double)data["XX"].minus_plus / (double)data["XX"].total_count - (double)data["XX"].minus_minus / (double)data["XX"].total_count;
   if (std::isnan(S01)) {
-    EV << "totoal count: " << (double)tommography_data_with_partner["XX"].total_count << "\n";
+    EV << "totoal count: " << (double)data["XX"].total_count << "\n";
     error("S01 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
-  double S02 = (double)tommography_data_with_partner["YY"].plus_plus / (double)tommography_data_with_partner["YY"].total_count -
-               (double)tommography_data_with_partner["YY"].plus_minus / (double)tommography_data_with_partner["YY"].total_count +
-               (double)tommography_data_with_partner["YY"].minus_plus / (double)tommography_data_with_partner["YY"].total_count -
-               (double)tommography_data_with_partner["YY"].minus_minus / (double)tommography_data_with_partner["YY"].total_count;
+  double S02 = (double)data["YY"].plus_plus / (double)data["YY"].total_count - (double)data["YY"].plus_minus / (double)data["YY"].total_count +
+               (double)data["YY"].minus_plus / (double)data["YY"].total_count - (double)data["YY"].minus_minus / (double)data["YY"].total_count;
   if (std::isnan(S02)) {
     error("S02 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
-  double S03 = (double)tommography_data_with_partner["ZZ"].plus_plus / (double)tommography_data_with_partner["ZZ"].total_count -
-               (double)tommography_data_with_partner["ZZ"].plus_minus / (double)tommography_data_with_partner["ZZ"].total_count +
-               (double)tommography_data_with_partner["ZZ"].minus_plus / (double)tommography_data_with_partner["ZZ"].total_count -
-               (double)tommography_data_with_partner["ZZ"].minus_minus / (double)tommography_data_with_partner["ZZ"].total_count;
+  double S03 = (double)data["ZZ"].plus_plus / (double)data["ZZ"].total_count - (double)data["ZZ"].plus_minus / (double)data["ZZ"].total_count +
+               (double)data["ZZ"].minus_plus / (double)data["ZZ"].total_count - (double)data["ZZ"].minus_minus / (double)data["ZZ"].total_count;
   if (std::isnan(S03)) {
     error("S03 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
   // XX
-  double S10 = (double)tommography_data_with_partner["XX"].plus_plus / (double)tommography_data_with_partner["XX"].total_count +
-               (double)tommography_data_with_partner["XX"].plus_minus / (double)tommography_data_with_partner["XX"].total_count -
-               (double)tommography_data_with_partner["XX"].minus_plus / (double)tommography_data_with_partner["XX"].total_count -
-               (double)tommography_data_with_partner["XX"].minus_minus / (double)tommography_data_with_partner["XX"].total_count;
+  double S10 = (double)data["XX"].plus_plus / (double)data["XX"].total_count + (double)data["XX"].plus_minus / (double)data["XX"].total_count -
+               (double)data["XX"].minus_plus / (double)data["XX"].total_count - (double)data["XX"].minus_minus / (double)data["XX"].total_count;
   if (std::isnan(S10)) {
     error("S10 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
-  double S11 = (double)tommography_data_with_partner["XX"].plus_plus / (double)tommography_data_with_partner["XX"].total_count -
-               (double)tommography_data_with_partner["XX"].plus_minus / (double)tommography_data_with_partner["XX"].total_count -
-               (double)tommography_data_with_partner["XX"].minus_plus / (double)tommography_data_with_partner["XX"].total_count +
-               (double)tommography_data_with_partner["XX"].minus_minus / (double)tommography_data_with_partner["XX"].total_count;
+  double S11 = (double)data["XX"].plus_plus / (double)data["XX"].total_count - (double)data["XX"].plus_minus / (double)data["XX"].total_count -
+               (double)data["XX"].minus_plus / (double)data["XX"].total_count + (double)data["XX"].minus_minus / (double)data["XX"].total_count;
   if (std::isnan(S11)) {
     error("S11 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
-  double S12 = (double)tommography_data_with_partner["XY"].plus_plus / (double)tommography_data_with_partner["XY"].total_count -
-               (double)tommography_data_with_partner["XY"].plus_minus / (double)tommography_data_with_partner["XY"].total_count -
-               (double)tommography_data_with_partner["XY"].minus_plus / (double)tommography_data_with_partner["XY"].total_count +
-               (double)tommography_data_with_partner["XY"].minus_minus / (double)tommography_data_with_partner["XY"].total_count;
+  double S12 = (double)data["XY"].plus_plus / (double)data["XY"].total_count - (double)data["XY"].plus_minus / (double)data["XY"].total_count -
+               (double)data["XY"].minus_plus / (double)data["XY"].total_count + (double)data["XY"].minus_minus / (double)data["XY"].total_count;
   if (std::isnan(S12)) {
     error("S12 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
-  double S13 = (double)tommography_data_with_partner["XZ"].plus_plus / (double)tommography_data_with_partner["XZ"].total_count -
-               (double)tommography_data_with_partner["XZ"].plus_minus / (double)tommography_data_with_partner["XZ"].total_count -
-               (double)tommography_data_with_partner["XZ"].minus_plus / (double)tommography_data_with_partner["XZ"].total_count +
-               (double)tommography_data_with_partner["XZ"].minus_minus / (double)tommography_data_with_partner["XZ"].total_count;
+  double S13 = (double)data["XZ"].plus_plus / (double)data["XZ"].total_count - (double)data["XZ"].plus_minus / (double)data["XZ"].total_count -
+               (double)data["XZ"].minus_plus / (double)data["XZ"].total_count + (double)data["XZ"].minus_minus / (double)data["XZ"].total_count;
   if (std::isnan(S13)) {
     error("S13 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
   // YY
-  double S20 = (double)tommography_data_with_partner["YY"].plus_plus / (double)tommography_data_with_partner["YY"].total_count +
-               (double)tommography_data_with_partner["YY"].plus_minus / (double)tommography_data_with_partner["YY"].total_count -
-               (double)tommography_data_with_partner["YY"].minus_plus / (double)tommography_data_with_partner["YY"].total_count -
-               (double)tommography_data_with_partner["YY"].minus_minus / (double)tommography_data_with_partner["YY"].total_count;
+  double S20 = (double)data["YY"].plus_plus / (double)data["YY"].total_count + (double)data["YY"].plus_minus / (double)data["YY"].total_count -
+               (double)data["YY"].minus_plus / (double)data["YY"].total_count - (double)data["YY"].minus_minus / (double)data["YY"].total_count;
   if (std::isnan(S20)) {
     error("S20 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
-  double S21 = (double)tommography_data_with_partner["YX"].plus_plus / (double)tommography_data_with_partner["YX"].total_count -
-               (double)tommography_data_with_partner["YX"].plus_minus / (double)tommography_data_with_partner["YX"].total_count -
-               (double)tommography_data_with_partner["YX"].minus_plus / (double)tommography_data_with_partner["YX"].total_count +
-               (double)tommography_data_with_partner["YX"].minus_minus / (double)tommography_data_with_partner["YX"].total_count;
+  double S21 = (double)data["YX"].plus_plus / (double)data["YX"].total_count - (double)data["YX"].plus_minus / (double)data["YX"].total_count -
+               (double)data["YX"].minus_plus / (double)data["YX"].total_count + (double)data["YX"].minus_minus / (double)data["YX"].total_count;
   if (std::isnan(S21)) {
     error("S21 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
-  double S22 = (double)tommography_data_with_partner["YY"].plus_plus / (double)tommography_data_with_partner["YY"].total_count -
-               (double)tommography_data_with_partner["YY"].plus_minus / (double)tommography_data_with_partner["YY"].total_count -
-               (double)tommography_data_with_partner["YY"].minus_plus / (double)tommography_data_with_partner["YY"].total_count +
-               (double)tommography_data_with_partner["YY"].minus_minus / (double)tommography_data_with_partner["YY"].total_count;
+  double S22 = (double)data["YY"].plus_plus / (double)data["YY"].total_count - (double)data["YY"].plus_minus / (double)data["YY"].total_count -
+               (double)data["YY"].minus_plus / (double)data["YY"].total_count + (double)data["YY"].minus_minus / (double)data["YY"].total_count;
   if (std::isnan(S22)) {
     error("S22 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
-  double S23 = (double)tommography_data_with_partner["YZ"].plus_plus / (double)tommography_data_with_partner["YZ"].total_count -
-               (double)tommography_data_with_partner["YZ"].plus_minus / (double)tommography_data_with_partner["YZ"].total_count -
-               (double)tommography_data_with_partner["YZ"].minus_plus / (double)tommography_data_with_partner["YZ"].total_count +
-               (double)tommography_data_with_partner["YZ"].minus_minus / (double)tommography_data_with_partner["YZ"].total_count;
+  double S23 = (double)data["YZ"].plus_plus / (double)data["YZ"].total_count - (double)data["YZ"].plus_minus / (double)data["YZ"].total_count -
+               (double)data["YZ"].minus_plus / (double)data["YZ"].total_count + (double)data["YZ"].minus_minus / (double)data["YZ"].total_count;
   if (std::isnan(S23)) {
     error("S23 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
   // ZZ
-  double S30 = (double)tommography_data_with_partner["ZZ"].plus_plus / (double)tommography_data_with_partner["ZZ"].total_count +
-               (double)tommography_data_with_partner["ZZ"].plus_minus / (double)tommography_data_with_partner["ZZ"].total_count -
-               (double)tommography_data_with_partner["ZZ"].minus_plus / (double)tommography_data_with_partner["ZZ"].total_count -
-               (double)tommography_data_with_partner["ZZ"].minus_minus / (double)tommography_data_with_partner["ZZ"].total_count;
+  double S30 = (double)data["ZZ"].plus_plus / (double)data["ZZ"].total_count + (double)data["ZZ"].plus_minus / (double)data["ZZ"].total_count -
+               (double)data["ZZ"].minus_plus / (double)data["ZZ"].total_count - (double)data["ZZ"].minus_minus / (double)data["ZZ"].total_count;
   if (std::isnan(S30)) {
     error("S30 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
-  double S31 = (double)tommography_data_with_partner["ZX"].plus_plus / (double)tommography_data_with_partner["ZX"].total_count -
-               (double)tommography_data_with_partner["ZX"].plus_minus / (double)tommography_data_with_partner["ZX"].total_count -
-               (double)tommography_data_with_partner["ZX"].minus_plus / (double)tommography_data_with_partner["ZX"].total_count +
-               (double)tommography_data_with_partner["ZX"].minus_minus / (double)tommography_data_with_partner["ZX"].total_count;
+  double S31 = (double)data["ZX"].plus_plus / (double)data["ZX"].total_count - (double)data["ZX"].plus_minus / (double)data["ZX"].total_count -
+               (double)data["ZX"].minus_plus / (double)data["ZX"].total_count + (double)data["ZX"].minus_minus / (double)data["ZX"].total_count;
   if (std::isnan(S31)) {
     error("S31 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
-  double S32 = (double)tommography_data_with_partner["ZY"].plus_plus / (double)tommography_data_with_partner["ZY"].total_count -
-               (double)tommography_data_with_partner["ZY"].plus_minus / (double)tommography_data_with_partner["ZY"].total_count -
-               (double)tommography_data_with_partner["ZY"].minus_plus / (double)tommography_data_with_partner["ZY"].total_count +
-               (double)tommography_data_with_partner["ZY"].minus_minus / (double)tommography_data_with_partner["ZY"].total_count;
+  double S32 = (double)data["ZY"].plus_plus / (double)data["ZY"].total_count - (double)data["ZY"].plus_minus / (double)data["ZY"].total_count -
+               (double)data["ZY"].minus_plus / (double)data["ZY"].total_count + (double)data["ZY"].minus_minus / (double)data["ZY"].total_count;
   if (std::isnan(S32)) {
     error("S32 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
-  double S33 = (double)tommography_data_with_partner["ZZ"].plus_plus / (double)tommography_data_with_partner["ZZ"].total_count -
-               (double)tommography_data_with_partner["ZZ"].plus_minus / (double)tommography_data_with_partner["ZZ"].total_count -
-               (double)tommography_data_with_partner["ZZ"].minus_plus / (double)tommography_data_with_partner["ZZ"].total_count +
-               (double)tommography_data_with_partner["ZZ"].minus_minus / (double)tommography_data_with_partner["ZZ"].total_count;
+  double S33 = (double)data["ZZ"].plus_plus / (double)data["ZZ"].total_count - (double)data["ZZ"].plus_minus / (double)data["ZZ"].total_count -
+               (double)data["ZZ"].minus_plus / (double)data["ZZ"].total_count + (double)data["ZZ"].minus_minus / (double)data["ZZ"].total_count;
   if (std::isnan(S33)) {
     error("S33 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
 
-  double S = (double)tommography_data_with_partner["XX"].plus_plus / (double)tommography_data_with_partner["XX"].total_count +
-             (double)tommography_data_with_partner["XX"].plus_minus / (double)tommography_data_with_partner["XX"].total_count +
-             (double)tommography_data_with_partner["XX"].minus_plus / (double)tommography_data_with_partner["XX"].total_count +
-             (double)tommography_data_with_partner["XX"].minus_minus / (double)tommography_data_with_partner["XX"].total_count;
+  double S = (double)data["XX"].plus_plus / (double)data["XX"].total_count + (double)data["XX"].plus_minus / (double)data["XX"].total_count +
+             (double)data["XX"].minus_plus / (double)data["XX"].total_count + (double)data["XX"].minus_minus / (double)data["XX"].total_count;
   if (std::isnan(S)) {
     error(" final S error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
@@ -1348,7 +1159,6 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module)
   auto neighbor_info = createNeighborInfo(*neighbor_node);
   return neighbor_info;
 }
-
 
 cModule *HardwareMonitor::getQNodeWithAddress(int address) {
   cTopology *topo = new cTopology("topo");

@@ -66,7 +66,7 @@ class RuleEngine : public IRuleEngine {
   IRoutingDaemon *routingdaemon;
   IRealTimeController *realtime_controller;
   int *qnic_burst_trial_counter;
-  qnicResources *allResources; 
+  qnicResources *allResources;
   // <partner address, configs (qnic, timing etc..)>
   std::map<int, PhotonTransmissionConfig> photon_transmission_config_with_partner;
   // typedef rules::RuleSet* RuleSetPtr;

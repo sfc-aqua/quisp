@@ -1206,7 +1206,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
     // getting pointer to the rule
     // std::vector<Rule *> rule_ptr = process->getRule_ptr();
     int num_rules = process->numRules();
-    int num_partners =  process->entangled_partner.size();
+    int num_partners = process->entangled_partner.size();
     // iterate rules for all possible partners
     for (int i = 0; i < num_partners; i++) {
       // partner that has entanglement with this node

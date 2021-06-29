@@ -334,31 +334,7 @@ void BellStateAnalyzer::sendBSAresult(bool result, bool sendresults) {
   }
 }
 
-void BellStateAnalyzer::finish() {
-  std::cout << "total = " << DEBUG_total << "\n";
-  std::cout << "Success = " << DEBUG_success << "\n";
-  std::cout << "darkcount_count_left = " << DEBUG_darkcount_left << ", darkcount_count_right =" << DEBUG_darkcount_right << ", darkcount_count_both = " << DEBUG_darkcount_both
-            << "\n";
-  std::cout << "total BSA performance"
-            << "\n";
-  // filename for recoding bsa performance
-  // std::string file_name = BSA_perf_output_filename;
-  // int file_size = file_name.size();
-  // create file
-  std::string time_duration = std::to_string(duration);
-  std::string file_name = "num_trials" + time_duration;
-  std::ofstream bsa_stats(file_name, std::ios_base::app);
-
-  // 1. Bell pair creation time (average and std)
-  // receive photons - apply BSM - return result
-  // bsa_stats<<"s\n";
-  for (int i = 0; i < number_of_trials.size(); i++) {
-    bsa_stats << number_of_trials[i] << "\n";
-  }
-  // bsa_stats<<"f\n";
-  // 2. The number of bell pairs in total
-  bsa_stats.close();
-}
+void BellStateAnalyzer::finish() {}
 
 void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg) {
   PhotonicQubit *q = check_and_cast<PhotonicQubit *>(msg);

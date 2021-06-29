@@ -350,7 +350,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       int owner = path.at(i);
       if (i == 0) {  // if this is initiator
         // final element of the path is this node (responder) and first element is initiator node
-        // if owner is the first node, then, 
+        // if owner is the first node, then,
         // partner == responder (this node), and the first elements (initiator's) qnic type and index
         ruleset = generateTomographyRuleSet(owner, path.at(path.size() - 1), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
       } else {  // if this is responder

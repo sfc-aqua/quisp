@@ -31,13 +31,13 @@ class MockRoutingDaemon : public IRoutingDaemon {
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
-  Strategy(TestQNode *_qnode) : mockQubit(nullptr), routingDaemon(nullptr), parent_qnode(_qnode) {}
+  Strategy(TestQNode* _qnode) : mockQubit(nullptr), routingDaemon(nullptr), parent_qnode(_qnode) {}
   Strategy(MockStationaryQubit* qubit, MockRoutingDaemon* routing_daemon) : mockQubit(qubit), routingDaemon(routing_daemon) {}
   ~Strategy() {
     delete mockQubit;
     delete routingDaemon;
   }
-  cModule *getQNode() override { return parent_qnode; }
+  cModule* getQNode() override { return parent_qnode; }
   MockStationaryQubit* mockQubit = nullptr;
   MockRoutingDaemon* routingDaemon = nullptr;
   StationaryQubit* getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override {
@@ -46,8 +46,8 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
   };
   IRoutingDaemon* getRoutingDaemon() override { return routingDaemon; };
 
-  private :
-    TestQNode *parent_qnode;
+ private:
+  TestQNode* parent_qnode;
 };
 
 class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {

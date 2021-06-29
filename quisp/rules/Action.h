@@ -12,7 +12,6 @@
 #include <omnetpp.h>
 #include <memory>
 
-
 using namespace quisp::modules;
 
 namespace quisp {
