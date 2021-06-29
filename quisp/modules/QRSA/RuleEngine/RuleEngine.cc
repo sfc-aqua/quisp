@@ -1205,10 +1205,10 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
     RuleSet *process = it->second.Rs;  // One Process. From top to bottom.
     // getting pointer to the rule
     // std::vector<Rule *> rule_ptr = process->getRule_ptr();
-    int rule_ptr_size = process->numRules();
-    int partner_size = process->entangled_partner.size();
+    int num_rules = process->numRules();
+    int num_partners =  process->entangled_partner.size();
     // iterate rules for all possible partners
-    for (int i = 0; i < partner_size; i++) {
+    for (int i = 0; i < num_partners; i++) {
       // partner that has entanglement with this node
       int resource_entangled_with_address = process->entangled_partner.at(i);
 
@@ -1227,7 +1227,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
               !it->second->no_density_matrix_nullptr_entangled_partner_ok) {
             error("Freshing qubit wrong");
           }
-          if (rule_ptr_size != partner_size) {
+          if (num_rules != num_partners) {
             process->front()->addResource(resource_entangled_with_address, it->second);
           } else {
             process->getRule_ptr(i)->addResource(resource_entangled_with_address, it->second);
