@@ -993,7 +993,8 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   auto &resources = allResources[qnic_type][qnic_index];
   for (auto it = resources.begin(); it != resources.end(); ++it) {
     if (it->second == qubit) {
-      resources.erase(it++);
+      resources.erase(it--);
+      break;
     }
   }
   // Make this qubit available for rules
