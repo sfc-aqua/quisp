@@ -13,6 +13,7 @@ namespace quisp {
 namespace modules {
 
 Define_Module(RealTimeController);
+
 RealTimeController::RealTimeController() : provider(utils::ComponentProvider{this}) {}
 void RealTimeController::initialize() {
   EV << "RealTimeController booted\n";

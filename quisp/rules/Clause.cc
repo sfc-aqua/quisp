@@ -31,11 +31,10 @@ bool FidelityClause::check(std::multimap<int, StationaryQubit*> resource) const 
 }
 
 bool EnoughResourceClause::check(std::multimap<int, StationaryQubit*> resource) const {
-  // std::cout<<"!!In enough clause \n";
   bool enough = false;
   int num_free = 0;
 
-  for (std::multimap<int, StationaryQubit*>::iterator it = resource.begin(); it != resource.end(); ++it) {
+  for (auto it = resource.begin(); it != resource.end(); ++it) {
     if (it->first == partner) {
       if (!it->second->isLocked()) {  // here must have loop
         num_free++;
@@ -44,54 +43,6 @@ bool EnoughResourceClause::check(std::multimap<int, StationaryQubit*> resource) 
         enough = true;
       }
     }
-  }
-  // std::cout<<"Enough = "<<enough<<"\n";
-  return enough;
-}
-
-bool EnoughResourceClauseLeft::check(std::multimap<int, StationaryQubit*> resource) const {
-  // std::cout<<"!!In enough clause \n";
-  bool enough = false;
-  int num_free = 0;
-
-  for (std::multimap<int, StationaryQubit*>::iterator it = resource.begin(); it != resource.end(); ++it) {
-    if (it->first == partner_left) {
-      if (!it->second->isLocked()) {  // here must have loop
-        num_free++;
-      }
-      if (num_free >= num_resource_required_left) {
-        enough = true;
-      }
-    }
-  }
-  if (enough) {
-    EV << "You have enough resource between " << partner_left << "\n";
-  } else {
-    EV << "You don't have enough resource between " << partner_left << "\n";
-  }
-  // std::cout<<"Enough = "<<enough<<"\n";
-  return enough;
-}
-
-bool EnoughResourceClauseRight::check(std::multimap<int, StationaryQubit*> resource) const {
-  // std::cout<<"!!In enough clause \n";
-  bool enough = false;
-  int num_free = 0;
-
-  for (std::multimap<int, StationaryQubit*>::iterator it = resource.begin(); it != resource.end(); ++it) {
-    if (it->first == partner_right) {
-      if (!it->second->isLocked()) {  // here must have loop
-        num_free++;
-      }
-      if (num_free >= num_resource_required_right) {
-        enough = true;
-      }
-    }
-  }
-  if (enough) {
-    EV << "You have enough resource between " << partner_right << "\n";
-  } else {
-    EV << "You don't have enough resource between " << partner_right << "\n";
   }
   // std::cout<<"Enough = "<<enough<<"\n";
   return enough;
@@ -112,7 +63,6 @@ bool MeasureCountClause::check(qnicResources* resources) const {
 }*/
 
 bool MeasureCountClause::check(std::multimap<int, StationaryQubit*> resources) const {
-  // std::cout<<"MeasureCountClause invoked!!!! \n";
   if (current_count < max_count) {
     current_count++;  // Increment measured counter.
     // std::cout<<"Measurement count is now "<<current_count<<" < "<<max_count<<"\n";
@@ -124,7 +74,6 @@ bool MeasureCountClause::check(std::multimap<int, StationaryQubit*> resources) c
 }
 
 bool MeasureCountClause::checkTerminate(std::multimap<int, StationaryQubit*> resources) const {
-  EV << "Tomography termination clause invoked.\n";
   bool done = false;
   if (current_count >= max_count) {
     // EV<<"TRUE: Current count = "<<current_count<<" >=  "<<max_count<<"(max)\n";

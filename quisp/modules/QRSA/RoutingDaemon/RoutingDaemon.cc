@@ -54,9 +54,9 @@ void RoutingDaemon::initialize(int stage) {
 
   EV << "Routing table initialized \n";
   myAddress = getParentModule()->par("address");
-
   // Topology creation for routing table
   cTopology *topo = new cTopology("topo");
+  // veryfication?
   cMsgPar *yes = new cMsgPar();
   yes->setStringValue("yes");
   topo->extractByParameter("includeInTopo", yes->str().c_str());  // Any node that has a parameter includeInTopo will be included in routing
@@ -142,6 +142,24 @@ int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr) {
   }
   return it->second.address;
 }
+
+int RoutingDaemon::returnNumEndNodes() {
+  cTopology *topo = new cTopology("topo");
+  cMsgPar *yes = new cMsgPar();
+  yes->setStringValue("yes");
+  topo->extractByParameter("includeInTopo", yes->str().c_str());
+  int num_of_end_nodes = topo->getNumNodes();
+  int index = 0;
+  for (int i = 0; i < topo->getNumNodes(); i++) {
+    cTopology::Node *node = topo->getNode(i);
+    std::string node_type = node->getModule()->par("nodeType");
+    if (node_type == "EndNode") {  // ignore myself
+      index++;
+    }
+  }
+  delete topo;
+  return index;
+};
 
 /**
  * Once we begin using dynamic routing protocols, this is where the messages

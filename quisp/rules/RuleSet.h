@@ -22,7 +22,7 @@ class RuleSet : public std::list<pRule> {
  public:
   int owner;
   std::vector<int> entangled_partner;
-  std::vector<Rule*> entangled_partner_rule;
+  std::vector<Rule*> rules;
   // int entangled_partner_left;
   // int entangled_partner_right;
   simtime_t started_at;
@@ -52,8 +52,9 @@ class RuleSet : public std::list<pRule> {
 
   void addRule(Rule* r) { push_back(pRule(r)); };
   void addRule(pRule& r) { push_back(pRule(std::move(r))); };
-  void setRule_ptr(Rule* r_ptr) { this->entangled_partner_rule.push_back(r_ptr); };
-  std::vector<Rule*> getRule_ptr() { return this->entangled_partner_rule; };
+  void setRule_ptr(Rule* r_ptr) { this->rules.push_back(r_ptr); };
+  Rule* getRule_ptr(int i) { return this->rules.at(i); };
+  int numRules() { return this->rules.size(); };
   void finalize();
   int getSize() { return this->size(); };
   void destroyThis() {

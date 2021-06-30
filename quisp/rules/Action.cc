@@ -38,11 +38,6 @@ StationaryQubit *Action::getResource_fromTop_with_partner(int required_index, in
   // here
   int resource_index = 0;
   StationaryQubit *pt = nullptr;
-  // EV<<"===========================================\n";
-  // for (auto it=(*rule_resources).begin(); it!=(*rule_resources).end(); ++it) {
-  //     EV<<"hey!"<<it->first<<"\n";
-  // }
-  // EV<<"===========================================\n";
 
   for (auto it = (*rule_resources).begin(); it != (*rule_resources).end(); ++it) {
     if (it->second->isLocked()) {
@@ -95,8 +90,8 @@ cPacket *SwappingAction::run(cModule *re) {
   // just swapping pointer.
   // swapper have no way to know this swapping is success or not.
   // bell measurement
-  left_qubit->Hadamard_gate();
   right_qubit->CNOT_gate(left_qubit);
+  left_qubit->Hadamard_gate();
 
   // TODO This is a little bit cheating. This must be tracked!
   int lindex = left_partner_qubit->stationaryQubit_address;
@@ -107,46 +102,40 @@ cPacket *SwappingAction::run(cModule *re) {
 
   int operation_type_left, operation_type_right;
 
-  if (!left_measure && !right_measure) {
+  if (left_measure && right_measure) {
     EV << "operation type 0, operation left I, operation right I\n";
     operation_type_left = 0;
     operation_type_right = 0;
-  } else if (!left_measure && right_measure) {
+  } else if (left_measure && !right_measure) {
     EV << "operation type 1, operation left I, operation right X\n";
     operation_type_left = 0;
     operation_type_right = 1;
-  } else if (left_measure && !right_measure) {
+  } else if (!left_measure && right_measure) {
     EV << "operation type 2, operation left Z, operation right I\n";
     operation_type_left = 2;
     operation_type_right = 0;
-  } else if (left_measure && right_measure) {
+  } else if (!left_measure && !right_measure) {
     EV << "operation type 3, operation left Z, operation right X\n";
     operation_type_left = 2;
     operation_type_right = 1;
   }
   RuleEngine *rule_engine = check_and_cast<RuleEngine *>(re);
-  if (std::rand() / RAND_MAX < success_probability) {
+  if ((std::rand() / RAND_MAX) < success_probability) {
     right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
     left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
-
   } else {  // this might be wrong
-    // removeResource_fromRule(left_partner_qubit);
-    // removeResource_fromRule(right_partner_qubit);
+    removeResource_fromRule(left_partner_qubit);
+    removeResource_fromRule(right_partner_qubit);
     // TODO CHECK is this correct?
-    // rule_engine->freeConsumedResource(left_qnic_id, right_partner_qubit, right_qnic_type);
-    // rule_engine->freeConsumedResource(right_qnic_id, left_partner_qubit, left_qnic_type);
-    left_partner_qubit->isBusy = false;
-    right_partner_qubit->isBusy = false;
+    // This node can't manipulate partner's qubit
   }
   removeResource_fromRule(left_qubit);
   removeResource_fromRule(right_qubit);
-  // This might not be good
-  left_qubit->isBusy = false;
-  right_qubit->isBusy = false;
-  // rule_engine->freeConsumedResource(self_left_qnic_id, right_qubit, self_left_qnic_type);
-  // rule_engine->freeConsumedResource(self_right_qnic_id, left_qubit, self_right_qnic_type);
-  // Currently, this function is able to return only one packet, but this action have to return
-  //  two nodes (left partner and right partner). once return information to rule engine, then, duplicate it.
+  // free consumed
+  rule_engine->freeConsumedResource(self_left_qnic_id, left_qubit, self_left_qnic_type);  // free left
+  rule_engine->freeConsumedResource(self_right_qnic_id, right_qubit, self_right_qnic_type);  // free right
+
+  // result packet
   SwappingResult *pk = new SwappingResult;
   // no destination here. In RuleEngine, it's set.
   // this setKind() doesn't seem to have any effect; set instead in void RuleEngine::traverseThroughAllProcesses2()
@@ -154,8 +143,6 @@ cPacket *SwappingAction::run(cModule *re) {
   pk->setRuleSet_id(ruleset_id);
   pk->setRule_id(rule_id);
   pk->setAction_index(action_index);
-
-  // FIXME: These operations are corresponds to the result of operation.
   pk->setOperation_type_left(operation_type_left);  // operation type for left node
   pk->setOperation_type_right(operation_type_right);  // operation type for right node
   // These information are cropped in the RuleEngine.
@@ -242,7 +229,7 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   // free consumed
   rule_engine->freeConsumedResource(self_left_qnic_id, left_qubit, self_left_qnic_type);  // free left
   rule_engine->freeConsumedResource(self_right_qnic_id, right_qubit, self_right_qnic_type);  // free right
- 
+
   left_qubit->isBusy = false;
   right_qubit->isBusy = false;
 
@@ -598,7 +585,7 @@ cPacket *DoubleSelectionActionInv::run(cModule *re) {
 cPacket *RandomMeasureAction::run(cModule *re) {
   StationaryQubit *qubit = nullptr;
 
-  qubit = getResource_fromTop(resource);
+  qubit = getResource_fromTop_with_partner(resource, partner);
 
   if (qubit == nullptr) {
     Error *pk = new Error;

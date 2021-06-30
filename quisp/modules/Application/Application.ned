@@ -15,8 +15,9 @@ simple Application
         int TrafficPattern;
         int LoneInitiatorAddress;
         int NumberOfResources = default(1);
+        int distant_measure_count = default(7000);
+        // Maybe don't have to set the default here.
 
-        int num_measure = default(7000); // temporary
     gates:
         input fromRouter @loose;
         output toRouter @loose;

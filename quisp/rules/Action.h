@@ -505,6 +505,7 @@ class RandomMeasureAction : public Action {
     max_count = max;
     start = simTime();
   };
+
   // cPacket* run(qnicResources *resources) override;
   // cPacket* run(cModule *re, qnicResources *resources) override;
   cPacket* run(cModule* re) override;

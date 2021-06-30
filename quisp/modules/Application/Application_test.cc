@@ -51,6 +51,7 @@ TEST(AppTest, InitSimple) {
   setParInt(app, "NumberOfResources", 5);
   setParInt(app, "num_measure", 1);
   setParInt(app, "TrafficPattern", 0);
+  setParInt(app, "distant_measure_count", 100);
   setParInt(app, "LoneInitiatorAddress", 0);
 
   sim->registerComponent(app);
@@ -68,6 +69,7 @@ TEST(AppTest, Init_OneConnection_NoSender) {
   setParInt(app, "NumberOfResources", 5);
   setParInt(app, "num_measure", 1);
   setParInt(app, "TrafficPattern", 1);
+  setParInt(app, "distant_measure_count", 100);
   setParInt(app, "LoneInitiatorAddress", 0);
 
   sim->registerComponent(app);
@@ -86,6 +88,7 @@ TEST(AppTest, Init_OneConnection_Sender) {
   setParInt(app, "NumberOfResources", 5);
   setParInt(app, "num_measure", 1);
   setParInt(app, "TrafficPattern", 1);
+  setParInt(app, "distant_measure_count", 100);
   setParInt(app, "LoneInitiatorAddress", mock_qnode->address);
   sim->registerComponent(app);
 
@@ -119,6 +122,7 @@ TEST(AppTest, Init_OneConnection_Sender_TrafficPattern2) {
   setParInt(app, "NumberOfResources", 5);
   setParInt(app, "num_measure", 1);
   setParInt(app, "TrafficPattern", 2);
+  setParInt(app, "distant_measure_count", 100);
   setParInt(app, "LoneInitiatorAddress", 123);
   sim->registerComponent(app);
 
