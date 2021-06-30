@@ -990,13 +990,14 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     error("RuleEngine. Entanglement swapping went wrong");
   }
   // first delete old record
-  for (auto it = allResources[qnic_type][qnic_index].begin(); it != allResources[qnic_type][qnic_index].end(); ++it) {
+  auto &resources = allResources[qnic_type][qnic_index];
+  for (auto it = resources.begin(); it != resources.end(); ++it) {
     if (it->second == qubit) {
-      allResources[qnic_type][qnic_index].erase(it);
+      resources.erase(it++);
     }
   }
   // Make this qubit available for rules
-  allResources[qnic_type][qnic_index].insert(std::make_pair(new_partner, qubit));
+  resources.insert(std::make_pair(new_partner, qubit));
   // FOR DEBUGGING
   if (qubit->entangled_partner != nullptr) {
     if (qubit->entangled_partner->entangled_partner == nullptr) {
