@@ -85,8 +85,10 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
 TEST(RuleEngineTest, ESResourceUpdate) {
   auto routingdaemon = new MockRoutingDaemon;
   auto mockHardwareMonitor = new MockHardwareMonitor;
-  auto mockQubit = new MockStationaryQubit;
-  RuleEngineTestTarget c{mockQubit, routingdaemon, mockHardwareMonitor};
+  auto mockQubit0 = new MockStationaryQubit;
+  auto mockQubit1 = new MockStationaryQubit;  // qubit to be updated with entanglement swapping
+  auto mockQubit2 = new MockStationaryQubit;
+  RuleEngineTestTarget c{mockQubit1, routingdaemon, mockHardwareMonitor};
 
   auto info = std::make_unique<ConnectionSetupInfo>();
   info->qnic.type = QNIC_E;
@@ -104,18 +106,18 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).Times(2).WillOnce(Return(2)).WillOnce(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(std::move(info))));
   c.initialize();
-  c.setAllResources(QNIC_E, 0, 0, mockQubit);
-  c.setAllResources(QNIC_E, 0, 1, mockQubit);
-  c.setAllResources(QNIC_E, 0, 2, mockQubit);
-  auto part = c.allResources[QNIC_E][0].find(1);
-  ASSERT_TRUE(part != c.allResources[QNIC_E][0].end());
+  c.setAllResources(QNIC_E, 0, 0, mockQubit0);
+  c.setAllResources(QNIC_E, 0, 1, mockQubit1);
+  c.setAllResources(QNIC_E, 0, 2, mockQubit2);
+  auto partner = c.allResources[QNIC_E][0].find(1);
+  ASSERT_TRUE(partner != c.allResources[QNIC_E][0].end());
   // check resource is updated?
   c.updateResources_EntanglementSwapping(swapr);
-  auto part_after = c.allResources[QNIC_E][0].find(3);
-  ASSERT_TRUE(part_after != c.allResources[QNIC_E][0].end());
+  auto updated_partner = c.allResources[QNIC_E][0].find(3);
+  ASSERT_TRUE(updated_partner != c.allResources[QNIC_E][0].end());
   // old record was deleted properly
-  auto part_after_old = c.allResources[QNIC_E][0].find(1);
-  ASSERT_TRUE(part_after_old == c.allResources[QNIC_E][0].end());
+  auto old_partner = c.allResources[QNIC_E][0].find(1);
+  ASSERT_TRUE(old_partner == c.allResources[QNIC_E][0].end());
 }
 
 }  // namespace
