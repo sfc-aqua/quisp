@@ -79,7 +79,6 @@ class BellStateAnalyzer : public cSimpleModule {
 
  protected:
   virtual void initialize();
-  virtual void finish();
   virtual void handleMessage(cMessage *msg);
   virtual bool isPhotonLost(cMessage *msg);
   virtual void forDEBUG_countErrorTypes(cMessage *msg);
@@ -333,8 +332,6 @@ void BellStateAnalyzer::sendBSAresult(bool result, bool sendresults) {
     // EV<<"!!!!!!!!!!!!!!!over!!!!!!!!!!!this_trial_done == "<<this_trial_done<<"\n";
   }
 }
-
-void BellStateAnalyzer::finish() {}
 
 void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg) {
   PhotonicQubit *q = check_and_cast<PhotonicQubit *>(msg);

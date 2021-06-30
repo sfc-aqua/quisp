@@ -54,7 +54,7 @@ class HardwareMonitor : public IHardwareMonitor {
   int num_end_nodes;
   std::vector<int> tomography_partners;
   // in the case of retry connection setup, the partner could be changed.
-  std::multimap<int, int> qnic_partner_map;
+  std::map<int, int> qnic_partner_map;
 
   IRoutingDaemon *routing_daemon;
 
@@ -65,8 +65,8 @@ class HardwareMonitor : public IHardwareMonitor {
 
   // virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, QNIC_type qnic_type);//returns the set of free resources
   // virtual int checkNumFreeBuff(int qnic_index, QNIC_type qnic_type);//returns the number of free qubits
-  TomographyOutcome *temporal_tomography_output;  // qnic address -> partner . count_id . outcome
-  link_cost_map *tomography_runningtime_holder;
+  TomographyOutcomeTable *temporal_tomography_output;  // qnic address -> partner . count_id . outcome
+  LinkCostMap *tomography_runningtime_holder;
   std::string tomography_output_filename;
   std::string file_dir_name;
 

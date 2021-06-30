@@ -82,5 +82,4 @@ TEST(HardwareMonitorTestTarget, Init) {
   c.initialize(0);
   ASSERT_EQ(c.par("address").intValue(), 123);
 }
-
 }  // namespace
