@@ -21,6 +21,7 @@ using quisp::modules::StationaryQubit;
 
 class Action {
  public:
+  virtual ~Action(){};
   std::multimap<int, StationaryQubit*>* rule_resources;
   unsigned long ruleset_id;
   int rule_id;  // Used to make the lock_id unique, together with purification_count.
