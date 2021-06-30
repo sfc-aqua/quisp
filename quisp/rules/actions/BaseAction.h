@@ -34,8 +34,6 @@ class Action {
   virtual void removeResource_fromRule(StationaryQubit* qubit);
   // virtual StationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id);
 };
-typedef std::unique_ptr<Action> pAction;
-
 }  // namespace actions
 }  // namespace rules
 }  // namespace quisp

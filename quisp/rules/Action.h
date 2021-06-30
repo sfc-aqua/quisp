@@ -22,7 +22,6 @@ using actions::DoubleSelectionDualAction;
 using actions::DoubleSelectionDualActionInv;
 using actions::DoubleSelectionDualActionSecond;
 using actions::DoubleSelectionDualActionSecondInv;
-using actions::pAction;
 using actions::PurifyAction;
 using actions::RandomMeasureAction;
 using actions::SimultaneousSwappingAction;
