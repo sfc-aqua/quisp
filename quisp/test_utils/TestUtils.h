@@ -19,6 +19,7 @@ using utils::createStaticEnv;
 using utils::getTestSimulation;
 using utils::prepareSimulation;
 using utils::setParBool;
+using utils::setParDouble;
 using utils::setParInt;
 using utils::setParStr;
 
