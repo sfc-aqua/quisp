@@ -14,6 +14,13 @@ void setParInt(cModule *module, const char *name, const int val) {
   module->addPar(p);
 }
 
+void setParDouble(cModule *module, const char *name, const double val) {
+  cParImpl *p = new cDoubleParImpl();
+  p->setName(name);
+  p->setDoubleValue(val);
+  module->addPar(p);
+}
+
 void setParStr(cModule *module, const char *name, const char *val) {
   cParImpl *p = new cStringParImpl();
   p->setName(name);
