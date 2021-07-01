@@ -74,6 +74,7 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
 };
 
 TEST(HardwareMonitorTestTarget, Init) {
+  prepareSimulation();
   auto* mock_routing_daemon = new MockRoutingDaemon;
   auto* mock_qubit = new MockStationaryQubit;
   EXPECT_CALL(*mock_routing_daemon, returnNumEndNodes()).WillOnce(Return(1));

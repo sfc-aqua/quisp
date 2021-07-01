@@ -15,6 +15,7 @@ namespace {
 using namespace omnetpp;
 using namespace quisp::utils;
 using namespace quisp::modules;
+using namespace quisp_test;
 
 class MockStationaryQubit : public StationaryQubit {
  public:
@@ -55,6 +56,7 @@ TEST(RealTimeControllerTest, Init) {
   ASSERT_EQ(c.par("address").intValue(), 123);
 }
 TEST(RealTimeControllerTest, EmitPhoton) {
+  prepareSimulation();
   auto* qubit = new MockStationaryQubit{};
   RTCTestTarget c{qubit};
   c.initialize();
@@ -64,6 +66,7 @@ TEST(RealTimeControllerTest, EmitPhoton) {
 }
 
 TEST(RealTimeControllerTest, ReInitializeStationaryQubit) {
+  prepareSimulation();
   auto* qubit = new MockStationaryQubit{};
   RTCTestTarget c{qubit};
   c.initialize();

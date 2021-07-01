@@ -83,6 +83,7 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
 };
 
 TEST(RuleEngineTest, ESResourceUpdate) {
+  prepareSimulation();
   auto routingdaemon = new MockRoutingDaemon;
   auto mockHardwareMonitor = new MockHardwareMonitor;
   auto mockQubit0 = new MockStationaryQubit;
