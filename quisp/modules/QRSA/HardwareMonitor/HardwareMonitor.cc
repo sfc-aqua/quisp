@@ -53,11 +53,8 @@ void HardwareMonitor::initialize(int stage) {
 
   /* This is used to keep your own tomography data, and also to match and store the received partner's tomography data */
   // Assumes link tomography only between neighbors.
-  temporal_tomography_output = new ExtendedTomographyOutcome[num_qnic_total];
+  tomography_output_map = new ExtendedTomographyOutcome[num_qnic_total];
   tomography_runningtime_holder = new LinkCostMap[num_qnic_total];
-
-  /* Once all_temporal_tomography_output_holder is filled in, those data are summarized into basis based measurement outcome table.
-   * This accumulates the number of ++, +-, -+ and -- for each basis combination.*/
 
   /*This keeps which node is connected to which local qnic.*/
   tomography_output_filename = par("tomography_output_filename").str();
@@ -162,9 +159,9 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
   if (dynamic_cast<LinkTomographyResult *>(msg) != nullptr) {
     /*Link tomography measurement result/basis from neighbor received.*/
     LinkTomographyResult *result = check_and_cast<LinkTomographyResult *>(msg);
-    int partner = result->getPartner_address();
+    int partner_addr = result->getPartner_address();
     // Get QNIC info from neighbor address.
-    int qnic_addr_to_partner = routing_daemon->return_QNIC_address_to_destAddr(partner);
+    int qnic_addr_to_partner = routing_daemon->return_QNIC_address_to_destAddr(partner_addr);
     auto local_qnic_info = findConnectionInfoByQnicAddr(qnic_addr_to_partner);
     if (local_qnic_info == nullptr) {
       error("local qnic info should not be null");
@@ -173,11 +170,11 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     QNIC local_qnic = inter_info.qnic;
 
     // 1. find partner
-    auto ite = temporal_tomography_output[local_qnic.address].find(partner);
-    if (ite != temporal_tomography_output[local_qnic.address].end()) {
+    auto ite = tomography_output_map[local_qnic.address].find(partner_addr);
+    if (ite != tomography_output_map[local_qnic.address].end()) {
       // partner info found in this output
-      auto iter = temporal_tomography_output[local_qnic.address][partner].find(result->getCount_id());
-      if (iter != temporal_tomography_output[local_qnic.address][partner].end()) {
+      auto iter = tomography_output_map[local_qnic.address][partner_addr].find(result->getCount_id());
+      if (iter != tomography_output_map[local_qnic.address][partner_addr].end()) {
         EV << "Tomography data already found. \n";
         tomography_outcome temp = iter->second;
         if (result->getSrcAddr() == my_address) {
@@ -191,7 +188,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
         }
         iter->second = temp;
       } else {
-        EV << "Fresh tomography data with partner :" << partner << "\n";
+        EV << "Fresh tomography data with partner :" << partner_addr << "\n";
         tomography_outcome temp;
         if (result->getSrcAddr() == my_address) {
           temp.my_basis = result->getBasis();
@@ -202,11 +199,11 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
           temp.partner_output_is_plus = result->getOutput_is_plus();
           temp.partner_GOD_clean = result->getGOD_clean();
         }
-        temporal_tomography_output[local_qnic.address][partner].insert(std::make_pair(result->getCount_id(), temp));
+        tomography_output_map[local_qnic.address][partner_addr].insert(std::make_pair(result->getCount_id(), temp));
       }
     } else {
       // no partner info found in this output
-      EV << "No partner information found with partner: " << partner << "\n";
+      EV << "No partner information found with partner: " << partner_addr << "\n";
       tomography_outcome temp;
       if (result->getSrcAddr() == my_address) {
         temp.my_basis = result->getBasis();
@@ -220,24 +217,24 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
       // If this partner is new, then initialize tables
       std::map<int, tomography_outcome> temp_result;
       temp_result.insert(std::make_pair(result->getCount_id(), temp));
-      temporal_tomography_output[local_qnic.address].insert(std::make_pair(partner, temp_result));
+      tomography_output_map[local_qnic.address].insert(std::make_pair(partner_addr, temp_result));
       // NOTE: if you do buffer based multiplex and tomogrpahy need hack here
-      qnic_partner_map.insert(std::make_pair(local_qnic.address, partner));
+      qnic_partner_map.insert(std::make_pair(local_qnic.address, partner_addr));
 
       // initialize link cost
       link_cost temp_cost;
       temp_cost.Bellpair_per_sec = -1;
       temp_cost.tomography_measurements = -1;
       temp_cost.tomography_time = -1;
-      tomography_runningtime_holder[local_qnic.address].insert(std::make_pair(partner, temp_cost));
+      tomography_runningtime_holder[local_qnic.address].insert(std::make_pair(partner_addr, temp_cost));
     }
 
     if (result->getFinish() != -1) {
       // Pick the slower tomography time MIN(self,partner).
-      if (tomography_runningtime_holder[local_qnic.address][partner].tomography_time < result->getFinish()) {
-        tomography_runningtime_holder[local_qnic.address][partner].Bellpair_per_sec = (double)result->getMax_count() / result->getFinish().dbl();
-        tomography_runningtime_holder[local_qnic.address][partner].tomography_measurements = result->getMax_count();
-        tomography_runningtime_holder[local_qnic.address][partner].tomography_time = result->getFinish();
+      if (tomography_runningtime_holder[local_qnic.address][partner_addr].tomography_time < result->getFinish()) {
+        tomography_runningtime_holder[local_qnic.address][partner_addr].Bellpair_per_sec = (double)result->getMax_count() / result->getFinish().dbl();
+        tomography_runningtime_holder[local_qnic.address][partner_addr].tomography_measurements = result->getMax_count();
+        tomography_runningtime_holder[local_qnic.address][partner_addr].tomography_time = result->getFinish();
 
         StopEmitting *pk = new StopEmitting("StopEmitting");
         pk->setQnic_address(local_qnic.address);
@@ -267,7 +264,7 @@ void HardwareMonitor::finish() {
   std::cout << "Opened new file to write.\n";
 
   // here generate tomography data storage
-  tomography_data = new LawData[num_qnic_total];
+  tomography_data = new RawData[num_qnic_total];
 
   output_count initial;
   initial.minus_minus = 0;
@@ -303,7 +300,7 @@ void HardwareMonitor::finish() {
     int GOD_Z_pair_total = 0;
     int GOD_Y_pair_total = 0;
 
-    for (auto it = temporal_tomography_output[qnic][partner_address].begin(); it != temporal_tomography_output[qnic][partner_address].end(); it++) {
+    for (auto it = tomography_output_map[qnic][partner_address].begin(); it != tomography_output_map[qnic][partner_address].end(); it++) {
       std::string basis_combination = "";
       basis_combination += it->second.my_basis;
       basis_combination += it->second.partner_basis;
@@ -329,7 +326,7 @@ void HardwareMonitor::finish() {
         GOD_Z_pair_total++;
       } else if ((it->second.my_GOD_clean == 'Y' && it->second.partner_GOD_clean == 'F') || (it->second.my_GOD_clean == 'F' && it->second.partner_GOD_clean == 'Y')) {
         GOD_Y_pair_total++;
-      }  // end if
+      }
 
       // empirical result
       if (it->second.my_output_is_plus && it->second.partner_output_is_plus) {
@@ -349,7 +346,7 @@ void HardwareMonitor::finish() {
       }
     }  // end for
        // extended density matrix
-    Matrix4cd extended_density_matrix_reconstructed = extended_reconstruct_Density_Matrix(qnic, partner_address);
+    Matrix4cd extended_density_matrix_reconstructed = reconstruct_density_matrix(qnic, partner_address);
 
     Vector4cd Bellpair;
     Bellpair << 1 / sqrt(2), 0, 0, 1 / sqrt(2);
@@ -419,7 +416,7 @@ void HardwareMonitor::finish() {
   std::cout << "Closed file to write.\n";
 }
 
-Matrix4cd HardwareMonitor::extended_reconstruct_Density_Matrix(int qnic_id, int partner) {
+Matrix4cd HardwareMonitor::reconstruct_density_matrix(int qnic_id, int partner) {
   // II
   auto data = tomography_data[qnic_id][partner];
   double S00 = 1.0;
@@ -1154,25 +1151,6 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module)
   return neighbor_info;
 }
 
-cModule *HardwareMonitor::getQNode() {
-  // We know that Connection manager is not the QNode, so start from the parent.
-  cModule *currentModule = getParentModule();
-  cModuleType *QNodeType = cModuleType::get("modules.QNode");
-  try {
-    // Assumes the node in a network has a type QNode
-    while (currentModule->getModuleType() != QNodeType) {
-      currentModule = currentModule->getParentModule();
-    }
-    return currentModule;
-  } catch (std::exception &e) {
-    error(
-        "No module with QNode type found. Have you changed the type name in "
-        "ned file?");
-    endSimulation();
-  }
-  return currentModule;
-}
-
 cModule *HardwareMonitor::getQNodeWithAddress(int address) {
   cTopology *topo = new cTopology("topo");
   // veryfication?
@@ -1207,7 +1185,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
   if (provider.isHoMNodeType(type)) {
     cModule *controller = thisNode.getSubmodule("Controller");
     if (controller == nullptr) {
-      error("HoM Controller or ABSA Controller not found");
+      error("HoM Controller not found");
     }
 
     int address_one = controller->par("neighbor_address");
