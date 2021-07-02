@@ -56,8 +56,6 @@ void HardwareMonitor::initialize(int stage) {
   temporal_tomography_output = new TomographyOutcomeTable[num_qnic_total];
   tomography_runningtime_holder = new LinkCostMap[num_qnic_total];
 
-  // Raw count table for tomography per link/qnic
-
   /*This keeps which node is connected to which local qnic.*/
   tomography_output_filename = par("tomography_output_filename").str();
   file_dir_name = par("file_dir_name").str();
@@ -175,9 +173,8 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     auto partner_outputs_iter = temporal_tomography_output[local_qnic.address].find(partner_addr);
     if (partner_outputs_iter != temporal_tomography_output[local_qnic.address].end()) {
       // partner info found in this output
-      auto partner_tomography_outputs = temporal_tomography_output[local_qnic.address][partner_addr];
-      auto partner_output_iter = partner_tomography_outputs.find(result->getCount_id());
-      if (partner_output_iter != partner_tomography_outputs.end()) {
+      auto partner_output_iter = temporal_tomography_output[local_qnic.address][partner_addr].find(result->getCount_id());
+      if (partner_output_iter != temporal_tomography_output[local_qnic.address][partner_addr].end()) {
         EV << "Tomography data already found. \n";
         tomography_outcome temp = partner_output_iter->second;
         if (result->getSrcAddr() == my_address) {
@@ -202,7 +199,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
           temp.partner_output_is_plus = result->getOutput_is_plus();
           temp.partner_GOD_clean = result->getGOD_clean();
         }
-        partner_tomography_outputs.insert(std::make_pair(result->getCount_id(), temp));
+        temporal_tomography_output[local_qnic.address][partner_addr].insert(std::make_pair(result->getCount_id(), temp));
       }
     } else {
       // no partner info found in this output
