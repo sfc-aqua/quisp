@@ -1,6 +1,7 @@
 # RuleSets for all-optical quantum repeaters
 
-Before we dive into individual RuleSets for various types of network nodes we go over the notation used in this document.
+Before we dive into individual RuleSets for various types of network nodes we go over the notation used in this document.  
+The notation and figures are taken from the following paper: P. Hilaire, E. Barnes, S. Economu, _Resource requirements for efficient quantum communication using all-photonic graph states generated from a few matter qubits_, Quantum __5__, 397 (2021).
 
 We begin with the __repeater graph state (RGS)__:
 
