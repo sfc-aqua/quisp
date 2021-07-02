@@ -27,7 +27,7 @@ class Rule {
   int rule_index;
   std::string name;
   pCondition condition;
-  pAction action;
+  std::unique_ptr<Action> action;
   std::multimap<int, StationaryQubit *> resources;
   int mutable number_of_resources_allocated_in_total = 0;
   // std::unique_ptr<Rule> next_rule;
