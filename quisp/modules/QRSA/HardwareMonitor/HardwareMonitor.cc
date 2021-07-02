@@ -174,7 +174,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     if (partner_outputs_iter != temporal_tomography_output[local_qnic.address].end()) {
       // partner info found in this output
       auto partner_output_iter = temporal_tomography_output[local_qnic.address][partner_addr].find(result->getCount_id());
-      if (partner_output_iter != temporal_tomography_output[local_qnic.address][partner_addr].end()) { 
+      if (partner_output_iter != temporal_tomography_output[local_qnic.address][partner_addr].end()) {
         EV << "Tomography data already found. \n";
         tomography_outcome temp = partner_output_iter->second;
         if (result->getSrcAddr() == my_address) {
