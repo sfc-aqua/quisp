@@ -53,10 +53,11 @@ void HardwareMonitor::initialize(int stage) {
 
   /* This is used to keep your own tomography data, and also to match and store the received partner's tomography data */
   // Assumes link tomography only between neighbors.
-  temporal_tomography_output = new TomographyOutcomeTable[num_qnic_total];
+  temporal_tomography_output = new ExtendedTomographyOutcome[num_qnic_total];
   tomography_runningtime_holder = new LinkCostMap[num_qnic_total];
 
-  // Raw count table for tomography per link/qnic
+  /* Once all_temporal_tomography_output_holder is filled in, those data are summarized into basis based measurement outcome table.
+   * This accumulates the number of ++, +-, -+ and -- for each basis combination.*/
 
   /*This keeps which node is connected to which local qnic.*/
   tomography_output_filename = par("tomography_output_filename").str();
@@ -161,9 +162,9 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
   if (dynamic_cast<LinkTomographyResult *>(msg) != nullptr) {
     /*Link tomography measurement result/basis from neighbor received.*/
     LinkTomographyResult *result = check_and_cast<LinkTomographyResult *>(msg);
-    int partner_addr = result->getPartner_address();
+    int partner = result->getPartner_address();
     // Get QNIC info from neighbor address.
-    int qnic_addr_to_partner = routing_daemon->return_QNIC_address_to_destAddr(partner_addr);
+    int qnic_addr_to_partner = routing_daemon->return_QNIC_address_to_destAddr(partner);
     auto local_qnic_info = findConnectionInfoByQnicAddr(qnic_addr_to_partner);
     if (local_qnic_info == nullptr) {
       error("local qnic info should not be null");
@@ -172,14 +173,13 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     QNIC local_qnic = inter_info.qnic;
 
     // 1. find partner
-    auto partner_outputs_iter = temporal_tomography_output[local_qnic.address].find(partner_addr);
-    if (partner_outputs_iter != temporal_tomography_output[local_qnic.address].end()) {
+    auto ite = temporal_tomography_output[local_qnic.address].find(partner);
+    if (ite != temporal_tomography_output[local_qnic.address].end()) {
       // partner info found in this output
-      auto partner_tomography_outputs = temporal_tomography_output[local_qnic.address][partner_addr];
-      auto partner_output_iter = partner_tomography_outputs.find(result->getCount_id());
-      if (partner_output_iter != partner_tomography_outputs.end()) {
+      auto iter = temporal_tomography_output[local_qnic.address][partner].find(result->getCount_id());
+      if (iter != temporal_tomography_output[local_qnic.address][partner].end()) {
         EV << "Tomography data already found. \n";
-        tomography_outcome temp = partner_output_iter->second;
+        tomography_outcome temp = iter->second;
         if (result->getSrcAddr() == my_address) {
           temp.my_basis = result->getBasis();
           temp.my_output_is_plus = result->getOutput_is_plus();
@@ -189,9 +189,9 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
           temp.partner_output_is_plus = result->getOutput_is_plus();
           temp.partner_GOD_clean = result->getGOD_clean();
         }
-        partner_output_iter->second = temp;
+        iter->second = temp;
       } else {
-        EV << "Fresh tomography data with partner :" << partner_addr << "\n";
+        EV << "Fresh tomography data with partner :" << partner << "\n";
         tomography_outcome temp;
         if (result->getSrcAddr() == my_address) {
           temp.my_basis = result->getBasis();
@@ -202,11 +202,11 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
           temp.partner_output_is_plus = result->getOutput_is_plus();
           temp.partner_GOD_clean = result->getGOD_clean();
         }
-        partner_tomography_outputs.insert(std::make_pair(result->getCount_id(), temp));
+        temporal_tomography_output[local_qnic.address][partner].insert(std::make_pair(result->getCount_id(), temp));
       }
     } else {
       // no partner info found in this output
-      EV << "No partner information found with partner: " << partner_addr << "\n";
+      EV << "No partner information found with partner: " << partner << "\n";
       tomography_outcome temp;
       if (result->getSrcAddr() == my_address) {
         temp.my_basis = result->getBasis();
@@ -220,27 +220,24 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
       // If this partner is new, then initialize tables
       std::map<int, tomography_outcome> temp_result;
       temp_result.insert(std::make_pair(result->getCount_id(), temp));
-      /* temporal_tomography_output is filled in, those data are summarized into basis based measurement outcome table.
-       * This accumulates the number of ++, +-, -+ and -- for each basis combination.*/
-      temporal_tomography_output[local_qnic.address].insert(std::make_pair(partner_addr, temp_result));
+      temporal_tomography_output[local_qnic.address].insert(std::make_pair(partner, temp_result));
       // NOTE: if you do buffer based multiplex and tomogrpahy need hack here
-      qnic_partner_map.insert(std::make_pair(local_qnic.address, partner_addr));
+      qnic_partner_map.insert(std::make_pair(local_qnic.address, partner));
 
       // initialize link cost
       link_cost temp_cost;
       temp_cost.Bellpair_per_sec = -1;
       temp_cost.tomography_measurements = -1;
       temp_cost.tomography_time = -1;
-      tomography_runningtime_holder[local_qnic.address].insert(std::make_pair(partner_addr, temp_cost));
+      tomography_runningtime_holder[local_qnic.address].insert(std::make_pair(partner, temp_cost));
     }
 
     if (result->getFinish() != -1) {
-      EV << "finish? " << result->getFinish() << "\n";
       // Pick the slower tomography time MIN(self,partner).
-      if (tomography_runningtime_holder[local_qnic.address][partner_addr].tomography_time < result->getFinish()) {
-        tomography_runningtime_holder[local_qnic.address][partner_addr].Bellpair_per_sec = (double)result->getMax_count() / result->getFinish().dbl();
-        tomography_runningtime_holder[local_qnic.address][partner_addr].tomography_measurements = result->getMax_count();
-        tomography_runningtime_holder[local_qnic.address][partner_addr].tomography_time = result->getFinish();
+      if (tomography_runningtime_holder[local_qnic.address][partner].tomography_time < result->getFinish()) {
+        tomography_runningtime_holder[local_qnic.address][partner].Bellpair_per_sec = (double)result->getMax_count() / result->getFinish().dbl();
+        tomography_runningtime_holder[local_qnic.address][partner].tomography_measurements = result->getMax_count();
+        tomography_runningtime_holder[local_qnic.address][partner].tomography_time = result->getFinish();
 
         StopEmitting *pk = new StopEmitting("StopEmitting");
         pk->setQnic_address(local_qnic.address);
@@ -270,7 +267,7 @@ void HardwareMonitor::finish() {
   std::cout << "Opened new file to write.\n";
 
   // here generate tomography data storage
-  tomography_data = new raw_data[num_qnic_total];
+  tomography_data = new LawData[num_qnic_total];
 
   output_count initial;
   initial.minus_minus = 0;
@@ -292,9 +289,9 @@ void HardwareMonitor::finish() {
     tomography_data[qnic_id][part].insert(std::make_pair("YZ", initial));
   }
 
-  for (auto it = qnic_partner_map.begin(); it != qnic_partner_map.end(); it++) {
-    int qnic = it->first;
-    int partner_address = it->second;
+  for (auto partner_iter = qnic_partner_map.begin(); partner_iter != qnic_partner_map.end(); partner_iter++) {
+    int qnic = partner_iter->first;
+    int partner_address = partner_iter->second;
     // qnic index
     //  - partner address
     //  - - measurement counts
@@ -332,7 +329,7 @@ void HardwareMonitor::finish() {
         GOD_Z_pair_total++;
       } else if ((it->second.my_GOD_clean == 'Y' && it->second.partner_GOD_clean == 'F') || (it->second.my_GOD_clean == 'F' && it->second.partner_GOD_clean == 'Y')) {
         GOD_Y_pair_total++;
-      }
+      }  // end if
 
       // empirical result
       if (it->second.my_output_is_plus && it->second.partner_output_is_plus) {
@@ -351,7 +348,8 @@ void HardwareMonitor::finish() {
         error("This should not happen though..... ?");
       }
     }  // end for
-    Matrix4cd extended_density_matrix_reconstructed = reconstruct_density_matrix(qnic, partner_address);
+       // extended density matrix
+    Matrix4cd extended_density_matrix_reconstructed = extended_reconstruct_Density_Matrix(qnic, partner_address);
 
     Vector4cd Bellpair;
     Bellpair << 1 / sqrt(2), 0, 0, 1 / sqrt(2);
@@ -421,7 +419,7 @@ void HardwareMonitor::finish() {
   std::cout << "Closed file to write.\n";
 }
 
-Matrix4cd HardwareMonitor::reconstruct_density_matrix(int qnic_id, int partner) {
+Matrix4cd HardwareMonitor::extended_reconstruct_Density_Matrix(int qnic_id, int partner) {
   // II
   auto data = tomography_data[qnic_id][partner];
   double S00 = 1.0;
@@ -575,24 +573,20 @@ on the link.  This function creates one rule per purification.  As the
 work proceeds, a resource gets promoted from rule to rule (on
 purification success), so if you ask for three rounds of purification,
 it will emit three purification rules.
-
 For example, with 2002, the first instance of "first stage X
 purification" (Rule0) includes allocating the resources from the base
 pair pool, executing the purification circuit (including measurement),
 exchanging the result messages, comparing and either promoting or
 discarding, so a one-way classical messaging latency is incurred here.
-
 Then, the "second stage Z purification" (Rule1, the first time through
 the loop) begins by drawing two Bell pairs that have each been
 promoted by the first X purification (rule 0).  An additional one-way
 latency is incurred here.
-
 These actions are alternated initial_purification times, for a total
 of 2n rules (and 2n times the one-way latency).  Note that the
 semantics of initial_purification vary depending on the
 purification_type.  In the descriptions below, $n$ is
 initial_purification.
-
 Pumping doesn't really work because of the way resources are
 controlled as they are promoted from rule to rule.  At the moment,
 base Bell pairs (those created directly by the link) exist in a pool,
@@ -601,7 +595,6 @@ Action::getResource_fromTop().  This selects the oldest Bell pair.  At
 the moment, only the first rule (Rule0) draws from this pool; however,
 pumping would require that later rules also be able to draw from the
 pool.
-
 A purification scheme must be characterized by both the circuit being
 executed, and the scheduling discipline for selecting the inputs to
 the circuit.  The scheduling discipline in theory can be pumping,
@@ -1161,6 +1154,25 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module)
   return neighbor_info;
 }
 
+cModule *HardwareMonitor::getQNode() {
+  // We know that Connection manager is not the QNode, so start from the parent.
+  cModule *currentModule = getParentModule();
+  cModuleType *QNodeType = cModuleType::get("modules.QNode");
+  try {
+    // Assumes the node in a network has a type QNode
+    while (currentModule->getModuleType() != QNodeType) {
+      currentModule = currentModule->getParentModule();
+    }
+    return currentModule;
+  } catch (std::exception &e) {
+    error(
+        "No module with QNode type found. Have you changed the type name in "
+        "ned file?");
+    endSimulation();
+  }
+  return currentModule;
+}
+
 cModule *HardwareMonitor::getQNodeWithAddress(int address) {
   cTopology *topo = new cTopology("topo");
   // veryfication?
@@ -1195,7 +1207,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
   if (provider.isHoMNodeType(type)) {
     cModule *controller = thisNode.getSubmodule("Controller");
     if (controller == nullptr) {
-      error("HoM Controller not found");
+      error("HoM Controller or ABSA Controller not found");
     }
 
     int address_one = controller->par("neighbor_address");
@@ -1203,9 +1215,9 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
     int myaddress = par("address");
 
     EV_DEBUG << "myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << controller->getFullName() << "\n";
-
+    EV << address_one << ":" << address_two << "\n";
     if (address_one == -1 && address_two == -1) {
-      error("HoM Controller is not initialized properly");
+      error("HoM Controller or ABSA Controller is not initialized properly");
     }
 
     if (address_one == myaddress) {
@@ -1222,7 +1234,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
   }
 
   error(
-      "This simulator only recognizes the following network level node "
+      "node "
       "types: QNode, EPPS and HoM. Not %s",
       thisNode.getClassName());
 }

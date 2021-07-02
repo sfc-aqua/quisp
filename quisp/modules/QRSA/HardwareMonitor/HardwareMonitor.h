@@ -53,19 +53,21 @@ class HardwareMonitor : public IHardwareMonitor {
   int num_measure;
   int num_end_nodes;
   std::vector<int> tomography_partners;
+  std::vector<int> used_qnics;
   // in the case of retry connection setup, the partner could be changed.
-  std::map<int, int> qnic_partner_map;
+  std::multimap<int, int> qnic_partner_map;
 
   IRoutingDaemon *routing_daemon;
 
   cModule *getQnic(int qnic_index, QNIC_type qnic_type);
   NeighborTable neighbor_table;
-  raw_data *tomography_data;
+  LawData *tomography_data;
+
   single_qubit_error Pauli;
 
   // virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, QNIC_type qnic_type);//returns the set of free resources
   // virtual int checkNumFreeBuff(int qnic_index, QNIC_type qnic_type);//returns the number of free qubits
-  TomographyOutcomeTable *temporal_tomography_output;  // qnic address -> partner . count_id . outcome
+  ExtendedTomographyOutcome *temporal_tomography_output;  // qnic address -> partner . count_id . outcome
   LinkCostMap *tomography_runningtime_holder;
   std::string tomography_output_filename;
   std::string file_dir_name;
@@ -78,15 +80,15 @@ class HardwareMonitor : public IHardwareMonitor {
   void prepareNeighborTable();
 
   virtual std::unique_ptr<NeighborInfo> createNeighborInfo(const cModule &thisNode);
-  virtual std::unique_ptr<NeighborInfo> getNeighbor(cModule *qnic_pointer);
+  virtual cModule *getQNode();
   virtual cModule *getQNodeWithAddress(int address);
+  virtual std::unique_ptr<NeighborInfo> getNeighbor(cModule *qnic_pointer);
   virtual InterfaceInfo getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);
   virtual QNIC search_QNIC_from_Neighbor_QNode_address(int neighbor_address);
-  virtual Matrix4cd reconstruct_density_matrix(int qnic_id, int partner);
+  virtual Matrix4cd extended_reconstruct_Density_Matrix(int qnic_id, int partner);
   virtual unsigned long createUniqueId();
   virtual void writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec);
-
   // virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
   // simtime_t tomography_time;
 };
