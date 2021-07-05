@@ -70,9 +70,6 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   left_qubit->Hadamard_gate();
   right_qubit->CNOT_gate(left_qubit);
 
-  int lindex = left_partner_qubit->stationaryQubit_address;
-  int rindex = right_partner_qubit->stationaryQubit_address;
-
   bool left_measure = left_qubit->measure_Z();
   bool right_measure = right_qubit->measure_Z();
 
