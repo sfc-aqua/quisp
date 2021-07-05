@@ -8,6 +8,10 @@ namespace quisp_test {
 namespace utils {
 
 void setParInt(cModule *module, const char *name, const int val) {
+  if (module->findPar(name) != -1) {
+    module->par(name) = val;
+    return;
+  }
   cParImpl *p = new cIntParImpl();
   p->setName(name);
   p->setIntValue(val);
@@ -15,6 +19,10 @@ void setParInt(cModule *module, const char *name, const int val) {
 }
 
 void setParDouble(cModule *module, const char *name, const double val) {
+  if (module->findPar(name) != -1) {
+    module->par(name) = val;
+    return;
+  }
   cParImpl *p = new cDoubleParImpl();
   p->setName(name);
   p->setDoubleValue(val);
@@ -22,6 +30,10 @@ void setParDouble(cModule *module, const char *name, const double val) {
 }
 
 void setParStr(cModule *module, const char *name, const char *val) {
+  if (module->findPar(name) != -1) {
+    module->par(name) = val;
+    return;
+  }
   cParImpl *p = new cStringParImpl();
   p->setName(name);
   p->setStringValue(val);
@@ -29,6 +41,10 @@ void setParStr(cModule *module, const char *name, const char *val) {
 }
 
 void setParBool(cModule *module, const char *name, const bool val) {
+  if (module->findPar(name) != -1) {
+    module->par(name) = val;
+    return;
+  }
   cParImpl *p = new cBoolParImpl();
   p->setName(name);
   p->setBoolValue(val);
