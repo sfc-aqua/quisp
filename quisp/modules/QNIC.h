@@ -21,9 +21,9 @@ typedef enum : int {
 } QNIC_type;
 
 static const char* QNIC_names[QNIC_N] = {
-    [QNIC_E] = "qnic",
-    [QNIC_R] = "qnic_r",
-    [QNIC_RP] = "qnic_rp",
+    "qnic",
+    "qnic_r",
+    "qnic_rp",
 };
 
 typedef struct {
