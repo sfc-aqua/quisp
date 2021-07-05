@@ -42,6 +42,7 @@ class Clause {
     qnic_type = qt;
     qnic_id = qi;
   };
+  virtual ~Clause() {}
 
   void setQnic(QNIC_type qt, int qi) {
     // if (qt >= QNIC_N) omnetpp::error("Not that many QNIC types.");
