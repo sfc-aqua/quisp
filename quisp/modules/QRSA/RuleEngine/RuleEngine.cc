@@ -66,7 +66,6 @@ void RuleEngine::initialize() {
 
 void RuleEngine::handleMessage(cMessage *msg) {
   traverseThroughAllProcesses2();  // New resource added to QNIC with qnic_type qnic_index.
-  header *pk = check_and_cast<header *>(msg);
 
   if (dynamic_cast<EmitPhotonRequest *>(msg) != nullptr) {  // From self.
     EmitPhotonRequest *pk = check_and_cast<EmitPhotonRequest *>(msg);
@@ -84,7 +83,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
       // qubit with address Addr was shot in nth time. This list is ordered from old to new.
       tracker[qnic_address].insert(std::make_pair(nth_shot, Addr));
-      int new_nth_shot = tracker[qnic_address].size();
       // std::cout<<getQNode()->getFullName() <<": Emitted the "<<nth_shot<<" from qnic["<<qnic_address<<"]....tracker["<<qnic_address<<"] now size = "<<new_nth_shot<<"\n";
     }
     // switch: Only bubble messages
@@ -122,7 +120,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
     // Second, schedule the next burst by referring to the received timing information.
     int qnic_address, qnic_type;
-    int qnic_index, neighborQNodeAddress;
+    int qnic_index;
     if (pk->getInternal_qnic_address() == -1) {  // destination hom is outside this node.
       InterfaceInfo inf = getInterface_toNeighbor(pk->getSrcAddr());
       qnic_index = inf.qnic.index;
@@ -176,7 +174,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
     }
   } else if (dynamic_cast<EPPStimingNotifier *>(msg) != nullptr) {
     bubble("EPPS");
-    EPPStimingNotifier *pk = check_and_cast<EPPStimingNotifier *>(msg);
     error("EPPS is not implemented yet");
   }
 
@@ -252,9 +249,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
     storeCheck_TriplePurification_Agreement(pr);
   } else if (dynamic_cast<SwappingResult *>(msg) != nullptr) {
     SwappingResult *pkt = check_and_cast<SwappingResult *>(msg);
-    // here next add resources
-    int src = pkt->getSrcAddr();
-    int dest = pkt->getDestAddr();
     process_id swapping_id;
     swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
     swapping_id.rule_id = pkt->getRule_id();
@@ -286,8 +280,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
         oco_result ^= it->second;
       }
 
-      int src = pkt->getSrcAddr();
-      int dest = pkt->getDestAddr();
       process_id swapping_id;
       swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
       swapping_id.rule_id = pkt->getRule_id();
@@ -327,7 +319,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // doing end to end tomography
     if (pkt->getApplication_type() == 0) {
       // Received a tomography rule set.
-      InternalRuleSetForwarding_Application *pk = check_and_cast<InternalRuleSetForwarding_Application *>(msg);
       process p;
       p.ownner_addr = pkt->getRuleSet()->owner;
       p.Rs = pkt->getRuleSet();
@@ -958,9 +949,6 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // These are new partner's info
 
   int new_partner = swapr.new_partner;
-  int new_partner_qnic_index = swapr.new_partner_qnic_index;
-  int new_partner_qnic_address = swapr.new_partner_qnic_address;  // this is not nessesary?
-  QNIC_type new_partner_qnic_type = swapr.new_partner_qnic_type;
   int operation_type = swapr.operation_type;
   int qnic_address = routingdaemon->return_QNIC_address_to_destAddr(new_partner);
   auto info = hardware_monitor->findConnectionInfoByQnicAddr(qnic_address);
@@ -1015,9 +1003,6 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
 
 void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_result swapr) {
   int new_partner = swapr.new_partner;
-  int new_partner_qnic_index = swapr.new_partner_qnic_index;
-  int new_partner_qnic_address = swapr.new_partner_qnic_address;  // this is not nessesary?
-  QNIC_type new_partner_qnic_type = swapr.new_partner_qnic_type;
   int operation_type = swapr.operation_type;
 
   int qnic_address = routingdaemon->return_QNIC_address_to_destAddr(new_partner);

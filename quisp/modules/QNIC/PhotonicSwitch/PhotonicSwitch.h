@@ -44,4 +44,4 @@ class PhotonicSwitch : public cSimpleModule {
 
 Define_Module(PhotonicSwitch);
 
-#endif MODULES_PHOTONICSWITCH_H_
+#endif  // MODULES_PHOTONICSWITCH_H_

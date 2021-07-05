@@ -65,6 +65,7 @@ cPacket *SwappingAction::run(cModule *re) {
   bool left_measure = left_qubit->measure_Z();
   bool right_measure = right_qubit->measure_Z();
 
+  // RuleEngine::updateResources_EntanglementSwapping handles the operation type.
   int operation_type_left, operation_type_right;
 
   if (left_measure && right_measure) {
@@ -79,7 +80,8 @@ cPacket *SwappingAction::run(cModule *re) {
     EV << "operation type 2, operation left Z, operation right I\n";
     operation_type_left = 2;
     operation_type_right = 0;
-  } else if (!left_measure && !right_measure) {
+  } else {
+    // !left_measure && !right_measure
     EV << "operation type 3, operation left Z, operation right X\n";
     operation_type_left = 2;
     operation_type_right = 1;

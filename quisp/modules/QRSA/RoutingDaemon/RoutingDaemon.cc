@@ -68,8 +68,6 @@ void RoutingDaemon::initialize(int stage) {
 
   cTopology::Node *thisNode = topo->getNodeFor(getParentModule()->getParentModule());  // The parent node with this specific router
 
-  int number_of_links_total = 0;
-
   // Initialize channel weights for all existing links.
   for (int x = 0; x < topo->getNumNodes(); x++) {  // Traverse through all nodes
     // For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
@@ -106,7 +104,6 @@ void RoutingDaemon::initialize(int stage) {
     }
     // Returns the next link/gate in the ith shortest paths towards the target node.
     cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();
-    int gateIndex = parentModuleGate->getIndex();
     QNIC thisqnic;
     int destAddr = topo->getNode(i)->getModule()->par("address");
     thisqnic.address = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
@@ -148,7 +145,6 @@ int RoutingDaemon::returnNumEndNodes() {
   cMsgPar *yes = new cMsgPar();
   yes->setStringValue("yes");
   topo->extractByParameter("includeInTopo", yes->str().c_str());
-  int num_of_end_nodes = topo->getNumNodes();
   int index = 0;
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);
