@@ -22,7 +22,8 @@ namespace modules {
 
 /** \class StationaryQubit StationaryQubit.h
  *
- *  \brief StationaryQubit
+ *  \brief StationaryQubit.
+ *  \ref https://arxiv.org/abs/1908.10758
  */
 
 typedef std::complex<double> Complex;
@@ -204,6 +205,7 @@ class StationaryQubit : public cSimpleModule {
 
   single_qubit_error Pauli;
   measurement_operators meas_op;
+  // https://arxiv.org/abs/1908.10758 Eq 5.2
   MatrixXd Memory_Transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
   MatrixXd Memory_Transition_matrix_ns; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in ns.*/
   MatrixXd Memory_Transition_matrix_ms; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in ns.*/
