@@ -12,6 +12,11 @@ class StatQubitTarget : public StationaryQubit {
   using StationaryQubit::initialize;
   using StationaryQubit::par;
   StatQubitTarget() : StationaryQubit() { setComponentType(new TestModuleType("test qubit")); }
+  void reset() {
+    setFree(true);
+    updated_time = SimTime(0);
+    no_density_matrix_nullptr_entangled_partner_ok = true;
+  }
   void fillParams() {
     // see networks/omnetpp.ini
     setParDouble(this, "emission_success_probability", 0.5);
@@ -120,5 +125,95 @@ TEST(StationaryQubitTest, initialize_memory_transition_matrix) {
   Eigen::RowVectorXd row6(7);
   row6 << 0, 0, 0, 0, .014, .015, 1 - (.014 + .015);
   ASSERT_EQ(mat.row(6), row6);
+}
+
+TEST(StationaryQubitTest, apply_memory_error) {
+  auto *sim = prepareSimulation();
+  auto *rng = useTestRNG();
+  auto *qubit = new StatQubitTarget{};
+  qubit->fillParams();
+
+  // ceiled values should be:
+  // No error= 0.5, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
+  setParDouble(qubit, "memory_X_error_rate", .1);
+  setParDouble(qubit, "memory_Y_error_rate", .1);
+  setParDouble(qubit, "memory_Z_error_rate", .1);
+  setParDouble(qubit, "memory_energy_excitation_rate", .1);
+  setParDouble(qubit, "memory_energy_relaxation_rate", .1);
+  setParDouble(qubit, "memory_completely_mixed_rate", 0);
+  qubit->callInitialize();
+  sim->registerComponent(qubit);
+  sim->setSimTime(SimTime(1, SIMTIME_US));
+
+  // X error
+  qubit->reset();
+  rng->doubleValue = 0.55;
+  qubit->apply_memory_error(qubit);
+  EXPECT_TRUE(qubit->par("GOD_Xerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_REerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+
+  // Z error
+  rng->doubleValue = 0.65;
+  qubit->reset();
+  qubit->apply_memory_error(qubit);
+  EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
+  EXPECT_TRUE(qubit->par("GOD_Zerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_REerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+
+  // Y error
+  rng->doubleValue = 0.75;
+  qubit->reset();
+  qubit->apply_memory_error(qubit);
+  EXPECT_TRUE(qubit->par("GOD_Xerror").boolValue());
+  EXPECT_TRUE(qubit->par("GOD_Zerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_REerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+
+  // Excitation error
+  rng->doubleValue = 0.85;
+  qubit->reset();
+  qubit->apply_memory_error(qubit);
+  EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
+  EXPECT_TRUE(qubit->par("GOD_EXerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_REerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+
+  // Relaxation error
+  rng->doubleValue = 0.95;
+  qubit->reset();
+  qubit->apply_memory_error(qubit);
+  EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
+  EXPECT_TRUE(qubit->par("GOD_REerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+}
+
+TEST(StationaryQubitTest, setFree) {
+  auto *sim = prepareSimulation();
+  auto *qubit = new StatQubitTarget{};
+  qubit->fillParams();
+  sim->registerComponent(qubit);
+  qubit->callInitialize();
+  qubit->par("GOD_Xerror") = true;
+  qubit->par("GOD_Zerror") = true;
+  qubit->par("GOD_EXerror") = true;
+  qubit->par("GOD_REerror") = true;
+  qubit->par("GOD_CMerror") = true;
+  qubit->setFree(true);
+
+  // check the qubit reset properly
+  EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_REerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
 }
 }  // namespace
