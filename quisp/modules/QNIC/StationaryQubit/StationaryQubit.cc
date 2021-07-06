@@ -122,7 +122,6 @@ memory_err.completely_mixed_rate = memory_err.error_rate * (memory_completely_mi
   Pauli.I << 1, 0, 0, 1;
 
   // Set measurement operators. This is used in the process of simulating tomography.
-
   meas_op.X_basis.plus << 0.5, 0.5, 0.5, 0.5;
   meas_op.X_basis.minus << 0.5, -0.5, -0.5, 0.5;
   meas_op.X_basis.plus_ket << 1 / sqrt(2), 1 / sqrt(2);
@@ -667,23 +666,18 @@ void StationaryQubit::apply_memory_error(StationaryQubit *qubit) {
   if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok)
     error("This must not happen in apply memory error");
 
-  // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-  // std::cout<<"Applying memory error to "<<qubit<<" in qnic["<<qubit->qnic_index<<"] in node["<<qubit->node_address<<"]\n";
-  // std::cout<<"memory_err = "<<memory_err.pauli_error_rate<<"\n";
-  // Check when the error got updated last time. Errors will be performed depending on the difference between that time and the current time.
   // If no memory error occurs, or if the state is completely mixed, skip this memory error simulation.
   if (qubit->memory_err.error_rate == 0) {
     // error("memory error is set to 0. If on purpose, that is fine. Comment this out.");
     return;
   }
 
+  // Check when the error got updated last time.
+  // Errors will be performed depending on the difference between that time and the current time.
   double time_evolution = simTime().dbl() - qubit->updated_time.dbl();
   double time_evolution_microsec = time_evolution * 1000000 /** 100*/;
-  // std::cout<<"time = "<<time_evolution_microsec<<"\n";
   if (time_evolution_microsec > 0) {
-    // EV<<"\n Memory error applied for time = "<<time_evolution_microsec<<" μs, on qubit "<<qubit<<"in node["<<qubit->par("node_address").str()<<"] \n";
     // Perform Monte-Carlo error simulation on this qubit.
-    // std::cout<<"time_evolution_microsec "<<time_evolution_microsec<<"\n";
     bool Xerr = qubit->par("GOD_Xerror");
     bool Zerr = qubit->par("GOD_Zerror");
     bool EXerr = qubit->par("GOD_EXerror");
@@ -695,178 +689,123 @@ void StationaryQubit::apply_memory_error(StationaryQubit *qubit) {
     if (qubit->excited_or_relaxed != EXerr && qubit->excited_or_relaxed != REerr) {
       error("[apply_memory_error] Relaxed/Excited flag not matching");
     }
-    // std::cout<<"\n\n\n\n First it was "<<Xerr<<","<<Zerr<<"\n";
 
     MatrixXd Initial_condition(1, 7);  // I, X, Z, Y, Ex, Re, Cm
     if (EXerr) {
-      // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-      // std::cout<<"[Init] = EX\n";
-      Initial_condition << 0, 0, 0, 0, 1, 0, 0;  // Has an excitation error
-
-      // error("err EX");
+      Initial_condition << 0, 0, 0, 0, 1, 0, 0;  // excitation error
     } else if (REerr) {
-      // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-      // std::cout<<"[Init] = RE\n";
-      Initial_condition << 0, 0, 0, 0, 0, 1, 0;  // Has an relaxation error
-
-      // error("err RE");
+      Initial_condition << 0, 0, 0, 0, 0, 1, 0;  // relaxation error
     } else if (CMerr) {
-      // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-      // std::cout<<"[Init] = CM\n";
-      Initial_condition << 0, 0, 0, 0, 0, 0, 1;  // Has an relaxation e
+      Initial_condition << 0, 0, 0, 0, 0, 0, 1;  // completely mixed error
     } else if (Zerr && Xerr) {
-      Initial_condition << 0, 0, 0, 1, 0, 0, 0;  // Has a Y error
-      // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-      // std::cout<<"[Init] = Y\n";
-      // std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<",
-      // time_evolution_microsec"<<time_evolution_microsec<<"\n"; error("err Y");
+      Initial_condition << 0, 0, 0, 1, 0, 0, 0;  // Y error
     } else if (Zerr && !Xerr) {
-      // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-      // std::cout<<"[Init] = Z\n";
-      Initial_condition << 0, 0, 1, 0, 0, 0, 0;  // Has a Z error
-      // std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<",
-      // time_evolution_microsec"<<time_evolution_microsec<<"\n"; error("err Z");
+      Initial_condition << 0, 0, 1, 0, 0, 0, 0;  // Z error
     } else if (!Zerr && Xerr) {
-      // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-      // std::cout<<"[Init] = X\n";
-      Initial_condition << 0, 1, 0, 0, 0, 0, 0;  // Has an X error
-      // std::cout<<"node["<<this->node_address<<"], qubit["<<this->stationaryQubit_address<<"] time_evolution"<<time_evolution<<",
-      // time_evolution_microsec"<<time_evolution_microsec<<"\n"; error("err X");
+      Initial_condition << 0, 1, 0, 0, 0, 0, 0;  // X error
     } else {
-      // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-      // std::cout<<"[Init] = I\n";
       Initial_condition << 1, 0, 0, 0, 0, 0, 0;  // No error
     }
 
     bool skip_exponentiation = false;
     for (int i = 0; i < Memory_Transition_matrix.cols(); i++) {
-      // std::cout<<"Memory_Transition_matrix(0,i) = "<<Memory_Transition_matrix(0,i)<<"\n";
       if (Memory_Transition_matrix(0, i) == 1) {
-        skip_exponentiation = true;  // Do not to the exponentiation! Eigen will mess up the exponentiation anyway...
+        // Do not to the exponentiation! Eigen will mess up the exponentiation anyway...
+        skip_exponentiation = true;
         break;
       }
     }
 
     MatrixXd Dynamic_transition_matrix(7, 7);
-
-    // clang-format off
-    Dynamic_transition_matrix << -1,-1,-1,-1,-1,-1,-1,
-                                 -1,-1,-1,-1,-1,-1,-1,
-                                 -1,-1,-1,-1,-1,-1,-1,
-                                 -1,-1,-1,-1,-1,-1,-1,
-                                 -1,-1,-1,-1,-1,-1,-1,
-                                 -1,-1,-1,-1,-1,-1,-1,
-                                 -1,-1,-1,-1,-1,-1,-1;
-    // clang-format on
-
     if (!skip_exponentiation) {
-      // std::cout<<"Init Condition = "<<Initial_condition<<"\n";
-      // MatrixPower<MatrixXd> Apow(qubit->Memory_Transition_matrix);
+      // calculate time evoluted error matrix: Q^(time_evolution_microsec)
       MatrixPower<MatrixXd> Apow(Memory_Transition_matrix);
       Dynamic_transition_matrix = Apow(time_evolution_microsec);
     } else {
       Dynamic_transition_matrix = Memory_Transition_matrix;
     }
-    // Dynamic_transition_matrix = Memory_Transition_matrix.pow(time_evolution_microsec);
 
-    // std::cout<<"Memory_Transition_matrix"<<qubit->Memory_Transition_matrix<<"\n";
-    // std::cout<<"Memory_Transition_matrix^"<<time_evolution_microsec<<" = "<<Dynamic_transition_matrix ;
-
+    // validate DynamicTransitionMatrix
     for (int r = 0; r < Dynamic_transition_matrix.rows(); r++) {
       double col_sum = 0;
       for (int i = 0; i < Dynamic_transition_matrix.cols(); i++) {
-        // std::cout<<"Dynamic_transition_matrix(0,i) = "<<Dynamic_transition_matrix(0,i)<<"\n";
         col_sum += Dynamic_transition_matrix(r, i);
       }
       if (col_sum > 1.01 || col_sum < 0.99) {
-        // std::cout<<"col_sum = "<<col_sum<<"\n";
+        std::cout << "col_sum = " << col_sum << std::endl;
         error("Row of the transition matrix does not sum up to 1.");
       }
     }
 
     if (std::isnan(Dynamic_transition_matrix(0, 0))) {
-      // std::cout<<"!!!!!Check out this\n";
-      // std::cout<<qubit->Memory_Transition_matrix.pow(time_evolution_microsec);
+      std::cout << "DynamicTransitionMatrix: " << Dynamic_transition_matrix << std::endl;
       error("Transition maatrix is NaN. This is Eigen's fault.");
     }
 
     MatrixXd Output_condition(1, 6);  // I, X, Z, Y
-
+    // take error rate vector from DynamicTransitionMatrix Eq 5.3
     Output_condition = Initial_condition * Dynamic_transition_matrix;  // I,X,Y,Z
-    // std::cout<<"Output Condition = "<<Output_condition<<"\n";
-    // std::cout<<"\n Input (I,X,Z,Y) was "<<Initial_condition<<"\n Output (I,X,Z,Y) is now"<<Output_condition<<"\n";
+
+    /* this prepares the sectors for Monte-Carlo. later, we'll pick a random value and check with this sectors.
+     *
+     * 0.0    No_error_ceil       Z_error_ceil           EX_error_ceil                      1.0
+     *  |          |                   |                      |                              |
+     *  | No Error | X Error | Z Error | Y Error | Excitation | Relaxation | Cmpletely Mixed |
+     *                       |                   |                         |
+     *                  X_error_ceil        Y_error_ceil             RE_error_ceil
+     */
     double No_error_ceil = Output_condition(0, 0);
     double X_error_ceil = No_error_ceil + Output_condition(0, 1);
     double Z_error_ceil = X_error_ceil + Output_condition(0, 2);
     double Y_error_ceil = Z_error_ceil + Output_condition(0, 3);
     double EX_error_ceil = Y_error_ceil + Output_condition(0, 4);
     double RE_error_ceil = EX_error_ceil + Output_condition(0, 5);
-    double rand = dblrand();  // Gives a random double between 0.0 ~ 1.0
 
-    // std::cout<<"dbl = "<<rand<<" No ceil = "<<No_error_ceil<<", "<<X_error_ceil<<", "<<Z_error_ceil<<","<<Y_error_ceil<<", "<<EX_error_ceil<<", "<<RE_error_ceil<<", 1"<<"\n";
+    // Gives a random double between 0.0 ~ 1.0
+    double rand = dblrand();
+
     if (rand < No_error_ceil) {
-      // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-      // std::cout<<"NO err\n";
-      // std::cout<<qubit<<(bool)(qubit->entangled_partner==nullptr)<<" entangled if("<<false<<")\n";
-      // std::cout<<qubit->entangled_partner<<(bool)(qubit->entangled_partner->entangled_partner==nullptr)<<" entangled if("<<false<<")\n";
-
       // Qubit will end up with no error
       qubit->par("GOD_Xerror") = false;
       qubit->par("GOD_Zerror") = false;
-
     } else if (No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil != X_error_ceil)) {
       // X error
-
-      // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-      // std::cout<<"X err\n";
       qubit->par("GOD_Xerror") = true;
       qubit->par("GOD_Zerror") = false;
       DEBUG_memory_X_count++;
-
     } else if (X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil != Z_error_ceil)) {
       // Z error
-
-      // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-      // std::cout<<"Z err\n";
       qubit->par("GOD_Xerror") = false;
       qubit->par("GOD_Zerror") = true;
       DEBUG_memory_Z_count++;
-
     } else if (Z_error_ceil <= rand && rand < Y_error_ceil && (Z_error_ceil != Y_error_ceil)) {
       // Y error
-      // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-      // std::cout<<"Y err\n";
       qubit->par("GOD_Xerror") = true;
       qubit->par("GOD_Zerror") = true;
       DEBUG_memory_Y_count++;
-
     } else if (Y_error_ceil <= rand && rand < EX_error_ceil && (Y_error_ceil != EX_error_ceil)) {
       // Excitation error
-
-      // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-      // std::cout<<"Ex err\n";
-      qubit->setExcitedDensityMatrix();  // Also sets the partner completely mixed if it used to be entangled.
+      // Also sets the partner completely mixed if it used to be entangled.
+      qubit->setExcitedDensityMatrix();
     } else if (EX_error_ceil <= rand && rand < RE_error_ceil && (EX_error_ceil != RE_error_ceil)) {
       // Excitation error
-
-      // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-      // std::cout<<"Re err\n";
-      qubit->setRelaxedDensityMatrix();  // Also sets the partner completely mixed if it used to be entangled.
+      // Also sets the partner completely mixed if it used to be entangled.
+      qubit->setRelaxedDensityMatrix();
     } else {
       // Memory completely mixed error
 
-      // if(qubit->getIndex() == 71 && qubit->node_address == 3)
-      // std::cout<<"Cm err\n";
-      if (qubit->entangled_partner != nullptr) {  // If this qubit still used to be entangled with another qubit.
+      // If this qubit still used to be entangled with another qubit.
+      if (qubit->entangled_partner != nullptr) {
         qubit->entangled_partner->updated_time = simTime();
-        qubit->entangled_partner->par("last_updated_at") = simTime().dbl();  // For GUI
-        qubit->entangled_partner->setCompletelyMixedDensityMatrix();  // Break entanglement with partner. Overwrite its density matrix.
+        qubit->entangled_partner->par("last_updated_at") = simTime().dbl();
+        // Break entanglement with partner. Overwrite its density matrix.
+        qubit->entangled_partner->setCompletelyMixedDensityMatrix();
       }
       qubit->setCompletelyMixedDensityMatrix();
     }
   }
-  qubit->updated_time = simTime();  // Update parameter, updated_time, to now.
-  qubit->par("last_updated_at") = simTime().dbl();  // For GUI
+  qubit->updated_time = simTime();
+  qubit->par("last_updated_at") = simTime().dbl();
 }
 
 Matrix2cd StationaryQubit::getErrorMatrix(StationaryQubit *qubit) {
