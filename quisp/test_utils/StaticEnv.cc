@@ -17,6 +17,13 @@ std::string StaticEnv::gets(const char *prompt, const char *defaultreply) {
 }
 void StaticEnv::undisposedObject(cObject *obj) {}
 
+cRNG *StaticEnv::getRNG(int k) {
+  if (rng == nullptr) {
+    rng = new omnetpp::cMersenneTwister();
+  }
+  return rng;
+}
+
 /**
  * \brief delete current simulation and then setup new simulation
  */
@@ -25,7 +32,9 @@ cSimulation *StaticEnv::newSimulation() {
   auto *sim = new simulation::TestSimulation("test_sim", this);
   cComponent::clearSignalState();
   cSimulation::setActiveSimulation(sim);
-  SimTime::setScaleExp(-3);
+  // see https://doc.omnetpp.org/omnetpp/manual/#sec:simple-modules:simulation-time
+  // resolution is 1ns
+  SimTime::setScaleExp(-9);
   sim->setGlobalContext();
   return sim;
 }

@@ -84,10 +84,7 @@ class StaticEnv : public omnetpp::cEnvir {
 
   // RNGs
   int getNumRNGs() const override { return 0; }
-  cRNG *getRNG(int k) override {
-    auto *rng = new omnetpp::cMersenneTwister();
-    return rng;
-  }
+  cRNG *getRNG(int k) override;
 
   // output vectors
   void *registerOutputVector(const char *modulename, const char *vectorname) override { return nullptr; }
@@ -145,6 +142,7 @@ class StaticEnv : public omnetpp::cEnvir {
 
   cSimulation *newSimulation();
   void resetSimulation();
+  cRNG *rng = nullptr;
 };
 
 }  // namespace env
