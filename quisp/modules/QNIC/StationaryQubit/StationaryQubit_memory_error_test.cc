@@ -2,6 +2,7 @@
 #include <test_utils/TestUtils.h>
 #include <unsupported/Eigen/MatrixFunctions>
 #include "StationaryQubit.h"
+#include "omnetpp/simtime.h"
 
 using namespace quisp::modules;
 using namespace quisp_test;
@@ -81,6 +82,45 @@ class StatQubitTarget : public StationaryQubit {
   }
 };
 
+TEST(StationaryQubitMemoryErrorTest, do_nothing) {
+  auto *sim = prepareSimulation();
+  auto *rng = useTestRNG();
+  auto *qubit = new StatQubitTarget{};
+  qubit->fillParams();
+  qubit->callInitialize();
+  qubit->reset();
+  qubit->par("GOD_Xerror") = true;
+  qubit->par("GOD_Zerror") = true;
+  EXPECT_TRUE(qubit->par("GOD_Xerror"));
+  EXPECT_TRUE(qubit->par("GOD_Zerror"));
+  EXPECT_FALSE(qubit->par("GOD_REerror"));
+  EXPECT_FALSE(qubit->par("GOD_EXerror"));
+  sim->registerComponent(qubit);
+
+  // if current time and updated_time are same, do nothing
+  EXPECT_EQ(qubit->updated_time, SimTime(0));
+  sim->setSimTime(SimTime(0, SIMTIME_US));
+  qubit->apply_memory_error(qubit);
+
+  EXPECT_EQ(qubit->updated_time, SimTime(0, SIMTIME_US));
+  EXPECT_TRUE(qubit->par("GOD_Xerror"));
+  EXPECT_TRUE(qubit->par("GOD_Zerror"));
+  EXPECT_FALSE(qubit->par("GOD_REerror"));
+  EXPECT_FALSE(qubit->par("GOD_EXerror"));
+}
+TEST(StationaryQubitMemoryErrorTest, update_timestamp) {
+  auto *sim = prepareSimulation();
+  auto *rng = useTestRNG();
+  auto *qubit = new StatQubitTarget{};
+  qubit->fillParams();
+  qubit->callInitialize();
+  qubit->reset();
+  EXPECT_EQ(qubit->updated_time, SimTime(0));
+  sim->registerComponent(qubit);
+  sim->setSimTime(SimTime(1, SIMTIME_US));
+  qubit->apply_memory_error(qubit);
+  EXPECT_EQ(qubit->updated_time, SimTime(1, SIMTIME_US));
+}
 TEST(StationaryQubitMemoryErrorTest, apply_memory_error_no_error) {
   auto *sim = prepareSimulation();
   auto *rng = useTestRNG();
