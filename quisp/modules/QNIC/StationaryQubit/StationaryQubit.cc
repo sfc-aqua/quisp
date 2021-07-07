@@ -678,33 +678,16 @@ void StationaryQubit::apply_memory_error(StationaryQubit *qubit) {
   double time_evolution_microsec = time_evolution * 1000000 /** 100*/;
   if (time_evolution_microsec > 0) {
     // Perform Monte-Carlo error simulation on this qubit.
-    bool Xerr = qubit->par("GOD_Xerror");
-    bool Zerr = qubit->par("GOD_Zerror");
-    bool EXerr = qubit->par("GOD_EXerror");
-    bool REerr = qubit->par("GOD_REerror");
-    bool CMerr = qubit->par("GOD_CMerror");
-    if (qubit->completely_mixed != CMerr) {
+    bool has_x_err = qubit->par("GOD_Xerror");
+    bool has_z_err = qubit->par("GOD_Zerror");
+    bool has_excited_error = qubit->par("GOD_EXerror");
+    bool has_relaxed_err = qubit->par("GOD_REerror");
+    bool has_completely_mixed_err = qubit->par("GOD_CMerror");
+    if (qubit->completely_mixed != has_completely_mixed_err) {
       error("[apply_memory_error] Completely mixed flag not matching");
     }
-    if (qubit->excited_or_relaxed != EXerr && qubit->excited_or_relaxed != REerr) {
+    if (qubit->excited_or_relaxed != has_excited_error && qubit->excited_or_relaxed != has_relaxed_err) {
       error("[apply_memory_error] Relaxed/Excited flag not matching");
-    }
-
-    MatrixXd Initial_condition(1, 7);  // I, X, Z, Y, Ex, Re, Cm
-    if (EXerr) {
-      Initial_condition << 0, 0, 0, 0, 1, 0, 0;  // excitation error
-    } else if (REerr) {
-      Initial_condition << 0, 0, 0, 0, 0, 1, 0;  // relaxation error
-    } else if (CMerr) {
-      Initial_condition << 0, 0, 0, 0, 0, 0, 1;  // completely mixed error
-    } else if (Zerr && Xerr) {
-      Initial_condition << 0, 0, 0, 1, 0, 0, 0;  // Y error
-    } else if (Zerr && !Xerr) {
-      Initial_condition << 0, 0, 1, 0, 0, 0, 0;  // Z error
-    } else if (!Zerr && Xerr) {
-      Initial_condition << 0, 1, 0, 0, 0, 0, 0;  // X error
-    } else {
-      Initial_condition << 1, 0, 0, 0, 0, 0, 0;  // No error
     }
 
     bool skip_exponentiation = false;
@@ -716,20 +699,20 @@ void StationaryQubit::apply_memory_error(StationaryQubit *qubit) {
       }
     }
 
-    MatrixXd Dynamic_transition_matrix(7, 7);
+    MatrixXd transition_mat(7, 7);
     if (!skip_exponentiation) {
-      // calculate time evoluted error matrix: Q^(time_evolution_microsec)
-      MatrixPower<MatrixXd> Apow(Memory_Transition_matrix);
-      Dynamic_transition_matrix = Apow(time_evolution_microsec);
+      // calculate time evoluted error matrix: Q^(time_evolution_microsec) in Eq 5.3
+      MatrixPower<MatrixXd> q_pow(Memory_Transition_matrix);
+      transition_mat = q_pow(time_evolution_microsec);
     } else {
-      Dynamic_transition_matrix = Memory_Transition_matrix;
+      transition_mat = Memory_Transition_matrix;
     }
 
-    // validate DynamicTransitionMatrix
-    for (int r = 0; r < Dynamic_transition_matrix.rows(); r++) {
+    // validate transition_mat
+    for (int r = 0; r < transition_mat.rows(); r++) {
       double col_sum = 0;
-      for (int i = 0; i < Dynamic_transition_matrix.cols(); i++) {
-        col_sum += Dynamic_transition_matrix(r, i);
+      for (int i = 0; i < transition_mat.cols(); i++) {
+        col_sum += transition_mat(r, i);
       }
       if (col_sum > 1.01 || col_sum < 0.99) {
         std::cout << "col_sum = " << col_sum << std::endl;
@@ -737,57 +720,76 @@ void StationaryQubit::apply_memory_error(StationaryQubit *qubit) {
       }
     }
 
-    if (std::isnan(Dynamic_transition_matrix(0, 0))) {
-      std::cout << "DynamicTransitionMatrix: " << Dynamic_transition_matrix << std::endl;
+    if (std::isnan(transition_mat(0, 0))) {
+      std::cout << "transition_mat: " << transition_mat << std::endl;
       error("Transition maatrix is NaN. This is Eigen's fault.");
     }
 
-    MatrixXd Output_condition(1, 6);  // I, X, Z, Y
+    // pi(0 ~ 6) vector in Eq 5.3
+    MatrixXd pi_vector(1, 7);  // I, X, Z, Y, Ex, Re, Cm
+    if (has_excited_error) {
+      pi_vector << 0, 0, 0, 0, 1, 0, 0;  // excitation error
+    } else if (has_relaxed_err) {
+      pi_vector << 0, 0, 0, 0, 0, 1, 0;  // relaxation error
+    } else if (has_completely_mixed_err) {
+      pi_vector << 0, 0, 0, 0, 0, 0, 1;  // completely mixed error
+    } else if (has_z_err && has_x_err) {
+      pi_vector << 0, 0, 0, 1, 0, 0, 0;  // Y error
+    } else if (has_z_err && !has_x_err) {
+      pi_vector << 0, 0, 1, 0, 0, 0, 0;  // Z error
+    } else if (!has_z_err && has_x_err) {
+      pi_vector << 0, 1, 0, 0, 0, 0, 0;  // X error
+    } else {
+      pi_vector << 1, 0, 0, 0, 0, 0, 0;  // No error
+    }
+    // pi(t) in Eq 5.3
+    // Clean, X, Z, Y, Excited, Relaxed
+    MatrixXd output_vector(1, 6);
     // take error rate vector from DynamicTransitionMatrix Eq 5.3
-    Output_condition = Initial_condition * Dynamic_transition_matrix;  // I,X,Y,Z
+    output_vector = pi_vector * transition_mat;
 
     /* this prepares the sectors for Monte-Carlo. later, we'll pick a random value and check with this sectors.
      *
-     * 0.0    No_error_ceil       Z_error_ceil           EX_error_ceil                      1.0
+     * 0.0    clean_ceil             z_ceil              excited_ceil                       1.0
      *  |          |                   |                      |                              |
      *  | No Error | X Error | Z Error | Y Error | Excitation | Relaxation | Cmpletely Mixed |
      *                       |                   |                         |
-     *                  X_error_ceil        Y_error_ceil             RE_error_ceil
+     *                    x_ceil               y_ceil                relaxed_ceil
      */
-    double No_error_ceil = Output_condition(0, 0);
-    double X_error_ceil = No_error_ceil + Output_condition(0, 1);
-    double Z_error_ceil = X_error_ceil + Output_condition(0, 2);
-    double Y_error_ceil = Z_error_ceil + Output_condition(0, 3);
-    double EX_error_ceil = Y_error_ceil + Output_condition(0, 4);
-    double RE_error_ceil = EX_error_ceil + Output_condition(0, 5);
+    double clean_ceil = output_vector(0, 0);
+    double x_ceil = clean_ceil + output_vector(0, 1);
+    double z_ceil = x_ceil + output_vector(0, 2);
+    double y_ceil = z_ceil + output_vector(0, 3);
+    double excited_ceil = y_ceil + output_vector(0, 4);
+    double relaxed_ceil = excited_ceil + output_vector(0, 5);
 
     // Gives a random double between 0.0 ~ 1.0
     double rand = dblrand();
 
-    if (rand < No_error_ceil) {
+    if (rand < clean_ceil) {
       // Qubit will end up with no error
       qubit->par("GOD_Xerror") = false;
       qubit->par("GOD_Zerror") = false;
-    } else if (No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil != X_error_ceil)) {
+    } else if (clean_ceil <= rand && rand < x_ceil && (clean_ceil != x_ceil)) {
       // X error
       qubit->par("GOD_Xerror") = true;
       qubit->par("GOD_Zerror") = false;
       DEBUG_memory_X_count++;
-    } else if (X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil != Z_error_ceil)) {
+    } else if (x_ceil <= rand && rand < z_ceil && (x_ceil != z_ceil)) {
       // Z error
       qubit->par("GOD_Xerror") = false;
       qubit->par("GOD_Zerror") = true;
       DEBUG_memory_Z_count++;
-    } else if (Z_error_ceil <= rand && rand < Y_error_ceil && (Z_error_ceil != Y_error_ceil)) {
+    } else if (z_ceil <= rand && rand < y_ceil && (z_ceil != y_ceil)) {
       // Y error
       qubit->par("GOD_Xerror") = true;
       qubit->par("GOD_Zerror") = true;
       DEBUG_memory_Y_count++;
-    } else if (Y_error_ceil <= rand && rand < EX_error_ceil && (Y_error_ceil != EX_error_ceil)) {
+    } else if (y_ceil <= rand && rand < excited_ceil && (y_ceil != excited_ceil)) {
       // Excitation error
       // Also sets the partner completely mixed if it used to be entangled.
       qubit->setExcitedDensityMatrix();
-    } else if (EX_error_ceil <= rand && rand < RE_error_ceil && (EX_error_ceil != RE_error_ceil)) {
+    } else if (excited_ceil <= rand && rand < relaxed_ceil && (excited_ceil != relaxed_ceil)) {
       // Excitation error
       // Also sets the partner completely mixed if it used to be entangled.
       qubit->setRelaxedDensityMatrix();
