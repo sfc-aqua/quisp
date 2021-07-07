@@ -84,7 +84,6 @@ class StatQubitTarget : public StationaryQubit {
 
 TEST(StationaryQubitMemoryErrorTest, do_nothing) {
   auto *sim = prepareSimulation();
-  auto *rng = useTestRNG();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
   qubit->callInitialize();
@@ -110,7 +109,6 @@ TEST(StationaryQubitMemoryErrorTest, do_nothing) {
 }
 TEST(StationaryQubitMemoryErrorTest, update_timestamp) {
   auto *sim = prepareSimulation();
-  auto *rng = useTestRNG();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
   qubit->callInitialize();
