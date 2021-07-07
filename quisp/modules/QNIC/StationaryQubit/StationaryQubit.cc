@@ -680,13 +680,13 @@ void StationaryQubit::apply_memory_error(StationaryQubit *qubit) {
     // Perform Monte-Carlo error simulation on this qubit.
     bool has_x_err = qubit->par("GOD_Xerror");
     bool has_z_err = qubit->par("GOD_Zerror");
-    bool has_excited_error = qubit->par("GOD_EXerror");
-    bool has_relaxed_err = qubit->par("GOD_REerror");
-    bool has_completely_mixed_err = qubit->par("GOD_CMerror");
-    if (qubit->completely_mixed != has_completely_mixed_err) {
+    bool is_excited = qubit->par("GOD_EXerror");
+    bool is_relaxed = qubit->par("GOD_REerror");
+    bool is_completely_mixed = qubit->par("GOD_CMerror");
+    if (qubit->completely_mixed != is_completely_mixed) {
       error("[apply_memory_error] Completely mixed flag not matching");
     }
-    if (qubit->excited_or_relaxed != has_excited_error && qubit->excited_or_relaxed != has_relaxed_err) {
+    if (qubit->excited_or_relaxed != is_excited && qubit->excited_or_relaxed != is_relaxed) {
       error("[apply_memory_error] Relaxed/Excited flag not matching");
     }
 
@@ -727,11 +727,11 @@ void StationaryQubit::apply_memory_error(StationaryQubit *qubit) {
 
     // pi(0 ~ 6) vector in Eq 5.3
     MatrixXd pi_vector(1, 7);  // I, X, Z, Y, Ex, Re, Cm
-    if (has_excited_error) {
+    if (is_excited) {
       pi_vector << 0, 0, 0, 0, 1, 0, 0;  // excitation error
-    } else if (has_relaxed_err) {
+    } else if (is_relaxed) {
       pi_vector << 0, 0, 0, 0, 0, 1, 0;  // relaxation error
-    } else if (has_completely_mixed_err) {
+    } else if (is_completely_mixed) {
       pi_vector << 0, 0, 0, 0, 0, 0, 1;  // completely mixed error
     } else if (has_z_err && has_x_err) {
       pi_vector << 0, 0, 0, 1, 0, 0, 0;  // Y error
