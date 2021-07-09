@@ -82,7 +82,7 @@ class StatQubitTarget : public StationaryQubit {
   }
 };
 
-TEST(StationaryQubitTest, initialize_memory_transition_matrix) {
+TEST(StatQubitTest, initialize_memory_transition_matrix) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
@@ -128,7 +128,7 @@ TEST(StationaryQubitTest, initialize_memory_transition_matrix) {
   ASSERT_EQ(mat.row(6), row6);
 }
 
-TEST(StationaryQubitTest, setFree) {
+TEST(StatQubitTest, setFree) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();

@@ -88,7 +88,7 @@ class StatQubitTarget : public StationaryQubit {
   }
 };
 
-TEST(StationaryQubitTest, SetSingleQubitGateErrorCeilings) {
+TEST(StatQubitGateErrorTest, SetSingleQubitGateErrorCeilings) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
@@ -97,7 +97,8 @@ TEST(StationaryQubitTest, SetSingleQubitGateErrorCeilings) {
   setParDouble(qubit, "Xgate_Z_error_ratio", 2);
   setParDouble(qubit, "Xgate_Y_error_ratio", 3);
   sim->registerComponent(qubit);
-  auto error_model = qubit->SetSingleQubitGateErrorCeilings(std::string("Xgate"));
+  qubit->setSingleQubitGateErrorModel(qubit->Xgate_error, std::string("Xgate"));
+  auto &error_model = qubit->Xgate_error;
   EXPECT_FALSE(std::isnan(error_model.X_error_rate));
   EXPECT_FALSE(std::isnan(error_model.Y_error_rate));
   EXPECT_FALSE(std::isnan(error_model.Z_error_rate));
@@ -120,7 +121,7 @@ TEST(StationaryQubitTest, SetSingleQubitGateErrorCeilings) {
   EXPECT_DOUBLE_EQ(error_model.Y_error_rate, 0.3 * 1 / 6);
 }
 
-TEST(StationaryQubitTest, SetSingleQubitGateErrorCeilings_div_by_zero) {
+TEST(StatQubitGateErrorTest, SetSingleQubitGateErrorCeilings_div_by_zero) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
@@ -129,7 +130,8 @@ TEST(StationaryQubitTest, SetSingleQubitGateErrorCeilings_div_by_zero) {
   setParDouble(qubit, "Xgate_Z_error_ratio", 0);
   setParDouble(qubit, "Xgate_Y_error_ratio", 0);
   sim->registerComponent(qubit);
-  auto error_model = qubit->SetSingleQubitGateErrorCeilings(std::string("Xgate"));
+  qubit->setSingleQubitGateErrorModel(qubit->Xgate_error, std::string("Xgate"));
+  auto &error_model = qubit->Xgate_error;
   EXPECT_FALSE(std::isnan(error_model.X_error_rate));
   EXPECT_FALSE(std::isnan(error_model.Y_error_rate));
   EXPECT_FALSE(std::isnan(error_model.Z_error_rate));
@@ -152,7 +154,7 @@ TEST(StationaryQubitTest, SetSingleQubitGateErrorCeilings_div_by_zero) {
   EXPECT_DOUBLE_EQ(error_model.Y_error_rate, 0.1 * 1 / 3);
 }
 
-TEST(StationaryQubitTest, SetTwoQubitGateErrorCeilings) {
+TEST(StatQubitGateErrorTest, SetTwoQubitGateErrorCeilings) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
@@ -167,7 +169,8 @@ TEST(StationaryQubitTest, SetTwoQubitGateErrorCeilings) {
   setParDouble(qubit, "CNOTgate_YI_error_ratio", 1);
   setParDouble(qubit, "CNOTgate_YY_error_ratio", 1);
   sim->registerComponent(qubit);
-  auto error_model = qubit->SetTwoQubitGateErrorCeilings(std::string("CNOTgate"));
+  qubit->setTwoQubitGateErrorCeilings(qubit->CNOTgate_error, std::string("CNOTgate"));
+  auto const &error_model = qubit->CNOTgate_error;
   EXPECT_FALSE(std::isnan(error_model.IX_error_rate));
   EXPECT_FALSE(std::isnan(error_model.XI_error_rate));
   EXPECT_FALSE(std::isnan(error_model.XX_error_rate));
@@ -221,7 +224,7 @@ TEST(StationaryQubitTest, SetTwoQubitGateErrorCeilings) {
   EXPECT_DOUBLE_EQ(error_model.YY_error_rate, 0.1 * 1 / 9);
 }
 
-TEST(StationaryQubitTest, SetTwoQubitGateErrorCeilings_div_by_zero) {
+TEST(StatQubitGateErrorTest, SetTwoQubitGateErrorCeilings_div_by_zero) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
@@ -236,7 +239,8 @@ TEST(StationaryQubitTest, SetTwoQubitGateErrorCeilings_div_by_zero) {
   setParDouble(qubit, "CNOTgate_YI_error_ratio", 0);
   setParDouble(qubit, "CNOTgate_YY_error_ratio", 0);
   sim->registerComponent(qubit);
-  auto error_model = qubit->SetTwoQubitGateErrorCeilings(std::string("CNOTgate"));
+  qubit->setTwoQubitGateErrorCeilings(qubit->CNOTgate_error, std::string("CNOTgate"));
+  auto const &error_model = qubit->CNOTgate_error;
   EXPECT_FALSE(std::isnan(error_model.IX_error_rate));
   EXPECT_FALSE(std::isnan(error_model.XI_error_rate));
   EXPECT_FALSE(std::isnan(error_model.XX_error_rate));
@@ -289,10 +293,11 @@ TEST(StationaryQubitTest, SetTwoQubitGateErrorCeilings_div_by_zero) {
   EXPECT_DOUBLE_EQ(error_model.IY_error_rate, 0.1 * 1 / 9);
   EXPECT_DOUBLE_EQ(error_model.YY_error_rate, 0.1 * 1 / 9);
 }
-TEST(StationaryQubitMemoryErrorTest, do_nothing) {
+TEST(StatQubitGateErrorTest, do_nothing_single_qubit_gate) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
+  setParDouble(qubit, "Xgate_error_rate", 0.0);
   qubit->callInitialize();
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
@@ -303,10 +308,7 @@ TEST(StationaryQubitMemoryErrorTest, do_nothing) {
   EXPECT_FALSE(qubit->par("GOD_EXerror"));
   sim->registerComponent(qubit);
 
-  // if current time and updated_time are same, do nothing
-  EXPECT_EQ(qubit->updated_time, SimTime(0));
-  sim->setSimTime(SimTime(0, SIMTIME_US));
-  qubit->apply_memory_error(qubit);
+  qubit->apply_single_qubit_gate_error(qubit->Xgate_error);
 
   EXPECT_EQ(qubit->updated_time, SimTime(0, SIMTIME_US));
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
@@ -315,7 +317,46 @@ TEST(StationaryQubitMemoryErrorTest, do_nothing) {
   EXPECT_FALSE(qubit->par("GOD_EXerror"));
 }
 
-TEST(StationaryQubitSingleGateErrorTest, apply_single_qubit_gate_error) {
+TEST(StatQubitGateErrorTest, do_nothing_two_qubit_gate) {
+  auto *sim = prepareSimulation();
+  auto *qubit = new StatQubitTarget{};
+  auto *qubit2 = new StatQubitTarget{};
+  qubit->fillParams();
+  qubit2->fillParams();
+  setParDouble(qubit, "CNOTgate_error_rate", 0.0);
+  qubit->callInitialize();
+  qubit2->callInitialize();
+  qubit->reset();
+  qubit2->reset();
+  qubit->par("GOD_Xerror") = true;
+  qubit->par("GOD_Zerror") = true;
+  qubit2->par("GOD_Xerror") = true;
+  qubit2->par("GOD_Zerror") = true;
+  EXPECT_TRUE(qubit->par("GOD_Xerror"));
+  EXPECT_TRUE(qubit->par("GOD_Zerror"));
+  EXPECT_FALSE(qubit->par("GOD_REerror"));
+  EXPECT_FALSE(qubit->par("GOD_EXerror"));
+  EXPECT_TRUE(qubit2->par("GOD_Xerror"));
+  EXPECT_TRUE(qubit2->par("GOD_Zerror"));
+  EXPECT_FALSE(qubit2->par("GOD_REerror"));
+  EXPECT_FALSE(qubit2->par("GOD_EXerror"));
+  sim->registerComponent(qubit);
+  sim->registerComponent(qubit2);
+
+  qubit->apply_two_qubit_gate_error(qubit->CNOTgate_error, qubit2);
+
+  EXPECT_EQ(qubit->updated_time, SimTime(0, SIMTIME_US));
+  EXPECT_TRUE(qubit->par("GOD_Xerror"));
+  EXPECT_TRUE(qubit->par("GOD_Zerror"));
+  EXPECT_FALSE(qubit->par("GOD_REerror"));
+  EXPECT_FALSE(qubit->par("GOD_EXerror"));
+  EXPECT_TRUE(qubit2->par("GOD_Xerror"));
+  EXPECT_TRUE(qubit2->par("GOD_Zerror"));
+  EXPECT_FALSE(qubit2->par("GOD_REerror"));
+  EXPECT_FALSE(qubit2->par("GOD_EXerror"));
+}
+
+TEST(StatQubitGateErrorTest, apply_single_qubit_gate_error) {
   auto *sim = prepareSimulation();
   auto *rng = useTestRNG();
   auto *qubit = new StatQubitTarget{};
@@ -365,7 +406,7 @@ TEST(StationaryQubitSingleGateErrorTest, apply_single_qubit_gate_error) {
   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
 }
 
-TEST(StationaryQubitSingleGateErrorTest, apply_two_qubit_gate_error) {
+TEST(StatQubitGateErrorTest, apply_two_qubit_gate_error) {
   auto *sim = prepareSimulation();
   auto *rng = useTestRNG();
   auto *qubit1 = new StatQubitTarget{};
