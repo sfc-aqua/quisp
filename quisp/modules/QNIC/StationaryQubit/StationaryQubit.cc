@@ -885,24 +885,28 @@ void StationaryQubit::apply_single_qubit_gate_error(SingleGateErrorModel gate, S
   if (gate.pauli_error_rate == 0) {
     return;
   }
-  double rand = dblrand();  // Gives a random double between 0.0 ~ 1.0
+  // Gives a random double between 0.0 ~ 1.0
+  double rand = dblrand();
 
+  /*
+   * 0.0    No_error_ceil       Z_error_ceil  1.0
+   *  |          |                   |         |
+   *  | No Error | X Error | Z Error | Y Error |
+   *                       |
+   *                  X_error_ceil
+   */
   if (rand <= gate.No_error_ceil) {
-    // Do nothing
-    // std::cout<<"Single qubit gate I error\n";
+    // No error
   } else if (gate.No_error_ceil < rand && rand <= gate.X_error_ceil && (gate.No_error_ceil != gate.X_error_ceil)) {
     // X error
     qubit->addXerror();
-    // std::cout<<"Single qubit gate X error\n";
   } else if (gate.X_error_ceil < rand && rand <= gate.Z_error_ceil && (gate.X_error_ceil != gate.Z_error_ceil)) {
     // Z error
     qubit->addZerror();
-    // std::cout<<"Single qubit gate Z error\n";
   } else {
     // Y error
     qubit->addZerror();
     qubit->addXerror();
-    // std::cout<<"Single qubit gate Y error\n";
   }
 }
 
@@ -911,48 +915,47 @@ void StationaryQubit::apply_two_qubit_gate_error(TwoQubitGateErrorModel gate, St
     return;
   }
 
-  double rand = dblrand();  // Gives a random double between 0.0 ~ 1.0
+  // Gives a random double between 0.0 ~ 1.0
+  double rand = dblrand();
 
+  /*
+   * 0.0  No_error_ceil    XI_error_ceil     IY_error_ceil     YY_error_ceil    ZI_error_ceil  1.0
+   *  |        |                 |                 |                 |                 |        |
+   *  | No err | IX err | XI err | XX err | IY err | YI err | YY err | IZ err | ZI err | ZZ err |
+   *                    |                 |                 |                 |
+   *              IX_error_ceil      XX_error_ceil     YI_error_ceil    IZ_error_ceil
+   */
   if (rand <= gate.No_error_ceil) {
-    // Do nothing
+    // No error
   } else if (gate.No_error_ceil < rand && rand <= gate.IX_error_ceil && (gate.No_error_ceil != gate.IX_error_ceil)) {
     // IX error
-    // error("IX");
     first_qubit->addXerror();
   } else if (gate.IX_error_ceil < rand && rand <= gate.XI_error_ceil && (gate.IX_error_ceil != gate.XI_error_ceil)) {
     // XI error
-    // error("XI");
     second_qubit->addXerror();
   } else if (gate.XI_error_ceil < rand && rand <= gate.XX_error_ceil && (gate.XI_error_ceil != gate.XX_error_ceil)) {
     // XX error
-    // error("XX");
     first_qubit->addXerror();
     second_qubit->addXerror();
   } else if (gate.XX_error_ceil < rand && rand <= gate.IZ_error_ceil && (gate.XX_error_ceil != gate.IZ_error_ceil)) {
     // IZ error
-    // error("IZ");
     first_qubit->addZerror();
   } else if (gate.IZ_error_ceil < rand && rand <= gate.ZI_error_ceil && (gate.IZ_error_ceil != gate.ZI_error_ceil)) {
     // ZI error
-    // error("ZI");
     second_qubit->addZerror();
   } else if (gate.ZI_error_ceil < rand && rand <= gate.ZZ_error_ceil && (gate.ZI_error_ceil != gate.ZZ_error_ceil)) {
     // ZZ error
-    // error("ZZ");
     first_qubit->addZerror();
     second_qubit->addZerror();
   } else if (gate.ZZ_error_ceil < rand && rand <= gate.IY_error_ceil && (gate.ZZ_error_ceil != gate.IY_error_ceil)) {
     // IY error
-    // error("IY");
     first_qubit->addXerror();
     first_qubit->addZerror();
   } else if (gate.IY_error_ceil < rand && rand <= gate.YI_error_ceil && (gate.IY_error_ceil != gate.YI_error_ceil)) {
     // YI error
-    // error("YI");
     second_qubit->addXerror();
     second_qubit->addZerror();
   } else {
-    // error("YY");
     // YY error
     first_qubit->addXerror();
     first_qubit->addZerror();
