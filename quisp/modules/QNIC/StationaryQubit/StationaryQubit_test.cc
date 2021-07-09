@@ -12,7 +12,6 @@ class StatQubitTarget : public StationaryQubit {
  public:
   using StationaryQubit::initialize;
   using StationaryQubit::par;
-  using StationaryQubit::SetSingleQubitGateErrorCeilings;
   StatQubitTarget() : StationaryQubit() { setComponentType(new TestModuleType("test qubit")); }
   void reset() {
     setFree(true);
@@ -150,71 +149,4 @@ TEST(StationaryQubitTest, setFree) {
   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
 }
 
-TEST(StationaryQubitTest, SetSingleQubitGateErrorCeilings) {
-  auto *sim = prepareSimulation();
-  auto *qubit = new StatQubitTarget{};
-  qubit->fillParams();
-  setParDouble(qubit, "Xgate_error_rate", 0.1);
-  auto r = qubit->par("Xgate_error_rate").doubleValue();
-  EXPECT_EQ(r, 0.1);
-  setParDouble(qubit, "Xgate_X_error_ratio", 1);
-  setParDouble(qubit, "Xgate_Z_error_ratio", 2);
-  setParDouble(qubit, "Xgate_Y_error_ratio", 3);
-  sim->registerComponent(qubit);
-  auto error_model = qubit->SetSingleQubitGateErrorCeilings(std::string("Xgate"));
-  EXPECT_FALSE(std::isnan(error_model.X_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.Y_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.Z_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.pauli_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.No_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.X_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.Z_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.Y_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.X_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.Y_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.Z_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.pauli_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.No_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.X_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.Z_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.Y_error_ceil));
-  EXPECT_DOUBLE_EQ(error_model.pauli_error_rate, 0.1);
-  EXPECT_DOUBLE_EQ(error_model.X_error_rate, 0.1 * 1 / 6);
-  EXPECT_DOUBLE_EQ(error_model.Z_error_rate, 0.2 * 1 / 6);
-  EXPECT_DOUBLE_EQ(error_model.Y_error_rate, 0.3 * 1 / 6);
-}
-
-TEST(StationaryQubitTest, SetSingleQubitGateErrorCeilings_div_by_zero) {
-  auto *sim = prepareSimulation();
-  auto *qubit = new StatQubitTarget{};
-  qubit->fillParams();
-  setParDouble(qubit, "Xgate_error_rate", 0.1);
-  auto r = qubit->par("Xgate_error_rate").doubleValue();
-  EXPECT_EQ(r, 0.1);
-  setParDouble(qubit, "Xgate_X_error_ratio", 0);
-  setParDouble(qubit, "Xgate_Z_error_ratio", 0);
-  setParDouble(qubit, "Xgate_Y_error_ratio", 0);
-  sim->registerComponent(qubit);
-  auto error_model = qubit->SetSingleQubitGateErrorCeilings(std::string("Xgate"));
-  EXPECT_FALSE(std::isnan(error_model.X_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.Y_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.Z_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.pauli_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.No_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.X_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.Z_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.Y_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.X_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.Y_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.Z_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.pauli_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.No_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.X_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.Z_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.Y_error_ceil));
-  EXPECT_DOUBLE_EQ(error_model.pauli_error_rate, 0.1);
-  EXPECT_DOUBLE_EQ(error_model.X_error_rate, 0.1 * 1 / 3);
-  EXPECT_DOUBLE_EQ(error_model.Z_error_rate, 0.1 * 1 / 3);
-  EXPECT_DOUBLE_EQ(error_model.Y_error_rate, 0.1 * 1 / 3);
-}
 }  // namespace
