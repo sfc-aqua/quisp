@@ -12,8 +12,8 @@ class StatQubitTarget : public StationaryQubit {
  public:
   using StationaryQubit::initialize;
   using StationaryQubit::par;
-  using StationaryQubit::SetSingleQubitGateErrorCeilings;
-  using StationaryQubit::SetTwoQubitGateErrorCeilings;
+  using StationaryQubit::setSingleQubitGateErrorModel;
+  using StationaryQubit::setTwoQubitGateErrorCeilings;
   StatQubitTarget() : StationaryQubit() { setComponentType(new TestModuleType("test qubit")); }
   void reset() {
     setFree(true);

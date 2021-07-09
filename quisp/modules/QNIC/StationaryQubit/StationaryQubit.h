@@ -331,8 +331,8 @@ class StationaryQubit : public cSimpleModule {
   virtual Matrix2cd getErrorMatrix(StationaryQubit *qubit);  // returns the matrix that represents the errors on the Bell pair. (e.g. XY, XZ and ZI...)
   virtual quantum_state getQuantumState();  // returns the dm of the physical Bell pair. Used for tomography.
   virtual measurement_operator Random_Measurement_Basis_Selection();
-  virtual SingleGateErrorModel SetSingleQubitGateErrorCeilings(std::string gate_name);
-  virtual TwoQubitGateErrorModel SetTwoQubitGateErrorCeilings(std::string gate_name);
+  virtual void setSingleQubitGateErrorModel(SingleGateErrorModel &model, std::string gate_name);
+  virtual TwoQubitGateErrorModel setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model, std::string gate_name);
   // virtual measurement_output_probabilities getOutputProbabilities(quantum_state state, char meas_basis);
 };
 

@@ -106,11 +106,11 @@ memory_err.completely_mixed_rate = memory_err.error_rate * (memory_completely_mi
   // clang-format on
   std::cout << "Memory_Transition_matrix = \n " << Memory_Transition_matrix << " done \n";
 
-  Hgate_error = SetSingleQubitGateErrorCeilings("Hgate");
-  Xgate_error = SetSingleQubitGateErrorCeilings("Xgate");
-  Zgate_error = SetSingleQubitGateErrorCeilings("Zgate");
-  Measurement_error = SetSingleQubitGateErrorCeilings("Measurement");
-  CNOTgate_error = SetTwoQubitGateErrorCeilings("CNOTgate");
+  setSingleQubitGateErrorModel(Hgate_error, "Hgate");
+  setSingleQubitGateErrorModel(Xgate_error, "Xgate");
+  setSingleQubitGateErrorModel(Zgate_error, "Zgate");
+  setSingleQubitGateErrorModel(Measurement_error, "Measurement");
+  setTwoQubitGateErrorCeilings(CNOTgate_error, "CNOTgate");
 
   std::cout << Memory_Transition_matrix << "\n";
   // endSimulation();
@@ -180,13 +180,12 @@ void StationaryQubit::handleMessage(cMessage *msg) {
   }
 }
 
-SingleGateErrorModel StationaryQubit::SetSingleQubitGateErrorCeilings(std::string gate_name) {
-  SingleGateErrorModel gate;
+void StationaryQubit::setSingleQubitGateErrorModel(SingleGateErrorModel &model, std::string gate_name) {
   auto err_rate_name = gate_name + std::string("_error_rate");
   auto x_ratio_name = gate_name + std::string("_X_error_ratio");
   auto z_ratio_name = gate_name + std::string("_Z_error_ratio");
   auto y_ratio_name = gate_name + std::string("_Y_error_ratio");
-  gate.pauli_error_rate = par(err_rate_name.c_str()).doubleValue();
+  model.pauli_error_rate = par(err_rate_name.c_str()).doubleValue();
   auto x_ratio = par(x_ratio_name.c_str()).doubleValue();
   auto z_ratio = par(z_ratio_name.c_str()).doubleValue();
   auto y_ratio = par(y_ratio_name.c_str()).doubleValue();
@@ -199,19 +198,16 @@ SingleGateErrorModel StationaryQubit::SetSingleQubitGateErrorCeilings(std::strin
     sum = 3.;
   }
 
-  gate.X_error_rate = gate.pauli_error_rate * (x_ratio / sum);
-  gate.Y_error_rate = gate.pauli_error_rate * (y_ratio / sum);
-  gate.Z_error_rate = gate.pauli_error_rate * (z_ratio / sum);
-  gate.No_error_ceil = 1 - gate.pauli_error_rate;
-  gate.X_error_ceil = gate.No_error_ceil + gate.X_error_rate;
-  gate.Z_error_ceil = gate.X_error_ceil + gate.Z_error_rate;
-  gate.Y_error_ceil = gate.Z_error_ceil + gate.Y_error_rate;
-  return gate;
+  model.X_error_rate = model.pauli_error_rate * (x_ratio / sum);
+  model.Y_error_rate = model.pauli_error_rate * (y_ratio / sum);
+  model.Z_error_rate = model.pauli_error_rate * (z_ratio / sum);
+  model.No_error_ceil = 1 - model.pauli_error_rate;
+  model.X_error_ceil = model.No_error_ceil + model.X_error_rate;
+  model.Z_error_ceil = model.X_error_ceil + model.Z_error_rate;
+  model.Y_error_ceil = model.Z_error_ceil + model.Y_error_rate;
 }
 
-TwoQubitGateErrorModel StationaryQubit::SetTwoQubitGateErrorCeilings(std::string gate_name) {
-  TwoQubitGateErrorModel gate;
-
+TwoQubitGateErrorModel StationaryQubit::setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model, std::string gate_name) {
   // prepare parameter names
   std::string err_rate_name = std::string(gate_name) + std::string("_error_rate");
   auto ix_ratio_name = gate_name + std::string("_IX_error_ratio");
@@ -227,7 +223,7 @@ TwoQubitGateErrorModel StationaryQubit::SetTwoQubitGateErrorCeilings(std::string
   auto yy_ratio_name = gate_name + std::string("_YY_error_ratio");
 
   // get error ratios from parameter
-  gate.pauli_error_rate = par(err_rate_name.c_str()).doubleValue();
+  model.pauli_error_rate = par(err_rate_name.c_str()).doubleValue();
   double ix_ratio = par(ix_ratio_name.c_str()).doubleValue();
   double xi_ratio = par(xi_ratio_name.c_str()).doubleValue();
   double xx_ratio = par(xx_rationame.c_str()).doubleValue();
@@ -255,31 +251,31 @@ TwoQubitGateErrorModel StationaryQubit::SetTwoQubitGateErrorCeilings(std::string
     ratio_sum = 9.;
   }
 
-  gate.IX_error_rate = gate.pauli_error_rate * (ix_ratio / ratio_sum);
-  gate.XI_error_rate = gate.pauli_error_rate * (xi_ratio / ratio_sum);
-  gate.XX_error_rate = gate.pauli_error_rate * (xx_ratio / ratio_sum);
+  model.IX_error_rate = model.pauli_error_rate * (ix_ratio / ratio_sum);
+  model.XI_error_rate = model.pauli_error_rate * (xi_ratio / ratio_sum);
+  model.XX_error_rate = model.pauli_error_rate * (xx_ratio / ratio_sum);
 
-  gate.IZ_error_rate = gate.pauli_error_rate * (iz_ratio / ratio_sum);
-  gate.ZI_error_rate = gate.pauli_error_rate * (zi_ratio / ratio_sum);
-  gate.ZZ_error_rate = gate.pauli_error_rate * (zz_ratio / ratio_sum);
+  model.IZ_error_rate = model.pauli_error_rate * (iz_ratio / ratio_sum);
+  model.ZI_error_rate = model.pauli_error_rate * (zi_ratio / ratio_sum);
+  model.ZZ_error_rate = model.pauli_error_rate * (zz_ratio / ratio_sum);
 
-  gate.IY_error_rate = gate.pauli_error_rate * (iy_ratio / ratio_sum);
-  gate.YI_error_rate = gate.pauli_error_rate * (yi_ratio / ratio_sum);
-  gate.YY_error_rate = gate.pauli_error_rate * (yy_ratio / ratio_sum);
+  model.IY_error_rate = model.pauli_error_rate * (iy_ratio / ratio_sum);
+  model.YI_error_rate = model.pauli_error_rate * (yi_ratio / ratio_sum);
+  model.YY_error_rate = model.pauli_error_rate * (yy_ratio / ratio_sum);
 
-  gate.No_error_ceil = 1 - gate.pauli_error_rate;
-  gate.IX_error_ceil = gate.No_error_ceil + gate.IX_error_rate;
-  gate.XI_error_ceil = gate.IX_error_ceil + gate.XI_error_rate;
-  gate.XX_error_ceil = gate.XI_error_ceil + gate.XX_error_rate;
+  model.No_error_ceil = 1 - model.pauli_error_rate;
+  model.IX_error_ceil = model.No_error_ceil + model.IX_error_rate;
+  model.XI_error_ceil = model.IX_error_ceil + model.XI_error_rate;
+  model.XX_error_ceil = model.XI_error_ceil + model.XX_error_rate;
 
-  gate.IZ_error_ceil = gate.XX_error_ceil + gate.IZ_error_rate;
-  gate.ZI_error_ceil = gate.IZ_error_ceil + gate.ZI_error_rate;
-  gate.ZZ_error_ceil = gate.ZI_error_ceil + gate.ZZ_error_rate;
+  model.IZ_error_ceil = model.XX_error_ceil + model.IZ_error_rate;
+  model.ZI_error_ceil = model.IZ_error_ceil + model.ZI_error_rate;
+  model.ZZ_error_ceil = model.ZI_error_ceil + model.ZZ_error_rate;
 
-  gate.IY_error_ceil = gate.ZZ_error_ceil + gate.IY_error_rate;
-  gate.YI_error_ceil = gate.IY_error_ceil + gate.YI_error_rate;
-  gate.YY_error_ceil = gate.YI_error_ceil + gate.YY_error_rate;
-  return gate;
+  model.IY_error_ceil = model.ZZ_error_ceil + model.IY_error_rate;
+  model.YI_error_ceil = model.IY_error_ceil + model.YI_error_rate;
+  model.YY_error_ceil = model.YI_error_ceil + model.YY_error_rate;
+  return model;
 }
 
 /*
