@@ -271,7 +271,7 @@ class StationaryQubit : public cSimpleModule {
   virtual void apply_memory_error(StationaryQubit *qubit);
 
   virtual void apply_single_qubit_gate_error(SingleGateErrorModel const &err);
-  virtual void apply_two_qubit_gate_error(TwoQubitGateErrorModel gate, StationaryQubit *first_qubit, StationaryQubit *second_qubit);
+  virtual void apply_two_qubit_gate_error(TwoQubitGateErrorModel const &err, StationaryQubit *another_qubit);
   /**
    * \brief Two qubit CNOT gate.
    * \param Need to specify the control qubit as an argument.

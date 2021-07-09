@@ -368,7 +368,7 @@ void StationaryQubit::X_gate() {
 
 void StationaryQubit::CNOT_gate(StationaryQubit *control_qubit) {
   // Need to add noise here later
-  apply_two_qubit_gate_error(CNOTgate_error, this, control_qubit);
+  apply_two_qubit_gate_error(CNOTgate_error, control_qubit);
   // std::cout<<"this X err = "<<this->par("GOD_Xerror").boolValue()<<"\n";
 
   if (control_qubit->par("GOD_Xerror")) {
@@ -910,8 +910,8 @@ void StationaryQubit::apply_single_qubit_gate_error(SingleGateErrorModel const &
   }
 }
 
-void StationaryQubit::apply_two_qubit_gate_error(TwoQubitGateErrorModel gate, StationaryQubit *first_qubit, StationaryQubit *second_qubit) {
-  if (gate.pauli_error_rate == 0) {
+void StationaryQubit::apply_two_qubit_gate_error(TwoQubitGateErrorModel const &err, StationaryQubit *another_qubit) {
+  if (err.pauli_error_rate == 0) {
     return;
   }
 
@@ -925,42 +925,42 @@ void StationaryQubit::apply_two_qubit_gate_error(TwoQubitGateErrorModel gate, St
    *                    |                 |                 |                 |
    *              IX_error_ceil      XX_error_ceil     YI_error_ceil    IZ_error_ceil
    */
-  if (rand <= gate.No_error_ceil) {
+  if (rand <= err.No_error_ceil) {
     // No error
-  } else if (gate.No_error_ceil < rand && rand <= gate.IX_error_ceil && (gate.No_error_ceil != gate.IX_error_ceil)) {
+  } else if (err.No_error_ceil < rand && rand <= err.IX_error_ceil && (err.No_error_ceil != err.IX_error_ceil)) {
     // IX error
-    first_qubit->addXerror();
-  } else if (gate.IX_error_ceil < rand && rand <= gate.XI_error_ceil && (gate.IX_error_ceil != gate.XI_error_ceil)) {
+    addXerror();
+  } else if (err.IX_error_ceil < rand && rand <= err.XI_error_ceil && (err.IX_error_ceil != err.XI_error_ceil)) {
     // XI error
-    second_qubit->addXerror();
-  } else if (gate.XI_error_ceil < rand && rand <= gate.XX_error_ceil && (gate.XI_error_ceil != gate.XX_error_ceil)) {
+    another_qubit->addXerror();
+  } else if (err.XI_error_ceil < rand && rand <= err.XX_error_ceil && (err.XI_error_ceil != err.XX_error_ceil)) {
     // XX error
-    first_qubit->addXerror();
-    second_qubit->addXerror();
-  } else if (gate.XX_error_ceil < rand && rand <= gate.IZ_error_ceil && (gate.XX_error_ceil != gate.IZ_error_ceil)) {
+    addXerror();
+    another_qubit->addXerror();
+  } else if (err.XX_error_ceil < rand && rand <= err.IZ_error_ceil && (err.XX_error_ceil != err.IZ_error_ceil)) {
     // IZ error
-    first_qubit->addZerror();
-  } else if (gate.IZ_error_ceil < rand && rand <= gate.ZI_error_ceil && (gate.IZ_error_ceil != gate.ZI_error_ceil)) {
+    addZerror();
+  } else if (err.IZ_error_ceil < rand && rand <= err.ZI_error_ceil && (err.IZ_error_ceil != err.ZI_error_ceil)) {
     // ZI error
-    second_qubit->addZerror();
-  } else if (gate.ZI_error_ceil < rand && rand <= gate.ZZ_error_ceil && (gate.ZI_error_ceil != gate.ZZ_error_ceil)) {
+    another_qubit->addZerror();
+  } else if (err.ZI_error_ceil < rand && rand <= err.ZZ_error_ceil && (err.ZI_error_ceil != err.ZZ_error_ceil)) {
     // ZZ error
-    first_qubit->addZerror();
-    second_qubit->addZerror();
-  } else if (gate.ZZ_error_ceil < rand && rand <= gate.IY_error_ceil && (gate.ZZ_error_ceil != gate.IY_error_ceil)) {
+    addZerror();
+    another_qubit->addZerror();
+  } else if (err.ZZ_error_ceil < rand && rand <= err.IY_error_ceil && (err.ZZ_error_ceil != err.IY_error_ceil)) {
     // IY error
-    first_qubit->addXerror();
-    first_qubit->addZerror();
-  } else if (gate.IY_error_ceil < rand && rand <= gate.YI_error_ceil && (gate.IY_error_ceil != gate.YI_error_ceil)) {
+    addXerror();
+    addZerror();
+  } else if (err.IY_error_ceil < rand && rand <= err.YI_error_ceil && (err.IY_error_ceil != err.YI_error_ceil)) {
     // YI error
-    second_qubit->addXerror();
-    second_qubit->addZerror();
+    another_qubit->addXerror();
+    another_qubit->addZerror();
   } else {
     // YY error
-    first_qubit->addXerror();
-    first_qubit->addZerror();
-    second_qubit->addXerror();
-    second_qubit->addZerror();
+    addXerror();
+    addZerror();
+    another_qubit->addXerror();
+    another_qubit->addZerror();
   }
 }
 
