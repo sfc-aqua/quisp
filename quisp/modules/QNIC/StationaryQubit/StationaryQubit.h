@@ -270,7 +270,7 @@ class StationaryQubit : public cSimpleModule {
   /*Applies memory error to the given qubit*/
   virtual void apply_memory_error(StationaryQubit *qubit);
 
-  virtual void apply_single_qubit_gate_error(SingleGateErrorModel gate, StationaryQubit *qubit);
+  virtual void apply_single_qubit_gate_error(SingleGateErrorModel const &err);
   virtual void apply_two_qubit_gate_error(TwoQubitGateErrorModel gate, StationaryQubit *first_qubit, StationaryQubit *second_qubit);
   /**
    * \brief Two qubit CNOT gate.

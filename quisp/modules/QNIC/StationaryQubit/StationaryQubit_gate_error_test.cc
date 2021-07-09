@@ -327,7 +327,7 @@ TEST(StationaryQubitSingleGateErrorTest, apply_single_qubit_gate_error) {
   // No error
   qubit->reset();
   rng->doubleValue = 0.35;
-  qubit->apply_single_qubit_gate_error(qubit->Xgate_error, qubit);
+  qubit->apply_single_qubit_gate_error(qubit->Xgate_error);
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -337,7 +337,7 @@ TEST(StationaryQubitSingleGateErrorTest, apply_single_qubit_gate_error) {
   // X error
   qubit->reset();
   rng->doubleValue = 0.45;
-  qubit->apply_single_qubit_gate_error(qubit->Xgate_error, qubit);
+  qubit->apply_single_qubit_gate_error(qubit->Xgate_error);
   EXPECT_TRUE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -347,7 +347,7 @@ TEST(StationaryQubitSingleGateErrorTest, apply_single_qubit_gate_error) {
   // Z error
   qubit->reset();
   rng->doubleValue = 0.65;
-  qubit->apply_single_qubit_gate_error(qubit->Xgate_error, qubit);
+  qubit->apply_single_qubit_gate_error(qubit->Xgate_error);
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -357,7 +357,7 @@ TEST(StationaryQubitSingleGateErrorTest, apply_single_qubit_gate_error) {
   // Y error
   qubit->reset();
   rng->doubleValue = 0.85;
-  qubit->apply_single_qubit_gate_error(qubit->Xgate_error, qubit);
+  qubit->apply_single_qubit_gate_error(qubit->Xgate_error);
   EXPECT_TRUE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());

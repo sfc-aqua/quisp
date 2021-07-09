@@ -318,7 +318,7 @@ void StationaryQubit::setEmissionPauliError(){
 
 bool StationaryQubit::measure_X() {
   // Need to add noise here later
-  apply_single_qubit_gate_error(Measurement_error, this);
+  apply_single_qubit_gate_error(Measurement_error);
   return !par("GOD_Zerror");
 }
 
@@ -327,7 +327,7 @@ bool StationaryQubit::measure_X() {
  */
 bool StationaryQubit::measure_Y() {
   // Need to add noise here later
-  apply_single_qubit_gate_error(Measurement_error, this);
+  apply_single_qubit_gate_error(Measurement_error);
   bool error = true;
   if (par("GOD_Zerror") && par("GOD_Xerror")) {
     error = false;
@@ -341,14 +341,14 @@ bool StationaryQubit::measure_Y() {
 
 bool StationaryQubit::measure_Z() {
   // Need to add noise here later
-  apply_single_qubit_gate_error(Measurement_error, this);
+  apply_single_qubit_gate_error(Measurement_error);
   return !par("GOD_Xerror");
 }
 
 // Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
 void StationaryQubit::Hadamard_gate() {
   // Need to add noise here later
-  apply_single_qubit_gate_error(Hgate_error, this);
+  apply_single_qubit_gate_error(Hgate_error);
   bool z = par("GOD_Zerror");
   par("GOD_Zerror") = par("GOD_Xerror");
   par("GOD_Xerror") = z;
@@ -356,13 +356,13 @@ void StationaryQubit::Hadamard_gate() {
 
 void StationaryQubit::Z_gate() {
   // Need to add noise here later
-  apply_single_qubit_gate_error(Zgate_error, this);
+  apply_single_qubit_gate_error(Zgate_error);
   par("GOD_Zerror") = !par("GOD_Zerror");
 }
 
 void StationaryQubit::X_gate() {
   // Need to add noise here later
-  apply_single_qubit_gate_error(Xgate_error, this);
+  apply_single_qubit_gate_error(Xgate_error);
   par("GOD_Xerror") = !par("GOD_Xerror");
 }
 
@@ -881,8 +881,8 @@ quantum_state StationaryQubit::getQuantumState() {
   return q;
 }
 
-void StationaryQubit::apply_single_qubit_gate_error(SingleGateErrorModel gate, StationaryQubit *qubit) {
-  if (gate.pauli_error_rate == 0) {
+void StationaryQubit::apply_single_qubit_gate_error(SingleGateErrorModel const &err) {
+  if (err.pauli_error_rate == 0) {
     return;
   }
   // Gives a random double between 0.0 ~ 1.0
@@ -895,18 +895,18 @@ void StationaryQubit::apply_single_qubit_gate_error(SingleGateErrorModel gate, S
    *                       |
    *                  X_error_ceil
    */
-  if (rand <= gate.No_error_ceil) {
+  if (rand <= err.No_error_ceil) {
     // No error
-  } else if (gate.No_error_ceil < rand && rand <= gate.X_error_ceil && (gate.No_error_ceil != gate.X_error_ceil)) {
+  } else if (err.No_error_ceil < rand && rand <= err.X_error_ceil && (err.No_error_ceil != err.X_error_ceil)) {
     // X error
-    qubit->addXerror();
-  } else if (gate.X_error_ceil < rand && rand <= gate.Z_error_ceil && (gate.X_error_ceil != gate.Z_error_ceil)) {
+    addXerror();
+  } else if (err.X_error_ceil < rand && rand <= err.Z_error_ceil && (err.X_error_ceil != err.Z_error_ceil)) {
     // Z error
-    qubit->addZerror();
+    addZerror();
   } else {
     // Y error
-    qubit->addZerror();
-    qubit->addXerror();
+    addZerror();
+    addXerror();
   }
 }
 
@@ -985,7 +985,7 @@ measurement_outcome StationaryQubit::measure_density_independent() {
   apply_memory_error(this);
 
   // Measurement gate error
-  apply_single_qubit_gate_error(Measurement_error, this);
+  apply_single_qubit_gate_error(Measurement_error);
 
   // This becomes nullptr if this qubit got excited/relaxed or measured.
   if (this->entangled_partner != nullptr) {
