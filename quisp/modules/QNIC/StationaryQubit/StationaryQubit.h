@@ -54,7 +54,7 @@ struct SingleGateErrorModel {
   double Y_error_ceil;
 };
 
-typedef struct {
+struct TwoQubitGateErrorModel {
   double pauli_error_rate;  // Overall error rate
   double IZ_error_rate;
   double ZI_error_rate;
@@ -76,7 +76,7 @@ typedef struct {
   double IX_error_ceil;
   double XI_error_ceil;
   double XX_error_ceil;
-} two_qubit_gate_error_model;
+};
 
 typedef struct {
   double error_rate;  // Overall error rate
@@ -180,7 +180,7 @@ class StationaryQubit : public cSimpleModule {
   SingleGateErrorModel Hgate_error;
   SingleGateErrorModel Xgate_error;
   SingleGateErrorModel Zgate_error;
-  two_qubit_gate_error_model CNOTgate_error;
+  TwoQubitGateErrorModel CNOTgate_error;
   SingleGateErrorModel Measurement_error;
   /* double emit_error_rate;
    double No_error_ceil;
@@ -271,7 +271,7 @@ class StationaryQubit : public cSimpleModule {
   virtual void apply_memory_error(StationaryQubit *qubit);
 
   virtual void apply_single_qubit_gate_error(SingleGateErrorModel gate, StationaryQubit *qubit);
-  virtual void apply_two_qubit_gate_error(two_qubit_gate_error_model gate, StationaryQubit *first_qubit, StationaryQubit *second_qubit);
+  virtual void apply_two_qubit_gate_error(TwoQubitGateErrorModel gate, StationaryQubit *first_qubit, StationaryQubit *second_qubit);
   /**
    * \brief Two qubit CNOT gate.
    * \param Need to specify the control qubit as an argument.
@@ -332,7 +332,7 @@ class StationaryQubit : public cSimpleModule {
   virtual quantum_state getQuantumState();  // returns the dm of the physical Bell pair. Used for tomography.
   virtual measurement_operator Random_Measurement_Basis_Selection();
   virtual SingleGateErrorModel SetSingleQubitGateErrorCeilings(std::string gate_name);
-  virtual two_qubit_gate_error_model SetTwoQubitGateErrorCeilings(std::string gate_name);
+  virtual TwoQubitGateErrorModel SetTwoQubitGateErrorCeilings(std::string gate_name);
   // virtual measurement_output_probabilities getOutputProbabilities(quantum_state state, char meas_basis);
 };
 

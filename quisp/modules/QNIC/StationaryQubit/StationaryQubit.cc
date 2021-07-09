@@ -209,62 +209,63 @@ SingleGateErrorModel StationaryQubit::SetSingleQubitGateErrorCeilings(std::strin
   return gate;
 }
 
-two_qubit_gate_error_model StationaryQubit::SetTwoQubitGateErrorCeilings(std::string gate_name) {
-  two_qubit_gate_error_model gate;
-  std::string error_rate_par_name = std::string(gate_name) + std::string("_error_rate");
+TwoQubitGateErrorModel StationaryQubit::SetTwoQubitGateErrorCeilings(std::string gate_name) {
+  TwoQubitGateErrorModel gate;
 
-  std::string IXerror_ratio_par_name = std::string(gate_name) + std::string("_IX_error_ratio");
-  std::string XIerror_ratio_par_name = std::string(gate_name) + std::string("_XI_error_ratio");
-  std::string XXerror_ratio_par_name = std::string(gate_name) + std::string("_XX_error_ratio");
+  // prepare parameter names
+  std::string err_rate_name = std::string(gate_name) + std::string("_error_rate");
+  auto ix_ratio_name = gate_name + std::string("_IX_error_ratio");
+  auto xi_ratio_name = gate_name + std::string("_XI_error_ratio");
+  auto xx_rationame = gate_name + std::string("_XX_error_ratio");
 
-  std::string IZerror_ratio_par_name = std::string(gate_name) + std::string("_IZ_error_ratio");
-  std::string ZIerror_ratio_par_name = std::string(gate_name) + std::string("_ZI_error_ratio");
-  std::string ZZerror_ratio_par_name = std::string(gate_name) + std::string("_ZZ_error_ratio");
+  auto iz_ratio_name = gate_name + std::string("_IZ_error_ratio");
+  auto zi_ratio_name = gate_name + std::string("_ZI_error_ratio");
+  auto zz_ratio_name = gate_name + std::string("_ZZ_error_ratio");
 
-  std::string IYerror_ratio_par_name = std::string(gate_name) + std::string("_IY_error_ratio");
-  std::string YIerror_ratio_par_name = std::string(gate_name) + std::string("_YI_error_ratio");
-  std::string YYerror_ratio_par_name = std::string(gate_name) + std::string("_YY_error_ratio");
+  auto iy_ratio_name = gate_name + std::string("_IY_error_ratio");
+  auto yi_ratio_name = gate_name + std::string("_YI_error_ratio");
+  auto yy_ratio_name = gate_name + std::string("_YY_error_ratio");
 
-  gate.pauli_error_rate = par(error_rate_par_name.c_str());
-  double IXratio = par(IXerror_ratio_par_name.c_str());
-  double XIratio = par(XIerror_ratio_par_name.c_str());
-  double XXratio = par(XXerror_ratio_par_name.c_str());
+  // get error ratios from parameter
+  gate.pauli_error_rate = par(err_rate_name.c_str()).doubleValue();
+  double ix_ratio = par(ix_ratio_name.c_str()).doubleValue();
+  double xi_ratio = par(xi_ratio_name.c_str()).doubleValue();
+  double xx_ratio = par(xx_rationame.c_str()).doubleValue();
 
-  double IZratio = par(IZerror_ratio_par_name.c_str());
-  double ZIratio = par(ZIerror_ratio_par_name.c_str());
-  double ZZratio = par(ZZerror_ratio_par_name.c_str());
+  double iz_ratio = par(iz_ratio_name.c_str()).doubleValue();
+  double zi_ratio = par(zi_ratio_name.c_str()).doubleValue();
+  double zz_ratio = par(zz_ratio_name.c_str()).doubleValue();
 
-  double IYratio = par(IYerror_ratio_par_name.c_str());
-  double YIratio = par(YIerror_ratio_par_name.c_str());
-  double YYratio = par(YYerror_ratio_par_name.c_str());
+  double iy_ratio = par(iy_ratio_name.c_str()).doubleValue();
+  double yi_ratio = par(yi_ratio_name.c_str()).doubleValue();
+  double yy_ratio = par(yy_ratio_name.c_str()).doubleValue();
 
-  double ratio_sum = IXratio + XIratio + XXratio + IZratio + ZIratio + ZZratio + IYratio + YIratio + YYratio;
+  double ratio_sum = ix_ratio + xi_ratio + xx_ratio + iz_ratio + zi_ratio + zz_ratio + iy_ratio + yi_ratio + yy_ratio;
 
   if (ratio_sum == 0) {
-    // Dummy up ratios.
-    IXratio = 1.;
-    XIratio = 1.;
-    XXratio = 1.;
-    IZratio = 1.;
-    ZIratio = 1.;
-    ZZratio = 1.;
-    IYratio = 1.;
-    YIratio = 1.;
-    YYratio = 1.;
+    ix_ratio = 1.;
+    xi_ratio = 1.;
+    xx_ratio = 1.;
+    iz_ratio = 1.;
+    zi_ratio = 1.;
+    zz_ratio = 1.;
+    iy_ratio = 1.;
+    yi_ratio = 1.;
+    yy_ratio = 1.;
     ratio_sum = 9.;
   }
 
-  gate.IX_error_rate = gate.pauli_error_rate * (IXratio / ratio_sum);
-  gate.XI_error_rate = gate.pauli_error_rate * (XIratio / ratio_sum);
-  gate.XX_error_rate = gate.pauli_error_rate * (XXratio / ratio_sum);
+  gate.IX_error_rate = gate.pauli_error_rate * (ix_ratio / ratio_sum);
+  gate.XI_error_rate = gate.pauli_error_rate * (xi_ratio / ratio_sum);
+  gate.XX_error_rate = gate.pauli_error_rate * (xx_ratio / ratio_sum);
 
-  gate.IZ_error_rate = gate.pauli_error_rate * (IZratio / ratio_sum);
-  gate.ZI_error_rate = gate.pauli_error_rate * (ZIratio / ratio_sum);
-  gate.ZZ_error_rate = gate.pauli_error_rate * (ZZratio / ratio_sum);
+  gate.IZ_error_rate = gate.pauli_error_rate * (iz_ratio / ratio_sum);
+  gate.ZI_error_rate = gate.pauli_error_rate * (zi_ratio / ratio_sum);
+  gate.ZZ_error_rate = gate.pauli_error_rate * (zz_ratio / ratio_sum);
 
-  gate.IY_error_rate = gate.pauli_error_rate * (IYratio / ratio_sum);
-  gate.YI_error_rate = gate.pauli_error_rate * (YIratio / ratio_sum);
-  gate.YY_error_rate = gate.pauli_error_rate * (YYratio / ratio_sum);
+  gate.IY_error_rate = gate.pauli_error_rate * (iy_ratio / ratio_sum);
+  gate.YI_error_rate = gate.pauli_error_rate * (yi_ratio / ratio_sum);
+  gate.YY_error_rate = gate.pauli_error_rate * (yy_ratio / ratio_sum);
 
   gate.No_error_ceil = 1 - gate.pauli_error_rate;
   gate.IX_error_ceil = gate.No_error_ceil + gate.IX_error_rate;
@@ -278,9 +279,6 @@ two_qubit_gate_error_model StationaryQubit::SetTwoQubitGateErrorCeilings(std::st
   gate.IY_error_ceil = gate.ZZ_error_ceil + gate.IY_error_rate;
   gate.YI_error_ceil = gate.IY_error_ceil + gate.YI_error_rate;
   gate.YY_error_ceil = gate.YI_error_ceil + gate.YY_error_rate;
-  std::cout << "[CNOT] No=" << gate.No_error_ceil << ", IX=" << gate.IX_error_ceil << ", XI=" << gate.XI_error_ceil << ", XX=" << gate.XX_error_ceil << "\n";
-  std::cout << "IZ=" << gate.IZ_error_ceil << ", ZI=" << gate.ZI_error_ceil << ", ZZ=" << gate.ZZ_error_ceil << "\n";
-  std::cout << "IY=" << gate.IY_error_ceil << ", YI=" << gate.YI_error_ceil << ", YY=" << gate.YY_error_ceil << "\n";
   return gate;
 }
 
@@ -908,7 +906,7 @@ void StationaryQubit::apply_single_qubit_gate_error(SingleGateErrorModel gate, S
   }
 }
 
-void StationaryQubit::apply_two_qubit_gate_error(two_qubit_gate_error_model gate, StationaryQubit *first_qubit, StationaryQubit *second_qubit) {
+void StationaryQubit::apply_two_qubit_gate_error(TwoQubitGateErrorModel gate, StationaryQubit *first_qubit, StationaryQubit *second_qubit) {
   if (gate.pauli_error_rate == 0) {
     return;
   }
