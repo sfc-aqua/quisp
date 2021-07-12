@@ -24,6 +24,7 @@ void HoMController::initialize(int stage) {
   address = par("address");
   receiver = par("receiver");
   passive = par("passive");
+  bsa_notification_interval = par("bsa_notification_interval");
   /** \todo This code looks awefully simplifiable */
   if (passive) {
     // Nothing to do. EPPS will take care of entanglement creation.
@@ -107,11 +108,12 @@ void HoMController::handleMessage(cMessage *msg) {
   // but very rarely does not recognize the type. VERY weird.
 
   if (dynamic_cast<BSAstart *>(msg) != nullptr) {
-    // std::cout<<"Generate packet\n";
     sendNotifiers();
+
+    BSAstart *bsa_start = new BSAstart("BSA trial for the next step");
+    scheduleAt(simTime() + bsa_notification_interval, bsa_start);
     delete msg;
     return;
-    // Create timeout
   } else if (dynamic_cast<BSAresult *>(msg) != nullptr) {
     // std::cout<<"BSAresult\n";
     auto_resend_BSANotifier = false;  // Photon is arriving. No need to auto reschedule next round. Wait for the last photon fron either node.
@@ -125,14 +127,6 @@ void HoMController::handleMessage(cMessage *msg) {
     if (prev + 1 != aft) {
       error("Nahnah nah!");
     }
-
-    /*if(getStoredBSAresultsSize() == max_buffer && handshake==true){
-        bubble("All results stored!");
-        sendBSAresultsToNeighbors();
-        clearBSAresults();
-    }else{
-
-    }*/
   } else if (dynamic_cast<BSAfinish *>(msg) != nullptr) {  // Last photon from either node arrived.
     EV << "BSAfinish\n";
     bubble("BSAresult accumulated");
