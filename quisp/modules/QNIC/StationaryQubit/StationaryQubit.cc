@@ -106,11 +106,11 @@ memory_err.completely_mixed_rate = memory_err.error_rate * (memory_completely_mi
   // clang-format on
   std::cout << "Memory_Transition_matrix = \n " << Memory_Transition_matrix << " done \n";
 
-  Hgate_error = SetSingleQubitGateErrorCeilings("Hgate");
-  Xgate_error = SetSingleQubitGateErrorCeilings("Xgate");
-  Zgate_error = SetSingleQubitGateErrorCeilings("Zgate");
-  Measurement_error = SetSingleQubitGateErrorCeilings("Measurement");
-  CNOTgate_error = SetTwoQubitGateErrorCeilings("CNOTgate");
+  setSingleQubitGateErrorModel(Hgate_error, "Hgate");
+  setSingleQubitGateErrorModel(Xgate_error, "Xgate");
+  setSingleQubitGateErrorModel(Zgate_error, "Zgate");
+  setSingleQubitGateErrorModel(Measurement_error, "Measurement");
+  setTwoQubitGateErrorCeilings(CNOTgate_error, "CNOTgate");
 
   std::cout << Memory_Transition_matrix << "\n";
   // endSimulation();
@@ -180,104 +180,101 @@ void StationaryQubit::handleMessage(cMessage *msg) {
   }
 }
 
-gate_error_model StationaryQubit::SetSingleQubitGateErrorCeilings(std::string gate_name) {
-  gate_error_model gate;
-  std::string error_rate_par_name = std::string(gate_name) + std::string("_error_rate");
-  std::string Xerror_ratio_par_name = std::string(gate_name) + std::string("_X_error_ratio");
-  std::string Zerror_ratio_par_name = std::string(gate_name) + std::string("_Z_error_ratio");
-  std::string Yerror_ratio_par_name = std::string(gate_name) + std::string("_Y_error_ratio");
-  gate.pauli_error_rate = par(error_rate_par_name.c_str());
-  double Xratio = par(Xerror_ratio_par_name.c_str());
-  double Zratio = par(Zerror_ratio_par_name.c_str());
-  double Yratio = par(Yerror_ratio_par_name.c_str());
-  double ratio_sum = Xratio + Zratio + Yratio;
-  if (ratio_sum == 0) {
-    Xratio = 1;
-    Zratio = 1;
-    Yratio = 1;
+void StationaryQubit::setSingleQubitGateErrorModel(SingleGateErrorModel &model, std::string gate_name) {
+  auto err_rate_name = gate_name + std::string("_error_rate");
+  auto x_ratio_name = gate_name + std::string("_X_error_ratio");
+  auto z_ratio_name = gate_name + std::string("_Z_error_ratio");
+  auto y_ratio_name = gate_name + std::string("_Y_error_ratio");
+  model.pauli_error_rate = par(err_rate_name.c_str()).doubleValue();
+  auto x_ratio = par(x_ratio_name.c_str()).doubleValue();
+  auto z_ratio = par(z_ratio_name.c_str()).doubleValue();
+  auto y_ratio = par(y_ratio_name.c_str()).doubleValue();
+
+  double sum = x_ratio + z_ratio + y_ratio;
+  if (sum == 0) {
+    x_ratio = 1.;
+    z_ratio = 1.;
+    y_ratio = 1.;
+    sum = 3.;
   }
-  gate.X_error_rate = gate.pauli_error_rate * (Xratio / ratio_sum);
-  gate.Y_error_rate = gate.pauli_error_rate * (Yratio / ratio_sum);
-  gate.Z_error_rate = gate.pauli_error_rate * (Zratio / ratio_sum);
-  gate.No_error_ceil = 1 - gate.pauli_error_rate;
-  gate.X_error_ceil = gate.No_error_ceil + gate.X_error_rate;
-  gate.Z_error_ceil = gate.X_error_ceil + gate.Z_error_rate;
-  gate.Y_error_ceil = gate.Z_error_ceil + gate.Y_error_rate;
-  return gate;
+
+  model.X_error_rate = model.pauli_error_rate * (x_ratio / sum);
+  model.Y_error_rate = model.pauli_error_rate * (y_ratio / sum);
+  model.Z_error_rate = model.pauli_error_rate * (z_ratio / sum);
+  model.No_error_ceil = 1 - model.pauli_error_rate;
+  model.X_error_ceil = model.No_error_ceil + model.X_error_rate;
+  model.Z_error_ceil = model.X_error_ceil + model.Z_error_rate;
+  model.Y_error_ceil = model.Z_error_ceil + model.Y_error_rate;
 }
 
-two_qubit_gate_error_model StationaryQubit::SetTwoQubitGateErrorCeilings(std::string gate_name) {
-  two_qubit_gate_error_model gate;
-  std::string error_rate_par_name = std::string(gate_name) + std::string("_error_rate");
+void StationaryQubit::setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model, std::string gate_name) {
+  // prepare parameter names
+  std::string err_rate_name = std::string(gate_name) + std::string("_error_rate");
+  auto ix_ratio_name = gate_name + std::string("_IX_error_ratio");
+  auto xi_ratio_name = gate_name + std::string("_XI_error_ratio");
+  auto xx_rationame = gate_name + std::string("_XX_error_ratio");
 
-  std::string IXerror_ratio_par_name = std::string(gate_name) + std::string("_IX_error_ratio");
-  std::string XIerror_ratio_par_name = std::string(gate_name) + std::string("_XI_error_ratio");
-  std::string XXerror_ratio_par_name = std::string(gate_name) + std::string("_XX_error_ratio");
+  auto iz_ratio_name = gate_name + std::string("_IZ_error_ratio");
+  auto zi_ratio_name = gate_name + std::string("_ZI_error_ratio");
+  auto zz_ratio_name = gate_name + std::string("_ZZ_error_ratio");
 
-  std::string IZerror_ratio_par_name = std::string(gate_name) + std::string("_IZ_error_ratio");
-  std::string ZIerror_ratio_par_name = std::string(gate_name) + std::string("_ZI_error_ratio");
-  std::string ZZerror_ratio_par_name = std::string(gate_name) + std::string("_ZZ_error_ratio");
+  auto iy_ratio_name = gate_name + std::string("_IY_error_ratio");
+  auto yi_ratio_name = gate_name + std::string("_YI_error_ratio");
+  auto yy_ratio_name = gate_name + std::string("_YY_error_ratio");
 
-  std::string IYerror_ratio_par_name = std::string(gate_name) + std::string("_IY_error_ratio");
-  std::string YIerror_ratio_par_name = std::string(gate_name) + std::string("_YI_error_ratio");
-  std::string YYerror_ratio_par_name = std::string(gate_name) + std::string("_YY_error_ratio");
+  // get error ratios from parameter
+  model.pauli_error_rate = par(err_rate_name.c_str()).doubleValue();
+  double ix_ratio = par(ix_ratio_name.c_str()).doubleValue();
+  double xi_ratio = par(xi_ratio_name.c_str()).doubleValue();
+  double xx_ratio = par(xx_rationame.c_str()).doubleValue();
 
-  gate.pauli_error_rate = par(error_rate_par_name.c_str());
-  double IXratio = par(IXerror_ratio_par_name.c_str());
-  double XIratio = par(XIerror_ratio_par_name.c_str());
-  double XXratio = par(XXerror_ratio_par_name.c_str());
+  double iz_ratio = par(iz_ratio_name.c_str()).doubleValue();
+  double zi_ratio = par(zi_ratio_name.c_str()).doubleValue();
+  double zz_ratio = par(zz_ratio_name.c_str()).doubleValue();
 
-  double IZratio = par(IZerror_ratio_par_name.c_str());
-  double ZIratio = par(ZIerror_ratio_par_name.c_str());
-  double ZZratio = par(ZZerror_ratio_par_name.c_str());
+  double iy_ratio = par(iy_ratio_name.c_str()).doubleValue();
+  double yi_ratio = par(yi_ratio_name.c_str()).doubleValue();
+  double yy_ratio = par(yy_ratio_name.c_str()).doubleValue();
 
-  double IYratio = par(IYerror_ratio_par_name.c_str());
-  double YIratio = par(YIerror_ratio_par_name.c_str());
-  double YYratio = par(YYerror_ratio_par_name.c_str());
-
-  double ratio_sum = IXratio + XIratio + XXratio + IZratio + ZIratio + ZZratio + IYratio + YIratio + YYratio;
+  double ratio_sum = ix_ratio + xi_ratio + xx_ratio + iz_ratio + zi_ratio + zz_ratio + iy_ratio + yi_ratio + yy_ratio;
 
   if (ratio_sum == 0) {
-    // Dummy up ratios.
-    IXratio = 1;
-    XIratio = 1;
-    XXratio = 1;
-    IZratio = 1;
-    ZIratio = 1;
-    ZZratio = 1;
-    IYratio = 1;
-    YIratio = 1;
-    YYratio = 1;
+    ix_ratio = 1.;
+    xi_ratio = 1.;
+    xx_ratio = 1.;
+    iz_ratio = 1.;
+    zi_ratio = 1.;
+    zz_ratio = 1.;
+    iy_ratio = 1.;
+    yi_ratio = 1.;
+    yy_ratio = 1.;
+    ratio_sum = 9.;
   }
 
-  gate.IX_error_rate = gate.pauli_error_rate * (IXratio / ratio_sum);
-  gate.XI_error_rate = gate.pauli_error_rate * (XIratio / ratio_sum);
-  gate.XX_error_rate = gate.pauli_error_rate * (XXratio / ratio_sum);
+  model.IX_error_rate = model.pauli_error_rate * (ix_ratio / ratio_sum);
+  model.XI_error_rate = model.pauli_error_rate * (xi_ratio / ratio_sum);
+  model.XX_error_rate = model.pauli_error_rate * (xx_ratio / ratio_sum);
 
-  gate.IZ_error_rate = gate.pauli_error_rate * (IZratio / ratio_sum);
-  gate.ZI_error_rate = gate.pauli_error_rate * (ZIratio / ratio_sum);
-  gate.ZZ_error_rate = gate.pauli_error_rate * (ZZratio / ratio_sum);
+  model.IZ_error_rate = model.pauli_error_rate * (iz_ratio / ratio_sum);
+  model.ZI_error_rate = model.pauli_error_rate * (zi_ratio / ratio_sum);
+  model.ZZ_error_rate = model.pauli_error_rate * (zz_ratio / ratio_sum);
 
-  gate.IY_error_rate = gate.pauli_error_rate * (IYratio / ratio_sum);
-  gate.YI_error_rate = gate.pauli_error_rate * (YIratio / ratio_sum);
-  gate.YY_error_rate = gate.pauli_error_rate * (YYratio / ratio_sum);
+  model.IY_error_rate = model.pauli_error_rate * (iy_ratio / ratio_sum);
+  model.YI_error_rate = model.pauli_error_rate * (yi_ratio / ratio_sum);
+  model.YY_error_rate = model.pauli_error_rate * (yy_ratio / ratio_sum);
 
-  gate.No_error_ceil = 1 - gate.pauli_error_rate;
-  gate.IX_error_ceil = gate.No_error_ceil + gate.IX_error_rate;
-  gate.XI_error_ceil = gate.IX_error_ceil + gate.XI_error_rate;
-  gate.XX_error_ceil = gate.XI_error_ceil + gate.XX_error_rate;
+  model.No_error_ceil = 1 - model.pauli_error_rate;
+  model.IX_error_ceil = model.No_error_ceil + model.IX_error_rate;
+  model.XI_error_ceil = model.IX_error_ceil + model.XI_error_rate;
+  model.XX_error_ceil = model.XI_error_ceil + model.XX_error_rate;
 
-  gate.IZ_error_ceil = gate.XX_error_ceil + gate.IZ_error_rate;
-  gate.ZI_error_ceil = gate.IZ_error_ceil + gate.ZI_error_rate;
-  gate.ZZ_error_ceil = gate.ZI_error_ceil + gate.ZZ_error_rate;
+  model.IZ_error_ceil = model.XX_error_ceil + model.IZ_error_rate;
+  model.ZI_error_ceil = model.IZ_error_ceil + model.ZI_error_rate;
+  model.ZZ_error_ceil = model.ZI_error_ceil + model.ZZ_error_rate;
 
-  gate.IY_error_ceil = gate.ZZ_error_ceil + gate.IY_error_rate;
-  gate.YI_error_ceil = gate.IY_error_ceil + gate.YI_error_rate;
-  gate.YY_error_ceil = gate.YI_error_ceil + gate.YY_error_rate;
-  std::cout << "[CNOT] No=" << gate.No_error_ceil << ", IX=" << gate.IX_error_ceil << ", XI=" << gate.XI_error_ceil << ", XX=" << gate.XX_error_ceil << "\n";
-  std::cout << "IZ=" << gate.IZ_error_ceil << ", ZI=" << gate.ZI_error_ceil << ", ZZ=" << gate.ZZ_error_ceil << "\n";
-  std::cout << "IY=" << gate.IY_error_ceil << ", YI=" << gate.YI_error_ceil << ", YY=" << gate.YY_error_ceil << "\n";
-  return gate;
+  model.IY_error_ceil = model.ZZ_error_ceil + model.IY_error_rate;
+  model.YI_error_ceil = model.IY_error_ceil + model.YI_error_rate;
+  model.YY_error_ceil = model.YI_error_ceil + model.YY_error_rate;
 }
 
 /*
@@ -316,7 +313,7 @@ void StationaryQubit::setEmissionPauliError(){
 
 bool StationaryQubit::measure_X() {
   // Need to add noise here later
-  apply_single_qubit_gate_error(Measurement_error, this);
+  apply_single_qubit_gate_error(Measurement_error);
   return !par("GOD_Zerror");
 }
 
@@ -325,7 +322,7 @@ bool StationaryQubit::measure_X() {
  */
 bool StationaryQubit::measure_Y() {
   // Need to add noise here later
-  apply_single_qubit_gate_error(Measurement_error, this);
+  apply_single_qubit_gate_error(Measurement_error);
   bool error = true;
   if (par("GOD_Zerror") && par("GOD_Xerror")) {
     error = false;
@@ -339,14 +336,14 @@ bool StationaryQubit::measure_Y() {
 
 bool StationaryQubit::measure_Z() {
   // Need to add noise here later
-  apply_single_qubit_gate_error(Measurement_error, this);
+  apply_single_qubit_gate_error(Measurement_error);
   return !par("GOD_Xerror");
 }
 
 // Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
 void StationaryQubit::Hadamard_gate() {
   // Need to add noise here later
-  apply_single_qubit_gate_error(Hgate_error, this);
+  apply_single_qubit_gate_error(Hgate_error);
   bool z = par("GOD_Zerror");
   par("GOD_Zerror") = par("GOD_Xerror");
   par("GOD_Xerror") = z;
@@ -354,19 +351,19 @@ void StationaryQubit::Hadamard_gate() {
 
 void StationaryQubit::Z_gate() {
   // Need to add noise here later
-  apply_single_qubit_gate_error(Zgate_error, this);
+  apply_single_qubit_gate_error(Zgate_error);
   par("GOD_Zerror") = !par("GOD_Zerror");
 }
 
 void StationaryQubit::X_gate() {
   // Need to add noise here later
-  apply_single_qubit_gate_error(Xgate_error, this);
+  apply_single_qubit_gate_error(Xgate_error);
   par("GOD_Xerror") = !par("GOD_Xerror");
 }
 
 void StationaryQubit::CNOT_gate(StationaryQubit *control_qubit) {
   // Need to add noise here later
-  apply_two_qubit_gate_error(CNOTgate_error, this, control_qubit);
+  apply_two_qubit_gate_error(CNOTgate_error, control_qubit);
   // std::cout<<"this X err = "<<this->par("GOD_Xerror").boolValue()<<"\n";
 
   if (control_qubit->par("GOD_Xerror")) {
@@ -879,83 +876,86 @@ quantum_state StationaryQubit::getQuantumState() {
   return q;
 }
 
-void StationaryQubit::apply_single_qubit_gate_error(gate_error_model gate, StationaryQubit *qubit) {
-  if (gate.pauli_error_rate == 0) {
+void StationaryQubit::apply_single_qubit_gate_error(SingleGateErrorModel const &err) {
+  if (err.pauli_error_rate == 0) {
     return;
   }
-  double rand = dblrand();  // Gives a random double between 0.0 ~ 1.0
+  // Gives a random double between 0.0 ~ 1.0
+  double rand = dblrand();
 
-  if (rand <= gate.No_error_ceil) {
-    // Do nothing
-    // std::cout<<"Single qubit gate I error\n";
-  } else if (gate.No_error_ceil < rand && rand <= gate.X_error_ceil && (gate.No_error_ceil != gate.X_error_ceil)) {
+  /*
+   * 0.0    No_error_ceil       Z_error_ceil  1.0
+   *  |          |                   |         |
+   *  | No Error | X Error | Z Error | Y Error |
+   *                       |
+   *                  X_error_ceil
+   */
+  if (rand <= err.No_error_ceil) {
+    // No error
+  } else if (err.No_error_ceil < rand && rand <= err.X_error_ceil && (err.No_error_ceil != err.X_error_ceil)) {
     // X error
-    qubit->addXerror();
-    // std::cout<<"Single qubit gate X error\n";
-  } else if (gate.X_error_ceil < rand && rand <= gate.Z_error_ceil && (gate.X_error_ceil != gate.Z_error_ceil)) {
+    addXerror();
+  } else if (err.X_error_ceil < rand && rand <= err.Z_error_ceil && (err.X_error_ceil != err.Z_error_ceil)) {
     // Z error
-    qubit->addZerror();
-    // std::cout<<"Single qubit gate Z error\n";
+    addZerror();
   } else {
     // Y error
-    qubit->addZerror();
-    qubit->addXerror();
-    // std::cout<<"Single qubit gate Y error\n";
+    addZerror();
+    addXerror();
   }
 }
 
-void StationaryQubit::apply_two_qubit_gate_error(two_qubit_gate_error_model gate, StationaryQubit *first_qubit, StationaryQubit *second_qubit) {
-  if (gate.pauli_error_rate == 0) {
+void StationaryQubit::apply_two_qubit_gate_error(TwoQubitGateErrorModel const &err, StationaryQubit *another_qubit) {
+  if (err.pauli_error_rate == 0) {
     return;
   }
 
-  double rand = dblrand();  // Gives a random double between 0.0 ~ 1.0
+  // Gives a random double between 0.0 ~ 1.0
+  double rand = dblrand();
 
-  if (rand <= gate.No_error_ceil) {
-    // Do nothing
-  } else if (gate.No_error_ceil < rand && rand <= gate.IX_error_ceil && (gate.No_error_ceil != gate.IX_error_ceil)) {
+  /*
+   * 0.0  No_error_ceil    XI_error_ceil     IY_error_ceil     YY_error_ceil    ZI_error_ceil  1.0
+   *  |        |                 |                 |                 |                 |        |
+   *  | No err | IX err | XI err | XX err | IY err | YI err | YY err | IZ err | ZI err | ZZ err |
+   *                    |                 |                 |                 |
+   *              IX_error_ceil      XX_error_ceil     YI_error_ceil    IZ_error_ceil
+   */
+  if (rand <= err.No_error_ceil) {
+    // No error
+  } else if (err.No_error_ceil < rand && rand <= err.IX_error_ceil && (err.No_error_ceil != err.IX_error_ceil)) {
     // IX error
-    // error("IX");
-    first_qubit->addXerror();
-  } else if (gate.IX_error_ceil < rand && rand <= gate.XI_error_ceil && (gate.IX_error_ceil != gate.XI_error_ceil)) {
+    addXerror();
+  } else if (err.IX_error_ceil < rand && rand <= err.XI_error_ceil && (err.IX_error_ceil != err.XI_error_ceil)) {
     // XI error
-    // error("XI");
-    second_qubit->addXerror();
-  } else if (gate.XI_error_ceil < rand && rand <= gate.XX_error_ceil && (gate.XI_error_ceil != gate.XX_error_ceil)) {
+    another_qubit->addXerror();
+  } else if (err.XI_error_ceil < rand && rand <= err.XX_error_ceil && (err.XI_error_ceil != err.XX_error_ceil)) {
     // XX error
-    // error("XX");
-    first_qubit->addXerror();
-    second_qubit->addXerror();
-  } else if (gate.XX_error_ceil < rand && rand <= gate.IZ_error_ceil && (gate.XX_error_ceil != gate.IZ_error_ceil)) {
+    addXerror();
+    another_qubit->addXerror();
+  } else if (err.XX_error_ceil < rand && rand <= err.IZ_error_ceil && (err.XX_error_ceil != err.IZ_error_ceil)) {
     // IZ error
-    // error("IZ");
-    first_qubit->addZerror();
-  } else if (gate.IZ_error_ceil < rand && rand <= gate.ZI_error_ceil && (gate.IZ_error_ceil != gate.ZI_error_ceil)) {
+    addZerror();
+  } else if (err.IZ_error_ceil < rand && rand <= err.ZI_error_ceil && (err.IZ_error_ceil != err.ZI_error_ceil)) {
     // ZI error
-    // error("ZI");
-    second_qubit->addZerror();
-  } else if (gate.ZI_error_ceil < rand && rand <= gate.ZZ_error_ceil && (gate.ZI_error_ceil != gate.ZZ_error_ceil)) {
+    another_qubit->addZerror();
+  } else if (err.ZI_error_ceil < rand && rand <= err.ZZ_error_ceil && (err.ZI_error_ceil != err.ZZ_error_ceil)) {
     // ZZ error
-    // error("ZZ");
-    first_qubit->addZerror();
-    second_qubit->addZerror();
-  } else if (gate.ZZ_error_ceil < rand && rand <= gate.IY_error_ceil && (gate.ZZ_error_ceil != gate.IY_error_ceil)) {
+    addZerror();
+    another_qubit->addZerror();
+  } else if (err.ZZ_error_ceil < rand && rand <= err.IY_error_ceil && (err.ZZ_error_ceil != err.IY_error_ceil)) {
     // IY error
-    // error("IY");
-    first_qubit->addXerror();
-    first_qubit->addZerror();
-  } else if (gate.IY_error_ceil < rand && rand <= gate.YI_error_ceil && (gate.IY_error_ceil != gate.YI_error_ceil)) {
+    addXerror();
+    addZerror();
+  } else if (err.IY_error_ceil < rand && rand <= err.YI_error_ceil && (err.IY_error_ceil != err.YI_error_ceil)) {
     // YI error
-    // error("YI");
-    second_qubit->addXerror();
-    second_qubit->addZerror();
+    another_qubit->addXerror();
+    another_qubit->addZerror();
   } else {
-    // error("YY");
     // YY error
-    first_qubit->addXerror();
-    first_qubit->addZerror();
-    second_qubit->addXerror();
-    second_qubit->addZerror();
+    addXerror();
+    addZerror();
+    another_qubit->addXerror();
+    another_qubit->addZerror();
   }
 }
 
@@ -980,7 +980,7 @@ measurement_outcome StationaryQubit::measure_density_independent() {
   apply_memory_error(this);
 
   // Measurement gate error
-  apply_single_qubit_gate_error(Measurement_error, this);
+  apply_single_qubit_gate_error(Measurement_error);
 
   // This becomes nullptr if this qubit got excited/relaxed or measured.
   if (this->entangled_partner != nullptr) {

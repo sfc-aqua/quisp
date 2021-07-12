@@ -82,7 +82,7 @@ class StatQubitTarget : public StationaryQubit {
   }
 };
 
-TEST(StationaryQubitMemoryErrorTest, do_nothing) {
+TEST(StatQubitMemoryErrorTest, do_nothing) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
@@ -107,7 +107,7 @@ TEST(StationaryQubitMemoryErrorTest, do_nothing) {
   EXPECT_FALSE(qubit->par("GOD_REerror"));
   EXPECT_FALSE(qubit->par("GOD_EXerror"));
 }
-TEST(StationaryQubitMemoryErrorTest, update_timestamp) {
+TEST(StatQubitMemoryErrorTest, update_timestamp) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
@@ -119,7 +119,7 @@ TEST(StationaryQubitMemoryErrorTest, update_timestamp) {
   qubit->apply_memory_error(qubit);
   EXPECT_EQ(qubit->updated_time, SimTime(1, SIMTIME_US));
 }
-TEST(StationaryQubitMemoryErrorTest, apply_memory_error_no_error) {
+TEST(StatQubitMemoryErrorTest, apply_memory_error_no_error) {
   auto *sim = prepareSimulation();
   auto *rng = useTestRNG();
   auto *qubit = new StatQubitTarget{};
@@ -190,7 +190,7 @@ TEST(StationaryQubitMemoryErrorTest, apply_memory_error_no_error) {
   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
 }
 
-TEST(StationaryQubitMemoryErrorTest, apply_memory_error_X_error) {
+TEST(StatQubitMemoryErrorTest, apply_memory_error_X_error) {
   auto *sim = prepareSimulation();
   auto *rng = useTestRNG();
   auto *qubit = new StatQubitTarget{};
@@ -266,7 +266,7 @@ TEST(StationaryQubitMemoryErrorTest, apply_memory_error_X_error) {
   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
 }
 
-TEST(StationaryQubitMemoryErrorTest, apply_memory_error_Z_error) {
+TEST(StatQubitMemoryErrorTest, apply_memory_error_Z_error) {
   auto *sim = prepareSimulation();
   auto *rng = useTestRNG();
   auto *qubit = new StatQubitTarget{};
@@ -342,7 +342,7 @@ TEST(StationaryQubitMemoryErrorTest, apply_memory_error_Z_error) {
   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
 }
 
-TEST(StationaryQubitMemoryErrorTest, apply_memory_error_Y_error) {
+TEST(StatQubitMemoryErrorTest, apply_memory_error_Y_error) {
   auto *sim = prepareSimulation();
   auto *rng = useTestRNG();
   auto *qubit = new StatQubitTarget{};
@@ -423,7 +423,7 @@ TEST(StationaryQubitMemoryErrorTest, apply_memory_error_Y_error) {
   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
 }
 
-TEST(StationaryQubitMemoryErrorTest, apply_memory_error_excitation_error) {
+TEST(StatQubitMemoryErrorTest, apply_memory_error_excitation_error) {
   auto *sim = prepareSimulation();
   auto *rng = useTestRNG();
   auto *qubit = new StatQubitTarget{};
@@ -499,7 +499,7 @@ TEST(StationaryQubitMemoryErrorTest, apply_memory_error_excitation_error) {
   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
 }
 
-TEST(StationaryQubitMemoryErrorTest, apply_memory_error_relaxation_error) {
+TEST(StatQubitMemoryErrorTest, apply_memory_error_relaxation_error) {
   auto *sim = prepareSimulation();
   auto *rng = useTestRNG();
   auto *qubit = new StatQubitTarget{};
