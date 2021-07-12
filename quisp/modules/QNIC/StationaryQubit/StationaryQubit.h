@@ -332,7 +332,7 @@ class StationaryQubit : public cSimpleModule {
   virtual quantum_state getQuantumState();  // returns the dm of the physical Bell pair. Used for tomography.
   virtual measurement_operator Random_Measurement_Basis_Selection();
   virtual void setSingleQubitGateErrorModel(SingleGateErrorModel &model, std::string gate_name);
-  virtual TwoQubitGateErrorModel setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model, std::string gate_name);
+  virtual void setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model, std::string gate_name);
   // virtual measurement_output_probabilities getOutputProbabilities(quantum_state state, char meas_basis);
 };
 

@@ -207,7 +207,7 @@ void StationaryQubit::setSingleQubitGateErrorModel(SingleGateErrorModel &model, 
   model.Y_error_ceil = model.Z_error_ceil + model.Y_error_rate;
 }
 
-TwoQubitGateErrorModel StationaryQubit::setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model, std::string gate_name) {
+void StationaryQubit::setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model, std::string gate_name) {
   // prepare parameter names
   std::string err_rate_name = std::string(gate_name) + std::string("_error_rate");
   auto ix_ratio_name = gate_name + std::string("_IX_error_ratio");
@@ -275,7 +275,6 @@ TwoQubitGateErrorModel StationaryQubit::setTwoQubitGateErrorCeilings(TwoQubitGat
   model.IY_error_ceil = model.ZZ_error_ceil + model.IY_error_rate;
   model.YI_error_ceil = model.IY_error_ceil + model.YI_error_rate;
   model.YY_error_ceil = model.YI_error_ceil + model.YY_error_rate;
-  return model;
 }
 
 /*
