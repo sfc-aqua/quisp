@@ -1,5 +1,6 @@
 #include "UtilFunctions.h"
 #include <omnetpp.h>
+#include "RNG.h"
 #include "StaticEnv.h"
 
 using namespace omnetpp;
@@ -64,6 +65,13 @@ TestSimulation *getTestSimulation() {
 }
 
 cEnvir *createStaticEnv() { return new quisp_test::env::StaticEnv; }
+quisp_test::rng::TestRNG *useTestRNG() {
+  using quisp_test::env::StaticEnv;
+  auto *env = dynamic_cast<StaticEnv *>(cSimulation::getStaticEnvir());
+  auto *rng = new quisp_test::rng::TestRNG();
+  env->rng = rng;
+  return rng;
+}
 
 }  // namespace utils
 }  // namespace quisp_test

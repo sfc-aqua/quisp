@@ -22,5 +22,6 @@ using utils::setParBool;
 using utils::setParDouble;
 using utils::setParInt;
 using utils::setParStr;
+using utils::useTestRNG;
 
 }  // namespace quisp_test
