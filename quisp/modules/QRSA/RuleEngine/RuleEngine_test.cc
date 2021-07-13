@@ -68,13 +68,12 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
     setParInt(this, "number_of_qnics_r", 1);
     setParInt(this, "number_of_qnics", 1);
     setParInt(this, "total_number_of_qnics", 2);
-    this->setName("rule_engine_test_target");
-    this->provider.setStrategy(std::make_unique<Strategy>(mockQubit, routingdaemon, hardware_monitor));
+    setName("rule_engine_test_target");
+    provider.setStrategy(std::make_unique<Strategy>(mockQubit, routingdaemon, hardware_monitor));
+    setComponentType(new TestModuleType("rule_engine_test"));
   }
-
- protected:
   // setter function for allResorces[qnic_type][qnic_index]
-  void setAllResources(int qnic_type, int qnic_index, int partner, StationaryQubit* qubit) { this->allResources[qnic_type][qnic_index].insert(std::make_pair(partner, qubit)); };
+  void setAllResources(int qnic_type, int qnic_index, int partner, StationaryQubit* qubit) { this->allResources.insert((QNIC_type)qnic_type, qnic_index, partner, qubit); };
 
  private:
   FRIEND_TEST(RuleEngineTest, ESResourceUpdate);
@@ -110,15 +109,30 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   c.setAllResources(QNIC_E, 0, 0, mockQubit0);
   c.setAllResources(QNIC_E, 0, 1, mockQubit1);
   c.setAllResources(QNIC_E, 0, 2, mockQubit2);
-  auto partner = c.allResources[QNIC_E][0].find(1);
-  ASSERT_TRUE(partner != c.allResources[QNIC_E][0].end());
+  auto* partner = c.allResources.find(QNIC_E, 0, 1);
+  ASSERT_TRUE(partner != nullptr);
   // check resource is updated?
   c.updateResources_EntanglementSwapping(swapr);
-  auto updated_partner = c.allResources[QNIC_E][0].find(3);
-  ASSERT_TRUE(updated_partner != c.allResources[QNIC_E][0].end());
+  auto* updated_partner = c.allResources.find(QNIC_E, 0, 3);
+  ASSERT_TRUE(updated_partner != nullptr);
   // old record was deleted properly
-  auto old_partner = c.allResources[QNIC_E][0].find(1);
-  ASSERT_TRUE(old_partner == c.allResources[QNIC_E][0].end());
+  auto* old_partner = c.allResources.find(QNIC_E, 0, 1);
+  ASSERT_TRUE(old_partner == nullptr);
+}
+
+TEST(RuleEngineTest, resourceAllocationTest) {
+  auto* sim = prepareSimulation();
+  auto routingdaemon = new MockRoutingDaemon;
+  auto mockHardwareMonitor = new MockHardwareMonitor;
+  auto mockQubit0 = new MockStationaryQubit;
+  auto mockQubit1 = new MockStationaryQubit;  // qubit to be updated with entanglement swapping
+  auto mockQubit2 = new MockStationaryQubit;
+  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor};
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+  rule_engine->setAllResources(QNIC_E, 0, 0, mockQubit0);
+  rule_engine->setAllResources(QNIC_E, 0, 1, mockQubit1);
+  rule_engine->setAllResources(QNIC_E, 0, 2, mockQubit2);
 }
 
 }  // namespace
