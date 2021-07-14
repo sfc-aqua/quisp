@@ -972,9 +972,9 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     error("RuleEngine. Entanglement swapping went wrong");
   }
   // first delete old record
-  allResources.erase(qnic_type, qnic_index, qubit);
+  entangled_resources.eraseQubit(qubit);
   // Make this qubit available for rules
-  allResources.insert(qnic_type, qnic_index, new_partner, qubit);
+  entangled_resources.insertEntangledQubit(new_partner, qubit);
 
   // FOR DEBUGGING
   if (qubit->entangled_partner != nullptr) {
@@ -1027,7 +1027,7 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
     error("RuleEngine. Ebit succeed. but wrong");
   }
   // first delete old record
-  allResources.erase(qnic_type, qnic_index, qubit);
+  entangled_resources.eraseQubit(qubit);
 
   // Make this qubit available for rules
   if (qubit->isAllocated()) {
@@ -1036,7 +1036,7 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
   if (qubit->isLocked()) {
     error("qubit is locked");
   }
-  allResources.insert(qnic_type, qnic_index, new_partner, qubit);
+  entangled_resources.insertEntangledQubit(new_partner, qubit);
   if (qubit->entangled_partner != nullptr) {
     if (qubit->entangled_partner->entangled_partner == nullptr) {
       error("1. Entanglement tracking is not doing its job. in update resource E.S.");
@@ -1109,7 +1109,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
         error("RuleEngine. Ebit succeed. but wrong");
       }
       // Add qubit as available resource between NeighborQNodeAddress.
-      allResources.insert(qnic_type, qnic_index, neighborQNodeAddress, qubit);
+      entangled_resources.insertEntangledQubit(neighborQNodeAddress, qubit);
     }
   }
 
@@ -1190,7 +1190,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
       }
 
       int assigned = 0;
-      for (auto &it : allResources.range((QNIC_type)qnic_type, qnic_index)) {
+      for (auto &it : entangled_resources.range((QNIC_type)qnic_type, qnic_index)) {
         auto &qubit = it.second;
         auto &addr = it.first;
         if (!qubit->isAllocated() && resource_entangled_with_address == addr) {
@@ -1385,7 +1385,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, StationaryQubit *qubit, QNIC_type qnic_type) {
   realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit->par("stationaryQubit_address"), qnic_type, true);
   Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit->par("stationaryQubit_address"));
-  allResources.erase(qnic_type, qnic_index, qubit);
+  entangled_resources.eraseQubit(qubit);
 }
 
 }  // namespace modules

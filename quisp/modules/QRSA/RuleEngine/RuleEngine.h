@@ -14,8 +14,8 @@
 #include <vector>
 
 #include "../../PhysicalConnection/BSA/HoMController.h"
+#include "EntangledResourceStore.h"
 #include "IRuleEngine.h"
-#include "ResourceStore.h"
 #include "classical_messages_m.h"
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
@@ -67,7 +67,7 @@ class RuleEngine : public IRuleEngine {
   IRoutingDaemon *routingdaemon;
   IRealTimeController *realtime_controller;
   int *qnic_burst_trial_counter;
-  ResourceStore allResources;
+  EntangledResourceStore entangled_resources;
   // <partner address, configs (qnic, timing etc..)>
   std::map<int, PhotonTransmissionConfig> photon_transmission_config_with_partner;
   // typedef rules::RuleSet* RuleSetPtr;

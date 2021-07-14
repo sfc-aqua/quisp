@@ -73,7 +73,7 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
     setComponentType(new TestModuleType("rule_engine_test"));
   }
   // setter function for allResorces[qnic_type][qnic_index]
-  void setAllResources(int qnic_type, int qnic_index, int partner, StationaryQubit* qubit) { this->allResources.insert((QNIC_type)qnic_type, qnic_index, partner, qubit); };
+  void setAllResources(int partner_addr, StationaryQubit* qubit) { this->entangled_resources.insertEntangledQubit(partner_addr, qubit); };
 
  private:
   FRIEND_TEST(RuleEngineTest, ESResourceUpdate);
@@ -106,17 +106,17 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).Times(2).WillOnce(Return(2)).WillOnce(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(std::move(info))));
   c.initialize();
-  c.setAllResources(QNIC_E, 0, 0, mockQubit0);
-  c.setAllResources(QNIC_E, 0, 1, mockQubit1);
-  c.setAllResources(QNIC_E, 0, 2, mockQubit2);
-  auto* partner = c.allResources.find(QNIC_E, 0, 1);
+  c.setAllResources(0, mockQubit0);
+  c.setAllResources(1, mockQubit1);
+  c.setAllResources(2, mockQubit2);
+  auto* partner = c.entangled_resources.findQubit(QNIC_E, 0, 1);
   ASSERT_TRUE(partner != nullptr);
   // check resource is updated?
   c.updateResources_EntanglementSwapping(swapr);
-  auto* updated_partner = c.allResources.find(QNIC_E, 0, 3);
+  auto* updated_partner = c.entangled_resources.findQubit(QNIC_E, 0, 3);
   ASSERT_TRUE(updated_partner != nullptr);
   // old record was deleted properly
-  auto* old_partner = c.allResources.find(QNIC_E, 0, 1);
+  auto* old_partner = c.entangled_resources.findQubit(QNIC_E, 0, 1);
   ASSERT_TRUE(old_partner == nullptr);
 }
 
@@ -130,9 +130,9 @@ TEST(RuleEngineTest, resourceAllocationTest) {
   auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor};
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
-  rule_engine->setAllResources(QNIC_E, 0, 0, mockQubit0);
-  rule_engine->setAllResources(QNIC_E, 0, 1, mockQubit1);
-  rule_engine->setAllResources(QNIC_E, 0, 2, mockQubit2);
+  rule_engine->setAllResources(0, mockQubit0);
+  rule_engine->setAllResources(1, mockQubit1);
+  rule_engine->setAllResources(2, mockQubit2);
 }
 
 }  // namespace
