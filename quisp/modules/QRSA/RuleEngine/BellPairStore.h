@@ -12,10 +12,10 @@ using EntangledPartnerAddrQubitMap = std::multimap<QNodeAddr, StationaryQubit*>;
 using ResourceKey = std::pair<QNIC_type, QNicIndex>;
 using EntangledQubitsRangeIterator = std::pair<EntangledPartnerAddrQubitMap::iterator, EntangledPartnerAddrQubitMap::iterator>;
 
-class EntangledResourceStore {
+class BellPairStore {
  public:
-  EntangledResourceStore();
-  ~EntangledResourceStore();
+  BellPairStore();
+  ~BellPairStore();
   void eraseQubit(StationaryQubit* const qubit);
   void insertEntangledQubit(int partner_addr, StationaryQubit* const qubit);
   StationaryQubit* findQubit(QNIC_type qnic_type, int qnic_index, int addr);

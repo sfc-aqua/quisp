@@ -1,13 +1,13 @@
-#include "EntangledResourceStore.h"
+#include "BellPairStore.h"
 #include <utility>
 #include "modules/QNIC.h"
 
 namespace quisp {
 namespace modules {
-EntangledResourceStore::EntangledResourceStore() {}
-EntangledResourceStore::~EntangledResourceStore() {}
+BellPairStore::BellPairStore() {}
+BellPairStore::~BellPairStore() {}
 
-void EntangledResourceStore::insertEntangledQubit(int partner_addr, StationaryQubit *const qubit) {
+void BellPairStore::insertEntangledQubit(int partner_addr, StationaryQubit *const qubit) {
   auto qnic_type = (QNIC_type)qubit->qnic_type;
   auto qnic_index = qubit->qnic_index;
   auto key = std::make_pair(qnic_type, qnic_index);
@@ -18,7 +18,7 @@ void EntangledResourceStore::insertEntangledQubit(int partner_addr, StationaryQu
   }
 }
 
-void EntangledResourceStore::eraseQubit(StationaryQubit *const qubit) {
+void BellPairStore::eraseQubit(StationaryQubit *const qubit) {
   auto qnic_type = (QNIC_type)qubit->qnic_type;
   auto qnic_index = qubit->qnic_index;
   if (_resources.find(std::make_pair(qnic_type, qnic_index)) == _resources.cend()) {
@@ -33,7 +33,7 @@ void EntangledResourceStore::eraseQubit(StationaryQubit *const qubit) {
   }
 }
 
-StationaryQubit *EntangledResourceStore::findQubit(QNIC_type qnic_type, int qnic_index, int addr) {
+StationaryQubit *BellPairStore::findQubit(QNIC_type qnic_type, int qnic_index, int addr) {
   auto key = std::make_pair(qnic_type, qnic_index);
   if (_resources.find(key) == _resources.cend()) {
     return nullptr;
@@ -45,7 +45,7 @@ StationaryQubit *EntangledResourceStore::findQubit(QNIC_type qnic_type, int qnic
   return it->second;
 }
 
-EntangledQubitsRangeIterator EntangledResourceStore::getQubitsRange(QNIC_type qnic_type, int qnic_index, int partner_addr) {
+EntangledQubitsRangeIterator BellPairStore::getQubitsRange(QNIC_type qnic_type, int qnic_index, int partner_addr) {
   auto key = std::make_pair(qnic_type, qnic_index);
   if (_resources.find(key) == _resources.cend()) {
     _resources.emplace(key, std::multimap<int, StationaryQubit *>{});

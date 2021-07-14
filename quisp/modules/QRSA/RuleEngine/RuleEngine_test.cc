@@ -73,7 +73,7 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
     setComponentType(new TestModuleType("rule_engine_test"));
   }
   // setter function for allResorces[qnic_type][qnic_index]
-  void setAllResources(int partner_addr, StationaryQubit* qubit) { this->entangled_resources.insertEntangledQubit(partner_addr, qubit); };
+  void setAllResources(int partner_addr, StationaryQubit* qubit) { this->bell_pair_store.insertEntangledQubit(partner_addr, qubit); };
 
  private:
   FRIEND_TEST(RuleEngineTest, ESResourceUpdate);
@@ -109,14 +109,14 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   c.setAllResources(0, mockQubit0);
   c.setAllResources(1, mockQubit1);
   c.setAllResources(2, mockQubit2);
-  auto* partner = c.entangled_resources.findQubit(QNIC_E, 0, 1);
+  auto* partner = c.bell_pair_store.findQubit(QNIC_E, 0, 1);
   ASSERT_TRUE(partner != nullptr);
   // check resource is updated?
   c.updateResources_EntanglementSwapping(swapr);
-  auto* updated_partner = c.entangled_resources.findQubit(QNIC_E, 0, 3);
+  auto* updated_partner = c.bell_pair_store.findQubit(QNIC_E, 0, 3);
   ASSERT_TRUE(updated_partner != nullptr);
   // old record was deleted properly
-  auto* old_partner = c.entangled_resources.findQubit(QNIC_E, 0, 1);
+  auto* old_partner = c.bell_pair_store.findQubit(QNIC_E, 0, 1);
   ASSERT_TRUE(old_partner == nullptr);
 }
 
