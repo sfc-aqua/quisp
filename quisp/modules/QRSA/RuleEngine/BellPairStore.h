@@ -8,21 +8,21 @@ namespace modules {
 using QNodeAddr = int;
 using QNicIndex = int;
 // entangled partner qnode address -> qubit
-using EntangledPartnerAddrQubitMap = std::multimap<QNodeAddr, StationaryQubit*>;
+using PartnerAddrQubitMap = std::multimap<QNodeAddr, StationaryQubit*>;
 using ResourceKey = std::pair<QNIC_type, QNicIndex>;
-using EntangledQubitsRangeIterator = std::pair<EntangledPartnerAddrQubitMap::iterator, EntangledPartnerAddrQubitMap::iterator>;
+using PartnerAddrQubitMapRange = std::pair<PartnerAddrQubitMap::iterator, PartnerAddrQubitMap::iterator>;
 
 class BellPairStore {
  public:
   BellPairStore();
   ~BellPairStore();
   void eraseQubit(StationaryQubit* const qubit);
-  void insertEntangledQubit(int partner_addr, StationaryQubit* const qubit);
-  StationaryQubit* findQubit(QNIC_type qnic_type, int qnic_index, int addr);
-  EntangledQubitsRangeIterator getQubitsRange(QNIC_type qnic_type, int qnic_index, int partner_addr);
+  void insertEntangledQubit(QNodeAddr partner_addr, StationaryQubit* const qubit);
+  StationaryQubit* findQubit(QNIC_type qnic_type, QNicIndex qnic_index, QNodeAddr addr);
+  PartnerAddrQubitMapRange getBellPairsRange(QNIC_type qnic_type, QNicIndex qnic_index, QNodeAddr partner_addr);
 
  protected:
-  std::map<ResourceKey, EntangledPartnerAddrQubitMap> _resources;
+  std::map<ResourceKey, PartnerAddrQubitMap> _resources;
 };
 }  // namespace modules
 }  // namespace quisp

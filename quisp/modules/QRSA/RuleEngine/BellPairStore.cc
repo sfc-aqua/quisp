@@ -7,7 +7,7 @@ namespace modules {
 BellPairStore::BellPairStore() {}
 BellPairStore::~BellPairStore() {}
 
-void BellPairStore::insertEntangledQubit(int partner_addr, StationaryQubit *const qubit) {
+void BellPairStore::insertEntangledQubit(QNodeAddr partner_addr, StationaryQubit *const qubit) {
   auto qnic_type = (QNIC_type)qubit->qnic_type;
   auto qnic_index = qubit->qnic_index;
   auto key = std::make_pair(qnic_type, qnic_index);
@@ -26,14 +26,16 @@ void BellPairStore::eraseQubit(StationaryQubit *const qubit) {
   }
   // take the ref of entangled partner qubits map
   auto &resource = _resources[std::make_pair(qnic_type, qnic_index)];
-  for (auto it = resource.begin(); it != resource.cend(); ++it) {
+  auto it = resource.begin();
+  while (it != resource.cend()) {
     if (it->second == qubit) {
       it = resource.erase(it);
-    }
+    } else
+      it++;
   }
 }
 
-StationaryQubit *BellPairStore::findQubit(QNIC_type qnic_type, int qnic_index, int addr) {
+StationaryQubit *BellPairStore::findQubit(QNIC_type qnic_type, QNicIndex qnic_index, QNodeAddr addr) {
   auto key = std::make_pair(qnic_type, qnic_index);
   if (_resources.find(key) == _resources.cend()) {
     return nullptr;
@@ -45,7 +47,7 @@ StationaryQubit *BellPairStore::findQubit(QNIC_type qnic_type, int qnic_index, i
   return it->second;
 }
 
-EntangledQubitsRangeIterator BellPairStore::getQubitsRange(QNIC_type qnic_type, int qnic_index, int partner_addr) {
+PartnerAddrQubitMapRange BellPairStore::getBellPairsRange(QNIC_type qnic_type, int qnic_index, int partner_addr) {
   auto key = std::make_pair(qnic_type, qnic_index);
   if (_resources.find(key) == _resources.cend()) {
     _resources.emplace(key, std::multimap<int, StationaryQubit *>{});

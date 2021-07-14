@@ -1191,7 +1191,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
 
       int assigned = 0;
       // range contains the begin and end iterators of entangled qubits with the specified qnic_type, qnic_index and partner addr.
-      auto range = bell_pair_store.getQubitsRange((QNIC_type)qnic_type, qnic_index, resource_entangled_with_address);
+      auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, resource_entangled_with_address);
       for (auto it = range.first; it != range.second; ++it) {
         auto *qubit = it->second;
         if (!qubit->isAllocated()) {
