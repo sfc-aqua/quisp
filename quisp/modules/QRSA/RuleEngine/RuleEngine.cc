@@ -1190,10 +1190,11 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
       }
 
       int assigned = 0;
-      for (auto &it : entangled_resources.range((QNIC_type)qnic_type, qnic_index)) {
-        auto &qubit = it.second;
-        auto &addr = it.first;
-        if (!qubit->isAllocated() && resource_entangled_with_address == addr) {
+      // range contains the begin and end iterators of entangled qubits with the specified qnic_type, qnic_index and partner addr.
+      auto range = entangled_resources.getQubitsRange((QNIC_type)qnic_type, qnic_index, resource_entangled_with_address);
+      for (auto it = range.first; it != range.second; ++it) {
+        auto *qubit = it->second;
+        if (!qubit->isAllocated()) {
           int num_rsc_bf = process->front()->resources.size();
           if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
             error("Freshing qubit wrong");

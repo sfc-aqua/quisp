@@ -45,7 +45,13 @@ StationaryQubit *EntangledResourceStore::findQubit(QNIC_type qnic_type, int qnic
   return it->second;
 }
 
-EntangledPartnerAddrQubitMap EntangledResourceStore::range(QNIC_type qnic_type, int qnic_index) { return _resources[std::make_pair(qnic_type, qnic_index)]; }
+EntangledQubitsRangeIterator EntangledResourceStore::getQubitsRange(QNIC_type qnic_type, int qnic_index, int partner_addr) {
+  auto key = std::make_pair(qnic_type, qnic_index);
+  if (_resources.find(key) == _resources.cend()) {
+    _resources.emplace(key, std::multimap<int, StationaryQubit *>{});
+  }
+  return _resources[key].equal_range(partner_addr);
+}
 
 }  // namespace modules
 }  // namespace quisp
