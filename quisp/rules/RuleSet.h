@@ -26,8 +26,8 @@ class RuleSet {
   int size();
   bool empty();
   void finalize() {}
-  std::vector<Rule* const>::iterator cbegin();
-  std::vector<Rule* const>::iterator cend();
+  std::vector<Rule*>::const_iterator cbegin();
+  std::vector<Rule*>::const_iterator cend();
 
   int owner_addr;
   std::vector<int> entangled_partners;
