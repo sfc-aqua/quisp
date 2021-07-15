@@ -70,12 +70,12 @@ struct PhotonTransmissionConfig {
   double interval;
 };
 
-// Process = RuleSet
-typedef struct {
+// Process contains RuleSet
+struct Process {
+  // is this different from RuleSet::owner_addr?
   int ownner_addr;
-  // int process_ID;
   RuleSet *Rs;
-} process;
+};
 
 typedef std::map<int, QubitState> QubitStateTable;
 typedef std::multimap<int, purification_result> PurificationTable;
@@ -84,7 +84,7 @@ typedef std::multimap<int, Quatropurification_result> QuatroPurificationTable;
 typedef std::multimap<int, Triplepurification_result> TriplePurificationTable;
 typedef std::map<int, QubitAddr_cons> sentQubitIndexTracker;  // nth shot -> node/qnic/qubit index (node addr not needed actually)
 typedef std::map<int, bool> trial_tracker;  // trial index, false or true (that trial is over or not)
-typedef std::map<int, process> running_processes;  // index -> process
+typedef std::map<int, Process> running_processes;  // index -> process
 typedef std::map<int, Rule *> rule_ptr;
 
 class IRuleEngine : public cSimpleModule {

@@ -723,7 +723,6 @@ RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, Swapp
 
   RuleSet *ruleset = new RuleSet(ruleset_id, owner, partners);
   ruleset->addRule(rule);
-  ruleset->setRule_ptr(rule);
 
   return ruleset;
 }
@@ -755,7 +754,6 @@ RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int 
 
   RuleSet *ruleset = new RuleSet(ruleset_id, owner, partners);
   ruleset->addRule(rule);
-  ruleset->setRule_ptr(rule);
 
   return ruleset;
 }
