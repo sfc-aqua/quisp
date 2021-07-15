@@ -1,27 +1,39 @@
-#include "RuleEngine.h"
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <omnetpp.h>
 #include <test_utils/TestUtils.h>
 #include <memory>
+
+#include "BellPairStore.h"
+#include "IRuleEngine.h"
+#include "RuleEngine.h"
+
 #include "modules/QNIC.h"
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
-#include "modules/QRSA/RuleEngine/RuleEngine.h"
-#include "omnetpp/csimulation.h"
+#include "rules/Action.h"
 
 namespace {
 
 using namespace omnetpp;
 using namespace quisp::utils;
+using namespace quisp::rules;
+using namespace quisp::rules::actions;
+using quisp::rules::actions::Action;
 using namespace quisp::modules;
 using namespace quisp_test;
 using namespace testing;
 
 class MockStationaryQubit : public StationaryQubit {
  public:
+  MockStationaryQubit(QNIC_type _type, QNicIndex index) {
+    qnic_type = _type;
+    qnic_index = index;
+  }
+
   MOCK_METHOD(void, emitPhoton, (int pulse), (override));
   MOCK_METHOD(void, setFree, (bool consumed), (override));
 };
@@ -31,10 +43,12 @@ class MockRoutingDaemon : public RoutingDaemon {
   MOCK_METHOD(int, return_QNIC_address_to_destAddr, (int destAddr), (override));
 };
 
-class MockHardwareMonitor : public HardwareMonitor {
+class MockHardwareMonitor : public IHardwareMonitor {
  public:
-  MOCK_METHOD(std::unique_ptr<ConnectionSetupInfo>, findConnectionInfoByQnicAddr, (int qnic_address), (override));
   MOCK_METHOD(int, getQnicNumQubits, (int i, QNIC_type qnic_type), (override));
+  MOCK_METHOD(NeighborTable, passNeighborTable, (), (override));
+  MOCK_METHOD(std::unique_ptr<InterfaceInfo>, findInterfaceByNeighborAddr, (int neighbor_address), (override));
+  MOCK_METHOD(std::unique_ptr<ConnectionSetupInfo>, findConnectionInfoByQnicAddr, (int qnic_address), (override));
 };
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
@@ -51,7 +65,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
   MockRoutingDaemon* routingDaemon = nullptr;
   MockHardwareMonitor* hardwareMonitor = nullptr;
   StationaryQubit* getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override {
-    if (mockQubit == nullptr) mockQubit = new MockStationaryQubit();
+    if (mockQubit == nullptr) mockQubit = new MockStationaryQubit(QNIC_E, 1);
     return mockQubit;
   };
   IRoutingDaemon* getRoutingDaemon() override { return routingDaemon; };
@@ -85,9 +99,9 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   prepareSimulation();
   auto routingdaemon = new MockRoutingDaemon;
   auto mockHardwareMonitor = new MockHardwareMonitor;
-  auto mockQubit0 = new MockStationaryQubit;
-  auto mockQubit1 = new MockStationaryQubit;  // qubit to be updated with entanglement swapping
-  auto mockQubit2 = new MockStationaryQubit;
+  auto mockQubit0 = new MockStationaryQubit(QNIC_E, 0);
+  auto mockQubit1 = new MockStationaryQubit(QNIC_E, 0);  // qubit to be updated with entanglement swapping
+  auto mockQubit2 = new MockStationaryQubit(QNIC_E, 0);
   RuleEngineTestTarget c{mockQubit1, routingdaemon, mockHardwareMonitor};
 
   auto info = std::make_unique<ConnectionSetupInfo>();
@@ -120,19 +134,41 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   ASSERT_TRUE(old_partner == nullptr);
 }
 
-TEST(RuleEngineTest, resourceAllocationTest) {
+TEST(RuleEngineTest, resourceAllocation) {
   auto* sim = prepareSimulation();
   auto routingdaemon = new MockRoutingDaemon;
   auto mockHardwareMonitor = new MockHardwareMonitor;
-  auto mockQubit0 = new MockStationaryQubit;
-  auto mockQubit1 = new MockStationaryQubit;  // qubit to be updated with entanglement swapping
-  auto mockQubit2 = new MockStationaryQubit;
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
+  auto mockQubit0 = new MockStationaryQubit(QNIC_E, 3);
+  auto mockQubit1 = new MockStationaryQubit(QNIC_E, 3);
+  auto mockQubit2 = new MockStationaryQubit(QNIC_E, 3);
   auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor};
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
   rule_engine->setAllResources(0, mockQubit0);
   rule_engine->setAllResources(1, mockQubit1);
   rule_engine->setAllResources(2, mockQubit2);
+  auto* rs = new RuleSet(0, 0, 1);
+  auto* rule = new Rule();
+  auto* action = new RandomMeasureAction(1, QNIC_E, 3, 1, 0, 1);
+
+  rule->setAction(action);
+  rs->addRule(rule);
+  process proc;
+  proc.ownner_addr = 0;
+  proc.Rs = rs;
+  rule_engine->rp.insert(std::make_pair(0, proc));
+
+  rule_engine->ResourceAllocation(QNIC_E, 3);
+
+  // resource allocation assigns a corresponding qubit to action's resource
+  auto _rs = rule_engine->rp.at(0).Rs;
+  EXPECT_NE(_rs, nullptr);
+  EXPECT_EQ(_rs->size(), 1);
+  auto _rule = _rs->front().get();
+  EXPECT_FALSE(_rule == nullptr);
+  EXPECT_EQ(_rule->resources.size(), 1);
 }
 
 }  // namespace

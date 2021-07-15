@@ -101,4 +101,40 @@ TEST(BellPairStoreTest, getRange) {
   auto empty_range = store.getBellPairsRange(QNIC_E, 3, 700);
   EXPECT_EQ(empty_range.first, empty_range.second);
 }
+TEST(BellPairStoreTest, getRangeWithLoop) {
+  prepareSimulation();
+  BellPairStore store;
+
+  // empty resources
+  auto range = store.getBellPairsRange(QNIC_E, 3, 700);
+  int count = 0;
+  for (auto it = range.first; it != range.second; it++) {
+    count++;
+  }
+  EXPECT_EQ(count, 0);
+
+  // 1 qubit
+  auto *qubit1 = new MockQubit(QNIC_E, 3, 6);
+  store.insertEntangledQubit(7, qubit1);
+  range = store.getBellPairsRange(QNIC_E, 3, 7);
+  count = 0;
+  for (auto it = range.first; it != range.second; it++) {
+    count++;
+  }
+  EXPECT_EQ(count, 1);
+
+  // 4 qubits and same partner addr.
+  auto *qubit2 = new MockQubit(QNIC_E, 3, 6);
+  auto *qubit3 = new MockQubit(QNIC_E, 3, 6);
+  auto *qubit4 = new MockQubit(QNIC_E, 3, 6);
+  store.insertEntangledQubit(7, qubit2);
+  store.insertEntangledQubit(7, qubit3);
+  store.insertEntangledQubit(7, qubit4);
+  range = store.getBellPairsRange(QNIC_E, 3, 7);
+  count = 0;
+  for (auto it = range.first; it != range.second; it++) {
+    count++;
+  }
+  EXPECT_EQ(count, 4);
+}
 }  // namespace
