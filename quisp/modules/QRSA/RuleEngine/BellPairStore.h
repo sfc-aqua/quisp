@@ -12,6 +12,12 @@ using PartnerAddrQubitMap = std::multimap<QNodeAddr, StationaryQubit*>;
 using ResourceKey = std::pair<QNIC_type, QNicIndex>;
 using PartnerAddrQubitMapRange = std::pair<PartnerAddrQubitMap::iterator, PartnerAddrQubitMap::iterator>;
 
+/**
+ * this class contains the bell pair information for RuleEngine.
+ * this tracks the entangled qubit and its partner addr.
+ * RuleEngine recognizes a bell pair generated, store the information to this class.
+ * if RuleSet needs bell pair resource, RuleEngine takes a bell pair from this class.
+ */
 class BellPairStore {
  public:
   BellPairStore();
