@@ -41,13 +41,6 @@ struct QubitState {
   bool isBusy;
   simtime_t timestamp;  // When the qubit became busy (emitted photon).
 };
-
-/*For resource management*/
-// typedef std::multimap<int, QubitAddr> EntangledPairs;//entangled Node address -> list of qubits from new to old
-typedef std::multimap<int, StationaryQubit*> EntangledPairs;  // entangled Node address -> pointer to that local qubit
-typedef EntangledPairs* qnicResources;  // For each qnic. If the number of "qnic" is 3, then the size is 3.
-/*For resource management over.*/
-
 }  // namespace modules
 }  // namespace quisp
 
