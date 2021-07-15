@@ -163,10 +163,10 @@ TEST(RuleEngineTest, resourceAllocation) {
   rule_engine->ResourceAllocation(QNIC_E, 3);
 
   // resource allocation assigns a corresponding qubit to action's resource
-  auto _rs = rule_engine->rp.at(0).Rs;
+  auto* _rs = rule_engine->rp.at(0).Rs;
   EXPECT_NE(_rs, nullptr);
   EXPECT_EQ(_rs->size(), 1);
-  auto _rule = _rs->front().get();
+  auto* _rule = _rs->getRule(0);
   EXPECT_FALSE(_rule == nullptr);
   EXPECT_EQ(_rule->resources.size(), 1);
 }
