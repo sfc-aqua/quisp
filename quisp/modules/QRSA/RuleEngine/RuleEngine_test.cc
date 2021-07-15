@@ -97,11 +97,11 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
 
 TEST(RuleEngineTest, ESResourceUpdate) {
   prepareSimulation();
-  auto routingdaemon = new MockRoutingDaemon;
-  auto mockHardwareMonitor = new MockHardwareMonitor;
-  auto mockQubit0 = new MockStationaryQubit(QNIC_E, 0);
-  auto mockQubit1 = new MockStationaryQubit(QNIC_E, 0);  // qubit to be updated with entanglement swapping
-  auto mockQubit2 = new MockStationaryQubit(QNIC_E, 0);
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  auto* mockQubit0 = new MockStationaryQubit(QNIC_E, 0);
+  auto* mockQubit1 = new MockStationaryQubit(QNIC_E, 0);  // qubit to be updated with entanglement swapping
+  auto* mockQubit2 = new MockStationaryQubit(QNIC_E, 0);
   RuleEngineTestTarget c{mockQubit1, routingdaemon, mockHardwareMonitor};
 
   auto info = std::make_unique<ConnectionSetupInfo>();
@@ -136,8 +136,8 @@ TEST(RuleEngineTest, ESResourceUpdate) {
 
 TEST(RuleEngineTest, resourceAllocation) {
   auto* sim = prepareSimulation();
-  auto routingdaemon = new MockRoutingDaemon;
-  auto mockHardwareMonitor = new MockHardwareMonitor;
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
   EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
   auto mockQubit0 = new MockStationaryQubit(QNIC_E, 3);
@@ -169,6 +169,8 @@ TEST(RuleEngineTest, resourceAllocation) {
   auto _rule = _rs->front().get();
   EXPECT_FALSE(_rule == nullptr);
   EXPECT_EQ(_rule->resources.size(), 1);
+  delete mockHardwareMonitor;
+  delete routingdaemon;
 }
 
 }  // namespace
