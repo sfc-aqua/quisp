@@ -191,20 +191,20 @@ network topology_dumbell_MIM
         HoM5.port++ <--> ClassicalChannel {  distance = 10km; } <--> EndNode4.port++;
         HoM6.port++ <--> ClassicalChannel {  distance = 10km; } <--> EndNode5.port++;
         HoM7.port++ <--> ClassicalChannel {  distance = 10km; } <--> EndNode6.port++;
-        
+
         EndNode1.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM1.quantum_port++;
         EndNode2.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM2.quantum_port++;
-		EndNode3.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM3.quantum_port++;
-		HoM1.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> Repeater1.quantum_port++;
-		HoM2.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> Repeater1.quantum_port++;
-		HoM3.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> Repeater1.quantum_port++;
-		Repeater1.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM4.quantum_port++;
-		HoM4.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> Repeater2.quantum_port++;
-		Repeater2.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM5.quantum_port++;
-		Repeater2.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM6.quantum_port++;
-		Repeater2.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM7.quantum_port++;
-		HoM5.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> EndNode4.quantum_port++;
-		HoM6.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> EndNode5.quantum_port++;
-		HoM7.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> EndNode6.quantum_port++;
-		
+        EndNode3.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM3.quantum_port++;
+        HoM1.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> Repeater1.quantum_port++;
+        HoM2.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> Repeater1.quantum_port++;
+        HoM3.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> Repeater1.quantum_port++;
+        Repeater1.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM4.quantum_port++;
+        HoM4.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> Repeater2.quantum_port++;
+        Repeater2.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM5.quantum_port++;
+        Repeater2.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM6.quantum_port++;
+        Repeater2.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM7.quantum_port++;
+        HoM5.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> EndNode4.quantum_port++;
+        HoM6.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> EndNode5.quantum_port++;
+        HoM7.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> EndNode6.quantum_port++;
+
 }
