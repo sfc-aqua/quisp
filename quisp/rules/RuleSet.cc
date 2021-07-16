@@ -10,10 +10,26 @@
 namespace quisp {
 namespace rules {
 
-void RuleSet::finalize() {
-  for (auto rule = this->cbegin(), end = this->cend(); rule != end; rule++) {
-  }
+RuleSet::RuleSet(long _ruleset_id, int _owner_addr, std::vector<int> partner_addrs) {
+  ruleset_id = _ruleset_id;
+  owner_addr = _owner_addr;
+  entangled_partners = partner_addrs;
+  started_at = simTime();
 }
+
+RuleSet::RuleSet(long _ruleset_id, int _owner_addr, int partner_addr) {
+  ruleset_id = _ruleset_id;
+  owner_addr = _owner_addr;
+  entangled_partners.push_back(partner_addr);
+  started_at = simTime();
+}
+
+void RuleSet::addRule(std::unique_ptr<Rule> r) { rules.emplace_back(std::move(r)); };
+std::unique_ptr<Rule>& RuleSet::getRule(int i) { return rules[i]; };
+int RuleSet::size() { return rules.size(); };
+bool RuleSet::empty() { return rules.empty(); }
+std::vector<std::unique_ptr<Rule>>::const_iterator RuleSet::cbegin() { return rules.cbegin(); }
+std::vector<std::unique_ptr<Rule>>::const_iterator RuleSet::cend() { return rules.cend(); }
 
 }  // namespace rules
 }  // namespace quisp

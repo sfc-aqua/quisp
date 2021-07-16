@@ -6,7 +6,6 @@
  *  \brief Clause
  */
 #include "Clause.h"
-#include "tools.h"
 
 namespace quisp {
 namespace rules {

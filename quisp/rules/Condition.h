@@ -18,16 +18,15 @@ namespace rules {
  *
  *  \brief Condition
  */
-class Condition : std::list<pClause> {
+class Condition {
  public:
-  void addClause(Clause* c) { push_back(pClause(c)); };
-  void addClause(pClause& c) { push_back(pClause(std::move(c))); };
-  // bool check(qnicResources * resources) const;
+  void addClause(Clause* c);
   bool check(std::multimap<int, StationaryQubit*> resources) const;
-  // bool checkTerminate(qnicResources * resources) const;
   bool checkTerminate(std::multimap<int, StationaryQubit*> resources) const;
+
+ protected:
+  std::vector<Clause*> clauses;
 };
-typedef std::unique_ptr<Condition> pCondition;
 
 }  // namespace rules
 }  // namespace quisp
