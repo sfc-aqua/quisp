@@ -22,8 +22,8 @@ TEST(RuleSetTest, Init) {
 TEST(RuleSetTest, AddRule) {
   prepareSimulation();
   RuleSet rule_set(1, 2, 3);
-  Rule* rule = new Rule();
-  rule_set.addRule(rule);
+  auto rule = std::make_unique<Rule>();
+  rule_set.addRule(std::move(rule));
   EXPECT_EQ(1, rule_set.size());
 }
 }  // namespace
