@@ -1,7 +1,7 @@
 .PHONY: all tidy format ci makefile-exe makefile-lib checkmakefile googletest clean test
 
 all: makefile-exe
-	$(MAKE) -C quisp -j
+	$(MAKE) -C quisp -j$(nproc)
 
 run-module-test: lib
 	cd module_tests && ./runtest
@@ -12,12 +12,12 @@ run-unit-test: lib googletest
 test: run-module-test run-unit-test
 
 exe: makefile-exe
-	$(MAKE) -C quisp -j
+	$(MAKE) -C quisp -j$(nproc)
 
 lib: makefile-lib
-	$(MAKE) -C quisp -j
+	$(MAKE) -C quisp -j$(nproc)
 
-ci: quisp/Makefile
+ci: makefile-lib
 	$(MAKE) -C quisp ci
 
 format: quisp/Makefile

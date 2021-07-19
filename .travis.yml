@@ -18,5 +18,6 @@ install:
 
 script:
   - bash docker_run_lint.sh
-  - docker run --rm -i -v "$TRAVIS_BUILD_DIR:/root/quisp" quisp /bin/sh -c "cd /root/quisp/test; /bin/bash test.sh"
-  - cd test && sudo python -m unittest discover && sudo rm testresults.txt && echo "test done"
+  - docker run --rm -i -v "$TRAVIS_BUILD_DIR:/root/quisp" quisp /bin/sh -c "cd /root/quisp/; make ci" || travis_terminate 1;
+  - docker run --rm -i -v "$TRAVIS_BUILD_DIR:/root/quisp" quisp /bin/sh -c "cd /root/quisp/test; /bin/bash test.sh" || travis_terminate 1;
+  - cd test && sudo python -m unittest discover && sudo rm testresults.txt && echo "test done" || travis_terminate 1;
