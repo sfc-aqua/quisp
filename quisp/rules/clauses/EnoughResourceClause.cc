@@ -4,7 +4,7 @@ namespace quisp {
 namespace rules {
 namespace clauses {
 
-bool EnoughResourceClause::check(std::multimap<int, StationaryQubit*> resource) const {
+bool EnoughResourceClause::check(std::multimap<int, StationaryQubit*> resource) {
   bool enough = false;
   int num_free = 0;
 

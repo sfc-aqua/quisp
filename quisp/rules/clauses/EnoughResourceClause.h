@@ -17,7 +17,7 @@ class EnoughResourceClause : public Clause {
     num_resource_required = num_res;
     partner = partner_addr;
   };
-  bool check(std::multimap<int, StationaryQubit*>) const override;
+  bool check(std::multimap<int, StationaryQubit*>) override;
   bool checkTerminate(std::multimap<int, StationaryQubit*>) const override { return false; };
 };
 }  // namespace clauses

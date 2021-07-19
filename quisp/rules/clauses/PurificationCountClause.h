@@ -9,14 +9,9 @@ namespace clauses {
 class PurificationCountClause : public Clause {
  public:
   int num_purify_must;
-  // int mutable current_count;
-  PurificationCountClause(int part, QNIC_type qt, int qi, int n_purify) : Clause(part, qt, qi) {  // May not need this
-    // max_count = max;
-    // current_count = 0;
-    num_purify_must = n_purify;
-  };
+  PurificationCountClause(int partner_addr, QNIC_type qnic_type, int qnic_id, int n_purify) : Clause(partner_addr, qnic_type, qnic_id) { num_purify_must = n_purify; };
 
-  bool check(std::multimap<int, StationaryQubit*>) const override;
+  [[noreturn]] bool check(std::multimap<int, StationaryQubit*>) override;
 };
 
 }  // namespace clauses

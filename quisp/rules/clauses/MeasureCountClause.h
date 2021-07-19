@@ -9,20 +9,13 @@ namespace clauses {
 class MeasureCountClause : public Clause {
  public:
   int max_count;
-  int mutable current_count;
-  MeasureCountClause(int max, int part, QNIC_type qt, int qi, int res) : Clause(part, qt, qi, res) {  // May not need this
-    max_count = max;
-    current_count = 0;
+  int current_count = 0;
+  MeasureCountClause(int _max_count, int partner_addr, QNIC_type qnic_type, int qnic_id, int resource) : Clause(partner_addr, qnic_type, qnic_id, resource) {
+    max_count = _max_count;
   };
-  MeasureCountClause(int max) : Clause() {
-    max_count = max;
-    current_count = 0;
-  };
-  // bool check(qnicResources *resources) const override;
-  // bool checkTerminate(qnicResources *resources) const override;
-  bool check(std::multimap<int, StationaryQubit*>) const override;
+  MeasureCountClause(int _max_count) : Clause() { max_count = _max_count; };
+  bool check(std::multimap<int, StationaryQubit*>) override;
   bool checkTerminate(std::multimap<int, StationaryQubit*>) const override;
-  // void increment(){current_count++;};
 };
 
 }  // namespace clauses

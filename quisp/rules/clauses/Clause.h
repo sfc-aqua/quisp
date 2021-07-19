@@ -29,8 +29,8 @@ class Clause {
     resource = _resource;
   };
   virtual ~Clause() {}
-
-  virtual bool check(std::multimap<int, StationaryQubit*>) const = 0;
+  // if the condition is satisfied, return true, otherwise return false.
+  virtual bool check(std::multimap<int, StationaryQubit*>) = 0;
   virtual bool checkTerminate(std::multimap<int, StationaryQubit*>) const = 0;
 };
 
