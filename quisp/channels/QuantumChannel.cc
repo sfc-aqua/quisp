@@ -19,12 +19,12 @@ namespace quisp {
 namespace channels {
 
 /*The sum of Z,X and Y error rate equates to pauli_error_rate. Value could potentially between 0 ~ 1. */
-typedef struct _channel_error_model {
+struct channel_error_model {
   double pauli_error_rate;  // Overall error rate
   double Z_error_rate;
   double X_error_rate;
   double Y_error_rate;
-} channel_error_model;
+};
 
 /** \class QuantumChannel QuantumChannel.cc
  *  \todo Documentation of the class header.
