@@ -53,7 +53,7 @@ void RuleEngine::initialize() {
 
   // Tracks which qubit was sent first, second and so on per qnic(r,rp)
   tracker = new sentQubitIndexTracker[number_of_qnics_all];
-  for (int qnic_address = 0; qnic_address < number_of_qnics_all; qnic_address++){
+  for (int qnic_address = 0; qnic_address < number_of_qnics_all; qnic_address++) {
     tracker_accessible.push_back(true);
   }
 
@@ -146,7 +146,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
   else if (dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg) != nullptr) {
     SchedulePhotonTransmissionsOnebyOne *pk = check_and_cast<SchedulePhotonTransmissionsOnebyOne *>(msg);
-    EV_DEBUG << provider.getQNode()->getFullName() << ": Photon shooting is from qnic[" << pk->getQnic_index() << "] with address=" << pk->getQnic_address()<<"\n";
+    EV_DEBUG << provider.getQNode()->getFullName() << ": Photon shooting is from qnic[" << pk->getQnic_index() << "] with address=" << pk->getQnic_address() << "\n";
     // Terminate emission if trial is over already (the neighbor ran out of free qubits)
     if (burstTrial_outdated(pk->getTrial(), pk->getQnic_address())) {
       delete msg;
@@ -162,7 +162,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   // Bell pair generation timing syncronization from HoM
   else if (dynamic_cast<BSMtimingNotifier *>(msg) != nullptr && dynamic_cast<CombinedBSAresults *>(msg) == nullptr) {
     bubble("timing received");
-    EV<<"BSM timing notifier received\n";
+    EV << "BSM timing notifier received\n";
     BSMtimingNotifier *pk = check_and_cast<BSMtimingNotifier *>(msg);
     if (pk->getInternal_qnic_index() == -1) {  // MIM, or the other node without internnal HoM of MM
       EV_DEBUG << "This BSA request is non-internal\n";
@@ -692,7 +692,7 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
   // store the interface information for the futhter link generation process
   int numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[transmission_config.qnic_type], transmission_config.qnic_index);
   if (numFree > 0 && tracker_accessible.at(transmission_config.qnic_address)) {
-    tracker_accessible.at(transmission_config.qnic_address) = false;  //block access to tracker
+    tracker_accessible.at(transmission_config.qnic_address) = false;  // block access to tracker
     sendPhotonTransmissionSchedule(transmission_config);
   }
 }

@@ -50,7 +50,7 @@ void HoMController::internodeInitializer() {
   updateIDE_Parameter(true);
 
   accepted_burst_interval = (double)1 / (double)photon_detection_per_sec;
-  HoMNotificationTimer *generatePacket = new HoMNotificationTimer("BSA Start");
+  auto *generatePacket = new HoMNotificationTimer("BsaStart");
   scheduleAt(simTime() + par("Initial_notification_timing_buffer"), generatePacket);
   // scheduleAt(simTime(),generatePacket);
 }
@@ -67,7 +67,7 @@ void HoMController::standaloneInitializer() {
   updateIDE_Parameter(false);
 
   accepted_burst_interval = (double)1 / (double)photon_detection_per_sec;
-  HoMNotificationTimer *generatePacket = new HoMNotificationTimer("BsaStart");
+  auto *generatePacket = new HoMNotificationTimer("BsaStart");
   scheduleAt(simTime() + par("Initial_notification_timing_buffer"), generatePacket);
   // scheduleAt(simTime(),generatePacket);
 }
@@ -100,7 +100,7 @@ void HoMController::sendNotifiers() {
   } catch (std::exception &e) {
     error("Error in HoM_Controller.cc. It does not have port named toRouter_port.");
     endSimulation();
-  }    
+  }
 }
 
 void HoMController::handleMessage(cMessage *msg) {
@@ -110,7 +110,7 @@ void HoMController::handleMessage(cMessage *msg) {
 
   if (dynamic_cast<HoMNotificationTimer *>(msg) != nullptr) {
     sendNotifiers();
-    HoMNotificationTimer *notification_timer = new HoMNotificationTimer("BSA start");
+    auto *notification_timer = new HoMNotificationTimer("BsaStart");
     scheduleAt(simTime() + bsa_notification_interval, notification_timer);
   } else if (dynamic_cast<BSAresult *>(msg) != nullptr) {
     // std::cout<<"BSAresult\n";

@@ -107,8 +107,6 @@ void Router::handleMessage(cMessage *msg) {
   header *pk = check_and_cast<header *>(msg);
   int destAddr = pk->getDestAddr();  // read destination from the packet
   int who_are_you = pk->getKind();  // read the type of packet // This might be better fixed
-  // bubble("Message kind "<<message_type<<" received");
-  // EV << "destAddr ==== " << destAddr;
   if (destAddr == myAddress && who_are_you == 1) {  // If destination is this node: Path selection
     send(pk, "toApp");  // send to Application locally
     return;
