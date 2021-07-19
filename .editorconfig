@@ -17,6 +17,6 @@ indent_style = space
 [Makefile]
 indent_style = tab
 
-[.travis.yml]
+[*.yml]
 indent_style = space
 indent_size = 2
