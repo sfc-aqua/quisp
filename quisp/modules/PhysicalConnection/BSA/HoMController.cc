@@ -50,7 +50,7 @@ void HoMController::internodeInitializer() {
   updateIDE_Parameter(true);
 
   accepted_burst_interval = (double)1 / (double)photon_detection_per_sec;
-  BSAstart *generatePacket = new BSAstart("BsaStart");
+  HoMNotificationTimer *generatePacket = new HoMNotificationTimer("BSA Start");
   scheduleAt(simTime() + par("Initial_notification_timing_buffer"), generatePacket);
   // scheduleAt(simTime(),generatePacket);
 }
@@ -67,7 +67,7 @@ void HoMController::standaloneInitializer() {
   updateIDE_Parameter(false);
 
   accepted_burst_interval = (double)1 / (double)photon_detection_per_sec;
-  BSAstart *generatePacket = new BSAstart("BsaStart");
+  HoMNotificationTimer *generatePacket = new HoMNotificationTimer("BsaStart");
   scheduleAt(simTime() + par("Initial_notification_timing_buffer"), generatePacket);
   // scheduleAt(simTime(),generatePacket);
 }
@@ -89,6 +89,7 @@ void HoMController::sendNotifiers() {
       generateNotifier(time, speed_of_light_in_channel, distance_to_neighbor_two, neighbor_address_two, accepted_burst_interval, photon_detection_per_sec, max_buffer);
   double second_nodes_timing = calculateEmissionStartTime(time, distance_to_neighbor_two, speed_of_light_in_channel);
   pkt->setTiming_at(second_nodes_timing);  // Tell neighboring nodes to shoot photons so that the first one arrives at BSA at the specified timing
+
   // If you want some uncertainty in timing calculation, maybe second_nodes_timing+uniform(-n,n) helps
   try {
     send(pk, "toRouter_port");  // send to port out. connected to local routing module (routing.localIn).
@@ -99,7 +100,7 @@ void HoMController::sendNotifiers() {
   } catch (std::exception &e) {
     error("Error in HoM_Controller.cc. It does not have port named toRouter_port.");
     endSimulation();
-  }
+  }    
 }
 
 void HoMController::handleMessage(cMessage *msg) {
@@ -107,13 +108,10 @@ void HoMController::handleMessage(cMessage *msg) {
   // std::cout<<msg<<", bsa? ="<<(bool)( dynamic_cast<BSAresult *>(msg) != nullptr)<<"\n"; //Omnet somehow bugs without this... it receives a msg correctly from BellStateAnalyzer,
   // but very rarely does not recognize the type. VERY weird.
 
-  if (dynamic_cast<BSAstart *>(msg) != nullptr) {
+  if (dynamic_cast<HoMNotificationTimer *>(msg) != nullptr) {
     sendNotifiers();
-
-    BSAstart *bsa_start = new BSAstart("BSA trial for the next step");
-    scheduleAt(simTime() + bsa_notification_interval, bsa_start);
-    delete msg;
-    return;
+    HoMNotificationTimer *notification_timer = new HoMNotificationTimer("BSA start");
+    scheduleAt(simTime() + bsa_notification_interval, notification_timer);
   } else if (dynamic_cast<BSAresult *>(msg) != nullptr) {
     // std::cout<<"BSAresult\n";
     auto_resend_BSANotifier = false;  // Photon is arriving. No need to auto reschedule next round. Wait for the last photon fron either node.
@@ -136,24 +134,10 @@ void HoMController::handleMessage(cMessage *msg) {
     char moge[sizeof(stored)];
     sprintf(moge, "%d", stored);
     bubble(moge);
-
-    bubble("done");
-    sendBSAresultsToNeighbors();  // memory leak
-    clearBSAresults();
     auto_resend_BSANotifier = true;
     current_trial_id = dblrand();
-    // Schedule a checker with a time-out t, to see if both actually sent something.
-    // Worst case is, when both have no free qubit, and no qubits get transmitted. In that case, this module needs to recognize that problem, and reschedule/resend the request
-    // after a cetrain time.
-  } else if (dynamic_cast<BSAtimeoutChecker *>(msg) != nullptr) {
-    // std::cout<<"BSAtimeout\n";
-    // std::cout<<"timeout check at"<<simTime()<<"\n";
-    BSAtimeoutChecker *pk = check_and_cast<BSAtimeoutChecker *>(msg);
-    if (auto_resend_BSANotifier == true && pk->getTrial_id() == current_trial_id) {
-      // No photon came from both nodes. All of the resources must have been busy that time.
-      // error("there you go..");
-    }
-    // error("Timeout");
+    sendBSAresultsToNeighbors();
+    clearBSAresults();
   } else {
     error("what's this packet?");
   }
@@ -375,11 +359,6 @@ void HoMController::sendBSAresultsToNeighbors() {
     }
     send(pk, "toRouter_port");
     send(pkt, "toRouter_port");
-
-    // BSAtimeoutChecker *timeout = new BSAtimeoutChecker;//This is used to emit the next round's timing in case no photon arrived.
-    // timeout->setTrial_id(current_trial_id);
-    // std::cout<<"now = "<<simTime()<<"time = "<<time<<"\n";
-    // scheduleAt(simTime()+2*(1.1*time), timeout);
 
   } else {  // For SPDC type link
     CombinedBSAresults_epps *pk, *pkt;

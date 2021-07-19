@@ -73,6 +73,7 @@ class RuleEngine : public IRuleEngine {
   running_processes rp;
   // Vector for store package for simultaneous entanglement swapping
   std::map<int, std::map<int, int>> simultaneous_es_results;
+  std::vector<bool> tracker_accessible;  // if the tracker is accessible true
 
   void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type) override;
   void freeConsumedResource(int qnic_index, StationaryQubit *qubit, QNIC_type qnic_type) override;
