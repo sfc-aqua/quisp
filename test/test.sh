@@ -1,5 +1,7 @@
 #!/bin/bash
 set -eu
+set -o pipefail
+
 # run the result_test.ini in the network. This is not an unit test.
 echo "test start"
 QUISP_ROOT=`pwd`/..
