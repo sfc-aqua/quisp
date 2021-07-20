@@ -52,7 +52,6 @@ class MockHardwareMonitor : public IHardwareMonitor {
   MOCK_METHOD(std::unique_ptr<ConnectionSetupInfo>, findConnectionInfoByQnicAddr, (int qnic_address), (override));
 };
 
-
 class MockRealTimeController : public RealTimeController {
  public:
   MOCK_METHOD(void, EmitPhoton, (int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse), (override));
@@ -86,7 +85,8 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
  public:
   using quisp::modules::RuleEngine::initialize;
   using quisp::modules::RuleEngine::par;
-  RuleEngineTestTarget(MockStationaryQubit* mockQubit, MockRoutingDaemon* routingdaemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller) : quisp::modules::RuleEngine() {
+  RuleEngineTestTarget(MockStationaryQubit* mockQubit, MockRoutingDaemon* routingdaemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller)
+      : quisp::modules::RuleEngine() {
     setParInt(this, "address", 123);
     setParInt(this, "number_of_qnics_rp", 0);
     setParInt(this, "number_of_qnics_r", 1);
@@ -195,14 +195,14 @@ TEST(RuleEngineTest, trackerUpdate) {
   EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
   rule_engine->initialize();
-  for (int i = 0; i< rule_engine->number_of_qnics_all; i++){
+  for (int i = 0; i < rule_engine->number_of_qnics_all; i++) {
     EXPECT_EQ(rule_engine->tracker[i].size(), 0);  // tracker is properly initialized?
   }
   // set tracker accessible false at qnic 0
   rule_engine->tracker_accessible.at(0) = false;
   // 2. start emission (check records) add records
   // TODO: actual BSM notification should be introduced here
-  QubitAddr_cons addr(1, 0, 0); // parent_address, qnic_index, qubit_index
+  QubitAddr_cons addr(1, 0, 0);  // parent_address, qnic_index, qubit_index
   rule_engine->setTracker(0, 0, addr);
   EXPECT_EQ(rule_engine->tracker[0].size(), 1);
   // check if the tracker is blocked properly
