@@ -20,7 +20,8 @@ jobs:
       - name: clang-format, unit-test, clang-tidy
         run: make ci
       - name: Run Simulations
-        run: ls -la && cd test && /bin/bash test.sh
+        run: /bin/bash test.sh
+        working-directory: test
       - name: Check Simulation Results
         run: cd test && python -m unittest discover && rm testresults.txt && echo "test done"
 
