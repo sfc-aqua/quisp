@@ -73,7 +73,10 @@ class RuleEngine : public IRuleEngine {
   running_processes rp;
   // Vector for store package for simultaneous entanglement swapping
   std::map<int, std::map<int, int>> simultaneous_es_results;
-  std::vector<bool> tracker_accessible;  // if the tracker is accessible true
+  // tracker accessible table has as many number of boolean value as the number of qnics in the qnode.
+  // when the tracker for the qnic is clered by previous BSM trial it goes true
+  // when the RuleEngine try to start new Photon emittion, it goes false and other BSM trial can't access to it.
+  std::vector<bool> tracker_accessible;
 
   void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type) override;
   void freeConsumedResource(int qnic_index, StationaryQubit *qubit, QNIC_type qnic_type) override;
