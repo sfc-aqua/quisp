@@ -1,6 +1,7 @@
 #include "StationaryQubit.h"
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
+#include <cmath>
 #include <unsupported/Eigen/MatrixFunctions>
 
 using namespace quisp::modules;
@@ -12,6 +13,11 @@ class StatQubitTarget : public StationaryQubit {
   using StationaryQubit::initialize;
   using StationaryQubit::par;
   StatQubitTarget() : StationaryQubit() { setComponentType(new TestModuleType("test qubit")); }
+  void reset() {
+    setFree(true);
+    updated_time = SimTime(0);
+    no_density_matrix_nullptr_entangled_partner_ok = true;
+  }
   void fillParams() {
     // see networks/omnetpp.ini
     setParDouble(this, "emission_success_probability", 0.5);
@@ -76,7 +82,7 @@ class StatQubitTarget : public StationaryQubit {
   }
 };
 
-TEST(StationaryQubitTest, initialize_memory_transition_matrix) {
+TEST(StatQubitTest, initialize_memory_transition_matrix) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
@@ -121,4 +127,26 @@ TEST(StationaryQubitTest, initialize_memory_transition_matrix) {
   row6 << 0, 0, 0, 0, .014, .015, 1 - (.014 + .015);
   ASSERT_EQ(mat.row(6), row6);
 }
+
+TEST(StatQubitTest, setFree) {
+  auto *sim = prepareSimulation();
+  auto *qubit = new StatQubitTarget{};
+  qubit->fillParams();
+  sim->registerComponent(qubit);
+  qubit->callInitialize();
+  qubit->par("GOD_Xerror") = true;
+  qubit->par("GOD_Zerror") = true;
+  qubit->par("GOD_EXerror") = true;
+  qubit->par("GOD_REerror") = true;
+  qubit->par("GOD_CMerror") = true;
+  qubit->setFree(true);
+
+  // check the qubit reset properly
+  EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_REerror").boolValue());
+  EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+}
+
 }  // namespace

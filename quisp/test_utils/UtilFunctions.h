@@ -1,6 +1,7 @@
 #pragma once
 
 #include <omnetpp.h>
+#include "RNG.h"
 #include "Simulation.h"
 
 namespace quisp_test {
@@ -16,6 +17,7 @@ void setParStr(cModule *module, const char *name, const char *val);
 TestSimulation *prepareSimulation();
 TestSimulation *getTestSimulation();
 omnetpp::cEnvir *createStaticEnv();
+quisp_test::rng::TestRNG *useTestRNG();
 
 }  // namespace utils
 }  // namespace quisp_test
