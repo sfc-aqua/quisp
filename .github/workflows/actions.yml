@@ -10,6 +10,7 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
+      - run: pwd; ls -la; ls -la ..; ls -la quisp;
       - run: apt-get update -y && apt install -y --no-install-recommends cmake g++ clang-format clang-tidy
       - run: make ci
       - run: /bin/bash test.sh
