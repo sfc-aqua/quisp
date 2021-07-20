@@ -10,6 +10,12 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
-      - run: cd /root/quisp && make ci
-      - run: cd /root/quisp/test && /bin/bash test.sh
-      - run: cd /root/quisp/test && sudo python -m unittest discover && sudo rm testresults.txt && echo "test done"
+      - run: make ci
+        working-directory: ${GITHUB_WORKSPACE}
+      - run: docker run --rm -i -v "${GITHUB_WORKSPACE}/root/quisp" quisp /bin/sh -c "cd /root/quisp/; make ci"
+        working-directory: ${GITHUB_WORKSPACE}
+      - run: /bin/bash test.sh
+        working-directory: ${GITHUB_WORKSPACE}/test
+      - run: sudo python -m unittest discover && sudo rm testresults.txt && echo "test done"
+        working-directory: ${GITHUB_WORKSPACE}/test
+
