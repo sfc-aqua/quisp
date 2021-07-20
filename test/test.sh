@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eux
+set -eu
 
 # run the result_test.ini in the network. This is not an unit test.
 echo "test start"
