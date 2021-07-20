@@ -23,5 +23,6 @@ jobs:
         run: /bin/bash test.sh
         working-directory: test
       - name: Check Simulation Results
-        run: cd test && python -m unittest discover && rm testresults.txt && echo "test done"
+        run: python -m unittest discover && echo "test done"
+        working-directory: test
 

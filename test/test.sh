@@ -1,10 +1,10 @@
 #!/bin/bash
-set -eu
-set -o pipefail
+set -eux
 
 # run the result_test.ini in the network. This is not an unit test.
 echo "test start"
 QUISP_ROOT=`pwd`/..
+NEDPATH=$QUISP_ROOT/quisp/networks:$QUISP_ROOT/quisp/modules:$QUISP_ROOT/quisp/channels
 cd $QUISP_ROOT
 make makefile-exe
 cd $QUISP_ROOT/quisp/
@@ -24,7 +24,8 @@ NUM_TEST=35
 for((i=0; i<$NUM_TEST; i++)); do
 echo "start test $i"
 echo "init$i" >> $QUISP_ROOT/test/testresults.txt
-$QUISP_ROOT/quisp/out/clang-release/quisp  -u Cmdenv --cmdenv-express-mode=true -c "Test$i" -f $QUISP_ROOT/quisp/networks/test.ini | grep "fidelity" | tr ";" "\n" | tr "{" "\n"| tr "}" "\n"|sed s/"<-->"/"\n"/g>> $QUISP_ROOT/test/testresults.txt
+$QUISP_ROOT/quisp/out/clang-release/quisp -u Cmdenv --cmdenv-express-mode=true -c "Test$i" -f $QUISP_ROOT/quisp/networks/test.ini -n $NEDPATH >> $QUISP_ROOT/test/Test$i.log
+cat $QUISP_ROOT/test/Test$i.log | grep "fidelity" | tr ";" "\n" | tr "{" "\n"| tr "}" "\n"|sed s/"<-->"/"\n"/g>> $QUISP_ROOT/test/testresults.txt
 echo "next">>$QUISP_ROOT/test/testresults.txt
 echo "finish test $i"
 done
