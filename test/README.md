@@ -13,7 +13,7 @@ Currently, we need *docker* to run the tests.
 - **quisp/test/test_result.py** ... this python script checks if the result is same as what we expected. Simulation results are loaded from quisp/test/testresults.txt.
 - **quisp/test/testresults.txt** ... This text file doesn't exist at first, but when you run test.sh, this file is automatically created.
 - **quisp/quisp/networks/test.ini** ... this file includes all test cases.
-- **quisp/.travis.yml** ... this .yml file is for Travis CI. Travis executes all tests automatically when you push your changes.
+- **quisp/.github/workflows/main.yml** ... this .yml file is for GitHub Actions (CI). GitHub Actions executes all tests automatically when you push your changes.
 
 ## How to run?
 
