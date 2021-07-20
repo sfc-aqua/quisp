@@ -11,7 +11,7 @@ make BATCH=true QCONFIG=$QUISP_ROOT/quisp/networks/* -j $(nproc) all
 # These are creating all simulations HACK
 # if we set quisp as ./quisp/..., may be error because of existance of the same name binary
 if [ -e $QUISP_ROOT/test/testresults.txt ];then
-    rm  $QUISP_ROOT/quisp/test/testresults.txt
+    rm  $QUISP_ROOT/test/testresults.txt
 fi
 # Actual test part
 # Experiments=("Test0" "Test1" "Test2")
