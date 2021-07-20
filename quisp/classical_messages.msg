@@ -158,7 +158,6 @@ packet BSMtimingNotifier extends header
     int internal_qnic_address = -1;
 }
 
-packet BSAstart extends header{}
 
 packet HoMNotificationTimer extends header{}
 
