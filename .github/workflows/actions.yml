@@ -10,6 +10,6 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
-      - run: make ci
+      - run: cd /root/quisp && make ci
       - run: cd /root/quisp/test && /bin/bash test.sh
       - run: cd /root/quisp/test && sudo python -m unittest discover && sudo rm testresults.txt && echo "test done"
