@@ -13,6 +13,7 @@
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
+#include "modules/QRSA/RealTimeController/IRealTimeController.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
 #include "rules/Action.h"
 
@@ -51,46 +52,60 @@ class MockHardwareMonitor : public IHardwareMonitor {
   MOCK_METHOD(std::unique_ptr<ConnectionSetupInfo>, findConnectionInfoByQnicAddr, (int qnic_address), (override));
 };
 
+class MockRealTimeController : public IRealTimeController {
+ public:
+  MOCK_METHOD(void, initialize, (), (override));
+  MOCK_METHOD(void, handleMessage, (cMessage * msg), (override));
+  MOCK_METHOD(void, EmitPhoton, (int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse), (override));
+  MOCK_METHOD(void, ReInitialize_StationaryQubit, (int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed), (override));
+};
+
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
   Strategy() : mockQubit(nullptr), routingDaemon(nullptr), hardwareMonitor(nullptr) {}
-  Strategy(MockStationaryQubit* _qubit, MockRoutingDaemon* routing_daemon, MockHardwareMonitor* hardware_monitor)
-      : mockQubit(_qubit), routingDaemon(routing_daemon), hardwareMonitor(hardware_monitor) {}
+  Strategy(MockStationaryQubit* _qubit, MockRoutingDaemon* routing_daemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller)
+      : mockQubit(_qubit), routingDaemon(routing_daemon), hardwareMonitor(hardware_monitor), realtimeController(realtime_controller) {}
   ~Strategy() {
     delete mockQubit;
     delete routingDaemon;
     delete hardwareMonitor;
+    delete realtimeController;
   }
   MockStationaryQubit* mockQubit = nullptr;
   MockRoutingDaemon* routingDaemon = nullptr;
   MockHardwareMonitor* hardwareMonitor = nullptr;
+  MockRealTimeController* realtimeController = nullptr;
   StationaryQubit* getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override {
     if (mockQubit == nullptr) mockQubit = new MockStationaryQubit(QNIC_E, 1);
     return mockQubit;
   };
   IRoutingDaemon* getRoutingDaemon() override { return routingDaemon; };
   IHardwareMonitor* getHardwareMonitor() override { return hardwareMonitor; };
+  IRealTimeController* getRealTimeController() override { return realtimeController; };
 };
 
 class RuleEngineTestTarget : public quisp::modules::RuleEngine {
  public:
   using quisp::modules::RuleEngine::initialize;
   using quisp::modules::RuleEngine::par;
-  RuleEngineTestTarget(MockStationaryQubit* mockQubit, MockRoutingDaemon* routingdaemon, MockHardwareMonitor* hardware_monitor) : quisp::modules::RuleEngine() {
+  RuleEngineTestTarget(MockStationaryQubit* mockQubit, MockRoutingDaemon* routingdaemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller)
+      : quisp::modules::RuleEngine() {
     setParInt(this, "address", 123);
     setParInt(this, "number_of_qnics_rp", 0);
     setParInt(this, "number_of_qnics_r", 1);
     setParInt(this, "number_of_qnics", 1);
     setParInt(this, "total_number_of_qnics", 2);
     setName("rule_engine_test_target");
-    provider.setStrategy(std::make_unique<Strategy>(mockQubit, routingdaemon, hardware_monitor));
+    provider.setStrategy(std::make_unique<Strategy>(mockQubit, routingdaemon, hardware_monitor, realtime_controller));
     setComponentType(new TestModuleType("rule_engine_test"));
   }
   // setter function for allResorces[qnic_type][qnic_index]
   void setAllResources(int partner_addr, StationaryQubit* qubit) { this->bell_pair_store.insertEntangledQubit(partner_addr, qubit); };
+  void setTracker(int qnic_address, int shot_number, QubitAddr_cons qubit_address) { this->tracker[qnic_address].insert(std::make_pair(shot_number, qubit_address)); };
 
  private:
   FRIEND_TEST(RuleEngineTest, ESResourceUpdate);
+  FRIEND_TEST(RuleEngineTest, trackerUpdate);
   friend class MockRoutingDaemon;
   friend class MockHardwareMonitor;
 };
@@ -102,7 +117,7 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   auto* mockQubit0 = new MockStationaryQubit(QNIC_E, 0);
   auto* mockQubit1 = new MockStationaryQubit(QNIC_E, 0);  // qubit to be updated with entanglement swapping
   auto* mockQubit2 = new MockStationaryQubit(QNIC_E, 0);
-  RuleEngineTestTarget c{mockQubit1, routingdaemon, mockHardwareMonitor};
+  RuleEngineTestTarget c{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
 
   auto info = std::make_unique<ConnectionSetupInfo>();
   info->qnic.type = QNIC_E;
@@ -143,7 +158,7 @@ TEST(RuleEngineTest, resourceAllocation) {
   auto mockQubit0 = new MockStationaryQubit(QNIC_E, 3);
   auto mockQubit1 = new MockStationaryQubit(QNIC_E, 3);
   auto mockQubit2 = new MockStationaryQubit(QNIC_E, 3);
-  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor};
+  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
   rule_engine->setAllResources(0, mockQubit0);
@@ -171,6 +186,41 @@ TEST(RuleEngineTest, resourceAllocation) {
   EXPECT_EQ(_rule->resources.size(), 1);
   delete mockHardwareMonitor;
   delete routingdaemon;
+}
+
+TEST(RuleEngineTest, trackerUpdate) {
+  // 1. initialize tracker
+  prepareSimulation();
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  auto* mockRealTimeController = new MockRealTimeController;
+  auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, mockRealTimeController};
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
+  rule_engine->initialize();
+  for (int i = 0; i < rule_engine->number_of_qnics_all; i++) {
+    EXPECT_EQ(rule_engine->tracker[i].size(), 0);  // tracker is properly initialized?
+  }
+  // set tracker accessible false at qnic 0
+  rule_engine->tracker_accessible.at(0) = false;
+  // 2. start emission (check records) add records
+  // TODO: actual BSM notification should be introduced here
+  QubitAddr_cons addr(1, 0, 0);  // parent_address, qnic_index, qubit_index
+  rule_engine->setTracker(0, 0, addr);
+  EXPECT_EQ(rule_engine->tracker[0].size(), 1);
+  // check if the tracker is blocked properly
+  EXPECT_FALSE(rule_engine->tracker_accessible[0]);
+  EXPECT_TRUE(rule_engine->tracker_accessible[1]);
+  // 3. clear tracker and check flag is reset
+  rule_engine->clearTrackerTable(0, 0);  // source address, qnic address
+  EXPECT_TRUE(rule_engine->tracker_accessible[0]);
+  EXPECT_TRUE(rule_engine->tracker_accessible[1]);
+  // clered table
+  EXPECT_EQ(rule_engine->tracker[0].size(), 0);
+  EXPECT_EQ(rule_engine->tracker[1].size(), 0);
+  delete routingdaemon;
+  delete mockHardwareMonitor;
+  delete mockRealTimeController;
 }
 
 }  // namespace

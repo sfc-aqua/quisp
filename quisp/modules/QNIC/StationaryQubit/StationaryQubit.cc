@@ -426,7 +426,7 @@ void StationaryQubit::setFree(bool consumed) {
   par("GOD_entangled_qnic_address") = -1;
   par("GOD_entangled_qnic_type") = -1;
   entangled_partner = nullptr;
-  EV << "!!!!!!!!!!!!!! Freeing this qubit!!!" << this << "\n";
+  EV_DEBUG << "Freeing this qubit!!!" << this << " at qnode: " << node_address << " qnic_type: " << qnic_type << " qnic_index: " << qnic_index << "\n";
   // GUI part
   if (hasGUI()) {
     if (consumed) {
@@ -613,7 +613,6 @@ void StationaryQubit::setEntangledPartnerInfo(StationaryQubit *partner) {
   // When BSA succeeds, this method gets invoked to store entangled partner information.
   // This will also be sent classically to the partner node afterwards.
   entangled_partner = partner;
-
   par("GOD_entangled_stationaryQubit_address") = partner->par("stationaryQubit_address");
   par("GOD_entangled_node_address") = partner->par("node_address");
   par("GOD_entangled_qnic_address") = partner->par("qnic_address");

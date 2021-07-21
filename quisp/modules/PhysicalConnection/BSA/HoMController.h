@@ -65,6 +65,7 @@ class HoMController : public cSimpleModule {
   double BSA_timeout = 1e-5;
   bool auto_resend_BSANotifier;
   double current_trial_id;
+  double bsa_notification_interval;
 
  protected:
   virtual void initialize(int stage) override;

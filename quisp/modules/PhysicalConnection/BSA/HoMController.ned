@@ -18,6 +18,7 @@ simple HoMController
         double emission_variance = default(0);//in seconds. Photons will be shot towards HoM with 100% accuracy
         bool receiver = default(false);
         bool passive = default(false);
+        double bsa_notification_interval=default(1e-2);
 
         // performance
         @signal[creation_time](type="float");

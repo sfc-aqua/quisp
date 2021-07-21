@@ -53,6 +53,9 @@ void RuleEngine::initialize() {
 
   // Tracks which qubit was sent first, second and so on per qnic(r,rp)
   tracker = new sentQubitIndexTracker[number_of_qnics_all];
+  for (int qnic_address = 0; qnic_address < number_of_qnics_all; qnic_address++) {
+    tracker_accessible.push_back(true);
+  }
 
   // running_processes = new RuleSetPtr[QNIC_N];//One process per QNIC for now. No multiplexing.
   // WATCH(assigned);
@@ -63,18 +66,16 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
   if (dynamic_cast<EmitPhotonRequest *>(msg) != nullptr) {  // From self.
     EmitPhotonRequest *pk = check_and_cast<EmitPhotonRequest *>(msg);
-
+    // Index the qnic and qubit index to the tracker.
+    int qnic_address = pk->getQnic_address();
     // Terminate emission if trial is over already (e.g. the neighbor ran out of free qubits and the BSA already returned the results)
-    if (burstTrial_outdated(pk->getTrial(), pk->getQnic_address())) {
+    if (burstTrial_outdated(pk->getTrial(), qnic_address)) {
       // Terminate bursting if this trial has finished already.
       delete msg;
       return;
     } else {
-      // Index the qnic and qubit index to the tracker.
-      int qnic_address = pk->getQnic_address();
-      QubitAddr_cons Addr(-1, pk->getQnic_index(), pk->getQubit_index());
+      QubitAddr_cons Addr(parentAddress, pk->getQnic_index(), pk->getQubit_index());
       int nth_shot = tracker[qnic_address].size();
-
       // qubit with address Addr was shot in nth time. This list is ordered from old to new.
       tracker[qnic_address].insert(std::make_pair(nth_shot, Addr));
       // std::cout<<getQNode()->getFullName() <<": Emitted the "<<nth_shot<<" from qnic["<<qnic_address<<"]....tracker["<<qnic_address<<"] now size = "<<new_nth_shot<<"\n";
@@ -104,11 +105,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // Set qubits free according to results
     // Also needs to send which qubit was which to the neighbor (not BSA but the neighboring QNode). To update the QubitState table's entangled address.
     incrementBurstTrial(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index());
-    // std::cout<<"(if internal)The finished qnic["<<pk->getInternal_qnic_index()<<"] with address = "<<pk->getInternal_qnic_address()<<" has emitted
-    // tracker["<<pk->getInternal_qnic_address()<<"].size() = "<<tracker[pk->getInternal_qnic_address()].size()<<" photons \n"; Updates free/busy of qubits, and also adds
     // successfully entangled qubits as resources.
     freeFailedQubits_and_AddAsResource(pk->getSrcAddr(), pk->getInternal_qnic_address(), pk->getInternal_qnic_index(), pk_result);
-
     // Clear tracker every end of burst trial. This keeps which qubit was fired first, second, third and so on only for that trial.
     clearTrackerTable(pk->getSrcAddr(), pk->getInternal_qnic_address());
 
@@ -142,7 +140,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
   else if (dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg) != nullptr) {
     SchedulePhotonTransmissionsOnebyOne *pk = check_and_cast<SchedulePhotonTransmissionsOnebyOne *>(msg);
-    EV << provider.getQNode()->getFullName() << ": Photon shooting is from qnic[" << pk->getQnic_index() << "] with address=" << pk->getQnic_address();
+    EV_DEBUG << provider.getQNode()->getFullName() << ": Photon shooting is from qnic[" << pk->getQnic_index() << "] with address=" << pk->getQnic_address() << "\n";
     // Terminate emission if trial is over already (the neighbor ran out of free qubits)
     if (burstTrial_outdated(pk->getTrial(), pk->getQnic_address())) {
       delete msg;
@@ -158,6 +156,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   // Bell pair generation timing syncronization from HoM
   else if (dynamic_cast<BSMtimingNotifier *>(msg) != nullptr && dynamic_cast<CombinedBSAresults *>(msg) == nullptr) {
     bubble("timing received");
+    EV << "BSM timing notifier received\n";
     BSMtimingNotifier *pk = check_and_cast<BSMtimingNotifier *>(msg);
     if (pk->getInternal_qnic_index() == -1) {  // MIM, or the other node without internnal HoM of MM
       EV_DEBUG << "This BSA request is non-internal\n";
@@ -686,20 +685,9 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
   transmission_config.qnic_type = qnic_type;
   // store the interface information for the futhter link generation process
   int numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[transmission_config.qnic_type], transmission_config.qnic_index);
-  if (numFree > 0) {
+  if (numFree > 0 && tracker_accessible.at(transmission_config.qnic_address)) {
+    tracker_accessible.at(transmission_config.qnic_address) = false;  // block access to tracker
     sendPhotonTransmissionSchedule(transmission_config);
-  } else {
-    // generate BSM timing notifier again
-    // Do we have better solution for this?
-    photon_transmission_config_with_partner.insert(std::make_pair(transmission_config.transmission_partner_address, transmission_config));
-    // InternalBSMtimingNotifier *pk_bsm = new InternalBSMtimingNotifier("Internal wait for BSM");
-    // pk_bsm->setSrcAddr(pk->getSrcAddr());
-    // pk_bsm->setInterval(pk->getInterval());
-    // pk_bsm->setAccepted_photons_per_sec(pk->getAccepted_photons_per_sec());
-    // pk_bsm->setTiming_at(pk->getTiming_at() + (double)0.01);
-    // pk_bsm->setInternal_qnic_index(pk->getInternal_qnic_index());
-    // pk_bsm->setInternal_qnic_address(pk->getInternal_qnic_index());
-    // scheduleAt(simTime()+0.0005, pk_bsm);
   }
 }
 
@@ -793,7 +781,6 @@ void RuleEngine::shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk) {
 
 // This method is for qnic (not qnic_r, qnic_rp).
 void RuleEngine::shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk) {
-  EV << pk->getQnic_address() << ", " << pk->getQnic_index();
   if (countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[QNIC_E], pk->getQnic_index()) == 0) {
     return;
   }
@@ -1143,6 +1130,7 @@ void RuleEngine::clearTrackerTable(int destAddr, int internal_qnic_address) {
   }
   if (qnic_address == -1) error("Failed clearing tracker of a qnic. This should not happen.");
   tracker[qnic_address].clear();
+  tracker_accessible.at(qnic_address) = true;
 }
 
 void RuleEngine::finish() { delete qnic_burst_trial_counter; }
