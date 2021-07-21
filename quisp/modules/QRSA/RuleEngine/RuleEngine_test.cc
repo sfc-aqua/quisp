@@ -165,12 +165,12 @@ TEST(RuleEngineTest, resourceAllocation) {
   rule_engine->setAllResources(1, mockQubit1);
   rule_engine->setAllResources(2, mockQubit2);
   auto* rs = new RuleSet(0, 0, 1);
-  auto* rule = new Rule();
+  auto rule = std::make_unique<Rule>();
   auto* action = new RandomMeasureAction(1, QNIC_E, 3, 1, 0, 1);
 
   rule->setAction(action);
-  rs->addRule(rule);
-  process proc;
+  rs->addRule(std::move(rule));
+  Process proc;
   proc.ownner_addr = 0;
   proc.Rs = rs;
   rule_engine->rp.insert(std::make_pair(0, proc));
@@ -178,10 +178,10 @@ TEST(RuleEngineTest, resourceAllocation) {
   rule_engine->ResourceAllocation(QNIC_E, 3);
 
   // resource allocation assigns a corresponding qubit to action's resource
-  auto _rs = rule_engine->rp.at(0).Rs;
+  auto* _rs = rule_engine->rp.at(0).Rs;
   EXPECT_NE(_rs, nullptr);
   EXPECT_EQ(_rs->size(), 1);
-  auto _rule = _rs->front().get();
+  auto& _rule = _rs->getRule(0);
   EXPECT_FALSE(_rule == nullptr);
   EXPECT_EQ(_rule->resources.size(), 1);
   delete mockHardwareMonitor;
