@@ -6,8 +6,8 @@ OBJS := $(filter-out %unit_test_main.o,$(OBJS))
 # you can pass the file path you want to check as SRCS environment variable. see the example below.
 # $ SRCS=./quisp/modules/Application.cc make tidy # checks only Application.cc
 # $ make tidy # checks all sources
-SRCS?=$(shell find . -type f -name "*.cc" -print)
-HEADERS=$(shell find . -type f -name "*.h" -print)
+SRCS?=$(shell git ls-files . | grep "^.*.cc$$")
+HEADERS?=$(shell git ls-files . | grep "^.*.h$$")
 TEST_SRCS=$(filter %_test.cc,$(SRCS)) $(test_utils/%.cc) ./unit_test_main.cc
 TEST_OBJS=$(foreach obj,$(TEST_SRCS:.cc=.o),$O/$(obj))
 TEST_INCLUDE=-I../googletest/googletest/include/ -I../googletest/googlemock/include/
@@ -31,11 +31,11 @@ format:
 	clang-format -i $(SRCS) $(HEADERS)
 
 tidy:
-	clang-tidy -header-filter="./quisp/(.|utils|rules|modules)/.*.h" $(SRCS) -- $(COPTS) $(TEST_INCLUDE)
+	clang-tidy -header-filter="./quisp/(.|utils|rules|modules|test_utils)/.*.h" $(SRCS) -- $(COPTS) $(TEST_INCLUDE)
 
 ci: msgheaders
 	@clang-format $(SRCS) $(HEADERS) -output-replacements-xml | grep -c "<replacement " -q ; if [ $$? -ne 1 ]; then echo "error: run make format and then push it again"; exit 1; fi
-	@clang-tidy -warnings-as-errors="*" -header-filter="./(.|utils|rules|modules)/.*.h" $(SRCS) -- $(COPTS) $(TEST_INCLUDE)
+	@clang-tidy -warnings-as-errors="*" -header-filter="./(.|utils|rules|modules|test_utils)/.*.h" $(SRCS) -- $(COPTS) $(TEST_INCLUDE)
 
 $(TEST_OBJS): $O/%.o : %.cc
 	@$(MKPATH) $(dir $@)
