@@ -13,7 +13,7 @@
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
-#include "modules/QRSA/RealTimeController/RealTimeController.h"
+#include "modules/QRSA/RealTimeController/IRealTimeController.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
 #include "rules/Action.h"
 
@@ -52,9 +52,12 @@ class MockHardwareMonitor : public IHardwareMonitor {
   MOCK_METHOD(std::unique_ptr<ConnectionSetupInfo>, findConnectionInfoByQnicAddr, (int qnic_address), (override));
 };
 
-class MockRealTimeController : public RealTimeController {
+class MockRealTimeController : public IRealTimeController {
  public:
+  MOCK_METHOD(void, initialize, (), (override));
+  MOCK_METHOD(void, handleMessage, (cMessage* msg), (override));
   MOCK_METHOD(void, EmitPhoton, (int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse), (override));
+  MOCK_METHOD(void, ReInitialize_StationaryQubit, (int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed), (override));
 };
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
@@ -209,8 +212,7 @@ TEST(RuleEngineTest, trackerUpdate) {
   EXPECT_FALSE(rule_engine->tracker_accessible[0]);
   EXPECT_TRUE(rule_engine->tracker_accessible[1]);
   // 3. clear tracker and check flag is reset
-  int src_addr, qnic_addr = 0;
-  rule_engine->clearTrackerTable(src_addr, qnic_addr);
+  rule_engine->clearTrackerTable(0, 0);  // source address, qnic address
   EXPECT_TRUE(rule_engine->tracker_accessible[0]);
   EXPECT_TRUE(rule_engine->tracker_accessible[1]);
   // clered table
