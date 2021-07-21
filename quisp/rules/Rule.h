@@ -26,7 +26,7 @@ class Rule {
   int ruleset_id;
   int rule_index;
   std::string name;
-  pCondition condition;
+  std::unique_ptr<Condition> condition;
   std::unique_ptr<Action> action;
   std::multimap<int, StationaryQubit *> resources;
   int mutable number_of_resources_allocated_in_total = 0;
@@ -66,8 +66,6 @@ class Rule {
   bool checkTerminate();
   // bool checkTerminate(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
 };
-
-typedef std::unique_ptr<Rule> pRule;
 
 }  // namespace rules
 }  // namespace quisp

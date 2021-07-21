@@ -715,15 +715,14 @@ RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, Swapp
                                                     conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type,
                                                     conf.self_right_qnic_index, conf.self_right_qnic_type);
 
-  Rule *rule = new Rule(ruleset_id, rule_index, "entanglement swapping");
+  auto rule = std::make_unique<Rule>(ruleset_id, rule_index, "entanglement swapping");
   rule->setCondition(condition);
   rule->setAction(action);
 
   std::vector<int> partners = {conf.left_partner, conf.right_partner};
 
   RuleSet *ruleset = new RuleSet(ruleset_id, owner, partners);
-  ruleset->addRule(rule);
-  ruleset->setRule_ptr(rule);
+  ruleset->addRule(std::move(rule));
 
   return ruleset;
 }
@@ -747,15 +746,14 @@ RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int 
       conf.initiator_qnic_type, conf.initiator_qnic_index, conf.initiator_qnic_address, conf.initiator_res, conf.responder, conf.responder_qnic_type, conf.responder_qnic_index,
       conf.responder_qnic_address, conf.responder_res, index_in_path, path_length_exclude_IR);
 
-  Rule *rule = new Rule(ruleset_id, rule_index);
+  auto rule = std::make_unique<Rule>(ruleset_id, rule_index);
   rule->setCondition(condition);
   rule->setAction(action);
 
   std::vector<int> partners = {conf.left_partner, conf.right_partner};
 
   RuleSet *ruleset = new RuleSet(ruleset_id, owner, partners);
-  ruleset->addRule(rule);
-  ruleset->setRule_ptr(rule);
+  ruleset->addRule(std::move(rule));
 
   return ruleset;
 }
@@ -765,7 +763,7 @@ RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, in
 
   int rule_index = 0;
   RuleSet *tomography = new RuleSet(ruleset_id, owner, partner);
-  Rule *rule = new Rule(ruleset_id, rule_index, "tomography");
+  auto rule = std::make_unique<Rule>(ruleset_id, rule_index, "tomography");
 
   // 3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
   Clause *count_clause = new MeasureCountClause(num_of_measure);
@@ -784,7 +782,7 @@ RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, in
   rule->setAction(action);
 
   // Add the rule to the RuleSet
-  tomography->addRule(rule);
+  tomography->addRule(std::move(rule));
 
   return tomography;
 }
