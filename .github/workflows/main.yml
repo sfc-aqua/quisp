@@ -22,8 +22,8 @@ jobs:
           opp_makemake -f --deep -O out -i ./makefrag -M release --make-so
           make run-unit-test
         working-directory: quisp
-      - name: module tests
-        run: make run-module-test
+      # - name: module tests
+        # run: make run-module-test
       - name: Run Simulations
         run: /bin/bash test.sh
         working-directory: test
