@@ -55,7 +55,7 @@ class MockHardwareMonitor : public IHardwareMonitor {
 class MockRealTimeController : public IRealTimeController {
  public:
   MOCK_METHOD(void, initialize, (), (override));
-  MOCK_METHOD(void, handleMessage, (cMessage* msg), (override));
+  MOCK_METHOD(void, handleMessage, (cMessage * msg), (override));
   MOCK_METHOD(void, EmitPhoton, (int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse), (override));
   MOCK_METHOD(void, ReInitialize_StationaryQubit, (int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed), (override));
 };
