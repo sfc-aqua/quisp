@@ -51,6 +51,8 @@ class ConnectionManager : public IConnectionManager {
   int num_of_qnics;
   std::map<int, bool> qnic_res_table;
   bool simultaneous_es_enabled;
+  bool es_with_purify;
+  int num_remote_purification;
   IRoutingDaemon *routing_daemon;
   IHardwareMonitor *hardware_monitor;
 

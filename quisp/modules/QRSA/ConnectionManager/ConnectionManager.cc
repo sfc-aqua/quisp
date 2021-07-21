@@ -26,7 +26,12 @@ void ConnectionManager::initialize() {
   my_address = par("address");
   num_of_qnics = par("total_number_of_qnics");
   simultaneous_es_enabled = par("simultaneous_es_enabled");
-  enable_purification = par("purification_")
+  es_with_purify = par("entanglement_swapping_with_purification");
+  num_remote_purification = par("num_remote_purification");
+
+  if (simultaneous_es_enabled && es_with_purify){
+    error("Currently, simultaneous entanglement swapping cannot be simulated with purification");
+  }
 
   for (int i = 0; i < num_of_qnics; i++) {
     // qnode address
@@ -320,25 +325,32 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
 
       if (!simultaneous_es_enabled) {
         SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
-        RuleSet *rule = generateEntanglementSwappingRuleSet(path.at(i), config);
+
+        RuleSet *ruleset_es;
+        if (es_with_purify){
+          ruleset_es = generateEsAndPurificationRuleSet(path.at(i), config, num_remote_purification);
+        }else{
+          // pure entanglement swapping 
+          ruleset_es = generateEntanglementSwappingRuleSet(path.at(i), config);
+        }
 
         auto *pkr = new ConnectionSetupResponse("ConnSetupResponse(Swapping)");
         pkr->setDestAddr(path.at(i));
         pkr->setSrcAddr(my_address);
         pkr->setKind(2);
-        pkr->setRuleSet(rule);
+        pkr->setRuleSet(ruleset_es);
         pkr->setActual_srcAddr(path.at(0));
         pkr->setActual_destAddr(path.at(path.size() - 1));
         send(pkr, "RouterPort$o");
       } else {
         SwappingConfig config = generateSimultaneousSwappingConfig(path.at(i), path, qnics, num_resource);
-        RuleSet *rule = generateSimultaneousEntanglementSwappingRuleSet(path.at(i), config, path);
+        RuleSet *ruleset_simul_es = generateSimultaneousEntanglementSwappingRuleSet(path.at(i), config, path);
 
         auto *pkr = new ConnectionSetupResponse("ConnSetupResponse(SimultaneousSwapping)");
         pkr->setDestAddr(path.at(i));
         pkr->setSrcAddr(my_address);
         pkr->setKind(2);
-        pkr->setRuleSet(rule);
+        pkr->setRuleSet(ruleset_simul_es);
         pkr->setActual_srcAddr(path.at(0));
         pkr->setActual_destAddr(path.at(path.size() - 1));
         send(pkr, "RouterPort$o");
@@ -347,22 +359,22 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       EV_DEBUG << "Im not swapper!" << path.at(i) << "\n";
       int num_measure = req->getNum_measure();
 
-      RuleSet *ruleset;
+      RuleSet *ruleset_tomography;
       int owner = path.at(i);
       if (i == 0) {  // if this is initiator
         // final element of the path is this node (responder) and first element is initiator node
         // if owner is the first node, then,
         // partner == responder (this node), and the first elements (initiator's) qnic type and index
-        ruleset = generateTomographyRuleSet(owner, path.at(path.size() - 1), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
+        ruleset_tomography = generateTomographyRuleSet(owner, path.at(path.size() - 1), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
       } else {  // if this is responder
-        ruleset = generateTomographyRuleSet(owner, path.at(0), num_measure, qnics.at(qnics.size() - 1).fst.type, qnics.at(qnics.size() - 1).fst.index, num_resource);
+        ruleset_tomography = generateTomographyRuleSet(owner, path.at(0), num_measure, qnics.at(qnics.size() - 1).fst.type, qnics.at(qnics.size() - 1).fst.index, num_resource);
       }
 
       ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Tomography)");
       pkr->setDestAddr(path.at(i));
       pkr->setSrcAddr(my_address);
       pkr->setKind(2);
-      pkr->setRuleSet(ruleset);
+      pkr->setRuleSet(ruleset_tomography);
       pkr->setActual_srcAddr(path.at(0));
       pkr->setActual_destAddr(path.at(path.size() - 1));
 
