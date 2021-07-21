@@ -25,9 +25,9 @@ cPacket *DoubleSelectionAction::run(cModule *re) {
   StationaryQubit *qubit = nullptr;
   StationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
 
-  qubit = getResource_fromTop(resource);
-  trash_qubit_X = getResource_fromTop(trash_resource_X);
-  trash_qubit_Z = getResource_fromTop(trash_resource_Z);
+  qubit = getResource_fromTop_with_partner(resource, partner);
+  trash_qubit_X = getResource_fromTop_with_partner(trash_resource_X, partner);
+  trash_qubit_Z = getResource_fromTop_with_partner(trash_resource_Z, partner);
 
   if (qubit == trash_qubit_X || qubit == trash_qubit_Z || trash_qubit_Z == trash_qubit_X) {
     Error *pk = new Error;

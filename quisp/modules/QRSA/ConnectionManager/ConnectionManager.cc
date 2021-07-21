@@ -789,6 +789,11 @@ RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, in
   return tomography;
 }
 
+/*
+generateCombinedRuleSet generate RuleSet includes both entanglement swapping and purification
+*/
+RuleSet *ConnectionManager::generateCombinedRuleSet(int owner_address){}
+
 unsigned long ConnectionManager::createUniqueId() {
   std::string time = SimTime().str();
   std::string address = std::to_string(my_address);

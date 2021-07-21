@@ -72,6 +72,7 @@ class ConnectionManager : public IConnectionManager {
   RuleSet *generateEntanglementSwappingRuleSet(int owner, SwappingConfig conf);
   RuleSet *generateSimultaneousEntanglementSwappingRuleSet(int owner, SwappingConfig conf, std::vector<int> path);
   RuleSet *generateRGSsourceRuleSet(int owner, int partner, int num_of_measure);
+  RuleSet *generateCombinedRuleSet(int owner_address);
   SwappingConfig generateSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners, std::vector<QNIC_pair_info> qnics,
                                         int num_resources);
   SwappingConfig generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources);

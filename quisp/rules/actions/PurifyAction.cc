@@ -41,8 +41,8 @@ cPacket *PurifyAction::run(cModule *re) {
   StationaryQubit *qubit = nullptr;
   StationaryQubit *trash_qubit = nullptr;
 
-  qubit = getResource_fromTop(resource);
-  trash_qubit = getResource_fromTop(trash_resource);
+  qubit = getResource_fromTop_with_partner(resource, partner);
+  trash_qubit = getResource_fromTop_with_partner(trash_resource, partner);
 
   if (qubit == trash_qubit) {
     Error *pk = new Error;
