@@ -25,7 +25,7 @@ format: quisp/Makefile
 	$(MAKE) -C quisp format
 
 tidy: quisp/Makefile
-	$(MAKE) -C quisp format
+	$(MAKE) -C quisp tidy
 
 googletest/CMakeLists.txt:
 	git submodule update --init
