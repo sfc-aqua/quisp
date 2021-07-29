@@ -14,6 +14,10 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include <vector>
 
+using quisp::types::MeasureXResult;
+using quisp::types::MeasureYResult;
+using quisp::types::MeasureZResult;
+
 namespace quisp {
 namespace modules {
 
@@ -311,17 +315,18 @@ void StationaryQubit::setEmissionPauliError(){
 }
 */
 
-bool StationaryQubit::measure_X() {
-  // Need to add noise here later
+MeasureXResult StationaryQubit::measure_X() {
   apply_single_qubit_gate_error(Measurement_error);
-  return !par("GOD_Zerror");
+  if (par("GOD_Zerror").boolValue()) {
+    return MeasureXResult::HAS_X_ERROR;
+  }
+  return MeasureXResult::NO_ERROR;
 }
 
 /**
  *  Returns true if the measurement outcome was correct
  */
-bool StationaryQubit::measure_Y() {
-  // Need to add noise here later
+MeasureYResult StationaryQubit::measure_Y() {
   apply_single_qubit_gate_error(Measurement_error);
   bool error = true;
   if (par("GOD_Zerror") && par("GOD_Xerror")) {
@@ -330,14 +335,18 @@ bool StationaryQubit::measure_Y() {
   if (!par("GOD_Zerror") && !par("GOD_Xerror")) {
     error = false;
   }
-  return error;
-  // return !(par("GOD_Zerror") || par("GOD_Xerror"));
+  if (error) {
+    return MeasureYResult::HAS_Y_ERROR;
+  }
+  return MeasureYResult::NO_ERROR;
 }
 
-bool StationaryQubit::measure_Z() {
-  // Need to add noise here later
+MeasureZResult StationaryQubit::measure_Z() {
   apply_single_qubit_gate_error(Measurement_error);
-  return !par("GOD_Xerror");
+  if (par("GOD_Xerror")) {
+    return MeasureZResult::HAS_Z_ERROR;
+  }
+  return MeasureZResult::NO_ERROR;
 }
 
 // Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
