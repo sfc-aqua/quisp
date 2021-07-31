@@ -2,6 +2,7 @@
 #include <classical_messages_m.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
+using quisp::types::MeasureZResult;
 namespace quisp {
 namespace rules {
 namespace actions {
@@ -70,25 +71,25 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   left_qubit->Hadamard_gate();
   right_qubit->CNOT_gate(left_qubit);
 
-  bool left_measure = left_qubit->measure_Z();
-  bool right_measure = right_qubit->measure_Z();
+  auto left_measure = left_qubit->measure_Z();
+  auto right_measure = right_qubit->measure_Z();
 
   int operation_type_left, operation_type_right;
 
-  if (!left_measure && !right_measure) {  // 0 0
+  if (left_measure == MeasureZResult::NO_ERROR && right_measure == MeasureZResult::NO_ERROR) {  // 0 0
     EV << "operation type 0, operation left I, operation right I\n";
     operation_type_left = 0;
     operation_type_right = 0;
-  } else if (!left_measure && right_measure) {  // 0 1
+  } else if (left_measure == MeasureZResult::NO_ERROR && right_measure == MeasureZResult::HAS_X_ERROR) {  // 0 1
     EV << "operation type 1, operation left I, operation right X\n";
     operation_type_left = 0;
     operation_type_right = 1;
-  } else if (left_measure && !right_measure) {  // 1 0
+  } else if (left_measure == MeasureZResult::HAS_X_ERROR && right_measure == MeasureZResult::NO_ERROR) {  // 1 0
     EV << "operation type 2, operation left Z, operation right I\n";
     operation_type_left = 0;
     operation_type_right = 2;
   } else {
-    // left_measure && right_measure 1 1
+    // left_measure == HAS_X_ERROR && right_measure == HAS_X_ERROR
     EV << "operation type 3, operation left Z, operation right X\n";
     operation_type_left = 0;
     operation_type_right = 3;
