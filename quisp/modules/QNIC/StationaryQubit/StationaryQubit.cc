@@ -318,7 +318,7 @@ void StationaryQubit::setEmissionPauliError(){
 MeasureXResult StationaryQubit::measure_X() {
   apply_single_qubit_gate_error(Measurement_error);
   if (par("GOD_Zerror").boolValue()) {
-    return MeasureXResult::HAS_X_ERROR;
+    return MeasureXResult::HAS_Z_ERROR;
   }
   return MeasureXResult::NO_ERROR;
 }
@@ -336,7 +336,7 @@ MeasureYResult StationaryQubit::measure_Y() {
     error = false;
   }
   if (error) {
-    return MeasureYResult::HAS_Y_ERROR;
+    return MeasureYResult::HAS_XZ_ERROR;
   }
   return MeasureYResult::NO_ERROR;
 }
@@ -344,7 +344,7 @@ MeasureYResult StationaryQubit::measure_Y() {
 MeasureZResult StationaryQubit::measure_Z() {
   apply_single_qubit_gate_error(Measurement_error);
   if (par("GOD_Xerror")) {
-    return MeasureZResult::HAS_Z_ERROR;
+    return MeasureZResult::HAS_X_ERROR;
   }
   return MeasureZResult::NO_ERROR;
 }
