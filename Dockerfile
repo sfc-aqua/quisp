@@ -1,7 +1,16 @@
 #!/usr/bin/env docker build --build-arg VERSION=5.6 -t omnetpp/omnetpp-gui:u18.04-5.6 .
 FROM omnetpp/omnetpp-base:u18.04 as base
-RUN apt-get update -y && apt install -y --no-install-recommends qt5-default libqt5opengl5-dev \
-    libgtk-3-0 libwebkitgtk-3.0-0 default-jre osgearth libeigen3-dev cmake g++ gdb clang-format clang-tidy lldb
+RUN apt-get update -y && apt install -y --no-install-recommends \
+    qt5-default libqt5opengl5-dev libgtk-3-0 libwebkitgtk-3.0-0 default-jre osgearth \
+    libeigen3-dev cmake g++ gdb gpg-agent software-properties-common && \
+    wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
+    apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-12 main" && \
+    apt install clang-format-12 clang-tidy-12 lldb-12 -y && \
+    ln -s /usr/bin/clang-format-12 /usr/bin/clang-format && \
+    ln -s /usr/bin/clang-tidy-12 /usr/bin/clang-tidy && \
+    ln -sf /usr/bin/clang-12 /usr/bin/clang && \
+    ln -sf /usr/bin/clang++-12 /usr/bin/clang++
+
 
 # first stage - build OMNeT++ with GUI
 FROM base as builder
