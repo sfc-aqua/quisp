@@ -68,8 +68,6 @@ class RuleEngine : public IRuleEngine {
   IRealTimeController *realtime_controller;
   int *qnic_burst_trial_counter;
   BellPairStore bell_pair_store;
-  // <partner address, configs (qnic, timing etc..)>
-  std::map<int, PhotonTransmissionConfig> photon_transmission_config_with_partner;
   // typedef rules::RuleSet* RuleSetPtr;
   running_processes rp;
   // Vector for store package for simultaneous entanglement swapping
@@ -81,7 +79,6 @@ class RuleEngine : public IRuleEngine {
 
   void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type) override;
   void freeConsumedResource(int qnic_index, StationaryQubit *qubit, QNIC_type qnic_type) override;
-  void dynamic_ResourceAllocation(int qnic_type, int qnic_index) override;
   void ResourceAllocation(int qnic_type, int qnic_index) override;
 
  protected:
@@ -95,7 +92,6 @@ class RuleEngine : public IRuleEngine {
   QubitStateTable initializeQubitStateTable(QubitStateTable temp, QNIC_type qnic_type);
   void scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type);
   void sendPhotonTransmissionSchedule(PhotonTransmissionConfig transmission_config);
-  void restartBSMtrial();
   void shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk);
   // virtual int getQNICjob_index_for_this_qnic(int qnic_index, QNIC_type qnic_type);
   void incrementBurstTrial(int destAddr, int internal_qnic_address, int internal_qnic_index);
@@ -111,7 +107,7 @@ class RuleEngine : public IRuleEngine {
   void traverseThroughAllProcesses2();
   double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
   // virtual void check_Purification_Agreement(purification_result pr);
-  void storeCheck_Purification_Agreement(purification_result pr);
+  void storeCheck_Purification_Agreement(purification_result pur_result);
   void storeCheck_DoublePurification_Agreement(Doublepurification_result pr);
   void storeCheck_TriplePurification_Agreement(Triplepurification_result pr);
   void storeCheck_QuatroPurification_Agreement(Quatropurification_result pr);

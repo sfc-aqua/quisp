@@ -18,6 +18,9 @@ class PurifyAction : public Action {
   bool Z;
   int num_purify;
   int action_index = 0;  // To track how many times this particular action has been invoked.
+  // To track the number of invocation with partner address. (partner_address, action_index)
+  std::map<int, int> action_indices;
+
  public:
   PurifyAction();
   PurifyAction(int part, QNIC_type qt, int qi, int res, int tres, int rs_id, int r_id);

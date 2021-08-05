@@ -827,31 +827,31 @@ network Realistic_Layer2_Star_Sep
         }
         HoM21[1]: HoM {
             address = 21;
-            @display("i=device/bsm;p=164,176");
+            @display("i=device/device;p=164,176");
         }
         HoM22[1]: HoM {
             address = 22;
-            @display("i=device/bsm;p=484,98");
+            @display("i=device/device;p=484,98");
         }
         HoM23[1]: HoM {
             address = 23;
-            @display("i=device/bsm;p=445,157");
+            @display("i=device/device;p=445,157");
         }
         HoM24[1]: HoM {
             address = 24;
-            @display("i=device/bsm;p=324,98");
+            @display("i=device/device;p=324,98");
         }
         HoM25[1]: HoM {
             address = 25;
-            @display("i=device/bsm;p=270,70");
+            @display("i=device/device;p=270,70");
         }
         HoM26[1]: HoM {
             address = 26;
-            @display("i=device/bsm;p=193,77");
+            @display("i=device/device;p=193,77");
         }
         HoM27[1]: HoM {
             address = 27;
-            @display("i=device/bsm;p=128,137");
+            @display("i=device/device;p=128,137");
         }
 
     connections:

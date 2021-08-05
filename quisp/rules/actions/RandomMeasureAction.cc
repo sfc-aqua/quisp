@@ -21,7 +21,7 @@ RandomMeasureAction::RandomMeasureAction(int part, QNIC_type qt, int qi, int res
 cPacket *RandomMeasureAction::run(cModule *re) {
   StationaryQubit *qubit = nullptr;
 
-  qubit = getResource_fromTop_with_partner(resource, partner);
+  qubit = getResourceFromTopWithPartner(resource, partner);
 
   if (qubit == nullptr) {
     Error *pk = new Error;

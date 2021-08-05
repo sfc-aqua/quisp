@@ -18,6 +18,7 @@ PurifyAction::PurifyAction(int part, QNIC_type qt, int qi, int res, int tres, in
   rule_id = r_id;
   ruleset_id = rs_id;
   // action_index++;
+  action_indices.insert(std::make_pair(part, 0));
 }
 
 PurifyAction::PurifyAction(unsigned long RuleSet_id, int rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res,
@@ -34,6 +35,7 @@ PurifyAction::PurifyAction(unsigned long RuleSet_id, int rule_index, bool X_puri
   X = X_purification;
   Z = Z_purification;
   // action_index++;
+  action_indices.insert(std::make_pair(part, 0));
 }
 
 // Either Z or X purification.
@@ -41,8 +43,8 @@ cPacket *PurifyAction::run(cModule *re) {
   StationaryQubit *qubit = nullptr;
   StationaryQubit *trash_qubit = nullptr;
 
-  qubit = getResource_fromTop_with_partner(resource, partner);
-  trash_qubit = getResource_fromTop_with_partner(trash_resource, partner);
+  qubit = getResourceFromTopWithPartner(resource, partner);
+  trash_qubit = getResourceFromTopWithPartner(trash_resource, partner);
 
   if (qubit == trash_qubit) {
     Error *pk = new Error;
@@ -60,7 +62,7 @@ cPacket *PurifyAction::run(cModule *re) {
   else if (!X && Z)
     meas = trash_qubit->Zpurify(qubit);  // Error propagation only. Not based on density matrix
 
-  qubit->Lock(ruleset_id, rule_id, action_index);
+  qubit->Lock(ruleset_id, rule_id, action_indices.at(partner));
 
   // Trash qubit has been measured. Now, break the entanglement info of the partner.
   // There is no need to overwrite its density matrix since we are only tracking errors.
@@ -68,7 +70,6 @@ cPacket *PurifyAction::run(cModule *re) {
     // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
     // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
     trash_qubit->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
-
     // Break entanglement.
     trash_qubit->entangled_partner->entangled_partner = nullptr;
   }
@@ -76,17 +77,16 @@ cPacket *PurifyAction::run(cModule *re) {
   removeResource_fromRule(trash_qubit);  // Remove from resource list in this Rule.
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
   rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);  // Remove from entangled resource list.
-  // Deleting done
 
   PurificationResult *pk = new PurificationResult;
   pk->setDestAddr(partner);
   pk->setKind(7);
-  pk->setAction_index(action_index);
+  pk->setAction_index(action_indices.at(partner));
   pk->setRule_id(rule_id);
   pk->setRuleset_id(ruleset_id);
   pk->setOutput_is_plus(meas);
   pk->setEntangled_with(qubit);
-  action_index++;
+  action_indices.at(partner)++;
   return pk;
 }
 }  // namespace actions

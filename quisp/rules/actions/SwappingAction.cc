@@ -35,8 +35,8 @@ cPacket *SwappingAction::run(cModule *re) {
   StationaryQubit *left_qubit = nullptr;
   StationaryQubit *right_qubit = nullptr;
 
-  left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
-  right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
+  left_qubit = getResourceFromTopWithPartner(0, left_partner);  // index should be 0 (just means the first available qubit)
+  right_qubit = getResourceFromTopWithPartner(0, right_partner);
 
   if (left_qubit == nullptr || right_qubit == nullptr) {
     Error *pk = new Error;

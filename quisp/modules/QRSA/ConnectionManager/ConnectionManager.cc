@@ -809,38 +809,66 @@ RuleSet *ConnectionManager::generateEsAndPurificationRuleSet(int owner_address, 
   unsigned long ruleset_id = createUniqueId();
   std::vector<int> partners = {conf.left_partner, conf.right_partner};
   RuleSet *ruleset = new RuleSet(ruleset_id, owner_address, partners);
-  // 1. Define Rules and append them to RuleSet
-  /*
-  Rule1: Entanglement Purification with left partner (Purify entanglements generated in previous ES or BSM)
-      Clause1: Enough number of entanglements with left partner
-    Action:
-      Purify Action
-  */
+
   int rule_index = 0;
-  auto rule_purification_left = std::make_unique<Rule>(ruleset_id, rule_index, "entanglement purification with left partner");
-  Condition *condition_left = new Condition();
-  Clause *resource_clause_left_pur = new EnoughResourceClause(conf.left_partner, conf.lres);
-  condition_left->addClause(resource_clause_left_pur);
-  rule_purification_left->setCondition(condition_left);
-  // PurifyAction(unsigned long RuleSet_id, int rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res, int tres);
-  Action *purify_action_left = new PurifyAction(ruleset_id, rule_index, true, false, num_purification, conf.left_partner, conf.self_left_qnic_type, conf.self_left_qnic_index, 0, 1);
-  rule_purification_left->setAction(purify_action_left);
-  ruleset->addRule(std::move(rule_purification_left));
-  /*
-  Rule2: Entanglement Purification with right partner (Purify entanglements generated in previous ES or BSM)
-      Clause1: Enough number of entanglements with right partner
-    Action:
-      Purify Action
-  */
-  rule_index++;
-  auto rule_purification_right = std::make_unique<Rule>(ruleset_id, rule_index, "entanglement purification with right partner");
-  Condition *condition_right = new Condition();
-  Clause *resource_clause_right_pur = new EnoughResourceClause(conf.right_partner, conf.rres);
-  condition_right->addClause(resource_clause_right_pur);
-  rule_purification_right->setCondition(condition_right);
-  Action *purify_action_right = new PurifyAction(ruleset_id, rule_index, true, false, num_purification, conf.right_partner, conf.self_right_qnic_type, conf.self_right_qnic_index, 0, 1);
-  rule_purification_right->setAction(purify_action_right);
-  ruleset->addRule(std::move(rule_purification_right));
+  for (int i=0; i<num_purification; i++){
+    // 1. Define Rules and append them to RuleSet
+    /*
+    Rule1: Entanglement Purification with left partner (Purify entanglements generated in previous ES or BSM)
+        Clause1: Enough number of entanglements with left partner
+      Action:
+        Purify Action
+    */
+    // First stage, X purification
+    auto rule_purification_left = std::make_unique<Rule>(ruleset_id, rule_index, "X purification with left partner");
+    Condition *condition_left = new Condition();
+    Clause *resource_clause_left_pur = new EnoughResourceClause(conf.left_partner, 2);  // to prepare 1 purified entanglement, we need 2 raw entanglements
+    condition_left->addClause(resource_clause_left_pur);
+    rule_purification_left->setCondition(condition_left);
+    // PurifyAction(unsigned long RuleSet_id, int rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res, int tres);
+    Action *purify_action_left = new PurifyAction(ruleset_id, rule_index, true, false, num_purification, conf.left_partner, conf.self_left_qnic_type, conf.self_left_qnic_index, 0, 1);
+    rule_purification_left->setAction(purify_action_left);
+    rule_index++;
+    ruleset->addRule(std::move(rule_purification_left));
+    // Z purification
+    rule_purification_left = std::make_unique<Rule>(ruleset_id, rule_index, "Z purification with left partner");
+    condition_left = new Condition();
+    resource_clause_left_pur = new EnoughResourceClause(conf.left_partner, 2);  // to prepare 1 purified entanglement, we need 2 raw entanglements
+    condition_left->addClause(resource_clause_left_pur);
+    rule_purification_left->setCondition(condition_left);
+    // PurifyAction(unsigned long RuleSet_id, int rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res, int tres);
+    purify_action_left = new PurifyAction(ruleset_id, rule_index, false, true, num_purification, conf.left_partner, conf.self_left_qnic_type, conf.self_left_qnic_index, 0, 1);
+    rule_purification_left->setAction(purify_action_left);
+    rule_index++;
+    ruleset->addRule(std::move(rule_purification_left));
+
+    /*
+    Rule2: Entanglement Purification with right partner (Purify entanglements generated in previous ES or BSM)
+        Clause1: Enough number of entanglements with right partner
+      Action:
+        Purify Action
+    */
+    // X purification
+    auto rule_purification_right = std::make_unique<Rule>(ruleset_id, rule_index, "X purification with right partner");
+    Condition *condition_right = new Condition();
+    Clause *resource_clause_right_pur = new EnoughResourceClause(conf.right_partner, 2);
+    condition_right->addClause(resource_clause_right_pur);
+    rule_purification_right->setCondition(condition_right);
+    Action *purify_action_right = new PurifyAction(ruleset_id, rule_index, true, false, num_purification, conf.right_partner, conf.self_right_qnic_type, conf.self_right_qnic_index, 0, 1);
+    rule_purification_right->setAction(purify_action_right);
+    rule_index++;
+    ruleset->addRule(std::move(rule_purification_right));
+    // Z purification
+    rule_purification_right = std::make_unique<Rule>(ruleset_id, rule_index, "Z purification with right partner");
+    condition_right = new Condition();
+    resource_clause_right_pur = new EnoughResourceClause(conf.right_partner, 2);
+    condition_right->addClause(resource_clause_right_pur);
+    rule_purification_right->setCondition(condition_right);
+    purify_action_right = new PurifyAction(ruleset_id, rule_index, false, true, num_purification, conf.right_partner, conf.self_right_qnic_type, conf.self_right_qnic_index, 0, 1);
+    rule_purification_right->setAction(purify_action_right);
+    rule_index++;
+    ruleset->addRule(std::move(rule_purification_right));
+  }
   /* 
   Rule3: Entanglement Swapping
     Condition:
@@ -849,18 +877,18 @@ RuleSet *ConnectionManager::generateEsAndPurificationRuleSet(int owner_address, 
     Action:
       SwappingAction 
   */
-  rule_index++;
   auto rule_entanglement_swapping = std::make_unique<Rule>(ruleset_id, rule_index, "entanglement swapping");
   Condition *condition = new Condition();
-  Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, conf.lres);
-  Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, conf.rres);
+  Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, 1);
+  Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, 1);
   condition->addClause(resource_clause_left);
   condition->addClause(resource_clause_right);
   rule_entanglement_swapping->setCondition(condition);
-  quisp::rules::Action *action = new SwappingAction(ruleset_id, rule_index, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner,
-                                                    conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type,
-                                                    conf.self_right_qnic_index, conf.self_right_qnic_type);
+  Action *action = new SwappingAction(ruleset_id, rule_index, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner,
+                                      conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type,
+                                      conf.self_right_qnic_index, conf.self_right_qnic_type);
   rule_entanglement_swapping->setAction(action);
+  rule_index++;
   ruleset->addRule(std::move(rule_entanglement_swapping));
 
   return ruleset;
