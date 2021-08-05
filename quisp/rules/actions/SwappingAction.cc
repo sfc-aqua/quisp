@@ -69,7 +69,7 @@ cPacket *SwappingAction::run(cModule *re) {
 
   // RuleEngine::updateResources_EntanglementSwapping handles the operation type.
   int operation_type_left, operation_type_right;
-
+  // operation_type: 0 = I, 1 = X, 2 = Z
   if (left_measure == MeasureZResult::NO_ERROR && right_measure == MeasureZResult::NO_ERROR) {
     EV << "operation type 0, operation left I, operation right I\n";
     operation_type_left = 0;
