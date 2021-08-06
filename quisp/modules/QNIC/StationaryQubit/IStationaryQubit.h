@@ -1,0 +1,237 @@
+#pragma once
+
+#include <PhotonicQubit_m.h>
+
+namespace quisp {
+
+namespace types {
+enum class MeasureXResult : int {
+  NO_ERROR,
+  HAS_Z_ERROR,
+};
+enum class MeasureYResult : int {
+  NO_ERROR,
+  HAS_XZ_ERROR,
+};
+enum class MeasureZResult : int {
+  NO_ERROR,
+  HAS_X_ERROR,
+};
+}  // namespace types
+
+namespace modules {
+struct emission_error_model {
+  double pauli_error_rate;  // Overall error rate
+  double Z_error_rate;
+  double X_error_rate;
+  double Y_error_rate;
+  double Loss_error_rate;
+
+  double No_error_ceil;
+  double X_error_ceil;
+  double Y_error_ceil;
+  double Z_error_ceil;
+  double Loss_error_ceil;
+};
+
+struct SingleGateErrorModel {
+  double pauli_error_rate;  // Overall error rate
+  double Z_error_rate;
+  double X_error_rate;
+  double Y_error_rate;
+
+  double No_error_ceil;
+  double Z_error_ceil;
+  double X_error_ceil;
+  double Y_error_ceil;
+};
+
+struct TwoQubitGateErrorModel {
+  double pauli_error_rate;  // Overall error rate
+  double IZ_error_rate;
+  double ZI_error_rate;
+  double ZZ_error_rate;
+  double IY_error_rate;
+  double YI_error_rate;
+  double YY_error_rate;
+  double IX_error_rate;
+  double XI_error_rate;
+  double XX_error_rate;
+
+  double No_error_ceil;
+  double IZ_error_ceil;
+  double ZI_error_ceil;
+  double ZZ_error_ceil;
+  double IY_error_ceil;
+  double YI_error_ceil;
+  double YY_error_ceil;
+  double IX_error_ceil;
+  double XI_error_ceil;
+  double XX_error_ceil;
+};
+
+struct memory_error_model {
+  double error_rate;  // Overall error rate
+  double Z_error_rate;
+  double X_error_rate;
+  double Y_error_rate;
+  double excitation_error_rate;
+  double relaxation_error_rate;
+  double completely_mixed_rate;
+};
+
+// Matrices of single qubit errors. Used when conducting tomography.
+struct single_qubit_error {
+  Eigen::Matrix2cd X;  // double 2*2 matrix
+  Eigen::Matrix2cd Y;  // complex double 2*2 matrix
+  Eigen::Matrix2cd Z;
+  Eigen::Matrix2cd I;
+};
+
+struct quantum_state {
+  Eigen::Matrix4cd state_in_density_matrix;
+  Eigen::Vector4cd state_in_ket;
+};
+
+struct measurement_output_probabilities {
+  double probability_plus_plus;  // P(+,+)
+  double probability_minus_plus;  // P(+,-)
+  double probability_plus_minus;  // P(-,+)
+  double probability_minus_minus;  // P(-,-)
+};
+
+struct measurement_operator {
+  Eigen::Matrix2cd plus;
+  Eigen::Matrix2cd minus;
+  Eigen::Vector2cd plus_ket;
+  Eigen::Vector2cd minus_ket;
+  char basis;
+};
+
+// Single qubit
+struct measurement_operators {
+  measurement_operator X_basis;
+  measurement_operator Y_basis;
+  measurement_operator Z_basis;
+  Eigen::Matrix2cd identity;
+};
+
+struct measurement_outcome {
+  char basis;
+  bool outcome_is_plus;
+  char GOD_clean;
+};
+
+class IStationaryQubit : public cSimpleModule {
+ public:
+  virtual ~IStationaryQubit(){};
+  /** Pointer to the entangled qubit*/
+  IStationaryQubit *entangled_partner = nullptr;
+  /** Photon emitted at*/
+  simtime_t emitted_time = -1;
+  /** Stationary qubit last updated at*/
+  simtime_t updated_time = -1;
+
+  /** Stationary Qubit is free or reserved. */
+  bool isBusy;
+  /** Standard deviation */
+  double std;
+
+  double emission_success_probability;
+  int numemitted;
+
+  SingleGateErrorModel Hgate_error;
+  SingleGateErrorModel Xgate_error;
+  SingleGateErrorModel Zgate_error;
+  TwoQubitGateErrorModel CNOTgate_error;
+  SingleGateErrorModel Measurement_error;
+
+  /** Error rate for idle stationary qubits */
+  memory_error_model memory_err;
+  double memory_error_rate;
+  double memory_No_error_ceil;
+  double memory_X_error_ceil;
+  double memory_Y_error_ceil;
+  double memory_Z_error_ceil;
+  double memory_Excitation_error_ceil;
+  double memory_Relaxation_error_ceil;
+
+  single_qubit_error Pauli;
+  measurement_operators meas_op;
+  Eigen::Matrix2cd Density_Matrix_Collapsed;  // Used when partner has been measured.
+  int num_purified;
+  bool partner_measured;
+  bool completely_mixed;
+  bool excited_or_relaxed;
+  bool GOD_dm_Xerror;
+  bool GOD_dm_Zerror;
+
+  virtual bool checkBusy();
+  virtual void setFree(bool consumed);
+  virtual void Lock(unsigned long rs_id, int rule_id, int action_id); /*In use. E.g. waiting for purification result.*/
+  virtual void Unlock();
+  virtual bool isLocked();
+  virtual void Allocate();
+  virtual void Deallocate();
+  virtual bool isAllocated();
+
+  /**
+   * \brief Emit photon.
+   * \param pulse is 1 for the beginning of the burst, 2 for the end.
+   */
+  virtual void emitPhoton(int pulse);
+
+  /**
+   * \brief Single Qubit X measurement.
+   * \param This is only for simulating error propagations.
+   * New errors only occur when wrong measurement result is delivered for feed-forward
+   * (The error on the measured qubit propagates to the byproduct gate target qubit).
+   */
+  virtual quisp::types::MeasureXResult measure_X();
+
+  /**
+   * \brief Single Qubit Y measurement.
+   * This is only for simulating error propagations.
+   * New errors only occur when wrong measurement result is delivered for feed-forward
+   * (The error on the measured qubit propagates to the byproduct gate target qubit).
+   */
+  virtual types::MeasureYResult measure_Y();
+
+  /**
+   * \brief Single Qubit Z measurement.
+   * This is only for simulating error propagations.
+   * New errors only occur when wrong measurement result is delivered for feed-forward
+   * (The error on the measured qubit propagates to the byproduct gate target qubit).
+   */
+  virtual types::MeasureZResult measure_Z();
+
+  /**
+   * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
+   * */
+  virtual measurement_outcome measure_density_independent(); /*Separate dm calculation*/
+
+  virtual void CNOT_gate(IStationaryQubit *control_qubit);
+  virtual void Hadamard_gate();
+  virtual void Z_gate();
+  virtual void X_gate();
+  virtual bool Xpurify(IStationaryQubit *resource_qubit);
+  virtual bool Zpurify(IStationaryQubit *resource_qubit);
+
+  /*GOD parameters*/
+  virtual void setEntangledPartnerInfo(IStationaryQubit *partner);
+  virtual void setCompletelyMixedDensityMatrix();
+  virtual void addXerror();
+  virtual void addZerror();
+
+  int stationaryQubit_address;
+  int node_address;
+  int qnic_address;
+  int qnic_type;
+  int qnic_index;
+
+  int action_index;
+  bool no_density_matrix_nullptr_entangled_partner_ok;
+};
+
+}  // namespace modules
+}  // namespace quisp
