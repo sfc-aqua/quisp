@@ -90,6 +90,6 @@ class MockQubit : public StationaryQubit {
     setParDouble(this, "fidelity", -1.0);
   }
 };
-}  // namespace mock_qubit
+}  // namespace stationary_qubit
 }  // namespace mock_modules
 }  // namespace quisp_test
