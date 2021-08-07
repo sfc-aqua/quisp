@@ -6,13 +6,13 @@ namespace quisp {
 namespace rules {
 namespace actions {
 
-RandomMeasureAction::RandomMeasureAction(int part, QNIC_type qt, int qi, int res, int srcAddr, int max) {
+RandomMeasureAction::RandomMeasureAction(int owner_address, int part, QNIC_type qt, int qi, int res, int max) {
+  src = owner_address;
   partner = part;
   dst = part;
   qnic_type = qt;
   qnic_id = qi;
   resource = res;
-  src = srcAddr;
   current_count = 0;
   max_count = max;
   start = simTime();

@@ -35,17 +35,19 @@ StationaryQubit *Action::getResource_fromTop(int required_index) {
 
 StationaryQubit *Action::getResourceFromTopWithPartner(int required_index, int partner) {
   // here
-  int resource_index = 0;
   StationaryQubit *pt = nullptr;
 
+  std::vector<StationaryQubit *> available_entanglements_with_partner;
+  // 1. take partners
   for (auto it = (*rule_resources).begin(); it != (*rule_resources).end(); ++it) {
-    if (it->second->isLocked()) {
-      // Ignore locked resource
-    } else if (resource_index == required_index && it->first == partner && !it->second->isLocked()) {
-      pt = it->second;
-      break;
-    } else {
-      resource_index++;
+    if (it->first == partner && !it->second->isLocked()) {
+      available_entanglements_with_partner.push_back(it->second);
+    }
+  }
+  // 2. check the index
+  for (int i = 0; i < available_entanglements_with_partner.size(); i++) {
+    if (i == required_index && !available_entanglements_with_partner.at(i)->isLocked()) {
+      pt = available_entanglements_with_partner.at(i);
     }
   }
   return pt;

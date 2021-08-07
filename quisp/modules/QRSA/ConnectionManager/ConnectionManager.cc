@@ -7,6 +7,8 @@
  */
 
 #include "ConnectionManager.h"
+#include <memory>
+#include <string>
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "utils/ComponentProvider.h"
 
@@ -29,7 +31,7 @@ void ConnectionManager::initialize() {
   es_with_purify = par("entanglement_swapping_with_purification");
   num_remote_purification = par("num_remote_purification");
 
-  if (simultaneous_es_enabled && es_with_purify){
+  if (simultaneous_es_enabled && es_with_purify) {
     error("Currently, simultaneous entanglement swapping cannot be simulated with purification");
   }
 
@@ -313,6 +315,9 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   int num_resource = req->getNumber_of_required_Bellpairs();
   int intermediate_node_size = req->getStack_of_QNodeIndexesArraySize();
   // generate the rulesets for intermediate swappers
+  std::vector<int> purification_partners_initiator;
+  std::vector<int> purification_partners_responder;
+  unsigned long ruleset_id = createUniqueId();
   for (int i = 0; i <= intermediate_node_size; i++) {
     auto itr = std::find(swappers.begin(), swappers.end(), path.at(i));
     size_t index = std::distance(swappers.begin(), itr);
@@ -326,11 +331,25 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       if (!simultaneous_es_enabled) {
         SwappingConfig config = generateSwappingConfig(path.at(i), path, swapping_partners, qnics, num_resource);
 
+        // correct the swapper information that perform purification with endnodes.
+        if (config.left_partner == path.at(0)) {
+          if (config.left_partner == path.at(path.size() - 1)) {
+            error("This should not happen");
+          }
+          purification_partners_initiator.push_back(path.at(i));
+        }
+        if (config.right_partner == path.at(path.size() - 1)) {
+          if (config.right_partner == path.at(0)) {
+            error("This should not happen");
+          }
+          purification_partners_responder.push_back(path.at(i));
+        }
         RuleSet *ruleset_es;
-        if (es_with_purify){
-          ruleset_es = generateEsAndPurificationRuleSet(path.at(i), config, num_remote_purification);
-        }else{
-          // pure entanglement swapping 
+        if (es_with_purify) {
+          // do purification with entanglement swapping
+          ruleset_es = generateEsAndPurificationRuleSet(path.at(i), config, num_remote_purification, ruleset_id);
+        } else {
+          // pure entanglement swapping
           ruleset_es = generateEntanglementSwappingRuleSet(path.at(i), config);
         }
 
@@ -361,13 +380,25 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
 
       RuleSet *ruleset_tomography;
       int owner = path.at(i);
-      if (i == 0) {  // if this is initiator
-        // final element of the path is this node (responder) and first element is initiator node
-        // if owner is the first node, then,
-        // partner == responder (this node), and the first elements (initiator's) qnic type and index
-        ruleset_tomography = generateTomographyRuleSet(owner, path.at(path.size() - 1), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
-      } else {  // if this is responder
-        ruleset_tomography = generateTomographyRuleSet(owner, path.at(0), num_measure, qnics.at(qnics.size() - 1).fst.type, qnics.at(qnics.size() - 1).fst.index, num_resource);
+      if (!es_with_purify) {
+        if (i == 0) {  // if this is initiator
+          // final element of the path is this node (responder) and first element is initiator node
+          // if owner is the first node, then,
+          // partner == responder (this node), and the first elements (initiator's) qnic type and index
+          ruleset_tomography = generateTomographyRuleSet(owner, path.at(path.size() - 1), num_measure, qnics.at(0).snd.type, qnics.at(0).snd.index, num_resource);
+        } else {  // if this is responder
+          ruleset_tomography = generateTomographyRuleSet(owner, path.at(0), num_measure, qnics.at(qnics.size() - 1).fst.type, qnics.at(qnics.size() - 1).fst.index, num_resource);
+        }
+      } else {
+        if (i == 0) {  // if this is initiator
+          // generatePurAndTomographyRuleSet(int owner_address, int partner_address, int num_purification, QNIC_type qnic_type, int qnic_index, int num_of_measure, int
+          // num_resources, unsigned long ruleset_id)
+          ruleset_tomography = generatePurAndTomographyRuleSet(owner, path.at(path.size() - 1), purification_partners_initiator, num_remote_purification, qnics.at(0).snd.type,
+                                                               qnics.at(0).snd.index, num_measure, num_resource, ruleset_id);
+        } else {  // if this is responder
+          ruleset_tomography = generatePurAndTomographyRuleSet(owner, path.at(0), purification_partners_responder, num_remote_purification, qnics.at(qnics.size() - 1).fst.type,
+                                                               qnics.at(qnics.size() - 1).fst.index, num_measure, num_resource, ruleset_id);
+        }
       }
 
       ConnectionSetupResponse *pkr = new ConnectionSetupResponse("ConnSetupResponse(Tomography)");
@@ -713,30 +744,13 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
  * \todo Room for endless intelligence and improvements here.  Ideally should be
  * a _configurable choice_, or even a _policy_ implementation.
  **/
-RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner, SwappingConfig conf) {
+RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner_address, SwappingConfig conf) {
+  std::vector<int> partners = {conf.left_partner, conf.right_partner};
   unsigned long ruleset_id = createUniqueId();
   int rule_index = 0;
-
-  Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, conf.lres);
-  Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, conf.rres);
-
-  Condition *condition = new Condition();
-  condition->addClause(resource_clause_left);
-  condition->addClause(resource_clause_right);
-
-  quisp::rules::Action *action = new SwappingAction(ruleset_id, rule_index, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner,
-                                                    conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type,
-                                                    conf.self_right_qnic_index, conf.self_right_qnic_type);
-
-  auto rule = std::make_unique<Rule>(ruleset_id, rule_index, "entanglement swapping");
-  rule->setCondition(condition);
-  rule->setAction(action);
-
-  std::vector<int> partners = {conf.left_partner, conf.right_partner};
-
-  RuleSet *ruleset = new RuleSet(ruleset_id, owner, partners);
+  RuleSet *ruleset = new RuleSet(ruleset_id, owner_address, partners);
+  auto rule = swappingRule(conf, ruleset_id, rule_index);
   ruleset->addRule(std::move(rule));
-
   return ruleset;
 }
 
@@ -771,47 +785,29 @@ RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int 
   return ruleset;
 }
 
-RuleSet *ConnectionManager::generateTomographyRuleSet(int owner, int partner, int num_of_measure, QNIC_type qnic_type, int qnic_index, int num_resources) {
+RuleSet *ConnectionManager::generateTomographyRuleSet(int owner_address, int partner_address, int num_of_measure, QNIC_type qnic_type, int qnic_index, int num_resources) {
   unsigned long ruleset_id = createUniqueId();
-
   int rule_index = 0;
-  RuleSet *tomography = new RuleSet(ruleset_id, owner, partner);
-  auto rule = std::make_unique<Rule>(ruleset_id, rule_index, "tomography");
-
-  // 3000 measurements in total. There are 3*3 = 9 patterns of measurements. So each combination must perform 3000/9 measurements.
-  Clause *count_clause = new MeasureCountClause(num_of_measure);
-  Clause *resource_clause = new EnoughResourceClause(partner, num_resources);
-
-  // Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
-  Condition *condition = new Condition();
-  condition->addClause(count_clause);
-  condition->addClause(resource_clause);
-
-  rule->setCondition(condition);
-
-  // Measure the local resource between it->second.neighborQNode_address.
-  // final argument is multihop tomography flag
-  quisp::rules::Action *action = new RandomMeasureAction(partner, qnic_type, qnic_index, num_resources, owner, num_of_measure);
-  rule->setAction(action);
-
-  // Add the rule to the RuleSet
+  RuleSet *tomography = new RuleSet(ruleset_id, owner_address, partner_address);
+  auto rule = tomographyRule(owner_address, partner_address, num_of_measure, qnic_type, qnic_index, ruleset_id, rule_index);
   tomography->addRule(std::move(rule));
-
   return tomography;
 }
 
-
 /*
 generateCombinedRuleSet generate RuleSet includes both entanglement swapping and purification
+FIXME: Currently, the purification result is refered based on ruleset id. Then, multiple ruleset must share the same ruleset id.
+This is not good idea. must be fixed
 */
-RuleSet *ConnectionManager::generateEsAndPurificationRuleSet(int owner_address, SwappingConfig conf, int num_purification){  // purification type should be argument?
+RuleSet *ConnectionManager::generateEsAndPurificationRuleSet(int owner_address, SwappingConfig conf, int num_purification,
+                                                             unsigned long ruleset_id) {  // purification type should be argument?
   // 0. Define RuleSet with random id and partner information
-  unsigned long ruleset_id = createUniqueId();
   std::vector<int> partners = {conf.left_partner, conf.right_partner};
   RuleSet *ruleset = new RuleSet(ruleset_id, owner_address, partners);
 
   int rule_index = 0;
-  for (int i=0; i<num_purification; i++){
+  // purification for all possible partners
+  for (int i = 0; i < num_purification; i++) {
     // 1. Define Rules and append them to RuleSet
     /*
     Rule1: Entanglement Purification with left partner (Purify entanglements generated in previous ES or BSM)
@@ -820,28 +816,14 @@ RuleSet *ConnectionManager::generateEsAndPurificationRuleSet(int owner_address, 
         Purify Action
     */
     // First stage, X purification
-    auto rule_purification_left = std::make_unique<Rule>(ruleset_id, rule_index, "X purification with left partner");
-    Condition *condition_left = new Condition();
-    Clause *resource_clause_left_pur = new EnoughResourceClause(conf.left_partner, 2);  // to prepare 1 purified entanglement, we need 2 raw entanglements
-    condition_left->addClause(resource_clause_left_pur);
-    rule_purification_left->setCondition(condition_left);
-    // PurifyAction(unsigned long RuleSet_id, int rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res, int tres);
-    Action *purify_action_left = new PurifyAction(ruleset_id, rule_index, true, false, num_purification, conf.left_partner, conf.self_left_qnic_type, conf.self_left_qnic_index, 0, 1);
-    rule_purification_left->setAction(purify_action_left);
+    // purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, int ruleset_id, int rule_index)
+    auto rule_purification_left_X = purificationRule(conf.left_partner, 0, num_purification, conf.self_left_qnic_type, conf.self_left_qnic_index, ruleset_id, rule_index);
+    ruleset->addRule(std::move(rule_purification_left_X));
     rule_index++;
-    ruleset->addRule(std::move(rule_purification_left));
     // Z purification
-    rule_purification_left = std::make_unique<Rule>(ruleset_id, rule_index, "Z purification with left partner");
-    condition_left = new Condition();
-    resource_clause_left_pur = new EnoughResourceClause(conf.left_partner, 2);  // to prepare 1 purified entanglement, we need 2 raw entanglements
-    condition_left->addClause(resource_clause_left_pur);
-    rule_purification_left->setCondition(condition_left);
-    // PurifyAction(unsigned long RuleSet_id, int rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res, int tres);
-    purify_action_left = new PurifyAction(ruleset_id, rule_index, false, true, num_purification, conf.left_partner, conf.self_left_qnic_type, conf.self_left_qnic_index, 0, 1);
-    rule_purification_left->setAction(purify_action_left);
+    auto rule_purification_left_Z = purificationRule(conf.left_partner, 1, num_purification, conf.self_left_qnic_type, conf.self_left_qnic_index, ruleset_id, rule_index);
+    ruleset->addRule(std::move(rule_purification_left_Z));
     rule_index++;
-    ruleset->addRule(std::move(rule_purification_left));
-
     /*
     Rule2: Entanglement Purification with right partner (Purify entanglements generated in previous ES or BSM)
         Clause1: Enough number of entanglements with right partner
@@ -849,34 +831,104 @@ RuleSet *ConnectionManager::generateEsAndPurificationRuleSet(int owner_address, 
         Purify Action
     */
     // X purification
-    auto rule_purification_right = std::make_unique<Rule>(ruleset_id, rule_index, "X purification with right partner");
-    Condition *condition_right = new Condition();
-    Clause *resource_clause_right_pur = new EnoughResourceClause(conf.right_partner, 2);
-    condition_right->addClause(resource_clause_right_pur);
-    rule_purification_right->setCondition(condition_right);
-    Action *purify_action_right = new PurifyAction(ruleset_id, rule_index, true, false, num_purification, conf.right_partner, conf.self_right_qnic_type, conf.self_right_qnic_index, 0, 1);
-    rule_purification_right->setAction(purify_action_right);
+    auto rule_purification_right_X = purificationRule(conf.right_partner, 0, num_purification, conf.self_right_qnic_type, conf.self_right_qnic_index, ruleset_id, rule_index);
     rule_index++;
-    ruleset->addRule(std::move(rule_purification_right));
+    ruleset->addRule(std::move(rule_purification_right_X));
     // Z purification
-    rule_purification_right = std::make_unique<Rule>(ruleset_id, rule_index, "Z purification with right partner");
-    condition_right = new Condition();
-    resource_clause_right_pur = new EnoughResourceClause(conf.right_partner, 2);
-    condition_right->addClause(resource_clause_right_pur);
-    rule_purification_right->setCondition(condition_right);
-    purify_action_right = new PurifyAction(ruleset_id, rule_index, false, true, num_purification, conf.right_partner, conf.self_right_qnic_type, conf.self_right_qnic_index, 0, 1);
-    rule_purification_right->setAction(purify_action_right);
+    auto rule_purification_right_Z = purificationRule(conf.right_partner, 1, num_purification, conf.self_right_qnic_type, conf.self_right_qnic_index, ruleset_id, rule_index);
     rule_index++;
-    ruleset->addRule(std::move(rule_purification_right));
+    ruleset->addRule(std::move(rule_purification_right_Z));
   }
-  /* 
+  /*
   Rule3: Entanglement Swapping
     Condition:
       Clause1: Enough number of entanglements with left partner
       Clause2: Enough number of entanglements with right partner
     Action:
-      SwappingAction 
+      SwappingAction
   */
+  // swappingRule(Swapping_config conf, int ruleset_id, int rule_index)
+  auto rule_entanglement_swapping = swappingRule(conf, ruleset_id, rule_index);
+  rule_index++;
+  ruleset->addRule(std::move(rule_entanglement_swapping));
+  return ruleset;
+}
+
+RuleSet *ConnectionManager::generatePurAndTomographyRuleSet(int owner_address, int tomography_partner_address, std::vector<int> purification_partner_addresses,
+                                                            int num_purification, QNIC_type qnic_type, int qnic_index, int num_of_measure, int num_resources,
+                                                            unsigned long ruleset_id) {
+  // partner address must be the same as the swapper's one
+  std::vector<int> partners = purification_partner_addresses;
+  partners.push_back(tomography_partner_address);
+  RuleSet *pur_tomo_ruleset = new RuleSet(ruleset_id, owner_address, partners);
+  // left(initiator) <--> middle <--> right (responder)
+  int rule_index = 0;
+  if (my_address == owner_address) {  // responder
+    for (auto i = 0; i < purification_partner_addresses.size(); i++) {
+      for (int i = 0; i < num_purification; i++) {
+        // 1. Define Rules and append them to RuleSet
+        /*
+        Rule1: Entanglement Purification with left partner (Purify entanglements generated in previous ES or BSM)
+            Clause1: Enough number of entanglements with left partner
+          Action:
+            Purify Action
+        */
+        // First stage, X purification
+        // purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, int ruleset_id, int rule_index)
+        int purification_partner = purification_partner_addresses.at(i);
+        auto rule_purification_left_X = purificationRule(purification_partner, 0, num_purification, qnic_type, qnic_index, ruleset_id, rule_index);
+        pur_tomo_ruleset->addRule(std::move(rule_purification_left_X));
+        rule_index++;
+        // Z purification
+        auto rule_purification_left_Z = purificationRule(purification_partner, 1, num_purification, qnic_type, qnic_index, ruleset_id, rule_index);
+        pur_tomo_ruleset->addRule(std::move(rule_purification_left_Z));
+        rule_index++;
+      }
+    }
+  }
+  // Rule2: tomography
+  // tomographyRule(int owner_address, int partner_address, int num_measure, int num_resources, QNIC_type qnic_type, int qnic_index, int ruleset_id, int rule_index)
+  auto rule_tomography = tomographyRule(owner_address, tomography_partner_address, num_of_measure, qnic_type, qnic_index, ruleset_id, rule_index);
+  pur_tomo_ruleset->addRule(std::move(rule_tomography));
+  return pur_tomo_ruleset;
+}
+
+// Rule Generators
+std::unique_ptr<Rule> ConnectionManager::purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, int ruleset_id,
+                                                          int rule_index) {
+  std::string pur_name = "";
+  if (purification_type == 0) {
+    std::string pur_name = "X purification";
+  } else if (purification_type == 1) {
+    std::string pur_name = "Z purification";
+  }
+  auto rule_purification = std::make_unique<Rule>(ruleset_id, rule_index, pur_name);
+  if (purification_type == 0) {
+    // X purification (should prepare enum with purification)
+    Condition *condition = new Condition();
+    Clause *resource_clause = new EnoughResourceClause(partner_address, 2);  // to prepare 1 purified entanglement, we need 2 raw entanglements
+    condition->addClause(resource_clause);
+    rule_purification->setCondition(condition);
+    // PurifyAction(unsigned long RuleSet_id, int rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res, int tres);
+    Action *purify_action = new PurifyAction(ruleset_id, rule_index, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+    rule_purification->setAction(purify_action);
+  } else if (purification_type == 1) {
+    rule_purification = std::make_unique<Rule>(ruleset_id, rule_index, "Z purification");
+    // Z purification (should prepare enum with purification)
+    Condition *condition = new Condition();
+    Clause *resource_clause = new EnoughResourceClause(partner_address, 2);  // to prepare 1 purified entanglement, we need 2 raw entanglements
+    condition->addClause(resource_clause);
+    rule_purification->setCondition(condition);
+    // PurifyAction(unsigned long RuleSet_id, int rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res, int tres);
+    Action *purify_action = new PurifyAction(ruleset_id, rule_index, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+    rule_purification->setAction(purify_action);
+  } else {
+    error("Unknown purification type");
+  }
+  return rule_purification;
+}
+
+std::unique_ptr<Rule> ConnectionManager::swappingRule(SwappingConfig conf, int ruleset_id, int rule_index) {
   auto rule_entanglement_swapping = std::make_unique<Rule>(ruleset_id, rule_index, "entanglement swapping");
   Condition *condition = new Condition();
   Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, 1);
@@ -888,10 +940,22 @@ RuleSet *ConnectionManager::generateEsAndPurificationRuleSet(int owner_address, 
                                       conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type,
                                       conf.self_right_qnic_index, conf.self_right_qnic_type);
   rule_entanglement_swapping->setAction(action);
-  rule_index++;
-  ruleset->addRule(std::move(rule_entanglement_swapping));
+  return rule_entanglement_swapping;
+}
 
-  return ruleset;
+std::unique_ptr<Rule> ConnectionManager::tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, int ruleset_id,
+                                                        int rule_index) {
+  auto tomography_rule = std::make_unique<Rule>(ruleset_id, rule_index, "tomography");
+  Condition *condition = new Condition();
+  Clause *count_clause = new MeasureCountClause(num_measure);
+  Clause *resource_clause = new EnoughResourceClause(partner_address, 1);
+  // Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
+  condition->addClause(count_clause);
+  condition->addClause(resource_clause);
+  tomography_rule->setCondition(condition);
+  Action *action = new RandomMeasureAction(owner_address, partner_address, qnic_type, qnic_index, 0, num_measure);
+  tomography_rule->setAction(action);
+  return tomography_rule;
 }
 
 unsigned long ConnectionManager::createUniqueId() {

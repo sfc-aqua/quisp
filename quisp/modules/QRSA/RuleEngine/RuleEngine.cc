@@ -352,6 +352,7 @@ void RuleEngine::storeCheck_Purification_Agreement(purification_result pur_resul
     next_it = it;
     ++next_it;
     RuleSet *process = it->second.Rs;  // One Process. From top to bottom.
+    EV<<"process: "<<process->ruleset_id<<" : "<<pur_result.id.ruleset_id<<"\n";
     if (process->ruleset_id == pur_result.id.ruleset_id) {
       ruleset_running = true;
       break;
@@ -366,9 +367,9 @@ void RuleEngine::storeCheck_Purification_Agreement(purification_result pur_resul
     // If the RuleSet has been deleted already, do not do anything.
     for (auto it = purification_table_for_ruleset.first; it != purification_table_for_ruleset.second; it++) {
       // it->second => purification result {id: , outcome: }
-      EV<<"Address: "<< parentAddress<<"\n";
-      EV<<"Rule Index: "<<it->second.id.rule_id <<" : "<<pur_result.id.rule_id<<"\n";
-      EV<<"Action Index: "<<it->second.id.index <<" : "<< pur_result.id.index<<"\n";
+      EV << "Address: " << parentAddress << "\n";
+      EV << "Rule Index: " << it->second.id.rule_id << " : " << pur_result.id.rule_id << "\n";
+      EV << "Action Index: " << it->second.id.index << " : " << pur_result.id.index << "\n";
       if (it->second.id.rule_id == pur_result.id.rule_id && it->second.id.index == pur_result.id.index) {
         // std::cout<<"node["<<parentAddress<<"] Rule found: Discard/Keep purification.\n";
         if (it->second.outcome == pur_result.outcome) {
@@ -383,7 +384,7 @@ void RuleEngine::storeCheck_Purification_Agreement(purification_result pur_resul
       }
     }
     // New purification outcome arrived. Store it in the purification table
-    EV<<"New purification result: "<<pur_result.id.ruleset_id <<" rule id "<< pur_result.id.rule_id<<" action id "<<pur_result.id.index<<"\n";
+    EV << "New purification result: " << pur_result.id.ruleset_id << " rule id " << pur_result.id.rule_id << " action id " << pur_result.id.index << "\n";
     Purification_table.insert(std::make_pair(pur_result.id.ruleset_id, pur_result));  // Otherwise, if data has not been found, store it.
   }
 }
@@ -583,10 +584,10 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int
                 return;
               }
             }
-          } // end if (Rule id check)
+          }  // end if (Rule id check)
         }
       }
-    } // end if (RuleSet id check)
+    }  // end if (RuleSet id check)
   }
   if (!ok) {
     error("Upgrade: Resource in rule not found....");
