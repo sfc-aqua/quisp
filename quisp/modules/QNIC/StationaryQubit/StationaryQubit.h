@@ -14,6 +14,20 @@ using namespace omnetpp;
 using namespace quisp::messages;
 
 namespace quisp {
+namespace types {
+enum class MeasureXResult : int {
+  NO_ERROR,
+  HAS_Z_ERROR,
+};
+enum class MeasureYResult : int {
+  NO_ERROR,
+  HAS_XZ_ERROR,
+};
+enum class MeasureZResult : int {
+  NO_ERROR,
+  HAS_X_ERROR,
+};
+}  // namespace types
 namespace modules {
 
 #define STATIONARYQUBIT_PULSE_BEGIN 0x01
@@ -242,24 +256,27 @@ class StationaryQubit : public cSimpleModule {
 
   /**
    * \brief Single Qubit X measurement.
-   * \param If a Z error, which affects the X-measurement, is present, then returns false. Otherwise it returns true. This is only for simulating error propagations.
-   * New errors only occur when wrong measurement result is delivered for feed-forward (The error on the measured qubit propagates to the byproduct gate target qubit).
+   * \param This is only for simulating error propagations.
+   * New errors only occur when wrong measurement result is delivered for feed-forward
+   * (The error on the measured qubit propagates to the byproduct gate target qubit).
    */
-  virtual bool measure_X();
+  virtual quisp::types::MeasureXResult measure_X();
 
   /**
    * \brief Single Qubit Y measurement.
-   * \param If a Z error OR an X error, which affects the Y-measurement, is present, then returns false. Otherwise it returns true. This is only for simulating error propagations.
-   * New errors only occur when wrong measurement result is delivered for feed-forward (The error on the measured qubit propagates to the byproduct gate target qubit).
+   * This is only for simulating error propagations.
+   * New errors only occur when wrong measurement result is delivered for feed-forward
+   * (The error on the measured qubit propagates to the byproduct gate target qubit).
    */
-  virtual bool measure_Y();
+  virtual types::MeasureYResult measure_Y();
 
   /**
    * \brief Single Qubit Z measurement.
-   * \param If an X error, which affects the Z-measurement, is present, then returns false. Otherwise it returns true. This is only for simulating error propagations.
-   * New errors only occur when wrong measurement result is delivered for feed-forward (The error on the measured qubit propagates to the byproduct gate target qubit).
+   * This is only for simulating error propagations.
+   * New errors only occur when wrong measurement result is delivered for feed-forward
+   * (The error on the measured qubit propagates to the byproduct gate target qubit).
    */
-  virtual bool measure_Z();
+  virtual types::MeasureZResult measure_Z();
 
   /**
    * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
@@ -297,15 +314,12 @@ class StationaryQubit : public cSimpleModule {
   virtual void addXerror();
   virtual void addZerror();
 
-  /** @name Self address
-   *  @{                   */
   int stationaryQubit_address;
   int node_address;
   int qnic_address;
   int qnic_type;
   int qnic_index;
 
-  //@}
   bool locked;
   unsigned long locked_ruleset_id;
   int locked_rule_id;

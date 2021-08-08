@@ -14,6 +14,10 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include <vector>
 
+using quisp::types::MeasureXResult;
+using quisp::types::MeasureYResult;
+using quisp::types::MeasureZResult;
+
 namespace quisp {
 namespace modules {
 
@@ -311,17 +315,18 @@ void StationaryQubit::setEmissionPauliError(){
 }
 */
 
-bool StationaryQubit::measure_X() {
-  // Need to add noise here later
+MeasureXResult StationaryQubit::measure_X() {
   apply_single_qubit_gate_error(Measurement_error);
-  return !par("GOD_Zerror");
+  if (par("GOD_Zerror").boolValue()) {
+    return MeasureXResult::HAS_Z_ERROR;
+  }
+  return MeasureXResult::NO_ERROR;
 }
 
 /**
  *  Returns true if the measurement outcome was correct
  */
-bool StationaryQubit::measure_Y() {
-  // Need to add noise here later
+MeasureYResult StationaryQubit::measure_Y() {
   apply_single_qubit_gate_error(Measurement_error);
   bool error = true;
   if (par("GOD_Zerror") && par("GOD_Xerror")) {
@@ -330,14 +335,18 @@ bool StationaryQubit::measure_Y() {
   if (!par("GOD_Zerror") && !par("GOD_Xerror")) {
     error = false;
   }
-  return error;
-  // return !(par("GOD_Zerror") || par("GOD_Xerror"));
+  if (error) {
+    return MeasureYResult::HAS_XZ_ERROR;
+  }
+  return MeasureYResult::NO_ERROR;
 }
 
-bool StationaryQubit::measure_Z() {
-  // Need to add noise here later
+MeasureZResult StationaryQubit::measure_Z() {
   apply_single_qubit_gate_error(Measurement_error);
-  return !par("GOD_Xerror");
+  if (par("GOD_Xerror")) {
+    return MeasureZResult::HAS_X_ERROR;
+  }
+  return MeasureZResult::NO_ERROR;
 }
 
 // Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
@@ -643,7 +652,7 @@ bool StationaryQubit::Xpurify(StationaryQubit *resource_qubit /*Controlled*/) {
   apply_memory_error(this);
   apply_memory_error(resource_qubit);
   /*Target qubit*/ this->CNOT_gate(resource_qubit /*controlled qubit*/);
-  bool meas = this->measure_Z();
+  bool meas = this->measure_Z() == MeasureZResult::NO_ERROR;
   return meas;
 }
 
@@ -653,7 +662,7 @@ bool StationaryQubit::Zpurify(StationaryQubit *resource_qubit /*Target*/) {
   apply_memory_error(resource_qubit);
   /*Target qubit*/ resource_qubit->CNOT_gate(this /*controlled qubit*/);
   this->Hadamard_gate();
-  bool meas = this->measure_Z();
+  bool meas = this->measure_Z() == MeasureZResult::NO_ERROR;
   return meas;
 }
 
