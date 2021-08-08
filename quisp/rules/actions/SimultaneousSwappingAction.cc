@@ -68,8 +68,8 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   StationaryQubit *right_partner_qubit = right_qubit->entangled_partner;
   StationaryQubit *left_partner_qubit = left_qubit->entangled_partner;
 
-  left_qubit->Hadamard_gate();
   right_qubit->CNOT_gate(left_qubit);
+  left_qubit->Hadamard_gate();
 
   auto left_measure = left_qubit->measure_Z();
   auto right_measure = right_qubit->measure_Z();
