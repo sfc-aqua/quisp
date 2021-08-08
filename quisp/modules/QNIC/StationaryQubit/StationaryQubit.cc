@@ -652,7 +652,7 @@ bool StationaryQubit::Xpurify(StationaryQubit *resource_qubit /*Controlled*/) {
   apply_memory_error(this);
   apply_memory_error(resource_qubit);
   /*Target qubit*/ this->CNOT_gate(resource_qubit /*controlled qubit*/);
-  bool meas = this->measure_Z() == MeasureZResult::HAS_X_ERROR;
+  bool meas = this->measure_Z() == MeasureZResult::NO_ERROR;
   return meas;
 }
 
@@ -662,7 +662,7 @@ bool StationaryQubit::Zpurify(StationaryQubit *resource_qubit /*Target*/) {
   apply_memory_error(resource_qubit);
   /*Target qubit*/ resource_qubit->CNOT_gate(this /*controlled qubit*/);
   this->Hadamard_gate();
-  bool meas = this->measure_Z() == MeasureZResult::HAS_X_ERROR;
+  bool meas = this->measure_Z() == MeasureZResult::NO_ERROR;
   return meas;
 }
 
