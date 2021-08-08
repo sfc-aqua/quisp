@@ -154,7 +154,6 @@ memory_err.completely_mixed_rate = memory_err.error_rate * (memory_completely_mi
   qnic_index = par("qnic_index");
   std = par("std");
   setFree(false);
-  setFidelity(-1.);
 
   DEBUG_memory_X_count = 0;
   DEBUG_memory_Y_count = 0;
@@ -505,7 +504,7 @@ bool StationaryQubit::isAllocated() { return allocated; }
  */
 PhotonicQubit *StationaryQubit::generateEntangledPhoton() {
   Enter_Method("generateEntangledPhoton()");
-  photon = new PhotonicQubit("Photon");
+  auto *photon = new PhotonicQubit("Photon");
   // To simulate the actual physical entangled partner, not what the system thinks!!! we need this.
 
   // This photon is entangled with.... node_address = node's index

@@ -27,50 +27,15 @@ typedef std::complex<double> Complex;
 
 class StationaryQubit : public IStationaryQubit {
  public:
-  double emission_success_probability;
-  int numemitted;
-
-  SingleGateErrorModel Hgate_error;
-  SingleGateErrorModel Xgate_error;
-  SingleGateErrorModel Zgate_error;
-  TwoQubitGateErrorModel CNOTgate_error;
-  SingleGateErrorModel Measurement_error;
-  memory_error_model memory_err;
-  double memory_error_rate;
-  double memory_No_error_ceil;
-  double memory_X_error_ceil;
-  double memory_Y_error_ceil;
-  double memory_Z_error_ceil;
-  double memory_Excitation_error_ceil;
-  double memory_Relaxation_error_ceil;
-
-  single_qubit_error Pauli;
-  measurement_operators meas_op;
-  // https://arxiv.org/abs/1908.10758 Eq 5.2
-  Eigen::MatrixXd Memory_Transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
-  Eigen::MatrixXd Memory_Transition_matrix_ns; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in ns.*/
-  Eigen::MatrixXd Memory_Transition_matrix_ms; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in ns.*/
-  int num_purified;
-  bool partner_measured;
-  bool completely_mixed;
-  bool excited_or_relaxed;
-  bool GOD_dm_Xerror;
-  bool GOD_dm_Zerror;
-
-  bool checkBusy();
-  void setFree(bool consumed);
-  void Lock(unsigned long rs_id, int rule_id, int action_id); /*In use. E.g. waiting for purification result.*/
-  void Unlock();
-  bool isLocked();
-  void Allocate();
-  void Deallocate();
-  bool isAllocated();
-
-  double getFidelity() { return fidelity; };
-  void setFidelity(const double f) {
-    fidelity = f;
-    par("fidelity") = f;
-  };
+  bool checkBusy() override;
+  void setFree(bool consumed) override;
+  /*In use. E.g. waiting for purification result.*/
+  void Lock(unsigned long rs_id, int rule_id, int action_id) override;
+  void Unlock() override;
+  bool isLocked() override;
+  void Allocate() override;
+  void Deallocate() override;
+  bool isAllocated() override;
 
   /**
    * \brief Emit photon.
@@ -113,14 +78,13 @@ class StationaryQubit : public IStationaryQubit {
    * \param Need to specify the control qubit as an argument.
    */
   void CNOT_gate(IStationaryQubit *control_qubit) override;
+
   /**
    * \brief Single qubit Hadamard gate
    * \param X error transforms to Z, and vise-versa.
    */
   void Hadamard_gate() override;
-
   void Z_gate() override;
-
   void X_gate() override;
   bool Xpurify(IStationaryQubit *resource_qubit) override;
   bool Zpurify(IStationaryQubit *resource_qubit) override;
@@ -133,12 +97,36 @@ class StationaryQubit : public IStationaryQubit {
   void addXerror() override;
   void addZerror() override;
 
+  double emission_success_probability;
+  int numemitted;
+
+  SingleGateErrorModel Hgate_error;
+  SingleGateErrorModel Xgate_error;
+  SingleGateErrorModel Zgate_error;
+  TwoQubitGateErrorModel CNOTgate_error;
+  SingleGateErrorModel Measurement_error;
+  memory_error_model memory_err;
+  double memory_error_rate;
+  double memory_No_error_ceil;
+  double memory_X_error_ceil;
+  double memory_Y_error_ceil;
+  double memory_Z_error_ceil;
+  double memory_Excitation_error_ceil;
+  double memory_Relaxation_error_ceil;
+
+  single_qubit_error Pauli;
+  measurement_operators meas_op;
+  // https://arxiv.org/abs/1908.10758 Eq 5.2
+  Eigen::MatrixXd Memory_Transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
+  Eigen::MatrixXd Memory_Transition_matrix_ns; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in ns.*/
+  Eigen::MatrixXd Memory_Transition_matrix_ms; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in ns.*/
+  int num_purified;
+
   bool locked;
   unsigned long locked_ruleset_id;
   int locked_rule_id;
 
  private:
-  messages::PhotonicQubit *photon;
   double fidelity;
   bool allocated;
   int DEBUG_memory_X_count;

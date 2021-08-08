@@ -126,50 +126,11 @@ class IStationaryQubit : public cSimpleModule {
  public:
   IStationaryQubit(){};
   virtual ~IStationaryQubit(){};
-  /** Pointer to the entangled qubit*/
-  IStationaryQubit *entangled_partner = nullptr;
-  /** Photon emitted at*/
-  simtime_t emitted_time = -1;
-  /** Stationary qubit last updated at*/
-  simtime_t updated_time = -1;
-
-  /** Stationary Qubit is free or reserved. */
-  bool isBusy;
-  /** Standard deviation */
-  double std;
-
-  double emission_success_probability;
-  int numemitted;
-
-  SingleGateErrorModel Hgate_error;
-  SingleGateErrorModel Xgate_error;
-  SingleGateErrorModel Zgate_error;
-  TwoQubitGateErrorModel CNOTgate_error;
-  SingleGateErrorModel Measurement_error;
-
-  /** Error rate for idle stationary qubits */
-  memory_error_model memory_err;
-  double memory_error_rate;
-  double memory_No_error_ceil;
-  double memory_X_error_ceil;
-  double memory_Y_error_ceil;
-  double memory_Z_error_ceil;
-  double memory_Excitation_error_ceil;
-  double memory_Relaxation_error_ceil;
-
-  // single_qubit_error Pauli;
-  // measurement_operators meas_op;
-  Eigen::Matrix2cd Density_Matrix_Collapsed;  // Used when partner has been measured.
-  int num_purified;
-  bool partner_measured;
-  bool completely_mixed;
-  bool excited_or_relaxed;
-  bool GOD_dm_Xerror;
-  bool GOD_dm_Zerror;
 
   virtual bool checkBusy() = 0;
   virtual void setFree(bool consumed) = 0;
-  virtual void Lock(unsigned long rs_id, int rule_id, int action_id) = 0; /*In use. E.g. waiting for purification result.*/
+  /*In use. E.g. waiting for purification result.*/
+  virtual void Lock(unsigned long rs_id, int rule_id, int action_id) = 0;
   virtual void Unlock() = 0;
   virtual bool isLocked() = 0;
   virtual void Allocate() = 0;
@@ -181,29 +142,8 @@ class IStationaryQubit : public cSimpleModule {
    * \param pulse is 1 for the beginning of the burst, 2 for the end.
    */
   virtual void emitPhoton(int pulse) = 0;
-
-  /**
-   * \brief Single Qubit X measurement.
-   * \param This is only for simulating error propagations.
-   * New errors only occur when wrong measurement result is delivered for feed-forward
-   * (The error on the measured qubit propagates to the byproduct gate target qubit).
-   */
   virtual quisp::types::MeasureXResult measure_X() = 0;
-
-  /**
-   * \brief Single Qubit Y measurement.
-   * This is only for simulating error propagations.
-   * New errors only occur when wrong measurement result is delivered for feed-forward
-   * (The error on the measured qubit propagates to the byproduct gate target qubit).
-   */
   virtual types::MeasureYResult measure_Y() = 0;
-
-  /**
-   * \brief Single Qubit Z measurement.
-   * This is only for simulating error propagations.
-   * New errors only occur when wrong measurement result is delivered for feed-forward
-   * (The error on the measured qubit propagates to the byproduct gate target qubit).
-   */
   virtual types::MeasureZResult measure_Z() = 0;
 
   /**
@@ -232,6 +172,31 @@ class IStationaryQubit : public cSimpleModule {
 
   int action_index;
   bool no_density_matrix_nullptr_entangled_partner_ok;
+
+  /** Pointer to the entangled qubit*/
+  IStationaryQubit *entangled_partner = nullptr;
+  /** Photon emitted at*/
+  simtime_t emitted_time = -1;
+  /** Stationary qubit last updated at*/
+  simtime_t updated_time = -1;
+
+  /** Stationary Qubit is free or reserved. */
+  bool isBusy;
+  /** Standard deviation */
+  double std;
+
+  SingleGateErrorModel Hgate_error;
+  SingleGateErrorModel Xgate_error;
+  SingleGateErrorModel Zgate_error;
+  TwoQubitGateErrorModel CNOTgate_error;
+  SingleGateErrorModel Measurement_error;
+
+  Eigen::Matrix2cd Density_Matrix_Collapsed;  // Used when partner has been measured.
+  bool partner_measured;
+  bool completely_mixed;
+  bool excited_or_relaxed;
+  bool GOD_dm_Xerror;
+  bool GOD_dm_Zerror;
 };
 
 }  // namespace modules
