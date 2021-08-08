@@ -83,9 +83,10 @@ class ConnectionManager : public IConnectionManager {
                                            QNIC_type qnic_type, int qnic_index, int num_of_measure, int num_resources, unsigned long ruleset_id);
 
   // Rule generator
-  std::unique_ptr<Rule> purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, int ruleset_id, int rule_index);
-  std::unique_ptr<Rule> swappingRule(SwappingConfig conf, int ruleset_id, int rule_index);
-  std::unique_ptr<Rule> tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, int ruleset_id, int rule_index);
+  std::unique_ptr<Rule> purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
+                                         int rule_index);
+  std::unique_ptr<Rule> swappingRule(SwappingConfig conf, unsigned long ruleset_id, int rule_index);
+  std::unique_ptr<Rule> tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id, int rule_index);
 
   void reserveQnic(int qnic_address);
   void releaseQnic(int qnic_address);

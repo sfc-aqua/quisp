@@ -84,6 +84,7 @@ cPacket *PurifyAction::run(cModule *re) {
   pk->setAction_index(action_indices.at(partner));
   pk->setRule_id(rule_id);
   pk->setRuleset_id(ruleset_id);
+  EV << "purification id:" << ruleset_id << "\n";
   pk->setOutput_is_plus(meas);
   pk->setEntangled_with(qubit);
   action_indices.at(partner)++;

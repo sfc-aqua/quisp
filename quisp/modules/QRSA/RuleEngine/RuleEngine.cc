@@ -352,7 +352,6 @@ void RuleEngine::storeCheck_Purification_Agreement(purification_result pur_resul
     next_it = it;
     ++next_it;
     RuleSet *process = it->second.Rs;  // One Process. From top to bottom.
-    EV<<"process: "<<process->ruleset_id<<" : "<<pur_result.id.ruleset_id<<"\n";
     if (process->ruleset_id == pur_result.id.ruleset_id) {
       ruleset_running = true;
       break;
