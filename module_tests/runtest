@@ -23,7 +23,7 @@ do
     NEDPATH=$NEDPATH:$WORK_DIR/`basename "$t" .test`
 done
 export NEDPATH
-EXTRA_INCLUDES="-I$WORK_DIR/lib -I$QUISP_DIR/modules/Application -I$QUISP_DIR"
+EXTRA_INCLUDES="-I$WORK_DIR/lib -I$QUISP_DIR/modules/Application -I$QUISP_DIR -I$QUISP_DIR/../googletest/googletest/include -I$QUISP_DIR/../googletest/googlemock/include"
 EXTRA_LIBS=" -L$QUISP_DIR -lquisp_dbg"
 OPT="--debugger-attach-on-error=true"
 
