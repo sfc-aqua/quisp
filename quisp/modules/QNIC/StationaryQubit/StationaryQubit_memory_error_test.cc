@@ -10,6 +10,7 @@ namespace {
 
 class StatQubitTarget : public StationaryQubit {
  public:
+  using StationaryQubit::apply_memory_error;
   using StationaryQubit::initialize;
   using StationaryQubit::par;
   StatQubitTarget() : StationaryQubit() { setComponentType(new TestModuleType("test qubit")); }

@@ -134,12 +134,6 @@ class StationaryQubit : public IStationaryQubit {
   void addXerror() override;
   void addZerror() override;
 
-  int stationaryQubit_address;
-  int node_address;
-  int qnic_address;
-  int qnic_type;
-  int qnic_index;
-
   bool locked;
   unsigned long locked_ruleset_id;
   int locked_rule_id;

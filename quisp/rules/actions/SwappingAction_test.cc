@@ -15,6 +15,7 @@ using namespace quisp::messages;
 using namespace quisp_test;
 
 using quisp::modules::IRuleEngine;
+using quisp::modules::IStationaryQubit;
 using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_type;
 using quisp::modules::StationaryQubit;
@@ -64,7 +65,7 @@ class SwappingAction : public OriginalSwappingAction {
   }
 
   MOCK_METHOD(StationaryQubit *, getResource_fromTop_with_partner, (int required_index, int partner), (override));
-  MOCK_METHOD(void, removeResource_fromRule, (StationaryQubit *), (override));
+  MOCK_METHOD(void, removeResource_fromRule, (IStationaryQubit *), (override));
 };
 
 TEST(SwappingActionTest, init) {

@@ -124,6 +124,7 @@ struct measurement_outcome {
 
 class IStationaryQubit : public cSimpleModule {
  public:
+  IStationaryQubit(){};
   virtual ~IStationaryQubit(){};
   /** Pointer to the entangled qubit*/
   IStationaryQubit *entangled_partner = nullptr;
@@ -166,20 +167,20 @@ class IStationaryQubit : public cSimpleModule {
   bool GOD_dm_Xerror;
   bool GOD_dm_Zerror;
 
-  virtual bool checkBusy();
-  virtual void setFree(bool consumed);
-  virtual void Lock(unsigned long rs_id, int rule_id, int action_id); /*In use. E.g. waiting for purification result.*/
-  virtual void Unlock();
-  virtual bool isLocked();
-  virtual void Allocate();
-  virtual void Deallocate();
-  virtual bool isAllocated();
+  virtual bool checkBusy() = 0;
+  virtual void setFree(bool consumed) = 0;
+  virtual void Lock(unsigned long rs_id, int rule_id, int action_id) = 0; /*In use. E.g. waiting for purification result.*/
+  virtual void Unlock() = 0;
+  virtual bool isLocked() = 0;
+  virtual void Allocate() = 0;
+  virtual void Deallocate() = 0;
+  virtual bool isAllocated() = 0;
 
   /**
    * \brief Emit photon.
    * \param pulse is 1 for the beginning of the burst, 2 for the end.
    */
-  virtual void emitPhoton(int pulse);
+  virtual void emitPhoton(int pulse) = 0;
 
   /**
    * \brief Single Qubit X measurement.
@@ -187,7 +188,7 @@ class IStationaryQubit : public cSimpleModule {
    * New errors only occur when wrong measurement result is delivered for feed-forward
    * (The error on the measured qubit propagates to the byproduct gate target qubit).
    */
-  virtual quisp::types::MeasureXResult measure_X();
+  virtual quisp::types::MeasureXResult measure_X() = 0;
 
   /**
    * \brief Single Qubit Y measurement.
@@ -195,7 +196,7 @@ class IStationaryQubit : public cSimpleModule {
    * New errors only occur when wrong measurement result is delivered for feed-forward
    * (The error on the measured qubit propagates to the byproduct gate target qubit).
    */
-  virtual types::MeasureYResult measure_Y();
+  virtual types::MeasureYResult measure_Y() = 0;
 
   /**
    * \brief Single Qubit Z measurement.
@@ -203,25 +204,25 @@ class IStationaryQubit : public cSimpleModule {
    * New errors only occur when wrong measurement result is delivered for feed-forward
    * (The error on the measured qubit propagates to the byproduct gate target qubit).
    */
-  virtual types::MeasureZResult measure_Z();
+  virtual types::MeasureZResult measure_Z() = 0;
 
   /**
    * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
    * */
-  virtual measurement_outcome measure_density_independent(); /*Separate dm calculation*/
+  virtual measurement_outcome measure_density_independent() = 0; /*Separate dm calculation*/
 
-  virtual void CNOT_gate(IStationaryQubit *control_qubit);
-  virtual void Hadamard_gate();
-  virtual void Z_gate();
-  virtual void X_gate();
-  virtual bool Xpurify(IStationaryQubit *resource_qubit);
-  virtual bool Zpurify(IStationaryQubit *resource_qubit);
+  virtual void CNOT_gate(IStationaryQubit *control_qubit) = 0;
+  virtual void Hadamard_gate() = 0;
+  virtual void Z_gate() = 0;
+  virtual void X_gate() = 0;
+  virtual bool Xpurify(IStationaryQubit *resource_qubit) = 0;
+  virtual bool Zpurify(IStationaryQubit *resource_qubit) = 0;
 
   /*GOD parameters*/
-  virtual void setEntangledPartnerInfo(IStationaryQubit *partner);
-  virtual void setCompletelyMixedDensityMatrix();
-  virtual void addXerror();
-  virtual void addZerror();
+  virtual void setEntangledPartnerInfo(IStationaryQubit *partner) = 0;
+  virtual void setCompletelyMixedDensityMatrix() = 0;
+  virtual void addXerror() = 0;
+  virtual void addZerror() = 0;
 
   int stationaryQubit_address;
   int node_address;

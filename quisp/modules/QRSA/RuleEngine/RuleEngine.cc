@@ -571,7 +571,7 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int
                 // Correct resource found! Need to unlock and stage up the resource to the next rule.
                 qubit->second->Unlock();
                 // std::cout<<"[Upgrade Unlock] "<<qubit->second<<" in node["<<qubit->second->node_address<<"]\n";
-                StationaryQubit *q = qubit->second;
+                IStationaryQubit *q = qubit->second;
                 (*rule)->resources.erase(qubit);  // Erase this from resource list
                 rule++;
                 if (rule == end) {
@@ -1371,7 +1371,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
   }  // For loop
 }
 
-void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, StationaryQubit *qubit, QNIC_type qnic_type) {
+void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
   realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit->par("stationaryQubit_address"), qnic_type, true);
   Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit->par("stationaryQubit_address"));
   bell_pair_store.eraseQubit(qubit);

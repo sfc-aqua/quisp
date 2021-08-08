@@ -375,7 +375,7 @@ void StationaryQubit::X_gate() {
 
 void StationaryQubit::CNOT_gate(IStationaryQubit *control_qubit) {
   // Need to add noise here later
-  apply_two_qubit_gate_error(CNOTgate_error, check_and_cast<StationaryQubit *>(control_qubit));
+  apply_two_qubit_gate_error(CNOTgate_error, dynamic_cast<StationaryQubit *>(control_qubit));
   // std::cout<<"this X err = "<<this->par("GOD_Xerror").boolValue()<<"\n";
 
   if (control_qubit->par("GOD_Xerror")) {
@@ -653,7 +653,7 @@ bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
   // std::cout<<"X puri\n";
   // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
   apply_memory_error(this);
-  apply_memory_error(check_and_cast<StationaryQubit *>(resource_qubit));
+  apply_memory_error(dynamic_cast<StationaryQubit *>(resource_qubit));
   /*Target qubit*/ this->CNOT_gate(resource_qubit /*controlled qubit*/);
   bool meas = this->measure_Z() == MeasureZResult::NO_ERROR;
   return meas;
@@ -662,7 +662,7 @@ bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
 bool StationaryQubit::Zpurify(IStationaryQubit *resource_qubit /*Target*/) {
   // std::cout<<"Z puri\n";
   apply_memory_error(this);  // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
-  apply_memory_error(check_and_cast<StationaryQubit *>(resource_qubit));
+  apply_memory_error(dynamic_cast<StationaryQubit *>(resource_qubit));
   /*Target qubit*/ resource_qubit->CNOT_gate(this /*controlled qubit*/);
   this->Hadamard_gate();
   bool meas = this->measure_Z() == MeasureZResult::NO_ERROR;
@@ -862,7 +862,7 @@ quantum_state StationaryQubit::getQuantumState() {
   // std::cout<<"par re= "<<this->entangled_partner->par("GOD_REerror").boolValue()<<", par cm = "<<this->entangled_partner->par("GOD_EXerror").boolValue()<<", re/ex =
   // "<<this->entangled_partner->excited_or_relaxed<<"\n"; std::cout<<"!!!!!!!!!!!!!!!!!!\n";
 
-  Matrix4cd combined_errors = kroneckerProduct(getErrorMatrix(this), getErrorMatrix(check_and_cast<StationaryQubit *>(entangled_partner))).eval();
+  Matrix4cd combined_errors = kroneckerProduct(getErrorMatrix(this), getErrorMatrix(dynamic_cast<StationaryQubit *>(entangled_partner))).eval();
 
   // If Pauli errors
   Vector4cd ideal_Bell_state(1 / sqrt(2), 0, 0, 1 / sqrt(2));  // Assumes that the state is a 2 qubit state |00> + |11>
@@ -1006,7 +1006,7 @@ measurement_outcome StationaryQubit::measure_density_independent() {
       error("Entangled but completely mixed / Excited / Relaxed ? Probably wrong.");
     }
     // Also do the same on the partner if it is still entangled! This could break the entanglement due to relaxation/excitation error!
-    apply_memory_error(check_and_cast<StationaryQubit *>(this->entangled_partner));
+    apply_memory_error(dynamic_cast<StationaryQubit *>(this->entangled_partner));
   }
 
   /*-For debugging-*/

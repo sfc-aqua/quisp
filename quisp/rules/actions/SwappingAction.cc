@@ -34,8 +34,8 @@ SwappingAction::SwappingAction(unsigned long RuleSet_id, int rule_index, int lp,
 cPacket *SwappingAction::run(cModule *re) {
   float success_probability = 1.0;
 
-  StationaryQubit *left_qubit = nullptr;
-  StationaryQubit *right_qubit = nullptr;
+  IStationaryQubit *left_qubit = nullptr;
+  IStationaryQubit *right_qubit = nullptr;
 
   left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
   right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
@@ -52,8 +52,8 @@ cPacket *SwappingAction::run(cModule *re) {
   }
 
   // actual swapping operations
-  StationaryQubit *right_partner_qubit = right_qubit->entangled_partner;
-  StationaryQubit *left_partner_qubit = left_qubit->entangled_partner;
+  auto *right_partner_qubit = right_qubit->entangled_partner;
+  auto *left_partner_qubit = left_qubit->entangled_partner;
   // just swapping pointer.
   // swapper have no way to know this swapping is success or not.
   // bell measurement
