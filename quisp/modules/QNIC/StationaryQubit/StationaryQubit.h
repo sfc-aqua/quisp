@@ -50,7 +50,6 @@ class StationaryQubit : public IStationaryQubit {
   Eigen::MatrixXd Memory_Transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
   Eigen::MatrixXd Memory_Transition_matrix_ns; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in ns.*/
   Eigen::MatrixXd Memory_Transition_matrix_ms; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in ns.*/
-  Eigen::Matrix2cd Density_Matrix_Collapsed;  // Used when partner has been measured.
   int num_purified;
   bool partner_measured;
   bool completely_mixed;
@@ -137,8 +136,6 @@ class StationaryQubit : public IStationaryQubit {
   bool locked;
   unsigned long locked_ruleset_id;
   int locked_rule_id;
-  int action_index;
-  bool no_density_matrix_nullptr_entangled_partner_ok;
 
  private:
   messages::PhotonicQubit *photon;

@@ -157,8 +157,8 @@ class IStationaryQubit : public cSimpleModule {
   double memory_Excitation_error_ceil;
   double memory_Relaxation_error_ceil;
 
-  single_qubit_error Pauli;
-  measurement_operators meas_op;
+  // single_qubit_error Pauli;
+  // measurement_operators meas_op;
   Eigen::Matrix2cd Density_Matrix_Collapsed;  // Used when partner has been measured.
   int num_purified;
   bool partner_measured;
