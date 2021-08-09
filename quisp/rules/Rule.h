@@ -29,6 +29,7 @@ class Rule {
   std::unique_ptr<Condition> condition;
   std::unique_ptr<Action> action;
   std::multimap<int, StationaryQubit *> resources;
+  std::vector<int> action_partners;
   int mutable number_of_resources_allocated_in_total = 0;
   // std::unique_ptr<Rule> next_rule;
   Rule(){};
@@ -43,6 +44,15 @@ class Rule {
     name = r_name;
   };
 
+  // May need combine with above two constructors
+  Rule(int rs_index, int r_index, std::string r_name, std::vector<int> _action_partners) {
+    ruleset_id = rs_index;
+    rule_index = r_index;
+    name = r_name;
+    action_partners = _action_partners;
+  };
+
+  int num_partners() { return action_partners.size(); };
   void addResource(int address_entangled_with, StationaryQubit *qubit);
   void setCondition(Condition *c);
   void setAction(Action *a);

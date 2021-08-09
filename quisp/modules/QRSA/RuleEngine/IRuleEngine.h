@@ -20,6 +20,7 @@ namespace modules {
 using namespace rules;
 
 typedef struct {
+  int partner_address;
   unsigned long ruleset_id;
   int rule_id;
   int index;
@@ -78,7 +79,7 @@ struct Process {
 };
 
 typedef std::map<int, QubitState> QubitStateTable;
-typedef std::multimap<unsigned long, purification_result> PurificationTable;
+typedef std::multimap<int, purification_result> PurificationTable;  // map<partner, purification_result>
 typedef std::multimap<unsigned long, Doublepurification_result> DoublePurificationTable;
 typedef std::multimap<unsigned long, Quatropurification_result> QuatroPurificationTable;
 typedef std::multimap<unsigned long, Triplepurification_result> TriplePurificationTable;

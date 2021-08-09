@@ -93,6 +93,7 @@ packet PurificationResult extends header
 	unsigned long ruleset_id;
 	int rule_id;
 	int action_index;
+    int purification_partner;  // not the same as the destination sometimes
 	GOD_statQubitPtr entangled_with;//For Debugging purposes.
 }
 

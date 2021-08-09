@@ -166,9 +166,11 @@ TEST(RuleEngineTest, resourceAllocation) {
   rule_engine->setAllResources(2, mockQubit2);
   auto* rs = new RuleSet(0, 0, 1);
   auto rule = std::make_unique<Rule>();
-  auto* action = new RandomMeasureAction(1, QNIC_E, 3, 1, 0, 1);
+  // owner address,
+  auto* action = new RandomMeasureAction(0, 1, QNIC_E, 3, 1, 10);
 
   rule->setAction(action);
+  rule->action_partners = {1};
   rs->addRule(std::move(rule));
   Process proc;
   proc.ownner_addr = 0;

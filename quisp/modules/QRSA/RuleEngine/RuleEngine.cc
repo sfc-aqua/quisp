@@ -188,10 +188,10 @@ void RuleEngine::handleMessage(cMessage *msg) {
       error("Empty rule set...");
     }
   } else if (dynamic_cast<PurificationResult *>(msg) != nullptr) {
-    // std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
     PurificationResult *pkt = check_and_cast<PurificationResult *>(msg);
     process_id purification_id;
     purification_result pr;
+    purification_id.partner_address = pkt->getPurification_partner();
     purification_id.ruleset_id = pkt->getRuleset_id();
     purification_id.rule_id = pkt->getRule_id();
     purification_id.index = pkt->getAction_index();
@@ -357,35 +357,59 @@ void RuleEngine::storeCheck_Purification_Agreement(purification_result pur_resul
       break;
     }
   }
+
+  // 0. take the partner address
+  int partner_address = pur_result.id.partner_address;
+  // 1. check the ruleset is currently running.
   if (rp.size() == 0 || !ruleset_running) {
     // Probably process already finished. Delete the table and ignore the result.
     return;
   } else {
-    // Find all resource in qtype/qid entangled with partner.
-    auto purification_table_for_ruleset = Purification_table.equal_range(pur_result.id.ruleset_id);
-    // If the RuleSet has been deleted already, do not do anything.
-    for (auto it = purification_table_for_ruleset.first; it != purification_table_for_ruleset.second; it++) {
-      // it->second => purification result {id: , outcome: }
-      EV << "Address: " << parentAddress << "\n";
-      EV << "Rule Index: " << it->second.id.rule_id << " : " << pur_result.id.rule_id << "\n";
-      EV << "Action Index: " << it->second.id.index << " : " << pur_result.id.index << "\n";
+    // 2. Check if there are some recodes existed.
+    // take range of purification table with partener address.
+    auto range = Purification_table.equal_range(partner_address);
+    for (auto it = range.first; it != range.second; it++) {
       if (it->second.id.rule_id == pur_result.id.rule_id && it->second.id.index == pur_result.id.index) {
-        // std::cout<<"node["<<parentAddress<<"] Rule found: Discard/Keep purification.\n";
         if (it->second.outcome == pur_result.outcome) {
-          // Outcomes agreed. Keep the entangled pair.
+          // the result is coordinate to the counter part
           Unlock_resource_and_upgrade_stage(pur_result.id.ruleset_id, pur_result.id.rule_id, pur_result.id.index);
         } else {
-          // Discard failed qubits and free it
+          // the result is different. discard the resource
           Unlock_resource_and_discard(pur_result.id.ruleset_id, pur_result.id.rule_id, pur_result.id.index);
         }
         Purification_table.erase(it);
         return;
       }
     }
-    // New purification outcome arrived. Store it in the purification table
-    EV << "New purification result: " << pur_result.id.ruleset_id << " rule id " << pur_result.id.rule_id << " action id " << pur_result.id.index << "\n";
-    Purification_table.insert(std::make_pair(pur_result.id.ruleset_id, pur_result));  // Otherwise, if data has not been found, store it.
+    Purification_table.insert(std::make_pair(partner_address, pur_result));
+    return;
   }
+  // if (rp.size() == 0 || !ruleset_running) {
+  //   // Probably process already finished. Delete the table and ignore the result.
+  //   return;
+  // } else {
+  //   // Find all resource in qtype/qid entangled with partner.
+  //   auto purification_table_for_ruleset = Purification_table.equal_range(pur_result.id.ruleset_id);
+  //   // If the RuleSet has been deleted already, do not do anything.
+  //   for (auto it = purification_table_for_ruleset.first; it != purification_table_for_ruleset.second; it++) {
+  //     // it->second => purification result {id: , outcome: }
+  //     if (it->second.id.rule_id == pur_result.id.rule_id && it->second.id.index == pur_result.id.index) {
+  //       // std::cout<<"node["<<parentAddress<<"] Rule found: Discard/Keep purification.\n";
+  //       if (it->second.outcome == pur_result.outcome) {
+  //         // Outcomes agreed. Keep the entangled pair.
+  //         Unlock_resource_and_upgrade_stage(pur_result.id.ruleset_id, pur_result.id.rule_id, pur_result.id.index);
+  //       } else {
+  //         // Discard failed qubits and free it
+  //         Unlock_resource_and_discard(pur_result.id.ruleset_id, pur_result.id.rule_id, pur_result.id.index);
+  //       }
+  //       Purification_table.erase(it);
+  //       return;
+  //     }
+  //   }
+  //   // New purification outcome arrived. Store it in the purification table
+  //   EV << "New purification result: " << pur_result.id.ruleset_id << " rule id " << pur_result.id.rule_id << " action id " << pur_result.id.index << "\n";
+  //   Purification_table.insert(std::make_pair(pur_result.id.ruleset_id, pur_result));  // Otherwise, if data has not been found, store it.
+  // }
 }
 
 void RuleEngine::storeCheck_DoublePurification_Agreement(Doublepurification_result pr) {
@@ -555,39 +579,76 @@ void RuleEngine::check_Purification_Agreement(purification_result pr){
 }*/
 
 void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int index) {
+  // Currently this function can only be used for upgrading purification stage.
   bool ok = false;
-  for (auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it) {  // In a particular RuleSet
-    next_it = it;
-    ++next_it;
-    if (it->second.Rs->ruleset_id == ruleset_id) {  // Find the corresponding ruleset.
-      RuleSet *process = it->second.Rs;  // One Process. From top to bottom.
-      int partner_size = process->entangled_partners.size();
-      // iterate for partners stored in the RuleSet
-      for (int i = 0; i < partner_size; i++) {
-        int entangled_partner_addr = process->entangled_partners[i];
-        for (auto rule = process->cbegin(), end = process->cend(); rule != end; rule++) {  // Traverse through rules
-          if ((*rule)->rule_index == rule_id) {  // Find the corresponding rule.
-            for (auto qubit = (*rule)->resources.begin(); qubit != (*rule)->resources.end(); ++qubit) {
-              if (qubit->second->action_index == index) {
-                // Correct resource found! Need to unlock and stage up the resource to the next rule.
-                qubit->second->Unlock();
-                // std::cout<<"[Upgrade Unlock] "<<qubit->second<<" in node["<<qubit->second->node_address<<"]\n";
-                StationaryQubit *q = qubit->second;
-                (*rule)->resources.erase(qubit);  // Erase this from resource list
-                rule++;
-                if (rule == end) {
-                  error("Rule came to end after operation (e.g. purification) success");
-                }
-                (*rule)->addResource(entangled_partner_addr, q);
-                ok = true;
-                return;
-              }
+
+  int partner_address;
+  StationaryQubit *qubit;
+  // 1. pick up proper ruleset
+  for (auto it = rp.cbegin(); it != rp.cend(); ++it) {
+    if (it->second.Rs->ruleset_id == ruleset_id) {
+      RuleSet *process = it->second.Rs;  // target ruleset
+      // 2. pick up proper rule inside the ruleset
+      bool qubit_found = false;
+      for (auto rule = process->cbegin(); rule != process->cend(); ++rule) {
+        if ((*rule)->rule_index == rule_id) {
+          // 3. loop for resources currently assined
+          // FIXME qubit identifier should be provided as classical paket result
+          for (auto qubit_map = (*rule)->resources.begin(); qubit_map != (*rule)->resources.end(); ++qubit_map) {
+            partner_address = qubit_map->first;
+            qubit = qubit_map->second;  // qubit instance
+
+            // 4. unlock qubit for later use
+            qubit->Unlock();
+            // 5. remove from current resources to promote it to the next rule
+            (*rule)->resources.erase(qubit_map);
+            qubit_found = true;
+          }
+        }
+        if (qubit_found) {
+          // 6. add the qubit to the later rule
+          for (auto next_rule = process->cbegin(); next_rule != process->cend(); next_rule++) {
+            // 6.1 check the target rule index is larger than current rule index and has proper partner address
+            auto proper_partner = std::find((*next_rule)->action_partners.begin(), (*next_rule)->action_partners.end(), partner_address);
+            if ((*next_rule)->rule_index > rule_id && proper_partner != (*next_rule)->action_partners.end()) {  // to avoid allocating to previous rules
+              (*next_rule)->addResource(partner_address, qubit);
+              ok = true;
+              return;
             }
-          }  // end if (Rule id check)
+          }
         }
       }
-    }  // end if (RuleSet id check)
+    }
   }
+
+  // for (auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it) {  // In a particular RuleSet
+  //   next_it = it;
+  //   ++next_it;
+  //   if (it->second.Rs->ruleset_id == ruleset_id) {  // Find the corresponding ruleset.
+  //     RuleSet *process = it->second.Rs;  // One Process. From top to bottom.
+  //     // iterate for partners stored in the RuleSet
+  //     for (auto rule = process->cbegin(), end = process->cend(); rule != end; rule++) {  // Traverse through rules
+  //       if ((*rule)->rule_index == rule_id) {  // Find the corresponding rule.
+  //         for (auto qubit = (*rule)->resources.begin(); qubit != (*rule)->resources.end(); ++qubit) {
+  //           if (qubit->second->action_index == index) {
+  //             // Correct resource found! Need to unlock and stage up the resource to the next rule.
+  //             qubit->second->Unlock();
+  //             // This function is only used for purification. No need to change the entangled address
+  //             int entangled_partner_addr = qubit->first;
+  //             StationaryQubit *q = qubit->second;
+  //             (*rule)->resources.erase(qubit);  // Erase this from resource list
+  //             rule++;  // start from the next rule
+  //             if (rule == end) { error("Rule came to end after operation (e.g. purification) success");};
+  //             // promote resources to the next rule
+  //             (*rule)->addResource(entangled_partner_addr, q);
+  //             ok = true;
+  //             return;
+  //           }
+  //         }
+  //       }  // end if (Rule id check)
+  //     }
+  //   }  // end if (RuleSet id check)
+  // }
   if (!ok) {
     error("Upgrade: Resource in rule not found....");
   }
@@ -1126,45 +1187,31 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
     ++next_it;
     // take the first ruleset
     RuleSet *process = it->second.Rs;  // One Process. From top to bottom.
-    // getting pointer to the rule
-    // std::vector<Rule *> rule_ptr = process->getRule_ptr();
-    int num_rules = process->size();
-    int num_partners = process->entangled_partners.size();
-    // iterate rules for all possible partners
-    for (int i = 0; i < num_partners; i++) {
-      // partner that has entanglement with this node
-      int resource_entangled_with_address = process->entangled_partners.at(i);
 
-      if (process->empty()) {
-        error("RuleSet with no Rule found. Probably not what you want!");
-      }
-
-      int assigned = 0;
-      // range contains the begin and end iterators of entangled qubits with the specified qnic_type, qnic_index and partner addr.
-      auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, resource_entangled_with_address);
-      for (auto it = range.first; it != range.second; ++it) {
-        auto *qubit = it->second;
-        if (!qubit->isAllocated()) {
-          if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
-            error("Freshing qubit wrong");
-          }
-          if (num_rules != num_partners) {
-            int num_rsc_bf = process->getRule(0)->resources.size();
-            process->getRule(0)->addResource(resource_entangled_with_address, qubit);
-            int num_rsc_af = process->getRule(0)->resources.size();
-            if (num_rsc_af != num_rsc_bf + 1) {
-              error("Resource is not added properly. This happens when an element in the map has the same key as the one that needed to be added.");
+    if (process->empty()) {
+      error("RuleSet with no Rule found. Probably not what you want!");
+    }
+    int assigned = 0;
+    // FIXME: Currently, all resources are allocated to the first Rule
+    for (int p = 0; p < process->size(); p++) {
+      // 1. loop for all rulesets and take the partners for each rule
+      for (int action_partner : process->getRule(p)->action_partners) {
+        // 2. take available Bell pairs between action partner
+        // range contains the begin and end iterators of entangled qubits with the specified qnic_type, qnic_index and partner addr.
+        auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, action_partner);
+        for (auto it = range.first; it != range.second; ++it) {
+          auto *qubit = it->second;
+          // 3. if the qubit is not allocated yet,
+          if (!qubit->isAllocated()) {
+            if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
+              error("Freshing qubit wrong");
             }
-          } else {
-            int num_rsc_bf = process->getRule(i)->resources.size();
-            process->getRule(i)->addResource(resource_entangled_with_address, qubit);
-            int num_rsc_af = process->getRule(i)->resources.size();
-            if (num_rsc_af != num_rsc_bf + 1) {
-              error("Resource is not added properly. This happens when an element in the map has the same key as the one that needed to be added.");
-            }
+            // 4. Allocate to the rule p
+            process->getRule(p)->addResource(action_partner, qubit);
+            // 5. increment the assined counter and set allocated flag
+            assigned++;
+            qubit->Allocate();
           }
-          qubit->Allocate();
-          assigned++;
         }
       }
     }
@@ -1190,7 +1237,6 @@ void RuleEngine::traverseThroughAllProcesses2() {
         if (!((*rule)->resources.size() > 0)) {
           break;  // No more resource left for now.
         }
-
         cPacket *pk = (*rule)->checkrun(this);  // Do something on qubits entangled with resource_entangled_with_address.
 
         if (pk != nullptr) {
@@ -1211,6 +1257,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
             pkt->setSrcAddr(parentAddress);
             PurificationResult *pk_for_self = pkt->dup();
             pk_for_self->setDestAddr(parentAddress);
+            EV << "purification finished\n";
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
           } else if (dynamic_cast<DoublePurificationResult *>(pk) != nullptr) {

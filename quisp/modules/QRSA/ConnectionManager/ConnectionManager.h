@@ -78,9 +78,9 @@ class ConnectionManager : public IConnectionManager {
   RuleSet *generateEntanglementSwappingRuleSet(int owner, SwappingConfig conf);
   RuleSet *generateSimultaneousEntanglementSwappingRuleSet(int owner, SwappingConfig conf, std::vector<int> path);
   RuleSet *generateRGSsourceRuleSet(int owner, int partner, int num_of_measure);
-  RuleSet *generateEsAndPurificationRuleSet(int owner_address, SwappingConfig conf, int num_purification, unsigned long ruleset_id);
+  RuleSet *generateEsAndPurificationRuleSet(int owner_address, SwappingConfig conf, int num_purification);
   RuleSet *generatePurAndTomographyRuleSet(int owner_address, int tomography_partner_address, std::vector<int> purification_partner_addresses, int num_purification,
-                                           QNIC_type qnic_type, int qnic_index, int num_of_measure, int num_resources, unsigned long ruleset_id);
+                                           QNIC_type qnic_type, int qnic_index, int num_of_measure, int num_resources);
 
   // Rule generator
   std::unique_ptr<Rule> purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
