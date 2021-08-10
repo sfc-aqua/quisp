@@ -33,57 +33,7 @@ Define_Module(StationaryQubit);
  *
  */
 void StationaryQubit::initialize() {
-  double rand = dblrand();
-
-  /*Photon emission time error rates*/
-
-  /*
   emission_success_probability = par("emission_success_probability");
-  emission_error.X_error_rate = par("emission_Z_error_rate");//par("name") will be read from .ini or .ned file
-  emission_error.X_error_rate =  par("emission_X_error_rate");
-  emission_error.Z_error_rate = par("emission_Y_error_rate");
-  emission_error.pauli_error_rate = emission_error.Y_error_rate + emission_error.Z_error_rate + emission_error.X_error_rate;
-
-
-  emission_error.No_error_ceil =1-emission_error.pauli_error_rate;// if 0 <= dblrand < fidelity = No error
-  emission_error.X_error_ceil = emission_error.No_error_ceil + emission_error.X_error_rate; // if fidelity <= dblrand < fidelity+X error rate = X error
-  emission_error.Z_error_ceil = emission_error.X_error_ceil + emission_error.Z_error_rate;
-  emission_error.Y_error_ceil = 1;
-
-
-  std::cout<<"emission_error.No_error_ceil = "<<emission_error.No_error_ceil<<"\n";
-  std::cout<<"emission_error.X_error_ceil = "<<emission_error.X_error_ceil<<"\n";
-  std::cout<<"emission_error.Y_error_ceil = "<<emission_error.Y_error_ceil<<"\n";
-  std::cout<<"emission_error.Z_error_ceil = "<<emission_error.Z_error_ceil<<"\n";
-  */
-  emission_success_probability = par("emission_success_probability");
-  // numemitted = 0;
-  // setErrorCeilings();
-
-  /*Memory error rates*/
-
-  /*
-double memory_Z_error_ratio = par("memory_Z_error_ratio");//par("name") will be read from .ini or .ned file
-double memory_X_error_ratio = par("memory_X_error_ratio");
-double memory_Y_error_ratio = par("memory_Y_error_ratio");
-double memory_excitation_error_ratio = par("memory_energy_excitation_ratio");
-double memory_relaxation_error_ratio = par("memory_energy_relaxation_ratio");
-double memory_completely_mixed_ratio = par("memory_completely_mixed_ratio");
-
-if(memory_Z_error_ratio == 0 && memory_X_error_ratio == 0 && memory_Y_error_ratio == 0 && memory_excitation_error_ratio == 0 && memory_relaxation_error_ratio == 0 &&
-memory_completely_mixed_ratio ==0){ memory_Z_error_ratio = 1; memory_X_error_ratio = 1; memory_Y_error_ratio = 1; memory_excitation_error_ratio = 1; memory_relaxation_error_ratio =
-1; memory_completely_mixed_ratio = 1;
-}
-
-//EV<<"memory_excitation_error_ratio = "<<memory_excitation_error_ratio<<", memory_relaxation_error_ratio"<<memory_relaxation_error_ratio<<"\n";
-double memory_ratio_sum = memory_Z_error_ratio+memory_X_error_ratio+memory_Y_error_ratio + memory_excitation_error_ratio + memory_relaxation_error_ratio +
-memory_completely_mixed_ratio; memory_err.error_rate = par("memory_error_rate");//This is per μs. memory_err.X_error_rate = memory_err.error_rate *
-(memory_X_error_ratio/memory_ratio_sum); memory_err.Y_error_rate = memory_err.error_rate * (memory_Y_error_ratio/memory_ratio_sum); memory_err.Z_error_rate = memory_err.error_rate
-* (memory_Z_error_ratio/memory_ratio_sum); memory_err.excitation_error_rate = memory_err.error_rate * (memory_excitation_error_ratio/memory_ratio_sum);
-memory_err.relaxation_error_rate = memory_err.error_rate * (memory_relaxation_error_ratio/memory_ratio_sum);
-memory_err.completely_mixed_rate = memory_err.error_rate * (memory_completely_mixed_ratio/memory_ratio_sum);
-  */
-
   memory_err.X_error_rate = (double)par("memory_X_error_rate").doubleValue();
   memory_err.Y_error_rate = (double)par("memory_Y_error_rate").doubleValue();
   memory_err.Z_error_rate = (double)par("memory_Z_error_rate").doubleValue();
@@ -92,14 +42,6 @@ memory_err.completely_mixed_rate = memory_err.error_rate * (memory_completely_mi
   memory_err.completely_mixed_rate = (double)par("memory_completely_mixed_rate").doubleValue();
   memory_err.error_rate = memory_err.X_error_rate + memory_err.Y_error_rate + memory_err.Z_error_rate + memory_err.excitation_error_rate + memory_err.relaxation_error_rate +
                           memory_err.completely_mixed_rate;  // This is per μs.
-  /*EV<<"Err rate = "<<memory_err.pauli_error_rate<<"\n";
-  EV<<"Ratio sum = "<<memory_ratio_sum<<"\n";
-  EV<<"I error rate (mem) = "<<1-memory_err.pauli_error_rate<<"\n";
-  EV<<"X error rate (mem) = "<<memory_err.X_error_rate<<"\n";
-  EV<<"Y error rate (mem) = "<<memory_err.Y_error_rate<<"\n";
-  EV<<"Z error rate (mem) = "<<memory_err.Z_error_rate<<"\n";
-  EV<<"Excitation error rate (mem) = "<<memory_err.excitation_error_rate<<"\n";
-  EV<<"Relaxation error rate (mem) = "<<memory_err.relaxation_error_rate<<"\n";*/
   Memory_Transition_matrix = MatrixXd::Zero(7, 7);
   // clang-format off
   Memory_Transition_matrix <<
@@ -120,7 +62,6 @@ memory_err.completely_mixed_rate = memory_err.error_rate * (memory_completely_mi
   setTwoQubitGateErrorCeilings(CNOTgate_error, "CNOTgate");
 
   std::cout << Memory_Transition_matrix << "\n";
-  // endSimulation();
 
   // Set error matrices. This is used in the process of simulating tomography.
   Pauli.X << 0, 1, 1, 0;
@@ -162,9 +103,7 @@ memory_err.completely_mixed_rate = memory_err.error_rate * (memory_completely_mi
   /* e^(t/T1) energy relaxation, e^(t/T2) phase relaxation. Want to use only 1/10 of T1 and T2 in general.*/
 }
 
-void StationaryQubit::finish() {
-  // std::cout<<"emitted "<<numemitted<<"¥n";
-}
+void StationaryQubit::finish() {}
 
 /**
  * \brief cSimpleModule handleMessage function
@@ -174,8 +113,6 @@ void StationaryQubit::finish() {
 void StationaryQubit::handleMessage(cMessage *msg) {
   bubble("Got a photon!!");
   setBusy();
-  // numemitted++;
-  // setEmissionPauliError();
   double rand = dblrand();
   if (rand < (1 - emission_success_probability)) {
     PhotonicQubit *pk = check_and_cast<PhotonicQubit *>(msg);
@@ -282,40 +219,6 @@ void StationaryQubit::setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model
   model.YI_error_ceil = model.IY_error_ceil + model.YI_error_rate;
   model.YY_error_ceil = model.YI_error_ceil + model.YY_error_rate;
 }
-
-/*
-void StationaryQubit::setEmissionPauliError(){
-    if(par("GOD_Xerror") || par("GOD_Zerror")){
-        //std::cout<<"node["<<node_address<<"] qnic["<<qnic_address<<"] Emitting from "<<this<<"X="<<par("GOD_Xerror").str()<<"Z="<<par("GOD_Zerror").str()<<"\n";
-        error("There shouldn't be an error existing before photon emission. This error may have not been reinitialized since last use. Better check!");
-    }
-    double rand = dblrand();//Gives a random double between 0.0 ~ 1.0
-    if(rand < emission_error.No_error_ceil){
-               //Qubit will end up with no error
-               //EV<<"No error :"<<rand<<" < "<<No_error_ceil<<"\n";
-    }else if(emission_error.No_error_ceil <= rand && rand < emission_error.X_error_ceil && (emission_error.No_error_ceil!=emission_error.X_error_ceil)){
-               //X error
-                par("GOD_Xerror") = true;
-                //EV<<"Xerror :"<<No_error_ceil<<"<="<<rand<<" < "<<X_error_ceil<<"\n";
-    }else if(emission_error.X_error_ceil <= rand && rand < emission_error.Z_error_ceil && (emission_error.X_error_ceil!=emission_error.Z_error_ceil)){
-               //Z error
-                par("GOD_Zerror") = true;
-               // EV<<"Zerror :"<<X_error_ceil<<"<="<<rand<<" < "<<Z_error_ceil<<"\n";
-    }else if(emission_error.Z_error_ceil <= rand && rand < emission_error.Y_error_ceil && (emission_error.Z_error_ceil!=emission_error.Y_error_ceil)){
-               //Y error
-                par("GOD_Xerror") = true;
-                par("GOD_Zerror") = true;
-                //EV<<"Yerror :"<<Z_error_ceil<<"<="<<rand<<" < "<<Y_error_ceil<<"\n";
-   }else{
-       std::cout<<rand<<"\n";
-       std::cout<<"emission_error.No_error_ceil = "<<emission_error.No_error_ceil<<"\n";
-       std::cout<<"emission_error.X_error_ceil = "<<emission_error.X_error_ceil<<"\n";
-       std::cout<<"emission_error.Y_error_ceil = "<<emission_error.Y_error_ceil<<"\n";
-       std::cout<<"emission_error.Z_error_ceil = "<<emission_error.Z_error_ceil<<"\n";
-       error("Either the error ceilings or the random double generator is wrong.");
-   }
-}
-*/
 
 MeasureXResult StationaryQubit::measure_X() {
   apply_single_qubit_gate_error(Measurement_error);

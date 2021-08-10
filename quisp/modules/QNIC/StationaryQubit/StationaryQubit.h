@@ -98,7 +98,6 @@ class StationaryQubit : public IStationaryQubit {
   void addZerror() override;
 
   double emission_success_probability;
-  int numemitted;
 
   SingleGateErrorModel Hgate_error;
   SingleGateErrorModel Xgate_error;
