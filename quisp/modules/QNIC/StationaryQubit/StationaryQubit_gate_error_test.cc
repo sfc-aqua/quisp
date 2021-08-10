@@ -10,6 +10,8 @@ namespace {
 
 class StatQubitTarget : public StationaryQubit {
  public:
+  using StationaryQubit::apply_single_qubit_gate_error;
+  using StationaryQubit::apply_two_qubit_gate_error;
   using StationaryQubit::initialize;
   using StationaryQubit::par;
   using StationaryQubit::setSingleQubitGateErrorModel;

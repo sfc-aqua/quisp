@@ -8,8 +8,8 @@ namespace actions {
 
 // X purification, Z purification to trash_qubit_X Bell pair.
 cPacket *DoubleSelectionDualAction::run(cModule *re) {
-  StationaryQubit *qubit = nullptr;
-  StationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_Z, *ds_trash_qubit_X = nullptr;
+  IStationaryQubit *qubit = nullptr;
+  IStationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_Z, *ds_trash_qubit_X = nullptr;
 
   qubit = getResource_fromTop(resource);
   trash_qubit_X = getResource_fromTop(trash_resource_X);
@@ -118,8 +118,8 @@ DoubleSelectionDualActionInv::DoubleSelectionDualActionInv(unsigned long RuleSet
 
 // Double selection double error (ZX error) purification
 cPacket *DoubleSelectionDualActionInv::run(cModule *re) {
-  StationaryQubit *qubit = nullptr;
-  StationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_Z, *ds_trash_qubit_X = nullptr;
+  IStationaryQubit *qubit = nullptr;
+  IStationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_Z, *ds_trash_qubit_X = nullptr;
 
   qubit = getResource_fromTop(resource);
   trash_qubit_X = getResource_fromTop(trash_resource_X);

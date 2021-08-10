@@ -17,7 +17,7 @@
 #include "BellPairStore.h"
 #include "IRuleEngine.h"
 #include "classical_messages_m.h"
-#include "modules/QNIC/StationaryQubit/StationaryQubit.h"
+#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RealTimeController/IRealTimeController.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
@@ -80,7 +80,7 @@ class RuleEngine : public IRuleEngine {
   std::vector<bool> tracker_accessible;
 
   void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type) override;
-  void freeConsumedResource(int qnic_index, StationaryQubit *qubit, QNIC_type qnic_type) override;
+  void freeConsumedResource(int qnic_index, IStationaryQubit *qubit, QNIC_type qnic_type) override;
   void dynamic_ResourceAllocation(int qnic_type, int qnic_index) override;
   void ResourceAllocation(int qnic_type, int qnic_index) override;
 

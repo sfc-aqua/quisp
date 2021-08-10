@@ -22,8 +22,8 @@ DoubleSelectionAction::DoubleSelectionAction(unsigned long RuleSet_id, int rule_
 
 // Double selection single error (X error) purification.
 cPacket *DoubleSelectionAction::run(cModule *re) {
-  StationaryQubit *qubit = nullptr;
-  StationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
+  IStationaryQubit *qubit = nullptr;
+  IStationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
 
   qubit = getResource_fromTop(resource);
   trash_qubit_X = getResource_fromTop(trash_resource_X);
@@ -102,8 +102,8 @@ DoubleSelectionActionInv::DoubleSelectionActionInv(unsigned long RuleSet_id, int
 
 // Double selection single error (Z error) purification
 cPacket *DoubleSelectionActionInv::run(cModule *re) {
-  StationaryQubit *qubit = nullptr;
-  StationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
+  IStationaryQubit *qubit = nullptr;
+  IStationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
 
   qubit = getResource_fromTop(resource);
   trash_qubit_X = getResource_fromTop(trash_resource_X);

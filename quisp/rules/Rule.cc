@@ -9,12 +9,12 @@
 #include "Rule.h"
 #include "classical_messages_m.h"
 
-//#include <modules/RuleEngine.h>
+using quisp::messages::ConditionNotSatisfied;
 
 namespace quisp {
 namespace rules {
 
-void Rule::addResource(int address_entangled_with, StationaryQubit *qubit) {
+void Rule::addResource(int address_entangled_with, IStationaryQubit *qubit) {
   // int index = number_of_resources_allocated_in_total;
   // this index must be entangled partner (this must be updated)
   resources.insert(std::make_pair(address_entangled_with, qubit));  // Assign resource to the 1st Rule.

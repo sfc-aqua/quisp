@@ -39,7 +39,7 @@ class Application : public IApplication {
   void storeEndNodeAddresses();
   int getOneRandomEndNodeAddress();
 
-  ConnectionSetupRequest *createConnectionSetupRequest(int dest_addr, int num_of_required_resources);
+  messages::ConnectionSetupRequest *createConnectionSetupRequest(int dest_addr, int num_of_required_resources);
   utils::ComponentProvider provider;
 };
 
