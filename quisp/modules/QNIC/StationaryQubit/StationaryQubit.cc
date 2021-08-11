@@ -228,9 +228,6 @@ MeasureXResult StationaryQubit::measure_X() {
   return MeasureXResult::NO_ERROR;
 }
 
-/**
- *  Returns true if the measurement outcome was correct
- */
 MeasureYResult StationaryQubit::measure_Y() {
   applySingleQubitGateError(Measurement_error);
   bool error = true;
