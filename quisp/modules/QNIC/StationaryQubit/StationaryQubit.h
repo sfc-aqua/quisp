@@ -148,8 +148,8 @@ class StationaryQubit : public IStationaryQubit {
   /*Applies memory error to the given qubit*/
   void applyMemoryError();
 
-  void apply_single_qubit_gate_error(SingleGateErrorModel const &err);
-  void apply_two_qubit_gate_error(TwoQubitGateErrorModel const &err, StationaryQubit *another_qubit);
+  void applySingleQubitGateError(SingleGateErrorModel const &err);
+  void applyTwoQubitGateError(TwoQubitGateErrorModel const &err, StationaryQubit *another_qubit);
 };
 
 }  // namespace modules
