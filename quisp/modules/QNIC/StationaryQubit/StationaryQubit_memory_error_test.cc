@@ -10,7 +10,7 @@ namespace {
 
 class StatQubitTarget : public StationaryQubit {
  public:
-  using StationaryQubit::apply_memory_error;
+  using StationaryQubit::applyMemoryError;
   using StationaryQubit::initialize;
   using StationaryQubit::par;
   StatQubitTarget() : StationaryQubit() { setComponentType(new TestModuleType("test qubit")); }
@@ -100,7 +100,7 @@ TEST(StatQubitMemoryErrorTest, do_nothing) {
   // if current time and updated_time are same, do nothing
   EXPECT_EQ(qubit->updated_time, SimTime(0));
   sim->setSimTime(SimTime(0, SIMTIME_US));
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
 
   EXPECT_EQ(qubit->updated_time, SimTime(0, SIMTIME_US));
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
@@ -117,7 +117,7 @@ TEST(StatQubitMemoryErrorTest, update_timestamp) {
   EXPECT_EQ(qubit->updated_time, SimTime(0));
   sim->registerComponent(qubit);
   sim->setSimTime(SimTime(1, SIMTIME_US));
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_EQ(qubit->updated_time, SimTime(1, SIMTIME_US));
 }
 TEST(StatQubitMemoryErrorTest, apply_memory_error_no_error) {
@@ -143,7 +143,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_no_error) {
   // X error
   qubit->reset();
   rng->doubleValue = 0.55;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_TRUE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -153,7 +153,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_no_error) {
   // Z error
   rng->doubleValue = 0.65;
   qubit->reset();
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -163,7 +163,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_no_error) {
   // Y error
   rng->doubleValue = 0.75;
   qubit->reset();
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_TRUE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -173,7 +173,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_no_error) {
   // Excitation error
   rng->doubleValue = 0.85;
   qubit->reset();
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_EXerror").boolValue());
@@ -183,7 +183,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_no_error) {
   // Relaxation error
   rng->doubleValue = 0.95;
   qubit->reset();
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -215,7 +215,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_X_error) {
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
   rng->doubleValue = 0.55;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_TRUE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -226,7 +226,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_X_error) {
   rng->doubleValue = 0.65;
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -237,7 +237,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_X_error) {
   rng->doubleValue = 0.75;
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_TRUE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -248,7 +248,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_X_error) {
   rng->doubleValue = 0.85;
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_EXerror").boolValue());
@@ -259,7 +259,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_X_error) {
   rng->doubleValue = 0.95;
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -291,7 +291,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_Z_error) {
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
   rng->doubleValue = 0.55;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_TRUE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -302,7 +302,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_Z_error) {
   rng->doubleValue = 0.65;
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -313,7 +313,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_Z_error) {
   rng->doubleValue = 0.75;
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_TRUE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -324,7 +324,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_Z_error) {
   rng->doubleValue = 0.85;
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_EXerror").boolValue());
@@ -335,7 +335,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_Z_error) {
   rng->doubleValue = 0.95;
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -368,7 +368,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_Y_error) {
   qubit->par("GOD_Xerror") = true;
   qubit->par("GOD_Zerror") = true;
   rng->doubleValue = 0.15;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_TRUE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -380,7 +380,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_Y_error) {
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
   qubit->par("GOD_Zerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -392,7 +392,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_Y_error) {
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
   qubit->par("GOD_Zerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_TRUE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -404,7 +404,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_Y_error) {
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
   qubit->par("GOD_Zerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_EXerror").boolValue());
@@ -416,7 +416,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_Y_error) {
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
   qubit->par("GOD_Zerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -448,7 +448,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_excitation_error) {
   qubit->reset();
   qubit->par("GOD_EXerror") = true;
   rng->doubleValue = 0.15;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_EXerror").boolValue());
@@ -459,7 +459,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_excitation_error) {
   rng->doubleValue = 0.25;
   qubit->reset();
   qubit->par("GOD_EXerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_EXerror").boolValue());
@@ -470,7 +470,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_excitation_error) {
   rng->doubleValue = 0.5;
   qubit->reset();
   qubit->par("GOD_EXerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_EXerror").boolValue());
@@ -481,7 +481,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_excitation_error) {
   rng->doubleValue = 0.85;
   qubit->reset();
   qubit->par("GOD_EXerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_EXerror").boolValue());
@@ -492,7 +492,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_excitation_error) {
   rng->doubleValue = 0.95;
   qubit->reset();
   qubit->par("GOD_EXerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
@@ -524,7 +524,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_relaxation_error) {
   rng->doubleValue = 0.05;
   qubit->reset();
   qubit->par("GOD_REerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_TRUE(qubit->par("GOD_EXerror").boolValue());
@@ -535,7 +535,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_relaxation_error) {
   rng->doubleValue = 0.95;
   qubit->reset();
   qubit->par("GOD_REerror") = true;
-  qubit->apply_memory_error(qubit);
+  qubit->applyMemoryError();
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());

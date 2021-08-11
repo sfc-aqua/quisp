@@ -554,8 +554,8 @@ void StationaryQubit::addZerror() {
 bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
   // std::cout<<"X puri\n";
   // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
-  apply_memory_error(this);
-  apply_memory_error(check_and_cast<StationaryQubit *>(resource_qubit));
+  applyMemoryError();
+  check_and_cast<StationaryQubit *>(resource_qubit)->applyMemoryError();
   /*Target qubit*/ this->CNOT_gate(resource_qubit /*controlled qubit*/);
   bool meas = this->measure_Z() == MeasureZResult::NO_ERROR;
   return meas;
@@ -563,8 +563,8 @@ bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
 
 bool StationaryQubit::Zpurify(IStationaryQubit *resource_qubit /*Target*/) {
   // std::cout<<"Z puri\n";
-  apply_memory_error(this);  // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
-  apply_memory_error(check_and_cast<StationaryQubit *>(resource_qubit));
+  applyMemoryError();  // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
+  check_and_cast<StationaryQubit *>(resource_qubit)->applyMemoryError();
   /*Target qubit*/ resource_qubit->CNOT_gate(this /*controlled qubit*/);
   this->Hadamard_gate();
   bool meas = this->measure_Z() == MeasureZResult::NO_ERROR;
@@ -572,31 +572,31 @@ bool StationaryQubit::Zpurify(IStationaryQubit *resource_qubit /*Target*/) {
 }
 
 // Single qubit memory error based on Markov-Chain
-void StationaryQubit::apply_memory_error(StationaryQubit *qubit) {
-  if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok)
+void StationaryQubit::applyMemoryError() {
+  if (entangled_partner == nullptr && Density_Matrix_Collapsed(0, 0).real() == -111 && !no_density_matrix_nullptr_entangled_partner_ok)
     error("This must not happen in apply memory error");
 
   // If no memory error occurs, or if the state is completely mixed, skip this memory error simulation.
-  if (qubit->memory_err.error_rate == 0) {
+  if (memory_err.error_rate == 0) {
     // error("memory error is set to 0. If on purpose, that is fine. Comment this out.");
     return;
   }
 
   // Check when the error got updated last time.
   // Errors will be performed depending on the difference between that time and the current time.
-  double time_evolution = simTime().dbl() - qubit->updated_time.dbl();
+  double time_evolution = simTime().dbl() - updated_time.dbl();
   double time_evolution_microsec = time_evolution * 1000000 /** 100*/;
   if (time_evolution_microsec > 0) {
     // Perform Monte-Carlo error simulation on this qubit.
-    bool has_x_err = qubit->par("GOD_Xerror");
-    bool has_z_err = qubit->par("GOD_Zerror");
-    bool is_excited = qubit->par("GOD_EXerror");
-    bool is_relaxed = qubit->par("GOD_REerror");
-    bool is_completely_mixed = qubit->par("GOD_CMerror");
-    if (qubit->completely_mixed != is_completely_mixed) {
+    bool has_x_err = par("GOD_Xerror");
+    bool has_z_err = par("GOD_Zerror");
+    bool is_excited = par("GOD_EXerror");
+    bool is_relaxed = par("GOD_REerror");
+    bool is_completely_mixed = par("GOD_CMerror");
+    if (completely_mixed != is_completely_mixed) {
       error("[apply_memory_error] Completely mixed flag not matching");
     }
-    if (qubit->excited_or_relaxed != is_excited && qubit->excited_or_relaxed != is_relaxed) {
+    if (excited_or_relaxed != is_excited && excited_or_relaxed != is_relaxed) {
       error("[apply_memory_error] Relaxed/Excited flag not matching");
     }
 
@@ -678,46 +678,46 @@ void StationaryQubit::apply_memory_error(StationaryQubit *qubit) {
 
     if (rand < clean_ceil) {
       // Qubit will end up with no error
-      qubit->par("GOD_Xerror") = false;
-      qubit->par("GOD_Zerror") = false;
+      par("GOD_Xerror") = false;
+      par("GOD_Zerror") = false;
     } else if (clean_ceil <= rand && rand < x_ceil && (clean_ceil != x_ceil)) {
       // X error
-      qubit->par("GOD_Xerror") = true;
-      qubit->par("GOD_Zerror") = false;
+      par("GOD_Xerror") = true;
+      par("GOD_Zerror") = false;
       DEBUG_memory_X_count++;
     } else if (x_ceil <= rand && rand < z_ceil && (x_ceil != z_ceil)) {
       // Z error
-      qubit->par("GOD_Xerror") = false;
-      qubit->par("GOD_Zerror") = true;
+      par("GOD_Xerror") = false;
+      par("GOD_Zerror") = true;
       DEBUG_memory_Z_count++;
     } else if (z_ceil <= rand && rand < y_ceil && (z_ceil != y_ceil)) {
       // Y error
-      qubit->par("GOD_Xerror") = true;
-      qubit->par("GOD_Zerror") = true;
+      par("GOD_Xerror") = true;
+      par("GOD_Zerror") = true;
       DEBUG_memory_Y_count++;
     } else if (y_ceil <= rand && rand < excited_ceil && (y_ceil != excited_ceil)) {
       // Excitation error
       // Also sets the partner completely mixed if it used to be entangled.
-      qubit->setExcitedDensityMatrix();
+      setExcitedDensityMatrix();
     } else if (excited_ceil <= rand && rand < relaxed_ceil && (excited_ceil != relaxed_ceil)) {
       // Excitation error
       // Also sets the partner completely mixed if it used to be entangled.
-      qubit->setRelaxedDensityMatrix();
+      setRelaxedDensityMatrix();
     } else {
       // Memory completely mixed error
 
       // If this qubit still used to be entangled with another qubit.
-      if (qubit->entangled_partner != nullptr) {
-        qubit->entangled_partner->updated_time = simTime();
-        qubit->entangled_partner->par("last_updated_at") = simTime().dbl();
+      if (entangled_partner != nullptr) {
+        entangled_partner->updated_time = simTime();
+        entangled_partner->par("last_updated_at") = simTime().dbl();
         // Break entanglement with partner. Overwrite its density matrix.
-        qubit->entangled_partner->setCompletelyMixedDensityMatrix();
+        entangled_partner->setCompletelyMixedDensityMatrix();
       }
-      qubit->setCompletelyMixedDensityMatrix();
+      setCompletelyMixedDensityMatrix();
     }
   }
-  qubit->updated_time = simTime();
-  qubit->par("last_updated_at") = simTime().dbl();
+  updated_time = simTime();
+  par("last_updated_at") = simTime().dbl();
 }
 
 Matrix2cd StationaryQubit::getErrorMatrix(StationaryQubit *qubit) {
@@ -890,7 +890,7 @@ measurement_outcome StationaryQubit::measure_density_independent() {
   char Output_is_plus;
 
   // Add memory error depending on the idle time. If excited/relaxed, this will immediately break entanglement, leaving the other qubit as completely mixed.
-  apply_memory_error(this);
+  applyMemoryError();
 
   // Measurement gate error
   apply_single_qubit_gate_error(Measurement_error);
@@ -908,7 +908,7 @@ measurement_outcome StationaryQubit::measure_density_independent() {
       error("Entangled but completely mixed / Excited / Relaxed ? Probably wrong.");
     }
     // Also do the same on the partner if it is still entangled! This could break the entanglement due to relaxation/excitation error!
-    apply_memory_error(check_and_cast<StationaryQubit *>(this->entangled_partner));
+    check_and_cast<StationaryQubit *>(this->entangled_partner)->applyMemoryError();
   }
 
   /*-For debugging-*/
