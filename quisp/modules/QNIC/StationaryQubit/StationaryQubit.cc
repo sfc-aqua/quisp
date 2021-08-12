@@ -700,36 +700,17 @@ void StationaryQubit::applyMemoryError() {
 }
 
 Matrix2cd StationaryQubit::getErrorMatrix(StationaryQubit *qubit) {
-  Matrix2cd err;
-
   if (qubit->par("GOD_CMerror") || qubit->par("GOD_REerror") || qubit->par("GOD_REerror")) {
-    // std::cout<<"CMerror: "<<qubit<<" in node["<<node_address<<"]\n";
-    // std::cout<<"***CHECK: "<<qubit<<" in node["<<node_address<<"]***\n";
-    // std::cout<<"par cm = "<<qubit->par("GOD_CMerror").boolValue()<<", completely_mixed = "<<qubit->completely_mixed<<"\n";
-    /// std::cout<<"par re= "<<qubit->par("GOD_REerror").boolValue()<<", par cm = "<<qubit->par("GOD_EXerror").boolValue()<<", re/ex = "<<qubit->excited_or_relaxed<<"\n";
-    // std::cout<<"******************************\n";
-
     error("CMerror in getErrorMatrix. Not supposed to happen.");
   }
 
-  if (qubit->par("GOD_Zerror") && qubit->par("GOD_Xerror")) {  // Y error on this qubit
-    err = Pauli.Y;
-    EV << "Y error"
-       << "\n";
-  } else if (qubit->par("GOD_Zerror") && !qubit->par("GOD_Xerror")) {  // Z error
-    err = Pauli.Z;
-    EV << "Z error"
-       << "\n";
-  } else if (!qubit->par("GOD_Zerror") && qubit->par("GOD_Xerror")) {  // X error
-    err = Pauli.X;
-    EV << "X error"
-       << "\n";
-  } else {
-    err = Pauli.I;
-    EV << "I error"
-       << "\n";
-  }
-  return err;
+  auto has_z_err = qubit->par("GOD_Zerror").boolValue();
+  auto has_x_err = qubit->par("GOD_Xerror").boolValue();
+
+  if (has_z_err && has_x_err) return Pauli.Y;
+  if (has_z_err) return Pauli.Z;
+  if (has_x_err) return Pauli.X;
+  return Pauli.I;
 }
 
 // returns the density matrix of the Bell pair with error. This assumes that this is entangled with another stationary qubit.
