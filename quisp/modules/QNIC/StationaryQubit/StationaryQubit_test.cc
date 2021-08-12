@@ -149,4 +149,27 @@ TEST(StatQubitTest, setFree) {
   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
 }
 
+TEST(StatQubitTest, addXError) {
+  auto *sim = prepareSimulation();
+  auto *qubit = new StatQubitTarget{};
+  qubit->fillParams();
+  sim->registerComponent(qubit);
+  EXPECT_FALSE(qubit->par("GOD_Xerror"));
+  qubit->addXerror();
+  EXPECT_TRUE(qubit->par("GOD_Xerror"));
+  qubit->addXerror();
+  EXPECT_FALSE(qubit->par("GOD_Xerror"));
+}
+
+TEST(StatQubitTest, addZError) {
+  auto *sim = prepareSimulation();
+  auto *qubit = new StatQubitTarget{};
+  qubit->fillParams();
+  sim->registerComponent(qubit);
+  EXPECT_FALSE(qubit->par("GOD_Zerror"));
+  qubit->addZerror();
+  EXPECT_TRUE(qubit->par("GOD_Zerror"));
+  qubit->addZerror();
+  EXPECT_FALSE(qubit->par("GOD_Zerror"));
+}
 }  // namespace
