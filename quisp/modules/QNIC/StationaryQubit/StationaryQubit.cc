@@ -526,22 +526,11 @@ void StationaryQubit::setEntangledPartnerInfo(IStationaryQubit *partner) {
   par("GOD_entangled_qnic_type") = partner->par("qnic_type");
 }
 
-/*Add another X error. If an X error already exists, then they cancel out*/
-void StationaryQubit::addXerror() {
-  // error("Huh...?");
-  bool Xerr = this->par("GOD_Xerror");
-  // Switches true to false or false to true
-  this->par("GOD_Xerror") = !Xerr;
-  // this->par("GOD_Xerror") = true;
-}
+/* Add another X error. If an X error already exists, then they cancel out */
+void StationaryQubit::addXerror() { this->par("GOD_Xerror") = !this->par("GOD_Xerror"); }
 
-/*Add another Z error. If an Z error already exists, then they cancel out*/
-void StationaryQubit::addZerror() {
-  bool Zerr = this->par("GOD_Zerror");
-  // Switches true to false or false to true
-  this->par("GOD_Zerror") = !Zerr;
-  // this->par("GOD_Zerror") = true;
-}
+/* Add another Z error. If an Z error already exists, then they cancel out */
+void StationaryQubit::addZerror() { this->par("GOD_Zerror") = !this->par("GOD_Zerror"); }
 
 // Only tracks error propagation. If two booleans (Alice and Bob) agree (truetrue or falsefalse), keep the purified ebit.
 bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
