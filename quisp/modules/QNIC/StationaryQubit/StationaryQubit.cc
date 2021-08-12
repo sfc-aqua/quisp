@@ -96,10 +96,6 @@ void StationaryQubit::initialize() {
   std = par("std");
   setFree(false);
 
-  DEBUG_memory_X_count = 0;
-  DEBUG_memory_Y_count = 0;
-  DEBUG_memory_Z_count = 0;
-
   /* e^(t/T1) energy relaxation, e^(t/T2) phase relaxation. Want to use only 1/10 of T1 and T2 in general.*/
 }
 
@@ -681,17 +677,14 @@ void StationaryQubit::applyMemoryError() {
       // X error
       par("GOD_Xerror") = true;
       par("GOD_Zerror") = false;
-      DEBUG_memory_X_count++;
     } else if (x_ceil <= rand && rand < z_ceil && (x_ceil != z_ceil)) {
       // Z error
       par("GOD_Xerror") = false;
       par("GOD_Zerror") = true;
-      DEBUG_memory_Z_count++;
     } else if (z_ceil <= rand && rand < y_ceil && (z_ceil != y_ceil)) {
       // Y error
       par("GOD_Xerror") = true;
       par("GOD_Zerror") = true;
-      DEBUG_memory_Y_count++;
     } else if (y_ceil <= rand && rand < excited_ceil && (y_ceil != excited_ceil)) {
       // Excitation error
       // Also sets the partner completely mixed if it used to be entangled.

@@ -126,11 +126,7 @@ class StationaryQubit : public IStationaryQubit {
   int locked_rule_id;
 
  private:
-  double fidelity;
   bool allocated;
-  int DEBUG_memory_X_count;
-  int DEBUG_memory_Y_count;
-  int DEBUG_memory_Z_count;
 
  protected:
   void initialize() override;
