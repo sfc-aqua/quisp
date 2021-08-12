@@ -126,11 +126,7 @@ class StationaryQubit : public IStationaryQubit {
   int locked_rule_id;
 
  private:
-  double fidelity;
   bool allocated;
-  int DEBUG_memory_X_count;
-  int DEBUG_memory_Y_count;
-  int DEBUG_memory_Z_count;
 
  protected:
   void initialize() override;
@@ -146,10 +142,10 @@ class StationaryQubit : public IStationaryQubit {
   void setSingleQubitGateErrorModel(SingleGateErrorModel &model, std::string gate_name);
   void setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model, std::string gate_name);
   /*Applies memory error to the given qubit*/
-  virtual void apply_memory_error(StationaryQubit *qubit);
+  void applyMemoryError();
 
-  void apply_single_qubit_gate_error(SingleGateErrorModel const &err);
-  void apply_two_qubit_gate_error(TwoQubitGateErrorModel const &err, StationaryQubit *another_qubit);
+  void applySingleQubitGateError(SingleGateErrorModel const &err);
+  void applyTwoQubitGateError(TwoQubitGateErrorModel const &err, StationaryQubit *another_qubit);
 };
 
 }  // namespace modules
