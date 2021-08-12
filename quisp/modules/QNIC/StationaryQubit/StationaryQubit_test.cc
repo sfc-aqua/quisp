@@ -6,10 +6,12 @@
 
 using namespace quisp::modules;
 using namespace quisp_test;
+using namespace Eigen;
 namespace {
 
 class StatQubitTarget : public StationaryQubit {
  public:
+  using StationaryQubit::getErrorMatrix;
   using StationaryQubit::initialize;
   using StationaryQubit::par;
   StatQubitTarget() : StationaryQubit() { setComponentType(new TestModuleType("test qubit")); }
@@ -171,5 +173,39 @@ TEST(StatQubitTest, addZError) {
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   qubit->addZerror();
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
+}
+
+TEST(StatQubitTest, getErrorMatrixTest) {
+  auto *sim = prepareSimulation();
+  auto *qubit = new StatQubitTarget{};
+  qubit->fillParams();
+  sim->registerComponent(qubit);
+  qubit->callInitialize();
+  Matrix2cd err;
+
+  err = qubit->getErrorMatrix(qubit);
+  EXPECT_EQ(Matrix2cd::Identity(), err);
+
+  Matrix2cd Z(2, 2);
+  Z << 1, 0, 0, -1;
+  qubit->addZerror();
+  err = qubit->getErrorMatrix(qubit);
+  EXPECT_EQ(Z, err);
+  qubit->setFree(true);
+
+  Matrix2cd X(2, 2);
+  X << 0, 1, 1, 0;
+  qubit->addXerror();
+  err = qubit->getErrorMatrix(qubit);
+  EXPECT_EQ(X, err);
+  qubit->setFree(true);
+
+  Matrix2cd Y(2, 2);
+  Y << 0, Complex(0, -1), Complex(0, 1), 0;
+  qubit->addXerror();
+  qubit->addZerror();
+  err = qubit->getErrorMatrix(qubit);
+  EXPECT_EQ(Y, err);
+  qubit->setFree(true);
 }
 }  // namespace
