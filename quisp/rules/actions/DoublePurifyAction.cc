@@ -22,8 +22,8 @@ DoublePurifyAction::DoublePurifyAction(unsigned long RuleSet_id, int rule_index,
 
 // Double error purification
 cPacket *DoublePurifyAction::run(cModule *re) {
-  StationaryQubit *qubit = nullptr;
-  StationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
+  IStationaryQubit *qubit = nullptr;
+  IStationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
 
   qubit = getResourceFromTopWithPartner(resource, partner);
   trash_qubit_X = getResourceFromTopWithPartner(trash_resource_X, partner);
@@ -88,8 +88,8 @@ cPacket *DoublePurifyAction::run(cModule *re) {
 
 // Inveerted double error purification.
 cPacket *DoublePurifyActionInv::run(cModule *re) {
-  StationaryQubit *qubit = nullptr;
-  StationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
+  IStationaryQubit *qubit = nullptr;
+  IStationaryQubit *trash_qubit_Z, *trash_qubit_X = nullptr;
 
   qubit = getResource_fromTop(resource);
   trash_qubit_X = getResource_fromTop(trash_resource_X);

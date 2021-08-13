@@ -13,8 +13,8 @@ class FidelityClause : public Clause {
  public:
   FidelityClause(int partner, int resource, double fidelity) : Clause(partner, resource) { threshold = fidelity; };
   FidelityClause(int part, QNIC_type qt, int qi, int res, double fidelity) : Clause(part, qt, qi, res) { threshold = fidelity; };
-  [[noreturn]] bool check(std::multimap<int, StationaryQubit*>) override;
-  bool checkTerminate(std::multimap<int, StationaryQubit*>) const override;
+  [[noreturn]] bool check(std::multimap<int, IStationaryQubit*>) override;
+  bool checkTerminate(std::multimap<int, IStationaryQubit*>) const override;
 };
 }  // namespace clauses
 }  // namespace rules

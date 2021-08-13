@@ -19,7 +19,7 @@ RandomMeasureAction::RandomMeasureAction(int owner_address, int part, QNIC_type 
 };
 
 cPacket *RandomMeasureAction::run(cModule *re) {
-  StationaryQubit *qubit = nullptr;
+  IStationaryQubit *qubit = nullptr;
 
   qubit = getResourceFromTopWithPartner(resource, partner);
 

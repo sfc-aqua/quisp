@@ -83,7 +83,7 @@ class HardwareMonitor : public IHardwareMonitor {
   virtual InterfaceInfo getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);
   virtual QNIC search_QNIC_from_Neighbor_QNode_address(int neighbor_address);
-  virtual Matrix4cd reconstruct_density_matrix(int qnic_id, int partner);
+  virtual Eigen::Matrix4cd reconstruct_density_matrix(int qnic_id, int partner);
   virtual unsigned long createUniqueId();
   virtual void writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec);
 

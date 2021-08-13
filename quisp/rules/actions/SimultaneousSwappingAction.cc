@@ -48,8 +48,8 @@ SimultaneousSwappingAction::SimultaneousSwappingAction(unsigned long RuleSet_id,
 cPacket *SimultaneousSwappingAction::run(cModule *re) {
   float success_probability = 1.0;
 
-  StationaryQubit *left_qubit = nullptr;
-  StationaryQubit *right_qubit = nullptr;
+  IStationaryQubit *left_qubit = nullptr;
+  IStationaryQubit *right_qubit = nullptr;
 
   left_qubit = getResourceFromTopWithPartner(left_resource, left_partner);
   right_qubit = getResourceFromTopWithPartner(right_resource, right_partner);
@@ -65,8 +65,8 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
     return pk;
   }
 
-  StationaryQubit *right_partner_qubit = right_qubit->entangled_partner;
-  StationaryQubit *left_partner_qubit = left_qubit->entangled_partner;
+  auto *right_partner_qubit = right_qubit->entangled_partner;
+  auto *left_partner_qubit = left_qubit->entangled_partner;
 
   right_qubit->CNOT_gate(left_qubit);
   left_qubit->Hadamard_gate();

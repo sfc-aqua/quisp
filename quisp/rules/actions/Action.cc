@@ -16,9 +16,9 @@ namespace actions {
 int Action::checkNumResource() { return (*rule_resources).size(); }
 
 // required_index: 0 is the top one, 1 is the 2nd top one, and so on.
-StationaryQubit *Action::getResource_fromTop(int required_index) {
+IStationaryQubit *Action::getResource_fromTop(int required_index) {
   int resource_index = 0;
-  StationaryQubit *pt = nullptr;
+  IStationaryQubit *pt = nullptr;
 
   for (auto it = (*rule_resources).begin(); it != (*rule_resources).end(); ++it) {
     if (it->second->isLocked()) {
@@ -53,7 +53,7 @@ StationaryQubit *Action::getResourceFromTopWithPartner(int required_index, int p
   return pt;
 }
 
-void Action::removeResource_fromRule(StationaryQubit *qubit) {
+void Action::removeResource_fromRule(IStationaryQubit *qubit) {
   for (auto it = (*rule_resources).begin(), next_it = (*rule_resources).begin(); it != (*rule_resources).end(); it = next_it) {
     next_it = it;
     ++next_it;

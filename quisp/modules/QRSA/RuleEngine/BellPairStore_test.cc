@@ -34,7 +34,10 @@ TEST(BellPairStoreTest, insert) {
   auto key = std::make_pair(QNIC_E, 3);
   // check the PartnerAddrQubitMap is created for the key
   ASSERT_EQ(store._resources.size(), 1);
-  ASSERT_NE(store._resources.find(key), store._resources.end());
+  for (auto &i : store._resources) {
+    std::cout << key.first << "," << key.second << ": " << i.first.first << ", " << i.first.second << std::endl;
+  }
+  ASSERT_NE(store._resources.find(key), store._resources.end()) << "bell pair not found";
   auto it = store._resources[key].find(7);
   ASSERT_FALSE(it == store._resources[key].end());
   EXPECT_EQ(it->second, dynamic_cast<StationaryQubit *>(qubit1));

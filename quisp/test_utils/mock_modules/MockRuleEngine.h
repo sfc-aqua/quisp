@@ -4,6 +4,7 @@
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
 using quisp::modules::IRuleEngine;
+using quisp::modules::IStationaryQubit;
 
 namespace quisp_test {
 namespace mock_modules {

@@ -53,10 +53,10 @@ class Rule {
   };
 
   int num_partners() { return action_partners.size(); };
-  void addResource(int address_entangled_with, StationaryQubit *qubit);
+  void addResource(int address_entangled_with, IStationaryQubit *qubit);
   void setCondition(Condition *c);
   void setAction(Action *a);
-  void eraseResource(StationaryQubit *qubit){
+  void eraseResource(IStationaryQubit *qubit){
       /*bool erased = false;
       for (auto it =  rc.cbegin(), next_it =  rc.cbegin(); it !=  rc.cend(); it = next_it){
           next_it = it; ++next_it;

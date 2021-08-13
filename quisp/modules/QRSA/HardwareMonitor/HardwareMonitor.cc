@@ -19,10 +19,13 @@
 #include "omnetpp/cexception.h"
 #include "utils/ComponentProvider.h"
 
+using namespace quisp::messages;
+using namespace quisp::rules;
+using Eigen::Matrix4cd;
+using Eigen::Vector4cd;
+
 namespace quisp {
 namespace modules {
-
-using namespace rules;
 
 HardwareMonitor::HardwareMonitor() : provider(utils::ComponentProvider{this}) {}
 HardwareMonitor::~HardwareMonitor() {}

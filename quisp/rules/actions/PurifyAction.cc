@@ -40,8 +40,8 @@ PurifyAction::PurifyAction(unsigned long RuleSet_id, unsigned long rule_index, b
 
 // Either Z or X purification.
 cPacket *PurifyAction::run(cModule *re) {
-  StationaryQubit *qubit = nullptr;
-  StationaryQubit *trash_qubit = nullptr;
+  IStationaryQubit *qubit = nullptr;
+  IStationaryQubit *trash_qubit = nullptr;
 
   qubit = getResourceFromTopWithPartner(resource, partner);
   trash_qubit = getResourceFromTopWithPartner(trash_resource, partner);

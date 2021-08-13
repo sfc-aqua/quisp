@@ -16,13 +16,13 @@ namespace quisp {
 namespace rules {
 namespace actions {
 
+using quisp::modules::IStationaryQubit;
 using quisp::modules::QNIC_type;
-using quisp::modules::StationaryQubit;
 
 class Action {
  public:
   virtual ~Action(){};
-  std::multimap<int, StationaryQubit*>* rule_resources;
+  std::multimap<int, IStationaryQubit*>* rule_resources;
   unsigned long ruleset_id;
   int rule_id;  // Used to make the lock_id unique, together with purification_count.
   // int resource_index = 0;// for check the index of resource.
@@ -31,7 +31,7 @@ class Action {
   virtual StationaryQubit* getResource_fromTop(int required_index);
   virtual StationaryQubit* getResourceFromTopWithPartner(int required_index, int partner);
   virtual int checkNumResource();
-  virtual void removeResource_fromRule(StationaryQubit* qubit);
+  virtual void removeResource_fromRule(IStationaryQubit* qubit);
   // virtual StationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id);
 };
 }  // namespace actions
