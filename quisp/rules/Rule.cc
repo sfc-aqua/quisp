@@ -7,6 +7,7 @@
  */
 
 #include "Rule.h"
+#include <iterator>
 #include "classical_messages_m.h"
 
 //#include <modules/RuleEngine.h>
@@ -53,6 +54,16 @@ bool Rule::checkTerminate() {
     // std::cout<<"Termination conditions not yet fulfilled.\n ";
   }
   return done;
+}
+
+bool Rule::checkActionPartner(int action_partner){
+  auto iter = std::find(action_partners.begin(), action_partners.end(), action_partner);
+  bool found = iter != action_partners.end();
+  if (found){
+    return true;
+  }else{
+    return false;
+  }
 }
 
 /*

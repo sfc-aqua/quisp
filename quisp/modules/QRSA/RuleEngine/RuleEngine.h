@@ -111,8 +111,8 @@ class RuleEngine : public IRuleEngine {
   void storeCheck_DoublePurification_Agreement(Doublepurification_result pr);
   void storeCheck_TriplePurification_Agreement(Triplepurification_result pr);
   void storeCheck_QuatroPurification_Agreement(Quatropurification_result pr);
-  void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int index);
-  void Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int index);
+  void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, unsigned long rule_id, int index);
+  void Unlock_resource_and_discard(unsigned long ruleset_id, unsigned long rule_id, int index);
 
   void updateResources_EntanglementSwapping(swapping_result swapr);
 

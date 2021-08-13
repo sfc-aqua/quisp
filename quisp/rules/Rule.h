@@ -23,8 +23,8 @@ namespace rules {
 
 class Rule {
  public:
-  int ruleset_id;
-  int rule_index;
+  unsigned long ruleset_id;
+  unsigned long rule_index;
   std::string name;
   std::unique_ptr<Condition> condition;
   std::unique_ptr<Action> action;
@@ -33,19 +33,19 @@ class Rule {
   int mutable number_of_resources_allocated_in_total = 0;
   // std::unique_ptr<Rule> next_rule;
   Rule(){};
-  Rule(int rs_index, int r_index) {
+  Rule(unsigned long rs_index, unsigned long r_index) {
     ruleset_id = rs_index;
     rule_index = r_index;
   };
 
-  Rule(int rs_index, int r_index, std::string r_name) {
+  Rule(unsigned long rs_index, unsigned long r_index, std::string r_name) {
     ruleset_id = rs_index;
     rule_index = r_index;
     name = r_name;
   };
 
   // May need combine with above two constructors
-  Rule(int rs_index, int r_index, std::string r_name, std::vector<int> _action_partners) {
+  Rule(unsigned long rs_index, unsigned long r_index, std::string r_name, std::vector<int> _action_partners) {
     ruleset_id = rs_index;
     rule_index = r_index;
     name = r_name;
@@ -74,6 +74,7 @@ class Rule {
   // cPacket* checkrun(cModule *re, qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
   cPacket *checkrun(cModule *re);
   bool checkTerminate();
+  bool checkActionPartner(int action_partner);
   // bool checkTerminate(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
 };
 

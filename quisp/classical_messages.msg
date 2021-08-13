@@ -37,8 +37,6 @@ packet ConnectionSetupRequest extends header
 
     int num_measure;
 
-    int number_of_required_Bellpairs;
-
     int stack_of_QNodeIndexes[];
     int stack_of_linkCosts[];
 
@@ -91,9 +89,8 @@ packet PurificationResult extends header
 {
 	bool Output_is_plus;
 	unsigned long ruleset_id;
-	int rule_id;
+	unsigned long rule_id;
 	int action_index;
-    int purification_partner;  // not the same as the destination sometimes
 	GOD_statQubitPtr entangled_with;//For Debugging purposes.
 }
 

@@ -29,7 +29,7 @@ class SwappingAction : public Action {
 
  public:
   // constructor of entanglement swapping
-  SwappingAction(unsigned long RuleSet_id, int rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr, int slqi,
+  SwappingAction(unsigned long RuleSet_id, unsigned long rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr, int slqi,
                  QNIC_type slqt, int srqi, QNIC_type srqt);
   // cPacket* run(qnicResources *resources) override;
   // cPacket* run(cModule *re, qnicResources *resources) override;

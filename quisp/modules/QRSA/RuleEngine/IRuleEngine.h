@@ -20,9 +20,8 @@ namespace modules {
 using namespace rules;
 
 typedef struct {
-  int partner_address;
   unsigned long ruleset_id;
-  int rule_id;
+  unsigned long rule_id;
   int index;
 } process_id;
 

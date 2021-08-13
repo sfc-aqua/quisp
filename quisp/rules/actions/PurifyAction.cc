@@ -8,7 +8,7 @@ namespace actions {
 
 PurifyAction::PurifyAction() {}
 
-PurifyAction::PurifyAction(int part, QNIC_type qt, int qi, int res, int tres, int rs_id, int r_id) {
+PurifyAction::PurifyAction(int part, QNIC_type qt, int qi, int res, int tres, unsigned long rs_id, unsigned long r_id) {
   partner = part;
   qnic_type = qt;
   qnic_id = qi;
@@ -21,7 +21,7 @@ PurifyAction::PurifyAction(int part, QNIC_type qt, int qi, int res, int tres, in
   action_indices.insert(std::make_pair(part, 0));
 }
 
-PurifyAction::PurifyAction(unsigned long RuleSet_id, int rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res,
+PurifyAction::PurifyAction(unsigned long RuleSet_id, unsigned long rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res,
                            int tres) {
   partner = part;
   qnic_type = qt;
@@ -40,7 +40,6 @@ PurifyAction::PurifyAction(unsigned long RuleSet_id, int rule_index, bool X_puri
 
 // Either Z or X purification.
 cPacket *PurifyAction::run(cModule *re) {
-  EV << "purification start\n";
   StationaryQubit *qubit = nullptr;
   StationaryQubit *trash_qubit = nullptr;
 
@@ -64,7 +63,6 @@ cPacket *PurifyAction::run(cModule *re) {
     meas = trash_qubit->Zpurify(qubit);  // Error propagation only. Not based on density matrix
 
   qubit->Lock(ruleset_id, rule_id, action_indices.at(partner));
-  EV << "qubit: " << qubit << " trash qubit: " << trash_qubit << "\n";
 
   // Trash qubit has been measured. Now, break the entanglement info of the partner.
   // There is no need to overwrite its density matrix since we are only tracking errors.
@@ -84,7 +82,6 @@ cPacket *PurifyAction::run(cModule *re) {
   pk->setDestAddr(partner);
   // This result is sent to partner address and my address.
   // To keep the information who is the purifcation partner, this variable is used.
-  pk->setPurification_partner(partner);
   pk->setKind(7);
   pk->setAction_index(action_indices.at(partner));
   pk->setRule_id(rule_id);

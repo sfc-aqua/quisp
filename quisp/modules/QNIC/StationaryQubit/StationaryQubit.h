@@ -235,7 +235,7 @@ class StationaryQubit : public cSimpleModule {
 
   virtual bool checkBusy();
   virtual void setFree(bool consumed);
-  virtual void Lock(unsigned long rs_id, int rule_id, int action_id); /*In use. E.g. waiting for purification result.*/
+  virtual void Lock(unsigned long rs_id, unsigned long rule_id, int action_id); /*In use. E.g. waiting for purification result.*/
   virtual void Unlock();
   virtual bool isLocked();
   virtual void Allocate();
