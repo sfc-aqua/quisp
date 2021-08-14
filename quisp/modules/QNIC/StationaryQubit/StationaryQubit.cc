@@ -714,38 +714,20 @@ Matrix2cd StationaryQubit::getErrorMatrix(StationaryQubit *qubit) {
 }
 
 // returns the density matrix of the Bell pair with error. This assumes that this is entangled with another stationary qubit.
-// Measurement output will be based on this matrix, as long as it is still entnagled.
+// Measurement output will be based on this matrix, as long as it is still entangled.
 quantum_state StationaryQubit::getQuantumState() {
-  if (this->excited_or_relaxed || this->entangled_partner->excited_or_relaxed) {
-    error("Wrong");
-  }
-  // std::cout<<"!!!!CHECK: "<<this->entangled_partner<<" in node["<<this->entangled_partner->node_address<<"]!!!\n";
-  // std::cout<<"par cm = "<<this->entangled_partner->par("GOD_CMerror").boolValue()<<", completely_mixed = "<<this->entangled_partner->completely_mixed<<"\n";
-  // std::cout<<"par re= "<<this->entangled_partner->par("GOD_REerror").boolValue()<<", par cm = "<<this->entangled_partner->par("GOD_EXerror").boolValue()<<", re/ex =
-  // "<<this->entangled_partner->excited_or_relaxed<<"\n"; std::cout<<"!!!!!!!!!!!!!!!!!!\n";
+  if (this->excited_or_relaxed) error("this qubit is excited or relaxed");
+  if (this->entangled_partner == nullptr) error("no entangled partner");
+  if (this->entangled_partner->excited_or_relaxed) error("partner qubit is excited or relaxed");
 
-  Matrix4cd combined_errors = kroneckerProduct(getErrorMatrix(this), getErrorMatrix(check_and_cast<StationaryQubit *>(entangled_partner))).eval();
-
-  // If Pauli errors
-  Vector4cd ideal_Bell_state(1 / sqrt(2), 0, 0, 1 / sqrt(2));  // Assumes that the state is a 2 qubit state |00> + |11>
-
-  // std::cout<<"CMerror: "<<this<<" in node["<<node_address<<"]\n";
-  // std::cout<<"~~~CHECK: "<<this<<" in node["<<node_address<<"]~~~\n";
-  // std::cout<<"par cm = "<<this->par("GOD_CMerror").boolValue()<<", completely_mixed = "<<this->completely_mixed<<"\n";
-  // std::cout<<"par re= "<<this->par("GOD_REerror").boolValue()<<", par cm = "<<this->par("GOD_EXerror").boolValue()<<", re/ex = "<<this->excited_or_relaxed<<"\n";
-  // std::cout<<"~~~~~~~~~~~~~~~~~~~~~~~~\n";
-
-  // Matrix4cd combined_errors = kroneckerProduct(getErrorMatrix(this),getErrorMatrix(entangled_partner)).eval();
-
-  // EV<<"Combined errors  = "<<combined_errors<<"\n";
-  Vector4cd actual_Bell_state = combined_errors * ideal_Bell_state;
-  // EV<<"Current physical state is = "<<actual_Bell_state;
-  Matrix4cd density_matrix = actual_Bell_state * actual_Bell_state.adjoint();
-  // EV<<"dm = "<<density_matrix<<"\n";
+  Matrix4cd error_mat = kroneckerProduct(getErrorMatrix(this), getErrorMatrix(check_and_cast<StationaryQubit *>(entangled_partner))).eval();
+  // Assumes that the state is a 2 qubit state |00> + |11>
+  Vector4cd ideal_bell_state(1 / sqrt(2), 0, 0, 1 / sqrt(2));
+  Vector4cd actual_bell_state = error_mat * ideal_bell_state;
 
   quantum_state q;
-  q.state_in_density_matrix = density_matrix;
-  q.state_in_ket = actual_Bell_state;
+  q.state_in_density_matrix = actual_bell_state * actual_bell_state.adjoint();
+  q.state_in_ket = actual_bell_state;
   return q;
 }
 
