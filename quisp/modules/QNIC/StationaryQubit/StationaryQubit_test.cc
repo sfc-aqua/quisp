@@ -12,6 +12,7 @@ namespace {
 class StatQubitTarget : public StationaryQubit {
  public:
   using StationaryQubit::getErrorMatrix;
+  using StationaryQubit::getQuantumState;
   using StationaryQubit::initialize;
   using StationaryQubit::par;
   StatQubitTarget() : StationaryQubit() { setComponentType(new TestModuleType("test qubit")); }
@@ -207,5 +208,52 @@ TEST(StatQubitTest, getErrorMatrixTest) {
   err = qubit->getErrorMatrix(qubit);
   EXPECT_EQ(Y, err);
   qubit->setFree(true);
+}
+
+TEST(StatQubitTest, getQuantumState) {
+  auto *sim = prepareSimulation();
+  auto *qubit = new StatQubitTarget{};
+  auto *partner_qubit = new StatQubitTarget{};
+  sim->registerComponent(qubit);
+  sim->registerComponent(partner_qubit);
+  qubit->fillParams();
+  qubit->callInitialize();
+  partner_qubit->fillParams();
+  partner_qubit->callInitialize();
+  qubit->setEntangledPartnerInfo(partner_qubit);
+
+  quantum_state state;
+
+  state = qubit->getQuantumState();
+  Vector4cd state_vector(4);
+  state_vector << 1 / sqrt(2), 0, 0, 1 / sqrt(2);
+  Matrix4cd dm(4, 4);
+  dm = state_vector * state_vector.adjoint();
+  EXPECT_EQ(dm, state.state_in_density_matrix);
+  EXPECT_EQ(state_vector, state.state_in_ket);
+
+  qubit->addXerror();
+  state = qubit->getQuantumState();
+  state_vector << 0, 1 / sqrt(2), 1 / sqrt(2), 0;
+  dm = state_vector * state_vector.adjoint();
+  EXPECT_EQ(dm, state.state_in_density_matrix);
+  EXPECT_EQ(state_vector, state.state_in_ket);
+  qubit->addXerror();
+
+  partner_qubit->addXerror();
+  state = qubit->getQuantumState();
+  state_vector << 0, 1 / sqrt(2), 1 / sqrt(2), 0;
+  dm = state_vector * state_vector.adjoint();
+  EXPECT_EQ(dm, state.state_in_density_matrix);
+  EXPECT_EQ(state_vector, state.state_in_ket);
+  partner_qubit->addXerror();
+
+  qubit->addZerror();
+  state = qubit->getQuantumState();
+  state_vector << 1 / sqrt(2), 0, 0, -1 / sqrt(2);
+  dm = state_vector * state_vector.adjoint();
+  EXPECT_EQ(dm, state.state_in_density_matrix);
+  EXPECT_EQ(state_vector, state.state_in_ket);
+  qubit->addZerror();
 }
 }  // namespace
