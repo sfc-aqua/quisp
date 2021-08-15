@@ -526,22 +526,11 @@ void StationaryQubit::setEntangledPartnerInfo(IStationaryQubit *partner) {
   par("GOD_entangled_qnic_type") = partner->par("qnic_type");
 }
 
-/*Add another X error. If an X error already exists, then they cancel out*/
-void StationaryQubit::addXerror() {
-  // error("Huh...?");
-  bool Xerr = this->par("GOD_Xerror");
-  // Switches true to false or false to true
-  this->par("GOD_Xerror") = !Xerr;
-  // this->par("GOD_Xerror") = true;
-}
+/* Add another X error. If an X error already exists, then they cancel out */
+void StationaryQubit::addXerror() { this->par("GOD_Xerror") = !this->par("GOD_Xerror"); }
 
-/*Add another Z error. If an Z error already exists, then they cancel out*/
-void StationaryQubit::addZerror() {
-  bool Zerr = this->par("GOD_Zerror");
-  // Switches true to false or false to true
-  this->par("GOD_Zerror") = !Zerr;
-  // this->par("GOD_Zerror") = true;
-}
+/* Add another Z error. If an Z error already exists, then they cancel out */
+void StationaryQubit::addZerror() { this->par("GOD_Zerror") = !this->par("GOD_Zerror"); }
 
 // Only tracks error propagation. If two booleans (Alice and Bob) agree (truetrue or falsefalse), keep the purified ebit.
 bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
@@ -711,71 +700,34 @@ void StationaryQubit::applyMemoryError() {
 }
 
 Matrix2cd StationaryQubit::getErrorMatrix(StationaryQubit *qubit) {
-  Matrix2cd err;
-
   if (qubit->par("GOD_CMerror") || qubit->par("GOD_REerror") || qubit->par("GOD_REerror")) {
-    // std::cout<<"CMerror: "<<qubit<<" in node["<<node_address<<"]\n";
-    // std::cout<<"***CHECK: "<<qubit<<" in node["<<node_address<<"]***\n";
-    // std::cout<<"par cm = "<<qubit->par("GOD_CMerror").boolValue()<<", completely_mixed = "<<qubit->completely_mixed<<"\n";
-    /// std::cout<<"par re= "<<qubit->par("GOD_REerror").boolValue()<<", par cm = "<<qubit->par("GOD_EXerror").boolValue()<<", re/ex = "<<qubit->excited_or_relaxed<<"\n";
-    // std::cout<<"******************************\n";
-
     error("CMerror in getErrorMatrix. Not supposed to happen.");
   }
 
-  if (qubit->par("GOD_Zerror") && qubit->par("GOD_Xerror")) {  // Y error on this qubit
-    err = Pauli.Y;
-    EV << "Y error"
-       << "\n";
-  } else if (qubit->par("GOD_Zerror") && !qubit->par("GOD_Xerror")) {  // Z error
-    err = Pauli.Z;
-    EV << "Z error"
-       << "\n";
-  } else if (!qubit->par("GOD_Zerror") && qubit->par("GOD_Xerror")) {  // X error
-    err = Pauli.X;
-    EV << "X error"
-       << "\n";
-  } else {
-    err = Pauli.I;
-    EV << "I error"
-       << "\n";
-  }
-  return err;
+  auto has_z_err = qubit->par("GOD_Zerror").boolValue();
+  auto has_x_err = qubit->par("GOD_Xerror").boolValue();
+
+  if (has_z_err && has_x_err) return Pauli.Y;
+  if (has_z_err) return Pauli.Z;
+  if (has_x_err) return Pauli.X;
+  return Pauli.I;
 }
 
 // returns the density matrix of the Bell pair with error. This assumes that this is entangled with another stationary qubit.
-// Measurement output will be based on this matrix, as long as it is still entnagled.
+// Measurement output will be based on this matrix, as long as it is still entangled.
 quantum_state StationaryQubit::getQuantumState() {
-  if (this->excited_or_relaxed || this->entangled_partner->excited_or_relaxed) {
-    error("Wrong");
-  }
-  // std::cout<<"!!!!CHECK: "<<this->entangled_partner<<" in node["<<this->entangled_partner->node_address<<"]!!!\n";
-  // std::cout<<"par cm = "<<this->entangled_partner->par("GOD_CMerror").boolValue()<<", completely_mixed = "<<this->entangled_partner->completely_mixed<<"\n";
-  // std::cout<<"par re= "<<this->entangled_partner->par("GOD_REerror").boolValue()<<", par cm = "<<this->entangled_partner->par("GOD_EXerror").boolValue()<<", re/ex =
-  // "<<this->entangled_partner->excited_or_relaxed<<"\n"; std::cout<<"!!!!!!!!!!!!!!!!!!\n";
+  if (this->excited_or_relaxed) error("this qubit is excited or relaxed");
+  if (this->entangled_partner == nullptr) error("no entangled partner");
+  if (this->entangled_partner->excited_or_relaxed) error("partner qubit is excited or relaxed");
 
-  Matrix4cd combined_errors = kroneckerProduct(getErrorMatrix(this), getErrorMatrix(check_and_cast<StationaryQubit *>(entangled_partner))).eval();
-
-  // If Pauli errors
-  Vector4cd ideal_Bell_state(1 / sqrt(2), 0, 0, 1 / sqrt(2));  // Assumes that the state is a 2 qubit state |00> + |11>
-
-  // std::cout<<"CMerror: "<<this<<" in node["<<node_address<<"]\n";
-  // std::cout<<"~~~CHECK: "<<this<<" in node["<<node_address<<"]~~~\n";
-  // std::cout<<"par cm = "<<this->par("GOD_CMerror").boolValue()<<", completely_mixed = "<<this->completely_mixed<<"\n";
-  // std::cout<<"par re= "<<this->par("GOD_REerror").boolValue()<<", par cm = "<<this->par("GOD_EXerror").boolValue()<<", re/ex = "<<this->excited_or_relaxed<<"\n";
-  // std::cout<<"~~~~~~~~~~~~~~~~~~~~~~~~\n";
-
-  // Matrix4cd combined_errors = kroneckerProduct(getErrorMatrix(this),getErrorMatrix(entangled_partner)).eval();
-
-  // EV<<"Combined errors  = "<<combined_errors<<"\n";
-  Vector4cd actual_Bell_state = combined_errors * ideal_Bell_state;
-  // EV<<"Current physical state is = "<<actual_Bell_state;
-  Matrix4cd density_matrix = actual_Bell_state * actual_Bell_state.adjoint();
-  // EV<<"dm = "<<density_matrix<<"\n";
+  Matrix4cd error_mat = kroneckerProduct(getErrorMatrix(this), getErrorMatrix(check_and_cast<StationaryQubit *>(entangled_partner))).eval();
+  // Assumes that the state is a 2 qubit state |00> + |11>
+  Vector4cd ideal_bell_state(1 / sqrt(2), 0, 0, 1 / sqrt(2));
+  Vector4cd actual_bell_state = error_mat * ideal_bell_state;
 
   quantum_state q;
-  q.state_in_density_matrix = density_matrix;
-  q.state_in_ket = actual_Bell_state;
+  q.state_in_density_matrix = actual_bell_state * actual_bell_state.adjoint();
+  q.state_in_ket = actual_bell_state;
   return q;
 }
 
