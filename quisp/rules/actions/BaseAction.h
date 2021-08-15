@@ -28,8 +28,8 @@ class Action {
   // int resource_index = 0;// for check the index of resource.
   // virtual cPacket* run(cModule *re, qnicResources *resources) = 0;
   virtual cPacket* run(cModule* re) = 0;
-  virtual StationaryQubit* getResource_fromTop(int required_index);
-  virtual StationaryQubit* getResourceFromTopWithPartner(int required_index, int partner);
+  virtual IStationaryQubit* getResource_fromTop(int required_index);
+  virtual IStationaryQubit* getResourceFromTopWithPartner(int required_index, int partner);
   virtual int checkNumResource();
   virtual void removeResource_fromRule(IStationaryQubit* qubit);
   // virtual StationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id);

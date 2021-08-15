@@ -8,8 +8,8 @@ namespace quisp {
 namespace rules {
 namespace actions {
 
-SwappingAction::SwappingAction(unsigned long RuleSet_id, unsigned long rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr,
-                               int slqi, QNIC_type slqt, int srqi, QNIC_type srqt) {
+SwappingAction::SwappingAction(unsigned long RuleSet_id, unsigned long rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad,
+                               int rr, int slqi, QNIC_type slqt, int srqi, QNIC_type srqt) {
   ruleset_id = RuleSet_id;
   rule_id = rule_index;
 
@@ -32,8 +32,6 @@ SwappingAction::SwappingAction(unsigned long RuleSet_id, unsigned long rule_inde
 
 // TODO: completely mixed
 cPacket *SwappingAction::run(cModule *re) {
-  float success_probability = 1.0;
-
   IStationaryQubit *left_qubit = nullptr;
   IStationaryQubit *right_qubit = nullptr;
 
@@ -90,15 +88,8 @@ cPacket *SwappingAction::run(cModule *re) {
     operation_type_right = 1;
   }
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
-  if ((std::rand() / RAND_MAX) < success_probability) {
-    right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
-    left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
-  } else {  // this might be wrong
-    removeResource_fromRule(left_partner_qubit);
-    removeResource_fromRule(right_partner_qubit);
-    // TODO CHECK is this correct?
-    // This node can't manipulate partner's qubit
-  }
+  right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
+  left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
   removeResource_fromRule(left_qubit);
   removeResource_fromRule(right_qubit);
   // free consumed

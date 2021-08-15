@@ -64,8 +64,9 @@ class SwappingAction : public OriginalSwappingAction {
                                             self_right_qnic_type);
   }
 
-  MOCK_METHOD(StationaryQubit *, getResourceFromTopWithPartner, (int required_index, int partner), (override));
-  MOCK_METHOD(void, removeResource_fromRule, (StationaryQubit *), (override));
+  // MOCK_METHOD(IStationaryQubit *, getResource_fromTop, (int required_index), (override));
+  MOCK_METHOD(IStationaryQubit *, getResourceFromTopWithPartner, (int required_index, int partner), (override));
+  MOCK_METHOD(void, removeResource_fromRule, (IStationaryQubit *), (override));
 };
 
 TEST(SwappingActionTest, init) {

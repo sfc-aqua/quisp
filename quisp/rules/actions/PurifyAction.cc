@@ -18,11 +18,10 @@ PurifyAction::PurifyAction(int part, QNIC_type qt, int qi, int res, int tres, un
   rule_id = r_id;
   ruleset_id = rs_id;
   // action_index++;
-  action_indices.insert(std::make_pair(part, 0));
 }
 
-PurifyAction::PurifyAction(unsigned long RuleSet_id, unsigned long rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res,
-                           int tres) {
+PurifyAction::PurifyAction(unsigned long RuleSet_id, unsigned long rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi,
+                           int res, int tres) {
   partner = part;
   qnic_type = qt;
   qnic_id = qi;
@@ -35,7 +34,6 @@ PurifyAction::PurifyAction(unsigned long RuleSet_id, unsigned long rule_index, b
   X = X_purification;
   Z = Z_purification;
   // action_index++;
-  action_indices.insert(std::make_pair(part, 0));
 }
 
 // Either Z or X purification.
@@ -62,7 +60,7 @@ cPacket *PurifyAction::run(cModule *re) {
   else if (!X && Z)
     meas = trash_qubit->Zpurify(qubit);  // Error propagation only. Not based on density matrix
 
-  qubit->Lock(ruleset_id, rule_id, action_indices.at(partner));
+  qubit->Lock(ruleset_id, rule_id, action_index);
 
   // Trash qubit has been measured. Now, break the entanglement info of the partner.
   // There is no need to overwrite its density matrix since we are only tracking errors.
@@ -83,12 +81,12 @@ cPacket *PurifyAction::run(cModule *re) {
   // This result is sent to partner address and my address.
   // To keep the information who is the purifcation partner, this variable is used.
   pk->setKind(7);
-  pk->setAction_index(action_indices.at(partner));
+  pk->setAction_index(action_index);
   pk->setRule_id(rule_id);
   pk->setRuleset_id(ruleset_id);
   pk->setOutput_is_plus(meas);
   pk->setEntangled_with(qubit);
-  action_indices.at(partner)++;
+  action_index++;
   return pk;
 }
 }  // namespace actions

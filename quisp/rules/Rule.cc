@@ -56,12 +56,12 @@ bool Rule::checkTerminate() {
   return done;
 }
 
-bool Rule::checkActionPartner(int action_partner){
+bool Rule::checkActionPartner(int action_partner) {
   auto iter = std::find(action_partners.begin(), action_partners.end(), action_partner);
   bool found = iter != action_partners.end();
-  if (found){
+  if (found) {
     return true;
-  }else{
+  } else {
     return false;
   }
 }

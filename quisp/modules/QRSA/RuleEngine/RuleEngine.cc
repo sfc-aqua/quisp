@@ -9,6 +9,7 @@
 
 #include "RuleEngine.h"
 #include <fstream>
+#include <utility>
 #include "utils/ComponentProvider.h"
 
 namespace quisp {
@@ -366,7 +367,6 @@ void RuleEngine::storeCheck_Purification_Agreement(purification_result pur_resul
     // check the purification results that belong to the same connection
     auto range = Purification_table.equal_range(pur_result.id.ruleset_id);
     for (auto it = range.first; it != range.second; it++) {
-      EV<<it->second.id.rule_id<<" : "<<pur_result.id.rule_id<<" : "<<it->second.id.index<<" : "<<pur_result.id.index<<"\n";
       if (it->second.id.rule_id == pur_result.id.rule_id && it->second.id.index == pur_result.id.index) {
         if (it->second.outcome == pur_result.outcome) {
           // the result is coordinate to the counter part
@@ -554,30 +554,28 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
   // There should be better way
   // 0. this resorce update only update just one entanglement
   int partner_address;
-  StationaryQubit *qubit;
+  IStationaryQubit *qubit;
   // 1. loop for ruleset and check where the target index
   for (auto it = rp.cbegin(); it != rp.cend(); ++it) {
-    RuleSet *process = it->second.Rs; // check ruleset
-    if (process->ruleset_id == ruleset_id){
-      
+    RuleSet *process = it->second.Rs;  // check ruleset
+    if (process->ruleset_id == ruleset_id) {
       // 2. pick up proper rule inside the ruleset
       for (auto rule = process->cbegin(); rule != process->cend(); ++rule) {
-        if ((*rule)->rule_index == rule_id) { // here we can identify the rule of purification
+        if ((*rule)->rule_index == rule_id) {  // here we can identify the rule of purification
 
           // 3. loop for resources currently assined
           for (auto qubit_map = (*rule)->resources.begin(); qubit_map != (*rule)->resources.end(); ++qubit_map) {
             partner_address = qubit_map->first;
             qubit = qubit_map->second;  // qubit instance
-            
+
             // 4. check which trial of purification
-            if(qubit->action_index == index){
+            if (qubit->action_index == index) {
               // 5. unlock qubit for later use
               qubit->Unlock();
-
-              // 6. if the "next" rule requires this resource, then prmote it to the next.
-              // otherwise, just back to the bell pair store
+              // remove qubit from resource list in the rule
               (*rule)->resources.erase(qubit_map);
-              bell_pair_store.insertEntangledQubit(partner_address, qubit);
+              qubit->Deallocate();
+              // bell_pair_store.insertEntangledQubit(partner_address, qubit);
               return;
             }
           }
@@ -586,6 +584,49 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
     }
   }
   error("Resource is not successfully updated");
+}
+
+void RuleEngine::updateAppliedRule(IStationaryQubit *qubit, unsigned long rule_id) {
+  // find there is a key
+  auto iter = applied_rules.find(qubit);
+  if (iter != applied_rules.end()) {
+    // qubit key found;
+    iter->second.push_back(rule_id);
+  } else {
+    std::vector<unsigned long> rule_vector = {rule_id};
+    applied_rules.insert(std::make_pair(qubit, rule_vector));
+  }
+}
+
+bool RuleEngine::checkAppliedRule(IStationaryQubit *qubit, unsigned long rule_id) {
+  // check if the rule can be applied (target rule id is not in the applied rules)
+  bool applicable = false;
+  auto iter = applied_rules.find(qubit);
+  if (iter != applied_rules.end()) {
+    auto rules = applied_rules[qubit];
+    auto rule_iter = std::find(rules.begin(), rules.end(), rule_id);
+    if (rule_iter != rules.end()) {
+      // this rule is already applied
+      applicable = false;
+    } else {
+      // not applied yet. you can go ahead to apply the rule
+      applicable = true;
+    }
+  } else {
+    // completely fresh resource
+    applicable = true;
+  }
+  return applicable;
+}
+
+void RuleEngine::clearAppliedRule(IStationaryQubit *qubit) {
+  // erase the record when the qubit is initialized
+  auto iter = applied_rules.find(qubit);
+  if (iter != applied_rules.end()) {
+    applied_rules.erase(iter);
+  } else {
+    error("No rule record found at clearing");
+  }
 }
 
 void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, unsigned long rule_id, int index) {
@@ -605,9 +646,9 @@ void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, unsigned 
               QNIC_type qt = (QNIC_type)qubit->qnic_type;
               qubit->par("GOD_Xerror") = false;
               qubit->par("GOD_Zerror") = false;
-
+              // remove from current rule
+              (*rule)->resources.erase(qubit_map);
               freeConsumedResource(qubit->qnic_index, qubit, qt);  // Remove from entangled resource list.
-              bell_pair_store.eraseQubit(qubit);
               ok = true;
               return;
             }
@@ -932,13 +973,10 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     // std::cout << qubit << ", node[" << qubit->node_address << "] from qnic[" << qubit->qnic_index << "]\n";
     error("RuleEngine. Entanglement swapping went wrong");
   }
-  // first delete old record
-  // QNIC_type qnic_type, QNicIndex qnic_index, QNodeAddr addr
-  if (bell_pair_store.findQubit(qnic_type, qnic_index, qubit_index) != nullptr){
-    bell_pair_store.eraseQubit(qubit);
-  }else{
-    error("Target Qubit is not found");
-  }
+
+  // Remove the qubit from resources
+  bell_pair_store.eraseQubit(qubit);
+  qubit->Deallocate();
   // Make this qubit available for rules
   bell_pair_store.insertEntangledQubit(new_partner, qubit);
 
@@ -1131,25 +1169,27 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
       error("RuleSet with no Rule found. Probably not what you want!");
     }
     int assigned = 0;
-    // FIXME: Currently, all resources are allocated to the first Rule. resources must be promoted properly
-    for (int p = 0; p < process->size(); p++) {
+    for (auto rule = process->cbegin(); rule != process->cend(); rule++) {
       // 1. loop for all rulesets and take the partners for each rule
-      for (int action_partner : process->getRule(p)->action_partners) {
+      for (int action_partner : (*rule)->action_partners) {
         // 2. take available Bell pairs between action partner
         // range contains the begin and end iterators of entangled qubits with the specified qnic_type, qnic_index and partner addr.
         auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, action_partner);
         for (auto it = range.first; it != range.second; ++it) {
-          auto *qubit = it->second;
-          // 3. if the qubit is not allocated yet,
-          if (!qubit->isAllocated()) {
+          auto qubit = it->second;
+          // 3. if the qubit is not allocated yet, and the qubit has not been allocated to this rule,
+          // if the qubit has already been assigned to the rule, the qubit is not allocatable to that rule
+          bool allocatable = checkAppliedRule(qubit, (*rule)->rule_index);
+          // EV<<" allocatable: "<<allocatable<<" : "<<qubit<<"action_partner:"<<action_partner<<"\n";
+          if (!qubit->isAllocated() && allocatable) {
             if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
               error("Freshing qubit wrong");
             }
-            // 4. Allocate to the rule p
-            process->getRule(p)->addResource(action_partner, qubit);
             // 5. increment the assined counter and set allocated flag
             assigned++;
             qubit->Allocate();
+            updateAppliedRule(qubit, (*rule)->rule_index);
+            (*rule)->addResource(action_partner, qubit);
           }
         }
       }
@@ -1163,7 +1203,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
   if (number_of_process == 0) {
     return;
   }
-  
+
   for (auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it) {
     next_it = it;
     ++next_it;
@@ -1222,7 +1262,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
             send(pk_for_self, "RouterPort$o");
           } else if (dynamic_cast<SwappingResult *>(pk) != nullptr) {
             SwappingResult *pkt = check_and_cast<SwappingResult *>(pk);
-            EV << "done swapping at " << parentAddress << "\n";
+            EV << "done swapping at " << parentAddress << " left: " << pkt->getLeft_Dest() << " right: " << pkt->getRight_Dest() << "\n";
             // here this packet goes to two destination.
             // one is left node the other is right node.
             // only swapper knows which is left and right, but qnodes don't
@@ -1326,6 +1366,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
   realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit->par("stationaryQubit_address"), qnic_type, true);
   Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit->par("stationaryQubit_address"));
+  clearAppliedRule(qubit);
   bell_pair_store.eraseQubit(qubit);
 }
 

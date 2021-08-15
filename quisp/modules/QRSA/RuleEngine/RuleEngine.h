@@ -76,9 +76,11 @@ class RuleEngine : public IRuleEngine {
   // when the tracker for the qnic is clered by previous BSM trial it goes true
   // when the RuleEngine try to start new Photon emittion, it goes false and other BSM trial can't access to it.
   std::vector<bool> tracker_accessible;
+  // tracking the rules that have been applied to the qubit
+  std::map<IStationaryQubit *, std::vector<unsigned long>> applied_rules;  // <qubit, list of rules>
 
   void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type) override;
-  void freeConsumedResource(int qnic_index, StationaryQubit *qubit, QNIC_type qnic_type) override;
+  void freeConsumedResource(int qnic_index, IStationaryQubit *qubit, QNIC_type qnic_type) override;
   void ResourceAllocation(int qnic_type, int qnic_index) override;
 
  protected:
@@ -114,6 +116,9 @@ class RuleEngine : public IRuleEngine {
   void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, unsigned long rule_id, int index);
   void Unlock_resource_and_discard(unsigned long ruleset_id, unsigned long rule_id, int index);
 
+  void updateAppliedRule(IStationaryQubit *qubit, unsigned long rule_id);
+  bool checkAppliedRule(IStationaryQubit *qubit, unsigned long rule_id);
+  void clearAppliedRule(IStationaryQubit *qubit);
   void updateResources_EntanglementSwapping(swapping_result swapr);
 
   utils::ComponentProvider provider;

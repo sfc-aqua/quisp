@@ -20,13 +20,12 @@ class PurifyAction : public Action {
   bool Z;
   int num_purify;
   int action_index = 0;  // To track how many times this particular action has been invoked.
-  // To track the number of invocation with partner address. (partner_address, action_index)
-  std::map<int, int> action_indices;
 
  public:
   PurifyAction();
   PurifyAction(int part, QNIC_type qt, int qi, int res, int tres, unsigned long rs_id, unsigned long r_id);
-  PurifyAction(unsigned long RuleSet_id, unsigned long rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res, int tres);
+  PurifyAction(unsigned long RuleSet_id, unsigned long rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res,
+               int tres);
   // cPacket* run(qnicResources *resources) override;
   // cPacket* run(cModule *re, qnicResources *resources) override;
   cPacket* run(cModule* re) override;
