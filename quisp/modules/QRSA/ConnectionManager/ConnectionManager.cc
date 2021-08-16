@@ -376,9 +376,10 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       auto rule_es = swappingRule(config, ruleset_id, rule_id);
       ruleset_map[swapper_address]->addRule(std::move(rule_es));
     } else {
-      error("under implementation");
-      // SwappingConfig config = generateSimultaneousSwappingConfig(owner_address, path, qnics, resource_index);
-      // RuleSet *ruleset_simul_es = generateSimultaneousEntanglementSwappingRuleSet(owner_address, config, path, ruleset_id);
+      SwappingConfig config = generateSimultaneousSwappingConfig(swapper_address, path, qnics, resource_index);
+      unsigned long rule_id = createUniqueId();
+      auto rule_es = simultaneousSwappingRule(config, path, ruleset_id, rule_id);
+      ruleset_map[swapper_address]->addRule(std::move(rule_es));
     }
   }
 
@@ -747,84 +748,6 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
   }
 }
 
-/**
- *  This function is called during the handling of ConnectionSetupRequest at the responder.
- * \param RuleSet_id the unique identifier for this RuleSet (== connection)
- * \param owner address of the intermediate node we are generating this RuleSet for
- * \param conf the SwappingConfig listing the order and partners
- * \returns the newly-created RuleSet for ES at the given intermediate node.
- *
- *  This is where much of the work happens, and there is the potential for new value
- *  if you have a better way to do this.
- *  Called once per intermediate node to create rules for that node, which will
- *  later be distributed to that node using a ConnectionSetupResponse.
- *  \todo
- * \todo Room for endless intelligence and improvements here.  Ideally should be
- * a _configurable choice_, or even a _policy_ implementation.
- **/
-RuleSet *ConnectionManager::generateEntanglementSwappingRuleSet(int owner_address, SwappingConfig conf, unsigned long ruleset_id) {
-  std::vector<int> partners = {conf.left_partner, conf.right_partner};
-  int rule_index = 0;
-  RuleSet *ruleset = new RuleSet(ruleset_id, owner_address, partners);
-  auto rule = swappingRule(conf, ruleset_id, rule_index);
-  ruleset->addRule(std::move(rule));
-  return ruleset;
-}
-
-RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int owner, SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id) {
-  int rule_index = 0;
-  int index_in_path = conf.index;
-  int path_length_exclude_IR = path.size() - 2;
-
-  Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, conf.lres);
-  Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, conf.rres);
-
-  Condition *condition = new Condition();
-  condition->addClause(resource_clause_left);
-  condition->addClause(resource_clause_right);
-
-  quisp::rules::Action *action = new SimultaneousSwappingAction(
-      ruleset_id, rule_index, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner, conf.rqnic_type, conf.rqnic_index,
-      conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type, conf.self_right_qnic_index, conf.self_right_qnic_type, conf.initiator,
-      conf.initiator_qnic_type, conf.initiator_qnic_index, conf.initiator_qnic_address, conf.initiator_res, conf.responder, conf.responder_qnic_type, conf.responder_qnic_index,
-      conf.responder_qnic_address, conf.responder_res, index_in_path, path_length_exclude_IR);
-
-  auto rule = std::make_unique<Rule>(ruleset_id, rule_index);
-  rule->setCondition(condition);
-  rule->setAction(action);
-
-  std::vector<int> partners = {conf.left_partner, conf.right_partner};
-
-  RuleSet *ruleset = new RuleSet(ruleset_id, owner, partners);
-  ruleset->addRule(std::move(rule));
-
-  return ruleset;
-}
-
-RuleSet *ConnectionManager::generateTomographyRuleSet(int owner_address, int partner_address, int num_of_measure, QNIC_type qnic_type, int qnic_index, int num_resources,
-                                                      unsigned long ruleset_id) {
-  int rule_index = 0;
-  RuleSet *tomography = new RuleSet(ruleset_id, owner_address, partner_address);
-  auto rule = tomographyRule(owner_address, partner_address, num_of_measure, qnic_type, qnic_index, ruleset_id, rule_index);
-  tomography->addRule(std::move(rule));
-  return tomography;
-}
-
-// for purification, pairwise ruleset must have the same ruleset id
-RuleSet *ConnectionManager::generatePurificationRuleSet(int owner_address, int partner_address, int num_purification, QNIC_type qnic_type, int qnic_index,
-                                                        unsigned long ruleset_id) {
-  int rule_index = 0;
-  RuleSet *purification = new RuleSet(ruleset_id, owner_address, partner_address);
-  // x purification
-  auto xpurification_rule = purificationRule(partner_address, 0, num_purification, qnic_type, qnic_index, ruleset_id, rule_index);
-  purification->addRule(std::move(xpurification_rule));
-  rule_index++;
-  auto zpurification_rule = purificationRule(partner_address, 1, num_purification, qnic_type, qnic_index, ruleset_id, rule_index);
-  purification->addRule(std::move(zpurification_rule));
-  rule_index++;
-  return purification;
-}
-
 // Rule Generators
 std::unique_ptr<Rule> ConnectionManager::purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index,
                                                           unsigned long ruleset_id, unsigned long rule_id) {
@@ -879,9 +802,30 @@ std::unique_ptr<Rule> ConnectionManager::swappingRule(SwappingConfig conf, unsig
   return rule_entanglement_swapping;
 }
 
-// std::unique_ptr<Rule> ConnectionManager::simultaneousSwappingRule(SwappingConfig conf, unsigned long ruleset_id, int rule_index) {
+std::unique_ptr<Rule> ConnectionManager::simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id) {
+  // From @poramet implementations
+  std::vector<int> partners = {conf.left_partner, conf.right_partner};
+  std::string rule_name = "Simultaneous Entanglement Swapping with " + std::to_string(conf.left_partner) + " : " + std::to_string(conf.right_partner);
+  int index_in_path = conf.index;
+  int path_length_exclude_IR = path.size() - 2;
 
-// }
+  auto rule_simultaneous_entanglement_swapping = std::make_unique<Rule>(ruleset_id, rule_id, rule_name, partners);
+  Condition *condition = new Condition();
+  Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, conf.lres);
+  Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, conf.rres);
+  condition->addClause(resource_clause_left);
+  condition->addClause(resource_clause_right);
+
+  quisp::rules::Action *action = new SimultaneousSwappingAction(
+      ruleset_id, rule_id, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner, conf.rqnic_type, conf.rqnic_index,
+      conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type, conf.self_right_qnic_index, conf.self_right_qnic_type, conf.initiator,
+      conf.initiator_qnic_type, conf.initiator_qnic_index, conf.initiator_qnic_address, conf.initiator_res, conf.responder, conf.responder_qnic_type, conf.responder_qnic_index,
+      conf.responder_qnic_address, conf.responder_res, index_in_path, path_length_exclude_IR);
+
+  rule_simultaneous_entanglement_swapping->setCondition(condition);
+  rule_simultaneous_entanglement_swapping->setAction(action);
+  return rule_simultaneous_entanglement_swapping;
+}
 
 std::unique_ptr<Rule> ConnectionManager::tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
                                                         unsigned long rule_id) {

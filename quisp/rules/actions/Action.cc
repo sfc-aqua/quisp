@@ -36,10 +36,10 @@ IStationaryQubit *Action::getResource_fromTop(int required_index) {
 IStationaryQubit *Action::getResource(int required_index, int partner) {
   int i = 0;
   for (auto it = (*rule_resources).begin(); it != (*rule_resources).end(); ++it) {
-      if(it->first == partner && !it->second->isLocked()){
-        if (i == required_index)  return it->second;
-        i++;
-      }
+    if (it->first == partner && !it->second->isLocked()) {
+      if (i == required_index) return it->second;
+      i++;
+    }
   }
   return nullptr;
 }

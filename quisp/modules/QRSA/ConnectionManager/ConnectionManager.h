@@ -73,20 +73,12 @@ class ConnectionManager : public IConnectionManager {
   SwappingConfig generateSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners, std::vector<QNIC_pair_info> qnics,
                                         int num_resources);
   SwappingConfig generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources);
-  // RuleSet generators
-  RuleSet *generateTomographyRuleSet(int owner_address, int partner_address, int num_of_measure, QNIC_type qnic_type, int qnic_index, int num_resources, unsigned long ruleset_id);
-  RuleSet *generateEntanglementSwappingRuleSet(int owner, SwappingConfig conf, unsigned long ruleset_id);
-  RuleSet *generateSimultaneousEntanglementSwappingRuleSet(int owner, SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id);
-  RuleSet *generatePurificationRuleSet(int owner_address, int partner_address, int num_purification, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id);
-  RuleSet *generateRGSsourceRuleSet(int owner, int partner, int num_of_measure);
-  RuleSet *generateEsAndPurificationRuleSet(int owner_address, SwappingConfig conf, int num_purification, unsigned long ruleset_id);
-  RuleSet *generatePurAndTomographyRuleSet(int owner_address, int tomography_partner_address, std::vector<int> purification_partner_addresses, int num_purification,
-                                           QNIC_type qnic_type, int qnic_index, int num_of_measure, int num_resources, unsigned long ruleset_id);
 
-  // Rule generator
+  // Rule generators
   std::unique_ptr<Rule> purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
                                          unsigned long rule_id);
   std::unique_ptr<Rule> swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id);
+  std::unique_ptr<Rule> simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id);
   std::unique_ptr<Rule> tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
                                        unsigned long rule_id);
 
