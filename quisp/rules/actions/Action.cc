@@ -34,23 +34,14 @@ IStationaryQubit *Action::getResource_fromTop(int required_index) {
 }
 
 IStationaryQubit *Action::getResource(int required_index, int partner) {
-  // here
-  IStationaryQubit *pt = nullptr;
-
-  std::vector<IStationaryQubit *> available_entanglements_with_partner;
-  // 1. take partners
+  int i = 0;
   for (auto it = (*rule_resources).begin(); it != (*rule_resources).end(); ++it) {
-    if (it->first == partner && !it->second->isLocked()) {
-      available_entanglements_with_partner.push_back(it->second);
-    }
+      if(it->first == partner && !it->second->isLocked()){
+        if (i == required_index)  return it->second;
+        i++;
+      }
   }
-  // 2. check the index
-  for (int i = 0; i < available_entanglements_with_partner.size(); i++) {
-    if (i == required_index && !available_entanglements_with_partner.at(i)->isLocked()) {
-      pt = available_entanglements_with_partner.at(i);
-    }
-  }
-  return pt;
+  return nullptr;
 }
 
 void Action::removeResource_fromRule(IStationaryQubit *qubit) {

@@ -56,16 +56,6 @@ bool Rule::checkTerminate() {
   return done;
 }
 
-bool Rule::checkActionPartner(int action_partner) {
-  auto iter = std::find(action_partners.begin(), action_partners.end(), action_partner);
-  bool found = iter != action_partners.end();
-  if (found) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 /*
 cPacket* Rule::checkrun(cModule *re, qnicResources * resources, int qnic_type, int qnic_index, int resource_entangled_with_address) {
     EntangledPairs temp_resource_list;

@@ -74,7 +74,7 @@ class Rule {
   // cPacket* checkrun(cModule *re, qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
   cPacket *checkrun(cModule *re);
   bool checkTerminate();
-  bool checkActionPartner(int action_partner);
+
   // bool checkTerminate(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
 };
 
