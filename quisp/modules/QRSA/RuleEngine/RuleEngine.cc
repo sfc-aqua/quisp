@@ -60,6 +60,7 @@ void RuleEngine::initialize() {
 
   // running_processes = new RuleSetPtr[QNIC_N];//One process per QNIC for now. No multiplexing.
   // WATCH(assigned);
+  WATCH_MAP(bell_pair_store._resources);
 }
 
 void RuleEngine::handleMessage(cMessage *msg) {

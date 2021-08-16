@@ -57,3 +57,28 @@ PartnerAddrQubitMapRange BellPairStore::getBellPairsRange(QNIC_type qnic_type, i
 
 }  // namespace modules
 }  // namespace quisp
+
+namespace std {
+std::basic_ostream<char>& operator<<(std::basic_ostream<char>& os, const std::pair<quisp::modules::QNIC_type, int>& key) {
+  os << "type: " << std::to_string(key.first) << ", qnic index: " << std::to_string(key.second);
+  return os;
+}
+
+std::basic_ostream<char>& operator<<(std::basic_ostream<char>& os, const quisp::modules::PartnerAddrQubitMap& map) {
+  os << "length:" << std::to_string(map.size()) << ". ";
+  std::set<int> keys;
+
+  for (auto& resource : map) {
+    keys.insert(resource.first);
+  }
+  for (auto key : keys) {
+    os << "partner(" << std::to_string(key) << "): qubits:[";
+    auto range = map.equal_range(key);
+    for (auto it = range.first; it != range.second; it++) {
+      os << std::to_string(it->second->getIndex()) << ",";
+    }
+    os << "]. ";
+  }
+  return os;
+}
+}  // namespace std

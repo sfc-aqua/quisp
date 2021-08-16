@@ -27,8 +27,12 @@ class BellPairStore {
   IStationaryQubit* findQubit(QNIC_type qnic_type, QNicIndex qnic_index, QNodeAddr addr);
   PartnerAddrQubitMapRange getBellPairsRange(QNIC_type qnic_type, QNicIndex qnic_index, QNodeAddr partner_addr);
 
- protected:
   std::map<ResourceKey, PartnerAddrQubitMap> _resources;
 };
 }  // namespace modules
 }  // namespace quisp
+
+namespace std {
+std::basic_ostream<char>& operator<<(std::basic_ostream<char>& os, const std::pair<quisp::modules::QNIC_type, int>& key);
+std::basic_ostream<char>& operator<<(std::basic_ostream<char>& os, const quisp::modules::PartnerAddrQubitMap& map);
+}  // namespace std
