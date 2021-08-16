@@ -27,10 +27,10 @@ cPacket *DoubleSelectionDualActionSecond::run(cModule *re) {
   IStationaryQubit *qubit = nullptr;
   IStationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_X = nullptr;
 
-  qubit = getResourceFromTopWithPartner(resource, partner);
-  trash_qubit_X = getResourceFromTopWithPartner(trash_resource_X, partner);
-  trash_qubit_Z = getResourceFromTopWithPartner(trash_resource_Z, partner);
-  ds_trash_qubit_X = getResourceFromTopWithPartner(doubleselection_trash_resource_X, partner);
+  qubit = getResource(resource, partner);
+  trash_qubit_X = getResource(trash_resource_X, partner);
+  trash_qubit_Z = getResource(trash_resource_Z, partner);
+  ds_trash_qubit_X = getResource(doubleselection_trash_resource_X, partner);
 
   if (qubit == trash_qubit_X || qubit == trash_qubit_Z || trash_qubit_Z == trash_qubit_X || qubit == ds_trash_qubit_X || trash_qubit_X == ds_trash_qubit_X) {
     Error *pk = new Error;

@@ -29,7 +29,7 @@ class Action {
   // virtual cPacket* run(cModule *re, qnicResources *resources) = 0;
   virtual cPacket* run(cModule* re) = 0;
   virtual IStationaryQubit* getResource_fromTop(int required_index);
-  virtual IStationaryQubit* getResourceFromTopWithPartner(int required_index, int partner);
+  virtual IStationaryQubit* getResource(int required_index, int partner);
   virtual int checkNumResource();
   virtual void removeResource_fromRule(IStationaryQubit* qubit);
   // virtual StationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id);

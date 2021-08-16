@@ -51,8 +51,8 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   IStationaryQubit *left_qubit = nullptr;
   IStationaryQubit *right_qubit = nullptr;
 
-  left_qubit = getResourceFromTopWithPartner(left_resource, left_partner);
-  right_qubit = getResourceFromTopWithPartner(right_resource, right_partner);
+  left_qubit = getResource(left_resource, left_partner);
+  right_qubit = getResource(right_resource, right_partner);
 
   if (left_qubit == nullptr || right_qubit == nullptr) {
     Error *pk = new Error;

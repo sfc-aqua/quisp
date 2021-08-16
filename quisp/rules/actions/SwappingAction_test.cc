@@ -65,7 +65,7 @@ class SwappingAction : public OriginalSwappingAction {
   }
 
   // MOCK_METHOD(IStationaryQubit *, getResource_fromTop, (int required_index), (override));
-  MOCK_METHOD(IStationaryQubit *, getResourceFromTopWithPartner, (int required_index, int partner), (override));
+  MOCK_METHOD(IStationaryQubit *, getResource, (int required_index, int partner), (override));
   MOCK_METHOD(void, removeResource_fromRule, (IStationaryQubit *), (override));
 };
 
@@ -116,8 +116,8 @@ TEST(SwappingActionTest, runWithoutQubit) {
   action->right_partner = 22;
   action->left_resource = 23;
   action->left_partner = 24;
-  EXPECT_CALL(*action, getResourceFromTopWithPartner(21, 22)).WillOnce(Return(nullptr));
-  EXPECT_CALL(*action, getResourceFromTopWithPartner(23, 24)).WillOnce(Return(nullptr));
+  EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(nullptr));
+  EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(nullptr));
   auto packet = action->run(nullptr);
   EXPECT_NE(nullptr, packet);
   EXPECT_NE(nullptr, dynamic_cast<Error *>(packet));
@@ -138,8 +138,8 @@ TEST(SwappingActionTest, runWithInvalidQnicId) {
   right_qubit->fillParams();
   left_qubit->fillParams();
 
-  EXPECT_CALL(*action, getResourceFromTopWithPartner(21, 22)).WillOnce(Return(right_qubit));
-  EXPECT_CALL(*action, getResourceFromTopWithPartner(23, 24)).WillOnce(Return(left_qubit));
+  EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
+  EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(left_qubit));
   auto packet = action->run(rule_engine);
   EXPECT_NE(nullptr, packet);
   EXPECT_NE(nullptr, dynamic_cast<Error *>(packet));
@@ -169,8 +169,8 @@ TEST(SwappingActionTest, runWithNoError) {
   EXPECT_CALL(*right_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::NO_ERROR));
   EXPECT_CALL(*left_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::NO_ERROR));
 
-  EXPECT_CALL(*action, getResourceFromTopWithPartner(21, 22)).WillOnce(Return(right_qubit));
-  EXPECT_CALL(*action, getResourceFromTopWithPartner(23, 24)).WillOnce(Return(left_qubit));
+  EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
+  EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(left_qubit));
   EXPECT_CALL(*action, removeResource_fromRule(right_qubit)).WillOnce(Return());
   EXPECT_CALL(*action, removeResource_fromRule(left_qubit)).WillOnce(Return());
   EXPECT_CALL(*rule_engine, freeConsumedResource(25, left_qubit, QNIC_E)).WillOnce(Return());
@@ -208,8 +208,8 @@ TEST(SwappingActionTest, runWithRightHasError) {
   EXPECT_CALL(*right_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
   EXPECT_CALL(*left_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::NO_ERROR));
 
-  EXPECT_CALL(*action, getResourceFromTopWithPartner(21, 22)).WillOnce(Return(right_qubit));
-  EXPECT_CALL(*action, getResourceFromTopWithPartner(23, 24)).WillOnce(Return(left_qubit));
+  EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
+  EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(left_qubit));
   EXPECT_CALL(*action, removeResource_fromRule(right_qubit)).WillOnce(Return());
   EXPECT_CALL(*action, removeResource_fromRule(left_qubit)).WillOnce(Return());
   EXPECT_CALL(*rule_engine, freeConsumedResource(25, left_qubit, QNIC_E)).WillOnce(Return());
@@ -247,8 +247,8 @@ TEST(SwappingActionTest, runWithLeftHasError) {
   EXPECT_CALL(*right_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::NO_ERROR));
   EXPECT_CALL(*left_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
 
-  EXPECT_CALL(*action, getResourceFromTopWithPartner(21, 22)).WillOnce(Return(right_qubit));
-  EXPECT_CALL(*action, getResourceFromTopWithPartner(23, 24)).WillOnce(Return(left_qubit));
+  EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
+  EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(left_qubit));
   EXPECT_CALL(*action, removeResource_fromRule(right_qubit)).WillOnce(Return());
   EXPECT_CALL(*action, removeResource_fromRule(left_qubit)).WillOnce(Return());
   EXPECT_CALL(*rule_engine, freeConsumedResource(25, left_qubit, QNIC_E)).WillOnce(Return());
@@ -286,8 +286,8 @@ TEST(SwappingActionTest, runWithBothErrors) {
   EXPECT_CALL(*right_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
   EXPECT_CALL(*left_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
 
-  EXPECT_CALL(*action, getResourceFromTopWithPartner(21, 22)).WillOnce(Return(right_qubit));
-  EXPECT_CALL(*action, getResourceFromTopWithPartner(23, 24)).WillOnce(Return(left_qubit));
+  EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
+  EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(left_qubit));
   EXPECT_CALL(*action, removeResource_fromRule(right_qubit)).WillOnce(Return());
   EXPECT_CALL(*action, removeResource_fromRule(left_qubit)).WillOnce(Return());
   EXPECT_CALL(*rule_engine, freeConsumedResource(25, left_qubit, QNIC_E)).WillOnce(Return());

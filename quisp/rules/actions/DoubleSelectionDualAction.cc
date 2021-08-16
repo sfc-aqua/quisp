@@ -11,11 +11,11 @@ cPacket *DoubleSelectionDualAction::run(cModule *re) {
   IStationaryQubit *qubit = nullptr;
   IStationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_Z, *ds_trash_qubit_X = nullptr;
 
-  qubit = getResourceFromTopWithPartner(resource, partner);
-  trash_qubit_X = getResourceFromTopWithPartner(trash_resource_X, partner);
-  trash_qubit_Z = getResourceFromTopWithPartner(trash_resource_Z, partner);
-  ds_trash_qubit_X = getResourceFromTopWithPartner(doubleselection_trash_resource_X, partner);
-  ds_trash_qubit_Z = getResourceFromTopWithPartner(doubleselection_trash_resource_Z, partner);
+  qubit = getResource(resource, partner);
+  trash_qubit_X = getResource(trash_resource_X, partner);
+  trash_qubit_Z = getResource(trash_resource_Z, partner);
+  ds_trash_qubit_X = getResource(doubleselection_trash_resource_X, partner);
+  ds_trash_qubit_Z = getResource(doubleselection_trash_resource_Z, partner);
 
   if (qubit == trash_qubit_X || qubit == trash_qubit_Z || trash_qubit_Z == trash_qubit_X || qubit == ds_trash_qubit_X || qubit == ds_trash_qubit_Z ||
       trash_qubit_Z == ds_trash_qubit_X || trash_qubit_X == ds_trash_qubit_X || ds_trash_qubit_Z == ds_trash_qubit_X) {

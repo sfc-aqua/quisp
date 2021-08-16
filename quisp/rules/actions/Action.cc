@@ -33,7 +33,7 @@ IStationaryQubit *Action::getResource_fromTop(int required_index) {
   return pt;
 }
 
-IStationaryQubit *Action::getResourceFromTopWithPartner(int required_index, int partner) {
+IStationaryQubit *Action::getResource(int required_index, int partner) {
   // here
   IStationaryQubit *pt = nullptr;
 
