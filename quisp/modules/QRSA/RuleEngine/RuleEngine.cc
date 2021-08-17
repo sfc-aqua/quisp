@@ -10,7 +10,60 @@
 #include "RuleEngine.h"
 #include <fstream>
 #include <utility>
+#include "omnetpp/clog.h"
 #include "utils/ComponentProvider.h"
+
+namespace omnetpp {
+template <class KeyT, class ValueT, class CmpT>
+class cStdMultiMapWatcher : public cStdVectorWatcherBase {
+ protected:
+  std::multimap<KeyT, ValueT, CmpT> &m;
+  mutable typename std::map<KeyT, ValueT, CmpT>::iterator it;
+  mutable int itPos;
+  std::string classname;
+
+ public:
+  cStdMultiMapWatcher(const char *name, std::multimap<KeyT, ValueT, CmpT> &var) : cStdVectorWatcherBase(name), m(var) {
+    itPos = -1;
+    classname = std::string("std::map<") + opp_typename(typeid(KeyT)) + "," + opp_typename(typeid(ValueT)) + ">";
+  }
+  const char *getClassName() const override { return classname.c_str(); }
+  virtual const char *getElemTypeName() const override { return "pair<,>"; }
+  virtual int size() const override { return m.size(); }
+  virtual std::string at(int i) const override {
+    // std::map doesn't support random access iterator and iteration is slow,
+    // so we have to use a trick, knowing that Tkenv will call this function with
+    // i=0, i=1, etc...
+    if (i == 0) {
+      it = m.begin();
+      itPos = 0;
+    } else if (i == itPos + 1 && it != m.end()) {
+      ++it;
+      ++itPos;
+    } else {
+      it = m.begin();
+      for (int k = 0; k < i && it != m.end(); k++) ++it;
+      itPos = i;
+    }
+    if (it == m.end()) {
+      return std::string("out of bounds");
+    }
+    return atIt();
+  }
+  virtual std::string atIt() const {
+    std::stringstream out;
+    out << it->first << " ==> " << it->second;
+    return out.str();
+  }
+};
+
+template <class KeyT, class ValueT, class CmpT>
+void createStdMultiMapWatcher(const char *varname, std::multimap<KeyT, ValueT, CmpT> &m) {
+  new cStdMultiMapWatcher<KeyT, ValueT, CmpT>(varname, m);
+}
+
+}  // namespace omnetpp
+#define WATCH_MULTIMAP(m) omnetpp::createStdMultiMapWatcher(#m, (m))
 
 namespace quisp {
 namespace modules {
@@ -61,6 +114,7 @@ void RuleEngine::initialize() {
   // running_processes = new RuleSetPtr[QNIC_N];//One process per QNIC for now. No multiplexing.
   // WATCH(assigned);
   WATCH_MAP(bell_pair_store._resources);
+  WATCH_MULTIMAP(Purification_table);
 }
 
 void RuleEngine::handleMessage(cMessage *msg) {
@@ -573,6 +627,13 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
 
             // 4. check which trial of purification
             if (qubit->action_index == index) {
+              EV_DEBUG << "RS:" << process->ruleset_id << " rule_index: "<< (*rule)->rule_index << ", purification success " << qubit->getFullPath();
+              if (qubit->entangled_partner != nullptr) {
+                EV_DEBUG << " with " << qubit->entangled_partner->getFullPath() << '\n';
+              } else {
+                EV_DEBUG << '\n';
+                EV_ERROR << "partner of " << qubit->getFullPath() << " is nullptr\n";
+              }
               // 5. unlock qubit for later use
               qubit->Unlock();
               // remove qubit from resource list in the rule
@@ -1414,3 +1475,10 @@ void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, ISt
 
 }  // namespace modules
 }  // namespace quisp
+
+namespace std {
+std::basic_ostream<char>& operator<<(std::basic_ostream<char>& os, const quisp::modules::purification_result& res) {
+  os << "RS:" << res.id.ruleset_id << ", Rule:" << res.id.rule_id <<  ", i:"<< res.id.index << ", outcome:" << std::to_string(res.outcome);
+  return os;
+}
+}
