@@ -574,7 +574,11 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
               qubit->Unlock();
               // remove qubit from resource list in the rule
               (*rule)->resources.erase(qubit_map);
-              qubit->Deallocate();
+              rule++;
+              if (rule == process->cend()){
+                error("no more rules after this. Should be promoted to the application");
+              }
+              (*rule)->addResource(partner_address, qubit);
               // bell_pair_store.insertEntangledQubit(partner_address, qubit);
               return;
             }
@@ -944,6 +948,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // swapper believe previous BSM was succeeded.
   // These are new partner's info
 
+
   int new_partner = swapr.new_partner;
   int operation_type = swapr.operation_type;
   int qnic_address = routingdaemon->return_QNIC_address_to_destAddr(new_partner);
@@ -973,12 +978,41 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     // std::cout << qubit << ", node[" << qubit->node_address << "] from qnic[" << qubit->qnic_index << "]\n";
     error("RuleEngine. Entanglement swapping went wrong");
   }
-
-  // Remove the qubit from resources
-  bell_pair_store.eraseQubit(qubit);
-  qubit->Deallocate();
-  // Make this qubit available for rules
-  bell_pair_store.insertEntangledQubit(new_partner, qubit);
+  bool promoted = false;
+  // Promote entanglement from this rule to the next rule
+  // 1. erase qubit from the privious rule (Entanglement Swapping)
+  // 1.1 take identifiers
+  unsigned long ruleset_id = swapr.id.ruleset_id;
+  unsigned long rule_id = swapr.id.rule_id;
+  // this routine can be a function in the ruleset.
+  for (auto iter = rp.cbegin(); iter != rp.cend(); iter++){
+    RuleSet *ruleset = iter->second.Rs;
+    if (ruleset->ruleset_id == ruleset_id){
+      for (auto rule = ruleset->cbegin(); rule != ruleset->cend(); rule++){
+        if ((*rule)->rule_id == rule_id){ // rule identified
+          // remove qubit from previous rule
+          for (auto qubit_map = (*rule)->resources.cbegin(); qubit_map != (*rule)->resources.cend(); qubit_map++){
+            auto target_qubit = qubit_map->second;
+            if (target_qubit == qubit){
+              (*rule)->resources.erase(qubit_map);
+              // 2. add qubit to the next rule 
+              rule++;
+              if(rule == ruleset->cend()){
+                error("No more rules to promote. Should pass to the application")
+              }
+              qubit->Deallocate();
+              rule->addResource(new_partner, qubit);
+              promoted = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+  if (!promoted){
+    error("The qubit is not promoted from entanglement swapping to the next rule");
+  }
 
   // FOR DEBUGGING
   if (qubit->entangled_partner != nullptr) {
