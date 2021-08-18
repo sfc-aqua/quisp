@@ -225,4 +225,51 @@ TEST(RuleEngineTest, trackerUpdate) {
   delete mockRealTimeController;
 }
 
+TEST(RuleEngineTest, storeCheckPurificationAgreement_no_process) {
+  prepareSimulation();
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  auto* mockRealTimeController = new MockRealTimeController;
+  auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, mockRealTimeController};
+}
+
+TEST(RuleEngineTest, storeCheckPurificationAgreement_running_process) {
+  prepareSimulation();
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  auto* mockRealTimeController = new MockRealTimeController;
+  auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, mockRealTimeController};
+}
+
+TEST(RuleEngineTest, unlockResourceAndDiscard) {
+  prepareSimulation();
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  auto* mockRealTimeController = new MockRealTimeController;
+  auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, mockRealTimeController};
+}
+
+TEST(RuleEngineTest, unlockResourceAndUpgradeStage) {
+  prepareSimulation();
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  auto* mockRealTimeController = new MockRealTimeController;
+  auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, mockRealTimeController};
+}
+
+TEST(RuleEngineTest, updateAppliedRule) {
+  prepareSimulation();
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  auto* mockRealTimeController = new MockRealTimeController;
+  auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, mockRealTimeController};
+}
+
+TEST(RuleEngineTest, checkAppliedRule) {
+  prepareSimulation();
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  auto* mockRealTimeController = new MockRealTimeController;
+  auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, mockRealTimeController};
+}
 }  // namespace
