@@ -1,7 +1,7 @@
-#include "ConnectionManager.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <omnetpp.h>
+#include "ConnectionManager.h"
 #include "test_utils/TestUtils.h"
 
 namespace {
@@ -13,10 +13,10 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
   ~Strategy() {}
 };
 
-class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
+class ConnectionManager : public quisp::modules::ConnectionManager {
  public:
   using quisp::modules::ConnectionManager::par;
-  ConnectionManagerTestTarget() : quisp::modules::ConnectionManager() {
+  ConnectionManager() : quisp::modules::ConnectionManager() {
     setParInt(this, "address", 123);
     setParInt(this, "total_number_of_qnics", 10);
     this->setName("connection_manager_test_target");
@@ -24,18 +24,13 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
   }
 };
 
-TEST(ConnectionManagerTest, Init) {
-  ConnectionManagerTestTarget c;
+TEST(ConnectionManagerRuleGenTest, PurificationRule) {
+  ConnectionManager c;
   ASSERT_EQ(c.par("address").intValue(), 123);
 }
 
-TEST(ConnectionManagerTest, RespondToRequest) {
-  ConnectionManagerTestTarget c;
-  ASSERT_EQ(c.par("address").intValue(), 123);
-}
-
-TEST(ConnectionManagerTest, GetQNICInterface) {
-  ConnectionManagerTestTarget c;
+TEST(ConnectionManagerRuleGenTest, SwappingRule) {
+  ConnectionManager c;
   ASSERT_EQ(c.par("address").intValue(), 123);
 }
 }  // namespace
