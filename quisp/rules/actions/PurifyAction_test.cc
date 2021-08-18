@@ -8,6 +8,7 @@
 #include <test_utils/TestUtils.h>
 #include "modules/QRSA/RuleEngine/RuleEngine.h"
 
+namespace {
 using namespace testing;
 using namespace quisp::messages;
 using namespace quisp_test;
@@ -19,7 +20,6 @@ using quisp::modules::QNIC_type;
 using quisp::modules::StationaryQubit;
 using OriginalPurifyAction = quisp::rules::actions::PurifyAction;
 
-namespace {
 class PurifyAction : public OriginalPurifyAction {
  public:
   using OriginalPurifyAction::num_purify;
@@ -33,6 +33,24 @@ class PurifyAction : public OriginalPurifyAction {
   using OriginalPurifyAction::trash_resource;
   using OriginalPurifyAction::X;
   using OriginalPurifyAction::Z;
+
+  static std::unique_ptr<PurifyAction> setupAction() {
+    int partner_addr = 2;
+    QNIC_type qnic_type = QNIC_E;
+    int qnic_id = 3;
+    int resource_index = 4;
+    int trash_resource_index = 5;
+    unsigned long ruleset_id = 6;
+    unsigned long rule_id = 7;
+    bool x_purification_enabled = true;
+    bool z_purification_enabled = true;
+    int num_purification = 8;
+
+    return std::make_unique<PurifyAction>(ruleset_id, rule_id, x_purification_enabled, z_purification_enabled, num_purification, partner_addr, qnic_type, qnic_id, resource_index,
+                                          trash_resource_index);
+  }
+  MOCK_METHOD(IStationaryQubit *, getResource, (int required_index, int partner), (override));
+  MOCK_METHOD(void, removeResource_fromRule, (IStationaryQubit *), (override));
 };
 
 TEST(PurifyActionTest, Init) {
@@ -59,6 +77,48 @@ TEST(PurifyActionTest, Init) {
   EXPECT_EQ(action->X, x_purification_enabled);
   EXPECT_EQ(action->Z, z_purification_enabled);
   EXPECT_EQ(action->num_purify, num_purification);
+}
+
+TEST(PurifyActionTest, runWithoutQubit) {
+  prepareSimulation();
+  auto action = PurifyAction::setupAction();
+  auto *rule_engine = new MockRuleEngine();
+  EXPECT_CALL(*action, getResource(action->resource, action->partner)).WillOnce(Return(nullptr));
+  EXPECT_CALL(*action, getResource(action->trash_resource, action->partner)).WillOnce(Return(nullptr));
+  auto packet = action->run(rule_engine);
+  ASSERT_NE(packet, nullptr);
+  auto result = dynamic_cast<Error *>(packet);
+  ASSERT_NE(result, nullptr);
+}
+
+TEST(PurifyActionTest, runWithOneQubit) {
+  auto sim = prepareSimulation();
+  auto action = PurifyAction::setupAction();
+  auto *rule_engine = new MockRuleEngine();
+  auto *qubit = new MockQubit();
+  sim->registerComponent(qubit);
+  qubit->fillParams();
+  EXPECT_CALL(*action, getResource(action->resource, action->partner)).WillOnce(Return(qubit));
+  EXPECT_CALL(*action, getResource(action->trash_resource, action->partner)).WillOnce(Return(nullptr));
+  auto packet = action->run(rule_engine);
+  ASSERT_NE(packet, nullptr);
+  auto result = dynamic_cast<Error *>(packet);
+  ASSERT_NE(result, nullptr);
+}
+
+TEST(PurifyActionTest, runWithSameQubit) {
+  auto sim = prepareSimulation();
+  auto action = PurifyAction::setupAction();
+  auto *rule_engine = new MockRuleEngine();
+  auto *qubit = new MockQubit();
+  sim->registerComponent(qubit);
+  qubit->fillParams();
+  EXPECT_CALL(*action, getResource(action->resource, action->partner)).WillOnce(Return(qubit));
+  EXPECT_CALL(*action, getResource(action->trash_resource, action->partner)).WillOnce(Return(qubit));
+  auto packet = action->run(rule_engine);
+  ASSERT_NE(packet, nullptr);
+  auto result = dynamic_cast<Error *>(packet);
+  ASSERT_NE(result, nullptr);
 }
 
 TEST(PurifyActionTest, runXPurify) { auto *sim = prepareSimulation(); }
