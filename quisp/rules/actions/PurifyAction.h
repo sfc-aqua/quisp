@@ -23,11 +23,9 @@ class PurifyAction : public Action {
 
  public:
   PurifyAction();
-  PurifyAction(int part, QNIC_type qt, int qi, int res, int tres, unsigned long rs_id, unsigned long r_id);
   PurifyAction(unsigned long RuleSet_id, unsigned long rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res,
                int tres);
-  // cPacket* run(qnicResources *resources) override;
-  // cPacket* run(cModule *re, qnicResources *resources) override;
+
   cPacket* run(cModule* re) override;
 };
 
