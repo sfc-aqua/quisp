@@ -989,7 +989,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     RuleSet *ruleset = iter->second.Rs;
     if (ruleset->ruleset_id == ruleset_id){
       for (auto rule = ruleset->cbegin(); rule != ruleset->cend(); rule++){
-        if ((*rule)->rule_id == rule_id){ // rule identified
+        if ((*rule)->rule_index == rule_id){ // rule identified
           // remove qubit from previous rule
           for (auto qubit_map = (*rule)->resources.cbegin(); qubit_map != (*rule)->resources.cend(); qubit_map++){
             auto target_qubit = qubit_map->second;
@@ -998,10 +998,10 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
               // 2. add qubit to the next rule 
               rule++;
               if(rule == ruleset->cend()){
-                error("No more rules to promote. Should pass to the application")
+                error("No more rules to promote. Should pass to the application");
               }
               qubit->Deallocate();
-              rule->addResource(new_partner, qubit);
+              (*rule)->addResource(new_partner, qubit);
               promoted = true;
               break;
             }
