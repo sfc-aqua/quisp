@@ -6,10 +6,13 @@
 
 using namespace quisp::modules;
 using namespace quisp_test;
+using namespace Eigen;
 namespace {
 
 class StatQubitTarget : public StationaryQubit {
  public:
+  using StationaryQubit::getErrorMatrix;
+  using StationaryQubit::getQuantumState;
   using StationaryQubit::initialize;
   using StationaryQubit::par;
   StatQubitTarget() : StationaryQubit() { setComponentType(new TestModuleType("test qubit")); }
@@ -149,4 +152,108 @@ TEST(StatQubitTest, setFree) {
   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
 }
 
+TEST(StatQubitTest, addXError) {
+  auto *sim = prepareSimulation();
+  auto *qubit = new StatQubitTarget{};
+  qubit->fillParams();
+  sim->registerComponent(qubit);
+  EXPECT_FALSE(qubit->par("GOD_Xerror"));
+  qubit->addXerror();
+  EXPECT_TRUE(qubit->par("GOD_Xerror"));
+  qubit->addXerror();
+  EXPECT_FALSE(qubit->par("GOD_Xerror"));
+}
+
+TEST(StatQubitTest, addZError) {
+  auto *sim = prepareSimulation();
+  auto *qubit = new StatQubitTarget{};
+  qubit->fillParams();
+  sim->registerComponent(qubit);
+  EXPECT_FALSE(qubit->par("GOD_Zerror"));
+  qubit->addZerror();
+  EXPECT_TRUE(qubit->par("GOD_Zerror"));
+  qubit->addZerror();
+  EXPECT_FALSE(qubit->par("GOD_Zerror"));
+}
+
+TEST(StatQubitTest, getErrorMatrixTest) {
+  auto *sim = prepareSimulation();
+  auto *qubit = new StatQubitTarget{};
+  qubit->fillParams();
+  sim->registerComponent(qubit);
+  qubit->callInitialize();
+  Matrix2cd err;
+
+  err = qubit->getErrorMatrix(qubit);
+  EXPECT_EQ(Matrix2cd::Identity(), err);
+
+  Matrix2cd Z(2, 2);
+  Z << 1, 0, 0, -1;
+  qubit->addZerror();
+  err = qubit->getErrorMatrix(qubit);
+  EXPECT_EQ(Z, err);
+  qubit->setFree(true);
+
+  Matrix2cd X(2, 2);
+  X << 0, 1, 1, 0;
+  qubit->addXerror();
+  err = qubit->getErrorMatrix(qubit);
+  EXPECT_EQ(X, err);
+  qubit->setFree(true);
+
+  Matrix2cd Y(2, 2);
+  Y << 0, Complex(0, -1), Complex(0, 1), 0;
+  qubit->addXerror();
+  qubit->addZerror();
+  err = qubit->getErrorMatrix(qubit);
+  EXPECT_EQ(Y, err);
+  qubit->setFree(true);
+}
+
+TEST(StatQubitTest, getQuantumState) {
+  auto *sim = prepareSimulation();
+  auto *qubit = new StatQubitTarget{};
+  auto *partner_qubit = new StatQubitTarget{};
+  sim->registerComponent(qubit);
+  sim->registerComponent(partner_qubit);
+  qubit->fillParams();
+  qubit->callInitialize();
+  partner_qubit->fillParams();
+  partner_qubit->callInitialize();
+  qubit->setEntangledPartnerInfo(partner_qubit);
+
+  quantum_state state;
+
+  state = qubit->getQuantumState();
+  Vector4cd state_vector(4);
+  state_vector << 1 / sqrt(2), 0, 0, 1 / sqrt(2);
+  Matrix4cd dm(4, 4);
+  dm = state_vector * state_vector.adjoint();
+  EXPECT_EQ(dm, state.state_in_density_matrix);
+  EXPECT_EQ(state_vector, state.state_in_ket);
+
+  qubit->addXerror();
+  state = qubit->getQuantumState();
+  state_vector << 0, 1 / sqrt(2), 1 / sqrt(2), 0;
+  dm = state_vector * state_vector.adjoint();
+  EXPECT_EQ(dm, state.state_in_density_matrix);
+  EXPECT_EQ(state_vector, state.state_in_ket);
+  qubit->addXerror();
+
+  partner_qubit->addXerror();
+  state = qubit->getQuantumState();
+  state_vector << 0, 1 / sqrt(2), 1 / sqrt(2), 0;
+  dm = state_vector * state_vector.adjoint();
+  EXPECT_EQ(dm, state.state_in_density_matrix);
+  EXPECT_EQ(state_vector, state.state_in_ket);
+  partner_qubit->addXerror();
+
+  qubit->addZerror();
+  state = qubit->getQuantumState();
+  state_vector << 1 / sqrt(2), 0, 0, -1 / sqrt(2);
+  dm = state_vector * state_vector.adjoint();
+  EXPECT_EQ(dm, state.state_in_density_matrix);
+  EXPECT_EQ(state_vector, state.state_in_ket);
+  qubit->addZerror();
+}
 }  // namespace
