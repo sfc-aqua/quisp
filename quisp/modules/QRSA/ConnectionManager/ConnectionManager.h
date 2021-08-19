@@ -46,7 +46,7 @@ class ConnectionManager : public IConnectionManager {
   ConnectionManager();
   utils::ComponentProvider provider;
 
- private:
+ protected:
   int my_address;
   int num_of_qnics;
   std::map<int, bool> qnic_res_table;
