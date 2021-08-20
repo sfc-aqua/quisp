@@ -984,6 +984,8 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // 1.1 take identifiers
   unsigned long ruleset_id = swapr.id.ruleset_id;
   unsigned long rule_id = swapr.id.rule_id;
+
+  unsigned long next_rule_id = -1;
   // this routine can be a function in the ruleset.
   for (auto iter = rp.cbegin(); iter != rp.cend(); iter++){
     RuleSet *ruleset = iter->second.Rs;
@@ -996,16 +998,22 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
             if (target_qubit == qubit){
               (*rule)->resources.erase(qubit_map);
               // 2. add qubit to the next rule 
-              rule++;
+              // rule++;
               if(rule == ruleset->cend()){
                 error("No more rules to promote. Should pass to the application");
               }
-              qubit->Deallocate();
-              (*rule)->addResource(new_partner, qubit);
-              promoted = true;
+              // qubit->Deallocate();
+              // (*rule)->addResource(new_partner, qubit);
+
+              // next_rule_id = (*rule)->next_rule_id;
               break;
             }
           }
+        }else if((*rule)->rule_index == next_rule_id){
+          // next rule id is properly updated
+          qubit->Deallocate();
+          (*rule)->addResource(new_partner, qubit);
+          promoted = true;
         }
       }
     }

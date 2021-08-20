@@ -314,88 +314,96 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
 
   // 0. prepare empty RuleSets for all nodes
   unsigned long ruleset_id = createUniqueId();
-  std::map<int, RuleSet *> ruleset_map;  // <node address, RuleSet pointer>
+  std::map<int, RuleSet *> ruleset_map;  // <node address, RuleSet>
   for (int i = 0; i < path.size(); i++) {
     int ruleset_owner = path.at(i);
     RuleSet *ruleset = new RuleSet(ruleset_id, ruleset_owner, {});  // start from empty partners
     ruleset_map.insert(std::make_pair(ruleset_owner, ruleset));
   }
   // 1. add purification rules to the ruleset (policy: do purification before entanglement swapping)
-  // 1.1 check purification pairs
-  if (es_with_purify) {
-    std::map<int, std::vector<int>> purification_partners;  // <owner address, {partners}>
-    for (int i = 1; i < path.size() - 1; i++) {  // from the first swapper to the last swapper.
-      // we reuse the swapping config
-      auto espartners = swapping_partners[path.at(i)];
-      int left_partner = espartners.at(0);
-      int right_partner = espartners.at(1);
-      // 1.2 add them to the purification partner
-      purification_partners[path.at(i)].push_back(left_partner);
-      purification_partners[path.at(i)].push_back(right_partner);
-      // // 1.3 from left and right partner, this node is also the partner
-      // purification_partners[left_partner].push_back(path.at(i));
-      // purification_partners[right_partner].push_back(path.at(i));
+  // RuleSet stack
+  // Apply purification for all links
+  // Entanglement Swapping -> Purification -> ES -> PUR -> ...
+  // Finally Tomography at the end nodes.
+  // TODO: How do we provide intereface for ruleset constructions?
+
+  // 1.1 initial purification for all links
+  // 0 <-pur-> 1 <-pur-> 2 <-pur-> 3 <-pur-> 4
+  if (es_with_purify){
+    for (int i = 1; i<path.size() ; i ++){
+      int left_node = path.at(i-1);  // 0, 1, 2, 3
+      int right_node = path.at(i);   // 1, 2, 3, 4
+      auto left_qnic = getQnicInterface(left_node, right_node, path, qnics);
+      auto right_qnic = getQnicInterface(right_node, left_node, path, qnics);
+
+      unsigned long rule_id = createUniqueId();
+      auto pur_rule_left = purificationRule(right_node, 0, num_remote_purification, left_qnic.type, left_qnic.index, ruleset_id, rule_id);
+      auto pur_rule_right = purificationRule(left_node, 0, num_remote_purification, right_qnic.type, right_qnic.index, ruleset_id, rule_id);
+      ruleset_map[left_node]->addRule(std::move(pur_rule_left));
+      ruleset_map[right_node]->addRule(std::move(pur_rule_right));
     }
-    // 1.4 add final purification between two endnodes.
-    purification_partners[path.at(0)].push_back(path.at(path.size() - 1));
-    // purification_partners[path.at(path.size()-1)].push_back(path.at(0));
+    // 1.2 ES -> PUR -> ES -> ...
+    // If we follow the path from first to last, the order of rule is going to be different
+    // because of the current es order policy
+    // Should be (1 (first), 5 (last),) --> end nodes
+    //  2 (second) > 4 (second last) > 3 (third)
+    auto rev_path = path;
+    std::sort(rev_path.begin(), rev_path.end(), std::greater<int>{});
+    for (int i = 1; i<(path.size() + 1)/2; i++){ // repeat for all swappers
+      // ES
+      std::vector<int> swapper_nodes;
+      if (path.at(i) != rev_path.at(i)){
+        swapper_nodes = {path.at(i), rev_path.at(i)};
+      }else{
+        swapper_nodes = {path.at(i)};
+      }
+      for (int swapper_node: swapper_nodes){
+        auto config = generateSwappingConfig(swapper_node, path, swapping_partners, qnics, 0);
+        int left_partner = config.left_partner;
+        int right_partner = config.right_partner;
+        unsigned long rule_id = createUniqueId();
+        // empty rules for left and right nodes and swapping rule for swapper
+        auto empty_rule_left = emptyRule(swapper_node, ruleset_id, rule_id);
+        auto empty_rule_right = emptyRule(swapper_node, ruleset_id, rule_id);
+        auto swapping_rule = swappingRule(config, ruleset_id, rule_id);
+        ruleset_map[left_partner] -> addRule(std::move(empty_rule_left));
+        ruleset_map[right_partner]->addRule(std::move(empty_rule_right));
+        ruleset_map[swapper_node]->addRule(std::move(swapping_rule));
 
-    // 1.5 generate purification entanglements
-    for (auto purification_map = purification_partners.begin(); purification_map != purification_partners.end(); ++purification_map) {
-      int rule_owner = purification_map->first;
-      auto rule_partners = purification_map->second;
-      // 1.5.1 loop for all partners and share the same rule ids
-      for (int partner_address : rule_partners) {
-        unsigned long rule_id = createUniqueId();  // not the ruleset id
-        // purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id, int rule_id) {
-        // get the qnic interface from owner to partner
-        // owner --> partner
-        QNIC_id qnic_info_owner = getQnicInterface(rule_owner, partner_address, path, qnics);
-        // purification rule for owner
-        auto owner_purification_rule = purificationRule(partner_address, 0, num_remote_purification, qnic_info_owner.type, qnic_info_owner.index, ruleset_id, rule_id);
-        ruleset_map[rule_owner]->addRule(std::move(owner_purification_rule));
-
-        // owner <-- partner
-        QNIC_id qnic_info_partner = getQnicInterface(partner_address, rule_owner, path, qnics);
-        auto partner_purification_rule = purificationRule(rule_owner, 0, num_remote_purification, qnic_info_partner.type, qnic_info_partner.index, ruleset_id, rule_id);
-        ruleset_map[partner_address]->addRule(std::move(partner_purification_rule));
+        // PUR 
+        // 1 --- (2, swapped) --- 3
+        // 1 (lqnic) --- --- (rqnic) 3 -> pur between 1 - 3
+        rule_id = createUniqueId();
+        auto pur_rule_left = purificationRule(right_partner, 0, num_remote_purification, config.lqnic_type, config.lqnic_index, ruleset_id, rule_id);
+        auto pur_rule_right = purificationRule(left_partner, 0, num_remote_purification, config.rqnic_type, config.rqnic_index, ruleset_id, rule_id);
+        ruleset_map[left_partner] -> addRule(std::move(pur_rule_left));
+        ruleset_map[right_partner] -> addRule(std::move(pur_rule_right));
       }
     }
+    // 2. Tomography
+    int initiator_address = path.at(0);
+    int responder_address = my_address;
+    int num_measure = req->getNum_measure();
+    auto initiator_qnic = getQnicInterface(initiator_address, responder_address, path, qnics);
+    auto responder_qnic = getQnicInterface(responder_address, initiator_address, path, qnics);
+    unsigned long rule_id = createUniqueId();
+    auto tomo_rule_initiator = tomographyRule(initiator_address, responder_address, num_measure, initiator_qnic.type, initiator_qnic.index, ruleset_id, rule_id);
+    auto tomo_rule_responder = tomographyRule(responder_address, initiator_address, num_measure, responder_qnic.type, responder_qnic.index, ruleset_id, rule_id);
+    ruleset_map[initiator_address] -> addRule(std::move(tomo_rule_initiator));
+    ruleset_map[responder_address] -> addRule(std::move(tomo_rule_responder));
   }
 
-  // 2. Entanglement Swapping Rules
-  int resource_index = 0;  // always take the first resource
-  for (int i = 1; i < path.size() - 1; i++) {  // loop for intermediate nodes
-    int swapper_address = path.at(i);
+  // // check
+  // for (auto rs = ruleset_map.begin(); rs != ruleset_map.end(); ++rs){
+  //   int owner = rs->first;
+  //   RuleSet *ruleset = rs->second;
+  //   EV<<"owner: "<<owner<<"\n";
+  //   for (auto rule = ruleset->cbegin(); rule != ruleset->cend(); ++rule){
+  //     EV<<"Rule: "<<(*rule)->name<<"\n";
+  //   }
+  // }
 
-    if (!simultaneous_es_enabled) {
-      // 2.1 generate configs for entanglement swapping
-      SwappingConfig config = generateSwappingConfig(swapper_address, path, swapping_partners, qnics, resource_index);
-      // 2.2 prepare entanglement swapping rule
-      unsigned long rule_id = createUniqueId();
-      auto rule_es = swappingRule(config, ruleset_id, rule_id);
-      ruleset_map[swapper_address]->addRule(std::move(rule_es));
-    } else {
-      SwappingConfig config = generateSimultaneousSwappingConfig(swapper_address, path, qnics, resource_index);
-      unsigned long rule_id = createUniqueId();
-      auto rule_es = simultaneousSwappingRule(config, path, ruleset_id, rule_id);
-      ruleset_map[swapper_address]->addRule(std::move(rule_es));
-    }
-  }
-
-  // 3. Tomography Rules for endnodes (This would be replaced to transfer ownership)
-  int initiator_address = path.at(0);
-  int responder_address = my_address;
-  int num_measure = req->getNum_measure();
-  QNIC_id initiator_qnic = getQnicInterface(initiator_address, responder_address, path, qnics);
-  QNIC_id responder_qnic = getQnicInterface(responder_address, initiator_address, path, qnics);
-  unsigned long rule_id = createUniqueId();
-  auto tomography_rule_initiator = tomographyRule(initiator_address, responder_address, num_measure, initiator_qnic.type, initiator_qnic.index, ruleset_id, rule_id);
-  auto tomography_rule_responder = tomographyRule(responder_address, initiator_address, num_measure, responder_qnic.type, responder_qnic.index, ruleset_id, rule_id);
-  ruleset_map[initiator_address]->addRule(std::move(tomography_rule_initiator));
-  ruleset_map[responder_address]->addRule(std::move(tomography_rule_responder));
-
-  // 4. send rulesets to nodes
+  // 3. send rulesets to nodes
   for (auto it = ruleset_map.begin(); it != ruleset_map.end(); ++it) {
     int owner_address = it->first;
     auto ruleset = it->second;
@@ -751,6 +759,10 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
 // Rule Generators
 std::unique_ptr<Rule> ConnectionManager::purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index,
                                                           unsigned long ruleset_id, unsigned long rule_id) {
+
+  if (num_purification != 1){
+    error("more than 1 purification is not impelented here yet");
+  }
   std::string pur_name = "";
   if (purification_type == 0) {
     pur_name = "X purification with : " + std::to_string(partner_address);
@@ -825,6 +837,14 @@ std::unique_ptr<Rule> ConnectionManager::simultaneousSwappingRule(SwappingConfig
   rule_simultaneous_entanglement_swapping->setCondition(condition);
   rule_simultaneous_entanglement_swapping->setAction(action);
   return rule_simultaneous_entanglement_swapping;
+}
+
+std::unique_ptr<Rule> ConnectionManager::emptyRule(int partner_address, unsigned long ruleset_id, unsigned long rule_id) {
+  // This is used for waiting swapping result from partner
+  std::vector<int> partners = {partner_address};
+  std::string rule_name = "Empty rule with: " + std::to_string(partner_address);
+  auto empty_rule = std::make_unique<Rule>(ruleset_id, rule_id, rule_name, partners); 
+  return empty_rule;
 }
 
 std::unique_ptr<Rule> ConnectionManager::tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,

@@ -25,6 +25,7 @@ class Rule {
  public:
   unsigned long ruleset_id;
   unsigned long rule_index;
+  unsigned long next_rule_id;
   std::string name;
   std::unique_ptr<Condition> condition;
   std::unique_ptr<Action> action;
