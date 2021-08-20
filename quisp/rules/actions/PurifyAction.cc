@@ -8,18 +8,6 @@ namespace actions {
 
 PurifyAction::PurifyAction() {}
 
-PurifyAction::PurifyAction(int part, QNIC_type qt, int qi, int res, int tres, unsigned long rs_id, unsigned long r_id) {
-  partner = part;
-  qnic_type = qt;
-  qnic_id = qi;
-  resource = res; /*The one to purify. Index from top to bottom.*/
-  trash_resource = tres; /*The one to consume to purify*/
-  purification_count = 0;
-  rule_id = r_id;
-  ruleset_id = rs_id;
-  // action_index++;
-}
-
 PurifyAction::PurifyAction(unsigned long RuleSet_id, unsigned long rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi,
                            int res, int tres) {
   partner = part;

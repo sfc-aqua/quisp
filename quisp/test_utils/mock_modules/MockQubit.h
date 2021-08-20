@@ -9,19 +9,39 @@ namespace quisp_test {
 namespace mock_modules {
 namespace stationary_qubit {
 
-using quisp::modules::StationaryQubit;
+using quisp::modules::IStationaryQubit;
 using quisp_test::utils::setParBool;
 using quisp_test::utils::setParDouble;
 using quisp_test::utils::setParInt;
 
-class MockQubit : public StationaryQubit {
+class MockQubit : public IStationaryQubit {
  public:
-  using StationaryQubit::initialize;
-  using StationaryQubit::par;
+  using IStationaryQubit::initialize;
+  using IStationaryQubit::par;
   MOCK_METHOD(void, emitPhoton, (int pulse), (override));
   MOCK_METHOD(void, setFree, (bool consumed), (override));
   MOCK_METHOD(quisp::types::MeasureZResult, measure_Z, (), (override));
-  MockQubit() : StationaryQubit() { setComponentType(new module_type::TestModuleType("test qubit")); }
+  MOCK_METHOD(quisp::types::MeasureXResult, measure_X, (), (override));
+  MOCK_METHOD(quisp::types::MeasureYResult, measure_Y, (), (override));
+  MOCK_METHOD(bool, Xpurify, (IStationaryQubit *), (override));
+  MOCK_METHOD(bool, Zpurify, (IStationaryQubit *), (override));
+  MOCK_METHOD(bool, checkBusy, (), (override));
+  MOCK_METHOD(void, addXerror, (), (override));
+  MOCK_METHOD(void, addZerror, (), (override));
+  MOCK_METHOD(void, Z_gate, (), (override));
+  MOCK_METHOD(void, X_gate, (), (override));
+  MOCK_METHOD(void, Hadamard_gate, (), (override));
+  MOCK_METHOD(void, CNOT_gate, (IStationaryQubit *), (override));
+  MOCK_METHOD(void, Lock, (unsigned long rs_id, unsigned long rule_id, int action_id), (override));
+  MOCK_METHOD(void, Unlock, (), (override));
+  MOCK_METHOD(bool, isLocked, (), (override));
+  MOCK_METHOD(void, Allocate, (), (override));
+  MOCK_METHOD(void, Deallocate, (), (override));
+  MOCK_METHOD(bool, isAllocated, (), (override));
+  MOCK_METHOD(quisp::modules::measurement_outcome, measure_density_independent, (), (override));
+  MOCK_METHOD(void, setCompletelyMixedDensityMatrix, (), (override));
+  MOCK_METHOD(void, setEntangledPartnerInfo, (IStationaryQubit *), (override));
+  MockQubit() : IStationaryQubit() { setComponentType(new module_type::TestModuleType("test qubit")); }
   void reset() {
     setFree(true);
     updated_time = SimTime(0);
