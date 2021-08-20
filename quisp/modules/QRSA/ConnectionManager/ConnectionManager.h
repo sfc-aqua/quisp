@@ -79,7 +79,7 @@ class ConnectionManager : public IConnectionManager {
                                          unsigned long rule_id);
   std::unique_ptr<Rule> swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id);
   std::unique_ptr<Rule> simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id);
-  std::unique_ptr<Rule> emptyRule(int partner_address, unsigned long ruleset_id, unsigned long rule_id);
+  std::unique_ptr<Rule> waitRule(int partner_address, int next_partner_address, unsigned long ruleset_id, unsigned long rule_id);
   std::unique_ptr<Rule> tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
                                        unsigned long rule_id);
 

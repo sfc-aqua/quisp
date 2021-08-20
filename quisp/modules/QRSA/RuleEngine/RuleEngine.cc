@@ -996,8 +996,8 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
             auto target_qubit = qubit_map->second;
             if (target_qubit == qubit) {
               (*rule)->resources.erase(qubit_map);
-              // 2. add qubit to the next rule 
-              if(rule == ruleset->cend()){
+              // 2. add qubit to the next rule
+              if (rule == ruleset->cend()) {
                 error("No more rules to promote. Should pass to the application");
               }
               // qubit->Deallocate();
@@ -1007,7 +1007,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
               break;
             }
           }
-        }else if((*rule)->rule_index == next_rule_id){
+        } else if ((*rule)->rule_index == next_rule_id) {
           // next rule id is properly updated
           qubit->Deallocate();
           (*rule)->addResource(new_partner, qubit);

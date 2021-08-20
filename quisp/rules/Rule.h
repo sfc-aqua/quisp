@@ -25,12 +25,13 @@ class Rule {
  public:
   unsigned long ruleset_id;
   unsigned long rule_index;
-  unsigned long next_rule_id;
+  unsigned long next_rule_id = 0;
   std::string name;
   std::unique_ptr<Condition> condition;
   std::unique_ptr<Action> action;
   std::multimap<int, IStationaryQubit *> resources;
   std::vector<int> action_partners;
+  std::vector<int> next_action_partners;  // if this rule extends the entanglement
   int mutable number_of_resources_allocated_in_total = 0;
   // std::unique_ptr<Rule> next_rule;
   Rule(){};
