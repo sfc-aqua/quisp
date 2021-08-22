@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 #include <omnetpp.h>
 #include <test_utils/TestUtils.h>
-#include "classical_messages_m.h"
+#include "messages/classical_messages.h"
 
 namespace {
 

@@ -5,7 +5,7 @@
  *
  *  \brief Router
  */
-#include <classical_messages_m.h>  //Path selection: type = 1, Timing notifier for BMA: type = 4
+#include "messages/classical_messages.h"  //Path selection: type = 1, Timing notifier for BMA: type = 4
 #include <omnetpp.h>
 #include <map>
 
@@ -104,7 +104,7 @@ void Router::initialize(int stage) {
 
 void Router::handleMessage(cMessage *msg) {
   // check the header of the received package
-  header *pk = check_and_cast<header *>(msg);
+  Header *pk = check_and_cast<Header *>(msg);
   int destAddr = pk->getDestAddr();  // read destination from the packet
   int who_are_you = pk->getKind();  // read the type of packet // This might be better fixed
   if (destAddr == myAddress && who_are_you == 1) {  // If destination is this node: Path selection

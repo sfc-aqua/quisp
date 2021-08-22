@@ -1,5 +1,5 @@
 #include "SwappingAction.h"
-#include <classical_messages_m.h>
+#include "messages/classical_messages.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <modules/QNIC.h>

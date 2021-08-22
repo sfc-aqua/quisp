@@ -16,7 +16,7 @@
 #include "../../PhysicalConnection/BSA/HoMController.h"
 #include "BellPairStore.h"
 #include "IRuleEngine.h"
-#include "classical_messages_m.h"
+#include "messages/classical_messages.h"
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RealTimeController/IRealTimeController.h"

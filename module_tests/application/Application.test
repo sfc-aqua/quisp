@@ -55,11 +55,11 @@ network = ApplicationTestNet
 **.qrsa.hm.Purification_type = 0
 
 %includes:
-#include <classical_messages_m.h>
+#include "messages/classical_messages.h"
 
 %file: mock_router.cc
 #include <omnetpp.h>
-#include <classical_messages_m.h>
+#include "messages/classical_messages.h"
 #include <modules/Application/Application.h>
 #include <test_utils/TestUtils.h>
 using namespace omnetpp;
