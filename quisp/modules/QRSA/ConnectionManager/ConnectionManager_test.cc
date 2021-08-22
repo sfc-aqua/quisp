@@ -96,6 +96,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   auto gate = connection_manager->toRouterGate;
   EXPECT_EQ(gate->messages.size(), 4);
 
+  unsigned long ruleset_id;
   // checking the ruleset for QNode2(initiator)
   {
     auto *packetFor2 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[0]);
@@ -104,29 +105,50 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     auto *ruleset = packetFor2->getRuleSet();
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset->size(), 4);
+    ruleset_id = ruleset->ruleset_id;
+    // EXPECT_EQ(packetFor2->getRuleSet_id(), ruleset_id);
+    EXPECT_EQ(ruleset->entangled_partners.size(), 1);
+    // EXPECT_EQ(ruleset->entangled_partners.at(0), 5); // always 0
 
-    // checking the 1st rule
+    // checking the 1st rule: if EnoughResource -> Purify
     {
       auto *rule = ruleset->rules.at(0).get();
       EXPECT_EQ(rule->name, "X purification with : 3");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      // action partner must be the next neighbor qnode3 (this qnode is qnode2[initiator])
+      // first action is the purification with the neighbor qnode
+      EXPECT_EQ(rule->action_partners.at(0), 3);
+      EXPECT_EQ(rule->next_action_partners.size(), 0);
+
       EXPECT_EQ(rule->condition->clauses.size(), 1);
       EXPECT_NE(dynamic_cast<PurifyAction *>(rule->action.get()), nullptr);
       EXPECT_NE(dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0)), nullptr);
     }
 
-    // checking the 2nd rule
+    // checking the 2nd rule: Wait
     {
       auto *rule = ruleset->rules.at(1).get();
       EXPECT_EQ(rule->name, "Wait rule with: 3");
-      EXPECT_EQ(rule->condition->clauses.size(), 1);
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      EXPECT_EQ(rule->action_partners.at(0), 3);  // just wait QNode 3
+      EXPECT_EQ(rule->next_action_partners.size(), 0);
+      ASSERT_EQ(rule->condition->clauses.size(), 1);
       EXPECT_NE(dynamic_cast<WaitClause *>(rule->condition->clauses.at(0)), nullptr);
       EXPECT_EQ(rule->action.get(), nullptr);
     }
 
-    // checking the 3rd rule
+    // checking the 3rd rule: if EnoughResource -> Purify
     {
       auto *rule = ruleset->rules.at(2).get();
       EXPECT_EQ(rule->name, "X purification with : 5");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      // action partner must be the qnode5(responder)
+      // third action is the purification with the opposite end qnode
+      EXPECT_EQ(rule->action_partners.at(0), 5);
+      EXPECT_EQ(rule->next_action_partners.size(), 0);
       EXPECT_EQ(rule->condition->clauses.size(), 1);
       EXPECT_NE(dynamic_cast<PurifyAction *>(rule->action.get()), nullptr);
       EXPECT_NE(dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0)), nullptr);
@@ -136,11 +158,21 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     {
       auto *rule = ruleset->rules.at(3).get();
       EXPECT_EQ(rule->name, "tomography");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
       EXPECT_EQ(rule->condition->clauses.size(), 2);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      // action partner must be the qnode5(responder)
+      // last action is the tomography with the opposite end qnode
+      EXPECT_EQ(rule->action_partners.at(0), 5);
+      EXPECT_EQ(rule->next_action_partners.size(), 0);
       EXPECT_NE(dynamic_cast<RandomMeasureAction *>(rule->action.get()), nullptr);
       EXPECT_NE(dynamic_cast<MeasureCountClause *>(rule->condition.get()->clauses.at(0)), nullptr);
       EXPECT_NE(dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(1)), nullptr);
     }
+
+    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(1)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, ruleset->rules.at(3)->rule_index);
   }
 
   auto *packetFor3 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[1]);
