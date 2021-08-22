@@ -460,18 +460,6 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     }
   }
 
-  // check
-  // EV<<"RuleSet id"<<ruleset_id<<"\n";
-  // for (auto rs = ruleset_map.begin(); rs != ruleset_map.end(); ++rs) {
-  //   int owner = rs->first;
-  //   RuleSet *ruleset = rs->second;
-  //   EV << "owner: " << owner << "\n";
-  //   for (auto rule = ruleset->cbegin(); rule != ruleset->cend(); ++rule) {
-  //     EV << "Rule: " << (*rule)->name << " Rule id: " << (*rule)->rule_index << " next rule id: " << (*rule)->next_rule_id << "\n";
-  //   }
-  // }
-  // error("check");
-
   // 3. send rulesets to nodes
   for (auto it = ruleset_map.begin(); it != ruleset_map.end(); ++it) {
     int owner_address = it->first;

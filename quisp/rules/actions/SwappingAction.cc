@@ -8,10 +8,10 @@ namespace quisp {
 namespace rules {
 namespace actions {
 
-SwappingAction::SwappingAction(unsigned long ruleset_id, unsigned long rule_id, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr,
-                               int slqi, QNIC_type slqt, int srqi, QNIC_type srqt) {
-  _ruleset_id = ruleset_id;
-  _rule_id = rule_id;
+SwappingAction::SwappingAction(unsigned long _ruleset_id, unsigned long _rule_id, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad,
+                               int rr, int slqi, QNIC_type slqt, int srqi, QNIC_type srqt) {
+  ruleset_id = _ruleset_id;
+  rule_id = _rule_id;
 
   left_partner = lp;
   left_qnic_type = lqt;
@@ -114,9 +114,8 @@ cPacket *SwappingAction::run(cModule *re) {
   // no destination here. In RuleEngine, it's set.
   // this setKind() doesn't seem to have any effect; set instead in void RuleEngine::traverseThroughAllProcesses2()
   pk->setKind(5);
-  EV << "RuleSet id: " << _ruleset_id << " Rule id: " << _rule_id << "\n";
-  pk->setRuleSet_id(_ruleset_id);
-  pk->setRule_id(_rule_id);
+  pk->setRuleSet_id(ruleset_id);
+  pk->setRule_id(rule_id);
   pk->setAction_index(action_index);
   pk->setOperation_type_left(operation_type_left);  // operation type for left node
   pk->setOperation_type_right(operation_type_right);  // operation type for right node

@@ -35,7 +35,7 @@ TEST(ConnectionManagerRuleGenTest, PurificationRule) {
   ConnectionManager connection_manager;
   int partner_addr = 1;
   int purification_type = 0;  // 0: X, 1: Z
-  int num_purification = 3;
+  int num_purification = 1;
   QNIC_type qnic_type = QNIC_E;
   int qnic_id = 4;
   unsigned long ruleset_id = 5;

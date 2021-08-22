@@ -7,7 +7,7 @@ namespace rules {
 namespace clauses {
 class WaitClause : public Clause {
  public:
-  WaitClause() : Clause() {};
+  WaitClause() : Clause(){};
   bool check(std::multimap<int, IStationaryQubit*>) override;
   bool checkTerminate(std::multimap<int, IStationaryQubit*>) const override { return false; };
 };

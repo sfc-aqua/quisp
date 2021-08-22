@@ -71,7 +71,7 @@ class SwappingAction : public OriginalSwappingAction {
 
 TEST(SwappingActionTest, init) {
   unsigned long ruleset_id = 0;
-  int rule_index = 1;
+  unsigned long rule_index = 1;
 
   int left_partner_addr = 2;
   QNIC_type left_qnic_type = QNIC_E;
