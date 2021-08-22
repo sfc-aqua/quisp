@@ -24,7 +24,6 @@ class Condition {
   bool check(std::multimap<int, IStationaryQubit*> resources) const;
   bool checkTerminate(std::multimap<int, IStationaryQubit*> resources) const;
 
- protected:
   std::vector<Clause*> clauses;
 };
 
