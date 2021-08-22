@@ -470,7 +470,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     }
   }
 
-  error("stop it");
+  // error("stop it");
 
   // 3. send rulesets to nodes
   for (auto it = ruleset_map.begin(); it != ruleset_map.end(); ++it) {
