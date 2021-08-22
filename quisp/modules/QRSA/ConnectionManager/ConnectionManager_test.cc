@@ -35,7 +35,7 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
     setParInt(this, "total_number_of_qnics", 10);
     this->setName("connection_manager_test_target");
     setParBool(this, "simultaneous_es_enabled", false);
-    setParBool(this, "entanglement_swapping_with_purification", true);
+    setParBool(this, "entanglement_swapping_with_purification", false);
     setParInt(this, "num_remote_purification", 1);
 
     this->provider.setStrategy(std::make_unique<Strategy>(routing_daemon, hardware_monitor));
@@ -69,6 +69,8 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   auto *connection_manager = new ConnectionManagerTestTarget(routing_daemon, hardware_monitor);
   sim->registerComponent(connection_manager);
   connection_manager->par("address") = 5;
+  connection_manager->par("entanglement_swapping_with_purification") = true;
+
   connection_manager->callInitialize();
   auto *req = new ConnectionSetupRequest;
 
@@ -97,6 +99,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   EXPECT_EQ(gate->messages.size(), 4);
 
   unsigned long ruleset_id;
+
   // checking the ruleset for QNode2(initiator)
   {
     auto *packetFor2 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[0]);
@@ -110,7 +113,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(ruleset->entangled_partners.size(), 1);
     // EXPECT_EQ(ruleset->entangled_partners.at(0), 5); // always 0
 
-    // checking the 1st rule: if EnoughResource -> Purify
+    // checking the 1st rule of QNode2(initiator): if EnoughResource -> Purify
     {
       auto *rule = ruleset->rules.at(0).get();
       EXPECT_EQ(rule->name, "X purification with : 3");
@@ -121,25 +124,37 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       EXPECT_EQ(rule->action_partners.at(0), 3);
       EXPECT_EQ(rule->next_action_partners.size(), 0);
 
+      auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
+      EXPECT_NE(action, nullptr);
+
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      EXPECT_NE(dynamic_cast<PurifyAction *>(rule->action.get()), nullptr);
-      EXPECT_NE(dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0)), nullptr);
+      auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
+      ASSERT_NE(clause, nullptr);
+
+      // it's a private/protected field, so later extract and check it
+      // EXPECT_EQ(clause->partner, 3);
+      // EXPECT_EQ(clause->qnic_id, 1);
+      // EXPECT_EQ(clause->qnic_type, QNIC_E);
+      // EXPECT_EQ(clause->resource, 0);
+      // EXPECT_EQ(clause->num_resource_required, 1);
     }
 
-    // checking the 2nd rule: Wait
+    // checking the 2nd rule of QNode2(initiator): Wait
     {
       auto *rule = ruleset->rules.at(1).get();
       EXPECT_EQ(rule->name, "Wait rule with: 3");
       EXPECT_EQ(rule->ruleset_id, ruleset_id);
       ASSERT_EQ(rule->action_partners.size(), 1);
       EXPECT_EQ(rule->action_partners.at(0), 3);  // just wait QNode 3
-      EXPECT_EQ(rule->next_action_partners.size(), 0);
+      EXPECT_EQ(rule->next_action_partners.size(), 1);
+      EXPECT_EQ(rule->next_action_partners.at(0), 5);
+
       ASSERT_EQ(rule->condition->clauses.size(), 1);
       EXPECT_NE(dynamic_cast<WaitClause *>(rule->condition->clauses.at(0)), nullptr);
       EXPECT_EQ(rule->action.get(), nullptr);
     }
 
-    // checking the 3rd rule: if EnoughResource -> Purify
+    // checking the 3rd rule of QNode2(initiator): if EnoughResource -> Purify
     {
       auto *rule = ruleset->rules.at(2).get();
       EXPECT_EQ(rule->name, "X purification with : 5");
@@ -149,44 +164,342 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       // third action is the purification with the opposite end qnode
       EXPECT_EQ(rule->action_partners.at(0), 5);
       EXPECT_EQ(rule->next_action_partners.size(), 0);
-      EXPECT_EQ(rule->condition->clauses.size(), 1);
-      EXPECT_NE(dynamic_cast<PurifyAction *>(rule->action.get()), nullptr);
-      EXPECT_NE(dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0)), nullptr);
+
+      auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
+      EXPECT_NE(action, nullptr);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 1);
+      auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
+      ASSERT_NE(clause, nullptr);
     }
 
-    // checking the 4th rule
+    // checking the 4th rule of QNode2(initiator): EnoughResource && MeasureCount -> Tomography
     {
       auto *rule = ruleset->rules.at(3).get();
       EXPECT_EQ(rule->name, "tomography");
       EXPECT_EQ(rule->ruleset_id, ruleset_id);
-      EXPECT_EQ(rule->condition->clauses.size(), 2);
       ASSERT_EQ(rule->action_partners.size(), 1);
       // action partner must be the qnode5(responder)
       // last action is the tomography with the opposite end qnode
       EXPECT_EQ(rule->action_partners.at(0), 5);
       EXPECT_EQ(rule->next_action_partners.size(), 0);
-      EXPECT_NE(dynamic_cast<RandomMeasureAction *>(rule->action.get()), nullptr);
-      EXPECT_NE(dynamic_cast<MeasureCountClause *>(rule->condition.get()->clauses.at(0)), nullptr);
-      EXPECT_NE(dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(1)), nullptr);
+
+      auto *action = dynamic_cast<RandomMeasureAction *>(rule->action.get());
+      EXPECT_NE(action, nullptr);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 2);
+      auto *measure_count_clause = dynamic_cast<MeasureCountClause *>(rule->condition.get()->clauses.at(0));
+      ASSERT_NE(measure_count_clause, nullptr);
+      auto *enough_res_clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(1));
+      ASSERT_NE(enough_res_clause, nullptr);
     }
 
     EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(1)->rule_index);
     EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_index);
     EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, ruleset->rules.at(3)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(3)->next_rule_id, 0);
   }
 
-  auto *packetFor3 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[1]);
-  ASSERT_NE(packetFor3, nullptr);
-  EXPECT_EQ(packetFor3->getDestAddr(), 3);
+  // checking the ruleset for QNode3
+  {
+    auto *packetFor3 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[1]);
+    ASSERT_NE(packetFor3, nullptr);
+    EXPECT_EQ(packetFor3->getDestAddr(), 3);
 
-  auto *packetFor4 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[2]);
-  ASSERT_NE(packetFor4, nullptr);
-  EXPECT_EQ(packetFor4->getDestAddr(), 4);
+    auto *ruleset = packetFor3->getRuleSet();
+    ASSERT_NE(ruleset, nullptr);
+    EXPECT_EQ(ruleset->size(), 5);
+    EXPECT_EQ(ruleset->ruleset_id, ruleset_id);
+    // EXPECT_EQ(packetFor3->getRuleSet_id(), ruleset_id);
+    EXPECT_EQ(ruleset->entangled_partners.size(), 1);
+    // EXPECT_EQ(ruleset->entangled_partners.at(0), 5); // always 0
 
-  auto *packetFor5 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[3]);
-  ASSERT_NE(packetFor5, nullptr);
-  EXPECT_EQ(packetFor5->getDestAddr(), 5);
+    // checking the 1st rule of QNode3: if EnoughResource -> Purify
+    {
+      auto *rule = ruleset->rules.at(0).get();
+      EXPECT_EQ(rule->name, "X purification with : 2");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      EXPECT_EQ(rule->action_partners.at(0), 2);
+      EXPECT_EQ(rule->next_action_partners.size(), 0);
 
+      auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
+      EXPECT_NE(action, nullptr);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 1);
+      auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
+      ASSERT_NE(clause, nullptr);
+    }
+
+    // checking the 2nd rule of QNode3: if EnoughResource -> Purify
+    {
+      auto *rule = ruleset->rules.at(1).get();
+      EXPECT_EQ(rule->name, "X purification with : 4");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      EXPECT_EQ(rule->action_partners.at(0), 4);
+      EXPECT_EQ(rule->next_action_partners.size(), 0);
+
+      auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
+      EXPECT_NE(action, nullptr);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 1);
+      auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
+      ASSERT_NE(clause, nullptr);
+    }
+
+    // checking the 3rd rule of QNode3: if EnoughResource -> Swapping
+    {
+      auto *rule = ruleset->rules.at(2).get();
+      EXPECT_EQ(rule->name, "Entanglement Swapping with 2 : 5");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 2);
+      EXPECT_EQ(rule->action_partners.at(0), 2);
+      EXPECT_EQ(rule->action_partners.at(1), 5);
+      EXPECT_EQ(rule->next_action_partners.size(), 0);
+
+      auto *action = dynamic_cast<SwappingAction *>(rule->action.get());
+      EXPECT_NE(action, nullptr);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 2);
+      auto *clause1 = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
+      ASSERT_NE(clause1, nullptr);
+      auto *clause2 = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(1));
+      ASSERT_NE(clause2, nullptr);
+    }
+
+    // checking the 4th rule of QNode3: Wait QNode4
+    {
+      auto *rule = ruleset->rules.at(3).get();
+      EXPECT_EQ(rule->name, "Wait rule with: 4");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      EXPECT_EQ(rule->action_partners.at(0), 4);
+      EXPECT_EQ(rule->next_action_partners.size(), 1);
+      EXPECT_EQ(rule->next_action_partners.at(0), 5);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 1);
+      EXPECT_NE(dynamic_cast<WaitClause *>(rule->condition->clauses.at(0)), nullptr);
+      EXPECT_EQ(rule->action.get(), nullptr);
+    }
+
+    // checking the 5th rule of QNode3: if EnoughResorce -> Purify
+    {
+      auto *rule = ruleset->rules.at(4).get();
+      EXPECT_EQ(rule->name, "X purification with : 5");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      EXPECT_EQ(rule->action_partners.at(0), 5);
+      EXPECT_EQ(rule->next_action_partners.size(), 0);
+
+      auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
+      EXPECT_NE(action, nullptr);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 1);
+      auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
+      ASSERT_NE(clause, nullptr);
+    }
+
+    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(1)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, 0);  // XXX: is it right?
+    EXPECT_EQ(ruleset->rules.at(3)->next_rule_id, ruleset->rules.at(4)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(4)->next_rule_id, 0);
+  }
+
+  // checking the ruleset for QNode4
+  {
+    auto *packetFor4 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[2]);
+    ASSERT_NE(packetFor4, nullptr);
+    EXPECT_EQ(packetFor4->getDestAddr(), 4);
+    auto *ruleset = packetFor4->getRuleSet();
+    ASSERT_NE(ruleset, nullptr);
+    EXPECT_EQ(ruleset->size(), 3);
+    EXPECT_EQ(ruleset->ruleset_id, ruleset_id);
+    // EXPECT_EQ(packetFor4->getRuleSet_id(), ruleset_id);
+    EXPECT_EQ(ruleset->entangled_partners.size(), 1);
+    // EXPECT_EQ(ruleset->entangled_partners.at(0), 5); // always 0
+
+    // checking the 1st rule of QNode4: if EnoughResource -> Purify
+    {
+      auto *rule = ruleset->rules.at(0).get();
+      EXPECT_EQ(rule->name, "X purification with : 3");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      EXPECT_EQ(rule->action_partners.at(0), 3);
+      EXPECT_EQ(rule->next_action_partners.size(), 0);
+
+      auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
+      EXPECT_NE(action, nullptr);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 1);
+      auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
+      ASSERT_NE(clause, nullptr);
+    }
+
+    // checking the 2nd rule of QNode4: if EnoughResource -> Purify
+    {
+      auto *rule = ruleset->rules.at(1).get();
+      EXPECT_EQ(rule->name, "X purification with : 5");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      EXPECT_EQ(rule->action_partners.at(0), 5);
+      EXPECT_EQ(rule->next_action_partners.size(), 0);
+
+      auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
+      EXPECT_NE(action, nullptr);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 1);
+      auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
+      ASSERT_NE(clause, nullptr);
+    }
+
+    // checking the 3rd rule of QNode4: if EnoughResource -> Swapping
+    {
+      auto *rule = ruleset->rules.at(2).get();
+      EXPECT_EQ(rule->name, "Entanglement Swapping with 3 : 5");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 2);
+      EXPECT_EQ(rule->action_partners.at(0), 3);
+      EXPECT_EQ(rule->action_partners.at(1), 5);
+      EXPECT_EQ(rule->next_action_partners.size(), 0);
+
+      auto *action = dynamic_cast<SwappingAction *>(rule->action.get());
+      EXPECT_NE(action, nullptr);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 2);
+      auto *clause1 = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
+      ASSERT_NE(clause1, nullptr);
+      auto *clause2 = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(1));
+      ASSERT_NE(clause2, nullptr);
+    }
+
+    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(1)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, 0);
+  }
+
+  // checking the ruleset for QNode5
+  {
+    auto *packetFor5 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[3]);
+    ASSERT_NE(packetFor5, nullptr);
+    EXPECT_EQ(packetFor5->getDestAddr(), 5);
+    auto *ruleset = packetFor5->getRuleSet();
+    ASSERT_NE(ruleset, nullptr);
+    EXPECT_EQ(ruleset->size(), 6);
+    EXPECT_EQ(ruleset->ruleset_id, ruleset_id);
+    // EXPECT_EQ(packetFor5->getRuleSet_id(), ruleset_id);
+    EXPECT_EQ(ruleset->entangled_partners.size(), 1);
+    // EXPECT_EQ(ruleset->entangled_partners.at(0), 5); // always 0
+
+    // checking the 1st rule of QNode5: if EnoughResource -> Purify
+    {
+      auto *rule = ruleset->rules.at(0).get();
+      EXPECT_EQ(rule->name, "X purification with : 4");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      EXPECT_EQ(rule->action_partners.at(0), 4);
+      EXPECT_EQ(rule->next_action_partners.size(), 0);
+
+      auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
+      EXPECT_NE(action, nullptr);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 1);
+      auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
+      ASSERT_NE(clause, nullptr);
+    }
+
+    // checking the 2nd rule of QNode5: Wait QNode3
+    {
+      auto *rule = ruleset->rules.at(1).get();
+      EXPECT_EQ(rule->name, "Wait rule with: 3");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      EXPECT_EQ(rule->action_partners.at(0), 3);
+      EXPECT_EQ(rule->next_action_partners.size(), 1);
+      EXPECT_EQ(rule->next_action_partners.at(0), 2);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 1);
+      EXPECT_NE(dynamic_cast<WaitClause *>(rule->condition->clauses.at(0)), nullptr);
+      EXPECT_EQ(rule->action.get(), nullptr);
+    }
+
+    // checking the 3rd rule of QNode5: if EnoughResource -> Purify
+    {
+      auto *rule = ruleset->rules.at(2).get();
+      EXPECT_EQ(rule->name, "X purification with : 2");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      EXPECT_EQ(rule->action_partners.at(0), 2);
+      EXPECT_EQ(rule->next_action_partners.size(), 0);
+
+      auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
+      EXPECT_NE(action, nullptr);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 1);
+      auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
+      ASSERT_NE(clause, nullptr);
+    }
+
+    // checking the 4th rule of QNode5: Wait QNode4
+    {
+      auto *rule = ruleset->rules.at(3).get();
+      EXPECT_EQ(rule->name, "Wait rule with: 4");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      EXPECT_EQ(rule->action_partners.at(0), 4);
+      EXPECT_EQ(rule->next_action_partners.size(), 1);
+      EXPECT_EQ(rule->next_action_partners.at(0), 3);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 1);
+      EXPECT_NE(dynamic_cast<WaitClause *>(rule->condition->clauses.at(0)), nullptr);
+      EXPECT_EQ(rule->action.get(), nullptr);
+    }
+
+    // checking the 5th rule of QNode5: if EnoughResource -> Purify
+    {
+      auto *rule = ruleset->rules.at(4).get();
+      EXPECT_EQ(rule->name, "X purification with : 3");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      EXPECT_EQ(rule->action_partners.at(0), 3);
+      EXPECT_EQ(rule->next_action_partners.size(), 0);
+
+      auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
+      EXPECT_NE(action, nullptr);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 1);
+      auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
+      ASSERT_NE(clause, nullptr);
+    }
+
+    // checking the 6th rule of QNode5: if EnoughResource -> Swapping
+    {
+      auto *rule = ruleset->rules.at(5).get();
+      EXPECT_EQ(rule->name, "tomography");
+      EXPECT_EQ(rule->ruleset_id, ruleset_id);
+      ASSERT_EQ(rule->action_partners.size(), 1);
+      // action partner must be the qnode2(initiator)
+      // last action is the tomography with the opposite end qnode
+      EXPECT_EQ(rule->action_partners.at(0), 2);
+      EXPECT_EQ(rule->next_action_partners.size(), 0);
+
+      auto *action = dynamic_cast<RandomMeasureAction *>(rule->action.get());
+      EXPECT_NE(action, nullptr);
+
+      ASSERT_EQ(rule->condition->clauses.size(), 2);
+      auto *measure_count_clause = dynamic_cast<MeasureCountClause *>(rule->condition.get()->clauses.at(0));
+      ASSERT_NE(measure_count_clause, nullptr);
+      auto *enough_res_clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(1));
+      ASSERT_NE(enough_res_clause, nullptr);
+    }
+
+    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(1)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, ruleset->rules.at(3)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(3)->next_rule_id, ruleset->rules.at(4)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(4)->next_rule_id, 0);
+  }
   delete routing_daemon;
   delete hardware_monitor;
 }
