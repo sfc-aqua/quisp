@@ -226,7 +226,7 @@ packet StopEmitting extends header{
 
 packet SwappingResult extends header{
     unsigned long RuleSet_id;
-    int Rule_id;
+    unsigned long Rule_id;
     int action_index;
 
     int left_Dest;

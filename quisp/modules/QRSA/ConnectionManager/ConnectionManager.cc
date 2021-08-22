@@ -461,16 +461,16 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   }
 
   // check
-  for (auto rs = ruleset_map.begin(); rs != ruleset_map.end(); ++rs) {
-    int owner = rs->first;
-    RuleSet *ruleset = rs->second;
-    EV << "owner: " << owner << "\n";
-    for (auto rule = ruleset->cbegin(); rule != ruleset->cend(); ++rule) {
-      EV << "Rule: " << (*rule)->name << " Rule id: " << (*rule)->rule_index << " next rule id: " << (*rule)->next_rule_id << "\n";
-    }
-  }
-
-  error("stop it");
+  // EV<<"RuleSet id"<<ruleset_id<<"\n";
+  // for (auto rs = ruleset_map.begin(); rs != ruleset_map.end(); ++rs) {
+  //   int owner = rs->first;
+  //   RuleSet *ruleset = rs->second;
+  //   EV << "owner: " << owner << "\n";
+  //   for (auto rule = ruleset->cbegin(); rule != ruleset->cend(); ++rule) {
+  //     EV << "Rule: " << (*rule)->name << " Rule id: " << (*rule)->rule_index << " next rule id: " << (*rule)->next_rule_id << "\n";
+  //   }
+  // }
+  // error("check");
 
   // 3. send rulesets to nodes
   for (auto it = ruleset_map.begin(); it != ruleset_map.end(); ++it) {
@@ -910,10 +910,14 @@ std::unique_ptr<Rule> ConnectionManager::simultaneousSwappingRule(SwappingConfig
 std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, int next_parter_address, unsigned long ruleset_id, unsigned long rule_id) {
   // This is used for waiting swapping result from partner
   std::vector<int> partners = {partner_address};
-  std::string rule_name = "Wait rule with: " + std::to_string(partner_address) + " to ";
-  auto empty_rule = std::make_unique<Rule>(ruleset_id, rule_id, rule_name, partners);
-  empty_rule->next_action_partners.push_back(next_parter_address);
-  return empty_rule;
+  std::string rule_name = "Wait rule with: " + std::to_string(partner_address);
+  auto wait_rule = std::make_unique<Rule>(ruleset_id, rule_id, rule_name, partners);
+  Condition *condition = new Condition();
+  Clause *wait_clause = new WaitClause();
+  condition->addClause(wait_clause);
+  wait_rule->setCondition(condition);
+  wait_rule->next_action_partners.push_back(next_parter_address);
+  return wait_rule;
 }
 
 std::unique_ptr<Rule> ConnectionManager::tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,

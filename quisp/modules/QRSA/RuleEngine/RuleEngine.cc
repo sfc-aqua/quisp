@@ -176,7 +176,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     LinkTomographyRuleSet *pk = check_and_cast<LinkTomographyRuleSet *>(msg);
     // std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
     Process p;
-    p.ownner_addr = pk->getRuleSet()->owner_addr;
+    p.owner_addr = pk->getRuleSet()->owner_addr;
     p.Rs = pk->getRuleSet();
     int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
     std::cout << "Process size is ...." << p.Rs->size() << " node[" << parentAddress << "\n";
@@ -294,7 +294,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     InternalRuleSetForwarding *pkt = check_and_cast<InternalRuleSetForwarding *>(msg);
     // add actual process
     Process p;
-    p.ownner_addr = pkt->getRuleSet()->owner_addr;
+    p.owner_addr = pkt->getRuleSet()->owner_addr;
     // for check
     p.Rs = pkt->getRuleSet();
     // here swappers got swapping ruleset with internal packet
@@ -313,7 +313,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     if (pkt->getApplication_type() == 0) {
       // Received a tomography rule set.
       Process p;
-      p.ownner_addr = pkt->getRuleSet()->owner_addr;
+      p.owner_addr = pkt->getRuleSet()->owner_addr;
       p.Rs = pkt->getRuleSet();
       int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
       std::cout << "Process size is ...." << p.Rs->size() << " node[" << parentAddress << "\n";
@@ -555,16 +555,18 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
   // 0. this resorce update only update just one entanglement
   int partner_address;
   IStationaryQubit *qubit;
+  unsigned long next_rule_id;
+
   // 1. loop for ruleset and check where the target index
   for (auto it = rp.cbegin(); it != rp.cend(); ++it) {
     RuleSet *process = it->second.Rs;  // check ruleset
     if (process->ruleset_id == ruleset_id) {
       // 2. pick up proper rule inside the ruleset
-      for (auto rule = process->cbegin(); rule != process->cend(); ++rule) {
+      for (auto rule = process->cbegin(); rule != process->cend(); rule++) {
         if ((*rule)->rule_index == rule_id) {  // here we can identify the rule of purification
 
           // 3. loop for resources currently assined
-          for (auto qubit_map = (*rule)->resources.begin(); qubit_map != (*rule)->resources.end(); ++qubit_map) {
+          for (auto qubit_map = (*rule)->resources.begin(); qubit_map != (*rule)->resources.end(); qubit_map++) {
             partner_address = qubit_map->first;
             qubit = qubit_map->second;  // qubit instance
 
@@ -574,15 +576,17 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
               qubit->Unlock();
               // remove qubit from resource list in the rule
               (*rule)->resources.erase(qubit_map);
-              rule++;
-              if (rule == process->cend()) {
-                error("no more rules after this. Should be promoted to the application");
-              }
-              (*rule)->addResource(partner_address, qubit);
-              // bell_pair_store.insertEntangledQubit(partner_address, qubit);
-              return;
+              EV << "Current rule: " << (*rule)->name << "\n";
+              EV << "partner: " << partner_address << " qubit: " << qubit << "\n";
+              next_rule_id = (*rule)->next_rule_id;
+              break;
             }
           }
+        } else if ((*rule)->rule_index == next_rule_id) {
+          (*rule)->addResource(partner_address, qubit);
+          EV << "Next rule: " << (*rule)->name << "\n";
+          EV << "partner: " << partner_address << " qubit: " << qubit << "\n";
+          return;
         }
       }
     }
@@ -977,49 +981,6 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     // std::cout << qubit << ", node[" << qubit->node_address << "] from qnic[" << qubit->qnic_index << "]\n";
     error("RuleEngine. Entanglement swapping went wrong");
   }
-  bool promoted = false;
-  // Promote entanglement from this rule to the next rule
-  // 1. erase qubit from the privious rule (Entanglement Swapping)
-  // 1.1 take identifiers
-  unsigned long ruleset_id = swapr.id.ruleset_id;
-  unsigned long rule_id = swapr.id.rule_id;
-
-  unsigned long next_rule_id = -1;
-  // this routine can be a function in the ruleset.
-  for (auto iter = rp.cbegin(); iter != rp.cend(); iter++) {
-    RuleSet *ruleset = iter->second.Rs;
-    if (ruleset->ruleset_id == ruleset_id) {
-      for (auto rule = ruleset->cbegin(); rule != ruleset->cend(); rule++) {
-        if ((*rule)->rule_index == rule_id) {  // rule identified
-          // remove qubit from previous rule
-          for (auto qubit_map = (*rule)->resources.cbegin(); qubit_map != (*rule)->resources.cend(); qubit_map++) {
-            auto target_qubit = qubit_map->second;
-            if (target_qubit == qubit) {
-              (*rule)->resources.erase(qubit_map);
-              // 2. add qubit to the next rule
-              if (rule == ruleset->cend()) {
-                error("No more rules to promote. Should pass to the application");
-              }
-              // qubit->Deallocate();
-              // (*rule)->addResource(new_partner, qubit);
-
-              // next_rule_id = (*rule)->next_rule_id;
-              break;
-            }
-          }
-        } else if ((*rule)->rule_index == next_rule_id) {
-          // next rule id is properly updated
-          qubit->Deallocate();
-          (*rule)->addResource(new_partner, qubit);
-          promoted = true;
-        }
-      }
-    }
-  }
-  if (!promoted) {
-    error("The qubit is not promoted from entanglement swapping to the next rule");
-  }
-
   // FOR DEBUGGING
   if (qubit->entangled_partner != nullptr) {
     if (qubit->entangled_partner->entangled_partner == nullptr) {
@@ -1030,8 +991,44 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     }
   }
 
-  ResourceAllocation(qnic_type, qnic_index);
-  traverseThroughAllProcesses2();  // New resource added to QNIC with qnic_type qnic_index.
+  bool promoted = false;
+  // Promote entanglement from this rule to the next rule
+  // 1. erase qubit from the privious rule (Entanglement Swapping)
+  // 1.1 take identifiers
+  unsigned long ruleset_id = swapr.id.ruleset_id;
+  unsigned long rule_id = swapr.id.rule_id;
+  unsigned long next_rule_id;
+  // this routine can be a function in the ruleset.
+  if (rp.size() == 0) {
+    return;
+  }
+  for (auto iter = rp.cbegin(); iter != rp.cend(); iter++) {
+    RuleSet *ruleset = iter->second.Rs;
+    EV << ruleset->ruleset_id << " : " << ruleset_id << "\n";
+    if (ruleset->ruleset_id == ruleset_id) {
+      for (auto rule = ruleset->cbegin(); rule != ruleset->cend(); rule++) {
+        if ((*rule)->rule_index == rule_id) {  // rule identified
+          // remove qubit from previous rule
+          for (auto qubit_map = (*rule)->resources.cbegin(); qubit_map != (*rule)->resources.cend(); qubit_map++) {
+            auto target_qubit = qubit_map->second;
+            if (target_qubit == qubit) {
+              (*rule)->resources.erase(qubit_map);
+              next_rule_id = (*rule)->next_rule_id;
+              break;
+            }
+          }
+        } else if ((*rule)->rule_index == next_rule_id) {
+          // next rule id is properly updated
+          (*rule)->addResource(new_partner, qubit);
+          promoted = true;
+          return;
+        }
+      }
+    }
+  }
+  if (!promoted) {
+    error("The qubit is not promoted from entanglement swapping to the next rule");
+  }
 }
 
 void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_result swapr) {
@@ -1309,6 +1306,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
             // packet for left node
             SwappingResult *pkt_for_left = new SwappingResult("SwappingResult(Left)");
+            pkt_for_left->setRuleSet_id(pkt->getRuleSet_id());
+            pkt_for_left->setRule_id(pkt->getRule_id());
             pkt_for_left->setKind(5);  // cyan
             pkt_for_left->setDestAddr(pkt->getLeft_Dest());
             pkt_for_left->setSrcAddr(parentAddress);
@@ -1321,6 +1320,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
             // packet for right node
             SwappingResult *pkt_for_right = new SwappingResult("SwappingResult(Right)");
+            pkt_for_right->setRuleSet_id(pkt->getRuleSet_id());
+            pkt_for_right->setRule_id(pkt->getRule_id());
             pkt_for_right->setKind(5);  // cyan
             pkt_for_right->setDestAddr(pkt->getRight_Dest());
             pkt_for_right->setSrcAddr(parentAddress);

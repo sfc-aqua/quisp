@@ -4,6 +4,7 @@
 #include <omnetpp.h>
 #include <test_utils/TestUtils.h>
 #include <memory>
+#include <utility>
 
 #include "BellPairStore.h"
 #include "IRuleEngine.h"
@@ -111,42 +112,65 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
 };
 
 TEST(RuleEngineTest, ESResourceUpdate) {
-  prepareSimulation();
+  // 1 (wait) -- 2(ES) -- 3(wait)
+  // from wait to next rule
+  auto* sim = prepareSimulation();
   auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockQubit0 = new MockStationaryQubit(QNIC_E, 0);
-  auto* mockQubit1 = new MockStationaryQubit(QNIC_E, 0);  // qubit to be updated with entanglement swapping
-  auto* mockQubit2 = new MockStationaryQubit(QNIC_E, 0);
-  RuleEngineTestTarget c{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
+  auto* mockQubit1 = new MockStationaryQubit(QNIC_E, 0);
+  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
 
   auto info = std::make_unique<ConnectionSetupInfo>();
   info->qnic.type = QNIC_E;
   info->qnic.index = 0;
 
+  unsigned long mock_ruleset_id = 10;
+  unsigned long mock_rule_id = 5193;
+  unsigned long mock_next_rule_id = 3829;
+
   swapping_result swapr;
+  swapr.id.ruleset_id = mock_ruleset_id;
+  swapr.id.rule_id = mock_rule_id;
   swapr.new_partner = 3;
   swapr.operation_type = 0;
   swapr.new_partner_qnic_address = 1;
   swapr.new_partner_qnic_index = 1;
   swapr.new_partner_qnic_type = QNIC_E;
   swapr.measured_qubit_index = 1;
+
   EXPECT_CALL(*routingdaemon, return_QNIC_address_to_destAddr(swapr.new_partner)).WillOnce(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).Times(2).WillOnce(Return(2)).WillOnce(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).Times(2).WillOnce(Return(2)).WillOnce(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(std::move(info))));
-  c.initialize();
-  c.setAllResources(0, mockQubit0);
-  c.setAllResources(1, mockQubit1);
-  c.setAllResources(2, mockQubit2);
-  auto* partner = c.bell_pair_store.findQubit(QNIC_E, 0, 1);
-  ASSERT_TRUE(partner != nullptr);
-  // check resource is updated?
-  c.updateResources_EntanglementSwapping(swapr);
-  auto* updated_partner = c.bell_pair_store.findQubit(QNIC_E, 0, 3);
-  ASSERT_TRUE(updated_partner != nullptr);
-  // old record was deleted properly
-  auto* old_partner = c.bell_pair_store.findQubit(QNIC_E, 0, 1);
-  ASSERT_TRUE(old_partner == nullptr);
+
+  // 0. set ruleset
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+  auto* rs = new RuleSet(mock_ruleset_id, mock_rule_id, {});  // ruleset_id, ruleset_owner, partners
+  auto wait_rule = std::make_unique<Rule>();
+  wait_rule->ruleset_id = mock_ruleset_id;
+  wait_rule->rule_index = mock_rule_id;
+  wait_rule->next_rule_id = mock_next_rule_id;
+  rs->addRule(std::move(wait_rule));
+  auto next_rule = std::make_unique<Rule>();
+  next_rule->ruleset_id = mock_ruleset_id;
+  next_rule->rule_index = mock_next_rule_id;
+  rs->addRule(std::move(next_rule));
+
+  Process proc;
+  proc.owner_addr = 0;
+  proc.Rs = rs;
+  rule_engine->rp.insert(std::make_pair(0, proc));
+  rule_engine->rp[0].Rs->getRule(0)->addResource(1, mockQubit1);
+  ASSERT_EQ(rule_engine->rp[0].Rs->getRule(0)->resources.size(), 1);
+  ASSERT_EQ(rule_engine->rp[0].Rs->getRule(1)->resources.size(), 0);
+  rule_engine->updateResources_EntanglementSwapping(swapr);
+  // 1. remove from previous rule
+  ASSERT_EQ(rule_engine->rp[0].Rs->getRule(0)->resources.size(), 0);
+  // // 2. add to the next rule
+  ASSERT_EQ(rule_engine->rp[0].Rs->getRule(1)->resources.size(), 1);
+  delete mockHardwareMonitor;
+  delete routingdaemon;
 }
 
 TEST(RuleEngineTest, resourceAllocation) {
@@ -173,7 +197,7 @@ TEST(RuleEngineTest, resourceAllocation) {
   rule->action_partners = {1};
   rs->addRule(std::move(rule));
   Process proc;
-  proc.ownner_addr = 0;
+  proc.owner_addr = 0;
   proc.Rs = rs;
   rule_engine->rp.insert(std::make_pair(0, proc));
 

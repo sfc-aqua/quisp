@@ -8,10 +8,10 @@ namespace quisp {
 namespace rules {
 namespace actions {
 
-SwappingAction::SwappingAction(unsigned long RuleSet_id, unsigned long rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad,
-                               int rr, int slqi, QNIC_type slqt, int srqi, QNIC_type srqt) {
-  ruleset_id = RuleSet_id;
-  rule_id = rule_index;
+SwappingAction::SwappingAction(unsigned long ruleset_id, unsigned long rule_id, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr,
+                               int slqi, QNIC_type slqt, int srqi, QNIC_type srqt) {
+  _ruleset_id = ruleset_id;
+  _rule_id = rule_id;
 
   left_partner = lp;
   left_qnic_type = lqt;
@@ -44,6 +44,13 @@ cPacket *SwappingAction::run(cModule *re) {
     pk->setError_text("Not enough resource found! This shouldn't happen!");
     return pk;
   }
+
+  if (left_qubit == right_qubit) {
+    Error *pk = new Error;
+    pk->setError_text("Left and right qubits are the same. ");
+    return pk;
+  }
+
   if (left_qnic_id < 0 || right_qnic_id < 0) {
     Error *pk = new Error;
     pk->setError_text("QNICs are not found!");
@@ -53,6 +60,12 @@ cPacket *SwappingAction::run(cModule *re) {
   // actual swapping operations
   auto *right_partner_qubit = right_qubit->entangled_partner;
   auto *left_partner_qubit = left_qubit->entangled_partner;
+
+  if (right_partner_qubit == nullptr || left_partner_qubit == nullptr) {
+    Error *pk = new Error;
+    pk->setError_text("Partner qubits are null");
+    return pk;
+  }
   // just swapping pointer.
   // swapper have no way to know this swapping is success or not.
   // bell measurement
@@ -101,8 +114,9 @@ cPacket *SwappingAction::run(cModule *re) {
   // no destination here. In RuleEngine, it's set.
   // this setKind() doesn't seem to have any effect; set instead in void RuleEngine::traverseThroughAllProcesses2()
   pk->setKind(5);
-  pk->setRuleSet_id(ruleset_id);
-  pk->setRule_id(rule_id);
+  EV << "RuleSet id: " << _ruleset_id << " Rule id: " << _rule_id << "\n";
+  pk->setRuleSet_id(_ruleset_id);
+  pk->setRule_id(_rule_id);
   pk->setAction_index(action_index);
   pk->setOperation_type_left(operation_type_left);  // operation type for left node
   pk->setOperation_type_right(operation_type_right);  // operation type for right node

@@ -73,7 +73,7 @@ struct PhotonTransmissionConfig {
 // Process contains RuleSet
 struct Process {
   // is this different from RuleSet::owner_addr?
-  int ownner_addr;
+  int owner_addr;
   RuleSet *Rs;
 };
 
