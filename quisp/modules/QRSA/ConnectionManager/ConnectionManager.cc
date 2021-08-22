@@ -348,12 +348,15 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     // Should be (1 (first), 5 (last),) --> end nodes
     //  2 (second) > 4 (second last) > 3 (third)
     auto rev_path = path;
-    std::sort(rev_path.begin(), rev_path.end(), std::greater<int>{});
+    std::reverse(rev_path.begin(), rev_path.end());
+    for (int i = 1; i < (path.size() + 1) / 2; i++) {
+      EV << path.at(i) << " : " << rev_path.at(i) << "\n";
+    }
     for (int i = 1; i < (path.size() + 1) / 2; i++) {  // repeat for all swappers
       // ES
       std::vector<int> swapper_nodes;
       if (path.at(i) != rev_path.at(i)) {
-        swapper_nodes = {path.at(i), rev_path.at(i)};
+        swapper_nodes = {rev_path.at(i), path.at(i)};
       } else {
         swapper_nodes = {path.at(i)};
       }
@@ -459,6 +462,18 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       current_index++;
     }
   }
+
+  // // check
+  // EV<<"RuleSet id"<<ruleset_id<<"\n";
+  // for (auto rs = ruleset_map.begin(); rs != ruleset_map.end(); ++rs) {
+  //   int owner = rs->first;
+  //   RuleSet *ruleset = rs->second;
+  //   EV << "owner: " << owner << "\n";
+  //   for (auto rule = ruleset->cbegin(); rule != ruleset->cend(); ++rule) {
+  //     EV << "Rule: " << (*rule)->name << " Rule id: " << (*rule)->rule_index << " next rule id: " << (*rule)->next_rule_id << "\n";
+  //   }
+  // }
+  // error("check");
 
   // 3. send rulesets to nodes
   for (auto it = ruleset_map.begin(); it != ruleset_map.end(); ++it) {
@@ -568,7 +583,7 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
   }
   int left_partner = it->second.at(0);
   int right_partner = it->second.at(1);
-  EV << "swapping" << left_partner << "<-->" << swapper_address << "<-->" << right_partner << "\n";
+  EV_DEBUG << "swapping" << left_partner << "<-->" << swapper_address << "<-->" << right_partner << "\n";
   auto iter_left = std::find(path.begin(), path.end(), left_partner);
   auto iter_right = std::find(path.begin(), path.end(), right_partner);
   if (iter_left == path.end()) {

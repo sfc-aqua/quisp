@@ -556,36 +556,34 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
   int partner_address;
   IStationaryQubit *qubit;
   unsigned long next_rule_id;
-
+  if (rp.size() == 0) {
+    return;
+  }
   // 1. loop for ruleset and check where the target index
   for (auto it = rp.cbegin(); it != rp.cend(); ++it) {
     RuleSet *process = it->second.Rs;  // check ruleset
     if (process->ruleset_id == ruleset_id) {
       // 2. pick up proper rule inside the ruleset
-      for (auto rule = process->cbegin(); rule != process->cend(); rule++) {
+      for (auto rule = process->cbegin(); rule != process->cend(); ++rule) {
         if ((*rule)->rule_index == rule_id) {  // here we can identify the rule of purification
-
           // 3. loop for resources currently assined
-          for (auto qubit_map = (*rule)->resources.begin(); qubit_map != (*rule)->resources.end(); qubit_map++) {
+          for (auto qubit_map = (*rule)->resources.begin(); qubit_map != (*rule)->resources.end(); ++qubit_map) {
             partner_address = qubit_map->first;
-            qubit = qubit_map->second;  // qubit instance
-
+            qubit = qubit_map->second;
             // 4. check which trial of purification
             if (qubit->action_index == index) {
               // 5. unlock qubit for later use
               qubit->Unlock();
               // remove qubit from resource list in the rule
               (*rule)->resources.erase(qubit_map);
-              EV << "Current rule: " << (*rule)->name << "\n";
-              EV << "partner: " << partner_address << " qubit: " << qubit << "\n";
+              EV << "rule: " << (*rule)->name << " at " << parentAddress << "\n";
               next_rule_id = (*rule)->next_rule_id;
+              EV << "next rule: " << next_rule_id << "\n";
               break;
             }
           }
         } else if ((*rule)->rule_index == next_rule_id) {
           (*rule)->addResource(partner_address, qubit);
-          EV << "Next rule: " << (*rule)->name << "\n";
-          EV << "partner: " << partner_address << " qubit: " << qubit << "\n";
           return;
         }
       }

@@ -123,7 +123,7 @@ class StationaryQubit : public IStationaryQubit {
 
   bool locked;
   unsigned long locked_ruleset_id;
-  int locked_rule_id;
+  unsigned long locked_rule_id;
 
  private:
   bool allocated;
