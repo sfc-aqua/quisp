@@ -117,8 +117,9 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     // checking the 2nd rule
     {
       auto *rule = ruleset->rules.at(1).get();
-      EXPECT_EQ(rule->name, "Wait rule with: 3 to ");
-      EXPECT_EQ(rule->condition.get(), nullptr);
+      EXPECT_EQ(rule->name, "Wait rule with: 3");
+      EXPECT_EQ(rule->condition->clauses.size(), 1);
+      EXPECT_NE(dynamic_cast<WaitClause *>(rule->condition->clauses.at(0)), nullptr);
       EXPECT_EQ(rule->action.get(), nullptr);
     }
 
