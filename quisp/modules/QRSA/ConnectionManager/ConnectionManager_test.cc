@@ -154,6 +154,9 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   auto *packetFor5 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[3]);
   ASSERT_NE(packetFor5, nullptr);
   EXPECT_EQ(packetFor5->getDestAddr(), 5);
+
+  delete routing_daemon;
+  delete hardware_monitor;
 }
 
 TEST(ConnectionManagerTest, GetQNICInterface) {
