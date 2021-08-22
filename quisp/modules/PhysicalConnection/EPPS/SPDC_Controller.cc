@@ -7,7 +7,7 @@
  *  \brief SPDC_Controller
  */
 #include <PhotonicQubit_m.h>
-#include "messages/classical_messages.h"
+#include <messages/classical_messages.h>
 #include <omnetpp.h>
 #include <vector>
 

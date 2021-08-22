@@ -2,7 +2,7 @@ cplusplus {{
 #include "base_messages_m.h"
 #include <rules/RuleSet.h>
 #include <modules/QNIC.h>
-}} 
+}}
 
 cplusplus {{
     typedef quisp::rules::RuleSet * RuleSetField;

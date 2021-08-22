@@ -5,7 +5,7 @@
  *
  *  \brief Router
  */
-#include "messages/classical_messages.h"  //Path selection: type = 1, Timing notifier for BMA: type = 4
+#include <messages/classical_messages.h>  //Path selection: type = 1, Timing notifier for BMA: type = 4
 #include <omnetpp.h>
 #include <map>
 

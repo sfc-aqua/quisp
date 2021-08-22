@@ -7,7 +7,7 @@
  */
 
 #include "Rule.h"
-#include "messages/classical_messages.h"
+#include <messages/classical_messages.h>
 
 using quisp::messages::ConditionNotSatisfied;
 

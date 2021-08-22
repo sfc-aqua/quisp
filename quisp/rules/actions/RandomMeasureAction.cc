@@ -1,5 +1,5 @@
 #include "RandomMeasureAction.h"
-#include "messages/classical_messages.h"
+#include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
 namespace quisp {

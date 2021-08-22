@@ -10,7 +10,7 @@
 #define MODULES_PHOTONICSWITCH_H_
 
 #include <PhotonicQubit_m.h>
-#include "messages/classical_messages.h"
+#include <messages/classical_messages.h>
 #include <omnetpp.h>
 #include <vector>
 

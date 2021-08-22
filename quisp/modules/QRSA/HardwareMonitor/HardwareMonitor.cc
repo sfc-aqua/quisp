@@ -15,7 +15,7 @@
 #include <unsupported/Eigen/KroneckerProduct>
 #include <unsupported/Eigen/MatrixFunctions>
 
-#include "messages/classical_messages.h"
+#include <messages/classical_messages.h>
 #include "omnetpp/cexception.h"
 #include "utils/ComponentProvider.h"
 

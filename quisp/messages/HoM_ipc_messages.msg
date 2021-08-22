@@ -1,6 +1,6 @@
 cplusplus {{
 #include "base_messages_m.h"
-}} 
+}}
 
 namespace quisp::messages;
 
