@@ -68,6 +68,8 @@ void RoutingDaemon::initialize(int stage) {
 
   cTopology::Node *thisNode = topo->getNodeFor(getParentModule()->getParentModule());  // The parent node with this specific router
 
+  int number_of_links_total = 0;
+
   // Initialize channel weights for all existing links.
   for (int x = 0; x < topo->getNumNodes(); x++) {  // Traverse through all nodes
     // For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
@@ -76,14 +78,27 @@ void RoutingDaemon::initialize(int stage) {
       // EV<<"\n thisNode is "<< topo->getNode(x)->getModule()->getFullName() <<" has "<<topo->getNode(x)->getNumOutLinks()<<" links \n";
 
       // Get assigned cost for each channel written in .ned file
-      double channel_cost = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("cost");
+      // double channel_cost = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("cost");
+      // Calculate bell pair generation rate to use it as channel cost
+      double speed = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("Speed_of_light_in_fiber");
+      double length = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("distance");
+      double emission_prob = 0.46*0.49;
+      // Emission success probability needs to be read from the .ini file or StationaryQubit.cc residing inside qnic module
+      //cTopology::Node *currNode = topo->getNodeFor(getParentModule()->getParentModule());
+      // double emission_prob = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("emission_success_probability");
+      EV<<"\n Channel length is "<<length;
+      EV<<"\n Speed of light in the channel is "<<speed;
+      //cTopology::Node *currNode = topo->getNodeFor(getParentModule()->getParentModule());
+      // double emission_prob = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("emission_success_probability");
+      double BellGenT = (length/speed)*emission_prob;
+      EV<<"\n BellGenT metric for the channel is "<<BellGenT;
 
       // EV<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName()<<" =? "<<"QuantumChannel"<<"\n";
       // if(strcmp(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName(),"QuantumChannel")==0){
       if (strstr(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName(), "quantum")) {
         // Otherwise, keep the quantum channels and set the weight
         // EV<<"\n Quantum Channel!!!!!! cost is"<<channel_cost<<"\n";
-        topo->getNode(x)->getLinkOut(j)->setWeight(channel_cost);  // Set channel weight
+        topo->getNode(x)->getLinkOut(j)->setWeight(BellGenT);  // Set channel weight
       } else {
         // Ignore classical link in quantum routing table
         topo->getNode(x)->getLinkOut(j)->disable();
@@ -104,6 +119,7 @@ void RoutingDaemon::initialize(int stage) {
     }
     // Returns the next link/gate in the ith shortest paths towards the target node.
     cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();
+    int gateIndex = parentModuleGate->getIndex();
     QNIC thisqnic;
     int destAddr = topo->getNode(i)->getModule()->par("address");
     thisqnic.address = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
@@ -134,7 +150,7 @@ int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr) {
   Enter_Method("return_QNIC_address_to_destAddr");
   RoutingTable::iterator it = qrtable.find(destAddr);
   if (it == qrtable.end()) {
-    EV << "Quantum: address " << destAddr << " unreachable from this node  \n";
+    EV << "Quantum: address " << destAddr << " unreachable from this nodeÂ Â \n";
     return -1;
   }
   return it->second.address;
@@ -145,6 +161,7 @@ int RoutingDaemon::returnNumEndNodes() {
   cMsgPar *yes = new cMsgPar();
   yes->setStringValue("yes");
   topo->extractByParameter("includeInTopo", yes->str().c_str());
+  int num_of_end_nodes = topo->getNumNodes();
   int index = 0;
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);
@@ -167,3 +184,4 @@ void RoutingDaemon::handleMessage(cMessage *msg) {}
 
 }  // namespace modules
 }  // namespace quisp
+
