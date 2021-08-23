@@ -9,6 +9,25 @@
 #include "rules/clauses/EnoughResourceClause.h"
 #include "test_utils/TestUtils.h"
 
+ACCESS_PRIVATE_FIELD(quisp::modules::Clause, int, partner);
+ACCESS_PRIVATE_FIELD(quisp::modules::Clause, int, qnic_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::Clause, int, resource);
+ACCESS_PRIVATE_FIELD(quisp::modules::Clause, QNIC_type, qnic_type);
+
+ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, partner);
+ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, num_resource_required);
+
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, unsigned long, ruleset_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, unsigned long, rule_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, partner);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, resource);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, trash_resource);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, purification_count);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, bool, X);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, bool, Z);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, num_purify);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, action_index);
+
 namespace {
 using namespace omnetpp;
 using namespace quisp_test;
@@ -131,12 +150,11 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
-      // it's a private/protected field, so later extract and check it
-      // EXPECT_EQ(clause->partner, 3);
-      // EXPECT_EQ(clause->qnic_id, 1);
-      // EXPECT_EQ(clause->qnic_type, QNIC_E);
-      // EXPECT_EQ(clause->resource, 0);
-      // EXPECT_EQ(clause->num_resource_required, 1);
+      EXPECT_EQ(access_private::partner(*clause), 3);
+      EXPECT_EQ(access_private::qnic_id(*clause), 2);
+      // EXPECT_EQ(access_private::qnic_type(*clause), QNIC_E); // XXX: uninitialized
+      EXPECT_EQ(access_private::resource(*clause), -1);
+      EXPECT_EQ(access_private::num_resource_required(*clause), 2);
     }
 
     // checking the 2nd rule of QNode2(initiator): Wait
