@@ -9,6 +9,47 @@
 #include "rules/clauses/EnoughResourceClause.h"
 #include "test_utils/TestUtils.h"
 
+ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, partner);
+ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, num_resource_required);
+
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, unsigned long, ruleset_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, unsigned long, rule_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, qnic_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, QNIC_type, qnic_type);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, partner);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, resource);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, trash_resource);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, purification_count);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, bool, X);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, bool, Z);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, num_purify);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, action_index);
+
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_partner);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_qnic_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, self_left_qnic_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_qnic_address);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, left_qnic_type);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, self_left_qnic_type);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_resource);
+
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_partner);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_qnic_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, self_right_qnic_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_qnic_address);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, right_qnic_type);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, self_right_qnic_type);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_resource);
+
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, partner);
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, qnic_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, QNIC_type, qnic_type);
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, resource);
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, src);
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, dst);
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, current_count);
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, max_count);
+
 namespace {
 using namespace omnetpp;
 using namespace quisp_test;
@@ -74,7 +115,8 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   connection_manager->callInitialize();
   auto *req = new ConnectionSetupRequest;
 
-  // [QNode2](qnic_addr:1) -- (2)[QNode3](3) -- (4)[QNode4](5) -- (6)[QNode5(test target)]
+  // qnic_index(id)     11       12           13       14           15       16
+  // [QNode2](qnic_addr:101) -- (102)[QNode3](103) -- (104)[QNode4](105) -- (106)[QNode5(test target)]
   req->setActual_destAddr(5);
   req->setActual_srcAddr(4);
   req->setDestAddr(5);
@@ -84,14 +126,20 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   req->setStack_of_QNodeIndexes(0, 2);
   req->setStack_of_QNodeIndexes(1, 3);
   req->setStack_of_QNodeIndexes(2, 4);
-  req->setStack_of_QNICs(0, QNIC_id_pair{.fst = NULL_CONNECTION_SETUP_INFO.qnic, .snd = {.type = QNIC_E, .index = 0, .address = 1}});
-  req->setStack_of_QNICs(1, QNIC_id_pair{.fst = {.type = QNIC_E, .index = 0, .address = 2}, .snd = {.type = QNIC_E, .index = 1, .address = 3}});
-  req->setStack_of_QNICs(1, QNIC_id_pair{.fst = {.type = QNIC_E, .index = 0, .address = 4}, .snd = {.type = QNIC_E, .index = 1, .address = 5}});
+  req->setStack_of_QNICs(0, QNIC_id_pair{.fst = NULL_CONNECTION_SETUP_INFO.qnic, .snd = {.type = QNIC_E, .index = 11, .address = 101}});
+  req->setStack_of_QNICs(1, QNIC_id_pair{.fst = {.type = QNIC_E, .index = 12, .address = 102}, .snd = {.type = QNIC_E, .index = 13, .address = 103}});
+  req->setStack_of_QNICs(1, QNIC_id_pair{.fst = {.type = QNIC_E, .index = 14, .address = 104}, .snd = {.type = QNIC_E, .index = 15, .address = 105}});
 
   EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(5)).Times(1).WillOnce(Return(-1));
-  EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(4)).Times(1).WillOnce(Return(5));
-  auto src_info = new ConnectionSetupInfo{};
-  EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(5)).Times(1).WillOnce(Return(ByMove(std::unique_ptr<ConnectionSetupInfo>(src_info))));
+  EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(4)).Times(1).WillOnce(Return(105));
+  auto src_info = new ConnectionSetupInfo{.qnic =
+                                              {
+                                                  .type = QNIC_E,
+                                                  .index = 15,
+                                              },
+                                          .neighbor_address = 3,
+                                          .quantum_link_cost = 10};
+  EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(105)).Times(1).WillOnce(Return(ByMove(std::unique_ptr<ConnectionSetupInfo>(src_info))));
 
   sim->setContext(connection_manager);
   connection_manager->respondToRequest(req);
@@ -126,17 +174,27 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
+      EXPECT_EQ(access_private::partner(*action), 3);
+      EXPECT_EQ(access_private::X(*action), true);
+      EXPECT_EQ(access_private::Z(*action), false);
+      EXPECT_EQ(access_private::qnic_id(*action), 11);
+      EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::resource(*action), 0);
+      EXPECT_EQ(access_private::trash_resource(*action), 1);
+      EXPECT_EQ(access_private::action_index(*action), 0);
+      EXPECT_EQ(access_private::purification_count(*action), 1);
+      EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
-      // it's a private/protected field, so later extract and check it
-      // EXPECT_EQ(clause->partner, 3);
-      // EXPECT_EQ(clause->qnic_id, 1);
-      // EXPECT_EQ(clause->qnic_type, QNIC_E);
-      // EXPECT_EQ(clause->resource, 0);
-      // EXPECT_EQ(clause->num_resource_required, 1);
+      auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
+      ASSERT_NE(enough_resource_clause, nullptr);
+      EXPECT_EQ(access_private::partner(*enough_resource_clause), 3);
+      EXPECT_EQ(access_private::num_resource_required(*enough_resource_clause), 2);
     }
 
     // checking the 2nd rule of QNode2(initiator): Wait
@@ -150,7 +208,8 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       EXPECT_EQ(rule->next_action_partners.at(0), 5);
 
       ASSERT_EQ(rule->condition->clauses.size(), 1);
-      EXPECT_NE(dynamic_cast<WaitClause *>(rule->condition->clauses.at(0)), nullptr);
+      auto *clause = dynamic_cast<WaitClause *>(rule->condition->clauses.at(0));
+      EXPECT_NE(clause, nullptr);
       EXPECT_EQ(rule->action.get(), nullptr);
     }
 
@@ -167,10 +226,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
+      EXPECT_EQ(access_private::partner(*action), 5);
+      EXPECT_EQ(access_private::X(*action), true);
+      EXPECT_EQ(access_private::Z(*action), false);
+      EXPECT_EQ(access_private::qnic_id(*action), 11);
+      EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::resource(*action), 0);
+      EXPECT_EQ(access_private::trash_resource(*action), 1);
+      EXPECT_EQ(access_private::action_index(*action), 0);
+      EXPECT_EQ(access_private::purification_count(*action), 1);
+      EXPECT_EQ(access_private::num_purify(*action), 1);
 
       ASSERT_EQ(rule->condition->clauses.size(), 1);
       auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
+      EXPECT_EQ(access_private::partner(*clause), 5);
+      EXPECT_EQ(access_private::num_resource_required(*clause), 2);
     }
 
     // checking the 4th rule of QNode2(initiator): EnoughResource && MeasureCount -> Tomography
@@ -186,12 +259,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<RandomMeasureAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
+      EXPECT_EQ(access_private::partner(*action), 5);
+      EXPECT_EQ(access_private::qnic_id(*action), 11);
+      EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::resource(*action), 0);
+      EXPECT_EQ(access_private::src(*action), 2);
+      EXPECT_EQ(access_private::dst(*action), 5);
+      EXPECT_EQ(access_private::current_count(*action), 0);
+      EXPECT_EQ(access_private::max_count(*action), 0);  // XXX: is it right?
 
       ASSERT_EQ(rule->condition->clauses.size(), 2);
       auto *measure_count_clause = dynamic_cast<MeasureCountClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(measure_count_clause, nullptr);
+      EXPECT_EQ(measure_count_clause->max_count, 0);  // XXX: is it right?
+      EXPECT_EQ(measure_count_clause->current_count, 0);
       auto *enough_res_clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(1));
       ASSERT_NE(enough_res_clause, nullptr);
+      EXPECT_EQ(access_private::partner(*enough_res_clause), 5);
+      EXPECT_EQ(access_private::num_resource_required(*enough_res_clause), 1);
     }
 
     EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(1)->rule_index);
@@ -225,10 +310,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
+      EXPECT_EQ(access_private::partner(*action), 2);
+      EXPECT_EQ(access_private::X(*action), true);
+      EXPECT_EQ(access_private::Z(*action), false);
+      EXPECT_EQ(access_private::qnic_id(*action), 12);  // FIXME
+      EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::resource(*action), 0);
+      EXPECT_EQ(access_private::trash_resource(*action), 1);
+      EXPECT_EQ(access_private::action_index(*action), 0);
+      EXPECT_EQ(access_private::purification_count(*action), 1);
+      EXPECT_EQ(access_private::num_purify(*action), 1);
 
       ASSERT_EQ(rule->condition->clauses.size(), 1);
       auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
+      EXPECT_EQ(access_private::partner(*clause), 2);
+      EXPECT_EQ(access_private::num_resource_required(*clause), 2);
     }
 
     // checking the 2nd rule of QNode3: if EnoughResource -> Purify
@@ -242,10 +341,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
+      EXPECT_EQ(access_private::partner(*action), 4);
+      EXPECT_EQ(access_private::X(*action), true);
+      EXPECT_EQ(access_private::Z(*action), false);
+      EXPECT_EQ(access_private::qnic_id(*action), 13);  // FIXME
+      EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::resource(*action), 0);
+      EXPECT_EQ(access_private::trash_resource(*action), 1);
+      EXPECT_EQ(access_private::action_index(*action), 0);
+      EXPECT_EQ(access_private::purification_count(*action), 1);
+      EXPECT_EQ(access_private::num_purify(*action), 1);
 
       ASSERT_EQ(rule->condition->clauses.size(), 1);
       auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
+      EXPECT_EQ(access_private::partner(*clause), 4);
+      EXPECT_EQ(access_private::num_resource_required(*clause), 2);
     }
     // checking the 3rd rule of QNode3: Wait QNode4
     {
@@ -272,10 +385,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
+      EXPECT_EQ(access_private::partner(*action), 5);
+      EXPECT_EQ(access_private::X(*action), true);
+      EXPECT_EQ(access_private::Z(*action), false);
+      // EXPECT_EQ(access_private::qnic_id(*action), 13); // FIXME
+      EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::resource(*action), 0);
+      EXPECT_EQ(access_private::trash_resource(*action), 1);
+      EXPECT_EQ(access_private::action_index(*action), 0);
+      EXPECT_EQ(access_private::purification_count(*action), 1);
+      EXPECT_EQ(access_private::num_purify(*action), 1);
 
       ASSERT_EQ(rule->condition->clauses.size(), 1);
       auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
+      EXPECT_EQ(access_private::partner(*clause), 5);
+      EXPECT_EQ(access_private::num_resource_required(*clause), 2);
     }
 
     // checking the 5th rule of QNode3: if EnoughResource -> Swapping
@@ -290,12 +417,31 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<SwappingAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
+      EXPECT_EQ(access_private::left_partner(*action), 2);
+      EXPECT_EQ(access_private::left_qnic_id(*action), 11);
+      EXPECT_EQ(access_private::left_qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::left_qnic_address(*action), 101);
+      EXPECT_EQ(access_private::left_resource(*action), 0);
+      EXPECT_EQ(access_private::self_left_qnic_id(*action), 12);
+      EXPECT_EQ(access_private::self_left_qnic_type(*action), QNIC_E);
+
+      EXPECT_EQ(access_private::right_partner(*action), 5);
+      EXPECT_EQ(access_private::right_qnic_id(*action), 14);
+      EXPECT_EQ(access_private::right_qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::right_qnic_address(*action), 0);
+      EXPECT_EQ(access_private::right_resource(*action), 0);
+      EXPECT_EQ(access_private::self_right_qnic_id(*action), 13);
+      EXPECT_EQ(access_private::self_right_qnic_type(*action), QNIC_E);
 
       ASSERT_EQ(rule->condition->clauses.size(), 2);
       auto *clause1 = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause1, nullptr);
+      EXPECT_EQ(access_private::partner(*clause1), 2);
+      EXPECT_EQ(access_private::num_resource_required(*clause1), 0);  // XXX: should be 1?
       auto *clause2 = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(1));
       ASSERT_NE(clause2, nullptr);
+      EXPECT_EQ(access_private::partner(*clause2), 5);
+      EXPECT_EQ(access_private::num_resource_required(*clause2), 0);  // XXX: should be 1?
     }
 
     EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(4)->rule_index);
@@ -328,10 +474,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
+      EXPECT_EQ(access_private::partner(*action), 3);
+      EXPECT_EQ(access_private::X(*action), true);
+      EXPECT_EQ(access_private::Z(*action), false);
+      EXPECT_EQ(access_private::qnic_id(*action), 0);
+      EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::resource(*action), 0);
+      EXPECT_EQ(access_private::trash_resource(*action), 1);
+      EXPECT_EQ(access_private::action_index(*action), 0);
+      EXPECT_EQ(access_private::purification_count(*action), 1);
+      EXPECT_EQ(access_private::num_purify(*action), 1);
 
       ASSERT_EQ(rule->condition->clauses.size(), 1);
       auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
+      EXPECT_EQ(access_private::partner(*clause), 3);
+      EXPECT_EQ(access_private::num_resource_required(*clause), 2);
     }
 
     // checking the 2nd rule of QNode4: if EnoughResource -> Purify
@@ -345,10 +505,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
+      EXPECT_EQ(access_private::partner(*action), 5);
+      EXPECT_EQ(access_private::X(*action), true);
+      EXPECT_EQ(access_private::Z(*action), false);
+      EXPECT_EQ(access_private::qnic_id(*action), 0);
+      EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::resource(*action), 0);
+      EXPECT_EQ(access_private::trash_resource(*action), 1);
+      EXPECT_EQ(access_private::action_index(*action), 0);
+      EXPECT_EQ(access_private::purification_count(*action), 1);
+      EXPECT_EQ(access_private::num_purify(*action), 1);
 
       ASSERT_EQ(rule->condition->clauses.size(), 1);
       auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
+      EXPECT_EQ(access_private::partner(*clause), 5);
+      EXPECT_EQ(access_private::num_resource_required(*clause), 2);
     }
 
     // checking the 3rd rule of QNode4: if EnoughResource -> Swapping
@@ -363,12 +537,31 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<SwappingAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
+      EXPECT_EQ(access_private::left_partner(*action), 3);
+      EXPECT_EQ(access_private::left_qnic_id(*action), 13);
+      EXPECT_EQ(access_private::left_qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::left_qnic_address(*action), 103);
+      EXPECT_EQ(access_private::left_resource(*action), 0);
+      EXPECT_EQ(access_private::self_left_qnic_id(*action), 14);
+      EXPECT_EQ(access_private::self_left_qnic_type(*action), QNIC_E);
+
+      EXPECT_EQ(access_private::right_partner(*action), 5);
+      EXPECT_EQ(access_private::right_qnic_id(*action), 16);
+      EXPECT_EQ(access_private::right_qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::right_qnic_address(*action), 106);
+      EXPECT_EQ(access_private::right_resource(*action), 0);
+      EXPECT_EQ(access_private::self_right_qnic_id(*action), 15);
+      EXPECT_EQ(access_private::self_right_qnic_type(*action), QNIC_E);
 
       ASSERT_EQ(rule->condition->clauses.size(), 2);
       auto *clause1 = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause1, nullptr);
+      EXPECT_EQ(access_private::partner(*clause1), 3);
+      EXPECT_EQ(access_private::num_resource_required(*clause1), 0);
       auto *clause2 = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(1));
       ASSERT_NE(clause2, nullptr);
+      EXPECT_EQ(access_private::partner(*clause2), 5);
+      EXPECT_EQ(access_private::num_resource_required(*clause2), 0);
     }
 
     EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(2)->rule_index);
@@ -400,10 +593,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
+      EXPECT_EQ(access_private::partner(*action), 4);
+      EXPECT_EQ(access_private::X(*action), true);
+      EXPECT_EQ(access_private::Z(*action), false);
+      EXPECT_EQ(access_private::qnic_id(*action), 15);
+      EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::resource(*action), 0);
+      EXPECT_EQ(access_private::trash_resource(*action), 1);
+      EXPECT_EQ(access_private::action_index(*action), 0);
+      EXPECT_EQ(access_private::purification_count(*action), 1);
+      EXPECT_EQ(access_private::num_purify(*action), 1);
 
       ASSERT_EQ(rule->condition->clauses.size(), 1);
       auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
+      EXPECT_EQ(access_private::partner(*clause), 4);
+      EXPECT_EQ(access_private::num_resource_required(*clause), 2);
     }
 
     // checking the 2nd rule of QNode5: Wait QNode4
@@ -432,10 +639,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
+      EXPECT_EQ(access_private::partner(*action), 3);
+      EXPECT_EQ(access_private::X(*action), true);
+      EXPECT_EQ(access_private::Z(*action), false);
+      EXPECT_EQ(access_private::qnic_id(*action), 15);
+      EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::resource(*action), 0);
+      EXPECT_EQ(access_private::trash_resource(*action), 1);
+      EXPECT_EQ(access_private::action_index(*action), 0);
+      EXPECT_EQ(access_private::purification_count(*action), 1);
+      EXPECT_EQ(access_private::num_purify(*action), 1);
 
       ASSERT_EQ(rule->condition->clauses.size(), 1);
       auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
+      EXPECT_EQ(access_private::partner(*clause), 3);
+      EXPECT_EQ(access_private::num_resource_required(*clause), 2);
     }
     // checking the 4th rule of QNode5: Wait QNode3
     {
@@ -463,10 +684,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
+      EXPECT_EQ(access_private::partner(*action), 2);
+      EXPECT_EQ(access_private::X(*action), true);
+      EXPECT_EQ(access_private::Z(*action), false);
+      EXPECT_EQ(access_private::qnic_id(*action), 15);
+      EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::resource(*action), 0);
+      EXPECT_EQ(access_private::trash_resource(*action), 1);
+      EXPECT_EQ(access_private::action_index(*action), 0);
+      EXPECT_EQ(access_private::purification_count(*action), 1);
+      EXPECT_EQ(access_private::num_purify(*action), 1);
 
       ASSERT_EQ(rule->condition->clauses.size(), 1);
       auto *clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
+      EXPECT_EQ(access_private::partner(*clause), 2);
+      EXPECT_EQ(access_private::num_resource_required(*clause), 2);
     }
 
     // checking the 6th rule of QNode5: if EnoughResource -> Swapping
@@ -482,12 +717,22 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<RandomMeasureAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
+      EXPECT_EQ(access_private::partner(*action), 2);
+      EXPECT_EQ(access_private::qnic_id(*action), 15);
+      EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
+      EXPECT_EQ(access_private::resource(*action), 0);
+      EXPECT_EQ(access_private::src(*action), 5);
+      EXPECT_EQ(access_private::dst(*action), 2);
+      EXPECT_EQ(access_private::current_count(*action), 0);
+      EXPECT_EQ(access_private::max_count(*action), 0);  // XXX: is it right?
 
       ASSERT_EQ(rule->condition->clauses.size(), 2);
       auto *measure_count_clause = dynamic_cast<MeasureCountClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(measure_count_clause, nullptr);
       auto *enough_res_clause = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(1));
       ASSERT_NE(enough_res_clause, nullptr);
+      EXPECT_EQ(access_private::partner(*enough_res_clause), 2);
+      EXPECT_EQ(access_private::num_resource_required(*enough_res_clause), 1);
     }
 
     EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(1)->rule_index);
