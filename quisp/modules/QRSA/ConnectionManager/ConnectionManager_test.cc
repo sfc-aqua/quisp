@@ -118,9 +118,9 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   // qnic_index(id)     11       12           13       14           15       16
   // [QNode2](qnic_addr:101) -- (102)[QNode3](103) -- (104)[QNode4](105) -- (106)[QNode5(test target)]
   req->setActual_destAddr(5);
-  req->setActual_srcAddr(4);
+  req->setActual_srcAddr(2);
   req->setDestAddr(5);
-  req->setSrcAddr(2);
+  req->setSrcAddr(4);
   req->setStack_of_QNICsArraySize(3);
   req->setStack_of_QNodeIndexesArraySize(3);
   req->setStack_of_QNodeIndexes(0, 2);
@@ -128,18 +128,18 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   req->setStack_of_QNodeIndexes(2, 4);
   req->setStack_of_QNICs(0, QNIC_id_pair{.fst = NULL_CONNECTION_SETUP_INFO.qnic, .snd = {.type = QNIC_E, .index = 11, .address = 101}});
   req->setStack_of_QNICs(1, QNIC_id_pair{.fst = {.type = QNIC_E, .index = 12, .address = 102}, .snd = {.type = QNIC_E, .index = 13, .address = 103}});
-  req->setStack_of_QNICs(1, QNIC_id_pair{.fst = {.type = QNIC_E, .index = 14, .address = 104}, .snd = {.type = QNIC_E, .index = 15, .address = 105}});
+  req->setStack_of_QNICs(2, QNIC_id_pair{.fst = {.type = QNIC_E, .index = 14, .address = 104}, .snd = {.type = QNIC_E, .index = 15, .address = 105}});
 
   EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(5)).Times(1).WillOnce(Return(-1));
-  EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(4)).Times(1).WillOnce(Return(105));
+  EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(2)).Times(1).WillOnce(Return(106));
   auto src_info = new ConnectionSetupInfo{.qnic =
                                               {
                                                   .type = QNIC_E,
-                                                  .index = 15,
+                                                  .index = 16,
                                               },
-                                          .neighbor_address = 3,
+                                          .neighbor_address = 4,
                                           .quantum_link_cost = 10};
-  EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(105)).Times(1).WillOnce(Return(ByMove(std::unique_ptr<ConnectionSetupInfo>(src_info))));
+  EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(106)).Times(1).WillOnce(Return(ByMove(std::unique_ptr<ConnectionSetupInfo>(src_info))));
 
   sim->setContext(connection_manager);
   connection_manager->respondToRequest(req);
@@ -426,7 +426,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       EXPECT_EQ(access_private::self_left_qnic_type(*action), QNIC_E);
 
       EXPECT_EQ(access_private::right_partner(*action), 5);
-      EXPECT_EQ(access_private::right_qnic_id(*action), 14);
+      EXPECT_EQ(access_private::right_qnic_id(*action), 16);  // 2 --- 3 (13) --- (16)5
       EXPECT_EQ(access_private::right_qnic_type(*action), QNIC_E);
       EXPECT_EQ(access_private::right_qnic_address(*action), 0);
       EXPECT_EQ(access_private::right_resource(*action), 0);
@@ -479,7 +479,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       EXPECT_EQ(access_private::partner(*action), 3);
       EXPECT_EQ(access_private::X(*action), true);
       EXPECT_EQ(access_private::Z(*action), false);
-      EXPECT_EQ(access_private::qnic_id(*action), 0);
+      EXPECT_EQ(access_private::qnic_id(*action), 14);
       EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
       EXPECT_EQ(access_private::resource(*action), 0);
       EXPECT_EQ(access_private::trash_resource(*action), 1);
@@ -510,7 +510,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       EXPECT_EQ(access_private::partner(*action), 5);
       EXPECT_EQ(access_private::X(*action), true);
       EXPECT_EQ(access_private::Z(*action), false);
-      EXPECT_EQ(access_private::qnic_id(*action), 0);
+      EXPECT_EQ(access_private::qnic_id(*action), 15);
       EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
       EXPECT_EQ(access_private::resource(*action), 0);
       EXPECT_EQ(access_private::trash_resource(*action), 1);
@@ -548,7 +548,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       EXPECT_EQ(access_private::right_partner(*action), 5);
       EXPECT_EQ(access_private::right_qnic_id(*action), 16);
       EXPECT_EQ(access_private::right_qnic_type(*action), QNIC_E);
-      EXPECT_EQ(access_private::right_qnic_address(*action), 106);
+      EXPECT_EQ(access_private::right_qnic_address(*action), 0);  // --(106) 5 (0)
       EXPECT_EQ(access_private::right_resource(*action), 0);
       EXPECT_EQ(access_private::self_right_qnic_id(*action), 15);
       EXPECT_EQ(access_private::self_right_qnic_type(*action), QNIC_E);
@@ -598,7 +598,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       EXPECT_EQ(access_private::partner(*action), 4);
       EXPECT_EQ(access_private::X(*action), true);
       EXPECT_EQ(access_private::Z(*action), false);
-      EXPECT_EQ(access_private::qnic_id(*action), 15);
+      EXPECT_EQ(access_private::qnic_id(*action), 16);
       EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
       EXPECT_EQ(access_private::resource(*action), 0);
       EXPECT_EQ(access_private::trash_resource(*action), 1);
@@ -644,7 +644,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       EXPECT_EQ(access_private::partner(*action), 3);
       EXPECT_EQ(access_private::X(*action), true);
       EXPECT_EQ(access_private::Z(*action), false);
-      EXPECT_EQ(access_private::qnic_id(*action), 15);
+      EXPECT_EQ(access_private::qnic_id(*action), 16);
       EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
       EXPECT_EQ(access_private::resource(*action), 0);
       EXPECT_EQ(access_private::trash_resource(*action), 1);
@@ -689,7 +689,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       EXPECT_EQ(access_private::partner(*action), 2);
       EXPECT_EQ(access_private::X(*action), true);
       EXPECT_EQ(access_private::Z(*action), false);
-      EXPECT_EQ(access_private::qnic_id(*action), 15);
+      EXPECT_EQ(access_private::qnic_id(*action), 16);
       EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
       EXPECT_EQ(access_private::resource(*action), 0);
       EXPECT_EQ(access_private::trash_resource(*action), 1);
@@ -718,7 +718,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       auto *action = dynamic_cast<RandomMeasureAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
       EXPECT_EQ(access_private::partner(*action), 2);
-      EXPECT_EQ(access_private::qnic_id(*action), 15);
+      EXPECT_EQ(access_private::qnic_id(*action), 16);
       EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
       EXPECT_EQ(access_private::resource(*action), 0);
       EXPECT_EQ(access_private::src(*action), 5);
