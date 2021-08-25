@@ -24,7 +24,7 @@ class DoubleSelectionDualActionSecond : public Action {
 
  public:
   DoubleSelectionDualActionSecond();
-  DoubleSelectionDualActionSecond(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z, int ds_X);
+  DoubleSelectionDualActionSecond(unsigned long RuleSet_id, unsigned long rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z, int ds_X);
   cPacket* run(cModule* re) override;
 };
 
@@ -46,7 +46,7 @@ class DoubleSelectionDualActionSecondInv : public Action {
 
  public:
   DoubleSelectionDualActionSecondInv();
-  DoubleSelectionDualActionSecondInv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z, int ds_Z);
+  DoubleSelectionDualActionSecondInv(unsigned long RuleSet_id, unsigned long rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z, int ds_Z);
   cPacket* run(cModule* re) override;
 };
 

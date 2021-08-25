@@ -620,7 +620,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   RuleSet *tomography_RuleSet = new RuleSet(RuleSet_id, my_address, partner_address);
   EV_INFO << "Creating rules now ruleset_id = " << RuleSet_id << ", partner_address = " << partner_address << "\n";
 
-  int rule_index = 0;
+  unsigned long rule_index = 0;
 
   if (num_purification > 0) {
     if (Purification_type == 2002) {  // Performs both X and Z purification for each n.

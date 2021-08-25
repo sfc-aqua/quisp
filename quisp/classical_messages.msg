@@ -101,7 +101,7 @@ packet DoublePurificationResult extends header
 	bool ZOutput_is_plus;
 	bool XOutput_is_plus;
 	unsigned long ruleset_id;
-	int rule_id;
+	unsigned long rule_id;
 	int action_index;
 	GOD_statQubitPtr entangled_with;//For Debugging purposes.
 }
@@ -115,7 +115,7 @@ packet DS_DoublePurificationResult extends header
 	bool DS_ZOutput_is_plus;
 	bool DS_XOutput_is_plus;
 	unsigned long ruleset_id;
-	int rule_id;
+	unsigned long rule_id;
 	int action_index;
 	GOD_statQubitPtr entangled_with;//For Debugging purposes.
 }
@@ -127,7 +127,7 @@ packet DS_DoublePurificationSecondResult extends header
 	bool XOutput_is_plus;
 	bool DS_Output_is_plus;
 	unsigned long ruleset_id;
-	int rule_id;
+	unsigned long rule_id;
 	int action_index;
 	GOD_statQubitPtr entangled_with;//For Debugging purposes.
 }
@@ -257,7 +257,7 @@ packet SwappingResult extends header{
 
 packet SimultaneousSwappingResult extends header{
     unsigned long RuleSet_id;
-    int Rule_id;
+    unsigned long Rule_id;
     int action_index;
 
     int initiator_Dest;
@@ -293,14 +293,14 @@ packet SimultaneousSwappingResult extends header{
 
 packet InternalRuleSetForwarding extends header{
     unsigned long RuleSet_id;
-    int Rule_id;
+    unsigned long Rule_id;
 
     RuleSetField RuleSet;
 }
 
 packet InternalRuleSetForwarding_Application extends header{
     unsigned long RuleSet_id;
-    int Rule_id;
+    unsigned long Rule_id;
     int application_type;
 
     RuleSetField RuleSet;

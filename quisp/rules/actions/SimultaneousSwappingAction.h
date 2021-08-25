@@ -44,9 +44,9 @@ class SimultaneousSwappingAction : public Action {
 
  public:
   // constructor of entanglement swapping
-  SimultaneousSwappingAction(unsigned long RuleSet_id, int rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr, int slqi,
-                             QNIC_type slqt, int srqi, QNIC_type srqt, int init, QNIC_type initqt, int initqi, int initqad, int initr, int resp, QNIC_type respqt, int respqi,
-                             int respqad, int respr, int iip, int pleir);
+  SimultaneousSwappingAction(unsigned long RuleSet_id, unsigned long rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr,
+                             int slqi, QNIC_type slqt, int srqi, QNIC_type srqt, int init, QNIC_type initqt, int initqi, int initqad, int initr, int resp, QNIC_type respqt,
+                             int respqi, int respqad, int respr, int iip, int pleir);
 
   cPacket* run(cModule* re) override;
 };

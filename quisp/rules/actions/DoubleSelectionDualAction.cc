@@ -101,8 +101,8 @@ cPacket *DoubleSelectionDualAction::run(cModule *re) {
 }
 
 DoubleSelectionDualActionInv::DoubleSelectionDualActionInv(){};
-DoubleSelectionDualActionInv::DoubleSelectionDualActionInv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z, int ds_X,
-                                                           int ds_Z) {
+DoubleSelectionDualActionInv::DoubleSelectionDualActionInv(unsigned long RuleSet_id, unsigned long rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z,
+                                                           int ds_X, int ds_Z) {
   partner = part;
   qnic_type = qt;
   qnic_id = qi;

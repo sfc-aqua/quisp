@@ -8,7 +8,7 @@ namespace actions {
 
 DoublePurifyAction::DoublePurifyAction() {}
 
-DoublePurifyAction::DoublePurifyAction(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z) {
+DoublePurifyAction::DoublePurifyAction(unsigned long RuleSet_id, unsigned long rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z) {
   partner = part;
   qnic_type = qt;
   qnic_id = qi;

@@ -8,8 +8,8 @@ namespace actions {
 
 DoubleSelectionDualActionSecond::DoubleSelectionDualActionSecond() {}
 
-DoubleSelectionDualActionSecond::DoubleSelectionDualActionSecond(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z,
-                                                                 int ds_X) {
+DoubleSelectionDualActionSecond::DoubleSelectionDualActionSecond(unsigned long RuleSet_id, unsigned long rule_index, int part, QNIC_type qt, int qi, int res, int tres_X,
+                                                                 int tres_Z, int ds_X) {
   partner = part;
   qnic_type = qt;
   qnic_id = qi;
@@ -100,8 +100,8 @@ cPacket *DoubleSelectionDualActionSecond::run(cModule *re) {
 
 DoubleSelectionDualActionSecondInv::DoubleSelectionDualActionSecondInv() {}
 
-DoubleSelectionDualActionSecondInv::DoubleSelectionDualActionSecondInv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z,
-                                                                       int ds_Z) {
+DoubleSelectionDualActionSecondInv::DoubleSelectionDualActionSecondInv(unsigned long RuleSet_id, unsigned long rule_index, int part, QNIC_type qt, int qi, int res, int tres_X,
+                                                                       int tres_Z, int ds_Z) {
   partner = part;
   qnic_type = qt;
   qnic_id = qi;

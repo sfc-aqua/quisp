@@ -831,39 +831,71 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
 // Rule Generators
 std::unique_ptr<Rule> ConnectionManager::purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index,
                                                           unsigned long ruleset_id, unsigned long rule_id) {
-  if (num_purification != 1) {
-    error("more than 1 purification is not impelented here yet");
-  }
+  // list of purification types
   std::string pur_name = "";
   if (purification_type == 0) {
     pur_name = "X purification with : " + std::to_string(partner_address);
   } else if (purification_type == 1) {
     pur_name = "Z purification with : " + std::to_string(partner_address);
+  } else if (purification_type == 2) {
+    pur_name = "Double purificaiton with: " + std::to_string(partner_address);
+  } else if (purification_type == 3) {
+    pur_name = "Double seletion purification with: " + std::to_string(partner_address);
+  } else if (purification_type == 4) {
+    pur_name = "Double selection dual action purification with: " + std::to_string(partner_address);
   }
+
   std::vector<int> partners = {partner_address};
   auto rule_purification = std::make_unique<Rule>(ruleset_id, rule_id, pur_name, partners);
-  if (purification_type == 0) {
-    // X purification (should prepare enum with purification)
-    Condition *condition = new Condition();
-    Clause *resource_clause = new EnoughResourceClause(partner_address, 2);  // to prepare 1 purified entanglement, we need 2 raw entanglements
-    condition->addClause(resource_clause);
-    rule_purification->setCondition(condition);
-    // PurifyAction(unsigned long RuleSet_id, unsigned long rule_id, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res, int
-    // tres);
-    Action *purify_action = new PurifyAction(ruleset_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
-    rule_purification->setAction(purify_action);
-  } else if (purification_type == 1) {
-    // Z purification (should prepare enum with purification)
-    Condition *condition = new Condition();
-    Clause *resource_clause = new EnoughResourceClause(partner_address, 2);  // to prepare 1 purified entanglement, we need 2 raw entanglements
-    condition->addClause(resource_clause);
-    rule_purification->setCondition(condition);
-    // PurifyAction(unsigned long RuleSet_id, unsigned long rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res, int
-    // tres);
-    Action *purify_action = new PurifyAction(ruleset_id, rule_id, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
-    rule_purification->setAction(purify_action);
-  } else {
-    error("Unknown purification type");
+
+  for (int i = 0; i < num_purification; i++) {
+    if (purification_type == 0) {
+      // X purification (should prepare enum with purification)
+      Condition *condition = new Condition();
+      Clause *resource_clause = new EnoughResourceClause(partner_address, 2);  // to prepare 1 purified entanglement, we need 2 raw entanglements
+      condition->addClause(resource_clause);
+      rule_purification->setCondition(condition);
+      // PurifyAction(unsigned long RuleSet_id, unsigned long rule_id, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res, int
+      // tres);
+      Action *purify_action = new PurifyAction(ruleset_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      rule_purification->setAction(purify_action);
+    } else if (purification_type == 1) {
+      // Z purification (should prepare enum with purification)
+      Condition *condition = new Condition();
+      Clause *resource_clause = new EnoughResourceClause(partner_address, 2);  // to prepare 1 purified entanglement, we need 2 raw entanglements
+      condition->addClause(resource_clause);
+      rule_purification->setCondition(condition);
+      // PurifyAction(unsigned long RuleSet_id, unsigned long rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res,
+      // int tres);
+      Action *purify_action = new PurifyAction(ruleset_id, rule_id, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      rule_purification->setAction(purify_action);
+    } else if (purification_type == 2) {
+      // Double purification
+      Condition *condition = new Condition();
+      Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
+      condition->addClause(resource_clause);
+      rule_purification->setCondition(condition);
+      Action *purify_action = new DoublePurifyAction(ruleset_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      rule_purification->setAction(purify_action);
+    } else if (purification_type == 3) {
+      // Double Selection purify X action
+      Condition *condition = new Condition();
+      Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
+      condition->addClause(resource_clause);
+      rule_purification->setCondition(condition);
+      Action *purify_action = new DoublePurifyAction(ruleset_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      rule_purification->setAction(purify_action);
+    } else if (purification_type == 4) {
+      // Double Selection second
+      Condition *condition = new Condition();
+      Clause *resource_clause = new EnoughResourceClause(partner_address, 4);
+      condition->addClause(resource_clause);
+      rule_purification->setCondition(condition);
+      Action *purify_action = new DoubleSelectionDualActionSecond(ruleset_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
+      rule_purification->setAction(purify_action);
+    } else {
+      error("Unknown purification type");
+    }
   }
   return rule_purification;
 }

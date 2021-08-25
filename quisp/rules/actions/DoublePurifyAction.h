@@ -21,7 +21,7 @@ class DoublePurifyAction : public Action {
   int action_index = 0;  // To track how many times this particular action has been invoked.
  public:
   DoublePurifyAction();
-  DoublePurifyAction(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z);
+  DoublePurifyAction(unsigned long RuleSet_id, unsigned long rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z);
   cPacket* run(cModule* re) override;
 };
 
@@ -39,7 +39,7 @@ class DoublePurifyActionInv : public Action {
   int num_purify;
   int action_index = 0;  // To track how many times this particular action has been invoked.
  public:
-  DoublePurifyActionInv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z) {
+  DoublePurifyActionInv(unsigned long RuleSet_id, unsigned long rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z) {
     partner = part;
     qnic_type = qt;
     qnic_id = qi;
