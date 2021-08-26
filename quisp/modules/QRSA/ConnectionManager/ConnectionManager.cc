@@ -233,7 +233,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   if (src_info == nullptr) {
     error("src_info not found");
   }
-  QNIC_id_pair pair_info = {.fst = src_info->qnic, .snd = dst_info->qnic};
+  QNIC_pair_info pair_info = {.fst = src_info->qnic, .snd = dst_info->qnic};
 
   bool is_src_qnic_reserved = isQnicBusy(src_info->qnic.address);
   bool is_dst_qnic_reserved = isQnicBusy(dst_info->qnic.address);
@@ -297,7 +297,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
 
   // HACK This may be also not good way
   std::vector<QNIC_pair_info> qnics = {};
-  QNIC_id_pair qnic_pairs;
+  QNIC_pair_info qnic_pairs;
   for (int i = 0; i < qnic_array_size + 1; i++) {
     qnic_pairs = req->getStack_of_QNICs(i);
     qnics.push_back(qnic_pairs);
@@ -747,7 +747,7 @@ void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
     return;
   }
 
-  QNIC_id_pair pair_info = {.fst = src_info->qnic, .snd = dst_info->qnic};
+  QNIC_pair_info pair_info = {.fst = src_info->qnic, .snd = dst_info->qnic};
   req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
 
   if (!is_initiator) {

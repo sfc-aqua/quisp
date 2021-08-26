@@ -1,7 +1,7 @@
 #ifndef MODULES_ICONNECTIONMANAGER_H_
 #define MODULES_ICONNECTIONMANAGER_H_
 
-#include <classical_messages_m.h>
+#include <messages/classical_messages.h>
 #include <modules/QNIC.h>
 #include <modules/QRSA/HardwareMonitor/HardwareMonitor.h>
 #include <modules/QRSA/RoutingDaemon/RoutingDaemon.h>

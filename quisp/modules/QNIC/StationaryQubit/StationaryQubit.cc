@@ -7,7 +7,7 @@
 #include "StationaryQubit.h"
 
 #include <PhotonicQubit_m.h>
-#include <classical_messages_m.h>
+#include <messages/classical_messages.h>
 #include <omnetpp.h>
 #include <bitset>
 #include <unsupported/Eigen/KroneckerProduct>
