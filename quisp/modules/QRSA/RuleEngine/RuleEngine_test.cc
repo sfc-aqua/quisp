@@ -40,27 +40,6 @@ class MockStationaryQubit : public StationaryQubit {
   MOCK_METHOD(void, setFree, (bool consumed), (override));
 };
 
-class MockRoutingDaemon : public RoutingDaemon {
- public:
-  MOCK_METHOD(int, return_QNIC_address_to_destAddr, (int destAddr), (override));
-};
-
-class MockHardwareMonitor : public IHardwareMonitor {
- public:
-  MOCK_METHOD(int, getQnicNumQubits, (int i, QNIC_type qnic_type), (override));
-  MOCK_METHOD(NeighborTable, passNeighborTable, (), (override));
-  MOCK_METHOD(std::unique_ptr<InterfaceInfo>, findInterfaceByNeighborAddr, (int neighbor_address), (override));
-  MOCK_METHOD(std::unique_ptr<ConnectionSetupInfo>, findConnectionInfoByQnicAddr, (int qnic_address), (override));
-};
-
-class MockRealTimeController : public IRealTimeController {
- public:
-  MOCK_METHOD(void, initialize, (), (override));
-  MOCK_METHOD(void, handleMessage, (cMessage * msg), (override));
-  MOCK_METHOD(void, EmitPhoton, (int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse), (override));
-  MOCK_METHOD(void, ReInitialize_StationaryQubit, (int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed), (override));
-};
-
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
   Strategy() : mockQubit(nullptr), routingDaemon(nullptr), hardwareMonitor(nullptr) {}
