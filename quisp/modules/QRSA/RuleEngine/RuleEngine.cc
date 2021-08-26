@@ -363,7 +363,7 @@ void RuleEngine::storeCheck_Purification_Agreement(purification_result pur_resul
     // Probably process already finished. Delete the table and ignore the result.
     return;
   } else {
-    // 2. Check if there are some recodes existed.
+    // 2. Check if there are some records existed.
     // check the purification results that belong to the same connection
     auto range = Purification_table.equal_range(pur_result.id.ruleset_id);
     for (auto it = range.first; it != range.second; it++) {
@@ -604,23 +604,22 @@ void RuleEngine::updateAppliedRule(IStationaryQubit *qubit, unsigned long rule_i
 
 bool RuleEngine::checkAppliedRule(IStationaryQubit *qubit, unsigned long rule_id) {
   // check if the rule can be applied (target rule id is not in the applied rules)
-  bool applicable = false;
   auto iter = applied_rules.find(qubit);
   if (iter != applied_rules.end()) {
     auto rules = applied_rules[qubit];
     auto rule_iter = std::find(rules.begin(), rules.end(), rule_id);
     if (rule_iter != rules.end()) {
       // this rule is already applied
-      applicable = false;
+      return false;
     } else {
       // not applied yet. you can go ahead to apply the rule
-      applicable = true;
+      return true;
     }
   } else {
     // completely fresh resource
-    applicable = true;
+    return true;
   }
-  return applicable;
+  return false;
 }
 
 void RuleEngine::clearAppliedRule(IStationaryQubit *qubit) {
