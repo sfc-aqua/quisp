@@ -5,8 +5,8 @@
 #include <rules/RuleSet.h>
 #include <vector>
 
+#include <messages/classical_messages.h>
 #include "../../PhysicalConnection/BSA/HoMController.h"
-#include "classical_messages_m.h"
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RealTimeController/IRealTimeController.h"

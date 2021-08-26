@@ -1,7 +1,7 @@
 #include "SwappingAction.h"
-#include <classical_messages_m.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <messages/classical_messages.h>
 #include <modules/QNIC.h>
 #include <modules/QNIC/StationaryQubit/StationaryQubit.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>

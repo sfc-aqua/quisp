@@ -1,5 +1,5 @@
 #include "DoubleSelectionDualAction.h"
-#include <classical_messages_m.h>
+#include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
 namespace quisp {

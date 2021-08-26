@@ -1,9 +1,9 @@
 #include "Application.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <messages/classical_messages.h>
 #include <omnetpp.h>
 #include <test_utils/TestUtils.h>
-#include "classical_messages_m.h"
 
 namespace {
 
