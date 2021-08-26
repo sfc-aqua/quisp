@@ -261,7 +261,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   else if (dynamic_cast<SimultaneousSwappingResult *>(msg) != nullptr) {
     SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(msg);
     // Add messeage to collection [ruleSetid][index_in_path]
-    int rule_id = pkt->getRuleSet_id();
+    unsigned long rule_id = pkt->getRuleSet_id();
     simultaneous_es_results[rule_id][pkt->getIndex_in_path()] = pkt->getOperation_type();
 
     // Check if all message is here or not
@@ -576,9 +576,7 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
               qubit->Unlock();
               // remove qubit from resource list in the rule
               (*rule)->resources.erase(qubit_map);
-              EV << "rule: " << (*rule)->name << " at " << parentAddress << "\n";
               next_rule_id = (*rule)->next_rule_id;
-              EV << "next rule: " << next_rule_id << "\n";
               break;
             }
           }
