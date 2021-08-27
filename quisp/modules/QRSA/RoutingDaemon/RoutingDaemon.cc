@@ -80,10 +80,10 @@ void RoutingDaemon::initialize(int stage) {
       double speed_of_light_in_fiber = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("Speed_of_light_in_fiber");
       double channel_length = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("distance");
       double emission_prob = 0.46 * 0.49;
-      EV_DEBUG << "\n Channel length is " << channel_length;
-      EV_DEBUG << "\n Speed of light in the channel is " << speed_of_light_in_fiber;
+      EV_DEBUG << "Channel length is " << channel_length<<"\n";
+      EV_DEBUG << "Speed of light in the channel is " << speed_of_light_in_fiber<<"\n";
       double seconds_per_bell_pair_generation = (channel_length / speed_of_light_in_fiber) * emission_prob;
-      EV_DEBUG << "\n BellGenT metric for the channel is " << seconds_per_bell_pair_generation;
+      EV_DEBUG << "BellGenT metric for the channel is " << seconds_per_bell_pair_generation<<"\n";
 
       // EV<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName()<<" =? "<<"QuantumChannel"<<"\n";
       // if(strcmp(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName(),"QuantumChannel")==0){
