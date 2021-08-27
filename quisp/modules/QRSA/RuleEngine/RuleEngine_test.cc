@@ -17,6 +17,7 @@
 #include "modules/QRSA/RealTimeController/IRealTimeController.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
 #include "rules/Action.h"
+#include "rules/RuleSet.h"
 
 namespace {
 
@@ -68,6 +69,10 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
  public:
   using quisp::modules::RuleEngine::initialize;
   using quisp::modules::RuleEngine::par;
+  using quisp::modules::RuleEngine::storeCheck_Purification_Agreement;
+  using quisp::modules::RuleEngine::Unlock_resource_and_discard;
+  using quisp::modules::RuleEngine::Unlock_resource_and_upgrade_stage;
+
   RuleEngineTestTarget(MockStationaryQubit* mockQubit, MockRoutingDaemon* routingdaemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller)
       : quisp::modules::RuleEngine() {
     setParInt(this, "address", 123);
@@ -230,10 +235,14 @@ TEST(RuleEngineTest, trackerUpdate) {
 
 TEST(RuleEngineTest, storeCheckPurificationAgreement_no_process) {
   prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
-  auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockRealTimeController = new MockRealTimeController;
-  auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, mockRealTimeController};
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  purification_result result{
+      .outcome = true,
+  };
+  rule_engine->storeCheck_Purification_Agreement(result);
 }
 
 TEST(RuleEngineTest, storeCheckPurificationAgreement_running_process) {
@@ -246,33 +255,67 @@ TEST(RuleEngineTest, storeCheckPurificationAgreement_running_process) {
 
 TEST(RuleEngineTest, unlockResourceAndDiscard) {
   prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
-  auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockRealTimeController = new MockRealTimeController;
-  auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, mockRealTimeController};
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
 }
 
 TEST(RuleEngineTest, unlockResourceAndUpgradeStage) {
   prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
-  auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockRealTimeController = new MockRealTimeController;
-  auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, mockRealTimeController};
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+
+  unsigned long ruleset_id = 4;
+  int partner_addr = 5;
+  auto* ruleset = new RuleSet(ruleset_id, rule_engine->parentAddress, partner_addr);
+  unsigned long target_rule_id = 10;
+  auto rule1 = new Rule(ruleset_id, target_rule_id);
+  auto rule2 = new Rule(ruleset_id, 11);
+  auto* qubit = new MockQubit(QNIC_E, 0);
+
+  qubit->action_index = rule1->rule_index;
+  rule1->addResource(partner_addr, qubit);
+  rule1->next_rule_id = rule2->rule_index;
+  ruleset->addRule(std::unique_ptr<Rule>(rule1));
+  ruleset->addRule(std::unique_ptr<Rule>(rule2));
+
+  auto proc = Process{
+      .owner_addr = rule_engine->parentAddress,
+      .Rs = ruleset,
+  };
+
+  rule_engine->rp.insert(std::make_pair(1, proc));
+  EXPECT_CALL(*qubit, Unlock()).Times(1);
+
+  EXPECT_EQ(rule1->resources.size(), 1);
+  EXPECT_EQ(rule2->resources.size(), 0);
+
+  // the rule engine brings the qubit from rule1 to rule2
+  rule_engine->Unlock_resource_and_upgrade_stage(ruleset_id, target_rule_id, qubit->action_index);
+
+  EXPECT_EQ(rule1->resources.size(), 0);
+  ASSERT_EQ(rule2->resources.size(), 1);
+  auto it = rule2->resources.begin();
+  EXPECT_EQ(it->first, partner_addr);
+  EXPECT_EQ(it->second, qubit);
 }
 
 TEST(RuleEngineTest, updateAppliedRule) {
   prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
-  auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockRealTimeController = new MockRealTimeController;
-  auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, mockRealTimeController};
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
 }
 
 TEST(RuleEngineTest, checkAppliedRule) {
   prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
-  auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockRealTimeController = new MockRealTimeController;
-  auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, mockRealTimeController};
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
 }
 }  // namespace
