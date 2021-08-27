@@ -75,15 +75,22 @@ void RoutingDaemon::initialize(int stage) {
       // thisNode->disable();//You can also disable nodes or channels accordingly to represent broken hardwares
       // EV<<"\n thisNode is "<< topo->getNode(x)->getModule()->getFullName() <<" has "<<topo->getNode(x)->getNumOutLinks()<<" links \n";
 
-      // Get assigned cost for each channel written in .ned file
-      double channel_cost = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("cost");
+      // Calculate bell pair generation rate to use it as channel cost
+      // The cost metric is taken from https://arxiv.org/abs/1206.5655
+      double speed_of_light_in_fiber = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("Speed_of_light_in_fiber");
+      double channel_length = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("distance");
+      double emission_prob = 0.46 * 0.49;
+      EV_DEBUG << "Channel length is " << channel_length << "\n";
+      EV_DEBUG << "Speed of light in the channel is " << speed_of_light_in_fiber << "\n";
+      double seconds_per_bell_pair_generation = (channel_length / speed_of_light_in_fiber) * emission_prob;
+      EV_DEBUG << "BellGenT metric for the channel is " << seconds_per_bell_pair_generation << "\n";
 
       // EV<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName()<<" =? "<<"QuantumChannel"<<"\n";
       // if(strcmp(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName(),"QuantumChannel")==0){
       if (strstr(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName(), "quantum")) {
         // Otherwise, keep the quantum channels and set the weight
         // EV<<"\n Quantum Channel!!!!!! cost is"<<channel_cost<<"\n";
-        topo->getNode(x)->getLinkOut(j)->setWeight(channel_cost);  // Set channel weight
+        topo->getNode(x)->getLinkOut(j)->setWeight(seconds_per_bell_pair_generation);  // Set channel weight
       } else {
         // Ignore classical link in quantum routing table
         topo->getNode(x)->getLinkOut(j)->disable();
@@ -134,7 +141,7 @@ int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr) {
   Enter_Method("return_QNIC_address_to_destAddr");
   RoutingTable::iterator it = qrtable.find(destAddr);
   if (it == qrtable.end()) {
-    EV << "Quantum: address " << destAddr << " unreachable from this node  \n";
+    EV << "Quantum: address " << destAddr << " unreachable from this node \n";
     return -1;
   }
   return it->second.address;
