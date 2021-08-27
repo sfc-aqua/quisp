@@ -567,15 +567,15 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
       for (auto rule = process->cbegin(); rule != process->cend(); ++rule) {
         if ((*rule)->rule_index == rule_id) {  // here we can identify the rule of purification
           // 3. loop for resources currently assined
-          for (auto qubit_map = (*rule)->resources.begin(); qubit_map != (*rule)->resources.end(); ++qubit_map) {
-            partner_address = qubit_map->first;
-            qubit = qubit_map->second;
+          for (auto qubit_record = (*rule)->resources.begin(); qubit_record != (*rule)->resources.end(); ++qubit_record) {
+            partner_address = qubit_record->first;
+            qubit = qubit_record->second;
             // 4. check which trial of purification
             if (qubit->action_index == index) {
               // 5. unlock qubit for later use
               qubit->Unlock();
               // remove qubit from resource list in the rule
-              (*rule)->resources.erase(qubit_map);
+              (*rule)->resources.erase(qubit_record);
               next_rule_id = (*rule)->next_rule_id;
               break;
             }
@@ -641,16 +641,17 @@ void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, unsigned 
       RuleSet *process = it->second.Rs;  // One Process. From top to bottom.
       for (auto rule = process->cbegin(), end = process->cend(); rule != end; rule++) {  // Traverse through rules
         if ((*rule)->rule_index == rule_id) {  // Find the corresponding rule.
-          for (auto qubit_map = (*rule)->resources.begin(); qubit_map != (*rule)->resources.end(); ++qubit_map) {
-            auto qubit = qubit_map->second;
+          for (auto qubit_record = (*rule)->resources.begin(); qubit_record != (*rule)->resources.end(); ++qubit_record) {
+            auto qubit = qubit_record->second;
             // std::cout<<".....node["<<qubit->second->node_address<<" qnic["<<qubit->second->qnic_index<<"]" << qubit->second<<"\n";
             if (qubit->action_index == index) {
               // Purification failed, discard resource.
+              qubit->Unlock();
               QNIC_type qt = (QNIC_type)qubit->qnic_type;
               qubit->par("GOD_Xerror") = false;
               qubit->par("GOD_Zerror") = false;
               // remove from current rule
-              (*rule)->resources.erase(qubit_map);
+              (*rule)->resources.erase(qubit_record);
               freeConsumedResource(qubit->qnic_index, qubit, qt);  // Remove from entangled resource list.
               ok = true;
               return;
@@ -1004,10 +1005,10 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
       for (auto rule = ruleset->cbegin(); rule != ruleset->cend(); rule++) {
         if ((*rule)->rule_index == rule_id) {  // rule identified
           // remove qubit from previous rule
-          for (auto qubit_map = (*rule)->resources.cbegin(); qubit_map != (*rule)->resources.cend(); qubit_map++) {
-            auto target_qubit = qubit_map->second;
+          for (auto qubit_record = (*rule)->resources.cbegin(); qubit_record != (*rule)->resources.cend(); qubit_record++) {
+            auto target_qubit = qubit_record->second;
             if (target_qubit == qubit) {
-              (*rule)->resources.erase(qubit_map);
+              (*rule)->resources.erase(qubit_record);
               next_rule_id = (*rule)->next_rule_id;
               break;
             }
