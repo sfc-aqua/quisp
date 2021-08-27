@@ -80,13 +80,8 @@ void RoutingDaemon::initialize(int stage) {
       double speed_of_light_in_fiber = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("Speed_of_light_in_fiber");
       double channel_length = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("distance");
       double emission_prob = 0.46 * 0.49;
-      // Emission success probability needs to be read from the .ini file or StationaryQubit.cc residing inside qnic module
-      // cTopology::Node *currNode = topo->getNodeFor(getParentModule()->getParentModule());
-      // double emission_prob = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("emission_success_probability");
       EV_DEBUG << "\n Channel length is " << channel_length;
       EV_DEBUG << "\n Speed of light in the channel is " << speed_of_light_in_fiber;
-      // cTopology::Node *currNode = topo->getNodeFor(getParentModule()->getParentModule());
-      // double emission_prob = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("emission_success_probability");
       double seconds_per_bell_pair_generation = (channel_length / speed_of_light_in_fiber) * emission_prob;
       EV_DEBUG << "\n BellGenT metric for the channel is " << seconds_per_bell_pair_generation;
 
