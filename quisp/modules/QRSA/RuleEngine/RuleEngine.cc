@@ -605,21 +605,15 @@ void RuleEngine::updateAppliedRule(IStationaryQubit *qubit, unsigned long rule_i
 bool RuleEngine::checkAppliedRule(IStationaryQubit *qubit, unsigned long rule_id) {
   // check if the rule can be applied (target rule id is not in the applied rules)
   auto iter = applied_rules.find(qubit);
-  if (iter != applied_rules.end()) {
-    auto rules = applied_rules[qubit];
-    auto rule_iter = std::find(rules.begin(), rules.end(), rule_id);
-    if (rule_iter != rules.end()) {
-      // this rule is already applied
-      return false;
-    } else {
-      // not applied yet. you can go ahead to apply the rule
-      return true;
-    }
-  } else {
+  if (iter == applied_rules.end()) {
     // completely fresh resource
     return true;
   }
-  return false;
+  auto rules = applied_rules[qubit];
+  auto rule_exists = std::find(rules.begin(), rules.end(), rule_id) != rules.end();
+  // if the rule exists, this rule is already applied, so you cannot apply any more.
+  // if not, you can go ahead to apply the rule
+  return !rule_exists;
 }
 
 void RuleEngine::clearAppliedRule(IStationaryQubit *qubit) {
