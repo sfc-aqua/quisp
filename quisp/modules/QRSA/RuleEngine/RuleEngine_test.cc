@@ -254,10 +254,60 @@ TEST(RuleEngineTest, storeCheckPurificationAgreement_no_process) {
 
 TEST(RuleEngineTest, storeCheckPurificationAgreement_running_process) {
   prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
-  auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockRealTimeController = new MockRealTimeController;
-  auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, mockRealTimeController};
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  rule_engine->callInitialize();
+  unsigned long ruleset_id = 4;
+  int partner_addr = 5;
+  int action_index = 3;
+  auto* ruleset = new RuleSet(ruleset_id, rule_engine->parentAddress, partner_addr);
+  unsigned long target_rule_id = 10;
+  auto rule1 = new Rule(ruleset_id, target_rule_id);
+  auto rule2 = new Rule(ruleset_id, 11);
+  auto* qubit = new MockQubit(QNIC_E, 0);
+
+  qubit->action_index = action_index;
+  rule1->addResource(partner_addr, qubit);
+  rule1->next_rule_id = rule2->rule_index;
+  ruleset->addRule(std::unique_ptr<Rule>(rule1));
+  ruleset->addRule(std::unique_ptr<Rule>(rule2));
+
+  auto proc = Process{
+      .owner_addr = rule_engine->parentAddress,
+      .Rs = ruleset,
+  };
+
+  rule_engine->rp.insert(std::make_pair(1, proc));
+  EXPECT_CALL(*qubit, Unlock()).Times(1);
+
+  purification_result result{
+      .id = {.ruleset_id = ruleset_id, .rule_id = rule1->rule_index, .index = action_index},
+      .outcome = true,
+  };
+
+  EXPECT_EQ(rule1->resources.size(), 1);
+  EXPECT_EQ(rule2->resources.size(), 0);
+
+  EXPECT_EQ(rule_engine->Purification_table.size(), 0);
+  // got the result from the node itself
+  rule_engine->storeCheck_Purification_Agreement(result);
+
+  EXPECT_EQ(rule1->resources.size(), 1);
+  EXPECT_EQ(rule2->resources.size(), 0);
+  EXPECT_EQ(rule_engine->Purification_table.size(), 1);
+
+  // got the same result from the opposite node
+  // and then the resource will be upgrade.
+  // but obviously we should separate this into 2 methods.
+  rule_engine->storeCheck_Purification_Agreement(result);
+  EXPECT_EQ(rule1->resources.size(), 0);
+  EXPECT_EQ(rule2->resources.size(), 1);
+  delete qubit;
+  delete hardware_monitor;
 }
 
 TEST(RuleEngineTest, freeConsumedResource) {
@@ -296,6 +346,7 @@ TEST(RuleEngineTest, unlockResourceAndDiscard) {
 
   unsigned long ruleset_id = 4;
   int partner_addr = 5;
+  int action_index = 3;
   auto* ruleset = new RuleSet(ruleset_id, rule_engine->parentAddress, partner_addr);
   unsigned long target_rule_id = 10;
   auto rule1 = new Rule(ruleset_id, target_rule_id);
@@ -303,7 +354,7 @@ TEST(RuleEngineTest, unlockResourceAndDiscard) {
   int qnic_index = 17;
   auto* qubit = new MockQubit(QNIC_E, qnic_index);
   qubit->fillParams();
-  qubit->action_index = rule1->rule_index;
+  qubit->action_index = action_index;
   rule1->addResource(partner_addr, qubit);
   rule1->next_rule_id = rule2->rule_index;
   ruleset->addRule(std::unique_ptr<Rule>(rule1));
@@ -321,7 +372,7 @@ TEST(RuleEngineTest, unlockResourceAndDiscard) {
   EXPECT_EQ(rule1->resources.size(), 1);
   EXPECT_EQ(rule2->resources.size(), 0);
   EXPECT_CALL(*realtime_controller, ReInitialize_StationaryQubit(qnic_index, 1, QNIC_E, true)).Times(1).WillOnce(Return());
-  rule_engine->Unlock_resource_and_discard(ruleset_id, target_rule_id, qubit->action_index);
+  rule_engine->Unlock_resource_and_discard(ruleset_id, target_rule_id, action_index);
 
   EXPECT_EQ(rule1->resources.size(), 0);
   EXPECT_EQ(rule2->resources.size(), 0);
@@ -343,13 +394,15 @@ TEST(RuleEngineTest, unlockResourceAndUpgradeStage) {
 
   unsigned long ruleset_id = 4;
   int partner_addr = 5;
+  int action_index = 3;
+
   auto* ruleset = new RuleSet(ruleset_id, rule_engine->parentAddress, partner_addr);
   unsigned long target_rule_id = 10;
   auto rule1 = new Rule(ruleset_id, target_rule_id);
   auto rule2 = new Rule(ruleset_id, 11);
   auto* qubit = new MockQubit(QNIC_E, 0);
 
-  qubit->action_index = rule1->rule_index;
+  qubit->action_index = action_index;
   rule1->addResource(partner_addr, qubit);
   rule1->next_rule_id = rule2->rule_index;
   ruleset->addRule(std::unique_ptr<Rule>(rule1));
@@ -367,7 +420,7 @@ TEST(RuleEngineTest, unlockResourceAndUpgradeStage) {
   EXPECT_EQ(rule2->resources.size(), 0);
 
   // the rule engine brings the qubit from rule1 to rule2
-  rule_engine->Unlock_resource_and_upgrade_stage(ruleset_id, target_rule_id, qubit->action_index);
+  rule_engine->Unlock_resource_and_upgrade_stage(ruleset_id, target_rule_id, action_index);
 
   EXPECT_EQ(rule1->resources.size(), 0);
   ASSERT_EQ(rule2->resources.size(), 1);
@@ -391,12 +444,14 @@ TEST(RuleEngineTest, unlockResourceAndUpgradeStage_without_next_rule) {
 
   unsigned long ruleset_id = 4;
   int partner_addr = 5;
+  int action_index = 3;
+
   auto* ruleset = new RuleSet(ruleset_id, rule_engine->parentAddress, partner_addr);
   unsigned long target_rule_id = 10;
   auto rule = new Rule(ruleset_id, target_rule_id);
   auto* qubit = new MockQubit(QNIC_E, 0);
 
-  qubit->action_index = rule->rule_index;
+  qubit->action_index = action_index;
   rule->addResource(partner_addr, qubit);
   ruleset->addRule(std::unique_ptr<Rule>(rule));
 
@@ -408,7 +463,7 @@ TEST(RuleEngineTest, unlockResourceAndUpgradeStage_without_next_rule) {
   rule_engine->rp.insert(std::make_pair(1, proc));
   EXPECT_CALL(*qubit, Unlock()).Times(1);
   EXPECT_EQ(rule->resources.size(), 1);
-  EXPECT_THROW({ rule_engine->Unlock_resource_and_upgrade_stage(ruleset_id, target_rule_id, qubit->action_index); }, cRuntimeError);
+  EXPECT_THROW({ rule_engine->Unlock_resource_and_upgrade_stage(ruleset_id, target_rule_id, action_index); }, cRuntimeError);
 
   delete qubit;
   delete hardware_monitor;
