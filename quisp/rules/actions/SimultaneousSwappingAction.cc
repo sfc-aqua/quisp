@@ -6,9 +6,9 @@ using quisp::types::MeasureZResult;
 namespace quisp {
 namespace rules {
 namespace actions {
-SimultaneousSwappingAction::SimultaneousSwappingAction(unsigned long RuleSet_id, int rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi,
-                                                       int rqad, int rr, int slqi, QNIC_type slqt, int srqi, QNIC_type srqt, int init, QNIC_type initqt, int initqi, int initqad,
-                                                       int initr, int resp, QNIC_type respqt, int respqi, int respqad, int respr, int iip, int pleir) {
+SimultaneousSwappingAction::SimultaneousSwappingAction(unsigned long RuleSet_id, unsigned long rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt,
+                                                       int rqi, int rqad, int rr, int slqi, QNIC_type slqt, int srqi, QNIC_type srqt, int init, QNIC_type initqt, int initqi,
+                                                       int initqad, int initr, int resp, QNIC_type respqt, int respqi, int respqad, int respr, int iip, int pleir) {
   ruleset_id = RuleSet_id;
   rule_id = rule_index;
 
@@ -51,8 +51,8 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   IStationaryQubit *left_qubit = nullptr;
   IStationaryQubit *right_qubit = nullptr;
 
-  left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
-  right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
+  left_qubit = getResource(left_resource, left_partner);
+  right_qubit = getResource(right_resource, right_partner);
 
   if (left_qubit == nullptr || right_qubit == nullptr) {
     Error *pk = new Error;

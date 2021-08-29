@@ -21,7 +21,7 @@ using namespace rules;
 
 typedef struct {
   unsigned long ruleset_id;
-  int rule_id;
+  unsigned long rule_id;
   int index;
 } process_id;
 
@@ -73,15 +73,15 @@ struct PhotonTransmissionConfig {
 // Process contains RuleSet
 struct Process {
   // is this different from RuleSet::owner_addr?
-  int ownner_addr;
+  int owner_addr;
   RuleSet *Rs;
 };
 
 typedef std::map<int, QubitState> QubitStateTable;
-typedef std::multimap<int, purification_result> PurificationTable;
-typedef std::multimap<int, Doublepurification_result> DoublePurificationTable;
-typedef std::multimap<int, Quatropurification_result> QuatroPurificationTable;
-typedef std::multimap<int, Triplepurification_result> TriplePurificationTable;
+typedef std::multimap<int, purification_result> PurificationTable;  // map<partner, purification_result>
+typedef std::multimap<unsigned long, Doublepurification_result> DoublePurificationTable;
+typedef std::multimap<unsigned long, Quatropurification_result> QuatroPurificationTable;
+typedef std::multimap<unsigned long, Triplepurification_result> TriplePurificationTable;
 typedef std::map<int, QubitAddr_cons> sentQubitIndexTracker;  // nth shot -> node/qnic/qubit index (node addr not needed actually)
 typedef std::map<int, bool> trial_tracker;  // trial index, false or true (that trial is over or not)
 typedef std::map<int, Process> running_processes;  // index -> process
@@ -92,7 +92,6 @@ class IRuleEngine : public cSimpleModule {
   ~IRuleEngine() {}
   virtual void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type) = 0;
   virtual void freeConsumedResource(int qnic_index, IStationaryQubit *qubit, QNIC_type qnic_type) = 0;
-  virtual void dynamic_ResourceAllocation(int qnic_type, int qnic_index) = 0;
   virtual void ResourceAllocation(int qnic_type, int qnic_index) = 0;
 };
 

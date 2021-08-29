@@ -23,7 +23,7 @@ class DoubleSelectionAction : public Action {
   int action_index = 0;  // To track how many times this particular action has been invoked.
  public:
   DoubleSelectionAction();
-  DoubleSelectionAction(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z);
+  DoubleSelectionAction(unsigned long RuleSet_id, unsigned long rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z);
   cPacket* run(cModule* re) override;
 };
 
@@ -43,7 +43,7 @@ class DoubleSelectionActionInv : public Action {
   int action_index = 0;  // To track how many times this particular action has been invoked.
  public:
   DoubleSelectionActionInv();
-  DoubleSelectionActionInv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z);
+  DoubleSelectionActionInv(unsigned long RuleSet_id, unsigned long rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z);
   cPacket* run(cModule* re) override;
 };
 }  // namespace actions

@@ -4,6 +4,7 @@
 #include <omnetpp.h>
 #include <test_utils/TestUtils.h>
 #include <memory>
+#include <utility>
 
 #include "BellPairStore.h"
 #include "IRuleEngine.h"
@@ -16,6 +17,7 @@
 #include "modules/QRSA/RealTimeController/IRealTimeController.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
 #include "rules/Action.h"
+#include "rules/RuleSet.h"
 
 namespace {
 
@@ -37,27 +39,6 @@ class MockStationaryQubit : public StationaryQubit {
 
   MOCK_METHOD(void, emitPhoton, (int pulse), (override));
   MOCK_METHOD(void, setFree, (bool consumed), (override));
-};
-
-class MockRoutingDaemon : public RoutingDaemon {
- public:
-  MOCK_METHOD(int, return_QNIC_address_to_destAddr, (int destAddr), (override));
-};
-
-class MockHardwareMonitor : public IHardwareMonitor {
- public:
-  MOCK_METHOD(int, getQnicNumQubits, (int i, QNIC_type qnic_type), (override));
-  MOCK_METHOD(NeighborTable, passNeighborTable, (), (override));
-  MOCK_METHOD(std::unique_ptr<InterfaceInfo>, findInterfaceByNeighborAddr, (int neighbor_address), (override));
-  MOCK_METHOD(std::unique_ptr<ConnectionSetupInfo>, findConnectionInfoByQnicAddr, (int qnic_address), (override));
-};
-
-class MockRealTimeController : public IRealTimeController {
- public:
-  MOCK_METHOD(void, initialize, (), (override));
-  MOCK_METHOD(void, handleMessage, (cMessage * msg), (override));
-  MOCK_METHOD(void, EmitPhoton, (int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse), (override));
-  MOCK_METHOD(void, ReInitialize_StationaryQubit, (int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed), (override));
 };
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
@@ -86,8 +67,15 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
 
 class RuleEngineTestTarget : public quisp::modules::RuleEngine {
  public:
+  using quisp::modules::RuleEngine::checkAppliedRule;
+  using quisp::modules::RuleEngine::clearAppliedRule;
   using quisp::modules::RuleEngine::initialize;
   using quisp::modules::RuleEngine::par;
+  using quisp::modules::RuleEngine::storeCheck_Purification_Agreement;
+  using quisp::modules::RuleEngine::Unlock_resource_and_discard;
+  using quisp::modules::RuleEngine::Unlock_resource_and_upgrade_stage;
+  using quisp::modules::RuleEngine::updateAppliedRule;
+
   RuleEngineTestTarget(MockStationaryQubit* mockQubit, MockRoutingDaemon* routingdaemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller)
       : quisp::modules::RuleEngine() {
     setParInt(this, "address", 123);
@@ -111,42 +99,65 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
 };
 
 TEST(RuleEngineTest, ESResourceUpdate) {
-  prepareSimulation();
+  // 1 (wait) -- 2(ES) -- 3(wait)
+  // from wait to next rule
+  auto* sim = prepareSimulation();
   auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockQubit0 = new MockStationaryQubit(QNIC_E, 0);
-  auto* mockQubit1 = new MockStationaryQubit(QNIC_E, 0);  // qubit to be updated with entanglement swapping
-  auto* mockQubit2 = new MockStationaryQubit(QNIC_E, 0);
-  RuleEngineTestTarget c{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
+  auto* mockQubit1 = new MockStationaryQubit(QNIC_E, 0);
+  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
 
   auto info = std::make_unique<ConnectionSetupInfo>();
   info->qnic.type = QNIC_E;
   info->qnic.index = 0;
 
+  unsigned long mock_ruleset_id = 10;
+  unsigned long mock_rule_id = 5193;
+  unsigned long mock_next_rule_id = 3829;
+
   swapping_result swapr;
+  swapr.id.ruleset_id = mock_ruleset_id;
+  swapr.id.rule_id = mock_rule_id;
   swapr.new_partner = 3;
   swapr.operation_type = 0;
   swapr.new_partner_qnic_address = 1;
   swapr.new_partner_qnic_index = 1;
   swapr.new_partner_qnic_type = QNIC_E;
   swapr.measured_qubit_index = 1;
+
   EXPECT_CALL(*routingdaemon, return_QNIC_address_to_destAddr(swapr.new_partner)).WillOnce(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).Times(2).WillOnce(Return(2)).WillOnce(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).Times(2).WillOnce(Return(2)).WillOnce(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(std::move(info))));
-  c.initialize();
-  c.setAllResources(0, mockQubit0);
-  c.setAllResources(1, mockQubit1);
-  c.setAllResources(2, mockQubit2);
-  auto* partner = c.bell_pair_store.findQubit(QNIC_E, 0, 1);
-  ASSERT_TRUE(partner != nullptr);
-  // check resource is updated?
-  c.updateResources_EntanglementSwapping(swapr);
-  auto* updated_partner = c.bell_pair_store.findQubit(QNIC_E, 0, 3);
-  ASSERT_TRUE(updated_partner != nullptr);
-  // old record was deleted properly
-  auto* old_partner = c.bell_pair_store.findQubit(QNIC_E, 0, 1);
-  ASSERT_TRUE(old_partner == nullptr);
+
+  // 0. set ruleset
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+  auto* rs = new RuleSet(mock_ruleset_id, mock_rule_id, {});  // ruleset_id, ruleset_owner, partners
+  auto wait_rule = std::make_unique<Rule>();
+  wait_rule->ruleset_id = mock_ruleset_id;
+  wait_rule->rule_index = mock_rule_id;
+  wait_rule->next_rule_id = mock_next_rule_id;
+  rs->addRule(std::move(wait_rule));
+  auto next_rule = std::make_unique<Rule>();
+  next_rule->ruleset_id = mock_ruleset_id;
+  next_rule->rule_index = mock_next_rule_id;
+  rs->addRule(std::move(next_rule));
+
+  Process proc;
+  proc.owner_addr = 0;
+  proc.Rs = rs;
+  rule_engine->rp.insert(std::make_pair(0, proc));
+  rule_engine->rp[0].Rs->getRule(0)->addResource(1, mockQubit1);
+  ASSERT_EQ(rule_engine->rp[0].Rs->getRule(0)->resources.size(), 1);
+  ASSERT_EQ(rule_engine->rp[0].Rs->getRule(1)->resources.size(), 0);
+  rule_engine->updateResources_EntanglementSwapping(swapr);
+  // 1. remove from previous rule
+  ASSERT_EQ(rule_engine->rp[0].Rs->getRule(0)->resources.size(), 0);
+  // // 2. add to the next rule
+  ASSERT_EQ(rule_engine->rp[0].Rs->getRule(1)->resources.size(), 1);
+  delete mockHardwareMonitor;
+  delete routingdaemon;
 }
 
 TEST(RuleEngineTest, resourceAllocation) {
@@ -166,12 +177,14 @@ TEST(RuleEngineTest, resourceAllocation) {
   rule_engine->setAllResources(2, mockQubit2);
   auto* rs = new RuleSet(0, 0, 1);
   auto rule = std::make_unique<Rule>();
-  auto* action = new RandomMeasureAction(1, QNIC_E, 3, 1, 0, 1);
+  // owner address,
+  auto* action = new RandomMeasureAction(0, 1, QNIC_E, 3, 1, 10);
 
   rule->setAction(action);
+  rule->action_partners = {1};
   rs->addRule(std::move(rule));
   Process proc;
-  proc.ownner_addr = 0;
+  proc.owner_addr = 0;
   proc.Rs = rs;
   rule_engine->rp.insert(std::make_pair(0, proc));
 
@@ -223,4 +236,295 @@ TEST(RuleEngineTest, trackerUpdate) {
   delete mockRealTimeController;
 }
 
+TEST(RuleEngineTest, storeCheckPurificationAgreement_no_process) {
+  prepareSimulation();
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  rule_engine->callInitialize();
+  purification_result result{
+      .outcome = true,
+  };
+  rule_engine->storeCheck_Purification_Agreement(result);
+  delete hardware_monitor;
+}
+
+TEST(RuleEngineTest, storeCheckPurificationAgreement_running_process) {
+  prepareSimulation();
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  rule_engine->callInitialize();
+  unsigned long ruleset_id = 4;
+  int partner_addr = 5;
+  int action_index = 3;
+  auto* ruleset = new RuleSet(ruleset_id, rule_engine->parentAddress, partner_addr);
+  unsigned long target_rule_id = 10;
+  auto rule1 = new Rule(ruleset_id, target_rule_id);
+  auto rule2 = new Rule(ruleset_id, 11);
+  auto* qubit = new MockQubit(QNIC_E, 0);
+
+  qubit->action_index = action_index;
+  rule1->addResource(partner_addr, qubit);
+  rule1->next_rule_id = rule2->rule_index;
+  ruleset->addRule(std::unique_ptr<Rule>(rule1));
+  ruleset->addRule(std::unique_ptr<Rule>(rule2));
+
+  auto proc = Process{
+      .owner_addr = rule_engine->parentAddress,
+      .Rs = ruleset,
+  };
+
+  rule_engine->rp.insert(std::make_pair(1, proc));
+  EXPECT_CALL(*qubit, Unlock()).Times(1);
+
+  purification_result result{
+      .id = {.ruleset_id = ruleset_id, .rule_id = rule1->rule_index, .index = action_index},
+      .outcome = true,
+  };
+
+  EXPECT_EQ(rule1->resources.size(), 1);
+  EXPECT_EQ(rule2->resources.size(), 0);
+
+  EXPECT_EQ(rule_engine->Purification_table.size(), 0);
+  // got the result from the node itself
+  rule_engine->storeCheck_Purification_Agreement(result);
+
+  EXPECT_EQ(rule1->resources.size(), 1);
+  EXPECT_EQ(rule2->resources.size(), 0);
+  EXPECT_EQ(rule_engine->Purification_table.size(), 1);
+
+  // got the same result from the opposite node
+  // and then the resource will be upgrade.
+  // but obviously we should separate this into 2 methods.
+  rule_engine->storeCheck_Purification_Agreement(result);
+  EXPECT_EQ(rule1->resources.size(), 0);
+  EXPECT_EQ(rule2->resources.size(), 1);
+  delete qubit;
+  delete hardware_monitor;
+}
+
+TEST(RuleEngineTest, freeConsumedResource) {
+  prepareSimulation();
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  rule_engine->callInitialize();
+  int qnic_index = 7;
+  auto* qubit = new MockQubit(QNIC_E, qnic_index);
+  qubit->fillParams();
+  rule_engine->updateAppliedRule(qubit, 0);
+  EXPECT_FALSE(rule_engine->checkAppliedRule(qubit, 0));
+
+  EXPECT_CALL(*realtime_controller, ReInitialize_StationaryQubit(qnic_index, 1, QNIC_E, true)).Times(1).WillOnce(Return());
+  rule_engine->freeConsumedResource(qnic_index, qubit, QNIC_E);
+  EXPECT_TRUE(rule_engine->checkAppliedRule(qubit, 0));
+  delete qubit;
+  delete hardware_monitor;
+  delete realtime_controller;
+}
+
+TEST(RuleEngineTest, unlockResourceAndDiscard) {
+  prepareSimulation();
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  // prevent creation of the qubits in the Busy_OR_Free_QubitState_table.
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(1).WillRepeatedly(Return(0));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(1).WillRepeatedly(Return(0));
+  rule_engine->callInitialize();
+
+  unsigned long ruleset_id = 4;
+  int partner_addr = 5;
+  int action_index = 3;
+  auto* ruleset = new RuleSet(ruleset_id, rule_engine->parentAddress, partner_addr);
+  unsigned long target_rule_id = 10;
+  auto rule1 = new Rule(ruleset_id, target_rule_id);
+  auto rule2 = new Rule(ruleset_id, 11);
+  int qnic_index = 17;
+  auto* qubit = new MockQubit(QNIC_E, qnic_index);
+  qubit->fillParams();
+  qubit->action_index = action_index;
+  rule1->addResource(partner_addr, qubit);
+  rule1->next_rule_id = rule2->rule_index;
+  ruleset->addRule(std::unique_ptr<Rule>(rule1));
+  ruleset->addRule(std::unique_ptr<Rule>(rule2));
+
+  auto proc = Process{
+      .owner_addr = rule_engine->parentAddress,
+      .Rs = ruleset,
+  };
+
+  rule_engine->rp.insert(std::make_pair(1, proc));
+  EXPECT_CALL(*qubit, Unlock()).Times(1);
+
+  rule_engine->updateAppliedRule(qubit, 0);
+  EXPECT_EQ(rule1->resources.size(), 1);
+  EXPECT_EQ(rule2->resources.size(), 0);
+  EXPECT_CALL(*realtime_controller, ReInitialize_StationaryQubit(qnic_index, 1, QNIC_E, true)).Times(1).WillOnce(Return());
+  rule_engine->Unlock_resource_and_discard(ruleset_id, target_rule_id, action_index);
+
+  EXPECT_EQ(rule1->resources.size(), 0);
+  EXPECT_EQ(rule2->resources.size(), 0);
+
+  delete qubit;
+  delete hardware_monitor;
+  delete realtime_controller;
+}
+
+TEST(RuleEngineTest, unlockResourceAndUpgradeStage) {
+  prepareSimulation();
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  rule_engine->callInitialize();
+
+  unsigned long ruleset_id = 4;
+  int partner_addr = 5;
+  int action_index = 3;
+
+  auto* ruleset = new RuleSet(ruleset_id, rule_engine->parentAddress, partner_addr);
+  unsigned long target_rule_id = 10;
+  auto rule1 = new Rule(ruleset_id, target_rule_id);
+  auto rule2 = new Rule(ruleset_id, 11);
+  auto* qubit = new MockQubit(QNIC_E, 0);
+
+  qubit->action_index = action_index;
+  rule1->addResource(partner_addr, qubit);
+  rule1->next_rule_id = rule2->rule_index;
+  ruleset->addRule(std::unique_ptr<Rule>(rule1));
+  ruleset->addRule(std::unique_ptr<Rule>(rule2));
+
+  auto proc = Process{
+      .owner_addr = rule_engine->parentAddress,
+      .Rs = ruleset,
+  };
+
+  rule_engine->rp.insert(std::make_pair(1, proc));
+  EXPECT_CALL(*qubit, Unlock()).Times(1);
+
+  EXPECT_EQ(rule1->resources.size(), 1);
+  EXPECT_EQ(rule2->resources.size(), 0);
+
+  // the rule engine brings the qubit from rule1 to rule2
+  rule_engine->Unlock_resource_and_upgrade_stage(ruleset_id, target_rule_id, action_index);
+
+  EXPECT_EQ(rule1->resources.size(), 0);
+  ASSERT_EQ(rule2->resources.size(), 1);
+  auto it = rule2->resources.begin();
+  EXPECT_EQ(it->first, partner_addr);
+  EXPECT_EQ(it->second, qubit);
+
+  delete qubit;
+  delete hardware_monitor;
+}
+
+TEST(RuleEngineTest, unlockResourceAndUpgradeStage_without_next_rule) {
+  prepareSimulation();
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  rule_engine->callInitialize();
+
+  unsigned long ruleset_id = 4;
+  int partner_addr = 5;
+  int action_index = 3;
+
+  auto* ruleset = new RuleSet(ruleset_id, rule_engine->parentAddress, partner_addr);
+  unsigned long target_rule_id = 10;
+  auto rule = new Rule(ruleset_id, target_rule_id);
+  auto* qubit = new MockQubit(QNIC_E, 0);
+
+  qubit->action_index = action_index;
+  rule->addResource(partner_addr, qubit);
+  ruleset->addRule(std::unique_ptr<Rule>(rule));
+
+  auto proc = Process{
+      .owner_addr = rule_engine->parentAddress,
+      .Rs = ruleset,
+  };
+
+  rule_engine->rp.insert(std::make_pair(1, proc));
+  EXPECT_CALL(*qubit, Unlock()).Times(1);
+  EXPECT_EQ(rule->resources.size(), 1);
+  EXPECT_THROW({ rule_engine->Unlock_resource_and_upgrade_stage(ruleset_id, target_rule_id, action_index); }, cRuntimeError);
+
+  delete qubit;
+  delete hardware_monitor;
+}
+
+TEST(RuleEngineTest, unlockResourceAndUpgradeStage_without_process) {
+  prepareSimulation();
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  rule_engine->callInitialize();
+
+  EXPECT_NO_THROW({ rule_engine->Unlock_resource_and_upgrade_stage(101, 102, 103); });
+  delete hardware_monitor;
+}
+
+TEST(RuleEngineTest, updateAndCheckAppliedRule) {
+  prepareSimulation();
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  rule_engine->callInitialize();
+
+  auto* qubit1 = new MockQubit(QNIC_E, 7);
+  auto* qubit2 = new MockQubit(QNIC_E, 11);
+  EXPECT_TRUE(rule_engine->checkAppliedRule(qubit1, 1));
+  rule_engine->updateAppliedRule(qubit1, 1);
+  EXPECT_FALSE(rule_engine->checkAppliedRule(qubit1, 1));
+  EXPECT_TRUE(rule_engine->checkAppliedRule(qubit1, 2));
+  EXPECT_TRUE(rule_engine->checkAppliedRule(qubit2, 1));
+
+  delete qubit1;
+  delete qubit2;
+  delete hardware_monitor;
+}
+
+TEST(RuleEngineTest, checkAppliedRule) {
+  prepareSimulation();
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  rule_engine->callInitialize();
+
+  auto* qubit = new MockQubit(QNIC_E, 7);
+  EXPECT_TRUE(rule_engine->checkAppliedRule(qubit, 1));
+  rule_engine->updateAppliedRule(qubit, 1);
+  EXPECT_FALSE(rule_engine->checkAppliedRule(qubit, 1));
+
+  rule_engine->clearAppliedRule(qubit);
+  EXPECT_TRUE(rule_engine->checkAppliedRule(qubit, 1));
+
+  delete qubit;
+  delete hardware_monitor;
+}
 }  // namespace

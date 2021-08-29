@@ -620,7 +620,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   RuleSet *tomography_RuleSet = new RuleSet(RuleSet_id, my_address, partner_address);
   EV_INFO << "Creating rules now ruleset_id = " << RuleSet_id << ", partner_address = " << partner_address << "\n";
 
-  int rule_index = 0;
+  unsigned long rule_index = 0;
 
   if (num_purification > 0) {
     if (Purification_type == 2002) {  // Performs both X and Z purification for each n.
@@ -1025,7 +1025,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
     Random_measure_tomo->setCondition(total_measurements);
 
     // Measure the local resource between it->second.neighborQNode_address.
-    quisp::rules::Action *measure = new RandomMeasureAction(partner_address, qnic_type, qnic_index, 0, my_address, num_measure);
+    quisp::rules::Action *measure = new RandomMeasureAction(my_address, partner_address, qnic_type, qnic_index, 0, num_measure);
     Random_measure_tomo->setAction(measure);
     //---------
     // Add the rule to the RuleSet
@@ -1053,7 +1053,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
     Random_measure_tomo->setCondition(total_measurements);
 
     // Measure the local resource between it->second.neighborQNode_address.
-    quisp::rules::Action *measure = new RandomMeasureAction(partner_address, qnic_type, qnic_index, 0, my_address, num_measure);
+    quisp::rules::Action *measure = new RandomMeasureAction(my_address, partner_address, qnic_type, qnic_index, 0, num_measure);
     Random_measure_tomo->setAction(measure);
     //---------
     // Add the rule to the RuleSet

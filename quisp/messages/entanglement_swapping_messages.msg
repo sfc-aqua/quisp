@@ -13,7 +13,7 @@ packet Header;
 
 packet SwappingResult extends Header{
     unsigned long RuleSet_id;
-    int Rule_id;
+    unsigned long Rule_id;
     int action_index;
 
     int left_Dest;
@@ -44,7 +44,7 @@ packet SwappingResult extends Header{
 
 packet SimultaneousSwappingResult extends Header{
     unsigned long RuleSet_id;
-    int Rule_id;
+    unsigned long Rule_id;
     int action_index;
 
     int initiator_Dest;

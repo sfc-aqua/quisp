@@ -11,11 +11,11 @@ cPacket *DoubleSelectionDualAction::run(cModule *re) {
   IStationaryQubit *qubit = nullptr;
   IStationaryQubit *trash_qubit_Z, *trash_qubit_X, *ds_trash_qubit_Z, *ds_trash_qubit_X = nullptr;
 
-  qubit = getResource_fromTop(resource);
-  trash_qubit_X = getResource_fromTop(trash_resource_X);
-  trash_qubit_Z = getResource_fromTop(trash_resource_Z);
-  ds_trash_qubit_X = getResource_fromTop(doubleselection_trash_resource_X);
-  ds_trash_qubit_Z = getResource_fromTop(doubleselection_trash_resource_Z);
+  qubit = getResource(resource, partner);
+  trash_qubit_X = getResource(trash_resource_X, partner);
+  trash_qubit_Z = getResource(trash_resource_Z, partner);
+  ds_trash_qubit_X = getResource(doubleselection_trash_resource_X, partner);
+  ds_trash_qubit_Z = getResource(doubleselection_trash_resource_Z, partner);
 
   if (qubit == trash_qubit_X || qubit == trash_qubit_Z || trash_qubit_Z == trash_qubit_X || qubit == ds_trash_qubit_X || qubit == ds_trash_qubit_Z ||
       trash_qubit_Z == ds_trash_qubit_X || trash_qubit_X == ds_trash_qubit_X || ds_trash_qubit_Z == ds_trash_qubit_X) {
@@ -101,8 +101,8 @@ cPacket *DoubleSelectionDualAction::run(cModule *re) {
 }
 
 DoubleSelectionDualActionInv::DoubleSelectionDualActionInv(){};
-DoubleSelectionDualActionInv::DoubleSelectionDualActionInv(unsigned long RuleSet_id, int rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z, int ds_X,
-                                                           int ds_Z) {
+DoubleSelectionDualActionInv::DoubleSelectionDualActionInv(unsigned long RuleSet_id, unsigned long rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z,
+                                                           int ds_X, int ds_Z) {
   partner = part;
   qnic_type = qt;
   qnic_id = qi;

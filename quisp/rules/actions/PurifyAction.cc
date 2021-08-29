@@ -8,20 +8,8 @@ namespace actions {
 
 PurifyAction::PurifyAction() {}
 
-PurifyAction::PurifyAction(int part, QNIC_type qt, int qi, int res, int tres, int rs_id, int r_id) {
-  partner = part;
-  qnic_type = qt;
-  qnic_id = qi;
-  resource = res; /*The one to purify. Index from top to bottom.*/
-  trash_resource = tres; /*The one to consume to purify*/
-  purification_count = 0;
-  rule_id = r_id;
-  ruleset_id = rs_id;
-  // action_index++;
-}
-
-PurifyAction::PurifyAction(unsigned long RuleSet_id, int rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res,
-                           int tres) {
+PurifyAction::PurifyAction(unsigned long RuleSet_id, unsigned long rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi,
+                           int res, int tres) {
   partner = part;
   qnic_type = qt;
   qnic_id = qi;
@@ -41,8 +29,8 @@ cPacket *PurifyAction::run(cModule *re) {
   IStationaryQubit *qubit = nullptr;
   IStationaryQubit *trash_qubit = nullptr;
 
-  qubit = getResource_fromTop(resource);
-  trash_qubit = getResource_fromTop(trash_resource);
+  qubit = getResource(resource, partner);
+  trash_qubit = getResource(trash_resource, partner);
 
   if (qubit == trash_qubit) {
     Error *pk = new Error;
@@ -68,7 +56,6 @@ cPacket *PurifyAction::run(cModule *re) {
     // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
     // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
     trash_qubit->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
-
     // Break entanglement.
     trash_qubit->entangled_partner->entangled_partner = nullptr;
   }
@@ -76,10 +63,11 @@ cPacket *PurifyAction::run(cModule *re) {
   removeResource_fromRule(trash_qubit);  // Remove from resource list in this Rule.
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
   rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);  // Remove from entangled resource list.
-  // Deleting done
 
   PurificationResult *pk = new PurificationResult;
   pk->setDestAddr(partner);
+  // This result is sent to partner address and my address.
+  // To keep the information who is the purifcation partner, this variable is used.
   pk->setKind(7);
   pk->setAction_index(action_index);
   pk->setRule_id(rule_id);

@@ -8,10 +8,10 @@ namespace quisp {
 namespace rules {
 namespace actions {
 
-SwappingAction::SwappingAction(unsigned long RuleSet_id, int rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr,
-                               int slqi, QNIC_type slqt, int srqi, QNIC_type srqt) {
-  ruleset_id = RuleSet_id;
-  rule_id = rule_index;
+SwappingAction::SwappingAction(unsigned long _ruleset_id, unsigned long _rule_id, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad,
+                               int rr, int slqi, QNIC_type slqt, int srqi, QNIC_type srqt) {
+  ruleset_id = _ruleset_id;
+  rule_id = _rule_id;
 
   left_partner = lp;
   left_qnic_type = lqt;
@@ -32,19 +32,25 @@ SwappingAction::SwappingAction(unsigned long RuleSet_id, int rule_index, int lp,
 
 // TODO: completely mixed
 cPacket *SwappingAction::run(cModule *re) {
-  float success_probability = 1.0;
-
   IStationaryQubit *left_qubit = nullptr;
   IStationaryQubit *right_qubit = nullptr;
 
-  left_qubit = getResource_fromTop_with_partner(left_resource, left_partner);
-  right_qubit = getResource_fromTop_with_partner(right_resource, right_partner);
+  // FIXME: left_resource is misleading name. This is just an index.
+  left_qubit = getResource(left_resource, left_partner);
+  right_qubit = getResource(right_resource, right_partner);
 
   if (left_qubit == nullptr || right_qubit == nullptr) {
     Error *pk = new Error;
     pk->setError_text("Not enough resource found! This shouldn't happen!");
     return pk;
   }
+
+  if (left_qubit == right_qubit) {
+    Error *pk = new Error;
+    pk->setError_text("Left and right qubits are the same. ");
+    return pk;
+  }
+
   if (left_qnic_id < 0 || right_qnic_id < 0) {
     Error *pk = new Error;
     pk->setError_text("QNICs are not found!");
@@ -54,6 +60,12 @@ cPacket *SwappingAction::run(cModule *re) {
   // actual swapping operations
   auto *right_partner_qubit = right_qubit->entangled_partner;
   auto *left_partner_qubit = left_qubit->entangled_partner;
+
+  if (right_partner_qubit == nullptr || left_partner_qubit == nullptr) {
+    Error *pk = new Error;
+    pk->setError_text("Partner qubits are null");
+    return pk;
+  }
   // just swapping pointer.
   // swapper have no way to know this swapping is success or not.
   // bell measurement
@@ -89,15 +101,8 @@ cPacket *SwappingAction::run(cModule *re) {
     operation_type_right = 1;
   }
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
-  if ((std::rand() / RAND_MAX) < success_probability) {
-    right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
-    left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
-  } else {  // this might be wrong
-    removeResource_fromRule(left_partner_qubit);
-    removeResource_fromRule(right_partner_qubit);
-    // TODO CHECK is this correct?
-    // This node can't manipulate partner's qubit
-  }
+  right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
+  left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
   removeResource_fromRule(left_qubit);
   removeResource_fromRule(right_qubit);
   // free consumed

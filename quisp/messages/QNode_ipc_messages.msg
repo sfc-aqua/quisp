@@ -46,14 +46,14 @@ packet StopEmitting extends Header{
 
 packet InternalRuleSetForwarding extends Header{
     unsigned long RuleSet_id;
-    int Rule_id;
+    unsigned long Rule_id;
 
     RuleSetField RuleSet;
 }
 
 packet InternalRuleSetForwarding_Application extends Header{
     unsigned long RuleSet_id;
-    int Rule_id;
+    unsigned long Rule_id;
     int application_type;
 
     RuleSetField RuleSet;

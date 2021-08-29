@@ -48,7 +48,6 @@ TEST(AppTest, InitSimple) {
   auto *mock_qnode = new TestQNode{123};
   auto *app = new AppTestTarget{mock_qnode};
   setParBool(app, "EndToEndConnection", true);
-  setParInt(app, "NumberOfResources", 5);
   setParInt(app, "num_measure", 1);
   setParInt(app, "TrafficPattern", 0);
   setParInt(app, "distant_measure_count", 100);
@@ -110,7 +109,6 @@ TEST(AppTest, Init_OneConnection_Sender) {
   ASSERT_EQ(pkt->getActual_destAddr(), mock_qnode2->address);
   ASSERT_EQ(pkt->getSrcAddr(), 123);
   ASSERT_EQ(pkt->getDestAddr(), 123);
-  ASSERT_EQ(pkt->getNumber_of_required_Bellpairs(), 5);
 }
 
 TEST(AppTest, Init_OneConnection_Sender_TrafficPattern2) {
@@ -119,7 +117,6 @@ TEST(AppTest, Init_OneConnection_Sender_TrafficPattern2) {
   auto *mock_qnode2 = new TestQNode{456};
   auto *app = new AppTestTarget{mock_qnode};
   setParBool(app, "EndToEndConnection", true);
-  setParInt(app, "NumberOfResources", 5);
   setParInt(app, "num_measure", 1);
   setParInt(app, "TrafficPattern", 2);
   setParInt(app, "distant_measure_count", 100);
@@ -140,7 +137,6 @@ TEST(AppTest, Init_OneConnection_Sender_TrafficPattern2) {
   ASSERT_EQ(pkt->getActual_destAddr(), mock_qnode2->address);
   ASSERT_EQ(pkt->getSrcAddr(), 123);
   ASSERT_EQ(pkt->getDestAddr(), 123);
-  ASSERT_EQ(pkt->getNumber_of_required_Bellpairs(), 5);
 }
 
 }  // namespace

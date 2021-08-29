@@ -33,22 +33,15 @@ IStationaryQubit *Action::getResource_fromTop(int required_index) {
   return pt;
 }
 
-IStationaryQubit *Action::getResource_fromTop_with_partner(int required_index, int partner) {
-  // here
-  int resource_index = 0;
-  IStationaryQubit *pt = nullptr;
-
+IStationaryQubit *Action::getResource(int required_index, int partner) {
+  int i = 0;
   for (auto it = (*rule_resources).begin(); it != (*rule_resources).end(); ++it) {
-    if (it->second->isLocked()) {
-      // Ignore locked resource
-    } else if (it->first == partner && !it->second->isLocked()) {
-      pt = it->second;
-      break;
-    } else {
-      resource_index++;
+    if (it->first == partner && !it->second->isLocked()) {
+      if (i == required_index) return it->second;
+      i++;
     }
   }
-  return pt;
+  return nullptr;
 }
 
 void Action::removeResource_fromRule(IStationaryQubit *qubit) {

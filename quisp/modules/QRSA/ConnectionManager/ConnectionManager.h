@@ -46,11 +46,13 @@ class ConnectionManager : public IConnectionManager {
   ConnectionManager();
   utils::ComponentProvider provider;
 
- private:
+ protected:
   int my_address;
   int num_of_qnics;
   std::map<int, bool> qnic_res_table;
   bool simultaneous_es_enabled;
+  bool es_with_purify;
+  int num_remote_purification;
   IRoutingDaemon *routing_daemon;
   IHardwareMonitor *hardware_monitor;
 
@@ -68,17 +70,23 @@ class ConnectionManager : public IConnectionManager {
 
   void rejectRequest(ConnectionSetupRequest *req);
 
-  RuleSet *generateTomographyRuleSet(int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index, int num_resources);
-  RuleSet *generateEntanglementSwappingRuleSet(int owner, SwappingConfig conf);
-  RuleSet *generateSimultaneousEntanglementSwappingRuleSet(int owner, SwappingConfig conf, std::vector<int> path);
-  RuleSet *generateRGSsourceRuleSet(int owner, int partner, int num_of_measure);
   SwappingConfig generateSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners, std::vector<QNIC_pair_info> qnics,
                                         int num_resources);
   SwappingConfig generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources);
 
+  // Rule generators
+  std::unique_ptr<Rule> purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
+                                         unsigned long rule_id);
+  std::unique_ptr<Rule> swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id);
+  std::unique_ptr<Rule> simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id);
+  std::unique_ptr<Rule> waitRule(int partner_address, int next_partner_address, unsigned long ruleset_id, unsigned long rule_id);
+  std::unique_ptr<Rule> tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
+                                       unsigned long rule_id);
+
   void reserveQnic(int qnic_address);
   void releaseQnic(int qnic_address);
   bool isQnicBusy(int qnic_address);
+  QNIC_id getQnicInterface(int owner_address, int partner_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics);
 
   unsigned long createUniqueId();
   static int computePathDivisionSize(int l);
