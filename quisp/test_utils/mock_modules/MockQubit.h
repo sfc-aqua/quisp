@@ -4,6 +4,8 @@
 #include <modules/QNIC/StationaryQubit/StationaryQubit.h>
 #include <test_utils/ModuleType.h>
 #include <test_utils/UtilFunctions.h>
+#include "modules/QNIC.h"
+#include "modules/QRSA/RuleEngine/BellPairStore.h"
 
 namespace quisp_test {
 namespace mock_modules {
@@ -42,6 +44,10 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(void, setCompletelyMixedDensityMatrix, (), (override));
   MOCK_METHOD(void, setEntangledPartnerInfo, (IStationaryQubit *), (override));
   MockQubit() : IStationaryQubit() { setComponentType(new module_type::TestModuleType("test qubit")); }
+  MockQubit(quisp::modules::QNIC_type _type, quisp::modules::QNicIndex _qnic_index) : MockQubit() {
+    qnic_type = _type;
+    qnic_index = _qnic_index;
+  }
   void reset() {
     setFree(true);
     updated_time = SimTime(0);
