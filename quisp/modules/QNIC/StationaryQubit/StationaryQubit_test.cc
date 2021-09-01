@@ -134,15 +134,22 @@ TEST(StatQubitTest, initialize_memory_transition_matrix) {
 TEST(StatQubitTest, setFree) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
-  qubit->fillParams();
   sim->registerComponent(qubit);
+  qubit->fillParams();
   qubit->callInitialize();
   qubit->par("GOD_Xerror") = true;
   qubit->par("GOD_Zerror") = true;
   qubit->par("GOD_EXerror") = true;
   qubit->par("GOD_REerror") = true;
   qubit->par("GOD_CMerror") = true;
+
   qubit->setFree(true);
+  EXPECT_EQ(qubit->updated_time, simTime());
+  auto last_updated_at = qubit->updated_time;
+  sim->setSimTime(10);
+  EXPECT_EQ(qubit->updated_time, last_updated_at);
+  qubit->setFree(true);
+  EXPECT_EQ(qubit->updated_time, simTime());
 
   // check the qubit reset properly
   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
@@ -150,6 +157,24 @@ TEST(StatQubitTest, setFree) {
   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_REerror").boolValue());
   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+}
+
+TEST(StatQubitTest, setFreeUpdatesTime) {
+  auto *sim = prepareSimulation();
+  auto *qubit = new StatQubitTarget{};
+  sim->registerComponent(qubit);
+  qubit->fillParams();
+  qubit->callInitialize();
+
+  qubit->setFree(true);
+  EXPECT_EQ(qubit->updated_time, simTime());
+
+  auto last_updated_at = qubit->updated_time;
+  sim->setSimTime(10);
+  EXPECT_EQ(qubit->updated_time, last_updated_at);
+
+  qubit->setFree(true);
+  EXPECT_EQ(qubit->updated_time, simTime());
 }
 
 TEST(StatQubitTest, addXError) {

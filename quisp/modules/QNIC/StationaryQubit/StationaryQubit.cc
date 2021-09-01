@@ -310,8 +310,8 @@ void StationaryQubit::setFree(bool consumed) {
   isBusy = false;
   allocated = false;
   emitted_time = -1;
-  updated_time = -1;
-  /**/
+  updated_time = simTime();
+
   partner_measured = false;
   completely_mixed = false;
   excited_or_relaxed = false;
