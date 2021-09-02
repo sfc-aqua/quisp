@@ -941,8 +941,8 @@ std::unique_ptr<Rule> ConnectionManager::swappingRule(SwappingConfig conf, unsig
   std::string rule_name = "Entanglement Swapping with " + std::to_string(conf.left_partner) + " : " + std::to_string(conf.right_partner);
   auto rule_entanglement_swapping = std::make_unique<Rule>(ruleset_id, rule_id, rule_name, partners);
   Condition *condition = new Condition();
-  Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, 1);
-  Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, 1);
+  Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, conf.lres);
+  Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, conf.rres);
   condition->addClause(resource_clause_left);
   condition->addClause(resource_clause_right);
   rule_entanglement_swapping->setCondition(condition);
@@ -962,8 +962,8 @@ std::unique_ptr<Rule> ConnectionManager::simultaneousSwappingRule(SwappingConfig
 
   auto rule_simultaneous_entanglement_swapping = std::make_unique<Rule>(ruleset_id, rule_id, rule_name, partners);
   Condition *condition = new Condition();
-  Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, 1);
-  Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, 1);
+  Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, conf.lres);
+  Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, conf.rres);
   condition->addClause(resource_clause_left);
   condition->addClause(resource_clause_right);
 
