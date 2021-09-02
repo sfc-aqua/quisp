@@ -696,9 +696,9 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// ![](../img/PhysRevA.100.052320-Fig11.png)
       // First stage X purification
       for (int i = 0; i < num_purification; i++) {
-        if (i % 2 == 0){
+        if (i % 2 == 0) {
           rule_name = "X purification with: " + std::to_string(partner_address);
-        }else{
+        } else {
           rule_name = "Z purification with: " + std::to_string(partner_address);
         }
         auto Purification = std::make_unique<Rule>(RuleSet_id, rule_index, rule_name, partners);
@@ -737,7 +737,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// Similar to 1221.
       /// ![](../img/PhysRevA.100.052320-Fig12.png)
       for (int i = 0; i < num_purification; i++) {
-        rule_name = "Double purification with: " + std::to_string(partner_address); 
+        rule_name = "Double purification with: " + std::to_string(partner_address);
         auto Purification = std::make_unique<Rule>(RuleSet_id, rule_index, rule_name, partners);
         Condition *Purification_condition = new Condition();
         Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
@@ -765,7 +765,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// ![](../img/PhysRevA.100.052320-Fig12.png)
       for (int i = 0; i < num_purification; i++) {
         if (i % 2 == 0) {
-          rule_name = "Double purification with: " + std::to_string(partner_address);  
+          rule_name = "Double purification with: " + std::to_string(partner_address);
           auto Purification = std::make_unique<Rule>(RuleSet_id, rule_index, rule_name, partners);
           Condition *Purification_condition = new Condition();
           Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
@@ -777,7 +777,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           rule_index++;
           tomography_RuleSet->addRule(std::move(Purification));
         } else {
-          rule_name = "Double purification Inverse with: " + std::to_string(partner_address);  
+          rule_name = "Double purification Inverse with: " + std::to_string(partner_address);
           auto Purification = std::make_unique<Rule>(RuleSet_id, rule_index, rule_name, partners);
           Condition *Purification_condition = new Condition();
           Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
@@ -806,7 +806,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// Note there is no basis change between rounds.
       /// ![](../img/arxiv.1904.08605-Fig13.png)
       for (int i = 0; i < num_purification; i++) {
-        rule_name = "Double Selection with: " + std::to_string(partner_address);  
+        rule_name = "Double Selection with: " + std::to_string(partner_address);
         auto Purification = std::make_unique<Rule>(RuleSet_id, rule_index, rule_name, partners);
         Condition *Purification_condition = new Condition();
         Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
@@ -833,10 +833,10 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// first round is XZ, second is ZX.
       /// ![](../img/arxiv.1904.08605-Fig13.png)
       for (int i = 0; i < num_purification; i++) {
-        if (i % 2 == 0){
-          rule_name = "Double selection with: " + std::to_string(partner_address);  
-        }else{
-          rule_name = "Double selection Inverse with: " + std::to_string(partner_address);  
+        if (i % 2 == 0) {
+          rule_name = "Double selection with: " + std::to_string(partner_address);
+        } else {
+          rule_name = "Double selection Inverse with: " + std::to_string(partner_address);
         }
         auto Purification = std::make_unique<Rule>(RuleSet_id, rule_index, rule_name, partners);
         Condition *Purification_condition = new Condition();
@@ -870,10 +870,10 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// be impractical.
       /// ![](../img/arxiv.1904.08605-Fig14.png)
       for (int i = 0; i < num_purification; i++) {
-        if (i % 2== 0){
-          rule_name = "Double selection Dual action with: " + std::to_string(partner_address);  
-        }else{
-          rule_name = "Double selection Dual action Inverse with: " + std::to_string(partner_address);  
+        if (i % 2 == 0) {
+          rule_name = "Double selection Dual action with: " + std::to_string(partner_address);
+        } else {
+          rule_name = "Double selection Dual action Inverse with: " + std::to_string(partner_address);
         }
         auto Purification = std::make_unique<Rule>(RuleSet_id, rule_index, rule_name, partners);
         Condition *Purification_condition = new Condition();
@@ -906,10 +906,10 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// Bell pairs. Initial results weren't very promised, not extensively
       /// used.
       for (int i = 0; i < num_purification; i++) {
-        if (i%2 == 0){
-          rule_name = "Double selection Dual action second with: " + std::to_string(partner_address);  
-        }else{
-          rule_name = "Double selection Dual action second inverse with: " + std::to_string(partner_address);  
+        if (i % 2 == 0) {
+          rule_name = "Double selection Dual action second with: " + std::to_string(partner_address);
+        } else {
+          rule_name = "Double selection Dual action second inverse with: " + std::to_string(partner_address);
         }
         auto Purification = std::make_unique<Rule>(RuleSet_id, rule_index, rule_name, partners);
         Condition *Purification_condition = new Condition();
@@ -940,10 +940,10 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// The point of this was to show that you don't have to stick with one
       /// scheme, but can use different schemes in different rounds.
       for (int i = 0; i < 2; i++) {
-        if (i%2 == 0){
-          rule_name = "Double selection action with: " + std::to_string(partner_address);  
-        }else{
-          rule_name = "Double selection action inverse with: " + std::to_string(partner_address);  
+        if (i % 2 == 0) {
+          rule_name = "Double selection action with: " + std::to_string(partner_address);
+        } else {
+          rule_name = "Double selection action inverse with: " + std::to_string(partner_address);
         }
         auto Purification = std::make_unique<Rule>(RuleSet_id, rule_index, rule_name, partners);
         Condition *Purification_condition = new Condition();
@@ -963,10 +963,10 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       }
 
       for (int i = 0; i < num_purification; i++) {
-        if (i%2 == 0){
-          rule_name = "X Purification with: " + std::to_string(partner_address);  
-        }else{
-          rule_name = "Z Purification with: " + std::to_string(partner_address);  
+        if (i % 2 == 0) {
+          rule_name = "X Purification with: " + std::to_string(partner_address);
+        } else {
+          rule_name = "Z Purification with: " + std::to_string(partner_address);
         }
         auto Purification = std::make_unique<Rule>(RuleSet_id, rule_index, rule_name, partners);
         Condition *Purification_condition = new Condition();
@@ -997,7 +997,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// One round of Ds-Sp, then Ss-Sp.
       /// The point of this was to show that you don't have to stick with one
       /// scheme, but can use different schemes in different rounds.
-      rule_name = "Double selection action with: " + std::to_string(partner_address);  
+      rule_name = "Double selection action with: " + std::to_string(partner_address);
       auto Purification = std::make_unique<Rule>(RuleSet_id, rule_index, rule_name, partners);
       Condition *Purification_condition = new Condition();
       Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
@@ -1010,10 +1010,10 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       tomography_RuleSet->addRule(std::move(Purification));
 
       for (int i = 0; i < num_purification; i++) {
-        if (i%2 == 0){
-          rule_name = "Z purification with: " + std::to_string(partner_address);  
-        }else{
-          rule_name = "X purification with: " + std::to_string(partner_address);  
+        if (i % 2 == 0) {
+          rule_name = "Z purification with: " + std::to_string(partner_address);
+        } else {
+          rule_name = "X purification with: " + std::to_string(partner_address);
         }
         auto Purification = std::make_unique<Rule>(RuleSet_id, rule_index, rule_name, partners);
         Condition *Purification_condition = new Condition();
@@ -1047,7 +1047,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// uses X_Purification and Z_purification booleans, but is obsolete.
       /// Creates a single purification only, or a single round of double
       /// purification. Use of this for new work is deprecated.
-      rule_name = "Single purification with: " + std::to_string(partner_address);  
+      rule_name = "Single purification with: " + std::to_string(partner_address);
       auto Purification = std::make_unique<Rule>(RuleSet_id, rule_index, rule_name, partners);
       Condition *Purification_condition = new Condition();
       Clause *resource_clause = new EnoughResourceClause(partner_address, 2);
