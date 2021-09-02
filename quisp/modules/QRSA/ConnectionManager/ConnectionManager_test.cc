@@ -903,7 +903,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::partner(*clause), 3);
       EXPECT_EQ(access_private::num_resource_required(*clause), 2);
     }
-    
+
     // checking the 4th rule of QNode1(initiator): Wait
     {
       auto *rule = ruleset->rules.at(3).get();
@@ -919,7 +919,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_NE(clause, nullptr);
       EXPECT_EQ(rule->action.get(), nullptr);
     }
-    
+
     // checking the 5th rule of QNode1(initiator): if EnoughResource -> Purify
     // purification with node 5
     {
@@ -951,7 +951,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::partner(*clause), 5);
       EXPECT_EQ(access_private::num_resource_required(*clause), 2);
     }
-    
+
     // checking the 6th rule of QNode1(initiator): Wait
     {
       auto *rule = ruleset->rules.at(5).get();
@@ -999,7 +999,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_resource_required(*clause), 2);
     }
 
-    // checking the 8th rule of QNode1(initiator): 
+    // checking the 8th rule of QNode1(initiator):
     {
       auto *rule = ruleset->rules.at(7).get();
       EXPECT_EQ(rule->name, "tomography");
@@ -1049,7 +1049,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
     EXPECT_EQ(packetFor2->getDestAddr(), 2);
     auto *ruleset = packetFor2->getRuleSet();
     ASSERT_NE(ruleset, nullptr);
-    EXPECT_EQ(ruleset->size(), 3); // pur1, pur3, es 1:3
+    EXPECT_EQ(ruleset->size(), 3);  // pur1, pur3, es 1:3
     ruleset_id = ruleset->ruleset_id;
     EXPECT_EQ(ruleset->entangled_partners.size(), 1);
     // checking the 1st rule of QNode2(initiator): if EnoughResource -> Purify
@@ -1172,7 +1172,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
     EXPECT_EQ(packetFor3->getDestAddr(), 3);
     auto *ruleset = packetFor3->getRuleSet();
     ASSERT_NE(ruleset, nullptr);
-    EXPECT_EQ(ruleset->size(), 7); // pur2, pur4, wait2, wait4, pur1, pur5, es1:5, 
+    EXPECT_EQ(ruleset->size(), 7);  // pur2, pur4, wait2, wait4, pur1, pur5, es1:5,
     ruleset_id = ruleset->ruleset_id;
     EXPECT_EQ(ruleset->entangled_partners.size(), 1);
     // checking the 1st rule of QNode3: if EnoughResource -> Purify
@@ -1396,7 +1396,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
     EXPECT_EQ(packetFor4->getDestAddr(), 4);
     auto *ruleset = packetFor4->getRuleSet();
     ASSERT_NE(ruleset, nullptr);
-    EXPECT_EQ(ruleset->size(), 3); // pur1, pur3, es 1:3
+    EXPECT_EQ(ruleset->size(), 3);  // pur1, pur3, es 1:3
     ruleset_id = ruleset->ruleset_id;
     EXPECT_EQ(ruleset->entangled_partners.size(), 1);
     // checking the 1st rule of QNode2(initiator): if EnoughResource -> Purify
@@ -1735,7 +1735,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_resource_required(*enough_resource_clause), 2);
     }
 
-    // 9th rule Wait rule 
+    // 9th rule Wait rule
     {
       auto *rule = ruleset->rules.at(8).get();
       EXPECT_EQ(rule->name, "Wait rule with: 3");
@@ -1750,7 +1750,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_NE(clause, nullptr);
       EXPECT_EQ(rule->action.get(), nullptr);
     }
-        // 10th purification
+    // 10th purification
     {
       auto *rule = ruleset->rules.at(9).get();
       EXPECT_EQ(rule->name, "X purification with : 1");
@@ -1766,7 +1766,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::partner(*action), 1);
       EXPECT_EQ(access_private::X(*action), true);
       EXPECT_EQ(access_private::Z(*action), false);
-      EXPECT_EQ(access_private::qnic_id(*action),18);
+      EXPECT_EQ(access_private::qnic_id(*action), 18);
       EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
       EXPECT_EQ(access_private::resource(*action), 0);
       EXPECT_EQ(access_private::trash_resource(*action), 1);
@@ -1834,7 +1834,6 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
     EXPECT_EQ(ruleset->rules.at(8)->next_rule_id, ruleset->rules.at(10)->rule_index);
     EXPECT_EQ(ruleset->rules.at(9)->next_rule_id, ruleset->rules.at(10)->rule_index);
     EXPECT_EQ(ruleset->rules.at(10)->next_rule_id, 0);
-
   }
 
   delete routing_daemon;
