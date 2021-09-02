@@ -326,10 +326,12 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   // Entanglement Swapping -> Purification -> ES -> PUR -> ...
   // Finally Tomography at the end nodes.
   // TODO: How do we provide intereface for ruleset constructions?
+  auto rev_path = path;
+  std::reverse(rev_path.begin(), rev_path.end());
 
-  // 1.1 initial purification for all links
-  // 0 <-pur-> 1 <-pur-> 2 <-pur-> 3 <-pur-> 4
   if (es_with_purify) {
+    // 1.1 initial purification for all links
+    // 0 <-pur-> 1 <-pur-> 2 <-pur-> 3 <-pur-> 4
     for (int i = 1; i < path.size(); i++) {
       int left_node = path.at(i - 1);  // 0, 1, 2, 3
       int right_node = path.at(i);  // 1, 2, 3, 4
@@ -342,56 +344,16 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       ruleset_map[left_node]->addRule(std::move(pur_rule_left));
       ruleset_map[right_node]->addRule(std::move(pur_rule_right));
     }
-    // 1.2 ES -> PUR -> ES -> ...
-    // If we follow the path from first to last, the order of rule is going to be different
-    // because of the current es order policy
-    // Should be (1 (first), 5 (last),) --> end nodes
-    //  2 (second) > 4 (second last) > 3 (third)
-    auto rev_path = path;
-    std::reverse(rev_path.begin(), rev_path.end());
-    for (int i = 1; i < (path.size() + 1) / 2; i++) {
-      EV << path.at(i) << " : " << rev_path.at(i) << "\n";
-    }
-    for (int i = 1; i < (path.size() + 1) / 2; i++) {  // repeat for all swappers
-      // ES
-      std::vector<int> swapper_nodes;
-      if (path.at(i) != rev_path.at(i)) {
-        swapper_nodes = {rev_path.at(i), path.at(i)};
-      } else {
-        swapper_nodes = {path.at(i)};
-      }
-      for (int swapper_node : swapper_nodes) {
-        auto config = generateSwappingConfig(swapper_node, path, swapping_partners, qnics, 0);
-        int left_partner = config.left_partner;
-        int right_partner = config.right_partner;
-        unsigned long rule_id = createUniqueId();
-        // empty rules for left and right nodes and swapping rule for swapper
-        auto empty_rule_left = waitRule(swapper_node, right_partner, ruleset_id, rule_id);
-        auto empty_rule_right = waitRule(swapper_node, left_partner, ruleset_id, rule_id);
-        auto swapping_rule = swappingRule(config, ruleset_id, rule_id);
-        ruleset_map[left_partner]->addRule(std::move(empty_rule_left));
-        ruleset_map[right_partner]->addRule(std::move(empty_rule_right));
-        ruleset_map[swapper_node]->addRule(std::move(swapping_rule));
 
-        // PUR
-        // 1 --- (2, swapped) --- 3
-        // 1 (lqnic) --- --- (rqnic) 3 -> pur between 1 - 3
-        rule_id = createUniqueId();
-        auto pur_rule_left = purificationRule(right_partner, 0, num_remote_purification, config.lqnic_type, config.lqnic_index, ruleset_id, rule_id);
-        auto pur_rule_right = purificationRule(left_partner, 0, num_remote_purification, config.rqnic_type, config.rqnic_index, ruleset_id, rule_id);
-        ruleset_map[left_partner]->addRule(std::move(pur_rule_left));
-        ruleset_map[right_partner]->addRule(std::move(pur_rule_right));
-      }
-    }
-  } else {  // no purifications
-    if (!simultaneous_es_enabled) {
-      auto rev_path = path;
-      std::sort(rev_path.begin(), rev_path.end(), std::greater<int>{});
+    // 1.2 ES -> PUR -> ES -> ...
+    // Policy of Entanglement swapping
+    // Start from one hop entanglement swapping
+    for (int distance = 1; distance < path.size() / 2 + 1; distance++) {
+      // 1.2.1 Entanglement swapping
       for (int i = 1; i < (path.size() + 1) / 2; i++) {  // repeat for all swappers
-        // ES
         std::vector<int> swapper_nodes;
-        if (path.at(i) != rev_path.at(i)) {
-          swapper_nodes = {path.at(i), rev_path.at(i)};
+        if (rev_path.at(i) != path.at(i)) {
+          swapper_nodes = {rev_path.at(i), path.at(i)};
         } else {
           swapper_nodes = {path.at(i)};
         }
@@ -399,14 +361,85 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
           auto config = generateSwappingConfig(swapper_node, path, swapping_partners, qnics, 0);
           int left_partner = config.left_partner;
           int right_partner = config.right_partner;
-          unsigned long rule_id = createUniqueId();
-          // empty rules for left and right nodes and swapping rule for swapper
-          auto empty_rule_left = waitRule(swapper_node, right_partner, ruleset_id, rule_id);
-          auto empty_rule_right = waitRule(swapper_node, left_partner, ruleset_id, rule_id);
-          auto swapping_rule = swappingRule(config, ruleset_id, rule_id);
-          ruleset_map[left_partner]->addRule(std::move(empty_rule_left));
-          ruleset_map[right_partner]->addRule(std::move(empty_rule_right));
-          ruleset_map[swapper_node]->addRule(std::move(swapping_rule));
+          // check if the distance of swapping is the same as the target distance
+          auto swapper_it = std::find(path.begin(), path.end(), swapper_node);
+          auto left_it = std::find(path.begin(), path.end(), left_partner);
+          auto right_it = std::find(path.begin(), path.end(), right_partner);
+          int index = 0;
+          int lindex = 0;
+          int rindex = 0;
+
+          if (swapper_it != path.end() && left_it != path.end() && right_it != path.end()) {
+            index = swapper_it - path.begin();
+            lindex = left_it - path.begin();
+            rindex = right_it - path.begin();
+          } else {
+            error("swapper and partner indices are not found in the path. Should not happen.");
+          }
+          if (std::max(std::abs(index - lindex), std::abs(index - rindex)) == distance) {
+            unsigned long rule_id = createUniqueId();
+            // empty rules for left and right nodes and swapping rule for swapper
+            auto empty_rule_left = waitRule(swapper_node, right_partner, ruleset_id, rule_id);
+            auto empty_rule_right = waitRule(swapper_node, left_partner, ruleset_id, rule_id);
+            auto swapping_rule = swappingRule(config, ruleset_id, rule_id);
+            ruleset_map[left_partner]->addRule(std::move(empty_rule_left));
+            ruleset_map[right_partner]->addRule(std::move(empty_rule_right));
+            ruleset_map[swapper_node]->addRule(std::move(swapping_rule));
+
+            // 1.2.2 Purification
+            // 1 --- (2, swapped) --- 3
+            // 1 (lqnic) --- --- (rqnic) 3 -> pur between 1 - 3
+            rule_id = createUniqueId();
+            auto pur_rule_left = purificationRule(right_partner, 0, num_remote_purification, config.lqnic_type, config.lqnic_index, ruleset_id, rule_id);
+            auto pur_rule_right = purificationRule(left_partner, 0, num_remote_purification, config.rqnic_type, config.rqnic_index, ruleset_id, rule_id);
+            ruleset_map[left_partner]->addRule(std::move(pur_rule_left));
+            ruleset_map[right_partner]->addRule(std::move(pur_rule_right));
+          }
+        }
+      }
+    }
+  } else {  // no purifications
+    if (!simultaneous_es_enabled) {
+      for (int distance = 1; distance < path.size() / 2 + 1; distance++) {
+        for (int i = 1; i < path.size() - 1; i++) {  // repeat for all swappers
+          std::vector<int> swapper_nodes;
+          if (rev_path.at(i) != path.at(i)) {
+            swapper_nodes = {rev_path.at(i), path.at(i)};
+          } else {
+            swapper_nodes = {path.at(i)};
+          }
+          for (int swapper_node : swapper_nodes) {
+            auto config = generateSwappingConfig(swapper_node, path, swapping_partners, qnics, 0);
+            int left_partner = config.left_partner;
+            int right_partner = config.right_partner;
+
+            // check if the distance of swapping is the same as the target distance
+            auto swapper_it = std::find(path.begin(), path.end(), swapper_node);
+            auto left_it = std::find(path.begin(), path.end(), left_partner);
+            auto right_it = std::find(path.begin(), path.end(), right_partner);
+            int index = 0;
+            int lindex = 0;
+            int rindex = 0;
+
+            if (swapper_it != path.end() && left_it != path.end() && right_it != path.end()) {
+              index = swapper_it - path.begin();
+              lindex = left_it - path.begin();
+              rindex = right_it - path.begin();
+            } else {
+              error("swapper and partner indices are not found in the path. Should not happen.");
+            }
+            // the distance of left and right partner should be the same
+            if (std::max(std::abs(index - lindex), std::abs(index - rindex)) == distance) {
+              unsigned long rule_id = createUniqueId();
+              // empty rules for left and right nodes and swapping rule for swapper
+              auto empty_rule_left = waitRule(swapper_node, right_partner, ruleset_id, rule_id);
+              auto empty_rule_right = waitRule(swapper_node, left_partner, ruleset_id, rule_id);
+              auto swapping_rule = swappingRule(config, ruleset_id, rule_id);
+              ruleset_map[left_partner]->addRule(std::move(empty_rule_left));
+              ruleset_map[right_partner]->addRule(std::move(empty_rule_right));
+              ruleset_map[swapper_node]->addRule(std::move(swapping_rule));
+            }
+          }
         }
       }
     } else {
@@ -463,7 +496,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     }
   }
 
-  // // check
+  // check
   // EV<<"RuleSet id"<<ruleset_id<<"\n";
   // for (auto rs = ruleset_map.begin(); rs != ruleset_map.end(); ++rs) {
   //   int owner = rs->first;
@@ -896,6 +929,9 @@ std::unique_ptr<Rule> ConnectionManager::purificationRule(int partner_address, i
     } else {
       error("Unknown purification type");
     }
+  }
+  if (rule_purification == nullptr) {
+    error("Purification Rule is not successfully generated.");
   }
   return rule_purification;
 }
