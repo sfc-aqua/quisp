@@ -9,6 +9,7 @@
 #include <omnetpp.h>
 #include <rules/RuleSet.h>
 #include <utils/ComponentProvider.h>
+#include <queue>
 #include <vector>
 
 using namespace omnetpp;

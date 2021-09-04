@@ -40,6 +40,10 @@ void ConnectionManager::initialize() {
   for (int i = 0; i < num_of_qnics; i++) {
     // qnode address
     qnic_res_table.insert(std::make_pair(i, false));
+    char msgname[32];
+    sprintf(msgname, "send timing qnic address-%d", i);
+    request_send_timing.push_back(new cMessage(msgname));
+    connection_retry_count[i] = 0;
   }
 }
 
@@ -48,6 +52,18 @@ void ConnectionManager::initialize() {
  * \param msg pointer to the cMessage itself
  */
 void ConnectionManager::handleMessage(cMessage *msg) {
+  // this should only be the send notification
+  if (msg->isSelfMessage()) {
+    // check which qnic address the notification is for and initiate the connection
+    for (int i = 0; i < request_send_timing.size(); i++) {
+      if (request_send_timing[i] == msg) {
+        initiateApplicationRequest(i);
+        return;
+      }
+    }
+    error("receive a send self-notification but cannot find which qnic to use");
+  }
+
   if (dynamic_cast<ConnectionSetupRequest *>(msg) != nullptr) {
     ConnectionSetupRequest *req = check_and_cast<ConnectionSetupRequest *>(msg);
     int actual_dst = req->getActual_destAddr();
@@ -57,29 +73,13 @@ void ConnectionManager::handleMessage(cMessage *msg) {
       // got ConnectionSetupRequest and return the response
       respondToRequest(req);
       delete msg;
-      return;
+    } else if (actual_src == my_address) {
+      // initiator node
+      queueApplicationRequest(req);
+    } else {
+      // intermediate node
+      tryRelayRequestToNextHop(req);
     }
-
-    int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
-    auto dst_inf = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
-    bool is_qnic_available = !isQnicBusy(dst_inf->qnic.address);
-    bool requested_by_myself = actual_src == my_address;
-
-    if (requested_by_myself) {
-      if (is_qnic_available) {
-        // reserve the qnic and relay the request to the next node
-        relayRequestToNextHop(req);
-        return;
-      }
-
-      // cannot accept this request because the qnic is unavailable.
-      rejectRequest(req);
-      return;
-    }
-
-    // got ConnectionSetupRequest as the intermediate node
-    // reserve the qnic and relay the request to the next node
-    relayRequestToNextHop(req);
     return;
   }
 
@@ -103,11 +103,13 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   if (dynamic_cast<RejectConnectionSetupRequest *>(msg) != nullptr) {
     RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
     int actual_src = pk->getActual_srcAddr();
-    // Umm... this might be bug.
-    if (actual_src != my_address) {
+
+    if (actual_src == my_address) {
+      initiator_reject_req_handler(pk);
+    } else {
       intermediate_reject_req_handler(pk);
-      delete msg;
     }
+    delete msg;
     return;
   }
 }
@@ -185,13 +187,18 @@ void ConnectionManager::storeRuleSetForApplication(ConnectionSetupResponse *pk) 
 }
 
 void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
-  RejectConnectionSetupRequest *packet = new RejectConnectionSetupRequest("RejectConnSetup");
-  packet->setKind(6);
-  packet->setDestAddr(req->getActual_srcAddr());
-  packet->setSrcAddr(my_address);
-  packet->setActual_destAddr(req->getActual_destAddr());
-  packet->setActual_srcAddr(req->getActual_srcAddr());
-  send(packet, "RouterPort$o");
+  int hop_count = req->getStack_of_QNodeIndexesArraySize();
+  std::vector<int> path;
+  for (int i = 0; i < hop_count; i++) {
+    int destination_address = req->getStack_of_QNodeIndexes(i);
+    RejectConnectionSetupRequest *packet = new RejectConnectionSetupRequest("RejectConnSetup");
+    packet->setKind(6);
+    packet->setDestAddr(destination_address);
+    packet->setSrcAddr(my_address);
+    packet->setActual_destAddr(req->getActual_destAddr());
+    packet->setActual_srcAddr(req->getActual_srcAddr());
+    send(packet, "RouterPort$o");
+  }
 }
 
 /**
@@ -731,62 +738,52 @@ SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper
 }
 
 /**
- *  This method is called to handle the ConnectionSetupRequest at an intermediate or initiator node.
+ *  This method is called to handle the ConnectionSetupRequest at an intermediate.
  *  This method reserves requested qnics and then send the request to next hop.
+ *  If the QNIC cannot be reserved the ConnectionSetupRequest will be rejected.
  * \param req pointer to the ConnectionSetupRequest packet itself
  * \returns nothing
  **/
-void ConnectionManager::relayRequestToNextHop(ConnectionSetupRequest *req) {
-  int responder_addr = req->getActual_destAddr();  // responder address
-  int initiator_addr = req->getActual_srcAddr();  // initiator address (to get input qnic)
-  int dst_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(responder_addr);
-  int src_qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
-  if (dst_qnic_addr == -1) {
+void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
+  int responder_addr = req->getActual_destAddr();
+  int initiator_addr = req->getActual_srcAddr();
+  int outbound_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(responder_addr);
+  int inbound_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
+
+  if (outbound_qnic_address == -1) {
     error("QNIC to destination not found");
+  }
+  if (inbound_qnic_address == -1) {
+    error("QNIC from source not found");
   }
 
   // Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
-  auto dst_info = hardware_monitor->findConnectionInfoByQnicAddr(dst_qnic_addr);
-  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(src_qnic_addr);
-  int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
-  int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
-  int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();
+  auto outbound_info = hardware_monitor->findConnectionInfoByQnicAddr(outbound_qnic_address);
+  auto inbound_info = hardware_monitor->findConnectionInfoByQnicAddr(inbound_qnic_address);
 
-  // Update information and send it to the next Qnode.
-  req->setDestAddr(dst_info->neighbor_address);
-  req->setSrcAddr(my_address);
-  req->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes + 1);
-  req->setStack_of_linkCostsArraySize(num_accumulated_costs + 1);
-  req->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
-  req->setStack_of_linkCosts(num_accumulated_costs, dst_info->quantum_link_cost);
-  req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
-
-  bool is_dst_qnic_reserved = isQnicBusy(dst_info->qnic.address);
-  bool is_src_qnic_reserved = false;
-
-  bool is_initiator = my_address == initiator_addr;
-
-  if (is_initiator) {
-    src_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
-  } else {
-    if (src_info == nullptr) {
-      error("source qnic not found");
-    }
-    is_src_qnic_reserved = isQnicBusy(src_info->qnic.address);
-  }
-
-  if (is_src_qnic_reserved || is_dst_qnic_reserved) {
+  if (isQnicBusy(outbound_qnic_address) || isQnicBusy(inbound_qnic_address)) {
     rejectRequest(req);
     return;
   }
 
-  QNIC_pair_info pair_info = {.fst = src_info->qnic, .snd = dst_info->qnic};
+  // Update information and send it to the next Qnode.
+  int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
+  int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
+  int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();
+
+  req->setDestAddr(outbound_info->neighbor_address);
+  req->setSrcAddr(my_address);
+  req->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes + 1);
+  req->setStack_of_linkCostsArraySize(num_accumulated_costs + 1);
+  req->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
+  req->setStack_of_linkCosts(num_accumulated_costs, outbound_info->quantum_link_cost);
+  req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
+
+  QNIC_pair_info pair_info = {.fst = inbound_info->qnic, .snd = outbound_info->qnic};
   req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
 
-  if (!is_initiator) {
-    reserveQnic(src_info->qnic.address);
-  }
-  reserveQnic(dst_info->qnic.address);
+  reserveQnic(inbound_info->qnic.address);
+  reserveQnic(outbound_info->qnic.address);
 
   send(req, "RouterPort$o");
 }
@@ -818,11 +815,18 @@ bool ConnectionManager::isQnicBusy(int qnic_address) {
   return isReserved;
 }
 
+void ConnectionManager::initiator_reject_req_handler(RejectConnectionSetupRequest *pk) {
+  int actual_dest = pk->getActual_destAddr();
+  int outbound_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(actual_dest);
+
+  releaseQnic(outbound_qnic_address);
+  scheduleRequestRetry(outbound_qnic_address);
+}
+
 /**
  *  This function is called during the handling of ConnectionSetupRequest at the responder.
  * \param pk pointer to the ConnectionSetupRequest packet itself
  * \returns nothing
- * \todo needs to be filled in!
  * This function is called when we discover that we can't fulfill the connection request,
  * primarily due to resource reservation conflicts.
  **/
@@ -833,32 +837,19 @@ void ConnectionManager::responder_reject_req_handler(RejectConnectionSetupReques
  *  intermediate node (not the initator or responder).
  * \param pk pointer to the ConnectionSetupRequest packet itself
  * \returns nothing
- * \todo needs to be filled in!
  * This function is called when we discover that we can't fulfill the connection request,
  * primarily due to resource reservation conflicts.
  **/
 void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupRequest *pk) {
-  // here we have to implement when the rejection packet received.
-  // free reserved qnics
   int actual_dst = pk->getActual_destAddr();  // responder address
   int actual_src = pk->getActual_srcAddr();  // initiator address (to get input qnic)
-  // Currently, sending path and returning path are same, but for future, this might not good way
-  int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
-  int local_qnic_address_to_actual_src = routing_daemon->return_QNIC_address_to_destAddr(actual_src);
-  auto dst_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_dst);
-  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
-  if (my_address != actual_dst && my_address != actual_src) {
-    releaseQnic(dst_info->qnic.address);
-    releaseQnic(src_info->qnic.address);
-    return;
-  }
 
-  if (my_address == actual_dst) {
-    releaseQnic(src_info->qnic.address);
-  }
-  if (my_address == actual_src) {
-    releaseQnic(dst_info->qnic.address);
-  }
+  // Currently, sending path and returning path are same, but for future, this might not good way
+  int outbound_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
+  int inbound_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(actual_src);
+
+  releaseQnic(outbound_qnic_address);
+  releaseQnic(inbound_qnic_address);
 }
 
 // Rule Generators
@@ -1016,6 +1007,90 @@ unsigned long ConnectionManager::createUniqueId() {
   size_t t = hash_fn(hash_seed);
   unsigned long ruleset_id = static_cast<long>(t);
   return ruleset_id;
+}
+
+void ConnectionManager::queueApplicationRequest(ConnectionSetupRequest *req) {
+  int responder_address = req->getActual_destAddr();
+  int outbound_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(responder_address);
+
+  if (outbound_qnic_address == -1) {
+    error("QNIC to destination cannot be found");
+  }
+
+  // Use the QNIC address to find the next hop QNode, by asking the Hardware Monitor (neighbor table).
+  auto inbound_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
+  auto outbound_info = hardware_monitor->findConnectionInfoByQnicAddr(outbound_qnic_address);
+
+  // Update information and send it to the next Qnode.
+  int num_accumulated_nodes = req->getStack_of_QNodeIndexesArraySize();
+  int num_accumulated_costs = req->getStack_of_linkCostsArraySize();
+  int num_accumulated_pair_info = req->getStack_of_QNICsArraySize();
+
+  req->setDestAddr(outbound_info->neighbor_address);
+  req->setSrcAddr(my_address);
+  req->setStack_of_QNodeIndexesArraySize(num_accumulated_nodes + 1);
+  req->setStack_of_linkCostsArraySize(num_accumulated_costs + 1);
+  req->setStack_of_QNodeIndexes(num_accumulated_nodes, my_address);
+  req->setStack_of_linkCosts(num_accumulated_costs, outbound_info->quantum_link_cost);
+  req->setStack_of_QNICsArraySize(num_accumulated_pair_info + 1);
+
+  QNIC_pair_info pair_info = {.fst = inbound_info->qnic, .snd = outbound_info->qnic};
+  req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
+
+  auto &request_queue = connection_setup_buffer[outbound_qnic_address];
+  request_queue.push(req);
+
+  // this is the only request in the queue, try to send it right away
+  if (request_queue.size() == 1) {
+    EV << "schedule from enqueue" << endl;
+    scheduleAt(simTime(), request_send_timing[outbound_qnic_address]);
+  }
+}
+
+void ConnectionManager::popApplicationRequest(int qnic_address) {
+  auto &request_queue = connection_setup_buffer[qnic_address];
+  auto *req = request_queue.front();
+
+  connection_retry_count[qnic_address] = 0;
+  request_queue.pop();
+  delete req;
+  releaseQnic(qnic_address);
+
+  if (!request_queue.empty()) {
+    EV << "schedule from pop" << endl;
+    scheduleAt(simTime(), request_send_timing[qnic_address]);
+  }
+}
+
+void ConnectionManager::initiateApplicationRequest(int qnic_address) {
+  auto &request_queue = connection_setup_buffer[qnic_address];
+
+  if (request_queue.empty()) {
+    error("trying to initiate a request from empty queue");
+  }
+
+  if (isQnicBusy(qnic_address)) {
+    EV << "qnic is busy stop trying to send for now" << endl;
+    connection_retry_count[qnic_address] = 0;
+    return;
+  }
+
+  reserveQnic(qnic_address);
+  auto req = request_queue.front();
+  send(req->dup(), "RouterPort$o");
+}
+
+void ConnectionManager::scheduleRequestRetry(int qnic_address) {
+  connection_retry_count[qnic_address]++;
+  int upper_bound = (1 << connection_retry_count[qnic_address]) - 1;
+  int k = intuniform(0, upper_bound);
+  // simtime_t upper_bound = SimTime(50, SIMTIME_US) * connection_retry_count[qnic_address];  // 50 microsec
+  EV << "upper bound = " << upper_bound << endl;
+  simtime_t backoff = SimTime(50, SIMTIME_US) * k;
+  EV << "cannot initiate the connection. Retry attempt = " << connection_retry_count[qnic_address] << " Retry again in " << backoff << " .\n";
+  EV << "schedule from retry" << endl;
+  scheduleAt(simTime() + backoff, request_send_timing[qnic_address]);
+  return;
 }
 
 }  // namespace modules
