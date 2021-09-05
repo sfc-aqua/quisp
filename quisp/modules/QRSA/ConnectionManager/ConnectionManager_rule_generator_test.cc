@@ -162,11 +162,11 @@ TEST(ConnectionManagerRuleGenTest, SwappingRule) {
   EXPECT_EQ(rule->condition->clauses.size(), 2);
   auto *left_clause = dynamic_cast<EnoughResourceClause *>(rule->condition->clauses.at(0));
   EXPECT_EQ(access_private::partner(*left_clause), conf.left_partner);
-  EXPECT_EQ(access_private::num_resource_required(*left_clause), 1);
+  EXPECT_EQ(access_private::num_resource_required(*left_clause), conf.lres);
 
   auto *right_clause = dynamic_cast<EnoughResourceClause *>(rule->condition->clauses.at(1));
   EXPECT_EQ(access_private::partner(*right_clause), conf.right_partner);
-  EXPECT_EQ(access_private::num_resource_required(*right_clause), 1);
+  EXPECT_EQ(access_private::num_resource_required(*right_clause), conf.rres);
 
   auto *action = dynamic_cast<SwappingAction *>(rule->action.get());
   ASSERT_NE(action, nullptr);
