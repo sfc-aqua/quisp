@@ -79,7 +79,20 @@ void RoutingDaemon::initialize(int stage) {
       // The cost metric is taken from https://arxiv.org/abs/1206.5655
       double speed_of_light_in_fiber = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("Speed_of_light_in_fiber");
       double channel_length = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("distance");
-      double emission_prob = 0.46 * 0.49;
+
+      auto *some_stationary_qubit_in_qnic = getModuleByPath("^.^.qnic[0].statQubit[0]");
+      auto *some_stationary_qubit_in_qnic_r = getModuleByPath("^.^.qnic_r[0].statQubit[0]");
+
+      double emission_prob = 1.0;
+      // TODO: fix this to read the emission success probability correctly. This is a quick fix!!
+      if (some_stationary_qubit_in_qnic != nullptr) {
+        emission_prob = some_stationary_qubit_in_qnic->par("emission_success_probability").doubleValue();
+      } else if (some_stationary_qubit_in_qnic_r != nullptr) {
+        emission_prob = some_stationary_qubit_in_qnic_r->par("emission_success_probability").doubleValue();
+      } else {
+        error("cannot read emission_success_probability from file");
+      }
+
       EV_DEBUG << "Channel length is " << channel_length << "\n";
       EV_DEBUG << "Speed of light in the channel is " << speed_of_light_in_fiber << "\n";
       double seconds_per_bell_pair_generation = (channel_length / speed_of_light_in_fiber) * emission_prob;
