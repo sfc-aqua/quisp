@@ -49,7 +49,10 @@ class ConnectionManager : public IConnectionManager {
  protected:
   int my_address;
   int num_of_qnics;
+  std::map<int, std::queue<ConnectionSetupRequest *>> connection_setup_buffer;  // key is qnic address
+  std::map<int, int> connection_retry_count;  // key is qnic address
   std::map<int, bool> qnic_res_table;
+  std::vector<cMessage *> request_send_timing;  // self message, notification for sending out request
   bool simultaneous_es_enabled;
   bool es_with_purify;
   int num_remote_purification;
@@ -60,11 +63,17 @@ class ConnectionManager : public IConnectionManager {
   void handleMessage(cMessage *msg) override;
 
   void respondToRequest(ConnectionSetupRequest *pk);
-  void relayRequestToNextHop(ConnectionSetupRequest *pk);
+  void tryRelayRequestToNextHop(ConnectionSetupRequest *pk);
+
+  void queueApplicationRequest(ConnectionSetupRequest *pk);
+  void initiateApplicationRequest(int qnic_address);
+  void scheduleRequestRetry(int qnic_address);
+  void popApplicationRequest(int qnic_address);
 
   void storeRuleSetForApplication(ConnectionSetupResponse *pk);
   void storeRuleSet(ConnectionSetupResponse *pk);
 
+  void initiator_reject_req_handler(RejectConnectionSetupRequest *pk);
   void responder_reject_req_handler(RejectConnectionSetupRequest *pk);
   void intermediate_reject_req_handler(RejectConnectionSetupRequest *pk);
 
