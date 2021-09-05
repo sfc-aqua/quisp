@@ -437,7 +437,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       auto *clause1 = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause1, nullptr);
       EXPECT_EQ(access_private::partner(*clause1), 2);
-      EXPECT_EQ(access_private::num_resource_required(*clause1), 1);  
+      EXPECT_EQ(access_private::num_resource_required(*clause1), 1);
       auto *clause2 = dynamic_cast<EnoughResourceClause *>(rule->condition.get()->clauses.at(1));
       ASSERT_NE(clause2, nullptr);
       EXPECT_EQ(access_private::partner(*clause2), 5);
