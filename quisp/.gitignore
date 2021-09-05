@@ -21,3 +21,4 @@ classical_messages_m.h
 /networks/.gitignore
 !networks/*.ned
 !networks/*.ini
+!networks/benchmark

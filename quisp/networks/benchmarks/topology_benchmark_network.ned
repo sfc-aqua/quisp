@@ -1,4 +1,4 @@
-package networks;
+package networks.benchmarks;
 
 import ned.DatarateChannel;
 import ned.IdealChannel;
@@ -7,7 +7,7 @@ import channels.*;
 import modules.*;
 
 
-network linear10_mm_small
+network linear10_mm
 {
     parameters:
         **.Speed_of_light_in_fiber = 205336.986301 km;
@@ -18,7 +18,7 @@ network linear10_mm_small
 			@display("i=device/smallrouter");
 		};
 
-		Endnode[2]: QNode{
+		EndNode[2]: QNode{
 			address = 10000+index;
 			nodeType = "EndNode";
 			@display("i=device/pc");
@@ -40,6 +40,90 @@ network linear10_mm_small
 			Repeater[i].quantum_port_receiver++ <--> ClassicalChannel{ distance = 1km;} <--> Repeater[i+1].quantum_port++;
 		}
 		Repeater[sizeof(Repeater)-1].quantum_port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode[1].quantum_port_receiver++;
+}
+
+
+network linear50_mm
+{
+    parameters:
+        **.Speed_of_light_in_fiber = 205336.986301 km;
+	submodules:
+		Repeater[50]: QNode{
+			address = 1000+index;
+			nodeType="Repeater";
+			@display("i=device/smallrouter");
+		};
+
+		EndNode1: QNode{
+			address = 1;
+			nodeType = "EndNode";
+			@display("i=device/pc");
+		};
+
+		EndNode2: QNode{
+			address = 100;
+			nodeType = "EndNode";
+			@display("i=device/pc");
+		};
+
+	connections:
+		// Classical channels
+		EndNode1.port++ <--> ClassicalChannel { distance = 1km; } <--> Repeater[0].port++; 
+		// Repeaters
+		for i=0..sizeof(Repeater)-2{
+			Repeater[i].port++ <--> ClassicalChannel{ distance = 1km;} <--> Repeater[i+1].port++;
+		}
+		Repeater[sizeof(Repeater)-1].port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode2.port++;
+		
+		// Quantum Channels
+		EndNode1.quantum_port_receiver++ <--> ClassicalChannel { distance = 1km; } <--> Repeater[0].quantum_port++; 
+		// Repeaters
+		for i=0..sizeof(Repeater)-2{
+			Repeater[i].quantum_port_receiver++ <--> ClassicalChannel{ distance = 1km;} <--> Repeater[i+1].quantum_port++;
+		}
+		Repeater[sizeof(Repeater)-1].quantum_port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode2.quantum_port_receiver++;
+}
+
+network linear100_mm
+{
+    parameters:
+        **.Speed_of_light_in_fiber = 205336.986301 km;
+	submodules:
+		Repeater[100]: QNode{
+			address = 1000+index;
+			nodeType="Repeater";
+			@display("i=device/smallrouter");
+		};
+
+		EndNode1: QNode{
+			address = 1;
+			nodeType = "EndNode";
+			@display("i=device/pc");
+		};
+
+
+		EndNode2: QNode{
+			address = 100;
+			nodeType = "EndNode";
+			@display("i=device/pc");
+		};
+
+	connections:
+		// Classical channels
+		EndNode1.port++ <--> ClassicalChannel { distance = 1km; } <--> Repeater[0].port++; 
+		// Repeaters
+		for i=0..sizeof(Repeater)-2{
+			Repeater[i].port++ <--> ClassicalChannel{ distance = 1km;} <--> Repeater[i+1].port++;
+		}
+		Repeater[sizeof(Repeater)-1].port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode2.port++;
+		
+		// Quantum Channels
+		EndNode1.quantum_port_receiver++ <--> ClassicalChannel { distance = 1km; } <--> Repeater[0].quantum_port++; 
+		// Repeaters
+		for i=0..sizeof(Repeater)-2{
+			Repeater[i].quantum_port_receiver++ <--> ClassicalChannel{ distance = 1km;} <--> Repeater[i+1].quantum_port++;
+		}
+		Repeater[sizeof(Repeater)-1].quantum_port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode2.quantum_port_receiver++;
 }
 
 network nodes10_network_small
