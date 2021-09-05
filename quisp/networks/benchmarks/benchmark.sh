@@ -7,7 +7,7 @@ NEDPATH=$EXEC_ROOT/networks:$EXEC_ROOT/modules:$EXEC_ROOT/channels
 cd $QUISP_ROOT 
 make exe 
 cd $EXEC_ROOT 
-smake cleanall 
+make cleanall 
 make BATCH=true QCONFIG=$EXEC_ROOT/networks/* -j $(nproc) all
 cd $BENCH_ROOT
 mkdir output
