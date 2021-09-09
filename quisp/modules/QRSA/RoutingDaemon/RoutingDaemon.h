@@ -34,6 +34,7 @@ class RoutingDaemon : public IRoutingDaemon {
  public:
   int returnNumEndNodes() override;
   int return_QNIC_address_to_destAddr(int destAddr) override;
+  std::vector<int> returnAllRepeaterAddress() override;
 };
 
 }  // namespace modules

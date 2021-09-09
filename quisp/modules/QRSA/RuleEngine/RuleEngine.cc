@@ -10,6 +10,7 @@
 #include "RuleEngine.h"
 #include <fstream>
 #include <utility>
+#include "messages/connection_setup_messages_m.h"
 #include "utils/ComponentProvider.h"
 
 namespace quisp {
@@ -60,6 +61,7 @@ void RuleEngine::initialize() {
 
   // running_processes = new RuleSetPtr[QNIC_N];//One process per QNIC for now. No multiplexing.
   // WATCH(assigned);
+  terminate_msg_count = 0;
 }
 
 void RuleEngine::handleMessage(cMessage *msg) {
@@ -96,6 +98,19 @@ void RuleEngine::handleMessage(cMessage *msg) {
         bubble("order received!");
     }
     realtime_controller->EmitPhoton(pk->getQnic_index(), pk->getQubit_index(), (QNIC_type)pk->getQnic_type(), pk->getKind());
+  }
+
+  else if (dynamic_cast<TerminateConnection *>(msg) != nullptr) {
+    terminate_msg_count++;
+    std::cout << "address = " << parentAddress << " receiving terminate command =  " << terminate_msg_count << std::endl;
+    if (terminate_msg_count == 2) {
+      std::cout << "address = " << parentAddress << " trying to delete the RuleSet!!!!" << std::endl;
+      for (auto it = rp.begin(); it != rp.end(); ) {
+        auto *process = it->second.Rs;
+        delete process;
+        it = rp.erase(it);
+      }
+    }
   }
 
   else if (dynamic_cast<CombinedBSAresults *>(msg) != nullptr) {
@@ -1377,12 +1392,27 @@ void RuleEngine::traverseThroughAllProcesses2() {
         if (process_done) {  // Delete rule set if done
           // std::cout<<"!!!!!!!!!!!!!!!!!!!!! TERMINATING!!!!!!!!!!!!!!!!!!!!!!!!!";
           std::cout << "RuleSet_id=" << process->ruleset_id << "\n";
+          auto ruleset_id = process->ruleset_id;
           // todo:Also need to deallocate resources!!!!!!!!!!!!not implemented yet.
           delete process;
           rp.erase(it);  // Erase rule set from map.
           terminate_this_rule = true;  // Flag to get out from outer loop
           std::cout << "node[" << parentAddress << "]:RuleSet deleted.\n";
+
+          std::cout<< "hey trying to delete something here!!!!" << std::endl;
           EV << "node[" << parentAddress << "]:RuleSet deleted.\n";
+
+          for (auto addr: routingdaemon->returnAllRepeaterAddress()) {
+            if (addr == parentAddress) 
+              continue;
+            std::cout << "node " << parentAddress << " sending terminate request to " << addr << std::endl;
+            auto term_msg = new TerminateConnection("terminateConn");
+            term_msg->setSrcAddr(parentAddress);
+            term_msg->setDestAddr(addr);;
+            term_msg->setActual_destAddr(addr);
+            term_msg->setRuleSet_id(ruleset_id);
+            send(term_msg, "RouterPort$o");
+          }
           break;  // get out from this for loop.
         }
 

@@ -1042,7 +1042,6 @@ void ConnectionManager::queueApplicationRequest(ConnectionSetupRequest *req) {
 
   // this is the only request in the queue, try to send it right away
   if (request_queue.size() == 1) {
-    EV << "schedule from enqueue" << endl;
     scheduleAt(simTime(), request_send_timing[outbound_qnic_address]);
   }
 }
@@ -1057,7 +1056,6 @@ void ConnectionManager::popApplicationRequest(int qnic_address) {
   releaseQnic(qnic_address);
 
   if (!request_queue.empty()) {
-    EV << "schedule from pop" << endl;
     scheduleAt(simTime(), request_send_timing[qnic_address]);
   }
 }
@@ -1082,13 +1080,15 @@ void ConnectionManager::initiateApplicationRequest(int qnic_address) {
 
 void ConnectionManager::scheduleRequestRetry(int qnic_address) {
   connection_retry_count[qnic_address]++;
-  int upper_bound = (1 << connection_retry_count[qnic_address]) - 1;
+
+  // TODO: maximum retry?
+  // or should we just notify app and drop it?
+  int shift_value = std::min(connection_retry_count[qnic_address], 31);
+  int upper_bound = (1 << shift_value) - 1;
+
   int k = intuniform(0, upper_bound);
-  // simtime_t upper_bound = SimTime(50, SIMTIME_US) * connection_retry_count[qnic_address];  // 50 microsec
-  EV << "upper bound = " << upper_bound << endl;
   simtime_t backoff = SimTime(50, SIMTIME_US) * k;
   EV << "cannot initiate the connection. Retry attempt = " << connection_retry_count[qnic_address] << " Retry again in " << backoff << " .\n";
-  EV << "schedule from retry" << endl;
   scheduleAt(simTime() + backoff, request_send_timing[qnic_address]);
   return;
 }

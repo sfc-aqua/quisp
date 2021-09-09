@@ -351,6 +351,9 @@ void HardwareMonitor::finish() {
         error("This should not happen though..... ?");
       }
     }  // end for
+    std::cout << "total measurement = " << meas_total << std::endl;
+    std::cout << "***************************************************************" << std::endl;
+
     Matrix4cd extended_density_matrix_reconstructed = reconstruct_density_matrix(qnic, partner_address);
 
     Vector4cd Bellpair;

@@ -8,7 +8,9 @@
 #include "RoutingDaemon.h"
 #include <messages/classical_messages.h>
 #include <omnetpp.h>
+#include <cstring>
 #include <vector>
+#include "omnetpp/ctopology.h"
 
 using namespace omnetpp;
 
@@ -51,6 +53,12 @@ Define_Module(RoutingDaemon);
  */
 void RoutingDaemon::initialize(int stage) {
   EV << "Routing Daemon booted\n";
+
+  std::cout << "routing daemon is booting" << std::endl;
+  auto *output_filename = getModuleByPath("^.hm")->par("tomography_output_filename").stringValue();
+  if (strstr(output_filename, "Linear") != NULL) {
+    std::cout << "hey we found the linear in the name!!!!" << std::endl;
+  }
 
   EV << "Routing table initialized \n";
   myAddress = getParentModule()->par("address");
@@ -176,6 +184,32 @@ int RoutingDaemon::returnNumEndNodes() {
   delete topo;
   return index;
 };
+
+std::vector<int> RoutingDaemon::returnAllRepeaterAddress() {
+  std::cout << "tryin to find all repeaters" << std::endl;
+  cTopology *topo = new cTopology("topo");
+  cMsgPar *repeater = new cMsgPar();
+  repeater->setStringValue("Repeater");
+  // std::string repeater = "Repeater";
+  topo->extractByParameter("nodeType", repeater->str().c_str());
+  std::vector<int> all_address;
+  auto *output_filename = getModuleByPath("^.hm")->par("tomography_output_filename").stringValue();
+  if (strstr(output_filename, "Linear") == NULL) {
+    delete topo;
+    delete repeater;
+    return std::vector<int>();
+  }
+
+  for (int i = 0; i < topo->getNumNodes(); i++) {
+    auto *node = topo->getNode(i);
+    auto addr = node->getModule()->par("address").intValue();
+    all_address.push_back(addr);
+    std::cout << "repeater addr: " << addr << std::endl;
+  }
+  delete topo;
+  delete repeater;
+  return all_address;
+}
 
 /**
  * Once we begin using dynamic routing protocols, this is where the messages

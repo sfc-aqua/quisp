@@ -181,6 +181,9 @@ void Router::handleMessage(cMessage *msg) {
   } else if (destAddr == myAddress && dynamic_cast<StopEmitting *>(msg) != nullptr) {
     send(pk, "rePort$o");
     return;
+  } else if (destAddr == myAddress && dynamic_cast<TerminateConnection *>(msg) != nullptr) {
+    send(pk, "rePort$o");
+    return;
   }
 
   // Check if packet is reachable

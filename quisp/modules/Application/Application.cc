@@ -88,8 +88,8 @@ ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr,
 
 void Application::handleMessage(cMessage *msg) {
   if (dynamic_cast<deleteThisModule *>(msg) != nullptr) {
-    deleteModule();
     delete msg;
+    deleteModule();
     return;
   }
 

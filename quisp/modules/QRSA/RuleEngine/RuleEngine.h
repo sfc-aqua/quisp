@@ -54,6 +54,7 @@ class RuleEngine : public IRuleEngine {
   int number_of_qnics;
   int number_of_qnics_r;
   int number_of_qnics_rp;
+  int terminate_msg_count;
   PurificationTable Purification_table;
   DoublePurificationTable DoublePurification_table;
   TriplePurificationTable TriplePurification_table;
