@@ -1,0 +1,93 @@
+file 1723573 1631501536                                         
+version 2
+run validation_network-0-20210913-02:51:58-2245
+attr configname validation_network
+attr datetime 20210913-02:51:58
+attr experiment validation_network
+attr inifile validation.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network validation_network_mm
+attr processid 2245
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param **.emission_success_probability 1
+param **.buffers 50
+param **.tomography_output_filename "\"Validate network\""
+param **.channel_Loss_error_rate 0
+param **.channel_X_error_rate 0.001
+param **.channel_Z_error_rate 0
+param **.channel_Y_error_rate 0
+param **.memory_X_error_rate 0
+param **.memory_Y_error_rate 0
+param **.memory_Z_error_rate 0
+param **.entanglement_swapping_with_purification true
+param **.Hgate_error_rate 0
+param **.Hgate_X_error_ratio 0
+param **.Hgate_Y_error_ratio 0
+param **.Hgate_Z_error_ratio 0
+param **.Measurement_error_rate 0
+param **.Measurement_X_error_ratio 0
+param **.Measurement_Y_error_ratio 0
+param **.Measurement_Z_error_ratio 0
+param **.Xgate_error_rate 0
+param **.Xgate_X_error_ratio 0
+param **.Xgate_Y_error_ratio 0
+param **.Xgate_Z_error_ratio 0
+param **.Zgate_error_rate 0
+param **.Zgate_X_error_ratio 0
+param **.Zgate_Y_error_ratio 0
+param **.Zgate_Z_error_ratio 0
+param **.CNOTgate_error_rate 0
+param **.CNOTgate_IZ_error_ratio 0
+param **.CNOTgate_ZI_error_ratio 0
+param **.CNOTgate_ZZ_error_ratio 0
+param **.CNOTgate_IX_error_ratio 0
+param **.CNOTgate_XI_error_ratio 0
+param **.CNOTgate_XX_error_ratio 0
+param **.CNOTgate_IY_error_ratio 0
+param **.CNOTgate_YI_error_ratio 0
+param **.CNOTgate_YY_error_ratio 0
+param **.memory_X_error_rate 0
+param **.memory_Y_error_rate 0
+param **.memory_Z_error_rate 0
+param **.memory_energy_excitation_rate 0
+param **.memory_energy_relaxation_rate 0
+param **.memory_completely_mixed_rate 0
+param **.channel_Loss_error_rate 0
+param **.channel_X_error_rate 0
+param **.channel_Z_error_rate 0
+param **.channel_Y_error_rate 0
+param **.internal_hom_loss_rate 0
+param **.internal_hom_error_rate 0
+param **.internal_hom_required_precision 1.5e-9
+param **.internal_hom_photon_detection_per_sec 1000000000
+param **.internal_hom_darkcount_probability 0
+param **.hom_loss_rate 0
+param **.hom_error_rate 0
+param **.hom_required_precision 1.5e-9
+param **.hom_photon_detection_per_sec 1000000000
+param **.hom_darkcount_probability 10e-8
+param **.Initial_notification_timing_buffer "10 s"
+param **.EndToEndConnection true
+param **.TrafficPattern 1
+param **.LoneInitiatorAddress 1
+param **.entanglement_swapping_with_purification true
+param **.link_tomography false
+param **.distant_measure_count 7000
+param **.initial_purification 0
+param **.Purification_type 2002
+
+vector 0 validation_network_mm.EndNode1.qnic_r[0].internal_hom.BSA Num_Bell_state:vector ETV
+attr interpolationmode sample-hold
+attr title "actual number of resource, vector"
+vector 1 validation_network_mm.EndNode2.qnic_r[0].internal_hom.BSA Num_Bell_state:vector ETV
+attr interpolationmode sample-hold
+attr title "actual number of resource, vector"
+0	3081 859975 474 3069545 10.000097400865 10.215048949055 28031 1 28031 392882496 7342057124416
+1	863056 860516 559 3069864 10.000097406865 10.215050216055 28044 1 28044 393246990 7352276807370
+
