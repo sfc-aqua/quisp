@@ -29,7 +29,7 @@ namespace modules {
 class BellStateAnalyzer : public cSimpleModule {
  private:
   // for performance analysis
-  int n_res = 0;
+  long n_res = 0;
   int trials = 0;
   simsignal_t GOD_num_resSignal;
   std::string BSA_perf_output_filename;

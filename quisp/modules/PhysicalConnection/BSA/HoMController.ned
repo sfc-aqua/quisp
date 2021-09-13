@@ -21,7 +21,7 @@ simple HoMController
         double bsa_notification_interval=default(1e-2);
 
         // performance
-        @signal[creation_time](type="float");
+        @signal[creation_time](type=double);
         @statistic[creation_time](title="Bell pair creation time"; record=vector; interpolationmode=sample-hold);
     gates:
         input fromRouter_port @loose;
