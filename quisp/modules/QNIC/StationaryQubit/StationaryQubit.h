@@ -131,7 +131,7 @@ class StationaryQubit : public IStationaryQubit {
  protected:
   void initialize() override;
   void finish() override;
-  void handleMessage(cMessage *msg) override;
+  void handleMessage(omnetpp::cMessage *msg) override;
   messages::PhotonicQubit *generateEntangledPhoton();
   void setBusy();
   // returns the matrix that represents the errors on the Bell pair. (e.g. XY, XZ and ZI...)

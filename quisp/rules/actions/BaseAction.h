@@ -16,8 +16,8 @@ namespace quisp {
 namespace rules {
 namespace actions {
 
-using quisp::modules::IStationaryQubit;
-using quisp::modules::QNIC_type;
+using ::quisp::modules::IStationaryQubit;
+using ::quisp::modules::QNIC_type;
 
 class Action {
  public:

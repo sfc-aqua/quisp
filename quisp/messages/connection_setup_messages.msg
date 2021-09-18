@@ -1,19 +1,6 @@
-cplusplus {{
-#include "base_messages_m.h"
-#include <modules/QNIC.h>
-#include <rules/RuleSet.h>
-}}
-
-cplusplus {{
-    typedef quisp::rules::RuleSet * RuleSetField;
-}}
-class noncobject RuleSetField;
-
-struct QNIC_pair_info;
+import base_messages;
 
 namespace quisp::messages;
-
-packet Header;
 
 packet ConnectionSetupRequest extends Header
 {
@@ -38,7 +25,7 @@ packet ConnectionSetupResponse extends Header
     int actual_srcAddr;
     int actual_destAddr;
     unsigned long RuleSet_id;
-    RuleSetField RuleSet;
+    RuleSet* ruleSet;
     int application_type;
     int stack_of_QNodeIndexes[];
 }

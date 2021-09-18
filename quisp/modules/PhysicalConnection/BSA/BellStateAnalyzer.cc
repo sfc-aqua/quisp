@@ -158,7 +158,8 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     left_photon_origin_qnic_address = photon->getQNICEntangledWith();
     left_photon_origin_qubit_address = photon->getStationaryQubitEntangledWith();
     left_photon_origin_qnic_type = photon->getQNICtypeEntangledWith();
-    left_statQubit_ptr = check_and_cast<StationaryQubit *>(photon->getEntangled_with());
+    // FIXME: DO NOT use const_cast
+    left_statQubit_ptr = const_cast<StationaryQubit *>(check_and_cast_nullable<const StationaryQubit *>(photon->getEntangled_with()));
     left_photon_Xerr = photon->getPauliXerr();
     left_photon_Zerr = photon->getPauliZerr();
     left_photon_lost = photon->getPhotonLost();
@@ -179,8 +180,8 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     right_photon_origin_qnic_address = photon->getQNICEntangledWith();
     right_photon_origin_qubit_address = photon->getStationaryQubitEntangledWith();
     right_photon_origin_qnic_type = photon->getQNICtypeEntangledWith();
-    // right_statQubit_ptr = photon->getEntangled_with();
-    right_statQubit_ptr = check_and_cast<StationaryQubit *>(photon->getEntangled_with());
+    // FIXME: DO NOT use const_cast
+    right_statQubit_ptr = const_cast<StationaryQubit *>(check_and_cast<const StationaryQubit *>(photon->getEntangled_with()));
     right_photon_Xerr = photon->getPauliXerr();
     right_photon_Zerr = photon->getPauliZerr();
     right_photon_lost = photon->getPhotonLost();
@@ -362,17 +363,12 @@ bool BellStateAnalyzer::isPhotonLost(cMessage *msg) {
 }
 
 void BellStateAnalyzer::GOD_setCompletelyMixedDensityMatrix() {
-  // error("Hrtr");
-  // std::cout<<"Darkcount CM "<<left_statQubit_ptr<<", "<<right_statQubit_ptr<<"\n";
   left_statQubit_ptr->setCompletelyMixedDensityMatrix();
   right_statQubit_ptr->setCompletelyMixedDensityMatrix();
 }
 
 /*Error on flying qubit with a successful BSA propagates to its original stationary qubit. */
 void BellStateAnalyzer::GOD_updateEntangledInfoParameters_of_qubits() {
-  // std::cout<<"Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"]
-  // with "<<right_statQubit_ptr->getFullName()<<" in "<<right_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
-
   left_statQubit_ptr->setEntangledPartnerInfo(right_statQubit_ptr);
   // If Photon had an X error, Add X error to the stationary qubit.
   if (left_photon_Xerr) left_statQubit_ptr->addXerror();

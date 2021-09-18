@@ -1,15 +1,12 @@
 cplusplus {{
 #include "base_messages_m.h"
 #include <modules/QNIC.h>
-
-using namespace quisp::modules;
+#include <rules/RuleSet.h>
 }}
 
-struct QNIC_type;
-
+import base_messages;
 namespace quisp::messages;
 
-packet Header;
 
 packet SwappingResult extends Header{
     unsigned long RuleSet_id;

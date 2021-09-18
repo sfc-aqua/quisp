@@ -8,9 +8,9 @@
 #ifndef MODULES_APPLICATION_H_
 #define MODULES_APPLICATION_H_
 
+#include <messages/classical_messages.h>
+#include <utils/ComponentProvider.h>
 #include "IApplication.h"
-#include "utils/ComponentProvider.h"
-
 using namespace omnetpp;
 
 namespace quisp {

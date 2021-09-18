@@ -1,10 +1,10 @@
 cplusplus {{
 #include "base_messages_m.h"
 }}
+import base_messages;
 
 namespace quisp::messages;
 
-packet Header;
 
 packet HoMNotificationTimer extends Header{}
 

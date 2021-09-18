@@ -1,4 +1,4 @@
-CXXFLAGS = -std=c++14
+CXXFLAGS = -std=c++17
 
 OBJS := $(filter-out test_util/% %_test.o,$(OBJS))
 OBJS := $(filter-out %unit_test_main.o,$(OBJS))

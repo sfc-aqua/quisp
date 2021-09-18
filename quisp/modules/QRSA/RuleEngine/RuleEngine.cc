@@ -177,7 +177,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
     Process p;
     p.owner_addr = pk->getRuleSet()->owner_addr;
-    p.Rs = pk->getRuleSet();
+    p.Rs = const_cast<RuleSet *>(pk->getRuleSet());
     int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
     std::cout << "Process size is ...." << p.Rs->size() << " node[" << parentAddress << "\n";
     // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
@@ -296,7 +296,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     Process p;
     p.owner_addr = pkt->getRuleSet()->owner_addr;
     // for check
-    p.Rs = pkt->getRuleSet();
+    p.Rs = const_cast<RuleSet *>(pkt->getRuleSet());
     // here swappers got swapping ruleset with internal packet
     int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
     // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
@@ -314,7 +314,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
       // Received a tomography rule set.
       Process p;
       p.owner_addr = pkt->getRuleSet()->owner_addr;
-      p.Rs = pkt->getRuleSet();
+      p.Rs = const_cast<RuleSet *>(pkt->getRuleSet());
       int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
       std::cout << "Process size is ...." << p.Rs->size() << " node[" << parentAddress << "\n";
       if (p.Rs->size() > 0) {

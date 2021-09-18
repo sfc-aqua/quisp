@@ -1,14 +1,9 @@
-cplusplus {{
-#include "base_messages_m.h"
 
-using namespace omnetpp;
-typedef cModule *GOD_statQubitPtr;
-}} // C++ typedef
-class noncobject GOD_statQubitPtr; // For tracking the truely entangled ones (Only God knows!). The system may think the qubit is entangled but it may not (darkcount)!
+
+import base_messages;
+
 
 namespace quisp::messages;
-
-packet Header;
 
 packet PurificationResult extends Header
 {
@@ -16,7 +11,7 @@ packet PurificationResult extends Header
     unsigned long ruleset_id;
     unsigned long rule_id;
     int action_index;
-    GOD_statQubitPtr entangled_with;//For Debugging purposes.
+    cModule* entangled_with;//For Debugging purposes.
 }
 
 packet DoublePurificationResult extends Header
@@ -26,7 +21,7 @@ packet DoublePurificationResult extends Header
     unsigned long ruleset_id;
     unsigned long rule_id;
     int action_index;
-    GOD_statQubitPtr entangled_with;//For Debugging purposes.
+    cModule* entangled_with;//For Debugging purposes.
 }
 
 packet DS_DoublePurificationResult extends Header
@@ -38,7 +33,7 @@ packet DS_DoublePurificationResult extends Header
     unsigned long ruleset_id;
     unsigned long rule_id;
     int action_index;
-    GOD_statQubitPtr entangled_with;//For Debugging purposes.
+    cModule* entangled_with;//For Debugging purposes.
 }
 
 packet DS_DoublePurificationSecondResult extends Header
@@ -49,5 +44,5 @@ packet DS_DoublePurificationSecondResult extends Header
     unsigned long ruleset_id;
     unsigned long rule_id;
     int action_index;
-    GOD_statQubitPtr entangled_with;//For Debugging purposes.
+    cModule* entangled_with;//For Debugging purposes.
 }

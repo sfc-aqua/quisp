@@ -6,9 +6,10 @@ namespace quisp_test {
 namespace gate {
 
 using omnetpp::cSimulation;
+using omnetpp::SendOptions;
 
 TempGate::TempGate() {}
-bool TempGate::deliver(cMessage *msg, simtime_t at) { return true; }
+bool TempGate::deliver(cMessage *msg, const SendOptions &options, simtime_t at) { return true; }
 
 TestGate::TestGate(cModule *mod, const char *name) {
   desc = new omnetpp::cGate::Desc;
@@ -24,7 +25,7 @@ TestGate::TestGate(cModule *mod, const char *name) {
  * \brief this method called when a module sent cMessage to this gate.
  * and then store the msg into `messages`
  */
-bool TestGate::deliver(cMessage *msg, simtime_t at) {
+bool TestGate::deliver(cMessage *msg, const SendOptions &options, simtime_t at) {
   messages.push_back(msg->dup());
   return true;
 }

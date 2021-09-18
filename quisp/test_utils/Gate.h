@@ -20,7 +20,7 @@ class TempGate : public omnetpp::cGate {
   TempGate();
 
  protected:
-  bool deliver(cMessage *msg, simtime_t at) override;
+  bool deliver(cMessage *msg, const omnetpp::SendOptions &options, simtime_t at) override;
 };
 
 /**
@@ -34,7 +34,7 @@ class TestGate : public omnetpp::cGate {
 
  protected:
   TempGate temp_gate;
-  bool deliver(cMessage *msg, simtime_t at) override;
+  bool deliver(cMessage *msg, const omnetpp::SendOptions &options, simtime_t at) override;
 };
 
 }  // namespace gate

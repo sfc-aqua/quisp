@@ -1,7 +1,6 @@
 #ifndef MODULES_IAPPLICATION_H_
 #define MODULES_IAPPLICATION_H_
 
-#include <messages/classical_messages.h>
 #include <omnetpp.h>
 
 using namespace omnetpp;

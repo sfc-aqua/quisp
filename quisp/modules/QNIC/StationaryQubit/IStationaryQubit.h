@@ -1,6 +1,7 @@
 #pragma once
-
 #include <PhotonicQubit_m.h>
+#include <Eigen/Dense>
+#include <complex>
 
 namespace quisp {
 
@@ -122,7 +123,7 @@ struct measurement_outcome {
   char GOD_clean;
 };
 
-class IStationaryQubit : public cSimpleModule {
+class IStationaryQubit : public omnetpp::cSimpleModule {
  public:
   IStationaryQubit(){};
   virtual ~IStationaryQubit(){};
@@ -176,9 +177,9 @@ class IStationaryQubit : public cSimpleModule {
   /** Pointer to the entangled qubit*/
   IStationaryQubit *entangled_partner = nullptr;
   /** Photon emitted at*/
-  simtime_t emitted_time = -1;
+  omnetpp::simtime_t emitted_time = -1;
   /** Stationary qubit last updated at*/
-  simtime_t updated_time = -1;
+  omnetpp::simtime_t updated_time = -1;
 
   /** Stationary Qubit is free or reserved. */
   bool isBusy;

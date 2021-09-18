@@ -5,13 +5,13 @@
  *
  *  \brief QuantumChannel
  */
-#include <omnetpp.h>
-#include <unsupported/Eigen/MatrixFunctions>
-#include <vector>
-//#include <Eigen/Dense>
 #include <PhotonicQubit_m.h>
+#include <omnetpp.h>
+#include <Eigen/Dense>
+#include <unsupported/Eigen/MatrixFunctions>
 
-using namespace Eigen;
+#include <vector>
+
 using namespace omnetpp;
 using namespace quisp::messages;
 
@@ -44,21 +44,20 @@ class QuantumChannel : public cDatarateChannel {
   double Z_error_ceil;
   double Lost_ceil;
   int DEBUG_darkcount_count = 0;
-  MatrixXd Q_to_the_distance;
+  Eigen::MatrixXd Q_to_the_distance;
   virtual void initialize();
-  virtual void processMessage(cMessage *msg, simtime_t t, result_t &result);
+  virtual cChannel::Result processMessage(cMessage *msg, simtime_t t);
 
  public:
   QuantumChannel();
 };
 
-Define_Channel(QuantumChannel)
+Define_Channel(QuantumChannel);
 
-    QuantumChannel::QuantumChannel() {}
+QuantumChannel::QuantumChannel() : Q_to_the_distance(5, 5) {}
 
 void QuantumChannel::initialize() {
   cDatarateChannel::initialize();
-  Q_to_the_distance(5, 5);
   distance = par("distance");  // in km
 
   /*double Z_error_ratio = par("Z_error_ratio");//par("name") will be read from .ini or .ned file
@@ -107,14 +106,14 @@ void QuantumChannel::initialize() {
 
   // std::cout<<"Sum of errors must be ... = "<<err.X_error_rate+err.Y_error_rate+err.Z_error_rate+photon_loss_rate<<"\n";
   // std::cout<<"Channel err:"<<err.pauli_error_rate<<" X = " <<err.X_error_rate << "Y = "<< err.Y_error_rate << ", Z = "<< err.Z_error_rate<<",Loss"<<photon_loss_rate<<"\n";
-  MatrixXd Transition_matrix(5, 5);
+  Eigen::MatrixXd Transition_matrix(5, 5);
 
   Transition_matrix << 1 - err.pauli_error_rate, err.X_error_rate, err.Z_error_rate, err.Y_error_rate, photon_loss_rate, err.X_error_rate, 1 - err.pauli_error_rate,
       err.Y_error_rate, err.Z_error_rate, photon_loss_rate, err.Z_error_rate, err.Y_error_rate, 1 - err.pauli_error_rate, err.X_error_rate, photon_loss_rate, err.Y_error_rate,
       err.Z_error_rate, err.X_error_rate, 1 - err.pauli_error_rate, photon_loss_rate, 0, 0, 0, 0, 1;
 
   std::cout << "Transition mat per km = \n" << Transition_matrix << "\n";
-  MatrixPower<MatrixXd> Apow(Transition_matrix);
+  Eigen::MatrixPower<Eigen::MatrixXd> Apow(Transition_matrix);
   Q_to_the_distance = Apow(distance);
   std::cout << "Transition mat = " << Q_to_the_distance << "\n";
 
@@ -123,9 +122,7 @@ void QuantumChannel::initialize() {
   // <<1-err.pauli_error_rate<<"err.X_error_rate"<<err.X_error_rate<<"err.Z_error_rate"<<err.Z_error_rate<<"err.Y_error_rate"<<err.Y_error_rate<<"photon_loss_rate"<<photon_loss_rate<<"\n";
 }
 
-void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t &result) {
-  cDatarateChannel::processMessage(msg, t, result);  // Call the original processMessage
-
+cChannel::Result QuantumChannel::processMessage(cMessage *msg, simtime_t t) {
   try {
     PhotonicQubit *q = check_and_cast<PhotonicQubit *>(msg);
 
@@ -134,7 +131,7 @@ void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t &result
     bool Xerr = q->getPauliXerr();
 
     // The photon may have an error when emitted.
-    MatrixXd Initial_condition(1, 5);  // I, X, Z, Y, Photon Lost
+    Eigen::MatrixXd Initial_condition(1, 5);  // I, X, Z, Y, Photon Lost
     if (lost) {
       Initial_condition << 0, 0, 0, 0, 1;  // Photon already lost. Maybe by emission time. Not implemented though.
     } else if (Zerr && Xerr) {
@@ -146,7 +143,7 @@ void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t &result
     } else {
       Initial_condition << 1, 0, 0, 0, 0;  // No error
     }
-    MatrixXd Output_condition(1, 5);
+    Eigen::MatrixXd Output_condition(1, 5);
     Output_condition = Initial_condition * Q_to_the_distance;
 
     // std::cout<<"Q_to_the_distance"<<Q_to_the_distance<<"\n";
@@ -194,6 +191,7 @@ void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t &result
     // error("Only PhotonicQubit is allowed in quantum channel");
     EV << "Only PhotonicQubit is allowed in quantum channel";
   }
+  return cChannel::Result();
 }
 
 }  // namespace channels

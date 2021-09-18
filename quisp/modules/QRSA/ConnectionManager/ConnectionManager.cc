@@ -165,7 +165,7 @@ void ConnectionManager::storeRuleSet(ConnectionSetupResponse *pk) {
   pk_internal->setSrcAddr(pk->getDestAddr());
   pk_internal->setKind(4);
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
-  pk_internal->setRuleSet(pk->getRuleSet());
+  pk_internal->setRuleSet(const_cast<RuleSet *>(pk->getRuleSet()));
   send(pk_internal, "RouterPort$o");
 }
 
@@ -181,7 +181,7 @@ void ConnectionManager::storeRuleSetForApplication(ConnectionSetupResponse *pk) 
   pk_internal->setSrcAddr(pk->getDestAddr());  // Should be original Src here?
   pk_internal->setKind(4);
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
-  pk_internal->setRuleSet(pk->getRuleSet());
+  pk_internal->setRuleSet(const_cast<RuleSet *>(pk->getRuleSet()));
   pk_internal->setApplication_type(pk->getApplication_type());
   send(pk_internal, "RouterPort$o");
 }

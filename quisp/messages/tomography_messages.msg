@@ -4,22 +4,15 @@ cplusplus {{
 #include <modules/QNIC.h>
 }}
 
-cplusplus {{
-    typedef quisp::rules::RuleSet * RuleSetField;
-}}
-
-struct QNIC_type;
-class noncobject RuleSetField;
+import base_messages;
 
 namespace quisp::messages;
-
-packet Header;
 
 packet LinkTomographyRuleSet extends Header
 {
     int process_id;
     int number_of_measuring_resources;
-    RuleSetField RuleSet;
+    RuleSet* ruleSet;
 }
 
 packet LinkTomographyRequest extends Header {}

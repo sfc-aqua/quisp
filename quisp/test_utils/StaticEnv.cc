@@ -43,15 +43,15 @@ cSimulation *StaticEnv::newSimulation() {
  *  \brief delete all cObjects in cSimulation::defaultList.
  */
 void StaticEnv::resetSimulation() {
-  using omnetpp::defaultList;
+  using omnetpp::globalOwningContext;
   cSimulation *prev_sim = cSimulation::getActiveSimulation();
   if (prev_sim != nullptr) {
     prev_sim->deleteNetwork();
     // set owner of all managed objects nullptr before deleting the object.
-    for (int i = 0; i < defaultList.defaultListSize(); i++) {
-      defaultList.defaultListGet(i)->removeFromOwnershipTree();
+    for (int i = 0; i < globalOwningContext.getNumOwnedObjects(); i++) {
+      globalOwningContext.getOwnedObject(i)->removeFromOwnershipTree();
     }
-    defaultList.removeFromOwnershipTree();
+    globalOwningContext.removeFromOwnershipTree();
   }
 }
 
