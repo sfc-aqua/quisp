@@ -6,6 +6,7 @@ jobs:
     steps:
       - name: Generate doxygen 
         uses: mattnotmitt/doxygen-action@v1
+        doxyfile-path: './'
       - name: Deploy to github pages
         uses: peaceiris/actions-gh-pages@v3
         with:
