@@ -9,7 +9,7 @@ def format_result(file_path):
     f.close()
     lines = data.split(' ')
     result = {"ev/sec": {i: [] for i in range(10)}}
-    file_name = lines[0].replace("\n", "")
+    file_name = lines[0].replace("\n", "") + "re"
     trial = -1
     for ln in lines:
         if ln[:6] == "ev/sec":
@@ -17,7 +17,7 @@ def format_result(file_path):
                 trial += 1
             else:
                 result["ev/sec"][trial].append(float(ln[7:]))
-    with open("./output/" + file_name + ".pkl", "wb") as tf:
+    with open("./output_200Mes/" + file_name + ".pkl", "wb") as tf:
         pickle.dump(result, tf)
 
 

@@ -18,30 +18,162 @@ network linear10_mm
 			@display("i=device/smallrouter");
 		};
 
-		EndNode[2]: QNode{
-			address = 10000+index;
+		EndNode1: QNode{
+			address = 1;
+			nodeType = "EndNode";
+			@display("i=device/pc");
+		};
+
+		EndNode2: QNode{
+			address = 10000;
 			nodeType = "EndNode";
 			@display("i=device/pc");
 		};
 
 	connections:
 		// Classical channels
-		EndNode[0].port++ <--> ClassicalChannel { distance = 1km; } <--> Repeater[0].port++; 
+		EndNode1.port++ <--> ClassicalChannel { distance = 2km; } <--> Repeater[0].port++; 
+		// Repeaters
+		for i=0..sizeof(Repeater)-2{
+			Repeater[i].port++ <--> ClassicalChannel{ distance = 2km;} <--> Repeater[i+1].port++;
+		}
+		Repeater[sizeof(Repeater)-1].port++ <--> ClassicalChannel { distance = 2km; } <--> EndNode2.port++;
+		
+		// Quantum Channels
+		EndNode1.quantum_port_receiver++ <--> ClassicalChannel { distance = 2km; } <--> Repeater[0].quantum_port++; 
+		// Repeaters
+		for i=0..sizeof(Repeater)-2{
+			Repeater[i].quantum_port_receiver++ <--> ClassicalChannel{ distance = 2km;} <--> Repeater[i+1].quantum_port++;
+		}
+		Repeater[sizeof(Repeater)-1].quantum_port++ <--> ClassicalChannel { distance = 2km; } <--> EndNode2.quantum_port_receiver++;
+}
+
+
+network linear20_mm
+{
+    parameters:
+        **.Speed_of_light_in_fiber = 205336.986301 km;
+	submodules:
+		Repeater[20]: QNode{
+			address = 1000+index;
+			nodeType="Repeater";
+			@display("i=device/smallrouter");
+		};
+
+		EndNode1: QNode{
+			address = 1;
+			nodeType = "EndNode";
+			@display("i=device/pc");
+		};
+
+		EndNode2: QNode{
+			address = 10000;
+			nodeType = "EndNode";
+			@display("i=device/pc");
+		};
+
+	connections:
+		// Classical channels
+		EndNode1.port++ <--> ClassicalChannel { distance = 1km; } <--> Repeater[0].port++; 
 		// Repeaters
 		for i=0..sizeof(Repeater)-2{
 			Repeater[i].port++ <--> ClassicalChannel{ distance = 1km;} <--> Repeater[i+1].port++;
 		}
-		Repeater[sizeof(Repeater)-1].port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode[1].port++;
+		Repeater[sizeof(Repeater)-1].port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode2.port++;
 		
 		// Quantum Channels
-		EndNode[0].quantum_port_receiver++ <--> ClassicalChannel { distance = 1km; } <--> Repeater[0].quantum_port++; 
+		EndNode1.quantum_port_receiver++ <--> ClassicalChannel { distance = 1km; } <--> Repeater[0].quantum_port++; 
 		// Repeaters
 		for i=0..sizeof(Repeater)-2{
 			Repeater[i].quantum_port_receiver++ <--> ClassicalChannel{ distance = 1km;} <--> Repeater[i+1].quantum_port++;
 		}
-		Repeater[sizeof(Repeater)-1].quantum_port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode[1].quantum_port_receiver++;
+		Repeater[sizeof(Repeater)-1].quantum_port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode2.quantum_port_receiver++;
 }
 
+network linear30_mm
+{
+    parameters:
+        **.Speed_of_light_in_fiber = 205336.986301 km;
+	submodules:
+		Repeater[30]: QNode{
+			address = 1000+index;
+			nodeType="Repeater";
+			@display("i=device/smallrouter");
+		};
+
+		EndNode1: QNode{
+			address = 1;
+			nodeType = "EndNode";
+			@display("i=device/pc");
+		};
+
+
+		EndNode2: QNode{
+			address = 10000;
+			nodeType = "EndNode";
+			@display("i=device/pc");
+		};
+
+	connections:
+		// Classical channels
+		EndNode1.port++ <--> ClassicalChannel { distance = 1km; } <--> Repeater[0].port++; 
+		// Repeaters
+		for i=0..sizeof(Repeater)-2{
+			Repeater[i].port++ <--> ClassicalChannel{ distance = 1km;} <--> Repeater[i+1].port++;
+		}
+		Repeater[sizeof(Repeater)-1].port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode2.port++;
+		
+		// Quantum Channels
+		EndNode1.quantum_port_receiver++ <--> ClassicalChannel { distance = 1km; } <--> Repeater[0].quantum_port++; 
+		// Repeaters
+		for i=0..sizeof(Repeater)-2{
+			Repeater[i].quantum_port_receiver++ <--> ClassicalChannel{ distance = 1km;} <--> Repeater[i+1].quantum_port++;
+		}
+		Repeater[sizeof(Repeater)-1].quantum_port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode2.quantum_port_receiver++;
+}
+
+
+network linear40_mm
+{
+    parameters:
+        **.Speed_of_light_in_fiber = 205336.986301 km;
+	submodules:
+		Repeater[40]: QNode{
+			address = 1000+index;
+			nodeType="Repeater";
+			@display("i=device/smallrouter");
+		};
+
+		EndNode1: QNode{
+			address = 1;
+			nodeType = "EndNode";
+			@display("i=device/pc");
+		};
+
+
+		EndNode2: QNode{
+			address = 10000;
+			nodeType = "EndNode";
+			@display("i=device/pc");
+		};
+
+	connections:
+		// Classical channels
+		EndNode1.port++ <--> ClassicalChannel { distance = 1km; } <--> Repeater[0].port++; 
+		// Repeaters
+		for i=0..sizeof(Repeater)-2{
+			Repeater[i].port++ <--> ClassicalChannel{ distance = 1km;} <--> Repeater[i+1].port++;
+		}
+		Repeater[sizeof(Repeater)-1].port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode2.port++;
+		
+		// Quantum Channels
+		EndNode1.quantum_port_receiver++ <--> ClassicalChannel { distance = 1km; } <--> Repeater[0].quantum_port++; 
+		// Repeaters
+		for i=0..sizeof(Repeater)-2{
+			Repeater[i].quantum_port_receiver++ <--> ClassicalChannel{ distance = 1km;} <--> Repeater[i+1].quantum_port++;
+		}
+		Repeater[sizeof(Repeater)-1].quantum_port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode2.quantum_port_receiver++;
+}
 
 network linear50_mm
 {
@@ -60,8 +192,9 @@ network linear50_mm
 			@display("i=device/pc");
 		};
 
+
 		EndNode2: QNode{
-			address = 100;
+			address = 10000;
 			nodeType = "EndNode";
 			@display("i=device/pc");
 		};
@@ -84,47 +217,6 @@ network linear50_mm
 		Repeater[sizeof(Repeater)-1].quantum_port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode2.quantum_port_receiver++;
 }
 
-network linear100_mm
-{
-    parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
-	submodules:
-		Repeater[100]: QNode{
-			address = 1000+index;
-			nodeType="Repeater";
-			@display("i=device/smallrouter");
-		};
-
-		EndNode1: QNode{
-			address = 1;
-			nodeType = "EndNode";
-			@display("i=device/pc");
-		};
-
-
-		EndNode2: QNode{
-			address = 100;
-			nodeType = "EndNode";
-			@display("i=device/pc");
-		};
-
-	connections:
-		// Classical channels
-		EndNode1.port++ <--> ClassicalChannel { distance = 1km; } <--> Repeater[0].port++; 
-		// Repeaters
-		for i=0..sizeof(Repeater)-2{
-			Repeater[i].port++ <--> ClassicalChannel{ distance = 1km;} <--> Repeater[i+1].port++;
-		}
-		Repeater[sizeof(Repeater)-1].port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode2.port++;
-		
-		// Quantum Channels
-		EndNode1.quantum_port_receiver++ <--> ClassicalChannel { distance = 1km; } <--> Repeater[0].quantum_port++; 
-		// Repeaters
-		for i=0..sizeof(Repeater)-2{
-			Repeater[i].quantum_port_receiver++ <--> ClassicalChannel{ distance = 1km;} <--> Repeater[i+1].quantum_port++;
-		}
-		Repeater[sizeof(Repeater)-1].quantum_port++ <--> ClassicalChannel { distance = 1km; } <--> EndNode2.quantum_port_receiver++;
-}
 
 network nodes10_network_small
 {
