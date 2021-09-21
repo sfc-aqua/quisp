@@ -4,13 +4,14 @@ jobs:
   all:
     runs-on: ubuntu-latest
     steps:
+      - name: Check current dir
+        run: echo ${pwd}
       - name: Generate doxygen 
         uses: mattnotmitt/doxygen-action@v1
-        doxyfile-path: './'
       - name: Deploy to github pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./gh-pages
+          publish_dir: ./public
 
 
