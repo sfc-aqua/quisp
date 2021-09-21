@@ -1,0 +1,8 @@
+<map id="quisp::modules::ConnectionManager" name="quisp::modules::ConnectionManager">
+<area shape="rect" id="node1" title="ConnectionManager." alt="" coords="523,108,701,149"/>
+<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_connection_manager.html" title=" " alt="" coords="175,5,358,47"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,78,116,105"/>
+<area shape="rect" id="node4" href="$classquisp_1_1modules_1_1_i_hardware_monitor.html" title=" " alt="" coords="179,71,354,112"/>
+<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="185,136,348,177"/>
+<area shape="rect" id="node6" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="165,202,368,229"/>
+</map>

@@ -1,0 +1,20 @@
+<map id="quisp/test_utils/mock_modules/MockHardwareMonitor.h" name="quisp/test_utils/mock_modules/MockHardwareMonitor.h">
+<area shape="rect" id="node1" title=" " alt="" coords="289,5,511,47"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,102,120,129"/>
+<area shape="rect" id="node3" href="$_stationary_qubit_8h.html" title="StationaryQubit." alt="" coords="145,95,346,136"/>
+<area shape="rect" id="node6" href="$_module_type_8h.html" title=" " alt="" coords="483,102,642,129"/>
+<area shape="rect" id="node11" href="$_util_functions_8h.html" title=" " alt="" coords="317,184,483,211"/>
+<area shape="rect" id="node15" href="$_i_hardware_monitor_8h.html" title=" " alt="" coords="731,95,946,136"/>
+<area shape="rect" id="node4" title=" " alt="" coords="105,259,237,285"/>
+<area shape="rect" id="node5" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="167,184,292,211"/>
+<area shape="rect" id="node7" title=" " alt="" coords="557,333,640,360"/>
+<area shape="rect" id="node8" title=" " alt="" coords="507,184,562,211"/>
+<area shape="rect" id="node9" href="$_configuration_8h.html" title=" " alt="" coords="587,184,693,211"/>
+<area shape="rect" id="node10" href="$_key_value_8h.html" title=" " alt="" coords="555,259,642,285"/>
+<area shape="rect" id="node12" href="$_r_n_g_8h.html" title=" " alt="" coords="469,259,531,285"/>
+<area shape="rect" id="node13" href="$_simulation_8h.html" title=" " alt="" coords="301,259,395,285"/>
+<area shape="rect" id="node14" title=" " alt="" coords="271,333,425,360"/>
+<area shape="rect" id="node16" title=" " alt="" coords="769,184,837,211"/>
+<area shape="rect" id="node17" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="791,259,910,285"/>
+<area shape="rect" id="node18" title=" " alt="" coords="912,184,1085,211"/>
+</map>

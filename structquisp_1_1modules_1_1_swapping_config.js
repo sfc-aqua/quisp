@@ -1,0 +1,28 @@
+var structquisp_1_1modules_1_1_swapping_config =
+[
+    [ "index", "structquisp_1_1modules_1_1_swapping_config.html#add5b2e9bd8392c504528482d05d464fc", null ],
+    [ "initiator", "structquisp_1_1modules_1_1_swapping_config.html#a9c58fcf7e1656de8a58d90de69b3d5c2", null ],
+    [ "initiator_qnic_address", "structquisp_1_1modules_1_1_swapping_config.html#a57e5b1cc1a45ef9617025991216703ee", null ],
+    [ "initiator_qnic_index", "structquisp_1_1modules_1_1_swapping_config.html#a0e280acd22db4ef2b2e0c899a84686b0", null ],
+    [ "initiator_qnic_type", "structquisp_1_1modules_1_1_swapping_config.html#a1516ba986085bd75c4844f05940f2fc0", null ],
+    [ "initiator_res", "structquisp_1_1modules_1_1_swapping_config.html#a0446cc9291e896e6769beab7380b9eda", null ],
+    [ "left_partner", "structquisp_1_1modules_1_1_swapping_config.html#ad494cc185eb68b9554729761679875e1", null ],
+    [ "lqnic_address", "structquisp_1_1modules_1_1_swapping_config.html#a1c4b9cab0986dd14a295e25ea539705f", null ],
+    [ "lqnic_index", "structquisp_1_1modules_1_1_swapping_config.html#a740a89191b24b33f42cb82b7c90e368a", null ],
+    [ "lqnic_type", "structquisp_1_1modules_1_1_swapping_config.html#a3d2308c62e8bb26d8c2dffd077e41714", null ],
+    [ "lres", "structquisp_1_1modules_1_1_swapping_config.html#a3f46b04f6ab2cbcb88d3efacd8cad299", null ],
+    [ "responder", "structquisp_1_1modules_1_1_swapping_config.html#a08bff2fb14cb0a4ee9af0327d75f5dc6", null ],
+    [ "responder_qnic_address", "structquisp_1_1modules_1_1_swapping_config.html#a285463441ee86474a5c3ed6c3d3b5165", null ],
+    [ "responder_qnic_index", "structquisp_1_1modules_1_1_swapping_config.html#a355a32638aad1b95e3b6d3c9c339b695", null ],
+    [ "responder_qnic_type", "structquisp_1_1modules_1_1_swapping_config.html#a74973350298af4f6deff190357f0d5fc", null ],
+    [ "responder_res", "structquisp_1_1modules_1_1_swapping_config.html#a46e50f1948adefdb61559e40c87618d7", null ],
+    [ "right_partner", "structquisp_1_1modules_1_1_swapping_config.html#a9db6e6f88cb22cf0a499e2361ae2e4ea", null ],
+    [ "rqnic_address", "structquisp_1_1modules_1_1_swapping_config.html#a4b92c3bd3f2b9b6efed338ab8421cab2", null ],
+    [ "rqnic_index", "structquisp_1_1modules_1_1_swapping_config.html#a12c4b1623bf05500f402141de0fc0262", null ],
+    [ "rqnic_type", "structquisp_1_1modules_1_1_swapping_config.html#a97bd14375a1581ea8faafbd2a40b9a30", null ],
+    [ "rres", "structquisp_1_1modules_1_1_swapping_config.html#adc33dc0eef37c94dc9b15f50e4741e31", null ],
+    [ "self_left_qnic_index", "structquisp_1_1modules_1_1_swapping_config.html#a62961762bbc257765c59fbc505f7e5a8", null ],
+    [ "self_left_qnic_type", "structquisp_1_1modules_1_1_swapping_config.html#ad8d2b44bdd3808a3dea7b37f27ad4606", null ],
+    [ "self_right_qnic_index", "structquisp_1_1modules_1_1_swapping_config.html#a795a0555277dd6b026b8bf739210fd81", null ],
+    [ "self_right_qnic_type", "structquisp_1_1modules_1_1_swapping_config.html#a75e8e4a9ffaefee915275019d83a86f4", null ]
+];

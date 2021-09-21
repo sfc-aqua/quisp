@@ -1,0 +1,44 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,533,116,560"/>
+<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_bell_state_analyzer.html" title="BellStateAnalyzer." alt="" coords="180,97,347,138"/>
+<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_entangled_photon_pair_source.html" title="Entangled Photons Pairs Source." alt="" coords="178,162,349,203"/>
+<area shape="rect" id="node4" href="$classquisp_1_1modules_1_1_ho_m_controller.html" title="HoMController." alt="" coords="165,228,362,255"/>
+<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1_i_application.html" title=" " alt="" coords="172,279,355,305"/>
+<area shape="rect" id="node8" href="$classquisp_1_1modules_1_1_i_connection_manager.html" title=" " alt="" coords="172,330,355,371"/>
+<area shape="rect" id="node12" href="$classquisp_1_1modules_1_1_i_hardware_monitor.html" title=" " alt="" coords="176,395,351,437"/>
+<area shape="rect" id="node16" href="$classquisp_1_1modules_1_1_i_real_time_controller.html" title=" " alt="" coords="177,461,350,502"/>
+<area shape="rect" id="node20" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="182,526,345,567"/>
+<area shape="rect" id="node24" href="$classquisp_1_1modules_1_1_i_rule_engine.html" title=" " alt="" coords="172,592,355,619"/>
+<area shape="rect" id="node28" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="175,643,351,685"/>
+<area shape="rect" id="node38" href="$classquisp_1_1modules_1_1_photonic_switch.html" title="PhotonicSwitch." alt="" coords="181,709,346,750"/>
+<area shape="rect" id="node39" href="$classquisp_1_1modules_1_1_queue.html" title="Queue." alt="" coords="187,775,339,801"/>
+<area shape="rect" id="node40" href="$classquisp_1_1modules_1_1_router.html" title="Router." alt="" coords="187,825,339,852"/>
+<area shape="rect" id="node41" href="$classquisp_1_1modules_1_1_s_p_d_c___controller.html" title="SPDC_Controller." alt="" coords="188,877,339,918"/>
+<area shape="rect" id="node42" href="$classquisp_1_1modules_1_1dummy_module.html" title="dummyModule" alt="" coords="164,943,363,969"/>
+<area shape="rect" id="node6" href="$classquisp_1_1modules_1_1_application.html" title="Application." alt="" coords="447,55,625,81"/>
+<area shape="rect" id="node7" href="$classanonymous__namespace_02_application__test_8cc_03_1_1_app_test_target.html" title=" " alt="" coords="731,5,894,61"/>
+<area shape="rect" id="node9" href="$classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager." alt="" coords="447,165,625,206"/>
+<area shape="rect" id="node10" href="$classanonymous__namespace_02_connection_manager__rule__generator__test_8cc_03_1_1_connection_manager.html" title=" " alt="" coords="711,86,915,157"/>
+<area shape="rect" id="node11" href="$classanonymous__namespace_02_connection_manager__test_8cc_03_1_1_connection_manager_test_target.html" title=" " alt="" coords="709,181,916,237"/>
+<area shape="rect" id="node13" href="$classquisp_1_1modules_1_1_hardware_monitor.html" title="HardwareMonitor." alt="" coords="451,230,621,271"/>
+<area shape="rect" id="node15" href="$classquisp__test_1_1mock__modules_1_1hardware__monitor_1_1_mock_hardware_monitor.html" title=" " alt="" coords="423,295,649,351"/>
+<area shape="rect" id="node14" href="$classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_hardware_monitor_test_target.html" title=" " alt="" coords="717,261,908,317"/>
+<area shape="rect" id="node17" href="$classquisp_1_1modules_1_1_real_time_controller.html" title="RealTimeController." alt="" coords="451,374,621,415"/>
+<area shape="rect" id="node19" href="$classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html" title=" " alt="" coords="448,439,624,495"/>
+<area shape="rect" id="node18" href="$classanonymous__namespace_02_real_time_controller__test_8cc_03_1_1_r_t_c_test_target.html" title=" " alt="" coords="729,367,896,423"/>
+<area shape="rect" id="node21" href="$classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_mock_routing_daemon.html" title=" " alt="" coords="449,519,623,575"/>
+<area shape="rect" id="node22" href="$classquisp_1_1modules_1_1_routing_daemon.html" title=" " alt="" coords="433,599,639,625"/>
+<area shape="rect" id="node23" href="$classquisp__test_1_1mock__modules_1_1routing__daemon_1_1_mock_routing_daemon.html" title=" " alt="" coords="411,650,661,691"/>
+<area shape="rect" id="node25" href="$classquisp_1_1modules_1_1_rule_engine.html" title="RuleEngine." alt="" coords="447,716,625,743"/>
+<area shape="rect" id="node27" href="$classquisp__test_1_1mock__modules_1_1rule__engine_1_1_mock_rule_engine.html" title=" " alt="" coords="437,767,635,809"/>
+<area shape="rect" id="node26" href="$classanonymous__namespace_02_rule_engine__test_8cc_03_1_1_rule_engine_test_target.html" title=" " alt="" coords="731,545,894,601"/>
+<area shape="rect" id="node29" href="$classquisp_1_1modules_1_1_stationary_qubit.html" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="450,833,622,874"/>
+<area shape="rect" id="node37" href="$classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html" title=" " alt="" coords="442,898,630,939"/>
+<area shape="rect" id="node30" href="$classanonymous__namespace_02_bell_pair_store__test_8cc_03_1_1_mock_qubit.html" title=" " alt="" coords="731,625,894,681"/>
+<area shape="rect" id="node31" href="$classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_mock_stationary_qubit.html" title=" " alt="" coords="725,705,900,761"/>
+<area shape="rect" id="node32" href="$classanonymous__namespace_02_real_time_controller__test_8cc_03_1_1_mock_stationary_qubit.html" title=" " alt="" coords="713,785,912,841"/>
+<area shape="rect" id="node33" href="$classanonymous__namespace_02_rule_engine__test_8cc_03_1_1_mock_stationary_qubit.html" title=" " alt="" coords="731,865,894,921"/>
+<area shape="rect" id="node34" href="$classanonymous__namespace_02_stationary_qubit__gate__error__test_8cc_03_1_1_stat_qubit_target.html" title=" " alt="" coords="711,945,914,1001"/>
+<area shape="rect" id="node35" href="$classanonymous__namespace_02_stationary_qubit__memory__error__test_8cc_03_1_1_stat_qubit_target.html" title=" " alt="" coords="711,1025,914,1081"/>
+<area shape="rect" id="node36" href="$classanonymous__namespace_02_stationary_qubit__test_8cc_03_1_1_stat_qubit_target.html" title=" " alt="" coords="730,1105,895,1161"/>
+</map>

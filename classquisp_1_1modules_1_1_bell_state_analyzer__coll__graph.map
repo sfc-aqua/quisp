@@ -1,0 +1,13 @@
+<map id="quisp::modules::BellStateAnalyzer" name="quisp::modules::BellStateAnalyzer">
+<area shape="rect" id="node1" title="BellStateAnalyzer." alt="" coords="1019,27,1185,69"/>
+<area shape="rect" id="node2" title=" " alt="" coords="47,5,157,32"/>
+<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="369,185,545,226"/>
+<area shape="rect" id="node3" title=" " alt="" coords="63,97,141,124"/>
+<area shape="rect" id="node4" href="$classquisp_1_1modules_1_1_stationary_qubit.html" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="691,351,863,393"/>
+<area shape="rect" id="node6" href="$structquisp_1_1modules_1_1_single_gate_error_model.html" title=" " alt="" coords="13,242,191,283"/>
+<area shape="rect" id="node7" href="$structquisp_1_1modules_1_1_two_qubit_gate_error_model.html" title=" " alt="" coords="17,329,187,370"/>
+<area shape="rect" id="node8" href="$structquisp_1_1modules_1_1memory__error__model.html" title=" " alt="" coords="377,421,537,462"/>
+<area shape="rect" id="node9" href="$structquisp_1_1modules_1_1single__qubit__error.html" title=" " alt="" coords="383,486,531,527"/>
+<area shape="rect" id="node10" href="$structquisp_1_1modules_1_1measurement__operators.html" title=" " alt="" coords="360,551,553,593"/>
+<area shape="rect" id="node11" href="$structquisp_1_1modules_1_1measurement__operator.html" title=" " alt="" coords="5,551,199,593"/>
+</map>
