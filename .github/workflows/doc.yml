@@ -1,5 +1,8 @@
 name: quisp doc
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
 jobs:
   all:
     runs-on: ubuntu-latest
