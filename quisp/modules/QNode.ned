@@ -33,16 +33,16 @@ module QNode
     submodules:
         app: Application {
             parameters:
-                address = address;//share the same address within all inner modules
+                address = parent.address;//share the same address within all inner modules
                 @display("p=30,43");
         }
         router: Router {
             parameters:
-                address = address;
+                address = parent.address;
                 @display("p=140,94");
             gates:
-                fromQueue[sizeof(port)];
-                toQueue[sizeof(port)];
+                fromQueue[sizeof(parent.port)];
+                toQueue[sizeof(parent.port)];
         }
         queue[sizeof(port)]: Queue {
             parameters:
@@ -53,22 +53,22 @@ module QNode
         }
         qrsa: quantumRoutingSoft {
             parameters:
-                address = address;
+                address = parent.address;
                 //@display("p=110.05918,124.85208;is=vl");
                 @display("p=171,33");
-                number_of_qnics = sizeof(quantum_port);
-                number_of_qnics_r = sizeof(quantum_port_receiver);
-                number_of_qnics_rp = sizeof(quantum_port_receiver_passive);
-                simultaneous_es_enabled = simultaneous_es_enabled;
+                number_of_qnics = sizeof(parent.quantum_port);
+                number_of_qnics_r = sizeof(parent.quantum_port_receiver);
+                number_of_qnics_rp = sizeof(parent.quantum_port_receiver_passive);
+                simultaneous_es_enabled = parent.simultaneous_es_enabled;
         }
         qnic[sizeof(quantum_port)]: QNIC {//number of QNIC is the same as number of classical queue/NIC
             parameters:
-                parent_node_address = address;
+                parent_node_address = parent.address;
                 self_qnic_address = index;
                 self_qnic_index = index;
-                numBuffer = default(int(buffers));//number of buffers for each qnic
+                numBuffer = default(int(parent.buffers));//number of buffers for each qnic
                 receiver = false;
-                emission_std = emission_timing_std;
+                emission_std = parent.emission_timing_std;
                 self_qnic_type = 0;
                 //@display("p=198,124");
                 //@display("p=209,195;b=,,,white");
@@ -76,21 +76,21 @@ module QNode
         }
         qnic_r[sizeof(quantum_port_receiver)]: QNIC {
             parameters:
-                parent_node_address = address;
-                self_qnic_address = index + sizeof(quantum_port);
+                parent_node_address = parent.address;
+                self_qnic_address = index + sizeof(parent.quantum_port);
                 self_qnic_index = index;
-                numBuffer = default(int(buffers));//number of buffers for each qnic
+                numBuffer = default(int(parent.buffers));//number of buffers for each qnic
                 receiver = true;
                 passive = false;
                 self_qnic_type = 1;
-                emission_std = emission_timing_std;
+                emission_std = parent.emission_timing_std;
                 //@display("p=232,173");
                 @display("p=100, 250,m,5,50,60");
         }
         qnic_rp[sizeof(quantum_port_receiver_passive)]: QNIC {
             parameters:
-                parent_node_address = address;
-                self_qnic_address = index + sizeof(quantum_port) + sizeof(quantum_port_receiver);
+                parent_node_address = parent.address;
+                self_qnic_address = index + sizeof(parent.quantum_port) + sizeof(parent.quantum_port_receiver);
                 self_qnic_index = index;
                 numBuffer = default(int(buffers));//number of buffers for each qnic
                 receiver = true;

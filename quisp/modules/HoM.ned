@@ -31,20 +31,20 @@ module interHoM
     submodules:
         Controller: HoMController {
             parameters:
-                address = address;
+                address = parent.address;
                 @display("p=103.55499,121.435");
                 receiver = true;
-                passive = passive;
-                photon_detection_per_sec = internal_hom_photon_detection_per_sec;
+                passive = parent.passive;
+                photon_detection_per_sec = parent.internal_hom_photon_detection_per_sec;
         }
         BSA: BellStateAnalyzer {
             parameters:
-                address = address;//share the same address within all inner modules
-                darkcount_probability = internal_hom_darkcount_probability;
-                loss_rate = internal_hom_loss_rate;
-                error_rate = internal_hom_error_rate;
-                required_precision = internal_hom_required_precision;
-                photon_detection_per_sec = internal_hom_photon_detection_per_sec;
+                address = parent.address;//share the same address within all inner modules
+                darkcount_probability = parent.internal_hom_darkcount_probability;
+                loss_rate = parent.internal_hom_loss_rate;
+                error_rate = parent.internal_hom_error_rate;
+                required_precision = parent.internal_hom_required_precision;
+                photon_detection_per_sec = parent.internal_hom_photon_detection_per_sec;
                 @display("p=207.855,120.689995");
         }
     connections:
@@ -78,21 +78,21 @@ module HoM
     submodules:
         BSA: BellStateAnalyzer {
             parameters:
-                address = address;//share the same address within all inner modules
-                darkcount_probability = hom_darkcount_probability;
-                loss_rate = hom_loss_rate;
-                error_rate = hom_error_rate;
-                required_precision = hom_required_precision;
-                photon_detection_per_sec = hom_photon_detection_per_sec;
+                address = parent.address;//share the same address within all inner modules
+                darkcount_probability = parent.hom_darkcount_probability;
+                loss_rate = parent.hom_loss_rate;
+                error_rate = parent.hom_error_rate;
+                required_precision = parent.hom_required_precision;
+                photon_detection_per_sec = parent.hom_photon_detection_per_sec;
                 @display("p=207.855,120.689995");
         }
         router: Router {
             parameters:
-                address = address;
+                address = parent.address;
                 @display("p=157,40");
             gates:
-                fromQueue[sizeof(port)];
-                toQueue[sizeof(port)];
+                fromQueue[sizeof(parent.port)];
+                toQueue[sizeof(parent.port)];
         }
         nic[sizeof(port)]: Queue {
             parameters:
@@ -101,8 +101,8 @@ module HoM
         }
         Controller: HoMController {
             parameters:
-                address = address;
-                photon_detection_per_sec = hom_photon_detection_per_sec;
+                address = parent.address;
+                photon_detection_per_sec = parent.hom_photon_detection_per_sec;
                 @display("p=103.55499,121.435");
         }
     connections:

@@ -33,24 +33,24 @@ module QNIC
     submodules:
         statQubit[numBuffer]: StationaryQubit {
             stationaryQubit_address = index;
-            node_address = parent_node_address;
-            qnic_address = self_qnic_address;
-            qnic_index = self_qnic_index;
-            qnic_type = self_qnic_type;
+            node_address = parent.parent_node_address;
+            qnic_address = parent.self_qnic_address;
+            qnic_index = parent.self_qnic_index;
+            qnic_type = parent.self_qnic_type;
             xPosition_Graphics = 70 + 65*index;  // use submodule index to generate different IDs
             //@display("p=$xPosition_Graphics,40,,circle");
             @display("t=Id $stationaryQubit_address;i=block/circle,blue;p=150,100,m,5,60,60"); // modify display string
-            std = emission_std;
+            std = parent.emission_std;
         }
 
         lens: PhotonicSwitch {
-            address = self_qnic_address;
+            address = parent.self_qnic_address;
             @display("i=block/dispatch;p=75.240005,117.810005");
         }
 
         internal_hom: interHoM if receiver {
-            address = parent_node_address;
-            passive = passive;
+            address = parent.parent_node_address;
+            passive = parent.passive;
             @display("p=177.21,39.600002");
         }
 
