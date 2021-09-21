@@ -39,7 +39,7 @@ var classquisp_1_1modules_1_1_bell_state_analyzer =
     [ "left_photon_Zerr", "classquisp_1_1modules_1_1_bell_state_analyzer.html#aa85c0ec13ed08cc2f85830a46b237cdd", null ],
     [ "left_statQubit_ptr", "classquisp_1_1modules_1_1_bell_state_analyzer.html#a8e3a85686018ad2401dd540c8547797f", null ],
     [ "loss_rate", "classquisp_1_1modules_1_1_bell_state_analyzer.html#a3aa257e59e734f0cece142d6885f3fb3", null ],
-    [ "n_res", "classquisp_1_1modules_1_1_bell_state_analyzer.html#a79bab107e6940ed743ed1bab6d6cda11", null ],
+    [ "n_res", "classquisp_1_1modules_1_1_bell_state_analyzer.html#af08d7d7cbbecda931354276d93fa6988", null ],
     [ "number_of_trials", "classquisp_1_1modules_1_1_bell_state_analyzer.html#af40f1877010b34589b7b71ec4220576d", null ],
     [ "nwidth", "classquisp_1_1modules_1_1_bell_state_analyzer.html#afd768f4077975fbd9e59ada068b36164", null ],
     [ "required_precision", "classquisp_1_1modules_1_1_bell_state_analyzer.html#a73ccda905fb330d589dee4190dca9956", null ],
