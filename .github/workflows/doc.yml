@@ -4,6 +4,7 @@ jobs:
   all:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Generate doxygen 
         uses: mattnotmitt/doxygen-action@v1
         with:
