@@ -1,6 +1,4 @@
 /** \file HoM_Controller.cc
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/04/01
  *
@@ -25,7 +23,7 @@ void HoMController::initialize(int stage) {
   receiver = par("receiver");
   passive = par("passive");
   bsa_notification_interval = par("bsa_notification_interval");
-  /** \todo This code looks awefully simplifiable */
+  /** todo This code looks awefully simplifiable */
   if (passive) {
     // Nothing to do. EPPS will take care of entanglement creation.
     // max_buffer also stays unknown, until this gets a message about that info from epps.

@@ -1,5 +1,4 @@
 /** \file Application.cc
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/14
  *

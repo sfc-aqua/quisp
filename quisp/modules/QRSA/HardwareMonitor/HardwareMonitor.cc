@@ -1,6 +1,4 @@
 /** \file HardwareMonitor.cc
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/19
  *

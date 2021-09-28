@@ -1,6 +1,4 @@
 /** \file Queue.cc
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *
  *  \brief Queue

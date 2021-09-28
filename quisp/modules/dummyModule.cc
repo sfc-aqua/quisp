@@ -1,6 +1,4 @@
 /** \file dummyModule.cc
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/25
  *
@@ -15,7 +13,6 @@ namespace quisp {
 namespace modules {
 
 /** \class dummyModule dummyModule.cc
- *  \todo Documentation of the class header.
  *
  *  \brief dummyModule
  */

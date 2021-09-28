@@ -1,6 +1,4 @@
 /** \file RoutingDaemon.cc
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors takaakimatsuo
  *
  *  \brief RoutingDaemon
@@ -18,7 +16,6 @@ namespace modules {
 Define_Module(RoutingDaemon);
 
 /**
- *  \todo Documentation of the class header.
  *
  *  \brief RoutingDaemon
  *
@@ -34,7 +31,7 @@ Define_Module(RoutingDaemon);
  *
  * The above is the intended design.
  *
- * \todo In fact, the RoutingDaemon as it exists today uses special, internal
+ * TODO In fact, the RoutingDaemon as it exists today uses special, internal
  * OMNeT++ magic to directly access the network topology, as stored in the
  * simulator, rather than dynamically discovering it.  That should be corrected.
  *
@@ -45,7 +42,7 @@ Define_Module(RoutingDaemon);
  * discipline is fully blocking, as in circuit switching, which is the first
  * discipline we are implementing.
  *
- * \todo Also, this code is built as a Module, via the Define_Module call;
+ * TODO Also, this code is built as a Module, via the Define_Module call;
  * the other important modules are classes.  That distinction needs to be
  * addressed.
  */
@@ -147,7 +144,7 @@ void RoutingDaemon::initialize(int stage) {
  * Rather than exchanging a message with those who need this information (ConnectionManager, mainly,
  * and in one case RuleEngine), this is a direct call that they make.
  *
- * \todo Decide if this is really the right way to do this.  Likely also
+ * todo Decide if this is really the right way to do this.  Likely also
  * hooked up in the issue of module v. class.
  */
 int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr) {
@@ -181,7 +178,7 @@ int RoutingDaemon::returnNumEndNodes() {
  * Once we begin using dynamic routing protocols, this is where the messages
  * will be handled.  This perhaps will also be how we communicate with the
  * other important daemons in the qrsa.
- * \todo Handle dynamic routing protocol messages.
+ * TODO Handle dynamic routing protocol messages.
  **/
 void RoutingDaemon::handleMessage(cMessage *msg) {}
 
