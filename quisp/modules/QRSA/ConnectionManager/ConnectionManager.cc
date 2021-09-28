@@ -155,7 +155,6 @@ int ConnectionManager::fillPathDivision(std::vector<int> path, int i, int l, int
  * Probably should also let the Application know that the setup is complete and running.
  *
  * \param pk the received ConnectionSetupResponse.
- * todo Where should timeouts and error handling happen?
  **/
 void ConnectionManager::storeRuleSet(ConnectionSetupResponse *pk) {
   InternalRuleSetForwarding *pk_internal = new InternalRuleSetForwarding("InternalRuleSetForwarding");
@@ -212,8 +211,6 @@ void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
  * 2. generate all the RuleSets by calling generateEntanglementSwappingRuleSet
  * 3. return ConnectionSetupResponse to each node in this connection.
  * \endverbatim
- * todo Always room to make this better.  Ideally should be
- * a _configurable choice_, or even a _policy_ implementation.
  */
 void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   // Taking qnic information of responder node.
@@ -567,7 +564,6 @@ QNIC_id ConnectionManager::getQnicInterface(int owner_address, int partner_addre
  * \param qnics index and type of QNICs at each node in the path
  * \param num_resources the duration of the requested connection, in Bell pairs
  * \returns a SwappingConfig
- * todo node_address might be better using qnic index
  **/
 SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners,
                                                          std::vector<QNIC_pair_info> qnics, int num_resources) {

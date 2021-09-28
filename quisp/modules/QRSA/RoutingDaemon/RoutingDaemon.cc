@@ -144,8 +144,6 @@ void RoutingDaemon::initialize(int stage) {
  * Rather than exchanging a message with those who need this information (ConnectionManager, mainly,
  * and in one case RuleEngine), this is a direct call that they make.
  *
- * todo Decide if this is really the right way to do this.  Likely also
- * hooked up in the issue of module v. class.
  */
 int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr) {
   Enter_Method("return_QNIC_address_to_destAddr");
