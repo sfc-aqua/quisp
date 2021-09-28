@@ -1,6 +1,4 @@
 /** \file BellStateAnalyzer.cc
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *
  *  \brief BellStateAnalyzer
@@ -22,7 +20,6 @@ namespace quisp {
 namespace modules {
 
 /** \class BellStateAnalyzer BellStateAnalyzer.cc
- *  \todo Documentation of the class header.
  *
  *  \brief BellStateAnalyzer
  */

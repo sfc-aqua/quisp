@@ -12,7 +12,6 @@
 #include "IRoutingDaemon.h"
 
 /** \class RoutingDaemon RoutingDaemon.cc
- *  \todo Documentation of the class header.
  *
  *  \brief RoutingDaemon
  */

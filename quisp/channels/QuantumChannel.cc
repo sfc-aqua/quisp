@@ -1,6 +1,4 @@
 /** \file QuantumChannel.cc
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors takaakimatsuo
  *
  *  \brief QuantumChannel
@@ -27,7 +25,6 @@ struct channel_error_model {
 };
 
 /** \class QuantumChannel QuantumChannel.cc
- *  \todo Documentation of the class header.
  *
  *  \brief QuantumChannel
  */

@@ -1,6 +1,4 @@
 /** \file HardwareMonitor.h
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/19
  *
@@ -17,7 +15,6 @@ namespace quisp {
 namespace modules {
 
 /** \class HardwareMonitor HardwareMonitor.h
- *  \todo Documentation of the class header.
  *
  *  \brief HardwareMonitor
  */

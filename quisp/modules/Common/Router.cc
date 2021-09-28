@@ -1,6 +1,4 @@
 /** \file Router.cc
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors takaakimatsuo
  *
  *  \brief Router
@@ -16,7 +14,6 @@ namespace quisp {
 namespace modules {
 
 /** \class Router Router.cc
- *  \todo Documentation of the class header.
  *
  *  \brief Router
  */

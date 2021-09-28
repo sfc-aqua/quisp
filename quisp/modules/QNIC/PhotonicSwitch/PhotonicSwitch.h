@@ -1,6 +1,4 @@
 /** \file PhotonicSwitch.h
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *
  *  \brief PhotonicSwitch
@@ -20,7 +18,6 @@ namespace quisp {
 namespace modules {
 
 /** \class PhotonicSwitch PhotonicSwitch.cc
- *  \todo Documentation of the class header.
  *
  *  \brief PhotonicSwitch
  */

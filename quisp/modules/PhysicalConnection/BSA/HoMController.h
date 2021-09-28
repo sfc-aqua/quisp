@@ -1,6 +1,4 @@
 /** \file HoM_Controller.h
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/04/01
  *
@@ -21,7 +19,6 @@ namespace quisp {
 namespace modules {
 
 /** \class HoMController HoM_Controller.h
- *  \todo Documentation of the class header.
  *  \note How about if two nodes have imbalanced buffers?
  *        Maybe use unused qnic (which is ought to be used for another path)?
  *

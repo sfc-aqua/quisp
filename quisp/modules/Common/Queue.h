@@ -20,7 +20,6 @@ namespace quisp {
 namespace modules {
 
 /** \class Queue Queue.cc
- *  \todo Documentation of the class header.
  *
  *  \brief Queue
  */

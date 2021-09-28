@@ -1,6 +1,4 @@
 /** \file RuleEngine.h
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/04/04
  *
@@ -31,7 +29,6 @@ namespace modules {
 using namespace rules;
 
 /** \class RuleEngine RuleEngine.h
- *  \todo Documentation of the class header.
  *  \note The Connection Manager responds to connection requests received from other nodes.
  *        Connection setup, so a regular operation but not high bandwidth, relatively low constraints.
  *        Connections from nearest neighbors only.

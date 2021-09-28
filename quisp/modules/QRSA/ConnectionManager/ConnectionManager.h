@@ -18,7 +18,6 @@ namespace quisp {
 namespace modules {
 
 /** \class ConnectionManager ConnectionManager.cc
- *  \todo Documentation of the class header.
  *
  *  \brief ConnectionManager
  *
