@@ -1,57 +1,5 @@
 var annotated_dup =
 [
-    [ "anonymous_namespace{AccessPrivate.h}", "namespaceanonymous__namespace_02_access_private_8h_03.html", [
-      [ "private_access_detail", "namespaceanonymous__namespace_02_access_private_8h_03_1_1private__access__detail.html", [
-        [ "private_access", "structanonymous__namespace_02_access_private_8h_03_1_1private__access__detail_1_1private__access.html", "structanonymous__namespace_02_access_private_8h_03_1_1private__access__detail_1_1private__access" ]
-      ] ]
-    ] ],
-    [ "anonymous_namespace{Application_test.cc}", "namespaceanonymous__namespace_02_application__test_8cc_03.html", [
-      [ "Strategy", "classanonymous__namespace_02_application__test_8cc_03_1_1_strategy.html", "classanonymous__namespace_02_application__test_8cc_03_1_1_strategy" ],
-      [ "AppTestTarget", "classanonymous__namespace_02_application__test_8cc_03_1_1_app_test_target.html", "classanonymous__namespace_02_application__test_8cc_03_1_1_app_test_target" ]
-    ] ],
-    [ "anonymous_namespace{BellPairStore_test.cc}", "namespaceanonymous__namespace_02_bell_pair_store__test_8cc_03.html", [
-      [ "MockQubit", "classanonymous__namespace_02_bell_pair_store__test_8cc_03_1_1_mock_qubit.html", "classanonymous__namespace_02_bell_pair_store__test_8cc_03_1_1_mock_qubit" ],
-      [ "BellPairStore", "classanonymous__namespace_02_bell_pair_store__test_8cc_03_1_1_bell_pair_store.html", null ]
-    ] ],
-    [ "anonymous_namespace{ConnectionManager_rule_generator_test.cc}", "namespaceanonymous__namespace_02_connection_manager__rule__generator__test_8cc_03.html", [
-      [ "Strategy", "classanonymous__namespace_02_connection_manager__rule__generator__test_8cc_03_1_1_strategy.html", "classanonymous__namespace_02_connection_manager__rule__generator__test_8cc_03_1_1_strategy" ],
-      [ "ConnectionManager", "classanonymous__namespace_02_connection_manager__rule__generator__test_8cc_03_1_1_connection_manager.html", "classanonymous__namespace_02_connection_manager__rule__generator__test_8cc_03_1_1_connection_manager" ]
-    ] ],
-    [ "anonymous_namespace{ConnectionManager_test.cc}", "namespaceanonymous__namespace_02_connection_manager__test_8cc_03.html", [
-      [ "Strategy", "classanonymous__namespace_02_connection_manager__test_8cc_03_1_1_strategy.html", "classanonymous__namespace_02_connection_manager__test_8cc_03_1_1_strategy" ],
-      [ "ConnectionManagerTestTarget", "classanonymous__namespace_02_connection_manager__test_8cc_03_1_1_connection_manager_test_target.html", "classanonymous__namespace_02_connection_manager__test_8cc_03_1_1_connection_manager_test_target" ]
-    ] ],
-    [ "anonymous_namespace{HardwareMonitor_test.cc}", "namespaceanonymous__namespace_02_hardware_monitor__test_8cc_03.html", [
-      [ "MockStationaryQubit", "classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_mock_stationary_qubit.html", "classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_mock_stationary_qubit" ],
-      [ "MockRoutingDaemon", "classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_mock_routing_daemon.html", "classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_mock_routing_daemon" ],
-      [ "Strategy", "classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_strategy.html", "classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_strategy" ],
-      [ "HardwareMonitorTestTarget", "classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_hardware_monitor_test_target.html", "classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_hardware_monitor_test_target" ]
-    ] ],
-    [ "anonymous_namespace{PurifyAction_test.cc}", "namespaceanonymous__namespace_02_purify_action__test_8cc_03.html", [
-      [ "PurifyAction", "classanonymous__namespace_02_purify_action__test_8cc_03_1_1_purify_action.html", "classanonymous__namespace_02_purify_action__test_8cc_03_1_1_purify_action" ]
-    ] ],
-    [ "anonymous_namespace{RealTimeController_test.cc}", "namespaceanonymous__namespace_02_real_time_controller__test_8cc_03.html", [
-      [ "MockStationaryQubit", "classanonymous__namespace_02_real_time_controller__test_8cc_03_1_1_mock_stationary_qubit.html", "classanonymous__namespace_02_real_time_controller__test_8cc_03_1_1_mock_stationary_qubit" ],
-      [ "Strategy", "classanonymous__namespace_02_real_time_controller__test_8cc_03_1_1_strategy.html", "classanonymous__namespace_02_real_time_controller__test_8cc_03_1_1_strategy" ],
-      [ "RTCTestTarget", "classanonymous__namespace_02_real_time_controller__test_8cc_03_1_1_r_t_c_test_target.html", "classanonymous__namespace_02_real_time_controller__test_8cc_03_1_1_r_t_c_test_target" ]
-    ] ],
-    [ "anonymous_namespace{RuleEngine_test.cc}", "namespaceanonymous__namespace_02_rule_engine__test_8cc_03.html", [
-      [ "MockStationaryQubit", "classanonymous__namespace_02_rule_engine__test_8cc_03_1_1_mock_stationary_qubit.html", "classanonymous__namespace_02_rule_engine__test_8cc_03_1_1_mock_stationary_qubit" ],
-      [ "Strategy", "classanonymous__namespace_02_rule_engine__test_8cc_03_1_1_strategy.html", "classanonymous__namespace_02_rule_engine__test_8cc_03_1_1_strategy" ],
-      [ "RuleEngineTestTarget", "classanonymous__namespace_02_rule_engine__test_8cc_03_1_1_rule_engine_test_target.html", "classanonymous__namespace_02_rule_engine__test_8cc_03_1_1_rule_engine_test_target" ]
-    ] ],
-    [ "anonymous_namespace{StationaryQubit_gate_error_test.cc}", "namespaceanonymous__namespace_02_stationary_qubit__gate__error__test_8cc_03.html", [
-      [ "StatQubitTarget", "classanonymous__namespace_02_stationary_qubit__gate__error__test_8cc_03_1_1_stat_qubit_target.html", "classanonymous__namespace_02_stationary_qubit__gate__error__test_8cc_03_1_1_stat_qubit_target" ]
-    ] ],
-    [ "anonymous_namespace{StationaryQubit_memory_error_test.cc}", "namespaceanonymous__namespace_02_stationary_qubit__memory__error__test_8cc_03.html", [
-      [ "StatQubitTarget", "classanonymous__namespace_02_stationary_qubit__memory__error__test_8cc_03_1_1_stat_qubit_target.html", "classanonymous__namespace_02_stationary_qubit__memory__error__test_8cc_03_1_1_stat_qubit_target" ]
-    ] ],
-    [ "anonymous_namespace{StationaryQubit_test.cc}", "namespaceanonymous__namespace_02_stationary_qubit__test_8cc_03.html", [
-      [ "StatQubitTarget", "classanonymous__namespace_02_stationary_qubit__test_8cc_03_1_1_stat_qubit_target.html", "classanonymous__namespace_02_stationary_qubit__test_8cc_03_1_1_stat_qubit_target" ]
-    ] ],
-    [ "anonymous_namespace{SwappingAction_test.cc}", "namespaceanonymous__namespace_02_swapping_action__test_8cc_03.html", [
-      [ "SwappingAction", "classanonymous__namespace_02_swapping_action__test_8cc_03_1_1_swapping_action.html", "classanonymous__namespace_02_swapping_action__test_8cc_03_1_1_swapping_action" ]
-    ] ],
     [ "quisp", "namespacequisp.html", [
       [ "channels", "namespacequisp_1_1channels.html", [
         [ "channel_error_model", "structquisp_1_1channels_1_1channel__error__model.html", "structquisp_1_1channels_1_1channel__error__model" ],

@@ -103,15 +103,15 @@ $(document).ready(function(){initNavTree('_access_private_8h_source.html',''); i
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// Unnamed namespace is used to avoid duplicate symbols if the macros are used</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// in several translation units. See test1.</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="namespaceanonymous__namespace_02_access_private_8h_03.html">   44</a></span>&#160;<span class="keyword">namespace </span>{</div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="namespaceanonymous__namespace_02_access_private_8h_03_1_1private__access__detail.html">   45</a></span>&#160;  <span class="keyword">namespace </span>private_access_detail {</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">namespace </span>{</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="namespaceprivate__access__detail.html">   45</a></span>&#160;  <span class="keyword">namespace </span><a class="code" href="namespaceprivate__access__detail.html">private_access_detail</a> {</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="comment">// @tparam TagType, used to declare different &quot;get&quot; funciton overloads for</span></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="comment">// different members/statics</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> PtrType, PtrType PtrValue, <span class="keyword">typename</span> TagType&gt;</div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="structanonymous__namespace_02_access_private_8h_03_1_1private__access__detail_1_1private__access.html">   50</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structanonymous__namespace_02_access_private_8h_03_1_1private__access__detail_1_1private__access.html">private_access</a> {</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">struct </span>private_access {</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      <span class="comment">// Normal lookup cannot find in-class defined (inline) friend functions.</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="structanonymous__namespace_02_access_private_8h_03_1_1private__access__detail_1_1private__access.html#a05276da1dccb21c1ae854be4d5a9571b">   52</a></span>&#160;      <span class="keyword">friend</span> PtrType <a class="code" href="structanonymous__namespace_02_access_private_8h_03_1_1private__access__detail_1_1private__access.html#a05276da1dccb21c1ae854be4d5a9571b">get</a>(TagType) { <span class="keywordflow">return</span> PtrValue; }</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      <span class="keyword">friend</span> PtrType get(TagType) { <span class="keywordflow">return</span> PtrValue; }</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    };</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  } <span class="comment">// namespace private_access_detail</span></div>
@@ -241,9 +241,8 @@ $(document).ready(function(){initNavTree('_access_private_8h_source.html',''); i
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<span class="preprocessor">  PRIVATE_ACCESS_DETAIL_ACCESS_PRIVATE_STATIC_FUN(                             \</span></div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<span class="preprocessor">      PRIVATE_ACCESS_DETAIL_UNIQUE_TAG, Class, Type, Name)</span></div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160; </div>
-<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdef"><b>Definition:</b> HardwareMonitor.cc:1301</div></div>
-<div class="ttc" id="astructanonymous__namespace_02_access_private_8h_03_1_1private__access__detail_1_1private__access_html"><div class="ttname"><a href="structanonymous__namespace_02_access_private_8h_03_1_1private__access__detail_1_1private__access.html">anonymous_namespace{AccessPrivate.h}::private_access_detail::private_access</a></div><div class="ttdef"><b>Definition:</b> AccessPrivate.h:50</div></div>
-<div class="ttc" id="astructanonymous__namespace_02_access_private_8h_03_1_1private__access__detail_1_1private__access_html_a05276da1dccb21c1ae854be4d5a9571b"><div class="ttname"><a href="structanonymous__namespace_02_access_private_8h_03_1_1private__access__detail_1_1private__access.html#a05276da1dccb21c1ae854be4d5a9571b">anonymous_namespace{AccessPrivate.h}::private_access_detail::private_access::get</a></div><div class="ttdeci">friend PtrType get(TagType)</div><div class="ttdef"><b>Definition:</b> AccessPrivate.h:52</div></div>
+<div class="ttc" id="anamespaceprivate__access__detail_html"><div class="ttname"><a href="namespaceprivate__access__detail.html">private_access_detail</a></div><div class="ttdef"><b>Definition:</b> AccessPrivate.h:45</div></div>
+<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdef"><b>Definition:</b> HardwareMonitor.cc:1299</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

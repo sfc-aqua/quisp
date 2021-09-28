@@ -102,11 +102,9 @@ Inheritance diagram for quisp::modules::ConnectionManager:</div>
 <div class="dyncontent">
 <div class="center"><img src="classquisp_1_1modules_1_1_connection_manager__inherit__graph.png" border="0" usemap="#aquisp_1_1modules_1_1_connection_manager_inherit__map" alt="Inheritance graph"/></div>
 <map name="aquisp_1_1modules_1_1_connection_manager_inherit__map" id="aquisp_1_1modules_1_1_connection_manager_inherit__map">
-<area shape="rect" title="ConnectionManager." alt="" coords="395,64,573,105"/>
-<area shape="rect" href="classanonymous__namespace_02_connection_manager__rule__generator__test_8cc_03_1_1_connection_manager.html" title=" " alt="" coords="623,5,827,76"/>
-<area shape="rect" href="classanonymous__namespace_02_connection_manager__test_8cc_03_1_1_connection_manager_test_target.html" title=" " alt="" coords="621,101,828,157"/>
-<area shape="rect" href="classquisp_1_1modules_1_1_i_connection_manager.html" title=" " alt="" coords="164,64,347,105"/>
-<area shape="rect" title=" " alt="" coords="5,71,116,98"/>
+<area shape="rect" title="ConnectionManager." alt="" coords="7,169,186,211"/>
+<area shape="rect" href="classquisp_1_1modules_1_1_i_connection_manager.html" title=" " alt="" coords="5,80,188,121"/>
+<area shape="rect" title=" " alt="" coords="41,5,152,32"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -225,7 +223,6 @@ Protected Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager.">ConnectionManager</a>. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000028">Todo:</a></b></dt><dd>Documentation of the class header.</dd></dl>
 <p>The <a class="el" href="classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager.">ConnectionManager</a> is one of the five key modules in the software for a quantum repeater/router (qrsa). It is responsible for managing the connections: initiating ConnectionSetupRequests, behaving as responder for a ConnectionSetupRequest (which involves actually creating the RuleSets), and handling the requests and responses as the move along the path at setup time.</p>
 <p>It communicates with the <a class="el" href="classquisp_1_1modules_1_1_rule_engine.html" title="RuleEngine.">RuleEngine</a>, which is responsible for actually executing the Rules as it is notified of events, but the <a class="el" href="classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager.">ConnectionManager</a> has <em>nothing</em> to do with the actual processing of the quantum states as they evolve.</p>
 <p>You will see member functions for the roles as initiator, responder, and intermediate node. The main tasks are to respond to ConnectionSetupRequest, ConnectionSetupResponse, RejectConnectionSetupRequest, and ConnectionTeardown messages.</p>
@@ -493,7 +490,6 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a <a class="el" href="structquisp_1_1modules_1_1_swapping_config.html">SwappingConfig</a> </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000026">Todo:</a></b></dt><dd>node_address might be better using qnic index </dd></dl>
 <pre class="fragment">1.recognize partner. (which node is left partner, right partner)
 Currently, we choose every other node in the path to do swapping in the first round.
 In the examples below, the number in parentheses is the round of swapping,
@@ -506,7 +502,7 @@ If the number of hops is a power of two, we get something like
 /// node1 --------------------------------------- node5 --- node6
 /// node1 ------------------------------------ node5(3) --- node6
 /// node1 ------------------------------------------------- node6
-/// </pre> <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000027">Todo:</a></b></dt><dd>hypothetically, with no purification, all of the intermediate nodes could swap asynchronously and essentially simultaneously. In fact, that's probably what we want, to minimize decoherence. But, the condition clause will have to be extended in order to support "when part of this connection" rather than "when entangled with this node" and you have to be careful of not creating the wrong result by accident. </dd></dl>
+/// </pre><p> todo hypothetically, with no purification, all of the intermediate nodes could swap asynchronously and essentially simultaneously. In fact, that's probably what we want, to minimize decoherence. But, the condition clause will have to be extended in order to support "when part of this connection" rather than "when entangled with this node" and you have to be careful of not creating the wrong result by accident.</p>
 
 </div>
 </div>
@@ -988,8 +984,7 @@ If the number of hops is a power of two, we get something like
 <p>The procedure: </p><pre class="fragment">* 1. figure out swapping order &amp; partners by calling EntanglementSwappingConfig
 * 2. generate all the RuleSets by calling generateEntanglementSwappingRuleSet
 * 3. return ConnectionSetupResponse to each node in this connection.
-* </pre> <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000025">Todo:</a></b></dt><dd>Always room to make this better. Ideally should be a <em>configurable choice</em>, or even a <em>policy</em> implementation. </dd></dl>
-
+* </pre> 
 </div>
 </div>
 <a id="a829cc9cced4938d46d75686970db41e2"></a>
@@ -1096,7 +1091,6 @@ If the number of hops is a power of two, we get something like
   </table>
   </dd>
 </dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000024">Todo:</a></b></dt><dd>Where should timeouts and error handling happen? </dd></dl>
 
 </div>
 </div>

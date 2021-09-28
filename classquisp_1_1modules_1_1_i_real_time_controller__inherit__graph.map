@@ -1,7 +1,6 @@
 <map id="quisp::modules::IRealTimeController" name="quisp::modules::IRealTimeController">
-<area shape="rect" id="node1" title=" " alt="" coords="164,49,337,90"/>
-<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_real_time_controller.html" title="RealTimeController." alt="" coords="389,13,558,54"/>
-<area shape="rect" id="node5" href="$classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html" title=" " alt="" coords="385,77,561,133"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,56,116,83"/>
-<area shape="rect" id="node4" href="$classanonymous__namespace_02_real_time_controller__test_8cc_03_1_1_r_t_c_test_target.html" title=" " alt="" coords="609,5,776,61"/>
+<area shape="rect" id="node1" title=" " alt="" coords="164,41,337,83"/>
+<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_real_time_controller.html" title="RealTimeController." alt="" coords="389,5,558,47"/>
+<area shape="rect" id="node4" href="$classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html" title=" " alt="" coords="385,70,561,126"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,49,116,75"/>
 </map>

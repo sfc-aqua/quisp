@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['originalpurifyaction_2160',['OriginalPurifyAction',['../namespaceanonymous__namespace_02_purify_action__test_8cc_03.html#a826a86ef57ba934dee1cd7076418310c',1,'anonymous_namespace{PurifyAction_test.cc}']]],
-  ['originalswappingaction_2161',['OriginalSwappingAction',['../namespaceanonymous__namespace_02_swapping_action__test_8cc_03.html#aee9e3f1b65241b4c73df92b3581d0328',1,'anonymous_namespace{SwappingAction_test.cc}']]]
+  ['partneraddrqubitmap_2066',['PartnerAddrQubitMap',['../namespacequisp_1_1modules.html#a0634ef3aa49569e58c5a5208f240fb49',1,'quisp::modules']]],
+  ['partneraddrqubitmaprange_2067',['PartnerAddrQubitMapRange',['../namespacequisp_1_1modules.html#abf60aac8c13704b1b501124d946bbf2a',1,'quisp::modules']]],
+  ['purificationtable_2068',['PurificationTable',['../namespacequisp_1_1modules.html#a926af4afd0fbecd3cfe768865186cb44',1,'quisp::modules']]]
 ];

@@ -34,7 +34,6 @@ var NAVTREE =
       [ "ComponentProvider", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md27", null ],
       [ "Unit Testing", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md28", null ]
     ] ],
-    [ "Todo List", "todo.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -54,8 +53,7 @@ var NAVTREE =
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", "functions_vars" ],
-        [ "Typedefs", "functions_type.html", null ],
-        [ "Related Functions", "functions_rela.html", null ]
+        [ "Typedefs", "functions_type.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -72,14 +70,13 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_access_private_8h.html",
-"_q_n_i_c_8h.html#a27ddf07eb98a314604f173d9de2bbd77",
-"classanonymous__namespace_02_rule_engine__test_8cc_03_1_1_strategy.html#aba7edec170dd811da6fecf3a031e3b83",
-"classquisp_1_1modules_1_1_ho_m_controller.html#a4ac570fea4d8c22036dd268040bfc95f",
-"classquisp_1_1modules_1_1_stationary_qubit.html#a040600a0d47fd1c2895e76249bbefd6d",
-"classquisp_1_1rules_1_1actions_1_1_purify_action.html#a83ad32bb76a5d2ed5311b594e3a9a246",
-"classquisp__test_1_1gate_1_1_test_gate.html#a7107d6c6b567ef0b6de0df242b7158a4",
-"namespaceanonymous__namespace_02_connection_manager__test_8cc_03.html#aa06fff63ab0eae44b908b6b0e30b653a",
-"structquisp_1_1modules_1_1_swapping_config.html#a285463441ee86474a5c3ed6c3d3b5165"
+"_real_time_controller_8cc.html#a9904d5b47cc4c29cd51ee4472c932c4b",
+"classquisp_1_1modules_1_1_hardware_monitor.html#a7438f7da6259f8f26b80f6f60dde56b8",
+"classquisp_1_1modules_1_1_rule_engine.html#ad04a056802a4ce87531d6eea3a08ce9a",
+"classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#a79b4c5a058737e5605359696ae8b683d",
+"classquisp__test_1_1env_1_1_static_env.html#a8d97a2de2d1b7e53c706f9482a758470",
+"functions_vars_s.html",
+"structquisp_1_1modules_1_1emission__error__model.html#a5225caa81d6ff397b8fb32212e9f0fb8"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,11 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classquisp_1_1utils_1_1_i_component_provider_strategy.html" title=" " alt="" coords="5,181,164,222"/>
-<area shape="rect" id="node2" href="$classquisp_1_1utils_1_1_default_component_provider_strategy.html" title=" " alt="" coords="222,147,418,189"/>
-<area shape="rect" id="node3" href="$classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html" title=" " alt="" coords="212,213,428,254"/>
-<area shape="rect" id="node4" href="$classanonymous__namespace_02_application__test_8cc_03_1_1_strategy.html" title=" " alt="" coords="490,5,653,61"/>
-<area shape="rect" id="node5" href="$classanonymous__namespace_02_connection_manager__rule__generator__test_8cc_03_1_1_strategy.html" title=" " alt="" coords="478,85,665,141"/>
-<area shape="rect" id="node6" href="$classanonymous__namespace_02_connection_manager__test_8cc_03_1_1_strategy.html" title=" " alt="" coords="476,165,667,221"/>
-<area shape="rect" id="node7" href="$classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_strategy.html" title=" " alt="" coords="484,245,659,301"/>
-<area shape="rect" id="node8" href="$classanonymous__namespace_02_real_time_controller__test_8cc_03_1_1_strategy.html" title=" " alt="" coords="490,325,653,381"/>
-<area shape="rect" id="node9" href="$classanonymous__namespace_02_rule_engine__test_8cc_03_1_1_strategy.html" title=" " alt="" coords="490,405,653,461"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,13,165,39"/>
+<area shape="rect" id="node2" href="$classquisp__test_1_1configuration_1_1_configuration.html" title=" " alt="" coords="213,5,375,47"/>
 </map>

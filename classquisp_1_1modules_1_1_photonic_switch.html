@@ -141,7 +141,6 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classquisp_1_1modules_1_1_photonic_switch.html" title="PhotonicSwitch.">PhotonicSwitch</a>. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000022">Todo:</a></b></dt><dd>Documentation of the class header.</dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="ad156b47953e975371e4320dd314b052e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad156b47953e975371e4320dd314b052e">&#9670;&nbsp;</a></span>ensureCorrespondingNeighborAddress()</h2>
@@ -342,7 +341,7 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>At the moment, the only multiplexing scheme supported is circuit switching managed at the <a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a> level, so we have put a single reservation boolean here associated with the <a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a>. On processing of a ConnectionSetupRequest, this flag is checked and if available set. If the <a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a> is already reserved (e.g., competing reservations are flowing in the network, and part of the path is already reserved), then the <a class="el" href="classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager.">ConnectionManager</a> should fail this request and send a RejectConnectionSetupRequest message. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000020">Todo:</a></b></dt><dd>extend this to support other muxing styles (long-term research project, but should build on Aparicio) </dd></dl>
+<p>At the moment, the only multiplexing scheme supported is circuit switching managed at the <a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a> level, so we have put a single reservation boolean here associated with the <a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a>. On processing of a ConnectionSetupRequest, this flag is checked and if available set. If the <a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a> is already reserved (e.g., competing reservations are flowing in the network, and part of the path is already reserved), then the <a class="el" href="classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager.">ConnectionManager</a> should fail this request and send a RejectConnectionSetupRequest message. </p>
 
 </div>
 </div>

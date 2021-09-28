@@ -9,18 +9,12 @@ var hierarchy =
       [ "quisp::rules::actions::DoubleSelectionDualActionInv", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html", null ],
       [ "quisp::rules::actions::DoubleSelectionDualActionSecond", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_second.html", null ],
       [ "quisp::rules::actions::DoubleSelectionDualActionSecondInv", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_second_inv.html", null ],
-      [ "quisp::rules::actions::PurifyAction", "classquisp_1_1rules_1_1actions_1_1_purify_action.html", [
-        [ "anonymous_namespace{PurifyAction_test.cc}::PurifyAction", "classanonymous__namespace_02_purify_action__test_8cc_03_1_1_purify_action.html", null ]
-      ] ],
+      [ "quisp::rules::actions::PurifyAction", "classquisp_1_1rules_1_1actions_1_1_purify_action.html", null ],
       [ "quisp::rules::actions::RandomMeasureAction", "classquisp_1_1rules_1_1actions_1_1_random_measure_action.html", null ],
       [ "quisp::rules::actions::SimultaneousSwappingAction", "classquisp_1_1rules_1_1actions_1_1_simultaneous_swapping_action.html", null ],
-      [ "quisp::rules::actions::SwappingAction", "classquisp_1_1rules_1_1actions_1_1_swapping_action.html", [
-        [ "anonymous_namespace{SwappingAction_test.cc}::SwappingAction", "classanonymous__namespace_02_swapping_action__test_8cc_03_1_1_swapping_action.html", null ]
-      ] ]
+      [ "quisp::rules::actions::SwappingAction", "classquisp_1_1rules_1_1actions_1_1_swapping_action.html", null ]
     ] ],
-    [ "quisp::modules::BellPairStore", "classquisp_1_1modules_1_1_bell_pair_store.html", [
-      [ "anonymous_namespace{BellPairStore_test.cc}::BellPairStore", "classanonymous__namespace_02_bell_pair_store__test_8cc_03_1_1_bell_pair_store.html", null ]
-    ] ],
+    [ "quisp::modules::BellPairStore", "classquisp_1_1modules_1_1_bell_pair_store.html", null ],
     [ "omnetpp::cConfiguration", null, [
       [ "quisp_test::configuration::Configuration", "classquisp__test_1_1configuration_1_1_configuration.html", null ]
     ] ],
@@ -59,14 +53,7 @@ var hierarchy =
     [ "quisp::modules::entangledPhotons", "structquisp_1_1modules_1_1entangled_photons.html", null ],
     [ "quisp::utils::IComponentProviderStrategy", "classquisp_1_1utils_1_1_i_component_provider_strategy.html", [
       [ "quisp::utils::DefaultComponentProviderStrategy", "classquisp_1_1utils_1_1_default_component_provider_strategy.html", null ],
-      [ "quisp_test::strategy::TestComponentProviderStrategy", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html", [
-        [ "anonymous_namespace{Application_test.cc}::Strategy", "classanonymous__namespace_02_application__test_8cc_03_1_1_strategy.html", null ],
-        [ "anonymous_namespace{ConnectionManager_rule_generator_test.cc}::Strategy", "classanonymous__namespace_02_connection_manager__rule__generator__test_8cc_03_1_1_strategy.html", null ],
-        [ "anonymous_namespace{ConnectionManager_test.cc}::Strategy", "classanonymous__namespace_02_connection_manager__test_8cc_03_1_1_strategy.html", null ],
-        [ "anonymous_namespace{HardwareMonitor_test.cc}::Strategy", "classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_strategy.html", null ],
-        [ "anonymous_namespace{RealTimeController_test.cc}::Strategy", "classanonymous__namespace_02_real_time_controller__test_8cc_03_1_1_strategy.html", null ],
-        [ "anonymous_namespace{RuleEngine_test.cc}::Strategy", "classanonymous__namespace_02_rule_engine__test_8cc_03_1_1_strategy.html", null ]
-      ] ]
+      [ "quisp_test::strategy::TestComponentProviderStrategy", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html", null ]
     ] ],
     [ "quisp::modules::InterfaceInfo", "structquisp_1_1modules_1_1_interface_info.html", null ],
     [ "omnetpp::cConfiguration::KeyValue", null, [
@@ -81,7 +68,6 @@ var hierarchy =
     [ "quisp::modules::NeighborInfo", "structquisp_1_1modules_1_1_neighbor_info.html", null ],
     [ "quisp::modules::output_count", "structquisp_1_1modules_1_1output__count.html", null ],
     [ "quisp::modules::PhotonTransmissionConfig", "structquisp_1_1modules_1_1_photon_transmission_config.html", null ],
-    [ "anonymous_namespace{AccessPrivate.h}::private_access_detail::private_access< PtrType, PtrValue, TagType >", "structanonymous__namespace_02_access_private_8h_03_1_1private__access__detail_1_1private__access.html", null ],
     [ "quisp::modules::Process", "structquisp_1_1modules_1_1_process.html", null ],
     [ "quisp::modules::process_id", "structquisp_1_1modules_1_1process__id.html", null ],
     [ "quisp::modules::purification_result", "structquisp_1_1modules_1_1purification__result.html", null ],
@@ -109,49 +95,29 @@ var hierarchy =
       [ "quisp::modules::EntangledPhotonPairSource", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html", null ],
       [ "quisp::modules::HoMController", "classquisp_1_1modules_1_1_ho_m_controller.html", null ],
       [ "quisp::modules::IApplication", "classquisp_1_1modules_1_1_i_application.html", [
-        [ "quisp::modules::Application", "classquisp_1_1modules_1_1_application.html", [
-          [ "anonymous_namespace{Application_test.cc}::AppTestTarget", "classanonymous__namespace_02_application__test_8cc_03_1_1_app_test_target.html", null ]
-        ] ]
+        [ "quisp::modules::Application", "classquisp_1_1modules_1_1_application.html", null ]
       ] ],
       [ "quisp::modules::IConnectionManager", "classquisp_1_1modules_1_1_i_connection_manager.html", [
-        [ "quisp::modules::ConnectionManager", "classquisp_1_1modules_1_1_connection_manager.html", [
-          [ "anonymous_namespace{ConnectionManager_rule_generator_test.cc}::ConnectionManager", "classanonymous__namespace_02_connection_manager__rule__generator__test_8cc_03_1_1_connection_manager.html", null ],
-          [ "anonymous_namespace{ConnectionManager_test.cc}::ConnectionManagerTestTarget", "classanonymous__namespace_02_connection_manager__test_8cc_03_1_1_connection_manager_test_target.html", null ]
-        ] ]
+        [ "quisp::modules::ConnectionManager", "classquisp_1_1modules_1_1_connection_manager.html", null ]
       ] ],
       [ "quisp::modules::IHardwareMonitor", "classquisp_1_1modules_1_1_i_hardware_monitor.html", [
-        [ "quisp::modules::HardwareMonitor", "classquisp_1_1modules_1_1_hardware_monitor.html", [
-          [ "anonymous_namespace{HardwareMonitor_test.cc}::HardwareMonitorTestTarget", "classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_hardware_monitor_test_target.html", null ]
-        ] ],
+        [ "quisp::modules::HardwareMonitor", "classquisp_1_1modules_1_1_hardware_monitor.html", null ],
         [ "quisp_test::mock_modules::hardware_monitor::MockHardwareMonitor", "classquisp__test_1_1mock__modules_1_1hardware__monitor_1_1_mock_hardware_monitor.html", null ]
       ] ],
       [ "quisp::modules::IRealTimeController", "classquisp_1_1modules_1_1_i_real_time_controller.html", [
-        [ "quisp::modules::RealTimeController", "classquisp_1_1modules_1_1_real_time_controller.html", [
-          [ "anonymous_namespace{RealTimeController_test.cc}::RTCTestTarget", "classanonymous__namespace_02_real_time_controller__test_8cc_03_1_1_r_t_c_test_target.html", null ]
-        ] ],
+        [ "quisp::modules::RealTimeController", "classquisp_1_1modules_1_1_real_time_controller.html", null ],
         [ "quisp_test::mock_modules::realtime_controller::MockRealTimeController", "classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html", null ]
       ] ],
       [ "quisp::modules::IRoutingDaemon", "classquisp_1_1modules_1_1_i_routing_daemon.html", [
-        [ "anonymous_namespace{HardwareMonitor_test.cc}::MockRoutingDaemon", "classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_mock_routing_daemon.html", null ],
         [ "quisp::modules::RoutingDaemon", "classquisp_1_1modules_1_1_routing_daemon.html", null ],
         [ "quisp_test::mock_modules::routing_daemon::MockRoutingDaemon", "classquisp__test_1_1mock__modules_1_1routing__daemon_1_1_mock_routing_daemon.html", null ]
       ] ],
       [ "quisp::modules::IRuleEngine", "classquisp_1_1modules_1_1_i_rule_engine.html", [
-        [ "quisp::modules::RuleEngine", "classquisp_1_1modules_1_1_rule_engine.html", [
-          [ "anonymous_namespace{RuleEngine_test.cc}::RuleEngineTestTarget", "classanonymous__namespace_02_rule_engine__test_8cc_03_1_1_rule_engine_test_target.html", null ]
-        ] ],
+        [ "quisp::modules::RuleEngine", "classquisp_1_1modules_1_1_rule_engine.html", null ],
         [ "quisp_test::mock_modules::rule_engine::MockRuleEngine", "classquisp__test_1_1mock__modules_1_1rule__engine_1_1_mock_rule_engine.html", null ]
       ] ],
       [ "quisp::modules::IStationaryQubit", "classquisp_1_1modules_1_1_i_stationary_qubit.html", [
-        [ "quisp::modules::StationaryQubit", "classquisp_1_1modules_1_1_stationary_qubit.html", [
-          [ "anonymous_namespace{BellPairStore_test.cc}::MockQubit", "classanonymous__namespace_02_bell_pair_store__test_8cc_03_1_1_mock_qubit.html", null ],
-          [ "anonymous_namespace{HardwareMonitor_test.cc}::MockStationaryQubit", "classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_mock_stationary_qubit.html", null ],
-          [ "anonymous_namespace{RealTimeController_test.cc}::MockStationaryQubit", "classanonymous__namespace_02_real_time_controller__test_8cc_03_1_1_mock_stationary_qubit.html", null ],
-          [ "anonymous_namespace{RuleEngine_test.cc}::MockStationaryQubit", "classanonymous__namespace_02_rule_engine__test_8cc_03_1_1_mock_stationary_qubit.html", null ],
-          [ "anonymous_namespace{StationaryQubit_gate_error_test.cc}::StatQubitTarget", "classanonymous__namespace_02_stationary_qubit__gate__error__test_8cc_03_1_1_stat_qubit_target.html", null ],
-          [ "anonymous_namespace{StationaryQubit_memory_error_test.cc}::StatQubitTarget", "classanonymous__namespace_02_stationary_qubit__memory__error__test_8cc_03_1_1_stat_qubit_target.html", null ],
-          [ "anonymous_namespace{StationaryQubit_test.cc}::StatQubitTarget", "classanonymous__namespace_02_stationary_qubit__test_8cc_03_1_1_stat_qubit_target.html", null ]
-        ] ],
+        [ "quisp::modules::StationaryQubit", "classquisp_1_1modules_1_1_stationary_qubit.html", null ],
         [ "quisp_test::mock_modules::stationary_qubit::MockQubit", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html", null ]
       ] ],
       [ "quisp::modules::PhotonicSwitch", "classquisp_1_1modules_1_1_photonic_switch.html", null ],

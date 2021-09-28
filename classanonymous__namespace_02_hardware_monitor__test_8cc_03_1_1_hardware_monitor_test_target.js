@@ -1,4 +1,0 @@
-var classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_hardware_monitor_test_target =
-[
-    [ "HardwareMonitorTestTarget", "classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_hardware_monitor_test_target.html#a9c6645bf0a700646cd5f75edefa5f738", null ]
-];

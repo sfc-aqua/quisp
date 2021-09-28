@@ -1,10 +1,4 @@
 <map id="quisp_test::strategy::TestComponentProviderStrategy" name="quisp_test::strategy::TestComponentProviderStrategy">
-<area shape="rect" id="node1" title=" " alt="" coords="212,213,428,254"/>
-<area shape="rect" id="node3" href="$classanonymous__namespace_02_application__test_8cc_03_1_1_strategy.html" title=" " alt="" coords="490,5,653,61"/>
-<area shape="rect" id="node4" href="$classanonymous__namespace_02_connection_manager__rule__generator__test_8cc_03_1_1_strategy.html" title=" " alt="" coords="478,85,665,141"/>
-<area shape="rect" id="node5" href="$classanonymous__namespace_02_connection_manager__test_8cc_03_1_1_strategy.html" title=" " alt="" coords="476,165,667,221"/>
-<area shape="rect" id="node6" href="$classanonymous__namespace_02_hardware_monitor__test_8cc_03_1_1_strategy.html" title=" " alt="" coords="484,245,659,301"/>
-<area shape="rect" id="node7" href="$classanonymous__namespace_02_real_time_controller__test_8cc_03_1_1_strategy.html" title=" " alt="" coords="490,325,653,381"/>
-<area shape="rect" id="node8" href="$classanonymous__namespace_02_rule_engine__test_8cc_03_1_1_strategy.html" title=" " alt="" coords="490,405,653,461"/>
-<area shape="rect" id="node2" href="$classquisp_1_1utils_1_1_i_component_provider_strategy.html" title=" " alt="" coords="5,213,164,254"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,95,221,136"/>
+<area shape="rect" id="node2" href="$classquisp_1_1utils_1_1_i_component_provider_strategy.html" title=" " alt="" coords="34,5,193,47"/>
 </map>

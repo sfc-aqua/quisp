@@ -190,7 +190,7 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Once we begin using dynamic routing protocols, this is where the messages will be handled. This perhaps will also be how we communicate with the other important daemons in the qrsa. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000040">Todo:</a></b></dt><dd>Handle dynamic routing protocol messages. </dd></dl>
+<p>Once we begin using dynamic routing protocols, this is where the messages will be handled. This perhaps will also be how we communicate with the other important daemons in the qrsa. TODO Handle dynamic routing protocol messages. </p>
 
 </div>
 </div>
@@ -219,13 +219,12 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html">RoutingDaemon</a>. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000036">Todo:</a></b></dt><dd>Documentation of the class header.</dd></dl>
 <p>The <a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html">RoutingDaemon</a> is one of the five key modules in the software for a quantum repeater/router (qrsa). It will be responsible for running dynamic routing protocols, such as qOSPF, qBGP, etc.</p>
 <p>It communicates with other RoutingDaemons, in other nodes on the network, as in the classical Internet. Internally, its role is to keep track of the QNICs and the links by communicating with the <a class="el" href="classquisp_1_1modules_1_1_hardware_monitor.html" title="HardwareMonitor.">HardwareMonitor</a>, and to provide information to the <a class="el" href="classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager.">ConnectionManager</a> when requested. (There is also one place where the <a class="el" href="classquisp_1_1modules_1_1_rule_engine.html" title="RuleEngine.">RuleEngine</a> needs access to information maintained by the RD.)</p>
 <p>The above is the intended design.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000037">Todo:</a></b></dt><dd>In fact, the <a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html">RoutingDaemon</a> as it exists today uses special, internal OMNeT++ magic to directly access the network topology, as stored in the simulator, rather than dynamically discovering it. That should be corrected.</dd></dl>
+<p>TODO In fact, the <a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html">RoutingDaemon</a> as it exists today uses special, internal OMNeT++ magic to directly access the network topology, as stored in the simulator, rather than dynamically discovering it. That should be corrected.</p>
 <p>At the moment, the RD is independent of the end-to-end reservation of resources, as dictated by the multiplexing (muxing) discpline in use. This means that it always returns a single, best path to connect to the requested node. A consequence is that ConnectionSetupRequest can fail if the resource management discipline is fully blocking, as in circuit switching, which is the first discipline we are implementing.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000038">Todo:</a></b></dt><dd>Also, this code is built as a Module, via the Define_Module call; the other important modules are classes. That distinction needs to be addressed. </dd></dl>
+<p>TODO Also, this code is built as a Module, via the Define_Module call; the other important modules are classes. That distinction needs to be addressed. </p>
 
 </div>
 </div>
@@ -277,8 +276,7 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>This is the only routine, at the moment, with any outside contact. Rather than exchanging a message with those who need this information (<a class="el" href="classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager.">ConnectionManager</a>, mainly, and in one case <a class="el" href="classquisp_1_1modules_1_1_rule_engine.html" title="RuleEngine.">RuleEngine</a>), this is a direct call that they make.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000039">Todo:</a></b></dt><dd>Decide if this is really the right way to do this. Likely also hooked up in the issue of module v. class. </dd></dl>
+<p>This is the only routine, at the moment, with any outside contact. Rather than exchanging a message with those who need this information (<a class="el" href="classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager.">ConnectionManager</a>, mainly, and in one case <a class="el" href="classquisp_1_1modules_1_1_rule_engine.html" title="RuleEngine.">RuleEngine</a>), this is a direct call that they make. </p>
 
 <p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_routing_daemon.html#a61143da95188b64280c07a1294855b07">quisp::modules::IRoutingDaemon</a>.</p>
 
