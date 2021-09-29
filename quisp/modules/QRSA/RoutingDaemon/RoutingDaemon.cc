@@ -54,10 +54,7 @@ void RoutingDaemon::initialize(int stage) {
   // Topology creation for routing table
   cTopology *topo = new cTopology("topo");
   // veryfication?
-  cMsgPar *yes = new cMsgPar();
-  yes->setStringValue("yes");
-  topo->extractByParameter("includeInTopo", yes->str().c_str());  // Any node that has a parameter includeInTopo will be included in routing
-  delete (yes);
+  topo->extractByParameter("includeInTopo", "\"yes\"");  // Any node that has a parameter includeInTopo will be included in routing
   // EV << "cTopology found " << topo->getNumNodes() << " nodes\n";
   if (topo->getNumNodes() == 0 || topo == nullptr) {  // If no node with the parameter & value found, do nothing.
     return;
@@ -157,9 +154,7 @@ int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr) {
 
 int RoutingDaemon::returnNumEndNodes() {
   cTopology *topo = new cTopology("topo");
-  cMsgPar *yes = new cMsgPar();
-  yes->setStringValue("yes");
-  topo->extractByParameter("includeInTopo", yes->str().c_str());
+  topo->extractByParameter("includeInTopo", "\"yes\"");
   int index = 0;
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);
