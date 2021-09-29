@@ -51,11 +51,12 @@ class QuantumChannel : public cDatarateChannel {
 
 Define_Channel(QuantumChannel)
 
-    QuantumChannel::QuantumChannel() {}
+    QuantumChannel::QuantumChannel()
+    : Q_to_the_distance(5, 5) {}
 
 void QuantumChannel::initialize() {
   cDatarateChannel::initialize();
-  Q_to_the_distance(5, 5);
+  ;
   distance = par("distance");  // in km
 
   /*double Z_error_ratio = par("Z_error_ratio");//par("name") will be read from .ini or .ned file
