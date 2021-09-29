@@ -553,7 +553,6 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
   // 0. this resorce update only update just one entanglement
   int partner_address;
   IStationaryQubit *qubit;
-  unsigned long next_rule_id;
   if (rp.size() == 0) {
     return;
   }
@@ -574,13 +573,16 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
               qubit->Unlock();
               // remove qubit from resource list in the rule
               (*rule)->resources.erase(qubit_record);
-              next_rule_id = (*rule)->next_rule_id;
-              break;
+              unsigned long next_rule_id = (*rule)->next_rule_id;
+              for (; rule != process->cend(); ++rule) {
+                if ((*rule)->rule_index == next_rule_id) {
+                  (*rule)->addResource(partner_address, qubit);
+                  return;
+                }
+              }
+              error("next rule not found: RuleSetID: %l, RuleId: %l, index: %d", ruleset_id, rule_id, index);
             }
           }
-        } else if ((*rule)->rule_index == next_rule_id) {
-          (*rule)->addResource(partner_address, qubit);
-          return;
         }
       }
     }
