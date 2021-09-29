@@ -309,7 +309,7 @@ void HardwareMonitor::finish() {
       basis_combination += it->second.my_basis;
       basis_combination += it->second.partner_basis;
       if (tomography_data[qnic][partner_address].count(basis_combination) != 1) {
-        error("Basis combination for tomography with partner: %s at %d is not found", partner_address, qnic);
+        error("Basis combination for tomography with partner: %d at %d is not found", partner_address, qnic);
       }
       tomography_data[qnic][partner_address][basis_combination].total_count++;
       // the number of total measurement
