@@ -60,6 +60,7 @@ class ConnectionManager : public IConnectionManager {
 
   void initialize() override;
   void handleMessage(cMessage *msg) override;
+  void finish() override;
 
   void respondToRequest(ConnectionSetupRequest *pk);
   void tryRelayRequestToNextHop(ConnectionSetupRequest *pk);
