@@ -132,6 +132,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     pk->setQnic_type(info->qnic.type);
 
     send(pk, "RouterPort$o");
+    delete request;
     return;
   }
 
@@ -154,6 +155,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     QNIC_type partner_qnic_type = ack->getQnic_type();
     int partner_qnic_index = ack->getQnic_index();
     sendLinkTomographyRuleSet(partner_address, my_address, partner_qnic_type, partner_qnic_index, RuleSet_id);
+    delete ack;
     return;
   }
 
@@ -247,6 +249,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
         send(pk, "RouterPort$o");
       }
     }
+    delete result;
     return;
   }
 }
@@ -1225,9 +1228,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module)
 cModule *HardwareMonitor::getQNodeWithAddress(int address) {
   cTopology *topo = new cTopology("topo");
   // veryfication?
-  cMsgPar *yes = new cMsgPar();
-  yes->setStringValue("yes");
-  topo->extractByParameter("includeInTopo", yes->str().c_str());
+  topo->extractByParameter("includeInTopo", "\"yes\"");
   int addr;
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);

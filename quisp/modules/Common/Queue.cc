@@ -110,7 +110,7 @@ void Queue::handleMessage(cMessage *msg) {
   emit(busy_signal, true);
 }
 
-void Queue::finish() { delete end_transmission_event; }
+void Queue::finish() { cancelAndDelete(end_transmission_event); }
 
 void Queue::refreshDisplay() const {
   getDisplayString().setTagArg("t", 0, is_busy ? "transmitting" : "idle");

@@ -1087,5 +1087,11 @@ void ConnectionManager::scheduleRequestRetry(int qnic_address) {
   return;
 }
 
+void ConnectionManager::finish() {
+  for (auto *msg : request_send_timing) {
+    cancelAndDelete(msg);
+  }
+}
+
 }  // namespace modules
 }  // namespace quisp
