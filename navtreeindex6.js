@@ -1,5 +1,6 @@
 var NAVTREEINDEX6 =
 {
+"functions_vars_r.html":[3,3,2,17],
 "functions_vars_s.html":[3,3,2,18],
 "functions_vars_t.html":[3,3,2,19],
 "functions_vars_u.html":[3,3,2,20],
@@ -248,6 +249,5 @@ var NAVTREEINDEX6 =
 "structquisp_1_1modules_1_1_two_qubit_gate_error_model.html#af458c8c873372d820ba402d63792c950":[3,0,0,1,13,2],
 "structquisp_1_1modules_1_1emission__error__model.html":[3,0,0,1,11],
 "structquisp_1_1modules_1_1emission__error__model.html#a19a8a46b39154ca7817c51d910de4692":[3,0,0,1,11,6],
-"structquisp_1_1modules_1_1emission__error__model.html#a24285f11793dee4b839d634d926d2d0f":[3,0,0,1,11,0],
-"structquisp_1_1modules_1_1emission__error__model.html#a2692e0bc7b8d6a2d6c6dc896d7a07911":[3,0,0,1,11,3]
+"structquisp_1_1modules_1_1emission__error__model.html#a24285f11793dee4b839d634d926d2d0f":[3,0,0,1,11,0]
 };
