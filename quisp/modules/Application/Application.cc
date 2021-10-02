@@ -30,8 +30,8 @@ void Application::initialize() {
   }
 
   my_address = provider.getQNode()->par("address");
-  is_e2e_connection = par("EndToEndConnection"); 
-  num_measure = par("distant_measure_count");  
+  is_e2e_connection = par("EndToEndConnection");
+  num_measure = par("distant_measure_count");
 
   WATCH_VECTOR(other_end_node_addresses);
   storeEndNodeAddresses();
@@ -40,7 +40,7 @@ void Application::initialize() {
     return;
   }
 
-  traffic_pattern = par("TrafficPattern"); 
+  traffic_pattern = par("TrafficPattern");
 
   if (traffic_pattern == 0) {
     EV_INFO << "EndToEndConnection is set true. but no traffic pattern specified; proceeding with no traffic\n";
@@ -75,9 +75,9 @@ void Application::initialize() {
 }
 
 /**
-* \brief Generate connection setup response packet
-* @param dest_addr Destination address of this request
-*/
+ * \brief Generate connection setup response packet
+ * @param dest_addr Destination address of this request
+ */
 ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr, int num_of_required_resources) {
   ConnectionSetupRequest *pk = new ConnectionSetupRequest("ConnSetupRequest");
   pk->setActual_srcAddr(my_address);
@@ -90,10 +90,10 @@ ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr,
 }
 
 /**
-* \brief Message handler
-* 
-* @param msg OMNeT++ cMessage 
-*/
+ * \brief Message handler
+ *
+ * @param msg OMNeT++ cMessage
+ */
 void Application::handleMessage(cMessage *msg) {
   if (dynamic_cast<deleteThisModule *>(msg) != nullptr) {
     deleteModule();
@@ -116,8 +116,8 @@ void Application::handleMessage(cMessage *msg) {
 }
 
 /**
-* \brief Store communicatable EndNode addresses
-*/
+ * \brief Store communicatable EndNode addresses
+ */
 void Application::storeEndNodeAddresses() {
   cTopology *topo = new cTopology("topo");
 
@@ -138,8 +138,8 @@ void Application::storeEndNodeAddresses() {
 }
 
 /**
-* \brief Return one randome EndNode address
-*/
+ * \brief Return one randome EndNode address
+ */
 int Application::getOneRandomEndNodeAddress() {
   int random_index = intuniform(0, other_end_node_addresses.size() - 1);
   return other_end_node_addresses[random_index];

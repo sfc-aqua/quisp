@@ -26,39 +26,39 @@ namespace modules {
 class BellStateAnalyzer : public cSimpleModule {
  private:
   // for performance analysis
-  long n_res = 0;
-  int trials = 0;
-  simsignal_t GOD_num_resSignal;
-  std::string BSA_perf_output_filename;
-  std::vector<simtime_t> creation_time;
-  simsignal_t average_num_trialSignal;
-  std::vector<int> number_of_trials;
-  int nwidth = 0;
-  int duration = 1;
+  long n_res = 0;  ///< The number of resources for performance analysis
+  int trials = 0;  ///< No longer used
+  simsignal_t GOD_num_resSignal;  ///< The number of resources for signaling
+  std::string BSA_perf_output_filename;  ///< No longer used
+  std::vector<simtime_t> creation_time;  ///< No longer used
+  simsignal_t average_num_trialSignal;  ///< No longer used
+  std::vector<int> number_of_trials;  ///< No longer used
+  int nwidth = 0;  ///< No longer used
+  int duration = 1;  ///< No longer used
   // parameters
-  double darkcount_probability;
-  double loss_rate;
-  double error_rate;
+  double darkcount_probability;  ///< Probability the darkcount happen in BSA
+  double loss_rate;  ///< Not implemented yet, but will be used for photon loss in BSA?
+  double error_rate;  ///< Not implemetned yet
   // bool left_clicked;
   // bool right_click;
-  bool left_last_photon_detected;
-  bool right_last_photon_detected;
-  bool send_result;
-  double required_precision;  // 1.5ns
-  simtime_t left_arrived_at;
-  int left_photon_origin_node_address;
-  int left_photon_origin_qnic_address;
-  int left_photon_origin_qnic_type;
-  int left_photon_origin_qubit_address;
-  bool left_photon_Xerr;
-  bool left_photon_Zerr;
-  StationaryQubit *left_statQubit_ptr;
-  simtime_t right_arrived_at;
-  int right_photon_origin_node_address;
-  int right_photon_origin_qnic_address;
-  int right_photon_origin_qnic_type;
-  int right_photon_origin_qubit_address;
-  bool right_photon_Xerr;
+  bool left_last_photon_detected;  ///< Last photon from left node in this trial is detected
+  bool right_last_photon_detected;  ///< Last photon from right node in this trial is detected
+  bool send_result;  ///< If this is true, send BSA finish and accumulated results to neigbor nodes. If it's false, just send accumulate result in HoM Controller
+  double required_precision;  ///< Precision of photon arrivial time // 1.5ns
+  simtime_t left_arrived_at;  ///< Simulation time that left photon arrived at BSA
+  int left_photon_origin_node_address;  ///< Node address of left photon
+  int left_photon_origin_qnic_address;  ///< QNIC address of left photon
+  int left_photon_origin_qnic_type;  ///< QNIC type of left photon
+  int left_photon_origin_qubit_address;  ///< Address of qubit that emits left photon
+  bool left_photon_Xerr;  ///< True: Left phothon has X error
+  bool left_photon_Zerr;  ///< True: Left photon has Z error
+  StationaryQubit *left_statQubit_ptr;  ///< Instance of qubit memory of left node
+  simtime_t right_arrived_at;  ///< Simulation time that right photon arrived at BSA
+  int right_photon_origin_node_address;  ///< Node address of right photon
+  int right_photon_origin_qnic_address;  ///< QNIC address of right photon
+  int right_photon_origin_qnic_type;  ///< QNIC type of right photon
+  int right_photon_origin_qubit_address;  ///< Address of qubit that emits right photon
+  bool right_photon_Xerr; 
   bool right_photon_Zerr;
   bool right_photon_lost;
   bool left_photon_lost;
@@ -87,6 +87,10 @@ class BellStateAnalyzer : public cSimpleModule {
 
 Define_Module(BellStateAnalyzer);
 
+/**
+ * \brief Initialize Bell State Analyzer
+ *
+ */
 void BellStateAnalyzer::initialize() {
   // performance analysis
   GOD_num_resSignal = registerSignal("Num_Bell_state");
@@ -119,7 +123,7 @@ void BellStateAnalyzer::initialize() {
   left_photon_lost = false;
 }
 
-/*
+/**
  * Execute the BSA operation.
  * Input: msg is a "photon", with a few bits of info of its status.  msg arrives even if photon is lost; this msg will
  * indicate that.  Photon is assumed to be entangled with a stationary memory somewhere.  Photon has been updated to
