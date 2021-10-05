@@ -19,7 +19,7 @@ Application::Application() : provider(utils::ComponentProvider{this}) {}
 /**
  * \brief Initialize module.
  *
- * If the node type is not EndNode, this module is atomatically deleted in this function.
+ * If the node type is not EndNode, this module is automatically deleted in this function.
  */
 void Application::initialize() {
   // Since we only need this module in EndNode, delete it otherwise.
