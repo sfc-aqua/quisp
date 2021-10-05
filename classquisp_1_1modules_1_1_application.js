@@ -12,5 +12,6 @@ var classquisp_1_1modules_1_1_application =
     [ "num_measure", "classquisp_1_1modules_1_1_application.html#a3cff36d6330ff1643f9c1dfaa2e253b2", null ],
     [ "number_of_resources", "classquisp_1_1modules_1_1_application.html#a880d00c8e73ebc3da5efc85bb5f68d1b", null ],
     [ "other_end_node_addresses", "classquisp_1_1modules_1_1_application.html#ae8d0294e97694e0800c33d26ea2a2094", null ],
-    [ "provider", "classquisp_1_1modules_1_1_application.html#ad1f8abb1b87eec2214b88556dc0a2c8d", null ]
+    [ "provider", "classquisp_1_1modules_1_1_application.html#ad1f8abb1b87eec2214b88556dc0a2c8d", null ],
+    [ "traffic_pattern", "classquisp_1_1modules_1_1_application.html#ae2655130ae0f93ea8249e921aad7f3ea", null ]
 ];

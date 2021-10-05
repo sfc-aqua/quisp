@@ -25,14 +25,25 @@
 var NAVTREE =
 [
   [ "QuISP", "index.html", [
+    [ "Research questions", "index.html#autotoc_md1", null ],
+    [ "Simulation goals", "index.html#autotoc_md2", null ],
+    [ "Current status", "index.html#autotoc_md3", null ],
+    [ "Installation requirements", "index.html#autotoc_md4", null ],
+    [ "Building and running", "index.html#autotoc_md5", null ],
+    [ "Moving into useful work", "index.html#autotoc_md6", null ],
+    [ "Development tools", "index.html#autotoc_md7", null ],
+    [ "Is QuISP right for me?", "index.html#autotoc_md8", null ],
+    [ "Learning more", "index.html#autotoc_md9", null ],
+    [ "Contributing", "index.html#autotoc_md10", null ],
+    [ "License", "index.html#autotoc_md11", null ],
     [ "Test Utilities", "md_quisp_test_utils__r_e_a_d_m_e.html", [
-      [ "Usage", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md23", null ],
-      [ "Grab a packet", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md24", null ],
-      [ "Example", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md25", null ]
+      [ "Usage", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md35", null ],
+      [ "Grab a packet", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md36", null ],
+      [ "Example", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md37", null ]
     ] ],
     [ "quisp::utils", "md_quisp_utils__r_e_a_d_m_e.html", [
-      [ "ComponentProvider", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md27", null ],
-      [ "Unit Testing", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md28", null ]
+      [ "ComponentProvider", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md39", null ],
+      [ "Unit Testing", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md40", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -71,12 +82,12 @@ var NAVTREEINDEX =
 [
 "_access_private_8h.html",
 "_real_time_controller_8cc.html#a9904d5b47cc4c29cd51ee4472c932c4b",
-"classquisp_1_1modules_1_1_hardware_monitor.html#a715deb69363050ca9c969cbc2d466c7d",
-"classquisp_1_1modules_1_1_rule_engine.html#ace96dd8c067d397fc7fd427d559492d3",
-"classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#a702f3de6c8642ac0e5103d9398edd3f8",
-"classquisp__test_1_1env_1_1_static_env.html#a8b265dfb459c3e33f69956aaf966898b",
-"functions_vars_r.html",
-"structquisp_1_1modules_1_1emission__error__model.html#a2692e0bc7b8d6a2d6c6dc896d7a07911"
+"classquisp_1_1modules_1_1_hardware_monitor.html#a6aa832ec90f9c644018146f26ca28dbd",
+"classquisp_1_1modules_1_1_rule_engine.html#acb5c93d57eb484cc8a97e9b30cc25d13",
+"classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#a6b062306977390d612a6dfea67898eea",
+"classquisp__test_1_1env_1_1_static_env.html#a89b0d4c71d79060a4676b1702230375f",
+"functions_vars_q.html",
+"structquisp_1_1modules_1_1_two_qubit_gate_error_model.html#a79a8517b23c8e8696fb4a1006abfe8b2"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
