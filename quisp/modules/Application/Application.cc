@@ -19,7 +19,7 @@ Application::Application() : provider(utils::ComponentProvider{this}) {}
 /**
  * \brief Initialize module.
  *
- * If we're not in and end node, this module is not necessary.
+ * If the node type is not EndNode, this module is automatically deleted in this function.
  */
 void Application::initialize() {
   // Since we only need this module in EndNode, delete it otherwise.
@@ -40,7 +40,7 @@ void Application::initialize() {
     return;
   }
 
-  int traffic_pattern = par("TrafficPattern");
+  traffic_pattern = par("TrafficPattern");
 
   if (traffic_pattern == 0) {
     EV_INFO << "EndToEndConnection is set true. but no traffic pattern specified; proceeding with no traffic\n";
@@ -74,6 +74,10 @@ void Application::initialize() {
   error("Invalid TrafficPattern specified.");
 }
 
+/**
+ * \brief Generate connection setup response packet
+ * @param dest_addr Destination address of this request
+ */
 ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr, int num_of_required_resources) {
   ConnectionSetupRequest *pk = new ConnectionSetupRequest("ConnSetupRequest");
   pk->setActual_srcAddr(my_address);
@@ -85,6 +89,11 @@ ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr,
   return pk;
 }
 
+/**
+ * \brief Message handler
+ *
+ * @param msg OMNeT++ cMessage
+ */
 void Application::handleMessage(cMessage *msg) {
   if (dynamic_cast<deleteThisModule *>(msg) != nullptr) {
     deleteModule();
@@ -106,6 +115,9 @@ void Application::handleMessage(cMessage *msg) {
   error("Application not recognizing this packet");
 }
 
+/**
+ * \brief Store communicatable EndNode addresses
+ */
 void Application::storeEndNodeAddresses() {
   cTopology *topo = new cTopology("topo");
 
@@ -125,6 +137,9 @@ void Application::storeEndNodeAddresses() {
   delete topo;
 }
 
+/**
+ * \brief Return one randome EndNode address
+ */
 int Application::getOneRandomEndNodeAddress() {
   int random_index = intuniform(0, other_end_node_addresses.size() - 1);
   return other_end_node_addresses[random_index];
