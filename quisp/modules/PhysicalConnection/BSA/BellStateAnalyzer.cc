@@ -50,24 +50,24 @@ class BellStateAnalyzer : public cSimpleModule {
   int left_photon_origin_qnic_address;  ///< QNIC address of left photon
   int left_photon_origin_qnic_type;  ///< QNIC type of left photon
   int left_photon_origin_qubit_address;  ///< Address of qubit that emits left photon
-  bool left_photon_Xerr;  ///< True: Left phothon has X error
-  bool left_photon_Zerr;  ///< True: Left photon has Z error
+  bool left_photon_Xerr;  ///< True: Photon from left node has X error
+  bool left_photon_Zerr;  ///< True: Photon from left node has Z error
+  bool left_photon_lost;  ///< True: Photon from left node is lost
   StationaryQubit *left_statQubit_ptr;  ///< Instance of qubit memory of left node
   simtime_t right_arrived_at;  ///< Simulation time that right photon arrived at BSA
   int right_photon_origin_node_address;  ///< Node address of right photon
   int right_photon_origin_qnic_address;  ///< QNIC address of right photon
   int right_photon_origin_qnic_type;  ///< QNIC type of right photon
   int right_photon_origin_qubit_address;  ///< Address of qubit that emits right photon
-  bool right_photon_Xerr; 
-  bool right_photon_Zerr;
-  bool right_photon_lost;
-  bool left_photon_lost;
-  StationaryQubit *right_statQubit_ptr;
+  bool right_photon_Xerr;  ///< True: Photon from right node has X error
+  bool right_photon_Zerr;  ///< True: Photon from right node has Z error
+  bool right_photon_lost;  ///< True: Photon from right node is lost
+  StationaryQubit *right_statQubit_ptr;  ///< Instance of qubit memory of right node
   int count_X = 0, count_Y = 0, count_Z = 0, count_I = 0, count_L = 0, count_total = 0;  // for debug
   // bool handshake = false;
-  bool this_trial_done = false;
-  double BSAsuccess_rate = 0.5 * 0.8 * 0.8;  // detector probability = 0.8
-  int left_count, right_count = 0;
+  bool this_trial_done = false;  ///< True: Finish this trial of BSA
+  double BSAsuccess_rate = 0.5 * 0.8 * 0.8;  ///< The probability of BSA success. Maximum probability of success in linear optics is 0.5 and detector probability is 0.8.
+  int left_count, right_count = 0;  ///< The number of photon count.
   int DEBUG_darkcount_left = 0;
   int DEBUG_darkcount_right = 0;
   int DEBUG_darkcount_both = 0;
