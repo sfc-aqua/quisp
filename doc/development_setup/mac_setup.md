@@ -1,3 +1,0 @@
-# MacOS Setup
-
-(TBD)
