@@ -1,13 +1,11 @@
 /** \file BellStateAnalyzer.cc
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *
  *  \brief BellStateAnalyzer
  */
 #include <PhotonicQubit_m.h>
-#include <classical_messages_m.h>
-#include <modules/QRSA/HardwareMonitor/HardwareMonitor.h>
+#include <messages/classical_messages.h>
+#include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
 #include <omnetpp.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,55 +20,54 @@ namespace quisp {
 namespace modules {
 
 /** \class BellStateAnalyzer BellStateAnalyzer.cc
- *  \todo Documentation of the class header.
  *
  *  \brief BellStateAnalyzer
  */
 class BellStateAnalyzer : public cSimpleModule {
  private:
   // for performance analysis
-  int n_res = 0;
-  int trials = 0;
-  simsignal_t GOD_num_resSignal;
-  std::string BSA_perf_output_filename;
-  std::vector<simtime_t> creation_time;
-  simsignal_t average_num_trialSignal;
-  std::vector<int> number_of_trials;
-  int nwidth = 0;
-  int duration = 1;
+  long n_res = 0;  ///< The number of resources for performance analysis
+  int trials = 0;  ///< No longer used
+  simsignal_t GOD_num_resSignal;  ///< The number of resources for signaling
+  std::string BSA_perf_output_filename;  ///< No longer used
+  std::vector<simtime_t> creation_time;  ///< No longer used
+  simsignal_t average_num_trialSignal;  ///< No longer used
+  std::vector<int> number_of_trials;  ///< No longer used
+  int nwidth = 0;  ///< No longer used
+  int duration = 1;  ///< No longer used
   // parameters
-  double darkcount_probability;
-  double loss_rate;
-  double error_rate;
+  double darkcount_probability;  ///< Probability the darkcount happen in BSA
+  double loss_rate;  ///< Not implemented yet, but will be used for photon loss in BSA?
+  double error_rate;  ///< Not implemetned yet
   // bool left_clicked;
   // bool right_click;
-  bool left_last_photon_detected;
-  bool right_last_photon_detected;
-  bool send_result;
-  double required_precision;  // 1.5ns
-  simtime_t left_arrived_at;
-  int left_photon_origin_node_address;
-  int left_photon_origin_qnic_address;
-  int left_photon_origin_qnic_type;
-  int left_photon_origin_qubit_address;
-  bool left_photon_Xerr;
-  bool left_photon_Zerr;
-  StationaryQubit *left_statQubit_ptr;
-  simtime_t right_arrived_at;
-  int right_photon_origin_node_address;
-  int right_photon_origin_qnic_address;
-  int right_photon_origin_qnic_type;
-  int right_photon_origin_qubit_address;
-  bool right_photon_Xerr;
-  bool right_photon_Zerr;
-  bool right_photon_lost;
-  bool left_photon_lost;
-  StationaryQubit *right_statQubit_ptr;
+  bool left_last_photon_detected;  ///< Last photon from left node in this trial is detected
+  bool right_last_photon_detected;  ///< Last photon from right node in this trial is detected
+  bool send_result;  ///< If this is true, send BSA finish and accumulated results to neigbor nodes. If it's false, just send accumulate result in HoM Controller
+  double required_precision;  ///< Precision of photon arrivial time // 1.5ns
+  simtime_t left_arrived_at;  ///< Simulation time that left photon arrived at BSA
+  int left_photon_origin_node_address;  ///< Node address of left photon
+  int left_photon_origin_qnic_address;  ///< QNIC address of left photon
+  int left_photon_origin_qnic_type;  ///< QNIC type of left photon
+  int left_photon_origin_qubit_address;  ///< Address of qubit that emits left photon
+  bool left_photon_Xerr;  ///< True: Photon from left node has X error
+  bool left_photon_Zerr;  ///< True: Photon from left node has Z error
+  bool left_photon_lost;  ///< True: Photon from left node is lost
+  StationaryQubit *left_statQubit_ptr;  ///< Instance of qubit memory of left node
+  simtime_t right_arrived_at;  ///< Simulation time that right photon arrived at BSA
+  int right_photon_origin_node_address;  ///< Node address of right photon
+  int right_photon_origin_qnic_address;  ///< QNIC address of right photon
+  int right_photon_origin_qnic_type;  ///< QNIC type of right photon
+  int right_photon_origin_qubit_address;  ///< Address of qubit that emits right photon
+  bool right_photon_Xerr;  ///< True: Photon from right node has X error
+  bool right_photon_Zerr;  ///< True: Photon from right node has Z error
+  bool right_photon_lost;  ///< True: Photon from right node is lost
+  StationaryQubit *right_statQubit_ptr;  ///< Instance of qubit memory of right node
   int count_X = 0, count_Y = 0, count_Z = 0, count_I = 0, count_L = 0, count_total = 0;  // for debug
   // bool handshake = false;
-  bool this_trial_done = false;
-  double BSAsuccess_rate = 0.5 * 0.8 * 0.8;  // detector probability = 0.8
-  int left_count, right_count = 0;
+  bool this_trial_done = false;  ///< True: Finish this trial of BSA
+  double BSAsuccess_rate = 0.5 * 0.8 * 0.8;  ///< The probability of BSA success. Maximum probability of success in linear optics is 0.5 and detector probability is 0.8.
+  int left_count, right_count = 0;  ///< The number of photon count.
   int DEBUG_darkcount_left = 0;
   int DEBUG_darkcount_right = 0;
   int DEBUG_darkcount_both = 0;
@@ -79,7 +76,6 @@ class BellStateAnalyzer : public cSimpleModule {
 
  protected:
   virtual void initialize();
-  virtual void finish();
   virtual void handleMessage(cMessage *msg);
   virtual bool isPhotonLost(cMessage *msg);
   virtual void forDEBUG_countErrorTypes(cMessage *msg);
@@ -91,6 +87,10 @@ class BellStateAnalyzer : public cSimpleModule {
 
 Define_Module(BellStateAnalyzer);
 
+/**
+ * \brief Initialize Bell State Analyzer
+ *
+ */
 void BellStateAnalyzer::initialize() {
   // performance analysis
   GOD_num_resSignal = registerSignal("Num_Bell_state");
@@ -123,7 +123,7 @@ void BellStateAnalyzer::initialize() {
   left_photon_lost = false;
 }
 
-/*
+/**
  * Execute the BSA operation.
  * Input: msg is a "photon", with a few bits of info of its status.  msg arrives even if photon is lost; this msg will
  * indicate that.  Photon is assumed to be entangled with a stationary memory somewhere.  Photon has been updated to
@@ -332,32 +332,6 @@ void BellStateAnalyzer::sendBSAresult(bool result, bool sendresults) {
     this_trial_done = true;
     // EV<<"!!!!!!!!!!!!!!!over!!!!!!!!!!!this_trial_done == "<<this_trial_done<<"\n";
   }
-}
-
-void BellStateAnalyzer::finish() {
-  std::cout << "total = " << DEBUG_total << "\n";
-  std::cout << "Success = " << DEBUG_success << "\n";
-  std::cout << "darkcount_count_left = " << DEBUG_darkcount_left << ", darkcount_count_right =" << DEBUG_darkcount_right << ", darkcount_count_both = " << DEBUG_darkcount_both
-            << "\n";
-  std::cout << "total BSA performance"
-            << "\n";
-  // filename for recoding bsa performance
-  // std::string file_name = BSA_perf_output_filename;
-  // int file_size = file_name.size();
-  // create file
-  std::string time_duration = std::to_string(duration);
-  std::string file_name = "num_trials" + time_duration;
-  std::ofstream bsa_stats(file_name, std::ios_base::app);
-
-  // 1. Bell pair creation time (average and std)
-  // receive photons - apply BSM - return result
-  // bsa_stats<<"s\n";
-  for (int i = 0; i < number_of_trials.size(); i++) {
-    bsa_stats << number_of_trials[i] << "\n";
-  }
-  // bsa_stats<<"f\n";
-  // 2. The number of bell pairs in total
-  bsa_stats.close();
 }
 
 void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg) {

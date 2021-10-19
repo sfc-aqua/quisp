@@ -18,9 +18,10 @@ simple HoMController
         double emission_variance = default(0);//in seconds. Photons will be shot towards HoM with 100% accuracy
         bool receiver = default(false);
         bool passive = default(false);
+        double bsa_notification_interval=default(1e-2);
 
         // performance
-        @signal[creation_time](type="float");
+        @signal[creation_time](type=double);
         @statistic[creation_time](title="Bell pair creation time"; record=vector; interpolationmode=sample-hold);
     gates:
         input fromRouter_port @loose;

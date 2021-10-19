@@ -1,6 +1,4 @@
 /** \file HoM_Controller.h
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/04/01
  *
@@ -10,7 +8,7 @@
 #define QUISP_MODULES_HOM_CONTROLLER_H_
 
 #include <PhotonicQubit_m.h>
-#include <classical_messages_m.h>
+#include <messages/classical_messages.h>
 #include <omnetpp.h>
 #include <vector>
 
@@ -21,7 +19,6 @@ namespace quisp {
 namespace modules {
 
 /** \class HoMController HoM_Controller.h
- *  \todo Documentation of the class header.
  *  \note How about if two nodes have imbalanced buffers?
  *        Maybe use unused qnic (which is ought to be used for another path)?
  *
@@ -30,41 +27,42 @@ namespace modules {
 class HoMController : public cSimpleModule {
  private:
   int address;
-  int photon_detection_per_sec;
-  std::vector<const char*> gates_here;
+  int photon_detection_per_sec;  ///< The number of detectable photon in a second. This info is used to decide the number of photon in one trial.
+  std::vector<const char*> gates_here;  ///< No longer used
   // cMessage *generatePacket;
-  double speed_of_light_in_channel;
+  double speed_of_light_in_channel;  ///< Speed of light in optical fiber.
   cPar* c;
-  int time_out_count;
-  int success_count = 0;
+  int time_out_count;  ///< No longer used
+  int success_count = 0;  ///< No longer used
   // simsignal_t recog_resSignal;
  public:
-  int neighbor_address;
-  int neighbor_address_two;
-  int neighbor_buffer;
-  int neighbor_buffer_two;
-  int max_buffer;
-  double distance_to_neighbor;  // in km
-  double distance_to_neighbor_two;  // in km
-  double max_neighbor_distance;  // in km
-  double accepted_burst_interval;  // in s
+  int neighbor_address;  ///< Address of one of two neighbor node.
+  int neighbor_address_two;  ///< Address of the other node from "neighbor address"
+  int neighbor_buffer;  ///< The number of qubits in a qnic in the neighbor node
+  int neighbor_buffer_two;  ///< The number of qubits in a qnic in the other neighbor node
+  int max_buffer;  ///< Maximum number of qubits available for BSA process
+  double distance_to_neighbor;  ///< Physical distance of fiber to the neighbor node (unit: km)
+  double distance_to_neighbor_two;  ///< Physical distance of fiber to the other neighbor node (unit: km)
+  double max_neighbor_distance;  ///< Store longer one of "distance_to_neighbor" and "distance_to_neighbor_two". max(distance_to_neighbor, distance_to_neighbor_two)(unit: km)
+  double accepted_burst_interval;  ///< Calculated phton burst interval calculated by distance and light speed. (unit: s)
 
-  int BSAtimingNotifier_type = 4;
-  int PathSelection_type = 1;
-  int PhotonicQubit_type = 100;
+  int BSAtimingNotifier_type = 4;  ///< Type of packet
+  int PathSelection_type = 1;  ///< No longer used
+  int PhotonicQubit_type = 100;  ///< No longer used
 
-  bool receiver, passive;
-  int qnic_index = -1;
-  int qnic_address = -1;
+  bool receiver, passive;  ///< Type of QNIC. receiver: receive phton from counter part. passive: Not implemented yet. Will be used for MSM link.
+  int qnic_index = -1;  ///< Index of qnic. If the qnic is internal (used in MM link), the index is -1. (default: -1)
+  int qnic_address = -1;  ///< Address of qnic. If the qnic is internal (used in MM link), the index is -1. (default: -1)
 
-  int* BSAresults;
-  typedef std::map<int, bool> BSAresultTable;  // BSA trial index --> success or failure
+  int* BSAresults;  ///< not used?
+  typedef std::map<int, bool> BSAresultTable;  ///< A table to store the pair of BSA trial index --> success or failure
   BSAresultTable results;
 
-  bool handshake = false;
-  double BSA_timeout = 1e-5;
-  bool auto_resend_BSANotifier;
-  double current_trial_id;
+  bool handshake = false;  ///< True: Return ack and negotiate the number of available qubits. False: Use maximum number of available qubits
+  double BSA_timeout = 1e-5;  ///< No longer used
+  bool auto_resend_BSANotifier;  ///< True: resend BSA notification again automatically
+  double current_trial_id;  ///< Unique identifier for this trial
+  double bsa_notification_interval;  ///< Interval to send BSA notification
 
  protected:
   virtual void initialize(int stage) override;

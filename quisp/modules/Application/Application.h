@@ -8,8 +8,8 @@
 #ifndef MODULES_APPLICATION_H_
 #define MODULES_APPLICATION_H_
 
-#include <classical_messages_m.h>
-#include <omnetpp.h>
+#include "IApplication.h"
+#include "utils/ComponentProvider.h"
 
 using namespace omnetpp;
 
@@ -20,28 +20,32 @@ namespace modules {
  *
  *  \brief Application
  */
-class Application : public cSimpleModule {
- private:
-  int my_address;
-
-  int *other_end_node_addresses;
-  int num_of_other_end_nodes;
-  bool is_e2e_connection;
-  int number_of_resources;
-  int num_measure;
-
-  virtual void initialize() override;
-  virtual void handleMessage(cMessage *msg) override;
-
-  virtual int *storeEndNodeAddresses();
-  virtual int getOneRandomEndNodeAddress();
-  virtual cModule *getQNode();
-
-  ConnectionSetupRequest *createConnectionSetupRequest(int dest_addr, int num_of_required_resources);
-
+class Application : public IApplication {
  public:
   Application();
-  int getAddress();
+  ~Application() {}
+
+ protected:
+  int my_address;
+
+  std::vector<int> other_end_node_addresses;
+  bool is_e2e_connection; /**< Does this simulation require end-to-end connection setup?*/
+  int number_of_resources;
+  int num_measure; /**< The number of measurement between end nodes.*/
+  int traffic_pattern; /**< A type of traffic generation.
+                        * - 0: No traffic
+                        * - 1: From one end node node to random partner node (1 to 1)
+                        * - 2: From all end nodes to random partner nodes (n to n)
+                        */
+
+  void initialize() override;
+  void handleMessage(cMessage *msg) override;
+
+  void storeEndNodeAddresses();
+  int getOneRandomEndNodeAddress();
+
+  messages::ConnectionSetupRequest *createConnectionSetupRequest(int dest_addr, int num_of_required_resources);
+  utils::ComponentProvider provider;
 };
 
 Define_Module(Application);

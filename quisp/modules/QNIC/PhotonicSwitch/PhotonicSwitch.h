@@ -1,6 +1,4 @@
 /** \file PhotonicSwitch.h
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *
  *  \brief PhotonicSwitch
@@ -10,7 +8,7 @@
 #define MODULES_PHOTONICSWITCH_H_
 
 #include <PhotonicQubit_m.h>
-#include <classical_messages_m.h>
+#include <messages/classical_messages.h>
 #include <omnetpp.h>
 #include <vector>
 
@@ -20,7 +18,6 @@ namespace quisp {
 namespace modules {
 
 /** \class PhotonicSwitch PhotonicSwitch.cc
- *  \todo Documentation of the class header.
  *
  *  \brief PhotonicSwitch
  */
@@ -44,4 +41,4 @@ class PhotonicSwitch : public cSimpleModule {
 
 Define_Module(PhotonicSwitch);
 
-#endif MODULES_PHOTONICSWITCH_H_
+#endif  // MODULES_PHOTONICSWITCH_H_

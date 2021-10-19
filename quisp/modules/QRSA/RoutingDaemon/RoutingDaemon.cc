@@ -1,12 +1,10 @@
 /** \file RoutingDaemon.cc
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors takaakimatsuo
  *
  *  \brief RoutingDaemon
  */
 #include "RoutingDaemon.h"
-#include <classical_messages_m.h>
+#include <messages/classical_messages.h>
 #include <omnetpp.h>
 #include <vector>
 
@@ -18,7 +16,6 @@ namespace modules {
 Define_Module(RoutingDaemon);
 
 /**
- *  \todo Documentation of the class header.
  *
  *  \brief RoutingDaemon
  *
@@ -34,7 +31,7 @@ Define_Module(RoutingDaemon);
  *
  * The above is the intended design.
  *
- * \todo In fact, the RoutingDaemon as it exists today uses special, internal
+ * TODO In fact, the RoutingDaemon as it exists today uses special, internal
  * OMNeT++ magic to directly access the network topology, as stored in the
  * simulator, rather than dynamically discovering it.  That should be corrected.
  *
@@ -45,7 +42,7 @@ Define_Module(RoutingDaemon);
  * discipline is fully blocking, as in circuit switching, which is the first
  * discipline we are implementing.
  *
- * \todo Also, this code is built as a Module, via the Define_Module call;
+ * TODO Also, this code is built as a Module, via the Define_Module call;
  * the other important modules are classes.  That distinction needs to be
  * addressed.
  */
@@ -54,21 +51,16 @@ void RoutingDaemon::initialize(int stage) {
 
   EV << "Routing table initialized \n";
   myAddress = getParentModule()->par("address");
-
   // Topology creation for routing table
   cTopology *topo = new cTopology("topo");
-  cMsgPar *yes = new cMsgPar();
-  yes->setStringValue("yes");
-  topo->extractByParameter("includeInTopo", yes->str().c_str());  // Any node that has a parameter includeInTopo will be included in routing
-  delete (yes);
+  // veryfication?
+  topo->extractByParameter("includeInTopo", "\"yes\"");  // Any node that has a parameter includeInTopo will be included in routing
   // EV << "cTopology found " << topo->getNumNodes() << " nodes\n";
   if (topo->getNumNodes() == 0 || topo == nullptr) {  // If no node with the parameter & value found, do nothing.
     return;
   }
 
   cTopology::Node *thisNode = topo->getNodeFor(getParentModule()->getParentModule());  // The parent node with this specific router
-
-  int number_of_links_total = 0;
 
   // Initialize channel weights for all existing links.
   for (int x = 0; x < topo->getNumNodes(); x++) {  // Traverse through all nodes
@@ -77,15 +69,35 @@ void RoutingDaemon::initialize(int stage) {
       // thisNode->disable();//You can also disable nodes or channels accordingly to represent broken hardwares
       // EV<<"\n thisNode is "<< topo->getNode(x)->getModule()->getFullName() <<" has "<<topo->getNode(x)->getNumOutLinks()<<" links \n";
 
-      // Get assigned cost for each channel written in .ned file
-      double channel_cost = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("cost");
+      // Calculate bell pair generation rate to use it as channel cost
+      // The cost metric is taken from https://arxiv.org/abs/1206.5655
+      double speed_of_light_in_fiber = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("Speed_of_light_in_fiber");
+      double channel_length = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("distance");
+
+      auto *some_stationary_qubit_in_qnic = getModuleByPath("^.^.qnic[0].statQubit[0]");
+      auto *some_stationary_qubit_in_qnic_r = getModuleByPath("^.^.qnic_r[0].statQubit[0]");
+
+      double emission_prob = 1.0;
+      // TODO: fix this to read the emission success probability correctly. This is a quick fix!!
+      if (some_stationary_qubit_in_qnic != nullptr) {
+        emission_prob = some_stationary_qubit_in_qnic->par("emission_success_probability").doubleValue();
+      } else if (some_stationary_qubit_in_qnic_r != nullptr) {
+        emission_prob = some_stationary_qubit_in_qnic_r->par("emission_success_probability").doubleValue();
+      } else {
+        error("cannot read emission_success_probability from file");
+      }
+
+      EV_DEBUG << "Channel length is " << channel_length << "\n";
+      EV_DEBUG << "Speed of light in the channel is " << speed_of_light_in_fiber << "\n";
+      double seconds_per_bell_pair_generation = (channel_length / speed_of_light_in_fiber) * emission_prob;
+      EV_DEBUG << "BellGenT metric for the channel is " << seconds_per_bell_pair_generation << "\n";
 
       // EV<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName()<<" =? "<<"QuantumChannel"<<"\n";
       // if(strcmp(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName(),"QuantumChannel")==0){
       if (strstr(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName(), "quantum")) {
         // Otherwise, keep the quantum channels and set the weight
         // EV<<"\n Quantum Channel!!!!!! cost is"<<channel_cost<<"\n";
-        topo->getNode(x)->getLinkOut(j)->setWeight(channel_cost);  // Set channel weight
+        topo->getNode(x)->getLinkOut(j)->setWeight(seconds_per_bell_pair_generation);  // Set channel weight
       } else {
         // Ignore classical link in quantum routing table
         topo->getNode(x)->getLinkOut(j)->disable();
@@ -106,7 +118,6 @@ void RoutingDaemon::initialize(int stage) {
     }
     // Returns the next link/gate in the ith shortest paths towards the target node.
     cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();
-    int gateIndex = parentModuleGate->getIndex();
     QNIC thisqnic;
     int destAddr = topo->getNode(i)->getModule()->par("address");
     thisqnic.address = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
@@ -130,24 +141,37 @@ void RoutingDaemon::initialize(int stage) {
  * Rather than exchanging a message with those who need this information (ConnectionManager, mainly,
  * and in one case RuleEngine), this is a direct call that they make.
  *
- * \todo Decide if this is really the right way to do this.  Likely also
- * hooked up in the issue of module v. class.
  */
 int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr) {
   Enter_Method("return_QNIC_address_to_destAddr");
   RoutingTable::iterator it = qrtable.find(destAddr);
   if (it == qrtable.end()) {
-    EV << "Quantum: address " << destAddr << " unreachable from this node  \n";
+    EV << "Quantum: address " << destAddr << " unreachable from this node \n";
     return -1;
   }
   return it->second.address;
 }
 
+int RoutingDaemon::returnNumEndNodes() {
+  cTopology *topo = new cTopology("topo");
+  topo->extractByParameter("includeInTopo", "\"yes\"");
+  int index = 0;
+  for (int i = 0; i < topo->getNumNodes(); i++) {
+    cTopology::Node *node = topo->getNode(i);
+    std::string node_type = node->getModule()->par("nodeType");
+    if (node_type == "EndNode") {  // ignore myself
+      index++;
+    }
+  }
+  delete topo;
+  return index;
+};
+
 /**
  * Once we begin using dynamic routing protocols, this is where the messages
  * will be handled.  This perhaps will also be how we communicate with the
  * other important daemons in the qrsa.
- * \todo Handle dynamic routing protocol messages.
+ * TODO Handle dynamic routing protocol messages.
  **/
 void RoutingDaemon::handleMessage(cMessage *msg) {}
 

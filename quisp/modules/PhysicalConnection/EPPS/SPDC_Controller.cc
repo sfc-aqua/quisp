@@ -1,13 +1,11 @@
 /** \file SPDC_Controller.cc
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/03/25
  *
  *  \brief SPDC_Controller
  */
 #include <PhotonicQubit_m.h>
-#include <classical_messages_m.h>
+#include <messages/classical_messages.h>
 #include <omnetpp.h>
 #include <vector>
 
@@ -22,7 +20,6 @@ namespace modules {
 // Maybe use unused qnic (which is ought to be used for another path)?
 
 /** \class SPDC_Controller SPDC_Controller.cc
- *  \todo Documentation of the class header.
  *
  *  \brief SPDC_Controller
  */

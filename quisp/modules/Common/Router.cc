@@ -1,11 +1,9 @@
 /** \file Router.cc
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors takaakimatsuo
  *
  *  \brief Router
  */
-#include <classical_messages_m.h>  //Path selection: type = 1, Timing notifier for BMA: type = 4
+#include <messages/classical_messages.h>  //Path selection: type = 1, Timing notifier for BMA: type = 4
 #include <omnetpp.h>
 #include <map>
 
@@ -16,7 +14,6 @@ namespace quisp {
 namespace modules {
 
 /** \class Router Router.cc
- *  \todo Documentation of the class header.
  *
  *  \brief Router
  */
@@ -41,10 +38,7 @@ void Router::initialize(int stage) {
 
   // Topology creation for routing table
   cTopology *topo = new cTopology("topo");
-  cMsgPar *yes = new cMsgPar();
-  yes->setStringValue("yes");
-  topo->extractByParameter("includeInTopo", yes->str().c_str());  // Any node that has a parameter includeInTopo will be included in routing
-  delete (yes);
+  topo->extractByParameter("includeInTopo", "\"yes\"");  // Any node that has a parameter includeInTopo will be included in routing
   if (topo->getNumNodes() == 0 || topo == nullptr) {  // If no node with the parameter & value found, do nothing.
     return;
   }
@@ -104,11 +98,9 @@ void Router::initialize(int stage) {
 
 void Router::handleMessage(cMessage *msg) {
   // check the header of the received package
-  header *pk = check_and_cast<header *>(msg);
+  Header *pk = check_and_cast<Header *>(msg);
   int destAddr = pk->getDestAddr();  // read destination from the packet
   int who_are_you = pk->getKind();  // read the type of packet // This might be better fixed
-  // bubble("Message kind "<<message_type<<" received");
-  EV << "destAddr ==== " << destAddr;
   if (destAddr == myAddress && who_are_you == 1) {  // If destination is this node: Path selection
     send(pk, "toApp");  // send to Application locally
     return;
@@ -141,6 +133,10 @@ void Router::handleMessage(cMessage *msg) {
     send(pk, "rePort$o");
     return;
   } else if (destAddr == myAddress && dynamic_cast<SwappingResult *>(msg) != nullptr) {
+    bubble("Swapping Result packet received");
+    send(pk, "rePort$o");
+    return;
+  } else if (destAddr == myAddress && dynamic_cast<SimultaneousSwappingResult *>(msg) != nullptr) {
     bubble("Swapping Result packet received");
     send(pk, "rePort$o");
     return;
@@ -191,7 +187,6 @@ void Router::handleMessage(cMessage *msg) {
   }
 
   int outGateIndex = (*it).second;
-  EV << "forwarding packet " << pk->getName() << " on gate index " << outGateIndex << endl;
   pk->setHopCount(pk->getHopCount() + 1);
   send(pk, "toQueue", outGateIndex);
 }

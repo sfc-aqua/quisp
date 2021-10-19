@@ -1,13 +1,19 @@
 #!/bin/bash
+set -eu
+
 # run the result_test.ini in the network. This is not an unit test.
 echo "test start"
-cd /root/quisp/quisp/
+QUISP_ROOT=`pwd`/..
+NEDPATH=$QUISP_ROOT/quisp/networks:$QUISP_ROOT/quisp/modules:$QUISP_ROOT/quisp/channels
+cd $QUISP_ROOT
+make makefile-exe
+cd $QUISP_ROOT/quisp/
 make cleanall
-make BATCH=true QCONFIG=/root/quisp/quisp/networks/* -j $(nproc) all
+make BATCH=true QCONFIG=$QUISP_ROOT/quisp/networks/* -j $(nproc) all
 # These are creating all simulations HACK
-# if we set quisp as ./quisp/..., may be error because of existance of the same name binary 
-if [ -e /root/quisp/test/testresults.txt ];then
-    rm  /root/quisp/test/testresults.txt
+# if we set quisp as ./quisp/..., may be error because of existance of the same name binary
+if [ -e $QUISP_ROOT/test/testresults.txt ];then
+    rm  $QUISP_ROOT/test/testresults.txt
 fi
 # Actual test part
 # Experiments=("Test0" "Test1" "Test2")
@@ -17,13 +23,9 @@ NUM_TEST=35
 # for((i=0; i<${#Experiments[@]}; i++)); do
 for((i=0; i<$NUM_TEST; i++)); do
 echo "start test $i"
-echo "init$i" >> /root/quisp/test/testresults.txt 
-/root/quisp/quisp/out/clang-release/quisp  -u Cmdenv --cmdenv-express-mode=true -c "Test$i" -f /root/quisp/quisp/networks/test.ini | grep "fidelity" | tr ";" "\n" | tr "{" "\n"| tr "}" "\n"|sed s/"<-->"/"\n"/g>> /root/quisp/test/testresults.txt
-echo "next">>/root/quisp/test/testresults.txt
+echo "init$i" >> $QUISP_ROOT/test/testresults.txt
+$QUISP_ROOT/quisp/out/clang-release/quisp -u Cmdenv --cmdenv-express-mode=true -c "Test$i" -f $QUISP_ROOT/quisp/networks/test.ini -n $NEDPATH >> $QUISP_ROOT/test/Test$i.log
+cat $QUISP_ROOT/test/Test$i.log | grep "fidelity" | tr ";" "\n" | tr "{" "\n"| tr "}" "\n"|sed s/"<-->"/"\n"/g>> $QUISP_ROOT/test/testresults.txt
+echo "next">>$QUISP_ROOT/test/testresults.txt
 echo "finish test $i"
 done
-# ==== 
-# On docker
-# g++ -std=c++11 -o /root/quisp/test/quisp_test /root/quisp/test/quisp_test.cpp -I/rooot/omnetpp/include -I/usr/include/eigen3 -I/root/clibrary/googletest/googletest/include -L/root/clibrary/googletest/build/lib/ -pthread -lgtest_main -lgtest
-# This is just testing result! not each function!
-

@@ -10,10 +10,10 @@ simple BellStateAnalyzer
         double required_precision = default(1.5e-9);
         int photon_detection_per_sec = default(10000);
         int address;
-        @signal[Num_Bell_state](type="int");
+        @signal[Num_Bell_state](type=long);
         @statistic[Num_Bell_state](title="actual number of resource"; record=vector, max; interpolationmode=sample-hold);
 
-        @signal[num_trial](type="int");
+        @signal[num_trial](type=long);
         @statistic[num_trial](title="The average number of BSA trials to generate one Bell pair"; record=vector, mean; interpolationmode=sample-hold);
 
         int degree = 2;

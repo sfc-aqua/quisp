@@ -1,54 +1,71 @@
 CXXFLAGS = -std=c++14
 
-OBJS := $(filter-out %_test.o,$(OBJS))
+OBJS := $(filter-out test_util/% %_test.o,$(OBJS))
 OBJS := $(filter-out %unit_test_main.o,$(OBJS))
 
 # you can pass the file path you want to check as SRCS environment variable. see the example below.
 # $ SRCS=./quisp/modules/Application.cc make tidy # checks only Application.cc
 # $ make tidy # checks all sources
-SRCS?=$(shell find . -type f -name "*.cc" -print)
-HEADERS=$(shell find . -type f -name "*.h" -print)
-TEST_SRCS=$(filter %_test.cc,$(SRCS))
-TEST_OBJS=$(TEST_SRCS:.cc=.o)
-TEST_INCLUDE=-I../googletest/googletest/include/
-TEST_LIBS=-L../googletest/build/lib -lgtest
-TEST_MAIN_SRC=unit_test_main.cc
-TEST_MAIN_OBJ=$(O)/unit_test_main.o
+SRCS?=$(shell git ls-files . | grep "^.*.cc$$")
+HEADERS?=$(shell git ls-files . | grep "^.*.h$$")
+TEST_SRCS=$(filter %_test.cc,$(SRCS)) $(test_utils/%.cc) ./unit_test_main.cc
+TEST_OBJS=$(foreach obj,$(TEST_SRCS:.cc=.o),$O/$(obj))
+TEST_INCLUDE=-I../googletest/googletest/include/ -I../googletest/googlemock/include/
+
+TEST_LIBS=-L../googletest/build/lib -lgtest -lgmock
 
 # check eigen3 is in PKG_CONFIG_PATH
 PKG_CONFIG_STATUS=$(shell pkg-config eigen3 --cflags 2>/dev/null 1>&2; echo $$?)
 ifneq ('0','$(PKG_CONFIG_STATUS)')
-$(warning 'eigen3 is not found in pkg-config. check you PKG_CONFIG_PATH')
-$(warning 'your PKG_CONFIG_PATH is $(PKG_CONFIG_PATH)')
+# using quisp/eigen
+INCLUDE_PATH+=-I. -I$(CURDIR)/../eigen/
+else
+INCLUDE_PATH+=-I. $(shell pkg-config eigen3 --cflags)
 endif
 
-INCLUDE_PATH+=-I. $(shell pkg-config eigen3 --cflags)
+INCLUDE_PATH+=-I.
 
-default: all
+default: eigen all
 
 format:
 	clang-format -i $(SRCS) $(HEADERS)
 
 tidy:
-	clang-tidy -header-filter="./quisp/(rules|modules)/.*.h" $(SRCS) -- $(COPTS:-I.=-I./quisp)
+	clang-tidy -header-filter="./quisp/(.|utils|rules|modules|test_utils)/.*.h" $(SRCS) -- $(COPTS) $(TEST_INCLUDE)
 
 ci: msgheaders
 	@clang-format $(SRCS) $(HEADERS) -output-replacements-xml | grep -c "<replacement " -q ; if [ $$? -ne 1 ]; then echo "error: run make format and then push it again"; exit 1; fi
-	@clang-tidy -warnings-as-errors="*" -header-filter="./(rules|modules)/.*.h" $(SRCS) -- $(COPTS:-I.=-I./quisp)
+	@clang-tidy -header-filter="./quisp/(.|utils|rules|modules|test_utils)/.*.h" $(SRCS) -- $(COPTS) $(TEST_INCLUDE)
 
-$(O)/$(TEST_OBJS): $(TEST_SRCS)
+$(TEST_OBJS): $O/%.o : %.cc
 	@$(MKPATH) $(dir $@)
 	$(qecho) "$<"
 	$(Q)$(CXX) -c $(CXXFLAGS) $(COPTS) $(TEST_INCLUDE) -o $@ $<
 
-$(O)/$(TEST_MAIN_OBJ): $(TEST_MAIN_SRC)
-	@$(MKPATH) $(dir $@)
-	$(Q)$(CXX) -c $(TEST_INCLUDE) -o $@ $< $(CXXFLAGS)
-
-$(TARGET_DIR)/run_unit_test: $(O)/$(TEST_OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE) $(O)/$(TEST_MAIN_OBJ)
+$(TARGET_DIR)/run_unit_test: $(TARGET_DIR)/$(TARGET) $(TEST_OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)
 	@$(MKPATH) $O
 	@echo Creating test executable:
-	$(Q)$(CXX) $(LDFLAGS) -lpthread -o $(TARGET_DIR)/run_unit_test $(O)/$(TEST_OBJS) $(OBJS) $(O)/$(TEST_MAIN_OBJ) $(EXTRA_OBJS) $(LIBS) $(TEST_LIBS) $(OMNETPP_LIBS)
+	$(Q)$(CXX) $(LDFLAGS) -lpthread -o $(TARGET_DIR)/run_unit_test $(TEST_OBJS) $(OBJS) $(EXTRA_OBJS) $(LIBS) $(TEST_LIBS) $(OMNETPP_LIBS)
 
 run-unit-test: $(TARGET_DIR)/run_unit_test
 	$(TARGET_DIR)/run_unit_test
+
+.PHONY: eigen
+# check eigen exists and setup eigen if needed.
+eigen:
+	PKG_CONFIG_STATUS=$(shell pkg-config eigen3 --cflags 2>/dev/null 1>&2; echo $$?)
+# check eigen3 exists on pkg-config
+ifneq ('0','$(PKG_CONFIG_STATUS)')
+# check eigen is installed on quisp/eigen
+ifeq (,$(wildcard $(CURDIR)/../eigen/CMakeLists.txt))
+	make eigen -C $(CURDIR)/..
+endif
+	# using quisp/eigen
+INCLUDE_PATH+=-I$(CURDIR)/../eigen/
+else
+INCLUDE_PATH+=-I.
+INCLUDE_PATH+=$(shell pkg-config eigen3 --cflags)
+endif
+
+all: eigen
+

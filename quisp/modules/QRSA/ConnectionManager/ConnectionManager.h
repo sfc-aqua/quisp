@@ -8,14 +8,7 @@
 #ifndef MODULES_CONNECTIONMANAGER_H_
 #define MODULES_CONNECTIONMANAGER_H_
 
-#include <classical_messages_m.h>
-#include <modules/QNIC.h>
-#include <omnetpp.h>
-#include <rules/RuleSet.h>
-#include <vector>
-#include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
-#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
-#include "modules/QRSA/RuleEngine/RuleEngine.h"
+#include "IConnectionManager.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -24,25 +17,7 @@ using namespace quisp::rules;
 namespace quisp {
 namespace modules {
 
-typedef struct {  // This is a little bit redundant
-  int left_partner;
-  QNIC_type lqnic_type;
-  int lqnic_index;
-  int lqnic_address;
-  int lres;
-  int right_partner;
-  QNIC_type rqnic_type;
-  int rqnic_index;
-  int rqnic_address;
-  int rres;
-  int self_left_qnic_index;
-  QNIC_type self_left_qnic_type;
-  int self_right_qnic_index;
-  QNIC_type self_right_qnic_type;
-} SwappingConfig;
-
 /** \class ConnectionManager ConnectionManager.cc
- *  \todo Documentation of the class header.
  *
  *  \brief ConnectionManager
  *
@@ -65,43 +40,68 @@ typedef struct {  // This is a little bit redundant
  * It is also responsible for the end-to-end reservation of resources,
  * as dictated by the multiplexing (muxing) discipline in use.
  */
-class ConnectionManager : public cSimpleModule {
- private:
+class ConnectionManager : public IConnectionManager {
+ public:
+  ConnectionManager();
+  utils::ComponentProvider provider;
+
+ protected:
   int my_address;
   int num_of_qnics;
+  std::map<int, std::queue<ConnectionSetupRequest *>> connection_setup_buffer;  // key is qnic address
+  std::map<int, int> connection_retry_count;  // key is qnic address
   std::map<int, bool> qnic_res_table;
-  RoutingDaemon *routing_daemon;
-  HardwareMonitor *hardware_monitor;
+  std::vector<cMessage *> request_send_timing;  // self message, notification for sending out request
+  bool simultaneous_es_enabled;
+  bool es_with_purify;
+  int num_remote_purification;
+  IRoutingDaemon *routing_daemon;
+  IHardwareMonitor *hardware_monitor;
 
-  virtual void initialize() override;
-  virtual void handleMessage(cMessage *msg) override;
+  void initialize() override;
+  void handleMessage(cMessage *msg) override;
+  void finish() override;
 
   void respondToRequest(ConnectionSetupRequest *pk);
-  void relayRequestToNextHop(ConnectionSetupRequest *pk);
+  void tryRelayRequestToNextHop(ConnectionSetupRequest *pk);
+
+  void queueApplicationRequest(ConnectionSetupRequest *pk);
+  void initiateApplicationRequest(int qnic_address);
+  void scheduleRequestRetry(int qnic_address);
+  void popApplicationRequest(int qnic_address);
 
   void storeRuleSetForApplication(ConnectionSetupResponse *pk);
   void storeRuleSet(ConnectionSetupResponse *pk);
 
+  void initiator_reject_req_handler(RejectConnectionSetupRequest *pk);
   void responder_reject_req_handler(RejectConnectionSetupRequest *pk);
   void intermediate_reject_req_handler(RejectConnectionSetupRequest *pk);
 
   void rejectRequest(ConnectionSetupRequest *req);
 
-  RuleSet *generateTomographyRuleSet(int owner, int partner, int num_measure, QNIC_type qnic_type, int qnic_index, int num_resources);
-  RuleSet *generateEntanglementSwappingRuleSet(int owner, SwappingConfig conf);
   SwappingConfig generateSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners, std::vector<QNIC_pair_info> qnics,
                                         int num_resources);
+  SwappingConfig generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources);
+
+  // Rule generators
+  std::unique_ptr<Rule> purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
+                                         unsigned long rule_id);
+  std::unique_ptr<Rule> swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id);
+  std::unique_ptr<Rule> simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id);
+  std::unique_ptr<Rule> waitRule(int partner_address, int next_partner_address, unsigned long ruleset_id, unsigned long rule_id);
+  std::unique_ptr<Rule> tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
+                                       unsigned long rule_id);
 
   void reserveQnic(int qnic_address);
   void releaseQnic(int qnic_address);
   bool isQnicBusy(int qnic_address);
+  QNIC_id getQnicInterface(int owner_address, int partner_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics);
 
   unsigned long createUniqueId();
   static int computePathDivisionSize(int l);
   static int fillPathDivision(std::vector<int> path, int i, int l, int *link_left, int *link_right, int *swapper, int fill_start);
 };
 
-Define_Module(ConnectionManager);
 }  // namespace modules
 }  // namespace quisp
 #endif /* MODULES_CONNECTIONMANAGER_H_ */

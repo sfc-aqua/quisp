@@ -1,6 +1,4 @@
 /** \file Queue.cc
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *
  *  \brief Queue
@@ -112,7 +110,7 @@ void Queue::handleMessage(cMessage *msg) {
   emit(busy_signal, true);
 }
 
-void Queue::finish() { delete end_transmission_event; }
+void Queue::finish() { cancelAndDelete(end_transmission_event); }
 
 void Queue::refreshDisplay() const {
   getDisplayString().setTagArg("t", 0, is_busy ? "transmitting" : "idle");

@@ -1,6 +1,4 @@
 /** \file PhotonicSwitch.cc
- *  \todo clean Clean code when it is simple.
- *  \todo doc Write doxygen documentation.
  *  \authors cldurand,takaakimatsuo
  *
  *  \brief PhotonicSwitch
@@ -50,8 +48,6 @@ cModule *PhotonicSwitch::getQNode() {
  * If the QNIC is already reserved
  * (e.g., competing reservations are flowing in the network, and part of the path is already reserved),
  * then the ConnectionManager should fail this request and send a RejectConnectionSetupRequest message.
- * \todo extend this to support other muxing styles (long-term research project,
- * but should build on Aparicio)
  */
 void PhotonicSwitch::reserve() {
   getParentModule()->par("is_reserved") = true;

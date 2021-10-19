@@ -9,7 +9,7 @@
 #define MODULES_QUEUE_H_
 
 #include <PhotonicQubit_m.h>
-#include <classical_messages_m.h>
+#include <messages/classical_messages.h>
 #include <omnetpp.h>
 #include <stdio.h>
 #include <string.h>
@@ -20,7 +20,6 @@ namespace quisp {
 namespace modules {
 
 /** \class Queue Queue.cc
- *  \todo Documentation of the class header.
  *
  *  \brief Queue
  */

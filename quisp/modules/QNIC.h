@@ -21,9 +21,9 @@ typedef enum : int {
 } QNIC_type;
 
 static const char* QNIC_names[QNIC_N] = {
-    [QNIC_E] = "qnic",
-    [QNIC_R] = "qnic_r",
-    [QNIC_RP] = "qnic_rp",
+    "qnic",
+    "qnic_r",
+    "qnic_rp",
 };
 
 typedef struct {
@@ -36,9 +36,9 @@ typedef struct {
 typedef struct {
   QNIC_id fst;
   QNIC_id snd;
-} QNIC_id_pair;
+} QNIC_pair_info;
 
-typedef struct : QNIC_id {
+typedef struct QNIC : QNIC_id {
   cModule* pointer;  // Pointer to that particular QNIC.
   int address;
 } QNIC;
