@@ -6,15 +6,15 @@ namespace quisp {
 
 namespace types {
 enum class MeasureXResult : int {
-  NO_ERROR,
+  NO_Z_ERROR,
   HAS_Z_ERROR,
 };
 enum class MeasureYResult : int {
-  NO_ERROR,
+  NO_XZ_ERROR,
   HAS_XZ_ERROR,
 };
 enum class MeasureZResult : int {
-  NO_ERROR,
+  NO_X_ERROR,
   HAS_X_ERROR,
 };
 }  // namespace types

@@ -221,7 +221,7 @@ MeasureXResult StationaryQubit::measure_X() {
   if (par("GOD_Zerror").boolValue()) {
     return MeasureXResult::HAS_Z_ERROR;
   }
-  return MeasureXResult::NO_ERROR;
+  return MeasureXResult::NO_Z_ERROR;
 }
 
 MeasureYResult StationaryQubit::measure_Y() {
@@ -236,7 +236,7 @@ MeasureYResult StationaryQubit::measure_Y() {
   if (error) {
     return MeasureYResult::HAS_XZ_ERROR;
   }
-  return MeasureYResult::NO_ERROR;
+  return MeasureYResult::NO_XZ_ERROR;
 }
 
 MeasureZResult StationaryQubit::measure_Z() {
@@ -244,7 +244,7 @@ MeasureZResult StationaryQubit::measure_Z() {
   if (par("GOD_Xerror")) {
     return MeasureZResult::HAS_X_ERROR;
   }
-  return MeasureZResult::NO_ERROR;
+  return MeasureZResult::NO_X_ERROR;
 }
 
 // Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
@@ -539,7 +539,7 @@ bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
   applyMemoryError();
   check_and_cast<StationaryQubit *>(resource_qubit)->applyMemoryError();
   /*Target qubit*/ this->CNOT_gate(resource_qubit /*controlled qubit*/);
-  bool meas = this->measure_Z() == MeasureZResult::NO_ERROR;
+  bool meas = this->measure_Z() == MeasureZResult::NO_X_ERROR;
   return meas;
 }
 
@@ -549,7 +549,7 @@ bool StationaryQubit::Zpurify(IStationaryQubit *resource_qubit /*Target*/) {
   check_and_cast<StationaryQubit *>(resource_qubit)->applyMemoryError();
   /*Target qubit*/ resource_qubit->CNOT_gate(this /*controlled qubit*/);
   this->Hadamard_gate();
-  bool meas = this->measure_Z() == MeasureZResult::NO_ERROR;
+  bool meas = this->measure_Z() == MeasureZResult::NO_X_ERROR;
   return meas;
 }
 
