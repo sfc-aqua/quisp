@@ -1280,7 +1280,6 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
   }
 
   if (provider.isSPDCNodeType(type)) {
-    EV << thisNode.getModuleType()->getFullName() << " == " << SPDCType->getFullName() << "\n";
     cModule *controller = thisNode.getSubmodule("Controller");
     if (controller == nullptr) {
       error("SPDC Controller not found");

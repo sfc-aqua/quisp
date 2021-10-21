@@ -16,6 +16,8 @@ packet BSMtimingNotifier extends Header
     int internal_qnic_address = -1;
 }
 
+packet EPPSstart extends Header{}
+
 packet EPPStimingNotifier extends Header
 {
     simtime_t timing_at;
