@@ -1,6 +1,6 @@
 # QUISP
 ![github workflow](https://github.com/sfc-aqua/quisp/actions/workflows/main.yml/badge.svg)
-<a href="https://aqua-quisp.slack.com/" rel="nofollow"><img src="https://img.shields.io/badge/join-us%20on%20slack-gray.svg?colorB=red&amp;logo=slack&amp;longCache=true" alt="Slack Widget"></a>  
+<a href="https://aqua-quisp.slack.com/" rel="nofollow"><img src="https://img.shields.io/badge/join-us%20on%20slack-gray.svg?colorB=red&amp;logo=slack&amp;longCache=true" alt="Slack Widget"></a>
 The Quantum Internet Simulation Package (QuISP) is an event-driven
 simulation of quantum repeater networks, which will be the foundation
 of the coming Quantum Internet.  QuISP's goal is to simulate a full
@@ -11,7 +11,7 @@ physical layer as realistic as possible.
 
 QuISP is a product of the Advancing Quantum Architecture (AQUA)
 research group headed by Prof. Rodney Van Meter, at Keio University's
-Shonan Fujisawa Campus, Fujisawa, Japan.  See 
+Shonan Fujisawa Campus, Fujisawa, Japan.  See
 [http://aqua.sfc.wide.ad.jp](http://aqua.sfc.wide.ad.jp) and the list
 of [Authors](Authors.md).
 
@@ -55,7 +55,7 @@ Research questions we hope to answer:
 
 ## Simulation goals
 
-We have a number of long-term goals for development of the simulator:  
+We have a number of long-term goals for development of the simulator:
 
 * Complex network topologies, including the notion of network
   boundaries and heterogeneity at the physical and logical levels
@@ -161,10 +161,10 @@ Mid-term to long-term release features:
 ## Installation requirements
 
 The full installation process is described in
-[doc/INSTALL.md](doc/INSTALL.md).  The main software tools you will
+[Wiki]](https://github.com/sfc-aqua/quisp/wiki).  The main software tools you will
 need are:
 
-* QUISP requires [OmNET++](https://omnetpp.org/) and
+* QUISP requires [OMNeT++](https://omnetpp.org/) and
 * an external C++ library, [Eigen](http://eigen.tuxfamily.org/), to
   work.
 * To contribute to QuISP development, you will also need to be
@@ -179,25 +179,27 @@ Docker, ffmpeg for making videos, etc.), documented in the installation notes.
 
 ## Building and running
 
-First see [doc/INSTALL.md](doc/INSTALL.md), then follow the instructions below.
+First see [Wiki](https://github.com/sfc-aqua/quisp/wiki), then follow the instructions below.
 
 There are two main ways of working with QUISP. You can either use the
 Eclipse-like graphical interface of OmNET++, for which you will find
-instructions in [doc/USAGE-omnetpp-gui.md](doc/USAGE-omnetpp-gui.md),
+instructions in [Building QuISP with OMNeT IDE
+](https://github.com/sfc-aqua/quisp/wiki/Building-QuISP-with-OMNeT-IDE),
 or you can use the `Makefile` and GNU make, by looking at instructions
-in [doc/USAGE-makefile.md](doc/USAGE-makefile.md). Some operations are
+in [Building QuISP with GNU Make
+(wiki)](https://github.com/sfc-aqua/quisp/wiki/Building-QuISP-with-GNU-Make). Some operations are
 implemented in the Makefile and not explained for the graphical user
 interface.
 
 ## Moving into useful work
 
 Once you have gotten this far, you should be able to [run some of the
-most basic demos](doc/running-demos.md).  Next, you'll want to learn
+most basic demos](https://github.com/sfc-aqua/quisp/wiki/Running-Basic-QuISP-Demos).  Next, you'll want to learn
 how to create your own test networks, and how to extend the source
 code for your own uses.
 
 When you are ready to start contributing, you can start reading the
-code, as [we have done](doc/code-spelunking.md).
+code, as [we have done](https://github.com/sfc-aqua/quisp/wiki/Code-Spelunking).
 
 You will also want to look at some of the [software design documents](doc/software-design.md).
 
@@ -227,7 +229,7 @@ See the [references](doc/References.md).
 
 First, join the [QuISP Slack team](https://aqua-quisp.slack.com).
 
-Please also refer to the [code of conduct](CODE_OF_CONDUCT.md).
+Please also refer to the [code of conduct](CODE_OF_CONDUCT.md) and [Contributing guide](.github/CONTRIBUTING.md).
 
 ## License
 

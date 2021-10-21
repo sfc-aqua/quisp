@@ -1,5 +1,5 @@
-# The hitchhiker's guide to the QuISP Documentation  
-  
+# The hitchhiker's guide to the QuISP Documentation
+
 ## Table of contents
 * [User's Guide](#Users-Guide)
   * [Intro & Install](#Intro--install)
@@ -11,14 +11,8 @@
 
 
 ## User’s Guide
-### Intro & Install
-1. [Install](INSTALL.md)
-2. [Build on docker](Build_on_docker.md)
-3. [Build on windows](Build_on_windows.md)
-4. [Running the OmNET++ GUI](USAGE-omnetpp-gui.md)
-5. [USAGE IN COMMAND LINE USING MAKE](USAGE-makefile.md)
-6. [Running Basic QuISP Demos](running-demos.md)
-7. [If you have trouble with using xhost command](xhost_trouble_shooting.md)
+[Install (GitHub Wiki)](https://github.com/sfc-aqua/quisp/wiki)
+
 ### Science & Engineering
 * [Research Questions](Research%20Questions.md)
 * [Quantum State Representations](Quantum%20State%20Representations.md)

@@ -8,7 +8,7 @@ Thank you for reading this page! We love your input! We want to make contributin
 * Proposing new features
 * Becoming a maintainer
 
-When contributing to this repository, please first discuss the change you wish to make via issue, 
+When contributing to this repository, please first discuss the change you wish to make via issue,
 email, or any other method with the owners of this repository before making a change.
 
 We recommend reaching us via [QuISP Slack team](https://aqua-quisp.slack.com).
@@ -75,12 +75,8 @@ All code changes should happen through pull requests.
 
 ### QuISP Development Setup
 
-We want to make QuISP development as easy as possible, be it installation, setting up working evironment, writing tests, or adding new features. We provide [some guides](/doc/development_setup/README.md) on how to do that depending on your machine operating system and how you want to run QuISP.
+We want to make QuISP development as easy as possible, be it installation, setting up working evironment, writing tests, or adding new features. We provide [some guides](https://github.com/sfc-aqua/quisp/wiki#3-setup-development-environment) on how to do that depending on your machine operating system and how you want to run QuISP.
 
-* [Development Setup on MacOS](/doc/development_set/mac_setup.md)
-* [Development Setup using docker](/doc/development_set/docker_setup.md)
-* [Development Setup on Unix-based System](/doc/development_set/unix_setup.md)
-* [Development Setup on Windows](/doc/development_set/windows_setup.md)
 
 ### Reporting Bugs
 
@@ -117,7 +113,7 @@ Pull requests are the best way to propose changes to the codebase (we use [Githu
 
 ### Styleguides
 
-We define how to format code via `.clang-format` and lint vs `.clang-tidy` at project root. We also have a script which you can use to run the formatter and linter via `$ make format` or `$ sh docker_run_lint.sh` before committing. We follow code format from [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html). 
+We define how to format code via `.clang-format` and lint vs `.clang-tidy` at project root. We also have a script which you can use to run the formatter and linter via `$ make format` or `$ sh docker_run_lint.sh` before committing. We follow code format from [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
 
 * If you're writing code using [Visual Studio Code](https://code.visualstudio.com), we have a [guide](/doc/development_setup/vscode_setup.md) on how to setup.
 * If you're using OMNeT++ IDE, you can format the code seamlessly using [CppStyle](https://github.com/wangzw/CppStyle).
