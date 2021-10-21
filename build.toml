@@ -1,0 +1,11 @@
+[omnetpp-wasm-build]
+
+# preloaded files
+ned-folders = [
+	"./networks",
+	"./channels",
+	"./modules"
+]
+ini-file = "./networks/omnetpp.ini"
+project-folder = "./quisp"
+output-folder = "./wasm-out"

@@ -1,0 +1,48 @@
+name: wasm build
+on: [push, pull_request]
+jobs:
+  build-wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: wasm build
+        uses: zigen/omnetpp-wasm@v0.6
+      - uses: actions/upload-artifact@v2
+        with:
+          name: wasm-build
+          path: |
+            quisp/out/emcc-release/*.html
+            quisp/out/emcc-release/*.js
+            quisp/out/emcc-release/*.data
+            quisp/out/emcc-release/*.wasm
+            quisp/out/emcc-release/*.svg
+  deploy-wasm:
+    needs: build-wasm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: 'sfc-aqua/quisp-online'
+      - uses: actions/download-artifact@v2
+        with:
+          name: wasm-build
+      - name: commit and push
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          GIT_SSH_COMMAND: ssh -i ~/deploy_key.pem -o StrictHostKeyChecking=no -F /dev/null
+        run: |
+          echo "$DEPLOY_KEY" > ~/deploy_key.pem
+          chmod 600 ~/deploy_key.pem
+          ls -la
+          git status
+          mkdir -p $GITHUB_SHA
+          mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js $GITHUB_SHA
+          git add $GITHUB_SHA
+          git config remote.origin.url  "git@github.com:sfc-aqua/quisp-online"
+          git config user.name "GitHub Actions Bot"
+          git config user.email "sfc-aqua@users.noreply.github.com"
+          git commit -m "wasm build: $GITHUB_SHA"
+          git push origin master -f
