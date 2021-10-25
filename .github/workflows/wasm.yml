@@ -29,20 +29,23 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: wasm-build
-      - name: commit and push
+      - name: setup git
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
-          GIT_SSH_COMMAND: ssh -i ~/deploy_key.pem -o StrictHostKeyChecking=no -F /dev/null
         run: |
-          echo "$DEPLOY_KEY" > ~/deploy_key.pem
+          echo "$deploy_key" > ~/deploy_key.pem
           chmod 600 ~/deploy_key.pem
-          ls -la
-          git status
-          mkdir -p $GITHUB_SHA
-          mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js $GITHUB_SHA
-          git add $GITHUB_SHA
           git config remote.origin.url  "git@github.com:sfc-aqua/quisp-online"
           git config user.name "GitHub Actions Bot"
           git config user.email "sfc-aqua@users.noreply.github.com"
+      - name: commit
+        run: |
+          mkdir -p $GITHUB_SHA
+          mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js $GITHUB_SHA
+          git add $GITHUB_SHA
           git commit -m "wasm build: $GITHUB_SHA"
+      - name: push
+        env:
+          GIT_SSH_COMMAND: ssh -i ~/deploy_key.pem -o StrictHostKeyChecking=no -F /dev/null
+        run: |
           git push origin master -f
