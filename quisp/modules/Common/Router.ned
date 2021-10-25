@@ -1,4 +1,5 @@
 package modules.Common;
+@namespace(quisp::modules);
 
 simple Router
 {

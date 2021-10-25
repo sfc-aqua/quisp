@@ -1,4 +1,5 @@
 package modules;
+@namespace(quisp::modules);
 
 import modules.Application.Application;
 import modules.QRSA.quantumRoutingSoft;

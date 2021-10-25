@@ -1,4 +1,5 @@
 package modules;
+@namespace(quisp::modules);
 
 import modules.QNIC.StationaryQubit.*;
 import modules.QNIC.PhotonicSwitch.*;
@@ -8,7 +9,7 @@ import modules.interHoM;
 module QNIC
 {
     parameters:
-        
+
         int numBuffer = default(7);
 
         int self_qnic_address;//Buffer identifier/address

@@ -14,6 +14,7 @@
 //
 
 package modules.QRSA.RuleEngine;
+@namespace(quisp::modules);
 
 simple RuleEngine
 {
