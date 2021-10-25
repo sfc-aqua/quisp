@@ -33,7 +33,7 @@ jobs:
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
         run: |
-          echo "$deploy_key" > ~/deploy_key.pem
+          echo "$DEPLOY_KEY" > ~/deploy_key.pem
           chmod 600 ~/deploy_key.pem
           git config remote.origin.url  "git@github.com:sfc-aqua/quisp-online"
           git config user.name "GitHub Actions Bot"
