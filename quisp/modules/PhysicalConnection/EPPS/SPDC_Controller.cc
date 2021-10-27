@@ -67,6 +67,7 @@ void SPDC_Controller::initialize() {
   epps = check_and_cast<EntangledPhotonPairSource *>(pump);
   address = par("address");
   timing_buffer = par("timing_buffer");
+  timing_buffer += 1.0;//TODO:
   cPar *c = &par("Speed_of_light_in_fiber");
   speed_of_light_in_channel = c->doubleValue();
   // For simplicity, I assume the SPDC can access those neighbor information without classical communication but directly.
@@ -97,23 +98,23 @@ void SPDC_Controller::handleMessage(cMessage *msg) {
     startPump();
   } else if (dynamic_cast<EmitPhotonRequest *>(msg) != nullptr) {
     epps->emitPhotons();
-    SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne");
-    scheduleAt(simTime() + max_accepted_rate, st);
-  } else if (dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg) != nullptr) {
-    epps->emitPhotons();
-    SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne");
-    scheduleAt(simTime() + max_accepted_rate, st);
+    // SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne");
+    // scheduleAt(simTime() + max_accepted_rate, st);
+  // } else if (dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg) != nullptr) {
+  //   epps->emitPhotons();
+  //   SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne");
+  //   scheduleAt(simTime() + max_accepted_rate, st);
   }
   delete msg;
 }
 
 void SPDC_Controller::startPump() {
-  // for(int i=0; i<max_buffer; i++){
-  //   emt = new  EmitPhotonRequest();
-  //   scheduleAt(simTime()+timing_buffer+(max_accepted_rate*i), emt);
-  // }
-  emt = new EmitPhotonRequest("EmitPhotonRequest");
-  scheduleAt(simTime() + timing_buffer + (max_accepted_rate), emt);
+  // emt = new EmitPhotonRequest("EmitPhotonRequest");
+  // scheduleAt(simTime() + timing_buffer + (max_accepted_rate), emt);
+  for(int i=0; i<max_buffer; i++){
+    emt = new EmitPhotonRequest();
+    scheduleAt(simTime()+timing_buffer+(max_accepted_rate*i), emt);
+  }
 }
 
 EPPStimingNotifier *SPDC_Controller::generateNotifier(double distance_to_neighbor, double c, int destAddr) {

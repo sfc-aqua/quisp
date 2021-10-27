@@ -397,15 +397,42 @@ void HoMController::sendBSAresultsToNeighbors() {
     pk = new CombinedBSAresults_epps();
     pkt = new CombinedBSAresults_epps();
 
+    cGate *currentGate = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->getParentModule()->gate("quantum_port$o", 0);
+    int loop_counter = 0;
+    std::string node = "modules.interHoM";
+    const char *array = node.c_str();
+    cModuleType *NodeType_check = cModuleType::get(array);
+    while (currentGate->getOwnerModule()->getModuleType() != NodeType_check) {
+      currentGate = currentGate->getNextGate();
+      loop_counter ++;
+    }
+    int dest = currentGate->getOwnerModule()->getParentModule()->getParentModule()->par("address");
+    //TODO:
+    if (dest == neighbor_address) {
+      cGate *currentGate = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->getParentModule()->gate("quantum_port$o", 1);
+      int loop_counter = 0;
+      std::string node = "modules.interHoM";
+      const char *array = node.c_str();
+      cModuleType *NodeType_check = cModuleType::get(array);
+      while (currentGate->getOwnerModule()->getModuleType() != NodeType_check) {
+        currentGate = currentGate->getNextGate();
+        loop_counter ++;
+      }
+      dest = currentGate->getOwnerModule()->getParentModule()->getParentModule()->par("address");
+    }
+
     pk->setSrcAddr(address);
     pk->setDestAddr(neighbor_address);
     pk->setList_of_failedArraySize(getStoredBSAresultsSize());
     pk->setKind(6);
 
     pkt->setSrcAddr(address);
-    pkt->setDestAddr(neighbor_address_two);
+    pkt->setDestAddr(dest);
     pkt->setList_of_failedArraySize(getStoredBSAresultsSize());
     pkt->setKind(6);
+
+    EV<<"neighbor_address: "<<neighbor_address<<"\n";
+    EV<<"dest: "<<dest<<"\n";
 
     EV << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!list of failed size = " << getStoredBSAresultsSize() << "\n";
 

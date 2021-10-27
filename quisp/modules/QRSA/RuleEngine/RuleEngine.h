@@ -63,6 +63,8 @@ class RuleEngine : public IRuleEngine {
   IHardwareMonitor *hardware_monitor;
   IRoutingDaemon *routingdaemon;
   IRealTimeController *realtime_controller;
+  CombinedBSAresults_epps *combinedBSA_results_epps_one = nullptr;
+  CombinedBSAresults_epps *combinedBSA_results_epps_two = nullptr;
   int *qnic_burst_trial_counter;
   BellPairStore bell_pair_store;
   // typedef rules::RuleSet* RuleSetPtr;
@@ -89,7 +91,7 @@ class RuleEngine : public IRuleEngine {
   QubitStateTable setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
   QubitStateTable setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
   QubitStateTable initializeQubitStateTable(QubitStateTable temp, QNIC_type qnic_type);
-  void scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type);
+  void scheduleFirstPhotonEmission(cMessage *pk, QNIC_type qnic_type);
   void sendPhotonTransmissionSchedule(PhotonTransmissionConfig transmission_config);
   void shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk);
   // virtual int getQNICjob_index_for_this_qnic(int qnic_index, QNIC_type qnic_type);
@@ -99,8 +101,9 @@ class RuleEngine : public IRuleEngine {
   // virtual int getQnicIndex_toNeighbor(int destAddr);
   InterfaceInfo getInterface_toNeighbor(int destAddr);
   InterfaceInfo getInterface_toNeighbor_Internal(int local_qnic_index);
-  void scheduleNextEmissionEvent(int qnic_index, int qnic_address, double interval, simtime_t timing, int num_sent, bool internal, int trial);
+  void scheduleNextEmissionEvent(int qnic_index, int qnic_address, double interval, simtime_t timing, int num_sent, QNIC_type qnic_type, int trial);
   void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result);
+  void freeFailedQubits_and_AddAsResource_MSM(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults_epps *pk_result_one, CombinedBSAresults_epps *pk_result_two);
   void clearTrackerTable(int destAddr, int internal_qnic_address);
   // virtual void traverseThroughAllProcesses(RuleEngine *re, int qnic_type, int qnic_index);
   void traverseThroughAllProcesses2();

@@ -33,7 +33,7 @@ packet CombinedBSAresults extends BSMtimingNotifier
 }
 
 //Used for MSM. BSA results are sent back to EPPS. EPPS will generate the next order based on that.
-packet CombinedBSAresults_epps extends Header
+packet CombinedBSAresults_epps extends EPPStimingNotifier
 {
     bool list_of_failed[];
 }

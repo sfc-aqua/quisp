@@ -35,14 +35,38 @@ PhotonicQubit *EntangledPhotonPairSource::generateEntangledPhotons() {
   // qubits->qubitTwo = photon_two;
   // qubits->qubitOne = photon_one;
   // return qubits;
+
+  // Enter_Method("generateEntangledPhoton()");
+  // auto *photon = new PhotonicQubit("Photon");
+  // // To simulate the actual physical entangled partner, not what the system thinks!!! we need this.
+
+  // // This photon is entangled with.... node_address = node's index
+  // photon->setNodeEntangledWith(node_address);
+
+  // // qnic_address != qnic_index. qnic_index is not unique because there are 3 types.
+  // photon->setQNICEntangledWith(qnic_address);
+
+  // // stationaryQubit_address = StationaryQubit's index
+  // photon->setStationaryQubitEntangledWith(stationaryQubit_address);
+  // photon->setQNICtypeEntangledWith(qnic_type);
+  // photon->setEntangled_with(this);
+  // return photon;
 }
 
 void EntangledPhotonPairSource::emitPhotons() {
   Enter_Method("emitPhotons()");
-  PhotonicQubit *qubit = generateEntangledPhotons();
+  // PhotonicQubit *qubit = generateEntangledPhotons();
+  PhotonicQubit *qubit = new PhotonicQubit("Photon");
   qubit->addPar("gate") = 0;
-  PhotonicQubit *qubitTwo = generateEntangledPhotons();
+  // PhotonicQubit *qubitTwo = generateEntangledPhotons();
+  PhotonicQubit *qubitTwo = new PhotonicQubit("Photon");
   qubitTwo->addPar("gate") = 1;
+
+  qubit->setEntangled_photon(qubitTwo);
+  qubit->setIs_entangled_with_photon(true);
+  qubitTwo->setEntangled_photon(qubit);
+  qubitTwo->setIs_entangled_with_photon(true);
+
   float jitter_timing = normal(0, emission_std);
   float abso = fabs(jitter_timing);
 
