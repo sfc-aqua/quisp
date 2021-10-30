@@ -22,6 +22,7 @@ jobs:
   deploy-wasm:
     needs: build-wasm
     runs-on: ubuntu-latest
+    if: ${{ (github.ref == 'refs/heads/master') || startsWith('refs/tags/', github.ref) }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -38,12 +39,21 @@ jobs:
           git config remote.origin.url  "git@github.com:sfc-aqua/quisp-online"
           git config user.name "GitHub Actions Bot"
           git config user.email "sfc-aqua@users.noreply.github.com"
-      - name: commit
+      - name: commit master branch
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: |
+          rm -rf master
+          mkdir -p master
+          mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js master
+          git add master
+          git commit -m "[master] wasm build: $GITHUB_SHA"
+      - name: commit tag
+        if: ${{ startsWith('refs/tags/', github.ref) }}
         run: |
           mkdir -p $GITHUB_SHA
           mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js $GITHUB_SHA
           git add $GITHUB_SHA
-          git commit -m "wasm build: $GITHUB_SHA"
+          git commit -m "wasm build: $GITHUB_SHA : $GITHUB_REF"
       - name: push
         env:
           GIT_SSH_COMMAND: ssh -i ~/deploy_key.pem -o StrictHostKeyChecking=no -F /dev/null
