@@ -28,7 +28,6 @@ module MockQNode {
             TrafficPattern = 1;
             LoneInitiatorAddress = 1;
             address = address;
-            NumberOfResources = 1;
         }
     connections:
         router.fromApp <-- app.toRouter;
