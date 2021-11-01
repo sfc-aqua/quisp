@@ -8,6 +8,7 @@ OBJS := $(filter-out %unit_test_main.o,$(OBJS))
 # $ make tidy # checks all sources
 SRCS?=$(shell git ls-files . | grep "^.*.cc$$")
 HEADERS?=$(shell git ls-files . | grep "^.*.h$$")
+PROJ_ROOT=$(shell git rev-parse --show-toplevel)
 TEST_SRCS=$(filter %_test.cc,$(SRCS)) $(test_utils/%.cc) ./unit_test_main.cc
 TEST_OBJS=$(foreach obj,$(TEST_SRCS:.cc=.o),$O/$(obj))
 TEST_INCLUDE=-I../googletest/googletest/include/ -I../googletest/googlemock/include/
@@ -18,7 +19,7 @@ TEST_LIBS=-L../googletest/build/lib -lgtest -lgmock
 PKG_CONFIG_STATUS=$(shell pkg-config eigen3 --cflags 2>/dev/null 1>&2; echo $$?)
 ifneq ('0','$(PKG_CONFIG_STATUS)')
 # using quisp/eigen
-INCLUDE_PATH+=-I. -I$(CURDIR)/../eigen/
+INCLUDE_PATH+=-I. -I$(PROJ_ROOT)/eigen/
 else
 INCLUDE_PATH+=-I. $(shell pkg-config eigen3 --cflags)
 endif
@@ -57,11 +58,11 @@ eigen:
 # check eigen3 exists on pkg-config
 ifneq ('0','$(PKG_CONFIG_STATUS)')
 # check eigen is installed on quisp/eigen
-ifeq (,$(wildcard $(CURDIR)/../eigen/CMakeLists.txt))
-	make eigen -C $(CURDIR)/..
+ifeq (,$(wildcard $(PROJ_ROOT)/eigen/CMakeLists.txt))
+	make eigen -C $(PROJ_ROOT)
 endif
 	# using quisp/eigen
-INCLUDE_PATH+=-I$(CURDIR)/../eigen/
+INCLUDE_PATH+=-I$(PROJ_ROOT)/eigen/
 else
 INCLUDE_PATH+=-I.
 INCLUDE_PATH+=$(shell pkg-config eigen3 --cflags)
