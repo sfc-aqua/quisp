@@ -1,4 +1,5 @@
 package modules.QNIC.StationaryQubit;
+@namespace(quisp::modules);
 
 simple StationaryQubit
 {

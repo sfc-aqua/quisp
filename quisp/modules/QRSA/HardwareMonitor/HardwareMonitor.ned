@@ -1,4 +1,5 @@
 package modules.QRSA.HardwareMonitor;
+@namespace(quisp::modules);
 
 simple HardwareMonitor
 {
@@ -25,5 +26,5 @@ simple HardwareMonitor
     gates:
         inout RuleEnginePort;
         inout RouterPort;
-        
+
 }
