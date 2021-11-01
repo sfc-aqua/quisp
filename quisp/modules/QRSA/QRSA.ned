@@ -1,4 +1,5 @@
 package modules.QRSA;
+@namespace(quisp::modules);
 
 import modules.QRSA.ConnectionManager.*;
 import modules.QRSA.HardwareMonitor.*;
@@ -68,7 +69,7 @@ module quantumRoutingSoft
         re.RouterPort <--> rePort;
         re.HardwareMonitorPort <--> hm.RuleEnginePort;
         hm.RouterPort <--> hmPort;
-        
+
         //for i=0..sizeof(qnics)-1{
         //    rd.dummyQNICLink++ <--> qnics[i];
         //}

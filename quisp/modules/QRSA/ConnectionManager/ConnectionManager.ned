@@ -1,4 +1,6 @@
 package modules.QRSA.ConnectionManager;
+@namespace(quisp::modules);
+
 simple ConnectionManager
 {
     parameters:

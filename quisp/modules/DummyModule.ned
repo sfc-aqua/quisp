@@ -1,4 +1,5 @@
 package modules;
+@namespace(quisp::modules);
 
 simple dummyModule {
      //@class(quisp::modules::dummyModule);

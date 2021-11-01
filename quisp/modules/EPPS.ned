@@ -1,4 +1,5 @@
 package modules;
+@namespace(quisp::modules);
 
 import ned.DatarateChannel;
 import ned.DelayChannel;

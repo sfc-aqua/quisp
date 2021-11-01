@@ -1,4 +1,5 @@
 package modules.PhysicalConnection.BSA;
+@namespace(quisp::modules);
 
 simple BellStateAnalyzer
 {

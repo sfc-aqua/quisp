@@ -1,4 +1,5 @@
 package modules.QRSA.RoutingDaemon;
+@namespace(quisp::modules);
 
 simple RoutingDaemon
 {
