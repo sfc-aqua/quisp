@@ -20,13 +20,13 @@ As the inputs of BSA, we assume two photons entangled with matter qubit (quantum
 
 ![Beam Splitter (4).png](./img/Beam_Splitter_(4).png)
 
-Here, we assume those entangled states are $|\psi^-\rangle = \frac{|HV\rangle - |VH\rangle}{\sqrt{2}}$ known as one of the Bell states, where $|H\rangle$ is horizontal polarization state and $|V\rangle$ is vertical polarization state. 
+Here, we assume those entangled states are <img src="https://render.githubusercontent.com/render/math?math=|\psi^{-}\rangle = \frac{|HV\rangle - |VH\rangle}{\sqrt{2}}"> known as one of the Bell states, where <img src="https://render.githubusercontent.com/render/math?math=|H\rangle"> is horizontal polarization state and <img src="https://render.githubusercontent.com/render/math?math=|V\rangle"> is vertical polarization state. 
 
 Beam splitter (or semi-reflective mirror) is one optical component that splits incident light into two, transmitted and reflected light. 
 
 ![BSA (3).png](./img/BSA_D.png)
 
-When there are joint detection in (D1, D3) or (D2, D4), the remaining qubit's state $|\psi^-\rangle$. If there are joint detection in (D1, D2) or (D3, D4), the state is $|\psi^+\rangle$.  In the case where both photons are detected at one detector, the state is $|\phi^+\rangle$ or $|\phi^-\rangle$.  It is impossible to distinguish either $|\phi^+\rangle$ or $|\phi^-\rangle$. From this fact,  the maximum success probability of linear optical Bell state measurement is known as theoretically limited to 50 %[4].
+When there are joint detection in (D1, D3) or (D2, D4), the remaining qubit's state<img src="https://render.githubusercontent.com/render/math?math=|\psi^{-}\rangle">. If there are joint detection in (D1, D2) or (D3, D4), the state is <img src="https://render.githubusercontent.com/render/math?math=|\psi^{+}\rangle">.  In the case where both photons are detected at one detector, the state is <img src="https://render.githubusercontent.com/render/math?math=|\phi^{+}\rangle"> or <img src="https://render.githubusercontent.com/render/math?math=|\phi^{-}\rangle">.  It is impossible to distinguish either <img src="https://render.githubusercontent.com/render/math?math=|\phi^{+}\rangle"> or <img src="https://render.githubusercontent.com/render/math?math=|\phi^{-}\rangle">. From this fact,  the maximum success probability of linear optical Bell state measurement is known as theoretically limited to 50 %[4].
 
 # What is the interface to the outside world?
 
