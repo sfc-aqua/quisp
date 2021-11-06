@@ -144,18 +144,15 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   next_rule->rule_index = mock_next_rule_id;
   rs->addRule(std::move(next_rule));
 
-  Process proc;
-  proc.owner_addr = 0;
-  proc.Rs = rs;
-  rule_engine->rp.insert(std::make_pair(0, proc));
-  rule_engine->rp[0].Rs->getRule(0)->addResource(1, mockQubit1);
-  ASSERT_EQ(rule_engine->rp[0].Rs->getRule(0)->resources.size(), 1);
-  ASSERT_EQ(rule_engine->rp[0].Rs->getRule(1)->resources.size(), 0);
+  rule_engine->rp.insert(std::make_pair(0, rs));
+  rule_engine->rp[0]->getRule(0)->addResource(1, mockQubit1);
+  ASSERT_EQ(rule_engine->rp[0]->getRule(0)->resources.size(), 1);
+  ASSERT_EQ(rule_engine->rp[0]->getRule(1)->resources.size(), 0);
   rule_engine->updateResources_EntanglementSwapping(swapr);
   // 1. remove from previous rule
-  ASSERT_EQ(rule_engine->rp[0].Rs->getRule(0)->resources.size(), 0);
+  ASSERT_EQ(rule_engine->rp[0]->getRule(0)->resources.size(), 0);
   // // 2. add to the next rule
-  ASSERT_EQ(rule_engine->rp[0].Rs->getRule(1)->resources.size(), 1);
+  ASSERT_EQ(rule_engine->rp[0]->getRule(1)->resources.size(), 1);
   delete mockHardwareMonitor;
   delete routingdaemon;
 }
@@ -183,15 +180,12 @@ TEST(RuleEngineTest, resourceAllocation) {
   rule->setAction(action);
   rule->action_partners = {1};
   rs->addRule(std::move(rule));
-  Process proc;
-  proc.owner_addr = 0;
-  proc.Rs = rs;
-  rule_engine->rp.insert(std::make_pair(0, proc));
+  rule_engine->rp.insert(std::make_pair(0, rs));
 
   rule_engine->ResourceAllocation(QNIC_E, 3);
 
   // resource allocation assigns a corresponding qubit to action's resource
-  auto* _rs = rule_engine->rp.at(0).Rs;
+  auto& _rs = rule_engine->rp.at(0);
   EXPECT_NE(_rs, nullptr);
   EXPECT_EQ(_rs->size(), 1);
   auto& _rule = _rs->getRule(0);
@@ -276,12 +270,7 @@ TEST(RuleEngineTest, storeCheckPurificationAgreement_running_process) {
   ruleset->addRule(std::unique_ptr<Rule>(rule1));
   ruleset->addRule(std::unique_ptr<Rule>(rule2));
 
-  auto proc = Process{
-      .owner_addr = rule_engine->parentAddress,
-      .Rs = ruleset,
-  };
-
-  rule_engine->rp.insert(std::make_pair(1, proc));
+  rule_engine->rp.insert(std::make_pair(1, ruleset));
   EXPECT_CALL(*qubit, Unlock()).Times(1);
 
   purification_result result{
@@ -360,12 +349,7 @@ TEST(RuleEngineTest, unlockResourceAndDiscard) {
   ruleset->addRule(std::unique_ptr<Rule>(rule1));
   ruleset->addRule(std::unique_ptr<Rule>(rule2));
 
-  auto proc = Process{
-      .owner_addr = rule_engine->parentAddress,
-      .Rs = ruleset,
-  };
-
-  rule_engine->rp.insert(std::make_pair(1, proc));
+  rule_engine->rp.insert(std::make_pair(1, ruleset));
   EXPECT_CALL(*qubit, Unlock()).Times(1);
 
   rule_engine->updateAppliedRule(qubit, 0);
@@ -408,12 +392,7 @@ TEST(RuleEngineTest, unlockResourceAndUpgradeStage) {
   ruleset->addRule(std::unique_ptr<Rule>(rule1));
   ruleset->addRule(std::unique_ptr<Rule>(rule2));
 
-  auto proc = Process{
-      .owner_addr = rule_engine->parentAddress,
-      .Rs = ruleset,
-  };
-
-  rule_engine->rp.insert(std::make_pair(1, proc));
+  rule_engine->rp.insert(std::make_pair(1, ruleset));
   EXPECT_CALL(*qubit, Unlock()).Times(1);
 
   EXPECT_EQ(rule1->resources.size(), 1);
@@ -455,12 +434,7 @@ TEST(RuleEngineTest, unlockResourceAndUpgradeStage_without_next_rule) {
   rule->addResource(partner_addr, qubit);
   ruleset->addRule(std::unique_ptr<Rule>(rule));
 
-  auto proc = Process{
-      .owner_addr = rule_engine->parentAddress,
-      .Rs = ruleset,
-  };
-
-  rule_engine->rp.insert(std::make_pair(1, proc));
+  rule_engine->rp.insert(std::make_pair(1, ruleset));
   EXPECT_CALL(*qubit, Unlock()).Times(1);
   EXPECT_EQ(rule->resources.size(), 1);
   EXPECT_THROW({ rule_engine->Unlock_resource_and_upgrade_stage(ruleset_id, target_rule_id, action_index); }, cRuntimeError);
