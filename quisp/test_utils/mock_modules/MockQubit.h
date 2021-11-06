@@ -5,7 +5,7 @@
 #include <test_utils/ModuleType.h>
 #include <test_utils/UtilFunctions.h>
 #include "modules/QNIC.h"
-#include "modules/QRSA/RuleEngine/BellPairStore.h"
+#include "modules/QRSA/RuleEngine/BellPairStore/BellPairStore.h"
 
 namespace quisp_test {
 namespace mock_modules {

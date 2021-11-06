@@ -2,8 +2,7 @@
 
 #include <modules/QNIC.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
 using QNodeAddr = int;
 using QNicIndex = int;
@@ -30,5 +29,4 @@ class BellPairStore {
  protected:
   std::map<ResourceKey, PartnerAddrQubitMap> _resources;
 };
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules
