@@ -7,6 +7,7 @@
 
 #include "RuleEngine.h"
 #include <fstream>
+#include <iterator>
 #include <utility>
 #include "utils/ComponentProvider.h"
 
@@ -542,7 +543,7 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
   for (auto &[_, ruleset] : rp) {
     if (ruleset->ruleset_id == ruleset_id) {
       // 2. pick up proper rule inside the ruleset
-      for (auto rule = ruleset->cbegin(); rule != ruleset->cend(); ++rule) {
+      for (auto rule = ruleset->rules.cbegin(); rule != ruleset->cend(); ++rule) {
         if ((*rule)->rule_index == rule_id) {  // here we can identify the rule of purification
           // 3. loop for resources currently assined
           for (auto qubit_record = (*rule)->resources.begin(); qubit_record != (*rule)->resources.end(); ++qubit_record) {
