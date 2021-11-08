@@ -46,4 +46,42 @@ TEST(RuleSetStore, Erase) {
   rs.erase(first_ruleset);
   EXPECT_EQ(rs.rulesets.size(), 0);
 }
+
+TEST(RuleSetStore, EraseWhileIterating) {
+  prepareSimulation();
+  RuleSetStore rs;
+  for (int i = 0; i < 10; i++) {
+    auto ruleset = new RuleSet(i, i * 2, i * 3);
+    rs.insert(ruleset);
+  }
+  int i = 0;
+  for (auto&& ruleset = rs.cbegin(); ruleset != rs.cend();) {
+    if (i == 9) {
+      ruleset = rs.erase(ruleset);
+    } else {
+      ruleset++;
+    }
+    i++;
+  }
+  EXPECT_EQ(rs.rulesets.size(), 9);
+}
+TEST(RuleSetStore, IterateWithConst) {
+  prepareSimulation();
+  RuleSetStore rs;
+  EXPECT_EQ(rs.rulesets.size(), 0);
+  EXPECT_EQ(rs.cbegin(), rs.cend());
+  for (int i = 0; i < 10; i++) {
+    auto ruleset = new RuleSet(i, i * 2, i * 3);
+    rs.insert(ruleset);
+  }
+
+  EXPECT_EQ(rs.rulesets.size(), 10);
+  int i = 0;
+  for (auto&& ruleset = rs.cbegin(); ruleset != rs.cend(); ++ruleset) {
+    EXPECT_EQ((*ruleset)->ruleset_id, i);
+    EXPECT_EQ((*ruleset)->owner_addr, i * 2);
+    EXPECT_EQ((*ruleset)->entangled_partners.at(0), i * 3);
+    i++;
+  }
+}
 }  // namespace

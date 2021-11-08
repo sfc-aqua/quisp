@@ -1206,11 +1206,11 @@ void RuleEngine::traverseThroughAllProcesses2() {
     return;
   }
 
-  for (auto &&rs_iter = rp.cbegin(); rs_iter != rp.cend(); rs_iter++) {
+  for (auto &&rs_iter = rp.cbegin(); rs_iter != rp.cend();) {
     auto &&ruleset = *rs_iter;
+    bool ruleset_deleted = false;
     for (auto rule = ruleset->cbegin(), end = ruleset->cend(); rule != end; rule++) {
       bool process_done = false;
-      bool terminate_this_rule = false;
 
       while (true) {
         if (!((*rule)->resources.size() > 0)) {
@@ -1351,8 +1351,9 @@ void RuleEngine::traverseThroughAllProcesses2() {
           // std::cout<<"!!!!!!!!!!!!!!!!!!!!! TERMINATING!!!!!!!!!!!!!!!!!!!!!!!!!";
           std::cout << "RuleSet_id=" << ruleset->ruleset_id << "\n";
           // todo:Also need to deallocate resources!!!!!!!!!!!!not implemented yet.
-          rp.erase(rs_iter);  // Erase rule set from map.
-          terminate_this_rule = true;  // Flag to get out from outer loop
+          // delete ruleset
+          rs_iter = rp.erase(rs_iter);
+          ruleset_deleted = true;
           std::cout << "node[" << parentAddress << "]:RuleSet deleted.\n";
           EV << "node[" << parentAddress << "]:RuleSet deleted.\n";
           break;  // get out from this for loop.
@@ -1363,6 +1364,11 @@ void RuleEngine::traverseThroughAllProcesses2() {
         break;
       }
     }  // For
+    // if the ruleset deleted, the rs_iter points the next ruleset.
+    if (!ruleset_deleted) {
+      // if not, we need to incremet the rs_iter to point the next ruleset.
+      rs_iter++;
+    }
   }  // For loop
 }
 
