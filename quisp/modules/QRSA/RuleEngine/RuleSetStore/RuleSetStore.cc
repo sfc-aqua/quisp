@@ -18,4 +18,11 @@ std::unique_ptr<RuleSet>& RuleSetStore::operator[](int i) {
   return rulesets[i];
 }
 
+RuleSetVector::iterator RuleSetStore::findById(long ruleset_id) {
+  for (auto &&rs = rulesets.begin(), end = rulesets.end(); rs != end; ++rs) {
+    if ((*rs)->ruleset_id == ruleset_id) return rs;
+  }
+  return rulesets.end();
+}
+
 }  // namespace quisp::modules::ruleset_store

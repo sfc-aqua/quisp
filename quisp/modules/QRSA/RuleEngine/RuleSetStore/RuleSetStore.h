@@ -20,6 +20,7 @@ class RuleSetStore {
   void insert(RuleSet* ruleset);
   RuleSetVector::iterator erase(const RuleSetVector::const_iterator& ruleset);
   std::unique_ptr<RuleSet>& operator[](int i);
+  RuleSetVector::iterator findById(long ruleset_id);
 
  protected:
   RuleSetVector rulesets;
