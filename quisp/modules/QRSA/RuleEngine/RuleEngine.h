@@ -15,6 +15,7 @@
 #include "../../PhysicalConnection/BSA/HoMController.h"
 #include "BellPairStore/BellPairStore.h"
 #include "IRuleEngine.h"
+#include "RuleSetStore/RuleSetStore.h"
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RealTimeController/IRealTimeController.h"
@@ -66,7 +67,7 @@ class RuleEngine : public IRuleEngine {
   int *qnic_burst_trial_counter;
   BellPairStore bell_pair_store;
   // typedef rules::RuleSet* RuleSetPtr;
-  RuleSetStore rp;
+  ruleset_store::RuleSetStore rp;
   // Vector for store package for simultaneous entanglement swapping
   std::map<int, std::map<int, int>> simultaneous_es_results;
   // tracker accessible table has as many number of boolean value as the number of qnics in the qnode.

@@ -180,7 +180,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
     // ResourceAllocation();
     if (ruleset->size() > 0) {
-      rp.insert(std::make_pair(process_id, ruleset));
+      rp.insert(ruleset);
       EV << "New process arrived !\n";
     } else {
       error("Empty rule set...");
@@ -292,11 +292,10 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // add actual process
     auto &ruleset = pkt->getRuleSet();
     // here swappers got swapping ruleset with internal packet
-    int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
     // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
     // ResourceAllocation();
     if (ruleset->size() > 0) {
-      rp.insert(std::make_pair(process_id, ruleset));
+      rp.insert(ruleset);
       EV << "New process arrived !\n";
     } else {
       error("Empty rule set...");
@@ -308,10 +307,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
       // Received a tomography rule set.
 
       auto ruleset = pkt->getRuleSet();
-      int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
       std::cout << "Process size is ...." << ruleset->size() << " node[" << parentAddress << "\n";
       if (ruleset->size() > 0) {
-        rp.insert(std::make_pair(process_id, ruleset));
+        rp.insert(ruleset);
         EV << "New process arrived !\n";
       } else {
         error("Empty rule set...");
@@ -341,7 +339,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
 void RuleEngine::storeCheck_Purification_Agreement(purification_result pur_result) {
   bool ruleset_running = false;
-  for (const auto &[_, ruleset] : rp) {
+  for (const auto &ruleset : rp) {
     if (ruleset->ruleset_id == pur_result.id.ruleset_id) {
       ruleset_running = true;
       break;
@@ -376,7 +374,7 @@ void RuleEngine::storeCheck_Purification_Agreement(purification_result pur_resul
 
 void RuleEngine::storeCheck_DoublePurification_Agreement(Doublepurification_result pr) {
   bool ruleset_running = false;
-  for (const auto &[_, ruleset] : rp) {
+  for (const auto &ruleset : rp) {
     if (ruleset->ruleset_id == pr.id.ruleset_id) {
       ruleset_running = true;
       break;
@@ -416,7 +414,7 @@ void RuleEngine::storeCheck_DoublePurification_Agreement(Doublepurification_resu
 
 void RuleEngine::storeCheck_TriplePurification_Agreement(Triplepurification_result pr) {
   bool ruleset_running = false;
-  for (const auto &[_, ruleset] : rp) {
+  for (const auto &ruleset : rp) {
     if (ruleset->ruleset_id == pr.id.ruleset_id) {
       ruleset_running = true;
       break;
@@ -450,7 +448,7 @@ void RuleEngine::storeCheck_TriplePurification_Agreement(Triplepurification_resu
 
 void RuleEngine::storeCheck_QuatroPurification_Agreement(Quatropurification_result pr) {
   bool ruleset_running = false;
-  for (const auto &[_, ruleset] : rp) {
+  for (const auto &ruleset : rp) {
     if (ruleset->ruleset_id == pr.id.ruleset_id) {
       ruleset_running = true;
       break;
@@ -540,7 +538,7 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
     return;
   }
   // 1. loop for ruleset and check where the target index
-  for (auto &[_, ruleset] : rp) {
+  for (auto &&ruleset : rp) {
     if (ruleset->ruleset_id == ruleset_id) {
       // 2. pick up proper rule inside the ruleset
       for (auto rule = ruleset->rules.cbegin(); rule != ruleset->cend(); ++rule) {
@@ -610,7 +608,7 @@ void RuleEngine::clearAppliedRule(IStationaryQubit *qubit) {
 
 void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, unsigned long rule_id, int index) {
   bool ok = false;
-  for (auto &[_, ruleset] : rp) {  // In a particular RuleSet
+  for (auto &&ruleset : rp) {  // In a particular RuleSet
 
     if (ruleset->ruleset_id == ruleset_id) {  // Find the corresponding ruleset.
       // One Process. From top to bottom.
@@ -973,7 +971,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   if (rp.size() == 0) {
     return;
   }
-  for (const auto &[_, ruleset] : rp) {
+  for (const auto &ruleset : rp) {
     EV << ruleset->ruleset_id << " : " << ruleset_id << "\n";
     if (ruleset->ruleset_id == ruleset_id) {
       for (auto rule = ruleset->cbegin(); rule != ruleset->cend(); rule++) {
@@ -1166,10 +1164,9 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
     return;
   }
   // If there are running rulesets, then try to allocate resource to it
-  for (auto &[_, ruleset] : rp) {  // In a particular RuleSet
+  for (auto &&ruleset : rp) {  // In a particular RuleSet
 
     // take the first ruleset
-
     if (ruleset->empty()) {
       error("RuleSet with no Rule found. Probably not what you want!");
     }
@@ -1209,8 +1206,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
     return;
   }
 
-  for (const auto &it : rp) {
-    auto &ruleset = it.second;
+  for (auto &&rs_iter = rp.cbegin(); rs_iter != rp.cend(); rs_iter++) {
+    auto &&ruleset = *rs_iter;
     for (auto rule = ruleset->cbegin(), end = ruleset->cend(); rule != end; rule++) {
       bool process_done = false;
       bool terminate_this_rule = false;
@@ -1354,7 +1351,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
           // std::cout<<"!!!!!!!!!!!!!!!!!!!!! TERMINATING!!!!!!!!!!!!!!!!!!!!!!!!!";
           std::cout << "RuleSet_id=" << ruleset->ruleset_id << "\n";
           // todo:Also need to deallocate resources!!!!!!!!!!!!not implemented yet.
-          rp.erase(it.first);  // Erase rule set from map.
+          rp.erase(rs_iter);  // Erase rule set from map.
           terminate_this_rule = true;  // Flag to get out from outer loop
           std::cout << "node[" << parentAddress << "]:RuleSet deleted.\n";
           EV << "node[" << parentAddress << "]:RuleSet deleted.\n";
