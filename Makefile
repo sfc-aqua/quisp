@@ -52,11 +52,17 @@ makefile-lib: eigen
 clean:
 	$(RM) quisp/Makefile quisp/quisp quisp/quisp_dbg quisp/run_unit_test quisp/libquisp*
 	$(RM) -r quisp/out
+	$(RM) -rf quisp/coverage* quisp/default.profraw quisp/lcov.info
 
 distclean:
 	git submodule deinit --all -f
 	make clean
 
+generate-coverage: makefile-lib
+	$(MAKE) -C quisp lcov.info
+
+generate-coverage-report: makefile-lib
+	$(MAKE) -C quisp/ coverage/index.html
 
 checkmakefile:
 	@if [ ! -f $(QUISP_MAKEFILE) ]; then \
