@@ -205,8 +205,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structquisp_1_1modules_1_1_photon_transmission_config.html">PhotonTransmissionConfig</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structquisp_1_1modules_1_1_process.html">Process</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_rule_engine.html">IRuleEngine</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_rule_engine.html">RuleEngine</a></td></tr>
@@ -259,8 +257,8 @@ Typedefs</h2></td></tr>
 <tr class="separator:a9b4bf1166a725a4d4970d21c187343c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6d54a83900f33d33ff32ca35460740f"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; int, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#af6d54a83900f33d33ff32ca35460740f">trial_tracker</a></td></tr>
 <tr class="separator:af6d54a83900f33d33ff32ca35460740f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ecfacb4b7230b7d4540cff4418a8759"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; int, <a class="el" href="structquisp_1_1modules_1_1_process.html">Process</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#a4ecfacb4b7230b7d4540cff4418a8759">running_processes</a></td></tr>
-<tr class="separator:a4ecfacb4b7230b7d4540cff4418a8759"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f323110510134307203862bcb86f95c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#a3f323110510134307203862bcb86f95c">RuleSetStore</a> = std::map&lt; int, std::unique_ptr&lt; <a class="el" href="classquisp_1_1rules_1_1_rule_set.html">RuleSet</a> &gt; &gt;</td></tr>
+<tr class="separator:a3f323110510134307203862bcb86f95c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c28ce58538cd43776e34a515a1422fe"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; int, <a class="el" href="classquisp_1_1rules_1_1_rule.html">Rule</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#a2c28ce58538cd43776e34a515a1422fe">rule_ptr</a></td></tr>
 <tr class="separator:a2c28ce58538cd43776e34a515a1422fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -536,14 +534,14 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a4ecfacb4b7230b7d4540cff4418a8759"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4ecfacb4b7230b7d4540cff4418a8759">&#9670;&nbsp;</a></span>running_processes</h2>
+<a id="a3f323110510134307203862bcb86f95c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f323110510134307203862bcb86f95c">&#9670;&nbsp;</a></span>RuleSetStore</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef std::map&lt;int, <a class="el" href="structquisp_1_1modules_1_1_process.html">Process</a>&gt; <a class="el" href="namespacequisp_1_1modules.html#a4ecfacb4b7230b7d4540cff4418a8759">quisp::modules::running_processes</a></td>
+          <td class="memname">using <a class="el" href="namespacequisp_1_1modules.html#a3f323110510134307203862bcb86f95c">quisp::modules::RuleSetStore</a> = typedef std::map&lt;int, std::unique_ptr&lt;<a class="el" href="classquisp_1_1rules_1_1_rule_set.html">RuleSet</a>&gt; &gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">

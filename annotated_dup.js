@@ -55,7 +55,6 @@ var annotated_dup =
         [ "Quatropurification_result", "structquisp_1_1modules_1_1_quatropurification__result.html", "structquisp_1_1modules_1_1_quatropurification__result" ],
         [ "swapping_result", "structquisp_1_1modules_1_1swapping__result.html", "structquisp_1_1modules_1_1swapping__result" ],
         [ "PhotonTransmissionConfig", "structquisp_1_1modules_1_1_photon_transmission_config.html", "structquisp_1_1modules_1_1_photon_transmission_config" ],
-        [ "Process", "structquisp_1_1modules_1_1_process.html", "structquisp_1_1modules_1_1_process" ],
         [ "IRuleEngine", "classquisp_1_1modules_1_1_i_rule_engine.html", "classquisp_1_1modules_1_1_i_rule_engine" ],
         [ "RuleEngine", "classquisp_1_1modules_1_1_rule_engine.html", "classquisp_1_1modules_1_1_rule_engine" ],
         [ "QubitAddr_cons", "structquisp_1_1modules_1_1_qubit_addr__cons.html", "structquisp_1_1modules_1_1_qubit_addr__cons" ],

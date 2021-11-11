@@ -68,7 +68,6 @@ var hierarchy =
     [ "quisp::modules::NeighborInfo", "structquisp_1_1modules_1_1_neighbor_info.html", null ],
     [ "quisp::modules::output_count", "structquisp_1_1modules_1_1output__count.html", null ],
     [ "quisp::modules::PhotonTransmissionConfig", "structquisp_1_1modules_1_1_photon_transmission_config.html", null ],
-    [ "quisp::modules::Process", "structquisp_1_1modules_1_1_process.html", null ],
     [ "quisp::modules::process_id", "structquisp_1_1modules_1_1process__id.html", null ],
     [ "quisp::modules::purification_result", "structquisp_1_1modules_1_1purification__result.html", null ],
     [ "quisp::modules::QNIC_id", "structquisp_1_1modules_1_1_q_n_i_c__id.html", [
