@@ -15,6 +15,7 @@ simple SPDC_Controller
         int neighbor_buffer = default(-1);
         int neighbor_buffer_two = default(-1);
         int max_buffer = default(-1);
+        int number_of_attempts = default(-1);
         double distance_to_neighbor = default(-1);//in km
         double distance_to_neighbor_two = default(-1);//in km
         double max_neighbor_distance = default(-1);//in km

@@ -56,7 +56,9 @@ class HoMController : public cSimpleModule {
 
   int* BSAresults;  ///< not used?
   typedef std::map<int, bool> BSAresultTable;  ///< A table to store the pair of BSA trial index --> success or failure
+  typedef std::map<int, BSAresultTable> BSAresultTable_epps;
   BSAresultTable results;
+  BSAresultTable_epps results_epps;
 
   bool handshake = false;  ///< True: Return ack and negotiate the number of available qubits. False: Use maximum number of available qubits
   double BSA_timeout = 1e-5;  ///< No longer used
@@ -82,9 +84,11 @@ class HoMController : public cSimpleModule {
   virtual void checkNeighborBuffer(bool receiver);
   virtual void updateIDE_Parameter(bool receiver);
   virtual void sendNotifiers();
-  virtual void pushToBSAresults(bool attempt_success);
+  virtual void pushToBSAresults(bool attempt_success ,int qubit_index = -1);
   virtual int getStoredBSAresultsSize();
+  virtual int getStoredBSAresultsSize_epps();
   virtual void clearBSAresults();
+  virtual void clearBSAresults_epps();
   virtual void sendBSAresultsToNeighbors();
   // virtual void  finish();
  public:

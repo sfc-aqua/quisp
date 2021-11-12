@@ -23,6 +23,7 @@ packet EPPStimingNotifier extends Header
     simtime_t timing_at;
     double interval;
     int number_of_qubits;
+    int number_of_attempts;
     int internal_qnic = -1;
 }
 
@@ -36,4 +37,5 @@ packet CombinedBSAresults extends BSMtimingNotifier
 packet CombinedBSAresults_epps extends EPPStimingNotifier
 {
     bool list_of_failed[];
+    int list_of_qubit_index[];
 }

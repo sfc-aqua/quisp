@@ -109,24 +109,37 @@ void HoMController::handleMessage(cMessage *msg) {
     sendNotifiers();
     auto *notification_timer = new HoMNotificationTimer("BsaStart");
     scheduleAt(simTime() + bsa_notification_interval, notification_timer);
+    delete msg;
   } else if (dynamic_cast<BSAresult *>(msg) != nullptr) {
+    EV<<"BSAresult(HoM)\n";
     // std::cout<<"BSAresult\n";
     auto_resend_BSANotifier = false;  // Photon is arriving. No need to auto reschedule next round. Wait for the last photon fron either node.
     bubble("BSAresult accumulated");
     BSAresult *pk = check_and_cast<BSAresult *>(msg);
     bool entangled = pk->getEntangled();
+    int qubit_index = pk->getQubit_index();
     // std::cout<<"Accumulating "<<entangled<<"\n";
     int prev = getStoredBSAresultsSize();
-    pushToBSAresults(entangled);
+    pushToBSAresults(entangled, qubit_index);
     int aft = getStoredBSAresultsSize();
-    if (prev + 1 != aft) {
-      error("Nahnah nah!");
+    int qnic_index = pk->getQNIC_index();
+    EV<<"qnic_index: "<<qnic_index<<"\n";
+    if (qnic_index != -1) {
+      send(pk, "toRouter_port");  // send to port out. connected to local routing module (routing.localIn).
+    } else {
+      if (prev + 1 != aft) {
+        error("Nahnah nah!");
+      }
+      delete msg;
     }
   } else if (dynamic_cast<BSAfinish *>(msg) != nullptr) {  // Last photon from either node arrived.
     EV << "BSAfinish\n";
     bubble("BSAresult accumulated");
     BSAfinish *pk = check_and_cast<BSAfinish *>(msg);
-    pushToBSAresults(pk->getEntangled());
+    int qnic_index = pk->getQNIC_index();
+    if (qnic_index == -1) {
+      pushToBSAresults(pk->getEntangled());
+    }
     int stored = getStoredBSAresultsSize();
     char moge[sizeof(stored)];
     sprintf(moge, "%d", stored);
@@ -134,11 +147,16 @@ void HoMController::handleMessage(cMessage *msg) {
     auto_resend_BSANotifier = true;
     current_trial_id = dblrand();
     sendBSAresultsToNeighbors();
-    clearBSAresults();
+    if (qnic_index == -1) {
+      clearBSAresults();
+    } else {
+      clearBSAresults_epps();
+    }
+    delete msg;
   } else {
+    delete msg;
     error("what's this packet?");
   }
-  delete msg;
 }
 
 // This method checks the address of the neighbors.
@@ -341,16 +359,38 @@ cModule *HoMController::getQNode() {
   return currentModule;
 }
 
-void HoMController::pushToBSAresults(bool attempt_success) {
-  int prev = getStoredBSAresultsSize();
-  results[getStoredBSAresultsSize()] = attempt_success;
-  int aft = getStoredBSAresultsSize();
-  if (prev + 1 != aft) {
-    error("Not working correctly");
+void HoMController::pushToBSAresults(bool attempt_success, int qubit_index) {
+  if (qubit_index == -1) {
+    int prev = getStoredBSAresultsSize();
+    results[getStoredBSAresultsSize()] = attempt_success;
+    int aft = getStoredBSAresultsSize();
+    if (prev + 1 != aft) {
+      error("Not working correctly");
+    }
+  } else {
+    BSAresultTable current_table = results_epps[qubit_index];
+    int prev = current_table.size();
+    current_table[prev] = attempt_success;
+    results_epps[qubit_index] = current_table;
+    int aft = current_table.size();
+    if (prev + 1 != aft) {
+      error("Not working correctly");
+    }
   }
 }
 int HoMController::getStoredBSAresultsSize() { return results.size(); }
+int HoMController::getStoredBSAresultsSize_epps() {
+  int size = 0;
+  for (auto it : results_epps) {
+    BSAresultTable table = it.second;
+    for (auto it_ : table) {
+      size++;
+    }
+  }
+  return size;
+}
 void HoMController::clearBSAresults() { results.clear(); }
+void HoMController::clearBSAresults_epps() { results_epps.clear(); }
 
 // Instead of sendNotifiers, we invoke this during the simulation to return the next BSA timing and the result.
 // This should be simplified more.
@@ -423,24 +463,33 @@ void HoMController::sendBSAresultsToNeighbors() {
 
     pk->setSrcAddr(address);
     pk->setDestAddr(neighbor_address);
-    pk->setList_of_failedArraySize(getStoredBSAresultsSize());
+    pk->setList_of_failedArraySize(getStoredBSAresultsSize_epps());
+    pk->setList_of_qubit_indexArraySize(getStoredBSAresultsSize_epps());
     pk->setKind(6);
 
     pkt->setSrcAddr(address);
     pkt->setDestAddr(dest);
-    pkt->setList_of_failedArraySize(getStoredBSAresultsSize());
+    pkt->setList_of_failedArraySize(getStoredBSAresultsSize_epps());
+    pkt->setList_of_qubit_indexArraySize(getStoredBSAresultsSize_epps());
     pkt->setKind(6);
 
     EV<<"neighbor_address: "<<neighbor_address<<"\n";
     EV<<"dest: "<<dest<<"\n";
 
-    EV << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!list of failed size = " << getStoredBSAresultsSize() << "\n";
+    EV << "getStoredBSAresultsSize_epps: " << getStoredBSAresultsSize_epps() << "\n";
 
-    for (auto it : results) {
-      int index = it.first;
-      bool entangled = it.second;
-      pk->setList_of_failed(index, entangled);
-      pkt->setList_of_failed(index, entangled);
+    int index = 0;
+    for (auto it : results_epps) {
+      int qubit_index = it.first;
+      BSAresultTable table = it.second;
+      for (auto it_ : table) {
+        bool result = it_.second;
+        pk ->setList_of_qubit_index(index, qubit_index);
+        pk->setList_of_failed(index, result);
+        pkt->setList_of_qubit_index(index, qubit_index);
+        pkt->setList_of_failed(index, result);
+        index++;
+      }
     }
     send(pk, "toRouter_port");
     send(pkt, "toRouter_port");

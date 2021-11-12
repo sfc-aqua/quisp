@@ -31,6 +31,7 @@ class SPDC_Controller : public cSimpleModule {
   int neighbor_buffer;
   int neighbor_buffer_two;
   int max_buffer;
+  int number_of_attempts;
   double distance_to_neighbor;  // in km
   double distance_to_neighbor_two;  // in km
   double accepted_rate_one;
@@ -67,7 +68,10 @@ void SPDC_Controller::initialize() {
   epps = check_and_cast<EntangledPhotonPairSource *>(pump);
   address = par("address");
   timing_buffer = par("timing_buffer");
-  timing_buffer += 1.0;//TODO:
+  // timing_buffer += 1.0;
+  // number of BSM trials for each qubit
+  number_of_attempts = 10;
+  par("number_of_attempts") = number_of_attempts;
   cPar *c = &par("Speed_of_light_in_fiber");
   speed_of_light_in_channel = c->doubleValue();
   // For simplicity, I assume the SPDC can access those neighbor information without classical communication but directly.
@@ -93,27 +97,24 @@ void SPDC_Controller::handleMessage(cMessage *msg) {
       send(pkt, "toRouter_port");
     } catch (std::exception &e) {
       error("Error in SPDC_Controller.cc. It does not have port named toRouter_port.");
-      // endSimulation();
     }
     startPump();
   } else if (dynamic_cast<EmitPhotonRequest *>(msg) != nullptr) {
-    epps->emitPhotons();
-    // SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne");
-    // scheduleAt(simTime() + max_accepted_rate, st);
-  // } else if (dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg) != nullptr) {
-  //   epps->emitPhotons();
-  //   SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne");
-  //   scheduleAt(simTime() + max_accepted_rate, st);
+    EmitPhotonRequest *pk = dynamic_cast<EmitPhotonRequest *>(msg);
+    epps->emitPhotons(pk->getFirst(), pk->getLast());
   }
   delete msg;
 }
 
 void SPDC_Controller::startPump() {
-  // emt = new EmitPhotonRequest("EmitPhotonRequest");
-  // scheduleAt(simTime() + timing_buffer + (max_accepted_rate), emt);
-  for(int i=0; i<max_buffer; i++){
+  EV<<"timing_buffer: "<<timing_buffer<<"\n";
+  EV<<"max_accepeted_rate: "<<max_accepted_rate<<"\n\n\n";
+  for(int i=0; i<(max_buffer*number_of_attempts); i++){
     emt = new EmitPhotonRequest();
-    scheduleAt(simTime()+timing_buffer+(max_accepted_rate*i), emt);
+    if (i == 0) emt->setFirst(true);
+    if (i == (max_buffer*number_of_attempts - 1)) emt->setLast(true);
+    double interval = max_accepted_rate * double(i);
+    scheduleAt(simTime()+timing_buffer+interval, emt);
   }
 }
 
@@ -129,10 +130,10 @@ EPPStimingNotifier *SPDC_Controller::generateNotifier(double distance_to_neighbo
   pk->setTiming_at(first_arrival_time);
   pk->setKind(4);
   pk->setNumber_of_qubits(max_buffer);
+  pk->setNumber_of_attempts(number_of_attempts);
   pk->setInterval(max_accepted_rate);
   pk->setSrcAddr(address);
   pk->setDestAddr(destAddr);
-  EV << "!!!!!!!!!!!!!!!!!!!!!!!!!!neighbor_address=" << neighbor_address;
   return pk;
 }
 
@@ -218,6 +219,7 @@ void SPDC_Controller::checkNeighborsHoMCapacity() {
   if (pump_rate > max_accepted_rate) {  // If HoM detection rate is faster than pump
     max_accepted_rate = pump_rate;  // Now frequency is limited by SPDC pump rate
   }
+  max_accepted_rate = ceil(max_accepted_rate * 10e10) / 10e10; // In order to suppress numerical error
   par("accepted_burst_interval") = max_accepted_rate;
 }
 

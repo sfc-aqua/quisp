@@ -116,6 +116,10 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Combined BSA Results received");
     send(pk, "rePort$o");
     return;
+  } else if (destAddr == myAddress && dynamic_cast<BSAresult *>(msg) != nullptr) {
+    bubble("BSA Result received");
+    send(pk, "rePort$o");
+    return;
   } else if (destAddr == myAddress && dynamic_cast<ConnectionSetupRequest *>(msg) != nullptr) {
     bubble("Connection setup request received");
     send(pk, "cmPort$o");

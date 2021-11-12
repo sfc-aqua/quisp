@@ -48,7 +48,7 @@ class EntangledPhotonPairSource : public cSimpleModule {
  public:
   double frequency;
   virtual double getEmissionFrequency();
-  virtual void emitPhotons();
+  virtual void emitPhotons(bool isFirst, bool isLast);
 };
 
 }  // namespace modules

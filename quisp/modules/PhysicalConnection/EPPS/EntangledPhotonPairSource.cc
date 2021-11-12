@@ -53,7 +53,7 @@ PhotonicQubit *EntangledPhotonPairSource::generateEntangledPhotons() {
   // return photon;
 }
 
-void EntangledPhotonPairSource::emitPhotons() {
+void EntangledPhotonPairSource::emitPhotons(bool isFirst, bool isLast) {
   Enter_Method("emitPhotons()");
   // PhotonicQubit *qubit = generateEntangledPhotons();
   PhotonicQubit *qubit = new PhotonicQubit("Photon");
@@ -64,8 +64,12 @@ void EntangledPhotonPairSource::emitPhotons() {
 
   qubit->setEntangled_photon(qubitTwo);
   qubit->setIs_entangled_with_photon(true);
+  qubit->setFirst(isFirst);
+  qubit->setLast(isLast);
   qubitTwo->setEntangled_photon(qubit);
   qubitTwo->setIs_entangled_with_photon(true);
+  qubitTwo->setFirst(isFirst);
+  qubitTwo->setLast(isLast);
 
   float jitter_timing = normal(0, emission_std);
   float abso = fabs(jitter_timing);
