@@ -66,7 +66,7 @@ class RuleEngine : public IRuleEngine {
   int *qnic_burst_trial_counter;
   BellPairStore bell_pair_store;
   // typedef rules::RuleSet* RuleSetPtr;
-  running_processes rp;
+  RuleSetStore rp;
   // Vector for store package for simultaneous entanglement swapping
   std::map<int, std::map<int, int>> simultaneous_es_results;
   // tracker accessible table has as many number of boolean value as the number of qnics in the qnode.
