@@ -6,26 +6,26 @@ Quantum Repeater is one crucial network device in entanglement-based quantum net
 
 The main works of quantum repeaters are following.
 
-1. Creating elementary entanglement
+1. Creating base entanglement
 2. Entanglement extension
 3. Error management
 4. Network operations
 
-### 1. Creating elementary entanglement
+### 1. Creating base entanglement
 
-Quantum Repeater generates entanglement between neighbor nodes known as link-level entanglement. 
-
- 
+Quantum Repeater generates entanglement between neighbor nodes known as link-level entanglement, relatively shorter distance entanglement. In practice, the distances between neighbor nodes should be decided by characteristics of the channel, such as attenuation, loss, error. 
 
 ![Repeater.drawio (1).png](./img/Repeater.png)
 
-Several link types have been proposed, such as Memory-Memory architecture, Memory-Interfere-Memory architecture.
+Several link types have been proposed to generate this link-level entanglement, such as Memory-Memory architecture, Memory-Interfere-Memory architecture.  
 
 ### 2. Entanglement extension
 
-The entanglement swapping is performed in each repeater station and extends link-level entanglement to end-to-end entanglement. 
+The entanglement swapping is performed in each repeater station and extends link-level entanglement to end-to-end entanglement. Repeaters perform Bell state measurement to pair of qubits and extend link-level entanglement to multihop entanglement.
 
 ![EntanglementSwapping.drawio (2).png](./img/EntanglementSwapping.png)
+
+At the end of this process, the repeater must tell the result of Bell measurement to proper partners to correct state with Pauli operations. 
 
 ### 3. Error management
 
@@ -33,7 +33,7 @@ Quantum error is one critical obstacle for large-scale quantum networking. Keepi
 
 ### 4. Network operations
 
-The repeater node behaves as an ordinal network node that is responsible for routing, multiplexing, etc. 
+The repeater node behaves as an ordinal network node that is responsible for routing, multiplexing, etc. As mentioned above, repeaters must be capable of coordinating operations with other repeaters or end nodes.
 
 ## What is the interface to the outside world?
 
