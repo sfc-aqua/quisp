@@ -31,7 +31,7 @@ googletest/CMakeLists.txt:
 	git submodule update --init
 
 googletest/build: googletest/CMakeLists.txt
-	mkdir -p googletest/build && cd googletest/build && cmake ..
+	mkdir -p googletest/build && cd googletest/build && cmake .. -G "Unix Makefiles"
 
 googletest/build/lib: googletest/build
 	make -C googletest/build
