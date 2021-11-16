@@ -552,6 +552,7 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
   }
   delete qubit;
   delete hardware_monitor;
+  delete routing_daemon;
 }
 TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   /* setup components */
@@ -581,7 +582,11 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
     EXPECT_EQ(ruleset->rules.at(1)->resources.size(), 0);
   }
 
-  swapping_result result{.new_partner = 2, .operation_type = 0, .id = {.ruleset_id = ruleset_id, .rule_id = rule_id, .index = 0}};
+  swapping_result result{
+      .id = {.ruleset_id = ruleset_id, .rule_id = rule_id, .index = 0},
+      .new_partner = 2,
+      .operation_type = 0,
+  };
   EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(2)).Times(1).WillOnce(Return(5));
   auto info = std::make_unique<ConnectionSetupInfo>();
   info->qnic.type = QNIC_E;
@@ -597,5 +602,6 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
 
   delete qubit;
   delete hardware_monitor;
+  delete routing_daemon;
 }
 }  // namespace
