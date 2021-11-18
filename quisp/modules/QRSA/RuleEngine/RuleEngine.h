@@ -15,6 +15,7 @@
 #include "../../PhysicalConnection/BSA/HoMController.h"
 #include "BellPairStore/BellPairStore.h"
 #include "IRuleEngine.h"
+#include "QubitStateStore/QubitStateStore.h"
 #include "RuleSetStore/RuleSetStore.h"
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
@@ -56,9 +57,7 @@ class RuleEngine : public IRuleEngine {
   DoublePurificationTable DoublePurification_table;
   TriplePurificationTable TriplePurification_table;
   QuatroPurificationTable QuatroPurification_table;
-  // Although qnic index is in QubitAddr, lest make int qnic_index -> QubisState to lessen the search
-  // QubitStateTable stable, stable_r, stable_rp;
-  QubitStateTable *Busy_OR_Free_QubitState_table;
+  std::unique_ptr<qubit_state_store::QubitStateStore> qubit_states;
   bool *terminated_qnic;  // When you need to intentionally stop the link to make the simulation lighter.
   sentQubitIndexTracker *tracker;
   IHardwareMonitor *hardware_monitor;
