@@ -1,10 +1,10 @@
 <map id="quisp/test_utils/Simulation.h" name="quisp/test_utils/Simulation.h">
-<area shape="rect" id="node1" title=" " alt="" coords="1345,5,1531,32"/>
-<area shape="rect" id="node2" href="$_simulation_8cc.html" title=" " alt="" coords="907,87,1099,114"/>
-<area shape="rect" id="node3" href="$_static_env_8cc.html" title=" " alt="" coords="1123,87,1310,114"/>
-<area shape="rect" id="node4" href="$_test_component_provider_strategy_8h.html" title=" " alt="" coords="1335,80,1541,121"/>
-<area shape="rect" id="node5" href="$_test_utils_8h.html" title=" " alt="" coords="1541,259,1719,285"/>
-<area shape="rect" id="node21" href="$_util_functions_8h.html" title=" " alt="" coords="1783,87,1984,114"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1456,5,1641,32"/>
+<area shape="rect" id="node2" href="$_simulation_8cc.html" title=" " alt="" coords="1018,87,1210,114"/>
+<area shape="rect" id="node3" href="$_static_env_8cc.html" title=" " alt="" coords="1234,87,1421,114"/>
+<area shape="rect" id="node4" href="$_test_component_provider_strategy_8h.html" title=" " alt="" coords="1445,80,1652,121"/>
+<area shape="rect" id="node5" href="$_test_utils_8h.html" title=" " alt="" coords="1652,259,1829,285"/>
+<area shape="rect" id="node22" href="$_util_functions_8h.html" title=" " alt="" coords="1893,87,2095,114"/>
 <area shape="rect" id="node6" href="$_application__test_8cc.html" title=" " alt="" coords="5,341,180,382"/>
 <area shape="rect" id="node7" href="$_stationary_qubit__gate__error__test_8cc.html" title=" " alt="" coords="204,333,381,389"/>
 <area shape="rect" id="node8" href="$_stationary_qubit__memory__error__test_8cc.html" title=" " alt="" coords="405,333,591,389"/>
@@ -16,12 +16,13 @@
 <area shape="rect" id="node14" href="$_routing_daemon__test_8cc.html" title=" " alt="" coords="1745,333,1960,389"/>
 <area shape="rect" id="node15" href="$_bell_pair_store__test_8cc.html" title=" " alt="" coords="1985,333,2155,389"/>
 <area shape="rect" id="node16" href="$_rule_engine__test_8cc.html" title=" " alt="" coords="2179,333,2339,389"/>
-<area shape="rect" id="node17" href="$_purify_action__test_8cc.html" title=" " alt="" coords="2364,341,2507,382"/>
-<area shape="rect" id="node18" href="$_swapping_action__test_8cc.html" title=" " alt="" coords="2531,341,2697,382"/>
-<area shape="rect" id="node19" href="$_rule_set__test_8cc.html" title=" " alt="" coords="2721,341,2856,382"/>
-<area shape="rect" id="node20" href="$unit__test__main_8cc.html" title=" " alt="" coords="2880,348,3039,375"/>
-<area shape="rect" id="node22" href="$_mock_hardware_monitor_8h.html" title=" " alt="" coords="1667,169,1889,211"/>
-<area shape="rect" id="node23" href="$_mock_qubit_8h.html" title=" " alt="" coords="1913,169,2067,211"/>
-<area shape="rect" id="node24" href="$_q_node_8cc.html" title=" " alt="" coords="2092,177,2264,203"/>
-<area shape="rect" id="node25" href="$_util_functions_8cc.html" title=" " alt="" coords="2289,177,2497,203"/>
+<area shape="rect" id="node17" href="$_rule_set_store__test_8cc.html" title=" " alt="" coords="2364,333,2536,389"/>
+<area shape="rect" id="node18" href="$_purify_action__test_8cc.html" title=" " alt="" coords="2560,341,2703,382"/>
+<area shape="rect" id="node19" href="$_swapping_action__test_8cc.html" title=" " alt="" coords="2727,341,2893,382"/>
+<area shape="rect" id="node20" href="$_rule_set__test_8cc.html" title=" " alt="" coords="2917,341,3052,382"/>
+<area shape="rect" id="node21" href="$unit__test__main_8cc.html" title=" " alt="" coords="3076,348,3235,375"/>
+<area shape="rect" id="node23" href="$_mock_hardware_monitor_8h.html" title=" " alt="" coords="1777,169,2000,211"/>
+<area shape="rect" id="node24" href="$_mock_qubit_8h.html" title=" " alt="" coords="2023,169,2178,211"/>
+<area shape="rect" id="node25" href="$_q_node_8cc.html" title=" " alt="" coords="2203,177,2375,203"/>
+<area shape="rect" id="node26" href="$_util_functions_8cc.html" title=" " alt="" coords="2399,177,2607,203"/>
 </map>

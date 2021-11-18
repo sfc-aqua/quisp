@@ -82,6 +82,7 @@ var hierarchy =
     [ "RoutingDaemon", "class_routing_daemon.html", null ],
     [ "quisp::rules::Rule", "classquisp_1_1rules_1_1_rule.html", null ],
     [ "quisp::rules::RuleSet", "classquisp_1_1rules_1_1_rule_set.html", null ],
+    [ "quisp::modules::ruleset_store::RuleSetStore", "classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store.html", null ],
     [ "quisp::modules::single_qubit_error", "structquisp_1_1modules_1_1single__qubit__error.html", null ],
     [ "quisp::modules::SingleGateErrorModel", "structquisp_1_1modules_1_1_single_gate_error_model.html", null ],
     [ "quisp::modules::swapping_result", "structquisp_1_1modules_1_1swapping__result.html", null ],

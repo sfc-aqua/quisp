@@ -1,4 +1,4 @@
-<map id="quisp/modules/QRSA/RuleEngine/BellPairStore_test.cc" name="quisp/modules/QRSA/RuleEngine/BellPairStore_test.cc">
+<map id="quisp/modules/QRSA/RuleEngine/BellPairStore/BellPairStore_test.cc" name="quisp/modules/QRSA/RuleEngine/BellPairStore/BellPairStore_test.cc">
 <area shape="rect" id="node1" title=" " alt="" coords="1881,5,2052,61"/>
 <area shape="rect" id="node2" href="$_bell_pair_store_8h.html" title=" " alt="" coords="1405,355,1513,382"/>
 <area shape="rect" id="node7" title=" " alt="" coords="2906,109,3001,136"/>

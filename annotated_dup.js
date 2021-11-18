@@ -6,6 +6,9 @@ var annotated_dup =
         [ "QuantumChannel", "classquisp_1_1channels_1_1_quantum_channel.html", "classquisp_1_1channels_1_1_quantum_channel" ]
       ] ],
       [ "modules", "namespacequisp_1_1modules.html", [
+        [ "ruleset_store", "namespacequisp_1_1modules_1_1ruleset__store.html", [
+          [ "RuleSetStore", "classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store.html", "classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store" ]
+        ] ],
         [ "Application", "classquisp_1_1modules_1_1_application.html", "classquisp_1_1modules_1_1_application" ],
         [ "IApplication", "classquisp_1_1modules_1_1_i_application.html", "classquisp_1_1modules_1_1_i_application" ],
         [ "Queue", "classquisp_1_1modules_1_1_queue.html", "classquisp_1_1modules_1_1_queue" ],

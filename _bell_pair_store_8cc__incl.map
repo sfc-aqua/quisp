@@ -1,9 +1,9 @@
-<map id="quisp/modules/QRSA/RuleEngine/BellPairStore.cc" name="quisp/modules/QRSA/RuleEngine/BellPairStore.cc">
-<area shape="rect" id="node1" title=" " alt="" coords="63,5,251,47"/>
-<area shape="rect" id="node2" href="$_bell_pair_store_8h.html" title=" " alt="" coords="103,95,211,121"/>
-<area shape="rect" id="node3" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="5,177,124,203"/>
-<area shape="rect" id="node7" title=" " alt="" coords="235,95,287,121"/>
-<area shape="rect" id="node5" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="148,169,349,211"/>
-<area shape="rect" id="node4" title=" " alt="" coords="23,259,106,285"/>
-<area shape="rect" id="node6" title=" " alt="" coords="183,259,315,285"/>
+<map id="quisp/modules/QRSA/RuleEngine/BellPairStore/BellPairStore.cc" name="quisp/modules/QRSA/RuleEngine/BellPairStore/BellPairStore.cc">
+<area shape="rect" id="node1" title=" " alt="" coords="71,5,242,61"/>
+<area shape="rect" id="node2" href="$_bell_pair_store_8h.html" title=" " alt="" coords="103,109,211,136"/>
+<area shape="rect" id="node3" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="5,191,124,218"/>
+<area shape="rect" id="node7" title=" " alt="" coords="235,109,287,136"/>
+<area shape="rect" id="node5" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="148,184,349,225"/>
+<area shape="rect" id="node4" title=" " alt="" coords="23,273,106,300"/>
+<area shape="rect" id="node6" title=" " alt="" coords="183,273,315,300"/>
 </map>

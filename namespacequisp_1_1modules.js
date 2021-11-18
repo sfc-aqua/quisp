@@ -1,5 +1,6 @@
 var namespacequisp_1_1modules =
 [
+    [ "ruleset_store", "namespacequisp_1_1modules_1_1ruleset__store.html", "namespacequisp_1_1modules_1_1ruleset__store" ],
     [ "Application", "classquisp_1_1modules_1_1_application.html", "classquisp_1_1modules_1_1_application" ],
     [ "IApplication", "classquisp_1_1modules_1_1_i_application.html", "classquisp_1_1modules_1_1_i_application" ],
     [ "Queue", "classquisp_1_1modules_1_1_queue.html", "classquisp_1_1modules_1_1_queue" ],
@@ -70,7 +71,6 @@ var namespacequisp_1_1modules =
     [ "raw_data", "namespacequisp_1_1modules.html#a47b510b280e1ac42bcf95908dc72facb", null ],
     [ "ResourceKey", "namespacequisp_1_1modules.html#ac2ba3b50171b853416c32771dd1ab2cd", null ],
     [ "rule_ptr", "namespacequisp_1_1modules.html#a2c28ce58538cd43776e34a515a1422fe", null ],
-    [ "RuleSetStore", "namespacequisp_1_1modules.html#a3f323110510134307203862bcb86f95c", null ],
     [ "sentQubitIndexTracker", "namespacequisp_1_1modules.html#a9b4bf1166a725a4d4970d21c187343c4", null ],
     [ "TomographyOutcomeTable", "namespacequisp_1_1modules.html#a2defc0c764ef7e29d546e4c3368248e1", null ],
     [ "trial_tracker", "namespacequisp_1_1modules.html#af6d54a83900f33d33ff32ca35460740f", null ],
