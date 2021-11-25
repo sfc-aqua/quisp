@@ -23,6 +23,7 @@ network Three_HoM_star
             double cost = default(1);
             double distance @unit(km) = default(20km);
             //delay = uniform(0.01ms, 1s);
+                            double Speed_of_light_in_fiber @unit(km) = default(208189.206944km);
             double distance_of_light_in_fiber_per_sec @unit(km) = default(205336.986301km);
             delay = this.distance / distance_of_light_in_fiber_per_sec * 1s;
             datarate = uniform(1kbps, 100kbps);
@@ -33,6 +34,7 @@ network Three_HoM_star
             double cost = default(1);
             double distance @unit(km) = default(20km);
             //delay = uniform(0.01ms, 1s);
+                            double Speed_of_light_in_fiber @unit(km) = default(208189.206944km);
             double distance_of_light_in_fiber_per_sec @unit(km) = default(205336.986301km);
             delay = this.distance / distance_of_light_in_fiber_per_sec * 1s;
             datarate = uniform(1kbps, 100kbps);
@@ -49,7 +51,7 @@ network Three_HoM_star
         //}
         EndNode[3]: QNode {
             //Initializerでaddress = node idにすればconflict無くなるかも。
-            address = index+100000;
+            address = index+10000;
             nodeType = "EndNode";
             @display("i=device/pc");
         }
@@ -64,20 +66,21 @@ network Three_HoM_star
             @display("i=device/server");
         }
     connections:
-        EndNode[0].port++ <--> C {  distance = 5km; } <--> HoM[0].port++;
-        HoM[0].port++ <--> C <--> Router[0].port++;
-        EndNode[0].quantum_port++ <--> QuantumChannel {  distance = 5km; } <--> HoM[0].quantum_port++;
-        HoM[0].quantum_port++ <--> QuantumChannel <--> Router[0].quantum_port++;
+        EndNode[0].port++ <--> C {  distance = 20km; } <--> HoM[0].port++;
+        HoM[0].port++ <--> C {  distance = 20km; } <--> Router[0].port++;
+        EndNode[0].quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> HoM[0].quantum_port++;
+        HoM[0].quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> Router[0].quantum_port++;
 
-        EndNode[1].port++ <--> C <--> HoM[1].port++;
-        HoM[1].port++ <--> C {  distance = 100km; } <--> Router[0].port++;
-        EndNode[1].quantum_port++ <--> QuantumChannel <--> HoM[1].quantum_port++;
-        HoM[1].quantum_port++ <--> QuantumChannel {  distance = 100km; } <--> Router[0].quantum_port++;
+        EndNode[1].port++ <--> C {  distance = 20km; } <--> HoM[1].port++;
+        HoM[1].port++ <--> C {  distance = 20km; } <--> Router[0].port++;
+        EndNode[1].quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> HoM[1].quantum_port++;
+        HoM[1].quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> Router[0].quantum_port++;
 
-        EndNode[2].port++ <--> C <--> HoM[2].port++;
-        HoM[2].port++ <--> C {  distance = 40km; } <--> Router[0].port++;
-        EndNode[2].quantum_port++ <--> QuantumChannel <--> HoM[2].quantum_port++;
-        HoM[2].quantum_port++ <--> QuantumChannel {  distance = 40km; } <--> Router[0].quantum_port++;
+        EndNode[2].port++ <--> C {  distance = 20km; }<--> HoM[2].port++;
+        HoM[2].port++ <--> C{  distance = 20km; } <--> Router[0].port++;
+        EndNode[2].quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> HoM[2].quantum_port++;
+        HoM[2].quantum_port++ <--> QuantumChannel {  distance = 20km; } <--> Router[0].quantum_port++;
+
 }
 
 

@@ -26,7 +26,7 @@ class Router : public cSimpleModule {
 
  protected:
   virtual void initialize(int stage) override;
-  virtual void handleMessage(cMessage *msg) override;
+  virtual void handleMessage(cMessage* msg) override;
   virtual int numInitStages() const override { return 1; };
 };
 
@@ -37,13 +37,13 @@ void Router::initialize(int stage) {
   myAddress = getParentModule()->par("address");
 
   // Topology creation for routing table
-  cTopology *topo = new cTopology("topo");
+  cTopology* topo = new cTopology("topo");
   topo->extractByParameter("includeInTopo", "\"yes\"");  // Any node that has a parameter includeInTopo will be included in routing
   if (topo->getNumNodes() == 0 || topo == nullptr) {  // If no node with the parameter & value found, do nothing.
     return;
   }
 
-  cTopology::Node *thisNode = topo->getNodeFor(getParentModule());  // The parent node with this specific router
+  cTopology::Node* thisNode = topo->getNodeFor(getParentModule());  // The parent node with this specific router
 
   int number_of_links_total = 0;
 
@@ -80,7 +80,7 @@ void Router::initialize(int stage) {
     // Check the number of shortest paths towards the target node. This may be more than 1 if multiple paths have the same minimum cost.
     if (thisNode->getNumPaths() == 0) continue;  // not connected
 
-    cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();  // Returns the next link/gate in the ith shortest paths towards the target node.
+    cGate* parentModuleGate = thisNode->getPath(0)->getLocalGate();  // Returns the next link/gate in the ith shortest paths towards the target node.
     int gateIndex = parentModuleGate->getIndex();
     int address = topo->getNode(i)->getModule()->par("address");
     rtable[address] = gateIndex;  // Store gate index per destination from this node
@@ -96,83 +96,87 @@ void Router::initialize(int stage) {
   delete topo;
 }
 
-void Router::handleMessage(cMessage *msg) {
+void Router::handleMessage(cMessage* msg) {
   // check the header of the received package
-  Header *pk = check_and_cast<Header *>(msg);
+  Header* pk = check_and_cast<Header*>(msg);
   int destAddr = pk->getDestAddr();  // read destination from the packet
   int who_are_you = pk->getKind();  // read the type of packet // This might be better fixed
+
   if (destAddr == myAddress && who_are_you == 1) {  // If destination is this node: Path selection
     send(pk, "toApp");  // send to Application locally
     return;
-  } else if (destAddr == myAddress && dynamic_cast<BSMtimingNotifier *>(msg) != nullptr) {  // Timing for BSM
+  } else if (destAddr == myAddress && dynamic_cast<BSMtimingNotifier*>(msg) != nullptr) {  // Timing for BSM
     bubble("Timing Notifier from HoM (stand-alone or internal) received");
     send(pk, "rePort$o");  // send to Application locally
     return;
-  } else if (destAddr == myAddress && dynamic_cast<EPPStimingNotifier *>(msg) != nullptr) {  // Timing for BSM
+  } else if (destAddr == myAddress && dynamic_cast<EPPStimingNotifier*>(msg) != nullptr) {  // Timing for BSM
     bubble("Timing Notifier from EPPS received");
     send(pk, "rePort$o");  // send to Application locally
     return;
-  } else if (destAddr == myAddress && dynamic_cast<ConnectionSetupRequest *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<ConnectionSetupRequest*>(msg) != nullptr) {
     bubble("Connection setup request received");
     send(pk, "cmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<ConnectionSetupResponse*>(msg) != nullptr) {
     bubble("Connection setup response received");
     send(pk, "cmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<RejectConnectionSetupRequest *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<RejectConnectionSetupRequest*>(msg) != nullptr) {
     bubble("Reject connection setup response received");
     send(pk, "cmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<InternalRuleSetForwarding*>(msg) != nullptr) {
     bubble("Internal RuleSet Forwarding packet received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<InternalRuleSetForwarding_Application *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<InternalRuleSetForwarding_Application*>(msg) != nullptr) {
     bubble("Internal RuleSet Forwarding Application packet received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<SwappingResult *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<SwappingResult*>(msg) != nullptr) {
     bubble("Swapping Result packet received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<SimultaneousSwappingResult *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<SimultaneousSwappingResult*>(msg) != nullptr) {
     bubble("Swapping Result packet received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyRequest *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyRequest*>(msg) != nullptr) {
     bubble("Link tomography request received");
     send(pk, "hmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyAck *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyAck*>(msg) != nullptr) {
     bubble("Link tomography ack received");
     send(pk, "hmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyRuleSet *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyRuleSet*>(msg) != nullptr) {
     bubble("Link tomography rule set received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyResult *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyResult*>(msg) != nullptr) {
     bubble("Link tomography result received");
     send(pk, "hmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<PurificationResult *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<PurificationResult*>(msg) != nullptr) {
     bubble("Purification result received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<DoublePurificationResult *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<DoublePurificationResult*>(msg) != nullptr) {
     bubble("DoublePurification result received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<DS_DoublePurificationResult *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<DS_DoublePurificationResult*>(msg) != nullptr) {
     bubble("DS_DoublePurification result received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<DS_DoublePurificationSecondResult *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<DS_DoublePurificationSecondResult*>(msg) != nullptr) {
     bubble("DS_DoublePurificationSecond result received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<StopEmitting *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<StopEmitting*>(msg) != nullptr) {
+    send(pk, "rePort$o");
+    return;
+  } else if (destAddr == myAddress && dynamic_cast<GeneralizedSwappingResult*>(msg) != nullptr) {
     send(pk, "rePort$o");
     return;
   }

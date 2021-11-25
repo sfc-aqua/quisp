@@ -80,11 +80,11 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
     EV << "operation type 0, operation left I, operation right I\n";
     operation_type_left = 0;
     operation_type_right = 0;
-  } else if (left_measure == MeasureZResult::NO_ERROR && right_measure == MeasureZResult::HAS_X_ERROR) {  // 0 1
+  } else if (left_measure == MeasureZResult::NO_ERROR && right_measure == MeasureZResult::HAS_Z_ERROR) {  // 0 1
     EV << "operation type 1, operation left I, operation right X\n";
     operation_type_left = 0;
     operation_type_right = 1;
-  } else if (left_measure == MeasureZResult::HAS_X_ERROR && right_measure == MeasureZResult::NO_ERROR) {  // 1 0
+  } else if (left_measure == MeasureZResult::HAS_Z_ERROR && right_measure == MeasureZResult::NO_ERROR) {  // 1 0
     EV << "operation type 2, operation left Z, operation right I\n";
     operation_type_left = 0;
     operation_type_right = 2;

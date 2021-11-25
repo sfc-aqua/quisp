@@ -76,3 +76,17 @@ packet SimultaneousSwappingResult extends Header{
     int index_in_path;
     int path_length_exclude_IR;
 }
+
+packet GeneralizedSwappingResult extends Header{
+    unsigned long RuleSet_id;
+    unsigned long Rule_id;
+    int action_index;
+    bool is_for_root;
+
+    int measurement_result;
+
+    //Used only for internal communication
+    int size_of_arrays;
+    int responder_dests[];
+    int measurement_results[];
+}

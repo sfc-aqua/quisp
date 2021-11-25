@@ -23,6 +23,7 @@ Application::Application() : provider(utils::ComponentProvider{this}) {}
  */
 void Application::initialize() {
   // Since we only need this module in EndNode, delete it otherwise.
+
   if (!gate("toRouter")->isConnected()) {
     deleteThisModule *msg = new deleteThisModule("DeleteThisModule");
     scheduleAt(simTime(), msg);
@@ -35,6 +36,7 @@ void Application::initialize() {
 
   WATCH_VECTOR(other_end_node_addresses);
   storeEndNodeAddresses();
+
 
   if (!is_e2e_connection) {
     return;
@@ -70,7 +72,30 @@ void Application::initialize() {
     scheduleAt(simTime() + 0.00001 * my_address, pk);
     return;
   }
+  /*
+    Simple GHZ distribution setup, not logic to have number_of_clients sent by clients.
+    The Lone initiator should send a message to itself to define the number of clients,
+    clients should send a setup request with a bool (and not a int) specifying the connection
+    is multipartite. This is to ensure, QNIC are locked not in the setup phase but on the response phase.
+  */
+  if (traffic_pattern == 3) {
+      int initiator_adress = par("LoneInitiatorAddress");
+    int number_of_clients = par("NumberOfClients");
+      if (my_address != initiator_adress) {
 
+        EV_INFO << "My multipartite connection setup request will be sent from " << my_address << " to " << initiator_adress << "\n";
+        EV_INFO << number_of_clients;
+        ConnectionSetupRequest *pk = createMultiConnectionSetupRequest(initiator_adress, number_of_resources, number_of_clients);
+        // delay to avoid conflict
+        scheduleAt(simTime() + 0.00001 * my_address, pk);
+      } else {
+        EV_INFO << "Initiator setup" << "\n";
+        ConnectionSetupRequest *pk = createMultiConnectionSetupRequest(initiator_adress, number_of_resources, number_of_clients);
+        // delay to avoid conflict
+        scheduleAt(simTime() + 0.00001 * my_address, pk);
+      }
+      return;
+  }
   error("Invalid TrafficPattern specified.");
 }
 
@@ -86,9 +111,22 @@ ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr,
   pk->setSrcAddr(my_address);
   pk->setNum_measure(num_measure);
   pk->setKind(7);
+  pk->setNumber_of_clients(1); //CM
   return pk;
 }
 
+//CM
+ConnectionSetupRequest *Application::createMultiConnectionSetupRequest(int dest_addr, int num_of_required_resources, int number_of_clients) {
+  ConnectionSetupRequest *pk = new ConnectionSetupRequest("ConnSetupRequest");
+  pk->setActual_srcAddr(my_address);
+  pk->setActual_destAddr(dest_addr);
+  pk->setDestAddr(my_address);
+  pk->setSrcAddr(my_address);
+  pk->setNum_measure(num_measure);
+  pk->setKind(7);
+  pk->setNumber_of_clients(number_of_clients);  // CM
+  return pk;
+}
 /**
  * \brief Message handler
  *

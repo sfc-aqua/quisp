@@ -31,6 +31,23 @@ void Rule::setAction(Action *a) {
 cPacket *Rule::checkrun(cModule *re) {
   cPacket *pk = nullptr;
 
+  /*EV_INFO << "--------------------------- EXAMEN DE RESSOURCES ------------------------------\n";
+  //CM Debug
+  for (auto it = resources.begin(); it != resources.end() ; ++it) {
+    EV_INFO << " Node address " << it->second->node_address << " QNIC Adress " << it->second->qnic_address << " QNIC index " << it->second->qnic_index << " Qnic Type "
+            << it->second->qnic_type << "\n";
+     EV_INFO << " Is multipartite " << it->second->is_in_multipartite << "\n";
+    if (it->second->entangled_partner == nullptr) {
+      EV_INFO << "No entangled partner\n";
+    } else {
+      EV_INFO << "Entangled partner  Node address " << it->second->entangled_partner->node_address
+              << " QNIC Adress " << it->second->entangled_partner->qnic_address << " QNIC index " << it->second->entangled_partner->qnic_index << " Qnic Type "
+              << it->second->entangled_partner->qnic_type << "\n";
+      EV_INFO << " Is multipartite " << it->second->entangled_partner->is_in_multipartite << "\n";
+    }
+  }
+  EV_INFO << "--------------------------- FIN ------------------------------\n";*/
+
   if (condition->check(resources)) {
     // std::cout<<"Condition met!.\n";
     // std::cout<<"before: check num = "<<action->checkNumResource()<<"\n";

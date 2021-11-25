@@ -7,7 +7,8 @@ simple BellStateAnalyzer
         double loss_rate = default(0);
         double error_rate = default(0);
         double duration = default(0);
-        double required_precision = default(1.5e-9);
+        // double required_precision = default(1.5e-9); CM
+        double required_precision = default(1.5e-5);
         int photon_detection_per_sec = default(10000);
         int address;
         @signal[Num_Bell_state](type=long);

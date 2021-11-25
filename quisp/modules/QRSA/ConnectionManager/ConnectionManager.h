@@ -17,6 +17,13 @@ using namespace quisp::rules;
 namespace quisp {
 namespace modules {
 
+
+  typedef struct {
+    int children;
+    QNIC_pair_info QNIC_pair;
+    int end_node;
+  } PathLink; //CM
+
 /** \class ConnectionManager ConnectionManager.cc
  *
  *  \brief ConnectionManager
@@ -50,6 +57,8 @@ class ConnectionManager : public IConnectionManager {
   int num_of_qnics;
   std::map<int, std::queue<ConnectionSetupRequest *>> connection_setup_buffer;  // key is qnic address
   std::map<int, int> connection_retry_count;  // key is qnic address
+  std::map<int, std::vector<PathLink>> tree_path_test; // CM: Taking both into a struct after
+  std::map<int, std::vector<int>> tree_path;
   std::map<int, bool> qnic_res_table;
   std::vector<cMessage *> request_send_timing;  // self message, notification for sending out request
   bool simultaneous_es_enabled;
@@ -69,7 +78,8 @@ class ConnectionManager : public IConnectionManager {
   void initiateApplicationRequest(int qnic_address);
   void scheduleRequestRetry(int qnic_address);
   void popApplicationRequest(int qnic_address);
-
+  void handleMultipartiteRequest(ConnectionSetupRequest *req, int actual_dst, int actual_src); //CM
+  void relayRequestToNextHop(ConnectionSetupRequest *pk);
   void storeRuleSetForApplication(ConnectionSetupResponse *pk);
   void storeRuleSet(ConnectionSetupResponse *pk);
 
@@ -100,8 +110,11 @@ class ConnectionManager : public IConnectionManager {
   unsigned long createUniqueId();
   static int computePathDivisionSize(int l);
   static int fillPathDivision(std::vector<int> path, int i, int l, int *link_left, int *link_right, int *swapper, int fill_start);
-};
 
+  PathLink getFather(int node);  // CM
+  int getFatherAdress(int node);
+  RuleSet *generateGeneralizedEntanglementSwappingRuleSet(int node, std::vector<PathLink> children_link);  // CM
+};
 }  // namespace modules
 }  // namespace quisp
 #endif /* MODULES_CONNECTIONMANAGER_H_ */

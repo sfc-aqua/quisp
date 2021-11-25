@@ -151,6 +151,7 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   rule_engine->rp[0].Rs->getRule(0)->addResource(1, mockQubit1);
   ASSERT_EQ(rule_engine->rp[0].Rs->getRule(0)->resources.size(), 1);
   ASSERT_EQ(rule_engine->rp[0].Rs->getRule(1)->resources.size(), 0);
+  EV_INFO << "On NE DEVRAIT PAS ETRE LA\n";
   rule_engine->updateResources_EntanglementSwapping(swapr);
   // 1. remove from previous rule
   ASSERT_EQ(rule_engine->rp[0].Rs->getRule(0)->resources.size(), 0);

@@ -118,6 +118,8 @@ class RuleEngine : public IRuleEngine {
   void clearAppliedRule(IStationaryQubit *qubit);
   void updateResources_EntanglementSwapping(swapping_result swapr);
 
+  //CM
+  void correction_GeneralizedEntanglementSwapping(GeneralizedSwappingResult *pkt);
   utils::ComponentProvider provider;
   virtual void updateResources_SimultaneousEntanglementSwapping(swapping_result swapr);
 };

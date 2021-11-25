@@ -30,7 +30,6 @@ void ConnectionManager::initialize() {
   simultaneous_es_enabled = par("simultaneous_es_enabled");
   es_with_purify = par("entanglement_swapping_with_purification");
   num_remote_purification = par("num_remote_purification");
-
   if (simultaneous_es_enabled && es_with_purify) {
     error("Currently, simultaneous entanglement swapping cannot be simulated with purification");
   }
@@ -86,16 +85,22 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     int initiator_addr = resp->getActual_destAddr();
     int responder_addr = resp->getActual_srcAddr();
 
-    if (initiator_addr == my_address || responder_addr == my_address) {
-      // this node is not a swapper
-      storeRuleSetForApplication(resp);
+    if (resp->getIsMultipartite() == false)
+    {
+        if (initiator_addr == my_address || responder_addr == my_address) {
+          // this node is not a swapper
+          storeRuleSetForApplication(resp);
+        } else {
+          // this node is a swapper (intermediate node)
+          // currently, destinations are separated. (Not accumulated.)
+          storeRuleSet(resp);
+        }
+        delete msg;
+        return;
     } else {
-      // this node is a swapper (intermediate node)
-      // currently, destinations are separated. (Not accumulated.)
-      storeRuleSet(resp);
+      storeRuleSetForApplication(resp);
     }
-    delete msg;
-    return;
+
   }
 
   if (dynamic_cast<RejectConnectionSetupRequest *>(msg) != nullptr) {
@@ -217,6 +222,13 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   int actual_dst = req->getActual_destAddr();
   int actual_src = req->getActual_srcAddr();  // initiator address (to get input qnic)
 
+  // CM BEGIN
+  // Should be check multipartite bool
+  if (req->getNumber_of_clients() != 1) {
+    handleMultipartiteRequest(req, actual_dst, actual_src);
+    return;
+  }
+  // CM END
   // This must be -1
   int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
   if (local_qnic_address_to_actual_dst != -1) {
@@ -557,6 +569,178 @@ QNIC_id ConnectionManager::getQnicInterface(int owner_address, int partner_addre
   return qnic_interface;
 }
 
+
+// CM To refactor
+void ConnectionManager::handleMultipartiteRequest(ConnectionSetupRequest *req, int actual_dst, int actual_src) {
+  static int number_of_received_connection = 0;
+  static int number_of_incoming_connections = 0;
+  int current_node;
+  QNIC_pair_info current_qnic_info;
+
+  if (actual_src == my_address) {
+    number_of_incoming_connections = req->getNumber_of_clients();
+    return;
+  }
+
+  int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
+  if (local_qnic_address_to_actual_dst != -1) {
+    error("something error happen!");
+  }
+
+  // TODO: premise only one connection allowed btw, two nodes.
+  int local_qnic_address_to_actual_src = routing_daemon->return_QNIC_address_to_destAddr(actual_src);
+  if (local_qnic_address_to_actual_src == -1) {
+    error("This shouldn't happen!");
+  }
+
+  auto dst_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
+  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
+  if (src_info == nullptr) {
+    error("src_info not found");
+  }
+  QNIC_pair_info pair_info = {.fst = src_info->qnic, .snd = dst_info->qnic};
+
+  bool is_src_qnic_reserved = isQnicBusy(src_info->qnic.address);
+  bool is_dst_qnic_reserved = isQnicBusy(dst_info->qnic.address);
+
+  // the number of steps
+  int hop_count = req->getStack_of_QNodeIndexesArraySize();
+
+  // path from source to destination
+  std::vector<int> path;
+  for (int i = 0; i < hop_count; i++)
+  {
+      path.push_back(req->getStack_of_QNodeIndexes(i));
+  }
+  path.push_back(my_address);
+
+  int qnic_array_size = req->getStack_of_QNICsArraySize();
+  req->setStack_of_QNICsArraySize(qnic_array_size + 1);
+  req->setStack_of_QNICs(qnic_array_size, pair_info);
+
+  std::vector<QNIC_pair_info> qnics = {};
+  for (int i = qnic_array_size - 1; i >= 0; i--) {
+    qnics.push_back(req->getStack_of_QNICs(i));
+  }
+
+  if (number_of_received_connection == 0)
+  {
+      tree_path_test.clear();
+  }
+
+
+  while (path.size() > 1)
+  {
+      current_node = path.back();
+      current_qnic_info = qnics.back();
+      path.pop_back();
+      qnics.pop_back();
+      if (tree_path_test.find(current_node) == tree_path_test.end())
+      {
+        PathLink new_path_link = {
+          path.back(),
+          current_qnic_info,
+          actual_src
+        };
+        EV_INFO << "actual src: " << actual_src << "\n";
+        std::vector<PathLink> child = {new_path_link};
+        tree_path_test.insert(std::make_pair(current_node, child));
+      }
+      else
+      {
+          bool is_in_child = false;
+          std::vector<PathLink> *current_childs = &tree_path_test.at(current_node);
+          for (auto it = current_childs->begin(); it != current_childs->end(); ++it)
+          {
+              if (it->children == path.back())
+              {
+                  is_in_child = true;
+                  break;
+              }
+          }
+          if (is_in_child == false)
+          {
+            PathLink new_path_link = {
+              path.back(),
+              current_qnic_info,
+              actual_src
+            };
+              current_childs->push_back(new_path_link);
+          }
+      }
+  }
+  current_node = path.back();
+  std::vector<PathLink> child = {};
+  tree_path_test.insert(std::make_pair(current_node, child));
+
+  number_of_received_connection += 1;
+  if (number_of_received_connection == number_of_incoming_connections)
+  {
+       number_of_received_connection = 0;
+
+        for (auto it = tree_path_test.begin(); it != tree_path_test.end(); ++it) {
+          auto *pkr = new ConnectionSetupResponse("ConnSetupResponse(GHZDistrib)");
+
+          RuleSet *rule = generateGeneralizedEntanglementSwappingRuleSet(it->first, it->second);
+          if (rule != nullptr)
+          {
+              pkr->setRuleSet(rule);
+            pkr->setDestAddr(it->first);
+            pkr->setSrcAddr(my_address);
+            pkr->setKind(2);
+            pkr->setIsMultipartite(true);
+            pkr->setActual_srcAddr(path.at(0));
+            pkr->setActual_destAddr(my_address);
+            pkr->setApplication_type(0);
+            send(pkr, "RouterPort$o");
+          }
+
+        }
+        if (actual_dst != my_address) {
+          reserveQnic(src_info->qnic.address);
+          reserveQnic(dst_info->qnic.address);
+        } else {
+          reserveQnic(src_info->qnic.address);
+        }
+  }
+
+}
+
+
+//To refactor in one method
+PathLink ConnectionManager::getFather(int node) {
+  for (auto it = tree_path_test.begin(); it != tree_path_test.end(); ++it) {
+    auto childs = it->second;
+
+    for (auto path_link_it = childs.begin(); path_link_it != childs.end(); ++path_link_it) {
+      if (path_link_it->children == node) {
+        //EV_INFO << "Found father link with " << path_link_it->children << " and QNIC address " << path_link_it->QNIC_pair.fst.address << " and "
+                //<< path_link_it->QNIC_pair.snd.address
+                //<< "\n";
+        return (*path_link_it);
+      }
+    }
+  }
+  //EV_INFO << "Did not found father address\n";
+  PathLink default_path_link;
+  default_path_link.children = -1;
+  return (default_path_link);
+}
+
+int ConnectionManager::getFatherAdress(int node) {
+  for (auto it = tree_path_test.begin(); it != tree_path_test.end(); ++it) {
+    auto childs = it->second;
+
+    for (auto path_link_it = childs.begin(); path_link_it != childs.end(); ++path_link_it) {
+      if (path_link_it->children == node) {
+        //EV_INFO << "Found father address " << it->first << "\n";
+        return (it->first);
+      }
+    }
+  }
+  return (-1);
+}
+
 /**
  *  This function is for selecting the order of entanglement swapping
  * \param swapper_address node address; could be any intermediate in the path (not an end point)
@@ -776,9 +960,11 @@ void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
   QNIC_pair_info pair_info = {.fst = inbound_info->qnic, .snd = outbound_info->qnic};
   req->setStack_of_QNICs(num_accumulated_pair_info, pair_info);
 
-  reserveQnic(inbound_info->qnic.address);
-  reserveQnic(outbound_info->qnic.address);
-
+    // CM For now we do not lock QNIC at all in multipartite, should lock them in the response phase
+  if (req->getNumber_of_clients() == 1) {
+    reserveQnic(inbound_info->qnic.address);
+    reserveQnic(outbound_info->qnic.address);
+  }
   send(req, "RouterPort$o");
 }
 
@@ -938,30 +1124,101 @@ std::unique_ptr<Rule> ConnectionManager::swappingRule(SwappingConfig conf, unsig
   return rule_entanglement_swapping;
 }
 
-std::unique_ptr<Rule> ConnectionManager::simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id) {
-  // From @poramet implementations
-  std::vector<int> partners = {conf.left_partner, conf.right_partner};
-  std::string rule_name = "Simultaneous Entanglement Swapping with " + std::to_string(conf.left_partner) + " : " + std::to_string(conf.right_partner);
-  int index_in_path = conf.index;
-  int path_length_exclude_IR = path.size() - 2;
 
-  auto rule_simultaneous_entanglement_swapping = std::make_unique<Rule>(ruleset_id, rule_id, rule_name, partners);
+//CM
+RuleSet *ConnectionManager::generateGeneralizedEntanglementSwappingRuleSet(int node, std::vector<PathLink> children_link) {
+  unsigned long ruleset_id = createUniqueId();
+  int rule_index = 0;
+  PathLink father = getFather(node);
+  int father_address = getFatherAdress(node);
+  std::vector<Clause *> clauses;
+  std::vector<int> config_partners;
+  std::vector<int> config_associated_end_nodes;
+  std::vector<QNIC_type> config_types;
+  std::vector<int> config_ids;
+  std::vector<int> config_addresses;
+  std::vector<int> config_self_ids;
+  std::vector<QNIC_type> config_self_types;
+  std::vector<int> config_resource;
   Condition *condition = new Condition();
-  Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, 1);
-  Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, 1);
-  condition->addClause(resource_clause_left);
-  condition->addClause(resource_clause_right);
 
-  quisp::rules::Action *action = new SimultaneousSwappingAction(
-      ruleset_id, rule_id, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner, conf.rqnic_type, conf.rqnic_index,
-      conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type, conf.self_right_qnic_index, conf.self_right_qnic_type, conf.initiator,
-      conf.initiator_qnic_type, conf.initiator_qnic_index, conf.initiator_qnic_address, conf.initiator_res, conf.responder, conf.responder_qnic_type, conf.responder_qnic_index,
-      conf.responder_qnic_address, conf.responder_res, index_in_path, path_length_exclude_IR);
+  if (father.children == -1 || children_link.size() == 0) {
+    return (nullptr);
+  }
+  else {
+    for (auto link_it = children_link.begin(); link_it != children_link.end(); ++link_it) {
+      config_resource.push_back(1);
+      Clause *resource_clause = new EnoughResourceClause(link_it->children, config_resource.back());
+      condition->addClause(resource_clause);
+      QNIC_id children_qnic = link_it->QNIC_pair.snd;
+      config_partners.push_back(link_it->children);
+      config_associated_end_nodes.push_back(link_it->end_node);
+      config_types.push_back(children_qnic.type);
+      config_ids.push_back(children_qnic.index);
+      config_addresses.push_back(children_qnic.address);
 
-  rule_simultaneous_entanglement_swapping->setCondition(condition);
-  rule_simultaneous_entanglement_swapping->setAction(action);
-  return rule_simultaneous_entanglement_swapping;
+      QNIC_id self_qnic = link_it->QNIC_pair.fst;
+      config_self_ids.push_back(self_qnic.index);
+      config_self_types.push_back(self_qnic.type);
+    }
+    Clause *resource_clause = new EnoughResourceClause(father_address, config_resource.back());
+    condition->addClause(resource_clause);
+    QNIC_id father_qnic = father.QNIC_pair.fst;
+    config_partners.push_back(father_address);
+    config_associated_end_nodes.push_back(my_address);
+    config_types.push_back(father_qnic.type);
+    // config_ids.push_back(father_qnic.index); It is curiously -1
+    config_ids.push_back(0);
+    config_addresses.push_back(father_qnic.address);
+
+    QNIC_id self_qnic = father.QNIC_pair.snd;
+    config_self_ids.push_back(self_qnic.index);
+    config_self_types.push_back(self_qnic.type);
+
+    config_resource.push_back(1);
+    rules::Action *action = new rules::actions::GeneralizedSwappingAction(ruleset_id, rule_index, config_partners, config_associated_end_nodes, config_types, config_ids,
+                                                                          config_addresses, config_resource, config_self_ids, config_self_types);
+    auto rule = std::make_unique<Rule>(ruleset_id, rule_index, "generalized entanglement swapping", config_partners);
+    rule->setCondition(condition);
+    rule->setAction(action);
+
+    RuleSet *ruleset = new RuleSet(ruleset_id, node, config_partners);
+    ruleset->addRule(std::move(rule));
+
+    return ruleset;
+  }
 }
+
+  // RuleSet *ConnectionManager::generateSimultaneousEntanglementSwappingRuleSet(int owner, SwappingConfig conf, std::vector<int> path) {
+  //  unsigned long ruleset_id = createUniqueId();
+  //  int rule_index = 0;
+
+  std::unique_ptr<Rule> ConnectionManager::simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id) {
+    // From @poramet implementations
+    std::vector<int> partners = {conf.left_partner, conf.right_partner};
+    std::string rule_name = "Simultaneous Entanglement Swapping with " + std::to_string(conf.left_partner) + " : " + std::to_string(conf.right_partner);
+
+    int index_in_path = conf.index;
+    int path_length_exclude_IR = path.size() - 2;
+
+    auto rule_simultaneous_entanglement_swapping = std::make_unique<Rule>(ruleset_id, rule_id, rule_name, partners);
+    Condition *condition = new Condition();
+    Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, 1);
+    Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, 1);
+    condition->addClause(resource_clause_left);
+    condition->addClause(resource_clause_right);
+
+    quisp::rules::Action *action = new SimultaneousSwappingAction(
+        ruleset_id, rule_id, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner, conf.rqnic_type, conf.rqnic_index,
+        conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type, conf.self_right_qnic_index, conf.self_right_qnic_type, conf.initiator,
+        conf.initiator_qnic_type, conf.initiator_qnic_index, conf.initiator_qnic_address, conf.initiator_res, conf.responder, conf.responder_qnic_type, conf.responder_qnic_index,
+        conf.responder_qnic_address, conf.responder_res, index_in_path, path_length_exclude_IR);
+
+    rule_simultaneous_entanglement_swapping->setCondition(condition);
+    rule_simultaneous_entanglement_swapping->setAction(action);
+    return (rule_simultaneous_entanglement_swapping);
+  }
+  
 
 std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, int next_parter_address, unsigned long ruleset_id, unsigned long rule_id) {
   // This is used for waiting swapping result from partner

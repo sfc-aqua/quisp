@@ -219,7 +219,7 @@ void StationaryQubit::setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model
 MeasureXResult StationaryQubit::measure_X() {
   applySingleQubitGateError(Measurement_error);
   if (par("GOD_Zerror").boolValue()) {
-    return MeasureXResult::HAS_Z_ERROR;
+    return MeasureXResult::HAS_X_ERROR;
   }
   return MeasureXResult::NO_ERROR;
 }
@@ -237,12 +237,13 @@ MeasureYResult StationaryQubit::measure_Y() {
     return MeasureYResult::HAS_XZ_ERROR;
   }
   return MeasureYResult::NO_ERROR;
+  return MeasureYResult::NO_ERROR;
 }
 
 MeasureZResult StationaryQubit::measure_Z() {
   applySingleQubitGateError(Measurement_error);
   if (par("GOD_Xerror")) {
-    return MeasureZResult::HAS_X_ERROR;
+    return MeasureZResult::HAS_Z_ERROR;
   }
   return MeasureZResult::NO_ERROR;
 }

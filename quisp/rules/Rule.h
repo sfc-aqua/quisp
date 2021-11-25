@@ -15,7 +15,6 @@
 
 namespace quisp {
 namespace rules {
-
 /** \class Rule Rule.h
  *
  *  \brief Rule
@@ -30,6 +29,7 @@ class Rule {
   std::unique_ptr<Condition> condition;
   std::unique_ptr<Action> action;
   std::multimap<int, IStationaryQubit *> resources;
+  std::vector<int> corrections_received;
   std::vector<int> action_partners;
   std::vector<int> next_action_partners;  // if this rule extends the entanglement
   int mutable number_of_resources_allocated_in_total = 0;

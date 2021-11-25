@@ -33,6 +33,12 @@ module QNode
     submodules:
         app: Application {
             parameters:
+            //CM Begin
+            TrafficPattern = 3; 
+            LoneInitiatorAddress = 10000;
+            NumberOfClients = 2;
+          
+             //CM End
                 address = address;//share the same address within all inner modules
                 @display("p=30,43");
         }

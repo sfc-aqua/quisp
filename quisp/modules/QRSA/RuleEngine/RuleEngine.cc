@@ -97,6 +97,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   }
 
   else if (dynamic_cast<CombinedBSAresults *>(msg) != nullptr) {
+    EV_INFO << "Received combined\n";
     // First, keep all the qubits that were successfully entangled, and reinitialize the failed ones.
     CombinedBSAresults *pk_result = check_and_cast<CombinedBSAresults *>(msg);
     BSMtimingNotifier *pk = check_and_cast<BSMtimingNotifier *>(msg);
@@ -164,7 +165,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
       EV_DEBUG << "This BSA request is internal\n";
       scheduleFirstPhotonEmission(pk, QNIC_R);
     }
-  } else if (dynamic_cast<EPPStimingNotifier *>(msg) != nullptr) {
+  }
+  else if (dynamic_cast<EPPStimingNotifier *>(msg) != nullptr) {
     bubble("EPPS");
     error("EPPS is not implemented yet");
   }
@@ -186,7 +188,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     } else {
       error("Empty rule set...");
     }
-  } else if (dynamic_cast<PurificationResult *>(msg) != nullptr) {
+  }
+  else if (dynamic_cast<PurificationResult *>(msg) != nullptr) {
     PurificationResult *pkt = check_and_cast<PurificationResult *>(msg);
     process_id purification_id;
     purification_result pr;
@@ -196,7 +199,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pr.id = purification_id;
     pr.outcome = pkt->getOutput_is_plus();
     storeCheck_Purification_Agreement(pr);
-  } else if (dynamic_cast<DoublePurificationResult *>(msg) != nullptr) {
+  }
+  else if (dynamic_cast<DoublePurificationResult *>(msg) != nullptr) {
     DoublePurificationResult *pkt = check_and_cast<DoublePurificationResult *>(msg);
     process_id purification_id;
     Doublepurification_result pr;
@@ -207,7 +211,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pr.Xpurification_outcome = pkt->getXOutput_is_plus();
     pr.Zpurification_outcome = pkt->getZOutput_is_plus();
     storeCheck_DoublePurification_Agreement(pr);
-  } else if (dynamic_cast<DS_DoublePurificationResult *>(msg) != nullptr) {
+  }
+  else if (dynamic_cast<DS_DoublePurificationResult *>(msg) != nullptr) {
     // std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
     DS_DoublePurificationResult *pkt = check_and_cast<DS_DoublePurificationResult *>(msg);
     // std::cout<<"Presult from node["<<pkt->getSrcAddr()<<"]\n";
@@ -225,7 +230,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
     // std::cout<<"Locked one is "<<pkt->getEntangled_with()<<"in node["<<q->node_address<<"] \n";
     storeCheck_QuatroPurification_Agreement(pr);
-  } else if (dynamic_cast<DS_DoublePurificationSecondResult *>(msg) != nullptr) {
+  }
+  else if (dynamic_cast<DS_DoublePurificationSecondResult *>(msg) != nullptr) {
     // std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
     DS_DoublePurificationSecondResult *pkt = check_and_cast<DS_DoublePurificationSecondResult *>(msg);
     process_id purification_id;
@@ -238,13 +244,13 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pr.Zpurification_outcome = pkt->getZOutput_is_plus();
     pr.DS_purification_outcome = pkt->getDS_Output_is_plus();
     storeCheck_TriplePurification_Agreement(pr);
-  } else if (dynamic_cast<SwappingResult *>(msg) != nullptr) {
+  }
+  else if (dynamic_cast<SwappingResult *>(msg) != nullptr) {
     SwappingResult *pkt = check_and_cast<SwappingResult *>(msg);
     process_id swapping_id;
     swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
     swapping_id.rule_id = pkt->getRule_id();
     swapping_id.index = pkt->getAction_index();
-
     swapping_result swapr;  // result of entanglement swapping
     swapr.id = swapping_id;
     swapr.new_partner = pkt->getNew_partner();
@@ -287,6 +293,11 @@ void RuleEngine::handleMessage(cMessage *msg) {
       updateResources_SimultaneousEntanglementSwapping(swapr);
     }
   }
+  else if (dynamic_cast<GeneralizedSwappingResult *>(msg) != nullptr) {
+    correction_GeneralizedEntanglementSwapping(check_and_cast<GeneralizedSwappingResult *>(msg));
+    return;
+    }
+  
 
   else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
     InternalRuleSetForwarding *pkt = check_and_cast<InternalRuleSetForwarding *>(msg);
@@ -305,7 +316,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     } else {
       error("Empty rule set...");
     }
-  } else if (dynamic_cast<InternalRuleSetForwarding_Application *>(msg) != nullptr) {
+  }
+  else if (dynamic_cast<InternalRuleSetForwarding_Application *>(msg) != nullptr) {
     InternalRuleSetForwarding_Application *pkt = check_and_cast<InternalRuleSetForwarding_Application *>(msg);
     // doing end to end tomography
     if (pkt->getApplication_type() == 0) {
@@ -325,7 +337,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     } else {
       error("This application is not recognized yet");
     }
-  } else if (dynamic_cast<StopEmitting *>(msg) != nullptr) {
+  }
+  else if (dynamic_cast<StopEmitting *>(msg) != nullptr) {
     StopEmitting *pkt = check_and_cast<StopEmitting *>(msg);
     terminated_qnic[pkt->getQnic_address()] = true;
   }
@@ -1037,17 +1050,21 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
 
   if (operation_type == 0) {
     // nothing
-  } else if (operation_type == 1) {
+  }
+  else if (operation_type == 1) {
     // do Z
     qubit->Z_gate();
-  } else if (operation_type == 2) {
+  }
+  else if (operation_type == 2) {
     // do X
     qubit->Z_gate();
-  } else if (operation_type == 3) {
+  }
+  else if (operation_type == 3) {
     // do XZ
     qubit->Z_gate();
     qubit->X_gate();
-  } else {
+  }
+  else {
     error("something error happened! This operation type doesn't recorded!");
   }
 
@@ -1078,6 +1095,27 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
   traverseThroughAllProcesses2();  // New resource added to QNIC with qnic_type qnic_index.
 }
 
+//CM Quick and dirty
+void RuleEngine::correction_GeneralizedEntanglementSwapping(GeneralizedSwappingResult *pkt) {
+  auto info = hardware_monitor->findConnectionInfoByQnicAddr(0);
+  int qnic_index = info->qnic.index;
+  QNIC_type qnic_type = info->qnic.type;
+
+  for (int i = 0; i < 10; i++) {
+    StationaryQubit *qubit = provider.getStationaryQubit(0, i, qnic_type);
+    if (qubit->is_in_multipartite) {
+      if (pkt->getIs_for_root()) {
+        EV_INFO << "ZGATE\n";
+        qubit->Z_gate();
+      } else {
+        EV_INFO << "XGATE\n";
+        qubit->X_gate();
+      }
+    }
+  }
+  
+}
+
 // Only for MIM and MM
 void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result) {
   // get the size of failed bsa
@@ -1098,7 +1136,6 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
     qnic_type = QNIC_R;
     neighborQNodeAddress = getInterface_toNeighbor_Internal(qnic_address).neighborQNode_address;
   }
-
   // How many photons are bursted?
   int num_emitted_in_this_burstTrial = tracker[qnic_address].size();
   // start iteration from 0 .. number of failed bsm
@@ -1137,6 +1174,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
         EV << "here should be true" << qubit->no_density_matrix_nullptr_entangled_partner_ok << "\n";
         error("RuleEngine. Ebit succeed. but wrong");
       }
+      EV_INFO << "C'est ajouté avec " << neighborQNodeAddress << "\n";
       // Add qubit as available resource between NeighborQNodeAddress.
       bell_pair_store.insertEntangledQubit(neighborQNodeAddress, qubit);
     }
@@ -1226,7 +1264,6 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
 
 void RuleEngine::traverseThroughAllProcesses2() {
   int number_of_process = rp.size();  // Number of running processes (in all QNICs).
-
   if (number_of_process == 0) {
     return;
   }
@@ -1238,12 +1275,10 @@ void RuleEngine::traverseThroughAllProcesses2() {
     for (auto rule = process->cbegin(), end = process->cend(); rule != end; rule++) {
       bool process_done = false;
       bool terminate_this_rule = false;
-
       while (true) {
         if (!((*rule)->resources.size() > 0)) {
           break;  // No more resource left for now.
         }
-
         cPacket *pk = (*rule)->checkrun(this);  // Do something on qubits entangled with resource_entangled_with_address.
 
         if (pk != nullptr) {
@@ -1259,35 +1294,40 @@ void RuleEngine::traverseThroughAllProcesses2() {
             }
             send(pk, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } else if (dynamic_cast<PurificationResult *>(pk) != nullptr) {
+          }
+          else if (dynamic_cast<PurificationResult *>(pk) != nullptr) {
             PurificationResult *pkt = check_and_cast<PurificationResult *>(pk);
             pkt->setSrcAddr(parentAddress);
             PurificationResult *pk_for_self = pkt->dup();
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } else if (dynamic_cast<DoublePurificationResult *>(pk) != nullptr) {
+          }
+          else if (dynamic_cast<DoublePurificationResult *>(pk) != nullptr) {
             DoublePurificationResult *pkt = check_and_cast<DoublePurificationResult *>(pk);
             pkt->setSrcAddr(parentAddress);
             DoublePurificationResult *pk_for_self = pkt->dup();
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } else if (dynamic_cast<DS_DoublePurificationResult *>(pk) != nullptr) {
+          }
+          else if (dynamic_cast<DS_DoublePurificationResult *>(pk) != nullptr) {
             DS_DoublePurificationResult *pkt = check_and_cast<DS_DoublePurificationResult *>(pk);
             pkt->setSrcAddr(parentAddress);
             DS_DoublePurificationResult *pk_for_self = pkt->dup();
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } else if (dynamic_cast<DS_DoublePurificationSecondResult *>(pk) != nullptr) {
+          }
+          else if (dynamic_cast<DS_DoublePurificationSecondResult *>(pk) != nullptr) {
             DS_DoublePurificationSecondResult *pkt = check_and_cast<DS_DoublePurificationSecondResult *>(pk);
             pkt->setSrcAddr(parentAddress);
             DS_DoublePurificationSecondResult *pk_for_self = pkt->dup();
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } else if (dynamic_cast<SwappingResult *>(pk) != nullptr) {
+          }
+          else if (dynamic_cast<SwappingResult *>(pk) != nullptr) {
             SwappingResult *pkt = check_and_cast<SwappingResult *>(pk);
             EV << "done swapping at " << parentAddress << " left: " << pkt->getLeft_Dest() << " right: " << pkt->getRight_Dest() << "\n";
             // here this packet goes to two destination.
@@ -1324,7 +1364,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
             send(pkt_for_left, "RouterPort$o");
             send(pkt_for_right, "RouterPort$o");
-          } else if (dynamic_cast<SimultaneousSwappingResult *>(pk) != nullptr) {
+          }
+          else if (dynamic_cast<SimultaneousSwappingResult *>(pk) != nullptr) {
             SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(pk);
             EV << "done swapping at " << parentAddress << "\n";
 
@@ -1355,12 +1396,32 @@ void RuleEngine::traverseThroughAllProcesses2() {
             send(pkt_for_initiator, "RouterPort$o");
             send(pkt_for_responder, "RouterPort$o");
           }
+          else if (dynamic_cast<GeneralizedSwappingResult *>(pk) != nullptr) {
+            GeneralizedSwappingResult *result_packet = check_and_cast<GeneralizedSwappingResult *>(pk);
 
+            for (int i = 0; i < result_packet->getSize_of_arrays(); i++) {
+              std::string tmp = std::to_string(result_packet->getResponder_dests(i));
+              char const *address = tmp.c_str();
+              GeneralizedSwappingResult *packet_to_send = new GeneralizedSwappingResult(address);
+              packet_to_send->setDestAddr(result_packet->getResponder_dests(i));
+              packet_to_send->setSrcAddr(parentAddress);
+              if (i < result_packet->getSize_of_arrays() - 1) {
+                packet_to_send->setIs_for_root(false);
+              }else {
+                packet_to_send->setIs_for_root(true);
+              }
+              
+              packet_to_send->setMeasurement_result(result_packet->getMeasurement_results(i));
+              send(packet_to_send, "RouterPort$o");
+            }
+
+          }
           else if (dynamic_cast<Error *>(pk) != nullptr) {
             Error *err = check_and_cast<Error *>(pk);
             error(err->getError_text());
             delete pk;
-          } else if (dynamic_cast<ConditionNotSatisfied *>(pk) != nullptr) {
+          }
+          else if (dynamic_cast<ConditionNotSatisfied *>(pk) != nullptr) {
             // Condition does not meet. Go to next rule. e.g. Fidelity is good enough by doing purification. Next could be swap.
             delete pk;
             break;
@@ -1375,6 +1436,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
         // std::cout<<"Is it done?";
         process_done = (*rule)->checkTerminate();  // The entire process is done. e.g. enough measurement for tomography.
         if (process_done) {  // Delete rule set if done
+          EV_INFO << "FINI !";
           // std::cout<<"!!!!!!!!!!!!!!!!!!!!! TERMINATING!!!!!!!!!!!!!!!!!!!!!!!!!";
           std::cout << "RuleSet_id=" << process->ruleset_id << "\n";
           // todo:Also need to deallocate resources!!!!!!!!!!!!not implemented yet.

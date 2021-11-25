@@ -9,6 +9,7 @@
 #include "actions/RandomMeasureAction.h"
 #include "actions/SimultaneousSwappingAction.h"
 #include "actions/SwappingAction.h"
+#include "actions/GeneralizedSwappingAction.h" //CM
 
 namespace quisp {
 namespace rules {

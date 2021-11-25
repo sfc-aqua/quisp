@@ -100,6 +100,8 @@ void BellStateAnalyzer::initialize() {
   error_rate = par("error_rate");
   // duration = par("duration");
   required_precision = par("required_precision");
+  //CM Waiting for a better solution
+  //required_precision = 0.00001;
   left_arrived_at = -1;
   right_arrived_at = -1;
   left_last_photon_detected = false;
@@ -348,8 +350,8 @@ void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg) {
     count_I++;
   }
   count_total++;
-  EV << "Y%=" << (double)count_Y / (double)count_total << ", X%=" << (double)count_X / (double)count_total << ", Z%=" << (double)count_Z / (double)count_total
-     << ", L%=" << (double)count_L / (double)count_total << ", I% =" << (double)count_I / (double)count_total << "\n";
+  //EV << "Y%=" << (double)count_Y / (double)count_total << ", X%=" << (double)count_X / (double)count_total << ", Z%=" << (double)count_Z / (double)count_total
+  //   << ", L%=" << (double)count_L / (double)count_total << ", I% =" << (double)count_I / (double)count_total << "\n";
 }
 
 bool BellStateAnalyzer::isPhotonLost(cMessage *msg) {

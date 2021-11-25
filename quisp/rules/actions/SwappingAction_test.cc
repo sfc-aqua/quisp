@@ -205,7 +205,7 @@ TEST(SwappingActionTest, runWithRightHasError) {
   right_qubit->entangled_partner = left_qubit;
   left_qubit->entangled_partner = right_qubit;
 
-  EXPECT_CALL(*right_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
+  EXPECT_CALL(*right_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_Z_ERROR));
   EXPECT_CALL(*left_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::NO_ERROR));
 
   EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
@@ -245,7 +245,7 @@ TEST(SwappingActionTest, runWithLeftHasError) {
   left_qubit->entangled_partner = right_qubit;
 
   EXPECT_CALL(*right_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::NO_ERROR));
-  EXPECT_CALL(*left_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
+  EXPECT_CALL(*left_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_Z_ERROR));
 
   EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
   EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(left_qubit));
@@ -283,8 +283,8 @@ TEST(SwappingActionTest, runWithBothErrors) {
   right_qubit->entangled_partner = left_qubit;
   left_qubit->entangled_partner = right_qubit;
 
-  EXPECT_CALL(*right_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
-  EXPECT_CALL(*left_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
+  EXPECT_CALL(*right_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_Z_ERROR));
+  EXPECT_CALL(*left_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_Z_ERROR));
 
   EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
   EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(left_qubit));

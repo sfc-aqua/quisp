@@ -16,6 +16,7 @@ void Condition::addClause(Clause *c) { clauses.push_back(c); }
 bool Condition::check(std::multimap<int, IStationaryQubit *> resources) const {
   bool satisfying = true;
   for (auto &clause : clauses) {
+   
     if (!clause->check(resources)) {
       satisfying = false;
       break;

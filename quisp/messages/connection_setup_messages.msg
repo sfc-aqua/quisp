@@ -24,6 +24,8 @@ packet ConnectionSetupRequest extends Header
     int stack_of_QNodeIndexes[];
     int stack_of_linkCosts[];
     QNIC_pair_info stack_of_QNICs[];
+    
+    int number_of_clients;
 }
 
 packet RejectConnectionSetupRequest extends Header
@@ -41,4 +43,6 @@ packet ConnectionSetupResponse extends Header
     RuleSetField RuleSet;
     int application_type;
     int stack_of_QNodeIndexes[];
+    
+    bool isMultipartite;
 }

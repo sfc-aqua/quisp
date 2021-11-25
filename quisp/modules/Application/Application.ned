@@ -14,6 +14,8 @@ simple Application
         // int TrafficPattern = default(1);
         int TrafficPattern;
         int LoneInitiatorAddress;
+        int NumberOfResources = default(1);
+        int NumberOfClients;
         int distant_measure_count = default(7000);
         // Maybe don't have to set the default here.
 

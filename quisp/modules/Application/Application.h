@@ -45,6 +45,7 @@ class Application : public IApplication {
   int getOneRandomEndNodeAddress();
 
   messages::ConnectionSetupRequest *createConnectionSetupRequest(int dest_addr, int num_of_required_resources);
+  messages::ConnectionSetupRequest *createMultiConnectionSetupRequest(int dest_addr, int num_of_required_resources, int number_of_clients);
   utils::ComponentProvider provider;
 };
 

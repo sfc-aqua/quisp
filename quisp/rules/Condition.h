@@ -13,7 +13,6 @@
 
 namespace quisp {
 namespace rules {
-
 /** \class Condition Condition.h
  *
  *  \brief Condition
@@ -24,10 +23,12 @@ class Condition {
   bool check(std::multimap<int, IStationaryQubit*> resources) const;
   bool checkTerminate(std::multimap<int, IStationaryQubit*> resources) const;
 
+  //CM Would need a type correction
+  void addCorrection(int measure);
+
   std::vector<Clause*> clauses;
 };
 
 }  // namespace rules
 }  // namespace quisp
-
 #endif  // QUISP_RULES_CONDITION_H_
