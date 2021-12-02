@@ -61,13 +61,10 @@ $(TARGET_DIR)/coverage.profraw:
 	LLVM_PROFILE_FILE=$(TARGET_DIR)/coverage.profraw $(TARGET_DIR)/run_unit_test
 
 $(TARGET_DIR)/coverage.profdata: $(TARGET_DIR)/coverage.profraw
-	ls -la
-	llvm-profdata -h
-	ls -la $(TARGET_DIR)
 	llvm-profdata merge -sparse -o $(TARGET_DIR)/coverage.profdata $(TARGET_DIR)/coverage.profraw
 
 $(TARGET_DIR)/lcov.info: $(TARGET_DIR)/coverage.profdata
-	llvm-cov export -instr-profile=./coverage.profdata ./run_unit_test -format=lcov ../ > lcov.info
+	llvm-cov export -instr-profile=./coverage.profdata ./run_unit_test -format=lcov ../ -ignore-filename-regex=".*_test.cc|eigen/.*|test_utils/.*|.*_m.h|.*_m.cc" > lcov.info
 
 $(TARGET_DIR)/coverage/index.html: $(TARGET_DIR)/lcov.info
 	genhtml lcov.info -o $(TARGET_DIR)/coverage
