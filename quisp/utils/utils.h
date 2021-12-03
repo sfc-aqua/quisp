@@ -2,7 +2,7 @@
 #define QUISP_UTILS_H_
 
 #include <modules/QNIC.h>
-#include <modules/QNIC/StationaryQubit/StationaryQubit.h>
+#include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>
 #include <modules/QRSA/RoutingDaemon/IRoutingDaemon.h>
@@ -17,7 +17,7 @@ using modules::IRoutingDaemon;
 using modules::QNIC_N;
 using modules::QNIC_names;
 using modules::QNIC_type;
-using modules::StationaryQubit;
+using modules::IStationaryQubit;
 using omnetpp::cModule;
 
 }  // namespace utils

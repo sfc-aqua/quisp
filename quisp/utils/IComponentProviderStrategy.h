@@ -16,7 +16,7 @@ class IComponentProviderStrategy {
   virtual bool isQNodeType(const cModuleType *const module) = 0;
   virtual bool isHoMNodeType(const cModuleType *const module) = 0;
   virtual bool isSPDCNodeType(const cModuleType *const module) = 0;
-  virtual StationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) = 0;
+  virtual IStationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) = 0;
   virtual cModule *getQNIC(int qnic_index, QNIC_type qnic_type) = 0;
   virtual IRoutingDaemon *getRoutingDaemon() = 0;
   virtual IHardwareMonitor *getHardwareMonitor() = 0;
