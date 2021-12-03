@@ -1,4 +1,4 @@
-.PHONY: all tidy format ci makefile-exe makefile-lib checkmakefile googletest clean test
+.PHONY: all tidy format ci makefile-exe makefile-lib checkmakefile googletest clean test coverage coverage-report help
 
 all: makefile-exe
 	$(MAKE) -C quisp -j$(nproc)
@@ -52,11 +52,17 @@ makefile-lib: eigen
 clean:
 	$(RM) quisp/Makefile quisp/quisp quisp/quisp_dbg quisp/run_unit_test quisp/libquisp*
 	$(RM) -r quisp/out
+	$(RM) -rf quisp/coverage* quisp/default.profraw quisp/lcov.info
 
 distclean:
 	git submodule deinit --all -f
 	make clean
 
+coverage: makefile-lib
+	$(MAKE) -C quisp lcov.info
+
+coverage-report: makefile-lib
+	$(MAKE) -C quisp/ coverage/index.html
 
 checkmakefile:
 	@if [ ! -f $(QUISP_MAKEFILE) ]; then \
@@ -67,4 +73,22 @@ checkmakefile:
 	echo; \
 	exit 1; \
 	fi
+
+help:
+	@echo; \
+	echo '===================================================================================================='; \
+	echo 'Usage: make [target]'; \
+	echo '===================================================================================================='; \
+	echo; \
+	echo 'Available targets:'; \
+	echo '  exe                 build the executable quisp/quisp'; \
+	echo '  lib                 build the library quisp/libquisp{_dbg}.{dylib,so}'; \
+	echo '  clean               remove objcet files, executables and libraries'; \
+	echo '  distclean           remove everything includes submoduled components'; \
+	echo '  run-unit-test       build unit tests and run it'; \
+	echo '  run-module-test     build modele tests(opp_test) and run it'; \
+	echo '  coverage            generate coverage as quisp/lcov.info'; \
+	echo '  coverage-report     generate html coverage report at quisp/coverage/index.html'; \
+	echo '  format              run clang-format on the source files'; \
+	echo '  tidy                run clang-tidy on the source files to do static analysis'; \
 

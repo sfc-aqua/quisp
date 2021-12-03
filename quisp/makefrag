@@ -25,6 +25,10 @@ INCLUDE_PATH+=-I. $(shell pkg-config eigen3 --cflags)
 endif
 
 INCLUDE_PATH+=-I.
+ifneq (,$(ENABLE_COVERAGE))
+CXXFLAGS+=-ftest-coverage -fprofile-instr-generate -fcoverage-mapping
+LDFLAGS+=-ftest-coverage -fprofile-instr-generate -fcoverage-mapping
+endif
 
 default: eigen all
 
@@ -50,6 +54,20 @@ $(TARGET_DIR)/run_unit_test: $(TARGET_DIR)/$(TARGET) $(TEST_OBJS)  $(wildcard $(
 
 run-unit-test: $(TARGET_DIR)/run_unit_test
 	$(TARGET_DIR)/run_unit_test
+
+$(TARGET_DIR)/coverage.profraw:
+	rm -rf coverage*
+	ENABLE_COVERAGE=true make run-unit-test
+	LLVM_PROFILE_FILE=$(TARGET_DIR)/coverage.profraw $(TARGET_DIR)/run_unit_test
+
+$(TARGET_DIR)/coverage.profdata: $(TARGET_DIR)/coverage.profraw
+	llvm-profdata merge -sparse -o $(TARGET_DIR)/coverage.profdata $(TARGET_DIR)/coverage.profraw
+
+$(TARGET_DIR)/lcov.info: $(TARGET_DIR)/coverage.profdata
+	llvm-cov export -instr-profile=./coverage.profdata ./run_unit_test -format=lcov ../ -ignore-filename-regex=".*_test.cc|eigen/.*|.*test_utils/.*|.*_m.h|.*_m.cc" > lcov.info
+
+$(TARGET_DIR)/coverage/index.html: $(TARGET_DIR)/lcov.info
+	genhtml lcov.info -o $(TARGET_DIR)/coverage
 
 .PHONY: eigen
 # check eigen exists and setup eigen if needed.

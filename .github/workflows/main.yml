@@ -19,15 +19,22 @@ jobs:
           ln -s /usr/bin/clang-tidy-12 /usr/bin/clang-tidy
           ln -sf /usr/bin/clang-12 /usr/bin/clang
           ln -sf /usr/bin/clang++-12 /usr/bin/clang++
+          ln -sf /usr/bin/llvm-profdata-12 /usr/bin/llvm-profdata
+          ln -sf /usr/bin/llvm-cov-12 /usr/bin/llvm-cov
       - name: Check out repository
         uses: actions/checkout@v2
       - name: clang-format and clang-tidy
         run: make ci
-      - name: unit tests
+      - name: unit tests and generate coverage report
         run: |
           opp_makemake -f --deep -O out -i ./makefrag -M release --make-so
-          make run-unit-test
+          make lcov.info
         working-directory: quisp
+      - name: Run codacy-coverage-reporter
+        uses: codacy/codacy-coverage-reporter-action@v1
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: quisp/lcov.info
       # - name: module tests
         # run: make run-module-test
       - name: Run Simulations

@@ -9,7 +9,9 @@ RUN apt-get update -y && apt install -y --no-install-recommends \
     ln -s /usr/bin/clang-format-12 /usr/bin/clang-format && \
     ln -s /usr/bin/clang-tidy-12 /usr/bin/clang-tidy && \
     ln -sf /usr/bin/clang-12 /usr/bin/clang && \
-    ln -sf /usr/bin/clang++-12 /usr/bin/clang++
+    ln -sf /usr/bin/clang++-12 /usr/bin/clang++ && \
+    ln -sf /usr/bin/llvm-profdata-12 /usr/bin/llvm-profdata && \
+    ln -sf /usr/bin/llvm-cov-12 /usr/bin/llvm-cov
 
 
 # first stage - build OMNeT++ with GUI
