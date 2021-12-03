@@ -1,4 +1,6 @@
 # QUISP
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/97c8ad57c7734c29b44ac660999a3145)](https://www.codacy.com/gh/zigen/quisp/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=zigen/quisp&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/97c8ad57c7734c29b44ac660999a3145)](https://www.codacy.com/gh/zigen/quisp/dashboard?utm_source=github.com&utm_medium=referral&utm_content=zigen/quisp&utm_campaign=Badge_Coverage)
 ![github workflow](https://github.com/sfc-aqua/quisp/actions/workflows/main.yml/badge.svg)
 <a href="https://aqua-quisp.slack.com/" rel="nofollow"><img src="https://img.shields.io/badge/join-us%20on%20slack-gray.svg?colorB=red&amp;logo=slack&amp;longCache=true" alt="Slack Widget"></a>
 The Quantum Internet Simulation Package (QuISP) is an event-driven
