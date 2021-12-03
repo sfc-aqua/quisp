@@ -4,7 +4,7 @@
 #include <omnetpp.h>
 #include <test_utils/TestUtils.h>
 #include "modules/QNIC.h"
-#include "modules/QNIC/StationaryQubit/StationaryQubit.h"
+#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RoutingDaemon/IRoutingDaemon.h"
 #include "omnetpp/csimulation.h"
@@ -17,31 +17,19 @@ using namespace quisp::modules;
 using namespace quisp_test;
 using namespace testing;
 
-class MockStationaryQubit : public StationaryQubit {
- public:
-  MOCK_METHOD(void, emitPhoton, (int pulse), (override));
-  MOCK_METHOD(void, setFree, (bool consumed), (override));
-};
-
-class MockRoutingDaemon : public IRoutingDaemon {
- public:
-  MOCK_METHOD(int, returnNumEndNodes, (), (override));
-  MOCK_METHOD(int, return_QNIC_address_to_destAddr, (int destAddr), (override));
-};
-
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
   Strategy(TestQNode* _qnode) : mockQubit(nullptr), routingDaemon(nullptr), parent_qnode(_qnode) {}
-  Strategy(MockStationaryQubit* qubit, MockRoutingDaemon* routing_daemon) : mockQubit(qubit), routingDaemon(routing_daemon) {}
+  Strategy(MockQubit* qubit, MockRoutingDaemon* routing_daemon) : mockQubit(qubit), routingDaemon(routing_daemon) {}
   ~Strategy() {
     delete mockQubit;
     delete routingDaemon;
   }
   cModule* getQNode() override { return parent_qnode; }
-  MockStationaryQubit* mockQubit = nullptr;
+  MockQubit* mockQubit = nullptr;
   MockRoutingDaemon* routingDaemon = nullptr;
-  StationaryQubit* getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override {
-    if (mockQubit == nullptr) mockQubit = new MockStationaryQubit();
+  IStationaryQubit* getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override {
+    if (mockQubit == nullptr) mockQubit = new MockQubit();
     return mockQubit;
   };
   IRoutingDaemon* getRoutingDaemon() override { return routingDaemon; };
@@ -54,7 +42,7 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
  public:
   using quisp::modules::HardwareMonitor::initialize;
   using quisp::modules::HardwareMonitor::par;
-  HardwareMonitorTestTarget(MockStationaryQubit* mock_qubit, MockRoutingDaemon* routing_daemon) : quisp::modules::HardwareMonitor() {
+  HardwareMonitorTestTarget(MockQubit* mock_qubit, MockRoutingDaemon* routing_daemon) : quisp::modules::HardwareMonitor() {
     setParInt(this, "address", 123);
     setParInt(this, "number_of_qnics_rp", 0);
     setParInt(this, "number_of_qnics_r", 0);
@@ -76,7 +64,7 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
 TEST(HardwareMonitorTestTarget, Init) {
   prepareSimulation();
   auto* mock_routing_daemon = new MockRoutingDaemon;
-  auto* mock_qubit = new MockStationaryQubit;
+  auto* mock_qubit = new MockQubit;
   EXPECT_CALL(*mock_routing_daemon, returnNumEndNodes()).WillOnce(Return(1));
   HardwareMonitorTestTarget c{mock_qubit, mock_routing_daemon};
 

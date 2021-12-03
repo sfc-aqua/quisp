@@ -17,20 +17,14 @@ using namespace quisp::utils;
 using namespace quisp::modules;
 using namespace quisp_test;
 
-class MockStationaryQubit : public StationaryQubit {
- public:
-  MOCK_METHOD(void, emitPhoton, (int pulse), (override));
-  MOCK_METHOD(void, setFree, (bool consumed), (override));
-};
-
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
   Strategy() : mockQubit(nullptr) {}
-  Strategy(MockStationaryQubit* _qubit) : mockQubit(_qubit) {}
+  Strategy(MockQubit* _qubit) : mockQubit(_qubit) {}
   ~Strategy() { delete mockQubit; }
-  MockStationaryQubit* mockQubit = nullptr;
-  StationaryQubit* getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override {
-    if (mockQubit == nullptr) mockQubit = new MockStationaryQubit();
+  MockQubit* mockQubit = nullptr;
+  IStationaryQubit* getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override {
+    if (mockQubit == nullptr) mockQubit = new MockQubit();
     return mockQubit;
   };
 };
@@ -39,7 +33,7 @@ class RTCTestTarget : public quisp::modules::RealTimeController {
  public:
   using quisp::modules::RealTimeController::initialize;
   using quisp::modules::RealTimeController::par;
-  RTCTestTarget(MockStationaryQubit* mockQubit) : RealTimeController() {
+  RTCTestTarget(MockQubit* mockQubit) : RealTimeController() {
     omnetpp::cParImpl* p = new omnetpp::cIntParImpl();
     const char* name = "address";
     p->setName(name);
@@ -57,7 +51,7 @@ TEST(RealTimeControllerTest, Init) {
 }
 TEST(RealTimeControllerTest, EmitPhoton) {
   prepareSimulation();
-  auto* qubit = new MockStationaryQubit{};
+  auto* qubit = new MockQubit{};
   RTCTestTarget c{qubit};
   c.initialize();
 
@@ -67,7 +61,7 @@ TEST(RealTimeControllerTest, EmitPhoton) {
 
 TEST(RealTimeControllerTest, ReInitializeStationaryQubit) {
   prepareSimulation();
-  auto* qubit = new MockStationaryQubit{};
+  auto* qubit = new MockQubit{};
   RTCTestTarget c{qubit};
   c.initialize();
 

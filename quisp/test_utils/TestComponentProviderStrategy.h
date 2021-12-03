@@ -12,8 +12,8 @@ namespace strategy {
 using quisp::modules::IHardwareMonitor;
 using quisp::modules::IRealTimeController;
 using quisp::modules::IRoutingDaemon;
-using quisp::modules::QNIC_type;
 using quisp::modules::IStationaryQubit;
+using quisp::modules::QNIC_type;
 using quisp::utils::IComponentProviderStrategy;
 using quisp_test::simulation::TestSimulation;
 

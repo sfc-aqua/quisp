@@ -14,10 +14,10 @@ namespace utils {
 using modules::IHardwareMonitor;
 using modules::IRealTimeController;
 using modules::IRoutingDaemon;
+using modules::IStationaryQubit;
 using modules::QNIC_N;
 using modules::QNIC_names;
 using modules::QNIC_type;
-using modules::IStationaryQubit;
 using omnetpp::cModule;
 
 }  // namespace utils
