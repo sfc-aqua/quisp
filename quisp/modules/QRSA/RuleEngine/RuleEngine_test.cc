@@ -172,6 +172,8 @@ TEST(RuleEngineTest, resourceAllocation) {
   rs->addRule(std::move(rule));
   rule_engine->rp.insert(rs);
 
+  EXPECT_CALL(*mockQubit1, Allocate()).WillRepeatedly(Return());
+  EXPECT_CALL(*mockQubit1, isAllocated()).WillRepeatedly(Return(false));
   rule_engine->ResourceAllocation(QNIC_E, 3);
 
   // resource allocation assigns a corresponding qubit to action's resource
@@ -183,6 +185,7 @@ TEST(RuleEngineTest, resourceAllocation) {
   EXPECT_EQ(_rule->resources.size(), 1);
   delete mockHardwareMonitor;
   delete routingdaemon;
+  delete mockQubit1;
 }
 
 TEST(RuleEngineTest, trackerUpdate) {

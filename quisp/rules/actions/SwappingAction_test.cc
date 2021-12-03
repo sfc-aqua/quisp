@@ -167,6 +167,10 @@ TEST(SwappingActionTest, runWithNoError) {
   left_qubit->entangled_partner = right_qubit;
 
   EXPECT_CALL(*right_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::NO_X_ERROR));
+  EXPECT_CALL(*right_qubit, CNOT_gate(left_qubit)).WillOnce(Return());
+  EXPECT_CALL(*right_qubit, setEntangledPartnerInfo(left_qubit)).WillOnce(Return());
+  EXPECT_CALL(*left_qubit, setEntangledPartnerInfo(right_qubit)).WillOnce(Return());
+  EXPECT_CALL(*left_qubit, Hadamard_gate()).WillOnce(Return());
   EXPECT_CALL(*left_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::NO_X_ERROR));
 
   EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
@@ -206,6 +210,10 @@ TEST(SwappingActionTest, runWithRightHasError) {
   left_qubit->entangled_partner = right_qubit;
 
   EXPECT_CALL(*right_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
+  EXPECT_CALL(*right_qubit, CNOT_gate(left_qubit)).WillOnce(Return());
+  EXPECT_CALL(*right_qubit, setEntangledPartnerInfo(left_qubit)).WillOnce(Return());
+  EXPECT_CALL(*left_qubit, setEntangledPartnerInfo(right_qubit)).WillOnce(Return());
+  EXPECT_CALL(*left_qubit, Hadamard_gate()).WillOnce(Return());
   EXPECT_CALL(*left_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::NO_X_ERROR));
 
   EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
@@ -245,6 +253,10 @@ TEST(SwappingActionTest, runWithLeftHasError) {
   left_qubit->entangled_partner = right_qubit;
 
   EXPECT_CALL(*right_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::NO_X_ERROR));
+  EXPECT_CALL(*right_qubit, CNOT_gate(left_qubit)).WillOnce(Return());
+  EXPECT_CALL(*right_qubit, setEntangledPartnerInfo(left_qubit)).WillOnce(Return());
+  EXPECT_CALL(*left_qubit, setEntangledPartnerInfo(right_qubit)).WillOnce(Return());
+  EXPECT_CALL(*left_qubit, Hadamard_gate()).WillOnce(Return());
   EXPECT_CALL(*left_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
 
   EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
@@ -284,6 +296,10 @@ TEST(SwappingActionTest, runWithBothErrors) {
   left_qubit->entangled_partner = right_qubit;
 
   EXPECT_CALL(*right_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
+  EXPECT_CALL(*right_qubit, CNOT_gate(left_qubit)).WillOnce(Return());
+  EXPECT_CALL(*right_qubit, setEntangledPartnerInfo(left_qubit)).WillOnce(Return());
+  EXPECT_CALL(*left_qubit, setEntangledPartnerInfo(right_qubit)).WillOnce(Return());
+  EXPECT_CALL(*left_qubit, Hadamard_gate()).WillOnce(Return());
   EXPECT_CALL(*left_qubit, measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
 
   EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
