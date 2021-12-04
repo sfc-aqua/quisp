@@ -31,6 +31,7 @@ jobs:
           make lcov.info
         working-directory: quisp
       - name: Run codacy-coverage-reporter
+        if: ${{ github.event_name == 'push' && github.repository == 'sfc-aqua/quisp' }}
         uses: codacy/codacy-coverage-reporter-action@v1
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
