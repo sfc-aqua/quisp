@@ -809,7 +809,8 @@ QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTable table, QNI
 
   int index = 0;
   for (int i = 0; i < qnics; i++) {
-    for (int x = 0; x < hardware_monitor->getQnicNumQubits(i, qnic_type); x++) {
+    int num_qubits = hardware_monitor->getQnicNumQubits(i, qnic_type);
+    for (int x = 0; x < num_qubits; x++) {
       QubitAddr this_qubit = {parentAddress, i, x};
       // QubitAddr entangled_qubit = {-1, -1, -1};//Entangled address. The system may miss-track the actual entangled partner.  Initialized as -1 'cause no entangled qubits in the
       // beginning QubitAddr actual = {-1, -1, -1};//Entangled address. This is the true physically entangled partner. If there!=actual, then any operation on the qubit is a mess!
