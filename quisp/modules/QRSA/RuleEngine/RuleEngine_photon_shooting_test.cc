@@ -17,6 +17,7 @@
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
 #include "modules/QRSA/RealTimeController/IRealTimeController.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
+#include "omnetpp/cmodule.h"
 #include "rules/Action.h"
 #include "rules/RuleSet.h"
 
@@ -32,10 +33,15 @@ using namespace quisp_test;
 using namespace testing;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
+  cModule* temp_qnic;
+
  public:
   Strategy() : mockQubit(nullptr), routingDaemon(nullptr), hardwareMonitor(nullptr) {}
   Strategy(IStationaryQubit* _qubit, MockRoutingDaemon* routing_daemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller)
-      : mockQubit(_qubit), routingDaemon(routing_daemon), hardwareMonitor(hardware_monitor), realtimeController(realtime_controller) {}
+      : mockQubit(_qubit), routingDaemon(routing_daemon), hardwareMonitor(hardware_monitor), realtimeController(realtime_controller) {
+    temp_qnic = new omnetpp::cModule();
+    setParInt(temp_qnic, "burst_trial_counter", 0);
+  }
   ~Strategy() {
     delete mockQubit;
     delete routingDaemon;
@@ -53,13 +59,17 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
   IRoutingDaemon* getRoutingDaemon() override { return routingDaemon; };
   IHardwareMonitor* getHardwareMonitor() override { return hardwareMonitor; };
   IRealTimeController* getRealTimeController() override { return realtimeController; };
+  cModule* getQNIC(int qnic_index, QNIC_type qnic_type) override { return temp_qnic; }
 };
 
 class RuleEngineTestTarget : public quisp::modules::RuleEngine {
  public:
+  using quisp::modules::RuleEngine::burstTrial_outdated;
   using quisp::modules::RuleEngine::checkAppliedRule;
   using quisp::modules::RuleEngine::clearAppliedRule;
+  using quisp::modules::RuleEngine::incrementBurstTrial;
   using quisp::modules::RuleEngine::initialize;
+  using quisp::modules::RuleEngine::ntable;
   using quisp::modules::RuleEngine::par;
   using quisp::modules::RuleEngine::scheduleNextEmissionEvent;
   using quisp::modules::RuleEngine::shootPhoton;
@@ -83,6 +93,8 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
     Busy_OR_Free_QubitState_table[qnic_type] = this->setQubitBusy_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit_index);
   };
   int getNumFreeQubitsInQnic(int qnic_type, int qnic_index) { return countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index); }
+
+  int getBurstCountByQnic(int qnic_address) { return this->qnic_burst_trial_counter[qnic_address]; }
 
  private:
   FRIEND_TEST(RuleEngineTest, ESResourceUpdate);
@@ -642,4 +654,73 @@ TEST(RuleEnginePhotonShootingTest, ScheduleNextEmissionEvent) {
   delete routingdaemon;
 }
 
+TEST(RuleEnginePhotonShootingTest, BurstTrialOutdated) {
+  auto* sim = prepareSimulation();
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  auto* mockQubit1 = new MockQubit(QNIC_E, 0);
+  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
+  setParInt(rule_engine, "total_number_of_qnics", 1);
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(3));
+
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+
+  int qnic_address = 0;
+  auto outdated = rule_engine->burstTrial_outdated(1, qnic_address);
+  EXPECT_TRUE(outdated);
+
+  outdated = rule_engine->burstTrial_outdated(0, qnic_address);
+  EXPECT_FALSE(outdated);
+
+  delete mockHardwareMonitor;
+  delete routingdaemon;
+  delete mockQubit1;
+}
+
+TEST(RuleEnginePhotonShootingTest, incrementBurstTrial) {
+  auto* sim = prepareSimulation();
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  auto* mockQubit1 = new MockQubit(QNIC_E, 0);
+  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
+  setParInt(rule_engine, "total_number_of_qnics", 2);
+  setParInt(rule_engine, "number_of_qnics", 1);
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
+
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+
+  // for QNIC_R
+  int qnic_address = 0;
+  EXPECT_EQ(rule_engine->getBurstCountByQnic(qnic_address), 0);
+  int dest_addr = 0;
+  int internal_qnic_index = 0;
+  rule_engine->incrementBurstTrial(dest_addr, qnic_address, internal_qnic_index);
+  EXPECT_EQ(rule_engine->getBurstCountByQnic(qnic_address), 1);
+
+  // for QNIC_E
+  qnic_address = 1;
+  InterfaceInfo interface_info{
+      .qnic =
+          {
+              .address = qnic_address,
+          },
+  };
+  rule_engine->ntable.insert(std::make_pair(dest_addr, interface_info));
+  int internal_qnic_address = -1;
+  EXPECT_EQ(rule_engine->getBurstCountByQnic(qnic_address), 0);
+  rule_engine->incrementBurstTrial(dest_addr, internal_qnic_address, internal_qnic_index);
+  EXPECT_EQ(rule_engine->getBurstCountByQnic(qnic_address), 1);
+
+  delete mockHardwareMonitor;
+  delete routingdaemon;
+  delete mockQubit1;
+}
 }  // namespace
