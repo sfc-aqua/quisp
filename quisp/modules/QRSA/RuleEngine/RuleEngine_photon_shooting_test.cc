@@ -63,6 +63,7 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
   using quisp::modules::RuleEngine::par;
   using quisp::modules::RuleEngine::scheduleNextEmissionEvent;
   using quisp::modules::RuleEngine::shootPhoton;
+  using quisp::modules::RuleEngine::shootPhoton_internal;
 
   RuleEngineTestTarget(IStationaryQubit* mockQubit, MockRoutingDaemon* routingdaemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller)
       : quisp::modules::RuleEngine() {
@@ -307,6 +308,235 @@ TEST(RuleEnginePhotonShootingTest, ShootPhotonWithThreeFreeQubits) {
     EXPECT_EQ(emitReq->getTrial(), trial);
     EXPECT_EQ(emitReq->getQnic_type(), QNIC_E);
     EXPECT_EQ(rule_engine->getNumFreeQubitsInQnic(QNIC_E, qnic_index), 0);
+
+    EXPECT_EQ(scheduled->getQnic_address(), qnic_address);
+    EXPECT_EQ(scheduled->getQnic_index(), qnic_index);
+    EXPECT_EQ(scheduled->getNum_sent(), num_sent + 1);
+    EXPECT_EQ(scheduled->getTrial(), trial);
+    EXPECT_EQ(scheduled->getInterval(), interval);
+    fes->clear();
+  }
+  delete mockHardwareMonitor;
+  delete routingdaemon;
+  delete mockQubit1;
+}
+
+TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithoutFreeQubit) {
+  auto* sim = prepareSimulation();
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  auto* mockQubit1 = new MockQubit(QNIC_E, 0);
+  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
+
+  // Emitter QNIC(index:0~2) has 1 qubit, Receiver QNIC(index:0) has 1 qubit
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
+
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+  sim->setContext(rule_engine);
+
+  int qnic_index = 1;
+  // no free qubit case
+  auto* pk = new SchedulePhotonTransmissionsOnebyOne();
+  pk->setQnic_index(1);
+  // set qubit in Emitter QNIC1 to busy, so there's no free qubit.
+  rule_engine->setQubitBusyInQnic(QNIC_E, qnic_index, 0);
+  rule_engine->shootPhoton_internal(pk);
+  auto* fes = sim->getFES();
+  ASSERT_EQ(fes->getLength(), 0);
+  fes->clear();
+
+  delete mockHardwareMonitor;
+  delete routingdaemon;
+  delete mockQubit1;
+}
+
+TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithSingleFreeQubit) {
+  auto* sim = prepareSimulation();
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  int qnic_index = 0;
+
+  auto* mockQubit1 = new MockQubit(QNIC_E, qnic_index);
+  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
+
+  // Emitter QNIC(index:0~2) has 2 qubit, Receiver QNIC(index:0) has 1 qubit
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(2));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(2));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(2));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
+
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+  EXPECT_EQ(rule_engine->getNumFreeQubitsInQnic(QNIC_R, qnic_index), 1);
+  sim->setContext(rule_engine);
+  auto* fes = sim->getFES();
+
+  int qnic_address = 1234;
+  int trial = 1;
+  int num_sent = 0;
+  double interval = 5.3;
+
+  {
+    auto pk = new SchedulePhotonTransmissionsOnebyOne();
+    pk->setQnic_index(qnic_index);
+    pk->setNum_sent(num_sent);
+    pk->setTrial(trial);
+    pk->setQnic_address(qnic_address);
+    pk->setInterval(interval);
+
+    rule_engine->shootPhoton_internal(pk);
+    ASSERT_EQ(fes->getLength(), 2);
+    auto* res1 = fes->get(0);
+    auto* res2 = fes->get(1);
+    auto* emitReq = dynamic_cast<EmitPhotonRequest*>(res1);
+    ASSERT_NE(emitReq, nullptr);
+    auto* scheduled = dynamic_cast<SchedulePhotonTransmissionsOnebyOne*>(res2);
+    ASSERT_NE(scheduled, nullptr);
+
+    EXPECT_EQ(emitReq->getKind(), STATIONARYQUBIT_PULSE_BOUND);
+    EXPECT_EQ(emitReq->getQnic_address(), qnic_address);
+    EXPECT_EQ(emitReq->getQnic_index(), qnic_index);
+    EXPECT_EQ(emitReq->getQubit_index(), 0);
+    EXPECT_EQ(emitReq->getTrial(), trial);
+    EXPECT_EQ(emitReq->getQnic_type(), QNIC_R);
+    // no free qubit left
+    EXPECT_EQ(rule_engine->getNumFreeQubitsInQnic(QNIC_R, qnic_index), 0);
+
+    EXPECT_EQ(scheduled->getQnic_address(), qnic_address);
+    EXPECT_EQ(scheduled->getQnic_index(), qnic_index);
+    EXPECT_EQ(scheduled->getNum_sent(), num_sent + 1);
+    EXPECT_EQ(scheduled->getTrial(), trial);
+    EXPECT_EQ(scheduled->getInterval(), interval);
+    fes->clear();
+  }
+
+  delete mockHardwareMonitor;
+  delete routingdaemon;
+  delete mockQubit1;
+}
+
+TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithThreeFreeQubits) {
+  auto* sim = prepareSimulation();
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  int qnic_index = 0;
+
+  auto* mockQubit1 = new MockQubit(QNIC_R, qnic_index);
+  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
+
+  // Emitter QNIC(index:0~2) has 1 qubit, Receiver QNIC(index:0) has 3 qubit
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(3));
+
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+  EXPECT_EQ(rule_engine->getNumFreeQubitsInQnic(QNIC_R, qnic_index), 3);
+  sim->setContext(rule_engine);
+  auto* fes = sim->getFES();
+
+  int qnic_address = 1234;
+  int trial = 1;
+  int num_sent = 0;
+  double interval = 5.3;
+
+  {  // first shot
+    auto pk = new SchedulePhotonTransmissionsOnebyOne();
+    pk->setQnic_index(qnic_index);
+    pk->setNum_sent(num_sent);
+    pk->setTrial(trial);
+    pk->setQnic_address(qnic_address);
+    pk->setInterval(interval);
+
+    rule_engine->shootPhoton_internal(pk);
+    ASSERT_EQ(fes->getLength(), 2);
+    auto* res1 = fes->get(0);
+    auto* res2 = fes->get(1);
+    auto* emitReq = dynamic_cast<EmitPhotonRequest*>(res1);
+    ASSERT_NE(emitReq, nullptr);
+    auto* scheduled = dynamic_cast<SchedulePhotonTransmissionsOnebyOne*>(res2);
+    ASSERT_NE(scheduled, nullptr);
+
+    EXPECT_EQ(emitReq->getKind(), STATIONARYQUBIT_PULSE_BEGIN);
+    EXPECT_EQ(emitReq->getQnic_address(), qnic_address);
+    EXPECT_EQ(emitReq->getQnic_index(), qnic_index);
+    EXPECT_EQ(emitReq->getQubit_index(), 0);
+    EXPECT_EQ(emitReq->getTrial(), trial);
+    EXPECT_EQ(emitReq->getQnic_type(), QNIC_R);
+    EXPECT_EQ(rule_engine->getNumFreeQubitsInQnic(QNIC_R, qnic_index), 2);
+
+    EXPECT_EQ(scheduled->getQnic_address(), qnic_address);
+    EXPECT_EQ(scheduled->getQnic_index(), qnic_index);
+    EXPECT_EQ(scheduled->getNum_sent(), num_sent + 1);
+    EXPECT_EQ(scheduled->getTrial(), trial);
+    EXPECT_EQ(scheduled->getInterval(), interval);
+    fes->clear();
+  }
+
+  {  // second shot
+    num_sent += 1;
+    auto pk = new SchedulePhotonTransmissionsOnebyOne();
+    pk->setQnic_index(qnic_index);
+    pk->setNum_sent(num_sent);
+    pk->setTrial(trial);
+    pk->setQnic_address(qnic_address);
+    pk->setInterval(interval);
+
+    rule_engine->shootPhoton_internal(pk);
+    ASSERT_EQ(fes->getLength(), 2);
+    auto* res1 = fes->get(0);
+    auto* res2 = fes->get(1);
+    auto* emitReq = dynamic_cast<EmitPhotonRequest*>(res1);
+    ASSERT_NE(emitReq, nullptr);
+    auto* scheduled = dynamic_cast<SchedulePhotonTransmissionsOnebyOne*>(res2);
+    ASSERT_NE(scheduled, nullptr);
+
+    EXPECT_EQ(emitReq->getKind(), 0);
+    EXPECT_EQ(emitReq->getQnic_address(), qnic_address);
+    EXPECT_EQ(emitReq->getQnic_index(), qnic_index);
+    EXPECT_EQ(emitReq->getQubit_index(), 1);
+    EXPECT_EQ(emitReq->getTrial(), trial);
+    EXPECT_EQ(emitReq->getQnic_type(), QNIC_R);
+    EXPECT_EQ(rule_engine->getNumFreeQubitsInQnic(QNIC_R, qnic_index), 1);
+
+    EXPECT_EQ(scheduled->getQnic_address(), qnic_address);
+    EXPECT_EQ(scheduled->getQnic_index(), qnic_index);
+    EXPECT_EQ(scheduled->getNum_sent(), num_sent + 1);
+    EXPECT_EQ(scheduled->getTrial(), trial);
+    EXPECT_EQ(scheduled->getInterval(), interval);
+    fes->clear();
+  }
+
+  {  // last shot
+    num_sent += 1;
+    auto pk = new SchedulePhotonTransmissionsOnebyOne();
+    pk->setQnic_index(qnic_index);
+    pk->setNum_sent(num_sent);
+    pk->setTrial(trial);
+    pk->setQnic_address(qnic_address);
+    pk->setInterval(interval);
+
+    rule_engine->shootPhoton_internal(pk);
+    ASSERT_EQ(fes->getLength(), 2);
+    auto* res1 = fes->get(0);
+    auto* res2 = fes->get(1);
+    auto* emitReq = dynamic_cast<EmitPhotonRequest*>(res1);
+    ASSERT_NE(emitReq, nullptr);
+    auto* scheduled = dynamic_cast<SchedulePhotonTransmissionsOnebyOne*>(res2);
+    ASSERT_NE(scheduled, nullptr);
+
+    EXPECT_EQ(emitReq->getKind(), STATIONARYQUBIT_PULSE_END);
+    EXPECT_EQ(emitReq->getQnic_address(), qnic_address);
+    EXPECT_EQ(emitReq->getQnic_index(), qnic_index);
+    EXPECT_EQ(emitReq->getQubit_index(), 2);
+    EXPECT_EQ(emitReq->getTrial(), trial);
+    EXPECT_EQ(emitReq->getQnic_type(), QNIC_R);
+    EXPECT_EQ(rule_engine->getNumFreeQubitsInQnic(QNIC_R, qnic_index), 0);
 
     EXPECT_EQ(scheduled->getQnic_address(), qnic_address);
     EXPECT_EQ(scheduled->getQnic_index(), qnic_index);
