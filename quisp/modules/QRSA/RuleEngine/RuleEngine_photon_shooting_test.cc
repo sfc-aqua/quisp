@@ -11,6 +11,7 @@
 #include "RuleEngine.h"
 
 #include "messages/QNode_ipc_messages_m.h"
+#include "messages/link_generation_messages_m.h"
 #include "modules/QNIC.h"
 #include "modules/QNIC/StationaryQubit/StationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
@@ -95,6 +96,7 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
   void setQubitBusyInQnic(int qnic_type, int qnic_index, int qubit_index) {
     Busy_OR_Free_QubitState_table[qnic_type] = this->setQubitBusy_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit_index);
   };
+
   int getNumFreeQubitsInQnic(int qnic_type, int qnic_index) { return countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index); }
 
   int getBurstCountByQnic(int qnic_address) { return this->qnic_burst_trial_counter[qnic_address]; }
@@ -776,6 +778,85 @@ TEST(RuleEnginePhotonShootingTest, sendPhotonTransmissionSchedule) {
   // internal hom case
   config.qnic_type = QNIC_R;
   rule_engine->sendPhotonTransmissionSchedule(config);
+  ASSERT_EQ(fes->getLength(), 1);
+  res = fes->get(0);
+  ASSERT_NE(res, nullptr);
+  scheduled = dynamic_cast<SchedulePhotonTransmissionsOnebyOne*>(res);
+  ASSERT_NE(scheduled, nullptr);
+  EXPECT_EQ(scheduled->getQnic_address(), qnic_address);
+  EXPECT_EQ(scheduled->getQnic_index(), qnic_index);
+  EXPECT_EQ(scheduled->getInterval(), interval);
+  EXPECT_EQ(scheduled->getTiming(), timing);
+  EXPECT_EQ(scheduled->getInternal_hom(), 1);
+  fes->clear();
+
+  delete mockHardwareMonitor;
+  delete routingdaemon;
+  delete mockQubit1;
+}
+
+TEST(RuleEnginePhotonShootingTest, scheduleFirstPhotonEmission) {
+  auto* sim = prepareSimulation();
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  auto* mockQubit1 = new MockQubit(QNIC_E, 0);
+  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
+  setParInt(rule_engine, "total_number_of_qnics", 2);
+  setParInt(rule_engine, "number_of_qnics", 1);
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
+
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+  sim->setContext(rule_engine);
+  auto* fes = sim->getFES();
+
+  int src_addr = 1;
+  int qnic_address = 0;
+  int qnic_index = 0;
+  int qnic_type = QNIC_E;
+  double interval = 0.5;
+  simtime_t timing = 1.0;
+
+  // QNIC_E
+  auto* pk = new BSMtimingNotifier();
+  pk->setInternal_qnic_address(qnic_address);
+  pk->setInternal_qnic_index(qnic_index);
+  pk->setTiming_at(timing);
+  pk->setInterval(interval);
+  pk->setSrcAddr(src_addr);
+  QNIC qnic;
+  qnic.index = qnic_index;
+  qnic.address = qnic_address;
+  InterfaceInfo interface_info{.qnic = qnic};
+  rule_engine->ntable.insert(std::make_pair(src_addr, interface_info));
+  rule_engine->scheduleFirstPhotonEmission(pk, QNIC_type(qnic_type));
+  ASSERT_EQ(fes->getLength(), 1);
+  auto* res = fes->get(0);
+  ASSERT_NE(res, nullptr);
+  auto scheduled = dynamic_cast<SchedulePhotonTransmissionsOnebyOne*>(res);
+  ASSERT_NE(scheduled, nullptr);
+  EXPECT_EQ(scheduled->getQnic_address(), qnic_address);
+  EXPECT_EQ(scheduled->getQnic_index(), qnic_index);
+  EXPECT_EQ(scheduled->getInterval(), interval);
+  EXPECT_EQ(scheduled->getTiming(), timing);
+  EXPECT_EQ(scheduled->getInternal_hom(), 0);
+  fes->clear();
+
+  // QNIC_R
+  qnic_type = QNIC_R;
+  qnic_index = 0;
+  pk = new BSMtimingNotifier();
+  pk->setInternal_qnic_address(qnic_address);
+  pk->setInternal_qnic_index(qnic_index);
+  pk->setTiming_at(timing);
+  pk->setInterval(interval);
+  pk->setSrcAddr(src_addr);
+  rule_engine->tracker_accessible[qnic_address] = true;
+  rule_engine->ntable.insert(std::make_pair(src_addr, interface_info));
+  rule_engine->scheduleFirstPhotonEmission(pk, QNIC_type(qnic_type));
   ASSERT_EQ(fes->getLength(), 1);
   res = fes->get(0);
   ASSERT_NE(res, nullptr);
