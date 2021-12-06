@@ -1,18 +1,18 @@
 <map id="quisp/modules/QRSA/HardwareMonitor/HardwareMonitor.h" name="quisp/modules/QRSA/HardwareMonitor/HardwareMonitor.h">
 <area shape="rect" id="node1" title="HardwareMonitor." alt="" coords="294,5,533,47"/>
-<area shape="rect" id="node2" href="$_i_hardware_monitor_8h.html" title=" " alt="" coords="94,415,229,442"/>
-<area shape="rect" id="node7" href="$_stationary_qubit_8h.html" title="StationaryQubit." alt="" coords="838,408,1039,449"/>
+<area shape="rect" id="node2" href="$_i_hardware_monitor_8h.html" title=" " alt="" coords="94,430,229,457"/>
+<area shape="rect" id="node7" href="$_stationary_qubit_8h.html" title="StationaryQubit." alt="" coords="799,333,1001,375"/>
 <area shape="rect" id="node10" href="$_component_provider_8h.html" title=" " alt="" coords="326,95,501,121"/>
-<area shape="rect" id="node3" title=" " alt="" coords="75,497,143,524"/>
-<area shape="rect" id="node4" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="530,497,649,524"/>
-<area shape="rect" id="node6" title=" " alt="" coords="220,497,393,524"/>
-<area shape="rect" id="node5" title=" " alt="" coords="723,572,805,599"/>
-<area shape="rect" id="node8" title=" " alt="" coords="865,572,997,599"/>
-<area shape="rect" id="node9" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="932,497,1057,524"/>
+<area shape="rect" id="node3" title=" " alt="" coords="75,512,143,539"/>
+<area shape="rect" id="node4" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="471,512,590,539"/>
+<area shape="rect" id="node6" title=" " alt="" coords="237,512,411,539"/>
+<area shape="rect" id="node5" title=" " alt="" coords="640,587,723,613"/>
+<area shape="rect" id="node8" title=" " alt="" coords="886,512,1018,539"/>
+<area shape="rect" id="node9" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="837,430,963,457"/>
 <area shape="rect" id="node11" href="$_default_component_provider_strategy_8h.html" title=" " alt="" coords="505,169,682,211"/>
 <area shape="rect" id="node12" href="$_i_component_provider_strategy_8h.html" title=" " alt="" coords="194,259,393,285"/>
-<area shape="rect" id="node13" href="$utils_8h.html" title=" " alt="" coords="471,333,527,360"/>
+<area shape="rect" id="node13" href="$utils_8h.html" title=" " alt="" coords="471,341,527,367"/>
 <area shape="rect" id="node16" title=" " alt="" coords="294,177,429,203"/>
-<area shape="rect" id="node14" href="$_i_real_time_controller_8h.html" title=" " alt="" coords="536,408,763,449"/>
-<area shape="rect" id="node15" href="$_i_routing_daemon_8h.html" title=" " alt="" coords="253,408,461,449"/>
+<area shape="rect" id="node14" href="$_i_real_time_controller_8h.html" title=" " alt="" coords="536,423,763,464"/>
+<area shape="rect" id="node15" href="$_i_routing_daemon_8h.html" title=" " alt="" coords="253,423,461,464"/>
 </map>

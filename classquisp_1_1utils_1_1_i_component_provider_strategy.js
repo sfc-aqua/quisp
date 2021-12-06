@@ -8,7 +8,7 @@ var classquisp_1_1utils_1_1_i_component_provider_strategy =
     [ "getQNode", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a1cdd9e36a5e822cc5bffd7b6b9c6b633", null ],
     [ "getRealTimeController", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#ae1bd83e7c19fb7a9c0c8afd02f182afa", null ],
     [ "getRoutingDaemon", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a8a5b2e07c644c47f145543b60b0d825a", null ],
-    [ "getStationaryQubit", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a6f8149a6e8d2ae67b6c1db3836d96d32", null ],
+    [ "getStationaryQubit", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a6ecee8e4651f415f34a0b7f7da761f71", null ],
     [ "isHoMNodeType", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a8055f7ad355d26165dc0cff04d1b3913", null ],
     [ "isQNodeType", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#ab23170a1049ca45b78a177f51c8bea93", null ],
     [ "isSPDCNodeType", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a7dd56e39404312d92dafcdde635b9ca3", null ]

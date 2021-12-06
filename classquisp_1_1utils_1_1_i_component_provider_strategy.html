@@ -117,8 +117,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8055f7ad355d26165dc0cff04d1b3913"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7dd56e39404312d92dafcdde635b9ca3"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_i_component_provider_strategy.html#a7dd56e39404312d92dafcdde635b9ca3">isSPDCNodeType</a> (const cModuleType *const module)=0</td></tr>
 <tr class="separator:a7dd56e39404312d92dafcdde635b9ca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f8149a6e8d2ae67b6c1db3836d96d32"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html">StationaryQubit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_i_component_provider_strategy.html#a6f8149a6e8d2ae67b6c1db3836d96d32">getStationaryQubit</a> (int qnic_index, int qubit_index, QNIC_type qnic_type)=0</td></tr>
-<tr class="separator:a6f8149a6e8d2ae67b6c1db3836d96d32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ecee8e4651f415f34a0b7f7da761f71"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_i_component_provider_strategy.html#a6ecee8e4651f415f34a0b7f7da761f71">getStationaryQubit</a> (int qnic_index, int qubit_index, QNIC_type qnic_type)=0</td></tr>
+<tr class="separator:a6ecee8e4651f415f34a0b7f7da761f71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a577f5c3ac790bb329e8980a468263d0a"><td class="memItemLeft" align="right" valign="top">virtual cModule *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_i_component_provider_strategy.html#a577f5c3ac790bb329e8980a468263d0a">getQNIC</a> (int qnic_index, QNIC_type qnic_type)=0</td></tr>
 <tr class="separator:a577f5c3ac790bb329e8980a468263d0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a5b2e07c644c47f145543b60b0d825a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classquisp_1_1modules_1_1_i_routing_daemon.html">IRoutingDaemon</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_i_component_provider_strategy.html#a8a5b2e07c644c47f145543b60b0d825a">getRoutingDaemon</a> ()=0</td></tr>
@@ -354,8 +354,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a6f8149a6e8d2ae67b6c1db3836d96d32"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f8149a6e8d2ae67b6c1db3836d96d32">&#9670;&nbsp;</a></span>getStationaryQubit()</h2>
+<a id="a6ecee8e4651f415f34a0b7f7da761f71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ecee8e4651f415f34a0b7f7da761f71">&#9670;&nbsp;</a></span>getStationaryQubit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -364,7 +364,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html">StationaryQubit</a>* quisp::utils::IComponentProviderStrategy::getStationaryQubit </td>
+          <td class="memname">virtual <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a>* quisp::utils::IComponentProviderStrategy::getStationaryQubit </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>qnic_index</em>, </td>
@@ -394,7 +394,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classquisp_1_1utils_1_1_default_component_provider_strategy.html#aec4743c7d25c00a338f9ff16f6240def">quisp::utils::DefaultComponentProviderStrategy</a>, and <a class="el" href="classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a960c633ac0dbe99f60f1aa73f5ad31de">quisp_test::strategy::TestComponentProviderStrategy</a>.</p>
+<p>Implemented in <a class="el" href="classquisp_1_1utils_1_1_default_component_provider_strategy.html#a4fced823f0bbaf64298c5d53cf01a349">quisp::utils::DefaultComponentProviderStrategy</a>, and <a class="el" href="classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#aa7daeb58f7d558fc196e6d318ce9aa7c">quisp_test::strategy::TestComponentProviderStrategy</a>.</p>
 
 </div>
 </div>
