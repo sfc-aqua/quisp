@@ -26,7 +26,7 @@ class ComponentProvider {
   bool isQNodeType(const cModuleType *const type);
   bool isHoMNodeType(const cModuleType *const type);
   bool isSPDCNodeType(const cModuleType *const type);
-  StationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type);
+  IStationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type);
   cModule *getQNIC(int qnic_index, QNIC_type qnic_type);
   IRoutingDaemon *getRoutingDaemon();
   IHardwareMonitor *getHardwareMonitor();

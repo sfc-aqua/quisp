@@ -907,7 +907,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   int qubit_index = swapr.measured_qubit_index;
 
   // qubit with address Addr was shot in nth time. This list is ordered from old to new.
-  StationaryQubit *qubit = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
+  IStationaryQubit *qubit = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
   // check
   if (operation_type == 0) {
     // do nothing
@@ -984,7 +984,7 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
   int qnic_index = info->qnic.index;
   QNIC_type qnic_type = info->qnic.type;
   int qubit_index = swapr.measured_qubit_index;
-  StationaryQubit *qubit = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
+  IStationaryQubit *qubit = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
 
   if (operation_type == 0) {
     // nothing
@@ -1068,7 +1068,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
       freeResource(it->second.qnic_index, it->second.qubit_index, qnic_type);
     } else {
       // Keep the entangled qubits
-      StationaryQubit *qubit = provider.getStationaryQubit(qnic_index, it->second.qubit_index, qnic_type);
+      IStationaryQubit *qubit = provider.getStationaryQubit(qnic_index, it->second.qubit_index, qnic_type);
 
       // if the partner is null, not correct
       if (qubit->entangled_partner != nullptr) {
