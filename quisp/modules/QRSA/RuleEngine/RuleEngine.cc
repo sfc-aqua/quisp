@@ -56,6 +56,8 @@ void RuleEngine::initialize() {
     tracker_accessible.push_back(true);
   }
 
+  generalized_results.clear();  // CM
+
   // running_processes = new RuleSetPtr[QNIC_N];//One process per QNIC for now. No multiplexing.
   // WATCH(assigned);
 }
@@ -1097,20 +1099,43 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
 
 //CM Quick and dirty
 void RuleEngine::correction_GeneralizedEntanglementSwapping(GeneralizedSwappingResult *pkt) {
-  auto info = hardware_monitor->findConnectionInfoByQnicAddr(0);
-  int qnic_index = info->qnic.index;
-  QNIC_type qnic_type = info->qnic.type;
+  std::string label = pkt->getLabel();
+  int correction = pkt->getCorrection_type();
 
-  for (int i = 0; i < 10; i++) {
-    StationaryQubit *qubit = provider.getStationaryQubit(0, i, qnic_type);
-    if (qubit->is_in_multipartite) {
-      if (pkt->getIs_for_root()) {
-        EV_INFO << "ZGATE\n";
-        qubit->Z_gate();
-      } else {
-        EV_INFO << "XGATE\n";
-        qubit->X_gate();
+  EV_INFO << "Received correction with label " << label << " and correction " << correction;
+
+  if (pkt->getIs_for_root()) {
+    EV_INFO << "Z\n";
+  } else {
+    EV_INFO << "X\n";
+  }
+
+
+  if (generalized_results.find(label) == generalized_results.end()) {
+    generalized_results.insert(std::make_pair(label, correction));
+  }
+  else {
+    generalized_results.at(label) = generalized_results.at(label) ^ correction;
+  }
+  received_correction += 1;
+  if (received_correction == pkt->getSize_of_tree_leafless()) {
+    EV_INFO << "Received Enough correction lezzugo\n";
+    auto info = hardware_monitor->findConnectionInfoByQnicAddr(0);
+    int qnic_index = info->qnic.index;
+    QNIC_type qnic_type = info->qnic.type;
+
+    for (int i = 0; i < 10; i++) {
+      StationaryQubit *qubit = provider.getStationaryQubit(0, i, qnic_type);
+      if (qubit->label == label && generalized_results.at(label) > 0) {
+        if (pkt->getIs_for_root()) {
+          EV_INFO << "ZGATE\n";
+          qubit->Z_gate();
+        } else {
+          EV_INFO << "XGATE\n";
+          qubit->X_gate();
+        }
       }
+      received_correction = 0;
     }
   }
   
@@ -1410,7 +1435,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
               }else {
                 packet_to_send->setIs_for_root(true);
               }
-              
+              packet_to_send->setLabel(result_packet->getLabel());
+              packet_to_send->setSize_of_tree_leafless(result_packet->getSize_of_tree_leafless());
               packet_to_send->setMeasurement_result(result_packet->getMeasurement_results(i));
               send(packet_to_send, "RouterPort$o");
             }

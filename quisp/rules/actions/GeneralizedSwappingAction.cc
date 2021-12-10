@@ -14,7 +14,7 @@ GeneralizedSwappingAction::GeneralizedSwappingAction(unsigned long RuleSet_id, i
                                                       std::vector<QNIC_type> types,
                                                       std::vector<int> ids, std::vector<int> addresses,
                                                       std::vector<int> resources, std::vector<int> self_ids,
-                                                      std::vector<QNIC_type> self_types) {
+                                                      std::vector<QNIC_type> self_types, std::string label, int size_tree) {
   this->ruleset_id = RuleSet_id;
   this->rule_id = rule_index;
   this->associated_end_nodes = associated_end_nodes;
@@ -25,6 +25,8 @@ GeneralizedSwappingAction::GeneralizedSwappingAction(unsigned long RuleSet_id, i
   this->resources = resources;
   this->self_qnic_ids = self_ids;
   this->self_qnic_types = self_types;
+  this->label = label;
+  this->size_tree_leafless = size_tree;
 }
 
 // TODO: completely mixed
@@ -71,21 +73,28 @@ cPacket *GeneralizedSwappingAction::run(cModule *re) {
 
   for (int i = 0; i < partners.size() - 1; i++) {
     qubits[i]->CNOT_gate(father_qubit);
-    qubits[i]->entangled_partner->is_in_multipartite = true;
+    qubits[i]->entangled_partner->label = label;
+    EV_INFO << "QBIT " << qubits[i]->entangled_partner->stationaryQubit_address << " at adress " << qubits[i]->node_address << "with label " << qubits[i]->entangled_partner->label
+            << "\n";
     packet->setMeasurement_results(i, (int)qubits[i]->measure_Z());
+    packet->setMeasurement_results(i, 1);
+    EV_INFO << "Correction (Z) " << packet->getMeasurement_results(i) << "\n";
     packet->setResponder_dests(i, associated_end_nodes[i]);
   }
 
-  father_qubit->entangled_partner->is_in_multipartite = true;
+  qubits[partners.size() - 1]->entangled_partner->label = label;
+  EV_INFO << "QBIT " << qubits[partners.size() - 1]->entangled_partner->stationaryQubit_address << " at adress " << qubits[partners.size() - 1]->node_address << "with label "
+          << qubits[partners.size() - 1]->entangled_partner->label << "\n";
+  EV_INFO << "Correction (X) " << packet->getMeasurement_results(partners.size() - 1) << "\n";
   packet->setMeasurement_results(partners.size() - 1, (int)father_qubit->measure_X());
   packet->setResponder_dests(partners.size() - 1, associated_end_nodes.back());
 
-  // RuleEngine::updateResources_EntanglementSwapping handles the operation type.
-  int operation_type;
+  packet->setSize_of_tree_leafless(size_tree_leafless);
+  packet->setLabel(label.c_str());
   
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
   for (auto it = qubits_pair.begin(); it != qubits_pair.end(); ++it) {
-    it->second->setEntangledPartnerInfo(father_qubit->entangled_partner);
+    //it->second->setEntangledPartnerInfo(father_qubit->entangled_partner);
     removeResource_fromRule(it->first);
   }
   // CM: For now we impose a success

@@ -45,4 +45,5 @@ packet ConnectionSetupResponse extends Header
     int stack_of_QNodeIndexes[];
     
     bool isMultipartite;
+    string label;
 }

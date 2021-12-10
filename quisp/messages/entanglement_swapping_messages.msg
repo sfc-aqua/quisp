@@ -81,9 +81,12 @@ packet GeneralizedSwappingResult extends Header{
     unsigned long RuleSet_id;
     unsigned long Rule_id;
     int action_index;
-    bool is_for_root;
+    bool is_for_root; //maybe soon to be obsolete
 
     int measurement_result;
+    int size_of_tree_leafless;
+    int correction_type;
+    string label;
 
     //Used only for internal communication
     int size_of_arrays;

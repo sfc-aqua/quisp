@@ -10,6 +10,7 @@
 #include <omnetpp.h>
 #include <rules/RuleSet.h>
 #include <vector>
+#include <map>
 
 #include <messages/classical_messages.h>
 #include "../../PhysicalConnection/BSA/HoMController.h"
@@ -69,6 +70,10 @@ class RuleEngine : public IRuleEngine {
   running_processes rp;
   // Vector for store package for simultaneous entanglement swapping
   std::map<int, std::map<int, int>> simultaneous_es_results;
+  // Vector to store the resuts of generalized entanglement swapping
+  std::map<std::string, int> generalized_results;
+  int received_correction = 0;
+
   // tracker accessible table has as many number of boolean value as the number of qnics in the qnode.
   // when the tracker for the qnic is clered by previous BSM trial it goes true
   // when the RuleEngine try to start new Photon emittion, it goes false and other BSM trial can't access to it.

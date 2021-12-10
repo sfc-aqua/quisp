@@ -8,6 +8,7 @@
 #ifndef MODULES_CONNECTIONMANAGER_H_
 #define MODULES_CONNECTIONMANAGER_H_
 
+#include <string>
 #include "IConnectionManager.h"
 
 using namespace omnetpp;
@@ -64,6 +65,7 @@ class ConnectionManager : public IConnectionManager {
   bool simultaneous_es_enabled;
   bool es_with_purify;
   int num_remote_purification;
+  int number_of_state_initiated = 0; // To label created states
   IRoutingDaemon *routing_daemon;
   IHardwareMonitor *hardware_monitor;
 
@@ -113,7 +115,7 @@ class ConnectionManager : public IConnectionManager {
 
   PathLink getFather(int node);  // CM
   int getFatherAdress(int node);
-  RuleSet *generateGeneralizedEntanglementSwappingRuleSet(int node, std::vector<PathLink> children_link);  // CM
+  RuleSet *generateGeneralizedEntanglementSwappingRuleSet(int node, std::vector<PathLink> children_link, int size_tree);  // CM
 };
 }  // namespace modules
 }  // namespace quisp

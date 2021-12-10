@@ -6,15 +6,15 @@ namespace quisp {
 
 namespace types {
 enum class MeasureXResult : int {
-  NO_ERROR,
+  NO_X_ERROR,
   HAS_X_ERROR,
 };
 enum class MeasureYResult : int {
-  NO_ERROR,
+  NO_Y_ERROR,
   HAS_XZ_ERROR,
 };
 enum class MeasureZResult : int {
-  NO_ERROR,
+  NO_Z_ERROR,
   HAS_Z_ERROR,
 };
 }  // namespace types
@@ -171,6 +171,7 @@ class IStationaryQubit : public cSimpleModule {
   int qnic_index;
   //CM
   bool is_in_multipartite = false;
+  std::string label = "";
 
   int action_index;
   bool no_density_matrix_nullptr_entangled_partner_ok;

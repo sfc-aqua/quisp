@@ -99,6 +99,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
         return;
     } else {
       storeRuleSetForApplication(resp);
+      //QNIC reservation ?
     }
 
   }
@@ -677,11 +678,18 @@ void ConnectionManager::handleMultipartiteRequest(ConnectionSetupRequest *req, i
   if (number_of_received_connection == number_of_incoming_connections)
   {
        number_of_received_connection = 0;
-
+       int size_of_tree = 0;
+       for (auto it = tree_path_test.begin(); it != tree_path_test.end(); ++it) {
+         PathLink father = getFather(it->first);
+         if (!(father.children == -1 || it->second.size() == 0)) {
+           size_of_tree++;
+         }
+       }
+       EV_INFO << "Size of the Leafless tree " << size_of_tree << "\n";
         for (auto it = tree_path_test.begin(); it != tree_path_test.end(); ++it) {
           auto *pkr = new ConnectionSetupResponse("ConnSetupResponse(GHZDistrib)");
 
-          RuleSet *rule = generateGeneralizedEntanglementSwappingRuleSet(it->first, it->second);
+          RuleSet *rule = generateGeneralizedEntanglementSwappingRuleSet(it->first, it->second, size_of_tree);
           if (rule != nullptr)
           {
               pkr->setRuleSet(rule);
@@ -702,6 +710,7 @@ void ConnectionManager::handleMultipartiteRequest(ConnectionSetupRequest *req, i
         } else {
           reserveQnic(src_info->qnic.address);
         }
+        number_of_state_initiated++;
   }
 
 }
@@ -1126,11 +1135,12 @@ std::unique_ptr<Rule> ConnectionManager::swappingRule(SwappingConfig conf, unsig
 
 
 //CM
-RuleSet *ConnectionManager::generateGeneralizedEntanglementSwappingRuleSet(int node, std::vector<PathLink> children_link) {
+RuleSet *ConnectionManager::generateGeneralizedEntanglementSwappingRuleSet(int node, std::vector<PathLink> children_link, int size_of_tree) {
   unsigned long ruleset_id = createUniqueId();
   int rule_index = 0;
   PathLink father = getFather(node);
   int father_address = getFatherAdress(node);
+  std::string label = "GHZ_" + std::to_string(my_address) + "_" + std::to_string(number_of_state_initiated);
   std::vector<Clause *> clauses;
   std::vector<int> config_partners;
   std::vector<int> config_associated_end_nodes;
@@ -1146,6 +1156,7 @@ RuleSet *ConnectionManager::generateGeneralizedEntanglementSwappingRuleSet(int n
     return (nullptr);
   }
   else {
+    EV_INFO << "Label we put in ruleset " << label << "\n";
     for (auto link_it = children_link.begin(); link_it != children_link.end(); ++link_it) {
       config_resource.push_back(1);
       Clause *resource_clause = new EnoughResourceClause(link_it->children, config_resource.back());
@@ -1177,7 +1188,7 @@ RuleSet *ConnectionManager::generateGeneralizedEntanglementSwappingRuleSet(int n
 
     config_resource.push_back(1);
     rules::Action *action = new rules::actions::GeneralizedSwappingAction(ruleset_id, rule_index, config_partners, config_associated_end_nodes, config_types, config_ids,
-                                                                          config_addresses, config_resource, config_self_ids, config_self_types);
+                                                                          config_addresses, config_resource, config_self_ids, config_self_types, label, size_of_tree);
     auto rule = std::make_unique<Rule>(ruleset_id, rule_index, "generalized entanglement swapping", config_partners);
     rule->setCondition(condition);
     rule->setAction(action);
