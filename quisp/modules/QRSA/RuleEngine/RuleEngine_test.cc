@@ -116,8 +116,8 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   swapr.measured_qubit_index = 1;
 
   EXPECT_CALL(*routingdaemon, return_QNIC_address_to_destAddr(swapr.new_partner)).WillOnce(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).Times(2).WillOnce(Return(2)).WillOnce(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).Times(2).WillOnce(Return(2)).WillOnce(Return(1));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(2));
+  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(2));
   EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(std::move(info))));
 
   // 0. set ruleset
@@ -229,8 +229,8 @@ TEST(RuleEngineTest, storeCheckPurificationAgreement_no_process) {
   auto* hardware_monitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
   auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(2));
   rule_engine->callInitialize();
   purification_result result{
       .outcome = true,
@@ -245,8 +245,8 @@ TEST(RuleEngineTest, storeCheckPurificationAgreement_running_process) {
   auto* hardware_monitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
   auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(2));
   rule_engine->callInitialize();
   unsigned long ruleset_id = 4;
   int partner_addr = 5;
@@ -298,8 +298,8 @@ TEST(RuleEngineTest, freeConsumedResource) {
   auto* hardware_monitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
   auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(2));
   rule_engine->callInitialize();
   int qnic_index = 7;
   auto* qubit = new MockQubit(QNIC_E, qnic_index);
@@ -322,8 +322,8 @@ TEST(RuleEngineTest, unlockResourceAndDiscard) {
   auto* realtime_controller = new MockRealTimeController;
   auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
   // prevent creation of the qubits in the Busy_OR_Free_QubitState_table.
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(1).WillRepeatedly(Return(0));
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(1).WillRepeatedly(Return(0));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(0));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(0));
   rule_engine->callInitialize();
 
   unsigned long ruleset_id = 4;
@@ -365,8 +365,8 @@ TEST(RuleEngineTest, unlockResourceAndUpgradeStage) {
   auto* hardware_monitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
   auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(2));
   rule_engine->callInitialize();
 
   unsigned long ruleset_id = 4;
@@ -410,8 +410,8 @@ TEST(RuleEngineTest, unlockResourceAndUpgradeStage_without_next_rule) {
   auto* hardware_monitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
   auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(2));
   rule_engine->callInitialize();
 
   unsigned long ruleset_id = 4;
@@ -442,8 +442,8 @@ TEST(RuleEngineTest, unlockResourceAndUpgradeStage_without_process) {
   auto* hardware_monitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
   auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(2));
   rule_engine->callInitialize();
 
   EXPECT_NO_THROW({ rule_engine->Unlock_resource_and_upgrade_stage(101, 102, 103); });
@@ -456,8 +456,8 @@ TEST(RuleEngineTest, updateAndCheckAppliedRule) {
   auto* hardware_monitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
   auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(2));
   rule_engine->callInitialize();
 
   auto* qubit1 = new MockQubit(QNIC_E, 7);
@@ -479,8 +479,8 @@ TEST(RuleEngineTest, checkAppliedRule) {
   auto* hardware_monitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
   auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller};
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(1).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(1).WillRepeatedly(Return(2));
   rule_engine->callInitialize();
 
   auto* qubit = new MockQubit(QNIC_E, 7);
@@ -503,8 +503,8 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
   auto* realtime_controller = new MockRealTimeController;
   auto* qubit = new MockQubit(QNIC_E, 7);
   auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller};
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(1).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(1).WillRepeatedly(Return(2));
   rule_engine->callInitialize();
 
   {  // swap result doesn't need an action
@@ -552,8 +552,8 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   auto* realtime_controller = new MockRealTimeController;
   auto* qubit = new MockQubit(QNIC_E, 7);
   auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller};
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(3).WillRepeatedly(Return(2));
-  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(3).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_E)).Times(1).WillRepeatedly(Return(2));
+  EXPECT_CALL(*hardware_monitor, getQnicNumQubits(0, QNIC_R)).Times(1).WillRepeatedly(Return(2));
   rule_engine->callInitialize();
 
   unsigned long ruleset_id = 3;
