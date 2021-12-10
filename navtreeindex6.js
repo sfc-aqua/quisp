@@ -1,10 +1,11 @@
 var NAVTREEINDEX6 =
 {
+"functions_s.html":[14,3,0,18],
 "functions_t.html":[14,3,0,19],
 "functions_type.html":[14,3,3],
 "functions_u.html":[14,3,0,20],
-"functions_vars.html":[14,3,2],
 "functions_vars.html":[14,3,2,0],
+"functions_vars.html":[14,3,2],
 "functions_vars_a.html":[14,3,2,1],
 "functions_vars_b.html":[14,3,2,2],
 "functions_vars_c.html":[14,3,2,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX6 =
 "structquisp_1_1modules_1_1_swapping_config.html#a9c58fcf7e1656de8a58d90de69b3d5c2":[14,0,0,1,28,1],
 "structquisp_1_1modules_1_1_swapping_config.html#a9db6e6f88cb22cf0a499e2361ae2e4ea":[14,0,0,1,28,16],
 "structquisp_1_1modules_1_1_swapping_config.html#ad494cc185eb68b9554729761679875e1":[14,0,0,1,28,6],
-"structquisp_1_1modules_1_1_swapping_config.html#ad8d2b44bdd3808a3dea7b37f27ad4606":[14,0,0,1,28,22],
-"structquisp_1_1modules_1_1_swapping_config.html#adc33dc0eef37c94dc9b15f50e4741e31":[14,0,0,1,28,20]
+"structquisp_1_1modules_1_1_swapping_config.html#ad8d2b44bdd3808a3dea7b37f27ad4606":[14,0,0,1,28,22]
 };

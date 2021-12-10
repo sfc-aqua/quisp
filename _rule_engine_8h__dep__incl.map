@@ -1,10 +1,11 @@
 <map id="quisp/modules/QRSA/RuleEngine/RuleEngine.h" name="quisp/modules/QRSA/RuleEngine/RuleEngine.h">
-<area shape="rect" id="node1" title="RuleEngine." alt="" coords="789,5,960,47"/>
+<area shape="rect" id="node1" title="RuleEngine." alt="" coords="889,5,1060,47"/>
 <area shape="rect" id="node2" href="$_i_connection_manager_8h.html" title=" " alt="" coords="354,95,569,151"/>
 <area shape="rect" id="node7" href="$_rule_engine_8cc.html" title="RuleEngine." alt="" coords="593,102,770,143"/>
-<area shape="rect" id="node8" href="$_rule_engine__test_8cc.html" title=" " alt="" coords="795,95,955,151"/>
-<area shape="rect" id="node9" href="$_purify_action__test_8cc.html" title=" " alt="" coords="979,102,1122,143"/>
-<area shape="rect" id="node10" href="$_swapping_action__test_8cc.html" title=" " alt="" coords="1146,102,1313,143"/>
+<area shape="rect" id="node8" href="$_rule_engine__photon__shooting__test_8cc.html" title=" " alt="" coords="795,95,965,151"/>
+<area shape="rect" id="node9" href="$_rule_engine__test_8cc.html" title=" " alt="" coords="989,95,1149,151"/>
+<area shape="rect" id="node10" href="$_purify_action__test_8cc.html" title=" " alt="" coords="1174,102,1317,143"/>
+<area shape="rect" id="node11" href="$_swapping_action__test_8cc.html" title=" " alt="" coords="1341,102,1507,143"/>
 <area shape="rect" id="node3" href="$_connection_manager_8h.html" title=" " alt="" coords="285,199,496,255"/>
 <area shape="rect" id="node5" href="$_connection_manager__rule__generator__test_8cc.html" title=" " alt="" coords="475,303,685,359"/>
 <area shape="rect" id="node4" href="$_connection_manager_8cc.html" title="ConnectionManager." alt="" coords="5,303,216,359"/>

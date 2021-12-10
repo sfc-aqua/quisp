@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action.html#a7e0af13b3a29c02f266dbb42a9588132":[14,0,0,2,0,5,9],
 "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action.html#a8a955313640e28f64cb1ee1a55604882":[14,0,0,2,0,5,4],
 "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action.html#a91d659fc7cce2fbcc7dbcdef36733e4c":[14,0,0,2,0,5,15],
 "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action.html#aa0b036bcf36a95f711c1df1f8093a716":[14,0,0,2,0,5,13],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "classquisp__test_1_1env_1_1_static_env.html#a465a2f8783fe4410b8016939a94bd4b5":[14,0,1,1,0,27],
 "classquisp__test_1_1env_1_1_static_env.html#a473a98d7bb9ac440ea8bbfb71b0c1e9a":[14,0,1,1,0,42],
 "classquisp__test_1_1env_1_1_static_env.html#a479385cddcc1a6f8ade2ff41cfc9efe3":[14,0,1,1,0,17],
-"classquisp__test_1_1env_1_1_static_env.html#a50ab5af563d7752bfda33033b5b2791b":[14,0,1,1,0,29],
-"classquisp__test_1_1env_1_1_static_env.html#a5187e1bc75fc550b364900709e43e69b":[14,0,1,1,0,58]
+"classquisp__test_1_1env_1_1_static_env.html#a50ab5af563d7752bfda33033b5b2791b":[14,0,1,1,0,29]
 };

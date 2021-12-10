@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"structquisp_1_1modules_1_1_swapping_config.html#adc33dc0eef37c94dc9b15f50e4741e31":[14,0,0,1,28,20],
 "structquisp_1_1modules_1_1_swapping_config.html#add5b2e9bd8392c504528482d05d464fc":[14,0,0,1,28,0],
 "structquisp_1_1modules_1_1_triplepurification__result.html":[14,0,0,1,46],
 "structquisp_1_1modules_1_1_triplepurification__result.html#a197067b9dfbb4ebccf3c0955009693fb":[14,0,0,1,46,3],
