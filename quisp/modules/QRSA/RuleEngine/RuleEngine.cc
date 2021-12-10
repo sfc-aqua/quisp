@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iterator>
 #include <utility>
+#include "QNicStore/QNicStore.h"
 #include "utils/ComponentProvider.h"
 
 namespace quisp {
@@ -17,6 +18,7 @@ namespace modules {
 Define_Module(RuleEngine);
 
 using namespace rules;
+using qnic_store::QNicStore;
 
 RuleEngine::RuleEngine() : provider(utils::ComponentProvider{this}) {}
 
@@ -33,6 +35,9 @@ void RuleEngine::initialize() {
   number_of_qnics = par("number_of_qnics");
   number_of_qnics_r = par("number_of_qnics_r");
   number_of_qnics_rp = par("number_of_qnics_rp");
+  if (qnic_store == nullptr) {
+    qnic_store = std::make_unique<QNicStore>(provider, number_of_qnics, number_of_qnics_r, number_of_qnics_rp);
+  }
   // recog_resSignal = registerSignal("recog_res");
   actual_resSignal = registerSignal("actual_res");
 

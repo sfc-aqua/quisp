@@ -15,6 +15,7 @@
 #include "../../PhysicalConnection/BSA/HoMController.h"
 #include "BellPairStore/BellPairStore.h"
 #include "IRuleEngine.h"
+#include "QNicStore/IQNicStore.h"
 #include "RuleSetStore/RuleSetStore.h"
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
@@ -28,6 +29,7 @@ using namespace omnetpp;
 namespace quisp {
 namespace modules {
 using namespace rules;
+using qnic_store::IQNicStore;
 
 /** \class RuleEngine RuleEngine.h
  *  \note The Connection Manager responds to connection requests received from other nodes.
@@ -121,6 +123,8 @@ class RuleEngine : public IRuleEngine {
 
   utils::ComponentProvider provider;
   virtual void updateResources_SimultaneousEntanglementSwapping(swapping_result swapr);
+
+  std::unique_ptr<IQNicStore> qnic_store = nullptr;
 };
 
 }  // namespace modules

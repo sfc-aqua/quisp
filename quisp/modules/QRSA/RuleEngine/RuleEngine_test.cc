@@ -76,6 +76,7 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
     setName("rule_engine_test_target");
     provider.setStrategy(std::make_unique<Strategy>(mockQubit, routingdaemon, hardware_monitor, realtime_controller));
     setComponentType(new TestModuleType("rule_engine_test"));
+    qnic_store = std::make_unique<MockQNicStore>();
   }
   // setter function for allResorces[qnic_type][qnic_index]
   void setAllResources(int partner_addr, IStationaryQubit* qubit) { this->bell_pair_store.insertEntangledQubit(partner_addr, qubit); };
