@@ -28,6 +28,7 @@ class TestComponentProviderStrategy : public IComponentProviderStrategy {
   virtual bool isSPDCNodeType(const cModuleType *const type) override { return false; };
   virtual IStationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override { return nullptr; };
   virtual cModule *getQNIC(int qnic_index, QNIC_type qnic_type) override { return nullptr; };
+  virtual int getNumQubits(int qnic_index, QNIC_type qnic_type) override { return 0; };
   virtual IRoutingDaemon *getRoutingDaemon() override { return nullptr; };
   virtual IHardwareMonitor *getHardwareMonitor() override { return nullptr; };
   virtual IRealTimeController *getRealTimeController() override { return nullptr; };
