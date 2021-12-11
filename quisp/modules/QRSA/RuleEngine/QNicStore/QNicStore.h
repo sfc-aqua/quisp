@@ -15,10 +15,13 @@ class QNicStore : public IQNicStore {
  public:
   QNicStore(utils::ComponentProvider& provider, int number_of_emitter_qnics, int number_of_receiver_qnics, int number_of_passive_receiver_qnics);
   ~QNicStore(){};
+  int countNumFreeQubits(QNIC_type type, int qnic_index) override;
+  int takeFreeQubitIndex(QNIC_type type, int qnic_index) override;
+  void setQubitBusy(QNIC_type type, int qnic_index, int qubit_index, bool is_busy) override;
 
  protected:
+  UniqueQNicRecord& getQNic(QNIC_type type, int qnic_index);
   std::map<QNIC_type, std::vector<UniqueQNicRecord>> qnics;
-
   utils::ComponentProvider& provider;
 };
 }  // namespace quisp::modules::qnic_store

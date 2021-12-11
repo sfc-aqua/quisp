@@ -12,6 +12,10 @@ class QNicRecord : public IQNicRecord {
   QNicRecord(utils::ComponentProvider& provider, int index, QNIC_type type);
   ~QNicRecord(){};
 
+  int countNumFreeQubits() override;
+  int takeFreeQubitIndex() override;
+  void setQubitBusy(int qubit_index, bool is_busy) override;
+
   const int index;
   const QNIC_type type;
 

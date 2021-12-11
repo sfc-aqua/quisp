@@ -62,6 +62,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
   IHardwareMonitor* getHardwareMonitor() override { return hardwareMonitor; };
   IRealTimeController* getRealTimeController() override { return realtimeController; };
   cModule* getQNIC(int qnic_index, QNIC_type qnic_type) override { return temp_qnic; }
+  int getNumQubits(int qnic_index, QNIC_type qnic_type) override { return hardwareMonitor->getQnicNumQubits(qnic_index, qnic_type); }
 };
 
 class RuleEngineTestTarget : public quisp::modules::RuleEngine {
@@ -93,12 +94,8 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
   // setter function for allResorces[qnic_type][qnic_index]
   void setAllResources(int partner_addr, IStationaryQubit* qubit) { this->bell_pair_store.insertEntangledQubit(partner_addr, qubit); };
   void setTracker(int qnic_address, int shot_number, QubitAddr_cons qubit_address) { this->tracker[qnic_address].insert(std::make_pair(shot_number, qubit_address)); };
-  void setQubitBusyInQnic(int qnic_type, int qnic_index, int qubit_index) {
-    Busy_OR_Free_QubitState_table[qnic_type] = this->setQubitBusy_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit_index);
-  };
-
-  int getNumFreeQubitsInQnic(int qnic_type, int qnic_index) { return countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index); }
-
+  void setQubitBusyInQnic(int qnic_type, int qnic_index, int qubit_index) { qnic_store->setQubitBusy(QNIC_type(qnic_type), qnic_index, qubit_index, true); };
+  int getNumFreeQubitsInQnic(int qnic_type, int qnic_index) { return qnic_store->countNumFreeQubits(QNIC_type(qnic_type), qnic_index); }
   int getBurstCountByQnic(int qnic_address) { return this->qnic_burst_trial_counter[qnic_address]; }
 
  private:

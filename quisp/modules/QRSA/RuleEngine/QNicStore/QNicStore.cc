@@ -22,4 +22,22 @@ QNicStore::QNicStore(ComponentProvider& provider, int number_of_emitter_qnics, i
   }
 }
 
+int QNicStore::countNumFreeQubits(QNIC_type type, int qnic_index) {
+  auto& qnic = getQNic(type, qnic_index);
+  return qnic->countNumFreeQubits();
+}
+int QNicStore::takeFreeQubitIndex(QNIC_type type, int qnic_index) {
+  auto& qnic = getQNic(type, qnic_index);
+  return qnic->takeFreeQubitIndex();
+}
+
+void QNicStore::setQubitBusy(QNIC_type type, int qnic_index, int qubit_index, bool is_busy) {
+  auto& qnic = getQNic(type, qnic_index);
+  return qnic->setQubitBusy(qubit_index, is_busy);
+}
+
+UniqueQNicRecord& QNicStore::getQNic(QNIC_type type, int qnic_index) {
+  auto& qnic_vec = qnics.at(type);
+  return qnic_vec.at(qnic_index);
+}
 }  // namespace quisp::modules::qnic_store

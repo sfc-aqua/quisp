@@ -13,5 +13,7 @@ using quisp::modules::qnic_store::IQNicStore;
 
 class MockQNicStore : public IQNicStore {
  public:
+  MOCK_METHOD(int, countNumFreeQubits, (QNIC_type type, int qnic_index), (override));
+  MOCK_METHOD(int, takeFreeQubitIndex, (QNIC_type type, int qnic_index), (override));
 };
 }  // namespace quisp_test::mock_modules::qnic_store
