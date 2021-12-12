@@ -34,6 +34,7 @@ TEST(QNicRecord, InitWithQubits) {
   EXPECT_EQ(qnic_type, record.type);
   EXPECT_EQ(5, record.countNumFreeQubits());
 }
+
 TEST(QNicRecord, TakeFreeQubit) {
   ComponentProvider provider(new cModule());
   int qnic_index = 3;
@@ -81,4 +82,5 @@ TEST(QNicRecord, SetQubitBusyWithInvalidIndex) {
   QNicRecord record(provider, qnic_index, qnic_type);
   EXPECT_THROW(record.setQubitBusy(100, true), omnetpp::cRuntimeError);
 }
+
 }  // namespace

@@ -6,6 +6,7 @@
 namespace quisp::modules::qnic_store {
 
 using utils::ComponentProvider;
+
 QNicStore::QNicStore(ComponentProvider& provider, int number_of_emitter_qnics, int number_of_receiver_qnics, int number_of_passive_receiver_qnics) : provider(provider) {
   std::array<std::pair<QNIC_type, int /* number of qnics */>, 3 /* the number of kinds of QNICs */> qnic_details = {
       {{QNIC_E, number_of_emitter_qnics}, {QNIC_R, number_of_receiver_qnics}, {QNIC_RP, number_of_passive_receiver_qnics}}};
@@ -48,4 +49,5 @@ UniqueQNicRecord& QNicStore::getQNic(QNIC_type type, int qnic_index) {
   }
   return qnic_vec.at(qnic_index);
 }
+
 }  // namespace quisp::modules::qnic_store
