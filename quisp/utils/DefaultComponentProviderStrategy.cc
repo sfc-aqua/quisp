@@ -49,7 +49,7 @@ int DefaultComponentProviderStrategy::getNumQubits(int qnic_index, QNIC_type qni
   if (qnic == nullptr) {
     throw cRuntimeError("DefaultComponentProviderStrategy::getNumQubits: QNIC not found. index: %d, type: %d", qnic_index, qnic_type);
   }
-  return qnic->par("numQubits").intValue();
+  return qnic->par("numBuffer").intValue();
 }
 
 IRoutingDaemon *DefaultComponentProviderStrategy::getRoutingDaemon() {
