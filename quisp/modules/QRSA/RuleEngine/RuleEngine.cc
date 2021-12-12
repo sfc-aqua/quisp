@@ -1112,7 +1112,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
 
 void RuleEngine::freeResource(int qnic_index /*The actual index. Not address. This with qnic_type makes the id unique.*/, int qubit_index, QNIC_type qnic_type) {
   realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, qnic_type, false);
-  Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit_index);
+  qnic_store->setQubitBusy(qnic_type, qnic_index, qubit_index, false);
 }
 
 void RuleEngine::clearTrackerTable(int destAddr, int internal_qnic_address) {
@@ -1349,7 +1349,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
   realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit->par("stationaryQubit_address"), qnic_type, true);
-  Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit->par("stationaryQubit_address"));
+  // Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit->par("stationaryQubit_address"));
+  qnic_store->setQubitBusy(qnic_type, qnic_index, qubit->par("stationaryQubit_address"), false);
   clearAppliedRule(qubit);
   bell_pair_store.eraseQubit(qubit);
 }

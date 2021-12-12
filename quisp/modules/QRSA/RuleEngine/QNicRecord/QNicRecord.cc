@@ -31,6 +31,11 @@ int QNicRecord::takeFreeQubitIndex() {
   }
 }
 
-void QNicRecord::setQubitBusy(int qubit_index, bool is_busy) { qubits.at(qubit_index)->setBusy(is_busy); }
+void QNicRecord::setQubitBusy(int qubit_index, bool is_busy) {
+  if (qubits.size() <= qubit_index) {
+    throw std::runtime_error("QNicRecord::setQubitBusy: Qubit index out of range");
+  }
+  qubits.at(qubit_index)->setBusy(is_busy);
+}
 
 }  // namespace quisp::modules::qnic_record

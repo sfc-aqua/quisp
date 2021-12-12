@@ -26,6 +26,7 @@ int QNicStore::countNumFreeQubits(QNIC_type type, int qnic_index) {
   auto& qnic = getQNic(type, qnic_index);
   return qnic->countNumFreeQubits();
 }
+
 int QNicStore::takeFreeQubitIndex(QNIC_type type, int qnic_index) {
   auto& qnic = getQNic(type, qnic_index);
   return qnic->takeFreeQubitIndex();

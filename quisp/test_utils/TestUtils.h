@@ -27,6 +27,7 @@ using mock_modules::rule_engine::MockRuleEngine;
 using mock_modules::stationary_qubit::MockQubit;
 using module_type::TestModuleType;
 using qnode::TestQNode;
+using strategy::QNicSpec;
 using strategy::TestComponentProviderStrategy;
 using utils::createStaticEnv;
 using utils::getTestSimulation;
