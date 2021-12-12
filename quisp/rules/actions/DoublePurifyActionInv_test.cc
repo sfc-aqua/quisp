@@ -23,7 +23,7 @@ using OriginalDoublePurifyAction = quisp::rules::actions::DoublePurifyAction;
 class DoublePurifyAction : public OriginalDoublePurifyAction {
  public:
   using OriginalDoublePurifyAction::action_index;
-  using OriginalDoublePurifyAction::DoublePurifyAction;
+  using OriginalDoublePurifyAction::DoublePurifyActionInv;
   using OriginalDoublePurifyAction::num_purify;
   using OriginalDoublePurifyAction::partner;
   using OriginalDoublePurifyAction::qnic_id;
@@ -36,7 +36,7 @@ class DoublePurifyAction : public OriginalDoublePurifyAction {
   using OriginalDoublePurifyAction::X;
   using OriginalDoublePurifyAction::Z;
 
-  static std::unique_ptr<DoublePurifyAction> setupAction() {
+  static std::unique_ptr<DoublePurifyActionInv> setupAction() {
     int partner_addr = 2;
     QNIC_type qnic_type = QNIC_E;
     int qnic_id = 3;
@@ -52,7 +52,7 @@ class DoublePurifyAction : public OriginalDoublePurifyAction {
   MOCK_METHOD(void, removeResource_fromRule, (IStationaryQubit *), (override));
 };
 
-TEST(DoublePurifyActionTest, Init) {
+TEST(DoublePurifyActionInvTest, Init) {
   int partner_addr = 2;
   QNIC_type qnic_type = QNIC_E;
   int qnic_id = 3;
@@ -62,7 +62,7 @@ TEST(DoublePurifyActionTest, Init) {
   unsigned long ruleset_id = 120;
   unsigned long rule_id = 2340;
 
-  auto *action = new DoublePurifyAction(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z);
+  auto *action = new DoublePurifyActionInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z);
   EXPECT_EQ(action->partner, partner_addr);
   EXPECT_EQ(action->qnic_type, QNIC_E);
   EXPECT_EQ(action->qnic_id, qnic_id);
@@ -73,9 +73,9 @@ TEST(DoublePurifyActionTest, Init) {
   EXPECT_EQ(action->rule_id, rule_id);
 }
 
-TEST(DoublePurifyActionTest, runWithoutQubit) {
+TEST(DoublePurifyActionInvTest, runWithoutQubit) {
   prepareSimulation();
-  auto action = DoublePurifyAction::setupAction();
+  auto action = DoublePurifyActionInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   EXPECT_CALL(*action, getResource(action->resource, action->partner)).WillOnce(Return(nullptr));
   EXPECT_CALL(*action, getResource(action->trash_resource_X, action->partner)).WillOnce(Return(nullptr));
@@ -86,9 +86,9 @@ TEST(DoublePurifyActionTest, runWithoutQubit) {
   ASSERT_NE(result, nullptr);
 }
 
-TEST(DoublePurifyActionTest, NoTrashQubit) {
+TEST(DoublePurifyActionInvTest, NoTrashQubit) {
   auto sim = prepareSimulation();
-  auto action = DoublePurifyAction::setupAction();
+  auto action = DoublePurifyActionInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   sim->registerComponent(qubit);
@@ -102,9 +102,9 @@ TEST(DoublePurifyActionTest, NoTrashQubit) {
   ASSERT_NE(result, nullptr);
 }
 
-TEST(DoublePurifyActionTest, NoTrashXQubit) {
+TEST(DoublePurifyActionInvTest, NoTrashXQubit) {
   auto sim = prepareSimulation();
-  auto action = DoublePurifyAction::setupAction();
+  auto action = DoublePurifyActionInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit_z = new MockQubit();
@@ -119,9 +119,9 @@ TEST(DoublePurifyActionTest, NoTrashXQubit) {
   ASSERT_NE(result, nullptr);
 }
 
-TEST(DoublePurifyActionTest, NoTrashZQubit) {
+TEST(DoublePurifyActionInvTest, NoTrashZQubit) {
   auto sim = prepareSimulation();
-  auto action = DoublePurifyAction::setupAction();
+  auto action = DoublePurifyActionInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit_x = new MockQubit();
@@ -136,9 +136,9 @@ TEST(DoublePurifyActionTest, NoTrashZQubit) {
   ASSERT_NE(result, nullptr);
 }
 
-TEST(DoublePurifyActionTest, TrashQubitDuplication) {
+TEST(DoublePurifyActionInvTest, TrashQubitDuplication) {
   auto sim = prepareSimulation();
-  auto action = DoublePurifyAction::setupAction();
+  auto action = DoublePurifyActionInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit = new MockQubit();
@@ -153,9 +153,9 @@ TEST(DoublePurifyActionTest, TrashQubitDuplication) {
   ASSERT_NE(result, nullptr);
 }
 
-TEST(DoublePurifyActionTest, ResourceTrashQubitXDuplication) {
+TEST(DoublePurifyActionInvTest, ResourceTrashQubitXDuplication) {
   auto sim = prepareSimulation();
-  auto action = DoublePurifyAction::setupAction();
+  auto action = DoublePurifyActionInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit_z = new MockQubit();
@@ -170,9 +170,10 @@ TEST(DoublePurifyActionTest, ResourceTrashQubitXDuplication) {
   ASSERT_NE(result, nullptr);
 }
 
-TEST(DoublePurifyActionTest, ResourceTrashQubitZDuplication) {
+
+TEST(DoublePurifyActionInvTest, ResourceTrashQubitZDuplication) {
   auto sim = prepareSimulation();
-  auto action = DoublePurifyAction::setupAction();
+  auto action = DoublePurifyActionInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit_x = new MockQubit();
@@ -187,9 +188,9 @@ TEST(DoublePurifyActionTest, ResourceTrashQubitZDuplication) {
   ASSERT_NE(result, nullptr);
 }
 
-TEST(DoublePurifyActionTest, BothOutcomeTrue) {
+TEST(DoublePurifyActionInvTest, BothOutcomeTrue) {
   prepareSimulation();
-  auto action = DoublePurifyAction::setupAction();
+  auto action = DoublePurifyActionInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit_x = new MockQubit();
@@ -225,9 +226,9 @@ TEST(DoublePurifyActionTest, BothOutcomeTrue) {
   delete rule_engine;
 }
 
-TEST(DoublePurifyActionTest, XOutcomeTrue) {
+TEST(DoublePurifyActionInvTest, XOutcomeTrue) {
   prepareSimulation();
-  auto action = DoublePurifyAction::setupAction();
+  auto action = DoublePurifyActionInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit_x = new MockQubit();
@@ -263,9 +264,9 @@ TEST(DoublePurifyActionTest, XOutcomeTrue) {
   delete rule_engine;
 }
 
-TEST(DoublePurifyActionTest, ZOutcomeTrue) {
+TEST(DoublePurifyActionInvTest, ZOutcomeTrue) {
   prepareSimulation();
-  auto action = DoublePurifyAction::setupAction();
+  auto action = DoublePurifyActionInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit_x = new MockQubit();
@@ -301,9 +302,9 @@ TEST(DoublePurifyActionTest, ZOutcomeTrue) {
   delete rule_engine;
 }
 
-TEST(DoublePurifyActionTest, BothOutcomeFalse) {
+TEST(DoublePurifyActionInvTest, BothOutcomeFalse) {
   prepareSimulation();
-  auto action = DoublePurifyAction::setupAction();
+  auto action = DoublePurifyActionInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit_x = new MockQubit();

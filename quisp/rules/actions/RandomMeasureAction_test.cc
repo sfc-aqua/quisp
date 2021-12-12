@@ -39,11 +39,7 @@ class RandomMeasureAction : public OriginalRandomMeasureAction {
     QNIC_type qnic_type = QNIC_E;
     int qnic_id = 11;
     int resource_index = 1;
-    int src = 1;
-    int dst = 2;
-    int current_count = 100;
     int max_count = 8000;
-    simtime_t start = 0;
 
     return std::make_unique<RandomMeasureAction>(owner_address, partner_address, qnic_type, qnic_id, resource_index, max_count);
   }
