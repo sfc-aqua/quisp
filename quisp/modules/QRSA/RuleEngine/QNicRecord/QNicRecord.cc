@@ -29,6 +29,7 @@ int QNicRecord::takeFreeQubitIndex() {
       return qubit->getIndex();
     }
   }
+  return -1;
 }
 
 void QNicRecord::setQubitBusy(int qubit_index, bool is_busy) {
