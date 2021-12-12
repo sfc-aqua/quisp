@@ -34,7 +34,7 @@ int QNicRecord::takeFreeQubitIndex() {
 
 void QNicRecord::setQubitBusy(int qubit_index, bool is_busy) {
   if (qubits.size() <= qubit_index) {
-    throw std::runtime_error("QNicRecord::setQubitBusy: Qubit index out of range");
+    throw omnetpp::cRuntimeError("QNicRecord::setQubitBusy: Qubit index:%d out of range. QNIC{%s, %d}, qubits.size(): %d", qubit_index, QNIC_names[type], index, qubits.size());
   }
   qubits.at(qubit_index)->setBusy(is_busy);
 }

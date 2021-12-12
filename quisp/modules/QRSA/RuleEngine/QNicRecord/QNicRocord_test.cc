@@ -70,4 +70,15 @@ TEST(QNicRecord, SetQubitBusy) {
   record.setQubitBusy(2, false);
   EXPECT_EQ(1, record.countNumFreeQubits());
 }
+
+TEST(QNicRecord, SetQubitBusyWithInvalidIndex) {
+  ComponentProvider provider(new cModule());
+  int qnic_index = 3;
+  auto qnic_type = QNIC_E;
+  std::vector<QNicSpec> qnic_specs = {{qnic_type, qnic_index, 3}};
+  provider.setStrategy(std::make_unique<TestComponentProviderStrategy>(qnic_specs));
+
+  QNicRecord record(provider, qnic_index, qnic_type);
+  EXPECT_THROW(record.setQubitBusy(100, true), omnetpp::cRuntimeError);
+}
 }  // namespace

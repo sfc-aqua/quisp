@@ -27,6 +27,7 @@ class QNicStore : public quisp::modules::qnic_store::QNicStore {
   QNicStore(ComponentProvider& provider, int number_of_emitter_qnics, int number_of_receiver_qnics, int number_of_passive_receiver_qnics)
       : quisp::modules::qnic_store::QNicStore(provider, number_of_emitter_qnics, number_of_receiver_qnics, number_of_passive_receiver_qnics) {}
 
+  using quisp::modules::qnic_store::QNicStore::getQNic;
   using quisp::modules::qnic_store::QNicStore::qnics;
 };
 
@@ -108,5 +109,17 @@ TEST(QNicStore, SetQubitBusy) {
   store.setQubitBusy(QNIC_E, 1, 2, false);
   EXPECT_EQ(1, store.countNumFreeQubits(QNIC_E, 1));
   EXPECT_THROW(store.setQubitBusy(QNIC_E, 1, 2, false), omnetpp::cRuntimeError);
+}
+TEST(QNicStore, GetQNicWithInvalidArgs) {
+  ComponentProvider provider(new cModule());
+  std::vector<QNicSpec> qnic_specs = {{QNIC_E, 0, 1}, {QNIC_E, 1, 3}, {QNIC_R, 0, 1}, {QNIC_RP, 0, 1}};
+  int num_emitter_qnics = 2;
+  int num_receiver_qnics = 1;
+  int num_passive_receiver_qnics = 1;
+
+  provider.setStrategy(std::make_unique<Strategy>(qnic_specs));
+  QNicStore store(provider, num_emitter_qnics, num_receiver_qnics, num_passive_receiver_qnics);
+  EXPECT_THROW(store.getQNic(QNIC_E, 100), omnetpp::cRuntimeError);
+  EXPECT_THROW(store.getQNic(QNIC_N, 0), omnetpp::cRuntimeError);
 }
 }  // namespace
