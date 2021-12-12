@@ -307,14 +307,12 @@ TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithoutFreeQubit) {
   auto* sim = prepareSimulation();
   auto* mockHardwareMonitor = new MockHardwareMonitor;
 
-  // Emitter QNIC(index:0~2) has 1 qubit, Receiver QNIC(index:0) has 1 qubit
+  // Emitter QNIC(index:0~2) has 1 qubit, Receiver QNIC(index:0) has 2 qubit
   std::vector<QNicSpec> qnic_specs = {
-      {QNIC_E, 0, 1},
-      {QNIC_E, 1, 1},
-      {QNIC_E, 2, 1},
-      {QNIC_R, 0, 1},
+      {QNIC_E, 0, 1}, {QNIC_E, 1, 1}, {QNIC_E, 2, 1}, {QNIC_R, 0, 1}, {QNIC_R, 1, 1},
   };
   auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
+  setParInt(rule_engine, "number_of_qnics_r", 2);
 
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
@@ -324,8 +322,8 @@ TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithoutFreeQubit) {
   // no free qubit case
   auto* pk = new SchedulePhotonTransmissionsOnebyOne();
   pk->setQnic_index(1);
-  // set qubit in Emitter QNIC1 to busy, so there's no free qubit.
-  rule_engine->setQubitBusyInQnic(QNIC_E, qnic_index, 0);
+  // set qubit in Receiver QNIC1 to busy, so there's no free qubit.
+  rule_engine->setQubitBusyInQnic(QNIC_R, qnic_index, 0);
   rule_engine->shootPhoton_internal(pk);
   auto* fes = sim->getFES();
   ASSERT_EQ(fes->getLength(), 0);

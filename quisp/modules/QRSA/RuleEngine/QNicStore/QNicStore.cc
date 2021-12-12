@@ -39,7 +39,13 @@ void QNicStore::setQubitBusy(QNIC_type type, int qnic_index, int qubit_index, bo
 }
 
 UniqueQNicRecord& QNicStore::getQNic(QNIC_type type, int qnic_index) {
+  if (qnics.size() <= type) {
+    throw cRuntimeError("QNicStore::getQNic(): QNIC type %d not found", type);
+  }
   auto& qnic_vec = qnics.at(type);
+  if (qnic_vec.size() <= qnic_index) {
+    throw cRuntimeError("QNicStore::getQNic(): QNIC %s with index %d not found", QNIC_names[type], qnic_index);
+  }
   return qnic_vec.at(qnic_index);
 }
 }  // namespace quisp::modules::qnic_store
