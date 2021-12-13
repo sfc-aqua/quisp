@@ -18,23 +18,23 @@ using quisp::modules::IStationaryQubit;
 using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_type;
 using quisp::modules::StationaryQubit;
-using OriginalDoublePurifyAction = quisp::rules::actions::DoublePurifyAction;
+using OriginalDoublePurifyActionInv = quisp::rules::actions::DoublePurifyActionInv;
 
-class DoublePurifyAction : public OriginalDoublePurifyAction {
+class DoublePurifyActionInv : public OriginalDoublePurifyActionInv {
  public:
-  using OriginalDoublePurifyAction::action_index;
-  using OriginalDoublePurifyAction::DoublePurifyActionInv;
-  using OriginalDoublePurifyAction::num_purify;
-  using OriginalDoublePurifyAction::partner;
-  using OriginalDoublePurifyAction::qnic_id;
-  using OriginalDoublePurifyAction::qnic_type;
-  using OriginalDoublePurifyAction::resource;
-  using OriginalDoublePurifyAction::rule_id;
-  using OriginalDoublePurifyAction::ruleset_id;
-  using OriginalDoublePurifyAction::trash_resource_X;
-  using OriginalDoublePurifyAction::trash_resource_Z;
-  using OriginalDoublePurifyAction::X;
-  using OriginalDoublePurifyAction::Z;
+  using OriginalDoublePurifyActionInv::action_index;
+  using OriginalDoublePurifyActionInv::DoublePurifyActionInv;
+  using OriginalDoublePurifyActionInv::num_purify;
+  using OriginalDoublePurifyActionInv::partner;
+  using OriginalDoublePurifyActionInv::qnic_id;
+  using OriginalDoublePurifyActionInv::qnic_type;
+  using OriginalDoublePurifyActionInv::resource;
+  using OriginalDoublePurifyActionInv::rule_id;
+  using OriginalDoublePurifyActionInv::ruleset_id;
+  using OriginalDoublePurifyActionInv::trash_resource_X;
+  using OriginalDoublePurifyActionInv::trash_resource_Z;
+  using OriginalDoublePurifyActionInv::X;
+  using OriginalDoublePurifyActionInv::Z;
 
   static std::unique_ptr<DoublePurifyActionInv> setupAction() {
     int partner_addr = 2;
@@ -46,7 +46,7 @@ class DoublePurifyAction : public OriginalDoublePurifyAction {
     unsigned long ruleset_id = 120;
     unsigned long rule_id = 2340;
 
-    return std::make_unique<DoublePurifyAction>(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z);
+    return std::make_unique<DoublePurifyActionInv>(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z);
   }
   MOCK_METHOD(IStationaryQubit *, getResource, (int required_index, int partner), (override));
   MOCK_METHOD(void, removeResource_fromRule, (IStationaryQubit *), (override));
