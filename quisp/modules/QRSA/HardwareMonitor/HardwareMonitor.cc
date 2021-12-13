@@ -59,6 +59,8 @@ void HardwareMonitor::initialize(int stage) {
 
   /*This keeps which node is connected to which local qnic.*/
   tomography_output_filename = par("tomography_output_filename").str();
+  // remove double quotes at the beginning and end
+  tomography_output_filename = tomography_output_filename.substr(1, tomography_output_filename.length() - 3);
   file_dir_name = par("file_dir_name").str();
   do_link_level_tomography = par("link_tomography");
   num_purification = par("initial_purification");
@@ -258,7 +260,7 @@ void HardwareMonitor::finish() {
   EV << "Finishing Hardware Monitor\n";
   // file name
   std::string file_name = tomography_output_filename;
-  std::string df = "\"default\"";
+  std::string df = "default";
   if (file_name.compare(df) == 0) {
     std::cout << df << "==" << file_name << "\n";
     file_name = std::string("Tomography_") + std::string(getSimulation()->getNetworkType()->getFullName());
