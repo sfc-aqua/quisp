@@ -3,6 +3,7 @@ var classquisp_1_1utils_1_1_default_component_provider_strategy =
     [ "DefaultComponentProviderStrategy", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a0ae2ef8b7a6704089bed4c91d5064e97", null ],
     [ "getHardwareMonitor", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a458fcfef32004117ad57af3530daeb5f", null ],
     [ "getNeighborNode", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a1a89a02f1f3f373da965f978d84978b5", null ],
+    [ "getNumQubits", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a47037be28381c551641c259173c24f78", null ],
     [ "getQNIC", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a205dffb7cc956670c7c8a3ba8250e900", null ],
     [ "getQNode", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a331e3458aa07ee63df44ce9cab0da136", null ],
     [ "getQRSA", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a2efa00e2d61e8746bd6774c11d877eae", null ],

@@ -1,5 +1,8 @@
 var namespacequisp_1_1modules =
 [
+    [ "qnic_record", "namespacequisp_1_1modules_1_1qnic__record.html", "namespacequisp_1_1modules_1_1qnic__record" ],
+    [ "qnic_store", "namespacequisp_1_1modules_1_1qnic__store.html", "namespacequisp_1_1modules_1_1qnic__store" ],
+    [ "qubit_record", "namespacequisp_1_1modules_1_1qubit__record.html", "namespacequisp_1_1modules_1_1qubit__record" ],
     [ "ruleset_store", "namespacequisp_1_1modules_1_1ruleset__store.html", "namespacequisp_1_1modules_1_1ruleset__store" ],
     [ "Application", "classquisp_1_1modules_1_1_application.html", "classquisp_1_1modules_1_1_application" ],
     [ "IApplication", "classquisp_1_1modules_1_1_i_application.html", "classquisp_1_1modules_1_1_i_application" ],

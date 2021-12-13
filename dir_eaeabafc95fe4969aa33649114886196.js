@@ -3,6 +3,9 @@ var dir_eaeabafc95fe4969aa33649114886196 =
     [ "MockHardwareMonitor.h", "_mock_hardware_monitor_8h.html", [
       [ "MockHardwareMonitor", "classquisp__test_1_1mock__modules_1_1hardware__monitor_1_1_mock_hardware_monitor.html", "classquisp__test_1_1mock__modules_1_1hardware__monitor_1_1_mock_hardware_monitor" ]
     ] ],
+    [ "MockQNicStore.h", "_mock_q_nic_store_8h.html", [
+      [ "MockQNicStore", "classquisp__test_1_1mock__modules_1_1qnic__store_1_1_mock_q_nic_store.html", "classquisp__test_1_1mock__modules_1_1qnic__store_1_1_mock_q_nic_store" ]
+    ] ],
     [ "MockQubit.h", "_mock_qubit_8h.html", [
       [ "MockQubit", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit" ]
     ] ],

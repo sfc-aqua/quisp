@@ -56,6 +56,16 @@ var hierarchy =
       [ "quisp_test::strategy::TestComponentProviderStrategy", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html", null ]
     ] ],
     [ "quisp::modules::InterfaceInfo", "structquisp_1_1modules_1_1_interface_info.html", null ],
+    [ "quisp::modules::qnic_record::IQNicRecord", "classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record.html", [
+      [ "quisp::modules::qnic_record::QNicRecord", "classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record.html", null ]
+    ] ],
+    [ "quisp::modules::qnic_store::IQNicStore", "classquisp_1_1modules_1_1qnic__store_1_1_i_q_nic_store.html", [
+      [ "quisp::modules::qnic_store::QNicStore", "classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html", null ],
+      [ "quisp_test::mock_modules::qnic_store::MockQNicStore", "classquisp__test_1_1mock__modules_1_1qnic__store_1_1_mock_q_nic_store.html", null ]
+    ] ],
+    [ "quisp::modules::qubit_record::IQubitRecord", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html", [
+      [ "quisp::modules::qubit_record::QubitRecord", "classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html", null ]
+    ] ],
     [ "omnetpp::cConfiguration::KeyValue", null, [
       [ "quisp_test::key_value::TestKeyValue", "classquisp__test_1_1key__value_1_1_test_key_value.html", null ]
     ] ],
@@ -74,6 +84,7 @@ var hierarchy =
       [ "quisp::modules::QNIC", "structquisp_1_1modules_1_1_q_n_i_c.html", null ]
     ] ],
     [ "quisp::modules::QNIC_pair_info", "structquisp_1_1modules_1_1_q_n_i_c__pair__info.html", null ],
+    [ "quisp_test::strategy::QNicSpec", "structquisp__test_1_1strategy_1_1_q_nic_spec.html", null ],
     [ "quisp::modules::quantum_state", "structquisp_1_1modules_1_1quantum__state.html", null ],
     [ "quisp::modules::Quatropurification_result", "structquisp_1_1modules_1_1_quatropurification__result.html", null ],
     [ "quisp::modules::QubitAddr", "structquisp_1_1modules_1_1_qubit_addr.html", null ],

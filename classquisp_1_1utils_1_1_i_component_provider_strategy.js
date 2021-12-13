@@ -4,6 +4,7 @@ var classquisp_1_1utils_1_1_i_component_provider_strategy =
     [ "~IComponentProviderStrategy", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a216a11486fe764113d233b7c362e5b89", null ],
     [ "getHardwareMonitor", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a807b00e8522724de0dec918d387bc0f1", null ],
     [ "getNeighborNode", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a1501159391b35fed3f0d6bbaff36f6b6", null ],
+    [ "getNumQubits", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a7bfc0da17d987db23f895ca22d3edf0b", null ],
     [ "getQNIC", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a577f5c3ac790bb329e8980a468263d0a", null ],
     [ "getQNode", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a1cdd9e36a5e822cc5bffd7b6b9c6b633", null ],
     [ "getRealTimeController", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#ae1bd83e7c19fb7a9c0c8afd02f182afa", null ],

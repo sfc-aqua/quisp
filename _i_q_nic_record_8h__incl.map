@@ -1,0 +1,17 @@
+<map id="quisp/modules/QRSA/RuleEngine/QNicRecord/IQNicRecord.h" name="quisp/modules/QRSA/RuleEngine/QNicRecord/IQNicRecord.h">
+<area shape="rect" id="node1" title=" " alt="" coords="478,5,645,61"/>
+<area shape="rect" id="node2" href="$_component_provider_8h.html" title=" " alt="" coords="474,109,649,136"/>
+<area shape="rect" id="node3" href="$_default_component_provider_strategy_8h.html" title=" " alt="" coords="410,184,588,225"/>
+<area shape="rect" id="node4" href="$_i_component_provider_strategy_8h.html" title=" " alt="" coords="306,273,505,300"/>
+<area shape="rect" id="node6" href="$utils_8h.html" title=" " alt="" coords="564,348,620,375"/>
+<area shape="rect" id="node15" title=" " alt="" coords="664,191,798,218"/>
+<area shape="rect" id="node5" title=" " alt="" coords="266,512,334,539"/>
+<area shape="rect" id="node7" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="829,512,948,539"/>
+<area shape="rect" id="node8" title=" " alt="" coords="947,587,1030,613"/>
+<area shape="rect" id="node9" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="26,423,228,464"/>
+<area shape="rect" id="node11" href="$_i_hardware_monitor_8h.html" title=" " alt="" coords="485,423,700,464"/>
+<area shape="rect" id="node13" href="$_i_real_time_controller_8h.html" title=" " alt="" coords="724,423,951,464"/>
+<area shape="rect" id="node14" href="$_i_routing_daemon_8h.html" title=" " alt="" coords="252,423,460,464"/>
+<area shape="rect" id="node10" title=" " alt="" coords="61,512,193,539"/>
+<area shape="rect" id="node12" title=" " alt="" coords="456,512,630,539"/>
+</map>

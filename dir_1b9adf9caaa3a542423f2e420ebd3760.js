@@ -32,6 +32,7 @@ var dir_1b9adf9caaa3a542423f2e420ebd3760 =
       [ "StaticEnv", "classquisp__test_1_1env_1_1_static_env.html", "classquisp__test_1_1env_1_1_static_env" ]
     ] ],
     [ "TestComponentProviderStrategy.h", "_test_component_provider_strategy_8h.html", [
+      [ "QNicSpec", "structquisp__test_1_1strategy_1_1_q_nic_spec.html", "structquisp__test_1_1strategy_1_1_q_nic_spec" ],
       [ "TestComponentProviderStrategy", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy" ]
     ] ],
     [ "TestUtils.h", "_test_utils_8h.html", null ],

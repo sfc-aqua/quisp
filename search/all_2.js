@@ -24,6 +24,5 @@ var searchData=
   ['buffer_5fsize_62',['buffer_size',['../structquisp_1_1modules_1_1_interface_info.html#afd139a08cc0ef63c3587db6384e1f35a',1,'quisp::modules::InterfaceInfo']]],
   ['buildinside_63',['buildInside',['../classquisp__test_1_1module__type_1_1_test_module_type.html#a2b941e91688016075e7f7cd373fb5247',1,'quisp_test::module_type::TestModuleType']]],
   ['bursttrial_5foutdated_64',['burstTrial_outdated',['../classquisp_1_1modules_1_1_rule_engine.html#ad1faddd49e6a97a4c3a550a2fe7e1a66',1,'quisp::modules::RuleEngine']]],
-  ['busy_5for_5ffree_5fqubitstate_5ftable_65',['Busy_OR_Free_QubitState_table',['../classquisp_1_1modules_1_1_rule_engine.html#a2c8c24cac92d1e5fe1e3ce3c9eb22e46',1,'quisp::modules::RuleEngine']]],
-  ['busy_5fsignal_66',['busy_signal',['../classquisp_1_1modules_1_1_queue.html#aebedaaabba1ca0b07d0ab36f8498e02d',1,'quisp::modules::Queue']]]
+  ['busy_5fsignal_65',['busy_signal',['../classquisp_1_1modules_1_1_queue.html#aebedaaabba1ca0b07d0ab36f8498e02d',1,'quisp::modules::Queue']]]
 ];

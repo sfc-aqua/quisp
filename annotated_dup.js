@@ -6,6 +6,18 @@ var annotated_dup =
         [ "QuantumChannel", "classquisp_1_1channels_1_1_quantum_channel.html", "classquisp_1_1channels_1_1_quantum_channel" ]
       ] ],
       [ "modules", "namespacequisp_1_1modules.html", [
+        [ "qnic_record", "namespacequisp_1_1modules_1_1qnic__record.html", [
+          [ "IQNicRecord", "classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record.html", "classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record" ],
+          [ "QNicRecord", "classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record.html", "classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record" ]
+        ] ],
+        [ "qnic_store", "namespacequisp_1_1modules_1_1qnic__store.html", [
+          [ "IQNicStore", "classquisp_1_1modules_1_1qnic__store_1_1_i_q_nic_store.html", "classquisp_1_1modules_1_1qnic__store_1_1_i_q_nic_store" ],
+          [ "QNicStore", "classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html", "classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store" ]
+        ] ],
+        [ "qubit_record", "namespacequisp_1_1modules_1_1qubit__record.html", [
+          [ "IQubitRecord", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record" ],
+          [ "QubitRecord", "classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html", "classquisp_1_1modules_1_1qubit__record_1_1_qubit_record" ]
+        ] ],
         [ "ruleset_store", "namespacequisp_1_1modules_1_1ruleset__store.html", [
           [ "RuleSetStore", "classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store.html", "classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store" ]
         ] ],
@@ -116,6 +128,9 @@ var annotated_dup =
         [ "hardware_monitor", "namespacequisp__test_1_1mock__modules_1_1hardware__monitor.html", [
           [ "MockHardwareMonitor", "classquisp__test_1_1mock__modules_1_1hardware__monitor_1_1_mock_hardware_monitor.html", "classquisp__test_1_1mock__modules_1_1hardware__monitor_1_1_mock_hardware_monitor" ]
         ] ],
+        [ "qnic_store", "namespacequisp__test_1_1mock__modules_1_1qnic__store.html", [
+          [ "MockQNicStore", "classquisp__test_1_1mock__modules_1_1qnic__store_1_1_mock_q_nic_store.html", "classquisp__test_1_1mock__modules_1_1qnic__store_1_1_mock_q_nic_store" ]
+        ] ],
         [ "realtime_controller", "namespacequisp__test_1_1mock__modules_1_1realtime__controller.html", [
           [ "MockRealTimeController", "classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html", "classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller" ]
         ] ],
@@ -142,6 +157,7 @@ var annotated_dup =
         [ "TestSimulation", "classquisp__test_1_1simulation_1_1_test_simulation.html", "classquisp__test_1_1simulation_1_1_test_simulation" ]
       ] ],
       [ "strategy", "namespacequisp__test_1_1strategy.html", [
+        [ "QNicSpec", "structquisp__test_1_1strategy_1_1_q_nic_spec.html", "structquisp__test_1_1strategy_1_1_q_nic_spec" ],
         [ "TestComponentProviderStrategy", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy" ]
       ] ]
     ] ],

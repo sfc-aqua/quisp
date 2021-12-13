@@ -100,31 +100,35 @@ $(document).ready(function(){initNavTree('_test_utils_8h_source.html',''); initR
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_mock_real_time_controller_8h.html">mock_modules/MockRealTimeController.h</a>&quot;</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_mock_routing_daemon_8h.html">mock_modules/MockRoutingDaemon.h</a>&quot;</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_mock_rule_engine_8h.html">mock_modules/MockRuleEngine.h</a>&quot;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacequisp__test.html">quisp_test</a> {</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">// use these functions and classes in your unit test.</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">using</span> gate::TestGate;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">using</span> mock_modules::hardware_monitor::MockHardwareMonitor;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">using</span> mock_modules::realtime_controller::MockRealTimeController;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">using</span> mock_modules::routing_daemon::MockRoutingDaemon;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">using</span> mock_modules::rule_engine::MockRuleEngine;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">using</span> mock_modules::stationary_qubit::MockQubit;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">using</span> module_type::TestModuleType;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">using</span> qnode::TestQNode;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">using</span> strategy::TestComponentProviderStrategy;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#a71bc01dc1416f8f407e29549e84273bc">utils::createStaticEnv</a>;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#a788d6f564f9d187a5984e1ddfd7b7c83">utils::getTestSimulation</a>;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#a8f56fe8b435500c54ff9eaf068d4c313">utils::prepareSimulation</a>;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#af9a2f1c08763158b1b0dddbf058c0a24">utils::setParBool</a>;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#aa40021f1932822ecb91a27e6c5701d7f">utils::setParDouble</a>;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#afa45b6ff482c6c650b51dc1bddd66a8d">utils::setParInt</a>;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#a2a16f066980624adbfef202f0d20b77f">utils::setParStr</a>;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#ac9608fdc54533daf8f1d6f999bce6e56">utils::useTestRNG</a>;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}  <span class="comment">// namespace quisp_test</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_mock_q_nic_store_8h.html">test_utils/mock_modules/MockQNicStore.h</a>&quot;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacequisp__test.html">quisp_test</a> {</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">// use these functions and classes in your unit test.</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">using</span> gate::TestGate;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">using</span> mock_modules::hardware_monitor::MockHardwareMonitor;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">using</span> mock_modules::qnic_store::MockQNicStore;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">using</span> mock_modules::realtime_controller::MockRealTimeController;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">using</span> mock_modules::routing_daemon::MockRoutingDaemon;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">using</span> mock_modules::rule_engine::MockRuleEngine;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">using</span> mock_modules::stationary_qubit::MockQubit;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword">using</span> module_type::TestModuleType;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">using</span> qnode::TestQNode;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">using</span> strategy::QNicSpec;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">using</span> strategy::TestComponentProviderStrategy;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#a71bc01dc1416f8f407e29549e84273bc">utils::createStaticEnv</a>;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#a788d6f564f9d187a5984e1ddfd7b7c83">utils::getTestSimulation</a>;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#a8f56fe8b435500c54ff9eaf068d4c313">utils::prepareSimulation</a>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#af9a2f1c08763158b1b0dddbf058c0a24">utils::setParBool</a>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#aa40021f1932822ecb91a27e6c5701d7f">utils::setParDouble</a>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#afa45b6ff482c6c650b51dc1bddd66a8d">utils::setParInt</a>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#a2a16f066980624adbfef202f0d20b77f">utils::setParStr</a>;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">using</span> <a class="code" href="namespacequisp__test_1_1utils.html#ac9608fdc54533daf8f1d6f999bce6e56">utils::useTestRNG</a>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}  <span class="comment">// namespace quisp_test</span></div>
 <div class="ttc" id="a_access_private_8h_html"><div class="ttname"><a href="_access_private_8h.html">AccessPrivate.h</a></div></div>
 <div class="ttc" id="a_gate_8h_html"><div class="ttname"><a href="_gate_8h.html">Gate.h</a></div></div>
 <div class="ttc" id="a_mock_hardware_monitor_8h_html"><div class="ttname"><a href="_mock_hardware_monitor_8h.html">MockHardwareMonitor.h</a></div></div>
+<div class="ttc" id="a_mock_q_nic_store_8h_html"><div class="ttname"><a href="_mock_q_nic_store_8h.html">MockQNicStore.h</a></div></div>
 <div class="ttc" id="a_mock_qubit_8h_html"><div class="ttname"><a href="_mock_qubit_8h.html">MockQubit.h</a></div></div>
 <div class="ttc" id="a_mock_real_time_controller_8h_html"><div class="ttname"><a href="_mock_real_time_controller_8h.html">MockRealTimeController.h</a></div></div>
 <div class="ttc" id="a_mock_routing_daemon_8h_html"><div class="ttname"><a href="_mock_routing_daemon_8h.html">MockRoutingDaemon.h</a></div></div>
