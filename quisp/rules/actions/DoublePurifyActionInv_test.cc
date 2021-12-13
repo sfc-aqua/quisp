@@ -1,4 +1,3 @@
-#include "DoublePurifyAction.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <messages/classical_messages.h>
@@ -6,6 +5,7 @@
 #include <modules/QNIC/StationaryQubit/StationaryQubit.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 #include <test_utils/TestUtils.h>
+#include "DoublePurifyAction.h"
 #include "modules/QRSA/RuleEngine/RuleEngine.h"
 
 namespace {
@@ -169,7 +169,6 @@ TEST(DoublePurifyActionInvTest, ResourceTrashQubitXDuplication) {
   auto result = dynamic_cast<Error *>(packet);
   ASSERT_NE(result, nullptr);
 }
-
 
 TEST(DoublePurifyActionInvTest, ResourceTrashQubitZDuplication) {
   auto sim = prepareSimulation();
