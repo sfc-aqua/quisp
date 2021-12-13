@@ -34,41 +34,28 @@ using namespace quisp::modules;
 using namespace quisp_test;
 using namespace testing;
 
-class Strategy : public quisp_test::TestComponentProviderStrategy {
+class Strategy : public TestComponentProviderStrategy {
   cModule* temp_qnic;
 
  public:
-  Strategy() : mockQubit(nullptr), routingDaemon(nullptr), hardwareMonitor(nullptr) {}
-  Strategy(IStationaryQubit* _qubit, MockRoutingDaemon* routing_daemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller)
-      : mockQubit(_qubit), routingDaemon(routing_daemon), hardwareMonitor(hardware_monitor), realtimeController(realtime_controller) {
+  Strategy(MockHardwareMonitor* hardware_monitor, std::vector<QNicSpec> qnic_specs) : TestComponentProviderStrategy(qnic_specs), hardwareMonitor(hardware_monitor) {
     temp_qnic = new omnetpp::cModule();
     setParInt(temp_qnic, "burst_trial_counter", 0);
   }
   ~Strategy() {
-    delete mockQubit;
-    delete routingDaemon;
     delete hardwareMonitor;
     delete realtimeController;
   }
-  IStationaryQubit* mockQubit = nullptr;
-  MockRoutingDaemon* routingDaemon = nullptr;
   MockHardwareMonitor* hardwareMonitor = nullptr;
   MockRealTimeController* realtimeController = nullptr;
-  IStationaryQubit* getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override {
-    if (mockQubit == nullptr) mockQubit = new MockQubit(QNIC_E, 1);
-    return mockQubit;
-  };
-  IRoutingDaemon* getRoutingDaemon() override { return routingDaemon; };
   IHardwareMonitor* getHardwareMonitor() override { return hardwareMonitor; };
   IRealTimeController* getRealTimeController() override { return realtimeController; };
-  cModule* getQNIC(int qnic_index, QNIC_type qnic_type) override { return temp_qnic; }
+  cModule* getQNIC(int qnic_index, QNIC_type qnic_type) override { return temp_qnic; };
 };
 
 class RuleEngineTestTarget : public quisp::modules::RuleEngine {
  public:
   using quisp::modules::RuleEngine::burstTrial_outdated;
-  using quisp::modules::RuleEngine::checkAppliedRule;
-  using quisp::modules::RuleEngine::clearAppliedRule;
   using quisp::modules::RuleEngine::incrementBurstTrial;
   using quisp::modules::RuleEngine::initialize;
   using quisp::modules::RuleEngine::ntable;
@@ -79,47 +66,34 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
   using quisp::modules::RuleEngine::shootPhoton;
   using quisp::modules::RuleEngine::shootPhoton_internal;
 
-  RuleEngineTestTarget(IStationaryQubit* mockQubit, MockRoutingDaemon* routingdaemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller)
-      : quisp::modules::RuleEngine() {
+  RuleEngineTestTarget(MockHardwareMonitor* hardware_monitor, std::vector<QNicSpec> qnic_specs) : quisp::modules::RuleEngine() {
     setParInt(this, "address", 123);
     setParInt(this, "number_of_qnics_rp", 0);
     setParInt(this, "number_of_qnics_r", 1);
     setParInt(this, "number_of_qnics", 3);
     setParInt(this, "total_number_of_qnics", 2);
     setName("rule_engine_test_target");
-    provider.setStrategy(std::make_unique<Strategy>(mockQubit, routingdaemon, hardware_monitor, realtime_controller));
+    provider.setStrategy(std::make_unique<Strategy>(hardware_monitor, qnic_specs));
     setComponentType(new TestModuleType("rule_engine_test"));
   }
   // setter function for allResorces[qnic_type][qnic_index]
-  void setAllResources(int partner_addr, IStationaryQubit* qubit) { this->bell_pair_store.insertEntangledQubit(partner_addr, qubit); };
-  void setTracker(int qnic_address, int shot_number, QubitAddr_cons qubit_address) { this->tracker[qnic_address].insert(std::make_pair(shot_number, qubit_address)); };
-  void setQubitBusyInQnic(int qnic_type, int qnic_index, int qubit_index) {
-    Busy_OR_Free_QubitState_table[qnic_type] = this->setQubitBusy_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit_index);
-  };
-
-  int getNumFreeQubitsInQnic(int qnic_type, int qnic_index) { return countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index); }
-
+  void setQubitBusyInQnic(int qnic_type, int qnic_index, int qubit_index) { qnic_store->setQubitBusy(QNIC_type(qnic_type), qnic_index, qubit_index, true); };
+  int getNumFreeQubitsInQnic(int qnic_type, int qnic_index) { return qnic_store->countNumFreeQubits(QNIC_type(qnic_type), qnic_index); }
   int getBurstCountByQnic(int qnic_address) { return this->qnic_burst_trial_counter[qnic_address]; }
-
- private:
-  FRIEND_TEST(RuleEngineTest, ESResourceUpdate);
-  FRIEND_TEST(RuleEngineTest, trackerUpdate);
-  friend class MockRoutingDaemon;
-  friend class MockHardwareMonitor;
 };
 
 TEST(RuleEnginePhotonShootingTest, ShootPhotonWithoutFreeQubit) {
   auto* sim = prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockQubit1 = new MockQubit(QNIC_E, 0);
-  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
-
   // Emitter QNIC(index:0~2) has 1 qubit, Receiver QNIC(index:0) has 1 qubit
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
+
+  std::vector<QNicSpec> qnic_specs = {
+      {QNIC_E, 0, 1},
+      {QNIC_E, 1, 1},
+      {QNIC_E, 2, 1},
+      {QNIC_R, 0, 1},
+  };
+  auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
 
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
@@ -137,24 +111,21 @@ TEST(RuleEnginePhotonShootingTest, ShootPhotonWithoutFreeQubit) {
   fes->clear();
 
   delete mockHardwareMonitor;
-  delete routingdaemon;
-  delete mockQubit1;
 }
 
 TEST(RuleEnginePhotonShootingTest, ShootPhotonWithSingleFreeQubit) {
   auto* sim = prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
   int qnic_index = 1;
 
-  auto* mockQubit1 = new MockQubit(QNIC_E, qnic_index);
-  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
-
   // Emitter QNIC(index:0~2) has 2 qubit, Receiver QNIC(index:0) has 1 qubit
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(2));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(2));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(2));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
+  std::vector<QNicSpec> qnic_specs = {
+      {QNIC_E, 0, 2},
+      {QNIC_E, 1, 2},
+      {QNIC_E, 2, 2},
+      {QNIC_R, 0, 1},
+  };
+  auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
 
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
@@ -203,24 +174,20 @@ TEST(RuleEnginePhotonShootingTest, ShootPhotonWithSingleFreeQubit) {
   }
 
   delete mockHardwareMonitor;
-  delete routingdaemon;
-  delete mockQubit1;
 }
 
 TEST(RuleEnginePhotonShootingTest, ShootPhotonWithThreeFreeQubits) {
   auto* sim = prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
   int qnic_index = 1;
 
-  auto* mockQubit1 = new MockQubit(QNIC_E, qnic_index);
-  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
-
-  // Emitter QNIC(index:0~2) has 2 qubit, Receiver QNIC(index:0) has 1 qubit
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(3));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(3));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(3));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
+  std::vector<QNicSpec> qnic_specs = {
+      {QNIC_E, 0, 3},
+      {QNIC_E, 1, 3},
+      {QNIC_E, 2, 3},
+      {QNIC_R, 0, 1},
+  };
+  auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
 
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
@@ -334,22 +301,18 @@ TEST(RuleEnginePhotonShootingTest, ShootPhotonWithThreeFreeQubits) {
     fes->clear();
   }
   delete mockHardwareMonitor;
-  delete routingdaemon;
-  delete mockQubit1;
 }
 
 TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithoutFreeQubit) {
   auto* sim = prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockQubit1 = new MockQubit(QNIC_E, 0);
-  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
 
-  // Emitter QNIC(index:0~2) has 1 qubit, Receiver QNIC(index:0) has 1 qubit
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
+  // Emitter QNIC(index:0~2) has 1 qubit, Receiver QNIC(index:0) has 2 qubit
+  std::vector<QNicSpec> qnic_specs = {
+      {QNIC_E, 0, 1}, {QNIC_E, 1, 1}, {QNIC_E, 2, 1}, {QNIC_R, 0, 1}, {QNIC_R, 1, 1},
+  };
+  auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
+  setParInt(rule_engine, "number_of_qnics_r", 2);
 
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
@@ -359,32 +322,30 @@ TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithoutFreeQubit) {
   // no free qubit case
   auto* pk = new SchedulePhotonTransmissionsOnebyOne();
   pk->setQnic_index(1);
-  // set qubit in Emitter QNIC1 to busy, so there's no free qubit.
-  rule_engine->setQubitBusyInQnic(QNIC_E, qnic_index, 0);
+  // set qubit in Receiver QNIC1 to busy, so there's no free qubit.
+  rule_engine->setQubitBusyInQnic(QNIC_R, qnic_index, 0);
   rule_engine->shootPhoton_internal(pk);
   auto* fes = sim->getFES();
   ASSERT_EQ(fes->getLength(), 0);
   fes->clear();
 
   delete mockHardwareMonitor;
-  delete routingdaemon;
-  delete mockQubit1;
 }
 
 TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithSingleFreeQubit) {
   auto* sim = prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
   int qnic_index = 0;
 
-  auto* mockQubit1 = new MockQubit(QNIC_E, qnic_index);
-  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
-
   // Emitter QNIC(index:0~2) has 2 qubit, Receiver QNIC(index:0) has 1 qubit
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(2));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(2));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(2));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
+  std::vector<QNicSpec> qnic_specs = {
+      {QNIC_E, 0, 2},
+      {QNIC_E, 1, 2},
+      {QNIC_E, 2, 2},
+      {QNIC_R, 0, 1},
+  };
+
+  auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
 
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
@@ -432,24 +393,20 @@ TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithSingleFreeQubit) {
   }
 
   delete mockHardwareMonitor;
-  delete routingdaemon;
-  delete mockQubit1;
 }
 
 TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithThreeFreeQubits) {
   auto* sim = prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
   int qnic_index = 0;
-
-  auto* mockQubit1 = new MockQubit(QNIC_R, qnic_index);
-  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
-
   // Emitter QNIC(index:0~2) has 1 qubit, Receiver QNIC(index:0) has 3 qubit
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(3));
+  std::vector<QNicSpec> qnic_specs = {
+      {QNIC_E, 0, 1},
+      {QNIC_E, 1, 1},
+      {QNIC_E, 2, 1},
+      {QNIC_R, 0, 3},
+  };
+  auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
 
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
@@ -563,22 +520,19 @@ TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithThreeFreeQubits) {
     fes->clear();
   }
   delete mockHardwareMonitor;
-  delete routingdaemon;
-  delete mockQubit1;
 }
 
 TEST(RuleEnginePhotonShootingTest, ScheduleNextEmissionEvent) {
   auto* sim = prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockQubit1 = new MockQubit(QNIC_E, 0);
-  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
-
   // Emitter QNIC(index:0~2) has 1 qubit, Receiver QNIC(index:0) has 1 qubit
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
+  std::vector<QNicSpec> qnic_specs = {
+      {QNIC_E, 0, 1},
+      {QNIC_E, 1, 1},
+      {QNIC_E, 2, 1},
+      {QNIC_R, 0, 1},
+  };
+  auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
 
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
@@ -656,20 +610,19 @@ TEST(RuleEnginePhotonShootingTest, ScheduleNextEmissionEvent) {
   fes->clear();
 
   delete mockHardwareMonitor;
-  delete routingdaemon;
 }
 
 TEST(RuleEnginePhotonShootingTest, BurstTrialOutdated) {
   auto* sim = prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockQubit1 = new MockQubit(QNIC_E, 0);
-  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
+  std::vector<QNicSpec> qnic_specs = {
+      {QNIC_E, 0, 1},
+      {QNIC_E, 1, 1},
+      {QNIC_E, 2, 1},
+      {QNIC_R, 0, 3},
+  };
+  auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
   setParInt(rule_engine, "total_number_of_qnics", 1);
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(3));
 
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
@@ -682,22 +635,20 @@ TEST(RuleEnginePhotonShootingTest, BurstTrialOutdated) {
   EXPECT_FALSE(outdated);
 
   delete mockHardwareMonitor;
-  delete routingdaemon;
-  delete mockQubit1;
 }
 
 TEST(RuleEnginePhotonShootingTest, incrementBurstTrial) {
   auto* sim = prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockQubit1 = new MockQubit(QNIC_E, 0);
-  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
+  std::vector<QNicSpec> qnic_specs = {
+      {QNIC_E, 0, 1},
+      {QNIC_E, 1, 1},
+      {QNIC_E, 2, 1},
+      {QNIC_R, 0, 1},
+  };
+  auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
   setParInt(rule_engine, "total_number_of_qnics", 2);
   setParInt(rule_engine, "number_of_qnics", 1);
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
 
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
@@ -722,23 +673,20 @@ TEST(RuleEnginePhotonShootingTest, incrementBurstTrial) {
   EXPECT_EQ(rule_engine->getBurstCountByQnic(qnic_address), 1);
 
   delete mockHardwareMonitor;
-  delete routingdaemon;
-  delete mockQubit1;
 }
 
 TEST(RuleEnginePhotonShootingTest, sendPhotonTransmissionSchedule) {
   auto* sim = prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockQubit1 = new MockQubit(QNIC_E, 0);
-  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
+  std::vector<QNicSpec> qnic_specs = {
+      {QNIC_E, 0, 1},
+      {QNIC_E, 1, 1},
+      {QNIC_E, 2, 1},
+      {QNIC_R, 0, 1},
+  };
+  auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
   setParInt(rule_engine, "total_number_of_qnics", 2);
   setParInt(rule_engine, "number_of_qnics", 1);
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
-
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
   sim->setContext(rule_engine);
@@ -791,22 +739,20 @@ TEST(RuleEnginePhotonShootingTest, sendPhotonTransmissionSchedule) {
   fes->clear();
 
   delete mockHardwareMonitor;
-  delete routingdaemon;
-  delete mockQubit1;
 }
 
 TEST(RuleEnginePhotonShootingTest, scheduleFirstPhotonEmission) {
   auto* sim = prepareSimulation();
-  auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockQubit1 = new MockQubit(QNIC_E, 0);
-  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr};
+  std::vector<QNicSpec> qnic_specs = {
+      {QNIC_E, 0, 1},
+      {QNIC_E, 1, 1},
+      {QNIC_E, 2, 1},
+      {QNIC_R, 0, 1},
+  };
+  auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
   setParInt(rule_engine, "total_number_of_qnics", 2);
   setParInt(rule_engine, "number_of_qnics", 1);
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(1, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(2, QNIC_E)).WillRepeatedly(Return(1));
-  EXPECT_CALL(*mockHardwareMonitor, getQnicNumQubits(0, QNIC_R)).WillRepeatedly(Return(1));
 
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
@@ -870,7 +816,5 @@ TEST(RuleEnginePhotonShootingTest, scheduleFirstPhotonEmission) {
   fes->clear();
 
   delete mockHardwareMonitor;
-  delete routingdaemon;
-  delete mockQubit1;
 }
 }  // namespace

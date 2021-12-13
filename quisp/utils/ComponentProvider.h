@@ -28,6 +28,7 @@ class ComponentProvider {
   bool isSPDCNodeType(const cModuleType *const type);
   IStationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type);
   cModule *getQNIC(int qnic_index, QNIC_type qnic_type);
+  int getNumQubits(int qnic_index, QNIC_type qnic_type);
   IRoutingDaemon *getRoutingDaemon();
   IHardwareMonitor *getHardwareMonitor();
   IRealTimeController *getRealTimeController();

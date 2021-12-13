@@ -17,6 +17,7 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
   bool isSPDCNodeType(const cModuleType *const type) override;
   IStationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override;
   cModule *getQNIC(int qnic_index, QNIC_type qnic_type) override;
+  int getNumQubits(int qnic_index, QNIC_type qnic_type) override;
   IRoutingDaemon *getRoutingDaemon() override;
   IHardwareMonitor *getHardwareMonitor() override;
   IRealTimeController *getRealTimeController() override;

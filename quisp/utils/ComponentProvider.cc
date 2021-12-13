@@ -40,7 +40,10 @@ cModule *ComponentProvider::getQNIC(int qnic_index, QNIC_type qnic_type) {
   ensureStrategy();
   return strategy->getQNIC(qnic_index, qnic_type);
 }
-
+int ComponentProvider::getNumQubits(int qnic_index, QNIC_type qnic_type) {
+  ensureStrategy();
+  return strategy->getNumQubits(qnic_index, qnic_type);
+}
 IHardwareMonitor *ComponentProvider::getHardwareMonitor() {
   ensureStrategy();
   return strategy->getHardwareMonitor();

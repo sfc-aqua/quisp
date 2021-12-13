@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iterator>
 #include <utility>
+#include "QNicStore/QNicStore.h"
 #include "utils/ComponentProvider.h"
 
 namespace quisp {
@@ -17,6 +18,7 @@ namespace modules {
 Define_Module(RuleEngine);
 
 using namespace rules;
+using qnic_store::QNicStore;
 
 RuleEngine::RuleEngine() : provider(utils::ComponentProvider{this}) {}
 
@@ -33,6 +35,9 @@ void RuleEngine::initialize() {
   number_of_qnics = par("number_of_qnics");
   number_of_qnics_r = par("number_of_qnics_r");
   number_of_qnics_rp = par("number_of_qnics_rp");
+  if (qnic_store == nullptr) {
+    qnic_store = std::make_unique<QNicStore>(provider, number_of_qnics, number_of_qnics_r, number_of_qnics_rp);
+  }
   // recog_resSignal = registerSignal("recog_res");
   actual_resSignal = registerSignal("actual_res");
 
@@ -45,11 +50,6 @@ void RuleEngine::initialize() {
     qnic_burst_trial_counter[i] = 0;
     terminated_qnic[i] = false;
   }
-
-  Busy_OR_Free_QubitState_table = new QubitStateTable[QNIC_N];
-  Busy_OR_Free_QubitState_table[QNIC_E] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_E], QNIC_E);
-  Busy_OR_Free_QubitState_table[QNIC_R] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_R], QNIC_R);
-  Busy_OR_Free_QubitState_table[QNIC_RP] = initializeQubitStateTable(Busy_OR_Free_QubitState_table[QNIC_RP], QNIC_RP);
 
   // Tracks which qubit was sent first, second and so on per qnic(r,rp)
   tracker = new sentQubitIndexTracker[number_of_qnics_all];
@@ -666,8 +666,8 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
   transmission_config.interval = pk->getInterval();
   transmission_config.qnic_type = qnic_type;
   // store the interface information for the futhter link generation process
-  int numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[transmission_config.qnic_type], transmission_config.qnic_index);
-  if (numFree > 0 && tracker_accessible.at(transmission_config.qnic_address)) {
+  int num_free = qnic_store->countNumFreeQubits(transmission_config.qnic_type, transmission_config.qnic_index);
+  if (num_free > 0 && tracker_accessible.at(transmission_config.qnic_address)) {
     tracker_accessible.at(transmission_config.qnic_address) = false;  // block access to tracker
     sendPhotonTransmissionSchedule(transmission_config);
   }
@@ -698,8 +698,8 @@ void RuleEngine::sendPhotonTransmissionSchedule(PhotonTransmissionConfig transmi
     st->setInternal_hom(1);  // Mark request that the request is for internal BSA node.
   }
 
-  int numFree = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[transmission_config.qnic_type], transmission_config.qnic_index);
-  if (numFree > 0) {
+  int num_free = qnic_store->countNumFreeQubits(transmission_config.qnic_type, transmission_config.qnic_index);
+  if (num_free > 0) {
     scheduleAt(simTime(), st);
   } else {
     delete st;
@@ -715,14 +715,16 @@ bool RuleEngine::burstTrial_outdated(int this_trial, int qnic_address) {
 }
 
 void RuleEngine::shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk) {
-  if (countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], pk->getQnic_index()) == 0) {
+  int qnic_index = pk->getQnic_index();
+  QNIC_type qnic_type = QNIC_R;
+  int num_free = qnic_store->countNumFreeQubits(qnic_type, qnic_index);
+  if (num_free == 0) {
     return;
   }
 
-  int qubit_index;
   emt = new EmitPhotonRequest("EmitPhotonRequest(internal)");
-  qubit_index = getOneFreeQubit_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], pk->getQnic_index());
-  Busy_OR_Free_QubitState_table[QNIC_R] = setQubitBusy_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], pk->getQnic_index(), qubit_index);
+  int qubit_index = qnic_store->takeFreeQubitIndex(qnic_type, qnic_index);
+  num_free--;
   emt->setQubit_index(qubit_index);
   emt->setQnic_index(pk->getQnic_index());
   emt->setQnic_address(pk->getQnic_address());
@@ -730,13 +732,13 @@ void RuleEngine::shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk) {
   emt->setQnic_type(QNIC_R);
 
   if (pk->getNum_sent() == 0) {  // First shot!!!
-    if (countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], pk->getQnic_index()) == 0)
+    if (num_free == 0)
       emt->setKind(STATIONARYQUBIT_PULSE_BOUND);  // First and last photon.
     else
       emt->setKind(STATIONARYQUBIT_PULSE_BEGIN);  // First photon
     scheduleAt(simTime() + pk->getTiming(), emt);
   } else {
-    if (countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[QNIC_R], pk->getQnic_index()) == 0)  // If no more free qubit
+    if (num_free == 0)  // If no more free qubit
       emt->setKind(STATIONARYQUBIT_PULSE_END);  // last one
     else
       emt->setKind(0);  // Just a photon in a burst. Not the beginning, nor the end.
@@ -747,13 +749,17 @@ void RuleEngine::shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk) {
 
 // This method is for qnic (not qnic_r, qnic_rp).
 void RuleEngine::shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk) {
-  if (countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[QNIC_E], pk->getQnic_index()) == 0) {
+  int qnic_index = pk->getQnic_index();
+  QNIC_type qnic_type = QNIC_E;
+  int num_free = qnic_store->countNumFreeQubits(qnic_type, qnic_index);
+
+  if (num_free == 0) {
     return;
   }
 
   emt = new EmitPhotonRequest("EmitPhotonRequest");
-  int qubit_index = getOneFreeQubit_inQnic(Busy_OR_Free_QubitState_table[QNIC_E], pk->getQnic_index());
-  Busy_OR_Free_QubitState_table[QNIC_E] = setQubitBusy_inQnic(Busy_OR_Free_QubitState_table[QNIC_E], pk->getQnic_index(), qubit_index);
+  int qubit_index = qnic_store->takeFreeQubitIndex(qnic_type, qnic_index);
+  num_free--;
   emt->setQubit_index(qubit_index);
   emt->setQnic_address(pk->getQnic_address());
   emt->setTrial(pk->getTrial());
@@ -761,13 +767,13 @@ void RuleEngine::shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk) {
   emt->setQnic_type(QNIC_E);
 
   if (pk->getNum_sent() == 0) {
-    if (countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[QNIC_E], pk->getQnic_index()) == 0)
+    if (num_free == 0)
       emt->setKind(STATIONARYQUBIT_PULSE_BOUND);  // First and last photon.
     else
       emt->setKind(STATIONARYQUBIT_PULSE_BEGIN);  // First photon
     scheduleAt(simTime() + pk->getTiming(), emt);
   } else {
-    if (countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[QNIC_E], pk->getQnic_index()) == 0)
+    if (num_free == 0)
       emt->setKind(STATIONARYQUBIT_PULSE_END);  // last one
     else
       emt->setKind(0);  // others
@@ -789,86 +795,6 @@ void RuleEngine::scheduleNextEmissionEvent(int qnic_index, int qnic_address, dou
     scheduleAt(simTime() + timing, st);
   else  // from the second emission, 1 photon per interval
     scheduleAt(simTime() + interval, st);
-}
-
-QubitStateTable RuleEngine::initializeQubitStateTable(QubitStateTable table, QNIC_type qnic_type) {
-  int qnics = -1;
-  switch (qnic_type) {
-    case QNIC_E:
-      qnics = number_of_qnics;
-      break;
-    case QNIC_R:
-      qnics = number_of_qnics_r;
-      break;
-    case QNIC_RP:
-      qnics = number_of_qnics_rp;
-      break;
-    default:
-      error("Dont put qnic_type except for 0,1 and 2");
-  }
-
-  int index = 0;
-  for (int i = 0; i < qnics; i++) {
-    int num_qubits = hardware_monitor->getQnicNumQubits(i, qnic_type);
-    for (int x = 0; x < num_qubits; x++) {
-      QubitAddr this_qubit = {parentAddress, i, x};
-      // QubitAddr entangled_qubit = {-1, -1, -1};//Entangled address. The system may miss-track the actual entangled partner.  Initialized as -1 'cause no entangled qubits in the
-      // beginning QubitAddr actual = {-1, -1, -1};//Entangled address. This is the true physically entangled partner. If there!=actual, then any operation on the qubit is a mess!
-      // table[index] = {this_qubit,entangled_qubit,actual,false, simTime()};
-      table[index] = {this_qubit, false, simTime()};  // Only stores which qubit is busy or free, and when it became busy.
-      index++;
-    }
-  }
-  return table;
-}
-
-// Just returns first index of free qubit.
-int RuleEngine::getOneFreeQubit_inQnic(QubitStateTable table, int qnic_index) {
-  int free_index = -1;
-  for (auto it = table.cbegin(); it != table.cend(); ++it) {
-    if (it->second.thisQubit_addr.qnic_index == qnic_index && it->second.isBusy == false) {
-      free_index = it->second.thisQubit_addr.qubit_index;  // Just return the up-most qubit index in the qubit state table.
-      break;
-    }
-  }
-  if (free_index == -1)
-    error("Free qubit not found in qnic. This should not happen because thd program checks it before this method. %d", qnic_index);  // This should not happen because
-  return free_index;
-}
-
-int RuleEngine::countFreeQubits_inQnic(QubitStateTable table, int qnic_index) {
-  int num_free = 0;
-  for (auto it = table.cbegin(); it != table.cend(); ++it) {
-    if (it->second.thisQubit_addr.qnic_index == qnic_index && !table[it->first].isBusy) {
-      num_free++;  // count up free qubits in qnic[qnic_index]
-    }
-  }
-  return num_free;
-}
-
-QubitStateTable RuleEngine::setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index) {
-  for (auto it = table.cbegin(); it != table.cend(); ++it) {
-    if (!it->second.isBusy && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index) {
-      table[it->first].isBusy = true;
-      break;
-    } else if (it->second.isBusy == true && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index) {
-      error("Trying to set a busy qubit busy. Only free qubits can do that. Something is wrong...");
-    }
-  }
-  return table;
-}
-
-QubitStateTable RuleEngine::setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index) {
-  for (auto it = table.cbegin(); it != table.cend(); ++it) {
-    // std::cout<<it->first<<" table = "<<table[it->first].isBusy<<"\n";
-    if (it->second.isBusy && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index) {
-      table[it->first].isBusy = false;
-      break;
-    } else if (!it->second.isBusy && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index) {
-      error("Trying to set a free qubit free. Only busy qubits can do that. Something is wrong... ");
-    }
-  }
-  return table;
 }
 
 void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, int internal_qnic_index) {
@@ -1111,7 +1037,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
 
 void RuleEngine::freeResource(int qnic_index /*The actual index. Not address. This with qnic_type makes the id unique.*/, int qubit_index, QNIC_type qnic_type) {
   realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, qnic_type, false);
-  Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit_index);
+  qnic_store->setQubitBusy(qnic_type, qnic_index, qubit_index, false);
 }
 
 void RuleEngine::clearTrackerTable(int destAddr, int internal_qnic_address) {
@@ -1348,7 +1274,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
   realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit->par("stationaryQubit_address"), qnic_type, true);
-  Busy_OR_Free_QubitState_table[qnic_type] = setQubitFree_inQnic(Busy_OR_Free_QubitState_table[qnic_type], qnic_index, qubit->par("stationaryQubit_address"));
+  qnic_store->setQubitBusy(qnic_type, qnic_index, qubit->par("stationaryQubit_address"), false);
   clearAppliedRule(qubit);
   bell_pair_store.eraseQubit(qubit);
 }

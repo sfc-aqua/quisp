@@ -15,6 +15,7 @@
 #include "../../PhysicalConnection/BSA/HoMController.h"
 #include "BellPairStore/BellPairStore.h"
 #include "IRuleEngine.h"
+#include "QNicStore/IQNicStore.h"
 #include "RuleSetStore/RuleSetStore.h"
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
@@ -28,6 +29,7 @@ using namespace omnetpp;
 namespace quisp {
 namespace modules {
 using namespace rules;
+using qnic_store::IQNicStore;
 
 /** \class RuleEngine RuleEngine.h
  *  \note The Connection Manager responds to connection requests received from other nodes.
@@ -56,9 +58,7 @@ class RuleEngine : public IRuleEngine {
   DoublePurificationTable DoublePurification_table;
   TriplePurificationTable TriplePurification_table;
   QuatroPurificationTable QuatroPurification_table;
-  // Although qnic index is in QubitAddr, lest make int qnic_index -> QubisState to lessen the search
-  // QubitStateTable stable, stable_r, stable_rp;
-  QubitStateTable *Busy_OR_Free_QubitState_table;
+
   bool *terminated_qnic;  // When you need to intentionally stop the link to make the simulation lighter.
   sentQubitIndexTracker *tracker;
   IHardwareMonitor *hardware_monitor;
@@ -85,11 +85,6 @@ class RuleEngine : public IRuleEngine {
   void initialize() override;
   void finish() override;
   void handleMessage(cMessage *msg) override;
-  int countFreeQubits_inQnic(QubitStateTable table, int qnic_index);
-  int getOneFreeQubit_inQnic(QubitStateTable table, int qnic_index);
-  QubitStateTable setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
-  QubitStateTable setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
-  QubitStateTable initializeQubitStateTable(QubitStateTable temp, QNIC_type qnic_type);
   void scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type);
   void sendPhotonTransmissionSchedule(PhotonTransmissionConfig transmission_config);
   void shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk);
@@ -118,9 +113,10 @@ class RuleEngine : public IRuleEngine {
   bool checkAppliedRule(IStationaryQubit *qubit, unsigned long rule_id);
   void clearAppliedRule(IStationaryQubit *qubit);
   void updateResources_EntanglementSwapping(swapping_result swapr);
+  virtual void updateResources_SimultaneousEntanglementSwapping(swapping_result swapr);
 
   utils::ComponentProvider provider;
-  virtual void updateResources_SimultaneousEntanglementSwapping(swapping_result swapr);
+  std::unique_ptr<IQNicStore> qnic_store = nullptr;
 };
 
 }  // namespace modules
