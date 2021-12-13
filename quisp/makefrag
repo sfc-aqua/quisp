@@ -2,6 +2,7 @@ CXXFLAGS = -std=c++17
 
 OBJS := $(filter-out test_util/% %_test.o,$(OBJS))
 OBJS := $(filter-out %unit_test_main.o,$(OBJS))
+MSGC:=$(MSGC) --msg6
 
 # you can pass the file path you want to check as SRCS environment variable. see the example below.
 # $ SRCS=./quisp/modules/Application.cc make tidy # checks only Application.cc
