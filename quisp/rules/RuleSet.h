@@ -23,8 +23,8 @@ class RuleSet {
   RuleSet(long _ruleset_id, int _owner_addr, std::vector<int> partner_addrs);
   void addRule(std::unique_ptr<Rule> r);
   std::unique_ptr<Rule>& getRule(int i);
-  int size();
-  bool empty();
+  int size() const;
+  bool empty() const;
   void finalize() {}
   std::vector<std::unique_ptr<Rule>>::const_iterator cbegin();
   std::vector<std::unique_ptr<Rule>>::const_iterator cend();
