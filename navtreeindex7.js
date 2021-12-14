@@ -1,5 +1,14 @@
 var NAVTREEINDEX7 =
 {
+"structquisp_1_1modules_1_1_connection_setup_info.html":[14,0,0,1,36],
+"structquisp_1_1modules_1_1_connection_setup_info.html#a0be1a8ea12553f72ebe315e91c78151b":[14,0,0,1,36,1],
+"structquisp_1_1modules_1_1_connection_setup_info.html#a79bf219e96e672f6aead61d4ebcbeaa3":[14,0,0,1,36,2],
+"structquisp_1_1modules_1_1_connection_setup_info.html#a965f14929712bc42ff39d8b43614f759":[14,0,0,1,36,0],
+"structquisp_1_1modules_1_1_doublepurification__result.html":[14,0,0,1,48],
+"structquisp_1_1modules_1_1_doublepurification__result.html#a43ce18a8337b685cd5698f2ffead2a5c":[14,0,0,1,48,2],
+"structquisp_1_1modules_1_1_doublepurification__result.html#a7b4a8ff2a6efd3bb69f6ed56e9068071":[14,0,0,1,48,0],
+"structquisp_1_1modules_1_1_doublepurification__result.html#af205cb5592751fad0e9c8e57c8ee22f2":[14,0,0,1,48,1],
+"structquisp_1_1modules_1_1_interface_info.html":[14,0,0,1,35],
 "structquisp_1_1modules_1_1_interface_info.html#a560c4adc796235f9c4bbfc767b7d060d":[14,0,0,1,35,4],
 "structquisp_1_1modules_1_1_interface_info.html#a5e71e0ef116f3129f74b34a9ff0659f9":[14,0,0,1,35,2],
 "structquisp_1_1modules_1_1_interface_info.html#a8bf02fa2853d561593c93e6790607dff":[14,0,0,1,35,1],

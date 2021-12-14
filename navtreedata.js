@@ -81,13 +81,13 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_access_private_8h.html",
-"_q_nic_store__test_8cc.html",
-"classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a2adc22e52f0a6a12e4b00b2306f00fd5",
-"classquisp_1_1modules_1_1_rule_engine.html#a59f1f4d01c57333d41ae56903a39d333",
-"classquisp_1_1rules_1_1actions_1_1_double_purify_action.html#a9106e51bed9c22ea0c1d033a4e24a2b2",
-"classquisp_1_1utils_1_1_default_component_provider_strategy.html",
-"dir_367dbefd8f51bb53a297d143302a8fc7.html",
-"structquisp_1_1modules_1_1_interface_info.html#a560c4adc796235f9c4bbfc767b7d060d"
+"_q_nic_record_8h_source.html",
+"classquisp_1_1modules_1_1_connection_manager.html#adef8b3d53759e698cc72bade6df42fb6",
+"classquisp_1_1modules_1_1_rule_engine.html#a2f7f537d7404458dfa4a2d2217e7a7c4",
+"classquisp_1_1rules_1_1actions_1_1_action.html#ad7b3da70ffb38f8bfc1b9bf9adc6744d",
+"classquisp_1_1utils_1_1_component_provider.html#a862000e20ec1c73da6baa792485a443c",
+"classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#acf339da0dd68ec0d37d66b73d6444540",
+"structquisp_1_1modules_1_1_connection_setup_info.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
