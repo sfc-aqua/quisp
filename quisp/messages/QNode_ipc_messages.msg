@@ -1,16 +1,6 @@
-cplusplus {{
-#include "base_messages_m.h"
-#include <rules/RuleSet.h>
-}}
-
-cplusplus {{
-    typedef quisp::rules::RuleSet * RuleSetField;
-}}
-class noncobject RuleSetField;
+import base_messages;
 
 namespace quisp::messages;
-
-packet Header;
 
 packet deleteThisModule{}
 
@@ -48,7 +38,7 @@ packet InternalRuleSetForwarding extends Header{
     unsigned long RuleSet_id;
     unsigned long Rule_id;
 
-    RuleSetField RuleSet;
+    RuleSet* ruleSet;
 }
 
 packet InternalRuleSetForwarding_Application extends Header{
@@ -56,5 +46,5 @@ packet InternalRuleSetForwarding_Application extends Header{
     unsigned long Rule_id;
     int application_type;
 
-    RuleSetField RuleSet;
+    RuleSet* ruleSet;
 }

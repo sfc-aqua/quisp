@@ -54,7 +54,7 @@ class Rule {
     action_partners = _action_partners;
   };
 
-  int num_partners() { return action_partners.size(); };
+  int num_partners() const { return action_partners.size(); };
   void addResource(int address_entangled_with, IStationaryQubit *qubit);
   void setCondition(Condition *c);
   void setAction(Action *a);

@@ -1,3 +1,26 @@
+cplusplus  {{
+    #include "base_messages_m.h"
+    #include <modules/QNIC.h>
+    #include <rules/RuleSet.h>
+    using quisp::rules::RuleSet;
+    using quisp::modules::QNIC_pair_info;
+}}
+
+class QNIC_type {
+    @existingClass;
+    @opaque;
+};
+
+class QNIC_pair_info {
+    @existingClass;
+    @opaque;
+};
+
+class RuleSet {
+    @existingClass;
+    @opaque;
+};
+
 namespace quisp::messages;
 
 packet Header
