@@ -204,8 +204,8 @@ TEST(DoubleSelectionActionInvTest, BothOutcomeTrue) {
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_x)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_z)).Times(1).WillOnce(Return());
 
-  EXPECT_CALL(*trash_qubit_x, Xpurify(qubit)).Times(1).WillOnce(Return(true));
-  EXPECT_CALL(*trash_qubit_z, Zpurify(trash_qubit_x)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*trash_qubit_x, Xpurify(trash_qubit_z)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*trash_qubit_z, Zpurify(qubit)).Times(1).WillOnce(Return(true));
 
   auto packet = action->run(rule_engine);
 
@@ -242,8 +242,8 @@ TEST(DoubleSelectionActionInvTest, XOutcomeTrue) {
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_x)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_z)).Times(1).WillOnce(Return());
 
-  EXPECT_CALL(*trash_qubit_x, Xpurify(qubit)).Times(1).WillOnce(Return(true));
-  EXPECT_CALL(*trash_qubit_z, Zpurify(trash_qubit_x)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*trash_qubit_x, Xpurify(trash_qubit_z)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*trash_qubit_z, Zpurify(qubit)).Times(1).WillOnce(Return(false));
 
   auto packet = action->run(rule_engine);
 
@@ -280,8 +280,8 @@ TEST(DoubleSelectionActionInvTest, ZOutcomeTrue) {
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_x)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_z)).Times(1).WillOnce(Return());
 
-  EXPECT_CALL(*trash_qubit_x, Xpurify(qubit)).Times(1).WillOnce(Return(false));
-  EXPECT_CALL(*trash_qubit_z, Zpurify(trash_qubit_x)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*trash_qubit_x, Xpurify(trash_qubit_z)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*trash_qubit_z, Zpurify(qubit)).Times(1).WillOnce(Return(true));
 
   auto packet = action->run(rule_engine);
 
@@ -318,8 +318,8 @@ TEST(DoubleSelectionActionInvTest, BothOutcomeFalse) {
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_x)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_z)).Times(1).WillOnce(Return());
 
-  EXPECT_CALL(*trash_qubit_x, Xpurify(qubit)).Times(1).WillOnce(Return(false));
-  EXPECT_CALL(*trash_qubit_z, Zpurify(trash_qubit_x)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*trash_qubit_x, Xpurify(trash_qubit_z)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*trash_qubit_z, Zpurify(qubit)).Times(1).WillOnce(Return(false));
 
   auto packet = action->run(rule_engine);
 

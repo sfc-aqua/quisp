@@ -18,7 +18,8 @@ cPacket *DoubleSelectionDualAction::run(cModule *re) {
   ds_trash_qubit_Z = getResource(doubleselection_trash_resource_Z, partner);
 
   if (qubit == trash_qubit_X || qubit == trash_qubit_Z || trash_qubit_Z == trash_qubit_X || qubit == ds_trash_qubit_X || qubit == ds_trash_qubit_Z ||
-      trash_qubit_Z == ds_trash_qubit_X || trash_qubit_X == ds_trash_qubit_X || ds_trash_qubit_Z == ds_trash_qubit_X) {
+      trash_qubit_Z == ds_trash_qubit_X || trash_qubit_Z == ds_trash_qubit_Z || trash_qubit_X == ds_trash_qubit_X || trash_qubit_X == ds_trash_qubit_Z ||
+      ds_trash_qubit_Z == ds_trash_qubit_X) {
     Error *pk = new Error;
     pk->setError_text("Qubit and Trash_qubit must be different.");
     return pk;
