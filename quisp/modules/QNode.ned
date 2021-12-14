@@ -36,7 +36,7 @@ module QNode
             //CM Begin
             TrafficPattern = 3; 
             LoneInitiatorAddress = 10000;
-            NumberOfClients = 2;
+            NumberOfClients = 4;
           
              //CM End
                 address = address;//share the same address within all inner modules

@@ -576,6 +576,7 @@ void ConnectionManager::handleMultipartiteRequest(ConnectionSetupRequest *req, i
   static int number_of_received_connection = 0;
   static int number_of_incoming_connections = 0;
   int current_node;
+  int path_size_without_end;
   QNIC_pair_info current_qnic_info;
 
   if (actual_src == my_address) {
@@ -614,6 +615,7 @@ void ConnectionManager::handleMultipartiteRequest(ConnectionSetupRequest *req, i
       path.push_back(req->getStack_of_QNodeIndexes(i));
   }
   path.push_back(my_address);
+  path_size_without_end = path.size() - 2;
 
   int qnic_array_size = req->getStack_of_QNICsArraySize();
   req->setStack_of_QNICsArraySize(qnic_array_size + 1);
@@ -671,6 +673,7 @@ void ConnectionManager::handleMultipartiteRequest(ConnectionSetupRequest *req, i
       }
   }
   current_node = path.back();
+  correction_number_for_node.insert(std::make_pair(current_node, path_size_without_end));
   std::vector<PathLink> child = {};
   tree_path_test.insert(std::make_pair(current_node, child));
 
@@ -1188,7 +1191,7 @@ RuleSet *ConnectionManager::generateGeneralizedEntanglementSwappingRuleSet(int n
 
     config_resource.push_back(1);
     rules::Action *action = new rules::actions::GeneralizedSwappingAction(ruleset_id, rule_index, config_partners, config_associated_end_nodes, config_types, config_ids,
-                                                                          config_addresses, config_resource, config_self_ids, config_self_types, label, size_of_tree);
+                                                                          config_addresses, config_resource, config_self_ids, config_self_types, label, size_of_tree, correction_number_for_node);
     auto rule = std::make_unique<Rule>(ruleset_id, rule_index, "generalized entanglement swapping", config_partners);
     rule->setCondition(condition);
     rule->setAction(action);

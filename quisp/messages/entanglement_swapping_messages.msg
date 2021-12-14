@@ -84,12 +84,13 @@ packet GeneralizedSwappingResult extends Header{
     bool is_for_root; //maybe soon to be obsolete
 
     int measurement_result;
-    int size_of_tree_leafless;
+    int number_of_corr;
     int correction_type;
     string label;
 
     //Used only for internal communication
     int size_of_arrays;
     int responder_dests[];
+    int responder_number_of_corr[];
     int measurement_results[];
 }

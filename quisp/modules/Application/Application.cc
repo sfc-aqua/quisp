@@ -80,7 +80,7 @@ void Application::initialize() {
   */
   if (traffic_pattern == 3) {
       int initiator_adress = par("LoneInitiatorAddress");
-    int number_of_clients = par("NumberOfClients");
+      int number_of_clients = par("NumberOfClients");
       if (my_address != initiator_adress) {
 
         EV_INFO << "My multipartite connection setup request will be sent from " << my_address << " to " << initiator_adress << "\n";

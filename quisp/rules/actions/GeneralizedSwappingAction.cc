@@ -14,7 +14,8 @@ GeneralizedSwappingAction::GeneralizedSwappingAction(unsigned long RuleSet_id, i
                                                       std::vector<QNIC_type> types,
                                                       std::vector<int> ids, std::vector<int> addresses,
                                                       std::vector<int> resources, std::vector<int> self_ids,
-                                                      std::vector<QNIC_type> self_types, std::string label, int size_tree) {
+                                                      std::vector<QNIC_type> self_types, std::string label, int size_tree,
+                                                      std::map<int, int> correction_number) {
   this->ruleset_id = RuleSet_id;
   this->rule_id = rule_index;
   this->associated_end_nodes = associated_end_nodes;
@@ -27,6 +28,7 @@ GeneralizedSwappingAction::GeneralizedSwappingAction(unsigned long RuleSet_id, i
   this->self_qnic_types = self_types;
   this->label = label;
   this->size_tree_leafless = size_tree;
+  this->correction_number_for_node = correction_number;
 }
 
 // TODO: completely mixed
@@ -39,7 +41,7 @@ cPacket *GeneralizedSwappingAction::run(cModule *re) {
 
   for (int i = 0; i < partners.size(); i++) {
 
-    //EV_INFO << "choppons la ressource " << resources.at(i) << " avec le partenaire " << partners.at(i) << "\n";
+    EV_INFO << "choppons la ressource " << resources.at(i) << " avec le partenaire " << partners.at(i) << "\n";
 
     IStationaryQubit *qubit = getResource(resources.at(i), partners.at(i));
 
@@ -70,6 +72,7 @@ cPacket *GeneralizedSwappingAction::run(cModule *re) {
   packet->setSize_of_arrays(partners.size());
   packet->setMeasurement_resultsArraySize(partners.size());
   packet->setResponder_destsArraySize(partners.size());
+  packet->setResponder_number_of_corrArraySize(partners.size());
 
   for (int i = 0; i < partners.size() - 1; i++) {
     qubits[i]->CNOT_gate(father_qubit);
@@ -77,9 +80,9 @@ cPacket *GeneralizedSwappingAction::run(cModule *re) {
     EV_INFO << "QBIT " << qubits[i]->entangled_partner->stationaryQubit_address << " at adress " << qubits[i]->node_address << "with label " << qubits[i]->entangled_partner->label
             << "\n";
     packet->setMeasurement_results(i, (int)qubits[i]->measure_Z());
-    packet->setMeasurement_results(i, 1);
     EV_INFO << "Correction (Z) " << packet->getMeasurement_results(i) << "\n";
     packet->setResponder_dests(i, associated_end_nodes[i]);
+    packet->setResponder_number_of_corr(i, correction_number_for_node.at(associated_end_nodes[i]));
   }
 
   qubits[partners.size() - 1]->entangled_partner->label = label;
@@ -88,8 +91,7 @@ cPacket *GeneralizedSwappingAction::run(cModule *re) {
   EV_INFO << "Correction (X) " << packet->getMeasurement_results(partners.size() - 1) << "\n";
   packet->setMeasurement_results(partners.size() - 1, (int)father_qubit->measure_X());
   packet->setResponder_dests(partners.size() - 1, associated_end_nodes.back());
-
-  packet->setSize_of_tree_leafless(size_tree_leafless);
+  packet->setResponder_number_of_corr(partners.size() - 1, size_tree_leafless);
   packet->setLabel(label.c_str());
   
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);

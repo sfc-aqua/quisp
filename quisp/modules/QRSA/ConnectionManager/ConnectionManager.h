@@ -58,8 +58,11 @@ class ConnectionManager : public IConnectionManager {
   int num_of_qnics;
   std::map<int, std::queue<ConnectionSetupRequest *>> connection_setup_buffer;  // key is qnic address
   std::map<int, int> connection_retry_count;  // key is qnic address
+
   std::map<int, std::vector<PathLink>> tree_path_test; // CM: Taking both into a struct after
   std::map<int, std::vector<int>> tree_path;
+  std::map<int, int> correction_number_for_node;
+
   std::map<int, bool> qnic_res_table;
   std::vector<cMessage *> request_send_timing;  // self message, notification for sending out request
   bool simultaneous_es_enabled;

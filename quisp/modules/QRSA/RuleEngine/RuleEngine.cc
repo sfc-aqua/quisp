@@ -987,13 +987,16 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     error("RuleEngine. Entanglement swapping went wrong");
   }
   // FOR DEBUGGING
-  if (qubit->entangled_partner != nullptr) {
-    if (qubit->entangled_partner->entangled_partner == nullptr) {
-      error("1. Entanglement tracking is not doing its job. in update resource E.S.");
-    }
-    if (qubit->entangled_partner->entangled_partner != qubit) {
-      error("2. Entanglement tracking is not doing its job. in update resource E.S.");
-    }
+  if (qubit->label == "") {
+    if (qubit->entangled_partner != nullptr) {
+      if (qubit->entangled_partner->entangled_partner == nullptr) {
+        error("1. Entanglement tracking is not doing its job. in update resource E.S.");
+      }
+      if (qubit->entangled_partner->entangled_partner != qubit) {
+        error("2. Entanglement tracking is not doing its job. in update resource E.S.");
+      }
+  }
+
   }
 
   bool promoted = false;
@@ -1024,7 +1027,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
           }
         } else if ((*rule)->rule_index == next_rule_id) {
           // next rule id is properly updated
-          (*rule)->addResource(new_partner, qubit);
+          (*rule)->addResource(new_partner, qubit);its 
           promoted = true;
           return;
         }
@@ -1085,14 +1088,17 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
     error("qubit is locked");
   }
   bell_pair_store.insertEntangledQubit(new_partner, qubit);
-  if (qubit->entangled_partner != nullptr) {
-    if (qubit->entangled_partner->entangled_partner == nullptr) {
-      error("1. Entanglement tracking is not doing its job. in update resource E.S.");
-    }
-    if (qubit->entangled_partner->entangled_partner != qubit) {
-      error("2. Entanglement tracking is not doing its job. in update resource E.S.");
+  if (qubit->label == "") {
+    if (qubit->entangled_partner != nullptr) {
+      if (qubit->entangled_partner->entangled_partner == nullptr) {
+        error("1. Entanglement tracking is not doing its job. in update resource E.S.");
+      }
+      if (qubit->entangled_partner->entangled_partner != qubit) {
+        error("2. Entanglement tracking is not doing its job. in update resource E.S.");
+      }
     }
   }
+
   ResourceAllocation(qnic_type, qnic_index);
   traverseThroughAllProcesses2();  // New resource added to QNIC with qnic_type qnic_index.
 }
@@ -1118,7 +1124,7 @@ void RuleEngine::correction_GeneralizedEntanglementSwapping(GeneralizedSwappingR
     generalized_results.at(label) = generalized_results.at(label) ^ correction;
   }
   received_correction += 1;
-  if (received_correction == pkt->getSize_of_tree_leafless()) {
+  if (received_correction == pkt->getNumber_of_corr()) {
     EV_INFO << "Received Enough correction lezzugo\n";
     auto info = hardware_monitor->findConnectionInfoByQnicAddr(0);
     int qnic_index = info->qnic.index;
@@ -1182,16 +1188,19 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
       StationaryQubit *qubit = provider.getStationaryQubit(qnic_index, it->second.qubit_index, qnic_type);
 
       // if the partner is null, not correct
-      if (qubit->entangled_partner != nullptr) {
-        if (qubit->entangled_partner->entangled_partner == nullptr) {
-          // my instance is null (no way)
-          error("1. Entanglement tracking is not doing its job.");
-        }
-        if (qubit->entangled_partner->entangled_partner != qubit) {
-          // partner's qubit doesn't point this qubit -> wrong
-          error("2. Entanglement tracking is not doing its job.");
+      if (qubit->label == "") {
+        if (qubit->entangled_partner != nullptr) {
+          if (qubit->entangled_partner->entangled_partner == nullptr) {
+            // my instance is null (no way)
+            error("1. Entanglement tracking is not doing its job.");
+          }
+          if (qubit->entangled_partner->entangled_partner != qubit) {
+            // partner's qubit doesn't point this qubit -> wrong
+            error("2. Entanglement tracking is not doing its job.");
+          }
         }
       }
+
 
       if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
         EV << "entangle partner null?" << qubit->entangled_partner << " == nullptr?\n";
@@ -1435,8 +1444,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
               }else {
                 packet_to_send->setIs_for_root(true);
               }
+              packet_to_send->setNumber_of_corr(result_packet->getResponder_number_of_corr(i));
               packet_to_send->setLabel(result_packet->getLabel());
-              packet_to_send->setSize_of_tree_leafless(result_packet->getSize_of_tree_leafless());
               packet_to_send->setMeasurement_result(result_packet->getMeasurement_results(i));
               send(packet_to_send, "RouterPort$o");
             }
