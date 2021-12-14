@@ -1,4 +1,3 @@
-#include "DoubleSelectionDualActionSecond.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <messages/classical_messages.h>
@@ -6,6 +5,7 @@
 #include <modules/QNIC/StationaryQubit/StationaryQubit.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 #include <test_utils/TestUtils.h>
+#include "DoubleSelectionDualActionSecond.h"
 #include "modules/QRSA/RuleEngine/RuleEngine.h"
 
 namespace {
@@ -18,82 +18,81 @@ using quisp::modules::IStationaryQubit;
 using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_type;
 using quisp::modules::StationaryQubit;
-using OriginalDoubleSelectionDualActionSecond = quisp::rules::actions::DoubleSelectionDualActionSecond;
+using OriginalDoubleSelectionDualActionSecondInv = quisp::rules::actions::DoubleSelectionDualActionSecondInv;
 
-class DoubleSelectionDualActionSecond : public OriginalDoubleSelectionDualActionSecond {
+class DoubleSelectionDualActionSecondInv : public OriginalDoubleSelectionDualActionSecondInv {
  public:
-  using OriginalDoubleSelectionDualActionSecond::action_index;
-  using OriginalDoubleSelectionDualActionSecond::rule_id;
-  using OriginalDoubleSelectionDualActionSecond::ruleset_id;
+  using OriginalDoubleSelectionDualActionSecondInv::action_index;
+  using OriginalDoubleSelectionDualActionSecondInv::doubleselection_trash_resource_Z;
+  using OriginalDoubleSelectionDualActionSecondInv::DoubleSelectionDualActionSecondInv;
+  using OriginalDoubleSelectionDualActionSecondInv::num_purify;
+  using OriginalDoubleSelectionDualActionSecondInv::partner;
+  using OriginalDoubleSelectionDualActionSecondInv::purification_count;
+  using OriginalDoubleSelectionDualActionSecondInv::qnic_id;
+  using OriginalDoubleSelectionDualActionSecondInv::qnic_type;
+  using OriginalDoubleSelectionDualActionSecondInv::resource;
+  using OriginalDoubleSelectionDualActionSecondInv::rule_id;
+  using OriginalDoubleSelectionDualActionSecondInv::ruleset_id;
+  using OriginalDoubleSelectionDualActionSecondInv::trash_resource_X;
+  using OriginalDoubleSelectionDualActionSecondInv::trash_resource_Z;
 
-  using OriginalDoubleSelectionDualActionSecond::doubleselection_trash_resource_X;
-  using OriginalDoubleSelectionDualActionSecond::DoubleSelectionDualActionSecond;
-  using OriginalDoubleSelectionDualActionSecond::num_purify;
-  using OriginalDoubleSelectionDualActionSecond::partner;
-  using OriginalDoubleSelectionDualActionSecond::purification_count;
-  using OriginalDoubleSelectionDualActionSecond::qnic_id;
-  using OriginalDoubleSelectionDualActionSecond::qnic_type;
-  using OriginalDoubleSelectionDualActionSecond::resource;
-  using OriginalDoubleSelectionDualActionSecond::trash_resource_X;
-  using OriginalDoubleSelectionDualActionSecond::trash_resource_Z;
-
-  static std::unique_ptr<DoubleSelectionDualActionSecond> setupAction() {
+  static std::unique_ptr<DoubleSelectionDualActionSecondInv> setupAction() {
     int partner_addr = 2;
     QNIC_type qnic_type = QNIC_E;
     int qnic_id = 3;
     int resource_index = 1;
     int trash_resource_x = 2;
     int trash_resource_z = 3;
-    int double_trash_resource_x = 4;
+    int double_trash_resource_z = 4;
     unsigned long ruleset_id = 6;
     unsigned long rule_id = 7;
 
-    return std::make_unique<DoubleSelectionDualActionSecond>(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z,
-                                                             double_trash_resource_x);
+    return std::make_unique<DoubleSelectionDualActionSecondInv>(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z,
+                                                                double_trash_resource_z);
   }
   MOCK_METHOD(IStationaryQubit *, getResource, (int required_index, int partner), (override));
   MOCK_METHOD(void, removeResource_fromRule, (IStationaryQubit *), (override));
 };
 
-TEST(DoubleSelectionDualActionSecond, Init) {
+TEST(DoubleSelectionDualActionSecondInv, Init) {
   int partner_addr = 2;
   QNIC_type qnic_type = QNIC_E;
   int qnic_id = 3;
   int resource_index = 4;
   int trash_resource_x = 5;
   int trash_resource_z = 6;
-  int double_trash_resource_x = 7;
+  int double_trash_resource_z = 7;
   unsigned long ruleset_id = 120;
   unsigned long rule_id = 2340;
 
   auto *action =
-      new DoubleSelectionDualActionSecond(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z, double_trash_resource_x);
+      new DoubleSelectionDualActionSecondInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z, double_trash_resource_z);
   EXPECT_EQ(action->partner, partner_addr);
   EXPECT_EQ(action->qnic_type, QNIC_E);
   EXPECT_EQ(action->qnic_id, qnic_id);
   EXPECT_EQ(action->resource, resource_index);
-  EXPECT_EQ(action->trash_resource_X, trash_resource_x);
+  EXPECT_EQ(action->trash_resource_Z, trash_resource_z);
   EXPECT_EQ(action->ruleset_id, ruleset_id);
   EXPECT_EQ(action->rule_id, rule_id);
 }
 
-TEST(DoubleSelectionDualActionSecond, runWithoutQubit) {
+TEST(DoubleSelectionDualActionSecondInv, runWithoutQubit) {
   prepareSimulation();
-  auto action = DoubleSelectionDualActionSecond::setupAction();
+  auto action = DoubleSelectionDualActionSecondInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   EXPECT_CALL(*action, getResource(action->resource, action->partner)).WillOnce(Return(nullptr));
   EXPECT_CALL(*action, getResource(action->trash_resource_X, action->partner)).WillOnce(Return(nullptr));
   EXPECT_CALL(*action, getResource(action->trash_resource_Z, action->partner)).WillOnce(Return(nullptr));
-  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_X, action->partner)).WillOnce(Return(nullptr));
+  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_Z, action->partner)).WillOnce(Return(nullptr));
   auto packet = action->run(rule_engine);
   ASSERT_NE(packet, nullptr);
   auto result = dynamic_cast<Error *>(packet);
   ASSERT_NE(result, nullptr);
 }
 
-TEST(DoubleSelectionDualActionSecond, NoTrashQubit) {
+TEST(DoubleSelectionDualActionSecondInv, NoTrashQubit) {
   auto sim = prepareSimulation();
-  auto action = DoubleSelectionDualActionSecond::setupAction();
+  auto action = DoubleSelectionDualActionSecondInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   sim->registerComponent(qubit);
@@ -101,26 +100,26 @@ TEST(DoubleSelectionDualActionSecond, NoTrashQubit) {
   EXPECT_CALL(*action, getResource(action->resource, action->partner)).WillOnce(Return(qubit));
   EXPECT_CALL(*action, getResource(action->trash_resource_X, action->partner)).WillOnce(Return(nullptr));
   EXPECT_CALL(*action, getResource(action->trash_resource_Z, action->partner)).WillOnce(Return(nullptr));
-  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_X, action->partner)).WillOnce(Return(nullptr));
+  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_Z, action->partner)).WillOnce(Return(nullptr));
   auto packet = action->run(rule_engine);
   ASSERT_NE(packet, nullptr);
   auto result = dynamic_cast<Error *>(packet);
   ASSERT_NE(result, nullptr);
 }
 
-TEST(DoubleSelectionDualActionSecond, NoTrashXQubit) {
+TEST(DoubleSelectionDualActionSecondInv, NoTrashXQubit) {
   auto sim = prepareSimulation();
-  auto action = DoubleSelectionDualActionSecond::setupAction();
+  auto action = DoubleSelectionDualActionSecondInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit_z = new MockQubit();
-  auto *ds_trash_qubit_x = new MockQubit();
+  auto *ds_trash_qubit_z = new MockQubit();
   sim->registerComponent(qubit);
   qubit->fillParams();
   EXPECT_CALL(*action, getResource(action->resource, action->partner)).WillOnce(Return(qubit));
   EXPECT_CALL(*action, getResource(action->trash_resource_X, action->partner)).WillOnce(Return(nullptr));
   EXPECT_CALL(*action, getResource(action->trash_resource_Z, action->partner)).WillOnce(Return(trash_qubit_z));
-  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_X, action->partner)).WillOnce(Return(ds_trash_qubit_x));
+  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_Z, action->partner)).WillOnce(Return(ds_trash_qubit_z));
 
   auto packet = action->run(rule_engine);
   ASSERT_NE(packet, nullptr);
@@ -128,9 +127,9 @@ TEST(DoubleSelectionDualActionSecond, NoTrashXQubit) {
   ASSERT_NE(result, nullptr);
 }
 
-TEST(DoubleSelectionDualActionSecond, NoDsTrashXQubit) {
+TEST(DoubleSelectionDualActionSecondInv, NoDsTrashZQubit) {
   auto sim = prepareSimulation();
-  auto action = DoubleSelectionDualActionSecond::setupAction();
+  auto action = DoubleSelectionDualActionSecondInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit_x = new MockQubit();
@@ -140,7 +139,7 @@ TEST(DoubleSelectionDualActionSecond, NoDsTrashXQubit) {
   EXPECT_CALL(*action, getResource(action->resource, action->partner)).WillOnce(Return(qubit));
   EXPECT_CALL(*action, getResource(action->trash_resource_X, action->partner)).WillOnce(Return(trash_qubit_x));
   EXPECT_CALL(*action, getResource(action->trash_resource_Z, action->partner)).WillOnce(Return(trash_qubit_z));
-  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_X, action->partner)).WillOnce(Return(nullptr));
+  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_Z, action->partner)).WillOnce(Return(nullptr));
 
   auto packet = action->run(rule_engine);
   ASSERT_NE(packet, nullptr);
@@ -148,13 +147,13 @@ TEST(DoubleSelectionDualActionSecond, NoDsTrashXQubit) {
   ASSERT_NE(result, nullptr);
 }
 
-TEST(DoubleSelectionDualActionSecond, TrashQubitDuplication1) {
+TEST(DoubleSelectionDualActionSecondInv, TrashQubitDuplication1) {
   auto sim = prepareSimulation();
-  auto action = DoubleSelectionDualActionSecond::setupAction();
+  auto action = DoubleSelectionDualActionSecondInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *dup_trash_qubit = new MockQubit();
-  auto *ds_trash_qubit_x = new MockQubit();
+  auto *ds_trash_qubit_z = new MockQubit();
 
   sim->registerComponent(qubit);
   qubit->fillParams();
@@ -162,39 +161,37 @@ TEST(DoubleSelectionDualActionSecond, TrashQubitDuplication1) {
   EXPECT_CALL(*action, getResource(action->resource, action->partner)).WillOnce(Return(qubit));
   EXPECT_CALL(*action, getResource(action->trash_resource_X, action->partner)).WillOnce(Return(dup_trash_qubit));
   EXPECT_CALL(*action, getResource(action->trash_resource_Z, action->partner)).WillOnce(Return(dup_trash_qubit));
-  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_X, action->partner)).WillOnce(Return(ds_trash_qubit_x));
+  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_Z, action->partner)).WillOnce(Return(ds_trash_qubit_z));
   auto packet = action->run(rule_engine);
   ASSERT_NE(packet, nullptr);
   auto result = dynamic_cast<Error *>(packet);
   ASSERT_NE(result, nullptr);
 }
 
-TEST(DoubleSelectionDualActionSecond, TrashQubitDuplication2) {
+TEST(DoubleSelectionDualActionSecondInv, TrashQubitDuplication2) {
   auto sim = prepareSimulation();
-  auto action = DoubleSelectionDualActionSecond::setupAction();
+  auto action = DoubleSelectionDualActionSecondInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *dup_trash_qubit = new MockQubit();
-  //   auto *trash_qubit_x = new MockQubit();
   auto *trash_qubit_z = new MockQubit();
-  //   auto *ds_trash_qubit_x = new MockQubit();
 
   sim->registerComponent(qubit);
   qubit->fillParams();
-  //  duplicate trash_X and doubleselection_trash_X
+  //  duplicate trash_X and doubleselection_trash_Z
   EXPECT_CALL(*action, getResource(action->resource, action->partner)).WillOnce(Return(qubit));
   EXPECT_CALL(*action, getResource(action->trash_resource_X, action->partner)).WillOnce(Return(dup_trash_qubit));
   EXPECT_CALL(*action, getResource(action->trash_resource_Z, action->partner)).WillOnce(Return(trash_qubit_z));
-  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_X, action->partner)).WillOnce(Return(dup_trash_qubit));
+  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_Z, action->partner)).WillOnce(Return(dup_trash_qubit));
   auto packet = action->run(rule_engine);
   ASSERT_NE(packet, nullptr);
   auto result = dynamic_cast<Error *>(packet);
   ASSERT_NE(result, nullptr);
 }
 
-TEST(DoubleSelectionDualActionSecond, TrashQubitDuplication3) {
+TEST(DoubleSelectionDualActionSecondInv, TrashQubitDuplication3) {
   auto sim = prepareSimulation();
-  auto action = DoubleSelectionDualActionSecond::setupAction();
+  auto action = DoubleSelectionDualActionSecondInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *dup_trash_qubit = new MockQubit();
@@ -205,37 +202,37 @@ TEST(DoubleSelectionDualActionSecond, TrashQubitDuplication3) {
   EXPECT_CALL(*action, getResource(action->resource, action->partner)).WillOnce(Return(qubit));
   EXPECT_CALL(*action, getResource(action->trash_resource_X, action->partner)).WillOnce(Return(trash_qubit_x));
   EXPECT_CALL(*action, getResource(action->trash_resource_Z, action->partner)).WillOnce(Return(dup_trash_qubit));
-  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_X, action->partner)).WillOnce(Return(dup_trash_qubit));
+  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_Z, action->partner)).WillOnce(Return(dup_trash_qubit));
   auto packet = action->run(rule_engine);
   ASSERT_NE(packet, nullptr);
   auto result = dynamic_cast<Error *>(packet);
   ASSERT_NE(result, nullptr);
 }
 
-TEST(DoubleSelectionDualActionSecond, AllOutcomeTrue) {
+TEST(DoubleSelectionDualActionSecondInv, AllOutcomeTrue) {
   prepareSimulation();
-  auto action = DoubleSelectionDualActionSecond::setupAction();
+  auto action = DoubleSelectionDualActionSecondInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit_x = new MockQubit();
   auto *trash_qubit_z = new MockQubit();
-  auto *ds_trash_qubit_x = new MockQubit();
+  auto *ds_trash_qubit_z = new MockQubit();
 
   EXPECT_CALL(*qubit, Lock(action->ruleset_id, action->rule_id, action->action_index)).Times(1).WillOnce(Return());
   EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, trash_qubit_x, action->qnic_type)).Times(1).WillOnce(Return());
   EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, trash_qubit_z, action->qnic_type)).Times(1).WillOnce(Return());
-  EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, ds_trash_qubit_x, action->qnic_type)).Times(1).WillOnce(Return());
+  EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, ds_trash_qubit_z, action->qnic_type)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, getResource(action->resource, action->partner)).Times(1).WillOnce(Return(qubit));
   EXPECT_CALL(*action, getResource(action->trash_resource_X, action->partner)).WillOnce(Return(trash_qubit_x));
   EXPECT_CALL(*action, getResource(action->trash_resource_Z, action->partner)).WillOnce(Return(trash_qubit_z));
-  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_X, action->partner)).WillOnce(Return(ds_trash_qubit_x));
+  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_Z, action->partner)).WillOnce(Return(ds_trash_qubit_z));
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_x)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_z)).Times(1).WillOnce(Return());
-  EXPECT_CALL(*action, removeResource_fromRule(ds_trash_qubit_x)).Times(1).WillOnce(Return());
+  EXPECT_CALL(*action, removeResource_fromRule(ds_trash_qubit_z)).Times(1).WillOnce(Return());
 
   EXPECT_CALL(*trash_qubit_x, Xpurify(qubit)).Times(1).WillOnce(Return(true));
   EXPECT_CALL(*trash_qubit_z, Zpurify(qubit)).Times(1).WillOnce(Return(true));
-  EXPECT_CALL(*ds_trash_qubit_x, Xpurify(trash_qubit_z)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*ds_trash_qubit_z, Zpurify(trash_qubit_x)).Times(1).WillOnce(Return(true));
 
   auto packet = action->run(rule_engine);
 
@@ -253,34 +250,34 @@ TEST(DoubleSelectionDualActionSecond, AllOutcomeTrue) {
   delete qubit;
   delete trash_qubit_x;
   delete trash_qubit_z;
-  delete ds_trash_qubit_x;
+  delete ds_trash_qubit_z;
   delete rule_engine;
 }
 
-TEST(DoubleSelectionDualActionSecond, FirstOutcomeTrue) {
+TEST(DoubleSelectionDualActionSecondInv, FirstOutcomeTrue) {
   prepareSimulation();
-  auto action = DoubleSelectionDualActionSecond::setupAction();
+  auto action = DoubleSelectionDualActionSecondInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit_x = new MockQubit();
   auto *trash_qubit_z = new MockQubit();
-  auto *ds_trash_qubit_x = new MockQubit();
+  auto *ds_trash_qubit_z = new MockQubit();
 
   EXPECT_CALL(*qubit, Lock(action->ruleset_id, action->rule_id, action->action_index)).Times(1).WillOnce(Return());
   EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, trash_qubit_x, action->qnic_type)).Times(1).WillOnce(Return());
   EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, trash_qubit_z, action->qnic_type)).Times(1).WillOnce(Return());
-  EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, ds_trash_qubit_x, action->qnic_type)).Times(1).WillOnce(Return());
+  EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, ds_trash_qubit_z, action->qnic_type)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, getResource(action->resource, action->partner)).Times(1).WillOnce(Return(qubit));
   EXPECT_CALL(*action, getResource(action->trash_resource_X, action->partner)).WillOnce(Return(trash_qubit_x));
   EXPECT_CALL(*action, getResource(action->trash_resource_Z, action->partner)).WillOnce(Return(trash_qubit_z));
-  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_X, action->partner)).WillOnce(Return(ds_trash_qubit_x));
+  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_Z, action->partner)).WillOnce(Return(ds_trash_qubit_z));
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_x)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_z)).Times(1).WillOnce(Return());
-  EXPECT_CALL(*action, removeResource_fromRule(ds_trash_qubit_x)).Times(1).WillOnce(Return());
+  EXPECT_CALL(*action, removeResource_fromRule(ds_trash_qubit_z)).Times(1).WillOnce(Return());
 
   EXPECT_CALL(*trash_qubit_x, Xpurify(qubit)).Times(1).WillOnce(Return(true));
   EXPECT_CALL(*trash_qubit_z, Zpurify(qubit)).Times(1).WillOnce(Return(false));
-  EXPECT_CALL(*ds_trash_qubit_x, Xpurify(trash_qubit_z)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*ds_trash_qubit_z, Zpurify(trash_qubit_x)).Times(1).WillOnce(Return(false));
 
   auto packet = action->run(rule_engine);
 
@@ -298,34 +295,34 @@ TEST(DoubleSelectionDualActionSecond, FirstOutcomeTrue) {
   delete qubit;
   delete trash_qubit_x;
   delete trash_qubit_z;
-  delete ds_trash_qubit_x;
+  delete ds_trash_qubit_z;
   delete rule_engine;
 }
 
-TEST(DoubleSelectionDualActionSecond, SecondOutcomeTrue) {
+TEST(DoubleSelectionDualActionSecondInv, SecondOutcomeTrue) {
   prepareSimulation();
-  auto action = DoubleSelectionDualActionSecond::setupAction();
+  auto action = DoubleSelectionDualActionSecondInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit_x = new MockQubit();
   auto *trash_qubit_z = new MockQubit();
-  auto *ds_trash_qubit_x = new MockQubit();
+  auto *ds_trash_qubit_z = new MockQubit();
 
   EXPECT_CALL(*qubit, Lock(action->ruleset_id, action->rule_id, action->action_index)).Times(1).WillOnce(Return());
   EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, trash_qubit_x, action->qnic_type)).Times(1).WillOnce(Return());
   EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, trash_qubit_z, action->qnic_type)).Times(1).WillOnce(Return());
-  EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, ds_trash_qubit_x, action->qnic_type)).Times(1).WillOnce(Return());
+  EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, ds_trash_qubit_z, action->qnic_type)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, getResource(action->resource, action->partner)).Times(1).WillOnce(Return(qubit));
   EXPECT_CALL(*action, getResource(action->trash_resource_X, action->partner)).WillOnce(Return(trash_qubit_x));
   EXPECT_CALL(*action, getResource(action->trash_resource_Z, action->partner)).WillOnce(Return(trash_qubit_z));
-  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_X, action->partner)).WillOnce(Return(ds_trash_qubit_x));
+  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_Z, action->partner)).WillOnce(Return(ds_trash_qubit_z));
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_x)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_z)).Times(1).WillOnce(Return());
-  EXPECT_CALL(*action, removeResource_fromRule(ds_trash_qubit_x)).Times(1).WillOnce(Return());
+  EXPECT_CALL(*action, removeResource_fromRule(ds_trash_qubit_z)).Times(1).WillOnce(Return());
 
   EXPECT_CALL(*trash_qubit_x, Xpurify(qubit)).Times(1).WillOnce(Return(false));
   EXPECT_CALL(*trash_qubit_z, Zpurify(qubit)).Times(1).WillOnce(Return(true));
-  EXPECT_CALL(*ds_trash_qubit_x, Xpurify(trash_qubit_z)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*ds_trash_qubit_z, Zpurify(trash_qubit_x)).Times(1).WillOnce(Return(false));
 
   auto packet = action->run(rule_engine);
 
@@ -343,34 +340,34 @@ TEST(DoubleSelectionDualActionSecond, SecondOutcomeTrue) {
   delete qubit;
   delete trash_qubit_x;
   delete trash_qubit_z;
-  delete ds_trash_qubit_x;
+  delete ds_trash_qubit_z;
   delete rule_engine;
 }
 
-TEST(DoubleSelectionDualActionSecond, ThirdOutcomeTrue) {
+TEST(DoubleSelectionDualActionSecondInv, ThirdOutcomeTrue) {
   prepareSimulation();
-  auto action = DoubleSelectionDualActionSecond::setupAction();
+  auto action = DoubleSelectionDualActionSecondInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit_x = new MockQubit();
   auto *trash_qubit_z = new MockQubit();
-  auto *ds_trash_qubit_x = new MockQubit();
+  auto *ds_trash_qubit_z = new MockQubit();
 
   EXPECT_CALL(*qubit, Lock(action->ruleset_id, action->rule_id, action->action_index)).Times(1).WillOnce(Return());
   EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, trash_qubit_x, action->qnic_type)).Times(1).WillOnce(Return());
   EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, trash_qubit_z, action->qnic_type)).Times(1).WillOnce(Return());
-  EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, ds_trash_qubit_x, action->qnic_type)).Times(1).WillOnce(Return());
+  EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, ds_trash_qubit_z, action->qnic_type)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, getResource(action->resource, action->partner)).Times(1).WillOnce(Return(qubit));
   EXPECT_CALL(*action, getResource(action->trash_resource_X, action->partner)).WillOnce(Return(trash_qubit_x));
   EXPECT_CALL(*action, getResource(action->trash_resource_Z, action->partner)).WillOnce(Return(trash_qubit_z));
-  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_X, action->partner)).WillOnce(Return(ds_trash_qubit_x));
+  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_Z, action->partner)).WillOnce(Return(ds_trash_qubit_z));
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_x)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_z)).Times(1).WillOnce(Return());
-  EXPECT_CALL(*action, removeResource_fromRule(ds_trash_qubit_x)).Times(1).WillOnce(Return());
+  EXPECT_CALL(*action, removeResource_fromRule(ds_trash_qubit_z)).Times(1).WillOnce(Return());
 
   EXPECT_CALL(*trash_qubit_x, Xpurify(qubit)).Times(1).WillOnce(Return(false));
   EXPECT_CALL(*trash_qubit_z, Zpurify(qubit)).Times(1).WillOnce(Return(false));
-  EXPECT_CALL(*ds_trash_qubit_x, Xpurify(trash_qubit_z)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*ds_trash_qubit_z, Zpurify(trash_qubit_x)).Times(1).WillOnce(Return(true));
 
   auto packet = action->run(rule_engine);
 
@@ -388,34 +385,34 @@ TEST(DoubleSelectionDualActionSecond, ThirdOutcomeTrue) {
   delete qubit;
   delete trash_qubit_x;
   delete trash_qubit_z;
-  delete ds_trash_qubit_x;
+  delete ds_trash_qubit_z;
   delete rule_engine;
 }
 
-TEST(DoubleSelectionDualActionSecond, AllOutcomeFalse) {
+TEST(DoubleSelectionDualActionSecondInv, AllOutcomeFalse) {
   prepareSimulation();
-  auto action = DoubleSelectionDualActionSecond::setupAction();
+  auto action = DoubleSelectionDualActionSecondInv::setupAction();
   auto *rule_engine = new MockRuleEngine();
   auto *qubit = new MockQubit();
   auto *trash_qubit_x = new MockQubit();
   auto *trash_qubit_z = new MockQubit();
-  auto *ds_trash_qubit_x = new MockQubit();
+  auto *ds_trash_qubit_z = new MockQubit();
 
   EXPECT_CALL(*qubit, Lock(action->ruleset_id, action->rule_id, action->action_index)).Times(1).WillOnce(Return());
   EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, trash_qubit_x, action->qnic_type)).Times(1).WillOnce(Return());
   EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, trash_qubit_z, action->qnic_type)).Times(1).WillOnce(Return());
-  EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, ds_trash_qubit_x, action->qnic_type)).Times(1).WillOnce(Return());
+  EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, ds_trash_qubit_z, action->qnic_type)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, getResource(action->resource, action->partner)).Times(1).WillOnce(Return(qubit));
   EXPECT_CALL(*action, getResource(action->trash_resource_X, action->partner)).WillOnce(Return(trash_qubit_x));
   EXPECT_CALL(*action, getResource(action->trash_resource_Z, action->partner)).WillOnce(Return(trash_qubit_z));
-  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_X, action->partner)).WillOnce(Return(ds_trash_qubit_x));
+  EXPECT_CALL(*action, getResource(action->doubleselection_trash_resource_Z, action->partner)).WillOnce(Return(ds_trash_qubit_z));
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_x)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, removeResource_fromRule(trash_qubit_z)).Times(1).WillOnce(Return());
-  EXPECT_CALL(*action, removeResource_fromRule(ds_trash_qubit_x)).Times(1).WillOnce(Return());
+  EXPECT_CALL(*action, removeResource_fromRule(ds_trash_qubit_z)).Times(1).WillOnce(Return());
 
   EXPECT_CALL(*trash_qubit_x, Xpurify(qubit)).Times(1).WillOnce(Return(false));
   EXPECT_CALL(*trash_qubit_z, Zpurify(qubit)).Times(1).WillOnce(Return(false));
-  EXPECT_CALL(*ds_trash_qubit_x, Xpurify(trash_qubit_z)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*ds_trash_qubit_z, Zpurify(trash_qubit_x)).Times(1).WillOnce(Return(false));
 
   auto packet = action->run(rule_engine);
 
@@ -433,7 +430,7 @@ TEST(DoubleSelectionDualActionSecond, AllOutcomeFalse) {
   delete qubit;
   delete trash_qubit_x;
   delete trash_qubit_z;
-  delete ds_trash_qubit_x;
+  delete ds_trash_qubit_z;
   delete rule_engine;
 }
 
