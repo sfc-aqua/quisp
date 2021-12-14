@@ -1,4 +1,3 @@
-#include "DoubleSelectionDualAction.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <messages/classical_messages.h>
@@ -6,6 +5,7 @@
 #include <modules/QNIC/StationaryQubit/StationaryQubit.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 #include <test_utils/TestUtils.h>
+#include "DoubleSelectionDualAction.h"
 #include "modules/QRSA/RuleEngine/RuleEngine.h"
 
 namespace {
@@ -51,7 +51,7 @@ class DoubleSelectionDualActionInv : public OriginalDoubleSelectionDualActionInv
     unsigned long rule_id = 7;
 
     return std::make_unique<DoubleSelectionDualActionInv>(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z,
-                                                       double_trash_resource_x, double_trash_resource_z);
+                                                          double_trash_resource_x, double_trash_resource_z);
   }
   MOCK_METHOD(IStationaryQubit *, getResource, (int required_index, int partner), (override));
   MOCK_METHOD(void, removeResource_fromRule, (IStationaryQubit *), (override));
@@ -69,8 +69,8 @@ TEST(DoubleSelectionDualActionInv, Init) {
   unsigned long ruleset_id = 120;
   unsigned long rule_id = 2340;
 
-  auto *action = new DoubleSelectionDualActionInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z, double_trash_resource_x,
-                                               double_trash_resource_z);
+  auto *action = new DoubleSelectionDualActionInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z,
+                                                  double_trash_resource_x, double_trash_resource_z);
   EXPECT_EQ(action->partner, partner_addr);
   EXPECT_EQ(action->qnic_type, QNIC_E);
   EXPECT_EQ(action->qnic_id, qnic_id);
