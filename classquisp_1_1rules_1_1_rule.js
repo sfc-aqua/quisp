@@ -8,7 +8,7 @@ var classquisp_1_1rules_1_1_rule =
     [ "checkrun", "classquisp_1_1rules_1_1_rule.html#a6b9b620f21840753c7baa9e69d6f41ea", null ],
     [ "checkTerminate", "classquisp_1_1rules_1_1_rule.html#af1f2ee5daaa5501d540fde07eea6f5ce", null ],
     [ "eraseResource", "classquisp_1_1rules_1_1_rule.html#aea1d62b193eeacc5370a26a43cfdcdf1", null ],
-    [ "num_partners", "classquisp_1_1rules_1_1_rule.html#a003da560195217ec8851cbd3a2ab3528", null ],
+    [ "num_partners", "classquisp_1_1rules_1_1_rule.html#ad0ab226aaa28efc13871cc2aa6f249ac", null ],
     [ "setAction", "classquisp_1_1rules_1_1_rule.html#a2d6ad1e7297d9dc03bb67ef801f3496a", null ],
     [ "setCondition", "classquisp_1_1rules_1_1_rule.html#a2d908351be0c241d64f5e6a3b38abd09", null ],
     [ "action", "classquisp_1_1rules_1_1_rule.html#a30e6b596cc8b3eecc42640b9a78e0f0c", null ],

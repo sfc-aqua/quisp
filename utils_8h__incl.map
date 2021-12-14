@@ -1,12 +1,13 @@
 <map id="quisp/utils/utils.h" name="quisp/utils/utils.h">
-<area shape="rect" id="node1" title=" " alt="" coords="280,5,399,32"/>
-<area shape="rect" id="node2" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="287,169,405,196"/>
-<area shape="rect" id="node3" title=" " alt="" coords="159,244,242,271"/>
-<area shape="rect" id="node4" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="25,80,227,121"/>
-<area shape="rect" id="node6" href="$_i_hardware_monitor_8h.html" title=" " alt="" coords="553,80,768,121"/>
-<area shape="rect" id="node9" href="$_i_real_time_controller_8h.html" title=" " alt="" coords="302,80,529,121"/>
-<area shape="rect" id="node10" href="$_i_routing_daemon_8h.html" title=" " alt="" coords="793,80,1001,121"/>
-<area shape="rect" id="node5" title=" " alt="" coords="60,169,192,196"/>
-<area shape="rect" id="node7" title=" " alt="" coords="627,169,695,196"/>
-<area shape="rect" id="node8" title=" " alt="" coords="765,169,938,196"/>
+<area shape="rect" id="node1" title=" " alt="" coords="279,5,397,32"/>
+<area shape="rect" id="node2" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="335,169,453,196"/>
+<area shape="rect" id="node3" title=" " alt="" coords="158,244,241,271"/>
+<area shape="rect" id="node4" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="24,80,225,121"/>
+<area shape="rect" id="node7" href="$_i_hardware_monitor_8h.html" title=" " alt="" coords="552,80,767,121"/>
+<area shape="rect" id="node10" href="$_i_real_time_controller_8h.html" title=" " alt="" coords="301,80,527,121"/>
+<area shape="rect" id="node11" href="$_i_routing_daemon_8h.html" title=" " alt="" coords="791,80,999,121"/>
+<area shape="rect" id="node5" title=" " alt="" coords="41,169,173,196"/>
+<area shape="rect" id="node6" title=" " alt="" coords="198,169,289,196"/>
+<area shape="rect" id="node8" title=" " alt="" coords="625,169,693,196"/>
+<area shape="rect" id="node9" title=" " alt="" coords="763,169,937,196"/>
 </map>

@@ -1,6 +1,7 @@
 <map id="quisp::modules::SPDC_Controller" name="quisp::modules::SPDC_Controller">
-<area shape="rect" id="node1" title="SPDC_Controller." alt="" coords="92,185,243,227"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,116,32"/>
-<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_entangled_photon_pair_source.html" title="Entangled Photons Pairs Source." alt="" coords="82,81,253,123"/>
-<area shape="rect" id="node4" title=" " alt="" coords="277,89,359,115"/>
+<area shape="rect" id="node1" title="SPDC_Controller." alt="" coords="207,185,357,227"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,89,172,115"/>
+<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_entangled_photon_pair_source.html" title="Entangled Photons Pairs Source." alt="" coords="197,81,367,123"/>
+<area shape="rect" id="node4" title=" " alt="" coords="227,5,337,32"/>
+<area shape="rect" id="node5" title=" " alt="" coords="391,89,474,115"/>
 </map>

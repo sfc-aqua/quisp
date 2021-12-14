@@ -15,7 +15,7 @@ var classquisp_1_1modules_1_1_stationary_qubit =
     [ "getErrorMatrix", "classquisp_1_1modules_1_1_stationary_qubit.html#a0c411ac4a00c3304c04a8b224bd838d3", null ],
     [ "getQuantumState", "classquisp_1_1modules_1_1_stationary_qubit.html#a2e4dac77c7b641c0f56059a7dd4d9688", null ],
     [ "Hadamard_gate", "classquisp_1_1modules_1_1_stationary_qubit.html#aad136c5d0db3eb996ea2f2119281aa04", null ],
-    [ "handleMessage", "classquisp_1_1modules_1_1_stationary_qubit.html#a8dff32084019b625f91771c3741e8c70", null ],
+    [ "handleMessage", "classquisp_1_1modules_1_1_stationary_qubit.html#a166b4d5519865191b82c424fe55a65b4", null ],
     [ "initialize", "classquisp_1_1modules_1_1_stationary_qubit.html#a1a6b38dc99cc01573fe3da2c64c84dbe", null ],
     [ "isAllocated", "classquisp_1_1modules_1_1_stationary_qubit.html#a5bc067a98c10f7602b3c12a21ebeff31", null ],
     [ "isLocked", "classquisp_1_1modules_1_1_stationary_qubit.html#a691fb10bcfa50096f8f8dfc58781e880", null ],

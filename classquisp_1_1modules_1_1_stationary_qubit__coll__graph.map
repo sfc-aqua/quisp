@@ -1,7 +1,7 @@
 <map id="quisp::modules::StationaryQubit" name="quisp::modules::StationaryQubit">
 <area shape="rect" id="node1" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="673,314,845,355"/>
 <area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="369,201,545,242"/>
-<area shape="rect" id="node3" title=" " alt="" coords="47,212,157,239"/>
+<area shape="rect" id="node3" title=" " alt="" coords="19,212,185,239"/>
 <area shape="rect" id="node4" href="$structquisp_1_1modules_1_1_single_gate_error_model.html" title=" " alt="" coords="13,58,191,99"/>
 <area shape="rect" id="node5" title=" " alt="" coords="63,161,141,188"/>
 <area shape="rect" id="node6" href="$structquisp_1_1modules_1_1_two_qubit_gate_error_model.html" title=" " alt="" coords="17,270,187,311"/>

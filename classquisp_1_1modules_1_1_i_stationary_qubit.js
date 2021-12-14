@@ -29,7 +29,7 @@ var classquisp_1_1modules_1_1_i_stationary_qubit =
     [ "CNOTgate_error", "classquisp_1_1modules_1_1_i_stationary_qubit.html#acb4c33aba11317b96f22a42dce5c0da6", null ],
     [ "completely_mixed", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a14bcd0c2ef1cdc3b1dc1ddd5ce906f16", null ],
     [ "Density_Matrix_Collapsed", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a05c305d9ef66f9dcd13ea849fa922c46", null ],
-    [ "emitted_time", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a21a655f88059b7be40d4718e073f98d5", null ],
+    [ "emitted_time", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a9cf531649223b7a1ab3733cc66381294", null ],
     [ "entangled_partner", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a3975170c35b740328d9b7a1b22a4fc1d", null ],
     [ "excited_or_relaxed", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a6976717d69ef8ce146a78b9d1fbc3358", null ],
     [ "GOD_dm_Xerror", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a128a25683d9a6d54ecdc44179d7c7dfa", null ],
@@ -45,7 +45,7 @@ var classquisp_1_1modules_1_1_i_stationary_qubit =
     [ "qnic_type", "classquisp_1_1modules_1_1_i_stationary_qubit.html#afe46d60a05cb893d9f797a53bed01236", null ],
     [ "stationaryQubit_address", "classquisp_1_1modules_1_1_i_stationary_qubit.html#ad2ecd4221e6773457ba77d0edc9c2224", null ],
     [ "std", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a86be61a3ce35257904258a8613752778", null ],
-    [ "updated_time", "classquisp_1_1modules_1_1_i_stationary_qubit.html#acd5c14dc1ff991f3283b2dec64d3836f", null ],
+    [ "updated_time", "classquisp_1_1modules_1_1_i_stationary_qubit.html#aac9bd84ec4658f786f28b8a00687e2b0", null ],
     [ "Xgate_error", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a71317115a0c831cafdbe94e34798b679", null ],
     [ "Zgate_error", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a10437a29b49b3bc13cfe1e4d5984cd50", null ]
 ];

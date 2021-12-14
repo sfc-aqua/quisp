@@ -2,7 +2,7 @@ var searchData=
 [
   ['emission_5fstd_1827',['emission_std',['../classquisp_1_1modules_1_1_entangled_photon_pair_source.html#ae2466210e33fe57960c3cba58e9a761b',1,'quisp::modules::EntangledPhotonPairSource']]],
   ['emission_5fsuccess_5fprobability_1828',['emission_success_probability',['../classquisp_1_1modules_1_1_stationary_qubit.html#abedc1562fd46e447bfde9833f9c95e7e',1,'quisp::modules::StationaryQubit']]],
-  ['emitted_5ftime_1829',['emitted_time',['../classquisp_1_1modules_1_1_i_stationary_qubit.html#a21a655f88059b7be40d4718e073f98d5',1,'quisp::modules::IStationaryQubit']]],
+  ['emitted_5ftime_1829',['emitted_time',['../classquisp_1_1modules_1_1_i_stationary_qubit.html#a9cf531649223b7a1ab3733cc66381294',1,'quisp::modules::IStationaryQubit']]],
   ['emt_1830',['emt',['../classquisp_1_1modules_1_1_s_p_d_c___controller.html#ae55fa4a8b562c040c32960728d619789',1,'quisp::modules::SPDC_Controller::emt()'],['../classquisp_1_1modules_1_1_rule_engine.html#ac7e5e70c1124aa733a23e56b2f693407',1,'quisp::modules::RuleEngine::emt()']]],
   ['end_5ftransmission_5fevent_1831',['end_transmission_event',['../classquisp_1_1modules_1_1_queue.html#a3a6c00ea94f823e98cfe7f6c73173297',1,'quisp::modules::Queue']]],
   ['entangled_5fpartner_1832',['entangled_partner',['../classquisp_1_1modules_1_1_i_stationary_qubit.html#a3975170c35b740328d9b7a1b22a4fc1d',1,'quisp::modules::IStationaryQubit']]],

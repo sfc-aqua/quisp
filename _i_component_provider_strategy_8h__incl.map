@@ -1,13 +1,14 @@
 <map id="quisp/utils/IComponentProviderStrategy.h" name="quisp/utils/IComponentProviderStrategy.h">
-<area shape="rect" id="node1" title=" " alt="" coords="195,5,398,47"/>
-<area shape="rect" id="node2" title=" " alt="" coords="273,259,341,285"/>
-<area shape="rect" id="node3" href="$utils_8h.html" title=" " alt="" coords="571,95,627,121"/>
-<area shape="rect" id="node4" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="836,259,955,285"/>
-<area shape="rect" id="node5" title=" " alt="" coords="954,333,1037,360"/>
-<area shape="rect" id="node6" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="33,169,235,211"/>
-<area shape="rect" id="node8" href="$_i_hardware_monitor_8h.html" title=" " alt="" coords="492,169,707,211"/>
-<area shape="rect" id="node10" href="$_i_real_time_controller_8h.html" title=" " alt="" coords="731,169,958,211"/>
-<area shape="rect" id="node11" href="$_i_routing_daemon_8h.html" title=" " alt="" coords="259,169,467,211"/>
-<area shape="rect" id="node7" title=" " alt="" coords="68,259,200,285"/>
-<area shape="rect" id="node9" title=" " alt="" coords="463,259,637,285"/>
+<area shape="rect" id="node1" title=" " alt="" coords="196,5,399,47"/>
+<area shape="rect" id="node2" title=" " alt="" coords="11,259,79,285"/>
+<area shape="rect" id="node3" href="$utils_8h.html" title=" " alt="" coords="581,95,637,121"/>
+<area shape="rect" id="node4" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="551,259,670,285"/>
+<area shape="rect" id="node5" title=" " alt="" coords="783,333,865,360"/>
+<area shape="rect" id="node6" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="798,169,999,211"/>
+<area shape="rect" id="node9" href="$_i_hardware_monitor_8h.html" title=" " alt="" coords="257,169,471,211"/>
+<area shape="rect" id="node11" href="$_i_real_time_controller_8h.html" title=" " alt="" coords="496,169,723,211"/>
+<area shape="rect" id="node12" href="$_i_routing_daemon_8h.html" title=" " alt="" coords="24,169,232,211"/>
+<area shape="rect" id="node7" title=" " alt="" coords="725,259,857,285"/>
+<area shape="rect" id="node8" title=" " alt="" coords="881,259,972,285"/>
+<area shape="rect" id="node10" title=" " alt="" coords="220,259,393,285"/>
 </map>

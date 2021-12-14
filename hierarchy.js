@@ -48,6 +48,17 @@ var hierarchy =
     [ "omnetpp::cRNG", null, [
       [ "quisp_test::rng::TestRNG", "classquisp__test_1_1rng_1_1_test_r_n_g.html", null ]
     ] ],
+    [ "omnetpp::cSimpleModule", null, [
+      [ "quisp::modules::IStationaryQubit", "classquisp_1_1modules_1_1_i_stationary_qubit.html", [
+        [ "quisp::modules::StationaryQubit", "classquisp_1_1modules_1_1_stationary_qubit.html", null ],
+        [ "quisp_test::mock_modules::stationary_qubit::MockQubit", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html", null ]
+      ] ],
+      [ "quisp::modules::PhotonicSwitch", "classquisp_1_1modules_1_1_photonic_switch.html", null ],
+      [ "quisp::modules::Queue", "classquisp_1_1modules_1_1_queue.html", null ],
+      [ "quisp::modules::Router", "classquisp_1_1modules_1_1_router.html", null ],
+      [ "quisp::modules::SPDC_Controller", "classquisp_1_1modules_1_1_s_p_d_c___controller.html", null ],
+      [ "quisp::modules::dummyModule", "classquisp_1_1modules_1_1dummy_module.html", null ]
+    ] ],
     [ "quisp::modules::Doublepurification_result", "structquisp_1_1modules_1_1_doublepurification__result.html", null ],
     [ "quisp::modules::emission_error_model", "structquisp_1_1modules_1_1emission__error__model.html", null ],
     [ "quisp::modules::entangledPhotons", "structquisp_1_1modules_1_1entangled_photons.html", null ],
@@ -126,16 +137,7 @@ var hierarchy =
       [ "quisp::modules::IRuleEngine", "classquisp_1_1modules_1_1_i_rule_engine.html", [
         [ "quisp::modules::RuleEngine", "classquisp_1_1modules_1_1_rule_engine.html", null ],
         [ "quisp_test::mock_modules::rule_engine::MockRuleEngine", "classquisp__test_1_1mock__modules_1_1rule__engine_1_1_mock_rule_engine.html", null ]
-      ] ],
-      [ "quisp::modules::IStationaryQubit", "classquisp_1_1modules_1_1_i_stationary_qubit.html", [
-        [ "quisp::modules::StationaryQubit", "classquisp_1_1modules_1_1_stationary_qubit.html", null ],
-        [ "quisp_test::mock_modules::stationary_qubit::MockQubit", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html", null ]
-      ] ],
-      [ "quisp::modules::PhotonicSwitch", "classquisp_1_1modules_1_1_photonic_switch.html", null ],
-      [ "quisp::modules::Queue", "classquisp_1_1modules_1_1_queue.html", null ],
-      [ "quisp::modules::Router", "classquisp_1_1modules_1_1_router.html", null ],
-      [ "quisp::modules::SPDC_Controller", "classquisp_1_1modules_1_1_s_p_d_c___controller.html", null ],
-      [ "quisp::modules::dummyModule", "classquisp_1_1modules_1_1dummy_module.html", null ]
+      ] ]
     ] ],
     [ "cSimulation", null, [
       [ "quisp_test::simulation::TestSimulation", "classquisp__test_1_1simulation_1_1_test_simulation.html", null ]

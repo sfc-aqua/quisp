@@ -51,7 +51,7 @@ var searchData=
   ['simultaneousswappingrule_910',['simultaneousSwappingRule',['../classquisp_1_1modules_1_1_connection_manager.html#a6b5ccb111e4d3983fee38ce6b359ce83',1,'quisp::modules::ConnectionManager']]],
   ['single_5fqubit_5ferror_911',['single_qubit_error',['../structquisp_1_1modules_1_1single__qubit__error.html',1,'quisp::modules']]],
   ['singlegateerrormodel_912',['SingleGateErrorModel',['../structquisp_1_1modules_1_1_single_gate_error_model.html',1,'quisp::modules']]],
-  ['size_913',['size',['../classquisp_1_1rules_1_1_rule_set.html#abdbc183cf12d7c1cf6af40ee7aba7d9b',1,'quisp::rules::RuleSet::size()'],['../classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store.html#a008b928a9ed75662ed59377821050160',1,'quisp::modules::ruleset_store::RuleSetStore::size()']]],
+  ['size_913',['size',['../classquisp_1_1rules_1_1_rule_set.html#a3fe89fe71d9de5ccb49ab3d6941a1a74',1,'quisp::rules::RuleSet::size()'],['../classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store.html#a008b928a9ed75662ed59377821050160',1,'quisp::modules::ruleset_store::RuleSetStore::size()']]],
   ['snd_914',['snd',['../structquisp_1_1modules_1_1_q_n_i_c__pair__info.html#a917ae0f6103464d391c91cc2b1ecafe4',1,'quisp::modules::QNIC_pair_info']]],
   ['spdc_5fcontroller_915',['SPDC_Controller',['../classquisp_1_1modules_1_1_s_p_d_c___controller.html',1,'quisp::modules']]],
   ['spdc_5fcontroller_2ecc_916',['SPDC_Controller.cc',['../_s_p_d_c___controller_8cc.html',1,'']]],
