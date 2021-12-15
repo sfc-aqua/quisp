@@ -27,7 +27,6 @@ class BellStateAnalyzer : public cSimpleModule {
  private:
   // for performance analysis
   long n_res = 0;  ///< The number of resources for performance analysis
-  int trials = 0;  ///< No longer used
   simsignal_t GOD_num_resSignal;  ///< The number of resources for signaling
   std::string BSA_perf_output_filename;  ///< No longer used
   std::vector<simtime_t> creation_time;  ///< No longer used
@@ -57,7 +56,8 @@ class BellStateAnalyzer : public cSimpleModule {
   PhotonicQubit *epps_photon_ptr;
   StationaryQubit *left_statQubit_ptr;  ///< Instance of qubit memory of left node
   simtime_t right_arrived_at;  ///< Simulation time that right photon arrived at BSA
-  int QNICEntangledWith;
+  int qnic_address_entangled_with;
+  int qnic_index_entangled_with;
   int StationaryQubitEntangledWith;
   int right_photon_origin_node_address;  ///< Node address of right photon
   int right_photon_origin_qnic_address;  ///< QNIC address of right photon
@@ -106,7 +106,8 @@ void BellStateAnalyzer::initialize() {
   required_precision = par("required_precision");
   left_arrived_at = -1;
   right_arrived_at = -1;
-  QNICEntangledWith = -1;
+  qnic_address_entangled_with = -1;
+  qnic_index_entangled_with = -1;
   StationaryQubitEntangledWith = -1;
   left_last_photon_detected = false;
   right_last_photon_detected = false;
@@ -147,8 +148,6 @@ void BellStateAnalyzer::initialize() {
  * local to this object (the BSA itself), second one completes and updates the actual qubits.
  */
 void BellStateAnalyzer::handleMessage(cMessage *msg) {
-  trials++;
-  EV<<"trial: "<<trials<<"\n";
   PhotonicQubit *photon = check_and_cast<PhotonicQubit *>(msg);
   if (photon->getFirst() && this_trial_done == true) {  // Next round started
     this_trial_done = false;
@@ -173,9 +172,10 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
       epps_photon_ptr = photon;
       is_attempt_epps = true;
     } else {
-      EV<<"left stat"<<"\n";
+      EV<<"left stationary qubit"<<"\n";
       left_statQubit_ptr = check_and_cast<StationaryQubit *>(photon->getEntangled_with());
-      QNICEntangledWith = photon->getQNICEntangledWith();
+      qnic_address_entangled_with = photon->getQNICEntangledWith();
+      qnic_index_entangled_with = photon->getQNICIndexEntangledWith();
       StationaryQubitEntangledWith = photon->getStationaryQubitEntangledWith();
     }
     left_photon_Xerr = photon->getPauliXerr();
@@ -203,9 +203,10 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
       epps_photon_ptr = photon;
       is_attempt_epps = true;
     } else {
-      EV<<"right stat"<<"\n";
+      EV<<"right stationary qubit"<<"\n";
       right_statQubit_ptr = check_and_cast<StationaryQubit *>(photon->getEntangled_with());
-      QNICEntangledWith = photon->getQNICEntangledWith();
+      qnic_address_entangled_with = photon->getQNICEntangledWith();
+      qnic_index_entangled_with = photon->getQNICIndexEntangledWith();
       StationaryQubitEntangledWith = photon->getStationaryQubitEntangledWith();
     }
     right_photon_Xerr = photon->getPauliXerr();
@@ -245,8 +246,6 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     delete msg;
     return;
   } else if ((left_arrived_at != -1 && right_arrived_at != -1) && std::abs(difference) <= (required_precision)) {
-    EV<<"left_arrived_at: "<<left_arrived_at<<"\n";
-    EV<<"right_arrived_at: "<<right_arrived_at<<"\n";
     // Both arrived perfectly fine
     // bool lost = isPhotonLost(msg);
 
@@ -259,7 +258,6 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
         (right_photon_lost && !left_photon_lost && darkcount_right < darkcount_probability) /*Got left, darkcount right*/ ||
         (right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability && darkcount_right < darkcount_probability) /*Darkcount right left*/) {
       if (!right_photon_lost && (left_photon_lost && darkcount_left <= darkcount_probability)) {
-        EV<<"dark count 1"<<"\n";
         // error("Dark count :)");
         DEBUG_darkcount_left++;
         // std::cout<<"CM Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in
@@ -268,7 +266,6 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
         GOD_setCompletelyMixedDensityMatrix();
         sendBSAresult(false, send_result);
       } else if (!left_photon_lost && (right_photon_lost && darkcount_right <= darkcount_probability)) {
-        EV<<"dark count 2"<<"\n";
         // error("Dark count :)");
         // std::cout<<"CM Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in
         // node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in
@@ -277,7 +274,6 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
         GOD_setCompletelyMixedDensityMatrix();
         sendBSAresult(false, send_result);
       } else if ((left_photon_lost && darkcount_left <= darkcount_probability) && (right_photon_lost && darkcount_right <= darkcount_probability)) {
-        EV<<"dark count 3"<<"\n";
         // error("Dark count :)");
         // std::cout<<"CM Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in
         // node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in
@@ -360,7 +356,6 @@ void BellStateAnalyzer::initializeVariables() {
   left_photon_origin_qubit_address = -1;
   left_photon_origin_qnic_type = -1;
   right_arrived_at = -1;
-  QNICEntangledWith = -1;
   StationaryQubitEntangledWith = -1;
   right_photon_origin_node_address = -1;
   right_photon_origin_qnic_address = -1;
@@ -391,13 +386,11 @@ void BellStateAnalyzer::sendBSAresult(bool result, bool sendresults) {
     pk->setEntangled(result);
     if (is_attempt_epps) {
       int address = par("address");
-      EV<<"true "<<address<<"\n\n\n";
-      pk->setQNIC_index(QNICEntangledWith);
+      pk->setQNIC_index(qnic_index_entangled_with);
       pk->setQubit_index(StationaryQubitEntangledWith);
       pk->setDestAddr(address);
       pk->setSrcAddr(address);
     }
-    EV<<"send to HoM port\n";
     send(pk, "toHoMController_port");
   } else {  // Was the last photon. End pulse detected.
     BSAfinish *pk = new BSAfinish("BsaFinish");
@@ -406,7 +399,8 @@ void BellStateAnalyzer::sendBSAresult(bool result, bool sendresults) {
     pk->setEntangled(result);
     if (is_attempt_epps) {
       int address = par("address");
-      pk->setQNIC_index(QNICEntangledWith);
+      pk->setQNIC_index(qnic_index_entangled_with);
+      pk->setQNIC_address(qnic_address_entangled_with);
       pk->setDestAddr(address);
       pk->setSrcAddr(address);
     }

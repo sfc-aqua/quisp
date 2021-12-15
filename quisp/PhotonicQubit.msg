@@ -27,6 +27,7 @@ message PhotonicQubit
     bool nonPaulierrTwo = false;
     int NodeEntangledWith = -1;//Which node it is entangled with. -1 if not entangled. Equivalent to SrcAddress.
     int QNICEntangledWith = -1;//Which QNIC it is entangled with
+    int QNICIndexEntangledWith = -1;
     int StationaryQubitEntangledWith = -1;//Which buffer it is entangled with
     GOD_statQubitPtr entangled_with;
     GOD_photonicQubitPtr entangled_photon;

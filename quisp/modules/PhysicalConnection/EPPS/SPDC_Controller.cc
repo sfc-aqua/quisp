@@ -32,6 +32,10 @@ class SPDC_Controller : public cSimpleModule {
   int neighbor_buffer_two;
   int max_buffer;
   int number_of_attempts;
+  int internal_qnic_index;
+  int internal_qnic_index_two;
+  int internal_qnic_address;
+  int internal_qnic_address_two;
   double distance_to_neighbor;  // in km
   double distance_to_neighbor_two;  // in km
   double accepted_rate_one;
@@ -40,6 +44,7 @@ class SPDC_Controller : public cSimpleModule {
   double frequency;
   cMessage *generatePacket;
   double timing_buffer;
+  std::vector<EPPSnextRound *> round_requests;
   // double max_neighbor_distance;//in km
   // double accepted_burst_interval;//in s
   double speed_of_light_in_channel;
@@ -56,7 +61,7 @@ class SPDC_Controller : public cSimpleModule {
   virtual void checkNeighborsHoMCapacity();
   virtual void checkNeighborsBuffer();
   virtual double calculateTimeToTravel(double distance, double c);
-  virtual EPPStimingNotifier *generateNotifier(double distance_to_neighbor, double c, int destAddr);
+  virtual EPPStimingNotifier *generateNotifier(double distance_to_neighbor, double c, int destAddr, int pairAddr, int dest_qnic_index, int dest_qnic_address);
   virtual void startPump();
 };
 
@@ -68,7 +73,6 @@ void SPDC_Controller::initialize() {
   epps = check_and_cast<EntangledPhotonPairSource *>(pump);
   address = par("address");
   timing_buffer = par("timing_buffer");
-  // timing_buffer += 1.0;
   // number of BSM trials for each qubit
   number_of_attempts = 10;
   par("number_of_attempts") = number_of_attempts;
@@ -90,8 +94,8 @@ void SPDC_Controller::handleMessage(cMessage *msg) {
     // Or just emit entangled photons without telling the neighbors?
     // Then the neighbor can analyze the intervaland adjust its emission accordingly.
     EPPStimingNotifier *pk, *pkt;
-    pk = generateNotifier(distance_to_neighbor, speed_of_light_in_channel, neighbor_address);
-    pkt = generateNotifier(distance_to_neighbor_two, speed_of_light_in_channel, neighbor_address_two);
+    pk = generateNotifier(distance_to_neighbor, speed_of_light_in_channel, neighbor_address, neighbor_address_two, internal_qnic_index, internal_qnic_address);
+    pkt = generateNotifier(distance_to_neighbor_two, speed_of_light_in_channel, neighbor_address_two, neighbor_address, internal_qnic_index_two, internal_qnic_address_two);
     try {
       send(pk, "toRouter_port");  // send to port out. connected to local routing module (routing.localIn).
       send(pkt, "toRouter_port");
@@ -102,13 +106,20 @@ void SPDC_Controller::handleMessage(cMessage *msg) {
   } else if (dynamic_cast<EmitPhotonRequest *>(msg) != nullptr) {
     EmitPhotonRequest *pk = dynamic_cast<EmitPhotonRequest *>(msg);
     epps->emitPhotons(pk->getFirst(), pk->getLast());
+  } else if (dynamic_cast<EPPSnextRound *>(msg) != nullptr) {
+    EPPSnextRound *pk = dynamic_cast<EPPSnextRound *>(msg);
+    round_requests.push_back(pk);
+    if (round_requests.size() == 2) {
+      max_buffer = pk->getNumber_of_qubits();
+      EPPSstart *generatePacket = new EPPSstart("EPPSprocess");
+      scheduleAt(simTime(), generatePacket);
+      round_requests.clear();
+    }
   }
   delete msg;
 }
 
 void SPDC_Controller::startPump() {
-  EV<<"timing_buffer: "<<timing_buffer<<"\n";
-  EV<<"max_accepeted_rate: "<<max_accepted_rate<<"\n\n\n";
   for(int i=0; i<(max_buffer*number_of_attempts); i++){
     emt = new EmitPhotonRequest();
     if (i == 0) emt->setFirst(true);
@@ -118,7 +129,7 @@ void SPDC_Controller::startPump() {
   }
 }
 
-EPPStimingNotifier *SPDC_Controller::generateNotifier(double distance_to_neighbor, double c, int destAddr) {
+EPPStimingNotifier *SPDC_Controller::generateNotifier(double distance_to_neighbor, double c, int destAddr, int pairAddr, int dest_qnic_index, int dest_qnic_address) {
   EPPStimingNotifier *pk = new EPPStimingNotifier("EppsTimingNotifier");
   double time_to_reach = calculateTimeToTravel(distance_to_neighbor, c);
 
@@ -132,6 +143,9 @@ EPPStimingNotifier *SPDC_Controller::generateNotifier(double distance_to_neighbo
   pk->setNumber_of_qubits(max_buffer);
   pk->setNumber_of_attempts(number_of_attempts);
   pk->setInterval(max_accepted_rate);
+  pk->setInternal_qnic_index(dest_qnic_index);
+  pk->setInternal_qnic_address(dest_qnic_address);
+  pk->setPair_node_address(pairAddr);
   pk->setSrcAddr(address);
   pk->setDestAddr(destAddr);
   return pk;
@@ -174,10 +188,19 @@ void SPDC_Controller::checkNeighborsDistance() {
 void SPDC_Controller::checkNeighborsAddress() {
   // First, check the node address of neighbors and their channel length.
   cModule *epps = getNode("SPDC");
-  cModule *neighbor_one = getNextNode(epps, 0, "QNode");
+  cModule *neighbor_one = getNextNode(epps, 1, "QNode");
   neighbor_address = neighbor_one->par("address");
-  cModule *neighbor_two = getNextNode(epps, 1, "QNode");
+  internal_qnic_index = 0;
+  internal_qnic_address = neighbor_one->gateSize("quantum_port_receiver") + neighbor_one->gateSize("quantum_port");
+  cModule *neighbor_two = getNextNode(epps, 0, "QNode");
   neighbor_address_two = neighbor_two->par("address");
+  int rp_gate_size_two = neighbor_two->gateSize("quantum_port_receiver_passive");
+  if (rp_gate_size_two == 1) {
+    internal_qnic_index_two = 0;
+  } else {
+    internal_qnic_index_two = 1;
+  }
+  internal_qnic_address_two = internal_qnic_index_two + neighbor_two->gateSize("quantum_port_receiver") + neighbor_two->gateSize("quantum_port");
 
   try {
     par("neighbor_address") = neighbor_address;

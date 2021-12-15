@@ -111,8 +111,6 @@ void HoMController::handleMessage(cMessage *msg) {
     scheduleAt(simTime() + bsa_notification_interval, notification_timer);
     delete msg;
   } else if (dynamic_cast<BSAresult *>(msg) != nullptr) {
-    EV<<"BSAresult(HoM)\n";
-    // std::cout<<"BSAresult\n";
     auto_resend_BSANotifier = false;  // Photon is arriving. No need to auto reschedule next round. Wait for the last photon fron either node.
     bubble("BSAresult accumulated");
     BSAresult *pk = check_and_cast<BSAresult *>(msg);
@@ -123,7 +121,6 @@ void HoMController::handleMessage(cMessage *msg) {
     pushToBSAresults(entangled, qubit_index);
     int aft = getStoredBSAresultsSize();
     int qnic_index = pk->getQNIC_index();
-    EV<<"qnic_index: "<<qnic_index<<"\n";
     if (qnic_index != -1) {
       send(pk, "toRouter_port");  // send to port out. connected to local routing module (routing.localIn).
     } else {
@@ -133,10 +130,10 @@ void HoMController::handleMessage(cMessage *msg) {
       delete msg;
     }
   } else if (dynamic_cast<BSAfinish *>(msg) != nullptr) {  // Last photon from either node arrived.
-    EV << "BSAfinish\n";
     bubble("BSAresult accumulated");
     BSAfinish *pk = check_and_cast<BSAfinish *>(msg);
     int qnic_index = pk->getQNIC_index();
+    int qnic_address = pk->getQNIC_address();
     if (qnic_index == -1) {
       pushToBSAresults(pk->getEntangled());
     }
@@ -146,7 +143,7 @@ void HoMController::handleMessage(cMessage *msg) {
     bubble(moge);
     auto_resend_BSANotifier = true;
     current_trial_id = dblrand();
-    sendBSAresultsToNeighbors();
+    sendBSAresultsToNeighbors(qnic_index, qnic_address);
     if (qnic_index == -1) {
       clearBSAresults();
     } else {
@@ -192,44 +189,9 @@ void HoMController::checkNeighborAddress(bool receiver) {
 // Checks the buffer size of the connected qnics.
 void HoMController::checkNeighborBuffer(bool receiver) {
   if (receiver) {
-    EV<<"\n\n\n";
-    EV<<"getParentModule(): "<<getParentModule()<<"\n";
-    omnetpp::cModule *gate1_owner = getParentModule()->gate("quantum_port$o", 1)->getOwnerModule();
-    omnetpp::cModule *gate2_owner = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getOwnerModule();
-    omnetpp::cModule *gate3_owner = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getOwnerModule();
-    omnetpp::cModule *gate4_owner = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getOwnerModule();
-    omnetpp::cModule *gate5_owner = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule();
-    EV<<"getParentModule()->gate('quantum_port$o', 1): "<< gate1_owner <<"\n";
-    EV<<"getParentModule()->gate('quantum_port$o', 2): "<< gate2_owner <<"\n";
-    EV<<"getParentModule()->gate('quantum_port$o', 3): "<< gate3_owner <<"\n";
-    EV<<"getParentModule()->gate('quantum_port$o', 4): "<< gate4_owner <<"\n";
-    EV<<"getParentModule()->gate('quantum_port$o', 5): "<< gate5_owner <<"\n";
-
-    std::string node_temp = "modules.EntangledPhotonPairSource";
-    const char *array_temp = node_temp.c_str();
-    cModuleType *NodeType_check = cModuleType::get(array_temp);
     try {
       neighbor_buffer = getParentModule()->getParentModule()->par("numBuffer");
-      bool is_SPDC_exists = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->getModuleType() == NodeType_check;
-      if (is_SPDC_exists) {
-          EV<<"currernt module: EntangledPhotonPairSource"<<"\n";
-        std::string node = "modules.interHoM";
-        const char *array = node.c_str();
-        cModuleType *NodeType = cModuleType::get(array);
-        cGate *currentGate = gate5_owner->getParentModule()->gate("quantum_port$o", 1);
-        int loop_counter = 0;
-        while (currentGate->getOwnerModule()->getModuleType() != NodeType) {
-          EV<<loop_counter<<"\n";
-          currentGate = currentGate->getNextGate();
-          loop_counter ++;
-        }
-        EV<<"currentGate: "<<currentGate<<"\n";
-        neighbor_buffer_two = currentGate->getOwnerModule()->getParentModule()->par("numBuffer");
-      } else {
-        neighbor_buffer_two = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->par("numBuffer");
-      }
-      EV<<"neighbor_buffer: "<< neighbor_buffer << "\n";
-      EV<<"neighbor_buffer_two: "<< neighbor_buffer_two << "\n";
+      neighbor_buffer_two = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->par("numBuffer");
       max_buffer = std::min(neighbor_buffer, neighbor_buffer_two);  // Both nodes should transmit the same amount of photons.
     } catch (std::exception &e) {
       error("Error in HoM_Controller.cc. HoM couldnt find parameter numBuffer in the neighbor's qnic.");
@@ -394,7 +356,7 @@ void HoMController::clearBSAresults_epps() { results_epps.clear(); }
 
 // Instead of sendNotifiers, we invoke this during the simulation to return the next BSA timing and the result.
 // This should be simplified more.
-void HoMController::sendBSAresultsToNeighbors() {
+void HoMController::sendBSAresultsToNeighbors(int src_qnic_index, int src_qnic_address) {
   if (!passive) {
     CombinedBSAresults *pk, *pkt;
 
@@ -437,26 +399,19 @@ void HoMController::sendBSAresultsToNeighbors() {
     pk = new CombinedBSAresults_epps();
     pkt = new CombinedBSAresults_epps();
 
+    //get dest address
     cGate *currentGate = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->getParentModule()->gate("quantum_port$o", 0);
-    int loop_counter = 0;
     std::string node = "modules.interHoM";
     const char *array = node.c_str();
     cModuleType *NodeType_check = cModuleType::get(array);
     while (currentGate->getOwnerModule()->getModuleType() != NodeType_check) {
       currentGate = currentGate->getNextGate();
-      loop_counter ++;
     }
     int dest = currentGate->getOwnerModule()->getParentModule()->getParentModule()->par("address");
-    //TODO:
     if (dest == neighbor_address) {
       cGate *currentGate = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->getParentModule()->gate("quantum_port$o", 1);
-      int loop_counter = 0;
-      std::string node = "modules.interHoM";
-      const char *array = node.c_str();
-      cModuleType *NodeType_check = cModuleType::get(array);
       while (currentGate->getOwnerModule()->getModuleType() != NodeType_check) {
         currentGate = currentGate->getNextGate();
-        loop_counter ++;
       }
       dest = currentGate->getOwnerModule()->getParentModule()->getParentModule()->par("address");
     }
@@ -465,18 +420,17 @@ void HoMController::sendBSAresultsToNeighbors() {
     pk->setDestAddr(neighbor_address);
     pk->setList_of_failedArraySize(getStoredBSAresultsSize_epps());
     pk->setList_of_qubit_indexArraySize(getStoredBSAresultsSize_epps());
+    pk->setQnic_address(src_qnic_address);
+    pk->setQnic_index(src_qnic_index);
     pk->setKind(6);
 
     pkt->setSrcAddr(address);
     pkt->setDestAddr(dest);
     pkt->setList_of_failedArraySize(getStoredBSAresultsSize_epps());
     pkt->setList_of_qubit_indexArraySize(getStoredBSAresultsSize_epps());
+    pkt->setQnic_address(src_qnic_address);
+    pkt->setQnic_index(src_qnic_index);
     pkt->setKind(6);
-
-    EV<<"neighbor_address: "<<neighbor_address<<"\n";
-    EV<<"dest: "<<dest<<"\n";
-
-    EV << "getStoredBSAresultsSize_epps: " << getStoredBSAresultsSize_epps() << "\n";
 
     int index = 0;
     for (auto it : results_epps) {

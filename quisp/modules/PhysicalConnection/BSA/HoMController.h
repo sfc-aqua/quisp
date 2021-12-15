@@ -89,7 +89,7 @@ class HoMController : public cSimpleModule {
   virtual int getStoredBSAresultsSize_epps();
   virtual void clearBSAresults();
   virtual void clearBSAresults_epps();
-  virtual void sendBSAresultsToNeighbors();
+  virtual void sendBSAresultsToNeighbors(int src_qnic_index, int src_qnic_address);
   // virtual void  finish();
  public:
   virtual void setMax_buffer(int buffer);

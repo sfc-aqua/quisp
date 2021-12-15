@@ -18,4 +18,5 @@ packet BSAresult extends Header
 packet BSAfinish extends Header{
     bool entangled;
     int QNIC_index = -1;
+    int QNIC_address = -1;
 }

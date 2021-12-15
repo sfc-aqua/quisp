@@ -408,6 +408,7 @@ PhotonicQubit *StationaryQubit::generateEntangledPhoton() {
 
   // qnic_address != qnic_index. qnic_index is not unique because there are 3 types.
   photon->setQNICEntangledWith(qnic_address);
+  photon->setQNICIndexEntangledWith(qnic_index);
 
   // stationaryQubit_address = StationaryQubit's index
   photon->setStationaryQubitEntangledWith(stationaryQubit_address);

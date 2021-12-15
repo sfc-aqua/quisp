@@ -93,9 +93,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
       default:
         bubble("order received!");
     }
-    EV<<"("<<parentAddress<<")Busy_OR_Free_QubitState_table["<<pk->getQubit_index()<<"].isBusy: "<<Busy_OR_Free_QubitState_table[(QNIC_type)pk->getQnic_type()][pk->getQubit_index()].isBusy<<"\n\n";
+    EV<<"getQubitState(Busy_OR_Free_QubitState_table[QNIC_RP], qnic_index: "<<pk->getQnic_index()<<", qubit_index: "<< pk->getQubit_index()<<").isBusy"<<getQubitState(Busy_OR_Free_QubitState_table[(QNIC_type)pk->getQnic_type()], pk->getQnic_index(), pk->getQubit_index()).isBusy<<"\n\n";
     //in order to avoid sending a request to busy one
-    if (!Busy_OR_Free_QubitState_table[(QNIC_type)pk->getQnic_type()][pk->getQubit_index()].isBusy) {
+    if (!getQubitState(Busy_OR_Free_QubitState_table[(QNIC_type)pk->getQnic_type()], pk->getQnic_index(), pk->getQubit_index()).isBusy) {
       realtime_controller->EmitPhoton(pk->getQnic_index(), pk->getQubit_index(), (QNIC_type)pk->getQnic_type(), pk->getKind());
     }
     // realtime_controller->ReInitialize_StationaryQubit(pk->getQnic_index(), pk->getQubit_index(), (QNIC_type)pk->getQnic_type(), false);
@@ -144,15 +144,50 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
   else if (dynamic_cast<CombinedBSAresults_epps *>(msg) != nullptr) {
     CombinedBSAresults_epps *pk_result = check_and_cast<CombinedBSAresults_epps *>(msg);
-    freeFailedQubits_and_AddAsResource_MSM(1, 0, 0, pk_result);
+
+    int src_address = pk_result->getSrcAddr();
+    int qnic_address = pk_result->getQnic_address();
+    int qnic_index = pk_result->getQnic_index();
+    if (src_address != parentAddress) {
+      qnic_address = epps_pair_qnic_info[src_address];
+      qnic_index = qnic_address - (getParentModule()->getParentModule()->gateSize("quantum_port") + getParentModule()->getParentModule()->gateSize("quantum_port_receiver"));
+    }
+    EV<<"parentAddress: "<<parentAddress<<", src_address: "<<src_address<<", qnic_address: "<<qnic_address<<", qnic_index: "<<qnic_index<<"\n";
+    bool is_result_ready = checkEPPSResultStatus_and_UpdateResource(qnic_address, qnic_index, pk_result);
+    if (is_result_ready) {
+      incrementBurstTrial(-2, qnic_address, qnic_index);
+      clearTrackerTable(-2, qnic_address);
+
+      // Second, sending the next round request
+      cGate * currentGate = getParentModule()->getParentModule()->gate("quantum_port_receiver_passive$o", qnic_index);
+      std::string node = "modules.SPDC";
+      const char *array = node.c_str();
+      cModuleType *NodeType = cModuleType::get(array);  // Assumes the node in a network has a type SPDC
+      while (currentGate->getOwnerModule()->getModuleType() != NodeType) {
+        currentGate = currentGate->getNextGate();
+      }
+      cModule *epps = currentGate->getOwnerModule();
+
+      EPPSnextRound *pk = new EPPSnextRound("EPPSnextRound");
+      int free_qubit_num = countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[QNIC_RP], qnic_index);
+      int destAddr = epps->par("address");
+
+      pk->setNumber_of_qubits(free_qubit_num);
+      pk->setKind(1);
+      pk->setSrcAddr(parentAddress);
+      pk->setDestAddr(destAddr);
+      send(pk, "RouterPort$o");
+    }
   }
 
   // for MSM
   else if (dynamic_cast<BSAresult *>(msg) != nullptr) {
     BSAresult *pk = check_and_cast<BSAresult *>(msg);
     bool isEntangled = !(pk->getEntangled());
-    EV<<"("<<parentAddress<<")BSAresult: "<<isEntangled<<"\n\n";
-    if (isEntangled && !Busy_OR_Free_QubitState_table[QNIC_RP][pk->getQubit_index()].isBusy) {
+    if (pk->getQNIC_index() == -1 || pk->getQubit_index() == -1) {
+      error("qnic_index and qubit_index obtained from BSAresult should not be -1");
+    }
+    if (isEntangled && !getQubitState(Busy_OR_Free_QubitState_table[QNIC_RP], pk->getQNIC_index(), pk->getQubit_index()).isBusy) {
       Busy_OR_Free_QubitState_table[QNIC_RP] = setQubitBusy_inQnic(Busy_OR_Free_QubitState_table[QNIC_RP], pk->getQNIC_index(), pk->getQubit_index());
     } else {
       realtime_controller->ReInitialize_StationaryQubit(pk->getQNIC_index(), pk->getQubit_index(), QNIC_RP, false);
@@ -160,7 +195,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
   }
 
   else if (dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg) != nullptr) {
-    EV<<"SchedulePhotonTransmissionsOnebyOne("<<parentAddress<<")\n";
     SchedulePhotonTransmissionsOnebyOne *pk = check_and_cast<SchedulePhotonTransmissionsOnebyOne *>(msg);
     EV_DEBUG << provider.getQNode()->getFullName() << ": Photon shooting is from qnic[" << pk->getQnic_index() << "] with address=" << pk->getQnic_address() << "\n";
     // Terminate emission if trial is over already (the neighbor ran out of free qubits)
@@ -171,7 +205,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
     if (pk->getInternal_hom() == 0) {  // for MIM
       shootPhoton(pk);
     } else {  // for MM or MSM
-      EV<<"shootPhoton_internal\n";
       shootPhoton_internal(pk);
     }
   }
@@ -190,6 +223,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (dynamic_cast<EPPStimingNotifier *>(msg) != nullptr) {
     bubble("EPPS");
     EPPStimingNotifier *pk = check_and_cast<EPPStimingNotifier *>(msg);
+    int pairAddr = pk->getPair_node_address();
+    int qnicAddr = pk->getInternal_qnic_address();
+    epps_pair_qnic_info[pairAddr] = qnicAddr;
     scheduleFirstPhotonEmission(pk, QNIC_RP);
   } else if (dynamic_cast<LinkTomographyRuleSet *>(msg) != nullptr) {
     // Received a tomography rule set.
@@ -732,8 +768,8 @@ void RuleEngine::scheduleFirstPhotonEmission(cMessage *pk, QNIC_type qnic_type) 
     case QNIC_RP:
       eppsPk = check_and_cast<EPPStimingNotifier *>(pk);
       internal = true;
-      transmission_config.qnic_address = 0;//TODO: fix here
-      transmission_config.qnic_index = 0;
+      transmission_config.qnic_address = eppsPk->getInternal_qnic_address();
+      transmission_config.qnic_index = eppsPk->getInternal_qnic_index();
       break;
     default:
       error("Only 3 qnic types are currently recognized....");
@@ -811,14 +847,14 @@ void RuleEngine::shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk) {
   emt = new EmitPhotonRequest("EmitPhotonRequest(internal)");
   qubit_index = getOneFreeQubit_inQnic(Busy_OR_Free_QubitState_table[qnic_type], pk->getQnic_index());
   int attempt = pk->getAttempt();
-  EV<<"attempt: "<<attempt<<"\n";
   if (pk->getNumber_of_attempts() == -1) {
     Busy_OR_Free_QubitState_table[qnic_type] = setQubitBusy_inQnic(Busy_OR_Free_QubitState_table[qnic_type], pk->getQnic_index(), qubit_index);
   } else if (attempt > pk->getNumber_of_attempts()) {
     attempt = 2;
-    if (!Busy_OR_Free_QubitState_table[qnic_type][pk->getFormer_attempt_qubit_index()].isBusy) {
+    if (!getQubitState(Busy_OR_Free_QubitState_table[qnic_type], pk->getQnic_index(), pk->getFormer_attempt_qubit_index()).isBusy) {
       Busy_OR_Free_QubitState_table[qnic_type] = setQubitBusy_inQnic(Busy_OR_Free_QubitState_table[qnic_type], pk->getQnic_index(), pk->getFormer_attempt_qubit_index());
     }
+    if (countFreeQubits_inQnic(Busy_OR_Free_QubitState_table[qnic_type], pk->getQnic_index()) == 0) return;
     qubit_index = getOneFreeQubit_inQnic(Busy_OR_Free_QubitState_table[qnic_type], pk->getQnic_index());
   } else {
     attempt++;
@@ -826,7 +862,6 @@ void RuleEngine::shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk) {
       qubit_index = pk->getFormer_attempt_qubit_index();
     }
   }
-  EV<<"qubit_index: "<<qubit_index<<"\n";
   emt->setQubit_index(qubit_index);
   emt->setQnic_index(pk->getQnic_index());
   emt->setQnic_address(pk->getQnic_address());
@@ -954,8 +989,18 @@ int RuleEngine::countFreeQubits_inQnic(QubitStateTable table, int qnic_index) {
   return num_free;
 }
 
+QubitState RuleEngine::getQubitState(QubitStateTable table, int qnic_index, int qubit_index) {
+  QubitState qubit_state;
+  for (auto it = table.cbegin(); it != table.cend(); ++it) {
+    if (it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index) {
+      qubit_state = it->second;
+      break;
+    }
+  }
+  return qubit_state;
+}
+
 QubitStateTable RuleEngine::setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index) {
-  EV<<"busy qubit index"<<qubit_index<<"\n";
   for (auto it = table.cbegin(); it != table.cend(); ++it) {
     if (!it->second.isBusy && it->second.thisQubit_addr.qnic_index == qnic_index && it->second.thisQubit_addr.qubit_index == qubit_index) {
       table[it->first].isBusy = true;
@@ -987,6 +1032,10 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
     qnic_index = inf.qnic.index;
     qnic_address = inf.qnic.address;
     qnic_type = QNIC_E;
+  } else if (destAddr == -2) {
+    qnic_address = internal_qnic_address;
+    qnic_index = internal_qnic_index;
+    qnic_type = QNIC_RP;
   } else {  // destination hom is in the qnic in this node. This gets invoked when the request from internal hom is send from the same node.
     qnic_address = internal_qnic_address;
     qnic_index = internal_qnic_index;
@@ -997,6 +1046,8 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
   switch (qnic_type) {  // if ((qnic_type == QNIC_E) || (qnic_type == QNIC_R)) // if (qnic_type < QNIC_RP)
     case QNIC_E:
     case QNIC_R:
+      provider.getQNIC(qnic_index, QNIC_type(qnic_type))->par("burst_trial_counter") = qnic_burst_trial_counter[qnic_address];
+    case QNIC_RP:
       provider.getQNIC(qnic_index, QNIC_type(qnic_type))->par("burst_trial_counter") = qnic_burst_trial_counter[qnic_address];
   }
 }
@@ -1220,8 +1271,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
   traverseThroughAllProcesses2();  // New resource added to QNIC with qnic_type qnic_index.
 }
 
-//TODO:
-void RuleEngine::freeFailedQubits_and_AddAsResource_MSM(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults_epps *pk_result) {
+bool RuleEngine::checkEPPSResultStatus_and_UpdateResource(int internal_qnic_address, int internal_qnic_index, CombinedBSAresults_epps *pk_result) {
   std::map<int, std::vector<std::vector<bool>>> current_results_qnic = combinedBSA_results_epps[internal_qnic_address];
   bool should_update_resource = false;
 
@@ -1231,7 +1281,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource_MSM(int destAddr, int intern
     error("List size of results and qubit index should be same.");
   }
 
-  //prepare new_results, which is constructed from pk_result
+  // prepare new_results, which is constructed from pk_result
   std::map<int, std::vector<bool>> new_results;
   for (int i = 0; i < result_list_size; i++) {
     int qubit_index = pk_result->getList_of_qubit_index(i);
@@ -1241,7 +1291,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource_MSM(int destAddr, int intern
     new_results[qubit_index] = current_results;
   }
 
-  //add new_results to combinedBSA_results_epps
+  // add new_results to combinedBSA_results_epps
   for (auto it : new_results) {
     int qubit_index = it.first;
     std::vector<bool> failed_list = it.second;
@@ -1253,18 +1303,15 @@ void RuleEngine::freeFailedQubits_and_AddAsResource_MSM(int destAddr, int intern
 
   combinedBSA_results_epps[internal_qnic_address] = current_results_qnic;
 
-  // If result is not ready, just return.
-  if (!should_update_resource) return;
+  EV<<"should_update_resource"<<should_update_resource<<"\n";
+  // If the result is not ready, return false and indicate that the result is not ready for updating resources.
+  if (!should_update_resource) return false;
 
   //get the size of failed bsa
-  int neighborQNodeAddress = parentAddress == 1 ? 3 : 1;
-  // neighborQNodeAddress = getInterface_toNeighbor_Internal(qnic_address).neighborQNode_address;//TODO:
+  int neighborQNodeAddress = getInterface_toNeighbor_Internal(internal_qnic_address).neighborQNode_address;
 
   // How many photons are bursted?
   int num_emitted_in_this_burstTrial = tracker[internal_qnic_address].size();
-
-  int num_success = 0;
-  int num_fail = 0;
 
   for (auto it : current_results_qnic) {
     int qubit_index = it.first;
@@ -1272,15 +1319,13 @@ void RuleEngine::freeFailedQubits_and_AddAsResource_MSM(int destAddr, int intern
     std::vector<bool> results_one = results_qubit[0];
     std::vector<bool> results_two = results_qubit[1];
     bool is_size_same = (results_one.size()) == (results_two.size());
-    // EV<<"qubit_index: "<<qubit_index<<", size same: "<<is_size_same<<", results_one fail: "<<results_one.back()<<", results_two fail: "<<results_two.back()<<"\n";
+    EV<<"qubit_index: "<<qubit_index<<", size same: "<<is_size_same<<", results_one fail: "<<results_one.back()<<", results_two fail: "<<results_two.back()<<"\n";
 
      // if the ith BSM failed
     if (!is_size_same || (results_one.back() || results_two.back())) {
       // Free failed qubits
       freeResource(internal_qnic_index, qubit_index, QNIC_RP);
-      num_fail++;
     } else {
-      num_success++;
       // Keep the entangled qubits
       StationaryQubit *qubit = provider.getStationaryQubit(internal_qnic_address, qubit_index, QNIC_RP);
 
@@ -1306,12 +1351,12 @@ void RuleEngine::freeFailedQubits_and_AddAsResource_MSM(int destAddr, int intern
       bell_pair_store.insertEntangledQubit(neighborQNodeAddress, qubit);
     }
   }
-
-  EV<<"100 trials, succeeded: "<<num_success<<"\n";
-  EV<<"100 trials, fail: "<<num_fail<<"\n\n\n\n";
+  combinedBSA_results_epps.erase(internal_qnic_address);
 
   ResourceAllocation(QNIC_RP, internal_qnic_index);
   traverseThroughAllProcesses2();  // New resource added to QNIC with qnic_type qnic_index.
+
+  return true;
 }
 
 void RuleEngine::freeResource(int qnic_index /*The actual index. Not address. This with qnic_type makes the id unique.*/, int qubit_index, QNIC_type qnic_type) {

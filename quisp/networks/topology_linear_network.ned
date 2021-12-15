@@ -79,6 +79,8 @@ network Linear_One_MSM
 {
     parameters:
         **.Speed_of_light_in_fiber = 205336.986301 km;
+        double link_distance @unit(km);
+        link_distance = default(1km);
         //**.HoM_handshake = false;
 
         @display("bgb=294,138");
@@ -102,11 +104,211 @@ network Linear_One_MSM
             @display("i=device/pc;p=32,69");
         }
     connections:
-        source.port++ <--> ClassicalChannel {  distance = 1km; } <--> EPPS.port++;
-        EPPS.port++ <--> ClassicalChannel {  distance = 1km; } <--> target.port++;
+        source.port++ <--> ClassicalChannel {  distance = link_distance; } <--> EPPS.port++;
+        EPPS.port++ <--> ClassicalChannel {  distance = link_distance; } <--> target.port++;
 
-        source.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 1km; } <--> EPPS.quantum_port++;
-        EPPS.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> target.quantum_port_receiver_passive++;
+        source.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = link_distance; } <--> EPPS.quantum_port++;
+        EPPS.quantum_port++ <--> QuantumChannel {  distance = link_distance; } <--> target.quantum_port_receiver_passive++;
+
+}
+
+network Linear_Two_MSM
+{
+    parameters:
+        **.Speed_of_light_in_fiber = 205336.986301 km;
+        //**.HoM_handshake = false;
+
+        @display("bgb=500,138");
+    submodules:
+        EndNode1: QNode {
+            address = 1;
+            nodeType = "EndNode";
+            @display("i=device/pc;p=32,69");
+        }
+        EPPS1: SPDC {
+            address = 2;
+            @display("i=device/bsm;p=132,69");
+        }
+        Repeater: QNode {
+            address = 3;
+            nodeType = "Repeater";
+            @display("i=device/smallrouter;p=232,69");
+        }
+        EPPS2: SPDC {
+            address = 4;
+            @display("i=device/bsm;p=332,69");
+        }
+        EndNode2: QNode {
+            address = 5;
+            nodeType = "EndNode";
+            @display("i=device/pc;p=432,69");
+        }
+    connections:
+        //Classical Channel
+        EndNode1.port++ <--> ClassicalChannel {  distance = 1km; } <--> EPPS1.port++;
+        EPPS1.port++ <--> ClassicalChannel {  distance = 1km; } <--> Repeater.port++;
+        Repeater.port++ <--> ClassicalChannel {  distance = 1km; } <--> EPPS2.port++;
+        EPPS2.port++ <--> ClassicalChannel {  distance = 1km; } <--> EndNode2.port++;
+
+        //Quantum Channel
+        EndNode1.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 1km; } <--> EPPS1.quantum_port++;
+        EPPS1.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> Repeater.quantum_port_receiver_passive++;
+        Repeater.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 1km; } <--> EPPS2.quantum_port++;
+        EPPS2.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> EndNode2.quantum_port_receiver_passive++;
+
+}
+
+network Linear_Ten_MSM
+{
+    parameters:
+        **.Speed_of_light_in_fiber = 205336.986301 km;
+        //**.HoM_handshake = false;
+
+        @display("bgb=2095,138");
+    submodules:
+        EndNode1: QNode {
+            address = 1;
+            nodeType = "EndNode";
+            @display("i=device/pc;p=32,69");
+        }
+        EPPS1: SPDC {
+            address = 2;
+            @display("i=device/bsm;p=131,69");
+        }
+        Repeater1: QNode {
+            address = 3;
+            nodeType = "Repeater";
+            @display("i=device/smallrouter;p=235,69");
+        }
+        EPPS2: SPDC {
+            address = 4;
+            @display("i=device/bsm;p=335,69");
+        }
+        Repeater2: QNode {
+            address = 5;
+            nodeType = "Repeater";
+            @display("i=device/smallrouter;p=435,69");
+        }
+        EPPS3: SPDC {
+            address = 6;
+            @display("i=device/bsm;p=535,69");
+        }
+        Repeater3: QNode {
+            address = 7;
+            nodeType = "Repeater";
+            @display("i=device/smallrouter;p=635,69");
+        }
+        EPPS4: SPDC {
+            address = 8;
+            @display("i=device/bsm;p=735,69");
+        }
+        Repeater4: QNode {
+            address = 9;
+            nodeType = "Repeater";
+            @display("i=device/smallrouter;p=835,69");
+        }
+        EPPS5: SPDC {
+            address = 10;
+            @display("i=device/bsm;p=935,69");
+        }
+        Repeater5: QNode {
+            address = 11;
+            nodeType = "Repeater";
+            @display("i=device/smallrouter;p=1035,69");
+        }
+        EPPS6: SPDC {
+            address = 12;
+            @display("i=device/bsm;p=1135,69");
+        }
+        Repeater6: QNode {
+            address = 13;
+            nodeType = "Repeater";
+            @display("i=device/smallrouter;p=1235,69");
+        }
+        EPPS7: SPDC {
+            address = 14;
+            @display("i=device/bsm;p=1335,69");
+        }
+        Repeater7: QNode {
+            address = 15;
+            nodeType = "Repeater";
+            @display("i=device/smallrouter;p=1435,69");
+        }
+        EPPS8: SPDC {
+            address = 16;
+            @display("i=device/bsm;p=1535,69");
+        }
+        Repeater8: QNode {
+            address = 17;
+            nodeType = "Repeater";
+            @display("i=device/smallrouter;p=1635,69");
+        }
+        EPPS9: SPDC {
+            address = 18;
+            @display("i=device/bsm;p=1735,69");
+        }
+        Repeater9: QNode {
+            address = 19;
+            nodeType = "Repeater";
+            @display("i=device/smallrouter;p=1835,69");
+        }
+        EPPS10: SPDC {
+            address = 20;
+            @display("i=device/bsm;p=1935,69");
+        }
+        EndNode2: QNode {
+            address = 21;
+            nodeType = "EndNode";
+            @display("i=device/pc;p=2035,69");
+        }
+    connections:
+        //Classical Channel
+        EndNode1.port++ <--> ClassicalChannel {  distance = 1km; } <--> EPPS1.port++;
+
+        EPPS1.port++ <--> ClassicalChannel {  distance = 1km; } <--> Repeater1.port++;
+        Repeater1.port++ <--> ClassicalChannel {  distance = 1km; } <--> EPPS2.port++;
+        EPPS2.port++ <--> ClassicalChannel {  distance = 1km; } <--> Repeater2.port++;
+        Repeater2.port++ <--> ClassicalChannel {  distance = 1km; } <--> EPPS3.port++;
+        EPPS3.port++ <--> ClassicalChannel {  distance = 1km; } <--> Repeater3.port++;
+        Repeater3.port++ <--> ClassicalChannel {  distance = 1km; } <--> EPPS4.port++;
+        EPPS4.port++ <--> ClassicalChannel {  distance = 1km; } <--> Repeater4.port++;
+        Repeater4.port++ <--> ClassicalChannel {  distance = 1km; } <--> EPPS5.port++;
+        EPPS5.port++ <--> ClassicalChannel {  distance = 1km; } <--> Repeater5.port++;
+        Repeater5.port++ <--> ClassicalChannel {  distance = 1km; } <--> EPPS6.port++;
+        EPPS6.port++ <--> ClassicalChannel {  distance = 1km; } <--> Repeater6.port++;
+        Repeater6.port++ <--> ClassicalChannel {  distance = 1km; } <--> EPPS7.port++;
+        EPPS7.port++ <--> ClassicalChannel {  distance = 1km; } <--> Repeater7.port++;
+        Repeater7.port++ <--> ClassicalChannel {  distance = 1km; } <--> EPPS8.port++;
+        EPPS8.port++ <--> ClassicalChannel {  distance = 1km; } <--> Repeater8.port++;
+        Repeater8.port++ <--> ClassicalChannel {  distance = 1km; } <--> EPPS9.port++;
+        EPPS9.port++ <--> ClassicalChannel {  distance = 1km; } <--> Repeater9.port++;
+        Repeater9.port++ <--> ClassicalChannel {  distance = 1km; } <--> EPPS10.port++;
+
+        EPPS10.port++ <--> ClassicalChannel {  distance = 1km; } <--> EndNode2.port++;
+
+        //Quantum Channel
+        EndNode1.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 1km; } <--> EPPS1.quantum_port++;
+
+        EPPS1.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> Repeater1.quantum_port_receiver_passive++;
+        Repeater1.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 1km; } <--> EPPS2.quantum_port++;
+        EPPS2.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> Repeater2.quantum_port_receiver_passive++;
+        Repeater2.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 1km; } <--> EPPS3.quantum_port++;
+        EPPS3.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> Repeater3.quantum_port_receiver_passive++;
+        Repeater3.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 1km; } <--> EPPS4.quantum_port++;
+        EPPS4.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> Repeater4.quantum_port_receiver_passive++;
+        Repeater4.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 1km; } <--> EPPS5.quantum_port++;
+        EPPS5.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> Repeater5.quantum_port_receiver_passive++;
+        Repeater5.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 1km; } <--> EPPS6.quantum_port++;
+        EPPS6.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> Repeater6.quantum_port_receiver_passive++;
+        Repeater6.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 1km; } <--> EPPS7.quantum_port++;
+        EPPS7.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> Repeater7.quantum_port_receiver_passive++;
+        Repeater7.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 1km; } <--> EPPS8.quantum_port++;
+        EPPS8.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> Repeater8.quantum_port_receiver_passive++;
+        Repeater8.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 1km; } <--> EPPS9.quantum_port++;
+        EPPS9.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> Repeater9.quantum_port_receiver_passive++;
+        Repeater9.quantum_port_receiver_passive++ <--> QuantumChannel {  distance = 1km; } <--> EPPS10.quantum_port++;
+
+        EPPS10.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> EndNode2.quantum_port_receiver_passive++;
 
 }
 

@@ -69,8 +69,10 @@ class RuleEngine : public IRuleEngine {
   running_processes rp;
   // Vector for store package for simultaneous entanglement swapping
   std::map<int, std::map<int, int>> simultaneous_es_results;
-  // Map for MSM link type BSA result: <qnic_index, <qubit_index, <results>>>
+  // Map for MSM link type BSA result: <qnic_index, <qubit_index, [results]>>
   std::map<int, std::map<int, std::vector<std::vector<bool>>>> combinedBSA_results_epps;
+  // <node_address, qnic_address>
+  std::map<int, int> epps_pair_qnic_info;
   // tracker accessible table has as many number of boolean value as the number of qnics in the qnode.
   // when the tracker for the qnic is clered by previous BSM trial it goes true
   // when the RuleEngine try to start new Photon emittion, it goes false and other BSM trial can't access to it.
@@ -88,6 +90,7 @@ class RuleEngine : public IRuleEngine {
   void handleMessage(cMessage *msg) override;
   int countFreeQubits_inQnic(QubitStateTable table, int qnic_index);
   int getOneFreeQubit_inQnic(QubitStateTable table, int qnic_index);
+  QubitState getQubitState(QubitStateTable table, int qnic_index, int qubit_index);
   QubitStateTable setQubitBusy_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
   QubitStateTable setQubitFree_inQnic(QubitStateTable table, int qnic_index, int qubit_index);
   QubitStateTable initializeQubitStateTable(QubitStateTable temp, QNIC_type qnic_type);
@@ -103,7 +106,7 @@ class RuleEngine : public IRuleEngine {
   InterfaceInfo getInterface_toNeighbor_Internal(int local_qnic_index);
   void scheduleNextEmissionEvent(int qnic_index, int qnic_address, int qubit_index, double interval, simtime_t timing, int num_sent, QNIC_type qnic_type, int trial, int num_attempts, int attempt);
   void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result);
-  void freeFailedQubits_and_AddAsResource_MSM(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults_epps *pk_result);
+  bool checkEPPSResultStatus_and_UpdateResource(int internal_qnic_address, int internal_qnic_index, CombinedBSAresults_epps *pk_result);
   void clearTrackerTable(int destAddr, int internal_qnic_address);
   // virtual void traverseThroughAllProcesses(RuleEngine *re, int qnic_type, int qnic_index);
   void traverseThroughAllProcesses2();

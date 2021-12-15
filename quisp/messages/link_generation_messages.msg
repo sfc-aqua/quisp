@@ -24,7 +24,13 @@ packet EPPStimingNotifier extends Header
     double interval;
     int number_of_qubits;
     int number_of_attempts;
-    int internal_qnic = -1;
+    int internal_qnic_index = -1;
+    int internal_qnic_address = -1;
+    int pair_node_address;
+}
+
+packet EPPSnextRound extends Header{
+    int number_of_qubits;
 }
 
 //Used for MIM and MM. BSA results are sent back to the neighboring nodes, together with the timing notifier
@@ -34,8 +40,10 @@ packet CombinedBSAresults extends BSMtimingNotifier
 }
 
 //Used for MSM. BSA results are sent back to EPPS. EPPS will generate the next order based on that.
-packet CombinedBSAresults_epps extends EPPStimingNotifier
+packet CombinedBSAresults_epps extends Header
 {
     bool list_of_failed[];
     int list_of_qubit_index[];
+    int qnic_address;
+    int qnic_index;
 }
