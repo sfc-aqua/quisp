@@ -17,9 +17,15 @@ class IQubitRecord {
   virtual ~IQubitRecord() {}
   virtual bool isBusy() const = 0;
   virtual void setBusy(bool _is_busy) = 0;
+  virtual bool isAllocated() const = 0;
+  virtual void setAllocated(bool _is_allocated) = 0;
   virtual int getQubitIndex() const = 0;
   virtual int getQNicIndex() const = 0;
   virtual QNIC_type getQNicType() const = 0;
+
+  virtual bool isRuleApplied(unsigned long rule_id) const = 0;
+  virtual void markRuleApplied(unsigned long rule_id) = 0;
+  virtual void clearAppliedRules() = 0;
 };
 
 }  // namespace quisp::modules::qubit_record
