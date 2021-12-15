@@ -12,7 +12,9 @@ class QubitRecord : public IQubitRecord {
   ~QubitRecord();
   bool isBusy() const override;
   void setBusy(bool _is_busy) override;
-  int getIndex() const override;
+  int getQubitIndex() const override;
+  int getQNicIndex() const override;
+  QNIC_type getQNicType() const override;
 
  protected:
   QNIC_type qnic_type;

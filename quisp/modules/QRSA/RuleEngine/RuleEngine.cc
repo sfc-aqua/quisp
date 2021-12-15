@@ -834,32 +834,20 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   int qubit_index = swapr.measured_qubit_index;
 
   // qubit with address Addr was shot in nth time. This list is ordered from old to new.
-  IStationaryQubit *qubit = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
+  auto &qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit_index);
   // check
   if (operation_type == 0) {
     // do nothing
   } else if (operation_type == 1) {
     // do X
-    qubit->X_gate();
+    realtime_controller->applyXGate(qubit_record);
   } else if (operation_type == 2) {
-    qubit->Z_gate();
+    realtime_controller->applyZGate(qubit_record);
   } else {
     error("Something went wrong. This operation type isn't recorded!");
   }
 
-  if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
-    // std::cout << qubit << ", node[" << qubit->node_address << "] from qnic[" << qubit->qnic_index << "]\n";
-    error("RuleEngine. Entanglement swapping went wrong");
-  }
-  // FOR DEBUGGING
-  if (qubit->entangled_partner != nullptr) {
-    if (qubit->entangled_partner->entangled_partner == nullptr) {
-      error("1. Entanglement tracking is not doing its job. in update resource E.S.");
-    }
-    if (qubit->entangled_partner->entangled_partner != qubit) {
-      error("2. Entanglement tracking is not doing its job. in update resource E.S.");
-    }
-  }
+  realtime_controller->assertNoEntanglement(qubit_record);
 
   // Promote entanglement from this rule to the next rule
   // 1. erase qubit from the privious rule (Entanglement Swapping)
@@ -875,7 +863,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   if (ruleset_result == rp.end()) {
     error("The qubit is not promoted from entanglement swapping to the next rule. no ruleset(%l) found", ruleset_id);
   }
-
+  auto qubit = provider.getStationaryQubit(qubit_record);
   const auto &ruleset = *ruleset_result;
   for (auto rule_iter = ruleset->cbegin(); rule_iter != ruleset->cend(); rule_iter++) {
     auto &&rule = *rule_iter;
@@ -911,28 +899,26 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
   int qnic_index = info->qnic.index;
   QNIC_type qnic_type = info->qnic.type;
   int qubit_index = swapr.measured_qubit_index;
-  IStationaryQubit *qubit = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
+  auto &qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit_index);
 
   if (operation_type == 0) {
     // nothing
   } else if (operation_type == 1) {
     // do Z
-    qubit->Z_gate();
+    realtime_controller->applyZGate(qubit_record);
   } else if (operation_type == 2) {
     // do X
-    qubit->Z_gate();
+    realtime_controller->applyZGate(qubit_record);
+
   } else if (operation_type == 3) {
     // do XZ
-    qubit->Z_gate();
-    qubit->X_gate();
+    realtime_controller->applyZGate(qubit_record);
+    realtime_controller->applyXGate(qubit_record);
   } else {
     error("something error happened! This operation type doesn't recorded!");
   }
-
-  if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
-    std::cout << qubit << ", node[" << qubit->node_address << "] from qnic[" << qubit->qnic_index << "]\n";
-    error("RuleEngine. Ebit succeed. but wrong");
-  }
+  realtime_controller->assertNoEntanglement(qubit_record);
+  IStationaryQubit *qubit = provider.getStationaryQubit(qubit_record);
   // first delete old record
   bell_pair_store.eraseQubit(qubit);
 

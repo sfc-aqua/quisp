@@ -38,6 +38,10 @@ void QNicStore::setQubitBusy(QNIC_type type, int qnic_index, int qubit_index, bo
   auto& qnic = getQNic(type, qnic_index);
   return qnic->setQubitBusy(qubit_index, is_busy);
 }
+qrsa::UniqueQubitRecord& QNicStore::getQubitRecord(QNIC_type type, int qnic_index, int qubit_index) {
+  auto& qnic = getQNic(type, qnic_index);
+  return qnic->getQubit(qubit_index);
+}
 
 UniqueQNicRecord& QNicStore::getQNic(QNIC_type type, int qnic_index) {
   if (qnics.size() <= type) {

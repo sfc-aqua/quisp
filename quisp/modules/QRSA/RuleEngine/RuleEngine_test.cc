@@ -14,8 +14,10 @@
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
+#include "modules/QRSA/QRSA.h"
 #include "modules/QRSA/RealTimeController/IRealTimeController.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
+#include "modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h"
 #include "rules/Action.h"
 #include "rules/RuleSet.h"
 
@@ -27,6 +29,8 @@ using namespace quisp::rules;
 using namespace quisp::rules::actions;
 using quisp::rules::actions::Action;
 using namespace quisp::modules;
+using quisp::modules::qrsa::UniqueQubitRecord;
+using quisp::modules::qubit_record::QubitRecord;
 using namespace quisp_test;
 using namespace testing;
 
@@ -101,8 +105,10 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   auto* sim = prepareSimulation();
   auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
   auto* mockQubit1 = new MockQubit(QNIC_E, 0);
-  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr, qnic_specs};
+  UniqueQubitRecord qubit_record = std::make_unique<QubitRecord>(0, QNIC_E, 0);
+  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, realtime_controller, qnic_specs};
 
   auto info = std::make_unique<ConnectionSetupInfo>();
   info->qnic.type = QNIC_E;
@@ -124,7 +130,8 @@ TEST(RuleEngineTest, ESResourceUpdate) {
 
   EXPECT_CALL(*routingdaemon, return_QNIC_address_to_destAddr(swapr.new_partner)).WillOnce(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(std::move(info))));
-
+  EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(QNIC_E, 0, 1)).Times(1).WillOnce(ReturnRef(qubit_record));
+  EXPECT_CALL(*realtime_controller, assertNoEntanglement(Eq(std::ref(qubit_record)))).Times(1);
   // 0. set ruleset
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
@@ -150,6 +157,8 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   ASSERT_EQ(rule_engine->rp[0]->getRule(1)->resources.size(), 1);
   delete mockHardwareMonitor;
   delete routingdaemon;
+  delete realtime_controller;
+  delete rule_engine->qnic_store.get();
 }
 
 TEST(RuleEngineTest, resourceAllocation) {
@@ -490,6 +499,9 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
   auto* realtime_controller = new MockRealTimeController;
   auto* qubit = new MockQubit(QNIC_E, 7);
   auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
+  UniqueQubitRecord qubit_record = std::make_unique<QubitRecord>(0, QNIC_E, 0);
+  EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(QNIC_E, 0, 0)).Times(3).WillRepeatedly(ReturnRef(qubit_record));
+  EXPECT_CALL(*realtime_controller, assertNoEntanglement(Eq(std::ref(qubit_record)))).Times(3);
   rule_engine->callInitialize();
 
   {  // swap result doesn't need an action
@@ -499,8 +511,8 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
     info->qnic.type = QNIC_E;
     info->qnic.index = 0;
     EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(5)).Times(1).WillOnce(Return(ByMove(std::move(info))));
-    EXPECT_CALL(*qubit, X_gate()).Times(0);
-    EXPECT_CALL(*qubit, Z_gate()).Times(0);
+    EXPECT_CALL(*realtime_controller, applyXGate(_)).Times(0);
+    EXPECT_CALL(*realtime_controller, applyZGate(_)).Times(0);
     rule_engine->updateResources_EntanglementSwapping(result);
   }
   {  // swap result needs to apply X gate
@@ -510,8 +522,8 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
     info->qnic.type = QNIC_E;
     info->qnic.index = 0;
     EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(5)).Times(1).WillOnce(Return(ByMove(std::move(info))));
-    EXPECT_CALL(*qubit, X_gate()).Times(1);
-    EXPECT_CALL(*qubit, Z_gate()).Times(0);
+    EXPECT_CALL(*realtime_controller, applyXGate(Eq(std::ref(qubit_record)))).Times(1);
+    EXPECT_CALL(*realtime_controller, applyZGate(_)).Times(0);
     rule_engine->updateResources_EntanglementSwapping(result);
   }
   {  // swap result needs to apply Z gate
@@ -521,13 +533,15 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
     info->qnic.type = QNIC_E;
     info->qnic.index = 0;
     EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(5)).Times(1).WillOnce(Return(ByMove(std::move(info))));
-    EXPECT_CALL(*qubit, Z_gate()).Times(1);
-    EXPECT_CALL(*qubit, X_gate()).Times(0);
+    EXPECT_CALL(*realtime_controller, applyZGate(Eq(std::ref(qubit_record)))).Times(1);
+    EXPECT_CALL(*realtime_controller, applyXGate(_)).Times(0);
     rule_engine->updateResources_EntanglementSwapping(result);
   }
   delete qubit;
   delete hardware_monitor;
   delete routing_daemon;
+  delete realtime_controller;
+  delete rule_engine->qnic_store.get();
 }
 TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   /* setup components */
@@ -537,6 +551,9 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   auto* realtime_controller = new MockRealTimeController;
   auto* qubit = new MockQubit(QNIC_E, 7);
   auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
+  UniqueQubitRecord qubit_record = std::make_unique<QubitRecord>(7, QNIC_E, 0);
+  EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(QNIC_E, 0, 0)).Times(1).WillRepeatedly(ReturnRef(qubit_record));
+  EXPECT_CALL(*realtime_controller, assertNoEntanglement(Eq(std::ref(qubit_record)))).Times(1);
   rule_engine->callInitialize();
 
   unsigned long ruleset_id = 3;
@@ -576,5 +593,7 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   delete qubit;
   delete hardware_monitor;
   delete routing_daemon;
+  delete realtime_controller;
+  delete rule_engine->qnic_store.get();
 }
 }  // namespace

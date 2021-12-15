@@ -36,6 +36,12 @@ IStationaryQubit *ComponentProvider::getStationaryQubit(int qnic_index, int qubi
   ensureStrategy();
   return strategy->getStationaryQubit(qnic_index, qubit_index, qnic_type);
 }
+
+IStationaryQubit *ComponentProvider::getStationaryQubit(modules::qrsa::UniqueQubitRecord &qubit_record) {
+  ensureStrategy();
+  return strategy->getStationaryQubit(qubit_record->getQNicIndex(), qubit_record->getQubitIndex(), qubit_record->getQNicType());
+}
+
 cModule *ComponentProvider::getQNIC(int qnic_index, QNIC_type qnic_type) {
   ensureStrategy();
   return strategy->getQNIC(qnic_index, qnic_type);

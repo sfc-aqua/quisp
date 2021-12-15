@@ -26,17 +26,21 @@ int QNicRecord::takeFreeQubitIndex() {
   for (auto& qubit : qubits) {
     if (!qubit->isBusy()) {
       qubit->setBusy(true);
-      return qubit->getIndex();
+      return qubit->getQubitIndex();
     }
   }
   return -1;
 }
-
-void QNicRecord::setQubitBusy(int qubit_index, bool is_busy) {
+qrsa::UniqueQubitRecord& QNicRecord::getQubit(int qubit_index) {
   if (qubits.size() <= qubit_index) {
     throw omnetpp::cRuntimeError("QNicRecord::setQubitBusy: Qubit index:%d out of range. QNIC{%s, %d}, qubits.size(): %d", qubit_index, QNIC_names[type], index, qubits.size());
   }
-  qubits.at(qubit_index)->setBusy(is_busy);
+  return qubits.at(qubit_index);
+}
+
+void QNicRecord::setQubitBusy(int qubit_index, bool is_busy) {
+  auto& qubit = getQubit(qubit_index);
+  qubit->setBusy(is_busy);
 }
 
 }  // namespace quisp::modules::qnic_record

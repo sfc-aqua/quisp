@@ -23,7 +23,7 @@ TEST(QubitRecord, Init) {
   auto qnic_type = QNIC_R;
   int qubit_index = 5;
   QubitRecord record(qnic_index, qnic_type, qubit_index);
-  EXPECT_EQ(qubit_index, record.getIndex());
+  EXPECT_EQ(qubit_index, record.getQubitIndex());
   EXPECT_EQ(qubit_index, record.qubit_index);
   EXPECT_EQ(qnic_index, record.qnic_index);
   EXPECT_EQ(qnic_type, record.qnic_type);

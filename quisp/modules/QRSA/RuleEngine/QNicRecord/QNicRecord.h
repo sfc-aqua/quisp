@@ -17,6 +17,7 @@ class QNicRecord : public IQNicRecord {
   int countNumFreeQubits() override;
   int takeFreeQubitIndex() override;
   void setQubitBusy(int qubit_index, bool is_busy) override;
+  qrsa::UniqueQubitRecord& getQubit(int qubit_index) override;
 
   const int index;
   const QNIC_type type;

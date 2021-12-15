@@ -16,6 +16,8 @@ void QubitRecord::setBusy(bool _is_busy) {
   is_busy = _is_busy;
 }
 
-int QubitRecord::getIndex() const { return qubit_index; }
+int QubitRecord::getQubitIndex() const { return qubit_index; }
+int QubitRecord::getQNicIndex() const { return qnic_type; }
+QNIC_type QubitRecord::getQNicType() const { return qnic_type; }
 
 }  // namespace quisp::modules::qubit_record
