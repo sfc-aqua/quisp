@@ -107,7 +107,7 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   auto* mockHardwareMonitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
   auto* mockQubit1 = new MockQubit(QNIC_E, 0);
-  std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(0, QNIC_E, 0);
+  std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(QNIC_E, 0, 0);
   auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, realtime_controller, qnic_specs};
 
   auto info = std::make_unique<ConnectionSetupInfo>();
@@ -499,7 +499,7 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
   auto* realtime_controller = new MockRealTimeController;
   auto* qubit = new MockQubit(QNIC_E, 7);
   auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
-  std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(0, QNIC_E, 0);
+  std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(QNIC_E, 0, 0);
   EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(QNIC_E, 0, 0)).Times(3).WillRepeatedly(Return(qubit_record.get()));
   EXPECT_CALL(*realtime_controller, assertNoEntanglement(qubit_record.get())).Times(3);
   rule_engine->callInitialize();
@@ -551,7 +551,7 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   auto* realtime_controller = new MockRealTimeController;
   auto* qubit = new MockQubit(QNIC_E, 7);
   auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
-  std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(7, QNIC_E, 0);
+  std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(QNIC_E, 7, 0);
   EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(QNIC_E, 0, 0)).Times(1).WillRepeatedly(Return(qubit_record.get()));
   EXPECT_CALL(*realtime_controller, assertNoEntanglement(qubit_record.get())).Times(1);
   rule_engine->callInitialize();

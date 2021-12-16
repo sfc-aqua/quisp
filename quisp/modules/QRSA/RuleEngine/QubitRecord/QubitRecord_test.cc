@@ -17,16 +17,16 @@ class QubitRecord : public quisp::modules::qubit_record::QubitRecord {
   using quisp::modules::qubit_record::QubitRecord::qnic_index;
   using quisp::modules::qubit_record::QubitRecord::qnic_type;
   using quisp::modules::qubit_record::QubitRecord::qubit_index;
-  QubitRecord(int qnic_index, QNIC_type qnic_type, int qubit_index) : quisp::modules::qubit_record::QubitRecord(qnic_index, qnic_type, qubit_index) {}
+  QubitRecord(QNIC_type qnic_type, int qnic_index, int qubit_index) : quisp::modules::qubit_record::QubitRecord(qnic_type, qnic_index, qubit_index) {}
 };
 
 class QubitRecordTest : public ::testing::Test {
  protected:
-  void SetUp() override { record = QubitRecord(qnic_index, qnic_type, qubit_index); }
+  void SetUp() override { record = QubitRecord(qnic_type, qnic_index, qubit_index); }
   int qnic_index = 3;
   QNIC_type qnic_type = QNIC_R;
   int qubit_index = 5;
-  QubitRecord record = QubitRecord(0, QNIC_E, 0);
+  QubitRecord record = QubitRecord(QNIC_E, 0, 0);
 };
 
 TEST_F(QubitRecordTest, Init) {

@@ -8,7 +8,7 @@ namespace quisp::modules::qubit_record {
 
 class QubitRecord : public IQubitRecord {
  public:
-  QubitRecord(int qnic_index, QNIC_type qnic_type, int qubit_index);
+  QubitRecord(QNIC_type qnic_type, int qnic_index, int qubit_index);
   ~QubitRecord();
   bool isBusy() const override;
   void setBusy(bool _is_busy) override;
