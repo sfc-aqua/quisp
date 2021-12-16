@@ -21,7 +21,7 @@ class QNicStore : public IQNicStore {
   int countNumFreeQubits(QNIC_type type, int qnic_index) override;
   int takeFreeQubitIndex(QNIC_type type, int qnic_index) override;
   void setQubitBusy(QNIC_type type, int qnic_index, int qubit_index, bool is_busy) override;
-  qrsa::UniqueQubitRecord& getQubitRecord(QNIC_type type, int qnic_index, int qubit_index) override;
+  qrsa::IQubitRecord* getQubitRecord(QNIC_type type, int qnic_index, int qubit_index) override;
 
  protected:
   UniqueQNicRecord& getQNic(QNIC_type type, int qnic_index);

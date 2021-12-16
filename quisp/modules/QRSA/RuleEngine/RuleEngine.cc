@@ -834,7 +834,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   int qubit_index = swapr.measured_qubit_index;
 
   // qubit with address Addr was shot in nth time. This list is ordered from old to new.
-  auto &qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit_index);
+  auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit_index);
   // check
   if (operation_type == 0) {
     // do nothing
@@ -899,7 +899,7 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
   int qnic_index = info->qnic.index;
   QNIC_type qnic_type = info->qnic.type;
   int qubit_index = swapr.measured_qubit_index;
-  auto &qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit_index);
+  auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit_index);
 
   if (operation_type == 0) {
     // nothing

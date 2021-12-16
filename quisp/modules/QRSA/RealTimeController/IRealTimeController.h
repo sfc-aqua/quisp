@@ -15,9 +15,9 @@ class IRealTimeController : public cSimpleModule {
  public:
   virtual void EmitPhoton(int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse) = 0;
   virtual void ReInitialize_StationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed) = 0;
-  virtual void applyXGate(qrsa::UniqueQubitRecord& qubit_record) = 0;
-  virtual void applyZGate(qrsa::UniqueQubitRecord& qubit_record) = 0;
-  virtual void assertNoEntanglement(qrsa::UniqueQubitRecord& qubit_record) = 0;
+  virtual void applyXGate(qrsa::IQubitRecord* const qubit_record) = 0;
+  virtual void applyZGate(qrsa::IQubitRecord* const qubit_record) = 0;
+  virtual void assertNoEntanglement(qrsa::IQubitRecord* const qubit_record) = 0;
 };
 }  // namespace modules
 }  // namespace quisp

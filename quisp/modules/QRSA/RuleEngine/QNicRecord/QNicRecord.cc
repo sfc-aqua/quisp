@@ -31,15 +31,15 @@ int QNicRecord::takeFreeQubitIndex() {
   }
   return -1;
 }
-qrsa::UniqueQubitRecord& QNicRecord::getQubit(int qubit_index) {
+qrsa::IQubitRecord* QNicRecord::getQubit(int qubit_index) {
   if (qubits.size() <= qubit_index) {
     throw omnetpp::cRuntimeError("QNicRecord::setQubitBusy: Qubit index:%d out of range. QNIC{%s, %d}, qubits.size(): %d", qubit_index, QNIC_names[type], index, qubits.size());
   }
-  return qubits.at(qubit_index);
+  return qubits.at(qubit_index).get();
 }
 
 void QNicRecord::setQubitBusy(int qubit_index, bool is_busy) {
-  auto& qubit = getQubit(qubit_index);
+  auto* qubit = getQubit(qubit_index);
   qubit->setBusy(is_busy);
 }
 

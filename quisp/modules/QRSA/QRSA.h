@@ -5,7 +5,7 @@
 
 namespace quisp::modules::qrsa {
 
-using UniqueQubitRecord = std::unique_ptr<quisp::modules::qubit_record::IQubitRecord>;
+using IQubitRecord = quisp::modules::qubit_record::IQubitRecord;
 // points qnode local qubit
 struct LocalQubitRef {
   LocalQubitRef(QNIC_type qnic_type, int qnic_index, int qubit_index) : qnic_type(qnic_type), qnic_index(qnic_index), qubit_index(qubit_index) {}
