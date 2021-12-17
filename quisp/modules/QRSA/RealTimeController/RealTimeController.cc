@@ -30,9 +30,19 @@ void RealTimeController::ReInitialize_StationaryQubit(int qnic_index, int qubit_
   auto *q = provider.getStationaryQubit(qnic_index, qubit_index, qnic_type);
   q->setFree(consumed);
 }
+void RealTimeController::ReInitialize_StationaryQubit(qrsa::IQubitRecord *const qubit_record, bool consumed) {
+  auto *qubit = provider.getStationaryQubit(qubit_record);
+  qubit->setFree(consumed);
+}
 
-void RealTimeController::applyXGate(qrsa::IQubitRecord *const qubit_record) {}
-void RealTimeController::applyZGate(qrsa::IQubitRecord *const qubit_record) {}
+void RealTimeController::applyXGate(qrsa::IQubitRecord *const qubit_record) {
+  auto *qubit = provider.getStationaryQubit(qubit_record);
+  qubit->X_gate();
+}
+void RealTimeController::applyZGate(qrsa::IQubitRecord *const qubit_record) {
+  auto *qubit = provider.getStationaryQubit(qubit_record);
+  qubit->Z_gate();
+}
 void RealTimeController::assertNoEntanglement(qrsa::IQubitRecord *const qubit_record) {
   auto *qubit = provider.getStationaryQubit(qubit_record);
   if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {

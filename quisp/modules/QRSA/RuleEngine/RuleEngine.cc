@@ -920,7 +920,7 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
   realtime_controller->assertNoEntanglement(qubit_record);
   IStationaryQubit *qubit = provider.getStationaryQubit(qubit_record);
   // first delete old record
-  bell_pair_store.eraseQubit(qubit);
+  bell_pair_store.eraseQubit(qubit_record);
 
   // Make this qubit available for rules
   if (qubit->isAllocated()) {
@@ -929,7 +929,7 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
   if (qubit->isLocked()) {
     error("qubit is locked");
   }
-  bell_pair_store.insertEntangledQubit(new_partner, qubit);
+  bell_pair_store.insertEntangledQubit(new_partner, qubit_record);
   if (qubit->entangled_partner != nullptr) {
     if (qubit->entangled_partner->entangled_partner == nullptr) {
       error("1. Entanglement tracking is not doing its job. in update resource E.S.");
@@ -981,7 +981,8 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
       freeResource(it->second.qnic_index, it->second.qubit_index, qnic_type);
     } else {
       // Keep the entangled qubits
-      IStationaryQubit *qubit = provider.getStationaryQubit(qnic_index, it->second.qubit_index, qnic_type);
+      auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, it->second.qubit_index);
+      IStationaryQubit *qubit = provider.getStationaryQubit(qubit_record);
 
       // if the partner is null, not correct
       if (qubit->entangled_partner != nullptr) {
@@ -1002,7 +1003,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
         error("RuleEngine. Ebit succeed. but wrong");
       }
       // Add qubit as available resource between NeighborQNodeAddress.
-      bell_pair_store.insertEntangledQubit(neighborQNodeAddress, qubit);
+      bell_pair_store.insertEntangledQubit(neighborQNodeAddress, qubit_record);
     }
   }
 
@@ -1064,7 +1065,8 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
         // range contains the begin and end iterators of entangled qubits with the specified qnic_type, qnic_index and partner addr.
         auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, action_partner);
         for (auto it = range.first; it != range.second; ++it) {
-          auto qubit = it->second;
+          auto qubit_record = it->second;
+          auto *qubit = provider.getStationaryQubit(qubit_record);
           // 3. if the qubit is not allocated yet, and the qubit has not been allocated to this rule,
           // if the qubit has already been assigned to the rule, the qubit is not allocatable to that rule
           bool allocatable = checkAppliedRule(qubit, (*rule)->rule_index);
@@ -1259,10 +1261,11 @@ void RuleEngine::traverseThroughAllProcesses2() {
 }
 
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
-  realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit->par("stationaryQubit_address"), qnic_type, true);
-  qnic_store->setQubitBusy(qnic_type, qnic_index, qubit->par("stationaryQubit_address"), false);
+  auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit->par("stationaryQubit_address"));
+  realtime_controller->ReInitialize_StationaryQubit(qubit_record, false);
+  qubit_record->setBusy(false);
   clearAppliedRule(qubit);
-  bell_pair_store.eraseQubit(qubit);
+  bell_pair_store.eraseQubit(qubit_record);
 }
 
 }  // namespace modules

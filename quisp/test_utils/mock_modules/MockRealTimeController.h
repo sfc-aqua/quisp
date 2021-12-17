@@ -17,6 +17,7 @@ class MockRealTimeController : public quisp::modules::IRealTimeController {
   MOCK_METHOD(void, handleMessage, (cMessage * msg), (override));
   MOCK_METHOD(void, EmitPhoton, (int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse), (override));
   MOCK_METHOD(void, ReInitialize_StationaryQubit, (int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed), (override));
+  MOCK_METHOD(void, ReInitialize_StationaryQubit, (IQubitRecord* const qubit_record, bool consumed), (override));
   MOCK_METHOD(void, applyXGate, (IQubitRecord* const qubit_record), (override));
   MOCK_METHOD(void, applyZGate, (IQubitRecord* const qubit_record), (override));
   MOCK_METHOD(void, assertNoEntanglement, (IQubitRecord* const qubit_record), (override));

@@ -83,10 +83,10 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
     setName("rule_engine_test_target");
     provider.setStrategy(std::make_unique<Strategy>(mockQubit, routingdaemon, hardware_monitor, realtime_controller, qnic_specs));
     setComponentType(new TestModuleType("rule_engine_test"));
-    qnic_store = std::make_unique<MockQNicStore>();
+    qnic_store = std::make_unique<StrictMock<MockQNicStore>>();
   }
   // setter function for allResorces[qnic_type][qnic_index]
-  void setAllResources(int partner_addr, IStationaryQubit* qubit) { this->bell_pair_store.insertEntangledQubit(partner_addr, qubit); };
+  void setAllResources(int partner_addr, IQubitRecord* qubit) { this->bell_pair_store.insertEntangledQubit(partner_addr, qubit); };
   void setTracker(int qnic_address, int shot_number, QubitAddr_cons qubit_address) { this->tracker[qnic_address].insert(std::make_pair(shot_number, qubit_address)); };
 
  private:
@@ -165,15 +165,18 @@ TEST(RuleEngineTest, resourceAllocation) {
   auto* sim = prepareSimulation();
   auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto mockQubit0 = new MockQubit(QNIC_E, 3);
-  auto mockQubit1 = new MockQubit(QNIC_E, 3);
-  auto mockQubit2 = new MockQubit(QNIC_E, 3);
+  auto* mockQubit0 = new MockQubit(QNIC_E, 3);
+  auto* mockQubit1 = new MockQubit(QNIC_E, 3);
+  auto* mockQubit2 = new MockQubit(QNIC_E, 3);
+  auto* qubit_record0 = new QubitRecord(QNIC_E, 3, 0);
+  auto* qubit_record1 = new QubitRecord(QNIC_E, 3, 1);
+  auto* qubit_record2 = new QubitRecord(QNIC_E, 3, 2);
   auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr, qnic_specs};
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
-  rule_engine->setAllResources(0, mockQubit0);
-  rule_engine->setAllResources(1, mockQubit1);
-  rule_engine->setAllResources(2, mockQubit2);
+  rule_engine->setAllResources(0, qubit_record0);
+  rule_engine->setAllResources(1, qubit_record1);
+  rule_engine->setAllResources(2, qubit_record2);
   auto* rs = new RuleSet(0, 0, 1);
   auto rule = std::make_unique<Rule>();
   // owner address,
@@ -307,14 +310,17 @@ TEST(RuleEngineTest, freeConsumedResource) {
   rule_engine->callInitialize();
   int qnic_index = 7;
   auto* qubit = new MockQubit(QNIC_E, qnic_index);
+  auto* qubit_record = new QubitRecord(QNIC_E, qnic_index, 1);
+  qubit_record->setBusy(true);
   qubit->fillParams();
   rule_engine->updateAppliedRule(qubit, 0);
   EXPECT_FALSE(rule_engine->checkAppliedRule(qubit, 0));
 
-  EXPECT_CALL(*realtime_controller, ReInitialize_StationaryQubit(qnic_index, 1, QNIC_E, true)).Times(1).WillOnce(Return());
-  EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), setQubitBusy(QNIC_E, qnic_index, 1, false)).Times(1).WillOnce(Return());
+  EXPECT_CALL(*realtime_controller, ReInitialize_StationaryQubit(qubit_record, false)).Times(1).WillOnce(Return());
+  EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(QNIC_E, qnic_index, 1)).Times(1).WillOnce(Return(qubit_record));
   rule_engine->freeConsumedResource(qnic_index, qubit, QNIC_E);
   EXPECT_TRUE(rule_engine->checkAppliedRule(qubit, 0));
+  EXPECT_FALSE(qubit_record->isBusy());
   delete qubit;
   delete hardware_monitor;
   delete realtime_controller;
@@ -339,6 +345,8 @@ TEST(RuleEngineTest, unlockResourceAndDiscard) {
   auto rule2 = new Rule(ruleset_id, 11);
   int qnic_index = 17;
   auto* qubit = new MockQubit(QNIC_E, qnic_index);
+  auto* qubit_record = new QubitRecord(QNIC_E, qnic_index, 1);
+  qubit_record->setBusy(true);
   qubit->fillParams();
   qubit->action_index = action_index;
   rule1->addResource(partner_addr, qubit);
@@ -348,16 +356,17 @@ TEST(RuleEngineTest, unlockResourceAndDiscard) {
 
   rule_engine->rp.insert(ruleset);
   EXPECT_CALL(*qubit, Unlock()).Times(1);
-  EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), setQubitBusy(QNIC_E, qnic_index, 1, false)).Times(1).WillOnce(Return());
+  EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(QNIC_E, qnic_index, 1)).Times(1).WillOnce(Return(qubit_record));
 
   rule_engine->updateAppliedRule(qubit, 0);
   EXPECT_EQ(rule1->resources.size(), 1);
   EXPECT_EQ(rule2->resources.size(), 0);
-  EXPECT_CALL(*realtime_controller, ReInitialize_StationaryQubit(qnic_index, 1, QNIC_E, true)).Times(1).WillOnce(Return());
+  EXPECT_CALL(*realtime_controller, ReInitialize_StationaryQubit(qubit_record, false)).Times(1).WillOnce(Return());
   rule_engine->Unlock_resource_and_discard(ruleset_id, target_rule_id, action_index);
 
   EXPECT_EQ(rule1->resources.size(), 0);
   EXPECT_EQ(rule2->resources.size(), 0);
+  EXPECT_FALSE(qubit_record->isBusy());
 
   delete qubit;
   delete hardware_monitor;

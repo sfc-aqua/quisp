@@ -29,6 +29,8 @@ class RealTimeController : public IRealTimeController {
   RealTimeController();
   void EmitPhoton(int qnic_index, int qubit_index, QNIC_type qnic_type, int pulse) override;
   void ReInitialize_StationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type, bool consumed) override;
+  void ReInitialize_StationaryQubit(qrsa::IQubitRecord* const qubit_record, bool consumed) override;
+
   void applyXGate(qrsa::IQubitRecord* const qubit_record) override;
   void applyZGate(qrsa::IQubitRecord* const qubit_record) override;
   void assertNoEntanglement(qrsa::IQubitRecord* const qubit_record) override;
