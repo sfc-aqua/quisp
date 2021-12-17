@@ -27,7 +27,6 @@ typedef std::complex<double> Complex;
 
 class StationaryQubit : public IStationaryQubit {
  public:
-  bool checkBusy() override;
   void setFree(bool consumed) override;
   /*In use. E.g. waiting for purification result.*/
   void Lock(unsigned long rs_id, unsigned long rule_id, int action_id) override;
@@ -146,6 +145,10 @@ class StationaryQubit : public IStationaryQubit {
 
   void applySingleQubitGateError(SingleGateErrorModel const &err);
   void applyTwoQubitGateError(TwoQubitGateErrorModel const &err, StationaryQubit *another_qubit);
+
+  // this is for debugging. class internal use only.
+  // and it's different from QubitRecord's one.
+  bool is_busy;
 };
 
 }  // namespace modules

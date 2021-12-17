@@ -98,10 +98,6 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   if (std::rand() / RAND_MAX < success_probability) {
     right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
     left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
-
-  } else {
-    left_partner_qubit->isBusy = false;
-    right_partner_qubit->isBusy = false;
   }
   removeResource_fromRule(left_qubit);
   removeResource_fromRule(right_qubit);
@@ -109,9 +105,6 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   // free consumed
   rule_engine->freeConsumedResource(self_left_qnic_id, left_qubit, self_left_qnic_type);  // free left
   rule_engine->freeConsumedResource(self_right_qnic_id, right_qubit, self_right_qnic_type);  // free right
-
-  left_qubit->isBusy = false;
-  right_qubit->isBusy = false;
 
   auto *pk = new SimultaneousSwappingResult;
 
