@@ -11,54 +11,56 @@ using namespace quisp::modules;
 using quisp::modules::qubit_record::IQubitRecord;
 using quisp::modules::qubit_record::QubitRecord;
 using namespace quisp_test;
-class MockQubit : public StationaryQubit {
- public:
-  explicit MockQubit(QNIC_type t, QNicIndex i, QNodeAddr addr) : StationaryQubit() {
-    qnic_type = t;
-    qnic_index = i;
-    node_address = addr;
-  }
-};
 
 class BellPairStore : public quisp::modules::BellPairStore {
  public:
   using quisp::modules::BellPairStore::_resources;
 };
 
-TEST(BellPairStoreTest, init) {
-  BellPairStore store;
-  EXPECT_EQ(store._resources.size(), 0);
-}
+class BellPairStoreTest : public ::testing::Test {
+ protected:
+  void SetUp() override {
+    qubit1 = new QubitRecord(QNIC_E, 3, 6);
+    qubit2 = new QubitRecord(QNIC_E, 3, 6);
+    qubit3 = new QubitRecord(QNIC_E, 3, 6);
+    qubit4 = new QubitRecord(QNIC_E, 3, 6);
+    store = BellPairStore();
+  }
 
-TEST(BellPairStoreTest, insert) {
-  prepareSimulation();
-  auto *qubit1 = new QubitRecord(QNIC_E, 3, 6);
+  void TearDown() override {
+    delete qubit1;
+    delete qubit2;
+    delete qubit3;
+    delete qubit4;
+  }
+
   BellPairStore store;
+  QubitRecord *qubit1;
+  QubitRecord *qubit2;
+  QubitRecord *qubit3;
+  QubitRecord *qubit4;
+};
+
+TEST_F(BellPairStoreTest, init) { EXPECT_EQ(store._resources.size(), 0); }
+
+TEST_F(BellPairStoreTest, insert) {
   store.insertEntangledQubit(7, qubit1);
   auto key = std::make_pair(QNIC_E, 3);
   // check the PartnerAddrQubitMap is created for the key
   ASSERT_EQ(store._resources.size(), 1);
-  for (auto &i : store._resources) {
-    std::cout << key.first << "," << key.second << ": " << i.first.first << ", " << i.first.second << std::endl;
-  }
   ASSERT_NE(store._resources.find(key), store._resources.end()) << "bell pair not found";
   auto it = store._resources[key].find(7);
   ASSERT_FALSE(it == store._resources[key].end());
   EXPECT_EQ(it->second, dynamic_cast<IQubitRecord *>(qubit1));
 }
 
-TEST(BellPairStoreTest, erase) {
-  prepareSimulation();
-  auto *qubit1 = new QubitRecord(QNIC_E, 3, 6);
-  BellPairStore store;
+TEST_F(BellPairStoreTest, erase) {
   store.insertEntangledQubit(7, qubit1);
   auto key = std::make_pair(QNIC_E, 3);
   store.eraseQubit(qubit1);
   auto it = store._resources[key].find(7);
   ASSERT_TRUE(it == store._resources[key].end());
 
-  auto *qubit2 = new QubitRecord(QNIC_E, 3, 6);
-  auto *qubit3 = new QubitRecord(QNIC_E, 3, 6);
   store.insertEntangledQubit(7, qubit1);
   store.insertEntangledQubit(7, qubit2);
   store.insertEntangledQubit(7, qubit1);
@@ -68,16 +70,10 @@ TEST(BellPairStoreTest, erase) {
   EXPECT_EQ(store._resources[key].size(), 2);
 }
 
-TEST(BellPairStoreTest, find) {
-  prepareSimulation();
-  auto *qubit1 = new QubitRecord(QNIC_E, 3, 6);
-  auto *qubit2 = new QubitRecord(QNIC_E, 3, 6);
-  auto *qubit3 = new QubitRecord(QNIC_E, 3, 6);
-  BellPairStore store;
+TEST_F(BellPairStoreTest, find) {
   store.insertEntangledQubit(7, qubit1);
   store.insertEntangledQubit(8, qubit2);
   store.insertEntangledQubit(9, qubit3);
-  auto key = std::make_pair(QNIC_E, 3);
   auto *result = store.findQubit(QNIC_E, 3, 7);
   EXPECT_EQ(result, qubit1);
 
@@ -88,12 +84,7 @@ TEST(BellPairStoreTest, find) {
   EXPECT_TRUE(result == nullptr);
 }
 
-TEST(BellPairStoreTest, getRange) {
-  prepareSimulation();
-  auto *qubit1 = new QubitRecord(QNIC_E, 3, 6);
-  auto *qubit2 = new QubitRecord(QNIC_E, 3, 6);
-  auto *qubit3 = new QubitRecord(QNIC_E, 3, 6);
-  BellPairStore store;
+TEST_F(BellPairStoreTest, getRange) {
   store.insertEntangledQubit(7, qubit1);
   store.insertEntangledQubit(6, qubit2);
   store.insertEntangledQubit(7, qubit3);
@@ -108,10 +99,8 @@ TEST(BellPairStoreTest, getRange) {
   auto empty_range = store.getBellPairsRange(QNIC_E, 3, 700);
   EXPECT_EQ(empty_range.first, empty_range.second);
 }
-TEST(BellPairStoreTest, getRangeWithLoop) {
-  prepareSimulation();
-  BellPairStore store;
 
+TEST_F(BellPairStoreTest, getRangeWithLoop) {
   // empty resources
   auto range = store.getBellPairsRange(QNIC_E, 3, 700);
   int count = 0;
@@ -121,7 +110,6 @@ TEST(BellPairStoreTest, getRangeWithLoop) {
   EXPECT_EQ(count, 0);
 
   // 1 qubit
-  auto *qubit1 = new QubitRecord(QNIC_E, 3, 6);
   store.insertEntangledQubit(7, qubit1);
   range = store.getBellPairsRange(QNIC_E, 3, 7);
   count = 0;
@@ -131,9 +119,6 @@ TEST(BellPairStoreTest, getRangeWithLoop) {
   EXPECT_EQ(count, 1);
 
   // 4 qubits and same partner addr.
-  auto *qubit2 = new QubitRecord(QNIC_E, 3, 6);
-  auto *qubit3 = new QubitRecord(QNIC_E, 3, 6);
-  auto *qubit4 = new QubitRecord(QNIC_E, 3, 6);
   store.insertEntangledQubit(7, qubit2);
   store.insertEntangledQubit(7, qubit3);
   store.insertEntangledQubit(7, qubit4);
