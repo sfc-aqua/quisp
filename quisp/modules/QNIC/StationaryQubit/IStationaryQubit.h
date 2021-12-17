@@ -132,9 +132,6 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   virtual void Lock(unsigned long rs_id, unsigned long rule_id, int action_id) = 0;
   virtual void Unlock() = 0;
   virtual bool isLocked() = 0;
-  virtual void Allocate() = 0;
-  virtual void Deallocate() = 0;
-  virtual bool isAllocated() = 0;
 
   /**
    * \brief Emit photon.

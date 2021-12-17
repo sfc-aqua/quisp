@@ -36,9 +36,6 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(void, Lock, (unsigned long rs_id, unsigned long rule_id, int action_id), (override));
   MOCK_METHOD(void, Unlock, (), (override));
   MOCK_METHOD(bool, isLocked, (), (override));
-  MOCK_METHOD(void, Allocate, (), (override));
-  MOCK_METHOD(void, Deallocate, (), (override));
-  MOCK_METHOD(bool, isAllocated, (), (override));
   MOCK_METHOD(quisp::modules::measurement_outcome, measure_density_independent, (), (override));
   MOCK_METHOD(void, setCompletelyMixedDensityMatrix, (), (override));
   MOCK_METHOD(void, setEntangledPartnerInfo, (IStationaryQubit *), (override));

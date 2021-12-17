@@ -32,9 +32,6 @@ class StationaryQubit : public IStationaryQubit {
   void Lock(unsigned long rs_id, unsigned long rule_id, int action_id) override;
   void Unlock() override;
   bool isLocked() override;
-  void Allocate() override;
-  void Deallocate() override;
-  bool isAllocated() override;
 
   /**
    * \brief Emit photon.
@@ -123,9 +120,6 @@ class StationaryQubit : public IStationaryQubit {
   bool locked;
   unsigned long locked_ruleset_id;
   unsigned long locked_rule_id;
-
- private:
-  bool allocated;
 
  protected:
   void initialize() override;

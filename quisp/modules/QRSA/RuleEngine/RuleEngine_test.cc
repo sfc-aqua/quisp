@@ -187,9 +187,8 @@ TEST(RuleEngineTest, resourceAllocation) {
   rs->addRule(std::move(rule));
   rule_engine->rp.insert(rs);
 
-  EXPECT_CALL(*mockQubit1, Allocate()).WillRepeatedly(Return());
-  EXPECT_CALL(*mockQubit1, isAllocated()).WillRepeatedly(Return(false));
   rule_engine->ResourceAllocation(QNIC_E, 3);
+  EXPECT_TRUE(qubit_record1->isAllocated());
 
   // resource allocation assigns a corresponding qubit to action's resource
   auto& _rs = rule_engine->rp[0];

@@ -56,9 +56,7 @@ void RuleEngine::initialize() {
   for (int qnic_address = 0; qnic_address < number_of_qnics_all; qnic_address++) {
     tracker_accessible.push_back(true);
   }
-
-  // running_processes = new RuleSetPtr[QNIC_N];//One process per QNIC for now. No multiplexing.
-  // WATCH(assigned);
+  WATCH_VECTOR(tracker_accessible);
 }
 
 void RuleEngine::handleMessage(cMessage *msg) {
@@ -923,7 +921,7 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
   bell_pair_store.eraseQubit(qubit_record);
 
   // Make this qubit available for rules
-  if (qubit->isAllocated()) {
+  if (qubit_record->isAllocated()) {
     error("qubit is already allocated");
   }
   if (qubit->isLocked()) {
@@ -1023,8 +1021,10 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
 }
 
 void RuleEngine::freeResource(int qnic_index /*The actual index. Not address. This with qnic_type makes the id unique.*/, int qubit_index, QNIC_type qnic_type) {
-  realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, qnic_type, false);
-  qnic_store->setQubitBusy(qnic_type, qnic_index, qubit_index, false);
+  auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit_index);
+  realtime_controller->ReInitialize_StationaryQubit(qubit_record, false);
+  qubit_record->setBusy(false);
+  if (qubit_record->isAllocated()) qubit_record->setAllocated(false);
 }
 
 void RuleEngine::clearTrackerTable(int destAddr, int internal_qnic_address) {
@@ -1071,13 +1071,13 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
           // if the qubit has already been assigned to the rule, the qubit is not allocatable to that rule
           bool allocatable = checkAppliedRule(qubit, (*rule)->rule_index);
           // EV<<" allocatable: "<<allocatable<<" : "<<qubit<<"action_partner:"<<action_partner<<"\n";
-          if (!qubit->isAllocated() && allocatable) {
+          if (!qubit_record->isAllocated() && allocatable) {
             if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
               error("Freshing qubit wrong");
             }
             // 5. increment the assined counter and set allocated flag
             assigned++;
-            qubit->Allocate();
+            qubit_record->setAllocated(true);
             updateAppliedRule(qubit, (*rule)->rule_index);
             (*rule)->addResource(action_partner, qubit);
           }
@@ -1264,6 +1264,7 @@ void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, ISt
   auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit->par("stationaryQubit_address"));
   realtime_controller->ReInitialize_StationaryQubit(qubit_record, false);
   qubit_record->setBusy(false);
+  if (qubit_record->isAllocated()) qubit_record->setAllocated(false);
   clearAppliedRule(qubit);
   bell_pair_store.eraseQubit(qubit_record);
 }

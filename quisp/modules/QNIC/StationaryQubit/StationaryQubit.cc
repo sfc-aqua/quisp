@@ -307,7 +307,6 @@ void StationaryQubit::setFree(bool consumed) {
   locked_rule_id = -1;
   action_index = -1;
 
-  allocated = false;
   is_busy = false;
   emitted_time = -1;
   updated_time = simTime();
@@ -376,18 +375,6 @@ void StationaryQubit::Unlock() {
 }
 
 bool StationaryQubit::isLocked() { return locked; }
-
-void StationaryQubit::Allocate() {
-  allocated = true;
-  if (hasGUI()) {
-    bubble("Allocated!");
-    getDisplayString().setTagArg("i", 1, "purple");
-  }
-}
-
-void StationaryQubit::Deallocate() { allocated = false; }
-
-bool StationaryQubit::isAllocated() { return allocated; }
 
 /**
  * \brief Generate photon entangled with the memory
