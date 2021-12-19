@@ -34,14 +34,10 @@ cPacket *DoubleSelectionDualActionSecond::run(cModule *re) {
 
   if (qubit == trash_qubit_X || qubit == trash_qubit_Z || trash_qubit_Z == trash_qubit_X || qubit == ds_trash_qubit_X || trash_qubit_X == ds_trash_qubit_X ||
       trash_qubit_Z == ds_trash_qubit_X) {
-    Error *pk = new Error;
-    pk->setError_text("Qubit and Trash_qubit must be different.");
-    return pk;
+    return generateError("Qubit and Trash_qubit must be different.");
   }
   if (qubit == nullptr || trash_qubit_Z == nullptr || trash_qubit_X == nullptr || ds_trash_qubit_X == nullptr) {
-    Error *pk = new Error;
-    pk->setError_text("Not enough resource (Qubit and Trash_qubit) found. This should have been checked as a condition clause.");
-    return pk;
+    return generateError("Not enough resource (Qubit and Trash_qubit) found. This should have been checked as a condition clause.");
   }
   bool meas_X, meas_Z, ds_meas_X = false;
 
@@ -127,14 +123,10 @@ cPacket *DoubleSelectionDualActionSecondInv::run(cModule *re) {
 
   if (qubit == trash_qubit_X || qubit == trash_qubit_Z || trash_qubit_Z == trash_qubit_X || qubit == ds_trash_qubit_Z || trash_qubit_X == ds_trash_qubit_Z ||
       trash_qubit_Z == ds_trash_qubit_Z) {
-    Error *pk = new Error;
-    pk->setError_text("Qubit and Trash_qubit must be different.");
-    return pk;
+    return generateError("Qubit and Trash_qubit must be different.");
   }
   if (qubit == nullptr || trash_qubit_Z == nullptr || trash_qubit_X == nullptr || ds_trash_qubit_Z == nullptr) {
-    Error *pk = new Error;
-    pk->setError_text("Not enough resource (Qubit and Trash_qubit) found. This should have been checked as a condition clause.");
-    return pk;
+    return generateError("Not enough resource (Qubit and Trash_qubit) found. This should have been checked as a condition clause.");
   }
   bool meas_X, meas_Z, ds_meas_Z = false;
 

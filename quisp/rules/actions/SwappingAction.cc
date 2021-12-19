@@ -40,21 +40,15 @@ cPacket *SwappingAction::run(cModule *re) {
   right_qubit = getResource(right_resource, right_partner);
 
   if (left_qubit == nullptr || right_qubit == nullptr) {
-    Error *pk = new Error;
-    pk->setError_text("Not enough resource found! This shouldn't happen!");
-    return pk;
+    return generateError("Not enough resource found! This shouldn't happen!");
   }
 
   if (left_qubit == right_qubit) {
-    Error *pk = new Error;
-    pk->setError_text("Left and right qubits are the same. ");
-    return pk;
+    return generateError("Left and right qubits are the same. ");
   }
 
   if (left_qnic_id < 0 || right_qnic_id < 0) {
-    Error *pk = new Error;
-    pk->setError_text("QNICs are not found!");
-    return pk;
+    return generateError("QNICs are not found!");
   }
 
   // actual swapping operations
@@ -62,9 +56,7 @@ cPacket *SwappingAction::run(cModule *re) {
   auto *left_partner_qubit = left_qubit->entangled_partner;
 
   if (right_partner_qubit == nullptr || left_partner_qubit == nullptr) {
-    Error *pk = new Error;
-    pk->setError_text("Partner qubits are null");
-    return pk;
+    return generateError("Partner qubits are null");
   }
   // just swapping pointer.
   // swapper have no way to know this swapping is success or not.

@@ -55,14 +55,10 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   right_qubit = getResource(right_resource, right_partner);
 
   if (left_qubit == nullptr || right_qubit == nullptr) {
-    Error *pk = new Error;
-    pk->setError_text("Not enough resource found! This shouldn't happen!");
-    return pk;
+    return generateError("Not enough resource found! This shouldn't happen!");
   }
   if (left_qnic_id < 0 || right_qnic_id < 0) {
-    Error *pk = new Error;
-    pk->setError_text("QNICs are not found!");
-    return pk;
+    return generateError("QNICs are not found!");
   }
 
   auto *right_partner_qubit = right_qubit->entangled_partner;

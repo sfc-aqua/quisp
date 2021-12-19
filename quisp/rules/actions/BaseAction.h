@@ -13,6 +13,7 @@
 #include <memory>
 
 namespace quisp {
+
 namespace rules {
 namespace actions {
 
@@ -32,6 +33,7 @@ class Action {
   virtual IStationaryQubit* getResource(int required_index, int partner);
   virtual int checkNumResource();
   virtual void removeResource_fromRule(IStationaryQubit* qubit);
+  cPacket* generateError(const char* msg);
   // virtual StationaryQubit* getQubit(qnicResources* resources, QNIC_type qtype, int qid, int partner, int res_id);
 };
 }  // namespace actions

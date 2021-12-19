@@ -5,7 +5,7 @@
  *
  *  \brief Action
  */
-#include <messages/classical_messages.h>
+#include <messages/base_messages_m.h>
 #include <omnetpp.h>
 #include "BaseAction.h"
 
@@ -53,6 +53,11 @@ void Action::removeResource_fromRule(IStationaryQubit *qubit) {
       break;
     }
   }
+}
+cPacket *Action::generateError(const char *msg) {
+  auto *error = new quisp::messages::Error();
+  error->setError_text(msg);
+  return error;
 }
 
 }  // namespace actions
