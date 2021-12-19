@@ -2,35 +2,25 @@
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
-namespace quisp {
-namespace rules {
-namespace actions {
+namespace quisp::rules::actions {
 
-PurifyAction::PurifyAction() {}
-
-PurifyAction::PurifyAction(unsigned long RuleSet_id, unsigned long rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi,
-                           int res, int tres) {
-  partner = part;
-  qnic_type = qt;
-  qnic_id = qi;
-  resource = res;
-  trash_resource = tres;
-  purification_count = num_purification;
-  rule_id = rule_index;
-  ruleset_id = RuleSet_id;
-  num_purify = num_purification;
-  X = X_purification;
-  Z = Z_purification;
-  // action_index++;
-}
+PurifyAction::PurifyAction(unsigned long ruleset_id, unsigned long rule_index, bool x_purification, bool z_purification, int num_purification, int partner, QNIC_type qnic_type,
+                           int qnic_id, int resource, int trash_resource)
+    : Action(ruleset_id, rule_index),
+      partner(partner),
+      qnic_type(qnic_type),
+      qnic_id(qnic_id),
+      resource(resource),
+      trash_resource(trash_resource),
+      purification_count(num_purification),
+      X(x_purification),
+      Z(z_purification),
+      num_purify(num_purification) {}
 
 // Either Z or X purification.
 cPacket *PurifyAction::run(cModule *re) {
-  IStationaryQubit *qubit = nullptr;
-  IStationaryQubit *trash_qubit = nullptr;
-
-  qubit = getResource(resource, partner);
-  trash_qubit = getResource(trash_resource, partner);
+  auto *qubit = getResource(resource, partner);
+  auto *trash_qubit = getResource(trash_resource, partner);
 
   if (qubit == trash_qubit) {
     return generateError("Qubit and Trash_qubit must be different.");
@@ -38,27 +28,24 @@ cPacket *PurifyAction::run(cModule *re) {
   if (qubit == nullptr || trash_qubit == nullptr) {
     return generateError("Not enough resource (Qubit and Trash_qubit) found. This should have been checked as a condition clause.");
   }
+
   bool meas = false;
-  if (X && !Z)
-    meas = trash_qubit->Xpurify(qubit);  // Error propagation only. Not based on density matrix
-  else if (!X && Z)
-    meas = trash_qubit->Zpurify(qubit);  // Error propagation only. Not based on density matrix
+  if (X && !Z) {
+    meas = trash_qubit->Xpurify(qubit);
+  } else if (!X && Z) {
+    meas = trash_qubit->Zpurify(qubit);
+  }
 
   qubit->Lock(ruleset_id, rule_id, action_index);
 
-  // Trash qubit has been measured. Now, break the entanglement info of the partner.
-  // There is no need to overwrite its density matrix since we are only tracking errors.
   if (trash_qubit->entangled_partner != nullptr) {
-    // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
-    // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
     trash_qubit->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
-    // Break entanglement.
     trash_qubit->entangled_partner->entangled_partner = nullptr;
   }
-  // Delete measured resource from the tracked list of resources.
-  removeResource_fromRule(trash_qubit);  // Remove from resource list in this Rule.
+
+  removeResource_fromRule(trash_qubit);
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
-  rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);  // Remove from entangled resource list.
+  rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);
 
   PurificationResult *pk = new PurificationResult;
   pk->setDestAddr(partner);
@@ -73,6 +60,4 @@ cPacket *PurifyAction::run(cModule *re) {
   action_index++;
   return pk;
 }
-}  // namespace actions
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::actions
