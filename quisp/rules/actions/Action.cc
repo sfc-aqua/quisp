@@ -13,7 +13,7 @@ namespace quisp::rules::actions {
 
 IStationaryQubit *Action::getResource(int required_index, int partner) {
   int i = 0;
-  for (auto it = (*rule_resources).begin(); it != (*rule_resources).end(); ++it) {
+  for (auto it = rule_resources->begin(); it != rule_resources->end(); ++it) {
     if (it->first == partner && !it->second->isLocked()) {
       if (i == required_index) return it->second;
       i++;
@@ -23,12 +23,10 @@ IStationaryQubit *Action::getResource(int required_index, int partner) {
 }
 
 void Action::removeResource_fromRule(IStationaryQubit *qubit) {
-  for (auto it = (*rule_resources).begin(), next_it = (*rule_resources).begin(); it != (*rule_resources).end(); it = next_it) {
-    next_it = it;
-    ++next_it;
+  for (auto it = rule_resources->begin(); it != rule_resources->end(); ++it) {
     if (it->second == qubit) {
-      (*rule_resources).erase(it);
-      break;
+      rule_resources->erase(it);
+      return;
     }
   }
 }
