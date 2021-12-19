@@ -9,29 +9,7 @@
 #include <omnetpp.h>
 #include "BaseAction.h"
 
-namespace quisp {
-namespace rules {
-namespace actions {
-
-int Action::checkNumResource() { return (*rule_resources).size(); }
-
-// required_index: 0 is the top one, 1 is the 2nd top one, and so on.
-IStationaryQubit *Action::getResource_fromTop(int required_index) {
-  int resource_index = 0;
-  IStationaryQubit *pt = nullptr;
-
-  for (auto it = (*rule_resources).begin(); it != (*rule_resources).end(); ++it) {
-    if (it->second->isLocked()) {
-      // Ignore locked resource
-    } else if (resource_index == required_index && !it->second->isLocked()) {
-      pt = it->second;
-      break;
-    } else {
-      resource_index++;
-    }
-  }
-  return pt;
-}
+namespace quisp::rules::actions {
 
 IStationaryQubit *Action::getResource(int required_index, int partner) {
   int i = 0;
@@ -60,6 +38,4 @@ cPacket *Action::generateError(const char *msg) {
   return error;
 }
 
-}  // namespace actions
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::actions

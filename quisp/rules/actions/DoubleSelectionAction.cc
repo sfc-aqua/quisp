@@ -93,7 +93,6 @@ DoubleSelectionActionInv::DoubleSelectionActionInv(unsigned long RuleSet_id, uns
   trash_resource_Z = tres_Z;
   rule_id = rule_index;
   ruleset_id = RuleSet_id;
-  // action_index++;
 }
 
 // Double selection single error (Z error) purification
@@ -143,7 +142,6 @@ cPacket *DoubleSelectionActionInv::run(cModule *re) {
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
   rule_engine->freeConsumedResource(qnic_id, trash_qubit_X, qnic_type);  // Remove from entangled resource list.
   rule_engine->freeConsumedResource(qnic_id, trash_qubit_Z, qnic_type);
-  // Deleting done
 
   DoublePurificationResult *pk = new DoublePurificationResult;
   pk->setDestAddr(partner);
