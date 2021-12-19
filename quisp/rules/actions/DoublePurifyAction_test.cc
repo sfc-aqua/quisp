@@ -33,8 +33,6 @@ class DoublePurifyAction : public OriginalDoublePurifyAction {
   using OriginalDoublePurifyAction::ruleset_id;
   using OriginalDoublePurifyAction::trash_resource_X;
   using OriginalDoublePurifyAction::trash_resource_Z;
-  using OriginalDoublePurifyAction::X;
-  using OriginalDoublePurifyAction::Z;
 
   static std::unique_ptr<DoublePurifyAction> setupAction() {
     int partner_addr = 2;
