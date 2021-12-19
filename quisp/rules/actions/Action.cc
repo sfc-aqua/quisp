@@ -11,6 +11,8 @@
 
 namespace quisp::rules::actions {
 
+Action::Action(unsigned long ruleset_id, unsigned long rule_id) : ruleset_id(ruleset_id), rule_id(rule_id){};
+
 IStationaryQubit *Action::getResource(int required_index, int partner) {
   int i = 0;
   for (auto it = rule_resources->begin(); it != rule_resources->end(); ++it) {
