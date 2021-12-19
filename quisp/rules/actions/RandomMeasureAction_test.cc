@@ -41,7 +41,7 @@ class RandomMeasureAction : public OriginalRandomMeasureAction {
     int resource_index = 1;
     int max_count = 8000;
 
-    return std::make_unique<RandomMeasureAction>(owner_address, partner_address, qnic_type, qnic_id, resource_index, max_count);
+    return std::make_unique<RandomMeasureAction>(0, 0, owner_address, partner_address, qnic_type, qnic_id, resource_index, max_count);
   }
   MOCK_METHOD(IStationaryQubit *, getResource, (int required_index, int partner), (override));
   MOCK_METHOD(void, removeResource_fromRule, (IStationaryQubit *), (override));
@@ -55,7 +55,7 @@ TEST(RandomMeasureActionTest, Init) {
   int resource_index = 1;
   int num_measure = 8000;
 
-  auto *action = new RandomMeasureAction(owner_address, partner_address, qnic_type, qnic_id, resource_index, num_measure);
+  auto *action = new RandomMeasureAction(0, 0, owner_address, partner_address, qnic_type, qnic_id, resource_index, num_measure);
   EXPECT_EQ(action->src, owner_address);
   EXPECT_EQ(action->dst, partner_address);
   EXPECT_EQ(action->partner, partner_address);

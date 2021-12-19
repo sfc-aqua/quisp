@@ -2,19 +2,12 @@
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
-namespace quisp {
-namespace rules {
-namespace actions {
+namespace quisp::rules::actions {
 
-RandomMeasureAction::RandomMeasureAction(int owner_address, int part, QNIC_type qt, int qi, int res, int max) {
-  src = owner_address;
-  partner = part;
-  dst = part;
-  qnic_type = qt;
-  qnic_id = qi;
-  resource = res;
+RandomMeasureAction::RandomMeasureAction(unsigned long ruleset_id, unsigned long rule_index, int owner_address, int partner, QNIC_type qnic_type, int qnic_id, int resource,
+                                         int max_count)
+    : Action(ruleset_id, rule_index), partner(partner), qnic_type(qnic_type), qnic_id(qnic_id), resource(resource), src(owner_address), dst(partner), max_count(max_count) {
   current_count = 0;
-  max_count = max;
   start = simTime();
 };
 
@@ -31,10 +24,9 @@ cPacket *RandomMeasureAction::run(cModule *re) {
   current_count++;
 
   // Delete measured resource from the tracked list of resources.
-  removeResource_fromRule(qubit);  // Remove from resource list in this Rule.
+  removeResource_fromRule(qubit);
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
-  rule_engine->freeConsumedResource(qnic_id, qubit, qnic_type);  // Remove from entangled resource list.
-  // Deleting done
+  rule_engine->freeConsumedResource(qnic_id, qubit, qnic_type);
 
   LinkTomographyResult *pk = new LinkTomographyResult;
   pk->setSrcAddr(src);
@@ -51,6 +43,4 @@ cPacket *RandomMeasureAction::run(cModule *re) {
   }
   return pk;
 }
-}  // namespace actions
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::actions
