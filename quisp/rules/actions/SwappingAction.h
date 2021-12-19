@@ -2,11 +2,15 @@
 
 #include "BaseAction.h"
 
-namespace quisp {
-namespace rules {
-namespace actions {
+namespace quisp::rules::actions {
 
 class SwappingAction : public Action {
+ public:
+  SwappingAction(unsigned long ruleset_id, unsigned long rule_id, int left_partner, QNIC_type left_qnic_type, int left_qnic_id, int left_qnic_address, int left_resource,
+                 int right_partner, QNIC_type right_qnic_type, int right_qnic_id, int right_qnic_address, int right_resource, int self_left_qnic_id, QNIC_type self_left_qnic_type,
+                 int self_right_qnic_id, QNIC_type self_right_qnic_type);
+  cPacket* run(cModule* re) override;
+
  protected:
   // First partner
   int left_partner;
@@ -26,16 +30,6 @@ class SwappingAction : public Action {
   int self_right_qnic_id;
   QNIC_type self_left_qnic_type;
   QNIC_type self_right_qnic_type;
-
- public:
-  // constructor of entanglement swapping
-  SwappingAction(unsigned long _ruleset_id, unsigned long _rule_id, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr, int slqi,
-                 QNIC_type slqt, int srqi, QNIC_type srqt);
-  // cPacket* run(qnicResources *resources) override;
-  // cPacket* run(cModule *re, qnicResources *resources) override;
-  cPacket* run(cModule* re) override;
 };
 
-}  // namespace actions
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::actions

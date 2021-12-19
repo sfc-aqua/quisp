@@ -4,40 +4,32 @@
 
 using quisp::types::MeasureZResult;
 
-namespace quisp {
-namespace rules {
-namespace actions {
+namespace quisp::rules::actions {
 
-SwappingAction::SwappingAction(unsigned long _ruleset_id, unsigned long _rule_id, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad,
-                               int rr, int slqi, QNIC_type slqt, int srqi, QNIC_type srqt) {
-  ruleset_id = _ruleset_id;
-  rule_id = _rule_id;
-
-  left_partner = lp;
-  left_qnic_type = lqt;
-  left_qnic_id = lqi;
-  left_qnic_address = lqad;
-  left_resource = lr;
-  right_partner = rp;
-  right_qnic_type = rqt;
-  right_qnic_id = rqi;
-  right_qnic_address = rqad;
-  right_resource = rr;
-
-  self_left_qnic_id = slqi;
-  self_right_qnic_id = srqi;
-  self_left_qnic_type = slqt;
-  self_right_qnic_type = srqt;
-}
+SwappingAction::SwappingAction(unsigned long ruleset_id, unsigned long rule_id, int left_partner, QNIC_type left_qnic_type, int left_qnic_id, int left_qnic_address,
+                               int left_resource, int right_partner, QNIC_type right_qnic_type, int right_qnic_id, int right_qnic_address, int right_resource,
+                               int self_left_qnic_id, QNIC_type self_left_qnic_type, int self_right_qnic_id, QNIC_type self_right_qnic_type)
+    : Action(ruleset_id, rule_id),
+      left_partner(left_partner),
+      left_qnic_type(left_qnic_type),
+      left_qnic_id(left_qnic_id),
+      left_qnic_address(left_qnic_address),
+      left_resource(left_resource),
+      right_partner(right_partner),
+      right_qnic_type(right_qnic_type),
+      right_qnic_id(right_qnic_id),
+      right_qnic_address(right_qnic_address),
+      right_resource(right_resource),
+      self_left_qnic_id(self_left_qnic_id),
+      self_right_qnic_id(self_right_qnic_id),
+      self_left_qnic_type(self_left_qnic_type),
+      self_right_qnic_type(self_right_qnic_type) {}
 
 // TODO: completely mixed
 cPacket *SwappingAction::run(cModule *re) {
-  IStationaryQubit *left_qubit = nullptr;
-  IStationaryQubit *right_qubit = nullptr;
-
   // FIXME: left_resource is misleading name. This is just an index.
-  left_qubit = getResource(left_resource, left_partner);
-  right_qubit = getResource(right_resource, right_partner);
+  auto *left_qubit = getResource(left_resource, left_partner);
+  auto *right_qubit = getResource(right_resource, right_partner);
 
   if (left_qubit == nullptr || right_qubit == nullptr) {
     return generateError("Not enough resource found! This shouldn't happen!");
@@ -97,12 +89,10 @@ cPacket *SwappingAction::run(cModule *re) {
   left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
   removeResource_fromRule(left_qubit);
   removeResource_fromRule(right_qubit);
-  // free consumed
   rule_engine->freeConsumedResource(self_left_qnic_id, left_qubit, self_left_qnic_type);  // free left
   rule_engine->freeConsumedResource(self_right_qnic_id, right_qubit, self_right_qnic_type);  // free right
 
-  // result packet
-  SwappingResult *pk = new SwappingResult;
+  auto *pk = new SwappingResult;
   // no destination here. In RuleEngine, it's set.
   // this setKind() doesn't seem to have any effect; set instead in void RuleEngine::traverseThroughAllProcesses2()
   pk->setKind(5);
@@ -129,6 +119,4 @@ cPacket *SwappingAction::run(cModule *re) {
   return pk;
 }
 
-}  // namespace actions
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::actions
