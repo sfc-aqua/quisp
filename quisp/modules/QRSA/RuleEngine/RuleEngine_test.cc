@@ -136,14 +136,10 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
   auto* rs = new RuleSet(mock_ruleset_id, mock_rule_id, {});  // ruleset_id, ruleset_owner, partners
-  auto wait_rule = std::make_unique<Rule>();
-  wait_rule->ruleset_id = mock_ruleset_id;
-  wait_rule->rule_index = mock_rule_id;
+  auto wait_rule = std::make_unique<Rule>(mock_ruleset_id, mock_rule_id);
   wait_rule->next_rule_id = mock_next_rule_id;
   rs->addRule(std::move(wait_rule));
-  auto next_rule = std::make_unique<Rule>();
-  next_rule->ruleset_id = mock_ruleset_id;
-  next_rule->rule_index = mock_next_rule_id;
+  auto next_rule = std::make_unique<Rule>(mock_ruleset_id, mock_next_rule_id);
   rs->addRule(std::move(next_rule));
 
   rule_engine->rp.insert(rs);
@@ -165,9 +161,7 @@ TEST(RuleEngineTest, resourceAllocation) {
   auto* sim = prepareSimulation();
   auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockQubit0 = new MockQubit(QNIC_E, 3);
   auto* mockQubit1 = new MockQubit(QNIC_E, 3);
-  auto* mockQubit2 = new MockQubit(QNIC_E, 3);
   auto* qubit_record0 = new QubitRecord(QNIC_E, 3, 0);
   auto* qubit_record1 = new QubitRecord(QNIC_E, 3, 1);
   auto* qubit_record2 = new QubitRecord(QNIC_E, 3, 2);
@@ -178,7 +172,7 @@ TEST(RuleEngineTest, resourceAllocation) {
   rule_engine->setAllResources(1, qubit_record1);
   rule_engine->setAllResources(2, qubit_record2);
   auto* rs = new RuleSet(0, 0, 1);
-  auto rule = std::make_unique<Rule>();
+  auto rule = std::make_unique<Rule>(0, 0);
   // owner address,
   auto* action = new RandomMeasureAction(0, 1, QNIC_E, 3, 1, 10);
 

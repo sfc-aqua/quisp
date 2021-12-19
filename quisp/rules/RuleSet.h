@@ -25,7 +25,6 @@ class RuleSet {
   std::unique_ptr<Rule>& getRule(int i);
   int size() const;
   bool empty() const;
-  void finalize() {}
   std::vector<std::unique_ptr<Rule>>::const_iterator cbegin();
   std::vector<std::unique_ptr<Rule>>::const_iterator cend();
 

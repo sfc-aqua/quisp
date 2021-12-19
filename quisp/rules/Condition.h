@@ -7,8 +7,6 @@
 #ifndef QUISP_RULES_CONDITION_H_
 #define QUISP_RULES_CONDITION_H_
 
-#include <omnetpp.h>
-#include <memory>
 #include "Clause.h"
 
 namespace quisp {

@@ -22,7 +22,7 @@ TEST(RuleSetTest, Init) {
 TEST(RuleSetTest, AddRule) {
   prepareSimulation();
   RuleSet rule_set(1, 2, 3);
-  auto rule = std::make_unique<Rule>();
+  auto rule = std::make_unique<Rule>(0, 0);
   rule_set.addRule(std::move(rule));
   EXPECT_EQ(1, rule_set.size());
 }
