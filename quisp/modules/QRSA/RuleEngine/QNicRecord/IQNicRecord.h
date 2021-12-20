@@ -1,6 +1,7 @@
 #pragma once
 
-#include "utils/ComponentProvider.h"
+#include <modules/QRSA/QRSA.h>
+#include <utils/ComponentProvider.h>
 
 namespace quisp::modules::qnic_record {
 
@@ -16,6 +17,7 @@ class IQNicRecord {
   virtual int countNumFreeQubits() = 0;
   virtual int takeFreeQubitIndex() = 0;
   virtual void setQubitBusy(int qubit_index, bool is_busy) = 0;
+  virtual qrsa::IQubitRecord* getQubit(int qubit_index) = 0;
 };
 
 }  // namespace quisp::modules::qnic_record

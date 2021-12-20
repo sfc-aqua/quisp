@@ -289,7 +289,7 @@ void StationaryQubit::CNOT_gate(IStationaryQubit *control_qubit) {
 
 // This is invoked whenever a photon is emitted out from this particular qubit.
 void StationaryQubit::setBusy() {
-  isBusy = true;
+  is_busy = true;
   emitted_time = simTime();
   updated_time = simTime();  // Should be no error at this time.
   par("photon_emitted_at") = emitted_time.dbl();
@@ -310,8 +310,7 @@ void StationaryQubit::setFree(bool consumed) {
   locked_rule_id = -1;
   action_index = -1;
 
-  isBusy = false;
-  allocated = false;
+  is_busy = false;
   emitted_time = -1;
   updated_time = simTime();
 
@@ -349,11 +348,6 @@ void StationaryQubit::setFree(bool consumed) {
   }
 }
 
-bool StationaryQubit::checkBusy() {
-  Enter_Method("checkBusy()");
-  return isBusy;
-}
-
 /*To avoid disturbing this qubit.*/
 void StationaryQubit::Lock(unsigned long rs_id, unsigned long rule_id, int action_id) {
   if (rs_id == -1 || rule_id == -1 || action_id == -1) {
@@ -384,18 +378,6 @@ void StationaryQubit::Unlock() {
 }
 
 bool StationaryQubit::isLocked() { return locked; }
-
-void StationaryQubit::Allocate() {
-  allocated = true;
-  if (hasGUI()) {
-    bubble("Allocated!");
-    getDisplayString().setTagArg("i", 1, "purple");
-  }
-}
-
-void StationaryQubit::Deallocate() { allocated = false; }
-
-bool StationaryQubit::isAllocated() { return allocated; }
 
 /**
  * \brief Generate photon entangled with the memory
@@ -428,7 +410,7 @@ PhotonicQubit *StationaryQubit::generateEntangledPhoton() {
  */
 void StationaryQubit::emitPhoton(int pulse) {
   Enter_Method("emitPhoton()");
-  if (checkBusy()) {
+  if (is_busy) {
     error("Requested a photon emission to a busy qubit... this should not happen!");
     return;
   }

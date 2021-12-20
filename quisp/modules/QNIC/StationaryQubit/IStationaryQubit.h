@@ -127,15 +127,11 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   IStationaryQubit(){};
   virtual ~IStationaryQubit(){};
 
-  virtual bool checkBusy() = 0;
   virtual void setFree(bool consumed) = 0;
   /*In use. E.g. waiting for purification result.*/
   virtual void Lock(unsigned long rs_id, unsigned long rule_id, int action_id) = 0;
   virtual void Unlock() = 0;
   virtual bool isLocked() = 0;
-  virtual void Allocate() = 0;
-  virtual void Deallocate() = 0;
-  virtual bool isAllocated() = 0;
 
   /**
    * \brief Emit photon.
@@ -180,8 +176,6 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   /** Stationary qubit last updated at*/
   omnetpp::simtime_t updated_time = -1;
 
-  /** Stationary Qubit is free or reserved. */
-  bool isBusy;
   /** Standard deviation */
   double std;
 
