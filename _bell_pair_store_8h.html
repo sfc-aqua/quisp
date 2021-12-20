@@ -91,17 +91,21 @@ $(document).ready(function(){initNavTree('_bell_pair_store_8h.html',''); initRes
 <div class="contents">
 <div class="textblock"><code>#include &lt;<a class="el" href="_q_n_i_c_8h_source.html">modules/QNIC.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="_i_stationary_qubit_8h_source.html">modules/QNIC/StationaryQubit/IStationaryQubit.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="_q_r_s_a_8h_source.html">modules/QRSA/QRSA.h</a>&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for BellPairStore.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="_bell_pair_store_8h__incl.png" border="0" usemap="#aquisp_2modules_2_q_r_s_a_2_rule_engine_2_bell_pair_store_2_bell_pair_store_8h" alt=""/></div>
 <map name="aquisp_2modules_2_q_r_s_a_2_rule_engine_2_bell_pair_store_2_bell_pair_store_8h" id="aquisp_2modules_2_q_r_s_a_2_rule_engine_2_bell_pair_store_2_bell_pair_store_8h">
-<area shape="rect" title=" " alt="" coords="71,5,242,61"/>
-<area shape="rect" href="_q_n_i_c_8h.html" title="QNIC." alt="" coords="5,117,124,143"/>
-<area shape="rect" href="_i_stationary_qubit_8h.html" title=" " alt="" coords="148,109,349,151"/>
-<area shape="rect" title=" " alt="" coords="23,199,106,225"/>
-<area shape="rect" title=" " alt="" coords="156,199,288,225"/>
-<area shape="rect" title=" " alt="" coords="313,199,403,225"/>
+<area shape="rect" title=" " alt="" coords="96,5,267,61"/>
+<area shape="rect" href="_q_n_i_c_8h.html" title="QNIC." alt="" coords="258,288,377,315"/>
+<area shape="rect" href="_i_stationary_qubit_8h.html" title=" " alt="" coords="81,109,282,151"/>
+<area shape="rect" href="_q_r_s_a_8h.html" title=" " alt="" coords="331,117,493,143"/>
+<area shape="rect" title=" " alt="" coords="276,363,359,389"/>
+<area shape="rect" title=" " alt="" coords="33,206,165,233"/>
+<area shape="rect" title=" " alt="" coords="189,206,280,233"/>
+<area shape="rect" title=" " alt="" coords="461,288,529,315"/>
+<area shape="rect" href="_i_qubit_record_8h.html" title=" " alt="" coords="355,199,517,240"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -170,8 +174,8 @@ Typedefs</h2></td></tr>
 <tr class="separator:a0f71b198c963a11406c9846dc8062c8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac15251b960056e05af47534b467cd5b6"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#ac15251b960056e05af47534b467cd5b6">quisp::modules::QNicIndex</a> = int</td></tr>
 <tr class="separator:ac15251b960056e05af47534b467cd5b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0634ef3aa49569e58c5a5208f240fb49"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#a0634ef3aa49569e58c5a5208f240fb49">quisp::modules::PartnerAddrQubitMap</a> = std::multimap&lt; QNodeAddr, IStationaryQubit * &gt;</td></tr>
-<tr class="separator:a0634ef3aa49569e58c5a5208f240fb49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaddacfaab29681c46ad5a418968ecb7d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#aaddacfaab29681c46ad5a418968ecb7d">quisp::modules::PartnerAddrQubitMap</a> = std::multimap&lt; QNodeAddr, qrsa::IQubitRecord * &gt;</td></tr>
+<tr class="separator:aaddacfaab29681c46ad5a418968ecb7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2ba3b50171b853416c32771dd1ab2cd"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#ac2ba3b50171b853416c32771dd1ab2cd">quisp::modules::ResourceKey</a> = std::pair&lt; QNIC_type, QNicIndex &gt;</td></tr>
 <tr class="separator:ac2ba3b50171b853416c32771dd1ab2cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf60aac8c13704b1b501124d946bbf2a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp_1_1modules.html#abf60aac8c13704b1b501124d946bbf2a">quisp::modules::PartnerAddrQubitMapRange</a> = std::pair&lt; PartnerAddrQubitMap::iterator, PartnerAddrQubitMap::iterator &gt;</td></tr>

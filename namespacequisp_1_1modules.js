@@ -2,6 +2,7 @@ var namespacequisp_1_1modules =
 [
     [ "qnic_record", "namespacequisp_1_1modules_1_1qnic__record.html", "namespacequisp_1_1modules_1_1qnic__record" ],
     [ "qnic_store", "namespacequisp_1_1modules_1_1qnic__store.html", "namespacequisp_1_1modules_1_1qnic__store" ],
+    [ "qrsa", "namespacequisp_1_1modules_1_1qrsa.html", "namespacequisp_1_1modules_1_1qrsa" ],
     [ "qubit_record", "namespacequisp_1_1modules_1_1qubit__record.html", "namespacequisp_1_1modules_1_1qubit__record" ],
     [ "ruleset_store", "namespacequisp_1_1modules_1_1ruleset__store.html", "namespacequisp_1_1modules_1_1ruleset__store" ],
     [ "Application", "classquisp_1_1modules_1_1_application.html", "classquisp_1_1modules_1_1_application" ],
@@ -62,7 +63,7 @@ var namespacequisp_1_1modules =
     [ "DoublePurificationTable", "namespacequisp_1_1modules.html#a1336f6c1da370af21c6066ff0c249b6b", null ],
     [ "LinkCostMap", "namespacequisp_1_1modules.html#af3ccf887db6fb13ad8cb3dd947247a4b", null ],
     [ "NeighborTable", "namespacequisp_1_1modules.html#aa8221402c1bbaa72e7188e116ef1193b", null ],
-    [ "PartnerAddrQubitMap", "namespacequisp_1_1modules.html#a0634ef3aa49569e58c5a5208f240fb49", null ],
+    [ "PartnerAddrQubitMap", "namespacequisp_1_1modules.html#aaddacfaab29681c46ad5a418968ecb7d", null ],
     [ "PartnerAddrQubitMapRange", "namespacequisp_1_1modules.html#abf60aac8c13704b1b501124d946bbf2a", null ],
     [ "PurificationTable", "namespacequisp_1_1modules.html#a926af4afd0fbecd3cfe768865186cb44", null ],
     [ "QNIC", "namespacequisp_1_1modules.html#a3991da9b9702c427d36b804b21a31956", null ],

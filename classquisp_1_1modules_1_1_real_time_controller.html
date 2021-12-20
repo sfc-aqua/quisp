@@ -126,6 +126,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9b336c0f7d0c893bbac1f19bb400b9d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a63b25db9df6411b0b957cd8b436ad87d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_real_time_controller.html#a63b25db9df6411b0b957cd8b436ad87d">ReInitialize_StationaryQubit</a> (int qnic_index, int qubit_index, <a class="el" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">QNIC_type</a> qnic_type, bool consumed) override</td></tr>
 <tr class="separator:a63b25db9df6411b0b957cd8b436ad87d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07c2f311e2a33a7c9d6f33747c1bee51"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_real_time_controller.html#a07c2f311e2a33a7c9d6f33747c1bee51">ReInitialize_StationaryQubit</a> (<a class="el" href="namespacequisp_1_1modules_1_1qrsa.html#a03b0866b48bb748920c561500cc46c17">qrsa::IQubitRecord</a> *const qubit_record, bool consumed) override</td></tr>
+<tr class="separator:a07c2f311e2a33a7c9d6f33747c1bee51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2f26b93b218622fe5cf312df1d3fc6b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_real_time_controller.html#ae2f26b93b218622fe5cf312df1d3fc6b">applyXGate</a> (<a class="el" href="namespacequisp_1_1modules_1_1qrsa.html#a03b0866b48bb748920c561500cc46c17">qrsa::IQubitRecord</a> *const qubit_record) override</td></tr>
+<tr class="separator:ae2f26b93b218622fe5cf312df1d3fc6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dd0f6c9e1f136d053c01ff00529b7a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_real_time_controller.html#a9dd0f6c9e1f136d053c01ff00529b7a9">applyZGate</a> (<a class="el" href="namespacequisp_1_1modules_1_1qrsa.html#a03b0866b48bb748920c561500cc46c17">qrsa::IQubitRecord</a> *const qubit_record) override</td></tr>
+<tr class="separator:a9dd0f6c9e1f136d053c01ff00529b7a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a175d18b9d714a4d2c87bcfd43e15d022"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_real_time_controller.html#a175d18b9d714a4d2c87bcfd43e15d022">assertNoEntanglement</a> (<a class="el" href="namespacequisp_1_1modules_1_1qrsa.html#a03b0866b48bb748920c561500cc46c17">qrsa::IQubitRecord</a> *const qubit_record) override</td></tr>
+<tr class="separator:a175d18b9d714a4d2c87bcfd43e15d022"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -165,6 +173,90 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ae2f26b93b218622fe5cf312df1d3fc6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2f26b93b218622fe5cf312df1d3fc6b">&#9670;&nbsp;</a></span>applyXGate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp::modules::RealTimeController::applyXGate </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules_1_1qrsa.html#a03b0866b48bb748920c561500cc46c17">qrsa::IQubitRecord</a> *const&#160;</td>
+          <td class="paramname"><em>qubit_record</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_real_time_controller.html#acf83030c366df4544fe736dccf81669d">quisp::modules::IRealTimeController</a>.</p>
+
+</div>
+</div>
+<a id="a9dd0f6c9e1f136d053c01ff00529b7a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dd0f6c9e1f136d053c01ff00529b7a9">&#9670;&nbsp;</a></span>applyZGate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp::modules::RealTimeController::applyZGate </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules_1_1qrsa.html#a03b0866b48bb748920c561500cc46c17">qrsa::IQubitRecord</a> *const&#160;</td>
+          <td class="paramname"><em>qubit_record</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_real_time_controller.html#a7e46382fabd64b5b68c0d318561f10cf">quisp::modules::IRealTimeController</a>.</p>
+
+</div>
+</div>
+<a id="a175d18b9d714a4d2c87bcfd43e15d022"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a175d18b9d714a4d2c87bcfd43e15d022">&#9670;&nbsp;</a></span>assertNoEntanglement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp::modules::RealTimeController::assertNoEntanglement </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules_1_1qrsa.html#a03b0866b48bb748920c561500cc46c17">qrsa::IQubitRecord</a> *const&#160;</td>
+          <td class="paramname"><em>qubit_record</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_real_time_controller.html#a1e24c0d5e52d91281e18e1f808ab7500">quisp::modules::IRealTimeController</a>.</p>
+
+</div>
+</div>
 <a id="a9b336c0f7d0c893bbac1f19bb400b9d2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9b336c0f7d0c893bbac1f19bb400b9d2">&#9670;&nbsp;</a></span>EmitPhoton()</h2>
 
@@ -271,7 +363,7 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <a id="a63b25db9df6411b0b957cd8b436ad87d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a63b25db9df6411b0b957cd8b436ad87d">&#9670;&nbsp;</a></span>ReInitialize_StationaryQubit()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a63b25db9df6411b0b957cd8b436ad87d">&#9670;&nbsp;</a></span>ReInitialize_StationaryQubit() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -317,6 +409,44 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_real_time_controller.html#ad3627e0ad9943a22fd844e322cd59177">quisp::modules::IRealTimeController</a>.</p>
+
+</div>
+</div>
+<a id="a07c2f311e2a33a7c9d6f33747c1bee51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07c2f311e2a33a7c9d6f33747c1bee51">&#9670;&nbsp;</a></span>ReInitialize_StationaryQubit() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp::modules::RealTimeController::ReInitialize_StationaryQubit </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules_1_1qrsa.html#a03b0866b48bb748920c561500cc46c17">qrsa::IQubitRecord</a> *const&#160;</td>
+          <td class="paramname"><em>qubit_record</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>consumed</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_real_time_controller.html#a41f53e51531350a7aaa89e464de58d23">quisp::modules::IRealTimeController</a>.</p>
 
 </div>
 </div>

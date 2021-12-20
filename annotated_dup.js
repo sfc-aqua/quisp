@@ -14,6 +14,9 @@ var annotated_dup =
           [ "IQNicStore", "classquisp_1_1modules_1_1qnic__store_1_1_i_q_nic_store.html", "classquisp_1_1modules_1_1qnic__store_1_1_i_q_nic_store" ],
           [ "QNicStore", "classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html", "classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store" ]
         ] ],
+        [ "qrsa", "namespacequisp_1_1modules_1_1qrsa.html", [
+          [ "LocalQubitRef", "structquisp_1_1modules_1_1qrsa_1_1_local_qubit_ref.html", "structquisp_1_1modules_1_1qrsa_1_1_local_qubit_ref" ]
+        ] ],
         [ "qubit_record", "namespacequisp_1_1modules_1_1qubit__record.html", [
           [ "IQubitRecord", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record" ],
           [ "QubitRecord", "classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html", "classquisp_1_1modules_1_1qubit__record_1_1_qubit_record" ]

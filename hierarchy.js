@@ -81,6 +81,7 @@ var hierarchy =
       [ "quisp_test::key_value::TestKeyValue", "classquisp__test_1_1key__value_1_1_test_key_value.html", null ]
     ] ],
     [ "quisp::modules::link_cost", "structquisp_1_1modules_1_1link__cost.html", null ],
+    [ "quisp::modules::qrsa::LocalQubitRef", "structquisp_1_1modules_1_1qrsa_1_1_local_qubit_ref.html", null ],
     [ "quisp::modules::measurement_operator", "structquisp_1_1modules_1_1measurement__operator.html", null ],
     [ "quisp::modules::measurement_operators", "structquisp_1_1modules_1_1measurement__operators.html", null ],
     [ "quisp::modules::measurement_outcome", "structquisp_1_1modules_1_1measurement__outcome.html", null ],

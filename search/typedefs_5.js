@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['partneraddrqubitmap_2191',['PartnerAddrQubitMap',['../namespacequisp_1_1modules.html#a0634ef3aa49569e58c5a5208f240fb49',1,'quisp::modules']]],
-  ['partneraddrqubitmaprange_2192',['PartnerAddrQubitMapRange',['../namespacequisp_1_1modules.html#abf60aac8c13704b1b501124d946bbf2a',1,'quisp::modules']]],
-  ['purificationtable_2193',['PurificationTable',['../namespacequisp_1_1modules.html#a926af4afd0fbecd3cfe768865186cb44',1,'quisp::modules']]]
+  ['neighbortable_2216',['NeighborTable',['../namespacequisp_1_1modules.html#aa8221402c1bbaa72e7188e116ef1193b',1,'quisp::modules']]]
 ];

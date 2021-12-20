@@ -85,7 +85,7 @@ $(document).ready(function(){initNavTree('classquisp_1_1modules_1_1_stationary_q
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classquisp_1_1modules_1_1_stationary_qubit-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">quisp::modules::StationaryQubit Class Reference</div>  </div>
@@ -126,8 +126,6 @@ Collaboration diagram for quisp::modules::StationaryQubit:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5676fa8062202813daa2f6a68bc53422"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a5676fa8062202813daa2f6a68bc53422">checkBusy</a> () override</td></tr>
-<tr class="separator:a5676fa8062202813daa2f6a68bc53422"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1857331255127644aef4824488d89388"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a1857331255127644aef4824488d89388">setFree</a> (bool consumed) override</td></tr>
 <tr class="separator:a1857331255127644aef4824488d89388"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76f7d0df00c33ae672837dc4bae8aee4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a76f7d0df00c33ae672837dc4bae8aee4">Lock</a> (unsigned long rs_id, unsigned long rule_id, int action_id) override</td></tr>
@@ -136,12 +134,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a56fc6c0cd54b3e6cbb025ad058053efb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a691fb10bcfa50096f8f8dfc58781e880"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a691fb10bcfa50096f8f8dfc58781e880">isLocked</a> () override</td></tr>
 <tr class="separator:a691fb10bcfa50096f8f8dfc58781e880"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9607e217b1b3633f396010d92e488592"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a9607e217b1b3633f396010d92e488592">Allocate</a> () override</td></tr>
-<tr class="separator:a9607e217b1b3633f396010d92e488592"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c29017114125fed76e39733ee829963"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a9c29017114125fed76e39733ee829963">Deallocate</a> () override</td></tr>
-<tr class="separator:a9c29017114125fed76e39733ee829963"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bc067a98c10f7602b3c12a21ebeff31"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a5bc067a98c10f7602b3c12a21ebeff31">isAllocated</a> () override</td></tr>
-<tr class="separator:a5bc067a98c10f7602b3c12a21ebeff31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa271f8eed9884a510ceb80fa156b15b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#aa271f8eed9884a510ceb80fa156b15b6">emitPhoton</a> (int pulse) override</td></tr>
 <tr class="memdesc:aa271f8eed9884a510ceb80fa156b15b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emit photon.  <a href="classquisp_1_1modules_1_1_stationary_qubit.html#aa271f8eed9884a510ceb80fa156b15b6">More...</a><br /></td></tr>
 <tr class="separator:aa271f8eed9884a510ceb80fa156b15b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -257,8 +249,6 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a9cf531649223b7a1ab3733cc66381294 inherit pub_attribs_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac9bd84ec4658f786f28b8a00687e2b0 inherit pub_attribs_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">omnetpp::simtime_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#aac9bd84ec4658f786f28b8a00687e2b0">updated_time</a> = -1</td></tr>
 <tr class="separator:aac9bd84ec4658f786f28b8a00687e2b0 inherit pub_attribs_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3b3255705fc24180d938c0927fed29a inherit pub_attribs_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#ae3b3255705fc24180d938c0927fed29a">isBusy</a></td></tr>
-<tr class="separator:ae3b3255705fc24180d938c0927fed29a inherit pub_attribs_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86be61a3ce35257904258a8613752778 inherit pub_attribs_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a86be61a3ce35257904258a8613752778">std</a></td></tr>
 <tr class="separator:a86be61a3ce35257904258a8613752778 inherit pub_attribs_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af67b7f07fd182afe5bb581570ed8b54e inherit pub_attribs_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structquisp_1_1modules_1_1_single_gate_error_model.html">SingleGateErrorModel</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#af67b7f07fd182afe5bb581570ed8b54e">Hgate_error</a></td></tr>
@@ -316,10 +306,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a6765c0afc023de3461dcbad11af00c65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a6765c0afc023de3461dcbad11af00c65">applyTwoQubitGateError</a> (<a class="el" href="structquisp_1_1modules_1_1_two_qubit_gate_error_model.html">TwoQubitGateErrorModel</a> const &amp;err, <a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html">StationaryQubit</a> *another_qubit)</td></tr>
 <tr class="separator:a6765c0afc023de3461dcbad11af00c65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
-Private Attributes</h2></td></tr>
-<tr class="memitem:a2f490ee77938bf2c75b5a4119b7e3219"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a2f490ee77938bf2c75b5a4119b7e3219">allocated</a></td></tr>
-<tr class="separator:a2f490ee77938bf2c75b5a4119b7e3219"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:ae9998b4e6f93adac8a5a5e4cdcd27fc6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#ae9998b4e6f93adac8a5a5e4cdcd27fc6">is_busy</a></td></tr>
+<tr class="separator:ae9998b4e6f93adac8a5a5e4cdcd27fc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html" title="StationaryQubit. https://arxiv.org/abs/1908.10758.">StationaryQubit</a>. <a href="https://arxiv.org/abs/1908.10758">https://arxiv.org/abs/1908.10758</a>. </p>
@@ -375,33 +365,6 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a1721a30e159414d763da6dab7439b06a">quisp::modules::IStationaryQubit</a>.</p>
-
-</div>
-</div>
-<a id="a9607e217b1b3633f396010d92e488592"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9607e217b1b3633f396010d92e488592">&#9670;&nbsp;</a></span>Allocate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void quisp::modules::StationaryQubit::Allocate </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a8a334b75449ac3ef9470d0cfc41416e2">quisp::modules::IStationaryQubit</a>.</p>
 
 </div>
 </div>
@@ -493,33 +456,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5676fa8062202813daa2f6a68bc53422"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5676fa8062202813daa2f6a68bc53422">&#9670;&nbsp;</a></span>checkBusy()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool quisp::modules::StationaryQubit::checkBusy </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a303170bbe08c9425ebd6949f753c5516">quisp::modules::IStationaryQubit</a>.</p>
-
-</div>
-</div>
 <a id="a2a148bb1bab30250dcc9c1b1367a6113"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2a148bb1bab30250dcc9c1b1367a6113">&#9670;&nbsp;</a></span>CNOT_gate()</h2>
 
@@ -553,33 +489,6 @@ Private Attributes</h2></td></tr>
 </dl>
 
 <p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#ae34e3fea4008504689063466a7ab3fb0">quisp::modules::IStationaryQubit</a>.</p>
-
-</div>
-</div>
-<a id="a9c29017114125fed76e39733ee829963"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c29017114125fed76e39733ee829963">&#9670;&nbsp;</a></span>Deallocate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void quisp::modules::StationaryQubit::Deallocate </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a36faa68ad863358eb58149fe62c07c58">quisp::modules::IStationaryQubit</a>.</p>
 
 </div>
 </div>
@@ -819,33 +728,6 @@ Private Attributes</h2></td></tr>
 
 <p>Initialize <a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html" title="StationaryQubit. https://arxiv.org/abs/1908.10758.">StationaryQubit</a>. </p>
 <p>Omnet called method to initialize objects. </p>
-
-</div>
-</div>
-<a id="a5bc067a98c10f7602b3c12a21ebeff31"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5bc067a98c10f7602b3c12a21ebeff31">&#9670;&nbsp;</a></span>isAllocated()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool quisp::modules::StationaryQubit::isAllocated </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a2ae9965ff7489239462bbba16b4c5fd2">quisp::modules::IStationaryQubit</a>.</p>
 
 </div>
 </div>
@@ -1418,28 +1300,6 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a2f490ee77938bf2c75b5a4119b7e3219"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f490ee77938bf2c75b5a4119b7e3219">&#9670;&nbsp;</a></span>allocated</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool quisp::modules::StationaryQubit::allocated</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a30422f4e77b14b2144cdbe0f3be25249"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a30422f4e77b14b2144cdbe0f3be25249">&#9670;&nbsp;</a></span>CNOTgate_error</h2>
 
@@ -1478,6 +1338,28 @@ Private Attributes</h2></td></tr>
           <td class="memname"><a class="el" href="structquisp_1_1modules_1_1_single_gate_error_model.html">SingleGateErrorModel</a> quisp::modules::StationaryQubit::Hgate_error</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae9998b4e6f93adac8a5a5e4cdcd27fc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9998b4e6f93adac8a5a5e4cdcd27fc6">&#9670;&nbsp;</a></span>is_busy</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool quisp::modules::StationaryQubit::is_busy</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

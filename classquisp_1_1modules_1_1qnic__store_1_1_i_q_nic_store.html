@@ -114,6 +114,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0e1b1fbcbbf916822d3982241fa1d895"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4f2c91e1e5a3bdc49d82a5258fd3b0c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1qnic__store_1_1_i_q_nic_store.html#aa4f2c91e1e5a3bdc49d82a5258fd3b0c">setQubitBusy</a> (<a class="el" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">QNIC_type</a> type, int qnic_index, int qubit_index, bool is_busy)=0</td></tr>
 <tr class="separator:aa4f2c91e1e5a3bdc49d82a5258fd3b0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15fe9b03dfed16d8247a0d7930ec48e6"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1modules_1_1qrsa.html#a03b0866b48bb748920c561500cc46c17">qrsa::IQubitRecord</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1qnic__store_1_1_i_q_nic_store.html#a15fe9b03dfed16d8247a0d7930ec48e6">getQubitRecord</a> (<a class="el" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">QNIC_type</a> type, int qnic_index, int qubit_index)=0</td></tr>
+<tr class="separator:a15fe9b03dfed16d8247a0d7930ec48e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html">QNicStore</a> interface. </p>
@@ -180,6 +182,50 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html#a3b1331e98a48a47f01b713d644644791">quisp::modules::qnic_store::QNicStore</a>.</p>
+
+</div>
+</div>
+<a id="a15fe9b03dfed16d8247a0d7930ec48e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15fe9b03dfed16d8247a0d7930ec48e6">&#9670;&nbsp;</a></span>getQubitRecord()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacequisp_1_1modules_1_1qrsa.html#a03b0866b48bb748920c561500cc46c17">qrsa::IQubitRecord</a>* quisp::modules::qnic_store::IQNicStore::getQubitRecord </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">QNIC_type</a>&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>qnic_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>qubit_index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html#afb195344df44aa77edb2430b117b4cb1">quisp::modules::qnic_store::QNicStore</a>.</p>
 
 </div>
 </div>

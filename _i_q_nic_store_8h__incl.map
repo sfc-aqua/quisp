@@ -1,5 +1,8 @@
 <map id="quisp/modules/QRSA/RuleEngine/QNicStore/IQNicStore.h" name="quisp/modules/QRSA/RuleEngine/QNicStore/IQNicStore.h">
 <area shape="rect" id="node1" title=" " alt="" coords="5,5,161,61"/>
-<area shape="rect" id="node2" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="24,109,143,136"/>
-<area shape="rect" id="node3" title=" " alt="" coords="42,184,125,211"/>
+<area shape="rect" id="node2" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="16,273,135,300"/>
+<area shape="rect" id="node4" href="$_q_r_s_a_8h.html" title=" " alt="" coords="87,109,250,136"/>
+<area shape="rect" id="node3" title=" " alt="" coords="34,348,117,375"/>
+<area shape="rect" id="node5" title=" " alt="" coords="219,273,287,300"/>
+<area shape="rect" id="node6" href="$_i_qubit_record_8h.html" title=" " alt="" coords="113,184,275,225"/>
 </map>
