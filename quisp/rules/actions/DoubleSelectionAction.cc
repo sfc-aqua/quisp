@@ -30,14 +30,10 @@ cPacket *DoubleSelectionAction::run(cModule *re) {
   trash_qubit_Z = getResource(trash_resource_Z, partner);
 
   if (qubit == trash_qubit_X || qubit == trash_qubit_Z || trash_qubit_Z == trash_qubit_X) {
-    Error *pk = new Error;
-    pk->setError_text("Qubit and Trash_qubit must be different.");
-    return pk;
+    return generateError("Qubit and Trash_qubit must be different.");
   }
   if (qubit == nullptr || trash_qubit_Z == nullptr || trash_qubit_X == nullptr) {
-    Error *pk = new Error;
-    pk->setError_text("Not enough resource (Qubit and Trash_qubit) found. This should have been checked as a condition clause.");
-    return pk;
+    return generateError("Not enough resource (Qubit and Trash_qubit) found. This should have been checked as a condition clause.");
   }
   bool meas_X, meas_Z = false;
 
@@ -97,7 +93,6 @@ DoubleSelectionActionInv::DoubleSelectionActionInv(unsigned long RuleSet_id, uns
   trash_resource_Z = tres_Z;
   rule_id = rule_index;
   ruleset_id = RuleSet_id;
-  // action_index++;
 }
 
 // Double selection single error (Z error) purification
@@ -110,14 +105,10 @@ cPacket *DoubleSelectionActionInv::run(cModule *re) {
   trash_qubit_Z = getResource(trash_resource_Z, partner);
 
   if (qubit == trash_qubit_X || qubit == trash_qubit_Z || trash_qubit_Z == trash_qubit_X) {
-    Error *pk = new Error;
-    pk->setError_text("Qubit and Trash_qubit must be different.");
-    return pk;
+    return generateError("Qubit and Trash_qubit must be different.");
   }
   if (qubit == nullptr || trash_qubit_Z == nullptr || trash_qubit_X == nullptr) {
-    Error *pk = new Error;
-    pk->setError_text("Not enough resource (Qubit and Trash_qubit) found. This should have been checked as a condition clause.");
-    return pk;
+    return generateError("Not enough resource (Qubit and Trash_qubit) found. This should have been checked as a condition clause.");
   }
   bool meas_X, meas_Z = false;
 
@@ -151,7 +142,6 @@ cPacket *DoubleSelectionActionInv::run(cModule *re) {
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
   rule_engine->freeConsumedResource(qnic_id, trash_qubit_X, qnic_type);  // Remove from entangled resource list.
   rule_engine->freeConsumedResource(qnic_id, trash_qubit_Z, qnic_type);
-  // Deleting done
 
   DoublePurificationResult *pk = new DoublePurificationResult;
   pk->setDestAddr(partner);

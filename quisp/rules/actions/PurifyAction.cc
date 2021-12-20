@@ -33,14 +33,10 @@ cPacket *PurifyAction::run(cModule *re) {
   trash_qubit = getResource(trash_resource, partner);
 
   if (qubit == trash_qubit) {
-    Error *pk = new Error;
-    pk->setError_text("Qubit and Trash_qubit must be different.");
-    return pk;
+    return generateError("Qubit and Trash_qubit must be different.");
   }
   if (qubit == nullptr || trash_qubit == nullptr) {
-    Error *pk = new Error;
-    pk->setError_text("Not enough resource (Qubit and Trash_qubit) found. This should have been checked as a condition clause.");
-    return pk;
+    return generateError("Not enough resource (Qubit and Trash_qubit) found. This should have been checked as a condition clause.");
   }
   bool meas = false;
   if (X && !Z)

@@ -1124,7 +1124,6 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
     //---------
     // Add the rule to the RuleSet
     tomography_RuleSet->addRule(std::move(Random_measure_tomo));
-    tomography_RuleSet->finalize();
     //---------------------------
     pk->setRuleSet(tomography_RuleSet);
     send(pk, "RouterPort$o");

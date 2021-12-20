@@ -8,8 +8,6 @@ namespace actions {
 
 class PurifyAction : public Action {
  protected:
-  unsigned long ruleset_id;
-  unsigned long rule_id;
   int partner; /**< Identifies entanglement partner. */
   QNIC_type qnic_type;
   int qnic_id;

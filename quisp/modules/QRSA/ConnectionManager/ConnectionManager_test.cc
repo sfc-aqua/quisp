@@ -12,8 +12,8 @@
 ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, partner);
 ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, num_resource_required);
 
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, unsigned long, ruleset_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, unsigned long, rule_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::Action, unsigned long, ruleset_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::Action, unsigned long, rule_id);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, qnic_id);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, QNIC_type, qnic_type);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, partner);
