@@ -1,35 +1,34 @@
 #!/usr/bin/env docker build --build-arg VERSION=5.6 -t omnetpp/omnetpp-gui:u18.04-5.6 .
-FROM omnetpp/omnetpp-base:u18.04 as base
-RUN apt-get update -y && apt install -y --no-install-recommends \
-    qt5-default libqt5opengl5-dev libgtk-3-0 libwebkitgtk-3.0-0 default-jre osgearth \
-    libeigen3-dev cmake g++ gdb gpg-agent software-properties-common && \
-    wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
-    apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-12 main" && \
-    apt install clang-format-12 clang-tidy-12 lldb-12 -y && \
+FROM ubuntu:20.04 as base
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt update -y && apt install -y --no-install-recommends \
+    qt5-default libqt5opengl5-dev libgtk-3-0 default-jre osgearth \
+    libeigen3-dev cmake g++ gdb gpg-agent software-properties-common wget \
+    vim bison flex make lld-12 git clang-format-12 clang-tidy-12 lldb-12 && \
     ln -s /usr/bin/clang-format-12 /usr/bin/clang-format && \
     ln -s /usr/bin/clang-tidy-12 /usr/bin/clang-tidy && \
     ln -sf /usr/bin/clang-12 /usr/bin/clang && \
     ln -sf /usr/bin/clang++-12 /usr/bin/clang++ && \
     ln -sf /usr/bin/llvm-profdata-12 /usr/bin/llvm-profdata && \
-    ln -sf /usr/bin/llvm-cov-12 /usr/bin/llvm-cov
-
+    ln -sf /usr/bin/llvm-cov-12 /usr/bin/llvm-cov && \
+    ln -sf /usr/bin/lld-12 /usr/bin/lld
 
 # first stage - build OMNeT++ with GUI
 FROM base as builder
 
 ARG VERSION
 WORKDIR /root
-RUN wget https://github.com/omnetpp/omnetpp/releases/download/omnetpp-$VERSION/omnetpp-$VERSION-src-linux.tgz \
-         --referer=https://omnetpp.org/ -O omnetpp-src-linux.tgz --progress=dot:giga && \
-         tar xf omnetpp-src-linux.tgz && rm omnetpp-src-linux.tgz
+RUN wget https://github.com/omnetpp/omnetpp/releases/download/omnetpp-$VERSION/omnetpp-$VERSION-linux-x86_64.tgz \
+    --referer=https://omnetpp.org/ -O omnetpp-src-linux.tgz --progress=dot:giga && \
+    tar xf omnetpp-src-linux.tgz && rm omnetpp-src-linux.tgz
 RUN mv omnetpp-$VERSION omnetpp
 WORKDIR /root/omnetpp
 ENV PATH /root/omnetpp/bin:$PATH
-# remove unused files and build
-RUN ./configure WITH_OSG=no && \
+
+RUN bash -c "source setenv && ./configure WITH_OSG=no && \
     make -j $(nproc) MODE=debug base && \
     make -j $(nproc) MODE=release base && \
-    rm -r doc out test samples config.log config.status
+    rm -r doc out test samples config.log config.status"
 
 # second stage - copy only the final binaries (to get rid of the 'out' folder and reduce the image size)
 FROM base
@@ -46,22 +45,6 @@ RUN chmod 775 /root/ && \
     sed 's!$IDEDIR/../samples!/root/quisp!' bin/omnetpp.bak >bin/omnetpp && \
     rm bin/omnetpp.bak && chmod +x bin/omnetpp
 
-# Google test need HACK
-ARG GTEST_VERSION
-RUN mkdir -p /root/clibrary
-WORKDIR /root/clibrary
-RUN chmod 755 /root/clibrary && \
-    wget https://github.com/google/googletest/archive/release-${GTEST_VERSION}.tar.gz -O gtest.tar.gz --progress=bar &&\
-    tar -zxvf gtest.tar.gz &&\
-    rm gtest.tar.gz &&\
-    mv /root/clibrary/googletest-release-${GTEST_VERSION} /root/clibrary/googletest &&\
-    chmod 755 /root/clibrary/googletest &&\
-    cd /root/clibrary/googletest &&\
-    mkdir build && chmod 755 build &&\
-    cd /root/clibrary/googletest/build &&\
-    cmake .. -DBUILD_SHARED_LIBS=0 &&\
-    make
-ENV GTEST_ROOT /root/clibrary/googletest/build/googletest/:$PATH
 RUN echo 'PS1="quisp:\w\$ "' >> /root/.bashrc && chmod +x /root/.bashrc && \
     touch /root/.hushlogin
 ENV HOME=/root/
