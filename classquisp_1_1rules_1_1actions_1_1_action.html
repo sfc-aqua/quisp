@@ -118,14 +118,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7074efca2d562f8843c46a1a88cb8675"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60a4dee476115f9d3ffaae42a797edd0"><td class="memItemLeft" align="right" valign="top">virtual cPacket *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1rules_1_1actions_1_1_action.html#a60a4dee476115f9d3ffaae42a797edd0">run</a> (cModule *re)=0</td></tr>
 <tr class="separator:a60a4dee476115f9d3ffaae42a797edd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6daf8ca3a22114ebbc5eaffab460a39c"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1rules_1_1actions_1_1_action.html#a6daf8ca3a22114ebbc5eaffab460a39c">getResource_fromTop</a> (int required_index)</td></tr>
-<tr class="separator:a6daf8ca3a22114ebbc5eaffab460a39c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40e1d057a9f2d34f6da5ed300bf596be"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1rules_1_1actions_1_1_action.html#a40e1d057a9f2d34f6da5ed300bf596be">getResource</a> (int required_index, int partner)</td></tr>
 <tr class="separator:a40e1d057a9f2d34f6da5ed300bf596be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab59b7f67f80902f93daefd25d6efa4e7"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1rules_1_1actions_1_1_action.html#ab59b7f67f80902f93daefd25d6efa4e7">checkNumResource</a> ()</td></tr>
-<tr class="separator:ab59b7f67f80902f93daefd25d6efa4e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03662ce633c7e3c9b05d66c3e5b664d6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1rules_1_1actions_1_1_action.html#a03662ce633c7e3c9b05d66c3e5b664d6">removeResource_fromRule</a> (<a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *qubit)</td></tr>
 <tr class="separator:a03662ce633c7e3c9b05d66c3e5b664d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf3a3fb152b229b1926a2696a1c0edfb"><td class="memItemLeft" align="right" valign="top">cPacket *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1rules_1_1actions_1_1_action.html#adf3a3fb152b229b1926a2696a1c0edfb">generateError</a> (const char *msg)</td></tr>
+<tr class="separator:adf3a3fb152b229b1926a2696a1c0edfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -163,27 +161,20 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ab59b7f67f80902f93daefd25d6efa4e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab59b7f67f80902f93daefd25d6efa4e7">&#9670;&nbsp;</a></span>checkNumResource()</h2>
+<a id="adf3a3fb152b229b1926a2696a1c0edfb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf3a3fb152b229b1926a2696a1c0edfb">&#9670;&nbsp;</a></span>generateError()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int quisp::rules::actions::Action::checkNumResource </td>
+          <td class="memname">cPacket * quisp::rules::actions::Action::generateError </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>msg</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -213,32 +204,6 @@ Public Attributes</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6daf8ca3a22114ebbc5eaffab460a39c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6daf8ca3a22114ebbc5eaffab460a39c">&#9670;&nbsp;</a></span>getResource_fromTop()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> * quisp::rules::actions::Action::getResource_fromTop </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>required_index</em></td><td>)</td>
-          <td></td>
         </tr>
       </table>
   </td>

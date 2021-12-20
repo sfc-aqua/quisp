@@ -6,7 +6,6 @@ var classquisp_1_1rules_1_1_rule_set =
     [ "cbegin", "classquisp_1_1rules_1_1_rule_set.html#a758f01e19690392a6dc0c03b0e7d2d37", null ],
     [ "cend", "classquisp_1_1rules_1_1_rule_set.html#ad91456cfb72e844cf31fae4fbee43a13", null ],
     [ "empty", "classquisp_1_1rules_1_1_rule_set.html#a04dd3f2d088ac2179d20ff4439429320", null ],
-    [ "finalize", "classquisp_1_1rules_1_1_rule_set.html#ae3f4d59fc574ffbc0b616eb18f674321", null ],
     [ "getRule", "classquisp_1_1rules_1_1_rule_set.html#a4b9f3906b2d5ea394a87ef05eebe049b", null ],
     [ "size", "classquisp_1_1rules_1_1_rule_set.html#a3fe89fe71d9de5ccb49ab3d6941a1a74", null ],
     [ "entangled_partners", "classquisp_1_1rules_1_1_rule_set.html#a058c20d8101363f84ebc2fb286607c83", null ],

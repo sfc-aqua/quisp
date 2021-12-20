@@ -10,8 +10,6 @@ var classquisp_1_1rules_1_1actions_1_1_purify_action =
     [ "qnic_id", "classquisp_1_1rules_1_1actions_1_1_purify_action.html#af660c45cdec61a974811896dd4d18594", null ],
     [ "qnic_type", "classquisp_1_1rules_1_1actions_1_1_purify_action.html#ab6cd2d7b342f24a39f44eb9b0f6468d9", null ],
     [ "resource", "classquisp_1_1rules_1_1actions_1_1_purify_action.html#a83d9ef8fd4726888051b9f95bdb7514d", null ],
-    [ "rule_id", "classquisp_1_1rules_1_1actions_1_1_purify_action.html#ae39c07754c31fc05cc45662d3adc1a1e", null ],
-    [ "ruleset_id", "classquisp_1_1rules_1_1actions_1_1_purify_action.html#a83ad32bb76a5d2ed5311b594e3a9a246", null ],
     [ "trash_resource", "classquisp_1_1rules_1_1actions_1_1_purify_action.html#a207714b44d87aa9c2ccb191917e057ff", null ],
     [ "X", "classquisp_1_1rules_1_1actions_1_1_purify_action.html#aee908e2dfe1cd11951a1156e4a3ade0e", null ],
     [ "Z", "classquisp_1_1rules_1_1actions_1_1_purify_action.html#a9ee718de35f16a1f7a3868a2d634abc9", null ]
