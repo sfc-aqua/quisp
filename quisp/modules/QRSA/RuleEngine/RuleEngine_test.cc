@@ -174,7 +174,7 @@ TEST(RuleEngineTest, resourceAllocation) {
   auto* rs = new RuleSet(0, 0, 1);
   auto rule = std::make_unique<Rule>(0, 0);
   // owner address,
-  auto* action = new RandomMeasureAction(0, 1, QNIC_E, 3, 1, 10);
+  auto* action = new RandomMeasureAction(0, 0, 0, 1, QNIC_E, 3, 1, 10);
 
   rule->setAction(action);
   rule->action_partners = {1};

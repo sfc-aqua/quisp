@@ -987,7 +987,7 @@ std::unique_ptr<Rule> ConnectionManager::tomographyRule(int owner_address, int p
   condition->addClause(count_clause);
   condition->addClause(resource_clause);
   tomography_rule->setCondition(condition);
-  Action *action = new RandomMeasureAction(owner_address, partner_address, qnic_type, qnic_index, 0, num_measure);
+  Action *action = new RandomMeasureAction(ruleset_id, rule_id, owner_address, partner_address, qnic_type, qnic_index, 0, num_measure);
   tomography_rule->setAction(action);
   return tomography_rule;
 }

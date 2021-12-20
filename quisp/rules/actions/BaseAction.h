@@ -19,6 +19,7 @@ using quisp::modules::QNIC_type;
 
 class Action {
  public:
+  Action(unsigned long ruleset_id, unsigned long rule_id);
   virtual ~Action(){};
   std::multimap<int, IStationaryQubit*>* rule_resources;
   unsigned long ruleset_id;

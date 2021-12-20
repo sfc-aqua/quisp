@@ -2,12 +2,15 @@
 
 #include "BaseAction.h"
 
-namespace quisp {
-namespace rules {
-namespace actions {
+namespace quisp::rules::actions {
 
 // https://arxiv.org/abs/0811.2639
 class DoubleSelectionDualActionSecond : public Action {
+ public:
+  DoubleSelectionDualActionSecond(unsigned long ruleset_id, unsigned long rule_index, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
+                                  int trash_resource_z, int ds_trash_resource_x);
+  cPacket* run(cModule* re) override;
+
  protected:
   int partner; /**< Identifies entanglement partner. */
   QNIC_type qnic_type;
@@ -21,15 +24,15 @@ class DoubleSelectionDualActionSecond : public Action {
   bool Z;
   int num_purify;
   int action_index = 0;  // To track how many times this particular action has been invoked.
-
- public:
-  DoubleSelectionDualActionSecond();
-  DoubleSelectionDualActionSecond(unsigned long RuleSet_id, unsigned long rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z, int ds_X);
-  cPacket* run(cModule* re) override;
 };
 
 // https://arxiv.org/abs/0811.2639
 class DoubleSelectionDualActionSecondInv : public Action {
+ public:
+  DoubleSelectionDualActionSecondInv(unsigned long ruleset_id, unsigned long rule_index, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
+                                     int trash_resource_z, int ds_trash_resource_z);
+  cPacket* run(cModule* re) override;
+
  protected:
   int partner; /**< Identifies entanglement partner. */
   QNIC_type qnic_type;
@@ -39,17 +42,8 @@ class DoubleSelectionDualActionSecondInv : public Action {
   int trash_resource_X;
   int doubleselection_trash_resource_Z;
   int mutable purification_count;  // Used for locked_id in StationaryQubit. You unlock the qubit when purification is successful.
-  bool X;
-  bool Z;
   int num_purify;
   int action_index = 0;  // To track how many times this particular action has been invoked.
-
- public:
-  DoubleSelectionDualActionSecondInv();
-  DoubleSelectionDualActionSecondInv(unsigned long RuleSet_id, unsigned long rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z, int ds_Z);
-  cPacket* run(cModule* re) override;
 };
 
-}  // namespace actions
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::actions
