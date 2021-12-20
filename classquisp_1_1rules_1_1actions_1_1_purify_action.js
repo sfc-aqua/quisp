@@ -1,7 +1,6 @@
 var classquisp_1_1rules_1_1actions_1_1_purify_action =
 [
-    [ "PurifyAction", "classquisp_1_1rules_1_1actions_1_1_purify_action.html#ade3f8b771c9983f090002cbfc0a3311b", null ],
-    [ "PurifyAction", "classquisp_1_1rules_1_1actions_1_1_purify_action.html#a814a793170a83c2982d481b60fae0659", null ],
+    [ "PurifyAction", "classquisp_1_1rules_1_1actions_1_1_purify_action.html#a1990e8d2169b9f15ee24c794a1a1d739", null ],
     [ "run", "classquisp_1_1rules_1_1actions_1_1_purify_action.html#aa898e5ad4b02acd8cc36f88e678ad97c", null ],
     [ "action_index", "classquisp_1_1rules_1_1actions_1_1_purify_action.html#a1c61c0e5224b9281a0c332f835bf4e0f", null ],
     [ "num_purify", "classquisp_1_1rules_1_1actions_1_1_purify_action.html#a49abd52de9bfbb68549d7bec27f4c610", null ],

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['doublepurificationtable_2203',['DoublePurificationTable',['../namespacequisp_1_1modules.html#a1336f6c1da370af21c6066ff0c249b6b',1,'quisp::modules']]]
+  ['doublepurificationtable_2204',['DoublePurificationTable',['../namespacequisp_1_1modules.html#a1336f6c1da370af21c6066ff0c249b6b',1,'quisp::modules']]]
 ];

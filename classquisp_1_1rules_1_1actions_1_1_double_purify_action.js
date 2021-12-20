@@ -1,7 +1,6 @@
 var classquisp_1_1rules_1_1actions_1_1_double_purify_action =
 [
-    [ "DoublePurifyAction", "classquisp_1_1rules_1_1actions_1_1_double_purify_action.html#a601428124cba50f15a3d6e449144f365", null ],
-    [ "DoublePurifyAction", "classquisp_1_1rules_1_1actions_1_1_double_purify_action.html#a9b2c86c3e8d83be71498e14dcb39cec1", null ],
+    [ "DoublePurifyAction", "classquisp_1_1rules_1_1actions_1_1_double_purify_action.html#aab12ccaebb30755d7fe624e420864e92", null ],
     [ "run", "classquisp_1_1rules_1_1actions_1_1_double_purify_action.html#a1d759391a2b24e0ed1d09b9603653d0c", null ],
     [ "action_index", "classquisp_1_1rules_1_1actions_1_1_double_purify_action.html#a448731194aae084233e13874bd072110", null ],
     [ "num_purify", "classquisp_1_1rules_1_1actions_1_1_double_purify_action.html#aee94c3c3852210a63223eb303ac7c522", null ],
@@ -11,7 +10,5 @@ var classquisp_1_1rules_1_1actions_1_1_double_purify_action =
     [ "qnic_type", "classquisp_1_1rules_1_1actions_1_1_double_purify_action.html#a8db7cbbf8e227ee494469b9258ca7a04", null ],
     [ "resource", "classquisp_1_1rules_1_1actions_1_1_double_purify_action.html#a049e11869128111cbc0d339b50612f84", null ],
     [ "trash_resource_X", "classquisp_1_1rules_1_1actions_1_1_double_purify_action.html#a36943b08ebf6f50487ccf989af754260", null ],
-    [ "trash_resource_Z", "classquisp_1_1rules_1_1actions_1_1_double_purify_action.html#ac9a7259fe513327643e367ef91213f2a", null ],
-    [ "X", "classquisp_1_1rules_1_1actions_1_1_double_purify_action.html#a303b59f48c5f5bdcb2279983bac2f330", null ],
-    [ "Z", "classquisp_1_1rules_1_1actions_1_1_double_purify_action.html#a9d84dd46946dc304e9c1b8c64a6ab028", null ]
+    [ "trash_resource_Z", "classquisp_1_1rules_1_1actions_1_1_double_purify_action.html#ac9a7259fe513327643e367ef91213f2a", null ]
 ];

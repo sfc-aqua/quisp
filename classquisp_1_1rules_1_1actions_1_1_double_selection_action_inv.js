@@ -1,7 +1,6 @@
 var classquisp_1_1rules_1_1actions_1_1_double_selection_action_inv =
 [
-    [ "DoubleSelectionActionInv", "classquisp_1_1rules_1_1actions_1_1_double_selection_action_inv.html#a5b8e2f53ba8eb2ca2134eaa2c4524582", null ],
-    [ "DoubleSelectionActionInv", "classquisp_1_1rules_1_1actions_1_1_double_selection_action_inv.html#a1d191f1d9b94dfc37c4046a26092c0b3", null ],
+    [ "DoubleSelectionActionInv", "classquisp_1_1rules_1_1actions_1_1_double_selection_action_inv.html#a1382db5983a3eed03fb278768d734df1", null ],
     [ "run", "classquisp_1_1rules_1_1actions_1_1_double_selection_action_inv.html#a0ef8247ca756382825e79772bed657e2", null ],
     [ "action_index", "classquisp_1_1rules_1_1actions_1_1_double_selection_action_inv.html#a53d2059e3156aa40d2501cf47a5e8402", null ],
     [ "num_purify", "classquisp_1_1rules_1_1actions_1_1_double_selection_action_inv.html#ab18fd28f80d394afc3935e7071ede276", null ],

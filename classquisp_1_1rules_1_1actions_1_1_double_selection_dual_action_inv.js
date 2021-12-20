@@ -1,7 +1,6 @@
 var classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv =
 [
-    [ "DoubleSelectionDualActionInv", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#a702f3de6c8642ac0e5103d9398edd3f8", null ],
-    [ "DoubleSelectionDualActionInv", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#a155a903b5e275d7d2ee2efc4850e23a7", null ],
+    [ "DoubleSelectionDualActionInv", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#ad574c2b19fbf193b0107bc231bb3f576", null ],
     [ "run", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#a3356c5e9d8490fa43ca69f55f140f5c9", null ],
     [ "action_index", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#aceca547a2d424dde41ee64a4eff284f8", null ],
     [ "doubleselection_trash_resource_X", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#adebfd22637ebbdb11c05699a8840bd45", null ],
@@ -13,7 +12,5 @@ var classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv =
     [ "qnic_type", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#a1b4ca71b179ed1e9d9b541631b5947e4", null ],
     [ "resource", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#a2457a13ad588add4520cb04b87cdc2ec", null ],
     [ "trash_resource_X", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#a4e8357eabb0981daa3267d08a03d91da", null ],
-    [ "trash_resource_Z", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#af1db4d667011c8d95005bac96630bc3c", null ],
-    [ "X", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#a3663a4a88e117d911da4268b146e9036", null ],
-    [ "Z", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#a6b062306977390d612a6dfea67898eea", null ]
+    [ "trash_resource_Z", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html#af1db4d667011c8d95005bac96630bc3c", null ]
 ];
