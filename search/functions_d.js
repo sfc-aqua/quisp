@@ -9,6 +9,6 @@ var searchData=
   ['processmessage_1653',['processMessage',['../classquisp_1_1channels_1_1_quantum_channel.html#af4aeed2aa61e1fd55b9d5fcb092691ec',1,'quisp::channels::QuantumChannel']]],
   ['purificationcountclause_1654',['PurificationCountClause',['../classquisp_1_1rules_1_1clauses_1_1_purification_count_clause.html#a57b448be4f6ceadcb8cbb05baefd564b',1,'quisp::rules::clauses::PurificationCountClause']]],
   ['purificationrule_1655',['purificationRule',['../classquisp_1_1modules_1_1_connection_manager.html#aee4bff657b039cec313c27eecdcd7810',1,'quisp::modules::ConnectionManager']]],
-  ['purifyaction_1656',['PurifyAction',['../classquisp_1_1rules_1_1actions_1_1_purify_action.html#a1990e8d2169b9f15ee24c794a1a1d739',1,'quisp::rules::actions::PurifyAction']]],
+  ['purifyaction_1656',['PurifyAction',['../classquisp_1_1rules_1_1actions_1_1_purify_action.html#a5371e005fa9929722d200135689227e7',1,'quisp::rules::actions::PurifyAction']]],
   ['pushtobsaresults_1657',['pushToBSAresults',['../classquisp_1_1modules_1_1_ho_m_controller.html#ae8800bab4feb0469713f112c19a06123',1,'quisp::modules::HoMController']]]
 ];

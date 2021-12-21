@@ -57,7 +57,7 @@ var searchData=
   ['purificationcountclause_2eh_659',['PurificationCountClause.h',['../_purification_count_clause_8h.html',1,'']]],
   ['purificationrule_660',['purificationRule',['../classquisp_1_1modules_1_1_connection_manager.html#aee4bff657b039cec313c27eecdcd7810',1,'quisp::modules::ConnectionManager']]],
   ['purificationtable_661',['PurificationTable',['../namespacequisp_1_1modules.html#a926af4afd0fbecd3cfe768865186cb44',1,'quisp::modules']]],
-  ['purifyaction_662',['PurifyAction',['../classquisp_1_1rules_1_1actions_1_1_purify_action.html#a1990e8d2169b9f15ee24c794a1a1d739',1,'quisp::rules::actions::PurifyAction::PurifyAction()'],['../classquisp_1_1rules_1_1actions_1_1_purify_action.html',1,'quisp::rules::actions::PurifyAction']]],
+  ['purifyaction_662',['PurifyAction',['../classquisp_1_1rules_1_1actions_1_1_purify_action.html#a5371e005fa9929722d200135689227e7',1,'quisp::rules::actions::PurifyAction::PurifyAction()'],['../classquisp_1_1rules_1_1actions_1_1_purify_action.html',1,'quisp::rules::actions::PurifyAction']]],
   ['purifyaction_2ecc_663',['PurifyAction.cc',['../_purify_action_8cc.html',1,'']]],
   ['purifyaction_2eh_664',['PurifyAction.h',['../_purify_action_8h.html',1,'']]],
   ['purifyaction_5ftest_2ecc_665',['PurifyAction_test.cc',['../_purify_action__test_8cc.html',1,'']]],
