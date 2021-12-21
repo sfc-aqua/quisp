@@ -1,12 +1,12 @@
 <map id="quisp/test_utils/Configuration.h" name="quisp/test_utils/Configuration.h">
-<area shape="rect" id="node1" title=" " alt="" coords="3171,5,3369,32"/>
-<area shape="rect" id="node2" href="$_module_type_8h.html" title=" " alt="" coords="3017,80,3211,107"/>
-<area shape="rect" id="node37" href="$_static_env_8h.html" title=" " alt="" coords="3499,80,3679,107"/>
-<area shape="rect" id="node3" href="$_mock_hardware_monitor_8h.html" title=" " alt="" coords="2627,155,2849,196"/>
-<area shape="rect" id="node4" href="$_test_utils_8h.html" title=" " alt="" coords="2928,244,3105,271"/>
-<area shape="rect" id="node34" href="$_mock_q_nic_store_8h.html" title=" " alt="" coords="2924,155,3109,196"/>
-<area shape="rect" id="node35" href="$_mock_qubit_8h.html" title=" " alt="" coords="3134,155,3289,196"/>
-<area shape="rect" id="node36" href="$_q_node_8cc.html" title=" " alt="" coords="3313,162,3485,189"/>
+<area shape="rect" id="node1" title=" " alt="" coords="3265,5,3464,32"/>
+<area shape="rect" id="node2" href="$_module_type_8h.html" title=" " alt="" coords="3111,80,3306,107"/>
+<area shape="rect" id="node38" href="$_static_env_8h.html" title=" " alt="" coords="3593,80,3773,107"/>
+<area shape="rect" id="node3" href="$_mock_hardware_monitor_8h.html" title=" " alt="" coords="2721,155,2944,196"/>
+<area shape="rect" id="node4" href="$_test_utils_8h.html" title=" " alt="" coords="3023,244,3200,271"/>
+<area shape="rect" id="node35" href="$_mock_q_nic_store_8h.html" title=" " alt="" coords="3019,155,3204,196"/>
+<area shape="rect" id="node36" href="$_mock_qubit_8h.html" title=" " alt="" coords="3229,155,3383,196"/>
+<area shape="rect" id="node37" href="$_q_node_8cc.html" title=" " alt="" coords="3408,162,3580,189"/>
 <area shape="rect" id="node5" href="$_application__test_8cc.html" title=" " alt="" coords="5,326,180,367"/>
 <area shape="rect" id="node6" href="$_stationary_qubit__gate__error__test_8cc.html" title=" " alt="" coords="204,319,381,375"/>
 <area shape="rect" id="node7" href="$_stationary_qubit__memory__error__test_8cc.html" title=" " alt="" coords="405,319,591,375"/>
@@ -34,8 +34,9 @@
 <area shape="rect" id="node29" href="$_purify_action__test_8cc.html" title=" " alt="" coords="4864,326,5007,367"/>
 <area shape="rect" id="node30" href="$_random_measure_action__test_8cc.html" title=" " alt="" coords="5031,319,5192,375"/>
 <area shape="rect" id="node31" href="$_swapping_action__test_8cc.html" title=" " alt="" coords="5216,326,5383,367"/>
-<area shape="rect" id="node32" href="$_rule_set__test_8cc.html" title=" " alt="" coords="5407,326,5541,367"/>
-<area shape="rect" id="node33" href="$unit__test__main_8cc.html" title=" " alt="" coords="5565,333,5724,360"/>
-<area shape="rect" id="node38" href="$_static_env_8cc.html" title=" " alt="" coords="3561,162,3747,189"/>
-<area shape="rect" id="node39" href="$_util_functions_8cc.html" title=" " alt="" coords="3771,162,3979,189"/>
+<area shape="rect" id="node32" href="$_rule__test_8cc.html" title=" " alt="" coords="5407,333,5568,360"/>
+<area shape="rect" id="node33" href="$_rule_set__test_8cc.html" title=" " alt="" coords="5592,326,5727,367"/>
+<area shape="rect" id="node34" href="$unit__test__main_8cc.html" title=" " alt="" coords="5751,333,5909,360"/>
+<area shape="rect" id="node39" href="$_static_env_8cc.html" title=" " alt="" coords="3655,162,3842,189"/>
+<area shape="rect" id="node40" href="$_util_functions_8cc.html" title=" " alt="" coords="3866,162,4074,189"/>
 </map>

@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"classquisp_1_1utils_1_1_component_provider.html#abba267196c30c742e53b8ccdcac40455":[14,0,0,3,0,14],
 "classquisp_1_1utils_1_1_component_provider.html#ad0c156e34d31dbc39564bb4eb746f5cf":[14,0,0,3,0,8],
 "classquisp_1_1utils_1_1_component_provider.html#ad119a53fb7d1f5027c242e03b74c1100":[14,0,0,3,0,9],
 "classquisp_1_1utils_1_1_component_provider.html#ad6638b3cd8ce8e45d97e5b97598d00a7":[14,0,0,3,0,11],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#ac4b4af6422e96f31bd86710de4399b61":[14,0,1,9,1,4],
 "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#acf339da0dd68ec0d37d66b73d6444540":[14,0,1,9,1,3],
 "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#ad8d083b82b18ab3bee99b4da21ebb9fb":[14,0,1,9,1,9],
-"classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#adb2de64a174ff8bd6ac4a0d23f0d0a46":[14,0,1,9,1,14],
-"clauses_2_clause_8h.html":[15,0,0,3,1,0]
+"classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#adb2de64a174ff8bd6ac4a0d23f0d0a46":[14,0,1,9,1,14]
 };
