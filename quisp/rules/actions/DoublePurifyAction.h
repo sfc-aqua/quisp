@@ -6,7 +6,7 @@ namespace quisp::rules::actions {
 
 class DoublePurifyAction : public Action {
  public:
-  DoublePurifyAction(unsigned long ruleset_id, unsigned long rule_index, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x, int trash_resource_z);
+  DoublePurifyAction(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x, int trash_resource_z);
   cPacket* run(cModule* re) override;
 
  protected:
@@ -23,8 +23,7 @@ class DoublePurifyAction : public Action {
 
 class DoublePurifyActionInv : public Action {
  public:
-  DoublePurifyActionInv(unsigned long ruleset_id, unsigned long rule_index, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
-                        int trash_resource_z);
+  DoublePurifyActionInv(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x, int trash_resource_z);
   cPacket* run(cModule* re) override;
 
  protected:

@@ -6,7 +6,7 @@ namespace quisp::rules::actions {
 
 class PurifyAction : public Action {
  public:
-  PurifyAction(unsigned long ruleset_id, unsigned long rule_index, bool x_purification, bool z_purification, int num_purification, int partner, QNIC_type qnic_type, int qnic_id,
+  PurifyAction(unsigned long ruleset_id, unsigned long rule_id, bool x_purification, bool z_purification, int num_purification, int partner, QNIC_type qnic_type, int qnic_id,
                int resource, int trash_resource);
 
   cPacket* run(cModule* re) override;

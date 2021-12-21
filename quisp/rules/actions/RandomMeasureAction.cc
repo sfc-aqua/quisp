@@ -4,9 +4,9 @@
 
 namespace quisp::rules::actions {
 
-RandomMeasureAction::RandomMeasureAction(unsigned long ruleset_id, unsigned long rule_index, int owner_address, int partner, QNIC_type qnic_type, int qnic_id, int resource,
+RandomMeasureAction::RandomMeasureAction(unsigned long ruleset_id, unsigned long rule_id, int owner_address, int partner, QNIC_type qnic_type, int qnic_id, int resource,
                                          int max_count)
-    : Action(ruleset_id, rule_index), partner(partner), qnic_type(qnic_type), qnic_id(qnic_id), resource(resource), src(owner_address), dst(partner), max_count(max_count) {
+    : Action(ruleset_id, rule_id), partner(partner), qnic_type(qnic_type), qnic_id(qnic_id), resource(resource), src(owner_address), dst(partner), max_count(max_count) {
   current_count = 0;
   start = simTime();
 };
