@@ -4,9 +4,9 @@
 
 namespace quisp::rules::actions {
 
-DoublePurifyAction::DoublePurifyAction(unsigned long ruleset_id, unsigned long rule_index, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
+DoublePurifyAction::DoublePurifyAction(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
                                        int trash_resource_z)
-    : Action(ruleset_id, rule_index),
+    : Action(ruleset_id, rule_id),
       partner(partner),
       qnic_type(qnic_type),
       qnic_id(qnic_id),
@@ -67,9 +67,9 @@ cPacket *DoublePurifyAction::run(cModule *re) {
   return pk;
 }
 
-DoublePurifyActionInv::DoublePurifyActionInv(unsigned long ruleset_id, unsigned long rule_index, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
+DoublePurifyActionInv::DoublePurifyActionInv(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
                                              int trash_resource_z)
-    : Action(ruleset_id, rule_index),
+    : Action(ruleset_id, rule_id),
       partner(partner),
       qnic_type(qnic_type),
       qnic_id(qnic_id),
