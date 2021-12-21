@@ -83,11 +83,11 @@ TEST(ConnectionManagerRuleGenTest, PurificationRule) {
 
   ASSERT_NE(action, nullptr);
   EXPECT_EQ(rule->ruleset_id, ruleset_id);
-  EXPECT_EQ(rule->rule_index, rule_id);
+  EXPECT_EQ(rule->rule_id, rule_id);
   // now action's ruleset_id and rule_id are not used.
   // EXPECT_EQ(rule->action->ruleset_id, ruleset_id);
   // EXPECT_EQ(rule->action->rule_id, rule_id);
-  EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+  EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
   EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
   EXPECT_EQ(access_private::partner(*action), partner_addr);
   EXPECT_EQ(access_private::X(*action), true);
@@ -108,7 +108,7 @@ TEST(ConnectionManagerRuleGenTest, PurificationRule) {
   ASSERT_NE(rule->action, nullptr);
   action = dynamic_cast<PurifyAction *>(rule->action.get());
   ASSERT_NE(action, nullptr);
-  EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+  EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
   EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
   EXPECT_EQ(access_private::partner(*action), partner_addr);
   EXPECT_EQ(access_private::X(*action), false);
@@ -121,7 +121,7 @@ TEST(ConnectionManagerRuleGenTest, PurificationRule) {
   EXPECT_EQ(access_private::purification_count(*action), 1);
   EXPECT_EQ(access_private::num_purify(*action), 1);
   EXPECT_EQ(rule->ruleset_id, ruleset_id);
-  EXPECT_EQ(rule->rule_index, rule_id);
+  EXPECT_EQ(rule->rule_id, rule_id);
   // EXPECT_EQ(rule->action->ruleset_id, ruleset_id);
   // EXPECT_EQ(rule->action->rule_id, rule_id);
   EXPECT_EQ(rule->name, "Z purification with : 1");
@@ -156,7 +156,7 @@ TEST(ConnectionManagerRuleGenTest, SwappingRule) {
 
   ASSERT_NE(rule->action, nullptr);
   EXPECT_EQ(rule->ruleset_id, ruleset_id);
-  EXPECT_EQ(rule->rule_index, rule_id);
+  EXPECT_EQ(rule->rule_id, rule_id);
 
   EXPECT_EQ(rule->name, "Entanglement Swapping with 40 : 70");
   EXPECT_EQ(rule->condition->clauses.size(), 2);

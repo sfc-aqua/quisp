@@ -261,7 +261,7 @@ TEST(RuleEngineTest, storeCheckPurificationAgreement_running_process) {
 
   qubit->action_index = action_index;
   rule1->addResource(partner_addr, qubit);
-  rule1->next_rule_id = rule2->rule_index;
+  rule1->next_rule_id = rule2->rule_id;
   ruleset->addRule(std::unique_ptr<Rule>(rule1));
   ruleset->addRule(std::unique_ptr<Rule>(rule2));
 
@@ -269,7 +269,7 @@ TEST(RuleEngineTest, storeCheckPurificationAgreement_running_process) {
   EXPECT_CALL(*qubit, Unlock()).Times(1);
 
   purification_result result{
-      .id = {.ruleset_id = ruleset_id, .rule_id = rule1->rule_index, .index = action_index},
+      .id = {.ruleset_id = ruleset_id, .rule_id = rule1->rule_id, .index = action_index},
       .outcome = true,
   };
 
@@ -343,7 +343,7 @@ TEST(RuleEngineTest, unlockResourceAndDiscard) {
   qubit->fillParams();
   qubit->action_index = action_index;
   rule1->addResource(partner_addr, qubit);
-  rule1->next_rule_id = rule2->rule_index;
+  rule1->next_rule_id = rule2->rule_id;
   ruleset->addRule(std::unique_ptr<Rule>(rule1));
   ruleset->addRule(std::unique_ptr<Rule>(rule2));
 
@@ -387,7 +387,7 @@ TEST(RuleEngineTest, unlockResourceAndUpgradeStage) {
 
   qubit->action_index = action_index;
   rule1->addResource(partner_addr, qubit);
-  rule1->next_rule_id = rule2->rule_index;
+  rule1->next_rule_id = rule2->rule_id;
   ruleset->addRule(std::unique_ptr<Rule>(rule1));
   ruleset->addRule(std::unique_ptr<Rule>(rule2));
 
