@@ -75,8 +75,8 @@ cPacket *DoubleSelectionDualActionSecond::run(cModule *re) {
   return pk;
 }
 
-DoubleSelectionDualActionSecondInv::DoubleSelectionDualActionSecondInv(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id,
-                                                                       int resource, int trash_resource_x, int trash_resource_z, int ds_trash_resource_z)
+DoubleSelectionDualActionSecondInv::DoubleSelectionDualActionSecondInv(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource,
+                                                                       int trash_resource_x, int trash_resource_z, int ds_trash_resource_z)
     : Action(ruleset_id, rule_id),
       partner(partner),
       qnic_type(qnic_type),
