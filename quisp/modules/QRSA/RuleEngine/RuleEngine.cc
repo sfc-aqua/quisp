@@ -568,7 +568,7 @@ bool RuleEngine::checkAppliedRule(IStationaryQubit *qubit, unsigned long rule_id
     }
   }
   // completely fresh resource
-  return false;
+  return true;
 }
 
 void RuleEngine::clearAppliedRule(IStationaryQubit *qubit) {
