@@ -14,8 +14,8 @@ class MeasureCountClause : public Clause {
     max_count = _max_count;
   };
   MeasureCountClause(int _max_count) : Clause() { max_count = _max_count; };
-  bool check(std::multimap<int, IStationaryQubit*>) override;
-  bool checkTerminate(std::multimap<int, IStationaryQubit*>) const override;
+  bool check(std::multimap<int, IStationaryQubit*>&) override;
+  bool checkTerminate(std::multimap<int, IStationaryQubit*>&) const override;
 };
 
 }  // namespace clauses
