@@ -1230,7 +1230,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
             delete pk;
           }
         } else {
-          error("Pk nullptr");
+          // error("Pk nullptr");
+          break;
         }
 
         // std::cout<<"Is it done?";
