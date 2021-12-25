@@ -21,6 +21,7 @@
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RealTimeController/IRealTimeController.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
+#include "modules/QRSA/RuleEngine/QubitRecord/IQubitRecord.h"
 #include "modules/QUBIT.h"
 #include "utils/ComponentProvider.h"
 
@@ -30,6 +31,7 @@ namespace quisp {
 namespace modules {
 using namespace rules;
 using qnic_store::IQNicStore;
+using qubit_record::IQubitRecord;
 
 /** \class RuleEngine RuleEngine.h
  *  \note The Connection Manager responds to connection requests received from other nodes.
@@ -74,8 +76,6 @@ class RuleEngine : public IRuleEngine {
   // when the tracker for the qnic is clered by previous BSM trial it goes true
   // when the RuleEngine try to start new Photon emittion, it goes false and other BSM trial can't access to it.
   std::vector<bool> tracker_accessible;
-  // tracking the rules that have been applied to the qubit
-  std::map<IStationaryQubit *, std::vector<unsigned long>> applied_rules;  // <qubit, list of rules>
 
   void freeResource(int qnic_index, int qubit_index, QNIC_type qnic_type) override;
   void freeConsumedResource(int qnic_index, IStationaryQubit *qubit, QNIC_type qnic_type) override;
@@ -109,9 +109,6 @@ class RuleEngine : public IRuleEngine {
   void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, unsigned long rule_id, int index);
   void Unlock_resource_and_discard(unsigned long ruleset_id, unsigned long rule_id, int index);
 
-  void updateAppliedRule(IStationaryQubit *qubit, unsigned long rule_id);
-  bool checkAppliedRule(IStationaryQubit *qubit, unsigned long rule_id);
-  void clearAppliedRule(IStationaryQubit *qubit);
   void updateResources_EntanglementSwapping(swapping_result swapr);
   virtual void updateResources_SimultaneousEntanglementSwapping(swapping_result swapr);
 

@@ -61,15 +61,12 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
 
 class RuleEngineTestTarget : public quisp::modules::RuleEngine {
  public:
-  using quisp::modules::RuleEngine::checkAppliedRule;
-  using quisp::modules::RuleEngine::clearAppliedRule;
   using quisp::modules::RuleEngine::initialize;
   using quisp::modules::RuleEngine::par;
   using quisp::modules::RuleEngine::qnic_store;
   using quisp::modules::RuleEngine::storeCheck_Purification_Agreement;
   using quisp::modules::RuleEngine::Unlock_resource_and_discard;
   using quisp::modules::RuleEngine::Unlock_resource_and_upgrade_stage;
-  using quisp::modules::RuleEngine::updateAppliedRule;
   using quisp::modules::RuleEngine::updateResources_EntanglementSwapping;
 
   RuleEngineTestTarget(IStationaryQubit* mockQubit, MockRoutingDaemon* routingdaemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller,
@@ -161,11 +158,10 @@ TEST(RuleEngineTest, resourceAllocation) {
   auto* sim = prepareSimulation();
   auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* mockQubit1 = new MockQubit(QNIC_E, 3);
   auto* qubit_record0 = new QubitRecord(QNIC_E, 3, 0);
   auto* qubit_record1 = new QubitRecord(QNIC_E, 3, 1);
   auto* qubit_record2 = new QubitRecord(QNIC_E, 3, 2);
-  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, nullptr, qnic_specs};
+  auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, nullptr, qnic_specs};
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
   rule_engine->setAllResources(0, qubit_record0);
@@ -193,7 +189,6 @@ TEST(RuleEngineTest, resourceAllocation) {
   EXPECT_EQ(_rule->resources.size(), 1);
   delete mockHardwareMonitor;
   delete routingdaemon;
-  delete mockQubit1;
 }
 
 TEST(RuleEngineTest, trackerUpdate) {
@@ -306,13 +301,13 @@ TEST(RuleEngineTest, freeConsumedResource) {
   auto* qubit_record = new QubitRecord(QNIC_E, qnic_index, 1);
   qubit_record->setBusy(true);
   qubit->fillParams();
-  rule_engine->updateAppliedRule(qubit, 0);
-  EXPECT_FALSE(rule_engine->checkAppliedRule(qubit, 0));
+  qubit_record->markRuleApplied(0);
+  EXPECT_FALSE(!qubit_record->isRuleApplied(0));
 
   EXPECT_CALL(*realtime_controller, ReInitialize_StationaryQubit(qubit_record, false)).Times(1).WillOnce(Return());
   EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(QNIC_E, qnic_index, 1)).Times(1).WillOnce(Return(qubit_record));
   rule_engine->freeConsumedResource(qnic_index, qubit, QNIC_E);
-  EXPECT_TRUE(rule_engine->checkAppliedRule(qubit, 0));
+  EXPECT_TRUE(!qubit_record->isRuleApplied(0));
   EXPECT_FALSE(qubit_record->isBusy());
   delete qubit;
   delete hardware_monitor;
@@ -351,7 +346,7 @@ TEST(RuleEngineTest, unlockResourceAndDiscard) {
   EXPECT_CALL(*qubit, Unlock()).Times(1);
   EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(QNIC_E, qnic_index, 1)).Times(1).WillOnce(Return(qubit_record));
 
-  rule_engine->updateAppliedRule(qubit, 0);
+  qubit_record->markRuleApplied(0);
   EXPECT_EQ(rule1->resources.size(), 1);
   EXPECT_EQ(rule2->resources.size(), 0);
   EXPECT_CALL(*realtime_controller, ReInitialize_StationaryQubit(qubit_record, false)).Times(1).WillOnce(Return());
@@ -460,16 +455,14 @@ TEST(RuleEngineTest, updateAndCheckAppliedRule) {
   auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
   rule_engine->callInitialize();
 
-  auto* qubit1 = new MockQubit(QNIC_E, 7);
-  auto* qubit2 = new MockQubit(QNIC_E, 11);
-  EXPECT_TRUE(rule_engine->checkAppliedRule(qubit1, 1));
-  rule_engine->updateAppliedRule(qubit1, 1);
-  EXPECT_FALSE(rule_engine->checkAppliedRule(qubit1, 1));
-  EXPECT_TRUE(rule_engine->checkAppliedRule(qubit1, 2));
-  EXPECT_TRUE(rule_engine->checkAppliedRule(qubit2, 1));
+  auto* qubit_record1 = new QubitRecord(QNIC_E, 7, 0);
+  auto* qubit_record2 = new QubitRecord(QNIC_E, 11, 0);
+  EXPECT_TRUE(!qubit_record1->isRuleApplied(1));
+  qubit_record1->markRuleApplied(1);
+  EXPECT_FALSE(!qubit_record1->isRuleApplied(1));
+  EXPECT_TRUE(!qubit_record1->isRuleApplied(2));
+  EXPECT_TRUE(!qubit_record2->isRuleApplied(1));
 
-  delete qubit1;
-  delete qubit2;
   delete hardware_monitor;
 }
 
@@ -482,14 +475,16 @@ TEST(RuleEngineTest, checkAppliedRule) {
   rule_engine->callInitialize();
 
   auto* qubit = new MockQubit(QNIC_E, 7);
-  EXPECT_TRUE(rule_engine->checkAppliedRule(qubit, 1));
-  rule_engine->updateAppliedRule(qubit, 1);
-  EXPECT_FALSE(rule_engine->checkAppliedRule(qubit, 1));
+  auto* qubit_record = new QubitRecord(QNIC_E, 7, 1);
+  EXPECT_TRUE(!qubit_record->isRuleApplied(1));
+  qubit_record->markRuleApplied(1);
+  EXPECT_FALSE(!qubit_record->isRuleApplied(1));
 
-  rule_engine->clearAppliedRule(qubit);
-  EXPECT_TRUE(rule_engine->checkAppliedRule(qubit, 1));
+  qubit_record->clearAppliedRules();
+  EXPECT_TRUE(!qubit_record->isRuleApplied(1));
 
   delete qubit;
+  delete qubit_record;
   delete hardware_monitor;
 }
 
