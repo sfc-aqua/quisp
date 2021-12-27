@@ -19,8 +19,8 @@ namespace rules {
 class Condition {
  public:
   void addClause(Clause* c);
-  bool check(std::multimap<int, IStationaryQubit*> resources) const;
-  bool checkTerminate(std::multimap<int, IStationaryQubit*> resources) const;
+  bool check(std::multimap<int, IStationaryQubit*>& resources) const;
+  bool checkTerminate(std::multimap<int, IStationaryQubit*>& resources) const;
 
   std::vector<Clause*> clauses;
 };

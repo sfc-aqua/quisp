@@ -29,7 +29,7 @@ cPacket *Rule::checkrun(cModule *re) {
   if (condition->check(resources)) {
     return action->run(re);
   }
-  return new ConditionNotSatisfied;
+  return nullptr;
 }
 
 bool Rule::checkTerminate() { return condition->checkTerminate(resources); }
