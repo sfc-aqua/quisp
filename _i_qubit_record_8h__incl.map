@@ -1,6 +1,9 @@
 <map id="quisp/modules/QRSA/RuleEngine/QubitRecord/IQubitRecord.h" name="quisp/modules/QRSA/RuleEngine/QubitRecord/IQubitRecord.h">
-<area shape="rect" id="node1" title=" " alt="" coords="40,5,207,61"/>
-<area shape="rect" id="node2" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="5,109,124,136"/>
-<area shape="rect" id="node4" title=" " alt="" coords="148,109,216,136"/>
-<area shape="rect" id="node3" title=" " alt="" coords="23,184,106,211"/>
+<area shape="rect" id="node1" title=" " alt="" coords="99,5,265,61"/>
+<area shape="rect" id="node2" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="5,117,124,143"/>
+<area shape="rect" id="node4" title=" " alt="" coords="148,117,216,143"/>
+<area shape="rect" id="node5" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="240,109,441,151"/>
+<area shape="rect" id="node3" title=" " alt="" coords="23,199,106,225"/>
+<area shape="rect" id="node6" title=" " alt="" coords="207,199,339,225"/>
+<area shape="rect" id="node7" title=" " alt="" coords="363,199,454,225"/>
 </map>

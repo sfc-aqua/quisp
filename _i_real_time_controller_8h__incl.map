@@ -1,8 +1,11 @@
 <map id="quisp/modules/QRSA/RealTimeController/IRealTimeController.h" name="quisp/modules/QRSA/RealTimeController/IRealTimeController.h">
-<area shape="rect" id="node1" title=" " alt="" coords="40,5,191,61"/>
-<area shape="rect" id="node2" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="5,273,124,300"/>
-<area shape="rect" id="node4" href="$_q_r_s_a_8h.html" title=" " alt="" coords="34,109,197,136"/>
-<area shape="rect" id="node6" href="$_i_qubit_record_8h.html" title=" " alt="" coords="153,184,315,225"/>
-<area shape="rect" id="node3" title=" " alt="" coords="23,348,106,375"/>
-<area shape="rect" id="node5" title=" " alt="" coords="173,273,241,300"/>
+<area shape="rect" id="node1" title=" " alt="" coords="73,5,224,61"/>
+<area shape="rect" id="node2" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="5,281,124,307"/>
+<area shape="rect" id="node4" href="$_q_r_s_a_8h.html" title=" " alt="" coords="67,109,230,136"/>
+<area shape="rect" id="node6" href="$_i_qubit_record_8h.html" title=" " alt="" coords="186,184,349,225"/>
+<area shape="rect" id="node3" title=" " alt="" coords="23,363,106,389"/>
+<area shape="rect" id="node5" title=" " alt="" coords="148,281,216,307"/>
+<area shape="rect" id="node7" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="240,273,441,315"/>
+<area shape="rect" id="node8" title=" " alt="" coords="343,363,475,389"/>
+<area shape="rect" id="node9" title=" " alt="" coords="227,363,318,389"/>
 </map>

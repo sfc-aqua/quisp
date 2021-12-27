@@ -10,5 +10,6 @@ var classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record =
     [ "isRuleApplied", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html#a46e56d368849e5f91a0ebca542d4da63", null ],
     [ "markRuleApplied", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html#a47dac1e8476ef4df873518e33dc39986", null ],
     [ "setAllocated", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html#a0f69432e37d24671daaa1144c1e792e4", null ],
-    [ "setBusy", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html#a19e171b1569ca1448c960d9a7f9eb0d9", null ]
+    [ "setBusy", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html#a19e171b1569ca1448c960d9a7f9eb0d9", null ],
+    [ "qubit_ptr", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html#a9f669a96f2506bc5c5d29fef1477494f", null ]
 ];

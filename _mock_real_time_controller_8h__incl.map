@@ -1,10 +1,13 @@
 <map id="quisp/test_utils/mock_modules/MockRealTimeController.h" name="quisp/test_utils/mock_modules/MockRealTimeController.h">
 <area shape="rect" id="node1" title=" " alt="" coords="115,5,349,47"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,102,120,129"/>
-<area shape="rect" id="node3" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="289,348,407,375"/>
-<area shape="rect" id="node5" href="$_q_r_s_a_8h.html" title=" " alt="" coords="89,184,252,211"/>
-<area shape="rect" id="node8" href="$_i_real_time_controller_8h.html" title=" " alt="" coords="195,95,421,136"/>
-<area shape="rect" id="node4" title=" " alt="" coords="307,423,389,449"/>
-<area shape="rect" id="node6" title=" " alt="" coords="171,348,239,375"/>
-<area shape="rect" id="node7" href="$_i_qubit_record_8h.html" title=" " alt="" coords="208,259,371,300"/>
+<area shape="rect" id="node3" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="334,355,453,382"/>
+<area shape="rect" id="node5" href="$_q_r_s_a_8h.html" title=" " alt="" coords="108,184,271,211"/>
+<area shape="rect" id="node11" href="$_i_real_time_controller_8h.html" title=" " alt="" coords="195,95,421,136"/>
+<area shape="rect" id="node4" title=" " alt="" coords="352,437,435,464"/>
+<area shape="rect" id="node6" title=" " alt="" coords="17,355,85,382"/>
+<area shape="rect" id="node7" href="$_i_qubit_record_8h.html" title=" " alt="" coords="128,259,291,300"/>
+<area shape="rect" id="node8" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="109,348,310,389"/>
+<area shape="rect" id="node9" title=" " alt="" coords="170,437,302,464"/>
+<area shape="rect" id="node10" title=" " alt="" coords="55,437,145,464"/>
 </map>

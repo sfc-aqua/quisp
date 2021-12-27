@@ -1,5 +1,6 @@
 var NAVTREEINDEX6 =
 {
+"classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#adb2de64a174ff8bd6ac4a0d23f0d0a46":[14,0,1,9,1,14],
 "clauses_2_clause_8h.html":[15,0,0,3,1,0],
 "clauses_2_clause_8h_source.html":[15,0,0,3,1,0],
 "dir_00de4095174e1f7689faab21b8d8d25c.html":[15,0,0],
@@ -37,8 +38,8 @@ var NAVTREEINDEX6 =
 "example_8h.html":[15,0,0,3,7],
 "example_8h_source.html":[15,0,0,3,7],
 "files.html":[15,0],
-"functions.html":[14,3,0,0],
 "functions.html":[14,3,0],
+"functions.html":[14,3,0,0],
 "functions_a.html":[14,3,0,1],
 "functions_b.html":[14,3,0,2],
 "functions_c.html":[14,3,0,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX6 =
 "structquisp_1_1channels_1_1channel__error__model.html#a2d8de8aa9d695c363600819250a19869":[14,0,0,0,0,1],
 "structquisp_1_1channels_1_1channel__error__model.html#a89436e4b4b601dde9202568b90e38a68":[14,0,0,0,0,3],
 "structquisp_1_1channels_1_1channel__error__model.html#aa23ab353eb0337263095bce340a46462":[14,0,0,0,0,0],
-"structquisp_1_1channels_1_1channel__error__model.html#af4f75ba5cbd64b9fef922eaf7f61a584":[14,0,0,0,0,2],
-"structquisp_1_1modules_1_1_connection_setup_info.html":[14,0,0,1,37]
+"structquisp_1_1channels_1_1channel__error__model.html#af4f75ba5cbd64b9fef922eaf7f61a584":[14,0,0,0,0,2]
 };
