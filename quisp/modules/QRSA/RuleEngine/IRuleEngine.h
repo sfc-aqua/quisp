@@ -2,8 +2,8 @@
 #define QUISP_MODULES_IRULEENGINE_H_
 
 #include <omnetpp.h>
-#include <rules/RuleSet.h>
 #include <rules/ActiveRuleSet.h>
+#include <rules/RuleSet.h>
 #include <vector>
 
 #include <messages/classical_messages.h>

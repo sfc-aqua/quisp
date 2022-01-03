@@ -319,7 +319,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   std::map<int, RuleSet *> ruleset_map;  // <node address, RuleSet>
   for (int i = 0; i < path.size(); i++) {
     int ruleset_owner = path.at(i);
-    RuleSet *ruleset = new RuleSet(ruleset_id, ruleset_owner, {});  // start from empty partners
+    RuleSet *ruleset = new RuleSet(ruleset_id, ruleset_owner);  // start from empty partners
     ruleset_map.insert(std::make_pair(ruleset_owner, ruleset));
   }
   // 1. add purification rules to the ruleset (policy: do purification before entanglement swapping)

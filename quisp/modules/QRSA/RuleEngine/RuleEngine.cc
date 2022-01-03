@@ -581,6 +581,8 @@ void RuleEngine::clearAppliedRule(IStationaryQubit *qubit) {
   }
 }
 
+ActiveRuleSet *RuleEngine::constructActiveRuleSet(RuleSet ruleset) {}
+
 void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, unsigned long rule_id, int index) {
   bool ok = false;
   auto ruleset_result = rp.findById(ruleset_id);

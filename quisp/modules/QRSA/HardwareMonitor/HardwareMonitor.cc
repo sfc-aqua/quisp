@@ -620,7 +620,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   pk->setKind(6);
 
   // Tomography between this node and the sender of Ack.
-  RuleSet *tomography_RuleSet = new RuleSet(RuleSet_id, my_address, partner_address);
+  RuleSet *tomography_RuleSet = new RuleSet(RuleSet_id, my_address);
   EV_INFO << "Creating rules now ruleset_id = " << RuleSet_id << ", partner_address = " << partner_address << "\n";
 
   unsigned long rule_id = 0;

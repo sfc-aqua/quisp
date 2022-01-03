@@ -158,8 +158,6 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(ruleset->size(), 4);
     ruleset_id = ruleset->ruleset_id;
     // EXPECT_EQ(packetFor2->getRuleSet_id(), ruleset_id);
-    EXPECT_EQ(ruleset->entangled_partners.size(), 1);
-    // EXPECT_EQ(ruleset->entangled_partners.at(0), 5); // always 0
 
     // checking the 1st rule of QNode2(initiator): if EnoughResource -> Purify
     {
@@ -295,9 +293,6 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset->size(), 5);
     EXPECT_EQ(ruleset->ruleset_id, ruleset_id);
-    // EXPECT_EQ(packetFor3->getRuleSet_id(), ruleset_id);
-    EXPECT_EQ(ruleset->entangled_partners.size(), 1);
-    // EXPECT_EQ(ruleset->entangled_partners.at(0), 5); // always 0
 
     // checking the 1st rule of QNode3: if EnoughResource -> Purify
     {
@@ -459,9 +454,6 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset->size(), 3);
     EXPECT_EQ(ruleset->ruleset_id, ruleset_id);
-    // EXPECT_EQ(packetFor4->getRuleSet_id(), ruleset_id);
-    EXPECT_EQ(ruleset->entangled_partners.size(), 1);
-    // EXPECT_EQ(ruleset->entangled_partners.at(0), 5); // always 0
 
     // checking the 1st rule of QNode4: if EnoughResource -> Purify
     {
@@ -578,9 +570,6 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset->size(), 6);
     EXPECT_EQ(ruleset->ruleset_id, ruleset_id);
-    // EXPECT_EQ(packetFor5->getRuleSet_id(), ruleset_id);
-    EXPECT_EQ(ruleset->entangled_partners.size(), 1);
-    // EXPECT_EQ(ruleset->entangled_partners.at(0), 5); // always 0
 
     // checking the 1st rule of QNode5: if EnoughResource -> Purify
     {
@@ -819,7 +808,6 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset->size(), 8);
     ruleset_id = ruleset->ruleset_id;
-    EXPECT_EQ(ruleset->entangled_partners.size(), 1);
 
     // checking the 1st rule of QNode1(initiator): if EnoughResource -> Purify
     {
@@ -1051,7 +1039,6 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset->size(), 3);  // pur1, pur3, es 1:3
     ruleset_id = ruleset->ruleset_id;
-    EXPECT_EQ(ruleset->entangled_partners.size(), 1);
     // checking the 1st rule of QNode2(initiator): if EnoughResource -> Purify
     {
       auto *rule = ruleset->rules.at(0).get();
@@ -1174,7 +1161,6 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset->size(), 7);  // pur2, pur4, wait2, wait4, pur1, pur5, es1:5,
     ruleset_id = ruleset->ruleset_id;
-    EXPECT_EQ(ruleset->entangled_partners.size(), 1);
     // checking the 1st rule of QNode3: if EnoughResource -> Purify
     {
       auto *rule = ruleset->rules.at(0).get();
@@ -1398,7 +1384,6 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset->size(), 3);  // pur1, pur3, es 1:3
     ruleset_id = ruleset->ruleset_id;
-    EXPECT_EQ(ruleset->entangled_partners.size(), 1);
     // checking the 1st rule of QNode2(initiator): if EnoughResource -> Purify
     {
       auto *rule = ruleset->rules.at(0).get();
@@ -1517,7 +1502,6 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset->size(), 11);
     ruleset_id = ruleset->ruleset_id;
-    EXPECT_EQ(ruleset->entangled_partners.size(), 1);
 
     // 1st rule pur with 4
     {
