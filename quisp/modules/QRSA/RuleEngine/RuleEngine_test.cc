@@ -598,4 +598,42 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   delete realtime_controller;
   delete rule_engine->qnic_store.get();
 }
+
+TEST(RuleEngineTest, constructActiveRuleSet){
+  prepareSimulation(); 
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* qubit = new MockQubit(QNIC_E, 7);
+  auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
+  std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(QNIC_E, 7, 0);
+  EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(QNIC_E, 0, 0)).Times(1).WillRepeatedly(Return(qubit_record.get()));
+  EXPECT_CALL(*realtime_controller, assertNoEntanglement(qubit_record.get())).Times(1);
+  rule_engine->callInitialize();
+
+  // prepare (static) ruleset being sent by responder
+  unsigned long ruleset_id = 1234;
+  int owner_address = 1;
+  unsigned long rule_id0 = 5678;
+  std::string rule0_name = "Purification";
+  unsigned long rule_id1 = 5679;
+  std::string rule1_name = "Swapping";
+  RuleSet ruleset = RuleSet(ruleset_id, owner_address);  // static ruleset
+  {
+    // mock static ruleset
+
+  } 
+
+  auto* active_ruleset = rule_engine->constructActiveRuleSet(ruleset);
+
+  EXPECT_EQ(active_ruleset->ruleset_id, ruleset_id);
+  auto* rule0 = active_ruleset->getRule(0);
+  EXPECT_EQ(rule0->rule_id, rule_id0);
+  EXPECT_EQ(rule0->name, rule0_name);
+  auto* rule1 = active_ruleset->getRule(1);
+  EXPECT_EQ(rule1->rule_id, rule_id1);
+  EXPECT_EQ(rule1->name, rule1_name);
+}
+
+
 }  // namespace

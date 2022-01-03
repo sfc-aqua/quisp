@@ -9,6 +9,7 @@
 
 #include <omnetpp.h>
 #include <rules/RuleSet.h>
+#include <rules/ActiveRuleSet.h>
 #include <vector>
 
 #include <messages/classical_messages.h>
