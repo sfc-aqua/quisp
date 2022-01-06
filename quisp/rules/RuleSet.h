@@ -21,6 +21,8 @@ class RuleSet {
  public:
   RuleSet(unsigned long _ruleset_id, int _owner_addr);
   void addRule(std::unique_ptr<Rule> r);
+  void serialize();
+  void deserialize();
   std::unique_ptr<Rule>& getRule(int i);
   int size() const;
   bool empty() const;
