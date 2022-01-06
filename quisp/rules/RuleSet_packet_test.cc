@@ -24,16 +24,16 @@ TEST(RuleSetTest, addRule) {
   /*
   BaseRuleConfig{
           .to
-		  .conditions = {}
-		  .actions = {}
+                  .conditions = {}
+                  .actions = {}
           setNextRule()
   }
   PurificationConfig: BaseRuleConfig{
           .type
           .number
           .name
-		  .conditions = {clause1, clause2, ...}
-		  .actions = {action1, action2, ...}
+                  .conditions = {clause1, clause2, ...}
+                  .actions = {action1, action2, ...}
           .to // next rule id
   }
   */
