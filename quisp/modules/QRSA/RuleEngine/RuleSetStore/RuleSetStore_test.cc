@@ -23,7 +23,7 @@ TEST(RuleSetStore, InsertUniquePtr) {
   prepareSimulation();
   RuleSetStore rs;
   EXPECT_EQ(rs.rulesets.size(), 0);
-  auto ruleset = std::make_unique<RuleSet>(0, 1);
+  auto ruleset = std::make_unique<ActiveRuleSet>(0, 1);
   rs.insert(ruleset);
   EXPECT_EQ(rs.rulesets.size(), 1);
 }
@@ -31,7 +31,7 @@ TEST(RuleSetStore, InsertRawPtr) {
   prepareSimulation();
   RuleSetStore rs;
   EXPECT_EQ(rs.rulesets.size(), 0);
-  auto ruleset = new RuleSet(0, 1);
+  auto ruleset = new ActiveRuleSet(0, 1);
   rs.insert(ruleset);
   EXPECT_EQ(rs.rulesets.size(), 1);
 }
@@ -39,7 +39,7 @@ TEST(RuleSetStore, Erase) {
   prepareSimulation();
   RuleSetStore rs;
   EXPECT_EQ(rs.rulesets.size(), 0);
-  auto ruleset = new RuleSet(0, 1);
+  auto ruleset = new ActiveRuleSet(0, 1);
   rs.insert(ruleset);
   EXPECT_EQ(rs.rulesets.size(), 1);
   const auto& first_ruleset = rs.cbegin();
@@ -51,7 +51,7 @@ TEST(RuleSetStore, EraseWhileIterating) {
   prepareSimulation();
   RuleSetStore rs;
   for (int i = 0; i < 10; i++) {
-    auto ruleset = new RuleSet(i, i * 2);
+    auto ruleset = new ActiveRuleSet(i, i * 2);
     rs.insert(ruleset);
   }
   int i = 0;
@@ -71,7 +71,7 @@ TEST(RuleSetStore, IterateWithConst) {
   EXPECT_EQ(rs.rulesets.size(), 0);
   EXPECT_EQ(rs.cbegin(), rs.cend());
   for (int i = 0; i < 10; i++) {
-    auto ruleset = new RuleSet(i, i * 2);
+    auto ruleset = new ActiveRuleSet(i, i * 2);
     rs.insert(ruleset);
   }
 

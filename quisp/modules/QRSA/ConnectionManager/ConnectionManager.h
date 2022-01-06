@@ -84,13 +84,13 @@ class ConnectionManager : public IConnectionManager {
   SwappingConfig generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources);
 
   // Rule generators
-  std::unique_ptr<Rule> purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
-                                         unsigned long rule_id);
-  std::unique_ptr<Rule> swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id);
-  std::unique_ptr<Rule> simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id);
-  std::unique_ptr<Rule> waitRule(int partner_address, int next_partner_address, unsigned long ruleset_id, unsigned long rule_id);
-  std::unique_ptr<Rule> tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
-                                       unsigned long rule_id);
+  std::unique_ptr<ActiveRule> purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
+                                               unsigned long rule_id);
+  std::unique_ptr<ActiveRule> swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id);
+  std::unique_ptr<ActiveRule> simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id);
+  std::unique_ptr<ActiveRule> waitRule(int partner_address, int next_partner_address, unsigned long ruleset_id, unsigned long rule_id);
+  std::unique_ptr<ActiveRule> tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
+                                             unsigned long rule_id);
 
   void reserveQnic(int qnic_address);
   void releaseQnic(int qnic_address);

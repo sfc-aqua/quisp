@@ -13,26 +13,9 @@
 
 namespace quisp::rules {
 
-class Rule {
- public:
-  const unsigned long ruleset_id;
-  const unsigned long rule_id;
-  unsigned long next_rule_id = 0;
-  std::string name;
-  std::unique_ptr<Condition> condition;
-  std::unique_ptr<Action> action;
-  std::multimap<int, IStationaryQubit *> resources;
-  std::vector<int> action_partners;
-  std::vector<int> next_action_partners;  // if this rule extends the entanglement
-
-  Rule(unsigned long ruleset_id, unsigned long rule_id, std::string rule_name = "", std::vector<int> action_partners = {});
-
-  void addResource(int address_entangled_with, IStationaryQubit *qubit);
-  void setCondition(Condition *c);
-  void setAction(Action *a);
-
-  cPacket *checkrun(cModule *re);
-  bool checkTerminate();
+struct BaseRule {
+  unsigned long rule_id;
+  unsigned long to;
 };
 
 }  // namespace quisp::rules
