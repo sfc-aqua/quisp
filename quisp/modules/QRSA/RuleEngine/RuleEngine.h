@@ -8,6 +8,7 @@
 #define QUISP_MODULES_RULEENGINE_H_
 
 #include <omnetpp.h>
+#include <rules/ActiveRuleSet.h>
 #include <rules/RuleSet.h>
 #include <vector>
 
@@ -113,6 +114,8 @@ class RuleEngine : public IRuleEngine {
   bool checkAppliedRule(IStationaryQubit *qubit, unsigned long rule_id);
   void clearAppliedRule(IStationaryQubit *qubit);
   void updateResources_EntanglementSwapping(swapping_result swapr);
+
+  ActiveRuleSet *constructActiveRuleSet(RuleSet ruleset);
   virtual void updateResources_SimultaneousEntanglementSwapping(swapping_result swapr);
 
   utils::ComponentProvider provider;

@@ -172,7 +172,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // Received a tomography rule set.
     LinkTomographyRuleSet *pk = check_and_cast<LinkTomographyRuleSet *>(msg);
     // std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
-    auto *ruleset = const_cast<RuleSet *>(pk->getRuleSet());
+    auto *ruleset = const_cast<ActiveRuleSet *>(pk->getRuleSet());
     int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
     std::cout << "Process size is ...." << ruleset->size() << " node[" << parentAddress << "\n";
     // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
@@ -288,7 +288,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
     InternalRuleSetForwarding *pkt = check_and_cast<InternalRuleSetForwarding *>(msg);
     // add actual process
-    auto *ruleset = const_cast<RuleSet *>(pkt->getRuleSet());
+    auto *ruleset = const_cast<ActiveRuleSet *>(pkt->getRuleSet());
     // here swappers got swapping ruleset with internal packet
     // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
     // ResourceAllocation();
@@ -304,7 +304,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     if (pkt->getApplication_type() == 0) {
       // Received a tomography rule set.
 
-      auto ruleset = const_cast<RuleSet *>(pkt->getRuleSet());
+      auto ruleset = const_cast<ActiveRuleSet *>(pkt->getRuleSet());
       std::cout << "Process size is ...." << ruleset->size() << " node[" << parentAddress << "\n";
       if (ruleset->size() > 0) {
         rp.insert(ruleset);
@@ -580,6 +580,8 @@ void RuleEngine::clearAppliedRule(IStationaryQubit *qubit) {
     error("No rule record found at clearing");
   }
 }
+
+ActiveRuleSet *RuleEngine::constructActiveRuleSet(RuleSet ruleset) {}
 
 void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, unsigned long rule_id, int index) {
   bool ok = false;

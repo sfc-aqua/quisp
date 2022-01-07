@@ -6,7 +6,7 @@ packet LinkTomographyRuleSet extends Header
 {
     int process_id;
     int number_of_measuring_resources;
-    RuleSet* ruleSet;
+    ActiveRuleSet* ruleSet;
 }
 
 packet LinkTomographyRequest extends Header {}

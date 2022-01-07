@@ -162,7 +162,7 @@ void ConnectionManager::storeRuleSet(ConnectionSetupResponse *pk) {
   pk_internal->setSrcAddr(pk->getDestAddr());
   pk_internal->setKind(4);
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
-  pk_internal->setRuleSet(const_cast<RuleSet *>(pk->getRuleSet()));
+  pk_internal->setRuleSet(const_cast<ActiveRuleSet *>(pk->getRuleSet()));
   send(pk_internal, "RouterPort$o");
 }
 
@@ -178,7 +178,7 @@ void ConnectionManager::storeRuleSetForApplication(ConnectionSetupResponse *pk) 
   pk_internal->setSrcAddr(pk->getDestAddr());  // Should be original Src here?
   pk_internal->setKind(4);
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
-  pk_internal->setRuleSet(const_cast<RuleSet *>(pk->getRuleSet()));
+  pk_internal->setRuleSet(const_cast<ActiveRuleSet *>(pk->getRuleSet()));
   pk_internal->setApplication_type(pk->getApplication_type());
   send(pk_internal, "RouterPort$o");
 }
@@ -316,10 +316,10 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
 
   // 0. prepare empty RuleSets for all nodes
   unsigned long ruleset_id = createUniqueId();
-  std::map<int, RuleSet *> ruleset_map;  // <node address, RuleSet>
+  std::map<int, ActiveRuleSet *> ruleset_map;  // <node address, RuleSet>
   for (int i = 0; i < path.size(); i++) {
     int ruleset_owner = path.at(i);
-    RuleSet *ruleset = new RuleSet(ruleset_id, ruleset_owner, {});  // start from empty partners
+    ActiveRuleSet *ruleset = new ActiveRuleSet(ruleset_id, ruleset_owner);  // start from empty partners
     ruleset_map.insert(std::make_pair(ruleset_owner, ruleset));
   }
   // 1. add purification rules to the ruleset (policy: do purification before entanglement swapping)
@@ -471,7 +471,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
 
   // Set next rules
   for (auto it = ruleset_map.cbegin(); it != ruleset_map.cend(); ++it) {
-    RuleSet *ruleset = it->second;
+    ActiveRuleSet *ruleset = it->second;
     int current_index = 0;
     for (auto rule = ruleset->cbegin(); rule != ruleset->cend(); ++rule) {
       if ((*rule)->action_partners.size() == 1) {
@@ -847,8 +847,8 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
 }
 
 // Rule Generators
-std::unique_ptr<Rule> ConnectionManager::purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index,
-                                                          unsigned long ruleset_id, unsigned long rule_id) {
+std::unique_ptr<ActiveRule> ConnectionManager::purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index,
+                                                                unsigned long ruleset_id, unsigned long rule_id) {
   // list of purification types
   std::string pur_name = "";
   if (purification_type == 0) {
@@ -864,7 +864,7 @@ std::unique_ptr<Rule> ConnectionManager::purificationRule(int partner_address, i
   }
 
   std::vector<int> partners = {partner_address};
-  auto rule_purification = std::make_unique<Rule>(ruleset_id, rule_id, pur_name, partners);
+  auto rule_purification = std::make_unique<ActiveRule>(ruleset_id, rule_id, pur_name, partners);
 
   for (int i = 0; i < num_purification; i++) {
     if (purification_type == 0) {
@@ -921,10 +921,10 @@ std::unique_ptr<Rule> ConnectionManager::purificationRule(int partner_address, i
   return rule_purification;
 }
 
-std::unique_ptr<Rule> ConnectionManager::swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id) {
+std::unique_ptr<ActiveRule> ConnectionManager::swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id) {
   std::vector<int> partners = {conf.left_partner, conf.right_partner};
   std::string rule_name = "Entanglement Swapping with " + std::to_string(conf.left_partner) + " : " + std::to_string(conf.right_partner);
-  auto rule_entanglement_swapping = std::make_unique<Rule>(ruleset_id, rule_id, rule_name, partners);
+  auto rule_entanglement_swapping = std::make_unique<ActiveRule>(ruleset_id, rule_id, rule_name, partners);
   Condition *condition = new Condition();
   Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, 1);
   Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, 1);
@@ -938,14 +938,14 @@ std::unique_ptr<Rule> ConnectionManager::swappingRule(SwappingConfig conf, unsig
   return rule_entanglement_swapping;
 }
 
-std::unique_ptr<Rule> ConnectionManager::simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id) {
+std::unique_ptr<ActiveRule> ConnectionManager::simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id) {
   // From @poramet implementations
   std::vector<int> partners = {conf.left_partner, conf.right_partner};
   std::string rule_name = "Simultaneous Entanglement Swapping with " + std::to_string(conf.left_partner) + " : " + std::to_string(conf.right_partner);
   int index_in_path = conf.index;
   int path_length_exclude_IR = path.size() - 2;
 
-  auto rule_simultaneous_entanglement_swapping = std::make_unique<Rule>(ruleset_id, rule_id, rule_name, partners);
+  auto rule_simultaneous_entanglement_swapping = std::make_unique<ActiveRule>(ruleset_id, rule_id, rule_name, partners);
   Condition *condition = new Condition();
   Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, 1);
   Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, 1);
@@ -963,11 +963,11 @@ std::unique_ptr<Rule> ConnectionManager::simultaneousSwappingRule(SwappingConfig
   return rule_simultaneous_entanglement_swapping;
 }
 
-std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, int next_parter_address, unsigned long ruleset_id, unsigned long rule_id) {
+std::unique_ptr<ActiveRule> ConnectionManager::waitRule(int partner_address, int next_parter_address, unsigned long ruleset_id, unsigned long rule_id) {
   // This is used for waiting swapping result from partner
   std::vector<int> partners = {partner_address};
   std::string rule_name = "Wait rule with: " + std::to_string(partner_address);
-  auto wait_rule = std::make_unique<Rule>(ruleset_id, rule_id, rule_name, partners);
+  auto wait_rule = std::make_unique<ActiveRule>(ruleset_id, rule_id, rule_name, partners);
   Condition *condition = new Condition();
   Clause *wait_clause = new WaitClause();
   condition->addClause(wait_clause);
@@ -976,10 +976,10 @@ std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, int next_
   return wait_rule;
 }
 
-std::unique_ptr<Rule> ConnectionManager::tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
-                                                        unsigned long rule_id) {
+std::unique_ptr<ActiveRule> ConnectionManager::tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index,
+                                                              unsigned long ruleset_id, unsigned long rule_id) {
   std::vector<int> partners = {partner_address};
-  auto tomography_rule = std::make_unique<Rule>(ruleset_id, rule_id, "tomography", partners);
+  auto tomography_rule = std::make_unique<ActiveRule>(ruleset_id, rule_id, "tomography", partners);
   Condition *condition = new Condition();
   Clause *count_clause = new MeasureCountClause(num_measure);
   Clause *resource_clause = new EnoughResourceClause(partner_address, 1);

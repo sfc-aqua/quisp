@@ -5,25 +5,53 @@
 namespace {
 using namespace quisp::rules;
 using namespace quisp_test;
+// using quisp::rules::PurificaitonRule;
+// using quisp::rules::SwappingRule;
+
 TEST(RuleSetTest, Init) {
   prepareSimulation();
-  RuleSet rule_set(1, 2, std::vector<int>{3, 4, 5});
-  EXPECT_EQ(1, rule_set.ruleset_id);
-  EXPECT_EQ(2, rule_set.owner_addr);
-  EXPECT_EQ(3, rule_set.entangled_partners.size());
+  // RuleSet ruleset(1, 2);
+  // EXPECT_EQ(1, ruleset.ruleset_id);
+  // EXPECT_EQ(2, ruleset.owner_addr);
 
-  RuleSet rule_set2(1, 2, 3);
-  EXPECT_EQ(1, rule_set2.ruleset_id);
-  EXPECT_EQ(2, rule_set2.owner_addr);
-  EXPECT_EQ(1, rule_set2.entangled_partners.size());
-  EXPECT_EQ(3, rule_set2.entangled_partners.at(0));
+  // RuleSet ruleset2(1, 2);
+  // EXPECT_EQ(1, ruleset2.ruleset_id);
+  // EXPECT_EQ(2, ruleset2.owner_addr);
 }
 
-TEST(RuleSetTest, AddRule) {
+TEST(RuleSetTest, addRule) {
   prepareSimulation();
-  RuleSet rule_set(1, 2, 3);
-  auto rule = std::make_unique<Rule>(0, 0);
-  rule_set.addRule(std::move(rule));
-  EXPECT_EQ(1, rule_set.size());
+  // RuleSet ruleset(1, 2);
+  // PurificationRule purification(SSDP_X, 1);  // (purification type, num purification)
+  // /*
+  // BaseRuleConfig{
+  //         .to
+  //                 .conditions = {}
+  //                 .actions = {}
+  //         setNextRule()
+  // }
+  // PurificationConfig: BaseRuleConfig{
+  //         .type
+  //         .number
+  //         .name
+  //                 .conditions = {clause1, clause2, ...}
+  //                 .actions = {action1, action2, ...}
+  //         .to // next rule id
+  // }
+  // */
+  // auto &rule1 = ruleset.addRule(purification, {1});  // return address to rule
+  // EXPECT_EQ(ruleset.rules(0).rule_id, rule1.rule_id);
+  // auto &rule2 = ruleset.addRule(purification, {3});  // return address to rule
+  // EXPECT_EQ(ruleset.rules(1).rule_id, rule2.rule_id);
+  // SwappingRule swapping(1);
+  // auto &rule3 = ruleset.addRule(swapping, {1, 3});
+  // EXPECT_EQ(ruleset.rules(2).rule_id, rule3.rule_id);
+  // rule1.setNextRule(rule3.rule_id);
+  // rule2.setNextRule(rule3.rule_id);
 }
+
+TEST(RuleSetTest, serialize) { prepareSimulation(); }
+
+TEST(RuleSetTest, deserialize) { prepareSimulation(); }
+
 }  // namespace

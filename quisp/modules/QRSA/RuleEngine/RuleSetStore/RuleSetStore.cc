@@ -8,10 +8,10 @@ RuleSetVector::const_iterator RuleSetStore::cend() { return rulesets.cend(); }
 RuleSetVector::iterator RuleSetStore::begin() { return rulesets.begin(); }
 RuleSetVector::iterator RuleSetStore::end() { return rulesets.end(); }
 
-void RuleSetStore::insert(std::unique_ptr<RuleSet>& ruleset) { rulesets.emplace_back(std::move(ruleset)); }
-void RuleSetStore::insert(RuleSet* ruleset) { rulesets.emplace_back(std::unique_ptr<RuleSet>(ruleset)); }
+void RuleSetStore::insert(std::unique_ptr<ActiveRuleSet>& ruleset) { rulesets.emplace_back(std::move(ruleset)); }
+void RuleSetStore::insert(ActiveRuleSet* ruleset) { rulesets.emplace_back(std::unique_ptr<ActiveRuleSet>(ruleset)); }
 RuleSetVector::iterator RuleSetStore::erase(const RuleSetVector::const_iterator& ruleset) { return rulesets.erase(ruleset); }
-std::unique_ptr<RuleSet>& RuleSetStore::operator[](int i) {
+std::unique_ptr<ActiveRuleSet>& RuleSetStore::operator[](int i) {
   if (i < 0 || i >= rulesets.size()) {
     throw std::out_of_range("RuleSetStore::operator[]");
   }
