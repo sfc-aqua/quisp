@@ -4,16 +4,12 @@ namespace quisp {
 namespace rules {
 
 /**
- * @brief Construct a new Active Rule Set:: Active Rule Set object
+ * @brief Construct a new ActiveRuleSet.
  *
  * @param _ruleset_id
  * @param _owner_addr
  */
-ActiveRuleSet::ActiveRuleSet(unsigned long _ruleset_id, int _owner_addr) {
-  ruleset_id = _ruleset_id;
-  owner_addr = _owner_addr;
-  started_at = simTime();
-}
+ActiveRuleSet::ActiveRuleSet(unsigned long _ruleset_id, int _owner_addr) : ruleset_id(_ruleset_id), owner_addr(_owner_addr), started_at(simTime()) {}
 
 void ActiveRuleSet::addRule(std::unique_ptr<ActiveRule> r) { rules.emplace_back(std::move(r)); };
 std::unique_ptr<ActiveRule>& ActiveRuleSet::getRule(int i) { return rules[i]; };

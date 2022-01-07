@@ -5,7 +5,7 @@
 namespace quisp {
 namespace rules {
 
-/** \class RuleSet RuleSet.h
+/**
  *
  * \brief Set of rules for the RuleEngine.
  */

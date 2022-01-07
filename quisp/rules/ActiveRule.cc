@@ -1,11 +1,3 @@
-/** \file Rule.cc
- *
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/06/25
- *
- *  \brief Rule
- */
-
 #include "ActiveRule.h"
 #include <messages/classical_messages.h>
 

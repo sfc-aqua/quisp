@@ -1,9 +1,3 @@
-/** \file Rule.h
- *  \authors cldurand, takaakimatsuo
- *  \date 2018/06/25
- *
- *  \brief Rule
- */
 #pragma once
 #include <omnetpp.h>
 #include <stdio.h>
