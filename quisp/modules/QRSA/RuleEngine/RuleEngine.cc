@@ -62,8 +62,7 @@ void RuleEngine::initialize() {
 void RuleEngine::handleMessage(cMessage *msg) {
   traverseThroughAllProcesses2();  // New resource added to QNIC with qnic_type qnic_index.
 
-  if (dynamic_cast<EmitPhotonRequest *>(msg) != nullptr) {  // From self.
-    EmitPhotonRequest *pk = check_and_cast<EmitPhotonRequest *>(msg);
+  if (auto *pk = dynamic_cast<EmitPhotonRequest *>(msg)) {  // From self.
     // Index the qnic and qubit index to the tracker.
     int qnic_address = pk->getQnic_address();
     // Terminate emission if trial is over already (e.g. the neighbor ran out of free qubits and the BSA already returned the results)
@@ -95,9 +94,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     realtime_controller->EmitPhoton(pk->getQnic_index(), pk->getQubit_index(), (QNIC_type)pk->getQnic_type(), pk->getKind());
   }
 
-  else if (dynamic_cast<CombinedBSAresults *>(msg) != nullptr) {
+  else if (auto *pk_result = dynamic_cast<CombinedBSAresults *>(msg)) {
     // First, keep all the qubits that were successfully entangled, and reinitialize the failed ones.
-    CombinedBSAresults *pk_result = check_and_cast<CombinedBSAresults *>(msg);
     BSMtimingNotifier *pk = check_and_cast<BSMtimingNotifier *>(msg);
     bubble("trial over is set to true");
     // Set qubits free according to results
@@ -136,8 +134,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     }
   }
 
-  else if (dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg) != nullptr) {
-    SchedulePhotonTransmissionsOnebyOne *pk = check_and_cast<SchedulePhotonTransmissionsOnebyOne *>(msg);
+  else if (auto *pk = dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg)) {
     EV_DEBUG << provider.getQNode()->getFullName() << ": Photon shooting is from qnic[" << pk->getQnic_index() << "] with address=" << pk->getQnic_address() << "\n";
     // Terminate emission if trial is over already (the neighbor ran out of free qubits)
     if (burstTrial_outdated(pk->getTrial(), pk->getQnic_address())) {
@@ -152,10 +149,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
   }
 
   // Bell pair generation timing syncronization from HoM
-  else if (dynamic_cast<BSMtimingNotifier *>(msg) != nullptr && dynamic_cast<CombinedBSAresults *>(msg) == nullptr) {
+  else if (auto *pk = dynamic_cast<BSMtimingNotifier *>(msg) != nullptr && dynamic_cast<CombinedBSAresults *>(msg) == nullptr) {
     bubble("timing received");
     EV << "BSM timing notifier received\n";
-    BSMtimingNotifier *pk = check_and_cast<BSMtimingNotifier *>(msg);
     if (pk->getInternal_qnic_index() == -1) {  // MIM, or the other node without internnal HoM of MM
       EV_DEBUG << "This BSA request is non-internal\n";
       scheduleFirstPhotonEmission(pk, QNIC_E);
@@ -163,14 +159,13 @@ void RuleEngine::handleMessage(cMessage *msg) {
       EV_DEBUG << "This BSA request is internal\n";
       scheduleFirstPhotonEmission(pk, QNIC_R);
     }
-  } else if (dynamic_cast<EPPStimingNotifier *>(msg) != nullptr) {
+  } else if (dynamic_cast<EPPStimingNotifier *>(msg)) {
     bubble("EPPS");
     error("EPPS is not implemented yet");
   }
 
-  else if (dynamic_cast<LinkTomographyRuleSet *>(msg) != nullptr) {
+  else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     // Received a tomography rule set.
-    LinkTomographyRuleSet *pk = check_and_cast<LinkTomographyRuleSet *>(msg);
     // std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
     auto *ruleset = const_cast<RuleSet *>(pk->getRuleSet());
     int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
@@ -183,8 +178,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     } else {
       error("Empty rule set...");
     }
-  } else if (dynamic_cast<PurificationResult *>(msg) != nullptr) {
-    PurificationResult *pkt = check_and_cast<PurificationResult *>(msg);
+  } else if (auto *pkt = dynamic_cast<PurificationResult *>(msg)) {
     process_id purification_id;
     purification_result pr;
     purification_id.ruleset_id = pkt->getRuleset_id();
@@ -193,8 +187,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pr.id = purification_id;
     pr.outcome = pkt->getOutput_is_plus();
     storeCheck_Purification_Agreement(pr);
-  } else if (dynamic_cast<DoublePurificationResult *>(msg) != nullptr) {
-    DoublePurificationResult *pkt = check_and_cast<DoublePurificationResult *>(msg);
+  } else if (auto *pkt = dynamic_cast<DoublePurificationResult *>(msg)) {
     process_id purification_id;
     Doublepurification_result pr;
     purification_id.ruleset_id = pkt->getRuleset_id();
@@ -204,9 +197,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pr.Xpurification_outcome = pkt->getXOutput_is_plus();
     pr.Zpurification_outcome = pkt->getZOutput_is_plus();
     storeCheck_DoublePurification_Agreement(pr);
-  } else if (dynamic_cast<DS_DoublePurificationResult *>(msg) != nullptr) {
+  } else if (auto *pkt = dynamic_cast<DS_DoublePurificationResult *>(msg)) {
     // std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
-    DS_DoublePurificationResult *pkt = check_and_cast<DS_DoublePurificationResult *>(msg);
     // std::cout<<"Presult from node["<<pkt->getSrcAddr()<<"]\n";
     process_id purification_id;
     Quatropurification_result pr;
@@ -222,9 +214,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
     // std::cout<<"Locked one is "<<pkt->getEntangled_with()<<"in node["<<q->node_address<<"] \n";
     storeCheck_QuatroPurification_Agreement(pr);
-  } else if (dynamic_cast<DS_DoublePurificationSecondResult *>(msg) != nullptr) {
+  } else if (auto *pkt = dynamic_cast<DS_DoublePurificationSecondResult *>(msg)) {
     // std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
-    DS_DoublePurificationSecondResult *pkt = check_and_cast<DS_DoublePurificationSecondResult *>(msg);
     process_id purification_id;
     Triplepurification_result pr;
     purification_id.ruleset_id = pkt->getRuleset_id();
@@ -235,8 +226,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pr.Zpurification_outcome = pkt->getZOutput_is_plus();
     pr.DS_purification_outcome = pkt->getDS_Output_is_plus();
     storeCheck_TriplePurification_Agreement(pr);
-  } else if (dynamic_cast<SwappingResult *>(msg) != nullptr) {
-    SwappingResult *pkt = check_and_cast<SwappingResult *>(msg);
+  } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
     process_id swapping_id;
     swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
     swapping_id.rule_id = pkt->getRule_id();
@@ -253,8 +243,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     updateResources_EntanglementSwapping(swapr);
   }
 
-  else if (dynamic_cast<SimultaneousSwappingResult *>(msg) != nullptr) {
-    SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(msg);
+  else if (auto *pkt = dynamic_cast<SimultaneousSwappingResult *>(msg)) {
     // Add messeage to collection [ruleSetid][index_in_path]
     unsigned long rule_id = pkt->getRuleSet_id();
     simultaneous_es_results[rule_id][pkt->getIndex_in_path()] = pkt->getOperation_type();
@@ -285,8 +274,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     }
   }
 
-  else if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
-    InternalRuleSetForwarding *pkt = check_and_cast<InternalRuleSetForwarding *>(msg);
+  else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     // add actual process
     auto *ruleset = const_cast<RuleSet *>(pkt->getRuleSet());
     // here swappers got swapping ruleset with internal packet
@@ -298,8 +286,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     } else {
       error("Empty rule set...");
     }
-  } else if (dynamic_cast<InternalRuleSetForwarding_Application *>(msg) != nullptr) {
-    InternalRuleSetForwarding_Application *pkt = check_and_cast<InternalRuleSetForwarding_Application *>(msg);
+  } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
     // doing end to end tomography
     if (pkt->getApplication_type() == 0) {
       // Received a tomography rule set.
@@ -316,8 +303,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     } else {
       error("This application is not recognized yet");
     }
-  } else if (dynamic_cast<StopEmitting *>(msg) != nullptr) {
-    StopEmitting *pkt = check_and_cast<StopEmitting *>(msg);
+  } else if (auto *pkt = dynamic_cast<StopEmitting *>(msg)) {
     terminated_qnic[pkt->getQnic_address()] = true;
   }
 
@@ -1109,9 +1095,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
         if (pk != nullptr) {
           // Feedback to another node required
-          if (dynamic_cast<LinkTomographyResult *>(pk) != nullptr) {
+          if (auto *pk_t = dynamic_cast<LinkTomographyResult *>(pk)) {
             // The cPacket *pk is a single packet forwarded to the neighbor. But this node's HardwareMonitor also needs to store the result.
-            LinkTomographyResult *pk_t = check_and_cast<LinkTomographyResult *>(pk);
             LinkTomographyResult *pk_for_self = pk_t->dup();
             pk_for_self->setPartner_address(pk_t->getDestAddr());
             pk_for_self->setDestAddr(pk_t->getSrcAddr());
@@ -1120,36 +1105,31 @@ void RuleEngine::traverseThroughAllProcesses2() {
             }
             send(pk, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } else if (dynamic_cast<PurificationResult *>(pk) != nullptr) {
-            PurificationResult *pkt = check_and_cast<PurificationResult *>(pk);
+          } else if (auto *pkt = dynamic_cast<PurificationResult *>(pk)) {
             pkt->setSrcAddr(parentAddress);
             PurificationResult *pk_for_self = pkt->dup();
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } else if (dynamic_cast<DoublePurificationResult *>(pk) != nullptr) {
-            DoublePurificationResult *pkt = check_and_cast<DoublePurificationResult *>(pk);
+          } else if (auto *pkt = dynamic_cast<DoublePurificationResult *>(pk)) {
             pkt->setSrcAddr(parentAddress);
             DoublePurificationResult *pk_for_self = pkt->dup();
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } else if (dynamic_cast<DS_DoublePurificationResult *>(pk) != nullptr) {
-            DS_DoublePurificationResult *pkt = check_and_cast<DS_DoublePurificationResult *>(pk);
+          } else if (auto *pkt = dynamic_cast<DS_DoublePurificationResult *>(pk)) {
             pkt->setSrcAddr(parentAddress);
             DS_DoublePurificationResult *pk_for_self = pkt->dup();
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } else if (dynamic_cast<DS_DoublePurificationSecondResult *>(pk) != nullptr) {
-            DS_DoublePurificationSecondResult *pkt = check_and_cast<DS_DoublePurificationSecondResult *>(pk);
+          } else if (auto *pkt = dynamic_cast<DS_DoublePurificationSecondResult *>(pk)) {
             pkt->setSrcAddr(parentAddress);
             DS_DoublePurificationSecondResult *pk_for_self = pkt->dup();
             pk_for_self->setDestAddr(parentAddress);
             send(pkt, "RouterPort$o");
             send(pk_for_self, "RouterPort$o");
-          } else if (dynamic_cast<SwappingResult *>(pk) != nullptr) {
-            SwappingResult *pkt = check_and_cast<SwappingResult *>(pk);
+          } else if (auto *pkt = dynamic_cast<SwappingResult *>(pk)) {
             EV << "done swapping at " << parentAddress << " left: " << pkt->getLeft_Dest() << " right: " << pkt->getRight_Dest() << "\n";
             // here this packet goes to two destination.
             // one is left node the other is right node.
@@ -1185,8 +1165,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
             send(pkt_for_left, "RouterPort$o");
             send(pkt_for_right, "RouterPort$o");
-          } else if (dynamic_cast<SimultaneousSwappingResult *>(pk) != nullptr) {
-            SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(pk);
+          } else if (auto *pkt = dynamic_cast<SimultaneousSwappingResult *>(pk)) {
             EV << "done swapping at " << parentAddress << "\n";
 
             // packet for left node
@@ -1217,11 +1196,11 @@ void RuleEngine::traverseThroughAllProcesses2() {
             send(pkt_for_responder, "RouterPort$o");
           }
 
-          else if (dynamic_cast<Error *>(pk) != nullptr) {
+          else if (dynamic_cast<Error *>(pk)) {
             Error *err = check_and_cast<Error *>(pk);
             error(err->getError_text());
             delete pk;
-          } else if (dynamic_cast<ConditionNotSatisfied *>(pk) != nullptr) {
+          } else if (dynamic_cast<ConditionNotSatisfied *>(pk)) {
             // Condition does not meet. Go to next rule. e.g. Fidelity is good enough by doing purification. Next could be swap.
             delete pk;
             break;
