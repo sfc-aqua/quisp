@@ -9,7 +9,7 @@ namespace quisp::rules::actions {
 SwappingAction::SwappingAction(unsigned long ruleset_id, unsigned long rule_id, int left_partner, QNIC_type left_qnic_type, int left_qnic_id, int left_qnic_address,
                                int left_resource, int right_partner, QNIC_type right_qnic_type, int right_qnic_id, int right_qnic_address, int right_resource,
                                int self_left_qnic_id, QNIC_type self_left_qnic_type, int self_right_qnic_id, QNIC_type self_right_qnic_type)
-    : Action(ruleset_id, rule_id),
+    : ActiveAction(ruleset_id, rule_id),
       left_partner(left_partner),
       left_qnic_type(left_qnic_type),
       left_qnic_id(left_qnic_id),

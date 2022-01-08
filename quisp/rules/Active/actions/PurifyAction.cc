@@ -6,7 +6,7 @@ namespace quisp::rules::actions {
 
 PurifyAction::PurifyAction(unsigned long ruleset_id, unsigned long rule_id, bool x_purification, bool z_purification, int num_purification, int partner, QNIC_type qnic_type,
                            int qnic_id, int resource, int trash_resource)
-    : Action(ruleset_id, rule_id),
+    : ActiveAction(ruleset_id, rule_id),
       partner(partner),
       qnic_type(qnic_type),
       qnic_id(qnic_id),

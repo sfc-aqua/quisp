@@ -1,7 +1,7 @@
 cplusplus  {{
     #include "base_messages_m.h"
     #include <modules/QNIC.h>
-    #include <rules/ActiveRuleSet.h>
+    #include <rules/Active/ActiveRuleSet.h>
     using quisp::rules::ActiveRuleSet;
     using quisp::modules::QNIC_pair_info;
 }}

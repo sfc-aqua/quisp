@@ -5,41 +5,41 @@
 namespace {
 using namespace quisp::rules;
 using namespace quisp_test;
-// using quisp::rules::PurificaitonRule;
+// using quisp::rules::PurRule;
 // using quisp::rules::SwappingRule;
 
 TEST(RuleSetTest, Init) {
   prepareSimulation();
-  // RuleSet ruleset(1, 2);
-  // EXPECT_EQ(1, ruleset.ruleset_id);
-  // EXPECT_EQ(2, ruleset.owner_addr);
+  RuleSet ruleset(1234, 2);
+  EXPECT_EQ(1234, ruleset.ruleset_id);
+  EXPECT_EQ(2, ruleset.owner_addr);
 
-  // RuleSet ruleset2(1, 2);
-  // EXPECT_EQ(1, ruleset2.ruleset_id);
-  // EXPECT_EQ(2, ruleset2.owner_addr);
+  RuleSet ruleset2(324, 10);
+  EXPECT_EQ(324, ruleset2.ruleset_id);
+  EXPECT_EQ(10, ruleset2.owner_addr);
 }
 
 TEST(RuleSetTest, addRule) {
   prepareSimulation();
   // RuleSet ruleset(1, 2);
-  // PurificationRule purification(SSDP_X, 1);  // (purification type, num purification)
-  // /*
-  // BaseRuleConfig{
-  //         .to
-  //                 .conditions = {}
-  //                 .actions = {}
-  //         setNextRule()
-  // }
-  // PurificationConfig: BaseRuleConfig{
-  //         .type
-  //         .number
-  //         .name
-  //                 .conditions = {clause1, clause2, ...}
-  //                 .actions = {action1, action2, ...}
-  //         .to // next rule id
-  // }
-  // */
-  // auto &rule1 = ruleset.addRule(purification, {1});  // return address to rule
+  // PurRule purification(SSDP_X, 1);  // (purification type, num purification)
+  /*
+  BaseRuleConfig{
+          .to
+                  .conditions = {}
+                  .actions = {}
+          setNextRule()
+  }
+  PurificationConfig: BaseRuleConfig{
+          .type
+          .number
+          .name
+                  .conditions = {clause1, clause2, ...}
+                  .actions = {action1, action2, ...}
+          .to // next rule id
+  }
+  */
+  // auto &rule1 = ruleset.addRule(purification, {1});  // rule type, partners
   // EXPECT_EQ(ruleset.rules(0).rule_id, rule1.rule_id);
   // auto &rule2 = ruleset.addRule(purification, {3});  // return address to rule
   // EXPECT_EQ(ruleset.rules(1).rule_id, rule2.rule_id);

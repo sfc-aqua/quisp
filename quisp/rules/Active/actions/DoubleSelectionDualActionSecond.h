@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "BaseAction.h"
@@ -6,9 +5,10 @@
 namespace quisp::rules::actions {
 
 // https://arxiv.org/abs/0811.2639
-class DoubleSelectionAction : public Action {
+class DoubleSelectionDualActionSecond : public ActiveAction {
  public:
-  DoubleSelectionAction(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x, int trash_resource_z);
+  DoubleSelectionDualActionSecond(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
+                                  int trash_resource_z, int ds_trash_resource_x);
   cPacket* run(cModule* re) override;
 
  protected:
@@ -18,6 +18,7 @@ class DoubleSelectionAction : public Action {
   int resource; /**< Identifies qubit */
   int trash_resource_Z;
   int trash_resource_X;
+  int doubleselection_trash_resource_X;
   int mutable purification_count;  // Used for locked_id in StationaryQubit. You unlock the qubit when purification is successful.
   bool X;
   bool Z;
@@ -26,10 +27,10 @@ class DoubleSelectionAction : public Action {
 };
 
 // https://arxiv.org/abs/0811.2639
-class DoubleSelectionActionInv : public Action {
+class DoubleSelectionDualActionSecondInv : public ActiveAction {
  public:
-  DoubleSelectionActionInv(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
-                           int trash_resource_z);
+  DoubleSelectionDualActionSecondInv(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
+                                     int trash_resource_z, int ds_trash_resource_z);
   cPacket* run(cModule* re) override;
 
  protected:
@@ -39,10 +40,10 @@ class DoubleSelectionActionInv : public Action {
   int resource; /**< Identifies qubit */
   int trash_resource_Z;
   int trash_resource_X;
+  int doubleselection_trash_resource_Z;
   int mutable purification_count;  // Used for locked_id in StationaryQubit. You unlock the qubit when purification is successful.
-  bool X;
-  bool Z;
   int num_purify;
   int action_index = 0;  // To track how many times this particular action has been invoked.
 };
+
 }  // namespace quisp::rules::actions

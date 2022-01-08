@@ -1,18 +1,18 @@
 #pragma once
 
 #include <map>
-#include "Clause.h"
+#include "ActiveClause.h"
 
 namespace quisp {
 namespace rules {
 namespace clauses {
-class FidelityClause : public Clause {
+class FidelityClause : public ActiveClause {
  protected:
   double threshold;
 
  public:
-  FidelityClause(int partner, int resource, double fidelity) : Clause(partner, resource) { threshold = fidelity; };
-  FidelityClause(int part, QNIC_type qt, int qi, int res, double fidelity) : Clause(part, qt, qi, res) { threshold = fidelity; };
+  FidelityClause(int partner, int resource, double fidelity) : ActiveClause(partner, resource) { threshold = fidelity; };
+  FidelityClause(int part, QNIC_type qt, int qi, int res, double fidelity) : ActiveClause(part, qt, qi, res) { threshold = fidelity; };
   [[noreturn]] bool check(std::multimap<int, IStationaryQubit*>&) override;
   bool checkTerminate(std::multimap<int, IStationaryQubit*>&) const override;
 };

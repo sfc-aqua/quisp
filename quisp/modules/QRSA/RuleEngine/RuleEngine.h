@@ -8,7 +8,7 @@
 #define QUISP_MODULES_RULEENGINE_H_
 
 #include <omnetpp.h>
-#include <rules/ActiveRuleSet.h>
+#include <rules/Active/ActiveRuleSet.h>
 #include <rules/RuleSet.h>
 #include <vector>
 

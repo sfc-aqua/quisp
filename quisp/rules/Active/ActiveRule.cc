@@ -10,9 +10,9 @@ ActiveRule::ActiveRule(unsigned long ruleset_id, unsigned long rule_id, std::str
 
 void ActiveRule::addResource(int address_entangled_with, IStationaryQubit *qubit) { resources.insert(std::make_pair(address_entangled_with, qubit)); }
 
-void ActiveRule::setCondition(Condition *c) { condition.reset(c); }
+void ActiveRule::setCondition(ActiveCondition *c) { condition.reset(c); }
 
-void ActiveRule::setAction(Action *a) {
+void ActiveRule::setAction(ActiveAction *a) {
   a->rule_resources = &resources;
   action.reset(a);
 }

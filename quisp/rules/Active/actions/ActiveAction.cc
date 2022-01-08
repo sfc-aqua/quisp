@@ -11,9 +11,9 @@
 
 namespace quisp::rules::actions {
 
-Action::Action(unsigned long ruleset_id, unsigned long rule_id) : ruleset_id(ruleset_id), rule_id(rule_id){};
+ActiveAction::ActiveAction(unsigned long ruleset_id, unsigned long rule_id) : ruleset_id(ruleset_id), rule_id(rule_id){};
 
-IStationaryQubit *Action::getResource(int required_index, int partner) {
+IStationaryQubit *ActiveAction::getResource(int required_index, int partner) {
   int i = 0;
   for (auto it = rule_resources->begin(); it != rule_resources->end(); ++it) {
     if (it->first == partner && !it->second->isLocked()) {
@@ -24,7 +24,7 @@ IStationaryQubit *Action::getResource(int required_index, int partner) {
   return nullptr;
 }
 
-void Action::removeResource_fromRule(IStationaryQubit *qubit) {
+void ActiveAction::removeResource_fromRule(IStationaryQubit *qubit) {
   for (auto it = rule_resources->begin(); it != rule_resources->end(); ++it) {
     if (it->second == qubit) {
       rule_resources->erase(it);
@@ -32,7 +32,7 @@ void Action::removeResource_fromRule(IStationaryQubit *qubit) {
     }
   }
 }
-cPacket *Action::generateError(const char *msg) {
+cPacket *ActiveAction::generateError(const char *msg) {
   auto *error = new quisp::messages::Error();
   error->setError_text(msg);
   return error;

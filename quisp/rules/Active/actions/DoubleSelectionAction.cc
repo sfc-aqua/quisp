@@ -1,12 +1,12 @@
-#include "DoublePurifyAction.h"
+#include "DoubleSelectionAction.h"
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
 namespace quisp::rules::actions {
 
-DoublePurifyAction::DoublePurifyAction(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
-                                       int trash_resource_z)
-    : Action(ruleset_id, rule_id),
+DoubleSelectionAction::DoubleSelectionAction(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
+                                             int trash_resource_z)
+    : ActiveAction(ruleset_id, rule_id),
       partner(partner),
       qnic_type(qnic_type),
       qnic_id(qnic_id),
@@ -14,8 +14,8 @@ DoublePurifyAction::DoublePurifyAction(unsigned long ruleset_id, unsigned long r
       trash_resource_Z(trash_resource_z),
       trash_resource_X(trash_resource_x) {}
 
-// Double error purification
-cPacket *DoublePurifyAction::run(cModule *re) {
+// Double selection single error (X error) purification.
+cPacket *DoubleSelectionAction::run(cModule *re) {
   auto *qubit = getResource(resource, partner);
   auto *trash_qubit_X = getResource(trash_resource_X, partner);
   auto *trash_qubit_Z = getResource(trash_resource_Z, partner);
@@ -28,15 +28,13 @@ cPacket *DoublePurifyAction::run(cModule *re) {
   }
 
   bool meas_X = trash_qubit_X->Xpurify(qubit);
-  bool meas_Z = trash_qubit_Z->Zpurify(qubit);
+  bool meas_Z = trash_qubit_Z->Zpurify(trash_qubit_X);
 
   qubit->Lock(ruleset_id, rule_id, action_index);
 
   // Trash qubit has been measured. Now, break the entanglement info of the partner.
   // There is no need to overwrite its density matrix since we are only tracking errors.
   if (trash_qubit_Z->entangled_partner != nullptr) {
-    // For debugging. Code in RuleEngine makes sure that any new resource is either entangled or has a density matrix stored.
-    // This is not true if the partner did a purification, because this does not update the densitymatrix as all we do is track error.
     trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
     trash_qubit_Z->entangled_partner->entangled_partner = nullptr;
   }
@@ -52,7 +50,6 @@ cPacket *DoublePurifyAction::run(cModule *re) {
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
   rule_engine->freeConsumedResource(qnic_id, trash_qubit_X, qnic_type);
   rule_engine->freeConsumedResource(qnic_id, trash_qubit_Z, qnic_type);
-  // Deleting done
 
   DoublePurificationResult *pk = new DoublePurificationResult;
   pk->setDestAddr(partner);
@@ -67,9 +64,9 @@ cPacket *DoublePurifyAction::run(cModule *re) {
   return pk;
 }
 
-DoublePurifyActionInv::DoublePurifyActionInv(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
-                                             int trash_resource_z)
-    : Action(ruleset_id, rule_id),
+DoubleSelectionActionInv::DoubleSelectionActionInv(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource,
+                                                   int trash_resource_x, int trash_resource_z)
+    : ActiveAction(ruleset_id, rule_id),
       partner(partner),
       qnic_type(qnic_type),
       qnic_id(qnic_id),
@@ -77,8 +74,8 @@ DoublePurifyActionInv::DoublePurifyActionInv(unsigned long ruleset_id, unsigned 
       trash_resource_Z(trash_resource_z),
       trash_resource_X(trash_resource_x) {}
 
-// Inveerted double error purification.
-cPacket *DoublePurifyActionInv::run(cModule *re) {
+// Double selection single error (Z error) purification
+cPacket *DoubleSelectionActionInv::run(cModule *re) {
   auto *qubit = getResource(resource, partner);
   auto *trash_qubit_X = getResource(trash_resource_X, partner);
   auto *trash_qubit_Z = getResource(trash_resource_Z, partner);
@@ -91,10 +88,12 @@ cPacket *DoublePurifyActionInv::run(cModule *re) {
   }
 
   bool meas_Z = trash_qubit_Z->Zpurify(qubit);
-  bool meas_X = trash_qubit_X->Xpurify(qubit);
+  bool meas_X = trash_qubit_X->Xpurify(trash_qubit_Z);
 
   qubit->Lock(ruleset_id, rule_id, action_index);
 
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
   if (trash_qubit_Z->entangled_partner != nullptr) {
     trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
     trash_qubit_Z->entangled_partner->entangled_partner = nullptr;
@@ -124,4 +123,5 @@ cPacket *DoublePurifyActionInv::run(cModule *re) {
   action_index++;
   return pk;
 }
+
 }  // namespace quisp::rules::actions

@@ -4,16 +4,16 @@
 #include <omnetpp.h>
 #include "modules/QNIC.h"
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
-#include "rules/Action.h"
-#include "rules/Clause.h"
-#include "rules/clauses/EnoughResourceClause.h"
+#include "rules/Active/ActiveAction.h"
+#include "rules/Active/ActiveClause.h"
+#include "rules/Active/clauses/EnoughResourceClause.h"
 #include "test_utils/TestUtils.h"
 
 ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, partner);
 ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, num_resource_required);
 
-ACCESS_PRIVATE_FIELD(quisp::modules::Action, unsigned long, ruleset_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::Action, unsigned long, rule_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, unsigned long, ruleset_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, unsigned long, rule_id);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, qnic_id);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, QNIC_type, qnic_type);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, partner);
@@ -186,7 +186,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
@@ -836,7 +836,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
@@ -1066,7 +1066,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
@@ -1101,7 +1101,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
@@ -1188,7 +1188,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
@@ -1223,7 +1223,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
@@ -1271,7 +1271,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
@@ -1319,7 +1319,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
@@ -1409,7 +1409,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
@@ -1442,7 +1442,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
@@ -1530,7 +1530,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
@@ -1565,7 +1565,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
@@ -1613,7 +1613,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
@@ -1661,7 +1661,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
@@ -1710,7 +1710,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);
@@ -1759,7 +1759,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_purify(*action), 1);
 
       EXPECT_EQ(rule->condition->clauses.size(), 1);
-      auto *clause = dynamic_cast<Clause *>(rule->condition.get()->clauses.at(0));
+      auto *clause = dynamic_cast<ActiveClause *>(rule->condition.get()->clauses.at(0));
       ASSERT_NE(clause, nullptr);
 
       auto *enough_resource_clause = dynamic_cast<EnoughResourceClause *>(clause);

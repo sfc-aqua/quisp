@@ -13,6 +13,7 @@
 namespace quisp {
 namespace rules {
 
+using namespace omnetpp;
 /** \class RuleSet RuleSet.h
  *
  * \brief Set of rules for the RuleEngine.

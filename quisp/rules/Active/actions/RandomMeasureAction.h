@@ -4,7 +4,7 @@
 
 namespace quisp::rules::actions {
 
-class RandomMeasureAction : public Action {
+class RandomMeasureAction : public ActiveAction {
  public:
   RandomMeasureAction(unsigned long ruleset_id, unsigned long rule_id, int owner_address, int partner, QNIC_type qnic_type, int qnic_id, int resource, int max_count);
   cPacket* run(cModule* re) override;

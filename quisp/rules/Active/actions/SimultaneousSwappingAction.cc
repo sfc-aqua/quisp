@@ -10,7 +10,7 @@ SimultaneousSwappingAction::SimultaneousSwappingAction(unsigned long ruleset_id,
                                                        QNIC_type self_right_qnic_type, int initiator, QNIC_type initiator_qnic_type, int initiator_qnic_id,
                                                        int initiator_qnic_address, int initiator_resource, int responder, QNIC_type responder_qnic_type, int responder_qnic_id,
                                                        int responder_qnic_address, int responder_resource, int index_in_path, int path_length_exclude_ir)
-    : Action(ruleset_id, rule_id),
+    : ActiveAction(ruleset_id, rule_id),
       left_partner(),
       left_qnic_type(left_qnic_type),
       left_qnic_id(left_qnic_index),

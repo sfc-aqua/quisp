@@ -11,7 +11,7 @@ namespace quisp {
 namespace rules {
 namespace clauses {
 
-class Clause {
+class ActiveClause {
  protected:
   int partner; /**< Identifies entanglement partner. */
   QNIC_type qnic_type;
@@ -19,16 +19,16 @@ class Clause {
   int resource; /**< Identifies qubit */
 
  public:
-  Clause(){};
-  Clause(int partner_addr, int resource) : Clause(partner_addr, QNIC_N, -1, resource){};
-  Clause(int partner_addr, QNIC_type qnic_type, int qnic_id) : Clause(partner_addr, qnic_type, qnic_id, 0){};
-  Clause(int partner_addr, QNIC_type _qnic_type, int _qnic_id, int _resource) {
+  ActiveClause(){};
+  ActiveClause(int partner_addr, int resource) : ActiveClause(partner_addr, QNIC_N, -1, resource){};
+  ActiveClause(int partner_addr, QNIC_type qnic_type, int qnic_id) : ActiveClause(partner_addr, qnic_type, qnic_id, 0){};
+  ActiveClause(int partner_addr, QNIC_type _qnic_type, int _qnic_id, int _resource) {
     partner = partner_addr;
     qnic_type = _qnic_type;
     qnic_id = _qnic_id;
     resource = _resource;
   };
-  virtual ~Clause() {}
+  virtual ~ActiveClause() {}
   // if the condition is satisfied, return true, otherwise return false.
   virtual bool check(std::multimap<int, IStationaryQubit*>&) = 0;
   virtual bool checkTerminate(std::multimap<int, IStationaryQubit*>&) const = 0;

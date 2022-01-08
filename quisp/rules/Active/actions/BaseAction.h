@@ -17,10 +17,10 @@ namespace quisp::rules::actions {
 using quisp::modules::IStationaryQubit;
 using quisp::modules::QNIC_type;
 
-class Action {
+class ActiveAction {
  public:
-  Action(unsigned long ruleset_id, unsigned long rule_id);
-  virtual ~Action(){};
+  ActiveAction(unsigned long ruleset_id, unsigned long rule_id);
+  virtual ~ActiveAction(){};
   std::multimap<int, IStationaryQubit*>* rule_resources;
   unsigned long ruleset_id;
   unsigned long rule_id;  // Used to make the lock_id unique, together with purification_count.

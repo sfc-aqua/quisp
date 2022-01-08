@@ -5,11 +5,11 @@
 #include "gtest/gtest_prod.h"
 #include "modules/QNIC.h"
 #include "modules/QRSA/ConnectionManager/IConnectionManager.h"
-#include "rules/Action.h"
+#include "rules/Active/ActiveAction.h"
 #include "test_utils/TestUtils.h"
 
-ACCESS_PRIVATE_FIELD(quisp::modules::Action, unsigned long, ruleset_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::Action, unsigned long, rule_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, unsigned long, ruleset_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, unsigned long, rule_id);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, qnic_id);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, QNIC_type, qnic_type);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, partner);
