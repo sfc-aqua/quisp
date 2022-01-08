@@ -116,9 +116,8 @@ std::unique_ptr<InterfaceInfo> HardwareMonitor::findInterfaceByNeighborAddr(int 
 }
 
 void HardwareMonitor::handleMessage(cMessage *msg) {
-  if (dynamic_cast<LinkTomographyRequest *>(msg) != nullptr) {
+  if (auto *request = dynamic_cast<LinkTomographyRequest *>(msg)) {
     /* Received a tomography request from neighbor */
-    LinkTomographyRequest *request = check_and_cast<LinkTomographyRequest *>(msg);
 
     auto info = findInterfaceByNeighborAddr(request->getSrcAddr());
     if (info == nullptr) {
@@ -138,9 +137,8 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     return;
   }
 
-  if (dynamic_cast<LinkTomographyAck *>(msg) != nullptr) {
+  if (auto *ack = dynamic_cast<LinkTomographyAck *>(msg)) {
     /*Received an acknowledgment for tomography from neighbor.*/
-    LinkTomographyAck *ack = check_and_cast<LinkTomographyAck *>(msg);
 
     /*Create and send RuleSets*/
     int partner_address = ack->getSrcAddr();
@@ -161,9 +159,8 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     return;
   }
 
-  if (dynamic_cast<LinkTomographyResult *>(msg) != nullptr) {
+  if (auto *result = dynamic_cast<LinkTomographyResult *>(msg)) {
     /*Link tomography measurement result/basis from neighbor received.*/
-    LinkTomographyResult *result = check_and_cast<LinkTomographyResult *>(msg);
     int partner_addr = result->getPartner_address();
     // Get QNIC info from neighbor address.
     int qnic_addr_to_partner = routing_daemon->return_QNIC_address_to_destAddr(partner_addr);

@@ -102,14 +102,14 @@ void HoMController::sendNotifiers() {
 
 void HoMController::handleMessage(cMessage *msg) {
   // std::cout<<"HoMReceiving result\n";
-  // std::cout<<msg<<", bsa? ="<<(bool)( dynamic_cast<BSAresult *>(msg) != nullptr)<<"\n"; //Omnet somehow bugs without this... it receives a msg correctly from BellStateAnalyzer,
+  // std::cout<<msg<<", bsa? ="<<(bool)( dynamic_cast<BSAresult *>(msg))<<"\n"; //Omnet somehow bugs without this... it receives a msg correctly from BellStateAnalyzer,
   // but very rarely does not recognize the type. VERY weird.
 
-  if (dynamic_cast<HoMNotificationTimer *>(msg) != nullptr) {
+  if (dynamic_cast<HoMNotificationTimer *>(msg)) {
     sendNotifiers();
     auto *notification_timer = new HoMNotificationTimer("BsaStart");
     scheduleAt(simTime() + bsa_notification_interval, notification_timer);
-  } else if (dynamic_cast<BSAresult *>(msg) != nullptr) {
+  } else if (dynamic_cast<BSAresult *>(msg)) {
     // std::cout<<"BSAresult\n";
     auto_resend_BSANotifier = false;  // Photon is arriving. No need to auto reschedule next round. Wait for the last photon fron either node.
     bubble("BSAresult accumulated");
@@ -122,7 +122,7 @@ void HoMController::handleMessage(cMessage *msg) {
     if (prev + 1 != aft) {
       error("Nahnah nah!");
     }
-  } else if (dynamic_cast<BSAfinish *>(msg) != nullptr) {  // Last photon from either node arrived.
+  } else if (dynamic_cast<BSAfinish *>(msg)) {  // Last photon from either node arrived.
     EV << "BSAfinish\n";
     bubble("BSAresult accumulated");
     BSAfinish *pk = check_and_cast<BSAfinish *>(msg);

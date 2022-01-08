@@ -62,8 +62,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     error("receive a send self-notification but cannot find which qnic to use");
   }
 
-  if (dynamic_cast<ConnectionSetupRequest *>(msg) != nullptr) {
-    ConnectionSetupRequest *req = check_and_cast<ConnectionSetupRequest *>(msg);
+  if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)) {
     int actual_dst = req->getActual_destAddr();
     int actual_src = req->getActual_srcAddr();
 
@@ -81,8 +80,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     return;
   }
 
-  if (dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr) {
-    ConnectionSetupResponse *resp = check_and_cast<ConnectionSetupResponse *>(msg);
+  if (auto *resp = dynamic_cast<ConnectionSetupResponse *>(msg)) {
     int initiator_addr = resp->getActual_destAddr();
     int responder_addr = resp->getActual_srcAddr();
 
@@ -98,8 +96,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     return;
   }
 
-  if (dynamic_cast<RejectConnectionSetupRequest *>(msg) != nullptr) {
-    RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
+  if (auto *pk = dynamic_cast<RejectConnectionSetupRequest *>(msg)) {
     int actual_src = pk->getActual_srcAddr();
 
     if (actual_src == my_address) {
