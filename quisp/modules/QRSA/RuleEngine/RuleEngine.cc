@@ -1107,7 +1107,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
           LinkTomographyResult *pk_t = check_and_cast<LinkTomographyResult *>(pk);
           LinkTomographyResult *pk_for_self = pk_t->dup();
           pk_for_self->setPartner_address(pk_t->getDestAddr());
-          pk_for_self->setDestAddr(pk_t->getSrcgAddr());
+          pk_for_self->setDestAddr(pk_t->getSrcAddr());
           if (pk_t->getPartner_address() == pk_for_self->getPartner_address()) {
             error("Wrong");
           }
