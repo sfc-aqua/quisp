@@ -149,9 +149,10 @@ void RuleEngine::handleMessage(cMessage *msg) {
   }
 
   // Bell pair generation timing syncronization from HoM
-  else if (auto *pk = dynamic_cast<BSMtimingNotifier *>(msg) != nullptr && dynamic_cast<CombinedBSAresults *>(msg) == nullptr) {
+  else if (dynamic_cast<BSMtimingNotifier *>(msg) != nullptr && dynamic_cast<CombinedBSAresults *>(msg) == nullptr) {
     bubble("timing received");
     EV << "BSM timing notifier received\n";
+    BSMtimingNotifier *pk = check_and_cast<BSMtimingNotifier *>(msg);
     if (pk->getInternal_qnic_index() == -1) {  // MIM, or the other node without internnal HoM of MM
       EV_DEBUG << "This BSA request is non-internal\n";
       scheduleFirstPhotonEmission(pk, QNIC_E);
@@ -1101,41 +1102,47 @@ void RuleEngine::traverseThroughAllProcesses2() {
           break;
         }
         // Feedback to another node required
-        if (auto *pk_t = dynamic_cast<LinkTomographyResult *>(pk)) {
+        if (dynamic_cast<LinkTomographyResult *>(pk) != nullptr) {
           // The cPacket *pk is a single packet forwarded to the neighbor. But this node's HardwareMonitor also needs to store the result.
+          LinkTomographyResult *pk_t = check_and_cast<LinkTomographyResult *>(pk);
           LinkTomographyResult *pk_for_self = pk_t->dup();
           pk_for_self->setPartner_address(pk_t->getDestAddr());
-          pk_for_self->setDestAddr(pk_t->getSrcAddr());
+          pk_for_self->setDestAddr(pk_t->getSrcgAddr());
           if (pk_t->getPartner_address() == pk_for_self->getPartner_address()) {
             error("Wrong");
           }
           send(pk, "RouterPort$o");
           send(pk_for_self, "RouterPort$o");
-        } else if (auto *pkt = dynamic_cast<PurificationResult *>(pk)) {
+        } else if (dynamic_cast<PurificationResult *>(pk) != nullptr) {
+          PurificationResult *pkt = check_and_cast<PurificationResult *>(pk);
           pkt->setSrcAddr(parentAddress);
           PurificationResult *pk_for_self = pkt->dup();
           pk_for_self->setDestAddr(parentAddress);
           send(pkt, "RouterPort$o");
           send(pk_for_self, "RouterPort$o");
-        } else if (auto *pkt = dynamic_cast<DoublePurificationResult *>(pk)) {
+        } else if (dynamic_cast<DoublePurificationResult *>(pk) != nullptr) {
+          DoublePurificationResult *pkt = check_and_cast<DoublePurificationResult *>(pk);
           pkt->setSrcAddr(parentAddress);
           DoublePurificationResult *pk_for_self = pkt->dup();
           pk_for_self->setDestAddr(parentAddress);
           send(pkt, "RouterPort$o");
           send(pk_for_self, "RouterPort$o");
-        } else if (auto *pkt = dynamic_cast<DS_DoublePurificationResult *>(pk)) {
+        } else if (dynamic_cast<DS_DoublePurificationResult *>(pk) != nullptr) {
+          DS_DoublePurificationResult *pkt = check_and_cast<DS_DoublePurificationResult *>(pk);
           pkt->setSrcAddr(parentAddress);
           DS_DoublePurificationResult *pk_for_self = pkt->dup();
           pk_for_self->setDestAddr(parentAddress);
           send(pkt, "RouterPort$o");
           send(pk_for_self, "RouterPort$o");
-        } else if (auto *pkt = dynamic_cast<DS_DoublePurificationSecondResult *>(pk)) {
+        } else if (dynamic_cast<DS_DoublePurificationSecondResult *>(pk) != nullptr) {
+          DS_DoublePurificationSecondResult *pkt = check_and_cast<DS_DoublePurificationSecondResult *>(pk);
           pkt->setSrcAddr(parentAddress);
           DS_DoublePurificationSecondResult *pk_for_self = pkt->dup();
           pk_for_self->setDestAddr(parentAddress);
           send(pkt, "RouterPort$o");
           send(pk_for_self, "RouterPort$o");
-        } else if (auto *pkt = dynamic_cast<SwappingResult *>(pk)) {
+        } else if (dynamic_cast<SwappingResult *>(pk) != nullptr) {
+          SwappingResult *pkt = check_and_cast<SwappingResult *>(pk);
           EV << "done swapping at " << parentAddress << " left: " << pkt->getLeft_Dest() << " right: " << pkt->getRight_Dest() << "\n";
           // here this packet goes to two destination.
           // one is left node the other is right node.
@@ -1171,7 +1178,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
           send(pkt_for_left, "RouterPort$o");
           send(pkt_for_right, "RouterPort$o");
-        } else if (auto *pkt = dynamic_cast<SimultaneousSwappingResult *>(pk)) {
+        } else if (dynamic_cast<SimultaneousSwappingResult *>(pk) != nullptr) {
+          SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(pk);
           EV << "done swapping at " << parentAddress << "\n";
 
           // packet for left node
@@ -1200,7 +1208,8 @@ void RuleEngine::traverseThroughAllProcesses2() {
 
           send(pkt_for_initiator, "RouterPort$o");
           send(pkt_for_responder, "RouterPort$o");
-        } else if (auto *err = dynamic_cast<Error *>(pk)) {
+        } else if (dynamic_cast<Error *>(pk) != nullptr) {
+          Error *err = check_and_cast<Error *>(pk);
           error(err->getError_text());
           delete pk;
         } else {
