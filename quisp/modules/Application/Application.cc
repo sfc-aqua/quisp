@@ -95,18 +95,18 @@ ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr,
  * @param msg OMNeT++ cMessage
  */
 void Application::handleMessage(cMessage *msg) {
-  if (dynamic_cast<deleteThisModule *>(msg) != nullptr) {
+  if (dynamic_cast<deleteThisModule *>(msg)) {
     deleteModule();
     delete msg;
     return;
   }
 
-  if (dynamic_cast<ConnectionSetupRequest *>(msg) != nullptr || dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr) {
+  if (dynamic_cast<ConnectionSetupRequest *>(msg) || dynamic_cast<ConnectionSetupResponse *>(msg)) {
     send(msg, "toRouter");
     return;
   }
 
-  if (dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
+  if (dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     send(msg, "toRouter");
     return;
   }
