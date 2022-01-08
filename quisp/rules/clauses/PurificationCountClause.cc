@@ -3,7 +3,9 @@
 namespace quisp {
 namespace rules {
 namespace clauses {
-bool PurificationCountClause::check(std::multimap<int, IStationaryQubit*> resource) { throw omnetpp::cRuntimeError("PurificationCountClause class has not been implemented yet"); }
+bool PurificationCountClause::check(std::multimap<int, IStationaryQubit *> &resource) {
+  throw omnetpp::cRuntimeError("PurificationCountClause class has not been implemented yet");
+}
 }  // namespace clauses
 }  // namespace rules
 }  // namespace quisp

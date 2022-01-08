@@ -11,7 +11,7 @@ namespace quisp::rules {
 
 void Condition::addClause(Clause *c) { clauses.push_back(c); }
 
-bool Condition::check(std::multimap<int, IStationaryQubit *> resources) const {
+bool Condition::check(std::multimap<int, IStationaryQubit *> &resources) const {
   for (auto &clause : clauses) {
     if (!clause->check(resources)) {
       return false;
@@ -20,7 +20,7 @@ bool Condition::check(std::multimap<int, IStationaryQubit *> resources) const {
   return true;
 }
 
-bool Condition::checkTerminate(std::multimap<int, IStationaryQubit *> resources) const {
+bool Condition::checkTerminate(std::multimap<int, IStationaryQubit *> &resources) const {
   for (auto &clause : clauses) {
     if (clause->checkTerminate(resources)) {
       return true;
