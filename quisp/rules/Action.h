@@ -1,5 +1,9 @@
 #pragma once
 
-namespace quisp {
-namespace rules {}  // namespace rules
-}  // namespace quisp
+namespace quisp::rules {
+
+class Action {
+ public:
+  Action(){};
+};
+}  // namespace quisp::rules

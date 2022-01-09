@@ -28,33 +28,45 @@ enum class PurType : int {
   DSDA_SECOND_INV  ///< Different type of Inverse Double Selection and Dual Action for both X and Z errors
 };
 
+enum class SwapType : int {
+  BINARY_TREE,  ///< Swapping order is based on the binary tree
+  SIMULTANEOUS  ///< All node do entanglment swapping at the same time
+};
+
 class BaseRule {
  public:
   unsigned long rule_id;
-  unsigned long to;
-  // std::vector<Condition> conditions;
-  // std::vector<Action> actions;
+  unsigned long to = 0;
+  std::vector<int> partners;
+  std::vector<Condition> conditions;
+  std::vector<Action> actions;
 
-  void addCondition();
-  void addAction();
-  void setNextRule(unsigned long next_ruleid);
+  void addCondition(Condition condition);
+  void addAction(Action action);
+  void setNextRule(unsigned long next_rule_id);
 };
 
-// class PurificationRule : public BaseRule {
-//  public:
-//   PurificationRule(PurType purification_type, int num_purification);
-//   PurType purtype;
-//   int num_purification;
-// };
+class PurificationRule : public BaseRule {
+ public:
+  PurificationRule(PurType purification_type);
+  PurType purification_type;
+};
 
-// class SwappingRule : public BaseRule {
-//  public:
-//   SwappingRule();
-// };
+class SwappingRule : public BaseRule {
+ public:
+  SwappingRule(SwapType swap_type);
+  SwapType swapping_type;
+};
 
-// class WaitRule : public BaseRule {
-//  public:
-//   WaitRule();
-// };
+class WaitRule : public BaseRule {
+ public:
+  WaitRule();
+};
+
+class RandomMeasurementRule : public BaseRule {
+ public:
+  RandomMeasurementRule(int total_measurement);
+  int total_measurement;
+};
 
 }  // namespace quisp::rules
