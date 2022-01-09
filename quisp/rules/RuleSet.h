@@ -1,7 +1,6 @@
 #pragma once
 #include "Rule.h"
 
-
 namespace quisp::rules {
 
 /**
