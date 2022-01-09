@@ -3,9 +3,7 @@
 #include <map>
 #include "ActiveClause.h"
 
-namespace quisp {
-namespace rules {
-namespace clauses {
+namespace quisp::rules::active::clauses {
 class PurificationCountClause : public ActiveClause {
  public:
   int num_purify_must;
@@ -14,6 +12,4 @@ class PurificationCountClause : public ActiveClause {
   [[noreturn]] bool check(std::multimap<int, IStationaryQubit*>&) override;
 };
 
-}  // namespace clauses
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::active::clauses

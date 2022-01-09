@@ -2,7 +2,7 @@
 
 #include "BaseAction.h"
 
-namespace quisp::rules::actions {
+namespace quisp::rules::active::actions {
 
 class DoublePurifyAction : public ActiveAction {
  public:
@@ -37,4 +37,4 @@ class DoublePurifyActionInv : public ActiveAction {
   int num_purify;
   int action_index = 0;  // To track how many times this particular action has been invoked.
 };
-}  // namespace quisp::rules::actions
+}  // namespace quisp::rules::active::actions

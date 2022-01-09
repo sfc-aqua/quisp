@@ -18,7 +18,7 @@ using quisp::modules::IStationaryQubit;
 using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_type;
 using quisp::modules::StationaryQubit;
-using OriginalRandomMeasureAction = quisp::rules::actions::RandomMeasureAction;
+using OriginalRandomMeasureAction = quisp::rules::active::actions::RandomMeasureAction;
 
 class RandomMeasureAction : public OriginalRandomMeasureAction {
  public:

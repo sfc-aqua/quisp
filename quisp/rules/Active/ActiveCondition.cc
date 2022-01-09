@@ -1,13 +1,6 @@
-/** \file Condition.cc
- *
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/06/25
- *
- *  \brief Condition
- */
 #include "ActiveCondition.h"
 
-namespace quisp::rules {
+namespace quisp::rules::active {
 
 void ActiveCondition::addClause(ActiveClause *c) { clauses.push_back(c); }
 
@@ -29,4 +22,4 @@ bool ActiveCondition::checkTerminate(std::multimap<int, IStationaryQubit *> &res
   return false;
 }
 
-}  // namespace quisp::rules
+}  // namespace quisp::rules::active

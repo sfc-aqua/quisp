@@ -1,10 +1,6 @@
 #include "WaitClause.h"
 
-namespace quisp {
-namespace rules {
-namespace clauses {
+namespace quisp::rules::active::clauses {
 // This never gets true.
 bool WaitClause::check(std::multimap<int, IStationaryQubit *> &resource) { return false; };
-}  // namespace clauses
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::active::clauses

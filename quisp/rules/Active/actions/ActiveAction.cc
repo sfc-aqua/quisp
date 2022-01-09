@@ -9,7 +9,7 @@
 #include <omnetpp.h>
 #include "BaseAction.h"
 
-namespace quisp::rules::actions {
+namespace quisp::rules::active::actions {
 
 ActiveAction::ActiveAction(unsigned long ruleset_id, unsigned long rule_id) : ruleset_id(ruleset_id), rule_id(rule_id){};
 
@@ -38,4 +38,4 @@ cPacket *ActiveAction::generateError(const char *msg) {
   return error;
 }
 
-}  // namespace quisp::rules::actions
+}  // namespace quisp::rules::active::actions

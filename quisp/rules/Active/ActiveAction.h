@@ -13,6 +13,8 @@
 namespace quisp {
 namespace rules {
 
+namespace active {
+
 using actions::ActiveAction;
 using actions::DoublePurifyAction;
 using actions::DoublePurifyActionInv;
@@ -27,5 +29,6 @@ using actions::RandomMeasureAction;
 using actions::SimultaneousSwappingAction;
 using actions::SwappingAction;
 
+}  // namespace active
 }  // namespace rules
 }  // namespace quisp

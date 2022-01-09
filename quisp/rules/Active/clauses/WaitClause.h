@@ -2,9 +2,7 @@
 
 #include "ActiveClause.h"
 
-namespace quisp {
-namespace rules {
-namespace clauses {
+namespace quisp::rules::active::clauses {
 class WaitClause : public ActiveClause {
  public:
   WaitClause() : ActiveClause(){};
@@ -12,6 +10,4 @@ class WaitClause : public ActiveClause {
   bool checkTerminate(std::multimap<int, IStationaryQubit*>&) const override { return false; };
 };
 
-}  // namespace clauses
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::active::clauses

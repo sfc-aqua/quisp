@@ -4,7 +4,7 @@
 
 using quisp::types::MeasureZResult;
 
-namespace quisp::rules::actions {
+namespace quisp::rules::active::actions {
 
 SwappingAction::SwappingAction(unsigned long ruleset_id, unsigned long rule_id, int left_partner, QNIC_type left_qnic_type, int left_qnic_id, int left_qnic_address,
                                int left_resource, int right_partner, QNIC_type right_qnic_type, int right_qnic_id, int right_qnic_address, int right_resource,
@@ -119,4 +119,4 @@ cPacket *SwappingAction::run(cModule *re) {
   return pk;
 }
 
-}  // namespace quisp::rules::actions
+}  // namespace quisp::rules::active::actions

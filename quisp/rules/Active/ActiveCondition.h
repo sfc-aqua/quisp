@@ -1,16 +1,9 @@
-/** \file Condition.h
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/06/25
- *
- *  \brief Condition
- */
-#ifndef QUISP_RULES_CONDITION_H_
-#define QUISP_RULES_CONDITION_H_
-
+#pragma once
 #include "ActiveClause.h"
 
 namespace quisp {
 namespace rules {
+namespace active {
 
 /** \class Condition Condition.h
  *
@@ -25,7 +18,6 @@ class ActiveCondition {
   std::vector<ActiveClause*> clauses;
 };
 
+}  // namespace active
 }  // namespace rules
 }  // namespace quisp
-
-#endif  // QUISP_RULES_CONDITION_H_

@@ -2,7 +2,7 @@
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
-namespace quisp::rules::actions {
+namespace quisp::rules::active::actions {
 DoubleSelectionDualAction::DoubleSelectionDualAction(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_index, int resource,
                                                      int trash_resource_x, int trash_resource_z, int ds_trash_resource_x, int ds_trash_resource_z)
     : ActiveAction(ruleset_id, rule_id),
@@ -164,4 +164,4 @@ cPacket *DoubleSelectionDualActionInv::run(cModule *re) {
   action_index++;
   return pk;
 }
-}  // namespace quisp::rules::actions
+}  // namespace quisp::rules::active::actions

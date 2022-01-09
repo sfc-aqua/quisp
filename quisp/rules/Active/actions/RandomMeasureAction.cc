@@ -2,7 +2,7 @@
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
-namespace quisp::rules::actions {
+namespace quisp::rules::active::actions {
 
 RandomMeasureAction::RandomMeasureAction(unsigned long ruleset_id, unsigned long rule_id, int owner_address, int partner, QNIC_type qnic_type, int qnic_id, int resource,
                                          int max_count)
@@ -43,4 +43,4 @@ cPacket *RandomMeasureAction::run(cModule *re) {
   }
   return pk;
 }
-}  // namespace quisp::rules::actions
+}  // namespace quisp::rules::active::actions

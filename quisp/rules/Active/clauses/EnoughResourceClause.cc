@@ -1,8 +1,6 @@
 #include "EnoughResourceClause.h"
 
-namespace quisp {
-namespace rules {
-namespace clauses {
+namespace quisp::rules::active::clauses {
 
 bool EnoughResourceClause::check(std::multimap<int, IStationaryQubit *> &resource) {
   bool enough = false;
@@ -20,6 +18,4 @@ bool EnoughResourceClause::check(std::multimap<int, IStationaryQubit *> &resourc
   }
   return enough;
 }
-}  // namespace clauses
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::active::clauses

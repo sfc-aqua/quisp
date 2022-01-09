@@ -7,9 +7,7 @@
 
 using namespace quisp::modules;
 
-namespace quisp {
-namespace rules {
-namespace clauses {
+namespace quisp::rules::active::clauses {
 
 class ActiveClause {
  protected:
@@ -34,6 +32,4 @@ class ActiveClause {
   virtual bool checkTerminate(std::multimap<int, IStationaryQubit*>&) const = 0;
 };
 
-}  // namespace clauses
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::active::clauses

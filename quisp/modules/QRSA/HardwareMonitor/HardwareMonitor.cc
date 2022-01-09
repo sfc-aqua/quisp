@@ -18,7 +18,7 @@
 #include "utils/ComponentProvider.h"
 
 using namespace quisp::messages;
-using namespace quisp::rules;
+using namespace quisp::rules::active;
 using Eigen::Matrix4cd;
 using Eigen::Vector4cd;
 

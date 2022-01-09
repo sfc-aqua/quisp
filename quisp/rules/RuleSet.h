@@ -24,7 +24,6 @@ class RuleSet {
 
   unsigned long ruleset_id;
   int owner_addr;
-  simtime_t started_at;
 };
 
 }  // namespace rules

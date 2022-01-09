@@ -18,7 +18,7 @@ using quisp::modules::IStationaryQubit;
 using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_type;
 using quisp::modules::StationaryQubit;
-using OriginalDoubleSelectionActionInv = quisp::rules::actions::DoubleSelectionActionInv;
+using OriginalDoubleSelectionActionInv = quisp::rules::active::actions::DoubleSelectionActionInv;
 
 class DoubleSelectionActionInv : public OriginalDoubleSelectionActionInv {
  public:

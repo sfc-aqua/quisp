@@ -20,7 +20,7 @@ using quisp::modules::IStationaryQubit;
 using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_type;
 using quisp::modules::StationaryQubit;
-using OriginalSwappingAction = quisp::rules::actions::SwappingAction;
+using OriginalSwappingAction = quisp::rules::active::actions::SwappingAction;
 
 class SwappingAction : public OriginalSwappingAction {
  public:

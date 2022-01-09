@@ -3,7 +3,7 @@
 
 using quisp::messages::ConditionNotSatisfied;
 
-namespace quisp::rules {
+namespace quisp::rules::active {
 
 ActiveRule::ActiveRule(unsigned long ruleset_id, unsigned long rule_id, std::string rule_name, std::vector<int> action_partners)
     : ruleset_id(ruleset_id), rule_id(rule_id), name(rule_name), action_partners(action_partners){};
@@ -25,4 +25,4 @@ cPacket *ActiveRule::checkrun(cModule *re) {
 }
 
 bool ActiveRule::checkTerminate() { return condition->checkTerminate(resources); }
-}  // namespace quisp::rules
+}  // namespace quisp::rules::active

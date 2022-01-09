@@ -2,7 +2,7 @@
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
-namespace quisp::rules::actions {
+namespace quisp::rules::active::actions {
 
 DoublePurifyAction::DoublePurifyAction(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
                                        int trash_resource_z)
@@ -124,4 +124,4 @@ cPacket *DoublePurifyActionInv::run(cModule *re) {
   action_index++;
   return pk;
 }
-}  // namespace quisp::rules::actions
+}  // namespace quisp::rules::active::actions

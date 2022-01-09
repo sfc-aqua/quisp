@@ -18,7 +18,7 @@ using namespace omnetpp;
 
 namespace quisp {
 namespace modules {
-using namespace rules;
+using namespace rules::active;
 
 typedef struct {
   unsigned long ruleset_id;

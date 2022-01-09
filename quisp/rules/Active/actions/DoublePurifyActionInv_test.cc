@@ -18,7 +18,7 @@ using quisp::modules::IStationaryQubit;
 using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_type;
 using quisp::modules::StationaryQubit;
-using OriginalDoublePurifyActionInv = quisp::rules::actions::DoublePurifyActionInv;
+using OriginalDoublePurifyActionInv = quisp::rules::active::actions::DoublePurifyActionInv;
 
 class DoublePurifyActionInv : public OriginalDoublePurifyActionInv {
  public:

@@ -2,7 +2,7 @@
 
 #include "BaseAction.h"
 
-namespace quisp::rules::actions {
+namespace quisp::rules::active::actions {
 
 class SimultaneousSwappingAction : public ActiveAction {
  public:
@@ -49,4 +49,4 @@ class SimultaneousSwappingAction : public ActiveAction {
   int index_in_path;
   int path_length_exclude_IR;
 };
-}  // namespace quisp::rules::actions
+}  // namespace quisp::rules::active::actions

@@ -1,5 +1,4 @@
 #include "example.h"
-using namespace quisp::rules;
 using namespace quisp::modules;
 
 /**

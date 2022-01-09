@@ -1,8 +1,6 @@
 #include "MeasureCountClause.h"
 
-namespace quisp {
-namespace rules {
-namespace clauses {
+namespace quisp::rules::active::clauses {
 bool MeasureCountClause::check(std::multimap<int, IStationaryQubit *> &resources) {
   if (current_count < max_count) {
     current_count++;
@@ -19,6 +17,4 @@ bool MeasureCountClause::checkTerminate(std::multimap<int, IStationaryQubit *> &
   return done;
 }
 
-}  // namespace clauses
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::active::clauses

@@ -2,7 +2,7 @@
 
 #include "BaseAction.h"
 
-namespace quisp::rules::actions {
+namespace quisp::rules::active::actions {
 
 // https://arxiv.org/abs/0811.2639
 class DoubleSelectionDualActionSecond : public ActiveAction {
@@ -46,4 +46,4 @@ class DoubleSelectionDualActionSecondInv : public ActiveAction {
   int action_index = 0;  // To track how many times this particular action has been invoked.
 };
 
-}  // namespace quisp::rules::actions
+}  // namespace quisp::rules::active::actions

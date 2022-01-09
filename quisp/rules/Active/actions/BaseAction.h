@@ -12,7 +12,7 @@
 #include <omnetpp.h>
 #include <memory>
 
-namespace quisp::rules::actions {
+namespace quisp::rules::active::actions {
 
 using quisp::modules::IStationaryQubit;
 using quisp::modules::QNIC_type;
@@ -29,4 +29,4 @@ class ActiveAction {
   virtual void removeResource_fromRule(IStationaryQubit* qubit);
   cPacket* generateError(const char* msg);
 };
-}  // namespace quisp::rules::actions
+}  // namespace quisp::rules::active::actions

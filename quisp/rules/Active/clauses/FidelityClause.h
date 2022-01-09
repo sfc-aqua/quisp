@@ -3,9 +3,7 @@
 #include <map>
 #include "ActiveClause.h"
 
-namespace quisp {
-namespace rules {
-namespace clauses {
+namespace quisp::rules::active::clauses {
 class FidelityClause : public ActiveClause {
  protected:
   double threshold;
@@ -16,6 +14,4 @@ class FidelityClause : public ActiveClause {
   [[noreturn]] bool check(std::multimap<int, IStationaryQubit*>&) override;
   bool checkTerminate(std::multimap<int, IStationaryQubit*>&) const override;
 };
-}  // namespace clauses
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::active::clauses

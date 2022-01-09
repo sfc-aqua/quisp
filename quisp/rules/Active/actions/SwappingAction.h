@@ -2,7 +2,7 @@
 
 #include "BaseAction.h"
 
-namespace quisp::rules::actions {
+namespace quisp::rules::active::actions {
 
 class SwappingAction : public ActiveAction {
  public:
@@ -32,4 +32,4 @@ class SwappingAction : public ActiveAction {
   QNIC_type self_right_qnic_type;
 };
 
-}  // namespace quisp::rules::actions
+}  // namespace quisp::rules::active::actions

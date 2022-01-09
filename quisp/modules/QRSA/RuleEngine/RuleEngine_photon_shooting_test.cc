@@ -28,8 +28,8 @@ namespace {
 using namespace omnetpp;
 using namespace quisp::utils;
 using namespace quisp::rules;
-using namespace quisp::rules::actions;
-using quisp::rules::actions::ActiveAction;
+using namespace quisp::rules::active::actions;
+using quisp::rules::active::actions::ActiveAction;
 using namespace quisp::modules;
 using namespace quisp_test;
 using namespace testing;

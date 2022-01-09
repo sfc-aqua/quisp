@@ -9,13 +9,13 @@
 
 namespace quisp {
 namespace rules {
-
+namespace active {
 using clauses::ActiveClause;
 using clauses::EnoughResourceClause;
 using clauses::FidelityClause;
 using clauses::MeasureCountClause;
 using clauses::PurificationCountClause;
 using clauses::WaitClause;
-
+}  // namespace active
 }  // namespace rules
 }  // namespace quisp

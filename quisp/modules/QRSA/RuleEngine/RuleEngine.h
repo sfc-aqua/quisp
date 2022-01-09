@@ -30,6 +30,7 @@ using namespace omnetpp;
 namespace quisp {
 namespace modules {
 using namespace rules;
+using namespace rules::active;
 using qnic_store::IQNicStore;
 
 /** \class RuleEngine RuleEngine.h

@@ -2,7 +2,7 @@
 
 #include "BaseAction.h"
 
-namespace quisp::rules::actions {
+namespace quisp::rules::active::actions {
 
 class RandomMeasureAction : public ActiveAction {
  public:
@@ -20,4 +20,4 @@ class RandomMeasureAction : public ActiveAction {
   int mutable max_count;
   simtime_t start;
 };
-}  // namespace quisp::rules::actions
+}  // namespace quisp::rules::active::actions

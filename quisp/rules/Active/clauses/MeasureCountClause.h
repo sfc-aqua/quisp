@@ -3,9 +3,7 @@
 #include <map>
 #include "ActiveClause.h"
 
-namespace quisp {
-namespace rules {
-namespace clauses {
+namespace quisp::rules::active::clauses {
 class MeasureCountClause : public ActiveClause {
  public:
   int max_count;
@@ -18,6 +16,4 @@ class MeasureCountClause : public ActiveClause {
   bool checkTerminate(std::multimap<int, IStationaryQubit*>&) const override;
 };
 
-}  // namespace clauses
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::active::clauses

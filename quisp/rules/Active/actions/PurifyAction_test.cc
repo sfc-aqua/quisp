@@ -18,7 +18,7 @@ using quisp::modules::IStationaryQubit;
 using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_type;
 using quisp::modules::StationaryQubit;
-using OriginalPurifyAction = quisp::rules::actions::PurifyAction;
+using OriginalPurifyAction = quisp::rules::active::actions::PurifyAction;
 
 class PurifyAction : public OriginalPurifyAction {
  public:
