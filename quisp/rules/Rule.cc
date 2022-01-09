@@ -3,6 +3,7 @@
 #include "Condition.h"
 
 namespace quisp::rules {
+
 void BaseRule::addCondition(Condition condition) {}
 
 void BaseRule::addAction(Action action) {}

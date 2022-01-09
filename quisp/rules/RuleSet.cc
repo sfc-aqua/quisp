@@ -1,17 +1,18 @@
 #include "RuleSet.h"
 #include <omnetpp.h>
+#include <memory>
 #include <random>
 #include <string>
 
 namespace quisp::rules {
 RuleSet::RuleSet(unsigned long ruleset_id, int owner_address) : ruleset_id(ruleset_id), owner_addr(owner_address) {}
 
-BaseRule& RuleSet::addRule(BaseRule rule, std::vector<int> partners) {
+BaseRule& RuleSet::addRule(std::unique_ptr<BaseRule> rule, std::vector<int> partners) {
   for (int partner : partners) {
-    rule.partners.push_back(partner);
+    rule->partners.push_back(partner);
   }
-  rule.rule_id = createUniqueId();
-  rules.push_back(rule);
+  rule->rule_id = createUniqueId();
+  rules.push_back(*rule);
   BaseRule& rule_ref = rules.at(rules.size() - 1);
   return rule_ref;
 };
