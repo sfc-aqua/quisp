@@ -16,8 +16,8 @@ namespace quisp {
 namespace modules {
 
 Define_Module(RuleEngine);
-
 using namespace rules;
+using namespace rules::active;
 using qnic_store::QNicStore;
 
 RuleEngine::RuleEngine() : provider(utils::ComponentProvider{this}) {}

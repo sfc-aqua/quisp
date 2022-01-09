@@ -18,7 +18,7 @@
 #include "utils/ComponentProvider.h"
 
 using namespace quisp::messages;
-using namespace quisp::rules;
+using namespace quisp::rules::active;
 using Eigen::Matrix4cd;
 using Eigen::Vector4cd;
 
@@ -653,11 +653,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         // First stage X purification
         rule_name = "X purification with: " + std::to_string(partner_address);
         auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-        Condition *Purification_condition = new Condition();
-        Clause *resource_clause = new EnoughResourceClause(partner_address, 2);
+        ActiveCondition *Purification_condition = new ActiveCondition();
+        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
-        Action *purify_action = new PurifyAction(RuleSet_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+        ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
         Purification->setAction(purify_action);
         Purification->next_rule_id = rule_id + 1;
         rule_id++;
@@ -666,7 +666,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         // Second stage Z purification (Using X purified resources)
         rule_name = "X purification with: " + std::to_string(partner_address);
         Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-        Purification_condition = new Condition();
+        Purification_condition = new ActiveCondition();
         resource_clause = new EnoughResourceClause(partner_address, 2);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
@@ -705,18 +705,18 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           rule_name = "Z purification with: " + std::to_string(partner_address);
         }
         auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-        Condition *Purification_condition = new Condition();
-        Clause *resource_clause = new EnoughResourceClause(partner_address, 2);
+        ActiveCondition *Purification_condition = new ActiveCondition();
+        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
 
         if (i % 2 == 0) {
           // X purification
-          Action *purify_action = new PurifyAction(RuleSet_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         } else {
           // Z purification
-          Action *purify_action = new PurifyAction(RuleSet_id, rule_id, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         }
         Purification->next_rule_id = rule_id + 1;
@@ -742,11 +742,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       for (int i = 0; i < num_purification; i++) {
         rule_name = "Double purification with: " + std::to_string(partner_address);
         auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-        Condition *Purification_condition = new Condition();
-        Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
+        ActiveCondition *Purification_condition = new ActiveCondition();
+        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
-        Action *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+        ActiveAction *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
         Purification->setAction(purify_action);
         Purification->next_rule_id = rule_id + 1;
         rule_id++;
@@ -770,11 +770,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         if (i % 2 == 0) {
           rule_name = "Double purification with: " + std::to_string(partner_address);
           auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-          Condition *Purification_condition = new Condition();
-          Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
+          ActiveCondition *Purification_condition = new ActiveCondition();
+          ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
           Purification_condition->addClause(resource_clause);
           Purification->setCondition(Purification_condition);
-          Action *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          ActiveAction *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
           Purification->next_rule_id = rule_id + 1;
           rule_id++;
@@ -782,11 +782,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         } else {
           rule_name = "Double purification Inverse with: " + std::to_string(partner_address);
           auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-          Condition *Purification_condition = new Condition();
-          Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
+          ActiveCondition *Purification_condition = new ActiveCondition();
+          ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
           Purification_condition->addClause(resource_clause);
           Purification->setCondition(Purification_condition);
-          Action *purify_action = new DoublePurifyActionInv(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          ActiveAction *purify_action = new DoublePurifyActionInv(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
           Purification->next_rule_id = rule_id + 1;
           rule_id++;
@@ -811,11 +811,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       for (int i = 0; i < num_purification; i++) {
         rule_name = "Double Selection with: " + std::to_string(partner_address);
         auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-        Condition *Purification_condition = new Condition();
-        Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
+        ActiveCondition *Purification_condition = new ActiveCondition();
+        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
-        Action *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+        ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
         Purification->setAction(purify_action);
         Purification->next_rule_id = rule_id + 1;
         rule_id++;
@@ -842,15 +842,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           rule_name = "Double selection Inverse with: " + std::to_string(partner_address);
         }
         auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-        Condition *Purification_condition = new Condition();
-        Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
+        ActiveCondition *Purification_condition = new ActiveCondition();
+        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
         if (i % 2 == 0) {
-          Action *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         } else {
-          Action *purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          ActiveAction *purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         }
         Purification->next_rule_id = rule_id + 1;
@@ -879,15 +879,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           rule_name = "Double selection Dual action Inverse with: " + std::to_string(partner_address);
         }
         auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-        Condition *Purification_condition = new Condition();
-        Clause *resource_clause = new EnoughResourceClause(partner_address, 5);
+        ActiveCondition *Purification_condition = new ActiveCondition();
+        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 5);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
         if (i % 2 == 0) {
-          Action *purify_action = new DoubleSelectionDualAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
+          ActiveAction *purify_action = new DoubleSelectionDualAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
           Purification->setAction(purify_action);
         } else {
-          Action *purify_action = new DoubleSelectionDualActionInv(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
+          ActiveAction *purify_action = new DoubleSelectionDualActionInv(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
           Purification->setAction(purify_action);
         }
         Purification->next_rule_id = rule_id + 1;
@@ -915,15 +915,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           rule_name = "Double selection Dual action second inverse with: " + std::to_string(partner_address);
         }
         auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-        Condition *Purification_condition = new Condition();
-        Clause *resource_clause = new EnoughResourceClause(partner_address, 4);
+        ActiveCondition *Purification_condition = new ActiveCondition();
+        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 4);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
         if (i % 2 == 0) {
-          Action *purify_action = new DoubleSelectionDualActionSecond(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
+          ActiveAction *purify_action = new DoubleSelectionDualActionSecond(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
           Purification->setAction(purify_action);
         } else {
-          Action *purify_action = new DoubleSelectionDualActionSecondInv(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
+          ActiveAction *purify_action = new DoubleSelectionDualActionSecondInv(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
           Purification->setAction(purify_action);
         }
         Purification->next_rule_id = rule_id + 1;
@@ -949,15 +949,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           rule_name = "Double selection action inverse with: " + std::to_string(partner_address);
         }
         auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-        Condition *Purification_condition = new Condition();
-        Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
+        ActiveCondition *Purification_condition = new ActiveCondition();
+        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
         if (i % 2 == 0) {
-          Action *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         } else {
-          Action *purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          ActiveAction *purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         }
         Purification->next_rule_id = rule_id + 1;
@@ -972,16 +972,16 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           rule_name = "Z Purification with: " + std::to_string(partner_address);
         }
         auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-        Condition *Purification_condition = new Condition();
-        Clause *resource_clause = new EnoughResourceClause(partner_address, 2);
+        ActiveCondition *Purification_condition = new ActiveCondition();
+        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
 
         if (i % 2 == 0) {  // X purification
-          Action *purify_action = new PurifyAction(RuleSet_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         } else {  // Z purification
-          Action *purify_action = new PurifyAction(RuleSet_id, rule_id, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         }
         Purification->next_rule_id = rule_id + 1;
@@ -1002,11 +1002,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// scheme, but can use different schemes in different rounds.
       rule_name = "Double selection action with: " + std::to_string(partner_address);
       auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-      Condition *Purification_condition = new Condition();
-      Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
+      ActiveCondition *Purification_condition = new ActiveCondition();
+      ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
       Purification_condition->addClause(resource_clause);
       Purification->setCondition(Purification_condition);
-      Action *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
       Purification->setAction(purify_action);
       Purification->next_rule_id = rule_id + 1;
       rule_id++;
@@ -1019,18 +1019,18 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           rule_name = "X purification with: " + std::to_string(partner_address);
         }
         auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-        Condition *Purification_condition = new Condition();
-        Clause *resource_clause = new EnoughResourceClause(partner_address, 2);
+        ActiveCondition *Purification_condition = new ActiveCondition();
+        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
 
         if (i % 2 == 0) {
           // X purification
-          Action *purify_action = new PurifyAction(RuleSet_id, rule_id, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         } else {
           // Z purification
-          Action *purify_action = new PurifyAction(RuleSet_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         }
         Purification->next_rule_id = rule_id + 1;
@@ -1052,11 +1052,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// purification. Use of this for new work is deprecated.
       rule_name = "Single purification with: " + std::to_string(partner_address);
       auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-      Condition *Purification_condition = new Condition();
-      Clause *resource_clause = new EnoughResourceClause(partner_address, 2);
+      ActiveCondition *Purification_condition = new ActiveCondition();
+      ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);
       Purification_condition->addClause(resource_clause);
       Purification->setCondition(Purification_condition);
-      Action *purify_action = new PurifyAction(RuleSet_id, rule_id, X_Purification, Z_Purification, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, X_Purification, Z_Purification, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
       Purification->setAction(purify_action);
       Purification->next_rule_id = rule_id + 1;
       rule_id++;
@@ -1065,11 +1065,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       error("syntax outdate or purification id not recognized.");
       rule_name = "Error purification";
       auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, rule_name, partners);
-      Condition *Purification_condition = new Condition();
-      Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
+      ActiveCondition *Purification_condition = new ActiveCondition();
+      ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
       Purification_condition->addClause(resource_clause);
       Purification->setCondition(Purification_condition);
-      Action *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      ActiveAction *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
       Purification->setAction(purify_action);
       Purification->next_rule_id = rule_id + 1;
       rule_id++;
@@ -1082,16 +1082,16 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
     // Technically, there is no condition because an available resource is
     // guaranteed whenever the rule is ran.
-    Condition *total_measurements = new Condition();
+    ActiveCondition *total_measurements = new ActiveCondition();
 
     // 3000 measurements in total. There are 3*3 = 9 patterns of measurements.
     // So each combination must perform 3000/9 measurements.
-    Clause *measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type, qnic_index, 0);
+    ActiveClause *measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type, qnic_index, 0);
     total_measurements->addClause(measure_count_clause);
     Random_measure_tomo->setCondition(total_measurements);
 
     // Measure the local resource between it->second.neighborQNode_address.
-    quisp::rules::Action *measure = new RandomMeasureAction(RuleSet_id, rule_id, my_address, partner_address, qnic_type, qnic_index, 0, num_measure);
+    ActiveAction *measure = new RandomMeasureAction(RuleSet_id, rule_id, my_address, partner_address, qnic_type, qnic_index, 0, num_measure);
     Random_measure_tomo->setAction(measure);
     //---------
     // Add the rule to the RuleSet
@@ -1108,18 +1108,18 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
     // Let's make nodes select measurement basis randomly, because it it easier.
     auto Random_measure_tomo = std::make_unique<ActiveRule>(RuleSet_id, 0);
     // Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
-    Condition *total_measurements = new Condition();
+    ActiveCondition *total_measurements = new ActiveCondition();
 
     // 3000 measurements in total. There are 3*3 = 9 patterns of measurements.
     // So each combination must perform 3000/9 measurements.
-    Clause *measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type, qnic_index, 0);
-    Clause *resource_clause = new EnoughResourceClause(partner_address, 1);
+    ActiveClause *measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type, qnic_index, 0);
+    ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 1);
     total_measurements->addClause(measure_count_clause);
     total_measurements->addClause(resource_clause);
     Random_measure_tomo->setCondition(total_measurements);
 
     // Measure the local resource between it->second.neighborQNode_address.
-    quisp::rules::Action *measure = new RandomMeasureAction(RuleSet_id, 0, my_address, partner_address, qnic_type, qnic_index, 0, num_measure);
+    ActiveAction *measure = new RandomMeasureAction(RuleSet_id, 0, my_address, partner_address, qnic_type, qnic_index, 0, num_measure);
     Random_measure_tomo->setAction(measure);
     //---------
     // Add the rule to the RuleSet

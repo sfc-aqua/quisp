@@ -7,14 +7,14 @@
 #include <modules/QRSA/RoutingDaemon/RoutingDaemon.h>
 #include <modules/QRSA/RuleEngine/RuleEngine.h>
 #include <omnetpp.h>
-#include <rules/RuleSet.h>
+#include <rules/Active/ActiveRuleSet.h>
 #include <utils/ComponentProvider.h>
 #include <queue>
 #include <vector>
 
 using namespace omnetpp;
 using namespace quisp::messages;
-using namespace quisp::rules;
+using namespace quisp::rules::active;
 
 namespace quisp {
 namespace modules {

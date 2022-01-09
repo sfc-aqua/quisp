@@ -1,7 +1,7 @@
 #include "RuleSetStore.h"
 #include <gtest/gtest.h>
 #include <memory>
-#include "rules/RuleSet.h"
+#include "rules/Active/ActiveRuleSet.h"
 #include "test_utils/TestUtils.h"
 
 namespace {

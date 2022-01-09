@@ -2,10 +2,10 @@
 
 #include <memory>
 #include <vector>
-#include "rules/ActiveRuleSet.h"
+#include "rules/Active/ActiveRuleSet.h"
 
 namespace quisp::modules::ruleset_store {
-using quisp::rules::ActiveRuleSet;
+using quisp::rules::active::ActiveRuleSet;
 using RuleSetVector = std::vector<std::unique_ptr<ActiveRuleSet>>;
 class RuleSetStore {
  public:

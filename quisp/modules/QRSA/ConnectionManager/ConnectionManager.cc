@@ -14,7 +14,7 @@
 
 using namespace omnetpp;
 using namespace quisp::messages;
-using namespace quisp::rules;
+using namespace quisp::rules::active;
 
 namespace quisp {
 namespace modules {
@@ -869,47 +869,47 @@ std::unique_ptr<ActiveRule> ConnectionManager::purificationRule(int partner_addr
   for (int i = 0; i < num_purification; i++) {
     if (purification_type == 0) {
       // X purification (should prepare enum with purification)
-      Condition *condition = new Condition();
-      Clause *resource_clause = new EnoughResourceClause(partner_address, 2);  // to prepare 1 purified entanglement, we need 2 raw entanglements
+      ActiveCondition *condition = new ActiveCondition();
+      ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);  // to prepare 1 purified entanglement, we need 2 raw entanglements
       condition->addClause(resource_clause);
       rule_purification->setCondition(condition);
       // PurifyAction(unsigned long RuleSet_id, unsigned long rule_id, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res, int
       // tres);
-      Action *purify_action = new PurifyAction(ruleset_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      ActiveAction *purify_action = new PurifyAction(ruleset_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
       rule_purification->setAction(purify_action);
     } else if (purification_type == 1) {
       // Z purification (should prepare enum with purification)
-      Condition *condition = new Condition();
-      Clause *resource_clause = new EnoughResourceClause(partner_address, 2);  // to prepare 1 purified entanglement, we need 2 raw entanglements
+      ActiveCondition *condition = new ActiveCondition();
+      ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);  // to prepare 1 purified entanglement, we need 2 raw entanglements
       condition->addClause(resource_clause);
       rule_purification->setCondition(condition);
       // PurifyAction(unsigned long RuleSet_id, unsigned long rule_id, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res,
       // int tres);
-      Action *purify_action = new PurifyAction(ruleset_id, rule_id, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      ActiveAction *purify_action = new PurifyAction(ruleset_id, rule_id, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
       rule_purification->setAction(purify_action);
     } else if (purification_type == 2) {
       // Double purification
-      Condition *condition = new Condition();
-      Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
+      ActiveCondition *condition = new ActiveCondition();
+      ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
       condition->addClause(resource_clause);
       rule_purification->setCondition(condition);
-      Action *purify_action = new DoublePurifyAction(ruleset_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      ActiveAction *purify_action = new DoublePurifyAction(ruleset_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
       rule_purification->setAction(purify_action);
     } else if (purification_type == 3) {
       // Double Selection purify X action
-      Condition *condition = new Condition();
-      Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
+      ActiveCondition *condition = new ActiveCondition();
+      ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
       condition->addClause(resource_clause);
       rule_purification->setCondition(condition);
-      Action *purify_action = new DoublePurifyAction(ruleset_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      ActiveAction *purify_action = new DoublePurifyAction(ruleset_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
       rule_purification->setAction(purify_action);
     } else if (purification_type == 4) {
       // Double Selection second
-      Condition *condition = new Condition();
-      Clause *resource_clause = new EnoughResourceClause(partner_address, 4);
+      ActiveCondition *condition = new ActiveCondition();
+      ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 4);
       condition->addClause(resource_clause);
       rule_purification->setCondition(condition);
-      Action *purify_action = new DoubleSelectionDualActionSecond(ruleset_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
+      ActiveAction *purify_action = new DoubleSelectionDualActionSecond(ruleset_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
       rule_purification->setAction(purify_action);
     } else {
       error("Unknown purification type");
@@ -925,15 +925,15 @@ std::unique_ptr<ActiveRule> ConnectionManager::swappingRule(SwappingConfig conf,
   std::vector<int> partners = {conf.left_partner, conf.right_partner};
   std::string rule_name = "Entanglement Swapping with " + std::to_string(conf.left_partner) + " : " + std::to_string(conf.right_partner);
   auto rule_entanglement_swapping = std::make_unique<ActiveRule>(ruleset_id, rule_id, rule_name, partners);
-  Condition *condition = new Condition();
-  Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, 1);
-  Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, 1);
+  ActiveCondition *condition = new ActiveCondition();
+  ActiveClause *resource_clause_left = new EnoughResourceClause(conf.left_partner, 1);
+  ActiveClause *resource_clause_right = new EnoughResourceClause(conf.right_partner, 1);
   condition->addClause(resource_clause_left);
   condition->addClause(resource_clause_right);
   rule_entanglement_swapping->setCondition(condition);
-  Action *action = new SwappingAction(ruleset_id, rule_id, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner, conf.rqnic_type,
-                                      conf.rqnic_index, conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type, conf.self_right_qnic_index,
-                                      conf.self_right_qnic_type);
+  ActiveAction *action = new SwappingAction(ruleset_id, rule_id, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner,
+                                            conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type,
+                                            conf.self_right_qnic_index, conf.self_right_qnic_type);
   rule_entanglement_swapping->setAction(action);
   return rule_entanglement_swapping;
 }
@@ -946,17 +946,17 @@ std::unique_ptr<ActiveRule> ConnectionManager::simultaneousSwappingRule(Swapping
   int path_length_exclude_IR = path.size() - 2;
 
   auto rule_simultaneous_entanglement_swapping = std::make_unique<ActiveRule>(ruleset_id, rule_id, rule_name, partners);
-  Condition *condition = new Condition();
-  Clause *resource_clause_left = new EnoughResourceClause(conf.left_partner, 1);
-  Clause *resource_clause_right = new EnoughResourceClause(conf.right_partner, 1);
+  ActiveCondition *condition = new ActiveCondition();
+  ActiveClause *resource_clause_left = new EnoughResourceClause(conf.left_partner, 1);
+  ActiveClause *resource_clause_right = new EnoughResourceClause(conf.right_partner, 1);
   condition->addClause(resource_clause_left);
   condition->addClause(resource_clause_right);
 
-  quisp::rules::Action *action = new SimultaneousSwappingAction(
-      ruleset_id, rule_id, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres, conf.right_partner, conf.rqnic_type, conf.rqnic_index,
-      conf.rqnic_address, conf.rres, conf.self_left_qnic_index, conf.self_left_qnic_type, conf.self_right_qnic_index, conf.self_right_qnic_type, conf.initiator,
-      conf.initiator_qnic_type, conf.initiator_qnic_index, conf.initiator_qnic_address, conf.initiator_res, conf.responder, conf.responder_qnic_type, conf.responder_qnic_index,
-      conf.responder_qnic_address, conf.responder_res, index_in_path, path_length_exclude_IR);
+  ActiveAction *action = new SimultaneousSwappingAction(ruleset_id, rule_id, conf.left_partner, conf.lqnic_type, conf.lqnic_index, conf.lqnic_address, conf.lres,
+                                                        conf.right_partner, conf.rqnic_type, conf.rqnic_index, conf.rqnic_address, conf.rres, conf.self_left_qnic_index,
+                                                        conf.self_left_qnic_type, conf.self_right_qnic_index, conf.self_right_qnic_type, conf.initiator, conf.initiator_qnic_type,
+                                                        conf.initiator_qnic_index, conf.initiator_qnic_address, conf.initiator_res, conf.responder, conf.responder_qnic_type,
+                                                        conf.responder_qnic_index, conf.responder_qnic_address, conf.responder_res, index_in_path, path_length_exclude_IR);
 
   rule_simultaneous_entanglement_swapping->setCondition(condition);
   rule_simultaneous_entanglement_swapping->setAction(action);
@@ -968,8 +968,8 @@ std::unique_ptr<ActiveRule> ConnectionManager::waitRule(int partner_address, int
   std::vector<int> partners = {partner_address};
   std::string rule_name = "Wait rule with: " + std::to_string(partner_address);
   auto wait_rule = std::make_unique<ActiveRule>(ruleset_id, rule_id, rule_name, partners);
-  Condition *condition = new Condition();
-  Clause *wait_clause = new WaitClause();
+  ActiveCondition *condition = new ActiveCondition();
+  ActiveClause *wait_clause = new WaitClause();
   condition->addClause(wait_clause);
   wait_rule->setCondition(condition);
   wait_rule->next_action_partners.push_back(next_parter_address);
@@ -980,14 +980,14 @@ std::unique_ptr<ActiveRule> ConnectionManager::tomographyRule(int owner_address,
                                                               unsigned long ruleset_id, unsigned long rule_id) {
   std::vector<int> partners = {partner_address};
   auto tomography_rule = std::make_unique<ActiveRule>(ruleset_id, rule_id, "tomography", partners);
-  Condition *condition = new Condition();
-  Clause *count_clause = new MeasureCountClause(num_measure);
-  Clause *resource_clause = new EnoughResourceClause(partner_address, 1);
+  ActiveCondition *condition = new ActiveCondition();
+  ActiveClause *count_clause = new MeasureCountClause(num_measure);
+  ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 1);
   // Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
   condition->addClause(count_clause);
   condition->addClause(resource_clause);
   tomography_rule->setCondition(condition);
-  Action *action = new RandomMeasureAction(ruleset_id, rule_id, owner_address, partner_address, qnic_type, qnic_index, 0, num_measure);
+  ActiveAction *action = new RandomMeasureAction(ruleset_id, rule_id, owner_address, partner_address, qnic_type, qnic_index, 0, num_measure);
   tomography_rule->setAction(action);
   return tomography_rule;
 }

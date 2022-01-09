@@ -13,6 +13,7 @@
 namespace quisp {
 namespace rules {
 
+using namespace omnetpp;
 /** \class RuleSet RuleSet.h
  *
  * \brief Set of rules for the RuleEngine.
@@ -23,7 +24,6 @@ class RuleSet {
 
   unsigned long ruleset_id;
   int owner_addr;
-  simtime_t started_at;
 };
 
 }  // namespace rules

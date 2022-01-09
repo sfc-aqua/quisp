@@ -17,16 +17,16 @@
 #include "modules/QRSA/RealTimeController/IRealTimeController.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
 #include "modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h"
-#include "rules/Action.h"
-#include "rules/RuleSet.h"
+#include "rules/Active/ActiveAction.h"
+#include "rules/Active/ActiveRuleSet.h"
 
 namespace {
 
 using namespace omnetpp;
 using namespace quisp::utils;
 using namespace quisp::rules;
-using namespace quisp::rules::actions;
-using quisp::rules::actions::Action;
+using namespace quisp::rules::active::actions;
+using quisp::rules::active::actions::ActiveAction;
 using namespace quisp::modules;
 using quisp::modules::qrsa::IQubitRecord;
 using quisp::modules::qubit_record::QubitRecord;
