@@ -1,14 +1,7 @@
 #pragma once
 #include "ActiveClause.h"
 
-namespace quisp {
-namespace rules {
-namespace active {
-
-/** \class Condition Condition.h
- *
- *  \brief Condition
- */
+namespace quisp::rules::active {
 class ActiveCondition {
  public:
   void addClause(ActiveClause* c);
@@ -18,6 +11,4 @@ class ActiveCondition {
   std::vector<ActiveClause*> clauses;
 };
 
-}  // namespace active
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::active

@@ -10,10 +10,7 @@
 #include "actions/SimultaneousSwappingAction.h"
 #include "actions/SwappingAction.h"
 
-namespace quisp {
-namespace rules {
-
-namespace active {
+namespace quisp::rules::active {
 
 using actions::ActiveAction;
 using actions::DoublePurifyAction;
@@ -29,6 +26,4 @@ using actions::RandomMeasureAction;
 using actions::SimultaneousSwappingAction;
 using actions::SwappingAction;
 
-}  // namespace active
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::active

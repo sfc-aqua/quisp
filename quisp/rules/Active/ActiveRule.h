@@ -5,9 +5,7 @@
 #include "ActiveAction.h"
 #include "ActiveCondition.h"
 
-namespace quisp {
-namespace rules {
-namespace active {
+namespace quisp::rules::active {
 class ActiveRule {
  public:
   const unsigned long ruleset_id;
@@ -30,6 +28,4 @@ class ActiveRule {
   bool checkTerminate();
 };
 
-}  // namespace active
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::active

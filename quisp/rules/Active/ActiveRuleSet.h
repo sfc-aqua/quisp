@@ -2,9 +2,7 @@
 #include <omnetpp.h>
 #include "ActiveRule.h"
 
-namespace quisp {
-namespace rules {
-namespace active {
+namespace quisp::rules::active {
 /**
  *
  * \brief Set of rules for the RuleEngine.
@@ -24,6 +22,4 @@ class ActiveRuleSet {
   std::vector<std::unique_ptr<ActiveRule>>::const_iterator cend();
 };
 
-}  // namespace active
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::active

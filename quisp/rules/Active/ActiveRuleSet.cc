@@ -1,8 +1,6 @@
 #include "ActiveRuleSet.h"
 
-namespace quisp {
-namespace rules {
-namespace active {
+namespace quisp::rules::active {
 /**
  * @brief Construct a new ActiveRuleSet.
  *
@@ -18,6 +16,4 @@ bool ActiveRuleSet::empty() const { return rules.empty(); }
 std::vector<std::unique_ptr<ActiveRule>>::const_iterator ActiveRuleSet::cbegin() { return rules.cbegin(); }
 std::vector<std::unique_ptr<ActiveRule>>::const_iterator ActiveRuleSet::cend() { return rules.cend(); }
 
-}  // namespace active
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::active
