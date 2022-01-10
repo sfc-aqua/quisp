@@ -9,6 +9,8 @@
 .cmdenv-log
 .cache
 compile_commands.json
+*.plan
+results
 
 ### coverage files
 quisp/coverage*
