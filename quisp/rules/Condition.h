@@ -1,6 +1,10 @@
 #pragma once
 #include "Clause.h"
 
-namespace quisp {
-namespace rules {}  // namespace rules
-}  // namespace quisp
+namespace quisp::rules {
+
+class Condition {
+ public:
+  Condition(){};
+};
+}  // namespace quisp::rules

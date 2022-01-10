@@ -1,32 +1,25 @@
-/** \file RuleSet.h
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/06/25
- *
- *  \brief RuleSet
- */
-#ifndef QUISP_RULES_RULESET_H_
-#define QUISP_RULES_RULESET_H_
-
-#include <omnetpp.h>
+#pragma once
+#include <memory>
 #include "Rule.h"
 
-namespace quisp {
-namespace rules {
+namespace quisp::rules {
 
-using namespace omnetpp;
-/** \class RuleSet RuleSet.h
+/**
+ * @brief RuleSet class which includes a set of Rule Information
  *
- * \brief Set of rules for the RuleEngine.
  */
 class RuleSet {
  public:
-  RuleSet(unsigned long _ruleset_id, int _owner_addr);
+  RuleSet(unsigned long ruleset_id, int owner_address);
 
-  unsigned long ruleset_id;
-  int owner_addr;
+  unsigned long ruleset_id;  ///< `ruleset_id` is used for identifying connection
+  int owner_addr;  ///< Address of RuleSet owner
+  std::vector<BaseRule> rules;
+
+  BaseRule &addRule(std::unique_ptr<BaseRule> rule, std::vector<int> partners);
+  void serialize();
+  void deserialize();
+  unsigned long createUniqueId();
 };
 
-}  // namespace rules
-}  // namespace quisp
-
-#endif  // QUISP_RULES_RULESET_H_
+}  // namespace quisp::rules

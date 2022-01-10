@@ -1,12 +1,13 @@
 #include "RuleSet.h"
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
+#include <memory>
 
 namespace {
 using namespace quisp::rules;
 using namespace quisp_test;
-// using quisp::rules::PurRule;
-// using quisp::rules::SwappingRule;
+using quisp::rules::PurType;
+using quisp::rules::SwapType;
 
 TEST(RuleSetTest, Init) {
   prepareSimulation();
@@ -21,33 +22,26 @@ TEST(RuleSetTest, Init) {
 
 TEST(RuleSetTest, addRule) {
   prepareSimulation();
-  // RuleSet ruleset(1, 2);
-  // PurRule purification(SSDP_X, 1);  // (purification type, num purification)
-  /*
-  BaseRuleConfig{
-          .to
-                  .conditions = {}
-                  .actions = {}
-          setNextRule()
-  }
-  PurificationConfig: BaseRuleConfig{
-          .type
-          .number
-          .name
-                  .conditions = {clause1, clause2, ...}
-                  .actions = {action1, action2, ...}
-          .to // next rule id
-  }
-  */
-  // auto &rule1 = ruleset.addRule(purification, {1});  // rule type, partners
-  // EXPECT_EQ(ruleset.rules(0).rule_id, rule1.rule_id);
-  // auto &rule2 = ruleset.addRule(purification, {3});  // return address to rule
-  // EXPECT_EQ(ruleset.rules(1).rule_id, rule2.rule_id);
-  // SwappingRule swapping(1);
-  // auto &rule3 = ruleset.addRule(swapping, {1, 3});
-  // EXPECT_EQ(ruleset.rules(2).rule_id, rule3.rule_id);
-  // rule1.setNextRule(rule3.rule_id);
-  // rule2.setNextRule(rule3.rule_id);
+  RuleSet ruleset(1, 2);
+  auto purification = std::make_unique<PurificationRule>(PurType::SSDP_X);  // (purification type)
+  auto swapping = std::make_unique<SwappingRule>(SwapType::BINARY_TREE);
+  auto &rule1 = ruleset.addRule(std::move(purification), {1});  // rule type, partners
+  EXPECT_EQ(ruleset.rules.size(), 1);
+  EXPECT_EQ(ruleset.rules.at(0).parent_ruleset_id, ruleset.ruleset_id);
+  EXPECT_EQ(ruleset.rules.at(0).rule_id, rule1.rule_id);
+  EXPECT_EQ(ruleset.rules.at(0).partners.at(0), 1);
+
+  auto purification2 = std::make_unique<PurificationRule>(PurType::SSDP_X);  // (purification type)
+  auto &rule2 = ruleset.addRule(std::move(purification2), {3});  // return address to rule
+  EXPECT_EQ(ruleset.rules.at(1).parent_ruleset_id, ruleset.ruleset_id);
+  EXPECT_EQ(ruleset.rules.at(1).rule_id, rule2.rule_id);
+  EXPECT_EQ(ruleset.rules.at(1).partners.at(0), 3);
+
+  auto &rule3 = ruleset.addRule(std::move(swapping), {1, 3});
+  EXPECT_EQ(ruleset.rules.at(2).parent_ruleset_id, ruleset.ruleset_id);
+  EXPECT_EQ(ruleset.rules.at(2).rule_id, rule3.rule_id);
+  EXPECT_EQ(ruleset.rules.at(2).partners.at(0), 1);
+  EXPECT_EQ(ruleset.rules.at(2).partners.at(1), 3);
 }
 
 TEST(RuleSetTest, serialize) { prepareSimulation(); }

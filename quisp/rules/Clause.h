@@ -1,5 +1,3 @@
 #pragma once
 
-namespace quisp {
-namespace rules {}  // namespace rules
-}  // namespace quisp
+namespace quisp::rules {}  // namespace quisp::rules
