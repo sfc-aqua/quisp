@@ -163,7 +163,7 @@ Mid-term to long-term release features:
 ## Installation requirements
 
 The full installation process is described in
-[Wiki]](https://github.com/sfc-aqua/quisp/wiki).  The main software tools you will
+[Wiki](https://github.com/sfc-aqua/quisp/wiki).  The main software tools you will
 need are:
 
 * QUISP requires [OMNeT++](https://omnetpp.org/) and
