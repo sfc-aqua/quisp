@@ -126,7 +126,7 @@ Simulation goals</h1>
 </ul>
 <p>Because these protocols can result in hundreds of qubits in a single entangled state, and the entire system may consist of up to a million qubits, simulation at the physical Hamiltonian level or even just above that at the unitary (gate, e.g. CNOT) level is infeasible. We cannot calculate and store full density matrices for such states. Instead, like simulators for large-scale error correction, QuISP operates primarily in the <em>error basis</em>, in which we maintain a description of errors the states have incurred rather than the full state. However, unlike most QEC simulators, QuISP supports non-Pauli errors, in a limited fashion.</p>
 <p>QuISP is almost endlessly configurable; for example, it is possible to set not only different lengths for different links in the network, but also different gate error rates and memory lifetimes on individual qubits. Non-Pauli errors that are at least partially supported in the current release include qubit loss, relaxation to ground state, excitation to excited state, and complete mixing.</p>
-<p>If you are unfamiliar with the research literature or the terminology above, see "Learning more", below.</p>
+<p>If you are unfamiliar with the research literature or the terminology above, see "[Learning more](#learning-more)", below.</p>
 <p>In addition, we aim to make simulations run on QuISP <em>completely reproducible</em>, to the extent humanly possible. It will be possible for others to verify work done using QuISP if they have the name of the QuISP release, version numbers for supporting software, the <code>.ini</code> file, any changed <code>.ned</code> files, and the seed for the pseudo-random number generator.</p>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Current status</h1>
@@ -140,7 +140,7 @@ Current status</h1>
 <p>Besides the obvious joys of the endless network configurability, here are the key quantum protocols that are implemented:</p>
 <ul>
 <li>basics of RuleSet creation &amp; distribution</li>
-<li>various <em>purification protocols</em>: Single round of X purification, alternating X/Z purification, etc. Currently implemented only over a single hop. Extending these to test your own custom purification protocol is pretty straightforward.</li>
+<li>various <em>purification protocols</em>: Single round of X purification, alternating X/Z purification, etc. Default to one round of purification per entanglement swapping round. Extending these to test your own custom purification protocol is pretty straightforward.</li>
 <li><em>tomography</em>: when the simulation boots, it assumes that the software at each end of each link knows <em>nothing</em> about the link, so it begins by performing tomography on the links. (This is actually problematic, because it turns out to take a long time for tomography to converge, which means a lot of boot-up time in the simulation before other interesting things start to happen. We are working on a way to pre-calculate this, so that you can choose to either include tomography or not.)</li>
 <li><em>entanglement swapping</em>.</li>
 </ul>
@@ -170,7 +170,7 @@ Current status</h1>
 </ul>
 <h1><a class="anchor" id="autotoc_md4"></a>
 Installation requirements</h1>
-<p>The full installation process is described in [Wiki]](<a href="https://github.com/sfc-aqua/quisp/wiki">https://github.com/sfc-aqua/quisp/wiki</a>). The main software tools you will need are:</p>
+<p>The full installation process is described in <a href="https://github.com/sfc-aqua/quisp/wiki">Wiki</a>. The main software tools you will need are:</p>
 <ul>
 <li>QUISP requires <a href="https://omnetpp.org/">OMNeT++</a> and</li>
 <li>an external C++ library, <a href="http://eigen.tuxfamily.org/">Eigen</a>, to work.</li>
@@ -179,29 +179,32 @@ Installation requirements</h1>
 </ul>
 <p>Depending on your local setup and how you intend to use QuISP, you may also need various tools (a C++ compiler, make, an X Windows server, Docker, ffmpeg for making videos, etc.), documented in the installation notes.</p>
 <h1><a class="anchor" id="autotoc_md5"></a>
-Building and running</h1>
+Trying it out on the web</h1>
+<p>If you just want to take a peek at the basic sample simulation set, we encourage you to try them out on the web (<a href="https://aqua.sfc.wide.ad.jp/quisp-online/master/">here</a>) which is built using the <a href="https://webassembly.org">WebAssembly</a>. Currently the Wasm version only supports running the pre-configured simulations and users cannot upload custom topology, we are still working on that. Also due to the heavy load of the OMNeT++ and the QuISP itself the performance on the web version is a lot slower than running it locally.</p>
+<h1><a class="anchor" id="autotoc_md6"></a>
+Building and running locally</h1>
 <p>First see <a href="https://github.com/sfc-aqua/quisp/wiki">Wiki</a>, then follow the instructions below.</p>
 <p>There are two main ways of working with QUISP. You can either use the Eclipse-like graphical interface of OmNET++, for which you will find instructions in <a href="https://github.com/sfc-aqua/quisp/wiki/Building-QuISP-with-OMNeT-IDE">Building QuISP with OMNeT IDE</a>, or you can use the <code>Makefile</code> and GNU make, by looking at instructions in <a href="https://github.com/sfc-aqua/quisp/wiki/Building-QuISP-with-GNU-Make">Building QuISP with GNU Make (wiki)</a>. Some operations are implemented in the Makefile and not explained for the graphical user interface.</p>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<h1><a class="anchor" id="autotoc_md7"></a>
 Moving into useful work</h1>
 <p>Once you have gotten this far, you should be able to <a href="https://github.com/sfc-aqua/quisp/wiki/Running-Basic-QuISP-Demos">run some of the most basic demos</a>. Next, you'll want to learn how to create your own test networks, and how to extend the source code for your own uses.</p>
 <p>When you are ready to start contributing, you can start reading the code, as <a href="https://github.com/sfc-aqua/quisp/wiki/Code-Spelunking">we have done</a>.</p>
 <p>You will also want to look at some of the software design documents.</p>
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md8"></a>
 Development tools</h1>
 <p>A few tools (mainly scripts) can be used to make development a bit easier. Look around in the <code>bin</code> folder of this project.</p>
-<h1><a class="anchor" id="autotoc_md8"></a>
+<h1><a class="anchor" id="autotoc_md9"></a>
 Is QuISP right for me?</h1>
 <p>Fundamentally, the point of QuISP is that <em>networks are much more than point-to-point connections</em>.</p>
 <p>If you want to know about the behavior of systems and networks, to study behavior of links that are too complex for simple analytic equations (esp. those with multiple qubits per link) or to contribute to the design of network protocols, QuISP is the simulator for you. If you're trying to adjust detector window timing v. entanglement fidelity, or figure out what Q factor your cavity needs to be, or understand dispersion in a fiber, it might not be.</p>
-<h1><a class="anchor" id="autotoc_md9"></a>
+<h1><a class="anchor" id="autotoc_md10"></a>
 Learning more</h1>
 <p>See the references.</p>
-<h1><a class="anchor" id="autotoc_md10"></a>
-Contributing</h1>
-<p>First, join the <a href="https://aqua-quisp.slack.com">QuISP Slack team</a>.</p>
-<p>Please also refer to the code of conduct and /github/workspace/.github/CONTRIBUTING.md "Contributing guide".</p>
 <h1><a class="anchor" id="autotoc_md11"></a>
+Contributing</h1>
+<p>First, join the <a href="https://join.slack.com/t/aqua-quisp/shared_invite/zt-rwyggp6t-_4TaXE0g7PlUnRNSPU~g2w">QuISP Slack team</a>.</p>
+<p>Please also refer to the code of conduct and /github/workspace/.github/CONTRIBUTING.md "Contributing guide".</p>
+<h1><a class="anchor" id="autotoc_md12"></a>
 License</h1>
 <p>QuISP was initially released on April 5, 2020, and is [licensed](LICENSE) under the <a href="https://opensource.org/licenses/BSD-3-Clause">3-Clause BSD License</a>.</p>
 <p>QuISP builds on OMNeT++. OMNeT++ itself is a <a href="https://omnetpp.org/intro/license">custom license</a>, open source and free for academic use, but a license fee required for commercial organizations. QuISP also requires the linear algebra library Eigen, where license is MPL2, and so <a href="http://eigen.tuxfamily.org/index.php?title=Main_Page#License">probably not an issue</a>. </p>

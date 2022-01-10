@@ -808,7 +808,7 @@ purification" (Rule0) includes allocating the resources from the base pair pool,
 <p>These actions are alternated initial_purification times, for a total of 2n rules (and 2n times the one-way latency). Note that the semantics of initial_purification vary depending on the purification_type. In the descriptions below, $n$ is initial_purification.</p>
 <p>Pumping doesn't really work because of the way resources are controlled as they are promoted from rule to rule. At the moment, base Bell pairs (those created directly by the link) exist in a pool, ordered by age. Over in <a class="el" href="_action_8cc.html" title="Action.">Action.cc</a>, you will find Action::getResource_fromTop(). This selects the oldest Bell pair. At the moment, only the first rule (Rule0) draws from this pool; however, pumping would require that later rules also be able to draw from the pool.</p>
 <p>A purification scheme must be characterized by both the circuit being executed, and the scheduling discipline for selecting the inputs to the circuit. The scheduling discipline in theory can be pumping, symmetric tree (perfect binary tree), or banded, and should also specify how the resources are sorted. Currently, this is hard-coded to select oldest first, and is geared toward symmetric tree. </p>
-<h1><a class="anchor" id="autotoc_md12"></a>
+<h1><a class="anchor" id="autotoc_md13"></a>
 Purification_type 2002:</h1>
 <ul>
 <li>name: Ss-Sp / perfect binary tree, even rounds</li>
@@ -818,12 +818,12 @@ Purification_type 2002:</h1>
 <li>circuit: Fig. 6.3 in Takaaki's master's thesis</li>
 <li>scheduling: symmetric tree </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md13"></a>
+<h2><a class="anchor" id="autotoc_md14"></a>
 description:</h2>
 <p>Ss-Sp is single selection, single error purification. Between rounds, Hadamard gates are applied to switch basis, creating alternating rounds of X and Z purification.</p>
 <p>The only difference between 2002 and 3003 is the semantics of initial_purification. Here, each iteration results in two rules, guaranteeing an even number of rounds.</p>
 <p>X always goes first. <img src="../img/PhysRevA.100.052320-Fig11.png" alt="" class="inline"/></p>
-<h1><a class="anchor" id="autotoc_md14"></a>
+<h1><a class="anchor" id="autotoc_md15"></a>
 Purification_type 3003:</h1>
 <ul>
 <li>name: Ss-Sp / perfect binary tree, odd or even rounds</li>
@@ -833,11 +833,11 @@ Purification_type 3003:</h1>
 <li>circuit: Fig. 6.3 in Takaaki's master's thesis</li>
 <li>scheduling: perfect binary (symmetric) tree </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md15"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 description:</h2>
 <p>Ss-Sp is single selection, single error purification. Between rounds, Hadamard gates are applied to switch basis, creating alternating rounds of X and Z purification.</p>
 <p>The only difference between 2002 and 3003 is the semantics of initial_purification. Here, each iteration results in one rule, X for even-numbered rounds (counting from zero), Z for odd-numbered ones, so it is possible to do XZX or XZXZX (but not ZXZ or ZXZXZ). <img src="../img/PhysRevA.100.052320-Fig11.png" alt="" class="inline"/></p>
-<h1><a class="anchor" id="autotoc_md16"></a>
+<h1><a class="anchor" id="autotoc_md17"></a>
 Purification_type 1001:</h1>
 <ul>
 <li>name: Ss-Dp XZ Purification</li>
@@ -847,10 +847,10 @@ Purification_type 1001:</h1>
 <li>circuit: Fig. 12 in arXiv:1904.08605</li>
 <li>scheduling: symmetric tree </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md17"></a>
+<h2><a class="anchor" id="autotoc_md18"></a>
 description:</h2>
 <p>Both X and Z purification in a single action. If A is the pair being purified, and C and E are tools, CNOT(A,C), MEAS(C), CNOT(E,A), MEAS(E) then select after comparing outcomes. Note that bases are not flipped between rounds. Similar to 1221. <img src="../img/PhysRevA.100.052320-Fig12.png" alt="" class="inline"/></p>
-<h1><a class="anchor" id="autotoc_md18"></a>
+<h1><a class="anchor" id="autotoc_md19"></a>
 Purification_type 1221:</h1>
 <ul>
 <li>name: Ss-Dp XZ, ZX alternating</li>
@@ -860,10 +860,10 @@ Purification_type 1221:</h1>
 <li>circuit: <em>almost</em> Fig. 12 from arXiv:1904.08605, but order of CNOTs reversed in alternating rounds</li>
 <li>scheduling: symmetric tree </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md19"></a>
+<h2><a class="anchor" id="autotoc_md20"></a>
 description:</h2>
 <p>Almost the same as 1001, but first round is XZ, second round is ZX. Results in better alternating error suppression, but still not great. <img src="../img/PhysRevA.100.052320-Fig12.png" alt="" class="inline"/></p>
-<h1><a class="anchor" id="autotoc_md20"></a>
+<h1><a class="anchor" id="autotoc_md21"></a>
 Purification_type 1011:</h1>
 <ul>
 <li>name: Ds-Sp: Fujii-san's Double selection purification</li>
@@ -873,10 +873,10 @@ Purification_type 1011:</h1>
 <li>circuit: Fig. 13 in arXiv:1904.08605</li>
 <li>scheduling: symmetric tree </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md21"></a>
+<h2><a class="anchor" id="autotoc_md22"></a>
 description:</h2>
 <p>Similar to 1001 and 1221 except that the control and target of the first CNOT are flipped, corresponding to Fujii-san's paper (PRA 80, 042308). Every round is identical. Note there is no basis change between rounds. <img src="../img/arxiv.1904.08605-Fig13.png" alt="" class="inline"/></p>
-<h1><a class="anchor" id="autotoc_md22"></a>
+<h1><a class="anchor" id="autotoc_md23"></a>
 Purification_type 1021:</h1>
 <ul>
 <li>name: Ds-Sp: Fujii-san's Double selection purification (alternating)</li>
@@ -886,10 +886,10 @@ Purification_type 1021:</h1>
 <li>circuit: <em>almost</em> Fig. 13 in arXiv:1904.08605, except that the order of the CNOTs alternates between rounds</li>
 <li>scheduling: symmetric tree </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md23"></a>
+<h2><a class="anchor" id="autotoc_md24"></a>
 description:</h2>
 <p>Similar to 1011, almost corresponding to Fujii-san's paper (PRA 80, 042308). Note there is no basis change between rounds, but that the first round is XZ, second is ZX. <img src="../img/arxiv.1904.08605-Fig13.png" alt="" class="inline"/></p>
-<h1><a class="anchor" id="autotoc_md24"></a>
+<h1><a class="anchor" id="autotoc_md25"></a>
 Purification_type 1031:</h1>
 <ul>
 <li>name: Ds-Dp: full double selection purification (alternating)</li>
@@ -899,10 +899,10 @@ Purification_type 1031:</h1>
 <li>circuit: Fig. 14 in arXiv:1904.08605, except that the order of the CNOTs alternates between rounds</li>
 <li>scheduling: symmetric tree </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md25"></a>
+<h2><a class="anchor" id="autotoc_md26"></a>
 description:</h2>
 <p>A combination of 1001 and 1011 (Figs. 12 &amp; 13). Resource requirements are high; two rounds of this requires 25 Bell pairs. With a low base Bell pair generation rate and realistic memory decoherence, this will be impractical. <img src="../img/arxiv.1904.08605-Fig14.png" alt="" class="inline"/></p>
-<h1><a class="anchor" id="autotoc_md26"></a>
+<h1><a class="anchor" id="autotoc_md27"></a>
 Purification_type 1061:</h1>
 <ul>
 <li>name: half double selection, half single selection</li>
@@ -912,10 +912,10 @@ Purification_type 1061:</h1>
 <li>circuit: no figure available</li>
 <li>scheduling: symmetric tree </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md27"></a>
+<h2><a class="anchor" id="autotoc_md28"></a>
 description:</h2>
 <p>Does double selection on X, single selection on Z Switches bases between rounds. Investigated for possibly highly asymmetric X/Z error rates in base Bell pairs. Initial results weren't very promised, not extensively used.</p>
-<h1><a class="anchor" id="autotoc_md28"></a>
+<h1><a class="anchor" id="autotoc_md29"></a>
 Purification_type 5555:</h1>
 <ul>
 <li>name: Switching (B)</li>
@@ -925,10 +925,10 @@ Purification_type 5555:</h1>
 <li>circuit: Fig. 21, case B in arXiv:1904.08605</li>
 <li>scheduling: symmetric tree (*) </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md29"></a>
+<h2><a class="anchor" id="autotoc_md30"></a>
 description:</h2>
 <p>Two rounds of Ds-Sp, then Ss-Sp. The point of this was to show that you don't have to stick with one scheme, but can use different schemes in different rounds.</p>
-<h1><a class="anchor" id="autotoc_md30"></a>
+<h1><a class="anchor" id="autotoc_md31"></a>
 Purification_type 5556:</h1>
 <ul>
 <li>name: Switching (A)</li>
@@ -938,10 +938,10 @@ Purification_type 5556:</h1>
 <li>circuit: Fig. 21, case A in arXiv:1904.08605</li>
 <li>scheduling: symmetric tree (*) </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md31"></a>
+<h2><a class="anchor" id="autotoc_md32"></a>
 description:</h2>
 <p>One round of Ds-Sp, then Ss-Sp. The point of this was to show that you don't have to stick with one scheme, but can use different schemes in different rounds.</p>
-<h1><a class="anchor" id="autotoc_md32"></a>
+<h1><a class="anchor" id="autotoc_md33"></a>
 Purification_type default:</h1>
 <ul>
 <li>name: Boolean-driven (obsolete)</li>
@@ -951,7 +951,7 @@ Purification_type default:</h1>
 <li>circuit: &lt;reference a figure&gt;</li>
 <li>scheduling: (commonly pumping, symmetric tree, or banded) </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md33"></a>
+<h2><a class="anchor" id="autotoc_md34"></a>
 description:</h2>
 <p>uses X_Purification and Z_purification booleans, but is obsolete. Creates a single purification only, or a single round of double purification. Use of this for new work is deprecated.</p>
 

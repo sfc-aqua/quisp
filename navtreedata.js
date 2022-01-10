@@ -29,21 +29,22 @@ var NAVTREE =
     [ "Simulation goals", "index.html#autotoc_md2", null ],
     [ "Current status", "index.html#autotoc_md3", null ],
     [ "Installation requirements", "index.html#autotoc_md4", null ],
-    [ "Building and running", "index.html#autotoc_md5", null ],
-    [ "Moving into useful work", "index.html#autotoc_md6", null ],
-    [ "Development tools", "index.html#autotoc_md7", null ],
-    [ "Is QuISP right for me?", "index.html#autotoc_md8", null ],
-    [ "Learning more", "index.html#autotoc_md9", null ],
-    [ "Contributing", "index.html#autotoc_md10", null ],
-    [ "License", "index.html#autotoc_md11", null ],
+    [ "Trying it out on the web", "index.html#autotoc_md5", null ],
+    [ "Building and running locally", "index.html#autotoc_md6", null ],
+    [ "Moving into useful work", "index.html#autotoc_md7", null ],
+    [ "Development tools", "index.html#autotoc_md8", null ],
+    [ "Is QuISP right for me?", "index.html#autotoc_md9", null ],
+    [ "Learning more", "index.html#autotoc_md10", null ],
+    [ "Contributing", "index.html#autotoc_md11", null ],
+    [ "License", "index.html#autotoc_md12", null ],
     [ "Test Utilities", "md_quisp_test_utils__r_e_a_d_m_e.html", [
-      [ "Usage", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md35", null ],
-      [ "Grab a packet", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md36", null ],
-      [ "Example", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md37", null ]
+      [ "Usage", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md36", null ],
+      [ "Grab a packet", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md37", null ],
+      [ "Example", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md38", null ]
     ] ],
     [ "quisp::utils", "md_quisp_utils__r_e_a_d_m_e.html", [
-      [ "ComponentProvider", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md39", null ],
-      [ "Unit Testing", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md40", null ]
+      [ "ComponentProvider", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md40", null ],
+      [ "Unit Testing", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md41", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -87,7 +88,7 @@ var NAVTREEINDEX =
 "classquisp_1_1rules_1_1_rule_set.html#a4b9f3906b2d5ea394a87ef05eebe049b",
 "classquisp_1_1utils_1_1_component_provider.html#aba871ba9e2a7ad2c4e4f19c33123f1dd",
 "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#adb2de64a174ff8bd6ac4a0d23f0d0a46",
-"structquisp_1_1modules_1_1_connection_setup_info.html"
+"structquisp_1_1channels_1_1channel__error__model.html#af4f75ba5cbd64b9fef922eaf7f61a584"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
