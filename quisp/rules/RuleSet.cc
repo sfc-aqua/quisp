@@ -12,6 +12,7 @@ BaseRule& RuleSet::addRule(std::unique_ptr<BaseRule> rule, std::vector<int> part
     rule->partners.push_back(partner);
   }
   rule->rule_id = createUniqueId();
+  rule->parent_ruleset_id = ruleset_id;
   rules.push_back(*rule);
   BaseRule& rule_ref = rules.at(rules.size() - 1);
   return rule_ref;

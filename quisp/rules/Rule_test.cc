@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
 #include <memory>
+#include "RuleSet.h"
 
 namespace {
 using namespace quisp_test;
@@ -12,13 +13,21 @@ using quisp::rules::SwapType;
 
 TEST(RuleTest, InitPurificationRule) {
   prepareSimulation();
-  PurificationRule pur_rule(PurType::SSDP_X);  // parent ruleset id, rule_id, partner address
+  auto pur_rule = std::make_unique<PurificationRule>(PurType::SSDP_X);
+  EXPECT_EQ(pur_rule->purification_type, PurType::SSDP_X);
 }
 
-TEST(RuleTest, InitSwappingRule) { prepareSimulation(); }
+TEST(RuleTest, InitSwappingRule) {
+  prepareSimulation();
+  auto swap_rule = std::make_unique<SwappingRule>(SwapType::BINARY_TREE);
+  EXPECT_EQ(swap_rule->swapping_type, SwapType::BINARY_TREE);
+}
 
-TEST(RuleTest, InitWaitRule) { prepareSimulation(); }
-TEST(RuleTest, InitRandomMeasurementRule) { prepareSimulation(); }
+TEST(RuleTest, InitRandomMeasurementRule) {
+  prepareSimulation();
+  auto random_measure_rule = std::make_unique<RandomMeasurementRule>(1000);
+  EXPECT_EQ(random_measure_rule->total_measurement, 1000);
+}
 
 TEST(RuleTest, setNextRule) { prepareSimulation(); }
 

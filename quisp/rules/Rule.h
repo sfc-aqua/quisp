@@ -35,6 +35,7 @@ enum class SwapType : int {
 
 class BaseRule {
  public:
+  unsigned long parent_ruleset_id;
   unsigned long rule_id;
   unsigned long to = 0;
   std::vector<int> partners;
