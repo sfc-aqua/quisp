@@ -4,6 +4,6 @@
 [submodule "eigen"]
 	path = eigen
 	url = https://gitlab.com/libeigen/eigen.git
-[submodule "crispr"]
-	path = crispr
-	url = https://github.com/sfc-aqua/crispr
+[submodule "quispr"]
+	path = quispr
+	url = https://github.com/sfc-aqua/quispr

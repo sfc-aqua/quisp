@@ -1,6 +1,6 @@
 QUISP_MAKEFILE = "./quisp/Makefile"
 
-.PHONY: all tidy format ci makefile-exe makefile-lib checkmakefile googletest clean test coverage coverage-report help crispr
+.PHONY: all tidy format ci makefile-exe makefile-lib checkmakefile googletest clean test coverage coverage-report help quispr
 
 all: makefile-exe
 	$(MAKE) -C quisp -j$(nproc)
@@ -69,9 +69,9 @@ coverage: makefile-lib
 coverage-report: makefile-lib
 	$(MAKE) -C quisp/ coverage/index.html
 
-crispr:
+quispr:
 	git submodule update --init
-	pip install -e crispr
+	pip install -e quispr
 
 checkmakefile:
 	@if [ ! -f "$(QUISP_MAKEFILE)" ]; then \
