@@ -47,7 +47,7 @@ RUN chmod 775 /root/ && \
     touch /root/.hushlogin
 
 RUN apt remove -y python3.8 && \
-    apt install -y python3.9 python3.9-distutils curl && \
+    apt install -y python3.9 python3.9-distutils curl time && \
     curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     python3.9 get-pip.py && \
     rm get-pip.py && \
