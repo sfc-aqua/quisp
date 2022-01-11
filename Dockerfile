@@ -1,4 +1,3 @@
-#!/usr/bin/env docker build --build-arg VERSION=5.6 -t omnetpp/omnetpp-gui:u18.04-5.6 .
 FROM ubuntu:20.04 as base
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update -y && apt install -y --no-install-recommends \
@@ -43,10 +42,17 @@ RUN chmod 775 /root/ && \
     touch ide/error.log && chmod 666 ide/error.log && \
     mv bin/omnetpp bin/omnetpp.bak && \
     sed 's!$IDEDIR/../samples!/root/quisp!' bin/omnetpp.bak >bin/omnetpp && \
-    rm bin/omnetpp.bak && chmod +x bin/omnetpp
-
-RUN echo 'PS1="quisp:\w\$ "' >> /root/.bashrc && chmod +x /root/.bashrc && \
+    rm bin/omnetpp.bak && chmod +x bin/omnetpp && \
+    echo 'PS1="quisp:\w\$ "' >> /root/.bashrc && chmod +x /root/.bashrc && \
     touch /root/.hushlogin
+
+RUN apt remove -y python3.8 && \
+    apt install -y python3.9 python3.9-distutils curl && \
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+    python3.9 get-pip.py && \
+    rm get-pip.py && \
+    ln -s /usr/bin/python3.9  /usr/local/bin/python
+
 ENV HOME=/root/
 CMD /bin/bash --init-file /root/.bashrc
 WORKDIR /root/quisp
