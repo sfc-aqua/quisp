@@ -125,12 +125,12 @@ network topology_dumbell_MIM
         Repeater1: QNode {
             address = 7;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=45,161");
+            @display("i=REP1G;p=45,161");
         }
         Repeater2: QNode {
             address = 8;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=197,21");
+            @display("i=REP1G;p=197,21");
         }
         HoM1: HoM {
             address = 9;
