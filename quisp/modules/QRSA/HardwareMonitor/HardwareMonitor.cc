@@ -88,7 +88,6 @@ void HardwareMonitor::initialize(int stage) {
         pk->setSrcAddr(my_address);
         pk->setKind(6);
         send(pk, "RouterPort$o");
-        delete pk;
       }
     }
   }
@@ -135,7 +134,6 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
 
     send(pk, "RouterPort$o");
     delete request;
-    delete pk;
     return;
   }
 
@@ -248,7 +246,6 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
         pk->setDestAddr(my_address);
         pk->setSrcAddr(my_address);
         send(pk, "RouterPort$o");
-        delete pk;
       }
     }
     delete result;
