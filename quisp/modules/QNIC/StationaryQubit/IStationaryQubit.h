@@ -17,6 +17,12 @@ enum class MeasureZResult : int {
   NO_X_ERROR,
   HAS_X_ERROR,
 };
+
+enum class EigenvalueResult : int {
+  MINUS_ONE,
+  PLUS_ONE,
+};
+
 }  // namespace types
 
 namespace modules {
@@ -80,6 +86,12 @@ struct memory_error_model {
   double completely_mixed_rate;
 };
 
+struct MeasurementErrorModel {
+  double X_measurement_error_rate;
+  double Y_measurement_error_rate;
+  double Z_measurement_error_rate;
+};
+
 // Matrices of single qubit errors. Used when conducting tomography.
 struct single_qubit_error {
   Eigen::Matrix2cd X;  // double 2*2 matrix
@@ -138,9 +150,13 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
    * \param pulse is 1 for the beginning of the burst, 2 for the end.
    */
   virtual void emitPhoton(int pulse) = 0;
-  virtual quisp::types::MeasureXResult measure_X() = 0;
-  virtual types::MeasureYResult measure_Y() = 0;
-  virtual types::MeasureZResult measure_Z() = 0;
+  virtual types::MeasureXResult correlation_measure_X() = 0;
+  virtual types::MeasureYResult correlation_measure_Y() = 0;
+  virtual types::MeasureZResult correlation_measure_Z() = 0;
+
+  virtual types::EigenvalueResult local_measure_X() = 0;
+  virtual types::EigenvalueResult local_measure_Y() = 0;
+  virtual types::EigenvalueResult local_measure_Z() = 0;
 
   /**
    * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.

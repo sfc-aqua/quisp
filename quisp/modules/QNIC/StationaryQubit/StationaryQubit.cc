@@ -20,6 +20,7 @@ using quisp::messages::PhotonicQubit;
 using quisp::types::MeasureXResult;
 using quisp::types::MeasureYResult;
 using quisp::types::MeasureZResult;
+using quisp::types::EigenvalueResult;
 
 namespace quisp {
 namespace modules {
@@ -219,7 +220,7 @@ void StationaryQubit::setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model
   model.YY_error_ceil = model.YI_error_ceil + model.YY_error_rate;
 }
 
-MeasureXResult StationaryQubit::measure_X() {
+MeasureXResult StationaryQubit::correlation_measure_X() {
   applySingleQubitGateError(Measurement_error);
   if (par("GOD_Zerror").boolValue()) {
     return MeasureXResult::HAS_Z_ERROR;
@@ -227,7 +228,7 @@ MeasureXResult StationaryQubit::measure_X() {
   return MeasureXResult::NO_Z_ERROR;
 }
 
-MeasureYResult StationaryQubit::measure_Y() {
+MeasureYResult StationaryQubit::correlation_measure_Y() {
   applySingleQubitGateError(Measurement_error);
   bool error = true;
   if (par("GOD_Zerror") && par("GOD_Xerror")) {
@@ -242,12 +243,43 @@ MeasureYResult StationaryQubit::measure_Y() {
   return MeasureYResult::NO_XZ_ERROR;
 }
 
-MeasureZResult StationaryQubit::measure_Z() {
+MeasureZResult StationaryQubit::correlation_measure_Z() {
   applySingleQubitGateError(Measurement_error);
   if (par("GOD_Xerror")) {
     return MeasureZResult::HAS_X_ERROR;
   }
   return MeasureZResult::NO_X_ERROR;
+}
+
+EigenvalueResult StationaryQubit::local_measure_X() {
+  // the Z error will propagate to its partner; This only works for Bell pair
+  if (this->entangled_partner != nullptr && par("GOD_Zerror")) {
+    this->entangled_partner->addZerror();
+  }
+
+  if (dblrand() < 0.5) {
+    return EigenvalueResult::PLUS_ONE;
+  } else {
+    return EigenvalueResult::MINUS_ONE;
+  }
+}
+
+EigenvalueResult StationaryQubit::local_measure_Y() {
+  error("Not Yet Implemented");
+  return EigenvalueResult::PLUS_ONE;
+}
+
+EigenvalueResult StationaryQubit::local_measure_Z() {
+  // the X error will propagate to its partner; This only works for Bell pair
+  if (this->entangled_partner != nullptr && par("GOD_Xerror")) {
+    this->entangled_partner->addXerror();
+  }
+
+  if (dblrand() < 0.5) {
+    return EigenvalueResult::PLUS_ONE;
+  } else {
+    return EigenvalueResult::MINUS_ONE;
+  }
 }
 
 // Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
@@ -524,7 +556,7 @@ bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
   applyMemoryError();
   check_and_cast<StationaryQubit *>(resource_qubit)->applyMemoryError();
   /*Target qubit*/ this->CNOT_gate(resource_qubit /*controlled qubit*/);
-  bool meas = this->measure_Z() == MeasureZResult::NO_X_ERROR;
+  bool meas = this->correlation_measure_Z() == MeasureZResult::NO_X_ERROR;
   return meas;
 }
 
@@ -534,7 +566,7 @@ bool StationaryQubit::Zpurify(IStationaryQubit *resource_qubit /*Target*/) {
   check_and_cast<StationaryQubit *>(resource_qubit)->applyMemoryError();
   /*Target qubit*/ resource_qubit->CNOT_gate(this /*controlled qubit*/);
   this->Hadamard_gate();
-  bool meas = this->measure_Z() == MeasureZResult::NO_X_ERROR;
+  bool meas = this->correlation_measure_Z() == MeasureZResult::NO_X_ERROR;
   return meas;
 }
 

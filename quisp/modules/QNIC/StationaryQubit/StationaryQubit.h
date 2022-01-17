@@ -45,7 +45,7 @@ class StationaryQubit : public IStationaryQubit {
    * New errors only occur when wrong measurement result is delivered for feed-forward
    * (The error on the measured qubit propagates to the byproduct gate target qubit).
    */
-  virtual quisp::types::MeasureXResult measure_X() override;
+  virtual quisp::types::MeasureXResult correlation_measure_X() override;
 
   /**
    * \brief Single Qubit Y measurement.
@@ -53,7 +53,7 @@ class StationaryQubit : public IStationaryQubit {
    * New errors only occur when wrong measurement result is delivered for feed-forward
    * (The error on the measured qubit propagates to the byproduct gate target qubit).
    */
-  virtual types::MeasureYResult measure_Y() override;
+  virtual types::MeasureYResult correlation_measure_Y() override;
 
   /**
    * \brief Single Qubit Z measurement.
@@ -61,7 +61,11 @@ class StationaryQubit : public IStationaryQubit {
    * New errors only occur when wrong measurement result is delivered for feed-forward
    * (The error on the measured qubit propagates to the byproduct gate target qubit).
    */
-  virtual types::MeasureZResult measure_Z() override;
+  virtual types::MeasureZResult correlation_measure_Z() override;
+
+  virtual types::EigenvalueResult local_measure_X() override;
+  virtual types::EigenvalueResult local_measure_Y() override;
+  virtual types::EigenvalueResult local_measure_Z() override;
 
   /**
    * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
@@ -134,6 +138,7 @@ class StationaryQubit : public IStationaryQubit {
   measurement_operator Random_Measurement_Basis_Selection();
   void setSingleQubitGateErrorModel(SingleGateErrorModel &model, std::string gate_name);
   void setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model, std::string gate_name);
+  void setMeasurementErrorModel(MeasurementErrorModel &model);
   /*Applies memory error to the given qubit*/
   void applyMemoryError();
 

@@ -60,8 +60,8 @@ cPacket *SwappingAction::run(cModule *re) {
   int lindex = left_partner_qubit->stationaryQubit_address;
   int rindex = right_partner_qubit->stationaryQubit_address;
 
-  auto left_measure = left_qubit->measure_Z();
-  auto right_measure = right_qubit->measure_Z();
+  auto left_measure = left_qubit->correlation_measure_Z();
+  auto right_measure = right_qubit->correlation_measure_Z();
 
   // RuleEngine::updateResources_EntanglementSwapping handles the operation type.
   int operation_type_left, operation_type_right;

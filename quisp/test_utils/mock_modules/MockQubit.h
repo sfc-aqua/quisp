@@ -22,9 +22,12 @@ class MockQubit : public IStationaryQubit {
   using IStationaryQubit::par;
   MOCK_METHOD(void, emitPhoton, (int pulse), (override));
   MOCK_METHOD(void, setFree, (bool consumed), (override));
-  MOCK_METHOD(quisp::types::MeasureZResult, measure_Z, (), (override));
-  MOCK_METHOD(quisp::types::MeasureXResult, measure_X, (), (override));
-  MOCK_METHOD(quisp::types::MeasureYResult, measure_Y, (), (override));
+  MOCK_METHOD(quisp::types::MeasureZResult, correlation_measure_Z, (), (override));
+  MOCK_METHOD(quisp::types::MeasureXResult, correlation_measure_X, (), (override));
+  MOCK_METHOD(quisp::types::MeasureYResult, correlation_measure_Y, (), (override));
+  MOCK_METHOD(quisp::types::EigenvalueResult, local_measure_X, (), (override));
+  MOCK_METHOD(quisp::types::EigenvalueResult, local_measure_Y, (), (override));
+  MOCK_METHOD(quisp::types::EigenvalueResult, local_measure_Z, (), (override));
   MOCK_METHOD(bool, Xpurify, (IStationaryQubit *), (override));
   MOCK_METHOD(bool, Zpurify, (IStationaryQubit *), (override));
   MOCK_METHOD(void, addXerror, (), (override));
