@@ -124,6 +124,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     if (terminated_qnic[qnic_address]) {
       // std::cout<<"NOT ANY MORE qnic["<<qnic_address<<"] in node["<<parentAddress<<"]";
       // error("qnic should not be terminated here, Node: %d, qnic_address: %d", parentAddress, qnic_address);
+      delete msg;
       return;
     } else if (pk->getInternal_qnic_index() == -1) {  // Schedule next burst. MIM, or the other node without internal HoM of MM
       EV_DEBUG << "This BSA request is non-internal\n";
