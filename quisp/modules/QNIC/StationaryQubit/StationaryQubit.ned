@@ -89,15 +89,6 @@ simple StationaryQubit
         // characteristics of the hardware
         // could eventually change over time if we model dynamic
         // changes to the device
-        double Measurement_error_rate = default(0);
-        double Measurement_X_error_ratio = default(1);
-        double Measurement_Y_error_ratio = default(1);
-        double Measurement_Z_error_ratio = default(1);
-
-        // ZZZ -- these are configured at boot time
-        // characteristics of the hardware
-        // could eventually change over time if we model dynamic
-        // changes to the device
         double Xgate_error_rate = default(0);
         double Xgate_X_error_ratio = default(1);
         double Xgate_Y_error_ratio = default(1);

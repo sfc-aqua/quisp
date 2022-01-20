@@ -53,11 +53,6 @@ class StatQubitTarget : public StationaryQubit {
     setParDouble(this, "Zgate_Z_error_ratio", 1);
     setParDouble(this, "Zgate_Y_error_ratio", 1);
 
-    setParDouble(this, "Measurement_error_rate", 0.6);
-    setParDouble(this, "Measurement_X_error_ratio", 1);
-    setParDouble(this, "Measurement_Y_error_ratio", 1);
-    setParDouble(this, "Measurement_Z_error_ratio", 1);
-
     // clean = 0.1,
     // IX = 0.2, XI = 0.3, XX = 0.4,
     // IZ = 0.5, ZI = 0.6, ZZ = 0.7,
@@ -110,12 +105,12 @@ TEST(StatQubitMeasurementTest, SetMeasurementErrorRate) {
   sim->registerComponent(qubit);
   qubit->setMeasurementErrorModel(qubit->Measurement_error);
   auto &error_model = qubit->Measurement_error;
-  EXPECT_FALSE(std::isnan(error_model.X_measurement_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.Y_measurement_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.Z_measurement_error_rate));
-  EXPECT_DOUBLE_EQ(error_model.X_measurement_error_rate, 0.1);
-  EXPECT_DOUBLE_EQ(error_model.Y_measurement_error_rate, 0.2);
-  EXPECT_DOUBLE_EQ(error_model.Z_measurement_error_rate, 0.4);
+  EXPECT_FALSE(std::isnan(error_model.x_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.y_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.z_error_rate));
+  EXPECT_DOUBLE_EQ(error_model.x_error_rate, 0.1);
+  EXPECT_DOUBLE_EQ(error_model.y_error_rate, 0.2);
+  EXPECT_DOUBLE_EQ(error_model.z_error_rate, 0.4);
 }
 
 TEST(StatQubitMeasurementTest, CorrelationMeasureXwithoutError) {

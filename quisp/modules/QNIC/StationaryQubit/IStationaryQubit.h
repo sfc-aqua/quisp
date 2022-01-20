@@ -87,9 +87,9 @@ struct memory_error_model {
 };
 
 struct MeasurementErrorModel {
-  double X_measurement_error_rate;
-  double Y_measurement_error_rate;
-  double Z_measurement_error_rate;
+  double x_error_rate;
+  double y_error_rate;
+  double z_error_rate;
 };
 
 // Matrices of single qubit errors. Used when conducting tomography.

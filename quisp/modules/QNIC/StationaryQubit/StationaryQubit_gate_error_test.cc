@@ -47,11 +47,6 @@ class StatQubitTarget : public StationaryQubit {
     setParDouble(this, "Zgate_Z_error_ratio", 1);
     setParDouble(this, "Zgate_Y_error_ratio", 1);
 
-    setParDouble(this, "Measurement_error_rate", 0.6);
-    setParDouble(this, "Measurement_X_error_ratio", 1);
-    setParDouble(this, "Measurement_Y_error_ratio", 1);
-    setParDouble(this, "Measurement_Z_error_ratio", 1);
-
     // clean = 0.1,
     // IX = 0.2, XI = 0.3, XX = 0.4,
     // IZ = 0.5, ZI = 0.6, ZZ = 0.7,

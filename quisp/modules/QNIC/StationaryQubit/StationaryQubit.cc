@@ -221,14 +221,14 @@ void StationaryQubit::setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model
 }
 
 void StationaryQubit::setMeasurementErrorModel(MeasurementErrorModel &model) {
-  model.X_measurement_error_rate = par("X_measurement_error_rate").doubleValue();
-  model.Y_measurement_error_rate = par("Y_measurement_error_rate").doubleValue();
-  model.Z_measurement_error_rate = par("Z_measurement_error_rate").doubleValue();
+  model.x_error_rate = par("X_measurement_error_rate").doubleValue();
+  model.y_error_rate = par("Y_measurement_error_rate").doubleValue();
+  model.z_error_rate = par("Z_measurement_error_rate").doubleValue();
 }
 
 MeasureXResult StationaryQubit::correlation_measure_X() {
   bool error = par("GOD_Zerror").boolValue();
-  if (dblrand() < Measurement_error.X_measurement_error_rate) {
+  if (dblrand() < Measurement_error.x_error_rate) {
     error = !error;
   }
   return error ? MeasureXResult::HAS_Z_ERROR : MeasureXResult::NO_Z_ERROR;
@@ -236,7 +236,7 @@ MeasureXResult StationaryQubit::correlation_measure_X() {
 
 MeasureYResult StationaryQubit::correlation_measure_Y() {
   bool error = par("GOD_Zerror").boolValue() != par("GOD_Xerror").boolValue();
-  if (dblrand() < Measurement_error.Y_measurement_error_rate) {
+  if (dblrand() < Measurement_error.y_error_rate) {
     error = !error;
   }
   return error ? MeasureYResult::HAS_XZ_ERROR : MeasureYResult::NO_XZ_ERROR;
@@ -244,7 +244,7 @@ MeasureYResult StationaryQubit::correlation_measure_Y() {
 
 MeasureZResult StationaryQubit::correlation_measure_Z() {
   bool error = par("GOD_Xerror").boolValue();
-  if (dblrand() < Measurement_error.X_measurement_error_rate) {
+  if (dblrand() < Measurement_error.x_error_rate) {
     error = !error;
   }
   return error ? MeasureZResult::HAS_X_ERROR : MeasureZResult::NO_X_ERROR;
@@ -263,7 +263,7 @@ EigenvalueResult StationaryQubit::local_measure_X() {
       this->entangled_partner->addZerror();
     }
   }
-  if (dblrand() < this->Measurement_error.X_measurement_error_rate) {
+  if (dblrand() < this->Measurement_error.x_error_rate) {
     result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
   }
   return result;
@@ -287,7 +287,7 @@ EigenvalueResult StationaryQubit::local_measure_Z() {
       this->entangled_partner->addXerror();
     }
   }
-  if (dblrand() < this->Measurement_error.Z_measurement_error_rate) {
+  if (dblrand() < this->Measurement_error.z_error_rate) {
     result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
   }
   return result;
@@ -1014,9 +1014,9 @@ measurement_outcome StationaryQubit::measure_density_independent() {
 
   // add measurement error
   auto rand_num = dblrand();
-  if (this_measurement.basis == meas_op.X_basis.basis && rand_num < Measurement_error.X_measurement_error_rate ||
-      this_measurement.basis == meas_op.Y_basis.basis && rand_num < Measurement_error.Y_measurement_error_rate ||
-      this_measurement.basis == meas_op.Z_basis.basis && rand_num < Measurement_error.Z_measurement_error_rate) {
+  if (this_measurement.basis == meas_op.X_basis.basis && rand_num < Measurement_error.x_error_rate ||
+      this_measurement.basis == meas_op.Y_basis.basis && rand_num < Measurement_error.y_error_rate ||
+      this_measurement.basis == meas_op.Z_basis.basis && rand_num < Measurement_error.z_error_rate) {
     Output_is_plus = !Output_is_plus;
   }
 

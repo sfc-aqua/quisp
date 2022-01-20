@@ -77,11 +77,6 @@ class MockQubit : public IStationaryQubit {
     setParDouble(this, "Zgate_Z_error_ratio", 0);
     setParDouble(this, "Zgate_Y_error_ratio", 0);
 
-    setParDouble(this, "Measurement_error_rate", 1 / 2000);
-    setParDouble(this, "Measurement_X_error_ratio", 1);
-    setParDouble(this, "Measurement_Y_error_ratio", 1);
-    setParDouble(this, "Measurement_Z_error_ratio", 1);
-
     setParDouble(this, "CNOTgate_error_rate", 1 / 2000);
     setParDouble(this, "CNOTgate_IX_error_ratio", 1);
     setParDouble(this, "CNOTgate_XI_error_ratio", 1);
