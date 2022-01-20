@@ -2,7 +2,7 @@
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
-using quisp::types::MeasureZResult;
+using quisp::types::EigenvalueResult;
 
 namespace quisp::rules::actions {
 
@@ -54,36 +54,19 @@ cPacket *SwappingAction::run(cModule *re) {
   // swapper have no way to know this swapping is success or not.
   // bell measurement
   right_qubit->CNOT_gate(left_qubit);
-  left_qubit->Hadamard_gate();
 
   // TODO This is a little bit cheating. This must be tracked!
   int lindex = left_partner_qubit->stationaryQubit_address;
   int rindex = right_partner_qubit->stationaryQubit_address;
 
-  auto left_measure = left_qubit->correlation_measure_Z();
-  auto right_measure = right_qubit->correlation_measure_Z();
+  auto left_measure = left_qubit->local_measure_X();
+  auto right_measure = right_qubit->local_measure_Z();
 
   // RuleEngine::updateResources_EntanglementSwapping handles the operation type.
-  int operation_type_left, operation_type_right;
   // operation_type: 0 = I, 1 = X, 2 = Z
-  if (left_measure == MeasureZResult::NO_X_ERROR && right_measure == MeasureZResult::NO_X_ERROR) {
-    EV << "operation type 0, operation left I, operation right I\n";
-    operation_type_left = 0;
-    operation_type_right = 0;
-  } else if (left_measure == MeasureZResult::NO_X_ERROR && right_measure == MeasureZResult::HAS_X_ERROR) {
-    EV << "operation type 1, operation left I, operation right X\n";
-    operation_type_left = 0;
-    operation_type_right = 1;
-  } else if (left_measure == MeasureZResult::HAS_X_ERROR && right_measure == MeasureZResult::NO_X_ERROR) {
-    EV << "operation type 2, operation left Z, operation right I\n";
-    operation_type_left = 2;
-    operation_type_right = 0;
-  } else {
-    // left_measure == HAS_X_ERROR && right_measure == HAS_X_ERROR
-    EV << "operation type 3, operation left Z, operation right X\n";
-    operation_type_left = 2;
-    operation_type_right = 1;
-  }
+  int operation_type_left = left_measure == EigenvalueResult::PLUS_ONE ? 0 : 2;
+  int operation_type_right = right_measure == EigenvalueResult::PLUS_ONE ? 0 : 1;
+
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
   right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
   left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);

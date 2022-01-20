@@ -103,7 +103,7 @@ class StationaryQubit : public IStationaryQubit {
   SingleGateErrorModel Xgate_error;
   SingleGateErrorModel Zgate_error;
   TwoQubitGateErrorModel CNOTgate_error;
-  SingleGateErrorModel Measurement_error;
+  MeasurementErrorModel Measurement_error;
   memory_error_model memory_err;
   double memory_error_rate;
   double memory_No_error_ceil;

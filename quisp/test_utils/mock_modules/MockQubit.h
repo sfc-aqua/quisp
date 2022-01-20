@@ -93,6 +93,10 @@ class MockQubit : public IStationaryQubit {
     setParDouble(this, "CNOTgate_YI_error_ratio", 1);
     setParDouble(this, "CNOTgate_YY_error_ratio", 1);
 
+    setParDouble(this, "X_measurement_error_rate", 1. / 2000);
+    setParDouble(this, "Y_measurement_error_rate", 1. / 2000);
+    setParDouble(this, "Z_measurement_error_rate", 1. / 2000);
+
     setParInt(this, "stationaryQubit_address", 1);
     setParInt(this, "node_address", 1);
     setParInt(this, "qnic_address", 1);

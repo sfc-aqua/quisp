@@ -77,16 +77,22 @@ class SwappingActionTest : public ::testing::Test {
     rule_engine = new MockRuleEngine();
     right_qubit = new MockQubit();
     left_qubit = new MockQubit();
+    left_partner_qubit = new MockQubit();
+    right_partner_qubit = new MockQubit();
   }
   void TearDown() override {
     delete rule_engine;
     delete right_qubit;
     delete left_qubit;
+    delete left_partner_qubit;
+    delete right_partner_qubit;
   }
   MockRuleEngine *rule_engine = nullptr;
   std::unique_ptr<SwappingAction> action = nullptr;
   MockQubit *right_qubit = nullptr;
   MockQubit *left_qubit = nullptr;
+  MockQubit *left_partner_qubit = nullptr;
+  MockQubit *right_partner_qubit = nullptr;
 };
 
 TEST_F(SwappingActionTest, init) {
@@ -163,7 +169,7 @@ TEST_F(SwappingActionTest, runWithInvalidQnicId) {
   EXPECT_NE(nullptr, dynamic_cast<Error *>(packet));
 }
 
-TEST_F(SwappingActionTest, runWithNoError) {
+TEST_F(SwappingActionTest, runWithMeasuredResult00) {
   action->right_resource = 21;
   action->right_partner = 22;
   action->left_resource = 23;
@@ -172,15 +178,18 @@ TEST_F(SwappingActionTest, runWithNoError) {
   action->self_right_qnic_id = 26;
   right_qubit->fillParams();
   left_qubit->fillParams();
-  right_qubit->entangled_partner = left_qubit;
-  left_qubit->entangled_partner = right_qubit;
+  left_partner_qubit->fillParams();
+  right_partner_qubit->fillParams();
+  right_qubit->entangled_partner = right_partner_qubit;
+  right_partner_qubit->entangled_partner = right_qubit;
+  left_qubit->entangled_partner = left_partner_qubit;
+  left_partner_qubit->entangled_partner = left_qubit;
 
-  EXPECT_CALL(*right_qubit, correlation_measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::NO_X_ERROR));
   EXPECT_CALL(*right_qubit, CNOT_gate(left_qubit));
-  EXPECT_CALL(*right_qubit, setEntangledPartnerInfo(left_qubit));
-  EXPECT_CALL(*left_qubit, setEntangledPartnerInfo(right_qubit));
-  EXPECT_CALL(*left_qubit, Hadamard_gate());
-  EXPECT_CALL(*left_qubit, correlation_measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::NO_X_ERROR));
+  EXPECT_CALL(*left_qubit, local_measure_X()).WillOnce(Return(quisp::types::EigenvalueResult::PLUS_ONE));
+  EXPECT_CALL(*right_qubit, local_measure_Z()).WillOnce(Return(quisp::types::EigenvalueResult::PLUS_ONE));
+  EXPECT_CALL(*left_partner_qubit, setEntangledPartnerInfo(right_partner_qubit));
+  EXPECT_CALL(*right_partner_qubit, setEntangledPartnerInfo(left_partner_qubit));
 
   EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
   EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(left_qubit));
@@ -198,7 +207,7 @@ TEST_F(SwappingActionTest, runWithNoError) {
   EXPECT_EQ(0, result->getOperation_type_right());
 }
 
-TEST_F(SwappingActionTest, runWithRightHasError) {
+TEST_F(SwappingActionTest, runWithMeasuredResult01) {
   action->right_resource = 21;
   action->right_partner = 22;
   action->left_resource = 23;
@@ -207,15 +216,18 @@ TEST_F(SwappingActionTest, runWithRightHasError) {
   action->self_right_qnic_id = 26;
   right_qubit->fillParams();
   left_qubit->fillParams();
-  right_qubit->entangled_partner = left_qubit;
-  left_qubit->entangled_partner = right_qubit;
+  left_partner_qubit->fillParams();
+  right_partner_qubit->fillParams();
+  right_qubit->entangled_partner = right_partner_qubit;
+  right_partner_qubit->entangled_partner = right_qubit;
+  left_qubit->entangled_partner = left_partner_qubit;
+  left_partner_qubit->entangled_partner = left_qubit;
 
-  EXPECT_CALL(*right_qubit, correlation_measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
   EXPECT_CALL(*right_qubit, CNOT_gate(left_qubit));
-  EXPECT_CALL(*right_qubit, setEntangledPartnerInfo(left_qubit));
-  EXPECT_CALL(*left_qubit, setEntangledPartnerInfo(right_qubit));
-  EXPECT_CALL(*left_qubit, Hadamard_gate());
-  EXPECT_CALL(*left_qubit, correlation_measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::NO_X_ERROR));
+  EXPECT_CALL(*left_qubit, local_measure_X()).WillOnce(Return(quisp::types::EigenvalueResult::PLUS_ONE));
+  EXPECT_CALL(*right_qubit, local_measure_Z()).WillOnce(Return(quisp::types::EigenvalueResult::MINUS_ONE));
+  EXPECT_CALL(*right_partner_qubit, setEntangledPartnerInfo(left_partner_qubit));
+  EXPECT_CALL(*left_partner_qubit, setEntangledPartnerInfo(right_partner_qubit));
 
   EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
   EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(left_qubit));
@@ -225,6 +237,7 @@ TEST_F(SwappingActionTest, runWithRightHasError) {
   EXPECT_CALL(*rule_engine, freeConsumedResource(26, right_qubit, QNIC_E));
 
   auto packet = action->run(rule_engine);
+
   ASSERT_NE(nullptr, packet);
   auto result = dynamic_cast<SwappingResult *>(packet);
   ASSERT_NE(nullptr, result);
@@ -232,7 +245,7 @@ TEST_F(SwappingActionTest, runWithRightHasError) {
   EXPECT_EQ(1, result->getOperation_type_right());
 }
 
-TEST_F(SwappingActionTest, runWithLeftHasError) {
+TEST_F(SwappingActionTest, runWithMeasuredResult10) {
   action->right_resource = 21;
   action->right_partner = 22;
   action->left_resource = 23;
@@ -241,15 +254,18 @@ TEST_F(SwappingActionTest, runWithLeftHasError) {
   action->self_right_qnic_id = 26;
   right_qubit->fillParams();
   left_qubit->fillParams();
-  right_qubit->entangled_partner = left_qubit;
-  left_qubit->entangled_partner = right_qubit;
+  left_partner_qubit->fillParams();
+  right_partner_qubit->fillParams();
+  right_qubit->entangled_partner = right_partner_qubit;
+  right_partner_qubit->entangled_partner = right_qubit;
+  left_qubit->entangled_partner = left_partner_qubit;
+  left_partner_qubit->entangled_partner = left_qubit;
 
-  EXPECT_CALL(*right_qubit, correlation_measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::NO_X_ERROR));
   EXPECT_CALL(*right_qubit, CNOT_gate(left_qubit));
-  EXPECT_CALL(*right_qubit, setEntangledPartnerInfo(left_qubit));
-  EXPECT_CALL(*left_qubit, setEntangledPartnerInfo(right_qubit));
-  EXPECT_CALL(*left_qubit, Hadamard_gate());
-  EXPECT_CALL(*left_qubit, correlation_measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
+  EXPECT_CALL(*left_qubit, local_measure_X()).WillOnce(Return(quisp::types::EigenvalueResult::MINUS_ONE));
+  EXPECT_CALL(*right_qubit, local_measure_Z()).WillOnce(Return(quisp::types::EigenvalueResult::PLUS_ONE));
+  EXPECT_CALL(*right_partner_qubit, setEntangledPartnerInfo(left_partner_qubit));
+  EXPECT_CALL(*left_partner_qubit, setEntangledPartnerInfo(right_partner_qubit));
 
   EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
   EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(left_qubit));
@@ -257,6 +273,7 @@ TEST_F(SwappingActionTest, runWithLeftHasError) {
   EXPECT_CALL(*action, removeResource_fromRule(left_qubit));
   EXPECT_CALL(*rule_engine, freeConsumedResource(25, left_qubit, QNIC_E));
   EXPECT_CALL(*rule_engine, freeConsumedResource(26, right_qubit, QNIC_E));
+
   auto packet = action->run(rule_engine);
 
   ASSERT_NE(nullptr, packet);
@@ -266,7 +283,7 @@ TEST_F(SwappingActionTest, runWithLeftHasError) {
   EXPECT_EQ(0, result->getOperation_type_right());
 }
 
-TEST_F(SwappingActionTest, runWithBothErrors) {
+TEST_F(SwappingActionTest, runWithMeasuredResult11) {
   action->right_resource = 21;
   action->right_partner = 22;
   action->left_resource = 23;
@@ -275,15 +292,18 @@ TEST_F(SwappingActionTest, runWithBothErrors) {
   action->self_right_qnic_id = 26;
   right_qubit->fillParams();
   left_qubit->fillParams();
-  right_qubit->entangled_partner = left_qubit;
-  left_qubit->entangled_partner = right_qubit;
+  left_partner_qubit->fillParams();
+  right_partner_qubit->fillParams();
+  right_qubit->entangled_partner = right_partner_qubit;
+  right_partner_qubit->entangled_partner = right_qubit;
+  left_qubit->entangled_partner = left_partner_qubit;
+  left_partner_qubit->entangled_partner = left_qubit;
 
-  EXPECT_CALL(*right_qubit, correlation_measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
   EXPECT_CALL(*right_qubit, CNOT_gate(left_qubit));
-  EXPECT_CALL(*right_qubit, setEntangledPartnerInfo(left_qubit));
-  EXPECT_CALL(*left_qubit, setEntangledPartnerInfo(right_qubit));
-  EXPECT_CALL(*left_qubit, Hadamard_gate());
-  EXPECT_CALL(*left_qubit, correlation_measure_Z()).WillOnce(Return(quisp::types::MeasureZResult::HAS_X_ERROR));
+  EXPECT_CALL(*left_qubit, local_measure_X()).WillOnce(Return(quisp::types::EigenvalueResult::MINUS_ONE));
+  EXPECT_CALL(*right_qubit, local_measure_Z()).WillOnce(Return(quisp::types::EigenvalueResult::MINUS_ONE));
+  EXPECT_CALL(*right_partner_qubit, setEntangledPartnerInfo(left_partner_qubit));
+  EXPECT_CALL(*left_partner_qubit, setEntangledPartnerInfo(right_partner_qubit));
 
   EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
   EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(left_qubit));
@@ -291,6 +311,7 @@ TEST_F(SwappingActionTest, runWithBothErrors) {
   EXPECT_CALL(*action, removeResource_fromRule(left_qubit));
   EXPECT_CALL(*rule_engine, freeConsumedResource(25, left_qubit, QNIC_E));
   EXPECT_CALL(*rule_engine, freeConsumedResource(26, right_qubit, QNIC_E));
+
   auto packet = action->run(rule_engine);
 
   ASSERT_NE(nullptr, packet);

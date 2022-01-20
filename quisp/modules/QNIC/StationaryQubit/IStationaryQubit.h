@@ -199,7 +199,7 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   SingleGateErrorModel Xgate_error;
   SingleGateErrorModel Zgate_error;
   TwoQubitGateErrorModel CNOTgate_error;
-  SingleGateErrorModel Measurement_error;
+  MeasurementErrorModel Measurement_error;
 
   Eigen::Matrix2cd Density_Matrix_Collapsed;  // Used when partner has been measured.
   bool partner_measured;
