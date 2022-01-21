@@ -1,20 +1,20 @@
 #pragma once
 
 #include <PhotonicQubit_m.h>
-
+#include <Eigen/Eigen>
 namespace quisp {
 
 namespace types {
 enum class MeasureXResult : int {
-  NO_ERROR,
+  NO_Z_ERROR,
   HAS_Z_ERROR,
 };
 enum class MeasureYResult : int {
-  NO_ERROR,
+  NO_XZ_ERROR,
   HAS_XZ_ERROR,
 };
 enum class MeasureZResult : int {
-  NO_ERROR,
+  NO_X_ERROR,
   HAS_X_ERROR,
 };
 }  // namespace types
@@ -122,20 +122,16 @@ struct measurement_outcome {
   char GOD_clean;
 };
 
-class IStationaryQubit : public cSimpleModule {
+class IStationaryQubit : public omnetpp::cSimpleModule {
  public:
   IStationaryQubit(){};
   virtual ~IStationaryQubit(){};
 
-  virtual bool checkBusy() = 0;
   virtual void setFree(bool consumed) = 0;
   /*In use. E.g. waiting for purification result.*/
   virtual void Lock(unsigned long rs_id, unsigned long rule_id, int action_id) = 0;
   virtual void Unlock() = 0;
   virtual bool isLocked() = 0;
-  virtual void Allocate() = 0;
-  virtual void Deallocate() = 0;
-  virtual bool isAllocated() = 0;
 
   /**
    * \brief Emit photon.
@@ -176,12 +172,10 @@ class IStationaryQubit : public cSimpleModule {
   /** Pointer to the entangled qubit*/
   IStationaryQubit *entangled_partner = nullptr;
   /** Photon emitted at*/
-  simtime_t emitted_time = -1;
+  omnetpp::simtime_t emitted_time = -1;
   /** Stationary qubit last updated at*/
-  simtime_t updated_time = -1;
+  omnetpp::simtime_t updated_time = -1;
 
-  /** Stationary Qubit is free or reserved. */
-  bool isBusy;
   /** Standard deviation */
   double std;
 

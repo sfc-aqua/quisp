@@ -30,8 +30,8 @@ class Clause {
   };
   virtual ~Clause() {}
   // if the condition is satisfied, return true, otherwise return false.
-  virtual bool check(std::multimap<int, IStationaryQubit*>) = 0;
-  virtual bool checkTerminate(std::multimap<int, IStationaryQubit*>) const = 0;
+  virtual bool check(std::multimap<int, IStationaryQubit*>&) = 0;
+  virtual bool checkTerminate(std::multimap<int, IStationaryQubit*>&) const = 0;
 };
 
 }  // namespace clauses

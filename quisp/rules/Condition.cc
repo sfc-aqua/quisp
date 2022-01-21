@@ -6,34 +6,27 @@
  *  \brief Condition
  */
 #include "Condition.h"
-#include <memory>
 
-namespace quisp {
-namespace rules {
+namespace quisp::rules {
 
 void Condition::addClause(Clause *c) { clauses.push_back(c); }
 
-bool Condition::check(std::multimap<int, IStationaryQubit *> resources) const {
-  bool satisfying = true;
+bool Condition::check(std::multimap<int, IStationaryQubit *> &resources) const {
   for (auto &clause : clauses) {
     if (!clause->check(resources)) {
-      satisfying = false;
-      break;
+      return false;
     }
   }
-  return satisfying;
+  return true;
 }
 
-bool Condition::checkTerminate(std::multimap<int, IStationaryQubit *> resources) const {
-  bool satisfying = false;
+bool Condition::checkTerminate(std::multimap<int, IStationaryQubit *> &resources) const {
   for (auto &clause : clauses) {
     if (clause->checkTerminate(resources)) {
-      satisfying = true;
-      break;
+      return true;
     }
   }
-  return satisfying;
+  return false;
 }
 
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules

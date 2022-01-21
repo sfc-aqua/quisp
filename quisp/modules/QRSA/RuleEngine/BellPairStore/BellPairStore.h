@@ -2,13 +2,13 @@
 
 #include <modules/QNIC.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
-namespace quisp {
-namespace modules {
+#include <modules/QRSA/QRSA.h>
+namespace quisp::modules {
 
 using QNodeAddr = int;
 using QNicIndex = int;
 // entangled partner qnode address -> qubit
-using PartnerAddrQubitMap = std::multimap<QNodeAddr, IStationaryQubit*>;
+using PartnerAddrQubitMap = std::multimap<QNodeAddr, qrsa::IQubitRecord*>;
 using ResourceKey = std::pair<QNIC_type, QNicIndex>;
 using PartnerAddrQubitMapRange = std::pair<PartnerAddrQubitMap::iterator, PartnerAddrQubitMap::iterator>;
 
@@ -22,13 +22,12 @@ class BellPairStore {
  public:
   BellPairStore();
   ~BellPairStore();
-  void eraseQubit(IStationaryQubit* const qubit);
-  void insertEntangledQubit(QNodeAddr partner_addr, IStationaryQubit* const qubit);
-  IStationaryQubit* findQubit(QNIC_type qnic_type, QNicIndex qnic_index, QNodeAddr addr);
+  void eraseQubit(qrsa::IQubitRecord* const qubit);
+  void insertEntangledQubit(QNodeAddr partner_addr, qrsa::IQubitRecord* qubit);
+  qrsa::IQubitRecord* findQubit(QNIC_type qnic_type, QNicIndex qnic_index, QNodeAddr addr);
   PartnerAddrQubitMapRange getBellPairsRange(QNIC_type qnic_type, QNicIndex qnic_index, QNodeAddr partner_addr);
 
  protected:
   std::map<ResourceKey, PartnerAddrQubitMap> _resources;
 };
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules

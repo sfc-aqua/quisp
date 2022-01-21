@@ -11,7 +11,7 @@ class PurificationCountClause : public Clause {
   int num_purify_must;
   PurificationCountClause(int partner_addr, QNIC_type qnic_type, int qnic_id, int n_purify) : Clause(partner_addr, qnic_type, qnic_id) { num_purify_must = n_purify; };
 
-  [[noreturn]] bool check(std::multimap<int, IStationaryQubit*>) override;
+  [[noreturn]] bool check(std::multimap<int, IStationaryQubit*>&) override;
 };
 
 }  // namespace clauses

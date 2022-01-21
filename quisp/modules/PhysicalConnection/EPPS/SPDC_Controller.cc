@@ -95,11 +95,11 @@ void SPDC_Controller::handleMessage(cMessage *msg) {
       endSimulation();
     }
     startPump();
-  } else if (dynamic_cast<EmitPhotonRequest *>(msg) != nullptr) {
+  } else if (dynamic_cast<EmitPhotonRequest *>(msg)) {
     epps->emitPhotons();
     SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne");
     scheduleAt(simTime() + max_accepted_rate, st);
-  } else if (dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg) != nullptr) {
+  } else if (dynamic_cast<SchedulePhotonTransmissionsOnebyOne *>(msg)) {
     epps->emitPhotons();
     SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne");
     scheduleAt(simTime() + max_accepted_rate, st);

@@ -1,4 +1,6 @@
 # QUISP
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/83c96c45f2684211a8cef800b1d07f81)](https://www.codacy.com/gh/sfc-aqua/quisp/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sfc-aqua/quisp&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/83c96c45f2684211a8cef800b1d07f81)](https://www.codacy.com/gh/sfc-aqua/quisp/dashboard?utm_source=github.com&utm_medium=referral&utm_content=sfc-aqua/quisp&utm_campaign=Badge_Coverage)
 ![github workflow](https://github.com/sfc-aqua/quisp/actions/workflows/main.yml/badge.svg)
 <a href="https://aqua-quisp.slack.com/" rel="nofollow"><img src="https://img.shields.io/badge/join-us%20on%20slack-gray.svg?colorB=red&amp;logo=slack&amp;longCache=true" alt="Slack Widget"></a>
 The Quantum Internet Simulation Package (QuISP) is an event-driven
@@ -86,7 +88,7 @@ current release include qubit loss, relaxation to ground state,
 excitation to excited state, and complete mixing.
 
 If you are unfamiliar with the research literature or the terminology
-above, see "Learning more", below.
+above, see "[Learning more](#learning-more)", below.
 
 In addition, we aim to make simulations run on QuISP _completely
 reproducible_, to the extent humanly possible.  It will be possible
@@ -118,8 +120,7 @@ are the key quantum protocols that are implemented:
 
 * basics of RuleSet creation & distribution
 * various *purification protocols*:  Single round
-  of X purification, alternating X/Z purification, etc.  Currently
-  implemented only over a single hop.  Extending
+  of X purification, alternating X/Z purification, etc.  Default to one round of purification per entanglement swapping round.  Extending
   these to test your own custom purification protocol is pretty
   straightforward.
 * *tomography*: when the simulation boots, it assumes that the software
@@ -161,7 +162,7 @@ Mid-term to long-term release features:
 ## Installation requirements
 
 The full installation process is described in
-[Wiki]](https://github.com/sfc-aqua/quisp/wiki).  The main software tools you will
+[Wiki](https://github.com/sfc-aqua/quisp/wiki).  The main software tools you will
 need are:
 
 * QUISP requires [OMNeT++](https://omnetpp.org/) and
@@ -177,7 +178,11 @@ Depending on your local setup and how you intend to use QuISP, you may
 also need various tools (a C++ compiler, make, an X Windows server,
 Docker, ffmpeg for making videos, etc.), documented in the installation notes.
 
-## Building and running
+## Trying it out on the web
+
+If you just want to take a peek at the basic sample simulation set, we encourage you to try them out on the web ([here](https://aqua.sfc.wide.ad.jp/quisp-online/master/)) which is built using the [WebAssembly](https://webassembly.org). Currently the Wasm version only supports running the pre-configured simulations and users cannot upload custom topology, we are still working on that. Also due to the heavy load of the OMNeT++ and the QuISP itself the performance on the web version is a lot slower than running it locally. 
+
+## Building and running locally
 
 First see [Wiki](https://github.com/sfc-aqua/quisp/wiki), then follow the instructions below.
 
@@ -227,7 +232,7 @@ See the [references](doc/References.md).
 
 ## Contributing
 
-First, join the [QuISP Slack team](https://aqua-quisp.slack.com).
+First, join the [QuISP Slack team](https://join.slack.com/t/aqua-quisp/shared_invite/zt-rwyggp6t-_4TaXE0g7PlUnRNSPU~g2w).
 
 Please also refer to the [code of conduct](CODE_OF_CONDUCT.md) and [Contributing guide](.github/CONTRIBUTING.md).
 

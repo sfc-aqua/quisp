@@ -3,47 +3,39 @@
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
 using quisp::types::MeasureZResult;
-namespace quisp {
-namespace rules {
-namespace actions {
-SimultaneousSwappingAction::SimultaneousSwappingAction(unsigned long RuleSet_id, unsigned long rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt,
-                                                       int rqi, int rqad, int rr, int slqi, QNIC_type slqt, int srqi, QNIC_type srqt, int init, QNIC_type initqt, int initqi,
-                                                       int initqad, int initr, int resp, QNIC_type respqt, int respqi, int respqad, int respr, int iip, int pleir) {
-  ruleset_id = RuleSet_id;
-  rule_id = rule_index;
-
-  left_partner = lp;
-  left_qnic_type = lqt;
-  left_qnic_id = lqi;
-  left_qnic_address = lqad;
-  left_resource = lr;
-  right_partner = rp;
-  right_qnic_type = rqt;
-  right_qnic_id = rqi;
-  right_qnic_address = rqad;
-  right_resource = rr;
-
-  // initiator and responder
-  initiator = init;
-  initiator_qnic_type = initqt;
-  initiator_qnic_id = initqi;
-  initiator_qnic_address = initqad;
-  initiator_resouce = initr;
-
-  responder = resp;
-  responder_qnic_type = respqt;
-  responder_qnic_id = respqi;
-  responder_qnic_address = respqad;
-  responder_resouce = respr;
-
-  self_left_qnic_id = slqi;
-  self_right_qnic_id = srqi;
-  self_left_qnic_type = slqt;
-  self_right_qnic_type = srqt;
-
-  index_in_path = iip;
-  path_length_exclude_IR = pleir;
-}
+namespace quisp::rules::actions {
+SimultaneousSwappingAction::SimultaneousSwappingAction(unsigned long ruleset_id, unsigned long rule_id, int left_partner, QNIC_type left_qnic_type, int left_qnic_index,
+                                                       int left_qnic_address, int left_resource, int right_partner, QNIC_type right_qnic_type, int right_qnic_index,
+                                                       int right_qnic_address, int right_resource, int self_left_qnic_id, QNIC_type self_left_qnic_type, int self_right_qnic_id,
+                                                       QNIC_type self_right_qnic_type, int initiator, QNIC_type initiator_qnic_type, int initiator_qnic_id,
+                                                       int initiator_qnic_address, int initiator_resource, int responder, QNIC_type responder_qnic_type, int responder_qnic_id,
+                                                       int responder_qnic_address, int responder_resource, int index_in_path, int path_length_exclude_ir)
+    : Action(ruleset_id, rule_id),
+      left_partner(),
+      left_qnic_type(left_qnic_type),
+      left_qnic_id(left_qnic_index),
+      left_qnic_address(left_qnic_address),
+      left_resource(left_resource),
+      right_partner(right_partner),
+      right_qnic_type(right_qnic_type),
+      right_qnic_id(right_qnic_index),
+      right_qnic_address(right_qnic_address),
+      right_resource(right_resource),
+      initiator(initiator),
+      initiator_qnic_type(initiator_qnic_type),
+      initiator_qnic_id(initiator_qnic_id),
+      initiator_qnic_address(initiator_qnic_address),
+      initiator_resource(initiator_resource),
+      responder(responder),
+      responder_qnic_type(responder_qnic_type),
+      responder_qnic_id(responder_qnic_id),
+      responder_qnic_address(responder_qnic_address),
+      self_left_qnic_id(self_left_qnic_id),
+      self_right_qnic_id(self_right_qnic_id),
+      self_left_qnic_type(self_left_qnic_type),
+      self_right_qnic_type(self_right_qnic_type),
+      index_in_path(index_in_path),
+      path_length_exclude_IR(path_length_exclude_ir) {}
 
 cPacket *SimultaneousSwappingAction::run(cModule *re) {
   float success_probability = 1.0;
@@ -55,14 +47,10 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   right_qubit = getResource(right_resource, right_partner);
 
   if (left_qubit == nullptr || right_qubit == nullptr) {
-    Error *pk = new Error;
-    pk->setError_text("Not enough resource found! This shouldn't happen!");
-    return pk;
+    return generateError("Not enough resource found! This shouldn't happen!");
   }
   if (left_qnic_id < 0 || right_qnic_id < 0) {
-    Error *pk = new Error;
-    pk->setError_text("QNICs are not found!");
-    return pk;
+    return generateError("QNICs are not found!");
   }
 
   auto *right_partner_qubit = right_qubit->entangled_partner;
@@ -76,15 +64,15 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
 
   int operation_type_left, operation_type_right;
 
-  if (left_measure == MeasureZResult::NO_ERROR && right_measure == MeasureZResult::NO_ERROR) {  // 0 0
+  if (left_measure == MeasureZResult::NO_X_ERROR && right_measure == MeasureZResult::NO_X_ERROR) {  // 0 0
     EV << "operation type 0, operation left I, operation right I\n";
     operation_type_left = 0;
     operation_type_right = 0;
-  } else if (left_measure == MeasureZResult::NO_ERROR && right_measure == MeasureZResult::HAS_X_ERROR) {  // 0 1
+  } else if (left_measure == MeasureZResult::NO_X_ERROR && right_measure == MeasureZResult::HAS_X_ERROR) {  // 0 1
     EV << "operation type 1, operation left I, operation right X\n";
     operation_type_left = 0;
     operation_type_right = 1;
-  } else if (left_measure == MeasureZResult::HAS_X_ERROR && right_measure == MeasureZResult::NO_ERROR) {  // 1 0
+  } else if (left_measure == MeasureZResult::HAS_X_ERROR && right_measure == MeasureZResult::NO_X_ERROR) {  // 1 0
     EV << "operation type 2, operation left Z, operation right I\n";
     operation_type_left = 0;
     operation_type_right = 2;
@@ -98,10 +86,6 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   if (std::rand() / RAND_MAX < success_probability) {
     right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
     left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
-
-  } else {
-    left_partner_qubit->isBusy = false;
-    right_partner_qubit->isBusy = false;
   }
   removeResource_fromRule(left_qubit);
   removeResource_fromRule(right_qubit);
@@ -109,9 +93,6 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   // free consumed
   rule_engine->freeConsumedResource(self_left_qnic_id, left_qubit, self_left_qnic_type);  // free left
   rule_engine->freeConsumedResource(self_right_qnic_id, right_qubit, self_right_qnic_type);  // free right
-
-  left_qubit->isBusy = false;
-  right_qubit->isBusy = false;
 
   auto *pk = new SimultaneousSwappingResult;
 
@@ -145,6 +126,4 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   return pk;
 }
 
-}  // namespace actions
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::actions

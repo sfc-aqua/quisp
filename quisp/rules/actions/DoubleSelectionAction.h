@@ -3,12 +3,14 @@
 
 #include "BaseAction.h"
 
-namespace quisp {
-namespace rules {
-namespace actions {
+namespace quisp::rules::actions {
 
 // https://arxiv.org/abs/0811.2639
 class DoubleSelectionAction : public Action {
+ public:
+  DoubleSelectionAction(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x, int trash_resource_z);
+  cPacket* run(cModule* re) override;
+
  protected:
   int partner; /**< Identifies entanglement partner. */
   QNIC_type qnic_type;
@@ -21,14 +23,15 @@ class DoubleSelectionAction : public Action {
   bool Z;
   int num_purify;
   int action_index = 0;  // To track how many times this particular action has been invoked.
- public:
-  DoubleSelectionAction();
-  DoubleSelectionAction(unsigned long RuleSet_id, unsigned long rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z);
-  cPacket* run(cModule* re) override;
 };
 
 // https://arxiv.org/abs/0811.2639
 class DoubleSelectionActionInv : public Action {
+ public:
+  DoubleSelectionActionInv(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
+                           int trash_resource_z);
+  cPacket* run(cModule* re) override;
+
  protected:
   int partner; /**< Identifies entanglement partner. */
   QNIC_type qnic_type;
@@ -41,11 +44,5 @@ class DoubleSelectionActionInv : public Action {
   bool Z;
   int num_purify;
   int action_index = 0;  // To track how many times this particular action has been invoked.
- public:
-  DoubleSelectionActionInv();
-  DoubleSelectionActionInv(unsigned long RuleSet_id, unsigned long rule_index, int part, QNIC_type qt, int qi, int res, int tres_X, int tres_Z);
-  cPacket* run(cModule* re) override;
 };
-}  // namespace actions
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::actions

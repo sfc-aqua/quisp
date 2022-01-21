@@ -10,6 +10,11 @@
 .cache
 compile_commands.json
 
+### coverage files
+quisp/coverage*
+quisp/lcov.info
+quisp/default.profraw
+
 ### generated on docker
 org.eclipse*
 

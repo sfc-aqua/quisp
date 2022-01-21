@@ -12,8 +12,8 @@
 ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, partner);
 ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, num_resource_required);
 
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, unsigned long, ruleset_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, unsigned long, rule_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::Action, unsigned long, ruleset_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::Action, unsigned long, rule_id);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, qnic_id);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, QNIC_type, qnic_type);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, partner);
@@ -174,7 +174,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 3);
       EXPECT_EQ(access_private::X(*action), true);
@@ -226,7 +226,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 5);
       EXPECT_EQ(access_private::X(*action), true);
@@ -279,9 +279,9 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       EXPECT_EQ(access_private::num_resource_required(*enough_res_clause), 1);
     }
 
-    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(1)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, ruleset->rules.at(3)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(1)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, ruleset->rules.at(3)->rule_id);
     EXPECT_EQ(ruleset->rules.at(3)->next_rule_id, 0);
   }
 
@@ -310,7 +310,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 2);
       EXPECT_EQ(access_private::X(*action), true);
@@ -341,7 +341,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 4);
       EXPECT_EQ(access_private::X(*action), true);
@@ -385,7 +385,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 5);
       EXPECT_EQ(access_private::X(*action), true);
@@ -444,9 +444,9 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       EXPECT_EQ(access_private::num_resource_required(*clause2), 1);
     }
 
-    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(4)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(3)->next_rule_id, ruleset->rules.at(4)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(4)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(3)->next_rule_id, ruleset->rules.at(4)->rule_id);
     EXPECT_EQ(ruleset->rules.at(4)->next_rule_id, 0);
   }
 
@@ -474,7 +474,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 3);
       EXPECT_EQ(access_private::X(*action), true);
@@ -505,7 +505,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 5);
       EXPECT_EQ(access_private::X(*action), true);
@@ -564,8 +564,8 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       EXPECT_EQ(access_private::num_resource_required(*clause2), 1);
     }
 
-    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(2)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(2)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_id);
     EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, 0);
   }
 
@@ -593,7 +593,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 4);
       EXPECT_EQ(access_private::X(*action), true);
@@ -639,7 +639,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 3);
       EXPECT_EQ(access_private::X(*action), true);
@@ -684,7 +684,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 2);
       EXPECT_EQ(access_private::X(*action), true);
@@ -735,11 +735,11 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       EXPECT_EQ(access_private::num_resource_required(*enough_res_clause), 1);
     }
 
-    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(1)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, ruleset->rules.at(3)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(3)->next_rule_id, ruleset->rules.at(4)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(4)->next_rule_id, ruleset->rules.at(5)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(1)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, ruleset->rules.at(3)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(3)->next_rule_id, ruleset->rules.at(4)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(4)->next_rule_id, ruleset->rules.at(5)->rule_id);
     EXPECT_EQ(ruleset->rules.at(5)->next_rule_id, 0);
   }
   delete routing_daemon;
@@ -834,7 +834,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 2);
       EXPECT_EQ(access_private::X(*action), true);
@@ -884,7 +884,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 3);
       EXPECT_EQ(access_private::X(*action), true);
@@ -932,7 +932,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 5);
       EXPECT_EQ(access_private::X(*action), true);
@@ -979,7 +979,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 9);
       EXPECT_EQ(access_private::X(*action), true);
@@ -1032,13 +1032,13 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_resource_required(*enough_res_clause), 1);
     }
 
-    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(1)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, ruleset->rules.at(3)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(3)->next_rule_id, ruleset->rules.at(4)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(4)->next_rule_id, ruleset->rules.at(5)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(5)->next_rule_id, ruleset->rules.at(6)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(6)->next_rule_id, ruleset->rules.at(7)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(1)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, ruleset->rules.at(3)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(3)->next_rule_id, ruleset->rules.at(4)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(4)->next_rule_id, ruleset->rules.at(5)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(5)->next_rule_id, ruleset->rules.at(6)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(6)->next_rule_id, ruleset->rules.at(7)->rule_id);
     EXPECT_EQ(ruleset->rules.at(7)->next_rule_id, 0);
   }
 
@@ -1065,7 +1065,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 1);
       EXPECT_EQ(access_private::X(*action), true);
@@ -1100,7 +1100,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 3);
       EXPECT_EQ(access_private::X(*action), true);
@@ -1161,8 +1161,8 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::partner(*clause2), 3);
       EXPECT_EQ(access_private::num_resource_required(*clause2), 1);
     }
-    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(2)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(2)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_id);
     EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, 0);
   }
   // Rules for node 3
@@ -1188,7 +1188,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 2);
       EXPECT_EQ(access_private::X(*action), true);
@@ -1223,7 +1223,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 4);
       EXPECT_EQ(access_private::X(*action), true);
@@ -1271,7 +1271,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 1);
       EXPECT_EQ(access_private::X(*action), true);
@@ -1319,7 +1319,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 5);
       EXPECT_EQ(access_private::X(*action), true);
@@ -1380,12 +1380,12 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_resource_required(*clause2), 1);
     }
 
-    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(2)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(3)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, ruleset->rules.at(4)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(3)->next_rule_id, ruleset->rules.at(5)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(4)->next_rule_id, ruleset->rules.at(6)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(5)->next_rule_id, ruleset->rules.at(6)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(2)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(3)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, ruleset->rules.at(4)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(3)->next_rule_id, ruleset->rules.at(5)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(4)->next_rule_id, ruleset->rules.at(6)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(5)->next_rule_id, ruleset->rules.at(6)->rule_id);
     EXPECT_EQ(ruleset->rules.at(6)->next_rule_id, 0);
   }
 
@@ -1410,7 +1410,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 3);
       EXPECT_EQ(access_private::X(*action), true);
@@ -1443,7 +1443,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 5);
       EXPECT_EQ(access_private::X(*action), true);
@@ -1504,8 +1504,8 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::partner(*clause2), 5);
       EXPECT_EQ(access_private::num_resource_required(*clause2), 1);
     }
-    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(2)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(2)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(2)->rule_id);
     EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, 0);
   }
   // Rules for node5
@@ -1532,7 +1532,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 4);
       EXPECT_EQ(access_private::X(*action), true);
@@ -1567,7 +1567,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 6);
       EXPECT_EQ(access_private::X(*action), true);
@@ -1615,7 +1615,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 7);
       EXPECT_EQ(access_private::X(*action), true);
@@ -1663,7 +1663,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 3);
       EXPECT_EQ(access_private::X(*action), true);
@@ -1712,7 +1712,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 9);
       EXPECT_EQ(access_private::X(*action), true);
@@ -1761,7 +1761,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
 
       auto *action = dynamic_cast<PurifyAction *>(rule->action.get());
       EXPECT_NE(action, nullptr);
-      EXPECT_EQ(access_private::rule_id(*action), rule->rule_index);
+      EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
       EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
       EXPECT_EQ(access_private::partner(*action), 1);
       EXPECT_EQ(access_private::X(*action), true);
@@ -1823,16 +1823,16 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
       EXPECT_EQ(access_private::num_resource_required(*clause2), 1);
     }
 
-    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(2)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(3)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, ruleset->rules.at(4)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(3)->next_rule_id, ruleset->rules.at(5)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(4)->next_rule_id, ruleset->rules.at(6)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(5)->next_rule_id, ruleset->rules.at(7)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(6)->next_rule_id, ruleset->rules.at(8)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(7)->next_rule_id, ruleset->rules.at(9)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(8)->next_rule_id, ruleset->rules.at(10)->rule_index);
-    EXPECT_EQ(ruleset->rules.at(9)->next_rule_id, ruleset->rules.at(10)->rule_index);
+    EXPECT_EQ(ruleset->rules.at(0)->next_rule_id, ruleset->rules.at(2)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(1)->next_rule_id, ruleset->rules.at(3)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(2)->next_rule_id, ruleset->rules.at(4)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(3)->next_rule_id, ruleset->rules.at(5)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(4)->next_rule_id, ruleset->rules.at(6)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(5)->next_rule_id, ruleset->rules.at(7)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(6)->next_rule_id, ruleset->rules.at(8)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(7)->next_rule_id, ruleset->rules.at(9)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(8)->next_rule_id, ruleset->rules.at(10)->rule_id);
+    EXPECT_EQ(ruleset->rules.at(9)->next_rule_id, ruleset->rules.at(10)->rule_id);
     EXPECT_EQ(ruleset->rules.at(10)->next_rule_id, 0);
   }
 

@@ -104,75 +104,75 @@ void Router::handleMessage(cMessage *msg) {
   if (destAddr == myAddress && who_are_you == 1) {  // If destination is this node: Path selection
     send(pk, "toApp");  // send to Application locally
     return;
-  } else if (destAddr == myAddress && dynamic_cast<BSMtimingNotifier *>(msg) != nullptr) {  // Timing for BSM
+  } else if (destAddr == myAddress && dynamic_cast<BSMtimingNotifier *>(msg)) {  // Timing for BSM
     bubble("Timing Notifier from HoM (stand-alone or internal) received");
     send(pk, "rePort$o");  // send to Application locally
     return;
-  } else if (destAddr == myAddress && dynamic_cast<EPPStimingNotifier *>(msg) != nullptr) {  // Timing for BSM
+  } else if (destAddr == myAddress && dynamic_cast<EPPStimingNotifier *>(msg)) {  // Timing for BSM
     bubble("Timing Notifier from EPPS received");
     send(pk, "rePort$o");  // send to Application locally
     return;
-  } else if (destAddr == myAddress && dynamic_cast<ConnectionSetupRequest *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<ConnectionSetupRequest *>(msg)) {
     bubble("Connection setup request received");
     send(pk, "cmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<ConnectionSetupResponse *>(msg)) {
     bubble("Connection setup response received");
     send(pk, "cmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<RejectConnectionSetupRequest *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<RejectConnectionSetupRequest *>(msg)) {
     bubble("Reject connection setup response received");
     send(pk, "cmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<InternalRuleSetForwarding *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     bubble("Internal RuleSet Forwarding packet received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<InternalRuleSetForwarding_Application *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
     bubble("Internal RuleSet Forwarding Application packet received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<SwappingResult *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<SwappingResult *>(msg)) {
     bubble("Swapping Result packet received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<SimultaneousSwappingResult *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<SimultaneousSwappingResult *>(msg)) {
     bubble("Swapping Result packet received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyRequest *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyRequest *>(msg)) {
     bubble("Link tomography request received");
     send(pk, "hmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyAck *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyAck *>(msg)) {
     bubble("Link tomography ack received");
     send(pk, "hmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyRuleSet *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     bubble("Link tomography rule set received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyResult *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<LinkTomographyResult *>(msg)) {
     bubble("Link tomography result received");
     send(pk, "hmPort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<PurificationResult *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<PurificationResult *>(msg)) {
     bubble("Purification result received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<DoublePurificationResult *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<DoublePurificationResult *>(msg)) {
     bubble("DoublePurification result received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<DS_DoublePurificationResult *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<DS_DoublePurificationResult *>(msg)) {
     bubble("DS_DoublePurification result received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<DS_DoublePurificationSecondResult *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<DS_DoublePurificationSecondResult *>(msg)) {
     bubble("DS_DoublePurificationSecond result received");
     send(pk, "rePort$o");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<StopEmitting *>(msg) != nullptr) {
+  } else if (destAddr == myAddress && dynamic_cast<StopEmitting *>(msg)) {
     send(pk, "rePort$o");
     return;
   }

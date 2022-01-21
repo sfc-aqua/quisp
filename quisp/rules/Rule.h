@@ -4,27 +4,19 @@
  *
  *  \brief Rule
  */
-#ifndef QUISP_RULES_RULE_H_
-#define QUISP_RULES_RULE_H_
-
+#pragma once
 #include <omnetpp.h>
 #include <stdio.h>
 #include <memory>
 #include "Action.h"
 #include "Condition.h"
 
-namespace quisp {
-namespace rules {
-
-/** \class Rule Rule.h
- *
- *  \brief Rule
- */
+namespace quisp::rules {
 
 class Rule {
  public:
-  unsigned long ruleset_id;
-  unsigned long rule_index;
+  const unsigned long ruleset_id;
+  const unsigned long rule_id;
   unsigned long next_rule_id = 0;
   std::string name;
   std::unique_ptr<Condition> condition;
@@ -32,55 +24,15 @@ class Rule {
   std::multimap<int, IStationaryQubit *> resources;
   std::vector<int> action_partners;
   std::vector<int> next_action_partners;  // if this rule extends the entanglement
-  int mutable number_of_resources_allocated_in_total = 0;
-  // std::unique_ptr<Rule> next_rule;
-  Rule(){};
-  Rule(unsigned long rs_index, unsigned long r_index) {
-    ruleset_id = rs_index;
-    rule_index = r_index;
-  };
 
-  Rule(unsigned long rs_index, unsigned long r_index, std::string r_name) {
-    ruleset_id = rs_index;
-    rule_index = r_index;
-    name = r_name;
-  };
+  Rule(unsigned long ruleset_id, unsigned long rule_id, std::string rule_name = "", std::vector<int> action_partners = {});
 
-  // May need combine with above two constructors
-  Rule(unsigned long rs_index, unsigned long r_index, std::string r_name, std::vector<int> _action_partners) {
-    ruleset_id = rs_index;
-    rule_index = r_index;
-    name = r_name;
-    action_partners = _action_partners;
-  };
-
-  int num_partners() { return action_partners.size(); };
   void addResource(int address_entangled_with, IStationaryQubit *qubit);
   void setCondition(Condition *c);
   void setAction(Action *a);
-  void eraseResource(IStationaryQubit *qubit){
-      /*bool erased = false;
-      for (auto it =  rc.cbegin(), next_it =  rc.cbegin(); it !=  rc.cend(); it = next_it){
-          next_it = it; ++next_it;
-          if (it->second == qubit){
-              rc.erase(it);
-              erased = true;
-              break;
-          }
-      }
-      if(!erased){
-          std::cout<<"Trying to erase an un-queued resource.....! \n";
-      }*/
-  };
 
-  // cPacket* checkrun(cModule *re, qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
   cPacket *checkrun(cModule *re);
   bool checkTerminate();
-
-  // bool checkTerminate(qnicResources * resources,int qnic_type, int qnic_index,  int resource_entangled_with_address);
 };
 
-}  // namespace rules
-}  // namespace quisp
-
-#endif  // QUISP_RULES_RULE_H_
+}  // namespace quisp::rules

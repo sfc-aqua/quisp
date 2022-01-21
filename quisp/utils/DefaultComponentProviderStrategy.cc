@@ -28,13 +28,13 @@ cModule *DefaultComponentProviderStrategy::getNeighborNode(cModule *qnic) {
   return neighbor_node;
 }
 
-StationaryQubit *DefaultComponentProviderStrategy::getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) {
+IStationaryQubit *DefaultComponentProviderStrategy::getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) {
   auto *qnic = getQNIC(qnic_index, qnic_type);
   if (qnic == nullptr) {
     throw cRuntimeError("QNIC not found. index: %d, type: %d", qnic_index, qnic_type);
   }
   auto *qubit = qnic->getSubmodule("statQubit", qubit_index);
-  return check_and_cast<StationaryQubit *>(qubit);
+  return check_and_cast<IStationaryQubit *>(qubit);
 }
 
 cModule *DefaultComponentProviderStrategy::getQNIC(int qnic_index, QNIC_type qnic_type) {
@@ -43,6 +43,13 @@ cModule *DefaultComponentProviderStrategy::getQNIC(int qnic_index, QNIC_type qni
   }
   auto qnode = getQNode();
   return qnode->getSubmodule(QNIC_names[qnic_type], qnic_index);
+}
+int DefaultComponentProviderStrategy::getNumQubits(int qnic_index, QNIC_type qnic_type) {
+  auto *qnic = getQNIC(qnic_index, qnic_type);
+  if (qnic == nullptr) {
+    throw cRuntimeError("DefaultComponentProviderStrategy::getNumQubits: QNIC not found. index: %d, type: %d", qnic_index, qnic_type);
+  }
+  return qnic->par("numBuffer").intValue();
 }
 
 IRoutingDaemon *DefaultComponentProviderStrategy::getRoutingDaemon() {

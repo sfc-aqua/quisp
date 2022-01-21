@@ -62,8 +62,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     error("receive a send self-notification but cannot find which qnic to use");
   }
 
-  if (dynamic_cast<ConnectionSetupRequest *>(msg) != nullptr) {
-    ConnectionSetupRequest *req = check_and_cast<ConnectionSetupRequest *>(msg);
+  if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)) {
     int actual_dst = req->getActual_destAddr();
     int actual_src = req->getActual_srcAddr();
 
@@ -81,8 +80,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     return;
   }
 
-  if (dynamic_cast<ConnectionSetupResponse *>(msg) != nullptr) {
-    ConnectionSetupResponse *resp = check_and_cast<ConnectionSetupResponse *>(msg);
+  if (auto *resp = dynamic_cast<ConnectionSetupResponse *>(msg)) {
     int initiator_addr = resp->getActual_destAddr();
     int responder_addr = resp->getActual_srcAddr();
 
@@ -98,8 +96,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     return;
   }
 
-  if (dynamic_cast<RejectConnectionSetupRequest *>(msg) != nullptr) {
-    RejectConnectionSetupRequest *pk = check_and_cast<RejectConnectionSetupRequest *>(msg);
+  if (auto *pk = dynamic_cast<RejectConnectionSetupRequest *>(msg)) {
     int actual_src = pk->getActual_srcAddr();
 
     if (actual_src == my_address) {
@@ -162,7 +159,7 @@ void ConnectionManager::storeRuleSet(ConnectionSetupResponse *pk) {
   pk_internal->setSrcAddr(pk->getDestAddr());
   pk_internal->setKind(4);
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
-  pk_internal->setRuleSet(pk->getRuleSet());
+  pk_internal->setRuleSet(const_cast<RuleSet *>(pk->getRuleSet()));
   send(pk_internal, "RouterPort$o");
 }
 
@@ -178,7 +175,7 @@ void ConnectionManager::storeRuleSetForApplication(ConnectionSetupResponse *pk) 
   pk_internal->setSrcAddr(pk->getDestAddr());  // Should be original Src here?
   pk_internal->setKind(4);
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
-  pk_internal->setRuleSet(pk->getRuleSet());
+  pk_internal->setRuleSet(const_cast<RuleSet *>(pk->getRuleSet()));
   pk_internal->setApplication_type(pk->getApplication_type());
   send(pk_internal, "RouterPort$o");
 }
@@ -488,7 +485,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
           // (*next_rule)->action_partners.find(action_partner) != (*next_rule)->action_partners.end() didn't work why?
           if (is_same_partner && next_index > current_index) {
             // EV<<"Rule: "<<(*rule)->name<<" Next rule: "<<(*next_rule)->name<<"action partner: "<<action_partner<<" same?: "<<is_same_partner<<"\n";
-            (*rule)->next_rule_id = (*next_rule)->rule_index;
+            (*rule)->next_rule_id = (*next_rule)->rule_id;
             break;
           }
           next_index++;
@@ -505,7 +502,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   //   RuleSet *ruleset = rs->second;
   //   EV << "owner: " << owner << "\n";
   //   for (auto rule = ruleset->cbegin(); rule != ruleset->cend(); ++rule) {
-  //     EV << "Rule: " << (*rule)->name << " Rule id: " << (*rule)->rule_index << " next rule id: " << (*rule)->next_rule_id << "\n";
+  //     EV << "Rule: " << (*rule)->name << " Rule id: " << (*rule)->rule_id << " next rule id: " << (*rule)->next_rule_id << "\n";
   //   }
   // }
   // error("check");
@@ -883,7 +880,7 @@ std::unique_ptr<Rule> ConnectionManager::purificationRule(int partner_address, i
       Clause *resource_clause = new EnoughResourceClause(partner_address, 2);  // to prepare 1 purified entanglement, we need 2 raw entanglements
       condition->addClause(resource_clause);
       rule_purification->setCondition(condition);
-      // PurifyAction(unsigned long RuleSet_id, unsigned long rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res,
+      // PurifyAction(unsigned long RuleSet_id, unsigned long rule_id, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res,
       // int tres);
       Action *purify_action = new PurifyAction(ruleset_id, rule_id, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
       rule_purification->setAction(purify_action);
@@ -987,7 +984,7 @@ std::unique_ptr<Rule> ConnectionManager::tomographyRule(int owner_address, int p
   condition->addClause(count_clause);
   condition->addClause(resource_clause);
   tomography_rule->setCondition(condition);
-  Action *action = new RandomMeasureAction(owner_address, partner_address, qnic_type, qnic_index, 0, num_measure);
+  Action *action = new RandomMeasureAction(ruleset_id, rule_id, owner_address, partner_address, qnic_type, qnic_index, 0, num_measure);
   tomography_rule->setAction(action);
   return tomography_rule;
 }

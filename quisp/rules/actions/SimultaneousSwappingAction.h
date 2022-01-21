@@ -2,11 +2,18 @@
 
 #include "BaseAction.h"
 
-namespace quisp {
-namespace rules {
-namespace actions {
+namespace quisp::rules::actions {
 
 class SimultaneousSwappingAction : public Action {
+ public:
+  SimultaneousSwappingAction(unsigned long ruleset_id, unsigned long rule_id, int left_partner, QNIC_type left_qnic_type, int left_qnic_index, int left_qnic_address,
+                             int left_resource, int right_partner, QNIC_type right_qnic_type, int right_qnic_index, int right_qnic_address, int right_resource,
+                             int self_left_qnic_id, QNIC_type self_left_qnic_type, int self_right_qnic_id, QNIC_type self_right_qnic_type, int initiator,
+                             QNIC_type initiator_qnic_type, int initiator_qnic_id, int initiator_qnic_address, int initiator_resource, int responder, QNIC_type responder_qnic_type,
+                             int responder_qnic_id, int responder_qnic_address, int responder_resource, int index_in_path, int path_length_exclude_ir);
+
+  cPacket* run(cModule* re) override;
+
  protected:
   // First partner
   int left_partner;
@@ -26,13 +33,13 @@ class SimultaneousSwappingAction : public Action {
   QNIC_type initiator_qnic_type;
   int initiator_qnic_id;
   int initiator_qnic_address;
-  int initiator_resouce;
+  int initiator_resource;
 
   int responder;
   QNIC_type responder_qnic_type;
   int responder_qnic_id;
   int responder_qnic_address;
-  int responder_resouce;
+  int responder_resource;
 
   int self_left_qnic_id;
   int self_right_qnic_id;
@@ -41,15 +48,5 @@ class SimultaneousSwappingAction : public Action {
 
   int index_in_path;
   int path_length_exclude_IR;
-
- public:
-  // constructor of entanglement swapping
-  SimultaneousSwappingAction(unsigned long RuleSet_id, unsigned long rule_index, int lp, QNIC_type lqt, int lqi, int lqad, int lr, int rp, QNIC_type rqt, int rqi, int rqad, int rr,
-                             int slqi, QNIC_type slqt, int srqi, QNIC_type srqt, int init, QNIC_type initqt, int initqi, int initqad, int initr, int resp, QNIC_type respqt,
-                             int respqi, int respqad, int respr, int iip, int pleir);
-
-  cPacket* run(cModule* re) override;
 };
-}  // namespace actions
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::actions

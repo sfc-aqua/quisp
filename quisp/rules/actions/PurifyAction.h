@@ -2,14 +2,16 @@
 
 #include "BaseAction.h"
 
-namespace quisp {
-namespace rules {
-namespace actions {
+namespace quisp::rules::actions {
 
 class PurifyAction : public Action {
+ public:
+  PurifyAction(unsigned long ruleset_id, unsigned long rule_id, bool x_purification, bool z_purification, int num_purification, int partner, QNIC_type qnic_type, int qnic_id,
+               int resource, int trash_resource);
+
+  cPacket* run(cModule* re) override;
+
  protected:
-  unsigned long ruleset_id;
-  unsigned long rule_id;
   int partner; /**< Identifies entanglement partner. */
   QNIC_type qnic_type;
   int qnic_id;
@@ -20,15 +22,6 @@ class PurifyAction : public Action {
   bool Z;
   int num_purify;
   int action_index = 0;  // To track how many times this particular action has been invoked.
-
- public:
-  PurifyAction();
-  PurifyAction(unsigned long RuleSet_id, unsigned long rule_index, bool X_purification, bool Z_purification, int num_purification, int part, QNIC_type qt, int qi, int res,
-               int tres);
-
-  cPacket* run(cModule* re) override;
 };
 
-}  // namespace actions
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::actions

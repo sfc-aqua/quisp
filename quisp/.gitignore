@@ -9,6 +9,7 @@ out/
 .oppbuildspec
 .oppfeaturestate
 quisp.dSYM/
+Test*
 
 PhotonicQubit_m.cc
 PhotonicQubit_m.h

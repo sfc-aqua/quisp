@@ -32,15 +32,26 @@ bool ComponentProvider::isQNodeType(const cModuleType *const type) {
   return strategy->isQNodeType(type);
 }
 
-StationaryQubit *ComponentProvider::getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) {
+IStationaryQubit *ComponentProvider::getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) {
   ensureStrategy();
   return strategy->getStationaryQubit(qnic_index, qubit_index, qnic_type);
+}
+
+IStationaryQubit *ComponentProvider::getStationaryQubit(modules::qrsa::IQubitRecord *const qubit_record) {
+  ensureStrategy();
+  if (qubit_record->qubit_ptr == nullptr) {
+    qubit_record->qubit_ptr = strategy->getStationaryQubit(qubit_record->getQNicIndex(), qubit_record->getQubitIndex(), qubit_record->getQNicType());
+  }
+  return qubit_record->qubit_ptr;
 }
 cModule *ComponentProvider::getQNIC(int qnic_index, QNIC_type qnic_type) {
   ensureStrategy();
   return strategy->getQNIC(qnic_index, qnic_type);
 }
-
+int ComponentProvider::getNumQubits(int qnic_index, QNIC_type qnic_type) {
+  ensureStrategy();
+  return strategy->getNumQubits(qnic_index, qnic_type);
+}
 IHardwareMonitor *ComponentProvider::getHardwareMonitor() {
   ensureStrategy();
   return strategy->getHardwareMonitor();

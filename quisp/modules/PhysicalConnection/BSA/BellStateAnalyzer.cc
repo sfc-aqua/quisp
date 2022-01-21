@@ -159,7 +159,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     left_photon_origin_qnic_address = photon->getQNICEntangledWith();
     left_photon_origin_qubit_address = photon->getStationaryQubitEntangledWith();
     left_photon_origin_qnic_type = photon->getQNICtypeEntangledWith();
-    left_statQubit_ptr = check_and_cast<StationaryQubit *>(photon->getEntangled_with());
+    left_statQubit_ptr = const_cast<StationaryQubit *>(check_and_cast<const StationaryQubit *>(photon->getEntangled_with()));
     left_photon_Xerr = photon->getPauliXerr();
     left_photon_Zerr = photon->getPauliZerr();
     left_photon_lost = photon->getPhotonLost();
@@ -181,7 +181,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     right_photon_origin_qubit_address = photon->getStationaryQubitEntangledWith();
     right_photon_origin_qnic_type = photon->getQNICtypeEntangledWith();
     // right_statQubit_ptr = photon->getEntangled_with();
-    right_statQubit_ptr = check_and_cast<StationaryQubit *>(photon->getEntangled_with());
+    right_statQubit_ptr = const_cast<StationaryQubit *>(check_and_cast<const StationaryQubit *>(photon->getEntangled_with()));
     right_photon_Xerr = photon->getPauliXerr();
     right_photon_Zerr = photon->getPauliZerr();
     right_photon_lost = photon->getPhotonLost();

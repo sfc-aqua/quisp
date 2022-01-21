@@ -2,11 +2,13 @@
 
 #include "BaseAction.h"
 
-namespace quisp {
-namespace rules {
-namespace actions {
+namespace quisp::rules::actions {
 
 class RandomMeasureAction : public Action {
+ public:
+  RandomMeasureAction(unsigned long ruleset_id, unsigned long rule_id, int owner_address, int partner, QNIC_type qnic_type, int qnic_id, int resource, int max_count);
+  cPacket* run(cModule* re) override;
+
  protected:
   int partner; /**< Identifies entanglement partner. */
   QNIC_type qnic_type;
@@ -17,14 +19,5 @@ class RandomMeasureAction : public Action {
   int mutable current_count;
   int mutable max_count;
   simtime_t start;
-
- public:
-  RandomMeasureAction(int owner_address, int part, QNIC_type qt, int qi, int res, int max);
-
-  // cPacket* run(qnicResources *resources) override;
-  // cPacket* run(cModule *re, qnicResources *resources) override;
-  cPacket* run(cModule* re) override;
 };
-}  // namespace actions
-}  // namespace rules
-}  // namespace quisp
+}  // namespace quisp::rules::actions

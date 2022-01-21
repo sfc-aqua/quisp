@@ -7,8 +7,6 @@
 #ifndef QUISP_RULES_CONDITION_H_
 #define QUISP_RULES_CONDITION_H_
 
-#include <omnetpp.h>
-#include <memory>
 #include "Clause.h"
 
 namespace quisp {
@@ -21,8 +19,8 @@ namespace rules {
 class Condition {
  public:
   void addClause(Clause* c);
-  bool check(std::multimap<int, IStationaryQubit*> resources) const;
-  bool checkTerminate(std::multimap<int, IStationaryQubit*> resources) const;
+  bool check(std::multimap<int, IStationaryQubit*>& resources) const;
+  bool checkTerminate(std::multimap<int, IStationaryQubit*>& resources) const;
 
   std::vector<Clause*> clauses;
 };
