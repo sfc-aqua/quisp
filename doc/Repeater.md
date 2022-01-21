@@ -33,11 +33,12 @@ Quantum error is one critical obstacle for large-scale quantum networking. Keepi
 
 ### 4. Network operations
 
-The repeater node behaves as an ordinal network node that is responsible for routing, multiplexing, etc. As mentioned above, repeaters must be capable of coordinating operations with other repeaters or end nodes.
+The repeater node behaves as an ordinal network node that is responsible for link-management, multiplexing, etc. As mentioned above, repeaters must be capable of coordinating operations with other repeaters or end nodes.
 
 ## What is the interface to the outside world?
 
 ### Quantum Interface
+A Repeater node has exactly two external links, so that it is useful in a line only.  It is essentially a repurposed [QNIC](./QNIC), with both halves of the card running the same network type. 
 
 QNIC (Quantum Network Interface Card) is the interface of quantum repeaters. QNIC contains quantum memories to store quantum information. 
 

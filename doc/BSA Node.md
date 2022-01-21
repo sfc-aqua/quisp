@@ -4,7 +4,7 @@
 
 Bell State Analyzer (BSA) is crucial for generating entanglement, especially in photonic quantum systems. BSA performs a special type of measurement called "Bell state measurement" which plays an important role, especially in quantum communication. The most common way in the current implementation of BSA is to use linear optics with beam splitters (BS), polarizing beam splitters (PBS), and single-photon detectors.  
 
-![Beam Splitter (2).png](./img/Beam_Splitter_(2).png)
+![BellStateMeasurement.png](./img/BellStateMeasurement.png)
 
 Schematic diagram of optical components in BSA
 
@@ -18,7 +18,7 @@ In this document, we explain how the BSA with polarization qubits in linear opti
 
 As the inputs of BSA, we assume two photons entangled with matter qubit (quantum memory) or another photon as below.
 
-![Beam Splitter (4).png](./img/Beam_Splitter_(4).png)
+![MIM_figure.png](./img/MIM_figure.png)
 
 Here, we assume those entangled states are <img src="https://render.githubusercontent.com/render/math?math=|\psi^{-}\rangle = \frac{|HV\rangle - |VH\rangle}{\sqrt{2}}"> known as one of the Bell states, where <img src="https://render.githubusercontent.com/render/math?math=|H\rangle"> is horizontal polarization state and <img src="https://render.githubusercontent.com/render/math?math=|V\rangle"> is vertical polarization state. 
 
