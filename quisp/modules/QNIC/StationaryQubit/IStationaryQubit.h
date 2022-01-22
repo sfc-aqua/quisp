@@ -150,13 +150,13 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
    * \param pulse is 1 for the beginning of the burst, 2 for the end.
    */
   virtual void emitPhoton(int pulse) = 0;
-  virtual types::MeasureXResult correlation_measure_X() = 0;
-  virtual types::MeasureYResult correlation_measure_Y() = 0;
-  virtual types::MeasureZResult correlation_measure_Z() = 0;
+  virtual types::MeasureXResult correlationMeasureX() = 0;
+  virtual types::MeasureYResult correlationMeasureY() = 0;
+  virtual types::MeasureZResult correlationMeasureZ() = 0;
 
-  virtual types::EigenvalueResult local_measure_X() = 0;
-  virtual types::EigenvalueResult local_measure_Y() = 0;
-  virtual types::EigenvalueResult local_measure_Z() = 0;
+  virtual types::EigenvalueResult localMeasureX() = 0;
+  virtual types::EigenvalueResult localMeasureY() = 0;
+  virtual types::EigenvalueResult localMeasureZ() = 0;
 
   /**
    * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.

@@ -226,7 +226,7 @@ void StationaryQubit::setMeasurementErrorModel(MeasurementErrorModel &model) {
   model.z_error_rate = par("Z_measurement_error_rate").doubleValue();
 }
 
-MeasureXResult StationaryQubit::correlation_measure_X() {
+MeasureXResult StationaryQubit::correlationMeasureX() {
   bool error = par("GOD_Zerror").boolValue();
   if (dblrand() < Measurement_error.x_error_rate) {
     error = !error;
@@ -234,7 +234,7 @@ MeasureXResult StationaryQubit::correlation_measure_X() {
   return error ? MeasureXResult::HAS_Z_ERROR : MeasureXResult::NO_Z_ERROR;
 }
 
-MeasureYResult StationaryQubit::correlation_measure_Y() {
+MeasureYResult StationaryQubit::correlationMeasureY() {
   bool error = par("GOD_Zerror").boolValue() != par("GOD_Xerror").boolValue();
   if (dblrand() < Measurement_error.y_error_rate) {
     error = !error;
@@ -242,7 +242,7 @@ MeasureYResult StationaryQubit::correlation_measure_Y() {
   return error ? MeasureYResult::HAS_XZ_ERROR : MeasureYResult::NO_XZ_ERROR;
 }
 
-MeasureZResult StationaryQubit::correlation_measure_Z() {
+MeasureZResult StationaryQubit::correlationMeasureZ() {
   bool error = par("GOD_Xerror").boolValue();
   if (dblrand() < Measurement_error.x_error_rate) {
     error = !error;
@@ -250,7 +250,7 @@ MeasureZResult StationaryQubit::correlation_measure_Z() {
   return error ? MeasureZResult::HAS_X_ERROR : MeasureZResult::NO_X_ERROR;
 }
 
-EigenvalueResult StationaryQubit::local_measure_X() {
+EigenvalueResult StationaryQubit::localMeasureX() {
   // the Z error will propagate to its partner; This only works for Bell pair and entanglement swapping for now
   if (this->entangled_partner != nullptr && par("GOD_Zerror").boolValue()) {
     this->entangled_partner->addZerror();
@@ -269,12 +269,12 @@ EigenvalueResult StationaryQubit::local_measure_X() {
   return result;
 }
 
-EigenvalueResult StationaryQubit::local_measure_Y() {
+EigenvalueResult StationaryQubit::localMeasureY() {
   error("Not Yet Implemented");
   return EigenvalueResult::PLUS_ONE;
 }
 
-EigenvalueResult StationaryQubit::local_measure_Z() {
+EigenvalueResult StationaryQubit::localMeasureZ() {
   // the X error will propagate to its partner; This only works for Bell pair and entanglement swapping for now
   if (this->entangled_partner != nullptr && par("GOD_Xerror").boolValue()) {
     this->entangled_partner->addXerror();
@@ -567,7 +567,7 @@ bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
   applyMemoryError();
   check_and_cast<StationaryQubit *>(resource_qubit)->applyMemoryError();
   /*Target qubit*/ this->CNOT_gate(resource_qubit /*controlled qubit*/);
-  bool meas = this->correlation_measure_Z() == MeasureZResult::NO_X_ERROR;
+  bool meas = this->correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
   return meas;
 }
 
@@ -577,7 +577,7 @@ bool StationaryQubit::Zpurify(IStationaryQubit *resource_qubit /*Target*/) {
   check_and_cast<StationaryQubit *>(resource_qubit)->applyMemoryError();
   /*Target qubit*/ resource_qubit->CNOT_gate(this /*controlled qubit*/);
   this->Hadamard_gate();
-  bool meas = this->correlation_measure_Z() == MeasureZResult::NO_X_ERROR;
+  bool meas = this->correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
   return meas;
 }
 

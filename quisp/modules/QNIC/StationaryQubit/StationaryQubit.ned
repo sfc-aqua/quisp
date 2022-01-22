@@ -124,6 +124,6 @@ simple StationaryQubit
         //int ruleset_id = default(-1);
         //int rule_id = default(-1);
         //int action_index = default(-1);
-        gates:
+    gates:
         inout tolens_quantum_port;
 }

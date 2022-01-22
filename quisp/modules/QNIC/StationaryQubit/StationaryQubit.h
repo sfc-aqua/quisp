@@ -45,7 +45,7 @@ class StationaryQubit : public IStationaryQubit {
    * New errors only occur when wrong measurement result is delivered for feed-forward
    * (The error on the measured qubit propagates to the byproduct gate target qubit).
    */
-  virtual quisp::types::MeasureXResult correlation_measure_X() override;
+  virtual quisp::types::MeasureXResult correlationMeasureX() override;
 
   /**
    * \brief Single Qubit Y measurement.
@@ -53,7 +53,7 @@ class StationaryQubit : public IStationaryQubit {
    * New errors only occur when wrong measurement result is delivered for feed-forward
    * (The error on the measured qubit propagates to the byproduct gate target qubit).
    */
-  virtual types::MeasureYResult correlation_measure_Y() override;
+  virtual types::MeasureYResult correlationMeasureY() override;
 
   /**
    * \brief Single Qubit Z measurement.
@@ -61,11 +61,11 @@ class StationaryQubit : public IStationaryQubit {
    * New errors only occur when wrong measurement result is delivered for feed-forward
    * (The error on the measured qubit propagates to the byproduct gate target qubit).
    */
-  virtual types::MeasureZResult correlation_measure_Z() override;
+  virtual types::MeasureZResult correlationMeasureZ() override;
 
-  virtual types::EigenvalueResult local_measure_X() override;
-  virtual types::EigenvalueResult local_measure_Y() override;
-  virtual types::EigenvalueResult local_measure_Z() override;
+  virtual types::EigenvalueResult localMeasureX() override;
+  virtual types::EigenvalueResult localMeasureY() override;
+  virtual types::EigenvalueResult localMeasureZ() override;
 
   /**
    * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.

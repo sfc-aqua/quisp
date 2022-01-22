@@ -13,13 +13,13 @@ class StatQubitTarget : public StationaryQubit {
  public:
   using StationaryQubit::addXerror;
   using StationaryQubit::addZerror;
-  using StationaryQubit::correlation_measure_X;
-  using StationaryQubit::correlation_measure_Y;
-  using StationaryQubit::correlation_measure_Z;
+  using StationaryQubit::correlationMeasureX;
+  using StationaryQubit::correlationMeasureY;
+  using StationaryQubit::correlationMeasureZ;
   using StationaryQubit::initialize;
-  using StationaryQubit::local_measure_X;
-  using StationaryQubit::local_measure_Y;
-  using StationaryQubit::local_measure_Z;
+  using StationaryQubit::localMeasureX;
+  using StationaryQubit::localMeasureY;
+  using StationaryQubit::localMeasureZ;
   using StationaryQubit::par;
   using StationaryQubit::setMeasurementErrorModel;
   StatQubitTarget() : StationaryQubit() { setComponentType(new TestModuleType("test qubit")); }
@@ -121,9 +121,9 @@ TEST(StatQubitMeasurementTest, CorrelationMeasureXwithoutError) {
   qubit->setMeasurementErrorModel(qubit->Measurement_error);
   sim->registerComponent(qubit);
   rng->doubleValue = 0.5;
-  EXPECT_EQ(qubit->correlation_measure_X(), quisp::types::MeasureXResult::NO_Z_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureX(), quisp::types::MeasureXResult::NO_Z_ERROR);
   rng->doubleValue = 1.0 / 3000;
-  EXPECT_EQ(qubit->correlation_measure_X(), quisp::types::MeasureXResult::HAS_Z_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureX(), quisp::types::MeasureXResult::HAS_Z_ERROR);
 }
 
 TEST(StatQubitMeasurementTest, CorrelationMeasureXwithError) {
@@ -137,23 +137,23 @@ TEST(StatQubitMeasurementTest, CorrelationMeasureXwithError) {
   // X error
   qubit->addXerror();
   rng->doubleValue = 0.5;
-  EXPECT_EQ(qubit->correlation_measure_X(), quisp::types::MeasureXResult::NO_Z_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureX(), quisp::types::MeasureXResult::NO_Z_ERROR);
   rng->doubleValue = 1.0 / 3000;
-  EXPECT_EQ(qubit->correlation_measure_X(), quisp::types::MeasureXResult::HAS_Z_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureX(), quisp::types::MeasureXResult::HAS_Z_ERROR);
 
   // Y error
   qubit->addZerror();
   rng->doubleValue = 0.5;
-  EXPECT_EQ(qubit->correlation_measure_X(), quisp::types::MeasureXResult::HAS_Z_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureX(), quisp::types::MeasureXResult::HAS_Z_ERROR);
   rng->doubleValue = 1.0 / 3000;
-  EXPECT_EQ(qubit->correlation_measure_X(), quisp::types::MeasureXResult::NO_Z_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureX(), quisp::types::MeasureXResult::NO_Z_ERROR);
 
   // Z error
   qubit->addXerror();
   rng->doubleValue = 0.5;
-  EXPECT_EQ(qubit->correlation_measure_X(), quisp::types::MeasureXResult::HAS_Z_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureX(), quisp::types::MeasureXResult::HAS_Z_ERROR);
   rng->doubleValue = 1.0 / 3000;
-  EXPECT_EQ(qubit->correlation_measure_X(), quisp::types::MeasureXResult::NO_Z_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureX(), quisp::types::MeasureXResult::NO_Z_ERROR);
 }
 
 TEST(StatQubitMeasurementTest, CorrelationMeasureYwithoutError) {
@@ -164,9 +164,9 @@ TEST(StatQubitMeasurementTest, CorrelationMeasureYwithoutError) {
   qubit->setMeasurementErrorModel(qubit->Measurement_error);
   sim->registerComponent(qubit);
   rng->doubleValue = 0.5;
-  EXPECT_EQ(qubit->correlation_measure_Y(), quisp::types::MeasureYResult::NO_XZ_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureY(), quisp::types::MeasureYResult::NO_XZ_ERROR);
   rng->doubleValue = 1.0 / 3000;
-  EXPECT_EQ(qubit->correlation_measure_Y(), quisp::types::MeasureYResult::HAS_XZ_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureY(), quisp::types::MeasureYResult::HAS_XZ_ERROR);
 }
 
 TEST(StatQubitMeasurementTest, CorrelationMeasureYwithError) {
@@ -180,23 +180,23 @@ TEST(StatQubitMeasurementTest, CorrelationMeasureYwithError) {
   // X error
   qubit->addXerror();
   rng->doubleValue = 0.5;
-  EXPECT_EQ(qubit->correlation_measure_Y(), quisp::types::MeasureYResult::HAS_XZ_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureY(), quisp::types::MeasureYResult::HAS_XZ_ERROR);
   rng->doubleValue = 1.0 / 3000;
-  EXPECT_EQ(qubit->correlation_measure_Y(), quisp::types::MeasureYResult::NO_XZ_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureY(), quisp::types::MeasureYResult::NO_XZ_ERROR);
 
   // Y error
   qubit->addZerror();
   rng->doubleValue = 0.5;
-  EXPECT_EQ(qubit->correlation_measure_Y(), quisp::types::MeasureYResult::NO_XZ_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureY(), quisp::types::MeasureYResult::NO_XZ_ERROR);
   rng->doubleValue = 1.0 / 3000;
-  EXPECT_EQ(qubit->correlation_measure_Y(), quisp::types::MeasureYResult::HAS_XZ_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureY(), quisp::types::MeasureYResult::HAS_XZ_ERROR);
 
   // Z error
   qubit->addXerror();
   rng->doubleValue = 0.5;
-  EXPECT_EQ(qubit->correlation_measure_Y(), quisp::types::MeasureYResult::HAS_XZ_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureY(), quisp::types::MeasureYResult::HAS_XZ_ERROR);
   rng->doubleValue = 1.0 / 3000;
-  EXPECT_EQ(qubit->correlation_measure_Y(), quisp::types::MeasureYResult::NO_XZ_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureY(), quisp::types::MeasureYResult::NO_XZ_ERROR);
 }
 
 TEST(StatQubitMeasurementTest, CorrelationMeasureZwithoutError) {
@@ -207,9 +207,9 @@ TEST(StatQubitMeasurementTest, CorrelationMeasureZwithoutError) {
   qubit->setMeasurementErrorModel(qubit->Measurement_error);
   sim->registerComponent(qubit);
   rng->doubleValue = 0.5;
-  EXPECT_EQ(qubit->correlation_measure_Z(), quisp::types::MeasureZResult::NO_X_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureZ(), quisp::types::MeasureZResult::NO_X_ERROR);
   rng->doubleValue = 1.0 / 3000;
-  EXPECT_EQ(qubit->correlation_measure_Z(), quisp::types::MeasureZResult::HAS_X_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureZ(), quisp::types::MeasureZResult::HAS_X_ERROR);
 }
 
 TEST(StatQubitMeasurementTest, CorrelationMeasureZwithError) {
@@ -223,23 +223,23 @@ TEST(StatQubitMeasurementTest, CorrelationMeasureZwithError) {
   // X error
   qubit->addXerror();
   rng->doubleValue = 0.5;
-  EXPECT_EQ(qubit->correlation_measure_Z(), quisp::types::MeasureZResult::HAS_X_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureZ(), quisp::types::MeasureZResult::HAS_X_ERROR);
   rng->doubleValue = 1.0 / 3000;
-  EXPECT_EQ(qubit->correlation_measure_Z(), quisp::types::MeasureZResult::NO_X_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureZ(), quisp::types::MeasureZResult::NO_X_ERROR);
 
   // Y error
   qubit->addZerror();
   rng->doubleValue = 0.5;
-  EXPECT_EQ(qubit->correlation_measure_Z(), quisp::types::MeasureZResult::HAS_X_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureZ(), quisp::types::MeasureZResult::HAS_X_ERROR);
   rng->doubleValue = 1.0 / 3000;
-  EXPECT_EQ(qubit->correlation_measure_Z(), quisp::types::MeasureZResult::NO_X_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureZ(), quisp::types::MeasureZResult::NO_X_ERROR);
 
   // Z error
   qubit->addXerror();
   rng->doubleValue = 0.5;
-  EXPECT_EQ(qubit->correlation_measure_Z(), quisp::types::MeasureZResult::NO_X_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureZ(), quisp::types::MeasureZResult::NO_X_ERROR);
   rng->doubleValue = 1.0 / 3000;
-  EXPECT_EQ(qubit->correlation_measure_Z(), quisp::types::MeasureZResult::HAS_X_ERROR);
+  EXPECT_EQ(qubit->correlationMeasureZ(), quisp::types::MeasureZResult::HAS_X_ERROR);
 }
 
 TEST(StatQubitMeasurementTest, localXMeasurementWithoutError) {
@@ -255,7 +255,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithoutError) {
   sim->registerComponent(qubit);
 
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -264,7 +264,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithoutError) {
   qubit->reset();
   another_qubit->reset();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -274,7 +274,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithoutError) {
   another_qubit->reset();
   qubit->addZerror();
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -284,7 +284,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithoutError) {
   another_qubit->reset();
   qubit->addZerror();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -294,7 +294,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithoutError) {
   another_qubit->reset();
   qubit->addXerror();
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -304,7 +304,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithoutError) {
   another_qubit->reset();
   qubit->addXerror();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -315,7 +315,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithoutError) {
   qubit->addZerror();
   qubit->addXerror();
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -326,7 +326,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithoutError) {
   qubit->addZerror();
   qubit->addXerror();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -347,7 +347,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithError) {
   sim->registerComponent(qubit);
 
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -356,7 +356,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithError) {
   qubit->reset();
   another_qubit->reset();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -366,7 +366,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithError) {
   another_qubit->reset();
   qubit->addZerror();
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -376,7 +376,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithError) {
   another_qubit->reset();
   qubit->addZerror();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -386,7 +386,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithError) {
   another_qubit->reset();
   qubit->addXerror();
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -396,7 +396,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithError) {
   another_qubit->reset();
   qubit->addXerror();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -407,7 +407,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithError) {
   qubit->addZerror();
   qubit->addXerror();
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -418,7 +418,7 @@ TEST(StatQubitMeasurementTest, localXMeasurementWithError) {
   qubit->addZerror();
   qubit->addXerror();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_X(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureX(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -438,7 +438,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithoutError) {
   sim->registerComponent(qubit);
 
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -447,7 +447,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithoutError) {
   qubit->reset();
   another_qubit->reset();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_TRUE(another_qubit->par("GOD_Xerror"));
@@ -457,7 +457,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithoutError) {
   another_qubit->reset();
   qubit->addZerror();
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -467,7 +467,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithoutError) {
   another_qubit->reset();
   qubit->addZerror();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_TRUE(another_qubit->par("GOD_Xerror"));
@@ -477,7 +477,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithoutError) {
   another_qubit->reset();
   qubit->addXerror();
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_TRUE(another_qubit->par("GOD_Xerror"));
@@ -487,7 +487,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithoutError) {
   another_qubit->reset();
   qubit->addXerror();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -498,7 +498,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithoutError) {
   qubit->addZerror();
   qubit->addXerror();
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_TRUE(another_qubit->par("GOD_Xerror"));
@@ -509,7 +509,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithoutError) {
   qubit->addZerror();
   qubit->addXerror();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -530,7 +530,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithError) {
   sim->registerComponent(qubit);
 
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -539,7 +539,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithError) {
   qubit->reset();
   another_qubit->reset();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_TRUE(another_qubit->par("GOD_Xerror"));
@@ -549,7 +549,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithError) {
   another_qubit->reset();
   qubit->addZerror();
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -559,7 +559,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithError) {
   another_qubit->reset();
   qubit->addZerror();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_FALSE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_TRUE(another_qubit->par("GOD_Xerror"));
@@ -569,7 +569,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithError) {
   another_qubit->reset();
   qubit->addXerror();
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_TRUE(another_qubit->par("GOD_Xerror"));
@@ -579,7 +579,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithError) {
   another_qubit->reset();
   qubit->addXerror();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_FALSE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
@@ -590,7 +590,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithError) {
   qubit->addZerror();
   qubit->addXerror();
   rng->doubleValue = 0.7;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::MINUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_TRUE(another_qubit->par("GOD_Xerror"));
@@ -601,7 +601,7 @@ TEST(StatQubitMeasurementTest, localZMeasurementWithError) {
   qubit->addZerror();
   qubit->addXerror();
   rng->doubleValue = 0.3;
-  EXPECT_EQ(qubit->local_measure_Z(), quisp::types::EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(qubit->localMeasureZ(), quisp::types::EigenvalueResult::PLUS_ONE);
   EXPECT_TRUE(qubit->par("GOD_Xerror"));
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(another_qubit->par("GOD_Xerror"));
