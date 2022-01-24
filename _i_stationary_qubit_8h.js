@@ -4,6 +4,7 @@ var _i_stationary_qubit_8h =
     [ "SingleGateErrorModel", "structquisp_1_1modules_1_1_single_gate_error_model.html", "structquisp_1_1modules_1_1_single_gate_error_model" ],
     [ "TwoQubitGateErrorModel", "structquisp_1_1modules_1_1_two_qubit_gate_error_model.html", "structquisp_1_1modules_1_1_two_qubit_gate_error_model" ],
     [ "memory_error_model", "structquisp_1_1modules_1_1memory__error__model.html", "structquisp_1_1modules_1_1memory__error__model" ],
+    [ "MeasurementErrorModel", "structquisp_1_1modules_1_1_measurement_error_model.html", "structquisp_1_1modules_1_1_measurement_error_model" ],
     [ "single_qubit_error", "structquisp_1_1modules_1_1single__qubit__error.html", "structquisp_1_1modules_1_1single__qubit__error" ],
     [ "quantum_state", "structquisp_1_1modules_1_1quantum__state.html", "structquisp_1_1modules_1_1quantum__state" ],
     [ "measurement_output_probabilities", "structquisp_1_1modules_1_1measurement__output__probabilities.html", "structquisp_1_1modules_1_1measurement__output__probabilities" ],
@@ -11,6 +12,10 @@ var _i_stationary_qubit_8h =
     [ "measurement_operators", "structquisp_1_1modules_1_1measurement__operators.html", "structquisp_1_1modules_1_1measurement__operators" ],
     [ "measurement_outcome", "structquisp_1_1modules_1_1measurement__outcome.html", "structquisp_1_1modules_1_1measurement__outcome" ],
     [ "IStationaryQubit", "classquisp_1_1modules_1_1_i_stationary_qubit.html", "classquisp_1_1modules_1_1_i_stationary_qubit" ],
+    [ "EigenvalueResult", "_i_stationary_qubit_8h.html#aa24270bdfb1fac470362edc943649d57", [
+      [ "MINUS_ONE", "_i_stationary_qubit_8h.html#aa24270bdfb1fac470362edc943649d57a25725c81fc4f00fa5b881c17af6a2a3e", null ],
+      [ "PLUS_ONE", "_i_stationary_qubit_8h.html#aa24270bdfb1fac470362edc943649d57a9c0ed0366bbc920f92606585259a1664", null ]
+    ] ],
     [ "MeasureXResult", "_i_stationary_qubit_8h.html#a312e2e3b1de3e59d939ff3688ed26d80", [
       [ "NO_Z_ERROR", "_i_stationary_qubit_8h.html#a312e2e3b1de3e59d939ff3688ed26d80a6a9643dc71b2b01f457096880d5c22c2", null ],
       [ "HAS_Z_ERROR", "_i_stationary_qubit_8h.html#a312e2e3b1de3e59d939ff3688ed26d80a0292f9bdf50bbd0fd2d8fb6e420c4f1a", null ]

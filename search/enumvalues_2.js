@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['qnic_5fe_2241',['QNIC_E',['../namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3da045495d91222801283ae27e8a0913da7',1,'quisp::modules']]],
-  ['qnic_5fn_2242',['QNIC_N',['../namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3daaa42f9a2558764542403a90d626a2d46',1,'quisp::modules']]],
-  ['qnic_5fr_2243',['QNIC_R',['../namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3dafd6a234f2c0ba28b3ad1c3995eae6fce',1,'quisp::modules']]],
-  ['qnic_5frp_2244',['QNIC_RP',['../namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3da18aba56dae027f8a6ffaf49c8bf39d17',1,'quisp::modules']]]
+  ['no_5fx_5ferror_2263',['NO_X_ERROR',['../namespacequisp_1_1types.html#a0e08c99e31d441475c6b1d118fe55f30a7db09b73ae4b533d72b71aa6e57bf744',1,'quisp::types']]],
+  ['no_5fxz_5ferror_2264',['NO_XZ_ERROR',['../namespacequisp_1_1types.html#aa9712dd9c693c474b93606fafc4e63a9ac03af9ea4243133514988e83d0f7bcae',1,'quisp::types']]],
+  ['no_5fz_5ferror_2265',['NO_Z_ERROR',['../namespacequisp_1_1types.html#a312e2e3b1de3e59d939ff3688ed26d80a6a9643dc71b2b01f457096880d5c22c2',1,'quisp::types']]]
 ];

@@ -39,6 +39,7 @@ var annotated_dup =
         [ "SingleGateErrorModel", "structquisp_1_1modules_1_1_single_gate_error_model.html", "structquisp_1_1modules_1_1_single_gate_error_model" ],
         [ "TwoQubitGateErrorModel", "structquisp_1_1modules_1_1_two_qubit_gate_error_model.html", "structquisp_1_1modules_1_1_two_qubit_gate_error_model" ],
         [ "memory_error_model", "structquisp_1_1modules_1_1memory__error__model.html", "structquisp_1_1modules_1_1memory__error__model" ],
+        [ "MeasurementErrorModel", "structquisp_1_1modules_1_1_measurement_error_model.html", "structquisp_1_1modules_1_1_measurement_error_model" ],
         [ "single_qubit_error", "structquisp_1_1modules_1_1single__qubit__error.html", "structquisp_1_1modules_1_1single__qubit__error" ],
         [ "quantum_state", "structquisp_1_1modules_1_1quantum__state.html", "structquisp_1_1modules_1_1quantum__state" ],
         [ "measurement_output_probabilities", "structquisp_1_1modules_1_1measurement__output__probabilities.html", "structquisp_1_1modules_1_1measurement__output__probabilities" ],

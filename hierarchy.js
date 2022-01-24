@@ -86,6 +86,7 @@ var hierarchy =
     [ "quisp::modules::measurement_operators", "structquisp_1_1modules_1_1measurement__operators.html", null ],
     [ "quisp::modules::measurement_outcome", "structquisp_1_1modules_1_1measurement__outcome.html", null ],
     [ "quisp::modules::measurement_output_probabilities", "structquisp_1_1modules_1_1measurement__output__probabilities.html", null ],
+    [ "quisp::modules::MeasurementErrorModel", "structquisp_1_1modules_1_1_measurement_error_model.html", null ],
     [ "quisp::modules::memory_error_model", "structquisp_1_1modules_1_1memory__error__model.html", null ],
     [ "quisp::modules::NeighborInfo", "structquisp_1_1modules_1_1_neighbor_info.html", null ],
     [ "quisp::modules::output_count", "structquisp_1_1modules_1_1output__count.html", null ],

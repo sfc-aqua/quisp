@@ -4,6 +4,10 @@ var namespacequisp =
     [ "modules", "namespacequisp_1_1modules.html", "namespacequisp_1_1modules" ],
     [ "rules", "namespacequisp_1_1rules.html", "namespacequisp_1_1rules" ],
     [ "types", "namespacequisp_1_1types.html", [
+      [ "EigenvalueResult", "namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57", [
+        [ "MINUS_ONE", "namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57a25725c81fc4f00fa5b881c17af6a2a3e", null ],
+        [ "PLUS_ONE", "namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57a9c0ed0366bbc920f92606585259a1664", null ]
+      ] ],
       [ "MeasureXResult", "namespacequisp_1_1types.html#a312e2e3b1de3e59d939ff3688ed26d80", [
         [ "NO_Z_ERROR", "namespacequisp_1_1types.html#a312e2e3b1de3e59d939ff3688ed26d80a6a9643dc71b2b01f457096880d5c22c2", null ],
         [ "HAS_Z_ERROR", "namespacequisp_1_1types.html#a312e2e3b1de3e59d939ff3688ed26d80a0292f9bdf50bbd0fd2d8fb6e420c4f1a", null ]

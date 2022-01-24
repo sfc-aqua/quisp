@@ -107,11 +107,12 @@ Collaboration diagram for quisp::modules::IStationaryQubit:</div>
 <div class="dyncontent">
 <div class="center"><img src="classquisp_1_1modules_1_1_i_stationary_qubit__coll__graph.png" border="0" usemap="#aquisp_1_1modules_1_1_i_stationary_qubit_coll__map" alt="Collaboration graph"/></div>
 <map name="aquisp_1_1modules_1_1_i_stationary_qubit_coll__map" id="aquisp_1_1modules_1_1_i_stationary_qubit_coll__map">
-<area shape="rect" title=" " alt="" coords="345,107,521,149"/>
-<area shape="rect" title=" " alt="" coords="11,5,178,32"/>
-<area shape="rect" href="structquisp_1_1modules_1_1_single_gate_error_model.html" title=" " alt="" coords="5,77,184,118"/>
-<area shape="rect" title=" " alt="" coords="55,144,134,171"/>
-<area shape="rect" href="structquisp_1_1modules_1_1_two_qubit_gate_error_model.html" title=" " alt="" coords="9,195,180,237"/>
+<area shape="rect" title=" " alt="" coords="363,122,539,163"/>
+<area shape="rect" title=" " alt="" coords="19,5,185,32"/>
+<area shape="rect" href="structquisp_1_1modules_1_1_single_gate_error_model.html" title=" " alt="" coords="13,62,191,103"/>
+<area shape="rect" title=" " alt="" coords="63,128,141,155"/>
+<area shape="rect" href="structquisp_1_1modules_1_1_measurement_error_model.html" title=" " alt="" coords="5,179,199,221"/>
+<area shape="rect" href="structquisp_1_1modules_1_1_two_qubit_gate_error_model.html" title=" " alt="" coords="17,245,187,286"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -132,12 +133,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afb5a94d328f0054b708dfa021afd193c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#afb5a94d328f0054b708dfa021afd193c">emitPhoton</a> (int pulse)=0</td></tr>
 <tr class="memdesc:afb5a94d328f0054b708dfa021afd193c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emit photon.  <a href="classquisp_1_1modules_1_1_i_stationary_qubit.html#afb5a94d328f0054b708dfa021afd193c">More...</a><br /></td></tr>
 <tr class="separator:afb5a94d328f0054b708dfa021afd193c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac64d4ebcaf397449a908fc83f21ed19d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1types.html#a312e2e3b1de3e59d939ff3688ed26d80">quisp::types::MeasureXResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#ac64d4ebcaf397449a908fc83f21ed19d">measure_X</a> ()=0</td></tr>
-<tr class="separator:ac64d4ebcaf397449a908fc83f21ed19d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace5d6dfd961d96cb2017b2adbdfd7491"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1types.html#aa9712dd9c693c474b93606fafc4e63a9">types::MeasureYResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#ace5d6dfd961d96cb2017b2adbdfd7491">measure_Y</a> ()=0</td></tr>
-<tr class="separator:ace5d6dfd961d96cb2017b2adbdfd7491"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a798a697f1e09d91fde5eb82256a73714"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1types.html#a0e08c99e31d441475c6b1d118fe55f30">types::MeasureZResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a798a697f1e09d91fde5eb82256a73714">measure_Z</a> ()=0</td></tr>
-<tr class="separator:a798a697f1e09d91fde5eb82256a73714"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44b88d44e1d5a2389256ccb96ecb618b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1types.html#a312e2e3b1de3e59d939ff3688ed26d80">types::MeasureXResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a44b88d44e1d5a2389256ccb96ecb618b">correlationMeasureX</a> ()=0</td></tr>
+<tr class="separator:a44b88d44e1d5a2389256ccb96ecb618b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62517b1d09c61eccec09d47006b28195"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1types.html#aa9712dd9c693c474b93606fafc4e63a9">types::MeasureYResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a62517b1d09c61eccec09d47006b28195">correlationMeasureY</a> ()=0</td></tr>
+<tr class="separator:a62517b1d09c61eccec09d47006b28195"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbf16bfaf2103b37cbd31cfe8d3826ca"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1types.html#a0e08c99e31d441475c6b1d118fe55f30">types::MeasureZResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#afbf16bfaf2103b37cbd31cfe8d3826ca">correlationMeasureZ</a> ()=0</td></tr>
+<tr class="separator:afbf16bfaf2103b37cbd31cfe8d3826ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64aea80efebc000555f07c3fa4b5e3f9"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57">types::EigenvalueResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a64aea80efebc000555f07c3fa4b5e3f9">localMeasureX</a> ()=0</td></tr>
+<tr class="separator:a64aea80efebc000555f07c3fa4b5e3f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b82d57796b51fc83cf1b37a2d90a58b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57">types::EigenvalueResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a4b82d57796b51fc83cf1b37a2d90a58b">localMeasureY</a> ()=0</td></tr>
+<tr class="separator:a4b82d57796b51fc83cf1b37a2d90a58b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e881984265cb09a43e59f452e0e25b1"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57">types::EigenvalueResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a4e881984265cb09a43e59f452e0e25b1">localMeasureZ</a> ()=0</td></tr>
+<tr class="separator:a4e881984265cb09a43e59f452e0e25b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7cbc6ff9628b7ecf7e39a2b5a3f2ffa"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structquisp_1_1modules_1_1measurement__outcome.html">measurement_outcome</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#af7cbc6ff9628b7ecf7e39a2b5a3f2ffa">measure_density_independent</a> ()=0</td></tr>
 <tr class="separator:af7cbc6ff9628b7ecf7e39a2b5a3f2ffa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae34e3fea4008504689063466a7ab3fb0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#ae34e3fea4008504689063466a7ab3fb0">CNOT_gate</a> (<a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *control_qubit)=0</td></tr>
@@ -193,8 +200,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a10437a29b49b3bc13cfe1e4d5984cd50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb4c33aba11317b96f22a42dce5c0da6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structquisp_1_1modules_1_1_two_qubit_gate_error_model.html">TwoQubitGateErrorModel</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#acb4c33aba11317b96f22a42dce5c0da6">CNOTgate_error</a></td></tr>
 <tr class="separator:acb4c33aba11317b96f22a42dce5c0da6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd65be645e52f74641d8b807c3ad5d30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structquisp_1_1modules_1_1_single_gate_error_model.html">SingleGateErrorModel</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#acd65be645e52f74641d8b807c3ad5d30">Measurement_error</a></td></tr>
-<tr class="separator:acd65be645e52f74641d8b807c3ad5d30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae74c226f9e7a47910d3a8620f32232bd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structquisp_1_1modules_1_1_measurement_error_model.html">MeasurementErrorModel</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#ae74c226f9e7a47910d3a8620f32232bd">Measurement_error</a></td></tr>
+<tr class="separator:ae74c226f9e7a47910d3a8620f32232bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05c305d9ef66f9dcd13ea849fa922c46"><td class="memItemLeft" align="right" valign="top">Eigen::Matrix2cd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a05c305d9ef66f9dcd13ea849fa922c46">Density_Matrix_Collapsed</a></td></tr>
 <tr class="separator:a05c305d9ef66f9dcd13ea849fa922c46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27ec29122c36fa9360bb59d009f936c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a27ec29122c36fa9360bb59d009f936c2">partner_measured</a></td></tr>
@@ -342,6 +349,87 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a44b88d44e1d5a2389256ccb96ecb618b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44b88d44e1d5a2389256ccb96ecb618b">&#9670;&nbsp;</a></span>correlationMeasureX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacequisp_1_1types.html#a312e2e3b1de3e59d939ff3688ed26d80">types::MeasureXResult</a> quisp::modules::IStationaryQubit::correlationMeasureX </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a6fbb4563d9a0c3be58ab27a852da0938">quisp::modules::StationaryQubit</a>.</p>
+
+</div>
+</div>
+<a id="a62517b1d09c61eccec09d47006b28195"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62517b1d09c61eccec09d47006b28195">&#9670;&nbsp;</a></span>correlationMeasureY()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacequisp_1_1types.html#aa9712dd9c693c474b93606fafc4e63a9">types::MeasureYResult</a> quisp::modules::IStationaryQubit::correlationMeasureY </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a41824e86ef2ab121d9eb3e8e1c4cb0b6">quisp::modules::StationaryQubit</a>.</p>
+
+</div>
+</div>
+<a id="afbf16bfaf2103b37cbd31cfe8d3826ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbf16bfaf2103b37cbd31cfe8d3826ca">&#9670;&nbsp;</a></span>correlationMeasureZ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacequisp_1_1types.html#a0e08c99e31d441475c6b1d118fe55f30">types::MeasureZResult</a> quisp::modules::IStationaryQubit::correlationMeasureZ </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#abc5969ec3ed3aa2433e4c3cbd0b526a2">quisp::modules::StationaryQubit</a>.</p>
+
+</div>
+</div>
 <a id="afb5a94d328f0054b708dfa021afd193c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afb5a94d328f0054b708dfa021afd193c">&#9670;&nbsp;</a></span>emitPhoton()</h2>
 
@@ -432,6 +520,87 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a64aea80efebc000555f07c3fa4b5e3f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64aea80efebc000555f07c3fa4b5e3f9">&#9670;&nbsp;</a></span>localMeasureX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57">types::EigenvalueResult</a> quisp::modules::IStationaryQubit::localMeasureX </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a0650b07a41b8ebe5b1516a5ba4839fd7">quisp::modules::StationaryQubit</a>.</p>
+
+</div>
+</div>
+<a id="a4b82d57796b51fc83cf1b37a2d90a58b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b82d57796b51fc83cf1b37a2d90a58b">&#9670;&nbsp;</a></span>localMeasureY()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57">types::EigenvalueResult</a> quisp::modules::IStationaryQubit::localMeasureY </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a2b1bf7b17ab1ec42dc9d7dd018950c34">quisp::modules::StationaryQubit</a>.</p>
+
+</div>
+</div>
+<a id="a4e881984265cb09a43e59f452e0e25b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e881984265cb09a43e59f452e0e25b1">&#9670;&nbsp;</a></span>localMeasureZ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57">types::EigenvalueResult</a> quisp::modules::IStationaryQubit::localMeasureZ </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a8f28f51cc75a79d59fab15aab8733a90">quisp::modules::StationaryQubit</a>.</p>
+
+</div>
+</div>
 <a id="a9f42224a84734cf1b3c43f20655c5a21"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9f42224a84734cf1b3c43f20655c5a21">&#9670;&nbsp;</a></span>Lock()</h2>
 
@@ -501,87 +670,6 @@ Public Attributes</h2></td></tr>
 <p>Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography. </p>
 
 <p>Implemented in <a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#ac9187d3f69136c1fb22ecbaf4a68a0a9">quisp::modules::StationaryQubit</a>.</p>
-
-</div>
-</div>
-<a id="ac64d4ebcaf397449a908fc83f21ed19d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac64d4ebcaf397449a908fc83f21ed19d">&#9670;&nbsp;</a></span>measure_X()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="namespacequisp_1_1types.html#a312e2e3b1de3e59d939ff3688ed26d80">quisp::types::MeasureXResult</a> quisp::modules::IStationaryQubit::measure_X </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a986f836110e3a9b80403b5d23babfbcd">quisp::modules::StationaryQubit</a>.</p>
-
-</div>
-</div>
-<a id="ace5d6dfd961d96cb2017b2adbdfd7491"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace5d6dfd961d96cb2017b2adbdfd7491">&#9670;&nbsp;</a></span>measure_Y()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="namespacequisp_1_1types.html#aa9712dd9c693c474b93606fafc4e63a9">types::MeasureYResult</a> quisp::modules::IStationaryQubit::measure_Y </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a897b483a2026421932b7c5ddd5cb9652">quisp::modules::StationaryQubit</a>.</p>
-
-</div>
-</div>
-<a id="a798a697f1e09d91fde5eb82256a73714"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a798a697f1e09d91fde5eb82256a73714">&#9670;&nbsp;</a></span>measure_Z()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="namespacequisp_1_1types.html#a0e08c99e31d441475c6b1d118fe55f30">types::MeasureZResult</a> quisp::modules::IStationaryQubit::measure_Z </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#aa8c2426a120974de349a1139c9a11843">quisp::modules::StationaryQubit</a>.</p>
 
 </div>
 </div>
@@ -948,14 +1036,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="acd65be645e52f74641d8b807c3ad5d30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd65be645e52f74641d8b807c3ad5d30">&#9670;&nbsp;</a></span>Measurement_error</h2>
+<a id="ae74c226f9e7a47910d3a8620f32232bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae74c226f9e7a47910d3a8620f32232bd">&#9670;&nbsp;</a></span>Measurement_error</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structquisp_1_1modules_1_1_single_gate_error_model.html">SingleGateErrorModel</a> quisp::modules::IStationaryQubit::Measurement_error</td>
+          <td class="memname"><a class="el" href="structquisp_1_1modules_1_1_measurement_error_model.html">MeasurementErrorModel</a> quisp::modules::IStationaryQubit::Measurement_error</td>
         </tr>
       </table>
 </div><div class="memdoc">
