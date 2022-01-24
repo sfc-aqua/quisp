@@ -4,6 +4,7 @@ package modules.Common;
 simple Router
 {
     parameters:
+        @display("i=block/routing");
         int address;
         string classical_router_soft = "yes";
     gates:

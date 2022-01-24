@@ -23,6 +23,7 @@ module interHoM
         int qnic_index = default(-1);
         double internal_distance = default(0);
         bool passive = default(false);
+        @display("i=BSA");
 
     gates:
         //inout quantum_port_one @loose;
@@ -60,6 +61,7 @@ module interHoM
 module HoM
 {
     parameters:
+        @display("i=BSA");
         double hom_darkcount_probability = default(0);
         double hom_loss_rate = default(0);
         double hom_error_rate = default(0);

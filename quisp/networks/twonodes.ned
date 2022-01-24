@@ -22,12 +22,12 @@ network twonodes
         source: QNode {
             address = 1;
             buffers = 7;
-
+            @display("i=COMP");
         }
         target: QNode {
             address = 3;
             buffers = 7;
-
+            @display("i=COMP");
         }
 
     connections:
@@ -53,18 +53,18 @@ network threenodes
         source: QNode {
             address = 1;
             buffers = 7;
-            @display("p=299,147");
+            @display("i=COMP;p=299,147");
 
         }
         target: QNode {
             address = 3;
             buffers = 3;
-
+            @display("i=COMP");
         }
         anothertarget: QNode {
             address = 2;
             buffers = 3;
-
+            @display("i=COMP");
         }
 
     connections:
@@ -92,19 +92,19 @@ network morenodes
     submodules:
         source: QNode {
             address = 1;
-            @display("p=278,81");
+            @display("i=COMP;p=278,81");
         }
         target: QNode {
             address = 2;
-            @display("p=182,56");
+            @display("i=COMP;p=182,56");
         }
         anotherTarget: QNode {
             address = 3;
-            @display("p=299,147");
+            @display("i=COMP;p=299,147");
         }
         andmoreTarget: QNode {
             address = 4;
-            @display("p=57,79");
+            @display("i=COMP;p=57,79");
         }
 
     connections:
