@@ -17,7 +17,6 @@ simple BellStateAnalyzer
         @signal[num_trial](type=long);
         @statistic[num_trial](title="The average number of BSA trials to generate one Bell pair"; record=vector, mean; interpolationmode=sample-hold);
 
-        @display("i=BSA");
         int degree = 2;
         string bsa_parf_output_filename = default("bsa_default");
     gates:
