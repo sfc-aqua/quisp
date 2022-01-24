@@ -25,26 +25,26 @@ network Simple_constant_quantum_cost
             datarate = uniform(1kbps, 100kbps);
             int test = default(0);
         }
-        
+
     submodules:
         endnode[3]: QNode {
             address = 10000000+index;
             nodeType = "EndNode";
-            @display("i=device/pc;");
+            @display("i=COMP;");
         }
         repeater[3]: QNode {
             address = sizeof(endnode) + index;
             nodeType = "Repeater";
-            @display("i=device/smallrouter");
+            @display("i=REP1G");
         }
         HoM[6]: HoM {
             address = sizeof(endnode) +sizeof(repeater) + index;
-            @display("i=device/bsm;");
+            @display("i=BSA;");
         }
         router[1]: QNode {
             address = sizeof(endnode) +sizeof(repeater) +sizeof(HoM) + index;
             nodeType = "Router";
-            @display("i=device/router;");
+            @display("i=RTR");
         }
     connections:
         endnode[0].port++ <--> C {  cost = 20; } <--> HoM[0].port++;

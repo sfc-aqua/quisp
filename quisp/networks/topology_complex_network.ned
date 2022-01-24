@@ -48,7 +48,7 @@ network ispMap_1239_node_23_48_hetero_distance
     submodules:
         hom[177]: HoM {
             address = index+1000;
-            @display("i=BSA;p=144,30");
+            @display("i=BSA;p=180.525,29.725");
             hom_photon_detection_per_sec = default(uniform(1000,40000));
         }
         repeater[118]: QNode {
@@ -59,12 +59,12 @@ network ispMap_1239_node_23_48_hetero_distance
         endnode[38]: QNode {
             address = index;
             nodeType = "EndNode";
-            @display("i=COMP");
+            @display("i=COMP;p=79.75,76.85");
         }
         router[10]: QNode {
             address = index+1000000;
             nodeType = "Router";
-            @display("i=RTR");
+            @display("i=RTR;p=132.675,18.125");
         }
     connections:
         endnode[0].quantum_port++ <--> QuantumChannel {  distance = 15.000000km; } <--> hom[0].quantum_port++;
@@ -792,7 +792,7 @@ network ispMap_1239_node_23_48
         int message_id_qubit = 100;
         int message_id_PathSelection = 1;
         int increment_address = 0;
-        @display("bgl=2");
+        @display("bgl=2;bgb=241,139");
     types:
         channel C extends DatarateChannel
         {
@@ -822,12 +822,12 @@ network ispMap_1239_node_23_48
     submodules:
         hom[177]: HoM {
             address = index+1000;
-            @display("i=BSA");
+            @display("i=BSA;p=127,41");
         }
         repeater[118]: QNode {
             address = index+10000;
             nodeType = "Repeater";
-            @display("i=REP1G");
+            @display("i=REP1G;p=178,88");
         }
         endnode[38]: QNode {
             address = index;
