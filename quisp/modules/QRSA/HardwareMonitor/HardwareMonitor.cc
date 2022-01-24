@@ -1233,7 +1233,9 @@ cModule *HardwareMonitor::getQNodeWithAddress(int address) {
     addr = (int)node->getModule()->par("address");
     EV_DEBUG << "End node address is " << addr << "\n";
     if (addr == address) {
-      return node->getModule();
+      auto *mod = node->getModule();
+      delete topo;
+      return mod;
     }
   }
   delete topo;

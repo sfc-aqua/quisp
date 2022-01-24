@@ -1,3 +1,5 @@
+QUISP_MAKEFILE = "./quisp/Makefile"
+
 .PHONY: all tidy format ci makefile-exe makefile-lib checkmakefile googletest clean test coverage coverage-report help
 
 all: makefile-exe
@@ -50,6 +52,9 @@ makefile-lib: eigen
 	cd quisp && opp_makemake -f --deep -O out -i ./makefrag -M debug  --make-so
 
 clean:
+	@if [ -f "$(QUISP_MAKEFILE)" ]; then \
+		$(MAKE) -C quisp clean; \
+	fi
 	$(RM) quisp/Makefile quisp/quisp quisp/quisp_dbg quisp/run_unit_test quisp/libquisp*
 	$(RM) -r quisp/out
 	$(RM) -rf quisp/coverage* quisp/default.profraw quisp/lcov.info
@@ -65,13 +70,15 @@ coverage-report: makefile-lib
 	$(MAKE) -C quisp/ coverage/index.html
 
 checkmakefile:
-	@if [ ! -f $(QUISP_MAKEFILE) ]; then \
+	@if [ ! -f "$(QUISP_MAKEFILE)" ]; then \
 	echo; \
 	echo '===================================================================================================='; \
 	echo 'quisp/Makefile does not exist. Please use "make makefile-exe" or "make makefile-lib" to generate it!'; \
 	echo '===================================================================================================='; \
 	echo; \
 	exit 1; \
+	else \
+	echo 'quisp/Makefile exists.'; \
 	fi
 
 help:
