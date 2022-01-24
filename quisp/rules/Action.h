@@ -27,31 +27,32 @@ enum class SwapType : int {
 
 class Action {
  public:
-  Action(QNIC_type qnic_type, int qnic_id) : qnic_type(qnic_type), qnic_id(qnic_id){};
+  Action(int partner_addr, QNIC_type qnic_type, int qnic_id) : partner_address(partner_addr), qnic_type(qnic_type), qnic_id(qnic_id){};
+  int partner_address;
   QNIC_type qnic_type;
   int qnic_id;
 };
 
 class Purification : public Action {
  public:
-  Purification(PurType purification_type, QNIC_type qnic_type, int qnic_id);
+  Purification(PurType purification_type, int partner_addr, QNIC_type qnic_type, int qnic_id);
   PurType purification_type;
 };
 
 class EntanglementSwapping : public Action {
  public:
-  EntanglementSwapping(SwapType swapping_type, QNIC_type qnic_type, int qnic_id);
+  EntanglementSwapping(SwapType swapping_type, int partner_addr, QNIC_type qnic_type, int qnic_id);
   SwapType swapping_type;
 };
 
 class Wait : public Action {
  public:
-  Wait(QNIC_type qnic_type, int qnic_id);
+  Wait(int partner_addr, QNIC_type qnic_type, int qnic_id);
 };
 
 class Tomography : public Action {
  public:
-  Tomography(int num_measurement, QNIC_type qnic_type, int qnic_id);
+  Tomography(int num_measurement, int partner_addr, QNIC_type qnic_type, int qnic_id);
   int num_measurement;
 };
 
