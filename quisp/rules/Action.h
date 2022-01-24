@@ -1,5 +1,8 @@
 #pragma once
+#include <modules/QNIC.h>
+#include <modules/QUBIT.h>
 
+using quisp::modules::QNIC_type;
 namespace quisp::rules {
 
 enum class PurType : int {
@@ -24,7 +27,32 @@ enum class SwapType : int {
 
 class Action {
  public:
-  Action(){};
+  Action(QNIC_type qnic_type, int qnic_id) : qnic_type(qnic_type), qnic_id(qnic_id){};
+  QNIC_type qnic_type;
+  int qnic_id;
+};
+
+class Purification : public Action {
+ public:
+  Purification(PurType purification_type, QNIC_type qnic_type, int qnic_id);
+  PurType purification_type;
+};
+
+class EntanglementSwapping : public Action {
+ public:
+  EntanglementSwapping(SwapType swapping_type, QNIC_type qnic_type, int qnic_id);
+  SwapType swapping_type;
+};
+
+class Wait : public Action {
+ public:
+  Wait(QNIC_type qnic_type, int qnic_id);
+};
+
+class Tomography : public Action {
+ public:
+  Tomography(int num_measurement, QNIC_type qnic_type, int qnic_id);
+  int num_measurement;
 };
 
 }  // namespace quisp::rules

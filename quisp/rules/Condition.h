@@ -9,7 +9,7 @@ class Condition {
  public:
   Condition(){};
 
-  std::vector<BaseClause> clauses;
-  void addClause(std::unique_ptr<BaseClause> clause);
+  std::vector<std::unique_ptr<Clause>> clauses;
+  void addClause(std::unique_ptr<Clause> clause);
 };
 }  // namespace quisp::rules

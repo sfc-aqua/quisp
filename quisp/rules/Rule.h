@@ -22,8 +22,8 @@ class Rule {
   std::unique_ptr<Condition> condition;  ///< Condition includes a set of clauses
   std::unique_ptr<Action> action;
 
-  void setCondition(std::unique_ptr<Condition> condition);
-  void setAction(std::unique_ptr<Action> action);
+  void setCondition(Condition* condition);
+  void setAction(Action* action);
   void setNextRule(unsigned long next_rule_id);
   void serialize();
 };
