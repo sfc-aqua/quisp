@@ -2,6 +2,7 @@
 
 #include <PhotonicQubit_m.h>
 #include <Eigen/Eigen>
+#include <unordered_set>
 namespace quisp {
 
 namespace types {
@@ -21,6 +22,33 @@ enum class MeasureZResult : int {
 enum class EigenvalueResult : int {
   MINUS_ONE,
   PLUS_ONE,
+};
+
+enum class CliffordOperator : int {
+  Id = 0,
+  X,
+  Y,
+  Z,
+  RX_INV,
+  RX,
+  Z_RX_INV,
+  Z_RX,
+  RY_INV,
+  RY,
+  H,
+  Z_RY,
+  S_INV,
+  S,
+  X_S_INV,
+  X_S,
+  S_INV_RX_INV,
+  S_INV_RX,
+  S_RX_INV,
+  S_RX,
+  S_INV_RY_INV,
+  S_INV_RY,
+  S_RY_INV,
+  S_RY,
 };
 
 }  // namespace types
@@ -135,6 +163,21 @@ struct measurement_outcome {
 };
 
 class IStationaryQubit : public omnetpp::cSimpleModule {
+ protected:
+  std::unordered_set<IStationaryQubit *> neighbors;
+  types::CliffordOperator vertex_operator;
+
+  virtual void applyClifford(types::CliffordOperator op) = 0;
+  virtual void applyRightClifford(types::CliffordOperator op) = 0;
+  virtual bool isNeighbor(IStationaryQubit *another_qubit) = 0;
+  virtual void addEdge(IStationaryQubit *another_qubit) = 0;
+  virtual void deleteEdge(IStationaryQubit *another_qubit) = 0;
+  virtual void toggleEdge(IStationaryQubit *another_qubit) = 0;
+  virtual void removeAllEdges() = 0;
+  virtual void localComplement() = 0;
+  virtual void removeVertexOperation(IStationaryQubit *qubit_to_avoid) = 0;
+  virtual void CZGate(IStationaryQubit *another_qubit) = 0;
+
  public:
   IStationaryQubit(){};
   virtual ~IStationaryQubit(){};
@@ -162,6 +205,9 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
    * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
    * */
   virtual measurement_outcome measure_density_independent() = 0; /*Separate dm calculation*/
+  virtual types::EigenvalueResult measureX() = 0;
+  virtual types::EigenvalueResult measureY() = 0;
+  virtual types::EigenvalueResult measureZ() = 0;
 
   virtual void CNOT_gate(IStationaryQubit *control_qubit) = 0;
   virtual void Hadamard_gate() = 0;
@@ -169,6 +215,17 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   virtual void X_gate() = 0;
   virtual bool Xpurify(IStationaryQubit *resource_qubit) = 0;
   virtual bool Zpurify(IStationaryQubit *resource_qubit) = 0;
+
+  virtual void CNOTGate(IStationaryQubit *control_qubit) = 0;
+  virtual void HadamardGate() = 0;
+  virtual void ZGate() = 0;
+  virtual void XGate() = 0;
+  virtual void SGate() = 0;
+  virtual void SdgGate() = 0;
+  virtual void excite() = 0;
+  virtual void relax() = 0;
+  virtual bool XPurify(IStationaryQubit *resource_qubit) = 0;
+  virtual bool ZPurify(IStationaryQubit *resource_qubit) = 0;
 
   /*GOD parameters*/
   virtual void setEntangledPartnerInfo(IStationaryQubit *partner) = 0;

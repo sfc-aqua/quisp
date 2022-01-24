@@ -10,13 +10,16 @@
 #include <messages/classical_messages.h>
 #include <omnetpp.h>
 #include <bitset>
+#include <unordered_set>
 #include <unsupported/Eigen/KroneckerProduct>
 #include <unsupported/Eigen/MatrixFunctions>
 #include <vector>
+#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 
 using namespace Eigen;
 
 using quisp::messages::PhotonicQubit;
+using quisp::types::CliffordOperator;
 using quisp::types::EigenvalueResult;
 using quisp::types::MeasureXResult;
 using quisp::types::MeasureYResult;
@@ -34,6 +37,7 @@ Define_Module(StationaryQubit);
  *
  */
 void StationaryQubit::initialize() {
+  // read and set parameters
   emission_success_probability = par("emission_success_probability");
   memory_err.X_error_rate = (double)par("memory_X_error_rate").doubleValue();
   memory_err.Y_error_rate = (double)par("memory_Y_error_rate").doubleValue();
@@ -98,6 +102,9 @@ void StationaryQubit::initialize() {
   setFree(false);
 
   /* e^(t/T1) energy relaxation, e^(t/T2) phase relaxation. Want to use only 1/10 of T1 and T2 in general.*/
+
+  // initialize variables for graph state representation tracking
+  vertex_operator = CliffordOperator::H;
 }
 
 void StationaryQubit::finish() {}
@@ -566,7 +573,7 @@ bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
   // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
   applyMemoryError();
   check_and_cast<StationaryQubit *>(resource_qubit)->applyMemoryError();
-  /*Target qubit*/ this->CNOT_gate(resource_qubit /*controlled qubit*/);
+  /*Target qubit*/ this->CNOTGate(resource_qubit /*controlled qubit*/);
   bool meas = this->correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
   return meas;
 }
@@ -575,8 +582,8 @@ bool StationaryQubit::Zpurify(IStationaryQubit *resource_qubit /*Target*/) {
   // std::cout<<"Z puri\n";
   applyMemoryError();  // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
   check_and_cast<StationaryQubit *>(resource_qubit)->applyMemoryError();
-  /*Target qubit*/ resource_qubit->CNOT_gate(this /*controlled qubit*/);
-  this->Hadamard_gate();
+  /*Target qubit*/ resource_qubit->CNOTGate(this /*controlled qubit*/);
+  this->HadamardGate();
   bool meas = this->correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
   return meas;
 }
@@ -1057,46 +1064,162 @@ measurement_operator StationaryQubit::Random_Measurement_Basis_Selection() {
   return this_measurement;
 }
 
-// Assumes that this qubit is entangled with another one, as Bell pair 00+11. 1st qubit is self, 2nd is partner.
-// When do we perform measurements? I think we can just ignore the success/fail of entanglement attempt, and measure it beforehand anyway. Waiting cause error.
-// How do we know when to measure though?
-// Return value: 1 if output is +, 0 if output is -.
-/*std::bitset<1> StationaryQubit::measure_density(char basis_this_qubit){
-    if(entangled_partner == nullptr){
-        error("Measuring a qubit that is not entangled with another qubit. Not allowed!");
-    }
-    //if(entangled_partner->emitted_time=-1 && single_qubit_dm == null){
-    //    error("Something is wrong.");
-    }
+void StationaryQubit::applyClifford(types::CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)op][(int)(this->vertex_operator)]; }
 
-    //todo Check if entangled state has collapsed already (partner qubit measured already).
+void StationaryQubit::applyRightClifford(types::CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)(this->vertex_operator)][(int)op]; }
 
-    //if not, then measure it and get the output (density matrix required)!
-    apply_memory_error(this);//Noise due to idle time in memory. This updates the par("GOD_Zerror") and par("GOD_Xerror") of this particular qubit.
-    quantum_state current_state = getQuantumState();//Get the density matrix of the Bell pair that involves this particular qubit.
-    measurement_output_probabilities p = getOutputProbabilities(current_state, basis_this_qubit);
-    EV <<" P(++) = "<<p.probability_plus_plus<<", P(+-) = "<<p.probability_plus_minus<<", P(-+) = "<<p.probability_minus_plus<<", P(--) = "<<p.probability_minus_minus<<"\n";
-    double rand = dblrand();//Gives a random double between 0.0 ~ 1.0
+bool StationaryQubit::isNeighbor(IStationaryQubit *another_qubit) { return this->neighbors.find(another_qubit) != this->neighbors.end(); }
 
-    std::bitset<2> output(0);//by default, output is -- (in binary 00)
-    if(rand < p.probability_plus_plus){
-        //Output is ++
-        output.set(0);//00->01
-        output.set(1);//01->11
-        EV<<"Output is ++"<<output<<"\n";
-    }else if(p.probability_plus_plus <= rand && rand < (p.probability_plus_plus+p.probability_plus_minus)){
-        //Output is +-
-        output.set(1);//00->10
-        EV<<"Output is +-"<<output<<"\n";
-    }else if((p.probability_plus_plus+p.probability_plus_minus) <= rand && rand < (p.probability_plus_plus+p.probability_plus_minus+p.probability_minus_plus)){
-        //Output is -+
-        output.set(0);//00->01
-        EV<<"Output is -+"<<output<<"\n";
-    }else{
-        EV<<"Output is --"<<output<<"\n";
+void StationaryQubit::addEdge(IStationaryQubit *another_qubit) {
+  this->neighbors.insert(another_qubit);
+  ((StationaryQubit *)another_qubit)->neighbors.insert(this);
+}
+
+void StationaryQubit::deleteEdge(IStationaryQubit *another_qubit) {
+  this->neighbors.erase(another_qubit);
+  ((StationaryQubit *)another_qubit)->neighbors.erase(this);
+}
+
+void StationaryQubit::toggleEdge(IStationaryQubit *another_qubit) {
+  if (this->isNeighbor(another_qubit)) {
+    this->deleteEdge(another_qubit);
+  } else {
+    this->addEdge(another_qubit);
+  }
+}
+
+void StationaryQubit::removeAllEdges() {
+  for (auto *v : this->neighbors) {
+    ((StationaryQubit *)v)->neighbors.erase(this);
+  }
+  this->neighbors.clear();
+}
+
+void StationaryQubit::localComplement() {
+  auto it_end = this->neighbors.end();
+  for (auto it_u = this->neighbors.begin(); it_u != it_end; it_u++) {
+    auto it_v = std::next(it_u);
+    for (; it_v != it_end; it_v++) {
+      ((StationaryQubit *)(*it_u))->toggleEdge(*it_v);
     }
-    //return output.test(1);
-}*/
+  }
+  for (auto *v : this->neighbors) {
+    ((StationaryQubit *)v)->applyRightClifford(CliffordOperator::RX_INV);
+  }
+  this->applyRightClifford(CliffordOperator::S);
+}
+
+void StationaryQubit::removeVertexOperation(IStationaryQubit *qubit_to_avoid) {
+  if (this->neighbors.empty() || this->vertex_operator == types::CliffordOperator::Id) {
+    return;
+  }
+  auto *swapping_partner = qubit_to_avoid;
+  for (auto *v : this->neighbors) {
+    if (v != qubit_to_avoid) {
+      swapping_partner = v;
+      break;
+    }
+  }
+  std::string decomposition_string = decomposition_table[(int)this->vertex_operator];
+  for (int i = decomposition_string.size() - 1; i >= 0; i--) {
+    if (decomposition_string[i] == 'V') {
+      this->localComplement();
+    } else {
+      // 'U'
+      ((StationaryQubit *)swapping_partner)->localComplement();
+    }
+  }
+}
+
+void StationaryQubit::CZGate(IStationaryQubit *another_qubit) {
+  auto *aq = (StationaryQubit *)another_qubit;
+  this->removeVertexOperation(aq);
+  aq->removeVertexOperation(this);
+  this->removeVertexOperation(aq);
+
+  bool has_edge = this->isNeighbor(aq);
+  int current_vop = (int)(this->vertex_operator);
+  int aq_vop = (int)(aq->vertex_operator);
+  this->vertex_operator = controlled_Z_lookup_node_1[has_edge][current_vop][aq_vop];
+  aq->vertex_operator = controlled_Z_lookup_node_2[has_edge][current_vop][aq_vop];
+  if (has_edge != controlled_Z_lookup_edge[has_edge][current_vop][aq_vop]) {
+    this->toggleEdge(aq);
+  }
+}
+
+void StationaryQubit::CNOTGate(IStationaryQubit *conrol_qubit) {}
+
+void StationaryQubit::HadamardGate() {}
+void StationaryQubit::ZGate() {}
+void StationaryQubit::XGate() {}
+void StationaryQubit::SGate() {}
+void StationaryQubit::SdgGate() {}
+void StationaryQubit::excite() {}
+void StationaryQubit::relax() {}
+bool StationaryQubit::XPurify(IStationaryQubit *resource_qubit) { return true; }
+bool StationaryQubit::ZPurify(IStationaryQubit *resource_qubit) { return true; }
+
+EigenvalueResult StationaryQubit::measureX() {
+  this->applyClifford(CliffordOperator::H);
+  return this->measureZ();
+}
+
+EigenvalueResult StationaryQubit::measureY() {
+  this->applyClifford(CliffordOperator::S_INV);
+  this->applyClifford(CliffordOperator::H);
+  return this->measureZ();
+}
+
+EigenvalueResult StationaryQubit::measureZ() {
+  auto vop = this->vertex_operator;
+  auto result = EigenvalueResult::PLUS_ONE;
+  if (this->neighbors.empty()) {
+    switch (vop) {
+      case CliffordOperator::RY_INV:
+      case CliffordOperator::H:
+      case CliffordOperator::S_INV_RY_INV:
+      case CliffordOperator::S_RY_INV:
+        break;
+      case CliffordOperator::RY:
+      case CliffordOperator::Z_RY:
+      case CliffordOperator::S_INV_RY:
+      case CliffordOperator::S_RY:
+        result = EigenvalueResult::MINUS_ONE;
+        break;
+      default:
+        result = (dblrand() < 0.5) ? EigenvalueResult::PLUS_ONE : EigenvalueResult::MINUS_ONE;
+    }
+  } else {
+    this->removeVertexOperation(this);  // nothing to be avoided
+    result = (dblrand() < 0.5) ? EigenvalueResult::PLUS_ONE : EigenvalueResult::MINUS_ONE;
+    this->removeAllEdges();
+  }
+  this->vertex_operator = (result == EigenvalueResult::PLUS_ONE) ? CliffordOperator::H : CliffordOperator::RY;
+  return result;
+}
+
+// initialize static variables
+CliffordOperator StationaryQubit::clifford_application_lookup[24][24] =
+#include "clifford_application_lookup.tbl"
+    ;
+
+bool StationaryQubit::controlled_Z_lookup_edge[2][24][24] =
+#include "cz_lookup_edge.tbl"
+    ;
+
+CliffordOperator StationaryQubit::controlled_Z_lookup_node_1[2][24][24] =
+#include "cz_lookup_node_1.tbl"
+    ;
+
+CliffordOperator StationaryQubit::controlled_Z_lookup_node_2[2][24][24] =
+#include "cz_lookup_node_2.tbl"
+    ;
+
+std::string StationaryQubit::decomposition_table[24] = {
+    "", "XX", "ZZXX", "ZZ", "XXX", "X", "ZZX", "XZZ", "ZZZXZ", "ZXZZZ", "ZXXXZ", "ZXZ", "Z", "ZZZ", "ZXX", "XXZ", "XXXZ", "XZ", "ZZXZ", "XZZZ", "ZXXX", "ZX", "ZZZX", "ZXZZ",
+};
+// #include "clifford_decomposition_lookup.tbl"
+//     ;
 
 }  // namespace modules
 }  // namespace quisp
