@@ -7,15 +7,15 @@
 namespace quisp::rules {
 RuleSet::RuleSet(unsigned long ruleset_id, int owner_address) : ruleset_id(ruleset_id), owner_addr(owner_address) {}
 
-BaseRule& RuleSet::addRule(std::unique_ptr<BaseRule> rule, std::vector<int> partners) {
+Rule *RuleSet::addRule(std::unique_ptr<Rule> rule, std::vector<int> partners) {
   for (int partner : partners) {
     rule->partners.push_back(partner);
   }
   rule->rule_id = createUniqueId();
   rule->parent_ruleset_id = ruleset_id;
-  rules.push_back(*rule);
-  BaseRule& rule_ref = rules.at(rules.size() - 1);
-  return rule_ref;
+  rules.push_back(std::move(rule));
+  Rule *raw_pointer = rules.at(rules.size() - 1).get();
+  return raw_pointer;
 };
 
 void RuleSet::serialize(){};
