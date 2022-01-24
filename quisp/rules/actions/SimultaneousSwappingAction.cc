@@ -59,8 +59,8 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   right_qubit->CNOT_gate(left_qubit);
   left_qubit->Hadamard_gate();
 
-  auto left_measure = left_qubit->measure_Z();
-  auto right_measure = right_qubit->measure_Z();
+  auto left_measure = left_qubit->correlationMeasureZ();
+  auto right_measure = right_qubit->correlationMeasureZ();
 
   int operation_type_left, operation_type_right;
 

@@ -22,9 +22,12 @@ class MockQubit : public IStationaryQubit {
   using IStationaryQubit::par;
   MOCK_METHOD(void, emitPhoton, (int pulse), (override));
   MOCK_METHOD(void, setFree, (bool consumed), (override));
-  MOCK_METHOD(quisp::types::MeasureZResult, measure_Z, (), (override));
-  MOCK_METHOD(quisp::types::MeasureXResult, measure_X, (), (override));
-  MOCK_METHOD(quisp::types::MeasureYResult, measure_Y, (), (override));
+  MOCK_METHOD(quisp::types::MeasureZResult, correlationMeasureZ, (), (override));
+  MOCK_METHOD(quisp::types::MeasureXResult, correlationMeasureX, (), (override));
+  MOCK_METHOD(quisp::types::MeasureYResult, correlationMeasureY, (), (override));
+  MOCK_METHOD(quisp::types::EigenvalueResult, localMeasureX, (), (override));
+  MOCK_METHOD(quisp::types::EigenvalueResult, localMeasureY, (), (override));
+  MOCK_METHOD(quisp::types::EigenvalueResult, localMeasureZ, (), (override));
   MOCK_METHOD(bool, Xpurify, (IStationaryQubit *), (override));
   MOCK_METHOD(bool, Zpurify, (IStationaryQubit *), (override));
   MOCK_METHOD(void, addXerror, (), (override));
@@ -74,11 +77,6 @@ class MockQubit : public IStationaryQubit {
     setParDouble(this, "Zgate_Z_error_ratio", 0);
     setParDouble(this, "Zgate_Y_error_ratio", 0);
 
-    setParDouble(this, "Measurement_error_rate", 1 / 2000);
-    setParDouble(this, "Measurement_X_error_ratio", 1);
-    setParDouble(this, "Measurement_Y_error_ratio", 1);
-    setParDouble(this, "Measurement_Z_error_ratio", 1);
-
     setParDouble(this, "CNOTgate_error_rate", 1 / 2000);
     setParDouble(this, "CNOTgate_IX_error_ratio", 1);
     setParDouble(this, "CNOTgate_XI_error_ratio", 1);
@@ -89,6 +87,10 @@ class MockQubit : public IStationaryQubit {
     setParDouble(this, "CNOTgate_IY_error_ratio", 1);
     setParDouble(this, "CNOTgate_YI_error_ratio", 1);
     setParDouble(this, "CNOTgate_YY_error_ratio", 1);
+
+    setParDouble(this, "X_measurement_error_rate", 1. / 2000);
+    setParDouble(this, "Y_measurement_error_rate", 1. / 2000);
+    setParDouble(this, "Z_measurement_error_rate", 1. / 2000);
 
     setParInt(this, "stationaryQubit_address", 1);
     setParInt(this, "node_address", 1);

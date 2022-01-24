@@ -17,6 +17,7 @@
 using namespace Eigen;
 
 using quisp::messages::PhotonicQubit;
+using quisp::types::EigenvalueResult;
 using quisp::types::MeasureXResult;
 using quisp::types::MeasureYResult;
 using quisp::types::MeasureZResult;
@@ -58,8 +59,8 @@ void StationaryQubit::initialize() {
   setSingleQubitGateErrorModel(Hgate_error, "Hgate");
   setSingleQubitGateErrorModel(Xgate_error, "Xgate");
   setSingleQubitGateErrorModel(Zgate_error, "Zgate");
-  setSingleQubitGateErrorModel(Measurement_error, "Measurement");
   setTwoQubitGateErrorCeilings(CNOTgate_error, "CNOTgate");
+  setMeasurementErrorModel(Measurement_error);
 
   std::cout << Memory_Transition_matrix << "\n";
 
@@ -219,35 +220,77 @@ void StationaryQubit::setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model
   model.YY_error_ceil = model.YI_error_ceil + model.YY_error_rate;
 }
 
-MeasureXResult StationaryQubit::measure_X() {
-  applySingleQubitGateError(Measurement_error);
-  if (par("GOD_Zerror").boolValue()) {
-    return MeasureXResult::HAS_Z_ERROR;
-  }
-  return MeasureXResult::NO_Z_ERROR;
+void StationaryQubit::setMeasurementErrorModel(MeasurementErrorModel &model) {
+  model.x_error_rate = par("X_measurement_error_rate").doubleValue();
+  model.y_error_rate = par("Y_measurement_error_rate").doubleValue();
+  model.z_error_rate = par("Z_measurement_error_rate").doubleValue();
 }
 
-MeasureYResult StationaryQubit::measure_Y() {
-  applySingleQubitGateError(Measurement_error);
-  bool error = true;
-  if (par("GOD_Zerror") && par("GOD_Xerror")) {
-    error = false;
+MeasureXResult StationaryQubit::correlationMeasureX() {
+  bool error = par("GOD_Zerror").boolValue();
+  if (dblrand() < Measurement_error.x_error_rate) {
+    error = !error;
   }
-  if (!par("GOD_Zerror") && !par("GOD_Xerror")) {
-    error = false;
-  }
-  if (error) {
-    return MeasureYResult::HAS_XZ_ERROR;
-  }
-  return MeasureYResult::NO_XZ_ERROR;
+  return error ? MeasureXResult::HAS_Z_ERROR : MeasureXResult::NO_Z_ERROR;
 }
 
-MeasureZResult StationaryQubit::measure_Z() {
-  applySingleQubitGateError(Measurement_error);
-  if (par("GOD_Xerror")) {
-    return MeasureZResult::HAS_X_ERROR;
+MeasureYResult StationaryQubit::correlationMeasureY() {
+  bool error = par("GOD_Zerror").boolValue() != par("GOD_Xerror").boolValue();
+  if (dblrand() < Measurement_error.y_error_rate) {
+    error = !error;
   }
-  return MeasureZResult::NO_X_ERROR;
+  return error ? MeasureYResult::HAS_XZ_ERROR : MeasureYResult::NO_XZ_ERROR;
+}
+
+MeasureZResult StationaryQubit::correlationMeasureZ() {
+  bool error = par("GOD_Xerror").boolValue();
+  if (dblrand() < Measurement_error.x_error_rate) {
+    error = !error;
+  }
+  return error ? MeasureZResult::HAS_X_ERROR : MeasureZResult::NO_X_ERROR;
+}
+
+EigenvalueResult StationaryQubit::localMeasureX() {
+  // the Z error will propagate to its partner; This only works for Bell pair and entanglement swapping for now
+  if (this->entangled_partner != nullptr && par("GOD_Zerror").boolValue()) {
+    this->entangled_partner->addZerror();
+  }
+
+  auto result = EigenvalueResult::PLUS_ONE;
+  if (dblrand() < 0.5) {
+    result = EigenvalueResult::MINUS_ONE;
+    if (this->entangled_partner != nullptr) {
+      this->entangled_partner->addZerror();
+    }
+  }
+  if (dblrand() < this->Measurement_error.x_error_rate) {
+    result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
+  }
+  return result;
+}
+
+EigenvalueResult StationaryQubit::localMeasureY() {
+  error("Not Yet Implemented");
+  return EigenvalueResult::PLUS_ONE;
+}
+
+EigenvalueResult StationaryQubit::localMeasureZ() {
+  // the X error will propagate to its partner; This only works for Bell pair and entanglement swapping for now
+  if (this->entangled_partner != nullptr && par("GOD_Xerror").boolValue()) {
+    this->entangled_partner->addXerror();
+  }
+
+  auto result = EigenvalueResult::PLUS_ONE;
+  if (dblrand() < 0.5) {
+    result = EigenvalueResult::MINUS_ONE;
+    if (this->entangled_partner != nullptr) {
+      this->entangled_partner->addXerror();
+    }
+  }
+  if (dblrand() < this->Measurement_error.z_error_rate) {
+    result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
+  }
+  return result;
 }
 
 // Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
@@ -524,7 +567,7 @@ bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
   applyMemoryError();
   check_and_cast<StationaryQubit *>(resource_qubit)->applyMemoryError();
   /*Target qubit*/ this->CNOT_gate(resource_qubit /*controlled qubit*/);
-  bool meas = this->measure_Z() == MeasureZResult::NO_X_ERROR;
+  bool meas = this->correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
   return meas;
 }
 
@@ -534,7 +577,7 @@ bool StationaryQubit::Zpurify(IStationaryQubit *resource_qubit /*Target*/) {
   check_and_cast<StationaryQubit *>(resource_qubit)->applyMemoryError();
   /*Target qubit*/ resource_qubit->CNOT_gate(this /*controlled qubit*/);
   this->Hadamard_gate();
-  bool meas = this->measure_Z() == MeasureZResult::NO_X_ERROR;
+  bool meas = this->correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
   return meas;
 }
 
@@ -814,13 +857,10 @@ measurement_outcome StationaryQubit::measure_density_independent() {
   }
   measurement_operator this_measurement = Random_Measurement_Basis_Selection();  // Select basis randomly
   char Output;
-  char Output_is_plus;
+  bool Output_is_plus;
 
   // Add memory error depending on the idle time. If excited/relaxed, this will immediately break entanglement, leaving the other qubit as completely mixed.
   applyMemoryError();
-
-  // Measurement gate error
-  applySingleQubitGateError(Measurement_error);
 
   // This becomes nullptr if this qubit got excited/relaxed or measured.
   if (this->entangled_partner != nullptr) {
@@ -971,6 +1011,15 @@ measurement_outcome StationaryQubit::measure_density_independent() {
   } else {
     error("Check condition in measure func.");
   }
+
+  // add measurement error
+  auto rand_num = dblrand();
+  if (this_measurement.basis == meas_op.X_basis.basis && rand_num < Measurement_error.x_error_rate ||
+      this_measurement.basis == meas_op.Y_basis.basis && rand_num < Measurement_error.y_error_rate ||
+      this_measurement.basis == meas_op.Z_basis.basis && rand_num < Measurement_error.z_error_rate) {
+    Output_is_plus = !Output_is_plus;
+  }
+
   measurement_outcome o;
   o.basis = this_measurement.basis;
   o.outcome_is_plus = Output_is_plus;
