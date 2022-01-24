@@ -42,6 +42,34 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(quisp::modules::measurement_outcome, measure_density_independent, (), (override));
   MOCK_METHOD(void, setCompletelyMixedDensityMatrix, (), (override));
   MOCK_METHOD(void, setEntangledPartnerInfo, (IStationaryQubit *), (override));
+
+  // graph state methods
+  MOCK_METHOD(void, applyClifford, (quisp::types::CliffordOperator op), (override));
+  MOCK_METHOD(void, applyRightClifford, (quisp::types::CliffordOperator op), (override));
+  MOCK_METHOD(bool, isNeighbor, (IStationaryQubit * another_qubit), (override));
+  MOCK_METHOD(void, addEdge, (IStationaryQubit * another_qubit), (override));
+  MOCK_METHOD(void, deleteEdge, (IStationaryQubit * another_qubit), (override));
+  MOCK_METHOD(void, toggleEdge, (IStationaryQubit * another_qubit), (override));
+  MOCK_METHOD(void, removeAllEdges, (), (override));
+  MOCK_METHOD(void, localComplement, (), (override));
+  MOCK_METHOD(void, removeVertexOperation, (IStationaryQubit * qubit_to_avoid), (override));
+  MOCK_METHOD(void, CZGate, (IStationaryQubit * another_qubit), (override));
+
+  MOCK_METHOD(quisp::types::EigenvalueResult, measureX, (), (override));
+  MOCK_METHOD(quisp::types::EigenvalueResult, measureY, (), (override));
+  MOCK_METHOD(quisp::types::EigenvalueResult, measureZ, (), (override));
+
+  MOCK_METHOD(void, CNOTGate, (IStationaryQubit * control_qubit), (override));
+  MOCK_METHOD(void, HadamardGate, (), (override));
+  MOCK_METHOD(void, ZGate, (), (override));
+  MOCK_METHOD(void, XGate, (), (override));
+  MOCK_METHOD(void, SGate, (), (override));
+  MOCK_METHOD(void, SdgGate, (), (override));
+  MOCK_METHOD(void, excite, (), (override));
+  MOCK_METHOD(void, relax, (), (override));
+  MOCK_METHOD(bool, XPurify, (IStationaryQubit * resource_qubit), (override));
+  MOCK_METHOD(bool, ZPurify, (IStationaryQubit * resource_qubit), (override));
+
   MockQubit() : IStationaryQubit() { setComponentType(new module_type::TestModuleType("test qubit")); }
   MockQubit(quisp::modules::QNIC_type _type, quisp::modules::QNicIndex _qnic_index) : MockQubit() {
     qnic_type = _type;
