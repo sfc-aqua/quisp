@@ -15,7 +15,7 @@ network Tomography_Linear_One_MM_MIM
         EndNode[2]: QNode {
             address = index;
             nodeType = "EndNode";
-            @display("i=device/pc;");
+            @display("i=COMP;");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
@@ -24,12 +24,12 @@ network Tomography_Linear_One_MM_MIM
             address = 1234;
             nodeType = "Repeater";
             //buffers = 25;
-            @display("i=device/smallrouter");
+            @display("i=REP1G");
         }
 
         HoM: HoM {
             address = 2;
-            @display("i=device/bsm");
+            @display("i=BSA");
         }
 
     connections:
@@ -52,20 +52,20 @@ network Linear_One_MIM
         source: QNode {
             address = 1;
             nodeType = "EndNode";
-            @display("i=device/pc");
+            @display("i=COMP");
             //buffers = 15;
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
         HoM: HoM {
             address = 2;
-            @display("i=device/bsm");
+            @display("i=BSA");
         }
         target: QNode {
             address = 3;
             nodeType = "EndNode";
             //buffers = 20;
-            @display("i=device/pc");
+            @display("i=COMP");
         }
     connections:
         source.port++ <--> ClassicalChannel {  distance = 1km; } <--> HoM.port++;
@@ -86,20 +86,20 @@ network Linear_One_MIM_biasedDistance
         source: QNode {
             address = 1;
             nodeType = "EndNode";
-            @display("i=device/pc");
+            @display("i=COMP");
             //buffers = 15;
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
         HoM: HoM {
             address = 2;
-            @display("i=device/bsm");
+            @display("i=BSA");
         }
         target: QNode {
             address = 3;
             nodeType = "EndNode";
             //buffers = 20;
-            @display("i=device/pc");
+            @display("i=COMP");
         }
     connections:
         source.port++ <--> ClassicalChannel {  distance = 7km; } <--> HoM.port++;
@@ -120,7 +120,7 @@ network Linear_One_MM
         EndNode[2]: QNode {
             address = index;
             nodeType = "EndNode";
-            @display("i=device/pc");
+            @display("i=COMP");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
@@ -140,7 +140,7 @@ network Linear_One_MM_bufferGap
             address = 112302;
             nodeType = "EndNode";
             buffers = 1;
-            @display("i=device/pc");
+            @display("i=COMP");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
@@ -149,7 +149,7 @@ network Linear_One_MM_bufferGap
             address = 300;
             buffers = 1;
             nodeType = "EndNode";
-            @display("i=device/pc");
+            @display("i=COMP");
         }
     connections:
         Small.port++ <--> ClassicalChannel {  distance = 12.3km; } <--> Big.port++;
@@ -167,19 +167,19 @@ network Linear_One_MSM
         source: QNode {
             address = 1;
             nodeType = "EndNode";
-            @display("i=device/pc;p=240,48");
+            @display("i=COMP;p=240,48");
 
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
         epps: SPDC {//needs to check the buffersize, and tell each node how many photon arrivals to expect.
             address = 2;
-            @display("i=device/epps;p=132,48");
+            @display("i=EPPS;p=132,48");
         }
         target: QNode {
             address = 3;
             nodeType = "EndNode";
-            @display("i=device/pc");
+            @display("i=COMP");
         }
     connections:
         source.port++ <--> ClassicalChannel {  distance = 40km; } <--> epps.port++;
@@ -272,44 +272,44 @@ network Linear_One_MIM_MM_MSM
         source: QNode {
             address = 10000000;
             nodeType = "EndNode";
-            @display("i=device/pc;p=502,132");
+            @display("i=COMP;p=502,132");
             //buffers = 15;
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
         HoM: HoM {
             address = 2;
-            @display("i=device/bsm;p=304,132");
+            @display("i=BSA;p=304,132");
         }
         repeater: QNode {
             address = 1234;
             nodeType = "Repeater";
         		//buffers = 25;
 
-            @display("i=device/smallrouter;p=408,131");
+            @display("i=REP1G;p=408,131");
         }
         router: QNode {
             address = 3;
             nodeType = "Router";
             //buffers = 30;
-            @display("i=device/smallrouter;p=207,131");
+            @display("i=RTR;p=207,131");
         }
         mm[2]: QNode {
             address = index + 100;
             //buffers = 20;
             nodeType = "EndNode";
-            @display("i=device/pc_s;p=207,31");
+            @display("i=COMP;p=207,31");
         }
         epps: SPDC {
             address = 5;
-            @display("i=device/epps;p=110,132");
+            @display("i=EPPS;p=110,132");
         }
 
         pas: QNode {
             address = 6;
             //buffers = 5;
             nodeType = "EndNode";
-            @display("i=device/pc_s;p=21,132");
+            @display("i=COMP;p=21,132");
         }
     connections:
         source.port++ <--> ClassicalChannel <--> repeater.port++;

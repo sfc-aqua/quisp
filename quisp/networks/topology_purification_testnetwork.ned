@@ -16,27 +16,27 @@ network Linear_five_MM_network
         EndNode1[1]: QNode {
             address = 1;
             nodeType = "EndNode";
-            @display("i=device/pc;p=72,170");
+            @display("i=COMP;p=72,170");
         }
         Repeater2[1]: QNode {
             address = 2;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=204,169");
+            @display("i=REP1G;p=204,169");
         }
         Repeater3[1]: QNode {
             address = 3;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=324,169");
+            @display("i=REP1G;p=324,169");
         }
         Repeater4[1]: QNode {
             address = 4;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=464,169");
+            @display("i=REP1G;p=464,169");
         }
         EndNode5[1]: QNode {
             address = 5;
             nodeType = "EndNode";
-            @display("i=device/pc;p=609,170");
+            @display("i=COMP;p=609,170");
         }
 
 
