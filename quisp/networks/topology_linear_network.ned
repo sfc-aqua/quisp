@@ -286,7 +286,7 @@ network Linear_One_MIM_MM_MSM
             nodeType = "Repeater";
         		//buffers = 25;
 
-            @display("i=RTR;p=408,131");
+            @display("i=REP1G;p=408,131");
         }
         router: QNode {
             address = 3;
