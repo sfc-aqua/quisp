@@ -48,7 +48,7 @@ network ispMap_1239_node_23_48_hetero_distance
     submodules:
         hom[177]: HoM {
             address = index+1000;
-            @display("i=BSA;p=180.525,29.725");
+            @display("p=180.525,29.725");
             hom_photon_detection_per_sec = default(uniform(1000,40000));
         }
         repeater[118]: QNode {
@@ -822,7 +822,7 @@ network ispMap_1239_node_23_48
     submodules:
         hom[177]: HoM {
             address = index+1000;
-            @display("i=BSA;p=127,41");
+            @display("p=127,41");
         }
         repeater[118]: QNode {
             address = index+10000;

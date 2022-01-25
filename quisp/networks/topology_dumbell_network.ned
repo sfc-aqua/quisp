@@ -3,15 +3,15 @@
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 
 package networks;
 
@@ -135,43 +135,38 @@ network topology_dumbell_MIM
         HoM1: HoM {
             address = 9;
             nodeType = "BSA";
-            @dispaly("i=BSA;p=42,150");
+            @dispaly("p=42,150");
             @display("p=105,238");
         }
         HoM2: HoM {
             address = 10;
             nodeType = "BSA";
-            @dispaly("i=BSA;p=52,140");
+            @dispaly("p=52,140");
             @display("p=186,238");
         }
         HoM3: HoM {
             address = 11;
             nodeType = "BSA";
-            @dispaly("i=BSA;p=32,130");
-            @display("p=293,238");
+            @dispaly("p=32,130");
         }
         HoM4: HoM {
             address = 12;
             nodeType = "BSA";
-            @dispaly("i=BSA;p=42,150");
             @display("p=113,87");
         }
         HoM5: HoM {
             address = 13;
             nodeType = "BSA";
-            @dispaly("i=BSA;p=62,225");
             @display("p=326,118");
         }
         HoM6: HoM {
             address = 14;
             nodeType = "BSA";
-            @dispaly("i=BSA;p=52,250");
             @display("p=421,118");
         }
         HoM7: HoM {
             address = 15;
             nodeType = "BSA";
-            @dispaly("i=BSA;p=55,240");
             @display("p=454,54");
         }
 

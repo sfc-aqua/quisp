@@ -39,7 +39,6 @@ network Simple_constant_quantum_cost
         }
         HoM[6]: HoM {
             address = sizeof(endnode) +sizeof(repeater) + index;
-            @display("i=BSA;");
         }
         router[1]: QNode {
             address = sizeof(endnode) +sizeof(repeater) +sizeof(HoM) + index;

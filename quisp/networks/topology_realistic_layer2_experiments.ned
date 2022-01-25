@@ -81,27 +81,27 @@ network Realistic_Layer2_Simple_MIM_MM_all_in_one
 
         HoM1[1]: HoM {
             address = 14;
-            @display("i=BSA;p=389,195");
+            @display("p=389,195");
         }
         HoM2[1]: HoM {
             address = 15;
-            @display("i=BSA;p=105,137");
+            @display("p=105,137");
         }
         HoM3[1]: HoM {
             address = 16;
-            @display("i=BSA;p=275,30");
+            @display("p=275,30");
         }
         HoM4[1]: HoM {
             address = 17;
-            @display("i=BSA;p=523,68");
+            @display("p=523,68");
         }
         HoM5[1]: HoM {
             address = 18;
-            @display("i=BSA;p=350,273");
+            @display("p=350,273");
         }
         HoM6[1]: HoM {
             address = 19;
-            @display("i=BSA;p=66,241");
+            @display("p=66,241");
         }
 
 
@@ -214,7 +214,7 @@ network Realistic_Layer2_Simple_MIM_MM_5km
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=163,182");
+            @display("p=163,182");
         }
 
 
@@ -298,7 +298,7 @@ network Realistic_Layer2_Simple_MIM_MM_7_5km
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -339,7 +339,7 @@ network Realistic_Layer2_Simple_MIM_MM_10km
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -381,7 +381,7 @@ network Realistic_Layer2_Simple_MIM_MM_15km
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -421,7 +421,7 @@ network Realistic_Layer2_Simple_MIM_MM_50km
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -462,7 +462,7 @@ network Realistic_Layer2_Simple_MIM_MM_40km
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -504,7 +504,7 @@ network Realistic_Layer2_Simple_MIM_MM_25km
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -544,7 +544,7 @@ network Realistic_Layer2_Simple_MIM_MM_30km
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -586,7 +586,7 @@ network Realistic_Layer2_Simple_MIM_MM
         }
         BSA[1]: HoM {
             address = 4;
-            @display("i=BSA;p=269,85");
+            @display("p=269,85");
         }
 
 
@@ -629,7 +629,7 @@ network Realistic_Layer2_Simple_MIM_MM_same
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -670,7 +670,7 @@ network Realistic_Layer2_RouterNet
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
         Router5[1]: QNode {
             address = 5;
@@ -827,31 +827,31 @@ network Realistic_Layer2_Star_Sep
         }
         HoM21[1]: HoM {
             address = 21;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
         HoM22[1]: HoM {
             address = 22;
-            @display("i=BSA;p=484,98");
+            @display("p=484,98");
         }
         HoM23[1]: HoM {
             address = 23;
-            @display("i=BSA;p=445,157");
+            @display("p=445,157");
         }
         HoM24[1]: HoM {
             address = 24;
-            @display("i=BSA;p=324,98");
+            @display("p=324,98");
         }
         HoM25[1]: HoM {
             address = 25;
-            @display("i=BSA;p=270,70");
+            @display("p=270,70");
         }
         HoM26[1]: HoM {
             address = 26;
-            @display("i=BSA;p=193,77");
+            @display("p=193,77");
         }
         HoM27[1]: HoM {
             address = 27;
-            @display("i=BSA;p=128,137");
+            @display("p=128,137");
         }
 
     connections:
@@ -967,8 +967,7 @@ network Realistic_Layer2_MM_MIM_MIM_MIM_MM
         //HoM[3]: HoM {
         HoM[1]: HoM {
             address = 100000+sizeof(EndNode)+ sizeof(repeater)+ index;
-            @display("i=BSA");
-        }
+         }
 
     connections:
         EndNode[0].port++ <--> ClassicalChannel {  distance = 20km; } <--> repeater[0].port++;//MM
@@ -1003,7 +1002,6 @@ network Realistic_Layer2_MIM_MIM
 
         HoM[2]: HoM {
             address = sizeof(EndNode)+ sizeof(repeater)+ index;
-            @display("i=BSA");
         }
 
     connections:
@@ -1043,7 +1041,6 @@ network Realistic_Layer2_MIM_tomography
 
         HoM[10]: HoM {
             address = sizeof(EndNode)+ sizeof(repeater)+ index;
-            @display("i=BSA");
         }
 
     connections:

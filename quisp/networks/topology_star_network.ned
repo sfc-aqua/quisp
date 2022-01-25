@@ -56,7 +56,7 @@ network Three_HoM_star
         HoM[3]: HoM {
             address = index+1000;
             //@display("p=326,57");
-            @display("i=BSA;p=33,87");
+            @display("p=33,87");
         }
         Router[1]: QNode {
             address = index;

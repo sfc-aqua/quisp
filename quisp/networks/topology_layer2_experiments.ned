@@ -81,27 +81,27 @@ network Layer2_Simple_MIM_MM_all_in_one
 
         HoM1[1]: HoM {
             address = 14;
-            @display("i=BSA;p=171,231");
+            @display("p=171,231");
         }
         HoM2[1]: HoM {
             address = 15;
-            @display("i=BSA;p=47,121");
+            @display("p=47,121");
         }
         HoM3[1]: HoM {
             address = 16;
-            @display("i=BSA;p=196,29");
+            @display("p=196,29");
         }
         HoM4[1]: HoM {
             address = 17;
-            @display("i=BSA;p=408,86");
+            @display("p=408,86");
         }
         HoM5[1]: HoM {
             address = 18;
-            @display("i=BSA;p=658,86");
+            @display("p=658,86");
         }
         HoM6[1]: HoM {
             address = 19;
-            @display("i=BSA;p=509,245");
+            @display("p=509,245");
         }
 
     connections:
@@ -209,7 +209,7 @@ network Layer2_Simple_MIM_MM_7km
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -248,7 +248,7 @@ network Layer2_Simple_MIM_MM_10km
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -290,7 +290,7 @@ network Layer2_Simple_MIM_MM_15km
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -330,7 +330,7 @@ network Layer2_Simple_MIM_MM_50km
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -371,7 +371,7 @@ network Layer2_Simple_MIM_MM_40km
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -411,7 +411,7 @@ network Layer2_Simple_MIM_MM_30km
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -453,7 +453,7 @@ network Layer2_Simple_MIM_MM
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -496,7 +496,7 @@ network Layer2_Simple_MIM_MM_same
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
 
 
@@ -537,7 +537,7 @@ network Layer2_RouterNet
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
         Router5[1]: QNode {
             address = 5;
@@ -605,7 +605,7 @@ network Layer2_Star_Sep
         }
         HoM1[1]: HoM {
             address = 4;
-            @display("i=BSA;p=164,176");
+            @display("p=164,176");
         }
         Router5[1]: QNode {
             address = 5;
@@ -624,7 +624,7 @@ network Layer2_Star_Sep
         }
         HoM2[1]: HoM {
             address = 8;
-            @display("i=BSA;p=484,98");
+            @display("p=484,98");
         }
         EndNode1[1]: QNode {
             address = 9;
@@ -633,7 +633,7 @@ network Layer2_Star_Sep
         }
         HoM3[1]: HoM {
             address = 10;
-            @display("i=BSA;p=445,157");
+            @display("p=445,157");
         }
         EndNode2[1]: QNode {
             address = 11;
@@ -662,19 +662,19 @@ network Layer2_Star_Sep
         }
         HoM4[1]: HoM {
             address = 16;
-            @display("i=BSA;p=324,98");
+            @display("p=324,98");
         }
         HoM5[1]: HoM {
             address = 17;
-            @display("i=BSA;p=270,70");
+            @display("p=270,70");
         }
         HoM6[1]: HoM {
             address = 18;
-            @display("i=BSA;p=193,77");
+            @display("p=193,77");
         }
         HoM7[1]: HoM {
             address = 19;
-            @display("i=BSA;p=128,137");
+            @display("p=128,137");
         }
 
         Repeater2[1]: QNode {
@@ -835,8 +835,7 @@ network Layer2_MM_MIM_MIM_MIM_MM
         //HoM[3]: HoM {
         HoM[1]: HoM {
             address = 100000+sizeof(EndNode)+ sizeof(repeater)+ index;
-            @display("i=BSA");
-        }
+         }
 
     connections:
         EndNode[0].port++ <--> ClassicalChannel {  distance = 20km; } <--> repeater[0].port++;//MM
@@ -871,7 +870,6 @@ network Layer2_MIM_MIM
 
         HoM[2]: HoM {
             address = sizeof(EndNode)+ sizeof(repeater)+ index;
-            @display("i=BSA");
         }
 
     connections:
@@ -911,7 +909,6 @@ network Layer2_MIM_tomography
 
         HoM[10]: HoM {
             address = sizeof(EndNode)+ sizeof(repeater)+ index;
-            @display("i=BSA");
         }
 
     connections:
@@ -997,11 +994,5 @@ network Layer2_MIM_tomography
         HoM[9].quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> EndNode[1].quantum_port++;
 
 
-}
-//
-// TODO documentation
-//
-network Network
-{
 }
 
