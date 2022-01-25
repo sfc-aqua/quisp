@@ -46,11 +46,6 @@ class StatQubitTarget : public StationaryQubit {
     setParDouble(this, "Zgate_Z_error_ratio", 0);
     setParDouble(this, "Zgate_Y_error_ratio", 0);
 
-    setParDouble(this, "Measurement_error_rate", 1 / 2000);
-    setParDouble(this, "Measurement_X_error_ratio", 1);
-    setParDouble(this, "Measurement_Y_error_ratio", 1);
-    setParDouble(this, "Measurement_Z_error_ratio", 1);
-
     setParDouble(this, "CNOTgate_error_rate", 1 / 2000);
     setParDouble(this, "CNOTgate_IX_error_ratio", 1);
     setParDouble(this, "CNOTgate_XI_error_ratio", 1);
@@ -61,6 +56,10 @@ class StatQubitTarget : public StationaryQubit {
     setParDouble(this, "CNOTgate_IY_error_ratio", 1);
     setParDouble(this, "CNOTgate_YI_error_ratio", 1);
     setParDouble(this, "CNOTgate_YY_error_ratio", 1);
+
+    setParDouble(this, "X_measurement_error_rate", 1. / 2000);
+    setParDouble(this, "Y_measurement_error_rate", 1. / 2000);
+    setParDouble(this, "Z_measurement_error_rate", 1. / 2000);
 
     setParInt(this, "stationaryQubit_address", 1);
     setParInt(this, "node_address", 1);

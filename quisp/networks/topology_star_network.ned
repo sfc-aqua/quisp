@@ -16,7 +16,7 @@ network Three_HoM_star
         int message_id_PathSelection = 1;
         int increment_address = 0;
 
-        @display("bgl=2");
+        @display("bgl=2;bgb=177,120");
     types:
         channel C extends DatarateChannel
         {
@@ -51,17 +51,17 @@ network Three_HoM_star
             //Initializerでaddress = node idにすればconflict無くなるかも。
             address = index+100000;
             nodeType = "EndNode";
-            @display("i=device/pc");
+            @display("i=COMP;p=33,24");
         }
         HoM[3]: HoM {
             address = index+1000;
             //@display("p=326,57");
-            @display("i=device/bsm");
+            @display("p=33,87");
         }
         Router[1]: QNode {
             address = index;
             //@display("p=246,56");
-            @display("i=device/server");
+            @display("i=RTR;p=126,87");
         }
     connections:
         EndNode[0].port++ <--> C {  distance = 5km; } <--> HoM[0].port++;
@@ -119,21 +119,21 @@ network Star_MSM
         node[3]: QNode {
             address = index;
             nodeType = "EndNode";
-            @display("i=device/pc");
+            @display("i=COMP");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
         spdc[6]: SPDC {
             address = index+1000;
-            @display("i=device/epps");
+            @display("i=EPPS");
         }
         router[1]: QNode {
             address = index+1000000;
-            @display("i=device/router");
+            @display("i=RTR;p=24,106");
         }
         repeater[3]: QNode {
             address = index+1000;
-            @display("i=device/device");
+            @display("i=REP1G;p=136,61");
         }
 
 

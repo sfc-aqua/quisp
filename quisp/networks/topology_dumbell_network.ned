@@ -3,15 +3,15 @@
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Lesser General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
+//
 
 package networks;
 
@@ -29,42 +29,42 @@ network topology_dumbell_MM
         EndNode1: QNode {
             address = 1;
             nodeType = "EndNode";
-            @display("i=device/pc;p=152,238");
+            @display("i=COMP;p=152,238");
         }
         EndNode2: QNode {
             address = 2;
             nodeType = "EndNode";
-            @display("i=device/pc;p=324,245");
+            @display("i=COMP;p=324,245");
         }
         EndNode3: QNode {
             address = 3;
             nodeType = "EndNode";
-            @display("i=device/pc;p=220,137");
+            @display("i=COMP;p=220,137");
         }
         EndNode4: QNode {
             address = 4;
             nodeType = "EndNode";
-            @display("i=device/pc;p=350,22");
+            @display("i=COMP;p=350,22");
         }
         EndNode5: QNode {
             address = 5;
             nodeType = "EndNode";
-            @display("i=device/pc;p=401,118");
+            @display("i=COMP;p=401,118");
         }
         EndNode6: QNode {
             address = 6;
             nodeType = "EndNode";
-            @display("i=device/pc;p=421,61");
+            @display("i=COMP;p=421,61");
         }
         Repeater1: QNode {
             address = 7;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=66,124");
+            @display("i=RTR;p=66,124");
         }
         Repeater2: QNode {
             address = 8;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=132,36");
+            @display("i=RTR;p=132,36");
         }
 
     connections:
@@ -95,83 +95,78 @@ network topology_dumbell_MIM
         EndNode1: QNode {
             address = 1;
             nodeType = "EndNode";
-            @display("i=device/pc;p=200,331");
+            @display("i=COMP;p=200,331");
         }
         EndNode2: QNode {
             address = 2;
             nodeType = "EndNode";
-            @display("i=device/pc;p=329,322");
+            @display("i=COMP;p=329,322");
         }
         EndNode3: QNode {
             address = 3;
             nodeType = "EndNode";
-            @display("i=device/pc;p=454,285");
+            @display("i=COMP;p=454,285");
         }
         EndNode4: QNode {
             address = 4;
             nodeType = "EndNode";
-            @display("i=device/pc;p=454,199");
+            @display("i=COMP;p=454,199");
         }
         EndNode5: QNode {
             address = 5;
             nodeType = "EndNode";
-            @display("i=device/pc;p=554,168");
+            @display("i=COMP;p=554,168");
         }
         EndNode6: QNode {
             address = 6;
             nodeType = "EndNode";
-            @display("i=device/pc;p=602,73");
+            @display("i=COMP;p=602,73");
         }
         Repeater1: QNode {
             address = 7;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=45,161");
+            @display("i=RTR;p=45,161");
         }
         Repeater2: QNode {
             address = 8;
             nodeType = "Repeater";
-            @display("i=device/smallrouter;p=197,21");
+            @display("i=RTR;p=197,21");
         }
         HoM1: HoM {
             address = 9;
             nodeType = "BSA";
-            @dispaly("i=i=device/bsm;p=42,150");
+            @dispaly("p=42,150");
             @display("p=105,238");
         }
         HoM2: HoM {
             address = 10;
             nodeType = "BSA";
-            @dispaly("i=i=device/bsm;p=52,140");
+            @dispaly("p=52,140");
             @display("p=186,238");
         }
         HoM3: HoM {
             address = 11;
             nodeType = "BSA";
-            @dispaly("i=i=device/bsm;p=32,130");
-            @display("p=293,238");
+            @dispaly("p=32,130");
         }
         HoM4: HoM {
             address = 12;
             nodeType = "BSA";
-            @dispaly("i=i=device/bsm;p=42,150");
             @display("p=113,87");
         }
         HoM5: HoM {
             address = 13;
             nodeType = "BSA";
-            @dispaly("i=i=device/bsm;p=62,225");
             @display("p=326,118");
         }
         HoM6: HoM {
             address = 14;
             nodeType = "BSA";
-            @dispaly("i=i=device/bsm;p=52,250");
             @display("p=421,118");
         }
         HoM7: HoM {
             address = 15;
             nodeType = "BSA";
-            @dispaly("i=i=device/bsm;p=55,240");
             @display("p=454,54");
         }
 
