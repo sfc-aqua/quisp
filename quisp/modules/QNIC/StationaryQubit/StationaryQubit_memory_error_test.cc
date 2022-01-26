@@ -29,22 +29,22 @@ class StatQubitTarget : public StationaryQubit {
     setParDouble(this, "memory_energy_relaxation_rate", 0.00000198);
     setParDouble(this, "memory_completely_mixed_rate", 0);
 
-    setParDouble(this, "Hgate_error_rate", 1 / 2000);
+    setParDouble(this, "Hgate_error_rate", 1. / 2000);
     setParDouble(this, "Hgate_X_error_ratio", 0);
     setParDouble(this, "Hgate_Z_error_ratio", 0);
     setParDouble(this, "Hgate_Y_error_ratio", 0);
 
-    setParDouble(this, "Xgate_error_rate", 1 / 2000);
+    setParDouble(this, "Xgate_error_rate", 1. / 2000);
     setParDouble(this, "Xgate_X_error_ratio", 0);
     setParDouble(this, "Xgate_Z_error_ratio", 0);
     setParDouble(this, "Xgate_Y_error_ratio", 0);
 
-    setParDouble(this, "Zgate_error_rate", 1 / 2000);
+    setParDouble(this, "Zgate_error_rate", 1. / 2000);
     setParDouble(this, "Zgate_X_error_ratio", 0);
     setParDouble(this, "Zgate_Z_error_ratio", 0);
     setParDouble(this, "Zgate_Y_error_ratio", 0);
 
-    setParDouble(this, "CNOTgate_error_rate", 1 / 2000);
+    setParDouble(this, "CNOTgate_error_rate", 1. / 2000);
     setParDouble(this, "CNOTgate_IX_error_ratio", 1);
     setParDouble(this, "CNOTgate_XI_error_ratio", 1);
     setParDouble(this, "CNOTgate_XX_error_ratio", 1);
