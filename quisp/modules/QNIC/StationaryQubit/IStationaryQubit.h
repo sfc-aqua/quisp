@@ -224,8 +224,6 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   virtual void SdgGate() = 0;
   virtual void excite() = 0;
   virtual void relax() = 0;
-  virtual bool XPurify(IStationaryQubit *resource_qubit) = 0;
-  virtual bool ZPurify(IStationaryQubit *resource_qubit) = 0;
 
   /*GOD parameters*/
   virtual void setEntangledPartnerInfo(IStationaryQubit *partner) = 0;
