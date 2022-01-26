@@ -14,9 +14,9 @@ class RuleSet {
 
   unsigned long ruleset_id;  ///< `ruleset_id` is used for identifying connection
   int owner_addr;  ///< Address of RuleSet owner
-  std::vector<BaseRule> rules;
+  std::vector<std::unique_ptr<Rule>> rules;
 
-  BaseRule &addRule(std::unique_ptr<BaseRule> rule, std::vector<int> partners);
+  Rule *addRule(std::unique_ptr<Rule> rule, std::vector<int> partners);
   void serialize();
   void deserialize();
   unsigned long createUniqueId();

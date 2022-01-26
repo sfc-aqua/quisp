@@ -35,7 +35,7 @@ TEST(ActiveRuleTest, Init) {
   EXPECT_EQ(rule.action_partners.at(1), 3);
 }
 
-TEST(RuleTest, addResourceTest) {
+TEST(ActiveRuleTest, addResourceTest) {
   prepareSimulation();
   auto rule = Rule::setupActiveRule();
   int entangled_partner_address1 = 1;
