@@ -227,7 +227,6 @@ TEST(StatQubitInternalGraphTest, ToggleEdge) {
 }
 
 TEST(StatQubitInternalGraphTest, removeAllEdges) {
-  // some comment
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitFixture{};
   auto *another_qubit = new StatQubitFixture{};
@@ -254,7 +253,6 @@ TEST(StatQubitInternalGraphTest, removeAllEdges) {
 }
 
 TEST(StatQubitInternalGraphTest, applyClifford) {
-  // some comment
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitFixture{};
   auto *another_qubit = new StatQubitFixture{};
@@ -295,7 +293,6 @@ TEST(StatQubitInternalGraphTest, applyClifford) {
 }
 
 TEST(StatQubitInternalGraphTest, applyRightClifford) {
-  // some comment
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitFixture{};
   auto *another_qubit = new StatQubitFixture{};
@@ -336,7 +333,6 @@ TEST(StatQubitInternalGraphTest, applyRightClifford) {
 }
 
 TEST(StatQubitInternalGraphTest, localComplement) {
-  // some comment
   auto *sim = prepareSimulation();
   auto *center_qubit = new StatQubitFixture{};
   std::vector<StatQubitFixture *> first_layer_qubits;
@@ -431,7 +427,6 @@ TEST(StatQubitInternalGraphTest, localComplement) {
 }
 
 TEST(StatQubitInternalGraphTest, removeVertexOperation) {
-  // some comment
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitFixture{};
   auto *another_qubit = new StatQubitFixture{};
