@@ -1147,17 +1147,51 @@ void StationaryQubit::CZGate(IStationaryQubit *another_qubit) {
   }
 }
 
-void StationaryQubit::CNOTGate(IStationaryQubit *conrol_qubit) {}
+void StationaryQubit::CNOTGate(IStationaryQubit *control_qubit) {
+  // apply memory error
+  this->HadamardGate();
+  this->CZGate(control_qubit);
+  this->HadamardGate();
+  // apply CNOT error
+}
 
-void StationaryQubit::HadamardGate() {}
-void StationaryQubit::ZGate() {}
-void StationaryQubit::XGate() {}
-void StationaryQubit::SGate() {}
-void StationaryQubit::SdgGate() {}
-void StationaryQubit::excite() {}
-void StationaryQubit::relax() {}
-bool StationaryQubit::XPurify(IStationaryQubit *resource_qubit) { return true; }
-bool StationaryQubit::ZPurify(IStationaryQubit *resource_qubit) { return true; }
+void StationaryQubit::HadamardGate() {
+  // apply memory error
+  this->applyClifford(CliffordOperator::H);
+  // apply single qubit gate error
+}
+void StationaryQubit::ZGate() {
+  // apply memory error
+  this->applyClifford(CliffordOperator::Z);
+  // apply single qubit gate error
+}
+void StationaryQubit::XGate() {
+  // apply memory error
+  this->applyClifford(CliffordOperator::X);
+  // apply single qubit gate error
+}
+void StationaryQubit::SGate() {
+  // apply memory error
+  this->applyClifford(CliffordOperator::S);
+  // apply single qubit gate error
+}
+void StationaryQubit::SdgGate() {
+  // apply memory error
+  this->applyClifford(CliffordOperator::S_INV);
+  // apply single qubit gate error
+}
+void StationaryQubit::excite() {
+  auto result = this->measureZ();
+  if (result == EigenvalueResult::PLUS_ONE) {
+    this->applyClifford(CliffordOperator::X);
+  }
+}
+void StationaryQubit::relax() {
+  auto result = this->measureZ();
+  if (result == EigenvalueResult::MINUS_ONE) {
+    this->applyClifford(CliffordOperator::X);
+  }
+}
 
 EigenvalueResult StationaryQubit::measureX() {
   this->applyClifford(CliffordOperator::H);
@@ -1171,19 +1205,20 @@ EigenvalueResult StationaryQubit::measureY() {
 }
 
 EigenvalueResult StationaryQubit::measureZ() {
+  // apply memory error
   auto vop = this->vertex_operator;
   auto result = EigenvalueResult::PLUS_ONE;
   if (this->neighbors.empty()) {
     switch (vop) {
-      case CliffordOperator::RY_INV:
       case CliffordOperator::H:
+      case CliffordOperator::RY_INV:
       case CliffordOperator::S_INV_RY_INV:
       case CliffordOperator::S_RY_INV:
         break;
       case CliffordOperator::RY:
-      case CliffordOperator::Z_RY:
       case CliffordOperator::S_INV_RY:
       case CliffordOperator::S_RY:
+      case CliffordOperator::Z_RY:
         result = EigenvalueResult::MINUS_ONE;
         break;
       default:
@@ -1195,6 +1230,7 @@ EigenvalueResult StationaryQubit::measureZ() {
     this->removeAllEdges();
   }
   this->vertex_operator = (result == EigenvalueResult::PLUS_ONE) ? CliffordOperator::H : CliffordOperator::RY;
+  // apply measurement error
   return result;
 }
 
@@ -1218,8 +1254,6 @@ CliffordOperator StationaryQubit::controlled_Z_lookup_node_2[2][24][24] =
 std::string StationaryQubit::decomposition_table[24] = {
     "", "XX", "ZZXX", "ZZ", "XXX", "X", "ZZX", "XZZ", "ZZZXZ", "ZXZZZ", "ZXXXZ", "ZXZ", "Z", "ZZZ", "ZXX", "XXZ", "XXXZ", "XZ", "ZZXZ", "XZZZ", "ZXXX", "ZX", "ZZZX", "ZXZZ",
 };
-// #include "clifford_decomposition_lookup.tbl"
-//     ;
 
 }  // namespace modules
 }  // namespace quisp

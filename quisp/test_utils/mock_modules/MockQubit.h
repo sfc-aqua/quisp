@@ -67,8 +67,6 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(void, SdgGate, (), (override));
   MOCK_METHOD(void, excite, (), (override));
   MOCK_METHOD(void, relax, (), (override));
-  MOCK_METHOD(bool, XPurify, (IStationaryQubit * resource_qubit), (override));
-  MOCK_METHOD(bool, ZPurify, (IStationaryQubit * resource_qubit), (override));
 
   MockQubit() : IStationaryQubit() { setComponentType(new module_type::TestModuleType("test qubit")); }
   MockQubit(quisp::modules::QNIC_type _type, quisp::modules::QNicIndex _qnic_index) : MockQubit() {
