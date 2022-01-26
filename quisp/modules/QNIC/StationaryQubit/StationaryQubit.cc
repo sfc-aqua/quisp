@@ -1103,29 +1103,30 @@ void StationaryQubit::localComplement() {
     }
   }
   for (auto *v : this->neighbors) {
-    ((StationaryQubit *)v)->applyRightClifford(CliffordOperator::RX_INV);
+    ((StationaryQubit *)v)->applyRightClifford(CliffordOperator::S);
   }
-  this->applyRightClifford(CliffordOperator::S);
+  this->applyRightClifford(CliffordOperator::RX_INV);
 }
 
 void StationaryQubit::removeVertexOperation(IStationaryQubit *qubit_to_avoid) {
   if (this->neighbors.empty() || this->vertex_operator == types::CliffordOperator::Id) {
     return;
   }
-  auto *swapping_partner = qubit_to_avoid;
+  auto *swapping_partner_temp = qubit_to_avoid;
   for (auto *v : this->neighbors) {
     if (v != qubit_to_avoid) {
-      swapping_partner = v;
+      swapping_partner_temp = v;
       break;
     }
   }
+  auto swapping_partner = (StationaryQubit *)swapping_partner_temp;
   std::string decomposition_string = decomposition_table[(int)this->vertex_operator];
   for (int i = decomposition_string.size() - 1; i >= 0; i--) {
     if (decomposition_string[i] == 'V') {
       this->localComplement();
     } else {
       // 'U'
-      ((StationaryQubit *)swapping_partner)->localComplement();
+      swapping_partner->localComplement();
     }
   }
 }
@@ -1251,7 +1252,7 @@ CliffordOperator StationaryQubit::controlled_Z_lookup_node_2[2][24][24] =
     ;
 
 std::string StationaryQubit::decomposition_table[24] = {
-    "", "XX", "ZZXX", "ZZ", "XXX", "X", "ZZX", "XZZ", "ZZZXZ", "ZXZZZ", "ZXXXZ", "ZXZ", "Z", "ZZZ", "ZXX", "XXZ", "XXXZ", "XZ", "ZZXZ", "XZZZ", "ZXXX", "ZX", "ZZZX", "ZXZZ",
+    "", "VV", "UUVV", "UU", "VVV", "V", "VUU", "UUV", "UVUUU", "UUUVU", "UVVVU", "UVU", "U", "UUU", "VVU", "UVV", "UVVV", "UV", "UVUU", "UUUV", "VVVU", "VU", "VUUU", "UUVU",
 };
 
 }  // namespace modules
