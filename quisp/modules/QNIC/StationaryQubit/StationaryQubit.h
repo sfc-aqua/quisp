@@ -123,8 +123,6 @@ class StationaryQubit : public IStationaryQubit {
   void SdgGate() override;
   void excite() override;
   void relax() override;
-  bool XPurify(IStationaryQubit *resource_qubit) override;
-  bool ZPurify(IStationaryQubit *resource_qubit) override;
 
   /*GOD parameters*/
   void setEntangledPartnerInfo(IStationaryQubit *partner) override;
