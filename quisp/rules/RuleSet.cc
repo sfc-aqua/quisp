@@ -13,9 +13,9 @@ Rule *RuleSet::addRule(std::unique_ptr<Rule> rule, std::vector<int> partners) {
   }
   rule->rule_id = createUniqueId();
   rule->parent_ruleset_id = ruleset_id;
+  Rule *raw_ptr = rule.get();
   rules.push_back(std::move(rule));
-  Rule *raw_pointer = rules.at(rules.size() - 1).get();
-  return raw_pointer;
+  return raw_ptr;
 };
 
 void RuleSet::serialize(){};
