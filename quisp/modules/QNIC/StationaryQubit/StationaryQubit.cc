@@ -14,7 +14,6 @@
 #include <unsupported/Eigen/KroneckerProduct>
 #include <unsupported/Eigen/MatrixFunctions>
 #include <vector>
-#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 
 using namespace Eigen;
 
@@ -1149,7 +1148,7 @@ void StationaryQubit::applyPureCZ(IStationaryQubit *another_qubit) {
 
 void StationaryQubit::CNOTGate(IStationaryQubit *control_qubit) {
   // apply memory error
-  this->applyClifford(CliffordOperator::H); // use apply Clifford for pure operation
+  this->applyClifford(CliffordOperator::H);  // use apply Clifford for pure operation
   this->applyPureCZ(control_qubit);
   this->applyClifford(CliffordOperator::H);
   // apply CNOT error
