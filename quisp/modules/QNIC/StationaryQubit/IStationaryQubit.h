@@ -176,7 +176,7 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   virtual void removeAllEdges() = 0;
   virtual void localComplement() = 0;
   virtual void removeVertexOperation(IStationaryQubit *qubit_to_avoid) = 0;
-  virtual void CZGate(IStationaryQubit *another_qubit) = 0;
+  virtual void applyPureCZ(IStationaryQubit *another_qubit) = 0;
 
  public:
   IStationaryQubit(){};

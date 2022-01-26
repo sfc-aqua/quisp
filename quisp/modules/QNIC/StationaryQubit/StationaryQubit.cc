@@ -1131,7 +1131,7 @@ void StationaryQubit::removeVertexOperation(IStationaryQubit *qubit_to_avoid) {
   }
 }
 
-void StationaryQubit::CZGate(IStationaryQubit *another_qubit) {
+void StationaryQubit::applyPureCZ(IStationaryQubit *another_qubit) {
   auto *aq = (StationaryQubit *)another_qubit;
   this->removeVertexOperation(aq);
   aq->removeVertexOperation(this);
@@ -1149,9 +1149,9 @@ void StationaryQubit::CZGate(IStationaryQubit *another_qubit) {
 
 void StationaryQubit::CNOTGate(IStationaryQubit *control_qubit) {
   // apply memory error
-  this->HadamardGate();
-  this->CZGate(control_qubit);
-  this->HadamardGate();
+  this->applyClifford(CliffordOperator::H); // use apply Clifford for pure operation
+  this->applyPureCZ(control_qubit);
+  this->applyClifford(CliffordOperator::H);
   // apply CNOT error
 }
 

@@ -40,7 +40,7 @@ class StationaryQubit : public IStationaryQubit {
   void removeAllEdges() override;
   void localComplement() override;
   void removeVertexOperation(IStationaryQubit *qubit_to_avoid) override;
-  void CZGate(IStationaryQubit *another_qubit) override;
+  void applyPureCZ(IStationaryQubit *another_qubit) override;
 
   static std::string decomposition_table[24];
   static types::CliffordOperator clifford_application_lookup[24][24];
