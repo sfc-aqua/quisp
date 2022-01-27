@@ -1063,6 +1063,8 @@ measurement_operator StationaryQubit::Random_Measurement_Basis_Selection() {
   return this_measurement;
 }
 
+// protected internal graph backend functions
+
 void StationaryQubit::applyClifford(types::CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)op][(int)(this->vertex_operator)]; }
 
 void StationaryQubit::applyRightClifford(types::CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)(this->vertex_operator)][(int)op]; }
@@ -1070,6 +1072,7 @@ void StationaryQubit::applyRightClifford(types::CliffordOperator op) { this->ver
 bool StationaryQubit::isNeighbor(IStationaryQubit *another_qubit) { return this->neighbors.find(another_qubit) != this->neighbors.end(); }
 
 void StationaryQubit::addEdge(IStationaryQubit *another_qubit) {
+  if (another_qubit == this) error("adding edge to self is not allowed");
   this->neighbors.insert(another_qubit);
   ((StationaryQubit *)another_qubit)->neighbors.insert(this);
 }
@@ -1147,6 +1150,36 @@ void StationaryQubit::applyPureCZ(IStationaryQubit *another_qubit) {
   }
 }
 
+EigenvalueResult StationaryQubit::graphMeasureZ() {
+  auto vop = this->vertex_operator;
+  auto result = EigenvalueResult::PLUS_ONE;
+  if (this->neighbors.empty()) {
+    switch (vop) {
+      case CliffordOperator::H:
+      case CliffordOperator::RY_INV:
+      case CliffordOperator::S_INV_RY_INV:
+      case CliffordOperator::S_RY_INV:
+        break;
+      case CliffordOperator::RY:
+      case CliffordOperator::S_INV_RY:
+      case CliffordOperator::S_RY:
+      case CliffordOperator::Z_RY:
+        result = EigenvalueResult::MINUS_ONE;
+        break;
+      default:
+        result = (dblrand() < 0.5) ? EigenvalueResult::PLUS_ONE : EigenvalueResult::MINUS_ONE;
+    }
+  } else {
+    this->removeVertexOperation(this);  // nothing to be avoided
+    result = (dblrand() < 0.5) ? EigenvalueResult::PLUS_ONE : EigenvalueResult::MINUS_ONE;
+    this->removeAllEdges();
+  }
+  this->vertex_operator = (result == EigenvalueResult::PLUS_ONE) ? CliffordOperator::H : CliffordOperator::RY;
+  return result;
+}
+
+// public member functions
+
 void StationaryQubit::CNOTGate(IStationaryQubit *control_qubit) {
   // apply memory error
   this->applyClifford(CliffordOperator::H);  // use apply Clifford for pure operation
@@ -1194,42 +1227,19 @@ void StationaryQubit::relax() {
 }
 
 EigenvalueResult StationaryQubit::measureX() {
-  this->applyClifford(CliffordOperator::H);
+  this->HadamardGate();
   return this->measureZ();
 }
 
 EigenvalueResult StationaryQubit::measureY() {
-  this->applyClifford(CliffordOperator::S_INV);
-  this->applyClifford(CliffordOperator::H);
+  this->SdgGate();
+  this->HadamardGate();
   return this->measureZ();
 }
 
 EigenvalueResult StationaryQubit::measureZ() {
   // apply memory error
-  auto vop = this->vertex_operator;
-  auto result = EigenvalueResult::PLUS_ONE;
-  if (this->neighbors.empty()) {
-    switch (vop) {
-      case CliffordOperator::H:
-      case CliffordOperator::RY_INV:
-      case CliffordOperator::S_INV_RY_INV:
-      case CliffordOperator::S_RY_INV:
-        break;
-      case CliffordOperator::RY:
-      case CliffordOperator::S_INV_RY:
-      case CliffordOperator::S_RY:
-      case CliffordOperator::Z_RY:
-        result = EigenvalueResult::MINUS_ONE;
-        break;
-      default:
-        result = (dblrand() < 0.5) ? EigenvalueResult::PLUS_ONE : EigenvalueResult::MINUS_ONE;
-    }
-  } else {
-    this->removeVertexOperation(this);  // nothing to be avoided
-    result = (dblrand() < 0.5) ? EigenvalueResult::PLUS_ONE : EigenvalueResult::MINUS_ONE;
-    this->removeAllEdges();
-  }
-  this->vertex_operator = (result == EigenvalueResult::PLUS_ONE) ? CliffordOperator::H : CliffordOperator::RY;
+  auto result = this->graphMeasureZ();
   // apply measurement error
   return result;
 }

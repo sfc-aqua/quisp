@@ -42,6 +42,8 @@ class StationaryQubit : public IStationaryQubit {
   void removeVertexOperation(IStationaryQubit *qubit_to_avoid) override;
   void applyPureCZ(IStationaryQubit *another_qubit) override;
 
+  types::EigenvalueResult graphMeasureZ() override;
+
   static std::string decomposition_table[24];
   static types::CliffordOperator clifford_application_lookup[24][24];
   static bool controlled_Z_lookup_edge[2][24][24];
