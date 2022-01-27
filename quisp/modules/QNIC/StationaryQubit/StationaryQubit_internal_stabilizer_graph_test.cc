@@ -4,6 +4,7 @@
 #include <vector>
 #include "StationaryQubit.h"
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
+#include "omnetpp/cexception.h"
 #include "omnetpp/simtime.h"
 
 using namespace quisp::modules;
@@ -13,17 +14,17 @@ namespace {
 class StatQubitFixture : public StationaryQubit {
  public:
   using StationaryQubit::addEdge;
-  using StationaryQubit::deleteEdge;
-  using StationaryQubit::isNeighbor;
-  using StationaryQubit::toggleEdge;
-
   using StationaryQubit::applyClifford;
   using StationaryQubit::applyPureCZ;
   using StationaryQubit::applyRightClifford;
+  using StationaryQubit::deleteEdge;
+  using StationaryQubit::graphMeasureZ;
+  using StationaryQubit::isNeighbor;
   using StationaryQubit::localComplement;
   using StationaryQubit::par;
   using StationaryQubit::removeAllEdges;
   using StationaryQubit::removeVertexOperation;
+  using StationaryQubit::toggleEdge;
 
   StatQubitFixture() : StationaryQubit() { setComponentType(new TestModuleType("test qubit")); }
   void reset() {
@@ -113,6 +114,9 @@ TEST(StatQubitInternalGraphTest, AddEdge) {
 
   sim->registerComponent(qubit);
   sim->registerComponent(another_qubit);
+
+  // try adding self
+  EXPECT_THROW(qubit->addEdge(qubit), cRuntimeError);
 
   EXPECT_TRUE(qubit->getNeighborSet().empty());
   EXPECT_TRUE(another_qubit->getNeighborSet().empty());
@@ -486,4 +490,163 @@ TEST(StatQubitInternalGraphTest, removeVertexOperation) {
   }
 }
 
+TEST(StatQubitInternalGraphTest, graphMeasureZIsolatedQubit) {
+  auto *sim = prepareSimulation();
+  auto *rng = useTestRNG();
+  auto *qubit = new StatQubitFixture{};
+
+  sim->registerComponent(qubit);
+
+  std::vector<quisp::types::CliffordOperator> zero_state_cliffords = {quisp::types::CliffordOperator::Id, quisp::types::CliffordOperator::Z, quisp::types::CliffordOperator::S,
+                                                                      quisp::types::CliffordOperator::S_INV};
+  std::vector<quisp::types::CliffordOperator> one_state_cliffords = {quisp::types::CliffordOperator::X, quisp::types::CliffordOperator::Y, quisp::types::CliffordOperator::X_S,
+                                                                     quisp::types::CliffordOperator::X_S_INV};
+  std::vector<quisp::types::CliffordOperator> superposition_state_cliffords = {
+      quisp::types::CliffordOperator::RX,       quisp::types::CliffordOperator::RX_INV,   quisp::types::CliffordOperator::Z_RX,     quisp::types::CliffordOperator::Z_RX_INV,
+      quisp::types::CliffordOperator::S_RX,     quisp::types::CliffordOperator::S_RX_INV, quisp::types::CliffordOperator::S_INV_RX, quisp::types::CliffordOperator::S_INV_RX_INV,
+      quisp::types::CliffordOperator::RY,       quisp::types::CliffordOperator::RY_INV,   quisp::types::CliffordOperator::Z_RY,     quisp::types::CliffordOperator::H,
+      quisp::types::CliffordOperator::S_RY_INV, quisp::types::CliffordOperator::S_RY,     quisp::types::CliffordOperator::S_INV_RY, quisp::types::CliffordOperator::S_INV_RY_INV};
+
+  // repeated measurement shouldn't change the result
+  // test 1000 times with rng
+  for (int i = 0; i < 1000; i++) {
+    qubit->reset();
+    qubit->applyClifford(quisp::types::CliffordOperator::H);
+    auto first_measure = qubit->graphMeasureZ();
+    auto second_measure = qubit->graphMeasureZ();
+    EXPECT_EQ(first_measure, second_measure);
+  }
+
+  // isolated qubit in |0> / |1> state
+  rng->doubleValue = 0.25;
+  for (auto cop : zero_state_cliffords) {
+    qubit->reset();
+    qubit->applyClifford(cop);
+    EXPECT_EQ(qubit->graphMeasureZ(), quisp::types::EigenvalueResult::PLUS_ONE);
+    EXPECT_EQ(qubit->getVertexOperator(), quisp::types::CliffordOperator::H);
+  }
+  for (auto cop : one_state_cliffords) {
+    qubit->reset();
+    qubit->applyClifford(cop);
+    EXPECT_EQ(qubit->graphMeasureZ(), quisp::types::EigenvalueResult::MINUS_ONE);
+    EXPECT_EQ(qubit->getVertexOperator(), quisp::types::CliffordOperator::RY);
+  }
+
+  // isolated qubit in |0> / |1> state
+  rng->doubleValue = 0.75;
+  for (auto cop : zero_state_cliffords) {
+    qubit->reset();
+    qubit->applyClifford(cop);
+    EXPECT_EQ(qubit->graphMeasureZ(), quisp::types::EigenvalueResult::PLUS_ONE);
+    EXPECT_EQ(qubit->getVertexOperator(), quisp::types::CliffordOperator::H);
+  }
+  for (auto cop : one_state_cliffords) {
+    qubit->reset();
+    qubit->applyClifford(cop);
+    EXPECT_EQ(qubit->graphMeasureZ(), quisp::types::EigenvalueResult::MINUS_ONE);
+    EXPECT_EQ(qubit->getVertexOperator(), quisp::types::CliffordOperator::RY);
+  }
+
+  // isolated qubit in other states output 0
+  rng->doubleValue = 0.25;
+  for (auto cop : superposition_state_cliffords) {
+    qubit->reset();
+    qubit->applyClifford(cop);
+    EXPECT_EQ(qubit->graphMeasureZ(), quisp::types::EigenvalueResult::PLUS_ONE);
+    EXPECT_EQ(qubit->getVertexOperator(), quisp::types::CliffordOperator::H);
+  }
+  // isolated qubit in other states output 1
+  rng->doubleValue = 0.75;
+  for (auto cop : superposition_state_cliffords) {
+    qubit->reset();
+    qubit->applyClifford(cop);
+    EXPECT_EQ(qubit->graphMeasureZ(), quisp::types::EigenvalueResult::MINUS_ONE);
+    EXPECT_EQ(qubit->getVertexOperator(), quisp::types::CliffordOperator::RY);
+  }
+}
+
+TEST(StatQubitInternalGraphTest, graphMeasureZGHZState) {
+  auto *sim = prepareSimulation();
+  auto *rng = useTestRNG();
+  auto *qubit = new StatQubitFixture{};
+  auto *another_qubit = new StatQubitFixture{};
+  std::vector<StatQubitFixture *> qarrs;
+  for (int i = 0; i < 10; i++) {
+    qarrs.push_back(new StatQubitFixture{});
+  }
+
+  sim->registerComponent(qubit);
+  sim->registerComponent(another_qubit);
+  for (auto q : qarrs) {
+    sim->registerComponent(q);
+  }
+
+  // Bell pair
+  for (int i = 0; i < 1000; i++) {
+    qubit->reset();
+    another_qubit->reset();
+    qubit->addEdge(another_qubit);
+    qubit->setVertexOperator(quisp::types::CliffordOperator::Id);
+
+    auto result_left = qubit->graphMeasureZ();
+    EXPECT_TRUE(qubit->getNeighborSet().empty());
+    EXPECT_TRUE(another_qubit->getNeighborSet().empty());
+    auto result_right = another_qubit->graphMeasureZ();
+    EXPECT_EQ(result_left, result_right);
+  }
+
+  // GHZ state measure in Z; star graph; measure from center
+  for (int i = 0; i < 1000; i++) {
+    qubit->reset();
+    qubit->setVertexOperator(quisp::types::CliffordOperator::Id);
+    for (auto v : qarrs) {
+      v->reset();
+      v->addEdge(qubit);
+      v->setVertexOperator(quisp::types::CliffordOperator::H);
+    }
+    std::vector<quisp::types::EigenvalueResult> measurement_result;
+
+    measurement_result.push_back(qubit->graphMeasureZ());
+
+    // check that all nodes now isolated
+    EXPECT_TRUE(qubit->getNeighborSet().empty());
+    for (auto v : qarrs) {
+      EXPECT_TRUE(v->getNeighborSet().empty());
+    }
+
+    for (auto v : qarrs) {
+      measurement_result.push_back(v->measureZ());
+    }
+    for (auto r : measurement_result) {
+      EXPECT_EQ(r, measurement_result[0]);
+    }
+  }
+
+  // GHZ state measure in Z; star graph; measure center last
+  for (int i = 0; i < 1000; i++) {
+    qubit->reset();
+    qubit->setVertexOperator(quisp::types::CliffordOperator::Id);
+    for (auto v : qarrs) {
+      v->reset();
+      v->addEdge(qubit);
+      v->setVertexOperator(quisp::types::CliffordOperator::H);
+    }
+    std::vector<quisp::types::EigenvalueResult> measurement_result;
+    // measure one leaf node
+    qarrs[0]->graphMeasureZ();
+    // check that all nodes now isolated
+    EXPECT_TRUE(qubit->getNeighborSet().empty());
+    for (auto v : qarrs) {
+      EXPECT_TRUE(v->getNeighborSet().empty());
+    }
+    // collect all measurement results
+    for (auto v : qarrs) {
+      measurement_result.push_back(v->measureZ());
+    }
+    measurement_result.push_back(qubit->graphMeasureZ());
+    for (auto r : measurement_result) {
+      EXPECT_EQ(r, measurement_result[0]);
+    }
+  }
+}
 }  // end namespace

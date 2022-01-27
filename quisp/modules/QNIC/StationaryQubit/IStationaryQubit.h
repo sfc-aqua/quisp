@@ -20,8 +20,8 @@ enum class MeasureZResult : int {
 };
 
 enum class EigenvalueResult : int {
-  MINUS_ONE,
   PLUS_ONE,
+  MINUS_ONE,
 };
 
 enum class CliffordOperator : int {
@@ -177,6 +177,8 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   virtual void localComplement() = 0;
   virtual void removeVertexOperation(IStationaryQubit *qubit_to_avoid) = 0;
   virtual void applyPureCZ(IStationaryQubit *another_qubit) = 0;
+
+  virtual types::EigenvalueResult graphMeasureZ() = 0;
 
  public:
   IStationaryQubit(){};

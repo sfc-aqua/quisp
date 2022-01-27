@@ -54,6 +54,7 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(void, localComplement, (), (override));
   MOCK_METHOD(void, removeVertexOperation, (IStationaryQubit * qubit_to_avoid), (override));
   MOCK_METHOD(void, applyPureCZ, (IStationaryQubit * another_qubit), (override));
+  MOCK_METHOD(quisp::types::EigenvalueResult, graphMeasureZ, (), (override));
 
   MOCK_METHOD(quisp::types::EigenvalueResult, measureX, (), (override));
   MOCK_METHOD(quisp::types::EigenvalueResult, measureY, (), (override));
