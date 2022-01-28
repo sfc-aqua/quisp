@@ -104,7 +104,7 @@ class StationaryQubit : public IStationaryQubit {
    * \brief Two qubit CNOT gate.
    * \param Need to specify the control qubit as an argument.
    */
-  void CNOTGate(IStationaryQubit *control_qubit) override;
+  void cnotGate(IStationaryQubit *control_qubit) override;
   void CNOT_gate(IStationaryQubit *control_qubit) override;
 
   /**
@@ -118,11 +118,11 @@ class StationaryQubit : public IStationaryQubit {
   bool Zpurify(IStationaryQubit *resource_qubit) override;
 
   // for graph state backend
-  void HadamardGate() override;
-  void ZGate() override;
-  void XGate() override;
-  void SGate() override;
-  void SdgGate() override;
+  void hadamardGate() override;
+  void zGate() override;
+  void xGate() override;
+  void sGate() override;
+  void sdgGate() override;
   void excite() override;
   void relax() override;
 
