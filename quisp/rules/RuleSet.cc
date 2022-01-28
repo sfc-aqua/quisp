@@ -4,6 +4,8 @@
 #include <random>
 #include <string>
 
+using json = nlohmann::json;
+
 namespace quisp::rules {
 RuleSet::RuleSet(unsigned long ruleset_id, int owner_address) : ruleset_id(ruleset_id), owner_addr(owner_address) {}
 
@@ -18,7 +20,17 @@ Rule *RuleSet::addRule(std::unique_ptr<Rule> rule, std::vector<int> partners) {
   return raw_ptr;
 };
 
-void RuleSet::serialize(){};
+json RuleSet::serialize() {
+  // inialize json and put metadata
+  json ruleset;
+  ruleset["ruleset_id"] = ruleset_id;
+  ruleset["owner_address"] = owner_addr;
+  ruleset["num_rules"] = rules.size();
+  for (auto &rule : rules) {
+    ruleset["rules"].push_back(rule->serialize());
+  }
+  return ruleset;
+};
 
 void RuleSet::deserialize(){};
 
