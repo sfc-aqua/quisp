@@ -572,7 +572,7 @@ bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
   // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
   applyMemoryError();
   check_and_cast<StationaryQubit *>(resource_qubit)->applyMemoryError();
-  /*Target qubit*/ this->CNOTGate(resource_qubit /*controlled qubit*/);
+  /*Target qubit*/ this->CNOT_gate(resource_qubit /*controlled qubit*/);
   bool meas = this->correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
   return meas;
 }
@@ -581,8 +581,8 @@ bool StationaryQubit::Zpurify(IStationaryQubit *resource_qubit /*Target*/) {
   // std::cout<<"Z puri\n";
   applyMemoryError();  // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
   check_and_cast<StationaryQubit *>(resource_qubit)->applyMemoryError();
-  /*Target qubit*/ resource_qubit->CNOTGate(this /*controlled qubit*/);
-  this->HadamardGate();
+  /*Target qubit*/ resource_qubit->CNOT_gate(this /*controlled qubit*/);
+  this->Hadamard_gate();
   bool meas = this->correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
   return meas;
 }
@@ -1180,7 +1180,7 @@ EigenvalueResult StationaryQubit::graphMeasureZ() {
 
 // public member functions
 
-void StationaryQubit::CNOTGate(IStationaryQubit *control_qubit) {
+void StationaryQubit::cnotGate(IStationaryQubit *control_qubit) {
   // apply memory error
   this->applyClifford(CliffordOperator::H);  // use apply Clifford for pure operation
   this->applyPureCZ(control_qubit);
@@ -1188,27 +1188,27 @@ void StationaryQubit::CNOTGate(IStationaryQubit *control_qubit) {
   // apply CNOT error
 }
 
-void StationaryQubit::HadamardGate() {
+void StationaryQubit::hadamardGate() {
   // apply memory error
   this->applyClifford(CliffordOperator::H);
   // apply single qubit gate error
 }
-void StationaryQubit::ZGate() {
+void StationaryQubit::zGate() {
   // apply memory error
   this->applyClifford(CliffordOperator::Z);
   // apply single qubit gate error
 }
-void StationaryQubit::XGate() {
+void StationaryQubit::xGate() {
   // apply memory error
   this->applyClifford(CliffordOperator::X);
   // apply single qubit gate error
 }
-void StationaryQubit::SGate() {
+void StationaryQubit::sGate() {
   // apply memory error
   this->applyClifford(CliffordOperator::S);
   // apply single qubit gate error
 }
-void StationaryQubit::SdgGate() {
+void StationaryQubit::sdgGate() {
   // apply memory error
   this->applyClifford(CliffordOperator::S_INV);
   // apply single qubit gate error
@@ -1227,13 +1227,13 @@ void StationaryQubit::relax() {
 }
 
 EigenvalueResult StationaryQubit::measureX() {
-  this->HadamardGate();
+  this->hadamardGate();
   return this->measureZ();
 }
 
 EigenvalueResult StationaryQubit::measureY() {
-  this->SdgGate();
-  this->HadamardGate();
+  this->sdgGate();
+  this->hadamardGate();
   return this->measureZ();
 }
 

@@ -218,12 +218,12 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   virtual bool Xpurify(IStationaryQubit *resource_qubit) = 0;
   virtual bool Zpurify(IStationaryQubit *resource_qubit) = 0;
 
-  virtual void CNOTGate(IStationaryQubit *control_qubit) = 0;
-  virtual void HadamardGate() = 0;
-  virtual void ZGate() = 0;
-  virtual void XGate() = 0;
-  virtual void SGate() = 0;
-  virtual void SdgGate() = 0;
+  virtual void cnotGate(IStationaryQubit *control_qubit) = 0;
+  virtual void hadamardGate() = 0;
+  virtual void zGate() = 0;
+  virtual void xGate() = 0;
+  virtual void sGate() = 0;
+  virtual void sdgGate() = 0;
   virtual void excite() = 0;
   virtual void relax() = 0;
 
