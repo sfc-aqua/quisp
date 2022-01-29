@@ -32,7 +32,7 @@ LDFLAGS+=-ftest-coverage -fprofile-instr-generate -fcoverage-mapping
 endif
 
 # include path for json
-INCLUDE_PATH+=-I. -I$(PROJ_ROOT)/json/include/
+INCLUDE_PATH+=-I$(PROJ_ROOT)/json/include/
 
 default: eigen all
 

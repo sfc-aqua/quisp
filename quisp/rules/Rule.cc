@@ -5,9 +5,9 @@
 
 namespace quisp::rules {
 
-void Rule::setCondition(std::unique_ptr<Condition> cond) { condition.reset(cond.release()); }
+void Rule::setCondition(std::unique_ptr<Condition> cond) { condition = std::move(cond); }
 
-void Rule::setAction(std::unique_ptr<Action> act) { action.reset(act.release()); }
+void Rule::setAction(std::unique_ptr<Action> act) { action = std::move(act); }
 
 void Rule::setNextRule(unsigned long next_rule_id) {
   if (to != 0) {
