@@ -37,6 +37,9 @@ Wait::Wait(int partner_addr, QNIC_type qnic_type, int qnic_id) : Action(partner_
 json Wait::serialize() {
   json wait_json;
   wait_json["type"] = "wait";
+  wait_json["options"]["partner_address"] = partner_address;  // should be two
+  wait_json["options"]["qnic_type"] = qnic_types;
+  wait_json["options"]["qnic_id"] = qnic_ids;
   return wait_json;
 }
 
@@ -45,7 +48,7 @@ Tomography::Tomography(int num_measurement, int partner_addr, QNIC_type qnic_typ
 json Tomography::serialize() {
   json tomography_json;
   tomography_json["type"] = "tomography";
-  tomography_json["options"]["num_measurement"] = num_measurement;
+  tomography_json["options"]["num_measure"] = num_measurement;
   tomography_json["options"]["partner_address"] = partner_address;
   tomography_json["options"]["qnic_type"] = qnic_types;
   tomography_json["options"]["qnic_id"] = qnic_ids;
