@@ -1092,7 +1092,7 @@ void StationaryQubit::toggleEdge(StationaryQubit *another_qubit) {
 
 void StationaryQubit::removeAllEdges() {
   for (auto *v : this->neighbors) {
-    ((StationaryQubit *)v)->neighbors.erase(this);
+    v->neighbors.erase(this);
   }
   this->neighbors.clear();
 }
@@ -1106,7 +1106,7 @@ void StationaryQubit::localComplement() {
     }
   }
   for (auto *v : this->neighbors) {
-    ((StationaryQubit *)v)->applyRightClifford(CliffordOperator::S);
+    v->applyRightClifford(CliffordOperator::S);
   }
   this->applyRightClifford(CliffordOperator::RX_INV);
 }
@@ -1122,7 +1122,7 @@ void StationaryQubit::removeVertexOperation(StationaryQubit *qubit_to_avoid) {
       break;
     }
   }
-  auto swapping_partner = (StationaryQubit *)swapping_partner_temp;
+  auto swapping_partner = swapping_partner_temp;
   std::string decomposition_string = decomposition_table[(int)this->vertex_operator];
   for (int i = decomposition_string.size() - 1; i >= 0; i--) {
     if (decomposition_string[i] == 'V') {
@@ -1135,7 +1135,7 @@ void StationaryQubit::removeVertexOperation(StationaryQubit *qubit_to_avoid) {
 }
 
 void StationaryQubit::applyPureCZ(StationaryQubit *another_qubit) {
-  auto *aq = (StationaryQubit *)another_qubit;
+  auto *aq = another_qubit;
   this->removeVertexOperation(aq);
   aq->removeVertexOperation(this);
   this->removeVertexOperation(aq);
