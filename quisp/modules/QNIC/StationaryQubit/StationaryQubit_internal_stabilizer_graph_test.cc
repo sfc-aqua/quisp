@@ -98,7 +98,7 @@ class StatQubitFixture : public StationaryQubit {
     setParDouble(this, "fidelity", -1.0);
   }
 
-  std::unordered_set<IStationaryQubit *> getNeighborSet() { return this->neighbors; }
+  std::unordered_set<StationaryQubit *> getNeighborSet() { return this->neighbors; }
 
   void setVertexOperator(quisp::types::CliffordOperator op) { this->vertex_operator = op; }
 

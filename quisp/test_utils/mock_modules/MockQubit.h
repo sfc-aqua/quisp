@@ -43,19 +43,6 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(void, setCompletelyMixedDensityMatrix, (), (override));
   MOCK_METHOD(void, setEntangledPartnerInfo, (IStationaryQubit *), (override));
 
-  // graph state methods
-  MOCK_METHOD(void, applyClifford, (quisp::types::CliffordOperator op), (override));
-  MOCK_METHOD(void, applyRightClifford, (quisp::types::CliffordOperator op), (override));
-  MOCK_METHOD(bool, isNeighbor, (IStationaryQubit * another_qubit), (override));
-  MOCK_METHOD(void, addEdge, (IStationaryQubit * another_qubit), (override));
-  MOCK_METHOD(void, deleteEdge, (IStationaryQubit * another_qubit), (override));
-  MOCK_METHOD(void, toggleEdge, (IStationaryQubit * another_qubit), (override));
-  MOCK_METHOD(void, removeAllEdges, (), (override));
-  MOCK_METHOD(void, localComplement, (), (override));
-  MOCK_METHOD(void, removeVertexOperation, (IStationaryQubit * qubit_to_avoid), (override));
-  MOCK_METHOD(void, applyPureCZ, (IStationaryQubit * another_qubit), (override));
-  MOCK_METHOD(quisp::types::EigenvalueResult, graphMeasureZ, (), (override));
-
   MOCK_METHOD(quisp::types::EigenvalueResult, measureX, (), (override));
   MOCK_METHOD(quisp::types::EigenvalueResult, measureY, (), (override));
   MOCK_METHOD(quisp::types::EigenvalueResult, measureZ, (), (override));

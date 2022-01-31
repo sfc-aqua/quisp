@@ -1069,20 +1069,20 @@ void StationaryQubit::applyClifford(types::CliffordOperator op) { this->vertex_o
 
 void StationaryQubit::applyRightClifford(types::CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)(this->vertex_operator)][(int)op]; }
 
-bool StationaryQubit::isNeighbor(IStationaryQubit *another_qubit) { return this->neighbors.find(another_qubit) != this->neighbors.end(); }
+bool StationaryQubit::isNeighbor(StationaryQubit *another_qubit) { return this->neighbors.find(another_qubit) != this->neighbors.end(); }
 
-void StationaryQubit::addEdge(IStationaryQubit *another_qubit) {
+void StationaryQubit::addEdge(StationaryQubit *another_qubit) {
   if (another_qubit == this) error("adding edge to self is not allowed");
   this->neighbors.insert(another_qubit);
-  ((StationaryQubit *)another_qubit)->neighbors.insert(this);
+  another_qubit->neighbors.insert(this);
 }
 
-void StationaryQubit::deleteEdge(IStationaryQubit *another_qubit) {
+void StationaryQubit::deleteEdge(StationaryQubit *another_qubit) {
   this->neighbors.erase(another_qubit);
-  ((StationaryQubit *)another_qubit)->neighbors.erase(this);
+  another_qubit->neighbors.erase(this);
 }
 
-void StationaryQubit::toggleEdge(IStationaryQubit *another_qubit) {
+void StationaryQubit::toggleEdge(StationaryQubit *another_qubit) {
   if (this->isNeighbor(another_qubit)) {
     this->deleteEdge(another_qubit);
   } else {
@@ -1102,7 +1102,7 @@ void StationaryQubit::localComplement() {
   for (auto it_u = this->neighbors.begin(); it_u != it_end; it_u++) {
     auto it_v = std::next(it_u);
     for (; it_v != it_end; it_v++) {
-      ((StationaryQubit *)(*it_u))->toggleEdge(*it_v);
+      (*it_u)->toggleEdge(*it_v);
     }
   }
   for (auto *v : this->neighbors) {
@@ -1111,7 +1111,7 @@ void StationaryQubit::localComplement() {
   this->applyRightClifford(CliffordOperator::RX_INV);
 }
 
-void StationaryQubit::removeVertexOperation(IStationaryQubit *qubit_to_avoid) {
+void StationaryQubit::removeVertexOperation(StationaryQubit *qubit_to_avoid) {
   if (this->neighbors.empty() || this->vertex_operator == types::CliffordOperator::Id) {
     return;
   }
@@ -1134,7 +1134,7 @@ void StationaryQubit::removeVertexOperation(IStationaryQubit *qubit_to_avoid) {
   }
 }
 
-void StationaryQubit::applyPureCZ(IStationaryQubit *another_qubit) {
+void StationaryQubit::applyPureCZ(StationaryQubit *another_qubit) {
   auto *aq = (StationaryQubit *)another_qubit;
   this->removeVertexOperation(aq);
   aq->removeVertexOperation(this);
@@ -1183,7 +1183,7 @@ EigenvalueResult StationaryQubit::graphMeasureZ() {
 void StationaryQubit::cnotGate(IStationaryQubit *control_qubit) {
   // apply memory error
   this->applyClifford(CliffordOperator::H);  // use apply Clifford for pure operation
-  this->applyPureCZ(control_qubit);
+  this->applyPureCZ((StationaryQubit *)control_qubit);
   this->applyClifford(CliffordOperator::H);
   // apply CNOT error
 }
