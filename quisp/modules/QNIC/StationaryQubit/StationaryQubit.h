@@ -28,21 +28,21 @@ typedef std::complex<double> Complex;
 
 class StationaryQubit : public IStationaryQubit {
  protected:
-  std::unordered_set<IStationaryQubit *> neighbors;
+  std::unordered_set<StationaryQubit *> neighbors;
   types::CliffordOperator vertex_operator;
 
-  void applyClifford(types::CliffordOperator op) override;
-  void applyRightClifford(types::CliffordOperator op) override;
-  bool isNeighbor(IStationaryQubit *another_qubit) override;
-  void addEdge(IStationaryQubit *another_qubit) override;
-  void deleteEdge(IStationaryQubit *another_qubit) override;
-  void toggleEdge(IStationaryQubit *another_qubit) override;
-  void removeAllEdges() override;
-  void localComplement() override;
-  void removeVertexOperation(IStationaryQubit *qubit_to_avoid) override;
-  void applyPureCZ(IStationaryQubit *another_qubit) override;
+  void applyClifford(types::CliffordOperator op);
+  void applyRightClifford(types::CliffordOperator op);
+  bool isNeighbor(StationaryQubit *another_qubit);
+  void addEdge(StationaryQubit *another_qubit);
+  void deleteEdge(StationaryQubit *another_qubit);
+  void toggleEdge(StationaryQubit *another_qubit);
+  void removeAllEdges();
+  void localComplement();
+  void removeVertexOperation(StationaryQubit *qubit_to_avoid);
+  void applyPureCZ(StationaryQubit *another_qubit);
 
-  types::EigenvalueResult graphMeasureZ() override;
+  types::EigenvalueResult graphMeasureZ();
 
   static std::string decomposition_table[24];
   static types::CliffordOperator clifford_application_lookup[24][24];

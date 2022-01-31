@@ -163,23 +163,6 @@ struct measurement_outcome {
 };
 
 class IStationaryQubit : public omnetpp::cSimpleModule {
- protected:
-  std::unordered_set<IStationaryQubit *> neighbors;
-  types::CliffordOperator vertex_operator;
-
-  virtual void applyClifford(types::CliffordOperator op) = 0;
-  virtual void applyRightClifford(types::CliffordOperator op) = 0;
-  virtual bool isNeighbor(IStationaryQubit *another_qubit) = 0;
-  virtual void addEdge(IStationaryQubit *another_qubit) = 0;
-  virtual void deleteEdge(IStationaryQubit *another_qubit) = 0;
-  virtual void toggleEdge(IStationaryQubit *another_qubit) = 0;
-  virtual void removeAllEdges() = 0;
-  virtual void localComplement() = 0;
-  virtual void removeVertexOperation(IStationaryQubit *qubit_to_avoid) = 0;
-  virtual void applyPureCZ(IStationaryQubit *another_qubit) = 0;
-
-  virtual types::EigenvalueResult graphMeasureZ() = 0;
-
  public:
   IStationaryQubit(){};
   virtual ~IStationaryQubit(){};
