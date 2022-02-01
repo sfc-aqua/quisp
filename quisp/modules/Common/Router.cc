@@ -108,7 +108,7 @@ void Router::handleMessage(cMessage *msg) {
     bubble("Timing Notifier from HoM (stand-alone or internal) received");
     send(pk, "rePort$o");  // send to Application locally
     return;
-  } else if (destAddr == myAddress && dynamic_cast<EPPStimingNotifier *>(msg)) {  // Timing for BSM
+  } else if (destAddr == myAddress && dynamic_cast<EppsTimingNotifier *>(msg)) {  // Timing for BSM
     bubble("Timing Notifier from EPPS received");
     send(pk, "rePort$o");  // send to Application locally
     return;

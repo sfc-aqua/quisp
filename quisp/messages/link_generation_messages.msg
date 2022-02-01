@@ -18,7 +18,6 @@ packet EppsTimingNotifier extends Header
     simtime_t timing_at;
     double interval;
     int number_of_qubits;
-    int internal_qnic = -1;
     int number_of_attempts;
     int internal_qnic_index = -1;
     int internal_qnic_address = -1;

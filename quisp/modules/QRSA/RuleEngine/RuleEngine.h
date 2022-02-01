@@ -85,7 +85,7 @@ class RuleEngine : public IRuleEngine {
   void initialize() override;
   void finish() override;
   void handleMessage(cMessage *msg) override;
-  void scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type);
+  void scheduleFirstPhotonEmission(cMessage *pk, QNIC_type qnic_type);
   void sendPhotonTransmissionSchedule(PhotonTransmissionConfig transmission_config);
   void shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk);
   // virtual int getQNICjob_index_for_this_qnic(int qnic_index, QNIC_type qnic_type);

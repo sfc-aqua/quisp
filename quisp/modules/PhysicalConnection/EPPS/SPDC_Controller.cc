@@ -55,7 +55,7 @@ class SPDC_Controller : public cSimpleModule {
   virtual void checkNeighborsHoMCapacity();
   virtual void checkNeighborsBuffer();
   virtual double calculateTimeToTravel(double distance, double c);
-  virtual EPPStimingNotifier *generateNotifier(double distance_to_neighbor, double c, int destAddr);
+  virtual EppsTimingNotifier *generateNotifier(double distance_to_neighbor, double c, int destAddr);
   virtual void startPump();
 };
 
@@ -84,7 +84,7 @@ void SPDC_Controller::handleMessage(cMessage *msg) {
   if (msg == generatePacket) {
     // Or just emit entangled photons without telling the neighbors?
     // Then the neighbor can analyze the intervaland adjust its emission accordingly.
-    EPPStimingNotifier *pk, *pkt;
+    EppsTimingNotifier *pk, *pkt;
     pk = generateNotifier(distance_to_neighbor, speed_of_light_in_channel, neighbor_address);
     pkt = generateNotifier(distance_to_neighbor_two, speed_of_light_in_channel, neighbor_address_two);
     try {
@@ -116,8 +116,8 @@ void SPDC_Controller::startPump() {
   scheduleAt(simTime() + timing_buffer + (max_accepted_rate), emt);
 }
 
-EPPStimingNotifier *SPDC_Controller::generateNotifier(double distance_to_neighbor, double c, int destAddr) {
-  EPPStimingNotifier *pk = new EPPStimingNotifier("EppsTimingNotifier");
+EppsTimingNotifier *SPDC_Controller::generateNotifier(double distance_to_neighbor, double c, int destAddr) {
+  EppsTimingNotifier *pk = new EppsTimingNotifier("EppsTimingNotifier");
   double time_to_reach = calculateTimeToTravel(distance_to_neighbor, c);
 
   // When the packet reaches = simitme()+time

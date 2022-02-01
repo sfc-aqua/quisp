@@ -68,7 +68,7 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
 
   RuleEngineTestTarget(MockHardwareMonitor* hardware_monitor, std::vector<QNicSpec> qnic_specs) : quisp::modules::RuleEngine() {
     setParInt(this, "address", 123);
-    setParInt(this, "number_of_qnics_rp", 0);
+    setParInt(this, "number_of_qnics_rp", 4);
     setParInt(this, "number_of_qnics_r", 1);
     setParInt(this, "number_of_qnics", 3);
     setParInt(this, "total_number_of_qnics", 2);
@@ -813,6 +813,66 @@ TEST(RuleEnginePhotonShootingTest, scheduleFirstPhotonEmission) {
   EXPECT_EQ(scheduled->getInterval(), interval);
   EXPECT_EQ(scheduled->getTiming(), timing);
   EXPECT_EQ(scheduled->getInternal_hom(), 1);
+  fes->clear();
+
+  delete mockHardwareMonitor;
+}
+
+TEST(RuleEnginePhotonShootingTest, scheduleFirstPhotonEmissionEPPS) {
+  auto* sim = prepareSimulation();
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  std::vector<QNicSpec> qnic_specs = {
+      {QNIC_RP, 0, 1},
+      {QNIC_RP, 1, 1},
+      {QNIC_RP, 2, 1},
+      {QNIC_RP, 3, 1},
+  };
+  auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
+  setParInt(rule_engine, "total_number_of_qnics", 2);
+  setParInt(rule_engine, "number_of_qnics", 1);
+
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+  sim->setContext(rule_engine);
+  auto* fes = sim->getFES();
+
+  int src_addr = 1;
+  int qnic_address = 0;
+  int qnic_index = 0;
+  int qnic_type = QNIC_RP;
+  double interval = 0.5;
+  int number_of_qubits = 1;
+  int number_of_attemps = 10;
+  int pair_node_address = 2;
+  simtime_t timing = 1.0;
+
+  // QNIC_RP
+  auto* pk = new EppsTimingNotifier();
+  pk->setTiming_at(timing);
+  pk->setInterval(interval);
+  pk->setNumber_of_qubits(number_of_qubits);
+  pk->setNumber_of_attempts(number_of_attemps);
+  pk->setInternal_qnic_address(qnic_address);
+  pk->setInternal_qnic_index(qnic_index);
+  pk->setPair_node_address(pair_node_address);
+  pk->setSrcAddr(src_addr);
+  QNIC qnic;
+  qnic.index = qnic_index;
+  qnic.address = qnic_address;
+  InterfaceInfo interface_info{.qnic = qnic};
+  rule_engine->ntable.insert(std::make_pair(src_addr, interface_info));
+  rule_engine->scheduleFirstPhotonEmission(pk, QNIC_type(qnic_type));
+  ASSERT_EQ(fes->getLength(), 1);
+  auto* res = fes->get(0);
+  ASSERT_NE(res, nullptr);
+  auto scheduled = dynamic_cast<SchedulePhotonTransmissionsOnebyOne*>(res);
+  ASSERT_NE(scheduled, nullptr);
+  EXPECT_EQ(scheduled->getQnic_address(), qnic_address);
+  EXPECT_EQ(scheduled->getQnic_index(), qnic_index);
+  EXPECT_EQ(scheduled->getInterval(), interval);
+  EXPECT_EQ(scheduled->getTiming(), timing);
+  EXPECT_EQ(scheduled->getInternal_hom(), 2);
+  EXPECT_EQ(scheduled->getNumber_of_attempts(), number_of_attemps);
   fes->clear();
 
   delete mockHardwareMonitor;

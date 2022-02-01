@@ -65,6 +65,7 @@ struct PhotonTransmissionConfig {
   int transmission_partner_address;
   int qnic_index;
   int qnic_address;
+  int number_of_attempts;
   QNIC_type qnic_type;
   simtime_t timing;
   double interval;

@@ -161,7 +161,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
       EV_DEBUG << "This BSA request is internal\n";
       scheduleFirstPhotonEmission(pk, QNIC_R);
     }
-  } else if (dynamic_cast<EPPStimingNotifier *>(msg)) {
+  } else if (dynamic_cast<EppsTimingNotifier *>(msg)) {
     bubble("EPPS");
     error("EPPS is not implemented yet");
   }
@@ -626,35 +626,49 @@ InterfaceInfo RuleEngine::getInterface_toNeighbor_Internal(int local_qnic_addres
   return inf;
 }
 
-void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type) {
+void RuleEngine::scheduleFirstPhotonEmission(cMessage *pk, QNIC_type qnic_type) {
   if (ntable.empty()) {
     ntable = hardware_monitor->passNeighborTable();  // Get neighbor table from Hardware Manager: neighbor address--> InterfaceInfo.
   }  // Just do this once, unless the network changes during the simulation.
 
   PhotonTransmissionConfig transmission_config;
-  int destAddr = pk->getSrcAddr();  // The destination is where the request is generated (source of stand-alone or internal BSA node).
   bool internal = false;  // for internal hom?
+  BSMtimingNotifier *bsmPk;
+  EppsTimingNotifier *eppsPk;
   switch (qnic_type) {
     case QNIC_E: {
-      InterfaceInfo inf = getInterface_toNeighbor(destAddr);
+      bsmPk = check_and_cast<BSMtimingNotifier *>(pk);
+      InterfaceInfo inf = getInterface_toNeighbor(bsmPk->getSrcAddr());
       transmission_config.qnic_index = inf.qnic.index;
       transmission_config.qnic_address = inf.qnic.address;
     }  // inf is not defined beyound this point
     break;
     case QNIC_R:
-      transmission_config.qnic_index = pk->getInternal_qnic_index();
-      transmission_config.qnic_address = pk->getInternal_qnic_address();
+      bsmPk = check_and_cast<BSMtimingNotifier *>(pk);
+      transmission_config.qnic_index = bsmPk->getInternal_qnic_index();
+      transmission_config.qnic_address = bsmPk->getInternal_qnic_address();
       internal = true;
       break;
     case QNIC_RP:
-      error("This is not implemented yet");
+      eppsPk = check_and_cast<EppsTimingNotifier *>(pk);
+      internal = true;
+      transmission_config.qnic_address = eppsPk->getInternal_qnic_address();
+      transmission_config.qnic_index = eppsPk->getInternal_qnic_index();
       break;
     default:
       error("Only 3 qnic types are currently recognized....");
   }
-  transmission_config.timing = pk->getTiming_at();
-  transmission_config.interval = pk->getInterval();
-  transmission_config.qnic_type = qnic_type;
+  if (qnic_type == QNIC_RP) {
+    transmission_config.timing = eppsPk->getTiming_at();
+    transmission_config.interval = eppsPk->getInterval();
+    transmission_config.number_of_attempts = eppsPk->getNumber_of_attempts();
+    transmission_config.qnic_type = qnic_type;
+  } else {
+    transmission_config.timing = bsmPk->getTiming_at();
+    transmission_config.interval = bsmPk->getInterval();
+    transmission_config.number_of_attempts = -1; // this means that this config is not for msm
+    transmission_config.qnic_type = qnic_type;
+  }
   // store the interface information for the futhter link generation process
   int num_free = qnic_store->countNumFreeQubits(transmission_config.qnic_type, transmission_config.qnic_index);
   if (num_free > 0 && tracker_accessible.at(transmission_config.qnic_address)) {
@@ -667,9 +681,12 @@ void RuleEngine::sendPhotonTransmissionSchedule(PhotonTransmissionConfig transmi
   SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne(First)");
   st->setQnic_index(transmission_config.qnic_index);
   st->setQnic_address(transmission_config.qnic_address);
+  st->setNumber_of_attempts(transmission_config.number_of_attempts);
+  st->setAttempt(1);
   st->setInterval(transmission_config.interval);
   st->setTiming(transmission_config.timing);
   st->setTrial(qnic_burst_trial_counter[transmission_config.qnic_address]);  // Keeps the burst counter. First burst index is 0.
+  st->setFormer_attempt_qubit_index(-1);
 
   bool internal = false;
   if (transmission_config.qnic_type == QNIC_R) {
@@ -678,7 +695,7 @@ void RuleEngine::sendPhotonTransmissionSchedule(PhotonTransmissionConfig transmi
   } else if (transmission_config.qnic_type == QNIC_E) {
     internal = false;
   } else if (transmission_config.qnic_type == QNIC_RP) {
-    error("Not implemented yet");
+    st->setInternal_hom(2);
   } else {
     // for later implementations
     error("New qnic type detected. Add here.");
