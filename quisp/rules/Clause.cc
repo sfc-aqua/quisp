@@ -1,5 +1,4 @@
 #include "Clause.h"
-// #include <omnetpp.h>
 
 namespace quisp::rules {
 
