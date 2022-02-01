@@ -13,14 +13,17 @@ message PhotonicQubit
     bool nonPaulierrTwo = false;
     int NodeEntangledWith = -1;//Which node it is entangled with. -1 if not entangled. Equivalent to SrcAddress.
     int QNICEntangledWith = -1;//Which QNIC it is entangled with
+    int qnic_index_entangled_with = -1;
     int StationaryQubitEntangledWith = -1;//Which buffer it is entangled with
     omnetpp::cModule* entangled_with;
+    omnetpp::cModule* entangled_photon;
     int QNICtypeEntangledWith = -1;
     //cModulePtr qnic_pointer;
     //EntangledWith entangledWith;
     double error_random_for_debug;
     bool first = false;
     bool last = false;
+    bool is_entangled_with_photon = false;
 }
 
 //See https://www.omnetpp.org/pmwiki/index.php?n=Main.FixUnresolvedInclusion

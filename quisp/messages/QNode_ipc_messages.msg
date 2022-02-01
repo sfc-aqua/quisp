@@ -25,6 +25,9 @@ packet SchedulePhotonTransmissionsOnebyOne extends Header
     int num_sent = 0;
     int number_of_qubits_to_send;
     int trial;
+    int number_of_attempts;
+    int attempt;
+    int former_attempt_qubit_index;
     double interval;
     simtime_t timing;
     int internal_hom = 0;
