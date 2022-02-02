@@ -1,7 +1,9 @@
 #pragma once
 #include <memory>
+#include <nlohmann/json.hpp>
 #include "Rule.h"
 
+using json = nlohmann::json;
 namespace quisp::rules {
 
 /**
@@ -17,7 +19,7 @@ class RuleSet {
   std::vector<std::unique_ptr<Rule>> rules;
 
   Rule *addRule(std::unique_ptr<Rule> rule, std::vector<int> partners);
-  void serialize();
+  json serialize();
   void deserialize();
   unsigned long createUniqueId();
 };
