@@ -7,11 +7,12 @@ EnoughResourceConditionClause::EnoughResourceConditionClause(int num_resource, d
 
 json EnoughResourceConditionClause::serialize_json() {
   json enough_resource_json;
-  enough_resource_json["num_resources"] = num_resource;
-  enough_resource_json["required_fidelity"] = required_fidelity;
-  enough_resource_json["partner_address"] = partner_address;
-  enough_resource_json["qnic_type"] = qnic_type;
-  enough_resource_json["qnic_id"] = qnic_id;
+  enough_resource_json["type"] = "enough_resource";
+  enough_resource_json["options"]["num_resources"] = num_resource;
+  enough_resource_json["options"]["required_fidelity"] = required_fidelity;
+  enough_resource_json["options"]["partner_address"] = partner_address;
+  enough_resource_json["options"]["qnic_type"] = qnic_type;
+  enough_resource_json["options"]["qnic_id"] = qnic_id;
   return enough_resource_json;
 }
 
@@ -20,10 +21,11 @@ MeasureCountConditionClause::MeasureCountConditionClause(int num_measurement, in
 
 json MeasureCountConditionClause::serialize_json() {
   json measure_count_json;
-  measure_count_json["num_measure"] = num_measure;
-  measure_count_json["partner_address"] = partner_address;
-  measure_count_json["qnic_type"] = qnic_type;
-  measure_count_json["qnic_id"] = qnic_id;
+  measure_count_json["type"] = "measure_count";
+  measure_count_json["options"]["num_measure"] = num_measure;
+  measure_count_json["options"]["partner_address"] = partner_address;
+  measure_count_json["options"]["qnic_type"] = qnic_type;
+  measure_count_json["options"]["qnic_id"] = qnic_id;
   return measure_count_json;
 }
 
@@ -32,10 +34,11 @@ FidelityConditionClause::FidelityConditionClause(double required_fidelity, int p
 
 json FidelityConditionClause::serialize_json() {
   json fidelity_json;
-  fidelity_json["required_fidelity"] = required_fidelity;
-  fidelity_json["partner_address"] = partner_address;
-  fidelity_json["qnic_type"] = qnic_type;
-  fidelity_json["qnic_id"] = qnic_id;
+  fidelity_json["type"] = "fidelity";
+  fidelity_json["options"]["required_fidelity"] = required_fidelity;
+  fidelity_json["options"]["partner_address"] = partner_address;
+  fidelity_json["options"]["qnic_type"] = qnic_type;
+  fidelity_json["options"]["qnic_id"] = qnic_id;
   return fidelity_json;
 }
 
@@ -43,6 +46,7 @@ WaitConditionClause::WaitConditionClause(int partner_addr, QNIC_type qnic_type, 
 
 json WaitConditionClause::serialize_json() {
   json wait_json;
+  wait_json["type"] = "wait";
   return wait_json;
 }
 
