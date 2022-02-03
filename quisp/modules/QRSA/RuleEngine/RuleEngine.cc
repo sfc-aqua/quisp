@@ -529,46 +529,6 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
   }
 }
 
-void RuleEngine::updateAppliedRule(IStationaryQubit *qubit, unsigned long rule_id) {
-  // find there is a key
-  auto iter = applied_rules.find(qubit);
-  if (iter != applied_rules.end()) {
-    // qubit key found;
-    iter->second.push_back(rule_id);
-  } else {
-    std::vector<unsigned long> rule_vector = {rule_id};
-    applied_rules.insert(std::make_pair(qubit, rule_vector));
-  }
-}
-
-bool RuleEngine::checkAppliedRule(IStationaryQubit *qubit, unsigned long rule_id) {
-  // check if the rule can be applied (target rule id is not in the applied rules)
-  for (auto &rules : applied_rules) {
-    if (rules.first == qubit) {
-      for (auto &rule : rules.second) {
-        // if the rule exists, this rule is already applied, so you cannot apply any more.
-        if (rule == rule_id) {
-          return false;
-        }
-      }
-      // if not, you can go ahead to apply the rule
-      return true;
-    }
-  }
-  // completely fresh resource
-  return true;
-}
-
-void RuleEngine::clearAppliedRule(IStationaryQubit *qubit) {
-  // erase the record when the qubit is initialized
-  auto iter = applied_rules.find(qubit);
-  if (iter != applied_rules.end()) {
-    applied_rules.erase(iter);
-  } else {
-    error("No rule record found at clearing");
-  }
-}
-
 void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, unsigned long rule_id, int index) {
   bool ok = false;
   auto ruleset_result = rp.findById(ruleset_id);
@@ -1061,16 +1021,14 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
           auto *qubit = provider.getStationaryQubit(qubit_record);
           // 3. if the qubit is not allocated yet, and the qubit has not been allocated to this rule,
           // if the qubit has already been assigned to the rule, the qubit is not allocatable to that rule
-          bool allocatable = checkAppliedRule(qubit, (*rule)->rule_id);
-          // EV<<" allocatable: "<<allocatable<<" : "<<qubit<<"action_partner:"<<action_partner<<"\n";
-          if (!qubit_record->isAllocated() && allocatable) {
+          if (!qubit_record->isAllocated() && !qubit_record->isRuleApplied((*rule)->rule_id)) {
             if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
               error("Freshing qubit wrong");
             }
             // 5. increment the assined counter and set allocated flag
             assigned++;
             qubit_record->setAllocated(true);
-            updateAppliedRule(qubit, (*rule)->rule_id);
+            qubit_record->markRuleApplied((*rule)->rule_id);
             (*rule)->addResource(action_partner, qubit);
           }
         }
@@ -1244,8 +1202,10 @@ void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, ISt
   auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit->par("stationaryQubit_address"));
   realtime_controller->ReInitialize_StationaryQubit(qubit_record, false);
   qubit_record->setBusy(false);
-  if (qubit_record->isAllocated()) qubit_record->setAllocated(false);
-  clearAppliedRule(qubit);
+  if (qubit_record->isAllocated()) {
+    qubit_record->setAllocated(false);
+  }
+  qubit_record->clearAppliedRules();
   bell_pair_store.eraseQubit(qubit_record);
 }
 
