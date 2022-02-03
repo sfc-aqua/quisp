@@ -3,17 +3,19 @@
 <area shape="rect" id="node2" href="$_condition_8h.html" title="Condition." alt="" coords="378,80,465,107"/>
 <area shape="rect" id="node3" href="$_clause_8h.html" title=" " alt="" coords="385,155,457,181"/>
 <area shape="rect" id="node4" href="$clauses_2_clause_8h.html" title=" " alt="" coords="366,319,487,345"/>
-<area shape="rect" id="node13" href="$_enough_resource_clause_8h.html" title=" " alt="" coords="421,237,640,263"/>
-<area shape="rect" id="node14" href="$_fidelity_clause_8h.html" title=" " alt="" coords="664,237,827,263"/>
-<area shape="rect" id="node15" href="$_measure_count_clause_8h.html" title=" " alt="" coords="851,237,1056,263"/>
-<area shape="rect" id="node16" href="$_purification_count_clause_8h.html" title=" " alt="" coords="227,229,397,271"/>
-<area shape="rect" id="node17" href="$_wait_clause_8h.html" title=" " alt="" coords="5,237,152,263"/>
+<area shape="rect" id="node15" href="$_enough_resource_clause_8h.html" title=" " alt="" coords="421,237,640,263"/>
+<area shape="rect" id="node16" href="$_fidelity_clause_8h.html" title=" " alt="" coords="664,237,827,263"/>
+<area shape="rect" id="node17" href="$_measure_count_clause_8h.html" title=" " alt="" coords="851,237,1056,263"/>
+<area shape="rect" id="node18" href="$_purification_count_clause_8h.html" title=" " alt="" coords="227,229,397,271"/>
+<area shape="rect" id="node19" href="$_wait_clause_8h.html" title=" " alt="" coords="5,237,152,263"/>
 <area shape="rect" id="node5" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="267,393,386,420"/>
 <area shape="rect" id="node6" title=" " alt="" coords="349,475,432,502"/>
 <area shape="rect" id="node7" href="$_q_u_b_i_t_8h.html" title="QUBIT." alt="" coords="462,393,589,420"/>
-<area shape="rect" id="node12" title=" " alt="" coords="613,393,659,420"/>
+<area shape="rect" id="node14" title=" " alt="" coords="613,393,659,420"/>
 <area shape="rect" id="node8" href="$_stationary_qubit_8h.html" title="StationaryQubit." alt="" coords="457,468,658,509"/>
-<area shape="rect" id="node9" title=" " alt="" coords="441,632,573,659"/>
-<area shape="rect" id="node10" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="544,557,669,584"/>
-<area shape="rect" id="node11" title=" " alt="" coords="597,632,688,659"/>
+<area shape="rect" id="node9" title=" " alt="" coords="359,632,491,659"/>
+<area shape="rect" id="node10" title=" " alt="" coords="645,557,699,584"/>
+<area shape="rect" id="node11" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="495,557,620,584"/>
+<area shape="rect" id="node12" title=" " alt="" coords="644,632,735,659"/>
+<area shape="rect" id="node13" title=" " alt="" coords="516,632,620,659"/>
 </map>

@@ -1,6 +1,8 @@
 <map id="quisp/modules/QNIC/StationaryQubit/StationaryQubit.h" name="quisp/modules/QNIC/StationaryQubit/StationaryQubit.h">
-<area shape="rect" id="node1" title="StationaryQubit." alt="" coords="32,5,209,61"/>
+<area shape="rect" id="node1" title="StationaryQubit." alt="" coords="27,5,204,61"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,184,137,211"/>
-<area shape="rect" id="node3" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="109,109,234,136"/>
-<area shape="rect" id="node4" title=" " alt="" coords="162,184,253,211"/>
+<area shape="rect" id="node3" title=" " alt="" coords="88,109,143,136"/>
+<area shape="rect" id="node4" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="167,109,293,136"/>
+<area shape="rect" id="node5" title=" " alt="" coords="173,184,263,211"/>
+<area shape="rect" id="node6" title=" " alt="" coords="287,184,391,211"/>
 </map>

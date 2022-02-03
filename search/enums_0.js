@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['eigenvalueresult_2244',['EigenvalueResult',['../namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57',1,'quisp::types']]]
+  ['cliffordoperator_2328',['CliffordOperator',['../namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43',1,'quisp::types']]]
 ];

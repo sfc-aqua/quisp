@@ -82,13 +82,14 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_access_private_8h.html",
-"_q_n_i_c_8h_source.html",
-"classquisp_1_1modules_1_1_connection_manager.html#aa8b24521677ac91bb528d1c128e97b78",
-"classquisp_1_1modules_1_1_routing_daemon.html#a6680efbc12fcf2b9ae1bbfda6211a4a1",
-"classquisp_1_1rules_1_1_rule.html#af1f2ee5daaa5501d540fde07eea6f5ce",
-"classquisp_1_1utils_1_1_component_provider.html#a4d6b46dd5dd01d265ac690a651392e66",
-"classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a62ce806f63afed6b297ebe616a6d9242",
-"namespacequisp__test_1_1utils.html#aa40021f1932822ecb91a27e6c5701d7f"
+"_mock_routing_daemon_8h_source.html",
+"classquisp_1_1modules_1_1_connection_manager.html#a11cd2a9a8a6a7e78796e1d9cff99235e",
+"classquisp_1_1modules_1_1_queue.html#a35203220a55789974f723f58c99e6276",
+"classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html",
+"classquisp_1_1rules_1_1actions_1_1_simultaneous_swapping_action.html#aaf7eea9ce0b3e86271921d21ab780208",
+"classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a3be41ea6ad7481f92cc3cfb6258e0c68",
+"namespacequisp_1_1modules.html#a73b723f8d26913c797269fb34995d9ad",
+"structquisp_1_1modules_1_1emission__error__model.html#ada76a90665e06fda117f46bfce2d8727"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
