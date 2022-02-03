@@ -67,9 +67,7 @@ TEST(RuleSetTest, metadata_serialize_json) {
   EXPECT_EQ(ruleset_json, expected_json);
 }
 
-TEST(RuleSetTest, serialize_protobuf){
-  prepareSimulation();
-}
+TEST(RuleSetTest, serialize_protobuf) { prepareSimulation(); }
 
 TEST(RuleSetTest, deserialize) { prepareSimulation(); }
 

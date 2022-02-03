@@ -73,7 +73,6 @@ TEST(RuleTest, serialize_json_purification_rule) {
   EXPECT_EQ(action_json["options"]["qnic_id"][0], 13);
 }
 
-
 TEST(RuleTest, serialize_json_swapping_rule) {
   prepareSimulation();
   RuleSet ruleset(1234, 2);
@@ -93,7 +92,7 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   condition->addClause(std::move(enough_resource_clause_right));
 
   auto action = std::make_unique<EntanglementSwapping>(partners, qnic_types, qnic_id);
-  
+
   // add condition and action
   swapping->setCondition(std::move(condition));
   swapping->setAction(std::move(action));
