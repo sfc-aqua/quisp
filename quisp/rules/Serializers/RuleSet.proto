@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package serialization;
+
+import "google/protobuf/any.proto";
+
+message Action{
+	reserved 3 to 15;
+	string type = 1;
+	repeated google.proto.any options = 2;
+}
+
+message Clause{
+	reserved 3 to 15;
+	string type = 1;
+	repeated google.proto.any options = 2;
+}
+
+message Condition{
+	reserved 2 to 15;
+	repeated Clause clauses= 1;
+}
+
+message Rule{
+	reserved 5 to 7, 10 to 15;
+	uint64 rule_id = 1;
+	uint64 next_rule_id = 2;
+	string name = 3;
+	repeated uint64 partners = 4;
+
+	Condition condition = 8;
+	Action action = 9;
+}
+
+message RuleSet{
+	reserved 4 to 13, 15;
+	uint64 ruleset_id = 1;
+	uint32 owner_address = 2;
+	uint32 num_rules = 3;
+
+	repeated Rule rules = 14;
+}
