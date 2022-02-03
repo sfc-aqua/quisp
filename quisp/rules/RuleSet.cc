@@ -28,7 +28,7 @@ void RuleSet::serialize_json() {
   ruleset["owner_address"] = owner_addr;
   ruleset["num_rules"] = rules.size();
   for (auto &rule : rules) {
-    ruleset["rules"].push_back(rule->serialize());
+    ruleset["rules"].push_back(rule->serialize_json());
   }
   out.json = ruleset;
 };

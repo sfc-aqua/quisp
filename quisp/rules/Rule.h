@@ -30,7 +30,7 @@ class Rule {
   void setCondition(std::unique_ptr<Condition> condition);
   void setAction(std::unique_ptr<Action> action);
   void setNextRule(unsigned long next_rule_id);
-  json serialize();
+  json serialize_json();
 };
 
 }  // namespace quisp::rules

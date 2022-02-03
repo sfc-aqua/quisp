@@ -17,17 +17,17 @@ void Rule::setNextRule(unsigned long next_rule_id) {
   }
 }
 
-json Rule::serialize() {
+json Rule::serialize_json() {
   json rule_json;
   rule_json["rule_id"] = rule_id;
   rule_json["next_rule_id"] = to;
   rule_json["name"] = name;
   rule_json["partners"] = partners;
   if (condition != nullptr) {
-    rule_json["condition"] = condition->serialize();
+    rule_json["condition"] = condition->serialize_json();
   }
   if (action != nullptr) {
-    rule_json["action"] = action->serialize();
+    rule_json["action"] = action->serialize_json();
   }
   return rule_json;
 }

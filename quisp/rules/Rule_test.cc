@@ -31,7 +31,7 @@ TEST(RuleTest, setNextRule) {
   EXPECT_EQ(rule3->to, 0);
 }
 
-TEST(RuleTest, serialize_purification_rule) {
+TEST(RuleTest, serialize_json_purification_rule) {
   prepareSimulation();
   RuleSet ruleset(1234, 2);
 
@@ -53,7 +53,7 @@ TEST(RuleTest, serialize_purification_rule) {
 
   rule1->setNextRule(rule2->rule_id);
 
-  json purification_json = rule1->serialize();
+  json purification_json = rule1->serialize_json();
   EXPECT_EQ(purification_json["rule_id"], rule1->rule_id);
   EXPECT_EQ(purification_json["next_rule_id"], rule1->to);
   EXPECT_EQ(purification_json["name"], "purification");

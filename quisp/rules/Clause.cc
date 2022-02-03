@@ -5,7 +5,7 @@ namespace quisp::rules {
 EnoughResourceConditionClause::EnoughResourceConditionClause(int num_resource, double required_fidelity, int partner_addr, QNIC_type qnic_type, int qnic_id)
     : Clause(partner_addr, qnic_type, qnic_id), num_resource(num_resource), required_fidelity(required_fidelity) {}
 
-json EnoughResourceConditionClause::serialize() {
+json EnoughResourceConditionClause::serialize_json() {
   json enough_resource_json;
   enough_resource_json["num_resources"] = num_resource;
   enough_resource_json["required_fidelity"] = required_fidelity;
@@ -18,7 +18,7 @@ json EnoughResourceConditionClause::serialize() {
 MeasureCountConditionClause::MeasureCountConditionClause(int num_measurement, int partner_addr, QNIC_type qnic_type, int qnic_id)
     : num_measure(num_measurement), Clause(partner_addr, qnic_type, qnic_id) {}
 
-json MeasureCountConditionClause::serialize() {
+json MeasureCountConditionClause::serialize_json() {
   json measure_count_json;
   measure_count_json["num_measure"] = num_measure;
   measure_count_json["partner_address"] = partner_address;
@@ -30,7 +30,7 @@ json MeasureCountConditionClause::serialize() {
 FidelityConditionClause::FidelityConditionClause(double required_fidelity, int partner_addr, QNIC_type qnic_type, int qnic_id)
     : required_fidelity(required_fidelity), Clause(partner_addr, qnic_type, qnic_id) {}
 
-json FidelityConditionClause::serialize() {
+json FidelityConditionClause::serialize_json() {
   json fidelity_json;
   fidelity_json["required_fidelity"] = required_fidelity;
   fidelity_json["partner_address"] = partner_address;
@@ -41,7 +41,7 @@ json FidelityConditionClause::serialize() {
 
 WaitConditionClause::WaitConditionClause(int partner_addr, QNIC_type qnic_type, int qnic_id) : Clause(partner_addr, qnic_type, qnic_id) {}
 
-json WaitConditionClause::serialize() {
+json WaitConditionClause::serialize_json() {
   json wait_json;
   return wait_json;
 }

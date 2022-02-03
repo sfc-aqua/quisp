@@ -13,6 +13,6 @@ class Condition {
 
   std::vector<std::unique_ptr<Clause>> clauses;
   void addClause(std::unique_ptr<Clause> clause);
-  json serialize();
+  json serialize_json();
 };
 }  // namespace quisp::rules

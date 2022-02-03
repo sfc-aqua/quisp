@@ -15,7 +15,7 @@ class Clause {
   int partner_address;
   QNIC_type qnic_type;
   int qnic_id;
-  virtual json serialize() = 0;
+  virtual json serialize_json() = 0;
   virtual std::string getName() = 0;
 };
 
@@ -25,7 +25,7 @@ class EnoughResourceConditionClause : public Clause {
   std::string name = "enough_resource";
   int num_resource;
   double required_fidelity;
-  json serialize() override;
+  json serialize_json() override;
   std::string getName() override { return name; };
 };
 
@@ -34,7 +34,7 @@ class MeasureCountConditionClause : public Clause {
   MeasureCountConditionClause(int num_measure, int partner_addr, QNIC_type qnic_type, int qnic_id);
   std::string name = "measure_count";
   int num_measure;
-  json serialize() override;
+  json serialize_json() override;
   std::string getName() override { return name; };
 };
 
@@ -43,7 +43,7 @@ class FidelityConditionClause : public Clause {
   FidelityConditionClause(double required_fidelity, int partner_addr, QNIC_type qnic_type, int qnic_id);
   std::string name = "fidelity";
   double required_fidelity;
-  json serialize() override;
+  json serialize_json() override;
   std::string getName() override { return name; };
 };
 
@@ -51,7 +51,7 @@ class WaitConditionClause : public Clause {
  public:
   WaitConditionClause(int partner_addr, QNIC_type qnic_type, int qnic_id);
   std::string name = "wait";
-  json serialize() override;
+  json serialize_json() override;
   std::string getName() override { return name; };
 };
 

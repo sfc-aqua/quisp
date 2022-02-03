@@ -11,7 +11,7 @@ Action::Action(int partner_addr, QNIC_type qnic_type, int qnic_id) {
 Purification::Purification(PurType purification_type, int partner_addr, QNIC_type qnic_type, int qnic_id)
     : Action(partner_addr, qnic_type, qnic_id), purification_type(purification_type) {}
 
-json Purification::serialize() {
+json Purification::serialize_json() {
   json purification_json;
   purification_json["type"] = "purification";
   purification_json["options"]["purification_type"] = purification_type;
@@ -23,7 +23,7 @@ json Purification::serialize() {
 
 EntanglementSwapping::EntanglementSwapping(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id) : Action(partner_addr, qnic_type, qnic_id) {}
 
-json EntanglementSwapping::serialize() {
+json EntanglementSwapping::serialize_json() {
   json swapping_json;
   swapping_json["type"] = "swapping";
   swapping_json["options"]["partner_address"] = partner_address;  // should be two
@@ -34,7 +34,7 @@ json EntanglementSwapping::serialize() {
 
 Wait::Wait(int partner_addr, QNIC_type qnic_type, int qnic_id) : Action(partner_addr, qnic_type, qnic_id) {}
 
-json Wait::serialize() {
+json Wait::serialize_json() {
   json wait_json;
   wait_json["type"] = "wait";
   wait_json["options"]["partner_address"] = partner_address;  // should be two
@@ -45,7 +45,7 @@ json Wait::serialize() {
 
 Tomography::Tomography(int num_measurement, int partner_addr, QNIC_type qnic_type, int qnic_id) : Action(partner_addr, qnic_type, qnic_id), num_measurement(num_measurement) {}
 
-json Tomography::serialize() {
+json Tomography::serialize_json() {
   json tomography_json;
   tomography_json["type"] = "tomography";
   tomography_json["options"]["num_measure"] = num_measurement;

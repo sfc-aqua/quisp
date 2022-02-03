@@ -30,33 +30,33 @@ class Action {
   std::vector<QNIC_type> qnic_types;
   std::vector<int> qnic_ids;
 
-  virtual json serialize() = 0;
+  virtual json serialize_json() = 0;
 };
 
 class Purification : public Action {
  public:
   Purification(PurType purification_type, int partner_addr, QNIC_type qnic_type, int qnic_id);
   PurType purification_type;
-  json serialize() override;
+  json serialize_json() override;
 };
 
 class EntanglementSwapping : public Action {
  public:
   EntanglementSwapping(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id);
-  json serialize() override;
+  json serialize_json() override;
 };
 
 class Wait : public Action {
  public:
   Wait(int partner_addr, QNIC_type qnic_type, int qnic_id);
-  json serialize() override;
+  json serialize_json() override;
 };
 
 class Tomography : public Action {
  public:
   Tomography(int num_measurement, int partner_addr, QNIC_type qnic_type, int qnic_id);
   int num_measurement;
-  json serialize() override;
+  json serialize_json() override;
 };
 
 }  // namespace quisp::rules
