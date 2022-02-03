@@ -365,6 +365,7 @@ TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithSingleFreeQubit) {
     pk->setTrial(trial);
     pk->setQnic_address(qnic_address);
     pk->setInterval(interval);
+    pk->setInternal_hom(1);
 
     rule_engine->shootPhoton_internal(pk);
     ASSERT_EQ(fes->getLength(), 2);
@@ -426,6 +427,7 @@ TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithThreeFreeQubits) {
     pk->setTrial(trial);
     pk->setQnic_address(qnic_address);
     pk->setInterval(interval);
+    pk->setInternal_hom(1);
 
     rule_engine->shootPhoton_internal(pk);
     ASSERT_EQ(fes->getLength(), 2);
@@ -460,6 +462,7 @@ TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithThreeFreeQubits) {
     pk->setTrial(trial);
     pk->setQnic_address(qnic_address);
     pk->setInterval(interval);
+    pk->setInternal_hom(1);
 
     rule_engine->shootPhoton_internal(pk);
     ASSERT_EQ(fes->getLength(), 2);
@@ -494,6 +497,7 @@ TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithThreeFreeQubits) {
     pk->setTrial(trial);
     pk->setQnic_address(qnic_address);
     pk->setInterval(interval);
+    pk->setInternal_hom(1);
 
     rule_engine->shootPhoton_internal(pk);
     ASSERT_EQ(fes->getLength(), 2);
@@ -540,13 +544,14 @@ TEST(RuleEnginePhotonShootingTest, ScheduleNextEmissionEvent) {
 
   int qnic_index = 3;
   int qnic_address = 9;
+  int qubit_index = 0;
   double interval = 0.5;
   simtime_t timing = sim->getSimTime();
   int num_sent = 5;
   bool internal = true;
   int trial = 7;
 
-  rule_engine->scheduleNextEmissionEvent(qnic_index, qnic_address, interval, timing, num_sent, internal, trial);
+  rule_engine->scheduleNextEmissionEvent(qnic_index, qnic_address, qubit_index, interval, timing, num_sent, QNIC_R, trial, -1, 1);
   // get first scheduled event in rule_engine
   auto* fes = sim->getFES();
   ASSERT_EQ(fes->getLength(), 1);
@@ -562,7 +567,7 @@ TEST(RuleEnginePhotonShootingTest, ScheduleNextEmissionEvent) {
   fes->clear();
 
   internal = false;
-  rule_engine->scheduleNextEmissionEvent(qnic_index, qnic_address, interval, timing, num_sent, internal, trial);
+  rule_engine->scheduleNextEmissionEvent(qnic_index, qnic_address, qubit_index, interval, timing, num_sent, QNIC_E, trial, -1, 1);
   ASSERT_EQ(fes->getLength(), 1);
   res = fes->get(0);
   packet = dynamic_cast<SchedulePhotonTransmissionsOnebyOne*>(res);
@@ -578,7 +583,7 @@ TEST(RuleEnginePhotonShootingTest, ScheduleNextEmissionEvent) {
   sim->setSimTime(3.0);
   num_sent = 1;
   timing = 1.5;
-  rule_engine->scheduleNextEmissionEvent(qnic_index, qnic_address, interval, timing, num_sent, internal, trial);
+  rule_engine->scheduleNextEmissionEvent(qnic_index, qnic_address, qubit_index, interval, timing, num_sent, QNIC_E, trial, -1, 1);
   ASSERT_EQ(fes->getLength(), 1);
   res = fes->get(0);
   packet = dynamic_cast<SchedulePhotonTransmissionsOnebyOne*>(res);
@@ -595,7 +600,7 @@ TEST(RuleEnginePhotonShootingTest, ScheduleNextEmissionEvent) {
   sim->setSimTime(7.0);
   num_sent = 0;
   timing = 1.5;
-  rule_engine->scheduleNextEmissionEvent(qnic_index, qnic_address, interval, timing, num_sent, internal, trial);
+  rule_engine->scheduleNextEmissionEvent(qnic_index, qnic_address, qubit_index, interval, timing, num_sent, QNIC_E, trial, -1, 1);
   ASSERT_EQ(fes->getLength(), 1);
   res = fes->get(0);
   packet = dynamic_cast<SchedulePhotonTransmissionsOnebyOne*>(res);
@@ -875,6 +880,255 @@ TEST(RuleEnginePhotonShootingTest, scheduleFirstPhotonEmissionEPPS) {
   EXPECT_EQ(scheduled->getNumber_of_attempts(), number_of_attemps);
   fes->clear();
 
+  delete mockHardwareMonitor;
+}
+
+TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithoutFreeQubitEpps) {
+  auto* sim = prepareSimulation();
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+
+  std::vector<QNicSpec> qnic_specs = {
+      {QNIC_RP, 0, 1},
+      {QNIC_RP, 1, 1},
+      {QNIC_RP, 2, 1},
+      {QNIC_RP, 3, 1},
+  };
+  auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
+  setParInt(rule_engine, "number_of_qnics_rp", 4);
+
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+  sim->setContext(rule_engine);
+
+  int qnic_index = 1;
+  // no free qubit case
+  auto* pk = new SchedulePhotonTransmissionsOnebyOne();
+  pk->setQnic_index(1);
+  pk->setInternal_hom(2);
+  // set qubit in Receiver QNIC1 to busy, so there's no free qubit.
+  rule_engine->setQubitBusyInQnic(QNIC_RP, qnic_index, 0);
+  rule_engine->shootPhoton_internal(pk);
+  auto* fes = sim->getFES();
+  ASSERT_EQ(fes->getLength(), 0);
+  fes->clear();
+
+  delete mockHardwareMonitor;
+}
+
+TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithSingleFreeQubitEpps) {
+  auto* sim = prepareSimulation();
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  int qnic_index = 0;
+
+  // Receiver passive QNIC has 1 qubit
+  std::vector<QNicSpec> qnic_specs = {
+      {QNIC_RP, 0, 1},
+  };
+
+  auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
+
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+  EXPECT_EQ(rule_engine->getNumFreeQubitsInQnic(QNIC_RP, qnic_index), 1);
+  sim->setContext(rule_engine);
+  auto* fes = sim->getFES();
+
+  int qnic_address = 1234;
+  int trial = 1;
+  int num_sent = 0;
+  int attempt = 1;
+  int num_attemps = 1;
+  double interval = 5.3;
+
+  {
+    auto pk = new SchedulePhotonTransmissionsOnebyOne();
+    pk->setQnic_index(qnic_index);
+    pk->setNum_sent(num_sent);
+    pk->setTrial(trial);
+    pk->setQnic_address(qnic_address);
+    pk->setInterval(interval);
+    pk->setInternal_hom(2);
+    pk->setNumber_of_attempts(num_attemps);
+    pk->setAttempt(attempt);
+
+    rule_engine->shootPhoton_internal(pk);
+    ASSERT_EQ(fes->getLength(), 2);
+    auto* res1 = fes->get(0);
+    auto* res2 = fes->get(1);
+    auto* emitReq = dynamic_cast<EmitPhotonRequest*>(res1);
+    ASSERT_NE(emitReq, nullptr);
+    auto* scheduled = dynamic_cast<SchedulePhotonTransmissionsOnebyOne*>(res2);
+    ASSERT_NE(scheduled, nullptr);
+
+    EXPECT_EQ(emitReq->getKind(), STATIONARYQUBIT_PULSE_BOUND);
+    EXPECT_EQ(emitReq->getQnic_address(), qnic_address);
+    EXPECT_EQ(emitReq->getQnic_index(), qnic_index);
+    EXPECT_EQ(emitReq->getQubit_index(), 0);
+    EXPECT_EQ(emitReq->getTrial(), trial);
+    EXPECT_EQ(emitReq->getQnic_type(), QNIC_RP);
+    // no free qubit left
+    EXPECT_EQ(rule_engine->getNumFreeQubitsInQnic(QNIC_RP, qnic_index), 0);
+
+    EXPECT_EQ(scheduled->getQnic_address(), qnic_address);
+    EXPECT_EQ(scheduled->getQnic_index(), qnic_index);
+    EXPECT_EQ(scheduled->getNum_sent(), num_sent + 1);
+    EXPECT_EQ(scheduled->getTrial(), trial);
+    EXPECT_EQ(scheduled->getInterval(), interval);
+    EXPECT_EQ(scheduled->getInternal_hom(), 2);
+    EXPECT_EQ(scheduled->getNumber_of_attempts(), num_attemps);
+    EXPECT_EQ(scheduled->getAttempt(), attempt);
+    EXPECT_EQ(scheduled->getFormer_attempt_qubit_index(), 0);
+
+    fes->clear();
+  }
+
+  delete mockHardwareMonitor;
+}
+
+TEST(RuleEnginePhotonShootingTest, ShootPhotonInternalWithThreeFreeQubitsEpps) {//TODO: here
+  auto* sim = prepareSimulation();
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  int qnic_index = 0;
+  // Receiver passive QNIC has 1 qubit
+  std::vector<QNicSpec> qnic_specs = {
+      {QNIC_RP, 0, 3},
+  };
+  auto rule_engine = new RuleEngineTestTarget{mockHardwareMonitor, qnic_specs};
+
+  sim->registerComponent(rule_engine);
+  rule_engine->callInitialize();
+  EXPECT_EQ(rule_engine->getNumFreeQubitsInQnic(QNIC_RP, qnic_index), 3);
+  sim->setContext(rule_engine);
+  auto* fes = sim->getFES();
+
+  int qnic_address = 1234;
+  int trial = 1;
+  int num_sent = 0;
+  int attempt = 1;
+  int num_attemps = 1;
+  double interval = 5.3;
+
+  {  // first shot
+    auto pk = new SchedulePhotonTransmissionsOnebyOne();
+    pk->setQnic_index(qnic_index);
+    pk->setNum_sent(num_sent);
+    pk->setTrial(trial);
+    pk->setQnic_address(qnic_address);
+    pk->setInterval(interval);
+    pk->setInternal_hom(2);
+    pk->setNumber_of_attempts(num_attemps);
+    pk->setAttempt(attempt);
+
+    rule_engine->shootPhoton_internal(pk);
+    ASSERT_EQ(fes->getLength(), 2);
+    auto* res1 = fes->get(0);
+    auto* res2 = fes->get(1);
+    auto* emitReq = dynamic_cast<EmitPhotonRequest*>(res1);
+    ASSERT_NE(emitReq, nullptr);
+    auto* scheduled = dynamic_cast<SchedulePhotonTransmissionsOnebyOne*>(res2);
+    ASSERT_NE(scheduled, nullptr);
+
+    EXPECT_EQ(emitReq->getKind(), STATIONARYQUBIT_PULSE_BEGIN);
+    EXPECT_EQ(emitReq->getQnic_address(), qnic_address);
+    EXPECT_EQ(emitReq->getQnic_index(), qnic_index);
+    EXPECT_EQ(emitReq->getQubit_index(), 0);
+    EXPECT_EQ(emitReq->getTrial(), trial);
+    EXPECT_EQ(emitReq->getQnic_type(), QNIC_RP);
+    EXPECT_EQ(rule_engine->getNumFreeQubitsInQnic(QNIC_RP, qnic_index), 2);
+
+    EXPECT_EQ(scheduled->getQnic_address(), qnic_address);
+    EXPECT_EQ(scheduled->getQnic_index(), qnic_index);
+    EXPECT_EQ(scheduled->getNum_sent(), num_sent + 1);
+    EXPECT_EQ(scheduled->getTrial(), trial);
+    EXPECT_EQ(scheduled->getInterval(), interval);
+    EXPECT_EQ(scheduled->getInternal_hom(), 2);
+    EXPECT_EQ(scheduled->getNumber_of_attempts(), num_attemps);
+    EXPECT_EQ(scheduled->getAttempt(), attempt);
+    EXPECT_EQ(scheduled->getFormer_attempt_qubit_index(), 0);
+    fes->clear();
+  }
+
+  {  // second shot
+    num_sent += 1;
+    auto pk = new SchedulePhotonTransmissionsOnebyOne();
+    pk->setQnic_index(qnic_index);
+    pk->setNum_sent(num_sent);
+    pk->setTrial(trial);
+    pk->setQnic_address(qnic_address);
+    pk->setInterval(interval);
+    pk->setInternal_hom(2);
+    pk->setNumber_of_attempts(num_attemps);
+    pk->setAttempt(attempt);
+
+    rule_engine->shootPhoton_internal(pk);
+    ASSERT_EQ(fes->getLength(), 2);
+    auto* res1 = fes->get(0);
+    auto* res2 = fes->get(1);
+    auto* emitReq = dynamic_cast<EmitPhotonRequest*>(res1);
+    ASSERT_NE(emitReq, nullptr);
+    auto* scheduled = dynamic_cast<SchedulePhotonTransmissionsOnebyOne*>(res2);
+    ASSERT_NE(scheduled, nullptr);
+
+    EXPECT_EQ(emitReq->getKind(), 0);
+    EXPECT_EQ(emitReq->getQnic_address(), qnic_address);
+    EXPECT_EQ(emitReq->getQnic_index(), qnic_index);
+    EXPECT_EQ(emitReq->getQubit_index(), 1);
+    EXPECT_EQ(emitReq->getTrial(), trial);
+    EXPECT_EQ(emitReq->getQnic_type(), QNIC_RP);
+    EXPECT_EQ(rule_engine->getNumFreeQubitsInQnic(QNIC_RP, qnic_index), 1);
+
+    EXPECT_EQ(scheduled->getQnic_address(), qnic_address);
+    EXPECT_EQ(scheduled->getQnic_index(), qnic_index);
+    EXPECT_EQ(scheduled->getNum_sent(), num_sent + 1);
+    EXPECT_EQ(scheduled->getTrial(), trial);
+    EXPECT_EQ(scheduled->getInterval(), interval);
+    EXPECT_EQ(scheduled->getInternal_hom(), 2);
+    EXPECT_EQ(scheduled->getNumber_of_attempts(), num_attemps);
+    EXPECT_EQ(scheduled->getAttempt(), attempt);
+    EXPECT_EQ(scheduled->getFormer_attempt_qubit_index(), 1);
+    fes->clear();
+  }
+
+  {  // last shot
+    num_sent += 1;
+    auto pk = new SchedulePhotonTransmissionsOnebyOne();
+    pk->setQnic_index(qnic_index);
+    pk->setNum_sent(num_sent);
+    pk->setTrial(trial);
+    pk->setQnic_address(qnic_address);
+    pk->setInterval(interval);
+    pk->setInternal_hom(2);
+    pk->setNumber_of_attempts(num_attemps);
+    pk->setAttempt(attempt);
+
+    rule_engine->shootPhoton_internal(pk);
+    ASSERT_EQ(fes->getLength(), 2);
+    auto* res1 = fes->get(0);
+    auto* res2 = fes->get(1);
+    auto* emitReq = dynamic_cast<EmitPhotonRequest*>(res1);
+    ASSERT_NE(emitReq, nullptr);
+    auto* scheduled = dynamic_cast<SchedulePhotonTransmissionsOnebyOne*>(res2);
+    ASSERT_NE(scheduled, nullptr);
+
+    EXPECT_EQ(emitReq->getKind(), STATIONARYQUBIT_PULSE_END);
+    EXPECT_EQ(emitReq->getQnic_address(), qnic_address);
+    EXPECT_EQ(emitReq->getQnic_index(), qnic_index);
+    EXPECT_EQ(emitReq->getQubit_index(), 2);
+    EXPECT_EQ(emitReq->getTrial(), trial);
+    EXPECT_EQ(emitReq->getQnic_type(), QNIC_RP);
+    EXPECT_EQ(rule_engine->getNumFreeQubitsInQnic(QNIC_RP, qnic_index), 0);
+
+    EXPECT_EQ(scheduled->getQnic_address(), qnic_address);
+    EXPECT_EQ(scheduled->getQnic_index(), qnic_index);
+    EXPECT_EQ(scheduled->getNum_sent(), num_sent + 1);
+    EXPECT_EQ(scheduled->getTrial(), trial);
+    EXPECT_EQ(scheduled->getInterval(), interval);
+    EXPECT_EQ(scheduled->getInternal_hom(), 2);
+    EXPECT_EQ(scheduled->getNumber_of_attempts(), num_attemps);
+    EXPECT_EQ(scheduled->getAttempt(), attempt);
+    EXPECT_EQ(scheduled->getFormer_attempt_qubit_index(), 2);
+    fes->clear();
+  }
   delete mockHardwareMonitor;
 }
 }  // namespace

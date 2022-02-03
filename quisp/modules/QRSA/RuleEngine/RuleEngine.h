@@ -95,7 +95,7 @@ class RuleEngine : public IRuleEngine {
   // virtual int getQnicIndex_toNeighbor(int destAddr);
   InterfaceInfo getInterface_toNeighbor(int destAddr);
   InterfaceInfo getInterface_toNeighbor_Internal(int local_qnic_index);
-  void scheduleNextEmissionEvent(int qnic_index, int qnic_address, double interval, simtime_t timing, int num_sent, bool internal, int trial);
+  void scheduleNextEmissionEvent(int qnic_index, int qnic_address, int qubit_index, double interval, simtime_t timing, int num_sent, QNIC_type qnic_type, int trial, int num_attempts, int attempt);
   void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result);
   void clearTrackerTable(int destAddr, int internal_qnic_address);
   // virtual void traverseThroughAllProcesses(RuleEngine *re, int qnic_type, int qnic_index);

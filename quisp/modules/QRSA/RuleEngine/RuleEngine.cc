@@ -144,7 +144,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     }
     if (pk->getInternal_hom() == 0) {  // for MIM
       shootPhoton(pk);
-    } else {  // for MM
+    } else {  // for MM or MSM
       shootPhoton_internal(pk);
     }
   }
@@ -723,20 +723,34 @@ bool RuleEngine::burstTrial_outdated(int this_trial, int qnic_address) {
 
 void RuleEngine::shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk) {
   int qnic_index = pk->getQnic_index();
-  QNIC_type qnic_type = QNIC_R;
+  QNIC_type qnic_type = pk->getInternal_hom() == 1 ? QNIC_R : QNIC_RP;
   int num_free = qnic_store->countNumFreeQubits(qnic_type, qnic_index);
   if (num_free == 0) {
     return;
   }
 
   emt = new EmitPhotonRequest("EmitPhotonRequest(internal)");
-  int qubit_index = qnic_store->takeFreeQubitIndex(qnic_type, qnic_index);
+  int qubit_index;
+  int attempt = pk->getAttempt();
+  int num_attemps = pk->getNumber_of_attempts();
+  if (qnic_type == QNIC_R) {
+    qubit_index = qnic_store->takeFreeQubitIndex(qnic_type, qnic_index);
+  } else {
+    if (attempt >= num_attemps) {
+      attempt = 1;
+      qubit_index = qnic_store->takeFreeQubitIndex(qnic_type, qnic_index);
+    } else {
+      attempt++;
+      qubit_index = pk->getFormer_attempt_qubit_index();
+    }
+  }
+
   num_free--;
   emt->setQubit_index(qubit_index);
   emt->setQnic_index(pk->getQnic_index());
   emt->setQnic_address(pk->getQnic_address());
   emt->setTrial(pk->getTrial());
-  emt->setQnic_type(QNIC_R);
+  emt->setQnic_type(qnic_type);
 
   if (pk->getNum_sent() == 0) {  // First shot!!!
     if (num_free == 0)
@@ -751,7 +765,7 @@ void RuleEngine::shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk) {
       emt->setKind(0);  // Just a photon in a burst. Not the beginning, nor the end.
     scheduleAt(simTime() + pk->getInterval(), emt);
   }
-  scheduleNextEmissionEvent(pk->getQnic_index(), pk->getQnic_address(), pk->getInterval(), pk->getTiming(), pk->getNum_sent(), true, pk->getTrial());
+  scheduleNextEmissionEvent(pk->getQnic_index(), pk->getQnic_address(), qubit_index, pk->getInterval(), pk->getTiming(), pk->getNum_sent(), qnic_type, pk->getTrial(), pk->getNumber_of_attempts(), attempt);
 }
 
 // This method is for qnic (not qnic_r, qnic_rp).
@@ -786,10 +800,10 @@ void RuleEngine::shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk) {
       emt->setKind(0);  // others
     scheduleAt(simTime() + pk->getInterval(), emt);
   }
-  scheduleNextEmissionEvent(pk->getQnic_index(), pk->getQnic_address(), pk->getInterval(), pk->getTiming(), pk->getNum_sent(), false, pk->getTrial());
+  scheduleNextEmissionEvent(pk->getQnic_index(), pk->getQnic_address(), qubit_index, pk->getInterval(), pk->getTiming(), pk->getNum_sent(), QNIC_E, pk->getTrial(), pk->getNumber_of_attempts(), pk->getAttempt());
 }
 
-void RuleEngine::scheduleNextEmissionEvent(int qnic_index, int qnic_address, double interval, simtime_t timing, int num_sent, bool internal, int trial) {
+void RuleEngine::scheduleNextEmissionEvent(int qnic_index, int qnic_address, int qubit_index, double interval, simtime_t timing, int num_sent, QNIC_type qnic_type, int trial, int num_attempts, int attempt) {
   SchedulePhotonTransmissionsOnebyOne *st = new SchedulePhotonTransmissionsOnebyOne("SchedulePhotonTransmissionsOneByOne");
   st->setQnic_index(qnic_index);
   st->setQnic_address(qnic_address);
@@ -797,7 +811,11 @@ void RuleEngine::scheduleNextEmissionEvent(int qnic_index, int qnic_address, dou
   st->setTiming(timing);
   st->setNum_sent(num_sent + 1);  // increment
   st->setTrial(trial);
-  if (internal) st->setInternal_hom(1);
+  st->setNumber_of_attempts(num_attempts);
+  st->setAttempt(attempt);
+  st->setFormer_attempt_qubit_index(qubit_index);
+  if (qnic_type == QNIC_R) st->setInternal_hom(1);
+  if (qnic_type == QNIC_RP) st->setInternal_hom(2);
   if (num_sent == 0)  // First scheduling must be adjusted to timing
     scheduleAt(simTime() + timing, st);
   else  // from the second emission, 1 photon per interval
