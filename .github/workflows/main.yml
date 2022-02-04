@@ -23,12 +23,16 @@ jobs:
           ln -sf /usr/bin/llvm-cov-12 /usr/bin/llvm-cov
       - name: Check out repository
         uses: actions/checkout@v2
-      - name: generate message header
+      - name: make eigen
+        run: make eigen
+      - name: generate makefile
+        run: make makefile-lib
+      - name: generate message headers
         run: make msgheaders
       - name: clang-format
         run: make format-ci
-      - name: make eigen googletest
-        run: make eigen googletest
+      - name: make googletest
+        run: make googletest
       - name: clang-tidy
         run: make tidy
       - name: unit tests and generate coverage report

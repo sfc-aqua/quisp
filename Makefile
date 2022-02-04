@@ -19,6 +19,9 @@ exe: makefile-exe
 lib: makefile-lib
 	$(MAKE) -C quisp -j$(nproc)
 
+msgheaders: checkmakefile
+	$(MAKE) -C quisp msgheaders
+
 format-ci: 
 	$(MAKE) -C quisp format-ci
 
