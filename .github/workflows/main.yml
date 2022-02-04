@@ -23,8 +23,18 @@ jobs:
           ln -sf /usr/bin/llvm-cov-12 /usr/bin/llvm-cov
       - name: Check out repository
         uses: actions/checkout@v2
-      - name: clang-format and clang-tidy
-        run: make ci
+      - name: make eigen
+        run: make eigen
+      - name: generate makefile
+        run: make makefile-lib
+      - name: generate message headers
+        run: make msgheaders
+      - name: clang-format
+        run: make format-ci
+      - name: make googletest
+        run: make googletest
+      - name: clang-tidy
+        run: make tidy
       - name: unit tests and generate coverage report
         run: |
           opp_makemake -f --deep -O out -i ./makefrag -M release --make-so
@@ -37,11 +47,10 @@ jobs:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: quisp/lcov.info
       # - name: module tests
-        # run: make run-module-test
+      # run: make run-module-test
       - name: Run Simulations
         run: /bin/bash test.sh
         working-directory: test
       - name: Check Simulation Results
         run: python -m unittest discover
         working-directory: test
-
