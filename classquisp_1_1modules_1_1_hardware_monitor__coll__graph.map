@@ -1,8 +1,8 @@
 <map id="quisp::modules::HardwareMonitor" name="quisp::modules::HardwareMonitor">
-<area shape="rect" id="node1" title="HardwareMonitor." alt="" coords="512,113,683,155"/>
+<area shape="rect" id="node1" title="HardwareMonitor." alt="" coords="512,107,683,148"/>
 <area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_hardware_monitor.html" title=" " alt="" coords="179,5,354,47"/>
 <area shape="rect" id="node3" title=" " alt="" coords="5,46,116,73"/>
 <area shape="rect" id="node5" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="185,71,348,112"/>
-<area shape="rect" id="node4" href="$structquisp_1_1modules_1_1single__qubit__error.html" title=" " alt="" coords="193,136,341,177"/>
-<area shape="rect" id="node6" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="165,202,368,229"/>
+<area shape="rect" id="node4" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="165,137,368,163"/>
+<area shape="rect" id="node6" href="$structquisp_1_1modules_1_1single__qubit__error.html" title=" " alt="" coords="193,188,341,229"/>
 </map>

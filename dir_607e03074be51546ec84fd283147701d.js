@@ -8,7 +8,7 @@ var dir_607e03074be51546ec84fd283147701d =
     [ "IRuleEngine.h", "_i_rule_engine_8h.html", "_i_rule_engine_8h" ],
     [ "RuleEngine.cc", "_rule_engine_8cc.html", "_rule_engine_8cc" ],
     [ "RuleEngine.h", "_rule_engine_8h.html", [
-      [ "RuleEngine", "classquisp_1_1modules_1_1_rule_engine.html", "classquisp_1_1modules_1_1_rule_engine" ]
+      [ "quisp::modules::RuleEngine", "classquisp_1_1modules_1_1_rule_engine.html", "classquisp_1_1modules_1_1_rule_engine" ]
     ] ],
     [ "RuleEngine_photon_shooting_test.cc", "_rule_engine__photon__shooting__test_8cc.html", null ],
     [ "RuleEngine_test.cc", "_rule_engine__test_8cc.html", null ]

@@ -6,7 +6,7 @@ var classquisp_1_1modules_1_1_connection_manager =
     [ "fillPathDivision", "classquisp_1_1modules_1_1_connection_manager.html#a93ce7efb2b81d167574ba6704fd0caf7", null ],
     [ "finish", "classquisp_1_1modules_1_1_connection_manager.html#a98108ea6ee5ea9ff0f92fb5f6b59af8d", null ],
     [ "generateSimultaneousSwappingConfig", "classquisp_1_1modules_1_1_connection_manager.html#a680ca378faff2404b082e9ac05f25cd1", null ],
-    [ "generateSwappingConfig", "classquisp_1_1modules_1_1_connection_manager.html#a7ee915b0c41845f4a06d5a8ebf4edaf9", null ],
+    [ "generateSwappingConfig", "classquisp_1_1modules_1_1_connection_manager.html#af9acf2b883945403061e6f9c383d651d", null ],
     [ "getQnicInterface", "classquisp_1_1modules_1_1_connection_manager.html#af01358e671239d0d3beeb27fa033f876", null ],
     [ "handleMessage", "classquisp_1_1modules_1_1_connection_manager.html#a079dba7a2efcc6ea70b2c1e1f03bf760", null ],
     [ "initialize", "classquisp_1_1modules_1_1_connection_manager.html#aed75f2009716a1e7f4d6be096631ce5b", null ],

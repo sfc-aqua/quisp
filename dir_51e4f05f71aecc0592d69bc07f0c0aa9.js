@@ -6,18 +6,18 @@ var dir_51e4f05f71aecc0592d69bc07f0c0aa9 =
     [ "Clause.h", "_clause_8h.html", null ],
     [ "Condition.cc", "_condition_8cc.html", null ],
     [ "Condition.h", "_condition_8h.html", [
-      [ "Condition", "classquisp_1_1rules_1_1_condition.html", "classquisp_1_1rules_1_1_condition" ]
+      [ "quisp::rules::Condition", "classquisp_1_1rules_1_1_condition.html", "classquisp_1_1rules_1_1_condition" ]
     ] ],
     [ "example.cc", "example_8cc.html", null ],
     [ "example.h", "example_8h.html", null ],
     [ "Rule.cc", "_rule_8cc.html", null ],
     [ "Rule.h", "_rule_8h.html", [
-      [ "Rule", "classquisp_1_1rules_1_1_rule.html", "classquisp_1_1rules_1_1_rule" ]
+      [ "quisp::rules::Rule", "classquisp_1_1rules_1_1_rule.html", "classquisp_1_1rules_1_1_rule" ]
     ] ],
     [ "Rule_test.cc", "_rule__test_8cc.html", null ],
     [ "RuleSet.cc", "_rule_set_8cc.html", null ],
     [ "RuleSet.h", "_rule_set_8h.html", [
-      [ "RuleSet", "classquisp_1_1rules_1_1_rule_set.html", "classquisp_1_1rules_1_1_rule_set" ]
+      [ "quisp::rules::RuleSet", "classquisp_1_1rules_1_1_rule_set.html", "classquisp_1_1rules_1_1_rule_set" ]
     ] ],
     [ "RuleSet_test.cc", "_rule_set__test_8cc.html", null ]
 ];

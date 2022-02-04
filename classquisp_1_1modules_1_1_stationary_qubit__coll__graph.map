@@ -1,11 +1,11 @@
 <map id="quisp::modules::StationaryQubit" name="quisp::modules::StationaryQubit">
 <area shape="rect" id="node1" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="676,326,848,367"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="371,231,547,273"/>
-<area shape="rect" id="node3" title=" " alt="" coords="19,261,185,288"/>
-<area shape="rect" id="node4" href="$structquisp_1_1modules_1_1_single_gate_error_model.html" title=" " alt="" coords="13,33,191,74"/>
-<area shape="rect" id="node5" title=" " alt="" coords="63,211,141,237"/>
-<area shape="rect" id="node6" href="$structquisp_1_1modules_1_1_measurement_error_model.html" title=" " alt="" coords="5,319,199,361"/>
-<area shape="rect" id="node7" href="$structquisp_1_1modules_1_1_two_qubit_gate_error_model.html" title=" " alt="" coords="17,126,187,167"/>
+<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="371,226,547,267"/>
+<area shape="rect" id="node3" title=" " alt="" coords="19,195,185,221"/>
+<area shape="rect" id="node4" title=" " alt="" coords="63,245,141,272"/>
+<area shape="rect" id="node5" href="$structquisp_1_1modules_1_1_single_gate_error_model.html" title=" " alt="" coords="13,27,191,69"/>
+<area shape="rect" id="node6" href="$structquisp_1_1modules_1_1_two_qubit_gate_error_model.html" title=" " alt="" coords="17,311,187,353"/>
+<area shape="rect" id="node7" href="$structquisp_1_1modules_1_1_measurement_error_model.html" title=" " alt="" coords="5,119,199,161"/>
 <area shape="rect" id="node8" href="$structquisp_1_1modules_1_1memory__error__model.html" title=" " alt="" coords="379,395,539,437"/>
 <area shape="rect" id="node9" href="$structquisp_1_1modules_1_1single__qubit__error.html" title=" " alt="" coords="385,461,533,502"/>
 <area shape="rect" id="node10" href="$structquisp_1_1modules_1_1measurement__operators.html" title=" " alt="" coords="363,526,556,567"/>

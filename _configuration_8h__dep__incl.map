@@ -1,12 +1,12 @@
 <map id="quisp/test_utils/Configuration.h" name="quisp/test_utils/Configuration.h">
-<area shape="rect" id="node1" title=" " alt="" coords="3487,5,3685,32"/>
-<area shape="rect" id="node2" href="$_module_type_8h.html" title=" " alt="" coords="3333,80,3527,107"/>
-<area shape="rect" id="node40" href="$_static_env_8h.html" title=" " alt="" coords="3815,80,3995,107"/>
-<area shape="rect" id="node3" href="$_mock_hardware_monitor_8h.html" title=" " alt="" coords="2943,155,3165,196"/>
+<area shape="rect" id="node1" title=" " alt="" coords="3275,5,3473,32"/>
+<area shape="rect" id="node2" href="$_module_type_8h.html" title=" " alt="" coords="3122,80,3317,107"/>
+<area shape="rect" id="node40" href="$_static_env_8h.html" title=" " alt="" coords="3617,80,3797,107"/>
+<area shape="rect" id="node3" href="$_q_node_8cc.html" title=" " alt="" coords="2747,162,2919,189"/>
 <area shape="rect" id="node4" href="$_test_utils_8h.html" title=" " alt="" coords="3244,244,3421,271"/>
-<area shape="rect" id="node37" href="$_mock_q_nic_store_8h.html" title=" " alt="" coords="3240,155,3425,196"/>
-<area shape="rect" id="node38" href="$_mock_qubit_8h.html" title=" " alt="" coords="3450,155,3605,196"/>
-<area shape="rect" id="node39" href="$_q_node_8cc.html" title=" " alt="" coords="3629,162,3801,189"/>
+<area shape="rect" id="node37" href="$_mock_hardware_monitor_8h.html" title=" " alt="" coords="2993,155,3216,196"/>
+<area shape="rect" id="node38" href="$_mock_q_nic_store_8h.html" title=" " alt="" coords="3240,155,3425,196"/>
+<area shape="rect" id="node39" href="$_mock_qubit_8h.html" title=" " alt="" coords="3450,155,3605,196"/>
 <area shape="rect" id="node5" href="$_application__test_8cc.html" title=" " alt="" coords="5,333,180,375"/>
 <area shape="rect" id="node6" href="$_stationary_qubit__gate__error__test_8cc.html" title=" " alt="" coords="204,326,381,382"/>
 <area shape="rect" id="node7" href="$_stationary_qubit__internal__stabilizer__graph__test_8cc.html" title=" " alt="" coords="405,319,583,389"/>
@@ -25,20 +25,20 @@
 <area shape="rect" id="node20" href="$_rule_engine__photon__shooting__test_8cc.html" title=" " alt="" coords="3153,326,3323,382"/>
 <area shape="rect" id="node21" href="$_rule_engine__test_8cc.html" title=" " alt="" coords="3347,326,3507,382"/>
 <area shape="rect" id="node22" href="$_rule_set_store__test_8cc.html" title=" " alt="" coords="3532,326,3704,382"/>
-<area shape="rect" id="node23" href="$_double_purify_action__test_8cc.html" title=" " alt="" coords="3729,326,3865,382"/>
-<area shape="rect" id="node24" href="$_double_purify_action_inv__test_8cc.html" title=" " alt="" coords="3889,326,4043,382"/>
-<area shape="rect" id="node25" href="$_double_selection_action__test_8cc.html" title=" " alt="" coords="4067,326,4225,382"/>
-<area shape="rect" id="node26" href="$_double_selection_action_inv__test_8cc.html" title=" " alt="" coords="4249,326,4424,382"/>
-<area shape="rect" id="node27" href="$_double_selection_dual_action__test_8cc.html" title=" " alt="" coords="4448,326,4631,382"/>
-<area shape="rect" id="node28" href="$_double_selection_dual_action_inv__test_8cc.html" title=" " alt="" coords="4655,326,4837,382"/>
-<area shape="rect" id="node29" href="$_double_selection_dual_action_second__test_8cc.html" title=" " alt="" coords="4861,326,5044,382"/>
-<area shape="rect" id="node30" href="$_double_selection_dual_action_second_inv__test_8cc.html" title=" " alt="" coords="5068,326,5251,382"/>
-<area shape="rect" id="node31" href="$_purify_action__test_8cc.html" title=" " alt="" coords="5275,333,5417,375"/>
-<area shape="rect" id="node32" href="$_random_measure_action__test_8cc.html" title=" " alt="" coords="5441,326,5603,382"/>
-<area shape="rect" id="node33" href="$_swapping_action__test_8cc.html" title=" " alt="" coords="5627,333,5793,375"/>
-<area shape="rect" id="node34" href="$_rule__test_8cc.html" title=" " alt="" coords="5817,341,5979,367"/>
-<area shape="rect" id="node35" href="$_rule_set__test_8cc.html" title=" " alt="" coords="6003,333,6137,375"/>
-<area shape="rect" id="node36" href="$unit__test__main_8cc.html" title=" " alt="" coords="6161,341,6320,367"/>
-<area shape="rect" id="node41" href="$_static_env_8cc.html" title=" " alt="" coords="3877,162,4063,189"/>
-<area shape="rect" id="node42" href="$_util_functions_8cc.html" title=" " alt="" coords="4087,162,4295,189"/>
+<area shape="rect" id="node23" href="$_rule_set__test_8cc.html" title=" " alt="" coords="3728,333,3863,375"/>
+<area shape="rect" id="node24" href="$_rule__test_8cc.html" title=" " alt="" coords="3887,341,4048,367"/>
+<area shape="rect" id="node25" href="$_double_purify_action_inv__test_8cc.html" title=" " alt="" coords="4073,326,4227,382"/>
+<area shape="rect" id="node26" href="$_double_purify_action__test_8cc.html" title=" " alt="" coords="4251,326,4387,382"/>
+<area shape="rect" id="node27" href="$_double_selection_action_inv__test_8cc.html" title=" " alt="" coords="4412,326,4587,382"/>
+<area shape="rect" id="node28" href="$_double_selection_action__test_8cc.html" title=" " alt="" coords="4611,326,4769,382"/>
+<area shape="rect" id="node29" href="$_double_selection_dual_action_inv__test_8cc.html" title=" " alt="" coords="4793,326,4976,382"/>
+<area shape="rect" id="node30" href="$_double_selection_dual_action_second_inv__test_8cc.html" title=" " alt="" coords="5000,326,5183,382"/>
+<area shape="rect" id="node31" href="$_double_selection_dual_action_second__test_8cc.html" title=" " alt="" coords="5207,326,5389,382"/>
+<area shape="rect" id="node32" href="$_double_selection_dual_action__test_8cc.html" title=" " alt="" coords="5413,326,5596,382"/>
+<area shape="rect" id="node33" href="$_purify_action__test_8cc.html" title=" " alt="" coords="5620,333,5763,375"/>
+<area shape="rect" id="node34" href="$_random_measure_action__test_8cc.html" title=" " alt="" coords="5787,326,5948,382"/>
+<area shape="rect" id="node35" href="$_swapping_action__test_8cc.html" title=" " alt="" coords="5972,333,6139,375"/>
+<area shape="rect" id="node36" href="$unit__test__main_8cc.html" title=" " alt="" coords="6163,341,6321,367"/>
+<area shape="rect" id="node41" href="$_static_env_8cc.html" title=" " alt="" coords="3679,162,3866,189"/>
+<area shape="rect" id="node42" href="$_util_functions_8cc.html" title=" " alt="" coords="3890,162,4098,189"/>
 </map>
