@@ -10,6 +10,3 @@
 [submodule "quispr"]
 	path = quispr
 	url = https://github.com/sfc-aqua/quispr
-[submodule "protobuf"]
-	path = protobuf
-	url = https://github.com/protocolbuffers/protobuf.git

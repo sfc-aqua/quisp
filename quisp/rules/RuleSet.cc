@@ -33,8 +33,6 @@ void RuleSet::serialize_json() {
   out.json = ruleset;
 };
 
-void RuleSet::serialize_protobuf() { throw omnetpp::cRuntimeError("Protobuf serialization is not yet implemented"); }
-
 void RuleSet::deserialize(){};
 
 }  // namespace quisp::rules
