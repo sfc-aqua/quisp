@@ -22,7 +22,7 @@ lib: makefile-lib
 msgheaders: checkmakefile
 	$(MAKE) -C quisp msgheaders
 
-format-ci: 
+format-ci:
 	$(MAKE) -C quisp format-ci
 
 format: quisp/Makefile
