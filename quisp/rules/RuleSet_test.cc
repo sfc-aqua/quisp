@@ -65,8 +65,25 @@ TEST(RuleSetTest, metadata_serialize_json) {
                             }]
                           })"_json;
   EXPECT_EQ(ruleset_json, expected_json);
+  // check if the values are initialized
+  EXPECT_EQ(ruleset.ruleset_id, 0);
+  EXPECT_EQ(ruleset.owner_addr, -1);
+  EXPECT_EQ(ruleset.rules.size(), 0);
 }
 
-TEST(RuleSetTest, deserialize) { prepareSimulation(); }
+TEST(RuleSetTest, deserialize_json) {
+  prepareSimulation();
+  RuleSet ruleset(1234, 2);  // ruleset_id, owner_addr
+
+  auto purification = std::make_unique<Rule>();
+  auto rule1 = ruleset.addRule(std::move(purification), {1});  // rule type, partners
+  ruleset.serialize_json();
+
+  // transfer serialized ruleset from HM to RE here.
+  ruleset.deserialize();  // deserialize ruleset and members should be filled in.
+  EXPECT_EQ(ruleset.ruleset_id, 1234);
+  EXPECT_EQ(ruleset.owner_addr, 2);
+  EXPECT_EQ(ruleset.rules.size(), 1);
+}
 
 }  // namespace

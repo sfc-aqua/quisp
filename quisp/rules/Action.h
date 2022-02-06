@@ -23,6 +23,7 @@ enum class PurType : int {
 };
 class Action {
  public:
+  Action() {}  // for deserialization
   Action(int partner_addr, QNIC_type qnic_type, int qnic_id);
   Action(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id) : partner_address(partner_addr), qnic_types(qnic_type), qnic_ids(qnic_id){};
   virtual ~Action() {}
@@ -31,32 +32,41 @@ class Action {
   std::vector<int> qnic_ids;
 
   virtual json serialize_json() = 0;
+  virtual void deserialize_json(json serialized) = 0;
 };
 
 class Purification : public Action {
  public:
+  Purification() {}  // for deserialization
   Purification(PurType purification_type, int partner_addr, QNIC_type qnic_type, int qnic_id);
   PurType purification_type;
   json serialize_json() override;
+  void deserialize_json(json serialized) override;
 };
 
 class EntanglementSwapping : public Action {
  public:
+  EntanglementSwapping() {}  // for deserialization
   EntanglementSwapping(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id);
   json serialize_json() override;
+  void deserialize_json(json serialized) override;
 };
 
 class Wait : public Action {
  public:
+  Wait() {}  // for deserialization
   Wait(int partner_addr, QNIC_type qnic_type, int qnic_id);
   json serialize_json() override;
+  void deserialize_json(json serialized) override;
 };
 
 class Tomography : public Action {
  public:
+  Tomography() {}  // for deserialization
   Tomography(int num_measurement, int partner_addr, QNIC_type qnic_type, int qnic_id);
   int num_measurement;
   json serialize_json() override;
+  void deserialize_json(json serialized) override;
 };
 
 }  // namespace quisp::rules

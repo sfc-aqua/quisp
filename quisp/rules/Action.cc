@@ -21,6 +21,17 @@ json Purification::serialize_json() {
   return purification_json;
 }
 
+void Purification::deserialize_json(json serialized) {
+  auto options = serialized["options"];
+  if (options != nullptr) {
+    // get options one by one
+    purification_type = options["purification_type"].get_to(purification_type);
+    partner_address = options["partner_address"].get_to(partner_address);
+    qnic_types = options["qnic_type"].get_to(qnic_types);
+    qnic_ids = options["qnic_id"].get_to(qnic_ids);
+  }
+}
+
 EntanglementSwapping::EntanglementSwapping(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id) : Action(partner_addr, qnic_type, qnic_id) {}
 
 json EntanglementSwapping::serialize_json() {
@@ -32,6 +43,16 @@ json EntanglementSwapping::serialize_json() {
   return swapping_json;
 }
 
+void EntanglementSwapping::deserialize_json(json serialized) {
+  auto options = serialized["options"];
+  if (options != nullptr) {
+    // get options one by one
+    partner_address = options["partner_address"].get_to(partner_address);
+    qnic_types = options["qnic_type"].get_to(qnic_types);
+    qnic_ids = options["qnic_id"].get_to(qnic_ids);
+  }
+}
+
 Wait::Wait(int partner_addr, QNIC_type qnic_type, int qnic_id) : Action(partner_addr, qnic_type, qnic_id) {}
 
 json Wait::serialize_json() {
@@ -41,6 +62,16 @@ json Wait::serialize_json() {
   wait_json["options"]["qnic_type"] = qnic_types;
   wait_json["options"]["qnic_id"] = qnic_ids;
   return wait_json;
+}
+
+void Wait::deserialize_json(json serialized) {
+  auto options = serialized["options"];
+  if (options != nullptr) {
+    // get options one by one
+    partner_address = options["partner_address"].get_to(partner_address);
+    qnic_types = options["qnic_type"].get_to(qnic_types);
+    qnic_ids = options["qnic_id"].get_to(qnic_ids);
+  }
 }
 
 Tomography::Tomography(int num_measurement, int partner_addr, QNIC_type qnic_type, int qnic_id) : Action(partner_addr, qnic_type, qnic_id), num_measurement(num_measurement) {}
@@ -55,4 +86,14 @@ json Tomography::serialize_json() {
   return tomography_json;
 }
 
+void Tomography::deserialize_json(json serialized) {
+  auto options = serialized["options"];
+  if (options != nullptr) {
+    // get options one by one
+    num_measurement = options["num_measure"].get<int>();
+    partner_address = options["partner_address"].get_to(partner_address);
+    qnic_types = options["qnic_type"].get_to(qnic_types);
+    qnic_ids = options["qnic_id"].get_to(qnic_ids);
+  }
+}
 }  // namespace quisp::rules

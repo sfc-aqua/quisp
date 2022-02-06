@@ -32,4 +32,41 @@ json Rule::serialize_json() {
   return rule_json;
 }
 
+void Rule::deserialize_json(json serialized) {
+  // deserialize rule meta data
+  rule_id = serialized["rule_id"];
+  to = serialized["next_rule_id"];
+  name = serialized["name"];
+  partners = serialized.at("partners").get_to(partners);
+
+  // deserialize actions
+  if (serialized["action"] != nullptr) {  // action found
+    auto serialized_action = serialized.at("action");
+    auto action_name = serialized_action.at("type").get<std::string>();
+    // check which action to be initialized
+    if (action_name == "purification") {
+      auto purification_action = std::make_unique<Purification>();
+      purification_action->deserialize_json(serialized_action);
+    } else if (action_name == "swapping") {
+      auto swapping_action = std::make_unique<EntanglementSwapping>();
+      swapping_action->deserialize_json(serialized_action);
+    } else if (action_name == "wait") {
+      auto wait_action = std::make_unique<Wait>();
+      wait_action->deserialize_json(serialized_action);
+    } else if (action_name == "tomography") {
+      auto tomography_action = std::make_unique<Tomography>();
+      tomography_action->deserialize_json(serialized_action);
+    } else {
+      throw omnetpp::cRuntimeError("No action type found");
+    }
+  }
+
+  // deserialize conditions
+  if (serialized["condition"] != nullptr) {  // condition found
+    // empty condition
+    auto empty_condition = std::make_unique<Condition>();
+    empty_condition->deserialize_json(serialized.at("condition"));
+  }
+}
+
 }  // namespace quisp::rules

@@ -9,6 +9,7 @@ namespace quisp::rules {
 
 class Clause {
  public:
+  Clause() {}
   Clause(int partner_addr, QNIC_type qnic_type, int qnic_id) : partner_address(partner_addr), qnic_type(qnic_type), qnic_id(qnic_id){};
   virtual ~Clause(){};
   std::string name = "";
@@ -16,43 +17,47 @@ class Clause {
   QNIC_type qnic_type;
   int qnic_id;
   virtual json serialize_json() = 0;
-  virtual std::string getName() = 0;
+  virtual void deserialize_json(json serialized) = 0;
 };
 
 class EnoughResourceConditionClause : public Clause {
  public:
+  EnoughResourceConditionClause() {}
   EnoughResourceConditionClause(int num_resources, double required_fidelity, int partner_addr, QNIC_type qnic_type, int qnic_id);
-  std::string name = "enough_resource";
+  const std::string name = "enough_resource";
   int num_resource;
   double required_fidelity;
   json serialize_json() override;
-  std::string getName() override { return name; };
+  void deserialize_json(json serialized) override;
 };
 
 class MeasureCountConditionClause : public Clause {
  public:
+  MeasureCountConditionClause() {}
   MeasureCountConditionClause(int num_measure, int partner_addr, QNIC_type qnic_type, int qnic_id);
-  std::string name = "measure_count";
+  const std::string name = "measure_count";
   int num_measure;
   json serialize_json() override;
-  std::string getName() override { return name; };
+  void deserialize_json(json serialized) override;
 };
 
 class FidelityConditionClause : public Clause {
  public:
+  FidelityConditionClause() {}
   FidelityConditionClause(double required_fidelity, int partner_addr, QNIC_type qnic_type, int qnic_id);
-  std::string name = "fidelity";
+  const std::string name = "fidelity";
   double required_fidelity;
   json serialize_json() override;
-  std::string getName() override { return name; };
+  void deserialize_json(json serialized) override;
 };
 
 class WaitConditionClause : public Clause {
  public:
+  WaitConditionClause() {}
   WaitConditionClause(int partner_addr, QNIC_type qnic_type, int qnic_id);
-  std::string name = "wait";
+  const std::string name = "wait";
   json serialize_json() override;
-  std::string getName() override { return name; };
+  void deserialize_json(json serialized) override;
 };
 
 }  // namespace quisp::rules

@@ -20,8 +20,8 @@ class Rule {
   Rule(){};
   Rule(std::string name) : name(name){};
   unsigned long parent_ruleset_id;
-  unsigned long rule_id;
-  unsigned long to = 0;
+  int rule_id;
+  int to = 0;
   std::string name = "";
   std::vector<int> partners;
   std::unique_ptr<Condition> condition;  ///< Condition includes a set of clauses
@@ -31,6 +31,7 @@ class Rule {
   void setAction(std::unique_ptr<Action> action);
   void setNextRule(unsigned long next_rule_id);
   json serialize_json();
+  void deserialize_json(json serialized);
 };
 
 }  // namespace quisp::rules

@@ -26,6 +26,7 @@ class RuleSet {
   Rule *addRule(std::unique_ptr<Rule> rule, std::vector<int> partners);
   void serialize_json();
   void deserialize();
+  void deserialize_json();
   unsigned long createUniqueId();
 };
 

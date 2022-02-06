@@ -14,5 +14,6 @@ class Condition {
   std::vector<std::unique_ptr<Clause>> clauses;
   void addClause(std::unique_ptr<Clause> clause);
   json serialize_json();
+  void deserialize_json(json serialized);
 };
 }  // namespace quisp::rules

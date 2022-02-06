@@ -1,5 +1,6 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <sys/wait.h>
 #include <test_utils/TestUtils.h>
 #include <memory>
 #include "Action.h"
@@ -21,6 +22,25 @@ TEST(ActionTest, Purification_serialize_json) {
   EXPECT_EQ(purification_json["options"]["qnic_id"][0], 123);
 }
 
+TEST(ActionTest, Purification_deserialize_json) {
+  prepareSimulation();
+  auto serialized = json::parse(R"({
+    "type": "purification",
+    "options": {
+      "purification_type": 3,
+      "partner_address": [1],
+      "qnic_type": [1],
+      "qnic_id": [30]
+      }
+    })");
+  auto empty_purification = std::make_unique<Purification>();
+  empty_purification->deserialize_json(serialized);
+  EXPECT_EQ(empty_purification->purification_type, PurType::DOUBLE_INV);
+  EXPECT_EQ(empty_purification->partner_address.at(0), 1);
+  EXPECT_EQ(empty_purification->qnic_types.at(0), QNIC_R);
+  EXPECT_EQ(empty_purification->qnic_ids.at(0), 30);
+}
+
 TEST(ActionTest, EntanglementSwapping_serialize_json) {
   prepareSimulation();
   // num measure
@@ -38,6 +58,26 @@ TEST(ActionTest, EntanglementSwapping_serialize_json) {
   EXPECT_EQ(swapping_json["options"]["qnic_id"][1], 15);
 }
 
+TEST(ActionTest, EntanglementSwapping_deserialize_json) {
+  prepareSimulation();
+  auto serialized = json::parse(R"({
+    "type": "swapping",
+    "options": {
+      "partner_address": [1, 3],
+      "qnic_type": [1, 2],
+      "qnic_id": [30, 32]
+      }
+    })");
+  auto empty_swapping = std::make_unique<EntanglementSwapping>();
+  empty_swapping->deserialize_json(serialized);
+  EXPECT_EQ(empty_swapping->partner_address.at(0), 1);
+  EXPECT_EQ(empty_swapping->partner_address.at(1), 3);
+  EXPECT_EQ(empty_swapping->qnic_types.at(0), QNIC_R);
+  EXPECT_EQ(empty_swapping->qnic_types.at(1), QNIC_RP);
+  EXPECT_EQ(empty_swapping->qnic_ids.at(0), 30);
+  EXPECT_EQ(empty_swapping->qnic_ids.at(1), 32);
+}
+
 TEST(ActionTest, Wait_serialize_json) {
   prepareSimulation();
   // num measure
@@ -47,6 +87,23 @@ TEST(ActionTest, Wait_serialize_json) {
   EXPECT_EQ(wait_json["options"]["partner_address"][0], 1);
   EXPECT_EQ(wait_json["options"]["qnic_type"][0], 1);
   EXPECT_EQ(wait_json["options"]["qnic_id"][0], 13);
+}
+
+TEST(ActionTest, Wait_deserialize_json) {
+  prepareSimulation();
+  auto serialized = json::parse(R"({
+    "type": "wait",
+    "options": {
+      "partner_address": [1],
+      "qnic_type": [1],
+      "qnic_id": [30]
+      }
+    })");
+  auto empty_wait = std::make_unique<Wait>();
+  empty_wait->deserialize_json(serialized);
+  EXPECT_EQ(empty_wait->partner_address.at(0), 1);
+  EXPECT_EQ(empty_wait->qnic_types.at(0), QNIC_R);
+  EXPECT_EQ(empty_wait->qnic_ids.at(0), 30);
 }
 
 TEST(ActionTest, Tomography_serialize_json) {
@@ -61,4 +118,22 @@ TEST(ActionTest, Tomography_serialize_json) {
   EXPECT_EQ(tomography_json["options"]["qnic_id"][0], 15);
 }
 
+TEST(ActionTest, Tomography_deserialize_json) {
+  prepareSimulation();
+  auto serialized = json::parse(R"({
+    "type": "tomography",
+    "options": {
+      "num_measure": 1000,
+      "partner_address": [1],
+      "qnic_type": [1],
+      "qnic_id": [30]
+      }
+    })");
+  auto empty_wait = std::make_unique<Tomography>();
+  empty_wait->deserialize_json(serialized);
+  EXPECT_EQ(empty_wait->num_measurement, 1000);
+  EXPECT_EQ(empty_wait->partner_address.at(0), 1);
+  EXPECT_EQ(empty_wait->qnic_types.at(0), QNIC_R);
+  EXPECT_EQ(empty_wait->qnic_ids.at(0), 30);
+}
 }  // namespace
