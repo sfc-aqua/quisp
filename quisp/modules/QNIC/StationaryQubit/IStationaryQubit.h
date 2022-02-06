@@ -2,6 +2,7 @@
 
 #include <PhotonicQubit_m.h>
 #include <Eigen/Eigen>
+#include <unordered_set>
 namespace quisp {
 
 namespace types {
@@ -19,8 +20,35 @@ enum class MeasureZResult : int {
 };
 
 enum class EigenvalueResult : int {
-  MINUS_ONE,
   PLUS_ONE,
+  MINUS_ONE,
+};
+
+enum class CliffordOperator : int {
+  Id = 0,
+  X,
+  Y,
+  Z,
+  RX_INV,
+  RX,
+  Z_RX_INV,
+  Z_RX,
+  RY_INV,
+  RY,
+  H,
+  Z_RY,
+  S_INV,
+  S,
+  X_S_INV,
+  X_S,
+  S_INV_RX_INV,
+  S_INV_RX,
+  S_RX_INV,
+  S_RX,
+  S_INV_RY_INV,
+  S_INV_RY,
+  S_RY_INV,
+  S_RY,
 };
 
 }  // namespace types
@@ -162,6 +190,9 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
    * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
    * */
   virtual measurement_outcome measure_density_independent() = 0; /*Separate dm calculation*/
+  virtual types::EigenvalueResult measureX() = 0;
+  virtual types::EigenvalueResult measureY() = 0;
+  virtual types::EigenvalueResult measureZ() = 0;
 
   virtual void CNOT_gate(IStationaryQubit *control_qubit) = 0;
   virtual void Hadamard_gate() = 0;
@@ -169,6 +200,15 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   virtual void X_gate() = 0;
   virtual bool Xpurify(IStationaryQubit *resource_qubit) = 0;
   virtual bool Zpurify(IStationaryQubit *resource_qubit) = 0;
+
+  virtual void cnotGate(IStationaryQubit *control_qubit) = 0;
+  virtual void hadamardGate() = 0;
+  virtual void zGate() = 0;
+  virtual void xGate() = 0;
+  virtual void sGate() = 0;
+  virtual void sdgGate() = 0;
+  virtual void excite() = 0;
+  virtual void relax() = 0;
 
   /*GOD parameters*/
   virtual void setEntangledPartnerInfo(IStationaryQubit *partner) = 0;

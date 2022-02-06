@@ -8,6 +8,7 @@
 #define QUISP_MODULES_StationaryQubit_H_
 
 #include <PhotonicQubit_m.h>
+#include <string>
 #include "IStationaryQubit.h"
 
 namespace quisp {
@@ -26,6 +27,29 @@ namespace modules {
 typedef std::complex<double> Complex;
 
 class StationaryQubit : public IStationaryQubit {
+ protected:
+  std::unordered_set<StationaryQubit *> neighbors;
+  types::CliffordOperator vertex_operator;
+
+  void applyClifford(types::CliffordOperator op);
+  void applyRightClifford(types::CliffordOperator op);
+  bool isNeighbor(StationaryQubit *another_qubit);
+  void addEdge(StationaryQubit *another_qubit);
+  void deleteEdge(StationaryQubit *another_qubit);
+  void toggleEdge(StationaryQubit *another_qubit);
+  void removeAllEdges();
+  void localComplement();
+  void removeVertexOperation(StationaryQubit *qubit_to_avoid);
+  void applyPureCZ(StationaryQubit *another_qubit);
+
+  types::EigenvalueResult graphMeasureZ();
+
+  static std::string decomposition_table[24];
+  static types::CliffordOperator clifford_application_lookup[24][24];
+  static bool controlled_Z_lookup_edge[2][24][24];
+  static types::CliffordOperator controlled_Z_lookup_node_1[2][24][24];
+  static types::CliffordOperator controlled_Z_lookup_node_2[2][24][24];
+
  public:
   void setFree(bool consumed) override;
   /*In use. E.g. waiting for purification result.*/
@@ -67,6 +91,9 @@ class StationaryQubit : public IStationaryQubit {
   virtual types::EigenvalueResult localMeasureY() override;
   virtual types::EigenvalueResult localMeasureZ() override;
 
+  virtual types::EigenvalueResult measureX() override;
+  virtual types::EigenvalueResult measureY() override;
+  virtual types::EigenvalueResult measureZ() override;
   /**
    * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
    * */
@@ -77,6 +104,7 @@ class StationaryQubit : public IStationaryQubit {
    * \brief Two qubit CNOT gate.
    * \param Need to specify the control qubit as an argument.
    */
+  void cnotGate(IStationaryQubit *control_qubit) override;
   void CNOT_gate(IStationaryQubit *control_qubit) override;
 
   /**
@@ -88,6 +116,15 @@ class StationaryQubit : public IStationaryQubit {
   void X_gate() override;
   bool Xpurify(IStationaryQubit *resource_qubit) override;
   bool Zpurify(IStationaryQubit *resource_qubit) override;
+
+  // for graph state backend
+  void hadamardGate() override;
+  void zGate() override;
+  void xGate() override;
+  void sGate() override;
+  void sdgGate() override;
+  void excite() override;
+  void relax() override;
 
   /*GOD parameters*/
   void setEntangledPartnerInfo(IStationaryQubit *partner) override;

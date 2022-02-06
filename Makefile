@@ -19,9 +19,11 @@ exe: makefile-exe
 lib: makefile-lib
 	$(MAKE) -C quisp -j$(nproc)
 
-ci: eigen googletest
-	cd quisp && opp_makemake -f --deep -O out -i ./makefrag -M release --make-so
-	$(MAKE) -C quisp ci -j$(nproc)
+msgheaders: checkmakefile
+	$(MAKE) -C quisp msgheaders
+
+format-ci:
+	$(MAKE) -C quisp format-ci
 
 format: quisp/Makefile
 	$(MAKE) -C quisp format

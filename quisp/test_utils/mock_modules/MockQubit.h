@@ -42,6 +42,20 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(quisp::modules::measurement_outcome, measure_density_independent, (), (override));
   MOCK_METHOD(void, setCompletelyMixedDensityMatrix, (), (override));
   MOCK_METHOD(void, setEntangledPartnerInfo, (IStationaryQubit *), (override));
+
+  MOCK_METHOD(quisp::types::EigenvalueResult, measureX, (), (override));
+  MOCK_METHOD(quisp::types::EigenvalueResult, measureY, (), (override));
+  MOCK_METHOD(quisp::types::EigenvalueResult, measureZ, (), (override));
+
+  MOCK_METHOD(void, cnotGate, (IStationaryQubit * control_qubit), (override));
+  MOCK_METHOD(void, hadamardGate, (), (override));
+  MOCK_METHOD(void, zGate, (), (override));
+  MOCK_METHOD(void, xGate, (), (override));
+  MOCK_METHOD(void, sGate, (), (override));
+  MOCK_METHOD(void, sdgGate, (), (override));
+  MOCK_METHOD(void, excite, (), (override));
+  MOCK_METHOD(void, relax, (), (override));
+
   MockQubit() : IStationaryQubit() { setComponentType(new module_type::TestModuleType("test qubit")); }
   MockQubit(quisp::modules::QNIC_type _type, quisp::modules::QNicIndex _qnic_index) : MockQubit() {
     qnic_type = _type;
@@ -62,22 +76,22 @@ class MockQubit : public IStationaryQubit {
     setParDouble(this, "memory_energy_relaxation_rate", 0.00000198);
     setParDouble(this, "memory_completely_mixed_rate", 0);
 
-    setParDouble(this, "Hgate_error_rate", 1 / 2000);
+    setParDouble(this, "Hgate_error_rate", 1. / 2000);
     setParDouble(this, "Hgate_X_error_ratio", 0);
     setParDouble(this, "Hgate_Z_error_ratio", 0);
     setParDouble(this, "Hgate_Y_error_ratio", 0);
 
-    setParDouble(this, "Xgate_error_rate", 1 / 2000);
+    setParDouble(this, "Xgate_error_rate", 1. / 2000);
     setParDouble(this, "Xgate_X_error_ratio", 0);
     setParDouble(this, "Xgate_Z_error_ratio", 0);
     setParDouble(this, "Xgate_Y_error_ratio", 0);
 
-    setParDouble(this, "Zgate_error_rate", 1 / 2000);
+    setParDouble(this, "Zgate_error_rate", 1. / 2000);
     setParDouble(this, "Zgate_X_error_ratio", 0);
     setParDouble(this, "Zgate_Z_error_ratio", 0);
     setParDouble(this, "Zgate_Y_error_ratio", 0);
 
-    setParDouble(this, "CNOTgate_error_rate", 1 / 2000);
+    setParDouble(this, "CNOTgate_error_rate", 1. / 2000);
     setParDouble(this, "CNOTgate_IX_error_ratio", 1);
     setParDouble(this, "CNOTgate_XI_error_ratio", 1);
     setParDouble(this, "CNOTgate_XX_error_ratio", 1);
