@@ -63,8 +63,7 @@ void RuleSet::deserialize_json() {
   // deserialize rules and push them back
   auto serialized_rules = serialized.at("rules");
   for (auto rule : serialized_rules) {
-    auto deserialized_rule = std::make_unique<Rule>();
-    deserialized_rule->deserialize_json(rule);
+    auto deserialized_rule = std::make_unique<Rule>(rule);
     rules.push_back(std::move(deserialized_rule));
   }
 };

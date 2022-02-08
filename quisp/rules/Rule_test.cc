@@ -35,7 +35,8 @@ TEST(RuleTest, serialize_json_purification_rule) {
   prepareSimulation();
   RuleSet ruleset(1234, 2);
 
-  auto purification = std::make_unique<Rule>("purification");  // name
+  auto purification = std::make_unique<Rule>();
+  purification->setName("purification");
   auto condition = std::make_unique<Condition>();
   // arguments: num_resource, required_fidelity, partner_addr, qnic_type, qnic_id
   auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.85, 1, QNIC_E, 13);
@@ -69,7 +70,7 @@ TEST(RuleTest, serialize_json_purification_rule) {
   EXPECT_EQ(action_json["type"], "purification");
   EXPECT_EQ(action_json["options"]["purification_type"], 4);
   EXPECT_EQ(action_json["options"]["partner_address"][0], 1);
-  EXPECT_EQ(action_json["options"]["qnic_type"][0], 0);
+  EXPECT_EQ(action_json["options"]["qnic_type"][0], "QNIC_E");
   EXPECT_EQ(action_json["options"]["qnic_id"][0], 13);
 }
 
@@ -77,7 +78,8 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   prepareSimulation();
   RuleSet ruleset(1234, 2);
 
-  auto swapping = std::make_unique<Rule>("swapping");  // name
+  auto swapping = std::make_unique<Rule>();
+  swapping->setName("swapping");
   auto condition = std::make_unique<Condition>();
 
   // {partner_addrs}, {qnic_type}, {qnic_id}
@@ -121,7 +123,7 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   EXPECT_EQ(clause1_json["options"]["num_resource"], 1);
   EXPECT_EQ(clause1_json["options"]["required_fidelity"], 0.85);
   EXPECT_EQ(clause1_json["options"]["partner_address"], 1);
-  EXPECT_EQ(clause1_json["options"]["qnic_type"], QNIC_E);
+  EXPECT_EQ(clause1_json["options"]["qnic_type"], "QNIC_E");
   EXPECT_EQ(clause1_json["options"]["qnic_id"], 13);
 
   // second clause: enough resource with partner 3 and fidelity > 0.85
@@ -130,17 +132,17 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   EXPECT_EQ(clause2_json["options"]["num_resource"], 1);
   EXPECT_EQ(clause2_json["options"]["required_fidelity"], 0.85);
   EXPECT_EQ(clause2_json["options"]["partner_address"], 3);
-  EXPECT_EQ(clause2_json["options"]["qnic_type"], QNIC_R);
+  EXPECT_EQ(clause2_json["options"]["qnic_type"], "QNIC_R");
   EXPECT_EQ(clause2_json["options"]["qnic_id"], 15);
 
   // action: entanglement swapping ("swapping")
   auto action_json = swapping_json["action"];
   EXPECT_EQ(action_json["type"], "swapping");
   EXPECT_EQ(action_json["options"]["partner_address"][0], 1);
-  EXPECT_EQ(action_json["options"]["qnic_type"][0], 0);
+  EXPECT_EQ(action_json["options"]["qnic_type"][0], "QNIC_E");
   EXPECT_EQ(action_json["options"]["qnic_id"][0], 13);
   EXPECT_EQ(action_json["options"]["partner_address"][1], 3);
-  EXPECT_EQ(action_json["options"]["qnic_type"][1], 1);
+  EXPECT_EQ(action_json["options"]["qnic_type"][1], "QNIC_R");
   EXPECT_EQ(action_json["options"]["qnic_id"][1], 15);
 }
 
@@ -148,7 +150,8 @@ TEST(RuleTest, deserialize_json_purification_rule) {
   prepareSimulation();
   RuleSet ruleset(1234, 2);
 
-  auto purification = std::make_unique<Rule>("purification");  // name
+  auto purification = std::make_unique<Rule>();
+  purification->setName("purification");
   auto condition = std::make_unique<Condition>();
   // arguments: num_resource, required_fidelity, partner_addr, qnic_type, qnic_id
   auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.85, 1, QNIC_E, 13);

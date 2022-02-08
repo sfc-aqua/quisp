@@ -21,20 +21,16 @@ void Condition::deserialize_json(json serialized) {
       // check clause type
       auto clause_type = clause["type"].get<std::string>();
       if (clause_type == "enough_resource") {
-        auto enough_resource = std::make_unique<EnoughResourceConditionClause>();
-        enough_resource->deserialize_json(clause);
+        auto enough_resource = std::make_unique<EnoughResourceConditionClause>(clause);
         clauses.push_back(std::move(enough_resource));
       } else if (clause_type == "measure_count") {
-        auto measure_count = std::make_unique<MeasureCountConditionClause>();
-        measure_count->deserialize_json(clause);
+        auto measure_count = std::make_unique<MeasureCountConditionClause>(clause);
         clauses.push_back(std::move(measure_count));
       } else if (clause_type == "fidelity") {
-        auto fidelity = std::make_unique<FidelityConditionClause>();
-        fidelity->deserialize_json(clause);
+        auto fidelity = std::make_unique<FidelityConditionClause>(clause);
         clauses.push_back(std::move(fidelity));
       } else if (clause_type == "wait") {
-        auto wait = std::make_unique<WaitConditionClause>();
-        wait->deserialize_json(clause);
+        auto wait = std::make_unique<WaitConditionClause>(clause);
         clauses.push_back(std::move(wait));
       } else {
         throw omnetpp::cRuntimeError("No matching clause found");

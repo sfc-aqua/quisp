@@ -9,7 +9,8 @@ namespace quisp::rules {
 
 class Condition {
  public:
-  Condition(){};
+  Condition() {}
+  Condition(json serialized) { deserialize_json(serialized); }
 
   std::vector<std::unique_ptr<Clause>> clauses;
   void addClause(std::unique_ptr<Clause> clause);

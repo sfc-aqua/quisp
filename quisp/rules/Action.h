@@ -37,7 +37,7 @@ class Action {
 
 class Purification : public Action {
  public:
-  Purification() {}  // for deserialization
+  Purification(json serialized) { deserialize_json(serialized); }  // for deserialization
   Purification(PurType purification_type, int partner_addr, QNIC_type qnic_type, int qnic_id);
   PurType purification_type;
   json serialize_json() override;
@@ -46,7 +46,7 @@ class Purification : public Action {
 
 class EntanglementSwapping : public Action {
  public:
-  EntanglementSwapping() {}  // for deserialization
+  EntanglementSwapping(json serialized) { deserialize_json(serialized); }  // for deserialization
   EntanglementSwapping(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id);
   json serialize_json() override;
   void deserialize_json(json serialized) override;
@@ -54,7 +54,7 @@ class EntanglementSwapping : public Action {
 
 class Wait : public Action {
  public:
-  Wait() {}  // for deserialization
+  Wait(json serialized) { deserialize_json(serialized); }  // for deserialization
   Wait(int partner_addr, QNIC_type qnic_type, int qnic_id);
   json serialize_json() override;
   void deserialize_json(json serialized) override;
@@ -62,7 +62,7 @@ class Wait : public Action {
 
 class Tomography : public Action {
  public:
-  Tomography() {}  // for deserialization
+  Tomography(json serialized) { deserialize_json(serialized); }  // for deserialization
   Tomography(int num_measurement, int partner_addr, QNIC_type qnic_type, int qnic_id);
   int num_measurement;
   json serialize_json() override;

@@ -45,17 +45,13 @@ void Rule::deserialize_json(json serialized) {
     auto action_name = serialized_action.at("type").get<std::string>();
     // check which action to be initialized
     if (action_name == "purification") {
-      auto purification_action = std::make_unique<Purification>();
-      purification_action->deserialize_json(serialized_action);
+      auto purification_action = std::make_unique<Purification>(serialized_action);
     } else if (action_name == "swapping") {
-      auto swapping_action = std::make_unique<EntanglementSwapping>();
-      swapping_action->deserialize_json(serialized_action);
+      auto swapping_action = std::make_unique<EntanglementSwapping>(serialized_action);
     } else if (action_name == "wait") {
-      auto wait_action = std::make_unique<Wait>();
-      wait_action->deserialize_json(serialized_action);
+      auto wait_action = std::make_unique<Wait>(serialized_action);
     } else if (action_name == "tomography") {
-      auto tomography_action = std::make_unique<Tomography>();
-      tomography_action->deserialize_json(serialized_action);
+      auto tomography_action = std::make_unique<Tomography>(serialized_action);
     } else {
       throw omnetpp::cRuntimeError("No action type found");
     }
@@ -64,8 +60,7 @@ void Rule::deserialize_json(json serialized) {
   // deserialize conditions
   if (serialized["condition"] != nullptr) {  // condition found
     // empty condition
-    auto empty_condition = std::make_unique<Condition>();
-    empty_condition->deserialize_json(serialized.at("condition"));
+    auto empty_condition = std::make_unique<Condition>(serialized.at("condition"));
   }
 }
 

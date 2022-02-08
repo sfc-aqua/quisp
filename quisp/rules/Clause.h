@@ -22,7 +22,7 @@ class Clause {
 
 class EnoughResourceConditionClause : public Clause {
  public:
-  EnoughResourceConditionClause() {}
+  EnoughResourceConditionClause(json serialized) { deserialize_json(serialized); }
   EnoughResourceConditionClause(int num_resources, double required_fidelity, int partner_addr, QNIC_type qnic_type, int qnic_id);
   const std::string name = "enough_resource";
   int num_resource;
@@ -33,7 +33,7 @@ class EnoughResourceConditionClause : public Clause {
 
 class MeasureCountConditionClause : public Clause {
  public:
-  MeasureCountConditionClause() {}
+  MeasureCountConditionClause(json serialized) { deserialize_json(serialized); }
   MeasureCountConditionClause(int num_measure, int partner_addr, QNIC_type qnic_type, int qnic_id);
   const std::string name = "measure_count";
   int num_measure;
@@ -43,7 +43,7 @@ class MeasureCountConditionClause : public Clause {
 
 class FidelityConditionClause : public Clause {
  public:
-  FidelityConditionClause() {}
+  FidelityConditionClause(json serialized) { deserialize_json(serialized); }
   FidelityConditionClause(double required_fidelity, int partner_addr, QNIC_type qnic_type, int qnic_id);
   const std::string name = "fidelity";
   double required_fidelity;
@@ -53,7 +53,7 @@ class FidelityConditionClause : public Clause {
 
 class WaitConditionClause : public Clause {
  public:
-  WaitConditionClause() {}
+  WaitConditionClause(json serialized) { deserialize_json(serialized); }
   WaitConditionClause(int partner_addr, QNIC_type qnic_type, int qnic_id);
   const std::string name = "wait";
   json serialize_json() override;
