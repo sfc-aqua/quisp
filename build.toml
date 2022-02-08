@@ -7,7 +7,7 @@ ned-folders = [
 	"./modules"
 ]
 images = [
-	"./images"
+	"./images@quisp/images"
 ]
 ini-file = "./networks/omnetpp.ini"
 project-folder = "./quisp"
