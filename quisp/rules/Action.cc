@@ -25,7 +25,7 @@ void Purification::deserialize_json(json serialized) {
   auto options = serialized["options"];
   if (options != nullptr) {
     // get options one by one
-    purification_type = options["purification_type"].get_to(purification_type);
+    purification_type = options["purification_type"].get<PurType>();
     partner_address = options["partner_address"].get_to(partner_address);
     qnic_types = options["qnic_type"].get_to(qnic_types);
     qnic_ids = options["qnic_id"].get_to(qnic_ids);

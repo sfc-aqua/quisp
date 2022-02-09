@@ -68,7 +68,7 @@ TEST(RuleTest, serialize_json_purification_rule) {
   EXPECT_EQ(clause_json["options"]["qnic_id"], 13);
   auto action_json = purification_json["action"];
   EXPECT_EQ(action_json["type"], "purification");
-  EXPECT_EQ(action_json["options"]["purification_type"], 4);
+  EXPECT_EQ(action_json["options"]["purification_type"], "SSDP_X");
   EXPECT_EQ(action_json["options"]["partner_address"][0], 1);
   EXPECT_EQ(action_json["options"]["qnic_type"][0], "QNIC_E");
   EXPECT_EQ(action_json["options"]["qnic_id"][0], 13);

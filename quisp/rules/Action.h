@@ -7,9 +7,9 @@ using nlohmann::json;
 using quisp::modules::QNIC_type;
 namespace quisp::rules {
 
-enum class PurType : int {
+enum PurType : int {
   SINGLE_X,  ///< Single purification for X error
-  SSIGLE_Z,  ///< Single purification for Z error
+  SINGLE_Z,  ///< Single purification for Z error
   DOUBLE,  ///< Double purification both for X and Z errors
   DOUBLE_INV,  ///< Double inverse purification both for X and Z errors
   SSDP_X,  ///< Single Selection and Double Purification (DoubleSelectionAction) for X error
@@ -21,6 +21,21 @@ enum class PurType : int {
   DSDA_SECOND,  ///< Different type of Double Selection and Dual Action for both X and Z errors
   DSDA_SECOND_INV  ///< Different type of Inverse Double Selection and Dual Action for both X and Z errors
 };
+
+NLOHMANN_JSON_SERIALIZE_ENUM(PurType, {
+                                          {SINGLE_X, "SINGLE_X"},
+                                          {SINGLE_Z, "SINGLE_Z"},
+                                          {DOUBLE, "DOUBLE"},
+                                          {DOUBLE_INV, "DOUBLE_INV"},
+                                          {SSDP_X, "SSDP_X"},
+                                          {SSDP_Z, "SSDP_Z"},
+                                          {SSDP_X_INV, "SSDP_X_INV"},
+                                          {SSDP_Z_INV, "SSDP_Z_INV"},
+                                          {DSDA, "DSDA"},
+                                          {DSDA_INV, "DSDA_INV"},
+                                          {DSDA_SECOND, "DSDA_SECOND"},
+                                          {DSDA_SECOND_INV, "DSDA_SECOND_INV"},
+                                      })
 class Action {
  public:
   Action() {}  // for deserialization

@@ -14,7 +14,7 @@ TEST(ActionTest, Purification_serialize_json) {
   auto purification = std::make_unique<Purification>(PurType::DSDA, 3, QNIC_E, 123);
   json purification_json = purification->serialize_json();
   EXPECT_EQ(purification_json["type"], "purification");
-  EXPECT_EQ(purification_json["options"]["purification_type"], 8);
+  EXPECT_EQ(purification_json["options"]["purification_type"], "DSDA");
   EXPECT_EQ(purification_json["options"]["partner_address"][0], 3);
   EXPECT_EQ(purification_json["options"]["qnic_type"][0], "QNIC_E");
   EXPECT_EQ(purification_json["options"]["qnic_id"][0], 123);
@@ -25,7 +25,7 @@ TEST(ActionTest, Purification_deserialize_json) {
   auto serialized = json::parse(R"({
     "type": "purification",
     "options": {
-      "purification_type": 3,
+      "purification_type": "DOUBLE_INV",
       "partner_address": [1],
       "qnic_type": ["QNIC_R"],
       "qnic_id": [30]
