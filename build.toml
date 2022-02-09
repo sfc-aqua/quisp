@@ -12,3 +12,6 @@ images = [
 ini-file = "./networks/omnetpp.ini"
 project-folder = "./quisp"
 output-folder = "./wasm-out"
+exec-args =  [
+	"--image-path=/quisp/images"
+]
