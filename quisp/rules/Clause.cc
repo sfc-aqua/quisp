@@ -20,11 +20,11 @@ void EnoughResourceConditionClause::deserialize_json(json serialized) {
   auto options = serialized["options"];
   if (options != nullptr) {
     // get options one by one
-    num_resource = options["num_resource"].get<int>();
-    required_fidelity = options["required_fidelity"].get<double>();
-    partner_address = options["partner_address"].get<int>();
-    qnic_type = options["qnic_type"].get_to(qnic_type);
-    qnic_id = options["qnic_id"].get<int>();
+    options["num_resource"].get_to(num_resource);
+    options["required_fidelity"].get_to(required_fidelity);
+    options["partner_address"].get_to(partner_address);
+    options["qnic_type"].get_to(qnic_type);
+    options["qnic_id"].get_to(qnic_id);
   }
 }
 
@@ -45,10 +45,10 @@ void MeasureCountConditionClause::deserialize_json(json serialized) {
   auto options = serialized["options"];
   if (options != nullptr) {
     // get options one by one
-    num_measure = options["num_measure"].get<int>();
-    partner_address = options["partner_address"].get<int>();
-    qnic_type = options["qnic_type"].get_to(qnic_type);
-    qnic_id = options["qnic_id"].get<int>();
+    options["num_measure"].get_to(num_measure);
+    options["partner_address"].get_to(partner_address);
+    options["qnic_type"].get_to(qnic_type);
+    options["qnic_id"].get_to(qnic_id);
   }
 }
 
@@ -69,10 +69,10 @@ void FidelityConditionClause::deserialize_json(json serialized) {
   auto options = serialized["options"];
   if (options != nullptr) {
     // get options one by one
-    required_fidelity = options["required_fidelity"].get<double>();
-    partner_address = options["partner_address"].get<int>();
-    qnic_type = options["qnic_type"].get_to(qnic_type);
-    qnic_id = options["qnic_id"].get<int>();
+    options["required_fidelity"].get_to(required_fidelity);
+    options["partner_address"].get_to(partner_address);
+    options["qnic_type"].get_to(qnic_type);
+    options["qnic_id"].get_to(qnic_id);
   }
 }
 
@@ -81,8 +81,18 @@ WaitConditionClause::WaitConditionClause(int partner_addr, QNIC_type qnic_type, 
 json WaitConditionClause::serialize_json() {
   json wait_json;
   wait_json["type"] = "wait";
+  wait_json["options"]["partner_address"] = partner_address;
+  wait_json["options"]["qnic_type"] = qnic_type;
+  wait_json["options"]["qnic_id"] = qnic_id;
   return wait_json;
 }
 
-void WaitConditionClause::deserialize_json(json serialized) {}
+void WaitConditionClause::deserialize_json(json serialized) {
+  auto options = serialized["options"];
+  if (options != nullptr) {
+    options["partner_address"].get_to(partner_address);
+    options["qnic_type"].get_to(qnic_type);
+    options["qnic_id"].get_to(qnic_id);
+  }
+}
 }  // namespace quisp::rules

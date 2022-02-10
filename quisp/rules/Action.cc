@@ -25,10 +25,10 @@ void Purification::deserialize_json(json serialized) {
   auto options = serialized["options"];
   if (options != nullptr) {
     // get options one by one
-    purification_type = options["purification_type"].get<PurType>();
-    partner_address = options["partner_address"].get_to(partner_address);
-    qnic_types = options["qnic_type"].get_to(qnic_types);
-    qnic_ids = options["qnic_id"].get_to(qnic_ids);
+    options["purification_type"].get_to(purification_type);
+    options["partner_address"].get_to(partner_address);
+    options["qnic_type"].get_to(qnic_types);
+    options["qnic_id"].get_to(qnic_ids);
   }
 }
 
@@ -47,9 +47,9 @@ void EntanglementSwapping::deserialize_json(json serialized) {
   auto options = serialized["options"];
   if (options != nullptr) {
     // get options one by one
-    partner_address = options["partner_address"].get_to(partner_address);
-    qnic_types = options["qnic_type"].get_to(qnic_types);
-    qnic_ids = options["qnic_id"].get_to(qnic_ids);
+    options["partner_address"].get_to(partner_address);
+    options["qnic_type"].get_to(qnic_types);
+    options["qnic_id"].get_to(qnic_ids);
   }
 }
 
@@ -68,9 +68,9 @@ void Wait::deserialize_json(json serialized) {
   auto options = serialized["options"];
   if (options != nullptr) {
     // get options one by one
-    partner_address = options["partner_address"].get_to(partner_address);
-    qnic_types = options["qnic_type"].get_to(qnic_types);
-    qnic_ids = options["qnic_id"].get_to(qnic_ids);
+    options["partner_address"].get_to(partner_address);
+    options["qnic_type"].get_to(qnic_types);
+    options["qnic_id"].get_to(qnic_ids);
   }
 }
 
@@ -90,10 +90,10 @@ void Tomography::deserialize_json(json serialized) {
   auto options = serialized["options"];
   if (options != nullptr) {
     // get options one by one
-    num_measurement = options["num_measure"].get<int>();
-    partner_address = options["partner_address"].get_to(partner_address);
-    qnic_types = options["qnic_type"].get_to(qnic_types);
-    qnic_ids = options["qnic_id"].get_to(qnic_ids);
+    options["num_measure"].get_to(num_measurement);
+    options["partner_address"].get_to(partner_address);
+    options["qnic_type"].get_to(qnic_types);
+    options["qnic_id"].get_to(qnic_ids);
   }
 }
 }  // namespace quisp::rules
