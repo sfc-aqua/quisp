@@ -46,18 +46,40 @@ TEST(RuleSetTest, addRule) {
   EXPECT_EQ(ruleset.rules.at(2)->partners.at(1), 3);
 }
 
-TEST(RuleSetTest, metadata_serialize) {
+TEST(RuleSetTest, metadata_serialize_json) {
   prepareSimulation();
   RuleSet ruleset(1234, 2);  // ruleset_id, owner_addr
   auto purification = std::make_unique<Rule>();
   auto rule1 = ruleset.addRule(std::move(purification), {1});  // rule type, partners
 
-  json serialized = ruleset.serialize();
-  EXPECT_EQ(serialized["ruleset_id"], 1234);
-  EXPECT_EQ(serialized["owner_address"], 2);
-  EXPECT_EQ(serialized["num_rules"], 1);
+  auto ruleset_json = ruleset.serialize_json();
+  json expected_json = R"({"ruleset_id": 1234,
+                           "owner_address": 2,
+                           "num_rules": 1,
+                           "rules": [{
+                             "name": "",
+                             "next_rule_id": 0,
+                             "partners": [1],
+                             "rule_id": 0
+                            }]
+                          })"_json;
+  EXPECT_EQ(ruleset_json, expected_json);
 }
 
-TEST(RuleSetTest, deserialize) { prepareSimulation(); }
+TEST(RuleSetTest, deserialize_json) {
+  prepareSimulation();
+  RuleSet ruleset(1234, 2);  // ruleset_id, owner_addr
+
+  auto purification = std::make_unique<Rule>();
+  auto rule1 = ruleset.addRule(std::move(purification), {1});  // rule type, partners
+  auto serialized = ruleset.serialize_json();
+
+  // transfer serialized ruleset from HM to RE here.
+  RuleSet empty_ruleset(1234, 2);
+  empty_ruleset.deserialize_json(serialized);
+  EXPECT_EQ(empty_ruleset.ruleset_id, 1234);
+  EXPECT_EQ(empty_ruleset.owner_addr, 2);
+  EXPECT_EQ(empty_ruleset.rules.size(), 1);
+}
 
 }  // namespace

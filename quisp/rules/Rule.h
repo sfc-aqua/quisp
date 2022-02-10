@@ -18,11 +18,11 @@ namespace quisp::rules {
 class Rule {
  public:
   Rule(){};
-  Rule(std::string name) : name(name){};
+  Rule(json serialized) { deserialize_json(serialized); };
   unsigned long parent_ruleset_id;
-  unsigned long rule_id;
-  unsigned long to = 0;
-  std::string name = "";
+  int rule_id;
+  int to = 0;
+  std::string name;
   std::vector<int> partners;
   std::unique_ptr<Condition> condition;  ///< Condition includes a set of clauses
   std::unique_ptr<Action> action;
@@ -30,7 +30,9 @@ class Rule {
   void setCondition(std::unique_ptr<Condition> condition);
   void setAction(std::unique_ptr<Action> action);
   void setNextRule(unsigned long next_rule_id);
-  json serialize();
+  void setName(std::string rule_name) { name = rule_name; };
+  json serialize_json();
+  void deserialize_json(json serialized);
 };
 
 }  // namespace quisp::rules
