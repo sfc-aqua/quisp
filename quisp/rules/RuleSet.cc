@@ -40,8 +40,8 @@ void RuleSet::deserialize_json(json serialized) {
   }
 
   // get properties from json with type conversion
-  ruleset_id = serialized.at("ruleset_id").get<unsigned long>();
-  owner_addr = serialized.at("owner_address").get<int>();
+  serialized.at("ruleset_id").get_to(ruleset_id);
+  serialized.at("owner_address").get_to(owner_addr);
 
   // deserialize rules and push them back
   auto serialized_rules = serialized.at("rules");

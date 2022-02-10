@@ -34,10 +34,10 @@ json Rule::serialize_json() {
 
 void Rule::deserialize_json(json serialized) {
   // deserialize rule meta data
-  rule_id = serialized["rule_id"];
-  to = serialized["next_rule_id"];
-  name = serialized["name"];
-  partners = serialized.at("partners").get_to(partners);
+  serialized["rule_id"].get_to(rule_id);
+  serialized["next_rule_id"].get_to(to);
+  serialized["name"].get_to(name);
+  serialized.at("partners").get_to(partners);
 
   // deserialize actions
   if (serialized["action"] != nullptr) {  // action found
