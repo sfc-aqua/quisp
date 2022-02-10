@@ -21,7 +21,7 @@ Rule *RuleSet::addRule(std::unique_ptr<Rule> rule, std::vector<int> partners) {
   return raw_ptr;
 };
 
-void RuleSet::serialize_json() {
+json RuleSet::serialize_json() {
   // inialize json and put metadata
   json ruleset_json;
   ruleset_json["ruleset_id"] = ruleset_id;
@@ -30,27 +30,10 @@ void RuleSet::serialize_json() {
   for (auto &rule : rules) {
     ruleset_json["rules"].push_back(rule->serialize_json());
   }
-  // store serialized ruleset json
-  out.json = ruleset_json;
-
-  // reinitialize member variables
-  ruleset_id = 0;
-  owner_addr = -1;
-  rules.clear();
+  return ruleset_json;
 };
 
-void RuleSet::deserialize() {
-  // check which serialization format
-  if (out.json != nullptr) {
-    // json deserialization
-    deserialize_json();
-  } else {
-    throw omnetpp::cRuntimeError("No serialization found");
-  }
-};
-
-void RuleSet::deserialize_json() {
-  auto serialized = out.json;
+void RuleSet::deserialize_json(json serialized) {
   // if this function is directly called, check if there is json serialization
   if (serialized == nullptr) {
     throw omnetpp::cRuntimeError("No json serialization found");

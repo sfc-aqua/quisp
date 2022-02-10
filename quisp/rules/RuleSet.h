@@ -5,10 +5,6 @@
 
 using json = nlohmann::json;
 namespace quisp::rules {
-
-struct Serialized {
-  json json;
-};
 /**
  * @brief RuleSet class which includes a set of Rule Information
  *
@@ -21,12 +17,10 @@ class RuleSet {
   int owner_addr;  ///< Address of RuleSet owner
   int current_rule_id = 0;
   std::vector<std::unique_ptr<Rule>> rules;
-  Serialized out;
 
   Rule *addRule(std::unique_ptr<Rule> rule, std::vector<int> partners);
-  void serialize_json();
-  void deserialize();
-  void deserialize_json();
+  json serialize_json();
+  void deserialize_json(json serialized);
   unsigned long createUniqueId();
 };
 

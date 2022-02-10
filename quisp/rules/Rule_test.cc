@@ -172,8 +172,7 @@ TEST(RuleTest, deserialize_json_purification_rule) {
   json purification_json = rule1->serialize_json();
 
   // empty rule injected purification rule json
-  auto empty_rule = std::make_unique<Rule>();
-  empty_rule->deserialize_json(purification_json);
+  auto empty_rule = std::make_unique<Rule>(purification_json);
   EXPECT_EQ(empty_rule->rule_id, 0);
   EXPECT_EQ(empty_rule->to, 1);
   EXPECT_EQ(empty_rule->name, "purification");
