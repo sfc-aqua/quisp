@@ -9,7 +9,7 @@ jobs:
         with:
           submodules: true
       - name: wasm build
-        uses: zigen/omnetpp-wasm@v0.6
+        uses: zigen/omnetpp-wasm@v0.8
       - uses: actions/upload-artifact@v2
         with:
           name: wasm-build
