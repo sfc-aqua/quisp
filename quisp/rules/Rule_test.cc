@@ -28,7 +28,7 @@ TEST(RuleTest, setNextRule) {
 
   EXPECT_EQ(rule1->to, rule3->rule_id);
   EXPECT_EQ(rule2->to, rule3->rule_id);
-  EXPECT_EQ(rule3->to, 0);
+  EXPECT_EQ(rule3->to, -1);
 }
 
 TEST(RuleTest, serialize_json_purification_rule) {

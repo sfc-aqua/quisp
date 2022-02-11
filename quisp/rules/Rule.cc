@@ -10,7 +10,7 @@ void Rule::setCondition(std::unique_ptr<Condition> cond) { condition = std::move
 void Rule::setAction(std::unique_ptr<Action> act) { action = std::move(act); }
 
 void Rule::setNextRule(unsigned long next_rule_id) {
-  if (to != 0) {
+  if (to != -1) {
     throw omnetpp::cRuntimeError("next_rule_id has already been set");
   } else {
     to = next_rule_id;

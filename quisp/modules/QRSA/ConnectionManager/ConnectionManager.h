@@ -13,6 +13,7 @@
 using namespace omnetpp;
 using namespace quisp::messages;
 using namespace quisp::rules::active;
+using quisp::rules::PurType;
 
 namespace quisp {
 namespace modules {
@@ -86,6 +87,7 @@ class ConnectionManager : public IConnectionManager {
   // Rule generators
   std::unique_ptr<ActiveRule> purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
                                                unsigned long rule_id);
+  std::unique_ptr<Rule> purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name = "purification");
   std::unique_ptr<ActiveRule> swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id);
   std::unique_ptr<ActiveRule> simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id);
   std::unique_ptr<ActiveRule> waitRule(int partner_address, int next_partner_address, unsigned long ruleset_id, unsigned long rule_id);

@@ -58,7 +58,7 @@ TEST(RuleSetTest, metadata_serialize_json) {
                            "num_rules": 1,
                            "rules": [{
                              "name": "",
-                             "next_rule_id": 0,
+                             "next_rule_id": -1,
                              "partners": [1],
                              "rule_id": 0
                             }]

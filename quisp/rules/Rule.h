@@ -20,8 +20,8 @@ class Rule {
   Rule(){};
   Rule(json serialized) { deserialize_json(serialized); };
   unsigned long parent_ruleset_id;
-  int rule_id;
-  int to = 0;
+  int rule_id = -1;
+  int to = -1;
   std::string name;
   std::vector<int> partners;
   std::unique_ptr<Condition> condition;  ///< Condition includes a set of clauses

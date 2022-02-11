@@ -5,6 +5,7 @@
  */
 
 #include "ConnectionManager.h"
+#include <algorithm>
 #include <iterator>
 #include <memory>
 #include <string>
@@ -916,6 +917,38 @@ std::unique_ptr<ActiveRule> ConnectionManager::purificationRule(int partner_addr
     error("Purification Rule is not successfully generated.");
   }
   return rule_purification;
+}
+
+std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name) {
+  auto purifyRule = std::make_unique<Rule>();
+  purifyRule->setName(name);
+
+  // decide how many Bell pairs are required
+  int num_resource;
+  if (purification_type == PurType::SINGLE_X || PurType::SINGLE_Z) {
+    num_resource = 2;
+  } else if (purification_type == PurType::DOUBLE || purification_type == PurType::DOUBLE_INV || purification_type == PurType::SSDP_X || purification_type == PurType::SSDP_X_INV ||
+             purification_type == PurType::SSDP_Z || purification_type == PurType::SSDP_Z_INV) {
+    num_resource = 3;
+  } else if (purification_type == PurType::DSDA_SECOND || purification_type == PurType::DSDA_SECOND_INV) {
+    num_resource = 4;
+  } else if (purification_type == PurType::DSDA || purification_type == PurType::DSDA_INV) {
+    num_resource = 5;
+  } else {
+    error("unknown purification type");
+  }
+
+  // prepare condition
+  auto condition = std::make_unique<Condition>();
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(num_resource, threshold_fidelity, partner_address, qnic_type, qnic_id);
+  condition->addClause(std::move(enough_resource_clause));
+  purifyRule->setCondition(std::move(condition));
+
+  // prepare action
+  auto purify_action = std::make_unique<Purification>(purification_type, partner_address, qnic_type, qnic_id);
+  purifyRule->setAction(std::move(purify_action));
+
+  return purifyRule;
 }
 
 std::unique_ptr<ActiveRule> ConnectionManager::swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id) {
