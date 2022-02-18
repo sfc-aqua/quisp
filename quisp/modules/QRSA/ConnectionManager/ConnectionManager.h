@@ -88,6 +88,7 @@ class ConnectionManager : public IConnectionManager {
   std::unique_ptr<ActiveRule> purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
                                                unsigned long rule_id);
   std::unique_ptr<Rule> purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name = "purification");
+  std::unique_ptr<Rule> swapRule(std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id, std::string name = "swapping");
   std::unique_ptr<ActiveRule> swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id);
   std::unique_ptr<ActiveRule> simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id);
   std::unique_ptr<ActiveRule> waitRule(int partner_address, int next_partner_address, unsigned long ruleset_id, unsigned long rule_id);

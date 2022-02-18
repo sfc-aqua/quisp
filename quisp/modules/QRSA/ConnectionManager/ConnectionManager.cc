@@ -844,6 +844,56 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
   releaseQnic(inbound_qnic_address);
 }
 
+std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name) {
+  auto purify_rule = std::make_unique<Rule>();
+  purify_rule->setName(name);
+
+  // decide how many Bell pairs are required
+  int num_resource;
+  if (purification_type == PurType::SINGLE_X || PurType::SINGLE_Z) {
+    num_resource = 2;
+  } else if (purification_type == PurType::DOUBLE || purification_type == PurType::DOUBLE_INV || purification_type == PurType::SSDP_X || purification_type == PurType::SSDP_X_INV ||
+             purification_type == PurType::SSDP_Z || purification_type == PurType::SSDP_Z_INV) {
+    num_resource = 3;
+  } else if (purification_type == PurType::DSDA_SECOND || purification_type == PurType::DSDA_SECOND_INV) {
+    num_resource = 4;
+  } else if (purification_type == PurType::DSDA || purification_type == PurType::DSDA_INV) {
+    num_resource = 5;
+  } else {
+    error("unknown purification type");
+  }
+
+  // prepare condition
+  auto condition = std::make_unique<Condition>();
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(num_resource, threshold_fidelity, partner_address, qnic_type, qnic_id);
+  condition->addClause(std::move(enough_resource_clause));
+  purify_rule->setCondition(std::move(condition));
+
+  // prepare action
+  auto purify_action = std::make_unique<Purification>(purification_type, partner_address, qnic_type, qnic_id);
+  purify_rule->setAction(std::move(purify_action));
+
+  return purify_rule;
+}
+
+std::unique_ptr<Rule> ConnectionManager::swapRule(std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id, std::string name){
+  auto swap_rule = std::make_unique<Rule>();
+  swap_rule->setName(name);
+
+  // prepare condition and two enough resource clauses
+  auto condition = std::make_unique<Condition>();
+  auto enough_resource_clause_first = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address.at(0), qnic_type.at(0), qnic_id.at(0));
+  auto enough_resource_clause_second = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address.at(1), qnic_type.at(1), qnic_id.at(1));
+  condition->addClause(std::move(enough_resource_clause_first));
+  condition->addClause(std::move(enough_resource_clause_second));
+  swap_rule->setCondition(std::move(condition));
+
+  // prepare swapping action (partners, qnic_types, qnic_ids)
+  auto swap_action = std::make_unique<EntanglementSwapping>(partner_address, qnic_type, qnic_id);
+  swap_rule->setAction(std::move(swap_action));
+
+  return swap_rule;
+}
 // Rule Generators
 std::unique_ptr<ActiveRule> ConnectionManager::purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index,
                                                                 unsigned long ruleset_id, unsigned long rule_id) {
@@ -919,37 +969,6 @@ std::unique_ptr<ActiveRule> ConnectionManager::purificationRule(int partner_addr
   return rule_purification;
 }
 
-std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name) {
-  auto purifyRule = std::make_unique<Rule>();
-  purifyRule->setName(name);
-
-  // decide how many Bell pairs are required
-  int num_resource;
-  if (purification_type == PurType::SINGLE_X || PurType::SINGLE_Z) {
-    num_resource = 2;
-  } else if (purification_type == PurType::DOUBLE || purification_type == PurType::DOUBLE_INV || purification_type == PurType::SSDP_X || purification_type == PurType::SSDP_X_INV ||
-             purification_type == PurType::SSDP_Z || purification_type == PurType::SSDP_Z_INV) {
-    num_resource = 3;
-  } else if (purification_type == PurType::DSDA_SECOND || purification_type == PurType::DSDA_SECOND_INV) {
-    num_resource = 4;
-  } else if (purification_type == PurType::DSDA || purification_type == PurType::DSDA_INV) {
-    num_resource = 5;
-  } else {
-    error("unknown purification type");
-  }
-
-  // prepare condition
-  auto condition = std::make_unique<Condition>();
-  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(num_resource, threshold_fidelity, partner_address, qnic_type, qnic_id);
-  condition->addClause(std::move(enough_resource_clause));
-  purifyRule->setCondition(std::move(condition));
-
-  // prepare action
-  auto purify_action = std::make_unique<Purification>(purification_type, partner_address, qnic_type, qnic_id);
-  purifyRule->setAction(std::move(purify_action));
-
-  return purifyRule;
-}
 
 std::unique_ptr<ActiveRule> ConnectionManager::swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id) {
   std::vector<int> partners = {conf.left_partner, conf.right_partner};
