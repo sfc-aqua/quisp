@@ -379,8 +379,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
           if (std::max(std::abs(index - lindex), std::abs(index - rindex)) == distance) {
             unsigned long rule_id = createUniqueId();
             // empty rules for left and right nodes and swapping rule for swapper
-            auto empty_rule_left = waitRule(swapper_node, right_partner, ruleset_id, rule_id);
-            auto empty_rule_right = waitRule(swapper_node, left_partner, ruleset_id, rule_id);
+            auto empty_rule_left = waitRule_deplicated(swapper_node, right_partner, ruleset_id, rule_id);
+            auto empty_rule_right = waitRule_deplicated(swapper_node, left_partner, ruleset_id, rule_id);
             auto swapping_rule = swappingRule(config, ruleset_id, rule_id);
             ruleset_map[left_partner]->addRule(std::move(empty_rule_left));
             ruleset_map[right_partner]->addRule(std::move(empty_rule_right));
@@ -432,8 +432,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
             if (std::max(std::abs(index - lindex), std::abs(index - rindex)) == distance) {
               unsigned long rule_id = createUniqueId();
               // empty rules for left and right nodes and swapping rule for swapper
-              auto empty_rule_left = waitRule(swapper_node, right_partner, ruleset_id, rule_id);
-              auto empty_rule_right = waitRule(swapper_node, left_partner, ruleset_id, rule_id);
+              auto empty_rule_left = waitRule_deplicated(swapper_node, right_partner, ruleset_id, rule_id);
+              auto empty_rule_right = waitRule_deplicated(swapper_node, left_partner, ruleset_id, rule_id);
               auto swapping_rule = swappingRule(config, ruleset_id, rule_id);
               ruleset_map[left_partner]->addRule(std::move(empty_rule_left));
               ruleset_map[right_partner]->addRule(std::move(empty_rule_right));
@@ -894,6 +894,23 @@ std::unique_ptr<Rule> ConnectionManager::swapRule(std::vector<int> partner_addre
 
   return swap_rule;
 }
+
+std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, QNIC_type qnic_type, int qnic_id, std::string name){
+  auto wait_rule = std::make_unique<Rule>();
+  wait_rule->setName(name);
+
+  // prepare condition and two enough resource clauses
+  auto condition = std::make_unique<Condition>();
+  auto wait_clause = std::make_unique<WaitConditionClause>(partner_address, qnic_type, qnic_id);
+  condition->addClause(std::move(wait_clause));
+  wait_rule->setCondition(std::move(condition));
+
+  // prepare swapping action (partners, qnic_types, qnic_ids)
+  auto wait_action = std::make_unique<Wait>(partner_address, qnic_type, qnic_id);
+  wait_rule->setAction(std::move(wait_action));
+
+  return wait_rule;
+}
 // Rule Generators
 std::unique_ptr<ActiveRule> ConnectionManager::purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index,
                                                                 unsigned long ruleset_id, unsigned long rule_id) {
@@ -1012,7 +1029,7 @@ std::unique_ptr<ActiveRule> ConnectionManager::simultaneousSwappingRule(Swapping
   return rule_simultaneous_entanglement_swapping;
 }
 
-std::unique_ptr<ActiveRule> ConnectionManager::waitRule(int partner_address, int next_parter_address, unsigned long ruleset_id, unsigned long rule_id) {
+std::unique_ptr<ActiveRule> ConnectionManager::waitRule_deplicated(int partner_address, int next_parter_address, unsigned long ruleset_id, unsigned long rule_id) {
   // This is used for waiting swapping result from partner
   std::vector<int> partners = {partner_address};
   std::string rule_name = "Wait rule with: " + std::to_string(partner_address);

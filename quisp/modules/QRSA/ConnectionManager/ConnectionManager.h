@@ -89,9 +89,10 @@ class ConnectionManager : public IConnectionManager {
                                                unsigned long rule_id);
   std::unique_ptr<Rule> purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name = "purification");
   std::unique_ptr<Rule> swapRule(std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id, std::string name = "swapping");
+  std::unique_ptr<Rule> waitRule(int partner_address, QNIC_type qnic_type, int qnic_id, std::string name = "wait");
   std::unique_ptr<ActiveRule> swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id);
   std::unique_ptr<ActiveRule> simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id);
-  std::unique_ptr<ActiveRule> waitRule(int partner_address, int next_partner_address, unsigned long ruleset_id, unsigned long rule_id);
+  std::unique_ptr<ActiveRule> waitRule_deplicated(int partner_address, int next_partner_address, unsigned long ruleset_id, unsigned long rule_id);
   std::unique_ptr<ActiveRule> tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
                                              unsigned long rule_id);
 
