@@ -462,8 +462,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   auto initiator_qnic = getQnicInterface(initiator_address, responder_address, path, qnics);
   auto responder_qnic = getQnicInterface(responder_address, initiator_address, path, qnics);
   unsigned long rule_id = createUniqueId();
-  auto tomo_rule_initiator = tomographyRule(initiator_address, responder_address, num_measure, initiator_qnic.type, initiator_qnic.index, ruleset_id, rule_id);
-  auto tomo_rule_responder = tomographyRule(responder_address, initiator_address, num_measure, responder_qnic.type, responder_qnic.index, ruleset_id, rule_id);
+  auto tomo_rule_initiator = tomographyRule_deplicated(initiator_address, responder_address, num_measure, initiator_qnic.type, initiator_qnic.index, ruleset_id, rule_id);
+  auto tomo_rule_responder = tomographyRule_deplicated(responder_address, initiator_address, num_measure, responder_qnic.type, responder_qnic.index, ruleset_id, rule_id);
   ruleset_map[initiator_address]->addRule(std::move(tomo_rule_initiator));
   ruleset_map[responder_address]->addRule(std::move(tomo_rule_responder));
 
@@ -876,7 +876,8 @@ std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType
   return purify_rule;
 }
 
-std::unique_ptr<Rule> ConnectionManager::swapRule(std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id, std::string name){
+std::unique_ptr<Rule> ConnectionManager::swapRule(std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id,
+                                                  std::string name) {
   auto swap_rule = std::make_unique<Rule>();
   swap_rule->setName(name);
 
@@ -895,7 +896,7 @@ std::unique_ptr<Rule> ConnectionManager::swapRule(std::vector<int> partner_addre
   return swap_rule;
 }
 
-std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, QNIC_type qnic_type, int qnic_id, std::string name){
+std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, QNIC_type qnic_type, int qnic_id, std::string name) {
   auto wait_rule = std::make_unique<Rule>();
   wait_rule->setName(name);
 
@@ -910,6 +911,23 @@ std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, QNIC_type
   wait_rule->setAction(std::move(wait_action));
 
   return wait_rule;
+}
+
+std::unique_ptr<Rule> ConnectionManager::tomographyRule(int partner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name) {
+  auto tomography_rule = std::make_unique<Rule>();
+  tomography_rule->setName(name);
+
+  // prepare condition
+  auto condition = std::make_unique<Condition>();
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address, qnic_type, qnic_id);
+  condition->addClause(std::move(enough_resource_clause));
+  tomography_rule->setCondition(std::move(condition));
+
+  // prepare action
+  auto tomography_action = std::make_unique<Tomography>(num_measure, partner_address, qnic_type, qnic_id);
+  tomography_rule->setAction(std::move(tomography_action));
+
+  return tomography_rule;
 }
 // Rule Generators
 std::unique_ptr<ActiveRule> ConnectionManager::purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index,
@@ -986,7 +1004,6 @@ std::unique_ptr<ActiveRule> ConnectionManager::purificationRule(int partner_addr
   return rule_purification;
 }
 
-
 std::unique_ptr<ActiveRule> ConnectionManager::swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id) {
   std::vector<int> partners = {conf.left_partner, conf.right_partner};
   std::string rule_name = "Entanglement Swapping with " + std::to_string(conf.left_partner) + " : " + std::to_string(conf.right_partner);
@@ -1042,8 +1059,8 @@ std::unique_ptr<ActiveRule> ConnectionManager::waitRule_deplicated(int partner_a
   return wait_rule;
 }
 
-std::unique_ptr<ActiveRule> ConnectionManager::tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index,
-                                                              unsigned long ruleset_id, unsigned long rule_id) {
+std::unique_ptr<ActiveRule> ConnectionManager::tomographyRule_deplicated(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index,
+                                                                         unsigned long ruleset_id, unsigned long rule_id) {
   std::vector<int> partners = {partner_address};
   auto tomography_rule = std::make_unique<ActiveRule>(ruleset_id, rule_id, "tomography", partners);
   ActiveCondition *condition = new ActiveCondition();

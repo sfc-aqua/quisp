@@ -27,8 +27,8 @@ class ConnectionManager : public quisp::modules::ConnectionManager {
   using quisp::modules::ConnectionManager::par;
   using quisp::modules::ConnectionManager::purifyRule;
   using quisp::modules::ConnectionManager::swapRule;
-  using quisp::modules::ConnectionManager::waitRule;
   using quisp::modules::ConnectionManager::tomographyRule;
+  using quisp::modules::ConnectionManager::waitRule;
 
   ConnectionManager() : quisp::modules::ConnectionManager() {
     setParInt(this, "address", 123);
@@ -173,6 +173,53 @@ TEST(ConnectionManagerRuleSetTest, waitRule) {
 					"action": {
 						"type": "wait",
 						"options": {
+							"partner_address": [1],
+							"qnic_type": ["QNIC_E"],
+							"qnic_id": [4]
+							}
+						}
+					})"_json;
+  EXPECT_EQ(serialized, expected);
+}
+
+TEST(ConnectionManagerRuleSetTest, tomographyRule) {
+  prepareSimulation();
+  ConnectionManager connection_manager;
+
+  // rule arguments
+  int partner_addr = 1;
+  QNIC_type qnic_type = QNIC_E;
+  int qnic_id = 4;
+  int num_measurement = 5000;
+  double threshold_fidelity = 0;
+
+  auto tomography_rule = connection_manager.tomographyRule(partner_addr, num_measurement, threshold_fidelity, qnic_type, qnic_id);
+  EXPECT_EQ(tomography_rule->rule_id, -1);
+  EXPECT_EQ(tomography_rule->name, "tomography");
+
+  auto serialized = tomography_rule->serialize_json();
+  //  rule_id is given by RuleSet and next_rule_id is given outside of Rule decration.
+  json expected = R"({
+          "rule_id": -1,
+					"next_rule_id": -1,
+					"name": "tomography",
+					"partners": [],
+					"condition": {
+						"clauses": [{
+							"type": "enough_resource",
+							"options": {
+								"num_resource": 1,
+								"required_fidelity": 0.0,
+								"partner_address": 1,
+								"qnic_type": "QNIC_E",
+								"qnic_id": 4
+								}
+							}]
+						},
+					"action": {
+						"type": "tomography",
+						"options": {
+              "num_measure": 5000,
 							"partner_address": [1],
 							"qnic_type": ["QNIC_E"],
 							"qnic_id": [4]
