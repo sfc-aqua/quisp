@@ -69,7 +69,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 
     if (actual_dst == my_address) {
       // got ConnectionSetupRequest and return the response
-      respondToRequest(req);
+      respondToRequest_deprecated(req);
       delete msg;
     } else if (actual_src == my_address) {
       // initiator node
@@ -195,6 +195,9 @@ void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
     send(packet, "RouterPort$o");
   }
 }
+// void ConnectionManager::respondRequest(ConnectionSetupRequest *req) {
+
+// }
 
 /**
  * This function is called to handle the ConnectionSetupRequest at the responder.
@@ -210,7 +213,7 @@ void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
  * 3. return ConnectionSetupResponse to each node in this connection.
  * \endverbatim
  */
-void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
+void ConnectionManager::respondToRequest_deprecated(ConnectionSetupRequest *req) {
   // Taking qnic information of responder node.
   int actual_dst = req->getActual_destAddr();
   int actual_src = req->getActual_srcAddr();  // initiator address (to get input qnic)
@@ -379,8 +382,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
           if (std::max(std::abs(index - lindex), std::abs(index - rindex)) == distance) {
             unsigned long rule_id = createUniqueId();
             // empty rules for left and right nodes and swapping rule for swapper
-            auto empty_rule_left = waitRule_deplicated(swapper_node, right_partner, ruleset_id, rule_id);
-            auto empty_rule_right = waitRule_deplicated(swapper_node, left_partner, ruleset_id, rule_id);
+            auto empty_rule_left = waitRule_deprecated(swapper_node, right_partner, ruleset_id, rule_id);
+            auto empty_rule_right = waitRule_deprecated(swapper_node, left_partner, ruleset_id, rule_id);
             auto swapping_rule = swappingRule(config, ruleset_id, rule_id);
             ruleset_map[left_partner]->addRule(std::move(empty_rule_left));
             ruleset_map[right_partner]->addRule(std::move(empty_rule_right));
@@ -432,8 +435,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
             if (std::max(std::abs(index - lindex), std::abs(index - rindex)) == distance) {
               unsigned long rule_id = createUniqueId();
               // empty rules for left and right nodes and swapping rule for swapper
-              auto empty_rule_left = waitRule_deplicated(swapper_node, right_partner, ruleset_id, rule_id);
-              auto empty_rule_right = waitRule_deplicated(swapper_node, left_partner, ruleset_id, rule_id);
+              auto empty_rule_left = waitRule_deprecated(swapper_node, right_partner, ruleset_id, rule_id);
+              auto empty_rule_right = waitRule_deprecated(swapper_node, left_partner, ruleset_id, rule_id);
               auto swapping_rule = swappingRule(config, ruleset_id, rule_id);
               ruleset_map[left_partner]->addRule(std::move(empty_rule_left));
               ruleset_map[right_partner]->addRule(std::move(empty_rule_right));
@@ -462,8 +465,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   auto initiator_qnic = getQnicInterface(initiator_address, responder_address, path, qnics);
   auto responder_qnic = getQnicInterface(responder_address, initiator_address, path, qnics);
   unsigned long rule_id = createUniqueId();
-  auto tomo_rule_initiator = tomographyRule_deplicated(initiator_address, responder_address, num_measure, initiator_qnic.type, initiator_qnic.index, ruleset_id, rule_id);
-  auto tomo_rule_responder = tomographyRule_deplicated(responder_address, initiator_address, num_measure, responder_qnic.type, responder_qnic.index, ruleset_id, rule_id);
+  auto tomo_rule_initiator = tomographyRule_deprecated(initiator_address, responder_address, num_measure, initiator_qnic.type, initiator_qnic.index, ruleset_id, rule_id);
+  auto tomo_rule_responder = tomographyRule_deprecated(responder_address, initiator_address, num_measure, responder_qnic.type, responder_qnic.index, ruleset_id, rule_id);
   ruleset_map[initiator_address]->addRule(std::move(tomo_rule_initiator));
   ruleset_map[responder_address]->addRule(std::move(tomo_rule_responder));
 
@@ -1046,7 +1049,7 @@ std::unique_ptr<ActiveRule> ConnectionManager::simultaneousSwappingRule(Swapping
   return rule_simultaneous_entanglement_swapping;
 }
 
-std::unique_ptr<ActiveRule> ConnectionManager::waitRule_deplicated(int partner_address, int next_parter_address, unsigned long ruleset_id, unsigned long rule_id) {
+std::unique_ptr<ActiveRule> ConnectionManager::waitRule_deprecated(int partner_address, int next_parter_address, unsigned long ruleset_id, unsigned long rule_id) {
   // This is used for waiting swapping result from partner
   std::vector<int> partners = {partner_address};
   std::string rule_name = "Wait rule with: " + std::to_string(partner_address);
@@ -1059,7 +1062,7 @@ std::unique_ptr<ActiveRule> ConnectionManager::waitRule_deplicated(int partner_a
   return wait_rule;
 }
 
-std::unique_ptr<ActiveRule> ConnectionManager::tomographyRule_deplicated(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index,
+std::unique_ptr<ActiveRule> ConnectionManager::tomographyRule_deprecated(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index,
                                                                          unsigned long ruleset_id, unsigned long rule_id) {
   std::vector<int> partners = {partner_address};
   auto tomography_rule = std::make_unique<ActiveRule>(ruleset_id, rule_id, "tomography", partners);

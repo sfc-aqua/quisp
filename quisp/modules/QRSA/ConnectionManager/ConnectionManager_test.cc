@@ -69,7 +69,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
 class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
  public:
   using quisp::modules::ConnectionManager::par;
-  using quisp::modules::ConnectionManager::respondToRequest;
+  using quisp::modules::ConnectionManager::respondToRequest_deprecated;
   ConnectionManagerTestTarget(IRoutingDaemon *routing_daemon, IHardwareMonitor *hardware_monitor)
       : quisp::modules::ConnectionManager(), toRouterGate(new TestGate(this, "RouterPort$o")) {
     setParInt(this, "address", 123);
@@ -142,7 +142,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(106)).Times(1).WillOnce(Return(ByMove(std::unique_ptr<ConnectionSetupInfo>(src_info))));
 
   sim->setContext(connection_manager);
-  connection_manager->respondToRequest(req);
+  connection_manager->respondToRequest_deprecated(req);
   auto gate = connection_manager->toRouterGate;
   EXPECT_EQ(gate->messages.size(), 4);
 
@@ -793,7 +793,7 @@ TEST(ConnectionManagerTest, RespondToRequestExtend) {
   EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(116)).Times(1).WillOnce(Return(ByMove(std::unique_ptr<ConnectionSetupInfo>(src_info))));
 
   sim->setContext(connection_manager);
-  connection_manager->respondToRequest(req);
+  connection_manager->respondToRequest_deprecated(req);
   auto gate = connection_manager->toRouterGate;
   // 9 rulesets must be prepared
   EXPECT_EQ(gate->messages.size(), 9);
