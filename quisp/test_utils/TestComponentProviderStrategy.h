@@ -1,5 +1,6 @@
 #pragma once
 
+#include <backends/Backends.h>
 #include <modules/QNIC.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>
@@ -9,6 +10,7 @@
 namespace quisp_test {
 namespace strategy {
 
+using quisp::backends::IQuantumBackend;
 using quisp::modules::IHardwareMonitor;
 using quisp::modules::IRealTimeController;
 using quisp::modules::IRoutingDaemon;
@@ -38,6 +40,7 @@ class TestComponentProviderStrategy : public IComponentProviderStrategy {
   virtual IRoutingDaemon *getRoutingDaemon() override { return nullptr; };
   virtual IHardwareMonitor *getHardwareMonitor() override { return nullptr; };
   virtual IRealTimeController *getRealTimeController() override { return nullptr; };
+  virtual IQuantumBackend *getQuantumBackend() override { return nullptr; };
   std::vector<QNicSpec> qnic_specs;
   virtual int getNumQubits(int qnic_index, QNIC_type qnic_type) override {
     for (auto spec : qnic_specs) {

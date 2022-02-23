@@ -1,6 +1,7 @@
 #ifndef QUISP_UTILS_H_
 #define QUISP_UTILS_H_
 
+#include <modules/Backend/Backend.h>
 #include <modules/QNIC.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
@@ -18,6 +19,8 @@ using modules::IStationaryQubit;
 using modules::QNIC_N;
 using modules::QNIC_names;
 using modules::QNIC_type;
+using modules::backend::BackendContainer;
+using modules::backend::IQuantumBackend;
 using omnetpp::cModule;
 
 }  // namespace utils

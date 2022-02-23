@@ -4,7 +4,9 @@ import ned.DatarateChannel;
 import ned.IdealChannel;
 
 import modules.*;
+import modules.Backend.Backend;
 import channels.*;
+
 
 network Tomography_Linear_One_MM_MIM
 {
@@ -12,6 +14,7 @@ network Tomography_Linear_One_MM_MIM
         **.Speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
+        backend: Backend {}
         EndNode[2]: QNode {
             address = index;
             nodeType = "EndNode";

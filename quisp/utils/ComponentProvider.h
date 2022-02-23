@@ -34,6 +34,7 @@ class ComponentProvider {
   IRoutingDaemon *getRoutingDaemon();
   IHardwareMonitor *getHardwareMonitor();
   IRealTimeController *getRealTimeController();
+  IQuantumBackend *getQuantumBackend();
 
   // when a this class instantiated, a strategy class instantiation may fail because
   // the strategy class may depend on other modules instantiated by OMNeT++'s NED file.

@@ -21,6 +21,7 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
   IRoutingDaemon *getRoutingDaemon() override;
   IHardwareMonitor *getHardwareMonitor() override;
   IRealTimeController *getRealTimeController() override;
+  IQuantumBackend *getQuantumBackend() override;
 
  private:
   const cModuleType *const QNodeType = cModuleType::get("modules.QNode");
