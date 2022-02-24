@@ -18,6 +18,8 @@ namespace quisp::rules {
 class Rule {
  public:
   Rule(){};
+  Rule(int partner_address) { partners.push_back(partner_address); };
+  Rule(std::vector<int> partner_addresses) : partners(partner_addresses){};
   Rule(json serialized) { deserialize_json(serialized); };
   unsigned long parent_ruleset_id;
   int rule_id = -1;
@@ -29,7 +31,7 @@ class Rule {
 
   void setCondition(std::unique_ptr<Condition> condition);
   void setAction(std::unique_ptr<Action> action);
-  void setNextRule(unsigned long next_rule_id);
+  void setNextRule(int next_rule_id);
   void setName(std::string rule_name) { name = rule_name; };
   json serialize_json();
   void deserialize_json(json serialized);

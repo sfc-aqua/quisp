@@ -9,10 +9,7 @@ using json = nlohmann::json;
 namespace quisp::rules {
 RuleSet::RuleSet(unsigned long ruleset_id, int owner_address) : ruleset_id(ruleset_id), owner_addr(owner_address) {}
 
-Rule *RuleSet::addRule(std::unique_ptr<Rule> rule, std::vector<int> partners) {
-  for (int partner : partners) {
-    rule->partners.push_back(partner);
-  }
+Rule *RuleSet::addRule(std::unique_ptr<Rule> rule) {
   rule->rule_id = current_rule_id;
   current_rule_id++;
   rule->parent_ruleset_id = ruleset_id;

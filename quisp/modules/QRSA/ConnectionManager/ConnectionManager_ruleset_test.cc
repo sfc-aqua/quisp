@@ -59,7 +59,7 @@ TEST(ConnectionManagerRuleSetTest, PurificationRule) {
 	  				"rule_id": -1,
 					"next_rule_id": -1,
 					"name": "purification",
-					"partners": [],
+					"partners": [1],
 					"condition": {
 						"clauses": [{
 							"type": "enough_resource",
@@ -105,7 +105,7 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
           "rule_id": -1,
 					"next_rule_id": -1,
 					"name": "swapping",
-					"partners": [],
+					"partners": [1, 3],
 					"condition": {
 						"clauses": [{
 							"type": "enough_resource",
@@ -159,7 +159,7 @@ TEST(ConnectionManagerRuleSetTest, waitRule) {
           "rule_id": -1,
 					"next_rule_id": -1,
 					"name": "wait",
-					"partners": [],
+					"partners": [1],
 					"condition": {
 						"clauses": [{
 							"type": "wait",
@@ -203,7 +203,7 @@ TEST(ConnectionManagerRuleSetTest, tomographyRule) {
           "rule_id": -1,
 					"next_rule_id": -1,
 					"name": "tomography",
-					"partners": [],
+					"partners": [1],
 					"condition": {
 						"clauses": [{
 							"type": "enough_resource",

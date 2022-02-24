@@ -56,6 +56,9 @@ class ConnectionManager : public IConnectionManager {
   bool simultaneous_es_enabled;
   bool es_with_purify;
   int num_remote_purification;
+  std::string pur_type;
+  double threshold_fidelity;
+  PurType purification_type;
   IRoutingDaemon *routing_daemon;
   IHardwareMonitor *hardware_monitor;
 
@@ -63,6 +66,7 @@ class ConnectionManager : public IConnectionManager {
   void handleMessage(cMessage *msg) override;
   void finish() override;
 
+  void respondToRequest(ConnectionSetupRequest *pk);
   void respondToRequest_deprecated(ConnectionSetupRequest *pk);
   void tryRelayRequestToNextHop(ConnectionSetupRequest *pk);
 

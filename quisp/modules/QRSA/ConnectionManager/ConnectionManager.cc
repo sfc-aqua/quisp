@@ -15,6 +15,7 @@
 
 using namespace omnetpp;
 using namespace quisp::messages;
+using namespace quisp::rules;
 using namespace quisp::rules::active;
 
 namespace quisp {
@@ -31,9 +32,36 @@ void ConnectionManager::initialize() {
   simultaneous_es_enabled = par("simultaneous_es_enabled");
   es_with_purify = par("entanglement_swapping_with_purification");
   num_remote_purification = par("num_remote_purification");
+  pur_type = par("purification_type_cm").str();
+  threshold_fidelity = par("threshold_fidelity");
 
   if (simultaneous_es_enabled && es_with_purify) {
     error("Currently, simultaneous entanglement swapping cannot be simulated with purification");
+  }
+  if (pur_type == "SINGLE_X") {
+    purification_type = PurType::SINGLE_X;
+  } else if (pur_type == "SINGLE_Z") {
+    purification_type = PurType::SINGLE_Z;
+  } else if (pur_type == "DOUBLE") {
+    purification_type = PurType::DOUBLE;
+  } else if (pur_type == "DOUBLE_INV") {
+    purification_type = PurType::DOUBLE_INV;
+  } else if (pur_type == "SSDP_X") {
+    purification_type = PurType::SSDP_X;
+  } else if (pur_type == "SSDP_Z") {
+    purification_type = PurType::SSDP_Z;
+  } else if (pur_type == "SSDP_X_INV") {
+    purification_type = PurType::SSDP_X_INV;
+  } else if (pur_type == "SSDP_Z_INV") {
+    purification_type = PurType::SSDP_Z_INV;
+  } else if (pur_type == "DSDA") {
+    purification_type = PurType::DSDA;
+  } else if (pur_type == "DSDA_INV") {
+    purification_type = PurType::DSDA_INV;
+  } else if (pur_type == "DSDA_SECOND") {
+    purification_type = PurType::DSDA_SECOND;
+  } else if (pur_type == "DSDA_SECOND_INV") {
+    purification_type = PurType::DSDA_SECOND_INV;
   }
 
   for (int i = 0; i < num_of_qnics; i++) {
@@ -160,7 +188,7 @@ void ConnectionManager::storeRuleSet(ConnectionSetupResponse *pk) {
   pk_internal->setSrcAddr(pk->getDestAddr());
   pk_internal->setKind(4);
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
-  pk_internal->setRuleSet(const_cast<ActiveRuleSet *>(pk->getRuleSet()));
+  pk_internal->setActiveRuleSet(const_cast<ActiveRuleSet *>(pk->getActiveRuleSet()));
   send(pk_internal, "RouterPort$o");
 }
 
@@ -176,7 +204,7 @@ void ConnectionManager::storeRuleSetForApplication(ConnectionSetupResponse *pk) 
   pk_internal->setSrcAddr(pk->getDestAddr());  // Should be original Src here?
   pk_internal->setKind(4);
   pk_internal->setRuleSet_id(pk->getRuleSet_id());
-  pk_internal->setRuleSet(const_cast<ActiveRuleSet *>(pk->getRuleSet()));
+  pk_internal->setActiveRuleSet(const_cast<ActiveRuleSet *>(pk->getActiveRuleSet()));
   pk_internal->setApplication_type(pk->getApplication_type());
   send(pk_internal, "RouterPort$o");
 }
@@ -195,9 +223,253 @@ void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
     send(packet, "RouterPort$o");
   }
 }
-// void ConnectionManager::respondRequest(ConnectionSetupRequest *req) {
 
-// }
+/**
+ * This function is called to handle the ConnectionSetupRequest at the responder.
+ * This is where much of the work happens, and there is the potential for new value
+ * if you have a better way to do this.
+ * \param pk pointer to the ConnectionSetupRequest packet itself
+ * \returns nothing
+ *
+ * The procedure:
+ * \verbatim
+ * 1. figure out swapping order & partners by calling EntanglementSwappingConfig
+ * 2. generate all the RuleSets by calling generateEntanglementSwappingRuleSet
+ * 3. return ConnectionSetupResponse to each node in this connection.
+ * \endverbatim
+ */
+void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
+  // 0. This function is only called in the reponder node.
+
+  // 1. get address and interface info
+  // 1.1 get initiator and responder info
+  int responder_addr = req->getActual_destAddr();
+  int initiator_addr = req->getActual_srcAddr();
+  if (responder_addr != my_address) {
+    error("The only node that can repond to the request is the end node");
+  }
+
+  // 1.2 get qnic interface infomation
+  int local_qnic_address_to_actual_dst = routing_daemon->return_QNIC_address_to_destAddr(responder_addr);  // This must be -1 (not found) because not interface to itself
+  int local_qnic_address_to_actual_src = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);  // interface toward to the initiator node
+  if (local_qnic_address_to_actual_dst != -1 || local_qnic_address_to_actual_src == -1) {
+    error("Unknown interface to the end node itself found or no interface found to source node. Something wrong with routing.");
+  }
+
+  // 1.3 destination and source information
+  auto dst_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
+  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
+  if (src_info == nullptr) {
+    error("source info not found");
+  }
+
+  // 1.4 check if the qnics are reserved or not
+  if (isQnicBusy(src_info->qnic.address) || isQnicBusy(dst_info->qnic.address)) {
+    rejectRequest(req);
+    return;
+  }
+
+  // 1.5 get path infomation from initiator to responder
+  int hop_count = req->getStack_of_QNodeIndexesArraySize();  // the number of nodes in between
+  std::vector<int> path;  // vector to store node addresses
+  for (int i = 0; i < hop_count; i++) {
+    path.push_back(req->getStack_of_QNodeIndexes(i));
+  }
+  path.push_back(my_address);  // path includes responder address
+
+  // 1.6 calculate swapping partners based on the path information
+  int divisions = computePathDivisionSize(hop_count);
+  int *link_left = new int[divisions], *link_right = new int[divisions], *swapper = new int[divisions];
+  // fillPathDivision should yield *exactly* the anticipated number of divisions.
+  if (fillPathDivision(path, 0, hop_count, link_left, link_right, swapper, 0) < divisions) {
+    error("Something went wrong in path division computation.");
+  }
+  // table of swapping partners {swapper address: [its swapping partners]..}
+  std::map<int, std::vector<int>> swapping_partner_table;
+  for (int i = 0; i < divisions; i++) {
+    std::vector<int> partners;
+    if (swapper[i] > 0) {
+      partners.push_back(link_left[i]);
+      partners.push_back(link_right[i]);
+      swapping_partner_table.insert(std::make_pair(swapper[i], partners));
+    }
+  }
+
+  // 1.7 get qnic info one by one
+  QNIC_pair_info pair_info = {.fst = src_info->qnic, .snd = dst_info->qnic};
+  int qnic_array_size = req->getStack_of_QNICsArraySize();
+  req->setStack_of_QNICsArraySize(qnic_array_size + 1);
+  req->setStack_of_QNICs(qnic_array_size, pair_info);
+  std::vector<QNIC_pair_info> qnics = {};
+  QNIC_pair_info qnic_pairs;  // qnic pairs information
+  for (int i = 0; i < qnic_array_size + 1; i++) {
+    qnic_pairs = req->getStack_of_QNICs(i);
+    qnics.push_back(qnic_pairs);
+  }
+  // (-1) - [initiator] --- ... --- [responder] - (-1)
+  if (qnics.at(0).fst.index != -1 || qnics.at(qnics.size() - 1).snd.index != -1) {
+    error("Qnic index of initiator and responder must be -1 in current scheme. ");
+  }
+
+  // 2. RuleSet generation
+  // 2.0 Initialize empty RuleSet
+  // store rule as a map and vector
+  /* {node1_addr, {rule1, rule2, ...}}
+   * {node2_addr, {rule1, rule2, ...}}
+   * ...
+   */
+  std::map<int, std::vector<std::unique_ptr<Rule>>> rules_array;
+  auto rev_path = path;
+  std::reverse(rev_path.begin(), rev_path.end());  // reversed path
+
+  // 2.1 Add rules one by one
+  if (es_with_purify) {
+    // 2.2.1 purification required
+    for (int i = 1; i < path.size(); i++) {
+      int left_node = path.at(i - 1), right_node = path.at(i);
+      auto left_qnic = getQnicInterface(left_node, right_node, path, qnics);
+      auto right_qnic = getQnicInterface(right_node, left_node, path, qnics);
+      // arguments: int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name
+      for (int i = 0; i < num_remote_purification; i++) {
+        auto pur_rule_left = purifyRule(right_node, purification_type, threshold_fidelity, left_qnic.type, left_qnic.index);
+        auto pur_rule_right = purifyRule(left_node, purification_type, threshold_fidelity, right_qnic.type, right_qnic.index);
+        std::vector<int> left_partner = {right_node}, right_partner = {left_node};
+        rules_array[left_node].push_back(std::move(pur_rule_left));  // add rule with partner info
+        rules_array[right_node].push_back(std::move(pur_rule_right));  // add rule with partner info
+      }
+    }
+    // 2.2.2 alternate EntanglementSwapping and Purification from one hop entanglement to multihop entanglement
+    for (int distance = 1; distance < path.size() / 2 + 1; distance++) {
+      // 2.2.3 Entanglement Swapping
+      for (int i = 1; i < (path.size() + 1) / 2; i++) {
+        std::vector<int> swapper_nodes;
+        if (rev_path.at(i) != path.at(i)) {
+          swapper_nodes = {rev_path.at(i), path.at(i)};
+        } else {
+          swapper_nodes = {path.at(i)};
+        }
+        // 2.2.4 iterate swapper nodes
+        for (int swapper_node : swapper_nodes) {
+          auto config = generateSwappingConfig(swapper_node, path, swapping_partner_table, qnics, 0);
+          int left_partner = config.left_partner, right_partner = config.right_partner;
+          // check if the distance of swapping is the same as the target distance
+          auto swapper_it = std::find(path.begin(), path.end(), swapper_node);
+          auto left_it = std::find(path.begin(), path.end(), left_partner);
+          auto right_it = std::find(path.begin(), path.end(), right_partner);
+          int index = 0, lindex = 0, rindex = 0;
+          if (swapper_it != path.end() && left_it != path.end() && right_it != path.end()) {
+            index = swapper_it - path.begin();
+            lindex = left_it - path.begin();
+            rindex = right_it - path.begin();
+          } else {
+            error("swapper and partner indices are not found in the path. Should not happen.");
+          }
+          if (std::max(std::abs(index - lindex), std::abs(index - rindex)) == distance) {
+            // 2.2.5 Swapping Rules
+            // waitRule: int partner_address, QNIC_type qnic_type, int qnic_id, std::string name
+            auto empty_rule_left = waitRule(swapper_node, config.lqnic_type, config.lqnic_index);
+            auto empty_rule_right = waitRule(swapper_node, config.rqnic_type, config.rqnic_index);
+            // std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id,std::string name
+            auto swapping_rule = swapRule(swapping_partner_table[swapper_node], threshold_fidelity, {config.self_left_qnic_type, config.self_right_qnic_type},
+                                          {config.self_left_qnic_index, config.self_right_qnic_index});
+            rules_array[left_partner].push_back(std::move(empty_rule_left));
+            rules_array[right_partner].push_back(std::move(empty_rule_right));
+            rules_array[swapper_node].push_back(std::move(swapping_rule));
+
+            // 2.2.6 Purification Rules
+            for (int i = 0; i < num_remote_purification; i++) {
+              auto pur_rule_left = purifyRule(right_partner, purification_type, threshold_fidelity, config.lqnic_type, config.lqnic_index);
+              auto pur_rule_right = purifyRule(left_partner, purification_type, threshold_fidelity, config.rqnic_type, config.rqnic_index);
+              rules_array[left_partner].push_back(std::move(pur_rule_left));
+              rules_array[right_partner].push_back(std::move(pur_rule_right));
+            }
+          }
+        }
+      }
+    }
+
+  } else {
+    // 2.3.1 purification not required
+    for (int distance = 1; distance < path.size() / 2 + 1; distance++) {
+      // 2.2.3 Entanglement Swapping
+      for (int i = 1; i < (path.size() + 1) / 2; i++) {
+        std::vector<int> swapper_nodes;
+        if (rev_path.at(i) != path.at(i)) {
+          swapper_nodes = {rev_path.at(i), path.at(i)};
+        } else {
+          swapper_nodes = {path.at(i)};
+        }
+        // 2.2.4 iterate swapper nodes
+        for (int swapper_node : swapper_nodes) {
+          auto config = generateSwappingConfig(swapper_node, path, swapping_partner_table, qnics, 0);
+          int left_partner = config.left_partner, right_partner = config.right_partner;
+          // check if the distance of swapping is the same as the target distance
+          auto swapper_it = std::find(path.begin(), path.end(), swapper_node);
+          auto left_it = std::find(path.begin(), path.end(), left_partner);
+          auto right_it = std::find(path.begin(), path.end(), right_partner);
+          int index = 0, lindex = 0, rindex = 0;
+          if (swapper_it != path.end() && left_it != path.end() && right_it != path.end()) {
+            index = swapper_it - path.begin();
+            lindex = left_it - path.begin();
+            rindex = right_it - path.begin();
+          } else {
+            error("swapper and partner indices are not found in the path. Should not happen.");
+          }
+          if (std::max(std::abs(index - lindex), std::abs(index - rindex)) == distance) {
+            // 2.2.5 Swapping Rules
+            // waitRule: int partner_address, QNIC_type qnic_type, int qnic_id, std::string name
+            auto empty_rule_left = waitRule(swapper_node, config.lqnic_type, config.lqnic_index);
+            auto empty_rule_right = waitRule(swapper_node, config.rqnic_type, config.rqnic_index);
+            // std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id,std::string name
+            auto swapping_rule = swapRule(swapping_partner_table[swapper_node], threshold_fidelity, {config.self_left_qnic_type, config.self_right_qnic_type},
+                                          {config.self_left_qnic_index, config.self_right_qnic_index});
+            rules_array[left_partner].push_back(std::move(empty_rule_left));
+            rules_array[right_partner].push_back(std::move(empty_rule_right));
+            rules_array[swapper_node].push_back(std::move(swapping_rule));
+          }
+        }
+      }
+    }
+  }
+  // 2.4. Tomography
+  int initiator_address = path.at(0);
+  int responder_address = my_address;
+  int num_measure = req->getNum_measure();
+  auto initiator_qnic = getQnicInterface(initiator_address, responder_address, path, qnics);
+  auto responder_qnic = getQnicInterface(responder_address, initiator_address, path, qnics);
+  // int partner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name
+  auto tomo_rule_initiator = tomographyRule(responder_address, num_measure, threshold_fidelity, initiator_qnic.type, initiator_qnic.index);
+  auto tomo_rule_responder = tomographyRule(initiator_address, num_measure, threshold_fidelity, responder_qnic.type, responder_qnic.index);
+  rules_array[initiator_address].push_back(std::move(tomo_rule_initiator));
+  rules_array[responder_address].push_back(std::move(tomo_rule_responder));
+
+  // 3. Wrap up rules into ruleset and send them to prpoer partners
+  // 3.1 wrap up rulesets
+  unsigned long ruleset_id = createUniqueId();
+  for (auto it = rules_array.begin(); it != rules_array.end(); ++it) {
+    int owner_address = it->first;
+    auto rules = std::move(it->second);
+    RuleSet ruleset(ruleset_id, owner_address);
+    for (int i = 0; i < rules.size(); i++) {
+      auto rule = std::move(rules.at(i));
+      auto appended_rule = ruleset.addRule(std::move(rule));
+      appended_rule->setNextRule(appended_rule->rule_id + 1);  // rule id is sequencial
+    }
+    auto serialized_ruleset = ruleset.serialize_json();
+
+    ConnectionSetupResponse *pkt = new ConnectionSetupResponse("Connection Setup Response");
+    pkt->setDestAddr(owner_address);
+    pkt->setSrcAddr(my_address);
+    pkt->setKind(2);
+    pkt->setRuleSet(serialized_ruleset);
+    pkt->setActual_srcAddr(initiator_address);
+    pkt->setActual_destAddr(responder_address);
+    // this is not application but for checking swapping done properly.
+    pkt->setApplication_type(0);
+    send(pkt, "RouterPort$o");
+  }
+  reserveQnic(src_info->qnic.address);
+}
 
 /**
  * This function is called to handle the ConnectionSetupRequest at the responder.
@@ -519,7 +791,7 @@ void ConnectionManager::respondToRequest_deprecated(ConnectionSetupRequest *req)
     pkt->setDestAddr(owner_address);
     pkt->setSrcAddr(my_address);
     pkt->setKind(2);
-    pkt->setRuleSet(ruleset);
+    pkt->setActiveRuleSet(ruleset);
     pkt->setActual_srcAddr(initiator_address);
     pkt->setActual_destAddr(responder_address);
     // this is not application but for checking swapping done properly.
@@ -848,7 +1120,7 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
 }
 
 std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name) {
-  auto purify_rule = std::make_unique<Rule>();
+  auto purify_rule = std::make_unique<Rule>(partner_address);
   purify_rule->setName(name);
 
   // decide how many Bell pairs are required
@@ -881,7 +1153,7 @@ std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType
 
 std::unique_ptr<Rule> ConnectionManager::swapRule(std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id,
                                                   std::string name) {
-  auto swap_rule = std::make_unique<Rule>();
+  auto swap_rule = std::make_unique<Rule>(partner_address);
   swap_rule->setName(name);
 
   // prepare condition and two enough resource clauses
@@ -900,7 +1172,7 @@ std::unique_ptr<Rule> ConnectionManager::swapRule(std::vector<int> partner_addre
 }
 
 std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, QNIC_type qnic_type, int qnic_id, std::string name) {
-  auto wait_rule = std::make_unique<Rule>();
+  auto wait_rule = std::make_unique<Rule>(partner_address);
   wait_rule->setName(name);
 
   // prepare condition and two enough resource clauses
@@ -917,7 +1189,7 @@ std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, QNIC_type
 }
 
 std::unique_ptr<Rule> ConnectionManager::tomographyRule(int partner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name) {
-  auto tomography_rule = std::make_unique<Rule>();
+  auto tomography_rule = std::make_unique<Rule>(partner_address);
   tomography_rule->setName(name);
 
   // prepare condition
