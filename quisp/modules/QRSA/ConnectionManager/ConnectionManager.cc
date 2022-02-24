@@ -453,7 +453,23 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     for (int i = 0; i < rules.size(); i++) {
       auto rule = std::move(rules.at(i));
       auto appended_rule = ruleset.addRule(std::move(rule));
-      appended_rule->setNextRule(appended_rule->rule_id + 1);  // rule id is sequencial
+      auto target_qnic_type = appended_rule -> qnic_types;
+      auto target_qnic_id = appended_rule -> qnic_ids;
+      if (appended_rule->finalize){
+        // if the rule is entanglement swapping or tomography rule, no need to specify the next rule
+        break;
+      }
+      // 3.2 find next rule (if the qnic type and qnic id is the same, promote entanglement if the rule is not ES)
+      for (int j = i+1; j<rules.size() ; j++){ // start from the next rule
+        auto next_qnic_type = rules.at(j)->qnic_types;
+        auto next_qnic_id = rules.at(j)->qnic_ids;
+        auto qnic_type_it = std::find(next_qnic_type.begin(), next_qnic_type.end(), target_qnic_type.at(0));
+        auto qnic_id_it = std::find(next_qnic_id.begin(), next_qnic_id.end(), target_qnic_id.at(0));
+        if (qnic_type_it != next_qnic_type.end() && qnic_id_it != next_qnic_id.end()){
+          appended_rule->setNextRule(j);  // rule id is sequencial
+          break;
+        }
+      }
     }
     auto serialized_ruleset = ruleset.serialize_json();
 
@@ -1120,7 +1136,7 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
 }
 
 std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name) {
-  auto purify_rule = std::make_unique<Rule>(partner_address);
+  auto purify_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, false);
   purify_rule->setName(name);
 
   // decide how many Bell pairs are required
@@ -1153,7 +1169,7 @@ std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType
 
 std::unique_ptr<Rule> ConnectionManager::swapRule(std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id,
                                                   std::string name) {
-  auto swap_rule = std::make_unique<Rule>(partner_address);
+  auto swap_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, true);
   swap_rule->setName(name);
 
   // prepare condition and two enough resource clauses
@@ -1172,7 +1188,7 @@ std::unique_ptr<Rule> ConnectionManager::swapRule(std::vector<int> partner_addre
 }
 
 std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, QNIC_type qnic_type, int qnic_id, std::string name) {
-  auto wait_rule = std::make_unique<Rule>(partner_address);
+  auto wait_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, false);
   wait_rule->setName(name);
 
   // prepare condition and two enough resource clauses
@@ -1189,7 +1205,7 @@ std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, QNIC_type
 }
 
 std::unique_ptr<Rule> ConnectionManager::tomographyRule(int partner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name) {
-  auto tomography_rule = std::make_unique<Rule>(partner_address);
+  auto tomography_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, true);
   tomography_rule->setName(name);
 
   // prepare condition

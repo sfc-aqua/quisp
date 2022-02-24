@@ -56,10 +56,12 @@ TEST(ConnectionManagerRuleSetTest, PurificationRule) {
   auto serialized = purification_rule->serialize_json();
   //  rule_id is given by RuleSet and next_rule_id is given outside of Rule decration.
   json expected = R"({
-	  				"rule_id": -1,
+	  			"rule_id": -1,
 					"next_rule_id": -1,
 					"name": "purification",
 					"partners": [1],
+          "qnic_type": ["QNIC_E"],
+          "qnic_id": [4],
 					"condition": {
 						"clauses": [{
 							"type": "enough_resource",
@@ -106,6 +108,8 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
 					"next_rule_id": -1,
 					"name": "swapping",
 					"partners": [1, 3],
+          "qnic_type": ["QNIC_E", "QNIC_R"],
+          "qnic_id": [4, 5],
 					"condition": {
 						"clauses": [{
 							"type": "enough_resource",
@@ -160,6 +164,8 @@ TEST(ConnectionManagerRuleSetTest, waitRule) {
 					"next_rule_id": -1,
 					"name": "wait",
 					"partners": [1],
+          "qnic_type": ["QNIC_E"],
+          "qnic_id": [4],
 					"condition": {
 						"clauses": [{
 							"type": "wait",
@@ -204,6 +210,8 @@ TEST(ConnectionManagerRuleSetTest, tomographyRule) {
 					"next_rule_id": -1,
 					"name": "tomography",
 					"partners": [1],
+          "qnic_type": ["QNIC_E"],
+          "qnic_id": [4],
 					"condition": {
 						"clauses": [{
 							"type": "enough_resource",

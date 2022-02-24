@@ -18,14 +18,17 @@ namespace quisp::rules {
 class Rule {
  public:
   Rule(){};
-  Rule(int partner_address) { partners.push_back(partner_address); };
-  Rule(std::vector<int> partner_addresses) : partners(partner_addresses){};
+  Rule(int partner_address, QNIC_type qnic_type, int qnic_id, bool finalize);
+  Rule(std::vector<int> partner_addresses, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id, bool finalize) : partners(partner_addresses), qnic_types(qnic_type), qnic_ids(qnic_id), finalize(finalize){};
   Rule(json serialized) { deserialize_json(serialized); };
   unsigned long parent_ruleset_id;
   int rule_id = -1;
   int to = -1;
+  bool finalize;
   std::string name;
   std::vector<int> partners;
+  std::vector<QNIC_type> qnic_types;
+  std::vector<int> qnic_ids;
   std::unique_ptr<Condition> condition;  ///< Condition includes a set of clauses
   std::unique_ptr<Action> action;
 

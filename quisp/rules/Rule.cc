@@ -5,6 +5,12 @@
 
 namespace quisp::rules {
 
+Rule::Rule(int partner_address, QNIC_type qnic_type, int qnic_id, bool finalize): finalize(finalize) {
+  partners.push_back(partner_address);
+  qnic_types.push_back(qnic_type);
+  qnic_ids.push_back(qnic_id);
+};
+
 void Rule::setCondition(std::unique_ptr<Condition> cond) { condition = std::move(cond); }
 
 void Rule::setAction(std::unique_ptr<Action> act) { action = std::move(act); }
@@ -23,6 +29,8 @@ json Rule::serialize_json() {
   rule_json["next_rule_id"] = to;
   rule_json["name"] = name;
   rule_json["partners"] = partners;
+  rule_json["qnic_type"] = qnic_types;
+  rule_json["qnic_id"] = qnic_ids;
   if (condition != nullptr) {
     rule_json["condition"] = condition->serialize_json();
   }
@@ -38,6 +46,8 @@ void Rule::deserialize_json(json serialized) {
   serialized["next_rule_id"].get_to(to);
   serialized["name"].get_to(name);
   serialized.at("partners").get_to(partners);
+  serialized["qnic_type"].get_to(qnic_types);
+  serialized["qnic_id"].get_to(qnic_ids);
 
   // deserialize actions
   if (serialized["action"] != nullptr) {  // action found

@@ -17,12 +17,14 @@ TEST(RuleTest, setNextRule) {
   RuleSet ruleset(1, 2);
 
   std::vector<int> partners = {1, 3};
+  std::vector<QNIC_type> qnic_types = {QNIC_E, QNIC_R};
+  std::vector<int> qnic_id = {10, 11};
 
-  auto purification = std::make_unique<Rule>(partners.at(0));  // (purification type)
+  auto purification = std::make_unique<Rule>(partners.at(0), QNIC_E, 10, false);  // (purification type)
   auto rule1 = ruleset.addRule(std::move(purification));  // rule type, partners
-  auto purification2 = std::make_unique<Rule>(partners.at(1));  // (purification type)
+  auto purification2 = std::make_unique<Rule>(partners.at(1), QNIC_R, 11, false);  // (purification type)
   auto rule2 = ruleset.addRule(std::move(purification2));  // return address to rule
-  auto swapping = std::make_unique<Rule>(partners);
+  auto swapping = std::make_unique<Rule>(partners, qnic_types, qnic_id, true);
   auto rule3 = ruleset.addRule(std::move(swapping));
 
   rule1->setNextRule(rule3->rule_id);
@@ -37,7 +39,7 @@ TEST(RuleTest, serialize_json_purification_rule) {
   prepareSimulation();
   RuleSet ruleset(1234, 2);
 
-  auto purification = std::make_unique<Rule>(1);
+  auto purification = std::make_unique<Rule>(1, QNIC_E, 10, false);
   purification->setName("purification");
   auto condition = std::make_unique<Condition>();
   // arguments: num_resource, required_fidelity, partner_addr, qnic_type, qnic_id
@@ -49,7 +51,9 @@ TEST(RuleTest, serialize_json_purification_rule) {
   purification->setCondition(std::move(condition));
   purification->setAction(std::move(action));
   std::vector<int> partners = {1, 3};
-  auto swapping = std::make_unique<Rule>(partners);
+  std::vector<QNIC_type> qnic_type = {QNIC_R, QNIC_E};
+  std::vector<int> qnic_id = {10, 11};
+  auto swapping = std::make_unique<Rule>(partners, qnic_type, qnic_id, true);
 
   // append rules to RuleSet
   auto rule1 = ruleset.addRule(std::move(purification));
@@ -85,8 +89,7 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   std::vector<int> partners = {1, 3};
   std::vector<QNIC_type> qnic_types = {QNIC_E, QNIC_R};
   std::vector<int> qnic_id = {13, 15};
-
-  auto swapping = std::make_unique<Rule>(partners);
+  auto swapping = std::make_unique<Rule>(partners, qnic_types, qnic_id, true);
   swapping->setName("swapping");
   auto condition = std::make_unique<Condition>();
 
@@ -103,8 +106,8 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   swapping->setAction(std::move(action));
 
   // dummy rules
-  auto purification1 = std::make_unique<Rule>(partners.at(0));
-  auto purification3 = std::make_unique<Rule>(partners.at(1));
+  auto purification1 = std::make_unique<Rule>(partners.at(0), QNIC_E, 12, false);
+  auto purification3 = std::make_unique<Rule>(partners.at(1), QNIC_R, 13, false);
 
   // append rules to RuleSet
   auto rule1 = ruleset.addRule(std::move(swapping));
@@ -153,7 +156,7 @@ TEST(RuleTest, deserialize_json_purification_rule) {
   prepareSimulation();
   RuleSet ruleset(1234, 2);
 
-  auto purification = std::make_unique<Rule>(1);
+  auto purification = std::make_unique<Rule>(1, QNIC_E, 14, false);
   purification->setName("purification");
   auto condition = std::make_unique<Condition>();
   // arguments: num_resource, required_fidelity, partner_addr, qnic_type, qnic_id
@@ -165,7 +168,9 @@ TEST(RuleTest, deserialize_json_purification_rule) {
   purification->setCondition(std::move(condition));
   purification->setAction(std::move(action));
   std::vector<int> partners = {1, 3};
-  auto swapping = std::make_unique<Rule>(partners);
+  std::vector<QNIC_type> qnic_type = {QNIC_E, QNIC_R};
+  std::vector<int> qnic_id = {14, 15};
+  auto swapping = std::make_unique<Rule>(partners, qnic_type, qnic_id, true);
 
   // append rules to RuleSet
   auto rule1 = ruleset.addRule(std::move(purification));
