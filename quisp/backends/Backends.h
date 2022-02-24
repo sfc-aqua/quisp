@@ -1,5 +1,5 @@
 #pragma once
-#include "ErrorTrackingBackend/ErrorTrackingBackend.h"
+#include "ErrorTracking/Backend.h"
 #include "IQuantumBackend.h"
 
 // the namespace for exposing the backend

@@ -6,10 +6,11 @@ using abstract::IQuantumBackend;
 using abstract::IQubit;
 using abstract::QubitId;
 
-class ErrorTrackingBackend : public IQuantumBackend {
- public:
-  ErrorTrackingBackend(){};
-  ~ErrorTrackingBackend(){};
-  IQubit* getQubit(QubitId id) override { return nullptr; };
+class ErrorTrackingQubit : public IQubit {
+  public:
+   ErrorTrackingQubit(const QubitId id);
+   ~ErrorTrackingQubit();
+
+  QubitId id;
 };
 }  // namespace quisp::backends::error_tracking
