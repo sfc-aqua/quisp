@@ -5,7 +5,7 @@
 
 namespace quisp::rules {
 
-Rule::Rule(int partner_address, QNIC_type qnic_type, int qnic_id, bool finalize): finalize(finalize) {
+Rule::Rule(int partner_address, QNIC_type qnic_type, int qnic_id, bool finalize) : finalize(finalize) {
   partners.push_back(partner_address);
   qnic_types.push_back(qnic_type);
   qnic_ids.push_back(qnic_id);

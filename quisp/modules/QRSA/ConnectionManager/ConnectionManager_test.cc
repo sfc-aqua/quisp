@@ -274,7 +274,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
                 }]
               }
             }]
-          })"_json;   
+          })"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }
 

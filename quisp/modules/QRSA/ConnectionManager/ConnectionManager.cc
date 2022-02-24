@@ -453,19 +453,19 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     for (int i = 0; i < rules.size(); i++) {
       auto rule = std::move(rules.at(i));
       auto appended_rule = ruleset.addRule(std::move(rule));
-      auto target_qnic_type = appended_rule -> qnic_types;
-      auto target_qnic_id = appended_rule -> qnic_ids;
-      if (appended_rule->finalize){
+      auto target_qnic_type = appended_rule->qnic_types;
+      auto target_qnic_id = appended_rule->qnic_ids;
+      if (appended_rule->finalize) {
         // if the rule is entanglement swapping or tomography rule, no need to specify the next rule
         break;
       }
       // 3.2 find next rule (if the qnic type and qnic id is the same, promote entanglement if the rule is not ES)
-      for (int j = i+1; j<rules.size() ; j++){ // start from the next rule
+      for (int j = i + 1; j < rules.size(); j++) {  // start from the next rule
         auto next_qnic_type = rules.at(j)->qnic_types;
         auto next_qnic_id = rules.at(j)->qnic_ids;
         auto qnic_type_it = std::find(next_qnic_type.begin(), next_qnic_type.end(), target_qnic_type.at(0));
         auto qnic_id_it = std::find(next_qnic_id.begin(), next_qnic_id.end(), target_qnic_id.at(0));
-        if (qnic_type_it != next_qnic_type.end() && qnic_id_it != next_qnic_id.end()){
+        if (qnic_type_it != next_qnic_type.end() && qnic_id_it != next_qnic_id.end()) {
           appended_rule->setNextRule(j);  // rule id is sequencial
           break;
         }
