@@ -7,9 +7,9 @@ using abstract::IQubit;
 using abstract::QubitId;
 
 class ErrorTrackingQubit : public IQubit {
-  public:
-   ErrorTrackingQubit(const QubitId id);
-   ~ErrorTrackingQubit();
+ public:
+  ErrorTrackingQubit(const QubitId id);
+  ~ErrorTrackingQubit();
 
   QubitId id;
 };

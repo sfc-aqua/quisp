@@ -9,6 +9,12 @@ using namespace quisp::modules;
 using namespace quisp_test;
 namespace {
 
+class Strategy : public TestComponentProviderStrategy {
+ public:
+  Strategy() {}
+  ~Strategy() {}
+};
+
 class StatQubitTarget : public StationaryQubit {
  public:
   using StationaryQubit::addXerror;
@@ -22,7 +28,10 @@ class StatQubitTarget : public StationaryQubit {
   using StationaryQubit::localMeasureZ;
   using StationaryQubit::par;
   using StationaryQubit::setMeasurementErrorModel;
-  StatQubitTarget() : StationaryQubit() { setComponentType(new TestModuleType("test qubit")); }
+  StatQubitTarget() : StationaryQubit() {
+    setComponentType(new TestModuleType("test qubit"));
+    provider.setStrategy(std::make_unique<Strategy>());
+  }
   void reset() {
     setParBool(this, "GOD_Xerror", false);
     setParBool(this, "GOD_Yerror", false);

@@ -4,10 +4,11 @@
  *
  *  \brief StationaryQubit
  */
-#ifndef QUISP_MODULES_StationaryQubit_H_
-#define QUISP_MODULES_StationaryQubit_H_
+#pragma once
 
 #include <PhotonicQubit_m.h>
+#include <backends/Backends.h>
+#include <utils/ComponentProvider.h>
 #include <string>
 #include "IStationaryQubit.h"
 
@@ -50,7 +51,10 @@ class StationaryQubit : public IStationaryQubit {
   static types::CliffordOperator controlled_Z_lookup_node_1[2][24][24];
   static types::CliffordOperator controlled_Z_lookup_node_2[2][24][24];
 
+  backends::IQubit *qubit_ref;
+
  public:
+  StationaryQubit();
   void setFree(bool consumed) override;
   /*In use. E.g. waiting for purification result.*/
   void Lock(unsigned long rs_id, unsigned long rule_id, int action_id) override;
@@ -185,9 +189,8 @@ class StationaryQubit : public IStationaryQubit {
   // this is for debugging. class internal use only.
   // and it's different from QubitRecord's one.
   bool is_busy;
+  utils::ComponentProvider provider;
 };
 
 }  // namespace modules
 }  // namespace quisp
-
-#endif /* QUISP_MODULES_StationaryQubit_H_ */

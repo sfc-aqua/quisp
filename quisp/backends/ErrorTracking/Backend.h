@@ -14,8 +14,8 @@ class ErrorTrackingBackend : public IQuantumBackend {
   ~ErrorTrackingBackend();
   IQubit* getQubit(QubitId id) override;
 
-  protected:
-  std::unordered_map<QubitId,std::unique_ptr<ErrorTrackingQubit>> qubits;
+ protected:
+  std::unordered_map<QubitId, std::unique_ptr<ErrorTrackingQubit>> qubits;
 };
 
 }  // namespace quisp::backends::error_tracking

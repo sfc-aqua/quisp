@@ -9,13 +9,22 @@ using namespace quisp_test;
 using namespace Eigen;
 namespace {
 
+class Strategy : public TestComponentProviderStrategy {
+ public:
+  Strategy() {}
+  ~Strategy() {}
+};
+
 class StatQubitTarget : public StationaryQubit {
  public:
   using StationaryQubit::getErrorMatrix;
   using StationaryQubit::getQuantumState;
   using StationaryQubit::initialize;
   using StationaryQubit::par;
-  StatQubitTarget() : StationaryQubit() { setComponentType(new TestModuleType("test qubit")); }
+  StatQubitTarget() : StationaryQubit() {
+    setComponentType(new TestModuleType("test qubit"));
+    provider.setStrategy(std::make_unique<Strategy>());
+  }
   void reset() {
     setFree(true);
     updated_time = SimTime(0);

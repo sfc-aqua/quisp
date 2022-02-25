@@ -7,6 +7,11 @@
 using namespace quisp::modules;
 using namespace quisp_test;
 namespace {
+class Strategy : public TestComponentProviderStrategy {
+ public:
+  Strategy() {}
+  ~Strategy() {}
+};
 
 class StatQubitTarget : public StationaryQubit {
  public:
@@ -16,7 +21,10 @@ class StatQubitTarget : public StationaryQubit {
   using StationaryQubit::par;
   using StationaryQubit::setSingleQubitGateErrorModel;
   using StationaryQubit::setTwoQubitGateErrorCeilings;
-  StatQubitTarget() : StationaryQubit() { setComponentType(new TestModuleType("test qubit")); }
+  StatQubitTarget() : StationaryQubit() {
+    setComponentType(new TestModuleType("test qubit"));
+    provider.setStrategy(std::make_unique<Strategy>());
+  }
   void reset() {
     setFree(true);
     updated_time = SimTime(0);
