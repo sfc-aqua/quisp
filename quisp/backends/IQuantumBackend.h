@@ -1,6 +1,8 @@
 #pragma once
+#include <omnetpp/simtime_t.h>
 #include <functional>
 #include <tuple>
+#include "omnetpp/simtime.h"
 
 namespace quisp::backends::abstract {
 using QNodeAddr = int;
@@ -8,6 +10,9 @@ using QNicIndex = int;
 using QNicType = int;
 using QubitIndex = int;
 using QubitId = std::tuple<QNodeAddr, QNicIndex, QNicType, QubitIndex>;
+
+using omnetpp::SimTime;
+using omnetpp::SimTimeUnit;
 
 class IQubit;
 
@@ -17,6 +22,8 @@ class IQuantumBackend {
   virtual ~IQuantumBackend(){};
 
   virtual IQubit* getQubit(QubitId id) = 0;
+  virtual const SimTime& getTime() = 0;
+  virtual void setTime(SimTime time) = 0;
 
  protected:
 };

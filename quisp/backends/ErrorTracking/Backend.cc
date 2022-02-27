@@ -1,7 +1,7 @@
 #include "Backend.h"
 
 namespace quisp::backends::error_tracking {
-ErrorTrackingBackend::ErrorTrackingBackend() {}
+ErrorTrackingBackend::ErrorTrackingBackend() : current_time(SimTime()) {}
 ErrorTrackingBackend::~ErrorTrackingBackend() {}
 IQubit* ErrorTrackingBackend::getQubit(const QubitId id) {
   auto qubit = qubits.find(id);
@@ -14,4 +14,7 @@ IQubit* ErrorTrackingBackend::getQubit(const QubitId id) {
   qubits.insert({id, std::move(original_qubit)});
   return qubit_ptr;
 }
+
+const SimTime& ErrorTrackingBackend::getTime() { return current_time; }
+void ErrorTrackingBackend::setTime(SimTime time) { current_time = time; }
 }  // namespace quisp::backends::error_tracking

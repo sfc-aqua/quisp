@@ -13,9 +13,12 @@ class ErrorTrackingBackend : public IQuantumBackend {
   ErrorTrackingBackend();
   ~ErrorTrackingBackend();
   IQubit* getQubit(QubitId id) override;
+  const SimTime& getTime() override;
+  void setTime(SimTime time) override;
 
  protected:
   std::unordered_map<QubitId, std::unique_ptr<ErrorTrackingQubit>> qubits;
+  SimTime current_time;
 };
 
 }  // namespace quisp::backends::error_tracking
