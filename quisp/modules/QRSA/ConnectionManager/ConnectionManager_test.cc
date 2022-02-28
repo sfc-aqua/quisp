@@ -445,6 +445,313 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     })"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }
+
+  // checking the ruleset for QNode4 (swapper)
+  {
+    auto *packetFor4 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[2]);
+    ASSERT_NE(packetFor4, nullptr);
+    EXPECT_EQ(packetFor4->getDestAddr(), 4);
+    auto ruleset = packetFor4->getRuleSet();  // json serialized ruleset
+    ASSERT_NE(ruleset, nullptr);
+    EXPECT_EQ(ruleset["rules"].size(), 3);
+
+    // rule1 (id: 0) : purification with 3, next to 2
+    // rule2 (id: 1): purification with 5, next to 2
+    // rule3 (id: 2): swapping with [3, 5], next to -1
+    auto expected_ruleset = R"({
+      "ruleset_id": 2817478050987672464,
+      "num_rules": 3,
+      "owner_address": 4,
+      "rules": [{
+        "name": "purification",
+		    "next_rule_id": 2,
+		    "partners": [3],
+        "qnic_id": [14],
+        "qnic_type": ["QNIC_E"],
+        "rule_id": 0,
+        "action": {
+          "type": "purification",
+          "options": {
+            "partner_address": [3],
+            "purification_type": "SINGLE_X",
+            "qnic_id": [14],
+            "qnic_type": ["QNIC_E"]
+          }
+        },
+        "condition": {
+          "clauses": [{
+            "type": "enough_resource",
+            "options": {
+              "num_resource": 2,
+              "partner_address": 3,
+              "qnic_id": 14,
+              "qnic_type": "QNIC_E",
+              "required_fidelity": 0.0
+            }
+          }]
+        }
+      },
+      {
+        "name": "purification",
+        "next_rule_id": 2,
+        "partners": [5],
+        "qnic_id": [15],
+        "qnic_type": ["QNIC_E"],
+        "rule_id": 1,
+        "action": {
+          "type": "purification",
+          "options": {
+            "partner_address": [5],
+            "purification_type": "SINGLE_X",
+            "qnic_id": [15],
+            "qnic_type": ["QNIC_E"]
+          }
+        },
+        "condition": {
+          "clauses": [{
+            "type": "enough_resource",
+            "options": {
+              "num_resource": 2,
+              "partner_address": 5,
+              "qnic_id": 15,
+              "qnic_type": "QNIC_E",
+              "required_fidelity": 0.0
+            }
+          }]
+        }
+      }, 
+    {
+      "name": "swapping",
+      "next_rule_id": -1,
+      "partners": [3, 5],
+      "qnic_id": [14, 15],
+      "qnic_type": ["QNIC_E", "QNIC_E"],
+      "rule_id": 2,
+      "action": {
+        "type": "swapping",
+        "options": {
+          "partner_address": [3, 5],
+          "qnic_id": [14, 15],
+          "qnic_type": ["QNIC_E", "QNIC_E"]
+        }
+      },
+      "condition": {
+        "clauses": [{
+          "type": "enough_resource",
+          "options": {
+            "num_resource": 1,
+            "partner_address": 3,
+            "qnic_id": 14,
+            "qnic_type": "QNIC_E",
+            "required_fidelity": 0.0
+          }
+        }, 
+      {
+        "type": "enough_resource",
+				"options": {
+					"num_resource": 1,
+					"partner_address": 5,
+					"qnic_id": 15,
+					"qnic_type": "QNIC_E",
+					"required_fidelity": 0.0
+          }
+			  }]
+		  }
+	  }]
+    })"_json;
+    EXPECT_EQ(expected_ruleset, ruleset);
+  }
+
+  // checking the ruleset for QNode5 (swapper)
+  {
+    auto *packetFor5 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[3]);
+    ASSERT_NE(packetFor5, nullptr);
+    EXPECT_EQ(packetFor5->getDestAddr(), 5);
+    auto ruleset = packetFor5->getRuleSet();  // json serialized ruleset
+    ASSERT_NE(ruleset, nullptr);
+    EXPECT_EQ(ruleset["rules"].size(), 6);
+
+    // rule1 (id: 0): purification with 4, to (id: 1)
+    // rule2 (id: 1): wait with 4, to (id: 2)
+    // rule3 (id: 2): purification with 3, to (id: 3)
+    // rule4 (id: 3): wait with 3, to (id: 4)
+    // rule5 (id: 4): purification with 1, to (id: 5)
+    // rule6 (id: 5): tomography with 1, to (id: -1)
+    auto expected_ruleset = R"({
+      "ruleset_id": 2817478050987672464,
+      "num_rules": 6,
+      "owner_address": 5,
+      "rules": [{
+        "name": "purification",
+        "next_rule_id": 1,
+        "partners": [4],
+        "qnic_id": [16],
+        "qnic_type": ["QNIC_E"],
+        "rule_id": 0,
+        "action": {
+          "type": "purification",
+          "options": {
+            "partner_address": [4],
+            "purification_type": "SINGLE_X",
+            "qnic_id": [16],
+            "qnic_type": ["QNIC_E"]
+          }
+        },
+        "condition": {
+          "clauses": [{
+            "type": "enough_resource",
+            "options": {
+              "num_resource": 2,
+              "partner_address": 4,
+              "qnic_id": 16,
+              "qnic_type": "QNIC_E",
+              "required_fidelity": 0.0
+              }
+            }]
+          }
+        }, 
+        {
+        "name": "wait",
+        "next_rule_id": 2,
+        "partners": [4],
+        "qnic_id": [16],
+        "qnic_type": ["QNIC_E"],
+        "rule_id": 1,
+        "action": {
+          "type": "wait",
+          "options": {
+            "partner_address": [4],
+            "qnic_id": [16],
+            "qnic_type": ["QNIC_E"]
+          }
+        },
+        "condition": {
+          "clauses": [{
+            "type": "wait",
+            "options": {
+              "partner_address": 4,
+              "qnic_id": 16,
+              "qnic_type": "QNIC_E"
+            }
+          }]
+        }
+        }, 
+        {
+        "name": "purification",
+        "next_rule_id": 3,
+        "partners": [3],
+        "qnic_id": [16],
+        "qnic_type": ["QNIC_E"],
+        "rule_id": 2,
+        "action": {
+          "type": "purification",
+          "options": {
+            "partner_address": [3],
+            "purification_type": "SINGLE_X",
+            "qnic_id": [16],
+            "qnic_type": ["QNIC_E"]
+          }
+        },
+        "condition": {
+          "clauses": [{
+            "type": "enough_resource",
+            "options": {
+              "num_resource": 2,
+              "partner_address": 3,
+              "qnic_id": 16,
+              "qnic_type": "QNIC_E",
+              "required_fidelity": 0.0
+            }
+          }]
+        }
+       }, 
+        {
+        "name": "wait",
+        "next_rule_id": 4,
+        "partners": [3],
+        "qnic_id": [16],
+        "qnic_type": ["QNIC_E"],
+        "rule_id": 3,
+        "action": {
+          "type": "wait",
+          "options": {
+            "partner_address": [3],
+            "qnic_id": [16],
+            "qnic_type": ["QNIC_E"]
+          }
+        },
+        "condition": {
+          "clauses": [{
+            "type": "wait",
+            "options": {
+              "partner_address": 3,
+              "qnic_id": 16,
+              "qnic_type": "QNIC_E"
+            }
+          }]
+        }
+        },
+       {
+        "name": "purification",
+        "next_rule_id": 5,
+        "partners": [2],
+        "qnic_id": [16],
+        "qnic_type": ["QNIC_E"],
+        "rule_id": 4,
+        "action": {
+          "type": "purification",
+          "options": {
+            "partner_address": [2],
+            "purification_type": "SINGLE_X",
+            "qnic_id": [16],
+            "qnic_type": ["QNIC_E"]
+          }
+        },
+        "condition": {
+          "clauses": [{
+            "type": "enough_resource",
+            "options": {
+              "num_resource": 2,
+              "partner_address": 2,
+              "qnic_id": 16,
+              "qnic_type": "QNIC_E",
+              "required_fidelity": 0.0
+            }
+          }]
+        }
+       },
+       {
+        "name": "tomography",
+        "next_rule_id": -1,
+        "partners": [2],
+        "qnic_id": [16],
+        "qnic_type": ["QNIC_E"],
+        "rule_id": 5,
+        "action": {
+          "type": "tomography",
+          "options": {
+            "num_measure": 0,
+            "partner_address": [2],
+            "qnic_id": [16],
+            "qnic_type": ["QNIC_E"]
+          }
+        },
+        "condition": {
+          "clauses": [{
+            "type": "enough_resource",
+            "options": {
+              "num_resource": 1,
+              "partner_address": 2,
+              "qnic_id": 16,
+              "qnic_type": "QNIC_E",
+              "required_fidelity": 0.0
+            }
+          }]
+        }
+      }]
+    })"_json;
+    EXPECT_EQ(expected_ruleset, ruleset);
+  }
   delete routing_daemon;
   delete hardware_monitor;
 }
