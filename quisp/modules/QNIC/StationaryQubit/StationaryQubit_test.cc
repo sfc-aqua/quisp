@@ -1,18 +1,23 @@
 #include "StationaryQubit.h"
 #include <gtest/gtest.h>
+#include <modules/common_types.h>
 #include <test_utils/TestUtils.h>
 #include <cmath>
 #include <unsupported/Eigen/MatrixFunctions>
 
 using namespace quisp::modules;
+using namespace quisp::modules::common;
 using namespace quisp_test;
 using namespace Eigen;
+
 namespace {
 
 class Strategy : public TestComponentProviderStrategy {
  public:
-  Strategy() {}
+  Strategy() : backend(new MockQuantumBackend()) {}
   ~Strategy() {}
+  IQuantumBackend *getQuantumBackend() override { return backend; }
+  MockQuantumBackend *backend;
 };
 
 class StatQubitTarget : public StationaryQubit {

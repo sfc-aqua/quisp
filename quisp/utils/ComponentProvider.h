@@ -1,9 +1,10 @@
 #ifndef QUISP_UTILS_COMPONENTPROVIDER_H_
 #define QUISP_UTILS_COMPONENTPROVIDER_H_
 
+#include <modules/QRSA/QRSA.h>
+#include <modules/common_types.h>
 #include "DefaultComponentProviderStrategy.h"
 #include "IComponentProviderStrategy.h"
-#include "modules/QRSA/QRSA.h"
 #include "omnetpp/cmodule.h"
 #include "utils.h"
 

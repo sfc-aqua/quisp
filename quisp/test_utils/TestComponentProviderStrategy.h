@@ -1,6 +1,5 @@
 #pragma once
 
-#include <backends/Backends.h>
 #include <modules/QNIC.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>
@@ -10,12 +9,12 @@
 namespace quisp_test {
 namespace strategy {
 
-using quisp::backends::IQuantumBackend;
 using quisp::modules::IHardwareMonitor;
 using quisp::modules::IRealTimeController;
 using quisp::modules::IRoutingDaemon;
 using quisp::modules::IStationaryQubit;
 using quisp::modules::QNIC_type;
+using quisp::modules::common::IQuantumBackend;
 using quisp::utils::IComponentProviderStrategy;
 using quisp_test::simulation::TestSimulation;
 

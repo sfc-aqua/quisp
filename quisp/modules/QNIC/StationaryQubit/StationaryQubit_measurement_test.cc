@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <modules/common_types.h>
 #include <test_utils/TestUtils.h>
 #include <unsupported/Eigen/MatrixFunctions>
 #include "StationaryQubit.h"
@@ -6,13 +7,16 @@
 #include "omnetpp/simtime.h"
 
 using namespace quisp::modules;
+using namespace quisp::modules::common;
 using namespace quisp_test;
 namespace {
 
 class Strategy : public TestComponentProviderStrategy {
  public:
-  Strategy() {}
+  Strategy() : backend(new MockQuantumBackend()) {}
   ~Strategy() {}
+  IQuantumBackend *getQuantumBackend() override { return backend; }
+  MockQuantumBackend *backend;
 };
 
 class StatQubitTarget : public StationaryQubit {

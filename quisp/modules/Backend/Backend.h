@@ -1,11 +1,11 @@
 #pragma once
-#include <backends/Backends.h>
+#include <modules/common_types.h>
 #include <omnetpp.h>
 #include "omnetpp/regmacros.h"
 
 namespace quisp::modules::backend {
-using quisp::backends::ErrorTrackingBackend;
-using quisp::backends::IQuantumBackend;
+using quisp::modules::common::ErrorTrackingBackend;
+using quisp::modules::common::IQuantumBackend;
 
 class BackendContainer : public omnetpp::cSimpleModule {
  public:

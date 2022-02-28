@@ -7,7 +7,7 @@
 #pragma once
 
 #include <PhotonicQubit_m.h>
-#include <backends/Backends.h>
+#include <modules/common_types.h>
 #include <utils/ComponentProvider.h>
 #include <string>
 #include "IStationaryQubit.h"
@@ -26,6 +26,8 @@ namespace modules {
  */
 
 typedef std::complex<double> Complex;
+using quisp::modules::common::IBackendQubit;
+using quisp::modules::common::IQuantumBackend;
 
 class StationaryQubit : public IStationaryQubit {
  protected:
@@ -51,7 +53,7 @@ class StationaryQubit : public IStationaryQubit {
   static types::CliffordOperator controlled_Z_lookup_node_1[2][24][24];
   static types::CliffordOperator controlled_Z_lookup_node_2[2][24][24];
 
-  backends::IQubit *qubit_ref;
+  IBackendQubit *qubit_ref;
 
  public:
   StationaryQubit();
@@ -158,8 +160,6 @@ class StationaryQubit : public IStationaryQubit {
   measurement_operators meas_op;
   // https://arxiv.org/abs/1908.10758 Eq 5.2
   Eigen::MatrixXd Memory_Transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
-  Eigen::MatrixXd Memory_Transition_matrix_ns; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in ns.*/
-  Eigen::MatrixXd Memory_Transition_matrix_ms; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in ns.*/
   int num_purified;
 
   bool locked;

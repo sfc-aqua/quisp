@@ -7,6 +7,7 @@
 #include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>
 #include <modules/QRSA/RoutingDaemon/IRoutingDaemon.h>
+#include <modules/common_types.h>
 #include <omnetpp.h>
 
 namespace quisp {
@@ -20,7 +21,7 @@ using modules::QNIC_N;
 using modules::QNIC_names;
 using modules::QNIC_type;
 using modules::backend::BackendContainer;
-using modules::backend::IQuantumBackend;
+using modules::common::IQuantumBackend;
 using omnetpp::cModule;
 
 }  // namespace utils
