@@ -6,6 +6,7 @@
 namespace quisp::backends {
 using abstract::IQuantumBackend;
 using abstract::IQubit;
-using abstract::QubitId;
 using error_tracking::ErrorTrackingBackend;
+using error_tracking::ErrorTrackingQubit;
+
 }  // namespace quisp::backends

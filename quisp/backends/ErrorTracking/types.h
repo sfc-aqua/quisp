@@ -152,8 +152,8 @@ struct measurement_operator {
 // Single qubit
 struct measurement_operators {
   measurement_operator X_basis;
-  measurement_operator Y_basis;
   measurement_operator Z_basis;
+  measurement_operator Y_basis;
   Eigen::Matrix2cd identity;
 };
 

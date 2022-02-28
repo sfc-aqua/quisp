@@ -5,29 +5,26 @@
 #include "omnetpp/simtime.h"
 
 namespace quisp::backends::abstract {
-using QNodeAddr = int;
-using QNicIndex = int;
-using QNicType = int;
-using QubitIndex = int;
-using QubitId = std::tuple<QNodeAddr, QNicIndex, QNicType, QubitIndex>;
 
 using omnetpp::SimTime;
 using omnetpp::SimTimeUnit;
-
+template <typename QubitId>
 class IQubit;
 
+template <typename QubitId>
 class IQuantumBackend {
  public:
   IQuantumBackend(){};
   virtual ~IQuantumBackend(){};
 
-  virtual IQubit* getQubit(QubitId id) = 0;
-  virtual const SimTime& getTime() = 0;
-  virtual void setTime(SimTime time) = 0;
+  virtual IQubit<QubitId>* getQubit(QubitId id) = 0;
+  virtual const SimTime& getSimTime() = 0;
+  virtual void setSimTime(SimTime time) = 0;
 
  protected:
 };
 
+template <typename QubitId>
 class IQubit {
  public:
   IQubit(){};

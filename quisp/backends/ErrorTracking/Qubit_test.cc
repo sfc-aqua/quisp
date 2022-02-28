@@ -2,11 +2,18 @@
 #include <backends/Backends.h>
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
+#include <stdexcept>
 #include <unsupported/Eigen/MatrixFunctions>
+#include "Backend.h"
+
+using QubitId = int;
+
+template class ::quisp::backends::error_tracking::ErrorTrackingQubit<QubitId>;
+template class ::quisp::backends::error_tracking::ErrorTrackingBackend<QubitId>;
 
 namespace {
-using namespace quisp::backends;
-using error_tracking::ErrorTrackingQubit;
+using ErrorTrackingQubit = ::quisp::backends::ErrorTrackingQubit<QubitId>;
+using ErrorTrackingBackend = ::quisp::backends::ErrorTrackingBackend<QubitId>;
 
 class Qubit : public ErrorTrackingQubit {
  public:
@@ -17,7 +24,7 @@ class Qubit : public ErrorTrackingQubit {
   using ErrorTrackingQubit::has_z_error;
   using ErrorTrackingQubit::updated_time;
 
-  Qubit(QubitId id = {0, 0, 0, 0}) : ErrorTrackingQubit(id) {}
+  Qubit(QubitId id = 0) : ErrorTrackingQubit(id) {}
   void reset() {
     // setFree(true);
     // updated_time = SimTime(0);
@@ -32,8 +39,7 @@ class Qubit : public ErrorTrackingQubit {
     double memory_energy_excitation_rate = 0.000198;
     double memory_energy_relaxation_rate = 0.00000198;
     double memory_completely_mixed_rate = 0;
-    this->setMemoryErrorRates(memory_X_error_rate, memory_Y_error_rate, memory_Z_error_rate, memory_energy_excitation_rate, memory_energy_relaxation_rate,
-                              memory_completely_mixed_rate);
+    setMemoryErrorRates(memory_X_error_rate, memory_Y_error_rate, memory_Z_error_rate, memory_energy_excitation_rate, memory_energy_relaxation_rate, memory_completely_mixed_rate);
 
     double Hgate_error_rate = 1. / 2000;
     double Hgate_X_error_ratio = 0;
@@ -87,8 +93,10 @@ class ETQubitMemoryErrorTest : public ::testing::Test {
   virtual void SetUp() {
     // to avoid the omnetpp::SimTime assertion
     SimTime::setScaleExp(-9);
-    qubit = new Qubit{};
+    qubit = dynamic_cast<Qubit*>(backend.getQubit(0));
+    if (qubit == nullptr) throw std::runtime_error("Qubit is nullptr");
   }
+  ErrorTrackingBackend backend;
   Qubit* qubit;
 };
 
@@ -104,7 +112,7 @@ TEST_F(ETQubitMemoryErrorTest, do_nothing) {
 
   // if current time and updated_time are same, do nothing
   EXPECT_EQ(qubit->updated_time, SimTime(0));
-  // sim->setSimTime(SimTime(0, SIMTIME_US));
+  backend.setSimTime(SimTime(0, SIMTIME_US));
   qubit->applyMemoryError();
 
   EXPECT_EQ(qubit->updated_time, SimTime(0, SIMTIME_US));
@@ -113,15 +121,16 @@ TEST_F(ETQubitMemoryErrorTest, do_nothing) {
   EXPECT_FALSE(qubit->has_relaxation_error);
   EXPECT_FALSE(qubit->has_excitation_error);
 }
+
 TEST_F(ETQubitMemoryErrorTest, update_timestamp) {
   auto* qubit = new Qubit{};
   qubit->fillParams();
   qubit->reset();
   // EXPECT_EQ(qubit->updated_time, SimTime(0));
   // sim->registerComponent(qubit);
-  // sim->setSimTime(SimTime(1, SIMTIME_US));
+  backend.setSimTime(SimTime(1, SIMTIME_US));
   qubit->applyMemoryError();
-  // EXPECT_EQ(qubit->updated_time, SimTime(1, SIMTIME_US));
+  EXPECT_EQ(qubit->updated_time, SimTime(1, SIMTIME_US));
 }
 // TEST(StatQubitMemoryErrorTest, apply_memory_error_no_error) {
 //   auto *sim = prepareSimulation();
