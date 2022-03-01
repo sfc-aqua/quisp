@@ -15,31 +15,41 @@ namespace {
 using ErrorTrackingQubit = ::quisp::backends::ErrorTrackingQubit<QubitId>;
 using ErrorTrackingBackend = ::quisp::backends::ErrorTrackingBackend<QubitId>;
 
+class TestRNG : public quisp::backends::abstract::IRandomNumberGenerator {
+ public:
+  TestRNG() {}
+  double doubleRandom() override { return doubleValue; }
+  double doubleValue = 0.0;
+};
+
 class Qubit : public ErrorTrackingQubit {
  public:
   using ErrorTrackingQubit::applyMemoryError;
+  using ErrorTrackingQubit::has_completely_mixed_error;
   using ErrorTrackingQubit::has_excitation_error;
   using ErrorTrackingQubit::has_relaxation_error;
   using ErrorTrackingQubit::has_x_error;
   using ErrorTrackingQubit::has_z_error;
+  using ErrorTrackingQubit::setMemoryErrorRates;
   using ErrorTrackingQubit::updated_time;
 
-  Qubit(QubitId id = 0) : ErrorTrackingQubit(id) {}
+  Qubit(QubitId id, ErrorTrackingBackend* const backend) : ErrorTrackingQubit(id, backend) {}
   void reset() {
-    // setFree(true);
-    // updated_time = SimTime(0);
+    setFree();
+    updated_time = SimTime(0);
     // no_density_matrix_nullptr_entangled_partner_ok = true;
   }
   void fillParams() {
     // see networks/omnetpp.ini
     // setParDouble(this, "emission_success_probability", 0.5);
-    double memory_X_error_rate = 1.11111111e-7;
-    double memory_Y_error_rate = 1.11111111e-7;
-    double memory_Z_error_rate = 1.11111111e-7;
-    double memory_energy_excitation_rate = 0.000198;
-    double memory_energy_relaxation_rate = 0.00000198;
-    double memory_completely_mixed_rate = 0;
-    setMemoryErrorRates(memory_X_error_rate, memory_Y_error_rate, memory_Z_error_rate, memory_energy_excitation_rate, memory_energy_relaxation_rate, memory_completely_mixed_rate);
+    double x_error_rate = .1;
+    double y_error_rate = .1;
+    double z_error_rate = .1;
+    double energy_excitation_rate = .1;
+    double energy_relaxation_rate = .1;
+    double completely_mixed_rate = 0;
+    setMemoryErrorRates(x_error_rate, y_error_rate, z_error_rate, energy_excitation_rate, energy_relaxation_rate, completely_mixed_rate);
+    backend->setSimTime(SimTime(1, SIMTIME_US));
 
     double Hgate_error_rate = 1. / 2000;
     double Hgate_X_error_ratio = 0;
@@ -88,16 +98,35 @@ class Qubit : public ErrorTrackingQubit {
   }
 };
 
+class Backend : public ErrorTrackingBackend {
+ public:
+  Backend(TestRNG* const rng) : ErrorTrackingBackend(rng) {}
+  quisp::backends::IQubit<QubitId>* getQubit(QubitId id) override {
+    auto qubit = qubits.find(id);
+
+    if (qubit != qubits.cend()) {
+      return qubit->second.get();
+    }
+    auto original_qubit = std::make_unique<Qubit>(id, this);
+    auto* qubit_ptr = original_qubit.get();
+    qubits.insert({id, std::move(original_qubit)});
+    return qubit_ptr;
+  }
+};
+
 class ETQubitMemoryErrorTest : public ::testing::Test {
  protected:
   virtual void SetUp() {
     // to avoid the omnetpp::SimTime assertion
     SimTime::setScaleExp(-9);
-    qubit = dynamic_cast<Qubit*>(backend.getQubit(0));
+    rng = std::make_unique<TestRNG>();
+    backend = std::make_unique<Backend>(rng.get());
+    qubit = dynamic_cast<Qubit*>(backend->getQubit(0));
     if (qubit == nullptr) throw std::runtime_error("Qubit is nullptr");
   }
-  ErrorTrackingBackend backend;
   Qubit* qubit;
+  std::unique_ptr<Backend> backend;
+  std::unique_ptr<TestRNG> rng;
 };
 
 TEST_F(ETQubitMemoryErrorTest, do_nothing) {
@@ -112,7 +141,7 @@ TEST_F(ETQubitMemoryErrorTest, do_nothing) {
 
   // if current time and updated_time are same, do nothing
   EXPECT_EQ(qubit->updated_time, SimTime(0));
-  backend.setSimTime(SimTime(0, SIMTIME_US));
+  backend->setSimTime(SimTime(0, SIMTIME_US));
   qubit->applyMemoryError();
 
   EXPECT_EQ(qubit->updated_time, SimTime(0, SIMTIME_US));
@@ -123,436 +152,371 @@ TEST_F(ETQubitMemoryErrorTest, do_nothing) {
 }
 
 TEST_F(ETQubitMemoryErrorTest, update_timestamp) {
-  auto* qubit = new Qubit{};
   qubit->fillParams();
   qubit->reset();
-  // EXPECT_EQ(qubit->updated_time, SimTime(0));
-  // sim->registerComponent(qubit);
-  backend.setSimTime(SimTime(1, SIMTIME_US));
+  EXPECT_EQ(qubit->updated_time, SimTime(0));
+  backend->setSimTime(SimTime(1, SIMTIME_US));
   qubit->applyMemoryError();
   EXPECT_EQ(qubit->updated_time, SimTime(1, SIMTIME_US));
 }
-// TEST(StatQubitMemoryErrorTest, apply_memory_error_no_error) {
-//   auto *sim = prepareSimulation();
-//   auto *rng = useTestRNG();
-//   auto *qubit = new Qubit{};
-//   qubit->fillParams();
 
-//   // Initial_condition << 1, 0, 0, 0, 0, 0, 0;
-//   // this means take 1st row of MemoryTransitionMatrix
-//   // ceiled values should be:
-//   // No error= 0.5, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-//   setParDouble(qubit, "memory_X_error_rate", .1);
-//   setParDouble(qubit, "memory_Y_error_rate", .1);
-//   setParDouble(qubit, "memory_Z_error_rate", .1);
-//   setParDouble(qubit, "memory_energy_excitation_rate", .1);
-//   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
-//   setParDouble(qubit, "memory_completely_mixed_rate", 0);
-//   qubit->callInitialize();
-//   sim->registerComponent(qubit);
-//   sim->setSimTime(SimTime(1, SIMTIME_US));
+TEST_F(ETQubitMemoryErrorTest, apply_memory_error_no_error) {
+  qubit->fillParams();
 
-//   // X error
-//   qubit->reset();
-//   rng->doubleValue = 0.55;
-//   qubit->applyMemoryError();
-//   EXPECT_TRUE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // Initial_condition << 1, 0, 0, 0, 0, 0, 0;
+  // this means take 1st row of MemoryTransitionMatrix
+  // ceiled values should be:
+  // No error= 0.5, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
+  backend->setSimTime(SimTime(1, SIMTIME_US));
 
-//   // Z error
-//   rng->doubleValue = 0.65;
-//   qubit->reset();
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_TRUE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // X error
+  qubit->reset();
+  rng->doubleValue = 0.55;
+  qubit->applyMemoryError();
+  EXPECT_TRUE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-//   // Y error
-//   rng->doubleValue = 0.75;
-//   qubit->reset();
-//   qubit->applyMemoryError();
-//   EXPECT_TRUE(qubit->has_x_error.boolValue());
-//   EXPECT_TRUE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // Z error
+  rng->doubleValue = 0.65;
+  qubit->reset();
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_TRUE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-//   // Excitation error
-//   rng->doubleValue = 0.85;
-//   qubit->reset();
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_TRUE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // Y error
+  rng->doubleValue = 0.75;
+  qubit->reset();
+  qubit->applyMemoryError();
+  EXPECT_TRUE(qubit->has_x_error);
+  EXPECT_TRUE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-//   // Relaxation error
-//   rng->doubleValue = 0.95;
-//   qubit->reset();
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_TRUE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
-// }
+  // Excitation error
+  rng->doubleValue = 0.85;
+  qubit->reset();
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_TRUE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-// TEST(StatQubitMemoryErrorTest, apply_memory_error_X_error) {
-//   auto *sim = prepareSimulation();
-//   auto *rng = useTestRNG();
-//   auto *qubit = new Qubit{};
-//   qubit->fillParams();
+  // Relaxation error
+  rng->doubleValue = 0.95;
+  qubit->reset();
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_TRUE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
+}
 
-//   // Initial_condition << 0, 1, 0, 0, 0, 0, 0;
-//   // this means take 2nd row of MemoryTransitionMatrix
-//   // ceiled values should be:
-//   // No error= 0.1, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-//   setParDouble(qubit, "memory_X_error_rate", .1);
-//   setParDouble(qubit, "memory_Y_error_rate", .1);
-//   setParDouble(qubit, "memory_Z_error_rate", .1);
-//   setParDouble(qubit, "memory_energy_excitation_rate", .1);
-//   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
-//   setParDouble(qubit, "memory_completely_mixed_rate", 0);
-//   qubit->callInitialize();
-//   sim->registerComponent(qubit);
-//   sim->setSimTime(SimTime(1, SIMTIME_US));
+TEST_F(ETQubitMemoryErrorTest, apply_memory_error_X_error) {
+  qubit->fillParams();
 
-//   // X error
-//   qubit->reset();
-//   qubit->has_x_error = true;
-//   rng->doubleValue = 0.55;
-//   qubit->applyMemoryError();
-//   EXPECT_TRUE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // Initial_condition << 0, 1, 0, 0, 0, 0, 0;
+  // this means take 2nd row of MemoryTransitionMatrix
+  // ceiled values should be:
+  // No error= 0.1, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
+  rng->doubleValue = .0;
+  backend->setSimTime(SimTime(1, SIMTIME_US));
 
-//   // Z error
-//   rng->doubleValue = 0.65;
-//   qubit->reset();
-//   qubit->has_x_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_TRUE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // X error
+  qubit->reset();
+  qubit->has_x_error = true;
+  rng->doubleValue = 0.55;
+  qubit->applyMemoryError();
+  EXPECT_TRUE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-//   // Y error
-//   rng->doubleValue = 0.75;
-//   qubit->reset();
-//   qubit->has_x_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_TRUE(qubit->has_x_error.boolValue());
-//   EXPECT_TRUE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // Z error
+  rng->doubleValue = 0.65;
+  qubit->reset();
+  qubit->has_x_error = true;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_TRUE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-//   // Excitation error
-//   rng->doubleValue = 0.85;
-//   qubit->reset();
-//   qubit->has_x_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_TRUE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // Y error
+  rng->doubleValue = 0.75;
+  qubit->reset();
+  qubit->has_x_error = true;
+  qubit->applyMemoryError();
+  EXPECT_TRUE(qubit->has_x_error);
+  EXPECT_TRUE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-//   // Relaxation error
-//   rng->doubleValue = 0.95;
-//   qubit->reset();
-//   qubit->has_x_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_TRUE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
-// }
+  // Excitation error
+  rng->doubleValue = 0.85;
+  qubit->reset();
+  qubit->has_x_error = true;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_TRUE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-// TEST(StatQubitMemoryErrorTest, apply_memory_error_Z_error) {
-//   auto *sim = prepareSimulation();
-//   auto *rng = useTestRNG();
-//   auto *qubit = new Qubit{};
-//   qubit->fillParams();
+  // Relaxation error
+  rng->doubleValue = 0.95;
+  qubit->reset();
+  qubit->has_x_error = true;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_TRUE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
+}
 
-//   // Initial_condition << 0, 0, 1, 0, 0, 0, 0;
-//   // this means take 3rd row of MemoryTransitionMatrix
-//   // ceiled values should be:
-//   // No error= 0.1, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-//   setParDouble(qubit, "memory_X_error_rate", .1);
-//   setParDouble(qubit, "memory_Y_error_rate", .1);
-//   setParDouble(qubit, "memory_Z_error_rate", .1);
-//   setParDouble(qubit, "memory_energy_excitation_rate", .1);
-//   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
-//   setParDouble(qubit, "memory_completely_mixed_rate", 0);
-//   qubit->callInitialize();
-//   sim->registerComponent(qubit);
-//   sim->setSimTime(SimTime(1, SIMTIME_US));
+TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Z_error) {
+  qubit->fillParams();
 
-//   // X error
-//   qubit->reset();
-//   qubit->has_x_error = true;
-//   rng->doubleValue = 0.55;
-//   qubit->applyMemoryError();
-//   EXPECT_TRUE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // Initial_condition << 0, 0, 1, 0, 0, 0, 0;
+  // this means take 3rd row of MemoryTransitionMatrix
+  // ceiled values should be:
+  // No error= 0.1, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
+  backend->setSimTime(SimTime(1, SIMTIME_US));
 
-//   // Z error
-//   rng->doubleValue = 0.65;
-//   qubit->reset();
-//   qubit->has_x_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_TRUE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // X error
+  qubit->reset();
+  qubit->has_x_error = true;
+  rng->doubleValue = 0.55;
+  qubit->applyMemoryError();
+  EXPECT_TRUE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-//   // Y error
-//   rng->doubleValue = 0.75;
-//   qubit->reset();
-//   qubit->has_x_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_TRUE(qubit->has_x_error.boolValue());
-//   EXPECT_TRUE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // Z error
+  rng->doubleValue = 0.65;
+  qubit->reset();
+  qubit->has_x_error = true;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_TRUE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-//   // Excitation error
-//   rng->doubleValue = 0.85;
-//   qubit->reset();
-//   qubit->has_x_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_TRUE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // Y error
+  rng->doubleValue = 0.75;
+  qubit->reset();
+  qubit->has_x_error = true;
+  qubit->applyMemoryError();
+  EXPECT_TRUE(qubit->has_x_error);
+  EXPECT_TRUE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-//   // Relaxation error
-//   rng->doubleValue = 0.95;
-//   qubit->reset();
-//   qubit->has_x_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_TRUE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
-// }
+  // Excitation error
+  rng->doubleValue = 0.85;
+  qubit->reset();
+  qubit->has_x_error = true;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_TRUE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-// TEST(StatQubitMemoryErrorTest, apply_memory_error_Y_error) {
-//   auto *sim = prepareSimulation();
-//   auto *rng = useTestRNG();
-//   auto *qubit = new Qubit{};
-//   qubit->fillParams();
+  // Relaxation error
+  rng->doubleValue = 0.95;
+  qubit->reset();
+  qubit->has_x_error = true;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_TRUE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
+}
 
-//   // Initial_condition << 0, 0, 0, 1, 0, 0, 0;
-//   // this means take 4th row of MemoryTransitionMatrix
-//   // ceiled values should be:
-//   // No error= 0.1, X error = 0.2, Z error = 0.3, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-//   setParDouble(qubit, "memory_X_error_rate", .1);
-//   setParDouble(qubit, "memory_Y_error_rate", .1);
-//   setParDouble(qubit, "memory_Z_error_rate", .1);
-//   setParDouble(qubit, "memory_energy_excitation_rate", .1);
-//   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
-//   setParDouble(qubit, "memory_completely_mixed_rate", 0);
-//   qubit->callInitialize();
-//   sim->registerComponent(qubit);
-//   sim->setSimTime(SimTime(1, SIMTIME_US));
+TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Y_error) {
+  qubit->fillParams();
 
-//   // X error
-//   qubit->reset();
-//   qubit->has_x_error = true;
-//   qubit->has_z_error = true;
-//   rng->doubleValue = 0.15;
-//   qubit->applyMemoryError();
-//   EXPECT_TRUE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // Initial_condition << 0, 0, 0, 1, 0, 0, 0;
+  // this means take 4th row of MemoryTransitionMatrix
+  // ceiled values should be:
+  // No error= 0.1, X error = 0.2, Z error = 0.3, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
 
-//   // Z error
-//   rng->doubleValue = 0.25;
-//   qubit->reset();
-//   qubit->has_x_error = true;
-//   qubit->has_z_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_TRUE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  backend->setSimTime(SimTime(1, SIMTIME_US));
 
-//   // Y error
-//   rng->doubleValue = 0.5;
-//   qubit->reset();
-//   qubit->has_x_error = true;
-//   qubit->has_z_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_TRUE(qubit->has_x_error.boolValue());
-//   EXPECT_TRUE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // X error
+  qubit->reset();
+  qubit->has_x_error = true;
+  qubit->has_z_error = true;
+  rng->doubleValue = 0.15;
+  qubit->applyMemoryError();
+  EXPECT_TRUE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-//   // Excitation error
-//   rng->doubleValue = 0.85;
-//   qubit->reset();
-//   qubit->has_x_error = true;
-//   qubit->has_z_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_TRUE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // Z error
+  rng->doubleValue = 0.25;
+  qubit->reset();
+  qubit->has_x_error = true;
+  qubit->has_z_error = true;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_TRUE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-//   // Relaxation error
-//   rng->doubleValue = 0.95;
-//   qubit->reset();
-//   qubit->has_x_error = true;
-//   qubit->has_z_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_TRUE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
-// }
+  // Y error
+  rng->doubleValue = 0.5;
+  qubit->reset();
+  qubit->has_x_error = true;
+  qubit->has_z_error = true;
+  qubit->applyMemoryError();
+  EXPECT_TRUE(qubit->has_x_error);
+  EXPECT_TRUE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-// TEST(StatQubitMemoryErrorTest, apply_memory_error_excitation_error) {
-//   auto *sim = prepareSimulation();
-//   auto *rng = useTestRNG();
-//   auto *qubit = new Qubit{};
-//   qubit->fillParams();
+  // Excitation error
+  rng->doubleValue = 0.85;
+  qubit->reset();
+  qubit->has_x_error = true;
+  qubit->has_z_error = true;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_TRUE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-//   // Initial_condition << 0, 0, 0, 0, 1, 0, 0;
-//   // this means take 5th row of MemoryTransitionMatrix
-//   // ceiled values should be:
-//   // No error= 0.1, X error = 0.2, Z error = 0.3, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-//   setParDouble(qubit, "memory_X_error_rate", .1);
-//   setParDouble(qubit, "memory_Y_error_rate", .1);
-//   setParDouble(qubit, "memory_Z_error_rate", .1);
-//   setParDouble(qubit, "memory_energy_excitation_rate", .1);
-//   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
-//   setParDouble(qubit, "memory_completely_mixed_rate", 0);
-//   qubit->callInitialize();
-//   sim->registerComponent(qubit);
-//   sim->setSimTime(SimTime(1, SIMTIME_US));
+  // Relaxation error
+  rng->doubleValue = 0.95;
+  qubit->reset();
+  qubit->has_x_error = true;
+  qubit->has_z_error = true;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_TRUE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
+}
 
-//   // X error
-//   qubit->reset();
-//   qubit->has_excitation_error = true;
-//   rng->doubleValue = 0.15;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_TRUE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+TEST_F(ETQubitMemoryErrorTest, apply_memory_error_excitation_error) {
+  qubit->fillParams();
 
-//   // Z error
-//   rng->doubleValue = 0.25;
-//   qubit->reset();
-//   qubit->has_excitation_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_TRUE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // Initial_condition << 0, 0, 0, 0, 1, 0, 0;
+  // this means take 5th row of MemoryTransitionMatrix
+  // ceiled values should be:
+  // No error= 0.1, X error = 0.2, Z error = 0.3, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
+  backend->setSimTime(SimTime(1, SIMTIME_US));
 
-//   // Y error
-//   rng->doubleValue = 0.5;
-//   qubit->reset();
-//   qubit->has_excitation_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_TRUE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // X error
+  qubit->reset();
+  qubit->has_excitation_error = true;
+  rng->doubleValue = 0.15;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_TRUE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-//   // Excitation error
-//   rng->doubleValue = 0.85;
-//   qubit->reset();
-//   qubit->has_excitation_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_TRUE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  // Z error
+  rng->doubleValue = 0.25;
+  qubit->reset();
+  qubit->has_excitation_error = true;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_TRUE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-//   // Relaxation error
-//   rng->doubleValue = 0.95;
-//   qubit->reset();
-//   qubit->has_excitation_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_TRUE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
-// }
+  // Y error
+  rng->doubleValue = 0.5;
+  qubit->reset();
+  qubit->has_excitation_error = true;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_TRUE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-// TEST(StatQubitMemoryErrorTest, apply_memory_error_relaxation_error) {
-//   auto *sim = prepareSimulation();
-//   auto *rng = useTestRNG();
-//   auto *qubit = new Qubit{};
-//   qubit->fillParams();
+  // Excitation error
+  rng->doubleValue = 0.85;
+  qubit->reset();
+  qubit->has_excitation_error = true;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_TRUE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
 
-//   // Initial_condition << 0, 0, 0, 0, 0, 1, 0;
-//   // this means take 6th row of MemoryTransitionMatrix
-//   // ceiled values should be:
-//   // No error= 0, X error = 0, Z error = 0, Y error = 0, Excitation = 0.1, Relaxation = 1.0
-//   setParDouble(qubit, "memory_X_error_rate", .1);
-//   setParDouble(qubit, "memory_Y_error_rate", .1);
-//   setParDouble(qubit, "memory_Z_error_rate", .1);
-//   setParDouble(qubit, "memory_energy_excitation_rate", .1);
-//   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
-//   setParDouble(qubit, "memory_completely_mixed_rate", 0);
-//   qubit->callInitialize();
-//   sim->registerComponent(qubit);
-//   sim->setSimTime(SimTime(1, SIMTIME_US));
+  // Relaxation error
+  rng->doubleValue = 0.95;
+  qubit->reset();
+  qubit->has_excitation_error = true;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_TRUE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
+}
 
-//   // Excitation error
-//   rng->doubleValue = 0.05;
-//   qubit->reset();
-//   qubit->has_relaxation_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_TRUE(qubit->has_excitation_error.boolValue());
-//   EXPECT_FALSE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+TEST_F(ETQubitMemoryErrorTest, apply_memory_error_relaxation_error) {
+  qubit->fillParams();
 
-//   // Relaxation error
-//   rng->doubleValue = 0.95;
-//   qubit->reset();
-//   qubit->has_relaxation_error = true;
-//   qubit->applyMemoryError();
-//   EXPECT_FALSE(qubit->has_x_error.boolValue());
-//   EXPECT_FALSE(qubit->has_z_error.boolValue());
-//   EXPECT_FALSE(qubit->has_excitation_error.boolValue());
-//   EXPECT_TRUE(qubit->has_relaxation_error.boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
-// }
+  // Initial_condition << 0, 0, 0, 0, 0, 1, 0;
+  // this means take 6th row of MemoryTransitionMatrix
+  // ceiled values should be:
+  // No error= 0, X error = 0, Z error = 0, Y error = 0, Excitation = 0.1, Relaxation = 1.0
+  backend->setSimTime(SimTime(1, SIMTIME_US));
+
+  // Excitation error
+  rng->doubleValue = 0.05;
+  qubit->reset();
+  qubit->has_relaxation_error = true;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_TRUE(qubit->has_excitation_error);
+  EXPECT_FALSE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
+
+  // Relaxation error
+  rng->doubleValue = 0.95;
+  qubit->reset();
+  qubit->has_relaxation_error = true;
+  qubit->applyMemoryError();
+  EXPECT_FALSE(qubit->has_x_error);
+  EXPECT_FALSE(qubit->has_z_error);
+  EXPECT_FALSE(qubit->has_excitation_error);
+  EXPECT_TRUE(qubit->has_relaxation_error);
+  EXPECT_FALSE(qubit->has_completely_mixed_error);
+}
 
 }  // namespace

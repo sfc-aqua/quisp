@@ -1,7 +1,7 @@
 #pragma once
 #include <modules/common_types.h>
 #include <omnetpp.h>
-#include "omnetpp/regmacros.h"
+#include "RNG.h"
 
 namespace quisp::modules::backend {
 using quisp::modules::common::ErrorTrackingBackend;
@@ -14,8 +14,9 @@ class BackendContainer : public omnetpp::cSimpleModule {
 
   void initialize() override {
     auto backend_type = std::string(par("backendType").stringValue());
+    rng = std::make_unique<RNG>(this);
     if (backend_type == "ErrorTrackingBackend") {
-      backend = new ErrorTrackingBackend();
+      backend = std::make_unique<ErrorTrackingBackend>(rng.get());
     } else {
       throw omnetpp::cRuntimeError("Unknown backend type: %s", backend_type.c_str());
     }
@@ -27,11 +28,12 @@ class BackendContainer : public omnetpp::cSimpleModule {
     if (backend == nullptr) {
       throw omnetpp::cRuntimeError("Backend is not initialized");
     }
-    return backend;
+    return backend.get();
   }
 
  protected:
-  IQuantumBackend* backend;
+  std::unique_ptr<IQuantumBackend> backend;
+  std::unique_ptr<RNG> rng;
 };
 
 Define_Module(BackendContainer);
