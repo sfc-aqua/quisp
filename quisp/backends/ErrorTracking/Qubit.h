@@ -87,6 +87,60 @@ class ErrorTrackingQubit : public IQubit<QubitId> {
       addXerror();
     }
   }
+
+  void applyTwoQubitGateError(TwoQubitGateErrorModel const& err, ErrorTrackingQubit<QubitId>* another_qubit) {
+    if (err.pauli_error_rate == 0) {
+      return;
+    }
+
+    // Gives a random double between 0.0 ~ 1.0
+    double rand = backend->dblrand();
+
+    /*
+     * 0.0  No_error_ceil    XI_error_ceil     IY_error_ceil     YY_error_ceil    ZI_error_ceil  1.0
+     *  |        |                 |                 |                 |                 |        |
+     *  | No err | IX err | XI err | XX err | IY err | YI err | YY err | IZ err | ZI err | ZZ err |
+     *                    |                 |                 |                 |
+     *              IX_error_ceil      XX_error_ceil     YI_error_ceil    IZ_error_ceil
+     */
+    if (rand <= err.No_error_ceil) {
+      // No error
+    } else if (err.No_error_ceil < rand && rand <= err.IX_error_ceil && (err.No_error_ceil != err.IX_error_ceil)) {
+      // IX error
+      addXerror();
+    } else if (err.IX_error_ceil < rand && rand <= err.XI_error_ceil && (err.IX_error_ceil != err.XI_error_ceil)) {
+      // XI error
+      another_qubit->addXerror();
+    } else if (err.XI_error_ceil < rand && rand <= err.XX_error_ceil && (err.XI_error_ceil != err.XX_error_ceil)) {
+      // XX error
+      addXerror();
+      another_qubit->addXerror();
+    } else if (err.XX_error_ceil < rand && rand <= err.IZ_error_ceil && (err.XX_error_ceil != err.IZ_error_ceil)) {
+      // IZ error
+      addZerror();
+    } else if (err.IZ_error_ceil < rand && rand <= err.ZI_error_ceil && (err.IZ_error_ceil != err.ZI_error_ceil)) {
+      // ZI error
+      another_qubit->addZerror();
+    } else if (err.ZI_error_ceil < rand && rand <= err.ZZ_error_ceil && (err.ZI_error_ceil != err.ZZ_error_ceil)) {
+      // ZZ error
+      addZerror();
+      another_qubit->addZerror();
+    } else if (err.ZZ_error_ceil < rand && rand <= err.IY_error_ceil && (err.ZZ_error_ceil != err.IY_error_ceil)) {
+      // IY error
+      addXerror();
+      addZerror();
+    } else if (err.IY_error_ceil < rand && rand <= err.YI_error_ceil && (err.IY_error_ceil != err.YI_error_ceil)) {
+      // YI error
+      another_qubit->addXerror();
+      another_qubit->addZerror();
+    } else {
+      // YY error
+      addXerror();
+      addZerror();
+      another_qubit->addXerror();
+      another_qubit->addZerror();
+    }
+  }
   void applyMemoryError() {
     // update();
     if (entangled_partner == nullptr && Density_Matrix_Collapsed(0, 0).real() == -111 && !no_density_matrix_nullptr_entangled_partner_ok) {
@@ -94,10 +148,8 @@ class ErrorTrackingQubit : public IQubit<QubitId> {
     }
 
     // If no memory error occurs, or if the state is completely mixed, skip this memory error simulation.
-    if (memory_err.error_rate == 0) {
-      // error("memory error is set to 0. If on purpose, that is fine. Comment this out.");
-      return;
-    }
+    if (memory_err.error_rate == 0) return;
+
     SimTime current_time = backend->getSimTime();
 
     // Check when the error got updated last time.
@@ -105,13 +157,6 @@ class ErrorTrackingQubit : public IQubit<QubitId> {
     double time_evolution = current_time.dbl() - updated_time.dbl();
     double time_evolution_microsec = time_evolution * 1000000 /** 100*/;
     if (time_evolution_microsec > 0) {
-      // Perform Monte-Carlo error simulation on this qubit.
-      bool last_x_error = has_x_error;
-      bool last_z_error = has_z_error;
-      bool last_is_excited = has_excitation_error;
-      bool last_is_relaxed = has_relaxation_error;
-      bool last_is_completely_mixed = has_completely_mixed_error;
-
       bool skip_exponentiation = false;
       for (int i = 0; i < Memory_Transition_matrix.cols(); i++) {
         if (Memory_Transition_matrix(0, i) == 1) {
@@ -147,17 +192,17 @@ class ErrorTrackingQubit : public IQubit<QubitId> {
 
       // pi(0 ~ 6) vector in Eq 5.3
       MatrixXd pi_vector(1, 7);  // I, X, Z, Y, Ex, Re, Cm
-      if (last_is_excited) {
+      if (has_excitation_error) {
         pi_vector << 0, 0, 0, 0, 1, 0, 0;  // excitation error
-      } else if (last_is_relaxed) {
+      } else if (has_relaxation_error) {
         pi_vector << 0, 0, 0, 0, 0, 1, 0;  // relaxation error
-      } else if (last_is_completely_mixed) {
+      } else if (has_completely_mixed_error) {
         pi_vector << 0, 0, 0, 0, 0, 0, 1;  // completely mixed error
-      } else if (last_z_error && last_x_error) {
+      } else if (has_z_error && has_x_error) {
         pi_vector << 0, 0, 0, 1, 0, 0, 0;  // Y error
-      } else if (last_z_error && !last_x_error) {
+      } else if (has_z_error && !has_x_error) {
         pi_vector << 0, 0, 1, 0, 0, 0, 0;  // Z error
-      } else if (!last_z_error && last_x_error) {
+      } else if (!has_z_error && has_x_error) {
         pi_vector << 0, 1, 0, 0, 0, 0, 0;  // X error
       } else {
         pi_vector << 1, 0, 0, 0, 0, 0, 0;  // No error
@@ -224,9 +269,8 @@ class ErrorTrackingQubit : public IQubit<QubitId> {
     }
     updated_time = current_time;
   }
-  void addXerror() {}
-  void addZerror() {}
-  void addYerror() {}
+  void addXerror() { has_x_error = !has_x_error; }
+  void addZerror() { has_z_error = !has_z_error; }
   void setFree() {
     has_x_error = false;
     has_z_error = false;
@@ -293,7 +337,7 @@ class ErrorTrackingQubit : public IQubit<QubitId> {
   static const measurement_operators meas_op;
   // other components
   ErrorTrackingBackend<QubitId>* const backend;
-  ErrorTrackingQubit<QubitId>* entangled_partner;
+  ErrorTrackingQubit<QubitId>* entangled_partner = nullptr;
 
   // state
   bool has_x_error;

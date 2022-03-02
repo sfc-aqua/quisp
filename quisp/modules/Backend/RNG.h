@@ -4,7 +4,7 @@
 #include <omnetpp.h>
 
 namespace quisp::modules::backend {
-class RNG :public backends::abstract::IRandomNumberGenerator {
+class RNG : public backends::abstract::IRandomNumberGenerator {
  public:
   RNG(omnetpp::cModule* module) : module(module) {}
   double doubleRandom() override { return module->dblrand(); }

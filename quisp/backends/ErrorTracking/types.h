@@ -30,8 +30,9 @@ struct SingleGateErrorModel {
   double X_error_ceil;
   double Y_error_ceil;
 
-  void setParams(double x_ratio, double y_ratio, double z_ratio) {
+  void setParams(double x_ratio, double y_ratio, double z_ratio, double error_rate) {
     double sum = x_ratio + z_ratio + y_ratio;
+    pauli_error_rate = error_rate;
     if (sum == 0) {
       x_ratio = 1.;
       z_ratio = 1.;

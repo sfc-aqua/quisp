@@ -1,10 +1,10 @@
-#include "Qubit.h"
 #include <backends/Backends.h>
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
 #include <stdexcept>
 #include <unsupported/Eigen/MatrixFunctions>
 #include "Backend.h"
+#include "Qubit.h"
 
 using QubitId = int;
 
@@ -37,11 +37,14 @@ class Qubit : public ErrorTrackingQubit {
   void reset() {
     setFree();
     updated_time = SimTime(0);
-    // no_density_matrix_nullptr_entangled_partner_ok = true;
+    no_density_matrix_nullptr_entangled_partner_ok = true;
   }
   void fillParams() {
     // see networks/omnetpp.ini
     // setParDouble(this, "emission_success_probability", 0.5);
+
+    // ceiled values should be:
+    // No error= 0.1, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
     double x_error_rate = .1;
     double y_error_rate = .1;
     double z_error_rate = .1;
@@ -120,9 +123,12 @@ class ETQubitMemoryErrorTest : public ::testing::Test {
     // to avoid the omnetpp::SimTime assertion
     SimTime::setScaleExp(-9);
     rng = std::make_unique<TestRNG>();
+    rng->doubleValue = .0;
     backend = std::make_unique<Backend>(rng.get());
     qubit = dynamic_cast<Qubit*>(backend->getQubit(0));
     if (qubit == nullptr) throw std::runtime_error("Qubit is nullptr");
+    backend->setSimTime(SimTime(1, SIMTIME_US));
+    qubit->fillParams();
   }
   Qubit* qubit;
   std::unique_ptr<Backend> backend;
@@ -130,7 +136,6 @@ class ETQubitMemoryErrorTest : public ::testing::Test {
 };
 
 TEST_F(ETQubitMemoryErrorTest, do_nothing) {
-  qubit->fillParams();
   qubit->reset();
   qubit->has_x_error = true;
   qubit->has_z_error = true;
@@ -152,7 +157,6 @@ TEST_F(ETQubitMemoryErrorTest, do_nothing) {
 }
 
 TEST_F(ETQubitMemoryErrorTest, update_timestamp) {
-  qubit->fillParams();
   qubit->reset();
   EXPECT_EQ(qubit->updated_time, SimTime(0));
   backend->setSimTime(SimTime(1, SIMTIME_US));
@@ -161,13 +165,7 @@ TEST_F(ETQubitMemoryErrorTest, update_timestamp) {
 }
 
 TEST_F(ETQubitMemoryErrorTest, apply_memory_error_no_error) {
-  qubit->fillParams();
-
   // Initial_condition << 1, 0, 0, 0, 0, 0, 0;
-  // this means take 1st row of MemoryTransitionMatrix
-  // ceiled values should be:
-  // No error= 0.5, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-  backend->setSimTime(SimTime(1, SIMTIME_US));
 
   // X error
   qubit->reset();
@@ -221,14 +219,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_no_error) {
 }
 
 TEST_F(ETQubitMemoryErrorTest, apply_memory_error_X_error) {
-  qubit->fillParams();
-
   // Initial_condition << 0, 1, 0, 0, 0, 0, 0;
-  // this means take 2nd row of MemoryTransitionMatrix
-  // ceiled values should be:
-  // No error= 0.1, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-  rng->doubleValue = .0;
-  backend->setSimTime(SimTime(1, SIMTIME_US));
 
   // X error
   qubit->reset();
@@ -287,13 +278,8 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_X_error) {
 }
 
 TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Z_error) {
-  qubit->fillParams();
-
   // Initial_condition << 0, 0, 1, 0, 0, 0, 0;
   // this means take 3rd row of MemoryTransitionMatrix
-  // ceiled values should be:
-  // No error= 0.1, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-  backend->setSimTime(SimTime(1, SIMTIME_US));
 
   // X error
   qubit->reset();
@@ -352,14 +338,8 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Z_error) {
 }
 
 TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Y_error) {
-  qubit->fillParams();
-
   // Initial_condition << 0, 0, 0, 1, 0, 0, 0;
   // this means take 4th row of MemoryTransitionMatrix
-  // ceiled values should be:
-  // No error= 0.1, X error = 0.2, Z error = 0.3, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-
-  backend->setSimTime(SimTime(1, SIMTIME_US));
 
   // X error
   qubit->reset();
@@ -423,13 +403,8 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Y_error) {
 }
 
 TEST_F(ETQubitMemoryErrorTest, apply_memory_error_excitation_error) {
-  qubit->fillParams();
-
   // Initial_condition << 0, 0, 0, 0, 1, 0, 0;
   // this means take 5th row of MemoryTransitionMatrix
-  // ceiled values should be:
-  // No error= 0.1, X error = 0.2, Z error = 0.3, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-  backend->setSimTime(SimTime(1, SIMTIME_US));
 
   // X error
   qubit->reset();
@@ -488,13 +463,8 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_excitation_error) {
 }
 
 TEST_F(ETQubitMemoryErrorTest, apply_memory_error_relaxation_error) {
-  qubit->fillParams();
-
   // Initial_condition << 0, 0, 0, 0, 0, 1, 0;
   // this means take 6th row of MemoryTransitionMatrix
-  // ceiled values should be:
-  // No error= 0, X error = 0, Z error = 0, Y error = 0, Excitation = 0.1, Relaxation = 1.0
-  backend->setSimTime(SimTime(1, SIMTIME_US));
 
   // Excitation error
   rng->doubleValue = 0.05;
