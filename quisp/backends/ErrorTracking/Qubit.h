@@ -5,6 +5,7 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include "../IQuantumBackend.h"
 #include "types.h"
+#include <iostream>
 
 namespace quisp::backends::error_tracking {
 
@@ -16,6 +17,10 @@ using Eigen::Matrix2cd;
 using Eigen::MatrixPower;
 using Eigen::MatrixXd;
 using Eigen::Vector2cd;
+using abstract::MeasureXResult;
+using abstract::MeasureZResult;
+using abstract::MeasureYResult;
+using abstract::EigenvalueResult;
 
 template <typename QubitId>
 class ErrorTrackingBackend;
@@ -32,8 +37,11 @@ class ErrorTrackingQubit : public IQubit<QubitId> {
     // setSingleQubitGateErrorModel(Zgate_error, "Zgate");
     // setTwoQubitGateErrorCeilings(CNOTgate_error, "CNOTgate");
     // setMeasurementErrorModel(Measurement_error);
+    std::cout << "init qubit " <<  std::endl;
   }
-  ~ErrorTrackingQubit() {}
+  ~ErrorTrackingQubit() override{
+        std::cout << "destroy qubit " << std::endl;
+  }
   void setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate, double completely_mixed_rate) {
     memory_err.X_error_rate = x_error_rate;
     memory_err.Y_error_rate = y_error_rate;
@@ -277,6 +285,7 @@ class ErrorTrackingQubit : public IQubit<QubitId> {
     has_relaxation_error = false;
     has_excitation_error = false;
     has_completely_mixed_error = false;
+
   }
   void setRelaxedDensityMatrix() {
     Density_Matrix_Collapsed << 0, 0, 0, 1;
@@ -323,6 +332,73 @@ class ErrorTrackingQubit : public IQubit<QubitId> {
   }
 
   void update() { updated_time = backend->getSimTime(); }
+
+MeasureXResult correlationMeasureX() {
+  bool error = has_z_error;
+  if (backend->dblrand() < Measurement_error.x_error_rate) {
+    error = !error;
+  }
+  return error ? MeasureXResult::HAS_Z_ERROR : MeasureXResult::NO_Z_ERROR;
+}
+
+MeasureYResult correlationMeasureY() {
+  bool error = has_z_error != has_x_error;
+  if (backend->dblrand() < Measurement_error.y_error_rate) {
+    error = !error;
+  }
+  return error ? MeasureYResult::HAS_XZ_ERROR : MeasureYResult::NO_XZ_ERROR;
+}
+
+MeasureZResult correlationMeasureZ() {
+  bool error = has_x_error;
+  if (backend->dblrand() < Measurement_error.x_error_rate) {
+    error = !error;
+  }
+  return error ? MeasureZResult::HAS_X_ERROR : MeasureZResult::NO_X_ERROR;
+}
+
+EigenvalueResult localMeasureX() {
+  // the Z error will propagate to its partner; This only works for Bell pair and entanglement swapping for now
+  if (this->entangled_partner != nullptr && has_z_error) {
+    this->entangled_partner->addZerror();
+  }
+
+  auto result = EigenvalueResult::PLUS_ONE;
+  if (backend->dblrand() < 0.5) {
+    result = EigenvalueResult::MINUS_ONE;
+    if (this->entangled_partner != nullptr) {
+      this->entangled_partner->addZerror();
+    }
+  }
+  if (backend->dblrand() < this->Measurement_error.x_error_rate) {
+    result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
+  }
+  return result;
+}
+
+EigenvalueResult localMeasureZ() {
+  // the X error will propagate to its partner; This only works for Bell pair and entanglement swapping for now
+    std::cout << "localMeasZ: ex: " << (entangled_partner != nullptr ? "no partner" : "has partner") << std::endl;
+
+  if (this->entangled_partner != nullptr && has_x_error) {
+    this->entangled_partner->addXerror();
+  }
+
+  auto result = EigenvalueResult::PLUS_ONE;
+  auto val = backend->dblrand();
+  std::cout << "localMeasZ: dblrand(): " << val << std::endl;
+  if (val < 0.5) {
+    result = EigenvalueResult::MINUS_ONE;
+    if (this->entangled_partner != nullptr) {
+      this->entangled_partner->addXerror();
+    }
+  }
+  if (backend->dblrand() < this->Measurement_error.z_error_rate) {
+    result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
+  }
+  return result;
+}
+
 
   // constants
   SingleGateErrorModel Hgate_error;

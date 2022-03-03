@@ -5,7 +5,6 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include "Backend.h"
 #include "Qubit.h"
-
 using QubitId = int;
 
 template class ::quisp::backends::error_tracking::ErrorTrackingQubit<QubitId>;

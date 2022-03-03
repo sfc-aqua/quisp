@@ -132,6 +132,11 @@ struct MeasurementErrorModel {
   double x_error_rate;
   double y_error_rate;
   double z_error_rate;
+  void setParams(double x, double y, double z) {
+    x_error_rate = x;
+    y_error_rate = y;
+    z_error_rate = z;
+  }
 };
 
 // Matrices of single qubit errors. Used when conducting tomography.

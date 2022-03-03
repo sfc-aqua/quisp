@@ -47,6 +47,23 @@ class IQubit {
   // virtual void gateCZ(IQubit const* anoter) = 0;
   // virtual void gateSWAP() = 0;
 };
+
+enum class MeasureXResult : int {
+  NO_Z_ERROR,
+  HAS_Z_ERROR,
+};
+enum class MeasureYResult : int {
+  NO_XZ_ERROR,
+  HAS_XZ_ERROR,
+};
+enum class MeasureZResult : int {
+  NO_X_ERROR,
+  HAS_X_ERROR,
+};
+enum class EigenvalueResult : int {
+  PLUS_ONE,
+  MINUS_ONE,
+};
 }  // namespace quisp::backends::abstract
 
 namespace std {
