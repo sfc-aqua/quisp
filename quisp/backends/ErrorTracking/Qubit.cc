@@ -2,11 +2,10 @@
 #include "Backend.h"
 namespace quisp::backends::error_tracking {
 
-ErrorTrackingQubit::ErrorTrackingQubit(const IQubitId* id, ErrorTrackingBackend* const backend)
-    : id(id),  Memory_Transition_matrix(MatrixXd::Zero(7, 7)), backend(backend) {
+ErrorTrackingQubit::ErrorTrackingQubit(const IQubitId* id, ErrorTrackingBackend* const backend) : id(id), Memory_Transition_matrix(MatrixXd::Zero(7, 7)), backend(backend) {
   // emission_success_probability = par("emission_success_probability");
 }
-ErrorTrackingQubit::~ErrorTrackingQubit() { }
+ErrorTrackingQubit::~ErrorTrackingQubit() {}
 void ErrorTrackingQubit::setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate,
                                              double completely_mixed_rate) {
   memory_err.X_error_rate = x_error_rate;
@@ -356,7 +355,6 @@ EigenvalueResult ErrorTrackingQubit::localMeasureZ() {
   }
   return result;
 }
-
 
 // Set error matrices. This is used in the process of simulating tomography.
 const single_qubit_error ErrorTrackingQubit::Pauli = {.X = (Matrix2cd() << 0, 1, 1, 0).finished(),

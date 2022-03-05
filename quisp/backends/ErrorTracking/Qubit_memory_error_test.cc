@@ -1,117 +1,11 @@
 #include <backends/Backends.h>
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
-#include <stdexcept>
 #include <unsupported/Eigen/MatrixFunctions>
-#include "Backend.h"
-#include "Qubit.h"
+#include "test.h"
 
 namespace {
-using ErrorTrackingQubit = ::quisp::backends::ErrorTrackingQubit;
-using ErrorTrackingBackend = ::quisp::backends::ErrorTrackingBackend;
-using quisp::backends::IQubitId;
-
-class TestRNG : public quisp::backends::abstract::IRandomNumberGenerator {
- public:
-  TestRNG() {}
-  double doubleRandom() override { return doubleValue; }
-  double doubleValue = 0.0;
-};
-
-class Qubit : public ErrorTrackingQubit {
- public:
-  using ErrorTrackingQubit::applyMemoryError;
-  using ErrorTrackingQubit::has_completely_mixed_error;
-  using ErrorTrackingQubit::has_excitation_error;
-  using ErrorTrackingQubit::has_relaxation_error;
-  using ErrorTrackingQubit::has_x_error;
-  using ErrorTrackingQubit::has_z_error;
-  using ErrorTrackingQubit::setMemoryErrorRates;
-  using ErrorTrackingQubit::updated_time;
-
-  Qubit(const IQubitId* id, ErrorTrackingBackend* const backend) : ErrorTrackingQubit(id, backend) {}
-  void reset() {
-    setFree();
-    updated_time = SimTime(0);
-    no_density_matrix_nullptr_entangled_partner_ok = true;
-  }
-  void fillParams() {
-    // see networks/omnetpp.ini
-    // setParDouble(this, "emission_success_probability", 0.5);
-
-    // ceiled values should be:
-    // No error= 0.1, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-    double x_error_rate = .1;
-    double y_error_rate = .1;
-    double z_error_rate = .1;
-    double energy_excitation_rate = .1;
-    double energy_relaxation_rate = .1;
-    double completely_mixed_rate = 0;
-    setMemoryErrorRates(x_error_rate, y_error_rate, z_error_rate, energy_excitation_rate, energy_relaxation_rate, completely_mixed_rate);
-    backend->setSimTime(SimTime(1, SIMTIME_US));
-
-    double Hgate_error_rate = 1. / 2000;
-    double Hgate_X_error_ratio = 0;
-    double Hgate_Z_error_ratio = 0;
-    double Hgate_Y_error_ratio = 0;
-
-    double Xgate_error_rate = 1. / 2000;
-    double Xgate_X_error_ratio = 0;
-    double Xgate_Z_error_ratio = 0;
-    double Xgate_Y_error_ratio = 0;
-
-    double Zgate_error_rate = 1. / 2000;
-    double Zgate_X_error_ratio = 0;
-    double Zgate_Z_error_ratio = 0;
-    double Zgate_Y_error_ratio = 0;
-
-    double CNOTgate_error_rate = 1. / 2000;
-    double CNOTgate_IX_error_ratio = 1;
-    double CNOTgate_XI_error_ratio = 1;
-    double CNOTgate_XX_error_ratio = 1;
-    double CNOTgate_IZ_error_ratio = 1;
-    double CNOTgate_ZI_error_ratio = 1;
-    double CNOTgate_ZZ_error_ratio = 1;
-    double CNOTgate_IY_error_ratio = 1;
-    double CNOTgate_YI_error_ratio = 1;
-    double CNOTgate_YY_error_ratio = 1;
-
-    double X_measurement_error_rate = 1. / 2000;
-    double Y_measurement_error_rate = 1. / 2000;
-    double Z_measurement_error_rate = 1. / 2000;
-
-    int stationaryQubit_address = 1;
-    int node_address = 1;
-    int qnic_address = 1;
-    int qnic_type = 0;
-    int qnic_index = 0;
-    double std = 0.5;
-
-    double photon_emitted_at = 0.0;
-    double last_updated_at = 0.0;
-    int GOD_entangled_stationaryQubit_address = 0;
-    int GOD_entangled_node_address = 0;
-    int GOD_entangled_qnic_address = 0;
-    int GOD_entangled_qnic_type = 0;
-    double fidelity = -1.0;
-  }
-};
-
-class Backend : public ErrorTrackingBackend {
- public:
-  Backend(TestRNG* const rng) : ErrorTrackingBackend(rng) {}
-  quisp::backends::IQubit* getQubit(const IQubitId* id) override {
-    auto qubit = qubits.find(id);
-
-    if (qubit != qubits.cend()) {
-      return qubit->second.get();
-    }
-    auto original_qubit = std::make_unique<Qubit>(id, this);
-    auto* qubit_ptr = original_qubit.get();
-    qubits.insert({id, std::move(original_qubit)});
-    return qubit_ptr;
-  }
-};
+using namespace quisp_test::backends;
 
 class ETQubitMemoryErrorTest : public ::testing::Test {
  protected:
@@ -124,8 +18,21 @@ class ETQubitMemoryErrorTest : public ::testing::Test {
     qubit = dynamic_cast<Qubit*>(backend->getQubit(0));
     if (qubit == nullptr) throw std::runtime_error("Qubit is nullptr");
     backend->setSimTime(SimTime(1, SIMTIME_US));
-    qubit->fillParams();
+    fillParams(qubit);
   }
+
+  void fillParams(Qubit* qubit) {
+    // ceiled values should be:
+    // No error= 0.1, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
+    double x_error_rate = .1;
+    double y_error_rate = .1;
+    double z_error_rate = .1;
+    double energy_excitation_rate = .1;
+    double energy_relaxation_rate = .1;
+    double completely_mixed_rate = 0;
+    qubit->setMemoryErrorRates(x_error_rate, y_error_rate, z_error_rate, energy_excitation_rate, energy_relaxation_rate, completely_mixed_rate);
+  }
+
   Qubit* qubit;
   std::unique_ptr<Backend> backend;
   std::unique_ptr<TestRNG> rng;
