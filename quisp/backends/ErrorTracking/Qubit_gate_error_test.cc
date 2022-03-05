@@ -5,15 +5,11 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include "Backend.h"
 
-using QubitId = int;
-
-template class ::quisp::backends::error_tracking::ErrorTrackingQubit<QubitId>;
-template class ::quisp::backends::error_tracking::ErrorTrackingBackend<QubitId>;
-
 namespace {
 
-using ErrorTrackingQubit = ::quisp::backends::ErrorTrackingQubit<QubitId>;
-using ErrorTrackingBackend = ::quisp::backends::ErrorTrackingBackend<QubitId>;
+using quisp::backends::ErrorTrackingBackend;
+using quisp::backends::ErrorTrackingQubit;
+using quisp::backends::IQubitId;
 
 class TestRNG : public quisp::backends::abstract::IRandomNumberGenerator {
  public:
@@ -37,7 +33,7 @@ class Qubit : public ErrorTrackingQubit {
   using ErrorTrackingQubit::updated_time;
   using ErrorTrackingQubit::Xgate_error;
 
-  Qubit(QubitId id, ErrorTrackingBackend* const backend) : ErrorTrackingQubit(id, backend) {}
+  Qubit(const IQubitId* id, ErrorTrackingBackend* const backend) : ErrorTrackingQubit(id, backend) {}
   void reset() {
     setFree();
     updated_time = SimTime(0);
@@ -116,10 +112,17 @@ class Qubit : public ErrorTrackingQubit {
   }
 };
 
+class QubitId : public IQubitId {
+ public:
+  QubitId(int id) : id(id) {}
+  int id;
+  std::size_t operator()() const { return std::hash<int>()(id); }
+};
+
 class Backend : public ErrorTrackingBackend {
  public:
   Backend(TestRNG* const rng) : ErrorTrackingBackend(rng) {}
-  quisp::backends::IQubit<QubitId>* getQubit(QubitId id) override {
+  quisp::backends::IQubit* getQubit(const IQubitId* id) override {
     auto qubit = qubits.find(id);
 
     if (qubit != qubits.cend()) {
@@ -140,9 +143,9 @@ class EtQubitGateErrorTest : public ::testing::Test {
     rng = std::make_unique<TestRNG>();
     rng->doubleValue = .0;
     backend = std::make_unique<Backend>(rng.get());
-    qubit = dynamic_cast<Qubit*>(backend->getQubit(0));
+    qubit = dynamic_cast<Qubit*>(backend->getQubit(new QubitId(0)));
     if (qubit == nullptr) throw std::runtime_error("Qubit is nullptr");
-    qubit2 = dynamic_cast<Qubit*>(backend->getQubit(1));
+    qubit2 = dynamic_cast<Qubit*>(backend->getQubit(new QubitId(1)));
     if (qubit2 == nullptr) throw std::runtime_error("Qubit is nullptr");
     backend->setSimTime(SimTime(1, SIMTIME_US));
     qubit->fillParams();

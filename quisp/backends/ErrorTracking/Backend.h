@@ -1,4 +1,5 @@
 #pragma once
+#include <omnetpp.h>
 #include <unordered_map>
 #include "../IQuantumBackend.h"
 #include "../IRandomNumberGenerator.h"
@@ -6,33 +7,22 @@
 namespace quisp::backends::error_tracking {
 using abstract::IQuantumBackend;
 using abstract::IQubit;
+using abstract::IQubitId;
 using abstract::IRandomNumberGenerator;
+using error_tracking::ErrorTrackingQubit;
+using omnetpp::SimTime;
 
-template <typename QubitId>
-class ErrorTrackingQubit;
-
-template <typename QubitId>
-class ErrorTrackingBackend : public IQuantumBackend<QubitId> {
+class ErrorTrackingBackend : public IQuantumBackend {
  public:
   ErrorTrackingBackend(IRandomNumberGenerator* const rng) : current_time(SimTime()), rng(rng) {}
   ~ErrorTrackingBackend() {}
-  IQubit<QubitId>* getQubit(QubitId id) override {
-    auto qubit = qubits.find(id);
-
-    if (qubit != qubits.cend()) {
-      return qubit->second.get();
-    }
-    auto original_qubit = std::make_unique<ErrorTrackingQubit<QubitId>>(id, this);
-    auto* qubit_ptr = original_qubit.get();
-    qubits.insert({id, std::move(original_qubit)});
-    return qubit_ptr;
-  }
+  IQubit* getQubit(const IQubitId* id) override;
   const SimTime& getSimTime() override { return current_time; }
   void setSimTime(SimTime time) override { current_time = time; }
   double dblrand() { return rng->doubleRandom(); }
 
  protected:
-  std::unordered_map<QubitId, std::unique_ptr<ErrorTrackingQubit<QubitId>>> qubits;
+  std::unordered_map<const IQubitId*, std::unique_ptr<ErrorTrackingQubit>> qubits;
   SimTime current_time;
   IRandomNumberGenerator* rng;
 };

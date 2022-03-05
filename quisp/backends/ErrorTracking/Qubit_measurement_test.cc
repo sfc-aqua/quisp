@@ -5,14 +5,10 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include "Backend.h"
 
-using QubitId = int;
-
-template class ::quisp::backends::error_tracking::ErrorTrackingQubit<QubitId>;
-template class ::quisp::backends::error_tracking::ErrorTrackingBackend<QubitId>;
-
 namespace {
-using ErrorTrackingQubit = ::quisp::backends::ErrorTrackingQubit<QubitId>;
-using ErrorTrackingBackend = ::quisp::backends::ErrorTrackingBackend<QubitId>;
+using ErrorTrackingQubit = ::quisp::backends::ErrorTrackingQubit;
+using ErrorTrackingBackend = ::quisp::backends::ErrorTrackingBackend;
+using quisp::backends::IQubitId;
 
 class TestRNG : public quisp::backends::abstract::IRandomNumberGenerator {
  public:
@@ -23,6 +19,12 @@ class TestRNG : public quisp::backends::abstract::IRandomNumberGenerator {
 
 using namespace ::quisp::backends::abstract;
 using namespace quisp_test;
+class QubitId : public IQubitId {
+ public:
+  QubitId(int id) : id(id) {}
+  int id;
+  std::size_t operator()() const { return std::hash<int>()(id); }
+};
 
 class Qubit : public ErrorTrackingQubit {
  public:
@@ -48,7 +50,7 @@ class Qubit : public ErrorTrackingQubit {
   using ErrorTrackingQubit::updated_time;
   using ErrorTrackingQubit::Xgate_error;
 
-  Qubit(QubitId id, ErrorTrackingBackend* const backend) : ErrorTrackingQubit(id, backend) {}
+  Qubit(const IQubitId* id, ErrorTrackingBackend* const backend) : ErrorTrackingQubit(id, backend) {}
   void reset() {
     has_x_error = false;
     has_z_error = false;
@@ -118,7 +120,9 @@ class Qubit : public ErrorTrackingQubit {
 class Backend : public ErrorTrackingBackend {
  public:
   Backend(TestRNG* const rng) : ErrorTrackingBackend(rng) {}
-  quisp::backends::IQubit<QubitId>* getQubit(QubitId id) override {
+  ~Backend() {}
+  quisp::backends::IQubit* getQubit(int id) { return getQubit(new QubitId(id)); }
+  quisp::backends::IQubit* getQubit(const IQubitId* id) override {
     auto qubit = qubits.find(id);
 
     if (qubit != qubits.cend()) {
@@ -148,7 +152,6 @@ class EtQubitMeasurementTest : public ::testing::Test {
     qubit->fillParams();
     qubit2->fillParams();
     another_qubit->fillParams();
-    std::cout << "setup done" << std::endl;
   }
   Qubit* qubit;
   Qubit* qubit2;
@@ -267,7 +270,11 @@ TEST_F(EtQubitMeasurementTest, CorrelationMeasureZwithError) {
 TEST_F(EtQubitMeasurementTest, localXMeasurementWithoutError) {
   qubit->entangled_partner = another_qubit;
   another_qubit->entangled_partner = qubit;
+  ASSERT_NE(qubit->entangled_partner, nullptr);
+  ASSERT_NE(another_qubit->entangled_partner, nullptr);
 
+  qubit->reset();
+  another_qubit->reset();
   rng->doubleValue = 0.7;
   EXPECT_EQ(qubit->localMeasureX(), EigenvalueResult::PLUS_ONE);
   EXPECT_FALSE(qubit->has_x_error);
@@ -437,6 +444,8 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithoutError) {
   another_qubit->entangled_partner = qubit;
   // qubit->setMeasurementErrorModel(qubit->Measurement_error);
 
+  qubit->reset();
+  another_qubit->reset();
   rng->doubleValue = 0.7;
   EXPECT_EQ(qubit->localMeasureZ(), EigenvalueResult::PLUS_ONE);
   EXPECT_FALSE(qubit->has_x_error);
@@ -522,6 +531,8 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithError) {
   qubit->entangled_partner = another_qubit;
   another_qubit->entangled_partner = qubit;
 
+  qubit->reset();
+  another_qubit->reset();
   rng->doubleValue = 0.7;
   EXPECT_EQ(qubit->localMeasureZ(), EigenvalueResult::MINUS_ONE);
   EXPECT_FALSE(qubit->has_x_error);

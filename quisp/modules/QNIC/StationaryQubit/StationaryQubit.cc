@@ -108,7 +108,7 @@ void StationaryQubit::initialize() {
   vertex_operator = CliffordOperator::H;
 
   auto *backend = provider.getQuantumBackend();
-  qubit_ref = backend->getQubit({node_address, qnic_index, qnic_type, stationaryQubit_address});
+  // qubit_ref = backend->getQubit({node_address, qnic_index, qnic_type, stationaryQubit_address});
 }
 
 void StationaryQubit::finish() {}

@@ -5,14 +5,11 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include "Backend.h"
 #include "Qubit.h"
-using QubitId = int;
-
-template class ::quisp::backends::error_tracking::ErrorTrackingQubit<QubitId>;
-template class ::quisp::backends::error_tracking::ErrorTrackingBackend<QubitId>;
 
 namespace {
-using ErrorTrackingQubit = ::quisp::backends::ErrorTrackingQubit<QubitId>;
-using ErrorTrackingBackend = ::quisp::backends::ErrorTrackingBackend<QubitId>;
+using ErrorTrackingQubit = ::quisp::backends::ErrorTrackingQubit;
+using ErrorTrackingBackend = ::quisp::backends::ErrorTrackingBackend;
+using quisp::backends::IQubitId;
 
 class TestRNG : public quisp::backends::abstract::IRandomNumberGenerator {
  public:
@@ -32,7 +29,7 @@ class Qubit : public ErrorTrackingQubit {
   using ErrorTrackingQubit::setMemoryErrorRates;
   using ErrorTrackingQubit::updated_time;
 
-  Qubit(QubitId id, ErrorTrackingBackend* const backend) : ErrorTrackingQubit(id, backend) {}
+  Qubit(const IQubitId* id, ErrorTrackingBackend* const backend) : ErrorTrackingQubit(id, backend) {}
   void reset() {
     setFree();
     updated_time = SimTime(0);
@@ -103,7 +100,7 @@ class Qubit : public ErrorTrackingQubit {
 class Backend : public ErrorTrackingBackend {
  public:
   Backend(TestRNG* const rng) : ErrorTrackingBackend(rng) {}
-  quisp::backends::IQubit<QubitId>* getQubit(QubitId id) override {
+  quisp::backends::IQubit* getQubit(const IQubitId* id) override {
     auto qubit = qubits.find(id);
 
     if (qubit != qubits.cend()) {
