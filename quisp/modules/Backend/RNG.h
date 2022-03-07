@@ -3,7 +3,7 @@
 #include <backends/Backends.h>
 #include <omnetpp.h>
 
-namespace quisp::modules::backend {
+namespace quisp::modules::backend::rng {
 class RNG : public backends::abstract::IRandomNumberGenerator {
  public:
   RNG(omnetpp::cModule* module) : module(module) {}
