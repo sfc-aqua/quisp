@@ -12,4 +12,4 @@ class RNG : public backends::abstract::IRandomNumberGenerator {
  private:
   omnetpp::cModule* module;
 };
-}  // namespace quisp::modules::backend
+}  // namespace quisp::modules::backend::rng
