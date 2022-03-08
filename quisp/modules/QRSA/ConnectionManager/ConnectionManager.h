@@ -56,7 +56,6 @@ class ConnectionManager : public IConnectionManager {
   bool simultaneous_es_enabled;
   bool es_with_purify;
   int num_remote_purification;
-  std::string pur_type;
   double threshold_fidelity;
   PurType purification_type;
   IRoutingDaemon *routing_daemon;
@@ -110,6 +109,7 @@ class ConnectionManager : public IConnectionManager {
   unsigned long createUniqueId();
   static int computePathDivisionSize(int l);
   static int fillPathDivision(std::vector<int> path, int i, int l, int *link_left, int *link_right, int *swapper, int fill_start);
+  static PurType parsePurType(const std::string &pur_type);
 };
 
 }  // namespace modules

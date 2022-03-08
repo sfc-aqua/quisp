@@ -32,36 +32,16 @@ void ConnectionManager::initialize() {
   simultaneous_es_enabled = par("simultaneous_es_enabled");
   es_with_purify = par("entanglement_swapping_with_purification");
   num_remote_purification = par("num_remote_purification");
-  pur_type = par("purification_type_cm").str();
+  std::string pur_type = par("purification_type_cm").str();
+  pur_type = pur_type.substr(1, pur_type.size() - 2);
   threshold_fidelity = par("threshold_fidelity");
 
   if (simultaneous_es_enabled && es_with_purify) {
     error("Currently, simultaneous entanglement swapping cannot be simulated with purification");
   }
-  if (pur_type == "SINGLE_X") {
-    purification_type = PurType::SINGLE_X;
-  } else if (pur_type == "SINGLE_Z") {
-    purification_type = PurType::SINGLE_Z;
-  } else if (pur_type == "DOUBLE") {
-    purification_type = PurType::DOUBLE;
-  } else if (pur_type == "DOUBLE_INV") {
-    purification_type = PurType::DOUBLE_INV;
-  } else if (pur_type == "SSDP_X") {
-    purification_type = PurType::SSDP_X;
-  } else if (pur_type == "SSDP_Z") {
-    purification_type = PurType::SSDP_Z;
-  } else if (pur_type == "SSDP_X_INV") {
-    purification_type = PurType::SSDP_X_INV;
-  } else if (pur_type == "SSDP_Z_INV") {
-    purification_type = PurType::SSDP_Z_INV;
-  } else if (pur_type == "DSDA") {
-    purification_type = PurType::DSDA;
-  } else if (pur_type == "DSDA_INV") {
-    purification_type = PurType::DSDA_INV;
-  } else if (pur_type == "DSDA_SECOND") {
-    purification_type = PurType::DSDA_SECOND;
-  } else if (pur_type == "DSDA_SECOND_INV") {
-    purification_type = PurType::DSDA_SECOND_INV;
+  purification_type = parsePurType(pur_type);
+  if (purification_type == PurType::INVALID) {
+    error("Unknown purification type");
   }
 
   for (int i = 0; i < num_of_qnics; i++) {
@@ -136,6 +116,38 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     delete msg;
     return;
   }
+}
+
+PurType ConnectionManager::parsePurType(const std::string &pur_type) {
+  PurType purify_type;
+  if (pur_type == "SINGLE_X") {
+    purify_type = PurType::SINGLE_X;
+  } else if (pur_type == "SINGLE_Z") {
+    purify_type = PurType::SINGLE_Z;
+  } else if (pur_type == "DOUBLE") {
+    purify_type = PurType::DOUBLE;
+  } else if (pur_type == "DOUBLE_INV") {
+    purify_type = PurType::DOUBLE_INV;
+  } else if (pur_type == "SSDP_X") {
+    purify_type = PurType::SSDP_X;
+  } else if (pur_type == "SSDP_Z") {
+    purify_type = PurType::SSDP_Z;
+  } else if (pur_type == "SSDP_X_INV") {
+    purify_type = PurType::SSDP_X_INV;
+  } else if (pur_type == "SSDP_Z_INV") {
+    purify_type = PurType::SSDP_Z_INV;
+  } else if (pur_type == "DSDA") {
+    purify_type = PurType::DSDA;
+  } else if (pur_type == "DSDA_INV") {
+    purify_type = PurType::DSDA_INV;
+  } else if (pur_type == "DSDA_SECOND") {
+    purify_type = PurType::DSDA_SECOND;
+  } else if (pur_type == "DSDA_SECOND_INV") {
+    purify_type = PurType::DSDA_SECOND_INV;
+  } else {
+    purify_type = PurType::INVALID;
+  }
+  return purify_type;
 }
 
 /**

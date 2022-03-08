@@ -71,6 +71,8 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
 class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
  public:
   using quisp::modules::ConnectionManager::par;
+  using quisp::modules::ConnectionManager::parsePurType;
+  using quisp::modules::ConnectionManager::purification_type;
   using quisp::modules::ConnectionManager::respondToRequest;
   using quisp::modules::ConnectionManager::respondToRequest_deprecated;
   ConnectionManagerTestTarget(IRoutingDaemon *routing_daemon, IHardwareMonitor *hardware_monitor)
@@ -81,7 +83,7 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
     setParBool(this, "simultaneous_es_enabled", false);
     setParBool(this, "entanglement_swapping_with_purification", false);
     setParInt(this, "num_remote_purification", 1);
-    setParStr(this, "purification_type_cm", "SSDP_X");
+    setParStr(this, "purification_type_cm", "SINGLE_X");
     setParDouble(this, "threshold_fidelity", 0);
 
     this->provider.setStrategy(std::make_unique<Strategy>(routing_daemon, hardware_monitor));
@@ -106,6 +108,42 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
 TEST(ConnectionManagerTest, Init) {
   ConnectionManagerTestTarget c;
   ASSERT_EQ(c.par("address").intValue(), 123);
+}
+
+TEST(ConnectionManagerTest, parsePurType) {
+  prepareSimulation();
+  auto *routing_daemon = new MockRoutingDaemon();
+  auto *hardware_monitor = new MockHardwareMonitor();
+  auto *connection_manager = new ConnectionManagerTestTarget(routing_daemon, hardware_monitor);
+
+  auto pur_type = connection_manager->parsePurType("SINGLE_X");
+  EXPECT_EQ(pur_type, PurType::SINGLE_X);
+
+  pur_type = connection_manager->parsePurType("SINGLE_Z");
+  EXPECT_EQ(pur_type, PurType::SINGLE_Z);
+  pur_type = connection_manager->parsePurType("DOUBLE");
+  EXPECT_EQ(pur_type, PurType::DOUBLE);
+  pur_type = connection_manager->parsePurType("DOUBLE_INV");
+  EXPECT_EQ(pur_type, PurType::DOUBLE_INV);
+  pur_type = connection_manager->parsePurType("SSDP_X");
+  EXPECT_EQ(pur_type, PurType::SSDP_X);
+  pur_type = connection_manager->parsePurType("SSDP_Z");
+  EXPECT_EQ(pur_type, PurType::SSDP_Z);
+  pur_type = connection_manager->parsePurType("SSDP_X_INV");
+  EXPECT_EQ(pur_type, PurType::SSDP_X_INV);
+  pur_type = connection_manager->parsePurType("SSDP_Z_INV");
+  EXPECT_EQ(pur_type, PurType::SSDP_Z_INV);
+  pur_type = connection_manager->parsePurType("DSDA");
+  EXPECT_EQ(pur_type, PurType::DSDA);
+  pur_type = connection_manager->parsePurType("DSDA_INV");
+  EXPECT_EQ(pur_type, PurType::DSDA_INV);
+  pur_type = connection_manager->parsePurType("DSDA_SECOND");
+  EXPECT_EQ(pur_type, PurType::DSDA_SECOND);
+  pur_type = connection_manager->parsePurType("DSDA_SECOND_INV");
+  EXPECT_EQ(pur_type, PurType::DSDA_SECOND_INV);
+  // unknown purification name
+  pur_type = connection_manager->parsePurType("DSDA_SECOND_INV_T");
+  EXPECT_EQ(pur_type, PurType::INVALID);
 }
 
 TEST(ConnectionManagerTest, RespondToRequest) {
@@ -189,7 +227,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
                 }
               }]
             }
-          }, 
+          },
         {
           "name": "wait",
           "next_rule_id": 2,
@@ -215,7 +253,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
                 }
               }]
             }
-          }, 
+          },
         {
           "name": "purification",
           "next_rule_id": 3,
@@ -244,7 +282,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
                 }
               }]
             }
-          }, 
+          },
         {
           "name": "tomography",
           "next_rule_id": -1,
@@ -410,7 +448,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
         "partners": [2, 5],
         "rule_id": 4,
         "qnic_type": ["QNIC_E", "QNIC_E"],
-        "qnic_id": [12, 13], 
+        "qnic_id": [12, 13],
         "action": {
           "type": "swapping",
           "options": {
@@ -519,7 +557,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
             }
           }]
         }
-      }, 
+      },
     {
       "name": "swapping",
       "next_rule_id": -1,
@@ -545,7 +583,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
             "qnic_type": "QNIC_E",
             "required_fidelity": 0.0
           }
-        }, 
+        },
       {
         "type": "enough_resource",
 				"options": {
@@ -609,7 +647,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
               }
             }]
           }
-        }, 
+        },
         {
         "name": "wait",
         "next_rule_id": 2,
@@ -635,7 +673,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
             }
           }]
         }
-        }, 
+        },
         {
         "name": "purification",
         "next_rule_id": 3,
@@ -664,7 +702,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
             }
           }]
         }
-       }, 
+       },
         {
         "name": "wait",
         "next_rule_id": 4,
