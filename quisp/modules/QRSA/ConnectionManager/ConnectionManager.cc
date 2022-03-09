@@ -119,35 +119,43 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 }
 
 PurType ConnectionManager::parsePurType(const std::string &pur_type) {
-  PurType purify_type;
   if (pur_type == "SINGLE_X") {
-    purify_type = PurType::SINGLE_X;
-  } else if (pur_type == "SINGLE_Z") {
-    purify_type = PurType::SINGLE_Z;
-  } else if (pur_type == "DOUBLE") {
-    purify_type = PurType::DOUBLE;
-  } else if (pur_type == "DOUBLE_INV") {
-    purify_type = PurType::DOUBLE_INV;
-  } else if (pur_type == "SSDP_X") {
-    purify_type = PurType::SSDP_X;
-  } else if (pur_type == "SSDP_Z") {
-    purify_type = PurType::SSDP_Z;
-  } else if (pur_type == "SSDP_X_INV") {
-    purify_type = PurType::SSDP_X_INV;
-  } else if (pur_type == "SSDP_Z_INV") {
-    purify_type = PurType::SSDP_Z_INV;
-  } else if (pur_type == "DSDA") {
-    purify_type = PurType::DSDA;
-  } else if (pur_type == "DSDA_INV") {
-    purify_type = PurType::DSDA_INV;
-  } else if (pur_type == "DSDA_SECOND") {
-    purify_type = PurType::DSDA_SECOND;
-  } else if (pur_type == "DSDA_SECOND_INV") {
-    purify_type = PurType::DSDA_SECOND_INV;
-  } else {
-    purify_type = PurType::INVALID;
+    return PurType::SINGLE_X;
   }
-  return purify_type;
+  if (pur_type == "SINGLE_Z") {
+    return PurType::SINGLE_Z;
+  }
+  if (pur_type == "DOUBLE") {
+    return PurType::DOUBLE;
+  }
+  if (pur_type == "DOUBLE_INV") {
+    return PurType::DOUBLE_INV;
+  }
+  if (pur_type == "SSDP_X") {
+    return PurType::SSDP_X;
+  }
+  if (pur_type == "SSDP_Z") {
+    return PurType::SSDP_Z;
+  }
+  if (pur_type == "SSDP_X_INV") {
+    return PurType::SSDP_X_INV;
+  }
+  if (pur_type == "SSDP_Z_INV") {
+    return PurType::SSDP_Z_INV;
+  }
+  if (pur_type == "DSDA") {
+    return PurType::DSDA;
+  }
+  if (pur_type == "DSDA_INV") {
+    return PurType::DSDA_INV;
+  }
+  if (pur_type == "DSDA_SECOND") {
+    return PurType::DSDA_SECOND;
+  }
+  if (pur_type == "DSDA_SECOND_INV") {
+    return PurType::DSDA_SECOND_INV;
+  }
+  return PurType::INVALID;
 }
 
 /**
