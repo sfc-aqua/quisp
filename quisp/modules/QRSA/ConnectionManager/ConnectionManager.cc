@@ -475,7 +475,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       auto appended_rule = ruleset.addRule(std::move(rule));
       auto target_qnic_type = appended_rule->qnic_types;
       auto target_qnic_id = appended_rule->qnic_ids;
-      if (appended_rule->finalize) {
+      if (appended_rule->is_finalized) {
         // if the rule is entanglement swapping or tomography rule, no need to specify the next rule
         break;
       }
