@@ -1,12 +1,11 @@
 #pragma once
 #include <cstddef>
 #include <functional>
-#include <iostream>
 
 namespace quisp::backends::abstract {
 class IQubitId {
  public:
-  virtual ~IQubitId() { std::cout << "IQubitId dtor" << std::endl; };
+  virtual ~IQubitId(){};
   virtual std::size_t operator()() const { return 0; };
   virtual std::size_t hash() const = 0;
   virtual bool compare(const IQubitId& id) const = 0;

@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
 #include <unsupported/Eigen/MatrixFunctions>
+#include "backends/IRandomNumberGenerator.h"
 #include "test.h"
 
 namespace {
@@ -12,9 +13,9 @@ class ETQubitMemoryErrorTest : public ::testing::Test {
   virtual void SetUp() {
     // to avoid the omnetpp::SimTime assertion
     SimTime::setScaleExp(-9);
-    rng = std::make_unique<TestRNG>();
+    rng = new TestRNG();
     rng->doubleValue = .0;
-    backend = std::make_unique<Backend>(rng.get());
+    backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng));
     qubit = dynamic_cast<Qubit*>(backend->getQubit(0));
     if (qubit == nullptr) throw std::runtime_error("Qubit is nullptr");
     backend->setSimTime(SimTime(1, SIMTIME_US));
@@ -35,7 +36,7 @@ class ETQubitMemoryErrorTest : public ::testing::Test {
 
   Qubit* qubit;
   std::unique_ptr<Backend> backend;
-  std::unique_ptr<TestRNG> rng;
+  TestRNG* rng;
 };
 
 TEST_F(ETQubitMemoryErrorTest, do_nothing) {

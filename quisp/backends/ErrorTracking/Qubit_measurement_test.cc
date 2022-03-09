@@ -2,6 +2,7 @@
 #include <test_utils/TestUtils.h>
 #include <stdexcept>
 #include <unsupported/Eigen/MatrixFunctions>
+#include "backends/IRandomNumberGenerator.h"
 #include "test.h"
 
 namespace {
@@ -12,10 +13,10 @@ class EtQubitMeasurementTest : public ::testing::Test {
   virtual void SetUp() {
     // to avoid the omnetpp::SimTime assertion
     SimTime::setScaleExp(-9);
-    rng = std::make_unique<TestRNG>();
+    rng = new TestRNG();
     rng->doubleValue = .0;
 
-    backend = std::make_unique<Backend>(rng.get());
+    backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng));
     qubit = dynamic_cast<Qubit*>(backend->getQubit(0));
     qubit2 = dynamic_cast<Qubit*>(backend->getQubit(1));
     another_qubit = dynamic_cast<Qubit*>(backend->getQubit(2));
@@ -84,7 +85,7 @@ class EtQubitMeasurementTest : public ::testing::Test {
   Qubit* qubit2;
   Qubit* another_qubit;
   std::unique_ptr<Backend> backend;
-  std::unique_ptr<TestRNG> rng;
+  TestRNG* rng;
 };
 
 TEST_F(EtQubitMeasurementTest, SetMeasurementErrorRate) {

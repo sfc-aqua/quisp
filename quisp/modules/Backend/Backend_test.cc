@@ -11,7 +11,6 @@ using quisp::modules::backend::ErrorTrackingBackend;
 class BackendContainer : public OriginalBackendContainer {
  public:
   using OriginalBackendContainer::backend;
-  using OriginalBackendContainer::rng;
 
   BackendContainer() : OriginalBackendContainer() { setComponentType(new TestModuleType("test qnode")); }
   ~BackendContainer() override {}
@@ -25,10 +24,8 @@ TEST(BackendContainer, callInitialize) {
   sim->registerComponent(backend);
   setParStr(backend, "backendType", "ErrorTrackingBackend");
   EXPECT_EQ(backend->backend, nullptr);
-  EXPECT_EQ(backend->rng, nullptr);
   backend->callInitialize();
   EXPECT_NE(backend->backend, nullptr);
-  EXPECT_NE(backend->rng, nullptr);
 }
 
 TEST(BackendContainer, callInitializeWithInvalidBackend) {
@@ -37,7 +34,6 @@ TEST(BackendContainer, callInitializeWithInvalidBackend) {
   sim->registerComponent(backend);
   setParStr(backend, "backendType", "SomeInvalidBackend");
   EXPECT_EQ(backend->backend, nullptr);
-  EXPECT_EQ(backend->rng, nullptr);
   EXPECT_THROW(backend->callInitialize(), omnetpp::cRuntimeError);
 }
 

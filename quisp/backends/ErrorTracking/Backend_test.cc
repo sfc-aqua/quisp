@@ -2,8 +2,9 @@
 #include <cxxabi.h>
 #include <gtest/gtest.h>
 #include <omnetpp.h>
-#include <iostream>
+#include "backends/IRandomNumberGenerator.h"
 #include "test.h"
+
 namespace {
 using namespace quisp::backends::error_tracking;
 using namespace quisp_test::backends;
@@ -14,7 +15,7 @@ class EtBackendTest : public ::testing::Test {
   virtual void SetUp() {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
-    backend = std::make_unique<Backend>(rng);
+    backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng));
   }
   TestRNG* rng;
   std::unique_ptr<Backend> backend;
@@ -28,7 +29,6 @@ TEST_F(EtBackendTest, getQubit) {
   EXPECT_EQ(qubit, backend->getQubit(id));
   EXPECT_EQ(backend->qubits.size(), 1);
 
-  std::cout << "**************" << std::endl;
   auto* same_id = new QubitId(123);
   auto* same_qubit = backend->getQubit(same_id);
   EXPECT_EQ(backend->qubits.size(), 1);

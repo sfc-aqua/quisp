@@ -1,6 +1,7 @@
 #pragma once
 #include <omnetpp.h>
 #include <unordered_map>
+
 #include "../IQuantumBackend.h"
 #include "../IRandomNumberGenerator.h"
 #include "Qubit.h"
@@ -16,12 +17,11 @@ using omnetpp::SimTime;
 
 class ErrorTrackingBackend : public IQuantumBackend {
  public:
-  ErrorTrackingBackend(IRandomNumberGenerator* const rng);
+  ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng);
   ~ErrorTrackingBackend() {
     for (auto& pair : qubits) {
       delete pair.first;
     }
-    delete rng;
   }
   IQubit* getQubit(const IQubitId* id) override;
   const SimTime& getSimTime() override;
@@ -31,7 +31,7 @@ class ErrorTrackingBackend : public IQuantumBackend {
  protected:
   std::unordered_map<const IQubitId*, std::unique_ptr<ErrorTrackingQubit>, IQubitId::Hash, IQubitId::Pred> qubits;
   SimTime current_time;
-  IRandomNumberGenerator* rng;
+  const std::unique_ptr<IRandomNumberGenerator> rng;
 };
 
 }  // namespace quisp::backends::error_tracking
