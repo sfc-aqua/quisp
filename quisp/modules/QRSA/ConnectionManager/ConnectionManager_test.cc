@@ -85,6 +85,7 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
     setParInt(this, "num_remote_purification", 1);
     setParStr(this, "purification_type_cm", "SINGLE_X");
     setParDouble(this, "threshold_fidelity", 0);
+    setParInt(this, "seed_cm", 0);
 
     this->provider.setStrategy(std::make_unique<Strategy>(routing_daemon, hardware_monitor));
     setComponentType(new module_type::TestModuleType("test cm"));

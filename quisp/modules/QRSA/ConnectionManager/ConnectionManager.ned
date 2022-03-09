@@ -14,6 +14,7 @@ simple ConnectionManager
         bool entanglement_swapping_with_purification = default(false);
         string purification_type_cm = default("SINGLE_X");
         double threshold_fidelity = default(0);
+        int seed_cm = default(0);
 
     gates:
         inout RouterPort;
