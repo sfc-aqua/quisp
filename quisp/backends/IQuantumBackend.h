@@ -1,9 +1,9 @@
 #pragma once
 #include <omnetpp/simtime_t.h>
 #include <functional>
+#include <memory>
 #include <tuple>
 #include "IQubitId.h"
-#include "omnetpp/simtime.h"
 
 namespace quisp::backends::abstract {
 
