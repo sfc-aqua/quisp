@@ -22,9 +22,7 @@ class QubitId : public IQubitId {
   QubitId(int id) : id(id) {}
   int id;
 
-  inline std::size_t hash() const override {
-    return std::hash<int>()(id);
-  }
+  inline std::size_t hash() const override { return std::hash<int>()(id); }
   bool compare(const IQubitId& qubit_id_ref) const override {
     auto qubit_id = dynamic_cast<const QubitId&>(qubit_id_ref);
     return id == qubit_id.id;
