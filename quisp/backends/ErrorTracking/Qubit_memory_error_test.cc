@@ -13,7 +13,7 @@ class ETQubitMemoryErrorTest : public ::testing::Test {
     // to avoid the omnetpp::SimTime assertion
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
-    rng->doubleValue = .0;
+    rng->double_value = .0;
     backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng));
     qubit = dynamic_cast<Qubit*>(backend->getQubit(0));
     if (qubit == nullptr) throw std::runtime_error("Qubit is nullptr");
@@ -72,7 +72,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_no_error) {
 
   // X error
   qubit->reset();
-  rng->doubleValue = 0.55;
+  rng->double_value = 0.55;
   qubit->applyMemoryError();
   EXPECT_TRUE(qubit->has_x_error);
   EXPECT_FALSE(qubit->has_z_error);
@@ -81,7 +81,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_no_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Z error
-  rng->doubleValue = 0.65;
+  rng->double_value = 0.65;
   qubit->reset();
   qubit->applyMemoryError();
   EXPECT_FALSE(qubit->has_x_error);
@@ -91,7 +91,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_no_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Y error
-  rng->doubleValue = 0.75;
+  rng->double_value = 0.75;
   qubit->reset();
   qubit->applyMemoryError();
   EXPECT_TRUE(qubit->has_x_error);
@@ -101,7 +101,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_no_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Excitation error
-  rng->doubleValue = 0.85;
+  rng->double_value = 0.85;
   qubit->reset();
   qubit->applyMemoryError();
   EXPECT_FALSE(qubit->has_x_error);
@@ -111,7 +111,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_no_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Relaxation error
-  rng->doubleValue = 0.95;
+  rng->double_value = 0.95;
   qubit->reset();
   qubit->applyMemoryError();
   EXPECT_FALSE(qubit->has_x_error);
@@ -127,7 +127,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_X_error) {
   // X error
   qubit->reset();
   qubit->has_x_error = true;
-  rng->doubleValue = 0.55;
+  rng->double_value = 0.55;
   qubit->applyMemoryError();
   EXPECT_TRUE(qubit->has_x_error);
   EXPECT_FALSE(qubit->has_z_error);
@@ -136,7 +136,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_X_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Z error
-  rng->doubleValue = 0.65;
+  rng->double_value = 0.65;
   qubit->reset();
   qubit->has_x_error = true;
   qubit->applyMemoryError();
@@ -147,7 +147,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_X_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Y error
-  rng->doubleValue = 0.75;
+  rng->double_value = 0.75;
   qubit->reset();
   qubit->has_x_error = true;
   qubit->applyMemoryError();
@@ -158,7 +158,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_X_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Excitation error
-  rng->doubleValue = 0.85;
+  rng->double_value = 0.85;
   qubit->reset();
   qubit->has_x_error = true;
   qubit->applyMemoryError();
@@ -169,7 +169,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_X_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Relaxation error
-  rng->doubleValue = 0.95;
+  rng->double_value = 0.95;
   qubit->reset();
   qubit->has_x_error = true;
   qubit->applyMemoryError();
@@ -187,7 +187,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Z_error) {
   // X error
   qubit->reset();
   qubit->has_x_error = true;
-  rng->doubleValue = 0.55;
+  rng->double_value = 0.55;
   qubit->applyMemoryError();
   EXPECT_TRUE(qubit->has_x_error);
   EXPECT_FALSE(qubit->has_z_error);
@@ -196,7 +196,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Z_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Z error
-  rng->doubleValue = 0.65;
+  rng->double_value = 0.65;
   qubit->reset();
   qubit->has_x_error = true;
   qubit->applyMemoryError();
@@ -207,7 +207,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Z_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Y error
-  rng->doubleValue = 0.75;
+  rng->double_value = 0.75;
   qubit->reset();
   qubit->has_x_error = true;
   qubit->applyMemoryError();
@@ -218,7 +218,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Z_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Excitation error
-  rng->doubleValue = 0.85;
+  rng->double_value = 0.85;
   qubit->reset();
   qubit->has_x_error = true;
   qubit->applyMemoryError();
@@ -229,7 +229,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Z_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Relaxation error
-  rng->doubleValue = 0.95;
+  rng->double_value = 0.95;
   qubit->reset();
   qubit->has_x_error = true;
   qubit->applyMemoryError();
@@ -248,7 +248,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Y_error) {
   qubit->reset();
   qubit->has_x_error = true;
   qubit->has_z_error = true;
-  rng->doubleValue = 0.15;
+  rng->double_value = 0.15;
   qubit->applyMemoryError();
   EXPECT_TRUE(qubit->has_x_error);
   EXPECT_FALSE(qubit->has_z_error);
@@ -257,7 +257,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Y_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Z error
-  rng->doubleValue = 0.25;
+  rng->double_value = 0.25;
   qubit->reset();
   qubit->has_x_error = true;
   qubit->has_z_error = true;
@@ -269,7 +269,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Y_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Y error
-  rng->doubleValue = 0.5;
+  rng->double_value = 0.5;
   qubit->reset();
   qubit->has_x_error = true;
   qubit->has_z_error = true;
@@ -281,7 +281,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Y_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Excitation error
-  rng->doubleValue = 0.85;
+  rng->double_value = 0.85;
   qubit->reset();
   qubit->has_x_error = true;
   qubit->has_z_error = true;
@@ -293,7 +293,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_Y_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Relaxation error
-  rng->doubleValue = 0.95;
+  rng->double_value = 0.95;
   qubit->reset();
   qubit->has_x_error = true;
   qubit->has_z_error = true;
@@ -312,7 +312,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_excitation_error) {
   // X error
   qubit->reset();
   qubit->has_excitation_error = true;
-  rng->doubleValue = 0.15;
+  rng->double_value = 0.15;
   qubit->applyMemoryError();
   EXPECT_FALSE(qubit->has_x_error);
   EXPECT_FALSE(qubit->has_z_error);
@@ -321,7 +321,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_excitation_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Z error
-  rng->doubleValue = 0.25;
+  rng->double_value = 0.25;
   qubit->reset();
   qubit->has_excitation_error = true;
   qubit->applyMemoryError();
@@ -332,7 +332,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_excitation_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Y error
-  rng->doubleValue = 0.5;
+  rng->double_value = 0.5;
   qubit->reset();
   qubit->has_excitation_error = true;
   qubit->applyMemoryError();
@@ -343,7 +343,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_excitation_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Excitation error
-  rng->doubleValue = 0.85;
+  rng->double_value = 0.85;
   qubit->reset();
   qubit->has_excitation_error = true;
   qubit->applyMemoryError();
@@ -354,7 +354,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_excitation_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Relaxation error
-  rng->doubleValue = 0.95;
+  rng->double_value = 0.95;
   qubit->reset();
   qubit->has_excitation_error = true;
   qubit->applyMemoryError();
@@ -370,7 +370,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_relaxation_error) {
   // this means take 6th row of MemoryTransitionMatrix
 
   // Excitation error
-  rng->doubleValue = 0.05;
+  rng->double_value = 0.05;
   qubit->reset();
   qubit->has_relaxation_error = true;
   qubit->applyMemoryError();
@@ -381,7 +381,7 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_relaxation_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 
   // Relaxation error
-  rng->doubleValue = 0.95;
+  rng->double_value = 0.95;
   qubit->reset();
   qubit->has_relaxation_error = true;
   qubit->applyMemoryError();

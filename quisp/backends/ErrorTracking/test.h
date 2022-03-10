@@ -32,35 +32,35 @@ class QubitId : public IQubitId {
 class TestRNG : public quisp::backends::abstract::IRandomNumberGenerator {
  public:
   TestRNG() {}
-  double doubleRandom() override { return doubleValue; }
-  double doubleValue = 0.0;
+  double doubleRandom() override { return double_value; }
+  double double_value = 0.0;
 };
 
 class Qubit : public ErrorTrackingQubit {
  public:
-  using ErrorTrackingQubit::addXerror;
-  using ErrorTrackingQubit::addZerror;
+  using ErrorTrackingQubit::addErrorX;
+  using ErrorTrackingQubit::addErrorZ;
   using ErrorTrackingQubit::applyMemoryError;
   using ErrorTrackingQubit::applySingleQubitGateError;
   using ErrorTrackingQubit::applyTwoQubitGateError;
-  using ErrorTrackingQubit::CNOTgate_error;
   using ErrorTrackingQubit::correlationMeasureX;
   using ErrorTrackingQubit::correlationMeasureY;
   using ErrorTrackingQubit::correlationMeasureZ;
   using ErrorTrackingQubit::entangled_partner;
+  using ErrorTrackingQubit::gate_err_cnot;
+  using ErrorTrackingQubit::gate_err_h;
+  using ErrorTrackingQubit::gate_err_x;
+  using ErrorTrackingQubit::gate_err_z;
   using ErrorTrackingQubit::has_completely_mixed_error;
   using ErrorTrackingQubit::has_excitation_error;
   using ErrorTrackingQubit::has_relaxation_error;
   using ErrorTrackingQubit::has_x_error;
   using ErrorTrackingQubit::has_z_error;
-  using ErrorTrackingQubit::Hgate_error;
   using ErrorTrackingQubit::localMeasureX;
   using ErrorTrackingQubit::localMeasureZ;
-  using ErrorTrackingQubit::Measurement_error;
+  using ErrorTrackingQubit::measurement_err;
   using ErrorTrackingQubit::setMemoryErrorRates;
   using ErrorTrackingQubit::updated_time;
-  using ErrorTrackingQubit::Xgate_error;
-  using ErrorTrackingQubit::Zgate_error;
 
   Qubit(const IQubitId* id, ErrorTrackingBackend* const backend) : ErrorTrackingQubit(id, backend) {}
   void reset() {

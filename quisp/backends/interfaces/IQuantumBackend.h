@@ -9,11 +9,11 @@ using omnetpp::SimTimeUnit;
 class IQubit;
 
 /**
-* @brief The abstract interface for a quantum backend.
-*
-* the QuantumBackend class manages its own qubits and the simulator instance.
-* It is responsible for creating qubits and managing their lifecycle.
-*/
+ * @brief The abstract interface for a quantum backend.
+ *
+ * the QuantumBackend class manages its own qubits and the simulator instance.
+ * It is responsible for creating qubits and managing their lifecycle.
+ */
 class IQuantumBackend {
  public:
   IQuantumBackend(){};
@@ -25,6 +25,5 @@ class IQuantumBackend {
 
  protected:
 };
-
 
 }  // namespace quisp::backends::abstract

@@ -2,22 +2,22 @@
 #include "Backend.h"
 namespace quisp::backends::error_tracking {
 
-ErrorTrackingQubit::ErrorTrackingQubit(const IQubitId* id, ErrorTrackingBackend* const backend) : id(id), Memory_Transition_matrix(MatrixXd::Zero(7, 7)), backend(backend) {
+ErrorTrackingQubit::ErrorTrackingQubit(const IQubitId* id, ErrorTrackingBackend* const backend) : id(id), memory_transition_matrix(MatrixXd::Zero(7, 7)), backend(backend) {
   // emission_success_probability = par("emission_success_probability");
 }
 ErrorTrackingQubit::~ErrorTrackingQubit() {}
 void ErrorTrackingQubit::setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate,
                                              double completely_mixed_rate) {
-  memory_err.X_error_rate = x_error_rate;
-  memory_err.Y_error_rate = y_error_rate;
-  memory_err.Z_error_rate = z_error_rate;
+  memory_err.x_error_rate = x_error_rate;
+  memory_err.y_error_rate = y_error_rate;
+  memory_err.z_error_rate = z_error_rate;
   memory_err.excitation_error_rate = excitation_rate;
   memory_err.relaxation_error_rate = relaxation_rate;
   memory_err.completely_mixed_rate = completely_mixed_rate;
   double error_rate = x_error_rate + y_error_rate + z_error_rate + excitation_rate + relaxation_rate + completely_mixed_rate;  // This is per μs.
   memory_err.error_rate = error_rate;
   // clang-format off
-  Memory_Transition_matrix <<
+  memory_transition_matrix <<
     1 - error_rate,  x_error_rate,   z_error_rate,   y_error_rate,   excitation_rate,                             relaxation_rate,                             completely_mixed_rate,
     x_error_rate,    1 - error_rate, y_error_rate,   z_error_rate,   excitation_rate,                             relaxation_rate,                             completely_mixed_rate,
     z_error_rate,    y_error_rate,   1 - error_rate, x_error_rate,   excitation_rate,                             relaxation_rate,                             completely_mixed_rate,
@@ -42,18 +42,18 @@ void ErrorTrackingQubit::applySingleQubitGateError(SingleGateErrorModel const& e
    *                       |
    *                  X_error_ceil
    */
-  if (rand <= err.No_error_ceil) {
+  if (rand <= err.no_error_ceil) {
     // No error
-  } else if (err.No_error_ceil < rand && rand <= err.X_error_ceil && (err.No_error_ceil != err.X_error_ceil)) {
+  } else if (err.no_error_ceil < rand && rand <= err.x_error_ceil && (err.no_error_ceil != err.x_error_ceil)) {
     // X error
-    addXerror();
-  } else if (err.X_error_ceil < rand && rand <= err.Z_error_ceil && (err.X_error_ceil != err.Z_error_ceil)) {
+    addErrorX();
+  } else if (err.x_error_ceil < rand && rand <= err.z_error_ceil && (err.x_error_ceil != err.z_error_ceil)) {
     // Z error
-    addZerror();
+    addErrorZ();
   } else {
     // Y error
-    addZerror();
-    addXerror();
+    addErrorZ();
+    addErrorX();
   }
 }
 
@@ -72,47 +72,47 @@ void ErrorTrackingQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const& er
    *                    |                 |                 |                 |
    *              IX_error_ceil      XX_error_ceil     YI_error_ceil    IZ_error_ceil
    */
-  if (rand <= err.No_error_ceil) {
+  if (rand <= err.no_error_ceil) {
     // No error
-  } else if (err.No_error_ceil < rand && rand <= err.IX_error_ceil && (err.No_error_ceil != err.IX_error_ceil)) {
+  } else if (err.no_error_ceil < rand && rand <= err.ix_error_ceil && (err.no_error_ceil != err.ix_error_ceil)) {
     // IX error
-    addXerror();
-  } else if (err.IX_error_ceil < rand && rand <= err.XI_error_ceil && (err.IX_error_ceil != err.XI_error_ceil)) {
+    addErrorX();
+  } else if (err.ix_error_ceil < rand && rand <= err.xi_error_ceil && (err.ix_error_ceil != err.xi_error_ceil)) {
     // XI error
-    another_qubit->addXerror();
-  } else if (err.XI_error_ceil < rand && rand <= err.XX_error_ceil && (err.XI_error_ceil != err.XX_error_ceil)) {
+    another_qubit->addErrorX();
+  } else if (err.xi_error_ceil < rand && rand <= err.xx_error_ceil && (err.xi_error_ceil != err.xx_error_ceil)) {
     // XX error
-    addXerror();
-    another_qubit->addXerror();
-  } else if (err.XX_error_ceil < rand && rand <= err.IZ_error_ceil && (err.XX_error_ceil != err.IZ_error_ceil)) {
+    addErrorX();
+    another_qubit->addErrorX();
+  } else if (err.xx_error_ceil < rand && rand <= err.iz_error_ceil && (err.xx_error_ceil != err.iz_error_ceil)) {
     // IZ error
-    addZerror();
-  } else if (err.IZ_error_ceil < rand && rand <= err.ZI_error_ceil && (err.IZ_error_ceil != err.ZI_error_ceil)) {
+    addErrorZ();
+  } else if (err.iz_error_ceil < rand && rand <= err.zi_error_ceil && (err.iz_error_ceil != err.zi_error_ceil)) {
     // ZI error
-    another_qubit->addZerror();
-  } else if (err.ZI_error_ceil < rand && rand <= err.ZZ_error_ceil && (err.ZI_error_ceil != err.ZZ_error_ceil)) {
+    another_qubit->addErrorZ();
+  } else if (err.zi_error_ceil < rand && rand <= err.zz_error_ceil && (err.zi_error_ceil != err.zz_error_ceil)) {
     // ZZ error
-    addZerror();
-    another_qubit->addZerror();
-  } else if (err.ZZ_error_ceil < rand && rand <= err.IY_error_ceil && (err.ZZ_error_ceil != err.IY_error_ceil)) {
+    addErrorZ();
+    another_qubit->addErrorZ();
+  } else if (err.zz_error_ceil < rand && rand <= err.iy_error_ceil && (err.zz_error_ceil != err.iy_error_ceil)) {
     // IY error
-    addXerror();
-    addZerror();
-  } else if (err.IY_error_ceil < rand && rand <= err.YI_error_ceil && (err.IY_error_ceil != err.YI_error_ceil)) {
+    addErrorX();
+    addErrorZ();
+  } else if (err.iy_error_ceil < rand && rand <= err.yi_error_ceil && (err.iy_error_ceil != err.yi_error_ceil)) {
     // YI error
-    another_qubit->addXerror();
-    another_qubit->addZerror();
+    another_qubit->addErrorX();
+    another_qubit->addErrorZ();
   } else {
     // YY error
-    addXerror();
-    addZerror();
-    another_qubit->addXerror();
-    another_qubit->addZerror();
+    addErrorX();
+    addErrorZ();
+    another_qubit->addErrorX();
+    another_qubit->addErrorZ();
   }
 }
 void ErrorTrackingQubit::applyMemoryError() {
   // update();
-  if (entangled_partner == nullptr && Density_Matrix_Collapsed(0, 0).real() == -111 && !no_density_matrix_nullptr_entangled_partner_ok) {
+  if (entangled_partner == nullptr && density_matrix_collapsed(0, 0).real() == -111 && !no_density_matrix_nullptr_entangled_partner_ok) {
     throw std::runtime_error("This must not happen in apply memory error");
   }
 
@@ -127,8 +127,8 @@ void ErrorTrackingQubit::applyMemoryError() {
   double time_evolution_microsec = time_evolution * 1000000 /** 100*/;
   if (time_evolution_microsec > 0) {
     bool skip_exponentiation = false;
-    for (int i = 0; i < Memory_Transition_matrix.cols(); i++) {
-      if (Memory_Transition_matrix(0, i) == 1) {
+    for (int i = 0; i < memory_transition_matrix.cols(); i++) {
+      if (memory_transition_matrix(0, i) == 1) {
         // Do not to the exponentiation! Eigen will mess up the exponentiation anyway...
         skip_exponentiation = true;
         break;
@@ -138,10 +138,10 @@ void ErrorTrackingQubit::applyMemoryError() {
     MatrixXd transition_mat(7, 7);
     if (!skip_exponentiation) {
       // calculate time evoluted error matrix: Q^(time_evolution_microsec) in Eq 5.3
-      MatrixPower<MatrixXd> q_pow(Memory_Transition_matrix);
+      MatrixPower<MatrixXd> q_pow(memory_transition_matrix);
       transition_mat = q_pow(time_evolution_microsec);
     } else {
-      transition_mat = Memory_Transition_matrix;
+      transition_mat = memory_transition_matrix;
     }
 
     // validate transition_mat
@@ -238,8 +238,8 @@ void ErrorTrackingQubit::applyMemoryError() {
   }
   updated_time = current_time;
 }
-void ErrorTrackingQubit::addXerror() { has_x_error = !has_x_error; }
-void ErrorTrackingQubit::addZerror() { has_z_error = !has_z_error; }
+void ErrorTrackingQubit::addErrorX() { has_x_error = !has_x_error; }
+void ErrorTrackingQubit::addErrorZ() { has_z_error = !has_z_error; }
 void ErrorTrackingQubit::setFree() {
   has_x_error = false;
   has_z_error = false;
@@ -248,7 +248,7 @@ void ErrorTrackingQubit::setFree() {
   has_completely_mixed_error = false;
 }
 void ErrorTrackingQubit::setRelaxedDensityMatrix() {
-  Density_Matrix_Collapsed << 0, 0, 0, 1;
+  density_matrix_collapsed << 0, 0, 0, 1;
   has_completely_mixed_error = false;
   has_excitation_error = false;
   has_relaxation_error = true;
@@ -264,7 +264,7 @@ void ErrorTrackingQubit::setRelaxedDensityMatrix() {
   }
 }
 void ErrorTrackingQubit::setExcitedDensityMatrix() {
-  Density_Matrix_Collapsed << 1, 0, 0, 0;  // Overwrite density matrix
+  density_matrix_collapsed << 1, 0, 0, 0;  // Overwrite density matrix
   has_completely_mixed_error = false;
   has_excitation_error = true;
   has_relaxation_error = false;
@@ -279,7 +279,7 @@ void ErrorTrackingQubit::setExcitedDensityMatrix() {
   }
 }
 void ErrorTrackingQubit::setCompletelyMixedDensityMatrix() {
-  Density_Matrix_Collapsed << (double)1. / (double)2., 0, 0, (double)1. / (double)2.;
+  density_matrix_collapsed << (double)1. / (double)2., 0, 0, (double)1. / (double)2.;
   has_completely_mixed_error = true;
   has_excitation_error = false;
   has_relaxation_error = false;
@@ -295,7 +295,7 @@ void ErrorTrackingQubit::update() { updated_time = backend->getSimTime(); }
 
 MeasureXResult ErrorTrackingQubit::correlationMeasureX() {
   bool error = has_z_error;
-  if (backend->dblrand() < Measurement_error.x_error_rate) {
+  if (backend->dblrand() < measurement_err.x_error_rate) {
     error = !error;
   }
   return error ? MeasureXResult::HAS_Z_ERROR : MeasureXResult::NO_Z_ERROR;
@@ -303,7 +303,7 @@ MeasureXResult ErrorTrackingQubit::correlationMeasureX() {
 
 MeasureYResult ErrorTrackingQubit::correlationMeasureY() {
   bool error = has_z_error != has_x_error;
-  if (backend->dblrand() < Measurement_error.y_error_rate) {
+  if (backend->dblrand() < measurement_err.y_error_rate) {
     error = !error;
   }
   return error ? MeasureYResult::HAS_XZ_ERROR : MeasureYResult::NO_XZ_ERROR;
@@ -311,7 +311,7 @@ MeasureYResult ErrorTrackingQubit::correlationMeasureY() {
 
 MeasureZResult ErrorTrackingQubit::correlationMeasureZ() {
   bool error = has_x_error;
-  if (backend->dblrand() < Measurement_error.x_error_rate) {
+  if (backend->dblrand() < measurement_err.x_error_rate) {
     error = !error;
   }
   return error ? MeasureZResult::HAS_X_ERROR : MeasureZResult::NO_X_ERROR;
@@ -320,17 +320,17 @@ MeasureZResult ErrorTrackingQubit::correlationMeasureZ() {
 EigenvalueResult ErrorTrackingQubit::localMeasureX() {
   // the Z error will propagate to its partner; This only works for Bell pair and entanglement swapping for now
   if (this->entangled_partner != nullptr && has_z_error) {
-    this->entangled_partner->addZerror();
+    this->entangled_partner->addErrorZ();
   }
 
   auto result = EigenvalueResult::PLUS_ONE;
   if (backend->dblrand() < 0.5) {
     result = EigenvalueResult::MINUS_ONE;
     if (this->entangled_partner != nullptr) {
-      this->entangled_partner->addZerror();
+      this->entangled_partner->addErrorZ();
     }
   }
-  if (backend->dblrand() < this->Measurement_error.x_error_rate) {
+  if (backend->dblrand() < this->measurement_err.x_error_rate) {
     result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
   }
   return result;
@@ -340,44 +340,44 @@ EigenvalueResult ErrorTrackingQubit::localMeasureZ() {
   // the X error will propagate to its partner; This only works for Bell pair and entanglement swapping for now
 
   if (this->entangled_partner != nullptr && has_x_error) {
-    this->entangled_partner->addXerror();
+    this->entangled_partner->addErrorX();
   }
 
   auto result = EigenvalueResult::PLUS_ONE;
   if (backend->dblrand() < 0.5) {
     result = EigenvalueResult::MINUS_ONE;
     if (this->entangled_partner != nullptr) {
-      this->entangled_partner->addXerror();
+      this->entangled_partner->addErrorX();
     }
   }
-  if (backend->dblrand() < this->Measurement_error.z_error_rate) {
+  if (backend->dblrand() < this->measurement_err.z_error_rate) {
     result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
   }
   return result;
 }
 
 // Set error matrices. This is used in the process of simulating tomography.
-const single_qubit_error ErrorTrackingQubit::Pauli = {.X = (Matrix2cd() << 0, 1, 1, 0).finished(),
-                                                      .Y = (Matrix2cd() << 0, Complex(0, -1), Complex(0, 1), 0).finished(),
-                                                      .Z = (Matrix2cd() << 1, 0, 0, -1).finished(),
-                                                      .I = (Matrix2cd() << 1, 0, 0, 1).finished()};
+const SingleQubitErrorModel ErrorTrackingQubit::pauli = {.X = (Matrix2cd() << 0, 1, 1, 0).finished(),
+                                                         .Y = (Matrix2cd() << 0, Complex(0, -1), Complex(0, 1), 0).finished(),
+                                                         .Z = (Matrix2cd() << 1, 0, 0, -1).finished(),
+                                                         .I = (Matrix2cd() << 1, 0, 0, 1).finished()};
 
 // Set measurement operators. This is used in the process of simulating tomography.
-const measurement_operators ErrorTrackingQubit::meas_op = {.X_basis = {.plus = (Matrix2cd() << 0.5, 0.5, 0.5, 0.5).finished(),
-                                                                       .minus = (Matrix2cd() << 0.5, -0.5, -0.5, 0.5).finished(),
-                                                                       .plus_ket = (Vector2cd() << 1 / sqrt(2), 1 / sqrt(2)).finished(),
-                                                                       .minus_ket = (Vector2cd() << 1 / sqrt(2), -1 / sqrt(2)).finished(),
-                                                                       .basis = 'X'},
-                                                           .Z_basis = {.plus = (Matrix2cd() << 1, 0, 0, 0).finished(),
-                                                                       .minus = (Matrix2cd() << 0, 0, 0, 1).finished(),
-                                                                       .plus_ket = (Vector2cd() << 1, 0).finished(),
-                                                                       .minus_ket = (Vector2cd() << 0, 1).finished(),
-                                                                       .basis = 'Z'},
-                                                           .Y_basis = {.plus = (Matrix2cd() << 0.5, Complex(0, -0.5), Complex(0, 0.5), 0.5).finished(),
-                                                                       .minus = (Matrix2cd() << 0.5, Complex(0, 0.5), Complex(0, -0.5), 0.5).finished(),
-                                                                       .plus_ket = (Vector2cd() << 1 / sqrt(2), Complex(0, 1 / sqrt(2))).finished(),
-                                                                       .minus_ket = (Vector2cd() << 1 / sqrt(2), -Complex(0, 1 / sqrt(2))).finished(),
-                                                                       .basis = 'Y'},
-                                                           .identity = (Matrix2cd() << 1, 0, 0, 1).finished()};
+const MeasurementOperators ErrorTrackingQubit::measurement_op = {.x_basis = {.plus = (Matrix2cd() << 0.5, 0.5, 0.5, 0.5).finished(),
+                                                                             .minus = (Matrix2cd() << 0.5, -0.5, -0.5, 0.5).finished(),
+                                                                             .plus_ket = (Vector2cd() << 1 / sqrt(2), 1 / sqrt(2)).finished(),
+                                                                             .minus_ket = (Vector2cd() << 1 / sqrt(2), -1 / sqrt(2)).finished(),
+                                                                             .basis = 'X'},
+                                                                 .z_basis = {.plus = (Matrix2cd() << 1, 0, 0, 0).finished(),
+                                                                             .minus = (Matrix2cd() << 0, 0, 0, 1).finished(),
+                                                                             .plus_ket = (Vector2cd() << 1, 0).finished(),
+                                                                             .minus_ket = (Vector2cd() << 0, 1).finished(),
+                                                                             .basis = 'Z'},
+                                                                 .y_basis = {.plus = (Matrix2cd() << 0.5, Complex(0, -0.5), Complex(0, 0.5), 0.5).finished(),
+                                                                             .minus = (Matrix2cd() << 0.5, Complex(0, 0.5), Complex(0, -0.5), 0.5).finished(),
+                                                                             .plus_ket = (Vector2cd() << 1 / sqrt(2), Complex(0, 1 / sqrt(2))).finished(),
+                                                                             .minus_ket = (Vector2cd() << 1 / sqrt(2), -Complex(0, 1 / sqrt(2))).finished(),
+                                                                             .basis = 'Y'},
+                                                                 .identity = (Matrix2cd() << 1, 0, 0, 1).finished()};
 
 }  // namespace quisp::backends::error_tracking

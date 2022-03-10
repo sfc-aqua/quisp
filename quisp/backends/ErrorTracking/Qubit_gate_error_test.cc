@@ -14,7 +14,7 @@ class EtQubitGateErrorTest : public ::testing::Test {
     // to avoid the omnetpp::SimTime assertion
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
-    rng->doubleValue = .0;
+    rng->double_value = .0;
     backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng));
     qubit = dynamic_cast<Qubit*>(backend->getQubit(new QubitId(0)));
     if (qubit == nullptr) throw std::runtime_error("Qubit is nullptr");
@@ -37,41 +37,41 @@ class EtQubitGateErrorTest : public ::testing::Test {
     qubit->setMemoryErrorRates(x_error_rate, y_error_rate, z_error_rate, energy_excitation_rate, energy_relaxation_rate, completely_mixed_rate);
 
     // // No error= 0.4, X error = 0.6, Z error = 0.8, Y error = 1.0
-    double Hgate_error_rate = 0.6;
-    double Hgate_X_error_ratio = 1.0;
-    double Hgate_Z_error_ratio = 1.0;
-    double Hgate_Y_error_ratio = 1.0;
-    qubit->Hgate_error.setParams(Hgate_X_error_ratio, Hgate_Y_error_ratio, Hgate_Z_error_ratio, Hgate_error_rate);
+    double h_gate_error_rate = 0.6;
+    double h_gate_x_error_ratio = 1.0;
+    double h_gate_z_error_ratio = 1.0;
+    double h_gate_y_error_ratio = 1.0;
+    qubit->gate_err_h.setParams(h_gate_x_error_ratio, h_gate_y_error_ratio, h_gate_z_error_ratio, h_gate_error_rate);
 
-    double Xgate_error_rate = 0.6;
-    double Xgate_X_error_ratio = 1.0;
-    double Xgate_Z_error_ratio = 1.0;
-    double Xgate_Y_error_ratio = 1.0;
-    qubit->Xgate_error.setParams(Xgate_X_error_ratio, Xgate_Y_error_ratio, Xgate_Z_error_ratio, Xgate_error_rate);
+    double x_gate_error_rate = 0.6;
+    double x_gate_x_error_ratio = 1.0;
+    double x_gate_z_error_ratio = 1.0;
+    double x_gate_y_error_ratio = 1.0;
+    qubit->gate_err_x.setParams(x_gate_x_error_ratio, x_gate_y_error_ratio, x_gate_z_error_ratio, x_gate_error_rate);
 
-    double Zgate_error_rate = 0.6;
-    double Zgate_X_error_ratio = 1.0;
-    double Zgate_Z_error_ratio = 1.0;
-    double Zgate_Y_error_ratio = 1.0;
-    qubit->Zgate_error.setParams(Zgate_X_error_ratio, Zgate_Y_error_ratio, Zgate_Z_error_ratio, Zgate_error_rate);
+    double z_gate_error_rate = 0.6;
+    double z_gate_x_error_ratio = 1.0;
+    double z_gate_z_error_ratio = 1.0;
+    double z_gate_y_error_ratio = 1.0;
+    qubit->gate_err_z.setParams(z_gate_x_error_ratio, z_gate_y_error_ratio, z_gate_z_error_ratio, z_gate_error_rate);
 
     // clean = 0.1,
     // IX = 0.2, XI = 0.3, XX = 0.4,
     // IZ = 0.5, ZI = 0.6, ZZ = 0.7,
     // IY = 0.8, IY = 0.9, YY = 1.0
 
-    double CNOTgate_error_rate = 0.9;
-    double CNOTgate_IX_error_ratio = 1;
-    double CNOTgate_XI_error_ratio = 1;
-    double CNOTgate_XX_error_ratio = 1;
-    double CNOTgate_IZ_error_ratio = 1;
-    double CNOTgate_ZI_error_ratio = 1;
-    double CNOTgate_ZZ_error_ratio = 1;
-    double CNOTgate_IY_error_ratio = 1;
-    double CNOTgate_YI_error_ratio = 1;
-    double CNOTgate_YY_error_ratio = 1;
-    qubit->CNOTgate_error.setParams(CNOTgate_error_rate, CNOTgate_IX_error_ratio, CNOTgate_XI_error_ratio, CNOTgate_XX_error_ratio, CNOTgate_IZ_error_ratio,
-                                    CNOTgate_IZ_error_ratio, CNOTgate_ZZ_error_ratio, CNOTgate_IY_error_ratio, CNOTgate_YI_error_ratio, CNOTgate_YY_error_ratio);
+    double cnot_gate_error_rate = 0.9;
+    double cnot_gate_ix_error_ratio = 1;
+    double cnot_gate_xi_error_ratio = 1;
+    double cnot_gate_xx_error_ratio = 1;
+    double cnot_gate_iz_error_ratio = 1;
+    double cnot_gate_zi_error_ratio = 1;
+    double cnot_gate_zz_error_ratio = 1;
+    double cnot_gate_iy_error_ratio = 1;
+    double cnot_gate_yi_error_ratio = 1;
+    double cnot_gate_yy_error_ratio = 1;
+    qubit->gate_err_cnot.setParams(cnot_gate_error_rate, cnot_gate_ix_error_ratio, cnot_gate_xi_error_ratio, cnot_gate_xx_error_ratio, cnot_gate_iz_error_ratio,
+                                   cnot_gate_iz_error_ratio, cnot_gate_zz_error_ratio, cnot_gate_iy_error_ratio, cnot_gate_yi_error_ratio, cnot_gate_yy_error_ratio);
   }
   Qubit* qubit;
   Qubit* qubit2;
@@ -80,206 +80,206 @@ class EtQubitGateErrorTest : public ::testing::Test {
 };
 
 TEST_F(EtQubitGateErrorTest, SetSingleQubitGateErrorCeilings) {
-  double Xgate_error_rate = 0.1;
-  double Xgate_X_error_ratio = 1;
-  double Xgate_Z_error_ratio = 2;
-  double Xgate_Y_error_ratio = 3;
-  qubit->Xgate_error.setParams(Xgate_X_error_ratio, Xgate_Y_error_ratio, Xgate_Z_error_ratio, Xgate_error_rate);
-  auto& error_model = qubit->Xgate_error;
-  EXPECT_FALSE(std::isnan(error_model.X_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.Y_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.Z_error_rate));
+  double x_gate_error_rate = 0.1;
+  double x_gate_x_error_ratio = 1;
+  double x_gate_z_error_ratio = 2;
+  double x_gate_y_error_ratio = 3;
+  qubit->gate_err_x.setParams(x_gate_x_error_ratio, x_gate_y_error_ratio, x_gate_z_error_ratio, x_gate_error_rate);
+  auto& error_model = qubit->gate_err_x;
+  EXPECT_FALSE(std::isnan(error_model.x_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.y_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.z_error_rate));
   EXPECT_FALSE(std::isnan(error_model.pauli_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.No_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.X_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.Z_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.Y_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.X_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.Y_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.Z_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.no_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.x_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.z_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.y_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.x_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.y_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.z_error_rate));
   EXPECT_FALSE(std::isinf(error_model.pauli_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.No_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.X_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.Z_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.Y_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.no_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.x_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.z_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.y_error_ceil));
   EXPECT_DOUBLE_EQ(error_model.pauli_error_rate, 0.1);
-  EXPECT_DOUBLE_EQ(error_model.X_error_rate, 0.1 * 1 / 6);
-  EXPECT_DOUBLE_EQ(error_model.Z_error_rate, 0.2 * 1 / 6);
-  EXPECT_DOUBLE_EQ(error_model.Y_error_rate, 0.3 * 1 / 6);
+  EXPECT_DOUBLE_EQ(error_model.x_error_rate, 0.1 * 1 / 6);
+  EXPECT_DOUBLE_EQ(error_model.z_error_rate, 0.2 * 1 / 6);
+  EXPECT_DOUBLE_EQ(error_model.y_error_rate, 0.3 * 1 / 6);
 }
 
 TEST_F(EtQubitGateErrorTest, SetSingleQubitGateErrorCeilings_div_by_zero) {
-  double Xgate_error_rate = 0.1;
-  double Xgate_X_error_ratio = 0;
-  double Xgate_Z_error_ratio = 0;
-  double Xgate_Y_error_ratio = 0;
-  qubit->Xgate_error.setParams(Xgate_X_error_ratio, Xgate_Y_error_ratio, Xgate_Z_error_ratio, Xgate_error_rate);
-  auto& error_model = qubit->Xgate_error;
-  EXPECT_FALSE(std::isnan(error_model.X_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.Y_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.Z_error_rate));
+  double x_gate_error_rate = 0.1;
+  double x_gate_x_error_ratio = 0;
+  double x_gate_z_error_ratio = 0;
+  double x_gate_y_error_ratio = 0;
+  qubit->gate_err_x.setParams(x_gate_x_error_ratio, x_gate_y_error_ratio, x_gate_z_error_ratio, x_gate_error_rate);
+  auto& error_model = qubit->gate_err_x;
+  EXPECT_FALSE(std::isnan(error_model.x_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.y_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.z_error_rate));
   EXPECT_FALSE(std::isnan(error_model.pauli_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.No_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.X_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.Z_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.Y_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.X_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.Y_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.Z_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.no_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.x_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.z_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.y_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.x_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.y_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.z_error_rate));
   EXPECT_FALSE(std::isinf(error_model.pauli_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.No_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.X_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.Z_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.Y_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.no_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.x_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.z_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.y_error_ceil));
   EXPECT_DOUBLE_EQ(error_model.pauli_error_rate, 0.1);
-  EXPECT_DOUBLE_EQ(error_model.X_error_rate, 0.1 * 1 / 3);
-  EXPECT_DOUBLE_EQ(error_model.Z_error_rate, 0.1 * 1 / 3);
-  EXPECT_DOUBLE_EQ(error_model.Y_error_rate, 0.1 * 1 / 3);
+  EXPECT_DOUBLE_EQ(error_model.x_error_rate, 0.1 * 1 / 3);
+  EXPECT_DOUBLE_EQ(error_model.z_error_rate, 0.1 * 1 / 3);
+  EXPECT_DOUBLE_EQ(error_model.y_error_rate, 0.1 * 1 / 3);
 }
 
 TEST_F(EtQubitGateErrorTest, SetTwoQubitGateErrorCeilings) {
-  double CNOTgate_error_rate = 0.1;
-  double CNOTgate_IX_error_ratio = 1;
-  double CNOTgate_XI_error_ratio = 1;
-  double CNOTgate_XX_error_ratio = 1;
-  double CNOTgate_IZ_error_ratio = 1;
-  double CNOTgate_ZI_error_ratio = 1;
-  double CNOTgate_ZZ_error_ratio = 1;
-  double CNOTgate_IY_error_ratio = 1;
-  double CNOTgate_YI_error_ratio = 1;
-  double CNOTgate_YY_error_ratio = 1;
-  qubit->CNOTgate_error.setParams(CNOTgate_error_rate, CNOTgate_IX_error_ratio, CNOTgate_XI_error_ratio, CNOTgate_XX_error_ratio, CNOTgate_IZ_error_ratio, CNOTgate_IZ_error_ratio,
-                                  CNOTgate_ZZ_error_ratio, CNOTgate_IY_error_ratio, CNOTgate_YI_error_ratio, CNOTgate_YY_error_ratio);
-  auto const& error_model = qubit->CNOTgate_error;
-  EXPECT_FALSE(std::isnan(error_model.IX_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.XI_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.XX_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.IZ_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.ZI_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.ZZ_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.IY_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.YI_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.YY_error_rate));
+  double cnot_gate_error_rate = 0.1;
+  double cnot_gate_ix_error_ratio = 1;
+  double cnot_gate_xi_error_ratio = 1;
+  double cnot_gate_xx_error_ratio = 1;
+  double cnot_gate_iz_error_ratio = 1;
+  double cnot_gate_zi_error_ratio = 1;
+  double cnot_gate_zz_error_ratio = 1;
+  double cnot_gate_iy_error_ratio = 1;
+  double cnot_gate_yi_error_ratio = 1;
+  double cnot_gate_yy_error_ratio = 1;
+  qubit->gate_err_cnot.setParams(cnot_gate_error_rate, cnot_gate_ix_error_ratio, cnot_gate_xi_error_ratio, cnot_gate_xx_error_ratio, cnot_gate_iz_error_ratio,
+                                 cnot_gate_iz_error_ratio, cnot_gate_zz_error_ratio, cnot_gate_iy_error_ratio, cnot_gate_yi_error_ratio, cnot_gate_yy_error_ratio);
+  auto const& error_model = qubit->gate_err_cnot;
+  EXPECT_FALSE(std::isnan(error_model.ix_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.xi_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.xx_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.iz_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.zi_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.zz_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.iy_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.yi_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.yy_error_rate));
   EXPECT_FALSE(std::isnan(error_model.pauli_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.No_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.XI_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.IX_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.XX_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.ZI_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.IZ_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.ZZ_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.YI_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.IY_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.YY_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.no_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.xi_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.ix_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.xx_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.zi_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.iz_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.zz_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.yi_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.iy_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.yy_error_ceil));
 
-  EXPECT_FALSE(std::isinf(error_model.XI_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.IX_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.XX_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.ZI_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.IZ_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.ZZ_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.YI_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.IY_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.YY_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.xi_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.ix_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.xx_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.zi_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.iz_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.zz_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.yi_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.iy_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.yy_error_rate));
   EXPECT_FALSE(std::isinf(error_model.pauli_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.No_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.XI_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.IX_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.XX_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.ZI_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.IZ_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.ZZ_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.YI_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.IY_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.YY_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.no_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.xi_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.ix_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.xx_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.zi_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.iz_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.zz_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.yi_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.iy_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.yy_error_ceil));
   EXPECT_DOUBLE_EQ(error_model.pauli_error_rate, 0.1);
-  EXPECT_DOUBLE_EQ(error_model.XI_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.IX_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.XX_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.ZI_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.IZ_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.ZZ_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.YI_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.IY_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.YY_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.xi_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.ix_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.xx_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.zi_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.iz_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.zz_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.yi_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.iy_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.yy_error_rate, 0.1 * 1 / 9);
 }
 
 TEST_F(EtQubitGateErrorTest, SetTwoQubitGateErrorCeilings_div_by_zero) {
-  double CNOTgate_error_rate = 0.1;
-  double CNOTgate_IX_error_ratio = 0;
-  double CNOTgate_XI_error_ratio = 0;
-  double CNOTgate_XX_error_ratio = 0;
-  double CNOTgate_IZ_error_ratio = 0;
-  double CNOTgate_ZI_error_ratio = 0;
-  double CNOTgate_ZZ_error_ratio = 0;
-  double CNOTgate_IY_error_ratio = 0;
-  double CNOTgate_YI_error_ratio = 0;
-  double CNOTgate_YY_error_ratio = 0;
-  qubit->CNOTgate_error.setParams(CNOTgate_error_rate, CNOTgate_IX_error_ratio, CNOTgate_XI_error_ratio, CNOTgate_XX_error_ratio, CNOTgate_IZ_error_ratio, CNOTgate_IZ_error_ratio,
-                                  CNOTgate_ZZ_error_ratio, CNOTgate_IY_error_ratio, CNOTgate_YI_error_ratio, CNOTgate_YY_error_ratio);
-  auto const& error_model = qubit->CNOTgate_error;
-  EXPECT_FALSE(std::isnan(error_model.IX_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.XI_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.XX_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.IZ_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.ZI_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.ZZ_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.IY_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.YI_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.YY_error_rate));
+  double cnot_gate_error_rate = 0.1;
+  double cnot_gate_ix_error_ratio = 0;
+  double cnot_gate_xi_error_ratio = 0;
+  double cnot_gate_xx_error_ratio = 0;
+  double cnot_gate_iz_error_ratio = 0;
+  double cnot_gate_zi_error_ratio = 0;
+  double cnot_gate_zz_error_ratio = 0;
+  double cnot_gate_iy_error_ratio = 0;
+  double cnot_gate_yi_error_ratio = 0;
+  double cnot_gate_yy_error_ratio = 0;
+  qubit->gate_err_cnot.setParams(cnot_gate_error_rate, cnot_gate_ix_error_ratio, cnot_gate_xi_error_ratio, cnot_gate_xx_error_ratio, cnot_gate_iz_error_ratio,
+                                 cnot_gate_iz_error_ratio, cnot_gate_zz_error_ratio, cnot_gate_iy_error_ratio, cnot_gate_yi_error_ratio, cnot_gate_yy_error_ratio);
+  auto const& error_model = qubit->gate_err_cnot;
+  EXPECT_FALSE(std::isnan(error_model.ix_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.xi_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.xx_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.iz_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.zi_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.zz_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.iy_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.yi_error_rate));
+  EXPECT_FALSE(std::isnan(error_model.yy_error_rate));
   EXPECT_FALSE(std::isnan(error_model.pauli_error_rate));
-  EXPECT_FALSE(std::isnan(error_model.No_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.XI_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.IX_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.XX_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.ZI_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.IZ_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.ZZ_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.YI_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.IY_error_ceil));
-  EXPECT_FALSE(std::isnan(error_model.YY_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.no_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.xi_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.ix_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.xx_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.zi_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.iz_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.zz_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.yi_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.iy_error_ceil));
+  EXPECT_FALSE(std::isnan(error_model.yy_error_ceil));
 
-  EXPECT_FALSE(std::isinf(error_model.XI_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.IX_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.XX_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.ZI_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.IZ_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.ZZ_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.YI_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.IY_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.YY_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.xi_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.ix_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.xx_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.zi_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.iz_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.zz_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.yi_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.iy_error_rate));
+  EXPECT_FALSE(std::isinf(error_model.yy_error_rate));
   EXPECT_FALSE(std::isinf(error_model.pauli_error_rate));
-  EXPECT_FALSE(std::isinf(error_model.No_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.XI_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.IX_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.XX_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.ZI_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.IZ_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.ZZ_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.YI_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.IY_error_ceil));
-  EXPECT_FALSE(std::isinf(error_model.YY_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.no_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.xi_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.ix_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.xx_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.zi_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.iz_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.zz_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.yi_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.iy_error_ceil));
+  EXPECT_FALSE(std::isinf(error_model.yy_error_ceil));
   EXPECT_DOUBLE_EQ(error_model.pauli_error_rate, 0.1);
-  EXPECT_DOUBLE_EQ(error_model.XI_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.IX_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.XX_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.ZI_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.IZ_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.ZZ_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.YI_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.IY_error_rate, 0.1 * 1 / 9);
-  EXPECT_DOUBLE_EQ(error_model.YY_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.xi_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.ix_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.xx_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.zi_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.iz_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.zz_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.yi_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.iy_error_rate, 0.1 * 1 / 9);
+  EXPECT_DOUBLE_EQ(error_model.yy_error_rate, 0.1 * 1 / 9);
 }
 
 TEST_F(EtQubitGateErrorTest, do_nothing_single_qubit_gate) {
-  double Xgate_error_rate = 0.0;
+  double x_gate_error_rate = 0.0;
   qubit->reset();
   qubit->has_x_error = true;
   qubit->has_z_error = true;
   EXPECT_FALSE(qubit->has_excitation_error);
   EXPECT_FALSE(qubit->has_relaxation_error);
 
-  qubit->applySingleQubitGateError(qubit->Xgate_error);
+  qubit->applySingleQubitGateError(qubit->gate_err_x);
 
   EXPECT_EQ(qubit->updated_time, SimTime(0, SIMTIME_US));
   EXPECT_TRUE(qubit->has_x_error);
@@ -289,7 +289,7 @@ TEST_F(EtQubitGateErrorTest, do_nothing_single_qubit_gate) {
 }
 
 TEST_F(EtQubitGateErrorTest, do_nothing_two_qubit_gate) {
-  double CNOTgate_error_rate = 0.0;
+  double cnot_gate_error_rate = 0.0;
   qubit->reset();
   qubit2->reset();
   qubit->has_x_error = true;
@@ -305,7 +305,7 @@ TEST_F(EtQubitGateErrorTest, do_nothing_two_qubit_gate) {
   EXPECT_FALSE(qubit2->has_relaxation_error);
   EXPECT_FALSE(qubit2->has_excitation_error);
 
-  qubit->applyTwoQubitGateError(qubit->CNOTgate_error, qubit2);
+  qubit->applyTwoQubitGateError(qubit->gate_err_cnot, qubit2);
 
   EXPECT_EQ(qubit->updated_time, SimTime(0, SIMTIME_US));
   EXPECT_TRUE(qubit->has_x_error);
@@ -322,8 +322,8 @@ TEST_F(EtQubitGateErrorTest, apply_single_qubit_gate_error) {
   backend->setSimTime(SimTime(1, SIMTIME_US));
   // No error
   qubit->reset();
-  rng->doubleValue = 0.35;
-  qubit->applySingleQubitGateError(qubit->Xgate_error);
+  rng->double_value = 0.35;
+  qubit->applySingleQubitGateError(qubit->gate_err_x);
   EXPECT_FALSE(qubit->has_x_error);
   EXPECT_FALSE(qubit->has_z_error);
   EXPECT_FALSE(qubit->has_excitation_error);
@@ -332,8 +332,8 @@ TEST_F(EtQubitGateErrorTest, apply_single_qubit_gate_error) {
 
   // X error
   qubit->reset();
-  rng->doubleValue = 0.45;
-  qubit->applySingleQubitGateError(qubit->Xgate_error);
+  rng->double_value = 0.45;
+  qubit->applySingleQubitGateError(qubit->gate_err_x);
   EXPECT_TRUE(qubit->has_x_error);
   EXPECT_FALSE(qubit->has_z_error);
   EXPECT_FALSE(qubit->has_excitation_error);
@@ -342,8 +342,8 @@ TEST_F(EtQubitGateErrorTest, apply_single_qubit_gate_error) {
 
   // Z error
   qubit->reset();
-  rng->doubleValue = 0.65;
-  qubit->applySingleQubitGateError(qubit->Xgate_error);
+  rng->double_value = 0.65;
+  qubit->applySingleQubitGateError(qubit->gate_err_x);
   EXPECT_FALSE(qubit->has_x_error);
   EXPECT_TRUE(qubit->has_z_error);
   EXPECT_FALSE(qubit->has_excitation_error);
@@ -352,8 +352,8 @@ TEST_F(EtQubitGateErrorTest, apply_single_qubit_gate_error) {
 
   // Y error
   qubit->reset();
-  rng->doubleValue = 0.85;
-  qubit->applySingleQubitGateError(qubit->Xgate_error);
+  rng->double_value = 0.85;
+  qubit->applySingleQubitGateError(qubit->gate_err_x);
   EXPECT_TRUE(qubit->has_x_error);
   EXPECT_TRUE(qubit->has_z_error);
   EXPECT_FALSE(qubit->has_excitation_error);
@@ -367,8 +367,8 @@ TEST_F(EtQubitGateErrorTest, apply_two_qubit_gate_error) {
   // No error
   qubit->reset();
   qubit2->reset();
-  rng->doubleValue = 0.05;
-  qubit->applyTwoQubitGateError(qubit->CNOTgate_error, qubit2);
+  rng->double_value = 0.05;
+  qubit->applyTwoQubitGateError(qubit->gate_err_cnot, qubit2);
   EXPECT_FALSE(qubit->has_x_error);
   EXPECT_FALSE(qubit->has_z_error);
   EXPECT_FALSE(qubit->has_excitation_error);
@@ -383,8 +383,8 @@ TEST_F(EtQubitGateErrorTest, apply_two_qubit_gate_error) {
   // IX error
   qubit->reset();
   qubit2->reset();
-  rng->doubleValue = 0.15;
-  qubit->applyTwoQubitGateError(qubit->CNOTgate_error, qubit2);
+  rng->double_value = 0.15;
+  qubit->applyTwoQubitGateError(qubit->gate_err_cnot, qubit2);
   EXPECT_TRUE(qubit->has_x_error);
   EXPECT_FALSE(qubit->has_z_error);
   EXPECT_FALSE(qubit->has_excitation_error);
@@ -399,8 +399,8 @@ TEST_F(EtQubitGateErrorTest, apply_two_qubit_gate_error) {
   // XI error
   qubit->reset();
   qubit2->reset();
-  rng->doubleValue = 0.25;
-  qubit->applyTwoQubitGateError(qubit->CNOTgate_error, qubit2);
+  rng->double_value = 0.25;
+  qubit->applyTwoQubitGateError(qubit->gate_err_cnot, qubit2);
   EXPECT_FALSE(qubit->has_x_error);
   EXPECT_FALSE(qubit->has_z_error);
   EXPECT_FALSE(qubit->has_excitation_error);
@@ -415,8 +415,8 @@ TEST_F(EtQubitGateErrorTest, apply_two_qubit_gate_error) {
   // XX error
   qubit->reset();
   qubit2->reset();
-  rng->doubleValue = 0.35;
-  qubit->applyTwoQubitGateError(qubit->CNOTgate_error, qubit2);
+  rng->double_value = 0.35;
+  qubit->applyTwoQubitGateError(qubit->gate_err_cnot, qubit2);
   EXPECT_TRUE(qubit->has_x_error);
   EXPECT_FALSE(qubit->has_z_error);
   EXPECT_FALSE(qubit->has_excitation_error);
@@ -431,8 +431,8 @@ TEST_F(EtQubitGateErrorTest, apply_two_qubit_gate_error) {
   // IZ error
   qubit->reset();
   qubit2->reset();
-  rng->doubleValue = 0.45;
-  qubit->applyTwoQubitGateError(qubit->CNOTgate_error, qubit2);
+  rng->double_value = 0.45;
+  qubit->applyTwoQubitGateError(qubit->gate_err_cnot, qubit2);
   EXPECT_FALSE(qubit->has_x_error);
   EXPECT_TRUE(qubit->has_z_error);
   EXPECT_FALSE(qubit->has_excitation_error);
@@ -447,8 +447,8 @@ TEST_F(EtQubitGateErrorTest, apply_two_qubit_gate_error) {
   // ZI error
   qubit->reset();
   qubit2->reset();
-  rng->doubleValue = 0.55;
-  qubit->applyTwoQubitGateError(qubit->CNOTgate_error, qubit2);
+  rng->double_value = 0.55;
+  qubit->applyTwoQubitGateError(qubit->gate_err_cnot, qubit2);
   EXPECT_FALSE(qubit->has_x_error);
   EXPECT_FALSE(qubit->has_z_error);
   EXPECT_FALSE(qubit->has_excitation_error);
@@ -463,8 +463,8 @@ TEST_F(EtQubitGateErrorTest, apply_two_qubit_gate_error) {
   // ZZ error
   qubit->reset();
   qubit2->reset();
-  rng->doubleValue = 0.65;
-  qubit->applyTwoQubitGateError(qubit->CNOTgate_error, qubit2);
+  rng->double_value = 0.65;
+  qubit->applyTwoQubitGateError(qubit->gate_err_cnot, qubit2);
   EXPECT_FALSE(qubit->has_x_error);
   EXPECT_TRUE(qubit->has_z_error);
   EXPECT_FALSE(qubit->has_excitation_error);
@@ -479,8 +479,8 @@ TEST_F(EtQubitGateErrorTest, apply_two_qubit_gate_error) {
   // IY error
   qubit->reset();
   qubit2->reset();
-  rng->doubleValue = 0.75;
-  qubit->applyTwoQubitGateError(qubit->CNOTgate_error, qubit2);
+  rng->double_value = 0.75;
+  qubit->applyTwoQubitGateError(qubit->gate_err_cnot, qubit2);
   EXPECT_TRUE(qubit->has_x_error);
   EXPECT_TRUE(qubit->has_z_error);
   EXPECT_FALSE(qubit->has_excitation_error);
@@ -495,8 +495,8 @@ TEST_F(EtQubitGateErrorTest, apply_two_qubit_gate_error) {
   // YI error
   qubit->reset();
   qubit2->reset();
-  rng->doubleValue = 0.85;
-  qubit->applyTwoQubitGateError(qubit->CNOTgate_error, qubit2);
+  rng->double_value = 0.85;
+  qubit->applyTwoQubitGateError(qubit->gate_err_cnot, qubit2);
   EXPECT_FALSE(qubit->has_x_error);
   EXPECT_FALSE(qubit->has_z_error);
   EXPECT_FALSE(qubit->has_excitation_error);
@@ -511,8 +511,8 @@ TEST_F(EtQubitGateErrorTest, apply_two_qubit_gate_error) {
   // YY error
   qubit->reset();
   qubit2->reset();
-  rng->doubleValue = 0.95;
-  qubit->applyTwoQubitGateError(qubit->CNOTgate_error, qubit2);
+  rng->double_value = 0.95;
+  qubit->applyTwoQubitGateError(qubit->gate_err_cnot, qubit2);
   EXPECT_TRUE(qubit->has_x_error);
   EXPECT_TRUE(qubit->has_z_error);
   EXPECT_FALSE(qubit->has_excitation_error);

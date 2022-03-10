@@ -39,8 +39,8 @@ class ErrorTrackingQubit : public IQubit {
   void applySingleQubitGateError(SingleGateErrorModel const& err);
   void applyTwoQubitGateError(TwoQubitGateErrorModel const& err, ErrorTrackingQubit* another_qubit);
   void applyMemoryError();
-  void addXerror();
-  void addZerror();
+  void addErrorX();
+  void addErrorZ();
   void setFree();
   void setRelaxedDensityMatrix();
   void setExcitedDensityMatrix();
@@ -54,16 +54,16 @@ class ErrorTrackingQubit : public IQubit {
   EigenvalueResult localMeasureZ();
 
   // constants
-  SingleGateErrorModel Hgate_error;
-  SingleGateErrorModel Xgate_error;
-  SingleGateErrorModel Zgate_error;
-  TwoQubitGateErrorModel CNOTgate_error;
-  MeasurementErrorModel Measurement_error;
+  SingleGateErrorModel gate_err_h;
+  SingleGateErrorModel gate_err_x;
+  SingleGateErrorModel gate_err_z;
+  TwoQubitGateErrorModel gate_err_cnot;
+  MeasurementErrorModel measurement_err;
+  MemoryErrorModel memory_err;
+  Eigen::MatrixXd memory_transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
   double emission_success_probability;
-  Eigen::MatrixXd Memory_Transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
-  memory_error_model memory_err;
-  static const single_qubit_error Pauli;
-  static const measurement_operators meas_op;
+  static const SingleQubitErrorModel pauli;
+  static const MeasurementOperators measurement_op;
 
   // state
   bool has_x_error = false;
@@ -72,7 +72,7 @@ class ErrorTrackingQubit : public IQubit {
   bool has_excitation_error = false;
   bool has_completely_mixed_error = false;
   SimTime updated_time = SimTime(0);
-  Matrix2cd Density_Matrix_Collapsed;  // Used when partner has been measured.
+  Matrix2cd density_matrix_collapsed;  // Used when partner has been measured.
   bool no_density_matrix_nullptr_entangled_partner_ok = false;
   ErrorTrackingQubit* entangled_partner = nullptr;
 
