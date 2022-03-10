@@ -5,7 +5,11 @@ namespace quisp::backends::error_tracking {
 using error_tracking::ErrorTrackingQubit;
 
 ErrorTrackingBackend::ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng) : current_time(SimTime()), rng(std::move(rng)) {}
-
+ErrorTrackingBackend::~ErrorTrackingBackend() {
+  for (auto& pair : qubits) {
+    delete pair.first;
+  }
+}
 IQubit* ErrorTrackingBackend::getQubit(const IQubitId* id) {
   auto qubit = qubits.find(id);
 

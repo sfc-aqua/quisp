@@ -4,10 +4,11 @@
 #include <stdexcept>
 #include <unsupported/Eigen/KroneckerProduct>
 #include <unsupported/Eigen/MatrixFunctions>
-#include "../IQuantumBackend.h"
+#include "../interfaces/IQuantumBackend.h"
+#include "../interfaces/IQubit.h"
 #include "omnetpp/simtime.h"
 #include "types.h"
-// #include "Backend.h"
+
 namespace quisp::backends::error_tracking {
 
 using abstract::EigenvalueResult;
@@ -36,7 +37,6 @@ class ErrorTrackingQubit : public IQubit {
 
  protected:
   void applySingleQubitGateError(SingleGateErrorModel const& err);
-
   void applyTwoQubitGateError(TwoQubitGateErrorModel const& err, ErrorTrackingQubit* another_qubit);
   void applyMemoryError();
   void addXerror();
@@ -64,9 +64,6 @@ class ErrorTrackingQubit : public IQubit {
   memory_error_model memory_err;
   static const single_qubit_error Pauli;
   static const measurement_operators meas_op;
-  // other components
-  ErrorTrackingBackend* const backend;
-  ErrorTrackingQubit* entangled_partner = nullptr;
 
   // state
   bool has_x_error = false;
@@ -77,6 +74,10 @@ class ErrorTrackingQubit : public IQubit {
   SimTime updated_time = SimTime(0);
   Matrix2cd Density_Matrix_Collapsed;  // Used when partner has been measured.
   bool no_density_matrix_nullptr_entangled_partner_ok = false;
+  ErrorTrackingQubit* entangled_partner = nullptr;
+
+  // other components
+  ErrorTrackingBackend* const backend;
 };
 
 }  // namespace quisp::backends::error_tracking

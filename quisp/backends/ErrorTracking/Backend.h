@@ -2,10 +2,10 @@
 #include <omnetpp.h>
 #include <unordered_map>
 
-#include "../IQuantumBackend.h"
-#include "../IRandomNumberGenerator.h"
+#include "../interfaces/IQuantumBackend.h"
+#include "../interfaces/IQubitId.h"
+#include "../interfaces/IRandomNumberGenerator.h"
 #include "Qubit.h"
-#include "backends/IQubitId.h"
 
 namespace quisp::backends::error_tracking {
 using abstract::IQuantumBackend;
@@ -18,11 +18,7 @@ using omnetpp::SimTime;
 class ErrorTrackingBackend : public IQuantumBackend {
  public:
   ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng);
-  ~ErrorTrackingBackend() {
-    for (auto& pair : qubits) {
-      delete pair.first;
-    }
-  }
+  ~ErrorTrackingBackend();
   IQubit* getQubit(const IQubitId* id) override;
   const SimTime& getSimTime() override;
   void setSimTime(SimTime time) override;

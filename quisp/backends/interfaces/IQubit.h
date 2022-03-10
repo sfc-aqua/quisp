@@ -1,28 +1,4 @@
-#pragma once
-#include <omnetpp/simtime_t.h>
-#include <functional>
-#include <memory>
-#include <tuple>
-#include "IQubitId.h"
-
 namespace quisp::backends::abstract {
-
-using omnetpp::SimTime;
-using omnetpp::SimTimeUnit;
-class IQubit;
-
-class IQuantumBackend {
- public:
-  IQuantumBackend(){};
-  virtual ~IQuantumBackend(){};
-
-  virtual IQubit* getQubit(const IQubitId* id) = 0;
-  virtual const SimTime& getSimTime() = 0;
-  virtual void setSimTime(SimTime time) = 0;
-
- protected:
-};
-
 class IQubit {
  public:
   IQubit(){};
@@ -45,7 +21,6 @@ class IQubit {
   // virtual void gateCZ(IQubit const* anoter) = 0;
   // virtual void gateSWAP() = 0;
 };
-
 enum class MeasureXResult : int {
   NO_Z_ERROR,
   HAS_Z_ERROR,

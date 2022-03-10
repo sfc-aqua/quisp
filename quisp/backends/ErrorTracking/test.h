@@ -3,10 +3,10 @@
 #include <omnetpp.h>
 #include <memory>
 #include <stdexcept>
+#include "../interfaces/IQubitId.h"
+#include "../interfaces/IRandomNumberGenerator.h"
 #include "Backend.h"
 #include "Qubit.h"
-#include "backends/IQubitId.h"
-#include "backends/IRandomNumberGenerator.h"
 
 namespace quisp_test::backends {
 using omnetpp::SimTime;

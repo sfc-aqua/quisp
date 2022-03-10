@@ -2,7 +2,6 @@
 #include <test_utils/TestUtils.h>
 #include <stdexcept>
 #include <unsupported/Eigen/MatrixFunctions>
-#include "backends/IRandomNumberGenerator.h"
 #include "test.h"
 
 namespace {

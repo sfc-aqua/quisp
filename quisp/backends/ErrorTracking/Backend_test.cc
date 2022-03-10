@@ -2,7 +2,7 @@
 #include <cxxabi.h>
 #include <gtest/gtest.h>
 #include <omnetpp.h>
-#include "backends/IRandomNumberGenerator.h"
+#include "../interfaces/IRandomNumberGenerator.h"
 #include "test.h"
 
 namespace {
