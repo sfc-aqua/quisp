@@ -1,5 +1,6 @@
 #pragma once
 #include <omnetpp.h>
+#include <memory>
 #include <unordered_map>
 
 #include "../interfaces/IQuantumBackend.h"
