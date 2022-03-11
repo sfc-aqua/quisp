@@ -11,6 +11,7 @@
 #include <utils/ComponentProvider.h>
 #include <string>
 #include "IStationaryQubit.h"
+#include "QubitId.h"
 
 namespace quisp {
 namespace modules {

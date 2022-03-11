@@ -18,6 +18,7 @@
 using namespace Eigen;
 
 using quisp::messages::PhotonicQubit;
+using quisp::modules::qubit_id::QubitId;
 using quisp::types::CliffordOperator;
 using quisp::types::EigenvalueResult;
 using quisp::types::MeasureXResult;
@@ -40,58 +41,58 @@ StationaryQubit::StationaryQubit() : provider(utils::ComponentProvider{this}) {}
 void StationaryQubit::initialize() {
   // read and set parameters
   emission_success_probability = par("emission_success_probability");
-  memory_err.X_error_rate = (double)par("memory_X_error_rate").doubleValue();
-  memory_err.Y_error_rate = (double)par("memory_Y_error_rate").doubleValue();
-  memory_err.Z_error_rate = (double)par("memory_Z_error_rate").doubleValue();
-  memory_err.excitation_error_rate = (double)par("memory_energy_excitation_rate").doubleValue();
-  memory_err.relaxation_error_rate = (double)par("memory_energy_relaxation_rate").doubleValue();
-  memory_err.completely_mixed_rate = (double)par("memory_completely_mixed_rate").doubleValue();
-  memory_err.error_rate = memory_err.X_error_rate + memory_err.Y_error_rate + memory_err.Z_error_rate + memory_err.excitation_error_rate + memory_err.relaxation_error_rate +
-                          memory_err.completely_mixed_rate;  // This is per μs.
+  // memory_err.X_error_rate = (double)par("memory_X_error_rate").doubleValue();
+  // memory_err.Y_error_rate = (double)par("memory_Y_error_rate").doubleValue();
+  // memory_err.Z_error_rate = (double)par("memory_Z_error_rate").doubleValue();
+  // memory_err.excitation_error_rate = (double)par("memory_energy_excitation_rate").doubleValue();
+  // memory_err.relaxation_error_rate = (double)par("memory_energy_relaxation_rate").doubleValue();
+  // memory_err.completely_mixed_rate = (double)par("memory_completely_mixed_rate").doubleValue();
+  // memory_err.error_rate = memory_err.X_error_rate + memory_err.Y_error_rate + memory_err.Z_error_rate + memory_err.excitation_error_rate + memory_err.relaxation_error_rate +
+  //                         memory_err.completely_mixed_rate;  // This is per μs.
   Memory_Transition_matrix = MatrixXd::Zero(7, 7);
   // clang-format off
-  Memory_Transition_matrix <<
-    1 - memory_err.error_rate,  memory_err.X_error_rate,   memory_err.Z_error_rate,   memory_err.Y_error_rate,    memory_err.excitation_error_rate, memory_err.relaxation_error_rate, memory_err.completely_mixed_rate,
-    memory_err.X_error_rate,    1 - memory_err.error_rate, memory_err.Y_error_rate,   memory_err.Z_error_rate,    memory_err.excitation_error_rate, memory_err.relaxation_error_rate, memory_err.completely_mixed_rate,
-    memory_err.Z_error_rate,    memory_err.Y_error_rate,   1 - memory_err.error_rate, memory_err.X_error_rate,    memory_err.excitation_error_rate, memory_err.relaxation_error_rate, memory_err.completely_mixed_rate,
-    memory_err.Y_error_rate,    memory_err.Z_error_rate,   memory_err.X_error_rate,   1 - memory_err.error_rate,  memory_err.excitation_error_rate, memory_err.relaxation_error_rate, memory_err.completely_mixed_rate,
-    0,                          0,                         0,                         0,                          1 - memory_err.relaxation_error_rate - memory_err.completely_mixed_rate, memory_err.relaxation_error_rate, memory_err.completely_mixed_rate,
-    0,                          0,                         0,                         0,                          memory_err.excitation_error_rate, 1 - memory_err.excitation_error_rate - memory_err.completely_mixed_rate, memory_err.completely_mixed_rate,
-    0,                          0,                         0,                         0,                          memory_err.excitation_error_rate, memory_err.relaxation_error_rate, 1 - memory_err.excitation_error_rate - memory_err.relaxation_error_rate;
+  // Memory_Transition_matrix <<
+  //   1 - memory_err.error_rate,  memory_err.X_error_rate,   memory_err.Z_error_rate,   memory_err.Y_error_rate,    memory_err.excitation_error_rate, memory_err.relaxation_error_rate, memory_err.completely_mixed_rate,
+  //   memory_err.X_error_rate,    1 - memory_err.error_rate, memory_err.Y_error_rate,   memory_err.Z_error_rate,    memory_err.excitation_error_rate, memory_err.relaxation_error_rate, memory_err.completely_mixed_rate,
+  //   memory_err.Z_error_rate,    memory_err.Y_error_rate,   1 - memory_err.error_rate, memory_err.X_error_rate,    memory_err.excitation_error_rate, memory_err.relaxation_error_rate, memory_err.completely_mixed_rate,
+  //   memory_err.Y_error_rate,    memory_err.Z_error_rate,   memory_err.X_error_rate,   1 - memory_err.error_rate,  memory_err.excitation_error_rate, memory_err.relaxation_error_rate, memory_err.completely_mixed_rate,
+  //   0,                          0,                         0,                         0,                          1 - memory_err.relaxation_error_rate - memory_err.completely_mixed_rate, memory_err.relaxation_error_rate, memory_err.completely_mixed_rate,
+  //   0,                          0,                         0,                         0,                          memory_err.excitation_error_rate, 1 - memory_err.excitation_error_rate - memory_err.completely_mixed_rate, memory_err.completely_mixed_rate,
+  //   0,                          0,                         0,                         0,                          memory_err.excitation_error_rate, memory_err.relaxation_error_rate, 1 - memory_err.excitation_error_rate - memory_err.relaxation_error_rate;
   // clang-format on
-  std::cout << "Memory_Transition_matrix = \n " << Memory_Transition_matrix << " done \n";
+  // std::cout << "Memory_Transition_matrix = \n " << Memory_Transition_matrix << " done \n";
 
-  setSingleQubitGateErrorModel(Hgate_error, "Hgate");
-  setSingleQubitGateErrorModel(Xgate_error, "Xgate");
-  setSingleQubitGateErrorModel(Zgate_error, "Zgate");
-  setTwoQubitGateErrorCeilings(CNOTgate_error, "CNOTgate");
-  setMeasurementErrorModel(Measurement_error);
+  // setSingleQubitGateErrorModel(Hgate_error, "Hgate");
+  // setSingleQubitGateErrorModel(Xgate_error, "Xgate");
+  // setSingleQubitGateErrorModel(Zgate_error, "Zgate");
+  // setTwoQubitGateErrorCeilings(CNOTgate_error, "CNOTgate");
+  // setMeasurementErrorModel(Measurement_error);
 
-  std::cout << Memory_Transition_matrix << "\n";
+  // std::cout << Memory_Transition_matrix << "\n";
 
   // Set error matrices. This is used in the process of simulating tomography.
-  Pauli.X << 0, 1, 1, 0;
-  Pauli.Y << 0, Complex(0, -1), Complex(0, 1), 0;
-  Pauli.Z << 1, 0, 0, -1;
-  Pauli.I << 1, 0, 0, 1;
+  // Pauli.X << 0, 1, 1, 0;
+  // Pauli.Y << 0, Complex(0, -1), Complex(0, 1), 0;
+  // Pauli.Z << 1, 0, 0, -1;
+  // Pauli.I << 1, 0, 0, 1;
 
   // Set measurement operators. This is used in the process of simulating tomography.
-  meas_op.X_basis.plus << 0.5, 0.5, 0.5, 0.5;
-  meas_op.X_basis.minus << 0.5, -0.5, -0.5, 0.5;
-  meas_op.X_basis.plus_ket << 1 / sqrt(2), 1 / sqrt(2);
-  meas_op.X_basis.minus_ket << 1 / sqrt(2), -1 / sqrt(2);
-  meas_op.X_basis.basis = 'X';
-  meas_op.Z_basis.plus << 1, 0, 0, 0;
-  meas_op.Z_basis.minus << 0, 0, 0, 1;
-  meas_op.Z_basis.plus_ket << 1, 0;
-  meas_op.Z_basis.minus_ket << 0, 1;
-  meas_op.Z_basis.basis = 'Z';
-  meas_op.Y_basis.plus << 0.5, Complex(0, -0.5), Complex(0, 0.5), 0.5;
-  meas_op.Y_basis.minus << 0.5, Complex(0, 0.5), Complex(0, -0.5), 0.5;
-  meas_op.Y_basis.plus_ket << 1 / sqrt(2), Complex(0, 1 / sqrt(2));
-  meas_op.Y_basis.minus_ket << 1 / sqrt(2), -Complex(0, 1 / sqrt(2));
-  meas_op.Y_basis.basis = 'Y';
-  meas_op.identity << 1, 0, 0, 1;
+  // meas_op.X_basis.plus << 0.5, 0.5, 0.5, 0.5;
+  // meas_op.X_basis.minus << 0.5, -0.5, -0.5, 0.5;
+  // meas_op.X_basis.plus_ket << 1 / sqrt(2), 1 / sqrt(2);
+  // meas_op.X_basis.minus_ket << 1 / sqrt(2), -1 / sqrt(2);
+  // meas_op.X_basis.basis = 'X';
+  // meas_op.Z_basis.plus << 1, 0, 0, 0;
+  // meas_op.Z_basis.minus << 0, 0, 0, 1;
+  // meas_op.Z_basis.plus_ket << 1, 0;
+  // meas_op.Z_basis.minus_ket << 0, 1;
+  // meas_op.Z_basis.basis = 'Z';
+  // meas_op.Y_basis.plus << 0.5, Complex(0, -0.5), Complex(0, 0.5), 0.5;
+  // meas_op.Y_basis.minus << 0.5, Complex(0, 0.5), Complex(0, -0.5), 0.5;
+  // meas_op.Y_basis.plus_ket << 1 / sqrt(2), Complex(0, 1 / sqrt(2));
+  // meas_op.Y_basis.minus_ket << 1 / sqrt(2), -Complex(0, 1 / sqrt(2));
+  // meas_op.Y_basis.basis = 'Y';
+  // meas_op.identity << 1, 0, 0, 1;
 
   // Get parameters from omnet
   stationaryQubit_address = par("stationaryQubit_address");
@@ -108,7 +109,7 @@ void StationaryQubit::initialize() {
   vertex_operator = CliffordOperator::H;
 
   auto *backend = provider.getQuantumBackend();
-  // qubit_ref = backend->getQubit({node_address, qnic_index, qnic_type, stationaryQubit_address});
+  qubit_ref = backend->getQubit(new QubitId(node_address, qnic_index, qnic_type, stationaryQubit_address));
 }
 
 void StationaryQubit::finish() {}
@@ -358,6 +359,8 @@ void StationaryQubit::setBusy() {
 // Re-initialization of this stationary qubit
 // This is called at the beginning of the simulation (in initialization() above), and whenever it is reinitialized via the RealTimeController.
 void StationaryQubit::setFree(bool consumed) {
+  qubit_ref->setFree();
+  /********************************/
   num_purified = 0;
   locked = false;
   locked_ruleset_id = -1;
