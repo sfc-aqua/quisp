@@ -466,7 +466,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
 
   // 3. Wrap up rules into ruleset and send them to prpoer partners
   // 3.1 wrap up rulesets
-  unsigned long ruleset_id = createUniqueId(seed_value);
+  unsigned long ruleset_id = createUniqueId();
   for (auto it = rules_array.begin(); it != rules_array.end(); ++it) {
     int owner_address = it->first;
     auto rules = std::move(it->second);
@@ -1387,11 +1387,10 @@ std::unique_ptr<ActiveRule> ConnectionManager::tomographyRule_deprecated(int own
   return tomography_rule;
 }
 
-unsigned long ConnectionManager::createUniqueId(int seed) {
+unsigned long ConnectionManager::createUniqueId() {
   std::string time = SimTime().str();
   std::string address = std::to_string(my_address);
-  auto rng = getRNG(seed);
-  std::string random = std::to_string(omnetpp::intuniform(rng, 0, 10000000));
+  std::string random = std::to_string(intuniform(0, 10000000));
   std::string hash_seed = address + time + random;
   std::hash<std::string> hash_fn;
   size_t t = hash_fn(hash_seed);

@@ -107,10 +107,11 @@ class ConnectionManager : public IConnectionManager {
   bool isQnicBusy(int qnic_address);
   QNIC_id getQnicInterface(int owner_address, int partner_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics);
 
-  unsigned long createUniqueId(int seed = 0);
   static int computePathDivisionSize(int l);
   static int fillPathDivision(std::vector<int> path, int i, int l, int *link_left, int *link_right, int *swapper, int fill_start);
   static PurType parsePurType(const std::string &pur_type);
+
+  unsigned long createUniqueId() override;
 };
 
 }  // namespace modules

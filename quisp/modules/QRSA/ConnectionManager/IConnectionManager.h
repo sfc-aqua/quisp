@@ -54,6 +54,7 @@ typedef struct {  // This is a little bit redundant
 class IConnectionManager : public cSimpleModule {
  public:
   virtual ~IConnectionManager(){};
+  virtual unsigned long createUniqueId() = 0;
 };
 
 }  // namespace modules

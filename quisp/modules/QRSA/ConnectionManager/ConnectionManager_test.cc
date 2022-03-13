@@ -104,6 +104,7 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
     return toRouterGate;
   };
   TestGate *toRouterGate;
+  unsigned long createUniqueId() override { return 1234; };
 };
 
 TEST(ConnectionManagerTest, Init) {
@@ -197,7 +198,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 4);
     auto expected_ruleset = R"({
-   "ruleset_id":2817478050987672464,
+   "ruleset_id":1234,
    "num_rules":4,
    "owner_address":2,
    "rules":[
@@ -385,7 +386,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(ruleset["rules"].size(), 5);
 
     auto expected_ruleset = R"({
-   "ruleset_id":2817478050987672464,
+   "ruleset_id":1234,
    "num_rules":5,
    "owner_address":3,
    "rules":[
@@ -634,7 +635,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     // rule2 (id: 1): purification with 5, next to 2
     // rule3 (id: 2): swapping with [3, 5], next to -1
     auto expected_ruleset = R"({
-   "ruleset_id":2817478050987672464,
+   "ruleset_id":1234,
    "num_rules":3,
    "owner_address":4,
    "rules":[
@@ -803,7 +804,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     // rule5 (id: 4): purification with 1, to (id: 5)
     // rule6 (id: 5): tomography with 1, to (id: -1)
     auto expected_ruleset = R"({
-   "ruleset_id":2817478050987672464,
+   "ruleset_id":1234,
    "num_rules":6,
    "owner_address":5,
    "rules":[
