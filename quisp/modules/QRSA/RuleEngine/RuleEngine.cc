@@ -169,7 +169,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     // Received a tomography rule set.
     // std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
-    auto *ruleset = const_cast<ActiveRuleSet *>(pk->getRuleSet());
+    auto *ruleset = const_cast<ActiveRuleSet *>(pk->getActiveRuleSet());
     int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
     std::cout << "Process size is ...." << ruleset->size() << " node[" << parentAddress << "\n";
     // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
@@ -278,7 +278,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
   else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     // add actual process
-    auto *ruleset = const_cast<ActiveRuleSet *>(pkt->getRuleSet());
+    auto *ruleset = const_cast<ActiveRuleSet *>(pkt->getActiveRuleSet());
     // here swappers got swapping ruleset with internal packet
     // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
     // ResourceAllocation();
@@ -293,7 +293,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     if (pkt->getApplication_type() == 0) {
       // Received a tomography rule set.
 
-      auto ruleset = const_cast<ActiveRuleSet *>(pkt->getRuleSet());
+      auto ruleset = const_cast<ActiveRuleSet *>(pkt->getActiveRuleSet());
       std::cout << "Process size is ...." << ruleset->size() << " node[" << parentAddress << "\n";
       if (ruleset->size() > 0) {
         rp.insert(ruleset);

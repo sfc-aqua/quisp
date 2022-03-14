@@ -13,6 +13,7 @@
 using namespace omnetpp;
 using namespace quisp::messages;
 using namespace quisp::rules::active;
+using quisp::rules::PurType;
 
 namespace quisp {
 namespace modules {
@@ -55,6 +56,8 @@ class ConnectionManager : public IConnectionManager {
   bool simultaneous_es_enabled;
   bool es_with_purify;
   int num_remote_purification;
+  double threshold_fidelity;
+  PurType purification_type;
   IRoutingDaemon *routing_daemon;
   IHardwareMonitor *hardware_monitor;
 
@@ -63,6 +66,7 @@ class ConnectionManager : public IConnectionManager {
   void finish() override;
 
   void respondToRequest(ConnectionSetupRequest *pk);
+  void respondToRequest_deprecated(ConnectionSetupRequest *pk);
   void tryRelayRequestToNextHop(ConnectionSetupRequest *pk);
 
   void queueApplicationRequest(ConnectionSetupRequest *pk);
@@ -83,23 +87,30 @@ class ConnectionManager : public IConnectionManager {
                                         int num_resources);
   SwappingConfig generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources);
 
+  std::unique_ptr<Rule> purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name = "purification");
+  std::unique_ptr<Rule> swapRule(std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id,
+                                 std::string name = "swapping");
+  std::unique_ptr<Rule> waitRule(int partner_address, QNIC_type qnic_type, int qnic_id, std::string name = "wait");
+  std::unique_ptr<Rule> tomographyRule(int partner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name = "tomography");
   // Rule generators
   std::unique_ptr<ActiveRule> purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
                                                unsigned long rule_id);
   std::unique_ptr<ActiveRule> swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id);
   std::unique_ptr<ActiveRule> simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id);
-  std::unique_ptr<ActiveRule> waitRule(int partner_address, int next_partner_address, unsigned long ruleset_id, unsigned long rule_id);
-  std::unique_ptr<ActiveRule> tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
-                                             unsigned long rule_id);
+  std::unique_ptr<ActiveRule> waitRule_deprecated(int partner_address, int next_partner_address, unsigned long ruleset_id, unsigned long rule_id);
+  std::unique_ptr<ActiveRule> tomographyRule_deprecated(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
+                                                        unsigned long rule_id);
 
   void reserveQnic(int qnic_address);
   void releaseQnic(int qnic_address);
   bool isQnicBusy(int qnic_address);
   QNIC_id getQnicInterface(int owner_address, int partner_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics);
 
-  unsigned long createUniqueId();
   static int computePathDivisionSize(int l);
   static int fillPathDivision(std::vector<int> path, int i, int l, int *link_left, int *link_right, int *swapper, int fill_start);
+  static PurType parsePurType(const std::string &pur_type);
+
+  unsigned long createUniqueId() override;
 };
 
 }  // namespace modules
