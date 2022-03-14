@@ -8,6 +8,7 @@ using quisp::modules::QNIC_type;
 namespace quisp::rules {
 
 enum PurType : int {
+  INVALID,  ///< Invalid purification type
   SINGLE_X,  ///< Single purification for X error
   SINGLE_Z,  ///< Single purification for Z error
   DOUBLE,  ///< Double purification both for X and Z errors
@@ -19,10 +20,11 @@ enum PurType : int {
   DSDA,  ///< Double Selection and Dual Action for both X and Z errors
   DSDA_INV,  ///< Inverse Double Selection and Dual Action for both X and Z errors
   DSDA_SECOND,  ///< Different type of Double Selection and Dual Action for both X and Z errors
-  DSDA_SECOND_INV  ///< Different type of Inverse Double Selection and Dual Action for both X and Z errors
+  DSDA_SECOND_INV,  ///< Different type of Inverse Double Selection and Dual Action for both X and Z errors
 };
 
 NLOHMANN_JSON_SERIALIZE_ENUM(PurType, {
+                                          {INVALID, "INVALID"},
                                           {SINGLE_X, "SINGLE_X"},
                                           {SINGLE_Z, "SINGLE_Z"},
                                           {DOUBLE, "DOUBLE"},
