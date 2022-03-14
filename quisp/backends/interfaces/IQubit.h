@@ -1,26 +1,27 @@
+#include <stdexcept>
 namespace quisp::backends::abstract {
 class IQubit {
  public:
   IQubit(){};
   virtual ~IQubit(){};
 
+  virtual void setFree() = 0;
   // // single qubit operations
-  // virtual void gateX() = 0;
-  // virtual void gateY() = 0;
-  // virtual void gateZ() = 0;
-  // virtual void gateI() = 0;
-  // virtual void gateH() = 0;
-  // virtual void gateT() = 0;
-  // virtual void gateS() = 0;
-  // virtual void gateRx() = 0;
-  // virtual void gateRy() = 0;
-  // virtual void gateRz() = 0;
+  virtual void gateX() { throw std::runtime_error("gateX not implemented"); }
+  virtual void gateY() { throw std::runtime_error("gateY not implemented"); }
+  virtual void gateZ() { throw std::runtime_error("gateZ not implemented"); }
+  virtual void gateI() { throw std::runtime_error("gateI not implemented"); }
+  virtual void gateH() { throw std::runtime_error("gateH not implemented"); }
+  virtual void gateT() { throw std::runtime_error("gateT not implemented"); }
+  virtual void gateS() { throw std::runtime_error("gateS not implemented"); }
 
-  // // two qubit operations
-  // virtual void gateCNOT(IQubit const* target) = 0;
-  // virtual void gateCZ(IQubit const* anoter) = 0;
-  // virtual void gateSWAP() = 0;
+  // two qubit operations
+  virtual void gateCNOT(IQubit *const control_qubit) { throw std::runtime_error("gateCNOT not implemented"); };
+  virtual void gateCZ(IQubit *const anoter) { throw std::runtime_error("gateCZ not implemented"); };
+  virtual bool purifyX(IQubit *const control_qubit) { throw std::runtime_error("gateCZ not implemented"); };
+  virtual bool purifyZ(IQubit *const target_qubit) { throw std::runtime_error("gateCZ not implemented"); };
 };
+
 enum class MeasureXResult : int {
   NO_Z_ERROR,
   HAS_Z_ERROR,

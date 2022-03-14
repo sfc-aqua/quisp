@@ -1,4 +1,5 @@
 #include "Qubit.h"
+#include <stdexcept>
 #include "Backend.h"
 namespace quisp::backends::error_tracking {
 
@@ -354,6 +355,63 @@ EigenvalueResult ErrorTrackingQubit::localMeasureZ() {
     result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
   }
   return result;
+}
+
+void ErrorTrackingQubit::gateX() {
+  applySingleQubitGateError(gate_err_x);
+  has_x_error = !has_x_error;
+}
+void ErrorTrackingQubit::gateZ() {
+  applySingleQubitGateError(gate_err_z);
+  has_z_error = !has_z_error;
+}
+void ErrorTrackingQubit::gateH() {
+  applySingleQubitGateError(gate_err_h);
+  bool z = has_z_error;
+  has_z_error = has_x_error;
+  has_z_error = z;
+}
+void ErrorTrackingQubit::gateCNOT(IQubit* const control_qubit) {
+  // Need to add noise here later
+  auto* et_control_qubit = dynamic_cast<ErrorTrackingQubit*>(control_qubit);
+  if (et_control_qubit == nullptr) {
+    throw std::runtime_error("ErrorTrackingQubit::gateCNOT: control_qubit is not an ErrorTrackingQubit");
+  }
+  applyTwoQubitGateError(gate_err_cnot, et_control_qubit);
+
+  if (et_control_qubit->has_x_error) {
+    // X error propagates from control to target. If an X error is already present, then it cancels out.
+    has_x_error = !has_x_error;
+  }
+
+  if (has_z_error) {
+    // Z error propagates from target to control. If an Z error is already present, then it cancels out.
+    et_control_qubit->has_z_error = !et_control_qubit->has_z_error;
+  }
+}
+
+bool ErrorTrackingQubit::purifyX(IQubit* const control_qubit) {
+  auto* et_control_qubit = dynamic_cast<ErrorTrackingQubit*>(control_qubit);
+  if (et_control_qubit == nullptr) {
+    throw std::runtime_error("ErrorTrackingQubit::purifyX: control_qubit is not an ErrorTrackingQubit");
+  }
+  // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
+  applyMemoryError();
+  et_control_qubit->applyMemoryError();
+  gateCNOT(control_qubit);
+  return correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
+}
+
+bool ErrorTrackingQubit::purifyZ(IQubit* const target_qubit) {
+  auto* et_target_qubit = dynamic_cast<ErrorTrackingQubit*>(target_qubit);
+  if (et_target_qubit == nullptr) {
+    throw std::runtime_error("ErrorTrackingQubit::purifyZ: target_qubit is not an ErrorTrackingQubit");
+  }
+  applyMemoryError();  // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
+  et_target_qubit->applyMemoryError();
+  et_target_qubit->gateCNOT(this);
+  gateH();
+  return this->correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
 }
 
 // Set error matrices. This is used in the process of simulating tomography.

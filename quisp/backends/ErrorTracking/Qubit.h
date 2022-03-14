@@ -35,23 +35,30 @@ class ErrorTrackingQubit : public IQubit {
   void setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate, double completely_mixed_rate);
   void reset();
 
+  void setFree() override;
+  MeasureXResult correlationMeasureX();
+  MeasureYResult correlationMeasureY();
+  MeasureZResult correlationMeasureZ();
+  EigenvalueResult localMeasureX();
+  EigenvalueResult localMeasureZ();
+  void gateX() override;
+  void gateZ() override;
+  void gateH() override;
+  void gateCNOT(IQubit* const control_qubit) override;
+  bool purifyX(IQubit* const control_qubit) override;
+  bool purifyZ(IQubit* const target_qubit) override;
+
  protected:
   void applySingleQubitGateError(SingleGateErrorModel const& err);
   void applyTwoQubitGateError(TwoQubitGateErrorModel const& err, ErrorTrackingQubit* another_qubit);
   void applyMemoryError();
   void addErrorX();
   void addErrorZ();
-  void setFree();
   void setRelaxedDensityMatrix();
   void setExcitedDensityMatrix();
   void setCompletelyMixedDensityMatrix();
 
   void update();
-  MeasureXResult correlationMeasureX();
-  MeasureYResult correlationMeasureY();
-  MeasureZResult correlationMeasureZ();
-  EigenvalueResult localMeasureX();
-  EigenvalueResult localMeasureZ();
 
   // constants
   SingleGateErrorModel gate_err_h;
