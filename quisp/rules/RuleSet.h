@@ -11,6 +11,7 @@ namespace quisp::rules {
  */
 class RuleSet {
  public:
+  RuleSet(){};
   RuleSet(unsigned long ruleset_id, int owner_address);
 
   unsigned long ruleset_id;  ///< `ruleset_id` is used for identifying connection
@@ -18,7 +19,7 @@ class RuleSet {
   int current_rule_id = 0;
   std::vector<std::unique_ptr<Rule>> rules;
 
-  Rule *addRule(std::unique_ptr<Rule> rule, std::vector<int> partners);
+  Rule *addRule(std::unique_ptr<Rule> rule);
   json serialize_json();
   void deserialize_json(json serialized);
   unsigned long createUniqueId();
