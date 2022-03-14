@@ -35,7 +35,6 @@ void ConnectionManager::initialize() {
   std::string pur_type = par("purification_type_cm").str();
   pur_type = pur_type.substr(1, pur_type.size() - 2);
   threshold_fidelity = par("threshold_fidelity");
-  seed_value = par("seed_cm");
 
   if (simultaneous_es_enabled && es_with_purify) {
     error("Currently, simultaneous entanglement swapping cannot be simulated with purification");
