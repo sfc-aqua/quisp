@@ -113,7 +113,10 @@ class RuleEngine : public IRuleEngine {
 
   void updateResources_EntanglementSwapping(swapping_result swapr);
 
-  ActiveRuleSet *constructActiveRuleSet(RuleSet ruleset);
+  std::unique_ptr<ActiveRuleSet> constructActiveRuleSet(RuleSet ruleset);
+  std::unique_ptr<ActiveRule> constructRule(std::unique_ptr<ActiveRule> active_rule, std::unique_ptr<Rule> rule, unsigned long ruleset_id);
+  ActiveCondition *constructCondition(std::unique_ptr<Condition> condition);
+  ActiveAction *constructAction(std::unique_ptr<Action> action, unsigned long ruleset_id, int rule_id);
   virtual void updateResources_SimultaneousEntanglementSwapping(swapping_result swapr);
 
   utils::ComponentProvider provider;

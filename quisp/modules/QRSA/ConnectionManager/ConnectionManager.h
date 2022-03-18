@@ -51,7 +51,7 @@ class ConnectionManager : public IConnectionManager {
   int num_of_qnics;
   std::map<int, std::queue<ConnectionSetupRequest *>> connection_setup_buffer;  // key is qnic address
   std::map<int, int> connection_retry_count;  // key is qnic address
-  std::map<int, bool> qnic_res_table;
+  std::vector<int> reserved_qnics = {};  // reserved qnic address table
   std::vector<cMessage *> request_send_timing;  // self message, notification for sending out request
   bool simultaneous_es_enabled;
   bool es_with_purify;
@@ -89,9 +89,9 @@ class ConnectionManager : public IConnectionManager {
 
   std::unique_ptr<Rule> purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name = "purification");
   std::unique_ptr<Rule> swapRule(std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id,
-                                 std::string name = "swapping");
+                                 std::vector<QNIC_type> remote_qnic_type, std::vector<int> remote_qnic_id, std::vector<int> remote_qnic_address, std::string name = "swapping");
   std::unique_ptr<Rule> waitRule(int partner_address, QNIC_type qnic_type, int qnic_id, std::string name = "wait");
-  std::unique_ptr<Rule> tomographyRule(int partner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name = "tomography");
+  std::unique_ptr<Rule> tomographyRule(int partner_address, int owner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name = "tomography");
   // Rule generators
   std::unique_ptr<ActiveRule> purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
                                                unsigned long rule_id);

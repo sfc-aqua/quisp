@@ -20,6 +20,47 @@
 #include "rules/Active/ActiveAction.h"
 #include "rules/Active/ActiveRuleSet.h"
 
+ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, partner);
+ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, num_resource_required);
+
+ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, unsigned long, ruleset_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, unsigned long, rule_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, qnic_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, QNIC_type, qnic_type);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, partner);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, resource);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, trash_resource);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, purification_count);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, bool, X);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, bool, Z);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, num_purify);
+ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, action_index);
+
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_partner);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_qnic_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, self_left_qnic_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_qnic_address);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, left_qnic_type);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, self_left_qnic_type);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_resource);
+
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_partner);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_qnic_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, self_right_qnic_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_qnic_address);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, right_qnic_type);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, self_right_qnic_type);
+ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_resource);
+
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, partner);
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, qnic_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, QNIC_type, qnic_type);
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, resource);
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, src);
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, dst);
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, current_count);
+ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, max_count);
+
 namespace {
 
 using namespace omnetpp;
@@ -60,6 +101,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
 
 class RuleEngineTestTarget : public quisp::modules::RuleEngine {
  public:
+  using quisp::modules::RuleEngine::constructActiveRuleSet;
   using quisp::modules::RuleEngine::initialize;
   using quisp::modules::RuleEngine::par;
   using quisp::modules::RuleEngine::qnic_store;
@@ -71,7 +113,7 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
   RuleEngineTestTarget(IStationaryQubit* mockQubit, MockRoutingDaemon* routingdaemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller,
                        std::vector<QNicSpec> qnic_specs = {})
       : quisp::modules::RuleEngine() {
-    setParInt(this, "address", 123);
+    setParInt(this, "address", 2);
     setParInt(this, "number_of_qnics_rp", 0);
     setParInt(this, "number_of_qnics_r", 1);
     setParInt(this, "number_of_qnics", 1);
@@ -94,6 +136,283 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
 
 // specifier for qnics in order to create qnic_record and qubit_record.
 static const std::vector<QNicSpec> qnic_specs = {{QNIC_E, 0, 2}, {QNIC_R, 0, 2}};
+
+TEST(RuleEngineTest, activeRuleSetConstruction) {
+  // translate static ruleset into active ruleset
+  prepareSimulation();
+  auto* routingdaemon = new MockRoutingDaemon;
+  auto* mockHardwareMonitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* mockQubit1 = new MockQubit(QNIC_E, 0);
+  std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(QNIC_E, 0, 0);
+  auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, realtime_controller, qnic_specs};
+  rule_engine->callInitialize();
+
+  auto serialized_ruleset = R"({
+      "ruleset_id": 1234,
+      "num_rules": 4,
+      "owner_address": 2,
+      "rules": [{
+        "name": "purification",
+        "next_rule_id": 1,
+        "partners": [3],
+        "rule_id": 0,
+        "qnic_type": ["QNIC_E"],
+        "qnic_id": [11],
+        "action": {
+          "type": "purification",
+          "options": {
+            "partner_address": [3],
+            "purification_type": "SINGLE_X",
+            "qnic_id": [11],
+            "qnic_type": ["QNIC_E"]
+            }
+          },
+          "condition": {
+            "clauses": [{
+              "type": "enough_resource",
+              "options": {
+                "num_resource": 2,
+                "partner_address": 3,
+                "qnic_id": 11,
+                "qnic_type": "QNIC_E",
+                "required_fidelity": 0.0
+                }
+              }]
+            }
+          },
+        {
+          "name": "wait",
+          "next_rule_id": 2,
+          "partners": [3],
+          "rule_id": 1,
+          "qnic_type": ["QNIC_E"],
+          "qnic_id": [11],
+          "action": {
+            "type": "wait",
+            "options": {
+              "partner_address": [3],
+              "qnic_id": [11],
+              "qnic_type": ["QNIC_E"]
+            }
+          },
+          "condition": {
+            "clauses": [{
+              "type": "wait",
+              "options": {
+                "partner_address": 3,
+                "qnic_id": 11,
+                "qnic_type": "QNIC_E"
+                }
+              }]
+            }
+          },
+        {
+          "name": "purification",
+          "next_rule_id": 3,
+          "partners": [5],
+          "rule_id": 2,
+          "qnic_id": [11],
+          "qnic_type": ["QNIC_E"],
+          "action": {
+            "type": "purification",
+            "options": {
+              "partner_address": [5],
+              "purification_type": "SINGLE_X",
+              "qnic_id": [11],
+              "qnic_type": ["QNIC_E"]
+            }
+          },
+          "condition": {
+            "clauses": [{
+              "type": "enough_resource",
+              "options": {
+                "num_resource": 2,
+                "partner_address": 5,
+                "qnic_id": 11,
+                "qnic_type": "QNIC_E",
+                "required_fidelity": 0.0
+                }
+              }]
+            }
+          },
+        {
+          "name": "tomography",
+          "next_rule_id": -1,
+          "partners": [5],
+          "rule_id": 3,
+          "qnic_type": ["QNIC_E"],
+          "qnic_id": [11],
+          "action": {
+            "type": "tomography",
+            "options": {
+              "num_measure": 0,
+              "owner_address": 2,
+              "partner_address": [5],
+              "qnic_id": [11],
+              "qnic_type": ["QNIC_E"]
+              }
+            },
+            "condition": {
+              "clauses": [
+                {
+                  "type": "measure_count",
+                  "options": {
+                    "num_measure": 100,
+                    "partner_address": 5,
+                    "qnic_id": 11,
+                    "qnic_type": "QNIC_E"
+                  }
+                },
+                {
+                "type": "enough_resource",
+                "options": {
+                  "num_resource": 1,
+                  "partner_address": 5,
+                  "qnic_id": 11,
+                  "qnic_type": "QNIC_E",
+                  "required_fidelity": 0.0
+                  }
+                }
+              ]
+              }
+            }]
+          })"_json;
+
+  RuleSet deserialized_ruleset;
+  deserialized_ruleset.deserialize_json(serialized_ruleset);
+
+  auto active_ruleset = rule_engine->constructActiveRuleSet(std::move(deserialized_ruleset));
+  // check property of resulted
+  ASSERT_NE(active_ruleset, nullptr);
+  EXPECT_EQ(active_ruleset->size(), 4);
+  auto ruleset_id = active_ruleset->ruleset_id;
+  auto expected_ruleset_id = 1234;
+
+  // checking the 1st rule of QNode2(initiator): if EnoughResource -> Purify
+  {
+    auto* rule = active_ruleset->rules.at(0).get();
+    EXPECT_EQ(rule->ruleset_id, ruleset_id);
+    ASSERT_EQ(rule->action_partners.size(), 1);
+    // action partner must be the next neighbor qnode3 (this qnode is qnode2[initiator])
+    // first action is the purification with the neighbor qnode
+    EXPECT_EQ(rule->action_partners.at(0), 3);
+
+    auto* action = dynamic_cast<PurifyAction*>(rule->action.get());
+    EXPECT_NE(action, nullptr);
+    EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
+    EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
+    EXPECT_EQ(access_private::partner(*action), 3);
+    EXPECT_EQ(access_private::X(*action), true);
+    EXPECT_EQ(access_private::Z(*action), false);
+    EXPECT_EQ(access_private::qnic_id(*action), 11);
+    EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
+    EXPECT_EQ(access_private::resource(*action), 0);
+    EXPECT_EQ(access_private::trash_resource(*action), 1);
+    EXPECT_EQ(access_private::action_index(*action), 0);
+    EXPECT_EQ(access_private::purification_count(*action), 1);
+    EXPECT_EQ(access_private::num_purify(*action), 1);
+
+    EXPECT_EQ(rule->condition->clauses.size(), 1);
+    std::cout << rule->condition->clauses.size() << std::endl;
+    auto* clause = dynamic_cast<ActiveClause*>(rule->condition.get()->clauses.at(0));
+    ASSERT_NE(clause, nullptr);
+
+    auto* enough_resource_clause = dynamic_cast<EnoughResourceClause*>(clause);
+    ASSERT_NE(enough_resource_clause, nullptr);
+    EXPECT_EQ(access_private::partner(*enough_resource_clause), 3);
+    EXPECT_EQ(access_private::num_resource_required(*enough_resource_clause), 2);
+  }
+  // checking the 2nd rule of QNode2(initiator): Wait
+  {
+    auto* rule = active_ruleset->rules.at(1).get();
+    EXPECT_EQ(rule->name, "wait with 3");
+    EXPECT_EQ(rule->ruleset_id, ruleset_id);
+    ASSERT_EQ(rule->action_partners.size(), 1);
+    EXPECT_EQ(rule->action_partners.at(0), 3);  // just wait QNode 3
+
+    ASSERT_EQ(rule->condition->clauses.size(), 1);
+    auto* clause = dynamic_cast<WaitClause*>(rule->condition->clauses.at(0));
+    EXPECT_NE(clause, nullptr);
+
+    auto* action = dynamic_cast<WaitAction*>(rule->action.get());
+    EXPECT_NE(rule->action.get(), nullptr);
+  }
+  // checking the 3rd rule of QNode2(initiator): if EnoughResource -> Purify
+  {
+    auto* rule = active_ruleset->rules.at(2).get();
+    EXPECT_EQ(rule->name, "purification with 5");
+    EXPECT_EQ(rule->ruleset_id, ruleset_id);
+    ASSERT_EQ(rule->action_partners.size(), 1);
+    // action partner must be the qnode5(responder)
+    // third action is the purification with the opposite end qnode
+    EXPECT_EQ(rule->action_partners.at(0), 5);
+    EXPECT_EQ(rule->next_action_partners.size(), 0);
+
+    auto* action = dynamic_cast<PurifyAction*>(rule->action.get());
+    EXPECT_NE(action, nullptr);
+    EXPECT_EQ(access_private::rule_id(*action), rule->rule_id);
+    EXPECT_EQ(access_private::ruleset_id(*action), ruleset_id);
+    EXPECT_EQ(access_private::partner(*action), 5);
+    EXPECT_EQ(access_private::X(*action), true);
+    EXPECT_EQ(access_private::Z(*action), false);
+    EXPECT_EQ(access_private::qnic_id(*action), 11);
+    EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
+    EXPECT_EQ(access_private::resource(*action), 0);
+    EXPECT_EQ(access_private::trash_resource(*action), 1);
+    EXPECT_EQ(access_private::action_index(*action), 0);
+    EXPECT_EQ(access_private::purification_count(*action), 1);
+    EXPECT_EQ(access_private::num_purify(*action), 1);
+
+    ASSERT_EQ(rule->condition->clauses.size(), 1);
+    auto* clause = dynamic_cast<EnoughResourceClause*>(rule->condition.get()->clauses.at(0));
+    ASSERT_NE(clause, nullptr);
+    EXPECT_EQ(access_private::partner(*clause), 5);
+    EXPECT_EQ(access_private::num_resource_required(*clause), 2);
+  }
+
+  // checking the 4th rule of QNode2(initiator): EnoughResource && MeasureCount -> Tomography
+  {
+    auto* rule = active_ruleset->rules.at(3).get();
+    EXPECT_EQ(rule->name, "tomography with 5");
+    EXPECT_EQ(rule->ruleset_id, ruleset_id);
+    ASSERT_EQ(rule->action_partners.size(), 1);
+    // action partner must be the qnode5(responder)
+    // last action is the tomography with the opposite end qnode
+    EXPECT_EQ(rule->action_partners.at(0), 5);
+    EXPECT_EQ(rule->next_action_partners.size(), 0);
+    auto* action = dynamic_cast<RandomMeasureAction*>(rule->action.get());
+    EXPECT_NE(action, nullptr);
+    EXPECT_EQ(access_private::partner(*action), 5);
+    EXPECT_EQ(access_private::qnic_id(*action), 11);
+    EXPECT_EQ(access_private::qnic_type(*action), QNIC_E);
+    EXPECT_EQ(access_private::resource(*action), 0);
+    EXPECT_EQ(access_private::src(*action), 2);
+    EXPECT_EQ(access_private::dst(*action), 5);
+    EXPECT_EQ(access_private::current_count(*action), 0);
+    EXPECT_EQ(access_private::max_count(*action), 0);
+    std::cout<<"here?"<<std::endl;
+
+    ASSERT_EQ(rule->condition->clauses.size(), 2);
+    auto* measure_count_clause = dynamic_cast<MeasureCountClause*>(rule->condition.get()->clauses.at(0));
+    ASSERT_NE(measure_count_clause, nullptr);
+    EXPECT_EQ(measure_count_clause->max_count, 100);
+    EXPECT_EQ(measure_count_clause->current_count, 0);
+    auto* enough_resource_clause = dynamic_cast<EnoughResourceClause*>(rule->condition.get()->clauses.at(1));
+    ASSERT_NE(enough_resource_clause, nullptr);
+    EXPECT_EQ(access_private::partner(*enough_resource_clause), 5);
+    EXPECT_EQ(access_private::num_resource_required(*enough_resource_clause), 1);
+  }
+
+  EXPECT_EQ(active_ruleset->rules.at(0)->next_rule_id, active_ruleset->rules.at(1)->rule_id);
+  EXPECT_EQ(active_ruleset->rules.at(1)->next_rule_id, active_ruleset->rules.at(2)->rule_id);
+  EXPECT_EQ(active_ruleset->rules.at(2)->next_rule_id, active_ruleset->rules.at(3)->rule_id);
+  EXPECT_EQ(active_ruleset->rules.at(3)->next_rule_id, -1);
+  delete mockHardwareMonitor;
+  delete routingdaemon;
+  delete realtime_controller;
+  delete rule_engine->qnic_store.get();
+}
 
 TEST(RuleEngineTest, ESResourceUpdate) {
   // 1 (wait) -- 2(ES) -- 3(wait)
@@ -248,7 +567,7 @@ TEST(RuleEngineTest, storeCheckPurificationAgreement_running_process) {
   int partner_addr = 5;
   int action_index = 3;
   auto* ruleset = new ActiveRuleSet(ruleset_id, rule_engine->parentAddress);
-  unsigned long target_rule_id = 10;
+  int target_rule_id = 10;
   auto rule1 = new ActiveRule(ruleset_id, target_rule_id);
   auto rule2 = new ActiveRule(ruleset_id, 11);
   auto* qubit = new MockQubit(QNIC_E, 0);
@@ -553,7 +872,7 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   rule_engine->callInitialize();
 
   unsigned long ruleset_id = 3;
-  unsigned long rule_id = 4;
+  int rule_id = 4;
   auto* ruleset = new ActiveRuleSet(ruleset_id, rule_id);
   {  // generate RuleSet
     auto rule = std::make_unique<ActiveRule>(ruleset_id, rule_id);
@@ -606,9 +925,9 @@ TEST(RuleEngineTest, constructActiveRuleSet) {
   // prepare (static) ruleset being sent by responder
   unsigned long ruleset_id = 1234;
   int owner_address = 1;
-  unsigned long rule_id0 = 5678;
+  int rule_id0 = 5678;
   std::string rule0_name = "Purification";
-  unsigned long rule_id1 = 5679;
+  int rule_id1 = 5679;
   std::string rule1_name = "Swapping";
   RuleSet ruleset = RuleSet(ruleset_id, owner_address);  // static ruleset
   {
