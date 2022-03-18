@@ -391,7 +391,7 @@ TEST(RuleEngineTest, activeRuleSetConstruction) {
     EXPECT_EQ(access_private::dst(*action), 5);
     EXPECT_EQ(access_private::current_count(*action), 0);
     EXPECT_EQ(access_private::max_count(*action), 0);
-    std::cout<<"here?"<<std::endl;
+    std::cout << "here?" << std::endl;
 
     ASSERT_EQ(rule->condition->clauses.size(), 2);
     auto* measure_count_clause = dynamic_cast<MeasureCountClause*>(rule->condition.get()->clauses.at(0));

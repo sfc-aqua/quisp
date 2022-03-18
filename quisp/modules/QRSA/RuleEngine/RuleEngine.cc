@@ -370,30 +370,26 @@ std::unique_ptr<ActiveRule> RuleEngine::constructRule(std::unique_ptr<ActiveRule
 ActiveCondition *RuleEngine::constructCondition(std::unique_ptr<Condition> condition) {
   auto active_condition = new ActiveCondition();
   auto clauses = std::move(condition->clauses);
-  std::cout<<"size: "<<clauses.size()<<std::endl;
+  std::cout << "size: " << clauses.size() << std::endl;
   for (int i = 0; i < clauses.size(); i++) {
     auto clause = std::move(clauses.at(i));
     if (auto *cond = dynamic_cast<EnoughResourceConditionClause *>(clause.get())) {
       // EnoughResourceClause(partner_address, num_resource)
       auto *resource_clause = new EnoughResourceClause(cond->partner_address, cond->num_resource);
       active_condition->addClause(resource_clause);
-    }
-    else if (auto *cond = dynamic_cast<MeasureCountConditionClause *>(clause.get())) {
+    } else if (auto *cond = dynamic_cast<MeasureCountConditionClause *>(clause.get())) {
       // MeasureCountClause (num_measure)
       auto *measure_count_clause = new MeasureCountClause(cond->num_measure);
       active_condition->addClause(measure_count_clause);
-    }
-    else if (auto *cond = dynamic_cast<WaitConditionClause *>(clause.get())) {
+    } else if (auto *cond = dynamic_cast<WaitConditionClause *>(clause.get())) {
       // WaitClause ()
       auto *wait_clause = new WaitClause();
       active_condition->addClause(wait_clause);
-    }
-    else if (auto *cond = dynamic_cast<FidelityConditionClause *>(clause.get())) {
+    } else if (auto *cond = dynamic_cast<FidelityConditionClause *>(clause.get())) {
       // FidelityClause (partner_addr, resource, fidleity)
       auto *fidelity_clause = new FidelityClause(cond->partner_address, 0, cond->required_fidelity);
       active_condition->addClause(fidelity_clause);
-    }
-    else{
+    } else {
       error("Unknown clause");
     }
   }
@@ -473,8 +469,9 @@ ActiveAction *RuleEngine::constructAction(std::unique_ptr<Action> action, unsign
                            right_remote_qnic_id, right_remote_qnic_address, 0, left_qnic_id, left_qnic_type, right_qnic_id, right_qnic_type);
     return active_action;
   }
-  if (auto *act = dynamic_cast<Tomography *>(action.get())){
-    auto active_action = new RandomMeasureAction(ruleset_id, rule_id, act->owner_address, act->partner_address.at(0), act->qnic_types.at(0), act->qnic_ids.at(0), 0, act->num_measurement);
+  if (auto *act = dynamic_cast<Tomography *>(action.get())) {
+    auto active_action =
+        new RandomMeasureAction(ruleset_id, rule_id, act->owner_address, act->partner_address.at(0), act->qnic_types.at(0), act->qnic_ids.at(0), 0, act->num_measurement);
     return active_action;
   }
 }

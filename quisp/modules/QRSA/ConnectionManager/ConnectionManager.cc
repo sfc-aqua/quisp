@@ -75,7 +75,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
 
     if (actual_dst == my_address) {
       // got ConnectionSetupRequest and return the response
-      respondToRequest_deprecated(req);
+      respondToRequest(req);
       delete msg;
     } else if (actual_src == my_address) {
       // initiator node
@@ -1221,7 +1221,8 @@ std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, QNIC_type
   return wait_rule;
 }
 
-std::unique_ptr<Rule> ConnectionManager::tomographyRule(int partner_address, int owner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name) {
+std::unique_ptr<Rule> ConnectionManager::tomographyRule(int partner_address, int owner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id,
+                                                        std::string name) {
   auto tomography_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, true);
   tomography_rule->setName(name);
 
