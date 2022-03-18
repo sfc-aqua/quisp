@@ -71,7 +71,7 @@ TEST(ConnectionManagerRuleGenTest, PurificationRule) {
   QNIC_type qnic_type = QNIC_E;
   int qnic_id = 4;
   unsigned long ruleset_id = 5;
-  unsigned long rule_id = 6;
+  int rule_id = 6;
   std::unique_ptr<ActiveRule> rule;
   rule = connection_manager.purificationRule(partner_addr, purification_type, num_purification, qnic_type, qnic_id, ruleset_id, rule_id);
   ASSERT_NE(rule, nullptr);
@@ -130,7 +130,7 @@ TEST(ConnectionManagerRuleGenTest, PurificationRule) {
 TEST(ConnectionManagerRuleGenTest, SwappingRule) {
   ConnectionManager connection_manager;
   unsigned long ruleset_id = 5;
-  unsigned long rule_id = 6;
+  int rule_id = 6;
 
   SwappingConfig conf{
       .left_partner = 40,

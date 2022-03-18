@@ -127,14 +127,10 @@ TEST(ConnectionManagerTest, parsePurType) {
   EXPECT_EQ(pur_type, PurType::DOUBLE);
   pur_type = connection_manager->parsePurType("DOUBLE_INV");
   EXPECT_EQ(pur_type, PurType::DOUBLE_INV);
-  pur_type = connection_manager->parsePurType("SSDP_X");
-  EXPECT_EQ(pur_type, PurType::SSDP_X);
-  pur_type = connection_manager->parsePurType("SSDP_Z");
-  EXPECT_EQ(pur_type, PurType::SSDP_Z);
-  pur_type = connection_manager->parsePurType("SSDP_X_INV");
-  EXPECT_EQ(pur_type, PurType::SSDP_X_INV);
-  pur_type = connection_manager->parsePurType("SSDP_Z_INV");
-  EXPECT_EQ(pur_type, PurType::SSDP_Z_INV);
+  pur_type = connection_manager->parsePurType("DSSA");
+  EXPECT_EQ(pur_type, PurType::DSSA);
+  pur_type = connection_manager->parsePurType("DSSA_INV");
+  EXPECT_EQ(pur_type, PurType::DSSA_INV);
   pur_type = connection_manager->parsePurType("DSDA");
   EXPECT_EQ(pur_type, PurType::DSDA);
   pur_type = connection_manager->parsePurType("DSDA_INV");
@@ -176,13 +172,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   req->setStack_of_QNICs(2, QNIC_pair_info{.fst = {.type = QNIC_E, .index = 14, .address = 104}, .snd = {.type = QNIC_E, .index = 15, .address = 105}});
   EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(5)).Times(1).WillOnce(Return(-1));
   EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(2)).Times(1).WillOnce(Return(106));
-  auto src_info = new ConnectionSetupInfo{.qnic =
-                                              {
-                                                  .type = QNIC_E,
-                                                  .index = 16,
-                                              },
-                                          .neighbor_address = 4,
-                                          .quantum_link_cost = 10};
+  auto src_info = new ConnectionSetupInfo{.qnic = {.type = QNIC_E, .index = 16, .address = 106}, .neighbor_address = 4, .quantum_link_cost = 10};
   EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(106)).Times(1).WillOnce(Return(ByMove(std::unique_ptr<ConnectionSetupInfo>(src_info))));
 
   sim->setContext(connection_manager);
@@ -345,6 +335,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
             "type":"tomography",
             "options":{
                "num_measure":0,
+               "owner_address":2 ,
                "partner_address":[
                   5
                ],
@@ -589,6 +580,18 @@ TEST(ConnectionManagerTest, RespondToRequest) {
                "qnic_type":[
                   "QNIC_E",
                   "QNIC_E"
+               ],
+               "remote_qnic_type":[
+                 "QNIC_E",
+                 "QNIC_E"
+               ],
+               "remote_qnic_id": [
+                 11,
+                 16
+               ],
+               "remote_qnic_address": [
+                 101,
+                 106
                ]
             }
          },
@@ -755,6 +758,18 @@ TEST(ConnectionManagerTest, RespondToRequest) {
                "qnic_type":[
                   "QNIC_E",
                   "QNIC_E"
+               ],
+               "remote_qnic_type":[
+                 "QNIC_E",
+                 "QNIC_E"
+               ],
+               "remote_qnic_id":[
+                 13,
+                 16
+               ],
+               "remote_qnic_address": [
+                 103,
+                 106
                ]
             }
          },
@@ -1034,6 +1049,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
             "type":"tomography",
             "options":{
                "num_measure":0,
+               "owner_address": 5,
                "partner_address":[
                   2
                ],
