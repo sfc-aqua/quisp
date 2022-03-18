@@ -22,7 +22,7 @@ using namespace rules::active;
 
 typedef struct {
   unsigned long ruleset_id;
-  unsigned long rule_id;
+  int rule_id;
   int index;
 } process_id;
 

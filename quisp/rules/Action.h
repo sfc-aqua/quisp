@@ -13,10 +13,8 @@ enum PurType : int {
   SINGLE_Z,  ///< Single purification for Z error
   DOUBLE,  ///< Double purification both for X and Z errors
   DOUBLE_INV,  ///< Double inverse purification both for X and Z errors
-  SSDP_X,  ///< Single Selection and Double Purification (DoubleSelectionAction) for X error
-  SSDP_Z,  ///< Single Selection and Double Purification (DoubleSelectionAction) for Z error
-  SSDP_X_INV,  ///< Single Selection and Double Purification Inverse (DoubleSelectionAction) for X error
-  SSDP_Z_INV,  ///< Single Selection and Double Purification Inverse (DoubleSelectionAction) for Z error
+  DSSA,  ///< Double selection XZ and single action (DoubleSelectionAction) for X error
+  DSSA_INV,  ///< Inverse Double selection XZ and single action(DoubleSelectionAction) for X error
   DSDA,  ///< Double Selection and Dual Action for both X and Z errors
   DSDA_INV,  ///< Inverse Double Selection and Dual Action for both X and Z errors
   DSDA_SECOND,  ///< Different type of Double Selection and Dual Action for both X and Z errors
@@ -29,10 +27,8 @@ NLOHMANN_JSON_SERIALIZE_ENUM(PurType, {
                                           {SINGLE_Z, "SINGLE_Z"},
                                           {DOUBLE, "DOUBLE"},
                                           {DOUBLE_INV, "DOUBLE_INV"},
-                                          {SSDP_X, "SSDP_X"},
-                                          {SSDP_Z, "SSDP_Z"},
-                                          {SSDP_X_INV, "SSDP_X_INV"},
-                                          {SSDP_Z_INV, "SSDP_Z_INV"},
+                                          {DSSA, "DSSA"},
+                                          {DSSA_INV, "DSSA_INV"},
                                           {DSDA, "DSDA"},
                                           {DSDA_INV, "DSDA_INV"},
                                           {DSDA_SECOND, "DSDA_SECOND"},
@@ -64,7 +60,11 @@ class Purification : public Action {
 class EntanglementSwapping : public Action {
  public:
   EntanglementSwapping(json serialized) { deserialize_json(serialized); }  // for deserialization
-  EntanglementSwapping(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id);
+  EntanglementSwapping(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id, std::vector<QNIC_type> remote_qnic_type,
+                       std::vector<int> remote_qnic_id, std::vector<int> remote_qnic_address);
+  std::vector<QNIC_type> remote_qnic_types;  // qnic type of partner's interface
+  std::vector<int> remote_qnic_ids;  // qnic id of partner's interface
+  std::vector<int> remote_qnic_address;  // qnic_address of partner's interface
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };
@@ -80,8 +80,9 @@ class Wait : public Action {
 class Tomography : public Action {
  public:
   Tomography(json serialized) { deserialize_json(serialized); }  // for deserialization
-  Tomography(int num_measurement, int partner_addr, QNIC_type qnic_type, int qnic_id);
+  Tomography(int num_measurement, int owner_addr, int partner_addr, QNIC_type qnic_type, int qnic_id);
   int num_measurement;
+  int owner_address;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };

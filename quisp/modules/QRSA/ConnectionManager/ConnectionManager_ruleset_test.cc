@@ -109,9 +109,12 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
   std::vector<int> partner_addr = {1, 3};
   std::vector<QNIC_type> qnic_type = {QNIC_E, QNIC_R};
   std::vector<int> qnic_id = {4, 5};
+  std::vector<QNIC_type> remote_qnic_type = {QNIC_R, QNIC_E};
+  std::vector<int> remote_qnic_id = {3, 6};
+  std::vector<int> remote_qnic_address = {11, 12};
   double threshold_fidelity = 0;
 
-  auto purification_rule = connection_manager.swapRule(partner_addr, threshold_fidelity, qnic_type, qnic_id);
+  auto purification_rule = connection_manager.swapRule(partner_addr, threshold_fidelity, qnic_type, qnic_id, remote_qnic_type, remote_qnic_id, remote_qnic_address);
   EXPECT_EQ(purification_rule->rule_id, -1);
   EXPECT_EQ(purification_rule->name, "swapping");
 
@@ -171,6 +174,18 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
          "qnic_id":[
             4,
             5
+         ],
+         "remote_qnic_type":[
+           "QNIC_R",
+           "QNIC_E"
+         ],
+         "remote_qnic_id":[
+           3,
+           6
+         ],
+         "remote_qnic_address":[
+           11,
+           12
          ]
       }
    }
@@ -242,12 +257,13 @@ TEST(ConnectionManagerRuleSetTest, tomographyRule) {
 
   // rule arguments
   int partner_addr = 1;
+  int owner_addr = 2;
   QNIC_type qnic_type = QNIC_E;
   int qnic_id = 4;
   int num_measurement = 5000;
   double threshold_fidelity = 0;
 
-  auto tomography_rule = connection_manager.tomographyRule(partner_addr, num_measurement, threshold_fidelity, qnic_type, qnic_id);
+  auto tomography_rule = connection_manager.tomographyRule(partner_addr, owner_addr, num_measurement, threshold_fidelity, qnic_type, qnic_id);
   EXPECT_EQ(tomography_rule->rule_id, -1);
   EXPECT_EQ(tomography_rule->name, "tomography");
 
@@ -284,6 +300,7 @@ TEST(ConnectionManagerRuleSetTest, tomographyRule) {
       "type":"tomography",
       "options":{
          "num_measure":5000,
+         "owner_address": 2,
          "partner_address":[
             1
          ],
