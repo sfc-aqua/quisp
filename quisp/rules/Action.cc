@@ -82,7 +82,8 @@ void Wait::deserialize_json(json serialized) {
   }
 }
 
-Tomography::Tomography(int num_measurement, int owner_addr, int partner_addr, QNIC_type qnic_type, int qnic_id) : Action(partner_addr, qnic_type, qnic_id), owner_address(owner_addr), num_measurement(num_measurement) {}
+Tomography::Tomography(int num_measurement, int owner_addr, int partner_addr, QNIC_type qnic_type, int qnic_id)
+    : Action(partner_addr, qnic_type, qnic_id), owner_address(owner_addr), num_measurement(num_measurement) {}
 
 json Tomography::serialize_json() {
   json tomography_json;
