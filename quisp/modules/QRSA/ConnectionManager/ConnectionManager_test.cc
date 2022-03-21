@@ -70,15 +70,15 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
 
 class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
  public:
+  using quisp::modules::ConnectionManager::isQnicBusy;
   using quisp::modules::ConnectionManager::par;
   using quisp::modules::ConnectionManager::parsePurType;
   using quisp::modules::ConnectionManager::purification_type;
-  using quisp::modules::ConnectionManager::respondToRequest;
-  using quisp::modules::ConnectionManager::respondToRequest_deprecated;
+  using quisp::modules::ConnectionManager::releaseQnic;
   using quisp::modules::ConnectionManager::reserved_qnics;
   using quisp::modules::ConnectionManager::reserveQnic;
-  using quisp::modules::ConnectionManager::releaseQnic;
-  using quisp::modules::ConnectionManager::isQnicBusy;
+  using quisp::modules::ConnectionManager::respondToRequest;
+  using quisp::modules::ConnectionManager::respondToRequest_deprecated;
   ConnectionManagerTestTarget(IRoutingDaemon *routing_daemon, IHardwareMonitor *hardware_monitor)
       : quisp::modules::ConnectionManager(), toRouterGate(new TestGate(this, "RouterPort$o")) {
     setParInt(this, "address", 123);
@@ -2814,7 +2814,7 @@ TEST(ConnectionManagerTest, GetQNICInterface) {
   ASSERT_EQ(c.par("address").intValue(), 123);
 }
 
-TEST(ConnectionManagerTest, QnicReservation){
+TEST(ConnectionManagerTest, QnicReservation) {
   prepareSimulation();
   auto *connection_manager = new ConnectionManagerTestTarget();
 
