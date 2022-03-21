@@ -93,15 +93,6 @@ class ConnectionManager : public IConnectionManager {
   std::unique_ptr<Rule> waitRule(int partner_address, QNIC_type qnic_type, int qnic_id, std::string name = "wait");
   std::unique_ptr<Rule> tomographyRule(int partner_address, int owner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id,
                                        std::string name = "tomography");
-  // Rule generators
-  std::unique_ptr<ActiveRule> purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
-                                               unsigned long rule_id);
-  std::unique_ptr<ActiveRule> swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id);
-  std::unique_ptr<ActiveRule> simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id);
-  std::unique_ptr<ActiveRule> waitRule_deprecated(int partner_address, int next_partner_address, unsigned long ruleset_id, unsigned long rule_id);
-  std::unique_ptr<ActiveRule> tomographyRule_deprecated(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
-                                                        unsigned long rule_id);
-
   void reserveQnic(int qnic_address);
   void releaseQnic(int qnic_address);
   bool isQnicBusy(int qnic_address);

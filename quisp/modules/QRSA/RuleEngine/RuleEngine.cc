@@ -279,12 +279,14 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
   else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     // add actual process
-    auto *ruleset = const_cast<ActiveRuleSet *>(pkt->getActiveRuleSet());
+    auto serialized_ruleset = pkt->getRuleSet();
+    RuleSet ruleset(0, 0);  // initialize empty ruleset
+    ruleset.deserialize_json(serialized_ruleset);
+    auto active_ruleset = constructActiveRuleSet(std::move(ruleset));
     // here swappers got swapping ruleset with internal packet
     // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
-    // ResourceAllocation();
-    if (ruleset->size() > 0) {
-      rp.insert(ruleset);
+    if (active_ruleset->size() > 0) {
+      rp.insert(active_ruleset);
       EV << "New process arrived !\n";
     } else {
       error("Empty rule set...");
@@ -292,12 +294,12 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
     // doing end to end tomography
     if (pkt->getApplication_type() == 0) {
-      // Received a tomography rule set.
-
-      auto ruleset = const_cast<ActiveRuleSet *>(pkt->getActiveRuleSet());
-      std::cout << "Process size is ...." << ruleset->size() << " node[" << parentAddress << "\n";
-      if (ruleset->size() > 0) {
-        rp.insert(ruleset);
+      auto serialized_ruleset = pkt->getRuleSet();
+      RuleSet ruleset(0, 0);  // initialize empty ruleset
+      ruleset.deserialize_json(serialized_ruleset);
+      auto active_ruleset = constructActiveRuleSet(std::move(ruleset));
+      if (active_ruleset->size() > 0) {
+        rp.insert(active_ruleset);
         EV << "New process arrived !\n";
       } else {
         error("Empty rule set...");
