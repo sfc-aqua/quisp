@@ -372,7 +372,6 @@ std::unique_ptr<ActiveRule> RuleEngine::constructRule(std::unique_ptr<ActiveRule
 ActiveCondition *RuleEngine::constructCondition(std::unique_ptr<Condition> condition) {
   auto active_condition = new ActiveCondition();
   auto clauses = std::move(condition->clauses);
-  std::cout << "size: " << clauses.size() << std::endl;
   for (int i = 0; i < clauses.size(); i++) {
     auto clause = std::move(clauses.at(i));
     if (auto *cond = dynamic_cast<EnoughResourceConditionClause *>(clause.get())) {

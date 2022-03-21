@@ -137,7 +137,7 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
 // specifier for qnics in order to create qnic_record and qubit_record.
 static const std::vector<QNicSpec> qnic_specs = {{QNIC_E, 0, 2}, {QNIC_R, 0, 2}};
 
-TEST(RuleEngineTest, activeRuleSetConstruction) {
+TEST(RuleEngineTest, activeRuleSetConstructionFromJson) {
   // translate static ruleset into active ruleset
   prepareSimulation();
   auto* routingdaemon = new MockRoutingDaemon;
@@ -314,7 +314,6 @@ TEST(RuleEngineTest, activeRuleSetConstruction) {
     EXPECT_EQ(access_private::num_purify(*action), 1);
 
     EXPECT_EQ(rule->condition->clauses.size(), 1);
-    std::cout << rule->condition->clauses.size() << std::endl;
     auto* clause = dynamic_cast<ActiveClause*>(rule->condition.get()->clauses.at(0));
     ASSERT_NE(clause, nullptr);
 
@@ -391,7 +390,6 @@ TEST(RuleEngineTest, activeRuleSetConstruction) {
     EXPECT_EQ(access_private::dst(*action), 5);
     EXPECT_EQ(access_private::current_count(*action), 0);
     EXPECT_EQ(access_private::max_count(*action), 0);
-    std::cout << "here?" << std::endl;
 
     ASSERT_EQ(rule->condition->clauses.size(), 2);
     auto* measure_count_clause = dynamic_cast<MeasureCountClause*>(rule->condition.get()->clauses.at(0));
@@ -912,7 +910,7 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   delete rule_engine->qnic_store.get();
 }
 
-TEST(RuleEngineTest, constructActiveRuleSet) {
+TEST(RuleEngineTest, generateActiveRuleSetFromRuleSet) {
   prepareSimulation();
   auto* routing_daemon = new MockRoutingDaemon;
   auto* hardware_monitor = new MockHardwareMonitor;
@@ -924,25 +922,76 @@ TEST(RuleEngineTest, constructActiveRuleSet) {
 
   // prepare (static) ruleset being sent by responder
   unsigned long ruleset_id = 1234;
-  int owner_address = 1;
-  int rule_id0 = 5678;
-  std::string rule0_name = "Purification";
-  int rule_id1 = 5679;
-  std::string rule1_name = "Swapping";
-  RuleSet ruleset = RuleSet(ruleset_id, owner_address);  // static ruleset
-  {
-    // mock static ruleset
-  }
+  int owner_address = 2;
+  // ruleset creation
+  RuleSet ruleset(ruleset_id, owner_address);  // static ruleset
+  ruleset.ruleset_id = ruleset_id;
+  ruleset.owner_addr = owner_address;
+  // purification rule (partner_addr, qnic_type, qnic_id, is_finalized)
+  auto purify_rule = std::make_unique<Rule>(0, QNIC_E, 0, false);
+  purify_rule->setName("purification");
+  auto pur_condition = std::make_unique<Condition>();
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0, 0, QNIC_E, 0);
+  pur_condition->addClause(std::move(enough_resource_clause));
+  purify_rule->setCondition(std::move(pur_condition));
+  auto pur_action = std::make_unique<Purification>(PurType::DSDA, 0, QNIC_E, 0);
+  purify_rule->setAction(std::move(pur_action));
+  ruleset.addRule(std::move(purify_rule));
+  // swapping rule
+  auto swapping_rule = std::make_unique<Rule>(0, QNIC_E, 0, false);
+  swapping_rule->setName("swapping");
+  auto swap_condition = std::make_unique<Condition>();
+  auto enough_resource_clause_left = std::make_unique<EnoughResourceConditionClause>(1, 0, 0, QNIC_E, 0);
+  auto enough_resource_clause_right = std::make_unique<EnoughResourceConditionClause>(1, 0, 0, QNIC_E, 0);
+  swap_condition->addClause(std::move(enough_resource_clause_left));
+  swap_condition->addClause(std::move(enough_resource_clause_right));
+  swapping_rule->setCondition(std::move(swap_condition));
+  std::vector<int> partners = {0, 0};
+  std::vector<QNIC_type> qnic_type = {QNIC_E, QNIC_E};
+  std::vector<int> qnic_id = {0, 0};
+  std::vector<QNIC_type> remote_qnic_type = {QNIC_E, QNIC_E};
+  std::vector<int> remote_qnic_id = {0, 0};
+  std::vector<int> remote_qnic_address = {0, 0};
+  auto swap_action = std::make_unique<EntanglementSwapping>(partners, qnic_type, qnic_id, remote_qnic_type, remote_qnic_id, remote_qnic_address);
+  swapping_rule->setAction(std::move(swap_action));
+  ruleset.addRule(std::move(swapping_rule));
+  // wait rule
+  auto wait_rule = std::make_unique<Rule>(0, QNIC_E, 0, false);
+  wait_rule->setName("wait");
+  auto wait_condition = std::make_unique<Condition>();
+  auto wait_clause = std::make_unique<WaitConditionClause>(0, QNIC_E, 0);
+  wait_condition->addClause(std::move(wait_clause));
+  wait_rule->setCondition(std::move(wait_condition));
+  auto wait_action = std::make_unique<Wait>(0, QNIC_E, 0);
+  wait_rule->setAction(std::move(wait_action));
+  ruleset.addRule(std::move(wait_rule));
+  // tomography rule
+  auto tomography_rule = std::make_unique<Rule>(0, QNIC_E, 0, true);
+  tomography_rule->setName("tomography");
+  auto tomo_condition = std::make_unique<Condition>();
+  auto enough_resource_clause_tomo = std::make_unique<EnoughResourceConditionClause>(0, 0, 0, QNIC_E, 0);
+  tomo_condition->addClause(std::move(enough_resource_clause_tomo));
+  tomography_rule->setCondition(std::move(tomo_condition));
+  auto tomo_action = std::make_unique<Tomography>(0, 0, 0, QNIC_E, 0);
+  tomography_rule->setAction(std::move(tomo_action));
+  ruleset.addRule(std::move(tomography_rule));
 
-  // auto* active_ruleset = rule_engine->constructActiveRuleSet(ruleset);
-
-  // EXPECT_EQ(active_ruleset->ruleset_id, ruleset_id);
-  // auto* rule0 = active_ruleset->getRule(0);
-  // EXPECT_EQ(rule0->rule_id, rule_id0);
-  // EXPECT_EQ(rule0->name, rule0_name);
-  // auto* rule1 = active_ruleset->getRule(1);
-  // EXPECT_EQ(rule1->rule_id, rule_id1);
-  // EXPECT_EQ(rule1->name, rule1_name);
+  // return active ruleset corresponding to input ruleset
+  auto active_ruleset = rule_engine->constructActiveRuleSet(std::move(ruleset));
+  EXPECT_EQ(active_ruleset->ruleset_id, ruleset_id);
+  EXPECT_EQ(active_ruleset->rules.size(), 4);
+  auto rule0 = std::move(active_ruleset->getRule(0));
+  EXPECT_EQ(rule0->rule_id, 0);
+  EXPECT_EQ(rule0->name, "purification with 0");
+  auto rule1 = std::move(active_ruleset->getRule(1));
+  EXPECT_EQ(rule1->rule_id, 1);
+  EXPECT_EQ(rule1->name, "swapping with 0");
+  auto rule2 = std::move(active_ruleset->getRule(2));
+  EXPECT_EQ(rule2->rule_id, 2);
+  EXPECT_EQ(rule2->name, "wait with 0");
+  auto rule3 = std::move(active_ruleset->getRule(3));
+  EXPECT_EQ(rule3->rule_id, 3);
+  EXPECT_EQ(rule3->name, "tomography with 0");
 }
 
 }  // namespace
