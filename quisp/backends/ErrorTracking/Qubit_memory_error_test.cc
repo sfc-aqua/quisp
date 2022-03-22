@@ -1,11 +1,17 @@
 #include <backends/Backends.h>
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
+#include <Eigen/Eigen>
 #include <unsupported/Eigen/MatrixFunctions>
+#include "backends/ErrorTracking/types.h"
 #include "test.h"
 
 namespace {
 using namespace quisp_test::backends;
+using Eigen::Matrix2cd;
+using Eigen::Matrix4cd;
+using Eigen::Vector4cd;
+using quisp::backends::error_tracking::QuantumState;
 
 class ETQubitMemoryErrorTest : public ::testing::Test {
  protected:
@@ -16,6 +22,7 @@ class ETQubitMemoryErrorTest : public ::testing::Test {
     rng->double_value = .0;
     backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng));
     qubit = dynamic_cast<Qubit*>(backend->getQubit(0));
+    partner_qubit = dynamic_cast<Qubit*>(backend->getQubit(1));
     if (qubit == nullptr) throw std::runtime_error("Qubit is nullptr");
     backend->setSimTime(SimTime(1, SIMTIME_US));
     fillParams(qubit);
@@ -34,6 +41,7 @@ class ETQubitMemoryErrorTest : public ::testing::Test {
   }
 
   Qubit* qubit;
+  Qubit* partner_qubit;
   std::unique_ptr<Backend> backend;
   TestRNG* rng;
 };
@@ -392,4 +400,70 @@ TEST_F(ETQubitMemoryErrorTest, apply_memory_error_relaxation_error) {
   EXPECT_FALSE(qubit->has_completely_mixed_error);
 }
 
+TEST_F(ETQubitMemoryErrorTest, getErrorMatrixTest) {
+  Matrix2cd err;
+
+  err = qubit->getErrorMatrix();
+  EXPECT_EQ(Matrix2cd::Identity(), err);
+
+  Matrix2cd Z(2, 2);
+  Z << 1, 0, 0, -1;
+  qubit->addErrorZ();
+  err = qubit->getErrorMatrix();
+  EXPECT_EQ(Z, err);
+  qubit->setFree();
+
+  Matrix2cd X(2, 2);
+  X << 0, 1, 1, 0;
+  qubit->addErrorX();
+  err = qubit->getErrorMatrix();
+  EXPECT_EQ(X, err);
+  qubit->setFree();
+
+  Matrix2cd Y(2, 2);
+  Y << 0, Complex(0, -1), Complex(0, 1), 0;
+  qubit->addErrorX();
+  qubit->addErrorZ();
+  err = qubit->getErrorMatrix();
+  EXPECT_EQ(Y, err);
+  qubit->setFree();
+}
+
+TEST_F(ETQubitMemoryErrorTest, getQuantumState) {
+  qubit->entangled_partner = partner_qubit;
+
+  QuantumState state;
+
+  state = qubit->getQuantumState();
+  Vector4cd state_vector(4);
+  state_vector << 1 / sqrt(2), 0, 0, 1 / sqrt(2);
+  Matrix4cd dm(4, 4);
+  dm = state_vector * state_vector.adjoint();
+  EXPECT_EQ(dm, state.state_in_density_matrix);
+  EXPECT_EQ(state_vector, state.state_in_ket);
+
+  qubit->addErrorX();
+  state = qubit->getQuantumState();
+  state_vector << 0, 1 / sqrt(2), 1 / sqrt(2), 0;
+  dm = state_vector * state_vector.adjoint();
+  EXPECT_EQ(dm, state.state_in_density_matrix);
+  EXPECT_EQ(state_vector, state.state_in_ket);
+  qubit->addErrorX();
+
+  partner_qubit->addErrorX();
+  state = qubit->getQuantumState();
+  state_vector << 0, 1 / sqrt(2), 1 / sqrt(2), 0;
+  dm = state_vector * state_vector.adjoint();
+  EXPECT_EQ(dm, state.state_in_density_matrix);
+  EXPECT_EQ(state_vector, state.state_in_ket);
+  partner_qubit->addErrorX();
+
+  qubit->addErrorZ();
+  state = qubit->getQuantumState();
+  state_vector << 1 / sqrt(2), 0, 0, -1 / sqrt(2);
+  dm = state_vector * state_vector.adjoint();
+  EXPECT_EQ(dm, state.state_in_density_matrix);
+  EXPECT_EQ(state_vector, state.state_in_ket);
+  qubit->addErrorZ();
+}
 }  // namespace

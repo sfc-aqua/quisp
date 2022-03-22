@@ -1,5 +1,29 @@
+#pragma once
 #include <stdexcept>
 namespace quisp::backends::abstract {
+
+enum class MeasureXResult : int {
+  NO_Z_ERROR,
+  HAS_Z_ERROR,
+};
+enum class MeasureYResult : int {
+  NO_XZ_ERROR,
+  HAS_XZ_ERROR,
+};
+enum class MeasureZResult : int {
+  NO_X_ERROR,
+  HAS_X_ERROR,
+};
+enum class EigenvalueResult : int {
+  PLUS_ONE,
+  MINUS_ONE,
+};
+struct MeasurementOutcome {
+  char basis;
+  bool outcome_is_plus;
+  char GOD_clean;
+};
+
 class IQubit {
  public:
   IQubit(){};
@@ -20,22 +44,14 @@ class IQubit {
   virtual void gateCZ(IQubit *const control_qubit) { throw std::runtime_error("gateCZ not implemented"); };
   virtual bool purifyX(IQubit *const control_qubit) { throw std::runtime_error("gateCZ not implemented"); };
   virtual bool purifyZ(IQubit *const target_qubit) { throw std::runtime_error("gateCZ not implemented"); };
+
+  // measurements
+  virtual MeasureXResult correlationMeasureX() { throw std::runtime_error("correlationMeasureX not implemented"); }
+  virtual MeasureYResult correlationMeasureY() { throw std::runtime_error("correlationMeasureY not implemented"); }
+  virtual MeasureZResult correlationMeasureZ() { throw std::runtime_error("correlationMeasureZ not implemented"); }
+  virtual EigenvalueResult localMeasureX() { throw std::runtime_error("localMeasureX not implemented"); }
+  virtual EigenvalueResult localMeasureZ() { throw std::runtime_error("localMeasureZ not implemented"); }
+  virtual MeasurementOutcome measureDensityIndependent() { throw std::runtime_error("measureDensityIndependent not implemented"); }
 };
 
-enum class MeasureXResult : int {
-  NO_Z_ERROR,
-  HAS_Z_ERROR,
-};
-enum class MeasureYResult : int {
-  NO_XZ_ERROR,
-  HAS_XZ_ERROR,
-};
-enum class MeasureZResult : int {
-  NO_X_ERROR,
-  HAS_X_ERROR,
-};
-enum class EigenvalueResult : int {
-  PLUS_ONE,
-  MINUS_ONE,
-};
 }  // namespace quisp::backends::abstract
