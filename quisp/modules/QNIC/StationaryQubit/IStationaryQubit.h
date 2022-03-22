@@ -1,28 +1,18 @@
 #pragma once
 
 #include <PhotonicQubit_m.h>
+#include <backends/Backends.h>
 #include <Eigen/Eigen>
 #include <unordered_set>
+
 namespace quisp {
 
 namespace types {
-enum class MeasureXResult : int {
-  NO_Z_ERROR,
-  HAS_Z_ERROR,
-};
-enum class MeasureYResult : int {
-  NO_XZ_ERROR,
-  HAS_XZ_ERROR,
-};
-enum class MeasureZResult : int {
-  NO_X_ERROR,
-  HAS_X_ERROR,
-};
-
-enum class EigenvalueResult : int {
-  PLUS_ONE,
-  MINUS_ONE,
-};
+using quisp::backends::EigenvalueResult;
+using quisp::backends::MeasurementOutcome;
+using quisp::backends::MeasureXResult;
+using quisp::backends::MeasureYResult;
+using quisp::backends::MeasureZResult;
 
 enum class CliffordOperator : int {
   Id = 0,
@@ -176,6 +166,7 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   IStationaryQubit(){};
   virtual ~IStationaryQubit(){};
 
+  // RTC
   virtual void setFree(bool consumed) = 0;
   /*In use. E.g. waiting for purification result.*/
   virtual void Lock(unsigned long rs_id, int rule_id, int action_id) = 0;
@@ -198,18 +189,10 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   /**
    * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
    * */
-  virtual measurement_outcome measure_density_independent() = 0; /*Separate dm calculation*/
-  virtual types::EigenvalueResult measureX() = 0;
-  virtual types::EigenvalueResult measureY() = 0;
-  virtual types::EigenvalueResult measureZ() = 0;
+  // RandomMeasureAction
+  virtual types::MeasurementOutcome measure_density_independent() = 0; /*Separate dm calculation*/
 
-  virtual void CNOT_gate(IStationaryQubit *control_qubit) = 0;
-  virtual void Hadamard_gate() = 0;
-  virtual void Z_gate() = 0;
-  virtual void X_gate() = 0;
-  virtual bool Xpurify(IStationaryQubit *resource_qubit) = 0;
-  virtual bool Zpurify(IStationaryQubit *resource_qubit) = 0;
-
+  // graph internal
   virtual void cnotGate(IStationaryQubit *control_qubit) = 0;
   virtual void hadamardGate() = 0;
   virtual void zGate() = 0;
@@ -219,12 +202,20 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   virtual void excite() = 0;
   virtual void relax() = 0;
 
+  // SwappingAction, SimultaneousSwappingAction
+  virtual void CNOT_gate(IStationaryQubit *control_qubit) = 0;
+  // SimultaneousSwappingAction
+  virtual void Hadamard_gate() = 0;
+  // RTC
+  virtual void Z_gate() = 0;
+  virtual void X_gate() = 0;
+  // Action
+  virtual bool Xpurify(IStationaryQubit *resource_qubit) = 0;
+  virtual bool Zpurify(IStationaryQubit *resource_qubit) = 0;
+
   /*GOD parameters*/
-  GodErrorState god_err;
+  // SwappingAction
   virtual void setEntangledPartnerInfo(IStationaryQubit *partner) = 0;
-  virtual void setCompletelyMixedDensityMatrix() = 0;
-  virtual void addXerror() = 0;
-  virtual void addZerror() = 0;
 
   int stationary_qubit_address;
   int node_address;
@@ -243,6 +234,7 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   IStationaryQubit *entangled_partner = nullptr;
   /** Photon emitted at*/
   omnetpp::simtime_t emitted_time = -1;
+  // internal
   /** Stationary qubit last updated at*/
   omnetpp::simtime_t updated_time = -1;
 

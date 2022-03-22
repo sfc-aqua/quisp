@@ -97,14 +97,14 @@ class StationaryQubit : public IStationaryQubit {
   virtual types::EigenvalueResult localMeasureY() override;
   virtual types::EigenvalueResult localMeasureZ() override;
 
-  virtual types::EigenvalueResult measureX() override;
-  virtual types::EigenvalueResult measureY() override;
-  virtual types::EigenvalueResult measureZ() override;
+  virtual types::EigenvalueResult measureX();
+  virtual types::EigenvalueResult measureY();
+  virtual types::EigenvalueResult measureZ();
   /**
    * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
    * */
   // virtual std::bitset<1> measure_density(char basis_this_qubit);/*Simultaneous dm calculation*/
-  virtual measurement_outcome measure_density_independent() override; /*Separate dm calculation*/
+  virtual types::MeasurementOutcome measure_density_independent() override; /*Separate dm calculation*/
 
   /**
    * \brief Two qubit CNOT gate.
@@ -134,19 +134,14 @@ class StationaryQubit : public IStationaryQubit {
 
   /*GOD parameters*/
   void setEntangledPartnerInfo(IStationaryQubit *partner) override;
-  void setCompletelyMixedDensityMatrix() override;
+  void setCompletelyMixedDensityMatrix();
   void setRelaxedDensityMatrix();
   void setExcitedDensityMatrix();
-  void addXerror() override;
-  void addZerror() override;
+  void addXerror();
+  void addZerror();
 
   double emission_success_probability;
 
-  SingleGateErrorModel Hgate_error;
-  SingleGateErrorModel Xgate_error;
-  SingleGateErrorModel Zgate_error;
-  TwoQubitGateErrorModel CNOTgate_error;
-  MeasurementErrorModel Measurement_error;
   memory_error_model memory_err;
 
   single_qubit_error Pauli;
@@ -170,14 +165,7 @@ class StationaryQubit : public IStationaryQubit {
   // returns the dm of the physical Bell pair. Used for tomography.
   quantum_state getQuantumState();
   measurement_operator Random_Measurement_Basis_Selection();
-  void setSingleQubitGateErrorModel(SingleGateErrorModel &model, std::string gate_name);
-  void setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model, std::string gate_name);
   void setMeasurementErrorModel(MeasurementErrorModel &model);
-  /*Applies memory error to the given qubit*/
-  void applyMemoryError();
-
-  void applySingleQubitGateError(SingleGateErrorModel const &err);
-  void applyTwoQubitGateError(TwoQubitGateErrorModel const &err, StationaryQubit *another_qubit);
 
   // this is for debugging. class internal use only.
   // and it's different from QubitRecord's one.
