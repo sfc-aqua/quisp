@@ -6,12 +6,14 @@
 #include <modules/QNIC/StationaryQubit/StationaryQubit.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 #include <test_utils/TestUtils.h>
+#include "backends/Backends.h"
 #include "modules/QRSA/RuleEngine/RuleEngine.h"
 
 namespace {
 using namespace testing;
 using namespace quisp::messages;
 using namespace quisp_test;
+using quisp::backends::MeasurementOutcome;
 
 using quisp::modules::IRuleEngine;
 using quisp::modules::IStationaryQubit;
@@ -87,7 +89,7 @@ TEST(RandomMeasureActionTest, MeasureResultNotFinished) {
   EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, qubit, action->qnic_type)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, getResource(action->resource, action->partner)).Times(1).WillOnce(Return(qubit));
   EXPECT_CALL(*action, removeResource_fromRule(qubit)).Times(1).WillOnce(Return());
-  measurement_outcome outcome;
+  MeasurementOutcome outcome;
   outcome.basis = 'X';
   outcome.outcome_is_plus = true;
   EXPECT_CALL(*qubit, measure_density_independent()).Times(1).WillOnce(Return(outcome));
@@ -119,7 +121,7 @@ TEST(RandomMeasureActionTest, FinalMeasurement) {
   EXPECT_CALL(*rule_engine, freeConsumedResource(action->qnic_id, qubit, action->qnic_type)).Times(1).WillOnce(Return());
   EXPECT_CALL(*action, getResource(action->resource, action->partner)).Times(1).WillOnce(Return(qubit));
   EXPECT_CALL(*action, removeResource_fromRule(qubit)).Times(1).WillOnce(Return());
-  measurement_outcome outcome;
+  MeasurementOutcome outcome;
   outcome.basis = 'Z';
   outcome.outcome_is_plus = false;
   EXPECT_CALL(*qubit, measure_density_independent()).Times(1).WillOnce(Return(outcome));

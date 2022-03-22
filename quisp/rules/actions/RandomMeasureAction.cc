@@ -20,7 +20,7 @@ cPacket *RandomMeasureAction::run(cModule *re) {
     return generateError("Qubit not found for measurement.");
   }
 
-  measurement_outcome o = qubit->measure_density_independent();
+  auto o = qubit->measure_density_independent();
   current_count++;
 
   // Delete measured resource from the tracked list of resources.

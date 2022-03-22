@@ -30,8 +30,6 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(quisp::types::EigenvalueResult, localMeasureZ, (), (override));
   MOCK_METHOD(bool, Xpurify, (IStationaryQubit *), (override));
   MOCK_METHOD(bool, Zpurify, (IStationaryQubit *), (override));
-  MOCK_METHOD(void, addXerror, (), (override));
-  MOCK_METHOD(void, addZerror, (), (override));
   MOCK_METHOD(void, Z_gate, (), (override));
   MOCK_METHOD(void, X_gate, (), (override));
   MOCK_METHOD(void, Hadamard_gate, (), (override));
@@ -39,13 +37,8 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(void, Lock, (unsigned long rs_id, unsigned long rule_id, int action_id), (override));
   MOCK_METHOD(void, Unlock, (), (override));
   MOCK_METHOD(bool, isLocked, (), (override));
-  MOCK_METHOD(quisp::modules::measurement_outcome, measure_density_independent, (), (override));
-  MOCK_METHOD(void, setCompletelyMixedDensityMatrix, (), (override));
+  MOCK_METHOD(quisp::types::MeasurementOutcome, measure_density_independent, (), (override));
   MOCK_METHOD(void, setEntangledPartnerInfo, (IStationaryQubit *), (override));
-
-  MOCK_METHOD(quisp::types::EigenvalueResult, measureX, (), (override));
-  MOCK_METHOD(quisp::types::EigenvalueResult, measureY, (), (override));
-  MOCK_METHOD(quisp::types::EigenvalueResult, measureZ, (), (override));
 
   MOCK_METHOD(void, cnotGate, (IStationaryQubit * control_qubit), (override));
   MOCK_METHOD(void, hadamardGate, (), (override));
