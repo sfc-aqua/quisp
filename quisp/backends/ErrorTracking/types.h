@@ -1,3 +1,4 @@
+#pragma once
 #include <Eigen/Eigen>
 #include <complex>
 
@@ -161,6 +162,11 @@ struct MeasurementOperators {
   MeasurementOperator z_basis;
   MeasurementOperator y_basis;
   Eigen::Matrix2cd identity;
+};
+
+struct QuantumState {
+  Eigen::Matrix4cd state_in_density_matrix;
+  Eigen::Vector4cd state_in_ket;
 };
 
 }  // namespace quisp::backends::error_tracking

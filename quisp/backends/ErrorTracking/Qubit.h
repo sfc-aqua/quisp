@@ -15,15 +15,18 @@ using abstract::EigenvalueResult;
 using abstract::IQuantumBackend;
 using abstract::IQubit;
 using abstract::IQubitId;
+using abstract::MeasurementOutcome;
 using abstract::MeasureXResult;
 using abstract::MeasureYResult;
 using abstract::MeasureZResult;
 using abstract::SimTime;
 using abstract::SimTimeUnit;
 using Eigen::Matrix2cd;
+using Eigen::Matrix4cd;
 using Eigen::MatrixPower;
 using Eigen::MatrixXd;
 using Eigen::Vector2cd;
+using Eigen::Vector4cd;
 
 class ErrorTrackingBackend;
 class ErrorTrackingQubit : public IQubit {
@@ -36,17 +39,18 @@ class ErrorTrackingQubit : public IQubit {
   void reset();
 
   void setFree() override;
-  MeasureXResult correlationMeasureX();
-  MeasureYResult correlationMeasureY();
-  MeasureZResult correlationMeasureZ();
-  EigenvalueResult localMeasureX();
-  EigenvalueResult localMeasureZ();
+  MeasureXResult correlationMeasureX() override;
+  MeasureYResult correlationMeasureY() override;
+  MeasureZResult correlationMeasureZ() override;
+  EigenvalueResult localMeasureX() override;
+  EigenvalueResult localMeasureZ() override;
   void gateX() override;
   void gateZ() override;
   void gateH() override;
   void gateCNOT(IQubit* const control_qubit) override;
   bool purifyX(IQubit* const control_qubit) override;
   bool purifyZ(IQubit* const target_qubit) override;
+  MeasurementOutcome measureDensityIndependent() override;
 
  protected:
   void applySingleQubitGateError(SingleGateErrorModel const& err);
@@ -57,7 +61,9 @@ class ErrorTrackingQubit : public IQubit {
   void setRelaxedDensityMatrix();
   void setExcitedDensityMatrix();
   void setCompletelyMixedDensityMatrix();
-
+  Matrix2cd getErrorMatrix();
+  QuantumState getQuantumState();
+  MeasurementOperator randomMeasurementBasisSelection();
   void update();
 
   // constants
@@ -73,11 +79,14 @@ class ErrorTrackingQubit : public IQubit {
   static const MeasurementOperators measurement_op;
 
   // state
+  bool god_dm_has_x_error = false;
+  bool god_dm_has_z_error = false;
   bool has_x_error = false;
   bool has_z_error = false;
   bool has_relaxation_error = false;
   bool has_excitation_error = false;
   bool has_completely_mixed_error = false;
+  bool partner_measured = false;
   SimTime updated_time = SimTime(0);
   Matrix2cd density_matrix_collapsed;  // Used when partner has been measured.
   bool no_density_matrix_nullptr_entangled_partner_ok = false;

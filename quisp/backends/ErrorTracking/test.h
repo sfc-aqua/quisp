@@ -51,6 +51,8 @@ class Qubit : public ErrorTrackingQubit {
   using ErrorTrackingQubit::gate_err_h;
   using ErrorTrackingQubit::gate_err_x;
   using ErrorTrackingQubit::gate_err_z;
+  using ErrorTrackingQubit::getErrorMatrix;
+  using ErrorTrackingQubit::getQuantumState;
   using ErrorTrackingQubit::has_completely_mixed_error;
   using ErrorTrackingQubit::has_excitation_error;
   using ErrorTrackingQubit::has_relaxation_error;
@@ -58,6 +60,7 @@ class Qubit : public ErrorTrackingQubit {
   using ErrorTrackingQubit::has_z_error;
   using ErrorTrackingQubit::localMeasureX;
   using ErrorTrackingQubit::localMeasureZ;
+  using ErrorTrackingQubit::measureDensityIndependent;
   using ErrorTrackingQubit::measurement_err;
   using ErrorTrackingQubit::setMemoryErrorRates;
   using ErrorTrackingQubit::updated_time;
