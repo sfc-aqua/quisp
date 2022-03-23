@@ -1,0 +1,15 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classquisp_1_1rules_1_1actions_1_1_action.html" title=" " alt="" coords="5,368,140,409"/>
+<area shape="rect" id="node2" href="$classquisp_1_1rules_1_1actions_1_1_double_purify_action.html" title=" " alt="" coords="220,5,359,47"/>
+<area shape="rect" id="node3" href="$classquisp_1_1rules_1_1actions_1_1_double_purify_action_inv.html" title=" " alt="" coords="211,71,367,112"/>
+<area shape="rect" id="node4" href="$classquisp_1_1rules_1_1actions_1_1_double_selection_action.html" title=" " alt="" coords="210,136,369,177"/>
+<area shape="rect" id="node5" href="$classquisp_1_1rules_1_1actions_1_1_double_selection_action_inv.html" title=" " alt="" coords="201,201,378,243"/>
+<area shape="rect" id="node6" href="$classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action.html" title=" " alt="" coords="197,267,382,308"/>
+<area shape="rect" id="node7" href="$classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html" title=" " alt="" coords="188,332,391,373"/>
+<area shape="rect" id="node8" href="$classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_second.html" title=" " alt="" coords="197,397,382,453"/>
+<area shape="rect" id="node9" href="$classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_second_inv.html" title=" " alt="" coords="197,477,382,533"/>
+<area shape="rect" id="node10" href="$classquisp_1_1rules_1_1actions_1_1_purify_action.html" title=" " alt="" coords="222,556,357,597"/>
+<area shape="rect" id="node11" href="$classquisp_1_1rules_1_1actions_1_1_random_measure_action.html" title=" " alt="" coords="208,621,371,663"/>
+<area shape="rect" id="node12" href="$classquisp_1_1rules_1_1actions_1_1_simultaneous_swapping_action.html" title=" " alt="" coords="189,687,390,728"/>
+<area shape="rect" id="node13" href="$classquisp_1_1rules_1_1actions_1_1_swapping_action.html" title=" " alt="" coords="222,752,357,793"/>
+</map>

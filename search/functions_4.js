@@ -13,6 +13,8 @@ var searchData=
   ['ensurestrategy_10',['ensureStrategy',['../classquisp_1_1utils_1_1_component_provider.html#a7773f2ecb5036a3530ff93ceff44d294',1,'quisp::utils::ComponentProvider']]],
   ['erase_11',['erase',['../classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store.html#acdd60456133d1d1db4ae7b0a461efc11',1,'quisp::modules::ruleset_store::RuleSetStore']]],
   ['erasequbit_12',['eraseQubit',['../classquisp_1_1modules_1_1_bell_pair_store.html#a63fa531976fbe72d8677cab200e87eaf',1,'quisp::modules::BellPairStore']]],
-  ['excite_13',['excite',['../classquisp_1_1modules_1_1_i_stationary_qubit.html#a8fd854148dec85e311a6813624670952',1,'quisp::modules::IStationaryQubit::excite()'],['../classquisp_1_1modules_1_1_stationary_qubit.html#a33b483d072140558dcada8b6d06e6bd0',1,'quisp::modules::StationaryQubit::excite()']]],
-  ['executenextevent_14',['executeNextEvent',['../classquisp__test_1_1simulation_1_1_test_simulation.html#a0986ee37d1779fef315756e8a09139d5',1,'quisp_test::simulation::TestSimulation']]]
+  ['errortrackingbackend_13',['ErrorTrackingBackend',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html#a8ff995dd07ffe4023d6bc870f897a198',1,'quisp::backends::error_tracking::ErrorTrackingBackend']]],
+  ['errortrackingqubit_14',['ErrorTrackingQubit',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a67983823b9bb8d18eb283d05b224cd14',1,'quisp::backends::error_tracking::ErrorTrackingQubit']]],
+  ['excite_15',['excite',['../classquisp_1_1modules_1_1_i_stationary_qubit.html#a8fd854148dec85e311a6813624670952',1,'quisp::modules::IStationaryQubit::excite()'],['../classquisp_1_1modules_1_1_stationary_qubit.html#a33b483d072140558dcada8b6d06e6bd0',1,'quisp::modules::StationaryQubit::excite()']]],
+  ['executenextevent_16',['executeNextEvent',['../classquisp__test_1_1simulation_1_1_test_simulation.html#a0986ee37d1779fef315756e8a09139d5',1,'quisp_test::simulation::TestSimulation']]]
 ];

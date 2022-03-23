@@ -1,11 +1,14 @@
 <map id="quisp/test_utils" name="quisp/test_utils">
-<area shape="rect" id="node1" href="dir_ea1185b6f782e3d4d47e4f1c837d33c0.html" title="utils" alt="" coords="173,159,245,207"/>
-<area shape="rect" id="node2" href="dir_eb6315794882b70fa40a4bf3b7e2676d.html" title="modules" alt="" coords="128,255,200,303"/>
-<area shape="rect" id="edge1-headlabel" href="dir_000027_000028.html" title="1" alt="" coords="174,133,182,147"/>
-<area shape="rect" id="edge3-headlabel" href="dir_000027_000012.html" title="16" alt="" coords="213,256,228,271"/>
-<area shape="rect" id="node4" href="dir_eaeabafc95fe4969aa33649114886196.html" title="mock_modules" alt="" coords="38,159,149,207"/>
-<area shape="rect" id="edge2-headlabel" href="dir_000027_000011.html" title="6" alt="" coords="106,135,114,150"/>
-<area shape="rect" id="edge4-headlabel" href="dir_000011_000012.html" title="13" alt="" coords="135,228,150,242"/>
-<area shape="rect" id="clust2" href="dir_1b9adf9caaa3a542423f2e420ebd3760.html" alt="" coords="27,52,160,217"/>
-<area shape="rect" id="clust1" href="dir_00de4095174e1f7689faab21b8d8d25c.html" title="quisp" alt="" coords="16,16,283,313"/>
+<area shape="rect" id="node1" href="dir_ea1185b6f782e3d4d47e4f1c837d33c0.html" title="utils" alt="" coords="315,159,387,207"/>
+<area shape="rect" id="node2" href="dir_eb6315794882b70fa40a4bf3b7e2676d.html" title="modules" alt="" coords="199,255,271,303"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000032_000033.html" title="1" alt="" coords="313,133,321,148"/>
+<area shape="rect" id="edge4-headlabel" href="dir_000032_000017.html" title="17" alt="" coords="283,274,297,289"/>
+<area shape="rect" id="node4" href="dir_e63aae68189dffd440e434c45c8ee5e8.html" title="mock_backends" alt="" coords="37,159,155,207"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000032_000015.html" title="1" alt="" coords="148,149,156,163"/>
+<area shape="rect" id="node5" href="dir_eaeabafc95fe4969aa33649114886196.html" title="mock_modules" alt="" coords="179,159,290,207"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000032_000016.html" title="6" alt="" coords="243,134,251,149"/>
+<area shape="rect" id="edge5-headlabel" href="dir_000015_000017.html" title="1" alt="" coords="186,230,194,245"/>
+<area shape="rect" id="edge6-headlabel" href="dir_000016_000017.html" title="13" alt="" coords="236,229,250,244"/>
+<area shape="rect" id="clust2" href="dir_1b9adf9caaa3a542423f2e420ebd3760.html" alt="" coords="27,52,301,217"/>
+<area shape="rect" id="clust1" href="dir_00de4095174e1f7689faab21b8d8d25c.html" title="quisp" alt="" coords="16,16,424,313"/>
 </map>

@@ -11,10 +11,15 @@ var searchData=
   ['qnode_2eh_8',['QNode.h',['../_q_node_8h.html',1,'']]],
   ['qrsa_2eh_9',['QRSA.h',['../_q_r_s_a_8h.html',1,'']]],
   ['quantumchannel_2ecc_10',['QuantumChannel.cc',['../_quantum_channel_8cc.html',1,'']]],
-  ['qubit_2eh_11',['QUBIT.h',['../_q_u_b_i_t_8h.html',1,'']]],
-  ['qubitrecord_2ecc_12',['QubitRecord.cc',['../_qubit_record_8cc.html',1,'']]],
-  ['qubitrecord_2eh_13',['QubitRecord.h',['../_qubit_record_8h.html',1,'']]],
-  ['qubitrecord_5ftest_2ecc_14',['QubitRecord_test.cc',['../_qubit_record__test_8cc.html',1,'']]],
-  ['queue_2ecc_15',['Queue.cc',['../_queue_8cc.html',1,'']]],
-  ['queue_2eh_16',['Queue.h',['../_queue_8h.html',1,'']]]
+  ['qubit_2ecc_11',['Qubit.cc',['../_qubit_8cc.html',1,'']]],
+  ['qubit_2eh_12',['Qubit.h',['../backends_2_error_tracking_2_q_u_b_i_t_8h.html',1,'']]],
+  ['qubit_2eh_13',['QUBIT.h',['../modules_2_q_u_b_i_t_8h.html',1,'']]],
+  ['qubit_5fgate_5ferror_5ftest_2ecc_14',['Qubit_gate_error_test.cc',['../_qubit__gate__error__test_8cc.html',1,'']]],
+  ['qubit_5fmeasurement_5ftest_2ecc_15',['Qubit_measurement_test.cc',['../_qubit__measurement__test_8cc.html',1,'']]],
+  ['qubit_5fmemory_5ferror_5ftest_2ecc_16',['Qubit_memory_error_test.cc',['../_qubit__memory__error__test_8cc.html',1,'']]],
+  ['qubitrecord_2ecc_17',['QubitRecord.cc',['../_qubit_record_8cc.html',1,'']]],
+  ['qubitrecord_2eh_18',['QubitRecord.h',['../_qubit_record_8h.html',1,'']]],
+  ['qubitrecord_5ftest_2ecc_19',['QubitRecord_test.cc',['../_qubit_record__test_8cc.html',1,'']]],
+  ['queue_2ecc_20',['Queue.cc',['../_queue_8cc.html',1,'']]],
+  ['queue_2eh_21',['Queue.h',['../_queue_8h.html',1,'']]]
 ];

@@ -88,38 +88,45 @@ $(document).ready(function(){initNavTree('utils_8h_source.html',''); initResizab
 <a href="utils_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef QUISP_UTILS_H_</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define QUISP_UTILS_H_</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;<a class="code" href="_q_n_i_c_8h.html">modules/QNIC.h</a>&gt;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;<a class="code" href="_i_stationary_qubit_8h.html">modules/QNIC/StationaryQubit/IStationaryQubit.h</a>&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;<a class="code" href="_i_hardware_monitor_8h.html">modules/QRSA/HardwareMonitor/IHardwareMonitor.h</a>&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;<a class="code" href="_i_real_time_controller_8h.html">modules/QRSA/RealTimeController/IRealTimeController.h</a>&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="_i_routing_daemon_8h.html">modules/QRSA/RoutingDaemon/IRoutingDaemon.h</a>&gt;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;omnetpp.h&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacequisp.html">quisp</a> {</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span>utils {</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">using</span> modules::IHardwareMonitor;</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">using</span> modules::IRealTimeController;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">using</span> modules::IRoutingDaemon;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">using</span> modules::IStationaryQubit;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">using</span> <a class="code hl_enumvalue" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3daaa42f9a2558764542403a90d626a2d46">modules::QNIC_N</a>;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">using</span> <a class="code hl_variable" href="namespacequisp_1_1modules.html#a73b723f8d26913c797269fb34995d9ad">modules::QNIC_names</a>;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">using</span> <a class="code hl_enumeration" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">modules::QNIC_type</a>;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">using</span> omnetpp::cModule;</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>}  <span class="comment">// namespace utils</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>}  <span class="comment">// namespace quisp</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;<a class="code" href="modules_2_backend_2_backend_8h.html">modules/Backend/Backend.h</a>&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;<a class="code" href="_q_n_i_c_8h.html">modules/QNIC.h</a>&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;<a class="code" href="_i_stationary_qubit_8h.html">modules/QNIC/StationaryQubit/IStationaryQubit.h</a>&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;<a class="code" href="_i_hardware_monitor_8h.html">modules/QRSA/HardwareMonitor/IHardwareMonitor.h</a>&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="_i_real_time_controller_8h.html">modules/QRSA/RealTimeController/IRealTimeController.h</a>&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="_i_routing_daemon_8h.html">modules/QRSA/RoutingDaemon/IRoutingDaemon.h</a>&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="common__types_8h.html">modules/common_types.h</a>&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;omnetpp.h&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacequisp.html">quisp</a> {</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span>utils {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">using</span> modules::IHardwareMonitor;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">using</span> modules::IRealTimeController;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">using</span> modules::IRoutingDaemon;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">using</span> modules::IStationaryQubit;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">using</span> <a class="code hl_enumvalue" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3daaa42f9a2558764542403a90d626a2d46">modules::QNIC_N</a>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">using</span> <a class="code hl_variable" href="namespacequisp_1_1modules.html#a73b723f8d26913c797269fb34995d9ad">modules::QNIC_names</a>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">using</span> <a class="code hl_enumeration" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">modules::QNIC_type</a>;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">using</span> modules::backend::BackendContainer;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">using</span> <a class="code hl_typedef" href="namespacequisp_1_1modules_1_1common.html#a198bf6911a6014f1c002381407e643a8">modules::common::IQuantumBackend</a>;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">using</span> omnetpp::cModule;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>}  <span class="comment">// namespace utils</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>}  <span class="comment">// namespace quisp</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_i_hardware_monitor_8h_html"><div class="ttname"><a href="_i_hardware_monitor_8h.html">IHardwareMonitor.h</a></div></div>
 <div class="ttc" id="a_i_real_time_controller_8h_html"><div class="ttname"><a href="_i_real_time_controller_8h.html">IRealTimeController.h</a></div></div>
 <div class="ttc" id="a_i_routing_daemon_8h_html"><div class="ttname"><a href="_i_routing_daemon_8h.html">IRoutingDaemon.h</a></div></div>
 <div class="ttc" id="a_i_stationary_qubit_8h_html"><div class="ttname"><a href="_i_stationary_qubit_8h.html">IStationaryQubit.h</a></div></div>
 <div class="ttc" id="a_q_n_i_c_8h_html"><div class="ttname"><a href="_q_n_i_c_8h.html">QNIC.h</a></div><div class="ttdoc">QNIC.</div></div>
+<div class="ttc" id="acommon__types_8h_html"><div class="ttname"><a href="common__types_8h.html">common_types.h</a></div></div>
+<div class="ttc" id="amodules_2_backend_2_backend_8h_html"><div class="ttname"><a href="modules_2_backend_2_backend_8h.html">Backend.h</a></div></div>
+<div class="ttc" id="anamespacequisp_1_1modules_1_1common_html_a198bf6911a6014f1c002381407e643a8"><div class="ttname"><a href="namespacequisp_1_1modules_1_1common.html#a198bf6911a6014f1c002381407e643a8">quisp::modules::common::IQuantumBackend</a></div><div class="ttdeci">quisp::backends::IQuantumBackend IQuantumBackend</div><div class="ttdef"><b>Definition:</b> common_types.h:14</div></div>
 <div class="ttc" id="anamespacequisp_1_1modules_html_a73b723f8d26913c797269fb34995d9ad"><div class="ttname"><a href="namespacequisp_1_1modules.html#a73b723f8d26913c797269fb34995d9ad">quisp::modules::QNIC_names</a></div><div class="ttdeci">static const char * QNIC_names[QNIC_N]</div><div class="ttdef"><b>Definition:</b> QNIC.h:23</div></div>
 <div class="ttc" id="anamespacequisp_1_1modules_html_af32f152795f192fb6a9b311e0eabae3d"><div class="ttname"><a href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">quisp::modules::QNIC_type</a></div><div class="ttdeci">QNIC_type</div><div class="ttdef"><b>Definition:</b> QNIC.h:16</div></div>
 <div class="ttc" id="anamespacequisp_1_1modules_html_af32f152795f192fb6a9b311e0eabae3daaa42f9a2558764542403a90d626a2d46"><div class="ttname"><a href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3daaa42f9a2558764542403a90d626a2d46">quisp::modules::QNIC_N</a></div><div class="ttdeci">@ QNIC_N</div><div class="ttdef"><b>Definition:</b> QNIC.h:20</div></div>
-<div class="ttc" id="anamespacequisp_html"><div class="ttname"><a href="namespacequisp.html">quisp</a></div><div class="ttdef"><b>Definition:</b> QuantumChannel.cc:16</div></div>
+<div class="ttc" id="anamespacequisp_html"><div class="ttname"><a href="namespacequisp.html">quisp</a></div><div class="ttdef"><b>Definition:</b> Backends.h:7</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

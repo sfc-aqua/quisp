@@ -7,6 +7,7 @@ var classquisp_1_1utils_1_1_default_component_provider_strategy =
     [ "getQNIC", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a205dffb7cc956670c7c8a3ba8250e900", null ],
     [ "getQNode", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a331e3458aa07ee63df44ce9cab0da136", null ],
     [ "getQRSA", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a2efa00e2d61e8746bd6774c11d877eae", null ],
+    [ "getQuantumBackend", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#abc1ccb2357fda51be6738f5543d95042", null ],
     [ "getRealTimeController", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a30985eea797a48144add7501e84c1f27", null ],
     [ "getRoutingDaemon", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a6a9564f004cff2b3b136a5b199164392", null ],
     [ "getStationaryQubit", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a4fced823f0bbaf64298c5d53cf01a349", null ],

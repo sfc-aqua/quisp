@@ -8,6 +8,7 @@ var classquisp__test_1_1strategy_1_1_test_component_provider_strategy =
     [ "getNumQubits", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#aa619c15966e6440fdcb8bd18e75ee6b2", null ],
     [ "getQNIC", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a080888b0fbecbe39d58e642f120449c3", null ],
     [ "getQNode", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a5b6477d94b061c2392cb8a56b6002134", null ],
+    [ "getQuantumBackend", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#ab642477accae171014aec0522d8737b7", null ],
     [ "getRealTimeController", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a77b169c5b35c5d57190ff94ed5a13315", null ],
     [ "getRoutingDaemon", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#ab89b21e3df281992b782392fa0e745e6", null ],
     [ "getStationaryQubit", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a61ad443e153f985d249a46de8cfe3e07", null ],

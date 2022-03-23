@@ -1,9 +1,11 @@
 var namespacequisp__test =
 [
+    [ "backends", "namespacequisp__test_1_1backends.html", "namespacequisp__test_1_1backends" ],
     [ "configuration", "namespacequisp__test_1_1configuration.html", "namespacequisp__test_1_1configuration" ],
     [ "env", "namespacequisp__test_1_1env.html", "namespacequisp__test_1_1env" ],
     [ "gate", "namespacequisp__test_1_1gate.html", "namespacequisp__test_1_1gate" ],
     [ "key_value", "namespacequisp__test_1_1key__value.html", "namespacequisp__test_1_1key__value" ],
+    [ "mock_backends", "namespacequisp__test_1_1mock__backends.html", "namespacequisp__test_1_1mock__backends" ],
     [ "mock_modules", "namespacequisp__test_1_1mock__modules.html", "namespacequisp__test_1_1mock__modules" ],
     [ "module_type", "namespacequisp__test_1_1module__type.html", "namespacequisp__test_1_1module__type" ],
     [ "qnode", "namespacequisp__test_1_1qnode.html", "namespacequisp__test_1_1qnode" ],

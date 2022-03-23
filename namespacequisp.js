@@ -1,5 +1,6 @@
 var namespacequisp =
 [
+    [ "backends", "namespacequisp_1_1backends.html", "namespacequisp_1_1backends" ],
     [ "channels", "namespacequisp_1_1channels.html", "namespacequisp_1_1channels" ],
     [ "modules", "namespacequisp_1_1modules.html", "namespacequisp_1_1modules" ],
     [ "rules", "namespacequisp_1_1rules.html", "namespacequisp_1_1rules" ],

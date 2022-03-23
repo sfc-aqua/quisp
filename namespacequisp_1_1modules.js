@@ -1,5 +1,16 @@
 var namespacequisp_1_1modules =
 [
+    [ "backend", "namespacequisp_1_1modules_1_1backend.html", "namespacequisp_1_1modules_1_1backend" ],
+    [ "common", "namespacequisp_1_1modules_1_1common.html", [
+      [ "ErrorTrackingBackend", "namespacequisp_1_1modules_1_1common.html#a7a382c89525cad564aada4ef2316077f", null ],
+      [ "IBackendQubit", "namespacequisp_1_1modules_1_1common.html#a0168d943e2227d20553a7a63e86cfe5b", null ],
+      [ "IQuantumBackend", "namespacequisp_1_1modules_1_1common.html#a198bf6911a6014f1c002381407e643a8", null ],
+      [ "QNicIndex", "namespacequisp_1_1modules_1_1common.html#af5a8db76b670dfc3f8ec863dfa82f05a", null ],
+      [ "QNicType", "namespacequisp_1_1modules_1_1common.html#ad9d3d3513492c09e8c36ad29fcd788fa", null ],
+      [ "QNodeAddr", "namespacequisp_1_1modules_1_1common.html#acce634550de795e44975c1e20c8be3a8", null ],
+      [ "QubitId", "namespacequisp_1_1modules_1_1common.html#a27af03ae81214bcb4d435892ffb722a2", null ],
+      [ "QubitIndex", "namespacequisp_1_1modules_1_1common.html#ae40fc279e2dc158039aa95bb2ad5e007", null ]
+    ] ],
     [ "qnic_record", "namespacequisp_1_1modules_1_1qnic__record.html", "namespacequisp_1_1modules_1_1qnic__record" ],
     [ "qnic_store", "namespacequisp_1_1modules_1_1qnic__store.html", "namespacequisp_1_1modules_1_1qnic__store" ],
     [ "qrsa", "namespacequisp_1_1modules_1_1qrsa.html", "namespacequisp_1_1modules_1_1qrsa" ],

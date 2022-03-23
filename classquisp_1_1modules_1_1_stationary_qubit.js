@@ -1,5 +1,6 @@
 var classquisp_1_1modules_1_1_stationary_qubit =
 [
+    [ "StationaryQubit", "classquisp_1_1modules_1_1_stationary_qubit.html#a7b33af9b282c8b3d681b0e17b1cd3d7b", null ],
     [ "addEdge", "classquisp_1_1modules_1_1_stationary_qubit.html#aff2645006d81d048c8bb3e6bcf6cd6ba", null ],
     [ "addXerror", "classquisp_1_1modules_1_1_stationary_qubit.html#ac2bddd3781befc2a6086099099ff465c", null ],
     [ "addZerror", "classquisp_1_1modules_1_1_stationary_qubit.html#a52ab3609ce00f602e996efa62c747e2f", null ],
@@ -80,14 +81,14 @@ var classquisp_1_1modules_1_1_stationary_qubit =
     [ "memory_No_error_ceil", "classquisp_1_1modules_1_1_stationary_qubit.html#ad03422c75d5c42fff879697fdcc252bb", null ],
     [ "memory_Relaxation_error_ceil", "classquisp_1_1modules_1_1_stationary_qubit.html#afb1f73897ef3fc76f5b7c76df8a7fb73", null ],
     [ "Memory_Transition_matrix", "classquisp_1_1modules_1_1_stationary_qubit.html#a3ca7d357777edd557d6ea6f342ef705f", null ],
-    [ "Memory_Transition_matrix_ms", "classquisp_1_1modules_1_1_stationary_qubit.html#a1390fbe88af2b7f653c85ff568eef2c3", null ],
-    [ "Memory_Transition_matrix_ns", "classquisp_1_1modules_1_1_stationary_qubit.html#ab1371cebb1cc474451af0155249210d4", null ],
     [ "memory_X_error_ceil", "classquisp_1_1modules_1_1_stationary_qubit.html#aed7f110bdce14fe8ee1785da28270475", null ],
     [ "memory_Y_error_ceil", "classquisp_1_1modules_1_1_stationary_qubit.html#acbc6eb9dcfa246e140e88adef0c1c992", null ],
     [ "memory_Z_error_ceil", "classquisp_1_1modules_1_1_stationary_qubit.html#a60463c75d2064d7a03a56f40b90593a9", null ],
     [ "neighbors", "classquisp_1_1modules_1_1_stationary_qubit.html#ab191f0f1d0d9940246f192388b8fb0a7", null ],
     [ "num_purified", "classquisp_1_1modules_1_1_stationary_qubit.html#a52f3836cde316a3987baaeef2057715c", null ],
     [ "Pauli", "classquisp_1_1modules_1_1_stationary_qubit.html#a923ea4f4f4c3122cfb00e369c5c77176", null ],
+    [ "provider", "classquisp_1_1modules_1_1_stationary_qubit.html#ac3a2db51569bb07e53309513ff242e86", null ],
+    [ "qubit_ref", "classquisp_1_1modules_1_1_stationary_qubit.html#a3dca3d6bef346ed2c18b7bae6565328a", null ],
     [ "vertex_operator", "classquisp_1_1modules_1_1_stationary_qubit.html#a56058e5659cc8738c353feb36597724f", null ],
     [ "Xgate_error", "classquisp_1_1modules_1_1_stationary_qubit.html#aed218fa2edd890a9f74c9a1dcb534853", null ],
     [ "Zgate_error", "classquisp_1_1modules_1_1_stationary_qubit.html#add16d62d585357662f4c576284c680bc", null ]

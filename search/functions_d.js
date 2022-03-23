@@ -10,5 +10,7 @@ var searchData=
   ['purificationcountclause_7',['PurificationCountClause',['../classquisp_1_1rules_1_1clauses_1_1_purification_count_clause.html#a57b448be4f6ceadcb8cbb05baefd564b',1,'quisp::rules::clauses::PurificationCountClause']]],
   ['purificationrule_8',['purificationRule',['../classquisp_1_1modules_1_1_connection_manager.html#aee4bff657b039cec313c27eecdcd7810',1,'quisp::modules::ConnectionManager']]],
   ['purifyaction_9',['PurifyAction',['../classquisp_1_1rules_1_1actions_1_1_purify_action.html#a5371e005fa9929722d200135689227e7',1,'quisp::rules::actions::PurifyAction']]],
-  ['pushtobsaresults_10',['pushToBSAresults',['../classquisp_1_1modules_1_1_ho_m_controller.html#ae8800bab4feb0469713f112c19a06123',1,'quisp::modules::HoMController']]]
+  ['purifyx_10',['purifyX',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#aa6ea48527df3cfc84f07652f37cdb333',1,'quisp::backends::error_tracking::ErrorTrackingQubit::purifyX()'],['../classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a1c356f4505f2379666f1d490cdacf85b',1,'quisp::backends::abstract::IQubit::purifyX()']]],
+  ['purifyz_11',['purifyZ',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a1ea8e90bc61f1494d587c688ebdcbebb',1,'quisp::backends::error_tracking::ErrorTrackingQubit::purifyZ()'],['../classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a3ddbc4f87d897e9b24908656c7c95b95',1,'quisp::backends::abstract::IQubit::purifyZ()']]],
+  ['pushtobsaresults_12',['pushToBSAresults',['../classquisp_1_1modules_1_1_ho_m_controller.html#ae8800bab4feb0469713f112c19a06123',1,'quisp::modules::HoMController']]]
 ];

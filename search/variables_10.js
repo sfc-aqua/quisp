@@ -20,9 +20,10 @@ var searchData=
   ['quatropurification_5ftable_17',['QuatroPurification_table',['../classquisp_1_1modules_1_1_rule_engine.html#afd9f5709ec42c6073aa03956e0ba32f8',1,'quisp::modules::RuleEngine']]],
   ['qubit_5findex_18',['qubit_index',['../structquisp_1_1modules_1_1qrsa_1_1_local_qubit_ref.html#ad34cc9641a5e5def99ea61f1ae376fe1',1,'quisp::modules::qrsa::LocalQubitRef::qubit_index()'],['../classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html#ab0f3d51f83aaa2a0eef8e3ea67050f9a',1,'quisp::modules::qubit_record::QubitRecord::qubit_index()'],['../structquisp_1_1modules_1_1_qubit_addr__cons.html#af1fa01e925f82c116a240129db1a5eb7',1,'quisp::modules::QubitAddr_cons::qubit_index()'],['../structquisp_1_1modules_1_1_qubit_addr.html#a3050368dae3aab4b20a232d5eec3d203',1,'quisp::modules::QubitAddr::qubit_index()']]],
   ['qubit_5fptr_19',['qubit_ptr',['../classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html#a9f669a96f2506bc5c5d29fef1477494f',1,'quisp::modules::qubit_record::IQubitRecord']]],
-  ['qubitone_20',['qubitOne',['../structquisp_1_1modules_1_1entangled_photons.html#aa1aefb9c7a844dfa648bec82c7f8c738',1,'quisp::modules::entangledPhotons']]],
-  ['qubits_21',['qubits',['../classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record.html#aa0812eaf99c5a087f9e3b24ab1c6df78',1,'quisp::modules::qnic_record::QNicRecord']]],
-  ['qubittwo_22',['qubitTwo',['../structquisp_1_1modules_1_1entangled_photons.html#abb5e301bd2a79d2e1635538f778f5f87',1,'quisp::modules::entangledPhotons']]],
-  ['queue_23',['queue',['../classquisp_1_1modules_1_1_queue.html#ad5596a4f643ff35990448e1f509cbd64',1,'quisp::modules::Queue']]],
-  ['queuing_5ftime_5fsignal_24',['queuing_time_signal',['../classquisp_1_1modules_1_1_queue.html#a76bc8544dca5a9a31d8917c1003c4451',1,'quisp::modules::Queue']]]
+  ['qubit_5fref_20',['qubit_ref',['../classquisp_1_1modules_1_1_stationary_qubit.html#a3dca3d6bef346ed2c18b7bae6565328a',1,'quisp::modules::StationaryQubit']]],
+  ['qubitone_21',['qubitOne',['../structquisp_1_1modules_1_1entangled_photons.html#aa1aefb9c7a844dfa648bec82c7f8c738',1,'quisp::modules::entangledPhotons']]],
+  ['qubits_22',['qubits',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html#acceb4c94c7f70e1e151f7916b18f0862',1,'quisp::backends::error_tracking::ErrorTrackingBackend::qubits()'],['../classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record.html#aa0812eaf99c5a087f9e3b24ab1c6df78',1,'quisp::modules::qnic_record::QNicRecord::qubits()']]],
+  ['qubittwo_23',['qubitTwo',['../structquisp_1_1modules_1_1entangled_photons.html#abb5e301bd2a79d2e1635538f778f5f87',1,'quisp::modules::entangledPhotons']]],
+  ['queue_24',['queue',['../classquisp_1_1modules_1_1_queue.html#ad5596a4f643ff35990448e1f509cbd64',1,'quisp::modules::Queue']]],
+  ['queuing_5ftime_5fsignal_25',['queuing_time_signal',['../classquisp_1_1modules_1_1_queue.html#a76bc8544dca5a9a31d8917c1003c4451',1,'quisp::modules::Queue']]]
 ];
