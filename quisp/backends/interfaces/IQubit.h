@@ -17,7 +17,7 @@ class IQubit {
 
   // two qubit operations
   virtual void gateCNOT(IQubit *const control_qubit) { throw std::runtime_error("gateCNOT not implemented"); };
-  virtual void gateCZ(IQubit *const anoter) { throw std::runtime_error("gateCZ not implemented"); };
+  virtual void gateCZ(IQubit *const control_qubit) { throw std::runtime_error("gateCZ not implemented"); };
   virtual bool purifyX(IQubit *const control_qubit) { throw std::runtime_error("gateCZ not implemented"); };
   virtual bool purifyZ(IQubit *const target_qubit) { throw std::runtime_error("gateCZ not implemented"); };
 };
