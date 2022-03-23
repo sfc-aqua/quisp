@@ -1,9 +1,10 @@
 #ifndef QUISP_UTILS_COMPONENTPROVIDER_H_
 #define QUISP_UTILS_COMPONENTPROVIDER_H_
 
+#include <modules/QRSA/QRSA.h>
+#include <modules/common_types.h>
 #include "DefaultComponentProviderStrategy.h"
 #include "IComponentProviderStrategy.h"
-#include "modules/QRSA/QRSA.h"
 #include "omnetpp/cmodule.h"
 #include "utils.h"
 
@@ -34,6 +35,7 @@ class ComponentProvider {
   IRoutingDaemon *getRoutingDaemon();
   IHardwareMonitor *getHardwareMonitor();
   IRealTimeController *getRealTimeController();
+  IQuantumBackend *getQuantumBackend();
 
   // when a this class instantiated, a strategy class instantiation may fail because
   // the strategy class may depend on other modules instantiated by OMNeT++'s NED file.

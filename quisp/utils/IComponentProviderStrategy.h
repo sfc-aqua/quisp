@@ -22,6 +22,7 @@ class IComponentProviderStrategy {
   virtual IRoutingDaemon *getRoutingDaemon() = 0;
   virtual IHardwareMonitor *getHardwareMonitor() = 0;
   virtual IRealTimeController *getRealTimeController() = 0;
+  virtual IQuantumBackend *getQuantumBackend() = 0;
 };
 
 }  // namespace utils

@@ -29,6 +29,8 @@ namespace modules {
 
 Define_Module(StationaryQubit);
 
+StationaryQubit::StationaryQubit() : provider(utils::ComponentProvider{this}) {}
+
 /**
  * \brief Initialize StationaryQubit
  *
@@ -104,6 +106,9 @@ void StationaryQubit::initialize() {
 
   // initialize variables for graph state representation tracking
   vertex_operator = CliffordOperator::H;
+
+  auto *backend = provider.getQuantumBackend();
+  // qubit_ref = backend->getQubit({node_address, qnic_index, qnic_type, stationaryQubit_address});
 }
 
 void StationaryQubit::finish() {}
