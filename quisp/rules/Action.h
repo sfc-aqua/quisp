@@ -6,6 +6,12 @@
 using nlohmann::json;
 using quisp::modules::QNIC_type;
 namespace quisp::rules {
+struct QnicInterface {
+  int partner_addr;
+  QNIC_type qnic_type;
+  int qnic_id;
+  int qnic_address;
+};
 
 enum PurType : int {
   INVALID,  ///< Invalid purification type
@@ -34,15 +40,29 @@ NLOHMANN_JSON_SERIALIZE_ENUM(PurType, {
                                           {DSDA_SECOND, "DSDA_SECOND"},
                                           {DSDA_SECOND_INV, "DSDA_SECOND_INV"},
                                       })
+
+inline void to_json(json& j, const QnicInterface& qi) {
+  j = json{{"partner_address", qi.partner_addr}, {"qnic_type", qi.qnic_type}, {"qnic_id", qi.qnic_id}};
+  if (qi.qnic_address) {
+    j["qnic_address"] = qi.qnic_address;
+  }
+}
+
+inline void from_json(const json& j, QnicInterface& qi) {
+  j.at("partner_address").get_to(qi.partner_addr);
+  j.at("qnic_type").get_to(qi.qnic_type);
+  j.at("qnic_id").get_to(qi.qnic_id);
+  if (j.contains("qnic_address")) {
+    j.at("qnic_address").get_to(qi.qnic_address);
+  }
+}
 class Action {
  public:
   Action() {}  // for deserialization
   Action(int partner_addr, QNIC_type qnic_type, int qnic_id);
-  Action(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id) : partner_address(partner_addr), qnic_types(qnic_type), qnic_ids(qnic_id){};
+  Action(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id);
   virtual ~Action() {}
-  std::vector<int> partner_address;
-  std::vector<QNIC_type> qnic_types;
-  std::vector<int> qnic_ids;
+  std::vector<QnicInterface> qnic_interfaces;
 
   virtual json serialize_json() = 0;
   virtual void deserialize_json(json serialized) = 0;
@@ -62,9 +82,7 @@ class EntanglementSwapping : public Action {
   EntanglementSwapping(json serialized) { deserialize_json(serialized); }  // for deserialization
   EntanglementSwapping(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id, std::vector<QNIC_type> remote_qnic_type,
                        std::vector<int> remote_qnic_id, std::vector<int> remote_qnic_address);
-  std::vector<QNIC_type> remote_qnic_types;  // qnic type of partner's interface
-  std::vector<int> remote_qnic_ids;  // qnic id of partner's interface
-  std::vector<int> remote_qnic_address;  // qnic_address of partner's interface
+  std::vector<QnicInterface> remote_qnic_interfaces;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };

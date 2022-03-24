@@ -337,11 +337,14 @@ std::unique_ptr<ActiveRuleSet> RuleEngine::constructActiveRuleSet(RuleSet rulese
     auto active_rule = std::make_unique<ActiveRule>(ruleset.ruleset_id, rule->rule_id);
     // 1. meta information
     active_rule->name = rule->name + " with ";
-    for (auto partner : rule->partners) {
-      active_rule->name = active_rule->name + std::to_string(partner);
+    auto qnic_interface = rule->qnic_interfaces;
+    std::vector<int> partners;
+    for (auto interface : rule->qnic_interfaces) {
+      active_rule->name = active_rule->name + std::to_string(interface.partner_addr);
+      partners.push_back(interface.partner_addr);
     }
     active_rule->rule_id = rule->rule_id;  // rule id
-    active_rule->action_partners = rule->partners;  // partner info
+    active_rule->action_partners = partners;  // partner info
     active_rule->next_rule_id = rule->to;  // next ruleid information
 
     // 2. add condition and action
@@ -399,9 +402,10 @@ ActiveCondition *RuleEngine::constructCondition(std::unique_ptr<Condition> condi
 
 ActiveAction *RuleEngine::constructAction(std::unique_ptr<Action> action, unsigned long ruleset_id, int rule_id) {
   if (auto *act = dynamic_cast<Purification *>(action.get())) {
-    auto partner_addr = act->partner_address.at(0);  // purification allow single partner
-    auto qnic_type = act->qnic_types.at(0);
-    auto qnic_id = act->qnic_ids.at(0);
+    auto interface = act->qnic_interfaces.at(0);
+    auto partner_addr = interface.partner_addr;
+    auto qnic_type = interface.qnic_type;
+    auto qnic_id = interface.qnic_id;
     if (act->purification_type == PurType::SINGLE_X) {
       // Purification(X)
       auto active_action = new PurifyAction(ruleset_id, rule_id, true, false, 1, partner_addr, qnic_type, qnic_id, 0, 1);
@@ -459,20 +463,34 @@ ActiveAction *RuleEngine::constructAction(std::unique_ptr<Action> action, unsign
   }
   if (auto *act = dynamic_cast<EntanglementSwapping *>(action.get())) {
     // get interface information
-    int left_partner = act->partner_address.at(0), right_partner = act->partner_address.at(1);
-    QNIC_type left_qnic_type = act->qnic_types.at(0), right_qnic_type = act->qnic_types.at(1);
-    int left_qnic_id = act->qnic_ids.at(0), right_qnic_id = act->qnic_ids.at(1);
-    QNIC_type left_remote_qnic_type = act->remote_qnic_types.at(0), right_remote_qnic_type = act->remote_qnic_types.at(1);
-    int left_remote_qnic_id = act->remote_qnic_ids.at(0), right_remote_qnic_id = act->remote_qnic_ids.at(1);
-    int left_remote_qnic_address = act->remote_qnic_address.at(0), right_remote_qnic_address = act->remote_qnic_address.at(1);
+    auto left_interface = act->qnic_interfaces.at(0);
+    auto left_partner = left_interface.partner_addr;
+    auto left_qnic_type = left_interface.qnic_type;
+    auto left_qnic_id = left_interface.qnic_id;
+
+    auto right_interface = act->qnic_interfaces.at(1);
+    auto right_partner = right_interface.partner_addr;
+    auto right_qnic_type = right_interface.qnic_type;
+    auto right_qnic_id = right_interface.qnic_id;
+
+    auto left_partner_interface = act->remote_qnic_interfaces.at(0);
+    auto left_partner_qnic_type = left_partner_interface.qnic_type;
+    auto left_partner_qnic_id = left_partner_interface.qnic_id;
+    auto left_partner_qnic_address = left_interface.qnic_address;
+
+    auto right_partner_interface = act->remote_qnic_interfaces.at(1);
+    auto right_partner_qnic_type = right_partner_interface.qnic_type;
+    auto right_partner_qnic_id = right_partner_interface.qnic_id;
+    auto right_partner_qnic_address = right_partner_interface.qnic_address;
     auto active_action =
-        new SwappingAction(ruleset_id, rule_id, left_partner, left_remote_qnic_type, left_remote_qnic_id, left_remote_qnic_address, 0, right_partner, right_remote_qnic_type,
-                           right_remote_qnic_id, right_remote_qnic_address, 0, left_qnic_id, left_qnic_type, right_qnic_id, right_qnic_type);
+        new SwappingAction(ruleset_id, rule_id, left_partner, left_partner_qnic_type, left_partner_qnic_id, left_partner_qnic_address, 0, right_partner, right_partner_qnic_type,
+                           right_partner_qnic_id, right_partner_qnic_address, 0, left_qnic_id, left_qnic_type, right_qnic_id, right_qnic_type);
     return active_action;
   }
   if (auto *act = dynamic_cast<Tomography *>(action.get())) {
+    auto qnic_interface = act->qnic_interfaces.at(0);
     auto active_action =
-        new RandomMeasureAction(ruleset_id, rule_id, act->owner_address, act->partner_address.at(0), act->qnic_types.at(0), act->qnic_ids.at(0), 0, act->num_measurement);
+        new RandomMeasureAction(ruleset_id, rule_id, act->owner_address, qnic_interface.partner_addr, qnic_interface.qnic_type, qnic_interface.qnic_id, 0, act->num_measurement);
     return active_action;
   }
 }

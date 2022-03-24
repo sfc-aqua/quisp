@@ -192,181 +192,154 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 4);
     auto expected_ruleset = R"({
-   "ruleset_id":1234,
-   "num_rules":4,
-   "owner_address":2,
-   "rules":[
-      {
-         "name":"purification",
-         "next_rule_id":1,
-         "partners":[
-            3
-         ],
-         "rule_id":0,
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "qnic_id":[
-            11
-         ],
-         "action":{
-            "type":"purification",
-            "options":{
-               "partner_address":[
-                  3
-               ],
-               "purification_type":"SINGLE_X",
-               "qnic_id":[
-                  11
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":2,
-                     "partner_address":3,
-                     "qnic_id":11,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               }
-            ]
-         }
-      },
-      {
-         "name":"wait",
-         "next_rule_id":2,
-         "partners":[
-            3
-         ],
-         "rule_id":1,
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "qnic_id":[
-            11
-         ],
-         "action":{
-            "type":"wait",
-            "options":{
-               "partner_address":[
-                  3
-               ],
-               "qnic_id":[
-                  11
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"wait",
-                  "options":{
-                     "partner_address":3,
-                     "qnic_id":11,
-                     "qnic_type":"QNIC_E"
-                  }
-               }
-            ]
-         }
-      },
-      {
-         "name":"purification",
-         "next_rule_id":3,
-         "partners":[
-            5
-         ],
-         "rule_id":2,
-         "qnic_id":[
-            11
-         ],
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "action":{
-            "type":"purification",
-            "options":{
-               "partner_address":[
-                  5
-               ],
-               "purification_type":"SINGLE_X",
-               "qnic_id":[
-                  11
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":2,
-                     "partner_address":5,
-                     "qnic_id":11,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               }
-            ]
-         }
-      },
-      {
-         "name":"tomography",
-         "next_rule_id":-1,
-         "partners":[
-            5
-         ],
-         "rule_id":3,
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "qnic_id":[
-            11
-         ],
-         "action":{
-            "type":"tomography",
-            "options":{
-               "num_measure":0,
-               "owner_address":2 ,
-               "partner_address":[
-                  5
-               ],
-               "qnic_id":[
-                  11
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":1,
-                     "partner_address":5,
-                     "qnic_id":11,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               }
-            ]
-         }
-      }
-   ]
+	"num_rules": 4,
+	"owner_address": 2,
+	"rules": [{
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 3,
+					"qnic_id": 11,
+					"qnic_type": "QNIC_E"
+				}],
+				"purification_type": "SINGLE_X"
+			},
+			"type": "purification"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 3,
+						"qnic_id": 11,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 2,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}]
+		},
+		"interface": [{
+			"partner_address": 3,
+			"qnic_id": 11,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "purification",
+		"next_rule_id": 1,
+		"rule_id": 0
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 3,
+					"qnic_id": 11,
+					"qnic_type": "QNIC_E"
+				}]
+			},
+			"type": "wait"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 3,
+						"qnic_id": 11,
+						"qnic_type": "QNIC_E"
+					}
+				},
+				"type": "wait"
+			}]
+		},
+		"interface": [{
+			"partner_address": 3,
+			"qnic_id": 11,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "wait",
+		"next_rule_id": 2,
+		"rule_id": 1
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 5,
+					"qnic_id": 11,
+					"qnic_type": "QNIC_E"
+				}],
+				"purification_type": "SINGLE_X"
+			},
+			"type": "purification"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 5,
+						"qnic_id": 11,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 2,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}]
+		},
+		"interface": [{
+			"partner_address": 5,
+			"qnic_id": 11,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "purification",
+		"next_rule_id": 3,
+		"rule_id": 2
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 5,
+					"qnic_id": 11,
+					"qnic_type": "QNIC_E"
+				}],
+				"num_measure": 0,
+				"owner_address": 2
+			},
+			"type": "tomography"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 5,
+						"qnic_id": 11,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 1,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}, {
+				"options": {
+					"interface": {
+						"partner_address": 5,
+						"qnic_id": 11,
+						"qnic_type": "QNIC_E"
+					},
+					"num_measure": 0
+				},
+				"type": "measure_count"
+			}]
+		},
+		"interface": [{
+			"partner_address": 5,
+			"qnic_id": 11,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "tomography",
+		"next_rule_id": -1,
+		"rule_id": 3
+	}],
+	"ruleset_id": 1234
 })"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }
@@ -381,250 +354,206 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(ruleset["rules"].size(), 5);
 
     auto expected_ruleset = R"({
-   "ruleset_id":1234,
-   "num_rules":5,
-   "owner_address":3,
-   "rules":[
-      {
-         "name":"purification",
-         "next_rule_id":4,
-         "partners":[
-            2
-         ],
-         "rule_id":0,
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "qnic_id":[
-            12
-         ],
-         "action":{
-            "type":"purification",
-            "options":{
-               "partner_address":[
-                  2
-               ],
-               "purification_type":"SINGLE_X",
-               "qnic_id":[
-                  12
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":2,
-                     "partner_address":2,
-                     "qnic_id":12,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               }
-            ]
-         }
-      },
-      {
-         "name":"purification",
-         "next_rule_id":2,
-         "partners":[
-            4
-         ],
-         "rule_id":1,
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "qnic_id":[
-            13
-         ],
-         "action":{
-            "type":"purification",
-            "options":{
-               "partner_address":[
-                  4
-               ],
-               "purification_type":"SINGLE_X",
-               "qnic_id":[
-                  13
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":2,
-                     "partner_address":4,
-                     "qnic_id":13,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               }
-            ]
-         }
-      },
-      {
-         "name":"wait",
-         "next_rule_id":3,
-         "partners":[
-            4
-         ],
-         "rule_id":2,
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "qnic_id":[
-            13
-         ],
-         "action":{
-            "type":"wait",
-            "options":{
-               "partner_address":[
-                  4
-               ],
-               "qnic_id":[
-                  13
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"wait",
-                  "options":{
-                     "partner_address":4,
-                     "qnic_id":13,
-                     "qnic_type":"QNIC_E"
-                  }
-               }
-            ]
-         }
-      },
-      {
-         "name":"purification",
-         "next_rule_id":4,
-         "partners":[
-            5
-         ],
-         "rule_id":3,
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "qnic_id":[
-            13
-         ],
-         "action":{
-            "type":"purification",
-            "options":{
-               "partner_address":[
-                  5
-               ],
-               "purification_type":"SINGLE_X",
-               "qnic_id":[
-                  13
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":2,
-                     "partner_address":5,
-                     "qnic_id":13,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               }
-            ]
-         }
-      },
-      {
-         "name":"swapping",
-         "next_rule_id":-1,
-         "partners":[
-            2,
-            5
-         ],
-         "rule_id":4,
-         "qnic_type":[
-            "QNIC_E",
-            "QNIC_E"
-         ],
-         "qnic_id":[
-            12,
-            13
-         ],
-         "action":{
-            "type":"swapping",
-            "options":{
-               "partner_address":[
-                  2,
-                  5
-               ],
-               "qnic_id":[
-                  12,
-                  13
-               ],
-               "qnic_type":[
-                  "QNIC_E",
-                  "QNIC_E"
-               ],
-               "remote_qnic_type":[
-                 "QNIC_E",
-                 "QNIC_E"
-               ],
-               "remote_qnic_id": [
-                 11,
-                 16
-               ],
-               "remote_qnic_address": [
-                 101,
-                 106
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":1,
-                     "partner_address":2,
-                     "qnic_id":12,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               },
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":1,
-                     "partner_address":5,
-                     "qnic_id":13,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               }
-            ]
-         }
-      }
-   ]
+	"num_rules": 5,
+	"owner_address": 3,
+	"rules": [{
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 2,
+					"qnic_id": 12,
+					"qnic_type": "QNIC_E"
+				}],
+				"purification_type": "SINGLE_X"
+			},
+			"type": "purification"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 2,
+						"qnic_id": 12,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 2,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}]
+		},
+		"interface": [{
+			"partner_address": 2,
+			"qnic_id": 12,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "purification",
+		"next_rule_id": 4,
+		"rule_id": 0
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 4,
+					"qnic_id": 13,
+					"qnic_type": "QNIC_E"
+				}],
+				"purification_type": "SINGLE_X"
+			},
+			"type": "purification"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 4,
+						"qnic_id": 13,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 2,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}]
+		},
+		"interface": [{
+			"partner_address": 4,
+			"qnic_id": 13,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "purification",
+		"next_rule_id": 2,
+		"rule_id": 1
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 4,
+					"qnic_id": 13,
+					"qnic_type": "QNIC_E"
+				}]
+			},
+			"type": "wait"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 4,
+						"qnic_id": 13,
+						"qnic_type": "QNIC_E"
+					}
+				},
+				"type": "wait"
+			}]
+		},
+		"interface": [{
+			"partner_address": 4,
+			"qnic_id": 13,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "wait",
+		"next_rule_id": 3,
+		"rule_id": 2
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 5,
+					"qnic_id": 13,
+					"qnic_type": "QNIC_E"
+				}],
+				"purification_type": "SINGLE_X"
+			},
+			"type": "purification"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 5,
+						"qnic_id": 13,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 2,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}]
+		},
+		"interface": [{
+			"partner_address": 5,
+			"qnic_id": 13,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "purification",
+		"next_rule_id": 4,
+		"rule_id": 3
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 2,
+					"qnic_id": 12,
+					"qnic_type": "QNIC_E"
+				}, {
+					"partner_address": 5,
+					"qnic_id": 13,
+					"qnic_type": "QNIC_E"
+				}],
+				"remote_interface": [{
+					"partner_address": 2,
+					"qnic_address": 101,
+					"qnic_id": 11,
+					"qnic_type": "QNIC_E"
+				}, {
+					"partner_address": 5,
+					"qnic_address": 106,
+					"qnic_id": 16,
+					"qnic_type": "QNIC_E"
+				}]
+			},
+			"type": "swapping"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 2,
+						"qnic_id": 12,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 1,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}, {
+				"options": {
+					"interface": {
+						"partner_address": 5,
+						"qnic_id": 13,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 1,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}]
+		},
+		"interface": [{
+			"partner_address": 2,
+			"qnic_id": 12,
+			"qnic_type": "QNIC_E"
+		}, {
+			"partner_address": 5,
+			"qnic_id": 13,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "swapping",
+		"next_rule_id": -1,
+		"rule_id": 4
+	}],
+	"ruleset_id": 1234
 })"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }
@@ -642,167 +571,141 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     // rule2 (id: 1): purification with 5, next to 2
     // rule3 (id: 2): swapping with [3, 5], next to -1
     auto expected_ruleset = R"({
-   "ruleset_id":1234,
-   "num_rules":3,
-   "owner_address":4,
-   "rules":[
-      {
-         "name":"purification",
-         "next_rule_id":2,
-         "partners":[
-            3
-         ],
-         "qnic_id":[
-            14
-         ],
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "rule_id":0,
-         "action":{
-            "type":"purification",
-            "options":{
-               "partner_address":[
-                  3
-               ],
-               "purification_type":"SINGLE_X",
-               "qnic_id":[
-                  14
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":2,
-                     "partner_address":3,
-                     "qnic_id":14,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               }
-            ]
-         }
-      },
-      {
-         "name":"purification",
-         "next_rule_id":2,
-         "partners":[
-            5
-         ],
-         "qnic_id":[
-            15
-         ],
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "rule_id":1,
-         "action":{
-            "type":"purification",
-            "options":{
-               "partner_address":[
-                  5
-               ],
-               "purification_type":"SINGLE_X",
-               "qnic_id":[
-                  15
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":2,
-                     "partner_address":5,
-                     "qnic_id":15,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               }
-            ]
-         }
-      },
-      {
-         "name":"swapping",
-         "next_rule_id":-1,
-         "partners":[
-            3,
-            5
-         ],
-         "qnic_id":[
-            14,
-            15
-         ],
-         "qnic_type":[
-            "QNIC_E",
-            "QNIC_E"
-         ],
-         "rule_id":2,
-         "action":{
-            "type":"swapping",
-            "options":{
-               "partner_address":[
-                  3,
-                  5
-               ],
-               "qnic_id":[
-                  14,
-                  15
-               ],
-               "qnic_type":[
-                  "QNIC_E",
-                  "QNIC_E"
-               ],
-               "remote_qnic_type":[
-                 "QNIC_E",
-                 "QNIC_E"
-               ],
-               "remote_qnic_id":[
-                 13,
-                 16
-               ],
-               "remote_qnic_address": [
-                 103,
-                 106
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":1,
-                     "partner_address":3,
-                     "qnic_id":14,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               },
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":1,
-                     "partner_address":5,
-                     "qnic_id":15,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               }
-            ]
-         }
-      }
-   ]
+	"num_rules": 3,
+	"owner_address": 4,
+	"rules": [{
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 3,
+					"qnic_id": 14,
+					"qnic_type": "QNIC_E"
+				}],
+				"purification_type": "SINGLE_X"
+			},
+			"type": "purification"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 3,
+						"qnic_id": 14,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 2,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}]
+		},
+		"interface": [{
+			"partner_address": 3,
+			"qnic_id": 14,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "purification",
+		"next_rule_id": 2,
+		"rule_id": 0
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 5,
+					"qnic_id": 15,
+					"qnic_type": "QNIC_E"
+				}],
+				"purification_type": "SINGLE_X"
+			},
+			"type": "purification"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 5,
+						"qnic_id": 15,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 2,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}]
+		},
+		"interface": [{
+			"partner_address": 5,
+			"qnic_id": 15,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "purification",
+		"next_rule_id": 2,
+		"rule_id": 1
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 3,
+					"qnic_id": 14,
+					"qnic_type": "QNIC_E"
+				}, {
+					"partner_address": 5,
+					"qnic_id": 15,
+					"qnic_type": "QNIC_E"
+				}],
+				"remote_interface": [{
+					"partner_address": 3,
+					"qnic_address": 103,
+					"qnic_id": 13,
+					"qnic_type": "QNIC_E"
+				}, {
+					"partner_address": 5,
+					"qnic_address": 106,
+					"qnic_id": 16,
+					"qnic_type": "QNIC_E"
+				}]
+			},
+			"type": "swapping"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 3,
+						"qnic_id": 14,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 1,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}, {
+				"options": {
+					"interface": {
+						"partner_address": 5,
+						"qnic_id": 15,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 1,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}]
+		},
+		"interface": [{
+			"partner_address": 3,
+			"qnic_id": 14,
+			"qnic_type": "QNIC_E"
+		}, {
+			"partner_address": 5,
+			"qnic_id": 15,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "swapping",
+		"next_rule_id": -1,
+		"rule_id": 2
+	}],
+	"ruleset_id": 1234
 })"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }
@@ -823,264 +726,219 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     // rule5 (id: 4): purification with 1, to (id: 5)
     // rule6 (id: 5): tomography with 1, to (id: -1)
     auto expected_ruleset = R"({
-   "ruleset_id":1234,
-   "num_rules":6,
-   "owner_address":5,
-   "rules":[
-      {
-         "name":"purification",
-         "next_rule_id":1,
-         "partners":[
-            4
-         ],
-         "qnic_id":[
-            16
-         ],
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "rule_id":0,
-         "action":{
-            "type":"purification",
-            "options":{
-               "partner_address":[
-                  4
-               ],
-               "purification_type":"SINGLE_X",
-               "qnic_id":[
-                  16
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":2,
-                     "partner_address":4,
-                     "qnic_id":16,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               }
-            ]
-         }
-      },
-      {
-         "name":"wait",
-         "next_rule_id":2,
-         "partners":[
-            4
-         ],
-         "qnic_id":[
-            16
-         ],
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "rule_id":1,
-         "action":{
-            "type":"wait",
-            "options":{
-               "partner_address":[
-                  4
-               ],
-               "qnic_id":[
-                  16
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"wait",
-                  "options":{
-                     "partner_address":4,
-                     "qnic_id":16,
-                     "qnic_type":"QNIC_E"
-                  }
-               }
-            ]
-         }
-      },
-      {
-         "name":"purification",
-         "next_rule_id":3,
-         "partners":[
-            3
-         ],
-         "qnic_id":[
-            16
-         ],
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "rule_id":2,
-         "action":{
-            "type":"purification",
-            "options":{
-               "partner_address":[
-                  3
-               ],
-               "purification_type":"SINGLE_X",
-               "qnic_id":[
-                  16
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":2,
-                     "partner_address":3,
-                     "qnic_id":16,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               }
-            ]
-         }
-      },
-      {
-         "name":"wait",
-         "next_rule_id":4,
-         "partners":[
-            3
-         ],
-         "qnic_id":[
-            16
-         ],
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "rule_id":3,
-         "action":{
-            "type":"wait",
-            "options":{
-               "partner_address":[
-                  3
-               ],
-               "qnic_id":[
-                  16
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"wait",
-                  "options":{
-                     "partner_address":3,
-                     "qnic_id":16,
-                     "qnic_type":"QNIC_E"
-                  }
-               }
-            ]
-         }
-      },
-      {
-         "name":"purification",
-         "next_rule_id":5,
-         "partners":[
-            2
-         ],
-         "qnic_id":[
-            16
-         ],
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "rule_id":4,
-         "action":{
-            "type":"purification",
-            "options":{
-               "partner_address":[
-                  2
-               ],
-               "purification_type":"SINGLE_X",
-               "qnic_id":[
-                  16
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":2,
-                     "partner_address":2,
-                     "qnic_id":16,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               }
-            ]
-         }
-      },
-      {
-         "name":"tomography",
-         "next_rule_id":-1,
-         "partners":[
-            2
-         ],
-         "qnic_id":[
-            16
-         ],
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "rule_id":5,
-         "action":{
-            "type":"tomography",
-            "options":{
-               "num_measure":0,
-               "owner_address": 5,
-               "partner_address":[
-                  2
-               ],
-               "qnic_id":[
-                  16
-               ],
-               "qnic_type":[
-                  "QNIC_E"
-               ]
-            }
-         },
-         "condition":{
-            "clauses":[
-               {
-                  "type":"enough_resource",
-                  "options":{
-                     "num_resource":1,
-                     "partner_address":2,
-                     "qnic_id":16,
-                     "qnic_type":"QNIC_E",
-                     "required_fidelity":0.0
-                  }
-               }
-            ]
-         }
-      }
-   ]
+	"num_rules": 6,
+	"owner_address": 5,
+	"rules": [{
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 4,
+					"qnic_id": 16,
+					"qnic_type": "QNIC_E"
+				}],
+				"purification_type": "SINGLE_X"
+			},
+			"type": "purification"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 4,
+						"qnic_id": 16,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 2,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}]
+		},
+		"interface": [{
+			"partner_address": 4,
+			"qnic_id": 16,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "purification",
+		"next_rule_id": 1,
+		"rule_id": 0
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 4,
+					"qnic_id": 16,
+					"qnic_type": "QNIC_E"
+				}]
+			},
+			"type": "wait"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 4,
+						"qnic_id": 16,
+						"qnic_type": "QNIC_E"
+					}
+				},
+				"type": "wait"
+			}]
+		},
+		"interface": [{
+			"partner_address": 4,
+			"qnic_id": 16,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "wait",
+		"next_rule_id": 2,
+		"rule_id": 1
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 3,
+					"qnic_id": 16,
+					"qnic_type": "QNIC_E"
+				}],
+				"purification_type": "SINGLE_X"
+			},
+			"type": "purification"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 3,
+						"qnic_id": 16,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 2,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}]
+		},
+		"interface": [{
+			"partner_address": 3,
+			"qnic_id": 16,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "purification",
+		"next_rule_id": 3,
+		"rule_id": 2
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 3,
+					"qnic_id": 16,
+					"qnic_type": "QNIC_E"
+				}]
+			},
+			"type": "wait"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 3,
+						"qnic_id": 16,
+						"qnic_type": "QNIC_E"
+					}
+				},
+				"type": "wait"
+			}]
+		},
+		"interface": [{
+			"partner_address": 3,
+			"qnic_id": 16,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "wait",
+		"next_rule_id": 4,
+		"rule_id": 3
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 2,
+					"qnic_id": 16,
+					"qnic_type": "QNIC_E"
+				}],
+				"purification_type": "SINGLE_X"
+			},
+			"type": "purification"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 2,
+						"qnic_id": 16,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 2,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}]
+		},
+		"interface": [{
+			"partner_address": 2,
+			"qnic_id": 16,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "purification",
+		"next_rule_id": 5,
+		"rule_id": 4
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 2,
+					"qnic_id": 16,
+					"qnic_type": "QNIC_E"
+				}],
+				"num_measure": 0,
+				"owner_address": 5
+			},
+			"type": "tomography"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 2,
+						"qnic_id": 16,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 1,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}, {
+				"options": {
+					"interface": {
+						"partner_address": 2,
+						"qnic_id": 16,
+						"qnic_type": "QNIC_E"
+					},
+					"num_measure": 0
+				},
+				"type": "measure_count"
+			}]
+		},
+		"interface": [{
+			"partner_address": 2,
+			"qnic_id": 16,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "tomography",
+		"next_rule_id": -1,
+		"rule_id": 5
+	}],
+	"ruleset_id": 1234
 })"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }

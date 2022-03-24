@@ -59,14 +59,8 @@ TEST(ConnectionManagerRuleSetTest, PurificationRule) {
    "rule_id":-1,
    "next_rule_id":-1,
    "name":"purification",
-   "partners":[
-      1
-   ],
-   "qnic_type":[
-      "QNIC_E"
-   ],
-   "qnic_id":[
-      4
+   "interface":[
+     {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 4}
    ],
    "condition":{
       "clauses":[
@@ -75,9 +69,11 @@ TEST(ConnectionManagerRuleSetTest, PurificationRule) {
             "options":{
                "num_resource":2,
                "required_fidelity":0.0,
-               "partner_address":1,
-               "qnic_type":"QNIC_E",
-               "qnic_id":4
+               "interface":{
+                 "partner_address":1,
+                 "qnic_type":"QNIC_E",
+                 "qnic_id":4
+                }
             }
          }
       ]
@@ -86,15 +82,9 @@ TEST(ConnectionManagerRuleSetTest, PurificationRule) {
       "type":"purification",
       "options":{
          "purification_type":"DOUBLE",
-         "partner_address":[
-            1
-         ],
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "qnic_id":[
-            4
-         ]
+         "interface": [
+           {"partner_address":1,"qnic_type":"QNIC_E","qnic_id":4}
+          ]
       }
    }
 })"_json;
@@ -124,17 +114,9 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
    "rule_id":-1,
    "next_rule_id":-1,
    "name":"swapping",
-   "partners":[
-      1,
-      3
-   ],
-   "qnic_type":[
-      "QNIC_E",
-      "QNIC_R"
-   ],
-   "qnic_id":[
-      4,
-      5
+   "interface":[
+     {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 4},
+     {"partner_address": 3, "qnic_type": "QNIC_R", "qnic_id": 5}
    ],
    "condition":{
       "clauses":[
@@ -143,9 +125,11 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
             "options":{
                "num_resource":1,
                "required_fidelity":0.0,
-               "partner_address":1,
-               "qnic_type":"QNIC_E",
-               "qnic_id":4
+               "interface": {
+                 "partner_address":1,
+                 "qnic_type":"QNIC_E",
+                 "qnic_id":4
+               }
             }
          },
          {
@@ -153,9 +137,11 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
             "options":{
                "num_resource":1,
                "required_fidelity":0.0,
-               "partner_address":3,
-               "qnic_type":"QNIC_R",
-               "qnic_id":5
+               "interface":{
+                 "partner_address":3,
+                 "qnic_type":"QNIC_R",
+                 "qnic_id":5
+               }
             }
          }
       ]
@@ -163,30 +149,14 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
    "action":{
       "type":"swapping",
       "options":{
-         "partner_address":[
-            1,
-            3
-         ],
-         "qnic_type":[
-            "QNIC_E",
-            "QNIC_R"
-         ],
-         "qnic_id":[
-            4,
-            5
-         ],
-         "remote_qnic_type":[
-           "QNIC_R",
-           "QNIC_E"
-         ],
-         "remote_qnic_id":[
-           3,
-           6
-         ],
-         "remote_qnic_address":[
-           11,
-           12
-         ]
+        "interface":[
+          {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 4},
+          {"partner_address": 3, "qnic_type": "QNIC_R", "qnic_id": 5}
+        ],
+        "remote_interface": [
+          {"partner_address": 1, "qnic_type": "QNIC_R", "qnic_id": 3, "qnic_address": 11},
+          {"partner_address": 3, "qnic_type": "QNIC_E", "qnic_id": 6, "qnic_address": 12}
+        ]
       }
    }
 })"_json;
@@ -212,23 +182,19 @@ TEST(ConnectionManagerRuleSetTest, waitRule) {
    "rule_id":-1,
    "next_rule_id":-1,
    "name":"wait",
-   "partners":[
-      1
-   ],
-   "qnic_type":[
-      "QNIC_E"
-   ],
-   "qnic_id":[
-      4
+   "interface":[
+     {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 4}
    ],
    "condition":{
       "clauses":[
          {
             "type":"wait",
             "options":{
-               "partner_address":1,
-               "qnic_type":"QNIC_E",
-               "qnic_id":4
+              "interface":{
+                "partner_address":1,
+                "qnic_type":"QNIC_E",
+                "qnic_id":4
+              }
             }
          }
       ]
@@ -236,15 +202,9 @@ TEST(ConnectionManagerRuleSetTest, waitRule) {
    "action":{
       "type":"wait",
       "options":{
-         "partner_address":[
-            1
-         ],
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "qnic_id":[
-            4
-         ]
+        "interface":[
+          {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 4}
+        ]
       }
    }
 })"_json;
@@ -269,50 +229,52 @@ TEST(ConnectionManagerRuleSetTest, tomographyRule) {
 
   auto serialized = tomography_rule->serialize_json();
   //  rule_id is given by RuleSet and next_rule_id is given outside of Rule decration.
-  json expected = R"({
-   "rule_id":-1,
-   "next_rule_id":-1,
-   "name":"tomography",
-   "partners":[
-      1
-   ],
-   "qnic_type":[
-      "QNIC_E"
-   ],
-   "qnic_id":[
-      4
-   ],
-   "condition":{
-      "clauses":[
-         {
-            "type":"enough_resource",
-            "options":{
-               "num_resource":1,
-               "required_fidelity":0.0,
-               "partner_address":1,
-               "qnic_type":"QNIC_E",
-               "qnic_id":4
-            }
-         }
-      ]
-   },
-   "action":{
-      "type":"tomography",
-      "options":{
-         "num_measure":5000,
-         "owner_address": 2,
-         "partner_address":[
-            1
-         ],
-         "qnic_type":[
-            "QNIC_E"
-         ],
-         "qnic_id":[
-            4
-         ]
-      }
-   }
-})"_json;
+  json expected = R"( {
+ 	"action": {
+ 		"options": {
+ 			"interface": [{
+ 				"partner_address": 1,
+ 				"qnic_id": 4,
+ 				"qnic_type": "QNIC_E"
+ 			}],
+ 			"num_measure": 5000,
+ 			"owner_address": 2
+ 		},
+ 		"type": "tomography"
+ 	},
+ 	"condition": {
+ 		"clauses": [{
+ 			"options": {
+ 				"interface": {
+ 					"partner_address": 1,
+ 					"qnic_id": 4,
+ 					"qnic_type": "QNIC_E"
+ 				},
+ 				"num_resource": 1,
+ 				"required_fidelity": 0.0
+ 			},
+ 			"type": "enough_resource"
+ 		}, {
+ 			"options": {
+ 				"interface": {
+ 					"partner_address": 1,
+ 					"qnic_id": 4,
+ 					"qnic_type": "QNIC_E"
+ 				},
+ 				"num_measure": 5000
+ 			},
+ 			"type": "measure_count"
+ 		}]
+ 	},
+ 	"interface": [{
+ 		"partner_address": 1,
+ 		"qnic_id": 4,
+ 		"qnic_type": "QNIC_E"
+ 	}],
+ 	"name": "tomography",
+ 	"next_rule_id": -1,
+ 	"rule_id": -1
+ })"_json;
   EXPECT_EQ(serialized, expected);
 }
 

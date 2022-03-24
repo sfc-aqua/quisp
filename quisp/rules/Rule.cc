@@ -6,10 +6,16 @@
 namespace quisp::rules {
 
 Rule::Rule(int partner_address, QNIC_type qnic_type, int qnic_id, bool is_finalized) : is_finalized(is_finalized) {
-  partners.push_back(partner_address);
-  qnic_types.push_back(qnic_type);
-  qnic_ids.push_back(qnic_id);
+  QnicInterface interface{partner_address, qnic_type, qnic_id};
+  qnic_interfaces.push_back(interface);
 };
+
+Rule::Rule(std::vector<int> partner_address, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id, bool is_finalized) : is_finalized(is_finalized) {
+  for (int i = 0; i < partner_address.size(); i++) {
+    QnicInterface interface{partner_address.at(i), qnic_type.at(i), qnic_id.at(i)};
+    qnic_interfaces.push_back(interface);
+  }
+}
 
 void Rule::setCondition(std::unique_ptr<Condition> cond) { condition = std::move(cond); }
 
@@ -28,9 +34,7 @@ json Rule::serialize_json() {
   rule_json["rule_id"] = rule_id;
   rule_json["next_rule_id"] = to;
   rule_json["name"] = name;
-  rule_json["partners"] = partners;
-  rule_json["qnic_type"] = qnic_types;
-  rule_json["qnic_id"] = qnic_ids;
+  rule_json["interface"] = qnic_interfaces;
   if (condition != nullptr) {
     rule_json["condition"] = condition->serialize_json();
   }
@@ -45,9 +49,13 @@ void Rule::deserialize_json(json serialized) {
   serialized["rule_id"].get_to(rule_id);
   serialized["next_rule_id"].get_to(to);
   serialized["name"].get_to(name);
-  serialized.at("partners").get_to(partners);
-  serialized["qnic_type"].get_to(qnic_types);
-  serialized["qnic_id"].get_to(qnic_ids);
+  // qnic_interfaces = serialized["interface"].get<std::vector<QnicInterface>>();
+  serialized["interface"].get_to(qnic_interfaces);
+  // for (auto interface: serialized["interface"]){
+  //   QnicInterface q_interface{interface["partner_address"], interface["qnic_type"], interface["qnic_id"]};
+  //   qnic_interfaces.push_back(q_interface);
+  // }
+  // serialized["interface"].get_to(qnic_interfaces);
 
   // deserialize actions
   if (serialized["action"] != nullptr) {  // action found

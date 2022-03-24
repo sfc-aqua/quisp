@@ -149,135 +149,155 @@ TEST(RuleEngineTest, activeRuleSetConstructionFromJson) {
   rule_engine->callInitialize();
 
   auto serialized_ruleset = R"({
-      "ruleset_id": 1234,
-      "num_rules": 4,
-      "owner_address": 2,
-      "rules": [{
-        "name": "purification",
-        "next_rule_id": 1,
-        "partners": [3],
-        "rule_id": 0,
-        "qnic_type": ["QNIC_E"],
-        "qnic_id": [11],
-        "action": {
-          "type": "purification",
-          "options": {
-            "partner_address": [3],
-            "purification_type": "SINGLE_X",
-            "qnic_id": [11],
-            "qnic_type": ["QNIC_E"]
-            }
-          },
-          "condition": {
-            "clauses": [{
-              "type": "enough_resource",
-              "options": {
-                "num_resource": 2,
-                "partner_address": 3,
-                "qnic_id": 11,
-                "qnic_type": "QNIC_E",
-                "required_fidelity": 0.0
-                }
-              }]
-            }
-          },
-        {
-          "name": "wait",
-          "next_rule_id": 2,
-          "partners": [3],
-          "rule_id": 1,
-          "qnic_type": ["QNIC_E"],
-          "qnic_id": [11],
-          "action": {
-            "type": "wait",
-            "options": {
-              "partner_address": [3],
-              "qnic_id": [11],
-              "qnic_type": ["QNIC_E"]
-            }
-          },
-          "condition": {
-            "clauses": [{
-              "type": "wait",
-              "options": {
-                "partner_address": 3,
-                "qnic_id": 11,
-                "qnic_type": "QNIC_E"
-                }
-              }]
-            }
-          },
-        {
-          "name": "purification",
-          "next_rule_id": 3,
-          "partners": [5],
-          "rule_id": 2,
-          "qnic_id": [11],
-          "qnic_type": ["QNIC_E"],
-          "action": {
-            "type": "purification",
-            "options": {
-              "partner_address": [5],
-              "purification_type": "SINGLE_X",
-              "qnic_id": [11],
-              "qnic_type": ["QNIC_E"]
-            }
-          },
-          "condition": {
-            "clauses": [{
-              "type": "enough_resource",
-              "options": {
-                "num_resource": 2,
-                "partner_address": 5,
-                "qnic_id": 11,
-                "qnic_type": "QNIC_E",
-                "required_fidelity": 0.0
-                }
-              }]
-            }
-          },
-        {
-          "name": "tomography",
-          "next_rule_id": -1,
-          "partners": [5],
-          "rule_id": 3,
-          "qnic_type": ["QNIC_E"],
-          "qnic_id": [11],
-          "action": {
-            "type": "tomography",
-            "options": {
-              "num_measure": 0,
-              "owner_address": 2,
-              "partner_address": [5],
-              "qnic_id": [11],
-              "qnic_type": ["QNIC_E"]
-              }
-            },
-            "condition": {
-              "clauses": [
-                {
-                  "type": "measure_count",
-                  "options": {
-                    "num_measure": 100,
-                    "partner_address": 5,
-                    "qnic_id": 11,
-                    "qnic_type": "QNIC_E"
-                  }
-                },
-                {
-                "type": "enough_resource",
-                "options": {
-                  "num_resource": 1,
-                  "partner_address": 5,
-                  "qnic_id": 11,
-                  "qnic_type": "QNIC_E",
-                  "required_fidelity": 0.0
-                  }
-                }
-              ]
-              }
-            }]
-          })"_json;
+	"num_rules": 4,
+	"owner_address": 2,
+	"rules": [{
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 3,
+					"qnic_id": 11,
+					"qnic_type": "QNIC_E"
+				}],
+				"purification_type": "SINGLE_X"
+			},
+			"type": "purification"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 3,
+						"qnic_id": 11,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 2,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}]
+		},
+		"interface": [{
+			"partner_address": 3,
+			"qnic_id": 11,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "purification",
+		"next_rule_id": 1,
+		"rule_id": 0
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 3,
+					"qnic_id": 11,
+					"qnic_type": "QNIC_E"
+				}]
+			},
+			"type": "wait"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 3,
+						"qnic_id": 11,
+						"qnic_type": "QNIC_E"
+					}
+				},
+				"type": "wait"
+			}]
+		},
+		"interface": [{
+			"partner_address": 3,
+			"qnic_id": 11,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "wait",
+		"next_rule_id": 2,
+		"rule_id": 1
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 5,
+					"qnic_id": 11,
+					"qnic_type": "QNIC_E"
+				}],
+				"purification_type": "SINGLE_X"
+			},
+			"type": "purification"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 5,
+						"qnic_id": 11,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 2,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}]
+		},
+		"interface": [{
+			"partner_address": 5,
+			"qnic_id": 11,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "purification",
+		"next_rule_id": 3,
+		"rule_id": 2
+	}, {
+		"action": {
+			"options": {
+				"interface": [{
+					"partner_address": 5,
+					"qnic_id": 11,
+					"qnic_type": "QNIC_E"
+				}],
+				"num_measure": 0,
+				"owner_address": 2
+			},
+			"type": "tomography"
+		},
+		"condition": {
+			"clauses": [{
+				"options": {
+					"interface": {
+						"partner_address": 5,
+						"qnic_id": 11,
+						"qnic_type": "QNIC_E"
+					},
+					"num_resource": 1,
+					"required_fidelity": 0.0
+				},
+				"type": "enough_resource"
+			}, {
+				"options": {
+					"interface": {
+						"partner_address": 5,
+						"qnic_id": 11,
+						"qnic_type": "QNIC_E"
+					},
+					"num_measure": 100
+				},
+				"type": "measure_count"
+			}]
+		},
+		"interface": [{
+			"partner_address": 5,
+			"qnic_id": 11,
+			"qnic_type": "QNIC_E"
+		}],
+		"name": "tomography",
+		"next_rule_id": -1,
+		"rule_id": 3
+	}],
+	"ruleset_id": 1234
+})"_json;
 
   RuleSet deserialized_ruleset;
   deserialized_ruleset.deserialize_json(serialized_ruleset);
@@ -392,11 +412,11 @@ TEST(RuleEngineTest, activeRuleSetConstructionFromJson) {
     EXPECT_EQ(access_private::max_count(*action), 0);
 
     ASSERT_EQ(rule->condition->clauses.size(), 2);
-    auto* measure_count_clause = dynamic_cast<MeasureCountClause*>(rule->condition.get()->clauses.at(0));
+    auto* measure_count_clause = dynamic_cast<MeasureCountClause*>(rule->condition.get()->clauses.at(1));
     ASSERT_NE(measure_count_clause, nullptr);
     EXPECT_EQ(measure_count_clause->max_count, 100);
     EXPECT_EQ(measure_count_clause->current_count, 0);
-    auto* enough_resource_clause = dynamic_cast<EnoughResourceClause*>(rule->condition.get()->clauses.at(1));
+    auto* enough_resource_clause = dynamic_cast<EnoughResourceClause*>(rule->condition.get()->clauses.at(0));
     ASSERT_NE(enough_resource_clause, nullptr);
     EXPECT_EQ(access_private::partner(*enough_resource_clause), 5);
     EXPECT_EQ(access_private::num_resource_required(*enough_resource_clause), 1);

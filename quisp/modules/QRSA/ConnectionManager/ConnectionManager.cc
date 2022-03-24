@@ -467,20 +467,26 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     for (int i = 0; i < rules.size(); i++) {
       auto rule = std::move(rules.at(i));
       auto appended_rule = ruleset.addRule(std::move(rule));
-      auto target_qnic_type = appended_rule->qnic_types;
-      auto target_qnic_id = appended_rule->qnic_ids;
       if (appended_rule->is_finalized) {
         // if the rule is entanglement swapping or tomography rule, no need to specify the next rule
         break;
       }
+      // so far, we assume if an action has two partners, it means entanglement swapping. And it's finalized here.
+      auto qnic_interface = appended_rule->qnic_interfaces;
+      // purification, wait, have only one partner
+      auto target_qnic_type = qnic_interface.at(0).qnic_type;
+      auto target_qnic_id = qnic_interface.at(0).qnic_id;
+
       // 3.2 find next rule (if the qnic type and qnic id is the same, promote entanglement if the rule is not ES)
       for (int j = i + 1; j < rules.size(); j++) {  // start from the next rule
-        auto next_qnic_type = rules.at(j)->qnic_types;
-        auto next_qnic_id = rules.at(j)->qnic_ids;
-        auto qnic_type_it = std::find(next_qnic_type.begin(), next_qnic_type.end(), target_qnic_type.at(0));
-        auto qnic_id_it = std::find(next_qnic_id.begin(), next_qnic_id.end(), target_qnic_id.at(0));
-        if (qnic_type_it != next_qnic_type.end() && qnic_id_it != next_qnic_id.end()) {
-          appended_rule->setNextRule(j);  // rule id is sequencial
+        auto next_qnic_interface = rules.at(j)->qnic_interfaces;
+        for (auto interface : next_qnic_interface) {
+          if (interface.qnic_type == target_qnic_type && interface.qnic_id == target_qnic_id) {
+            appended_rule->setNextRule(j);
+            break;
+          }
+        }
+        if (appended_rule->to != -1) {
           break;
         }
       }
@@ -893,7 +899,9 @@ std::unique_ptr<Rule> ConnectionManager::tomographyRule(int partner_address, int
   // prepare condition
   auto condition = std::make_unique<Condition>();
   auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address, qnic_type, qnic_id);
+  auto measure_count_clause = std::make_unique<MeasureCountConditionClause>(num_measure, partner_address, qnic_type, qnic_id);
   condition->addClause(std::move(enough_resource_clause));
+  condition->addClause(std::move(measure_count_clause));
   tomography_rule->setCondition(std::move(condition));
 
   // prepare action
