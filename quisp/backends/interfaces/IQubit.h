@@ -52,6 +52,15 @@ class IQubit {
   virtual EigenvalueResult localMeasureX() { throw std::runtime_error("localMeasureX not implemented"); }
   virtual EigenvalueResult localMeasureZ() { throw std::runtime_error("localMeasureZ not implemented"); }
   virtual MeasurementOutcome measureDensityIndependent() { throw std::runtime_error("measureDensityIndependent not implemented"); }
+
+  // for debugging
+  virtual void assertEntangledPartnerValid() { throw std::runtime_error("assertEntangledPartnerValid not implemented"); };
+
+  // deprecated (ErrorTraciking Qubit specific)
+  virtual void addErrorX() { throw std::runtime_error("addErrorX is not implemented. will be revomed"); }
+  virtual void addErrorZ() { throw std::runtime_error("addErrorZ is not implemented. will be revomed"); }
+  virtual void setCompletelyMixedDensityMatrix() { throw std::runtime_error("setCompletelyMixedDensityMatrix is not implemented. will be revomed"); }
+  virtual void setEntangledPartner(IQubit * const partner) {throw std::runtime_error("setEntangledPartner is not implemented. will be revomed"); }
 };
 
 }  // namespace quisp::backends::abstract
