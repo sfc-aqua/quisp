@@ -43,7 +43,6 @@ StationaryQubit::StationaryQubit() : provider(utils::ComponentProvider{this}) {}
 void StationaryQubit::initialize() {
   // read and set parameters
   emission_success_probability = par("emission_success_probability");
-  Memory_Transition_matrix = MatrixXd::Zero(7, 7);
 
   // Get parameters from omnet
   stationaryQubit_address = par("stationaryQubit_address");
@@ -122,50 +121,44 @@ void StationaryQubit::setBusy() {
 // This is called at the beginning of the simulation (in initialization() above), and whenever it is reinitialized via the RealTimeController.
 void StationaryQubit::setFree(bool consumed) {
   qubit_ref->setFree();
-  /********************************/
-  num_purified = 0;
+  is_busy = false;
   locked = false;
   locked_ruleset_id = -1;
   locked_rule_id = -1;
   action_index = -1;
-
-  is_busy = false;
   emitted_time = -1;
   updated_time = simTime();
 
-  partner_measured = false;
-  completely_mixed = false;
-  excited_or_relaxed = false;
-  GOD_dm_Zerror = false;
-  GOD_dm_Xerror = false;
-  Density_Matrix_Collapsed << -111, -111, -111, -111;
-  no_density_matrix_nullptr_entangled_partner_ok = false;
-  par("photon_emitted_at") = emitted_time.dbl();
-  par("last_updated_at") = updated_time.dbl();
-  par("GOD_Xerror") = false;
-  par("GOD_Zerror") = false;
-  par("GOD_CMerror") = false;
-  par("GOD_EXerror") = false;
-  par("GOD_REerror") = false;
-  par("GOD_CMerror") = false;
-  par("isBusy") = false;
-  par("GOD_entangled_stationaryQubit_address") = -1;
-  par("GOD_entangled_node_address") = -1;
-  par("GOD_entangled_qnic_address") = -1;
-  par("GOD_entangled_qnic_type") = -1;
-  entangled_partner = nullptr;
-  EV_DEBUG << "Freeing this qubit!!!" << this << " at qnode: " << node_address << " qnic_type: " << qnic_type << " qnic_index: " << qnic_index << "\n";
-  // GUI part
-  if (hasGUI()) {
-    if (consumed) {
-      bubble("Consumed!");
-      getDisplayString().setTagArg("i", 1, "yellow");
-    } else {
-      bubble("Failed to entangle!");
-      getDisplayString().setTagArg("i", 1, "blue");
+  /*
+
+
+
+
+    par("photon_emitted_at") = emitted_time.dbl();
+    par("last_updated_at") = updated_time.dbl();
+    par("GOD_Xerror") = false;
+    par("GOD_Zerror") = false;
+    par("GOD_CMerror") = false;
+    par("GOD_EXerror") = false;
+    par("GOD_REerror") = false;
+    par("GOD_CMerror") = false;
+    par("isBusy") = false;
+    EV_DEBUG << "Freeing this qubit!!!" << this << " at qnode: " << node_address << " qnic_type: " << qnic_type << " qnic_index: " << qnic_index << "\n";
+    // GUI part
+    if (hasGUI()) {
+      if (consumed) {
+        bubble("Consumed!");
+        getDisplayString().setTagArg("i", 1, "yellow");
+      } else {
+        bubble("Failed to entangle!");
+        getDisplayString().setTagArg("i", 1, "blue");
+      }
     }
-  }
+    */
 }
+
+backends::IQubit StationaryQubit::*getEntangledPartner() { return qubit_ref->entangled_partner; }
+void StationaryQubit::assertEntangledPartnerValid() { qubit_ref->assertEntangledPartnerValid(); }
 
 /*To avoid disturbing this qubit.*/
 void StationaryQubit::Lock(unsigned long rs_id, unsigned long rule_id, int action_id) {
@@ -243,66 +236,25 @@ void StationaryQubit::emitPhoton(int pulse) {
 }
 
 // This gets direcltly invoked when darkcount happened in BellStateAnalyzer.cc.
-void StationaryQubit::setCompletelyMixedDensityMatrix() {
-  this->Density_Matrix_Collapsed << (double)1 / (double)2, 0, 0, (double)1 / (double)2;
-  // std::cout<<"Dm completely mixed "<<this->Density_Matrix_Collapsed<<"\n";
-  this->completely_mixed = true;
-  this->excited_or_relaxed = false;
-
-  if (this->entangled_partner != nullptr) {  // Eliminate entangled information
-    this->entangled_partner->entangled_partner = nullptr;
-    this->entangled_partner = nullptr;
-  }
-  this->par("GOD_CMerror") = true;
-  this->par("GOD_EXerror") = false;
-  this->par("GOD_REerror") = false;
-  this->par("GOD_Xerror") = false;
-  this->par("GOD_Zerror") = false;
-  this->GOD_dm_Xerror = false;
-  this->GOD_dm_Zerror = false;
-  if (hasGUI()) {
-    bubble("Completely mixed. darkcount");
-    getDisplayString().setTagArg("i", 1, "black");
-  }
-}
+[[deprecated]] void StationaryQubit::setCompletelyMixedDensityMatrix() { qubit_ref->setCompletelyMixedDensityMatrix(); }
 
 void StationaryQubit::setEntangledPartnerInfo(IStationaryQubit *partner) {
   // When BSA succeeds, this method gets invoked to store entangled partner information.
   // This will also be sent classically to the partner node afterwards.
   entangled_partner = partner;
-  par("GOD_entangled_stationaryQubit_address") = partner->par("stationaryQubit_address");
-  par("GOD_entangled_node_address") = partner->par("node_address");
-  par("GOD_entangled_qnic_address") = partner->par("qnic_address");
-  par("GOD_entangled_qnic_type") = partner->par("qnic_type");
+  qubit_ref->setEntangledPartner(partner->getQubitRef());
 }
 
 /* Add another X error. If an X error already exists, then they cancel out */
-void StationaryQubit::addXerror() { this->par("GOD_Xerror") = !this->par("GOD_Xerror"); }
+[[deprecated]] void StationaryQubit::addXerror() { qubit_ref->addErrorX(); }
 
 /* Add another Z error. If an Z error already exists, then they cancel out */
-void StationaryQubit::addZerror() { this->par("GOD_Zerror") = !this->par("GOD_Zerror"); }
+[[deprecated]] void StationaryQubit::addZerror() { qubit_ref->addErrorZ(); }
 
 // Only tracks error propagation. If two booleans (Alice and Bob) agree (truetrue or falsefalse), keep the purified ebit.
-bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
-    if (qubit_ref == nullptr) throw std::runtime_error("qubit_ref nullptr error");
-
-  return qubit_ref->purifyX(check_and_cast<StationaryQubit *>(resource_qubit)->qubit_ref); }
+bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) { return qubit_ref->purifyX(check_and_cast<StationaryQubit *>(resource_qubit)->qubit_ref); }
 
 bool StationaryQubit::Zpurify(IStationaryQubit *resource_qubit /*Target*/) { return qubit_ref->purifyZ(check_and_cast<StationaryQubit *>(resource_qubit)->qubit_ref); }
-
-Matrix2cd StationaryQubit::getErrorMatrix(StationaryQubit *qubit) {
-  if (qubit->par("GOD_CMerror") || qubit->par("GOD_REerror") || qubit->par("GOD_REerror")) {
-    error("CMerror in getErrorMatrix. Not supposed to happen.");
-  }
-
-  auto has_z_err = qubit->par("GOD_Zerror").boolValue();
-  auto has_x_err = qubit->par("GOD_Xerror").boolValue();
-
-  if (has_z_err && has_x_err) return Pauli.Y;
-  if (has_z_err) return Pauli.Z;
-  if (has_x_err) return Pauli.X;
-  return Pauli.I;
-}
 
 MeasurementOutcome StationaryQubit::measure_density_independent() { return qubit_ref->measureDensityIndependent(); }
 

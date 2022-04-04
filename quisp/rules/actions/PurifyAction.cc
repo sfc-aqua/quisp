@@ -23,7 +23,7 @@ cPacket *PurifyAction::run(cModule *re) {
   auto *trash_qubit = getResource(trash_resource, partner);
 
   if (qubit == trash_qubit) {
-    return generateError("Qubit and Trash_qubit must be different.");
+    return generateError("PurifyAction: Qubit and Trash_qubit must be different.");
   }
   if (qubit == nullptr || trash_qubit == nullptr) {
     return generateError("Not enough resource (Qubit and Trash_qubit) found. This should have been checked as a condition clause.");
@@ -37,11 +37,6 @@ cPacket *PurifyAction::run(cModule *re) {
   }
 
   qubit->Lock(ruleset_id, rule_id, action_index);
-
-  if (trash_qubit->entangled_partner != nullptr) {
-    trash_qubit->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
-    trash_qubit->entangled_partner->entangled_partner = nullptr;
-  }
 
   removeResource_fromRule(trash_qubit);
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);

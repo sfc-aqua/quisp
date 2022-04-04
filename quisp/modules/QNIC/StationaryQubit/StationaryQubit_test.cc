@@ -22,8 +22,6 @@ class Strategy : public TestComponentProviderStrategy {
 
 class StatQubitTarget : public StationaryQubit {
  public:
-  using StationaryQubit::getErrorMatrix;
-  using StationaryQubit::getQuantumState;
   using StationaryQubit::initialize;
   using StationaryQubit::par;
   StatQubitTarget() : StationaryQubit() {

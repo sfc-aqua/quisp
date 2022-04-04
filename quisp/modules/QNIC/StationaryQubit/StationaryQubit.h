@@ -7,14 +7,14 @@
 #pragma once
 
 #include <PhotonicQubit_m.h>
+#include <backends/Backends.h>
 #include <modules/common_types.h>
 #include <utils/ComponentProvider.h>
 #include <string>
 #include "IStationaryQubit.h"
 #include "QubitId.h"
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
 #define STATIONARYQUBIT_PULSE_BEGIN 0x01
 #define STATIONARYQUBIT_PULSE_END 0x02
@@ -140,16 +140,12 @@ class StationaryQubit : public IStationaryQubit {
   void setExcitedDensityMatrix();
   void addXerror();
   void addZerror();
+  backends::IQubit *getEntangledPartner() override;
+
+  // for debugging
+  void assertEntangledPartnerValid() override;
 
   double emission_success_probability;
-
-  memory_error_model memory_err;
-
-  single_qubit_error Pauli;
-  measurement_operators meas_op;
-  // https://arxiv.org/abs/1908.10758 Eq 5.2
-  Eigen::MatrixXd Memory_Transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
-  int num_purified;
 
   bool locked;
   unsigned long locked_ruleset_id;
@@ -161,11 +157,8 @@ class StationaryQubit : public IStationaryQubit {
   void handleMessage(omnetpp::cMessage *msg) override;
   messages::PhotonicQubit *generateEntangledPhoton();
   void setBusy();
-  // returns the matrix that represents the errors on the Bell pair. (e.g. XY, XZ and ZI...)
   Eigen::Matrix2cd getErrorMatrix(StationaryQubit *qubit);
   // returns the dm of the physical Bell pair. Used for tomography.
-  quantum_state getQuantumState();
-  measurement_operator Random_Measurement_Basis_Selection();
   void setMeasurementErrorModel(MeasurementErrorModel &model);
 
   // this is for debugging. class internal use only.
@@ -174,5 +167,4 @@ class StationaryQubit : public IStationaryQubit {
   utils::ComponentProvider provider;
 };
 
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules

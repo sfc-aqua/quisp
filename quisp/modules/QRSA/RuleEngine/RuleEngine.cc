@@ -880,14 +880,7 @@ void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_resul
     error("qubit is locked");
   }
   bell_pair_store.insertEntangledQubit(new_partner, qubit_record);
-  if (qubit->entangled_partner != nullptr) {
-    if (qubit->entangled_partner->entangled_partner == nullptr) {
-      error("1. Entanglement tracking is not doing its job. in update resource E.S.");
-    }
-    if (qubit->entangled_partner->entangled_partner != qubit) {
-      error("2. Entanglement tracking is not doing its job. in update resource E.S.");
-    }
-  }
+  qubit->assertEntangledPartnerValid();
   ResourceAllocation(qnic_type, qnic_index);
   traverseThroughAllProcesses2();  // New resource added to QNIC with qnic_type qnic_index.
 }
@@ -933,25 +926,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
       // Keep the entangled qubits
       auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, it->second.qubit_index);
       IStationaryQubit *qubit = provider.getStationaryQubit(qubit_record);
-
-      // if the partner is null, not correct
-      if (qubit->entangled_partner != nullptr) {
-        if (qubit->entangled_partner->entangled_partner == nullptr) {
-          // my instance is null (no way)
-          error("1. Entanglement tracking is not doing its job.");
-        }
-        if (qubit->entangled_partner->entangled_partner != qubit) {
-          // partner's qubit doesn't point this qubit -> wrong
-          error("2. Entanglement tracking is not doing its job.");
-        }
-      }
-
-      if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
-        EV << "entangle partner null?" << qubit->entangled_partner << " == nullptr?\n";
-        EV << "density matrix collapsed?" << qubit->Density_Matrix_Collapsed(0, 0).real() << "==-111?\n";
-        EV << "here should be true" << qubit->no_density_matrix_nullptr_entangled_partner_ok << "\n";
-        error("RuleEngine. Ebit succeed. but wrong");
-      }
+      qubit->assertEntangledPartnerValid();
       // Add qubit as available resource between NeighborQNodeAddress.
       bell_pair_store.insertEntangledQubit(neighborQNodeAddress, qubit_record);
     }
@@ -1022,9 +997,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
           // 3. if the qubit is not allocated yet, and the qubit has not been allocated to this rule,
           // if the qubit has already been assigned to the rule, the qubit is not allocatable to that rule
           if (!qubit_record->isAllocated() && !qubit_record->isRuleApplied((*rule)->rule_id)) {
-            if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
-              error("Freshing qubit wrong");
-            }
+            qubit->assertEntangledPartnerValid();
             // 5. increment the assined counter and set allocated flag
             assigned++;
             qubit_record->setAllocated(true);

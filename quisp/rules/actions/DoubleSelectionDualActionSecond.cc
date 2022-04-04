@@ -36,20 +36,6 @@ cPacket *DoubleSelectionDualActionSecond::run(cModule *re) {
 
   qubit->Lock(ruleset_id, rule_id, action_index);
 
-  // Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density matrix since we are only tracking errors.
-  if (trash_qubit_Z->entangled_partner != nullptr) {
-    trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
-    trash_qubit_Z->entangled_partner->entangled_partner = nullptr;
-  }
-  if (trash_qubit_X->entangled_partner != nullptr) {
-    trash_qubit_X->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
-    trash_qubit_X->entangled_partner->entangled_partner = nullptr;
-  }
-  if (ds_trash_qubit_X->entangled_partner != nullptr) {
-    ds_trash_qubit_X->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
-
-    ds_trash_qubit_X->entangled_partner->entangled_partner = nullptr;
-  }
   // Delete measured resource from the tracked list of resources.
   removeResource_fromRule(trash_qubit_X);
   removeResource_fromRule(trash_qubit_Z);
@@ -107,20 +93,6 @@ cPacket *DoubleSelectionDualActionSecondInv::run(cModule *re) {
 
   qubit->Lock(ruleset_id, rule_id, action_index);
 
-  // Trash qubit has been measured. Now, break the entanglement info of the partner. There is no need to overwrite its density matrix since we are only tracking errors.
-  if (trash_qubit_Z->entangled_partner != nullptr) {
-    trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
-    trash_qubit_Z->entangled_partner->entangled_partner = nullptr;
-  }
-  if (trash_qubit_X->entangled_partner != nullptr) {
-    trash_qubit_X->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
-    trash_qubit_X->entangled_partner->entangled_partner = nullptr;
-  }
-
-  if (ds_trash_qubit_Z->entangled_partner != nullptr) {
-    ds_trash_qubit_Z->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
-    ds_trash_qubit_Z->entangled_partner->entangled_partner = nullptr;
-  }
   // Delete measured resource from the tracked list of resources.
   removeResource_fromRule(trash_qubit_X);
   removeResource_fromRule(trash_qubit_Z);
