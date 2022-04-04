@@ -58,52 +58,6 @@ struct emission_error_model {
   double Loss_error_ceil;
 };
 
-struct SingleGateErrorModel {
-  double pauli_error_rate;  // Overall error rate
-  double Z_error_rate;
-  double X_error_rate;
-  double Y_error_rate;
-
-  double No_error_ceil;
-  double Z_error_ceil;
-  double X_error_ceil;
-  double Y_error_ceil;
-};
-
-struct TwoQubitGateErrorModel {
-  double pauli_error_rate;  // Overall error rate
-  double IZ_error_rate;
-  double ZI_error_rate;
-  double ZZ_error_rate;
-  double IY_error_rate;
-  double YI_error_rate;
-  double YY_error_rate;
-  double IX_error_rate;
-  double XI_error_rate;
-  double XX_error_rate;
-
-  double No_error_ceil;
-  double IZ_error_ceil;
-  double ZI_error_ceil;
-  double ZZ_error_ceil;
-  double IY_error_ceil;
-  double YI_error_ceil;
-  double YY_error_ceil;
-  double IX_error_ceil;
-  double XI_error_ceil;
-  double XX_error_ceil;
-};
-
-struct memory_error_model {
-  double error_rate;  // Overall error rate
-  double Z_error_rate;
-  double X_error_rate;
-  double Y_error_rate;
-  double excitation_error_rate;
-  double relaxation_error_rate;
-  double completely_mixed_rate;
-};
-
 struct MeasurementErrorModel {
   double x_error_rate;
   double y_error_rate;
@@ -124,41 +78,6 @@ struct single_qubit_error {
   Eigen::Matrix2cd Y;  // complex double 2*2 matrix
   Eigen::Matrix2cd Z;
   Eigen::Matrix2cd I;
-};
-
-struct quantum_state {
-  Eigen::Matrix4cd state_in_density_matrix;
-  Eigen::Vector4cd state_in_ket;
-};
-
-struct measurement_output_probabilities {
-  double probability_plus_plus;  // P(+,+)
-  double probability_minus_plus;  // P(+,-)
-  double probability_plus_minus;  // P(-,+)
-  double probability_minus_minus;  // P(-,-)
-};
-
-struct measurement_operator {
-  Eigen::Matrix2cd plus;
-  Eigen::Matrix2cd minus;
-  Eigen::Vector2cd plus_ket;
-  Eigen::Vector2cd minus_ket;
-  char basis;
-};
-
-// Single qubit
-struct measurement_operators {
-  measurement_operator X_basis;
-  measurement_operator Y_basis;
-  measurement_operator Z_basis;
-  Eigen::Matrix2cd identity;
-};
-
-struct measurement_outcome {
-  char basis;
-  bool outcome_is_plus;
-  char GOD_clean;
-  bool operator==(const measurement_outcome &outcome) const { return basis == outcome.basis && outcome_is_plus == outcome.outcome_is_plus && GOD_clean == outcome.GOD_clean; }
 };
 
 class IStationaryQubit : public omnetpp::cSimpleModule {
@@ -216,8 +135,8 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   /*GOD parameters*/
   // SwappingAction
   virtual void setEntangledPartnerInfo(IStationaryQubit *partner) = 0;
-
-  int stationary_qubit_address;
+  virtual backends::IQubit *getEntangledPartner() = 0;
+  int stationaryQubit_address;
   int node_address;
   int qnic_address;
   int qnic_type;
@@ -230,8 +149,8 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   int action_index;
   bool no_density_matrix_nullptr_entangled_partner_ok;
 
-  /** Pointer to the entangled qubit*/
-  IStationaryQubit *entangled_partner = nullptr;
+  virtual void assertEntangledPartnerValid() = 0;
+
   /** Photon emitted at*/
   omnetpp::simtime_t emitted_time = -1;
   // internal
@@ -248,11 +167,6 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   MeasurementErrorModel Measurement_error;
 
   Eigen::Matrix2cd Density_Matrix_Collapsed;  // Used when partner has been measured.
-  bool partner_measured;
-  bool completely_mixed;
-  bool excited_or_relaxed;
-  bool GOD_dm_Xerror;
-  bool GOD_dm_Zerror;
 };
 
 }  // namespace modules

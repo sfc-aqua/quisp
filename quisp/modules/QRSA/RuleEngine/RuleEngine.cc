@@ -500,25 +500,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
       // Keep the entangled qubits
       auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, it->second.qubit_index);
       IStationaryQubit *qubit = provider.getStationaryQubit(qubit_record);
-
-      // if the partner is null, not correct
-      if (qubit->entangled_partner != nullptr) {
-        if (qubit->entangled_partner->entangled_partner == nullptr) {
-          // my instance is null (no way)
-          error("1. Entanglement tracking is not doing its job.");
-        }
-        if (qubit->entangled_partner->entangled_partner != qubit) {
-          // partner's qubit doesn't point this qubit -> wrong
-          error("2. Entanglement tracking is not doing its job.");
-        }
-      }
-
-      if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
-        EV << "entangle partner null?" << qubit->entangled_partner << " == nullptr?\n";
-        EV << "density matrix collapsed?" << qubit->Density_Matrix_Collapsed(0, 0).real() << "==-111?\n";
-        EV << "here should be true" << qubit->no_density_matrix_nullptr_entangled_partner_ok << "\n";
-        error("RuleEngine. Ebit succeed. but wrong");
-      }
+      qubit->assertEntangledPartnerValid();
       // Add qubit as available resource between NeighborQNodeAddress.
       bell_pair_store.insertEntangledQubit(neighborQNodeAddress, qubit_record);
     }
