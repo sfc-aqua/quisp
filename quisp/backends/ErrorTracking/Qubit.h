@@ -51,13 +51,15 @@ class ErrorTrackingQubit : public IQubit {
   bool purifyX(IQubit* const control_qubit) override;
   bool purifyZ(IQubit* const target_qubit) override;
   MeasurementOutcome measureDensityIndependent() override;
+  void addErrorX() override;
+  void addErrorZ() override;
+  void assertEntangledPartnerValid() override;
+  void setEntangledPartner(IQubit * const partner) override;
 
  protected:
   void applySingleQubitGateError(SingleGateErrorModel const& err);
   void applyTwoQubitGateError(TwoQubitGateErrorModel const& err, ErrorTrackingQubit* another_qubit);
   void applyMemoryError();
-  void addErrorX();
-  void addErrorZ();
   void setRelaxedDensityMatrix();
   void setExcitedDensityMatrix();
   void setCompletelyMixedDensityMatrix();

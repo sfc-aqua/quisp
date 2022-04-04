@@ -247,6 +247,13 @@ void ErrorTrackingQubit::setFree() {
   has_relaxation_error = false;
   has_excitation_error = false;
   has_completely_mixed_error = false;
+
+  density_matrix_collapsed << -111, -111, -111, -111;
+  no_density_matrix_nullptr_entangled_partner_ok = false;
+  if (entangled_partner != nullptr) {
+    // entangled_partner->entangled_partner = nullptr;
+    entangled_partner = nullptr;
+  }
 }
 void ErrorTrackingQubit::setRelaxedDensityMatrix() {
   density_matrix_collapsed << 0, 0, 0, 1;
@@ -399,7 +406,15 @@ bool ErrorTrackingQubit::purifyX(IQubit* const control_qubit) {
   applyMemoryError();
   et_control_qubit->applyMemoryError();
   gateCNOT(control_qubit);
-  return correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
+  auto result = correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
+
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (entangled_partner != nullptr) {
+    entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
+    entangled_partner->entangled_partner = nullptr;
+  }
+  return result;
 }
 
 bool ErrorTrackingQubit::purifyZ(IQubit* const target_qubit) {
@@ -411,7 +426,16 @@ bool ErrorTrackingQubit::purifyZ(IQubit* const target_qubit) {
   et_target_qubit->applyMemoryError();
   et_target_qubit->gateCNOT(this);
   gateH();
-  return this->correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
+  auto result = correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
+
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (entangled_partner != nullptr) {
+    entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
+    entangled_partner->entangled_partner = nullptr;
+  }
+
+  return result;
 }
 
 Matrix2cd ErrorTrackingQubit::getErrorMatrix() {
@@ -495,7 +519,7 @@ MeasurementOutcome ErrorTrackingQubit::measureDensityIndependent() {
   }
 
   // if the partner qubit is measured,
-  if (this->partner_measured ||  has_completely_mixed_error || has_excitation_error ||
+  if (this->partner_measured || has_completely_mixed_error || has_excitation_error ||
       has_relaxation_error) {  // The case when the density matrix is completely local to this qubit.
 
     if (density_matrix_collapsed(0, 0).real() == -111) {  // We always need some kind of density matrix inside this if statement.
@@ -623,6 +647,26 @@ MeasurementOperator ErrorTrackingQubit::randomMeasurementBasisSelection() {
   }
   return this_measurement;
 }
+
+void ErrorTrackingQubit::assertEntangledPartnerValid() {
+  if (entangled_partner == nullptr && density_matrix_collapsed(0, 0).real() == -111 && !no_density_matrix_nullptr_entangled_partner_ok) {
+    throw std::runtime_error("ErrorTrackingQubit::assertEntangledPartnerValid: something went wrong");
+  }
+  if (entangled_partner != nullptr) {
+    if (entangled_partner->entangled_partner == nullptr) {
+      throw std::runtime_error("ErrorTrackingQubit::assertEntangledPartnerValid: 1. Entanglement tracking is not doing its job.");
+    }
+    if (entangled_partner->entangled_partner != this) {
+      throw std::runtime_error("ErrorTrackingQubit::assertEntangledPartnerValid: 2. Entanglement tracking is not doing its job.");
+    }
+  }
+}
+
+ void ErrorTrackingQubit::setEntangledPartner(IQubit * const partner){
+   auto *et_partner_qubit = dynamic_cast<ErrorTrackingQubit*>(partner);
+  if (et_partner_qubit == nullptr) throw std::runtime_error("ErrorTrackingQubit::setEntangledPartner: invalid qubit type passed");
+   entangled_partner = et_partner_qubit;
+ }
 
 // Set error matrices. This is used in the process of simulating tomography.
 const SingleQubitErrorModel ErrorTrackingQubit::pauli = {.X = (Matrix2cd() << 0, 1, 1, 0).finished(),
