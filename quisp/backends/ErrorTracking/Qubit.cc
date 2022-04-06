@@ -605,9 +605,9 @@ MeasurementOutcome ErrorTrackingQubit::measureDensityIndependent() {
 
   // add measurement error
   auto rand_num = backend->dblrand();
-  if (this_measurement.basis == measurement_op.x_basis.basis && rand_num < measurement_err.x_error_rate ||
-      this_measurement.basis == measurement_op.y_basis.basis && rand_num < measurement_err.y_error_rate ||
-      this_measurement.basis == measurement_op.z_basis.basis && rand_num < measurement_err.z_error_rate) {
+  if ((this_measurement.basis == measurement_op.x_basis.basis && rand_num < measurement_err.x_error_rate) ||
+      (this_measurement.basis == measurement_op.y_basis.basis && rand_num < measurement_err.y_error_rate) ||
+      (this_measurement.basis == measurement_op.z_basis.basis && rand_num < measurement_err.z_error_rate)) {
     Output_is_plus = !Output_is_plus;
   }
 
@@ -662,11 +662,15 @@ void ErrorTrackingQubit::assertEntangledPartnerValid() {
   }
 }
 
- void ErrorTrackingQubit::setEntangledPartner(IQubit * const partner){
-   auto *et_partner_qubit = dynamic_cast<ErrorTrackingQubit*>(partner);
+void ErrorTrackingQubit::setEntangledPartner(IQubit* const partner) {
+  auto* et_partner_qubit = dynamic_cast<ErrorTrackingQubit*>(partner);
   if (et_partner_qubit == nullptr) throw std::runtime_error("ErrorTrackingQubit::setEntangledPartner: invalid qubit type passed");
-   entangled_partner = et_partner_qubit;
- }
+  entangled_partner = et_partner_qubit;
+}
+
+IQubit* const ErrorTrackingQubit::getEntangledPartner() const { return entangled_partner; }
+
+const IQubitId* const ErrorTrackingQubit::getId() const { return id; }
 
 // Set error matrices. This is used in the process of simulating tomography.
 const SingleQubitErrorModel ErrorTrackingQubit::pauli = {.X = (Matrix2cd() << 0, 1, 1, 0).finished(),

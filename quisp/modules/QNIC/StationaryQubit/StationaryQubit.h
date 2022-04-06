@@ -139,7 +139,9 @@ class StationaryQubit : public IStationaryQubit {
   void setExcitedDensityMatrix();
   void addXerror();
   void addZerror();
-  backends::IQubit *getEntangledPartner() override;
+  backends::IQubit *getEntangledPartner() const override;
+  backends::IQubit *getBackendQubitRef() const override;
+  int getPartnerStationaryQubitAddress() const override;
 
   // for debugging
   void assertEntangledPartnerValid() override;

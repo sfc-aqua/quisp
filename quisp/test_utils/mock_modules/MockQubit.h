@@ -4,13 +4,17 @@
 #include <modules/QNIC/StationaryQubit/StationaryQubit.h>
 #include <test_utils/ModuleType.h>
 #include <test_utils/UtilFunctions.h>
+#include "backends/Backends.h"
 #include "modules/QNIC.h"
+#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/RuleEngine/BellPairStore/BellPairStore.h"
 
 namespace quisp_test {
 namespace mock_modules {
 namespace stationary_qubit {
 
+using quisp::backends::IQubit;
+using quisp::backends::IQubitId;
 using quisp::modules::IStationaryQubit;
 using quisp_test::utils::setParBool;
 using quisp_test::utils::setParDouble;
@@ -20,6 +24,8 @@ class MockQubit : public IStationaryQubit {
  public:
   using IStationaryQubit::initialize;
   using IStationaryQubit::par;
+  IStationaryQubit *entangled_partner;
+
   MOCK_METHOD(void, emitPhoton, (int pulse), (override));
   MOCK_METHOD(void, setFree, (bool consumed), (override));
   MOCK_METHOD(quisp::types::MeasureZResult, correlationMeasureZ, (), (override));
@@ -48,6 +54,10 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(void, sdgGate, (), (override));
   MOCK_METHOD(void, excite, (), (override));
   MOCK_METHOD(void, relax, (), (override));
+  MOCK_METHOD(void, assertEntangledPartnerValid, (), (override));
+  MOCK_METHOD(IQubit *const, getEntangledPartner, (), (const, override));
+  MOCK_METHOD(IQubit *const, getBackendQubitRef, (), (const, override));
+  MOCK_METHOD(int, getPartnerStationaryQubitAddress, (), (const, override));
 
   MockQubit() : IStationaryQubit() { setComponentType(new module_type::TestModuleType("test qubit")); }
   MockQubit(quisp::modules::QNIC_type _type, quisp::modules::QNicIndex _qnic_index) : MockQubit() {

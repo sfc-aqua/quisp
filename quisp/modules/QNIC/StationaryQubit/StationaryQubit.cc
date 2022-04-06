@@ -15,6 +15,8 @@
 #include <unsupported/Eigen/KroneckerProduct>
 #include <unsupported/Eigen/MatrixFunctions>
 #include <vector>
+#include "modules/QNIC/StationaryQubit/QubitId.h"
+#include "omnetpp/cexception.h"
 
 using namespace Eigen;
 
@@ -159,7 +161,7 @@ void StationaryQubit::setFree(bool consumed) {
     */
 }
 
-backends::IQubit StationaryQubit::*getEntangledPartner() { return qubit_ref->entangled_partner; }
+backends::IQubit *StationaryQubit::getEntangledPartner() const { return qubit_ref->getEntangledPartner(); }
 void StationaryQubit::assertEntangledPartnerValid() { qubit_ref->assertEntangledPartnerValid(); }
 
 /*To avoid disturbing this qubit.*/
@@ -240,8 +242,15 @@ void StationaryQubit::emitPhoton(int pulse) {
 void StationaryQubit::setEntangledPartnerInfo(IStationaryQubit *partner) {
   // When BSA succeeds, this method gets invoked to store entangled partner information.
   // This will also be sent classically to the partner node afterwards.
-  entangled_partner = partner;
-  qubit_ref->setEntangledPartner(partner->getQubitRef());
+  qubit_ref->setEntangledPartner(partner->getBackendQubitRef());
+}
+
+backends::IQubit *StationaryQubit::getBackendQubitRef() const { return qubit_ref; }
+int StationaryQubit::getPartnerStationaryQubitAddress() const {
+  auto *partner_qubit_ref = qubit_ref->getEntangledPartner();
+  auto *partner_id = dynamic_cast<const QubitId *const>(partner_qubit_ref->getId());
+  if (partner_id == nullptr) cRuntimeError("StationaryQubit::getPartnerStationaryQubitAddress: null partner backend qubit id cast");
+  return partner_id->qubit_addr;
 }
 
 /* Add another X error. If an X error already exists, then they cancel out */

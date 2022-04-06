@@ -135,7 +135,10 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   /*GOD parameters*/
   // SwappingAction
   virtual void setEntangledPartnerInfo(IStationaryQubit *partner) = 0;
-  virtual backends::IQubit *getEntangledPartner() = 0;
+  virtual backends::IQubit *getEntangledPartner() const = 0;
+  virtual backends::IQubit *getBackendQubitRef() const = 0;
+  virtual int getPartnerStationaryQubitAddress() const = 0;
+
   int stationaryQubit_address;
   int node_address;
   int qnic_address;
