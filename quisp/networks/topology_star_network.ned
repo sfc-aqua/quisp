@@ -4,6 +4,7 @@ import ned.DatarateChannel;
 import ned.IdealChannel;
 
 import modules.*;
+import modules.Backend.Backend;
 import channels.*;
 
 network Three_HoM_star
@@ -47,6 +48,7 @@ network Three_HoM_star
         //configurator: IPv4NetworkConfigurator {
         //    @display("p=100,100");
         //}
+        backend: Backend;
         EndNode[3]: QNode {
             //Initializerでaddress = node idにすればconflict無くなるかも。
             address = index+100000;
@@ -116,6 +118,7 @@ network Star_MSM
             int test = default(0);
         }
     submodules:
+        backend: Backend;
         node[3]: QNode {
             address = index;
             nodeType = "EndNode";
@@ -204,6 +207,7 @@ network Star_MM
             int test = default(0);
         }
     submodules:
+        backend: Backend;
         node[3]: QNode {
             address = index;
             nodeType = "EndNode";

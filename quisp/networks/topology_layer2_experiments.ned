@@ -5,6 +5,7 @@ import ned.IdealChannel;
 
 import channels.*;
 import modules.*;
+import modules.Backend.Backend;
 
 network Layer2_Simple_MIM_MM_all_in_one
 {
@@ -13,6 +14,7 @@ network Layer2_Simple_MIM_MM_all_in_one
 
         @display("bgb=707,326");
     submodules:
+        backend: Backend;
         EndNode1[1]: QNode {
             address = 1;
             nodeType = "EndNode";
@@ -835,7 +837,7 @@ network Layer2_MM_MIM_MIM_MIM_MM
         //HoM[3]: HoM {
         HoM[1]: HoM {
             address = 100000+sizeof(EndNode)+ sizeof(repeater)+ index;
-         }
+        }
 
     connections:
         EndNode[0].port++ <--> ClassicalChannel {  distance = 20km; } <--> repeater[0].port++;//MM
