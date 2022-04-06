@@ -5,6 +5,7 @@ import ned.DelayChannel;
 import ned.IdealChannel;
 
 import modules.*;
+import modules.Backend.Backend;
 import channels.*;
 
 network ispMap_1239_node_23_48_hetero_distance
@@ -46,6 +47,7 @@ network ispMap_1239_node_23_48_hetero_distance
             int test = default(0);
         }
     submodules:
+        backend: Backend;
         hom[177]: HoM {
             address = index+1000;
             @display("p=180.525,29.725");
@@ -820,6 +822,7 @@ network ispMap_1239_node_23_48
             int test = default(0);
         }
     submodules:
+        backend: Backend;
         hom[177]: HoM {
             address = index+1000;
             @display("p=127,41");

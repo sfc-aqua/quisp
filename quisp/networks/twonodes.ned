@@ -2,7 +2,9 @@ package networks;
 
 import ned.DatarateChannel;
 import modules.*;
+import modules.Backend.Backend;
 import channels.*;
+
 
 network twonodes
 {
@@ -19,6 +21,7 @@ network twonodes
         }
 
     submodules:
+        backend: Backend;
         source: QNode {
             address = 1;
             buffers = 7;
@@ -50,6 +53,7 @@ network threenodes
         }
 
     submodules:
+        backend: Backend;
         source: QNode {
             address = 1;
             buffers = 7;
@@ -90,6 +94,7 @@ network morenodes
         }
 
     submodules:
+        backend: Backend;
         source: QNode {
             address = 1;
             @display("i=COMP;p=278,81");

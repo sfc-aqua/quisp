@@ -14,7 +14,7 @@ network Tomography_Linear_One_MM_MIM
         **.Speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
-        backend: Backend {}
+        backend: Backend;
         EndNode[2]: QNode {
             address = index;
             nodeType = "EndNode";
@@ -52,7 +52,7 @@ network Linear_One_MIM
         //**.HoM_handshake = false;
 
     submodules:
-        backend: Backend{}
+        backend: Backend;
         source: QNode {
             address = 1;
             nodeType = "EndNode";
@@ -87,7 +87,7 @@ network Linear_One_MIM_biasedDistance
         //**.HoM_handshake = false;
 
     submodules:
-        backend: Backend{}
+        backend: Backend;
         source: QNode {
             address = 1;
             nodeType = "EndNode";
@@ -122,7 +122,7 @@ network Linear_One_MM
         **.Speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
-        backend: Backend{}
+        backend: Backend;
         EndNode[2]: QNode {
             address = index;
             nodeType = "EndNode";
@@ -142,7 +142,7 @@ network Linear_One_MM_bufferGap
         **.Speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
-        backend: Backend{}
+        backend: Backend;
         Small: QNode {
             address = 112302;
             nodeType = "EndNode";
@@ -171,6 +171,7 @@ network Linear_One_MSM
 
         @display("bgb=281,95");
     submodules:
+        backend: Backend;
         source: QNode {
             address = 1;
             nodeType = "EndNode";
