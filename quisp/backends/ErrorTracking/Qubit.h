@@ -37,7 +37,7 @@ class ErrorTrackingQubit : public IQubit {
   ~ErrorTrackingQubit();
   void setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate, double completely_mixed_rate);
   void reset();
-
+  const IQubitId* const getId() const override;
   void setFree() override;
   MeasureXResult correlationMeasureX() override;
   MeasureYResult correlationMeasureY() override;
@@ -54,7 +54,8 @@ class ErrorTrackingQubit : public IQubit {
   void addErrorX() override;
   void addErrorZ() override;
   void assertEntangledPartnerValid() override;
-  void setEntangledPartner(IQubit * const partner) override;
+  void setEntangledPartner(IQubit* const partner) override;
+  IQubit* const getEntangledPartner() const override;
 
  protected:
   void applySingleQubitGateError(SingleGateErrorModel const& err);
@@ -62,7 +63,7 @@ class ErrorTrackingQubit : public IQubit {
   void applyMemoryError();
   void setRelaxedDensityMatrix();
   void setExcitedDensityMatrix();
-  void setCompletelyMixedDensityMatrix();
+  void setCompletelyMixedDensityMatrix() override;
   Matrix2cd getErrorMatrix();
   QuantumState getQuantumState();
   MeasurementOperator randomMeasurementBasisSelection();

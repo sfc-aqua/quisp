@@ -24,12 +24,16 @@ struct MeasurementOutcome {
   char GOD_clean;
 };
 
+class IQubitId;
+
 class IQubit {
  public:
   IQubit(){};
   virtual ~IQubit(){};
 
   virtual void setFree() = 0;
+  virtual const IQubitId *const getId() const { throw std::runtime_error("getId is not implemented"); }
+
   // // single qubit operations
   virtual void gateX() { throw std::runtime_error("gateX not implemented"); }
   virtual void gateY() { throw std::runtime_error("gateY not implemented"); }
@@ -60,7 +64,8 @@ class IQubit {
   virtual void addErrorX() { throw std::runtime_error("addErrorX is not implemented. will be revomed"); }
   virtual void addErrorZ() { throw std::runtime_error("addErrorZ is not implemented. will be revomed"); }
   virtual void setCompletelyMixedDensityMatrix() { throw std::runtime_error("setCompletelyMixedDensityMatrix is not implemented. will be revomed"); }
-  virtual void setEntangledPartner(IQubit * const partner) {throw std::runtime_error("setEntangledPartner is not implemented. will be revomed"); }
+  virtual void setEntangledPartner(IQubit *const partner) { throw std::runtime_error("setEntangledPartner is not implemented. will be revomed"); }
+  virtual IQubit *const getEntangledPartner() const { throw std::runtime_error("getEntangledPartner is not implemented. will be revomed"); }
 };
 
 }  // namespace quisp::backends::abstract

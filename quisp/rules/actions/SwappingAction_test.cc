@@ -8,6 +8,8 @@
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 #include <modules/QRSA/RuleEngine/RuleEngine.h>
 #include <test_utils/TestUtils.h>
+#include "backends/Backends.h"
+#include "test_utils/mock_backends/MockBackendQubit.h"
 
 namespace {
 
@@ -79,6 +81,8 @@ class SwappingActionTest : public ::testing::Test {
     left_qubit = new MockQubit();
     left_partner_qubit = new MockQubit();
     right_partner_qubit = new MockQubit();
+    right_partner_backend_qubit = new MockBackendQubit();
+    left_partner_backend_qubit = new MockBackendQubit();
   }
   void TearDown() override {
     delete rule_engine;
@@ -86,6 +90,8 @@ class SwappingActionTest : public ::testing::Test {
     delete left_qubit;
     delete left_partner_qubit;
     delete right_partner_qubit;
+    delete right_partner_backend_qubit;
+    delete left_partner_backend_qubit;
   }
   MockRuleEngine *rule_engine = nullptr;
   std::unique_ptr<SwappingAction> action = nullptr;
@@ -93,6 +99,8 @@ class SwappingActionTest : public ::testing::Test {
   MockQubit *left_qubit = nullptr;
   MockQubit *left_partner_qubit = nullptr;
   MockQubit *right_partner_qubit = nullptr;
+  MockBackendQubit *right_partner_backend_qubit = nullptr;
+  MockBackendQubit *left_partner_backend_qubit = nullptr;
 };
 
 TEST_F(SwappingActionTest, init) {
@@ -185,11 +193,15 @@ TEST_F(SwappingActionTest, runWithMeasuredResult00) {
   left_qubit->entangled_partner = left_partner_qubit;
   left_partner_qubit->entangled_partner = left_qubit;
 
+  EXPECT_CALL(*right_qubit, getEntangledPartner()).WillOnce(Return(left_partner_backend_qubit));
+  EXPECT_CALL(*left_qubit, getEntangledPartner()).WillOnce(Return(right_partner_backend_qubit));
+  EXPECT_CALL(*right_qubit, getPartnerStationaryQubitAddress()).WillOnce(Return(3));
+  EXPECT_CALL(*left_qubit, getPartnerStationaryQubitAddress()).WillOnce(Return(7));
   EXPECT_CALL(*right_qubit, CNOT_gate(left_qubit));
   EXPECT_CALL(*left_qubit, localMeasureX()).WillOnce(Return(quisp::types::EigenvalueResult::PLUS_ONE));
   EXPECT_CALL(*right_qubit, localMeasureZ()).WillOnce(Return(quisp::types::EigenvalueResult::PLUS_ONE));
-  EXPECT_CALL(*left_partner_qubit, setEntangledPartnerInfo(right_partner_qubit));
-  EXPECT_CALL(*right_partner_qubit, setEntangledPartnerInfo(left_partner_qubit));
+  EXPECT_CALL(*left_partner_backend_qubit, setEntangledPartner(right_partner_backend_qubit)).WillOnce(Return());
+  EXPECT_CALL(*right_partner_backend_qubit, setEntangledPartner(left_partner_backend_qubit)).WillOnce(Return());
 
   EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
   EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(left_qubit));
@@ -205,6 +217,8 @@ TEST_F(SwappingActionTest, runWithMeasuredResult00) {
   ASSERT_NE(nullptr, result);
   EXPECT_EQ(0, result->getOperation_type_left());
   EXPECT_EQ(0, result->getOperation_type_right());
+  EXPECT_EQ(7, result->getMeasured_qubit_index_left());
+  EXPECT_EQ(3, result->getMeasured_qubit_index_right());
 }
 
 TEST_F(SwappingActionTest, runWithMeasuredResult01) {
@@ -223,11 +237,15 @@ TEST_F(SwappingActionTest, runWithMeasuredResult01) {
   left_qubit->entangled_partner = left_partner_qubit;
   left_partner_qubit->entangled_partner = left_qubit;
 
+  EXPECT_CALL(*right_qubit, getEntangledPartner()).WillOnce(Return(left_partner_backend_qubit));
+  EXPECT_CALL(*left_qubit, getEntangledPartner()).WillOnce(Return(right_partner_backend_qubit));
+  EXPECT_CALL(*right_qubit, getPartnerStationaryQubitAddress()).WillOnce(Return(3));
+  EXPECT_CALL(*left_qubit, getPartnerStationaryQubitAddress()).WillOnce(Return(7));
   EXPECT_CALL(*right_qubit, CNOT_gate(left_qubit));
   EXPECT_CALL(*left_qubit, localMeasureX()).WillOnce(Return(quisp::types::EigenvalueResult::PLUS_ONE));
   EXPECT_CALL(*right_qubit, localMeasureZ()).WillOnce(Return(quisp::types::EigenvalueResult::MINUS_ONE));
-  EXPECT_CALL(*right_partner_qubit, setEntangledPartnerInfo(left_partner_qubit));
-  EXPECT_CALL(*left_partner_qubit, setEntangledPartnerInfo(right_partner_qubit));
+  EXPECT_CALL(*left_partner_backend_qubit, setEntangledPartner(right_partner_backend_qubit)).WillOnce(Return());
+  EXPECT_CALL(*right_partner_backend_qubit, setEntangledPartner(left_partner_backend_qubit)).WillOnce(Return());
 
   EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
   EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(left_qubit));
@@ -243,6 +261,8 @@ TEST_F(SwappingActionTest, runWithMeasuredResult01) {
   ASSERT_NE(nullptr, result);
   EXPECT_EQ(0, result->getOperation_type_left());
   EXPECT_EQ(1, result->getOperation_type_right());
+  EXPECT_EQ(7, result->getMeasured_qubit_index_left());
+  EXPECT_EQ(3, result->getMeasured_qubit_index_right());
 }
 
 TEST_F(SwappingActionTest, runWithMeasuredResult10) {
@@ -261,11 +281,15 @@ TEST_F(SwappingActionTest, runWithMeasuredResult10) {
   left_qubit->entangled_partner = left_partner_qubit;
   left_partner_qubit->entangled_partner = left_qubit;
 
+  EXPECT_CALL(*right_qubit, getEntangledPartner()).WillOnce(Return(left_partner_backend_qubit));
+  EXPECT_CALL(*left_qubit, getEntangledPartner()).WillOnce(Return(right_partner_backend_qubit));
+  EXPECT_CALL(*right_qubit, getPartnerStationaryQubitAddress()).WillOnce(Return(3));
+  EXPECT_CALL(*left_qubit, getPartnerStationaryQubitAddress()).WillOnce(Return(7));
   EXPECT_CALL(*right_qubit, CNOT_gate(left_qubit));
   EXPECT_CALL(*left_qubit, localMeasureX()).WillOnce(Return(quisp::types::EigenvalueResult::MINUS_ONE));
   EXPECT_CALL(*right_qubit, localMeasureZ()).WillOnce(Return(quisp::types::EigenvalueResult::PLUS_ONE));
-  EXPECT_CALL(*right_partner_qubit, setEntangledPartnerInfo(left_partner_qubit));
-  EXPECT_CALL(*left_partner_qubit, setEntangledPartnerInfo(right_partner_qubit));
+  EXPECT_CALL(*left_partner_backend_qubit, setEntangledPartner(right_partner_backend_qubit)).WillOnce(Return());
+  EXPECT_CALL(*right_partner_backend_qubit, setEntangledPartner(left_partner_backend_qubit)).WillOnce(Return());
 
   EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
   EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(left_qubit));
@@ -281,6 +305,8 @@ TEST_F(SwappingActionTest, runWithMeasuredResult10) {
   ASSERT_NE(nullptr, result);
   EXPECT_EQ(2, result->getOperation_type_left());
   EXPECT_EQ(0, result->getOperation_type_right());
+  EXPECT_EQ(7, result->getMeasured_qubit_index_left());
+  EXPECT_EQ(3, result->getMeasured_qubit_index_right());
 }
 
 TEST_F(SwappingActionTest, runWithMeasuredResult11) {
@@ -299,11 +325,15 @@ TEST_F(SwappingActionTest, runWithMeasuredResult11) {
   left_qubit->entangled_partner = left_partner_qubit;
   left_partner_qubit->entangled_partner = left_qubit;
 
+  EXPECT_CALL(*right_qubit, getEntangledPartner()).WillOnce(Return(left_partner_backend_qubit));
+  EXPECT_CALL(*left_qubit, getEntangledPartner()).WillOnce(Return(right_partner_backend_qubit));
+  EXPECT_CALL(*right_qubit, getPartnerStationaryQubitAddress()).WillOnce(Return(3));
+  EXPECT_CALL(*left_qubit, getPartnerStationaryQubitAddress()).WillOnce(Return(7));
   EXPECT_CALL(*right_qubit, CNOT_gate(left_qubit));
   EXPECT_CALL(*left_qubit, localMeasureX()).WillOnce(Return(quisp::types::EigenvalueResult::MINUS_ONE));
   EXPECT_CALL(*right_qubit, localMeasureZ()).WillOnce(Return(quisp::types::EigenvalueResult::MINUS_ONE));
-  EXPECT_CALL(*right_partner_qubit, setEntangledPartnerInfo(left_partner_qubit));
-  EXPECT_CALL(*left_partner_qubit, setEntangledPartnerInfo(right_partner_qubit));
+  EXPECT_CALL(*left_partner_backend_qubit, setEntangledPartner(right_partner_backend_qubit)).WillOnce(Return());
+  EXPECT_CALL(*right_partner_backend_qubit, setEntangledPartner(left_partner_backend_qubit)).WillOnce(Return());
 
   EXPECT_CALL(*action, getResource(21, 22)).WillOnce(Return(right_qubit));
   EXPECT_CALL(*action, getResource(23, 24)).WillOnce(Return(left_qubit));
@@ -319,5 +349,7 @@ TEST_F(SwappingActionTest, runWithMeasuredResult11) {
   ASSERT_NE(nullptr, result);
   EXPECT_EQ(2, result->getOperation_type_left());
   EXPECT_EQ(1, result->getOperation_type_right());
+  EXPECT_EQ(7, result->getMeasured_qubit_index_left());
+  EXPECT_EQ(3, result->getMeasured_qubit_index_right());
 }
 }  // namespace

@@ -382,10 +382,6 @@ void BellStateAnalyzer::GOD_updateEntangledInfoParameters_of_qubits() {
   right_statQubit_ptr->setEntangledPartnerInfo(left_statQubit_ptr);
   if (right_photon_Xerr) right_statQubit_ptr->addXerror();
   if (right_photon_Zerr) right_statQubit_ptr->addZerror();
-  if (right_statQubit_ptr->entangled_partner == nullptr || left_statQubit_ptr->entangled_partner == nullptr) {
-    std::cout << "Entangling failed\n";
-    error("Entangling failed");
-  }
   n_res++;
   emit(GOD_num_resSignal, n_res);
   // std::cout<<right_statQubit_ptr<<", node["<<right_statQubit_ptr->node_address<<"] from qnic["<<right_statQubit_ptr->qnic_index<<"]\n";

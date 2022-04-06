@@ -53,8 +53,8 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
     return generateError("QNICs are not found!");
   }
 
-  auto *right_partner_qubit = right_qubit->entangled_partner;
-  auto *left_partner_qubit = left_qubit->entangled_partner;
+  auto *right_partner_qubit = right_qubit->getEntangledPartner();
+  auto *left_partner_qubit = left_qubit->getEntangledPartner();
 
   right_qubit->CNOT_gate(left_qubit);
   left_qubit->Hadamard_gate();
@@ -84,8 +84,8 @@ cPacket *SimultaneousSwappingAction::run(cModule *re) {
   }
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
   if (std::rand() / RAND_MAX < success_probability) {
-    right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
-    left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
+    right_partner_qubit->setEntangledPartner(left_partner_qubit);
+    left_partner_qubit->setEntangledPartner(right_partner_qubit);
   }
   removeResource_fromRule(left_qubit);
   removeResource_fromRule(right_qubit);

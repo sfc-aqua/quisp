@@ -44,8 +44,8 @@ cPacket *SwappingAction::run(cModule *re) {
   }
 
   // actual swapping operations
-  auto *right_partner_qubit = right_qubit->entangled_partner;
-  auto *left_partner_qubit = left_qubit->entangled_partner;
+  auto *right_partner_qubit = right_qubit->getEntangledPartner();
+  auto *left_partner_qubit = left_qubit->getEntangledPartner();
 
   if (right_partner_qubit == nullptr || left_partner_qubit == nullptr) {
     return generateError("Partner qubits are null");
@@ -56,8 +56,8 @@ cPacket *SwappingAction::run(cModule *re) {
   right_qubit->CNOT_gate(left_qubit);
 
   // TODO This is a little bit cheating. This must be tracked!
-  int lindex = left_partner_qubit->stationaryQubit_address;
-  int rindex = right_partner_qubit->stationaryQubit_address;
+  int lindex = left_qubit->getPartnerStationaryQubitAddress();
+  int rindex = right_qubit->getPartnerStationaryQubitAddress();
 
   auto left_measure = left_qubit->localMeasureX();
   auto right_measure = right_qubit->localMeasureZ();
@@ -68,8 +68,8 @@ cPacket *SwappingAction::run(cModule *re) {
   int operation_type_right = right_measure == EigenvalueResult::PLUS_ONE ? 0 : 1;
 
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
-  right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
-  left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
+  right_partner_qubit->setEntangledPartner(left_partner_qubit);
+  left_partner_qubit->setEntangledPartner(right_partner_qubit);
   removeResource_fromRule(left_qubit);
   removeResource_fromRule(right_qubit);
   rule_engine->freeConsumedResource(self_left_qnic_id, left_qubit, self_left_qnic_type);  // free left

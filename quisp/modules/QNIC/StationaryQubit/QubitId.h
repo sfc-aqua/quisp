@@ -20,14 +20,14 @@ class QubitId : public quisp::backends::IQubitId {
     return node_addr == id.node_addr && qnic_index == id.qnic_index && qnic_type == id.qnic_type && qubit_addr == id.qubit_addr;
   }
 
- protected:
-  // https://stackoverflow.com/questions/4948780/magic-number-in-boosthash-combine
-  void hashCombine(std::size_t& seed, int const& v) const { seed ^= std::hash<int>()(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2); }
-
   int node_addr;
   int qnic_index;
   int qnic_type;
   int qubit_addr;
+
+ protected:
+  // https://stackoverflow.com/questions/4948780/magic-number-in-boosthash-combine
+  void hashCombine(std::size_t& seed, int const& v) const { seed ^= std::hash<int>()(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2); }
 };
 
 }  // namespace quisp::modules::qubit_id

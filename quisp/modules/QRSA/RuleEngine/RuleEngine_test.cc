@@ -161,7 +161,8 @@ TEST(RuleEngineTest, resourceAllocation) {
   auto* qubit_record0 = new QubitRecord(QNIC_E, 3, 0);
   auto* qubit_record1 = new QubitRecord(QNIC_E, 3, 1);
   auto* qubit_record2 = new QubitRecord(QNIC_E, 3, 2);
-  auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, nullptr, qnic_specs};
+  auto* qubit = new MockQubit(QNIC_E, 1);
+  auto rule_engine = new RuleEngineTestTarget{qubit, routingdaemon, mockHardwareMonitor, nullptr, qnic_specs};
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
   rule_engine->setAllResources(0, qubit_record0);
@@ -176,7 +177,7 @@ TEST(RuleEngineTest, resourceAllocation) {
   rule->action_partners = {1};
   rs->addRule(std::move(rule));
   rule_engine->rp.insert(rs);
-
+  EXPECT_CALL(*qubit, assertEntangledPartnerValid()).WillOnce(Return());
   rule_engine->ResourceAllocation(QNIC_E, 3);
   EXPECT_TRUE(qubit_record1->isAllocated());
 
@@ -189,6 +190,7 @@ TEST(RuleEngineTest, resourceAllocation) {
   EXPECT_EQ(_rule->resources.size(), 1);
   delete mockHardwareMonitor;
   delete routingdaemon;
+  delete qubit;
 }
 
 TEST(RuleEngineTest, trackerUpdate) {
