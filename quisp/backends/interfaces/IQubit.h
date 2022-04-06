@@ -61,11 +61,11 @@ class IQubit {
   virtual void assertEntangledPartnerValid() { throw std::runtime_error("assertEntangledPartnerValid not implemented"); };
 
   // deprecated (ErrorTraciking Qubit specific)
-  virtual void addErrorX() { throw std::runtime_error("addErrorX is not implemented. will be revomed"); }
-  virtual void addErrorZ() { throw std::runtime_error("addErrorZ is not implemented. will be revomed"); }
-  virtual void setCompletelyMixedDensityMatrix() { throw std::runtime_error("setCompletelyMixedDensityMatrix is not implemented. will be revomed"); }
-  virtual void setEntangledPartner(IQubit *const partner) { throw std::runtime_error("setEntangledPartner is not implemented. will be revomed"); }
-  virtual IQubit *const getEntangledPartner() const { throw std::runtime_error("getEntangledPartner is not implemented. will be revomed"); }
+  virtual void addErrorX() { throw std::runtime_error("addErrorX is not implemented. will be removed"); }
+  virtual void addErrorZ() { throw std::runtime_error("addErrorZ is not implemented. will be removed"); }
+  virtual void setCompletelyMixedDensityMatrix() { throw std::runtime_error("setCompletelyMixedDensityMatrix is not implemented. will be removed"); }
+  virtual void setEntangledPartner(IQubit *const partner) { throw std::runtime_error("setEntangledPartner is not implemented. will be removed"); }
+  virtual IQubit *const getEntangledPartner() const { throw std::runtime_error("getEntangledPartner is not implemented. will be removed"); }
 };
 
 }  // namespace quisp::backends::abstract
