@@ -378,21 +378,13 @@ ActiveCondition *RuleEngine::constructCondition(std::unique_ptr<Condition> condi
   for (int i = 0; i < clauses.size(); i++) {
     auto clause = std::move(clauses.at(i));
     if (auto *cond = dynamic_cast<EnoughResourceConditionClause *>(clause.get())) {
-      // EnoughResourceClause(partner_address, num_resource)
-      auto *resource_clause = new EnoughResourceClause(cond->partner_address, cond->num_resource);
-      active_condition->addClause(resource_clause);
+      active_condition->addClause(new EnoughResourceClause(cond->partner_address, cond->num_resource));
     } else if (auto *cond = dynamic_cast<MeasureCountConditionClause *>(clause.get())) {
-      // MeasureCountClause (num_measure)
-      auto *measure_count_clause = new MeasureCountClause(cond->num_measure);
-      active_condition->addClause(measure_count_clause);
+      active_condition->addClause(new MeasureCountClause(cond->num_measure));
     } else if (auto *cond = dynamic_cast<WaitConditionClause *>(clause.get())) {
-      // WaitClause ()
-      auto *wait_clause = new WaitClause();
-      active_condition->addClause(wait_clause);
+      active_condition->addClause(new WaitClause());
     } else if (auto *cond = dynamic_cast<FidelityConditionClause *>(clause.get())) {
-      // FidelityClause (partner_addr, resource, fidleity)
-      auto *fidelity_clause = new FidelityClause(cond->partner_address, 0, cond->required_fidelity);
-      active_condition->addClause(fidelity_clause);
+      active_condition->addClause(new FidelityClause(cond->partner_address, 0, cond->required_fidelity));
     } else {
       error("Unknown clause");
     }
@@ -407,59 +399,38 @@ ActiveAction *RuleEngine::constructAction(std::unique_ptr<Action> action, unsign
     auto qnic_type = interface.qnic_type;
     auto qnic_id = interface.qnic_id;
     if (act->purification_type == PurType::SINGLE_X) {
-      // Purification(X)
-      auto active_action = new PurifyAction(ruleset_id, rule_id, true, false, 1, partner_addr, qnic_type, qnic_id, 0, 1);
-      return active_action;
+      return new PurifyAction(ruleset_id, rule_id, true, false, 1, partner_addr, qnic_type, qnic_id, 0, 1);
     }
     if (act->purification_type == PurType::SINGLE_Z) {
-      // Purification(Z)
-      auto active_action = new PurifyAction(ruleset_id, rule_id, false, true, 1, partner_addr, qnic_type, qnic_id, 0, 1);
-      return active_action;
+      return new PurifyAction(ruleset_id, rule_id, false, true, 1, partner_addr, qnic_type, qnic_id, 0, 1);
     }
     if (act->purification_type == PurType::DOUBLE) {
-      // DoublePurification(XZ)
-      auto active_action = new DoublePurifyAction(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2);
-      return active_action;
+      return new DoublePurifyAction(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2);
     }
     if (act->purification_type == PurType::DOUBLE_INV) {
-      // DoublePurification(XZ)
-      auto active_action = new DoublePurifyActionInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2);
-      return active_action;
+      return new DoublePurifyActionInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2);
     }
     if (act->purification_type == PurType::DSSA) {
-      // DoubleSelectionSingleAction
-      auto active_action = new DoubleSelectionAction(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2);
-      return active_action;
+      return new DoubleSelectionAction(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2);
     }
     if (act->purification_type == PurType::DSSA_INV) {
-      // DoubleSelectionSingleActionInverse
-      auto active_action = new DoubleSelectionActionInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2);
-      return active_action;
+      return new DoubleSelectionActionInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2);
     }
     if (act->purification_type == PurType::DSDA) {
-      // DoubleSelectionDoubleAction
-      auto active_action = new DoubleSelectionDualAction(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3, 4);
-      return active_action;
+      return new DoubleSelectionDualAction(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3, 4);
     }
     if (act->purification_type == PurType::DSDA_INV) {
-      // DoubleSeletionDoubleActionInverse
-      auto active_action = new DoubleSelectionDualActionInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3, 4);
-      return active_action;
+      return new DoubleSelectionDualActionInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3, 4);
     }
     if (act->purification_type == PurType::DSDA_SECOND) {
-      // DoubleSelectionDoubleActionSecond
-      auto active_action = new DoubleSelectionDualActionSecond(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3);
-      return active_action;
+      return new DoubleSelectionDualActionSecond(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3);
     }
     if (act->purification_type == PurType::DSDA_SECOND_INV) {
-      // DoubleSelectionDoubleActionSecondInverse
-      auto active_action = new DoubleSelectionDualActionSecondInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3);
-      return active_action;
+      return new DoubleSelectionDualActionSecondInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3);
     }
   }
   if (auto *act = dynamic_cast<Wait *>(action.get())) {
-    auto active_action = new WaitAction(ruleset_id, rule_id);
-    return active_action;
+    return new WaitAction(ruleset_id, rule_id);
   }
   if (auto *act = dynamic_cast<EntanglementSwapping *>(action.get())) {
     // get interface information
@@ -482,16 +453,12 @@ ActiveAction *RuleEngine::constructAction(std::unique_ptr<Action> action, unsign
     auto right_partner_qnic_type = right_partner_interface.qnic_type;
     auto right_partner_qnic_id = right_partner_interface.qnic_id;
     auto right_partner_qnic_address = right_partner_interface.qnic_address;
-    auto active_action =
-        new SwappingAction(ruleset_id, rule_id, left_partner, left_partner_qnic_type, left_partner_qnic_id, left_partner_qnic_address, 0, right_partner, right_partner_qnic_type,
-                           right_partner_qnic_id, right_partner_qnic_address, 0, left_qnic_id, left_qnic_type, right_qnic_id, right_qnic_type);
-    return active_action;
+    return new SwappingAction(ruleset_id, rule_id, left_partner, left_partner_qnic_type, left_partner_qnic_id, left_partner_qnic_address, 0, right_partner, right_partner_qnic_type,
+                              right_partner_qnic_id, right_partner_qnic_address, 0, left_qnic_id, left_qnic_type, right_qnic_id, right_qnic_type);
   }
   if (auto *act = dynamic_cast<Tomography *>(action.get())) {
     auto qnic_interface = act->qnic_interfaces.at(0);
-    auto active_action =
-        new RandomMeasureAction(ruleset_id, rule_id, act->owner_address, qnic_interface.partner_addr, qnic_interface.qnic_type, qnic_interface.qnic_id, 0, act->num_measurement);
-    return active_action;
+    return new RandomMeasureAction(ruleset_id, rule_id, act->owner_address, qnic_interface.partner_addr, qnic_interface.qnic_type, qnic_interface.qnic_id, 0, act->num_measurement);
   }
 }
 
