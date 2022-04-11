@@ -8,6 +8,7 @@
 #include "RuleEngine.h"
 #include <fstream>
 #include <iterator>
+#include <memory>
 #include <utility>
 #include "QNicStore/QNicStore.h"
 #include "utils/ComponentProvider.h"
@@ -278,12 +279,14 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
   else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     // add actual process
-    auto *ruleset = const_cast<ActiveRuleSet *>(pkt->getActiveRuleSet());
+    auto serialized_ruleset = pkt->getRuleSet();
+    RuleSet ruleset(0, 0);  // initialize empty ruleset
+    ruleset.deserialize_json(serialized_ruleset);
+    auto active_ruleset = constructActiveRuleSet(std::move(ruleset));
     // here swappers got swapping ruleset with internal packet
     // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
-    // ResourceAllocation();
-    if (ruleset->size() > 0) {
-      rp.insert(ruleset);
+    if (active_ruleset->size() > 0) {
+      rp.insert(active_ruleset);
       EV << "New process arrived !\n";
     } else {
       error("Empty rule set...");
@@ -291,12 +294,12 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
     // doing end to end tomography
     if (pkt->getApplication_type() == 0) {
-      // Received a tomography rule set.
-
-      auto ruleset = const_cast<ActiveRuleSet *>(pkt->getActiveRuleSet());
-      std::cout << "Process size is ...." << ruleset->size() << " node[" << parentAddress << "\n";
-      if (ruleset->size() > 0) {
-        rp.insert(ruleset);
+      auto serialized_ruleset = pkt->getRuleSet();
+      RuleSet ruleset(0, 0);  // initialize empty ruleset
+      ruleset.deserialize_json(serialized_ruleset);
+      auto active_ruleset = constructActiveRuleSet(std::move(ruleset));
+      if (active_ruleset->size() > 0) {
+        rp.insert(active_ruleset);
         EV << "New process arrived !\n";
       } else {
         error("Empty rule set...");
@@ -321,6 +324,142 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
   traverseThroughAllProcesses2();
   delete msg;
+}
+
+std::unique_ptr<ActiveRuleSet> RuleEngine::constructActiveRuleSet(RuleSet ruleset) {
+  if (ruleset.owner_addr != parentAddress) {
+    error("The owner of RuleSet is incorrect");
+  }
+  auto active_ruleset = std::make_unique<ActiveRuleSet>(ruleset.ruleset_id, ruleset.owner_addr);
+  auto rules = std::move(ruleset.rules);
+  for (int i = 0; i < rules.size(); i++) {
+    auto rule = std::move(rules.at(i));
+    auto active_rule = std::make_unique<ActiveRule>(ruleset.ruleset_id, rule->rule_id);
+    // 1. meta information
+    active_rule->name = rule->name + " with ";
+    auto qnic_interface = rule->qnic_interfaces;
+    std::vector<int> partners;
+    for (auto interface : rule->qnic_interfaces) {
+      active_rule->name = active_rule->name + std::to_string(interface.partner_addr);
+      partners.push_back(interface.partner_addr);
+    }
+    active_rule->rule_id = rule->rule_id;  // rule id
+    active_rule->action_partners = partners;  // partner info
+    active_rule->next_rule_id = rule->to;  // next ruleid information
+
+    // 2. add condition and action
+    active_rule = constructRule(std::move(active_rule), std::move(rule), ruleset.ruleset_id);
+    active_ruleset->addRule(std::move(active_rule));
+  }
+  return active_ruleset;
+}
+
+std::unique_ptr<ActiveRule> RuleEngine::constructRule(std::unique_ptr<ActiveRule> active_rule, std::unique_ptr<Rule> rule, unsigned long ruleset_id) {
+  // 3. prepare condition
+  if (rule->condition == nullptr) {
+    error("no condition set!");
+  }
+  auto active_condition = constructCondition(std::move(rule->condition));
+
+  // 4. prepare action
+  if (rule->action == nullptr) {
+    error("no action set!");
+  }
+  auto active_action = constructAction(std::move(rule->action), ruleset_id, rule->rule_id);
+
+  active_rule->setCondition(std::move(active_condition));
+  active_rule->setAction(std::move(active_action));
+  return active_rule;
+}
+
+ActiveCondition *RuleEngine::constructCondition(std::unique_ptr<Condition> condition) {
+  auto active_condition = new ActiveCondition();
+  auto clauses = std::move(condition->clauses);
+  for (int i = 0; i < clauses.size(); i++) {
+    auto clause = std::move(clauses.at(i));
+    if (auto *cond = dynamic_cast<EnoughResourceConditionClause *>(clause.get())) {
+      active_condition->addClause(new EnoughResourceClause(cond->partner_address, cond->num_resource));
+    } else if (auto *cond = dynamic_cast<MeasureCountConditionClause *>(clause.get())) {
+      active_condition->addClause(new MeasureCountClause(cond->num_measure));
+    } else if (auto *cond = dynamic_cast<WaitConditionClause *>(clause.get())) {
+      active_condition->addClause(new WaitClause());
+    } else if (auto *cond = dynamic_cast<FidelityConditionClause *>(clause.get())) {
+      active_condition->addClause(new FidelityClause(cond->partner_address, 0, cond->required_fidelity));
+    } else {
+      error("Unknown clause");
+    }
+  }
+  return active_condition;
+}
+
+ActiveAction *RuleEngine::constructAction(std::unique_ptr<Action> action, unsigned long ruleset_id, int rule_id) {
+  if (auto *act = dynamic_cast<Purification *>(action.get())) {
+    auto interface = act->qnic_interfaces.at(0);
+    auto partner_addr = interface.partner_addr;
+    auto qnic_type = interface.qnic_type;
+    auto qnic_id = interface.qnic_id;
+    if (act->purification_type == PurType::SINGLE_X) {
+      return new PurifyAction(ruleset_id, rule_id, true, false, 1, partner_addr, qnic_type, qnic_id, 0, 1);
+    }
+    if (act->purification_type == PurType::SINGLE_Z) {
+      return new PurifyAction(ruleset_id, rule_id, false, true, 1, partner_addr, qnic_type, qnic_id, 0, 1);
+    }
+    if (act->purification_type == PurType::DOUBLE) {
+      return new DoublePurifyAction(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2);
+    }
+    if (act->purification_type == PurType::DOUBLE_INV) {
+      return new DoublePurifyActionInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2);
+    }
+    if (act->purification_type == PurType::DSSA) {
+      return new DoubleSelectionAction(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2);
+    }
+    if (act->purification_type == PurType::DSSA_INV) {
+      return new DoubleSelectionActionInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2);
+    }
+    if (act->purification_type == PurType::DSDA) {
+      return new DoubleSelectionDualAction(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3, 4);
+    }
+    if (act->purification_type == PurType::DSDA_INV) {
+      return new DoubleSelectionDualActionInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3, 4);
+    }
+    if (act->purification_type == PurType::DSDA_SECOND) {
+      return new DoubleSelectionDualActionSecond(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3);
+    }
+    if (act->purification_type == PurType::DSDA_SECOND_INV) {
+      return new DoubleSelectionDualActionSecondInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3);
+    }
+  }
+  if (auto *act = dynamic_cast<Wait *>(action.get())) {
+    return new WaitAction(ruleset_id, rule_id);
+  }
+  if (auto *act = dynamic_cast<EntanglementSwapping *>(action.get())) {
+    // get interface information
+    auto left_interface = act->qnic_interfaces.at(0);
+    auto left_partner = left_interface.partner_addr;
+    auto left_qnic_type = left_interface.qnic_type;
+    auto left_qnic_id = left_interface.qnic_id;
+
+    auto right_interface = act->qnic_interfaces.at(1);
+    auto right_partner = right_interface.partner_addr;
+    auto right_qnic_type = right_interface.qnic_type;
+    auto right_qnic_id = right_interface.qnic_id;
+
+    auto left_partner_interface = act->remote_qnic_interfaces.at(0);
+    auto left_partner_qnic_type = left_partner_interface.qnic_type;
+    auto left_partner_qnic_id = left_partner_interface.qnic_id;
+    auto left_partner_qnic_address = left_interface.qnic_address;
+
+    auto right_partner_interface = act->remote_qnic_interfaces.at(1);
+    auto right_partner_qnic_type = right_partner_interface.qnic_type;
+    auto right_partner_qnic_id = right_partner_interface.qnic_id;
+    auto right_partner_qnic_address = right_partner_interface.qnic_address;
+    return new SwappingAction(ruleset_id, rule_id, left_partner, left_partner_qnic_type, left_partner_qnic_id, left_partner_qnic_address, 0, right_partner, right_partner_qnic_type,
+                              right_partner_qnic_id, right_partner_qnic_address, 0, left_qnic_id, left_qnic_type, right_qnic_id, right_qnic_type);
+  }
+  if (auto *act = dynamic_cast<Tomography *>(action.get())) {
+    auto qnic_interface = act->qnic_interfaces.at(0);
+    return new RandomMeasureAction(ruleset_id, rule_id, act->owner_address, qnic_interface.partner_addr, qnic_interface.qnic_type, qnic_interface.qnic_id, 0, act->num_measurement);
+  }
 }
 
 void RuleEngine::storeCheck_Purification_Agreement(purification_result pur_result) {

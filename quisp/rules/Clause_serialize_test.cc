@@ -17,9 +17,9 @@ TEST(ClauseTest, EnoughResourceConditionClause_serialize_json) {
   EXPECT_EQ(enough_resource_json["type"], "enough_resource");
   EXPECT_EQ(enough_resource_json["options"]["num_resource"], 3);
   EXPECT_EQ(enough_resource_json["options"]["required_fidelity"], 0.85);
-  EXPECT_EQ(enough_resource_json["options"]["partner_address"], 1);
-  EXPECT_EQ(enough_resource_json["options"]["qnic_type"], "QNIC_R");
-  EXPECT_EQ(enough_resource_json["options"]["qnic_id"], 13);
+  EXPECT_EQ(enough_resource_json["options"]["interface"]["partner_address"], 1);
+  EXPECT_EQ(enough_resource_json["options"]["interface"]["qnic_type"], "QNIC_R");
+  EXPECT_EQ(enough_resource_json["options"]["interface"]["qnic_id"], 13);
 }
 
 TEST(ClauseTest, EnoughResourceConditionClause_deserialize_json) {
@@ -29,9 +29,11 @@ TEST(ClauseTest, EnoughResourceConditionClause_deserialize_json) {
     "options": {
       "num_resource": 3,
       "required_fidelity": 0.95,
-      "partner_address": 1,
-      "qnic_type": "QNIC_R",
-      "qnic_id": 30
+      "interface":{
+        "partner_address": 1,
+        "qnic_type": "QNIC_R",
+        "qnic_id": 30
+      }
       }
     })");
   auto enough_resource = std::make_unique<EnoughResourceConditionClause>(serialized);
@@ -50,9 +52,9 @@ TEST(ClauseTest, MeasureCountConditionClause_serialize_json) {
   json measure_count_json = measure_count->serialize_json();
   EXPECT_EQ(measure_count_json["type"], "measure_count");
   EXPECT_EQ(measure_count_json["options"]["num_measure"], 1000);
-  EXPECT_EQ(measure_count_json["options"]["partner_address"], 1);
-  EXPECT_EQ(measure_count_json["options"]["qnic_type"], "QNIC_E");
-  EXPECT_EQ(measure_count_json["options"]["qnic_id"], 15);
+  EXPECT_EQ(measure_count_json["options"]["interface"]["partner_address"], 1);
+  EXPECT_EQ(measure_count_json["options"]["interface"]["qnic_type"], "QNIC_E");
+  EXPECT_EQ(measure_count_json["options"]["interface"]["qnic_id"], 15);
 }
 
 TEST(ClauseTest, MeasureCountConditionClause_deserialize_json) {
@@ -61,9 +63,11 @@ TEST(ClauseTest, MeasureCountConditionClause_deserialize_json) {
     "type": "measure_count",
     "options": {
       "num_measure": 500,
-      "partner_address": 1,
-      "qnic_type": "QNIC_R",
-      "qnic_id": 30
+      "interface": {
+        "partner_address": 1,
+        "qnic_type": "QNIC_R",
+        "qnic_id": 30
+      }
       }
     })");
   auto empty_measure_count = std::make_unique<MeasureCountConditionClause>(serialized);
@@ -81,9 +85,9 @@ TEST(ClauseTest, FidelityConditionClause_serialize_json) {
   json fidelity_json = fidelity->serialize_json();
   EXPECT_EQ(fidelity_json["type"], "fidelity");
   EXPECT_EQ(fidelity_json["options"]["required_fidelity"], 0.8);
-  EXPECT_EQ(fidelity_json["options"]["partner_address"], 3);
-  EXPECT_EQ(fidelity_json["options"]["qnic_type"], "QNIC_RP");
-  EXPECT_EQ(fidelity_json["options"]["qnic_id"], 103);
+  EXPECT_EQ(fidelity_json["options"]["interface"]["partner_address"], 3);
+  EXPECT_EQ(fidelity_json["options"]["interface"]["qnic_type"], "QNIC_RP");
+  EXPECT_EQ(fidelity_json["options"]["interface"]["qnic_id"], 103);
 }
 
 TEST(ClauseTest, FidelityConditionClause_deserialize_json) {
@@ -92,9 +96,11 @@ TEST(ClauseTest, FidelityConditionClause_deserialize_json) {
     "type": "fidelity",
     "options": {
       "required_fidelity": 0.9,
-      "partner_address": 1,
-      "qnic_type": "QNIC_R",
-      "qnic_id": 30
+      "interface": {
+        "partner_address": 1,
+        "qnic_type": "QNIC_R",
+        "qnic_id": 30
+      }
       }
     })");
   auto empty_fidelity = std::make_unique<FidelityConditionClause>(serialized);

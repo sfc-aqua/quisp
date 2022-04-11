@@ -27,7 +27,6 @@ packet ConnectionSetupResponse extends Header
     int actual_destAddr;
     unsigned long RuleSet_id;
     json ruleSet;
-    ActiveRuleSet* activeRuleSet;
     int application_type;
     int stack_of_QNodeIndexes[];
 }

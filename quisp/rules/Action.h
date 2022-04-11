@@ -6,6 +6,12 @@
 using nlohmann::json;
 using quisp::modules::QNIC_type;
 namespace quisp::rules {
+struct QnicInterface {
+  int partner_addr;
+  QNIC_type qnic_type;
+  int qnic_id;
+  int qnic_address;
+};
 
 enum PurType : int {
   INVALID,  ///< Invalid purification type
@@ -13,10 +19,8 @@ enum PurType : int {
   SINGLE_Z,  ///< Single purification for Z error
   DOUBLE,  ///< Double purification both for X and Z errors
   DOUBLE_INV,  ///< Double inverse purification both for X and Z errors
-  SSDP_X,  ///< Single Selection and Double Purification (DoubleSelectionAction) for X error
-  SSDP_Z,  ///< Single Selection and Double Purification (DoubleSelectionAction) for Z error
-  SSDP_X_INV,  ///< Single Selection and Double Purification Inverse (DoubleSelectionAction) for X error
-  SSDP_Z_INV,  ///< Single Selection and Double Purification Inverse (DoubleSelectionAction) for Z error
+  DSSA,  ///< Double selection XZ and single action (DoubleSelectionAction) for X error
+  DSSA_INV,  ///< Inverse Double selection XZ and single action(DoubleSelectionAction) for X error
   DSDA,  ///< Double Selection and Dual Action for both X and Z errors
   DSDA_INV,  ///< Inverse Double Selection and Dual Action for both X and Z errors
   DSDA_SECOND,  ///< Different type of Double Selection and Dual Action for both X and Z errors
@@ -29,24 +33,36 @@ NLOHMANN_JSON_SERIALIZE_ENUM(PurType, {
                                           {SINGLE_Z, "SINGLE_Z"},
                                           {DOUBLE, "DOUBLE"},
                                           {DOUBLE_INV, "DOUBLE_INV"},
-                                          {SSDP_X, "SSDP_X"},
-                                          {SSDP_Z, "SSDP_Z"},
-                                          {SSDP_X_INV, "SSDP_X_INV"},
-                                          {SSDP_Z_INV, "SSDP_Z_INV"},
+                                          {DSSA, "DSSA"},
+                                          {DSSA_INV, "DSSA_INV"},
                                           {DSDA, "DSDA"},
                                           {DSDA_INV, "DSDA_INV"},
                                           {DSDA_SECOND, "DSDA_SECOND"},
                                           {DSDA_SECOND_INV, "DSDA_SECOND_INV"},
                                       })
+
+inline void to_json(json& j, const QnicInterface& qi) {
+  j = json{{"partner_address", qi.partner_addr}, {"qnic_type", qi.qnic_type}, {"qnic_id", qi.qnic_id}};
+  if (qi.qnic_address) {
+    j["qnic_address"] = qi.qnic_address;
+  }
+}
+
+inline void from_json(const json& j, QnicInterface& qi) {
+  j.at("partner_address").get_to(qi.partner_addr);
+  j.at("qnic_type").get_to(qi.qnic_type);
+  j.at("qnic_id").get_to(qi.qnic_id);
+  if (j.contains("qnic_address")) {
+    j.at("qnic_address").get_to(qi.qnic_address);
+  }
+}
 class Action {
  public:
   Action() {}  // for deserialization
   Action(int partner_addr, QNIC_type qnic_type, int qnic_id);
-  Action(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id) : partner_address(partner_addr), qnic_types(qnic_type), qnic_ids(qnic_id){};
+  Action(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id);
   virtual ~Action() {}
-  std::vector<int> partner_address;
-  std::vector<QNIC_type> qnic_types;
-  std::vector<int> qnic_ids;
+  std::vector<QnicInterface> qnic_interfaces;
 
   virtual json serialize_json() = 0;
   virtual void deserialize_json(json serialized) = 0;
@@ -64,7 +80,9 @@ class Purification : public Action {
 class EntanglementSwapping : public Action {
  public:
   EntanglementSwapping(json serialized) { deserialize_json(serialized); }  // for deserialization
-  EntanglementSwapping(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id);
+  EntanglementSwapping(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id, std::vector<QNIC_type> remote_qnic_type,
+                       std::vector<int> remote_qnic_id, std::vector<int> remote_qnic_address);
+  std::vector<QnicInterface> remote_qnic_interfaces;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };
@@ -80,8 +98,9 @@ class Wait : public Action {
 class Tomography : public Action {
  public:
   Tomography(json serialized) { deserialize_json(serialized); }  // for deserialization
-  Tomography(int num_measurement, int partner_addr, QNIC_type qnic_type, int qnic_id);
+  Tomography(int num_measurement, int owner_addr, int partner_addr, QNIC_type qnic_type, int qnic_id);
   int num_measurement;
+  int owner_address;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };

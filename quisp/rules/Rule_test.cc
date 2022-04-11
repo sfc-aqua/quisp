@@ -46,7 +46,7 @@ TEST(RuleTest, serialize_json_purification_rule) {
   auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.85, 1, QNIC_E, 13);
   condition->addClause(std::move(enough_resource_clause));
   // purification_type, partner_addr, qnic_type, qnic_id
-  auto action = std::make_unique<Purification>(PurType::SSDP_X, 1, QNIC_E, 13);
+  auto action = std::make_unique<Purification>(PurType::DSSA, 1, QNIC_E, 13);
   // add condition and action
   purification->setCondition(std::move(condition));
   purification->setAction(std::move(action));
@@ -65,20 +65,20 @@ TEST(RuleTest, serialize_json_purification_rule) {
   EXPECT_EQ(purification_json["rule_id"], rule1->rule_id);
   EXPECT_EQ(purification_json["next_rule_id"], rule1->to);
   EXPECT_EQ(purification_json["name"], "purification");
-  EXPECT_EQ(purification_json["partners"][0], 1);
+  EXPECT_EQ(purification_json["interface"][0]["partner_address"], 1);
   auto clause_json = purification_json["condition"]["clauses"][0];  // (first clause) enough resource clause
   EXPECT_EQ(clause_json["type"], "enough_resource");
   EXPECT_EQ(clause_json["options"]["num_resource"], 1);
   EXPECT_EQ(clause_json["options"]["required_fidelity"], 0.85);
-  EXPECT_EQ(clause_json["options"]["partner_address"], 1);
-  EXPECT_EQ(clause_json["options"]["qnic_type"], QNIC_E);
-  EXPECT_EQ(clause_json["options"]["qnic_id"], 13);
+  EXPECT_EQ(clause_json["options"]["interface"]["partner_address"], 1);
+  EXPECT_EQ(clause_json["options"]["interface"]["qnic_type"], QNIC_E);
+  EXPECT_EQ(clause_json["options"]["interface"]["qnic_id"], 13);
   auto action_json = purification_json["action"];
   EXPECT_EQ(action_json["type"], "purification");
-  EXPECT_EQ(action_json["options"]["purification_type"], "SSDP_X");
-  EXPECT_EQ(action_json["options"]["partner_address"][0], 1);
-  EXPECT_EQ(action_json["options"]["qnic_type"][0], "QNIC_E");
-  EXPECT_EQ(action_json["options"]["qnic_id"][0], 13);
+  EXPECT_EQ(action_json["options"]["purification_type"], "DSSA");
+  EXPECT_EQ(action_json["options"]["interface"][0]["partner_address"], 1);
+  EXPECT_EQ(action_json["options"]["interface"][0]["qnic_type"], "QNIC_E");
+  EXPECT_EQ(action_json["options"]["interface"][0]["qnic_id"], 13);
 }
 
 TEST(RuleTest, serialize_json_swapping_rule) {
@@ -89,6 +89,9 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   std::vector<int> partners = {1, 3};
   std::vector<QNIC_type> qnic_types = {QNIC_E, QNIC_R};
   std::vector<int> qnic_id = {13, 15};
+  std::vector<QNIC_type> remote_qnic_types = {QNIC_R, QNIC_E};
+  std::vector<int> remote_qnic_id = {12, 16};
+  std::vector<int> remote_qnic_address = {21, 22};
   auto swapping = std::make_unique<Rule>(partners, qnic_types, qnic_id, true);
   swapping->setName("swapping");
   auto condition = std::make_unique<Condition>();
@@ -99,7 +102,7 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   condition->addClause(std::move(enough_resource_clause_left));
   condition->addClause(std::move(enough_resource_clause_right));
 
-  auto action = std::make_unique<EntanglementSwapping>(partners, qnic_types, qnic_id);
+  auto action = std::make_unique<EntanglementSwapping>(partners, qnic_types, qnic_id, remote_qnic_types, remote_qnic_id, remote_qnic_address);
 
   // add condition and action
   swapping->setCondition(std::move(condition));
@@ -120,36 +123,36 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   EXPECT_EQ(swapping_json["rule_id"], rule1->rule_id);
   EXPECT_EQ(swapping_json["next_rule_id"], rule1->to);
   EXPECT_EQ(swapping_json["name"], "swapping");
-  EXPECT_EQ(swapping_json["partners"][0], 1);
-  EXPECT_EQ(swapping_json["partners"][1], 3);
+  EXPECT_EQ(swapping_json["interface"][0]["partner_address"], 1);
+  EXPECT_EQ(swapping_json["interface"][1]["partner_address"], 3);
 
   // first clause: enough resource with partner 1 and fidelity > 0.85
   auto clause1_json = swapping_json["condition"]["clauses"][0];
   EXPECT_EQ(clause1_json["type"], "enough_resource");
   EXPECT_EQ(clause1_json["options"]["num_resource"], 1);
   EXPECT_EQ(clause1_json["options"]["required_fidelity"], 0.85);
-  EXPECT_EQ(clause1_json["options"]["partner_address"], 1);
-  EXPECT_EQ(clause1_json["options"]["qnic_type"], "QNIC_E");
-  EXPECT_EQ(clause1_json["options"]["qnic_id"], 13);
+  EXPECT_EQ(clause1_json["options"]["interface"]["partner_address"], 1);
+  EXPECT_EQ(clause1_json["options"]["interface"]["qnic_type"], "QNIC_E");
+  EXPECT_EQ(clause1_json["options"]["interface"]["qnic_id"], 13);
 
   // second clause: enough resource with partner 3 and fidelity > 0.85
   auto clause2_json = swapping_json["condition"]["clauses"][1];
   EXPECT_EQ(clause2_json["type"], "enough_resource");
   EXPECT_EQ(clause2_json["options"]["num_resource"], 1);
   EXPECT_EQ(clause2_json["options"]["required_fidelity"], 0.85);
-  EXPECT_EQ(clause2_json["options"]["partner_address"], 3);
-  EXPECT_EQ(clause2_json["options"]["qnic_type"], "QNIC_R");
-  EXPECT_EQ(clause2_json["options"]["qnic_id"], 15);
+  EXPECT_EQ(clause2_json["options"]["interface"]["partner_address"], 3);
+  EXPECT_EQ(clause2_json["options"]["interface"]["qnic_type"], "QNIC_R");
+  EXPECT_EQ(clause2_json["options"]["interface"]["qnic_id"], 15);
 
   // action: entanglement swapping ("swapping")
   auto action_json = swapping_json["action"];
   EXPECT_EQ(action_json["type"], "swapping");
-  EXPECT_EQ(action_json["options"]["partner_address"][0], 1);
-  EXPECT_EQ(action_json["options"]["qnic_type"][0], "QNIC_E");
-  EXPECT_EQ(action_json["options"]["qnic_id"][0], 13);
-  EXPECT_EQ(action_json["options"]["partner_address"][1], 3);
-  EXPECT_EQ(action_json["options"]["qnic_type"][1], "QNIC_R");
-  EXPECT_EQ(action_json["options"]["qnic_id"][1], 15);
+  EXPECT_EQ(action_json["options"]["interface"][0]["partner_address"], 1);
+  EXPECT_EQ(action_json["options"]["interface"][0]["qnic_type"], "QNIC_E");
+  EXPECT_EQ(action_json["options"]["interface"][0]["qnic_id"], 13);
+  EXPECT_EQ(action_json["options"]["interface"][1]["partner_address"], 3);
+  EXPECT_EQ(action_json["options"]["interface"][1]["qnic_type"], "QNIC_R");
+  EXPECT_EQ(action_json["options"]["interface"][1]["qnic_id"], 15);
 }
 
 TEST(RuleTest, deserialize_json_purification_rule) {
@@ -163,7 +166,7 @@ TEST(RuleTest, deserialize_json_purification_rule) {
   auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.85, 1, QNIC_E, 13);
   condition->addClause(std::move(enough_resource_clause));
   // purification_type, partner_addr, qnic_type, qnic_id
-  auto action = std::make_unique<Purification>(PurType::SSDP_X, 1, QNIC_E, 13);
+  auto action = std::make_unique<Purification>(PurType::DSSA, 1, QNIC_E, 13);
   // add condition and action
   purification->setCondition(std::move(condition));
   purification->setAction(std::move(action));
@@ -185,7 +188,7 @@ TEST(RuleTest, deserialize_json_purification_rule) {
   EXPECT_EQ(empty_rule->rule_id, 0);
   EXPECT_EQ(empty_rule->to, 1);
   EXPECT_EQ(empty_rule->name, "purification");
-  EXPECT_EQ(empty_rule->partners.at(0), 1);
+  EXPECT_EQ(empty_rule->qnic_interfaces.at(0).partner_addr, 1);
 }
 
 }  // namespace

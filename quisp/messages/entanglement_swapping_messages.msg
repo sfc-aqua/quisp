@@ -67,3 +67,8 @@ packet SimultaneousSwappingResult extends Header{
     int index_in_path;
     int path_length_exclude_IR;
 }
+
+packet WaitResult extends Header {
+    unsigned long RuleSet_id;
+    unsigned long Rule_id;
+}
