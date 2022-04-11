@@ -2,6 +2,7 @@ package networks;
 
 import ned.DatarateChannel;
 import modules.*;
+import modules.Backend.Backend;
 import channels.*;
 
 //
@@ -27,6 +28,7 @@ network Simple_constant_quantum_cost
         }
 
     submodules:
+        backend: Backend;
         endnode[3]: QNode {
             address = 10000000+index;
             nodeType = "EndNode";

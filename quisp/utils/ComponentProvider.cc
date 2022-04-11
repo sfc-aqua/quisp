@@ -66,6 +66,11 @@ IRealTimeController *ComponentProvider::getRealTimeController() {
   return strategy->getRealTimeController();
 }
 
+IQuantumBackend *ComponentProvider::getQuantumBackend() {
+  ensureStrategy();
+  return strategy->getQuantumBackend();
+}
+
 void ComponentProvider::setStrategy(std::unique_ptr<IComponentProviderStrategy> _strategy) { strategy = std::move(_strategy); }
 
 void ComponentProvider::ensureStrategy() {

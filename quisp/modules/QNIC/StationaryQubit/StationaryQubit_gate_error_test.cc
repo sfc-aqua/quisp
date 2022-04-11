@@ -1,12 +1,21 @@
 #include <gtest/gtest.h>
+#include <modules/common_types.h>
 #include <test_utils/TestUtils.h>
 #include <unsupported/Eigen/MatrixFunctions>
 #include "StationaryQubit.h"
 #include "omnetpp/simtime.h"
 
 using namespace quisp::modules;
+using namespace quisp::modules::common;
 using namespace quisp_test;
 namespace {
+class Strategy : public TestComponentProviderStrategy {
+ public:
+  Strategy() : backend(new MockQuantumBackend()) {}
+  ~Strategy() {}
+  IQuantumBackend *getQuantumBackend() override { return backend; }
+  MockQuantumBackend *backend;
+};
 
 class StatQubitTarget : public StationaryQubit {
  public:
@@ -16,7 +25,10 @@ class StatQubitTarget : public StationaryQubit {
   using StationaryQubit::par;
   using StationaryQubit::setSingleQubitGateErrorModel;
   using StationaryQubit::setTwoQubitGateErrorCeilings;
-  StatQubitTarget() : StationaryQubit() { setComponentType(new TestModuleType("test qubit")); }
+  StatQubitTarget() : StationaryQubit() {
+    setComponentType(new TestModuleType("test qubit"));
+    provider.setStrategy(std::make_unique<Strategy>());
+  }
   void reset() {
     setFree(true);
     updated_time = SimTime(0);

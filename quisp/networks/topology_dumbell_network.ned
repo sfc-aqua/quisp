@@ -19,6 +19,7 @@ import modules.*;
 import channels.*;
 import ned.IdealChannel;
 import ned.DatarateChannel;
+import modules.Backend.Backend;
 
 // Dumbell MM network
 network topology_dumbell_MM
@@ -26,6 +27,7 @@ network topology_dumbell_MM
     parameters:
         **.Speed_of_light_in_fiber = 205336.986301 km;
     submodules:
+        backend: Backend;
         EndNode1: QNode {
             address = 1;
             nodeType = "EndNode";
@@ -92,6 +94,7 @@ network topology_dumbell_MIM
     parameters:
         **.Speed_of_light_in_fiber = 205336.986301 km;
     submodules:
+        backend: Backend;
         EndNode1: QNode {
             address = 1;
             nodeType = "EndNode";

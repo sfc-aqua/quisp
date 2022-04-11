@@ -64,6 +64,15 @@ modules::IRealTimeController *DefaultComponentProviderStrategy::getRealTimeContr
   auto *qrsa = getQRSA();
   return check_and_cast<IRealTimeController *>(qrsa->getSubmodule("rt"));
 }
+IQuantumBackend *DefaultComponentProviderStrategy::getQuantumBackend() {
+  auto *qnode = getQNode();
+  auto *mod = qnode->getModuleByPath("backend");
+  if (mod == nullptr) {
+    throw cRuntimeError("Quantum backend not found");
+  }
+  auto *backend_container = check_and_cast<BackendContainer *>(mod);
+  return backend_container->getQuantumBackend();
+}
 
 cModule *DefaultComponentProviderStrategy::getQRSA() {
   auto *qnode = getQNode();
