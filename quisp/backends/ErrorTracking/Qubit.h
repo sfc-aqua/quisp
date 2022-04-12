@@ -6,6 +6,7 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include "../interfaces/IQuantumBackend.h"
 #include "../interfaces/IQubit.h"
+#include "backends/ErrorTracking/Configuration.h"
 #include "omnetpp/simtime.h"
 #include "types.h"
 
@@ -37,6 +38,7 @@ class ErrorTrackingQubit : public IQubit {
   ~ErrorTrackingQubit();
   void setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate, double completely_mixed_rate);
   void reset();
+  void configure(std::unique_ptr<ErrorTrackingConfiguration> configuration);
   const IQubitId* const getId() const override;
   void setFree() override;
   MeasureXResult correlationMeasureX() override;

@@ -7,6 +7,15 @@ ErrorTrackingQubit::ErrorTrackingQubit(const IQubitId* id, ErrorTrackingBackend*
   // emission_success_probability = par("emission_success_probability");
 }
 ErrorTrackingQubit::~ErrorTrackingQubit() {}
+void ErrorTrackingQubit::configure(std::unique_ptr<ErrorTrackingConfiguration> c) {
+  setMemoryErrorRates(c->memory_x_err_rate, c->memory_y_err_rate, c->memory_z_err_rate, c->memory_excitation_rate, c->memory_relaxation_rate, c->memory_completely_mixed_rate);
+  measurement_err.setParams(c->measurement_x_err_rate, c->measurement_y_err_rate, c->measurement_z_err_rate);
+  gate_err_h.setParams(c->h_gate_x_err_ratio, c->h_gate_y_err_ratio, c->h_gate_z_err_ratio, c->h_gate_err_rate);
+  gate_err_x.setParams(c->x_gate_x_err_ratio, c->x_gate_y_err_ratio, c->x_gate_z_err_ratio, c->x_gate_err_rate);
+  gate_err_z.setParams(c->z_gate_x_err_ratio, c->z_gate_y_err_ratio, c->z_gate_z_err_ratio, c->z_gate_err_rate);
+  gate_err_cnot.setParams(c->cnot_gate_err_rate, c->cnot_gate_ix_err_ratio, c->cnot_gate_xi_err_ratio, c->cnot_gate_xx_err_ratio, c->cnot_gate_iz_err_ratio,
+                          c->cnot_gate_zi_err_ratio, c->cnot_gate_zz_err_ratio, c->cnot_gate_iy_err_ratio, c->cnot_gate_yi_err_ratio, c->cnot_gate_yy_err_ratio);
+}
 void ErrorTrackingQubit::setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate,
                                              double completely_mixed_rate) {
   memory_err.x_error_rate = x_error_rate;

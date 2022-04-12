@@ -6,6 +6,7 @@
 
 namespace quisp::modules::backend {
 using quisp::modules::common::ErrorTrackingBackend;
+using quisp::modules::common::ErrorTrackingConfiguration;
 using quisp::modules::common::IQuantumBackend;
 using rng::RNG;
 
@@ -20,6 +21,7 @@ class BackendContainer : public omnetpp::cSimpleModule {
   IQuantumBackend* getQuantumBackend();
 
  protected:
+  void configureErrorTrackingBackend();
   std::unique_ptr<IQuantumBackend> backend;
 };
 
