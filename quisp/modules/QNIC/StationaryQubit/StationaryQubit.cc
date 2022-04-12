@@ -59,10 +59,61 @@ void StationaryQubit::initialize() {
   // initialize variables for graph state representation tracking
   vertex_operator = CliffordOperator::H;
 
-  auto *backend = provider.getQuantumBackend();
-  qubit_ref = backend->getQubit(new QubitId(node_address, qnic_index, qnic_type, stationaryQubit_address));
+  backend = provider.getQuantumBackend();
+  auto config = prepareBackendQubitConfiguration();
+  qubit_ref = backend->getQubit(new QubitId(node_address, qnic_index, qnic_type, stationaryQubit_address), std::move(config));
   if (qubit_ref == nullptr) throw std::runtime_error("qubit_ref nullptr error");
   setFree(false);
+}
+
+void StationaryQubit::tryToAssignParDouble(double &field, const char *par_name) {
+  int par_index = findPar(par_name);
+  if (par_index == -1) return;
+  field = par(par_index).doubleValue();
+}
+
+std::unique_ptr<IConfiguration> StationaryQubit::prepareBackendQubitConfiguration() {
+  auto conf = backend->getDefaultConfiguration();
+  if (auto et_conf = dynamic_cast<backend::ErrorTrackingConfiguration *>(conf.get())) {
+    tryToAssignParDouble(et_conf->measurement_x_err_rate, "Measurement_X_error_ratio");
+    et_conf->measurement_x_err_rate = par("Measurement_X_error_ratio").doubleValue();
+    et_conf->measurement_y_err_rate = par("Measurement_Y_error_ratio").doubleValue();
+    et_conf->measurement_z_err_rate = par("Measurement_Z_error_ratio").doubleValue();
+
+    et_conf->h_gate_err_rate = par("Hgate_error_rate").doubleValue();
+    et_conf->h_gate_x_err_ratio = par("Hgate_X_error_ratio").doubleValue();
+    et_conf->h_gate_y_err_ratio = par("Hgate_Y_error_ratio").doubleValue();
+    et_conf->h_gate_z_err_ratio = par("Hgate_Z_error_ratio").doubleValue();
+
+    et_conf->x_gate_err_rate = par("Xgate_error_rate").doubleValue();
+    et_conf->x_gate_x_err_ratio = par("Xgate_X_error_ratio").doubleValue();
+    et_conf->x_gate_y_err_ratio = par("Xgate_Y_error_ratio").doubleValue();
+    et_conf->x_gate_z_err_ratio = par("Xgate_Z_error_ratio").doubleValue();
+
+    et_conf->z_gate_err_rate = par("Zgate_error_rate").doubleValue();
+    et_conf->z_gate_x_err_ratio = par("Zgate_X_error_ratio").doubleValue();
+    et_conf->z_gate_y_err_ratio = par("Zgate_Y_error_ratio").doubleValue();
+    et_conf->z_gate_z_err_ratio = par("Zgate_Z_error_ratio").doubleValue();
+
+    et_conf->cnot_gate_err_rate = par("CNOTgate_error_rate").doubleValue();
+    et_conf->cnot_gate_iz_err_ratio = par("CNOTgate_IZ_error_ratio").doubleValue();
+    et_conf->cnot_gate_zi_err_ratio = par("CNOTgate_ZI_error_ratio").doubleValue();
+    et_conf->cnot_gate_zz_err_ratio = par("CNOTgate_ZZ_error_ratio").doubleValue();
+    et_conf->cnot_gate_ix_err_ratio = par("CNOTgate_IX_error_ratio").doubleValue();
+    et_conf->cnot_gate_xi_err_ratio = par("CNOTgate_XI_error_ratio").doubleValue();
+    et_conf->cnot_gate_xx_err_ratio = par("CNOTgate_XX_error_ratio").doubleValue();
+    et_conf->cnot_gate_iy_err_ratio = par("CNOTgate_IY_error_ratio").doubleValue();
+    et_conf->cnot_gate_yi_err_ratio = par("CNOTgate_YI_error_ratio").doubleValue();
+    et_conf->cnot_gate_yy_err_ratio = par("CNOTgate_YY_error_ratio").doubleValue();
+
+    et_conf->memory_x_err_rate = par("memory_X_error_rate").doubleValue();
+    et_conf->memory_y_err_rate = par("memory_Y_error_rate").doubleValue();
+    et_conf->memory_z_err_rate = par("memory_Z_error_rate").doubleValue();
+    et_conf->memory_excitation_rate = par("memory_energy_excitation_rate").doubleValue();
+    et_conf->memory_relaxation_rate = par("memory_energy_relaxation_rate").doubleValue();
+    et_conf->memory_completely_mixed_rate = par("memory_completely_mixed_rate").doubleValue();
+  }
+  return conf;
 }
 
 void StationaryQubit::finish() {}

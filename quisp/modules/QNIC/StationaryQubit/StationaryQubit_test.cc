@@ -1,10 +1,15 @@
 #include "StationaryQubit.h"
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <modules/common_types.h>
 #include <test_utils/TestUtils.h>
 #include <cmath>
 #include <unsupported/Eigen/MatrixFunctions>
+#include "backends/interfaces/IConfiguration.h"
+#include "backends/interfaces/IQuantumBackend.h"
+#include "test_utils/mock_backends/MockQuantumBackend.h"
 
+using namespace testing;
 using namespace quisp::modules;
 using namespace quisp::modules::common;
 using namespace quisp_test;
@@ -14,19 +19,19 @@ namespace {
 
 class Strategy : public TestComponentProviderStrategy {
  public:
-  Strategy() : backend(new MockQuantumBackend()) {}
+  Strategy(IQuantumBackend *backend) : backend(backend) {}
   ~Strategy() {}
   IQuantumBackend *getQuantumBackend() override { return backend; }
-  MockQuantumBackend *backend;
+  IQuantumBackend *backend;
 };
 
 class StatQubitTarget : public StationaryQubit {
  public:
   using StationaryQubit::initialize;
   using StationaryQubit::par;
-  StatQubitTarget() : StationaryQubit() {
+  StatQubitTarget(IQuantumBackend *backend) : StationaryQubit() {
     setComponentType(new TestModuleType("test qubit"));
-    provider.setStrategy(std::make_unique<Strategy>());
+    provider.setStrategy(std::make_unique<Strategy>(backend));
   }
   void reset() {
     setFree(true);
@@ -96,6 +101,20 @@ class StatQubitTarget : public StationaryQubit {
   }
 };
 
+class StatQubitTest : public ::testing::Test {
+ protected:
+  void SetUp() {
+    prepareSimulation();
+    backend = new MockQuantumBackend();
+    qubit = new StatQubitTarget(backend);
+    qubit->fillParams();
+  }
+  void TearDown() { delete backend; }
+
+  StatQubitTarget *qubit;
+  MockQuantumBackend *backend;
+};
+
 // TEST(StatQubitTest, initialize_memory_transition_matrix) {
 //   auto *sim = prepareSimulation();
 //   auto *qubit = new StatQubitTarget{};
@@ -142,17 +161,22 @@ class StatQubitTarget : public StationaryQubit {
 //   ASSERT_EQ(mat.row(6), row6);
 // }
 
+TEST_F(StatQubitTest, init) {
+  auto *backend_qubit = new MockBackendQubit();
+  auto *config = new IConfiguration();
+  EXPECT_CALL(*backend, getDefaultConfiguration()).WillOnce(Return(ByMove(std::unique_ptr<IConfiguration>(config))));
+  EXPECT_CALL(*backend, getQubit(NotNull(), NotNull())).WillOnce(Return(backend_qubit));
+  EXPECT_CALL(*backend_qubit, setFree()).WillOnce(Return());
+  qubit->callInitialize();
+  delete backend_qubit;
+}
+
 // TEST(StatQubitTest, setFree) {
 //   auto *sim = prepareSimulation();
 //   auto *qubit = new StatQubitTarget{};
 //   sim->registerComponent(qubit);
 //   qubit->fillParams();
 //   qubit->callInitialize();
-//   qubit->par("GOD_Xerror") = true;
-//   qubit->par("GOD_Zerror") = true;
-//   qubit->par("GOD_EXerror") = true;
-//   qubit->par("GOD_REerror") = true;
-//   qubit->par("GOD_CMerror") = true;
 
 //   qubit->setFree(true);
 //   EXPECT_EQ(qubit->updated_time, simTime());
@@ -162,12 +186,6 @@ class StatQubitTarget : public StationaryQubit {
 //   qubit->setFree(true);
 //   EXPECT_EQ(qubit->updated_time, simTime());
 
-//   // check the qubit reset properly
-//   EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_REerror").boolValue());
-//   EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
 // }
 
 // TEST(StatQubitTest, setFreeUpdatesTime) {

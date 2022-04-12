@@ -13,6 +13,7 @@
 #include <string>
 #include "IStationaryQubit.h"
 #include "QubitId.h"
+#include "backends/interfaces/IQuantumBackend.h"
 
 namespace quisp::modules {
 
@@ -28,6 +29,7 @@ namespace quisp::modules {
 
 typedef std::complex<double> Complex;
 using quisp::modules::common::IBackendQubit;
+using quisp::modules::common::IConfiguration;
 using quisp::modules::common::IQuantumBackend;
 
 class StationaryQubit : public IStationaryQubit {
@@ -160,13 +162,14 @@ class StationaryQubit : public IStationaryQubit {
   messages::PhotonicQubit *generateEntangledPhoton();
   void setBusy();
   Eigen::Matrix2cd getErrorMatrix(StationaryQubit *qubit);
-  // returns the dm of the physical Bell pair. Used for tomography.
-  void setMeasurementErrorModel(MeasurementErrorModel &model);
+  std::unique_ptr<IConfiguration> prepareBackendQubitConfiguration();
+  void tryToAssignParDouble(double &field, const char *par_name);
 
   // this is for debugging. class internal use only.
   // and it's different from QubitRecord's one.
   bool is_busy;
   utils::ComponentProvider provider;
+  IQuantumBackend *backend;
 };
 
 }  // namespace quisp::modules

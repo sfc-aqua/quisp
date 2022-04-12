@@ -20,7 +20,7 @@ class ETQubitMemoryErrorTest : public ::testing::Test {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
     rng->double_value = .0;
-    backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng));
+    backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<ErrorTrackingConfiguration>());
     qubit = dynamic_cast<Qubit*>(backend->getQubit(0));
     partner_qubit = dynamic_cast<Qubit*>(backend->getQubit(1));
     if (qubit == nullptr) throw std::runtime_error("Qubit is nullptr");

@@ -6,6 +6,7 @@
 #include "../interfaces/IQubitId.h"
 #include "../interfaces/IRandomNumberGenerator.h"
 #include "Backend.h"
+#include "Configuration.h"
 #include "Qubit.h"
 
 namespace quisp_test::backends {
@@ -13,6 +14,7 @@ using omnetpp::SimTime;
 using ::quisp::backends::abstract::IQubit;
 using ::quisp::backends::abstract::IQubitId;
 using ::quisp::backends::error_tracking::ErrorTrackingBackend;
+using ::quisp::backends::error_tracking::ErrorTrackingConfiguration;
 using ::quisp::backends::error_tracking::ErrorTrackingQubit;
 using namespace ::quisp::backends;
 using namespace ::quisp::backends::abstract;
@@ -76,7 +78,7 @@ class Qubit : public ErrorTrackingQubit {
 class Backend : public ErrorTrackingBackend {
  public:
   using ErrorTrackingBackend::qubits;
-  Backend(std::unique_ptr<IRandomNumberGenerator> rng) : ErrorTrackingBackend(std::move(rng)) {}
+  Backend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<ErrorTrackingConfiguration> config) : ErrorTrackingBackend(std::move(rng), std::move(config)) {}
   IQubit* getQubit(int id) { return getQubit(new QubitId(id)); }
   IQubit* getQubit(const IQubitId* id) override {
     auto qubit = qubits.find(id);

@@ -21,12 +21,11 @@ using omnetpp::SimTime;
 
 class ErrorTrackingBackend : public IQuantumBackend {
  public:
-  ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng);
   ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<ErrorTrackingConfiguration> configuration);
   ~ErrorTrackingBackend();
   IQubit* getQubit(const IQubitId* id) override;
   IQubit* getQubit(const IQubitId* id, std::unique_ptr<IConfiguration> configuration) override;
-  std::unique_ptr<ErrorTrackingConfiguration> getDefaultConfiguration() const;
+  std::unique_ptr<IConfiguration> getDefaultConfiguration() const override;
   const SimTime& getSimTime() override;
   void setSimTime(SimTime time) override;
   double dblrand();

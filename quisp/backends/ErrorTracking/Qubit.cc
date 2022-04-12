@@ -3,10 +3,10 @@
 #include "Backend.h"
 namespace quisp::backends::error_tracking {
 
-ErrorTrackingQubit::ErrorTrackingQubit(const IQubitId* id, ErrorTrackingBackend* const backend) : id(id), memory_transition_matrix(MatrixXd::Zero(7, 7)), backend(backend) {
-  // emission_success_probability = par("emission_success_probability");
-}
+ErrorTrackingQubit::ErrorTrackingQubit(const IQubitId* id, ErrorTrackingBackend* const backend) : id(id), memory_transition_matrix(MatrixXd::Zero(7, 7)), backend(backend) {}
+
 ErrorTrackingQubit::~ErrorTrackingQubit() {}
+
 void ErrorTrackingQubit::configure(std::unique_ptr<ErrorTrackingConfiguration> c) {
   setMemoryErrorRates(c->memory_x_err_rate, c->memory_y_err_rate, c->memory_z_err_rate, c->memory_excitation_rate, c->memory_relaxation_rate, c->memory_completely_mixed_rate);
   measurement_err.setParams(c->measurement_x_err_rate, c->measurement_y_err_rate, c->measurement_z_err_rate);
@@ -16,6 +16,7 @@ void ErrorTrackingQubit::configure(std::unique_ptr<ErrorTrackingConfiguration> c
   gate_err_cnot.setParams(c->cnot_gate_err_rate, c->cnot_gate_ix_err_ratio, c->cnot_gate_xi_err_ratio, c->cnot_gate_xx_err_ratio, c->cnot_gate_iz_err_ratio,
                           c->cnot_gate_zi_err_ratio, c->cnot_gate_zz_err_ratio, c->cnot_gate_iy_err_ratio, c->cnot_gate_yi_err_ratio, c->cnot_gate_yy_err_ratio);
 }
+
 void ErrorTrackingQubit::setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate,
                                              double completely_mixed_rate) {
   memory_err.x_error_rate = x_error_rate;
