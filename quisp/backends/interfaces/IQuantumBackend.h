@@ -1,5 +1,6 @@
 #pragma once
 #include <omnetpp/simtime_t.h>
+#include "IConfiguration.h"
 #include "IQubitId.h"
 
 namespace quisp::backends::abstract {
@@ -7,6 +8,7 @@ namespace quisp::backends::abstract {
 using omnetpp::SimTime;
 using omnetpp::SimTimeUnit;
 class IQubit;
+class IConfigurationCollector;
 
 /**
  * @brief The abstract interface for a quantum backend.
@@ -20,6 +22,7 @@ class IQuantumBackend {
   virtual ~IQuantumBackend(){};
 
   virtual IQubit* getQubit(const IQubitId* id) = 0;
+  virtual IQubit* getQubit(const IQubitId* id, std::unique_ptr<IConfiguration> configuration) = 0;
   virtual const SimTime& getSimTime() = 0;
   virtual void setSimTime(SimTime time) = 0;
 
