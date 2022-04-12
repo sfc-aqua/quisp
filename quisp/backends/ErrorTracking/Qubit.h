@@ -1,6 +1,7 @@
 #pragma once
 #include <Eigen/Eigen>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <unsupported/Eigen/KroneckerProduct>
 #include <unsupported/Eigen/MatrixFunctions>

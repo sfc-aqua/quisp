@@ -31,7 +31,6 @@ class StatQubitTarget : public StationaryQubit {
   using StationaryQubit::localMeasureY;
   using StationaryQubit::localMeasureZ;
   using StationaryQubit::par;
-  using StationaryQubit::setMeasurementErrorModel;
   StatQubitTarget() : StationaryQubit() {
     setComponentType(new TestModuleType("test qubit"));
     provider.setStrategy(std::make_unique<Strategy>());

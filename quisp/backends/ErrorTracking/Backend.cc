@@ -8,10 +8,9 @@ namespace quisp::backends::error_tracking {
 using error_tracking::ErrorTrackingQubit;
 
 ErrorTrackingBackend::ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<ErrorTrackingConfiguration> configuration)
-    : ErrorTrackingBackend(std::move(rng)) {
+    : current_time(SimTime()), rng(std::move(rng)) {
   config = std::move(configuration);
 }
-ErrorTrackingBackend::ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng) : current_time(SimTime()), rng(std::move(rng)) {}
 
 ErrorTrackingBackend::~ErrorTrackingBackend() {
   for (auto& pair : qubits) {
@@ -42,7 +41,7 @@ IQubit* ErrorTrackingBackend::getQubit(const IQubitId* id) {
   qubits.insert({id, std::move(original_qubit)});
   return qubit_ptr;
 }
-std::unique_ptr<ErrorTrackingConfiguration> ErrorTrackingBackend::getDefaultConfiguration() const {
+std::unique_ptr<IConfiguration> ErrorTrackingBackend::getDefaultConfiguration() const {
   // copy the default backend configuration for each qubit
   return std::make_unique<ErrorTrackingConfiguration>(*config.get());
 }

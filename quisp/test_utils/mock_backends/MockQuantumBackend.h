@@ -16,5 +16,6 @@ class MockQuantumBackend : public IQuantumBackend {
   MOCK_METHOD(IBackendQubit *, getQubit, (const IQubitId *, std::unique_ptr<IConfiguration> configuration), (override));
   MOCK_METHOD(const SimTime &, getSimTime, (), (override));
   MOCK_METHOD(void, setSimTime, (SimTime time), (override));
+  MOCK_METHOD(std::unique_ptr<IConfiguration>, getDefaultConfiguration, (), (const, override));
 };
 }  // namespace quisp_test::mock_backends

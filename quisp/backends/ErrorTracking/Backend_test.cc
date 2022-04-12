@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 #include <omnetpp.h>
 #include "../interfaces/IRandomNumberGenerator.h"
+#include "Configuration.h"
 #include "test.h"
 
 namespace {
@@ -15,7 +16,7 @@ class EtBackendTest : public ::testing::Test {
   virtual void SetUp() {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
-    backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng));
+    backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<ErrorTrackingConfiguration>());
   }
   TestRNG* rng;
   std::unique_ptr<Backend> backend;
