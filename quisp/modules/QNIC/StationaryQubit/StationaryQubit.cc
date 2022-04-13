@@ -60,25 +60,19 @@ void StationaryQubit::initialize() {
   vertex_operator = CliffordOperator::H;
 
   backend = provider.getQuantumBackend();
-  auto config = prepareBackendQubitConfiguration();
+  auto config = prepareBackendQubitConfiguration(par("overwrite_backend_qubit_config").boolValue());
   qubit_ref = backend->getQubit(new QubitId(node_address, qnic_index, qnic_type, stationaryQubit_address), std::move(config));
   if (qubit_ref == nullptr) throw std::runtime_error("qubit_ref nullptr error");
   setFree(false);
 }
 
-void StationaryQubit::tryToAssignParDouble(double &field, const char *par_name) {
-  int par_index = findPar(par_name);
-  if (par_index == -1) return;
-  field = par(par_index).doubleValue();
-}
-
-std::unique_ptr<IConfiguration> StationaryQubit::prepareBackendQubitConfiguration() {
+std::unique_ptr<IConfiguration> StationaryQubit::prepareBackendQubitConfiguration(bool overwrite) {
   auto conf = backend->getDefaultConfiguration();
+  if (!overwrite) return conf;
   if (auto et_conf = dynamic_cast<backend::ErrorTrackingConfiguration *>(conf.get())) {
-    tryToAssignParDouble(et_conf->measurement_x_err_rate, "Measurement_X_error_ratio");
-    et_conf->measurement_x_err_rate = par("Measurement_X_error_ratio").doubleValue();
-    et_conf->measurement_y_err_rate = par("Measurement_Y_error_ratio").doubleValue();
-    et_conf->measurement_z_err_rate = par("Measurement_Z_error_ratio").doubleValue();
+    et_conf->measurement_x_err_rate = par("X_measurement_error_rate").doubleValue();
+    et_conf->measurement_y_err_rate = par("Y_measurement_error_rate").doubleValue();
+    et_conf->measurement_z_err_rate = par("Z_measurement_error_rate").doubleValue();
 
     et_conf->h_gate_err_rate = par("Hgate_error_rate").doubleValue();
     et_conf->h_gate_x_err_ratio = par("Hgate_X_error_ratio").doubleValue();

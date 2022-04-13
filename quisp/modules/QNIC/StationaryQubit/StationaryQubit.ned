@@ -53,60 +53,34 @@ simple StationaryQubit
         double emission_X_error_rate = default(0);
         double emission_Y_error_rate = default(0);
 
-        // ZZZ -- these are configured at boot time
-        // characteristics of the hardware
-        // could eventually change over time if we model dynamic
-        // changes to the device
-        double memory_error_rate = default(0);// 10% per μs by default
-        double memory_Z_error_ratio = default(1);
-        double memory_X_error_ratio = default(1);
-        double memory_Y_error_ratio = default(1);
-        double memory_energy_excitation_ratio = default(1);
-        double memory_energy_relaxation_ratio = default(1);
-        double memory_completely_mixed_ratio = default(1);
+        bool overwrite_backend_qubit_config = default(false);
 
-        // ZZZ -- these are configured at boot time
-        // characteristics of the hardware
-        // could eventually change over time if we model dynamic
-        // changes to the device
-        double memory_Z_error_rate = default(0);
-        double memory_X_error_rate = default(0);
-        double memory_Y_error_rate = default(0);
-        double memory_energy_excitation_rate = default(0);
-        double memory_energy_relaxation_rate = default(0);
-        double memory_completely_mixed_rate = default(0);
+        // ErrorTracking Backend Qubit Configuration
+        // if overwrite_backend_qubit_config is true,
+        // these params overwrite the default configuration at the backend module.
+        double memory_error_rate = default(0);
+        double memory_Z_error_rate = default(1);
+        double memory_X_error_rate = default(1);
+        double memory_Y_error_rate = default(1);
+        double memory_energy_excitation_rate = default(1);
+        double memory_energy_relaxation_rate = default(1);
+        double memory_completely_mixed_rate = default(1);
 
-        // ZZZ -- these are configured at boot time
-        // characteristics of the hardware
-        // could eventually change over time if we model dynamic
-        // changes to the device
         double Hgate_error_rate = default(0);
         double Hgate_X_error_ratio = default(1);
         double Hgate_Y_error_ratio = default(1);
         double Hgate_Z_error_ratio = default(1);
 
-        // ZZZ -- these are configured at boot time
-        // characteristics of the hardware
-        // could eventually change over time if we model dynamic
-        // changes to the device
         double Xgate_error_rate = default(0);
         double Xgate_X_error_ratio = default(1);
         double Xgate_Y_error_ratio = default(1);
         double Xgate_Z_error_ratio = default(1);
 
-        // ZZZ -- these are configured at boot time
-        // characteristics of the hardware
-        // could eventually change over time if we model dynamic
-        // changes to the device
         double Zgate_error_rate = default(0);
         double Zgate_X_error_ratio = default(1);
         double Zgate_Y_error_ratio = default(1);
         double Zgate_Z_error_ratio = default(1);
 
-        // ZZZ -- these are configured at boot time
-        // characteristics of the hardware
-        // could eventually change over time if we model dynamic
-        // changes to the device
         double CNOTgate_error_rate = default(0);
         double CNOTgate_IZ_error_ratio = default(1);
         double CNOTgate_ZI_error_ratio = default(1);
@@ -121,9 +95,6 @@ simple StationaryQubit
         double X_measurement_error_rate = default(0);
         double Y_measurement_error_rate = default(0);
         double Z_measurement_error_rate = default(0);
-        //int ruleset_id = default(-1);
-        //int rule_id = default(-1);
-        //int action_index = default(-1);
     gates:
         inout tolens_quantum_port;
 }

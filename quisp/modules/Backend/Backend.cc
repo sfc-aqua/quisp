@@ -17,9 +17,9 @@ void BackendContainer::initialize() {
 
 void BackendContainer::configureErrorTrackingBackend() {
   auto conf = std::make_unique<ErrorTrackingConfiguration>();
-  conf->measurement_x_err_rate = par("Measurement_X_error_ratio").doubleValue();
-  conf->measurement_y_err_rate = par("Measurement_Y_error_ratio").doubleValue();
-  conf->measurement_z_err_rate = par("Measurement_Z_error_ratio").doubleValue();
+  conf->measurement_x_err_rate = par("Z_measurement_error_rate").doubleValue();
+  conf->measurement_y_err_rate = par("Y_measurement_error_rate").doubleValue();
+  conf->measurement_z_err_rate = par("Z_measurement_error_rate").doubleValue();
 
   conf->h_gate_err_rate = par("Hgate_error_rate").doubleValue();
   conf->h_gate_x_err_ratio = par("Hgate_X_error_ratio").doubleValue();
