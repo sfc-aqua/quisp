@@ -22,7 +22,7 @@ jobs:
           ln -sf /usr/bin/llvm-profdata-12 /usr/bin/llvm-profdata
           ln -sf /usr/bin/llvm-cov-12 /usr/bin/llvm-cov
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: make eigen
         run: make eigen
       - name: generate makefile
