@@ -7,6 +7,7 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include "backends/interfaces/IConfiguration.h"
 #include "backends/interfaces/IQuantumBackend.h"
+#include "test_utils/UtilFunctions.h"
 #include "test_utils/mock_backends/MockQuantumBackend.h"
 
 using namespace testing;
@@ -98,6 +99,7 @@ class StatQubitTarget : public StationaryQubit {
     setParInt(this, "GOD_entangled_qnic_address", 0);
     setParInt(this, "GOD_entangled_qnic_type", 0);
     setParDouble(this, "fidelity", -1.0);
+    setParBool(this, "overwrite_backend_qubit_config", false);
   }
 };
 

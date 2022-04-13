@@ -22,10 +22,9 @@ class BackendContainerTest : public ::testing::Test {
   virtual void SetUp() {
     auto *sim = utils::prepareSimulation();
     backend = new BackendContainer();
-    setParDouble(backend, "Measurement_error_rate", .01);
-    setParDouble(backend, "Measurement_X_error_ratio", .02);
-    setParDouble(backend, "Measurement_Y_error_ratio", .03);
-    setParDouble(backend, "Measurement_Z_error_ratio", .04);
+    setParDouble(backend, "X_measurement_error_rate", .02);
+    setParDouble(backend, "Y_measurement_error_rate", .03);
+    setParDouble(backend, "Z_measurement_error_rate", .04);
     setParDouble(backend, "Hgate_error_rate", .05);
     setParDouble(backend, "Hgate_X_error_ratio", .06);
     setParDouble(backend, "Hgate_Y_error_ratio", .07);
