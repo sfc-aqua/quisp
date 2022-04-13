@@ -7,6 +7,7 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include "backends/interfaces/IConfiguration.h"
 #include "backends/interfaces/IQuantumBackend.h"
+#include "test_utils/UtilFunctions.h"
 #include "test_utils/mock_backends/MockQuantumBackend.h"
 
 using namespace testing;
@@ -84,6 +85,7 @@ class StatQubitTarget : public StationaryQubit {
     setParInt(this, "qnic_type", 0);
     setParInt(this, "qnic_index", 0);
     setParDouble(this, "emission_jittering_standard_deviation", 0.5);
+    setParBool(this, "overwrite_backend_qubit_config", false);
   }
 };
 
