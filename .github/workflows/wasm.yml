@@ -4,8 +4,10 @@ jobs:
   build-wasm:
     runs-on: ubuntu-latest
     steps:
+      - name: work around permission issue
+        run: git config --global --add safe.directory /__w/quisp/quisp
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: true
       - name: wasm build
