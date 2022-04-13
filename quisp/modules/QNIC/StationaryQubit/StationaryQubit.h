@@ -161,7 +161,14 @@ class StationaryQubit : public IStationaryQubit {
   messages::PhotonicQubit *generateEntangledPhoton();
   void setBusy();
   Eigen::Matrix2cd getErrorMatrix(StationaryQubit *qubit);
-  std::unique_ptr<IConfiguration> prepareBackendQubitConfiguration();
+
+  /**
+   * get the default backend configuration from the Bcakend module.
+   * if overwrite arg is true, collect StationaryQubit's backend qubit config
+   * and overwrite the default configuration with it.
+   * if you want to use different qubit configuration, it's useful.
+   */
+  std::unique_ptr<IConfiguration> prepareBackendQubitConfiguration(bool overwrite);
   void tryToAssignParDouble(double &field, const char *par_name);
 
   // this is for debugging. class internal use only.
