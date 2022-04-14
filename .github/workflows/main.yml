@@ -42,12 +42,17 @@ jobs:
           opp_makemake -f --deep -O out -i ./makefrag -M release --make-so
           make lcov.info
         working-directory: quisp
-      - name: Run codacy-coverage-reporter
-        if: ${{ github.event_name == 'push' && github.repository == 'sfc-aqua/quisp' }}
-        uses: codacy/codacy-coverage-reporter-action@v1
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
         with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: quisp/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./quisp/lcov.info
+      # - name: Run codacy-coverage-reporter
+      #   if: ${{ github.event_name == 'push' && github.repository == 'sfc-aqua/quisp' }}
+      #   uses: codacy/codacy-coverage-reporter-action@v1
+      #   with:
+      #     project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+      #     coverage-reports: quisp/lcov.info
       # - name: module tests
       # run: make run-module-test
       - name: Run Simulations
