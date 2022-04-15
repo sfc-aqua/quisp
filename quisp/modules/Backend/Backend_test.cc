@@ -55,6 +55,9 @@ class BackendContainerTest : public ::testing::Test {
     setParDouble(backend, "memory_completely_mixed_rate", .29);
     sim->registerComponent(backend);
   }
+  virtual void TearDown() {}
+
+  // managed by cSimulation, so we don't need to use unique_ptr nor delete manually.
   BackendContainer *backend;
 };
 

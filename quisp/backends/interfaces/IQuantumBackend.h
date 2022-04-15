@@ -9,7 +9,6 @@ namespace quisp::backends::abstract {
 using omnetpp::SimTime;
 using omnetpp::SimTimeUnit;
 class IQubit;
-class IConfigurationCollector;
 
 /**
  * @brief The abstract interface for a quantum backend.
