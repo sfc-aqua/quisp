@@ -16,9 +16,9 @@ class EtQubitGateErrorTest : public ::testing::Test {
     rng = new TestRNG();
     rng->double_value = .0;
     backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<ErrorTrackingConfiguration>());
-    qubit = dynamic_cast<Qubit*>(backend->getQubit(new QubitId(0)));
+    qubit = dynamic_cast<Qubit*>(backend->getQubit(0));
     if (qubit == nullptr) throw std::runtime_error("Qubit is nullptr");
-    qubit2 = dynamic_cast<Qubit*>(backend->getQubit(new QubitId(1)));
+    qubit2 = dynamic_cast<Qubit*>(backend->getQubit(1));
     if (qubit2 == nullptr) throw std::runtime_error("Qubit is nullptr");
     backend->setSimTime(SimTime(1, SIMTIME_US));
     fillParams(qubit);
