@@ -264,6 +264,7 @@ void ErrorTrackingQubit::setFree() {
     // entangled_partner->entangled_partner = nullptr;
     entangled_partner = nullptr;
   }
+  updated_time = backend->getSimTime();
 }
 void ErrorTrackingQubit::setRelaxedDensityMatrix() {
   density_matrix_collapsed << 0, 0, 0, 1;
