@@ -123,4 +123,56 @@ TEST_F(EtQubitTest, setFreeUpdatesTime) {
   EXPECT_EQ(qubit->updated_time, backend->getSimTime());
 }
 
+TEST_F(EtQubitTest, initialize_memory_transition_matrix) {
+  qubit->setMemoryErrorRates(.011, .012, .013, .014, .015, .0);
+
+  auto mat = qubit->memory_transition_matrix;
+
+  // each element means: "Clean Xerror Zerror Yerror Excited Relaxed Mixed"
+  Eigen::RowVectorXd row0(7);
+  double sigma = .011 + .013 + .012 + .014 + .015;
+  row0 << 1 - sigma, .011, .013, .012, .014, .015, .0;
+  ASSERT_EQ(mat.row(0), row0);
+
+  Eigen::RowVectorXd row1(7);
+  row1 << .011, 1 - sigma, .012, .013, .014, .015, .0;
+  ASSERT_EQ(mat.row(1), row1);
+
+  Eigen::RowVectorXd row2(7);
+  row2 << .013, .012, 1 - sigma, .011, .014, .015, .0;
+  ASSERT_EQ(mat.row(2), row2);
+
+  Eigen::RowVectorXd row3(7);
+  row3 << .012, .013, .011, 1 - sigma, .014, .015, .0;
+  ASSERT_EQ(mat.row(3), row3);
+
+  Eigen::RowVectorXd row4(7);
+  row4 << 0, 0, 0, 0, 1 - .015, .015, .0;
+  ASSERT_EQ(mat.row(4), row4);
+
+  Eigen::RowVectorXd row5(7);
+  row5 << 0, 0, 0, 0, .014, 1 - .014, .0;
+  ASSERT_EQ(mat.row(5), row5);
+
+  Eigen::RowVectorXd row6(7);
+  row6 << 0, 0, 0, 0, .014, .015, 1 - (.014 + .015);
+  ASSERT_EQ(mat.row(6), row6);
+}
+
+
+TEST_F(EtQubitTest, addErrorX) {
+  EXPECT_FALSE(qubit->has_x_error);
+  qubit->addErrorX();
+  EXPECT_TRUE(qubit->has_x_error);
+  qubit->addErrorX();
+  EXPECT_FALSE(qubit->has_x_error);
+}
+
+TEST_F(EtQubitTest, addErrorZ) {
+  EXPECT_FALSE(qubit->has_z_error);
+  qubit->addErrorZ();
+  EXPECT_TRUE(qubit->has_z_error);
+  qubit->addErrorZ();
+  EXPECT_FALSE(qubit->has_z_error);
+}
 }  // namespace
