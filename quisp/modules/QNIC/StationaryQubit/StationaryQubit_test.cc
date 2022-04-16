@@ -103,52 +103,6 @@ class StatQubitTest : public ::testing::Test {
   MockQuantumBackend *backend;
 };
 
-// TEST(StatQubitTest, initialize_memory_transition_matrix) {
-//   auto *sim = prepareSimulation();
-//   auto *qubit = new StatQubitTarget{};
-//   qubit->fillParams();
-//   setParDouble(qubit, "memory_X_error_rate", .011);
-//   setParDouble(qubit, "memory_Y_error_rate", .012);
-//   setParDouble(qubit, "memory_Z_error_rate", .013);
-//   setParDouble(qubit, "memory_energy_excitation_rate", .014);
-//   setParDouble(qubit, "memory_energy_relaxation_rate", .015);
-//   setParDouble(qubit, "memory_completely_mixed_rate", 0);
-//   sim->registerComponent(qubit);
-//   qubit->callInitialize();
-
-//   auto mat = qubit->Memory_Transition_matrix;
-
-//   // each element means: "Clean Xerror Zerror Yerror Excited Relaxed Mixed"
-//   Eigen::RowVectorXd row0(7);
-//   double sigma = .011 + .013 + .012 + .014 + .015;
-//   row0 << 1 - sigma, .011, .013, .012, .014, .015, .0;
-//   ASSERT_EQ(mat.row(0), row0);
-
-//   Eigen::RowVectorXd row1(7);
-//   row1 << .011, 1 - sigma, .012, .013, .014, .015, .0;
-//   ASSERT_EQ(mat.row(1), row1);
-
-//   Eigen::RowVectorXd row2(7);
-//   row2 << .013, .012, 1 - sigma, .011, .014, .015, .0;
-//   ASSERT_EQ(mat.row(2), row2);
-
-//   Eigen::RowVectorXd row3(7);
-//   row3 << .012, .013, .011, 1 - sigma, .014, .015, .0;
-//   ASSERT_EQ(mat.row(3), row3);
-
-//   Eigen::RowVectorXd row4(7);
-//   row4 << 0, 0, 0, 0, 1 - .015, .015, .0;
-//   ASSERT_EQ(mat.row(4), row4);
-
-//   Eigen::RowVectorXd row5(7);
-//   row5 << 0, 0, 0, 0, .014, 1 - .014, .0;
-//   ASSERT_EQ(mat.row(5), row5);
-
-//   Eigen::RowVectorXd row6(7);
-//   row6 << 0, 0, 0, 0, .014, .015, 1 - (.014 + .015);
-//   ASSERT_EQ(mat.row(6), row6);
-// }
-
 TEST_F(StatQubitTest, init) {
   auto *backend_qubit = new MockBackendQubit();
   auto *config = new IConfiguration();
@@ -158,29 +112,5 @@ TEST_F(StatQubitTest, init) {
   qubit->callInitialize();
   delete backend_qubit;
 }
-
-// TEST(StatQubitTest, addXError) {
-//   auto *sim = prepareSimulation();
-//   auto *qubit = new StatQubitTarget{};
-//   qubit->fillParams();
-//   sim->registerComponent(qubit);
-//   EXPECT_FALSE(qubit->par("GOD_Xerror"));
-//   qubit->addXerror();
-//   EXPECT_TRUE(qubit->par("GOD_Xerror"));
-//   qubit->addXerror();
-//   EXPECT_FALSE(qubit->par("GOD_Xerror"));
-// }
-
-// TEST(StatQubitTest, addZError) {
-//   auto *sim = prepareSimulation();
-//   auto *qubit = new StatQubitTarget{};
-//   qubit->fillParams();
-//   sim->registerComponent(qubit);
-//   EXPECT_FALSE(qubit->par("GOD_Zerror"));
-//   qubit->addZerror();
-//   EXPECT_TRUE(qubit->par("GOD_Zerror"));
-//   qubit->addZerror();
-//   EXPECT_FALSE(qubit->par("GOD_Zerror"));
-// }
 
 }  // namespace

@@ -64,6 +64,7 @@ class Qubit : public ErrorTrackingQubit {
   using ErrorTrackingQubit::localMeasureZ;
   using ErrorTrackingQubit::measureDensityIndependent;
   using ErrorTrackingQubit::measurement_err;
+  using ErrorTrackingQubit::memory_transition_matrix;
   using ErrorTrackingQubit::setMemoryErrorRates;
   using ErrorTrackingQubit::updated_time;
 
