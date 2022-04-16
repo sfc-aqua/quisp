@@ -70,7 +70,6 @@ class ErrorTrackingQubit : public IQubit {
   Matrix2cd getErrorMatrix();
   QuantumState getQuantumState();
   MeasurementOperator randomMeasurementBasisSelection();
-  void update();
 
   // constants
   SingleGateErrorModel gate_err_h;

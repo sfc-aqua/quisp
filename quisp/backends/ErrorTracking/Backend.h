@@ -21,7 +21,13 @@ using omnetpp::SimTime;
 
 class ErrorTrackingBackend : public IQuantumBackend {
  public:
+  class ICallback {
+   public:
+    virtual ~ICallback() {}
+    virtual void willUpdate(ErrorTrackingBackend& backend) = 0;
+  };
   ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<ErrorTrackingConfiguration> configuration);
+  ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<ErrorTrackingConfiguration> configuration, ICallback* callback);
   ~ErrorTrackingBackend();
   IQubit* getQubit(const IQubitId* id) override;
   IQubit* getQubit(const IQubitId* id, std::unique_ptr<IConfiguration> configuration) override;
@@ -35,6 +41,7 @@ class ErrorTrackingBackend : public IQuantumBackend {
   SimTime current_time;
   const std::unique_ptr<IRandomNumberGenerator> rng;
   std::unique_ptr<ErrorTrackingConfiguration> config;
+  ICallback* callback = nullptr;
 };
 
 }  // namespace quisp::backends::error_tracking

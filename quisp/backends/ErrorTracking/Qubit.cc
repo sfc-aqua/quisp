@@ -122,7 +122,6 @@ void ErrorTrackingQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const& er
   }
 }
 void ErrorTrackingQubit::applyMemoryError() {
-  // update();
   if (entangled_partner == nullptr && density_matrix_collapsed(0, 0).real() == -111 && !no_density_matrix_nullptr_entangled_partner_ok) {
     throw std::runtime_error("This must not happen in apply memory error");
   }
@@ -309,8 +308,6 @@ void ErrorTrackingQubit::setCompletelyMixedDensityMatrix() {
     entangled_partner = nullptr;
   }
 }
-
-void ErrorTrackingQubit::update() { updated_time = backend->getSimTime(); }
 
 MeasureXResult ErrorTrackingQubit::correlationMeasureX() {
   bool error = has_z_error;
