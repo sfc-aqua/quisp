@@ -1,4 +1,5 @@
 #include "Backend.h"
+#include "backends/ErrorTracking/Qubit.h"
 
 namespace quisp::modules::backend {
 
@@ -54,9 +55,9 @@ void BackendContainer::configureErrorTrackingBackend() {
   conf->memory_relaxation_rate = par("memory_energy_relaxation_rate").doubleValue();
   conf->memory_completely_mixed_rate = par("memory_completely_mixed_rate").doubleValue();
 
-  backend = std::make_unique<ErrorTrackingBackend>(std::make_unique<RNG>(this), std::move(conf));
+  backend = std::make_unique<ErrorTrackingBackend>(std::make_unique<RNG>(this), std::move(conf), static_cast<ErrorTrackingBackend::ICallback*>(this));
 }
-
+void BackendContainer::willUpdate(ErrorTrackingBackend& backend) { backend.setSimTime(omnetpp::simTime()); }
 void BackendContainer::finish() {}
 
 IQuantumBackend* BackendContainer::getQuantumBackend() {

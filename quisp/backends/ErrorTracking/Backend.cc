@@ -13,6 +13,10 @@ ErrorTrackingBackend::ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerato
     : current_time(SimTime()), rng(std::move(rng)) {
   config = std::move(configuration);
 }
+ErrorTrackingBackend::ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<ErrorTrackingConfiguration> configuration, ICallback* cb)
+    : ErrorTrackingBackend(std::move(rng), std::move(configuration)) {
+  callback = cb;
+}
 
 ErrorTrackingBackend::~ErrorTrackingBackend() {
   for (auto& pair : qubits) {
@@ -47,7 +51,10 @@ std::unique_ptr<IConfiguration> ErrorTrackingBackend::getDefaultConfiguration() 
   // copy the default backend configuration for each qubit
   return std::make_unique<ErrorTrackingConfiguration>(*config.get());
 }
-const SimTime& ErrorTrackingBackend::getSimTime() { return current_time; }
+const SimTime& ErrorTrackingBackend::getSimTime() {
+  if (callback != nullptr) callback->willUpdate(*this);
+  return current_time;
+}
 void ErrorTrackingBackend::setSimTime(SimTime time) { current_time = time; }
 double ErrorTrackingBackend::dblrand() { return rng->doubleRandom(); }
 
