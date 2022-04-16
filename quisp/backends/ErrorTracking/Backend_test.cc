@@ -2,6 +2,7 @@
 #include <cxxabi.h>
 #include <gtest/gtest.h>
 #include <omnetpp.h>
+#include <stdexcept>
 #include "../interfaces/IRandomNumberGenerator.h"
 #include "Configuration.h"
 #include "Qubit.h"
@@ -73,6 +74,21 @@ TEST_F(EtBackendTest, getQubit) {
   auto* same_qubit = backend->getQubit(same_id);
   EXPECT_EQ(backend->qubits.size(), 1);
   EXPECT_EQ(same_qubit, qubit);
+}
+
+TEST_F(EtBackendTest, getQubitTwice) {
+  auto* id = new QubitId(3);
+  auto* qubit1 = backend->getQubit(id);
+  auto* qubit2 = backend->getQubit(id);
+  EXPECT_NE(qubit1, nullptr);
+  EXPECT_NE(qubit2, nullptr);
+  EXPECT_EQ(qubit1, qubit2);
+}
+
+TEST_F(EtBackendTest, getQubitWithInvalidConfiguration) {
+  auto conf = new IConfiguration;
+  auto* id = new QubitId(4);
+  ASSERT_THROW({ backend->getQubit(id, std::unique_ptr<IConfiguration>(conf)); }, std::runtime_error);
 }
 
 TEST_F(EtBackendTest, getQubitWithConfiguration) {
