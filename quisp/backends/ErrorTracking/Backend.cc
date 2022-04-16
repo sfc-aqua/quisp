@@ -42,17 +42,7 @@ IQubit* ErrorTrackingBackend::getQubit(const IQubitId* id, std::unique_ptr<IConf
   return qubit_ptr;
 }
 
-IQubit* ErrorTrackingBackend::getQubit(const IQubitId* id) {
-  auto qubit = qubits.find(id);
-
-  if (qubit != qubits.cend()) {
-    return qubit->second.get();
-  }
-  auto original_qubit = std::make_unique<ErrorTrackingQubit>(id, this);
-  auto* qubit_ptr = original_qubit.get();
-  qubits.insert({id, std::move(original_qubit)});
-  return qubit_ptr;
-}
+IQubit* ErrorTrackingBackend::getQubit(const IQubitId* id) { return getQubit(id, getDefaultConfiguration()); }
 std::unique_ptr<IConfiguration> ErrorTrackingBackend::getDefaultConfiguration() const {
   // copy the default backend configuration for each qubit
   return std::make_unique<ErrorTrackingConfiguration>(*config.get());
