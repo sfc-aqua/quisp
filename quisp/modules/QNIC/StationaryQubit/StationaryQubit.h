@@ -169,11 +169,17 @@ class StationaryQubit : public IStationaryQubit {
    * if you want to use different qubit configuration, it's useful.
    */
   std::unique_ptr<IConfiguration> prepareBackendQubitConfiguration(bool overwrite);
-  void tryToAssignParDouble(double &field, const char *par_name);
 
   // this is for debugging. class internal use only.
   // and it's different from QubitRecord's one.
   bool is_busy;
+  // photon emitted at
+  omnetpp::simtime_t emitted_time = -1;
+  // Standard deviation
+  double emission_jittering_standard_deviation;
+  int stationaryQubit_address;
+  int node_address;
+
   utils::ComponentProvider provider;
   IQuantumBackend *backend;
 };

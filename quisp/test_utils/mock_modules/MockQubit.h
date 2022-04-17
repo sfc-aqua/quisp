@@ -64,11 +64,7 @@ class MockQubit : public IStationaryQubit {
     qnic_type = _type;
     qnic_index = _qnic_index;
   }
-  void reset() {
-    setFree(true);
-    updated_time = SimTime(0);
-    no_density_matrix_nullptr_entangled_partner_ok = true;
-  }
+  void reset() { setFree(true); }
   void fillParams() {
     // see networks/omnetpp.ini
     setParDouble(this, "emission_success_probability", 0.5);
@@ -122,10 +118,6 @@ class MockQubit : public IStationaryQubit {
     setParBool(this, "god_excitation_error", false);
     setParBool(this, "god_relaxation_error", false);
     setParBool(this, "is_busy", false);
-    setParInt(this, "god_entangled_stationary_qubit_address", 0);
-    setParInt(this, "god_entangled_node_address", 0);
-    setParInt(this, "god_entangled_qnic_address", 0);
-    setParInt(this, "god_entangled_qnic_type", 0);
     setParDouble(this, "fidelity", -1.0);
   }
 };
