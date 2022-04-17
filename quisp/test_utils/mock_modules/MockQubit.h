@@ -46,14 +46,6 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(quisp::types::MeasurementOutcome, measure_density_independent, (), (override));
   MOCK_METHOD(void, setEntangledPartnerInfo, (IStationaryQubit *), (override));
 
-  MOCK_METHOD(void, cnotGate, (IStationaryQubit * control_qubit), (override));
-  MOCK_METHOD(void, hadamardGate, (), (override));
-  MOCK_METHOD(void, zGate, (), (override));
-  MOCK_METHOD(void, xGate, (), (override));
-  MOCK_METHOD(void, sGate, (), (override));
-  MOCK_METHOD(void, sdgGate, (), (override));
-  MOCK_METHOD(void, excite, (), (override));
-  MOCK_METHOD(void, relax, (), (override));
   MOCK_METHOD(void, assertEntangledPartnerValid, (), (override));
   MOCK_METHOD(IQubit *const, getEntangledPartner, (), (const, override));
   MOCK_METHOD(IQubit *const, getBackendQubitRef, (), (const, override));
