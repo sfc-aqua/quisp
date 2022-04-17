@@ -64,11 +64,7 @@ class MockQubit : public IStationaryQubit {
     qnic_type = _type;
     qnic_index = _qnic_index;
   }
-  void reset() {
-    setFree(true);
-    updated_time = SimTime(0);
-    no_density_matrix_nullptr_entangled_partner_ok = true;
-  }
+  void reset() { setFree(true); }
   void fillParams() {
     // see networks/omnetpp.ini
     setParDouble(this, "emission_success_probability", 0.5);

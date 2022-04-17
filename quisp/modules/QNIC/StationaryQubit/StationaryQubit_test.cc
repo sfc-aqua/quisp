@@ -34,11 +34,7 @@ class StatQubitTarget : public StationaryQubit {
     setComponentType(new TestModuleType("test qubit"));
     provider.setStrategy(std::make_unique<Strategy>(backend));
   }
-  void reset() {
-    setFree(true);
-    updated_time = SimTime(0);
-    no_density_matrix_nullptr_entangled_partner_ok = true;
-  }
+  void reset() { setFree(true); }
   void fillParams() {
     // see networks/omnetpp.ini
     setParDouble(this, "emission_success_probability", 0.5);

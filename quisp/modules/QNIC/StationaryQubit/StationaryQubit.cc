@@ -154,9 +154,7 @@ void StationaryQubit::CNOT_gate(IStationaryQubit *control_qubit) { qubit_ref->ga
 void StationaryQubit::setBusy() {
   is_busy = true;
   emitted_time = simTime();
-  updated_time = simTime();  // Should be no error at this time.
   par("photon_emitted_at") = emitted_time.dbl();
-  par("last_updated_at") = updated_time.dbl();
   par("isBusy") = true;
   // GUI part
   if (hasGUI()) {
@@ -174,34 +172,17 @@ void StationaryQubit::setFree(bool consumed) {
   locked_rule_id = -1;
   action_index = -1;
   emitted_time = -1;
-  updated_time = simTime();
 
-  /*
-
-
-
-
-    par("photon_emitted_at") = emitted_time.dbl();
-    par("last_updated_at") = updated_time.dbl();
-    par("GOD_Xerror") = false;
-    par("GOD_Zerror") = false;
-    par("GOD_CMerror") = false;
-    par("GOD_EXerror") = false;
-    par("GOD_REerror") = false;
-    par("GOD_CMerror") = false;
-    par("isBusy") = false;
-    EV_DEBUG << "Freeing this qubit!!!" << this << " at qnode: " << node_address << " qnic_type: " << qnic_type << " qnic_index: " << qnic_index << "\n";
-    // GUI part
-    if (hasGUI()) {
-      if (consumed) {
-        bubble("Consumed!");
-        getDisplayString().setTagArg("i", 1, "yellow");
-      } else {
-        bubble("Failed to entangle!");
-        getDisplayString().setTagArg("i", 1, "blue");
-      }
+  EV_DEBUG << "Freeing this qubit! " << this << " at qnode: " << node_address << " qnic_type: " << qnic_type << " qnic_index: " << qnic_index << "\n";
+  if (hasGUI()) {
+    if (consumed) {
+      bubble("Consumed!");
+      getDisplayString().setTagArg("i", 1, "yellow");
+    } else {
+      bubble("Failed to entangle!");
+      getDisplayString().setTagArg("i", 1, "blue");
     }
-    */
+  }
 }
 
 backends::IQubit *StationaryQubit::getEntangledPartner() const { return qubit_ref->getEntangledPartner(); }
@@ -216,7 +197,6 @@ void StationaryQubit::Lock(unsigned long rs_id, unsigned long rule_id, int actio
   locked_ruleset_id = rs_id;  // Used to identify what this qubit is locked for.
   locked_rule_id = rule_id;
   action_index = action_id;
-  // std::cout<<"*******************"<<this<<"in node["<<this->node_address<<"]Locked. Rsid="<<locked_ruleset_id<<" rid="<<locked_rule_id<<" aid="<<action_index<<"\n";
 
   if (hasGUI()) {
     bubble("Locked!");

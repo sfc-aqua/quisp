@@ -159,7 +159,6 @@ TEST_F(EtQubitTest, initialize_memory_transition_matrix) {
   ASSERT_EQ(mat.row(6), row6);
 }
 
-
 TEST_F(EtQubitTest, addErrorX) {
   EXPECT_FALSE(qubit->has_x_error);
   qubit->addErrorX();

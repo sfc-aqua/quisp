@@ -44,26 +44,6 @@ enum class CliffordOperator : int {
 }  // namespace types
 
 namespace modules {
-struct emission_error_model {
-  double pauli_error_rate;  // Overall error rate
-  double Z_error_rate;
-  double X_error_rate;
-  double Y_error_rate;
-  double Loss_error_rate;
-
-  double No_error_ceil;
-  double X_error_ceil;
-  double Y_error_ceil;
-  double Z_error_ceil;
-  double Loss_error_ceil;
-};
-
-struct MeasurementErrorModel {
-  double x_error_rate;
-  double y_error_rate;
-  double z_error_rate;
-};
-
 // Matrices of single qubit errors. Used when conducting tomography.
 struct single_qubit_error {
   Eigen::Matrix2cd X;  // double 2*2 matrix
@@ -130,29 +110,12 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   virtual backends::IQubit *getEntangledPartner() const = 0;
   virtual backends::IQubit *getBackendQubitRef() const = 0;
   virtual int getPartnerStationaryQubitAddress() const = 0;
+  virtual void assertEntangledPartnerValid() = 0;
 
-  int stationaryQubit_address;
-  int node_address;
   int qnic_address;
   int qnic_type;
   int qnic_index;
-
   int action_index;
-  bool no_density_matrix_nullptr_entangled_partner_ok;
-
-  virtual void assertEntangledPartnerValid() = 0;
-
-  /** Photon emitted at*/
-  omnetpp::simtime_t emitted_time = -1;
-  // internal
-  /** Stationary qubit last updated at*/
-  omnetpp::simtime_t updated_time = -1;
-
-  /** Standard deviation */
-  double std;
-
-  Eigen::Matrix2cd Density_Matrix_Collapsed;  // Used when partner has been measured.
 };
-
 }  // namespace modules
 }  // namespace quisp
