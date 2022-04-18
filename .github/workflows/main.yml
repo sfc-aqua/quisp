@@ -48,6 +48,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ./quisp/lcov_filtered.info
+          base-path: quisp
       # - name: module tests
       # run: make run-module-test
       - name: Run Simulations
