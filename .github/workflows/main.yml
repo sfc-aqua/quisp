@@ -41,13 +41,13 @@ jobs:
         run: |
           opp_makemake -f --deep -O out -i ./makefrag -M release --make-so
           make lcov.info
-          lcov -r lcov.info googletest/ -o lcov.info
+          lcov -r lcov.info 'googletest/*' -o lcov_filtered.info
         working-directory: quisp
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ./quisp/lcov.info
+          path-to-lcov: ./quisp/lcov_filtered.info
       # - name: module tests
       # run: make run-module-test
       - name: Run Simulations
