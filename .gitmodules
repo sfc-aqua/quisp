@@ -7,3 +7,6 @@
 [submodule "quispr"]
 	path = quispr
 	url = https://github.com/sfc-aqua/quispr
+[submodule "pybind11"]
+	path = pybind11
+	url = https://github.com/pybind/pybind11
