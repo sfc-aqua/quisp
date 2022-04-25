@@ -11,7 +11,7 @@ simple Application
         int address;
         volatile double sendIaTime @unit(s) = default(exponential(1s)); // time between generating packets
         string Other_endnodes_table = "";
-        bool EndToEndConnection = default(false);
+        bool EndToEndConnection = default(true);
         // removing default here forces app to ask
         // int TrafficPattern = default(1);
         int TrafficPattern;

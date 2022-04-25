@@ -3,7 +3,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update -y && apt install -y --no-install-recommends \
     qt5-default libqt5opengl5-dev libgtk-3-0 default-jre osgearth \
     libeigen3-dev cmake g++ gdb gpg-agent software-properties-common wget \
-    vim bison flex make lld-12 git clang-format-12 clang-tidy-12 lldb-12 && \
+    vim bison flex make lld-12 git clang-format-12 clang-tidy-12 lldb-12 pip && \
     ln -s /usr/bin/clang-format-12 /usr/bin/clang-format && \
     ln -s /usr/bin/clang-tidy-12 /usr/bin/clang-tidy && \
     ln -sf /usr/bin/clang-12 /usr/bin/clang && \
