@@ -5,6 +5,7 @@
  *  \brief Application
  */
 #include "Application.h"
+#include <omnetpp.h>
 #include <vector>
 #include "utils/ComponentProvider.h"
 
@@ -32,6 +33,9 @@ void Application::initialize() {
   my_address = provider.getQNode()->par("address");
   is_e2e_connection = par("EndToEndConnection");
   num_measure = par("distant_measure_count");
+
+  const char *app_py_path = par("app_py_path").stringValue();
+  compile_code(app_py_path);
 
   WATCH_VECTOR(other_end_node_addresses);
   storeEndNodeAddresses();

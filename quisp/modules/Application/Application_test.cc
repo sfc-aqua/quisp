@@ -3,6 +3,8 @@
 #include <gtest/gtest.h>
 #include <messages/classical_messages.h>
 #include <omnetpp.h>
+#include <pybind11/embed.h>
+#include <pybind11/pybind11.h>
 #include <test_utils/TestUtils.h>
 
 namespace {
@@ -35,6 +37,7 @@ class AppTestTarget : public quisp::modules::Application {
   explicit AppTestTarget(TestQNode *parent_qnode) : Application(), toRouterGate(new TestGate(this, "toRouter")) {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     setComponentType(new TestModuleType("test qnode"));
+    setParStr(this, "app_py_path", "app.py");
   }
   virtual ~AppTestTarget() { EVCB.gateDeleted(toRouterGate); }
   std::vector<int> getOtherEndNodeAdresses() { return this->other_end_node_addresses; }
@@ -44,6 +47,8 @@ class AppTestTarget : public quisp::modules::Application {
 };
 
 TEST(AppTest, InitSimple) {
+  pybind11::scoped_interpreter guard{};
+
   auto *sim = prepareSimulation();
   auto *mock_qnode = new TestQNode{123};
   auto *app = new AppTestTarget{mock_qnode};
@@ -61,6 +66,7 @@ TEST(AppTest, InitSimple) {
 }
 
 TEST(AppTest, Init_OneConnection_NoSender) {
+  pybind11::scoped_interpreter guard{};
   auto *sim = prepareSimulation();
   auto *mock_qnode = new TestQNode{123};
   auto *app = new AppTestTarget{mock_qnode};
@@ -79,6 +85,7 @@ TEST(AppTest, Init_OneConnection_NoSender) {
 }
 
 TEST(AppTest, Init_OneConnection_Sender) {
+  pybind11::scoped_interpreter guard{};
   auto *sim = prepareSimulation();
   auto *mock_qnode = new TestQNode{123};
 
@@ -112,6 +119,7 @@ TEST(AppTest, Init_OneConnection_Sender) {
 }
 
 TEST(AppTest, Init_OneConnection_Sender_TrafficPattern2) {
+  pybind11::scoped_interpreter guard{};
   auto *sim = prepareSimulation();
   auto *mock_qnode = new TestQNode{123};
   auto *mock_qnode2 = new TestQNode{456};

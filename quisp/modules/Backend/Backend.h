@@ -1,6 +1,7 @@
 #pragma once
 #include <modules/common_types.h>
 #include <omnetpp.h>
+#include <pybind11/embed.h>
 #include <memory>
 #include "RNG.h"
 
@@ -33,7 +34,9 @@ class BackendContainer : public omnetpp::cSimpleModule {
   }
 
  protected:
-  std::unique_ptr<IQuantumBackend> backend;
+  void configureErrorTrackingBackend();
+  std::unique_ptr<IQuantumBackend> backend = nullptr;
+  pybind11::scoped_interpreter interpreter;
 };
 
 Define_Module(BackendContainer);
