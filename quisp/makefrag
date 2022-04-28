@@ -25,11 +25,14 @@ else
 INCLUDE_PATH+=-I. $(shell pkg-config eigen3 --cflags)
 endif
 
-INCLUDE_PATH+=-I.
+INCLUDE_PATH+=-I$(PROJ_ROOT)/pybind11/include
+INCLUDE_PATH+=-I$(OMNETPP_ROOT)/tools/macosx/lib/Python.framework/Headers
 ifneq (,$(ENABLE_COVERAGE))
 CXXFLAGS+=-ftest-coverage -fprofile-instr-generate -fcoverage-mapping
 LDFLAGS+=-ftest-coverage -fprofile-instr-generate -fcoverage-mapping
 endif
+
+LDFLAGS+=-L$(OMNETPP_ROOT)/tools/macosx/lib -lpython3.8
 
 default: eigen all
 
