@@ -14,15 +14,17 @@ jobs:
           wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
           apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-12 main"
           apt-get update -y
-          apt install clang-format-12 clang-tidy-12 lldb-12 git -y
+          apt install clang-format-12 clang-tidy-12 lldb-12 git lcov -y
           ln -s /usr/bin/clang-format-12 /usr/bin/clang-format
           ln -s /usr/bin/clang-tidy-12 /usr/bin/clang-tidy
           ln -sf /usr/bin/clang-12 /usr/bin/clang
           ln -sf /usr/bin/clang++-12 /usr/bin/clang++
           ln -sf /usr/bin/llvm-profdata-12 /usr/bin/llvm-profdata
           ln -sf /usr/bin/llvm-cov-12 /usr/bin/llvm-cov
+      - name: work around permission issue
+        run: git config --global --add safe.directory /__w/quisp/quisp
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: make eigen
         run: make eigen
       - name: generate makefile
@@ -39,13 +41,13 @@ jobs:
         run: |
           opp_makemake -f --deep -O out -i ./makefrag -M release --make-so
           make lcov.info
+          lcov -r lcov.info 'googletest/*' -o lcov_filtered.info
         working-directory: quisp
-      - name: Run codacy-coverage-reporter
-        if: ${{ github.event_name == 'push' && github.repository == 'sfc-aqua/quisp' }}
-        uses: codacy/codacy-coverage-reporter-action@v1
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
         with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: quisp/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./quisp/lcov_filtered.info
       # - name: module tests
       # run: make run-module-test
       - name: Run Simulations
