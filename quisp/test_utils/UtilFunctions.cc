@@ -4,6 +4,7 @@
 #include "StaticEnv.h"
 
 using namespace omnetpp;
+using namespace omnetpp::internal;
 
 namespace quisp_test {
 namespace utils {
