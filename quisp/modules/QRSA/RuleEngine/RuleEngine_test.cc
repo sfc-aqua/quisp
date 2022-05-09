@@ -448,8 +448,8 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   info->qnic.index = 0;
 
   unsigned long mock_ruleset_id = 10;
-  unsigned long mock_rule_id = 5193;
-  unsigned long mock_next_rule_id = 3829;
+  int mock_rule_id = 0;
+  int mock_next_rule_id = 1;
 
   swapping_result swapr;
   swapr.id.ruleset_id = mock_ruleset_id;
@@ -890,7 +890,7 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   rule_engine->callInitialize();
 
   unsigned long ruleset_id = 3;
-  int rule_id = 4;
+  int rule_id = 0;
   auto* ruleset = new ActiveRuleSet(ruleset_id, rule_id);
   {  // generate RuleSet
     auto rule = std::make_unique<ActiveRule>(ruleset_id, rule_id);
