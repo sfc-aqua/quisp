@@ -13,6 +13,11 @@ int main(int argc, char **argv) {
    */
   omnetpp::cStaticFlag _flag;
   /**
+   * execute the processes defined by omnetpp's macro like Define_Module or Register_GlobalConfigOption.
+   * this defines global variables for simulation
+   */
+  omnetpp::CodeFragments::executeAll(CodeFragments::STARTUP);
+  /**
    * setup a simulation and its environment for testing.
    * OMNeT++'s methods expect that all modules are running on a simulation,
    * so it will cause segmentation faults or exceptions if there's no simulation env.
