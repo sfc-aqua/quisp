@@ -54,7 +54,7 @@ class ConnectionManager : public IConnectionManager {
   std::vector<int> reserved_qnics = {};  // reserved qnic address table
   std::vector<cMessage *> request_send_timing;  // self message, notification for sending out request
   bool simultaneous_es_enabled;
-  bool es_with_purify;
+  bool es_with_purify = false;
   int num_remote_purification;
   double threshold_fidelity;
   PurType purification_type;

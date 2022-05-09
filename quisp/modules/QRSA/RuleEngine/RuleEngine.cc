@@ -237,6 +237,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
     swapping_result swapr;  // result of entanglement swapping
     swapr.id = swapping_id;
+    swapr.swapper_addr = pkt->getSrcAddr();
     swapr.new_partner = pkt->getNew_partner();
     swapr.new_partner_qnic_index = pkt->getNew_partner_qnic_index();
     swapr.new_partner_qnic_address = pkt->getNew_partner_qnic_address();
@@ -942,6 +943,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // Promote entanglement from this rule to the next rule
   unsigned long ruleset_id = swapr.id.ruleset_id;
   const int rule_id = swapr.id.rule_id;
+  const int swapper_addr = swapr.swapper_addr;
   if (rp.size() == 0) {
     return;
   }
@@ -950,19 +952,32 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     error("The qubit is not promoted from entanglement swapping to the next rule. no ruleset(%l) found", ruleset_id);
   }
   const auto &ruleset = *ruleset_result;
-  auto *target_rule_ptr = ruleset->getRule(rule_id).get();
-  // 2. erase qubit from target rule
-  for (auto qubit_rec = target_rule_ptr->resources.cbegin(); qubit_rec != target_rule_ptr->resources.cend(); qubit_rec++) {
-    auto target_qubit = qubit_rec->second;
-    if (target_qubit == qubit) {
-      target_rule_ptr->resources.erase(qubit_rec);
-      break;
+
+  // The target rule must be wait rule that has a single action partner (swapper)
+  for (int index = 0; index < ruleset->size(); index++) {
+    auto target_rule_ptr = ruleset->getRule(index).get();
+    if (target_rule_ptr->action_partners.size() == 1 && target_rule_ptr->action_partners.at(0) == swapper_addr) {
+      // 2. erase qubit from target rule
+      for (auto qubit_rec = target_rule_ptr->resources.cbegin(); qubit_rec != target_rule_ptr->resources.cend(); qubit_rec++) {
+        auto target_qubit = qubit_rec->second;
+        if (target_qubit == qubit) {
+          target_rule_ptr->resources.erase(qubit_rec);
+          break;
+        }
+      }
+      // // 3. add qubit as a resource to the next rule
+      const int next_rule_id = target_rule_ptr->next_rule_id;
+      // if there is no following rule, finish this function
+      if (next_rule_id == -1) {
+        // After the exntanglement swapping, resource must be promoted to somewhere
+        error("This should not happen");
+      }
+      auto target_next_rule_ptr = ruleset->getRule(next_rule_id).get();
+      target_next_rule_ptr->addResource(new_partner, qubit);
+      return;
     }
   }
-  // 3. add qubit as a resource to the next rule
-  const int next_rule_id = target_rule_ptr->next_rule_id;
-  auto *target_next_rule_ptr = ruleset->getRule(next_rule_id).get();
-  target_next_rule_ptr->addResource(new_partner, qubit);
+  error("Resource is not promoted properly");
 }
 
 void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_result swapr) {

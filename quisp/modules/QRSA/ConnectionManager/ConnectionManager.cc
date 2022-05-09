@@ -30,8 +30,10 @@ void ConnectionManager::initialize() {
   my_address = par("address");
   num_of_qnics = par("total_number_of_qnics");
   simultaneous_es_enabled = par("simultaneous_es_enabled");
-  es_with_purify = par("entanglement_swapping_with_purification");
   num_remote_purification = par("num_remote_purification");
+  if (num_remote_purification > 0) {
+    es_with_purify = true;
+  }
   std::string pur_type = par("purification_type_cm").str();
   pur_type = pur_type.substr(1, pur_type.size() - 2);
   threshold_fidelity = par("threshold_fidelity");

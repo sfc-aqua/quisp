@@ -455,6 +455,7 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   swapr.id.ruleset_id = mock_ruleset_id;
   swapr.id.rule_id = mock_rule_id;
   swapr.new_partner = 3;
+  swapr.swapper_addr = 2;
   swapr.operation_type = 0;
   swapr.new_partner_qnic_address = 1;
   swapr.new_partner_qnic_index = 1;
@@ -471,6 +472,7 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   auto* rs = new ActiveRuleSet(mock_ruleset_id, mock_rule_id);  // ruleset_id, ruleset_owner, partners
   auto wait_rule = std::make_unique<ActiveRule>(mock_ruleset_id, mock_rule_id);
   wait_rule->next_rule_id = mock_next_rule_id;
+  wait_rule->action_partners.push_back(swapr.swapper_addr);
   rs->addRule(std::move(wait_rule));
   auto next_rule = std::make_unique<ActiveRule>(mock_ruleset_id, mock_next_rule_id);
   rs->addRule(std::move(next_rule));
@@ -895,6 +897,7 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   {  // generate RuleSet
     auto rule = std::make_unique<ActiveRule>(ruleset_id, rule_id);
     rule->next_rule_id = rule_id + 1;
+    rule->action_partners.push_back(2);
     rule->addResource(2, qubit);
     auto next_rule = std::make_unique<ActiveRule>(ruleset_id, rule_id + 1);
 
@@ -909,6 +912,7 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
       .id = {.ruleset_id = ruleset_id, .rule_id = rule_id, .index = 0},
       .new_partner = 2,
       .operation_type = 0,
+      .swapper_addr = 2,
   };
   EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(2)).Times(1).WillOnce(Return(5));
   auto info = std::make_unique<ConnectionSetupInfo>();
