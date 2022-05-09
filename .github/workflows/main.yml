@@ -9,18 +9,15 @@ jobs:
       - name: Install the latest git and dependencies
         run: |
           apt-get update -y
-          apt-get install -y --no-install-recommends software-properties-common gpg-agent cmake g++
-          add-apt-repository ppa:git-core/ppa
-          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
-          apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-12 main"
-          apt-get update -y
-          apt install clang-format-12 clang-tidy-12 lldb-12 git lcov -y
+          apt install clang-format-12 clang-tidy-12 lldb-12 python3 git lcov cmake -y
           ln -s /usr/bin/clang-format-12 /usr/bin/clang-format
           ln -s /usr/bin/clang-tidy-12 /usr/bin/clang-tidy
           ln -sf /usr/bin/clang-12 /usr/bin/clang
           ln -sf /usr/bin/clang++-12 /usr/bin/clang++
           ln -sf /usr/bin/llvm-profdata-12 /usr/bin/llvm-profdata
           ln -sf /usr/bin/llvm-cov-12 /usr/bin/llvm-cov
+          ln -sf /usr/bin/python3 /usr/local/bin/python3
+          ln -sf /usr/bin/python3 /usr/local/bin/python
       - name: work around permission issue
         run: git config --global --add safe.directory /__w/quisp/quisp
       - name: Check out repository
