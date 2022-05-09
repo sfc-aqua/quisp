@@ -311,6 +311,8 @@ TEST(StatQubitGateErrorTest, do_nothing_single_qubit_gate) {
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
   setParDouble(qubit, "Xgate_error_rate", 0.0);
+  sim->registerComponent(qubit);
+
   qubit->callInitialize();
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
@@ -319,7 +321,6 @@ TEST(StatQubitGateErrorTest, do_nothing_single_qubit_gate) {
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(qubit->par("GOD_REerror"));
   EXPECT_FALSE(qubit->par("GOD_EXerror"));
-  sim->registerComponent(qubit);
 
   qubit->applySingleQubitGateError(qubit->Xgate_error);
 
@@ -334,6 +335,9 @@ TEST(StatQubitGateErrorTest, do_nothing_two_qubit_gate) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   auto *qubit2 = new StatQubitTarget{};
+  sim->registerComponent(qubit);
+  sim->registerComponent(qubit2);
+
   qubit->fillParams();
   qubit2->fillParams();
   setParDouble(qubit, "CNOTgate_error_rate", 0.0);
@@ -353,8 +357,6 @@ TEST(StatQubitGateErrorTest, do_nothing_two_qubit_gate) {
   EXPECT_TRUE(qubit2->par("GOD_Zerror"));
   EXPECT_FALSE(qubit2->par("GOD_REerror"));
   EXPECT_FALSE(qubit2->par("GOD_EXerror"));
-  sim->registerComponent(qubit);
-  sim->registerComponent(qubit2);
 
   qubit->applyTwoQubitGateError(qubit->CNOTgate_error, qubit2);
 
@@ -374,9 +376,9 @@ TEST(StatQubitGateErrorTest, apply_single_qubit_gate_error) {
   auto *rng = useTestRNG();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
+  sim->registerComponent(qubit);
 
   qubit->callInitialize();
-  sim->registerComponent(qubit);
   sim->setSimTime(SimTime(1, SIMTIME_US));
   // No error
   qubit->reset();
@@ -426,11 +428,11 @@ TEST(StatQubitGateErrorTest, apply_two_qubit_gate_error) {
   auto *qubit2 = new StatQubitTarget{};
   qubit1->fillParams();
   qubit2->fillParams();
-
-  qubit1->callInitialize();
-  qubit2->callInitialize();
   sim->registerComponent(qubit1);
   sim->registerComponent(qubit2);
+  qubit1->callInitialize();
+  qubit2->callInitialize();
+
   sim->setSimTime(SimTime(1, SIMTIME_US));
 
   // No error
