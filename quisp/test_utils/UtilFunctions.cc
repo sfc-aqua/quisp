@@ -17,6 +17,7 @@ void setParInt(cModule *module, const char *name, const int val) {
   cParImpl *p = new cIntParImpl();
   p->setName(name);
   p->setIntValue(val);
+  p->setIsMutable(true);
   module->addPar(p);
 }
 
@@ -28,6 +29,7 @@ void setParDouble(cModule *module, const char *name, const double val) {
   cParImpl *p = new cDoubleParImpl();
   p->setName(name);
   p->setDoubleValue(val);
+  p->setIsMutable(true);
   module->addPar(p);
 }
 
@@ -39,6 +41,7 @@ void setParStr(cModule *module, const char *name, const char *val) {
   cParImpl *p = new cStringParImpl();
   p->setName(name);
   p->setStringValue(val);
+  p->setIsMutable(true);
   module->addPar(p);
 }
 
@@ -50,6 +53,7 @@ void setParBool(cModule *module, const char *name, const bool val) {
   cParImpl *p = new cBoolParImpl();
   p->setName(name);
   p->setBoolValue(val);
+  p->setIsMutable(true);
   module->addPar(p);
 }
 
