@@ -1,5 +1,6 @@
 #pragma once
 #include <omnetpp.h>
+#include <climits>
 
 namespace quisp_test {
 namespace rng {
@@ -10,7 +11,7 @@ class TestRNG : public omnetpp::cRNG {
  public:
   void initialize(int seedSet, int rngId, int numRngs, int parsimProcId, int parsimNumPartitions, omnetpp::cConfiguration *cfg) override {}
   void selfTest() override {}
-  unsigned int intRandMax() override { return 10000; };
+  unsigned int intRandMax() override { return UINT_MAX; };
 
   // Random integer in [0,n), n < intRandMax()
   unsigned int intRand(unsigned int n) override { return intValue; };
