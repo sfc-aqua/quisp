@@ -952,9 +952,9 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   const auto &ruleset = *ruleset_result;
   auto *target_rule_ptr = ruleset->getRule(rule_id).get();
   // 2. erase qubit from target rule
-  for (auto qubit_rec = target_rule_ptr->resources.cbegin(); qubit_rec != target_rule_ptr->resources.cend(); qubit_rec++){
+  for (auto qubit_rec = target_rule_ptr->resources.cbegin(); qubit_rec != target_rule_ptr->resources.cend(); qubit_rec++) {
     auto target_qubit = qubit_rec->second;
-    if (target_qubit == qubit){
+    if (target_qubit == qubit) {
       target_rule_ptr->resources.erase(qubit_rec);
       break;
     }
