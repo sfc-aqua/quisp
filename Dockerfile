@@ -15,7 +15,7 @@ RUN apt update -y && apt install -y --no-install-recommends \
 # first stage - build OMNeT++ with GUI
 FROM base as builder
 
-ARG VERSION
+ARG VERSION=6.0
 WORKDIR /root
 RUN wget https://github.com/omnetpp/omnetpp/releases/download/omnetpp-$VERSION/omnetpp-$VERSION-linux-x86_64.tgz \
     --referer=https://omnetpp.org/ -O omnetpp-src-linux.tgz --progress=dot:giga && \
@@ -24,7 +24,19 @@ RUN mv omnetpp-$VERSION omnetpp
 WORKDIR /root/omnetpp
 ENV PATH /root/omnetpp/bin:$PATH
 
-RUN bash -c "source setenv && ./configure WITH_OSG=no && \
+RUN apt remove -y python3.8 && \
+    apt install -y python3.9 python3.9-dev python3.9-distutils curl time && \
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+    python3.9 get-pip.py && \
+    rm get-pip.py && \
+    pip install numpy scipy pandas matplotlib posix_ipc && \
+    pip list && \
+    ln -s /usr/bin/python3.9  /usr/local/bin/python && \
+    ln -s /usr/bin/python3.9  /usr/local/bin/python3
+
+
+RUN bash -c "source setenv && \
+    ./configure WITH_OSG=no && \
     make -j $(nproc) MODE=debug base && \
     make -j $(nproc) MODE=release base && \
     rm -r doc out test samples config.log config.status"
@@ -46,12 +58,7 @@ RUN chmod 775 /root/ && \
     echo 'PS1="quisp:\w\$ "' >> /root/.bashrc && chmod +x /root/.bashrc && \
     touch /root/.hushlogin
 
-RUN apt remove -y python3.8 && \
-    apt install -y python3.9 python3.9-distutils curl time && \
-    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-    python3.9 get-pip.py && \
-    rm get-pip.py && \
-    ln -s /usr/bin/python3.9  /usr/local/bin/python
+
 
 ENV HOME=/root/
 CMD /bin/bash --init-file /root/.bashrc
