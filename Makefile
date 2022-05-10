@@ -1,4 +1,6 @@
-QUISP_MAKEFILE = "./quisp/Makefile"
+QUISP_SRC_DIR = "./quisp"
+QUISP_MAKEFILE = "$(QUISP_SRC_DIR)/Makefile
+QUISP_FEATURE = "$(QUISP_SRC_DIR)/feature_defines.h"
 
 .PHONY: all tidy format ci makefile-exe makefile-lib checkmakefile googletest clean test coverage coverage-report help quispr
 
@@ -47,11 +49,14 @@ eigen/CMakeLists.txt:
 
 eigen: eigen/CMakeLists.txt
 
-makefile-exe: eigen
+makefile-exe: eigen $(QUISP_FEATURE)
 	cd quisp && opp_makemake -f --deep -O out -i ./makefrag
 
-makefile-lib: eigen
+makefile-lib: eigen $(QUISP_FEATURE)
 	cd quisp && opp_makemake -f --deep -O out -i ./makefrag -M debug  --make-so
+
+$(QUISP_FEATURE): $(wildcard .oppfeaturestate) .oppfeatures
+	opp_featuretool defines > $(QUISP_SRC_DIR)/feature_defines.h
 
 clean:
 	@if [ -f "$(QUISP_MAKEFILE)" ]; then \

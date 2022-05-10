@@ -1,0 +1,12 @@
+<features cppSourceRoots = "src" definesFile = "quisp/features.h">
+    <feature
+        id = "EmbeddedPython"
+        name = "Embedded Python"
+        description = "this allows user to run python code in a simulation"
+        initiallyEnabled = "false"
+        extraSourceFolders = ""
+        compileFlags = "-DENABLE_PYTHON"
+        linkerFlags = ""
+        />
+
+</features>

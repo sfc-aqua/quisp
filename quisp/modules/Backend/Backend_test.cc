@@ -1,4 +1,5 @@
 #include "Backend.h"
+#include <Python.h>
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
 #include "modules/common_types.h"
@@ -29,6 +30,7 @@ TEST(BackendContainer, callInitialize) {
 }
 
 TEST(BackendContainer, callInitializeWithInvalidBackend) {
+  Py_Finalize();
   auto *sim = utils::prepareSimulation();
   BackendContainer *backend = new BackendContainer();
   sim->registerComponent(backend);
@@ -37,7 +39,8 @@ TEST(BackendContainer, callInitializeWithInvalidBackend) {
   EXPECT_THROW(backend->callInitialize(), omnetpp::cRuntimeError);
 }
 
-TEST(BackendContainer, getQuantumBackend) {
+TEST(BackendConpainer, getQuantumBackend) {
+  Py_Finalize();
   auto *sim = utils::prepareSimulation();
   BackendContainer *backend = new BackendContainer();
   sim->registerComponent(backend);

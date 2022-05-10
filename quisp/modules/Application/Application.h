@@ -26,7 +26,6 @@ class Application : public IApplication, python_embeddable::PythonEmbeddable {
   Application();
   ~Application() {}
 
- protected:
   int my_address;
 
   std::vector<int> other_end_node_addresses;

@@ -2,7 +2,12 @@
 
 namespace quisp::modules::backend {
 
-BackendContainer::BackendContainer() : interpreter(pybind11::scoped_interpreter{}) {}
+BackendContainer::BackendContainer()
+#ifdef ENABLE_PYTHON
+    : interpreter(pybind11::scoped_interpreter{})
+#endif
+{
+}
 
 BackendContainer::~BackendContainer() {}
 
