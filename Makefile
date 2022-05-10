@@ -1,5 +1,5 @@
 QUISP_SRC_DIR = "./quisp"
-QUISP_MAKEFILE = "$(QUISP_SRC_DIR)/Makefile
+QUISP_MAKEFILE = "$(QUISP_SRC_DIR)/Makefile"
 QUISP_FEATURE = "$(QUISP_SRC_DIR)/feature_defines.h"
 
 .PHONY: all tidy format ci makefile-exe makefile-lib checkmakefile googletest clean test coverage coverage-report help quispr
