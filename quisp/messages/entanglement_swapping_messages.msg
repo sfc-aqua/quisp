@@ -4,7 +4,8 @@ namespace quisp::messages;
 
 packet SwappingResult extends Header{
     unsigned long RuleSet_id;
-    unsigned long Rule_id;
+    int Rule_id;
+    int shared_tag;
     int action_index;
 
     int left_Dest;

@@ -41,7 +41,8 @@ class SwappingAction : public OriginalSwappingAction {
   using OriginalSwappingAction::SwappingAction;
   static std::unique_ptr<SwappingAction> setupAction() {
     unsigned long ruleset_id = 0;
-    unsigned long rule_id = 1;
+    int rule_id = 1;
+    int shared_tag = 3;
 
     int left_partner_addr = 2;
     QNIC_type left_qnic_type = QNIC_E;
@@ -60,7 +61,7 @@ class SwappingAction : public OriginalSwappingAction {
     int self_right_qnic_id = 13;
     QNIC_type self_right_qnic_type = QNIC_E;
 
-    return std::make_unique<SwappingAction>(ruleset_id, rule_id, left_partner_addr, left_qnic_type, left_qnic_id, left_qnic_addr, left_resource, right_partner_addr,
+    return std::make_unique<SwappingAction>(ruleset_id, rule_id, shared_tag, left_partner_addr, left_qnic_type, left_qnic_id, left_qnic_addr, left_resource, right_partner_addr,
                                             right_qnic_type, right_qnic_id, right_qnic_addr, right_resource, self_left_qnic_id, self_left_qnic_type, self_right_qnic_id,
                                             self_right_qnic_type);
   }
@@ -97,7 +98,8 @@ class SwappingActionTest : public ::testing::Test {
 
 TEST_F(SwappingActionTest, init) {
   unsigned long ruleset_id = 0;
-  unsigned long rule_id = 1;
+  int rule_id = 1;
+  int shared_tag = 3;
 
   int left_partner_addr = 2;
   QNIC_type left_qnic_type = QNIC_E;
@@ -116,8 +118,9 @@ TEST_F(SwappingActionTest, init) {
   int self_right_qnic_id = 13;
   QNIC_type self_right_qnic_type = QNIC_E;
 
-  auto action = new SwappingAction(ruleset_id, rule_id, left_partner_addr, left_qnic_type, left_qnic_id, left_qnic_addr, left_resource, right_partner_addr, right_qnic_type,
-                                   right_qnic_id, right_qnic_addr, right_resource, self_left_qnic_id, self_left_qnic_type, self_right_qnic_id, self_right_qnic_type);
+  auto action =
+      new SwappingAction(ruleset_id, rule_id, shared_tag, left_partner_addr, left_qnic_type, left_qnic_id, left_qnic_addr, left_resource, right_partner_addr, right_qnic_type,
+                         right_qnic_id, right_qnic_addr, right_resource, self_left_qnic_id, self_left_qnic_type, self_right_qnic_id, self_right_qnic_type);
   EXPECT_EQ(ruleset_id, action->ruleset_id);
   EXPECT_EQ(rule_id, action->rule_id);
   EXPECT_EQ(left_partner_addr, action->left_partner);

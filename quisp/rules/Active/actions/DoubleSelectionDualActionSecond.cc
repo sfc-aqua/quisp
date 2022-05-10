@@ -4,9 +4,9 @@
 
 namespace quisp::rules::active::actions {
 
-DoubleSelectionDualActionSecond::DoubleSelectionDualActionSecond(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource,
+DoubleSelectionDualActionSecond::DoubleSelectionDualActionSecond(unsigned long ruleset_id, int rule_id, int shared_tag, int partner, QNIC_type qnic_type, int qnic_id, int resource,
                                                                  int trash_resource_x, int trash_resource_z, int ds_trash_resource_x)
-    : ActiveAction(ruleset_id, rule_id),
+    : ActiveAction(ruleset_id, rule_id, shared_tag),
       partner(partner),
       qnic_type(qnic_type),
       qnic_id(qnic_id),
@@ -66,6 +66,7 @@ cPacket *DoubleSelectionDualActionSecond::run(cModule *re) {
   pk->setAction_index(action_index);
   pk->setRule_id(rule_id);
   pk->setRuleset_id(ruleset_id);
+  pk->setShared_tag(shared_tag);
   pk->setXOutput_is_plus(meas_X);
   pk->setZOutput_is_plus(meas_Z);
   pk->setDS_Output_is_plus(ds_meas_X);
@@ -75,9 +76,9 @@ cPacket *DoubleSelectionDualActionSecond::run(cModule *re) {
   return pk;
 }
 
-DoubleSelectionDualActionSecondInv::DoubleSelectionDualActionSecondInv(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource,
-                                                                       int trash_resource_x, int trash_resource_z, int ds_trash_resource_z)
-    : ActiveAction(ruleset_id, rule_id),
+DoubleSelectionDualActionSecondInv::DoubleSelectionDualActionSecondInv(unsigned long ruleset_id, int rule_id, int shared_tag, int partner, QNIC_type qnic_type, int qnic_id,
+                                                                       int resource, int trash_resource_x, int trash_resource_z, int ds_trash_resource_z)
+    : ActiveAction(ruleset_id, rule_id, shared_tag),
       partner(partner),
       qnic_type(qnic_type),
       qnic_id(qnic_id),
@@ -138,6 +139,7 @@ cPacket *DoubleSelectionDualActionSecondInv::run(cModule *re) {
   pk->setAction_index(action_index);
   pk->setRule_id(rule_id);
   pk->setRuleset_id(ruleset_id);
+  pk->setShared_tag(shared_tag);
   pk->setXOutput_is_plus(meas_X);
   pk->setZOutput_is_plus(meas_Z);
   pk->setDS_Output_is_plus(ds_meas_Z);

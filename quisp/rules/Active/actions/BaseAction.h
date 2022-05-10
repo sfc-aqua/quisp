@@ -19,11 +19,13 @@ using quisp::modules::QNIC_type;
 
 class ActiveAction {
  public:
-  ActiveAction(unsigned long ruleset_id, unsigned long rule_id);
+  ActiveAction(unsigned long ruleset_id, int rule_id);
+  ActiveAction(unsigned long ruleset_id, int rule_id, int shared_tag);
   virtual ~ActiveAction(){};
   std::multimap<int, IStationaryQubit*>* rule_resources;
   unsigned long ruleset_id;
-  unsigned long rule_id;  // Used to make the lock_id unique, together with purification_count.
+  int rule_id;  // Used to make the lock_id unique, together with purification_count.
+  int shared_tag;
   virtual cPacket* run(cModule* re) = 0;
   virtual IStationaryQubit* getResource(int required_index, int partner);
   virtual void removeResource_fromRule(IStationaryQubit* qubit);

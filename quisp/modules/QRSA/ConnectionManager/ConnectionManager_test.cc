@@ -14,7 +14,7 @@ ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, partner);
 ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, num_resource_required);
 
 ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, unsigned long, ruleset_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, unsigned long, rule_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, int, rule_id);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, qnic_id);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, QNIC_type, qnic_type);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, partner);
@@ -225,6 +225,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 11,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 0,
 		"name": "purification",
 		"next_rule_id": 1,
 		"rule_id": 0
@@ -256,6 +257,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 11,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 5,
 		"name": "wait",
 		"next_rule_id": 2,
 		"rule_id": 1
@@ -290,6 +292,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 11,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 6,
 		"name": "purification",
 		"next_rule_id": 3,
 		"rule_id": 2
@@ -335,6 +338,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 11,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 7,
 		"name": "tomography",
 		"next_rule_id": -1,
 		"rule_id": 3
@@ -387,6 +391,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 12,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 0,
 		"name": "purification",
 		"next_rule_id": 4,
 		"rule_id": 0
@@ -421,6 +426,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 13,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 1,
 		"name": "purification",
 		"next_rule_id": 2,
 		"rule_id": 1
@@ -452,6 +458,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 13,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 3,
 		"name": "wait",
 		"next_rule_id": 3,
 		"rule_id": 2
@@ -486,6 +493,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 13,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 4,
 		"name": "purification",
 		"next_rule_id": 4,
 		"rule_id": 3
@@ -544,11 +552,13 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"partner_address": 2,
 			"qnic_id": 12,
 			"qnic_type": "QNIC_E"
-		}, {
+		},
+    {
 			"partner_address": 5,
 			"qnic_id": 13,
 			"qnic_type": "QNIC_E"
-		}],
+    }],
+    "shared_tag": 5,
 		"name": "swapping",
 		"next_rule_id": -1,
 		"rule_id": 4
@@ -604,6 +614,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 14,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 1,
 		"name": "purification",
 		"next_rule_id": 2,
 		"rule_id": 0
@@ -638,6 +649,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 15,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 2,
 		"name": "purification",
 		"next_rule_id": 2,
 		"rule_id": 1
@@ -701,6 +713,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 15,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 3,
 		"name": "swapping",
 		"next_rule_id": -1,
 		"rule_id": 2
@@ -759,6 +772,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 16,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 2,
 		"name": "purification",
 		"next_rule_id": 1,
 		"rule_id": 0
@@ -790,6 +804,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 16,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 3,
 		"name": "wait",
 		"next_rule_id": 2,
 		"rule_id": 1
@@ -819,6 +834,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 				"type": "enough_resource"
 			}]
 		},
+    "shared_tag": 4,
 		"interface": [{
 			"partner_address": 3,
 			"qnic_id": 16,
@@ -855,6 +871,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 16,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 5,
 		"name": "wait",
 		"next_rule_id": 4,
 		"rule_id": 3
@@ -889,6 +906,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 16,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 6,
 		"name": "purification",
 		"next_rule_id": 5,
 		"rule_id": 4
@@ -934,6 +952,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"qnic_id": 16,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 7,
 		"name": "tomography",
 		"next_rule_id": -1,
 		"rule_id": 5

@@ -25,14 +25,14 @@ TEST(RuleSetTest, Init) {
 TEST(RuleSetTest, addRule) {
   prepareSimulation();
   RuleSet ruleset(1, 2);
-  auto purification = std::make_unique<Rule>(1, QNIC_E, 10, false);
+  auto purification = std::make_unique<Rule>(1, QNIC_E, 10, 0, false);
   auto rule1 = ruleset.addRule(std::move(purification));  // rule type, partners
   EXPECT_EQ(ruleset.rules.size(), 1);
   EXPECT_EQ(ruleset.rules.at(0)->parent_ruleset_id, ruleset.ruleset_id);
   EXPECT_EQ(ruleset.rules.at(0)->rule_id, rule1->rule_id);
   EXPECT_EQ(ruleset.rules.at(0)->qnic_interfaces.at(0).partner_addr, 1);
 
-  auto purification2 = std::make_unique<Rule>(3, QNIC_R, 11, false);
+  auto purification2 = std::make_unique<Rule>(3, QNIC_R, 11, 0, false);
   auto rule2 = ruleset.addRule(std::move(purification2));  // return address to rule
   EXPECT_EQ(ruleset.rules.at(1)->parent_ruleset_id, ruleset.ruleset_id);
   EXPECT_EQ(ruleset.rules.at(1)->rule_id, rule2->rule_id);
@@ -41,7 +41,7 @@ TEST(RuleSetTest, addRule) {
   std::vector<int> partners = {1, 3};
   std::vector<QNIC_type> qnic_types = {QNIC_E, QNIC_R};
   std::vector<int> qnic_id = {10, 11};
-  auto swapping = std::make_unique<Rule>(partners, qnic_types, qnic_id, false);
+  auto swapping = std::make_unique<Rule>(partners, qnic_types, qnic_id, 0, false);
   auto rule3 = ruleset.addRule(std::move(swapping));
   EXPECT_EQ(ruleset.rules.at(2)->parent_ruleset_id, ruleset.ruleset_id);
   EXPECT_EQ(ruleset.rules.at(2)->rule_id, rule3->rule_id);
@@ -52,7 +52,7 @@ TEST(RuleSetTest, addRule) {
 TEST(RuleSetTest, metadata_serialize_json) {
   prepareSimulation();
   RuleSet ruleset(1234, 2);  // ruleset_id, owner_addr
-  auto purification = std::make_unique<Rule>(1, QNIC_E, 10, false);
+  auto purification = std::make_unique<Rule>(1, QNIC_E, 10, 0, false);
   auto rule1 = ruleset.addRule(std::move(purification));  // rule type, partners
 
   auto ruleset_json = ruleset.serialize_json();
@@ -62,6 +62,7 @@ TEST(RuleSetTest, metadata_serialize_json) {
                            "rules": [{
                              "name": "",
                              "next_rule_id": -1,
+                             "shared_tag": 0,
                              "interface":[
                                {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 10}
                              ],
@@ -75,7 +76,7 @@ TEST(RuleSetTest, deserialize_json) {
   prepareSimulation();
   RuleSet ruleset(1234, 2);  // ruleset_id, owner_addr
 
-  auto purification = std::make_unique<Rule>(1, QNIC_E, 10, false);
+  auto purification = std::make_unique<Rule>(1, QNIC_E, 10, 0, false);
   auto rule1 = ruleset.addRule(std::move(purification));  // rule type, partners
   auto serialized = ruleset.serialize_json();
 

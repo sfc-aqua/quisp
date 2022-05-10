@@ -76,7 +76,7 @@ void FidelityConditionClause::deserialize_json(json serialized) {
   }
 }
 
-WaitConditionClause::WaitConditionClause(int partner_addr, QNIC_type qnic_type, int qnic_id) : Clause(partner_addr, qnic_type, qnic_id) {}
+WaitConditionClause::WaitConditionClause(int swapper_addr, QNIC_type qnic_type, int qnic_id) : Clause(swapper_addr, qnic_type, qnic_id) {}
 
 json WaitConditionClause::serialize_json() {
   json wait_json;

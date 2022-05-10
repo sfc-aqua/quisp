@@ -46,9 +46,10 @@ class DoubleSelectionDualActionSecond : public OriginalDoubleSelectionDualAction
     int trash_resource_z = 3;
     int double_trash_resource_x = 4;
     unsigned long ruleset_id = 6;
-    unsigned long rule_id = 7;
+    int rule_id = 7;
+    int shared_tag = 3;
 
-    return std::make_unique<DoubleSelectionDualActionSecond>(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z,
+    return std::make_unique<DoubleSelectionDualActionSecond>(ruleset_id, rule_id, shared_tag, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z,
                                                              double_trash_resource_x);
   }
   MOCK_METHOD(IStationaryQubit *, getResource, (int required_index, int partner), (override));
@@ -64,10 +65,11 @@ TEST(DoubleSelectionDualActionSecond, Init) {
   int trash_resource_z = 6;
   int double_trash_resource_x = 7;
   unsigned long ruleset_id = 120;
-  unsigned long rule_id = 2340;
+  int rule_id = 2340;
+  int shared_tag = 3;
 
-  auto *action =
-      new DoubleSelectionDualActionSecond(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z, double_trash_resource_x);
+  auto *action = new DoubleSelectionDualActionSecond(ruleset_id, rule_id, shared_tag, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z,
+                                                     double_trash_resource_x);
   EXPECT_EQ(action->partner, partner_addr);
   EXPECT_EQ(action->qnic_type, QNIC_E);
   EXPECT_EQ(action->qnic_id, qnic_id);

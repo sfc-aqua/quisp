@@ -11,7 +11,9 @@
 
 namespace quisp::rules::active::actions {
 
-ActiveAction::ActiveAction(unsigned long ruleset_id, unsigned long rule_id) : ruleset_id(ruleset_id), rule_id(rule_id){};
+ActiveAction::ActiveAction(unsigned long ruleset_id, int rule_id) : ruleset_id(ruleset_id), rule_id(rule_id){};
+
+ActiveAction::ActiveAction(unsigned long ruleset_id, int rule_id, int shared_tag) : ruleset_id(ruleset_id), rule_id(rule_id), shared_tag(shared_tag){};
 
 IStationaryQubit *ActiveAction::getResource(int required_index, int partner) {
   int i = 0;

@@ -8,7 +8,8 @@ namespace quisp::rules::active::actions {
 // https://arxiv.org/abs/0811.2639
 class DoubleSelectionAction : public ActiveAction {
  public:
-  DoubleSelectionAction(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x, int trash_resource_z);
+  DoubleSelectionAction(unsigned long ruleset_id, int rule_id, int shared_tag, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
+                        int trash_resource_z);
   cPacket* run(cModule* re) override;
 
  protected:
@@ -28,7 +29,7 @@ class DoubleSelectionAction : public ActiveAction {
 // https://arxiv.org/abs/0811.2639
 class DoubleSelectionActionInv : public ActiveAction {
  public:
-  DoubleSelectionActionInv(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
+  DoubleSelectionActionInv(unsigned long ruleset_id, int rule_id, int shared_tag, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
                            int trash_resource_z);
   cPacket* run(cModule* re) override;
 

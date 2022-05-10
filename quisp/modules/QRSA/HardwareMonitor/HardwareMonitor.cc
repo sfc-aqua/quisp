@@ -620,7 +620,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   ActiveRuleSet *tomography_RuleSet = new ActiveRuleSet(RuleSet_id, my_address);
   EV_INFO << "Creating rules now ruleset_id = " << RuleSet_id << ", partner_address = " << partner_address << "\n";
 
-  unsigned long rule_id = 0;
+  int rule_id = 0;
+  int shared_tag = 0;
   std::string rule_name;
   std::vector<int> partners = {partner_address};
 
@@ -654,7 +655,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
-        ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+        ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
         Purification->setAction(purify_action);
         Purification->next_rule_id = rule_id + 1;
         rule_id++;
@@ -667,10 +668,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         resource_clause = new EnoughResourceClause(partner_address, 2);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
-        purify_action = new PurifyAction(RuleSet_id, rule_id, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+        purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
         Purification->setAction(purify_action);
         Purification->next_rule_id = rule_id + 1;
         rule_id++;
+        shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
     } else if (Purification_type == 3003) {
@@ -709,15 +711,16 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
         if (i % 2 == 0) {
           // X purification
-          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         } else {
           // Z purification
-          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         }
         Purification->next_rule_id = rule_id + 1;
         rule_id++;
+        shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
     } else if (Purification_type == 1001) {
@@ -743,10 +746,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
-        ActiveAction *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+        ActiveAction *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
         Purification->setAction(purify_action);
         Purification->next_rule_id = rule_id + 1;
         rule_id++;
+        shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
     } else if (Purification_type == 1221) {
@@ -771,10 +775,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
           Purification_condition->addClause(resource_clause);
           Purification->setCondition(Purification_condition);
-          ActiveAction *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          ActiveAction *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
           Purification->next_rule_id = rule_id + 1;
           rule_id++;
+          shared_tag++;
           tomography_RuleSet->addRule(std::move(Purification));
         } else {
           rule_name = "Double purification Inverse with: " + std::to_string(partner_address);
@@ -783,10 +788,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
           Purification_condition->addClause(resource_clause);
           Purification->setCondition(Purification_condition);
-          ActiveAction *purify_action = new DoublePurifyActionInv(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          ActiveAction *purify_action = new DoublePurifyActionInv(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
           Purification->next_rule_id = rule_id + 1;
           rule_id++;
+          shared_tag++;
           tomography_RuleSet->addRule(std::move(Purification));
         }
       }
@@ -812,10 +818,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
-        ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+        ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
         Purification->setAction(purify_action);
         Purification->next_rule_id = rule_id + 1;
         rule_id++;
+        shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
     } else if (Purification_type == 1021) {  // Fujii-san's Double selection purification
@@ -844,14 +851,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
         if (i % 2 == 0) {
-          ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         } else {
-          ActiveAction *purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          ActiveAction *purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         }
         Purification->next_rule_id = rule_id + 1;
         rule_id++;
+        shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
     } else if (Purification_type == 1031) {
@@ -881,14 +889,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
         if (i % 2 == 0) {
-          ActiveAction *purify_action = new DoubleSelectionDualAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
+          ActiveAction *purify_action = new DoubleSelectionDualAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
           Purification->setAction(purify_action);
         } else {
-          ActiveAction *purify_action = new DoubleSelectionDualActionInv(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
+          ActiveAction *purify_action = new DoubleSelectionDualActionInv(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
           Purification->setAction(purify_action);
         }
         Purification->next_rule_id = rule_id + 1;
         rule_id++;
+        shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
     } else if (Purification_type == 1061) {
@@ -917,14 +926,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
         if (i % 2 == 0) {
-          ActiveAction *purify_action = new DoubleSelectionDualActionSecond(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
+          ActiveAction *purify_action = new DoubleSelectionDualActionSecond(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
           Purification->setAction(purify_action);
         } else {
-          ActiveAction *purify_action = new DoubleSelectionDualActionSecondInv(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
+          ActiveAction *purify_action = new DoubleSelectionDualActionSecondInv(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
           Purification->setAction(purify_action);
         }
         Purification->next_rule_id = rule_id + 1;
         rule_id++;
+        shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
     } else if (Purification_type == 5555) {  // Predefined purification method
@@ -951,14 +961,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         Purification_condition->addClause(resource_clause);
         Purification->setCondition(Purification_condition);
         if (i % 2 == 0) {
-          ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         } else {
-          ActiveAction *purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+          ActiveAction *purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
           Purification->setAction(purify_action);
         }
         Purification->next_rule_id = rule_id + 1;
         rule_id++;
+        shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
 
@@ -975,14 +986,15 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         Purification->setCondition(Purification_condition);
 
         if (i % 2 == 0) {  // X purification
-          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         } else {  // Z purification
-          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         }
         Purification->next_rule_id = rule_id + 1;
         rule_id++;
+        shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
     } else if (Purification_type == 5556) {  // Predefined purification method
@@ -1003,10 +1015,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
       Purification_condition->addClause(resource_clause);
       Purification->setCondition(Purification_condition);
-      ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
       Purification->setAction(purify_action);
       Purification->next_rule_id = rule_id + 1;
       rule_id++;
+      shared_tag++;
       tomography_RuleSet->addRule(std::move(Purification));
 
       for (int i = 0; i < num_purification; i++) {
@@ -1023,15 +1036,16 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
         if (i % 2 == 0) {
           // X purification
-          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         } else {
           // Z purification
-          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
           Purification->setAction(purify_action);
         }
         Purification->next_rule_id = rule_id + 1;
         rule_id++;
+        shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
 
@@ -1053,10 +1067,12 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);
       Purification_condition->addClause(resource_clause);
       Purification->setCondition(Purification_condition);
-      ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, X_Purification, Z_Purification, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      ActiveAction *purify_action =
+          new PurifyAction(RuleSet_id, rule_id, shared_tag, X_Purification, Z_Purification, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
       Purification->setAction(purify_action);
       Purification->next_rule_id = rule_id + 1;
       rule_id++;
+      shared_tag++;
       tomography_RuleSet->addRule(std::move(Purification));
     } else {  // X, Z double purification
       error("syntax outdate or purification id not recognized.");
@@ -1066,10 +1082,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
       Purification_condition->addClause(resource_clause);
       Purification->setCondition(Purification_condition);
-      ActiveAction *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      ActiveAction *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
       Purification->setAction(purify_action);
       Purification->next_rule_id = rule_id + 1;
       rule_id++;
+      shared_tag++;
       tomography_RuleSet->addRule(std::move(Purification));
     }
 

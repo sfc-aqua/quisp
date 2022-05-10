@@ -11,12 +11,12 @@ class ActiveRule {
   unsigned long ruleset_id;
   int rule_id;
   int next_rule_id = 0;
+  int shared_tag;
   std::string name;
   std::unique_ptr<ActiveCondition> condition;
   std::unique_ptr<ActiveAction> action;
   std::multimap<int, IStationaryQubit *> resources;
   std::vector<int> action_partners;
-  std::vector<int> next_action_partners;  // if this rule extends the entanglement
 
   ActiveRule(unsigned long ruleset_id, int rule_id, std::string rule_name = "", std::vector<int> action_partners = {});
 

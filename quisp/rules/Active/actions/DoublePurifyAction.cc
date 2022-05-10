@@ -4,9 +4,9 @@
 
 namespace quisp::rules::active::actions {
 
-DoublePurifyAction::DoublePurifyAction(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
+DoublePurifyAction::DoublePurifyAction(unsigned long ruleset_id, int rule_id, int shared_tag, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
                                        int trash_resource_z)
-    : ActiveAction(ruleset_id, rule_id),
+    : ActiveAction(ruleset_id, rule_id, shared_tag),
       partner(partner),
       qnic_type(qnic_type),
       qnic_id(qnic_id),
@@ -60,6 +60,7 @@ cPacket *DoublePurifyAction::run(cModule *re) {
   pk->setAction_index(action_index);
   pk->setRule_id(rule_id);
   pk->setRuleset_id(ruleset_id);
+  pk->setShared_tag(shared_tag);
   pk->setXOutput_is_plus(meas_X);
   pk->setZOutput_is_plus(meas_Z);
   pk->setEntangled_with(qubit);
@@ -67,9 +68,9 @@ cPacket *DoublePurifyAction::run(cModule *re) {
   return pk;
 }
 
-DoublePurifyActionInv::DoublePurifyActionInv(unsigned long ruleset_id, unsigned long rule_id, int partner, QNIC_type qnic_type, int qnic_id, int resource, int trash_resource_x,
-                                             int trash_resource_z)
-    : ActiveAction(ruleset_id, rule_id),
+DoublePurifyActionInv::DoublePurifyActionInv(unsigned long ruleset_id, int rule_id, int shared_tag, int partner, QNIC_type qnic_type, int qnic_id, int resource,
+                                             int trash_resource_x, int trash_resource_z)
+    : ActiveAction(ruleset_id, rule_id, shared_tag),
       partner(partner),
       qnic_type(qnic_type),
       qnic_id(qnic_id),
@@ -118,6 +119,7 @@ cPacket *DoublePurifyActionInv::run(cModule *re) {
   pk->setAction_index(action_index);
   pk->setRule_id(rule_id);
   pk->setRuleset_id(ruleset_id);
+  pk->setShared_tag(shared_tag);
   pk->setXOutput_is_plus(meas_X);
   pk->setZOutput_is_plus(meas_Z);
   pk->setEntangled_with(qubit);

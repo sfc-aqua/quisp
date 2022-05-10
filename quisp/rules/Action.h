@@ -90,7 +90,7 @@ class EntanglementSwapping : public Action {
 class Wait : public Action {
  public:
   Wait(json serialized) { deserialize_json(serialized); }  // for deserialization
-  Wait(int partner_addr, QNIC_type qnic_type, int qnic_id);
+  Wait(int swapper_addr, QNIC_type qnic_type, int qnic_id);
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };

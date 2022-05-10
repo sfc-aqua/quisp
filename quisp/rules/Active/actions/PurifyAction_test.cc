@@ -42,13 +42,14 @@ class PurifyAction : public OriginalPurifyAction {
     int resource_index = 4;
     int trash_resource_index = 5;
     unsigned long ruleset_id = 6;
-    unsigned long rule_id = 7;
+    int rule_id = 7;
+    int shared_tag = 3;
     bool x_purification_enabled = false;
     bool z_purification_enabled = false;
     int num_purification = 8;
 
-    return std::make_unique<PurifyAction>(ruleset_id, rule_id, x_purification_enabled, z_purification_enabled, num_purification, partner_addr, qnic_type, qnic_id, resource_index,
-                                          trash_resource_index);
+    return std::make_unique<PurifyAction>(ruleset_id, rule_id, shared_tag, x_purification_enabled, z_purification_enabled, num_purification, partner_addr, qnic_type, qnic_id,
+                                          resource_index, trash_resource_index);
   }
   MOCK_METHOD(IStationaryQubit *, getResource, (int required_index, int partner), (override));
   MOCK_METHOD(void, removeResource_fromRule, (IStationaryQubit *), (override));
@@ -61,13 +62,14 @@ TEST(PurifyActionTest, Init) {
   int resource_index = 4;
   int trash_resource_index = 5;
   unsigned long ruleset_id = 6;
-  unsigned long rule_id = 7;
+  int rule_id = 7;
+  int shared_tag = 3;
   bool x_purification_enabled = true;
   bool z_purification_enabled = true;
   int num_purification = 8;
 
-  auto *action = new PurifyAction(ruleset_id, rule_id, x_purification_enabled, z_purification_enabled, num_purification, partner_addr, qnic_type, qnic_id, resource_index,
-                                  trash_resource_index);
+  auto *action = new PurifyAction(ruleset_id, rule_id, shared_tag, x_purification_enabled, z_purification_enabled, num_purification, partner_addr, qnic_type, qnic_id,
+                                  resource_index, trash_resource_index);
   EXPECT_EQ(action->partner, partner_addr);
   EXPECT_EQ(action->qnic_type, QNIC_E);
   EXPECT_EQ(action->qnic_id, qnic_id);

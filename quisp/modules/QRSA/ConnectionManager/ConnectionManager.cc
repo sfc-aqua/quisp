@@ -336,6 +336,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   auto rev_path = path;
   std::reverse(rev_path.begin(), rev_path.end());  // reversed path
 
+  int shared_tag = 0;  // used for identifying the partner rule.
   // 2.1 Add rules one by one
   if (es_with_purify) {
     // 2.2.1 purification required
@@ -345,8 +346,9 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       auto right_qnic = getQnicInterface(right_node, left_node, path, qnics);
       // arguments: int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name
       for (int i = 0; i < num_remote_purification; i++) {
-        auto pur_rule_left = purifyRule(right_node, purification_type, threshold_fidelity, left_qnic.type, left_qnic.index);
-        auto pur_rule_right = purifyRule(left_node, purification_type, threshold_fidelity, right_qnic.type, right_qnic.index);
+        auto pur_rule_left = purifyRule(right_node, purification_type, threshold_fidelity, left_qnic.type, left_qnic.index, shared_tag);
+        auto pur_rule_right = purifyRule(left_node, purification_type, threshold_fidelity, right_qnic.type, right_qnic.index, shared_tag);
+        shared_tag++;
         std::vector<int> left_partner = {right_node}, right_partner = {left_node};
         rules_array[left_node].push_back(std::move(pur_rule_left));  // add rule with partner info
         rules_array[right_node].push_back(std::move(pur_rule_right));  // add rule with partner info
@@ -381,20 +383,22 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
           if (std::max(std::abs(index - lindex), std::abs(index - rindex)) == distance) {
             // 2.2.5 Swapping Rules
             // waitRule: int partner_address, QNIC_type qnic_type, int qnic_id, std::string name
-            auto empty_rule_left = waitRule(swapper_node, config.lqnic_type, config.lqnic_index);
-            auto empty_rule_right = waitRule(swapper_node, config.rqnic_type, config.rqnic_index);
+            auto wait_rule_left = waitRule(swapper_node, config.lqnic_type, config.lqnic_index, shared_tag);
+            auto wait_rule_right = waitRule(swapper_node, config.rqnic_type, config.rqnic_index, shared_tag);
             // std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id,std::string name
             auto swapping_rule = swapRule(swapping_partner_table[swapper_node], threshold_fidelity, {config.self_left_qnic_type, config.self_right_qnic_type},
                                           {config.self_left_qnic_index, config.self_right_qnic_index}, {config.lqnic_type, config.rqnic_type},
-                                          {config.lqnic_index, config.rqnic_index}, {config.lqnic_address, config.rqnic_address});
-            rules_array[left_partner].push_back(std::move(empty_rule_left));
-            rules_array[right_partner].push_back(std::move(empty_rule_right));
+                                          {config.lqnic_index, config.rqnic_index}, {config.lqnic_address, config.rqnic_address}, shared_tag);
+            shared_tag++;
+            rules_array[left_partner].push_back(std::move(wait_rule_left));
+            rules_array[right_partner].push_back(std::move(wait_rule_right));
             rules_array[swapper_node].push_back(std::move(swapping_rule));
 
             // 2.2.6 Purification Rules
             for (int i = 0; i < num_remote_purification; i++) {
-              auto pur_rule_left = purifyRule(right_partner, purification_type, threshold_fidelity, config.lqnic_type, config.lqnic_index);
-              auto pur_rule_right = purifyRule(left_partner, purification_type, threshold_fidelity, config.rqnic_type, config.rqnic_index);
+              auto pur_rule_left = purifyRule(right_partner, purification_type, threshold_fidelity, config.lqnic_type, config.lqnic_index, shared_tag);
+              auto pur_rule_right = purifyRule(left_partner, purification_type, threshold_fidelity, config.rqnic_type, config.rqnic_index, shared_tag);
+              shared_tag++;
               rules_array[left_partner].push_back(std::move(pur_rule_left));
               rules_array[right_partner].push_back(std::move(pur_rule_right));
             }
@@ -433,14 +437,15 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
           if (std::max(std::abs(index - lindex), std::abs(index - rindex)) == distance) {
             // 2.2.5 Swapping Rules
             // waitRule: int partner_address, QNIC_type qnic_type, int qnic_id, std::string name
-            auto empty_rule_left = waitRule(swapper_node, config.lqnic_type, config.lqnic_index);
-            auto empty_rule_right = waitRule(swapper_node, config.rqnic_type, config.rqnic_index);
+            auto wait_rule_left = waitRule(swapper_node, config.lqnic_type, config.lqnic_index, shared_tag);
+            auto wait_rule_right = waitRule(swapper_node, config.rqnic_type, config.rqnic_index, shared_tag);
             // std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id,std::string name
             auto swapping_rule = swapRule(swapping_partner_table[swapper_node], threshold_fidelity, {config.self_left_qnic_type, config.self_right_qnic_type},
                                           {config.self_left_qnic_index, config.self_right_qnic_index}, {config.lqnic_type, config.rqnic_type},
-                                          {config.lqnic_index, config.rqnic_index}, {config.lqnic_address, config.rqnic_address});
-            rules_array[left_partner].push_back(std::move(empty_rule_left));
-            rules_array[right_partner].push_back(std::move(empty_rule_right));
+                                          {config.lqnic_index, config.rqnic_index}, {config.lqnic_address, config.rqnic_address}, shared_tag);
+            shared_tag++;
+            rules_array[left_partner].push_back(std::move(wait_rule_left));
+            rules_array[right_partner].push_back(std::move(wait_rule_right));
             rules_array[swapper_node].push_back(std::move(swapping_rule));
           }
         }
@@ -454,8 +459,9 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   auto initiator_qnic = getQnicInterface(initiator_address, responder_address, path, qnics);
   auto responder_qnic = getQnicInterface(responder_address, initiator_address, path, qnics);
   // int partner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name
-  auto tomo_rule_initiator = tomographyRule(responder_address, initiator_address, num_measure, threshold_fidelity, initiator_qnic.type, initiator_qnic.index);
-  auto tomo_rule_responder = tomographyRule(initiator_address, responder_address, num_measure, threshold_fidelity, responder_qnic.type, responder_qnic.index);
+  auto tomo_rule_initiator = tomographyRule(responder_address, initiator_address, num_measure, threshold_fidelity, initiator_qnic.type, initiator_qnic.index, shared_tag);
+  auto tomo_rule_responder = tomographyRule(initiator_address, responder_address, num_measure, threshold_fidelity, responder_qnic.type, responder_qnic.index, shared_tag);
+  shared_tag++;
   rules_array[initiator_address].push_back(std::move(tomo_rule_initiator));
   rules_array[responder_address].push_back(std::move(tomo_rule_responder));
 
@@ -824,8 +830,9 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
   releaseQnic(inbound_qnic_address);
 }
 
-std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name) {
-  auto purify_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, false);
+std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, int shared_tag,
+                                                    std::string name) {
+  auto purify_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, shared_tag, false);
   purify_rule->setName(name);
 
   // decide how many Bell pairs are required
@@ -856,9 +863,9 @@ std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType
 }
 
 std::unique_ptr<Rule> ConnectionManager::swapRule(std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id,
-                                                  std::vector<QNIC_type> remote_qnic_type, std::vector<int> remote_qnic_id, std::vector<int> remote_qnic_address,
+                                                  std::vector<QNIC_type> remote_qnic_type, std::vector<int> remote_qnic_id, std::vector<int> remote_qnic_address, int shared_tag,
                                                   std::string name) {
-  auto swap_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, true);
+  auto swap_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, shared_tag, true);
   swap_rule->setName(name);
 
   // prepare condition and two enough resource clauses
@@ -876,17 +883,15 @@ std::unique_ptr<Rule> ConnectionManager::swapRule(std::vector<int> partner_addre
   return swap_rule;
 }
 
-std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, QNIC_type qnic_type, int qnic_id, std::string name) {
-  auto wait_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, false);
+std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, QNIC_type qnic_type, int qnic_id, int shared_tag, std::string name) {
+  auto wait_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, shared_tag, false);
   wait_rule->setName(name);
 
-  // prepare condition and two enough resource clauses
   auto condition = std::make_unique<Condition>();
   auto wait_clause = std::make_unique<WaitConditionClause>(partner_address, qnic_type, qnic_id);
   condition->addClause(std::move(wait_clause));
   wait_rule->setCondition(std::move(condition));
 
-  // prepare swapping action (partners, qnic_types, qnic_ids)
   auto wait_action = std::make_unique<Wait>(partner_address, qnic_type, qnic_id);
   wait_rule->setAction(std::move(wait_action));
 
@@ -894,8 +899,8 @@ std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, QNIC_type
 }
 
 std::unique_ptr<Rule> ConnectionManager::tomographyRule(int partner_address, int owner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id,
-                                                        std::string name) {
-  auto tomography_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, true);
+                                                        int shared_tag, std::string name) {
+  auto tomography_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, shared_tag, true);
   tomography_rule->setName(name);
 
   // prepare condition

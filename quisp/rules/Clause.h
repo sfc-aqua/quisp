@@ -54,7 +54,7 @@ class FidelityConditionClause : public Clause {
 class WaitConditionClause : public Clause {
  public:
   WaitConditionClause(json serialized) { deserialize_json(serialized); }
-  WaitConditionClause(int partner_addr, QNIC_type qnic_type, int qnic_id);
+  WaitConditionClause(int swapper_addr, QNIC_type qnic_type, int qnic_id);
   const std::string name = "wait";
   json serialize_json() override;
   void deserialize_json(json serialized) override;

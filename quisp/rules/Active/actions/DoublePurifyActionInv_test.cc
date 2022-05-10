@@ -42,9 +42,10 @@ class DoublePurifyActionInv : public OriginalDoublePurifyActionInv {
     int trash_resource_x = 5;
     int trash_resource_z = 6;
     unsigned long ruleset_id = 120;
-    unsigned long rule_id = 2340;
+    int rule_id = 2340;
+    int shared_tag = 3;
 
-    return std::make_unique<DoublePurifyActionInv>(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z);
+    return std::make_unique<DoublePurifyActionInv>(ruleset_id, rule_id, shared_tag, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z);
   }
   MOCK_METHOD(IStationaryQubit *, getResource, (int required_index, int partner), (override));
   MOCK_METHOD(void, removeResource_fromRule, (IStationaryQubit *), (override));
@@ -58,9 +59,10 @@ TEST(DoublePurifyActionInvTest, Init) {
   int trash_resource_x = 5;
   int trash_resource_z = 6;
   unsigned long ruleset_id = 120;
-  unsigned long rule_id = 2340;
+  int rule_id = 2340;
+  int shared_tag = 3;
 
-  auto *action = new DoublePurifyActionInv(ruleset_id, rule_id, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z);
+  auto *action = new DoublePurifyActionInv(ruleset_id, rule_id, shared_tag, partner_addr, qnic_type, qnic_id, resource_index, trash_resource_x, trash_resource_z);
   EXPECT_EQ(action->partner, partner_addr);
   EXPECT_EQ(action->qnic_type, QNIC_E);
   EXPECT_EQ(action->qnic_id, qnic_id);

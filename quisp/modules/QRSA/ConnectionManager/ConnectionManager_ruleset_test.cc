@@ -49,7 +49,7 @@ TEST(ConnectionManagerRuleSetTest, PurificationRule) {
   int qnic_id = 4;
   double threshold_fidelity = 0;
 
-  auto purification_rule = connection_manager.purifyRule(partner_addr, purification_type, threshold_fidelity, qnic_type, qnic_id);
+  auto purification_rule = connection_manager.purifyRule(partner_addr, purification_type, threshold_fidelity, qnic_type, qnic_id, 0);
   EXPECT_EQ(purification_rule->rule_id, -1);
   EXPECT_EQ(purification_rule->name, "purification");
 
@@ -59,6 +59,7 @@ TEST(ConnectionManagerRuleSetTest, PurificationRule) {
    "rule_id":-1,
    "next_rule_id":-1,
    "name":"purification",
+   "shared_tag": 0,
    "interface":[
      {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 4}
    ],
@@ -104,7 +105,7 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
   std::vector<int> remote_qnic_address = {11, 12};
   double threshold_fidelity = 0;
 
-  auto purification_rule = connection_manager.swapRule(partner_addr, threshold_fidelity, qnic_type, qnic_id, remote_qnic_type, remote_qnic_id, remote_qnic_address);
+  auto purification_rule = connection_manager.swapRule(partner_addr, threshold_fidelity, qnic_type, qnic_id, remote_qnic_type, remote_qnic_id, remote_qnic_address, 0);
   EXPECT_EQ(purification_rule->rule_id, -1);
   EXPECT_EQ(purification_rule->name, "swapping");
 
@@ -114,6 +115,7 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
    "rule_id":-1,
    "next_rule_id":-1,
    "name":"swapping",
+   "shared_tag": 0,
    "interface":[
      {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 4},
      {"partner_address": 3, "qnic_type": "QNIC_R", "qnic_id": 5}
@@ -171,8 +173,9 @@ TEST(ConnectionManagerRuleSetTest, waitRule) {
   int partner_addr = 1;
   QNIC_type qnic_type = QNIC_E;
   int qnic_id = 4;
+  int shared_tag = 0;
 
-  auto purification_rule = connection_manager.waitRule(partner_addr, qnic_type, qnic_id);
+  auto purification_rule = connection_manager.waitRule(partner_addr, qnic_type, qnic_id, shared_tag);
   EXPECT_EQ(purification_rule->rule_id, -1);
   EXPECT_EQ(purification_rule->name, "wait");
 
@@ -182,6 +185,7 @@ TEST(ConnectionManagerRuleSetTest, waitRule) {
    "rule_id":-1,
    "next_rule_id":-1,
    "name":"wait",
+   "shared_tag": 0,
    "interface":[
      {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 4}
    ],
@@ -191,7 +195,7 @@ TEST(ConnectionManagerRuleSetTest, waitRule) {
             "type":"wait",
             "options":{
               "interface":{
-                "partner_address":1,
+                "partner_address": 1,
                 "qnic_type":"QNIC_E",
                 "qnic_id":4
               }
@@ -222,8 +226,9 @@ TEST(ConnectionManagerRuleSetTest, tomographyRule) {
   int qnic_id = 4;
   int num_measurement = 5000;
   double threshold_fidelity = 0;
+  int shared_tag = 3;
 
-  auto tomography_rule = connection_manager.tomographyRule(partner_addr, owner_addr, num_measurement, threshold_fidelity, qnic_type, qnic_id);
+  auto tomography_rule = connection_manager.tomographyRule(partner_addr, owner_addr, num_measurement, threshold_fidelity, qnic_type, qnic_id, shared_tag);
   EXPECT_EQ(tomography_rule->rule_id, -1);
   EXPECT_EQ(tomography_rule->name, "tomography");
 
@@ -271,6 +276,7 @@ TEST(ConnectionManagerRuleSetTest, tomographyRule) {
  		"qnic_id": 4,
  		"qnic_type": "QNIC_E"
  	}],
+  "shared_tag": 3,
  	"name": "tomography",
  	"next_rule_id": -1,
  	"rule_id": -1

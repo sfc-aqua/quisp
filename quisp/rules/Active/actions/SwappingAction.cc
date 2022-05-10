@@ -6,10 +6,10 @@ using quisp::types::EigenvalueResult;
 
 namespace quisp::rules::active::actions {
 
-SwappingAction::SwappingAction(unsigned long ruleset_id, unsigned long rule_id, int left_partner, QNIC_type left_qnic_type, int left_qnic_id, int left_qnic_address,
+SwappingAction::SwappingAction(unsigned long ruleset_id, int rule_id, int shared_tag, int left_partner, QNIC_type left_qnic_type, int left_qnic_id, int left_qnic_address,
                                int left_resource, int right_partner, QNIC_type right_qnic_type, int right_qnic_id, int right_qnic_address, int right_resource,
                                int self_left_qnic_id, QNIC_type self_left_qnic_type, int self_right_qnic_id, QNIC_type self_right_qnic_type)
-    : ActiveAction(ruleset_id, rule_id),
+    : ActiveAction(ruleset_id, rule_id, shared_tag),
       left_partner(left_partner),
       left_qnic_type(left_qnic_type),
       left_qnic_id(left_qnic_id),
@@ -81,6 +81,7 @@ cPacket *SwappingAction::run(cModule *re) {
   pk->setKind(5);
   pk->setRuleSet_id(ruleset_id);
   pk->setRule_id(rule_id);
+  pk->setShared_tag(shared_tag);
   pk->setAction_index(action_index);
   pk->setOperation_type_left(operation_type_left);  // operation type for left node
   pk->setOperation_type_right(operation_type_right);  // operation type for right node

@@ -60,7 +60,7 @@ void EntanglementSwapping::deserialize_json(json serialized) {
   }
 }
 
-Wait::Wait(int partner_addr, QNIC_type qnic_type, int qnic_id) : Action(partner_addr, qnic_type, qnic_id) {}
+Wait::Wait(int swapper_addr, QNIC_type qnic_type, int qnic_id) : Action(swapper_addr, qnic_type, qnic_id) {}
 
 json Wait::serialize_json() {
   json wait_json;

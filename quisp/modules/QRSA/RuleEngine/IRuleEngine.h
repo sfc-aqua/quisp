@@ -24,6 +24,7 @@ typedef struct {
   unsigned long ruleset_id;
   int rule_id;
   int index;
+  int shared_tag;
 } process_id;
 
 struct purification_result {

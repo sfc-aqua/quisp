@@ -4,9 +4,9 @@
 
 namespace quisp::rules::active::actions {
 
-PurifyAction::PurifyAction(unsigned long ruleset_id, unsigned long rule_id, bool x_purification, bool z_purification, int num_purification, int partner, QNIC_type qnic_type,
+PurifyAction::PurifyAction(unsigned long ruleset_id, int rule_id, int shared_tag, bool x_purification, bool z_purification, int num_purification, int partner, QNIC_type qnic_type,
                            int qnic_id, int resource, int trash_resource)
-    : ActiveAction(ruleset_id, rule_id),
+    : ActiveAction(ruleset_id, rule_id, shared_tag),
       partner(partner),
       qnic_type(qnic_type),
       qnic_id(qnic_id),
@@ -55,6 +55,7 @@ cPacket *PurifyAction::run(cModule *re) {
   pk->setAction_index(action_index);
   pk->setRule_id(rule_id);
   pk->setRuleset_id(ruleset_id);
+  pk->setShared_tag(shared_tag);
   pk->setOutput_is_plus(meas);
   pk->setEntangled_with(qubit);
   action_index++;

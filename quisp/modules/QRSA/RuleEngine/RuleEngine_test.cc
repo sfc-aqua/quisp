@@ -24,7 +24,7 @@ ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, partner);
 ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, num_resource_required);
 
 ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, unsigned long, ruleset_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, unsigned long, rule_id);
+ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, int, rule_id);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, qnic_id);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, QNIC_type, qnic_type);
 ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, partner);
@@ -182,6 +182,7 @@ TEST(RuleEngineTest, activeRuleSetConstructionFromJson) {
 			"qnic_id": 11,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 0,
 		"name": "purification",
 		"next_rule_id": 1,
 		"rule_id": 0
@@ -213,6 +214,7 @@ TEST(RuleEngineTest, activeRuleSetConstructionFromJson) {
 			"qnic_id": 11,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 0,
 		"name": "wait",
 		"next_rule_id": 2,
 		"rule_id": 1
@@ -247,6 +249,7 @@ TEST(RuleEngineTest, activeRuleSetConstructionFromJson) {
 			"qnic_id": 11,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 0,
 		"name": "purification",
 		"next_rule_id": 3,
 		"rule_id": 2
@@ -292,6 +295,7 @@ TEST(RuleEngineTest, activeRuleSetConstructionFromJson) {
 			"qnic_id": 11,
 			"qnic_type": "QNIC_E"
 		}],
+    "shared_tag": 0,
 		"name": "tomography",
 		"next_rule_id": -1,
 		"rule_id": 3
@@ -345,7 +349,7 @@ TEST(RuleEngineTest, activeRuleSetConstructionFromJson) {
   // checking the 2nd rule of QNode2(initiator): Wait
   {
     auto* rule = active_ruleset->rules.at(1).get();
-    EXPECT_EQ(rule->name, "wait with 3");
+    EXPECT_EQ(rule->name, "wait with 3 ");
     EXPECT_EQ(rule->ruleset_id, ruleset_id);
     ASSERT_EQ(rule->action_partners.size(), 1);
     EXPECT_EQ(rule->action_partners.at(0), 3);  // just wait QNode 3
@@ -360,13 +364,12 @@ TEST(RuleEngineTest, activeRuleSetConstructionFromJson) {
   // checking the 3rd rule of QNode2(initiator): if EnoughResource -> Purify
   {
     auto* rule = active_ruleset->rules.at(2).get();
-    EXPECT_EQ(rule->name, "purification with 5");
+    EXPECT_EQ(rule->name, "purification with 5 ");
     EXPECT_EQ(rule->ruleset_id, ruleset_id);
     ASSERT_EQ(rule->action_partners.size(), 1);
     // action partner must be the qnode5(responder)
     // third action is the purification with the opposite end qnode
     EXPECT_EQ(rule->action_partners.at(0), 5);
-    EXPECT_EQ(rule->next_action_partners.size(), 0);
 
     auto* action = dynamic_cast<PurifyAction*>(rule->action.get());
     EXPECT_NE(action, nullptr);
@@ -393,13 +396,12 @@ TEST(RuleEngineTest, activeRuleSetConstructionFromJson) {
   // checking the 4th rule of QNode2(initiator): EnoughResource && MeasureCount -> Tomography
   {
     auto* rule = active_ruleset->rules.at(3).get();
-    EXPECT_EQ(rule->name, "tomography with 5");
+    EXPECT_EQ(rule->name, "tomography with 5 ");
     EXPECT_EQ(rule->ruleset_id, ruleset_id);
     ASSERT_EQ(rule->action_partners.size(), 1);
     // action partner must be the qnode5(responder)
     // last action is the tomography with the opposite end qnode
     EXPECT_EQ(rule->action_partners.at(0), 5);
-    EXPECT_EQ(rule->next_action_partners.size(), 0);
     auto* action = dynamic_cast<RandomMeasureAction*>(rule->action.get());
     EXPECT_NE(action, nullptr);
     EXPECT_EQ(access_private::partner(*action), 5);
@@ -450,10 +452,12 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   unsigned long mock_ruleset_id = 10;
   int mock_rule_id = 0;
   int mock_next_rule_id = 1;
+  int shared_tag = 3;
 
   swapping_result swapr;
   swapr.id.ruleset_id = mock_ruleset_id;
   swapr.id.rule_id = mock_rule_id;
+  swapr.id.shared_tag = shared_tag;
   swapr.new_partner = 3;
   swapr.swapper_addr = 2;
   swapr.operation_type = 0;
@@ -473,6 +477,7 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   auto wait_rule = std::make_unique<ActiveRule>(mock_ruleset_id, mock_rule_id);
   wait_rule->next_rule_id = mock_next_rule_id;
   wait_rule->action_partners.push_back(swapr.swapper_addr);
+  wait_rule->shared_tag = shared_tag;
   rs->addRule(std::move(wait_rule));
   auto next_rule = std::make_unique<ActiveRule>(mock_ruleset_id, mock_next_rule_id);
   rs->addRule(std::move(next_rule));
@@ -666,8 +671,10 @@ TEST(RuleEngineTest, unlockResourceAndDiscard) {
   int partner_addr = 5;
   int action_index = 3;
   auto* ruleset = new ActiveRuleSet(ruleset_id, rule_engine->parentAddress);
-  unsigned long target_rule_id = 10;
+  int target_rule_id = 10;
+  int shared_tag = 3;
   auto rule1 = new ActiveRule(ruleset_id, target_rule_id);
+  rule1->shared_tag = shared_tag;
   auto rule2 = new ActiveRule(ruleset_id, 11);
   int qnic_index = 17;
   auto* qubit = new MockQubit(QNIC_E, qnic_index);
@@ -688,7 +695,7 @@ TEST(RuleEngineTest, unlockResourceAndDiscard) {
   EXPECT_EQ(rule1->resources.size(), 1);
   EXPECT_EQ(rule2->resources.size(), 0);
   EXPECT_CALL(*realtime_controller, ReInitialize_StationaryQubit(qubit_record, false)).Times(1).WillOnce(Return());
-  rule_engine->Unlock_resource_and_discard(ruleset_id, target_rule_id, action_index);
+  rule_engine->Unlock_resource_and_discard(ruleset_id, target_rule_id, shared_tag, action_index);
 
   EXPECT_EQ(rule1->resources.size(), 0);
   EXPECT_EQ(rule2->resources.size(), 0);
@@ -713,8 +720,10 @@ TEST(RuleEngineTest, unlockResourceAndUpgradeStage) {
   int action_index = 3;
 
   auto* ruleset = new ActiveRuleSet(ruleset_id, rule_engine->parentAddress);
-  unsigned long target_rule_id = 10;
+  int target_rule_id = 10;
+  int shared_tag = 0;
   auto rule1 = new ActiveRule(ruleset_id, target_rule_id);
+  rule1->shared_tag = shared_tag;
   auto rule2 = new ActiveRule(ruleset_id, 11);
   auto* qubit = new MockQubit(QNIC_E, 0);
 
@@ -731,7 +740,7 @@ TEST(RuleEngineTest, unlockResourceAndUpgradeStage) {
   EXPECT_EQ(rule2->resources.size(), 0);
 
   // the rule engine brings the qubit from rule1 to rule2
-  rule_engine->Unlock_resource_and_upgrade_stage(ruleset_id, target_rule_id, action_index);
+  rule_engine->Unlock_resource_and_upgrade_stage(ruleset_id, target_rule_id, shared_tag, action_index);
 
   EXPECT_EQ(rule1->resources.size(), 0);
   ASSERT_EQ(rule2->resources.size(), 1);
@@ -756,8 +765,10 @@ TEST(RuleEngineTest, unlockResourceAndUpgradeStage_without_next_rule) {
   int action_index = 3;
 
   auto* ruleset = new ActiveRuleSet(ruleset_id, rule_engine->parentAddress);
-  unsigned long target_rule_id = 10;
+  int target_rule_id = 10;
+  int shared_tag = 3;
   auto rule = new ActiveRule(ruleset_id, target_rule_id);
+  rule->shared_tag = shared_tag;
   auto* qubit = new MockQubit(QNIC_E, 0);
 
   qubit->action_index = action_index;
@@ -767,7 +778,7 @@ TEST(RuleEngineTest, unlockResourceAndUpgradeStage_without_next_rule) {
   rule_engine->rp.insert(ruleset);
   EXPECT_CALL(*qubit, Unlock()).Times(1);
   EXPECT_EQ(rule->resources.size(), 1);
-  EXPECT_THROW({ rule_engine->Unlock_resource_and_upgrade_stage(ruleset_id, target_rule_id, action_index); }, cRuntimeError);
+  EXPECT_THROW({ rule_engine->Unlock_resource_and_upgrade_stage(ruleset_id, target_rule_id, shared_tag, action_index); }, cRuntimeError);
 
   delete qubit;
   delete hardware_monitor;
@@ -781,7 +792,7 @@ TEST(RuleEngineTest, unlockResourceAndUpgradeStage_without_process) {
   auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
   rule_engine->callInitialize();
 
-  EXPECT_NO_THROW({ rule_engine->Unlock_resource_and_upgrade_stage(101, 102, 103); });
+  EXPECT_NO_THROW({ rule_engine->Unlock_resource_and_upgrade_stage(101, 102, 103, 104); });
   delete hardware_monitor;
 }
 
@@ -893,12 +904,15 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
 
   unsigned long ruleset_id = 3;
   int rule_id = 0;
+  int shared_tag = 3;
   auto* ruleset = new ActiveRuleSet(ruleset_id, rule_id);
   {  // generate RuleSet
     auto rule = std::make_unique<ActiveRule>(ruleset_id, rule_id);
     rule->next_rule_id = rule_id + 1;
+    rule->action_partners.push_back(1);
     rule->action_partners.push_back(2);
     rule->addResource(2, qubit);
+    rule->shared_tag = shared_tag;
     auto next_rule = std::make_unique<ActiveRule>(ruleset_id, rule_id + 1);
 
     ruleset->addRule(std::move(rule));
@@ -909,10 +923,10 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   }
 
   swapping_result result{
-      .id = {.ruleset_id = ruleset_id, .rule_id = rule_id, .index = 0},
+      .id = {.ruleset_id = ruleset_id, .rule_id = rule_id, .shared_tag = shared_tag, .index = 0},
       .new_partner = 2,
       .operation_type = 0,
-      .swapper_addr = 2,
+      .swapper_addr = 1,
   };
   EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(2)).Times(1).WillOnce(Return(5));
   auto info = std::make_unique<ConnectionSetupInfo>();
@@ -951,8 +965,8 @@ TEST(RuleEngineTest, generateActiveRuleSetFromRuleSet) {
   RuleSet ruleset(ruleset_id, owner_address);  // static ruleset
   ruleset.ruleset_id = ruleset_id;
   ruleset.owner_addr = owner_address;
-  // purification rule (partner_addr, qnic_type, qnic_id, is_finalized)
-  auto purify_rule = std::make_unique<Rule>(0, QNIC_E, 0, false);
+
+  auto purify_rule = std::make_unique<Rule>(0, QNIC_E, 0, 0, false);
   purify_rule->setName("purification");
   auto pur_condition = std::make_unique<Condition>();
   auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0, 0, QNIC_E, 0);
@@ -962,7 +976,7 @@ TEST(RuleEngineTest, generateActiveRuleSetFromRuleSet) {
   purify_rule->setAction(std::move(pur_action));
   ruleset.addRule(std::move(purify_rule));
   // swapping rule
-  auto swapping_rule = std::make_unique<Rule>(0, QNIC_E, 0, false);
+  auto swapping_rule = std::make_unique<Rule>(0, QNIC_E, 0, 0, false);
   swapping_rule->setName("swapping");
   auto swap_condition = std::make_unique<Condition>();
   auto enough_resource_clause_left = std::make_unique<EnoughResourceConditionClause>(1, 0, 0, QNIC_E, 0);
@@ -980,7 +994,7 @@ TEST(RuleEngineTest, generateActiveRuleSetFromRuleSet) {
   swapping_rule->setAction(std::move(swap_action));
   ruleset.addRule(std::move(swapping_rule));
   // wait rule
-  auto wait_rule = std::make_unique<Rule>(0, QNIC_E, 0, false);
+  auto wait_rule = std::make_unique<Rule>(0, QNIC_E, 0, 0, false);
   wait_rule->setName("wait");
   auto wait_condition = std::make_unique<Condition>();
   auto wait_clause = std::make_unique<WaitConditionClause>(0, QNIC_E, 0);
@@ -990,7 +1004,7 @@ TEST(RuleEngineTest, generateActiveRuleSetFromRuleSet) {
   wait_rule->setAction(std::move(wait_action));
   ruleset.addRule(std::move(wait_rule));
   // tomography rule
-  auto tomography_rule = std::make_unique<Rule>(0, QNIC_E, 0, true);
+  auto tomography_rule = std::make_unique<Rule>(0, QNIC_E, 0, 0, true);
   tomography_rule->setName("tomography");
   auto tomo_condition = std::make_unique<Condition>();
   auto enough_resource_clause_tomo = std::make_unique<EnoughResourceConditionClause>(0, 0, 0, QNIC_E, 0);
@@ -1006,16 +1020,16 @@ TEST(RuleEngineTest, generateActiveRuleSetFromRuleSet) {
   EXPECT_EQ(active_ruleset->rules.size(), 4);
   auto rule0 = std::move(active_ruleset->getRule(0));
   EXPECT_EQ(rule0->rule_id, 0);
-  EXPECT_EQ(rule0->name, "purification with 0");
+  EXPECT_EQ(rule0->name, "purification with 0 ");
   auto rule1 = std::move(active_ruleset->getRule(1));
   EXPECT_EQ(rule1->rule_id, 1);
-  EXPECT_EQ(rule1->name, "swapping with 0");
+  EXPECT_EQ(rule1->name, "swapping with 0 ");
   auto rule2 = std::move(active_ruleset->getRule(2));
   EXPECT_EQ(rule2->rule_id, 2);
-  EXPECT_EQ(rule2->name, "wait with 0");
+  EXPECT_EQ(rule2->name, "wait with 0 ");
   auto rule3 = std::move(active_ruleset->getRule(3));
   EXPECT_EQ(rule3->rule_id, 3);
-  EXPECT_EQ(rule3->name, "tomography with 0");
+  EXPECT_EQ(rule3->name, "tomography with 0 ");
 }
 
 }  // namespace
