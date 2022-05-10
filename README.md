@@ -1,6 +1,6 @@
 # QUISP
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/83c96c45f2684211a8cef800b1d07f81)](https://www.codacy.com/gh/sfc-aqua/quisp/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sfc-aqua/quisp&amp;utm_campaign=Badge_Grade)
-[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/83c96c45f2684211a8cef800b1d07f81)](https://www.codacy.com/gh/sfc-aqua/quisp/dashboard?utm_source=github.com&utm_medium=referral&utm_content=sfc-aqua/quisp&utm_campaign=Badge_Coverage)
+[![Coverage Status](https://coveralls.io/repos/github/sfc-aqua/quisp/badge.svg?branch=master)](https://coveralls.io/github/sfc-aqua/quisp?branch=master)
 ![github workflow](https://github.com/sfc-aqua/quisp/actions/workflows/main.yml/badge.svg)
 <a href="https://aqua-quisp.slack.com/" rel="nofollow"><img src="https://img.shields.io/badge/join-us%20on%20slack-gray.svg?colorB=red&amp;logo=slack&amp;longCache=true" alt="Slack Widget"></a>
 The Quantum Internet Simulation Package (QuISP) is an event-driven
@@ -180,7 +180,7 @@ Docker, ffmpeg for making videos, etc.), documented in the installation notes.
 
 ## Trying it out on the web
 
-If you just want to take a peek at the basic sample simulation set, we encourage you to try them out on the web ([here](https://aqua.sfc.wide.ad.jp/quisp-online/master/)) which is built using the [WebAssembly](https://webassembly.org). Currently the Wasm version only supports running the pre-configured simulations and users cannot upload custom topology, we are still working on that. Also due to the heavy load of the OMNeT++ and the QuISP itself the performance on the web version is a lot slower than running it locally. 
+If you just want to take a peek at the basic sample simulation set, we encourage you to try them out on the web ([here](https://aqua.sfc.wide.ad.jp/quisp-online/master/)) which is built using the [WebAssembly](https://webassembly.org). Currently the Wasm version only supports running the pre-configured simulations and users cannot upload custom topology, we are still working on that. Also due to the heavy load of the OMNeT++ and the QuISP itself the performance on the web version is a lot slower than running it locally.
 
 ## Building and running locally
 
