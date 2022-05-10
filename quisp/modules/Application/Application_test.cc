@@ -37,7 +37,7 @@ class AppTestTarget : public quisp::modules::Application {
   explicit AppTestTarget(TestQNode *parent_qnode) : Application(), toRouterGate(new TestGate(this, "toRouter")) {
     this->provider.setStrategy(std::make_unique<Strategy>(parent_qnode));
     setComponentType(new TestModuleType("test qnode"));
-    setParStr(this, "app_py_path", "app.py");
+    setParStr(this, "app_py_path", "app");
   }
   virtual ~AppTestTarget() { EVCB.gateDeleted(toRouterGate); }
   std::vector<int> getOtherEndNodeAdresses() { return this->other_end_node_addresses; }

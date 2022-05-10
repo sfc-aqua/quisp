@@ -4,6 +4,7 @@
 #include <pybind11/embed.h>
 #include <memory>
 #include "RNG.h"
+#include "feature_defines.h"
 
 namespace quisp::modules::backend {
 using quisp::modules::common::ErrorTrackingBackend;
@@ -16,6 +17,10 @@ class BackendContainer : public omnetpp::cSimpleModule {
   ~BackendContainer();
 
   void initialize() override {
+#ifdef ENABLE_PYTHON
+    python_enabled = true;
+#endif
+    WATCH(python_enabled);
     auto backend_type = std::string(par("backendType").stringValue());
     if (backend_type == "ErrorTrackingBackend") {
       backend = std::make_unique<ErrorTrackingBackend>(std::make_unique<RNG>(this));
@@ -36,7 +41,10 @@ class BackendContainer : public omnetpp::cSimpleModule {
  protected:
   void configureErrorTrackingBackend();
   std::unique_ptr<IQuantumBackend> backend = nullptr;
+  bool python_enabled = false;
+#ifdef ENABLE_PYTHON
   pybind11::scoped_interpreter interpreter;
+#endif
 };
 
 Define_Module(BackendContainer);

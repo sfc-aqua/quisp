@@ -10,6 +10,7 @@ out/
 .oppfeaturestate
 quisp.dSYM/
 Test*
+feature_defines.h
 
 PhotonicQubit_m.cc
 PhotonicQubit_m.h

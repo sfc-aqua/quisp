@@ -11,6 +11,7 @@
 compile_commands.json
 *.plan
 results
+.oppfeaturestate
 
 ### coverage files
 quisp/coverage*
