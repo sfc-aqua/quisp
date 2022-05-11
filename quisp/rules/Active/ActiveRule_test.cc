@@ -13,21 +13,23 @@ class Rule : public OriginalActiveRule {
   using OriginalActiveRule::ActiveRule;
   static std::unique_ptr<ActiveRule> setupActiveRule() {
     unsigned long ruleset_id = 1234;
-    unsigned long rule_id = 3456;
+    int rule_id = 3456;
+    int shared_tag = 3;
     std::string rule_name = "example rule";
     std::vector<int> action_partners = {1, 3};
 
-    return std::make_unique<ActiveRule>(ruleset_id, rule_id, rule_name, action_partners);
+    return std::make_unique<ActiveRule>(ruleset_id, rule_id, shared_tag, rule_name, action_partners);
   }
 };
 
 TEST(ActiveRuleTest, Init) {
   prepareSimulation();
   unsigned long ruleset_id = 1234;
-  unsigned long rule_id = 3452;
+  int rule_id = 3452;
+  int shared_tag = 3;
   std::string rule_name = "empty rule";
   std::vector<int> action_partners = {1, 3};
-  ActiveRule rule(ruleset_id, rule_id, rule_name, action_partners);
+  ActiveRule rule(ruleset_id, rule_id, shared_tag, rule_name, action_partners);
   EXPECT_EQ(rule.ruleset_id, ruleset_id);
   EXPECT_EQ(rule.rule_id, rule_id);
   EXPECT_EQ(rule.name, rule_name);

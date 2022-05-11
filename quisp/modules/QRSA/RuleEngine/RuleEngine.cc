@@ -340,7 +340,7 @@ std::unique_ptr<ActiveRuleSet> RuleEngine::constructActiveRuleSet(RuleSet rulese
   auto rules = std::move(ruleset.rules);
   for (int i = 0; i < rules.size(); i++) {
     auto rule = std::move(rules.at(i));
-    auto active_rule = std::make_unique<ActiveRule>(ruleset.ruleset_id, rule->rule_id);
+    auto active_rule = std::make_unique<ActiveRule>(ruleset.ruleset_id, rule->rule_id, rule->shared_tag);
     // 1. meta information
     active_rule->name = rule->name + " with ";
     auto qnic_interface = rule->qnic_interfaces;
@@ -352,7 +352,6 @@ std::unique_ptr<ActiveRuleSet> RuleEngine::constructActiveRuleSet(RuleSet rulese
     active_rule->rule_id = rule->rule_id;  // rule id
     active_rule->action_partners = partners;  // partner info
     active_rule->next_rule_id = rule->to;  // next ruleid information
-    active_rule->shared_tag = rule->shared_tag;
 
     // 2. add condition and action
     active_rule = constructRule(std::move(active_rule), std::move(rule), ruleset.ruleset_id);
@@ -678,7 +677,6 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int
 }
 
 void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int shared_tag, int index) {
-  bool ok = false;
   auto ruleset_result = rp.findById(ruleset_id);
   if (ruleset_result == rp.end()) {
     error("Discard: Resource in rule not found.");
@@ -688,10 +686,8 @@ void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, int rule_
   // One Process. From top to bottom.
   for (auto rule = ruleset->cbegin(), end = ruleset->cend(); rule != end; rule++) {  // Traverse through rules
     if ((*rule)->shared_tag == shared_tag) {  // Find the corresponding rule.
-      EV << "ruletag: " << (*rule)->shared_tag << ": " << shared_tag << "\n";
       for (auto qubit_record = (*rule)->resources.begin(); qubit_record != (*rule)->resources.end(); ++qubit_record) {
         auto qubit = qubit_record->second;
-        EV << "action index " << qubit->action_index << ": " << index << "\n";
         if (qubit->action_index == index) {
           // Purification failed, discard resource.
           qubit->Unlock();
@@ -701,16 +697,12 @@ void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, int rule_
           // remove from current rule
           (*rule)->resources.erase(qubit_record);
           freeConsumedResource(qubit->qnic_index, qubit, qt);  // Remove from entangled resource list.
-          ok = true;
           return;
         }
       }
     }
   }
-  if (!ok) {
-    EV << "shared tag" << shared_tag << "\n";
-    error("Discard: Resource in rule not found....");
-  }
+  error("Discard: Resource in rule not found....");
 }
 
 InterfaceInfo RuleEngine::getInterface_toNeighbor(int destAddr) {

@@ -18,7 +18,7 @@ class ActiveRule {
   std::multimap<int, IStationaryQubit *> resources;
   std::vector<int> action_partners;
 
-  ActiveRule(unsigned long ruleset_id, int rule_id, std::string rule_name = "", std::vector<int> action_partners = {});
+  ActiveRule(unsigned long ruleset_id, int rule_id, int shared_tag, std::string rule_name = "", std::vector<int> action_partners = {});
 
   void addResource(int address_entangled_with, IStationaryQubit *qubit);
   void setCondition(ActiveCondition *c);
