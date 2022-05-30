@@ -102,6 +102,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
 class RuleEngineTestTarget : public quisp::modules::RuleEngine {
  public:
   using quisp::modules::RuleEngine::constructActiveRuleSet;
+  using quisp::modules::RuleEngine::constructRule;
   using quisp::modules::RuleEngine::initialize;
   using quisp::modules::RuleEngine::par;
   using quisp::modules::RuleEngine::qnic_store;
@@ -1026,6 +1027,70 @@ TEST(RuleEngineTest, generateActiveRuleSetFromRuleSet) {
   auto rule3 = std::move(active_ruleset->getRule(3));
   EXPECT_EQ(rule3->rule_id, 3);
   EXPECT_EQ(rule3->name, "tomography with 0 ");
+}
+
+TEST(RuleEngineTest, activeRuleSetGenerationDifferentOwnerExceptions) {
+  prepareSimulation();
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* qubit = new MockQubit(QNIC_E, 7);
+  auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
+  std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(QNIC_E, 7, 0);
+  rule_engine->callInitialize();
+
+  unsigned long ruleset_id = 1234;
+  int owner_address = 3;  // different from parent address
+
+  RuleSet ruleset(ruleset_id, owner_address);  // static ruleset
+  ruleset.ruleset_id = ruleset_id;
+  ruleset.owner_addr = owner_address;
+
+  EXPECT_THROW(rule_engine->constructActiveRuleSet(std::move(ruleset)), omnetpp::cRuntimeError);
+}
+
+TEST(RuleEngineTest, activeRuleSetGenerationNoConditionExceptions) {
+  prepareSimulation();
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* qubit = new MockQubit(QNIC_E, 7);
+  auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
+  std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(QNIC_E, 7, 0);
+  rule_engine->callInitialize();
+
+  auto purify_rule = std::make_unique<Rule>(0, QNIC_E, 0, 0, false);
+  purify_rule->setName("purification");
+  auto pur_condition = std::make_unique<Condition>();
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0, 0, QNIC_E, 0);
+  auto pur_action = std::make_unique<Purification>(PurType::DSDA, 0, QNIC_E, 0);
+  purify_rule->setAction(std::move(pur_action));
+
+  auto active_purify_rule = std::make_unique<ActiveRule>(1234, 0, 0);
+  // No condition set error
+  EXPECT_THROW(rule_engine->constructRule(std::move(active_purify_rule), std::move(purify_rule), 1234), omnetpp::cRuntimeError);
+}
+
+TEST(RuleEngineTest, activeRuleSetGenerationNoActionExceptions) {
+  prepareSimulation();
+  auto* routing_daemon = new MockRoutingDaemon;
+  auto* hardware_monitor = new MockHardwareMonitor;
+  auto* realtime_controller = new MockRealTimeController;
+  auto* qubit = new MockQubit(QNIC_E, 7);
+  auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
+  std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(QNIC_E, 7, 0);
+  rule_engine->callInitialize();
+
+  auto purify_rule = std::make_unique<Rule>(0, QNIC_E, 0, 0, false);
+  purify_rule->setName("purification");
+  auto pur_condition = std::make_unique<Condition>();
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0, 0, QNIC_E, 0);
+  pur_condition->addClause(std::move(enough_resource_clause));
+  purify_rule->setCondition(std::move(pur_condition));
+
+  auto active_purify_rule = std::make_unique<ActiveRule>(1234, 0, 0);
+  // No action set error
+  EXPECT_THROW(rule_engine->constructRule(std::move(active_purify_rule), std::move(purify_rule), 1234), omnetpp::cRuntimeError);
 }
 
 }  // namespace
