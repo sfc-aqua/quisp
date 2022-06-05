@@ -332,7 +332,7 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
    * {node2_addr, {rule1, rule2, ...}}
    * ...
    */
-  std::map<int, std::vector<std::unique_ptr<Rule>>> rules_array;
+  std::map<int, std::vector<std::unique_ptr<Rule>>> rules_map;
   auto rev_path = path;
   std::reverse(rev_path.begin(), rev_path.end());  // reversed path
 
@@ -350,8 +350,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
         auto pur_rule_right = purifyRule(left_node, purification_type, threshold_fidelity, right_qnic.type, right_qnic.index, shared_tag);
         shared_tag++;
         std::vector<int> left_partner = {right_node}, right_partner = {left_node};
-        rules_array[left_node].push_back(std::move(pur_rule_left));  // add rule with partner info
-        rules_array[right_node].push_back(std::move(pur_rule_right));  // add rule with partner info
+        rules_map[left_node].push_back(std::move(pur_rule_left));  // add rule with partner info
+        rules_map[right_node].push_back(std::move(pur_rule_right));  // add rule with partner info
       }
     }
     // 2.2.2 alternate EntanglementSwapping and Purification from one hop entanglement to multihop entanglement
@@ -390,17 +390,17 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
                                           {config.self_left_qnic_index, config.self_right_qnic_index}, {config.lqnic_type, config.rqnic_type},
                                           {config.lqnic_index, config.rqnic_index}, {config.lqnic_address, config.rqnic_address}, shared_tag);
             shared_tag++;
-            rules_array[left_partner].push_back(std::move(wait_rule_left));
-            rules_array[right_partner].push_back(std::move(wait_rule_right));
-            rules_array[swapper_node].push_back(std::move(swapping_rule));
+            rules_map[left_partner].push_back(std::move(wait_rule_left));
+            rules_map[right_partner].push_back(std::move(wait_rule_right));
+            rules_map[swapper_node].push_back(std::move(swapping_rule));
 
             // 2.2.6 Purification Rules
             for (int i = 0; i < num_remote_purification; i++) {
               auto pur_rule_left = purifyRule(right_partner, purification_type, threshold_fidelity, config.lqnic_type, config.lqnic_index, shared_tag);
               auto pur_rule_right = purifyRule(left_partner, purification_type, threshold_fidelity, config.rqnic_type, config.rqnic_index, shared_tag);
               shared_tag++;
-              rules_array[left_partner].push_back(std::move(pur_rule_left));
-              rules_array[right_partner].push_back(std::move(pur_rule_right));
+              rules_map[left_partner].push_back(std::move(pur_rule_left));
+              rules_map[right_partner].push_back(std::move(pur_rule_right));
             }
           }
         }
@@ -444,9 +444,9 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
                                           {config.self_left_qnic_index, config.self_right_qnic_index}, {config.lqnic_type, config.rqnic_type},
                                           {config.lqnic_index, config.rqnic_index}, {config.lqnic_address, config.rqnic_address}, shared_tag);
             shared_tag++;
-            rules_array[left_partner].push_back(std::move(wait_rule_left));
-            rules_array[right_partner].push_back(std::move(wait_rule_right));
-            rules_array[swapper_node].push_back(std::move(swapping_rule));
+            rules_map[left_partner].push_back(std::move(wait_rule_left));
+            rules_map[right_partner].push_back(std::move(wait_rule_right));
+            rules_map[swapper_node].push_back(std::move(swapping_rule));
           }
         }
       }
@@ -462,13 +462,13 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   auto tomo_rule_initiator = tomographyRule(responder_address, initiator_address, num_measure, threshold_fidelity, initiator_qnic.type, initiator_qnic.index, shared_tag);
   auto tomo_rule_responder = tomographyRule(initiator_address, responder_address, num_measure, threshold_fidelity, responder_qnic.type, responder_qnic.index, shared_tag);
   shared_tag++;
-  rules_array[initiator_address].push_back(std::move(tomo_rule_initiator));
-  rules_array[responder_address].push_back(std::move(tomo_rule_responder));
+  rules_map[initiator_address].push_back(std::move(tomo_rule_initiator));
+  rules_map[responder_address].push_back(std::move(tomo_rule_responder));
 
   // 3. Wrap up rules into ruleset and send them to prpoer partners
   // 3.1 wrap up rulesets
   unsigned long ruleset_id = createUniqueId();
-  for (auto it = rules_array.begin(); it != rules_array.end(); ++it) {
+  for (auto it = rules_map.begin(); it != rules_map.end(); ++it) {
     int owner_address = it->first;
     auto rules = std::move(it->second);
     RuleSet ruleset(ruleset_id, owner_address);
