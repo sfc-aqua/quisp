@@ -1,19 +1,36 @@
 var hierarchy =
 [
-    [ "quisp::rules::actions::Action", "classquisp_1_1rules_1_1actions_1_1_action.html", [
-      [ "quisp::rules::actions::DoublePurifyAction", "classquisp_1_1rules_1_1actions_1_1_double_purify_action.html", null ],
-      [ "quisp::rules::actions::DoublePurifyActionInv", "classquisp_1_1rules_1_1actions_1_1_double_purify_action_inv.html", null ],
-      [ "quisp::rules::actions::DoubleSelectionAction", "classquisp_1_1rules_1_1actions_1_1_double_selection_action.html", null ],
-      [ "quisp::rules::actions::DoubleSelectionActionInv", "classquisp_1_1rules_1_1actions_1_1_double_selection_action_inv.html", null ],
-      [ "quisp::rules::actions::DoubleSelectionDualAction", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action.html", null ],
-      [ "quisp::rules::actions::DoubleSelectionDualActionInv", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html", null ],
-      [ "quisp::rules::actions::DoubleSelectionDualActionSecond", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_second.html", null ],
-      [ "quisp::rules::actions::DoubleSelectionDualActionSecondInv", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_second_inv.html", null ],
-      [ "quisp::rules::actions::PurifyAction", "classquisp_1_1rules_1_1actions_1_1_purify_action.html", null ],
-      [ "quisp::rules::actions::RandomMeasureAction", "classquisp_1_1rules_1_1actions_1_1_random_measure_action.html", null ],
-      [ "quisp::rules::actions::SimultaneousSwappingAction", "classquisp_1_1rules_1_1actions_1_1_simultaneous_swapping_action.html", null ],
-      [ "quisp::rules::actions::SwappingAction", "classquisp_1_1rules_1_1actions_1_1_swapping_action.html", null ]
+    [ "quisp::rules::Action", "classquisp_1_1rules_1_1_action.html", [
+      [ "quisp::rules::EntanglementSwapping", "classquisp_1_1rules_1_1_entanglement_swapping.html", null ],
+      [ "quisp::rules::Purification", "classquisp_1_1rules_1_1_purification.html", null ],
+      [ "quisp::rules::Tomography", "classquisp_1_1rules_1_1_tomography.html", null ],
+      [ "quisp::rules::Wait", "classquisp_1_1rules_1_1_wait.html", null ]
     ] ],
+    [ "quisp::rules::active::actions::ActiveAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_active_action.html", [
+      [ "quisp::rules::active::actions::DoublePurifyAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_purify_action.html", null ],
+      [ "quisp::rules::active::actions::DoublePurifyActionInv", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_purify_action_inv.html", null ],
+      [ "quisp::rules::active::actions::DoubleSelectionAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_action.html", null ],
+      [ "quisp::rules::active::actions::DoubleSelectionActionInv", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_action_inv.html", null ],
+      [ "quisp::rules::active::actions::DoubleSelectionDualAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action.html", null ],
+      [ "quisp::rules::active::actions::DoubleSelectionDualActionInv", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_inv.html", null ],
+      [ "quisp::rules::active::actions::DoubleSelectionDualActionSecond", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_second.html", null ],
+      [ "quisp::rules::active::actions::DoubleSelectionDualActionSecondInv", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_second_inv.html", null ],
+      [ "quisp::rules::active::actions::PurifyAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_purify_action.html", null ],
+      [ "quisp::rules::active::actions::RandomMeasureAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_random_measure_action.html", null ],
+      [ "quisp::rules::active::actions::SimultaneousSwappingAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_simultaneous_swapping_action.html", null ],
+      [ "quisp::rules::active::actions::SwappingAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_swapping_action.html", null ],
+      [ "quisp::rules::active::actions::WaitAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_wait_action.html", null ]
+    ] ],
+    [ "quisp::rules::active::clauses::ActiveClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_active_clause.html", [
+      [ "quisp::rules::active::clauses::EnoughResourceClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_enough_resource_clause.html", null ],
+      [ "quisp::rules::active::clauses::FidelityClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_fidelity_clause.html", null ],
+      [ "quisp::rules::active::clauses::MeasureCountClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_measure_count_clause.html", null ],
+      [ "quisp::rules::active::clauses::PurificationCountClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_purification_count_clause.html", null ],
+      [ "quisp::rules::active::clauses::WaitClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_wait_clause.html", null ]
+    ] ],
+    [ "quisp::rules::active::ActiveCondition", "classquisp_1_1rules_1_1active_1_1_active_condition.html", null ],
+    [ "quisp::rules::active::ActiveRule", "classquisp_1_1rules_1_1active_1_1_active_rule.html", null ],
+    [ "quisp::rules::active::ActiveRuleSet", "classquisp_1_1rules_1_1active_1_1_active_rule_set.html", null ],
     [ "quisp::modules::BellPairStore", "classquisp_1_1modules_1_1_bell_pair_store.html", null ],
     [ "omnetpp::cConfiguration", null, [
       [ "quisp_test::configuration::Configuration", "classquisp__test_1_1configuration_1_1_configuration.html", null ]
@@ -29,12 +46,11 @@ var hierarchy =
       [ "quisp_test::gate::TestGate", "classquisp__test_1_1gate_1_1_test_gate.html", null ]
     ] ],
     [ "quisp::channels::channel_error_model", "structquisp_1_1channels_1_1channel__error__model.html", null ],
-    [ "quisp::rules::clauses::Clause", "classquisp_1_1rules_1_1clauses_1_1_clause.html", [
-      [ "quisp::rules::clauses::EnoughResourceClause", "classquisp_1_1rules_1_1clauses_1_1_enough_resource_clause.html", null ],
-      [ "quisp::rules::clauses::FidelityClause", "classquisp_1_1rules_1_1clauses_1_1_fidelity_clause.html", null ],
-      [ "quisp::rules::clauses::MeasureCountClause", "classquisp_1_1rules_1_1clauses_1_1_measure_count_clause.html", null ],
-      [ "quisp::rules::clauses::PurificationCountClause", "classquisp_1_1rules_1_1clauses_1_1_purification_count_clause.html", null ],
-      [ "quisp::rules::clauses::WaitClause", "classquisp_1_1rules_1_1clauses_1_1_wait_clause.html", null ]
+    [ "quisp::rules::Clause", "classquisp_1_1rules_1_1_clause.html", [
+      [ "quisp::rules::EnoughResourceConditionClause", "classquisp_1_1rules_1_1_enough_resource_condition_clause.html", null ],
+      [ "quisp::rules::FidelityConditionClause", "classquisp_1_1rules_1_1_fidelity_condition_clause.html", null ],
+      [ "quisp::rules::MeasureCountConditionClause", "classquisp_1_1rules_1_1_measure_count_condition_clause.html", null ],
+      [ "quisp::rules::WaitConditionClause", "classquisp_1_1rules_1_1_wait_condition_clause.html", null ]
     ] ],
     [ "omnetpp::cModule", null, [
       [ "quisp_test::qnode::TestQNode", "classquisp__test_1_1qnode_1_1_test_q_node.html", null ]
@@ -126,6 +142,7 @@ var hierarchy =
       [ "quisp::modules::QNIC", "structquisp_1_1modules_1_1_q_n_i_c.html", null ]
     ] ],
     [ "quisp::modules::QNIC_pair_info", "structquisp_1_1modules_1_1_q_n_i_c__pair__info.html", null ],
+    [ "quisp::rules::QnicInterface", "structquisp_1_1rules_1_1_qnic_interface.html", null ],
     [ "quisp_test::strategy::QNicSpec", "structquisp__test_1_1strategy_1_1_q_nic_spec.html", null ],
     [ "quisp::modules::quantum_state", "structquisp_1_1modules_1_1quantum__state.html", null ],
     [ "quisp::modules::Quatropurification_result", "structquisp_1_1modules_1_1_quatropurification__result.html", null ],

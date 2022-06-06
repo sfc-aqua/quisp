@@ -1,7 +1,8 @@
 var _connection_manager__test_8cc =
 [
-    [ "ACCESS_PRIVATE_FIELD", "_connection_manager__test_8cc.html#a76ad2b6f435b3f7b31f5dfc4fa8286b6", null ],
-    [ "ACCESS_PRIVATE_FIELD", "_connection_manager__test_8cc.html#a18df538a8d6002aed8870995cdfeffbe", null ],
+    [ "json", "_connection_manager__test_8cc.html#ab701e3ac61a85b337ec5c1abaad6742d", null ],
+    [ "ACCESS_PRIVATE_FIELD", "_connection_manager__test_8cc.html#af5612cccf7aa163e60df98ae9cefd1fe", null ],
+    [ "ACCESS_PRIVATE_FIELD", "_connection_manager__test_8cc.html#a58c3874bdc715a6f7518a57e12dcdf7b", null ],
     [ "ACCESS_PRIVATE_FIELD", "_connection_manager__test_8cc.html#a051819b1de2c2d8db3278b75036a6c30", null ],
     [ "ACCESS_PRIVATE_FIELD", "_connection_manager__test_8cc.html#acf449489a402536e4f6d18bec414441e", null ],
     [ "ACCESS_PRIVATE_FIELD", "_connection_manager__test_8cc.html#ad200ac6b29936877e5327ce86b018da5", null ],

@@ -73,6 +73,7 @@ var namespacequisp_1_1modules =
     [ "TwoQubitGateErrorModel", "structquisp_1_1modules_1_1_two_qubit_gate_error_model.html", "structquisp_1_1modules_1_1_two_qubit_gate_error_model" ],
     [ "Complex", "namespacequisp_1_1modules.html#ac704f3c7776bdbd11ae4697f052123bf", null ],
     [ "DoublePurificationTable", "namespacequisp_1_1modules.html#a1336f6c1da370af21c6066ff0c249b6b", null ],
+    [ "json", "namespacequisp_1_1modules.html#ac5600e2cedff8162864c3e7019ccd4d3", null ],
     [ "LinkCostMap", "namespacequisp_1_1modules.html#af3ccf887db6fb13ad8cb3dd947247a4b", null ],
     [ "NeighborTable", "namespacequisp_1_1modules.html#aa8221402c1bbaa72e7188e116ef1193b", null ],
     [ "PartnerAddrQubitMap", "namespacequisp_1_1modules.html#aaddacfaab29681c46ad5a418968ecb7d", null ],
@@ -86,7 +87,7 @@ var namespacequisp_1_1modules =
     [ "QubitStateTable", "namespacequisp_1_1modules.html#ae54e81f0c4c329b8b5cbf6ad5f4d2a44", null ],
     [ "raw_data", "namespacequisp_1_1modules.html#a47b510b280e1ac42bcf95908dc72facb", null ],
     [ "ResourceKey", "namespacequisp_1_1modules.html#ac2ba3b50171b853416c32771dd1ab2cd", null ],
-    [ "rule_ptr", "namespacequisp_1_1modules.html#a2c28ce58538cd43776e34a515a1422fe", null ],
+    [ "rule_ptr", "namespacequisp_1_1modules.html#ab05bf929490e7ad73f1a1d4790443b78", null ],
     [ "sentQubitIndexTracker", "namespacequisp_1_1modules.html#a9b4bf1166a725a4d4970d21c187343c4", null ],
     [ "TomographyOutcomeTable", "namespacequisp_1_1modules.html#a2defc0c764ef7e29d546e4c3368248e1", null ],
     [ "trial_tracker", "namespacequisp_1_1modules.html#af6d54a83900f33d33ff32ca35460740f", null ],
@@ -111,6 +112,6 @@ var namespacequisp_1_1modules =
     [ "Define_Module", "namespacequisp_1_1modules.html#ace7363c837ded9f1a7f6f5e9e7b7417f", null ],
     [ "Define_Module", "namespacequisp_1_1modules.html#ade64e415dfcdd9a79033630d20dadc94", null ],
     [ "Define_Module", "namespacequisp_1_1modules.html#aa641f48448e2dfbb936a8ff273ae400b", null ],
-    [ "NULL_CONNECTION_SETUP_INFO", "namespacequisp_1_1modules.html#a75d888a19ce0acef2f7b1604c87d72e4", null ],
-    [ "QNIC_names", "namespacequisp_1_1modules.html#a73b723f8d26913c797269fb34995d9ad", null ]
+    [ "NLOHMANN_JSON_SERIALIZE_ENUM", "namespacequisp_1_1modules.html#a5673d1c3e06529bb2246b87603a6a4bb", null ],
+    [ "NULL_CONNECTION_SETUP_INFO", "namespacequisp_1_1modules.html#a75d888a19ce0acef2f7b1604c87d72e4", null ]
 ];

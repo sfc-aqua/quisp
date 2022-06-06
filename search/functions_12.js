@@ -2,8 +2,8 @@ var searchData=
 [
   ['undisposedobject_0',['undisposedObject',['../classquisp__test_1_1env_1_1_static_env.html#a6f9be36c1b84afdb1445c6fc8ce244c6',1,'quisp_test::env::StaticEnv']]],
   ['unlock_1',['Unlock',['../classquisp_1_1modules_1_1_i_stationary_qubit.html#a7994f362fba966f10ffc8dd24cecfd3d',1,'quisp::modules::IStationaryQubit::Unlock()'],['../classquisp_1_1modules_1_1_stationary_qubit.html#a56fc6c0cd54b3e6cbb025ad058053efb',1,'quisp::modules::StationaryQubit::Unlock()']]],
-  ['unlock_5fresource_5fand_5fdiscard_2',['Unlock_resource_and_discard',['../classquisp_1_1modules_1_1_rule_engine.html#aec52b1c69a426823bb48efc6ce4ec321',1,'quisp::modules::RuleEngine']]],
-  ['unlock_5fresource_5fand_5fupgrade_5fstage_3',['Unlock_resource_and_upgrade_stage',['../classquisp_1_1modules_1_1_rule_engine.html#ade10c6ace6c6243d5f83278b64a85fd0',1,'quisp::modules::RuleEngine']]],
+  ['unlock_5fresource_5fand_5fdiscard_2',['Unlock_resource_and_discard',['../classquisp_1_1modules_1_1_rule_engine.html#a62246a4a5421ef828b3c2742f3484fee',1,'quisp::modules::RuleEngine']]],
+  ['unlock_5fresource_5fand_5fupgrade_5fstage_3',['Unlock_resource_and_upgrade_stage',['../classquisp_1_1modules_1_1_rule_engine.html#a29671204686e541942d7375e79c62e74',1,'quisp::modules::RuleEngine']]],
   ['unrefosgnode_4',['unrefOsgNode',['../classquisp__test_1_1env_1_1_static_env.html#a6f3b720479d093d912573d3df9247921',1,'quisp_test::env::StaticEnv']]],
   ['unsupported_5',['unsupported',['../classquisp__test_1_1env_1_1_static_env.html#af372c0c3b4bce34b7d0b240aae07c40a',1,'quisp_test::env::StaticEnv']]],
   ['update_6',['update',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a95fa5a808d803da5d0c5d110a3b6ffc1',1,'quisp::backends::error_tracking::ErrorTrackingQubit']]],

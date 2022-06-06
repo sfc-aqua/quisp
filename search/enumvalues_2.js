@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['minus_5fone_0',['MINUS_ONE',['../namespacequisp_1_1backends_1_1abstract.html#a62ea4b6babf182573968ca80708cce0da25725c81fc4f00fa5b881c17af6a2a3e',1,'quisp::backends::abstract::MINUS_ONE()'],['../namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57a25725c81fc4f00fa5b881c17af6a2a3e',1,'quisp::types::MINUS_ONE()']]]
+  ['id_0',['Id',['../namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43a490aa6e856ccf208a054389e47ce0d06',1,'quisp::types']]],
+  ['invalid_1',['INVALID',['../namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066da99370beed01a4f675d525ca0a62b4a7e',1,'quisp::rules']]]
 ];

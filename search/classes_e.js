@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['randommeasureaction_0',['RandomMeasureAction',['../classquisp_1_1rules_1_1actions_1_1_random_measure_action.html',1,'quisp::rules::actions']]],
+  ['randommeasureaction_0',['RandomMeasureAction',['../classquisp_1_1rules_1_1active_1_1actions_1_1_random_measure_action.html',1,'quisp::rules::active::actions']]],
   ['realtimecontroller_1',['RealTimeController',['../classquisp_1_1modules_1_1_real_time_controller.html',1,'quisp::modules']]],
   ['rng_2',['RNG',['../classquisp_1_1modules_1_1backend_1_1rng_1_1_r_n_g.html',1,'quisp::modules::backend::rng']]],
   ['router_3',['Router',['../classquisp_1_1modules_1_1_router.html',1,'quisp::modules']]],

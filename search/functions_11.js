@@ -10,7 +10,8 @@ var searchData=
   ['testrng_7',['TestRNG',['../classquisp__test_1_1backends_1_1_test_r_n_g.html#a63b811e7db69db915964dff8ba3461f4',1,'quisp_test::backends::TestRNG']]],
   ['testsimulation_8',['TestSimulation',['../classquisp__test_1_1simulation_1_1_test_simulation.html#a16e6f7a5be69e039d45db2ee7d1c158a',1,'quisp_test::simulation::TestSimulation']]],
   ['toggleedge_9',['toggleEdge',['../classquisp_1_1modules_1_1_stationary_qubit.html#aad3feb47d9cff5aa79066b8da765e8dc',1,'quisp::modules::StationaryQubit']]],
-  ['tomographyrule_10',['tomographyRule',['../classquisp_1_1modules_1_1_connection_manager.html#aa8b24521677ac91bb528d1c128e97b78',1,'quisp::modules::ConnectionManager']]],
-  ['traversethroughallprocesses2_11',['traverseThroughAllProcesses2',['../classquisp_1_1modules_1_1_rule_engine.html#a057e7140cef44d74b5be6c2cc3da9e92',1,'quisp::modules::RuleEngine']]],
-  ['tryrelayrequesttonexthop_12',['tryRelayRequestToNextHop',['../classquisp_1_1modules_1_1_connection_manager.html#a507ba05256fa6d73c3827324634c2a42',1,'quisp::modules::ConnectionManager']]]
+  ['tomography_10',['Tomography',['../classquisp_1_1rules_1_1_tomography.html#aba41ab4f8e84a698944567ead4fcbc52',1,'quisp::rules::Tomography::Tomography(json serialized)'],['../classquisp_1_1rules_1_1_tomography.html#abb4bf1ac746887c65ff2f0282e6111ce',1,'quisp::rules::Tomography::Tomography(int num_measurement, int owner_addr, int partner_addr, QNIC_type qnic_type, int qnic_id)']]],
+  ['tomographyrule_11',['tomographyRule',['../classquisp_1_1modules_1_1_connection_manager.html#adc6997ccd1c3c44de35a69318b168da1',1,'quisp::modules::ConnectionManager']]],
+  ['traversethroughallprocesses2_12',['traverseThroughAllProcesses2',['../classquisp_1_1modules_1_1_rule_engine.html#a057e7140cef44d74b5be6c2cc3da9e92',1,'quisp::modules::RuleEngine']]],
+  ['tryrelayrequesttonexthop_13',['tryRelayRequestToNextHop',['../classquisp_1_1modules_1_1_connection_manager.html#a507ba05256fa6d73c3827324634c2a42',1,'quisp::modules::ConnectionManager']]]
 ];

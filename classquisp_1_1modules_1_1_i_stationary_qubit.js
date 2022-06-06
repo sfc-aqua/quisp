@@ -17,7 +17,7 @@ var classquisp_1_1modules_1_1_i_stationary_qubit =
     [ "localMeasureX", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a64aea80efebc000555f07c3fa4b5e3f9", null ],
     [ "localMeasureY", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a4b82d57796b51fc83cf1b37a2d90a58b", null ],
     [ "localMeasureZ", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a4e881984265cb09a43e59f452e0e25b1", null ],
-    [ "Lock", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a9f42224a84734cf1b3c43f20655c5a21", null ],
+    [ "Lock", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a405a6d5eaa21b4be1566bb277c33bf10", null ],
     [ "measure_density_independent", "classquisp_1_1modules_1_1_i_stationary_qubit.html#af7cbc6ff9628b7ecf7e39a2b5a3f2ffa", null ],
     [ "measureX", "classquisp_1_1modules_1_1_i_stationary_qubit.html#a1881a3f2199711ddeba61c76d114712a", null ],
     [ "measureY", "classquisp_1_1modules_1_1_i_stationary_qubit.html#ac1941daaa62061507edad1ea6e21f355", null ],

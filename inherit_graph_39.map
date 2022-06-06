@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structquisp_1_1modules_1_1measurement__output__probabilities.html" title=" " alt="" coords="5,5,199,47"/>
+<area shape="rect" id="node1" href="$classquisp_1_1modules_1_1qnic__store_1_1_i_q_nic_store.html" title="The QNicStore interface." alt="" coords="5,39,144,80"/>
+<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html" title=" " alt="" coords="216,5,355,47"/>
+<area shape="rect" id="node3" href="$classquisp__test_1_1mock__modules_1_1qnic__store_1_1_mock_q_nic_store.html" title=" " alt="" coords="192,71,379,112"/>
 </map>

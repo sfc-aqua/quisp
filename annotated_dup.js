@@ -107,32 +107,49 @@ var annotated_dup =
         [ "TwoQubitGateErrorModel", "structquisp_1_1modules_1_1_two_qubit_gate_error_model.html", "structquisp_1_1modules_1_1_two_qubit_gate_error_model" ]
       ] ],
       [ "rules", "namespacequisp_1_1rules.html", [
-        [ "actions", "namespacequisp_1_1rules_1_1actions.html", [
-          [ "Action", "classquisp_1_1rules_1_1actions_1_1_action.html", "classquisp_1_1rules_1_1actions_1_1_action" ],
-          [ "DoublePurifyAction", "classquisp_1_1rules_1_1actions_1_1_double_purify_action.html", "classquisp_1_1rules_1_1actions_1_1_double_purify_action" ],
-          [ "DoublePurifyActionInv", "classquisp_1_1rules_1_1actions_1_1_double_purify_action_inv.html", "classquisp_1_1rules_1_1actions_1_1_double_purify_action_inv" ],
-          [ "DoubleSelectionAction", "classquisp_1_1rules_1_1actions_1_1_double_selection_action.html", "classquisp_1_1rules_1_1actions_1_1_double_selection_action" ],
-          [ "DoubleSelectionActionInv", "classquisp_1_1rules_1_1actions_1_1_double_selection_action_inv.html", "classquisp_1_1rules_1_1actions_1_1_double_selection_action_inv" ],
-          [ "DoubleSelectionDualAction", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action.html", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action" ],
-          [ "DoubleSelectionDualActionInv", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv.html", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_inv" ],
-          [ "DoubleSelectionDualActionSecond", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_second.html", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_second" ],
-          [ "DoubleSelectionDualActionSecondInv", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_second_inv.html", "classquisp_1_1rules_1_1actions_1_1_double_selection_dual_action_second_inv" ],
-          [ "PurifyAction", "classquisp_1_1rules_1_1actions_1_1_purify_action.html", "classquisp_1_1rules_1_1actions_1_1_purify_action" ],
-          [ "RandomMeasureAction", "classquisp_1_1rules_1_1actions_1_1_random_measure_action.html", "classquisp_1_1rules_1_1actions_1_1_random_measure_action" ],
-          [ "SimultaneousSwappingAction", "classquisp_1_1rules_1_1actions_1_1_simultaneous_swapping_action.html", "classquisp_1_1rules_1_1actions_1_1_simultaneous_swapping_action" ],
-          [ "SwappingAction", "classquisp_1_1rules_1_1actions_1_1_swapping_action.html", "classquisp_1_1rules_1_1actions_1_1_swapping_action" ]
+        [ "active", "namespacequisp_1_1rules_1_1active.html", [
+          [ "actions", "namespacequisp_1_1rules_1_1active_1_1actions.html", [
+            [ "ActiveAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_active_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_active_action" ],
+            [ "DoublePurifyAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_purify_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_purify_action" ],
+            [ "DoublePurifyActionInv", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_purify_action_inv.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_purify_action_inv" ],
+            [ "DoubleSelectionAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_action" ],
+            [ "DoubleSelectionActionInv", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_action_inv.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_action_inv" ],
+            [ "DoubleSelectionDualAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action" ],
+            [ "DoubleSelectionDualActionInv", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_inv.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_inv" ],
+            [ "DoubleSelectionDualActionSecond", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_second.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_second" ],
+            [ "DoubleSelectionDualActionSecondInv", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_second_inv.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_second_inv" ],
+            [ "PurifyAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_purify_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_purify_action" ],
+            [ "RandomMeasureAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_random_measure_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_random_measure_action" ],
+            [ "SimultaneousSwappingAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_simultaneous_swapping_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_simultaneous_swapping_action" ],
+            [ "SwappingAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_swapping_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_swapping_action" ],
+            [ "WaitAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_wait_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_wait_action" ]
+          ] ],
+          [ "clauses", "namespacequisp_1_1rules_1_1active_1_1clauses.html", [
+            [ "ActiveClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_active_clause.html", "classquisp_1_1rules_1_1active_1_1clauses_1_1_active_clause" ],
+            [ "EnoughResourceClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_enough_resource_clause.html", "classquisp_1_1rules_1_1active_1_1clauses_1_1_enough_resource_clause" ],
+            [ "FidelityClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_fidelity_clause.html", "classquisp_1_1rules_1_1active_1_1clauses_1_1_fidelity_clause" ],
+            [ "MeasureCountClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_measure_count_clause.html", "classquisp_1_1rules_1_1active_1_1clauses_1_1_measure_count_clause" ],
+            [ "PurificationCountClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_purification_count_clause.html", "classquisp_1_1rules_1_1active_1_1clauses_1_1_purification_count_clause" ],
+            [ "WaitClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_wait_clause.html", "classquisp_1_1rules_1_1active_1_1clauses_1_1_wait_clause" ]
+          ] ],
+          [ "ActiveCondition", "classquisp_1_1rules_1_1active_1_1_active_condition.html", "classquisp_1_1rules_1_1active_1_1_active_condition" ],
+          [ "ActiveRule", "classquisp_1_1rules_1_1active_1_1_active_rule.html", "classquisp_1_1rules_1_1active_1_1_active_rule" ],
+          [ "ActiveRuleSet", "classquisp_1_1rules_1_1active_1_1_active_rule_set.html", "classquisp_1_1rules_1_1active_1_1_active_rule_set" ]
         ] ],
-        [ "clauses", "namespacequisp_1_1rules_1_1clauses.html", [
-          [ "Clause", "classquisp_1_1rules_1_1clauses_1_1_clause.html", "classquisp_1_1rules_1_1clauses_1_1_clause" ],
-          [ "EnoughResourceClause", "classquisp_1_1rules_1_1clauses_1_1_enough_resource_clause.html", "classquisp_1_1rules_1_1clauses_1_1_enough_resource_clause" ],
-          [ "FidelityClause", "classquisp_1_1rules_1_1clauses_1_1_fidelity_clause.html", "classquisp_1_1rules_1_1clauses_1_1_fidelity_clause" ],
-          [ "MeasureCountClause", "classquisp_1_1rules_1_1clauses_1_1_measure_count_clause.html", "classquisp_1_1rules_1_1clauses_1_1_measure_count_clause" ],
-          [ "PurificationCountClause", "classquisp_1_1rules_1_1clauses_1_1_purification_count_clause.html", "classquisp_1_1rules_1_1clauses_1_1_purification_count_clause" ],
-          [ "WaitClause", "classquisp_1_1rules_1_1clauses_1_1_wait_clause.html", "classquisp_1_1rules_1_1clauses_1_1_wait_clause" ]
-        ] ],
+        [ "Action", "classquisp_1_1rules_1_1_action.html", "classquisp_1_1rules_1_1_action" ],
+        [ "Clause", "classquisp_1_1rules_1_1_clause.html", "classquisp_1_1rules_1_1_clause" ],
         [ "Condition", "classquisp_1_1rules_1_1_condition.html", "classquisp_1_1rules_1_1_condition" ],
+        [ "EnoughResourceConditionClause", "classquisp_1_1rules_1_1_enough_resource_condition_clause.html", "classquisp_1_1rules_1_1_enough_resource_condition_clause" ],
+        [ "EntanglementSwapping", "classquisp_1_1rules_1_1_entanglement_swapping.html", "classquisp_1_1rules_1_1_entanglement_swapping" ],
+        [ "FidelityConditionClause", "classquisp_1_1rules_1_1_fidelity_condition_clause.html", "classquisp_1_1rules_1_1_fidelity_condition_clause" ],
+        [ "MeasureCountConditionClause", "classquisp_1_1rules_1_1_measure_count_condition_clause.html", "classquisp_1_1rules_1_1_measure_count_condition_clause" ],
+        [ "Purification", "classquisp_1_1rules_1_1_purification.html", "classquisp_1_1rules_1_1_purification" ],
+        [ "QnicInterface", "structquisp_1_1rules_1_1_qnic_interface.html", "structquisp_1_1rules_1_1_qnic_interface" ],
         [ "Rule", "classquisp_1_1rules_1_1_rule.html", "classquisp_1_1rules_1_1_rule" ],
-        [ "RuleSet", "classquisp_1_1rules_1_1_rule_set.html", "classquisp_1_1rules_1_1_rule_set" ]
+        [ "RuleSet", "classquisp_1_1rules_1_1_rule_set.html", "classquisp_1_1rules_1_1_rule_set" ],
+        [ "Tomography", "classquisp_1_1rules_1_1_tomography.html", "classquisp_1_1rules_1_1_tomography" ],
+        [ "Wait", "classquisp_1_1rules_1_1_wait.html", "classquisp_1_1rules_1_1_wait" ],
+        [ "WaitConditionClause", "classquisp_1_1rules_1_1_wait_condition_clause.html", "classquisp_1_1rules_1_1_wait_condition_clause" ]
       ] ],
       [ "utils", "namespacequisp_1_1utils.html", [
         [ "ComponentProvider", "classquisp_1_1utils_1_1_component_provider.html", "classquisp_1_1utils_1_1_component_provider" ],

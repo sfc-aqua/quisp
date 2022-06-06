@@ -1,7 +1,9 @@
 var classquisp_1_1rules_1_1_condition =
 [
-    [ "addClause", "classquisp_1_1rules_1_1_condition.html#a75a03a6bd4f63bd4cd86520449a814cd", null ],
-    [ "check", "classquisp_1_1rules_1_1_condition.html#a7ff1a4b9aa85de6dab13effa4d45991c", null ],
-    [ "checkTerminate", "classquisp_1_1rules_1_1_condition.html#a846c2ceeb7139d952254415b296405ba", null ],
-    [ "clauses", "classquisp_1_1rules_1_1_condition.html#a4b590b41b1973b9ba2485e972818121d", null ]
+    [ "Condition", "classquisp_1_1rules_1_1_condition.html#a56e0f0356a5c9e2d657f49d1c29fb0e7", null ],
+    [ "Condition", "classquisp_1_1rules_1_1_condition.html#a76aa0af671eca59598f3fe780264af9c", null ],
+    [ "addClause", "classquisp_1_1rules_1_1_condition.html#aeed8d41a6b4093bb1661bf1749762ab9", null ],
+    [ "deserialize_json", "classquisp_1_1rules_1_1_condition.html#af302964d86bf6e14cd661c85908fc33b", null ],
+    [ "serialize_json", "classquisp_1_1rules_1_1_condition.html#a4938f189312f7fb27a03008a056f3499", null ],
+    [ "clauses", "classquisp_1_1rules_1_1_condition.html#aa9b26feae4aea1b21385590a77db2d37", null ]
 ];

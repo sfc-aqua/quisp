@@ -1,13 +1,6 @@
 var searchData=
 [
-  ['qnic_0',['QNIC',['../namespacequisp_1_1modules.html#a3991da9b9702c427d36b804b21a31956',1,'quisp::modules']]],
-  ['qnic_5freservation_5ftable_1',['QNIC_reservation_table',['../namespacequisp_1_1modules.html#a27ddf07eb98a314604f173d9de2bbd77',1,'quisp::modules']]],
-  ['qnicindex_2',['QNicIndex',['../namespacequisp_1_1modules_1_1common.html#af5a8db76b670dfc3f8ec863dfa82f05a',1,'quisp::modules::common::QNicIndex()'],['../namespacequisp_1_1modules.html#ac15251b960056e05af47534b467cd5b6',1,'quisp::modules::QNicIndex()'],['../namespacequisp_1_1modules_1_1qnic__store.html#ab9f66e2e0c0e97526a9c83389819f632',1,'quisp::modules::qnic_store::QNicIndex()']]],
-  ['qnicrecordtype_3',['QNicRecordType',['../namespacequisp_1_1modules_1_1qnic__store.html#aa661d6b02db5e7c76726a84cef686956',1,'quisp::modules::qnic_store']]],
-  ['qnictype_4',['QNicType',['../namespacequisp_1_1modules_1_1common.html#ad9d3d3513492c09e8c36ad29fcd788fa',1,'quisp::modules::common']]],
-  ['qnodeaddr_5',['QNodeAddr',['../namespacequisp_1_1modules_1_1common.html#acce634550de795e44975c1e20c8be3a8',1,'quisp::modules::common::QNodeAddr()'],['../namespacequisp_1_1modules.html#a0f71b198c963a11406c9846dc8062c8c',1,'quisp::modules::QNodeAddr()']]],
-  ['quatropurificationtable_6',['QuatroPurificationTable',['../namespacequisp_1_1modules.html#ad1f6e6ff14e2edd614ccb86b14d85f47',1,'quisp::modules']]],
-  ['qubitid_7',['QubitId',['../namespacequisp_1_1modules_1_1common.html#a27af03ae81214bcb4d435892ffb722a2',1,'quisp::modules::common']]],
-  ['qubitindex_8',['QubitIndex',['../namespacequisp_1_1modules_1_1common.html#ae40fc279e2dc158039aa95bb2ad5e007',1,'quisp::modules::common']]],
-  ['qubitstatetable_9',['QubitStateTable',['../namespacequisp_1_1modules.html#ae54e81f0c4c329b8b5cbf6ad5f4d2a44',1,'quisp::modules']]]
+  ['partneraddrqubitmap_0',['PartnerAddrQubitMap',['../namespacequisp_1_1modules.html#aaddacfaab29681c46ad5a418968ecb7d',1,'quisp::modules']]],
+  ['partneraddrqubitmaprange_1',['PartnerAddrQubitMapRange',['../namespacequisp_1_1modules.html#abf60aac8c13704b1b501124d946bbf2a',1,'quisp::modules']]],
+  ['purificationtable_2',['PurificationTable',['../namespacequisp_1_1modules.html#a926af4afd0fbecd3cfe768865186cb44',1,'quisp::modules']]]
 ];
