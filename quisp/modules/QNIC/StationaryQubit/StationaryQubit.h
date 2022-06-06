@@ -59,7 +59,7 @@ class StationaryQubit : public IStationaryQubit {
   StationaryQubit();
   void setFree(bool consumed) override;
   /*In use. E.g. waiting for purification result.*/
-  void Lock(unsigned long rs_id, unsigned long rule_id, int action_id) override;
+  void Lock(unsigned long rs_id, int rule_id, int action_id) override;
   void Unlock() override;
   bool isLocked() override;
 

@@ -12,7 +12,8 @@
 
 using namespace omnetpp;
 using namespace quisp::messages;
-using namespace quisp::rules;
+using namespace quisp::rules::active;
+using quisp::rules::PurType;
 
 namespace quisp {
 namespace modules {
@@ -50,11 +51,13 @@ class ConnectionManager : public IConnectionManager {
   int num_of_qnics;
   std::map<int, std::queue<ConnectionSetupRequest *>> connection_setup_buffer;  // key is qnic address
   std::map<int, int> connection_retry_count;  // key is qnic address
-  std::map<int, bool> qnic_res_table;
+  std::vector<int> reserved_qnics = {};  // reserved qnic address table
   std::vector<cMessage *> request_send_timing;  // self message, notification for sending out request
   bool simultaneous_es_enabled;
-  bool es_with_purify;
+  bool es_with_purify = false;
   int num_remote_purification;
+  double threshold_fidelity;
+  PurType purification_type;
   IRoutingDaemon *routing_daemon;
   IHardwareMonitor *hardware_monitor;
 
@@ -63,6 +66,7 @@ class ConnectionManager : public IConnectionManager {
   void finish() override;
 
   void respondToRequest(ConnectionSetupRequest *pk);
+  void respondToRequest_deprecated(ConnectionSetupRequest *pk);
   void tryRelayRequestToNextHop(ConnectionSetupRequest *pk);
 
   void queueApplicationRequest(ConnectionSetupRequest *pk);
@@ -83,23 +87,24 @@ class ConnectionManager : public IConnectionManager {
                                         int num_resources);
   SwappingConfig generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources);
 
-  // Rule generators
-  std::unique_ptr<Rule> purificationRule(int partner_address, int purification_type, int num_purification, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
-                                         unsigned long rule_id);
-  std::unique_ptr<Rule> swappingRule(SwappingConfig conf, unsigned long ruleset_id, unsigned long rule_id);
-  std::unique_ptr<Rule> simultaneousSwappingRule(SwappingConfig conf, std::vector<int> path, unsigned long ruleset_id, unsigned long rule_id);
-  std::unique_ptr<Rule> waitRule(int partner_address, int next_partner_address, unsigned long ruleset_id, unsigned long rule_id);
-  std::unique_ptr<Rule> tomographyRule(int owner_address, int partner_address, int num_measure, QNIC_type qnic_type, int qnic_index, unsigned long ruleset_id,
-                                       unsigned long rule_id);
-
+  std::unique_ptr<Rule> purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, int shared_tag,
+                                   std::string name = "purification");
+  std::unique_ptr<Rule> swapRule(std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id,
+                                 std::vector<QNIC_type> remote_qnic_type, std::vector<int> remote_qnic_id, std::vector<int> remote_qnic_address, int shared_tag,
+                                 std::string name = "swapping");
+  std::unique_ptr<Rule> waitRule(int partner_address, QNIC_type qnic_type, int qnic_id, int shared_tag, std::string name = "wait");
+  std::unique_ptr<Rule> tomographyRule(int partner_address, int owner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, int shared_tag,
+                                       std::string name = "tomography");
   void reserveQnic(int qnic_address);
   void releaseQnic(int qnic_address);
   bool isQnicBusy(int qnic_address);
   QNIC_id getQnicInterface(int owner_address, int partner_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics);
 
-  unsigned long createUniqueId();
   static int computePathDivisionSize(int l);
   static int fillPathDivision(std::vector<int> path, int i, int l, int *link_left, int *link_right, int *swapper, int fill_start);
+  static PurType parsePurType(const std::string &pur_type);
+
+  unsigned long createUniqueId() override;
 };
 
 }  // namespace modules

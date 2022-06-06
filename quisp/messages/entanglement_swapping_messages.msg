@@ -4,7 +4,8 @@ namespace quisp::messages;
 
 packet SwappingResult extends Header{
     unsigned long RuleSet_id;
-    unsigned long Rule_id;
+    int Rule_id;
+    int shared_tag;
     int action_index;
 
     int left_Dest;
@@ -66,4 +67,9 @@ packet SimultaneousSwappingResult extends Header{
     // Simultaneous EP
     int index_in_path;
     int path_length_exclude_IR;
+}
+
+packet WaitResult extends Header {
+    unsigned long RuleSet_id;
+    unsigned long Rule_id;
 }

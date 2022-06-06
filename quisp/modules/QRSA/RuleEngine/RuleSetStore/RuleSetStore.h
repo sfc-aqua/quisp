@@ -2,11 +2,11 @@
 
 #include <memory>
 #include <vector>
-#include "rules/RuleSet.h"
+#include "rules/Active/ActiveRuleSet.h"
 
 namespace quisp::modules::ruleset_store {
-using quisp::rules::RuleSet;
-using RuleSetVector = std::vector<std::unique_ptr<RuleSet>>;
+using quisp::rules::active::ActiveRuleSet;
+using RuleSetVector = std::vector<std::unique_ptr<ActiveRuleSet>>;
 class RuleSetStore {
  public:
   RuleSetStore() {}
@@ -16,10 +16,10 @@ class RuleSetStore {
   RuleSetVector::const_iterator cend();
   RuleSetVector::iterator begin();
   RuleSetVector::iterator end();
-  void insert(std::unique_ptr<RuleSet>& ruleset);
-  void insert(RuleSet* ruleset);
+  void insert(std::unique_ptr<ActiveRuleSet>& ruleset);
+  void insert(ActiveRuleSet* ruleset);
   RuleSetVector::iterator erase(const RuleSetVector::const_iterator& ruleset);
-  std::unique_ptr<RuleSet>& operator[](int i);
+  std::unique_ptr<ActiveRuleSet>& operator[](int i);
   RuleSetVector::iterator findById(long ruleset_id);
 
  protected:

@@ -11,7 +11,9 @@ simple ConnectionManager
         int total_number_of_qnics;
         int num_remote_purification = default(1);
         bool simultaneous_es_enabled = default(false);
-        bool entanglement_swapping_with_purification = default(false);
+        string purification_type_cm = default("SINGLE_X");
+        double threshold_fidelity = default(0);
+        int seed_cm = default(0);
 
     gates:
         inout RouterPort;
