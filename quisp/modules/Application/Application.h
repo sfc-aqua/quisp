@@ -46,6 +46,8 @@ class Application : public IApplication {
 
   messages::ConnectionSetupRequest *createConnectionSetupRequest(int dest_addr, int num_of_required_resources);
   utils::ComponentProvider provider;
+
+  simsignal_t signal_init_request;
 };
 
 Define_Module(Application);

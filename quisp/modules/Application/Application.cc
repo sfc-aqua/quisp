@@ -22,6 +22,9 @@ Application::Application() : provider(utils::ComponentProvider{this}) {}
  * If the node type is not EndNode, this module is automatically deleted in this function.
  */
 void Application::initialize() {
+
+   signal_init_request = registerSignal("initiateRequest");
+
   // Since we only need this module in EndNode, delete it otherwise.
   if (!gate("toRouter")->isConnected()) {
     deleteThisModule *msg = new deleteThisModule("DeleteThisModule");
@@ -97,11 +100,17 @@ ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr,
 void Application::handleMessage(cMessage *msg) {
   if (dynamic_cast<deleteThisModule *>(msg)) {
     delete msg;
-    deleteModule();
+    //deleteModule();
     return;
   }
 
-  if (dynamic_cast<ConnectionSetupRequest *>(msg) || dynamic_cast<ConnectionSetupResponse *>(msg)) {
+  if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)){
+      emit(signal_init_request, req->getDestAddr());
+      send(msg, "toRouter");
+      return;
+  }
+
+  if (dynamic_cast<ConnectionSetupResponse *>(msg)) {
     send(msg, "toRouter");
     return;
   }

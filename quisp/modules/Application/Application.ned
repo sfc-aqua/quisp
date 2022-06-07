@@ -17,7 +17,9 @@ simple Application
         int TrafficPattern;
         int LoneInitiatorAddress;
         int distant_measure_count = default(7000);
-        // Maybe don't have to set the default here.
+        @signal[initiateRequest](type=int);
+        @statistic[initiatedRequests](title="connection setup requests";source="initiateRequest";record=vector,stats;interpolationmode=none);
+     
 
     gates:
         input fromRouter @loose;
