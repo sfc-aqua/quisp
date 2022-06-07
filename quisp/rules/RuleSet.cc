@@ -1,35 +1,51 @@
-/** \file RuleSet.cc
- *
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/06/25
- *
- *  \brief RuleSet
- */
 #include "RuleSet.h"
+#include <omnetpp.h>
+#include <memory>
+#include <random>
+#include <string>
 
-namespace quisp {
-namespace rules {
+using json = nlohmann::json;
 
-RuleSet::RuleSet(long _ruleset_id, int _owner_addr, std::vector<int> partner_addrs) {
-  ruleset_id = _ruleset_id;
-  owner_addr = _owner_addr;
-  entangled_partners = partner_addrs;
-  started_at = simTime();
-}
+namespace quisp::rules {
+RuleSet::RuleSet(unsigned long ruleset_id, int owner_address) : ruleset_id(ruleset_id), owner_addr(owner_address) {}
 
-RuleSet::RuleSet(long _ruleset_id, int _owner_addr, int partner_addr) {
-  ruleset_id = _ruleset_id;
-  owner_addr = _owner_addr;
-  entangled_partners.push_back(partner_addr);
-  started_at = simTime();
-}
+Rule *RuleSet::addRule(std::unique_ptr<Rule> rule) {
+  rule->rule_id = current_rule_id;
+  current_rule_id++;
+  rule->parent_ruleset_id = ruleset_id;
+  Rule *raw_ptr = rule.get();
+  rules.push_back(std::move(rule));
+  return raw_ptr;
+};
 
-void RuleSet::addRule(std::unique_ptr<Rule> r) { rules.emplace_back(std::move(r)); };
-std::unique_ptr<Rule>& RuleSet::getRule(int i) { return rules[i]; };
-int RuleSet::size() const { return rules.size(); };
-bool RuleSet::empty() const { return rules.empty(); }
-std::vector<std::unique_ptr<Rule>>::const_iterator RuleSet::cbegin() { return rules.cbegin(); }
-std::vector<std::unique_ptr<Rule>>::const_iterator RuleSet::cend() { return rules.cend(); }
+json RuleSet::serialize_json() {
+  // inialize json and put metadata
+  json ruleset_json;
+  ruleset_json["ruleset_id"] = ruleset_id;
+  ruleset_json["owner_address"] = owner_addr;
+  ruleset_json["num_rules"] = rules.size();
+  for (auto &rule : rules) {
+    ruleset_json["rules"].push_back(rule->serialize_json());
+  }
+  return ruleset_json;
+};
 
-}  // namespace rules
-}  // namespace quisp
+void RuleSet::deserialize_json(json serialized) {
+  // if this function is directly called, check if there is json serialization
+  if (serialized == nullptr) {
+    throw omnetpp::cRuntimeError("No json serialization found");
+  }
+
+  // get properties from json with type conversion
+  serialized.at("ruleset_id").get_to(ruleset_id);
+  serialized.at("owner_address").get_to(owner_addr);
+
+  // deserialize rules and push them back
+  auto serialized_rules = serialized.at("rules");
+  for (auto rule : serialized_rules) {
+    auto deserialized_rule = std::make_unique<Rule>(rule);
+    rules.push_back(std::move(deserialized_rule));
+  }
+};
+
+}  // namespace quisp::rules

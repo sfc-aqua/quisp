@@ -1,41 +1,28 @@
-/** \file RuleSet.h
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/06/25
- *
- *  \brief RuleSet
- */
-#ifndef QUISP_RULES_RULESET_H_
-#define QUISP_RULES_RULESET_H_
-
-#include <omnetpp.h>
+#pragma once
+#include <memory>
+#include <nlohmann/json.hpp>
 #include "Rule.h"
 
-namespace quisp {
-namespace rules {
-
-/** \class RuleSet RuleSet.h
+using json = nlohmann::json;
+namespace quisp::rules {
+/**
+ * @brief RuleSet class which includes a set of Rule Information
  *
- * \brief Set of rules for the RuleEngine.
  */
 class RuleSet {
  public:
-  RuleSet(long _ruleset_id, int _owner_addr, int partner_addr);
-  RuleSet(long _ruleset_id, int _owner_addr, std::vector<int> partner_addrs);
-  void addRule(std::unique_ptr<Rule> r);
-  std::unique_ptr<Rule>& getRule(int i);
-  int size() const;
-  bool empty() const;
-  std::vector<std::unique_ptr<Rule>>::const_iterator cbegin();
-  std::vector<std::unique_ptr<Rule>>::const_iterator cend();
+  RuleSet(){};
+  RuleSet(unsigned long ruleset_id, int owner_address);
 
-  int owner_addr;
-  std::vector<int> entangled_partners;
+  unsigned long ruleset_id;  ///< `ruleset_id` is used for identifying connection
+  int owner_addr;  ///< Address of RuleSet owner
+  int current_rule_id = 0;
   std::vector<std::unique_ptr<Rule>> rules;
-  simtime_t started_at;
-  unsigned long ruleset_id;
+
+  Rule *addRule(std::unique_ptr<Rule> rule);
+  json serialize_json();
+  void deserialize_json(json serialized);
+  unsigned long createUniqueId();
 };
 
-}  // namespace rules
-}  // namespace quisp
-
-#endif  // QUISP_RULES_RULESET_H_
+}  // namespace quisp::rules

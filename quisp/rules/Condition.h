@@ -1,31 +1,20 @@
-/** \file Condition.h
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/06/25
- *
- *  \brief Condition
- */
-#ifndef QUISP_RULES_CONDITION_H_
-#define QUISP_RULES_CONDITION_H_
-
+#pragma once
+#include <memory>
+#include <nlohmann/json.hpp>
+#include <vector>
 #include "Clause.h"
 
-namespace quisp {
-namespace rules {
+using json = nlohmann::json;
+namespace quisp::rules {
 
-/** \class Condition Condition.h
- *
- *  \brief Condition
- */
 class Condition {
  public:
-  void addClause(Clause* c);
-  bool check(std::multimap<int, IStationaryQubit*>& resources) const;
-  bool checkTerminate(std::multimap<int, IStationaryQubit*>& resources) const;
+  Condition() {}
+  Condition(json serialized) { deserialize_json(serialized); }
 
-  std::vector<Clause*> clauses;
+  std::vector<std::unique_ptr<Clause>> clauses;
+  void addClause(std::unique_ptr<Clause> clause);
+  json serialize_json();
+  void deserialize_json(json serialized);
 };
-
-}  // namespace rules
-}  // namespace quisp
-
-#endif  // QUISP_RULES_CONDITION_H_
+}  // namespace quisp::rules
