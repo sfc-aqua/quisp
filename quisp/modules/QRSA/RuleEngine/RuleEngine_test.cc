@@ -140,13 +140,14 @@ static const std::vector<QNicSpec> qnic_specs = {{QNIC_E, 0, 2}, {QNIC_R, 0, 2}}
 
 TEST(RuleEngineTest, activeRuleSetConstructionFromJson) {
   // translate static ruleset into active ruleset
-  prepareSimulation();
+  auto* sim = prepareSimulation();
   auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
   auto* mockQubit1 = new MockQubit(QNIC_E, 0);
   std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(QNIC_E, 0, 0);
   auto rule_engine = new RuleEngineTestTarget{mockQubit1, routingdaemon, mockHardwareMonitor, realtime_controller, qnic_specs};
+  sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
 
   auto serialized_ruleset = R"({
@@ -957,13 +958,14 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
 }
 
 TEST(RuleEngineTest, generateActiveRuleSetFromRuleSet) {
-  prepareSimulation();
+  auto* sim = prepareSimulation();
   auto* routing_daemon = new MockRoutingDaemon;
   auto* hardware_monitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
   auto* qubit = new MockQubit(QNIC_E, 7);
   auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
   std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(QNIC_E, 7, 0);
+  sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
 
   // prepare (static) ruleset being sent by responder
@@ -1041,13 +1043,14 @@ TEST(RuleEngineTest, generateActiveRuleSetFromRuleSet) {
 }
 
 TEST(RuleEngineTest, activeRuleSetGenerationDifferentOwnerExceptions) {
-  prepareSimulation();
+  auto* sim = prepareSimulation();
   auto* routing_daemon = new MockRoutingDaemon;
   auto* hardware_monitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
   auto* qubit = new MockQubit(QNIC_E, 7);
   auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
   std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(QNIC_E, 7, 0);
+  sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
 
   unsigned long ruleset_id = 1234;
@@ -1061,13 +1064,14 @@ TEST(RuleEngineTest, activeRuleSetGenerationDifferentOwnerExceptions) {
 }
 
 TEST(RuleEngineTest, activeRuleSetGenerationNoConditionExceptions) {
-  prepareSimulation();
+  auto* sim = prepareSimulation();
   auto* routing_daemon = new MockRoutingDaemon;
   auto* hardware_monitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
   auto* qubit = new MockQubit(QNIC_E, 7);
   auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
   std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(QNIC_E, 7, 0);
+  sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
 
   auto purify_rule = std::make_unique<Rule>(0, QNIC_E, 0, 0, false);
@@ -1083,13 +1087,14 @@ TEST(RuleEngineTest, activeRuleSetGenerationNoConditionExceptions) {
 }
 
 TEST(RuleEngineTest, activeRuleSetGenerationNoActionExceptions) {
-  prepareSimulation();
+  auto* sim = prepareSimulation();
   auto* routing_daemon = new MockRoutingDaemon;
   auto* hardware_monitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
   auto* qubit = new MockQubit(QNIC_E, 7);
   auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
   std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(QNIC_E, 7, 0);
+  sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
 
   auto purify_rule = std::make_unique<Rule>(0, QNIC_E, 0, 0, false);
