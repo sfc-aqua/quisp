@@ -25,12 +25,12 @@ WORKDIR /root/omnetpp
 ENV PATH /root/omnetpp/bin:$PATH
 
 RUN apt remove -y python3.8 && \
-    apt install -y python3.9 python3.9-dev python3.9-distutils time && \
-    wget https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-    python3.9 get-pip.py && \
+    apt install -y python3.9 python3.9-dev libpython3.9-dev python3.9-distutils time && \
+    wget https://bootstrap.pypa.io/get-pip.py && \
+    python3.9 ./get-pip.py && \
     rm get-pip.py && \
-    pip install numpy scipy pandas matplotlib posix_ipc && \
-    pip list && \
+    pip3.9 install numpy scipy pandas matplotlib posix_ipc && \
+    pip3.9 list && \
     ln -s /usr/bin/python3.9  /usr/local/bin/python && \
     ln -s /usr/bin/python3.9  /usr/local/bin/python3
 
