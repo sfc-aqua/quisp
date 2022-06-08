@@ -1,5 +1,13 @@
 var NAVTREEINDEX16 =
 {
+"structquisp_1_1modules_1_1_single_gate_error_model.html#aec375ca3dc25a8cb2124c4a1cac2daee":[14,0,1,2,54,6],
+"structquisp_1_1modules_1_1_single_gate_error_model.html#af38a37d7bde83bfbae5245edc8425c3b":[15,0,0,2,53,4],
+"structquisp_1_1modules_1_1_single_gate_error_model.html#af38a37d7bde83bfbae5245edc8425c3b":[14,0,1,2,54,4],
+"structquisp_1_1modules_1_1_swapping_config.html":[14,0,1,2,58],
+"structquisp_1_1modules_1_1_swapping_config.html":[15,0,0,2,57],
+"structquisp_1_1modules_1_1_swapping_config.html#a0446cc9291e896e6769beab7380b9eda":[14,0,1,2,58,5],
+"structquisp_1_1modules_1_1_swapping_config.html#a0446cc9291e896e6769beab7380b9eda":[15,0,0,2,57,5],
+"structquisp_1_1modules_1_1_swapping_config.html#a08bff2fb14cb0a4ee9af0327d75f5dc6":[14,0,1,2,58,11],
 "structquisp_1_1modules_1_1_swapping_config.html#a08bff2fb14cb0a4ee9af0327d75f5dc6":[15,0,0,2,57,11],
 "structquisp_1_1modules_1_1_swapping_config.html#a0e280acd22db4ef2b2e0c899a84686b0":[14,0,1,2,58,3],
 "structquisp_1_1modules_1_1_swapping_config.html#a0e280acd22db4ef2b2e0c899a84686b0":[15,0,0,2,57,3],
@@ -241,13 +249,5 @@ var NAVTREEINDEX16 =
 "structquisp_1_1modules_1_1single__qubit__error.html#a4d183bfb7c975fbbde3ce585d4f1670c":[14,0,1,2,53,1],
 "structquisp_1_1modules_1_1single__qubit__error.html#a98af2ec52a8f124a6b218eaebc597e35":[15,0,0,2,52,0],
 "structquisp_1_1modules_1_1single__qubit__error.html#a98af2ec52a8f124a6b218eaebc597e35":[14,0,1,2,53,0],
-"structquisp_1_1modules_1_1single__qubit__error.html#aa08a1bc73f0bef3b2179be2a67f8dbf4":[14,0,1,2,53,3],
-"structquisp_1_1modules_1_1single__qubit__error.html#aa08a1bc73f0bef3b2179be2a67f8dbf4":[15,0,0,2,52,3],
-"structquisp_1_1modules_1_1single__qubit__error.html#ace55275a620c948f615250d13197fd94":[14,0,1,2,53,2],
-"structquisp_1_1modules_1_1single__qubit__error.html#ace55275a620c948f615250d13197fd94":[15,0,0,2,52,2],
-"structquisp_1_1modules_1_1swapping__result.html":[14,0,1,2,57],
-"structquisp_1_1modules_1_1swapping__result.html":[15,0,0,2,56],
-"structquisp_1_1modules_1_1swapping__result.html#a0d866742ad2871f7660cd28e8948b9c0":[14,0,1,2,57,5],
-"structquisp_1_1modules_1_1swapping__result.html#a0d866742ad2871f7660cd28e8948b9c0":[15,0,0,2,56,5],
-"structquisp_1_1modules_1_1swapping__result.html#a19c03cb031164f538339eef22279268e":[15,0,0,2,56,3]
+"structquisp_1_1modules_1_1single__qubit__error.html#aa08a1bc73f0bef3b2179be2a67f8dbf4":[14,0,1,2,53,3]
 };

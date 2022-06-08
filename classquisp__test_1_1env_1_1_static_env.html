@@ -128,14 +128,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6d9c996ac28ed45176359d14c0a9ede4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaaec3bff7455e1f6d588e3c1ba3682d1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#aaaec3bff7455e1f6d588e3c1ba3682d1">messageCancelled</a> (cMessage *msg) override</td></tr>
 <tr class="separator:aaaec3bff7455e1f6d588e3c1ba3682d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef4017e0f3d7d5ea3311b9b8949cdd88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#aef4017e0f3d7d5ea3311b9b8949cdd88">beginSend</a> (cMessage *msg) override</td></tr>
-<tr class="separator:aef4017e0f3d7d5ea3311b9b8949cdd88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10e05ff245e431af30cb184621f022f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#a10e05ff245e431af30cb184621f022f4">messageSendDirect</a> (cMessage *msg, cGate *toGate, simtime_t propagationDelay, simtime_t transmissionDelay) override</td></tr>
-<tr class="separator:a10e05ff245e431af30cb184621f022f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a008746fe7e84e5e82367a56606e4a045"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#a008746fe7e84e5e82367a56606e4a045">beginSend</a> (cMessage *msg, const omnetpp::SendOptions &amp;options) override</td></tr>
+<tr class="separator:a008746fe7e84e5e82367a56606e4a045"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd40c78605e5646cd225b7ccd6f515d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#afd40c78605e5646cd225b7ccd6f515d4">messageSendDirect</a> (cMessage *msg, cGate *toGate, const omnetpp::ChannelResult &amp;result) override</td></tr>
+<tr class="separator:afd40c78605e5646cd225b7ccd6f515d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6a639ba3d2b4d372655751e52c1a9d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#af6a639ba3d2b4d372655751e52c1a9d4">messageSendHop</a> (cMessage *msg, cGate *srcGate) override</td></tr>
 <tr class="separator:af6a639ba3d2b4d372655751e52c1a9d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5187e1bc75fc550b364900709e43e69b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#a5187e1bc75fc550b364900709e43e69b">messageSendHop</a> (cMessage *msg, cGate *srcGate, simtime_t propagationDelay, simtime_t transmissionDelay, bool discard) override</td></tr>
-<tr class="separator:a5187e1bc75fc550b364900709e43e69b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa359e5c91438af56e736052d15a2c41e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#aa359e5c91438af56e736052d15a2c41e">messageSendHop</a> (cMessage *msg, cGate *srcGate, const omnetpp::ChannelResult &amp;result) override</td></tr>
+<tr class="separator:aa359e5c91438af56e736052d15a2c41e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc4677543b888eac51092123debc05d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#afc4677543b888eac51092123debc05d7">endSend</a> (cMessage *msg) override</td></tr>
 <tr class="separator:afc4677543b888eac51092123debc05d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0d29426f5f781524153022e88399dba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#ad0d29426f5f781524153022e88399dba">messageCreated</a> (cMessage *msg) override</td></tr>
@@ -268,6 +268,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a87c72f77176471d55c46ba8d8abe2d3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d97a2de2d1b7e53c706f9482a758470"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#a8d97a2de2d1b7e53c706f9482a758470">notifyLifecycleListeners</a> (SimulationLifecycleEventType eventType, cObject *details) override</td></tr>
 <tr class="separator:a8d97a2de2d1b7e53c706f9482a758470"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a767810a8cfecfd9103053f2fdc259343"><td class="memItemLeft" align="right" valign="top">std::vector&lt; cFigure::Point &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#a767810a8cfecfd9103053f2fdc259343">getConnectionLine</a> (const cGate *sourceGate) override</td></tr>
+<tr class="separator:a767810a8cfecfd9103053f2fdc259343"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae921e306066919316fd2d64cd777e57a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#ae921e306066919316fd2d64cd777e57a">recordParameter</a> (cPar *par) override</td></tr>
+<tr class="separator:ae921e306066919316fd2d64cd777e57a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab62aba3d20ffb72e4cf83b2692c6ffc4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#ab62aba3d20ffb72e4cf83b2692c6ffc4">recordComponentType</a> (cComponent *component) override</td></tr>
+<tr class="separator:ab62aba3d20ffb72e4cf83b2692c6ffc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adde4eee9ac386d05c61fd84edd835d4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#adde4eee9ac386d05c61fd84edd835d4c">pausePoint</a> () override</td></tr>
+<tr class="separator:adde4eee9ac386d05c61fd84edd835d4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cab36d7685f839ad78b779d61c5a78d"><td class="memItemLeft" align="right" valign="top">cSimulation *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1env_1_1_static_env.html#a2cab36d7685f839ad78b779d61c5a78d">newSimulation</a> ()</td></tr>
 <tr class="memdesc:a2cab36d7685f839ad78b779d61c5a78d"><td class="mdescLeft">&#160;</td><td class="mdescRight">delete current simulation and then setup new simulation  <a href="classquisp__test_1_1env_1_1_static_env.html#a2cab36d7685f839ad78b779d61c5a78d">More...</a><br /></td></tr>
 <tr class="separator:a2cab36d7685f839ad78b779d61c5a78d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -488,8 +496,8 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aef4017e0f3d7d5ea3311b9b8949cdd88" name="aef4017e0f3d7d5ea3311b9b8949cdd88"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aef4017e0f3d7d5ea3311b9b8949cdd88">&#9670;&nbsp;</a></span>beginSend()</h2>
+<a id="a008746fe7e84e5e82367a56606e4a045" name="a008746fe7e84e5e82367a56606e4a045"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a008746fe7e84e5e82367a56606e4a045">&#9670;&nbsp;</a></span>beginSend()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -501,8 +509,18 @@ Protected Member Functions</h2></td></tr>
           <td class="memname">void quisp_test::env::StaticEnv::beginSend </td>
           <td>(</td>
           <td class="paramtype">cMessage *&#160;</td>
-          <td class="paramname"><em>msg</em></td><td>)</td>
+          <td class="paramname"><em>msg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const omnetpp::SendOptions &amp;&#160;</td>
+          <td class="paramname"><em>options</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -1109,6 +1127,32 @@ Protected Member Functions</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a767810a8cfecfd9103053f2fdc259343" name="a767810a8cfecfd9103053f2fdc259343"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a767810a8cfecfd9103053f2fdc259343">&#9670;&nbsp;</a></span>getConnectionLine()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; cFigure::Point &gt; quisp_test::env::StaticEnv::getConnectionLine </td>
+          <td>(</td>
+          <td class="paramtype">const cGate *&#160;</td>
+          <td class="paramname"><em>sourceGate</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1891,8 +1935,8 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a10e05ff245e431af30cb184621f022f4" name="a10e05ff245e431af30cb184621f022f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a10e05ff245e431af30cb184621f022f4">&#9670;&nbsp;</a></span>messageSendDirect()</h2>
+<a id="afd40c78605e5646cd225b7ccd6f515d4" name="afd40c78605e5646cd225b7ccd6f515d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd40c78605e5646cd225b7ccd6f515d4">&#9670;&nbsp;</a></span>messageSendDirect()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1915,14 +1959,8 @@ Protected Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">simtime_t&#160;</td>
-          <td class="paramname"><em>propagationDelay</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">simtime_t&#160;</td>
-          <td class="paramname"><em>transmissionDelay</em>&#160;</td>
+          <td class="paramtype">const omnetpp::ChannelResult &amp;&#160;</td>
+          <td class="paramname"><em>result</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1975,8 +2013,8 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5187e1bc75fc550b364900709e43e69b" name="a5187e1bc75fc550b364900709e43e69b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5187e1bc75fc550b364900709e43e69b">&#9670;&nbsp;</a></span>messageSendHop() <span class="overload">[2/2]</span></h2>
+<a id="aa359e5c91438af56e736052d15a2c41e" name="aa359e5c91438af56e736052d15a2c41e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa359e5c91438af56e736052d15a2c41e">&#9670;&nbsp;</a></span>messageSendHop() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1999,20 +2037,8 @@ Protected Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">simtime_t&#160;</td>
-          <td class="paramname"><em>propagationDelay</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">simtime_t&#160;</td>
-          <td class="paramname"><em>transmissionDelay</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>discard</em>&#160;</td>
+          <td class="paramtype">const omnetpp::ChannelResult &amp;&#160;</td>
+          <td class="paramname"><em>result</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2204,6 +2230,31 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="adde4eee9ac386d05c61fd84edd835d4c" name="adde4eee9ac386d05c61fd84edd835d4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adde4eee9ac386d05c61fd84edd835d4c">&#9670;&nbsp;</a></span>pausePoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp_test::env::StaticEnv::pausePoint </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ae4d59140ccd4d263f296927a2b3b54bc" name="ae4d59140ccd4d263f296927a2b3b54bc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae4d59140ccd4d263f296927a2b3b54bc">&#9670;&nbsp;</a></span>preconfigure()</h2>
 
@@ -2256,6 +2307,32 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ab62aba3d20ffb72e4cf83b2692c6ffc4" name="ab62aba3d20ffb72e4cf83b2692c6ffc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab62aba3d20ffb72e4cf83b2692c6ffc4">&#9670;&nbsp;</a></span>recordComponentType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp_test::env::StaticEnv::recordComponentType </td>
+          <td>(</td>
+          <td class="paramtype">cComponent *&#160;</td>
+          <td class="paramname"><em>component</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ae8073137bc73cfaaf5f7a53ca5e10e6f" name="ae8073137bc73cfaaf5f7a53ca5e10e6f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae8073137bc73cfaaf5f7a53ca5e10e6f">&#9670;&nbsp;</a></span>recordInOutputVector()</h2>
 
@@ -2287,6 +2364,32 @@ Protected Member Functions</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae921e306066919316fd2d64cd777e57a" name="ae921e306066919316fd2d64cd777e57a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae921e306066919316fd2d64cd777e57a">&#9670;&nbsp;</a></span>recordParameter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp_test::env::StaticEnv::recordParameter </td>
+          <td>(</td>
+          <td class="paramtype">cPar *&#160;</td>
+          <td class="paramname"><em>par</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>

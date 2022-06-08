@@ -120,8 +120,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a7ec71ca2f24dfdb904debec0f1b79d44"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1gate_1_1_temp_gate.html#a7ec71ca2f24dfdb904debec0f1b79d44">deliver</a> (cMessage *msg, simtime_t at) override</td></tr>
-<tr class="separator:a7ec71ca2f24dfdb904debec0f1b79d44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03f394342fa6c036286bf98c48a6d862"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1gate_1_1_temp_gate.html#a03f394342fa6c036286bf98c48a6d862">deliver</a> (cMessage *msg, const omnetpp::SendOptions &amp;options, simtime_t at) override</td></tr>
+<tr class="separator:a03f394342fa6c036286bf98c48a6d862"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >dumb class for <a class="el" href="classquisp__test_1_1gate_1_1_test_gate.html" title="this class can store received messages currently this class only for output gate. we may need to adap...">TestGate</a>. cGate needs <code>nextGate</code> or <code>prevGate</code> in <a class="el" href="classquisp__test_1_1gate_1_1_test_gate.html" title="this class can store received messages currently this class only for output gate. we may need to adap...">TestGate</a> to check the gate is output or input. this class is for filling <a class="el" href="classquisp__test_1_1gate_1_1_test_gate.html" title="this class can store received messages currently this class only for output gate. we may need to adap...">TestGate</a>'s <code>nextGate</code> or <code>prevGate</code> </p>
@@ -144,8 +144,8 @@ Protected Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a7ec71ca2f24dfdb904debec0f1b79d44" name="a7ec71ca2f24dfdb904debec0f1b79d44"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ec71ca2f24dfdb904debec0f1b79d44">&#9670;&nbsp;</a></span>deliver()</h2>
+<a id="a03f394342fa6c036286bf98c48a6d862" name="a03f394342fa6c036286bf98c48a6d862"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03f394342fa6c036286bf98c48a6d862">&#9670;&nbsp;</a></span>deliver()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -158,6 +158,12 @@ Protected Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">cMessage *&#160;</td>
           <td class="paramname"><em>msg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const omnetpp::SendOptions &amp;&#160;</td>
+          <td class="paramname"><em>options</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

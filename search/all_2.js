@@ -11,7 +11,7 @@ var searchData=
   ['baseaction_2eh_8',['BaseAction.h',['../_base_action_8h.html',1,'']]],
   ['basis_9',['basis',['../structquisp_1_1modules_1_1measurement__operator.html#a529080f3980dbca09b4d93a657378fa4',1,'quisp::modules::measurement_operator::basis()'],['../structquisp_1_1backends_1_1error__tracking_1_1_measurement_operator.html#a2dd1d9b64be4911c3368f53f179f5366',1,'quisp::backends::error_tracking::MeasurementOperator::basis()'],['../structquisp_1_1modules_1_1measurement__outcome.html#aea85ac84bb843ce98ea04c493a15a042',1,'quisp::modules::measurement_outcome::basis()']]],
   ['begin_10',['begin',['../classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store.html#a2ce71b7c42c14e6f51fbe58e51543a83',1,'quisp::modules::ruleset_store::RuleSetStore']]],
-  ['beginsend_11',['beginSend',['../classquisp__test_1_1env_1_1_static_env.html#aef4017e0f3d7d5ea3311b9b8949cdd88',1,'quisp_test::env::StaticEnv']]],
+  ['beginsend_11',['beginSend',['../classquisp__test_1_1env_1_1_static_env.html#a008746fe7e84e5e82367a56606e4a045',1,'quisp_test::env::StaticEnv']]],
   ['bell_5fpair_5fstore_12',['bell_pair_store',['../classquisp_1_1modules_1_1_rule_engine.html#a97f9ebd7ebbbb9ebf5464bc9d7acd204',1,'quisp::modules::RuleEngine']]],
   ['bellpair_5fper_5fsec_13',['Bellpair_per_sec',['../structquisp_1_1modules_1_1link__cost.html#ac8d33547f897defb8b79f5afb9e5ba66',1,'quisp::modules::link_cost']]],
   ['bellpairstore_14',['BellPairStore',['../classquisp_1_1modules_1_1_bell_pair_store.html#a0246c7c16e489b2b5ac1d1a46e4aca6f',1,'quisp::modules::BellPairStore::BellPairStore()'],['../classquisp_1_1modules_1_1_bell_pair_store.html',1,'quisp::modules::BellPairStore']]],

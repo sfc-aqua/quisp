@@ -1,5 +1,13 @@
 var NAVTREEINDEX17 =
 {
+"structquisp_1_1modules_1_1single__qubit__error.html#aa08a1bc73f0bef3b2179be2a67f8dbf4":[15,0,0,2,52,3],
+"structquisp_1_1modules_1_1single__qubit__error.html#ace55275a620c948f615250d13197fd94":[14,0,1,2,53,2],
+"structquisp_1_1modules_1_1single__qubit__error.html#ace55275a620c948f615250d13197fd94":[15,0,0,2,52,2],
+"structquisp_1_1modules_1_1swapping__result.html":[14,0,1,2,57],
+"structquisp_1_1modules_1_1swapping__result.html":[15,0,0,2,56],
+"structquisp_1_1modules_1_1swapping__result.html#a0d866742ad2871f7660cd28e8948b9c0":[14,0,1,2,57,5],
+"structquisp_1_1modules_1_1swapping__result.html#a0d866742ad2871f7660cd28e8948b9c0":[15,0,0,2,56,5],
+"structquisp_1_1modules_1_1swapping__result.html#a19c03cb031164f538339eef22279268e":[15,0,0,2,56,3],
 "structquisp_1_1modules_1_1swapping__result.html#a19c03cb031164f538339eef22279268e":[14,0,1,2,57,3],
 "structquisp_1_1modules_1_1swapping__result.html#a23c4bd6d4b237a1f8863d694cc0b0606":[15,0,0,2,56,6],
 "structquisp_1_1modules_1_1swapping__result.html#a23c4bd6d4b237a1f8863d694cc0b0606":[14,0,1,2,57,6],

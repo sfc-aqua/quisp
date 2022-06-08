@@ -95,11 +95,11 @@ var NAVTREEINDEX =
 "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_second_inv.html#a21c017b21e655af01d5d60168496f831",
 "classquisp_1_1rules_1_1active_1_1clauses_1_1_wait_clause.html#ad322aac303608a938332f6458e2232da",
 "classquisp__test_1_1env_1_1_static_env.html#a8b265dfb459c3e33f69956aaf966898b",
-"classquisp__test_1_1module__type_1_1_test_module_type.html#a4138f5880701592b8865b41bbe2f8748",
-"index.html#autotoc_md40",
-"structquisp_1_1backends_1_1error__tracking_1_1_single_gate_error_model.html",
-"structquisp_1_1modules_1_1_swapping_config.html#a08bff2fb14cb0a4ee9af0327d75f5dc6",
-"structquisp_1_1modules_1_1swapping__result.html#a19c03cb031164f538339eef22279268e"
+"classquisp__test_1_1module__type_1_1_test_module_type.html#a202497c4d270b8f2789add8e5284845c",
+"index.html#autotoc_md32",
+"structquisp_1_1backends_1_1error__tracking_1_1_memory_error_model.html#a68d7cd8c68311f15487689a4f8aa581e",
+"structquisp_1_1modules_1_1_single_gate_error_model.html#aec375ca3dc25a8cb2124c4a1cac2daee",
+"structquisp_1_1modules_1_1single__qubit__error.html#aa08a1bc73f0bef3b2179be2a67f8dbf4"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -2,7 +2,7 @@ var classquisp_1_1channels_1_1_quantum_channel =
 [
     [ "QuantumChannel", "classquisp_1_1channels_1_1_quantum_channel.html#a039e7090bd962414c70d8b85d1e8105a", null ],
     [ "initialize", "classquisp_1_1channels_1_1_quantum_channel.html#ad624aac86ebc3bf54f8107b87a6fcce9", null ],
-    [ "processMessage", "classquisp_1_1channels_1_1_quantum_channel.html#af4aeed2aa61e1fd55b9d5fcb092691ec", null ],
+    [ "processMessage", "classquisp_1_1channels_1_1_quantum_channel.html#a4616c7c631a21688794476f1513e417c", null ],
     [ "DEBUG_darkcount_count", "classquisp_1_1channels_1_1_quantum_channel.html#a8daad6da7e7fc5b9181de3723c704aa5", null ],
     [ "distance", "classquisp_1_1channels_1_1_quantum_channel.html#abb820a173df04694781585132ad2a2c4", null ],
     [ "err", "classquisp_1_1channels_1_1_quantum_channel.html#a6057958e2c40f2e8e98ff112e29be289", null ],
