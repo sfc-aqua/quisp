@@ -74,8 +74,8 @@ void RoutingDaemon::initialize(int stage) {
       double speed_of_light_in_fiber = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("Speed_of_light_in_fiber");
       double channel_length = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("distance");
 
-      auto *some_stationary_qubit_in_qnic = getModuleByPath("^.^.qnic[0].statQubit[0]");
-      auto *some_stationary_qubit_in_qnic_r = getModuleByPath("^.^.qnic_r[0].statQubit[0]");
+      auto *some_stationary_qubit_in_qnic = findModuleByPath("^.^.qnic[0].statQubit[0]");
+      auto *some_stationary_qubit_in_qnic_r = findModuleByPath("^.^.qnic_r[0].statQubit[0]");
 
       double emission_prob = 1.0;
       // TODO: fix this to read the emission success probability correctly. This is a quick fix!!

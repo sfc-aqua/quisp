@@ -30,10 +30,10 @@ class StaticEnv : public omnetpp::cEnvir {
   void simulationEvent(cEvent *event) override {}
   void messageScheduled(cMessage *msg) override {}
   void messageCancelled(cMessage *msg) override {}
-  void beginSend(cMessage *msg) override {}
-  void messageSendDirect(cMessage *msg, cGate *toGate, simtime_t propagationDelay, simtime_t transmissionDelay) override {}
+  void beginSend(cMessage *msg, const omnetpp::SendOptions &options) override {}
+  void messageSendDirect(cMessage *msg, cGate *toGate, const omnetpp::ChannelResult &result) override {}
   void messageSendHop(cMessage *msg, cGate *srcGate) override {}
-  void messageSendHop(cMessage *msg, cGate *srcGate, simtime_t propagationDelay, simtime_t transmissionDelay, bool discard) override {}
+  void messageSendHop(cMessage *msg, cGate *srcGate, const omnetpp::ChannelResult &result) override {}
   void endSend(cMessage *msg) override {}
   void messageCreated(cMessage *msg) override {}
   void messageCloned(cMessage *msg, cMessage *clone) override {}
@@ -139,6 +139,11 @@ class StaticEnv : public omnetpp::cEnvir {
   void addLifecycleListener(cISimulationLifecycleListener *listener) override {}
   void removeLifecycleListener(cISimulationLifecycleListener *listener) override {}
   void notifyLifecycleListeners(SimulationLifecycleEventType eventType, cObject *details) override {}
+
+  std::vector<cFigure::Point> getConnectionLine(const cGate *sourceGate) override { return std::vector<cFigure::Point>(); }
+  void recordParameter(cPar *par) override {}
+  void recordComponentType(cComponent *component) override {}
+  void pausePoint() override {}
 
   cSimulation *newSimulation();
   void resetSimulation();

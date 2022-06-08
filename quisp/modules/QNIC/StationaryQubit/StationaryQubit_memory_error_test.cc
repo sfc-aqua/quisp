@@ -98,6 +98,8 @@ TEST(StatQubitMemoryErrorTest, do_nothing) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
+  sim->registerComponent(qubit);
+
   qubit->callInitialize();
   qubit->reset();
   qubit->par("GOD_Xerror") = true;
@@ -106,7 +108,6 @@ TEST(StatQubitMemoryErrorTest, do_nothing) {
   EXPECT_TRUE(qubit->par("GOD_Zerror"));
   EXPECT_FALSE(qubit->par("GOD_REerror"));
   EXPECT_FALSE(qubit->par("GOD_EXerror"));
-  sim->registerComponent(qubit);
 
   // if current time and updated_time are same, do nothing
   EXPECT_EQ(qubit->updated_time, SimTime(0));
@@ -123,10 +124,11 @@ TEST(StatQubitMemoryErrorTest, update_timestamp) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
+  sim->registerComponent(qubit);
+
   qubit->callInitialize();
   qubit->reset();
   EXPECT_EQ(qubit->updated_time, SimTime(0));
-  sim->registerComponent(qubit);
   sim->setSimTime(SimTime(1, SIMTIME_US));
   qubit->applyMemoryError();
   EXPECT_EQ(qubit->updated_time, SimTime(1, SIMTIME_US));
@@ -147,8 +149,9 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_no_error) {
   setParDouble(qubit, "memory_energy_excitation_rate", .1);
   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
   setParDouble(qubit, "memory_completely_mixed_rate", 0);
-  qubit->callInitialize();
   sim->registerComponent(qubit);
+
+  qubit->callInitialize();
   sim->setSimTime(SimTime(1, SIMTIME_US));
 
   // X error
@@ -218,8 +221,8 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_X_error) {
   setParDouble(qubit, "memory_energy_excitation_rate", .1);
   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
   setParDouble(qubit, "memory_completely_mixed_rate", 0);
-  qubit->callInitialize();
   sim->registerComponent(qubit);
+  qubit->callInitialize();
   sim->setSimTime(SimTime(1, SIMTIME_US));
 
   // X error
@@ -294,8 +297,8 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_Z_error) {
   setParDouble(qubit, "memory_energy_excitation_rate", .1);
   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
   setParDouble(qubit, "memory_completely_mixed_rate", 0);
-  qubit->callInitialize();
   sim->registerComponent(qubit);
+  qubit->callInitialize();
   sim->setSimTime(SimTime(1, SIMTIME_US));
 
   // X error
@@ -370,8 +373,8 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_Y_error) {
   setParDouble(qubit, "memory_energy_excitation_rate", .1);
   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
   setParDouble(qubit, "memory_completely_mixed_rate", 0);
-  qubit->callInitialize();
   sim->registerComponent(qubit);
+  qubit->callInitialize();
   sim->setSimTime(SimTime(1, SIMTIME_US));
 
   // X error
@@ -451,8 +454,8 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_excitation_error) {
   setParDouble(qubit, "memory_energy_excitation_rate", .1);
   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
   setParDouble(qubit, "memory_completely_mixed_rate", 0);
-  qubit->callInitialize();
   sim->registerComponent(qubit);
+  qubit->callInitialize();
   sim->setSimTime(SimTime(1, SIMTIME_US));
 
   // X error
@@ -527,8 +530,8 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_relaxation_error) {
   setParDouble(qubit, "memory_energy_excitation_rate", .1);
   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
   setParDouble(qubit, "memory_completely_mixed_rate", 0);
-  qubit->callInitialize();
   sim->registerComponent(qubit);
+  qubit->callInitialize();
   sim->setSimTime(SimTime(1, SIMTIME_US));
 
   // Excitation error

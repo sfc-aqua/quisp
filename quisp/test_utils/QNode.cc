@@ -15,9 +15,10 @@ TestQNode::TestQNode(int addr) : omnetpp::cModule(), address(addr) {
   setParInt(this, "address", addr);
   setParStr(this, "nodeType", "qnode");
   setComponentType(new TestModuleType("test qnode"));
-  finalizeParameters();
+  setName("TestQNode");
   auto *sim = getTestSimulation();
   sim->registerComponent(this);
+  finalizeParameters();
 }
 
 }  // namespace qnode

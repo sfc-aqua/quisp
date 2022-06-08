@@ -26,41 +26,41 @@ module quantumRoutingSoft
     submodules:
         rd: RoutingDaemon {
             parameters:
-                address = address;//share the same address within all inner modules
+                address = parent.address;//share the same address within all inner modules
                 @display("p=115,63");
         }
         hm: HardwareMonitor {
             parameters:
-                address = address;//share the same address within all inner modules
+                address = parent.address;//share the same address within all inner modules
                 @display("p=115,231");
-                number_of_qnics = number_of_qnics;
-                number_of_qnics_r = number_of_qnics_r;
-                number_of_qnics_rp = number_of_qnics_rp;
+                number_of_qnics = parent.number_of_qnics;
+                number_of_qnics_r = parent.number_of_qnics_r;
+                number_of_qnics_rp = parent.number_of_qnics_rp;
 
         }
         cm: ConnectionManager {
             parameters:
-                address = address;//share the same address within all inner modules
-                number_of_qnics = number_of_qnics;
-                number_of_qnics_r = number_of_qnics_r;
-                number_of_qnics_rp = number_of_qnics_rp;
-                total_number_of_qnics = number_of_qnics +  number_of_qnics_r + number_of_qnics_rp;
-                simultaneous_es_enabled = simultaneous_es_enabled;
+                address = parent.address;//share the same address within all inner modules
+                number_of_qnics = parent.number_of_qnics;
+                number_of_qnics_r = parent.number_of_qnics_r;
+                number_of_qnics_rp = parent.number_of_qnics_rp;
+                total_number_of_qnics = parent.number_of_qnics +  parent.number_of_qnics_r + parent.number_of_qnics_rp;
+                simultaneous_es_enabled = parent.simultaneous_es_enabled;
                 @display("p=227,148");
         }
         rt: RealTimeController {
             parameters:
-                address = address;//share the same address within all inner modules
+                address = parent.address;//share the same address within all inner modules
                 @display("p=227,231");
         }
         re: RuleEngine {
             parameters:
-                address = address;//share the same address within all inner modules
+                address = parent.address;//share the same address within all inner modules
                 @display("p=227,63");
-                number_of_qnics = number_of_qnics;
-                number_of_qnics_r = number_of_qnics_r;
-                number_of_qnics_rp = number_of_qnics_rp;
-                total_number_of_qnics = number_of_qnics +  number_of_qnics_r + number_of_qnics_rp;
+                number_of_qnics = parent.number_of_qnics;
+                number_of_qnics_r = parent.number_of_qnics_r;
+                number_of_qnics_rp = parent.number_of_qnics_rp;
+                total_number_of_qnics = parent.number_of_qnics +  parent.number_of_qnics_r + parent.number_of_qnics_rp;
 
 
         }

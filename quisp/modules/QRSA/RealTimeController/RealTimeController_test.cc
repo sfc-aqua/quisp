@@ -34,7 +34,7 @@ class RTCTestTarget : public quisp::modules::RealTimeController {
   using quisp::modules::RealTimeController::initialize;
   using quisp::modules::RealTimeController::par;
   RTCTestTarget(MockQubit* mockQubit) : RealTimeController() {
-    omnetpp::cParImpl* p = new omnetpp::cIntParImpl();
+    auto* p = new omnetpp::internal::cIntParImpl();
     const char* name = "address";
     p->setName(name);
     p->setIntValue(123);
