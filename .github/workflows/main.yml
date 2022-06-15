@@ -4,20 +4,8 @@ jobs:
   all:
     runs-on: ubuntu-latest
     container:
-      image: omnetpp/travis-base:6.0-220428
+      image: ghcr.io/sfc-aqua/omnetpp-dockerfiles:latest
     steps:
-      - name: Install the latest git and dependencies
-        run: |
-          apt-get update -y
-          apt install clang-format-12 clang-tidy-12 lldb-12 python3 git lcov cmake -y
-          ln -s /usr/bin/clang-format-12 /usr/bin/clang-format
-          ln -s /usr/bin/clang-tidy-12 /usr/bin/clang-tidy
-          ln -sf /usr/bin/clang-12 /usr/bin/clang
-          ln -sf /usr/bin/clang++-12 /usr/bin/clang++
-          ln -sf /usr/bin/llvm-profdata-12 /usr/bin/llvm-profdata
-          ln -sf /usr/bin/llvm-cov-12 /usr/bin/llvm-cov
-          ln -sf /usr/bin/python3 /usr/local/bin/python3
-          ln -sf /usr/bin/python3 /usr/local/bin/python
       - name: work around permission issue
         run: git config --global --add safe.directory /__w/quisp/quisp
       - name: Check out repository
