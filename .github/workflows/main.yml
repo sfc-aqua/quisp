@@ -6,7 +6,7 @@ jobs:
     container:
       image: ghcr.io/sfc-aqua/omnetpp-dockerfiles:latest
       credentials:
-        username: ${{ github.actor }}
+        username: quisp-bot
         password: ${{ secrets.GHCR_PAT }}
     steps:
       - name: work around permission issue
