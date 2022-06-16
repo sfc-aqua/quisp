@@ -19,8 +19,6 @@ jobs:
         run: make makefile-lib
       - name: generate message headers
         run: make msgheaders
-      - name: clang-format
-        run: make format-ci
       - name: make googletest
         run: make googletest
       - name: unit tests and generate coverage report
@@ -52,18 +50,13 @@ jobs:
         run: make makefile-lib
       - name: generate message headers
         run: make msgheaders
-      - name: clang-format
-        run: make format-ci
-      - name: make googletest
-        run: make googletest
-      - name: clang-tidy
-        run: make tidy
       - name: Run Simulations
         run: /bin/bash test.sh
         working-directory: test
       - name: Check Simulation Results
         run: python -m unittest discover
         working-directory: test
+
   clang-tidy:
     runs-on: ubuntu-latest
     container:
@@ -82,9 +75,25 @@ jobs:
         run: make makefile-lib
       - name: generate message headers
         run: make msgheaders
-      - name: clang-format
-        run: make format-ci
       - name: make googletest
         run: make googletest
       - name: clang-tidy
         run: make tidy
+  clang-format:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/sfc-aqua/quisp-ci:latest
+      credentials:
+        username: quisp-bot
+        password: ${{ secrets.GHCR_PAT }}
+    steps:
+      - name: work around permission issue
+        run: git config --global --add safe.directory /__w/quisp/quisp
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: generate makefile
+        run: make makefile-lib
+      - name: generate message headers
+        run: make msgheaders
+      - name: clang-format
+        run: make format-ci
