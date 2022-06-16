@@ -1,4 +1,4 @@
-<features cppSourceRoots = "src" definesFile = "quisp/features.h">
+<features cppSourceRoots = "quisp" definesFile = "quisp/features.h">
     <feature
         id = "EmbeddedPython"
         name = "Embedded Python"
