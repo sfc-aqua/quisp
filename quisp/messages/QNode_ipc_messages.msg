@@ -38,7 +38,7 @@ packet InternalRuleSetForwarding extends Header{
     unsigned long RuleSet_id;
     unsigned long Rule_id;
 
-    RuleSet* ruleSet;
+    json RuleSet;
 }
 
 packet InternalRuleSetForwarding_Application extends Header{
@@ -46,5 +46,5 @@ packet InternalRuleSetForwarding_Application extends Header{
     unsigned long Rule_id;
     int application_type;
 
-    RuleSet* ruleSet;
+    json RuleSet;
 }

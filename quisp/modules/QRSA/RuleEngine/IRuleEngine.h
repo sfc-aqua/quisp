@@ -2,6 +2,7 @@
 #define QUISP_MODULES_IRULEENGINE_H_
 
 #include <omnetpp.h>
+#include <rules/Active/ActiveRuleSet.h>
 #include <rules/RuleSet.h>
 #include <vector>
 
@@ -17,12 +18,13 @@ using namespace omnetpp;
 
 namespace quisp {
 namespace modules {
-using namespace rules;
+using namespace rules::active;
 
 typedef struct {
   unsigned long ruleset_id;
-  unsigned long rule_id;
+  int rule_id;
   int index;
+  int shared_tag;
 } process_id;
 
 struct purification_result {
@@ -53,6 +55,7 @@ struct Quatropurification_result {
 
 struct swapping_result {
   process_id id;
+  int swapper_addr;
   int new_partner;
   int new_partner_qnic_index;
   int new_partner_qnic_address;
@@ -77,7 +80,7 @@ typedef std::multimap<unsigned long, Quatropurification_result> QuatroPurificati
 typedef std::multimap<unsigned long, Triplepurification_result> TriplePurificationTable;
 typedef std::map<int, QubitAddr_cons> sentQubitIndexTracker;  // nth shot -> node/qnic/qubit index (node addr not needed actually)
 typedef std::map<int, bool> trial_tracker;  // trial index, false or true (that trial is over or not)
-typedef std::map<int, Rule *> rule_ptr;
+typedef std::map<int, ActiveRule *> rule_ptr;
 
 class IRuleEngine : public cSimpleModule {
  public:

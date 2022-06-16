@@ -40,7 +40,7 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(void, X_gate, (), (override));
   MOCK_METHOD(void, Hadamard_gate, (), (override));
   MOCK_METHOD(void, CNOT_gate, (IStationaryQubit *), (override));
-  MOCK_METHOD(void, Lock, (unsigned long rs_id, unsigned long rule_id, int action_id), (override));
+  MOCK_METHOD(void, Lock, (unsigned long rs_id, int rule_id, int action_id), (override));
   MOCK_METHOD(void, Unlock, (), (override));
   MOCK_METHOD(bool, isLocked, (), (override));
   MOCK_METHOD(quisp::types::MeasurementOutcome, measure_density_independent, (), (override));

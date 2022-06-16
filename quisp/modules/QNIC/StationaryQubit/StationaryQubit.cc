@@ -189,7 +189,7 @@ backends::IQubit *StationaryQubit::getEntangledPartner() const { return qubit_re
 void StationaryQubit::assertEntangledPartnerValid() { qubit_ref->assertEntangledPartnerValid(); }
 
 /*To avoid disturbing this qubit.*/
-void StationaryQubit::Lock(unsigned long rs_id, unsigned long rule_id, int action_id) {
+void StationaryQubit::Lock(unsigned long rs_id, int rule_id, int action_id) {
   if (rs_id == -1 || rule_id == -1 || action_id == -1) {
     error("ruleset_id || rule_id || action_id == -1");
   }

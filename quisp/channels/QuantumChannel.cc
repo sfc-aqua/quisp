@@ -43,7 +43,7 @@ class QuantumChannel : public cDatarateChannel {
   int DEBUG_darkcount_count = 0;
   MatrixXd Q_to_the_distance;
   virtual void initialize();
-  virtual void processMessage(cMessage *msg, simtime_t t, result_t &result);
+  virtual cChannel::Result processMessage(cMessage *msg, simtime_t t);
 
  public:
   QuantumChannel();
@@ -121,9 +121,7 @@ void QuantumChannel::initialize() {
   // <<1-err.pauli_error_rate<<"err.X_error_rate"<<err.X_error_rate<<"err.Z_error_rate"<<err.Z_error_rate<<"err.Y_error_rate"<<err.Y_error_rate<<"photon_loss_rate"<<photon_loss_rate<<"\n";
 }
 
-void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t &result) {
-  cDatarateChannel::processMessage(msg, t, result);  // Call the original processMessage
-
+cChannel::Result QuantumChannel::processMessage(cMessage *msg, simtime_t t) {
   try {
     PhotonicQubit *q = check_and_cast<PhotonicQubit *>(msg);
 
@@ -192,6 +190,7 @@ void QuantumChannel::processMessage(cMessage *msg, simtime_t t, result_t &result
     // error("Only PhotonicQubit is allowed in quantum channel");
     EV << "Only PhotonicQubit is allowed in quantum channel";
   }
+  return cChannel::Result();
 }
 
 }  // namespace channels

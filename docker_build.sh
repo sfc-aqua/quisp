@@ -1,2 +1,2 @@
 #!/bin/sh
-docker build --build-arg VERSION=5.7 -t quisp .
+docker build --build-arg VERSION=6.0 -t quisp .

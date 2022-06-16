@@ -8,6 +8,7 @@
 #include "RuleEngine.h"
 #include <fstream>
 #include <iterator>
+#include <memory>
 #include <utility>
 #include "QNicStore/QNicStore.h"
 #include "utils/ComponentProvider.h"
@@ -16,8 +17,8 @@ namespace quisp {
 namespace modules {
 
 Define_Module(RuleEngine);
-
 using namespace rules;
+using namespace rules::active;
 using qnic_store::QNicStore;
 
 RuleEngine::RuleEngine() : provider(utils::ComponentProvider{this}) {}
@@ -169,7 +170,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
   else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     // Received a tomography rule set.
     // std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
-    auto *ruleset = const_cast<RuleSet *>(pk->getRuleSet());
+    auto *ruleset = const_cast<ActiveRuleSet *>(pk->getActiveRuleSet());
     int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
     std::cout << "Process size is ...." << ruleset->size() << " node[" << parentAddress << "\n";
     // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
@@ -186,6 +187,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     purification_id.ruleset_id = pkt->getRuleset_id();
     purification_id.rule_id = pkt->getRule_id();
     purification_id.index = pkt->getAction_index();
+    purification_id.shared_tag = pkt->getShared_tag();
     pr.id = purification_id;
     pr.outcome = pkt->getOutput_is_plus();
     storeCheck_Purification_Agreement(pr);
@@ -195,6 +197,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     purification_id.ruleset_id = pkt->getRuleset_id();
     purification_id.rule_id = pkt->getRule_id();
     purification_id.index = pkt->getAction_index();
+    purification_id.shared_tag = pkt->getShared_tag();
     pr.id = purification_id;
     pr.Xpurification_outcome = pkt->getXOutput_is_plus();
     pr.Zpurification_outcome = pkt->getZOutput_is_plus();
@@ -207,6 +210,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     purification_id.ruleset_id = pkt->getRuleset_id();
     purification_id.rule_id = pkt->getRule_id();
     purification_id.index = pkt->getAction_index();
+    purification_id.shared_tag = pkt->getShared_tag();
     pr.id = purification_id;
     pr.Xpurification_outcome = pkt->getXOutput_is_plus();
     pr.Zpurification_outcome = pkt->getZOutput_is_plus();
@@ -223,6 +227,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     purification_id.ruleset_id = pkt->getRuleset_id();
     purification_id.rule_id = pkt->getRule_id();
     purification_id.index = pkt->getAction_index();
+    purification_id.shared_tag = pkt->getShared_tag();
     pr.id = purification_id;
     pr.Xpurification_outcome = pkt->getXOutput_is_plus();
     pr.Zpurification_outcome = pkt->getZOutput_is_plus();
@@ -232,10 +237,12 @@ void RuleEngine::handleMessage(cMessage *msg) {
     process_id swapping_id;
     swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
     swapping_id.rule_id = pkt->getRule_id();
+    swapping_id.shared_tag = pkt->getShared_tag();
     swapping_id.index = pkt->getAction_index();
 
     swapping_result swapr;  // result of entanglement swapping
     swapr.id = swapping_id;
+    swapr.swapper_addr = pkt->getSrcAddr();
     swapr.new_partner = pkt->getNew_partner();
     swapr.new_partner_qnic_index = pkt->getNew_partner_qnic_index();
     swapr.new_partner_qnic_address = pkt->getNew_partner_qnic_address();
@@ -278,12 +285,14 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
   else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     // add actual process
-    auto *ruleset = const_cast<RuleSet *>(pkt->getRuleSet());
+    auto serialized_ruleset = pkt->getRuleSet();
+    RuleSet ruleset(0, 0);  // initialize empty ruleset
+    ruleset.deserialize_json(serialized_ruleset);
+    auto active_ruleset = constructActiveRuleSet(std::move(ruleset));
     // here swappers got swapping ruleset with internal packet
     // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
-    // ResourceAllocation();
-    if (ruleset->size() > 0) {
-      rp.insert(ruleset);
+    if (active_ruleset->size() > 0) {
+      rp.insert(active_ruleset);
       EV << "New process arrived !\n";
     } else {
       error("Empty rule set...");
@@ -291,12 +300,12 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
     // doing end to end tomography
     if (pkt->getApplication_type() == 0) {
-      // Received a tomography rule set.
-
-      auto ruleset = const_cast<RuleSet *>(pkt->getRuleSet());
-      std::cout << "Process size is ...." << ruleset->size() << " node[" << parentAddress << "\n";
-      if (ruleset->size() > 0) {
-        rp.insert(ruleset);
+      auto serialized_ruleset = pkt->getRuleSet();
+      RuleSet ruleset(0, 0);  // initialize empty ruleset
+      ruleset.deserialize_json(serialized_ruleset);
+      auto active_ruleset = constructActiveRuleSet(std::move(ruleset));
+      if (active_ruleset->size() > 0) {
+        rp.insert(active_ruleset);
         EV << "New process arrived !\n";
       } else {
         error("Empty rule set...");
@@ -323,6 +332,142 @@ void RuleEngine::handleMessage(cMessage *msg) {
   delete msg;
 }
 
+std::unique_ptr<ActiveRuleSet> RuleEngine::constructActiveRuleSet(RuleSet ruleset) {
+  if (ruleset.owner_addr != parentAddress) {
+    error("The owner of RuleSet is incorrect");
+  }
+  auto active_ruleset = std::make_unique<ActiveRuleSet>(ruleset.ruleset_id, ruleset.owner_addr);
+  auto rules = std::move(ruleset.rules);
+  for (int i = 0; i < rules.size(); i++) {
+    auto rule = std::move(rules.at(i));
+    auto active_rule = std::make_unique<ActiveRule>(ruleset.ruleset_id, rule->rule_id, rule->shared_tag);
+    // 1. meta information
+    active_rule->name = rule->name + " with ";
+    auto qnic_interface = rule->qnic_interfaces;
+    std::vector<int> partners;
+    for (auto interface : rule->qnic_interfaces) {
+      active_rule->name = active_rule->name + std::to_string(interface.partner_addr) + " ";
+      partners.push_back(interface.partner_addr);
+    }
+    active_rule->rule_id = rule->rule_id;  // rule id
+    active_rule->action_partners = partners;  // partner info
+    active_rule->next_rule_id = rule->to;  // next ruleid information
+
+    // 2. add condition and action
+    active_rule = constructRule(std::move(active_rule), std::move(rule), ruleset.ruleset_id);
+    active_ruleset->addRule(std::move(active_rule));
+  }
+  return active_ruleset;
+}
+
+std::unique_ptr<ActiveRule> RuleEngine::constructRule(std::unique_ptr<ActiveRule> active_rule, std::unique_ptr<Rule> rule, unsigned long ruleset_id) {
+  // 3. prepare condition
+  if (rule->condition == nullptr) {
+    error("no condition set!");
+  }
+  auto active_condition = constructCondition(std::move(rule->condition));
+
+  // 4. prepare action
+  if (rule->action == nullptr) {
+    error("no action set!");
+  }
+  auto active_action = constructAction(std::move(rule->action), ruleset_id, rule->rule_id, rule->shared_tag);
+
+  active_rule->setCondition(std::move(active_condition));
+  active_rule->setAction(std::move(active_action));
+  return active_rule;
+}
+
+ActiveCondition *RuleEngine::constructCondition(std::unique_ptr<Condition> condition) {
+  auto active_condition = new ActiveCondition();
+  auto clauses = std::move(condition->clauses);
+  for (int i = 0; i < clauses.size(); i++) {
+    auto clause = std::move(clauses.at(i));
+    if (auto *cond = dynamic_cast<EnoughResourceConditionClause *>(clause.get())) {
+      active_condition->addClause(new EnoughResourceClause(cond->partner_address, cond->num_resource));
+    } else if (auto *cond = dynamic_cast<MeasureCountConditionClause *>(clause.get())) {
+      active_condition->addClause(new MeasureCountClause(cond->num_measure));
+    } else if (auto *cond = dynamic_cast<WaitConditionClause *>(clause.get())) {
+      active_condition->addClause(new WaitClause());
+    } else if (auto *cond = dynamic_cast<FidelityConditionClause *>(clause.get())) {
+      active_condition->addClause(new FidelityClause(cond->partner_address, 0, cond->required_fidelity));
+    } else {
+      error("Unknown clause");
+    }
+  }
+  return active_condition;
+}
+
+ActiveAction *RuleEngine::constructAction(std::unique_ptr<Action> action, unsigned long ruleset_id, int rule_id, int shared_tag) {
+  if (auto *act = dynamic_cast<Purification *>(action.get())) {
+    auto interface = act->qnic_interfaces.at(0);
+    auto partner_addr = interface.partner_addr;
+    auto qnic_type = interface.qnic_type;
+    auto qnic_id = interface.qnic_id;
+    if (act->purification_type == PurType::SINGLE_X) {
+      return new PurifyAction(ruleset_id, rule_id, shared_tag, true, false, 1, partner_addr, qnic_type, qnic_id, 0, 1);
+    }
+    if (act->purification_type == PurType::SINGLE_Z) {
+      return new PurifyAction(ruleset_id, rule_id, shared_tag, false, true, 1, partner_addr, qnic_type, qnic_id, 0, 1);
+    }
+    if (act->purification_type == PurType::DOUBLE) {
+      return new DoublePurifyAction(ruleset_id, rule_id, shared_tag, partner_addr, qnic_type, qnic_id, 0, 1, 2);
+    }
+    if (act->purification_type == PurType::DOUBLE_INV) {
+      return new DoublePurifyActionInv(ruleset_id, rule_id, shared_tag, partner_addr, qnic_type, qnic_id, 0, 1, 2);
+    }
+    if (act->purification_type == PurType::DSSA) {
+      return new DoubleSelectionAction(ruleset_id, rule_id, shared_tag, partner_addr, qnic_type, qnic_id, 0, 1, 2);
+    }
+    if (act->purification_type == PurType::DSSA_INV) {
+      return new DoubleSelectionActionInv(ruleset_id, rule_id, shared_tag, partner_addr, qnic_type, qnic_id, 0, 1, 2);
+    }
+    if (act->purification_type == PurType::DSDA) {
+      return new DoubleSelectionDualAction(ruleset_id, rule_id, shared_tag, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3, 4);
+    }
+    if (act->purification_type == PurType::DSDA_INV) {
+      return new DoubleSelectionDualActionInv(ruleset_id, rule_id, shared_tag, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3, 4);
+    }
+    if (act->purification_type == PurType::DSDA_SECOND) {
+      return new DoubleSelectionDualActionSecond(ruleset_id, rule_id, shared_tag, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3);
+    }
+    if (act->purification_type == PurType::DSDA_SECOND_INV) {
+      return new DoubleSelectionDualActionSecondInv(ruleset_id, rule_id, shared_tag, partner_addr, qnic_type, qnic_id, 0, 1, 2, 3);
+    }
+  }
+  if (auto *act = dynamic_cast<Wait *>(action.get())) {
+    return new WaitAction(ruleset_id, rule_id);
+  }
+  if (auto *act = dynamic_cast<EntanglementSwapping *>(action.get())) {
+    // get interface information
+    auto left_interface = act->qnic_interfaces.at(0);
+    auto left_partner = left_interface.partner_addr;
+    auto left_qnic_type = left_interface.qnic_type;
+    auto left_qnic_id = left_interface.qnic_id;
+
+    auto right_interface = act->qnic_interfaces.at(1);
+    auto right_partner = right_interface.partner_addr;
+    auto right_qnic_type = right_interface.qnic_type;
+    auto right_qnic_id = right_interface.qnic_id;
+
+    auto left_partner_interface = act->remote_qnic_interfaces.at(0);
+    auto left_partner_qnic_type = left_partner_interface.qnic_type;
+    auto left_partner_qnic_id = left_partner_interface.qnic_id;
+    auto left_partner_qnic_address = left_interface.qnic_address;
+
+    auto right_partner_interface = act->remote_qnic_interfaces.at(1);
+    auto right_partner_qnic_type = right_partner_interface.qnic_type;
+    auto right_partner_qnic_id = right_partner_interface.qnic_id;
+    auto right_partner_qnic_address = right_partner_interface.qnic_address;
+    return new SwappingAction(ruleset_id, rule_id, shared_tag, left_partner, left_partner_qnic_type, left_partner_qnic_id, left_partner_qnic_address, 0, right_partner,
+                              right_partner_qnic_type, right_partner_qnic_id, right_partner_qnic_address, 0, left_qnic_id, left_qnic_type, right_qnic_id, right_qnic_type);
+  }
+  if (auto *act = dynamic_cast<Tomography *>(action.get())) {
+    auto qnic_interface = act->qnic_interfaces.at(0);
+    return new RandomMeasureAction(ruleset_id, rule_id, act->owner_address, qnic_interface.partner_addr, qnic_interface.qnic_type, qnic_interface.qnic_id, 0, act->num_measurement);
+  }
+}
+
 void RuleEngine::storeCheck_Purification_Agreement(purification_result pur_result) {
   auto ruleset_result = rp.findById(pur_result.id.ruleset_id);
   if (ruleset_result == rp.end()) {
@@ -334,13 +479,13 @@ void RuleEngine::storeCheck_Purification_Agreement(purification_result pur_resul
   // check the purification results that belong to the same connection
   auto range = Purification_table.equal_range(pur_result.id.ruleset_id);
   for (auto it = range.first; it != range.second; it++) {
-    if (it->second.id.rule_id == pur_result.id.rule_id && it->second.id.index == pur_result.id.index) {
+    if (it->second.id.shared_tag == pur_result.id.shared_tag && it->second.id.index == pur_result.id.index) {
       if (it->second.outcome == pur_result.outcome) {
         // the result is coordinate to the counter part
-        Unlock_resource_and_upgrade_stage(pur_result.id.ruleset_id, pur_result.id.rule_id, pur_result.id.index);
+        Unlock_resource_and_upgrade_stage(pur_result.id.ruleset_id, pur_result.id.rule_id, pur_result.id.shared_tag, pur_result.id.index);
       } else {
         // the result is different. discard the resource
-        Unlock_resource_and_discard(pur_result.id.ruleset_id, pur_result.id.rule_id, pur_result.id.index);
+        Unlock_resource_and_discard(pur_result.id.ruleset_id, pur_result.id.rule_id, pur_result.id.shared_tag, pur_result.id.index);
       }
       Purification_table.erase(it);
       return;
@@ -361,18 +506,18 @@ void RuleEngine::storeCheck_DoublePurification_Agreement(Doublepurification_resu
   // If the RuleSet has been deleted already, do not do anything.
 
   for (auto it = ret.first; it != ret.second; it++) {
-    if (it->second.id.rule_id == pr.id.rule_id && it->second.id.index == pr.id.index) {
+    if (it->second.id.shared_tag == pr.id.shared_tag && it->second.id.index == pr.id.index) {
       // std::cout<<"Rule_id="<<pr.id.rule_id<<", index="<<pr.id.index<<"\n";
       // std::cout<<"node["<<parentAddress<<"] Rule found: Discard/Keep purification.\n";
       if ((it->second.Xpurification_outcome == pr.Xpurification_outcome) && (it->second.Zpurification_outcome == pr.Zpurification_outcome)) {
         // Outcomes agreed. Keep the entangled pair.
         // std::cout<<"Unlocking and upgrading!\n";
-        Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
+        Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.shared_tag, pr.id.index);
       } else {
         // Discard
         // std::cout<<"node["<<parentAddress<<"] discaard ";
         // std::cout<<"Unlocking and discarding!\n";
-        Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
+        Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.shared_tag, pr.id.index);
       }
       DoublePurification_table.erase(it);
       return;
@@ -393,14 +538,14 @@ void RuleEngine::storeCheck_TriplePurification_Agreement(Triplepurification_resu
   // If the RuleSet has been deleted already, do not do anything.
 
   for (auto it = ret.first; it != ret.second; it++) {
-    if (it->second.id.rule_id == pr.id.rule_id && it->second.id.index == pr.id.index) {
+    if (it->second.id.shared_tag == pr.id.shared_tag && it->second.id.index == pr.id.index) {
       if ((it->second.Xpurification_outcome == pr.Xpurification_outcome) && (it->second.Zpurification_outcome == pr.Zpurification_outcome) &&
           (it->second.DS_purification_outcome == pr.DS_purification_outcome)) {
         // Outcomes agreed. Keep the entangled pair.
-        Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
+        Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.shared_tag, pr.id.index);
       } else {
         // Discard
-        Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
+        Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.shared_tag, pr.id.index);
       }
       TriplePurification_table.erase(it);
       return;
@@ -420,16 +565,16 @@ void RuleEngine::storeCheck_QuatroPurification_Agreement(Quatropurification_resu
   // If the RuleSet has been deleted already, do not do anything.
 
   for (auto it = ret.first; it != ret.second; it++) {
-    if (it->second.id.rule_id == pr.id.rule_id && it->second.id.index == pr.id.index) {
+    if (it->second.id.shared_tag == pr.id.shared_tag && it->second.id.index == pr.id.index) {
       // std::cout<<"Rule_id="<<pr.id.rule_id<<", index="<<pr.id.index<<"\n";
       // std::cout<<"node["<<parentAddress<<"] Rule found: Discard/Keep purification.\n";
       if ((it->second.Xpurification_outcome == pr.Xpurification_outcome) && (it->second.Zpurification_outcome == pr.Zpurification_outcome) &&
           (it->second.DS_Zpurification_outcome == pr.DS_Zpurification_outcome) && (it->second.DS_Xpurification_outcome == pr.DS_Xpurification_outcome)) {
         // Outcomes agreed. Keep the entangled pair.
-        Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
+        Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.shared_tag, pr.id.index);
       } else {
         // Discard
-        Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
+        Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.shared_tag, pr.id.index);
       }
       QuatroPurification_table.erase(it);
       return;
@@ -486,7 +631,7 @@ void RuleEngine::check_Purification_Agreement(purification_result pr){
     }
 }*/
 
-void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, unsigned long rule_id, int index) {
+void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int shared_tag, int index) {
   // There should be better way
   // 0. this resorce update only update just one entanglement
   int partner_address;
@@ -504,7 +649,9 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
 
   // 2. pick up proper rule inside the ruleset
   for (auto rule = ruleset->rules.cbegin(); rule != ruleset->cend(); ++rule) {
-    if ((*rule)->rule_id == rule_id) {  // here we can identify the rule of purification
+    // RuleID id not shared and consistent over the different node anymore.
+    // To identify the rule corresponding to the result, we need other way.
+    if ((*rule)->shared_tag == shared_tag) {  // here we can identify the rule of purification
       // 3. loop for resources currently assined
       for (auto qubit_record = (*rule)->resources.begin(); qubit_record != (*rule)->resources.end(); ++qubit_record) {
         partner_address = qubit_record->first;
@@ -529,20 +676,18 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, uns
   }
 }
 
-void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, unsigned long rule_id, int index) {
-  bool ok = false;
+void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int shared_tag, int index) {
   auto ruleset_result = rp.findById(ruleset_id);
   if (ruleset_result == rp.end()) {
-    error("Discard: Resource in rule not found....");
+    error("Discard: Resource in rule not found.");
   }
   auto &&ruleset = *ruleset_result;
 
   // One Process. From top to bottom.
   for (auto rule = ruleset->cbegin(), end = ruleset->cend(); rule != end; rule++) {  // Traverse through rules
-    if ((*rule)->rule_id == rule_id) {  // Find the corresponding rule.
+    if ((*rule)->shared_tag == shared_tag) {  // Find the corresponding rule.
       for (auto qubit_record = (*rule)->resources.begin(); qubit_record != (*rule)->resources.end(); ++qubit_record) {
         auto qubit = qubit_record->second;
-        // std::cout<<".....node["<<qubit->second->node_address<<" qnic["<<qubit->second->qnic_index<<"]" << qubit->second<<"\n";
         if (qubit->action_index == index) {
           // Purification failed, discard resource.
           qubit->Unlock();
@@ -552,15 +697,12 @@ void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, unsigned 
           // remove from current rule
           (*rule)->resources.erase(qubit_record);
           freeConsumedResource(qubit->qnic_index, qubit, qt);  // Remove from entangled resource list.
-          ok = true;
           return;
         }
       }
     }
   }
-  if (!ok) {
-    error("Discard: Resource in rule not found....");
-  }
+  error("Discard: Resource in rule not found....");
 }
 
 InterfaceInfo RuleEngine::getInterface_toNeighbor(int destAddr) {
@@ -774,6 +916,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
 
   int new_partner = swapr.new_partner;
   int operation_type = swapr.operation_type;
+  int shared_tag = swapr.id.shared_tag;
   int qnic_address = routingdaemon->return_QNIC_address_to_destAddr(new_partner);
   auto info = hardware_monitor->findConnectionInfoByQnicAddr(qnic_address);
   if (info == nullptr) {
@@ -798,14 +941,12 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   }
 
   realtime_controller->assertNoEntanglement(qubit_record);
+  auto qubit = provider.getStationaryQubit(qubit_record);
 
   // Promote entanglement from this rule to the next rule
-  // 1. erase qubit from the privious rule (Entanglement Swapping)
-  // 1.1 take identifiers
   unsigned long ruleset_id = swapr.id.ruleset_id;
-  unsigned long rule_id = swapr.id.rule_id;
-  unsigned long next_rule_id;
-  // this routine can be a function in the ruleset.
+  const int rule_id = swapr.id.rule_id;
+  const int swapper_addr = swapr.swapper_addr;
   if (rp.size() == 0) {
     return;
   }
@@ -813,28 +954,33 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   if (ruleset_result == rp.end()) {
     error("The qubit is not promoted from entanglement swapping to the next rule. no ruleset(%l) found", ruleset_id);
   }
-  auto qubit = provider.getStationaryQubit(qubit_record);
   const auto &ruleset = *ruleset_result;
-  for (auto rule_iter = ruleset->cbegin(); rule_iter != ruleset->cend(); rule_iter++) {
-    auto &&rule = *rule_iter;
-    if (rule->rule_id == rule_id) {  // rule identified
-      // remove qubit from previous rule
-      for (auto qubit_record = rule->resources.cbegin(); qubit_record != rule->resources.cend(); qubit_record++) {
-        auto target_qubit = qubit_record->second;
+
+  // The target rule must be wait rule that has a single action partner (swapper)
+  for (int index = 0; index < ruleset->size(); index++) {
+    auto target_rule_ptr = ruleset->getRule(index).get();
+    // Detect the target wait Rule
+    if (target_rule_ptr->shared_tag == shared_tag) {
+      // 2. erase qubit from target rule
+      for (auto qubit_rec = target_rule_ptr->resources.cbegin(); qubit_rec != target_rule_ptr->resources.cend(); qubit_rec++) {
+        auto target_qubit = qubit_rec->second;
         if (target_qubit == qubit) {
-          rule->resources.erase(qubit_record);
-          next_rule_id = rule->next_rule_id;
+          target_rule_ptr->resources.erase(qubit_rec);
           break;
         }
       }
-    } else if (rule->rule_id == next_rule_id) {
-      // next rule id is properly updated
-      rule->addResource(new_partner, qubit);
+      // // 3. add qubit as a resource to the next rule
+      const int next_rule_id = target_rule_ptr->next_rule_id;
+      if (next_rule_id == -1) {
+        // After the exntanglement swapping, resource must be promoted to somewhere
+        error("The resource must be promoted to be used by the next rule after the entanglement swapping.");
+      }
+      auto target_next_rule_ptr = ruleset->getRule(next_rule_id).get();
+      target_next_rule_ptr->addResource(new_partner, qubit);
       return;
     }
   }
-
-  error("The qubit is not promoted from entanglement swapping to the next rule");
+  error("Resource is not promoted properly");
 }
 
 void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_result swapr) {
@@ -1084,6 +1230,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
           SwappingResult *pkt_for_left = new SwappingResult("SwappingResult(Left)");
           pkt_for_left->setRuleSet_id(pkt->getRuleSet_id());
           pkt_for_left->setRule_id(pkt->getRule_id());
+          pkt_for_left->setShared_tag(pkt->getShared_tag());
           pkt_for_left->setKind(5);  // cyan
           pkt_for_left->setDestAddr(pkt->getLeft_Dest());
           pkt_for_left->setSrcAddr(parentAddress);
@@ -1098,6 +1245,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
           SwappingResult *pkt_for_right = new SwappingResult("SwappingResult(Right)");
           pkt_for_right->setRuleSet_id(pkt->getRuleSet_id());
           pkt_for_right->setRule_id(pkt->getRule_id());
+          pkt_for_right->setShared_tag(pkt->getShared_tag());
           pkt_for_right->setKind(5);  // cyan
           pkt_for_right->setDestAddr(pkt->getRight_Dest());
           pkt_for_right->setSrcAddr(parentAddress);

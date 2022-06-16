@@ -8,6 +8,7 @@
 #define QUISP_MODULES_RULEENGINE_H_
 
 #include <omnetpp.h>
+#include <rules/Active/ActiveRuleSet.h>
 #include <rules/RuleSet.h>
 #include <vector>
 
@@ -30,6 +31,7 @@ using namespace omnetpp;
 namespace quisp {
 namespace modules {
 using namespace rules;
+using namespace rules::active;
 using qnic_store::IQNicStore;
 using qubit_record::IQubitRecord;
 
@@ -106,10 +108,15 @@ class RuleEngine : public IRuleEngine {
   void storeCheck_DoublePurification_Agreement(Doublepurification_result pr);
   void storeCheck_TriplePurification_Agreement(Triplepurification_result pr);
   void storeCheck_QuatroPurification_Agreement(Quatropurification_result pr);
-  void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, unsigned long rule_id, int index);
-  void Unlock_resource_and_discard(unsigned long ruleset_id, unsigned long rule_id, int index);
+  void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int shared_tag, int index);
+  void Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int shared_tag, int index);
 
   void updateResources_EntanglementSwapping(swapping_result swapr);
+
+  std::unique_ptr<ActiveRuleSet> constructActiveRuleSet(RuleSet ruleset);
+  std::unique_ptr<ActiveRule> constructRule(std::unique_ptr<ActiveRule> active_rule, std::unique_ptr<Rule> rule, unsigned long ruleset_id);
+  ActiveCondition *constructCondition(std::unique_ptr<Condition> condition);
+  ActiveAction *constructAction(std::unique_ptr<Action> action, unsigned long ruleset_id, int rule_id, int shared_tag);
   virtual void updateResources_SimultaneousEntanglementSwapping(swapping_result swapr);
 
   utils::ComponentProvider provider;

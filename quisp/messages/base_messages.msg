@@ -1,9 +1,11 @@
 cplusplus  {{
     #include "base_messages_m.h"
     #include <modules/QNIC.h>
-    #include <rules/RuleSet.h>
-    using quisp::rules::RuleSet;
+    #include <rules/Active/ActiveRuleSet.h>
+    #include <nlohmann/json.hpp>
+    using quisp::rules::active::ActiveRuleSet;
     using quisp::modules::QNIC_pair_info;
+    using nlohmann::json;
 }}
 
 class QNIC_type {
@@ -16,10 +18,15 @@ class QNIC_pair_info {
     @opaque;
 };
 
-class RuleSet {
+class ActiveRuleSet {
     @existingClass;
     @opaque;
 };
+
+class json {
+    @existingClass;
+    @opaque;
+}
 
 namespace quisp::messages;
 

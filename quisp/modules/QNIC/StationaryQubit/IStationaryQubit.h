@@ -60,7 +60,7 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   // RTC
   virtual void setFree(bool consumed) = 0;
   /*In use. E.g. waiting for purification result.*/
-  virtual void Lock(unsigned long rs_id, unsigned long rule_id, int action_id) = 0;
+  virtual void Lock(unsigned long rs_id, int rule_id, int action_id) = 0;
   virtual void Unlock() = 0;
   virtual bool isLocked() = 0;
 

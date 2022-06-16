@@ -16,33 +16,33 @@ simple StationaryQubit
 
         // ZZZ -- these are volatile elements of the object (module) state
         // and should be private data members of the class object
-        int GOD_entangled_stationaryQubit_address = default(-1);
-        int GOD_entangled_node_address = default(-1);
-        int GOD_entangled_qnic_address = default(-1);
-        int GOD_entangled_qnic_type = default(-1);
+        int GOD_entangled_stationaryQubit_address @mutable = default(-1);
+        int GOD_entangled_node_address @mutable = default(-1);
+        int GOD_entangled_qnic_address @mutable = default(-1);
+        int GOD_entangled_qnic_type @mutable = default(-1);
 
         // ZZZ -- these are volatile elements of the object (module) state
         // and should be private data members of the class object
         int xPosition_Graphics;		// can this be usefully set in a .ned file?
-        double photon_emitted_at = default(-1);
-        double last_updated_at = default(-1);
-        bool isBusy = default(false);
-        double std = default(0);
+        double photon_emitted_at @mutable = default(-1);
+        double last_updated_at @mutable = default(-1);
+        bool isBusy @mutable = default(false);
+        double std @mutable = default(0);
 
         // ZZZ -- this is a volatile element of the object (module) state
         // and should be private data member of the class object
         // n.b.: this should be _software's_ idea of what the fidelity is?
-        double fidelity = default(-1.0);
+        double fidelity @mutable = default(-1.0);
 
         // ZZZ -- these are volatile elements of the object (module) state
         // and should be private data members of the class object
         // n.b.: these represent the _hardware_ state, and aren't directly
         // accessible to repeater software (qrsa)
-        bool GOD_Xerror = false;//Physical error on qubit
-        bool GOD_Zerror = false;//Physical error on qubit
-        bool GOD_EXerror = false;//Physical error on qubit
-        bool GOD_REerror = false;//Physical error on qubit
-        bool GOD_CMerror = false;//Physical error on qubit
+        bool GOD_Xerror @mutable = false;//Physical error on qubit
+        bool GOD_Zerror @mutable = false;//Physical error on qubit
+        bool GOD_EXerror @mutable = false;//Physical error on qubit
+        bool GOD_REerror @mutable = false;//Physical error on qubit
+        bool GOD_CMerror @mutable = false;//Physical error on qubit
 
         // ZZZ -- these are configured at boot time
         // characteristics of the hardware
