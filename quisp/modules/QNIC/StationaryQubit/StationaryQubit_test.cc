@@ -114,11 +114,13 @@ class StatQubitTest : public ::testing::Test {
 };
 
 TEST_F(StatQubitTest, init) {
+  auto *sim = utils::prepareSimulation();
   auto *backend_qubit = new MockBackendQubit();
   auto *config = new IConfiguration();
   EXPECT_CALL(*backend, getDefaultConfiguration()).WillOnce(Return(ByMove(std::unique_ptr<IConfiguration>(config))));
   EXPECT_CALL(*backend, getQubit(NotNull(), NotNull())).WillOnce(Return(backend_qubit));
   EXPECT_CALL(*backend_qubit, setFree()).WillOnce(Return());
+  sim->registerComponent(qubit);
   qubit->callInitialize();
   delete backend_qubit;
 }
