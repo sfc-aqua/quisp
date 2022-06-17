@@ -44,9 +44,7 @@ class Configuration : public omnetpp::cConfigurationEx {
   virtual std::vector<const char *> getMatchingConfigKeys(const char *pattern) const override {}
   virtual const char *getParameterValue(const char *moduleFullPath, const char *paramName, bool hasDefaultValue) const override {}
   virtual const KeyValue &getParameterEntry(const char *moduleFullPath, const char *paramName, bool hasDefaultValue) const override {}
-  virtual std::vector<const char *> getKeyValuePairs() const override {}
-  virtual std::vector<const char *> getParameterKeyValuePairs() const override {}
-  virtual std::vector<const char *> getMatchingPerObjectConfigKeys(const char *objectFullPath, const char *keySuffixPattern) const override {}
+  virtual std::vector<const char *> getKeyValuePairs(int flags = FILT_ALL) const override {}
   virtual std::vector<const char *> getMatchingPerObjectConfigKeySuffixes(const char *objectFullPath, const char *keySuffixPattern) const override {}
 };
 
