@@ -6,8 +6,8 @@ then
     exit 1
 else
     # xterm
-    xterm -e "$(xhost $IP)"
+    xterm -e "$(xhost "$IP")"
 fi
-socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\" &
+socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\""$DISPLAY"\" &
 docker run --privileged --rm -it -v "$(pwd):/root/quisp" -w /root/quisp --name quisp -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY="$IP:0" ghcr.io/sfc-aqua/quisp bash
 trap "lsof -i:6000 -t|xargs kill" 0
