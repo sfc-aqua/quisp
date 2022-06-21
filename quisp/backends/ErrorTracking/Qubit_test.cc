@@ -174,4 +174,10 @@ TEST_F(EtQubitTest, addErrorZ) {
   qubit->addErrorZ();
   EXPECT_FALSE(qubit->has_z_error);
 }
+
+TEST_F(EtQubitTest, backend_mock) {
+  auto* qubit = backend->getQubit(1);
+  auto* another_qubit = backend->getQubit(1);
+  ASSERT_EQ(qubit, another_qubit);
+}
 }  // namespace
