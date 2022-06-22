@@ -7,6 +7,8 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include "backends/interfaces/IConfiguration.h"
 #include "backends/interfaces/IQuantumBackend.h"
+#include "omnetpp/cmessage.h"
+#include "test_utils/Simulation.h"
 #include "test_utils/UtilFunctions.h"
 #include "test_utils/mock_backends/MockQuantumBackend.h"
 
@@ -28,8 +30,11 @@ class Strategy : public TestComponentProviderStrategy {
 
 class StatQubitTarget : public StationaryQubit {
  public:
+  using StationaryQubit::backend;
+  using StationaryQubit::finish;
   using StationaryQubit::initialize;
   using StationaryQubit::par;
+  using StationaryQubit::prepareBackendQubitConfiguration;
   StatQubitTarget(IQuantumBackend *backend) : StationaryQubit() {
     setComponentType(new TestModuleType("test qubit"));
     provider.setStrategy(std::make_unique<Strategy>(backend));
@@ -88,27 +93,41 @@ class StatQubitTarget : public StationaryQubit {
 class StatQubitTest : public ::testing::Test {
  protected:
   void SetUp() {
-    prepareSimulation();
+    sim = prepareSimulation();
     backend = new MockQuantumBackend();
     qubit = new StatQubitTarget(backend);
     qubit->fillParams();
+    sim->registerComponent(qubit);
   }
   void TearDown() { delete backend; }
 
   StatQubitTarget *qubit;
   MockQuantumBackend *backend;
+  simulation::TestSimulation *sim;
 };
 
 TEST_F(StatQubitTest, init) {
-  auto *sim = utils::prepareSimulation();
   auto *backend_qubit = new MockBackendQubit();
   auto *config = new IConfiguration();
   EXPECT_CALL(*backend, getDefaultConfiguration()).WillOnce(Return(ByMove(std::unique_ptr<IConfiguration>(config))));
   EXPECT_CALL(*backend, getQubit(NotNull(), NotNull())).WillOnce(Return(backend_qubit));
   EXPECT_CALL(*backend_qubit, setFree()).WillOnce(Return());
-  sim->registerComponent(qubit);
   qubit->callInitialize();
   delete backend_qubit;
+}
+
+TEST_F(StatQubitTest, prepareBackendQubit) {
+  auto *config = new IConfiguration();
+
+  // usually qubit->backend is assigned during initialize()
+  qubit->backend = backend;
+
+  EXPECT_CALL(*backend, getDefaultConfiguration()).WillOnce(Return(ByMove(std::unique_ptr<IConfiguration>(config))));
+  qubit->prepareBackendQubitConfiguration(true);
+}
+
+TEST_F(StatQubitTest, finish) {
+  ASSERT_NO_THROW({ qubit->finish(); });
 }
 
 }  // namespace
