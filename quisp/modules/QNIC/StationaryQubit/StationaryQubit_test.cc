@@ -6,7 +6,6 @@
 #include <cmath>
 #include <cstddef>
 #include <cstring>
-#include <format>
 #include <stdexcept>
 #include <unsupported/Eigen/MatrixFunctions>
 #include "backends/interfaces/IConfiguration.h"
