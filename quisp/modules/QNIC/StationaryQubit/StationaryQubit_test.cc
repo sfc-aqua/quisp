@@ -4,6 +4,10 @@
 #include <modules/common_types.h>
 #include <test_utils/TestUtils.h>
 #include <cmath>
+#include <cstddef>
+#include <cstring>
+#include <format>
+#include <stdexcept>
 #include <unsupported/Eigen/MatrixFunctions>
 #include "backends/interfaces/IConfiguration.h"
 #include "backends/interfaces/IQuantumBackend.h"
@@ -17,6 +21,7 @@ using namespace quisp::modules;
 using namespace quisp::modules::common;
 using namespace quisp_test;
 using namespace Eigen;
+using namespace omnetpp;
 
 namespace {
 
@@ -32,12 +37,14 @@ class StatQubitTarget : public StationaryQubit {
  public:
   using StationaryQubit::backend;
   using StationaryQubit::finish;
+  using StationaryQubit::handleMessage;
   using StationaryQubit::initialize;
   using StationaryQubit::par;
   using StationaryQubit::prepareBackendQubitConfiguration;
   StatQubitTarget(IQuantumBackend *backend) : StationaryQubit() {
     setComponentType(new TestModuleType("test qubit"));
     provider.setStrategy(std::make_unique<Strategy>(backend));
+    toLensGate = new TestGate(this, "tolens_quantum_port$o");
   }
   void reset() { setFree(true); }
   void fillParams() {
@@ -102,6 +109,14 @@ class StatQubitTarget : public StationaryQubit {
     setParDouble(this, "fidelity", -1.0);
     setParBool(this, "overwrite_backend_qubit_config", false);
   }
+
+  TestGate *toLensGate;
+  cGate *gate(const char *gatename, int index = -1) override {
+    if (strcmp("tolens_quantum_port$o", gatename) != 0) {
+      throw std::runtime_error("unexpected gate name");
+    }
+    return toLensGate;
+  }
 };
 
 class StatQubitTest : public ::testing::Test {
@@ -138,6 +153,37 @@ TEST_F(StatQubitTest, prepareBackendQubit) {
 
   EXPECT_CALL(*backend, getDefaultConfiguration()).WillOnce(Return(ByMove(std::unique_ptr<IConfiguration>(config))));
   qubit->prepareBackendQubitConfiguration(true);
+}
+
+TEST_F(StatQubitTest, emissionFailedPhotonLost) {
+  sim->setContext(qubit);
+  auto *msg = new PhotonicQubit();
+  qubit->emission_success_probability = 0;
+  EXPECT_EQ(qubit->toLensGate->messages.size(), 0);
+  qubit->handleMessage(msg);
+  EXPECT_EQ(qubit->toLensGate->messages.size(), 1);
+  auto *new_msg = qubit->toLensGate->messages.at(0);
+  ASSERT_NE(new_msg, nullptr);
+  EXPECT_NE(new_msg, msg);
+
+  auto *photon = dynamic_cast<PhotonicQubit *>(new_msg);
+  ASSERT_NE(photon, nullptr);
+  EXPECT_TRUE(photon->getPhotonLost());
+}
+
+TEST_F(StatQubitTest, emissionSuccess) {
+  sim->setContext(qubit);
+  auto *msg = new PhotonicQubit();
+  qubit->emission_success_probability = 1;
+  EXPECT_EQ(qubit->toLensGate->messages.size(), 0);
+  qubit->handleMessage(msg);
+  EXPECT_EQ(qubit->toLensGate->messages.size(), 1);
+  auto *new_msg = qubit->toLensGate->messages.at(0);
+  ASSERT_NE(new_msg, nullptr);
+
+  auto *photon = dynamic_cast<PhotonicQubit *>(new_msg);
+  ASSERT_NE(photon, nullptr);
+  EXPECT_FALSE(photon->getPhotonLost());
 }
 
 TEST_F(StatQubitTest, finish) {
