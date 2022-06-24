@@ -8,6 +8,8 @@
 #include <cstring>
 #include <stdexcept>
 #include <unsupported/Eigen/MatrixFunctions>
+#include "backends/Backends.h"
+#include "backends/ErrorTracking/Configuration.h"
 #include "backends/interfaces/IConfiguration.h"
 #include "backends/interfaces/IQuantumBackend.h"
 #include "omnetpp/cmessage.h"
@@ -21,6 +23,7 @@ using namespace quisp::modules::common;
 using namespace quisp_test;
 using namespace Eigen;
 using namespace omnetpp;
+using quisp::backends::ErrorTrackingConfiguration;
 
 namespace {
 
@@ -144,14 +147,124 @@ TEST_F(StatQubitTest, init) {
   delete backend_qubit;
 }
 
-TEST_F(StatQubitTest, prepareBackendQubit) {
-  auto *config = new IConfiguration();
+TEST_F(StatQubitTest, errorTrackingQubitConfigurationOverwrite) {
+  auto *config = new ErrorTrackingConfiguration();
+  setParDouble(qubit, "CNOTgate_error_rate", 0.01);
+  setParDouble(qubit, "CNOTgate_IX_error_ratio", 0.02);
+  setParDouble(qubit, "CNOTgate_XI_error_ratio", 0.03);
+  setParDouble(qubit, "CNOTgate_XX_error_ratio", 0.04);
+  setParDouble(qubit, "CNOTgate_IZ_error_ratio", 0.05);
+  setParDouble(qubit, "CNOTgate_ZI_error_ratio", 0.06);
+  setParDouble(qubit, "CNOTgate_ZZ_error_ratio", 0.07);
+  setParDouble(qubit, "CNOTgate_IY_error_ratio", 0.08);
+  setParDouble(qubit, "CNOTgate_YI_error_ratio", 0.09);
+  setParDouble(qubit, "CNOTgate_YY_error_ratio", 0.10);
+
+  setParDouble(qubit, "Hgate_error_rate", 0.11);
+  setParDouble(qubit, "Hgate_X_error_ratio", 0.12);
+  setParDouble(qubit, "Hgate_Y_error_ratio", 0.13);
+  setParDouble(qubit, "Hgate_Z_error_ratio", 0.14);
+
+  setParDouble(qubit, "Xgate_error_rate", 0.15);
+  setParDouble(qubit, "Xgate_X_error_ratio", 0.16);
+  setParDouble(qubit, "Xgate_Y_error_ratio", 0.17);
+  setParDouble(qubit, "Xgate_Z_error_ratio", 0.18);
+
+  setParDouble(qubit, "Zgate_error_rate", 0.19);
+  setParDouble(qubit, "Zgate_X_error_ratio", 0.20);
+  setParDouble(qubit, "Zgate_Y_error_ratio", 0.21);
+  setParDouble(qubit, "Zgate_Z_error_ratio", 0.22);
+
+  setParDouble(qubit, "X_measurement_error_rate", 0.23);
+  setParDouble(qubit, "Y_measurement_error_rate", 0.24);
+  setParDouble(qubit, "Z_measurement_error_rate", 0.25);
+
+  setParDouble(qubit, "memory_X_error_rate", 0.26);
+  setParDouble(qubit, "memory_Y_error_rate", 0.27);
+  setParDouble(qubit, "memory_Z_error_rate", 0.28);
+  setParDouble(qubit, "memory_energy_excitation_rate", 0.29);
+  setParDouble(qubit, "memory_energy_relaxation_rate", 0.30);
+  setParDouble(qubit, "memory_completely_mixed_rate", 0.31);
+
+  EXPECT_NE(config->cnot_gate_err_rate, qubit->par("CNOTgate_error_rate").doubleValue());
+  EXPECT_NE(config->cnot_gate_ix_err_ratio, qubit->par("CNOTgate_IX_error_ratio").doubleValue());
+  EXPECT_NE(config->cnot_gate_xi_err_ratio, qubit->par("CNOTgate_XI_error_ratio").doubleValue());
+  EXPECT_NE(config->cnot_gate_xx_err_ratio, qubit->par("CNOTgate_XX_error_ratio").doubleValue());
+  EXPECT_NE(config->cnot_gate_iz_err_ratio, qubit->par("CNOTgate_IZ_error_ratio").doubleValue());
+  EXPECT_NE(config->cnot_gate_zi_err_ratio, qubit->par("CNOTgate_ZI_error_ratio").doubleValue());
+  EXPECT_NE(config->cnot_gate_zz_err_ratio, qubit->par("CNOTgate_ZZ_error_ratio").doubleValue());
+  EXPECT_NE(config->cnot_gate_iy_err_ratio, qubit->par("CNOTgate_IY_error_ratio").doubleValue());
+  EXPECT_NE(config->cnot_gate_yi_err_ratio, qubit->par("CNOTgate_YI_error_ratio").doubleValue());
+  EXPECT_NE(config->cnot_gate_yy_err_ratio, qubit->par("CNOTgate_YY_error_ratio").doubleValue());
+
+  EXPECT_NE(config->h_gate_err_rate, qubit->par("Hgate_error_rate").doubleValue());
+  EXPECT_NE(config->h_gate_x_err_ratio, qubit->par("Hgate_X_error_ratio").doubleValue());
+  EXPECT_NE(config->h_gate_y_err_ratio, qubit->par("Hgate_Y_error_ratio").doubleValue());
+  EXPECT_NE(config->h_gate_z_err_ratio, qubit->par("Hgate_Z_error_ratio").doubleValue());
+
+  EXPECT_NE(config->x_gate_err_rate, qubit->par("Xgate_error_rate").doubleValue());
+  EXPECT_NE(config->x_gate_x_err_ratio, qubit->par("Xgate_X_error_ratio").doubleValue());
+  EXPECT_NE(config->x_gate_y_err_ratio, qubit->par("Xgate_Y_error_ratio").doubleValue());
+  EXPECT_NE(config->x_gate_z_err_ratio, qubit->par("Xgate_Z_error_ratio").doubleValue());
+
+  EXPECT_NE(config->z_gate_err_rate, qubit->par("Zgate_error_rate").doubleValue());
+  EXPECT_NE(config->z_gate_x_err_ratio, qubit->par("Zgate_X_error_ratio").doubleValue());
+  EXPECT_NE(config->z_gate_y_err_ratio, qubit->par("Zgate_Y_error_ratio").doubleValue());
+  EXPECT_NE(config->z_gate_z_err_ratio, qubit->par("Zgate_Z_error_ratio").doubleValue());
+
+  EXPECT_NE(config->measurement_x_err_rate, qubit->par("X_measurement_error_rate").doubleValue());
+  EXPECT_NE(config->measurement_y_err_rate, qubit->par("Y_measurement_error_rate").doubleValue());
+  EXPECT_NE(config->measurement_z_err_rate, qubit->par("Z_measurement_error_rate").doubleValue());
+
+  EXPECT_NE(config->memory_x_err_rate, qubit->par("memory_X_error_rate").doubleValue());
+  EXPECT_NE(config->memory_y_err_rate, qubit->par("memory_Y_error_rate").doubleValue());
+  EXPECT_NE(config->memory_z_err_rate, qubit->par("memory_Z_error_rate").doubleValue());
+  EXPECT_NE(config->memory_excitation_rate, qubit->par("memory_energy_excitation_rate").doubleValue());
+  EXPECT_NE(config->memory_relaxation_rate, qubit->par("memory_energy_relaxation_rate").doubleValue());
+  EXPECT_NE(config->memory_completely_mixed_rate, qubit->par("memory_completely_mixed_rate").doubleValue());
 
   // usually qubit->backend is assigned during initialize()
   qubit->backend = backend;
 
   EXPECT_CALL(*backend, getDefaultConfiguration()).WillOnce(Return(ByMove(std::unique_ptr<IConfiguration>(config))));
-  qubit->prepareBackendQubitConfiguration(true);
+  auto new_conf = qubit->prepareBackendQubitConfiguration(true);
+
+  EXPECT_EQ(config->cnot_gate_err_rate, qubit->par("CNOTgate_error_rate").doubleValue());
+  EXPECT_EQ(config->cnot_gate_ix_err_ratio, qubit->par("CNOTgate_IX_error_ratio").doubleValue());
+  EXPECT_EQ(config->cnot_gate_xi_err_ratio, qubit->par("CNOTgate_XI_error_ratio").doubleValue());
+  EXPECT_EQ(config->cnot_gate_xx_err_ratio, qubit->par("CNOTgate_XX_error_ratio").doubleValue());
+  EXPECT_EQ(config->cnot_gate_iz_err_ratio, qubit->par("CNOTgate_IZ_error_ratio").doubleValue());
+  EXPECT_EQ(config->cnot_gate_zi_err_ratio, qubit->par("CNOTgate_ZI_error_ratio").doubleValue());
+  EXPECT_EQ(config->cnot_gate_zz_err_ratio, qubit->par("CNOTgate_ZZ_error_ratio").doubleValue());
+  EXPECT_EQ(config->cnot_gate_iy_err_ratio, qubit->par("CNOTgate_IY_error_ratio").doubleValue());
+  EXPECT_EQ(config->cnot_gate_yi_err_ratio, qubit->par("CNOTgate_YI_error_ratio").doubleValue());
+  EXPECT_EQ(config->cnot_gate_yy_err_ratio, qubit->par("CNOTgate_YY_error_ratio").doubleValue());
+
+  EXPECT_EQ(config->h_gate_err_rate, qubit->par("Hgate_error_rate").doubleValue());
+  EXPECT_EQ(config->h_gate_x_err_ratio, qubit->par("Hgate_X_error_ratio").doubleValue());
+  EXPECT_EQ(config->h_gate_y_err_ratio, qubit->par("Hgate_Y_error_ratio").doubleValue());
+  EXPECT_EQ(config->h_gate_z_err_ratio, qubit->par("Hgate_Z_error_ratio").doubleValue());
+
+  EXPECT_EQ(config->x_gate_err_rate, qubit->par("Xgate_error_rate").doubleValue());
+  EXPECT_EQ(config->x_gate_x_err_ratio, qubit->par("Xgate_X_error_ratio").doubleValue());
+  EXPECT_EQ(config->x_gate_y_err_ratio, qubit->par("Xgate_Y_error_ratio").doubleValue());
+  EXPECT_EQ(config->x_gate_z_err_ratio, qubit->par("Xgate_Z_error_ratio").doubleValue());
+
+  EXPECT_EQ(config->z_gate_err_rate, qubit->par("Zgate_error_rate").doubleValue());
+  EXPECT_EQ(config->z_gate_x_err_ratio, qubit->par("Zgate_X_error_ratio").doubleValue());
+  EXPECT_EQ(config->z_gate_y_err_ratio, qubit->par("Zgate_Y_error_ratio").doubleValue());
+  EXPECT_EQ(config->z_gate_z_err_ratio, qubit->par("Zgate_Z_error_ratio").doubleValue());
+
+  EXPECT_EQ(config->measurement_x_err_rate, qubit->par("X_measurement_error_rate").doubleValue());
+  EXPECT_EQ(config->measurement_y_err_rate, qubit->par("Y_measurement_error_rate").doubleValue());
+  EXPECT_EQ(config->measurement_z_err_rate, qubit->par("Z_measurement_error_rate").doubleValue());
+
+  EXPECT_EQ(config->memory_x_err_rate, qubit->par("memory_X_error_rate").doubleValue());
+  EXPECT_EQ(config->memory_y_err_rate, qubit->par("memory_Y_error_rate").doubleValue());
+  EXPECT_EQ(config->memory_z_err_rate, qubit->par("memory_Z_error_rate").doubleValue());
+  EXPECT_EQ(config->memory_excitation_rate, qubit->par("memory_energy_excitation_rate").doubleValue());
+  EXPECT_EQ(config->memory_relaxation_rate, qubit->par("memory_energy_relaxation_rate").doubleValue());
+  EXPECT_EQ(config->memory_completely_mixed_rate, qubit->par("memory_completely_mixed_rate").doubleValue());
 }
 
 TEST_F(StatQubitTest, emissionFailedPhotonLost) {
