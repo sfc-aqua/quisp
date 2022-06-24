@@ -1,11 +1,7 @@
 var dir_f50702ceef2bd7c8eb12ef54d61eb01e =
 [
-    [ "IQNicRecord.h", "_i_q_nic_record_8h.html", [
-      [ "quisp::modules::qnic_record::IQNicRecord", "classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record.html", "classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record" ]
-    ] ],
+    [ "IQNicRecord.h", "_i_q_nic_record_8h.html", "_i_q_nic_record_8h" ],
     [ "QNicRecord.cc", "_q_nic_record_8cc.html", null ],
-    [ "QNicRecord.h", "_q_nic_record_8h.html", [
-      [ "quisp::modules::qnic_record::QNicRecord", "classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record.html", "classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record" ]
-    ] ],
+    [ "QNicRecord.h", "_q_nic_record_8h.html", "_q_nic_record_8h" ],
     [ "QNicRocord_test.cc", "_q_nic_rocord__test_8cc.html", null ]
 ];

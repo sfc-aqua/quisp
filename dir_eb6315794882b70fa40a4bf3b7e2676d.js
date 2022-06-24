@@ -9,9 +9,5 @@ var dir_eb6315794882b70fa40a4bf3b7e2676d =
     [ "common_types.h", "common__types_8h.html", "common__types_8h" ],
     [ "dummyModule.cc", "dummy_module_8cc.html", "dummy_module_8cc" ],
     [ "QNIC.h", "_q_n_i_c_8h.html", "_q_n_i_c_8h" ],
-    [ "QUBIT.h", "modules_2_qubit_8h.html", [
-      [ "quisp::modules::QubitAddr_cons", "structquisp_1_1modules_1_1_qubit_addr__cons.html", "structquisp_1_1modules_1_1_qubit_addr__cons" ],
-      [ "quisp::modules::QubitAddr", "structquisp_1_1modules_1_1_qubit_addr.html", "structquisp_1_1modules_1_1_qubit_addr" ],
-      [ "quisp::modules::QubitState", "structquisp_1_1modules_1_1_qubit_state.html", "structquisp_1_1modules_1_1_qubit_state" ]
-    ] ]
+    [ "QUBIT.h", "modules_2_qubit_8h.html", "modules_2_qubit_8h" ]
 ];

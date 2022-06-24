@@ -1,3 +1,12 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model.html" title=" " alt="" coords="5,5,232,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,219,172,246"/>
+<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="231,37,407,79"/>
+<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1_photonic_switch.html" title="PhotonicSwitch." alt="" coords="237,103,402,144"/>
+<area shape="rect" id="node6" href="$classquisp_1_1modules_1_1_queue.html" title="Queue." alt="" coords="243,169,395,195"/>
+<area shape="rect" id="node7" href="$classquisp_1_1modules_1_1_router.html" title="Router." alt="" coords="243,219,395,246"/>
+<area shape="rect" id="node8" href="$classquisp_1_1modules_1_1_s_p_d_c___controller.html" title="SPDC_Controller." alt="" coords="244,271,395,312"/>
+<area shape="rect" id="node9" href="$classquisp_1_1modules_1_1backend_1_1_backend_container.html" title=" " alt="" coords="238,336,401,377"/>
+<area shape="rect" id="node10" href="$classquisp_1_1modules_1_1dummy_module.html" title="dummyModule" alt="" coords="220,402,419,429"/>
+<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_stationary_qubit.html" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="475,5,647,47"/>
+<area shape="rect" id="node4" href="$classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html" title=" " alt="" coords="467,71,655,112"/>
 </map>
