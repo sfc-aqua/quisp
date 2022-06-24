@@ -1,6 +1,7 @@
 #include "Backend.h"
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
+#include "backends/interfaces/IQuantumBackend.h"
 #include "modules/common_types.h"
 
 namespace {
@@ -86,6 +87,12 @@ TEST_F(BackendContainerTest, getQuantumBackend) {
   EXPECT_NE(et_backend, nullptr);
 }
 
+TEST_F(BackendContainerTest, getQuantumBackendWithoutInit) {
+  setParStr(backend, "backendType", "ErrorTrackingBackend");
+  ASSERT_EQ(backend->backend, nullptr);
+  EXPECT_ANY_THROW({ backend->getQuantumBackend(); });
+}
+
 TEST_F(BackendContainerTest, getBackendConfiguration) {
   setParStr(backend, "backendType", "ErrorTrackingBackend");
   backend->callInitialize();
@@ -118,5 +125,9 @@ TEST_F(BackendContainerTest, getCopyOfBackendConfiguration) {
   et_conf->cnot_gate_err_rate = 10;
   EXPECT_NE(et_conf->cnot_gate_err_rate, et_conf2->cnot_gate_err_rate);
   EXPECT_NE(et_conf, et_conf2);
+}
+
+TEST_F(BackendContainerTest, finish) {
+  EXPECT_NO_THROW({ backend->finish(); });
 }
 }  // namespace
