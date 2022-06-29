@@ -31,8 +31,9 @@ CXXFLAGS+=-ftest-coverage -fprofile-instr-generate -fcoverage-mapping
 LDFLAGS+=-ftest-coverage -fprofile-instr-generate -fcoverage-mapping
 endif
 
-# include path for json
+# include path for external libs
 INCLUDE_PATH+=-I$(PROJ_ROOT)/json/include/
+INCLUDE_PATH+=-I$(PROJ_ROOT)/spdlog/include/
 
 default: eigen all
 

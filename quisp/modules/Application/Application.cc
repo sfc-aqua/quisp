@@ -7,6 +7,7 @@
 #include "Application.h"
 #include <vector>
 #include "utils/ComponentProvider.h"
+#include <spdlog/spdlog.h>
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -105,7 +106,8 @@ void Application::handleMessage(cMessage *msg) {
   }
 
   if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)){
-      emit(signal_init_request, req->getDestAddr());
+      // emit(signal_init_request, req->getDestAddr());
+      spdlog::info("Hello world");
       send(msg, "toRouter");
       return;
   }
