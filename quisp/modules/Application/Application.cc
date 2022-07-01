@@ -5,9 +5,9 @@
  *  \brief Application
  */
 #include "Application.h"
+#include <spdlog/spdlog.h>
 #include <vector>
 #include "utils/ComponentProvider.h"
-#include <spdlog/spdlog.h>
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -23,8 +23,7 @@ Application::Application() : provider(utils::ComponentProvider{this}) {}
  * If the node type is not EndNode, this module is automatically deleted in this function.
  */
 void Application::initialize() {
-
-   signal_init_request = registerSignal("initiateRequest");
+  signal_init_request = registerSignal("initiateRequest");
 
   // Since we only need this module in EndNode, delete it otherwise.
   if (!gate("toRouter")->isConnected()) {
@@ -101,15 +100,15 @@ ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr,
 void Application::handleMessage(cMessage *msg) {
   if (dynamic_cast<deleteThisModule *>(msg)) {
     delete msg;
-    //deleteModule();
+    // deleteModule();
     return;
   }
 
-  if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)){
-      // emit(signal_init_request, req->getDestAddr());
-      spdlog::info("Hello world");
-      send(msg, "toRouter");
-      return;
+  if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)) {
+    // emit(signal_init_request, req->getDestAddr());
+    spdlog::info("Hello world {}", msg->getArrivalGateId());
+    send(msg, "toRouter");
+    return;
   }
 
   if (dynamic_cast<ConnectionSetupResponse *>(msg)) {

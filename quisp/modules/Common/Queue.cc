@@ -40,7 +40,6 @@ void Queue::startTransmitting(cMessage *msg) {
   send(msg, "line$o");  // inout gate's output
   emit(tx_bytes_signal, (long)num_bytes);
 
-
   // Schedule an event for the time when last bit will leave the gate.
   simtime_t transmission_finish_time = gate("line$o")->getTransmissionChannel()->getTransmissionFinishTime();
   EV_INFO << "Transmission will end in " << transmission_finish_time << "\n";
