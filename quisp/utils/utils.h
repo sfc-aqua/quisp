@@ -2,6 +2,8 @@
 #define QUISP_UTILS_H_
 
 #include <modules/Backend/Backend.h>
+#include <modules/Logger/ILogger.h>
+#include <modules/Logger/LoggerModule.h>
 #include <modules/QNIC.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
@@ -22,6 +24,8 @@ using modules::QNIC_names;
 using modules::QNIC_type;
 using modules::backend::BackendContainer;
 using modules::common::IQuantumBackend;
+using modules::Logger::ILogger;
+using modules::Logger::LoggerModule;
 using omnetpp::cModule;
 
 }  // namespace utils

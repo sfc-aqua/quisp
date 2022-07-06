@@ -1,9 +1,11 @@
 #pragma once
 
+#include <modules/Logger/ILogger.h>
 #include <modules/QNIC.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>
 #include <utils/IComponentProviderStrategy.h>
+#include "Logger.h"
 #include "Simulation.h"
 
 namespace quisp_test {
@@ -15,9 +17,10 @@ using quisp::modules::IRoutingDaemon;
 using quisp::modules::IStationaryQubit;
 using quisp::modules::QNIC_type;
 using quisp::modules::common::IQuantumBackend;
+using quisp::modules::Logger::ILogger;
 using quisp::utils::IComponentProviderStrategy;
+using quisp_test::Logger::TestLogger;
 using quisp_test::simulation::TestSimulation;
-
 struct QNicSpec {
   QNIC_type type;
   int qnic_index;
@@ -40,6 +43,7 @@ class TestComponentProviderStrategy : public IComponentProviderStrategy {
   virtual IHardwareMonitor *getHardwareMonitor() override { return nullptr; };
   virtual IRealTimeController *getRealTimeController() override { return nullptr; };
   virtual IQuantumBackend *getQuantumBackend() override { return nullptr; };
+  virtual ILogger *getLogger() override { return new TestLogger(); };
   std::vector<QNicSpec> qnic_specs;
   virtual int getNumQubits(int qnic_index, QNIC_type qnic_type) override {
     for (auto spec : qnic_specs) {

@@ -5,6 +5,7 @@
 #include <modules/common_types.h>
 #include "DefaultComponentProviderStrategy.h"
 #include "IComponentProviderStrategy.h"
+#include "modules/Logger/LoggerModule.h"
 #include "omnetpp/cmodule.h"
 #include "utils.h"
 
@@ -36,7 +37,7 @@ class ComponentProvider {
   IHardwareMonitor *getHardwareMonitor();
   IRealTimeController *getRealTimeController();
   IQuantumBackend *getQuantumBackend();
-
+  ILogger *getLogger();
   // when a this class instantiated, a strategy class instantiation may fail because
   // the strategy class may depend on other modules instantiated by OMNeT++'s NED file.
   // So this method is for delaying to instantiate the strategy class.

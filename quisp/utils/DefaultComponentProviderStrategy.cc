@@ -6,8 +6,7 @@
 #include "omnetpp/cmodule.h"
 #include "utils/utils.h"
 
-namespace quisp {
-namespace utils {
+namespace quisp::utils {
 
 DefaultComponentProviderStrategy::DefaultComponentProviderStrategy(cModule *_self) : self(_self) {}
 
@@ -74,6 +73,16 @@ IQuantumBackend *DefaultComponentProviderStrategy::getQuantumBackend() {
   return backend_container->getQuantumBackend();
 }
 
+ILogger *DefaultComponentProviderStrategy::getLogger() {
+  auto *qnode = getQNode();
+  auto *mod = qnode->getModuleByPath("logger");
+  if (mod == nullptr) {
+    throw cRuntimeError("LoggerModule not found");
+  }
+  auto *logger_module = check_and_cast<LoggerModule *>(mod);
+  return logger_module->getLogger();
+}
+
 cModule *DefaultComponentProviderStrategy::getQRSA() {
   auto *qnode = getQNode();
   auto *qrsa = qnode->getSubmodule("qrsa");
@@ -86,5 +95,4 @@ cModule *DefaultComponentProviderStrategy::getQRSA() {
 bool DefaultComponentProviderStrategy::isHoMNodeType(const cModuleType *const type) { return type == HoMType; }
 bool DefaultComponentProviderStrategy::isQNodeType(const cModuleType *const type) { return type == QNodeType; }
 bool DefaultComponentProviderStrategy::isSPDCNodeType(const cModuleType *const type) { return type == SPDCType; }
-}  // namespace utils
-}  // namespace quisp
+}  // namespace quisp::utils

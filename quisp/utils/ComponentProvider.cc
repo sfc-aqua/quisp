@@ -4,8 +4,7 @@
 #include "omnetpp/cmodule.h"
 #include "utils/utils.h"
 
-namespace quisp {
-namespace utils {
+namespace quisp::utils {
 
 ComponentProvider::ComponentProvider(cModule *_module) : module(_module) {}
 
@@ -23,10 +22,12 @@ bool ComponentProvider::isHoMNodeType(const cModuleType *const type) {
   ensureStrategy();
   return strategy->isHoMNodeType(type);
 }
+
 bool ComponentProvider::isSPDCNodeType(const cModuleType *const type) {
   ensureStrategy();
   return strategy->isSPDCNodeType(type);
 }
+
 bool ComponentProvider::isQNodeType(const cModuleType *const type) {
   ensureStrategy();
   return strategy->isQNodeType(type);
@@ -44,14 +45,17 @@ IStationaryQubit *ComponentProvider::getStationaryQubit(modules::qrsa::IQubitRec
   }
   return qubit_record->qubit_ptr;
 }
+
 cModule *ComponentProvider::getQNIC(int qnic_index, QNIC_type qnic_type) {
   ensureStrategy();
   return strategy->getQNIC(qnic_index, qnic_type);
 }
+
 int ComponentProvider::getNumQubits(int qnic_index, QNIC_type qnic_type) {
   ensureStrategy();
   return strategy->getNumQubits(qnic_index, qnic_type);
 }
+
 IHardwareMonitor *ComponentProvider::getHardwareMonitor() {
   ensureStrategy();
   return strategy->getHardwareMonitor();
@@ -71,11 +75,15 @@ IQuantumBackend *ComponentProvider::getQuantumBackend() {
   return strategy->getQuantumBackend();
 }
 
+ILogger *ComponentProvider::getLogger() {
+  ensureStrategy();
+  return strategy->getLogger();
+}
+
 void ComponentProvider::setStrategy(std::unique_ptr<IComponentProviderStrategy> _strategy) { strategy = std::move(_strategy); }
 
 void ComponentProvider::ensureStrategy() {
   if (strategy != nullptr) return;
   strategy = std::make_unique<DefaultComponentProviderStrategy>(module);
 }
-}  // namespace utils
-} /* namespace quisp */
+}  // namespace quisp::utils

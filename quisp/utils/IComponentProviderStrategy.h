@@ -23,6 +23,7 @@ class IComponentProviderStrategy {
   virtual IHardwareMonitor *getHardwareMonitor() = 0;
   virtual IRealTimeController *getRealTimeController() = 0;
   virtual IQuantumBackend *getQuantumBackend() = 0;
+  virtual ILogger *getLogger() = 0;
 };
 
 }  // namespace utils

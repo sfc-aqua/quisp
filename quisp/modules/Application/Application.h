@@ -9,6 +9,7 @@
 #define MODULES_APPLICATION_H_
 
 #include "IApplication.h"
+#include "modules/Logger/LoggerBase.h"
 #include "utils/ComponentProvider.h"
 
 using namespace omnetpp;
@@ -20,7 +21,7 @@ namespace modules {
  *
  *  \brief Application
  */
-class Application : public IApplication {
+class Application : public IApplication, public Logger::LoggerBase {
  public:
   Application();
   ~Application() {}

@@ -24,6 +24,7 @@ Application::Application() : provider(utils::ComponentProvider{this}) {}
  */
 void Application::initialize() {
   signal_init_request = registerSignal("initiateRequest");
+  initializeLogger(provider);
 
   // Since we only need this module in EndNode, delete it otherwise.
   if (!gate("toRouter")->isConnected()) {
@@ -106,7 +107,7 @@ void Application::handleMessage(cMessage *msg) {
 
   if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)) {
     // emit(signal_init_request, req->getDestAddr());
-    spdlog::info("Hello world {}", msg->getArrivalGateId());
+    logger->logPacket("MESSAGE_", msg);
     send(msg, "toRouter");
     return;
   }
