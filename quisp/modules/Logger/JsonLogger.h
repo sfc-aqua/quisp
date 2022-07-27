@@ -10,10 +10,10 @@ namespace quisp::modules::Logger {
 /**
  * \brief Default Logger class using spdlog library and jsonl format
  */
-class Logger : public ILogger {
+class JsonLogger : public ILogger {
  public:
-  Logger(std::shared_ptr<spdlog::logger> logger);
-  virtual ~Logger();
+  JsonLogger(std::shared_ptr<spdlog::logger> logger);
+  virtual ~JsonLogger();
   void logPacket(std::string event_type, omnetpp::cMessage* msg) override;
   void setModule(omnetpp::cModule* mod) override;
 

@@ -1,4 +1,4 @@
-#include "Logger.h"
+#include "JsonLogger.h"
 #include <sstream>
 #include "messages/connection_setup_messages_m.h"
 
@@ -8,24 +8,24 @@ using quisp::messages::ConnectionSetupRequest;
 using quisp::messages::ConnectionSetupResponse;
 using quisp::messages::RejectConnectionSetupRequest;
 
-Logger::Logger(std::shared_ptr<spdlog::logger> logger) : _logger(logger) {
+JsonLogger::JsonLogger(std::shared_ptr<spdlog::logger> logger) : _logger(logger) {
   std::string jsonpattern = {"{\"level\": \"%^%l%$\", %v}"};
   _logger->set_pattern(jsonpattern);
 }
 
-Logger::~Logger() {}
+JsonLogger::~JsonLogger() {}
 
-void Logger::setModule(omnetpp::cModule* mod) {
+void JsonLogger::setModule(omnetpp::cModule* mod) {
   module = mod;
   module_path = mod->getFullPath();
 }
 
-void Logger::logPacket(std::string event_type, omnetpp::cMessage* msg) {
+void JsonLogger::logPacket(std::string event_type, omnetpp::cMessage* msg) {
   auto current_time = omnetpp::simTime();
   _logger->info("\"simtime\": {}, \"event_type\": \"{}\", \"path\": \"{}\", {}", current_time, event_type, module_path, format(msg));
 }
 
-std::string Logger::format(omnetpp::cMessage* msg) {
+std::string JsonLogger::format(omnetpp::cMessage* msg) {
   if (auto req = dynamic_cast<const quisp::messages::ConnectionSetupRequest*>(msg)) {
     std::stringstream os;
     os << "\"actual_dest_addr\": " << req->getActual_destAddr();

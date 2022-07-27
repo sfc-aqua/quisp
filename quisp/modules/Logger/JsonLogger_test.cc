@@ -1,4 +1,4 @@
-#include "Logger.h"
+#include "JsonLogger.h"
 #include <gtest/gtest.h>
 #include <messages/classical_messages.h>
 #include <spdlog/sinks/ostream_sink.h>
@@ -11,22 +11,22 @@
 namespace {
 
 using quisp::messages::ConnectionSetupRequest;
-using quisp::modules::Logger::Logger;
+using quisp::modules::Logger::JsonLogger;
 using namespace quisp_test;
 
-class LoggerTest : public testing::Test {
+class JsonLoggerTest : public testing::Test {
  protected:
   void SetUp() {
     utils::prepareSimulation();
     ostream_sink = std::make_shared<spdlog::sinks::ostream_sink_mt>(log_stream);
-    logger = new Logger(std::make_shared<spdlog::logger>("test_logger", ostream_sink));
+    logger = new JsonLogger(std::make_shared<spdlog::logger>("test_logger", ostream_sink));
   }
-  Logger* logger;
+  JsonLogger* logger;
   std::ostringstream log_stream;
   std::shared_ptr<spdlog::sinks::ostream_sink_mt> ostream_sink;
 };
 
-TEST_F(LoggerTest, ConnReqSetupTest) {
+TEST_F(JsonLoggerTest, ConnReqSetupTest) {
   auto* req = new ConnectionSetupRequest();
   req->setActual_destAddr(1);
   req->setActual_srcAddr(2);

@@ -1,3 +1,4 @@
 # quisp::modules::Logger::Logger
 
-Logger class is responsible for logging data related to
+Logger class is responsible for logging data related to simulation.
+

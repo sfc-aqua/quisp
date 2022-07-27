@@ -2,7 +2,7 @@
 #include <spdlog/async.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/spdlog.h>
-#include "Logger.h"
+#include "JsonLogger.h"
 
 namespace quisp::modules::Logger {
 
@@ -15,7 +15,7 @@ void LoggerModule::initialize() {
   logger = spdlog::basic_logger_mt<spdlog::async_factory>("default_sim_result_logger", trim_quotes(par("log_filename").str()));
 }
 
-ILogger* LoggerModule::getLogger() { return new Logger(logger); }
+ILogger* LoggerModule::getLogger() { return new JsonLogger(logger); }
 
 std::string LoggerModule::trim_quotes(std::string s) {
   if (s.length() == 0) return s;
