@@ -16,6 +16,8 @@ class LoggerModule : public omnetpp::cSimpleModule {
 
  protected:
   std::shared_ptr<spdlog::logger> logger;
+
+  static std::string trim_quotes(std::string s);
 };
 Define_Module(LoggerModule);
 }  // namespace quisp::modules::Logger

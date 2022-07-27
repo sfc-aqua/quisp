@@ -23,7 +23,6 @@ Application::Application() : provider(utils::ComponentProvider{this}) {}
  * If the node type is not EndNode, this module is automatically deleted in this function.
  */
 void Application::initialize() {
-  signal_init_request = registerSignal("initiateRequest");
   initializeLogger(provider);
 
   // Since we only need this module in EndNode, delete it otherwise.
@@ -106,18 +105,19 @@ void Application::handleMessage(cMessage *msg) {
   }
 
   if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)) {
-    // emit(signal_init_request, req->getDestAddr());
-    logger->logPacket("MESSAGE_", msg);
+    logger->logPacket("handleMessage", msg);
     send(msg, "toRouter");
     return;
   }
 
   if (dynamic_cast<ConnectionSetupResponse *>(msg)) {
+    logger->logPacket("handleMessage", msg);
     send(msg, "toRouter");
     return;
   }
 
   if (dynamic_cast<InternalRuleSetForwarding *>(msg)) {
+    logger->logPacket("handleMessage", msg);
     send(msg, "toRouter");
     return;
   }

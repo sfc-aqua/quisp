@@ -1,7 +1,8 @@
 package modules.Logger;
-@namespace(quisp::modules);
+@namespace(quisp::modules::Logger);
 
 simple Logger
 {
-
+    @class(LoggerModule);
+    string log_filename;// = default("results/default_simulation_log.jsonl");
 }

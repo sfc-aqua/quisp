@@ -5,6 +5,7 @@ import ned.IdealChannel;
 
 import modules.*;
 import modules.Backend.Backend;
+import modules.Logger.Logger;
 import channels.*;
 
 network Realistic_Layer2_Simple_MIM_MM_all_in_one
@@ -328,6 +329,7 @@ network Realistic_Layer2_Simple_MIM_MM_10km
         @display("bgb=707,326");
     submodules:
         backend: Backend{}
+        logger: Logger{}
         EndNode1[1]: QNode {
             address = 1;
             nodeType = "EndNode";

@@ -1,5 +1,6 @@
 #pragma once
 #include <omnetpp.h>
+#include "omnetpp/csimplemodule.h"
 
 namespace quisp::modules::Logger {
 
@@ -22,5 +23,6 @@ class ILogger {
  public:
   virtual ~ILogger(){};
   virtual void logPacket(std::string event_type, omnetpp::cMessage* msg) = 0;
+  virtual void setModule(omnetpp::cModule* mod) = 0;
 };
 }  // namespace quisp::modules::Logger

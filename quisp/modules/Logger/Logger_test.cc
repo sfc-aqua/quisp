@@ -26,9 +26,15 @@ class LoggerTest : public testing::Test {
   std::shared_ptr<spdlog::sinks::ostream_sink_mt> ostream_sink;
 };
 
-TEST_F(LoggerTest, Init) {
+TEST_F(LoggerTest, ConnReqSetupTest) {
   auto* req = new ConnectionSetupRequest();
+  req->setActual_destAddr(1);
+  req->setActual_srcAddr(2);
+  req->setNum_measure(5);
+  req->setNumber_of_required_Bellpairs(7);
   logger->logPacket("test", req);
-  std::cout << log_stream.str();
+  EXPECT_EQ(log_stream.str(),
+            "{\"level\": \"info\", \"simtime\": 0, \"event_type\": \"test\", \"path\": \"\", \"actual_dest_addr\": 1, \"actual_src_addr\": 2, \"num_measure\": 5, "
+            "\"num_required_bell_pairs\": 7}\n");
 }
 }  // namespace
