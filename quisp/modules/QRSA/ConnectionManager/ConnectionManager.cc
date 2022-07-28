@@ -60,7 +60,6 @@ void ConnectionManager::initialize() {
  * \param msg pointer to the cMessage itself
  */
 void ConnectionManager::handleMessage(cMessage *msg) {
-  logger->logPacket("handleMessage", msg);
   // this should only be the send notification
   if (msg->isSelfMessage()) {
     // check which qnic address the notification is for and initiate the connection
@@ -72,6 +71,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     }
     error("receive a send self-notification but cannot find which qnic to use");
   }
+  logger->logPacket("handleMessage", msg);
 
   if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)) {
     int actual_dst = req->getActual_destAddr();
