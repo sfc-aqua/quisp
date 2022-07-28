@@ -25,6 +25,7 @@ Define_Module(ConnectionManager);
 ConnectionManager::ConnectionManager() : provider(utils::ComponentProvider{this}) {}
 
 void ConnectionManager::initialize() {
+  initializeLogger(provider);
   routing_daemon = provider.getRoutingDaemon();
   hardware_monitor = provider.getHardwareMonitor();
   my_address = par("address");
@@ -59,6 +60,7 @@ void ConnectionManager::initialize() {
  * \param msg pointer to the cMessage itself
  */
 void ConnectionManager::handleMessage(cMessage *msg) {
+  logger->logPacket("handleMessage", msg);
   // this should only be the send notification
   if (msg->isSelfMessage()) {
     // check which qnic address the notification is for and initiate the connection

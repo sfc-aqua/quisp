@@ -9,6 +9,7 @@
 #define MODULES_CONNECTIONMANAGER_H_
 
 #include "IConnectionManager.h"
+#include "modules/Logger/LoggerBase.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -41,7 +42,7 @@ namespace modules {
  * It is also responsible for the end-to-end reservation of resources,
  * as dictated by the multiplexing (muxing) discipline in use.
  */
-class ConnectionManager : public IConnectionManager {
+class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
  public:
   ConnectionManager();
   utils::ComponentProvider provider;
