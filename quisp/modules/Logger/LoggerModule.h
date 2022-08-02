@@ -12,6 +12,7 @@ class LoggerModule : public omnetpp::cSimpleModule {
   LoggerModule();
   ~LoggerModule();
   void initialize() override;
+  void finish() override;
   ILogger* getLogger();
 
  protected:

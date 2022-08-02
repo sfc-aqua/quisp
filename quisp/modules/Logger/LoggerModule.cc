@@ -15,6 +15,8 @@ void LoggerModule::initialize() {
   logger = spdlog::basic_logger_mt<spdlog::async_factory>("default_sim_result_logger", trim_quotes(par("log_filename").str()));
 }
 
+void LoggerModule::finish() { logger->flush(); }
+
 ILogger* LoggerModule::getLogger() { return new JsonLogger(logger); }
 
 std::string LoggerModule::trim_quotes(std::string s) {

@@ -38,7 +38,7 @@ std::string JsonLogger::format(omnetpp::cMessage* msg) {
   if (auto* req = dynamic_cast<const quisp::messages::RejectConnectionSetupRequest*>(msg)) {
     std::stringstream os;
     os << "\"msg_type\": \"RejectConnectionSetupRequest\"";
-    os << "\"actual_dest_addr\": " << req->getActual_destAddr();
+    os << ", \"actual_dest_addr\": " << req->getActual_destAddr();
     os << ", \"actual_src_addr\": " << req->getActual_srcAddr();
     os << ", \"num_required_bell_pairs\": " << req->getNumber_of_required_Bellpairs();
     return os.str();
@@ -46,7 +46,7 @@ std::string JsonLogger::format(omnetpp::cMessage* msg) {
   if (auto* req = dynamic_cast<const quisp::messages::ConnectionSetupResponse*>(msg)) {
     std::stringstream os;
     os << "\"msg_type\": \"ConnectionSetupResponse\"";
-    os << "\"actual_dest_addr\": " << req->getActual_destAddr();
+    os << ", \"actual_dest_addr\": " << req->getActual_destAddr();
     os << ", \"actual_src_addr\": " << req->getActual_srcAddr();
     os << ", \"ruleset_id\": " << req->getRuleSet_id();
     os << ", \"ruleset\": " << req->getRuleSet();
@@ -60,7 +60,7 @@ std::string JsonLogger::format(omnetpp::cMessage* msg) {
     return os.str();
   }
 
-  return "\n\n**unknown format**\n" + msg->getFullPath() + "\n\n";
+  return "\"msg\": \"unknown class: \"" + msg->getFullPath() + "\"";
 }
 
 }  // namespace quisp::modules::Logger
