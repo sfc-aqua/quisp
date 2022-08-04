@@ -8,7 +8,11 @@ namespace quisp::modules::Logger {
 
 LoggerModule::LoggerModule() {}
 
-LoggerModule::~LoggerModule() {}
+LoggerModule::~LoggerModule() {
+  if (logger != nullptr) {
+    spdlog::shutdown();
+  }
+}
 
 void LoggerModule::initialize() {
   if (logger != nullptr) return;

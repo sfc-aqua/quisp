@@ -21,6 +21,7 @@ class JsonLoggerTest : public testing::Test {
     ostream_sink = std::make_shared<spdlog::sinks::ostream_sink_mt>(log_stream);
     logger = new JsonLogger(std::make_shared<spdlog::logger>("test_logger", ostream_sink));
   }
+  void TearDown() { delete logger; }
   JsonLogger* logger;
   std::ostringstream log_stream;
   std::shared_ptr<spdlog::sinks::ostream_sink_mt> ostream_sink;
