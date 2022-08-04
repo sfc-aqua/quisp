@@ -3,6 +3,7 @@ package networks;
 import ned.DatarateChannel;
 import modules.*;
 import modules.Backend.Backend;
+import modules.Logger.Logger;
 import channels.*;
 
 
@@ -22,6 +23,7 @@ network twonodes
 
     submodules:
         backend: Backend;
+        logger: Logger;
         source: QNode {
             address = 1;
             buffers = 7;
@@ -54,6 +56,7 @@ network threenodes
 
     submodules:
         backend: Backend;
+        logger: Logger;
         source: QNode {
             address = 1;
             buffers = 7;
@@ -95,6 +98,7 @@ network morenodes
 
     submodules:
         backend: Backend;
+        logger: Logger;
         source: QNode {
             address = 1;
             @display("i=COMP;p=278,81");

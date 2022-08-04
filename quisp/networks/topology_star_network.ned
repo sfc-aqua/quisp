@@ -5,6 +5,7 @@ import ned.IdealChannel;
 
 import modules.*;
 import modules.Backend.Backend;
+import modules.Logger.Logger;
 import channels.*;
 
 network Three_HoM_star
@@ -49,6 +50,7 @@ network Three_HoM_star
         //    @display("p=100,100");
         //}
         backend: Backend;
+        logger: Logger;
         EndNode[3]: QNode {
             //Initializerでaddress = node idにすればconflict無くなるかも。
             address = index+100000;
@@ -119,6 +121,7 @@ network Star_MSM
         }
     submodules:
         backend: Backend;
+        logger: Logger;
         node[3]: QNode {
             address = index;
             nodeType = "EndNode";
@@ -208,6 +211,7 @@ network Star_MM
         }
     submodules:
         backend: Backend;
+        logger: Logger;
         node[3]: QNode {
             address = index;
             nodeType = "EndNode";
