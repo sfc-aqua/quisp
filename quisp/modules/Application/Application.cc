@@ -5,7 +5,6 @@
  *  \brief Application
  */
 #include "Application.h"
-#include <spdlog/spdlog.h>
 #include <vector>
 #include "utils/ComponentProvider.h"
 
@@ -100,7 +99,7 @@ ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr,
 void Application::handleMessage(cMessage *msg) {
   if (dynamic_cast<deleteThisModule *>(msg)) {
     delete msg;
-    // deleteModule();
+    deleteModule();
     return;
   }
 

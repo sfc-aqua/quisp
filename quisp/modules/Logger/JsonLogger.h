@@ -8,7 +8,7 @@
 namespace quisp::modules::Logger {
 
 /**
- * \brief Default Logger class using spdlog library and jsonl format
+ * \brief JsonLogger class uses spdlog library and yields jsonl format log
  */
 class JsonLogger : public ILogger {
  public:
