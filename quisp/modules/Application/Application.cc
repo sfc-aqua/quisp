@@ -104,19 +104,19 @@ void Application::handleMessage(cMessage *msg) {
   }
 
   if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)) {
-    logger->logPacket("handleMessage", msg);
+    logPacket("handleMessage", msg);
     send(msg, "toRouter");
     return;
   }
 
   if (dynamic_cast<ConnectionSetupResponse *>(msg)) {
-    logger->logPacket("handleMessage", msg);
+    logPacket("handleMessage", msg);
     send(msg, "toRouter");
     return;
   }
 
   if (dynamic_cast<InternalRuleSetForwarding *>(msg)) {
-    logger->logPacket("handleMessage", msg);
+    logPacket("handleMessage", msg);
     send(msg, "toRouter");
     return;
   }
