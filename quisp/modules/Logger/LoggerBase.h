@@ -13,7 +13,7 @@ class LoggerBase {
   LoggerBase();
   ~LoggerBase();
   void initializeLogger(utils::ComponentProvider& provider);
-  void logPacket(std::string event_type, omnetpp::cMessage* msg);
+  void logPacket(const std::string& event_type, omnetpp::cMessage const* const msg);
 
  protected:
   ILogger* logger = nullptr;

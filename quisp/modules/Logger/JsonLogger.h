@@ -14,14 +14,14 @@ class JsonLogger : public ILogger {
  public:
   JsonLogger(std::shared_ptr<spdlog::logger> logger);
   virtual ~JsonLogger();
-  void logPacket(std::string event_type, omnetpp::cMessage* msg) override;
-  void setModule(omnetpp::cModule* mod) override;
+  void logPacket(const std::string& event_type, omnetpp::cMessage const* const msg) override;
+  void setModule(omnetpp::cModule const* const mod) override;
 
  protected:
   std::shared_ptr<spdlog::logger> _logger;
-  static std::string format(omnetpp::cMessage* msg);
+  static std::string format(omnetpp::cMessage const* const msg);
 
   std::string module_path;
-  omnetpp::cModule* module;
+  omnetpp::cModule const* module;
 };
 }  // namespace quisp::modules::Logger

@@ -7,7 +7,7 @@ class TestLogger : public ILogger {
  public:
   TestLogger() {}
   ~TestLogger() {}
-  void logPacket(std::string event_type, omnetpp::cMessage* msg) override { std::cout << "logPacket: " << event_type << std::endl; };
-  void setModule(omnetpp::cModule* mod) override {}
+  void logPacket(const std::string& event_type, omnetpp::cMessage const* const msg) override { std::cout << "logPacket: " << event_type << std::endl; };
+  void setModule(omnetpp::cModule const* const mod) override {}
 };
 }  // namespace quisp_test::Logger

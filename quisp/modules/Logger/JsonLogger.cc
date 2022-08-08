@@ -15,17 +15,17 @@ JsonLogger::JsonLogger(std::shared_ptr<spdlog::logger> logger) : _logger(logger)
 
 JsonLogger::~JsonLogger() {}
 
-void JsonLogger::setModule(omnetpp::cModule* mod) {
+void JsonLogger::setModule(omnetpp::cModule const* const mod) {
   module = mod;
   module_path = mod->getFullPath();
 }
 
-void JsonLogger::logPacket(std::string event_type, omnetpp::cMessage* msg) {
+void JsonLogger::logPacket(const std::string& event_type, omnetpp::cMessage const* const msg) {
   auto current_time = omnetpp::simTime();
   _logger->info("\"simtime\": {}, \"event_type\": \"{}\", \"path\": \"{}\", {}", current_time, event_type, module_path, format(msg));
 }
 
-std::string JsonLogger::format(omnetpp::cMessage* msg) {
+std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
   if (auto* req = dynamic_cast<const quisp::messages::ConnectionSetupRequest*>(msg)) {
     std::stringstream os;
     os << "\"msg_type\": \"ConnectionSetupRequest\"";
