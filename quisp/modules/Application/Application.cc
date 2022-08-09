@@ -5,14 +5,31 @@
  *  \brief Application
  */
 #include "Application.h"
+#include <omnetpp.h>
+#include <pybind11/detail/common.h>
+#include <pybind11/pybind11.h>
+#include <functional>
+#include <memory>
 #include <vector>
+#include "messages/base_messages_m.h"
+#include "messages/connection_setup_messages_m.h"
+#include "modules/Application/IApplication.h"
 #include "utils/ComponentProvider.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
+namespace py = pybind11;
 
 namespace quisp {
 namespace modules {
+
+PYBIND11_EMBEDDED_MODULE(application, m) {
+  py::class_<Application, std::unique_ptr<Application, pybind11::nodelete>, cSimpleModule> QuispApplication(m, "Application");
+  QuispApplication.def("create_conn_setup_req", &Application::createConnectionSetupRequest);
+  QuispApplication.def_readonly("my_address", &Application::my_address);
+  QuispApplication.def("get_one_random_endnode_addr", &Application::getOneRandomEndNodeAddress);
+  py::class_<ConnectionSetupRequest, std::unique_ptr<ConnectionSetupRequest, py::nodelete>, omnetpp::cMessage>(m, "ConnectionSetupRequest");
+}
 
 Application::Application() : provider(utils::ComponentProvider{this}) {}
 
@@ -29,18 +46,25 @@ void Application::initialize() {
     return;
   }
 
+  WATCH_VECTOR(other_end_node_addresses);
+  storeEndNodeAddresses();
+
+#ifdef ENABLE_PYTHON
+  const char *app_py_path = par("app_py_path").stringValue();
+  compile_code(app_py_path);
+  auto obj = py::cast(this);
+  execute_python("init_app_module", obj);
+
+#else
+
   my_address = provider.getQNode()->par("address");
   is_e2e_connection = par("EndToEndConnection");
   num_measure = par("distant_measure_count");
-
-  WATCH_VECTOR(other_end_node_addresses);
-  storeEndNodeAddresses();
+  traffic_pattern = par("TrafficPattern");
 
   if (!is_e2e_connection) {
     return;
   }
-
-  traffic_pattern = par("TrafficPattern");
 
   if (traffic_pattern == 0) {
     EV_INFO << "EndToEndConnection is set true. but no traffic pattern specified; proceeding with no traffic\n";
@@ -72,6 +96,7 @@ void Application::initialize() {
   }
 
   error("Invalid TrafficPattern specified.");
+#endif
 }
 
 /**

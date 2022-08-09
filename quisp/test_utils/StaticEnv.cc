@@ -11,6 +11,7 @@ using configuration::Configuration;
 StaticEnv::StaticEnv() {}
 
 cConfiguration *StaticEnv::getConfig() { return new Configuration(); }
+cConfigurationEx *StaticEnv::getConfigEx() { return new Configuration(); }
 std::string StaticEnv::gets(const char *prompt, const char *defaultreply) {
   unsupported();
   return "";

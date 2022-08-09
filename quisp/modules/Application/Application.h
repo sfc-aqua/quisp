@@ -8,6 +8,7 @@
 #ifndef MODULES_APPLICATION_H_
 #define MODULES_APPLICATION_H_
 
+#include <modules/Common/PythonEmbeddedable.h>
 #include "IApplication.h"
 #include "utils/ComponentProvider.h"
 
@@ -20,12 +21,11 @@ namespace modules {
  *
  *  \brief Application
  */
-class Application : public IApplication {
+class Application : public IApplication, python_embeddable::PythonEmbeddable {
  public:
   Application();
   ~Application() {}
 
- protected:
   int my_address;
 
   std::vector<int> other_end_node_addresses;

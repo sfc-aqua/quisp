@@ -70,6 +70,7 @@ class StaticEnv : public omnetpp::cEnvir {
   void flushXMLParsedContentCache() override {}
   unsigned getExtraStackForEnvir() const override { return 0; }
   cConfiguration *getConfig() override;
+  cConfigurationEx *getConfigEx() override;
   std::string resolveResourcePath(const char *fileName, cComponentType *context) override { return ""; }
   bool isGUI() const override { return false; }
   bool isExpressMode() const override { return false; }
