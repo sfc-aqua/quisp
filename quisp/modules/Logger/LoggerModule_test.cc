@@ -9,7 +9,8 @@ using namespace quisp_test::utils;
 using namespace quisp::modules;
 class LoggerModule : public quisp::modules::Logger::LoggerModule {
  public:
-  using quisp::modules::Logger::LoggerModule::trim_quotes;
+  using quisp::modules::Logger::LoggerModule::toLoggerType;
+  using quisp::modules::Logger::LoggerModule::trimQuotes;
 };
 class LoggerModuleTest : public testing::Test {
  protected:
@@ -18,6 +19,7 @@ class LoggerModuleTest : public testing::Test {
     logger_module = new LoggerModule();
     logger_module->setComponentType(new TestModuleType("test logger module"));
     setParStr(logger_module, "log_filename", "test.log");
+    setParStr(logger_module, "logger", "JsonLogger");
     sim->registerComponent(logger_module);
   }
   void TearDown() { logger_module->deleteModule(); }
@@ -25,12 +27,19 @@ class LoggerModuleTest : public testing::Test {
   utils::TestSimulation *sim;
 };
 
-TEST_F(LoggerModuleTest, trim_quote) {
-  EXPECT_EQ(LoggerModule::trim_quotes("\"test\""), "test");
-  EXPECT_EQ(LoggerModule::trim_quotes("test\""), "test");
-  EXPECT_EQ(LoggerModule::trim_quotes("\"test"), "test");
-  EXPECT_EQ(LoggerModule::trim_quotes("test"), "test");
+TEST_F(LoggerModuleTest, trimQuote) {
+  EXPECT_EQ(LoggerModule::trimQuotes("\"test\""), "test");
+  EXPECT_EQ(LoggerModule::trimQuotes("test\""), "test");
+  EXPECT_EQ(LoggerModule::trimQuotes("\"test"), "test");
+  EXPECT_EQ(LoggerModule::trimQuotes("test"), "test");
 }
+
+TEST_F(LoggerModuleTest, toLoggerType) {
+  using quisp::modules::Logger::LoggerType;
+  EXPECT_EQ(LoggerModule::toLoggerType("JsonLogger"), LoggerType::JsonLogger);
+  EXPECT_EQ(LoggerModule::toLoggerType("UnknownLogger"), LoggerType::Unknown);
+}
+
 TEST_F(LoggerModuleTest, initialize) { logger_module->callInitialize(); }
 
 TEST_F(LoggerModuleTest, finish) {

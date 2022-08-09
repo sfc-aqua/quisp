@@ -5,4 +5,6 @@ simple Logger
 {
     @class(LoggerModule);
     string log_filename;
+
+    string logger = default("JsonLogger");
 }

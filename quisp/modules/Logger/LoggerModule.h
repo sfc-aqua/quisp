@@ -7,6 +7,12 @@
 #include "ILogger.h"
 
 namespace quisp::modules::Logger {
+
+enum class LoggerType {
+  Unknown,
+  JsonLogger,
+};
+
 class LoggerModule : public omnetpp::cSimpleModule {
  public:
   LoggerModule();
@@ -17,8 +23,10 @@ class LoggerModule : public omnetpp::cSimpleModule {
 
  protected:
   std::shared_ptr<spdlog::logger> logger;
+  LoggerType logger_type = LoggerType::Unknown;
 
-  static std::string trim_quotes(std::string s);
+  static std::string trimQuotes(std::string s);
+  static LoggerType toLoggerType(const std::string& s);
 };
 Define_Module(LoggerModule);
 }  // namespace quisp::modules::Logger
