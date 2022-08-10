@@ -6,6 +6,8 @@ import ned.IdealChannel;
 import channels.*;
 import modules.*;
 import modules.Backend.Backend;
+import modules.Logger.Logger;
+
 
 network Linear_five_MM_network
 {
@@ -15,6 +17,7 @@ network Linear_five_MM_network
         @display("bgb=707,326");
     submodules:
         backend: Backend;
+        logger: Logger;
         EndNode1[1]: QNode {
             address = 1;
             nodeType = "EndNode";

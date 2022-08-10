@@ -10,3 +10,6 @@
 [submodule "quispr"]
 	path = quispr
 	url = https://github.com/sfc-aqua/quispr
+[submodule "spdlog"]
+	path = spdlog
+	url = https://github.com/gabime/spdlog.git

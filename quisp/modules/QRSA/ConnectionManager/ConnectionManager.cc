@@ -25,6 +25,7 @@ Define_Module(ConnectionManager);
 ConnectionManager::ConnectionManager() : provider(utils::ComponentProvider{this}) {}
 
 void ConnectionManager::initialize() {
+  initializeLogger(provider);
   routing_daemon = provider.getRoutingDaemon();
   hardware_monitor = provider.getHardwareMonitor();
   my_address = par("address");
@@ -70,6 +71,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
     }
     error("receive a send self-notification but cannot find which qnic to use");
   }
+  logPacket("handleMessage", msg);
 
   if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)) {
     int actual_dst = req->getActual_destAddr();

@@ -2,8 +2,9 @@ package networks;
 
 import ned.DatarateChannel;
 import modules.*;
-import modules.Backend.Backend;
 import channels.*;
+import modules.Backend.Backend;
+import modules.Logger.Logger;
 
 //
 // TODO auto-generated type
@@ -29,6 +30,7 @@ network Simple_constant_quantum_cost
 
     submodules:
         backend: Backend;
+        logger: Logger;
         endnode[3]: QNode {
             address = 10000000+index;
             nodeType = "EndNode";

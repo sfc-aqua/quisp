@@ -10,6 +10,7 @@ out/
 .oppfeaturestate
 quisp.dSYM/
 Test*
+!test_utils
 
 PhotonicQubit_m.cc
 PhotonicQubit_m.h

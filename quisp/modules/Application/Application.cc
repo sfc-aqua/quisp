@@ -22,6 +22,8 @@ Application::Application() : provider(utils::ComponentProvider{this}) {}
  * If the node type is not EndNode, this module is automatically deleted in this function.
  */
 void Application::initialize() {
+  initializeLogger(provider);
+
   // Since we only need this module in EndNode, delete it otherwise.
   if (!gate("toRouter")->isConnected()) {
     deleteThisModule *msg = new deleteThisModule("DeleteThisModule");
@@ -101,12 +103,20 @@ void Application::handleMessage(cMessage *msg) {
     return;
   }
 
-  if (dynamic_cast<ConnectionSetupRequest *>(msg) || dynamic_cast<ConnectionSetupResponse *>(msg)) {
+  if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)) {
+    logPacket("handleMessage", msg);
+    send(msg, "toRouter");
+    return;
+  }
+
+  if (dynamic_cast<ConnectionSetupResponse *>(msg)) {
+    logPacket("handleMessage", msg);
     send(msg, "toRouter");
     return;
   }
 
   if (dynamic_cast<InternalRuleSetForwarding *>(msg)) {
+    logPacket("handleMessage", msg);
     send(msg, "toRouter");
     return;
   }

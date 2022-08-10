@@ -37,14 +37,8 @@ void Queue::startTransmitting(cMessage *msg) {
   EV_INFO << "Starting transmission of " << msg << endl;
   is_busy = true;
   int64_t num_bytes = check_and_cast<cPacket *>(msg)->getByteLength();
-
-  EV_DEBUG << "here.....1\n";
   send(msg, "line$o");  // inout gate's output
-
-  EV_DEBUG << "here.....2\n";
   emit(tx_bytes_signal, (long)num_bytes);
-
-  EV_DEBUG << "here.....3\n";
 
   // Schedule an event for the time when last bit will leave the gate.
   simtime_t transmission_finish_time = gate("line$o")->getTransmissionChannel()->getTransmissionFinishTime();

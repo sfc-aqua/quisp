@@ -5,6 +5,7 @@ import ned.IdealChannel;
 
 import modules.*;
 import modules.Backend.Backend;
+import modules.Logger.Logger;
 import channels.*;
 
 
@@ -15,6 +16,7 @@ network Tomography_Linear_One_MM_MIM
 
     submodules:
         backend: Backend;
+        logger: Logger;
         EndNode[2]: QNode {
             address = index;
             nodeType = "EndNode";
@@ -53,6 +55,7 @@ network Linear_One_MIM
 
     submodules:
         backend: Backend;
+        logger: Logger;
         source: QNode {
             address = 1;
             nodeType = "EndNode";
@@ -88,6 +91,7 @@ network Linear_One_MIM_biasedDistance
 
     submodules:
         backend: Backend;
+        logger: Logger;
         source: QNode {
             address = 1;
             nodeType = "EndNode";
@@ -123,6 +127,7 @@ network Linear_One_MM
 
     submodules:
         backend: Backend;
+        logger: Logger;
         EndNode[2]: QNode {
             address = index;
             nodeType = "EndNode";
@@ -143,6 +148,7 @@ network Linear_One_MM_bufferGap
 
     submodules:
         backend: Backend;
+        logger: Logger;
         Small: QNode {
             address = 112302;
             nodeType = "EndNode";
@@ -172,6 +178,7 @@ network Linear_One_MSM
         @display("bgb=281,95");
     submodules:
         backend: Backend;
+        logger: Logger;
         source: QNode {
             address = 1;
             nodeType = "EndNode";

@@ -31,8 +31,9 @@ CXXFLAGS+=-ftest-coverage -fprofile-instr-generate -fcoverage-mapping
 LDFLAGS+=-ftest-coverage -fprofile-instr-generate -fcoverage-mapping
 endif
 
-# include path for json
+# include path for external libs
 INCLUDE_PATH+=-I$(PROJ_ROOT)/json/include/
+INCLUDE_PATH+=-I$(PROJ_ROOT)/spdlog/include/
 
 default: eigen all
 
@@ -67,7 +68,7 @@ $(TARGET_DIR)/coverage.profdata: $(TARGET_DIR)/coverage.profraw
 	llvm-profdata merge -sparse -o $(TARGET_DIR)/coverage.profdata $(TARGET_DIR)/coverage.profraw
 
 $(TARGET_DIR)/lcov.info: $(TARGET_DIR)/coverage.profdata
-	llvm-cov export -instr-profile=./coverage.profdata ./run_unit_test -format=lcov ../ -ignore-filename-regex=".*_test.cc|.*_test_main.cc|googletest/.*|json/.*|eigen/.*|.*test_utils/.*|.*_m.h|.*_m.cc" > lcov.info
+	llvm-cov export -instr-profile=./coverage.profdata ./run_unit_test -format=lcov ../ -ignore-filename-regex=".*_test.cc|.*_test_main.cc|googletest/.*|json/.*|eigen/.*|.*test_utils/.*|spdlog/|.*_m.h|.*_m.cc" > lcov.info
 
 $(TARGET_DIR)/coverage/index.html: $(TARGET_DIR)/lcov.info
 	genhtml lcov.info -o $(TARGET_DIR)/coverage
