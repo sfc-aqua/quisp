@@ -10,6 +10,7 @@
 #include <vector>
 
 #include <messages/classical_messages.h>
+#include <modules/Logger/LoggerBase.h>
 #include <modules/PhysicalConnection/BSA/HoMController.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/HardwareMonitor/HardwareMonitor.h>

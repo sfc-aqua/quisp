@@ -29,6 +29,7 @@ void RuleEngine::initialize() {
   hardware_monitor = provider.getHardwareMonitor();
   realtime_controller = provider.getRealTimeController();
   routingdaemon = provider.getRoutingDaemon();
+  initializeLogger(provider);
 
   parentAddress = par("address");
   number_of_qnics_all = par("total_number_of_qnics");
@@ -36,7 +37,7 @@ void RuleEngine::initialize() {
   number_of_qnics_r = par("number_of_qnics_r");
   number_of_qnics_rp = par("number_of_qnics_rp");
   if (qnic_store == nullptr) {
-    qnic_store = std::make_unique<QNicStore>(provider, number_of_qnics, number_of_qnics_r, number_of_qnics_rp);
+    qnic_store = std::make_unique<QNicStore>(provider, number_of_qnics, number_of_qnics_r, number_of_qnics_rp, logger);
   }
 
   terminated_qnic = new bool[number_of_qnics_all];
