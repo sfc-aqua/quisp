@@ -71,14 +71,11 @@ struct PhotonTransmissionConfig {
   double interval;
 };
 
-typedef std::map<int, QubitState> QubitStateTable;
 typedef std::multimap<int, purification_result> PurificationTable;  // map<partner, purification_result>
 typedef std::multimap<unsigned long, Doublepurification_result> DoublePurificationTable;
 typedef std::multimap<unsigned long, Quatropurification_result> QuatroPurificationTable;
 typedef std::multimap<unsigned long, Triplepurification_result> TriplePurificationTable;
 typedef std::map<int, QubitAddr_cons> sentQubitIndexTracker;  // nth shot -> node/qnic/qubit index (node addr not needed actually)
-typedef std::map<int, bool> trial_tracker;  // trial index, false or true (that trial is over or not)
-typedef std::map<int, ActiveRule *> rule_ptr;
 
 class IRuleEngine : public cSimpleModule {
  public:
