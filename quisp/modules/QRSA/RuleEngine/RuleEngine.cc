@@ -38,8 +38,6 @@ void RuleEngine::initialize() {
   if (qnic_store == nullptr) {
     qnic_store = std::make_unique<QNicStore>(provider, number_of_qnics, number_of_qnics_r, number_of_qnics_rp);
   }
-  // recog_resSignal = registerSignal("recog_res");
-  actual_resSignal = registerSignal("actual_res");
 
   terminated_qnic = new bool[number_of_qnics_all];
   // if there are 2 qnics, 1 qnic_r, and 2 qnic_rp,

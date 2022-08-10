@@ -43,11 +43,7 @@ using qubit_record::IQubitRecord;
  *  \brief RuleEngine
  */
 
-class RuleEngine : public IRuleEngine {
- private:
-  // simsignal_t recog_resSignal;
-  simsignal_t actual_resSignal;
-  // friend class Action;
+class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
  public:
   RuleEngine();
   int parentAddress;  // Parent QNode's address
