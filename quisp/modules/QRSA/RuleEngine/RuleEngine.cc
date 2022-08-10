@@ -5,18 +5,17 @@
  *  \brief RuleEngine
  */
 
-#include "RuleEngine.h"
 #include <fstream>
 #include <iterator>
 #include <memory>
 #include <utility>
+
+#include <utils/ComponentProvider.h>
 #include "QNicStore/QNicStore.h"
-#include "utils/ComponentProvider.h"
+#include "RuleEngine.h"
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
-Define_Module(RuleEngine);
 using namespace rules;
 using namespace rules::active;
 using qnic_store::QNicStore;
@@ -1357,5 +1356,4 @@ void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, ISt
   bell_pair_store.eraseQubit(qubit_record);
 }
 
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules

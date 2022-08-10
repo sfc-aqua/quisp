@@ -1,23 +1,21 @@
-#ifndef QUISP_MODULES_IRULEENGINE_H_
-#define QUISP_MODULES_IRULEENGINE_H_
+#pragma once
 
 #include <omnetpp.h>
-#include <rules/Active/ActiveRuleSet.h>
-#include <rules/RuleSet.h>
 #include <vector>
 
 #include <messages/classical_messages.h>
-#include "../../PhysicalConnection/BSA/HoMController.h"
-#include "modules/QNIC/StationaryQubit/StationaryQubit.h"
-#include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
-#include "modules/QRSA/RealTimeController/IRealTimeController.h"
-#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
-#include "modules/QUBIT.h"
+#include <modules/PhysicalConnection/BSA/HoMController.h>
+#include <modules/QNIC/StationaryQubit/StationaryQubit.h>
+#include <modules/QRSA/HardwareMonitor/HardwareMonitor.h>
+#include <modules/QRSA/RealTimeController/IRealTimeController.h>
+#include <modules/QRSA/RoutingDaemon/RoutingDaemon.h>
+#include <modules/QUBIT.h>
+#include <rules/Active/ActiveRuleSet.h>
+#include <rules/RuleSet.h>
 
 using namespace omnetpp;
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 using namespace rules::active;
 
 typedef struct {
@@ -90,7 +88,4 @@ class IRuleEngine : public cSimpleModule {
   virtual void ResourceAllocation(int qnic_type, int qnic_index) = 0;
 };
 
-}  // namespace modules
-}  // namespace quisp
-
-#endif /* MODULES_IRULEENGINE_H_ */
+}  // namespace quisp::modules
