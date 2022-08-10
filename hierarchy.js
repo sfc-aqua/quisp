@@ -69,6 +69,7 @@ var hierarchy =
         [ "quisp::modules::StationaryQubit", "classquisp_1_1modules_1_1_stationary_qubit.html", null ],
         [ "quisp_test::mock_modules::stationary_qubit::MockQubit", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html", null ]
       ] ],
+      [ "quisp::modules::Logger::LoggerModule", "classquisp_1_1modules_1_1_logger_1_1_logger_module.html", null ],
       [ "quisp::modules::PhotonicSwitch", "classquisp_1_1modules_1_1_photonic_switch.html", null ],
       [ "quisp::modules::Queue", "classquisp_1_1modules_1_1_queue.html", null ],
       [ "quisp::modules::Router", "classquisp_1_1modules_1_1_router.html", null ],
@@ -90,6 +91,10 @@ var hierarchy =
     [ "quisp::utils::IComponentProviderStrategy", "classquisp_1_1utils_1_1_i_component_provider_strategy.html", [
       [ "quisp::utils::DefaultComponentProviderStrategy", "classquisp_1_1utils_1_1_default_component_provider_strategy.html", null ],
       [ "quisp_test::strategy::TestComponentProviderStrategy", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html", null ]
+    ] ],
+    [ "quisp::modules::Logger::ILogger", "classquisp_1_1modules_1_1_logger_1_1_i_logger.html", [
+      [ "quisp::modules::Logger::JsonLogger", "classquisp_1_1modules_1_1_logger_1_1_json_logger.html", null ],
+      [ "quisp_test::Logger::TestLogger", "classquisp__test_1_1_logger_1_1_test_logger.html", null ]
     ] ],
     [ "quisp::modules::InterfaceInfo", "structquisp_1_1modules_1_1_interface_info.html", null ],
     [ "quisp::modules::qnic_record::IQNicRecord", "classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record.html", [
@@ -122,6 +127,10 @@ var hierarchy =
     ] ],
     [ "quisp::modules::link_cost", "structquisp_1_1modules_1_1link__cost.html", null ],
     [ "quisp::modules::qrsa::LocalQubitRef", "structquisp_1_1modules_1_1qrsa_1_1_local_qubit_ref.html", null ],
+    [ "quisp::modules::Logger::LoggerBase", "classquisp_1_1modules_1_1_logger_1_1_logger_base.html", [
+      [ "quisp::modules::Application", "classquisp_1_1modules_1_1_application.html", null ],
+      [ "quisp::modules::ConnectionManager", "classquisp_1_1modules_1_1_connection_manager.html", null ]
+    ] ],
     [ "quisp::modules::measurement_operator", "structquisp_1_1modules_1_1measurement__operator.html", null ],
     [ "quisp::modules::measurement_operators", "structquisp_1_1modules_1_1measurement__operators.html", null ],
     [ "quisp::modules::measurement_outcome", "structquisp_1_1modules_1_1measurement__outcome.html", null ],

@@ -1,7 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classquisp_1_1rules_1_1_clause.html" title=" " alt="" coords="5,111,139,138"/>
-<area shape="rect" id="node2" href="$classquisp_1_1rules_1_1_enough_resource_condition_clause.html" title=" " alt="" coords="187,5,377,47"/>
-<area shape="rect" id="node3" href="$classquisp_1_1rules_1_1_fidelity_condition_clause.html" title=" " alt="" coords="188,71,376,112"/>
-<area shape="rect" id="node4" href="$classquisp_1_1rules_1_1_measure_count_condition_clause.html" title=" " alt="" coords="193,136,371,177"/>
-<area shape="rect" id="node5" href="$classquisp_1_1rules_1_1_wait_condition_clause.html" title=" " alt="" coords="195,201,369,243"/>
+<area shape="rect" id="node1" href="$classquisp_1_1rules_1_1active_1_1clauses_1_1_active_clause.html" title=" " alt="" coords="5,136,161,177"/>
+<area shape="rect" id="node2" href="$classquisp_1_1rules_1_1active_1_1clauses_1_1_enough_resource_clause.html" title=" " alt="" coords="209,5,427,47"/>
+<area shape="rect" id="node3" href="$classquisp_1_1rules_1_1active_1_1clauses_1_1_fidelity_clause.html" title=" " alt="" coords="238,71,398,112"/>
+<area shape="rect" id="node4" href="$classquisp_1_1rules_1_1active_1_1clauses_1_1_measure_count_clause.html" title=" " alt="" coords="217,136,419,177"/>
+<area shape="rect" id="node5" href="$classquisp_1_1rules_1_1active_1_1clauses_1_1_purification_count_clause.html" title=" " alt="" coords="229,201,407,257"/>
+<area shape="rect" id="node6" href="$classquisp_1_1rules_1_1active_1_1clauses_1_1_wait_clause.html" title=" " alt="" coords="245,280,391,321"/>
 </map>

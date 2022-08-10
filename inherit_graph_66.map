@@ -1,7 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classquisp_1_1rules_1_1_action.html" title=" " alt="" coords="5,97,136,123"/>
-<area shape="rect" id="node2" href="$classquisp_1_1rules_1_1_entanglement_swapping.html" title=" " alt="" coords="184,5,356,47"/>
-<area shape="rect" id="node3" href="$classquisp_1_1rules_1_1_purification.html" title=" " alt="" coords="191,71,349,98"/>
-<area shape="rect" id="node4" href="$classquisp_1_1rules_1_1_tomography.html" title=" " alt="" coords="188,122,352,149"/>
-<area shape="rect" id="node5" href="$classquisp_1_1rules_1_1_wait.html" title=" " alt="" coords="211,173,329,199"/>
+<area shape="rect" id="node1" href="$structquisp_1_1modules_1_1_two_qubit_gate_error_model.html" title=" " alt="" coords="5,5,176,47"/>
 </map>

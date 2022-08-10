@@ -1,14 +1,20 @@
 var searchData=
 [
-  ['undisposedobject_0',['undisposedObject',['../classquisp__test_1_1env_1_1_static_env.html#a6f9be36c1b84afdb1445c6fc8ce244c6',1,'quisp_test::env::StaticEnv']]],
-  ['unlock_1',['Unlock',['../classquisp_1_1modules_1_1_i_stationary_qubit.html#a7994f362fba966f10ffc8dd24cecfd3d',1,'quisp::modules::IStationaryQubit::Unlock()'],['../classquisp_1_1modules_1_1_stationary_qubit.html#a56fc6c0cd54b3e6cbb025ad058053efb',1,'quisp::modules::StationaryQubit::Unlock()']]],
-  ['unlock_5fresource_5fand_5fdiscard_2',['Unlock_resource_and_discard',['../classquisp_1_1modules_1_1_rule_engine.html#a62246a4a5421ef828b3c2742f3484fee',1,'quisp::modules::RuleEngine']]],
-  ['unlock_5fresource_5fand_5fupgrade_5fstage_3',['Unlock_resource_and_upgrade_stage',['../classquisp_1_1modules_1_1_rule_engine.html#a29671204686e541942d7375e79c62e74',1,'quisp::modules::RuleEngine']]],
-  ['unrefosgnode_4',['unrefOsgNode',['../classquisp__test_1_1env_1_1_static_env.html#a6f3b720479d093d912573d3df9247921',1,'quisp_test::env::StaticEnv']]],
-  ['unsupported_5',['unsupported',['../classquisp__test_1_1env_1_1_static_env.html#af372c0c3b4bce34b7d0b240aae07c40a',1,'quisp_test::env::StaticEnv']]],
-  ['update_6',['update',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a95fa5a808d803da5d0c5d110a3b6ffc1',1,'quisp::backends::error_tracking::ErrorTrackingQubit']]],
-  ['updateide_5fparameter_7',['updateIDE_Parameter',['../classquisp_1_1modules_1_1_ho_m_controller.html#a44d9c4d86e33d1ce20ad9c407e07815f',1,'quisp::modules::HoMController']]],
-  ['updateresources_5fentanglementswapping_8',['updateResources_EntanglementSwapping',['../classquisp_1_1modules_1_1_rule_engine.html#afa2769dfc5f5d181865e141e59c73981',1,'quisp::modules::RuleEngine']]],
-  ['updateresources_5fsimultaneousentanglementswapping_9',['updateResources_SimultaneousEntanglementSwapping',['../classquisp_1_1modules_1_1_rule_engine.html#a472b72c389f890e045636e22cd8a72a1',1,'quisp::modules::RuleEngine']]],
-  ['usetestrng_10',['useTestRNG',['../namespacequisp__test_1_1utils.html#ac9608fdc54533daf8f1d6f999bce6e56',1,'quisp_test::utils']]]
+  ['takefreequbitindex_0',['takeFreeQubitIndex',['../classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record.html#a571c47a0807261a522413cc036b2cded',1,'quisp::modules::qnic_record::QNicRecord::takeFreeQubitIndex()'],['../classquisp_1_1modules_1_1qnic__store_1_1_i_q_nic_store.html#a0e1b1fbcbbf916822d3982241fa1d895',1,'quisp::modules::qnic_store::IQNicStore::takeFreeQubitIndex()'],['../classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html#a41e49672b1540f6cb2e532f72557aeed',1,'quisp::modules::qnic_store::QNicStore::takeFreeQubitIndex()'],['../classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record.html#a2917cd1811f2d3939a6039793a65026c',1,'quisp::modules::qnic_record::IQNicRecord::takeFreeQubitIndex()']]],
+  ['tempgate_1',['TempGate',['../classquisp__test_1_1gate_1_1_temp_gate.html#aea4d4facb88c646f0a26aa71615ed904',1,'quisp_test::gate::TempGate']]],
+  ['testcomponentproviderstrategy_2',['TestComponentProviderStrategy',['../classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a4ebb306c92ab52c8ddd80ea8cd26be64',1,'quisp_test::strategy::TestComponentProviderStrategy::TestComponentProviderStrategy()'],['../classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a51fe0788b31e3ae9fd4cc5e9d880e9d7',1,'quisp_test::strategy::TestComponentProviderStrategy::TestComponentProviderStrategy(std::vector&lt; QNicSpec &gt; specs)']]],
+  ['testgate_3',['TestGate',['../classquisp__test_1_1gate_1_1_test_gate.html#ac42fcb31bef305b3117a9b6b36f47ccc',1,'quisp_test::gate::TestGate']]],
+  ['testkeyvalue_4',['TestKeyValue',['../classquisp__test_1_1key__value_1_1_test_key_value.html#a04ebf9677d99293c78f30b2f66dd8ab4',1,'quisp_test::key_value::TestKeyValue']]],
+  ['testlogger_5',['TestLogger',['../classquisp__test_1_1_logger_1_1_test_logger.html#a5ac2ac1ec87cf39c4eaabcc633ec3a34',1,'quisp_test::Logger::TestLogger']]],
+  ['testmoduletype_6',['TestModuleType',['../classquisp__test_1_1module__type_1_1_test_module_type.html#aad45cd931ec980dd99bb5cd7efadd632',1,'quisp_test::module_type::TestModuleType']]],
+  ['testqnode_7',['TestQNode',['../classquisp__test_1_1qnode_1_1_test_q_node.html#a028967fe93397640b344e889f57a0620',1,'quisp_test::qnode::TestQNode']]],
+  ['testrng_8',['TestRNG',['../classquisp__test_1_1backends_1_1_test_r_n_g.html#a63b811e7db69db915964dff8ba3461f4',1,'quisp_test::backends::TestRNG']]],
+  ['testsimulation_9',['TestSimulation',['../classquisp__test_1_1simulation_1_1_test_simulation.html#a16e6f7a5be69e039d45db2ee7d1c158a',1,'quisp_test::simulation::TestSimulation']]],
+  ['toggleedge_10',['toggleEdge',['../classquisp_1_1modules_1_1_stationary_qubit.html#aad3feb47d9cff5aa79066b8da765e8dc',1,'quisp::modules::StationaryQubit']]],
+  ['tologgertype_11',['toLoggerType',['../classquisp_1_1modules_1_1_logger_1_1_logger_module.html#abfcb140ea82ad4928b2cf400c6bfc3d3',1,'quisp::modules::Logger::LoggerModule']]],
+  ['tomography_12',['Tomography',['../classquisp_1_1rules_1_1_tomography.html#aba41ab4f8e84a698944567ead4fcbc52',1,'quisp::rules::Tomography::Tomography(json serialized)'],['../classquisp_1_1rules_1_1_tomography.html#abb4bf1ac746887c65ff2f0282e6111ce',1,'quisp::rules::Tomography::Tomography(int num_measurement, int owner_addr, int partner_addr, QNIC_type qnic_type, int qnic_id)']]],
+  ['tomographyrule_13',['tomographyRule',['../classquisp_1_1modules_1_1_connection_manager.html#adc6997ccd1c3c44de35a69318b168da1',1,'quisp::modules::ConnectionManager']]],
+  ['traversethroughallprocesses2_14',['traverseThroughAllProcesses2',['../classquisp_1_1modules_1_1_rule_engine.html#a057e7140cef44d74b5be6c2cc3da9e92',1,'quisp::modules::RuleEngine']]],
+  ['trimquotes_15',['trimQuotes',['../classquisp_1_1modules_1_1_logger_1_1_logger_module.html#a9be662e22f2bae542a890308fdede9a5',1,'quisp::modules::Logger::LoggerModule']]],
+  ['tryrelayrequesttonexthop_16',['tryRelayRequestToNextHop',['../classquisp_1_1modules_1_1_connection_manager.html#a507ba05256fa6d73c3827324634c2a42',1,'quisp::modules::ConnectionManager']]]
 ];

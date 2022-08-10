@@ -37,14 +37,17 @@ var NAVTREE =
     [ "Learning more", "index.html#autotoc_md10", null ],
     [ "Contributing", "index.html#autotoc_md11", null ],
     [ "License", "index.html#autotoc_md12", null ],
+    [ "Logging", "md_quisp_modules__logger__r_e_a_d_m_e.html", [
+      [ "Usage", "md_quisp_modules__logger__r_e_a_d_m_e.html#autotoc_md14", null ]
+    ] ],
     [ "Test Utilities", "md_quisp_test_utils__r_e_a_d_m_e.html", [
-      [ "Usage", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md36", null ],
-      [ "Grab a packet", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md37", null ],
-      [ "Example", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md38", null ]
+      [ "Usage", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md38", null ],
+      [ "Grab a packet", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md39", null ],
+      [ "Example", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md40", null ]
     ] ],
     [ "quisp::utils", "md_quisp_utils__r_e_a_d_m_e.html", [
-      [ "ComponentProvider", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md40", null ],
-      [ "Unit Testing", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md41", null ]
+      [ "ComponentProvider", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md42", null ],
+      [ "Unit Testing", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md43", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -83,23 +86,23 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_access_private_8h.html",
-"_i_stationary_qubit_8h.html#a7d975efdf0e514097cc27f3bf2832d43a5c1f2e6ab420faca44be7cc77dc7177a",
-"classquisp_1_1backends_1_1abstract_1_1_i_qubit.html",
-"classquisp_1_1modules_1_1_bell_state_analyzer.html#a019d537a11764138f3e8de17255118b0",
-"classquisp_1_1modules_1_1_hardware_monitor.html#a34b8d855ffd99fd801d32d32c330d12b",
-"classquisp_1_1modules_1_1_i_stationary_qubit.html#a1721a30e159414d763da6dab7439b06a",
-"classquisp_1_1modules_1_1_rule_engine.html#a580bab294aa8252807eb2cac791378d3",
-"classquisp_1_1modules_1_1_stationary_qubit.html#abedc1562fd46e447bfde9833f9c95e7e",
-"classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store.html#af378618cb0298d2ce06aea1bb4264a06",
-"classquisp_1_1rules_1_1active_1_1_active_rule.html#a82292b3de85acd41206d80888630a345",
-"classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_second_inv.html#a21c017b21e655af01d5d60168496f831",
-"classquisp_1_1rules_1_1active_1_1clauses_1_1_wait_clause.html#ad322aac303608a938332f6458e2232da",
-"classquisp__test_1_1env_1_1_static_env.html#a8b265dfb459c3e33f69956aaf966898b",
-"classquisp__test_1_1module__type_1_1_test_module_type.html#a202497c4d270b8f2789add8e5284845c",
-"index.html#autotoc_md11",
-"structquisp_1_1backends_1_1error__tracking_1_1_memory_error_model.html#a68d7cd8c68311f15487689a4f8aa581e",
-"structquisp_1_1modules_1_1_single_gate_error_model.html#aec375ca3dc25a8cb2124c4a1cac2daee",
-"structquisp_1_1modules_1_1single__qubit__error.html#aa08a1bc73f0bef3b2179be2a67f8dbf4"
+"_i_stationary_qubit_8h.html#a7d975efdf0e514097cc27f3bf2832d43a490aa6e856ccf208a054389e47ce0d06",
+"backends_2_error_tracking_2_q_u_b_i_t_8h.html",
+"classquisp_1_1modules_1_1_bell_pair_store.html#a0246c7c16e489b2b5ac1d1a46e4aca6f",
+"classquisp_1_1modules_1_1_hardware_monitor.html",
+"classquisp_1_1modules_1_1_i_rule_engine.html#ad17e22d28becb2a84a58e6e1aaa72213",
+"classquisp_1_1modules_1_1_real_time_controller.html#abcb0ba9ac8f97c30d33183101b1e7a3f",
+"classquisp_1_1modules_1_1_stationary_qubit.html#a41824e86ef2ab121d9eb3e8e1c4cb0b6",
+"classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html#a6aa2630829a47f4bc88698f469583878",
+"classquisp_1_1rules_1_1_rule_set.html#aa62a1df1bd5155a3de6df0f2e0be1176",
+"classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action.html#a999d9c189d4aa55df8eb319e4428de6b",
+"classquisp_1_1rules_1_1active_1_1actions_1_1_wait_action.html#ad9ad20ac2017ab54186d87bf4c7c86ba",
+"classquisp__test_1_1env_1_1_static_env.html",
+"classquisp__test_1_1mock__modules_1_1routing__daemon_1_1_mock_routing_daemon.html#af1316c0b713c073ac476884951543fce",
+"dir_eaeabafc95fe4969aa33649114886196.html",
+"namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43a02129bb861061d1a052c592e2dc6b383",
+"structquisp_1_1modules_1_1_interface_info.html#afd139a08cc0ef63c3587db6384e1f35a",
+"structquisp_1_1modules_1_1measurement__operator.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

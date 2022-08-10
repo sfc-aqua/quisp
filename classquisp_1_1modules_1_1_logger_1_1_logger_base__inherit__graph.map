@@ -1,0 +1,5 @@
+<map id="quisp::modules::Logger::LoggerBase" name="quisp::modules::Logger::LoggerBase">
+<area shape="rect" id="node1" title="LoggerBase class integrate abilities to log simulation results into your components." alt="" coords="119,5,273,47"/>
+<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_application.html" title="Application." alt="" coords="5,102,184,129"/>
+<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager." alt="" coords="208,95,387,136"/>
+</map>

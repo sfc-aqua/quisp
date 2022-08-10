@@ -7,6 +7,7 @@ var dir_1b9adf9caaa3a542423f2e420ebd3760 =
     [ "Gate.cc", "_gate_8cc.html", null ],
     [ "Gate.h", "_gate_8h.html", "_gate_8h" ],
     [ "KeyValue.h", "_key_value_8h.html", "_key_value_8h" ],
+    [ "Logger.h", "_logger_8h.html", "_logger_8h" ],
     [ "ModuleType.h", "_module_type_8h.html", "_module_type_8h" ],
     [ "QNode.cc", "_q_node_8cc.html", null ],
     [ "QNode.h", "_q_node_8h.html", "_q_node_8h" ],

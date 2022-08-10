@@ -1,10 +1,10 @@
 <map id="quisp/modules/QNIC/StationaryQubit" name="quisp/modules/QNIC/StationaryQubit">
 <area shape="rect" id="node1" href="dir_b0e833530bfc19b88bea5e2f194584f3.html" title="StationaryQubit" alt="" coords="90,52,201,100"/>
 <area shape="rect" id="node2" href="dir_1b9adf9caaa3a542423f2e420ebd3760.html" title="test_utils" alt="" coords="5,148,80,196"/>
-<area shape="rect" id="edge1-headlabel" href="dir_000032_000033.html" title="5" alt="" coords="83,135,91,149"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000033_000034.html" title="5" alt="" coords="83,135,91,149"/>
 <area shape="rect" id="node3" href="dir_a836f5e64f274e5f0ad02ce32d2d2034.html" title="messages" alt="" coords="104,148,187,196"/>
-<area shape="rect" id="edge2-headlabel" href="dir_000032_000015.html" title="1" alt="" coords="150,122,158,137"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000033_000016.html" title="1" alt="" coords="150,122,158,137"/>
 <area shape="rect" id="node4" href="dir_ea1185b6f782e3d4d47e4f1c837d33c0.html" title="utils" alt="" coords="211,148,283,196"/>
-<area shape="rect" id="edge3-headlabel" href="dir_000032_000034.html" title="1" alt="" coords="210,122,218,137"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000033_000035.html" title="1" alt="" coords="210,122,218,137"/>
 <area shape="rect" id="clust1" href="dir_5be2f2e0efe1693c6264fc3f1f727d33.html" title="QNIC" alt="" coords="79,16,212,111"/>
 </map>

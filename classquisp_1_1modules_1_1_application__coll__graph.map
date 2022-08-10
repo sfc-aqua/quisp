@@ -1,6 +1,8 @@
 <map id="quisp::modules::Application" name="quisp::modules::Application">
-<area shape="rect" id="node1" title="Application." alt="" coords="115,171,294,197"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_application.html" title=" " alt="" coords="5,81,188,108"/>
-<area shape="rect" id="node3" title=" " alt="" coords="41,5,152,32"/>
-<area shape="rect" id="node4" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="213,81,415,108"/>
+<area shape="rect" id="node1" title="Application." alt="" coords="547,64,725,91"/>
+<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_application.html" title=" " alt="" coords="257,5,439,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="27,5,138,32"/>
+<area shape="rect" id="node4" href="$classquisp_1_1modules_1_1_logger_1_1_logger_base.html" title="LoggerBase class integrate abilities to log simulation results into your components." alt="" coords="271,57,425,98"/>
+<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1_logger_1_1_i_logger.html" title="Interface of Logger class. Logger class that inherits ILogger is responsible for logging simulation r..." alt="" coords="5,57,160,98"/>
+<area shape="rect" id="node6" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="247,123,449,149"/>
 </map>

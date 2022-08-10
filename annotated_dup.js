@@ -32,6 +32,12 @@ var annotated_dup =
           ] ],
           [ "BackendContainer", "classquisp_1_1modules_1_1backend_1_1_backend_container.html", "classquisp_1_1modules_1_1backend_1_1_backend_container" ]
         ] ],
+        [ "Logger", "namespacequisp_1_1modules_1_1_logger.html", [
+          [ "ILogger", "classquisp_1_1modules_1_1_logger_1_1_i_logger.html", "classquisp_1_1modules_1_1_logger_1_1_i_logger" ],
+          [ "JsonLogger", "classquisp_1_1modules_1_1_logger_1_1_json_logger.html", "classquisp_1_1modules_1_1_logger_1_1_json_logger" ],
+          [ "LoggerBase", "classquisp_1_1modules_1_1_logger_1_1_logger_base.html", "classquisp_1_1modules_1_1_logger_1_1_logger_base" ],
+          [ "LoggerModule", "classquisp_1_1modules_1_1_logger_1_1_logger_module.html", "classquisp_1_1modules_1_1_logger_1_1_logger_module" ]
+        ] ],
         [ "qnic_record", "namespacequisp_1_1modules_1_1qnic__record.html", [
           [ "IQNicRecord", "classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record.html", "classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record" ],
           [ "QNicRecord", "classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record.html", "classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record" ]
@@ -176,6 +182,9 @@ var annotated_dup =
       ] ],
       [ "key_value", "namespacequisp__test_1_1key__value.html", [
         [ "TestKeyValue", "classquisp__test_1_1key__value_1_1_test_key_value.html", "classquisp__test_1_1key__value_1_1_test_key_value" ]
+      ] ],
+      [ "Logger", "namespacequisp__test_1_1_logger.html", [
+        [ "TestLogger", "classquisp__test_1_1_logger_1_1_test_logger.html", "classquisp__test_1_1_logger_1_1_test_logger" ]
       ] ],
       [ "mock_backends", "namespacequisp__test_1_1mock__backends.html", [
         [ "MockQuantumBackend", "classquisp__test_1_1mock__backends_1_1_mock_quantum_backend.html", "classquisp__test_1_1mock__backends_1_1_mock_quantum_backend" ]

@@ -4,6 +4,7 @@ var classquisp__test_1_1strategy_1_1_test_component_provider_strategy =
     [ "TestComponentProviderStrategy", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a51fe0788b31e3ae9fd4cc5e9d880e9d7", null ],
     [ "~TestComponentProviderStrategy", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#aaf6ed18aad4cd53c86eb17abbbb03242", null ],
     [ "getHardwareMonitor", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a332154caac2ef05b8a73f973997ed9eb", null ],
+    [ "getLogger", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a68e532cde439913ea1c717d6077a7ceb", null ],
     [ "getNeighborNode", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#aa2630ffa848a699be1f337bd1e607f98", null ],
     [ "getNumQubits", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#aa619c15966e6440fdcb8bd18e75ee6b2", null ],
     [ "getQNIC", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a080888b0fbecbe39d58e642f120449c3", null ],
