@@ -9,7 +9,7 @@ using quisp::messages::ConnectionSetupResponse;
 using quisp::messages::RejectConnectionSetupRequest;
 
 JsonLogger::JsonLogger(std::shared_ptr<spdlog::logger> logger) : _logger(logger) {
-  std::string jsonpattern = {"{\"level\": \"%^%l%$\", %v}"};
+  std::string jsonpattern = {"{%v}"};
   _logger->set_pattern(jsonpattern);
 }
 

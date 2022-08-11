@@ -37,7 +37,7 @@ TEST_F(JsonLoggerTest, ConnReqSetupTest) {
   logger->setQNodeAddress(7);
   logger->logPacket("test", req);
   EXPECT_EQ(log_stream.str(),
-            "{\"level\": \"info\", \"simtime\": 0, \"event_type\": \"test\", \"address\": \"7\", \"msg_type\": \"ConnectionSetupRequest\", \"actual_dest_addr\": 1, "
+            "{\"simtime\": 0, \"event_type\": \"test\", \"address\": \"7\", \"msg_type\": \"ConnectionSetupRequest\", \"actual_dest_addr\": 1, "
             "\"actual_src_addr\": 2, \"num_measure\": 5, "
             "\"num_required_bell_pairs\": 7}\n");
 }
