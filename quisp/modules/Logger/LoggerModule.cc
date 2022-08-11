@@ -19,7 +19,14 @@ void LoggerModule::initialize() {
   logger_type = toLoggerType(par("logger"));
   if (logger_type == LoggerType::JsonLogger) {
     if (spdlog_logger != nullptr) return;
+
+#ifndef __EMSCRIPTEN__
     spdlog_logger = spdlog::basic_logger_mt<spdlog::async_factory>("default_sim_result_logger", trimQuotes(par("log_filename").str()));
+#else
+    // if the platform is WebAssembly, use single thread logger
+    spdlog_logger = spdlog::basic_logger_st("default_sim_result_logger", trimQuotes(par("log_filename").str()));
+#endif
+
     return;
   }
   error("unknown logger specified: %s", par("logger").str().c_str());
