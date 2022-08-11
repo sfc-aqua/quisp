@@ -13,5 +13,6 @@ class TestLogger : public ILogger {
   };
 
   void setModule(omnetpp::cModule const* const mod) override {}
+  void setQNodeAddress(int addr) override {}
 };
 }  // namespace quisp_test::Logger

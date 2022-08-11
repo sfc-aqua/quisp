@@ -9,24 +9,37 @@ namespace quisp::modules::Logger {
 LoggerModule::LoggerModule() {}
 
 LoggerModule::~LoggerModule() {
-  if (logger != nullptr) {
-    spdlog::shutdown();
+  if (logger_type == LoggerType::JsonLogger) {
+    if (spdlog_logger != nullptr) spdlog::shutdown();
+    return;
   }
 }
 
 void LoggerModule::initialize() {
   logger_type = toLoggerType(par("logger"));
-  if (logger != nullptr) return;
   if (logger_type == LoggerType::JsonLogger) {
-    logger = spdlog::basic_logger_mt<spdlog::async_factory>("default_sim_result_logger", trimQuotes(par("log_filename").str()));
+    if (spdlog_logger != nullptr) return;
+    spdlog_logger = spdlog::basic_logger_mt<spdlog::async_factory>("default_sim_result_logger", trimQuotes(par("log_filename").str()));
     return;
   }
   error("unknown logger specified: %s", par("logger").str().c_str());
 }
 
-void LoggerModule::finish() { logger->flush(); }
+void LoggerModule::finish() {
+  if (logger_type == LoggerType::JsonLogger) {
+    if (spdlog_logger != nullptr) spdlog_logger->flush();
+  }
+}
 
-ILogger* LoggerModule::getLogger() { return new JsonLogger(logger); }
+ILogger* LoggerModule::getLogger() {
+  if (logger_type == LoggerType::JsonLogger) {
+    if (spdlog_logger == nullptr) error("failed to instantiate logger. spdlog is not initialized.");
+    return new JsonLogger(spdlog_logger);
+  }
+
+  error("valid logger is not specified.");
+  return nullptr;
+}
 
 std::string LoggerModule::trimQuotes(std::string s) {
   if (s.length() == 0) return s;

@@ -22,7 +22,7 @@ class LoggerModule : public omnetpp::cSimpleModule {
   ILogger* getLogger();
 
  protected:
-  std::shared_ptr<spdlog::logger> logger;
+  std::shared_ptr<spdlog::logger> spdlog_logger;
   LoggerType logger_type = LoggerType::Unknown;
 
   static std::string trimQuotes(std::string s);

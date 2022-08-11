@@ -18,12 +18,14 @@ class JsonLogger : public ILogger {
   virtual void logQubitState(quisp::modules::QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_busy, bool is_allocated) override;
 
   void setModule(omnetpp::cModule const* const mod) override;
+  void setQNodeAddress(int addr) override;
 
  protected:
   std::shared_ptr<spdlog::logger> _logger;
   static std::string format(omnetpp::cMessage const* const msg);
 
   std::string module_path;
+  int qnode_address = -1;
   omnetpp::cModule const* module;
 };
 }  // namespace quisp::modules::Logger
