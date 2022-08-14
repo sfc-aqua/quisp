@@ -129,7 +129,8 @@ var hierarchy =
     [ "quisp::modules::qrsa::LocalQubitRef", "structquisp_1_1modules_1_1qrsa_1_1_local_qubit_ref.html", null ],
     [ "quisp::modules::Logger::LoggerBase", "classquisp_1_1modules_1_1_logger_1_1_logger_base.html", [
       [ "quisp::modules::Application", "classquisp_1_1modules_1_1_application.html", null ],
-      [ "quisp::modules::ConnectionManager", "classquisp_1_1modules_1_1_connection_manager.html", null ]
+      [ "quisp::modules::ConnectionManager", "classquisp_1_1modules_1_1_connection_manager.html", null ],
+      [ "quisp::modules::RuleEngine", "classquisp_1_1modules_1_1_rule_engine.html", null ]
     ] ],
     [ "quisp::modules::measurement_operator", "structquisp_1_1modules_1_1measurement__operator.html", null ],
     [ "quisp::modules::measurement_operators", "structquisp_1_1modules_1_1measurement__operators.html", null ],

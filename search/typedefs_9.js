@@ -8,6 +8,5 @@ var searchData=
   ['qnodeaddr_5',['QNodeAddr',['../namespacequisp_1_1modules_1_1common.html#acce634550de795e44975c1e20c8be3a8',1,'quisp::modules::common::QNodeAddr()'],['../namespacequisp_1_1modules.html#a0f71b198c963a11406c9846dc8062c8c',1,'quisp::modules::QNodeAddr()']]],
   ['quatropurificationtable_6',['QuatroPurificationTable',['../namespacequisp_1_1modules.html#ad1f6e6ff14e2edd614ccb86b14d85f47',1,'quisp::modules']]],
   ['qubitid_7',['QubitId',['../namespacequisp_1_1modules_1_1common.html#a27af03ae81214bcb4d435892ffb722a2',1,'quisp::modules::common']]],
-  ['qubitindex_8',['QubitIndex',['../namespacequisp_1_1modules_1_1common.html#ae40fc279e2dc158039aa95bb2ad5e007',1,'quisp::modules::common']]],
-  ['qubitstatetable_9',['QubitStateTable',['../namespacequisp_1_1modules.html#ae54e81f0c4c329b8b5cbf6ad5f4d2a44',1,'quisp::modules']]]
+  ['qubitindex_8',['QubitIndex',['../namespacequisp_1_1modules_1_1common.html#ae40fc279e2dc158039aa95bb2ad5e007',1,'quisp::modules::common']]]
 ];

@@ -110,8 +110,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac76de9dfb855b2571777efb193e3b0ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf389262b7c9ff1b15641e16269d7eec"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_logger_1_1_i_logger.html#adf389262b7c9ff1b15641e16269d7eec">logPacket</a> (const std::string &amp;event_type, omnetpp::cMessage const *const msg)=0</td></tr>
 <tr class="separator:adf389262b7c9ff1b15641e16269d7eec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7843acafd8e7144e11cfc56a17770c5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_logger_1_1_i_logger.html#af7843acafd8e7144e11cfc56a17770c5">logQubitState</a> (<a class="el" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">quisp::modules::QNIC_type</a> qnic_type, int qnic_index, int qubit_index, bool is_busy, bool is_allocated)=0</td></tr>
+<tr class="separator:af7843acafd8e7144e11cfc56a17770c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e8e993ea6dd6934e425958d4ead68c2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_logger_1_1_i_logger.html#a3e8e993ea6dd6934e425958d4ead68c2">setModule</a> (omnetpp::cModule const *const mod)=0</td></tr>
 <tr class="separator:a3e8e993ea6dd6934e425958d4ead68c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8982bbe5abe233156a0f5b675c86bb98"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_logger_1_1_i_logger.html#a8982bbe5abe233156a0f5b675c86bb98">setQNodeAddress</a> (int address)=0</td></tr>
+<tr class="separator:a8982bbe5abe233156a0f5b675c86bb98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Interface of <a class="el" href="namespacequisp_1_1modules_1_1_logger.html">Logger</a> class. <a class="el" href="namespacequisp_1_1modules_1_1_logger.html">Logger</a> class that inherits <a class="el" href="classquisp_1_1modules_1_1_logger_1_1_i_logger.html" title="Interface of Logger class. Logger class that inherits ILogger is responsible for logging simulation r...">ILogger</a> is responsible for logging simulation results. </p>
@@ -184,6 +188,62 @@ ComponentProvider </dd></dl>
 
 </div>
 </div>
+<a id="af7843acafd8e7144e11cfc56a17770c5" name="af7843acafd8e7144e11cfc56a17770c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7843acafd8e7144e11cfc56a17770c5">&#9670;&nbsp;</a></span>logQubitState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void quisp::modules::Logger::ILogger::logQubitState </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">quisp::modules::QNIC_type</a>&#160;</td>
+          <td class="paramname"><em>qnic_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>qnic_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>qubit_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>is_busy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>is_allocated</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1_logger_1_1_json_logger.html#ae392a752610d3ff53e78be63e3a4ef78">quisp::modules::Logger::JsonLogger</a>, and <a class="el" href="classquisp__test_1_1_logger_1_1_test_logger.html#ab522721fb8d6e133cfd9ddbe5c0a2925">quisp_test::Logger::TestLogger</a>.</p>
+
+</div>
+</div>
 <a id="a3e8e993ea6dd6934e425958d4ead68c2" name="a3e8e993ea6dd6934e425958d4ead68c2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3e8e993ea6dd6934e425958d4ead68c2">&#9670;&nbsp;</a></span>setModule()</h2>
 
@@ -209,6 +269,34 @@ ComponentProvider </dd></dl>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classquisp_1_1modules_1_1_logger_1_1_json_logger.html#a63156a01b50ccb24feb189213959f6b3">quisp::modules::Logger::JsonLogger</a>, and <a class="el" href="classquisp__test_1_1_logger_1_1_test_logger.html#aef8cf3e62cae3051badab5d2e562f73a">quisp_test::Logger::TestLogger</a>.</p>
+
+</div>
+</div>
+<a id="a8982bbe5abe233156a0f5b675c86bb98" name="a8982bbe5abe233156a0f5b675c86bb98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8982bbe5abe233156a0f5b675c86bb98">&#9670;&nbsp;</a></span>setQNodeAddress()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void quisp::modules::Logger::ILogger::setQNodeAddress </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>address</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1_logger_1_1_json_logger.html#a8bea9a139c31d22976b4aa835b601974">quisp::modules::Logger::JsonLogger</a>, and <a class="el" href="classquisp__test_1_1_logger_1_1_test_logger.html#ab4b36ae5a49bf90e9592ec0734fff983">quisp_test::Logger::TestLogger</a>.</p>
 
 </div>
 </div>

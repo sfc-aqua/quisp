@@ -32,7 +32,6 @@ var classquisp_1_1modules_1_1_rule_engine =
     [ "Unlock_resource_and_upgrade_stage", "classquisp_1_1modules_1_1_rule_engine.html#a29671204686e541942d7375e79c62e74", null ],
     [ "updateResources_EntanglementSwapping", "classquisp_1_1modules_1_1_rule_engine.html#afa2769dfc5f5d181865e141e59c73981", null ],
     [ "updateResources_SimultaneousEntanglementSwapping", "classquisp_1_1modules_1_1_rule_engine.html#a472b72c389f890e045636e22cd8a72a1", null ],
-    [ "actual_resSignal", "classquisp_1_1modules_1_1_rule_engine.html#ab0f0daa210a24c4e64c00532c07cf0c3", null ],
     [ "bell_pair_store", "classquisp_1_1modules_1_1_rule_engine.html#a97f9ebd7ebbbb9ebf5464bc9d7acd204", null ],
     [ "DoublePurification_table", "classquisp_1_1modules_1_1_rule_engine.html#a973cd8e5e723cf6aa789cd6ed0246dd0", null ],
     [ "emt", "classquisp_1_1modules_1_1_rule_engine.html#ac7e5e70c1124aa733a23e56b2f693407", null ],

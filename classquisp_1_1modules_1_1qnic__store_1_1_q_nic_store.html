@@ -114,8 +114,8 @@ Collaboration diagram for quisp::modules::qnic_store::QNicStore:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac477a07baca7217938b4060fe007ec00"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html#ac477a07baca7217938b4060fe007ec00">QNicStore</a> (<a class="el" href="classquisp_1_1utils_1_1_component_provider.html">utils::ComponentProvider</a> &amp;<a class="el" href="classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html#aac44241a530e70c3d33cb58903bdb83b">provider</a>, int number_of_emitter_qnics, int number_of_receiver_qnics, int number_of_passive_receiver_qnics)</td></tr>
-<tr class="separator:ac477a07baca7217938b4060fe007ec00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a987f56c70d494e35d0e32b293c3e471f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html#a987f56c70d494e35d0e32b293c3e471f">QNicStore</a> (<a class="el" href="classquisp_1_1utils_1_1_component_provider.html">utils::ComponentProvider</a> &amp;<a class="el" href="classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html#aac44241a530e70c3d33cb58903bdb83b">provider</a>, int number_of_emitter_qnics, int number_of_receiver_qnics, int number_of_passive_receiver_qnics, <a class="el" href="classquisp_1_1modules_1_1_logger_1_1_i_logger.html">Logger::ILogger</a> *logger=nullptr)</td></tr>
+<tr class="separator:a987f56c70d494e35d0e32b293c3e471f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4c1d24e117f5638e2fb2ddc057ad2e7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html#ab4c1d24e117f5638e2fb2ddc057ad2e7">~QNicStore</a> ()</td></tr>
 <tr class="separator:ab4c1d24e117f5638e2fb2ddc057ad2e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b1331e98a48a47f01b713d644644791"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html#a3b1331e98a48a47f01b713d644644791">countNumFreeQubits</a> (<a class="el" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">QNIC_type</a> type, int qnic_index) override</td></tr>
@@ -151,8 +151,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:aac44241a530e70c3d33cb58903bdb83b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ac477a07baca7217938b4060fe007ec00" name="ac477a07baca7217938b4060fe007ec00"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac477a07baca7217938b4060fe007ec00">&#9670;&nbsp;</a></span>QNicStore()</h2>
+<a id="a987f56c70d494e35d0e32b293c3e471f" name="a987f56c70d494e35d0e32b293c3e471f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a987f56c70d494e35d0e32b293c3e471f">&#9670;&nbsp;</a></span>QNicStore()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -179,7 +179,13 @@ Protected Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>number_of_passive_receiver_qnics</em>&#160;</td>
+          <td class="paramname"><em>number_of_passive_receiver_qnics</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classquisp_1_1modules_1_1_logger_1_1_i_logger.html">Logger::ILogger</a> *&#160;</td>
+          <td class="paramname"><em>logger</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>

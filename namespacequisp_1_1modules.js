@@ -85,13 +85,10 @@ var namespacequisp_1_1modules =
     [ "QNicIndex", "namespacequisp_1_1modules.html#ac15251b960056e05af47534b467cd5b6", null ],
     [ "QNodeAddr", "namespacequisp_1_1modules.html#a0f71b198c963a11406c9846dc8062c8c", null ],
     [ "QuatroPurificationTable", "namespacequisp_1_1modules.html#ad1f6e6ff14e2edd614ccb86b14d85f47", null ],
-    [ "QubitStateTable", "namespacequisp_1_1modules.html#ae54e81f0c4c329b8b5cbf6ad5f4d2a44", null ],
     [ "raw_data", "namespacequisp_1_1modules.html#a47b510b280e1ac42bcf95908dc72facb", null ],
     [ "ResourceKey", "namespacequisp_1_1modules.html#ac2ba3b50171b853416c32771dd1ab2cd", null ],
-    [ "rule_ptr", "namespacequisp_1_1modules.html#ab05bf929490e7ad73f1a1d4790443b78", null ],
     [ "sentQubitIndexTracker", "namespacequisp_1_1modules.html#a9b4bf1166a725a4d4970d21c187343c4", null ],
     [ "TomographyOutcomeTable", "namespacequisp_1_1modules.html#a2defc0c764ef7e29d546e4c3368248e1", null ],
-    [ "trial_tracker", "namespacequisp_1_1modules.html#af6d54a83900f33d33ff32ca35460740f", null ],
     [ "TriplePurificationTable", "namespacequisp_1_1modules.html#a7235ae6e9296a0c516d7b475a6686f9c", null ],
     [ "QNIC_type", "namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d", [
       [ "QNIC_E", "namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3da045495d91222801283ae27e8a0913da7", null ],

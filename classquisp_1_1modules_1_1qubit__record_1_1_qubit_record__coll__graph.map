@@ -1,6 +1,6 @@
 <map id="quisp::modules::qubit_record::QubitRecord" name="quisp::modules::qubit_record::QubitRecord">
-<area shape="rect" id="node1" title=" " alt="" coords="873,149,1016,190"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html" title="The QubitRecord interface." alt="" coords="677,149,824,190"/>
+<area shape="rect" id="node1" title=" " alt="" coords="919,197,1061,238"/>
+<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html" title="The QubitRecord interface." alt="" coords="681,149,828,190"/>
 <area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="400,149,576,190"/>
 <area shape="rect" id="node4" title=" " alt="" coords="19,5,185,32"/>
 <area shape="rect" id="node5" title=" " alt="" coords="63,56,141,83"/>
@@ -8,4 +8,5 @@
 <area shape="rect" id="node7" href="$structquisp_1_1modules_1_1_two_qubit_gate_error_model.html" title=" " alt="" coords="17,173,187,214"/>
 <area shape="rect" id="node8" href="$structquisp_1_1modules_1_1_measurement_error_model.html" title=" " alt="" coords="5,238,199,279"/>
 <area shape="rect" id="node9" title=" " alt="" coords="63,304,141,331"/>
+<area shape="rect" id="node10" href="$classquisp_1_1modules_1_1_logger_1_1_i_logger.html" title="Interface of Logger class. Logger class that inherits ILogger is responsible for logging simulation r..." alt="" coords="677,214,832,255"/>
 </map>

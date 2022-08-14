@@ -1,6 +1,6 @@
 var classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store =
 [
-    [ "QNicStore", "classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html#ac477a07baca7217938b4060fe007ec00", null ],
+    [ "QNicStore", "classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html#a987f56c70d494e35d0e32b293c3e471f", null ],
     [ "~QNicStore", "classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html#ab4c1d24e117f5638e2fb2ddc057ad2e7", null ],
     [ "countNumFreeQubits", "classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html#a3b1331e98a48a47f01b713d644644791", null ],
     [ "getQNic", "classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html#a34659e0ce725cf9d5bdef7725cd93c97", null ],
