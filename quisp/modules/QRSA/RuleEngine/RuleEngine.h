@@ -4,32 +4,32 @@
  *
  *  \brief RuleEngine
  */
-#ifndef QUISP_MODULES_RULEENGINE_H_
-#define QUISP_MODULES_RULEENGINE_H_
+#pragma once
 
 #include <omnetpp.h>
-#include <rules/Active/ActiveRuleSet.h>
-#include <rules/RuleSet.h>
 #include <vector>
 
 #include <messages/classical_messages.h>
-#include "../../PhysicalConnection/BSA/HoMController.h"
+#include <modules/Logger/LoggerBase.h>
+#include <modules/PhysicalConnection/BSA/HoMController.h>
+#include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
+#include <modules/QRSA/HardwareMonitor/HardwareMonitor.h>
+#include <modules/QRSA/RealTimeController/IRealTimeController.h>
+#include <modules/QRSA/RoutingDaemon/RoutingDaemon.h>
+#include <modules/QUBIT.h>
+#include <rules/Active/ActiveRuleSet.h>
+#include <rules/RuleSet.h>
+#include <utils/ComponentProvider.h>
+
 #include "BellPairStore/BellPairStore.h"
 #include "IRuleEngine.h"
 #include "QNicStore/IQNicStore.h"
+#include "QubitRecord/IQubitRecord.h"
 #include "RuleSetStore/RuleSetStore.h"
-#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
-#include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
-#include "modules/QRSA/RealTimeController/IRealTimeController.h"
-#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
-#include "modules/QRSA/RuleEngine/QubitRecord/IQubitRecord.h"
-#include "modules/QUBIT.h"
-#include "utils/ComponentProvider.h"
 
 using namespace omnetpp;
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 using namespace rules;
 using namespace rules::active;
 using qnic_store::IQNicStore;
@@ -44,11 +44,7 @@ using qubit_record::IQubitRecord;
  *  \brief RuleEngine
  */
 
-class RuleEngine : public IRuleEngine {
- private:
-  // simsignal_t recog_resSignal;
-  simsignal_t actual_resSignal;
-  // friend class Action;
+class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
  public:
   RuleEngine();
   int parentAddress;  // Parent QNode's address
@@ -123,7 +119,5 @@ class RuleEngine : public IRuleEngine {
   std::unique_ptr<IQNicStore> qnic_store = nullptr;
 };
 
-}  // namespace modules
-}  // namespace quisp
-
-#endif /* MODULES_RULEENGINE_H_ */
+Define_Module(RuleEngine);
+}  // namespace quisp::modules

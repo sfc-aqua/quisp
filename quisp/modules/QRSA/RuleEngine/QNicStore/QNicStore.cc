@@ -7,7 +7,8 @@ namespace quisp::modules::qnic_store {
 
 using utils::ComponentProvider;
 
-QNicStore::QNicStore(ComponentProvider& provider, int number_of_emitter_qnics, int number_of_receiver_qnics, int number_of_passive_receiver_qnics) : provider(provider) {
+QNicStore::QNicStore(ComponentProvider& provider, int number_of_emitter_qnics, int number_of_receiver_qnics, int number_of_passive_receiver_qnics, Logger::ILogger* logger)
+    : provider(provider) {
   std::array<std::pair<QNIC_type, int /* number of qnics */>, 3 /* the number of kinds of QNICs */> qnic_details = {
       {{QNIC_E, number_of_emitter_qnics}, {QNIC_R, number_of_receiver_qnics}, {QNIC_RP, number_of_passive_receiver_qnics}}};
 
@@ -19,7 +20,7 @@ QNicStore::QNicStore(ComponentProvider& provider, int number_of_emitter_qnics, i
       if (qnic == nullptr) {
         throw cRuntimeError("QNicStore::QNicStore(): %s QNIC with index %d not found", QNIC_names[type], i);
       }
-      qnic_vec->emplace_back(std::make_unique<QNicRecordType>(provider, i, type));
+      qnic_vec->emplace_back(std::make_unique<QNicRecordType>(provider, i, type, logger));
     }
   }
 }

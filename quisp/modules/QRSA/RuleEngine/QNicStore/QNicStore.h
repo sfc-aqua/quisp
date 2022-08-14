@@ -1,11 +1,12 @@
 #pragma once
 
+#include <modules/Logger/ILogger.h>
+#include <utils/ComponentProvider.h>
 #include <memory>
 #include <vector>
 #include "../QNicRecord/IQNicRecord.h"
 #include "../QNicRecord/QNicRecord.h"
 #include "IQNicStore.h"
-#include "utils/ComponentProvider.h"
 
 namespace quisp::modules::qnic_store {
 
@@ -16,7 +17,7 @@ using QNicIndex = int;
 
 class QNicStore : public IQNicStore {
  public:
-  QNicStore(utils::ComponentProvider& provider, int number_of_emitter_qnics, int number_of_receiver_qnics, int number_of_passive_receiver_qnics);
+  QNicStore(utils::ComponentProvider& provider, int number_of_emitter_qnics, int number_of_receiver_qnics, int number_of_passive_receiver_qnics, Logger::ILogger* logger = nullptr);
   ~QNicStore(){};
   int countNumFreeQubits(QNIC_type type, int qnic_index) override;
   int takeFreeQubitIndex(QNIC_type type, int qnic_index) override;

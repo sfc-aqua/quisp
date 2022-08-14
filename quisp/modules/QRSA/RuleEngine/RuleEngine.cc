@@ -5,18 +5,17 @@
  *  \brief RuleEngine
  */
 
-#include "RuleEngine.h"
 #include <fstream>
 #include <iterator>
 #include <memory>
 #include <utility>
+
+#include <utils/ComponentProvider.h>
 #include "QNicStore/QNicStore.h"
-#include "utils/ComponentProvider.h"
+#include "RuleEngine.h"
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
-Define_Module(RuleEngine);
 using namespace rules;
 using namespace rules::active;
 using qnic_store::QNicStore;
@@ -30,6 +29,7 @@ void RuleEngine::initialize() {
   hardware_monitor = provider.getHardwareMonitor();
   realtime_controller = provider.getRealTimeController();
   routingdaemon = provider.getRoutingDaemon();
+  initializeLogger(provider);
 
   parentAddress = par("address");
   number_of_qnics_all = par("total_number_of_qnics");
@@ -37,10 +37,8 @@ void RuleEngine::initialize() {
   number_of_qnics_r = par("number_of_qnics_r");
   number_of_qnics_rp = par("number_of_qnics_rp");
   if (qnic_store == nullptr) {
-    qnic_store = std::make_unique<QNicStore>(provider, number_of_qnics, number_of_qnics_r, number_of_qnics_rp);
+    qnic_store = std::make_unique<QNicStore>(provider, number_of_qnics, number_of_qnics_r, number_of_qnics_rp, logger);
   }
-  // recog_resSignal = registerSignal("recog_res");
-  actual_resSignal = registerSignal("actual_res");
 
   terminated_qnic = new bool[number_of_qnics_all];
   // if there are 2 qnics, 1 qnic_r, and 2 qnic_rp,
@@ -1357,5 +1355,4 @@ void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, ISt
   bell_pair_store.eraseQubit(qubit_record);
 }
 
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules
