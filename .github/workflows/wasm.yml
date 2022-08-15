@@ -57,6 +57,14 @@ jobs:
           mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js $TAG
           git add $TAG
           git commit -m "[$TAG] wasm build: https://github.com/sfc-aqua/quisp/commit/$GITHUB_SHA"
+      - name: commit demo branch
+        if: ${{ startsWith(github.ref, 'refs/heads/demo-') }}
+        run: |
+          export BRANCH=$(echo $GITHUB_REF | sed -e 's/refs\/heads\/demo-//')
+          mkdir -p $BRANCH
+          mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js $BRANCH
+          git add $BRANCH
+          git commit -m "[$BRANCH] wasm build: https://github.com/sfc-aqua/quisp/commit/$GITHUB_SHA"
       - name: push
         env:
           GIT_SSH_COMMAND: ssh -i ~/deploy_key.pem -o StrictHostKeyChecking=no -F /dev/null
