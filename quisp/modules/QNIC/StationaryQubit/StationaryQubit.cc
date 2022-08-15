@@ -59,15 +59,12 @@ void StationaryQubit::initialize() {
     0,                          0,                         0,                         0,                          memory_err.excitation_error_rate, 1 - memory_err.excitation_error_rate - memory_err.completely_mixed_rate, memory_err.completely_mixed_rate,
     0,                          0,                         0,                         0,                          memory_err.excitation_error_rate, memory_err.relaxation_error_rate, 1 - memory_err.excitation_error_rate - memory_err.relaxation_error_rate;
   // clang-format on
-  std::cout << "Memory_Transition_matrix = \n " << Memory_Transition_matrix << " done \n";
 
   setSingleQubitGateErrorModel(Hgate_error, "Hgate");
   setSingleQubitGateErrorModel(Xgate_error, "Xgate");
   setSingleQubitGateErrorModel(Zgate_error, "Zgate");
   setTwoQubitGateErrorCeilings(CNOTgate_error, "CNOTgate");
   setMeasurementErrorModel(Measurement_error);
-
-  std::cout << Memory_Transition_matrix << "\n";
 
   // Set error matrices. This is used in the process of simulating tomography.
   Pauli.X << 0, 1, 1, 0;
@@ -328,7 +325,6 @@ void StationaryQubit::X_gate() {
 void StationaryQubit::CNOT_gate(IStationaryQubit *control_qubit) {
   // Need to add noise here later
   applyTwoQubitGateError(CNOTgate_error, check_and_cast<StationaryQubit *>(control_qubit));
-  // std::cout<<"this X err = "<<this->par("GOD_Xerror").boolValue()<<"\n";
 
   if (control_qubit->par("GOD_Xerror")) {
     // X error propagates from control to target. If an X error is already present, then it cancels out.
@@ -411,7 +407,6 @@ void StationaryQubit::Lock(unsigned long rs_id, int rule_id, int action_id) {
   locked_ruleset_id = rs_id;  // Used to identify what this qubit is locked for.
   locked_rule_id = rule_id;
   action_index = action_id;
-  // std::cout<<"*******************"<<this<<"in node["<<this->node_address<<"]Locked. Rsid="<<locked_ruleset_id<<" rid="<<locked_rule_id<<" aid="<<action_index<<"\n";
 
   if (hasGUI()) {
     bubble("Locked!");
@@ -583,7 +578,6 @@ bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
 }
 
 bool StationaryQubit::Zpurify(IStationaryQubit *resource_qubit /*Target*/) {
-  // std::cout<<"Z puri\n";
   applyMemoryError();  // This could result in completelty mixed, excited, relaxed, which also affects the entangled partner.
   check_and_cast<StationaryQubit *>(resource_qubit)->applyMemoryError();
   /*Target qubit*/ resource_qubit->CNOT_gate(this /*controlled qubit*/);
@@ -854,13 +848,7 @@ void StationaryQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, 
 }
 
 measurement_outcome StationaryQubit::measure_density_independent() {
-  // std::cout<<"\n\n\n\n\n\n\n\nMEASURING!!!\n";
-
-  // if(this->getIndex() == 71 && this->node_address == 3)
-  //	std::cout<<"---measuring "<<this<<" in node["<<node_address<<"]\n";
-  // std::cout<<"---measuring "<<this<<" in qnic["<<qnic_index<<"] in node["<<node_address<<"]\n";
   if (this->entangled_partner == nullptr && this->Density_Matrix_Collapsed(0, 0).real() == -111) {
-    // EV<<entangled_partner<<"\n";
     std::cout << Density_Matrix_Collapsed << "\n";
     std::cout << "Measuring" << this << "in node[" << node_address << "]\n";
     std::cout << this->getIndex() << "\n";
