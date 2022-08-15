@@ -76,20 +76,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
       tracker[qnic_address].insert(std::make_pair(nth_shot, Addr));
       // std::cout<<getQNode()->getFullName() <<": Emitted the "<<nth_shot<<" from qnic["<<qnic_address<<"]....tracker["<<qnic_address<<"] now size = "<<new_nth_shot<<"\n";
     }
-    // switch: Only bubble messages
-    switch (pk->getKind()) {
-      case STATIONARYQUBIT_PULSE_BEGIN:
-        bubble("first..");
-        break;
-      case STATIONARYQUBIT_PULSE_END:
-        bubble("last..");
-        break;
-      case STATIONARYQUBIT_PULSE_BOUND:
-        bubble("first and last..");
-        break;
-      default:
-        bubble("order received!");
-    }
+
     realtime_controller->EmitPhoton(pk->getQnic_index(), pk->getQubit_index(), (QNIC_type)pk->getQnic_type(), pk->getKind());
   }
 
