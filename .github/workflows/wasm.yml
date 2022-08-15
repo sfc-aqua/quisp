@@ -24,7 +24,7 @@ jobs:
   deploy-wasm:
     needs: build-wasm
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')) }}
+    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')) || startsWith(github.ref, 'refs/heads/demo-')) }}
     steps:
       - uses: actions/checkout@v2
         with:
