@@ -18,27 +18,27 @@ network Linear_five_MM_network
     submodules:
         backend: Backend;
         logger: Logger;
-        EndNode1[1]: QNode {
+        EndNode1: QNode {
             address = 1;
             nodeType = "EndNode";
             @display("i=COMP;p=72,170");
         }
-        Repeater2[1]: QNode {
+        Repeater2: QNode {
             address = 2;
             nodeType = "Repeater";
-            @display("i=REP1G;p=204,169");
+            @display("i=REP1G;p=204,200");
         }
-        Repeater3[1]: QNode {
+        Repeater3: QNode {
             address = 3;
             nodeType = "Repeater";
-            @display("i=REP1G;p=324,169");
+            @display("i=REP1G;p=324,230");
         }
-        Repeater4[1]: QNode {
+        Repeater4: QNode {
             address = 4;
             nodeType = "Repeater";
-            @display("i=REP1G;p=464,169");
+            @display("i=REP1G;p=464,200");
         }
-        EndNode5[1]: QNode {
+        EndNode5: QNode {
             address = 5;
             nodeType = "EndNode";
             @display("i=COMP;p=609,170");
@@ -48,14 +48,14 @@ network Linear_five_MM_network
 
 
     connections:
-        EndNode1[0].port++ <--> ClassicalChannel {  distance = 7km; } <--> Repeater2[0].port++;
-        Repeater2[0].port++ <--> ClassicalChannel {  distance = 7km; } <--> Repeater3[0].port++;
-        Repeater3[0].port++ <--> ClassicalChannel {  distance = 7km; } <--> Repeater4[0].port++;
-        Repeater4[0].port++ <--> ClassicalChannel {  distance = 7km; } <--> EndNode5[0].port++;
+        EndNode1.port++ <--> ClassicalChannel {  distance = 7km; } <--> Repeater2.port++;
+        Repeater2.port++ <--> ClassicalChannel {  distance = 7km; } <--> Repeater3.port++;
+        Repeater3.port++ <--> ClassicalChannel {  distance = 7km; } <--> Repeater4.port++;
+        Repeater4.port++ <--> ClassicalChannel {  distance = 7km; } <--> EndNode5.port++;
 
 
-        EndNode1[0].quantum_port_receiver++ <--> ClassicalChannel {  distance = 7km; } <--> Repeater2[0].quantum_port++;
-        Repeater2[0].quantum_port_receiver++ <--> ClassicalChannel {  distance = 7km; } <--> Repeater3[0].quantum_port++;
-        Repeater3[0].quantum_port_receiver++ <--> ClassicalChannel {  distance = 7km; } <--> Repeater4[0].quantum_port++;
-        Repeater4[0].quantum_port_receiver++ <--> ClassicalChannel {  distance = 7km; } <--> EndNode5[0].quantum_port++;
+        EndNode1.quantum_port_receiver++ <--> ClassicalChannel {  distance = 7km; } <--> Repeater2.quantum_port++;
+        Repeater2.quantum_port_receiver++ <--> ClassicalChannel {  distance = 7km; } <--> Repeater3.quantum_port++;
+        Repeater3.quantum_port_receiver++ <--> ClassicalChannel {  distance = 7km; } <--> Repeater4.quantum_port++;
+        Repeater4.quantum_port_receiver++ <--> ClassicalChannel {  distance = 7km; } <--> EndNode5.quantum_port++;
 }
