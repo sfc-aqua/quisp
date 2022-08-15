@@ -21,7 +21,7 @@ module QNIC
         bool receiver = default(false);
         double emission_std = default(0);
         bool passive = default(false);
-        @display("bgb=612,194");
+        @display("bgb=654.39,1687.06006");
         int burst_trial_counter @mutable = default(0);
 
         bool is_reserved @mutable = default(false);
@@ -38,7 +38,7 @@ module QNIC
             qnic_address = parent.self_qnic_address;
             qnic_index = parent.self_qnic_index;
             qnic_type = parent.self_qnic_type;
-            xPosition_Graphics = 70 + 65*index;  // use submodule index to generate different IDs
+            xPosition_Graphics = 70 + 80*index;  // use submodule index to generate different IDs
             //@display("p=$xPosition_Graphics,40,,circle");
             @display("t=Id $stationaryQubit_address;i=block/circle,blue;p=150,100,m,5,60,60"); // modify display string
             std = parent.emission_std;
