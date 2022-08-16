@@ -9,7 +9,7 @@ ned-folders = [
 images = [
 	"./images@./quisp/images"
 ]
-ini-file = "./networks/omnetpp.ini"
+ini-file = "./wasm.ini"
 project-folder = "./quisp"
 output-folder = "./wasm-out"
 exec-args =  [
