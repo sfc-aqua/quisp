@@ -63,7 +63,8 @@ jobs:
         run: |
           export BRANCH=$(echo $GITHUB_REF | sed -e 's/refs\/heads\/demo-//')
           mkdir -p $BRANCH
-          mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js main.is style.css $BRANCH
+          ls -la
+          mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js main.js styles.css $BRANCH
           git add $BRANCH
           git commit -m "[$BRANCH] wasm build: https://github.com/sfc-aqua/quisp/commit/$GITHUB_SHA"
       - name: push
