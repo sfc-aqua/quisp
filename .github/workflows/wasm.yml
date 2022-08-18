@@ -21,6 +21,7 @@ jobs:
             quisp/out/emcc-release/*.data
             quisp/out/emcc-release/*.wasm
             quisp/out/emcc-release/*.svg
+            quisp/out/emcc-release/*.css
   deploy-wasm:
     needs: build-wasm
     runs-on: ubuntu-latest
@@ -62,7 +63,7 @@ jobs:
         run: |
           export BRANCH=$(echo $GITHUB_REF | sed -e 's/refs\/heads\/demo-//')
           mkdir -p $BRANCH
-          mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js $BRANCH
+          mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js main.is style.css $BRANCH
           git add $BRANCH
           git commit -m "[$BRANCH] wasm build: https://github.com/sfc-aqua/quisp/commit/$GITHUB_SHA"
       - name: push
