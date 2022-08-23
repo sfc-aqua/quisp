@@ -7,8 +7,8 @@ namespace quisp_test {
 namespace mock_modules {
 namespace rule_engine {
 
-using quisp::modules::IRuleEngine;
 using quisp::modules::IStationaryQubit;
+using quisp::modules::qrsa::RuleEngine::IRuleEngine;
 
 class MockRuleEngine : public IRuleEngine {
  public:

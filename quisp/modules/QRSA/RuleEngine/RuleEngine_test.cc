@@ -20,46 +20,48 @@
 #include "rules/Active/ActiveAction.h"
 #include "rules/Active/ActiveRuleSet.h"
 
-ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, partner);
-ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, num_resource_required);
+using namespace quisp::rules::active;
 
-ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, unsigned long, ruleset_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, int, rule_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, QNIC_type, qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, partner);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, resource);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, trash_resource);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, purification_count);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, bool, X);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, bool, Z);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, num_purify);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, action_index);
+ACCESS_PRIVATE_FIELD(EnoughResourceClause, int, partner);
+ACCESS_PRIVATE_FIELD(EnoughResourceClause, int, num_resource_required);
 
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_partner);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, self_left_qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_qnic_address);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, left_qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, self_left_qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_resource);
+ACCESS_PRIVATE_FIELD(ActiveAction, unsigned long, ruleset_id);
+ACCESS_PRIVATE_FIELD(ActiveAction, int, rule_id);
+ACCESS_PRIVATE_FIELD(PurifyAction, int, qnic_id);
+ACCESS_PRIVATE_FIELD(PurifyAction, QNIC_type, qnic_type);
+ACCESS_PRIVATE_FIELD(PurifyAction, int, partner);
+ACCESS_PRIVATE_FIELD(PurifyAction, int, resource);
+ACCESS_PRIVATE_FIELD(PurifyAction, int, trash_resource);
+ACCESS_PRIVATE_FIELD(PurifyAction, int, purification_count);
+ACCESS_PRIVATE_FIELD(PurifyAction, bool, X);
+ACCESS_PRIVATE_FIELD(PurifyAction, bool, Z);
+ACCESS_PRIVATE_FIELD(PurifyAction, int, num_purify);
+ACCESS_PRIVATE_FIELD(PurifyAction, int, action_index);
 
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_partner);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, self_right_qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_qnic_address);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, right_qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, self_right_qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_resource);
+ACCESS_PRIVATE_FIELD(SwappingAction, int, left_partner);
+ACCESS_PRIVATE_FIELD(SwappingAction, int, left_qnic_id);
+ACCESS_PRIVATE_FIELD(SwappingAction, int, self_left_qnic_id);
+ACCESS_PRIVATE_FIELD(SwappingAction, int, left_qnic_address);
+ACCESS_PRIVATE_FIELD(SwappingAction, QNIC_type, left_qnic_type);
+ACCESS_PRIVATE_FIELD(SwappingAction, QNIC_type, self_left_qnic_type);
+ACCESS_PRIVATE_FIELD(SwappingAction, int, left_resource);
 
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, partner);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, QNIC_type, qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, resource);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, src);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, dst);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, current_count);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, max_count);
+ACCESS_PRIVATE_FIELD(SwappingAction, int, right_partner);
+ACCESS_PRIVATE_FIELD(SwappingAction, int, right_qnic_id);
+ACCESS_PRIVATE_FIELD(SwappingAction, int, self_right_qnic_id);
+ACCESS_PRIVATE_FIELD(SwappingAction, int, right_qnic_address);
+ACCESS_PRIVATE_FIELD(SwappingAction, QNIC_type, right_qnic_type);
+ACCESS_PRIVATE_FIELD(SwappingAction, QNIC_type, self_right_qnic_type);
+ACCESS_PRIVATE_FIELD(SwappingAction, int, right_resource);
+
+ACCESS_PRIVATE_FIELD(RandomMeasureAction, int, partner);
+ACCESS_PRIVATE_FIELD(RandomMeasureAction, int, qnic_id);
+ACCESS_PRIVATE_FIELD(RandomMeasureAction, QNIC_type, qnic_type);
+ACCESS_PRIVATE_FIELD(RandomMeasureAction, int, resource);
+ACCESS_PRIVATE_FIELD(RandomMeasureAction, int, src);
+ACCESS_PRIVATE_FIELD(RandomMeasureAction, int, dst);
+ACCESS_PRIVATE_FIELD(RandomMeasureAction, int, current_count);
+ACCESS_PRIVATE_FIELD(RandomMeasureAction, int, max_count);
 
 namespace {
 
@@ -73,6 +75,8 @@ using quisp::modules::qrsa::IQubitRecord;
 using quisp::modules::qubit_record::QubitRecord;
 using namespace quisp_test;
 using namespace testing;
+using quisp::modules::qrsa::RuleEngine::purification_result;
+using quisp::modules::qrsa::RuleEngine::swapping_result;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
@@ -99,21 +103,21 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
   IRealTimeController* getRealTimeController() override { return realtimeController; };
 };
 
-class RuleEngineTestTarget : public quisp::modules::RuleEngine {
+class RuleEngineTestTarget : public quisp::modules::qrsa::RuleEngine::RuleEngine {
  public:
-  using quisp::modules::RuleEngine::constructActiveRuleSet;
-  using quisp::modules::RuleEngine::constructRule;
-  using quisp::modules::RuleEngine::initialize;
-  using quisp::modules::RuleEngine::par;
-  using quisp::modules::RuleEngine::qnic_store;
-  using quisp::modules::RuleEngine::storeCheck_Purification_Agreement;
-  using quisp::modules::RuleEngine::Unlock_resource_and_discard;
-  using quisp::modules::RuleEngine::Unlock_resource_and_upgrade_stage;
-  using quisp::modules::RuleEngine::updateResources_EntanglementSwapping;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::constructActiveRuleSet;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::constructRule;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::initialize;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::par;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::qnic_store;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::storeCheck_Purification_Agreement;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::Unlock_resource_and_discard;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::Unlock_resource_and_upgrade_stage;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::updateResources_EntanglementSwapping;
 
   RuleEngineTestTarget(IStationaryQubit* mockQubit, MockRoutingDaemon* routingdaemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller,
                        std::vector<QNicSpec> qnic_specs = {})
-      : quisp::modules::RuleEngine() {
+      : quisp::modules::qrsa::RuleEngine::RuleEngine() {
     setParInt(this, "address", 2);
     setParInt(this, "number_of_qnics_rp", 0);
     setParInt(this, "number_of_qnics_r", 1);

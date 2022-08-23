@@ -4,6 +4,8 @@
 
 namespace quisp::rules::active::actions {
 
+using quisp::messages::PurificationResult;
+
 PurifyAction::PurifyAction(unsigned long ruleset_id, int rule_id, int shared_tag, bool x_purification, bool z_purification, int num_purification, int partner, QNIC_type qnic_type,
                            int qnic_id, int resource, int trash_resource)
     : ActiveAction(ruleset_id, rule_id, shared_tag),

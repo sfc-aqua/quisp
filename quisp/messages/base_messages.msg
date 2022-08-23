@@ -5,6 +5,7 @@ cplusplus  {{
     #include <nlohmann/json.hpp>
     using quisp::rules::active::ActiveRuleSet;
     using quisp::modules::QNIC_pair_info;
+    using quisp::modules::QNIC_type;
     using nlohmann::json;
 }}
 

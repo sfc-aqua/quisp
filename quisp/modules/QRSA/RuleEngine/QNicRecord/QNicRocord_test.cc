@@ -6,8 +6,10 @@
 
 namespace {
 using namespace quisp_test;
-using quisp::utils::ComponentProvider;
 using namespace quisp::modules::qnic_record;
+using namespace quisp::modules;
+
+using quisp::utils::ComponentProvider;
 
 TEST(QNicRecord, InitWithoutQubits) {
   ComponentProvider provider(new cModule());

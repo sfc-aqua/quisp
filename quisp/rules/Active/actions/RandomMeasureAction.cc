@@ -1,8 +1,11 @@
 #include "RandomMeasureAction.h"
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
+#include "messages/tomography_messages_m.h"
 
 namespace quisp::rules::active::actions {
+
+using quisp::messages::LinkTomographyResult;
 
 RandomMeasureAction::RandomMeasureAction(unsigned long ruleset_id, unsigned long rule_id, int owner_address, int partner, QNIC_type qnic_type, int qnic_id, int resource,
                                          int max_count)

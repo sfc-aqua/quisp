@@ -2,9 +2,10 @@
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
-using quisp::types::EigenvalueResult;
-
 namespace quisp::rules::active::actions {
+
+using quisp::messages::SwappingResult;
+using quisp::types::EigenvalueResult;
 
 SwappingAction::SwappingAction(unsigned long ruleset_id, int rule_id, int shared_tag, int left_partner, QNIC_type left_qnic_type, int left_qnic_id, int left_qnic_address,
                                int left_resource, int right_partner, QNIC_type right_qnic_type, int right_qnic_id, int right_qnic_address, int right_resource,

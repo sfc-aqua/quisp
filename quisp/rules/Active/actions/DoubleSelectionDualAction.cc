@@ -3,6 +3,9 @@
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
 namespace quisp::rules::active::actions {
+
+using quisp::messages::DS_DoublePurificationResult;
+
 DoubleSelectionDualAction::DoubleSelectionDualAction(unsigned long ruleset_id, int rule_id, int shared_tag, int partner, QNIC_type qnic_type, int qnic_index, int resource,
                                                      int trash_resource_x, int trash_resource_z, int ds_trash_resource_x, int ds_trash_resource_z)
     : ActiveAction(ruleset_id, rule_id, shared_tag),

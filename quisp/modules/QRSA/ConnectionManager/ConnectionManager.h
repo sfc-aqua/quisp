@@ -5,19 +5,19 @@
  *      Author: zigen
  */
 
-#ifndef MODULES_CONNECTIONMANAGER_H_
-#define MODULES_CONNECTIONMANAGER_H_
+#pragma once
 
 #include "IConnectionManager.h"
 #include "modules/Logger/LoggerBase.h"
+#include "rules/Rule.h"
 
+namespace quisp::modules::ConnectionManager {
 using namespace omnetpp;
 using namespace quisp::messages;
 using namespace quisp::rules::active;
-using quisp::rules::PurType;
 
-namespace quisp {
-namespace modules {
+using quisp::rules::PurType;
+using quisp::rules::Rule;
 
 /** \class ConnectionManager ConnectionManager.cc
  *
@@ -108,6 +108,4 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   unsigned long createUniqueId() override;
 };
 
-}  // namespace modules
-}  // namespace quisp
-#endif /* MODULES_CONNECTIONMANAGER_H_ */
+}  // namespace quisp::modules::ConnectionManager

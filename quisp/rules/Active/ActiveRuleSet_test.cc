@@ -1,10 +1,14 @@
-#include "ActiveRuleSet.h"
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
+
+#include "ActiveRule.h"
+#include "ActiveRuleSet.h"
 
 namespace {
 using namespace quisp::rules;
 using namespace quisp_test;
+using namespace quisp::rules::active;
+using quisp::rules::active::ActiveRule;
 
 TEST(ActiveRuleSetTest, Init) {
   // test for initialization

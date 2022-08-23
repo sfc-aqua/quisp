@@ -7,15 +7,18 @@
 
 #pragma once
 
-#include <modules/QNIC.h>
-#include <modules/QUBIT.h>
 #include <omnetpp.h>
 #include <memory>
+
+#include <modules/QNIC.h>
+#include <modules/QRSA/RuleEngine/IRuleEngine.h>
+#include <modules/QUBIT.h>
 
 namespace quisp::rules::active::actions {
 
 using quisp::modules::IStationaryQubit;
 using quisp::modules::QNIC_type;
+using quisp::modules::qrsa::RuleEngine::IRuleEngine;
 
 class ActiveAction {
  public:

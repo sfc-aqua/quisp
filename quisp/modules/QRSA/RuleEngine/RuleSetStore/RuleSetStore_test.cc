@@ -6,6 +6,7 @@
 
 namespace {
 using namespace quisp::rules;
+using namespace quisp::rules::active;
 using namespace quisp_test;
 class RuleSetStore : public quisp::modules::ruleset_store::RuleSetStore {
  public:

@@ -6,6 +6,7 @@
 
 namespace {
 using namespace quisp_test;
+using namespace quisp::modules;
 using quisp::utils::ComponentProvider;
 
 class Strategy : public TestComponentProviderStrategy {

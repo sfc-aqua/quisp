@@ -27,9 +27,8 @@
 #include "QubitRecord/IQubitRecord.h"
 #include "RuleSetStore/RuleSetStore.h"
 
+namespace quisp::modules::qrsa::RuleEngine {
 using namespace omnetpp;
-
-namespace quisp::modules {
 using namespace rules;
 using namespace rules::active;
 using qnic_store::IQNicStore;
@@ -120,4 +119,4 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
 };
 
 Define_Module(RuleEngine);
-}  // namespace quisp::modules
+}  // namespace quisp::modules::qrsa::RuleEngine

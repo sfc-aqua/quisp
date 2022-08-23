@@ -14,7 +14,7 @@
 #include "QNicStore/QNicStore.h"
 #include "RuleEngine.h"
 
-namespace quisp::modules {
+namespace quisp::modules::qrsa::RuleEngine {
 
 using namespace rules;
 using namespace rules::active;
@@ -1342,4 +1342,4 @@ void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, ISt
   bell_pair_store.eraseQubit(qubit_record);
 }
 
-}  // namespace quisp::modules
+}  // namespace quisp::modules::qrsa::RuleEngine

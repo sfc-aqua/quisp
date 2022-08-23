@@ -1,13 +1,19 @@
-#include "ActiveRule.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
 #include <memory>
 
+#include "ActiveRule.h"
+
 namespace {
+
 using namespace quisp_test;
 using namespace quisp::rules;
+
+using quisp::rules::active::ActiveRule;
+
 using OriginalActiveRule = quisp::rules::active::ActiveRule;
+
 class Rule : public OriginalActiveRule {
  public:
   using OriginalActiveRule::ActiveRule;

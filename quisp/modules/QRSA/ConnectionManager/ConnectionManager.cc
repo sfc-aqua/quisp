@@ -18,8 +18,7 @@ using namespace quisp::messages;
 using namespace quisp::rules;
 using namespace quisp::rules::active;
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules::ConnectionManager {
 
 Define_Module(ConnectionManager);
 ConnectionManager::ConnectionManager() : provider(utils::ComponentProvider{this}) {}
@@ -1021,5 +1020,4 @@ void ConnectionManager::finish() {
   }
 }
 
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules::ConnectionManager

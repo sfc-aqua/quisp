@@ -3,6 +3,9 @@
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
 namespace quisp::rules::active::actions {
+
+using quisp::messages::WaitResult;
+
 cPacket *WaitAction::run(cModule *re) {
   auto *pk = new WaitResult;
   pk->setKind(6);

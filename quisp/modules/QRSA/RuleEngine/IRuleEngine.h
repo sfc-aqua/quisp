@@ -3,20 +3,16 @@
 #include <omnetpp.h>
 #include <vector>
 
-#include <messages/classical_messages.h>
-#include <modules/PhysicalConnection/BSA/HoMController.h>
 #include <modules/QNIC/StationaryQubit/StationaryQubit.h>
 #include <modules/QRSA/HardwareMonitor/HardwareMonitor.h>
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>
 #include <modules/QRSA/RoutingDaemon/RoutingDaemon.h>
 #include <modules/QUBIT.h>
-#include <rules/Active/ActiveRuleSet.h>
 #include <rules/RuleSet.h>
 
 using namespace omnetpp;
 
-namespace quisp::modules {
-using namespace rules::active;
+namespace quisp::modules::qrsa::RuleEngine {
 
 typedef struct {
   unsigned long ruleset_id;
@@ -85,4 +81,4 @@ class IRuleEngine : public cSimpleModule {
   virtual void ResourceAllocation(int qnic_type, int qnic_index) = 0;
 };
 
-}  // namespace quisp::modules
+}  // namespace quisp::modules::qrsa::RuleEngine

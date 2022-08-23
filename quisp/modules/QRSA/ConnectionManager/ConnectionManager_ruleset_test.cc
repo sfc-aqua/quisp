@@ -22,15 +22,15 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
   ~Strategy() {}
 };
 
-class ConnectionManager : public quisp::modules::ConnectionManager {
+class ConnectionManager : public quisp::modules::ConnectionManager::ConnectionManager {
  public:
-  using quisp::modules::ConnectionManager::par;
-  using quisp::modules::ConnectionManager::purifyRule;
-  using quisp::modules::ConnectionManager::swapRule;
-  using quisp::modules::ConnectionManager::tomographyRule;
-  using quisp::modules::ConnectionManager::waitRule;
+  using quisp::modules::ConnectionManager::ConnectionManager::par;
+  using quisp::modules::ConnectionManager::ConnectionManager::purifyRule;
+  using quisp::modules::ConnectionManager::ConnectionManager::swapRule;
+  using quisp::modules::ConnectionManager::ConnectionManager::tomographyRule;
+  using quisp::modules::ConnectionManager::ConnectionManager::waitRule;
 
-  ConnectionManager() : quisp::modules::ConnectionManager() {
+  ConnectionManager() : quisp::modules::ConnectionManager::ConnectionManager() {
     setParInt(this, "address", 123);
     setParInt(this, "total_number_of_qnics", 10);
     this->setName("connection_manager_test_target");

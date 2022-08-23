@@ -11,6 +11,7 @@ using namespace omnetpp;
 using namespace quisp::utils;
 using namespace quisp::modules;
 using namespace quisp_test;
+using namespace quisp::messages;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:

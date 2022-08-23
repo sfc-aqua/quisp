@@ -29,10 +29,11 @@ using namespace omnetpp;
 using namespace quisp::utils;
 using namespace quisp::rules;
 using namespace quisp::rules::active::actions;
-using quisp::rules::active::actions::ActiveAction;
 using namespace quisp::modules;
 using namespace quisp_test;
 using namespace testing;
+
+using quisp::modules::qrsa::RuleEngine::PhotonTransmissionConfig;
 
 class Strategy : public TestComponentProviderStrategy {
   cModule* temp_qnic;
@@ -53,20 +54,20 @@ class Strategy : public TestComponentProviderStrategy {
   cModule* getQNIC(int qnic_index, QNIC_type qnic_type) override { return temp_qnic; };
 };
 
-class RuleEngineTestTarget : public quisp::modules::RuleEngine {
+class RuleEngineTestTarget : public quisp::modules::qrsa::RuleEngine::RuleEngine {
  public:
-  using quisp::modules::RuleEngine::burstTrial_outdated;
-  using quisp::modules::RuleEngine::incrementBurstTrial;
-  using quisp::modules::RuleEngine::initialize;
-  using quisp::modules::RuleEngine::ntable;
-  using quisp::modules::RuleEngine::par;
-  using quisp::modules::RuleEngine::scheduleFirstPhotonEmission;
-  using quisp::modules::RuleEngine::scheduleNextEmissionEvent;
-  using quisp::modules::RuleEngine::sendPhotonTransmissionSchedule;
-  using quisp::modules::RuleEngine::shootPhoton;
-  using quisp::modules::RuleEngine::shootPhoton_internal;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::burstTrial_outdated;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::incrementBurstTrial;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::initialize;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::ntable;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::par;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::scheduleFirstPhotonEmission;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::scheduleNextEmissionEvent;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::sendPhotonTransmissionSchedule;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::shootPhoton;
+  using quisp::modules::qrsa::RuleEngine::RuleEngine::shootPhoton_internal;
 
-  RuleEngineTestTarget(MockHardwareMonitor* hardware_monitor, std::vector<QNicSpec> qnic_specs) : quisp::modules::RuleEngine() {
+  RuleEngineTestTarget(MockHardwareMonitor* hardware_monitor, std::vector<QNicSpec> qnic_specs) : quisp::modules::qrsa::RuleEngine::RuleEngine() {
     setParInt(this, "address", 123);
     setParInt(this, "number_of_qnics_rp", 0);
     setParInt(this, "number_of_qnics_r", 1);

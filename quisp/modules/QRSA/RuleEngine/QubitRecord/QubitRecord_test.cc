@@ -7,6 +7,7 @@
 
 namespace {
 using namespace quisp_test;
+using namespace quisp::modules;
 using quisp::utils::ComponentProvider;
 
 class QubitRecord : public quisp::modules::qubit_record::QubitRecord {
