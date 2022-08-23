@@ -4,8 +4,7 @@
  *
  *  \brief HoMController
  */
-#ifndef QUISP_MODULES_HOM_CONTROLLER_H_
-#define QUISP_MODULES_HOM_CONTROLLER_H_
+#pragma once
 
 #include <PhotonicQubit_m.h>
 #include <messages/classical_messages.h>
@@ -28,13 +27,9 @@ class HoMController : public cSimpleModule {
  private:
   int address;
   int photon_detection_per_sec;  ///< The number of detectable photon in a second. This info is used to decide the number of photon in one trial.
-  std::vector<const char*> gates_here;  ///< No longer used
-  // cMessage *generatePacket;
   double speed_of_light_in_channel;  ///< Speed of light in optical fiber.
   cPar* c;
-  int time_out_count;  ///< No longer used
-  int success_count = 0;  ///< No longer used
-  // simsignal_t recog_resSignal;
+
  public:
   int neighbor_address;  ///< Address of one of two neighbor node.
   int neighbor_address_two;  ///< Address of the other node from "neighbor address"
@@ -47,8 +42,6 @@ class HoMController : public cSimpleModule {
   double accepted_burst_interval;  ///< Calculated phton burst interval calculated by distance and light speed. (unit: s)
 
   int BSAtimingNotifier_type = 4;  ///< Type of packet
-  int PathSelection_type = 1;  ///< No longer used
-  int PhotonicQubit_type = 100;  ///< No longer used
 
   bool receiver, passive;  ///< Type of QNIC. receiver: receive phton from counter part. passive: Not implemented yet. Will be used for MSM link.
   int qnic_index = -1;  ///< Index of qnic. If the qnic is internal (used in MM link), the index is -1. (default: -1)
@@ -59,9 +52,6 @@ class HoMController : public cSimpleModule {
   BSAresultTable results;
 
   bool handshake = false;  ///< True: Return ack and negotiate the number of available qubits. False: Use maximum number of available qubits
-  double BSA_timeout = 1e-5;  ///< No longer used
-  bool auto_resend_BSANotifier;  ///< True: resend BSA notification again automatically
-  double current_trial_id;  ///< Unique identifier for this trial
   double bsa_notification_interval;  ///< Interval to send BSA notification
 
  protected:
@@ -70,7 +60,6 @@ class HoMController : public cSimpleModule {
   virtual void standaloneInitializer();
   virtual void internodeInitializer();
   virtual void handleMessage(cMessage* msg) override;
-  virtual void BubbleText(const char* txt);
   virtual double calculateEmissionStartTime(double timing, double distance_to_node, double c);
   virtual double calculateTimeToTravel(double distance, double c);
   virtual BSMtimingNotifier* generateNotifier(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
@@ -86,7 +75,7 @@ class HoMController : public cSimpleModule {
   virtual int getStoredBSAresultsSize();
   virtual void clearBSAresults();
   virtual void sendBSAresultsToNeighbors();
-  // virtual void  finish();
+
  public:
   virtual void setMax_buffer(int buffer);
   HoMController();
@@ -94,5 +83,3 @@ class HoMController : public cSimpleModule {
 
 }  // namespace modules
 }  // namespace quisp
-
-#endif /* QUISP_MODULES_HOM_CONTROLLER_H_ */
