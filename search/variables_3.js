@@ -19,9 +19,7 @@ var searchData=
   ['count_5fx_16',['count_X',['../classquisp_1_1modules_1_1_bell_state_analyzer.html#a95f5316e1346007ace43be5c9c30cd34',1,'quisp::modules::BellStateAnalyzer']]],
   ['count_5fy_17',['count_Y',['../classquisp_1_1modules_1_1_bell_state_analyzer.html#a53eda29d9c936a47f004f36c6cd87fb0',1,'quisp::modules::BellStateAnalyzer']]],
   ['count_5fz_18',['count_Z',['../classquisp_1_1modules_1_1_bell_state_analyzer.html#a3346a9320b618f2d93651640bd7962b8',1,'quisp::modules::BellStateAnalyzer']]],
-  ['creation_5ftime_19',['creation_time',['../classquisp_1_1modules_1_1_bell_state_analyzer.html#a8bdda2a9c2cea94781b04c0c4623102a',1,'quisp::modules::BellStateAnalyzer']]],
-  ['current_5fcount_20',['current_count',['../classquisp_1_1rules_1_1active_1_1actions_1_1_random_measure_action.html#a16a9d34cdf127930509d944a526ef5e2',1,'quisp::rules::active::actions::RandomMeasureAction::current_count()'],['../classquisp_1_1rules_1_1active_1_1clauses_1_1_measure_count_clause.html#a644643fd07f329ab73e1121a4bce02f8',1,'quisp::rules::active::clauses::MeasureCountClause::current_count()']]],
-  ['current_5frule_5fid_21',['current_rule_id',['../classquisp_1_1rules_1_1_rule_set.html#ae2e1c3e954f8ebdc643a4f703ffb5a16',1,'quisp::rules::RuleSet']]],
-  ['current_5ftime_22',['current_time',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html#a3352dbadfa611a7b8f95d03d2dfdef61',1,'quisp::backends::error_tracking::ErrorTrackingBackend']]],
-  ['current_5ftrial_5fid_23',['current_trial_id',['../classquisp_1_1modules_1_1_ho_m_controller.html#a8273fa4d1f620438336f710f425dffc9',1,'quisp::modules::HoMController']]]
+  ['current_5fcount_19',['current_count',['../classquisp_1_1rules_1_1active_1_1actions_1_1_random_measure_action.html#a16a9d34cdf127930509d944a526ef5e2',1,'quisp::rules::active::actions::RandomMeasureAction::current_count()'],['../classquisp_1_1rules_1_1active_1_1clauses_1_1_measure_count_clause.html#a644643fd07f329ab73e1121a4bce02f8',1,'quisp::rules::active::clauses::MeasureCountClause::current_count()']]],
+  ['current_5frule_5fid_20',['current_rule_id',['../classquisp_1_1rules_1_1_rule_set.html#ae2e1c3e954f8ebdc643a4f703ffb5a16',1,'quisp::rules::RuleSet']]],
+  ['current_5ftime_21',['current_time',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html#a3352dbadfa611a7b8f95d03d2dfdef61',1,'quisp::backends::error_tracking::ErrorTrackingBackend']]]
 ];

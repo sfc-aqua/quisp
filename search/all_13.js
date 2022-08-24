@@ -116,13 +116,12 @@ var searchData=
   ['str_113',['str',['../classquisp__test_1_1module__type_1_1_test_module_type.html#a076264967633c90c5b7149853302f7f7',1,'quisp_test::module_type::TestModuleType']]],
   ['strategy_114',['strategy',['../classquisp_1_1utils_1_1_component_provider.html#ad9f4a1cc768e0bce2f11c4309df6b5e0',1,'quisp::utils::ComponentProvider']]],
   ['substitutevariables_115',['substituteVariables',['../classquisp__test_1_1configuration_1_1_configuration.html#a2819bea7b32484a4d59bbc2070d0ef45',1,'quisp_test::configuration::Configuration']]],
-  ['success_5fcount_116',['success_count',['../classquisp_1_1modules_1_1_ho_m_controller.html#a2f1b7faf03a52f3defabc44de3e12148',1,'quisp::modules::HoMController']]],
-  ['swapper_5faddr_117',['swapper_addr',['../structquisp_1_1modules_1_1swapping__result.html#a9809cbdba19dc84c047320d03787ebfd',1,'quisp::modules::swapping_result']]],
-  ['swapping_5fresult_118',['swapping_result',['../structquisp_1_1modules_1_1swapping__result.html',1,'quisp::modules']]],
-  ['swappingaction_119',['SwappingAction',['../classquisp_1_1rules_1_1active_1_1actions_1_1_swapping_action.html',1,'quisp::rules::active::actions::SwappingAction'],['../classquisp_1_1rules_1_1active_1_1actions_1_1_swapping_action.html#a5ee396ac2ecd537205f86cd68beb333d',1,'quisp::rules::active::actions::SwappingAction::SwappingAction()']]],
-  ['swappingaction_2ecc_120',['SwappingAction.cc',['../_swapping_action_8cc.html',1,'']]],
-  ['swappingaction_2eh_121',['SwappingAction.h',['../_swapping_action_8h.html',1,'']]],
-  ['swappingaction_5ftest_2ecc_122',['SwappingAction_test.cc',['../_swapping_action__test_8cc.html',1,'']]],
-  ['swappingconfig_123',['SwappingConfig',['../structquisp_1_1modules_1_1_swapping_config.html',1,'quisp::modules']]],
-  ['swaprule_124',['swapRule',['../classquisp_1_1modules_1_1_connection_manager.html#a58a6d50f0381f39a3ae665dea69c672a',1,'quisp::modules::ConnectionManager']]]
+  ['swapper_5faddr_116',['swapper_addr',['../structquisp_1_1modules_1_1swapping__result.html#a9809cbdba19dc84c047320d03787ebfd',1,'quisp::modules::swapping_result']]],
+  ['swapping_5fresult_117',['swapping_result',['../structquisp_1_1modules_1_1swapping__result.html',1,'quisp::modules']]],
+  ['swappingaction_118',['SwappingAction',['../classquisp_1_1rules_1_1active_1_1actions_1_1_swapping_action.html',1,'quisp::rules::active::actions::SwappingAction'],['../classquisp_1_1rules_1_1active_1_1actions_1_1_swapping_action.html#a5ee396ac2ecd537205f86cd68beb333d',1,'quisp::rules::active::actions::SwappingAction::SwappingAction()']]],
+  ['swappingaction_2ecc_119',['SwappingAction.cc',['../_swapping_action_8cc.html',1,'']]],
+  ['swappingaction_2eh_120',['SwappingAction.h',['../_swapping_action_8h.html',1,'']]],
+  ['swappingaction_5ftest_2ecc_121',['SwappingAction_test.cc',['../_swapping_action__test_8cc.html',1,'']]],
+  ['swappingconfig_122',['SwappingConfig',['../structquisp_1_1modules_1_1_swapping_config.html',1,'quisp::modules']]],
+  ['swaprule_123',['swapRule',['../classquisp_1_1modules_1_1_connection_manager.html#a58a6d50f0381f39a3ae665dea69c672a',1,'quisp::modules::ConnectionManager']]]
 ];

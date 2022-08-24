@@ -23,6 +23,5 @@ var searchData=
   ['ds_5fpurification_5foutcome_20',['DS_purification_outcome',['../structquisp_1_1modules_1_1_triplepurification__result.html#ac5b5b219dbe5ed26b0b3156116b4030c',1,'quisp::modules::Triplepurification_result']]],
   ['ds_5fxpurification_5foutcome_21',['DS_Xpurification_outcome',['../structquisp_1_1modules_1_1_quatropurification__result.html#af3e7acc153346b355670d867780194ae',1,'quisp::modules::Quatropurification_result']]],
   ['ds_5fzpurification_5foutcome_22',['DS_Zpurification_outcome',['../structquisp_1_1modules_1_1_quatropurification__result.html#af1a5c64fb1f39adf308de4fa0fa7d9b0',1,'quisp::modules::Quatropurification_result']]],
-  ['dst_23',['dst',['../classquisp_1_1rules_1_1active_1_1actions_1_1_random_measure_action.html#a4171bf48003fe9a0d1dfee53982bd6d7',1,'quisp::rules::active::actions::RandomMeasureAction']]],
-  ['duration_24',['duration',['../classquisp_1_1modules_1_1_bell_state_analyzer.html#adc400aa0b64335e140aad900eb23f2a3',1,'quisp::modules::BellStateAnalyzer']]]
+  ['dst_23',['dst',['../classquisp_1_1rules_1_1active_1_1actions_1_1_random_measure_action.html#a4171bf48003fe9a0d1dfee53982bd6d7',1,'quisp::rules::active::actions::RandomMeasureAction']]]
 ];

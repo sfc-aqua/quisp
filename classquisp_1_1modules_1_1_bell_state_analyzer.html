@@ -130,12 +130,9 @@ Collaboration diagram for quisp::modules::BellStateAnalyzer:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a019d537a11764138f3e8de17255118b0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a019d537a11764138f3e8de17255118b0">initialize</a> ()</td></tr>
-<tr class="memdesc:a019d537a11764138f3e8de17255118b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize Bell State Analyzer.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a019d537a11764138f3e8de17255118b0">More...</a><br /></td></tr>
 <tr class="separator:a019d537a11764138f3e8de17255118b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a103b025960e82e23964a2edbeffdc8fa"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a103b025960e82e23964a2edbeffdc8fa">handleMessage</a> (cMessage *msg)</td></tr>
 <tr class="separator:a103b025960e82e23964a2edbeffdc8fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b53b518247ba3b9737e15dc3603d8e7"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a9b53b518247ba3b9737e15dc3603d8e7">isPhotonLost</a> (cMessage *msg)</td></tr>
-<tr class="separator:a9b53b518247ba3b9737e15dc3603d8e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8fbc2526440978d4fc8db12a7b03e20"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ac8fbc2526440978d4fc8db12a7b03e20">forDEBUG_countErrorTypes</a> (cMessage *msg)</td></tr>
 <tr class="separator:ac8fbc2526440978d4fc8db12a7b03e20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52d141391e770d5ebe969921bab6f23c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a52d141391e770d5ebe969921bab6f23c">sendBSAresult</a> (bool result, bool last)</td></tr>
@@ -152,101 +149,38 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:af08d7d7cbbecda931354276d93fa6988"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#af08d7d7cbbecda931354276d93fa6988">n_res</a> = 0</td></tr>
 <tr class="memdesc:af08d7d7cbbecda931354276d93fa6988"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of resources for performance analysis.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#af08d7d7cbbecda931354276d93fa6988">More...</a><br /></td></tr>
 <tr class="separator:af08d7d7cbbecda931354276d93fa6988"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37f8ac46fd7a705787dfdbe482591476"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a37f8ac46fd7a705787dfdbe482591476">trials</a> = 0</td></tr>
-<tr class="memdesc:a37f8ac46fd7a705787dfdbe482591476"><td class="mdescLeft">&#160;</td><td class="mdescRight">No longer used.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a37f8ac46fd7a705787dfdbe482591476">More...</a><br /></td></tr>
-<tr class="separator:a37f8ac46fd7a705787dfdbe482591476"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e93db10c0eea3d6b5878bde9c384fb9"><td class="memItemLeft" align="right" valign="top">simsignal_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a3e93db10c0eea3d6b5878bde9c384fb9">GOD_num_resSignal</a></td></tr>
 <tr class="memdesc:a3e93db10c0eea3d6b5878bde9c384fb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of resources for signaling.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a3e93db10c0eea3d6b5878bde9c384fb9">More...</a><br /></td></tr>
 <tr class="separator:a3e93db10c0eea3d6b5878bde9c384fb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3f34e147897db9e076c9902d1066966"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ae3f34e147897db9e076c9902d1066966">BSA_perf_output_filename</a></td></tr>
-<tr class="memdesc:ae3f34e147897db9e076c9902d1066966"><td class="mdescLeft">&#160;</td><td class="mdescRight">No longer used.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ae3f34e147897db9e076c9902d1066966">More...</a><br /></td></tr>
-<tr class="separator:ae3f34e147897db9e076c9902d1066966"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8bdda2a9c2cea94781b04c0c4623102a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; simtime_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a8bdda2a9c2cea94781b04c0c4623102a">creation_time</a></td></tr>
-<tr class="memdesc:a8bdda2a9c2cea94781b04c0c4623102a"><td class="mdescLeft">&#160;</td><td class="mdescRight">No longer used.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a8bdda2a9c2cea94781b04c0c4623102a">More...</a><br /></td></tr>
-<tr class="separator:a8bdda2a9c2cea94781b04c0c4623102a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4dfa8fb376124b535afd6ba84c3d01d4"><td class="memItemLeft" align="right" valign="top">simsignal_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a4dfa8fb376124b535afd6ba84c3d01d4">average_num_trialSignal</a></td></tr>
-<tr class="memdesc:a4dfa8fb376124b535afd6ba84c3d01d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">No longer used.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a4dfa8fb376124b535afd6ba84c3d01d4">More...</a><br /></td></tr>
-<tr class="separator:a4dfa8fb376124b535afd6ba84c3d01d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af40f1877010b34589b7b71ec4220576d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#af40f1877010b34589b7b71ec4220576d">number_of_trials</a></td></tr>
-<tr class="memdesc:af40f1877010b34589b7b71ec4220576d"><td class="mdescLeft">&#160;</td><td class="mdescRight">No longer used.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#af40f1877010b34589b7b71ec4220576d">More...</a><br /></td></tr>
-<tr class="separator:af40f1877010b34589b7b71ec4220576d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd768f4077975fbd9e59ada068b36164"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#afd768f4077975fbd9e59ada068b36164">nwidth</a> = 0</td></tr>
-<tr class="memdesc:afd768f4077975fbd9e59ada068b36164"><td class="mdescLeft">&#160;</td><td class="mdescRight">No longer used.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#afd768f4077975fbd9e59ada068b36164">More...</a><br /></td></tr>
-<tr class="separator:afd768f4077975fbd9e59ada068b36164"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc400aa0b64335e140aad900eb23f2a3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#adc400aa0b64335e140aad900eb23f2a3">duration</a> = 1</td></tr>
-<tr class="memdesc:adc400aa0b64335e140aad900eb23f2a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">No longer used.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#adc400aa0b64335e140aad900eb23f2a3">More...</a><br /></td></tr>
-<tr class="separator:adc400aa0b64335e140aad900eb23f2a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af11b34478c2e35954193933e7bca3859"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#af11b34478c2e35954193933e7bca3859">darkcount_probability</a></td></tr>
-<tr class="memdesc:af11b34478c2e35954193933e7bca3859"><td class="mdescLeft">&#160;</td><td class="mdescRight">Probability the darkcount happen in BSA.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#af11b34478c2e35954193933e7bca3859">More...</a><br /></td></tr>
 <tr class="separator:af11b34478c2e35954193933e7bca3859"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3aa257e59e734f0cece142d6885f3fb3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a3aa257e59e734f0cece142d6885f3fb3">loss_rate</a></td></tr>
-<tr class="memdesc:a3aa257e59e734f0cece142d6885f3fb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Not implemented yet, but will be used for photon loss in BSA?  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a3aa257e59e734f0cece142d6885f3fb3">More...</a><br /></td></tr>
-<tr class="separator:a3aa257e59e734f0cece142d6885f3fb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7411c3c2413d3d54419006d5774bb860"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a7411c3c2413d3d54419006d5774bb860">error_rate</a></td></tr>
-<tr class="memdesc:a7411c3c2413d3d54419006d5774bb860"><td class="mdescLeft">&#160;</td><td class="mdescRight">Not implemetned yet.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a7411c3c2413d3d54419006d5774bb860">More...</a><br /></td></tr>
-<tr class="separator:a7411c3c2413d3d54419006d5774bb860"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a123b062dba8a963a97c70f97770e4611"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a123b062dba8a963a97c70f97770e4611">left_last_photon_detected</a></td></tr>
-<tr class="memdesc:a123b062dba8a963a97c70f97770e4611"><td class="mdescLeft">&#160;</td><td class="mdescRight">Last photon from left node in this trial is detected.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a123b062dba8a963a97c70f97770e4611">More...</a><br /></td></tr>
 <tr class="separator:a123b062dba8a963a97c70f97770e4611"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a542d9c809e300d00cdb2099e8c7247ec"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a542d9c809e300d00cdb2099e8c7247ec">right_last_photon_detected</a></td></tr>
-<tr class="memdesc:a542d9c809e300d00cdb2099e8c7247ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Last photon from right node in this trial is detected.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a542d9c809e300d00cdb2099e8c7247ec">More...</a><br /></td></tr>
 <tr class="separator:a542d9c809e300d00cdb2099e8c7247ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9857584f680f9c9b644cb1e9083ef6e0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a9857584f680f9c9b644cb1e9083ef6e0">send_result</a></td></tr>
-<tr class="memdesc:a9857584f680f9c9b644cb1e9083ef6e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this is true, send BSA finish and accumulated results to neigbor nodes. If it's false, just send accumulate result in HoM Controller.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a9857584f680f9c9b644cb1e9083ef6e0">More...</a><br /></td></tr>
 <tr class="separator:a9857584f680f9c9b644cb1e9083ef6e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73ccda905fb330d589dee4190dca9956"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a73ccda905fb330d589dee4190dca9956">required_precision</a></td></tr>
 <tr class="memdesc:a73ccda905fb330d589dee4190dca9956"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precision of photon arrivial time // 1.5ns.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a73ccda905fb330d589dee4190dca9956">More...</a><br /></td></tr>
 <tr class="separator:a73ccda905fb330d589dee4190dca9956"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a602cadb177d1ffff6071a4314941f9b9"><td class="memItemLeft" align="right" valign="top">simtime_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a602cadb177d1ffff6071a4314941f9b9">left_arrived_at</a></td></tr>
-<tr class="memdesc:a602cadb177d1ffff6071a4314941f9b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simulation time that left photon arrived at BSA.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a602cadb177d1ffff6071a4314941f9b9">More...</a><br /></td></tr>
 <tr class="separator:a602cadb177d1ffff6071a4314941f9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa762f7984e841738f2bf6dd0c1740b97"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#aa762f7984e841738f2bf6dd0c1740b97">left_photon_origin_node_address</a></td></tr>
-<tr class="memdesc:aa762f7984e841738f2bf6dd0c1740b97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Node address of left photon.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#aa762f7984e841738f2bf6dd0c1740b97">More...</a><br /></td></tr>
-<tr class="separator:aa762f7984e841738f2bf6dd0c1740b97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a103b4d93f58a735c3ee5043c835d7892"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a103b4d93f58a735c3ee5043c835d7892">left_photon_origin_qnic_address</a></td></tr>
-<tr class="memdesc:a103b4d93f58a735c3ee5043c835d7892"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a> address of left photon.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a103b4d93f58a735c3ee5043c835d7892">More...</a><br /></td></tr>
-<tr class="separator:a103b4d93f58a735c3ee5043c835d7892"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09a5f5bd0b46b62f4415e249e6b642a8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a09a5f5bd0b46b62f4415e249e6b642a8">left_photon_origin_qnic_type</a></td></tr>
-<tr class="memdesc:a09a5f5bd0b46b62f4415e249e6b642a8"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a> type of left photon.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a09a5f5bd0b46b62f4415e249e6b642a8">More...</a><br /></td></tr>
-<tr class="separator:a09a5f5bd0b46b62f4415e249e6b642a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa7e37a8ec01d7e52b7bb05e81d21e22"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#afa7e37a8ec01d7e52b7bb05e81d21e22">left_photon_origin_qubit_address</a></td></tr>
-<tr class="memdesc:afa7e37a8ec01d7e52b7bb05e81d21e22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Address of qubit that emits left photon.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#afa7e37a8ec01d7e52b7bb05e81d21e22">More...</a><br /></td></tr>
-<tr class="separator:afa7e37a8ec01d7e52b7bb05e81d21e22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71826522648a97723d3ac77d821e8790"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a71826522648a97723d3ac77d821e8790">left_photon_Xerr</a></td></tr>
-<tr class="memdesc:a71826522648a97723d3ac77d821e8790"><td class="mdescLeft">&#160;</td><td class="mdescRight">True: Photon from left node has X error.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a71826522648a97723d3ac77d821e8790">More...</a><br /></td></tr>
 <tr class="separator:a71826522648a97723d3ac77d821e8790"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa85c0ec13ed08cc2f85830a46b237cdd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#aa85c0ec13ed08cc2f85830a46b237cdd">left_photon_Zerr</a></td></tr>
-<tr class="memdesc:aa85c0ec13ed08cc2f85830a46b237cdd"><td class="mdescLeft">&#160;</td><td class="mdescRight">True: Photon from left node has Z error.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#aa85c0ec13ed08cc2f85830a46b237cdd">More...</a><br /></td></tr>
 <tr class="separator:aa85c0ec13ed08cc2f85830a46b237cdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5adfc8589f428911ea2a3bb5f9ee50c6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a5adfc8589f428911ea2a3bb5f9ee50c6">left_photon_lost</a></td></tr>
-<tr class="memdesc:a5adfc8589f428911ea2a3bb5f9ee50c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">True: Photon from left node is lost.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a5adfc8589f428911ea2a3bb5f9ee50c6">More...</a><br /></td></tr>
 <tr class="separator:a5adfc8589f428911ea2a3bb5f9ee50c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e3a85686018ad2401dd540c8547797f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html">StationaryQubit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a8e3a85686018ad2401dd540c8547797f">left_statQubit_ptr</a></td></tr>
 <tr class="memdesc:a8e3a85686018ad2401dd540c8547797f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instance of qubit memory of left node.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a8e3a85686018ad2401dd540c8547797f">More...</a><br /></td></tr>
 <tr class="separator:a8e3a85686018ad2401dd540c8547797f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e6ed345ac49fe75f50b380e54c1fb4e"><td class="memItemLeft" align="right" valign="top">simtime_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a2e6ed345ac49fe75f50b380e54c1fb4e">right_arrived_at</a></td></tr>
-<tr class="memdesc:a2e6ed345ac49fe75f50b380e54c1fb4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simulation time that right photon arrived at BSA.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a2e6ed345ac49fe75f50b380e54c1fb4e">More...</a><br /></td></tr>
 <tr class="separator:a2e6ed345ac49fe75f50b380e54c1fb4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aded37e2d6f777cc65dcc28286cba1648"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#aded37e2d6f777cc65dcc28286cba1648">right_photon_origin_node_address</a></td></tr>
-<tr class="memdesc:aded37e2d6f777cc65dcc28286cba1648"><td class="mdescLeft">&#160;</td><td class="mdescRight">Node address of right photon.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#aded37e2d6f777cc65dcc28286cba1648">More...</a><br /></td></tr>
-<tr class="separator:aded37e2d6f777cc65dcc28286cba1648"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad05bef8fec479d45f2956bd55d79ded5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ad05bef8fec479d45f2956bd55d79ded5">right_photon_origin_qnic_address</a></td></tr>
-<tr class="memdesc:ad05bef8fec479d45f2956bd55d79ded5"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a> address of right photon.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ad05bef8fec479d45f2956bd55d79ded5">More...</a><br /></td></tr>
-<tr class="separator:ad05bef8fec479d45f2956bd55d79ded5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53078a8a1465ad79913370bb95881cb9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a53078a8a1465ad79913370bb95881cb9">right_photon_origin_qnic_type</a></td></tr>
-<tr class="memdesc:a53078a8a1465ad79913370bb95881cb9"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a> type of right photon.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a53078a8a1465ad79913370bb95881cb9">More...</a><br /></td></tr>
-<tr class="separator:a53078a8a1465ad79913370bb95881cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8caeb2bfbe5f59f3981a2e9138e8d6f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ac8caeb2bfbe5f59f3981a2e9138e8d6f">right_photon_origin_qubit_address</a></td></tr>
-<tr class="memdesc:ac8caeb2bfbe5f59f3981a2e9138e8d6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Address of qubit that emits right photon.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ac8caeb2bfbe5f59f3981a2e9138e8d6f">More...</a><br /></td></tr>
-<tr class="separator:ac8caeb2bfbe5f59f3981a2e9138e8d6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3943e74335b30b75532d7fac39c24df6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a3943e74335b30b75532d7fac39c24df6">right_photon_Xerr</a></td></tr>
-<tr class="memdesc:a3943e74335b30b75532d7fac39c24df6"><td class="mdescLeft">&#160;</td><td class="mdescRight">True: Photon from right node has X error.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a3943e74335b30b75532d7fac39c24df6">More...</a><br /></td></tr>
 <tr class="separator:a3943e74335b30b75532d7fac39c24df6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10dc878142fac28514df25db0b99205a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a10dc878142fac28514df25db0b99205a">right_photon_Zerr</a></td></tr>
-<tr class="memdesc:a10dc878142fac28514df25db0b99205a"><td class="mdescLeft">&#160;</td><td class="mdescRight">True: Photon from right node has Z error.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a10dc878142fac28514df25db0b99205a">More...</a><br /></td></tr>
 <tr class="separator:a10dc878142fac28514df25db0b99205a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe86bca7e2dd67ecd7208558fc200b92"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#abe86bca7e2dd67ecd7208558fc200b92">right_photon_lost</a></td></tr>
-<tr class="memdesc:abe86bca7e2dd67ecd7208558fc200b92"><td class="mdescLeft">&#160;</td><td class="mdescRight">True: Photon from right node is lost.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#abe86bca7e2dd67ecd7208558fc200b92">More...</a><br /></td></tr>
 <tr class="separator:abe86bca7e2dd67ecd7208558fc200b92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a6f7f55a724ca77738b897fceac63ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html">StationaryQubit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a0a6f7f55a724ca77738b897fceac63ac">right_statQubit_ptr</a></td></tr>
 <tr class="memdesc:a0a6f7f55a724ca77738b897fceac63ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instance of qubit memory of right node.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a0a6f7f55a724ca77738b897fceac63ac">More...</a><br /></td></tr>
@@ -264,15 +198,12 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a0223e298eb86ef0b00a0a3ad72908fa9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a0223e298eb86ef0b00a0a3ad72908fa9">count_total</a> = 0</td></tr>
 <tr class="separator:a0223e298eb86ef0b00a0a3ad72908fa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24dff4bc89131199224b1fb7796973ad"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a24dff4bc89131199224b1fb7796973ad">this_trial_done</a> = false</td></tr>
-<tr class="memdesc:a24dff4bc89131199224b1fb7796973ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">True: Finish this trial of BSA.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a24dff4bc89131199224b1fb7796973ad">More...</a><br /></td></tr>
 <tr class="separator:a24dff4bc89131199224b1fb7796973ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00a6eab3158c1b2697c7333f32c4588d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a00a6eab3158c1b2697c7333f32c4588d">BSAsuccess_rate</a> = 0.5 * 0.8 * 0.8</td></tr>
-<tr class="memdesc:a00a6eab3158c1b2697c7333f32c4588d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The probability of BSA success. Maximum probability of success in linear optics is 0.5 and detector probability is 0.8.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a00a6eab3158c1b2697c7333f32c4588d">More...</a><br /></td></tr>
 <tr class="separator:a00a6eab3158c1b2697c7333f32c4588d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a202348e3f6d6c39b52f0e71d5dd0eee6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a202348e3f6d6c39b52f0e71d5dd0eee6">left_count</a></td></tr>
 <tr class="separator:a202348e3f6d6c39b52f0e71d5dd0eee6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab91a44f703f4e390192efdeddfaadec3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ab91a44f703f4e390192efdeddfaadec3">right_count</a> = 0</td></tr>
-<tr class="memdesc:ab91a44f703f4e390192efdeddfaadec3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of photon count.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ab91a44f703f4e390192efdeddfaadec3">More...</a><br /></td></tr>
 <tr class="separator:ab91a44f703f4e390192efdeddfaadec3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a220689f5968f83b6886c1ec0770f5074"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a220689f5968f83b6886c1ec0770f5074">DEBUG_darkcount_left</a> = 0</td></tr>
 <tr class="separator:a220689f5968f83b6886c1ec0770f5074"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -414,8 +345,6 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Initialize Bell State Analyzer. </p>
-
 </div>
 </div>
 <a id="a335f54ea54a2ad6f7062a253582d0775" name="a335f54ea54a2ad6f7062a253582d0775"></a>
@@ -431,32 +360,6 @@ Private Attributes</h2></td></tr>
           <td class="memname">void quisp::modules::BellStateAnalyzer::initializeVariables </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9b53b518247ba3b9737e15dc3603d8e7" name="a9b53b518247ba3b9737e15dc3603d8e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b53b518247ba3b9737e15dc3603d8e7">&#9670;&nbsp;</a></span>isPhotonLost()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool quisp::modules::BellStateAnalyzer::isPhotonLost </td>
-          <td>(</td>
-          <td class="paramtype">cMessage *&#160;</td>
-          <td class="paramname"><em>msg</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -506,54 +409,6 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a4dfa8fb376124b535afd6ba84c3d01d4" name="a4dfa8fb376124b535afd6ba84c3d01d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4dfa8fb376124b535afd6ba84c3d01d4">&#9670;&nbsp;</a></span>average_num_trialSignal</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">simsignal_t quisp::modules::BellStateAnalyzer::average_num_trialSignal</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>No longer used. </p>
-
-</div>
-</div>
-<a id="ae3f34e147897db9e076c9902d1066966" name="ae3f34e147897db9e076c9902d1066966"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3f34e147897db9e076c9902d1066966">&#9670;&nbsp;</a></span>BSA_perf_output_filename</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string quisp::modules::BellStateAnalyzer::BSA_perf_output_filename</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>No longer used. </p>
-
-</div>
-</div>
 <a id="a00a6eab3158c1b2697c7333f32c4588d" name="a00a6eab3158c1b2697c7333f32c4588d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a00a6eab3158c1b2697c7333f32c4588d">&#9670;&nbsp;</a></span>BSAsuccess_rate</h2>
 
@@ -573,8 +428,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>The probability of BSA success. Maximum probability of success in linear optics is 0.5 and detector probability is 0.8. </p>
 
 </div>
 </div>
@@ -710,30 +563,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a8bdda2a9c2cea94781b04c0c4623102a" name="a8bdda2a9c2cea94781b04c0c4623102a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8bdda2a9c2cea94781b04c0c4623102a">&#9670;&nbsp;</a></span>creation_time</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;simtime_t&gt; quisp::modules::BellStateAnalyzer::creation_time</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>No longer used. </p>
-
-</div>
-</div>
 <a id="af11b34478c2e35954193933e7bca3859" name="af11b34478c2e35954193933e7bca3859"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af11b34478c2e35954193933e7bca3859">&#9670;&nbsp;</a></span>darkcount_probability</h2>
 
@@ -753,8 +582,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Probability the darkcount happen in BSA. </p>
 
 </div>
 </div>
@@ -868,54 +695,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="adc400aa0b64335e140aad900eb23f2a3" name="adc400aa0b64335e140aad900eb23f2a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adc400aa0b64335e140aad900eb23f2a3">&#9670;&nbsp;</a></span>duration</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int quisp::modules::BellStateAnalyzer::duration = 1</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>No longer used. </p>
-
-</div>
-</div>
-<a id="a7411c3c2413d3d54419006d5774bb860" name="a7411c3c2413d3d54419006d5774bb860"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7411c3c2413d3d54419006d5774bb860">&#9670;&nbsp;</a></span>error_rate</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double quisp::modules::BellStateAnalyzer::error_rate</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Not implemetned yet. </p>
-
-</div>
-</div>
 <a id="a3e93db10c0eea3d6b5878bde9c384fb9" name="a3e93db10c0eea3d6b5878bde9c384fb9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3e93db10c0eea3d6b5878bde9c384fb9">&#9670;&nbsp;</a></span>GOD_num_resSignal</h2>
 
@@ -959,8 +738,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Simulation time that left photon arrived at BSA. </p>
 
 </div>
 </div>
@@ -1006,8 +783,6 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Last photon from left node in this trial is detected. </p>
-
 </div>
 </div>
 <a id="a5adfc8589f428911ea2a3bb5f9ee50c6" name="a5adfc8589f428911ea2a3bb5f9ee50c6"></a>
@@ -1029,104 +804,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>True: Photon from left node is lost. </p>
-
-</div>
-</div>
-<a id="aa762f7984e841738f2bf6dd0c1740b97" name="aa762f7984e841738f2bf6dd0c1740b97"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa762f7984e841738f2bf6dd0c1740b97">&#9670;&nbsp;</a></span>left_photon_origin_node_address</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int quisp::modules::BellStateAnalyzer::left_photon_origin_node_address</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Node address of left photon. </p>
-
-</div>
-</div>
-<a id="a103b4d93f58a735c3ee5043c835d7892" name="a103b4d93f58a735c3ee5043c835d7892"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a103b4d93f58a735c3ee5043c835d7892">&#9670;&nbsp;</a></span>left_photon_origin_qnic_address</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int quisp::modules::BellStateAnalyzer::left_photon_origin_qnic_address</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a> address of left photon. </p>
-
-</div>
-</div>
-<a id="a09a5f5bd0b46b62f4415e249e6b642a8" name="a09a5f5bd0b46b62f4415e249e6b642a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a09a5f5bd0b46b62f4415e249e6b642a8">&#9670;&nbsp;</a></span>left_photon_origin_qnic_type</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int quisp::modules::BellStateAnalyzer::left_photon_origin_qnic_type</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a> type of left photon. </p>
-
-</div>
-</div>
-<a id="afa7e37a8ec01d7e52b7bb05e81d21e22" name="afa7e37a8ec01d7e52b7bb05e81d21e22"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa7e37a8ec01d7e52b7bb05e81d21e22">&#9670;&nbsp;</a></span>left_photon_origin_qubit_address</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int quisp::modules::BellStateAnalyzer::left_photon_origin_qubit_address</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Address of qubit that emits left photon. </p>
 
 </div>
 </div>
@@ -1150,8 +827,6 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>True: Photon from left node has X error. </p>
-
 </div>
 </div>
 <a id="aa85c0ec13ed08cc2f85830a46b237cdd" name="aa85c0ec13ed08cc2f85830a46b237cdd"></a>
@@ -1173,8 +848,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>True: Photon from left node has Z error. </p>
 
 </div>
 </div>
@@ -1202,30 +875,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a3aa257e59e734f0cece142d6885f3fb3" name="a3aa257e59e734f0cece142d6885f3fb3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3aa257e59e734f0cece142d6885f3fb3">&#9670;&nbsp;</a></span>loss_rate</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double quisp::modules::BellStateAnalyzer::loss_rate</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Not implemented yet, but will be used for photon loss in BSA? </p>
-
-</div>
-</div>
 <a id="af08d7d7cbbecda931354276d93fa6988" name="af08d7d7cbbecda931354276d93fa6988"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af08d7d7cbbecda931354276d93fa6988">&#9670;&nbsp;</a></span>n_res</h2>
 
@@ -1247,54 +896,6 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The number of resources for performance analysis. </p>
-
-</div>
-</div>
-<a id="af40f1877010b34589b7b71ec4220576d" name="af40f1877010b34589b7b71ec4220576d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af40f1877010b34589b7b71ec4220576d">&#9670;&nbsp;</a></span>number_of_trials</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;int&gt; quisp::modules::BellStateAnalyzer::number_of_trials</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>No longer used. </p>
-
-</div>
-</div>
-<a id="afd768f4077975fbd9e59ada068b36164" name="afd768f4077975fbd9e59ada068b36164"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd768f4077975fbd9e59ada068b36164">&#9670;&nbsp;</a></span>nwidth</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int quisp::modules::BellStateAnalyzer::nwidth = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>No longer used. </p>
 
 </div>
 </div>
@@ -1342,8 +943,6 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Simulation time that right photon arrived at BSA. </p>
-
 </div>
 </div>
 <a id="ab91a44f703f4e390192efdeddfaadec3" name="ab91a44f703f4e390192efdeddfaadec3"></a>
@@ -1365,8 +964,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>The number of photon count. </p>
 
 </div>
 </div>
@@ -1390,8 +987,6 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Last photon from right node in this trial is detected. </p>
-
 </div>
 </div>
 <a id="abe86bca7e2dd67ecd7208558fc200b92" name="abe86bca7e2dd67ecd7208558fc200b92"></a>
@@ -1413,104 +1008,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>True: Photon from right node is lost. </p>
-
-</div>
-</div>
-<a id="aded37e2d6f777cc65dcc28286cba1648" name="aded37e2d6f777cc65dcc28286cba1648"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aded37e2d6f777cc65dcc28286cba1648">&#9670;&nbsp;</a></span>right_photon_origin_node_address</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int quisp::modules::BellStateAnalyzer::right_photon_origin_node_address</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Node address of right photon. </p>
-
-</div>
-</div>
-<a id="ad05bef8fec479d45f2956bd55d79ded5" name="ad05bef8fec479d45f2956bd55d79ded5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad05bef8fec479d45f2956bd55d79ded5">&#9670;&nbsp;</a></span>right_photon_origin_qnic_address</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int quisp::modules::BellStateAnalyzer::right_photon_origin_qnic_address</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a> address of right photon. </p>
-
-</div>
-</div>
-<a id="a53078a8a1465ad79913370bb95881cb9" name="a53078a8a1465ad79913370bb95881cb9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a53078a8a1465ad79913370bb95881cb9">&#9670;&nbsp;</a></span>right_photon_origin_qnic_type</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int quisp::modules::BellStateAnalyzer::right_photon_origin_qnic_type</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a> type of right photon. </p>
-
-</div>
-</div>
-<a id="ac8caeb2bfbe5f59f3981a2e9138e8d6f" name="ac8caeb2bfbe5f59f3981a2e9138e8d6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac8caeb2bfbe5f59f3981a2e9138e8d6f">&#9670;&nbsp;</a></span>right_photon_origin_qubit_address</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int quisp::modules::BellStateAnalyzer::right_photon_origin_qubit_address</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Address of qubit that emits right photon. </p>
 
 </div>
 </div>
@@ -1534,8 +1031,6 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>True: Photon from right node has X error. </p>
-
 </div>
 </div>
 <a id="a10dc878142fac28514df25db0b99205a" name="a10dc878142fac28514df25db0b99205a"></a>
@@ -1557,8 +1052,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>True: Photon from right node has Z error. </p>
 
 </div>
 </div>
@@ -1606,8 +1099,6 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>If this is true, send BSA finish and accumulated results to neigbor nodes. If it's false, just send accumulate result in HoM Controller. </p>
-
 </div>
 </div>
 <a id="a24dff4bc89131199224b1fb7796973ad" name="a24dff4bc89131199224b1fb7796973ad"></a>
@@ -1629,32 +1120,6 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>True: Finish this trial of BSA. </p>
-
-</div>
-</div>
-<a id="a37f8ac46fd7a705787dfdbe482591476" name="a37f8ac46fd7a705787dfdbe482591476"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37f8ac46fd7a705787dfdbe482591476">&#9670;&nbsp;</a></span>trials</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int quisp::modules::BellStateAnalyzer::trials = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>No longer used. </p>
 
 </div>
 </div>
