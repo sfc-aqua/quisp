@@ -47,16 +47,16 @@ Define_Module(RoutingDaemon);
  * addressed.
  */
 void RoutingDaemon::initialize(int stage) {
-  EV << "Routing Daemon booted\n";
-
-  EV << "Routing table initialized \n";
   myAddress = getParentModule()->par("address");
+
   // Topology creation for routing table
   cTopology *topo = new cTopology("topo");
-  // veryfication?
-  topo->extractByParameter("includeInTopo", "\"yes\"");  // Any node that has a parameter includeInTopo will be included in routing
-  // EV << "cTopology found " << topo->getNumNodes() << " nodes\n";
-  if (topo->getNumNodes() == 0 || topo == nullptr) {  // If no node with the parameter & value found, do nothing.
+
+  // Any node that has a parameter includeInTopo will be included in routing
+  topo->extractByParameter("includeInTopo", "\"yes\"");
+
+  // If no node with the parameter & value found, do nothing.
+  if (topo->getNumNodes() == 0 || topo == nullptr) {
     return;
   }
 
@@ -66,8 +66,6 @@ void RoutingDaemon::initialize(int stage) {
   for (int x = 0; x < topo->getNumNodes(); x++) {  // Traverse through all nodes
     // For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
     for (int j = 0; j < topo->getNode(x)->getNumOutLinks(); j++) {  // Traverse through all links from a specific node.
-      // thisNode->disable();//You can also disable nodes or channels accordingly to represent broken hardwares
-      // EV<<"\n thisNode is "<< topo->getNode(x)->getModule()->getFullName() <<" has "<<topo->getNode(x)->getNumOutLinks()<<" links \n";
 
       // Calculate bell pair generation rate to use it as channel cost
       // The cost metric is taken from https://arxiv.org/abs/1206.5655
@@ -87,16 +85,10 @@ void RoutingDaemon::initialize(int stage) {
         error("cannot read emission_success_probability from file");
       }
 
-      EV_DEBUG << "Channel length is " << channel_length << "\n";
-      EV_DEBUG << "Speed of light in the channel is " << speed_of_light_in_fiber << "\n";
       double seconds_per_bell_pair_generation = (channel_length / speed_of_light_in_fiber) * emission_prob;
-      EV_DEBUG << "BellGenT metric for the channel is " << seconds_per_bell_pair_generation << "\n";
 
-      // EV<<topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName()<<" =? "<<"QuantumChannel"<<"\n";
-      // if(strcmp(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->getFullName(),"QuantumChannel")==0){
       if (strstr(topo->getNode(x)->getLinkOut(j)->getLocalGate()->getFullName(), "quantum")) {
         // Otherwise, keep the quantum channels and set the weight
-        // EV<<"\n Quantum Channel!!!!!! cost is"<<channel_cost<<"\n";
         topo->getNode(x)->getLinkOut(j)->setWeight(seconds_per_bell_pair_generation);  // Set channel weight
       } else {
         // Ignore classical link in quantum routing table
@@ -126,9 +118,7 @@ void RoutingDaemon::initialize(int stage) {
     ;
     thisqnic.pointer = parentModuleGate->getPreviousGate()->getOwnerModule();
 
-    qrtable[destAddr] = thisqnic;  // Store gate index per destination from this node
-    // EV<<"\n Quantum: "<<topo->getNode(i)->getModule()->getFullName()<<"\n";
-    // EV <<"\n  Quantum: Towards node address " << destAddr << " use qnic with address = "<<parentModuleGate->getPreviousGate()->getOwnerModule()->getFullName()<<"\n";
+    qrtable[destAddr] = thisqnic;
     if (!strstr(parentModuleGate->getFullName(), "quantum")) {
       error("Quantum routing table referring to classical gates...");
     }
@@ -143,7 +133,6 @@ void RoutingDaemon::initialize(int stage) {
  *
  */
 int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr) {
-  Enter_Method("return_QNIC_address_to_destAddr");
   RoutingTable::iterator it = qrtable.find(destAddr);
   if (it == qrtable.end()) {
     EV << "Quantum: address " << destAddr << " unreachable from this node \n";

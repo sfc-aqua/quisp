@@ -27,47 +27,38 @@ class BellStateAnalyzer : public cSimpleModule {
  private:
   // for performance analysis
   long n_res = 0;  ///< The number of resources for performance analysis
-  int trials = 0;  ///< No longer used
   simsignal_t GOD_num_resSignal;  ///< The number of resources for signaling
-  std::string BSA_perf_output_filename;  ///< No longer used
-  std::vector<simtime_t> creation_time;  ///< No longer used
-  simsignal_t average_num_trialSignal;  ///< No longer used
-  std::vector<int> number_of_trials;  ///< No longer used
-  int nwidth = 0;  ///< No longer used
-  int duration = 1;  ///< No longer used
+
   // parameters
-  double darkcount_probability;  ///< Probability the darkcount happen in BSA
-  double loss_rate;  ///< Not implemented yet, but will be used for photon loss in BSA?
-  double error_rate;  ///< Not implemetned yet
-  // bool left_clicked;
-  // bool right_click;
-  bool left_last_photon_detected;  ///< Last photon from left node in this trial is detected
-  bool right_last_photon_detected;  ///< Last photon from right node in this trial is detected
-  bool send_result;  ///< If this is true, send BSA finish and accumulated results to neigbor nodes. If it's false, just send accumulate result in HoM Controller
+  double darkcount_probability;
+  bool left_last_photon_detected;
+  bool right_last_photon_detected;
+
+  // If this is true, send BSA finish and accumulated results to neigbor nodes.
+  // If it's false, just send accumulate result in HoM Controller
+  bool send_result;
   double required_precision;  ///< Precision of photon arrivial time // 1.5ns
-  simtime_t left_arrived_at;  ///< Simulation time that left photon arrived at BSA
-  int left_photon_origin_node_address;  ///< Node address of left photon
-  int left_photon_origin_qnic_address;  ///< QNIC address of left photon
-  int left_photon_origin_qnic_type;  ///< QNIC type of left photon
-  int left_photon_origin_qubit_address;  ///< Address of qubit that emits left photon
-  bool left_photon_Xerr;  ///< True: Photon from left node has X error
-  bool left_photon_Zerr;  ///< True: Photon from left node has Z error
-  bool left_photon_lost;  ///< True: Photon from left node is lost
+  simtime_t left_arrived_at;
+
+  bool left_photon_Xerr;
+  bool left_photon_Zerr;
+  bool left_photon_lost;
   StationaryQubit *left_statQubit_ptr;  ///< Instance of qubit memory of left node
-  simtime_t right_arrived_at;  ///< Simulation time that right photon arrived at BSA
-  int right_photon_origin_node_address;  ///< Node address of right photon
-  int right_photon_origin_qnic_address;  ///< QNIC address of right photon
-  int right_photon_origin_qnic_type;  ///< QNIC type of right photon
-  int right_photon_origin_qubit_address;  ///< Address of qubit that emits right photon
-  bool right_photon_Xerr;  ///< True: Photon from right node has X error
-  bool right_photon_Zerr;  ///< True: Photon from right node has Z error
-  bool right_photon_lost;  ///< True: Photon from right node is lost
+
+  simtime_t right_arrived_at;
+  bool right_photon_Xerr;
+  bool right_photon_Zerr;
+  bool right_photon_lost;
   StationaryQubit *right_statQubit_ptr;  ///< Instance of qubit memory of right node
+
   int count_X = 0, count_Y = 0, count_Z = 0, count_I = 0, count_L = 0, count_total = 0;  // for debug
-  // bool handshake = false;
-  bool this_trial_done = false;  ///< True: Finish this trial of BSA
-  double BSAsuccess_rate = 0.5 * 0.8 * 0.8;  ///< The probability of BSA success. Maximum probability of success in linear optics is 0.5 and detector probability is 0.8.
-  int left_count, right_count = 0;  ///< The number of photon count.
+
+  // True: Finish this trial of BSA
+  bool this_trial_done = false;
+
+  // The probability of BSA success. Maximum probability of success in linear optics is 0.5 and detector probability is 0.8.
+  double BSAsuccess_rate = 0.5 * 0.8 * 0.8;
+  int left_count, right_count = 0;
   int DEBUG_darkcount_left = 0;
   int DEBUG_darkcount_right = 0;
   int DEBUG_darkcount_both = 0;
@@ -77,7 +68,6 @@ class BellStateAnalyzer : public cSimpleModule {
  protected:
   virtual void initialize();
   virtual void handleMessage(cMessage *msg);
-  virtual bool isPhotonLost(cMessage *msg);
   virtual void forDEBUG_countErrorTypes(cMessage *msg);
   virtual void sendBSAresult(bool result, bool last);
   virtual void initializeVariables();
@@ -87,32 +77,16 @@ class BellStateAnalyzer : public cSimpleModule {
 
 Define_Module(BellStateAnalyzer);
 
-/**
- * \brief Initialize Bell State Analyzer
- *
- */
 void BellStateAnalyzer::initialize() {
-  // performance analysis
   GOD_num_resSignal = registerSignal("Num_Bell_state");
-  // initialize parameters
+
   darkcount_probability = par("darkcount_probability");
-  loss_rate = par("loss_rate");
-  error_rate = par("error_rate");
-  // duration = par("duration");
   required_precision = par("required_precision");
   left_arrived_at = -1;
   right_arrived_at = -1;
   left_last_photon_detected = false;
   right_last_photon_detected = false;
   send_result = false;
-  left_photon_origin_node_address = -1;
-  left_photon_origin_qnic_address = -1;
-  left_photon_origin_qubit_address = -1;
-  left_photon_origin_qnic_type = -1;
-  right_photon_origin_node_address = -1;
-  right_photon_origin_qnic_address = -1;
-  right_photon_origin_qubit_address = -1;
-  right_photon_origin_qnic_type = -1;
   left_photon_Xerr = false;
   left_photon_Zerr = false;
   right_photon_Xerr = false;
@@ -149,52 +123,35 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     send_result = false;
     right_count = 0;
     left_count = 0;
-    EV << "------------------Next round!\n";
     bubble("Next round!");
   }
 
   if (msg->arrivedOn("fromHoM_quantum_port$i", 0)) {
     left_arrived_at = simTime();
-    left_photon_origin_node_address = photon->getNodeEntangledWith();
-    left_photon_origin_qnic_address = photon->getQNICEntangledWith();
-    left_photon_origin_qubit_address = photon->getStationaryQubitEntangledWith();
-    left_photon_origin_qnic_type = photon->getQNICtypeEntangledWith();
     left_statQubit_ptr = const_cast<StationaryQubit *>(check_and_cast<const StationaryQubit *>(photon->getEntangled_with()));
     left_photon_Xerr = photon->getPauliXerr();
     left_photon_Zerr = photon->getPauliZerr();
     left_photon_lost = photon->getPhotonLost();
-    // photon->setGODfree();
     if (photon->getFirst()) {
       left_last_photon_detected = false;
-      // send_result = false;
     }
     if (photon->getLast()) {
       left_last_photon_detected = true;
-      // send_result = true;
     }
     left_count++;
-    // EV<<"Photon from Left arrived at = "<<simTime()<<"\n";
   } else if (msg->arrivedOn("fromHoM_quantum_port$i", 1)) {
     right_arrived_at = simTime();
-    right_photon_origin_node_address = photon->getNodeEntangledWith();
-    right_photon_origin_qnic_address = photon->getQNICEntangledWith();
-    right_photon_origin_qubit_address = photon->getStationaryQubitEntangledWith();
-    right_photon_origin_qnic_type = photon->getQNICtypeEntangledWith();
-    // right_statQubit_ptr = photon->getEntangled_with();
     right_statQubit_ptr = const_cast<StationaryQubit *>(check_and_cast<const StationaryQubit *>(photon->getEntangled_with()));
     right_photon_Xerr = photon->getPauliXerr();
     right_photon_Zerr = photon->getPauliZerr();
     right_photon_lost = photon->getPhotonLost();
     if (photon->getFirst()) {
       right_last_photon_detected = false;
-      // send_result = false;
     }
     if (photon->getLast()) {
       right_last_photon_detected = true;
-      // send_result = true;
     }
     right_count++;
-    // EV<<"Right = "<<simTime()<<"\n";
   } else {
     error("This shouldn't happen....! Only 2 connections to the BSA allowed");
   }
@@ -206,8 +163,8 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
   // Just for debugging purpose
   forDEBUG_countErrorTypes(msg);
 
-  double difference = (left_arrived_at - right_arrived_at).dbl();  // Difference in arrival time
-  // EV<<"!!!!!!!!!!!!!!!!!!!!!!!!!!this_trial_done == "<<this_trial_done<<"\n";
+  double difference = (left_arrived_at - right_arrived_at).dbl();
+
   if (this_trial_done == true) {
     bubble("dumping result");
     // No need to do anything. Just ignore the BSA result for this shot 'cause the trial is over and photons will only arrive from a single node anyway.
@@ -215,9 +172,9 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     return;
   } else if ((left_arrived_at != -1 && right_arrived_at != -1) && std::abs(difference) <= (required_precision)) {
     // Both arrived perfectly fine
-    // bool lost = isPhotonLost(msg);
 
-    double rand = dblrand();  // Even if we have 2 photons, whether we success entangling the qubits or not is probablistic.
+    // Even if we have 2 photons, whether we success entangling the qubits or not is probablistic.
+    double rand = dblrand();
     double darkcount_left = dblrand();
     double darkcount_right = dblrand();
 
@@ -226,26 +183,14 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
         (right_photon_lost && !left_photon_lost && darkcount_right < darkcount_probability) /*Got left, darkcount right*/ ||
         (right_photon_lost && left_photon_lost && darkcount_left < darkcount_probability && darkcount_right < darkcount_probability) /*Darkcount right left*/) {
       if (!right_photon_lost && (left_photon_lost && darkcount_left <= darkcount_probability)) {
-        // error("Dark count :)");
         DEBUG_darkcount_left++;
-        // std::cout<<"CM Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in
-        // node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in
-        // node["<<right_statQubit_ptr->node_address<<"]\n";
         GOD_setCompletelyMixedDensityMatrix();
         sendBSAresult(false, send_result);
       } else if (!left_photon_lost && (right_photon_lost && darkcount_right <= darkcount_probability)) {
-        // error("Dark count :)");
-        // std::cout<<"CM Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in
-        // node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in
-        // node["<<right_statQubit_ptr->node_address<<"]\n";
         DEBUG_darkcount_right++;
         GOD_setCompletelyMixedDensityMatrix();
         sendBSAresult(false, send_result);
       } else if ((left_photon_lost && darkcount_left <= darkcount_probability) && (right_photon_lost && darkcount_right <= darkcount_probability)) {
-        // error("Dark count :)");
-        // std::cout<<"CM Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in
-        // node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in
-        // node["<<right_statQubit_ptr->node_address<<"]\n";
         DEBUG_darkcount_both++;
         GOD_setCompletelyMixedDensityMatrix();
         sendBSAresult(false, send_result);
@@ -253,19 +198,15 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
         bubble("Success...!");
         DEBUG_success++;
         GOD_updateEntangledInfoParameters_of_qubits();
-        sendBSAresult(false, send_result);  // succeeded because both reached, and both clicked
+
+        // succeeded because both reached, and both clicked
+        sendBSAresult(false, send_result);
       }
-
-    }  // we also need else if for darkcount....
-    else {
+    } else {
+      // we also need else if for darkcount....
       bubble("Failed...!");
-      // EV<<"rand = "<<rand<<" <"<<BSAsuccess_rate;
-
-      // std::cout<<"Failed Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in
-      // node["<<left_statQubit_ptr->node_address<<"] with "<<right_statQubit_ptr->getFullName()<<" in "<<right_statQubit_ptr->getParentModule()->getFullName()<<"in
-      // node["<<right_statQubit_ptr->node_address<<"]\n";
-
-      sendBSAresult(true, send_result);  // just failed because only 1 detector clicked while both reached
+      // just failed because only 1 detector clicked while both reached
+      sendBSAresult(true, send_result);
     }
     DEBUG_total++;
 
@@ -277,13 +218,8 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     initializeVariables();
     sendBSAresult(true, send_result);
   } else {
-    bubble("Waiting...");
-    /*if(photon->getLast() && (left_count == 0 || right_count == 0)){//This is wrong, because it will ignore the 2nd photon arrival if both of the photons are the first and last.
-        //sendBSAresult(true,send_result);
-        bubble("Ehhh");
-        EV<<"left_count = "<<left_count<<", right_count = "<<right_count;
-    }*/
     // Just waiting for the other qubit to arrive.
+    bubble("Waiting...");
   }
 
   delete msg;
@@ -291,15 +227,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
 
 void BellStateAnalyzer::initializeVariables() {
   left_arrived_at = -1;
-  left_photon_origin_node_address = -1;
-  left_photon_origin_qnic_address = -1;
-  left_photon_origin_qubit_address = -1;
-  left_photon_origin_qnic_type = -1;
   right_arrived_at = -1;
-  right_photon_origin_node_address = -1;
-  right_photon_origin_qnic_address = -1;
-  right_photon_origin_qubit_address = -1;
-  right_photon_origin_qnic_type = -1;
   left_photon_lost = false;
   left_photon_lost = false;
   right_photon_Xerr = false;
@@ -316,21 +244,18 @@ void BellStateAnalyzer::sendBSAresult(bool result, bool sendresults) {
   // result could be false positive (actually ok but recognized as ng),
   // false negative (actually ng but recognized as ok) due to darkcount
   // true positive and true negative is no problem.
-  // std::cout<<"send?="<<sendresults<<"___________________________________\n";
   if (!sendresults) {
     BSAresult *pk = new BSAresult("BsaResult");
-    // std::cout<<"send result to HoM___\n";
     pk->setEntangled(result);
     send(pk, "toHoMController_port");
-  } else {  // Was the last photon. End pulse detected.
+  } else {
+    // Was the last photon. End pulse detected.
     BSAfinish *pk = new BSAfinish("BsaFinish");
     pk->setKind(7);
-    // std::cout<<"send last result to HoM___\n";
     pk->setEntangled(result);
     send(pk, "toHoMController_port");
     bubble("trial done now");
     this_trial_done = true;
-    // EV<<"!!!!!!!!!!!!!!!over!!!!!!!!!!!this_trial_done == "<<this_trial_done<<"\n";
   }
 }
 
@@ -352,28 +277,13 @@ void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg) {
      << ", L%=" << (double)count_L / (double)count_total << ", I% =" << (double)count_I / (double)count_total << "\n";
 }
 
-bool BellStateAnalyzer::isPhotonLost(cMessage *msg) {
-  PhotonicQubit *q = check_and_cast<PhotonicQubit *>(msg);
-  if (q->getPhotonLost()) {
-    return true;  // Lost
-  } else {
-    return false;
-  }
-  delete msg;
-}
-
 void BellStateAnalyzer::GOD_setCompletelyMixedDensityMatrix() {
-  // error("Hrtr");
-  // std::cout<<"Darkcount CM "<<left_statQubit_ptr<<", "<<right_statQubit_ptr<<"\n";
   left_statQubit_ptr->setCompletelyMixedDensityMatrix();
   right_statQubit_ptr->setCompletelyMixedDensityMatrix();
 }
 
-/*Error on flying qubit with a successful BSA propagates to its original stationary qubit. */
+/* Error on flying qubit with a successful BSA propagates to its original stationary qubit. */
 void BellStateAnalyzer::GOD_updateEntangledInfoParameters_of_qubits() {
-  // std::cout<<"Entangling "<<left_statQubit_ptr->getFullName()<<" in "<<left_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<left_statQubit_ptr->node_address<<"]
-  // with "<<right_statQubit_ptr->getFullName()<<" in "<<right_statQubit_ptr->getParentModule()->getFullName()<<"in node["<<right_statQubit_ptr->node_address<<"]\n";
-
   left_statQubit_ptr->setEntangledPartnerInfo(right_statQubit_ptr);
   // If Photon had an X error, Add X error to the stationary qubit.
   if (left_photon_Xerr) left_statQubit_ptr->addXerror();
@@ -388,10 +298,6 @@ void BellStateAnalyzer::GOD_updateEntangledInfoParameters_of_qubits() {
   }
   n_res++;
   emit(GOD_num_resSignal, n_res);
-  // std::cout<<right_statQubit_ptr<<", node["<<right_statQubit_ptr->node_address<<"] from qnic["<<right_statQubit_ptr->qnic_index<<"]\n";
-  // std::cout<<(bool)(right_statQubit_ptr->entangled_partner==nullptr)<<" Right Entangled if ("<<false<<")\n";
-  // std::cout<<left_statQubit_ptr<<", node["<<left_statQubit_ptr->node_address<<"] from qnic["<<left_statQubit_ptr->qnic_index<<"]\n";
-  // std::cout<<(bool)(left_statQubit_ptr->entangled_partner==nullptr)<<" Left Entangled if ("<<false<<")\n";
 }
 
 }  // namespace modules
