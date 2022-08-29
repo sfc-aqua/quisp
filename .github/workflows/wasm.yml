@@ -11,7 +11,7 @@ jobs:
         with:
           submodules: true
       - name: wasm build
-        uses: zigen/omnetpp-wasm@v0.9
+        uses: zigen/omnetpp-wasm@v0.26
       - uses: actions/upload-artifact@v3
         with:
           name: wasm-build
@@ -21,10 +21,11 @@ jobs:
             quisp/out/emcc-release/*.data
             quisp/out/emcc-release/*.wasm
             quisp/out/emcc-release/*.svg
+            quisp/out/emcc-release/*.css
   deploy-wasm:
     needs: build-wasm
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')) }}
+    if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/') || startsWith(github.ref, 'refs/heads/demo-')) }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -57,6 +58,15 @@ jobs:
           mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js $TAG
           git add $TAG
           git commit -m "[$TAG] wasm build: https://github.com/sfc-aqua/quisp/commit/$GITHUB_SHA"
+      - name: commit demo branch
+        if: ${{ startsWith(github.ref, 'refs/heads/demo-') }}
+        run: |
+          export BRANCH=$(echo $GITHUB_REF | sed -e 's/refs\/heads\/demo-//')
+          mkdir -p $BRANCH
+          ls -la
+          mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js main.js style.css $BRANCH
+          git add $BRANCH
+          git commit -m "[$BRANCH] wasm build: https://github.com/sfc-aqua/quisp/commit/$GITHUB_SHA"
       - name: push
         env:
           GIT_SSH_COMMAND: ssh -i ~/deploy_key.pem -o StrictHostKeyChecking=no -F /dev/null
