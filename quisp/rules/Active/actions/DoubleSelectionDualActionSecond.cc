@@ -1,6 +1,7 @@
 #include "DoubleSelectionDualActionSecond.h"
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
+#include "base/TransferMessage.h"
 
 namespace quisp::rules::active::actions {
 
@@ -60,20 +61,9 @@ cPacket *DoubleSelectionDualActionSecond::run(cModule *re) {
   rule_engine->freeConsumedResource(qnic_id, trash_qubit_Z, qnic_type);
   rule_engine->freeConsumedResource(qnic_id, ds_trash_qubit_X, qnic_type);
 
-  DS_DoublePurificationSecondResult *pk = new DS_DoublePurificationSecondResult;
-  pk->setDestAddr(partner);
-  pk->setKind(7);
-  pk->setAction_index(action_index);
-  pk->setRule_id(rule_id);
-  pk->setRuleset_id(ruleset_id);
-  pk->setShared_tag(shared_tag);
-  pk->setXOutput_is_plus(meas_X);
-  pk->setZOutput_is_plus(meas_Z);
-  pk->setDS_Output_is_plus(ds_meas_X);
-
-  pk->setEntangled_with(qubit);
+  auto message = base::TransferMessage(partner, ruleset_id, rule_id, shared_tag, action_index, 7, meas_X, meas_Z, ds_meas_X);
   action_index++;
-  return pk;
+  return message.generate();
 }
 
 DoubleSelectionDualActionSecondInv::DoubleSelectionDualActionSecondInv(unsigned long ruleset_id, int rule_id, int shared_tag, int partner, QNIC_type qnic_type, int qnic_id,
@@ -133,19 +123,9 @@ cPacket *DoubleSelectionDualActionSecondInv::run(cModule *re) {
   rule_engine->freeConsumedResource(qnic_id, ds_trash_qubit_Z, qnic_type);
   // Deleting done
 
-  DS_DoublePurificationSecondResult *pk = new DS_DoublePurificationSecondResult;
-  pk->setDestAddr(partner);
-  pk->setKind(7);
-  pk->setAction_index(action_index);
-  pk->setRule_id(rule_id);
-  pk->setRuleset_id(ruleset_id);
-  pk->setShared_tag(shared_tag);
-  pk->setXOutput_is_plus(meas_X);
-  pk->setZOutput_is_plus(meas_Z);
-  pk->setDS_Output_is_plus(ds_meas_Z);
-  pk->setEntangled_with(qubit);
+  auto message = base::TransferMessage(partner, ruleset_id, rule_id, shared_tag, action_index, 7, meas_X, meas_Z, ds_meas_Z);
   action_index++;
-  return pk;
+  return message.generate();
 }
 
 }  // namespace quisp::rules::active::actions

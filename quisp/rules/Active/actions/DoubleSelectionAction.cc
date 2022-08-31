@@ -1,6 +1,7 @@
 #include "DoubleSelectionAction.h"
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
+#include "base/TransferMessage.h"
 
 namespace quisp::rules::active::actions {
 
@@ -51,18 +52,9 @@ cPacket *DoubleSelectionAction::run(cModule *re) {
   rule_engine->freeConsumedResource(qnic_id, trash_qubit_X, qnic_type);
   rule_engine->freeConsumedResource(qnic_id, trash_qubit_Z, qnic_type);
 
-  DoublePurificationResult *pk = new DoublePurificationResult;
-  pk->setDestAddr(partner);
-  pk->setKind(7);
-  pk->setAction_index(action_index);
-  pk->setRule_id(rule_id);
-  pk->setRuleset_id(ruleset_id);
-  pk->setShared_tag(shared_tag);
-  pk->setXOutput_is_plus(meas_X);
-  pk->setZOutput_is_plus(meas_Z);
-  pk->setEntangled_with(qubit);
+  auto message = base::TransferMessage(partner, ruleset_id, rule_id, shared_tag, action_index, 7, meas_X, meas_Z);
   action_index++;
-  return pk;
+  return message.generate();
 }
 
 DoubleSelectionActionInv::DoubleSelectionActionInv(unsigned long ruleset_id, int rule_id, int shared_tag, int partner, QNIC_type qnic_type, int qnic_id, int resource,
@@ -112,18 +104,9 @@ cPacket *DoubleSelectionActionInv::run(cModule *re) {
   rule_engine->freeConsumedResource(qnic_id, trash_qubit_X, qnic_type);
   rule_engine->freeConsumedResource(qnic_id, trash_qubit_Z, qnic_type);
 
-  DoublePurificationResult *pk = new DoublePurificationResult;
-  pk->setDestAddr(partner);
-  pk->setKind(7);
-  pk->setAction_index(action_index);
-  pk->setRule_id(rule_id);
-  pk->setRuleset_id(ruleset_id);
-  pk->setShared_tag(shared_tag);
-  pk->setXOutput_is_plus(meas_X);
-  pk->setZOutput_is_plus(meas_Z);
-  pk->setEntangled_with(qubit);
+  auto message = base::TransferMessage(partner, ruleset_id, rule_id, shared_tag, action_index, 7, meas_X, meas_Z);
   action_index++;
-  return pk;
+  return message.generate();
 }
 
 }  // namespace quisp::rules::active::actions

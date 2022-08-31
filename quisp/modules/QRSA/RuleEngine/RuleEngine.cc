@@ -201,9 +201,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pr.Zpurification_outcome = pkt->getZOutput_is_plus();
     pr.DS_Xpurification_outcome = pkt->getDS_XOutput_is_plus();
     pr.DS_Zpurification_outcome = pkt->getDS_ZOutput_is_plus();
-    // StationaryQubit *q = check_and_cast<StationaryQubit *>(pkt->getEntangled_with());
-    // std::cout<<"Purification result is from node["<<pkt->getSrcAddr()<<"] rid="<< pkt->getRuleset_id()<<"Must be qnic["<<my_qnic_index<<" type="<<my_qnic_type<<"\n";
-    // std::cout<<"Locked one is "<<pkt->getEntangled_with()<<"in node["<<q->node_address<<"] \n";
     storeCheck_QuatroPurification_Agreement(pr);
   } else if (auto *pkt = dynamic_cast<DS_DoublePurificationSecondResult *>(msg)) {
     // std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";

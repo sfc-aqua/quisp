@@ -148,7 +148,7 @@ TEST(PurifyActionTest, runXPurifyOutcomeTrue) {
   EXPECT_EQ(result->getDestAddr(), action->partner);
   EXPECT_EQ(result->getRule_id(), action->rule_id);
   EXPECT_EQ(result->getRuleset_id(), action->ruleset_id);
-  EXPECT_EQ(result->getEntangled_with(), qubit);
+  // EXPECT_EQ(result->getEntangled_with(), qubit);
   EXPECT_EQ(result->getOutput_is_plus(), true);
 
   delete qubit;
@@ -180,7 +180,7 @@ TEST(PurifyActionTest, runXPurifyOutcomeFalse) {
   EXPECT_EQ(result->getDestAddr(), action->partner);
   EXPECT_EQ(result->getRule_id(), action->rule_id);
   EXPECT_EQ(result->getRuleset_id(), action->ruleset_id);
-  EXPECT_EQ(result->getEntangled_with(), qubit);
+  // EXPECT_EQ(result->getEntangled_with(), qubit);
   EXPECT_EQ(result->getOutput_is_plus(), false);
 
   delete qubit;
@@ -212,7 +212,7 @@ TEST(PurifyActionTest, runZPurifyOutcomeTrue) {
   EXPECT_EQ(result->getDestAddr(), action->partner);
   EXPECT_EQ(result->getRule_id(), action->rule_id);
   EXPECT_EQ(result->getRuleset_id(), action->ruleset_id);
-  EXPECT_EQ(result->getEntangled_with(), qubit);
+  // EXPECT_EQ(result->getEntangled_with(), qubit);
   EXPECT_EQ(result->getOutput_is_plus(), true);
 
   delete qubit;
@@ -244,7 +244,7 @@ TEST(PurifyActionTest, runZPurifyOutcomeFalse) {
   EXPECT_EQ(result->getDestAddr(), action->partner);
   EXPECT_EQ(result->getRule_id(), action->rule_id);
   EXPECT_EQ(result->getRuleset_id(), action->ruleset_id);
-  EXPECT_EQ(result->getEntangled_with(), qubit);
+  // EXPECT_EQ(result->getEntangled_with(), qubit);
   EXPECT_EQ(result->getOutput_is_plus(), false);
 
   delete qubit;

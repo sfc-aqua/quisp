@@ -1,6 +1,7 @@
 #include "PurifyAction.h"
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
+#include "base/TransferMessage.h"
 
 namespace quisp::rules::active::actions {
 
@@ -47,18 +48,8 @@ cPacket *PurifyAction::run(cModule *re) {
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
   rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);
 
-  PurificationResult *pk = new PurificationResult;
-  pk->setDestAddr(partner);
-  // This result is sent to partner address and my address.
-  // To keep the information who is the purifcation partner, this variable is used.
-  pk->setKind(7);
-  pk->setAction_index(action_index);
-  pk->setRule_id(rule_id);
-  pk->setRuleset_id(ruleset_id);
-  pk->setShared_tag(shared_tag);
-  pk->setOutput_is_plus(meas);
-  pk->setEntangled_with(qubit);
+  auto message = base::TransferMessage(partner, ruleset_id, rule_id, shared_tag, action_index, 7, meas);
   action_index++;
-  return pk;
+  return message.generate();
 }
 }  // namespace quisp::rules::active::actions
