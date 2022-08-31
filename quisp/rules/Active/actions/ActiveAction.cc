@@ -5,9 +5,9 @@
  *
  *  \brief Action
  */
+#include "ActiveAction.h"
 #include <messages/base_messages_m.h>
 #include <omnetpp.h>
-#include "ActiveAction.h"
 
 namespace quisp::rules::active::actions {
 
