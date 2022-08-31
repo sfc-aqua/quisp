@@ -47,7 +47,7 @@ jobs:
         run: |
           rm -rf master
           mkdir -p master
-          mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js master
+          mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js main.js style.css master
           git add master
           git commit -m "[master] wasm build: https://github.com/sfc-aqua/quisp/commit/$GITHUB_SHA"
       - name: commit tag
@@ -55,7 +55,7 @@ jobs:
         run: |
           export TAG=$(echo $GITHUB_REF | sed -e 's/refs\/tags\///')
           mkdir -p $TAG
-          mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js $TAG
+          mv quisp.js quisp.data quisp.wasm index.html qtlogo.svg qtloader.js main.js style.css $TAG
           git add $TAG
           git commit -m "[$TAG] wasm build: https://github.com/sfc-aqua/quisp/commit/$GITHUB_SHA"
       - name: commit demo branch
