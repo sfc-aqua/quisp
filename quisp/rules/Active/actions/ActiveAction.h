@@ -1,4 +1,4 @@
-/** \file BaseAction.h
+/** \file ActiveAction.h
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/06/25
  *

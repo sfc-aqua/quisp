@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BaseAction.h"
+#include "ActiveAction.h"
 
 namespace quisp::rules::active::actions {
 class WaitAction : public ActiveAction {

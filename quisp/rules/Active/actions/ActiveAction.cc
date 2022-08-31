@@ -7,7 +7,7 @@
  */
 #include <messages/base_messages_m.h>
 #include <omnetpp.h>
-#include "BaseAction.h"
+#include "ActiveAction.h"
 
 namespace quisp::rules::active::actions {
 
