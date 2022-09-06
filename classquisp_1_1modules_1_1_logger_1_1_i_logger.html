@@ -112,6 +112,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:adf389262b7c9ff1b15641e16269d7eec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7843acafd8e7144e11cfc56a17770c5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_logger_1_1_i_logger.html#af7843acafd8e7144e11cfc56a17770c5">logQubitState</a> (<a class="el" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">quisp::modules::QNIC_type</a> qnic_type, int qnic_index, int qubit_index, bool is_busy, bool is_allocated)=0</td></tr>
 <tr class="separator:af7843acafd8e7144e11cfc56a17770c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88578c04ab1455564ec7bf48756c591d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_logger_1_1_i_logger.html#a88578c04ab1455564ec7bf48756c591d">logBellPairInfo</a> (const std::string &amp;event_type, int partner_addr, <a class="el" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">quisp::modules::QNIC_type</a> qnic_type, int qnic_index, int qubit_index)=0</td></tr>
+<tr class="separator:a88578c04ab1455564ec7bf48756c591d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e8e993ea6dd6934e425958d4ead68c2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_logger_1_1_i_logger.html#a3e8e993ea6dd6934e425958d4ead68c2">setModule</a> (omnetpp::cModule const *const mod)=0</td></tr>
 <tr class="separator:a3e8e993ea6dd6934e425958d4ead68c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8982bbe5abe233156a0f5b675c86bb98"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_logger_1_1_i_logger.html#a8982bbe5abe233156a0f5b675c86bb98">setQNodeAddress</a> (int address)=0</td></tr>
@@ -150,6 +152,62 @@ ComponentProvider </dd></dl>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a88578c04ab1455564ec7bf48756c591d" name="a88578c04ab1455564ec7bf48756c591d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88578c04ab1455564ec7bf48756c591d">&#9670;&nbsp;</a></span>logBellPairInfo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void quisp::modules::Logger::ILogger::logBellPairInfo </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>event_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>partner_addr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d">quisp::modules::QNIC_type</a>&#160;</td>
+          <td class="paramname"><em>qnic_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>qnic_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>qubit_index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1modules_1_1_logger_1_1_json_logger.html#a84279cf8c8f56200def8776d4d66cd86">quisp::modules::Logger::JsonLogger</a>, and <a class="el" href="classquisp__test_1_1_logger_1_1_test_logger.html#a47786f491e7bc8206cce6ea885cff5fb">quisp_test::Logger::TestLogger</a>.</p>
+
+</div>
+</div>
 <a id="adf389262b7c9ff1b15641e16269d7eec" name="adf389262b7c9ff1b15641e16269d7eec"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adf389262b7c9ff1b15641e16269d7eec">&#9670;&nbsp;</a></span>logPacket()</h2>
 

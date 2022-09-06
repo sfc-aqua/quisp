@@ -6,7 +6,7 @@
 <area shape="rect" id="node7" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="267,122,429,163"/>
 <area shape="rect" id="node8" href="$classquisp_1_1modules_1_1_i_real_time_controller.html" title=" " alt="" coords="261,187,435,229"/>
 <area shape="rect" id="node4" href="$classquisp_1_1modules_1_1_logger_1_1_logger_base.html" title="LoggerBase class integrate abilities to log simulation results into your components." alt="" coords="271,253,425,294"/>
-<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1_logger_1_1_i_logger.html" title="Interface of Logger class. Logger class that inherits ILogger is responsible for logging simulation r..." alt="" coords="5,253,160,294"/>
+<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1_logger_1_1_i_logger.html" title="Interface of Logger class. Logger class that inherits ILogger is responsible for logging simulation r..." alt="" coords="5,287,160,329"/>
 <area shape="rect" id="node9" href="$classquisp_1_1modules_1_1_bell_pair_store.html" title=" " alt="" coords="269,318,427,359"/>
 <area shape="rect" id="node10" href="$classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store.html" title=" " alt="" coords="271,383,425,425"/>
 <area shape="rect" id="node11" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="247,449,449,476"/>
