@@ -1,7 +1,7 @@
 #include "PurifyAction.h"
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
-#include "base/TransferMessage.h"
+#include "base/TransferMessage.cc"
 
 namespace quisp::rules::active::actions {
 
@@ -48,8 +48,8 @@ cPacket *PurifyAction::run(cModule *re) {
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
   rule_engine->freeConsumedResource(qnic_id, trash_qubit, qnic_type);
 
-  auto message = base::TransferMessage(partner, ruleset_id, rule_id, shared_tag, action_index, 7, meas);
+  auto message = base::generatePurificationResult(partner, ruleset_id, rule_id, shared_tag, action_index, 7, meas);
   action_index++;
-  return message.generate();
+  return message;
 }
 }  // namespace quisp::rules::active::actions
