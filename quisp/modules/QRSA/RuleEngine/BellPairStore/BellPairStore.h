@@ -1,8 +1,10 @@
 #pragma once
 
+#include <modules/Logger/ILogger.h>
 #include <modules/QNIC.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/QRSA.h>
+
 namespace quisp::modules {
 
 using QNodeAddr = int;
@@ -20,12 +22,13 @@ using PartnerAddrQubitMapRange = std::pair<PartnerAddrQubitMap::iterator, Partne
  */
 class BellPairStore {
  public:
-  BellPairStore();
+  BellPairStore(Logger::ILogger* logger = nullptr);
   ~BellPairStore();
   void eraseQubit(qrsa::IQubitRecord* const qubit);
   void insertEntangledQubit(QNodeAddr partner_addr, qrsa::IQubitRecord* qubit);
   qrsa::IQubitRecord* findQubit(QNIC_type qnic_type, QNicIndex qnic_index, QNodeAddr addr);
   PartnerAddrQubitMapRange getBellPairsRange(QNIC_type qnic_type, QNicIndex qnic_index, QNodeAddr partner_addr);
+  Logger::ILogger* logger;
 
  protected:
   std::map<ResourceKey, PartnerAddrQubitMap> _resources;

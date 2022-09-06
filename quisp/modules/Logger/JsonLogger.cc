@@ -69,7 +69,13 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     return os.str();
   }
 
-  return "\"msg\": \"unknown class: \"" + msg->getFullPath() + "\"";
+  return "\"msg\": \"unknown class\": \"" + msg->getFullPath() + "\"";
+}
+
+void JsonLogger::logBellPairInfo(const std::string& event_type, int partner_addr, quisp::modules::QNIC_type qnic_type, int qnic_index, int qubit_index) {
+  auto current_time = omnetpp::simTime();
+  _logger->info("\"simtime\": {}, \"event_type\": \"BellPair{}\", \"address\": \"{}\", \"partner_addr\": {}, \"qnic_type\": {}, \"qnic_index\": {}, \"qubit_index\": {}",
+                current_time, event_type, qnode_address, partner_addr, qnic_type, qnic_index, qubit_index);
 }
 
 }  // namespace quisp::modules::Logger

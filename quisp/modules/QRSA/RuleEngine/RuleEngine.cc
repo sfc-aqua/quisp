@@ -30,6 +30,7 @@ void RuleEngine::initialize() {
   realtime_controller = provider.getRealTimeController();
   routingdaemon = provider.getRoutingDaemon();
   initializeLogger(provider);
+  bell_pair_store.logger = logger;
 
   parentAddress = par("address");
   number_of_qnics_all = par("total_number_of_qnics");
