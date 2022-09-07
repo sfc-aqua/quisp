@@ -12,10 +12,10 @@ var searchData=
   ['y_5ferror_5fratio_9',['Y_error_ratio',['../classquisp_1_1modules_1_1_entangled_photon_pair_source.html#a9aa3ac6f0e41e3ab125727c608251dc4',1,'quisp::modules::EntangledPhotonPairSource']]],
   ['yi_5ferror_5fceil_10',['YI_error_ceil',['../structquisp_1_1modules_1_1_two_qubit_gate_error_model.html#a0bec96af6b0f4167523db7e1302f1776',1,'quisp::modules::TwoQubitGateErrorModel']]],
   ['yi_5ferror_5fceil_11',['yi_error_ceil',['../structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model.html#a74e0aa7d39d34c9dfbe3f9cbfab094be',1,'quisp::backends::error_tracking::TwoQubitGateErrorModel']]],
-  ['yi_5ferror_5frate_12',['yi_error_rate',['../structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model.html#abe7e7ba02552a31dff036bb40ff05af8',1,'quisp::backends::error_tracking::TwoQubitGateErrorModel']]],
-  ['yi_5ferror_5frate_13',['YI_error_rate',['../structquisp_1_1modules_1_1_two_qubit_gate_error_model.html#a758edceec7bc9b38c03adc4dd4592449',1,'quisp::modules::TwoQubitGateErrorModel']]],
+  ['yi_5ferror_5frate_12',['YI_error_rate',['../structquisp_1_1modules_1_1_two_qubit_gate_error_model.html#a758edceec7bc9b38c03adc4dd4592449',1,'quisp::modules::TwoQubitGateErrorModel']]],
+  ['yi_5ferror_5frate_13',['yi_error_rate',['../structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model.html#abe7e7ba02552a31dff036bb40ff05af8',1,'quisp::backends::error_tracking::TwoQubitGateErrorModel']]],
   ['yy_5ferror_5fceil_14',['YY_error_ceil',['../structquisp_1_1modules_1_1_two_qubit_gate_error_model.html#a64138528554bdc54dca0afaadb2fba4c',1,'quisp::modules::TwoQubitGateErrorModel']]],
   ['yy_5ferror_5fceil_15',['yy_error_ceil',['../structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model.html#a03c708982c8caa7906ed1115abbebaa6',1,'quisp::backends::error_tracking::TwoQubitGateErrorModel']]],
-  ['yy_5ferror_5frate_16',['yy_error_rate',['../structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model.html#a194b1a181ba3dc044b18f43cb604e5be',1,'quisp::backends::error_tracking::TwoQubitGateErrorModel']]],
-  ['yy_5ferror_5frate_17',['YY_error_rate',['../structquisp_1_1modules_1_1_two_qubit_gate_error_model.html#a41b7b8b3714dbeedbd22b3d82b488f91',1,'quisp::modules::TwoQubitGateErrorModel']]]
+  ['yy_5ferror_5frate_16',['YY_error_rate',['../structquisp_1_1modules_1_1_two_qubit_gate_error_model.html#a41b7b8b3714dbeedbd22b3d82b488f91',1,'quisp::modules::TwoQubitGateErrorModel']]],
+  ['yy_5ferror_5frate_17',['yy_error_rate',['../structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model.html#a194b1a181ba3dc044b18f43cb604e5be',1,'quisp::backends::error_tracking::TwoQubitGateErrorModel']]]
 ];

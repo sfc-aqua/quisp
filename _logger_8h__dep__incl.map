@@ -1,7 +1,7 @@
 <map id="quisp/test_utils/Logger.h" name="quisp/test_utils/Logger.h">
-<area shape="rect" id="node1" title=" " alt="" coords="4353,5,4517,32"/>
-<area shape="rect" id="node2" href="$_test_component_provider_strategy_8h.html" title=" " alt="" coords="4331,80,4538,121"/>
-<area shape="rect" id="node3" href="$_test_utils_8h.html" title=" " alt="" coords="4346,169,4523,196"/>
+<area shape="rect" id="node1" title=" " alt="" coords="4447,5,4611,32"/>
+<area shape="rect" id="node2" href="$_test_component_provider_strategy_8h.html" title=" " alt="" coords="4426,80,4633,121"/>
+<area shape="rect" id="node3" href="$_test_utils_8h.html" title=" " alt="" coords="4441,169,4618,196"/>
 <area shape="rect" id="node4" href="$_qubit__gate__error__test_8cc.html" title=" " alt="" coords="5,259,200,300"/>
 <area shape="rect" id="node5" href="$_qubit__measurement__test_8cc.html" title=" " alt="" coords="224,259,419,300"/>
 <area shape="rect" id="node6" href="$_qubit__memory__error__test_8cc.html" title=" " alt="" coords="443,259,637,300"/>
@@ -40,9 +40,10 @@
 <area shape="rect" id="node39" href="$_purify_action__test_8cc.html" title=" " alt="" coords="7146,251,7289,307"/>
 <area shape="rect" id="node40" href="$_random_measure_action__test_8cc.html" title=" " alt="" coords="7313,251,7519,307"/>
 <area shape="rect" id="node41" href="$_swapping_action__test_8cc.html" title=" " alt="" coords="7543,251,7710,307"/>
-<area shape="rect" id="node42" href="$_clause__serialize__test_8cc.html" title=" " alt="" coords="7734,259,7863,300"/>
-<area shape="rect" id="node43" href="$_condition__test_8cc.html" title=" " alt="" coords="7887,259,8030,300"/>
-<area shape="rect" id="node44" href="$_rule_set__test_8cc.html" title=" " alt="" coords="8054,259,8189,300"/>
-<area shape="rect" id="node45" href="$_rule__test_8cc.html" title=" " alt="" coords="8213,266,8374,293"/>
-<area shape="rect" id="node46" href="$unit__test__main_8cc.html" title=" " alt="" coords="8398,266,8557,293"/>
+<area shape="rect" id="node42" href="$_transfer_message__test_8cc.html" title=" " alt="" coords="7735,251,7940,307"/>
+<area shape="rect" id="node43" href="$_clause__serialize__test_8cc.html" title=" " alt="" coords="7965,259,8094,300"/>
+<area shape="rect" id="node44" href="$_condition__test_8cc.html" title=" " alt="" coords="8118,259,8261,300"/>
+<area shape="rect" id="node45" href="$_rule_set__test_8cc.html" title=" " alt="" coords="8285,259,8419,300"/>
+<area shape="rect" id="node46" href="$_rule__test_8cc.html" title=" " alt="" coords="8443,266,8605,293"/>
+<area shape="rect" id="node47" href="$unit__test__main_8cc.html" title=" " alt="" coords="8629,266,8787,293"/>
 </map>
