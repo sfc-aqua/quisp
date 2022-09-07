@@ -1,6 +1,7 @@
 #include "DoubleSelectionDualAction.h"
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
+#include "base/TransferMessage.cc"
 
 namespace quisp::rules::active::actions {
 DoubleSelectionDualAction::DoubleSelectionDualAction(unsigned long ruleset_id, int rule_id, int shared_tag, int partner, QNIC_type qnic_type, int qnic_index, int resource,
@@ -69,20 +70,9 @@ cPacket *DoubleSelectionDualAction::run(cModule *re) {
   rule_engine->freeConsumedResource(qnic_id, ds_trash_qubit_X, qnic_type);
   rule_engine->freeConsumedResource(qnic_id, ds_trash_qubit_Z, qnic_type);
 
-  DS_DoublePurificationResult *pk = new DS_DoublePurificationResult;
-  pk->setDestAddr(partner);
-  pk->setKind(7);
-  pk->setAction_index(action_index);
-  pk->setRule_id(rule_id);
-  pk->setRuleset_id(ruleset_id);
-  pk->setShared_tag(shared_tag);
-  pk->setXOutput_is_plus(meas_X);
-  pk->setZOutput_is_plus(meas_Z);
-  pk->setDS_XOutput_is_plus(ds_meas_X);
-  pk->setDS_ZOutput_is_plus(ds_meas_Z);
-  pk->setEntangled_with(qubit);
+  auto message = base::generateDoubleSelectionDoublePurificationResult(partner, ruleset_id, rule_id, shared_tag, action_index, 7, meas_X, meas_Z, ds_meas_X, ds_meas_Z);
   action_index++;
-  return pk;
+  return message;
 }
 
 DoubleSelectionDualActionInv::DoubleSelectionDualActionInv(unsigned long ruleset_id, int rule_id, int shared_tag, int partner, QNIC_type qnic_type, int qnic_index, int resource,
@@ -151,19 +141,8 @@ cPacket *DoubleSelectionDualActionInv::run(cModule *re) {
   rule_engine->freeConsumedResource(qnic_id, ds_trash_qubit_X, qnic_type);
   rule_engine->freeConsumedResource(qnic_id, ds_trash_qubit_Z, qnic_type);
 
-  DS_DoublePurificationResult *pk = new DS_DoublePurificationResult;
-  pk->setDestAddr(partner);
-  pk->setKind(7);
-  pk->setAction_index(action_index);
-  pk->setRule_id(rule_id);
-  pk->setRuleset_id(ruleset_id);
-  pk->setShared_tag(shared_tag);
-  pk->setXOutput_is_plus(meas_X);
-  pk->setZOutput_is_plus(meas_Z);
-  pk->setDS_XOutput_is_plus(ds_meas_X);
-  pk->setDS_ZOutput_is_plus(ds_meas_Z);
-  pk->setEntangled_with(qubit);
+  auto message = base::generateDoubleSelectionDoublePurificationResult(partner, ruleset_id, rule_id, shared_tag, action_index, 7, meas_X, meas_Z, ds_meas_X, ds_meas_Z);
   action_index++;
-  return pk;
+  return message;
 }
 }  // namespace quisp::rules::active::actions

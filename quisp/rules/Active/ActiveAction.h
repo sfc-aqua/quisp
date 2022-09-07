@@ -1,6 +1,6 @@
 #pragma once
 
-#include "actions/BaseAction.h"
+#include "actions/ActiveAction.h"
 #include "actions/DoublePurifyAction.h"
 #include "actions/DoubleSelectionAction.h"
 #include "actions/DoubleSelectionDualAction.h"

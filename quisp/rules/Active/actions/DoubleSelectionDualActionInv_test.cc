@@ -392,7 +392,6 @@ TEST(DoubleSelectionDualActionInv, AllOutcomeTrue) {
   EXPECT_EQ(result->getDestAddr(), action->partner);
   EXPECT_EQ(result->getRule_id(), action->rule_id);
   EXPECT_EQ(result->getRuleset_id(), action->ruleset_id);
-  EXPECT_EQ(result->getEntangled_with(), qubit);
   EXPECT_EQ(result->getXOutput_is_plus(), true);
   EXPECT_EQ(result->getZOutput_is_plus(), true);
   EXPECT_EQ(result->getDS_XOutput_is_plus(), true);
@@ -444,7 +443,6 @@ TEST(DoubleSelectionDualActionInv, FirstOutcomeTrue) {
   EXPECT_EQ(result->getDestAddr(), action->partner);
   EXPECT_EQ(result->getRule_id(), action->rule_id);
   EXPECT_EQ(result->getRuleset_id(), action->ruleset_id);
-  EXPECT_EQ(result->getEntangled_with(), qubit);
   EXPECT_EQ(result->getZOutput_is_plus(), true);
   EXPECT_EQ(result->getDS_XOutput_is_plus(), false);
   EXPECT_EQ(result->getXOutput_is_plus(), false);
@@ -496,7 +494,6 @@ TEST(DoubleSelectionDualActionInv, SecondOutcomeTrue) {
   EXPECT_EQ(result->getDestAddr(), action->partner);
   EXPECT_EQ(result->getRule_id(), action->rule_id);
   EXPECT_EQ(result->getRuleset_id(), action->ruleset_id);
-  EXPECT_EQ(result->getEntangled_with(), qubit);
   EXPECT_EQ(result->getZOutput_is_plus(), false);
   EXPECT_EQ(result->getDS_XOutput_is_plus(), true);
   EXPECT_EQ(result->getXOutput_is_plus(), false);
@@ -548,7 +545,6 @@ TEST(DoubleSelectionDualActionInv, ThirdOutcomeTrue) {
   EXPECT_EQ(result->getDestAddr(), action->partner);
   EXPECT_EQ(result->getRule_id(), action->rule_id);
   EXPECT_EQ(result->getRuleset_id(), action->ruleset_id);
-  EXPECT_EQ(result->getEntangled_with(), qubit);
   EXPECT_EQ(result->getZOutput_is_plus(), false);
   EXPECT_EQ(result->getDS_XOutput_is_plus(), false);
   EXPECT_EQ(result->getXOutput_is_plus(), true);
@@ -600,7 +596,6 @@ TEST(DoubleSelectionDualActionInv, FinalOutcomeTrue) {
   EXPECT_EQ(result->getDestAddr(), action->partner);
   EXPECT_EQ(result->getRule_id(), action->rule_id);
   EXPECT_EQ(result->getRuleset_id(), action->ruleset_id);
-  EXPECT_EQ(result->getEntangled_with(), qubit);
   EXPECT_EQ(result->getZOutput_is_plus(), false);
   EXPECT_EQ(result->getDS_XOutput_is_plus(), false);
   EXPECT_EQ(result->getXOutput_is_plus(), false);
@@ -652,7 +647,6 @@ TEST(DoubleSelectionDualActionInv, AllOutcomeFalse) {
   EXPECT_EQ(result->getDestAddr(), action->partner);
   EXPECT_EQ(result->getRule_id(), action->rule_id);
   EXPECT_EQ(result->getRuleset_id(), action->ruleset_id);
-  EXPECT_EQ(result->getEntangled_with(), qubit);
   EXPECT_EQ(result->getZOutput_is_plus(), false);
   EXPECT_EQ(result->getDS_XOutput_is_plus(), false);
   EXPECT_EQ(result->getXOutput_is_plus(), false);
