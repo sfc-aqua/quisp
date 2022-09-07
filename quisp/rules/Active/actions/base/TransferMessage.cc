@@ -61,4 +61,22 @@ static DS_DoublePurificationSecondResult* generateDoubleSelectionDoublePurificat
   return pk;
 }
 
+static LinkTomographyResult* generateLinkTomographyResult(int src, int dst, int current_count, int kind, bool is_output_plus, char basis, char god_clean, int max_count,
+                                                          simtime_t start) {
+  LinkTomographyResult* pk = new LinkTomographyResult;
+  pk->setSrcAddr(src);
+  pk->setDestAddr(dst);
+  pk->setPartner_address(src);  // Partner's partner is self/src
+  pk->setCount_id(current_count);
+  pk->setKind(6);
+  pk->setOutput_is_plus(is_output_plus);
+  pk->setBasis(basis);
+  pk->setGOD_clean(god_clean);
+  if (current_count == max_count) {
+    pk->setFinish(simTime() - start);
+    pk->setMax_count(max_count);
+  }
+  return pk;
+}
+
 }  // namespace quisp::rules::active::actions::base
