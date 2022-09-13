@@ -7,7 +7,7 @@ jobs:
       image: ghcr.io/sfc-aqua/quisp-ci:latest
       credentials:
         username: quisp-bot
-        password: ${{ secrets.GHCR_PAT }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: work around permission issue
         run: git config --global --add safe.directory /__w/quisp/quisp
@@ -38,7 +38,7 @@ jobs:
       image: ghcr.io/sfc-aqua/quisp-ci:latest
       credentials:
         username: quisp-bot
-        password: ${{ secrets.GHCR_PAT }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: work around permission issue
         run: git config --global --add safe.directory /__w/quisp/quisp
@@ -63,7 +63,7 @@ jobs:
       image: ghcr.io/sfc-aqua/quisp-ci:latest
       credentials:
         username: quisp-bot
-        password: ${{ secrets.GHCR_PAT }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: work around permission issue
         run: git config --global --add safe.directory /__w/quisp/quisp
@@ -85,7 +85,7 @@ jobs:
       image: ghcr.io/sfc-aqua/quisp-ci:latest
       credentials:
         username: quisp-bot
-        password: ${{ secrets.GHCR_PAT }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: work around permission issue
         run: git config --global --add safe.directory /__w/quisp/quisp
