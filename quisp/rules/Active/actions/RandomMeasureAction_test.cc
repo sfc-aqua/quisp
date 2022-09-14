@@ -77,7 +77,6 @@ TEST(RandomMeasureActionTest, NullQubit) {
 }
 
 TEST(RandomMeasureActionTest, MeasureResultNotFinished) {
-  std::cout<<"segfo\n";
   prepareSimulation();
   auto action = RandomMeasureAction::setupAction();
   int current_count = 4999;
@@ -94,13 +93,10 @@ TEST(RandomMeasureActionTest, MeasureResultNotFinished) {
   EXPECT_CALL(*qubit, measure_density_independent()).Times(1).WillOnce(Return(outcome));
 
   auto packet = action->run(rule_engine);
-  std::cout<<"out1\n";
   ASSERT_NE(packet, nullptr);
   LinkTomographyResult *result = dynamic_cast<LinkTomographyResult *>(packet);
-  std::cout<<"out2\n";
   ASSERT_NE(result, nullptr);
   EXPECT_EQ(result->getSrcAddr(), action->src);
-  std::cout<<"out\n";
   EXPECT_EQ(result->getDestAddr(), action->partner);
   EXPECT_EQ(result->getCount_id(), current_count + 1);  // increment trial count
   EXPECT_EQ(result->getPartner_address(), action->src);  // partner of partner's qubit is source

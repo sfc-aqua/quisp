@@ -8,7 +8,7 @@ using namespace omnetpp;
 using namespace quisp::rules::active::actions::base;
 using namespace quisp::messages;
 
-class TransferMessageTest : public ::testing::Test {
+class TransferMessagePurificationTest : public ::testing::Test {
  protected:
   void SetUp() override {
     partner = 0;
@@ -41,7 +41,7 @@ class TransferMessageTest : public ::testing::Test {
   bool is_ds_output_plus;
 };
 
-TEST_F(TransferMessageTest, generatePurificationResultTest) {
+TEST_F(TransferMessagePurificationTest, generatePurificationResultTest) {
   auto *pk = generatePurificationResult(partner, ruleset_id, rule_id, shared_tag, action_index, kind, is_output_plus);
   ASSERT_EQ(pk->getDestAddr(), partner);
   ASSERT_EQ(pk->getRuleset_id(), ruleset_id);
@@ -52,7 +52,7 @@ TEST_F(TransferMessageTest, generatePurificationResultTest) {
   ASSERT_EQ(pk->getOutput_is_plus(), is_output_plus);
 }
 
-TEST_F(TransferMessageTest, generateDoublePurificationResultTest) {
+TEST_F(TransferMessagePurificationTest, generateDoublePurificationResultTest) {
   auto *pk = generateDoublePurificationResult(partner, ruleset_id, rule_id, shared_tag, action_index, kind, is_x_output_plus, is_z_output_plus);
   ASSERT_EQ(pk->getDestAddr(), partner);
   ASSERT_EQ(pk->getRuleset_id(), ruleset_id);
@@ -64,7 +64,7 @@ TEST_F(TransferMessageTest, generateDoublePurificationResultTest) {
   ASSERT_EQ(pk->getZOutput_is_plus(), is_z_output_plus);
 }
 
-TEST_F(TransferMessageTest, generateDoubleSelectionDoublePurificationResultTest) {
+TEST_F(TransferMessagePurificationTest, generateDoubleSelectionDoublePurificationResultTest) {
   auto *pk = generateDoubleSelectionDoublePurificationResult(partner, ruleset_id, rule_id, shared_tag, action_index, kind, is_x_output_plus, is_z_output_plus, is_ds_x_output_plus,
                                                              is_ds_z_output_plus);
   ASSERT_EQ(pk->getDestAddr(), partner);
@@ -79,7 +79,7 @@ TEST_F(TransferMessageTest, generateDoubleSelectionDoublePurificationResultTest)
   ASSERT_EQ(pk->getDS_ZOutput_is_plus(), is_ds_z_output_plus);
 }
 
-TEST_F(TransferMessageTest, generateDoubleSelectionDoublePurificationSecondResultTest) {
+TEST_F(TransferMessagePurificationTest, generateDoubleSelectionDoublePurificationSecondResultTest) {
   auto *pk =
       generateDoubleSelectionDoublePurificationSecondResult(partner, ruleset_id, rule_id, shared_tag, action_index, kind, is_x_output_plus, is_z_output_plus, is_ds_output_plus);
   ASSERT_EQ(pk->getDestAddr(), partner);
