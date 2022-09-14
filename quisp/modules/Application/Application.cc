@@ -53,8 +53,7 @@ void Application::initialize() {
   if (traffic_pattern == 1) {
     int initiator_address = par("LoneInitiatorAddress");
     if (my_address == initiator_address) {
-      // int endnode_dest_addr = getOneRandomEndNodeAddress();
-      int endnode_dest_addr = 3;
+      int endnode_dest_addr = getOneRandomEndNodeAddress();
       EV_INFO << "Just one lonely connection setup request will be sent from " << my_address << " to " << endnode_dest_addr << "\n";
       ConnectionSetupRequest *pk = createConnectionSetupRequest(endnode_dest_addr, number_of_resources);
       scheduleAt(simTime(), pk);
