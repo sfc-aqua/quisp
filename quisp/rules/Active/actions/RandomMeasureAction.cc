@@ -1,6 +1,7 @@
 #include "RandomMeasureAction.h"
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
+#include "base/TransferMessage.cc"
 
 namespace quisp::rules::active::actions {
 
@@ -28,19 +29,7 @@ cPacket *RandomMeasureAction::run(cModule *re) {
   IRuleEngine *rule_engine = check_and_cast<IRuleEngine *>(re);
   rule_engine->freeConsumedResource(qnic_id, qubit, qnic_type);
 
-  LinkTomographyResult *pk = new LinkTomographyResult;
-  pk->setSrcAddr(src);
-  pk->setDestAddr(dst);
-  pk->setCount_id(current_count);
-  pk->setPartner_address(src);  // Partner's partner is self/src
-  pk->setKind(6);
-  pk->setOutput_is_plus(o.outcome_is_plus);
-  pk->setBasis(o.basis);
-  pk->setGOD_clean(o.GOD_clean);
-  if (current_count == max_count) {
-    pk->setFinish(simTime() - start);
-    pk->setMax_count(max_count);
-  }
+  auto pk = base::generateLinkTomographyResult(src, dst, current_count, 4, o.outcome_is_plus, o.basis, o.GOD_clean, max_count, start);
   return pk;
 }
 }  // namespace quisp::rules::active::actions
