@@ -79,4 +79,34 @@ static LinkTomographyResult* generateLinkTomographyResult(int src, int dst, int 
   return pk;
 }
 
+static SwappingResult* generateSwappingResult(std::vector<int> partners, std::vector<int> qnic_ids, std::vector<QNIC_type> qnic_types, std::vector<int> qnic_addresses,
+                                              std::vector<int> qubit_indices, unsigned long ruleset_id, int rule_id, int shared_tag, int action_index, int kind,
+                                              std::vector<int> operation_types) {
+  SwappingResult* pk = new SwappingResult;
+  pk->setKind(kind);
+  pk->setRuleSet_id(ruleset_id);
+  pk->setRule_id(rule_id);
+  pk->setShared_tag(shared_tag);
+  pk->setAction_index(action_index);
+
+  // Instructions for left partner
+  pk->setLeft_Dest(partners[0]);
+  pk->setOperation_type_left(operation_types[0]);
+  pk->setNew_partner_left(partners[1]);
+  pk->setNew_partner_qnic_index_left(qnic_ids[1]);  // right qnic id
+  pk->setNew_partner_qnic_type_left(qnic_types[1]);  // right qnic type
+  pk->setNew_partner_qnic_address_left(qnic_addresses[1]);  // right qnic address
+  pk->setMeasured_qubit_index_left(qubit_indices[1]);  // right qubit address
+
+  // Instructions for right partner
+  pk->setRight_Dest(partners[1]);
+  pk->setOperation_type_right(operation_types[1]);
+  pk->setNew_partner_right(partners[0]);
+  pk->setNew_partner_qnic_index_right(qnic_ids[0]);
+  pk->setNew_partner_qnic_type_right(qnic_types[0]);
+  pk->setNew_partner_qnic_address_right(qnic_addresses[0]);
+  pk->setMeasured_qubit_index_right(qubit_indices[0]);
+  return pk;
+}
+
 }  // namespace quisp::rules::active::actions::base

@@ -1,6 +1,7 @@
 #include "SwappingAction.h"
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
+#include "base/TransferMessage.cc"
 
 using quisp::types::EigenvalueResult;
 
@@ -75,31 +76,8 @@ cPacket *SwappingAction::run(cModule *re) {
   rule_engine->freeConsumedResource(self_left_qnic_id, left_qubit, self_left_qnic_type);  // free left
   rule_engine->freeConsumedResource(self_right_qnic_id, right_qubit, self_right_qnic_type);  // free right
 
-  auto *pk = new SwappingResult;
-  // no destination here. In RuleEngine, it's set.
-  // this setKind() doesn't seem to have any effect; set instead in void RuleEngine::traverseThroughAllProcesses2()
-  pk->setKind(5);
-  pk->setRuleSet_id(ruleset_id);
-  pk->setRule_id(rule_id);
-  pk->setShared_tag(shared_tag);
-  pk->setAction_index(action_index);
-  pk->setOperation_type_left(operation_type_left);  // operation type for left node
-  pk->setOperation_type_right(operation_type_right);  // operation type for right node
-  // These information are cropped in the RuleEngine.
-  pk->setLeft_Dest(left_partner);  // this might not require but just in case
-  pk->setRight_Dest(right_partner);
-
-  pk->setNew_partner_left(right_partner);
-  pk->setNew_partner_qnic_index_left(right_qnic_id);
-  pk->setNew_partner_qnic_type_left(right_qnic_type);
-  pk->setNew_partner_qnic_address_left(right_qnic_address);
-  pk->setMeasured_qubit_index_left(lindex);  // here is wrong;
-
-  pk->setNew_partner_right(left_partner);
-  pk->setNew_partner_qnic_index_right(left_qnic_id);
-  pk->setNew_partner_qnic_type_right(left_qnic_type);
-  pk->setNew_partner_qnic_address_right(left_qnic_address);
-  pk->setMeasured_qubit_index_right(rindex);
+  auto *pk = base::generateSwappingResult({left_partner, right_partner}, {left_qnic_id, right_qnic_id}, {left_qnic_type, right_qnic_type}, {left_qnic_address, right_qnic_address},
+                                          {lindex, rindex}, ruleset_id, rule_id, shared_tag, action_index, 5, {operation_type_left, operation_type_right});
   return pk;
 }
 
