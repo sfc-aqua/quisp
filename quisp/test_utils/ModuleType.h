@@ -36,6 +36,8 @@ class TestModuleType : public cModuleType {
   std::string getPackageProperty(const char *name) const override { return std::string("mock package property"); };
   const char *getImplementationClassName() const override { return "TestModuleType"; };
   std::string getCxxNamespace() const override { return std::string("mock namespace"); };
+  std::string getCxxNamespaceForType(const char *type) const override { return "mock cxx namespace"; };
+
   const char *getSourceFileName() const override { return "no source"; };
   bool isInnerType() const override { return false; };
 
