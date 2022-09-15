@@ -17,7 +17,8 @@ void ActiveRule::setAction(ActiveAction *a) {
   action.reset(a);
 }
 
-cPacket *ActiveRule::checkrun(cModule *re) {
+cPacket *ActiveRule::checkrun(RuleEngine *re) {
+  re->logRuleEngineExecution();
   if (condition->check(resources)) {
     return action->run(re);
   }

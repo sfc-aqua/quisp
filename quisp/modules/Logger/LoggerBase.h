@@ -14,6 +14,7 @@ class LoggerBase {
   ~LoggerBase();
   void initializeLogger(utils::ComponentProvider& provider);
   void logPacket(const std::string& event_type, omnetpp::cMessage const* const msg);
+  void logRuleEngineExecution();
 
  protected:
   ILogger* logger = nullptr;

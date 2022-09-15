@@ -12,6 +12,9 @@
 #include <omnetpp.h>
 #include <memory>
 
+namespace quisp::modules {
+class RuleEngine;
+}
 namespace quisp::rules::active::actions {
 
 using quisp::modules::IStationaryQubit;
@@ -26,7 +29,7 @@ class ActiveAction {
   unsigned long ruleset_id;
   int rule_id;  // Used to make the lock_id unique, together with purification_count.
   int shared_tag;
-  virtual cPacket* run(cModule* re) = 0;
+  virtual cPacket* run(quisp::modules::RuleEngine* re) = 0;
   virtual IStationaryQubit* getResource(int required_index, int partner);
   virtual void removeResource_fromRule(IStationaryQubit* qubit);
   cPacket* generateError(const char* msg);

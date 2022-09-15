@@ -5,6 +5,9 @@
 #include "ActiveAction.h"
 #include "ActiveCondition.h"
 
+namespace quisp::modules {
+class RuleEngine;
+}
 namespace quisp::rules::active {
 class ActiveRule {
  public:
@@ -24,7 +27,7 @@ class ActiveRule {
   void setCondition(ActiveCondition *c);
   void setAction(ActiveAction *a);
 
-  cPacket *checkrun(cModule *re);
+  cPacket *checkrun(RuleEngine *re);
   bool checkTerminate();
 };
 

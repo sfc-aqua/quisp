@@ -12,4 +12,6 @@ void LoggerBase::initializeLogger(utils::ComponentProvider& provider) {
 }
 
 void LoggerBase::logPacket(const std::string& event_type, omnetpp::cMessage const* const msg) { logger->logPacket(event_type, msg); }
+
+void logRuleEngineExecution() {}
 }  // namespace quisp::modules::Logger
