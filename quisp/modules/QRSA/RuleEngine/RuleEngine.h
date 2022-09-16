@@ -19,6 +19,8 @@
 #include <modules/QUBIT.h>
 #include <rules/Active/ActiveRuleSet.h>
 #include <rules/RuleSet.h>
+#include <runtime/RuleSet.h>
+#include <runtime/Runtime.h>
 #include <utils/ComponentProvider.h>
 
 #include "BellPairStore/BellPairStore.h"
@@ -66,10 +68,12 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   IRealTimeController *realtime_controller;
   int *qnic_burst_trial_counter;
   BellPairStore bell_pair_store;
-  // typedef rules::RuleSet* RuleSetPtr;
-  ruleset_store::RuleSetStore rp;
+
+  [[deprecated]] ruleset_store::RuleSetStore rp;
+
   // Vector for store package for simultaneous entanglement swapping
   std::map<int, std::map<int, int>> simultaneous_es_results;
+
   // tracker accessible table has as many number of boolean value as the number of qnics in the qnode.
   // when the tracker for the qnic is clered by previous BSM trial it goes true
   // when the RuleEngine try to start new Photon emittion, it goes false and other BSM trial can't access to it.
@@ -86,20 +90,16 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type);
   void sendPhotonTransmissionSchedule(PhotonTransmissionConfig transmission_config);
   void shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk);
-  // virtual int getQNICjob_index_for_this_qnic(int qnic_index, QNIC_type qnic_type);
   void incrementBurstTrial(int destAddr, int internal_qnic_address, int internal_qnic_index);
   void shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk);
   bool burstTrial_outdated(int this_trial, int qnic_address);
-  // virtual int getQnicIndex_toNeighbor(int destAddr);
   InterfaceInfo getInterface_toNeighbor(int destAddr);
   InterfaceInfo getInterface_toNeighbor_Internal(int local_qnic_index);
   void scheduleNextEmissionEvent(int qnic_index, int qnic_address, double interval, simtime_t timing, int num_sent, bool internal, int trial);
   void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result);
   void clearTrackerTable(int destAddr, int internal_qnic_address);
-  // virtual void traverseThroughAllProcesses(RuleEngine *re, int qnic_type, int qnic_index);
-  void traverseThroughAllProcesses2();
+  [[deprecated]] void traverseThroughAllProcesses2();
   double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
-  // virtual void check_Purification_Agreement(purification_result pr);
   void storeCheck_Purification_Agreement(purification_result pur_result);
   void storeCheck_DoublePurification_Agreement(Doublepurification_result pr);
   void storeCheck_TriplePurification_Agreement(Triplepurification_result pr);
@@ -109,14 +109,18 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
 
   void updateResources_EntanglementSwapping(swapping_result swapr);
 
-  std::unique_ptr<ActiveRuleSet> constructActiveRuleSet(RuleSet ruleset);
-  std::unique_ptr<ActiveRule> constructRule(std::unique_ptr<ActiveRule> active_rule, std::unique_ptr<Rule> rule, unsigned long ruleset_id);
-  ActiveCondition *constructCondition(std::unique_ptr<Condition> condition);
-  ActiveAction *constructAction(std::unique_ptr<Action> action, unsigned long ruleset_id, int rule_id, int shared_tag);
+  [[deprecated]] std::unique_ptr<ActiveRuleSet> constructActiveRuleSet(RuleSet ruleset);
+  [[deprecated]] std::unique_ptr<ActiveRule> constructRule(std::unique_ptr<ActiveRule> active_rule, std::unique_ptr<Rule> rule, unsigned long ruleset_id);
+  [[deprecated]] ActiveCondition *constructCondition(std::unique_ptr<Condition> condition);
+  [[deprecated]] ActiveAction *constructAction(std::unique_ptr<Action> action, unsigned long ruleset_id, int rule_id, int shared_tag);
+
   virtual void updateResources_SimultaneousEntanglementSwapping(swapping_result swapr);
 
   utils::ComponentProvider provider;
   std::unique_ptr<IQNicStore> qnic_store = nullptr;
+
+  std::vector<runtime::RuleSet> rulesets;
+  std::vector<runtime::Runtime> runtimes;
 };
 
 Define_Module(RuleEngine);

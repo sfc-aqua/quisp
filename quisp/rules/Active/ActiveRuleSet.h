@@ -18,8 +18,10 @@ class ActiveRuleSet {
   std::unique_ptr<ActiveRule>& getRule(int i);
   int size() const;
   bool empty() const;
-  std::vector<std::unique_ptr<ActiveRule>>::const_iterator cbegin();
-  std::vector<std::unique_ptr<ActiveRule>>::const_iterator cend();
+  std::vector<std::unique_ptr<ActiveRule>>::const_iterator cbegin() const noexcept;
+  std::vector<std::unique_ptr<ActiveRule>>::const_iterator cend() const noexcept;
+  std::vector<std::unique_ptr<ActiveRule>>::iterator begin() noexcept;
+  std::vector<std::unique_ptr<ActiveRule>>::iterator end() noexcept;
 };
 
 }  // namespace quisp::rules::active
