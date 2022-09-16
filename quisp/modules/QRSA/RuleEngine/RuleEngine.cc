@@ -13,12 +13,14 @@
 #include <utils/ComponentProvider.h>
 #include "QNicStore/QNicStore.h"
 #include "RuleEngine.h"
+#include "RuleSetConverter/RuleSetConverter.h"
 
 namespace quisp::modules {
 
 using namespace rules;
 using namespace rules::active;
 using qnic_store::QNicStore;
+using rs_converter::RuleSetConverter;
 
 RuleEngine::RuleEngine() : provider(utils::ComponentProvider{this}) {}
 
@@ -269,34 +271,18 @@ void RuleEngine::handleMessage(cMessage *msg) {
   else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     // add actual process
     auto serialized_ruleset = pkt->getRuleSet();
-    RuleSet ruleset(0, 0);  // initialize empty ruleset
+    RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
-    auto active_ruleset = constructActiveRuleSet(std::move(ruleset));
-    // here swappers got swapping ruleset with internal packet
-    // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
-    if (active_ruleset->size() > 0) {
-      rp.insert(active_ruleset);
-      EV << "New process arrived !\n";
-    } else {
-      error("Empty rule set...");
-    }
-  } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
-    // doing end to end tomography
-    if (pkt->getApplication_type() == 0) {
-      auto serialized_ruleset = pkt->getRuleSet();
-      RuleSet ruleset(0, 0);  // initialize empty ruleset
-      ruleset.deserialize_json(serialized_ruleset);
-      auto active_ruleset = constructActiveRuleSet(std::move(ruleset));
-      if (active_ruleset->size() > 0) {
-        rp.insert(active_ruleset);
-        EV << "New process arrived !\n";
-      } else {
-        error("Empty rule set...");
-      }
 
-    } else {
-      error("This application is not recognized yet");
-    }
+    rulesets.emplace_back(RuleSetConverter::construct(ruleset));
+
+  } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
+    if (pkt->getApplication_type() != 0) error("This application is not recognized yet");
+    auto serialized_ruleset = pkt->getRuleSet();
+    RuleSet ruleset(0, 0);
+    ruleset.deserialize_json(serialized_ruleset);
+    rulesets.emplace_back(RuleSetConverter::construct(ruleset));
+
   } else if (auto *pkt = dynamic_cast<StopEmitting *>(msg)) {
     terminated_qnic[pkt->getQnic_address()] = true;
   }
@@ -311,7 +297,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     ResourceAllocation(QNIC_RP, i);
   }
 
-  traverseThroughAllProcesses2();
+  // traverseThroughAllProcesses2();
   delete msg;
 }
 
@@ -567,52 +553,6 @@ void RuleEngine::storeCheck_QuatroPurification_Agreement(Quatropurification_resu
   // std::cout<<"New data arrived. Need to keep the outcome of rulset_id="<<pr.id.ruleset_id<<" Rule_id="<<pr.id.rule_id<<", index="<<pr.id.index<<"\n";
   QuatroPurification_table.insert(std::make_pair(pr.id.ruleset_id, pr));  // Otherwise, if data has not been found, store it.
 }
-
-/*
-
-//todo:This assumes ordering. Not good. Better implement the same was as tomography.
-void RuleEngine::check_Purification_Agreement(purification_result pr){
-
-    std::cout<<"check_Purification_Agreement: "<<pr.id.ruleset_id<<"\n";
-    std::cout<<"rp size = "<<rp.size()<<"\n";
-
-    bool ruleset_running = false;
-    for(auto it = rp.cbegin(), next_it = rp.cbegin(); it != rp.cend(); it = next_it){
-               next_it = it; ++next_it;
-               RuleSet* process = it->second.RuleSet;//One Process. From top to bottom.
-               if(process->ruleset_id == pr.id.ruleset_id){
-                   ruleset_running = true;
-                   break;
-               }
-    }
-    if(rp.size()==0 || !ruleset_running){
-        //Already finished process. delete the table and ignore the result.
-        return;
-    }else{
-        auto ret = Purification_table.equal_range(pr.id.ruleset_id);//Find all resource in qytpe/qid entangled with partner.
-        //If the RuleSet has been deleted already, do not do anything.
-
-        for (auto it=ret.first; it!=ret.second; it++) {
-            if(it->second.id.rule_id == pr.id.rule_id && it->second.id.index == pr.id.index){
-                //std::cout<<"Rule_id="<<pr.id.rule_id<<", index="<<pr.id.index<<"\n";
-                //std::cout<<"node["<<parentAddress<<"] Rule found: Discard/Keep purification.\n";
-                if(it->second.outcome == pr.outcome){
-                    //Outcomes agreed. Keep the entangled pair.
-                    std::cout<<"Unlocking and upgrading!\n";
-                    Unlock_resource_and_upgrade_stage(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
-                }else{
-                    //Discard
-                    //std::cout<<"node["<<parentAddress<<"] discaard ";
-                    std::cout<<"Unlocking and discarding!\n";
-                    Unlock_resource_and_discard(pr.id.ruleset_id, pr.id.rule_id, pr.id.index);
-                }
-                Purification_table.erase(it);
-                return;
-            }
-        }
-        traverseThroughAllProcesses2();
-    }
-}*/
 
 void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int shared_tag, int index) {
   // There should be better way
