@@ -1,45 +1,85 @@
 #pragma once
-
-#include <rules/Active/ActiveRuleSet.h>
-#include "rules/Active/ActiveAction.h"
-#include "rules/Active/ActiveCondition.h"
+#include <iostream>
+#include <tuple>
+#include <variant>
+#include <vector>
 
 namespace quisp::runtime {
+
+enum class OpType {
+  NONE = 0,
+  DEBUG = 1,
+};
+class Identifier {};
+
+using Var = std::variant<int, float, std::string, Identifier>;
+using Operation0 = std::tuple<OpType>;
+using Operation1 = std::tuple<OpType, Var>;
+
+using OperationType = std::variant<Operation0, Operation1>;
+class Program {
+ public:
+  Program(const std::string& name, const std::vector<OperationType>& opcodes) : name(name), opcodes(opcodes) {}
+
+  std::string name;
+  std::vector<OperationType> opcodes;
+};
+
+class Rule {
+ public:
+  Rule(const Program& condition, const Program& action) : condition(condition), action(action) {}
+
+  Program condition;
+  Program action;
+};
+
+class RuleSet {
+ public:
+  RuleSet(const std::string& name) : name(name), rules(std::vector<Rule>()) {}
+  RuleSet(const std::string& name, const std::vector<Rule>& rules) : name(name), rules(rules) {}
+  int id;
+  std::string name;
+  std::vector<Rule> rules;
+};
+
+class RuntimeError {
+ public:
+  std::string message;
+};
+
+struct OperationVisitor {
+  void operator()(Operation0 op);
+  void operator()(Operation1 op);
+};
+
 class Runtime {
  public:
-  Runtime() {}
-  ~Runtime() {}
-  void exec(rules::active::ActiveRuleSet *ruleset) {
-    for (auto &rule : *ruleset) {
-      std::cout << "log: " << rule->name << std::endl;
-      auto &condition = rule->condition;
-      auto &action = rule->action;
-      if (!checkCondition(condition)) {
-        break;
-      }
-      execAction(action);
-    }
-  }
+  Runtime();
+  ~Runtime();
+  void exec(RuleSet ruleset);
 
-  bool checkCondition(std::unique_ptr<rules::active::ActiveCondition> &condition) { return false; }
+  RuntimeError* error;
+  void eval(Program& program);
 
-  void execAction(std::unique_ptr<rules::active::ActiveAction> &action) {}
+  void evalOperation(OperationType op);
+  OperationVisitor visitor;
 };
-namespace op {
-// Resource Preparations
-void assign() {}
-void validate() {}
-// Quantum Operations
-void gate() {}
-void measure() {}
 
-// Messaging
-void send() {}
+// namespace op {
+// // Resource Preparations
+// void assign() {}
+// void validate() {}
+// // Quantum Operations
+// void gate() {}
+// void measure() {}
 
-// Post processing
-void freeQubit() {}
-void setNameToResource() {}
-void update() {}
+// // Messaging
+// void send() {}
 
-};  // namespace op
+// // Post processing
+// void freeQubit() {}
+// void setNameToResource() {}
+// void update() {}
+
+// };  // namespace op
 }  // namespace quisp::runtime
