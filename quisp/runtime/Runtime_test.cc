@@ -9,9 +9,9 @@ using namespace quisp::rules::active;
 namespace {
 class RuntimeTest : public testing::Test {
  protected:
-  void SetUp() {}
+  void SetUp() { runtime = new Runtime(); }
 
-  void TearDown() {}
+  void TearDown() { delete runtime; }
 
  public:
   Runtime* runtime;
@@ -19,8 +19,17 @@ class RuntimeTest : public testing::Test {
 
 TEST_F(RuntimeTest, initialize) { ASSERT_NE(runtime, nullptr); }
 TEST_F(RuntimeTest, execSimpleRuleSet) {
-  auto rs = new ActiveRuleSet(0, 1);
-  rs->addRule(std::make_unique<ActiveRule>(0, 0, 3, "test"));
-  runtime->exec(rs);
+  Rule rule{Program{"cond1",
+                    {
+                        {OpType::NONE},
+                    }},
+            Program{"action1", {{OpType::DEBUG}}}};
+  RuleSet rs{"1st ruleset",
+             {
+                 Rule{Program{"cond2", {{OpType::DEBUG}}}, Program{"cond2", {{OpType::DEBUG}}}},
+
+             }};
+  runtime->exec(std::move(rs));
+  runtime->exec(RuleSet{"test ruleset"});
 }
 }  // namespace
