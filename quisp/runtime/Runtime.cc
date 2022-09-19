@@ -2,7 +2,7 @@
 
 namespace quisp::runtime {
 
-Runtime::Runtime() : error(nullptr) {}
+Runtime::Runtime() : error(nullptr), visitor(InstructionVisitor{this}) {}
 Runtime::~Runtime() {}
 void Runtime::exec(RuleSet ruleset) {
   this->error = nullptr;
@@ -20,18 +20,27 @@ void Runtime::eval(Program& program) {
   }
 }
 
-void Runtime::evalOperation(OperationType op) { std::visit(OperationVisitor{}, op); }
+void Runtime::evalOperation(InstructionTypes instruction) { std::visit(visitor, instruction); }
 
-void OperationVisitor::operator()(Operation0 op) {
-  auto [optype] = op;
-  switch (optype) {
-    case OpType::DEBUG:
-      std::cout << "debug" << std::endl;
-      break;
-    case OpType::NONE:
-    default:
-      break;
-  }
+void InstructionVisitor::operator()(Inst_NONE_int_ instruction) {}
+void InstructionVisitor::operator()(Inst_DEBUG_int_ instruction) {
+  auto [arg] = instruction.args;
+  std::cout << "Debug(int): " << arg << std::endl;
 }
-void OperationVisitor::operator()(Operation1 op) {}
+void InstructionVisitor::operator()(Inst_DEBUG_float_ instruction) {
+  auto [arg] = instruction.args;
+  std::cout << "Debug(float): " << arg << std::endl;
+}
+void InstructionVisitor::operator()(Inst_DEBUG_String_ instruction) {
+  auto [arg] = instruction.args;
+  std::cout << "Debug(string): " << arg << std::endl;
+}
+void InstructionVisitor::operator()(Inst_ADD_int_int_ instruction) {
+  auto [arg1, arg2] = instruction.args;
+  std::cout << "Add(int,int): " << arg1 + arg2 << std::endl;
+}
+void InstructionVisitor::operator()(Inst_SUB_int_int_ instruction) {
+  auto [arg1, arg2] = instruction.args;
+  std::cout << "Sub(int,int): " << arg1 + arg2 << std::endl;
+}
 };  // namespace quisp::runtime
