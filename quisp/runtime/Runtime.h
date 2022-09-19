@@ -1,28 +1,61 @@
 #pragma once
+#include <cstddef>
 #include <iostream>
 #include <tuple>
 #include <variant>
 #include <vector>
+#include "macro_utils.h"
 
 namespace quisp::runtime {
 
-enum class OpType {
-  NONE = 0,
-  DEBUG = 1,
+using String = std::string;
+
+// defines OpCode Enums
+enum OpType : int {
+#define OP(Opcode) Opcode,
+#include "opcodes.h"
+#undef OP
 };
+
+// Opcode Literal types for providing static type check for the instructions
+// OP_ADD => Op<OpType::ADD>
+template <int I>
+struct Op {
+  enum { value = I };
+};
+
+// this defines as OP(DEBUG) => OP_DEBUG
+#define OP(Opcode) using OP_##Opcode = Op<OpType::Opcode>;
+#define OP_LAST(Opcode) using OP_##Opcode = Op<OpType::Opcode>;
+#include "opcodes.h"
+#undef OP
+
 class Identifier {};
 
-using Var = std::variant<int, float, std::string, Identifier>;
-using Operation0 = std::tuple<OpType>;
-using Operation1 = std::tuple<OpType, Var>;
+template <class OpLit, class... Operands>
+struct Instruction {
+  Instruction(std::tuple<Operands...> args) : opcode(OpLit::value), args(args) {}
+  int opcode;
+  std::tuple<Operands...> args;
+};
 
-using OperationType = std::variant<Operation0, Operation1>;
+#define INST(Opcode, ...) using INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__) = Instruction<OP_##Opcode, __VA_ARGS__>;
+#define INST_LAST(Opcode, ...) using INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__) = Instruction<OP_##Opcode, __VA_ARGS__>;
+#include "opcodes.h"
+#undef INST
+
+using InstructionTypes = std::variant<
+#define INST(Opcode, ...) INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__),
+#define INST_LAST(Opcode, ...) INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__)
+#include "opcodes.h"
+#undef INST
+    >;
 class Program {
  public:
-  Program(const std::string& name, const std::vector<OperationType>& opcodes) : name(name), opcodes(opcodes) {}
+  Program(const std::string& name, const std::vector<InstructionTypes>& opcodes) : name(name), opcodes(opcodes) {}
 
   std::string name;
-  std::vector<OperationType> opcodes;
+  std::vector<InstructionTypes> opcodes;
 };
 
 class Rule {
@@ -47,9 +80,16 @@ class RuntimeError {
   std::string message;
 };
 
-struct OperationVisitor {
-  void operator()(Operation0 op);
-  void operator()(Operation1 op);
+class Runtime;
+
+struct InstructionVisitor {
+  InstructionVisitor(Runtime* runtime_) : runtime(runtime_) {}
+
+#define INST(Opcode, ...) void operator()(INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__) instruction);
+#include "opcodes.h"
+#undef INST
+
+  Runtime* runtime;
 };
 
 class Runtime {
@@ -57,12 +97,10 @@ class Runtime {
   Runtime();
   ~Runtime();
   void exec(RuleSet ruleset);
-
-  RuntimeError* error;
   void eval(Program& program);
-
-  void evalOperation(OperationType op);
-  OperationVisitor visitor;
+  void evalOperation(InstructionTypes op);
+  RuntimeError* error;
+  InstructionVisitor visitor;
 };
 
 // namespace op {
