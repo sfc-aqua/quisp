@@ -19,12 +19,13 @@ enum OpType : int {
 
 // Opcode Literal types for providing static type check for the instructions
 // OP_ADD => Op<OpType::ADD>
+// see also https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Int-To-Type
 template <int I>
 struct Op {
   enum { value = I };
 };
 
-// this defines as OP(DEBUG) => OP_DEBUG
+// this defines OP(DEBUG) as OP_DEBUG
 #define OP(Opcode) using OP_##Opcode = Op<OpType::Opcode>;
 #define OP_LAST(Opcode) using OP_##Opcode = Op<OpType::Opcode>;
 #include "opcodes.h"
@@ -39,15 +40,17 @@ struct Instruction {
   std::tuple<Operands...> args;
 };
 
+enum RegisterId { REG0, REG1, REG2, REG3 };
+
 #define INST(Opcode, ...) using INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__) = Instruction<OP_##Opcode, __VA_ARGS__>;
 #define INST_LAST(Opcode, ...) using INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__) = Instruction<OP_##Opcode, __VA_ARGS__>;
-#include "opcodes.h"
+#include "instructions.h"
 #undef INST
 
 using InstructionTypes = std::variant<
 #define INST(Opcode, ...) INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__),
 #define INST_LAST(Opcode, ...) INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__)
-#include "opcodes.h"
+#include "instructions.h"
 #undef INST
     >;
 class Program {
@@ -86,10 +89,19 @@ struct InstructionVisitor {
   InstructionVisitor(Runtime* runtime_) : runtime(runtime_) {}
 
 #define INST(Opcode, ...) void operator()(INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__) instruction);
-#include "opcodes.h"
+#include "instructions.h"
 #undef INST
 
   Runtime* runtime;
+};
+
+struct Register {
+  const String name;
+  unsigned long long value;
+};
+
+struct Flags {
+  bool test_result;
 };
 
 class Runtime {
@@ -99,6 +111,8 @@ class Runtime {
   void exec(RuleSet ruleset);
   void eval(Program& program);
   void evalOperation(InstructionTypes op);
+  unsigned int pc = 0;
+  Register registers[4];
   RuntimeError* error;
   InstructionVisitor visitor;
 };
