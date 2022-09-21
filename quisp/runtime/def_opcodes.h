@@ -4,11 +4,24 @@
 #ifndef OP_LAST
 #define OP_LAST OP
 #endif
-OP(NOP)
 OP(DEBUG)
 OP(ADD)
 OP(SUB)
-OP_LAST(SET)
+
+// branch
+OP(JMP)
+OP(BEQ)
+OP(BEZ)
+OP(BNZ)
+OP(BNE)
+OP(BLT)
+OP(BGE)
+
+// basic op
+OP(GET_QUBIT)
+OP(SET)
+
+OP_LAST(NOP)
 #endif
 #undef OP
 #undef OP_LAST
