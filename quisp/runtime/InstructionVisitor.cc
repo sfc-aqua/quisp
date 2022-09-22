@@ -24,37 +24,44 @@ void InstructionVisitor::operator()(INSTR_DEBUG_RegId_ instruction) {
   std::cout << "Debug(Reg): " << value << std::endl;
 }
 void InstructionVisitor::operator()(INSTR_ADD_RegId_RegId_int_ instruction) {
-  auto [regId1, regId2, arg2] = instruction.args;
-  auto arg1 = (int)runtime->getRegVal(regId2);
+  auto [reg_id1, reg_id2, arg2] = instruction.args;
+  int arg1 = runtime->getRegVal(reg_id2);
   auto val = arg1 + arg2;
-  runtime->setRegVal(regId1, val);
+  runtime->setRegVal(reg_id1, val);
   std::cout << "Add(Reg,Reg,int): " << val << std::endl;
 }
 void InstructionVisitor::operator()(INSTR_ADD_RegId_RegId_RegId_ instruction) {
-  auto [regId1, regId2, regId3] = instruction.args;
-  auto arg1 = runtime->getRegVal(regId2);
-  auto arg2 = runtime->getRegVal(regId3);
+  auto [reg_id1, reg_id2, reg_id3] = instruction.args;
+  auto arg1 = runtime->getRegVal(reg_id2);
+  auto arg2 = runtime->getRegVal(reg_id3);
   auto val = arg1 + arg2;
-  runtime->setRegVal(regId1, val);
+  runtime->setRegVal(reg_id1, val);
   std::cout << "Add(Reg,Reg,Reg): " << val << std::endl;
 }
 void InstructionVisitor::operator()(INSTR_SUB_RegId_RegId_int_ instruction) {
-  auto [regId1, regId2, arg2] = instruction.args;
-  auto arg1 = (int)runtime->getRegVal(regId2);
+  auto [reg_id1, reg_id2, arg2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_id2);
   auto val = arg1 - arg2;
-  runtime->setRegVal(regId1, val);
+  runtime->setRegVal(reg_id1, val);
   std::cout << "Sub(Reg,Reg,int): " << val << std::endl;
 }
 void InstructionVisitor::operator()(INSTR_SUB_RegId_RegId_RegId_ instruction) {
-  auto [regId1, regId2, regId3] = instruction.args;
-  auto arg1 = runtime->getRegVal(regId2);
-  auto arg2 = runtime->getRegVal(regId3);
+  auto [reg_id1, reg_id2, reg_id3] = instruction.args;
+  auto arg1 = runtime->getRegVal(reg_id2);
+  auto arg2 = runtime->getRegVal(reg_id3);
   auto val = arg1 - arg2;
-  runtime->setRegVal(regId1, val);
+  runtime->setRegVal(reg_id1, val);
   std::cout << "Sub(Reg,Reg,Reg): " << val << std::endl;
 }
 void InstructionVisitor::operator()(INSTR_SET_RegId_int_ instruction) {
-  auto [regId1, arg1] = instruction.args;
-  runtime->setRegVal(regId1, arg1);
+  auto [reg_id1, arg1] = instruction.args;
+  runtime->setRegVal(reg_id1, arg1);
+}
+
+void InstructionVisitor::operator()(INSTR_GET_QUBIT_QubitId_QNodeAddr_ instruction) {
+  auto [qubit_id, partner_addr] = instruction.args;
+  int qubit_index = 0;
+  auto qubit_ref = runtime->getQubitByPartnerAddr(partner_addr, qubit_index);
+  runtime->setQubit(qubit_ref, qubit_id);
 }
 }  // namespace quisp::runtime
