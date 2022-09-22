@@ -15,7 +15,9 @@ class Program {
 class Rule {
  public:
   Rule(const Program& condition, const Program& action) : condition(condition), action(action) {}
+  void finalize();
 
+  int index = -1;
   Program condition;
   Program action;
 };
@@ -24,6 +26,7 @@ class RuleSet {
  public:
   RuleSet(const std::string& name) : name(name), rules(std::vector<Rule>()) {}
   RuleSet(const std::string& name, const std::vector<Rule>& rules) : name(name), rules(rules) {}
+  void finalize();
   int id;
   std::string name;
   std::vector<Rule> rules;

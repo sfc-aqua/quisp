@@ -28,17 +28,21 @@ struct Op {
 #include "def_opcodes.h"
 #undef OP
 
+/// @brief it describes each instruction. it corresponds each assmebly instruction line by line
 template <class OpLit, class... Operands>
 struct Instruction {
-  Instruction(std::tuple<Operands...> args) : opcode(OpLit::value), args(args) {}
+  Instruction(std::tuple<Operands...> args, std::string label = "") : opcode(OpLit::value), args(args), label(label) {}
   int opcode;
   std::tuple<Operands...> args;
+  std::string label;
 };
 
+// specialize template for each instruction
 #define INSTR(Opcode, ...) using INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__) = Instruction<OP_##Opcode, __VA_ARGS__>;
 #include "def_instructions.h"
 #undef INSTR
 
+/// @brief a variant that is capable of storing all instructions
 using InstructionTypes = std::variant<
 #define INSTR(Opcode, ...) INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__),
 #define INSTR_LAST(Opcode, ...) INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__)
