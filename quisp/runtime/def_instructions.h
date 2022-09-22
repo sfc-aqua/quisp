@@ -13,6 +13,7 @@ INSTR(ADD, RegId, RegId, RegId)
 INSTR(SUB, RegId, RegId, int)
 INSTR(SUB, RegId, RegId, RegId)
 INSTR(SET, RegId, int)
+INSTR(GET_QUBIT, QubitId, QNodeAddr)
 INSTR_LAST(NOP, int)
 #undef INSTR
 #undef INSTR_LAST
