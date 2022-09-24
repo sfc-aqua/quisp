@@ -17,7 +17,7 @@ class Rule {
   Rule(const Program& condition, const Program& action) : condition(condition), action(action) {}
   void finalize();
 
-  int index = -1;
+  int id = -1;
   Program condition;
   Program action;
 };
