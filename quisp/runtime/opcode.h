@@ -35,6 +35,7 @@ struct Instruction {
   int opcode;
   std::tuple<Operands...> args;
   std::string label;
+  std::string getLabel() { return label; }
 };
 
 // specialize template for each instruction
