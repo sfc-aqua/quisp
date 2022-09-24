@@ -5,8 +5,11 @@
 #define OP_LAST OP
 #endif
 OP(DEBUG)
+OP(DEBUG_RUNTIME_STATE)
 OP(ADD)
 OP(SUB)
+OP(INC)
+OP(ERROR)
 
 // branch
 OP(JMP)  // jump
@@ -18,9 +21,14 @@ OP(BLT)  // branch if less than
 OP(BGE)  // branch if greater or equal
 OP(BNERR)  // branch if no error
 
+// memory
+OP(LOAD)
+OP(STORE)
+
 // basic op
 OP(GET_QUBIT)
 OP(SET)
+OP(MEASURE)
 
 OP_LAST(NOP)
 #endif

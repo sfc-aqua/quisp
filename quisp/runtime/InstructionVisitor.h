@@ -10,6 +10,7 @@ class Runtime;
 struct InstructionVisitor {
   InstructionVisitor(Runtime* runtime_) : runtime(runtime_) {}
 
+// the class declarations are done by macro expansion
 #define INSTR(Opcode, ...) void operator()(INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__) instruction);
 #include "def_instructions.h"
 #undef INSTR
