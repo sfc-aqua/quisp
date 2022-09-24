@@ -23,6 +23,12 @@ INSTR(BNZ, Label, RegId)  // branch if the reg val is not zero
 INSTR(BNERR, Label)  // branch if no error
 INSTR(JMP, Label)
 INSTR(ERROR, String)  // stop execution and show error
+
+// memory operations
+INSTR(LOAD, RegId, MemoryKey)
+INSTR(STORE, MemoryKey, RegId)
+INSTR(STORE, MemoryKey, int)
+
 INSTR_LAST(NOP, int)
 #undef INSTR
 #undef INSTR_LAST
