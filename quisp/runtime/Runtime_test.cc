@@ -49,17 +49,21 @@ INSTR_DEBUG_RegId_{RegId::REG0},
 
 TEST_F(RuntimeTest, evalQubitIdOperation) {
   auto q0 = 0;
+  auto count = RegId::REG0;
   QNodeAddr partner_addr = 1;
   auto qubit_index = 0;  // former 'resource'
   runtime->assignQubitToRuleSet(2, qubit);
   Program program{"RandomMeasureAction",
                   {
                       // clang-format off
+INSTR_LOAD_RegId_MemoryKey_{{count, "count"}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, qubit_index}},
 INSTR_BNERR_Label_{"L1"},
 INSTR_ERROR_String_{"Qubit not found for mesaurement"},
 // INSTR_MEASURE_MemoryKey_QubitId_{{"output", Qubit0}, "L1"},
-INSTR_INC_RegId_{RegId::REG1},
+INSTR_INC_RegId_{count},
+INSTR_STORE_MemoryKey_RegId_{{"count", count}}
+// INSTR_FREE_QUBIT{{q0}}
 // INSTR_SEND_LINK_TOMOGRAPHY_RESULT{RegId::REG0,RegId::REG1}
                       // clang-format on
                   }};
@@ -103,5 +107,25 @@ INSTR_DEBUG_RegId_{r0, "test"},
   runtime->cleanup();
   runtime->eval(program);
   EXPECT_EQ(runtime->getRegVal(r0), 10);
+}
+
+TEST_F(RuntimeTest, memoryOperations) {
+  auto r0 = RegId::REG0;
+  Program program{
+      "MemoryTest",
+      {
+          // clang-format off
+INSTR_DEBUG_RUNTIME_STATE_None_{nullptr},
+INSTR_SET_RegId_int_{{r0, 10}},
+INSTR_STORE_MemoryKey_RegId_{{"count", r0}, "INIT"},
+INSTR_DEBUG_RUNTIME_STATE_None_{nullptr},
+INSTR_SUB_RegId_RegId_int_{{r0, r0, 1}},
+INSTR_BNZ_Label_RegId_{{"INIT", r0}},
+INSTR_LOAD_RegId_MemoryKey_{{r0, "count"}}
+          // clang-format on
+      }};
+  runtime->cleanup();
+  runtime->eval(program);
+  EXPECT_EQ(runtime->getRegVal(r0), 1);
 }
 }  // namespace
