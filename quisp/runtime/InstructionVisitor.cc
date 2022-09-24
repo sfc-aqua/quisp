@@ -7,6 +7,21 @@ namespace quisp::runtime {
 
 void InstructionVisitor::operator()(INSTR_NOP_int_ instruction) {}
 
+void InstructionVisitor::operator()(INSTR_LOAD_RegId_MemoryKey_ instruction) {
+  auto [reg_id, memory_key] = instruction.args;
+  runtime->loadVal(memory_key, reg_id);
+}
+
+void InstructionVisitor::operator()(INSTR_STORE_MemoryKey_RegId_ instruction) {
+  auto [memory_key, reg_id] = instruction.args;
+  runtime->storeVal(memory_key, MemoryValue(runtime->getRegVal(reg_id)));
+}
+
+void InstructionVisitor::operator()(INSTR_STORE_MemoryKey_int_ instruction) {
+  auto [memory_key, value] = instruction.args;
+  runtime->storeVal(memory_key, MemoryValue(value));
+}
+
 void InstructionVisitor::operator()(INSTR_BNERR_Label_ instruction) {
   auto [label] = instruction.args;
   if (runtime->error == nullptr) {
@@ -54,8 +69,8 @@ void InstructionVisitor::operator()(INSTR_DEBUG_RUNTIME_STATE_None_ _instruction
 void InstructionVisitor::operator()(INSTR_DEBUG_QubitId_ instruction) {
   auto [qubit_id] = instruction.args;
   auto qubit_ref = runtime->getQubitByQubitId(qubit_id);
-  std::cout << "Debug(QubitId:" << qubit_id << "): " << std::endl;
-  std::cout << "  qnic: " << qubit_ref << std::endl;
+  std::cout << "Debug(QubitId:" << qubit_id << "): "
+            << "\n  qnic type: " << qubit_ref->getQNicType() << "\n  qnic index: " << qubit_ref->getQNicIndex() << "\n  qubit index: " << qubit_ref->getQubitIndex() << std::endl;
 }
 
 void InstructionVisitor::operator()(INSTR_DEBUG_String_ instruction) {
@@ -74,7 +89,6 @@ void InstructionVisitor::operator()(INSTR_ADD_RegId_RegId_int_ instruction) {
   int arg1 = runtime->getRegVal(reg_id2);
   auto val = arg1 + arg2;
   runtime->setRegVal(reg_id1, val);
-  std::cout << "Add(Reg,Reg,int): " << val << ", " << (int)reg_id1 << (int)reg_id2 << std::endl;
 }
 
 void InstructionVisitor::operator()(INSTR_ADD_RegId_RegId_RegId_ instruction) {
@@ -83,7 +97,6 @@ void InstructionVisitor::operator()(INSTR_ADD_RegId_RegId_RegId_ instruction) {
   auto arg2 = runtime->getRegVal(reg_id3);
   auto val = arg1 + arg2;
   runtime->setRegVal(reg_id1, val);
-  std::cout << "Add(Reg,Reg,Reg): " << val << std::endl;
 }
 
 void InstructionVisitor::operator()(INSTR_SUB_RegId_RegId_int_ instruction) {
@@ -91,7 +104,6 @@ void InstructionVisitor::operator()(INSTR_SUB_RegId_RegId_int_ instruction) {
   auto arg1 = (int)runtime->getRegVal(reg_id2);
   auto val = arg1 - arg2;
   runtime->setRegVal(reg_id1, val);
-  std::cout << "Sub(Reg,Reg,int): " << val << std::endl;
 }
 
 void InstructionVisitor::operator()(INSTR_SUB_RegId_RegId_RegId_ instruction) {
@@ -100,7 +112,6 @@ void InstructionVisitor::operator()(INSTR_SUB_RegId_RegId_RegId_ instruction) {
   auto arg2 = runtime->getRegVal(reg_id3);
   auto val = arg1 - arg2;
   runtime->setRegVal(reg_id1, val);
-  std::cout << "Sub(Reg,Reg,Reg): " << val << std::endl;
 }
 
 void InstructionVisitor::operator()(INSTR_SET_RegId_int_ instruction) {
