@@ -80,6 +80,13 @@ void Runtime::jumpTo(const Label& label) {
 
 void Runtime::setError(const String& message) { error = new RuntimeError(message, pc); }
 
+void Runtime::storeVal(MemoryKey key, MemoryValue val) { memory.insert_or_assign(key, val); }
+void Runtime::loadVal(MemoryKey key, RegId reg_id) {
+  auto it = memory.find(key);
+  if (it == memory.end()) return;
+  setRegVal(reg_id, it->second.intValue);
+}
+
 void Runtime::debugRuntimeState() {
   std::cout << "-----debug-runtime-state------"
             << "\npc: " << pc << "\nrule_id: " << rule_id << "\nRegisters:"
