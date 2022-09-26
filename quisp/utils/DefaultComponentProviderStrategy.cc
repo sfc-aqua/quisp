@@ -65,7 +65,7 @@ modules::IRealTimeController *DefaultComponentProviderStrategy::getRealTimeContr
 }
 IQuantumBackend *DefaultComponentProviderStrategy::getQuantumBackend() {
   auto *qnode = getQNode();
-  auto *mod = qnode->getModuleByPath("backend");
+  auto *mod = qnode->findModuleByPath("backend");
   if (mod == nullptr) {
     throw cRuntimeError("Quantum backend not found");
   }
@@ -75,7 +75,7 @@ IQuantumBackend *DefaultComponentProviderStrategy::getQuantumBackend() {
 
 ILogger *DefaultComponentProviderStrategy::getLogger() {
   auto *qnode = getQNode();
-  auto *mod = qnode->getModuleByPath("logger");
+  auto *mod = qnode->findModuleByPath("logger");
   if (mod == nullptr) {
     throw cRuntimeError("LoggerModule not found");
   }
