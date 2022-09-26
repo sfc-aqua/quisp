@@ -29,6 +29,13 @@ INSTR(LOAD, RegId, MemoryKey)
 INSTR(STORE, MemoryKey, RegId)
 INSTR(STORE, MemoryKey, int)
 
+// qubit operations
+INSTR(MEASURE, MemoryKey, QubitId)
+INSTR(FREE_QUBIT, QubitId)
+
+// send packet
+// INSTR(SEND_LINK_TOMOGRAPHY_RESULT)
+
 INSTR_LAST(NOP, int)
 #undef INSTR
 #undef INSTR_LAST

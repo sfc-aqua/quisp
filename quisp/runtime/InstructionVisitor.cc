@@ -7,6 +7,13 @@ namespace quisp::runtime {
 
 void InstructionVisitor::operator()(INSTR_NOP_int_ instruction) {}
 
+void InstructionVisitor::operator()(INSTR_MEASURE_MemoryKey_QubitId_ instruction) { auto [memory_key, qubit_id] = instruction.args; }
+
+void InstructionVisitor::operator()(INSTR_FREE_QUBIT_QubitId_ instruction) {
+  auto [qubit_id] = instruction.args;
+  runtime->freeQubit(qubit_id);
+}
+
 void InstructionVisitor::operator()(INSTR_LOAD_RegId_MemoryKey_ instruction) {
   auto [reg_id, memory_key] = instruction.args;
   runtime->loadVal(memory_key, reg_id);
