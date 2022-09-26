@@ -56,10 +56,11 @@ using Memory = std::unordered_map<MemoryKey, MemoryValue>;
 
 class Runtime {
  public:
-  class ICallBack {
+  struct ICallBack {
     virtual ~ICallBack() {}
 
-    void freeAndResetQubit(IQubitRecord*);
+    virtual void freeAndResetQubit(IQubitRecord*) = 0;
+    virtual MeasurementOutcome measureQubit(IQubitRecord*) = 0;
     // // Resource Preparations
     // void validate() {}
 
@@ -98,6 +99,8 @@ class Runtime {
   void setError(const String& message);
   void storeVal(MemoryKey, MemoryValue);
   void loadVal(MemoryKey, RegId);
+  void measureQubit(QubitId, MemoryKey);
+  void freeQubit(QubitId);
 
   // related components
   InstructionVisitor visitor;

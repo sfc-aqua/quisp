@@ -87,6 +87,23 @@ void Runtime::loadVal(MemoryKey key, RegId reg_id) {
   setRegVal(reg_id, it->second.intValue);
 }
 
+void Runtime::measureQubit(QubitId qubit_id, MemoryKey memory_key) {
+  auto qubit_ref = getQubitByQubitId(qubit_id);
+  if (qubit_ref == nullptr) {
+    return;
+  }
+  auto outcome = rule_engine->measureQubit(qubit_ref);
+  storeVal(memory_key, MemoryValue{outcome});
+}
+
+void Runtime::freeQubit(QubitId qubit_id) {
+  auto qubit_ref = getQubitByQubitId(qubit_id);
+  if (qubit_ref == nullptr) {
+    return;
+  }
+  rule_engine->freeAndResetQubit(qubit_ref);
+}
+
 void Runtime::debugRuntimeState() {
   std::cout << "-----debug-runtime-state------"
             << "\npc: " << pc << "\nrule_id: " << rule_id << "\nRegisters:"
