@@ -25,6 +25,10 @@ void Runtime::eval(Program& program) {
   auto& opcodes = program.opcodes;
   auto len = opcodes.size();
   for (pc = 0; pc < len; pc++) {
+    if (debugging) {
+      debugRuntimeState();
+      std::cout << "op: " << std::visit([](auto& op) { return op.toString(); }, opcodes[pc]) << std::endl;
+    }
     evalOperation(opcodes[pc]);
   }
 }
@@ -87,13 +91,23 @@ void Runtime::loadVal(MemoryKey key, RegId reg_id) {
   setRegVal(reg_id, it->second.intValue);
 }
 
-void Runtime::measureQubit(QubitId qubit_id, MemoryKey memory_key) {
+MemoryValue Runtime::loadVal(MemoryKey key) {
+  auto it = memory.find(key);
+  if (it == memory.end()) throw std::runtime_error("the value is empty for the key");
+  return it->second;
+}
+
+void Runtime::measureQubit(QubitId qubit_id, MemoryKey memory_key, Basis basis) {
   auto qubit_ref = getQubitByQubitId(qubit_id);
   if (qubit_ref == nullptr) {
     return;
   }
-  auto outcome = rule_engine->measureQubit(qubit_ref);
-  storeVal(memory_key, MemoryValue{outcome});
+  if (basis == Basis::RANDOM) {
+    auto outcome = rule_engine->measureQubitRandomly(qubit_ref);
+    storeVal(memory_key, MemoryValue{outcome});
+    return;
+  }
+  std::runtime_error("measure qubit with the specified basis is not implemented yet");
 }
 
 void Runtime::freeQubit(QubitId qubit_id) {
@@ -105,8 +119,14 @@ void Runtime::freeQubit(QubitId qubit_id) {
 }
 
 void Runtime::debugRuntimeState() {
-  std::cout << "-----debug-runtime-state------"
+  std::cout << "\n-----debug-runtime-state------"
             << "\npc: " << pc << "\nrule_id: " << rule_id << "\nRegisters:"
-            << "\n  Reg0: " << registers[0].value << "\n  Reg1: " << registers[1].value << "\n  Reg2: " << registers[2].value << "\n  Reg3: " << registers[3].value << std::endl;
+            << "\n  Reg0: " << registers[0].value << "\n  Reg1: " << registers[1].value << "\n  Reg2: " << registers[2].value << "\n  Reg3: " << registers[3].value
+            << "\n--memory--\n";
+  for (auto it : memory) {
+    std::cout << it.first << ": " << it.second.intValue << std::endl;
+  }
+  std::cout << "error: " << (error == nullptr ? "nullptr" : error->message);
+  std::cout << "\n--------" << std::endl;
 }
 };  // namespace quisp::runtime

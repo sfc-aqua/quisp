@@ -30,9 +30,14 @@ INSTR(STORE, MemoryKey, RegId)
 INSTR(STORE, MemoryKey, int)
 
 // qubit operations
-INSTR(MEASURE, MemoryKey, QubitId)
+INSTR(MEASURE_RANDOM, MemoryKey, QubitId)
+INSTR(MEASURE, MemoryKey, QubitId, Basis)
 INSTR(FREE_QUBIT, QubitId)
 
+// send classical messages
+INSTR(SEND_LINK_TOMOGRAPHY_RESULT, QNodeAddr, RegId, MemoryKey, int)  // partner addr, current count reg_id, outcome key, max_count
+// OP(SEND_PURIFICATION_RESULT)
+// OP(SEND_SWAPPING_RESULT)
 // send packet
 // INSTR(SEND_LINK_TOMOGRAPHY_RESULT)
 

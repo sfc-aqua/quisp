@@ -1,4 +1,6 @@
 #pragma once
+#include <sstream>
+#include <string>
 #include <tuple>
 #include <variant>
 
@@ -10,6 +12,12 @@ namespace quisp::runtime {
 // defines OpCode Enums
 enum OpType : int {
 #define OP(Opcode) Opcode,
+#include "def_opcodes.h"
+#undef OP
+};
+
+static std::string OP_TYPE_STR[]{
+#define OP(Opcode) #Opcode,
 #include "def_opcodes.h"
 #undef OP
 };
@@ -35,7 +43,22 @@ struct Instruction {
   int opcode;
   std::tuple<Operands...> args;
   std::string label;
-  std::string getLabel() { return label; }
+
+  std::string toString() {
+    std::stringstream ss;
+    ss << OP_TYPE_STR[opcode];
+    ss << " ";
+    toStringArgs(args, ss);
+    return ss.str();
+  }
+  template <size_t N = 0, typename T>
+  void toStringArgs(const T& t, std::stringstream& s) {
+    if constexpr (N < std::tuple_size<T>::value) {
+      const auto& x = std::get<N>(t);
+      s << x << ", ";
+      toStringArgs<N + 1>(t, s);
+    }
+  }
 };
 
 // specialize template for each instruction

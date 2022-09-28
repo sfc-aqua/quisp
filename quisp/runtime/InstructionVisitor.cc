@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdexcept>
 
 #include "InstructionVisitor.h"
 #include "Runtime.h"
@@ -7,7 +8,21 @@ namespace quisp::runtime {
 
 void InstructionVisitor::operator()(INSTR_NOP_int_ instruction) {}
 
-void InstructionVisitor::operator()(INSTR_MEASURE_MemoryKey_QubitId_ instruction) { auto [memory_key, qubit_id] = instruction.args; }
+void InstructionVisitor::operator()(INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_ instruction) {
+  auto [partner_addr, counter_reg_id, outcome_key, max_count] = instruction.args;
+  auto count = runtime->getRegVal(counter_reg_id);
+  auto outcome = runtime->loadVal(outcome_key).outcome;
+  runtime->rule_engine->sendLinkTomographyResult(partner_addr, count, outcome, max_count);
+}
+
+void InstructionVisitor::operator()(INSTR_MEASURE_RANDOM_MemoryKey_QubitId_ instruction) {
+  auto [memory_key, qubit_id] = instruction.args;
+  runtime->measureQubit(qubit_id, memory_key, Basis::RANDOM);
+}
+void InstructionVisitor::operator()(INSTR_MEASURE_MemoryKey_QubitId_Basis_ instruction) {
+  auto [memory_key, qubit_id, basis] = instruction.args;
+  runtime->measureQubit(qubit_id, memory_key, basis);
+}
 
 void InstructionVisitor::operator()(INSTR_FREE_QUBIT_QubitId_ instruction) {
   auto [qubit_id] = instruction.args;
@@ -128,7 +143,10 @@ void InstructionVisitor::operator()(INSTR_SET_RegId_int_ instruction) {
 
 void InstructionVisitor::operator()(INSTR_GET_QUBIT_QubitId_QNodeAddr_int_ instruction) {
   auto [qubit_id, partner_addr, qubit_resource_index] = instruction.args;
-  auto qubit_ref = runtime->getQubitByPartnerAddr(partner_addr, qubit_resource_index);
+  auto *qubit_ref = runtime->getQubitByPartnerAddr(partner_addr, qubit_resource_index);
+  if (qubit_ref == nullptr) {
+    runtime->setError("Qubit not found");
+  }
   runtime->setQubit(qubit_ref, qubit_id);
 }
 }  // namespace quisp::runtime
