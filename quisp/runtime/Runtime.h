@@ -51,22 +51,18 @@ class Runtime {
   struct ICallBack {
     virtual ~ICallBack() {}
 
-    virtual void freeAndResetQubit(IQubitRecord*) = 0;
-    virtual MeasurementOutcome measureQubitRandomly(IQubitRecord*) = 0;
-    virtual void sendLinkTomographyResult(QNodeAddr partner_addr, int count, MeasurementOutcome outcome, bool is_finished) = 0;
-
     // // Resource Preparations
     // void validate() {}
 
     // // Quantum Operations
     // void gate() {}
-    // void measure() {}
+    virtual MeasurementOutcome measureQubitRandomly(IQubitRecord*) = 0;
 
     // // Messaging
-    // void send() {}
+    virtual void sendLinkTomographyResult(QNodeAddr partner_addr, int count, MeasurementOutcome outcome, bool is_finished) = 0;
 
     // // Post processing
-    // void freeQubit() {}
+    virtual void freeAndResetQubit(IQubitRecord*) = 0;
     // void setNameToResource() {}
     // void update() {}
   };
@@ -99,7 +95,7 @@ class Runtime {
 
   // related components
   InstructionVisitor visitor;
-  ICallBack* rule_engine;
+  ICallBack* callback;
 
   // states
   /// @brief current rule evaluated

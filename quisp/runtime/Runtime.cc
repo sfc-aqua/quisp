@@ -104,7 +104,7 @@ void Runtime::measureQubit(QubitId qubit_id, MemoryKey memory_key, Basis basis) 
     return;
   }
   if (basis == Basis::RANDOM) {
-    auto outcome = rule_engine->measureQubitRandomly(qubit_ref);
+    auto outcome = callback->measureQubitRandomly(qubit_ref);
     storeVal(memory_key, MemoryValue{outcome});
     return;
   }
@@ -116,7 +116,7 @@ void Runtime::freeQubit(QubitId qubit_id) {
   if (qubit_ref == nullptr) {
     return;
   }
-  rule_engine->freeAndResetQubit(qubit_ref);
+  callback->freeAndResetQubit(qubit_ref);
 }
 
 void Runtime::debugRuntimeState() {
