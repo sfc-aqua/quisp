@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <stdexcept>
 #include <variant>
+#include "runtime/Value.h"
 
 namespace quisp::runtime {
 
@@ -88,7 +89,7 @@ void Runtime::storeVal(MemoryKey key, MemoryValue val) { memory.insert_or_assign
 void Runtime::loadVal(MemoryKey key, RegId reg_id) {
   auto it = memory.find(key);
   if (it == memory.end()) return;
-  setRegVal(reg_id, it->second.intValue);
+  setRegVal(reg_id, it->second.intValue());
 }
 
 MemoryValue Runtime::loadVal(MemoryKey key) {
@@ -124,9 +125,10 @@ void Runtime::debugRuntimeState() {
             << "\n  Reg0: " << registers[0].value << "\n  Reg1: " << registers[1].value << "\n  Reg2: " << registers[2].value << "\n  Reg3: " << registers[3].value
             << "\n--memory--\n";
   for (auto it : memory) {
-    std::cout << it.first << ": " << it.second.intValue << std::endl;
+    std::cout << it.first << ": " << it.second << std::endl;
   }
-  std::cout << "error: " << (error == nullptr ? "nullptr" : error->message);
+  std::cout << "\n--------" << std::endl;
+  std::cout << "\nerror: " << (error == nullptr ? "nullptr" : error->message);
   std::cout << "\n--------" << std::endl;
 }
 };  // namespace quisp::runtime

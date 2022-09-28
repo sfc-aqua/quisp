@@ -1,6 +1,8 @@
 #pragma once
+#include <cassert>
 #include <cstddef>
 #include <iostream>
+#include <stdexcept>
 #include <tuple>
 #include <unordered_map>
 #include <variant>
@@ -9,15 +11,12 @@
 #include "InstructionVisitor.h"
 #include "RuleSet.h"
 #include "macro_utils.h"
-#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
-#include "modules/QRSA/QRSA.h"
+
+#include "Value.h"
 #include "opcode.h"
 #include "types.h"
 
 namespace quisp::runtime {
-
-using IQubitRecord = quisp::modules::qrsa::IQubitRecord;
-using MeasurementOutcome = quisp::modules::measurement_outcome;
 
 struct RuntimeError {
   RuntimeError(std::string msg, int pc) : message(msg), pc(pc) {}
@@ -44,13 +43,6 @@ struct Hash {
 using QubitResources = std::unordered_multimap<std::pair<QNodeAddr, RuleId>, IQubitRecord*, Hash>;
 using QubitNameMap = std::unordered_map<QubitId, IQubitRecord*>;
 using LabelMap = std::unordered_map<Label, int>;
-
-union MemoryValue {
-  int intValue;
-  MeasurementOutcome outcome;
-  MemoryValue(int val) : intValue(val) {}
-  MemoryValue(MeasurementOutcome val) : outcome(val) {}
-};
 
 using Memory = std::unordered_map<MemoryKey, MemoryValue>;
 
