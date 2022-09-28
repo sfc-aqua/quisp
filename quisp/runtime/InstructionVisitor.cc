@@ -11,7 +11,7 @@ void InstructionVisitor::operator()(INSTR_NOP_int_ instruction) {}
 void InstructionVisitor::operator()(INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_ instruction) {
   auto [partner_addr, counter_reg_id, outcome_key, max_count] = instruction.args;
   auto count = runtime->getRegVal(counter_reg_id);
-  auto outcome = runtime->loadVal(outcome_key).outcome;
+  auto outcome = runtime->loadVal(outcome_key).outcome();
   runtime->rule_engine->sendLinkTomographyResult(partner_addr, count, outcome, max_count);
 }
 
