@@ -9,10 +9,14 @@ using RuleId = int;
 
 // these types are mainly used for describing type name in def_instruction.h
 enum class RegId : int { REG0, REG1, REG2, REG3 };
+std::ostream& operator<<(std::ostream& stream, const RegId& value);
 using QNodeAddr = int;
 using QubitId = int;
 using String = std::string;
 using Label = std::string;
 using MemoryKey = std::string;
 using None = std::nullptr_t;
+enum class Basis : int { Z, X, RANDOM };
+std::ostream& operator<<(std::ostream& stream, const Basis& value);
+
 }  // namespace quisp::runtime
