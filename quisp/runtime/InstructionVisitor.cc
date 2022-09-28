@@ -19,9 +19,20 @@ void InstructionVisitor::operator()(INSTR_MEASURE_RANDOM_MemoryKey_QubitId_ inst
   auto [memory_key, qubit_id] = instruction.args;
   runtime->measureQubit(qubit_id, memory_key, Basis::RANDOM);
 }
+
 void InstructionVisitor::operator()(INSTR_MEASURE_MemoryKey_QubitId_Basis_ instruction) {
   auto [memory_key, qubit_id, basis] = instruction.args;
   runtime->measureQubit(qubit_id, memory_key, basis);
+}
+
+void InstructionVisitor::operator()(INSTR_GATE_X_QubitId_ instruction) {
+  auto [qubit_id] = instruction.args;
+  runtime->gateX(qubit_id);
+}
+
+void InstructionVisitor::operator()(INSTR_GATE_Z_QubitId_ instruction) {
+  auto [qubit_id] = instruction.args;
+  runtime->gateZ(qubit_id);
 }
 
 void InstructionVisitor::operator()(INSTR_FREE_QUBIT_QubitId_ instruction) {

@@ -33,6 +33,8 @@ INSTR(STORE, MemoryKey, int)
 INSTR(MEASURE_RANDOM, MemoryKey, QubitId)
 INSTR(MEASURE, MemoryKey, QubitId, Basis)
 INSTR(FREE_QUBIT, QubitId)
+INSTR(GATE_X, QubitId)
+INSTR(GATE_Z, QubitId)
 
 // send classical messages
 INSTR(SEND_LINK_TOMOGRAPHY_RESULT, QNodeAddr, RegId, MemoryKey, int)  // partner addr, current count reg_id, outcome key, max_count

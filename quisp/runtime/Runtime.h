@@ -57,6 +57,8 @@ class Runtime {
     // // Quantum Operations
     // void gate() {}
     virtual MeasurementOutcome measureQubitRandomly(IQubitRecord*) = 0;
+    virtual void gateX(IQubitRecord*) = 0;
+    virtual void gateZ(IQubitRecord*) = 0;
 
     // // Messaging
     virtual void sendLinkTomographyResult(QNodeAddr partner_addr, int count, MeasurementOutcome outcome, bool is_finished) = 0;
@@ -92,6 +94,8 @@ class Runtime {
   MemoryValue loadVal(MemoryKey);
   void measureQubit(QubitId, MemoryKey, Basis);
   void freeQubit(QubitId);
+  void gateX(QubitId);
+  void gateZ(QubitId);
 
   // related components
   InstructionVisitor visitor;
