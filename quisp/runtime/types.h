@@ -3,9 +3,15 @@
 #include <cstddef>
 #include <string>
 
+#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
+#include "modules/QRSA/QRSA.h"
+
 namespace quisp::runtime {
 
 using RuleId = int;
+
+using IQubitRecord = quisp::modules::qrsa::IQubitRecord;
+using MeasurementOutcome = quisp::modules::measurement_outcome;
 
 // these types are mainly used for describing type name in def_instruction.h
 enum class RegId : int { REG0, REG1, REG2, REG3 };
