@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <variant>
 #include "runtime/Value.h"
+#include "runtime/types.h"
 
 namespace quisp::runtime {
 
@@ -117,6 +118,22 @@ void Runtime::freeQubit(QubitId qubit_id) {
     return;
   }
   callback->freeAndResetQubit(qubit_ref);
+}
+
+void Runtime::gateX(QubitId qubit_id) {
+  auto qubit_ref = getQubitByQubitId(qubit_id);
+  if (qubit_ref == nullptr) {
+    return;
+  }
+  callback->gateX(qubit_ref);
+}
+
+void Runtime::gateZ(QubitId qubit_id) {
+  auto qubit_ref = getQubitByQubitId(qubit_id);
+  if (qubit_ref == nullptr) {
+    return;
+  }
+  callback->gateZ(qubit_ref);
 }
 
 void Runtime::debugRuntimeState() {
