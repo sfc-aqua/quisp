@@ -60,7 +60,9 @@ class Runtime {
     virtual ~ICallBack() {}
 
     virtual void freeAndResetQubit(IQubitRecord*) = 0;
-    virtual MeasurementOutcome measureQubit(IQubitRecord*) = 0;
+    virtual MeasurementOutcome measureQubitRandomly(IQubitRecord*) = 0;
+    virtual void sendLinkTomographyResult(QNodeAddr partner_addr, int count, MeasurementOutcome outcome, bool is_finished) = 0;
+
     // // Resource Preparations
     // void validate() {}
 
@@ -99,7 +101,8 @@ class Runtime {
   void setError(const String& message);
   void storeVal(MemoryKey, MemoryValue);
   void loadVal(MemoryKey, RegId);
-  void measureQubit(QubitId, MemoryKey);
+  MemoryValue loadVal(MemoryKey);
+  void measureQubit(QubitId, MemoryKey, Basis);
   void freeQubit(QubitId);
 
   // related components
@@ -117,5 +120,6 @@ class Runtime {
   RuntimeError* error = nullptr;
   LabelMap label_map;
   Memory memory;
+  bool debugging = false;
 };
 }  // namespace quisp::runtime
