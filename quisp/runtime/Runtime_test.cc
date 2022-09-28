@@ -21,7 +21,7 @@ class RuntimeTest : public testing::Test {
  protected:
   void SetUp() {
     runtime = new Runtime();
-    runtime->rule_engine = new MockRuleEngineCallback();
+    runtime->callback = new MockRuleEngineCallback();
     runtime->rule_id = 0;
     runtime->cleanup();
     qubit = new QubitRecord{QNIC_E, 2, 3};
