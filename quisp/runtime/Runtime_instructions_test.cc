@@ -4,24 +4,21 @@
 #include "modules/QRSA/QRSA.h"
 #include "rules/Active/ActiveRuleSet.h"
 #include "runtime/types.h"
+#include "test.h"
 
 using namespace quisp::runtime;
 using namespace quisp::rules;
 using namespace quisp::rules::active;
 using quisp::modules::qubit_record::QubitRecord;
-namespace {
+using namespace quisp_test;
 
-struct MockRuleEngineCallback : public Runtime::ICallBack {
-  void freeAndResetQubit(IQubitRecord* qubit_ref) override {}
-  MeasurementOutcome measureQubitRandomly(IQubitRecord* qubit_ref) override { return MeasurementOutcome(); }
-  virtual void sendLinkTomographyResult(QNodeAddr partner_addr, int count, MeasurementOutcome outcome, bool is_finished) override {}
-};
+namespace {
 
 class RuntimeInstructionsTest : public testing::Test {
  protected:
   void SetUp() {
     runtime = new Runtime();
-    runtime->callback = new MockRuleEngineCallback();
+    runtime->callback = new MockRuntimeCallback();
     runtime->rule_id = 0;
     runtime->cleanup();
     qubit = new QubitRecord{QNIC_E, 2, 3};
@@ -39,7 +36,7 @@ class RuntimeInstructionsTest : public testing::Test {
   qrsa::IQubitRecord* qubit;
 };
 
-TEST_F(RuntimeInstructionsTest, initialize) {
+TEST_F(RuntimeInstructionsTest, setRegisters) {
   auto r0 = RegId::REG0;
   auto r1 = RegId::REG1;
   auto r2 = RegId::REG2;
@@ -59,4 +56,5 @@ TEST_F(RuntimeInstructionsTest, initialize) {
   EXPECT_EQ(regs[2].value, 3);
   EXPECT_EQ(regs[3].value, 4);
 }
+
 }  // namespace
