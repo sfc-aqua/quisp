@@ -24,10 +24,11 @@ class Rule {
 
 class RuleSet {
  public:
-  RuleSet(const std::string& name) : name(name), rules(std::vector<Rule>()) {}
+  RuleSet(const std::string& name = "") : name(name), rules(std::vector<Rule>()) {}
   RuleSet(const std::string& name, const std::vector<Rule>& rules) : name(name), rules(rules) {}
   void finalize();
   int id;
+  int owner_addr;
   std::string name;
   std::vector<Rule> rules;
 };
