@@ -4,24 +4,20 @@
 #include "modules/QRSA/QRSA.h"
 #include "rules/Active/ActiveRuleSet.h"
 #include "runtime/types.h"
+#include "test.h"
 
 using namespace quisp::runtime;
 using namespace quisp::rules;
 using namespace quisp::rules::active;
+using namespace quisp_test;
 using quisp::modules::qubit_record::QubitRecord;
 namespace {
-
-struct MockRuleEngineCallback : public Runtime::ICallBack {
-  void freeAndResetQubit(IQubitRecord* qubit_ref) override {}
-  MeasurementOutcome measureQubitRandomly(IQubitRecord* qubit_ref) override { return MeasurementOutcome(); }
-  virtual void sendLinkTomographyResult(QNodeAddr partner_addr, int count, MeasurementOutcome outcome, bool is_finished) override {}
-};
 
 class RuntimeTest : public testing::Test {
  protected:
   void SetUp() {
     runtime = new Runtime();
-    runtime->callback = new MockRuleEngineCallback();
+    runtime->callback = new MockRuntimeCallback();
     runtime->rule_id = 0;
     runtime->cleanup();
     qubit = new QubitRecord{QNIC_E, 2, 3};
