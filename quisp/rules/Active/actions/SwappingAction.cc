@@ -48,6 +48,8 @@ cPacket *SwappingAction::run(cModule *re) {
   auto *left_partner_qubit = left_qubit->entangled_partner;
 
   if (right_partner_qubit == nullptr || left_partner_qubit == nullptr) {
+    // EV<<left
+    EV<<left_partner<<":"<<right_partner<<"\n";
     return generateError("Partner qubits are null");
   }
   // just swapping pointer.

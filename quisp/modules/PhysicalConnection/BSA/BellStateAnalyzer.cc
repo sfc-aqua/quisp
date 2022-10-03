@@ -26,8 +26,8 @@ namespace modules {
 class BellStateAnalyzer : public cSimpleModule {
  private:
   // for performance analysis
-  long n_res = 0;  ///< The number of resources for performance analysis
-  simsignal_t GOD_num_resSignal;  ///< The number of resources for signaling
+  // long n_res = 0;  ///< The number of resources for performance analysis
+  // simsignal_t GOD_dnum_resSignal;  ///< The number of resources for signaling
 
   // parameters
   double darkcount_probability;
@@ -78,7 +78,6 @@ class BellStateAnalyzer : public cSimpleModule {
 Define_Module(BellStateAnalyzer);
 
 void BellStateAnalyzer::initialize() {
-  GOD_num_resSignal = registerSignal("Num_Bell_state");
 
   darkcount_probability = par("darkcount_probability");
   required_precision = par("required_precision");
@@ -296,8 +295,8 @@ void BellStateAnalyzer::GOD_updateEntangledInfoParameters_of_qubits() {
     std::cout << "Entangling failed\n";
     error("Entangling failed");
   }
-  n_res++;
-  emit(GOD_num_resSignal, n_res);
+  // n_res++;
+  // emit(GOD_num_resSignal, n_res);
 }
 
 }  // namespace modules

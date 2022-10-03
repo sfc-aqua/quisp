@@ -30,5 +30,6 @@ class ActiveAction {
   virtual IStationaryQubit* getResource(int required_index, int partner);
   virtual void removeResource_fromRule(IStationaryQubit* qubit);
   cPacket* generateError(const char* msg);
+
 };
 }  // namespace quisp::rules::active::actions

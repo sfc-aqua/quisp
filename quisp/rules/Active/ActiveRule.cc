@@ -8,7 +8,9 @@ namespace quisp::rules::active {
 ActiveRule::ActiveRule(unsigned long ruleset_id, int rule_id, int shared_tag, std::string rule_name, std::vector<int> action_partners)
     : ruleset_id(ruleset_id), rule_id(rule_id), shared_tag(shared_tag), name(rule_name), action_partners(action_partners){};
 
-void ActiveRule::addResource(int address_entangled_with, IStationaryQubit *qubit) { resources.insert(std::make_pair(address_entangled_with, qubit)); }
+void ActiveRule::addResource(int address_entangled_with, IStationaryQubit *qubit) {
+  resources.insert(std::make_pair(address_entangled_with, qubit)); 
+}
 
 void ActiveRule::setCondition(ActiveCondition *c) { condition.reset(c); }
 

@@ -19,6 +19,8 @@ package modules.QRSA.RuleEngine;
 simple RuleEngine
 {
     parameters:
+        @signal[num_res](type="int");
+        @statistic[num_res](title="E2E Bell pair creation time"; record=vector; interpolationmode=sample-hold);
         int address;
         int number_of_qnics;
         int number_of_qnics_r;

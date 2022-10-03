@@ -25,6 +25,7 @@ cPacket *DoublePurifyAction::run(cModule *re) {
     return generateError("Qubit and Trash_qubit must be different.");
   }
   if (qubit == nullptr || trash_qubit_Z == nullptr || trash_qubit_X == nullptr) {
+    EV<<resource<<":"<<trash_resource_X<<":"<<trash_resource_Z<<"\n";
     return generateError("Not enough resource (Qubit and Trash_qubit) found. This should have been checked as a condition clause.");
   }
 

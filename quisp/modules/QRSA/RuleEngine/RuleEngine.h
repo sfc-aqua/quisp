@@ -117,6 +117,9 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
 
   utils::ComponentProvider provider;
   std::unique_ptr<IQNicStore> qnic_store = nullptr;
+
+  // simsignal_t num_res_signal;
+  // int num_total_res=0;
 };
 
 Define_Module(RuleEngine);

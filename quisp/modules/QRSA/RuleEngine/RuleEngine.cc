@@ -57,6 +57,8 @@ void RuleEngine::initialize() {
     tracker_accessible.push_back(true);
   }
   WATCH_VECTOR(tracker_accessible);
+
+  // num_res_signal = registerSignal("num_res");
 }
 
 void RuleEngine::handleMessage(cMessage *msg) {
@@ -641,7 +643,7 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int
         qubit = qubit_record->second;
         // 4. check which trial of purification
         if (qubit->action_index == index) {
-          // 5. unlock qubit for later use
+          // // 5. unlock qubit for later use
           qubit->Unlock();
           // remove qubit from resource list in the rule
           (*rule)->resources.erase(qubit_record);
@@ -898,6 +900,12 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // These are new partner's info
 
   int new_partner = swapr.new_partner;
+
+  // for statistics
+  // if (parentAddress == 1 && new_partner == 5){
+    // num_total_res++;
+    // emit(num_res_signal, num_total_res);
+  // }
   int operation_type = swapr.operation_type;
   int shared_tag = swapr.id.shared_tag;
   int qnic_address = routingdaemon->return_QNIC_address_to_destAddr(new_partner);
@@ -938,7 +946,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
     error("The qubit is not promoted from entanglement swapping to the next rule. no ruleset(%l) found", ruleset_id);
   }
   const auto &ruleset = *ruleset_result;
-
+  
   // The target rule must be wait rule that has a single action partner (swapper)
   for (int index = 0; index < ruleset->size(); index++) {
     auto target_rule_ptr = ruleset->getRule(index).get();

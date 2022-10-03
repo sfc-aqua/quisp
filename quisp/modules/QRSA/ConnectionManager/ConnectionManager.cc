@@ -348,8 +348,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
       auto right_qnic = getQnicInterface(right_node, left_node, path, qnics);
       // arguments: int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name
       for (int i = 0; i < num_remote_purification; i++) {
-        auto pur_rule_left = purifyRule(right_node, purification_type, threshold_fidelity, left_qnic.type, left_qnic.index, shared_tag);
-        auto pur_rule_right = purifyRule(left_node, purification_type, threshold_fidelity, right_qnic.type, right_qnic.index, shared_tag);
+        auto pur_rule_left = purifyRule(right_node, PurType::SINGLE_X, threshold_fidelity, left_qnic.type, left_qnic.index, shared_tag);
+        auto pur_rule_right = purifyRule(left_node, PurType::SINGLE_X, threshold_fidelity, right_qnic.type, right_qnic.index, shared_tag);
         shared_tag++;
         std::vector<int> left_partner = {right_node}, right_partner = {left_node};
         rules_map[left_node].push_back(std::move(pur_rule_left));  // add rule with partner info
@@ -397,13 +397,13 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
             rules_map[swapper_node].push_back(std::move(swapping_rule));
 
             // 2.2.6 Purification Rules
-            for (int i = 0; i < num_remote_purification; i++) {
-              auto pur_rule_left = purifyRule(right_partner, purification_type, threshold_fidelity, config.lqnic_type, config.lqnic_index, shared_tag);
-              auto pur_rule_right = purifyRule(left_partner, purification_type, threshold_fidelity, config.rqnic_type, config.rqnic_index, shared_tag);
-              shared_tag++;
-              rules_map[left_partner].push_back(std::move(pur_rule_left));
-              rules_map[right_partner].push_back(std::move(pur_rule_right));
-            }
+            // for (int i = 0; i < num_remote_purification; i++) {
+            //   auto pur_rule_left = purifyRule(right_partner, purification_type, threshold_fidelity, config.lqnic_type, config.lqnic_index, shared_tag);
+            //   auto pur_rule_right = purifyRule(left_partner, purification_type, threshold_fidelity, config.rqnic_type, config.rqnic_index, shared_tag);
+            //   shared_tag++;
+            //   rules_map[left_partner].push_back(std::move(pur_rule_left));
+            //   rules_map[right_partner].push_back(std::move(pur_rule_right));
+            // }
           }
         }
       }
@@ -460,7 +460,22 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   int num_measure = req->getNum_measure();
   auto initiator_qnic = getQnicInterface(initiator_address, responder_address, path, qnics);
   auto responder_qnic = getQnicInterface(responder_address, initiator_address, path, qnics);
-  // int partner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, std::string name
+
+
+  // Do purification before tomography
+  // if (es_with_purify){
+  //   auto pur_rule_initiator = purifyRule(responder_address, PurType::SINGLE_X, threshold_fidelity, initiator_qnic.type, initiator_qnic.index, shared_tag);
+  //   auto pur_rule_responder = purifyRule(initiator_address, PurType::SINGLE_X, threshold_fidelity, responder_qnic.type, responder_qnic.index, shared_tag);
+  //   rules_map[initiator_address].push_back(std::move(pur_rule_initiator));
+  //   rules_map[responder_address].push_back(std::move(pur_rule_responder));
+  //   shared_tag++;
+    // auto pur_rule_initiator = purifyRule(responder_address, PurType::Single_Z, threshold_fidelity, initiator_qnic.type, initiator_qnic.index, shared_tag);
+    // auto pur_rule_responder = purifyRule(initiator_address, PurType::Single_Z, threshold_fidelity, responder_qnic.type, responder_qnic.index, shared_tag);
+    // rules_map[initiator_address].push_back(std::move(pur_rule_initiator));
+    // rules_map[responder_address].push_back(std::move(pur_rule_responder));
+    // shared_tag++;
+  // }
+
   auto tomo_rule_initiator = tomographyRule(responder_address, initiator_address, num_measure, threshold_fidelity, initiator_qnic.type, initiator_qnic.index, shared_tag);
   auto tomo_rule_responder = tomographyRule(initiator_address, responder_address, num_measure, threshold_fidelity, responder_qnic.type, responder_qnic.index, shared_tag);
   shared_tag++;
