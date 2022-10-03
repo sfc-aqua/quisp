@@ -1,7 +1,7 @@
 #include "RuleSetConverter.h"
 #include <rules/Action.h>
-#include "rules/Clause.h"
-#include "runtime/opcode.h"
+#include <rules/Clause.h>
+#include <runtime/Runtime.h>
 
 namespace quisp::modules::rs_converter {
 
@@ -14,6 +14,8 @@ using rules::Tomography;
 using rules::Wait;
 using rules::WaitConditionClause;
 using runtime::InstructionTypes;
+
+using namespace runtime;
 
 RuleSet RuleSetConverter::construct(const RSData &data) {
   RuleSet rs;
@@ -54,7 +56,25 @@ Program RuleSetConverter::constructAction(const ActionData *data) {
     return Program{"EntanglementSwapping", {}};
   }
   if (auto *act = dynamic_cast<const Tomography *>(data)) {
-    return Program{"Tomography", {}};
+    auto q0 = 0;
+    auto count = RegId::REG0;
+    int max_count = 100;
+    QNodeAddr partner_addr = 1;
+    auto qubit_index = 0;  // former 'resource'
+    return Program{"Tomography",
+                   {
+                       // clang-format off
+INSTR_LOAD_RegId_MemoryKey_{{count, "count"}},
+INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, qubit_index}},
+INSTR_BNERR_Label_{"L1"},
+INSTR_ERROR_String_{"Qubit not found for mesaurement"},
+INSTR_MEASURE_RANDOM_MemoryKey_QubitId_{{"outcome", q0}, "L1"},
+INSTR_INC_RegId_{count},
+INSTR_STORE_MemoryKey_RegId_{{"count", count}},
+INSTR_FREE_QUBIT_QubitId_{q0},
+INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_{{partner_addr, count, "outcome", max_count}}
+                       // clang-format on
+                   }};
   }
   if (auto *act = dynamic_cast<const Wait *>(data)) {
     return Program{"Wait", {}};
