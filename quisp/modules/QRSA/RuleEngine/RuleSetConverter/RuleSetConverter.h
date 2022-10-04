@@ -15,6 +15,15 @@ using ActionData = quisp::rules::Action;
 using ClauseData = quisp::rules::Clause;
 using ConditionData = quisp::rules::Condition;
 
+using rules::EnoughResourceConditionClause;
+using rules::EntanglementSwapping;
+using rules::FidelityConditionClause;
+using rules::MeasureCountConditionClause;
+using rules::Purification;
+using rules::Tomography;
+using rules::Wait;
+using rules::WaitConditionClause;
+
 // Runtime's RuleSet representation
 using quisp::runtime::Program;
 using quisp::runtime::Rule;
@@ -26,9 +35,11 @@ class RuleSetConverter {
 
   static Program constructAction(const ActionData* data);
   static Program constructCondition(const ConditionData* data);
-  static Program constructEntanglementSwappingAction(const ActionData* data);
-  static Program constructPurificationAction(const ActionData* data);
-  static Program constructWaitAction(const ActionData* data);
-  static Program constructTomographyAction(const ActionData* data);
+
+  // actions
+  static Program constructEntanglementSwappingAction(const EntanglementSwapping* data);
+  static Program constructPurificationAction(const Purification* data);
+  static Program constructWaitAction(const Wait* data);
+  static Program constructTomographyAction(const Tomography* data);
 };
 }  // namespace quisp::modules::rs_converter
