@@ -14,7 +14,8 @@ class Program {
 
 class Rule {
  public:
-  Rule(const Program& condition, const Program& action) : condition(condition), action(action) {}
+  Rule(const Program& condition, const Program& action) : Rule("", condition, action) {}
+  Rule(const std::string& name, const Program& condition, const Program& action) : condition(condition), action(action) {}
   void finalize();
 
   int id = -1;
