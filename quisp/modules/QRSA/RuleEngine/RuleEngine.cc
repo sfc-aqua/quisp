@@ -14,6 +14,7 @@
 #include "QNicStore/QNicStore.h"
 #include "RuleEngine.h"
 #include "RuleSetConverter/RuleSetConverter.h"
+#include "runtime/Runtime.h"
 
 namespace quisp::modules {
 
@@ -274,14 +275,20 @@ void RuleEngine::handleMessage(cMessage *msg) {
     RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
 
-    rulesets.emplace_back(RuleSetConverter::construct(ruleset));
+    auto rs = RuleSetConverter::construct(ruleset);
+    auto runtime = runtime::Runtime();
+    runtime.assignRuleSet(rs);
+    runtimes.emplace_back(runtime);
 
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
     if (pkt->getApplication_type() != 0) error("This application is not recognized yet");
     auto serialized_ruleset = pkt->getRuleSet();
     RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
-    rulesets.emplace_back(RuleSetConverter::construct(ruleset));
+    auto rs = RuleSetConverter::construct(ruleset);
+    auto runtime = runtime::Runtime();
+    runtime.assignRuleSet(rs);
+    runtimes.emplace_back(runtime);
 
   } else if (auto *pkt = dynamic_cast<StopEmitting *>(msg)) {
     terminated_qnic[pkt->getQnic_address()] = true;
