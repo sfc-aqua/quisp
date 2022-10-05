@@ -1075,38 +1075,20 @@ double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, 
 // Invoked whenever a new resource (entangled with neighbor) has been created.
 // Allocates those resources to a particular ruleset, from top to bottom (all of it).
 void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
-  if (!(rp.size() > 0)) {  // If no ruleset running, do nothing.
-    return;
-  }
-  // If there are running rulesets, then try to allocate resource to it
-  for (auto &&ruleset : rp) {  // In a particular RuleSet
+  for (auto &runtime : runtimes) {
+    auto partners = runtime.partners;
+    for (auto partner_addr : partners) {
+      auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, partner_addr);
+      for (auto it = range.first; it != range.second; ++it) {
+        auto qubit_record = it->second;
+        auto *qubit = provider.getStationaryQubit(qubit_record);
 
-    // take the first ruleset
-    if (ruleset->empty()) {
-      error("RuleSet with no Rule found. Probably not what you want!");
-    }
-    int assigned = 0;
-    for (auto rule = ruleset->cbegin(); rule != ruleset->cend(); rule++) {
-      // 1. loop for all rulesets and take the partners for each rule
-      for (int action_partner : (*rule)->action_partners) {
-        // 2. take available Bell pairs between action partner
-        // range contains the begin and end iterators of entangled qubits with the specified qnic_type, qnic_index and partner addr.
-        auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, action_partner);
-        for (auto it = range.first; it != range.second; ++it) {
-          auto qubit_record = it->second;
-          auto *qubit = provider.getStationaryQubit(qubit_record);
-          // 3. if the qubit is not allocated yet, and the qubit has not been allocated to this rule,
-          // if the qubit has already been assigned to the rule, the qubit is not allocatable to that rule
-          if (!qubit_record->isAllocated() && !qubit_record->isRuleApplied((*rule)->rule_id)) {
-            if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
-              error("Freshing qubit wrong");
-            }
-            // 5. increment the assined counter and set allocated flag
-            assigned++;
-            qubit_record->setAllocated(true);
-            qubit_record->markRuleApplied((*rule)->rule_id);
-            (*rule)->addResource(action_partner, qubit);
-          }
+        // 3. if the qubit is not allocated yet, and the qubit has not been allocated to this rule,
+        // if the qubit has already been assigned to the rule, the qubit is not allocatable to that rule
+        if (!qubit_record->isAllocated()) {  //&& !qubit_record->isRuleApplied((*rule)->rule_id
+          qubit_record->setAllocated(true);
+          // qubit_record->markRuleApplied((*rule)->rule_id);
+          runtime.assignQubitToRuleSet(partner_addr, qubit_record);
         }
       }
     }
@@ -1114,6 +1096,9 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
 }
 
 void RuleEngine::traverseThroughAllProcesses2() {
+  for (auto &runtime : runtimes) {
+    runtime.exec(runtime.ruleset);
+  }
   int number_of_process = rp.size();  // Number of running processes (in all QNICs).
 
   if (number_of_process == 0) {
