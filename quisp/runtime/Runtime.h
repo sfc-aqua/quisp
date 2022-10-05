@@ -65,7 +65,6 @@ class Runtime {
 
     // // Post processing
     virtual void freeAndResetQubit(IQubitRecord*) = 0;
-    // void setNameToResource() {}
     // void update() {}
   };
 
@@ -113,5 +112,7 @@ class Runtime {
   LabelMap label_map;
   Memory memory;
   bool debugging = false;
+  RuleSet ruleset;
+  std::set<QNodeAddr> partners;
 };
 }  // namespace quisp::runtime
