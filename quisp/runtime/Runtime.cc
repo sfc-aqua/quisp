@@ -56,6 +56,11 @@ void Runtime::collectLabels(Program& program) {
 }
 
 void Runtime::evalOperation(InstructionTypes instruction) { std::visit(visitor, instruction); }
+void Runtime::assignRuleSet(const RuleSet& _ruleset) {
+  ruleset = _ruleset;
+  ruleset.finalize();
+  partners = ruleset.partners;
+}
 void Runtime::assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_record) { qubits.emplace(std::make_pair(partner_addr, 0), qubit_record); }
 const Register& Runtime::getReg(RegId regId) const { return registers[(int)regId]; }
 unsigned long long Runtime::getRegVal(RegId regId) const { return registers[(int)regId].value; }

@@ -28,6 +28,8 @@ class RuleSet {
   RuleSet(const std::string& name = "") : name(name), rules(std::vector<Rule>()) {}
   RuleSet(const std::string& name, const std::vector<Rule>& rules) : name(name), rules(rules) {}
   void finalize();
+  std::set<QNodeAddr> partners;
+  bool finalized = false;
   int id;
   int owner_addr;
   std::string name;
