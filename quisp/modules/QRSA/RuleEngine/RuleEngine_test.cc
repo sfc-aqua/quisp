@@ -10,16 +10,19 @@
 #include "IRuleEngine.h"
 #include "RuleEngine.h"
 
-#include "modules/QNIC.h"
-#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
-#include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
-#include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
-#include "modules/QRSA/QRSA.h"
-#include "modules/QRSA/RealTimeController/IRealTimeController.h"
-#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
-#include "modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h"
-#include "rules/Active/ActiveAction.h"
-#include "rules/Active/ActiveRuleSet.h"
+#include <modules/QNIC.h>
+#include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
+#include <modules/QRSA/HardwareMonitor/HardwareMonitor.h>
+#include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
+#include <modules/QRSA/QRSA.h>
+#include <modules/QRSA/RealTimeController/IRealTimeController.h>
+#include <modules/QRSA/RoutingDaemon/RoutingDaemon.h>
+#include <modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h>
+#include <rules/Active/ActiveAction.h>
+#include <rules/Active/ActiveRuleSet.h>
+#include <runtime/RuleSet.h>
+#include <runtime/Runtime.h>
+#include <runtime/opcode.h>
 
 ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, partner);
 ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, num_resource_required);
@@ -75,6 +78,9 @@ using quisp::modules::qubit_record::QubitRecord;
 using namespace quisp_test;
 using namespace testing;
 using quisp::modules::Logger::DisabledLogger;
+using quisp::runtime::InstructionTypes;
+using quisp::runtime::Program;
+using quisp::runtime::Runtime;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
@@ -109,6 +115,7 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
   using quisp::modules::RuleEngine::initialize;
   using quisp::modules::RuleEngine::par;
   using quisp::modules::RuleEngine::qnic_store;
+  using quisp::modules::RuleEngine::runtimes;
   using quisp::modules::RuleEngine::storeCheck_Purification_Agreement;
   using quisp::modules::RuleEngine::Unlock_resource_and_discard;
   using quisp::modules::RuleEngine::Unlock_resource_and_upgrade_stage;
@@ -515,26 +522,32 @@ TEST(RuleEngineTest, resourceAllocation) {
   rule_engine->setAllResources(0, qubit_record0);
   rule_engine->setAllResources(1, qubit_record1);
   rule_engine->setAllResources(2, qubit_record2);
-  auto* rs = new ActiveRuleSet(0, 0);
-  auto rule = std::make_unique<ActiveRule>(0, 0, 0);
-  // owner address,
-  auto* action = new RandomMeasureAction(0, 0, 0, 1, QNIC_E, 3, 1, 10);
+  // auto* rs = new ActiveRuleSet(0, 0);
+  // auto rule = std::make_unique<ActiveRule>(0, 0, 0);
+  // // owner address,
+  // auto* action = new RandomMeasureAction(0, 0, 0, 1, QNIC_E, 3, 1, 10);
 
-  rule->setAction(action);
-  rule->action_partners = {1};
-  rs->addRule(std::move(rule));
-  rule_engine->rp.insert(rs);
+  // rule->setAction(action);
+  // rule->action_partners = {1};
+  // rs->addRule(std::move(rule));
+  // rule_engine->rp.insert(rs);
+  int q0 = 0;
+  int partner_addr = 1;
+  // this action needs a resource qubit that is entangled with partner 1.
+  Program test_action{"testAction", {quisp::runtime::INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, 0}}}};
+  Program empty_condition{"emptyCondition", {}};
+  auto rs = quisp::runtime::RuleSet{"test rs", {quisp::runtime::Rule{"test", empty_condition, test_action}}};
+  auto runtime = quisp::runtime::Runtime{};
+  runtime.assignRuleSet(rs);
+  rule_engine->runtimes.push_back(runtime);
 
   rule_engine->ResourceAllocation(QNIC_E, 3);
   EXPECT_TRUE(qubit_record1->isAllocated());
 
   // resource allocation assigns a corresponding qubit to action's resource
-  auto& _rs = rule_engine->rp[0];
-  EXPECT_NE(_rs, nullptr);
-  EXPECT_EQ(_rs->size(), 1);
-  auto& _rule = _rs->getRule(0);
-  EXPECT_FALSE(_rule == nullptr);
-  EXPECT_EQ(_rule->resources.size(), 1);
+  auto& rt = rule_engine->runtimes[0];
+  EXPECT_EQ(rt.ruleset.rules.size(), 1);
+  EXPECT_EQ(rt.qubits.size(), 1);
   delete mockHardwareMonitor;
   delete routingdaemon;
 }
