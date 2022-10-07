@@ -23,7 +23,7 @@ if type "docker" > /dev/null 2>&1; then
     echo "docker already installed"
 else
     brew install docker
-    brew cask install docker
+    brew install --cask docker
 fi
 
 if type "socat" > /dev/null 2>&1; then
@@ -35,7 +35,7 @@ fi
 if type "xterm" > /dev/null 2>&1; then
     echo "xterm already installed"
 else
-    brew cask install xquartz
+    brew install --cask xquartz
 fi
 
 echo "All tools are successfully installed! Don't forget to reboot your laptop!" 
