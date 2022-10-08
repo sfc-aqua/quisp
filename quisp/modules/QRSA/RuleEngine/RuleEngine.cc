@@ -1078,7 +1078,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
   for (auto &runtime : runtimes) {
     auto partners = runtime.partners;
     for (auto partner_addr : partners) {
-      auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, partner_addr);
+      auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, partner_addr.val);
       for (auto it = range.first; it != range.second; ++it) {
         auto qubit_record = it->second;
         auto *qubit = provider.getStationaryQubit(qubit_record);
