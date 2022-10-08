@@ -1,7 +1,7 @@
-#include "Runtime.h"
-#include <cstddef>
 #include <stdexcept>
 #include <variant>
+
+#include "Runtime.h"
 #include "runtime/Value.h"
 #include "runtime/types.h"
 
