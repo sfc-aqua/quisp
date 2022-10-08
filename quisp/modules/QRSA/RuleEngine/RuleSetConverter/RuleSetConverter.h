@@ -25,6 +25,8 @@ using rules::Wait;
 using rules::WaitConditionClause;
 
 // Runtime's RuleSet representation
+using quisp::runtime::Label;
+using quisp::runtime::MemoryKey;
 using quisp::runtime::Program;
 using quisp::runtime::Rule;
 using quisp::runtime::RuleSet;

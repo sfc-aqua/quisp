@@ -78,6 +78,7 @@ using namespace quisp_test;
 using namespace testing;
 using quisp::runtime::InstructionTypes;
 using quisp::runtime::Program;
+using quisp::runtime::QNodeAddr;
 using quisp::runtime::Runtime;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
@@ -528,7 +529,7 @@ TEST(RuleEngineTest, resourceAllocation) {
   // rs->addRule(std::move(rule));
   // rule_engine->rp.insert(rs);
   int q0 = 0;
-  int partner_addr = 1;
+  QNodeAddr partner_addr{1};
   // this action needs a resource qubit that is entangled with partner 1.
   Program test_action{"testAction", {quisp::runtime::INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, 0}}}};
   Program empty_condition{"emptyCondition", {}};
