@@ -3,6 +3,7 @@
 #include <modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h>
 #include "modules/QRSA/QRSA.h"
 #include "rules/Active/ActiveRuleSet.h"
+#include "runtime/InstructionVisitor.h"
 #include "runtime/types.h"
 #include "test.h"
 
@@ -54,25 +55,25 @@ INSTR_DEBUG_RegId_{RegId::REG0},
 }
 
 TEST_F(RuntimeTest, evalQubitIdOperation) {
-  auto q0 = 0;
+  QubitId q0{0};
   auto count = RegId::REG0;
   int max_count = 100;
-  QNodeAddr partner_addr = 1;
+  QNodeAddr partner_addr{1};
   auto qubit_index = 0;  // former 'resource'
   runtime->assignQubitToRuleSet(partner_addr, qubit);
-  runtime->debugging = true;
+  runtime->debugging = false;
   Program program{"RandomMeasureAction",
                   {
                       // clang-format off
-INSTR_LOAD_RegId_MemoryKey_{{count, "count"}},
+INSTR_LOAD_RegId_MemoryKey_{{count, MemoryKey{"count"}}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, qubit_index}},
-INSTR_BNERR_Label_{"L1"},
+INSTR_BNERR_Label_{Label{"L1"}},
 INSTR_ERROR_String_{"Qubit not found for mesaurement"},
-INSTR_MEASURE_RANDOM_MemoryKey_QubitId_{{"outcome", q0}, "L1"},
+INSTR_MEASURE_RANDOM_MemoryKey_QubitId_{{MemoryKey{"outcome"}, q0}, "L1"},
 INSTR_INC_RegId_{count},
-INSTR_STORE_MemoryKey_RegId_{{"count", count}},
+INSTR_STORE_MemoryKey_RegId_{{MemoryKey{"count"}, count}},
 INSTR_FREE_QUBIT_QubitId_{q0},
-INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_{{partner_addr, count, "outcome", max_count}}
+INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_{{partner_addr, count, MemoryKey{"outcome"}, max_count}}
                       // clang-format on
                   }};
   runtime->eval(program);
@@ -84,7 +85,7 @@ TEST_F(RuntimeTest, jump) {
                   {
                       // clang-format off
 INSTR_SET_RegId_int_{{r0, 10}},
-INSTR_JMP_Label_{"test"},
+INSTR_JMP_Label_{Label{"test"}},
 INSTR_ADD_RegId_RegId_int_{{r0, r0, 1}},
 INSTR_NOP_int_{0, "test"}
                       // clang-format on
@@ -100,7 +101,7 @@ TEST_F(RuntimeTest, branch_if_no_error) {
                   {
                       // clang-format off
 INSTR_SET_RegId_int_{{r0, 10}},
-INSTR_BNERR_Label_{"test"},
+INSTR_BNERR_Label_{Label{"test"}},
 // skip until "test" label
 INSTR_ADD_RegId_RegId_int_{{r0, r0, 3}},
 INSTR_NOP_int_{0, "test"}
@@ -117,10 +118,10 @@ TEST_F(RuntimeTest, memoryOperations) {
                   {
                       // clang-format off
 INSTR_SET_RegId_int_{{r0, 10}},
-INSTR_STORE_MemoryKey_RegId_{{"count", r0}, "INIT"},
+INSTR_STORE_MemoryKey_RegId_{{MemoryKey{"count"}, r0}, "INIT"},
 INSTR_SUB_RegId_RegId_int_{{r0, r0, 1}},
-INSTR_BNZ_Label_RegId_{{"INIT", r0}},
-INSTR_LOAD_RegId_MemoryKey_{{r0, "count"}}
+INSTR_BNZ_Label_RegId_{{Label{"INIT"}, r0}},
+INSTR_LOAD_RegId_MemoryKey_{{r0,MemoryKey{ "count"}}}
                       // clang-format on
                   }};
   runtime->cleanup();
