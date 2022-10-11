@@ -31,6 +31,10 @@
 
 using namespace omnetpp;
 
+namespace quisp::modules::runtime_callback {
+struct RuntimeCallback;
+}
+
 namespace quisp::modules {
 using namespace rules;
 using namespace rules::active;
@@ -48,6 +52,7 @@ using qubit_record::IQubitRecord;
 
 class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
  public:
+  friend runtime_callback::RuntimeCallback;
   RuleEngine();
   int parentAddress;  // Parent QNode's address
   EmitPhotonRequest *emt;
@@ -119,8 +124,8 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   utils::ComponentProvider provider;
   std::unique_ptr<IQNicStore> qnic_store = nullptr;
 
-  std::vector<runtime::RuleSet> rulesets;
   std::vector<runtime::Runtime> runtimes;
+  std::unique_ptr<runtime::Runtime::ICallBack> runtime_callback;
 };
 
 Define_Module(RuleEngine);

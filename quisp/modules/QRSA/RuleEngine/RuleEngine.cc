@@ -14,6 +14,7 @@
 #include "QNicStore/QNicStore.h"
 #include "RuleEngine.h"
 #include "RuleSetConverter/RuleSetConverter.h"
+#include "RuntimeCallback.h"
 #include "runtime/Runtime.h"
 
 namespace quisp::modules {
@@ -22,6 +23,7 @@ using namespace rules;
 using namespace rules::active;
 using qnic_store::QNicStore;
 using rs_converter::RuleSetConverter;
+using runtime_callback::RuntimeCallback;
 
 RuleEngine::RuleEngine() : provider(utils::ComponentProvider{this}) {}
 
@@ -60,6 +62,8 @@ void RuleEngine::initialize() {
     tracker_accessible.push_back(true);
   }
   WATCH_VECTOR(tracker_accessible);
+
+  runtime_callback = std::make_unique<RuntimeCallback>(this);
 }
 
 void RuleEngine::handleMessage(cMessage *msg) {
@@ -276,9 +280,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     ruleset.deserialize_json(serialized_ruleset);
 
     auto rs = RuleSetConverter::construct(ruleset);
-    auto runtime = runtime::Runtime();
-    runtime.assignRuleSet(rs);
-    runtimes.emplace_back(runtime);
+    runtimes.emplace_back(runtime::Runtime(rs, runtime_callback.get()));
 
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
     if (pkt->getApplication_type() != 0) error("This application is not recognized yet");
@@ -286,9 +288,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
     auto rs = RuleSetConverter::construct(ruleset);
-    auto runtime = runtime::Runtime();
-    runtime.assignRuleSet(rs);
-    runtimes.emplace_back(runtime);
+    runtimes.emplace_back(runtime::Runtime(rs, runtime_callback.get()));
 
   } else if (auto *pkt = dynamic_cast<StopEmitting *>(msg)) {
     terminated_qnic[pkt->getQnic_address()] = true;
