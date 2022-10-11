@@ -6,6 +6,13 @@
 
 namespace quisp::runtime {
 
+InstructionVisitor::InstructionVisitor(const InstructionVisitor& visitor) { runtime = visitor.runtime; }
+
+InstructionVisitor& InstructionVisitor::operator=(const InstructionVisitor& visitor) {
+  runtime = visitor.runtime;
+  return *this;
+}
+
 void InstructionVisitor::operator()(INSTR_NOP_int_ instruction) {}
 
 void InstructionVisitor::operator()(INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_ instruction) {
@@ -96,6 +103,7 @@ void InstructionVisitor::operator()(INSTR_INC_RegId_ instruction) {
 void InstructionVisitor::operator()(INSTR_ERROR_String_ instruction) {
   auto [message] = instruction.args;
   runtime->setError(message);
+  runtime->should_exit = true;
 }
 
 void InstructionVisitor::operator()(INSTR_DEBUG_RUNTIME_STATE_None_ _instruction) { runtime->debugRuntimeState(); }
@@ -154,9 +162,10 @@ void InstructionVisitor::operator()(INSTR_SET_RegId_int_ instruction) {
 
 void InstructionVisitor::operator()(INSTR_GET_QUBIT_QubitId_QNodeAddr_int_ instruction) {
   auto [qubit_id, partner_addr, qubit_resource_index] = instruction.args;
-  auto *qubit_ref = runtime->getQubitByPartnerAddr(partner_addr, qubit_resource_index);
+  auto* qubit_ref = runtime->getQubitByPartnerAddr(partner_addr, qubit_resource_index);
   if (qubit_ref == nullptr) {
     runtime->setError("Qubit not found");
+    return;
   }
   runtime->setQubit(qubit_ref, qubit_id);
 }

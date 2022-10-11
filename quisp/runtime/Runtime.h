@@ -27,7 +27,7 @@ struct RuntimeError {
 
 struct Register {
   const String name;
-  unsigned long long value;
+  unsigned long long value = 0;
 };
 
 struct QubitResourceHash {
@@ -70,6 +70,8 @@ class Runtime {
   };
 
   Runtime();
+  Runtime(const Runtime&);
+  Runtime(const RuleSet& ruleset, ICallBack* callback);
   ~Runtime();
   void assignRuleSet(const RuleSet& ruleset);
   void cleanup();
@@ -113,6 +115,7 @@ class Runtime {
   LabelMap label_map;
   Memory memory;
   bool debugging = false;
+  bool should_exit = false;
   RuleSet ruleset;
   std::set<QNodeAddr> partners;
 };
