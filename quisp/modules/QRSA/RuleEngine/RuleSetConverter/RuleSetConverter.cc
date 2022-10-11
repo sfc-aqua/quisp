@@ -1,8 +1,12 @@
 #include "RuleSetConverter.h"
+
+#include <stdexcept>
+#include <string>
+#include <vector>
+
 #include <rules/Action.h>
 #include <rules/Clause.h>
 #include <runtime/Runtime.h>
-#include <stdexcept>
 
 namespace quisp::modules::rs_converter {
 
