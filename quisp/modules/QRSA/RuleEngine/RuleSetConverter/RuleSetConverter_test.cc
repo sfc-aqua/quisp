@@ -1,7 +1,11 @@
-#include <gtest/gtest.h>
-#include <rules/RuleSet.h>
-#include <iostream>
 #include "RuleSetConverter.h"
+
+#include <gtest/gtest.h>
+#include <iostream>
+#include <nlohmann/json.hpp>
+
+#include <rules/RuleSet.h>
+
 namespace {
 using namespace quisp::modules::rs_converter;
 using RSData = quisp::rules::RuleSet;
