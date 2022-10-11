@@ -2,12 +2,22 @@
 #include <variant>
 
 #include "Runtime.h"
+#include "runtime/InstructionVisitor.h"
 #include "runtime/Value.h"
 #include "runtime/types.h"
 
 namespace quisp::runtime {
+Runtime::Runtime(const Runtime& rt) : Runtime() {
+  rule_id = rt.rule_id;
+  debugging = rt.debugging;
+  ruleset = rt.ruleset;
+  partners = rt.partners;
+  callback = rt.callback;
+}
 
 Runtime::Runtime() : visitor(InstructionVisitor{this}) {}
+
+Runtime::Runtime(const RuleSet& ruleset, ICallBack* cb) : visitor(InstructionVisitor{this}), callback(cb) { assignRuleSet(ruleset); }
 Runtime::~Runtime() {}
 
 void Runtime::exec(RuleSet ruleset) {
@@ -23,10 +33,12 @@ void Runtime::exec(RuleSet ruleset) {
 }
 
 void Runtime::eval(Program& program) {
+  should_exit = false;
   collectLabels(program);
   auto& opcodes = program.opcodes;
   auto len = opcodes.size();
   for (pc = 0; pc < len; pc++) {
+    if (should_exit) return;
     if (debugging) {
       debugRuntimeState();
       std::cout << "op: " << std::visit([](auto& op) { return op.toString(); }, opcodes[pc]) << std::endl;
@@ -56,16 +68,21 @@ void Runtime::collectLabels(Program& program) {
 }
 
 void Runtime::evalOperation(InstructionTypes instruction) { std::visit(visitor, instruction); }
+
 void Runtime::assignRuleSet(const RuleSet& _ruleset) {
   ruleset = _ruleset;
   ruleset.finalize();
   partners = ruleset.partners;
 }
+
 void Runtime::assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_record) { qubits.emplace(std::make_pair(partner_addr, 0), qubit_record); }
 const Register& Runtime::getReg(RegId regId) const { return registers[(int)regId]; }
 unsigned long long Runtime::getRegVal(RegId regId) const { return registers[(int)regId].value; }
 void Runtime::setRegVal(RegId regId, unsigned long long val) { registers[(int)regId].value = val; }
-void Runtime::setQubit(IQubitRecord* qubit_ref, QubitId qubit_id) { named_qubits.emplace(qubit_id, qubit_ref); }
+void Runtime::setQubit(IQubitRecord* qubit_ref, QubitId qubit_id) {
+  assert(qubit_ref != nullptr);
+  named_qubits.insert({qubit_id, qubit_ref});
+}
 IQubitRecord* Runtime::getQubitByPartnerAddr(QNodeAddr partner_addr, int index) {
   auto it = qubits.find({partner_addr, rule_id});
   for (int i = 0; it != qubits.cend(); it++, i++) {
@@ -94,8 +111,9 @@ void Runtime::setError(const String& message) { error = new RuntimeError(message
 void Runtime::storeVal(MemoryKey key, MemoryValue val) { memory.insert_or_assign(key, val); }
 void Runtime::loadVal(MemoryKey key, RegId reg_id) {
   auto it = memory.find(key);
-  if (it == memory.end()) return;
-  setRegVal(reg_id, it->second.intValue());
+  if (it != memory.end()) {
+    setRegVal(reg_id, it->second.intValue());
+  }
 }
 
 MemoryValue Runtime::loadVal(MemoryKey key) {
