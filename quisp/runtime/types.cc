@@ -54,6 +54,18 @@ std::ostream& operator<<(std::ostream& stream, const RegId& value) {
   return stream;
 };
 
+std::ostream& operator<<(std::ostream& stream, const ReturnCode& value) {
+  switch (value) {
+    case ReturnCode::COND_FAILED:
+      stream << std::string("COND_FAILED");
+      break;
+    case ReturnCode::COND_PASSED:
+      stream << std::string("COND_PASSED");
+      break;
+  }
+  return stream;
+};
+
 std::ostream& operator<<(std::ostream& stream, const Basis& value) {
   switch (value) {
     case Basis::X:

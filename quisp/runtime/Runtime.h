@@ -62,11 +62,15 @@ class Runtime {
     virtual void gateZ(IQubitRecord*) = 0;
 
     // // Messaging
-    virtual void sendLinkTomographyResult(QNodeAddr partner_addr, int count, MeasurementOutcome outcome, bool is_finished) = 0;
+    virtual void sendLinkTomographyResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, int count,
+                                          MeasurementOutcome outcome, bool is_finished) = 0;
+    virtual void sendPurificationResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, bool result) = 0;
 
     // // Post processing
     virtual void freeAndResetQubit(IQubitRecord*) = 0;
     // void update() {}
+
+    virtual bool isQubitLocked(IQubitRecord* const) = 0;
   };
 
   Runtime();
@@ -98,6 +102,7 @@ class Runtime {
   void freeQubit(QubitId);
   void gateX(QubitId);
   void gateZ(QubitId);
+  bool isQubitLocked(IQubitRecord* const);
 
   // related components
   InstructionVisitor visitor;
