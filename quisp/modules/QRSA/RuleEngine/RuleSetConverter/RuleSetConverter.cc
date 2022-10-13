@@ -23,8 +23,8 @@ RuleSet RuleSetConverter::construct(const RSData &data) {
   for (auto &rule_data : rules_data) {
     auto condition = constructCondition(rule_data->condition.get());
     auto action = constructAction(rule_data->action.get());
-    rs.rules.emplace_back(Rule{rule_data->name, rule_data->shared_tag, action, action});
-    std::cout << const_cast<RSData &>(data).serialize_json() << std::endl;
+    rs.rules.emplace_back(Rule{rule_data->name, rule_data->shared_tag, condition, action});
+    // std::cout << const_cast<RSData &>(data).serialize_json() << std::endl;
   }
   return rs;
 }
