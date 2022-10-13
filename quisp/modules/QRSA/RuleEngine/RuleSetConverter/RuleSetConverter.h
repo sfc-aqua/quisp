@@ -5,6 +5,8 @@
 #include <rules/Rule.h>
 #include <rules/RuleSet.h>
 #include <runtime/RuleSet.h>
+#include <runtime/types.h>
+#include <cstddef>
 
 namespace quisp::modules::rs_converter {
 
@@ -30,6 +32,7 @@ using quisp::runtime::MemoryKey;
 using quisp::runtime::Program;
 using quisp::runtime::Rule;
 using quisp::runtime::RuleSet;
+const nullptr_t None = nullptr;
 
 class RuleSetConverter {
  public:
