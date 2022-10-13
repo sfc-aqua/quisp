@@ -101,18 +101,13 @@ void RuleEngine::handleMessage(cMessage *msg) {
     clearTrackerTable(pk->getSrcAddr(), pk->getInternal_qnic_address());
 
     // Second, schedule the next burst by referring to the received timing information.
-    int qnic_address, qnic_type;
-    int qnic_index;
+    int qnic_address;
     if (pk->getInternal_qnic_address() == -1) {  // destination hom is outside this node.
       InterfaceInfo inf = getInterface_toNeighbor(pk->getSrcAddr());
-      qnic_index = inf.qnic.index;
       qnic_address = inf.qnic.address;
-      qnic_type = QNIC_E;
       // neighborQNodeAddress = inf.neighborQNode_address;
     } else {  // destination hom is in the qnic in this node. This gets invoked when the request from internal hom is send from the same node.
-      qnic_index = pk->getInternal_qnic_index();
       qnic_address = pk->getInternal_qnic_address();
-      qnic_type = QNIC_R;
     }
 
     if (terminated_qnic[qnic_address]) {
@@ -164,7 +159,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     // Received a tomography rule set.
     // std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
     auto *ruleset = const_cast<ActiveRuleSet *>(pk->getActiveRuleSet());
-    int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
+    // int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
     std::cout << "Process size is ...." << ruleset->size() << " node[" << parentAddress << "\n";
     // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
     // ResourceAllocation();
@@ -442,6 +437,7 @@ ActiveAction *RuleEngine::constructAction(std::unique_ptr<Action> action, unsign
     auto qnic_interface = act->qnic_interfaces.at(0);
     return new RandomMeasureAction(ruleset_id, rule_id, act->owner_address, qnic_interface.partner_addr, qnic_interface.qnic_type, qnic_interface.qnic_id, 0, act->num_measurement);
   }
+  return nullptr;
 }
 
 void RuleEngine::storeCheck_Purification_Agreement(purification_result pur_result) {
@@ -599,7 +595,7 @@ void RuleEngine::Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int
               return;
             }
           }
-          error("next rule not found: RuleSetID: %l, RuleId: %l, index: %d", ruleset_id, rule_id, index);
+          error("next rule not found: RuleSetID: %lu, RuleId: %d, index: %d", ruleset_id, rule_id, index);
         }
       }
     }
@@ -665,7 +661,6 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
 
   PhotonTransmissionConfig transmission_config;
   int destAddr = pk->getSrcAddr();  // The destination is where the request is generated (source of stand-alone or internal BSA node).
-  bool internal = false;  // for internal hom?
   switch (qnic_type) {
     case QNIC_E: {
       InterfaceInfo inf = getInterface_toNeighbor(destAddr);
@@ -676,7 +671,6 @@ void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qn
     case QNIC_R:
       transmission_config.qnic_index = pk->getInternal_qnic_index();
       transmission_config.qnic_address = pk->getInternal_qnic_address();
-      internal = true;
       break;
     case QNIC_RP:
       error("This is not implemented yet");
