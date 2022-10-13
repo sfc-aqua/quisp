@@ -169,6 +169,5 @@ TEST(RSConverterTest, init) {
   RSData rs_data;
   rs_data.deserialize_json(serialized_ruleset);
   RuleSet rs = RuleSetConverter::construct(rs_data);
-  std::cout << "finish" << std::endl;
 }
 }  // namespace

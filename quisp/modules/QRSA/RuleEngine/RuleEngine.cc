@@ -1093,6 +1093,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
   for (auto &runtime : runtimes) {
     runtime.exec(runtime.ruleset);
   }
+  return;
   int number_of_process = rp.size();  // Number of running processes (in all QNICs).
 
   if (number_of_process == 0) {
@@ -1226,7 +1227,7 @@ void RuleEngine::traverseThroughAllProcesses2() {
           send(pkt_for_responder, "RouterPort$o");
         } else if (dynamic_cast<Error *>(pk) != nullptr) {
           Error *err = check_and_cast<Error *>(pk);
-          error(err->getError_text());
+          error("%s", err->getError_text());
           delete pk;
         } else {
           error("Unknown return packet from action.");
