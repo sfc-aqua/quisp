@@ -15,5 +15,6 @@ class MockRuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   MOCK_METHOD(void, gateZ, (IQubitRecord*), (override));
   MOCK_METHOD(void, sendLinkTomographyResult, (QNodeAddr partner_addr, int count, MeasurementOutcome outcome, bool is_finished), (override));
   MOCK_METHOD(void, freeAndResetQubit, (IQubitRecord*), (override));
+  MOCK_METHOD(bool, isQubitLocked, (IQubitRecord* const), (override));
 };
 }  // namespace quisp_test
