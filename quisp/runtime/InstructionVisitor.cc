@@ -13,13 +13,33 @@ InstructionVisitor& InstructionVisitor::operator=(const InstructionVisitor& visi
   return *this;
 }
 
-void InstructionVisitor::operator()(INSTR_NOP_int_ instruction) {}
-
+void InstructionVisitor::operator()(INSTR_NOP_None_ instruction) {}
+void InstructionVisitor::operator()(INSTR_RET_ReturnCode_ instruction) { auto [return_code] = instruction.args; }
+void InstructionVisitor::operator()(INSTR_BRANCH_IF_LOCKED_Label_RegId_ instruction) {
+  auto [label, qubit_id_reg] = instruction.args;
+  auto qubit_id = runtime->getRegVal(qubit_id_reg);
+  auto* qubit = runtime->getQubitByQubitId(qubit_id);
+  if (runtime->isQubitLocked(qubit)) {
+    runtime->jumpTo(label);
+  }
+}
 void InstructionVisitor::operator()(INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_ instruction) {
   auto [partner_addr, counter_reg_id, outcome_key, max_count] = instruction.args;
   auto count = runtime->getRegVal(counter_reg_id);
   auto outcome = runtime->loadVal(outcome_key).outcome();
-  runtime->callback->sendLinkTomographyResult(partner_addr, count, outcome, max_count);
+  auto& rs = runtime->ruleset;
+  auto& rule = rs.rules.at(runtime->rule_id);
+  auto action_index = 0;
+  runtime->callback->sendLinkTomographyResult(rs.id, rule, action_index, partner_addr, count, outcome, max_count);
+}
+
+void InstructionVisitor::operator()(INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_ instruction) {
+  auto [partner_addr, result_reg_id] = instruction.args;
+  bool result = runtime->getRegVal(result_reg_id);
+  auto& rs = runtime->ruleset;
+  auto& rule = rs.rules.at(runtime->rule_id);
+  auto action_index = 0;
+  runtime->callback->sendPurificationResult(rs.id, rule, action_index, partner_addr, result);
 }
 
 void InstructionVisitor::operator()(INSTR_MEASURE_RANDOM_MemoryKey_QubitId_ instruction) {
@@ -42,9 +62,19 @@ void InstructionVisitor::operator()(INSTR_GATE_Z_QubitId_ instruction) {
   runtime->gateZ(qubit_id);
 }
 
+void InstructionVisitor::operator()(INSTR_PURIFY_X_RegId_QubitId_QubitId_ instruction) {
+  auto [result_reg_id, qubit_id, trash_qubit_id] = instruction.args;
+  // runtime->gateZ(qubit_id);
+}
+
 void InstructionVisitor::operator()(INSTR_FREE_QUBIT_QubitId_ instruction) {
   auto [qubit_id] = instruction.args;
   runtime->freeQubit(qubit_id);
+}
+
+void InstructionVisitor::operator()(INSTR_LOCK_QUBIT_QubitId_ instruction) {
+  auto [qubit_id] = instruction.args;
+  // runtime->freeQubit(qubit_id);
 }
 
 void InstructionVisitor::operator()(INSTR_LOAD_RegId_MemoryKey_ instruction) {
@@ -87,6 +117,10 @@ void InstructionVisitor::operator()(INSTR_BEZ_Label_RegId_ instruction) {
 void InstructionVisitor::operator()(INSTR_BNZ_Label_RegId_ instruction) {
   auto [label, reg_id] = instruction.args;
   if (runtime->getRegVal(reg_id) != 0) runtime->jumpTo(label);
+}
+void InstructionVisitor::operator()(INSTR_BLT_Label_RegId_int_ instruction) {
+  auto [label, reg_id, val] = instruction.args;
+  if (runtime->getRegVal(reg_id) < val) runtime->jumpTo(label);
 }
 
 void InstructionVisitor::operator()(INSTR_JMP_Label_ instruction) {
@@ -162,6 +196,18 @@ void InstructionVisitor::operator()(INSTR_SET_RegId_int_ instruction) {
 
 void InstructionVisitor::operator()(INSTR_GET_QUBIT_QubitId_QNodeAddr_int_ instruction) {
   auto [qubit_id, partner_addr, qubit_resource_index] = instruction.args;
+  auto* qubit_ref = runtime->getQubitByPartnerAddr(partner_addr, qubit_resource_index);
+  if (qubit_ref == nullptr) {
+    runtime->setError("Qubit not found");
+    return;
+  }
+  runtime->setQubit(qubit_ref, qubit_id);
+}
+
+void InstructionVisitor::operator()(INSTR_GET_QUBIT_RegId_QNodeAddr_RegId_ instruction) {
+  auto [qubit_id_reg, partner_addr, qubit_resource_index_reg] = instruction.args;
+  int qubit_resource_index = runtime->getRegVal(qubit_resource_index_reg);
+  int qubit_id = runtime->getRegVal(qubit_id_reg);
   auto* qubit_ref = runtime->getQubitByPartnerAddr(partner_addr, qubit_resource_index);
   if (qubit_ref == nullptr) {
     runtime->setError("Qubit not found");

@@ -14,11 +14,12 @@ class Program {
 
 class Rule {
  public:
-  Rule(const Program& condition, const Program& action) : Rule("", condition, action) {}
-  Rule(const std::string& name, const Program& condition, const Program& action) : condition(condition), action(action) {}
+  Rule(const Program& condition, const Program& action) : Rule("", -1, condition, action) {}
+  Rule(const std::string& name, int shared_tag, const Program& condition, const Program& action) : name(name), shared_tag(shared_tag), condition(condition), action(action) {}
   void finalize();
-
+  std::string name;
   int id = -1;
+  int shared_tag = -1;
   Program condition;
   Program action;
 };
@@ -30,7 +31,7 @@ class RuleSet {
   void finalize();
   std::set<QNodeAddr> partners;
   bool finalized = false;
-  int id;
+  unsigned long id;
   int owner_addr;
   std::string name;
   std::vector<Rule> rules;
