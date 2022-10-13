@@ -35,18 +35,19 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
                                 MeasurementOutcome outcome, bool is_finished) override {
     throw std::runtime_error("not implemented yet");
 
-    LinkTomographyResult *pk = new LinkTomographyResult;
-    // pk->setSrcAddr(src);
-    // pk->setDestAddr(dst);
+    LinkTomographyResult *pk = new LinkTomographyResult{"LinkTomographyResult"};
+    auto src = rule_engine->parentAddress;
+    pk->setSrcAddr(src);
+    pk->setDestAddr(partner_addr.val);
     // pk->setCount_id(current_count);
-    // pk->setPartner_address(src);  // Partner's partner is self/src
-    // pk->setKind(6);
-    // pk->setOutput_is_plus(o.outcome_is_plus);
-    // pk->setBasis(o.basis);
-    // pk->setGOD_clean(o.GOD_clean);
-    // if (current_count == max_count) {
-    //   pk->setFinish(simTime() - start);
-    //   pk->setMax_count(max_count);
+    pk->setPartner_address(src);  // Partner's partner is self/src
+    pk->setKind(6);
+    pk->setOutput_is_plus(outcome.outcome_is_plus);
+    pk->setBasis(outcome.basis);
+    pk->setGOD_clean(outcome.GOD_clean);
+    // if (is_finished) {
+    // pk->setFinish(simTime() - start);
+    // pk->setMax_count(max_count);
     // }
     // // The cPacket *pk is a single packet forwarded to the neighbor. But this node's HardwareMonitor also needs to store the result.
     LinkTomographyResult *pk_for_self = pk->dup();
@@ -57,7 +58,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   }
 
   void sendPurificationResult(const unsigned long ruleset_id, const runtime::Rule &rule, const int action_index, const QNodeAddr partner_addr, bool result) override {
-    auto *pkt = new PurificationResult{};
+    auto *pkt = new PurificationResult{"PurificationResult"};
     pkt->setSrcAddr(rule_engine->parentAddress);
     pkt->setDestAddr(partner_addr.val);
     pkt->setKind(7);
