@@ -87,7 +87,7 @@ TEST_F(RuntimeTest, jump) {
 INSTR_SET_RegId_int_{{r0, 10}},
 INSTR_JMP_Label_{Label{"test"}},
 INSTR_ADD_RegId_RegId_int_{{r0, r0, 1}},
-INSTR_NOP_int_{0, "test"}
+INSTR_NOP_None_{nullptr, "test"}
                       // clang-format on
                   }};
   runtime->cleanup();
@@ -104,7 +104,7 @@ INSTR_SET_RegId_int_{{r0, 10}},
 INSTR_BNERR_Label_{Label{"test"}},
 // skip until "test" label
 INSTR_ADD_RegId_RegId_int_{{r0, r0, 3}},
-INSTR_NOP_int_{0, "test"}
+INSTR_NOP_None_{nullptr, "test"}
                       // clang-format on
                   }};
   runtime->cleanup();
