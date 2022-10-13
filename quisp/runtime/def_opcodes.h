@@ -10,6 +10,7 @@ OP(ADD)
 OP(SUB)
 OP(INC)
 OP(ERROR)
+OP(RET)
 
 // branch
 OP(JMP)  // jump
@@ -20,6 +21,7 @@ OP(BNE)  // branch if not equal
 OP(BLT)  // branch if less than
 OP(BGE)  // branch if greater or equal
 OP(BNERR)  // branch if no error
+OP(BRANCH_IF_LOCKED)  // branch if the given qubit is locked
 
 // memory
 OP(LOAD)
@@ -31,8 +33,10 @@ OP(SET)
 OP(MEASURE_RANDOM)
 OP(MEASURE)
 OP(FREE_QUBIT)
+OP(LOCK_QUBIT)
 OP(GATE_X)
 OP(GATE_Z)
+OP(PURIFY_X)
 
 // send classical messages
 OP(SEND_LINK_TOMOGRAPHY_RESULT)

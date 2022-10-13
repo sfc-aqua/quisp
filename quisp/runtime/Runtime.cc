@@ -158,7 +158,7 @@ void Runtime::gateZ(QubitId qubit_id) {
   }
   callback->gateZ(qubit_ref);
 }
-
+bool Runtime::isQubitLocked(IQubitRecord* const qubit) { return callback->isQubitLocked(qubit); }
 void Runtime::debugRuntimeState() {
   std::cout << "\n-----debug-runtime-state------"
             << "\npc: " << pc << "\nrule_id: " << rule_id << "\nRegisters:"

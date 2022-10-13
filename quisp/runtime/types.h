@@ -18,6 +18,9 @@ using MeasurementOutcome = quisp::modules::measurement_outcome;
 enum class RegId : int { REG0, REG1, REG2, REG3 };
 std::ostream& operator<<(std::ostream& stream, const RegId& value);
 
+enum class ReturnCode : int { COND_FAILED, COND_PASSED };
+std::ostream& operator<<(std::ostream& stream, const ReturnCode& value);
+
 struct QNodeAddr {
   QNodeAddr(int val);
   int val;
