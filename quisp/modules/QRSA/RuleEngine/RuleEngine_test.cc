@@ -533,7 +533,7 @@ TEST(RuleEngineTest, resourceAllocation) {
   // this action needs a resource qubit that is entangled with partner 1.
   Program test_action{"testAction", {quisp::runtime::INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, 0}}}};
   Program empty_condition{"emptyCondition", {}};
-  auto rs = quisp::runtime::RuleSet{"test rs", {quisp::runtime::Rule{"test", empty_condition, test_action}}};
+  auto rs = quisp::runtime::RuleSet{"test rs", {quisp::runtime::Rule{"test", 0, empty_condition, test_action}}};
   auto runtime = quisp::runtime::Runtime{};
   runtime.assignRuleSet(rs);
   rule_engine->runtimes.push_back(runtime);
@@ -946,7 +946,7 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   }
 
   swapping_result result{
-      .id = {.ruleset_id = ruleset_id, .rule_id = rule_id, .shared_tag = shared_tag, .index = 0},
+      .id = {.ruleset_id = ruleset_id, .rule_id = rule_id, .index = 0, .shared_tag = shared_tag},
       .new_partner = 2,
       .operation_type = 0,
       .swapper_addr = 1,
