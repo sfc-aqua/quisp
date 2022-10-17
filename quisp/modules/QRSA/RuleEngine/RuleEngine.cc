@@ -5,9 +5,11 @@
  *  \brief RuleEngine
  */
 
+#include <cassert>
 #include <fstream>
 #include <iterator>
 #include <memory>
+#include <stdexcept>
 #include <utility>
 
 #include <utils/ComponentProvider.h>
@@ -15,7 +17,10 @@
 #include "RuleEngine.h"
 #include "RuleSetConverter/RuleSetConverter.h"
 #include "RuntimeCallback.h"
+#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
+#include "runtime/RuleSet.h"
 #include "runtime/Runtime.h"
+#include "runtime/types.h"
 
 namespace quisp::modules {
 
@@ -82,7 +87,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
       int nth_shot = tracker[qnic_address].size();
       // qubit with address Addr was shot in nth time. This list is ordered from old to new.
       tracker[qnic_address].insert(std::make_pair(nth_shot, Addr));
-      // std::cout<<getQNode()->getFullName() <<": Emitted the "<<nth_shot<<" from qnic["<<qnic_address<<"]....tracker["<<qnic_address<<"] now size = "<<new_nth_shot<<"\n";
     }
 
     realtime_controller->EmitPhoton(pk->getQnic_index(), pk->getQubit_index(), (QNIC_type)pk->getQnic_type(), pk->getKind());
@@ -170,16 +174,16 @@ void RuleEngine::handleMessage(cMessage *msg) {
       error("Empty rule set...");
     }
   } else if (auto *pkt = dynamic_cast<PurificationResult *>(msg)) {
-    process_id purification_id;
-    purification_result pr;
-    purification_id.ruleset_id = pkt->getRuleset_id();
-    purification_id.rule_id = pkt->getRule_id();
-    purification_id.index = pkt->getAction_index();
-    purification_id.shared_tag = pkt->getShared_tag();
-    pr.id = purification_id;
-    pr.outcome = pkt->getOutput_is_plus();
-    storeCheck_Purification_Agreement(pr);
+    const PurificationResultKey key{
+        .rs_id = pkt->getRuleset_id(),
+        .rule_id = pkt->getRule_id(),
+        .action_index = pkt->getAction_index(),
+        .shared_tag = pkt->getShared_tag(),
+        .type = rules::PurType::SINGLE_X  // TODO: read from pkt
+    };
+    handlePurificationResult(key, PurificationResultData{.is_x_plus = pkt->getOutput_is_plus()});
   } else if (auto *pkt = dynamic_cast<DoublePurificationResult *>(msg)) {
+    error("DoublePurification is not implemented yet");
     process_id purification_id;
     Doublepurification_result pr;
     purification_id.ruleset_id = pkt->getRuleset_id();
@@ -191,6 +195,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pr.Zpurification_outcome = pkt->getZOutput_is_plus();
     storeCheck_DoublePurification_Agreement(pr);
   } else if (auto *pkt = dynamic_cast<DS_DoublePurificationResult *>(msg)) {
+    error("DS DoublePurification is not implemented yet");
     // std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
     // std::cout<<"Presult from node["<<pkt->getSrcAddr()<<"]\n";
     process_id purification_id;
@@ -206,6 +211,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pr.DS_Zpurification_outcome = pkt->getDS_ZOutput_is_plus();
     storeCheck_QuatroPurification_Agreement(pr);
   } else if (auto *pkt = dynamic_cast<DS_DoublePurificationSecondResult *>(msg)) {
+    error("DS DoublePurification is not implemented yet");
     // std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
     process_id purification_id;
     Triplepurification_result pr;
@@ -219,6 +225,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pr.DS_purification_outcome = pkt->getDS_Output_is_plus();
     storeCheck_TriplePurification_Agreement(pr);
   } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
+    error("Swapping is not implemented yet");
     process_id swapping_id;
     swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
     swapping_id.rule_id = pkt->getRule_id();
@@ -239,6 +246,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
   else if (auto *pkt = dynamic_cast<SimultaneousSwappingResult *>(msg)) {
     // Add messeage to collection [ruleSetid][index_in_path]
+    error("Simultaneous Swapping is not implemented yet");
     unsigned long rule_id = pkt->getRuleSet_id();
     simultaneous_es_results[rule_id][pkt->getIndex_in_path()] = pkt->getOperation_type();
 
@@ -438,6 +446,64 @@ ActiveAction *RuleEngine::constructAction(std::unique_ptr<Action> action, unsign
     return new RandomMeasureAction(ruleset_id, rule_id, act->owner_address, qnic_interface.partner_addr, qnic_interface.qnic_type, qnic_interface.qnic_id, 0, act->num_measurement);
   }
   return nullptr;
+}
+
+void RuleEngine::handlePurificationResult(const PurificationResultKey &key, const PurificationResultData &result) {
+  auto it = purification_result_table.find(key);
+  if (it == purification_result_table.end()) {
+    purification_result_table.insert({key, result});
+    return;
+  }
+
+  runtime::Runtime *runtime = nullptr;
+  for (auto &rt : runtimes) {
+    if (rt.ruleset.id == key.rs_id) {
+      runtime = &rt;
+      break;
+    }
+  }
+  assert(runtime != nullptr);
+
+  // find qubit
+  runtime::Rule *rule;
+  for (auto &_rule : runtime->ruleset.rules) {
+    if (_rule.id == key.rule_id && _rule.shared_tag == key.shared_tag) {
+      rule = &_rule;
+    }
+  }
+  assert(rule != nullptr);
+
+  IQubitRecord *qubit_rec = nullptr;
+  IStationaryQubit *qubit = nullptr;
+  runtime::QubitResources::iterator qubit_key;
+  for (auto it = runtime->qubits.begin(); it != runtime->qubits.end(); it++) {
+    // for(auto &[k, q_rec]: runtime->qubits) {
+    auto &[addr, rule_id] = it->first;
+    if (rule_id != rule->id) continue;
+    auto *q = provider.getStationaryQubit(it->second);
+    if (q->action_index == key.action_index) {
+      // found qubit
+      qubit = q;
+      qubit_rec = it->second;
+      qubit_key = it;
+      break;
+    }
+  }
+
+  assert(qubit != nullptr);
+  assert(qubit_rec != nullptr);
+  qubit->Unlock();
+  runtime->qubits.erase(qubit_key);
+
+  if (result.isResultMatched(it->second, key.type)) {
+    // promote the qubit resource to the next rule
+    auto [addr, rule_id] = qubit_key->first;
+    runtime->assignQubitToRule(addr, rule_id + 1, qubit_rec);
+  } else {
+    // release it
+    freeConsumedResource(qubit->qnic_index, qubit, (QNIC_type)qubit->qnic_type);
+  }
+  purification_result_table.erase(it);
 }
 
 void RuleEngine::storeCheck_Purification_Agreement(purification_result pur_result) {
@@ -876,7 +942,7 @@ void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   }
   const auto &ruleset_result = rp.findById(ruleset_id);
   if (ruleset_result == rp.end()) {
-    error("The qubit is not promoted from entanglement swapping to the next rule. no ruleset(%l) found", ruleset_id);
+    error("The qubit is not promoted from entanglement swapping to the next rule. no ruleset(%lu) found", ruleset_id);
   }
   const auto &ruleset = *ruleset_result;
 
@@ -1091,169 +1157,150 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
 
 void RuleEngine::traverseThroughAllProcesses2() {
   for (auto &runtime : runtimes) {
+    // how should we delete the runtime and its ruleset?
     runtime.exec(runtime.ruleset);
   }
   return;
-  int number_of_process = rp.size();  // Number of running processes (in all QNICs).
+  /*
+          // Feedback to another node required
+          if (dynamic_cast<LinkTomographyResult *>(pk) != nullptr) {
+            // The cPacket *pk is a single packet forwarded to the neighbor. But this node's HardwareMonitor also needs to store the result.
+            LinkTomographyResult *pk_t = check_and_cast<LinkTomographyResult *>(pk);
+            LinkTomographyResult *pk_for_self = pk_t->dup();
+            pk_for_self->setPartner_address(pk_t->getDestAddr());
+            pk_for_self->setDestAddr(pk_t->getSrcAddr());
+            if (pk_t->getPartner_address() == pk_for_self->getPartner_address()) {
+              error("Wrong");
+            }
+            send(pk, "RouterPort$o");
+            send(pk_for_self, "RouterPort$o");
+          } else if (dynamic_cast<PurificationResult *>(pk) != nullptr) {
+            PurificationResult *pkt = check_and_cast<PurificationResult *>(pk);
+            pkt->setSrcAddr(parentAddress);
+            PurificationResult *pk_for_self = pkt->dup();
+            pk_for_self->setDestAddr(parentAddress);
+            send(pkt, "RouterPort$o");
+            send(pk_for_self, "RouterPort$o");
+          } else if (dynamic_cast<DoublePurificationResult *>(pk) != nullptr) {
+            DoublePurificationResult *pkt = check_and_cast<DoublePurificationResult *>(pk);
+            pkt->setSrcAddr(parentAddress);
+            DoublePurificationResult *pk_for_self = pkt->dup();
+            pk_for_self->setDestAddr(parentAddress);
+            send(pkt, "RouterPort$o");
+            send(pk_for_self, "RouterPort$o");
+          } else if (dynamic_cast<DS_DoublePurificationResult *>(pk) != nullptr) {
+            DS_DoublePurificationResult *pkt = check_and_cast<DS_DoublePurificationResult *>(pk);
+            pkt->setSrcAddr(parentAddress);
+            DS_DoublePurificationResult *pk_for_self = pkt->dup();
+            pk_for_self->setDestAddr(parentAddress);
+            send(pkt, "RouterPort$o");
+            send(pk_for_self, "RouterPort$o");
+          } else if (dynamic_cast<DS_DoublePurificationSecondResult *>(pk) != nullptr) {
+            DS_DoublePurificationSecondResult *pkt = check_and_cast<DS_DoublePurificationSecondResult *>(pk);
+            pkt->setSrcAddr(parentAddress);
+            DS_DoublePurificationSecondResult *pk_for_self = pkt->dup();
+            pk_for_self->setDestAddr(parentAddress);
+            send(pkt, "RouterPort$o");
+            send(pk_for_self, "RouterPort$o");
+          } else if (dynamic_cast<SwappingResult *>(pk) != nullptr) {
+            SwappingResult *pkt = check_and_cast<SwappingResult *>(pk);
+            EV << "done swapping at " << parentAddress << " left: " << pkt->getLeft_Dest() << " right: " << pkt->getRight_Dest() << "\n";
+            // here this packet goes to two destination.
+            // one is left node the other is right node.
+            // only swapper knows which is left and right, but qnodes don't
 
-  if (number_of_process == 0) {
-    return;
-  }
+            // packet for left node
+            SwappingResult *pkt_for_left = new SwappingResult("SwappingResult(Left)");
+            pkt_for_left->setRuleSet_id(pkt->getRuleSet_id());
+            pkt_for_left->setRule_id(pkt->getRule_id());
+            pkt_for_left->setShared_tag(pkt->getShared_tag());
+            pkt_for_left->setKind(5);  // cyan
+            pkt_for_left->setDestAddr(pkt->getLeft_Dest());
+            pkt_for_left->setSrcAddr(parentAddress);
+            pkt_for_left->setOperation_type(pkt->getOperation_type_left());
+            pkt_for_left->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
+            pkt_for_left->setNew_partner(pkt->getNew_partner_left());
+            pkt_for_left->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
+            pkt_for_left->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
+            pkt_for_left->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
 
-  for (auto &&rs_iter = rp.cbegin(); rs_iter != rp.cend();) {
-    auto &&ruleset = *rs_iter;
-    bool ruleset_deleted = false;
-    for (auto rule = ruleset->cbegin(), end = ruleset->cend(); rule != end; rule++) {
-      bool process_done = false;
+            // packet for right node
+            SwappingResult *pkt_for_right = new SwappingResult("SwappingResult(Right)");
+            pkt_for_right->setRuleSet_id(pkt->getRuleSet_id());
+            pkt_for_right->setRule_id(pkt->getRule_id());
+            pkt_for_right->setShared_tag(pkt->getShared_tag());
+            pkt_for_right->setKind(5);  // cyan
+            pkt_for_right->setDestAddr(pkt->getRight_Dest());
+            pkt_for_right->setSrcAddr(parentAddress);
+            pkt_for_right->setOperation_type(pkt->getOperation_type_right());
+            pkt_for_right->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
+            pkt_for_right->setNew_partner(pkt->getNew_partner_right());
+            pkt_for_right->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
+            pkt_for_right->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
+            pkt_for_right->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
 
-      while (true) {
-        if (!((*rule)->resources.size() > 0)) {
-          break;  // No more resource left for now.
-        }
+            send(pkt_for_left, "RouterPort$o");
+            send(pkt_for_right, "RouterPort$o");
+          } else if (dynamic_cast<SimultaneousSwappingResult *>(pk) != nullptr) {
+            SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(pk);
+            EV << "done swapping at " << parentAddress << "\n";
 
-        cPacket *pk = (*rule)->checkrun(this);  // Do something on qubits entangled with resource_entangled_with_address.
+            // packet for left node
+            SimultaneousSwappingResult *pkt_for_initiator = new SimultaneousSwappingResult("SimultaneousSwappingResult(Left)");
+            pkt_for_initiator->setKind(5);  // cyan
+            pkt_for_initiator->setDestAddr(pkt->getInitiator_Dest());
+            pkt_for_initiator->setSrcAddr(parentAddress);
+            pkt_for_initiator->setOperation_type(pkt->getOperation_type_left());
+            pkt_for_initiator->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
+            pkt_for_initiator->setNew_partner(pkt->getNew_partner_left());
+            pkt_for_initiator->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
+            pkt_for_initiator->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
+            pkt_for_initiator->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
 
-        if (pk == nullptr) {
+            // packet for right node
+            SimultaneousSwappingResult *pkt_for_responder = new SimultaneousSwappingResult("SimultaneousSwappingResult(Right)");
+            pkt_for_responder->setKind(5);  // cyan
+            pkt_for_responder->setDestAddr(pkt->getResponder_Dest());
+            pkt_for_responder->setSrcAddr(parentAddress);
+            pkt_for_responder->setOperation_type(pkt->getOperation_type_right());
+            pkt_for_responder->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
+            pkt_for_responder->setNew_partner(pkt->getNew_partner_right());
+            pkt_for_responder->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
+            pkt_for_responder->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
+            pkt_for_responder->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
+
+            send(pkt_for_initiator, "RouterPort$o");
+            send(pkt_for_responder, "RouterPort$o");
+          } else if (dynamic_cast<Error *>(pk) != nullptr) {
+            Error *err = check_and_cast<Error *>(pk);
+            error("%s", err->getError_text());
+            delete pk;
+          } else {
+            error("Unknown return packet from action.");
+            delete pk;
+          }
+
+          // std::cout<<"Is it done?";
+          process_done = (*rule)->checkTerminate();  // The entire process is done. e.g. enough measurement for tomography.
+          if (process_done) {  // Delete rule set if done
+            // delete ruleset
+            rs_iter = rp.erase(rs_iter);
+            ruleset_deleted = true;
+            break;  // get out from this for loop.
+          }
+
+        }  // While
+        if (process_done) {
           break;
         }
-        // Feedback to another node required
-        if (dynamic_cast<LinkTomographyResult *>(pk) != nullptr) {
-          // The cPacket *pk is a single packet forwarded to the neighbor. But this node's HardwareMonitor also needs to store the result.
-          LinkTomographyResult *pk_t = check_and_cast<LinkTomographyResult *>(pk);
-          LinkTomographyResult *pk_for_self = pk_t->dup();
-          pk_for_self->setPartner_address(pk_t->getDestAddr());
-          pk_for_self->setDestAddr(pk_t->getSrcAddr());
-          if (pk_t->getPartner_address() == pk_for_self->getPartner_address()) {
-            error("Wrong");
-          }
-          send(pk, "RouterPort$o");
-          send(pk_for_self, "RouterPort$o");
-        } else if (dynamic_cast<PurificationResult *>(pk) != nullptr) {
-          PurificationResult *pkt = check_and_cast<PurificationResult *>(pk);
-          pkt->setSrcAddr(parentAddress);
-          PurificationResult *pk_for_self = pkt->dup();
-          pk_for_self->setDestAddr(parentAddress);
-          send(pkt, "RouterPort$o");
-          send(pk_for_self, "RouterPort$o");
-        } else if (dynamic_cast<DoublePurificationResult *>(pk) != nullptr) {
-          DoublePurificationResult *pkt = check_and_cast<DoublePurificationResult *>(pk);
-          pkt->setSrcAddr(parentAddress);
-          DoublePurificationResult *pk_for_self = pkt->dup();
-          pk_for_self->setDestAddr(parentAddress);
-          send(pkt, "RouterPort$o");
-          send(pk_for_self, "RouterPort$o");
-        } else if (dynamic_cast<DS_DoublePurificationResult *>(pk) != nullptr) {
-          DS_DoublePurificationResult *pkt = check_and_cast<DS_DoublePurificationResult *>(pk);
-          pkt->setSrcAddr(parentAddress);
-          DS_DoublePurificationResult *pk_for_self = pkt->dup();
-          pk_for_self->setDestAddr(parentAddress);
-          send(pkt, "RouterPort$o");
-          send(pk_for_self, "RouterPort$o");
-        } else if (dynamic_cast<DS_DoublePurificationSecondResult *>(pk) != nullptr) {
-          DS_DoublePurificationSecondResult *pkt = check_and_cast<DS_DoublePurificationSecondResult *>(pk);
-          pkt->setSrcAddr(parentAddress);
-          DS_DoublePurificationSecondResult *pk_for_self = pkt->dup();
-          pk_for_self->setDestAddr(parentAddress);
-          send(pkt, "RouterPort$o");
-          send(pk_for_self, "RouterPort$o");
-        } else if (dynamic_cast<SwappingResult *>(pk) != nullptr) {
-          SwappingResult *pkt = check_and_cast<SwappingResult *>(pk);
-          EV << "done swapping at " << parentAddress << " left: " << pkt->getLeft_Dest() << " right: " << pkt->getRight_Dest() << "\n";
-          // here this packet goes to two destination.
-          // one is left node the other is right node.
-          // only swapper knows which is left and right, but qnodes don't
-
-          // packet for left node
-          SwappingResult *pkt_for_left = new SwappingResult("SwappingResult(Left)");
-          pkt_for_left->setRuleSet_id(pkt->getRuleSet_id());
-          pkt_for_left->setRule_id(pkt->getRule_id());
-          pkt_for_left->setShared_tag(pkt->getShared_tag());
-          pkt_for_left->setKind(5);  // cyan
-          pkt_for_left->setDestAddr(pkt->getLeft_Dest());
-          pkt_for_left->setSrcAddr(parentAddress);
-          pkt_for_left->setOperation_type(pkt->getOperation_type_left());
-          pkt_for_left->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
-          pkt_for_left->setNew_partner(pkt->getNew_partner_left());
-          pkt_for_left->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
-          pkt_for_left->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
-          pkt_for_left->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
-
-          // packet for right node
-          SwappingResult *pkt_for_right = new SwappingResult("SwappingResult(Right)");
-          pkt_for_right->setRuleSet_id(pkt->getRuleSet_id());
-          pkt_for_right->setRule_id(pkt->getRule_id());
-          pkt_for_right->setShared_tag(pkt->getShared_tag());
-          pkt_for_right->setKind(5);  // cyan
-          pkt_for_right->setDestAddr(pkt->getRight_Dest());
-          pkt_for_right->setSrcAddr(parentAddress);
-          pkt_for_right->setOperation_type(pkt->getOperation_type_right());
-          pkt_for_right->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
-          pkt_for_right->setNew_partner(pkt->getNew_partner_right());
-          pkt_for_right->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
-          pkt_for_right->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
-          pkt_for_right->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
-
-          send(pkt_for_left, "RouterPort$o");
-          send(pkt_for_right, "RouterPort$o");
-        } else if (dynamic_cast<SimultaneousSwappingResult *>(pk) != nullptr) {
-          SimultaneousSwappingResult *pkt = check_and_cast<SimultaneousSwappingResult *>(pk);
-          EV << "done swapping at " << parentAddress << "\n";
-
-          // packet for left node
-          SimultaneousSwappingResult *pkt_for_initiator = new SimultaneousSwappingResult("SimultaneousSwappingResult(Left)");
-          pkt_for_initiator->setKind(5);  // cyan
-          pkt_for_initiator->setDestAddr(pkt->getInitiator_Dest());
-          pkt_for_initiator->setSrcAddr(parentAddress);
-          pkt_for_initiator->setOperation_type(pkt->getOperation_type_left());
-          pkt_for_initiator->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
-          pkt_for_initiator->setNew_partner(pkt->getNew_partner_left());
-          pkt_for_initiator->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
-          pkt_for_initiator->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
-          pkt_for_initiator->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
-
-          // packet for right node
-          SimultaneousSwappingResult *pkt_for_responder = new SimultaneousSwappingResult("SimultaneousSwappingResult(Right)");
-          pkt_for_responder->setKind(5);  // cyan
-          pkt_for_responder->setDestAddr(pkt->getResponder_Dest());
-          pkt_for_responder->setSrcAddr(parentAddress);
-          pkt_for_responder->setOperation_type(pkt->getOperation_type_right());
-          pkt_for_responder->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
-          pkt_for_responder->setNew_partner(pkt->getNew_partner_right());
-          pkt_for_responder->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
-          pkt_for_responder->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
-          pkt_for_responder->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
-
-          send(pkt_for_initiator, "RouterPort$o");
-          send(pkt_for_responder, "RouterPort$o");
-        } else if (dynamic_cast<Error *>(pk) != nullptr) {
-          Error *err = check_and_cast<Error *>(pk);
-          error("%s", err->getError_text());
-          delete pk;
-        } else {
-          error("Unknown return packet from action.");
-          delete pk;
-        }
-
-        // std::cout<<"Is it done?";
-        process_done = (*rule)->checkTerminate();  // The entire process is done. e.g. enough measurement for tomography.
-        if (process_done) {  // Delete rule set if done
-          // delete ruleset
-          rs_iter = rp.erase(rs_iter);
-          ruleset_deleted = true;
-          break;  // get out from this for loop.
-        }
-
-      }  // While
-      if (process_done) {
-        break;
+      }  // For
+      // if the ruleset deleted, the rs_iter points the next ruleset.
+      if (!ruleset_deleted) {
+        // if not, we need to incremet the rs_iter to point the next ruleset.
+        rs_iter++;
       }
-    }  // For
-    // if the ruleset deleted, the rs_iter points the next ruleset.
-    if (!ruleset_deleted) {
-      // if not, we need to incremet the rs_iter to point the next ruleset.
-      rs_iter++;
-    }
-  }  // For loop
+    }  // For loop
+    */
 }
 
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
