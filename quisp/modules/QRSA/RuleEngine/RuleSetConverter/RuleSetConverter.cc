@@ -32,11 +32,17 @@ RuleSet RuleSetConverter::construct(const RSData &data) {
 Program RuleSetConverter::constructCondition(const ConditionData *data) {
   auto opcodes = std::vector<InstructionTypes>{};
   std::string name;
+  int i = 0;
   for (auto &clause_data : data->clauses) {
+    i++;
     auto clause_ptr = clause_data.get();
     if (auto *c = dynamic_cast<const EnoughResourceConditionClause *>(clause_ptr)) {
       auto counter = RegId::REG0;
       auto qubit_id = RegId::REG1;
+
+      Label loop_label{std::string("LOOP_") + std::to_string(i)};
+      Label found_qubit_label{std::string("FOUND_QUBIT_") + std::to_string(i)};
+      Label passed_label{std::string("PASSED_") + std::to_string(i)};
       /*
         SET qubit_id -1
         SET counter 0
@@ -56,16 +62,16 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       opcodes.push_back(INSTR_SET_RegId_int_{{counter, 0}});
       opcodes.push_back(INSTR_SET_RegId_int_{{qubit_id, -1}});
 
-      opcodes.push_back(INSTR_INC_RegId_{qubit_id, "LOOP"});
+      opcodes.push_back(INSTR_INC_RegId_{qubit_id, loop_label});
       opcodes.push_back(INSTR_GET_QUBIT_RegId_QNodeAddr_RegId_{{qubit_id, c->partner_address, qubit_id}});
-      opcodes.push_back(INSTR_BNERR_Label_{Label{"FOUND_QUBIT"}});
+      opcodes.push_back(INSTR_BNERR_Label_{found_qubit_label});
       opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::COND_FAILED});
 
-      opcodes.push_back(INSTR_BRANCH_IF_LOCKED_Label_RegId_{{Label{"LOOP"}, qubit_id}, "FOUND_QUBIT"});
+      opcodes.push_back(INSTR_BRANCH_IF_LOCKED_Label_RegId_{{loop_label, qubit_id}, found_qubit_label});
       opcodes.push_back(INSTR_INC_RegId_{{counter}});
-      opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{Label{"PASSED"}, counter, c->num_resource}});
-      opcodes.push_back(INSTR_JMP_Label_{Label{"LOOP"}});
-      opcodes.push_back(INSTR_NOP_None_{None, "PASSED"});
+      opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{passed_label, counter, c->num_resource}});
+      opcodes.push_back(INSTR_JMP_Label_{loop_label});
+      opcodes.push_back(INSTR_NOP_None_{nullptr, passed_label});
 
       name += "EnoughResource ";
     } else if (auto *c = dynamic_cast<const FidelityConditionClause *>(clause_ptr)) {
@@ -85,15 +91,16 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       */
       auto count = RegId::REG2;
       MemoryKey count_key{"measure_count"};
+      Label passed_label{std::string("PASSED_") + std::to_string(i)};
       opcodes.push_back(INSTR_LOAD_RegId_MemoryKey_{{count, count_key}});
-      opcodes.push_back(INSTR_BLT_Label_RegId_int_{{Label{"PASSED"}, count, c->num_measure}});
+      opcodes.push_back(INSTR_BLT_Label_RegId_int_{{passed_label, count, c->num_measure}});
       opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::COND_FAILED});
-      opcodes.push_back(INSTR_INC_RegId_{count, "PASSED"});
+      opcodes.push_back(INSTR_INC_RegId_{count, passed_label});
       opcodes.push_back(INSTR_STORE_MemoryKey_RegId_{{count_key, count}});
-      opcodes.push_back(INSTR_RET_ReturnCode_{{ReturnCode::COND_PASSED}});
       name += "MeasureCountCondition ";
     }
   }
+  opcodes.push_back(INSTR_RET_ReturnCode_{{ReturnCode::COND_PASSED}});
   return Program{name, opcodes};
 }
 
@@ -148,10 +155,22 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
     QubitId trash_qubit{1};
     RegId measure_result = RegId::REG0;
     QNodeAddr partner_addr{act->qnic_interfaces.at(0).partner_addr};
+    MemoryKey action_index_key{"action_index"};
+    RegId action_index = RegId::REG1;
     return Program{"Purification",
-                   {INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}}, INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit, partner_addr, 1}},
-                    INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}}, INSTR_FREE_QUBIT_QubitId_{{trash_qubit}}, INSTR_LOCK_QUBIT_QubitId_{{qubit}},
-                    INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_{{partner_addr, measure_result}}}};
+                   {
+                       // clang-format off
+                       INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
+INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
+INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit, partner_addr, 1}},
+INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}},
+INSTR_FREE_QUBIT_QubitId_{{trash_qubit}},
+INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
+INSTR_INC_RegId_{action_index},
+INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
+INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_{{partner_addr, measure_result}}
+                       // clang-format on
+                   }};
   }
   std::cout << const_cast<Purification *>(act)->serialize_json() << std::endl;
   throw std::runtime_error("pur not implemented");
