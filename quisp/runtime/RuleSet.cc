@@ -11,22 +11,31 @@ void RuleSet::finalize() {
     rules[i].id = i;
   }
 
-  // collect partner addresses
+  // collect partner addresses and initial rules
   partners = {};
+  partner_rule_map.clear();
   for (auto &rule : rules) {
     for (auto &instr : rule.condition.opcodes) {
       if (std::holds_alternative<INSTR_GET_QUBIT_QubitId_QNodeAddr_int_>(instr)) {
         auto [_qubit_id, partner_addr, _index] = std::get<INSTR_GET_QUBIT_QubitId_QNodeAddr_int_>(instr).args;
         partners.insert(partner_addr);
+
+        if (partner_rule_map.find(partner_addr) == partner_rule_map.end()) {
+          partner_rule_map.insert({partner_addr, rule.id});
+        }
       }
     }
     for (auto &instr : rule.action.opcodes) {
       if (std::holds_alternative<INSTR_GET_QUBIT_QubitId_QNodeAddr_int_>(instr)) {
         auto [_qubit_id, partner_addr, _index] = std::get<INSTR_GET_QUBIT_QubitId_QNodeAddr_int_>(instr).args;
         partners.insert(partner_addr);
+        if (partner_rule_map.find(partner_addr) == partner_rule_map.end()) {
+          partner_rule_map.insert({partner_addr, rule.id});
+        }
       }
     }
   }
+
   finalized = true;
 }
 }  // namespace quisp::runtime
