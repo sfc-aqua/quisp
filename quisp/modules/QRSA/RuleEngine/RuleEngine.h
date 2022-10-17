@@ -117,6 +117,8 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int shared_tag, int index);
   void Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int shared_tag, int index);
 
+  void handlePurificationResult(const PurificationResultKey &, const PurificationResultData &);
+
   void updateResources_EntanglementSwapping(swapping_result swapr);
 
   [[deprecated]] std::unique_ptr<ActiveRuleSet> constructActiveRuleSet(RuleSet ruleset);
