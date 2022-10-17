@@ -25,6 +25,7 @@
 
 #include "BellPairStore/BellPairStore.h"
 #include "IRuleEngine.h"
+#include "PurificationResultTable/PurificationResultTable.h"
 #include "QNicStore/IQNicStore.h"
 #include "QubitRecord/IQubitRecord.h"
 #include "RuleSetStore/RuleSetStore.h"
@@ -38,6 +39,9 @@ struct RuntimeCallback;
 namespace quisp::modules {
 using namespace rules;
 using namespace rules::active;
+using pur_result_table::PurificationResultData;
+using pur_result_table::PurificationResultKey;
+using pur_result_table::PurificationResultTable;
 using qnic_store::IQNicStore;
 using qubit_record::IQubitRecord;
 
@@ -61,6 +65,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   int number_of_qnics;
   int number_of_qnics_r;
   int number_of_qnics_rp;
+  PurificationResultTable purification_result_table;
   PurificationTable Purification_table;
   DoublePurificationTable DoublePurification_table;
   TriplePurificationTable TriplePurification_table;
