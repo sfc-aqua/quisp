@@ -83,7 +83,7 @@ class Runtime {
   void eval(Program& program);
   void evalOperation(InstructionTypes op);
   void assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_record);
-  void collectLabels(Program& program);
+  void assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record);
   void debugRuntimeState();
 
   // operations used by InstructionVisitor
