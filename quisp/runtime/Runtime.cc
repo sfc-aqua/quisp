@@ -75,7 +75,12 @@ void Runtime::assignRuleSet(const RuleSet& _ruleset) {
   partners = ruleset.partners;
 }
 
-void Runtime::assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_record) { qubits.emplace(std::make_pair(partner_addr, 0), qubit_record); }
+void Runtime::assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_record) {
+  auto it = ruleset.partner_rule_map.find(partner_addr);
+  qubits.emplace(std::make_pair(partner_addr, it->second), qubit_record);
+}
+
+void Runtime::assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record) { qubits.emplace(std::make_pair(partner_addr, rule_id), qubit_record); }
 const Register& Runtime::getReg(RegId regId) const { return registers[(int)regId]; }
 unsigned long long Runtime::getRegVal(RegId regId) const { return registers[(int)regId].value; }
 void Runtime::setRegVal(RegId regId, unsigned long long val) { registers[(int)regId].value = val; }
