@@ -20,23 +20,33 @@ Runtime::Runtime() : visitor(InstructionVisitor{this}) {}
 Runtime::Runtime(const RuleSet& ruleset, ICallBack* cb) : visitor(InstructionVisitor{this}), callback(cb) { assignRuleSet(ruleset); }
 Runtime::~Runtime() {}
 
-void Runtime::exec(RuleSet ruleset) {
-  this->error = nullptr;
+void Runtime::exec(const RuleSet& ruleset) {
+  cleanup();
   for (auto& rule : ruleset.rules) {
     rule_id = rule.id;
+    debugging = qubits.size() > 1;
     eval(rule.condition);
-    if (error != nullptr) {
-      break;
+    if (return_code == ReturnCode::COND_FAILED) {
+      continue;
     }
+    // if (error != nullptr) {
+    //   break;
+    // }
+    debugging = true;
     eval(rule.action);
   }
 }
 
-void Runtime::eval(Program& program) {
+void Runtime::eval(const Program& program) {
   should_exit = false;
   collectLabels(program);
   auto& opcodes = program.opcodes;
   auto len = opcodes.size();
+
+  std::cout << "\n------\n" << program.name << std::endl;
+  for (int i = 0; i < len; i++) {
+    std::cout << std::to_string(i) << ": " << std::visit([](auto& op) { return op.toString(); }, opcodes[i]) << std::endl;
+  }
   for (pc = 0; pc < len; pc++) {
     if (should_exit) return;
     if (debugging) {
@@ -53,9 +63,10 @@ void Runtime::cleanup() {
   }
   pc = 0;
   error = nullptr;
+  named_qubits.clear();
 }
 
-void Runtime::collectLabels(Program& program) {
+void Runtime::collectLabels(const Program& program) {
   auto& opcodes = program.opcodes;
   auto len = opcodes.size();
   for (pc = 0; pc < len; pc++) {
@@ -146,6 +157,15 @@ void Runtime::freeQubit(QubitId qubit_id) {
     return;
   }
   callback->freeAndResetQubit(qubit_ref);
+  auto named_qubit = named_qubits.find(qubit_id);
+  named_qubits.erase(named_qubit);
+  for (auto i = qubits.begin(); i != qubits.end(); i++) {
+    if (i->second == qubit_ref) {
+      qubits.erase(i);
+      return;
+    }
+  }
+  throw std::runtime_error("unknown qubit_ref");
 }
 
 void Runtime::gateX(QubitId qubit_id) {
@@ -163,12 +183,28 @@ void Runtime::gateZ(QubitId qubit_id) {
   }
   callback->gateZ(qubit_ref);
 }
+
+void Runtime::purifyX(QubitId qubit_id, QubitId trash_qubit_id) {
+  auto qubit = getQubitByQubitId(qubit_id);
+  auto trash_qubit = getQubitByQubitId(trash_qubit_id);
+  if (qubit == nullptr) return;
+  if (trash_qubit == nullptr) return;
+  callback->purifyX(qubit, trash_qubit);
+}
+
+void Runtime::purifyZ(QubitId qubit_id, QubitId trash_qubit_id) {
+  auto qubit = getQubitByQubitId(qubit_id);
+  auto trash_qubit = getQubitByQubitId(trash_qubit_id);
+  if (qubit == nullptr) return;
+  if (trash_qubit == nullptr) return;
+  callback->purifyZ(qubit, trash_qubit);
+}
+
 bool Runtime::isQubitLocked(IQubitRecord* const qubit) { return callback->isQubitLocked(qubit); }
 void Runtime::debugRuntimeState() {
   std::cout << "\n-----debug-runtime-state------"
             << "\npc: " << pc << "\nrule_id: " << rule_id << "\nRegisters:"
-            << "\n  Reg0: " << registers[0].value << "\n  Reg1: " << registers[1].value << "\n  Reg2: " << registers[2].value << "\n  Reg3: " << registers[3].value
-            << "\n--memory--\n";
+            << "\n  Reg0: " << registers[0].value << ", Reg1: " << registers[1].value << ", Reg2: " << registers[2].value << ", Reg3: " << registers[3].value << "\n--memory--\n";
   for (auto it : memory) {
     std::cout << it.first << ": " << it.second << std::endl;
   }

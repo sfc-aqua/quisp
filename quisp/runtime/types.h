@@ -18,7 +18,7 @@ using MeasurementOutcome = quisp::modules::measurement_outcome;
 enum class RegId : int { REG0, REG1, REG2, REG3 };
 std::ostream& operator<<(std::ostream& stream, const RegId& value);
 
-enum class ReturnCode : int { COND_FAILED, COND_PASSED };
+enum class ReturnCode : int { NONE, COND_FAILED, COND_PASSED };
 std::ostream& operator<<(std::ostream& stream, const ReturnCode& value);
 
 struct QNodeAddr {
@@ -59,6 +59,12 @@ std::ostream& operator<<(std::ostream& stream, const Basis& value);
 }  // namespace quisp::runtime
 
 namespace std {
+template <>
+struct ::std::hash<quisp::runtime::QNodeAddr> {
+ public:
+  size_t operator()(const quisp::runtime::QNodeAddr& addr) const { return std::hash<int>()(addr.val); }
+};
+
 template <>
 struct ::std::hash<quisp::runtime::QubitId> {
  public:
