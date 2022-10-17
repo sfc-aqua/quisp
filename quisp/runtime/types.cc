@@ -62,6 +62,9 @@ std::ostream& operator<<(std::ostream& stream, const ReturnCode& value) {
     case ReturnCode::COND_PASSED:
       stream << std::string("COND_PASSED");
       break;
+    case ReturnCode::NONE:
+      stream << std::string("NONE");
+      break;
   }
   return stream;
 };

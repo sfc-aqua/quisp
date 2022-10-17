@@ -14,7 +14,11 @@ InstructionVisitor& InstructionVisitor::operator=(const InstructionVisitor& visi
 }
 
 void InstructionVisitor::operator()(INSTR_NOP_None_ instruction) {}
-void InstructionVisitor::operator()(INSTR_RET_ReturnCode_ instruction) { auto [return_code] = instruction.args; }
+void InstructionVisitor::operator()(INSTR_RET_ReturnCode_ instruction) {
+  auto [return_code] = instruction.args;
+  runtime->should_exit = true;
+  runtime->return_code = return_code;
+}
 void InstructionVisitor::operator()(INSTR_BRANCH_IF_LOCKED_Label_RegId_ instruction) {
   auto [label, qubit_id_reg] = instruction.args;
   auto qubit_id = runtime->getRegVal(qubit_id_reg);
@@ -64,7 +68,7 @@ void InstructionVisitor::operator()(INSTR_GATE_Z_QubitId_ instruction) {
 
 void InstructionVisitor::operator()(INSTR_PURIFY_X_RegId_QubitId_QubitId_ instruction) {
   auto [result_reg_id, qubit_id, trash_qubit_id] = instruction.args;
-  // runtime->gateZ(qubit_id);
+  runtime->purifyX(qubit_id, trash_qubit_id);
 }
 
 void InstructionVisitor::operator()(INSTR_FREE_QUBIT_QubitId_ instruction) {
@@ -72,9 +76,13 @@ void InstructionVisitor::operator()(INSTR_FREE_QUBIT_QubitId_ instruction) {
   runtime->freeQubit(qubit_id);
 }
 
-void InstructionVisitor::operator()(INSTR_LOCK_QUBIT_QubitId_ instruction) {
-  auto [qubit_id] = instruction.args;
+void InstructionVisitor::operator()(INSTR_LOCK_QUBIT_QubitId_RegId_ instruction) {
+  auto [qubit_id, reg_id] = instruction.args;
   // runtime->freeQubit(qubit_id);
+  auto& rt = *runtime;
+  int action_index = rt.getRegVal(reg_id);
+  auto* qubit_rec = rt.getQubitByQubitId(qubit_id);
+  rt.callback->lockQubit(qubit_rec, rt.ruleset.id, rt.rule_id, action_index);
 }
 
 void InstructionVisitor::operator()(INSTR_LOAD_RegId_MemoryKey_ instruction) {
