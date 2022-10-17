@@ -31,6 +31,22 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     qubit->zGate();
   }
 
+  bool purifyX(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
+    auto *qubit = provider.getStationaryQubit(qubit_rec);
+    auto *trash_qubit = provider.getStationaryQubit(trash_qubit_rec);
+    assert(qubit != nullptr);
+    assert(trash_qubit != nullptr);
+    return trash_qubit->Xpurify(qubit);
+  }
+
+  bool purifyZ(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
+    auto *qubit = provider.getStationaryQubit(qubit_rec);
+    auto *trash_qubit = provider.getStationaryQubit(trash_qubit_rec);
+    assert(qubit != nullptr);
+    assert(trash_qubit != nullptr);
+    return trash_qubit->Zpurify(qubit);
+  }
+
   void sendLinkTomographyResult(const unsigned long ruleset_id, const runtime::Rule &rule, const int action_index, const runtime::QNodeAddr partner_addr, int count,
                                 MeasurementOutcome outcome, bool is_finished) override {
     throw std::runtime_error("not implemented yet");
@@ -73,10 +89,17 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     rule_engine->send(pk_for_self, "RouterPort$o");
   }
 
-  void freeAndResetQubit(IQubitRecord *) override{};
+  void freeAndResetQubit(IQubitRecord *qubit) override {
+    auto *stat_qubit = rule_engine->provider.getStationaryQubit((qubit));
+    rule_engine->freeConsumedResource(qubit->getQNicIndex(), stat_qubit, qubit->getQNicType());
+  };
   bool isQubitLocked(IQubitRecord *const qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     return qubit->isLocked();
+  }
+  void lockQubit(IQubitRecord *const qubit_rec, unsigned long rs_id, int rule_id, int action_index) override {
+    auto *qubit = provider.getStationaryQubit(qubit_rec);
+    qubit->Lock(rs_id, rule_id, action_index);
   }
   RuleEngine *rule_engine;
   utils::ComponentProvider &provider;
