@@ -40,19 +40,23 @@ struct Op {
 template <class OpLit, class... Operands>
 struct Instruction {
   Instruction(std::tuple<Operands...> args, std::string label = "") : opcode(OpLit::value), args(args), label(label) {}
+  Instruction(std::tuple<Operands...> args, Label label) : opcode(OpLit::value), args(args), label(label.val) {}
   int opcode;
   std::tuple<Operands...> args;
   std::string label;
 
-  std::string toString() {
+  std::string toString() const {
     std::stringstream ss;
     ss << OP_TYPE_STR[opcode];
     ss << " ";
     toStringArgs(args, ss);
+    if (label.size() > 0) {
+      ss << "     :" << label;
+    }
     return ss.str();
   }
   template <size_t N = 0, typename T>
-  void toStringArgs(const T& t, std::stringstream& s) {
+  void toStringArgs(const T& t, std::stringstream& s) const {
     if constexpr (N < std::tuple_size<T>::value) {
       const auto& x = std::get<N>(t);
       s << x << ", ";
