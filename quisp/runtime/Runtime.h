@@ -60,7 +60,8 @@ class Runtime {
     virtual MeasurementOutcome measureQubitRandomly(IQubitRecord*) = 0;
     virtual void gateX(IQubitRecord*) = 0;
     virtual void gateZ(IQubitRecord*) = 0;
-
+    virtual bool purifyX(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
+    virtual bool purifyZ(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
     // // Messaging
     virtual void sendLinkTomographyResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, int count,
                                           MeasurementOutcome outcome, bool is_finished) = 0;
@@ -71,6 +72,7 @@ class Runtime {
     // void update() {}
 
     virtual bool isQubitLocked(IQubitRecord* const) = 0;
+    virtual void lockQubit(IQubitRecord* const, unsigned long rs_id, int rule_id, int action_index) = 0;
   };
 
   Runtime();
@@ -79,11 +81,12 @@ class Runtime {
   ~Runtime();
   void assignRuleSet(const RuleSet& ruleset);
   void cleanup();
-  void exec(RuleSet ruleset);
-  void eval(Program& program);
+  void exec(const RuleSet& ruleset);
+  void eval(const Program& program);
   void evalOperation(InstructionTypes op);
   void assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_record);
   void assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record);
+  void collectLabels(const Program& program);
   void debugRuntimeState();
 
   // operations used by InstructionVisitor
@@ -102,6 +105,8 @@ class Runtime {
   void freeQubit(QubitId);
   void gateX(QubitId);
   void gateZ(QubitId);
+  void purifyX(QubitId, QubitId);
+  void purifyZ(QubitId, QubitId);
   bool isQubitLocked(IQubitRecord* const);
 
   // related components
@@ -123,5 +128,6 @@ class Runtime {
   bool should_exit = false;
   RuleSet ruleset;
   std::set<QNodeAddr> partners;
+  ReturnCode return_code = ReturnCode::NONE;
 };
 }  // namespace quisp::runtime
