@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <unordered_map>
 #include <vector>
 #include "opcode.h"
 
@@ -30,6 +31,7 @@ class RuleSet {
   RuleSet(const std::string& name, const std::vector<Rule>& rules) : name(name), rules(rules) {}
   void finalize();
   std::set<QNodeAddr> partners;
+  std::unordered_map<QNodeAddr, RuleId> partner_rule_map;
   bool finalized = false;
   unsigned long id;
   int owner_addr;
