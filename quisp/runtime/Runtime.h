@@ -30,17 +30,8 @@ struct Register {
   unsigned long long value = 0;
 };
 
-struct QubitResourceHash {
-  size_t operator()(const std::pair<QNodeAddr, int>& p) const {
-    auto seed = std::hash<int>()(p.first.val);
-    // https://stackoverflow.com/questions/4948780/magic-number-in-boosthash-combine
-    seed ^= std::hash<int>()(p.second) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    return seed;
-  }
-};
-
 // (partner's qnode addr, assigned RuleId) => [half bell pair qubit record]
-using QubitResources = std::unordered_multimap<std::pair<QNodeAddr, RuleId>, IQubitRecord*, QubitResourceHash>;
+using QubitResources = std::unordered_multimap<std::pair<QNodeAddr, RuleId>, IQubitRecord*>;
 
 using QubitNameMap = std::unordered_map<QubitId, IQubitRecord*>;
 using LabelMap = std::unordered_map<Label, int>;
