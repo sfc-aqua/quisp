@@ -166,9 +166,9 @@ INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit, partner_addr, 1}},
 INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit}},
 INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
+INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_{{partner_addr, measure_result, action_index}},
 INSTR_INC_RegId_{action_index},
 INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
-INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_{{partner_addr, measure_result}}
                        // clang-format on
                    }};
   }
