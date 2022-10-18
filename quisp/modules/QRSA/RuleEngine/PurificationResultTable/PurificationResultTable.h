@@ -13,7 +13,7 @@ struct PurificationResultKey {
   int shared_tag = -1;
   rules::PurType type;
   bool operator==(const PurificationResultKey& key) const {
-    return rs_id == key.rs_id && rule_id == key.rule_id && action_index && key.action_index && shared_tag == key.shared_tag;
+    return rs_id == key.rs_id && rule_id == key.rule_id && action_index == key.action_index && shared_tag == key.shared_tag;
   }
 };
 
