@@ -490,17 +490,16 @@ void RuleEngine::handlePurificationResult(const PurificationResultKey &key, cons
     }
   }
 
-  assert(qubit != nullptr);
+  if (qubit != nullptr) error("cannot found the qubit for purification result");
   assert(qubit_rec != nullptr);
   qubit->Unlock();
-  runtime->qubits.erase(qubit_key);
 
   if (result.isResultMatched(it->second, key.type)) {
     // promote the qubit resource to the next rule
-    auto [addr, rule_id] = qubit_key->first;
-    runtime->assignQubitToRule(addr, rule_id + 1, qubit_rec);
+    runtime->promoteQubit(qubit_key);
   } else {
     // release it
+    runtime->qubits.erase(qubit_key);
     freeConsumedResource(qubit->qnic_index, qubit, (QNIC_type)qubit->qnic_type);
   }
   purification_result_table.erase(it);
