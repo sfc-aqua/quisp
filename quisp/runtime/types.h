@@ -82,4 +82,16 @@ struct ::std::hash<quisp::runtime::Label> {
  public:
   size_t operator()(const quisp::runtime::Label& label) const { return std::hash<std::string>()(label.val); }
 };
+
+template <>
+struct ::std::hash<std::pair<quisp::runtime::QNodeAddr, quisp::runtime::RuleId>> {
+ public:
+  size_t operator()(const std::pair<quisp::runtime::QNodeAddr, quisp::runtime::RuleId>& p) const {
+    auto seed = std::hash<int>()(p.first.val);
+    // https://stackoverflow.com/questions/4948780/magic-number-in-boosthash-combine
+    seed ^= std::hash<int>()(p.second) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    return seed;
+  }
+};
+
 }  // namespace std
