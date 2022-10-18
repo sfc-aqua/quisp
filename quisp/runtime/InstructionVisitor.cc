@@ -66,6 +66,11 @@ void InstructionVisitor::operator()(INSTR_GATE_Z_QubitId_ instruction) {
   runtime->gateZ(qubit_id);
 }
 
+void InstructionVisitor::operator()(INSTR_GATE_CNOT_QubitId_QubitId_ instruction) {
+  auto [control_qubit_id, target_qubit_id] = instruction.args;
+  runtime->gateCNOT(control_qubit_id, target_qubit_id);
+}
+
 void InstructionVisitor::operator()(INSTR_PURIFY_X_RegId_QubitId_QubitId_ instruction) {
   auto [result_reg_id, qubit_id, trash_qubit_id] = instruction.args;
   runtime->purifyX(qubit_id, trash_qubit_id);
