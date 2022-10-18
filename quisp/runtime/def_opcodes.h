@@ -36,6 +36,7 @@ OP(FREE_QUBIT)
 OP(LOCK_QUBIT)
 OP(GATE_X)
 OP(GATE_Z)
+OP(GATE_CNOT)
 OP(PURIFY_X)
 
 // send classical messages
