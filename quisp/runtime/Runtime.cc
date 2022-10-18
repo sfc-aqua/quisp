@@ -186,6 +186,14 @@ void Runtime::gateZ(QubitId qubit_id) {
   callback->gateZ(qubit_ref);
 }
 
+void Runtime::gateCNOT(QubitId control_qubit_id, QubitId target_qubit_id) {
+  auto control_qubit = getQubitByQubitId(control_qubit_id);
+  auto target_qubit = getQubitByQubitId(target_qubit_id);
+  if (control_qubit == nullptr) return;
+  if (target_qubit == nullptr) return;
+  callback->gateCNOT(control_qubit, target_qubit);
+}
+
 void Runtime::purifyX(QubitId qubit_id, QubitId trash_qubit_id) {
   auto qubit = getQubitByQubitId(qubit_id);
   auto trash_qubit = getQubitByQubitId(trash_qubit_id);

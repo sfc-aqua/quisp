@@ -40,6 +40,7 @@ INSTR(FREE_QUBIT, QubitId)
 INSTR(LOCK_QUBIT, QubitId, RegId /* action index */)
 INSTR(GATE_X, QubitId)
 INSTR(GATE_Z, QubitId)
+INSTR(GATE_CNOT, QubitId, QubitId)
 INSTR(PURIFY_X, RegId, QubitId, QubitId)
 
 // send classical messages

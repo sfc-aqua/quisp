@@ -60,6 +60,7 @@ class Runtime {
     virtual MeasurementOutcome measureQubitRandomly(IQubitRecord*) = 0;
     virtual void gateX(IQubitRecord*) = 0;
     virtual void gateZ(IQubitRecord*) = 0;
+    virtual void gateCNOT(IQubitRecord* control_qubit_rec, IQubitRecord* target_qubit_rec) = 0;
     virtual bool purifyX(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
     virtual bool purifyZ(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
     // // Messaging
@@ -105,6 +106,7 @@ class Runtime {
   void freeQubit(QubitId);
   void gateX(QubitId);
   void gateZ(QubitId);
+  void gateCNOT(QubitId, QubitId);
   void purifyX(QubitId, QubitId);
   void purifyZ(QubitId, QubitId);
   bool isQubitLocked(IQubitRecord* const);
