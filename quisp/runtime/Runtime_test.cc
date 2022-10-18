@@ -57,14 +57,13 @@ INSTR_DEBUG_RegId_{RegId::REG0},
 TEST_F(RuntimeTest, evalQubitIdOperation) {
   QubitId q0{0};
   auto count = RegId::REG0;
-  int max_count = 100;
   QNodeAddr partner_addr{1};
   auto qubit_index = 0;  // former 'resource'
-  runtime->assignQubitToRuleSet(partner_addr, qubit);
   runtime->debugging = false;
-  Program program{"RandomMeasureAction",
-                  {
-                      // clang-format off
+  Program program{
+      "RandomMeasureAction",
+      {
+          // clang-format off
 INSTR_LOAD_RegId_MemoryKey_{{count, MemoryKey{"count"}}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, qubit_index}},
 INSTR_BNERR_Label_{Label{"L1"}},
@@ -73,9 +72,9 @@ INSTR_MEASURE_RANDOM_MemoryKey_QubitId_{{MemoryKey{"outcome"}, q0}, "L1"},
 INSTR_INC_RegId_{count},
 INSTR_STORE_MemoryKey_RegId_{{MemoryKey{"count"}, count}},
 INSTR_FREE_QUBIT_QubitId_{q0},
-INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_{{partner_addr, count, MemoryKey{"outcome"}, max_count}}
-                      // clang-format on
-                  }};
+          // clang-format on
+      }};
+  runtime->assignQubitToRule(partner_addr, runtime->rule_id, qubit);
   runtime->eval(program);
 }
 
