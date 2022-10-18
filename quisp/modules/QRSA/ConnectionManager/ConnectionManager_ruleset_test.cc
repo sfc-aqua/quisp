@@ -68,7 +68,7 @@ TEST(ConnectionManagerRuleSetTest, PurificationRule) {
          {
             "type":"enough_resource",
             "options":{
-               "num_resource":2,
+               "num_resource":3,
                "required_fidelity":0.0,
                "interface":{
                  "partner_address":1,
