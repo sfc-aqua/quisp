@@ -17,7 +17,7 @@ using quisp::runtime::QNodeAddr;
 struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   RuntimeCallback(RuleEngine *re) : rule_engine(re), provider(re->provider) {}
 
-  MeasurementOutcome measureQubitRandomly(IQubitRecord *) override {}
+  MeasurementOutcome measureQubitRandomly(IQubitRecord *) override { throw std::runtime_error("not implemented yet"); }
 
   void gateX(IQubitRecord *qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
@@ -30,7 +30,14 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     assert(qubit != nullptr);
     qubit->zGate();
   }
-
+  void gateCNOT(IQubitRecord *control_qubit_rec, IQubitRecord *target_qubit_rec) override {
+    auto *control_qubit = provider.getStationaryQubit(control_qubit_rec);
+    auto *target_qubit = provider.getStationaryQubit(target_qubit_rec);
+    assert(control_qubit != nullptr);
+    assert(target_qubit != nullptr);
+    target_qubit->CNOT_gate(control_qubit);
+    throw std::runtime_error("cnot applied!");
+  }
   bool purifyX(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     auto *trash_qubit = provider.getStationaryQubit(trash_qubit_rec);
