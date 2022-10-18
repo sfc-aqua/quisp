@@ -88,8 +88,8 @@ void Runtime::assignRuleSet(const RuleSet& _ruleset) {
 }
 
 void Runtime::assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_record) {
-  auto it = ruleset.partner_rule_map.find(partner_addr);
-  assert(it != ruleset.partner_rule_map.end());
+  auto it = ruleset.partner_initial_rule_table.find(partner_addr);
+  assert(it != ruleset.partner_initial_rule_table.end());
   qubits.emplace(std::make_pair(partner_addr, it->second), qubit_record);
 }
 
