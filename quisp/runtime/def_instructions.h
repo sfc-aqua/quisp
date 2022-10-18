@@ -45,7 +45,7 @@ INSTR(PURIFY_X, RegId, QubitId, QubitId)
 
 // send classical messages
 INSTR(SEND_LINK_TOMOGRAPHY_RESULT, QNodeAddr, RegId, MemoryKey, int)  // partner addr, current count reg_id, outcome key, max_count
-INSTR(SEND_PURIFICATION_RESULT, QNodeAddr, RegId)
+INSTR(SEND_PURIFICATION_RESULT, QNodeAddr, RegId /* result */, RegId /* action_index */)
 // send packet
 // INSTR(SEND_LINK_TOMOGRAPHY_RESULT)
 

@@ -80,6 +80,7 @@ class Runtime {
   void assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record);
   void collectLabels(const Program& program);
   void debugRuntimeState();
+  void promoteQubit(QubitResources::iterator);
 
   // operations used by InstructionVisitor
   const Register& getReg(RegId regId) const;
