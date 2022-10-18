@@ -1,8 +1,10 @@
 #pragma once
+
 #include <string>
 #include <unordered_map>
 #include <vector>
 #include "opcode.h"
+#include "types.h"
 
 namespace quisp::runtime {
 class Program {
@@ -30,12 +32,22 @@ class RuleSet {
   RuleSet(const std::string& name = "") : name(name), rules(std::vector<Rule>()) {}
   RuleSet(const std::string& name, const std::vector<Rule>& rules) : name(name), rules(rules) {}
   void finalize();
+
+  // @brief partners contains partner QNodeAddrs
   std::set<QNodeAddr> partners;
-  std::unordered_map<QNodeAddr, RuleId> partner_rule_map;
+  // @brief
+  std::unordered_map<QNodeAddr, RuleId> partner_initial_rule_table;
+  // [(partner_addr, current_rule_id): next_rule_id]
+  std::unordered_map<std::pair<QNodeAddr, RuleId>, RuleId> next_rule_table = {};
+
   bool finalized = false;
   unsigned long id;
   int owner_addr;
   std::string name;
   std::vector<Rule> rules;
+
+ protected:
+  static inline void collectPartners(const RuleId rule_id, const InstructionTypes& instr, std::set<QNodeAddr>& partners,
+                                     std::unordered_map<QNodeAddr, std::vector<RuleId>>& partner_rules);
 };
 }  // namespace quisp::runtime
