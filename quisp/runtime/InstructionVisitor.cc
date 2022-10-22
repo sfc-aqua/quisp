@@ -150,6 +150,7 @@ void InstructionVisitor::operator()(INSTR_INC_RegId_ instruction) {
 void InstructionVisitor::operator()(INSTR_ERROR_String_ instruction) {
   auto [message] = instruction.args;
   runtime->setError(message);
+  runtime->error->caught = true;
   runtime->should_exit = true;
 }
 

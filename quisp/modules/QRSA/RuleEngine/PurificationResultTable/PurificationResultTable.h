@@ -12,9 +12,7 @@ struct PurificationResultKey {
   int action_index = -1;
   int shared_tag = -1;
   rules::PurType type;
-  bool operator==(const PurificationResultKey& key) const {
-    return rs_id == key.rs_id && rule_id == key.rule_id && action_index == key.action_index && shared_tag == key.shared_tag;
-  }
+  bool operator==(const PurificationResultKey& key) const { return rs_id == key.rs_id && action_index == key.action_index && shared_tag == key.shared_tag; }
 };
 
 struct PurificationResultData {
@@ -44,7 +42,7 @@ struct ::std::hash<quisp::modules::pur_result_table::PurificationResultKey> {
   size_t operator()(const quisp::modules::pur_result_table::PurificationResultKey& k) const {
     auto seed = std::hash<unsigned long>()(k.rs_id);
     // https://stackoverflow.com/questions/4948780/magic-number-in-boosthash-combine
-    seed ^= std::hash<int>()(k.rule_id) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    // seed ^= std::hash<int>()(k.rule_id) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     seed ^= std::hash<int>()(k.action_index) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     seed ^= std::hash<int>()(k.shared_tag) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     seed ^= std::hash<int>()(k.type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
