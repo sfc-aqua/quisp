@@ -56,6 +56,9 @@ void Runtime::eval(const Program& program) {
     }
     evalOperation(opcodes[pc]);
   }
+  if (error != nullptr && !error->caught) {
+    throw std::runtime_error("uncaught error");
+  }
 }
 
 void Runtime::cleanup() {
@@ -227,6 +230,13 @@ void Runtime::debugRuntimeState() {
             << "\n  Reg0: " << registers[0].value << ", Reg1: " << registers[1].value << ", Reg2: " << registers[2].value << ", Reg3: " << registers[3].value << "\n--memory--\n";
   for (auto it : memory) {
     std::cout << it.first << ": " << it.second << std::endl;
+  }
+  std::cout << "\n--------\nqubits---------" << std::endl;
+  for (auto& [key, qubit] : qubits) {
+    //// (partner's qnode addr, assigned RuleId) => [half bell pair qubit record]
+    auto& [partner_addr, rule_id] = key;
+    auto locked = callback->isQubitLocked(qubit);
+    std::cout << "(" << qubit->getQNicIndex() << "," << qubit->getQubitIndex() << "):" << partner_addr << ", rule_id:" << rule_id << ", locked:" << locked << std::endl;
   }
   std::cout << "\n--------" << std::endl;
   std::cout << "\nerror: " << (error == nullptr ? "nullptr" : error->message);
