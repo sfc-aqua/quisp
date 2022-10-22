@@ -490,7 +490,7 @@ void RuleEngine::handlePurificationResult(const PurificationResultKey &key, cons
     }
   }
 
-  if (qubit != nullptr) error("cannot found the qubit for purification result");
+  if (qubit == nullptr) error("cannot found the qubit for purification result");
   assert(qubit_rec != nullptr);
   qubit->Unlock();
 
