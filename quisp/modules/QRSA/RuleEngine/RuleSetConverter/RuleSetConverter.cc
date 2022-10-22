@@ -78,6 +78,13 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       // XXX: no impl for now
       name += "FidelityCondition ";
     } else if (auto *c = dynamic_cast<const WaitConditionClause *>(clause_ptr)) {
+      QubitId q0{0};
+      Label found_qubit_label{std::string("FOUND_QUBIT_") + std::to_string(i)};
+      opcodes.push_back(INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, c->partner_address, 0}});
+      opcodes.push_back(INSTR_BNERR_Label_{found_qubit_label});
+      opcodes.push_back(INSTR_ERROR_String_{"qubit not found"});
+      // always failed the condition. swapping result handler will promote the qubit resource to next rule
+      opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::COND_FAILED, found_qubit_label});
       name += "Wait ";
     } else if (auto *c = dynamic_cast<const MeasureCountConditionClause *>(clause_ptr)) {
       /*
@@ -154,12 +161,14 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
     QubitId qubit{0};
     QubitId trash_qubit{1};
     RegId measure_result = RegId::REG0;
-    QNodeAddr partner_addr{act->qnic_interfaces.at(0).partner_addr};
-    MemoryKey action_index_key{"action_index"};
+    auto &interface = act->qnic_interfaces.at(0);
+    QNodeAddr partner_addr{interface.partner_addr};
+    MemoryKey action_index_key{"action_index_" + std::to_string(interface.partner_addr)};
     RegId action_index = RegId::REG1;
     return Program{"Purification",
                    {
                        // clang-format off
+INSTR_SET_RegId_int_{{action_index, 0}},
                        INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit, partner_addr, 1}},
