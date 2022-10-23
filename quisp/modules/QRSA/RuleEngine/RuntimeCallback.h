@@ -103,6 +103,42 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     rule_engine->send(pkt, "RouterPort$o");
     rule_engine->send(pk_for_self, "RouterPort$o");
   }
+  void sendSwappingResults(const unsigned long ruleset_id, const runtime::Rule &rule, const QNodeAddr left_partner_addr, int left_op, const QNodeAddr right_partner_addr,
+                           int right_op) override {
+    auto src_addr = rule_engine->parentAddress;
+
+    SwappingResult *pkt_for_left = new SwappingResult("SwappingResult(Left)");
+    pkt_for_left->setRuleSet_id(ruleset_id);
+    pkt_for_left->setRule_id(rule.id);
+    pkt_for_left->setShared_tag(rule.shared_tag);
+    pkt_for_left->setKind(5);  // cyan
+    pkt_for_left->setDestAddr(left_partner_addr.val);
+    pkt_for_left->setSrcAddr(src_addr);
+    pkt_for_left->setOperation_type(left_op);
+    // pkt_for_left->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
+    pkt_for_left->setNew_partner(right_partner_addr.val);
+    // pkt_for_left->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
+    // pkt_for_left->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
+    // pkt_for_left->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
+
+    // packet for right node
+    SwappingResult *pkt_for_right = new SwappingResult("SwappingResult(Right)");
+    pkt_for_right->setRuleSet_id(ruleset_id);
+    pkt_for_right->setRule_id(rule.id);
+    pkt_for_right->setShared_tag(rule.shared_tag);
+    pkt_for_right->setKind(5);  // cyan
+    pkt_for_right->setDestAddr(right_partner_addr.val);
+    pkt_for_right->setSrcAddr(src_addr);
+    pkt_for_right->setOperation_type(right_op);
+    // pkt_for_right->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
+    pkt_for_right->setNew_partner(left_partner_addr.val);
+    // pkt_for_right->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
+    // pkt_for_right->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
+    // pkt_for_right->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
+
+    rule_engine->send(pkt_for_left, "RouterPort$o");
+    rule_engine->send(pkt_for_right, "RouterPort$o");
+  }
 
   void freeAndResetQubit(IQubitRecord *qubit) override {
     auto *stat_qubit = rule_engine->provider.getStationaryQubit((qubit));
@@ -123,6 +159,18 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   void lockQubit(IQubitRecord *const qubit_rec, unsigned long rs_id, int rule_id, int action_index) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     qubit->Lock(rs_id, rule_id, action_index);
+  }
+
+  void hackSwappingPartners(IQubitRecord *const left_qubit_rec, IQubitRecord *const right_qubit_rec) override {
+    // HACK: this comes from the original SwappingAction.cc
+    // manipulate entangled partners to reproduce the situation of entanglement swapping
+    // this will be not used if we implement more realistic qubit backend
+    auto *left_qubit = provider.getStationaryQubit(left_qubit_rec);
+    auto *right_qubit = provider.getStationaryQubit(right_qubit_rec);
+    auto left_partner_qubit = left_qubit->entangled_partner;
+    auto right_partner_qubit = right_qubit->entangled_partner;
+    right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
+    left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
   }
   RuleEngine *rule_engine;
   utils::ComponentProvider &provider;
