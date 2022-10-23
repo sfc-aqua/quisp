@@ -108,7 +108,8 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void scheduleNextEmissionEvent(int qnic_index, int qnic_address, double interval, simtime_t timing, int num_sent, bool internal, int trial);
   void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result);
   void clearTrackerTable(int destAddr, int internal_qnic_address);
-  [[deprecated]] void traverseThroughAllProcesses2();
+  void handlePurificationResult(const PurificationResultKey &, const PurificationResultData &);
+  void updateResources_EntanglementSwapping(swapping_result swapr);
   double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
 
   [[deprecated]] void traverseThroughAllProcesses2();
