@@ -46,6 +46,13 @@ void InstructionVisitor::operator()(INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_Reg
   runtime->callback->sendPurificationResult(rs.id, rule, action_index, partner_addr, result);
 }
 
+void InstructionVisitor::operator()(INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_ instruction) {
+  auto [left_partner, left_op_id, right_partner, right_op_id] = instruction.args;
+  auto& rs = runtime->ruleset;
+  auto& rule = rs.rules.at(runtime->rule_id);
+  runtime->callback->sendSwappingResults(rs.id, rule, left_partner, runtime->getRegVal(left_op_id), right_partner, runtime->getRegVal(right_op_id));
+}
+
 void InstructionVisitor::operator()(INSTR_MEASURE_RANDOM_MemoryKey_QubitId_ instruction) {
   auto [memory_key, qubit_id] = instruction.args;
   runtime->measureQubit(qubit_id, memory_key, Basis::RANDOM);
@@ -93,6 +100,26 @@ void InstructionVisitor::operator()(INSTR_LOCK_QUBIT_QubitId_RegId_ instruction)
 void InstructionVisitor::operator()(INSTR_LOAD_RegId_MemoryKey_ instruction) {
   auto [reg_id, memory_key] = instruction.args;
   runtime->loadVal(memory_key, reg_id);
+}
+
+void InstructionVisitor::operator()(INSTR_LOAD_LEFT_OP_RegId_MemoryKey_ instruction) {
+  auto [reg_id, outcome_key] = instruction.args;
+  auto val = runtime->loadVal(outcome_key);
+  auto outcome = val.outcome();
+  // FIX: remove this assert and adapt to another basis and operation type
+  // current implementation is sticked to the original implementation
+  assert(outcome.basis == 'X');
+  // operation_type: 0 = I, 1 = X, 2 = Z
+  runtime->setRegVal(reg_id, outcome.outcome_is_plus ? 0 : 2);
+}
+
+void InstructionVisitor::operator()(INSTR_LOAD_RIGHT_OP_RegId_MemoryKey_ instruction) {
+  auto [reg_id, outcome_key] = instruction.args;
+  auto val = runtime->loadVal(outcome_key);
+  auto outcome = val.outcome();
+  assert(outcome.basis == 'Z');
+  // operation_type: 0 = I, 1 = X, 2 = Z
+  runtime->setRegVal(reg_id, outcome.outcome_is_plus ? 0 : 1);
 }
 
 void InstructionVisitor::operator()(INSTR_STORE_MemoryKey_RegId_ instruction) {
@@ -228,5 +255,10 @@ void InstructionVisitor::operator()(INSTR_GET_QUBIT_RegId_QNodeAddr_RegId_ instr
     return;
   }
   runtime->setQubit(qubit_ref, qubit_id);
+}
+
+void InstructionVisitor::operator()(INSTR_HACK_SWAPPING_PARTNERS_QubitId_QubitId_ instruction) {
+  auto [qubit_id1, qubit_id2] = instruction.args;
+  runtime->callback->hackSwappingPartners(runtime->getQubitByQubitId(qubit_id1), runtime->getQubitByQubitId(qubit_id2));
 }
 }  // namespace quisp::runtime
