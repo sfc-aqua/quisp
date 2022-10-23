@@ -34,6 +34,9 @@ using quisp::runtime::Rule;
 using quisp::runtime::RuleSet;
 const nullptr_t None = nullptr;
 
+/* \brief RuleSetConverter converts rules::RuleSet into runtime::RuleSet in RuleEngine.
+ * RuleEngine receives rules::RuleSet that is json serializable format of RuleSet.
+ */
 class RuleSetConverter {
  public:
   static RuleSet construct(const RSData&);
