@@ -33,6 +33,9 @@ INSTR(LOAD, RegId, MemoryKey)
 INSTR(STORE, MemoryKey, RegId)
 INSTR(STORE, MemoryKey, int)
 
+INSTR(LOAD_LEFT_OP, RegId, MemoryKey)
+INSTR(LOAD_RIGHT_OP, RegId, MemoryKey)
+
 // qubit operations
 INSTR(MEASURE_RANDOM, MemoryKey, QubitId)
 INSTR(MEASURE, MemoryKey, QubitId, Basis)
@@ -46,8 +49,9 @@ INSTR(PURIFY_X, RegId, QubitId, QubitId)
 // send classical messages
 INSTR(SEND_LINK_TOMOGRAPHY_RESULT, QNodeAddr, RegId, MemoryKey, int)  // partner addr, current count reg_id, outcome key, max_count
 INSTR(SEND_PURIFICATION_RESULT, QNodeAddr, RegId /* result */, RegId /* action_index */)
-// send packet
-// INSTR(SEND_LINK_TOMOGRAPHY_RESULT)
+INSTR(SEND_SWAPPING_RESULT, QNodeAddr /* left partner*/, RegId /* left operation */, QNodeAddr /* right partner*/, RegId /* right operation */)
+
+INSTR(HACK_SWAPPING_PARTNERS, QubitId, QubitId)
 
 INSTR_LAST(NOP, None)
 #undef INSTR

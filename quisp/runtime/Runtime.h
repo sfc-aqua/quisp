@@ -60,6 +60,8 @@ class Runtime {
     virtual void sendLinkTomographyResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, int count,
                                           MeasurementOutcome outcome, bool is_finished) = 0;
     virtual void sendPurificationResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, bool result) = 0;
+    virtual void sendSwappingResults(const unsigned long ruleset_id, const Rule& rule, const QNodeAddr left_partner_addr, int left_op, const QNodeAddr right_partner_addr,
+                                     int right_op) = 0;
 
     // // Post processing
     virtual void freeAndResetQubit(IQubitRecord*) = 0;
@@ -67,6 +69,8 @@ class Runtime {
 
     virtual bool isQubitLocked(IQubitRecord* const) = 0;
     virtual void lockQubit(IQubitRecord* const, unsigned long rs_id, int rule_id, int action_index) = 0;
+
+    virtual void hackSwappingPartners(IQubitRecord* const, IQubitRecord* const) = 0;
   };
 
   Runtime();
