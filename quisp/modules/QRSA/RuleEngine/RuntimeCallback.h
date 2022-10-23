@@ -18,7 +18,14 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   RuntimeCallback(RuleEngine *re) : rule_engine(re), provider(re->provider) {}
 
   MeasurementOutcome measureQubitRandomly(IQubitRecord *) override { throw std::runtime_error("not implemented yet"); }
-
+  MeasurementOutcome measureQubitX(IQubitRecord *qubit_rec) override {
+    auto qubit = provider.getStationaryQubit(qubit_rec);
+    return MeasurementOutcome{.basis = 'X', .outcome_is_plus = qubit->localMeasureX() == types::EigenvalueResult::PLUS_ONE};
+  }
+  MeasurementOutcome measureQubitZ(IQubitRecord *qubit_rec) override {
+    auto qubit = provider.getStationaryQubit(qubit_rec);
+    return MeasurementOutcome{.basis = 'Z', .outcome_is_plus = qubit->localMeasureZ() == types::EigenvalueResult::PLUS_ONE};
+  }
   void gateX(IQubitRecord *qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     assert(qubit != nullptr);
