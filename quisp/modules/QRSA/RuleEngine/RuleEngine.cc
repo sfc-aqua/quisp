@@ -174,6 +174,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
       error("Empty rule set...");
     }
   } else if (auto *pkt = dynamic_cast<PurificationResult *>(msg)) {
+    bool from_self = pkt->getSrcAddr() == parentAddress;
     const PurificationResultKey key{
         .rs_id = pkt->getRuleset_id(),
         .rule_id = pkt->getRule_id(),
@@ -181,7 +182,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
         .shared_tag = pkt->getShared_tag(),
         .type = rules::PurType::SINGLE_X  // TODO: read from pkt
     };
-    handlePurificationResult(key, PurificationResultData{.is_x_plus = pkt->getOutput_is_plus()});
+    handlePurificationResult(key, PurificationResultData{.is_x_plus = pkt->getOutput_is_plus()}, from_self);
   } else if (auto *pkt = dynamic_cast<DoublePurificationResult *>(msg)) {
     error("DoublePurification is not implemented yet");
     process_id purification_id;
@@ -448,12 +449,14 @@ ActiveAction *RuleEngine::constructAction(std::unique_ptr<Action> action, unsign
   return nullptr;
 }
 
-void RuleEngine::handlePurificationResult(const PurificationResultKey &key, const PurificationResultData &result) {
+void RuleEngine::handlePurificationResult(const PurificationResultKey &key, const PurificationResultData &result, bool from_self) {
   auto it = purification_result_table.find(key);
   if (it == purification_result_table.end()) {
     purification_result_table.insert({key, result});
     return;
   }
+  // rule_id might be different from other node's rule, so use rule id comes from our runtime
+  auto rule_id = from_self ? key.rule_id : it->first.rule_id;
 
   runtime::Runtime *runtime = nullptr;
   for (auto &rt : runtimes) {
@@ -467,7 +470,7 @@ void RuleEngine::handlePurificationResult(const PurificationResultKey &key, cons
   // find qubit
   runtime::Rule *rule;
   for (auto &_rule : runtime->ruleset.rules) {
-    if (_rule.id == key.rule_id && _rule.shared_tag == key.shared_tag) {
+    if (_rule.id == rule_id && _rule.shared_tag == key.shared_tag) {
       rule = &_rule;
     }
   }
