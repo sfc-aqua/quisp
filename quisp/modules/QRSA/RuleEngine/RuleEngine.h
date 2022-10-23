@@ -66,10 +66,10 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   int number_of_qnics_r;
   int number_of_qnics_rp;
   PurificationResultTable purification_result_table;
-  PurificationTable Purification_table;
-  DoublePurificationTable DoublePurification_table;
-  TriplePurificationTable TriplePurification_table;
-  QuatroPurificationTable QuatroPurification_table;
+  [[deprecated]] PurificationTable Purification_table;
+  [[deprecated]] DoublePurificationTable DoublePurification_table;
+  [[deprecated]] TriplePurificationTable TriplePurification_table;
+  [[deprecated]] QuatroPurificationTable QuatroPurification_table;
 
   bool *terminated_qnic;  // When you need to intentionally stop the link to make the simulation lighter.
   sentQubitIndexTracker *tracker;
@@ -110,16 +110,14 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void clearTrackerTable(int destAddr, int internal_qnic_address);
   [[deprecated]] void traverseThroughAllProcesses2();
   double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
-  void storeCheck_Purification_Agreement(purification_result pur_result);
-  void storeCheck_DoublePurification_Agreement(Doublepurification_result pr);
-  void storeCheck_TriplePurification_Agreement(Triplepurification_result pr);
-  void storeCheck_QuatroPurification_Agreement(Quatropurification_result pr);
-  void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int shared_tag, int index);
-  void Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int shared_tag, int index);
 
-  void handlePurificationResult(const PurificationResultKey &, const PurificationResultData &);
-
-  void updateResources_EntanglementSwapping(swapping_result swapr);
+  [[deprecated]] void traverseThroughAllProcesses2();
+  [[deprecated]] void storeCheck_Purification_Agreement(purification_result pur_result);
+  [[deprecated]] void storeCheck_DoublePurification_Agreement(Doublepurification_result pr);
+  [[deprecated]] void storeCheck_TriplePurification_Agreement(Triplepurification_result pr);
+  [[deprecated]] void storeCheck_QuatroPurification_Agreement(Quatropurification_result pr);
+  [[deprecated]] void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int shared_tag, int index);
+  [[deprecated]] void Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int shared_tag, int index);
 
   [[deprecated]] std::unique_ptr<ActiveRuleSet> constructActiveRuleSet(RuleSet ruleset);
   [[deprecated]] std::unique_ptr<ActiveRule> constructRule(std::unique_ptr<ActiveRule> active_rule, std::unique_ptr<Rule> rule, unsigned long ruleset_id);
