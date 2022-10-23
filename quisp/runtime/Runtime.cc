@@ -48,6 +48,7 @@ void Runtime::eval(const Program& program) {
   for (int i = 0; i < len; i++) {
     std::cout << std::to_string(i) << ": " << std::visit([](auto& op) { return op.toString(); }, opcodes[i]) << std::endl;
   }
+  cleanup();
   for (pc = 0; pc < len; pc++) {
     if (should_exit) return;
     if (debugging) {
