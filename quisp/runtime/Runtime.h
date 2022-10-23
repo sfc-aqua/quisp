@@ -49,6 +49,8 @@ class Runtime {
     // // Quantum Operations
     // void gate() {}
     virtual MeasurementOutcome measureQubitRandomly(IQubitRecord*) = 0;
+    virtual MeasurementOutcome measureQubitX(IQubitRecord*) = 0;
+    virtual MeasurementOutcome measureQubitZ(IQubitRecord*) = 0;
     virtual void gateX(IQubitRecord*) = 0;
     virtual void gateZ(IQubitRecord*) = 0;
     virtual void gateCNOT(IQubitRecord* control_qubit_rec, IQubitRecord* target_qubit_rec) = 0;
