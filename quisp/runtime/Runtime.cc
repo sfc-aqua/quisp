@@ -7,6 +7,7 @@
 #include "runtime/types.h"
 
 namespace quisp::runtime {
+
 Runtime::Runtime(const Runtime& rt) : Runtime() {
   rule_id = rt.rule_id;
   debugging = rt.debugging;
@@ -16,44 +17,41 @@ Runtime::Runtime(const Runtime& rt) : Runtime() {
 }
 
 Runtime::Runtime() : visitor(InstructionVisitor{this}) {}
-
 Runtime::Runtime(const RuleSet& ruleset, ICallBack* cb) : visitor(InstructionVisitor{this}), callback(cb) { assignRuleSet(ruleset); }
 Runtime::~Runtime() {}
 
 void Runtime::exec(const RuleSet& ruleset) {
   cleanup();
+  debugging = ruleset.debugging;
+  if (debugging) {
+    std::cout << "Run RuleSet: " << ruleset.name << "\n";
+  }
   for (auto& rule : ruleset.rules) {
     rule_id = rule.id;
-    debugging = qubits.size() > 1;
+    debugging = rule.debugging || ruleset.debugging;
+    if (debugging) {
+      std::cout << "Run Rule: " << rule.name << "\n";
+      debugRuntimeState();
+    }
     eval(rule.condition);
     if (return_code == ReturnCode::COND_FAILED) {
       continue;
     }
-    // if (error != nullptr) {
-    //   break;
-    // }
-    debugging = true;
     eval(rule.action);
   }
 }
 
 void Runtime::eval(const Program& program) {
-  should_exit = false;
-  error = nullptr;
   collectLabels(program);
   auto& opcodes = program.opcodes;
   auto len = opcodes.size();
 
-  std::cout << "\n------\n" << program.name << std::endl;
-  for (int i = 0; i < len; i++) {
-    std::cout << std::to_string(i) << ": " << std::visit([](auto& op) { return op.toString(); }, opcodes[i]) << std::endl;
-  }
   cleanup();
   for (pc = 0; pc < len; pc++) {
     if (should_exit) return;
-    if (debugging) {
+    if (program.debugging || debugging) {
+      std::cout << "op: " << debugInstruction(opcodes[pc]) << std::endl;
       debugRuntimeState();
-      std::cout << "op: " << std::visit([](auto& op) { return op.toString(); }, opcodes[pc]) << std::endl;
     }
     evalOperation(opcodes[pc]);
   }
@@ -69,6 +67,7 @@ void Runtime::cleanup() {
   pc = 0;
   error = nullptr;
   named_qubits.clear();
+  should_exit = false;
 }
 
 void Runtime::collectLabels(const Program& program) {
@@ -115,6 +114,7 @@ void Runtime::setQubit(IQubitRecord* qubit_ref, QubitId qubit_id) {
   assert(qubit_ref != nullptr);
   named_qubits.insert({qubit_id, qubit_ref});
 }
+
 IQubitRecord* Runtime::getQubitByPartnerAddr(QNodeAddr partner_addr, int index) {
   auto it = qubits.find({partner_addr, rule_id});
   for (int i = 0; it != qubits.cend(); it++, i++) {
@@ -122,6 +122,7 @@ IQubitRecord* Runtime::getQubitByPartnerAddr(QNodeAddr partner_addr, int index) 
   }
   return nullptr;
 }
+
 IQubitRecord* Runtime::getQubitByQubitId(QubitId id) const {
   auto it = named_qubits.find(id);
   if (it != named_qubits.end()) {
@@ -238,17 +239,35 @@ void Runtime::debugRuntimeState() {
             << "\npc: " << pc << "\nrule_id: " << rule_id << "\nRegisters:"
             << "\n  Reg0: " << registers[0].value << ", Reg1: " << registers[1].value << ", Reg2: " << registers[2].value << ", Reg3: " << registers[3].value << "\n--memory--\n";
   for (auto it : memory) {
-    std::cout << it.first << ": " << it.second << std::endl;
+    std::cout << it.first << ": " << it.second << "\n";
   }
-  std::cout << "\n--------\nqubits---------" << std::endl;
+  std::cout << "\n--------\nqubits---------\n";
   for (auto& [key, qubit] : qubits) {
     //// (partner's qnode addr, assigned RuleId) => [half bell pair qubit record]
     auto& [partner_addr, rule_id] = key;
     auto locked = callback->isQubitLocked(qubit);
-    std::cout << "(" << qubit->getQNicIndex() << "," << qubit->getQubitIndex() << "):" << partner_addr << ", rule_id:" << rule_id << ", locked:" << locked << std::endl;
+    std::cout << "(" << qubit->getQNicIndex() << "," << qubit->getQubitIndex() << "):" << partner_addr << ", rule_id:" << rule_id << ", locked:" << locked
+              << ", busy:" << qubit->isBusy() << "\n";
   }
-  std::cout << "\n--------" << std::endl;
+
+  for (auto& [qubit_id, qubit] : named_qubits) {
+    std::cout << "[qnic: " << qubit->getQNicIndex() << ", index: " << qubit->getQubitIndex() << "]:" << qubit_id << std::endl;
+  }
+  std::cout << "\n--------\n";
   std::cout << "\nerror: " << (error == nullptr ? "nullptr" : error->message);
   std::cout << "\n--------" << std::endl;
+}
+
+void Runtime::debugSource(const Program& program) const {
+  auto len = program.opcodes.size();
+  std::cout << program.name << "\n";
+  for (int i = 0; i < len; i++) {
+    std::cout << std::to_string(i) << ": " << std::visit([](auto& op) { return op.toString(); }, program.opcodes[i]) << "\n";
+  }
+  std::cout << std::flush;
+}
+
+std::string Runtime::debugInstruction(const InstructionTypes& instr) const {
+  return std::visit([](auto& op) { return op.toString(); }, instr);
 }
 };  // namespace quisp::runtime

@@ -86,6 +86,8 @@ class Runtime {
   void assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record);
   void collectLabels(const Program& program);
   void debugRuntimeState();
+  void debugSource(const Program& program) const;
+  std::string debugInstruction(const InstructionTypes& instr) const;
   void promoteQubit(QubitResources::iterator);
 
   // operations used by InstructionVisitor
