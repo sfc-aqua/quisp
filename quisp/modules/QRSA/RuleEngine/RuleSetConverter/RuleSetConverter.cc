@@ -21,10 +21,13 @@ RuleSet RuleSetConverter::construct(const RSData &data) {
   rs.owner_addr = data.owner_addr;
   auto &rules_data = data.rules;
   for (auto &rule_data : rules_data) {
+    std::string name = rule_data->name + " with ";
+    for (auto &interface : rule_data->qnic_interfaces) {
+      name += std::to_string(interface.partner_addr) + "";
+    }
     auto condition = constructCondition(rule_data->condition.get());
     auto action = constructAction(rule_data->action.get());
-    rs.rules.emplace_back(Rule{rule_data->name, rule_data->shared_tag, condition, action});
-    // std::cout << const_cast<RSData &>(data).serialize_json() << std::endl;
+    rs.rules.emplace_back(Rule{name, rule_data->shared_tag, condition, action});
   }
   return rs;
 }
@@ -75,7 +78,7 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
 
       name += "EnoughResource ";
     } else if (auto *c = dynamic_cast<const FidelityConditionClause *>(clause_ptr)) {
-      // XXX: no impl for now
+      // XXX: no impl in the original
       name += "FidelityCondition ";
     } else if (auto *c = dynamic_cast<const WaitConditionClause *>(clause_ptr)) {
       QubitId q0{0};
@@ -150,6 +153,7 @@ Program RuleSetConverter::constructEntanglementSwappingAction(const Entanglement
   MemoryKey result_right{"result_right"};
   auto op_left = RegId::REG0;
   auto op_right = RegId::REG1;
+
   return Program{"EntanglementSwapping",
                  {
                      // clang-format off
@@ -164,13 +168,23 @@ INSTR_FREE_QUBIT_QubitId_{q1},
 INSTR_LOAD_LEFT_OP_RegId_MemoryKey_{{op_left, result_left}},
 INSTR_LOAD_RIGHT_OP_RegId_MemoryKey_{{op_right, result_right}},
 INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_{{left_partner_addr, op_left, right_partner_addr, op_right}},
-
                      // clang-format on
                  }};
 }
 Program RuleSetConverter::constructPurificationAction(const Purification *act) {
-  //{"options":{"interface":[{"partner_address":3,"qnic_id":0,"qnic_type":"QNIC_E"}],"purification_type":"SINGLE_X"},"type":"purification"}
   if (act->purification_type == rules::PurType::SINGLE_X) {
+    /*
+    SET action_index 0
+    LOAD action_index "action_index_{partner_addr}"
+    GET_QUBIT qubit partner_addr 0
+    GET_QUBIT trash_qubit partner_addr 1
+    PURIFY_X measure_result qubit trash_qubit
+    FREE_QUBIT trash_qubit
+    LOCK_QUBIT qubit action_index
+    SEND_PURIFICATION_RESULT partner_addr measure_result action_index
+    INC action_index
+    STORE "action_index_{partner_addr}" action_index
+    */
     QubitId qubit{0};
     QubitId trash_qubit{1};
     RegId measure_result = RegId::REG0;
@@ -178,11 +192,12 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
     QNodeAddr partner_addr{interface.partner_addr};
     MemoryKey action_index_key{"action_index_" + std::to_string(interface.partner_addr)};
     RegId action_index = RegId::REG1;
-    return Program{"Purification",
+
+    return Program{"X Purification",
                    {
                        // clang-format off
 INSTR_SET_RegId_int_{{action_index, 0}},
-                       INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
+INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit, partner_addr, 1}},
 INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}},
@@ -198,12 +213,26 @@ INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
   throw std::runtime_error("pur not implemented");
   return Program{"Purification", {}};
 }
+
 Program RuleSetConverter::constructWaitAction(const Wait *act) {
-  // todo: maybe promote qubit to the next rule
+  // No actual action for now. maybe we can remove the wait action from RuleSet
+  // because essentially RuleSet mechanism doesn't need the wait action and it's for tweak rule index
   return Program{"Wait", {}};
 }
 
 Program RuleSetConverter::constructTomographyAction(const Tomography *act) {
+  /*
+  LOAD count "count"
+  GET_QUBIT q0 partner_addr qubit_resource_index
+  BNERR L1
+  ERROR "Qubit not found"
+L1:
+  MEASURE_RONDOM "outcome" q0
+  INC count
+  STORE "count" count
+  FREE_QUBIT q0
+  SEND_LINK_TOMOGRAPHY_RESULT partner_addr count "outcome" max_count
+  */
   auto q0 = 0;
   auto count = RegId::REG0;
   int max_count = act->num_measurement;
