@@ -49,4 +49,6 @@ struct ::std::hash<quisp::modules::pur_result_table::PurificationResultKey> {
     return seed;
   }
 };
+
+std::ostream& operator<<(std::ostream& os, const quisp::modules::pur_result_table::PurificationResultTable& table);
 }  // namespace std
