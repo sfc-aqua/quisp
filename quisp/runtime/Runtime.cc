@@ -164,6 +164,14 @@ void Runtime::measureQubit(QubitId qubit_id, MemoryKey memory_key, Basis basis) 
     storeVal(memory_key, MemoryValue{outcome});
     return;
   }
+  if (basis == Basis::X) {
+    storeVal(memory_key, MemoryValue(callback->measureQubitX(qubit_ref)));
+    return;
+  }
+  if (basis == Basis::Z) {
+    storeVal(memory_key, MemoryValue(callback->measureQubitZ(qubit_ref)));
+    return;
+  }
   std::runtime_error("measure qubit with the specified basis is not implemented yet");
 }
 
