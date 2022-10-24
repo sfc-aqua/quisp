@@ -446,7 +446,6 @@ PhotonicQubit *StationaryQubit::generateEntangledPhoton() {
   // stationaryQubit_address = StationaryQubit's index
   photon->setStationaryQubitEntangledWith(stationaryQubit_address);
   photon->setQNICtypeEntangledWith(qnic_type);
-  photon->setEntangled_with(this);
   return photon;
 }
 
