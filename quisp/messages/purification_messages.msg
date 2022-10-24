@@ -9,7 +9,6 @@ packet PurificationResult extends Header
     int shared_tag;
     int action_index;
     //For Debugging
-    omnetpp::cModule* entangled_with;
 }
 
 packet DoublePurificationResult extends Header
@@ -20,8 +19,6 @@ packet DoublePurificationResult extends Header
     int rule_id;
     int shared_tag;
     int action_index;
-     //For Debugging
-    omnetpp::cModule* entangled_with;
 }
 
 packet DS_DoublePurificationResult extends Header
@@ -34,8 +31,6 @@ packet DS_DoublePurificationResult extends Header
     int rule_id;
     int shared_tag;
     int action_index;
-    //For Debugging
-    omnetpp::cModule* entangled_with;
 }
 
 packet DS_DoublePurificationSecondResult extends Header
@@ -47,6 +42,4 @@ packet DS_DoublePurificationSecondResult extends Header
     int rule_id;
     int shared_tag;
     int action_index;
-    //For Debugging
-    omnetpp::cModule* entangled_with;
 }
