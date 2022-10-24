@@ -128,7 +128,6 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
 
   if (msg->arrivedOn("fromHoM_quantum_port$i", 0)) {
     left_arrived_at = simTime();
-    left_statQubit_ptr = const_cast<StationaryQubit *>(check_and_cast<const StationaryQubit *>(photon->getEntangled_with()));
     left_photon_Xerr = photon->getPauliXerr();
     left_photon_Zerr = photon->getPauliZerr();
     left_photon_lost = photon->getPhotonLost();
@@ -141,7 +140,6 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     left_count++;
   } else if (msg->arrivedOn("fromHoM_quantum_port$i", 1)) {
     right_arrived_at = simTime();
-    right_statQubit_ptr = const_cast<StationaryQubit *>(check_and_cast<const StationaryQubit *>(photon->getEntangled_with()));
     right_photon_Xerr = photon->getPauliXerr();
     right_photon_Zerr = photon->getPauliZerr();
     right_photon_lost = photon->getPhotonLost();
