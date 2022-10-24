@@ -53,6 +53,8 @@ std::ostream& operator<<(std::ostream& stream, const MemoryKey& key);
 bool operator==(const MemoryKey& a, const MemoryKey& b);
 
 using None = std::nullptr_t;
+using LabelMap = std::unordered_map<Label, int>;
+
 enum class Basis : int { Z, X, RANDOM };
 std::ostream& operator<<(std::ostream& stream, const Basis& value);
 
