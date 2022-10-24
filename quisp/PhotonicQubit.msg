@@ -14,7 +14,6 @@ message PhotonicQubit
     int NodeEntangledWith = -1;//Which node it is entangled with. -1 if not entangled. Equivalent to SrcAddress.
     int QNICEntangledWith = -1;//Which QNIC it is entangled with
     int StationaryQubitEntangledWith = -1;//Which buffer it is entangled with
-    omnetpp::cModule* entangled_with;
     int QNICtypeEntangledWith = -1;
     //cModulePtr qnic_pointer;
     //EntangledWith entangledWith;
