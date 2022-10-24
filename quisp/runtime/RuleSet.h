@@ -9,10 +9,11 @@
 namespace quisp::runtime {
 class Program {
  public:
-  Program(const std::string& name, const std::vector<InstructionTypes>& opcodes, bool debugging = false) : name(name), opcodes(opcodes), debugging(debugging) {}
+  Program(const std::string& name, const std::vector<InstructionTypes>& opcodes, bool debugging = false);
 
   std::string name;
   std::vector<InstructionTypes> opcodes;
+  LabelMap label_map;
   bool debugging = false;
 };
 
