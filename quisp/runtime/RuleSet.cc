@@ -7,6 +7,18 @@
 #include "runtime/types.h"
 
 namespace quisp::runtime {
+
+Program::Program(const std::string& name, const std::vector<InstructionTypes>& opcodes, bool debugging) : name(name), opcodes(opcodes), debugging(debugging) {
+  auto len = opcodes.size();
+  int pc = 0;
+  for (pc = 0; pc < len; pc++) {
+    auto op = opcodes[pc];
+    auto label = std::visit([](auto& o) { return o.label; }, op);
+    if (label.size() > 0) {
+      label_map.insert({label, pc});
+    }
+  }
+}
 void Rule::finalize() {}
 
 void RuleSet::finalize() {

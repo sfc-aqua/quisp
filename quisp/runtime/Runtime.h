@@ -34,7 +34,6 @@ struct Register {
 using QubitResources = std::unordered_multimap<std::pair<QNodeAddr, RuleId>, IQubitRecord*>;
 
 using QubitNameMap = std::unordered_map<QubitId, IQubitRecord*>;
-using LabelMap = std::unordered_map<Label, int>;
 
 using Memory = std::unordered_map<MemoryKey, MemoryValue>;
 
@@ -81,10 +80,9 @@ class Runtime {
   void cleanup();
   void exec(const RuleSet& ruleset);
   void eval(const Program& program);
-  void evalOperation(InstructionTypes op);
+  void evalOperation(const InstructionTypes& op);
   void assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_record);
   void assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record);
-  void collectLabels(const Program& program);
   void debugRuntimeState();
   void debugSource(const Program& program) const;
   std::string debugInstruction(const InstructionTypes& instr) const;
@@ -124,7 +122,7 @@ class Runtime {
   QubitResources qubits;
   QubitNameMap named_qubits;
   RuntimeError* error = nullptr;
-  LabelMap label_map;
+  LabelMap const* label_map = nullptr;
   Memory memory;
   bool debugging = false;
   bool should_exit = false;
