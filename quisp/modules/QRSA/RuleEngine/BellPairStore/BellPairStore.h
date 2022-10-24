@@ -28,9 +28,11 @@ class BellPairStore {
   void insertEntangledQubit(QNodeAddr partner_addr, qrsa::IQubitRecord* qubit);
   qrsa::IQubitRecord* findQubit(QNIC_type qnic_type, QNicIndex qnic_index, QNodeAddr addr);
   PartnerAddrQubitMapRange getBellPairsRange(QNIC_type qnic_type, QNicIndex qnic_index, QNodeAddr partner_addr);
+  std::string toString() const;
   Logger::ILogger* logger;
 
  protected:
   std::map<ResourceKey, PartnerAddrQubitMap> _resources;
 };
+std::ostream& operator<<(std::ostream& os, const quisp::modules::BellPairStore& store);
 }  // namespace quisp::modules
