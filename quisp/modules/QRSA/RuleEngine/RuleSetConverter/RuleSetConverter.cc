@@ -154,9 +154,10 @@ Program RuleSetConverter::constructEntanglementSwappingAction(const Entanglement
   auto op_left = RegId::REG0;
   auto op_right = RegId::REG1;
 
-  return Program{"EntanglementSwapping",
-                 {
-                     // clang-format off
+  return Program{
+      "EntanglementSwapping",
+      {
+          // clang-format off
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, left_partner_addr, 0}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q1, right_partner_addr, 1}},
 INSTR_GATE_CNOT_QubitId_QubitId_{{q0, q1}},
@@ -168,8 +169,9 @@ INSTR_FREE_QUBIT_QubitId_{q1},
 INSTR_LOAD_LEFT_OP_RegId_MemoryKey_{{op_left, result_left}},
 INSTR_LOAD_RIGHT_OP_RegId_MemoryKey_{{op_right, result_right}},
 INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_{{left_partner_addr, op_left, right_partner_addr, op_right}},
-                     // clang-format on
-                 }};
+          // clang-format on
+      },
+  };
 }
 Program RuleSetConverter::constructPurificationAction(const Purification *act) {
   if (act->purification_type == rules::PurType::SINGLE_X) {
