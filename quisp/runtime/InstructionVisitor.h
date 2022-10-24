@@ -16,7 +16,7 @@ struct InstructionVisitor {
   InstructionVisitor& operator=(InstructionVisitor&& visitor) = delete;
 
 // the class declarations are done by macro expansion
-#define INSTR(Opcode, ...) void operator()(INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__) instruction);
+#define INSTR(Opcode, ...) void operator()(const INSTRUCTION_TYPE_ALIAS(Opcode, __VA_ARGS__) & instruction);
 #include "def_instructions.h"
 #undef INSTR
 

@@ -42,7 +42,7 @@ void Runtime::exec(const RuleSet& ruleset) {
 }
 
 void Runtime::eval(const Program& program) {
-  collectLabels(program);
+  label_map = &program.label_map;
   auto& opcodes = program.opcodes;
   auto len = opcodes.size();
 
@@ -70,19 +70,7 @@ void Runtime::cleanup() {
   should_exit = false;
 }
 
-void Runtime::collectLabels(const Program& program) {
-  auto& opcodes = program.opcodes;
-  auto len = opcodes.size();
-  for (pc = 0; pc < len; pc++) {
-    auto op = opcodes[pc];
-    auto label = std::visit([](auto& o) { return o.label; }, op);
-    if (label.size() > 0) {
-      label_map.insert({label, pc});
-    }
-  }
-}
-
-void Runtime::evalOperation(InstructionTypes instruction) { std::visit(visitor, instruction); }
+void Runtime::evalOperation(const InstructionTypes& instruction) { std::visit(visitor, instruction); }
 
 void Runtime::assignRuleSet(const RuleSet& _ruleset) {
   ruleset = _ruleset;
@@ -132,8 +120,8 @@ IQubitRecord* Runtime::getQubitByQubitId(QubitId id) const {
 }
 
 void Runtime::jumpTo(const Label& label) {
-  auto it = label_map.find(label);
-  if (it != label_map.end()) {
+  auto it = label_map->find(label);
+  if (it != label_map->end()) {
     // pc will be incremeted before executing the next line
     pc = it->second - 1;
   }
