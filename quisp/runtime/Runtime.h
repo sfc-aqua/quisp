@@ -87,6 +87,7 @@ class Runtime {
   void debugSource(const Program& program) const;
   std::string debugInstruction(const InstructionTypes& instr) const;
   void promoteQubit(QubitResources::iterator);
+  void promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr new_partner_addr);
 
   // operations used by InstructionVisitor
   const Register& getReg(RegId regId) const;
