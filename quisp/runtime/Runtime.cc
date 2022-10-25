@@ -50,10 +50,14 @@ void Runtime::eval(const Program& program) {
   for (pc = 0; pc < len; pc++) {
     if (should_exit) return;
     if (program.debugging || debugging) {
-      std::cout << "op: " << debugInstruction(opcodes[pc]) << std::endl;
+      debugSource(program);
       debugRuntimeState();
     }
     evalOperation(opcodes[pc]);
+  }
+
+  if (program.debugging || debugging) {
+    debugRuntimeState();
   }
   if (error != nullptr && !error->caught) {
     throw std::runtime_error("uncaught error");
@@ -242,34 +246,34 @@ void Runtime::purifyZ(QubitId qubit_id, QubitId trash_qubit_id) {
 
 bool Runtime::isQubitLocked(IQubitRecord* const qubit) { return callback->isQubitLocked(qubit); }
 void Runtime::debugRuntimeState() {
-  std::cout << "\n-----debug-runtime-state------"
-            << "\npc: " << pc << "\nrule_id: " << rule_id << "\nRegisters:"
-            << "\n  Reg0: " << registers[0].value << ", Reg1: " << registers[1].value << ", Reg2: " << registers[2].value << ", Reg3: " << registers[3].value << "\n--memory--\n";
+  std::cout << "\n---------runtime-state---------"
+            << "\npc: " << pc << ", rule_id: " << rule_id << ", error: " << (error == nullptr ? "no error" : error->message);
+  std::cout << "\nReg0: " << registers[0].value << ", Reg1: " << registers[1].value << ", Reg2: " << registers[2].value << ", Reg3: " << registers[3].value
+            << "\n----------memory------------\n";
   for (auto it : memory) {
-    std::cout << it.first << ": " << it.second << "\n";
+    std::cout << "  " << it.first << ": " << it.second << "\n";
   }
-  std::cout << "\n--------\nqubits---------\n";
+  std::cout << "\n----------qubits---------\n";
   for (auto& [key, qubit] : qubits) {
     //// (partner's qnode addr, assigned RuleId) => [half bell pair qubit record]
     auto& [partner_addr, rule_id] = key;
     auto locked = callback->isQubitLocked(qubit);
-    std::cout << "(" << qubit->getQNicIndex() << "," << qubit->getQubitIndex() << "):" << partner_addr << ", rule_id:" << rule_id << ", locked:" << locked
+    std::cout << "  Qubit(qnic:" << qubit->getQNicIndex() << ", qubit_index:" << qubit->getQubitIndex() << "):" << partner_addr << " rule_id:" << rule_id << ", locked:" << locked
               << ", busy:" << qubit->isBusy() << "\n";
   }
 
+  std::cout << "\n--------named-qubits---------\n";
   for (auto& [qubit_id, qubit] : named_qubits) {
-    std::cout << "[qnic: " << qubit->getQNicIndex() << ", index: " << qubit->getQubitIndex() << "]:" << qubit_id << std::endl;
+    std::cout << "  QubitId(" << qubit_id.val << "): Qubit(qnic: " << qubit->getQNicIndex() << ", index: " << qubit->getQubitIndex() << "):\n";
   }
-  std::cout << "\n--------\n";
-  std::cout << "\nerror: " << (error == nullptr ? "nullptr" : error->message);
-  std::cout << "\n--------" << std::endl;
+  std::cout << "----------------------------------------\n\n" << std::endl;
 }
 
 void Runtime::debugSource(const Program& program) const {
   auto len = program.opcodes.size();
-  std::cout << program.name << "\n";
+  std::cout << program.name << callback->getNodeInfo() << "\n";
   for (int i = 0; i < len; i++) {
-    std::cout << std::to_string(i) << ": " << std::visit([](auto& op) { return op.toString(); }, program.opcodes[i]) << "\n";
+    std::cout << (i == pc ? "  >>" : "    ") << std::to_string(i) << ": " << std::visit([](auto& op) { return op.toString(); }, program.opcodes[i]) << "\n";
   }
   std::cout << std::flush;
 }
