@@ -271,7 +271,7 @@ void Runtime::debugRuntimeState() {
 
 void Runtime::debugSource(const Program& program) const {
   auto len = program.opcodes.size();
-  std::cout << program.name << callback->getNodeInfo() << "\n";
+  std::cout << program.name << " " << callback->getNodeInfo() << "\n";
   for (int i = 0; i < len; i++) {
     std::cout << (i == pc ? "  >>" : "    ") << std::to_string(i) << ": " << std::visit([](auto& op) { return op.toString(); }, program.opcodes[i]) << "\n";
   }
