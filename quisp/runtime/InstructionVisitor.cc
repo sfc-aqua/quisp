@@ -40,7 +40,7 @@ void InstructionVisitor::operator()(const INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNod
 void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_& instruction) {
   auto [partner_addr, result_reg_id, action_index_reg_id] = instruction.args;
   bool result = runtime->getRegVal(result_reg_id);
-  bool action_index = runtime->getRegVal(action_index_reg_id);
+  int action_index = runtime->getRegVal(action_index_reg_id);
   auto& rs = runtime->ruleset;
   auto& rule = rs.rules.at(runtime->rule_id);
   runtime->callback->sendPurificationResult(rs.id, rule, action_index, partner_addr, result);
