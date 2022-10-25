@@ -159,7 +159,7 @@ Program RuleSetConverter::constructEntanglementSwappingAction(const Entanglement
       {
           // clang-format off
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, left_partner_addr, 0}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q1, right_partner_addr, 1}},
+INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q1, right_partner_addr, 0}},
 INSTR_GATE_CNOT_QubitId_QubitId_{{q0, q1}},
 INSTR_MEASURE_MemoryKey_QubitId_Basis_{{result_left, q0, Basis::X}},
 INSTR_MEASURE_MemoryKey_QubitId_Basis_{{result_right, q1, Basis::Z}},

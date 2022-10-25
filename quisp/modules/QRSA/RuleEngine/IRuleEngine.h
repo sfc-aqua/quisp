@@ -55,10 +55,10 @@ struct swapping_result {
   process_id id;
   int swapper_addr;
   int new_partner;
-  int new_partner_qnic_index;
-  int new_partner_qnic_address;
+  [[deprecated]] int new_partner_qnic_index;
+  [[deprecated]] int new_partner_qnic_address;
   int measured_qubit_index;
-  QNIC_type new_partner_qnic_type;
+  [[deprecated]] QNIC_type new_partner_qnic_type;
   int operation_type;
 };
 
