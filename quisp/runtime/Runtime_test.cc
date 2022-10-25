@@ -24,6 +24,8 @@ class RuntimeTest : public testing::Test {
     qubit = new QubitRecord{QNIC_E, 2, 3};
     qubit2 = new QubitRecord{QNIC_E, 2, 4};
     qubit3 = new QubitRecord{QNIC_E, 2, 5};
+    qubit4 = new QubitRecord{QNIC_E, 2, 6};
+    qubit5 = new QubitRecord{QNIC_E, 2, 7};
   }
 
   void TearDown() { delete runtime; }
@@ -33,6 +35,8 @@ class RuntimeTest : public testing::Test {
   qrsa::IQubitRecord* qubit;
   qrsa::IQubitRecord* qubit2;
   qrsa::IQubitRecord* qubit3;
+  qrsa::IQubitRecord* qubit4;
+  qrsa::IQubitRecord* qubit5;
 };
 
 TEST_F(RuntimeTest, initialize) { ASSERT_NE(runtime, nullptr); }
@@ -135,20 +139,27 @@ INSTR_LOAD_RegId_MemoryKey_{{r0,MemoryKey{ "count"}}}
 TEST_F(RuntimeTest, getMultipleQubits) {
   QubitId q0{0};
   QubitId q1{1};
-  QNodeAddr partner_addr{1};
+  QubitId q2{2};
+  QNodeAddr partner_addr{2};
   runtime->debugging = true;
   Program program{"get multiple qubits",
                   {
                       // clang-format off
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, 0}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q1, partner_addr, 1}},
+INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q2, partner_addr, 2}},
+INSTR_ERROR_String_{"no qubit"},
                       // clang-format on
                   }};
   runtime->assignQubitToRule(partner_addr, runtime->rule_id, qubit);
   runtime->assignQubitToRule(partner_addr, runtime->rule_id + 1, qubit2);
   runtime->assignQubitToRule(partner_addr, runtime->rule_id, qubit3);
+  runtime->assignQubitToRule(partner_addr, runtime->rule_id + 1, qubit4);
+  runtime->assignQubitToRule(partner_addr, runtime->rule_id + 1, qubit5);
   runtime->eval(program);
 
   EXPECT_EQ(runtime->getQubitByQubitId(q0), qubit);
+  EXPECT_EQ(runtime->getQubitByQubitId(q1), qubit3);
+  EXPECT_EQ(runtime->getQubitByQubitId(q2), nullptr);
 }
 }  // namespace
