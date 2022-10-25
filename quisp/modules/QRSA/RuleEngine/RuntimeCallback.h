@@ -1,10 +1,13 @@
 #pragma once
 
+#include <omnetpp.h>
+#include <sstream>
+#include <stdexcept>
+
 #include <messages/classical_messages.h>
 #include <runtime/Runtime.h>
 #include <runtime/types.h>
 #include <utils/ComponentProvider.h>
-#include <stdexcept>
 
 #include "RuleEngine.h"
 
@@ -178,6 +181,13 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     right_qubit_index = right_partner_qubit->stationaryQubit_address;
     left_qubit_index = left_partner_qubit->stationaryQubit_address;
   }
+
+  std::string getNodeInfo() override {
+    std::stringstream ss;
+    ss << "QNodeAddr:" << std::to_string(rule_engine->parentAddress) << ", event #" << std::to_string(omnetpp::getSimulation()->getEventNumber());
+    return ss.str();
+  }
+
   RuleEngine *rule_engine;
   utils::ComponentProvider &provider;
   int right_qubit_index = -1;
