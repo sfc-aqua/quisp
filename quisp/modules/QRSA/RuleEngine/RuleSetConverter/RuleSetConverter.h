@@ -32,7 +32,7 @@ using quisp::runtime::MemoryKey;
 using quisp::runtime::Program;
 using quisp::runtime::Rule;
 using quisp::runtime::RuleSet;
-const nullptr_t None = nullptr;
+const std::nullptr_t None = nullptr;
 
 /* \brief RuleSetConverter converts rules::RuleSet into runtime::RuleSet in RuleEngine.
  * RuleEngine receives rules::RuleSet that is json serializable format of RuleSet.
