@@ -70,6 +70,8 @@ class Runtime {
     virtual void lockQubit(IQubitRecord* const, unsigned long rs_id, int rule_id, int action_index) = 0;
 
     virtual void hackSwappingPartners(IQubitRecord* const, IQubitRecord* const) = 0;
+
+    virtual std::string getNodeInfo() { return ""; };
   };
 
   Runtime();
