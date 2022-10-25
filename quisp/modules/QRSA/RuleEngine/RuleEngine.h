@@ -45,6 +45,15 @@ using pur_result_table::PurificationResultTable;
 using qnic_store::IQNicStore;
 using qubit_record::IQubitRecord;
 
+struct SwappingResultData {
+  unsigned long ruleset_id;
+  int shared_tag;
+  int new_partner_addr;
+  int swapper_addr;
+  int operation_type;
+  int qubit_index;
+};
+
 /** \class RuleEngine RuleEngine.h
  *  \note The Connection Manager responds to connection requests received from other nodes.
  *        Connection setup, so a regular operation but not high bandwidth, relatively low constraints.
@@ -109,6 +118,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result);
   void clearTrackerTable(int destAddr, int internal_qnic_address);
   void handlePurificationResult(const PurificationResultKey &, const PurificationResultData &, bool from_self);
+  void handleSwappingResult(const SwappingResultData &data);
   void updateResources_EntanglementSwapping(swapping_result swapr);
   double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
 

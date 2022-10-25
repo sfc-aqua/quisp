@@ -226,23 +226,15 @@ void RuleEngine::handleMessage(cMessage *msg) {
     pr.DS_purification_outcome = pkt->getDS_Output_is_plus();
     storeCheck_TriplePurification_Agreement(pr);
   } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
-    error("Swapping is not implemented yet");
-    process_id swapping_id;
-    swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
-    swapping_id.rule_id = pkt->getRule_id();
-    swapping_id.shared_tag = pkt->getShared_tag();
-    swapping_id.index = pkt->getAction_index();
-
-    swapping_result swapr;  // result of entanglement swapping
-    swapr.id = swapping_id;
-    swapr.swapper_addr = pkt->getSrcAddr();
-    swapr.new_partner = pkt->getNew_partner();
-    swapr.new_partner_qnic_index = pkt->getNew_partner_qnic_index();
-    swapr.new_partner_qnic_address = pkt->getNew_partner_qnic_address();
-    swapr.new_partner_qnic_type = pkt->getNew_partner_qnic_type();
-    swapr.measured_qubit_index = pkt->getMeasured_qubit_index();
-    swapr.operation_type = pkt->getOperation_type();
-    updateResources_EntanglementSwapping(swapr);
+    const SwappingResultData data{
+        .ruleset_id = pkt->getRuleSet_id(),
+        .shared_tag = pkt->getShared_tag(),
+        .new_partner_addr = pkt->getNew_partner(),
+        .swapper_addr = pkt->getSrcAddr(),
+        .operation_type = pkt->getOperation_type(),
+        .qubit_index = pkt->getMeasured_qubit_index()  // qubit index for this node, the name is misleading
+    };
+    handleSwappingResult(data);
   }
 
   else if (auto *pkt = dynamic_cast<SimultaneousSwappingResult *>(msg)) {
@@ -480,7 +472,6 @@ void RuleEngine::handlePurificationResult(const PurificationResultKey &key, cons
   IStationaryQubit *qubit = nullptr;
   runtime::QubitResources::iterator qubit_key;
   for (auto it = runtime->qubits.begin(); it != runtime->qubits.end(); it++) {
-    // for(auto &[k, q_rec]: runtime->qubits) {
     auto &[addr, rule_id] = it->first;
     if (rule_id != rule->id) continue;
     auto *q = provider.getStationaryQubit(it->second);
@@ -899,7 +890,38 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
       provider.getQNIC(qnic_index, QNIC_type(qnic_type))->par("burst_trial_counter") = qnic_burst_trial_counter[qnic_address];
   }
 }
+void RuleEngine::handleSwappingResult(const SwappingResultData &data) {
+  auto qnic_addr = routingdaemon->return_QNIC_address_to_destAddr(data.new_partner_addr);
+  auto conn_info = hardware_monitor->findConnectionInfoByQnicAddr(qnic_addr);
+  if (conn_info == nullptr) error("qnic(addr: %d) info not found", qnic_addr);
+  auto qnic_type = conn_info->qnic.type;
+  auto qnic_index = conn_info->qnic.index;
+  auto qubit_index = data.qubit_index;
 
+  auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit_index);
+  switch (data.operation_type) {
+    case 0:  // do nothing
+      break;
+    case 1:
+      realtime_controller->applyXGate(qubit_record);
+      break;
+    case 2:
+      realtime_controller->applyZGate(qubit_record);
+      break;
+    default:
+      error("Something went wrong. This operation type: %d isn't recorded!", data.operation_type);
+  }
+
+  runtime::Runtime *runtime = nullptr;
+  for (auto &rt : runtimes) {
+    if (rt.ruleset.id == data.ruleset_id) {
+      runtime = &rt;
+      break;
+    }
+  }
+  assert(runtime != nullptr);
+  runtime->promoteQubitWithNewPartner(qubit_record, data.new_partner_addr);
+}
 void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
   // swapper believe previous BSM was succeeded.
   // These are new partner's info
