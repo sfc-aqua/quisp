@@ -120,9 +120,12 @@ void Runtime::setQubit(IQubitRecord* qubit_ref, QubitId qubit_id) {
 }
 
 IQubitRecord* Runtime::getQubitByPartnerAddr(QNodeAddr partner_addr, int index) {
-  auto it = qubits.find({partner_addr, rule_id});
-  for (int i = 0; it != qubits.cend(); it++, i++) {
-    if (i == index) return it->second;
+  int i = 0;
+  for (auto it = qubits.begin(); it != qubits.end(); it++) {
+    if (it->first.first == partner_addr && it->first.second == rule_id) {
+      if (index == i) return it->second;
+      i++;
+    }
   }
   return nullptr;
 }
