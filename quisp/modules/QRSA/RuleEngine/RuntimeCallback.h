@@ -1,12 +1,12 @@
 #pragma once
 
+#include <messages/classical_messages.h>
 #include <runtime/Runtime.h>
 #include <runtime/types.h>
 #include <utils/ComponentProvider.h>
 #include <stdexcept>
 
 #include "RuleEngine.h"
-#include "messages/purification_messages_m.h"
 
 namespace quisp::modules::runtime_callback {
 
@@ -103,6 +103,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     rule_engine->send(pkt, "RouterPort$o");
     rule_engine->send(pk_for_self, "RouterPort$o");
   }
+
   void sendSwappingResults(const unsigned long ruleset_id, const runtime::Rule &rule, const QNodeAddr left_partner_addr, int left_op, const QNodeAddr right_partner_addr,
                            int right_op) override {
     auto src_addr = rule_engine->parentAddress;
@@ -112,29 +113,24 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     pkt_for_left->setRule_id(rule.id);
     pkt_for_left->setShared_tag(rule.shared_tag);
     pkt_for_left->setKind(5);  // cyan
-    pkt_for_left->setDestAddr(left_partner_addr.val);
     pkt_for_left->setSrcAddr(src_addr);
+
+    SwappingResult *pkt_for_right = pkt_for_left->dup();
+    pkt_for_right->setName("SwappingResult(Right)");
+
+    // packet for left node
+    pkt_for_left->setDestAddr(left_partner_addr.val);
     pkt_for_left->setOperation_type(left_op);
-    // pkt_for_left->setMeasured_qubit_index(pkt->getMeasured_qubit_index_left());
     pkt_for_left->setNew_partner(right_partner_addr.val);
-    // pkt_for_left->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_left());
-    // pkt_for_left->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_left());
-    // pkt_for_left->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_left());
+    // HACK: see hackSwappingPartners method
+    pkt_for_left->setMeasured_qubit_index(left_qubit_index);
 
     // packet for right node
-    SwappingResult *pkt_for_right = new SwappingResult("SwappingResult(Right)");
-    pkt_for_right->setRuleSet_id(ruleset_id);
-    pkt_for_right->setRule_id(rule.id);
-    pkt_for_right->setShared_tag(rule.shared_tag);
-    pkt_for_right->setKind(5);  // cyan
     pkt_for_right->setDestAddr(right_partner_addr.val);
-    pkt_for_right->setSrcAddr(src_addr);
     pkt_for_right->setOperation_type(right_op);
-    // pkt_for_right->setMeasured_qubit_index(pkt->getMeasured_qubit_index_right());
     pkt_for_right->setNew_partner(left_partner_addr.val);
-    // pkt_for_right->setNew_partner_qnic_index(pkt->getNew_partner_qnic_index_right());
-    // pkt_for_right->setNew_partner_qnic_address(pkt->getNew_partner_qnic_address_right());
-    // pkt_for_right->setNew_partner_qnic_type(pkt->getNew_partner_qnic_type_right());
+    // HACK: see hackSwappingPartners method
+    pkt_for_right->setMeasured_qubit_index(right_qubit_index);
 
     rule_engine->send(pkt_for_left, "RouterPort$o");
     rule_engine->send(pkt_for_right, "RouterPort$o");
@@ -152,10 +148,12 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     }
     rule_engine->freeConsumedResource(qubit->getQNicIndex(), stat_qubit, qubit->getQNicType());
   };
+
   bool isQubitLocked(IQubitRecord *const qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     return qubit->isLocked();
   }
+
   void lockQubit(IQubitRecord *const qubit_rec, unsigned long rs_id, int rule_id, int action_index) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     qubit->Lock(rs_id, rule_id, action_index);
@@ -171,9 +169,19 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     auto right_partner_qubit = right_qubit->entangled_partner;
     right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
     left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
+
+    // HACK: this is also comes from the original SwappingAction.cc
+    // at the both partner nodes, they need know which qubits are swapped.
+    // so here these qubit indices are stored and later sendSwappingResults method uses it
+    // this must be tracked in another way because we can't know these information
+    // from the actual qubits in real world
+    right_qubit_index = right_partner_qubit->stationaryQubit_address;
+    left_qubit_index = left_partner_qubit->stationaryQubit_address;
   }
   RuleEngine *rule_engine;
   utils::ComponentProvider &provider;
+  int right_qubit_index = -1;
+  int left_qubit_index = -1;
 };
 
 }  // namespace quisp::modules::runtime_callback
