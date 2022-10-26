@@ -27,14 +27,14 @@ void InstructionVisitor::operator()(const INSTR_BRANCH_IF_LOCKED_Label_RegId_& i
     runtime->jumpTo(label);
   }
 }
-void InstructionVisitor::operator()(const INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_& instruction) {
-  auto [partner_addr, counter_reg_id, outcome_key, max_count] = instruction.args;
+void InstructionVisitor::operator()(const INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_Time_& instruction) {
+  auto [partner_addr, counter_reg_id, outcome_key, max_count, start_time] = instruction.args;
   auto count = runtime->getRegVal(counter_reg_id);
   auto outcome = runtime->loadVal(outcome_key).outcome();
   auto& rs = runtime->ruleset;
   auto& rule = rs.rules.at(runtime->rule_id);
   auto action_index = 0;
-  runtime->callback->sendLinkTomographyResult(rs.id, rule, action_index, partner_addr, count, outcome, max_count);
+  runtime->callback->sendLinkTomographyResult(rs.id, rule, action_index, partner_addr, count, outcome, max_count, start_time);
 }
 
 void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_& instruction) {
