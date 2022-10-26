@@ -46,7 +46,17 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       Label loop_label{std::string("LOOP_") + std::to_string(i)};
       Label found_qubit_label{std::string("FOUND_QUBIT_") + std::to_string(i)};
       Label passed_label{std::string("PASSED_") + std::to_string(i)};
+
+      Label num_check_label{std::string("NUM_RES_CHECK") + std::to_string(i)};
+      Label store_qubit_label{std::string("STORE_QUBIT_INDEX") + std::to_string(i)};
+      Label store_trash_qubit_label{std::string("STORE_TRASH_QUBIT_INDEX") + std::to_string(i)};
+
+      MemoryKey qubit_index_key{"qubit_index"};
+      MemoryKey trash_qubit_index_key{"trash_qubit_index"};
       /*
+        STORE "qubit_id" -1
+        STORE "trash_qubit_id" -1
+        SET temp_qubit_id -1
         SET qubit_id -1
         SET counter 0
       LOOP:
@@ -57,6 +67,17 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       FOUND_QUBIT:
         BRANCH_IF_LOCKED qubit_id LOOP
         INC counter
+        BEQ STORE_QUBIT_ID counter 1
+        BEQ STORE_TRASH_QUBIT_ID counter 2
+        JMP NUM_RES_CHECK
+
+      STORE_QUBIT_ID:       # for purification
+        STORE "qubit_index" qubit_id
+        JMP NUM_RES_CHECK
+      STORE_TRASH_QUBIT_ID: # for purification
+        STORE "trash_qubit_index" qubit_id
+
+      NUM_RES_CHECK
         BEQ counter num_resource_required PASSED
         JMP LOOP
       PASSED:
@@ -72,7 +93,16 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
 
       opcodes.push_back(INSTR_BRANCH_IF_LOCKED_Label_RegId_{{loop_label, qubit_id}, found_qubit_label});
       opcodes.push_back(INSTR_INC_RegId_{{counter}});
-      opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{passed_label, counter, c->num_resource}});
+
+      opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{store_qubit_label, counter, 1}});
+      opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{store_trash_qubit_label, counter, 2}});
+      opcodes.push_back(INSTR_JMP_Label_{{num_check_label}});
+
+      opcodes.push_back(INSTR_STORE_MemoryKey_RegId_{{qubit_index_key, counter}, store_qubit_label});
+      opcodes.push_back(INSTR_JMP_Label_{{num_check_label}});
+      opcodes.push_back(INSTR_STORE_MemoryKey_RegId_{{trash_qubit_index_key, counter}, store_trash_qubit_label});
+
+      opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{passed_label, counter, c->num_resource}, num_check_label});
       opcodes.push_back(INSTR_JMP_Label_{loop_label});
       opcodes.push_back(INSTR_NOP_None_{nullptr, passed_label});
 
@@ -190,27 +220,35 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
     QubitId qubit{0};
     QubitId trash_qubit{1};
     RegId measure_result = RegId::REG0;
+    RegId action_index = RegId::REG1;
+    RegId qubit_index = RegId::REG2;
+    RegId trash_qubit_index = RegId::REG3;
+
     auto &interface = act->qnic_interfaces.at(0);
     QNodeAddr partner_addr{interface.partner_addr};
     MemoryKey action_index_key{"action_index_" + std::to_string(interface.partner_addr)};
-    RegId action_index = RegId::REG1;
+    MemoryKey qubit_index_key{"qubit_index"};
+    MemoryKey trash_qubit_index_key{"trash_qubit_index"};
 
-    return Program{"X Purification",
-                   {
-                       // clang-format off
+    return Program{
+        "X Purification",
+        {
+            // clang-format off
 INSTR_SET_RegId_int_{{action_index, 0}},
 INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit, partner_addr, 1}},
+INSTR_LOAD_RegId_MemoryKey_{{qubit_index, qubit_index_key}},
+INSTR_LOAD_RegId_MemoryKey_{{trash_qubit_index, trash_qubit_index_key}},
+INSTR_GET_QUBIT_QubitId_QNodeAddr_RegId_{{qubit, partner_addr, qubit_index}},
+INSTR_GET_QUBIT_QubitId_QNodeAddr_RegId_{{trash_qubit, partner_addr, trash_qubit_index}},
 INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}},
 INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit}},
-INSTR_FREE_QUBIT_QubitId_{{trash_qubit}},
 INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
+INSTR_FREE_QUBIT_QubitId_{{trash_qubit}},
 INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_{{partner_addr, measure_result, action_index}},
 INSTR_INC_RegId_{action_index},
 INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
-                       // clang-format on
-                   }};
+            // clang-format on
+        }};
   }
   std::cout << const_cast<Purification *>(act)->serialize_json() << std::endl;
   throw std::runtime_error("pur not implemented");
@@ -254,7 +292,7 @@ INSTR_MEASURE_RANDOM_MemoryKey_QubitId_{{MemoryKey{"outcome"}, q0}, "L1"},
 INSTR_INC_RegId_{count},
 INSTR_STORE_MemoryKey_RegId_{{MemoryKey{"count"}, count}},
 INSTR_FREE_QUBIT_QubitId_{q0},
-INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_{{partner_addr, count,MemoryKey{"outcome"}, max_count}}
+INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_Time_{{partner_addr, count,MemoryKey{"outcome"}, max_count, simTime() /* use the timing of the rule construction*/}}
           // clang-format on
       },
   };
