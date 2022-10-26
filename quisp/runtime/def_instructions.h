@@ -52,6 +52,7 @@ INSTR(SEND_PURIFICATION_RESULT, QNodeAddr, RegId /* result */, RegId /* action_i
 INSTR(SEND_SWAPPING_RESULT, QNodeAddr /* left partner*/, RegId /* left operation */, QNodeAddr /* right partner*/, RegId /* right operation */)
 
 INSTR(HACK_SWAPPING_PARTNERS, QubitId, QubitId)
+INSTR(HACK_BREAK_ENTANGLEMENT, QubitId)
 
 INSTR_LAST(NOP, None)
 #undef INSTR
