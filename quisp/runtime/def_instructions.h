@@ -47,7 +47,7 @@ INSTR(GATE_CNOT, QubitId, QubitId)
 INSTR(PURIFY_X, RegId, QubitId, QubitId)
 
 // send classical messages
-INSTR(SEND_LINK_TOMOGRAPHY_RESULT, QNodeAddr, RegId, MemoryKey, int)  // partner addr, current count reg_id, outcome key, max_count
+INSTR(SEND_LINK_TOMOGRAPHY_RESULT, QNodeAddr, RegId, MemoryKey, int, Time)  // partner addr, current count reg_id, outcome key, max_count, start_time
 INSTR(SEND_PURIFICATION_RESULT, QNodeAddr, RegId /* result */, RegId /* action_index */)
 INSTR(SEND_SWAPPING_RESULT, QNodeAddr /* left partner*/, RegId /* left operation */, QNodeAddr /* right partner*/, RegId /* right operation */)
 
