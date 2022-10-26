@@ -57,7 +57,7 @@ class Runtime {
     virtual bool purifyZ(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
     // // Messaging
     virtual void sendLinkTomographyResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, int count,
-                                          MeasurementOutcome outcome, bool is_finished) = 0;
+                                          MeasurementOutcome outcome, int max_count, Time start_time) = 0;
     virtual void sendPurificationResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, bool result) = 0;
     virtual void sendSwappingResults(const unsigned long ruleset_id, const Rule& rule, const QNodeAddr left_partner_addr, int left_op, const QNodeAddr right_partner_addr,
                                      int right_op) = 0;
