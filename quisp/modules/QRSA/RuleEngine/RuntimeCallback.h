@@ -166,6 +166,8 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     auto *right_qubit = provider.getStationaryQubit(right_qubit_rec);
     auto left_partner_qubit = left_qubit->entangled_partner;
     auto right_partner_qubit = right_qubit->entangled_partner;
+    if (right_partner_qubit == nullptr) throw std::runtime_error("invalid right partner qubit");
+    if (left_partner_qubit == nullptr) throw std::runtime_error("invalid left partner qubit");
     right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
     left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
 
