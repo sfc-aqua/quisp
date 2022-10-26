@@ -261,4 +261,9 @@ void InstructionVisitor::operator()(const INSTR_HACK_SWAPPING_PARTNERS_QubitId_Q
   auto [qubit_id1, qubit_id2] = instruction.args;
   runtime->callback->hackSwappingPartners(runtime->getQubitByQubitId(qubit_id1), runtime->getQubitByQubitId(qubit_id2));
 }
+
+void InstructionVisitor::operator()(const INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_& instruction) {
+  auto [qubit_id] = instruction.args;
+  runtime->callback->hackBreakEntanglement(runtime->getQubitByQubitId(qubit_id));
+}
 }  // namespace quisp::runtime
