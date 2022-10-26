@@ -235,6 +235,17 @@ void InstructionVisitor::operator()(const INSTR_SET_RegId_int_& instruction) {
   runtime->setRegVal(reg_id1, arg1);
 }
 
+void InstructionVisitor::operator()(const INSTR_GET_QUBIT_QubitId_QNodeAddr_RegId_& instruction) {
+  auto [qubit_id, partner_addr, qubit_resource_index_reg_id] = instruction.args;
+  int qubit_resource_index = runtime->getRegVal(qubit_resource_index_reg_id);
+  auto* qubit_ref = runtime->getQubitByPartnerAddr(partner_addr, qubit_resource_index);
+  if (qubit_ref == nullptr) {
+    runtime->setError("Qubit not found");
+    return;
+  }
+  runtime->setQubit(qubit_ref, qubit_id);
+}
+
 void InstructionVisitor::operator()(const INSTR_GET_QUBIT_QubitId_QNodeAddr_int_& instruction) {
   auto [qubit_id, partner_addr, qubit_resource_index] = instruction.args;
   auto* qubit_ref = runtime->getQubitByPartnerAddr(partner_addr, qubit_resource_index);

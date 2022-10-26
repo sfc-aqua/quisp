@@ -14,6 +14,7 @@ INSTR(SUB, RegId, RegId, RegId)
 INSTR(INC, RegId)
 INSTR(SET, RegId, int)
 INSTR(GET_QUBIT, QubitId, QNodeAddr, int)  // may throw an no qubit error
+INSTR(GET_QUBIT, QubitId, QNodeAddr, RegId)  // may throw an no qubit error
 INSTR(GET_QUBIT, RegId /* qubit id */, QNodeAddr /* partner addr */, RegId /* given qubit index */)  // may throw an no qubit error
 INSTR(RET, ReturnCode)
 // INSTR(MEASURE_QUBIT, MemoryKey, QubitId)
