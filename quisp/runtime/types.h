@@ -1,5 +1,6 @@
 #pragma once
 
+#include <omnetpp/simtime.h>
 #include <cstddef>
 #include <string>
 
@@ -13,6 +14,7 @@ using String = std::string;
 
 using IQubitRecord = quisp::modules::qrsa::IQubitRecord;
 using MeasurementOutcome = quisp::modules::measurement_outcome;
+using Time = omnetpp::SimTime;
 
 // these types are mainly used for describing type name in def_instruction.h
 enum class RegId : int { REG0, REG1, REG2, REG3 };
