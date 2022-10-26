@@ -300,7 +300,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     ResourceAllocation(QNIC_RP, i);
   }
 
-  // traverseThroughAllProcesses2();
+  traverseThroughAllProcesses2();
   delete msg;
 }
 
