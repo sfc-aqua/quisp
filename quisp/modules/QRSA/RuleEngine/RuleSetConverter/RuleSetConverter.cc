@@ -203,6 +203,7 @@ INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit, partner_addr, 1}},
 INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}},
+INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit}},
 INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
 INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_{{partner_addr, measure_result, action_index}},
@@ -241,9 +242,10 @@ L1:
   auto &qnic = act->qnic_interfaces.at(0);
   QNodeAddr partner_addr = qnic.partner_addr;
   auto qubit_resource_index = 0;
-  return Program{"Tomography",
-                 {
-                     // clang-format off
+  return Program{
+      "Tomography",
+      {
+          // clang-format off
 INSTR_LOAD_RegId_MemoryKey_{{count, MemoryKey{"count"}}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, qubit_resource_index}},
 INSTR_BNERR_Label_{Label{"L1"}},
@@ -253,7 +255,8 @@ INSTR_INC_RegId_{count},
 INSTR_STORE_MemoryKey_RegId_{{MemoryKey{"count"}, count}},
 INSTR_FREE_QUBIT_QubitId_{q0},
 INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_{{partner_addr, count,MemoryKey{"outcome"}, max_count}}
-                     // clang-format on
-                 }};
+          // clang-format on
+      },
+  };
 }
 }  // namespace quisp::modules::rs_converter
