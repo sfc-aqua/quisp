@@ -920,6 +920,8 @@ void RuleEngine::handleSwappingResult(const SwappingResultData &data) {
     }
   }
   assert(runtime != nullptr);
+  bell_pair_store.eraseQubit(qubit_record);
+  bell_pair_store.insertEntangledQubit(data.new_partner_addr, qubit_record);
   runtime->promoteQubitWithNewPartner(qubit_record, data.new_partner_addr);
 }
 void RuleEngine::updateResources_EntanglementSwapping(swapping_result swapr) {
