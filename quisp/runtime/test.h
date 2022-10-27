@@ -21,7 +21,7 @@ class MockRuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   MOCK_METHOD(bool, purifyZ, (IQubitRecord*, IQubitRecord*), (override));
   MOCK_METHOD(void, sendLinkTomographyResult,
               (const unsigned long ruleset_id, const quisp::runtime::Rule& rule, const int action_index, QNodeAddr partner_addr, int count, MeasurementOutcome outcome,
-               bool is_finished),
+               int max_count, SimTime started_time),
               (override));
   MOCK_METHOD(void, sendPurificationResult, (const unsigned long ruleset_id, const quisp::runtime::Rule& rule, const int action_index, QNodeAddr partner_addr, bool result),
               (override));
@@ -32,5 +32,6 @@ class MockRuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   MOCK_METHOD(bool, isQubitLocked, (IQubitRecord* const), (override));
   MOCK_METHOD(void, lockQubit, (IQubitRecord* const, unsigned long rs_id, int rule_id, int action_index), (override));
   MOCK_METHOD(void, hackSwappingPartners, (IQubitRecord* const, IQubitRecord* const), (override));
+  MOCK_METHOD(void, hackBreakEntanglement, (IQubitRecord* const), (override));
 };
 }  // namespace quisp_test
