@@ -141,7 +141,7 @@ TEST_F(RuntimeTest, getMultipleQubits) {
   QubitId q1{1};
   QubitId q2{2};
   QNodeAddr partner_addr{2};
-  runtime->debugging = true;
+  runtime->debugging = false;
   Program program{"get multiple qubits",
                   {
                       // clang-format off
