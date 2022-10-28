@@ -37,13 +37,23 @@ void InstructionVisitor::operator()(const INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNod
   runtime->callback->sendLinkTomographyResult(rs.id, rule, action_index, partner_addr, count, outcome, max_count, start_time);
 }
 
-void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_& instruction) {
-  auto [partner_addr, result_reg_id, action_index_reg_id] = instruction.args;
+void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_PurType_& instruction) {
+  auto [partner_addr, result_reg_id, action_index_reg_id, pur_type] = instruction.args;
   bool result = runtime->getRegVal(result_reg_id);
   int action_index = runtime->getRegVal(action_index_reg_id);
   auto& rs = runtime->ruleset;
   auto& rule = rs.rules.at(runtime->rule_id);
-  runtime->callback->sendPurificationResult(rs.id, rule, action_index, partner_addr, result);
+  runtime->callback->sendSinglePurificationResult(rs.id, rule, action_index, partner_addr, result, pur_type);
+}
+
+void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_RegId_PurType_& instruction) {
+  auto [partner_addr, result_z_reg_id, result_x_reg_id, action_index_reg_id, pur_type] = instruction.args;
+  bool result_z = runtime->getRegVal(result_z_reg_id);
+  bool result_x = runtime->getRegVal(result_x_reg_id);
+  int action_index = runtime->getRegVal(action_index_reg_id);
+  auto& rs = runtime->ruleset;
+  auto& rule = rs.rules.at(runtime->rule_id);
+  runtime->callback->sendDoublePurificationResult(rs.id, rule, action_index, partner_addr, result_z, result_x, pur_type);
 }
 
 void InstructionVisitor::operator()(const INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_& instruction) {
