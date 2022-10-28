@@ -46,6 +46,7 @@ INSTR(GATE_X, QubitId)
 INSTR(GATE_Z, QubitId)
 INSTR(GATE_CNOT, QubitId, QubitId)
 INSTR(PURIFY_X, RegId, QubitId, QubitId)
+INSTR(PURIFY_Z, RegId, QubitId, QubitId)
 
 // send classical messages
 INSTR(SEND_LINK_TOMOGRAPHY_RESULT, QNodeAddr, RegId, MemoryKey, int, Time)  // partner addr, current count reg_id, outcome key, max_count, start_time
