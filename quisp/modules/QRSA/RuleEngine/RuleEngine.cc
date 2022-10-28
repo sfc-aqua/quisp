@@ -224,7 +224,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
         .ruleset_id = pkt->getRuleSet_id(),
         .shared_tag = pkt->getShared_tag(),
         .new_partner_addr = pkt->getNew_partner(),
-        .swapper_addr = pkt->getSrcAddr(),
         .operation_type = pkt->getOperation_type(),
         .qubit_index = pkt->getMeasured_qubit_index()  // qubit index for this node, the name is misleading
     };

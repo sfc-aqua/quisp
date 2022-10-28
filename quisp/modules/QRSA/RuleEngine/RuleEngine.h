@@ -49,7 +49,6 @@ struct SwappingResultData {
   unsigned long ruleset_id;
   int shared_tag;
   int new_partner_addr;
-  int swapper_addr;
   int operation_type;
   int qubit_index;
 };
