@@ -126,7 +126,7 @@ void Runtime::setQubit(IQubitRecord* qubit_ref, QubitId qubit_id) {
 IQubitRecord* Runtime::getQubitByPartnerAddr(QNodeAddr partner_addr, int index) {
   int i = 0;
   for (auto it = qubits.begin(); it != qubits.end(); it++) {
-    if (it->first.first == partner_addr && it->first.second == rule_id) {
+    if (it->first.first == partner_addr && it->first.second == rule_id && !callback->isQubitLocked(it->second)) {
       if (index == i) return it->second;
       i++;
     }
