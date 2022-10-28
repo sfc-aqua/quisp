@@ -216,12 +216,13 @@ INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit, partner_addr, 1}},
 INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit}},
 INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit}},
-INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_{{partner_addr, measure_result, action_index}},
+INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_PurType_{{partner_addr, measure_result, action_index, pur_type}},
 INSTR_INC_RegId_{action_index},
 INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
                        // clang-format on
                    }};
   }
+
   if (pur_type == rules::PurType::DOUBLE || pur_type == rules::PurType::DOUBLE_INV) {
     /*
     SET action_index 0
@@ -254,7 +255,7 @@ INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
     MemoryKey trash_qubit_index_key{"trash_qubit_index"};
 
     return Program{
-        "X Purification",
+        "Double Purification",
         {
             // clang-format off
 INSTR_SET_RegId_int_{{action_index, 0}},
@@ -273,7 +274,7 @@ INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit_z}},
 INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
-INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_RegId_{{partner_addr, measure_result_x, measure_result_z, action_index}},
+INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_RegId_PurType_{{partner_addr, measure_result_z, measure_result_x, action_index, pur_type}},
 INSTR_INC_RegId_{action_index},
 INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
             // clang-format on

@@ -208,7 +208,6 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
 
   // check property of resulted
   EXPECT_EQ(active_ruleset.rules.size(), 4);
-  auto ruleset_id = active_ruleset.id;
   auto expected_ruleset_id = 1234;
   EXPECT_EQ(active_ruleset.id, expected_ruleset_id);
   ASSERT_EQ(active_ruleset.partners.size(), 2);
