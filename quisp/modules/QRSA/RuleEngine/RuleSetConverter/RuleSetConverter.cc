@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include "omnetpp/cexception.h"
 #include "runtime/types.h"
 
 #include <rules/Action.h>
@@ -20,6 +21,7 @@ RuleSet RuleSetConverter::construct(const RSData &data) {
   rs.id = data.ruleset_id;
   rs.owner_addr = data.owner_addr;
   auto &rules_data = data.rules;
+  if (data.rules.size() == 0) throw omnetpp::cRuntimeError("empty ruleset");
   for (auto &rule_data : rules_data) {
     std::string name = rule_data->name + " with ";
     for (auto &interface : rule_data->qnic_interfaces) {
