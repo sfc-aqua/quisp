@@ -1,7 +1,9 @@
 #pragma once
-#include <rules/Action.h>
 #include <stdexcept>
 #include <unordered_map>
+
+#include <messages/classical_messages.h>
+#include <rules/Action.h>
 
 namespace quisp::modules::pur_result_table {
 using quisp::rules::PurType;
@@ -13,6 +15,14 @@ struct PurificationResultKey {
   int shared_tag = -1;
   rules::PurType type;
 
+  PurificationResultKey(const messages::PurificationResult& result) {
+    rs_id = result.getRuleset_id();
+    rule_id = result.getRule_id();
+    action_index = result.getAction_index();
+    shared_tag = result.getShared_tag();
+    type = (rules::PurType)result.getPurType();
+  }
+
   // intentionally ignore rule_id because the rule_id might be different in each node
   bool operator==(const PurificationResultKey& key) const { return rs_id == key.rs_id && action_index == key.action_index && shared_tag == key.shared_tag; }
 };
@@ -22,6 +32,8 @@ struct PurificationResultData {
   bool is_z_plus = false;
   bool is_ds_x_plus = false;
   bool is_ds_z_plus = false;
+  PurType pur_type = PurType::INVALID;
+
   bool isResultMatched(const PurificationResultData& result, PurType type) const {
     switch (type) {
       case PurType::SINGLE_X:
@@ -37,6 +49,16 @@ struct PurificationResultData {
       case PurType::DSDA_INV:
       default:
         throw std::runtime_error("the pur type not implemented yet");
+    }
+  }
+
+  PurificationResultData(const messages::PurificationResult& result) {
+    pur_type = (PurType)result.getPurType();
+    if (pur_type == PurType::SINGLE_X) {
+      is_z_plus = result.getOutput_is_plus();
+    }
+    if (pur_type == PurType::SINGLE_Z) {
+      is_x_plus = result.getOutput_is_plus();
     }
   }
 };

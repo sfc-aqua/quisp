@@ -8,6 +8,7 @@ packet PurificationResult extends Header
     int rule_id;
     int shared_tag;
     int action_index;
+    int PurType;
     //For Debugging
 }
 
@@ -19,6 +20,7 @@ packet DoublePurificationResult extends Header
     int rule_id;
     int shared_tag;
     int action_index;
+    int PurType;
 }
 
 packet DS_DoublePurificationResult extends Header
@@ -31,6 +33,7 @@ packet DS_DoublePurificationResult extends Header
     int rule_id;
     int shared_tag;
     int action_index;
+    int PurType;
 }
 
 packet DS_DoublePurificationSecondResult extends Header
@@ -42,4 +45,5 @@ packet DS_DoublePurificationSecondResult extends Header
     int rule_id;
     int shared_tag;
     int action_index;
+    int PurType;
 }
