@@ -175,14 +175,8 @@ void RuleEngine::handleMessage(cMessage *msg) {
     }
   } else if (auto *pkt = dynamic_cast<PurificationResult *>(msg)) {
     bool from_self = pkt->getSrcAddr() == parentAddress;
-    const PurificationResultKey key{
-        .rs_id = pkt->getRuleset_id(),
-        .rule_id = pkt->getRule_id(),
-        .action_index = pkt->getAction_index(),
-        .shared_tag = pkt->getShared_tag(),
-        .type = rules::PurType::SINGLE_X  // TODO: read from pkt
-    };
-    handlePurificationResult(key, PurificationResultData{.is_x_plus = pkt->getOutput_is_plus()}, from_self);
+    const PurificationResultKey key{*pkt};
+    handlePurificationResult(key, PurificationResultData{*pkt}, from_self);
   } else if (auto *pkt = dynamic_cast<DoublePurificationResult *>(msg)) {
     error("DoublePurification is not implemented yet");
     process_id purification_id;
