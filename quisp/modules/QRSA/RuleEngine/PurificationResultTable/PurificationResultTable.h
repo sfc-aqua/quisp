@@ -25,9 +25,16 @@ struct PurificationResultData {
   bool isResultMatched(const PurificationResultData& result, PurType type) const {
     switch (type) {
       case PurType::SINGLE_X:
-        return result.is_x_plus == is_x_plus;
-      case PurType::SINGLE_Z:
         return result.is_z_plus == is_z_plus;
+      case PurType::SINGLE_Z:
+        return result.is_x_plus == is_x_plus;
+      case PurType::DOUBLE:
+      case PurType::DOUBLE_INV:
+        return result.is_x_plus == is_x_plus && result.is_z_plus == is_z_plus;
+      case PurType::DSSA:
+      case PurType::DSSA_INV:
+      case PurType::DSDA:
+      case PurType::DSDA_INV:
       default:
         throw std::runtime_error("the pur type not implemented yet");
     }
