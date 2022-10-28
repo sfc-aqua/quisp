@@ -58,7 +58,14 @@ class Runtime {
     // // Messaging
     virtual void sendLinkTomographyResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, int count,
                                           MeasurementOutcome outcome, int max_count, Time start_time) = 0;
-    virtual void sendPurificationResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, bool result) = 0;
+    virtual void sendSinglePurificationResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, bool result,
+                                              PurType pur_type) = 0;
+    virtual void sendDoublePurificationResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, bool result_z, bool result_x,
+                                              PurType pur_type) = 0;
+    virtual void sendTriplePurificationResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, bool result_z, bool result_x,
+                                              bool result_ds, PurType pur_type) = 0;
+    virtual void sendQuadruplePurificationResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, bool result_z,
+                                                 bool result_x, bool result_ds_z, bool result_ds_x, PurType pur_type) = 0;
     virtual void sendSwappingResults(const unsigned long ruleset_id, const Rule& rule, const QNodeAddr left_partner_addr, int left_op, const QNodeAddr right_partner_addr,
                                      int right_op) = 0;
 
