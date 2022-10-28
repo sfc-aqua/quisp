@@ -38,13 +38,13 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   void gateX(IQubitRecord *qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     assert(qubit != nullptr);
-    qubit->xGate();
+    qubit->X_gate();
   }
 
   void gateZ(IQubitRecord *qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     assert(qubit != nullptr);
-    qubit->zGate();
+    qubit->Z_gate();
   }
 
   void gateCNOT(IQubitRecord *control_qubit_rec, IQubitRecord *target_qubit_rec) override {
