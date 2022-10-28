@@ -178,13 +178,14 @@ INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_{{left_partner_addr, 
   };
 }
 Program RuleSetConverter::constructPurificationAction(const Purification *act) {
-  if (act->purification_type == rules::PurType::SINGLE_X) {
+  auto pur_type = act->purification_type;
+  if (pur_type == rules::PurType::SINGLE_X || pur_type == rules::PurType::SINGLE_Z) {
     /*
     SET action_index 0
     LOAD action_index "action_index_{partner_addr}"
     GET_QUBIT qubit partner_addr 0
     GET_QUBIT trash_qubit partner_addr 1
-    PURIFY_X measure_result qubit trash_qubit
+    PURIFY_X/Z measure_result qubit trash_qubit
     FREE_QUBIT trash_qubit
     LOCK_QUBIT qubit action_index
     SEND_PURIFICATION_RESULT partner_addr measure_result action_index
@@ -209,7 +210,9 @@ INSTR_SET_RegId_int_{{action_index, 0}},
 INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit, partner_addr, 1}},
-INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}},
+(pur_type == rules::PurType::SINGLE_X) /* else SINGLE_Z */?
+  (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}} :
+  (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}},
 INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit}},
 INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit}},
@@ -219,6 +222,64 @@ INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
                        // clang-format on
                    }};
   }
+  if (pur_type == rules::PurType::DOUBLE || pur_type == rules::PurType::DOUBLE_INV) {
+    /*
+    SET action_index 0
+    LOAD action_index "action_index_{partner_addr}"
+    GET_QUBIT qubit partner_addr 0
+    GET_QUBIT trash_qubit_x partner_addr 1
+    GET_QUBIT trash_qubit_z partner_addr 2
+    PURIFY_X measure_result_x qubit trash_qubit_x
+    PURIFY_Z measure_result_z qubit trash_qubit_z
+    HACK_BREAK_ENTANGLEMENT trash_qubit_x
+    HACK_BREAK_ENTANGLEMENT trash_qubit_Z
+    FREE_QUBIT trash_qubit_x
+    FREE_QUBIT trash_qubit_z
+    LOCK_QUBIT qubit action_index
+    SEND_PURIFICATION_RESULT partner_addr measure_result action_index
+    INC action_index
+    STORE "action_index_{partner_addr}" action_index
+    */
+    QubitId qubit{0};
+    QubitId trash_qubit_x{1};
+    QubitId trash_qubit_z{2};
+    RegId measure_result_x = RegId::REG0;
+    RegId measure_result_z = RegId::REG2;
+    RegId action_index = RegId::REG1;
+
+    auto &interface = act->qnic_interfaces.at(0);
+    QNodeAddr partner_addr{interface.partner_addr};
+    MemoryKey action_index_key{"action_index_double_" + std::to_string(interface.partner_addr)};
+    MemoryKey qubit_index_key{"qubit_index"};
+    MemoryKey trash_qubit_index_key{"trash_qubit_index"};
+
+    return Program{
+        "X Purification",
+        {
+            // clang-format off
+INSTR_SET_RegId_int_{{action_index, 0}},
+INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
+INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
+INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_x, partner_addr, 1}},
+INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_z, partner_addr, 1}},
+(pur_type == rules::PurType::DOUBLE) /* else DOUBLE_INV */?
+  (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}} :
+  (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}},
+(pur_type == rules::PurType::DOUBLE) /* else DOUBLE_INV */?
+  (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}} :
+  (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}},
+INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit_x}},
+INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit_z}},
+INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
+INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
+INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
+INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_RegId_{{partner_addr, measure_result_x, measure_result_z, action_index}},
+INSTR_INC_RegId_{action_index},
+INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
+            // clang-format on
+        }};
+  }
+
   std::cout << const_cast<Purification *>(act)->serialize_json() << std::endl;
   throw std::runtime_error("pur not implemented");
   return Program{"Purification", {}};
