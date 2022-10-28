@@ -130,11 +130,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   [[deprecated]] void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int shared_tag, int index);
   [[deprecated]] void Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int shared_tag, int index);
 
-  [[deprecated]] std::unique_ptr<ActiveRuleSet> constructActiveRuleSet(RuleSet ruleset);
-  [[deprecated]] std::unique_ptr<ActiveRule> constructRule(std::unique_ptr<ActiveRule> active_rule, std::unique_ptr<Rule> rule, unsigned long ruleset_id);
-  [[deprecated]] ActiveCondition *constructCondition(std::unique_ptr<Condition> condition);
-  [[deprecated]] ActiveAction *constructAction(std::unique_ptr<Action> action, unsigned long ruleset_id, int rule_id, int shared_tag);
-
   virtual void updateResources_SimultaneousEntanglementSwapping(swapping_result swapr);
 
   utils::ComponentProvider provider;
