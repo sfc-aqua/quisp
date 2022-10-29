@@ -23,6 +23,14 @@ struct PurificationResultKey {
     type = (rules::PurType)result.getPurType();
   }
 
+  PurificationResultKey(const messages::DoublePurificationResult& result) {
+    rs_id = result.getRuleset_id();
+    rule_id = result.getRule_id();
+    action_index = result.getAction_index();
+    shared_tag = result.getShared_tag();
+    type = (rules::PurType)result.getPurType();
+  }
+
   // intentionally ignore rule_id because the rule_id might be different in each node
   bool operator==(const PurificationResultKey& key) const { return rs_id == key.rs_id && action_index == key.action_index && shared_tag == key.shared_tag; }
 };
@@ -60,6 +68,13 @@ struct PurificationResultData {
     if (pur_type == PurType::SINGLE_Z) {
       is_x_plus = result.getOutput_is_plus();
     }
+  }
+
+  PurificationResultData(const messages::DoublePurificationResult& result) {
+    pur_type = (PurType)result.getPurType();
+    assert(pur_type == PurType::DOUBLE || pur_type == PurType::DOUBLE_INV);
+    is_z_plus = result.getZOutput_is_plus();
+    is_x_plus = result.getXOutput_is_plus();
   }
 };
 
