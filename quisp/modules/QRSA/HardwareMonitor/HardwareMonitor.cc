@@ -14,11 +14,12 @@
 #include <unsupported/Eigen/MatrixFunctions>
 
 #include <messages/classical_messages.h>
+#include <rules/RuleSet.h>
 #include "omnetpp/cexception.h"
 #include "utils/ComponentProvider.h"
 
 using namespace quisp::messages;
-using namespace quisp::rules::active;
+using namespace quisp::rules;
 using Eigen::Matrix4cd;
 using Eigen::Vector4cd;
 
@@ -617,7 +618,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   pk->setKind(6);
 
   // Tomography between this node and the sender of Ack.
-  ActiveRuleSet *tomography_RuleSet = new ActiveRuleSet(RuleSet_id, my_address);
+  auto *tomography_RuleSet = new RuleSet(RuleSet_id, my_address);
   EV_INFO << "Creating rules now ruleset_id = " << RuleSet_id << ", partner_address = " << partner_address << "\n";
 
   int rule_id = 0;
@@ -627,6 +628,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
   if (num_purification > 0) {
     if (Purification_type == 2002) {  // Performs both X and Z purification for each n.
+      error("not implemented yet");
       /// # Purification_type 2002: #
       /// - name: Ss-Sp / perfect binary tree, even rounds
       /// - rounds: 2n
@@ -647,83 +649,84 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       ///
       /// X always goes first.
       /// ![](../img/PhysRevA.100.052320-Fig11.png)
-      for (int i = 0; i < num_purification; i++) {
-        // First stage X purification
-        rule_name = "X purification with: " + std::to_string(partner_address);
-        auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-        ActiveCondition *Purification_condition = new ActiveCondition();
-        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);
-        Purification_condition->addClause(resource_clause);
-        Purification->setCondition(Purification_condition);
-        ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
-        Purification->setAction(purify_action);
-        Purification->next_rule_id = rule_id + 1;
-        rule_id++;
-        shared_tag++;
-        tomography_RuleSet->addRule(std::move(Purification));
+      // for (int i = 0; i < num_purification; i++) {
+      //   // First stage X purification
+      //   rule_name = "X purification with: " + std::to_string(partner_address);
+      //   auto Purification = std::make_unique<Rule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+      //   Condition *Purification_condition = new Condition;
+      //   Clause *resource_clause = new EnoughResourceConditionClause(partner_address, 2);
+      //   Purification_condition->addClause(resource_clause);
+      //   Purification->setCondition(Purification_condition);
+      //   auto *purify_action = new Purification(RuleSet_id, rule_id, shared_tag, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      //   Purification->setAction(purify_action);
+      //   Purification->setNextRule(rule_id + 1);
+      //   rule_id++;
+      //   shared_tag++;
+      //   tomography_RuleSet->addRule(std::move(Purification));
 
-        // Second stage Z purification (Using X purified resources)
-        rule_name = "X purification with: " + std::to_string(partner_address);
-        Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-        Purification_condition = new ActiveCondition();
-        resource_clause = new EnoughResourceClause(partner_address, 2);
-        Purification_condition->addClause(resource_clause);
-        Purification->setCondition(Purification_condition);
-        purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
-        Purification->setAction(purify_action);
-        Purification->next_rule_id = rule_id + 1;
-        rule_id++;
-        shared_tag++;
-        tomography_RuleSet->addRule(std::move(Purification));
-      }
+      //   // Second stage Z purification (Using X purified resources)
+      //   rule_name = "X purification with: " + std::to_string(partner_address);
+      //   Purification = std::make_unique<Rule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+      //   Purification_condition = new Condition();
+      //   resource_clause = new EnoughResourceConditionClause(partner_address, 2);
+      //   Purification_condition->addClause(resource_clause);
+      //   Purification->setCondition(Purification_condition);
+      //   purify_action = new Purification(RuleSet_id, rule_id, shared_tag, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      //   Purification->setAction(purify_action);
+      //   Purification->setNextRule(rule_id + 1);
+      //   rule_id++;
+      //   shared_tag++;
+      //   tomography_RuleSet->addRule(std::move(Purification));
+      // }
     } else if (Purification_type == 3003) {
-      /// # Purification_type 3003: #
-      /// - name: Ss-Sp / perfect binary tree, odd or even rounds
-      /// - rounds: n
-      /// - input Bell pairs per round: 2
-      /// - total Bell pairs: 2^n
-      /// - circuit: Fig. 6.3 in Takaaki's master's thesis
-      /// - scheduling: perfect binary (symmetric) tree
-      /// ## description: ##
-      /// Ss-Sp is single selection, single error purification.
-      /// Between rounds, Hadamard gates are applied
-      /// to switch basis, creating alternating
-      /// rounds of X and Z purification.
-      ///
-      /// The only difference between 2002 and 3003
-      /// is the semantics of initial_purification.
-      /// Here, each iteration results in one rule,
-      /// X for even-numbered rounds (counting from zero),
-      /// Z for odd-numbered ones, so it is possible to
-      /// do XZX or XZXZX (but not ZXZ or ZXZXZ).
-      /// ![](../img/PhysRevA.100.052320-Fig11.png)
-      // First stage X purification
-      for (int i = 0; i < num_purification; i++) {
-        if (i % 2 == 0) {
-          rule_name = "X purification with: " + std::to_string(partner_address);
-        } else {
-          rule_name = "Z purification with: " + std::to_string(partner_address);
-        }
-        auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-        ActiveCondition *Purification_condition = new ActiveCondition();
-        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);
-        Purification_condition->addClause(resource_clause);
-        Purification->setCondition(Purification_condition);
+      error("not implemented yet");
+      //   /// # Purification_type 3003: #
+      //   /// - name: Ss-Sp / perfect binary tree, odd or even rounds
+      //   /// - rounds: n
+      //   /// - input Bell pairs per round: 2
+      //   /// - total Bell pairs: 2^n
+      //   /// - circuit: Fig. 6.3 in Takaaki's master's thesis
+      //   /// - scheduling: perfect binary (symmetric) tree
+      //   /// ## description: ##
+      //   /// Ss-Sp is single selection, single error purification.
+      //   /// Between rounds, Hadamard gates are applied
+      //   /// to switch basis, creating alternating
+      //   /// rounds of X and Z purification.
+      //   ///
+      //   /// The only difference between 2002 and 3003
+      //   /// is the semantics of initial_purification.
+      //   /// Here, each iteration results in one rule,
+      //   /// X for even-numbered rounds (counting from zero),
+      //   /// Z for odd-numbered ones, so it is possible to
+      //   /// do XZX or XZXZX (but not ZXZ or ZXZXZ).
+      //   /// ![](../img/PhysRevA.100.052320-Fig11.png)
+      //   // First stage X purification
+      //   for (int i = 0; i < num_purification; i++) {
+      //     if (i % 2 == 0) {
+      //       rule_name = "X purification with: " + std::to_string(partner_address);
+      //     } else {
+      //       rule_name = "Z purification with: " + std::to_string(partner_address);
+      //     }
+      //     auto Purification = std::make_unique<Rule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+      //     Condition *Purification_condition = new Condition();
+      //     Clause *resource_clause = new EnoughResourceConditionClause(partner_address, 2);
+      //     Purification_condition->addClause(resource_clause);
+      //     Purification->setCondition(Purification_condition);
 
-        if (i % 2 == 0) {
-          // X purification
-          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
-          Purification->setAction(purify_action);
-        } else {
-          // Z purification
-          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
-          Purification->setAction(purify_action);
-        }
-        Purification->next_rule_id = rule_id + 1;
-        rule_id++;
-        shared_tag++;
-        tomography_RuleSet->addRule(std::move(Purification));
-      }
+      //     if (i % 2 == 0) {
+      //       // X purification
+      //       Action *purify_action = new Purification(RuleSet_id, rule_id, shared_tag, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      //       Purification->setAction(purify_action);
+      //     } else {
+      //       // Z purification
+      //       Action *purify_action = new Purification(RuleSet_id, rule_id, shared_tag, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      //       Purification->setAction(purify_action);
+      //     }
+      //     Purification->next_rule_id = rule_id + 1;
+      //     rule_id++;
+      //     shared_tag++;
+      //     tomography_RuleSet->addRule(std::move(Purification));
+      //   }
     } else if (Purification_type == 1001) {
       /// # Purification_type 1001: #
       /// - name: Ss-Dp XZ Purification
@@ -742,377 +745,388 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// ![](../img/PhysRevA.100.052320-Fig12.png)
       for (int i = 0; i < num_purification; i++) {
         rule_name = "Double purification with: " + std::to_string(partner_address);
-        auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-        ActiveCondition *Purification_condition = new ActiveCondition();
-        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
-        Purification_condition->addClause(resource_clause);
-        Purification->setCondition(Purification_condition);
-        ActiveAction *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
-        Purification->setAction(purify_action);
-        Purification->next_rule_id = rule_id + 1;
+        auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
+        rule->setName(rule_name);
+        auto Purification_condition = std::make_unique<Condition>();
+        auto resource_clause = std::make_unique<EnoughResourceConditionClause>(3, 0, partner_address, qnic_type, qnic_index);
+        Purification_condition->addClause(std::move(resource_clause));
+        rule->setCondition(std::move(Purification_condition));
+        auto purify_action = std::make_unique<Purification>(PurType::DOUBLE, partner_address, qnic_type, qnic_index);
+        rule->setAction(std::move(purify_action));
+        rule->setNextRule(rule_id + 1);
         rule_id++;
         shared_tag++;
-        tomography_RuleSet->addRule(std::move(Purification));
+        tomography_RuleSet->addRule(std::move(rule));
       }
     } else if (Purification_type == 1221) {
-      /// # Purification_type 1221: #
-      /// - name: Ss-Dp XZ, ZX alternating
-      /// - rounds: n
-      /// - input Bell pairs per round: 3
-      /// - total Bell pairs: 3^n
-      /// - circuit: *almost* Fig. 12 from arXiv:1904.08605, but order
-      /// of CNOTs reversed in alternating rounds
-      /// - scheduling: symmetric tree
-      /// ## description: ##
-      /// Almost the same as 1001, but first round
-      /// is XZ, second round is ZX.  Results in better alternating
-      /// error suppression, but still not great.
-      /// ![](../img/PhysRevA.100.052320-Fig12.png)
-      for (int i = 0; i < num_purification; i++) {
-        if (i % 2 == 0) {
-          rule_name = "Double purification with: " + std::to_string(partner_address);
-          auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-          ActiveCondition *Purification_condition = new ActiveCondition();
-          ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
-          Purification_condition->addClause(resource_clause);
-          Purification->setCondition(Purification_condition);
-          ActiveAction *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
-          Purification->setAction(purify_action);
-          Purification->next_rule_id = rule_id + 1;
-          rule_id++;
-          shared_tag++;
-          tomography_RuleSet->addRule(std::move(Purification));
-        } else {
-          rule_name = "Double purification Inverse with: " + std::to_string(partner_address);
-          auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-          ActiveCondition *Purification_condition = new ActiveCondition();
-          ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
-          Purification_condition->addClause(resource_clause);
-          Purification->setCondition(Purification_condition);
-          ActiveAction *purify_action = new DoublePurifyActionInv(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
-          Purification->setAction(purify_action);
-          Purification->next_rule_id = rule_id + 1;
-          rule_id++;
-          shared_tag++;
-          tomography_RuleSet->addRule(std::move(Purification));
-        }
-      }
+      error("not implemented yet");
+      //   /// # Purification_type 1221: #
+      //   /// - name: Ss-Dp XZ, ZX alternating
+      //   /// - rounds: n
+      //   /// - input Bell pairs per round: 3
+      //   /// - total Bell pairs: 3^n
+      //   /// - circuit: *almost* Fig. 12 from arXiv:1904.08605, but order
+      //   /// of CNOTs reversed in alternating rounds
+      //   /// - scheduling: symmetric tree
+      //   /// ## description: ##
+      //   /// Almost the same as 1001, but first round
+      //   /// is XZ, second round is ZX.  Results in better alternating
+      //   /// error suppression, but still not great.
+      //   /// ![](../img/PhysRevA.100.052320-Fig12.png)
+      //   for (int i = 0; i < num_purification; i++) {
+      //     if (i % 2 == 0) {
+      //       rule_name = "Double purification with: " + std::to_string(partner_address);
+      //       auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+      //       Condition *Purification_condition = new ActiveCondition();
+      //       Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
+      //       Purification_condition->addClause(resource_clause);
+      //       Purification->setCondition(Purification_condition);
+      //       Action *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      //       Purification->setAction(purify_action);
+      //       Purification->next_rule_id = rule_id + 1;
+      //       rule_id++;
+      //       shared_tag++;
+      //       tomography_RuleSet->addRule(std::move(Purification));
+      //     } else {
+      //       rule_name = "Double purification Inverse with: " + std::to_string(partner_address);
+      //       auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+      //       ActiveCondition *Purification_condition = new ActiveCondition();
+      //       ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
+      //       Purification_condition->addClause(resource_clause);
+      //       Purification->setCondition(Purification_condition);
+      //       ActiveAction *purify_action = new DoublePurifyActionInv(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      //       Purification->setAction(purify_action);
+      //       Purification->next_rule_id = rule_id + 1;
+      //       rule_id++;
+      //       shared_tag++;
+      //       tomography_RuleSet->addRule(std::move(Purification));
+      //     }
+      //   }
     } else if (Purification_type == 1011) {
-      /// # Purification_type 1011: #
-      /// - name: Ds-Sp: Fujii-san's Double selection purification
-      /// - rounds: n
-      /// - input Bell pairs per round: 3
-      /// - total Bell pairs: 3^n
-      /// - circuit: Fig. 13 in arXiv:1904.08605
-      /// - scheduling: symmetric tree
-      /// ## description: ##
-      /// Similar to 1001 and 1221 except that the control and target
-      /// of the first CNOT are flipped, corresponding to Fujii-san's
-      /// paper (PRA 80, 042308).
-      /// Every round is identical.
-      /// Note there is no basis change between rounds.
-      /// ![](../img/arxiv.1904.08605-Fig13.png)
-      for (int i = 0; i < num_purification; i++) {
-        rule_name = "Double Selection with: " + std::to_string(partner_address);
-        auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-        ActiveCondition *Purification_condition = new ActiveCondition();
-        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
-        Purification_condition->addClause(resource_clause);
-        Purification->setCondition(Purification_condition);
-        ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
-        Purification->setAction(purify_action);
-        Purification->next_rule_id = rule_id + 1;
-        rule_id++;
-        shared_tag++;
-        tomography_RuleSet->addRule(std::move(Purification));
-      }
+      error("not implemented yet");
+      //   /// # Purification_type 1011: #
+      //   /// - name: Ds-Sp: Fujii-san's Double selection purification
+      //   /// - rounds: n
+      //   /// - input Bell pairs per round: 3
+      //   /// - total Bell pairs: 3^n
+      //   /// - circuit: Fig. 13 in arXiv:1904.08605
+      //   /// - scheduling: symmetric tree
+      //   /// ## description: ##
+      //   /// Similar to 1001 and 1221 except that the control and target
+      //   /// of the first CNOT are flipped, corresponding to Fujii-san's
+      //   /// paper (PRA 80, 042308).
+      //   /// Every round is identical.
+      //   /// Note there is no basis change between rounds.
+      //   /// ![](../img/arxiv.1904.08605-Fig13.png)
+      //   for (int i = 0; i < num_purification; i++) {
+      //     rule_name = "Double Selection with: " + std::to_string(partner_address);
+      //     auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+      //     Condition *Purification_condition = new ActiveCondition();
+      //     Clause *resource_clause = new EnoughResourceClause(partner_address, 3);
+      //     Purification_condition->addClause(resource_clause);
+      //     Purification->setCondition(Purification_condition);
+      //     Action *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      //     Purification->setAction(purify_action);
+      //     Purification->setNextRule(rule_id + 1);
+      //     rule_id++;
+      //     shared_tag++;
+      //     tomography_RuleSet->addRule(std::move(Purification));
+      //   }
     } else if (Purification_type == 1021) {  // Fujii-san's Double selection purification
-      /// # Purification_type 1021: #
-      /// - name: Ds-Sp: Fujii-san's Double selection purification (alternating)
-      /// - rounds: n
-      /// - input Bell pairs per round: 3
-      /// - total Bell pairs: 3^n
-      /// - circuit: *almost* Fig. 13 in arXiv:1904.08605, except that
-      /// the order of the CNOTs alternates between rounds
-      /// - scheduling: symmetric tree
-      /// ## description: ##
-      /// Similar to 1011, almost corresponding to Fujii-san's paper (PRA 80,
-      /// 042308). Note there is no basis change between rounds, but that the
-      /// first round is XZ, second is ZX.
-      /// ![](../img/arxiv.1904.08605-Fig13.png)
-      for (int i = 0; i < num_purification; i++) {
-        if (i % 2 == 0) {
-          rule_name = "Double selection with: " + std::to_string(partner_address);
-        } else {
-          rule_name = "Double selection Inverse with: " + std::to_string(partner_address);
-        }
-        auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-        ActiveCondition *Purification_condition = new ActiveCondition();
-        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
-        Purification_condition->addClause(resource_clause);
-        Purification->setCondition(Purification_condition);
-        if (i % 2 == 0) {
-          ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
-          Purification->setAction(purify_action);
-        } else {
-          ActiveAction *purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
-          Purification->setAction(purify_action);
-        }
-        Purification->next_rule_id = rule_id + 1;
-        rule_id++;
-        shared_tag++;
-        tomography_RuleSet->addRule(std::move(Purification));
-      }
+      error("not implemented yet");
+      //   /// # Purification_type 1021: #
+      //   /// - name: Ds-Sp: Fujii-san's Double selection purification (alternating)
+      //   /// - rounds: n
+      //   /// - input Bell pairs per round: 3
+      //   /// - total Bell pairs: 3^n
+      //   /// - circuit: *almost* Fig. 13 in arXiv:1904.08605, except that
+      //   /// the order of the CNOTs alternates between rounds
+      //   /// - scheduling: symmetric tree
+      //   /// ## description: ##
+      //   /// Similar to 1011, almost corresponding to Fujii-san's paper (PRA 80,
+      //   /// 042308). Note there is no basis change between rounds, but that the
+      //   /// first round is XZ, second is ZX.
+      //   /// ![](../img/arxiv.1904.08605-Fig13.png)
+      //   for (int i = 0; i < num_purification; i++) {
+      //     if (i % 2 == 0) {
+      //       rule_name = "Double selection with: " + std::to_string(partner_address);
+      //     } else {
+      //       rule_name = "Double selection Inverse with: " + std::to_string(partner_address);
+      //     }
+      //     auto Purification = std::make_unique<Rule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+      //     Condition *Purification_condition = new Condition();
+      //     Clause *resource_clause = new EnoughResourceConditionClause(partner_address, 3);
+      //     Purification_condition->addClause(resource_clause);
+      //     Purification->setCondition(Purification_condition);
+      //     if (i % 2 == 0) {
+      //       ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      //       Purification->setAction(purify_action);
+      //     } else {
+      //       ActiveAction *purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      //       Purification->setAction(purify_action);
+      //     }
+      //     Purification->next_rule_id = rule_id + 1;
+      //     rule_id++;
+      //     shared_tag++;
+      //     tomography_RuleSet->addRule(std::move(Purification));
+      //   }
     } else if (Purification_type == 1031) {
-      /// # Purification_type 1031: #
-      /// - name: Ds-Dp: full double selection purification (alternating)
-      /// - rounds: n
-      /// - input Bell pairs per round: 5
-      /// - total Bell pairs: 5^n
-      /// - circuit: Fig. 14 in arXiv:1904.08605, except that
-      /// the order of the CNOTs alternates between rounds
-      /// - scheduling: symmetric tree
-      /// ## description: ##
-      /// A combination of 1001 and 1011 (Figs. 12 & 13).  Resource requirements
-      /// are high; two rounds of this requires 25 Bell pairs.  With a low base
-      /// Bell pair generation rate and realistic memory decoherence, this will
-      /// be impractical.
-      /// ![](../img/arxiv.1904.08605-Fig14.png)
-      for (int i = 0; i < num_purification; i++) {
-        if (i % 2 == 0) {
-          rule_name = "Double selection Dual action with: " + std::to_string(partner_address);
-        } else {
-          rule_name = "Double selection Dual action Inverse with: " + std::to_string(partner_address);
-        }
-        auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-        ActiveCondition *Purification_condition = new ActiveCondition();
-        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 5);
-        Purification_condition->addClause(resource_clause);
-        Purification->setCondition(Purification_condition);
-        if (i % 2 == 0) {
-          ActiveAction *purify_action = new DoubleSelectionDualAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
-          Purification->setAction(purify_action);
-        } else {
-          ActiveAction *purify_action = new DoubleSelectionDualActionInv(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
-          Purification->setAction(purify_action);
-        }
-        Purification->next_rule_id = rule_id + 1;
-        rule_id++;
-        shared_tag++;
-        tomography_RuleSet->addRule(std::move(Purification));
-      }
+      error("not implemented yet");
+      //   /// # Purification_type 1031: #
+      //   /// - name: Ds-Dp: full double selection purification (alternating)
+      //   /// - rounds: n
+      //   /// - input Bell pairs per round: 5
+      //   /// - total Bell pairs: 5^n
+      //   /// - circuit: Fig. 14 in arXiv:1904.08605, except that
+      //   /// the order of the CNOTs alternates between rounds
+      //   /// - scheduling: symmetric tree
+      //   /// ## description: ##
+      //   /// A combination of 1001 and 1011 (Figs. 12 & 13).  Resource requirements
+      //   /// are high; two rounds of this requires 25 Bell pairs.  With a low base
+      //   /// Bell pair generation rate and realistic memory decoherence, this will
+      //   /// be impractical.
+      //   /// ![](../img/arxiv.1904.08605-Fig14.png)
+      //   for (int i = 0; i < num_purification; i++) {
+      //     if (i % 2 == 0) {
+      //       rule_name = "Double selection Dual action with: " + std::to_string(partner_address);
+      //     } else {
+      //       rule_name = "Double selection Dual action Inverse with: " + std::to_string(partner_address);
+      //     }
+      //     auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+      //     ActiveCondition *Purification_condition = new ActiveCondition();
+      //     ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 5);
+      //     Purification_condition->addClause(resource_clause);
+      //     Purification->setCondition(Purification_condition);
+      //     if (i % 2 == 0) {
+      //       ActiveAction *purify_action = new DoubleSelectionDualAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
+      //       Purification->setAction(purify_action);
+      //     } else {
+      //       ActiveAction *purify_action = new DoubleSelectionDualActionInv(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2, 3, 4);
+      //       Purification->setAction(purify_action);
+      //     }
+      //     Purification->next_rule_id = rule_id + 1;
+      //     rule_id++;
+      //     shared_tag++;
+      //     tomography_RuleSet->addRule(std::move(Purification));
+      //   }
     } else if (Purification_type == 1061) {
-      /// # Purification_type 1061: #
-      /// - name: half double selection, half single selection
-      /// - rounds: n
-      /// - input Bell pairs per round: 4
-      /// - total Bell pairs: 4^n
-      /// - circuit: no figure available
-      /// - scheduling: symmetric tree
-      /// ## description: ##
-      /// Does double selection on X, single selection on Z
-      /// Switches bases between rounds.
-      /// Investigated for possibly highly asymmetric X/Z error rates in base
-      /// Bell pairs. Initial results weren't very promised, not extensively
-      /// used.
-      for (int i = 0; i < num_purification; i++) {
-        if (i % 2 == 0) {
-          rule_name = "Double selection Dual action second with: " + std::to_string(partner_address);
-        } else {
-          rule_name = "Double selection Dual action second inverse with: " + std::to_string(partner_address);
-        }
-        auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-        ActiveCondition *Purification_condition = new ActiveCondition();
-        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 4);
-        Purification_condition->addClause(resource_clause);
-        Purification->setCondition(Purification_condition);
-        if (i % 2 == 0) {
-          ActiveAction *purify_action = new DoubleSelectionDualActionSecond(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
-          Purification->setAction(purify_action);
-        } else {
-          ActiveAction *purify_action = new DoubleSelectionDualActionSecondInv(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
-          Purification->setAction(purify_action);
-        }
-        Purification->next_rule_id = rule_id + 1;
-        rule_id++;
-        shared_tag++;
-        tomography_RuleSet->addRule(std::move(Purification));
-      }
+      error("not implemented yet");
+      //   /// # Purification_type 1061: #
+      //   /// - name: half double selection, half single selection
+      //   /// - rounds: n
+      //   /// - input Bell pairs per round: 4
+      //   /// - total Bell pairs: 4^n
+      //   /// - circuit: no figure available
+      //   /// - scheduling: symmetric tree
+      //   /// ## description: ##
+      //   /// Does double selection on X, single selection on Z
+      //   /// Switches bases between rounds.
+      //   /// Investigated for possibly highly asymmetric X/Z error rates in base
+      //   /// Bell pairs. Initial results weren't very promised, not extensively
+      //   /// used.
+      //   for (int i = 0; i < num_purification; i++) {
+      //     if (i % 2 == 0) {
+      //       rule_name = "Double selection Dual action second with: " + std::to_string(partner_address);
+      //     } else {
+      //       rule_name = "Double selection Dual action second inverse with: " + std::to_string(partner_address);
+      //     }
+      //     auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+      //     ActiveCondition *Purification_condition = new ActiveCondition();
+      //     ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 4);
+      //     Purification_condition->addClause(resource_clause);
+      //     Purification->setCondition(Purification_condition);
+      //     if (i % 2 == 0) {
+      //       ActiveAction *purify_action = new DoubleSelectionDualActionSecond(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
+      //       Purification->setAction(purify_action);
+      //     } else {
+      //       ActiveAction *purify_action = new DoubleSelectionDualActionSecondInv(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2, 3);
+      //       Purification->setAction(purify_action);
+      //     }
+      //     Purification->next_rule_id = rule_id + 1;
+      //     rule_id++;
+      //     shared_tag++;
+      //     tomography_RuleSet->addRule(std::move(Purification));
+      //   }
     } else if (Purification_type == 5555) {  // Predefined purification method
-      /// # Purification_type 5555: #
-      /// - name: Switching (B)
-      /// - rounds: n
-      /// - input Bell pairs per round: 3 in first two rounds, then 2
-      /// - total Bell pairs: (complicated)
-      /// - circuit: Fig. 21, case B in arXiv:1904.08605
-      /// - scheduling: symmetric tree (*)
-      /// ## description: ##
-      /// Two rounds of Ds-Sp, then Ss-Sp.
-      /// The point of this was to show that you don't have to stick with one
-      /// scheme, but can use different schemes in different rounds.
-      for (int i = 0; i < 2; i++) {
-        if (i % 2 == 0) {
-          rule_name = "Double selection action with: " + std::to_string(partner_address);
-        } else {
-          rule_name = "Double selection action inverse with: " + std::to_string(partner_address);
-        }
-        auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-        ActiveCondition *Purification_condition = new ActiveCondition();
-        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
-        Purification_condition->addClause(resource_clause);
-        Purification->setCondition(Purification_condition);
-        if (i % 2 == 0) {
-          ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
-          Purification->setAction(purify_action);
-        } else {
-          ActiveAction *purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
-          Purification->setAction(purify_action);
-        }
-        Purification->next_rule_id = rule_id + 1;
-        rule_id++;
-        shared_tag++;
-        tomography_RuleSet->addRule(std::move(Purification));
-      }
+      error("not implemented yet");
+      //   /// # Purification_type 5555: #
+      //   /// - name: Switching (B)
+      //   /// - rounds: n
+      //   /// - input Bell pairs per round: 3 in first two rounds, then 2
+      //   /// - total Bell pairs: (complicated)
+      //   /// - circuit: Fig. 21, case B in arXiv:1904.08605
+      //   /// - scheduling: symmetric tree (*)
+      //   /// ## description: ##
+      //   /// Two rounds of Ds-Sp, then Ss-Sp.
+      //   /// The point of this was to show that you don't have to stick with one
+      //   /// scheme, but can use different schemes in different rounds.
+      //   for (int i = 0; i < 2; i++) {
+      //     if (i % 2 == 0) {
+      //       rule_name = "Double selection action with: " + std::to_string(partner_address);
+      //     } else {
+      //       rule_name = "Double selection action inverse with: " + std::to_string(partner_address);
+      //     }
+      //     auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+      //     ActiveCondition *Purification_condition = new ActiveCondition();
+      //     ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
+      //     Purification_condition->addClause(resource_clause);
+      //     Purification->setCondition(Purification_condition);
+      //     if (i % 2 == 0) {
+      //       ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      //       Purification->setAction(purify_action);
+      //     } else {
+      //       ActiveAction *purify_action = new DoubleSelectionActionInv(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      //       Purification->setAction(purify_action);
+      //     }
+      //     Purification->next_rule_id = rule_id + 1;
+      //     rule_id++;
+      //     shared_tag++;
+      //     tomography_RuleSet->addRule(std::move(Purification));
+      //   }
 
-      for (int i = 0; i < num_purification; i++) {
-        if (i % 2 == 0) {
-          rule_name = "X Purification with: " + std::to_string(partner_address);
-        } else {
-          rule_name = "Z Purification with: " + std::to_string(partner_address);
-        }
-        auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-        ActiveCondition *Purification_condition = new ActiveCondition();
-        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);
-        Purification_condition->addClause(resource_clause);
-        Purification->setCondition(Purification_condition);
+      //   for (int i = 0; i < num_purification; i++) {
+      //     if (i % 2 == 0) {
+      //       rule_name = "X Purification with: " + std::to_string(partner_address);
+      //     } else {
+      //       rule_name = "Z Purification with: " + std::to_string(partner_address);
+      //     }
+      //     auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+      //     ActiveCondition *Purification_condition = new ActiveCondition();
+      //     ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);
+      //     Purification_condition->addClause(resource_clause);
+      //     Purification->setCondition(Purification_condition);
 
-        if (i % 2 == 0) {  // X purification
-          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
-          Purification->setAction(purify_action);
-        } else {  // Z purification
-          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
-          Purification->setAction(purify_action);
-        }
-        Purification->next_rule_id = rule_id + 1;
-        rule_id++;
-        shared_tag++;
-        tomography_RuleSet->addRule(std::move(Purification));
-      }
+      //     if (i % 2 == 0) {  // X purification
+      //       ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      //       Purification->setAction(purify_action);
+      //     } else {  // Z purification
+      //       ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      //       Purification->setAction(purify_action);
+      //     }
+      //     Purification->next_rule_id = rule_id + 1;
+      //     rule_id++;
+      //     shared_tag++;
+      //     tomography_RuleSet->addRule(std::move(Purification));
+      //   }
     } else if (Purification_type == 5556) {  // Predefined purification method
-      /// # Purification_type 5556: #
-      /// - name: Switching (A)
-      /// - rounds: n
-      /// - input Bell pairs per round: 3 in first round, then 2
-      /// - total Bell pairs: (complicated)
-      /// - circuit: Fig. 21, case A in arXiv:1904.08605
-      /// - scheduling: symmetric tree (*)
-      /// ## description: ##
-      /// One round of Ds-Sp, then Ss-Sp.
-      /// The point of this was to show that you don't have to stick with one
-      /// scheme, but can use different schemes in different rounds.
-      rule_name = "Double selection action with: " + std::to_string(partner_address);
-      auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-      ActiveCondition *Purification_condition = new ActiveCondition();
-      ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
-      Purification_condition->addClause(resource_clause);
-      Purification->setCondition(Purification_condition);
-      ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
-      Purification->setAction(purify_action);
-      Purification->next_rule_id = rule_id + 1;
-      rule_id++;
-      shared_tag++;
-      tomography_RuleSet->addRule(std::move(Purification));
+      error("not implemented yet");
+      //   /// # Purification_type 5556: #
+      //   /// - name: Switching (A)
+      //   /// - rounds: n
+      //   /// - input Bell pairs per round: 3 in first round, then 2
+      //   /// - total Bell pairs: (complicated)
+      //   /// - circuit: Fig. 21, case A in arXiv:1904.08605
+      //   /// - scheduling: symmetric tree (*)
+      //   /// ## description: ##
+      //   /// One round of Ds-Sp, then Ss-Sp.
+      //   /// The point of this was to show that you don't have to stick with one
+      //   /// scheme, but can use different schemes in different rounds.
+      //   rule_name = "Double selection action with: " + std::to_string(partner_address);
+      //   auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+      //   ActiveCondition *Purification_condition = new ActiveCondition();
+      //   ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
+      //   Purification_condition->addClause(resource_clause);
+      //   Purification->setCondition(Purification_condition);
+      //   ActiveAction *purify_action = new DoubleSelectionAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      //   Purification->setAction(purify_action);
+      //   Purification->next_rule_id = rule_id + 1;
+      //   rule_id++;
+      //   shared_tag++;
+      //   tomography_RuleSet->addRule(std::move(Purification));
 
-      for (int i = 0; i < num_purification; i++) {
-        if (i % 2 == 0) {
-          rule_name = "Z purification with: " + std::to_string(partner_address);
-        } else {
-          rule_name = "X purification with: " + std::to_string(partner_address);
-        }
-        auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-        ActiveCondition *Purification_condition = new ActiveCondition();
-        ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);
-        Purification_condition->addClause(resource_clause);
-        Purification->setCondition(Purification_condition);
+      //   for (int i = 0; i < num_purification; i++) {
+      //     if (i % 2 == 0) {
+      //       rule_name = "Z purification with: " + std::to_string(partner_address);
+      //     } else {
+      //       rule_name = "X purification with: " + std::to_string(partner_address);
+      //     }
+      //     auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+      //     ActiveCondition *Purification_condition = new ActiveCondition();
+      //     ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);
+      //     Purification_condition->addClause(resource_clause);
+      //     Purification->setCondition(Purification_condition);
 
-        if (i % 2 == 0) {
-          // X purification
-          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
-          Purification->setAction(purify_action);
-        } else {
-          // Z purification
-          ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
-          Purification->setAction(purify_action);
-        }
-        Purification->next_rule_id = rule_id + 1;
-        rule_id++;
-        shared_tag++;
-        tomography_RuleSet->addRule(std::move(Purification));
-      }
+      //     if (i % 2 == 0) {
+      //       // X purification
+      //       ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, false, true, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      //       Purification->setAction(purify_action);
+      //     } else {
+      //       // Z purification
+      //       ActiveAction *purify_action = new PurifyAction(RuleSet_id, rule_id, shared_tag, true, false, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      //       Purification->setAction(purify_action);
+      //     }
+      //     Purification->next_rule_id = rule_id + 1;
+      //     rule_id++;
+      //     shared_tag++;
+      //     tomography_RuleSet->addRule(std::move(Purification));
+      //   }
 
     } else if ((X_Purification && !Z_Purification) || (!X_Purification && Z_Purification)) {  // X or Z purification. Out-dated syntax.
-      /// # Purification_type default: #
-      /// - name: Boolean-driven (obsolete)
-      /// - rounds: 1
-      /// - input Bell pairs: 2 or 3
-      /// - total Bell pairs: 2 or 3
-      /// - circuit: <reference a figure>
-      /// - scheduling: (commonly pumping, symmetric tree, or banded)
-      /// ## description: ##
-      /// uses X_Purification and Z_purification booleans, but is obsolete.
-      /// Creates a single purification only, or a single round of double
-      /// purification. Use of this for new work is deprecated.
-      rule_name = "Single purification with: " + std::to_string(partner_address);
-      auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-      ActiveCondition *Purification_condition = new ActiveCondition();
-      ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);
-      Purification_condition->addClause(resource_clause);
-      Purification->setCondition(Purification_condition);
-      ActiveAction *purify_action =
-          new PurifyAction(RuleSet_id, rule_id, shared_tag, X_Purification, Z_Purification, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
-      Purification->setAction(purify_action);
-      Purification->next_rule_id = rule_id + 1;
-      rule_id++;
-      shared_tag++;
-      tomography_RuleSet->addRule(std::move(Purification));
+      error("not implemented yet");
+      //   /// # Purification_type default: #
+      //   /// - name: Boolean-driven (obsolete)
+      //   /// - rounds: 1
+      //   /// - input Bell pairs: 2 or 3
+      //   /// - total Bell pairs: 2 or 3
+      //   /// - circuit: <reference a figure>
+      //   /// - scheduling: (commonly pumping, symmetric tree, or banded)
+      //   /// ## description: ##
+      //   /// uses X_Purification and Z_purification booleans, but is obsolete.
+      //   /// Creates a single purification only, or a single round of double
+      //   /// purification. Use of this for new work is deprecated.
+      //   rule_name = "Single purification with: " + std::to_string(partner_address);
+      //   auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+      //   ActiveCondition *Purification_condition = new ActiveCondition();
+      //   ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 2);
+      //   Purification_condition->addClause(resource_clause);
+      //   Purification->setCondition(Purification_condition);
+      //   ActiveAction *purify_action =
+      //       new PurifyAction(RuleSet_id, rule_id, shared_tag, X_Purification, Z_Purification, num_purification, partner_address, qnic_type, qnic_index, 0, 1);
+      //   Purification->setAction(purify_action);
+      //   Purification->next_rule_id = rule_id + 1;
+      //   rule_id++;
+      //   shared_tag++;
+      //   tomography_RuleSet->addRule(std::move(Purification));
     } else {  // X, Z double purification
-      error("syntax outdate or purification id not recognized.");
-      rule_name = "Error purification";
-      auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
-      ActiveCondition *Purification_condition = new ActiveCondition();
-      ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
-      Purification_condition->addClause(resource_clause);
-      Purification->setCondition(Purification_condition);
-      ActiveAction *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
-      Purification->setAction(purify_action);
-      Purification->next_rule_id = rule_id + 1;
-      rule_id++;
-      shared_tag++;
-      tomography_RuleSet->addRule(std::move(Purification));
+      error("not implemented yet");
+      //   error("syntax outdate or purification id not recognized.");
+      //   rule_name = "Error purification";
+      //   auto Purification = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+      //   ActiveCondition *Purification_condition = new ActiveCondition();
+      //   ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 3);
+      //   Purification_condition->addClause(resource_clause);
+      //   Purification->setCondition(Purification_condition);
+      //   ActiveAction *purify_action = new DoublePurifyAction(RuleSet_id, rule_id, shared_tag, partner_address, qnic_type, qnic_index, 0, 1, 2);
+      //   Purification->setAction(purify_action);
+      //   Purification->next_rule_id = rule_id + 1;
+      //   rule_id++;
+      //   shared_tag++;
+      //   tomography_RuleSet->addRule(std::move(Purification));
     }
 
     // Let's make nodes select measurement basis randomly, because it it easier.
     rule_name = "tomography";
-    auto Random_measure_tomo = std::make_unique<ActiveRule>(RuleSet_id, rule_id, shared_tag, rule_name, partners);
+    auto Random_measure_tomo = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
+    Random_measure_tomo->setName(rule_name);
 
     // Technically, there is no condition because an available resource is
     // guaranteed whenever the rule is ran.
-    ActiveCondition *total_measurements = new ActiveCondition();
+    auto total_measurements = std::make_unique<Condition>();
 
     // 3000 measurements in total. There are 3*3 = 9 patterns of measurements.
     // So each combination must perform 3000/9 measurements.
-    ActiveClause *measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type, qnic_index, 0);
-    total_measurements->addClause(measure_count_clause);
-    Random_measure_tomo->setCondition(total_measurements);
+    auto measure_count_clause = std::make_unique<MeasureCountConditionClause>(num_measure, partner_address, qnic_type, qnic_index);
+    total_measurements->addClause(std::move(measure_count_clause));
+    Random_measure_tomo->setCondition(std::move(total_measurements));
 
     // Measure the local resource between it->second.neighborQNode_address.
-    ActiveAction *measure = new RandomMeasureAction(RuleSet_id, rule_id, my_address, partner_address, qnic_type, qnic_index, 0, num_measure);
-    Random_measure_tomo->setAction(measure);
+    auto measure = std::make_unique<Tomography>(num_measure, my_address, partner_address, qnic_type, qnic_index);
+    Random_measure_tomo->setAction(std::move(measure));
     //---------
     // Add the rule to the RuleSet
     tomography_RuleSet->addRule(std::move(Random_measure_tomo));
     //---------------------------
-    pk->setActiveRuleSet(tomography_RuleSet);
+    pk->setRuleSet(tomography_RuleSet);
     send(pk, "RouterPort$o");
 
   } else {  // RuleSet with no purification. Pure measurement only link level
@@ -1121,26 +1135,27 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
     //-First rule-
 
     // Let's make nodes select measurement basis randomly, because it it easier.
-    auto Random_measure_tomo = std::make_unique<ActiveRule>(RuleSet_id, 0, shared_tag);
+    auto Random_measure_tomo = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
     // Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
-    ActiveCondition *total_measurements = new ActiveCondition();
+    auto total_measurements = std::make_unique<Condition>();
 
     // 3000 measurements in total. There are 3*3 = 9 patterns of measurements.
     // So each combination must perform 3000/9 measurements.
-    ActiveClause *measure_count_clause = new MeasureCountClause(num_measure, partner_address, qnic_type, qnic_index, 0);
-    ActiveClause *resource_clause = new EnoughResourceClause(partner_address, 1);
-    total_measurements->addClause(measure_count_clause);
-    total_measurements->addClause(resource_clause);
-    Random_measure_tomo->setCondition(total_measurements);
+    auto measure_count_clause = std::make_unique<MeasureCountConditionClause>(num_measure, partner_address, qnic_type, qnic_index);
+    auto resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.9, partner_address, qnic_type, qnic_index);
+    total_measurements->addClause(std::move(measure_count_clause));
+    total_measurements->addClause(std::move(resource_clause));
+    Random_measure_tomo->setCondition(std::move(total_measurements));
 
     // Measure the local resource between it->second.neighborQNode_address.
-    ActiveAction *measure = new RandomMeasureAction(RuleSet_id, 0, my_address, partner_address, qnic_type, qnic_index, 0, num_measure);
-    Random_measure_tomo->setAction(measure);
+    // Action *measure = new RandomMeasureAction(RuleSet_id, 0, my_address, partner_address, qnic_type, qnic_index, 0, num_measure);
+    auto measure = std::make_unique<Tomography>(num_measure, my_address, partner_address, qnic_type, qnic_index);
+    Random_measure_tomo->setAction(std::move(measure));
     //---------
     // Add the rule to the RuleSet
     tomography_RuleSet->addRule(std::move(Random_measure_tomo));
     //---------------------------
-    pk->setActiveRuleSet(tomography_RuleSet);
+    pk->setRuleSet(tomography_RuleSet);
     send(pk, "RouterPort$o");
   }
 }
