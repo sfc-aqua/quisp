@@ -160,35 +160,17 @@ void RuleEngine::handleMessage(cMessage *msg) {
   }
 
   else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
-    // Received a tomography rule set.
-    // std::cout<<"node["<<parentAddress<<"] !!!!!!!!!!Ruleset reveid!!!!!!!!! ruleset id = "<<pk->getRuleSet()->ruleset_id<<"\n";
-    auto *ruleset = const_cast<ActiveRuleSet *>(pk->getActiveRuleSet());
-    // int process_id = rp.size();  // This is temporary because it will not be unique when processes have been deleted.
-    std::cout << "Process size is ...." << ruleset->size() << " node[" << parentAddress << "\n";
-    // todo:We also need to allocate resources. e.g. if all qubits were entangled already, and got a new ruleset.
-    // ResourceAllocation();
-    if (ruleset->size() > 0) {
-      rp.insert(ruleset);
-      EV << "New process arrived !\n";
-    } else {
-      error("Empty rule set...");
-    }
+    auto *ruleset = pk->getRuleSet();
+    auto rs = RuleSetConverter::construct(*ruleset);
+    runtimes.emplace_back(runtime::Runtime(rs, runtime_callback.get()));
   } else if (auto *pkt = dynamic_cast<PurificationResult *>(msg)) {
     bool from_self = pkt->getSrcAddr() == parentAddress;
     const PurificationResultKey key{*pkt};
     handlePurificationResult(key, PurificationResultData{*pkt}, from_self);
   } else if (auto *pkt = dynamic_cast<DoublePurificationResult *>(msg)) {
-    error("DoublePurification is not implemented yet");
-    process_id purification_id;
-    Doublepurification_result pr;
-    purification_id.ruleset_id = pkt->getRuleset_id();
-    purification_id.rule_id = pkt->getRule_id();
-    purification_id.index = pkt->getAction_index();
-    purification_id.shared_tag = pkt->getShared_tag();
-    pr.id = purification_id;
-    pr.Xpurification_outcome = pkt->getXOutput_is_plus();
-    pr.Zpurification_outcome = pkt->getZOutput_is_plus();
-    storeCheck_DoublePurification_Agreement(pr);
+    bool from_self = pkt->getSrcAddr() == parentAddress;
+    const PurificationResultKey key{*pkt};
+    handlePurificationResult(key, PurificationResultData{*pkt}, from_self);
   } else if (auto *pkt = dynamic_cast<DS_DoublePurificationResult *>(msg)) {
     error("DS DoublePurification is not implemented yet");
     // std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
