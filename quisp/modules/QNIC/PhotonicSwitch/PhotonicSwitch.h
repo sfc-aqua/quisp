@@ -36,9 +36,9 @@ class PhotonicSwitch : public cSimpleModule {
   bool isReserved();
   int getAddress();
 };
-}  // namespace modules
-}  // namespace quisp
 
 Define_Module(PhotonicSwitch);
+}  // namespace modules
+}  // namespace quisp
 
 #endif  // MODULES_PHOTONICSWITCH_H_
