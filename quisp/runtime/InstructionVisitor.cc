@@ -56,6 +56,18 @@ void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAd
   runtime->callback->sendDoublePurificationResult(rs.id, rule, action_index, partner_addr, result_z, result_x, pur_type);
 }
 
+void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_RegId_RegId_RegId_PurType_& instruction) {
+  auto [partner_addr, result_z_reg_id, result_x_reg_id, ds_res_z_reg_id, ds_res_x_reg_id, action_index_reg_id, pur_type] = instruction.args;
+  bool result_z = runtime->getRegVal(result_z_reg_id);
+  bool result_x = runtime->getRegVal(result_x_reg_id);
+  bool ds_result_z = runtime->getRegVal(ds_res_z_reg_id);
+  bool ds_result_x = runtime->getRegVal(ds_res_x_reg_id);
+  int action_index = runtime->getRegVal(action_index_reg_id);
+  auto& rs = runtime->ruleset;
+  auto& rule = rs.rules.at(runtime->rule_id);
+  runtime->callback->sendQuadruplePurificationResult(rs.id, rule, action_index, partner_addr, result_z, result_x, ds_result_z, ds_result_x, pur_type);
+}
+
 void InstructionVisitor::operator()(const INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_& instruction) {
   auto [left_partner, left_op_id, right_partner, right_op_id] = instruction.args;
   auto& rs = runtime->ruleset;
