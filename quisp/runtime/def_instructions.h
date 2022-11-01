@@ -52,6 +52,7 @@ INSTR(PURIFY_Z, RegId, QubitId, QubitId)
 INSTR(SEND_LINK_TOMOGRAPHY_RESULT, QNodeAddr, RegId, MemoryKey, int, Time)  // partner addr, current count reg_id, outcome key, max_count, start_time
 INSTR(SEND_PURIFICATION_RESULT, QNodeAddr, RegId /* result_z or result_x */, RegId /* action_index */, PurType)
 INSTR(SEND_PURIFICATION_RESULT, QNodeAddr, RegId /* result_z */, RegId /* result_x */, RegId /* action_index */, PurType)
+INSTR(SEND_PURIFICATION_RESULT, QNodeAddr, RegId /* result_z */, RegId /* result_x */, RegId /* ds_res_z */, RegId /* ds_res_x */, RegId /* action_index */, PurType)
 INSTR(SEND_SWAPPING_RESULT, QNodeAddr /* left partner*/, RegId /* left operation */, QNodeAddr /* right partner*/, RegId /* right operation */)
 
 INSTR(HACK_SWAPPING_PARTNERS, QubitId, QubitId)
