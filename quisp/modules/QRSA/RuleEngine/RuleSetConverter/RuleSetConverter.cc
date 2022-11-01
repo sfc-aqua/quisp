@@ -104,7 +104,7 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       RET COND_PASSED
       */
       auto count = RegId::REG2;
-      MemoryKey count_key{"measure_count"};
+      MemoryKey count_key{"measure_count" + std::to_string(i)};
       Label passed_label{std::string("PASSED_") + std::to_string(i)};
       opcodes.push_back(INSTR_LOAD_RegId_MemoryKey_{{count, count_key}});
       opcodes.push_back(INSTR_BLT_Label_RegId_int_{{passed_label, count, c->num_measure}});
@@ -112,6 +112,20 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       opcodes.push_back(INSTR_INC_RegId_{count, passed_label});
       opcodes.push_back(INSTR_STORE_MemoryKey_RegId_{{count_key, count}});
       name += "MeasureCountCondition ";
+
+      Label continue_label{std::string("CONTINUE_") + std::to_string(i)};
+      std::vector<InstructionTypes> termination_check_codes{
+          // clang-format off
+INSTR_LOAD_RegId_MemoryKey_{{count, count_key}},
+INSTR_BLT_Label_RegId_int_{{continue_label, count, c->num_measure}},
+INSTR_RET_ReturnCode_{ReturnCode::RS_TERMINATED},
+INSTR_NOP_None_{{None}, continue_label}
+          // clang-format on
+      };
+
+      // insert termination check on the top of the opcodes.
+      // the RS termination should be checked at first of condition execution
+      opcodes.insert(opcodes.begin(), termination_check_codes.begin(), termination_check_codes.end());
     }
   }
   opcodes.push_back(INSTR_RET_ReturnCode_{{ReturnCode::COND_PASSED}});
