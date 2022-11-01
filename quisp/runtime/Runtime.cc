@@ -257,7 +257,7 @@ void Runtime::debugRuntimeState() {
   std::cout << "\n---------runtime-state---------"
             << "\npc: " << pc << ", rule_id: " << rule_id << ", error: " << (error == nullptr ? "no error" : error->message);
   std::cout << "\nReg0: " << registers[0].value << ", Reg1: " << registers[1].value << ", Reg2: " << registers[2].value << ", Reg3: " << registers[3].value
-            << "\n----------memory------------\n";
+            << ", Reg4: " << registers[4].value << "\n----------memory------------\n";
   for (auto it : memory) {
     std::cout << "  " << it.first << ": " << it.second << "\n";
   }

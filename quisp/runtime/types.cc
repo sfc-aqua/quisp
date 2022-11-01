@@ -50,6 +50,9 @@ std::ostream& operator<<(std::ostream& stream, const RegId& value) {
     case RegId::REG3:
       stream << std::string("REG3");
       break;
+    case RegId::REG4:
+      stream << std::string("REG4");
+      break;
   }
   return stream;
 };
