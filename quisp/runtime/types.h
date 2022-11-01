@@ -18,7 +18,7 @@ using Time = omnetpp::SimTime;
 using PurType = int;
 
 // these types are mainly used for describing type name in def_instruction.h
-enum class RegId : int { REG0, REG1, REG2, REG3 };
+enum class RegId : int { REG0, REG1, REG2, REG3, REG4 };
 std::ostream& operator<<(std::ostream& stream, const RegId& value);
 
 enum class ReturnCode : int { NONE, COND_FAILED, COND_PASSED, RS_TERMINATED };

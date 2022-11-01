@@ -129,7 +129,7 @@ class Runtime {
   RuleId rule_id = -1;
   /// @brief program counter for execution
   unsigned int pc = 0;
-  Register registers[4];
+  Register registers[5];
   QubitResources qubits;
   QubitNameMap named_qubits;
   RuntimeError* error = nullptr;
