@@ -21,7 +21,7 @@ using PurType = int;
 enum class RegId : int { REG0, REG1, REG2, REG3 };
 std::ostream& operator<<(std::ostream& stream, const RegId& value);
 
-enum class ReturnCode : int { NONE, COND_FAILED, COND_PASSED };
+enum class ReturnCode : int { NONE, COND_FAILED, COND_PASSED, RS_TERMINATED };
 std::ostream& operator<<(std::ostream& stream, const ReturnCode& value);
 
 struct QNodeAddr {

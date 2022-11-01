@@ -21,6 +21,7 @@ Runtime::Runtime(const RuleSet& ruleset, ICallBack* cb) : visitor(InstructionVis
 Runtime::~Runtime() {}
 
 void Runtime::exec(const RuleSet& ruleset) {
+  if (terminated) return;
   cleanup();
   debugging = ruleset.debugging;
   if (debugging) {
@@ -38,6 +39,10 @@ void Runtime::exec(const RuleSet& ruleset) {
       if (debugging) std::cout << return_code << std::endl;
       if (return_code == ReturnCode::COND_FAILED) {
         break;
+      }
+      if (return_code == ReturnCode::RS_TERMINATED) {
+        terminated = true;
+        return;
       }
       eval(rule.action);
     }
