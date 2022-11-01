@@ -93,7 +93,7 @@ void Runtime::promoteQubit(QubitResources::iterator iter) {
   auto it = ruleset.next_rule_table.find({partner_addr, current_rule_id});
   assert(it != ruleset.next_rule_table.end());
   auto next_rule_id = it->second;
-  auto& qubit = iter->second;
+  auto* qubit = iter->second;
   qubits.erase(iter);
   qubits.emplace(std::make_pair(partner_addr, next_rule_id), qubit);
 }
