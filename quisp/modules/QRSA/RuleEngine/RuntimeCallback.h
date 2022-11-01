@@ -134,7 +134,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
 
   void sendTriplePurificationResult(const unsigned long ruleset_id, const runtime::Rule &rule, const int action_index, const QNodeAddr partner_addr, bool result_z, bool result_x,
                                     bool result_ds, int pur_type) override {
-    auto *pkt = new DS_DoublePurificationSecondResult{"DS_DoublePurificationResult"};
+    auto *pkt = new DS_DoublePurificationSecondResult{"DS_DoublePurificationSecondResult"};
     pkt->setSrcAddr(rule_engine->parentAddress);
     pkt->setDestAddr(partner_addr.val);
     pkt->setKind(7);
