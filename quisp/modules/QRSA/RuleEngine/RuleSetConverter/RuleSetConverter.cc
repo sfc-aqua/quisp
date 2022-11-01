@@ -295,6 +295,104 @@ INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
         }};
   }
 
+  if (pur_type == rules::PurType::DSDA) {
+    /*
+   SET action_index 0
+   LOAD action_index "action_index_{partner_addr}"
+   GET_QUBIT qubit partner_addr 0
+   GET_QUBIT trash_qubit_x partner_addr 1
+   GET_QUBIT trash_qubit_z partner_addr 2
+   GET_QUBIT ds_trash_qubit_x partner_addr 3
+   GET_QUBIT ds_trash_qubit_z partner_addr 4
+ #if DSDA:
+   PURIFY_X measure_result_x qubit trash_qubit_x
+   PURIFY_Z ds_measure_result_z trash_qubit_x ds_trash_qubit_z
+   PURIFY_Z measure_result_z qubit trash_qubit_z
+   PURIFY_X ds_measure_result_x trash_qubit_z ds_trash_qubit_x
+ #elseif DSDA_INV:
+   PURIFY_Z measure_result_z qubit trash_qubit_z
+   PURIFY_X ds_measure_result_x trash_qubit_z ds_trash_qubit_x
+   PURIFY_X measure_result_x qubit trash_qubit_x
+   PURIFY_Z ds_measure_result_z trash_qubit_x ds_trash_qubit_z
+ #endif
+   HACK_BREAK_ENTANGLEMENT trash_qubit_x
+   HACK_BREAK_ENTANGLEMENT trash_qubit_Z
+   HACK_BREAK_ENTANGLEMENT ds_trash_qubit_X
+   HACK_BREAK_ENTANGLEMENT ds_trash_qubit_Z
+   FREE_QUBIT trash_qubit_x
+   FREE_QUBIT trash_qubit_z
+   FREE_QUBIT ds_trash_qubit_x
+   FREE_QUBIT ds_trash_qubit_z
+   LOCK_QUBIT qubit action_index
+   SEND_PURIFICATION_RESULT partner_addr measure_result_z measure_result_x ds_measure_result_z ds_measure_result_x action_index
+   INC action_index
+   STORE "action_index_{partner_addr}" action_index
+   */
+    QubitId qubit{0};
+    QubitId trash_qubit_x{1};
+    QubitId trash_qubit_z{2};
+    QubitId ds_trash_qubit_x{3};
+    QubitId ds_trash_qubit_z{4};
+    RegId measure_result_x = RegId::REG0;
+    RegId measure_result_z = RegId::REG2;
+    RegId ds_measure_result_x = RegId::REG3;
+    RegId ds_measure_result_z = RegId::REG4;
+    RegId action_index = RegId::REG1;
+
+    auto &interface = act->qnic_interfaces.at(0);
+    QNodeAddr partner_addr{interface.partner_addr};
+    MemoryKey action_index_key{"action_index_dsda_" + std::to_string(interface.partner_addr)};
+    MemoryKey qubit_index_key{"qubit_index"};
+    MemoryKey trash_qubit_index_key{"trash_qubit_index"};
+    std::string action_name = "Double Selection Dual Action";
+    std::vector<InstructionTypes> opcodes = {
+        INSTR_SET_RegId_int_{{action_index, 0}},
+        INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
+        INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
+        INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_x, partner_addr, 1}},
+        INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_z, partner_addr, 2}},
+        INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{ds_trash_qubit_x, partner_addr, 3}},
+        INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{ds_trash_qubit_z, partner_addr, 4}},
+    };
+
+    std::vector<InstructionTypes> v;
+    if (pur_type == rules::PurType::DSDA) {
+      v = {
+          INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}},
+          INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{ds_measure_result_z, trash_qubit_x, ds_trash_qubit_z}},
+          INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}},
+          INSTR_PURIFY_X_RegId_QubitId_QubitId_{{ds_measure_result_x, trash_qubit_z, ds_trash_qubit_x}},
+      };
+    } else {  // DSDA_INV
+      action_name += "_INV";
+      v = {
+          INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}},
+          INSTR_PURIFY_X_RegId_QubitId_QubitId_{{ds_measure_result_x, trash_qubit_z, ds_trash_qubit_x}},
+          INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}},
+          INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{ds_measure_result_z, trash_qubit_x, ds_trash_qubit_z}},
+      };
+    }
+    opcodes.insert(opcodes.end(), v.begin(), v.end());
+    v = {
+        INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit_x}},
+        INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit_z}},
+        INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{ds_trash_qubit_x}},
+        INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{ds_trash_qubit_z}},
+        INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
+        INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
+        INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
+        INSTR_FREE_QUBIT_QubitId_{{ds_trash_qubit_x}},
+        INSTR_FREE_QUBIT_QubitId_{{ds_trash_qubit_z}},
+        INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_RegId_RegId_RegId_PurType_{
+            {partner_addr, measure_result_z, measure_result_x, ds_measure_result_z, ds_measure_result_x, action_index, pur_type}},
+        INSTR_INC_RegId_{action_index},
+        INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
+    };
+    opcodes.insert(opcodes.end(), v.begin(), v.end());
+
+    return Program{action_name, opcodes};
+  }
+
   std::cout << const_cast<Purification *>(act)->serialize_json() << std::endl;
   throw std::runtime_error("pur not implemented");
   return Program{"Purification", {}};

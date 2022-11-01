@@ -31,6 +31,22 @@ struct PurificationResultKey {
     type = (rules::PurType)result.getPurType();
   }
 
+  PurificationResultKey(const messages::DS_DoublePurificationResult& result) {
+    rs_id = result.getRuleset_id();
+    rule_id = result.getRule_id();
+    action_index = result.getAction_index();
+    shared_tag = result.getShared_tag();
+    type = (rules::PurType)result.getPurType();
+  }
+
+  PurificationResultKey(const messages::DS_DoublePurificationSecondResult& result) {
+    rs_id = result.getRuleset_id();
+    rule_id = result.getRule_id();
+    action_index = result.getAction_index();
+    shared_tag = result.getShared_tag();
+    type = (rules::PurType)result.getPurType();
+  }
+
   // intentionally ignore rule_id because the rule_id might be different in each node
   bool operator==(const PurificationResultKey& key) const { return rs_id == key.rs_id && action_index == key.action_index && shared_tag == key.shared_tag; }
 };
@@ -51,10 +67,11 @@ struct PurificationResultData {
       case PurType::DOUBLE:
       case PurType::DOUBLE_INV:
         return result.is_x_plus == is_x_plus && result.is_z_plus == is_z_plus;
-      case PurType::DSSA:
-      case PurType::DSSA_INV:
       case PurType::DSDA:
       case PurType::DSDA_INV:
+        return result.is_x_plus == is_x_plus && result.is_z_plus == is_z_plus && result.is_ds_x_plus == is_ds_x_plus && result.is_ds_z_plus == is_ds_z_plus;
+      case PurType::DSSA:
+      case PurType::DSSA_INV:
       default:
         throw std::runtime_error("the pur type not implemented yet");
     }
@@ -75,6 +92,14 @@ struct PurificationResultData {
     assert(pur_type == PurType::DOUBLE || pur_type == PurType::DOUBLE_INV);
     is_z_plus = result.getZOutput_is_plus();
     is_x_plus = result.getXOutput_is_plus();
+  }
+  PurificationResultData(const messages::DS_DoublePurificationResult& result) {
+    pur_type = (PurType)result.getPurType();
+    assert(pur_type == PurType::DSDA || pur_type == PurType::DSDA_INV);
+    is_z_plus = result.getZOutput_is_plus();
+    is_x_plus = result.getXOutput_is_plus();
+    is_ds_x_plus = result.getDS_XOutput_is_plus();
+    is_ds_z_plus = result.getDS_ZOutput_is_plus();
   }
 };
 
