@@ -29,15 +29,18 @@ void Runtime::exec(const RuleSet& ruleset) {
   for (auto& rule : ruleset.rules) {
     rule_id = rule.id;
     debugging = rule.debugging || ruleset.debugging;
-    if (debugging) {
-      std::cout << "Run Rule: " << rule.name << "\n";
-      debugRuntimeState();
+    while (true) {
+      if (debugging) {
+        debugRuntimeState();
+        std::cout << "Run Rule(" << rule.id << "): " << rule.name << ", " << callback->getNodeInfo() << "\n";
+      }
+      eval(rule.condition);
+      if (debugging) std::cout << return_code << std::endl;
+      if (return_code == ReturnCode::COND_FAILED) {
+        break;
+      }
+      eval(rule.action);
     }
-    eval(rule.condition);
-    if (return_code == ReturnCode::COND_FAILED) {
-      continue;
-    }
-    eval(rule.action);
   }
 }
 
