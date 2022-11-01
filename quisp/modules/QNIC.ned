@@ -3,8 +3,8 @@ package modules;
 
 import modules.QNIC.StationaryQubit.*;
 import modules.QNIC.PhotonicSwitch.*;
-import modules.HoM;
-import modules.interHoM;
+import modules.HOM;
+import modules.interHOM;
 
 module QNIC
 {
@@ -49,7 +49,7 @@ module QNIC
             @display("i=block/dispatch;p=75.240005,117.810005");
         }
 
-        internal_hom: interHoM if receiver {
+        internal_hom: interHOM if receiver {
             address = parent.parent_node_address;
             passive = parent.passive;
             @display("p=177.21,39.600002");
@@ -60,10 +60,10 @@ module QNIC
         for i=0..numBuffer-1 {
             lens.toqubit_quantum_port++ <--> statQubit[i].tolens_quantum_port; //Put QuantumChannel_internal here if wanted
         }
-        //If no HoM is inside the node
+        //If no HOM is inside the node
         qnic_quantum_port <--> lens.toQNIC_quantum_port if !receiver;
         toParentRouter <-- gate_closer.close_output if !receiver;//Seal the unused gate. Otherwise, this causes an error.
-        //If an HoM is inside the node
+        //If an HOM is inside the node
         internal_hom.quantum_port++ <--> lens.toQNIC_quantum_port if receiver;//Also, put QuantumChannel_internal here if wanted
         internal_hom.quantum_port++ <--> qnic_quantum_port if receiver;
         internal_hom.toRouter --> toParentRouter if receiver;

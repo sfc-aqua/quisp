@@ -558,7 +558,7 @@ TEST(RuleEnginePhotonShootingTest, ScheduleNextEmissionEvent) {
   EXPECT_EQ(packet->getTiming(), timing);
   EXPECT_EQ(packet->getNum_sent(), num_sent + 1);
   EXPECT_EQ(packet->getTrial(), trial);
-  EXPECT_EQ(packet->getInternal_hom(), 1 /* internal HoM */);
+  EXPECT_EQ(packet->getInternal_hom(), 1 /* internal HOM */);
   fes->clear();
 
   internal = false;
@@ -572,7 +572,7 @@ TEST(RuleEnginePhotonShootingTest, ScheduleNextEmissionEvent) {
   EXPECT_EQ(packet->getTiming(), timing);
   EXPECT_EQ(packet->getNum_sent(), num_sent + 1);
   EXPECT_EQ(packet->getTrial(), trial);
-  EXPECT_EQ(packet->getInternal_hom(), 0 /* not internal HoM */);
+  EXPECT_EQ(packet->getInternal_hom(), 0 /* not internal HOM */);
   fes->clear();
 
   sim->setSimTime(3.0);
@@ -588,7 +588,7 @@ TEST(RuleEnginePhotonShootingTest, ScheduleNextEmissionEvent) {
   EXPECT_EQ(packet->getTiming(), timing);
   EXPECT_EQ(packet->getNum_sent(), num_sent + 1);
   EXPECT_EQ(packet->getTrial(), trial);
-  EXPECT_EQ(packet->getInternal_hom(), 0 /* not internal HoM */);
+  EXPECT_EQ(packet->getInternal_hom(), 0 /* not internal HOM */);
   EXPECT_EQ(packet->getArrivalTime(), sim->getSimTime() + interval);
   fes->clear();
 
@@ -605,7 +605,7 @@ TEST(RuleEnginePhotonShootingTest, ScheduleNextEmissionEvent) {
   EXPECT_EQ(packet->getTiming(), timing);
   EXPECT_EQ(packet->getNum_sent(), num_sent + 1);
   EXPECT_EQ(packet->getTrial(), trial);
-  EXPECT_EQ(packet->getInternal_hom(), 0 /* not internal HoM */);
+  EXPECT_EQ(packet->getInternal_hom(), 0 /* not internal HOM */);
   EXPECT_EQ(packet->getArrivalTime(), sim->getSimTime() + timing);
   fes->clear();
 

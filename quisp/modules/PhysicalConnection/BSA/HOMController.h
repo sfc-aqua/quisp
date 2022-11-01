@@ -1,8 +1,8 @@
-/** \file HoM_Controller.h
+/** \file HOM_Controller.h
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/04/01
  *
- *  \brief HoMController
+ *  \brief HOMController
  */
 #pragma once
 
@@ -17,13 +17,13 @@ using namespace quisp::messages;
 namespace quisp {
 namespace modules {
 
-/** \class HoMController HoM_Controller.h
+/** \class HOMController HOM_Controller.h
  *  \note How about if two nodes have imbalanced buffers?
  *        Maybe use unused qnic (which is ought to be used for another path)?
  *
- *  \brief HoMController
+ *  \brief HOMController
  */
-class HoMController : public cSimpleModule {
+class HOMController : public cSimpleModule {
  private:
   int address;
   int photon_detection_per_sec;  ///< The number of detectable photon in a second. This info is used to decide the number of photon in one trial.
@@ -78,7 +78,7 @@ class HoMController : public cSimpleModule {
 
  public:
   virtual void setMax_buffer(int buffer);
-  HoMController();
+  HOMController();
 };
 
 }  // namespace modules

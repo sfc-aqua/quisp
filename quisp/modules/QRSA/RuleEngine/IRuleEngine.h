@@ -4,7 +4,7 @@
 #include <vector>
 
 #include <messages/classical_messages.h>
-#include <modules/PhysicalConnection/BSA/HoMController.h>
+#include <modules/PhysicalConnection/BSA/HOMController.h>
 #include <modules/QNIC/StationaryQubit/StationaryQubit.h>
 #include <modules/QRSA/HardwareMonitor/HardwareMonitor.h>
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>

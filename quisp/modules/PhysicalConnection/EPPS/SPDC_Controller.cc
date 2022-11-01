@@ -52,7 +52,7 @@ class SPDC_Controller : public cSimpleModule {
   virtual cModule *getNode(std::string type);  // Find the parent with a specific type
   virtual void checkNeighborsAddress();
   virtual void checkNeighborsDistance();
-  virtual void checkNeighborsHoMCapacity();
+  virtual void checkNeighborsHOMCapacity();
   virtual void checkNeighborsBuffer();
   virtual double calculateTimeToTravel(double distance, double c);
   virtual EPPStimingNotifier *generateNotifier(double distance_to_neighbor, double c, int destAddr);
@@ -72,7 +72,7 @@ void SPDC_Controller::initialize() {
   // For simplicity, I assume the SPDC can access those neighbor information without classical communication but directly.
   checkNeighborsAddress();
   checkNeighborsDistance();
-  checkNeighborsHoMCapacity();
+  checkNeighborsHOMCapacity();
   checkNeighborsBuffer();
 
   // Notify the timing.
@@ -188,10 +188,10 @@ void SPDC_Controller::checkNeighborsAddress() {
 // Store the buffer size
 void SPDC_Controller::checkNeighborsBuffer() {
   cModule *epps = getNode("SPDC");
-  cModule *neighbor_qnic_one = getNextNode(epps, 0, "interHoM")->getParentModule();
+  cModule *neighbor_qnic_one = getNextNode(epps, 0, "interHOM")->getParentModule();
   neighbor_buffer = neighbor_qnic_one->par("numBuffer");
   par("neighbor_buffer") = neighbor_buffer;
-  cModule *neighbor_qnic_two = getNextNode(epps, 1, "interHoM")->getParentModule();
+  cModule *neighbor_qnic_two = getNextNode(epps, 1, "interHOM")->getParentModule();
   neighbor_buffer_two = neighbor_qnic_two->par("numBuffer");
   par("neighbor_buffer_two") = neighbor_buffer_two;
   max_buffer = std::min(neighbor_buffer, neighbor_buffer_two);  // Adjust to the slower one
@@ -199,22 +199,22 @@ void SPDC_Controller::checkNeighborsBuffer() {
 }
 
 // Store the frequency to adjust the emission rate.
-void SPDC_Controller::checkNeighborsHoMCapacity() {
+void SPDC_Controller::checkNeighborsHOMCapacity() {
   cModule *epps_node = getNode("SPDC");
-  cModule *neighbor_interHoM_one = getNextNode(epps_node, 0, "interHoM");
-  double temp = neighbor_interHoM_one->getSubmodule("Controller")->par("photon_detection_per_sec");
-  accepted_rate_one = (double)1 / (double)neighbor_interHoM_one->getSubmodule("Controller")->par("photon_detection_per_sec");
-  cModule *neighbor_interHoM_two = getNextNode(epps_node, 1, "interHoM");
-  double tempt = neighbor_interHoM_two->getSubmodule("Controller")->par("photon_detection_per_sec");
-  accepted_rate_two = (double)1 / (double)neighbor_interHoM_two->getSubmodule("Controller")->par("photon_detection_per_sec");
+  cModule *neighbor_interHOM_one = getNextNode(epps_node, 0, "interHOM");
+  double temp = neighbor_interHOM_one->getSubmodule("Controller")->par("photon_detection_per_sec");
+  accepted_rate_one = (double)1 / (double)neighbor_interHOM_one->getSubmodule("Controller")->par("photon_detection_per_sec");
+  cModule *neighbor_interHOM_two = getNextNode(epps_node, 1, "interHOM");
+  double tempt = neighbor_interHOM_two->getSubmodule("Controller")->par("photon_detection_per_sec");
+  accepted_rate_two = (double)1 / (double)neighbor_interHOM_two->getSubmodule("Controller")->par("photon_detection_per_sec");
 
   EV << tempt << "- - - - -" << accepted_rate_two << ",,,,,,,,,,," << accepted_rate_one << " - - - " << temp << "\n";
   max_accepted_rate = std::max(accepted_rate_one, accepted_rate_two);  // Needs to adjust to the slower device
-  // Adjust pump frequency to the lower HoM detection rate by neighbors.
+  // Adjust pump frequency to the lower HOM detection rate by neighbors.
   // if detection rate is better than emission rate.
   double pump_rate = (double)1 / (double)frequency;
   EV << "Self's rate is 1/" << frequency << " = " << pump_rate;
-  if (pump_rate > max_accepted_rate) {  // If HoM detection rate is faster than pump
+  if (pump_rate > max_accepted_rate) {  // If HOM detection rate is faster than pump
     max_accepted_rate = pump_rate;  // Now frequency is limited by SPDC pump rate
   }
   par("accepted_burst_interval") = max_accepted_rate;

@@ -41,42 +41,42 @@ network Simple_constant_quantum_cost
             nodeType = "Repeater";
             @display("i=REP1G");
         }
-        HoM[6]: HoM {
+        HOM[6]: HOM {
             address = sizeof(endnode) +sizeof(repeater) + index;
         }
         router[1]: QNode {
-            address = sizeof(endnode) +sizeof(repeater) +sizeof(HoM) + index;
+            address = sizeof(endnode) +sizeof(repeater) +sizeof(HOM) + index;
             nodeType = "Router";
             @display("i=RTR");
         }
     connections:
-        endnode[0].port++ <--> C {  cost = 20; } <--> HoM[0].port++;
-        HoM[0].port++ <--> C <--> repeater[0].port++;
-        repeater[0].port++ <--> C <--> HoM[1].port++;
-        HoM[1].port++ <--> C <--> router[0].port++;
+        endnode[0].port++ <--> C {  cost = 20; } <--> HOM[0].port++;
+        HOM[0].port++ <--> C <--> repeater[0].port++;
+        repeater[0].port++ <--> C <--> HOM[1].port++;
+        HOM[1].port++ <--> C <--> router[0].port++;
 
-        endnode[1].port++ <--> C <--> HoM[2].port++;
-        HoM[2].port++ <--> C <--> repeater[1].port++;
-        repeater[1].port++ <--> C <--> HoM[3].port++;
-        HoM[3].port++ <--> C <--> router[0].port++;
+        endnode[1].port++ <--> C <--> HOM[2].port++;
+        HOM[2].port++ <--> C <--> repeater[1].port++;
+        repeater[1].port++ <--> C <--> HOM[3].port++;
+        HOM[3].port++ <--> C <--> router[0].port++;
 
-        endnode[2].port++ <--> C <--> HoM[4].port++;
-        HoM[4].port++ <--> C <--> repeater[2].port++;
-        repeater[2].port++ <--> C <--> HoM[5].port++;
-        HoM[5].port++ <--> C <--> router[0].port++;
+        endnode[2].port++ <--> C <--> HOM[4].port++;
+        HOM[4].port++ <--> C <--> repeater[2].port++;
+        repeater[2].port++ <--> C <--> HOM[5].port++;
+        HOM[5].port++ <--> C <--> router[0].port++;
 
-        endnode[0].quantum_port++ <--> QuantumChannel <--> HoM[0].quantum_port++;
-        HoM[0].quantum_port++ <--> QuantumChannel <--> repeater[0].quantum_port++;
-        repeater[0].quantum_port++ <--> QuantumChannel <--> HoM[1].quantum_port++;
-        HoM[1].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port++;
+        endnode[0].quantum_port++ <--> QuantumChannel <--> HOM[0].quantum_port++;
+        HOM[0].quantum_port++ <--> QuantumChannel <--> repeater[0].quantum_port++;
+        repeater[0].quantum_port++ <--> QuantumChannel <--> HOM[1].quantum_port++;
+        HOM[1].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port++;
 
-        endnode[1].quantum_port++ <--> QuantumChannel <--> HoM[2].quantum_port++;
-        HoM[2].quantum_port++ <--> QuantumChannel <--> repeater[1].quantum_port++;
-        repeater[1].quantum_port++ <--> QuantumChannel <--> HoM[3].quantum_port++;
-        HoM[3].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port++;
+        endnode[1].quantum_port++ <--> QuantumChannel <--> HOM[2].quantum_port++;
+        HOM[2].quantum_port++ <--> QuantumChannel <--> repeater[1].quantum_port++;
+        repeater[1].quantum_port++ <--> QuantumChannel <--> HOM[3].quantum_port++;
+        HOM[3].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port++;
 
-        endnode[2].quantum_port++ <--> QuantumChannel <--> HoM[4].quantum_port++;
-        HoM[4].quantum_port++ <--> QuantumChannel <--> repeater[2].quantum_port++;
-        repeater[2].quantum_port++ <--> QuantumChannel <--> HoM[5].quantum_port++;
-        HoM[5].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port++;
+        endnode[2].quantum_port++ <--> QuantumChannel <--> HOM[4].quantum_port++;
+        HOM[4].quantum_port++ <--> QuantumChannel <--> repeater[2].quantum_port++;
+        repeater[2].quantum_port++ <--> QuantumChannel <--> HOM[5].quantum_port++;
+        HOM[5].quantum_port++ <--> QuantumChannel <--> router[0].quantum_port++;
 }

@@ -32,26 +32,26 @@ network Tomography_Linear_One_MM_MIM
             @display("i=REP1G");
         }
 
-        HoM: HoM {
+        HOM: HOM {
             address = 2;
             @display("i=BSA");
         }
 
     connections:
         EndNode[0].port++ <--> ClassicalChannel {  distance = 10km; } <--> repeater.port++;
-        repeater.port++ <--> ClassicalChannel {  distance = 10km; } <--> HoM.port++;
-        HoM.port++ <--> ClassicalChannel {  distance = 10km; } <--> EndNode[1].port++;
+        repeater.port++ <--> ClassicalChannel {  distance = 10km; } <--> HOM.port++;
+        HOM.port++ <--> ClassicalChannel {  distance = 10km; } <--> EndNode[1].port++;
 
         EndNode[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 10km; } <--> repeater.quantum_port++;
-        repeater.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HoM.quantum_port++;
-        HoM.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> EndNode[1].quantum_port++;
+        repeater.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> HOM.quantum_port++;
+        HOM.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> EndNode[1].quantum_port++;
 }
 
 network Linear_One_MIM
 {
     parameters:
         **.Speed_of_light_in_fiber = 205336.986301 km;
-        //**.HoM_handshake = false;
+        //**.HOM_handshake = false;
 
     submodules:
         backend: Backend;
@@ -64,7 +64,7 @@ network Linear_One_MIM
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
-        HoM: HoM {
+        HOM: HOM {
             address = 2;
             @display("i=BSA");
         }
@@ -75,10 +75,10 @@ network Linear_One_MIM
             @display("i=COMP");
         }
     connections:
-        source.port++ <--> ClassicalChannel {  distance = 1km; } <--> HoM.port++;
-        HoM.port++ <--> ClassicalChannel {  distance = 1km; } <--> target.port++;
-        source.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> HoM.quantum_port++;
-        HoM.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> target.quantum_port++;
+        source.port++ <--> ClassicalChannel {  distance = 1km; } <--> HOM.port++;
+        HOM.port++ <--> ClassicalChannel {  distance = 1km; } <--> target.port++;
+        source.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> HOM.quantum_port++;
+        HOM.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> target.quantum_port++;
 
 }
 
@@ -87,7 +87,7 @@ network Linear_One_MIM_biasedDistance
 {
     parameters:
         **.Speed_of_light_in_fiber = 205336.986301 km;
-        //**.HoM_handshake = false;
+        //**.HOM_handshake = false;
 
     submodules:
         backend: Backend;
@@ -100,7 +100,7 @@ network Linear_One_MIM_biasedDistance
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
-        HoM: HoM {
+        HOM: HOM {
             address = 2;
             @display("i=BSA");
         }
@@ -111,10 +111,10 @@ network Linear_One_MIM_biasedDistance
             @display("i=COMP");
         }
     connections:
-        source.port++ <--> ClassicalChannel {  distance = 7km; } <--> HoM.port++;
-        HoM.port++ <--> ClassicalChannel {  distance = 10km; } <--> target.port++;
-        source.quantum_port++ <--> QuantumChannel {  distance = 7km; } <--> HoM.quantum_port++;
-        HoM.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> target.quantum_port++;
+        source.port++ <--> ClassicalChannel {  distance = 7km; } <--> HOM.port++;
+        HOM.port++ <--> ClassicalChannel {  distance = 10km; } <--> target.port++;
+        source.quantum_port++ <--> QuantumChannel {  distance = 7km; } <--> HOM.quantum_port++;
+        HOM.quantum_port++ <--> QuantumChannel {  distance = 10km; } <--> target.quantum_port++;
 
 }
 
@@ -292,7 +292,7 @@ network Linear_One_MIM_MM_MSM
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
-        HoM: HoM {
+        HOM: HOM {
             address = 2;
             @display("i=BSA;p=304,132");
         }
@@ -328,15 +328,15 @@ network Linear_One_MIM_MM_MSM
         }
     connections:
         source.port++ <--> ClassicalChannel <--> repeater.port++;
-        repeater.port++ <--> ClassicalChannel <--> HoM.port++;
-        HoM.port++ <--> ClassicalChannel {  distance = 90km; } <--> router.port++;
+        repeater.port++ <--> ClassicalChannel <--> HOM.port++;
+        HOM.port++ <--> ClassicalChannel {  distance = 90km; } <--> router.port++;
         mm[0].port++ <--> ClassicalChannel {  distance = 40km; } <--> router.port++;
         mm[1].port++ <--> ClassicalChannel {  distance = 40km; } <--> router.port++;
         epps.port++ <--> ClassicalChannel <--> router.port++;
         epps.port++ <--> ClassicalChannel <--> pas.port++;
         source.quantum_port++ <--> QuantumChannel <--> repeater.quantum_port_receiver++;
-        repeater.quantum_port++ <--> QuantumChannel <--> HoM.quantum_port++;
-        HoM.quantum_port++ <--> QuantumChannel {  distance = 90km; } <--> router.quantum_port++;
+        repeater.quantum_port++ <--> QuantumChannel <--> HOM.quantum_port++;
+        HOM.quantum_port++ <--> QuantumChannel {  distance = 90km; } <--> router.quantum_port++;
         mm[0].quantum_port_receiver++ <--> QuantumChannel {  distance = 40km; } <--> router.quantum_port++;
         mm[1].quantum_port++ <--> QuantumChannel {  distance = 40km; } <--> router.quantum_port_receiver++;
         router.quantum_port_receiver_passive++ <--> QuantumChannel <--> epps.quantum_port++;

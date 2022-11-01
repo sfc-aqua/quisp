@@ -16,7 +16,7 @@ other end point.)
 #Entanglement Distribution Protocol for MIM and MM (notes by kaaki)#
 
 There are two main ways, with or without hand-shake, to distribute entangled pairs using a stand-alone or an internal BSA.
-Slides explaining those with figures can be found [slides](HoMProtocol.pptx).
+Slides explaining those with figures can be found [slides](HOMProtocol.pptx).
 The one without hand-shake is assuming a timeout, but we can also mark the beginning and end of emission by sandwiching the qubits by pulses (in the simulation, I have just marked them as setKind(n) with n=1 as the first and n=-1 as last). On the other hand, the method with handshake only requires to detect the existence of the photon ,which the physical hardware cost may be cheaper. 
 The one without hand-shake could be less efficient if the buffer size difference between neighbors is big (with handshake, each node knows the exact number of qubits, therefore, other unused qubits may be used for other qnics e.g. qnic buffer virtualization).
 In case with hand-shake, if one node says "no qubit to entangle...!!" then how should the BSA node schedule the next trial...?

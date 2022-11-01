@@ -3,7 +3,7 @@ import base_messages;
 namespace quisp::messages;
 
 
-packet HoMNotificationTimer extends Header{}
+packet HOMNotificationTimer extends Header{}
 
 packet BSAresult extends Header
 {

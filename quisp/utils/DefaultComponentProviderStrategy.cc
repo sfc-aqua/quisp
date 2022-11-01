@@ -92,7 +92,7 @@ cModule *DefaultComponentProviderStrategy::getQRSA() {
   return qrsa;
 }
 
-bool DefaultComponentProviderStrategy::isHoMNodeType(const cModuleType *const type) { return type == HoMType; }
+bool DefaultComponentProviderStrategy::isHOMNodeType(const cModuleType *const type) { return type == HOMType; }
 bool DefaultComponentProviderStrategy::isQNodeType(const cModuleType *const type) { return type == QNodeType; }
 bool DefaultComponentProviderStrategy::isSPDCNodeType(const cModuleType *const type) { return type == SPDCType; }
 }  // namespace quisp::utils

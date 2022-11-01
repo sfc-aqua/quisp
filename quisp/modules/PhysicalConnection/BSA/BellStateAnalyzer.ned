@@ -20,6 +20,6 @@ simple BellStateAnalyzer
         int degree = 2;
         string bsa_parf_output_filename = default("bsa_default");
     gates:
-        inout fromHoM_quantum_port[];
-        output toHoMController_port;
+        inout fromHOM_quantum_port[];
+        output toHOMController_port;
 }
