@@ -14,9 +14,10 @@
 #include <unsupported/Eigen/MatrixFunctions>
 
 #include <messages/classical_messages.h>
+#include <omnetpp/cexception.h>
+#include <rules/Clause.h>
 #include <rules/RuleSet.h>
-#include "omnetpp/cexception.h"
-#include "utils/ComponentProvider.h"
+#include <utils/ComponentProvider.h>
 
 using namespace quisp::messages;
 using namespace quisp::rules;
@@ -747,10 +748,11 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         rule_name = "Double purification with: " + std::to_string(partner_address);
         auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
         rule->setName(rule_name);
-        auto Purification_condition = std::make_unique<Condition>();
+        auto condition = std::make_unique<Condition>();
         auto resource_clause = std::make_unique<EnoughResourceConditionClause>(3, 0, partner_address, qnic_type, qnic_index);
-        Purification_condition->addClause(std::move(resource_clause));
-        rule->setCondition(std::move(Purification_condition));
+        condition->addClause(std::move(resource_clause));
+        rule->setCondition(std::move(condition));
+
         auto purify_action = std::make_unique<Purification>(PurType::DOUBLE, partner_address, qnic_type, qnic_index);
         rule->setAction(std::move(purify_action));
         rule->setNextRule(rule_id + 1);
@@ -1105,56 +1107,45 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
     }
 
     // Let's make nodes select measurement basis randomly, because it it easier.
-    rule_name = "tomography";
-    auto Random_measure_tomo = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-    Random_measure_tomo->setName(rule_name);
+    auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
+    rule->setName("tomography");
 
-    // Technically, there is no condition because an available resource is
-    // guaranteed whenever the rule is ran.
-    auto total_measurements = std::make_unique<Condition>();
+    auto condition = std::make_unique<Condition>();
+
+    // 1 qubit resource required to perform tomography action
+    auto res_check_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.9, partner_address, qnic_type, qnic_index);
+    condition->addClause(std::move(res_check_clause));
 
     // 3000 measurements in total. There are 3*3 = 9 patterns of measurements.
     // So each combination must perform 3000/9 measurements.
     auto measure_count_clause = std::make_unique<MeasureCountConditionClause>(num_measure, partner_address, qnic_type, qnic_index);
-    total_measurements->addClause(std::move(measure_count_clause));
-    Random_measure_tomo->setCondition(std::move(total_measurements));
+    condition->addClause(std::move(measure_count_clause));
+    rule->setCondition(std::move(condition));
 
     // Measure the local resource between it->second.neighborQNode_address.
-    auto measure = std::make_unique<Tomography>(num_measure, my_address, partner_address, qnic_type, qnic_index);
-    Random_measure_tomo->setAction(std::move(measure));
-    //---------
-    // Add the rule to the RuleSet
-    tomography_RuleSet->addRule(std::move(Random_measure_tomo));
-    //---------------------------
+    auto measure_action = std::make_unique<Tomography>(num_measure, my_address, partner_address, qnic_type, qnic_index);
+    rule->setAction(std::move(measure_action));
+
+    tomography_RuleSet->addRule(std::move(rule));
     pk->setRuleSet(tomography_RuleSet);
     send(pk, "RouterPort$o");
+  } else {
+    // RuleSet with no purification. Pure measurement only link level tomography.
 
-  } else {  // RuleSet with no purification. Pure measurement only link level
-            // tomography.
-    //-------------
-    //-First rule-
-
-    // Let's make nodes select measurement basis randomly, because it it easier.
-    auto Random_measure_tomo = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-    // Technically, there is no condition because an available resource is guaranteed whenever the rule is ran.
-    auto total_measurements = std::make_unique<Condition>();
-
-    // 3000 measurements in total. There are 3*3 = 9 patterns of measurements.
-    // So each combination must perform 3000/9 measurements.
+    auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
+    auto condition = std::make_unique<Condition>();
+    auto res_check_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.9, partner_address, qnic_type, qnic_index);
     auto measure_count_clause = std::make_unique<MeasureCountConditionClause>(num_measure, partner_address, qnic_type, qnic_index);
-    auto resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.9, partner_address, qnic_type, qnic_index);
-    total_measurements->addClause(std::move(measure_count_clause));
-    total_measurements->addClause(std::move(resource_clause));
-    Random_measure_tomo->setCondition(std::move(total_measurements));
+    condition->addClause(std::move(res_check_clause));
+    condition->addClause(std::move(measure_count_clause));
+    rule->setCondition(std::move(condition));
 
     // Measure the local resource between it->second.neighborQNode_address.
-    // Action *measure = new RandomMeasureAction(RuleSet_id, 0, my_address, partner_address, qnic_type, qnic_index, 0, num_measure);
     auto measure = std::make_unique<Tomography>(num_measure, my_address, partner_address, qnic_type, qnic_index);
-    Random_measure_tomo->setAction(std::move(measure));
-    //---------
-    // Add the rule to the RuleSet
-    tomography_RuleSet->addRule(std::move(Random_measure_tomo));
-    //---------------------------
+    rule->setAction(std::move(measure));
+
+    tomography_RuleSet->addRule(std::move(rule));
+
     pk->setRuleSet(tomography_RuleSet);
     send(pk, "RouterPort$o");
   }
