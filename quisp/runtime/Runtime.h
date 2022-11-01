@@ -140,5 +140,6 @@ class Runtime {
   RuleSet ruleset;
   std::set<QNodeAddr> partners;
   ReturnCode return_code = ReturnCode::NONE;
+  bool terminated = false;
 };
 }  // namespace quisp::runtime

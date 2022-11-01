@@ -65,6 +65,9 @@ std::ostream& operator<<(std::ostream& stream, const ReturnCode& value) {
     case ReturnCode::NONE:
       stream << std::string("NONE");
       break;
+    case ReturnCode::RS_TERMINATED:
+      stream << std::string("RS_TERMINATED");
+      break;
   }
   return stream;
 };
