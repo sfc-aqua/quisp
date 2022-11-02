@@ -110,7 +110,7 @@ std::ostream& operator<<(std::ostream& os, const quisp::modules::pur_result_tabl
 
 namespace std {
 template <>
-struct ::std::hash<quisp::modules::pur_result_table::PurificationResultKey> {
+struct hash<quisp::modules::pur_result_table::PurificationResultKey> {
  public:
   size_t operator()(const quisp::modules::pur_result_table::PurificationResultKey& k) const {
     auto seed = std::hash<unsigned long>()(k.rs_id);

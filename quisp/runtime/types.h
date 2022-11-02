@@ -65,31 +65,31 @@ std::ostream& operator<<(std::ostream& stream, const Basis& value);
 
 namespace std {
 template <>
-struct ::std::hash<quisp::runtime::QNodeAddr> {
+struct hash<quisp::runtime::QNodeAddr> {
  public:
   size_t operator()(const quisp::runtime::QNodeAddr& addr) const { return std::hash<int>()(addr.val); }
 };
 
 template <>
-struct ::std::hash<quisp::runtime::QubitId> {
+struct hash<quisp::runtime::QubitId> {
  public:
   size_t operator()(const quisp::runtime::QubitId& id) const { return std::hash<int>()(id.val); }
 };
 
 template <>
-struct ::std::hash<quisp::runtime::MemoryKey> {
+struct hash<quisp::runtime::MemoryKey> {
  public:
   size_t operator()(const quisp::runtime::MemoryKey& key) const { return std::hash<std::string>()(key.val); }
 };
 
 template <>
-struct ::std::hash<quisp::runtime::Label> {
+struct hash<quisp::runtime::Label> {
  public:
   size_t operator()(const quisp::runtime::Label& label) const { return std::hash<std::string>()(label.val); }
 };
 
 template <>
-struct ::std::hash<std::pair<quisp::runtime::QNodeAddr, quisp::runtime::RuleId>> {
+struct hash<std::pair<quisp::runtime::QNodeAddr, quisp::runtime::RuleId>> {
  public:
   size_t operator()(const std::pair<quisp::runtime::QNodeAddr, quisp::runtime::RuleId>& p) const {
     auto seed = std::hash<int>()(p.first.val);
