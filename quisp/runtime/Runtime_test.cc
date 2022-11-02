@@ -41,27 +41,6 @@ class RuntimeTest : public testing::Test {
 
 TEST_F(RuntimeTest, initialize) { ASSERT_NE(runtime, nullptr); }
 
-TEST_F(RuntimeTest, execSimpleRuleSet) {
-  RuleSet rs{"1st ruleset",
-             {
-                 Rule{Program{"cond2",
-                              {
-                                  // clang-format off
-INSTR_SET_RegId_int_{{RegId::REG0, 3}},
-INSTR_DEBUG_RegId_{RegId::REG0},
-INSTR_ADD_RegId_RegId_RegId_{{RegId::REG0, RegId::REG0, RegId::REG0}},
-INSTR_DEBUG_RegId_{RegId::REG0},
-INSTR_ADD_RegId_RegId_int_{{RegId::REG0, RegId::REG0, 1}},
-INSTR_DEBUG_RegId_{RegId::REG0},
-                                  // clang-format on
-                              }},
-                      Program{"cond2", {}}},
-
-             }};
-  rs.finalize();
-  runtime->exec(std::move(rs));
-}
-
 TEST_F(RuntimeTest, evalQubitIdOperation) {
   QubitId q0{0};
   auto count = RegId::REG0;
@@ -94,7 +73,8 @@ TEST_F(RuntimeTest, jump) {
 INSTR_SET_RegId_int_{{r0, 10}},
 INSTR_JMP_Label_{Label{"test"}},
 INSTR_ADD_RegId_RegId_int_{{r0, r0, 1}},
-INSTR_NOP_None_{nullptr, "test"}
+INSTR_NOP_None_{nullptr, "test"},
+INSTR_RET_ReturnCode_{ReturnCode::RS_TERMINATED}
                       // clang-format on
                   }};
   runtime->cleanup();
@@ -111,7 +91,8 @@ INSTR_SET_RegId_int_{{r0, 10}},
 INSTR_BNERR_Label_{Label{"test"}},
 // skip until "test" label
 INSTR_ADD_RegId_RegId_int_{{r0, r0, 3}},
-INSTR_NOP_None_{nullptr, "test"}
+INSTR_NOP_None_{nullptr, "test"},
+INSTR_RET_ReturnCode_{ReturnCode::RS_TERMINATED}
                       // clang-format on
                   }};
   runtime->cleanup();
@@ -128,7 +109,8 @@ INSTR_SET_RegId_int_{{r0, 10}},
 INSTR_STORE_MemoryKey_RegId_{{MemoryKey{"count"}, r0}, "INIT"},
 INSTR_SUB_RegId_RegId_int_{{r0, r0, 1}},
 INSTR_BNZ_Label_RegId_{{Label{"INIT"}, r0}},
-INSTR_LOAD_RegId_MemoryKey_{{r0,MemoryKey{ "count"}}}
+INSTR_LOAD_RegId_MemoryKey_{{r0,MemoryKey{ "count"}}},
+INSTR_RET_ReturnCode_{ReturnCode::RS_TERMINATED}
                       // clang-format on
                   }};
   runtime->cleanup();
