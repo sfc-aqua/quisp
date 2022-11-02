@@ -319,19 +319,20 @@ TEST(RSConverterTest, generateActiveRuleSetFromRuleSet) {
 
   // return active ruleset corresponding to input ruleset
   auto active_ruleset = RuleSetConverter::construct(std::move(ruleset));
+  active_ruleset.finalize();
   EXPECT_EQ(active_ruleset.id, ruleset_id);
   EXPECT_EQ(active_ruleset.rules.size(), 4);
   auto rule0 = std::move(active_ruleset.rules.at(0));
   EXPECT_EQ(rule0.id, 0);
-  EXPECT_EQ(rule0.name, "purification with 0 ");
+  EXPECT_EQ(rule0.name, "purification with 0");
   auto rule1 = std::move(active_ruleset.rules.at(1));
   EXPECT_EQ(rule1.id, 1);
-  EXPECT_EQ(rule1.name, "swapping with 0 ");
+  EXPECT_EQ(rule1.name, "swapping with 0");
   auto rule2 = std::move(active_ruleset.rules.at(2));
   EXPECT_EQ(rule2.id, 2);
-  EXPECT_EQ(rule2.name, "wait with 0 ");
+  EXPECT_EQ(rule2.name, "wait with 0");
   auto rule3 = std::move(active_ruleset.rules.at(3));
   EXPECT_EQ(rule3.id, 3);
-  EXPECT_EQ(rule3.name, "tomography with 0 ");
+  EXPECT_EQ(rule3.name, "tomography with 0");
 }
 }  // namespace
