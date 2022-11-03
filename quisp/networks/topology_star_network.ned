@@ -12,11 +12,6 @@ network Three_HOM_star
 {
     parameters:
         **.Speed_of_light_in_fiber = 208189.206944 km;
-        //**.distance_of_light_in_fiber_per_sec = 205336.986301 km; // calculated as 299792/1.46
-        int message_id_BSAtimingNoftifier = 4;
-        int message_id_qubit = 100;
-        int message_id_PathSelection = 1;
-        int increment_address = 0;
 
         @display("bgl=2;bgb=177,120");
     types:
@@ -88,7 +83,7 @@ network Three_HOM_star
 network Star_MSM
 {
     parameters:
-        **.distance_of_light_in_fiber_per_sec = 205336.986301 km;
+        **.Speed_of_light_in_fiber = 205336.986301 km;
 
     types:
         channel C extends DatarateChannel
@@ -180,7 +175,7 @@ network Star_MSM
 network Star_MM
 {
     parameters:
-        **.distance_of_light_in_fiber_per_sec = 205336.986301 km;
+        **.Speed_of_light_in_fiber = 205336.986301 km;
 
     types:
         channel C extends DatarateChannel
