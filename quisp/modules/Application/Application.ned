@@ -9,13 +9,8 @@ simple Application
     parameters:
         @display("i=block/app");
         int address;
-        volatile double sendIaTime @unit(s) = default(exponential(1s)); // time between generating packets
-        string Other_endnodes_table = "";
-        bool EndToEndConnection = default(false);
-        // removing default here forces app to ask
-        // int TrafficPattern = default(1);
-        int TrafficPattern;
-        int LoneInitiatorAddress;
+        volatile double sendIaTime @unit(s) = default(exponential(5s)); // time between generating packets
+        volatile int numberOfBellpair = default(intuniform(10, 100));
         int distant_measure_count = default(7000);
 
     gates:

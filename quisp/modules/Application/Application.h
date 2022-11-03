@@ -28,8 +28,10 @@ class Application : public IApplication, public Logger::LoggerBase {
 
  protected:
   int my_address;
+  bool is_initiator;
 
   std::vector<int> other_end_node_addresses;
+  std::unordered_map<int, int> end_node_weight_map;
   bool is_e2e_connection; /**< Does this simulation require end-to-end connection setup?*/
   int number_of_resources;
   int num_measure; /**< The number of measurement between end nodes.*/
@@ -43,6 +45,8 @@ class Application : public IApplication, public Logger::LoggerBase {
   void handleMessage(cMessage *msg) override;
 
   void storeEndNodeAddresses();
+  void createEndNodeWeightMap();
+  void generateTraffic();
   int getOneRandomEndNodeAddress();
 
   messages::ConnectionSetupRequest *createConnectionSetupRequest(int dest_addr, int num_of_required_resources);
