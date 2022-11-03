@@ -35,7 +35,7 @@ class TestComponentProviderStrategy : public IComponentProviderStrategy {
   virtual cModule *getQNode() override { return nullptr; };
   virtual cModule *getNeighborNode(cModule *qnic) override { return nullptr; };
   virtual bool isQNodeType(const cModuleType *const type) override { return false; };
-  virtual bool isHoMNodeType(const cModuleType *const type) override { return false; };
+  virtual bool isHOMNodeType(const cModuleType *const type) override { return false; };
   virtual bool isSPDCNodeType(const cModuleType *const type) override { return false; };
   virtual IStationaryQubit *getStationaryQubit(int qnic_index, int qubit_index, QNIC_type qnic_type) override { return nullptr; };
   virtual cModule *getQNIC(int qnic_index, QNIC_type qnic_type) override { return nullptr; };

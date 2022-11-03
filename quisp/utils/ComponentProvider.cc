@@ -18,9 +18,9 @@ cModule *ComponentProvider::getNeighborNode(cModule *qnic) {
   return strategy->getNeighborNode(qnic);
 }
 
-bool ComponentProvider::isHoMNodeType(const cModuleType *const type) {
+bool ComponentProvider::isHOMNodeType(const cModuleType *const type) {
   ensureStrategy();
-  return strategy->isHoMNodeType(type);
+  return strategy->isHOMNodeType(type);
 }
 
 bool ComponentProvider::isSPDCNodeType(const cModuleType *const type) {

@@ -1,7 +1,7 @@
 package modules.PhysicalConnection.BSA;
 @namespace(quisp::modules);
 
-simple HoMController
+simple HOMController
 {
     parameters:
         int address;
@@ -16,7 +16,7 @@ simple HoMController
         double distance_to_neighbor_two @mutable = default(-1);//in km
         double max_neighbor_distance @mutable = default(-1);
         int max_buffer @mutable = default(-1);
-        double emission_variance = default(0);//in seconds. Photons will be shot towards HoM with 100% accuracy
+        double emission_variance = default(0);//in seconds. Photons will be shot towards HOM with 100% accuracy
         bool receiver = default(false);
         bool passive = default(false);
         double bsa_notification_interval = default(1e-2);

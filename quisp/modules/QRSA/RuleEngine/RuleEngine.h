@@ -11,7 +11,7 @@
 
 #include <messages/classical_messages.h>
 #include <modules/Logger/LoggerBase.h>
-#include <modules/PhysicalConnection/BSA/HoMController.h>
+#include <modules/PhysicalConnection/BSA/HOMController.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/HardwareMonitor/HardwareMonitor.h>
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>
@@ -39,7 +39,7 @@ using qubit_record::IQubitRecord;
  *  \note The Connection Manager responds to connection requests received from other nodes.
  *        Connection setup, so a regular operation but not high bandwidth, relatively low constraints.
  *        Connections from nearest neighbors only.
- *        Connection manager needs to know which qnic is connected to where, which QNode not HoM/EPPS.
+ *        Connection manager needs to know which qnic is connected to where, which QNode not HOM/EPPS.
  *
  *  \brief RuleEngine
  */

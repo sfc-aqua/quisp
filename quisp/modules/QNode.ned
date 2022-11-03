@@ -23,8 +23,8 @@ module QNode
     gates:
         inout port[];//size will be determined by the number of connections defined at the end of this file
         inout quantum_port[] @loose;
-        inout quantum_port_receiver[] @loose;//HoM is active. Tells the neighboring nodes about the timings and so on.
-        inout quantum_port_receiver_passive[] @loose;//HoM is passive. Doesnt do anything. SPDC is in charge here.
+        inout quantum_port_receiver[] @loose;//HOM is active. Tells the neighboring nodes about the timings and so on.
+        inout quantum_port_receiver_passive[] @loose;//HOM is passive. Doesnt do anything. SPDC is in charge here.
         //inout qp_test[2] @loose;
 
     //types:
@@ -117,12 +117,12 @@ module QNode
         }
         for i=0..sizeof(quantum_port_receiver)-1 {
             qnic_r[i].qnic_quantum_port <--> quantum_port_receiver[i];
-            qnic_r[i].toParentRouter --> router.fromQNIC++;//Directly connected to internal HoM
+            qnic_r[i].toParentRouter --> router.fromQNIC++;//Directly connected to internal HOM
         		//qnic_r[i].dummyRoutingDaemonLink <--> qrsa.qnics++;
         }
         for i=0..sizeof(quantum_port_receiver_passive)-1 {
             qnic_rp[i].qnic_quantum_port <--> quantum_port_receiver_passive[i];
-            qnic_rp[i].toParentRouter --> router.fromQNIC++;//Directly connected to internal HoM
+            qnic_rp[i].toParentRouter --> router.fromQNIC++;//Directly connected to internal HOM
         		//qnic_rp[i].dummyRoutingDaemonLink <--> qrsa.qnics++;
         }
 

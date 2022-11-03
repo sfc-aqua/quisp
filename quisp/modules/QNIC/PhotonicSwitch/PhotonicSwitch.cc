@@ -17,7 +17,7 @@ void PhotonicSwitch::initialize() {
  * this method finds the corresponding neighbor node and save its address to the QNIC parameter.
  */
 void PhotonicSwitch::ensureCorrespondingNeighborAddress() {
-  // |qnic_quantum_port$o -(next gate)-> quantum_port$i | ---(next gate)---> | quantum_port$i --> fromHoM_quantum_port$i
+  // |qnic_quantum_port$o -(next gate)-> quantum_port$i | ---(next gate)---> | quantum_port$i --> fromHOM_quantum_port$i
   // Inner-port of this node in qnic - connected to another qnic in another node
   cGate *gate = getParentModule()->gate("qnic_quantum_port$o");
   int neighbor_address = gate->getNextGate()->getNextGate()->getOwnerModule()->par("address");

@@ -11,7 +11,7 @@ import modules.Common.Router;
 import modules.Common.Queue;
 
 
-module interHoM
+module interHOM
 {
     parameters:
         int address;
@@ -31,7 +31,7 @@ module interHoM
         inout quantum_port[] @loose;
         output toRouter @loose;
     submodules:
-        Controller: HoMController {
+        Controller: HOMController {
             parameters:
                 address = parent.address;
                 @display("p=103.55499,121.435");
@@ -51,14 +51,14 @@ module interHoM
         }
     connections:
         Controller.toRouter_port --> toRouter;
-        BSA.toHoMController_port --> Controller.fromBSA_port;
+        BSA.toHOMController_port --> Controller.fromBSA_port;
 
-        quantum_port++ <--> BSA.fromHoM_quantum_port++;
-        quantum_port++ <--> BSA.fromHoM_quantum_port++;
+        quantum_port++ <--> BSA.fromHOM_quantum_port++;
+        quantum_port++ <--> BSA.fromHOM_quantum_port++;
 }
 
 
-module HoM
+module HOM
 {
     parameters:
         @display("i=BSA");
@@ -71,8 +71,8 @@ module HoM
         int address = default(0);
         string includeInTopo = default("yes");
         @display("bgl=2");
-        string nodeType = default("HoM");
-        bool interHoM = default(false);
+        string nodeType = default("HOM");
+        bool interHOM = default(false);
 
     gates:
         inout quantum_port[] @loose;
@@ -102,7 +102,7 @@ module HoM
                 address = 0;
                 @display("p=281.61,55.874996");
         }
-        Controller: HoMController {
+        Controller: HOMController {
             parameters:
                 address = parent.address;
                 photon_detection_per_sec = parent.hom_photon_detection_per_sec;
@@ -117,10 +117,10 @@ module HoM
         }
 
         for i=0..sizeof(quantum_port)-1 {
-            quantum_port[i] <--> BSA.fromHoM_quantum_port++;
+            quantum_port[i] <--> BSA.fromHOM_quantum_port++;
         }
 
         Controller.toRouter_port --> router.fromApp;
         router.toApp --> Controller.fromRouter_port;
-        BSA.toHoMController_port --> Controller.fromBSA_port;
+        BSA.toHOMController_port --> Controller.fromBSA_port;
 }

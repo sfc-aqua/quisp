@@ -539,7 +539,7 @@ void HardwareMonitor::writeToFile_Topology_with_LinkCost(int qnic_id, double lin
   const cModuleType *const neighbor_node_type = neighbor_node->getModuleType();
   cChannel *channel = interface.qnic.pointer->gate("qnic_quantum_port$o")->getNextGate()->getChannel();
   double dis = channel->par("distance");
-  if (provider.isQNodeType(neighbor_node_type) && provider.isHoMNodeType(neighbor_node_type) && provider.isSPDCNodeType(neighbor_node_type)) {
+  if (provider.isQNodeType(neighbor_node_type) && provider.isHOMNodeType(neighbor_node_type) && provider.isSPDCNodeType(neighbor_node_type)) {
     error("Module Type not recognized when writing to file...");
   }
 
@@ -1201,7 +1201,7 @@ std::unique_ptr<ConnectionSetupInfo> HardwareMonitor::findConnectionInfoByQnicAd
 // This neighbor table includes all neighbors of qnic, qnic_r and qnic_rp
 void HardwareMonitor::prepareNeighborTable() {
   // Traverse through all local qnics to check where they are connected to.
-  // HoM and EPPS will be ignored in this case.
+  // HOM and EPPS will be ignored in this case.
   for (int index = 0; index < num_qnic; index++) {
     InterfaceInfo inf = getQnicInterfaceByQnicAddr(index, QNIC_E);
     auto n_inf = getNeighbor(inf.qnic.pointer);
@@ -1232,7 +1232,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module)
   cGate *gate = qnic_module->gate("qnic_quantum_port$o")->getNextGate();
   cGate *neighbor_gate = gate->getNextGate();
 
-  // Owner could be HoM, EPPS, QNode
+  // Owner could be HOM, EPPS, QNode
   const cModule *neighbor_node = neighbor_gate->getOwnerModule();
   if (neighbor_node == nullptr) {
     error("neighbor nod not found.");
@@ -1272,10 +1272,10 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
     return inf;
   }
 
-  if (provider.isHoMNodeType(type)) {
+  if (provider.isHOMNodeType(type)) {
     cModule *controller = thisNode.getSubmodule("Controller");
     if (controller == nullptr) {
-      error("HoM Controller not found");
+      error("HOM Controller not found");
     }
 
     int address_one = controller->par("neighbor_address");
@@ -1285,7 +1285,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
     EV_DEBUG << "myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << controller->getFullName() << "\n";
 
     if (address_one == -1 && address_two == -1) {
-      error("HoM Controller is not initialized properly");
+      error("HOM Controller is not initialized properly");
     }
 
     if (address_one == myaddress) {
@@ -1303,7 +1303,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
 
   error(
       "This simulator only recognizes the following network level node "
-      "types: QNode, EPPS and HoM. Not %s",
+      "types: QNode, EPPS and HOM. Not %s",
       thisNode.getClassName());
 }
 

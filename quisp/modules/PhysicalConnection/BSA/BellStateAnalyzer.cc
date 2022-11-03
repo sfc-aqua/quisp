@@ -35,7 +35,7 @@ class BellStateAnalyzer : public cSimpleModule {
   bool right_last_photon_detected;
 
   // If this is true, send BSA finish and accumulated results to neigbor nodes.
-  // If it's false, just send accumulate result in HoM Controller
+  // If it's false, just send accumulate result in HOM Controller
   bool send_result;
   double required_precision;  ///< Precision of photon arrivial time // 1.5ns
   simtime_t left_arrived_at;
@@ -126,7 +126,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
     bubble("Next round!");
   }
 
-  if (msg->arrivedOn("fromHoM_quantum_port$i", 0)) {
+  if (msg->arrivedOn("fromHOM_quantum_port$i", 0)) {
     left_arrived_at = simTime();
     left_statQubit_ptr = const_cast<StationaryQubit *>(check_and_cast<const StationaryQubit *>(photon->getEntangled_with()));
     left_photon_Xerr = photon->getPauliXerr();
@@ -139,7 +139,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
       left_last_photon_detected = true;
     }
     left_count++;
-  } else if (msg->arrivedOn("fromHoM_quantum_port$i", 1)) {
+  } else if (msg->arrivedOn("fromHOM_quantum_port$i", 1)) {
     right_arrived_at = simTime();
     right_statQubit_ptr = const_cast<StationaryQubit *>(check_and_cast<const StationaryQubit *>(photon->getEntangled_with()));
     right_photon_Xerr = photon->getPauliXerr();
@@ -247,13 +247,13 @@ void BellStateAnalyzer::sendBSAresult(bool result, bool sendresults) {
   if (!sendresults) {
     BSAresult *pk = new BSAresult("BsaResult");
     pk->setEntangled(result);
-    send(pk, "toHoMController_port");
+    send(pk, "toHOMController_port");
   } else {
     // Was the last photon. End pulse detected.
     BSAfinish *pk = new BSAfinish("BsaFinish");
     pk->setKind(7);
     pk->setEntangled(result);
-    send(pk, "toHoMController_port");
+    send(pk, "toHOMController_port");
     bubble("trial done now");
     this_trial_done = true;
   }

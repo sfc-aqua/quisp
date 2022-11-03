@@ -8,7 +8,7 @@ import modules.Backend.Backend;
 import modules.Logger.Logger;
 import channels.*;
 
-network Three_HoM_star
+network Three_HOM_star
 {
     parameters:
         **.Speed_of_light_in_fiber = 208189.206944 km;
@@ -57,7 +57,7 @@ network Three_HoM_star
             nodeType = "EndNode";
             @display("i=COMP;p=33,24");
         }
-        HoM[3]: HoM {
+        HOM[3]: HOM {
             address = index+1000;
             //@display("p=326,57");
             @display("p=33,87");
@@ -68,20 +68,20 @@ network Three_HoM_star
             @display("i=RTR;p=126,87");
         }
     connections:
-        EndNode[0].port++ <--> C {  distance = 5km; } <--> HoM[0].port++;
-        HoM[0].port++ <--> C <--> Router[0].port++;
-        EndNode[0].quantum_port++ <--> QuantumChannel {  distance = 5km; } <--> HoM[0].quantum_port++;
-        HoM[0].quantum_port++ <--> QuantumChannel <--> Router[0].quantum_port++;
+        EndNode[0].port++ <--> C {  distance = 5km; } <--> HOM[0].port++;
+        HOM[0].port++ <--> C <--> Router[0].port++;
+        EndNode[0].quantum_port++ <--> QuantumChannel {  distance = 5km; } <--> HOM[0].quantum_port++;
+        HOM[0].quantum_port++ <--> QuantumChannel <--> Router[0].quantum_port++;
 
-        EndNode[1].port++ <--> C <--> HoM[1].port++;
-        HoM[1].port++ <--> C {  distance = 100km; } <--> Router[0].port++;
-        EndNode[1].quantum_port++ <--> QuantumChannel <--> HoM[1].quantum_port++;
-        HoM[1].quantum_port++ <--> QuantumChannel {  distance = 100km; } <--> Router[0].quantum_port++;
+        EndNode[1].port++ <--> C <--> HOM[1].port++;
+        HOM[1].port++ <--> C {  distance = 100km; } <--> Router[0].port++;
+        EndNode[1].quantum_port++ <--> QuantumChannel <--> HOM[1].quantum_port++;
+        HOM[1].quantum_port++ <--> QuantumChannel {  distance = 100km; } <--> Router[0].quantum_port++;
 
-        EndNode[2].port++ <--> C <--> HoM[2].port++;
-        HoM[2].port++ <--> C {  distance = 40km; } <--> Router[0].port++;
-        EndNode[2].quantum_port++ <--> QuantumChannel <--> HoM[2].quantum_port++;
-        HoM[2].quantum_port++ <--> QuantumChannel {  distance = 40km; } <--> Router[0].quantum_port++;
+        EndNode[2].port++ <--> C <--> HOM[2].port++;
+        HOM[2].port++ <--> C {  distance = 40km; } <--> Router[0].port++;
+        EndNode[2].quantum_port++ <--> QuantumChannel <--> HOM[2].quantum_port++;
+        HOM[2].quantum_port++ <--> QuantumChannel {  distance = 40km; } <--> Router[0].quantum_port++;
 }
 
 

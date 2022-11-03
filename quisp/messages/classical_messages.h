@@ -1,5 +1,5 @@
 #pragma once
-#include "HoM_ipc_messages_m.h"
+#include "HOM_ipc_messages_m.h"
 #include "QNode_ipc_messages_m.h"
 #include "connection_setup_messages_m.h"
 #include "entanglement_swapping_messages_m.h"

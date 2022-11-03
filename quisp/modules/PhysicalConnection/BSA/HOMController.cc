@@ -1,19 +1,19 @@
-/** \file HoM_Controller.cc
+/** \file HOM_Controller.cc
  *  \authors cldurand,takaakimatsuo
  *  \date 2018/04/01
  *
- *  \brief HoMController
+ *  \brief HOMController
  */
-#include "../BSA/HoMController.h"
+#include "../BSA/HOMController.h"
 
 namespace quisp {
 namespace modules {
 
-Define_Module(HoMController);
+Define_Module(HOMController);
 
-HoMController::HoMController() {}
+HOMController::HOMController() {}
 
-void HoMController::initialize(int stage) {
+void HOMController::initialize(int stage) {
   handshake = false;
   address = par("address");
   receiver = par("receiver");
@@ -30,28 +30,28 @@ void HoMController::initialize(int stage) {
   } else if (!receiver) {
     standaloneInitializer();  // Other parameter settings
   } else {
-    error("Set receiver parameter of HoM to true or false.");
+    error("Set receiver parameter of HOM to true or false.");
   }
 }
 
-// Initialization of the HoM module inside a QNode.
-// The initialization will be a little bit different from the stand-alone HoM module.
+// Initialization of the HOM module inside a QNode.
+// The initialization will be a little bit different from the stand-alone HOM module.
 // For example, you don't need to check both of the neighbors because it is inside a QNode.
-void HoMController::internodeInitializer() {
+void HOMController::internodeInitializer() {
   checkNeighborAddress(true);
   checkNeighborBuffer(true);
   updateIDE_Parameter(true);
 
   accepted_burst_interval = (double)1 / (double)photon_detection_per_sec;
-  auto *generatePacket = new HoMNotificationTimer("BsaStart");
+  auto *generatePacket = new HOMNotificationTimer("BsaStart");
   scheduleAt(simTime() + par("Initial_notification_timing_buffer"), generatePacket);
 }
 
-// Initialization of the stand-alone HoM module.
-void HoMController::standaloneInitializer() {
+// Initialization of the stand-alone HOM module.
+void HOMController::standaloneInitializer() {
   // Just in case, check if the 2 quantum port of the node
   if (getParentModule()->gateSize("quantum_port") != 2) {
-    error("No more or less than 2 neighbors are allowed for HoM.");
+    error("No more or less than 2 neighbors are allowed for HOM.");
     endSimulation();
   }
   checkNeighborAddress(false);
@@ -59,14 +59,14 @@ void HoMController::standaloneInitializer() {
   updateIDE_Parameter(false);
 
   accepted_burst_interval = (double)1 / (double)photon_detection_per_sec;
-  auto *generatePacket = new HoMNotificationTimer("BsaStart");
+  auto *generatePacket = new HOMNotificationTimer("BsaStart");
   scheduleAt(simTime() + par("Initial_notification_timing_buffer"), generatePacket);
 }
 
 // This is invoked only once at the begining of the simulation.
 // This method sends 2 classical BSA timing notifiers to neighbors (or to itself).
 // During the simulation, this method is not needed because this information is piggybacked when the node returns the results of entanglement attempt.
-void HoMController::sendNotifiers() {
+void HOMController::sendNotifiers() {
   double time = calculateTimeToTravel(max_neighbor_distance, speed_of_light_in_channel);  // When the packet reaches = simitme()+time
   BSMtimingNotifier *pk = generateNotifier(time, speed_of_light_in_channel, distance_to_neighbor, neighbor_address, accepted_burst_interval, photon_detection_per_sec, max_buffer);
   double first_nodes_timing = calculateEmissionStartTime(time, distance_to_neighbor, speed_of_light_in_channel);
@@ -86,18 +86,18 @@ void HoMController::sendNotifiers() {
     send(pk, "toRouter_port");  // send to port out. connected to local routing module (routing.localIn).
     send(pkt, "toRouter_port");
   } catch (cTerminationException &e) {
-    error("Error in HoM_Controller.cc. It does not have port named toRouter_port.");
+    error("Error in HOM_Controller.cc. It does not have port named toRouter_port.");
     endSimulation();
   } catch (std::exception &e) {
-    error("Error in HoM_Controller.cc. It does not have port named toRouter_port.");
+    error("Error in HOM_Controller.cc. It does not have port named toRouter_port.");
     endSimulation();
   }
 }
 
-void HoMController::handleMessage(cMessage *msg) {
-  if (dynamic_cast<HoMNotificationTimer *>(msg)) {
+void HOMController::handleMessage(cMessage *msg) {
+  if (dynamic_cast<HOMNotificationTimer *>(msg)) {
     sendNotifiers();
-    auto *notification_timer = new HoMNotificationTimer("BsaStart");
+    auto *notification_timer = new HOMNotificationTimer("BsaStart");
     scheduleAt(simTime() + bsa_notification_interval, notification_timer);
   } else if (dynamic_cast<BSAresult *>(msg)) {
     bubble("BSAresult accumulated");
@@ -127,7 +127,7 @@ void HoMController::handleMessage(cMessage *msg) {
 
 // This method checks the address of the neighbors.
 // If it is a receiver, meaning that it is a internode, then it checks one neighbor address and stores its own QNode address.
-void HoMController::checkNeighborAddress(bool receiver) {
+void HOMController::checkNeighborAddress(bool receiver) {
   if (receiver) {
     try {
       qnic_index = getParentModule()->getParentModule()->getIndex();
@@ -138,10 +138,10 @@ void HoMController::checkNeighborAddress(bool receiver) {
       distance_to_neighbor_two = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getChannel()->par("distance");
       max_neighbor_distance = std::max(distance_to_neighbor, distance_to_neighbor_two);
     } catch (std::exception &e) {
-      error("Error in HoM_Controller.cc when getting neighbor addresses. Check internodeInitializer.");
+      error("Error in HOM_Controller.cc when getting neighbor addresses. Check internodeInitializer.");
       endSimulation();
     }
-  } else {  // Controller in a Stand alone HoM node
+  } else {  // Controller in a Stand alone HOM node
     try {
       neighbor_address = getParentModule()->gate("quantum_port$o", 0)->getNextGate()->getOwnerModule()->par("address");
       neighbor_address_two = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getOwnerModule()->par("address");
@@ -149,21 +149,21 @@ void HoMController::checkNeighborAddress(bool receiver) {
       distance_to_neighbor_two = getParentModule()->gate("quantum_port$o", 1)->getChannel()->par("distance");
       max_neighbor_distance = std::max(distance_to_neighbor, distance_to_neighbor_two);
     } catch (std::exception &e) {
-      error("Error in HoM_Controller.cc. Your stand-alone HoM module may not connected to the neighboring node (quantum_port).");
+      error("Error in HOM_Controller.cc. Your stand-alone HOM module may not connected to the neighboring node (quantum_port).");
       endSimulation();
     }
   }
 }
 
 // Checks the buffer size of the connected qnics.
-void HoMController::checkNeighborBuffer(bool receiver) {
+void HOMController::checkNeighborBuffer(bool receiver) {
   if (receiver) {
     try {
       neighbor_buffer = getParentModule()->getParentModule()->par("numBuffer");
       neighbor_buffer_two = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->par("numBuffer");
       max_buffer = std::min(neighbor_buffer, neighbor_buffer_two);  // Both nodes should transmit the same amount of photons.
     } catch (std::exception &e) {
-      error("Error in HoM_Controller.cc. HoM couldnt find parameter numBuffer in the neighbor's qnic.");
+      error("Error in HOM_Controller.cc. HOM couldnt find parameter numBuffer in the neighbor's qnic.");
       endSimulation();
     }
   } else {
@@ -172,17 +172,17 @@ void HoMController::checkNeighborBuffer(bool receiver) {
       neighbor_buffer_two = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getOwnerModule()->par("numBuffer");
       max_buffer = std::min(neighbor_buffer, neighbor_buffer_two);  // Both nodes should transmit the same amount of photons.
     } catch (std::exception &e) {
-      error("Error in HoM_Controller.cc. HoM couldnt find parameter numBuffer in the neighbor's qnic.");
+      error("Error in HOM_Controller.cc. HOM couldnt find parameter numBuffer in the neighbor's qnic.");
       endSimulation();
     }
   }
 }
 
-void HoMController::updateIDE_Parameter(bool receiver) {
+void HOMController::updateIDE_Parameter(bool receiver) {
   try {
     photon_detection_per_sec = (int)par("photon_detection_per_sec");
     if (photon_detection_per_sec <= 0) {
-      error("Photon detection per sec for HoM must be more than 0.");
+      error("Photon detection per sec for HOM must be more than 0.");
     }
     par("neighbor_address") = neighbor_address;
     par("neighbor_address_two") = neighbor_address_two;
@@ -201,7 +201,7 @@ void HoMController::updateIDE_Parameter(bool receiver) {
 }
 
 // Generates a BSA timing notifier. This is also called only once for the same reason as sendNotifiers().
-BSMtimingNotifier *HoMController::generateNotifier(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
+BSMtimingNotifier *HOMController::generateNotifier(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
                                                    int photon_detection_per_sec, int max_buffer) {
   BSMtimingNotifier *pk = new BSMtimingNotifier("BsmTimingNotifier");
   if (handshake == false) {
@@ -225,7 +225,7 @@ BSMtimingNotifier *HoMController::generateNotifier(double time, double speed_of_
 }
 
 // Generates a packet that includes the BSA timing notifier and the BSA entanglement attempt results.
-CombinedBSAresults *HoMController::generateNotifier_c(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
+CombinedBSAresults *HOMController::generateNotifier_c(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
                                                       int photon_detection_per_sec, int max_buffer) {
   CombinedBSAresults *pk = new CombinedBSAresults("CombinedBsaResults");
   if (handshake == false) {
@@ -248,9 +248,9 @@ CombinedBSAresults *HoMController::generateNotifier_c(double time, double speed_
 }
 
 // Depending on the distance to the neighbor QNIC, this calculates when the neighbor needs to start the emission.
-// The farther node emits it instantaneously, while the closer one needs to wait because 2 photons need to arrive at HoM simultaneously.
-double HoMController::calculateEmissionStartTime(double time, double distance_to_node, double c) {
-  // distance_to_node is the distance to HoM to self
+// The farther node emits it instantaneously, while the closer one needs to wait because 2 photons need to arrive at HOM simultaneously.
+double HOMController::calculateEmissionStartTime(double time, double distance_to_node, double c) {
+  // distance_to_node is the distance to HOM to self
   double self_timeToTravel = calculateTimeToTravel(distance_to_node, c);
 
   // If shorter distance, then the node needs to wait a little for the other node with the longer distance
@@ -263,9 +263,9 @@ double HoMController::calculateEmissionStartTime(double time, double distance_to
   }
 }
 
-double HoMController::calculateTimeToTravel(double distance, double c) { return (distance / c); }
+double HOMController::calculateTimeToTravel(double distance, double c) { return (distance / c); }
 
-cModule *HoMController::getQNode() {
+cModule *HOMController::getQNode() {
   // We know that Connection manager is not the QNode, so start from the parent.
   cModule *currentModule = getParentModule();
   try {
@@ -281,7 +281,7 @@ cModule *HoMController::getQNode() {
   return currentModule;
 }
 
-void HoMController::pushToBSAresults(bool attempt_success) {
+void HOMController::pushToBSAresults(bool attempt_success) {
   int prev = getStoredBSAresultsSize();
   results[getStoredBSAresultsSize()] = attempt_success;
   int aft = getStoredBSAresultsSize();
@@ -289,12 +289,12 @@ void HoMController::pushToBSAresults(bool attempt_success) {
     error("Not working correctly");
   }
 }
-int HoMController::getStoredBSAresultsSize() { return results.size(); }
-void HoMController::clearBSAresults() { results.clear(); }
+int HOMController::getStoredBSAresultsSize() { return results.size(); }
+void HOMController::clearBSAresults() { results.clear(); }
 
 // Instead of sendNotifiers, we invoke this during the simulation to return the next BSA timing and the result.
 // This should be simplified more.
-void HoMController::sendBSAresultsToNeighbors() {
+void HOMController::sendBSAresultsToNeighbors() {
   if (!passive) {
     CombinedBSAresults *pk, *pkt;
 
@@ -361,8 +361,8 @@ void HoMController::sendBSAresultsToNeighbors() {
 
 // When the BSA is passive, it does not know how many qubits to emit (because it depends on the neighbor's).
 // Therefore, the EPPS sends a classical packet that includes such information.
-// When CM receives it, it will also have to update the max_buffer of HoMController, to know when the emission end and send the classical BSAresults to the neighboring EPPS.
-void HoMController::setMax_buffer(int buffer) {
+// When CM receives it, it will also have to update the max_buffer of HOMController, to know when the emission end and send the classical BSAresults to the neighboring EPPS.
+void HOMController::setMax_buffer(int buffer) {
   Enter_Method("setMax_buffer()");
   if (!passive) {
     return;
