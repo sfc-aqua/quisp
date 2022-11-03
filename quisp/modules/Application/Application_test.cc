@@ -40,6 +40,7 @@ class AppTestTarget : public quisp::modules::Application {
   virtual ~AppTestTarget() { EVCB.gateDeleted(toRouterGate); }
   std::unordered_map<int, int> getEndNodeWeightMap() { return this->end_node_weight_map; }
   int getAddress() { return this->my_address; }
+  bool isInitiator() { return this->is_initiator; }
 
   TestGate *toRouterGate;
 };
@@ -61,7 +62,8 @@ TEST(AppTest, Init_IsInitiator) {
   auto *mock_qnode = new TestQNode{123, 100, true};
   auto *app = new AppTestTarget{mock_qnode};
 
-  setParBool(mock_qnode, "isInitiator", true);
+  setParDouble(app, "sendIaTime", 5);
+  setParInt(app, "numberOfBellpair", 10);
 
   sim->registerComponent(app);
   app->callInitialize();
@@ -79,6 +81,8 @@ TEST(AppTest, Init_WeightMap_Generation) {
   auto *mock_qnode3 = new TestQNode{789, 987, false};
 
   auto *app = new AppTestTarget{mock_qnode};
+  setParDouble(app, "sendIaTime", 5);
+  setParInt(app, "numberOfBellpair", 10);
 
   sim->registerComponent(app);
   app->callInitialize();
@@ -92,6 +96,33 @@ TEST(AppTest, Init_WeightMap_Generation) {
   ASSERT_EQ(app->getEndNodeWeightMap()[123], 0);
   ASSERT_EQ(app->getEndNodeWeightMap()[456], 654);
   ASSERT_EQ(app->getEndNodeWeightMap()[789], 987);
+}
+
+TEST(AppTest, Init_Connection_Setup_Message_Send) {
+  auto *sim = prepareSimulation();
+  auto *mock_qnode = new TestQNode{123, 100, true};
+  auto *mock_qnode2 = new TestQNode{456, 100, false};
+  auto *app = new AppTestTarget{mock_qnode};
+
+  setParDouble(app, "sendIaTime", 5);
+  setParInt(app, "numberOfBellpair", 10);
+
+  sim->registerComponent(app);
+  app->callInitialize();
+
+  ASSERT_EQ(app->getAddress(), 123);
+  ASSERT_EQ(app->getEndNodeWeightMap().size(), 2);
+
+  sim->run();
+  ASSERT_EQ(app->toRouterGate->messages.size(), 1);
+
+  auto *msg = app->toRouterGate->messages.at(0);
+  ASSERT_NE(msg, nullptr);
+  auto *pkt = dynamic_cast<ConnectionSetupRequest *>(msg);
+  ASSERT_EQ(pkt->getActual_srcAddr(), 123);
+  ASSERT_EQ(pkt->getActual_destAddr(), mock_qnode2->address);
+  ASSERT_EQ(pkt->getSrcAddr(), 123);
+  ASSERT_EQ(pkt->getDestAddr(), 123);
 }
 
 }  // namespace

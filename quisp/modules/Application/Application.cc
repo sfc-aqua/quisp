@@ -136,7 +136,7 @@ void Application::generateTraffic() {
 
   auto generate_up_to_time = simTime() + 100;
   // if max_sim_time is not defined generate traffic for the next 100s for now
-  if (max_sim_time == 0) {
+  if (max_sim_time != 0) {
     generate_up_to_time = max_sim_time;
     cancelAndDelete(generateTrafficMsg);
   }
@@ -150,14 +150,15 @@ void Application::generateTraffic() {
   std::mt19937 gen;
   gen.seed(time(0));  // if you want different results from different runs
 
-  simtime_t send_time = simTime();
+  simtime_t send_time = simTime() + par("sendIaTime").doubleValue();
 
   while (send_time < generate_up_to_time) {
     int dest_addr = addresses[dist(gen)];
     int num_request_bell_pair = par("numberOfBellpair").intValue();
     ConnectionSetupRequest *pk = createConnectionSetupRequest(dest_addr, num_request_bell_pair);
-    send_time = send_time + par("sendIaTime").doubleValue();
     EV_INFO << "Node " << my_address << " will initiate connection to " << dest_addr << " at " << send_time << " with " << num_request_bell_pair << " Bell pairs\n";
+    scheduleAt(send_time, pk);
+    send_time = send_time + par("sendIaTime").doubleValue();
   }
 }
 
