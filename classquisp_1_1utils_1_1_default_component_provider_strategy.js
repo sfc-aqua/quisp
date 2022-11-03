@@ -12,10 +12,10 @@ var classquisp_1_1utils_1_1_default_component_provider_strategy =
     [ "getRealTimeController", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a30985eea797a48144add7501e84c1f27", null ],
     [ "getRoutingDaemon", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a6a9564f004cff2b3b136a5b199164392", null ],
     [ "getStationaryQubit", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a4fced823f0bbaf64298c5d53cf01a349", null ],
-    [ "isHoMNodeType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a432f98ccefb694a95c81098e84c09528", null ],
+    [ "isHOMNodeType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a3fe14afced61f0eadb6b560a14f97e39", null ],
     [ "isQNodeType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#aea1f7f5818ec2ae0dd0334c18c22bb8e", null ],
     [ "isSPDCNodeType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a5000dad70e7a3ea755a6ab40e421f31d", null ],
-    [ "HoMType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a4d477dbc8c9c24b4bdd7a6baa79809cd", null ],
+    [ "HOMType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#acf41e3be0e82ccdf91a49723390295a9", null ],
     [ "QNodeType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a4a9c3a3ecc8b21db9f4c832ccee3fedd", null ],
     [ "self", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a440858e627c54d1b1472a13e50106403", null ],
     [ "SPDCType", "classquisp_1_1utils_1_1_default_component_provider_strategy.html#a08c7d20c7488b58df71d6a5761310c68", null ]

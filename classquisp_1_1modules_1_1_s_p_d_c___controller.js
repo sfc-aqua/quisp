@@ -4,7 +4,7 @@ var classquisp_1_1modules_1_1_s_p_d_c___controller =
     [ "checkNeighborsAddress", "classquisp_1_1modules_1_1_s_p_d_c___controller.html#a58a78617cef4c36de46964cd0fe849a2", null ],
     [ "checkNeighborsBuffer", "classquisp_1_1modules_1_1_s_p_d_c___controller.html#a7ba68843d00550fbc035b9ddedae18b5", null ],
     [ "checkNeighborsDistance", "classquisp_1_1modules_1_1_s_p_d_c___controller.html#a3e1d898e53aeaa78cfd5d6aece80ea69", null ],
-    [ "checkNeighborsHoMCapacity", "classquisp_1_1modules_1_1_s_p_d_c___controller.html#a511aab3b7d9b99a0dfbb37bf5bf24e87", null ],
+    [ "checkNeighborsHOMCapacity", "classquisp_1_1modules_1_1_s_p_d_c___controller.html#a95840edc919dc7ef7c682b2a0550babe", null ],
     [ "generateNotifier", "classquisp_1_1modules_1_1_s_p_d_c___controller.html#a27109b7bce6892750d3013598ce658df", null ],
     [ "getNextNode", "classquisp_1_1modules_1_1_s_p_d_c___controller.html#a536a092afc8e0a5b5d4f52d4a6ff9869", null ],
     [ "getNode", "classquisp_1_1modules_1_1_s_p_d_c___controller.html#a04f6fd18a057a897dfbda65d2c83d8ff", null ],

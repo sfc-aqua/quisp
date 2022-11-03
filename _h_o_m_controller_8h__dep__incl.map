@@ -1,6 +1,6 @@
-<map id="quisp/modules/PhysicalConnection/BSA/HoMController.h" name="quisp/modules/PhysicalConnection/BSA/HoMController.h">
+<map id="quisp/modules/PhysicalConnection/BSA/HOMController.h" name="quisp/modules/PhysicalConnection/BSA/HOMController.h">
 <area shape="rect" id="node1" title=" " alt="" coords="1129,5,1353,47"/>
-<area shape="rect" id="node2" href="$_ho_m_controller_8cc.html" title=" " alt="" coords="979,95,1203,136"/>
+<area shape="rect" id="node2" href="$_h_o_m_controller_8cc.html" title=" " alt="" coords="979,95,1203,136"/>
 <area shape="rect" id="node3" href="$_i_rule_engine_8h.html" title=" " alt="" coords="1905,95,2080,136"/>
 <area shape="rect" id="node4" href="$_rule_engine_8h.html" title="RuleEngine." alt="" coords="1531,288,1702,329"/>
 <area shape="rect" id="node10" href="$_rule_engine__photon__shooting__test_8cc.html" title=" " alt="" coords="245,385,415,441"/>

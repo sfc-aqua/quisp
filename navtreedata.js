@@ -89,7 +89,7 @@ var NAVTREEINDEX =
 "_i_stationary_qubit_8h.html#a7d975efdf0e514097cc27f3bf2832d43aba063a32e79c5196256f62d4f2575d2c",
 "backends_2_error_tracking_2_backend_8h.html",
 "classquisp_1_1modules_1_1_application.html#ae8d0294e97694e0800c33d26ea2a2094",
-"classquisp_1_1modules_1_1_hardware_monitor.html#a5bf570c894223245e5ced7e9f217e319",
+"classquisp_1_1modules_1_1_h_o_m_controller.html#a70148355cf3d2a3cd4de81ea25f2c522",
 "classquisp_1_1modules_1_1_i_stationary_qubit.html#a557592b61cd1f917633553914ebddf28",
 "classquisp_1_1modules_1_1_routing_daemon.html#a95afebf0bbf8325404b4dfd3fa599298",
 "classquisp_1_1modules_1_1_stationary_qubit.html#a76879fc0549549ecc6d3d638c313de38",

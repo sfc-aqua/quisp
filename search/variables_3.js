@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['c_0',['c',['../classquisp_1_1modules_1_1_ho_m_controller.html#ab0e13639c9ac2ced5f581f86d1621ebd',1,'quisp::modules::HoMController']]],
+  ['c_0',['c',['../classquisp_1_1modules_1_1_h_o_m_controller.html#aa1d7a2c24f65560ab525118daa28bd0c',1,'quisp::modules::HOMController']]],
   ['cfg_1',['cfg',['../classquisp__test_1_1module__type_1_1_test_module_type.html#a0c2febc0a735363f0ba00364ba02d6f8',1,'quisp_test::module_type::TestModuleType']]],
   ['clauses_2',['clauses',['../classquisp_1_1rules_1_1active_1_1_active_condition.html#ae3d891aa56d51c5700c4cdaaee3a6255',1,'quisp::rules::active::ActiveCondition::clauses()'],['../classquisp_1_1rules_1_1_condition.html#aa9b26feae4aea1b21385590a77db2d37',1,'quisp::rules::Condition::clauses()']]],
   ['clifford_5fapplication_5flookup_3',['clifford_application_lookup',['../classquisp_1_1modules_1_1_stationary_qubit.html#a66ba69fcf1f22fe5ab6ab4a0e512a332',1,'quisp::modules::StationaryQubit']]],

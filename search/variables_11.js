@@ -1,7 +1,7 @@
 var searchData=
 [
   ['realtime_5fcontroller_0',['realtime_controller',['../classquisp_1_1modules_1_1_rule_engine.html#af3f93ca94d467f64058bebf3680ae1a8',1,'quisp::modules::RuleEngine']]],
-  ['receiver_1',['receiver',['../classquisp_1_1modules_1_1_ho_m_controller.html#a86e4c5efbc2962b83706c8be18ec0fa8',1,'quisp::modules::HoMController']]],
+  ['receiver_1',['receiver',['../classquisp_1_1modules_1_1_h_o_m_controller.html#aa364685671a53f170b2274276133830e',1,'quisp::modules::HOMController']]],
   ['relaxation_5ferror_5frate_2',['relaxation_error_rate',['../structquisp_1_1modules_1_1memory__error__model.html#aa08e05a522dc4aab31e51f5e92d92a87',1,'quisp::modules::memory_error_model::relaxation_error_rate()'],['../structquisp_1_1backends_1_1error__tracking_1_1_memory_error_model.html#ac3ba8017005b504f42fad1f8b5614845',1,'quisp::backends::error_tracking::MemoryErrorModel::relaxation_error_rate()']]],
   ['remote_5fqnic_5finterfaces_3',['remote_qnic_interfaces',['../classquisp_1_1rules_1_1_entanglement_swapping.html#ab1b63de63c830c31bad6d1d758f34ce4',1,'quisp::rules::EntanglementSwapping']]],
   ['request_5fsend_5ftiming_4',['request_send_timing',['../classquisp_1_1modules_1_1_connection_manager.html#a5607912062650d8b4fc8ad9804c284b5',1,'quisp::modules::ConnectionManager']]],
@@ -17,7 +17,7 @@ var searchData=
   ['responder_5fqnic_5ftype_14',['responder_qnic_type',['../structquisp_1_1modules_1_1_swapping_config.html#a74973350298af4f6deff190357f0d5fc',1,'quisp::modules::SwappingConfig::responder_qnic_type()'],['../classquisp_1_1rules_1_1active_1_1actions_1_1_simultaneous_swapping_action.html#ab6971d9409b755ffe95fbfce2a97b34b',1,'quisp::rules::active::actions::SimultaneousSwappingAction::responder_qnic_type()']]],
   ['responder_5fres_15',['responder_res',['../structquisp_1_1modules_1_1_swapping_config.html#a46e50f1948adefdb61559e40c87618d7',1,'quisp::modules::SwappingConfig']]],
   ['responder_5fresource_16',['responder_resource',['../classquisp_1_1rules_1_1active_1_1actions_1_1_simultaneous_swapping_action.html#a628199886723a3cf7aa609fdd339ddd0',1,'quisp::rules::active::actions::SimultaneousSwappingAction']]],
-  ['results_17',['results',['../classquisp_1_1modules_1_1_ho_m_controller.html#a3338149e26b1f8e8c41b777610c3b4d8',1,'quisp::modules::HoMController']]],
+  ['results_17',['results',['../classquisp_1_1modules_1_1_h_o_m_controller.html#ac398616d05f08edccb74ba71b048cf30',1,'quisp::modules::HOMController']]],
   ['right_5farrived_5fat_18',['right_arrived_at',['../classquisp_1_1modules_1_1_bell_state_analyzer.html#a2e6ed345ac49fe75f50b380e54c1fb4e',1,'quisp::modules::BellStateAnalyzer']]],
   ['right_5fcount_19',['right_count',['../classquisp_1_1modules_1_1_bell_state_analyzer.html#ab91a44f703f4e390192efdeddfaadec3',1,'quisp::modules::BellStateAnalyzer']]],
   ['right_5flast_5fphoton_5fdetected_20',['right_last_photon_detected',['../classquisp_1_1modules_1_1_bell_state_analyzer.html#a542d9c809e300d00cdb2099e8c7247ec',1,'quisp::modules::BellStateAnalyzer']]],

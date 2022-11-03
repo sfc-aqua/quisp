@@ -15,5 +15,5 @@ var searchData=
   ['purifyrule_12',['purifyRule',['../classquisp_1_1modules_1_1_connection_manager.html#a616acbde66e398b50a4f419ae8ec4a4d',1,'quisp::modules::ConnectionManager']]],
   ['purifyx_13',['purifyX',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#aa6ea48527df3cfc84f07652f37cdb333',1,'quisp::backends::error_tracking::ErrorTrackingQubit::purifyX()'],['../classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a1c356f4505f2379666f1d490cdacf85b',1,'quisp::backends::abstract::IQubit::purifyX()']]],
   ['purifyz_14',['purifyZ',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a1ea8e90bc61f1494d587c688ebdcbebb',1,'quisp::backends::error_tracking::ErrorTrackingQubit::purifyZ()'],['../classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a3ddbc4f87d897e9b24908656c7c95b95',1,'quisp::backends::abstract::IQubit::purifyZ()']]],
-  ['pushtobsaresults_15',['pushToBSAresults',['../classquisp_1_1modules_1_1_ho_m_controller.html#ae8800bab4feb0469713f112c19a06123',1,'quisp::modules::HoMController']]]
+  ['pushtobsaresults_15',['pushToBSAresults',['../classquisp_1_1modules_1_1_h_o_m_controller.html#a65160350657db5fc314013cf8dbda82b',1,'quisp::modules::HOMController']]]
 ];

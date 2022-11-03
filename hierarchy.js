@@ -176,7 +176,7 @@ var hierarchy =
     [ "cSimpleModule", null, [
       [ "quisp::modules::BellStateAnalyzer", "classquisp_1_1modules_1_1_bell_state_analyzer.html", null ],
       [ "quisp::modules::EntangledPhotonPairSource", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html", null ],
-      [ "quisp::modules::HoMController", "classquisp_1_1modules_1_1_ho_m_controller.html", null ],
+      [ "quisp::modules::HOMController", "classquisp_1_1modules_1_1_h_o_m_controller.html", null ],
       [ "quisp::modules::IApplication", "classquisp_1_1modules_1_1_i_application.html", [
         [ "quisp::modules::Application", "classquisp_1_1modules_1_1_application.html", null ]
       ] ],

@@ -67,7 +67,7 @@ var annotated_dup =
         [ "EntangledPhotonPairSource", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html", "classquisp_1_1modules_1_1_entangled_photon_pair_source" ],
         [ "entangledPhotons", "structquisp_1_1modules_1_1entangled_photons.html", "structquisp_1_1modules_1_1entangled_photons" ],
         [ "HardwareMonitor", "classquisp_1_1modules_1_1_hardware_monitor.html", "classquisp_1_1modules_1_1_hardware_monitor" ],
-        [ "HoMController", "classquisp_1_1modules_1_1_ho_m_controller.html", "classquisp_1_1modules_1_1_ho_m_controller" ],
+        [ "HOMController", "classquisp_1_1modules_1_1_h_o_m_controller.html", "classquisp_1_1modules_1_1_h_o_m_controller" ],
         [ "IApplication", "classquisp_1_1modules_1_1_i_application.html", "classquisp_1_1modules_1_1_i_application" ],
         [ "IConnectionManager", "classquisp_1_1modules_1_1_i_connection_manager.html", "classquisp_1_1modules_1_1_i_connection_manager" ],
         [ "IHardwareMonitor", "classquisp_1_1modules_1_1_i_hardware_monitor.html", "classquisp_1_1modules_1_1_i_hardware_monitor" ],
