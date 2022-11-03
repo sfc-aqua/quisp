@@ -28,7 +28,7 @@ void Application::initialize() {
   // Since we only need this module in EndNode, delete it otherwise.
   // We delete it in the handleMessage because it's the right way not to raise error
   if (!gate("toRouter")->isConnected()) {
-    deleteThisModule *msg = new deleteThisModule("DeleteThisModule");
+    DeleteThisModule *msg = new DeleteThisModule("DeleteThisModule");
     scheduleAt(simTime(), msg);
     return;
   }
@@ -42,6 +42,8 @@ void Application::initialize() {
 
   createEndNodeWeightMap();
   generateTraffic();
+  generateTrafficMsg = new GenerateTraffic("GenerateTraffic");
+  scheduleAt(simTime() + 100, generateTrafficMsg);
 }
 
 /**
@@ -65,7 +67,7 @@ ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr,
  * @param msg OMNeT++ cMessage
  */
 void Application::handleMessage(cMessage *msg) {
-  if (dynamic_cast<deleteThisModule *>(msg)) {
+  if (dynamic_cast<DeleteThisModule *>(msg)) {
     delete msg;
     deleteModule();
     return;
@@ -87,6 +89,12 @@ void Application::handleMessage(cMessage *msg) {
     logPacket("handleMessage", msg);
     send(msg, "toRouter");
     return;
+  }
+
+  if (dynamic_cast<GenerateTraffic *>(msg)) {
+    logPacket("handleMessage", msg);
+    generateTraffic();
+    scheduleAt(simTime() + 100, msg);
   }
 
   delete msg;
@@ -126,9 +134,11 @@ void Application::generateTraffic() {
   auto *sim_time_limit_option = cConfigOption::get("sim-time-limit");
   double max_sim_time = config->getAsDouble(sim_time_limit_option);
 
-  // check if sim-time-limit is defined, if not throw error
+  auto generate_up_to_time = simTime() + 100;
+  // if max_sim_time is not defined generate traffic for the next 100s for now
   if (max_sim_time == 0) {
-    error("Simulation time needs to be set (sim-time-limit)");
+    generate_up_to_time = max_sim_time;
+    cancelAndDelete(generateTrafficMsg);
   }
 
   for (auto &it : end_node_weight_map) {
@@ -142,12 +152,11 @@ void Application::generateTraffic() {
 
   simtime_t send_time = simTime();
 
-  while (send_time < max_sim_time) {
+  while (send_time < generate_up_to_time) {
     int dest_addr = addresses[dist(gen)];
     int num_request_bell_pair = par("numberOfBellpair").intValue();
     ConnectionSetupRequest *pk = createConnectionSetupRequest(dest_addr, num_request_bell_pair);
     send_time = send_time + par("sendIaTime").doubleValue();
-    scheduleAt(send_time, pk);
     EV_INFO << "Node " << my_address << " will initiate connection to " << dest_addr << " at " << send_time << " with " << num_request_bell_pair << " Bell pairs\n";
   }
 }

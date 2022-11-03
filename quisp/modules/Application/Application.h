@@ -26,6 +26,9 @@ class Application : public IApplication, public Logger::LoggerBase {
   Application();
   ~Application() {}
 
+ private:
+  cMessage *generateTrafficMsg;
+
  protected:
   int my_address;
   bool is_initiator;
