@@ -36,8 +36,6 @@ void Application::initialize() {
   my_address = provider.getQNode()->par("address");
   is_initiator = provider.getQNode()->par("isInitiator");
 
-  // WATCH_VECTOR(other_end_node_addresses);
-
   if (!is_initiator) {
     return;
   }
@@ -56,7 +54,7 @@ ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr,
   pk->setActual_destAddr(dest_addr);
   pk->setDestAddr(my_address);
   pk->setSrcAddr(my_address);
-  pk->setNum_measure(num_measure);
+  pk->setNum_measure(num_of_required_resources);
   pk->setKind(7);
   return pk;
 }
@@ -151,7 +149,7 @@ void Application::generateTraffic() {
     send_time = send_time + par("sendIaTime").doubleValue();
     scheduleAt(send_time, pk);
     EV_INFO << "Node " << my_address << " will initiate connection to " << dest_addr << " at " << send_time << " with " << num_request_bell_pair << " Bell pairs\n";
-  } 
+  }
 }
 
 }  // namespace modules
