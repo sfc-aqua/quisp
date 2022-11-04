@@ -1,23 +1,23 @@
 QUISP_MAKEFILE = "./quisp/Makefile"
-
+NPROC ?= $(shell nproc)
 .PHONY: all tidy format ci makefile-exe makefile-lib checkmakefile googletest clean test coverage coverage-report help quispr
 
 all: makefile-exe
-	$(MAKE) -C quisp -j$(nproc)
+	$(MAKE) -C quisp -j$(NPROC)
 
 run-module-test: lib
 	cd module_tests && ./runtest
 
-run-unit-test: lib googletest
-	$(MAKE) -C quisp run-unit-test
+run-unit-test: makefile-lib googletest
+	$(MAKE) -C quisp run-unit-test -j$(NPROC)
 
 test: run-module-test run-unit-test
 
 exe: makefile-exe
-	$(MAKE) -C quisp -j$(nproc)
+	$(MAKE) -C quisp -j$(NPROC)
 
 lib: makefile-lib
-	$(MAKE) -C quisp -j$(nproc)
+	$(MAKE) -C quisp -j$(NPROC)
 
 msgheaders: checkmakefile
 	$(MAKE) -C quisp msgheaders
