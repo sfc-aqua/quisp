@@ -86,6 +86,7 @@ $(document).ready(function(){initNavTree('classquisp_1_1modules_1_1_application.
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classquisp_1_1modules_1_1_application-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">quisp::modules::Application Class Reference</div></div>
 </div><!--header-->
@@ -111,12 +112,13 @@ Collaboration diagram for quisp::modules::Application:</div>
 <div class="dyncontent">
 <div class="center"><img src="classquisp_1_1modules_1_1_application__coll__graph.png" border="0" usemap="#aquisp_1_1modules_1_1_application_coll__map" alt="Collaboration graph"/></div>
 <map name="aquisp_1_1modules_1_1_application_coll__map" id="aquisp_1_1modules_1_1_application_coll__map">
-<area shape="rect" title="Application." alt="" coords="547,64,725,91"/>
+<area shape="rect" title="Application." alt="" coords="611,105,789,132"/>
 <area shape="rect" href="classquisp_1_1modules_1_1_i_application.html" title=" " alt="" coords="257,5,439,32"/>
 <area shape="rect" title=" " alt="" coords="27,5,138,32"/>
 <area shape="rect" href="classquisp_1_1modules_1_1_logger_1_1_logger_base.html" title="LoggerBase class integrate abilities to log simulation results into your components." alt="" coords="271,57,425,98"/>
 <area shape="rect" href="classquisp_1_1modules_1_1_logger_1_1_i_logger.html" title="Interface of Logger class. Logger class that inherits ILogger is responsible for logging simulation r..." alt="" coords="5,57,160,98"/>
-<area shape="rect" href="classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="247,123,449,149"/>
+<area shape="rect" title=" " alt="" coords="307,123,389,149"/>
+<area shape="rect" href="classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="247,173,449,200"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -147,12 +149,11 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a468117325a96bdff23429e0a529770ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#a468117325a96bdff23429e0a529770ab">handleMessage</a> (cMessage *msg) override</td></tr>
 <tr class="memdesc:a468117325a96bdff23429e0a529770ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Message handler.  <a href="classquisp_1_1modules_1_1_application.html#a468117325a96bdff23429e0a529770ab">More...</a><br /></td></tr>
 <tr class="separator:a468117325a96bdff23429e0a529770ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8aff8eff35d0fe0a61d559704eaa8ebc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#a8aff8eff35d0fe0a61d559704eaa8ebc">storeEndNodeAddresses</a> ()</td></tr>
-<tr class="memdesc:a8aff8eff35d0fe0a61d559704eaa8ebc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store communicatable EndNode addresses.  <a href="classquisp_1_1modules_1_1_application.html#a8aff8eff35d0fe0a61d559704eaa8ebc">More...</a><br /></td></tr>
-<tr class="separator:a8aff8eff35d0fe0a61d559704eaa8ebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b15e6b88f32f636f8b7bffb9108ed0e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#a5b15e6b88f32f636f8b7bffb9108ed0e">getOneRandomEndNodeAddress</a> ()</td></tr>
-<tr class="memdesc:a5b15e6b88f32f636f8b7bffb9108ed0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return one randome EndNode address.  <a href="classquisp_1_1modules_1_1_application.html#a5b15e6b88f32f636f8b7bffb9108ed0e">More...</a><br /></td></tr>
-<tr class="separator:a5b15e6b88f32f636f8b7bffb9108ed0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0735e1cd9cf28107c7d42ecca95f0239"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#a0735e1cd9cf28107c7d42ecca95f0239">createEndNodeWeightMap</a> ()</td></tr>
+<tr class="memdesc:a0735e1cd9cf28107c7d42ecca95f0239"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store communicatable EndNode addresses and their mass parameters.  <a href="classquisp_1_1modules_1_1_application.html#a0735e1cd9cf28107c7d42ecca95f0239">More...</a><br /></td></tr>
+<tr class="separator:a0735e1cd9cf28107c7d42ecca95f0239"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aceeb1a16ce28a3608d91b77da21255d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#aceeb1a16ce28a3608d91b77da21255d0">generateTraffic</a> ()</td></tr>
+<tr class="separator:aceeb1a16ce28a3608d91b77da21255d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4dc9cc83d0d9279b1a4e890275efa44"><td class="memItemLeft" align="right" valign="top">messages::ConnectionSetupRequest *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#ad4dc9cc83d0d9279b1a4e890275efa44">createConnectionSetupRequest</a> (int dest_addr, int num_of_required_resources)</td></tr>
 <tr class="memdesc:ad4dc9cc83d0d9279b1a4e890275efa44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate connection setup response packet.  <a href="classquisp_1_1modules_1_1_application.html#ad4dc9cc83d0d9279b1a4e890275efa44">More...</a><br /></td></tr>
 <tr class="separator:ad4dc9cc83d0d9279b1a4e890275efa44"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -161,21 +162,20 @@ Protected Member Functions</h2></td></tr>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:ab753fecb53f767dd0af049e361cd406f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#ab753fecb53f767dd0af049e361cd406f">my_address</a></td></tr>
 <tr class="separator:ab753fecb53f767dd0af049e361cd406f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8d0294e97694e0800c33d26ea2a2094"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#ae8d0294e97694e0800c33d26ea2a2094">other_end_node_addresses</a></td></tr>
-<tr class="separator:ae8d0294e97694e0800c33d26ea2a2094"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae534a30ec27167bb31d054ad5f469e8b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#ae534a30ec27167bb31d054ad5f469e8b">is_e2e_connection</a></td></tr>
-<tr class="separator:ae534a30ec27167bb31d054ad5f469e8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a880d00c8e73ebc3da5efc85bb5f68d1b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#a880d00c8e73ebc3da5efc85bb5f68d1b">number_of_resources</a></td></tr>
-<tr class="separator:a880d00c8e73ebc3da5efc85bb5f68d1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3cff36d6330ff1643f9c1dfaa2e253b2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#a3cff36d6330ff1643f9c1dfaa2e253b2">num_measure</a></td></tr>
-<tr class="separator:a3cff36d6330ff1643f9c1dfaa2e253b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2655130ae0f93ea8249e921aad7f3ea"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#ae2655130ae0f93ea8249e921aad7f3ea">traffic_pattern</a></td></tr>
-<tr class="separator:ae2655130ae0f93ea8249e921aad7f3ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e2685998354814c70a143ee716935ec"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#a6e2685998354814c70a143ee716935ec">is_initiator</a></td></tr>
+<tr class="separator:a6e2685998354814c70a143ee716935ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89347a6f3ea0078be536262b7a604070"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; int, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#a89347a6f3ea0078be536262b7a604070">end_node_weight_map</a></td></tr>
+<tr class="separator:a89347a6f3ea0078be536262b7a604070"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1f8abb1b87eec2214b88556dc0a2c8d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1utils_1_1_component_provider.html">utils::ComponentProvider</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#ad1f8abb1b87eec2214b88556dc0a2c8d">provider</a></td></tr>
 <tr class="separator:ad1f8abb1b87eec2214b88556dc0a2c8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classquisp_1_1modules_1_1_logger_1_1_logger_base"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classquisp_1_1modules_1_1_logger_1_1_logger_base')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classquisp_1_1modules_1_1_logger_1_1_logger_base.html">quisp::modules::Logger::LoggerBase</a></td></tr>
 <tr class="memitem:ab0e218b86937c9d19a75c5511604824b inherit pro_attribs_classquisp_1_1modules_1_1_logger_1_1_logger_base"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1modules_1_1_logger_1_1_i_logger.html">ILogger</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_logger_1_1_logger_base.html#ab0e218b86937c9d19a75c5511604824b">logger</a> = nullptr</td></tr>
 <tr class="separator:ab0e218b86937c9d19a75c5511604824b inherit pro_attribs_classquisp_1_1modules_1_1_logger_1_1_logger_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a3df219bd41d70848a4e36a86b3bf31fc"><td class="memItemLeft" align="right" valign="top">cMessage *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_application.html#a3df219bd41d70848a4e36a86b3bf31fc">generateTrafficMsg</a></td></tr>
+<tr class="separator:a3df219bd41d70848a4e36a86b3bf31fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p ><a class="el" href="classquisp_1_1modules_1_1_application.html" title="Application.">Application</a>. </p>
@@ -267,8 +267,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5b15e6b88f32f636f8b7bffb9108ed0e" name="a5b15e6b88f32f636f8b7bffb9108ed0e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b15e6b88f32f636f8b7bffb9108ed0e">&#9670;&nbsp;</a></span>getOneRandomEndNodeAddress()</h2>
+<a id="a0735e1cd9cf28107c7d42ecca95f0239" name="a0735e1cd9cf28107c7d42ecca95f0239"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0735e1cd9cf28107c7d42ecca95f0239">&#9670;&nbsp;</a></span>createEndNodeWeightMap()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -277,7 +277,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int quisp::modules::Application::getOneRandomEndNodeAddress </td>
+          <td class="memname">void quisp::modules::Application::createEndNodeWeightMap </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -290,7 +290,32 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Return one randome EndNode address. </p>
+<p>Store communicatable EndNode addresses and their mass parameters. </p>
+
+</div>
+</div>
+<a id="aceeb1a16ce28a3608d91b77da21255d0" name="aceeb1a16ce28a3608d91b77da21255d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aceeb1a16ce28a3608d91b77da21255d0">&#9670;&nbsp;</a></span>generateTraffic()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp::modules::Application::generateTraffic </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -356,36 +381,9 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a8aff8eff35d0fe0a61d559704eaa8ebc" name="a8aff8eff35d0fe0a61d559704eaa8ebc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8aff8eff35d0fe0a61d559704eaa8ebc">&#9670;&nbsp;</a></span>storeEndNodeAddresses()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void quisp::modules::Application::storeEndNodeAddresses </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Store communicatable EndNode addresses. </p>
-
-</div>
-</div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="ae534a30ec27167bb31d054ad5f469e8b" name="ae534a30ec27167bb31d054ad5f469e8b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae534a30ec27167bb31d054ad5f469e8b">&#9670;&nbsp;</a></span>is_e2e_connection</h2>
+<a id="a89347a6f3ea0078be536262b7a604070" name="a89347a6f3ea0078be536262b7a604070"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89347a6f3ea0078be536262b7a604070">&#9670;&nbsp;</a></span>end_node_weight_map</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -394,7 +392,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool quisp::modules::Application::is_e2e_connection</td>
+          <td class="memname">std::unordered_map&lt;int, int&gt; quisp::modules::Application::end_node_weight_map</td>
         </tr>
       </table>
   </td>
@@ -403,7 +401,50 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p >Does this simulation require end-to-end connection setup? </p>
+
+</div>
+</div>
+<a id="a3df219bd41d70848a4e36a86b3bf31fc" name="a3df219bd41d70848a4e36a86b3bf31fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3df219bd41d70848a4e36a86b3bf31fc">&#9670;&nbsp;</a></span>generateTrafficMsg</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cMessage* quisp::modules::Application::generateTrafficMsg</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6e2685998354814c70a143ee716935ec" name="a6e2685998354814c70a143ee716935ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e2685998354814c70a143ee716935ec">&#9670;&nbsp;</a></span>is_initiator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool quisp::modules::Application::is_initiator</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -418,73 +459,6 @@ Protected Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">int quisp::modules::Application::my_address</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a3cff36d6330ff1643f9c1dfaa2e253b2" name="a3cff36d6330ff1643f9c1dfaa2e253b2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3cff36d6330ff1643f9c1dfaa2e253b2">&#9670;&nbsp;</a></span>num_measure</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int quisp::modules::Application::num_measure</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p >The number of measurement between end nodes. </p>
-
-</div>
-</div>
-<a id="a880d00c8e73ebc3da5efc85bb5f68d1b" name="a880d00c8e73ebc3da5efc85bb5f68d1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a880d00c8e73ebc3da5efc85bb5f68d1b">&#9670;&nbsp;</a></span>number_of_resources</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int quisp::modules::Application::number_of_resources</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae8d0294e97694e0800c33d26ea2a2094" name="ae8d0294e97694e0800c33d26ea2a2094"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8d0294e97694e0800c33d26ea2a2094">&#9670;&nbsp;</a></span>other_end_node_addresses</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;int&gt; quisp::modules::Application::other_end_node_addresses</td>
         </tr>
       </table>
   </td>
@@ -515,33 +489,6 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae2655130ae0f93ea8249e921aad7f3ea" name="ae2655130ae0f93ea8249e921aad7f3ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae2655130ae0f93ea8249e921aad7f3ea">&#9670;&nbsp;</a></span>traffic_pattern</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int quisp::modules::Application::traffic_pattern</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p >A type of traffic generation.</p><ul>
-<li>0: No traffic</li>
-<li>1: From one end node node to random partner node (1 to 1)</li>
-<li>2: From all end nodes to random partner nodes (n to n) </li>
-</ul>
 
 </div>
 </div>
