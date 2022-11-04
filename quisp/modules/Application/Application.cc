@@ -5,6 +5,7 @@
  *  \brief Application
  */
 #include "Application.h"
+#include <random>
 #include <vector>
 #include "utils/ComponentProvider.h"
 
@@ -25,55 +26,24 @@ void Application::initialize() {
   initializeLogger(provider);
 
   // Since we only need this module in EndNode, delete it otherwise.
+  // We delete it in the handleMessage because it's the right way not to raise error
   if (!gate("toRouter")->isConnected()) {
-    deleteThisModule *msg = new deleteThisModule("DeleteThisModule");
+    DeleteThisModule *msg = new DeleteThisModule("DeleteThisModule");
     scheduleAt(simTime(), msg);
     return;
   }
 
   my_address = provider.getQNode()->par("address");
-  is_e2e_connection = par("EndToEndConnection");
-  num_measure = par("distant_measure_count");
+  is_initiator = provider.getQNode()->par("isInitiator");
 
-  WATCH_VECTOR(other_end_node_addresses);
-  storeEndNodeAddresses();
-
-  if (!is_e2e_connection) {
+  if (!is_initiator) {
     return;
   }
 
-  traffic_pattern = par("TrafficPattern");
-
-  if (traffic_pattern == 0) {
-    EV_INFO << "EndToEndConnection is set true. but no traffic pattern specified; proceeding with no traffic\n";
-    return;
-  }
-
-  // just one connection
-  if (traffic_pattern == 1) {
-    int initiator_address = par("LoneInitiatorAddress");
-    if (my_address == initiator_address) {
-      int endnode_dest_addr = getOneRandomEndNodeAddress();
-      EV_INFO << "Just one lonely connection setup request will be sent from " << my_address << " to " << endnode_dest_addr << "\n";
-      ConnectionSetupRequest *pk = createConnectionSetupRequest(endnode_dest_addr, number_of_resources);
-      scheduleAt(simTime(), pk);
-    }
-    return;
-  }
-
-  // let's all mambo!
-  // Each EndNode makes exactly one connection.
-  // this means that some nodes will be receivers of more than one connection, at random.
-  if (traffic_pattern == 2) {
-    int endnode_dest_addr = getOneRandomEndNodeAddress();
-    EV_INFO << "My connection setup request will be sent from " << my_address << " to " << endnode_dest_addr << "\n";
-    ConnectionSetupRequest *pk = createConnectionSetupRequest(endnode_dest_addr, number_of_resources);
-    // delay to avoid conflict
-    scheduleAt(simTime() + 0.00001 * my_address, pk);
-    return;
-  }
-
-  error("Invalid TrafficPattern specified.");
+  createEndNodeWeightMap();
+  generateTraffic();
+  generateTrafficMsg = new GenerateTraffic("GenerateTraffic");
+  scheduleAt(simTime() + 100, generateTrafficMsg);
 }
 
 /**
@@ -86,7 +56,7 @@ ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr,
   pk->setActual_destAddr(dest_addr);
   pk->setDestAddr(my_address);
   pk->setSrcAddr(my_address);
-  pk->setNum_measure(num_measure);
+  pk->setNum_measure(num_of_required_resources);
   pk->setKind(7);
   return pk;
 }
@@ -97,7 +67,7 @@ ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr,
  * @param msg OMNeT++ cMessage
  */
 void Application::handleMessage(cMessage *msg) {
-  if (dynamic_cast<deleteThisModule *>(msg)) {
+  if (dynamic_cast<DeleteThisModule *>(msg)) {
     delete msg;
     deleteModule();
     return;
@@ -121,38 +91,75 @@ void Application::handleMessage(cMessage *msg) {
     return;
   }
 
+  if (dynamic_cast<GenerateTraffic *>(msg)) {
+    logPacket("handleMessage", msg);
+    generateTraffic();
+    scheduleAt(simTime() + 100, msg);
+  }
+
   delete msg;
   error("Application not recognizing this packet");
 }
 
 /**
- * \brief Store communicatable EndNode addresses
+ * \brief Store communicatable EndNode addresses and their mass parameters
  */
-void Application::storeEndNodeAddresses() {
+void Application::createEndNodeWeightMap() {
   cTopology *topo = new cTopology("topo");
 
-  // like topo.extractByParameter("nodeType","EndNode")
   topo->extractByParameter("nodeType", provider.getQNode()->par("nodeType").str().c_str());
 
-  int addr;
   for (int i = 0; i < topo->getNumNodes(); i++) {
-    cTopology::Node *node = topo->getNode(i);
-    addr = node->getModule()->par("address").intValue();
+    cModule *endnodeModule = topo->getNode(i)->getModule();
 
-    // ignore myself
-    if (addr != my_address) {
-      other_end_node_addresses.push_back(addr);
+    int addr = endnodeModule->par("address").intValue();
+    int weight = endnodeModule->par("mass").intValue();
+
+    if (addr == my_address) {
+      // set self weight to 0 to avoid creating connection request with self
+      end_node_weight_map[addr] = 0;
+    } else {
+      end_node_weight_map[addr] = weight;
     }
   }
+
   delete topo;
 }
 
-/**
- * \brief Return one randome EndNode address
- */
-int Application::getOneRandomEndNodeAddress() {
-  int random_index = intuniform(0, other_end_node_addresses.size() - 1);
-  return other_end_node_addresses[random_index];
+void Application::generateTraffic() {
+  std::vector<int> weights;
+  std::vector<int> addresses;
+
+  cConfiguration *config = getEnvir()->getConfig();
+  auto *sim_time_limit_option = cConfigOption::get("sim-time-limit");
+  double max_sim_time = config->getAsDouble(sim_time_limit_option);
+
+  auto generate_up_to_time = simTime() + 100;
+  // if max_sim_time is not defined generate traffic for the next 100s for now
+  if (max_sim_time != 0) {
+    generate_up_to_time = max_sim_time;
+    cancelAndDelete(generateTrafficMsg);
+  }
+
+  for (auto &it : end_node_weight_map) {
+    weights.push_back(it.second);
+    addresses.push_back(it.first);
+  }
+
+  std::discrete_distribution<int> dist(std::begin(weights), std::end(weights));
+  std::mt19937 gen;
+  gen.seed(time(0));  // if you want different results from different runs
+
+  simtime_t send_time = simTime() + par("sendIaTime").doubleValue();
+
+  while (send_time < generate_up_to_time) {
+    int dest_addr = addresses[dist(gen)];
+    int num_request_bell_pair = par("numberOfBellpair").intValue();
+    ConnectionSetupRequest *pk = createConnectionSetupRequest(dest_addr, num_request_bell_pair);
+    EV_INFO << "Node " << my_address << " will initiate connection to " << dest_addr << " at " << send_time << " with " << num_request_bell_pair << " Bell pairs\n";
+    scheduleAt(send_time, pk);
+    send_time = send_time + par("sendIaTime").doubleValue();
+  }
 }
 
 }  // namespace modules

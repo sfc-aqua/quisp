@@ -26,24 +26,20 @@ class Application : public IApplication, public Logger::LoggerBase {
   Application();
   ~Application() {}
 
+ private:
+  cMessage *generateTrafficMsg;
+
  protected:
   int my_address;
+  bool is_initiator;
 
-  std::vector<int> other_end_node_addresses;
-  bool is_e2e_connection; /**< Does this simulation require end-to-end connection setup?*/
-  int number_of_resources;
-  int num_measure; /**< The number of measurement between end nodes.*/
-  int traffic_pattern; /**< A type of traffic generation.
-                        * - 0: No traffic
-                        * - 1: From one end node node to random partner node (1 to 1)
-                        * - 2: From all end nodes to random partner nodes (n to n)
-                        */
+  std::unordered_map<int, int> end_node_weight_map;
 
   void initialize() override;
   void handleMessage(cMessage *msg) override;
 
-  void storeEndNodeAddresses();
-  int getOneRandomEndNodeAddress();
+  void createEndNodeWeightMap();
+  void generateTraffic();
 
   messages::ConnectionSetupRequest *createConnectionSetupRequest(int dest_addr, int num_of_required_resources);
   utils::ComponentProvider provider;

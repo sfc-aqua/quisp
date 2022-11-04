@@ -12,8 +12,9 @@ module QNode
         int bufferSize = default(10);
         int address = default(0);
         int buffers = default(10); //default is defined as 10 in .ini file but can be changed independently in .ned file
+        int mass = default(100);
+        bool isInitiator = default(false);
         @display("bgl=4");
-        //int numQNIC = 1;
 
         string includeInTopo = "yes";
         string nodeType = default("none");
