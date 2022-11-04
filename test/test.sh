@@ -9,7 +9,7 @@ cd $QUISP_ROOT
 make makefile-exe
 cd $QUISP_ROOT/quisp/
 make cleanall
-make BATCH=true QCONFIG=$QUISP_ROOT/quisp/networks/* -j $(nproc) all
+make BATCH=true QCONFIG=$QUISP_ROOT/quisp/networks/* -j $(shell nproc) all
 # These are creating all simulations HACK
 # if we set quisp as ./quisp/..., may be error because of existance of the same name binary
 if [ -e $QUISP_ROOT/test/testresults.txt ];then
