@@ -1,12 +1,21 @@
 {
 	"name": "QuISP Dev",
-	"build": {"dockerfile": "Dockerfile"},
-
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
-
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "uname -a",
-
-	"remoteUser": "root"
+	"remoteUser": "vscode",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode-remote.remote-containers",
+				"llvm-vs-code-extensions.vscode-clangd",
+				"vadimcn.vscode-lldb",
+				"matepek.vscode-catch2-test-adapter"
+			]
+		}
+	}
 }
