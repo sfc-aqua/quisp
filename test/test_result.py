@@ -499,7 +499,7 @@ class TestQuispResult(unittest.TestCase):
         with Measurement Error Y
         with 3003 purification
         """
-        test_number = 15  # TEST13
+        test_number = 15  # TEST15
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 9.993220e-01,
                               "Xerror": 6.775070e-04,
@@ -526,7 +526,7 @@ class TestQuispResult(unittest.TestCase):
         with Measurement Error Z
         with 1221 purification
         """
-        test_number = 16  # TEST13
+        test_number = 16  # TEST16
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 9.993670e-01,
                               "Xerror": 6.329110e-04,
@@ -553,7 +553,7 @@ class TestQuispResult(unittest.TestCase):
         with H gate Error X
         with 1221 purification
         """
-        test_number = 17  # TEST13
+        test_number = 17  # TEST17
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1.000000e+00,
                               "Xerror": 0.000000e+00,
@@ -580,7 +580,7 @@ class TestQuispResult(unittest.TestCase):
         with H gate Y error
         with 1011 purification
         """
-        test_number = 18  # TEST13
+        test_number = 18  # TEST18
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -607,7 +607,7 @@ class TestQuispResult(unittest.TestCase):
         with MemError Z
         with 1011 purification
         """
-        test_number = 19  # TEST13
+        test_number = 19  # TEST19
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -634,7 +634,7 @@ class TestQuispResult(unittest.TestCase):
         with X gate X error
         with 2002 purification
         """
-        test_number = 20  # TEST13
+        test_number = 20  # TEST20
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -661,7 +661,7 @@ class TestQuispResult(unittest.TestCase):
         with X gate Y error
         with 2002 purification
         """
-        test_number = 21  # TEST13
+        test_number = 21  # TEST21
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -688,7 +688,7 @@ class TestQuispResult(unittest.TestCase):
         with X gate Z error
         with 2002 purification
         """
-        test_number = 22  # TEST13
+        test_number = 22  # TEST22
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -715,7 +715,7 @@ class TestQuispResult(unittest.TestCase):
         with Z gate X error
         with 3003 purification
         """
-        test_number = 23  # TEST13
+        test_number = 23  # TEST23
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -742,7 +742,7 @@ class TestQuispResult(unittest.TestCase):
         with Z gate Y error
         with  3003 purification
         """
-        test_number = 24  # TEST13
+        test_number = 24  # TEST24
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -975,7 +975,7 @@ class TestQuispResult(unittest.TestCase):
                              {"Fidelity": 1,
                               "Xerror": 0,
                               "Zerror": 0,
-                              "Yerror": 0}]
+                              "Yerror": 0}]                
         for res, es in zip(results, expected_outcome):
             self.evaluation(res, es, neq=True)
     
@@ -1014,15 +1014,6 @@ class TestQuispResult(unittest.TestCase):
         """
         test_number = 34  # TEST35
         results = self.return_test_result(test_number)
-        # print("=======")
-        # print("expected_outcome = [", end="")
-        # for res in results:
-        #     print('{"Fidelity": %e,' % res["Fidelity"])
-        #     print('"Xerror": %e,' % res["Xerror"])
-        #     print('"Zerror": %e,' % res["Zerror"])
-        #     print('"Yerror": %e},' % res["Yerror"])
-        # print("]")
-        # print("=======")
         expected_outcome = [{"Fidelity": 9.987330e-01,
                               "Xerror": -1.267430e-03,
                               "Zerror": 1.267430e-03,
