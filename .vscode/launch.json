@@ -4,5 +4,29 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "UnitTests",
+            "program": "${workspaceFolder}/quisp/run_unit_test",
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Simulation",
+            "program": "${workspaceFolder}/quisp/quisp_dbg",
+            "args": [
+                "-n",
+                "./networks:./channels:./modules",
+                "-i",
+                "./images",
+                "./networks/omnetpp.ini",
+                "-u",
+                "Qtenv"
+            ],
+            "cwd": "${workspaceFolder}/quisp"
+        },
     ],
 }
