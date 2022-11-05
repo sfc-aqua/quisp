@@ -1,5 +1,10 @@
 {
 	"name": "QuISP Dev",
+
+	"containerEnv": {
+		"DOCKER_DEFAULT_PLATFORM": "$(echo $(uname) | tr '[:upper:]' '[:lower:]')/$(uname -i)"
+	},
+
 	"build": {
 		"dockerfile": "Dockerfile"
 	},
