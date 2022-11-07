@@ -72,9 +72,7 @@ void QuantumChannel::initialize() {
   Q_to_the_distance = Apow(distance);
 }
 
-
 cChannel::Result QuantumChannel::processMessage(cMessage *msg, const SendOptions &options, simtime_t t) {
-
   try {
     PhotonicQubit *q = check_and_cast<PhotonicQubit *>(msg);
 
