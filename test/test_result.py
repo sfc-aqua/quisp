@@ -93,7 +93,7 @@ class TestQuispResult(unittest.TestCase):
                 if not neq:
                     self.assertEqual(actual, est)
                 else:
-                    self.assertAlmostEqual(actual, est)
+                    self.assertAlmostEqual(actual, est, delta=0.05)
                     # self.assertEqual(True, math.isclose(actual, est,
                     #                                     rel_tol=rtol,
                     #                                     abs_tol=etol))
