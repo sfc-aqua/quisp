@@ -6,7 +6,7 @@
         {
             "label": "build unit test",
             "type": "shell",
-            "command": "make run-unit-test",
+            "command": "make run-unit-test MODE=debug",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -25,6 +25,12 @@
         },
         {
             "label": "clean",
+            "type": "shell",
+            "command": "make clean",
+            "problemMatcher": [],
+        },
+        {
+            "label": "distclean",
             "type": "shell",
             "command": "make clean",
             "problemMatcher": [],
