@@ -115,9 +115,9 @@ struct memory_error_model {
 };
 
 struct MeasurementErrorModel {
-  double X_error_rate;
-  double Y_error_rate;
-  double Z_error_rate;
+  double x_error_rate;
+  double y_error_rate;
+  double z_error_rate;
 };
 
 struct GOD_error_model {

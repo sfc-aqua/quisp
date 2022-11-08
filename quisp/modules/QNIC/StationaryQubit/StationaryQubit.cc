@@ -237,9 +237,9 @@ void StationaryQubit::setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model
 }
 
 void StationaryQubit::setMeasurementErrorModel(MeasurementErrorModel &model) {
-  model.X_error_rate = par("X_measurement_error_rate").doubleValue();
-  model.Y_error_rate = par("Y_measurement_error_rate").doubleValue();
-  model.Z_error_rate = par("Z_measurement_error_rate").doubleValue();
+  model.x_error_rate = par("X_measurement_error_rate").doubleValue();
+  model.y_error_rate = par("Y_measurement_error_rate").doubleValue();
+  model.z_error_rate = par("Z_measurement_error_rate").doubleValue();
 }
 
 MeasureXResult StationaryQubit::correlationMeasureX() {
