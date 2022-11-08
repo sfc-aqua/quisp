@@ -675,8 +675,8 @@ void RuleEngine::Unlock_resource_and_discard(unsigned long ruleset_id, int rule_
           // Purification failed, discard resource.
           qubit->Unlock();
           QNIC_type qt = (QNIC_type)qubit->qnic_type;
-          qubit->par("god_x_error") = false;
-          qubit->par("god_z_error") = false;
+          qubit->GOD_err.has_X_error = false;
+          qubit->GOD_err.has_Z_error = false;
           // remove from current rule
           (*rule)->resources.erase(qubit_record);
           freeConsumedResource(qubit->qnic_index, qubit, qt);  // Remove from entangled resource list.
