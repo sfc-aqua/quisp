@@ -229,14 +229,14 @@ void StationaryQubit::setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model
 }
 
 void StationaryQubit::setMeasurementErrorModel(MeasurementErrorModel &model) {
-  model.x_error_rate = par("X_measurement_error_rate").doubleValue();
-  model.y_error_rate = par("Y_measurement_error_rate").doubleValue();
-  model.z_error_rate = par("Z_measurement_error_rate").doubleValue();
+  model.X_error_rate = par("X_measurement_error_rate").doubleValue();
+  model.Y_error_rate = par("Y_measurement_error_rate").doubleValue();
+  model.Z_error_rate = par("Z_measurement_error_rate").doubleValue();
 }
 
 MeasureXResult StationaryQubit::correlationMeasureX() {
   bool error = par("GOD_Zerror").boolValue();
-  if (dblrand() < Measurement_error.x_error_rate) {
+  if (dblrand() < Measurement_error.X_error_rate) {
     error = !error;
   }
   return error ? MeasureXResult::HAS_Z_ERROR : MeasureXResult::NO_Z_ERROR;
@@ -244,7 +244,7 @@ MeasureXResult StationaryQubit::correlationMeasureX() {
 
 MeasureYResult StationaryQubit::correlationMeasureY() {
   bool error = par("GOD_Zerror").boolValue() != par("GOD_Xerror").boolValue();
-  if (dblrand() < Measurement_error.y_error_rate) {
+  if (dblrand() < Measurement_error.Y_error_rate) {
     error = !error;
   }
   return error ? MeasureYResult::HAS_XZ_ERROR : MeasureYResult::NO_XZ_ERROR;
@@ -252,7 +252,7 @@ MeasureYResult StationaryQubit::correlationMeasureY() {
 
 MeasureZResult StationaryQubit::correlationMeasureZ() {
   bool error = par("GOD_Xerror").boolValue();
-  if (dblrand() < Measurement_error.x_error_rate) {
+  if (dblrand() < Measurement_error.X_error_rate) {
     error = !error;
   }
   return error ? MeasureZResult::HAS_X_ERROR : MeasureZResult::NO_X_ERROR;
@@ -271,7 +271,7 @@ EigenvalueResult StationaryQubit::localMeasureX() {
       this->entangled_partner->addZerror();
     }
   }
-  if (dblrand() < this->Measurement_error.x_error_rate) {
+  if (dblrand() < this->Measurement_error.X_error_rate) {
     result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
   }
   return result;
@@ -295,7 +295,7 @@ EigenvalueResult StationaryQubit::localMeasureZ() {
       this->entangled_partner->addXerror();
     }
   }
-  if (dblrand() < this->Measurement_error.z_error_rate) {
+  if (dblrand() < this->Measurement_error.Z_error_rate) {
     result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
   }
   return result;
@@ -371,6 +371,7 @@ void StationaryQubit::setFree(bool consumed) {
   GOD_dm_Xerror = false;
   Density_Matrix_Collapsed << -111, -111, -111, -111;
   no_density_matrix_nullptr_entangled_partner_ok = false;
+  // GUI part
   if (hasGUI()) {
     par("photon_emitted_at") = emitted_time.dbl();
     par("last_updated_at") = updated_time.dbl();
@@ -380,7 +381,7 @@ void StationaryQubit::setFree(bool consumed) {
     par("GOD_entangled_qnic_address") = -1;
     par("GOD_entangled_qnic_type") = -1;
   }
-  // TODO: replace all par occurences to boolean
+  // TODO: replace all par occurences
   par("GOD_Xerror") = false;
   par("GOD_Zerror") = false;
   par("GOD_CMerror") = false;
@@ -411,7 +412,7 @@ void StationaryQubit::Lock(unsigned long rs_id, int rule_id, int action_id) {
   locked_ruleset_id = rs_id;  // Used to identify what this qubit is locked for.
   locked_rule_id = rule_id;
   action_index = action_id;
-
+  // GUI part
   if (hasGUI()) {
     bubble("Locked!");
     getDisplayString().setTagArg("i", 1, "purple");
@@ -558,12 +559,10 @@ void StationaryQubit::setEntangledPartnerInfo(IStationaryQubit *partner) {
   // When BSA succeeds, this method gets invoked to store entangled partner information.
   // This will also be sent classically to the partner node afterwards.
   entangled_partner = partner;
-  if (hasGUI()) {
-    par("GOD_entangled_stationaryQubit_address") = partner->par("stationaryQubit_address");
-    par("GOD_entangled_node_address") = partner->par("node_address");
-    par("GOD_entangled_qnic_address") = partner->par("qnic_address");
-    par("GOD_entangled_qnic_type") = partner->par("qnic_type");
-  }
+  par("GOD_entangled_stationaryQubit_address") = partner->stationaryQubit_address;
+  par("GOD_entangled_node_address") = partner->node_address;
+  par("GOD_entangled_qnic_address") = partner->qnic_address;
+  par("GOD_entangled_qnic_type") = partner->qnic_type;
 }
 
 /* Add another X error. If an X error already exists, then they cancel out */
@@ -1019,9 +1018,9 @@ measurement_outcome StationaryQubit::measure_density_independent() {
 
   // add measurement error
   auto rand_num = dblrand();
-  if (this_measurement.basis == meas_op.X_basis.basis && rand_num < Measurement_error.x_error_rate ||
-      this_measurement.basis == meas_op.Y_basis.basis && rand_num < Measurement_error.y_error_rate ||
-      this_measurement.basis == meas_op.Z_basis.basis && rand_num < Measurement_error.z_error_rate) {
+  if (this_measurement.basis == meas_op.X_basis.basis && rand_num < Measurement_error.X_error_rate ||
+      this_measurement.basis == meas_op.Y_basis.basis && rand_num < Measurement_error.Y_error_rate ||
+      this_measurement.basis == meas_op.Z_basis.basis && rand_num < Measurement_error.Z_error_rate) {
     Output_is_plus = !Output_is_plus;
   }
 
