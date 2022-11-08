@@ -57,18 +57,6 @@ simple StationaryQubit
         // characteristics of the hardware
         // could eventually change over time if we model dynamic
         // changes to the device
-        double memory_error_rate = default(0);// 10% per μs by default
-        double memory_Z_error_ratio = default(1);
-        double memory_X_error_ratio = default(1);
-        double memory_Y_error_ratio = default(1);
-        double memory_energy_excitation_ratio = default(1);
-        double memory_energy_relaxation_ratio = default(1);
-        double memory_completely_mixed_ratio = default(1);
-
-        // ZZZ -- these are configured at boot time
-        // characteristics of the hardware
-        // could eventually change over time if we model dynamic
-        // changes to the device
         double memory_Z_error_rate = default(0);
         double memory_X_error_rate = default(0);
         double memory_Y_error_rate = default(0);
