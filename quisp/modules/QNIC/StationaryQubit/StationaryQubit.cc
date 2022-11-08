@@ -379,6 +379,17 @@ void StationaryQubit::setFree(bool consumed) {
   GOD_dm_Xerror = false;
   Density_Matrix_Collapsed << -111, -111, -111, -111;
   no_density_matrix_nullptr_entangled_partner_ok = false;
+  GOD_entangled_stationaryQubit_address = -1;
+  GOD_entangled_node_address = -1;
+  GOD_entangled_qnic_address = -1;
+  GOD_entangled_qnic_type = -1;
+  GOD_err.has_X_error = false;
+  GOD_err.has_Z_error = false;
+  GOD_err.has_EX_error = false;
+  GOD_err.has_RE_error = false;
+  GOD_err.has_CM_error = false;
+  entangled_partner = nullptr;
+  EV_DEBUG << "Freeing this qubit!!!" << this << " at qnode: " << node_address << " qnic_type: " << qnic_type << " qnic_index: " << qnic_index << "\n";
   // GUI part
   if (hasGUI()) {
     par("photon_emitted_at") = emitted_time.dbl();
@@ -393,20 +404,6 @@ void StationaryQubit::setFree(bool consumed) {
     par("GOD_EXerror") = false;
     par("GOD_REerror") = false;
     par("GOD_CMerror") = false;
-  }
-  GOD_entangled_stationaryQubit_address = -1;
-  GOD_entangled_node_address = -1;
-  GOD_entangled_qnic_address = -1;
-  GOD_entangled_qnic_type = -1;
-  GOD_err.has_X_error = false;
-  GOD_err.has_Z_error = false;
-  GOD_err.has_EX_error = false;
-  GOD_err.has_RE_error = false;
-  GOD_err.has_CM_error = false;
-  entangled_partner = nullptr;
-  EV_DEBUG << "Freeing this qubit!!!" << this << " at qnode: " << node_address << " qnic_type: " << qnic_type << " qnic_index: " << qnic_index << "\n";
-  // GUI part
-  if (hasGUI()) {
     if (consumed) {
       bubble("Consumed!");
       getDisplayString().setTagArg("i", 1, "yellow");
@@ -510,6 +507,11 @@ void StationaryQubit::setCompletelyMixedDensityMatrix() {
   this->GOD_dm_Xerror = false;
   this->GOD_dm_Zerror = false;
   if (hasGUI()) {
+    par("GOD_Xerror") = false;
+    par("GOD_Zerror") = false;
+    par("GOD_EXerror") = false;
+    par("GOD_REerror") = false;
+    par("GOD_CMerror") = true;
     bubble("Completely mixed. darkcount");
     getDisplayString().setTagArg("i", 1, "black");
   }
@@ -530,6 +532,11 @@ void StationaryQubit::setExcitedDensityMatrix() {
   GOD_dm_Zerror = false;
 
   if (hasGUI()) {
+    par("GOD_Xerror") = false;
+    par("GOD_Zerror") = false;
+    par("GOD_EXerror") = true;
+    par("GOD_REerror") = false;
+    par("GOD_CMerror") = false;
     bubble("Completely mixed. darkcount");
     getDisplayString().setTagArg("i", 1, "white");
   }
@@ -538,7 +545,7 @@ void StationaryQubit::setExcitedDensityMatrix() {
     // error("What?");
     this->entangled_partner->updated_time = simTime();
     // For GUI
-    this->entangled_partner->par("last_updated_at") = simTime().dbl();
+    if (hasGUI()) this->entangled_partner->par("last_updated_at") = simTime().dbl();
     // This also eliminates the entanglement information.
     this->entangled_partner->setCompletelyMixedDensityMatrix();
   }  // else it is already not entangled. e.g. excited -> relaxed.
@@ -556,6 +563,11 @@ void StationaryQubit::setRelaxedDensityMatrix() {
   GOD_dm_Xerror = false;
   GOD_dm_Zerror = false;
   if (hasGUI()) {
+    par("GOD_Xerror") = false;
+    par("GOD_Zerror") = false;
+    par("GOD_EXerror") = false;
+    par("GOD_REerror") = true;
+    par("GOD_CMerror") = false;
     bubble("Completely mixed. darkcount");
     getDisplayString().setTagArg("i", 1, "white");
   }
@@ -573,10 +585,17 @@ void StationaryQubit::setEntangledPartnerInfo(IStationaryQubit *partner) {
   // When BSA succeeds, this method gets invoked to store entangled partner information.
   // This will also be sent classically to the partner node afterwards.
   entangled_partner = partner;
-  par("GOD_entangled_stationaryQubit_address") = partner->stationaryQubit_address;
-  par("GOD_entangled_node_address") = partner->node_address;
-  par("GOD_entangled_qnic_address") = partner->qnic_address;
-  par("GOD_entangled_qnic_type") = partner->qnic_type;
+  GOD_entangled_stationaryQubit_address = partner->stationaryQubit_address;
+  GOD_entangled_node_address = partner->node_address;
+  GOD_entangled_qnic_address = partner->qnic_address;
+  GOD_entangled_qnic_type = partner->qnic_type;
+  // For GUI
+  if (hasGUI()) {
+    par("GOD_entangled_stationaryQubit_address") = partner->stationaryQubit_address;
+    par("GOD_entangled_node_address") = partner->node_address;
+    par("GOD_entangled_qnic_address") = partner->qnic_address;
+    par("GOD_entangled_qnic_type") = partner->qnic_type;
+  }
 }
 
 /* Add another X error. If an X error already exists, then they cancel out */
@@ -748,7 +767,12 @@ void StationaryQubit::applyMemoryError() {
     }
   }
   updated_time = simTime();
-  par("last_updated_at") = simTime().dbl();
+  // For GUI
+  if (hasGUI()) {
+    par("last_updated_at") = simTime().dbl();
+    par("GOD_X_Error") = GOD_err.has_X_error;
+    par("GOD_Z_Error") = GOD_err.has_Z_error;
+  }
 }
 
 Matrix2cd StationaryQubit::getErrorMatrix(StationaryQubit *qubit) {
@@ -918,8 +942,8 @@ measurement_outcome StationaryQubit::measure_density_independent() {
     error("Cm track wrong\n");
   }
   if (this->excited_or_relaxed && !this->GOD_err.has_EX_error && !this->GOD_err.has_RE_error) {
-    std::cout << "this->excited_or_relaxed = " << this->excited_or_relaxed << ", !this->par(GOD_REerror)=" << !this->GOD_err.has_RE_error
-              << "!this->par(GOD_EXerror)=" << !this->GOD_err.has_EX_error;
+    std::cout << "this->excited_or_relaxed = " << this->excited_or_relaxed << ", !this->GOD_err.has_RE_error=" << !this->GOD_err.has_RE_error
+              << "!this->GOD_err.has_EX_error=" << !this->GOD_err.has_EX_error;
     error("Ex/Re track wrong\n");
   }
   // if there is an entanglement
