@@ -150,11 +150,11 @@ TEST(StatQubitTest, setFree) {
   sim->registerComponent(qubit);
   qubit->fillParams();
   qubit->callInitialize();
-  qubit->par("god_x_error") = true;
-  qubit->par("god_z_error") = true;
-  qubit->par("god_excitation_error") = true;
-  qubit->par("god_relaxation_error") = true;
-  qubit->par("god_completely_mixed_error") = true;
+  qubit->GOD_err.has_X_error = true;
+  qubit->GOD_err.has_Z_error = true;
+  qubit->GOD_err.has_EX_error = true;
+  qubit->GOD_err.has_RE_error = true;
+  qubit->GOD_err.has_CM_error = true;
 
   qubit->setFree(true);
   EXPECT_EQ(qubit->updated_time, simTime());
@@ -165,11 +165,11 @@ TEST(StatQubitTest, setFree) {
   EXPECT_EQ(qubit->updated_time, simTime());
 
   // check the qubit reset properly
-  EXPECT_FALSE(qubit->par("god_x_error").boolValue());
-  EXPECT_FALSE(qubit->par("god_z_error").boolValue());
-  EXPECT_FALSE(qubit->par("god_excitation_error").boolValue());
-  EXPECT_FALSE(qubit->par("god_relaxation_error").boolValue());
-  EXPECT_FALSE(qubit->par("god_completely_mixed_error").boolValue());
+  EXPECT_FALSE(qubit->GOD_err.has_X_error);
+  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
+  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
+  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
+  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
 }
 
 TEST(StatQubitTest, setFreeUpdatesTime) {
@@ -195,11 +195,11 @@ TEST(StatQubitTest, addXError) {
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
   sim->registerComponent(qubit);
-  EXPECT_FALSE(qubit->par("god_x_error"));
+  EXPECT_FALSE(qubit->GOD_err.has_X_error);
   qubit->addXerror();
-  EXPECT_TRUE(qubit->par("god_x_error"));
+  EXPECT_TRUE(qubit->GOD_err.has_X_error);
   qubit->addXerror();
-  EXPECT_FALSE(qubit->par("god_x_error"));
+  EXPECT_FALSE(qubit->GOD_err.has_X_error);
 }
 
 TEST(StatQubitTest, addZError) {
@@ -207,11 +207,11 @@ TEST(StatQubitTest, addZError) {
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
   sim->registerComponent(qubit);
-  EXPECT_FALSE(qubit->par("god_z_error"));
+  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
   qubit->addZerror();
-  EXPECT_TRUE(qubit->par("god_z_error"));
+  EXPECT_TRUE(qubit->GOD_err.has_Z_error);
   qubit->addZerror();
-  EXPECT_FALSE(qubit->par("god_z_error"));
+  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
 }
 
 TEST(StatQubitTest, getErrorMatrixTest) {
