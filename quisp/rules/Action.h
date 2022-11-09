@@ -99,6 +99,7 @@ class Tomography : public Action {
  public:
   Tomography(json serialized) { deserialize_json(serialized); }  // for deserialization
   Tomography(int num_measurement, int owner_addr, int partner_addr, QNIC_type qnic_type, int qnic_id);
+  simtime_t start_time = -1;
   int num_measurement;
   int owner_address;
   json serialize_json() override;

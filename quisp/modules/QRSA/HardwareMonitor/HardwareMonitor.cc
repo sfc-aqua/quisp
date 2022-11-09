@@ -1140,6 +1140,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
     // Measure the local resource between it->second.neighborQNode_address.
     auto measure_action = std::make_unique<Tomography>(num_measure, my_address, partner_address, qnic_type, qnic_index);
+    measure_action->start_time = simTime();
     rule->setAction(std::move(measure_action));
 
     tomography_RuleSet->addRule(std::move(rule));
@@ -1158,6 +1159,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
     // Measure the local resource between it->second.neighborQNode_address.
     auto measure = std::make_unique<Tomography>(num_measure, my_address, partner_address, qnic_type, qnic_index);
+    measure->start_time = simTime();
     rule->setAction(std::move(measure));
 
     tomography_RuleSet->addRule(std::move(rule));

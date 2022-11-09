@@ -493,6 +493,10 @@ L1:
   auto &qnic = act->qnic_interfaces.at(0);
   QNodeAddr partner_addr = qnic.partner_addr;
   auto qubit_resource_index = 0;
+  simtime_t start_time = act->start_time;
+  if (start_time == -1) {
+    start_time = simTime();
+  }
   return Program{
       "Tomography",
       {
@@ -505,7 +509,7 @@ INSTR_MEASURE_RANDOM_MemoryKey_QubitId_{{MemoryKey{"outcome"}, q0}, "L1"},
 INSTR_INC_RegId_{count},
 INSTR_STORE_MemoryKey_RegId_{{MemoryKey{"count"}, count}},
 INSTR_FREE_QUBIT_QubitId_{q0},
-INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_Time_{{partner_addr, count,MemoryKey{"outcome"}, max_count, simTime() /* use the timing of the rule construction*/}}
+INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_Time_{{partner_addr, count,MemoryKey{"outcome"}, max_count, start_time }}
           // clang-format on
       },
   };
