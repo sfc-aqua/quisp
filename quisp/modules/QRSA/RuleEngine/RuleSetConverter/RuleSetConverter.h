@@ -43,6 +43,7 @@ class RuleSetConverter {
 
   static Program constructAction(const ActionData* data);
   static Program constructCondition(const ConditionData* data);
+  static Program constructTerminateCondition(const ConditionData* data);
 
   // actions
   static Program constructEntanglementSwappingAction(const EntanglementSwapping* data);

@@ -2,9 +2,9 @@
 #include <variant>
 
 #include "Runtime.h"
-#include "runtime/InstructionVisitor.h"
-#include "runtime/Value.h"
-#include "runtime/types.h"
+#include "InstructionVisitor.h"
+#include "Value.h"
+#include "types.h"
 
 namespace quisp::runtime {
 
@@ -40,11 +40,12 @@ void Runtime::exec(const RuleSet& ruleset) {
       if (return_code == ReturnCode::COND_FAILED) {
         break;
       }
+      eval(rule.action);
+      eval(ruleset.termination_condition);
       if (return_code == ReturnCode::RS_TERMINATED) {
         terminated = true;
         return;
       }
-      eval(rule.action);
     }
   }
 }
