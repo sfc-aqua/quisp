@@ -18,6 +18,7 @@ class LoggerModuleTest : public testing::Test {
     sim = utils::prepareSimulation();
     logger_module = new LoggerModule();
     logger_module->setComponentType(new TestModuleType("test logger module"));
+    setParBool(logger_module, "enable_log", true);
     setParStr(logger_module, "log_filename", "test.log");
     setParStr(logger_module, "logger", "JsonLogger");
     sim->registerComponent(logger_module);
