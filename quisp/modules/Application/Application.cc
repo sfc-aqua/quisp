@@ -74,19 +74,19 @@ void Application::handleMessage(cMessage *msg) {
   }
 
   if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)) {
-    logPacket("handleMessage", msg);
+    if (logger != nullptr) logger->logPacket("handleMessage", msg);
     send(msg, "toRouter");
     return;
   }
 
   if (dynamic_cast<ConnectionSetupResponse *>(msg)) {
-    logPacket("handleMessage", msg);
+    if (logger != nullptr) logger->logPacket("handleMessage", msg);
     send(msg, "toRouter");
     return;
   }
 
   if (dynamic_cast<InternalRuleSetForwarding *>(msg)) {
-    logPacket("handleMessage", msg);
+    if (logger != nullptr) logger->logPacket("handleMessage", msg);
     send(msg, "toRouter");
     return;
   }

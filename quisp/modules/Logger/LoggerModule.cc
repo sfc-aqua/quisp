@@ -16,6 +16,7 @@ LoggerModule::~LoggerModule() {
 }
 
 void LoggerModule::initialize() {
+  if(!par("enable_log").boolValue()) return;
   logger_type = toLoggerType(par("logger"));
   if (logger_type == LoggerType::JsonLogger) {
     if (spdlog_logger != nullptr) return;
@@ -43,8 +44,6 @@ ILogger* LoggerModule::getLogger() {
     if (spdlog_logger == nullptr) error("failed to instantiate logger. spdlog is not initialized.");
     return new JsonLogger(spdlog_logger);
   }
-
-  error("valid logger is not specified.");
   return nullptr;
 }
 
