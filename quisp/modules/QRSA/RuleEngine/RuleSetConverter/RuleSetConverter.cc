@@ -29,9 +29,42 @@ RuleSet RuleSetConverter::construct(const RSData &data) {
     }
     auto condition = constructCondition(rule_data->condition.get());
     auto action = constructAction(rule_data->action.get());
+    auto terminate_condition = constructTerminateCondition(rule_data->condition.get());
+    if (terminate_condition.opcodes.size() > 0) {
+      rs.termination_condition = terminate_condition;
+    }
     rs.rules.emplace_back(Rule{name, rule_data->shared_tag, condition, action});
   }
   return rs;
+}
+
+Program RuleSetConverter::constructTerminateCondition(const ConditionData *data) {
+  auto opcodes = std::vector<InstructionTypes>{};
+  std::string name;
+  int i = 0;
+  for (auto &clause_data : data->clauses) {
+    i++;
+    auto clause_ptr = clause_data.get();
+    if (auto *c = dynamic_cast<const MeasureCountConditionClause *>(clause_ptr)) {
+      /*
+      LOAD count MemoryKey("count")
+      BLT CONTINUE count max_count
+      RET RS_TERMINATED
+    CONTINUE:
+      NOP
+      */
+      auto count = RegId::REG2;
+      MemoryKey count_key{"measure_count" + std::to_string(i)};
+      name += "MeasureCountCondition ";
+
+      Label continue_label{std::string("CONTINUE_") + std::to_string(i)};
+      opcodes.push_back(INSTR_LOAD_RegId_MemoryKey_{{count, count_key}});
+      opcodes.push_back(INSTR_BLT_Label_RegId_int_{{continue_label, count, c->num_measure}});
+      opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::RS_TERMINATED});
+      opcodes.push_back(INSTR_NOP_None_{{None}, continue_label});
+    }
+  }
+  return Program{name, opcodes};
 }
 
 Program RuleSetConverter::constructCondition(const ConditionData *data) {
@@ -112,20 +145,6 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       opcodes.push_back(INSTR_INC_RegId_{count, passed_label});
       opcodes.push_back(INSTR_STORE_MemoryKey_RegId_{{count_key, count}});
       name += "MeasureCountCondition ";
-
-      Label continue_label{std::string("CONTINUE_") + std::to_string(i)};
-      std::vector<InstructionTypes> termination_check_codes{
-          // clang-format off
-INSTR_LOAD_RegId_MemoryKey_{{count, count_key}},
-INSTR_BLT_Label_RegId_int_{{continue_label, count, c->num_measure}},
-INSTR_RET_ReturnCode_{ReturnCode::RS_TERMINATED},
-INSTR_NOP_None_{{None}, continue_label}
-          // clang-format on
-      };
-
-      // insert termination check on the top of the opcodes.
-      // the RS termination should be checked at first of condition execution
-      opcodes.insert(opcodes.begin(), termination_check_codes.begin(), termination_check_codes.end());
     }
   }
   opcodes.push_back(INSTR_RET_ReturnCode_{{ReturnCode::COND_PASSED}});
