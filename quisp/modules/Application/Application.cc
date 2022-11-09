@@ -92,7 +92,7 @@ void Application::handleMessage(cMessage *msg) {
   }
 
   if (dynamic_cast<GenerateTraffic *>(msg)) {
-    logPacket("handleMessage", msg);
+    if (logger != nullptr) logger->logPacket("handleMessage", msg);
     generateTraffic();
     scheduleAt(simTime() + 100, msg);
   }
