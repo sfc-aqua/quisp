@@ -176,19 +176,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
     const PurificationResultKey key{*pkt};
     handlePurificationResult(key, PurificationResultData{*pkt}, from_self);
   } else if (auto *pkt = dynamic_cast<DS_DoublePurificationSecondResult *>(msg)) {
-    error("DS DoublePurification is not implemented yet");
-    // std::cout<<"!!!!Purification result reveid!!! node["<<parentAddress<<"]\n";
-    process_id purification_id;
-    Triplepurification_result pr;
-    purification_id.ruleset_id = pkt->getRuleset_id();
-    purification_id.rule_id = pkt->getRule_id();
-    purification_id.index = pkt->getAction_index();
-    purification_id.shared_tag = pkt->getShared_tag();
-    pr.id = purification_id;
-    pr.Xpurification_outcome = pkt->getXOutput_is_plus();
-    pr.Zpurification_outcome = pkt->getZOutput_is_plus();
-    pr.DS_purification_outcome = pkt->getDS_Output_is_plus();
-    storeCheck_TriplePurification_Agreement(pr);
+    bool from_self = pkt->getSrcAddr() == parentAddress;
+    const PurificationResultKey key{*pkt};
+    handlePurificationResult(key, PurificationResultData{*pkt}, from_self);
   } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
     const SwappingResultData data{
         .ruleset_id = pkt->getRuleSet_id(),
