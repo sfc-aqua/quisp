@@ -56,6 +56,7 @@ struct PurificationResultData {
   bool is_z_plus = false;
   bool is_ds_x_plus = false;
   bool is_ds_z_plus = false;
+  bool is_ds_plus = false;
   PurType pur_type = PurType::INVALID;
 
   bool isResultMatched(const PurificationResultData& result, PurType type) const {
@@ -66,12 +67,15 @@ struct PurificationResultData {
         return result.is_x_plus == is_x_plus;
       case PurType::DOUBLE:
       case PurType::DOUBLE_INV:
+      case PurType::DSSA:
+      case PurType::DSSA_INV:
         return result.is_x_plus == is_x_plus && result.is_z_plus == is_z_plus;
       case PurType::DSDA:
       case PurType::DSDA_INV:
         return result.is_x_plus == is_x_plus && result.is_z_plus == is_z_plus && result.is_ds_x_plus == is_ds_x_plus && result.is_ds_z_plus == is_ds_z_plus;
-      case PurType::DSSA:
-      case PurType::DSSA_INV:
+      case PurType::DSDA_SECOND:
+      case PurType::DSDA_SECOND_INV:
+        return result.is_x_plus == is_x_plus && result.is_z_plus == is_z_plus && result.is_ds_plus == is_ds_plus;
       default:
         throw std::runtime_error("the pur type not implemented yet");
     }
@@ -79,6 +83,7 @@ struct PurificationResultData {
 
   PurificationResultData(const messages::PurificationResult& result) {
     pur_type = (PurType)result.getPurType();
+    assert(pur_type == PurType::SINGLE_X || pur_type == PurType::SINGLE_Z);
     if (pur_type == PurType::SINGLE_X) {
       is_z_plus = result.getOutput_is_plus();
     }
@@ -89,10 +94,19 @@ struct PurificationResultData {
 
   PurificationResultData(const messages::DoublePurificationResult& result) {
     pur_type = (PurType)result.getPurType();
-    assert(pur_type == PurType::DOUBLE || pur_type == PurType::DOUBLE_INV);
+    assert(pur_type == PurType::DOUBLE || pur_type == PurType::DOUBLE_INV || pur_type == PurType::DSSA || pur_type == PurType::DSSA_INV);
     is_z_plus = result.getZOutput_is_plus();
     is_x_plus = result.getXOutput_is_plus();
   }
+
+  PurificationResultData(const messages::DS_DoublePurificationSecondResult& result) {
+    pur_type = (PurType)result.getPurType();
+    assert(pur_type == PurType::DSDA_SECOND || pur_type == PurType::DSDA_SECOND_INV);
+    is_z_plus = result.getZOutput_is_plus();
+    is_x_plus = result.getXOutput_is_plus();
+    is_ds_plus = result.getDS_Output_is_plus();
+  }
+
   PurificationResultData(const messages::DS_DoublePurificationResult& result) {
     pur_type = (PurType)result.getPurType();
     assert(pur_type == PurType::DSDA || pur_type == PurType::DSDA_INV);
