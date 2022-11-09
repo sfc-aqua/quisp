@@ -33,8 +33,9 @@ class Rule {
 
 class RuleSet {
  public:
-  RuleSet(const std::string& name = "") : name(name), rules(std::vector<Rule>()) {}
-  RuleSet(const std::string& name, const std::vector<Rule>& rules, bool debugging = false) : name(name), rules(rules), debugging(debugging) {}
+  RuleSet(const std::string& name = "", const std::vector<Rule>& rules = std::vector<Rule>(), const Program& termination_cond = Program{"never terminate", {}},
+          bool debugging = false)
+      : name(name), rules(rules), termination_condition(termination_cond), debugging(debugging) {}
   void finalize();
 
   // @brief partners contains partner QNodeAddrs
@@ -49,6 +50,7 @@ class RuleSet {
   int owner_addr;
   std::string name;
   std::vector<Rule> rules;
+  Program termination_condition;
   bool debugging = false;
 
  protected:
