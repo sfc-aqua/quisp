@@ -16,7 +16,7 @@ LoggerModule::~LoggerModule() {
 }
 
 void LoggerModule::initialize() {
-  if(!par("enable_log").boolValue()) return;
+  if (!par("enable_log").boolValue()) return;
   logger_type = toLoggerType(par("logger"));
   if (logger_type == LoggerType::JsonLogger) {
     if (spdlog_logger != nullptr) return;

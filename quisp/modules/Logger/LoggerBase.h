@@ -13,6 +13,7 @@ class LoggerBase {
   LoggerBase();
   ~LoggerBase();
   void initializeLogger(utils::ComponentProvider& provider);
+
  protected:
   ILogger* logger = nullptr;
 };
