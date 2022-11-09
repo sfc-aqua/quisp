@@ -13,6 +13,14 @@
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "uname -a",
 	"remoteUser": "vscode",
+	"postStartCommand": "sudo service ssh start",
+
+	"forwardPorts": [
+		2222
+	],
+
+	"appPort": "2222:22",
+
 	"customizations": {
 		"vscode": {
 			"extensions": [
