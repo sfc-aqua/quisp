@@ -1,5 +1,6 @@
 #include "LoggerModule.h"
 #include <gtest/gtest.h>
+#include <modules/Logger/DisabledLogger.h>
 #include <test_utils/TestUtils.h>
 #include "test_utils/UtilFunctions.h"
 
@@ -18,7 +19,7 @@ class LoggerModuleTest : public testing::Test {
     sim = utils::prepareSimulation();
     logger_module = new LoggerModule();
     logger_module->setComponentType(new TestModuleType("test logger module"));
-    setParBool(logger_module, "enable_log", true);
+    setParBool(logger_module, "enabled_log", true);
     setParStr(logger_module, "log_filename", "test.log");
     setParStr(logger_module, "logger", "JsonLogger");
     sim->registerComponent(logger_module);
@@ -52,5 +53,12 @@ TEST_F(LoggerModuleTest, getLogger) {
   logger_module->callInitialize();
   auto *logger = logger_module->getLogger();
   ASSERT_NE(logger, nullptr);
+}
+
+TEST_F(LoggerModuleTest, getDisabledLogger) {
+  setParBool(logger_module, "enabled_log", false);
+  logger_module->callInitialize();
+  auto *logger = logger_module->getLogger();
+  EXPECT_NE(dynamic_cast<quisp::modules::Logger::DisabledLogger *>(logger), nullptr);
 }
 }  // namespace

@@ -74,25 +74,25 @@ void Application::handleMessage(cMessage *msg) {
   }
 
   if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)) {
-    if (logger != nullptr) logger->logPacket("handleMessage", msg);
+    logger->logPacket("handleMessage", msg);
     send(msg, "toRouter");
     return;
   }
 
   if (dynamic_cast<ConnectionSetupResponse *>(msg)) {
-    if (logger != nullptr) logger->logPacket("handleMessage", msg);
+    logger->logPacket("handleMessage", msg);
     send(msg, "toRouter");
     return;
   }
 
   if (dynamic_cast<InternalRuleSetForwarding *>(msg)) {
-    if (logger != nullptr) logger->logPacket("handleMessage", msg);
+    logger->logPacket("handleMessage", msg);
     send(msg, "toRouter");
     return;
   }
 
   if (dynamic_cast<GenerateTraffic *>(msg)) {
-    if (logger != nullptr) logger->logPacket("handleMessage", msg);
+    logger->logPacket("handleMessage", msg);
     generateTraffic();
     scheduleAt(simTime() + 100, msg);
   }

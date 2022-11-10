@@ -11,6 +11,7 @@ namespace quisp::modules::Logger {
 enum class LoggerType {
   Unknown,
   JsonLogger,
+  Disabled,
 };
 
 class LoggerModule : public omnetpp::cSimpleModule {

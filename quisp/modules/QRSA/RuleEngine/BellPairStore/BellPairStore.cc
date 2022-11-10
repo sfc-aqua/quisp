@@ -12,7 +12,7 @@ void BellPairStore::insertEntangledQubit(QNodeAddr partner_addr, qrsa::IQubitRec
   auto qnic_type = qubit->getQNicType();
   auto qnic_index = qubit->getQNicIndex();
   ResourceKey key{qnic_type, qnic_index};
-  if (logger != nullptr) logger->logBellPairInfo("Generated", partner_addr, qubit->getQNicType(), qubit->getQNicIndex(), qubit->getQubitIndex());
+  logger->logBellPairInfo("Generated", partner_addr, qubit->getQNicType(), qubit->getQNicIndex(), qubit->getQubitIndex());
   if (_resources.find(key) == _resources.cend()) {
     _resources.emplace(key, std::multimap<int, qrsa::IQubitRecord *>{std::make_pair(partner_addr, qubit)});
   } else {
@@ -31,7 +31,7 @@ void BellPairStore::eraseQubit(qrsa::IQubitRecord *const qubit) {
   auto it = resource.begin();
   while (it != resource.cend()) {
     if (it->second == qubit) {
-      if (logger != nullptr) logger->logBellPairInfo("Erased", it->first, qubit->getQNicType(), qubit->getQNicIndex(), qubit->getQubitIndex());
+      logger->logBellPairInfo("Erased", it->first, qubit->getQNicType(), qubit->getQNicIndex(), qubit->getQubitIndex());
       it = resource.erase(it);
     } else
       it++;

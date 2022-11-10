@@ -1,4 +1,5 @@
 #include "LoggerModule.h"
+#include <modules/Logger/DisabledLogger.h>
 #include <spdlog/async.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/spdlog.h>
@@ -16,7 +17,10 @@ LoggerModule::~LoggerModule() {
 }
 
 void LoggerModule::initialize() {
-  if (!par("enable_log").boolValue()) return;
+  if (!par("enabled_log").boolValue()) {
+    logger_type = LoggerType::Disabled;
+    return;
+  }
   logger_type = toLoggerType(par("logger"));
   if (logger_type == LoggerType::JsonLogger) {
     if (spdlog_logger != nullptr) return;
@@ -40,10 +44,12 @@ void LoggerModule::finish() {
 }
 
 ILogger* LoggerModule::getLogger() {
+  if (logger_type == LoggerType::Disabled) return new DisabledLogger();
   if (logger_type == LoggerType::JsonLogger) {
     if (spdlog_logger == nullptr) error("failed to instantiate logger. spdlog is not initialized.");
     return new JsonLogger(spdlog_logger);
   }
+  error("valid logger is not specified.");
   return nullptr;
 }
 
