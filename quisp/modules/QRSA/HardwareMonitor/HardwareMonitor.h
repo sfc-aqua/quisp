@@ -4,15 +4,16 @@
  *
  *  \brief HardwareMonitor
  */
-#ifndef QUISP_MODULES_HARDWAREMONITOR_H_
-#define QUISP_MODULES_HARDWAREMONITOR_H_
+#pragma once
 
 #include "IHardwareMonitor.h"
-#include "modules/QNIC/StationaryQubit/StationaryQubit.h"
-#include "utils/ComponentProvider.h"
 
-namespace quisp {
-namespace modules {
+#include <modules/QNIC/StationaryQubit/StationaryQubit.h>
+#include <rules/Action.h>
+#include <rules/Rule.h>
+#include <utils/ComponentProvider.h>
+
+namespace quisp::modules {
 
 /** \class HardwareMonitor HardwareMonitor.h
  *
@@ -60,8 +61,6 @@ class HardwareMonitor : public IHardwareMonitor {
   raw_data *tomography_data;
   single_qubit_error Pauli;
 
-  // virtual int* checkFreeBuffSet(int qnic_index, int *list_of_free_resources, QNIC_type qnic_type);//returns the set of free resources
-  // virtual int checkNumFreeBuff(int qnic_index, QNIC_type qnic_type);//returns the number of free qubits
   TomographyOutcomeTable *temporal_tomography_output;  // qnic address -> partner . count_id . outcome
   LinkCostMap *tomography_runningtime_holder;
   std::string tomography_output_filename;
@@ -73,7 +72,6 @@ class HardwareMonitor : public IHardwareMonitor {
   void handleMessage(cMessage *msg) override;
   int numInitStages() const override { return 2; };
   void prepareNeighborTable();
-
   virtual std::unique_ptr<NeighborInfo> createNeighborInfo(const cModule &thisNode);
   virtual std::unique_ptr<NeighborInfo> getNeighbor(cModule *qnic_pointer);
   virtual cModule *getQNodeWithAddress(int address);
@@ -84,18 +82,18 @@ class HardwareMonitor : public IHardwareMonitor {
   virtual unsigned long createUniqueId();
   virtual void writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec);
 
+  std::unique_ptr<quisp::rules::Rule> constructPurifyRule(const std::string &rule_name, const rules::PurType pur_type, const int partner_address, const QNIC_type qnic_type,
+                                                          const int qnic_index, const int rule_id, const int shared_tag) const;
+
   // virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
   // simtime_t tomography_time;
 };
 
 Define_Module(HardwareMonitor);
 
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules
 
 namespace std {
 std::stringstream &operator<<(std::stringstream &os, const quisp::modules::NeighborInfo &v);
 std::basic_ostream<char> &operator<<(std::basic_ostream<char> &os, const quisp::modules::InterfaceInfo &v);
 }  // namespace std
-
-#endif /* QUISP_MODULES_HARDWAREMONITOR_H_ */

@@ -6,6 +6,7 @@
  */
 #include "HardwareMonitor.h"
 
+#include <omnetpp/cexception.h>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -14,7 +15,7 @@
 #include <unsupported/Eigen/MatrixFunctions>
 
 #include <messages/classical_messages.h>
-#include <omnetpp/cexception.h>
+#include <rules/Action.h>
 #include <rules/Clause.h>
 #include <rules/RuleSet.h>
 #include <utils/ComponentProvider.h>
@@ -24,8 +25,7 @@ using namespace quisp::rules;
 using Eigen::Matrix4cd;
 using Eigen::Vector4cd;
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
 HardwareMonitor::HardwareMonitor() : provider(utils::ComponentProvider{this}) {}
 HardwareMonitor::~HardwareMonitor() {}
@@ -62,7 +62,7 @@ void HardwareMonitor::initialize(int stage) {
   /*This keeps which node is connected to which local qnic.*/
   tomography_output_filename = par("tomography_output_filename").str();
   // remove double quotes at the beginning and end
-  tomography_output_filename = tomography_output_filename.substr(1, tomography_output_filename.length() - 3);
+  tomography_output_filename = tomography_output_filename.substr(1, tomography_output_filename.length() - 2);
   file_dir_name = par("file_dir_name").str();
   do_link_level_tomography = par("link_tomography");
   num_purification = par("initial_purification");
@@ -237,6 +237,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
 
     if (result->getFinish() != -1) {
       EV << "finish? " << result->getFinish() << "\n";
+      EV << "tomography_time: " << tomography_runningtime_holder[local_qnic.address][partner_addr].tomography_time << std::endl;
       // Pick the slower tomography time MIN(self,partner).
       if (tomography_runningtime_holder[local_qnic.address][partner_addr].tomography_time < result->getFinish()) {
         tomography_runningtime_holder[local_qnic.address][partner_addr].Bellpair_per_sec = (double)result->getMax_count() / result->getFinish().dbl();
@@ -419,9 +420,8 @@ void HardwareMonitor::finish() {
                      << "; Y=" << Yerr_rate << endl;
     // output to cout for testing
     std::cout << this_node->getFullName() << "<-->QuantumChannel{cost=" << link_cost << ";distance=" << dis << "km;fidelity=" << fidelity
-              << ";bellpair_per_sec=" << tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec
-              << ";}<-->" << partner_node->getFullName() << "; Fidelity=" << fidelity << "; Xerror=" << Xerr_rate << "; Zerror=" << Zerr_rate
-              << "; Yerror=" << Yerr_rate << endl;
+              << ";bellpair_per_sec=" << tomography_runningtime_holder[qnic][partner_address].Bellpair_per_sec << ";}<-->" << partner_node->getFullName()
+              << "; Fidelity=" << fidelity << "; Xerror=" << Xerr_rate << "; Zerror=" << Zerr_rate << "; Yerror=" << Yerr_rate << endl;
   }
   tomography_stats.close();
   tomography_dm.close();
@@ -658,16 +658,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         // First stage X purification
         {
           rule_name = "X purification with: " + std::to_string(partner_address);
-          auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-          rule->setName(rule_name);
-          auto condition = std::make_unique<Condition>();
-          auto resource_clause = std::make_unique<EnoughResourceConditionClause>(2, 0, partner_address, qnic_type, qnic_index);
-          condition->addClause(std::move(resource_clause));
-          rule->setCondition(std::move(condition));
-
-          auto purify_action = std::make_unique<Purification>(PurType::SINGLE_X, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-          rule->setNextRule(rule_id + 1);
+          auto rule = constructPurifyRule(rule_name, PurType::SINGLE_X, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
           rule_id++;
           shared_tag++;
           tomography_RuleSet->addRule(std::move(rule));
@@ -675,16 +666,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         // Second stage Z purification (Using X purified resources)
         {
           rule_name = "Z purification with: " + std::to_string(partner_address);
-          auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-          rule->setName(rule_name);
-          auto condition = std::make_unique<Condition>();
-          auto resource_clause = std::make_unique<EnoughResourceConditionClause>(2, 0, partner_address, qnic_type, qnic_index);
-          condition->addClause(std::move(resource_clause));
-          rule->setCondition(std::move(condition));
-
-          auto purify_action = std::make_unique<Purification>(PurType::SINGLE_Z, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-          rule->setNextRule(rule_id + 1);
+          auto rule = constructPurifyRule(rule_name, PurType::SINGLE_Z, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
           rule_id++;
           shared_tag++;
           tomography_RuleSet->addRule(std::move(rule));
@@ -713,31 +695,14 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// ![](../img/PhysRevA.100.052320-Fig11.png)
       // First stage X purification
       for (int i = 0; i < num_purification; i++) {
+        std::unique_ptr<Rule> rule;
         if (i % 2 == 0) {
           rule_name = "X purification with: " + std::to_string(partner_address);
+          rule = constructPurifyRule(rule_name, PurType::SINGLE_X, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         } else {
           rule_name = "Z purification with: " + std::to_string(partner_address);
+          rule = constructPurifyRule(rule_name, PurType::SINGLE_Z, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         }
-
-        auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-        rule->setName(rule_name);
-        auto condition = std::make_unique<Condition>();
-        auto resource_clause = std::make_unique<EnoughResourceConditionClause>(2, 0, partner_address, qnic_type, qnic_index);
-        condition->addClause(std::move(resource_clause));
-        rule->setCondition(std::move(condition));
-
-        auto purify_action = std::make_unique<Purification>(PurType::SINGLE_Z, partner_address, qnic_type, qnic_index);
-
-        if (i % 2 == 0) {
-          // X purification
-          auto purify_action = std::make_unique<Purification>(PurType::SINGLE_X, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-        } else {
-          // Z purification
-          auto purify_action = std::make_unique<Purification>(PurType::SINGLE_Z, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-        }
-        rule->setNextRule(rule_id + 1);
         rule_id++;
         shared_tag++;
         tomography_RuleSet->addRule(std::move(rule));
@@ -760,16 +725,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// ![](../img/PhysRevA.100.052320-Fig12.png)
       for (int i = 0; i < num_purification; i++) {
         rule_name = "Double purification with: " + std::to_string(partner_address);
-        auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-        rule->setName(rule_name);
-        auto condition = std::make_unique<Condition>();
-        auto resource_clause = std::make_unique<EnoughResourceConditionClause>(3, 0, partner_address, qnic_type, qnic_index);
-        condition->addClause(std::move(resource_clause));
-        rule->setCondition(std::move(condition));
-
-        auto purify_action = std::make_unique<Purification>(PurType::DOUBLE, partner_address, qnic_type, qnic_index);
-        rule->setAction(std::move(purify_action));
-        rule->setNextRule(rule_id + 1);
+        auto rule = constructPurifyRule(rule_name, PurType::DOUBLE, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         rule_id++;
         shared_tag++;
         tomography_RuleSet->addRule(std::move(rule));
@@ -789,37 +745,17 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// error suppression, but still not great.
       /// ![](../img/PhysRevA.100.052320-Fig12.png)
       for (int i = 0; i < num_purification; i++) {
+        std::unique_ptr<Rule> rule;
         if (i % 2 == 0) {
           rule_name = "Double purification with: " + std::to_string(partner_address);
-          auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-          rule->setName(rule_name);
-          auto condition = std::make_unique<Condition>();
-          auto resource_clause = std::make_unique<EnoughResourceConditionClause>(3, 0, partner_address, qnic_type, qnic_index);
-          condition->addClause(std::move(resource_clause));
-          rule->setCondition(std::move(condition));
-
-          auto purify_action = std::make_unique<Purification>(PurType::DOUBLE, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-          rule->setNextRule(rule_id + 1);
-          rule_id++;
-          shared_tag++;
-          tomography_RuleSet->addRule(std::move(rule));
+          rule = constructPurifyRule(rule_name, PurType::DOUBLE, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         } else {
           rule_name = "Double purification Inverse with: " + std::to_string(partner_address);
-          auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-          rule->setName(rule_name);
-          auto condition = std::make_unique<Condition>();
-          auto resource_clause = std::make_unique<EnoughResourceConditionClause>(3, 0, partner_address, qnic_type, qnic_index);
-          condition->addClause(std::move(resource_clause));
-          rule->setCondition(std::move(condition));
-
-          auto purify_action = std::make_unique<Purification>(PurType::DOUBLE_INV, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-          rule->setNextRule(rule_id + 1);
-          rule_id++;
-          shared_tag++;
-          tomography_RuleSet->addRule(std::move(rule));
+          rule = constructPurifyRule(rule_name, PurType::DOUBLE_INV, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         }
+        rule_id++;
+        shared_tag++;
+        tomography_RuleSet->addRule(std::move(rule));
       }
     } else if (Purification_type == 1011) {
       /// # Purification_type 1011: #
@@ -838,16 +774,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// ![](../img/arxiv.1904.08605-Fig13.png)
       for (int i = 0; i < num_purification; i++) {
         rule_name = "Double Selection with: " + std::to_string(partner_address);
-        auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-        rule->setName(rule_name);
-        auto condition = std::make_unique<Condition>();
-        auto resource_clause = std::make_unique<EnoughResourceConditionClause>(3, 0, partner_address, qnic_type, qnic_index);
-        condition->addClause(std::move(resource_clause));
-        rule->setCondition(std::move(condition));
-
-        auto purify_action = std::make_unique<Purification>(PurType::DSSA, partner_address, qnic_type, qnic_index);
-        rule->setAction(std::move(purify_action));
-        rule->setNextRule(rule_id + 1);
+        auto rule = constructPurifyRule(rule_name, PurType::DSSA, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         rule_id++;
         shared_tag++;
         tomography_RuleSet->addRule(std::move(rule));
@@ -867,27 +794,14 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// first round is XZ, second is ZX.
       /// ![](../img/arxiv.1904.08605-Fig13.png)
       for (int i = 0; i < num_purification; i++) {
+        std::unique_ptr<Rule> rule;
         if (i % 2 == 0) {
           rule_name = "Double selection with: " + std::to_string(partner_address);
+          rule = constructPurifyRule(rule_name, PurType::DSSA, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         } else {
           rule_name = "Double selection Inverse with: " + std::to_string(partner_address);
+          rule = constructPurifyRule(rule_name, PurType::DSSA_INV, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         }
-
-        auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-        rule->setName(rule_name);
-        auto condition = std::make_unique<Condition>();
-        auto resource_clause = std::make_unique<EnoughResourceConditionClause>(3, 0, partner_address, qnic_type, qnic_index);
-        condition->addClause(std::move(resource_clause));
-        rule->setCondition(std::move(condition));
-
-        if (i % 2 == 0) {
-          auto purify_action = std::make_unique<Purification>(PurType::DSSA, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-        } else {
-          auto purify_action = std::make_unique<Purification>(PurType::DSSA_INV, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-        }
-        rule->setNextRule(rule_id + 1);
         rule_id++;
         shared_tag++;
         tomography_RuleSet->addRule(std::move(rule));
@@ -908,27 +822,14 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// be impractical.
       /// ![](../img/arxiv.1904.08605-Fig14.png)
       for (int i = 0; i < num_purification; i++) {
+        std::unique_ptr<Rule> rule;
         if (i % 2 == 0) {
           rule_name = "Double selection Dual action with: " + std::to_string(partner_address);
+          rule = constructPurifyRule(rule_name, PurType::DSDA, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         } else {
           rule_name = "Double selection Dual action Inverse with: " + std::to_string(partner_address);
+          rule = constructPurifyRule(rule_name, PurType::DSDA_INV, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         }
-
-        auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-        rule->setName(rule_name);
-        auto condition = std::make_unique<Condition>();
-        auto resource_clause = std::make_unique<EnoughResourceConditionClause>(5, 0, partner_address, qnic_type, qnic_index);
-        condition->addClause(std::move(resource_clause));
-        rule->setCondition(std::move(condition));
-
-        if (i % 2 == 0) {
-          auto purify_action = std::make_unique<Purification>(PurType::DSDA, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-        } else {
-          auto purify_action = std::make_unique<Purification>(PurType::DSDA_INV, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-        }
-        rule->setNextRule(rule_id + 1);
         rule_id++;
         shared_tag++;
         tomography_RuleSet->addRule(std::move(rule));
@@ -948,26 +849,14 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// Bell pairs. Initial results weren't very promised, not extensively
       /// used.
       for (int i = 0; i < num_purification; i++) {
+        std::unique_ptr<Rule> rule;
         if (i % 2 == 0) {
           rule_name = "Double selection Dual action second with: " + std::to_string(partner_address);
+          rule = constructPurifyRule(rule_name, PurType::DSDA_SECOND, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         } else {
           rule_name = "Double selection Dual action second inverse with: " + std::to_string(partner_address);
+          rule = constructPurifyRule(rule_name, PurType::DSDA_SECOND_INV, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         }
-        auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-        rule->setName(rule_name);
-        auto condition = std::make_unique<Condition>();
-        auto resource_clause = std::make_unique<EnoughResourceConditionClause>(4, 0, partner_address, qnic_type, qnic_index);
-        condition->addClause(std::move(resource_clause));
-        rule->setCondition(std::move(condition));
-        if (i % 2 == 0) {
-          auto purify_action = std::make_unique<Purification>(PurType::DSDA_SECOND, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-        } else {
-          auto purify_action = std::make_unique<Purification>(PurType::DSDA_SECOND_INV, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-        }
-
-        rule->setNextRule(rule_id + 1);
         rule_id++;
         shared_tag++;
         tomography_RuleSet->addRule(std::move(rule));
@@ -1011,29 +900,14 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       }
 
       for (int i = 0; i < num_purification; i++) {
+        std::unique_ptr<Rule> rule;
         if (i % 2 == 0) {
           rule_name = "X Purification with: " + std::to_string(partner_address);
+          rule = constructPurifyRule(rule_name, PurType::SINGLE_X, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         } else {
           rule_name = "Z Purification with: " + std::to_string(partner_address);
+          rule = constructPurifyRule(rule_name, PurType::SINGLE_Z, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         }
-
-        auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-        rule->setName(rule_name);
-        auto condition = std::make_unique<Condition>();
-        auto resource_clause = std::make_unique<EnoughResourceConditionClause>(2, 0, partner_address, qnic_type, qnic_index);
-        condition->addClause(std::move(resource_clause));
-        rule->setCondition(std::move(condition));
-
-        if (i % 2 == 0) {  // X purification
-
-          auto purify_action = std::make_unique<Purification>(PurType::SINGLE_X, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-        } else {  // Z purification
-          auto purify_action = std::make_unique<Purification>(PurType::SINGLE_Z, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-        }
-
-        rule->setNextRule(rule_id + 1);
         rule_id++;
         shared_tag++;
         tomography_RuleSet->addRule(std::move(rule));
@@ -1051,43 +925,20 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// The point of this was to show that you don't have to stick with one
       /// scheme, but can use different schemes in different rounds.
       rule_name = "Double selection action with: " + std::to_string(partner_address);
-      auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-      rule->setName(rule_name);
-      auto condition = std::make_unique<Condition>();
-      auto resource_clause = std::make_unique<EnoughResourceConditionClause>(3, 0.9, partner_address, qnic_type, qnic_index);
-      condition->addClause(std::move(resource_clause));
-      rule->setCondition(std::move(condition));
-
-      auto purify_action = std::make_unique<Purification>(PurType::DSSA, partner_address, qnic_type, qnic_index);
-      rule->setAction(std::move(purify_action));
-      rule->setNextRule(rule_id + 1);
+      auto rule = constructPurifyRule(rule_name, PurType::DSSA, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
       rule_id++;
       shared_tag++;
       tomography_RuleSet->addRule(std::move(rule));
 
       for (int i = 0; i < num_purification; i++) {
+        std::unique_ptr<Rule> rule;
         if (i % 2 == 0) {
           rule_name = "Z purification with: " + std::to_string(partner_address);
+          rule = constructPurifyRule(rule_name, PurType::SINGLE_Z, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         } else {
           rule_name = "X purification with: " + std::to_string(partner_address);
+          rule = constructPurifyRule(rule_name, PurType::SINGLE_Z, partner_address, qnic_type, qnic_index, rule_id, shared_tag);
         }
-        auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-        rule->setName(rule_name);
-        auto condition = std::make_unique<Condition>();
-        auto resource_clause = std::make_unique<EnoughResourceConditionClause>(2, 0, partner_address, qnic_type, qnic_index);
-        condition->addClause(std::move(resource_clause));
-        rule->setCondition(std::move(condition));
-
-        if (i % 2 == 0) {
-          // X purification
-          auto purify_action = std::make_unique<Purification>(PurType::SINGLE_Z, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-        } else {
-          // Z purification
-          auto purify_action = std::make_unique<Purification>(PurType::SINGLE_X, partner_address, qnic_type, qnic_index);
-          rule->setAction(std::move(purify_action));
-        }
-        rule->setNextRule(rule_id + 1);
         rule_id++;
         shared_tag++;
         tomography_RuleSet->addRule(std::move(rule));
@@ -1105,16 +956,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// Creates a single purification only, or a single round of double
       /// purification. Use of this for new work is deprecated.
       rule_name = "Single purification with: " + std::to_string(partner_address);
-      auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
-      rule->setName(rule_name);
-      auto condition = std::make_unique<Condition>();
-      auto resource_clause = std::make_unique<EnoughResourceConditionClause>(2, 0, partner_address, qnic_type, qnic_index);
-      condition->addClause(std::move(resource_clause));
-      rule->setCondition(std::move(condition));
-
-      auto purify_action = std::make_unique<Purification>((X_Purification ? PurType::SINGLE_X : PurType::SINGLE_Z), partner_address, qnic_type, qnic_index);
-      rule->setAction(std::move(purify_action));
-      rule->setNextRule(rule_id + 1);
+      auto rule = constructPurifyRule(rule_name, (X_Purification ? PurType::SINGLE_X : PurType::SINGLE_Z), partner_address, qnic_type, qnic_index, rule_id, shared_tag);
       rule_id++;
       shared_tag++;
       tomography_RuleSet->addRule(std::move(rule));
@@ -1167,6 +1009,45 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
     pk->setRuleSet(tomography_RuleSet);
     send(pk, "RouterPort$o");
   }
+}
+
+std::unique_ptr<quisp::rules::Rule> HardwareMonitor::constructPurifyRule(const std::string &rule_name, const rules::PurType pur_type, const int partner_address,
+                                                                         const QNIC_type qnic_type, const int qnic_index, const int rule_id, const int shared_tag) const {
+  int required_qubits = 0;
+  switch (pur_type) {
+    case PurType::SINGLE_X:
+    case PurType::SINGLE_Z:
+      required_qubits = 2;
+      break;
+    case PurType::DOUBLE:
+    case PurType::DOUBLE_INV:
+    case PurType::DSSA:
+    case PurType::DSSA_INV:
+      required_qubits = 3;
+      break;
+    case PurType::DSDA:
+    case PurType::DSDA_INV:
+      required_qubits = 5;
+      break;
+    case PurType::DSDA_SECOND:
+    case PurType::DSDA_SECOND_INV:
+      required_qubits = 4;
+      break;
+    case PurType::INVALID:
+    default:
+      error("got invalid purification type");
+  }
+  auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
+  rule->setName(rule_name);
+  auto condition = std::make_unique<Condition>();
+  auto resource_clause = std::make_unique<EnoughResourceConditionClause>(required_qubits, 0.9, partner_address, qnic_type, qnic_index);
+  condition->addClause(std::move(resource_clause));
+  rule->setCondition(std::move(condition));
+
+  auto purify_action = std::make_unique<Purification>(pur_type, partner_address, qnic_type, qnic_index);
+  rule->setAction(std::move(purify_action));
+  rule->setNextRule(rule_id + 1);
+  return rule;
 }
 
 int HardwareMonitor::getQnicNumQubits(int qnic_index, QNIC_type qnic_type) {
@@ -1336,8 +1217,7 @@ NeighborTable HardwareMonitor::passNeighborTable() {
   return neighbor_table;
 }
 
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules
 
 namespace std {
 std::stringstream &operator<<(std::stringstream &os, const quisp::modules::NeighborInfo &v) {
