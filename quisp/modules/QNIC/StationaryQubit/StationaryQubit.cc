@@ -59,11 +59,11 @@ void StationaryQubit::initialize() {
     0,                          0,                         0,                         0,                          memory_err.excitation_error_rate, 1 - memory_err.excitation_error_rate - memory_err.completely_mixed_rate, memory_err.completely_mixed_rate,
     0,                          0,                         0,                         0,                          memory_err.excitation_error_rate, memory_err.relaxation_error_rate, 1 - memory_err.excitation_error_rate - memory_err.relaxation_error_rate;
   // clang-format on
-  GOD_err.has_X_error = par("GOD_Xerror");
-  GOD_err.has_Z_error = par("GOD_Zerror");
-  GOD_err.has_EX_error = par("GOD_EXerror");
-  GOD_err.has_RE_error = par("GOD_REerror");
-  GOD_err.has_CM_error = par("GOD_CMerror");
+  GOD_err.has_X_error = par("GOD_Xerror").boolValue();
+  GOD_err.has_Z_error = par("GOD_Zerror").boolValue();
+  GOD_err.has_EX_error = par("GOD_EXerror").boolValue();
+  GOD_err.has_RE_error = par("GOD_REerror").boolValue();
+  GOD_err.has_CM_error = par("GOD_CMerror").boolValue();
   setSingleQubitGateErrorModel(Hgate_error, "Hgate");
   setSingleQubitGateErrorModel(Xgate_error, "Xgate");
   setSingleQubitGateErrorModel(Zgate_error, "Zgate");

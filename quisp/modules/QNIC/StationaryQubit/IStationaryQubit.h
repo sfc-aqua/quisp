@@ -219,7 +219,7 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   virtual void relax() = 0;
 
   /*GOD parameters*/
-  GOD_error_model GOD_err;
+  GOD_error_model GOD_err{.has_X_error = false, .has_Z_error = false, .has_EX_error = false, .has_RE_error = false, .has_CM_error = false};
   virtual void setEntangledPartnerInfo(IStationaryQubit *partner) = 0;
   virtual void setCompletelyMixedDensityMatrix() = 0;
   virtual void addXerror() = 0;

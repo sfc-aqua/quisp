@@ -1,3 +1,4 @@
+#include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <Eigen/Eigen>
 #include <complex>
 
@@ -137,6 +138,14 @@ struct MeasurementErrorModel {
     y_error_rate = y;
     z_error_rate = z;
   }
+};
+
+struct GOD_error_model {
+  bool has_X_error;
+  bool has_Z_error;
+  bool has_EX_error;
+  bool has_RE_error;
+  bool has_CM_error;
 };
 
 // Matrices of single qubit errors. Used when conducting tomography.
