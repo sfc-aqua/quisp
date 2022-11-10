@@ -102,12 +102,12 @@ void InstructionVisitor::operator()(const INSTR_GATE_CNOT_QubitId_QubitId_& inst
 
 void InstructionVisitor::operator()(const INSTR_PURIFY_X_RegId_QubitId_QubitId_& instruction) {
   auto [result_reg_id, qubit_id, trash_qubit_id] = instruction.args;
-  runtime->purifyX(qubit_id, trash_qubit_id);
+  runtime->purifyX(result_reg_id, qubit_id, trash_qubit_id);
 }
 
 void InstructionVisitor::operator()(const INSTR_PURIFY_Z_RegId_QubitId_QubitId_& instruction) {
   auto [result_reg_id, qubit_id, trash_qubit_id] = instruction.args;
-  runtime->purifyZ(qubit_id, trash_qubit_id);
+  runtime->purifyZ(result_reg_id, qubit_id, trash_qubit_id);
 }
 
 void InstructionVisitor::operator()(const INSTR_FREE_QUBIT_QubitId_& instruction) {

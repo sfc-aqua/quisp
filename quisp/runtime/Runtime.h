@@ -116,8 +116,8 @@ class Runtime {
   void gateX(QubitId);
   void gateZ(QubitId);
   void gateCNOT(QubitId, QubitId);
-  void purifyX(QubitId, QubitId);
-  void purifyZ(QubitId, QubitId);
+  void purifyX(RegId, QubitId, QubitId);
+  void purifyZ(RegId, QubitId, QubitId);
   bool isQubitLocked(IQubitRecord* const);
 
   // related components
