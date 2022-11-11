@@ -1,5 +1,4 @@
 #include "LoggerBase.h"
-#include <cstddef>
 #include "omnetpp/cmodule.h"
 
 namespace quisp::modules::Logger {
