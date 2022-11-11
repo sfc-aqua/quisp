@@ -93,7 +93,7 @@ class TestQuispResult(unittest.TestCase):
                 if not neq:
                     self.assertEqual(actual, est)
                 else:
-                    self.assertAlmostEqual(actual, est, delta=0.05)
+                    self.assertAlmostEqual(actual, est, delta=0.02)
                     # self.assertEqual(True, math.isclose(actual, est,
                     #                                     rel_tol=rtol,
                     #                                     abs_tol=etol))
@@ -102,7 +102,7 @@ class TestQuispResult(unittest.TestCase):
         """
         Test 0 no error.
         """
-        test_number = 0  # TEST0
+        test_number = 0
         results = self.return_test_result(test_number)
         estimated_result = {"Fidelity": 1.0,
                             "Xerror": 0.0,
@@ -117,7 +117,7 @@ class TestQuispResult(unittest.TestCase):
         with Xerror
         widh darkcount
         """
-        test_number = 1  # TEST1
+        test_number = 1
         results = self.return_test_result(test_number)
         # these are prepared for all connections
         expected_outcome = [{"Fidelity": 0.476815,
@@ -145,7 +145,7 @@ class TestQuispResult(unittest.TestCase):
         with Zerror
         with Darkcount
         """
-        test_number = 2  # TEST2
+        test_number = 2
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 0.489214,
                               "Xerror": -0.00894144,
@@ -173,7 +173,7 @@ class TestQuispResult(unittest.TestCase):
         with Darkcount
         CHECK is this correct?
         """
-        test_number = 3  # TEST3
+        test_number = 3
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 0.508346,
                               "Xerror": 0.491654,
@@ -201,7 +201,7 @@ class TestQuispResult(unittest.TestCase):
         no darkcount
         purificationtype 3003
         """
-        test_number = 4  # TEST4
+        test_number = 4
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 0.499229,
                               "Xerror": 0.500771,
@@ -228,7 +228,7 @@ class TestQuispResult(unittest.TestCase):
         with Memory Yerror
         with Darkcount
         """
-        test_number = 5  # TEST5
+        test_number = 5
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 0.257418,
                               "Xerror": 0.234406,
@@ -255,7 +255,7 @@ class TestQuispResult(unittest.TestCase):
         with MemoryZerror
         with Darkcount
         """
-        test_number = 6  # TEST6
+        test_number = 6
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 0.515494,
                               "Xerror": -0.0173436,
@@ -282,7 +282,7 @@ class TestQuispResult(unittest.TestCase):
         with Memory Energy Excite
         with 1031 purification
         """
-        test_number = 7  # TEST7
+        test_number = 7
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 0.47398,
                               "Xerror": 0.0148775,
@@ -308,7 +308,7 @@ class TestQuispResult(unittest.TestCase):
         Test 8
         with Memory Energy Relaxation
         """
-        test_number = 8  # TEST8
+        test_number = 8
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 0.505806,
                               "Xerror": -0.0117037,
@@ -334,7 +334,7 @@ class TestQuispResult(unittest.TestCase):
         Test 9
         with MemoryCompletelyMixed
         """
-        test_number = 9  # TEST9
+        test_number = 9
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 2.662890e-01,
                               "Xerror": 2.278130e-01,
@@ -361,7 +361,7 @@ class TestQuispResult(unittest.TestCase):
         with internal hom loss
         with 2002 purification
         """
-        test_number = 10  # TEST10
+        test_number = 10
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -389,7 +389,7 @@ class TestQuispResult(unittest.TestCase):
         with Darkcount
         with 1221 purification
         """
-        test_number = 11  # TEST11
+        test_number = 11
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -417,7 +417,7 @@ class TestQuispResult(unittest.TestCase):
         with Darkcount
         with purification 1031
         """
-        test_number = 12  # TEST12
+        test_number = 12
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -445,7 +445,7 @@ class TestQuispResult(unittest.TestCase):
         with Darkcount
         with 1001 purification
         """
-        test_number = 13  # TEST13
+        test_number = 13
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -472,7 +472,7 @@ class TestQuispResult(unittest.TestCase):
         with Measurement Error X
         with 1221 purification
         """
-        test_number = 14  # TEST14
+        test_number = 14
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1.000000e+00,
                               "Xerror": 0.000000e+00,
@@ -499,7 +499,7 @@ class TestQuispResult(unittest.TestCase):
         with Measurement Error Y
         with 3003 purification
         """
-        test_number = 15  # TEST15
+        test_number = 15
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 9.993220e-01,
                               "Xerror": 6.775070e-04,
@@ -526,7 +526,7 @@ class TestQuispResult(unittest.TestCase):
         with Measurement Error Z
         with 1221 purification
         """
-        test_number = 16  # TEST16
+        test_number = 16
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 9.993670e-01,
                               "Xerror": 6.329110e-04,
@@ -553,7 +553,7 @@ class TestQuispResult(unittest.TestCase):
         with H gate Error X
         with 1221 purification
         """
-        test_number = 17  # TEST17
+        test_number = 17
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1.000000e+00,
                               "Xerror": 0.000000e+00,
@@ -580,7 +580,7 @@ class TestQuispResult(unittest.TestCase):
         with H gate Y error
         with 1011 purification
         """
-        test_number = 18  # TEST18
+        test_number = 18
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -607,7 +607,7 @@ class TestQuispResult(unittest.TestCase):
         with MemError Z
         with 1011 purification
         """
-        test_number = 19  # TEST19
+        test_number = 19
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -634,7 +634,7 @@ class TestQuispResult(unittest.TestCase):
         with X gate X error
         with 2002 purification
         """
-        test_number = 20  # TEST20
+        test_number = 20
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -661,7 +661,7 @@ class TestQuispResult(unittest.TestCase):
         with X gate Y error
         with 2002 purification
         """
-        test_number = 21  # TEST21
+        test_number = 21
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -688,7 +688,7 @@ class TestQuispResult(unittest.TestCase):
         with X gate Z error
         with 2002 purification
         """
-        test_number = 22  # TEST22
+        test_number = 22
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -715,7 +715,7 @@ class TestQuispResult(unittest.TestCase):
         with Z gate X error
         with 3003 purification
         """
-        test_number = 23  # TEST23
+        test_number = 23
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -742,7 +742,7 @@ class TestQuispResult(unittest.TestCase):
         with Z gate Y error
         with  3003 purification
         """
-        test_number = 24  # TEST24
+        test_number = 24
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -769,7 +769,7 @@ class TestQuispResult(unittest.TestCase):
         with Z gate Z error
         with 3003 purification
         """
-        test_number = 25  # TEST25
+        test_number = 25
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -796,7 +796,7 @@ class TestQuispResult(unittest.TestCase):
         with CNOT IZ error
         with 1221 purification
         """
-        test_number = 26  # TEST26
+        test_number = 26
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -823,7 +823,7 @@ class TestQuispResult(unittest.TestCase):
         with CNOT ZI error
         with 1221 purification
         """
-        test_number = 27  # TEST27
+        test_number = 27
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -850,7 +850,7 @@ class TestQuispResult(unittest.TestCase):
         with CNOT ZZ error
         with 1221 purification
         """
-        test_number = 28  # TEST28
+        test_number = 28
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 9.987330e-01,
                               "Xerror": -1.267430e-03,
@@ -877,7 +877,7 @@ class TestQuispResult(unittest.TestCase):
         with CNOT ZX error
         with 1221 purification
         """
-        test_number = 29  # TEST29
+        test_number = 29
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 9.987200e-01,
                               "Xerror": 1.279630e-03,
@@ -904,7 +904,7 @@ class TestQuispResult(unittest.TestCase):
         with CNOT XI error
         with 1221 purification
         """
-        test_number = 30  # TEST30
+        test_number = 30
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 9.987200e-01,
                               "Xerror": 1.279630e-03,
@@ -931,7 +931,7 @@ class TestQuispResult(unittest.TestCase):
         with CNOT XX error
         with 1221 purification
         """
-        test_number = 31  # TEST31
+        test_number = 31
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1.000000e+00,
                               "Xerror": 0.000000e+00,
@@ -958,7 +958,7 @@ class TestQuispResult(unittest.TestCase):
         with CNOT IY error
         with 1221 purification
         """
-        test_number = 32  # TEST32
+        test_number = 32
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -985,7 +985,7 @@ class TestQuispResult(unittest.TestCase):
         with CNOT YI error
         with 1221 purification
         """
-        test_number = 33  # TEST34
+        test_number = 33
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 1,
                               "Xerror": 0,
@@ -1012,7 +1012,7 @@ class TestQuispResult(unittest.TestCase):
         with CNOT YY error
         with 1221 purification
         """
-        test_number = 34  # TEST35
+        test_number = 34
         results = self.return_test_result(test_number)
         expected_outcome = [{"Fidelity": 9.987330e-01,
                               "Xerror": -1.267430e-03,
