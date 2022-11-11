@@ -140,7 +140,7 @@ struct MeasurementErrorModel {
   }
 };
 
-struct GOD_error_model {
+struct GodErrorState {
   bool has_X_error;
   bool has_Z_error;
   bool has_EX_error;
