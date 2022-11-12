@@ -35,13 +35,13 @@ void Runtime::exec(const RuleSet& ruleset) {
         debugRuntimeState();
         std::cout << "Run Rule(" << rule.id << "): " << rule.name << ", " << callback->getNodeInfo() << "\n";
       }
-      eval(rule.condition);
+      execProgram(rule.condition);
       if (debugging) std::cout << return_code << std::endl;
       if (return_code == ReturnCode::COND_FAILED) {
         break;
       }
-      eval(rule.action);
-      eval(ruleset.termination_condition);
+      execProgram(rule.action);
+      execProgram(ruleset.termination_condition);
       if (return_code == ReturnCode::RS_TERMINATED) {
         terminated = true;
         return;
@@ -50,7 +50,7 @@ void Runtime::exec(const RuleSet& ruleset) {
   }
 }
 
-void Runtime::eval(const Program& program) {
+void Runtime::execProgram(const Program& program) {
   label_map = &program.label_map;
   auto& opcodes = program.opcodes;
   auto len = opcodes.size();
@@ -62,7 +62,7 @@ void Runtime::eval(const Program& program) {
       debugSource(program);
       debugRuntimeState();
     }
-    evalOperation(opcodes[pc]);
+    execInstruction(opcodes[pc]);
   }
 
   if (program.debugging || debugging) {
@@ -83,7 +83,7 @@ void Runtime::cleanup() {
   should_exit = false;
 }
 
-void Runtime::evalOperation(const InstructionTypes& instruction) { std::visit(visitor, instruction); }
+void Runtime::execInstruction(const InstructionTypes& instruction) { std::visit(visitor, instruction); }
 
 void Runtime::assignRuleSet(const RuleSet& _ruleset) {
   ruleset = _ruleset;

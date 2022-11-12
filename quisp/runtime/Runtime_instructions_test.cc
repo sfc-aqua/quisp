@@ -30,7 +30,7 @@ class RuntimeInstructionsTest : public testing::Test {
   void evalProgram(const Program& p) {
     RuleSet rs{"test rs", {Rule{p, Program{"empty", {}}}}};
     rs.finalize();
-    runtime->eval(p);
+    runtime->execProgram(p);
   }
   Runtime* runtime;
   qrsa::IQubitRecord* qubit;
