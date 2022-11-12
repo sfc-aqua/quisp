@@ -62,7 +62,7 @@ INSTR_FREE_QUBIT_QubitId_{q0},
           // clang-format on
       }};
   runtime->assignQubitToRule(partner_addr, runtime->rule_id, qubit);
-  runtime->eval(program);
+  runtime->execProgram(program);
 }
 
 TEST_F(RuntimeTest, jump) {
@@ -78,7 +78,7 @@ INSTR_RET_ReturnCode_{ReturnCode::RS_TERMINATED}
                       // clang-format on
                   }};
   runtime->cleanup();
-  runtime->eval(program);
+  runtime->execProgram(program);
   EXPECT_EQ(runtime->getRegVal(r0), 10);
 }
 
@@ -96,7 +96,7 @@ INSTR_RET_ReturnCode_{ReturnCode::RS_TERMINATED}
                       // clang-format on
                   }};
   runtime->cleanup();
-  runtime->eval(program);
+  runtime->execProgram(program);
   EXPECT_EQ(runtime->getRegVal(r0), 10);
 }
 
@@ -114,7 +114,7 @@ INSTR_RET_ReturnCode_{ReturnCode::RS_TERMINATED}
                       // clang-format on
                   }};
   runtime->cleanup();
-  runtime->eval(program);
+  runtime->execProgram(program);
   EXPECT_EQ(runtime->getRegVal(r0), 1);
 }
 
@@ -138,7 +138,7 @@ INSTR_ERROR_String_{"no qubit"},
   runtime->assignQubitToRule(partner_addr, runtime->rule_id, qubit3);
   runtime->assignQubitToRule(partner_addr, runtime->rule_id + 1, qubit4);
   runtime->assignQubitToRule(partner_addr, runtime->rule_id + 1, qubit5);
-  runtime->eval(program);
+  runtime->execProgram(program);
 
   EXPECT_EQ(runtime->getQubitByQubitId(q0), qubit);
   EXPECT_EQ(runtime->getQubitByQubitId(q1), qubit3);
