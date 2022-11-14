@@ -75,7 +75,7 @@ void Runtime::execProgram(const Program& program) {
 
 void Runtime::cleanup() {
   for (auto& reg : registers) {
-    reg.value = (unsigned long long)0;
+    reg.value = 0;
   }
   pc = 0;
   error = nullptr;
@@ -125,8 +125,8 @@ void Runtime::promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr n
 }
 void Runtime::assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record) { qubits.emplace(std::make_pair(partner_addr, rule_id), qubit_record); }
 const Register& Runtime::getReg(RegId reg_id) const { return registers[(int)reg_id]; }
-unsigned long long Runtime::getRegVal(RegId reg_id) const { return registers[(int)reg_id].value; }
-void Runtime::setRegVal(RegId reg_id, unsigned long long val) { registers[(int)reg_id].value = val; }
+int32_t Runtime::getRegVal(RegId reg_id) const { return registers[(int)reg_id].value; }
+void Runtime::setRegVal(RegId reg_id, int32_t val) { registers[(int)reg_id].value = val; }
 void Runtime::setQubit(IQubitRecord* qubit_ref, QubitId qubit_id) {
   assert(qubit_ref != nullptr);
   named_qubits.insert({qubit_id, qubit_ref});
