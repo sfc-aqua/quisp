@@ -9,7 +9,7 @@ namespace quisp::runtime {
 
 class Runtime;
 struct InstructionVisitor {
-  explicit InstructionVisitor(Runtime* runtime_) : runtime(runtime_) {}
+  explicit InstructionVisitor(Runtime* runtime) : runtime(runtime) {}
   InstructionVisitor(const InstructionVisitor& visitor);
   InstructionVisitor(InstructionVisitor&& visitor) = delete;
   InstructionVisitor& operator=(const InstructionVisitor& visitor);
