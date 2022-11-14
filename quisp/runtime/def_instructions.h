@@ -3,22 +3,22 @@
 #ifndef INSTR_LAST
 #define INSTR_LAST INSTR
 #endif
+
+// debugging
 INSTR(DEBUG_RUNTIME_STATE, None)
 INSTR(DEBUG, String)
 INSTR(DEBUG, RegId)
 INSTR(DEBUG, QubitId)
+
+// arithmetic
 INSTR(ADD, RegId, RegId, int)
 INSTR(ADD, RegId, RegId, RegId)
 INSTR(SUB, RegId, RegId, int)
 INSTR(SUB, RegId, RegId, RegId)
 INSTR(INC, RegId)
 INSTR(SET, RegId, int)
-INSTR(GET_QUBIT, QubitId, QNodeAddr, int)  // may throw an no qubit error
-INSTR(GET_QUBIT, QubitId, QNodeAddr, RegId)  // may throw an no qubit error
-INSTR(GET_QUBIT, RegId /* qubit id */, QNodeAddr /* partner addr */, RegId /* given qubit index */)  // may throw an no qubit error
-INSTR(RET, ReturnCode)
-// INSTR(MEASURE_QUBIT, MemoryKey, QubitId)
-// branch
+
+// control flow
 INSTR(BEQ, Label, RegId, RegId)  // branch if the regs are same
 INSTR(BEQ, Label, RegId, int)  // branch if the reg value is equal to the int value
 INSTR(BEZ, Label, RegId)  // branch if the reg value is zero
@@ -28,6 +28,7 @@ INSTR(BNERR, Label)  // branch if no error
 INSTR(BRANCH_IF_LOCKED, Label, RegId)
 INSTR(JMP, Label)
 INSTR(ERROR, String)  // stop execution and show error
+INSTR(RET, ReturnCode)  // stop execution with the ReturnCode
 
 // memory operations
 INSTR(LOAD, RegId, MemoryKey)
@@ -38,6 +39,9 @@ INSTR(LOAD_LEFT_OP, RegId, MemoryKey)
 INSTR(LOAD_RIGHT_OP, RegId, MemoryKey)
 
 // qubit operations
+INSTR(GET_QUBIT, QubitId, QNodeAddr, int)  // may throw no qubit error
+INSTR(GET_QUBIT, QubitId, QNodeAddr, RegId)  // may throw no qubit error
+INSTR(GET_QUBIT, RegId /* qubit id */, QNodeAddr /* partner addr */, RegId /* given qubit index */)  // may throw no qubit error
 INSTR(MEASURE_RANDOM, MemoryKey, QubitId)
 INSTR(MEASURE, MemoryKey, QubitId, Basis)
 INSTR(FREE_QUBIT, QubitId)
@@ -55,6 +59,7 @@ INSTR(SEND_PURIFICATION_RESULT, QNodeAddr, RegId /* result_z */, RegId /* result
 INSTR(SEND_PURIFICATION_RESULT, QNodeAddr, RegId /* result_z */, RegId /* result_x */, RegId /* ds_res_z */, RegId /* ds_res_x */, RegId /* action_index */, PurType)
 INSTR(SEND_SWAPPING_RESULT, QNodeAddr /* left partner*/, RegId /* left operation */, QNodeAddr /* right partner*/, RegId /* right operation */)
 
+// hacks. will be deleted
 INSTR(HACK_SWAPPING_PARTNERS, QubitId, QubitId)
 INSTR(HACK_BREAK_ENTANGLEMENT, QubitId)
 

@@ -16,7 +16,7 @@ enum OpType : int {
 #undef OP
 };
 
-static std::string OP_TYPE_STR[]{
+static const std::string OpTypeStr[]{
 #define OP(Opcode) #Opcode,
 #include "def_opcodes.h"
 #undef OP
@@ -27,7 +27,7 @@ static std::string OP_TYPE_STR[]{
 // see also https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Int-To-Type
 template <int I>
 struct Op {
-  enum { value = I };
+  enum { Value = I };
 };
 
 // this defines OP(DEBUG) as OP_DEBUG
@@ -36,18 +36,24 @@ struct Op {
 #include "def_opcodes.h"
 #undef OP
 
-/// @brief it describes each instruction. it corresponds each assmebly instruction line by line
+/**
+ * @brief This class represents IR (intermediate representation) instruction.
+ * Program consists of Instructions.
+ *
+ * @tparam OpLit
+ * @tparam Operands
+ */
 template <class OpLit, class... Operands>
 struct Instruction {
-  Instruction(std::tuple<Operands...> args, std::string label = "") : opcode(OpLit::value), args(args), label(label) {}
-  Instruction(std::tuple<Operands...> args, Label label) : opcode(OpLit::value), args(args), label(label.val) {}
+  Instruction(std::tuple<Operands...> args, std::string label = "") : opcode(OpLit::Value), args(args), label(label) {}
+  Instruction(std::tuple<Operands...> args, Label label) : opcode(OpLit::Value), args(args), label(label.val) {}
   int opcode;
   std::tuple<Operands...> args;
   std::string label;
 
   std::string toString() const {
     std::stringstream ss;
-    ss << OP_TYPE_STR[opcode];
+    ss << OpTypeStr[opcode];
     ss << " ";
     toStringArgs(args, ss);
     if (label.size() > 0) {
