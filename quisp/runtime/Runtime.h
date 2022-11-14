@@ -26,8 +26,7 @@ struct RuntimeError {
 };
 
 struct Register {
-  const String name;
-  unsigned long long value = 0;
+  int32_t value = 0;
 };
 
 // (partner's qnode addr, assigned RuleId) => [half bell pair qubit record]
@@ -118,9 +117,35 @@ class Runtime {
    * @return const Register&
    */
   const Register& getReg(RegId reg_id) const;
-  unsigned long long getRegVal(RegId reg_id) const;
-  void setRegVal(RegId reg_id, unsigned long long val);
+
+  /**
+   * @brief Get the Register's value
+   *
+   * @param reg_id
+   * @return int32_t
+   */
+  int32_t getRegVal(RegId reg_id) const;
+
+  /**
+   * @brief Set the given value to the Register
+   *
+   * @param reg_id
+   * @param val
+   */
+  void setRegVal(RegId reg_id, int32_t val);
+
+  /**
+   * @brief jump to the instruction that has the given label
+   *
+   * @param label
+   */
   void jumpTo(const Label& label);
+
+  /**
+   * @brief Set the RuntimeError and will stop the Program execution
+   *
+   * @param message
+   */
   void setError(const String& message);
   //@}
 
