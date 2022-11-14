@@ -85,8 +85,8 @@ void Runtime::cleanup() {
 
 void Runtime::execInstruction(const InstructionTypes& instruction) { std::visit(visitor, instruction); }
 
-void Runtime::assignRuleSet(const RuleSet& _ruleset) {
-  ruleset = _ruleset;
+void Runtime::assignRuleSet(const RuleSet& rs) {
+  ruleset = rs;
   ruleset.finalize();
   partners = ruleset.partners;
 }
@@ -124,9 +124,9 @@ void Runtime::promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr n
   qubits.emplace(std::make_pair(new_partner_addr, next_rule_id), qubit_record);
 }
 void Runtime::assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record) { qubits.emplace(std::make_pair(partner_addr, rule_id), qubit_record); }
-const Register& Runtime::getReg(RegId regId) const { return registers[(int)regId]; }
-unsigned long long Runtime::getRegVal(RegId regId) const { return registers[(int)regId].value; }
-void Runtime::setRegVal(RegId regId, unsigned long long val) { registers[(int)regId].value = val; }
+const Register& Runtime::getReg(RegId reg_id) const { return registers[(int)reg_id]; }
+unsigned long long Runtime::getRegVal(RegId reg_id) const { return registers[(int)reg_id].value; }
+void Runtime::setRegVal(RegId reg_id, unsigned long long val) { registers[(int)reg_id].value = val; }
 void Runtime::setQubit(IQubitRecord* qubit_ref, QubitId qubit_id) {
   assert(qubit_ref != nullptr);
   named_qubits.insert({qubit_id, qubit_ref});
