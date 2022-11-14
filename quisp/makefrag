@@ -32,7 +32,7 @@ format-ci:
 	clang-format $(SRCS) $(HEADERS) -output-replacements-xml | grep -c "<replacement " -q ; if [ $$? -ne 1 ]; then echo "error: run make format and then push it again"; exit 1; fi
 
 tidy:
-	clang-tidy -header-filter="./quisp/(.|backends|utils|rules|modules|test_utils)/.*.h" $(SRCS) -- $(COPTS) $(TEST_INCLUDE)
+	clang-tidy -header-filter="./quisp/(.|backends|utils|rules|runtime|modules|test_utils)/.*.h" $(SRCS) -- $(COPTS) $(TEST_INCLUDE)
 
 $(TEST_OBJS): $O/%.o : %.cc
 	@$(MKPATH) $(dir $@)
