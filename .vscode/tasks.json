@@ -32,7 +32,7 @@
         {
             "label": "distclean",
             "type": "shell",
-            "command": "make clean",
+            "command": "make distclean",
             "problemMatcher": [],
         },
         {
