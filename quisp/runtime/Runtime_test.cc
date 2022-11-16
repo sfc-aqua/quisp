@@ -65,59 +65,6 @@ INSTR_FREE_QUBIT_QubitId_{q0},
   runtime->execProgram(program);
 }
 
-TEST_F(RuntimeTest, jump) {
-  auto r0 = RegId::REG0;
-  Program program{"JumpTest",
-                  {
-                      // clang-format off
-INSTR_SET_RegId_int_{{r0, 10}},
-INSTR_JMP_Label_{Label{"test"}},
-INSTR_ADD_RegId_RegId_int_{{r0, r0, 1}},
-INSTR_NOP_None_{nullptr, "test"},
-INSTR_RET_ReturnCode_{ReturnCode::RS_TERMINATED}
-                      // clang-format on
-                  }};
-  runtime->cleanup();
-  runtime->execProgram(program);
-  EXPECT_EQ(runtime->getRegVal(r0), 10);
-}
-
-TEST_F(RuntimeTest, branch_if_no_error) {
-  auto r0 = RegId::REG0;
-  Program program{"BNErrTest",
-                  {
-                      // clang-format off
-INSTR_SET_RegId_int_{{r0, 10}},
-INSTR_BNERR_Label_{Label{"test"}},
-// skip until "test" label
-INSTR_ADD_RegId_RegId_int_{{r0, r0, 3}},
-INSTR_NOP_None_{nullptr, "test"},
-INSTR_RET_ReturnCode_{ReturnCode::RS_TERMINATED}
-                      // clang-format on
-                  }};
-  runtime->cleanup();
-  runtime->execProgram(program);
-  EXPECT_EQ(runtime->getRegVal(r0), 10);
-}
-
-TEST_F(RuntimeTest, memoryOperations) {
-  auto r0 = RegId::REG0;
-  Program program{"MemoryTest",
-                  {
-                      // clang-format off
-INSTR_SET_RegId_int_{{r0, 10}},
-INSTR_STORE_MemoryKey_RegId_{{MemoryKey{"count"}, r0}, "INIT"},
-INSTR_SUB_RegId_RegId_int_{{r0, r0, 1}},
-INSTR_BNZ_Label_RegId_{{Label{"INIT"}, r0}},
-INSTR_LOAD_RegId_MemoryKey_{{r0,MemoryKey{ "count"}}},
-INSTR_RET_ReturnCode_{ReturnCode::RS_TERMINATED}
-                      // clang-format on
-                  }};
-  runtime->cleanup();
-  runtime->execProgram(program);
-  EXPECT_EQ(runtime->getRegVal(r0), 1);
-}
-
 TEST_F(RuntimeTest, getMultipleQubits) {
   QubitId q0{0};
   QubitId q1{1};
