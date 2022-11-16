@@ -7,6 +7,12 @@
 #include "types.h"
 
 namespace quisp::runtime {
+
+/**
+ * @brief The Program is a list of Instructions with metadata.
+ * The Runtime can execute the Program.
+ *
+ */
 class Program {
  public:
   Program(const std::string& name, const std::vector<InstructionTypes>& opcodes, bool debugging = false);
@@ -31,6 +37,14 @@ class Rule {
   bool debugging = false;
 };
 
+/**
+ * @brief The RuleSet
+ *
+ * The responder QNode creates a set of RuleSets for each QNode in the path.
+ * The RuleSet contains a list of Rules. The Runtime receives the given RuleSet
+ * and executes it. The Runtime and the Ruleset will be deleted when the RuleSet
+ * is terminated.
+ */
 class RuleSet {
  public:
   RuleSet(const std::string& name = "", const std::vector<Rule>& rules = std::vector<Rule>(), const Program& termination_cond = Program{"never terminate", {}},
@@ -38,10 +52,17 @@ class RuleSet {
       : name(name), rules(rules), termination_condition(termination_cond), debugging(debugging) {}
   void finalize();
 
-  // @brief partners contains partner QNodeAddrs
+  /// @brief the partner QNodeAddrs used in this RuleSet
   std::set<QNodeAddr> partners;
-  // @brief
+
+  /**
+   * @brief This contains a list of pairs of the rule_id and partner's QNodeAddr.
+   *
+   * The Runtime assigns the entangled qubit to the rule by looking up this map.
+   * This is initialized when the Runtime receives the RuleSet.
+   */
   std::unordered_map<QNodeAddr, RuleId> partner_initial_rule_table;
+
   // [(partner_addr, current_rule_id): next_rule_id]
   std::unordered_map<std::pair<QNodeAddr, RuleId>, RuleId> next_rule_table = {};
 
