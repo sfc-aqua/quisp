@@ -6,5 +6,5 @@ simple Backend
     parameters:
         @class(BackendContainer);
         @display("p=30,40;");
-        string backendType = default("ErrorTrackingBackend");
+        string backend_type = default("ErrorTrackingBackend");
 }

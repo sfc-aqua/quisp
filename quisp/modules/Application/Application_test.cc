@@ -62,7 +62,7 @@ TEST(AppTest, Init_IsInitiator) {
   auto *mock_qnode = new TestQNode{123, 100, true};
   auto *app = new AppTestTarget{mock_qnode};
 
-  setParDouble(app, "sendIaTime", 5);
+  setParDouble(app, "request_generation_interval", 5);
   setParInt(app, "numberOfBellpair", 10);
 
   sim->registerComponent(app);
@@ -81,7 +81,7 @@ TEST(AppTest, Init_WeightMap_Generation) {
   auto *mock_qnode3 = new TestQNode{789, 987, false};
 
   auto *app = new AppTestTarget{mock_qnode};
-  setParDouble(app, "sendIaTime", 5);
+  setParDouble(app, "request_generation_interval", 5);
   setParInt(app, "numberOfBellpair", 10);
 
   sim->registerComponent(app);
@@ -104,7 +104,7 @@ TEST(AppTest, Init_Connection_Setup_Message_Send) {
   auto *mock_qnode2 = new TestQNode{456, 100, false};
   auto *app = new AppTestTarget{mock_qnode};
 
-  setParDouble(app, "sendIaTime", 5);
+  setParDouble(app, "request_generation_interval", 5);
   setParInt(app, "numberOfBellpair", 10);
 
   sim->registerComponent(app);

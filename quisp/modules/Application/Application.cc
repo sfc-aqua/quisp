@@ -150,7 +150,7 @@ void Application::generateTraffic() {
   std::mt19937 gen;
   gen.seed(time(0));  // if you want different results from different runs
 
-  simtime_t send_time = simTime() + par("sendIaTime").doubleValue();
+  simtime_t send_time = simTime() + par("request_generation_interval").doubleValue();
 
   while (send_time < generate_up_to_time) {
     int dest_addr = addresses[dist(gen)];
@@ -158,7 +158,7 @@ void Application::generateTraffic() {
     ConnectionSetupRequest *pk = createConnectionSetupRequest(dest_addr, num_request_bell_pair);
     EV_INFO << "Node " << my_address << " will initiate connection to " << dest_addr << " at " << send_time << " with " << num_request_bell_pair << " Bell pairs\n";
     scheduleAt(send_time, pk);
-    send_time = send_time + par("sendIaTime").doubleValue();
+    send_time = send_time + par("request_generation_interval").doubleValue();
   }
 }
 

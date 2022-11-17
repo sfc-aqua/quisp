@@ -15,7 +15,7 @@ class BackendContainer : public omnetpp::cSimpleModule {
   ~BackendContainer();
 
   void initialize() override {
-    auto backend_type = std::string(par("backendType").stringValue());
+    auto backend_type = std::string(par("backend_type").stringValue());
     if (backend_type == "ErrorTrackingBackend") {
       backend = std::make_unique<ErrorTrackingBackend>(std::make_unique<RNG>(this));
     } else {

@@ -10,7 +10,7 @@ simple Queue
         //int xPosition_Graphics;
         int address;
         //int buffer;//for qnic
-        int frameCapacity = default(0); // max number of packets; 0 means no limit
+        int frame_capacity = default(0); // max number of packets; 0 means no limit
         bool useCutThroughSwitching = default(false);  // use cut-through switching instead of store-and-forward
 	    @display("i=block/queue");
         @signal[qlen](type=long);
