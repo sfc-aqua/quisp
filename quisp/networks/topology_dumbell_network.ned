@@ -26,7 +26,7 @@ import modules.Logger.Logger;
 network topology_dumbell_MM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
     submodules:
         backend: Backend;
         logger: Logger;
@@ -94,7 +94,7 @@ network topology_dumbell_MM
 network topology_dumbell_MIM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
     submodules:
         backend: Backend;
         logger: Logger;

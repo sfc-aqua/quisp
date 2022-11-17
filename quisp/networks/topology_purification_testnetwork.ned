@@ -12,7 +12,7 @@ import modules.Logger.Logger;
 network Linear_five_MM_network
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=707,326");
     submodules:

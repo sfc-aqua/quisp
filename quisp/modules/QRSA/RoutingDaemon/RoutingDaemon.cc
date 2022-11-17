@@ -69,7 +69,7 @@ void RoutingDaemon::initialize(int stage) {
 
       // Calculate bell pair generation rate to use it as channel cost
       // The cost metric is taken from https://arxiv.org/abs/1206.5655
-      double speed_of_light_in_fiber = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("Speed_of_light_in_fiber");
+      double speed_of_light_in_fiber = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("speed_of_light_in_fiber");
       double channel_length = topo->getNode(x)->getLinkOut(j)->getLocalGate()->getChannel()->par("distance");
 
       auto *some_stationary_qubit_in_qnic = findModuleByPath("^.^.qnic[0].statQubit[0]");

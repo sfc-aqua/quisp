@@ -190,7 +190,7 @@ void HOMController::updateIDE_Parameter(bool receiver) {
     par("distance_to_neighbor_two") = distance_to_neighbor_two;
     par("max_neighbor_distance") = max_neighbor_distance;
     par("max_buffer") = max_buffer;
-    c = &par("Speed_of_light_in_fiber");
+    c = &par("speed_of_light_in_fiber");
     speed_of_light_in_channel = c->doubleValue();  // per sec
     if (receiver) {
       getParentModule()->par("qnic_index") = qnic_index;

@@ -11,7 +11,7 @@ import channels.*;
 network Three_HOM_star
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgl=2;bgb=177,120");
 
@@ -58,7 +58,7 @@ network Three_HOM_star
 network Star_MSM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=273,198");
     submodules:
@@ -122,7 +122,7 @@ network Star_MSM
 network Star_MM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
         backend: Backend;

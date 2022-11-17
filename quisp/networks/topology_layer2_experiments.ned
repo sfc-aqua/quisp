@@ -11,7 +11,7 @@ import modules.Logger.Logger;
 network Layer2_Simple_MIM_MM_all_in_one
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=707,326");
     submodules:
@@ -192,7 +192,7 @@ network Layer2_Simple_MIM_MM_all_in_one
 network Layer2_Simple_MIM_MM_7km
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=707,326");
     submodules:
@@ -233,7 +233,7 @@ network Layer2_Simple_MIM_MM_7km
 network Layer2_Simple_MIM_MM_10km
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=707,326");
     submodules:
@@ -277,7 +277,7 @@ network Layer2_Simple_MIM_MM_10km
 network Layer2_Simple_MIM_MM_15km
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=707,326");
     submodules:
@@ -319,7 +319,7 @@ network Layer2_Simple_MIM_MM_15km
 network Layer2_Simple_MIM_MM_50km
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=707,326");
     submodules:
@@ -362,7 +362,7 @@ network Layer2_Simple_MIM_MM_50km
 network Layer2_Simple_MIM_MM_40km
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=707,326");
     submodules:
@@ -404,7 +404,7 @@ network Layer2_Simple_MIM_MM_40km
 network Layer2_Simple_MIM_MM_30km
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=707,326");
     submodules:
@@ -448,7 +448,7 @@ network Layer2_Simple_MIM_MM_30km
 network Layer2_Simple_MIM_MM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=707,326");
     submodules:
@@ -493,7 +493,7 @@ network Layer2_Simple_MIM_MM
 network Layer2_Simple_MIM_MM_same
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=707,326");
     submodules:
@@ -536,7 +536,7 @@ network Layer2_Simple_MIM_MM_same
 network Layer2_RouterNet
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=707,326");
     submodules:
@@ -606,7 +606,7 @@ network Layer2_RouterNet
 network Layer2_Star_Sep
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=707,326");
     submodules:
@@ -836,7 +836,7 @@ network Layer2_Star_Sep
 network Layer2_MM_MIM_MIM_MIM_MM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
         backend: Backend;
@@ -876,7 +876,7 @@ network Layer2_MM_MIM_MIM_MIM_MM
 network Layer2_MIM_MIM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
         backend: Backend;
@@ -916,7 +916,7 @@ network Layer2_MIM_MIM
 network Layer2_MIM_tomography
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=305,240;bgl=3");
     submodules:

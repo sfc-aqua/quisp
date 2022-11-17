@@ -12,7 +12,7 @@ import modules.Logger.Logger;
 network Simple_constant_quantum_cost
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
         **.buffers = default(30);
         **.distance = 20 km;
         @display("bgb=746,327");

@@ -12,7 +12,7 @@ import channels.*;
 network Tomography_Linear_One_MM_MIM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
         backend: Backend;
@@ -50,7 +50,7 @@ network Tomography_Linear_One_MM_MIM
 network Linear_One_MIM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
         //**.HOM_handshake = false;
 
     submodules:
@@ -86,7 +86,7 @@ network Linear_One_MIM
 network Linear_One_MIM_biasedDistance
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
         //**.HOM_handshake = false;
 
     submodules:
@@ -123,7 +123,7 @@ network Linear_One_MIM_biasedDistance
 network Linear_One_MM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
         backend: Backend;
@@ -144,7 +144,7 @@ network Linear_One_MM
 network Linear_One_MM_bufferGap
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
         backend: Backend;
@@ -173,7 +173,7 @@ network Linear_One_MM_bufferGap
 network Linear_One_MSM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=281,95");
     submodules:
@@ -250,7 +250,7 @@ network Linear_One_MSM
 network Linear_One_MIM_MM_MSM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;//per second
+        **.speed_of_light_in_fiber = 205336.986301 km;//per second
 
         @display("bgb=526,236");
 

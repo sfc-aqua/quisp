@@ -12,7 +12,7 @@ import modules.Logger.Logger;
 network ispMap_1239_node_23_48_hetero_distance
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
         @display("bgl=2;bgb=250,141");
 
     submodules:
@@ -759,7 +759,7 @@ network ispMap_1239_node_23_48_hetero_distance
 network ispMap_1239_node_23_48
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
         @display("bgl=2;bgb=241,139");
 
     submodules:

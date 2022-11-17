@@ -67,7 +67,7 @@ void SPDC_Controller::initialize() {
   epps = check_and_cast<EntangledPhotonPairSource *>(pump);
   address = par("address");
   timing_buffer = par("timing_buffer");
-  cPar *c = &par("Speed_of_light_in_fiber");
+  cPar *c = &par("speed_of_light_in_fiber");
   speed_of_light_in_channel = c->doubleValue();
   // For simplicity, I assume the SPDC can access those neighbor information without classical communication but directly.
   checkNeighborsAddress();

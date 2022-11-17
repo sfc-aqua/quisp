@@ -11,7 +11,7 @@ import channels.*;
 network Realistic_Layer2_Simple_MIM_MM_all_in_one
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgb=707,326");
     submodules:
@@ -197,7 +197,7 @@ network Realistic_Layer2_Simple_MIM_MM_all_in_one
 network Realistic_Layer2_Simple_MIM_MM_5km
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgb=707,326");
     submodules:
@@ -239,7 +239,7 @@ network Realistic_Layer2_Simple_MIM_MM_5km
 network Realistic_Layer3_Simple_MM_MM_5km
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgb=707,326");
     submodules:
@@ -285,7 +285,7 @@ network Realistic_Layer3_Simple_MM_MM_5km
 network Realistic_Layer2_Simple_MIM_MM_7_5km
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgb=707,326");
     submodules:
@@ -328,7 +328,7 @@ network Realistic_Layer2_Simple_MIM_MM_7_5km
 network Realistic_Layer2_Simple_MIM_MM_10km
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgb=707,326");
     submodules:
@@ -372,7 +372,7 @@ network Realistic_Layer2_Simple_MIM_MM_10km
 network Realistic_Layer2_Simple_MIM_MM_15km
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgb=707,326");
     submodules:
@@ -414,7 +414,7 @@ network Realistic_Layer2_Simple_MIM_MM_15km
 network Realistic_Layer2_Simple_MIM_MM_50km
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgb=707,326");
     submodules:
@@ -457,7 +457,7 @@ network Realistic_Layer2_Simple_MIM_MM_50km
 network Realistic_Layer2_Simple_MIM_MM_40km
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgb=707,326");
     submodules:
@@ -501,7 +501,7 @@ network Realistic_Layer2_Simple_MIM_MM_40km
 network Realistic_Layer2_Simple_MIM_MM_25km
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgb=707,326");
     submodules:
@@ -543,7 +543,7 @@ network Realistic_Layer2_Simple_MIM_MM_25km
 network Realistic_Layer2_Simple_MIM_MM_30km
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgb=707,326");
     submodules:
@@ -587,7 +587,7 @@ network Realistic_Layer2_Simple_MIM_MM_30km
 network Realistic_Layer2_Simple_MIM_MM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgb=707,326");
     submodules:
@@ -632,7 +632,7 @@ network Realistic_Layer2_Simple_MIM_MM
 network Realistic_Layer2_Simple_MIM_MM_same
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgb=707,326");
     submodules:
@@ -675,7 +675,7 @@ network Realistic_Layer2_Simple_MIM_MM_same
 network Realistic_Layer2_RouterNet
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgb=707,326");
     submodules:
@@ -745,7 +745,7 @@ network Realistic_Layer2_RouterNet
 network Realistic_Layer2_Star_Sep
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgb=707,326");
     submodules:
@@ -974,7 +974,7 @@ network Realistic_Layer2_Star_Sep
 network Realistic_Layer2_MM_MIM_MIM_MIM_MM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
     submodules:
         backend: Backend;
@@ -1014,7 +1014,7 @@ network Realistic_Layer2_MM_MIM_MIM_MIM_MM
 network Realistic_Layer2_MIM_MIM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
     submodules:
         backend: Backend;
@@ -1054,7 +1054,7 @@ network Realistic_Layer2_MIM_MIM
 network Realistic_Layer2_MIM_tomography
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgb=305,240;bgl=3");
     submodules:
