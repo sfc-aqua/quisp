@@ -41,9 +41,9 @@ void Application::initialize() {
   }
 
   createEndNodeWeightMap();
-  generateTraffic();
   generateTrafficMsg = new GenerateTraffic("GenerateTraffic");
   scheduleAt(simTime() + 100, generateTrafficMsg);
+  generateTraffic();
 }
 
 /**
