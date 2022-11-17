@@ -10,8 +10,7 @@ simple Application
         @display("i=block/app");
         int address;
         volatile double sendIaTime @unit(s) = default(exponential(5s)); // time between generating packets
-        volatile int numberOfBellpair = default(intuniform(10, 100));
-        int distant_measure_count = default(7000);
+        volatile int numberOfBellpair;
 
     gates:
         input fromRouter @loose;

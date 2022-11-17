@@ -6,7 +6,7 @@
 #include <omnetpp.h>
 #include <unsupported/Eigen/MatrixFunctions>
 #include <vector>
-//#include <Eigen/Dense>
+// #include <Eigen/Dense>
 #include <PhotonicQubit_m.h>
 
 using namespace Eigen;
