@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['emitphoton_0',['EmitPhoton',['../classquisp_1_1modules_1_1_real_time_controller.html#a9b336c0f7d0c893bbac1f19bb400b9d2',1,'quisp::modules::RealTimeController']]],
-  ['emitphoton_1',['emitPhoton',['../classquisp_1_1modules_1_1_i_stationary_qubit.html#afb5a94d328f0054b708dfa021afd193c',1,'quisp::modules::IStationaryQubit::emitPhoton()'],['../classquisp_1_1modules_1_1_stationary_qubit.html#aa271f8eed9884a510ceb80fa156b15b6',1,'quisp::modules::StationaryQubit::emitPhoton()']]],
-  ['emitphoton_2',['EmitPhoton',['../classquisp_1_1modules_1_1_i_real_time_controller.html#a4a0287b562edf7acdd5320f075647a80',1,'quisp::modules::IRealTimeController']]],
+  ['emitphoton_0',['emitPhoton',['../classquisp_1_1modules_1_1_stationary_qubit.html#aa271f8eed9884a510ceb80fa156b15b6',1,'quisp::modules::StationaryQubit']]],
+  ['emitphoton_1',['EmitPhoton',['../classquisp_1_1modules_1_1_i_real_time_controller.html#a4a0287b562edf7acdd5320f075647a80',1,'quisp::modules::IRealTimeController::EmitPhoton()'],['../classquisp_1_1modules_1_1_real_time_controller.html#a9b336c0f7d0c893bbac1f19bb400b9d2',1,'quisp::modules::RealTimeController::EmitPhoton()']]],
+  ['emitphoton_2',['emitPhoton',['../classquisp_1_1modules_1_1_i_stationary_qubit.html#afb5a94d328f0054b708dfa021afd193c',1,'quisp::modules::IStationaryQubit']]],
   ['emitphotons_3',['emitPhotons',['../classquisp_1_1modules_1_1_entangled_photon_pair_source.html#af8889812a3e6fe04f0588906ca6ac789',1,'quisp::modules::EntangledPhotonPairSource']]],
   ['empty_4',['empty',['../classquisp_1_1rules_1_1active_1_1_active_rule_set.html#ad9e1d1cc6f8280c7da859288056a3046',1,'quisp::rules::active::ActiveRuleSet']]],
   ['end_5',['end',['../classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store.html#aaa6eecf4f1ba61d2c77d868d6519b831',1,'quisp::modules::ruleset_store::RuleSetStore']]],

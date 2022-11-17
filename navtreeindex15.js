@@ -1,7 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57":[15,0,1,4,1],
-"namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57a25725c81fc4f00fa5b881c17af6a2a3e":[15,0,1,4,1,1],
 "namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57a9c0ed0366bbc920f92606585259a1664":[15,0,1,4,1,0],
 "namespacequisp_1_1types.html#aa9712dd9c693c474b93606fafc4e63a9":[15,0,1,4,3],
 "namespacequisp_1_1types.html#aa9712dd9c693c474b93606fafc4e63a9a4c1abf890b95d5ce646ba8db98505f76":[15,0,1,4,3,1],
@@ -249,5 +247,7 @@ var NAVTREEINDEX15 =
 "structquisp_1_1modules_1_1_photon_transmission_config.html#a20384c606cb373ff822c56b16f2bb0cc":[15,0,1,2,38,5],
 "structquisp_1_1modules_1_1_photon_transmission_config.html#a501ca3a85cb6883298f8f17edbdf288a":[16,0,0,2,37,4],
 "structquisp_1_1modules_1_1_photon_transmission_config.html#a501ca3a85cb6883298f8f17edbdf288a":[15,0,1,2,38,4],
-"structquisp_1_1modules_1_1_photon_transmission_config.html#a544e8d94a582e5abb39cbf1768c3a629":[16,0,0,2,37,3]
+"structquisp_1_1modules_1_1_photon_transmission_config.html#a544e8d94a582e5abb39cbf1768c3a629":[16,0,0,2,37,3],
+"structquisp_1_1modules_1_1_photon_transmission_config.html#a544e8d94a582e5abb39cbf1768c3a629":[15,0,1,2,38,3],
+"structquisp_1_1modules_1_1_photon_transmission_config.html#a847841e2c7e36fd000f94fd9312623ac":[16,0,0,2,37,2]
 };

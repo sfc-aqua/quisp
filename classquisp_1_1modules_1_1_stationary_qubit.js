@@ -76,7 +76,6 @@ var classquisp_1_1modules_1_1_stationary_qubit =
     [ "meas_op", "classquisp_1_1modules_1_1_stationary_qubit.html#a5837b346db2d14fccb9e9969e7b0f388", null ],
     [ "Measurement_error", "classquisp_1_1modules_1_1_stationary_qubit.html#aa4608f62655f3ec6601697908c79d6b0", null ],
     [ "memory_err", "classquisp_1_1modules_1_1_stationary_qubit.html#af5253b05220a0ea8ac8278dbf5e2a19a", null ],
-    [ "memory_error_rate", "classquisp_1_1modules_1_1_stationary_qubit.html#ae8d8e7cfe8be1bf3a00796491e13a0b1", null ],
     [ "memory_Excitation_error_ceil", "classquisp_1_1modules_1_1_stationary_qubit.html#afa40b3d3c5899c4b25ad05ac9a0fbefd", null ],
     [ "memory_No_error_ceil", "classquisp_1_1modules_1_1_stationary_qubit.html#ad03422c75d5c42fff879697fdcc252bb", null ],
     [ "memory_Relaxation_error_ceil", "classquisp_1_1modules_1_1_stationary_qubit.html#afb1f73897ef3fc76f5b7c76df8a7fb73", null ],

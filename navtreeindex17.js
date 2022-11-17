@@ -1,7 +1,5 @@
 var NAVTREEINDEX17 =
 {
-"structquisp_1_1modules_1_1measurement__outcome.html#a01adc6728a59e2f92e369924586a958b":[16,0,0,2,30,1],
-"structquisp_1_1modules_1_1measurement__outcome.html#a7715b6ae34ecadaf73c67c478946ae03":[16,0,0,2,30,2],
 "structquisp_1_1modules_1_1measurement__outcome.html#a7715b6ae34ecadaf73c67c478946ae03":[15,0,1,2,31,2],
 "structquisp_1_1modules_1_1measurement__outcome.html#aea85ac84bb843ce98ea04c493a15a042":[16,0,0,2,30,0],
 "structquisp_1_1modules_1_1measurement__outcome.html#aea85ac84bb843ce98ea04c493a15a042":[15,0,1,2,31,0],

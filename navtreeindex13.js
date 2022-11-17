@@ -1,7 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a3d675ebba1e13d6388f5c7b8bec8acdf":[15,0,2,7,5,0,13],
-"classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a4a0ae3bfef66d083a5e7d4dc224fbab4":[16,0,1,7,5,0,30],
 "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a4a0ae3bfef66d083a5e7d4dc224fbab4":[15,0,2,7,5,0,30],
 "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a4dcd63a2b634f050b58bee4bd14a97b9":[15,0,2,7,5,0,17],
 "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a4dcd63a2b634f050b58bee4bd14a97b9":[16,0,1,7,5,0,17],
@@ -249,5 +247,7 @@ var NAVTREEINDEX13 =
 "functions_func_e.html":[16,3,1,4],
 "functions_func_f.html":[16,3,1,5],
 "functions_func_g.html":[16,3,1,6],
-"functions_func_h.html":[16,3,1,7]
+"functions_func_h.html":[16,3,1,7],
+"functions_func_i.html":[16,3,1,8],
+"functions_func_j.html":[16,3,1,9]
 };
