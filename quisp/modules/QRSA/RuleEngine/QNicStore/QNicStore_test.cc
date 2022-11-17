@@ -1,12 +1,14 @@
 #include "QNicStore.h"
-#include "gtest/gtest.h"
-#include "omnetpp/cmodule.h"
-#include "test_utils/TestUtils.h"
-#include "utils/ComponentProvider.h"
+#include <gtest/gtest.h>
+#include <modules/Logger/DisabledLogger.h>
+#include <omnetpp/cmodule.h>
+#include <test_utils/TestUtils.h>
+#include <utils/ComponentProvider.h>
 
 namespace {
 using namespace quisp_test;
 using quisp::utils::ComponentProvider;
+using namespace quisp::modules::Logger;
 
 class Strategy : public TestComponentProviderStrategy {
  public:
@@ -26,7 +28,7 @@ class Strategy : public TestComponentProviderStrategy {
 class QNicStore : public quisp::modules::qnic_store::QNicStore {
  public:
   QNicStore(ComponentProvider& provider, int number_of_emitter_qnics, int number_of_receiver_qnics, int number_of_passive_receiver_qnics)
-      : quisp::modules::qnic_store::QNicStore(provider, number_of_emitter_qnics, number_of_receiver_qnics, number_of_passive_receiver_qnics) {}
+      : quisp::modules::qnic_store::QNicStore(provider, number_of_emitter_qnics, number_of_receiver_qnics, number_of_passive_receiver_qnics, new DisabledLogger{}) {}
 
   using quisp::modules::qnic_store::QNicStore::getQNic;
   using quisp::modules::qnic_store::QNicStore::qnics;
