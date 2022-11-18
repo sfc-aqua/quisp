@@ -1,6 +1,7 @@
 #include "BellPairStore.h"
 #include <gtest/gtest.h>
 
+#include <modules/Logger/DisabledLogger.h>
 #include <modules/QRSA/RuleEngine/QubitRecord/IQubitRecord.h>
 #include <modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h>
 #include <utility>
@@ -10,11 +11,13 @@ namespace {
 using namespace quisp::modules;
 using quisp::modules::qubit_record::IQubitRecord;
 using quisp::modules::qubit_record::QubitRecord;
+using namespace quisp::modules::Logger;
 using namespace quisp_test;
 
 class BellPairStore : public quisp::modules::BellPairStore {
  public:
   using quisp::modules::BellPairStore::_resources;
+  using quisp::modules::BellPairStore::BellPairStore;
 };
 
 class BellPairStoreTest : public ::testing::Test {
@@ -24,7 +27,8 @@ class BellPairStoreTest : public ::testing::Test {
     qubit2 = new QubitRecord(QNIC_E, 3, 6);
     qubit3 = new QubitRecord(QNIC_E, 3, 6);
     qubit4 = new QubitRecord(QNIC_E, 3, 6);
-    store = BellPairStore();
+    logger = new DisabledLogger{};
+    store = BellPairStore(logger);
   }
 
   void TearDown() override {
@@ -39,6 +43,7 @@ class BellPairStoreTest : public ::testing::Test {
   QubitRecord *qubit2;
   QubitRecord *qubit3;
   QubitRecord *qubit4;
+  ILogger *logger;
 };
 
 TEST_F(BellPairStoreTest, init) { EXPECT_EQ(store._resources.size(), 0); }

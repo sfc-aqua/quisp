@@ -1,14 +1,15 @@
 #include "QubitRecord.h"
-#include "gtest/gtest.h"
-#include "omnetpp/cexception.h"
-#include "omnetpp/cmodule.h"
-#include "test_utils/TestUtils.h"
-#include "utils/ComponentProvider.h"
+#include <gtest/gtest.h>
+#include <modules/Logger/DisabledLogger.h>
+#include <omnetpp/cexception.h>
+#include <omnetpp/cmodule.h>
+#include <test_utils/TestUtils.h>
+#include <utils/ComponentProvider.h>
 
 namespace {
 using namespace quisp_test;
 using quisp::utils::ComponentProvider;
-
+using namespace quisp::modules::Logger;
 class QubitRecord : public quisp::modules::qubit_record::QubitRecord {
  public:
   using quisp::modules::qubit_record::QubitRecord::applied_rule_ids;
@@ -17,7 +18,7 @@ class QubitRecord : public quisp::modules::qubit_record::QubitRecord {
   using quisp::modules::qubit_record::QubitRecord::qnic_index;
   using quisp::modules::qubit_record::QubitRecord::qnic_type;
   using quisp::modules::qubit_record::QubitRecord::qubit_index;
-  QubitRecord(QNIC_type qnic_type, int qnic_index, int qubit_index) : quisp::modules::qubit_record::QubitRecord(qnic_type, qnic_index, qubit_index) {}
+  QubitRecord(QNIC_type qnic_type, int qnic_index, int qubit_index) : quisp::modules::qubit_record::QubitRecord(qnic_type, qnic_index, qubit_index, new DisabledLogger{}) {}
 };
 
 class QubitRecordTest : public ::testing::Test {

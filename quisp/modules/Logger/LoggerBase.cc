@@ -10,6 +10,4 @@ void LoggerBase::initializeLogger(utils::ComponentProvider& provider) {
   auto* qnode = provider.getQNode();
   if (qnode != nullptr) logger->setQNodeAddress(qnode->par("address").intValue());
 }
-
-void LoggerBase::logPacket(const std::string& event_type, omnetpp::cMessage const* const msg) { logger->logPacket(event_type, msg); }
 }  // namespace quisp::modules::Logger
