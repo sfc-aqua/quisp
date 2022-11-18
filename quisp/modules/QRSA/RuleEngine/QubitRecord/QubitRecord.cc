@@ -52,9 +52,6 @@ void QubitRecord::markRuleApplied(unsigned long rule_id) {
 
 void QubitRecord::clearAppliedRules() { applied_rule_ids.clear(); }
 
-void QubitRecord::logState() {
-  if (logger == nullptr) return;
-  logger->logQubitState(qnic_type, qnic_index, qubit_index, is_busy, is_allocated);
-}
+void QubitRecord::logState() { logger->logQubitState(qnic_type, qnic_index, qubit_index, is_busy, is_allocated); }
 
 }  // namespace quisp::modules::qubit_record
