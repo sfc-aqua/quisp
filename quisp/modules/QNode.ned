@@ -9,15 +9,15 @@ import modules.Common.*;
 module QNode
 {
     parameters:
-        int bufferSize = default(10);
+        int buffer_size = default(10);
         int address = default(0);
         int buffers = default(10); //default is defined as 10 in .ini file but can be changed independently in .ned file
         int mass = default(100);
-        bool isInitiator = default(false);
+        bool is_initiator = default(false);
         @display("bgl=4");
 
-        string includeInTopo = "yes";
-        string nodeType = default("none");
+        string included_in_topology = "yes";
+        string node_type = default("none");
         double emission_timing_std = default(0);//in seconds
         bool simultaneous_es_enabled = default(false);
 
@@ -103,7 +103,7 @@ module QNode
         }
 
     connections:
-        if (nodeType=="EndNode") {
+        if (node_type=="EndNode") {
             router.toApp --> app.fromRouter;
             router.fromApp <-- app.toRouter;
         }

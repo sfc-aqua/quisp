@@ -52,8 +52,8 @@ void RoutingDaemon::initialize(int stage) {
   // Topology creation for routing table
   cTopology *topo = new cTopology("topo");
 
-  // Any node that has a parameter includeInTopo will be included in routing
-  topo->extractByParameter("includeInTopo", "\"yes\"");
+  // Any node that has a parameter included_in_topology will be included in routing
+  topo->extractByParameter("included_in_topology", "\"yes\"");
 
   // If no node with the parameter & value found, do nothing.
   if (topo->getNumNodes() == 0 || topo == nullptr) {
@@ -143,11 +143,11 @@ int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr) {
 
 int RoutingDaemon::returnNumEndNodes() {
   cTopology *topo = new cTopology("topo");
-  topo->extractByParameter("includeInTopo", "\"yes\"");
+  topo->extractByParameter("included_in_topology", "\"yes\"");
   int index = 0;
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);
-    std::string node_type = node->getModule()->par("nodeType");
+    std::string node_type = node->getModule()->par("node_type");
     if (node_type == "EndNode") {  // ignore myself
       index++;
     }

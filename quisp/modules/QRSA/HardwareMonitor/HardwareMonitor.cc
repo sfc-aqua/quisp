@@ -1244,7 +1244,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module)
 cModule *HardwareMonitor::getQNodeWithAddress(int address) {
   cTopology *topo = new cTopology("topo");
   // veryfication?
-  topo->extractByParameter("includeInTopo", "\"yes\"");
+  topo->extractByParameter("included_in_topology", "\"yes\"");
   int addr;
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);

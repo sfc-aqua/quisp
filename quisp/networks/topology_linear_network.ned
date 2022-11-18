@@ -19,7 +19,7 @@ network Tomography_Linear_One_MM_MIM
         logger: Logger;
         EndNode[2]: QNode {
             address = index;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
@@ -27,7 +27,7 @@ network Tomography_Linear_One_MM_MIM
 
         repeater: QNode {
             address = 1234;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G");
         }
@@ -58,7 +58,7 @@ network Linear_One_MIM
         logger: Logger;
         source: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP");
             //buffers = 15;
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
@@ -70,7 +70,7 @@ network Linear_One_MIM
         }
         target: QNode {
             address = 3;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             //buffers = 20;
             @display("i=COMP");
         }
@@ -94,7 +94,7 @@ network Linear_One_MIM_biasedDistance
         logger: Logger;
         source: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP");
             //buffers = 15;
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
@@ -106,7 +106,7 @@ network Linear_One_MIM_biasedDistance
         }
         target: QNode {
             address = 3;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             //buffers = 20;
             @display("i=COMP");
         }
@@ -130,7 +130,7 @@ network Linear_One_MM
         logger: Logger;
         EndNode[2]: QNode {
             address = index;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
@@ -151,7 +151,7 @@ network Linear_One_MM_bufferGap
         logger: Logger;
         Small: QNode {
             address = 112302;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             buffers = 1;
             @display("i=COMP");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
@@ -161,7 +161,7 @@ network Linear_One_MM_bufferGap
         Big: QNode {
             address = 300;
             buffers = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP");
         }
     connections:
@@ -181,7 +181,7 @@ network Linear_One_MSM
         logger: Logger;
         source: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=240,48");
 
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
@@ -193,7 +193,7 @@ network Linear_One_MSM
         }
         target: QNode {
             address = 3;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP");
         }
     connections:
@@ -257,7 +257,7 @@ network Linear_One_MIM_MM_MSM
     submodules:
         source: QNode {
             address = 10000000;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=502,132");
             //buffers = 15;
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
@@ -269,21 +269,21 @@ network Linear_One_MIM_MM_MSM
         }
         repeater: QNode {
             address = 1234;
-            nodeType = "Repeater";
+            node_type = "Repeater";
         		//buffers = 25;
 
             @display("i=REP1G;p=408,131");
         }
         router: QNode {
             address = 3;
-            nodeType = "Router";
+            node_type = "Router";
             //buffers = 30;
             @display("i=RTR;p=207,131");
         }
         mm[2]: QNode {
             address = index + 100;
             //buffers = 20;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=207,31");
         }
         epps: SPDC {
@@ -294,7 +294,7 @@ network Linear_One_MIM_MM_MSM
         pas: QNode {
             address = 6;
             //buffers = 5;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=21,132");
         }
     connections:

@@ -73,12 +73,12 @@ module SPDC
         int address;
         double epps_frequency = default(5.9*10^6);// 5.9*10^6 = 5.9million pairs per sec as a default https://arxiv.org/pdf/1707.01339.pdf
         double epps_error_rate = default(0.093);//From 0~1. Fidelity = 0.907. This is the fidelity of the entangled qubit before entering the channel.
-        string includeInTopo = "yes";
+        string included_in_topology = "yes";
         double epps_y_error_ratio = default(1);
         double epps_z_error_ratio = default(1);
         double epps_x_error_ratio = default(1);
         double epps_timing_buffer = default(1e-9);//1ns buffer (gap between classical notifier and the actual photon emission)
-        string nodeType = default("SPDC");
+        string node_type = default("SPDC");
         double epps_emission_std = default(0);
     gates:
         inout quantum_port[] @loose;

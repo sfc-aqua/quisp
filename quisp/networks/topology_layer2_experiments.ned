@@ -19,67 +19,67 @@ network Layer2_Simple_MIM_MM_all_in_one
         logger: Logger;
         EndNode1[1]: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=297,173");
         }
         EndNode2[1]: QNode {
             address = 2;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=407,231");
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=270,238");
         }
         Repeater2[1]: QNode {
             address = 4;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=66,259");
         }
         Repeater3[1]: QNode {
             address = 5;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=47,189");
         }
         Repeater4[1]: QNode {
             address = 6;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=47,51");
         }
         Repeater5[1]: QNode {
             address = 7;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=121,36");
         }
         Repeater6[1]: QNode {
             address = 8;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=262,45");
         }
         Repeater7[1]: QNode {
             address = 9;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=343,37");
         }
         Repeater8[1]: QNode {
             address = 10;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=474,37");
         }
         Repeater9[1]: QNode {
             address = 11;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=577,29");
         }
         Repeater10[1]: QNode {
             address = 12;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=666,189");
         }
         Repeater11[1]: QNode {
             address = 13;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=623,252");
         }
 
@@ -200,17 +200,17 @@ network Layer2_Simple_MIM_MM_7km
         logger: Logger;
         EndNode1[1]: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
             address = 2;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         HOM1[1]: HOM {
@@ -241,17 +241,17 @@ network Layer2_Simple_MIM_MM_10km
         logger: Logger;
         EndNode1[1]: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
             address = 2;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         HOM1[1]: HOM {
@@ -285,17 +285,17 @@ network Layer2_Simple_MIM_MM_15km
         logger: Logger;
         EndNode1[1]: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
             address = 2;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         HOM1[1]: HOM {
@@ -327,17 +327,17 @@ network Layer2_Simple_MIM_MM_50km
         logger: Logger;
         EndNode1[1]: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
             address = 2;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         HOM1[1]: HOM {
@@ -370,17 +370,17 @@ network Layer2_Simple_MIM_MM_40km
         logger: Logger;
         EndNode1[1]: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
             address = 2;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         HOM1[1]: HOM {
@@ -412,17 +412,17 @@ network Layer2_Simple_MIM_MM_30km
         logger: Logger;
         EndNode1[1]: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
             address = 2;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         HOM1[1]: HOM {
@@ -456,17 +456,17 @@ network Layer2_Simple_MIM_MM
         logger: Logger;
         EndNode1[1]: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
             address = 2;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         HOM1[1]: HOM {
@@ -501,17 +501,17 @@ network Layer2_Simple_MIM_MM_same
         logger: Logger;
         EndNode1[1]: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
             address = 2;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
             address = 3;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         HOM1[1]: HOM {
@@ -544,17 +544,17 @@ network Layer2_RouterNet
         logger: Logger;
         Router1[1]: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         Router2[1]: QNode {
             address = 2;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Router3[1]: QNode {
             address = 3;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=220,137");
         }
         HOM1[1]: HOM {
@@ -567,7 +567,7 @@ network Layer2_RouterNet
         }
         Router4[1]: QNode {
             address = 6;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=RTR;p=432,246");
         }
 
@@ -614,17 +614,17 @@ network Layer2_Star_Sep
         logger: Logger;
         Router1[1]: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=RTR;p=350,157");
         }
         Router2[1]: QNode {
             address = 2;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=RTR;p=211,224");
         }
         Router3[1]: QNode {
             address = 3;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=RTR;p=220,137");
         }
         HOM1[1]: HOM {
@@ -637,12 +637,12 @@ network Layer2_Star_Sep
         }
         Router4[1]: QNode {
             address = 6;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=RTR;p=432,246");
         }
         Repeater1[1]: QNode {
             address = 7;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G;p=406,109");
         }
@@ -652,7 +652,7 @@ network Layer2_Star_Sep
         }
         EndNode1[1]: QNode {
             address = 9;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=551,84");
         }
         HOM3[1]: HOM {
@@ -661,27 +661,27 @@ network Layer2_Star_Sep
         }
         EndNode2[1]: QNode {
             address = 11;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=518,157");
         }
         EndNode3[1]: QNode {
             address = 12;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=220,297");
         }
         EndNode4[1]: QNode {
             address = 13;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=128,285");
         }
         EndNode5[1]: QNode {
             address = 14;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=109,246");
         }
         EndNode6[1]: QNode {
             address = 15;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=503,263");
         }
         HOM4[1]: HOM {
@@ -703,46 +703,46 @@ network Layer2_Star_Sep
 
         Repeater2[1]: QNode {
             address = 20;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G;p=350,54");
         }
         Repeater3[1]: QNode {
             address = 21;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G;p=285,22");
         }
         Repeater4[1]: QNode {
             address = 22;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G;p=89,60");
         }
         Repeater5[1]: QNode {
             address = 23;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G;p=58,143");
         }
         EndNode7[1]: QNode {
             address = 24;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=419,16");
         }
         EndNode8[1]: QNode {
             address = 25;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=211,16");
         }
         EndNode9[1]: QNode {
             address = 26;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=34,77");
         }
         EndNode10[1]: QNode {
             address = 27;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=13,208");
         }
 
@@ -844,7 +844,7 @@ network Layer2_MM_MIM_MIM_MIM_MM
         //EndNode[2]: QNode {
         EndNode[1]: QNode {
             address = 100+index;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
@@ -853,7 +853,7 @@ network Layer2_MM_MIM_MIM_MIM_MM
         //repeater[4]: QNode {
         repeater[2]: QNode {
             address = 10000+sizeof(EndNode) + index;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G");
         }
@@ -883,7 +883,7 @@ network Layer2_MIM_MIM
         logger: Logger;
         EndNode[2]: QNode {
             address = index;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
@@ -891,7 +891,7 @@ network Layer2_MIM_MIM
 
         repeater[1]: QNode {
             address = sizeof(EndNode) + index;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G");
         }
@@ -924,7 +924,7 @@ network Layer2_MIM_tomography
         logger: Logger;
         EndNode[2]: QNode {
             address = index;
-            nodeType = "EndNode";
+            node_type = "EndNode";
 
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
@@ -932,7 +932,7 @@ network Layer2_MIM_tomography
 
         repeater[9]: QNode {
             address = sizeof(EndNode) + index;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G");
         }

@@ -34,7 +34,7 @@ void Application::initialize() {
   }
 
   my_address = provider.getQNode()->par("address");
-  is_initiator = provider.getQNode()->par("isInitiator");
+  is_initiator = provider.getQNode()->par("is_initiator");
 
   if (!is_initiator) {
     return;
@@ -107,7 +107,7 @@ void Application::handleMessage(cMessage *msg) {
 void Application::createEndNodeWeightMap() {
   cTopology *topo = new cTopology("topo");
 
-  topo->extractByParameter("nodeType", provider.getQNode()->par("nodeType").str().c_str());
+  topo->extractByParameter("node_type", provider.getQNode()->par("node_type").str().c_str());
 
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cModule *endnodeModule = topo->getNode(i)->getModule();
