@@ -19,15 +19,14 @@ module MockQNode {
     parameters:
         // Application needs the parent node's address
         int address;
-        string nodeType;
+        string node_type;
+        bool is_initiator;
+        int mass;
 
     submodules:
         router: MockRouter;
 
         app: TestApplication {
-            TrafficPattern = 1;
-            LoneInitiatorAddress = 1;
-            address = address;
         }
     connections:
         router.fromApp <-- app.toRouter;
@@ -39,7 +38,9 @@ network ApplicationTestNet
     submodules:
         mockQNode: MockQNode {
             address = 1;
-            nodeType = "none";
+            node_type = "none";
+            is_initiator = false;
+            mass = 100;
         }
 }
 
@@ -47,11 +48,10 @@ network ApplicationTestNet
 
 [General]
 network = ApplicationTestNet
-**.app.TrafficPattern = 1
-**.app.LoneInitiatorAddress = 1
 **.qrsa.hm.link_tomography = false
 **.qrsa.hm.initial_purification = 0
 **.qrsa.hm.purification_type = 0
+**.app.number_of_bellpair = 10
 
 %includes:
 #include <messages/classical_messages.h>
