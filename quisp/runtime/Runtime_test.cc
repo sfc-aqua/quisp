@@ -7,6 +7,7 @@
 #include "runtime/types.h"
 #include "test.h"
 
+using namespace testing;
 using namespace quisp::runtime;
 using namespace quisp::rules;
 using namespace quisp::rules::active;
@@ -18,7 +19,8 @@ class RuntimeTest : public testing::Test {
  protected:
   void SetUp() {
     runtime = new Runtime();
-    runtime->callback = new MockRuntimeCallback();
+    callback = new MockRuntimeCallback();
+    runtime->callback = callback;
     runtime->rule_id = 0;
     runtime->cleanup();
     qubit = new QubitRecord{QNIC_E, 2, 3};
@@ -28,10 +30,14 @@ class RuntimeTest : public testing::Test {
     qubit5 = new QubitRecord{QNIC_E, 2, 7};
   }
 
-  void TearDown() { delete runtime; }
+  void TearDown() {
+    delete runtime;
+    delete callback;
+  }
 
  public:
   Runtime* runtime;
+  MockRuntimeCallback* callback;
   qrsa::IQubitRecord* qubit;
   qrsa::IQubitRecord* qubit2;
   qrsa::IQubitRecord* qubit3;
@@ -40,30 +46,6 @@ class RuntimeTest : public testing::Test {
 };
 
 TEST_F(RuntimeTest, initialize) { ASSERT_NE(runtime, nullptr); }
-
-TEST_F(RuntimeTest, evalQubitIdOperation) {
-  QubitId q0{0};
-  auto count = RegId::REG0;
-  QNodeAddr partner_addr{1};
-  auto qubit_index = 0;  // former 'resource'
-  runtime->debugging = false;
-  Program program{
-      "RandomMeasureAction",
-      {
-          // clang-format off
-INSTR_LOAD_RegId_MemoryKey_{{count, MemoryKey{"count"}}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, qubit_index}},
-INSTR_BNERR_Label_{Label{"L1"}},
-INSTR_ERROR_String_{"Qubit not found for mesaurement"},
-INSTR_MEASURE_RANDOM_MemoryKey_QubitId_{{MemoryKey{"outcome"}, q0}, "L1"},
-INSTR_INC_RegId_{count},
-INSTR_STORE_MemoryKey_RegId_{{MemoryKey{"count"}, count}},
-INSTR_FREE_QUBIT_QubitId_{q0},
-          // clang-format on
-      }};
-  runtime->assignQubitToRule(partner_addr, runtime->rule_id, qubit);
-  runtime->execProgram(program);
-}
 
 TEST_F(RuntimeTest, getMultipleQubits) {
   QubitId q0{0};
@@ -85,10 +67,37 @@ INSTR_ERROR_String_{"no qubit"},
   runtime->assignQubitToRule(partner_addr, runtime->rule_id, qubit3);
   runtime->assignQubitToRule(partner_addr, runtime->rule_id + 1, qubit4);
   runtime->assignQubitToRule(partner_addr, runtime->rule_id + 1, qubit5);
+
+  EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
   runtime->execProgram(program);
 
   EXPECT_EQ(runtime->getQubitByQubitId(q0), qubit);
   EXPECT_EQ(runtime->getQubitByQubitId(q1), qubit3);
   EXPECT_EQ(runtime->getQubitByQubitId(q2), nullptr);
 }
+
+TEST_F(RuntimeTest, CannotGetLockedQubits) {
+
+}
+
+TEST_F(RuntimeTest, ExecRuleSetWithCondPassed) {
+
+}
+
+TEST_F(RuntimeTest, ExecRuleSetWithCondFailed) {
+
+}
+
+TEST_F(RuntimeTest, ExecRuleSetWithTerminating) {
+
+}
+
+TEST_F(RuntimeTest, PromoteQubit) {
+
+}
+
+TEST_F(RuntimeTest, AssignQubit) {
+
+}
+
 }  // namespace
