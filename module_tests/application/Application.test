@@ -51,7 +51,7 @@ network = ApplicationTestNet
 **.app.LoneInitiatorAddress = 1
 **.qrsa.hm.link_tomography = false
 **.qrsa.hm.initial_purification = 0
-**.qrsa.hm.Purification_type = 0
+**.qrsa.hm.purification_type = 0
 
 %includes:
 #include <messages/classical_messages.h>

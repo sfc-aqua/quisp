@@ -189,10 +189,10 @@ void SPDC_Controller::checkNeighborsAddress() {
 void SPDC_Controller::checkNeighborsBuffer() {
   cModule *epps = getNode("SPDC");
   cModule *neighbor_qnic_one = getNextNode(epps, 0, "interHOM")->getParentModule();
-  neighbor_buffer = neighbor_qnic_one->par("numBuffer");
+  neighbor_buffer = neighbor_qnic_one->par("num_buffer");
   par("neighbor_buffer") = neighbor_buffer;
   cModule *neighbor_qnic_two = getNextNode(epps, 1, "interHOM")->getParentModule();
-  neighbor_buffer_two = neighbor_qnic_two->par("numBuffer");
+  neighbor_buffer_two = neighbor_qnic_two->par("num_buffer");
   par("neighbor_buffer_two") = neighbor_buffer_two;
   max_buffer = std::min(neighbor_buffer, neighbor_buffer_two);  // Adjust to the slower one
   par("max_buffer") = max_buffer;

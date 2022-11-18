@@ -51,9 +51,9 @@ class HardwareMonitorTestTarget : public quisp::modules::HardwareMonitor {
     setParStr(this, "tomography_output_filename", "test_file");
     setParStr(this, "file_dir_name", "out/tests");
     setParInt(this, "initial_purification", 0);
-    setParBool(this, "X_purification", true);
-    setParBool(this, "Z_purification", true);
-    setParInt(this, "Purification_type", 0);
+    setParBool(this, "x_purification", true);
+    setParBool(this, "z_purification", true);
+    setParInt(this, "purification_type", 0);
     setParInt(this, "num_measure", 0);
 
     this->setName("hardware_monitor_test_target");
