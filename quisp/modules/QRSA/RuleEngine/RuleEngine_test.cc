@@ -5,6 +5,7 @@
 #include <memory>
 #include <utility>
 
+#include <modules/Logger/DisabledLogger.h>
 #include "BellPairStore/BellPairStore.h"
 #include "IRuleEngine.h"
 #include "RuleEngine.h"
@@ -73,6 +74,7 @@ using quisp::modules::qrsa::IQubitRecord;
 using quisp::modules::qubit_record::QubitRecord;
 using namespace quisp_test;
 using namespace testing;
+using quisp::modules::Logger::DisabledLogger;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
@@ -97,6 +99,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
   IRoutingDaemon* getRoutingDaemon() override { return routingDaemon; };
   IHardwareMonitor* getHardwareMonitor() override { return hardwareMonitor; };
   IRealTimeController* getRealTimeController() override { return realtimeController; };
+  ILogger* getLogger() override { return new DisabledLogger{}; }
 };
 
 class RuleEngineTestTarget : public quisp::modules::RuleEngine {
@@ -502,9 +505,10 @@ TEST(RuleEngineTest, resourceAllocation) {
   auto* sim = prepareSimulation();
   auto* routingdaemon = new MockRoutingDaemon;
   auto* mockHardwareMonitor = new MockHardwareMonitor;
-  auto* qubit_record0 = new QubitRecord(QNIC_E, 3, 0);
-  auto* qubit_record1 = new QubitRecord(QNIC_E, 3, 1);
-  auto* qubit_record2 = new QubitRecord(QNIC_E, 3, 2);
+  auto logger = std::make_unique<DisabledLogger>();
+  auto* qubit_record0 = new QubitRecord(QNIC_E, 3, 0, logger.get());
+  auto* qubit_record1 = new QubitRecord(QNIC_E, 3, 1, logger.get());
+  auto* qubit_record2 = new QubitRecord(QNIC_E, 3, 2, logger.get());
   auto rule_engine = new RuleEngineTestTarget{nullptr, routingdaemon, mockHardwareMonitor, nullptr, qnic_specs};
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
@@ -644,8 +648,9 @@ TEST(RuleEngineTest, freeConsumedResource) {
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
   int qnic_index = 7;
+  auto logger = std::make_unique<DisabledLogger>();
   auto* qubit = new MockQubit(QNIC_E, qnic_index);
-  auto* qubit_record = new QubitRecord(QNIC_E, qnic_index, 1);
+  auto* qubit_record = new QubitRecord(QNIC_E, qnic_index, 1, logger.get());
   qubit_record->setBusy(true);
   qubit->fillParams();
   qubit_record->markRuleApplied(0);
@@ -682,7 +687,7 @@ TEST(RuleEngineTest, unlockResourceAndDiscard) {
   auto rule2 = new ActiveRule(ruleset_id, 11, 4);
   int qnic_index = 17;
   auto* qubit = new MockQubit(QNIC_E, qnic_index);
-  auto* qubit_record = new QubitRecord(QNIC_E, qnic_index, 1);
+  auto* qubit_record = new QubitRecord(QNIC_E, qnic_index, 1, new DisabledLogger{});
   qubit_record->setBusy(true);
   qubit->fillParams();
   qubit->action_index = action_index;

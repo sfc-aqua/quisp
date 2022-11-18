@@ -12,28 +12,16 @@ HEADERS?=$(shell git ls-files . | grep "^.*.h$$")
 PROJ_ROOT=$(shell git rev-parse --show-toplevel)
 TEST_SRCS=$(filter %_test.cc,$(SRCS)) $(test_utils/%.cc) ./unit_test_main.cc
 TEST_OBJS=$(foreach obj,$(TEST_SRCS:.cc=.o),$O/$(obj))
-TEST_INCLUDE=-I../googletest/googletest/include/ -I../googletest/googlemock/include/
+TEST_INCLUDE=-I$(PROJ_ROOT)/googletest/googletest/include/ -I$(PROJ_ROOT)/googletest/googlemock/include/
+TEST_LIBS=-L$(PROJ_ROOT)/googletest/build/lib -lgtest -lgmock
 
-TEST_LIBS=-L../googletest/build/lib -lgtest -lgmock
-
-# check eigen3 is in PKG_CONFIG_PATH
-PKG_CONFIG_STATUS=$(shell pkg-config eigen3 --cflags 2>/dev/null 1>&2; echo $$?)
-ifneq ('0','$(PKG_CONFIG_STATUS)')
-# using quisp/eigen
-INCLUDE_PATH+=-I. -I$(PROJ_ROOT)/eigen/
-else
-INCLUDE_PATH+=-I. $(shell pkg-config eigen3 --cflags)
-endif
-
-INCLUDE_PATH+=-I.
 ifneq (,$(ENABLE_COVERAGE))
 CXXFLAGS+=-ftest-coverage -fprofile-instr-generate -fcoverage-mapping
 LDFLAGS+=-ftest-coverage -fprofile-instr-generate -fcoverage-mapping
 endif
 
 # include path for external libs
-INCLUDE_PATH+=-I$(PROJ_ROOT)/json/include/
-INCLUDE_PATH+=-I$(PROJ_ROOT)/spdlog/include/
+INCLUDE_PATH+=-I. -I$(PROJ_ROOT)/eigen/ -I$(PROJ_ROOT)/json/include/ -I$(PROJ_ROOT)/spdlog/include/
 
 default: eigen all
 
@@ -76,19 +64,6 @@ $(TARGET_DIR)/coverage/index.html: $(TARGET_DIR)/lcov.info
 .PHONY: eigen
 # check eigen exists and setup eigen if needed.
 eigen:
-	PKG_CONFIG_STATUS=$(shell pkg-config eigen3 --cflags 2>/dev/null 1>&2; echo $$?)
-# check eigen3 exists on pkg-config
-ifneq ('0','$(PKG_CONFIG_STATUS)')
-# check eigen is installed on quisp/eigen
-ifeq (,$(wildcard $(PROJ_ROOT)/eigen/CMakeLists.txt))
 	make eigen -C $(PROJ_ROOT)
-endif
-	# using quisp/eigen
-INCLUDE_PATH+=-I$(PROJ_ROOT)/eigen/
-else
-INCLUDE_PATH+=-I.
-INCLUDE_PATH+=$(shell pkg-config eigen3 --cflags)
-endif
 
 all: eigen
-
