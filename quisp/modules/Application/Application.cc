@@ -154,7 +154,7 @@ void Application::generateTraffic() {
 
   while (send_time < generate_up_to_time) {
     int dest_addr = addresses[dist(gen)];
-    int num_request_bell_pair = par("numberOfBellpair").intValue();
+    int num_request_bell_pair = par("number_of_bellpair").intValue();
     ConnectionSetupRequest *pk = createConnectionSetupRequest(dest_addr, num_request_bell_pair);
     EV_INFO << "Node " << my_address << " will initiate connection to " << dest_addr << " at " << send_time << " with " << num_request_bell_pair << " Bell pairs\n";
     scheduleAt(send_time, pk);

@@ -63,7 +63,7 @@ TEST(AppTest, Init_IsInitiator) {
   auto *app = new AppTestTarget{mock_qnode};
 
   setParDouble(app, "request_generation_interval", 5);
-  setParInt(app, "numberOfBellpair", 10);
+  setParInt(app, "number_of_bellpair", 10);
 
   sim->registerComponent(app);
   app->callInitialize();
@@ -82,7 +82,7 @@ TEST(AppTest, Init_WeightMap_Generation) {
 
   auto *app = new AppTestTarget{mock_qnode};
   setParDouble(app, "request_generation_interval", 5);
-  setParInt(app, "numberOfBellpair", 10);
+  setParInt(app, "number_of_bellpair", 10);
 
   sim->registerComponent(app);
   app->callInitialize();
@@ -105,7 +105,7 @@ TEST(AppTest, Init_Connection_Setup_Message_Send) {
   auto *app = new AppTestTarget{mock_qnode};
 
   setParDouble(app, "request_generation_interval", 5);
-  setParInt(app, "numberOfBellpair", 10);
+  setParInt(app, "number_of_bellpair", 10);
 
   sim->registerComponent(app);
   app->callInitialize();
