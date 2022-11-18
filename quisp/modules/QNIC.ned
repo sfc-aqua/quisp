@@ -33,14 +33,14 @@ module QNIC
 
     submodules:
         statQubit[numBuffer]: StationaryQubit {
-            stationaryQubit_address = index;
+            stationary_qubit_address = index;
             node_address = parent.parent_node_address;
             qnic_address = parent.self_qnic_address;
             qnic_index = parent.self_qnic_index;
             qnic_type = parent.self_qnic_type;
-            xPosition_Graphics = 70 + 80*index;  // use submodule index to generate different IDs
-            //@display("p=$xPosition_Graphics,40,,circle");
-            @display("t=Id $stationaryQubit_address;i=block/circle,blue;p=150,100,m,5,60,60"); // modify display string
+            x_position_graphics = 70 + 80*index;  // use submodule index to generate different IDs
+            //@display("p=$x_position_graphics,40,,circle");
+            @display("t=Id $stationary_qubit_address;i=block/circle,blue;p=150,100,m,5,60,60"); // modify display string
             std = parent.emission_std;
         }
 

@@ -7,7 +7,7 @@ import ned.IdealChannel;
 simple Queue
 {
     parameters:
-        //int xPosition_Graphics;
+        //int x_position_graphics;
         int address;
         //int buffer;//for qnic
         int frame_capacity = default(0); // max number of packets; 0 means no limit
