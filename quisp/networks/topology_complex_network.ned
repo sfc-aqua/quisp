@@ -12,7 +12,7 @@ import modules.Logger.Logger;
 network ispMap_1239_node_23_48_hetero_distance
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
         @display("bgl=2;bgb=250,141");
 
     submodules:
@@ -25,17 +25,17 @@ network ispMap_1239_node_23_48_hetero_distance
         }
         repeater[118]: QNode {
             address = index+10000;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=150.8,99.325,m,5,60,60");
         }
         endnode[38]: QNode {
             address = index;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=72.5,98.6,m,5,60,60");
         }
         router[10]: QNode {
             address = index+1000000;
-            nodeType = "Router";
+            node_type = "Router";
             @display("i=RTR;p=87,27.55,m,5,60,60");
         }
     connections:
@@ -759,7 +759,7 @@ network ispMap_1239_node_23_48_hetero_distance
 network ispMap_1239_node_23_48
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
         @display("bgl=2;bgb=241,139");
 
     submodules:
@@ -771,17 +771,17 @@ network ispMap_1239_node_23_48
         }
         repeater[118]: QNode {
             address = index+10000;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=157.3,109.395,m,5,60,60");
         }
         endnode[38]: QNode {
             address = index;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=82.94,72.215,m,5,60,60");
         }
         router[10]: QNode {
             address = index+1000000;
-            nodeType = "Router";
+            node_type = "Router";
             @display("i=RTR;p=114.4,25.025,m,5,60,60");
         }
     connections:

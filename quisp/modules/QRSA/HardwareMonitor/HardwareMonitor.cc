@@ -64,9 +64,9 @@ void HardwareMonitor::initialize(int stage) {
   file_dir_name = par("file_dir_name").str();
   do_link_level_tomography = par("link_tomography");
   num_purification = par("initial_purification");
-  X_Purification = par("X_purification");
-  Z_Purification = par("Z_purification");
-  Purification_type = par("Purification_type");
+  X_Purification = par("x_purification");
+  Z_Purification = par("z_purification");
+  purification_type = par("purification_type");
   num_measure = par("num_measure");
   my_address = par("address");
 
@@ -630,8 +630,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   std::vector<int> partners = {partner_address};
 
   if (num_purification > 0) {
-    if (Purification_type == 2002) {  // Performs both X and Z purification for each n.
-      /// # Purification_type 2002: #
+    if (purification_type == 2002) {  // Performs both X and Z purification for each n.
+      /// # purification_type 2002: #
       /// - name: Ss-Sp / perfect binary tree, even rounds
       /// - rounds: 2n
       /// - input Bell pairs per round: 2
@@ -680,8 +680,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
-    } else if (Purification_type == 3003) {
-      /// # Purification_type 3003: #
+    } else if (purification_type == 3003) {
+      /// # purification_type 3003: #
       /// - name: Ss-Sp / perfect binary tree, odd or even rounds
       /// - rounds: n
       /// - input Bell pairs per round: 2
@@ -728,8 +728,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
-    } else if (Purification_type == 1001) {
-      /// # Purification_type 1001: #
+    } else if (purification_type == 1001) {
+      /// # purification_type 1001: #
       /// - name: Ss-Dp XZ Purification
       /// - rounds: n
       /// - input Bell pairs per round: 3
@@ -758,8 +758,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
-    } else if (Purification_type == 1221) {
-      /// # Purification_type 1221: #
+    } else if (purification_type == 1221) {
+      /// # purification_type 1221: #
       /// - name: Ss-Dp XZ, ZX alternating
       /// - rounds: n
       /// - input Bell pairs per round: 3
@@ -801,8 +801,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
           tomography_RuleSet->addRule(std::move(Purification));
         }
       }
-    } else if (Purification_type == 1011) {
-      /// # Purification_type 1011: #
+    } else if (purification_type == 1011) {
+      /// # purification_type 1011: #
       /// - name: Ds-Sp: Fujii-san's Double selection purification
       /// - rounds: n
       /// - input Bell pairs per round: 3
@@ -830,8 +830,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
-    } else if (Purification_type == 1021) {  // Fujii-san's Double selection purification
-      /// # Purification_type 1021: #
+    } else if (purification_type == 1021) {  // Fujii-san's Double selection purification
+      /// # purification_type 1021: #
       /// - name: Ds-Sp: Fujii-san's Double selection purification (alternating)
       /// - rounds: n
       /// - input Bell pairs per round: 3
@@ -867,8 +867,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
-    } else if (Purification_type == 1031) {
-      /// # Purification_type 1031: #
+    } else if (purification_type == 1031) {
+      /// # purification_type 1031: #
       /// - name: Ds-Dp: full double selection purification (alternating)
       /// - rounds: n
       /// - input Bell pairs per round: 5
@@ -905,8 +905,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
-    } else if (Purification_type == 1061) {
-      /// # Purification_type 1061: #
+    } else if (purification_type == 1061) {
+      /// # purification_type 1061: #
       /// - name: half double selection, half single selection
       /// - rounds: n
       /// - input Bell pairs per round: 4
@@ -942,8 +942,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
-    } else if (Purification_type == 5555) {  // Predefined purification method
-      /// # Purification_type 5555: #
+    } else if (purification_type == 5555) {  // Predefined purification method
+      /// # purification_type 5555: #
       /// - name: Switching (B)
       /// - rounds: n
       /// - input Bell pairs per round: 3 in first two rounds, then 2
@@ -1002,8 +1002,8 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         shared_tag++;
         tomography_RuleSet->addRule(std::move(Purification));
       }
-    } else if (Purification_type == 5556) {  // Predefined purification method
-      /// # Purification_type 5556: #
+    } else if (purification_type == 5556) {  // Predefined purification method
+      /// # purification_type 5556: #
       /// - name: Switching (A)
       /// - rounds: n
       /// - input Bell pairs per round: 3 in first round, then 2
@@ -1055,7 +1055,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       }
 
     } else if ((X_Purification && !Z_Purification) || (!X_Purification && Z_Purification)) {  // X or Z purification. Out-dated syntax.
-      /// # Purification_type default: #
+      /// # purification_type default: #
       /// - name: Boolean-driven (obsolete)
       /// - rounds: 1
       /// - input Bell pairs: 2 or 3
@@ -1063,7 +1063,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
       /// - circuit: <reference a figure>
       /// - scheduling: (commonly pumping, symmetric tree, or banded)
       /// ## description: ##
-      /// uses X_Purification and Z_purification booleans, but is obsolete.
+      /// uses X_Purification and z_purification booleans, but is obsolete.
       /// Creates a single purification only, or a single round of double
       /// purification. Use of this for new work is deprecated.
       rule_name = "Single purification with: " + std::to_string(partner_address);
@@ -1152,7 +1152,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 int HardwareMonitor::getQnicNumQubits(int qnic_index, QNIC_type qnic_type) {
   Enter_Method("checkNumBuff()");
   auto qnic = getQnic(qnic_index, qnic_type);
-  return qnic->par("numBuffer");
+  return qnic->par("num_buffer");
 }
 
 cModule *HardwareMonitor::getQnic(int qnic_index, QNIC_type qnic_type) {
@@ -1174,7 +1174,7 @@ InterfaceInfo HardwareMonitor::getQnicInterfaceByQnicAddr(int qnic_index, QNIC_t
   inf.qnic.address = local_qnic->par("self_qnic_address");
   inf.qnic.index = qnic_index;
   inf.qnic.type = qnic_type;
-  inf.buffer_size = local_qnic->par("numBuffer");
+  inf.buffer_size = local_qnic->par("num_buffer");
 
   // Just read link cost from channel parameter for now as a dummy (or as an initialization).
   // int cost = local_qnic->gate("qnic_quantum_port$o")->getNextGate()->getChannel()->par("cost");
@@ -1248,7 +1248,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module)
 cModule *HardwareMonitor::getQNodeWithAddress(int address) {
   cTopology *topo = new cTopology("topo");
   // veryfication?
-  topo->extractByParameter("includeInTopo", "\"yes\"");
+  topo->extractByParameter("included_in_topology", "\"yes\"");
   int addr;
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);

@@ -26,48 +26,48 @@ import modules.Logger.Logger;
 network topology_dumbell_MM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
     submodules:
         backend: Backend;
         logger: Logger;
         EndNode1: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=152,238");
         }
         EndNode2: QNode {
             address = 2;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=324,245");
         }
         EndNode3: QNode {
             address = 3;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=220,137");
         }
         EndNode4: QNode {
             address = 4;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=350,22");
         }
         EndNode5: QNode {
             address = 5;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=401,118");
         }
         EndNode6: QNode {
             address = 6;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=421,61");
         }
         Repeater1: QNode {
             address = 7;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=RTR;p=66,124");
         }
         Repeater2: QNode {
             address = 8;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=RTR;p=132,36");
         }
 
@@ -94,85 +94,85 @@ network topology_dumbell_MM
 network topology_dumbell_MIM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
     submodules:
         backend: Backend;
         logger: Logger;
         EndNode1: QNode {
             address = 1;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=200,331");
         }
         EndNode2: QNode {
             address = 2;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=329,322");
         }
         EndNode3: QNode {
             address = 3;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=454,285");
         }
         EndNode4: QNode {
             address = 4;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=454,199");
         }
         EndNode5: QNode {
             address = 5;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=554,168");
         }
         EndNode6: QNode {
             address = 6;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=602,73");
         }
         Repeater1: QNode {
             address = 7;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=RTR;p=45,161");
         }
         Repeater2: QNode {
             address = 8;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=RTR;p=197,21");
         }
         HOM1: HOM {
             address = 9;
-            nodeType = "BSA";
+            node_type = "BSA";
             @dispaly("p=42,150");
             @display("p=105,238");
         }
         HOM2: HOM {
             address = 10;
-            nodeType = "BSA";
+            node_type = "BSA";
             @dispaly("p=52,140");
             @display("p=186,238");
         }
         HOM3: HOM {
             address = 11;
-            nodeType = "BSA";
+            node_type = "BSA";
             @dispaly("p=32,130");
         }
         HOM4: HOM {
             address = 12;
-            nodeType = "BSA";
+            node_type = "BSA";
             @display("p=113,87");
         }
         HOM5: HOM {
             address = 13;
-            nodeType = "BSA";
+            node_type = "BSA";
             @display("p=326,118");
         }
         HOM6: HOM {
             address = 14;
-            nodeType = "BSA";
+            node_type = "BSA";
             @display("p=421,118");
         }
         HOM7: HOM {
             address = 15;
-            nodeType = "BSA";
+            node_type = "BSA";
             @display("p=454,54");
         }
 

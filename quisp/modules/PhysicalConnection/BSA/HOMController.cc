@@ -159,20 +159,20 @@ void HOMController::checkNeighborAddress(bool receiver) {
 void HOMController::checkNeighborBuffer(bool receiver) {
   if (receiver) {
     try {
-      neighbor_buffer = getParentModule()->getParentModule()->par("numBuffer");
-      neighbor_buffer_two = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->par("numBuffer");
+      neighbor_buffer = getParentModule()->getParentModule()->par("num_buffer");
+      neighbor_buffer_two = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getNextGate()->getNextGate()->getOwnerModule()->par("num_buffer");
       max_buffer = std::min(neighbor_buffer, neighbor_buffer_two);  // Both nodes should transmit the same amount of photons.
     } catch (std::exception &e) {
-      error("Error in HOM_Controller.cc. HOM couldnt find parameter numBuffer in the neighbor's qnic.");
+      error("Error in HOM_Controller.cc. HOM couldnt find parameter num_buffer in the neighbor's qnic.");
       endSimulation();
     }
   } else {
     try {
-      neighbor_buffer = getParentModule()->gate("quantum_port$o", 0)->getNextGate()->getNextGate()->getOwnerModule()->par("numBuffer");
-      neighbor_buffer_two = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getOwnerModule()->par("numBuffer");
+      neighbor_buffer = getParentModule()->gate("quantum_port$o", 0)->getNextGate()->getNextGate()->getOwnerModule()->par("num_buffer");
+      neighbor_buffer_two = getParentModule()->gate("quantum_port$o", 1)->getNextGate()->getNextGate()->getOwnerModule()->par("num_buffer");
       max_buffer = std::min(neighbor_buffer, neighbor_buffer_two);  // Both nodes should transmit the same amount of photons.
     } catch (std::exception &e) {
-      error("Error in HOM_Controller.cc. HOM couldnt find parameter numBuffer in the neighbor's qnic.");
+      error("Error in HOM_Controller.cc. HOM couldnt find parameter num_buffer in the neighbor's qnic.");
       endSimulation();
     }
   }
@@ -190,7 +190,7 @@ void HOMController::updateIDE_Parameter(bool receiver) {
     par("distance_to_neighbor_two") = distance_to_neighbor_two;
     par("max_neighbor_distance") = max_neighbor_distance;
     par("max_buffer") = max_buffer;
-    c = &par("Speed_of_light_in_fiber");
+    c = &par("speed_of_light_in_fiber");
     speed_of_light_in_channel = c->doubleValue();  // per sec
     if (receiver) {
       getParentModule()->par("qnic_index") = qnic_index;

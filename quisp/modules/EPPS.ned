@@ -20,7 +20,7 @@ simple SPDC_Controller
         double distance_to_neighbor_two = default(-1);//in km
         double max_neighbor_distance = default(-1);//in km
         double accepted_burst_interval = default(-1);//in s
-        double Speed_of_light_in_fiber @unit(km);
+        double speed_of_light_in_fiber @unit(km);
         double timing_buffer = default(1e-9);
         double frequency = default(-1);
     gates:
@@ -73,12 +73,12 @@ module SPDC
         int address;
         double epps_frequency = default(5.9*10^6);// 5.9*10^6 = 5.9million pairs per sec as a default https://arxiv.org/pdf/1707.01339.pdf
         double epps_error_rate = default(0.093);//From 0~1. Fidelity = 0.907. This is the fidelity of the entangled qubit before entering the channel.
-        string includeInTopo = "yes";
-        double epps_Y_error_ratio = default(1);
-        double epps_Z_error_ratio = default(1);
-        double epps_X_error_ratio = default(1);
+        string included_in_topology = "yes";
+        double epps_y_error_ratio = default(1);
+        double epps_z_error_ratio = default(1);
+        double epps_x_error_ratio = default(1);
         double epps_timing_buffer = default(1e-9);//1ns buffer (gap between classical notifier and the actual photon emission)
-        string nodeType = default("SPDC");
+        string node_type = default("SPDC");
         double epps_emission_std = default(0);
     gates:
         inout quantum_port[] @loose;
@@ -110,9 +110,9 @@ module SPDC
                 address = address;
                 frequency = epps_frequency;
                 error_rate = epps_error_rate;
-                	Y_error_ratio = epps_Y_error_ratio;
-        			Z_error_ratio = epps_Z_error_ratio;
-      			X_error_ratio = epps_X_error_ratio;
+                	Y_error_ratio = epps_y_error_ratio;
+        			Z_error_ratio = epps_z_error_ratio;
+      			X_error_ratio = epps_x_error_ratio;
       			emission_std = epps_emission_std;
                 @display("p=281,138");
         }

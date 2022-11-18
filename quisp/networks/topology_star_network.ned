@@ -11,7 +11,7 @@ import channels.*;
 network Three_HOM_star
 {
     parameters:
-        **.Speed_of_light_in_fiber = 208189.206944 km;
+        **.speed_of_light_in_fiber = 208189.206944 km;
 
         @display("bgl=2;bgb=177,120");
 
@@ -24,7 +24,7 @@ network Three_HOM_star
         EndNode[3]: QNode {
             //Initializerでaddress = node idにすればconflict無くなるかも。
             address = index+100000;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=60.333336,16.893333,m,5,60,60");
         }
         HOM[3]: HOM {
@@ -58,7 +58,7 @@ network Three_HOM_star
 network Star_MSM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
         @display("bgb=273,198");
     submodules:
@@ -66,7 +66,7 @@ network Star_MSM
         logger: Logger;
         node[3]: QNode {
             address = index;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=182,120,m,5,60,60");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
@@ -122,14 +122,14 @@ network Star_MSM
 network Star_MM
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
 
     submodules:
         backend: Backend;
         logger: Logger;
         node[3]: QNode {
             address = index;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=device/pc");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;

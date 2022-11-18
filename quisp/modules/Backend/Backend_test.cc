@@ -22,7 +22,7 @@ TEST(BackendContainer, callInitialize) {
   auto *sim = utils::prepareSimulation();
   BackendContainer *backend = new BackendContainer();
   sim->registerComponent(backend);
-  setParStr(backend, "backendType", "ErrorTrackingBackend");
+  setParStr(backend, "backend_type", "ErrorTrackingBackend");
   EXPECT_EQ(backend->backend, nullptr);
   backend->callInitialize();
   EXPECT_NE(backend->backend, nullptr);
@@ -32,7 +32,7 @@ TEST(BackendContainer, callInitializeWithInvalidBackend) {
   auto *sim = utils::prepareSimulation();
   BackendContainer *backend = new BackendContainer();
   sim->registerComponent(backend);
-  setParStr(backend, "backendType", "SomeInvalidBackend");
+  setParStr(backend, "backend_type", "SomeInvalidBackend");
   EXPECT_EQ(backend->backend, nullptr);
   EXPECT_THROW(backend->callInitialize(), omnetpp::cRuntimeError);
 }
@@ -41,7 +41,7 @@ TEST(BackendContainer, getQuantumBackend) {
   auto *sim = utils::prepareSimulation();
   BackendContainer *backend = new BackendContainer();
   sim->registerComponent(backend);
-  setParStr(backend, "backendType", "ErrorTrackingBackend");
+  setParStr(backend, "backend_type", "ErrorTrackingBackend");
   backend->callInitialize();
   ASSERT_NE(backend->backend, nullptr);
   auto *b = backend->getQuantumBackend();

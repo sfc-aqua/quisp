@@ -5,7 +5,7 @@ simple HOMController
 {
     parameters:
         int address;
-        volatile double Speed_of_light_in_fiber @unit(km);//per sec
+        volatile double speed_of_light_in_fiber @unit(km);//per sec
         int photon_detection_per_sec = default(10000);
         double Initial_notification_timing_buffer @unit(s) = default(0s);
         //rate can be up to 1 billion photons per second by default
