@@ -91,7 +91,7 @@ class StatQubitFixture : public StationaryQubit {
     setParBool(this, "god_excitation_error", false);
     setParBool(this, "god_relaxation_error", false);
     setParBool(this, "is_busy", false);
-    setParInt(this, "god_entangled_stationaryQubit_address", 0);
+    setParInt(this, "god_entangled_stationary_qubit_address", 0);
     setParInt(this, "god_entangled_node_address", 0);
     setParInt(this, "god_entangled_qnic_address", 0);
     setParInt(this, "god_entangled_qnic_type", 0);

@@ -344,7 +344,7 @@ void StationaryQubit::setBusy() {
   updated_time = simTime();  // Should be no error at this time.
   par("photon_emitted_at") = emitted_time.dbl();
   par("last_updated_at") = updated_time.dbl();
-  par(is_busy) = true;
+  par("is_busy") = true;
   // GUI part
   if (hasGUI()) {
     getDisplayString().setTagArg("i", 1, "red");
@@ -380,7 +380,7 @@ void StationaryQubit::setFree(bool consumed) {
   par("god_relaxation_error") = false;
   par("god_completely_mixed_error") = false;
   par("is_busy") = false;
-  par("god_entangled_stationaryQubit_address") = -1;
+  par("god_entangled_stationary_qubit_address") = -1;
   par("god_entangled_node_address") = -1;
   par("god_entangled_qnic_address") = -1;
   par("god_entangled_qnic_type") = -1;
@@ -554,7 +554,7 @@ void StationaryQubit::setEntangledPartnerInfo(IStationaryQubit *partner) {
   // When BSA succeeds, this method gets invoked to store entangled partner information.
   // This will also be sent classically to the partner node afterwards.
   entangled_partner = partner;
-  par("god_entangled_stationaryQubit_address") = partner->par("stationary_qubit_address");
+  par("god_entangled_stationary_qubit_address") = partner->par("stationary_qubit_address");
   par("god_entangled_node_address") = partner->par("node_address");
   par("god_entangled_qnic_address") = partner->par("qnic_address");
   par("god_entangled_qnic_type") = partner->par("qnic_type");

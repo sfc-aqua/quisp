@@ -35,7 +35,6 @@ module QNode
     submodules:
         app: Application {
             parameters:
-                address = parent.address;//share the same address within all inner modules
                 @display("p=30,43");
         }
         router: Router {
