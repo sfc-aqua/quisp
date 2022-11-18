@@ -34,42 +34,42 @@ class StatQubitTarget : public StationaryQubit {
   void fillParams() {
     // see networks/omnetpp.ini
     setParDouble(this, "emission_success_probability", 0.5);
-    setParDouble(this, "memory_X_error_rate", 1.11111111e-7);
-    setParDouble(this, "memory_Y_error_rate", 1.11111111e-7);
-    setParDouble(this, "memory_Z_error_rate", 1.11111111e-7);
+    setParDouble(this, "memory_x_error_rate", 1.11111111e-7);
+    setParDouble(this, "memory_y_error_rate", 1.11111111e-7);
+    setParDouble(this, "memory_z_error_rate", 1.11111111e-7);
     setParDouble(this, "memory_energy_excitation_rate", 0.000198);
     setParDouble(this, "memory_energy_relaxation_rate", 0.00000198);
     setParDouble(this, "memory_completely_mixed_rate", 0);
 
-    setParDouble(this, "Hgate_error_rate", 1. / 2000);
-    setParDouble(this, "Hgate_X_error_ratio", 0);
-    setParDouble(this, "Hgate_Z_error_ratio", 0);
-    setParDouble(this, "Hgate_Y_error_ratio", 0);
+    setParDouble(this, "h_gate_error_rate", 1. / 2000);
+    setParDouble(this, "h_gate_x_error_ratio", 0);
+    setParDouble(this, "h_gate_z_error_ratio", 0);
+    setParDouble(this, "h_gate_y_error_ratio", 0);
 
-    setParDouble(this, "Xgate_error_rate", 1. / 2000);
-    setParDouble(this, "Xgate_X_error_ratio", 0);
-    setParDouble(this, "Xgate_Z_error_ratio", 0);
-    setParDouble(this, "Xgate_Y_error_ratio", 0);
+    setParDouble(this, "x_gate_error_rate", 1. / 2000);
+    setParDouble(this, "x_gate_x_error_ratio", 0);
+    setParDouble(this, "x_gate_z_error_ratio", 0);
+    setParDouble(this, "x_gate_y_error_ratio", 0);
 
-    setParDouble(this, "Zgate_error_rate", 1. / 2000);
-    setParDouble(this, "Zgate_X_error_ratio", 0);
-    setParDouble(this, "Zgate_Z_error_ratio", 0);
-    setParDouble(this, "Zgate_Y_error_ratio", 0);
+    setParDouble(this, "z_gate_error_rate", 1. / 2000);
+    setParDouble(this, "z_gate_x_error_ratio", 0);
+    setParDouble(this, "z_gate_z_error_ratio", 0);
+    setParDouble(this, "z_gate_y_error_ratio", 0);
 
-    setParDouble(this, "CNOTgate_error_rate", 1. / 2000);
-    setParDouble(this, "CNOTgate_IX_error_ratio", 1);
-    setParDouble(this, "CNOTgate_XI_error_ratio", 1);
-    setParDouble(this, "CNOTgate_XX_error_ratio", 1);
-    setParDouble(this, "CNOTgate_IZ_error_ratio", 1);
-    setParDouble(this, "CNOTgate_ZI_error_ratio", 1);
-    setParDouble(this, "CNOTgate_ZZ_error_ratio", 1);
-    setParDouble(this, "CNOTgate_IY_error_ratio", 1);
-    setParDouble(this, "CNOTgate_YI_error_ratio", 1);
-    setParDouble(this, "CNOTgate_YY_error_ratio", 1);
+    setParDouble(this, "cnot_gate_error_rate", 1. / 2000);
+    setParDouble(this, "cnot_gate_ix_error_ratio", 1);
+    setParDouble(this, "cnot_gate_xi_error_ratio", 1);
+    setParDouble(this, "cnot_gate_xx_error_ratio", 1);
+    setParDouble(this, "cnot_gate_iz_error_ratio", 1);
+    setParDouble(this, "cnot_gate_zi_error_ratio", 1);
+    setParDouble(this, "cnot_gate_zz_error_ratio", 1);
+    setParDouble(this, "cnot_gate_iy_error_ratio", 1);
+    setParDouble(this, "cnot_gate_yi_error_ratio", 1);
+    setParDouble(this, "cnot_gate_yy_error_ratio", 1);
 
-    setParDouble(this, "X_measurement_error_rate", 1. / 2000);
-    setParDouble(this, "Y_measurement_error_rate", 1. / 2000);
-    setParDouble(this, "Z_measurement_error_rate", 1. / 2000);
+    setParDouble(this, "x_measurement_error_rate", 1. / 2000);
+    setParDouble(this, "y_measurement_error_rate", 1. / 2000);
+    setParDouble(this, "z_measurement_error_rate", 1. / 2000);
 
     setParInt(this, "stationary_qubit_address", 1);
     setParInt(this, "node_address", 1);
@@ -143,9 +143,9 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_no_error) {
   // this means take 1st row of MemoryTransitionMatrix
   // ceiled values should be:
   // No error= 0.5, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-  setParDouble(qubit, "memory_X_error_rate", .1);
-  setParDouble(qubit, "memory_Y_error_rate", .1);
-  setParDouble(qubit, "memory_Z_error_rate", .1);
+  setParDouble(qubit, "memory_x_error_rate", .1);
+  setParDouble(qubit, "memory_y_error_rate", .1);
+  setParDouble(qubit, "memory_z_error_rate", .1);
   setParDouble(qubit, "memory_energy_excitation_rate", .1);
   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
   setParDouble(qubit, "memory_completely_mixed_rate", 0);
@@ -205,7 +205,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_no_error) {
   EXPECT_FALSE(qubit->par("god_completely_mixed_error").boolValue());
 }
 
-TEST(StatQubitMemoryErrorTest, apply_memory_error_X_error) {
+TEST(StatQubitMemoryErrorTest, apply_memory_error_x_error) {
   auto *sim = prepareSimulation();
   auto *rng = useTestRNG();
   auto *qubit = new StatQubitTarget{};
@@ -215,9 +215,9 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_X_error) {
   // this means take 2nd row of MemoryTransitionMatrix
   // ceiled values should be:
   // No error= 0.1, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-  setParDouble(qubit, "memory_X_error_rate", .1);
-  setParDouble(qubit, "memory_Y_error_rate", .1);
-  setParDouble(qubit, "memory_Z_error_rate", .1);
+  setParDouble(qubit, "memory_x_error_rate", .1);
+  setParDouble(qubit, "memory_y_error_rate", .1);
+  setParDouble(qubit, "memory_z_error_rate", .1);
   setParDouble(qubit, "memory_energy_excitation_rate", .1);
   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
   setParDouble(qubit, "memory_completely_mixed_rate", 0);
@@ -281,7 +281,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_X_error) {
   EXPECT_FALSE(qubit->par("god_completely_mixed_error").boolValue());
 }
 
-TEST(StatQubitMemoryErrorTest, apply_memory_error_Z_error) {
+TEST(StatQubitMemoryErrorTest, apply_memory_error_z_error) {
   auto *sim = prepareSimulation();
   auto *rng = useTestRNG();
   auto *qubit = new StatQubitTarget{};
@@ -291,9 +291,9 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_Z_error) {
   // this means take 3rd row of MemoryTransitionMatrix
   // ceiled values should be:
   // No error= 0.1, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-  setParDouble(qubit, "memory_X_error_rate", .1);
-  setParDouble(qubit, "memory_Y_error_rate", .1);
-  setParDouble(qubit, "memory_Z_error_rate", .1);
+  setParDouble(qubit, "memory_x_error_rate", .1);
+  setParDouble(qubit, "memory_y_error_rate", .1);
+  setParDouble(qubit, "memory_z_error_rate", .1);
   setParDouble(qubit, "memory_energy_excitation_rate", .1);
   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
   setParDouble(qubit, "memory_completely_mixed_rate", 0);
@@ -357,7 +357,7 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_Z_error) {
   EXPECT_FALSE(qubit->par("god_completely_mixed_error").boolValue());
 }
 
-TEST(StatQubitMemoryErrorTest, apply_memory_error_Y_error) {
+TEST(StatQubitMemoryErrorTest, apply_memory_error_y_error) {
   auto *sim = prepareSimulation();
   auto *rng = useTestRNG();
   auto *qubit = new StatQubitTarget{};
@@ -367,9 +367,9 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_Y_error) {
   // this means take 4th row of MemoryTransitionMatrix
   // ceiled values should be:
   // No error= 0.1, X error = 0.2, Z error = 0.3, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-  setParDouble(qubit, "memory_X_error_rate", .1);
-  setParDouble(qubit, "memory_Y_error_rate", .1);
-  setParDouble(qubit, "memory_Z_error_rate", .1);
+  setParDouble(qubit, "memory_x_error_rate", .1);
+  setParDouble(qubit, "memory_y_error_rate", .1);
+  setParDouble(qubit, "memory_z_error_rate", .1);
   setParDouble(qubit, "memory_energy_excitation_rate", .1);
   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
   setParDouble(qubit, "memory_completely_mixed_rate", 0);
@@ -448,9 +448,9 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_excitation_error) {
   // this means take 5th row of MemoryTransitionMatrix
   // ceiled values should be:
   // No error= 0.1, X error = 0.2, Z error = 0.3, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
-  setParDouble(qubit, "memory_X_error_rate", .1);
-  setParDouble(qubit, "memory_Y_error_rate", .1);
-  setParDouble(qubit, "memory_Z_error_rate", .1);
+  setParDouble(qubit, "memory_x_error_rate", .1);
+  setParDouble(qubit, "memory_y_error_rate", .1);
+  setParDouble(qubit, "memory_z_error_rate", .1);
   setParDouble(qubit, "memory_energy_excitation_rate", .1);
   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
   setParDouble(qubit, "memory_completely_mixed_rate", 0);
@@ -524,9 +524,9 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_relaxation_error) {
   // this means take 6th row of MemoryTransitionMatrix
   // ceiled values should be:
   // No error= 0, X error = 0, Z error = 0, Y error = 0, Excitation = 0.1, Relaxation = 1.0
-  setParDouble(qubit, "memory_X_error_rate", .1);
-  setParDouble(qubit, "memory_Y_error_rate", .1);
-  setParDouble(qubit, "memory_Z_error_rate", .1);
+  setParDouble(qubit, "memory_x_error_rate", .1);
+  setParDouble(qubit, "memory_y_error_rate", .1);
+  setParDouble(qubit, "memory_z_error_rate", .1);
   setParDouble(qubit, "memory_energy_excitation_rate", .1);
   setParDouble(qubit, "memory_energy_relaxation_rate", .1);
   setParDouble(qubit, "memory_completely_mixed_rate", 0);

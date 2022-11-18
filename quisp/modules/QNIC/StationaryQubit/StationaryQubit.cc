@@ -40,9 +40,9 @@ StationaryQubit::StationaryQubit() : provider(utils::ComponentProvider{this}) {}
 void StationaryQubit::initialize() {
   // read and set parameters
   emission_success_probability = par("emission_success_probability");
-  memory_err.X_error_rate = (double)par("memory_X_error_rate").doubleValue();
-  memory_err.Y_error_rate = (double)par("memory_Y_error_rate").doubleValue();
-  memory_err.Z_error_rate = (double)par("memory_Z_error_rate").doubleValue();
+  memory_err.X_error_rate = (double)par("memory_x_error_rate").doubleValue();
+  memory_err.Y_error_rate = (double)par("memory_y_error_rate").doubleValue();
+  memory_err.Z_error_rate = (double)par("memory_z_error_rate").doubleValue();
   memory_err.excitation_error_rate = (double)par("memory_energy_excitation_rate").doubleValue();
   memory_err.relaxation_error_rate = (double)par("memory_energy_relaxation_rate").doubleValue();
   memory_err.completely_mixed_rate = (double)par("memory_completely_mixed_rate").doubleValue();
@@ -60,10 +60,10 @@ void StationaryQubit::initialize() {
     0,                          0,                         0,                         0,                          memory_err.excitation_error_rate, memory_err.relaxation_error_rate, 1 - memory_err.excitation_error_rate - memory_err.relaxation_error_rate;
   // clang-format on
 
-  setSingleQubitGateErrorModel(Hgate_error, "Hgate");
-  setSingleQubitGateErrorModel(Xgate_error, "Xgate");
-  setSingleQubitGateErrorModel(Zgate_error, "Zgate");
-  setTwoQubitGateErrorCeilings(CNOTgate_error, "CNOTgate");
+  setSingleQubitGateErrorModel(Hgate_error, "h_gate");
+  setSingleQubitGateErrorModel(Xgate_error, "x_gate");
+  setSingleQubitGateErrorModel(Zgate_error, "z_gate");
+  setTwoQubitGateErrorCeilings(CNOTgate_error, "cnot_gate");
   setMeasurementErrorModel(Measurement_error);
 
   // Set error matrices. This is used in the process of simulating tomography.
@@ -133,9 +133,9 @@ void StationaryQubit::handleMessage(cMessage *msg) {
 
 void StationaryQubit::setSingleQubitGateErrorModel(SingleGateErrorModel &model, std::string gate_name) {
   auto err_rate_name = gate_name + std::string("_error_rate");
-  auto x_ratio_name = gate_name + std::string("_X_error_ratio");
-  auto z_ratio_name = gate_name + std::string("_Z_error_ratio");
-  auto y_ratio_name = gate_name + std::string("_Y_error_ratio");
+  auto x_ratio_name = gate_name + std::string("_x_error_ratio");
+  auto z_ratio_name = gate_name + std::string("_z_error_ratio");
+  auto y_ratio_name = gate_name + std::string("_y_error_ratio");
   model.pauli_error_rate = par(err_rate_name.c_str()).doubleValue();
   auto x_ratio = par(x_ratio_name.c_str()).doubleValue();
   auto z_ratio = par(z_ratio_name.c_str()).doubleValue();
@@ -161,17 +161,17 @@ void StationaryQubit::setSingleQubitGateErrorModel(SingleGateErrorModel &model, 
 void StationaryQubit::setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model, std::string gate_name) {
   // prepare parameter names
   std::string err_rate_name = std::string(gate_name) + std::string("_error_rate");
-  auto ix_ratio_name = gate_name + std::string("_IX_error_ratio");
-  auto xi_ratio_name = gate_name + std::string("_XI_error_ratio");
-  auto xx_rationame = gate_name + std::string("_XX_error_ratio");
+  auto ix_ratio_name = gate_name + std::string("_ix_error_ratio");
+  auto xi_ratio_name = gate_name + std::string("_xi_error_ratio");
+  auto xx_rationame = gate_name + std::string("_xx_error_ratio");
 
-  auto iz_ratio_name = gate_name + std::string("_IZ_error_ratio");
-  auto zi_ratio_name = gate_name + std::string("_ZI_error_ratio");
-  auto zz_ratio_name = gate_name + std::string("_ZZ_error_ratio");
+  auto iz_ratio_name = gate_name + std::string("_iz_error_ratio");
+  auto zi_ratio_name = gate_name + std::string("_zi_error_ratio");
+  auto zz_ratio_name = gate_name + std::string("_zz_error_ratio");
 
-  auto iy_ratio_name = gate_name + std::string("_IY_error_ratio");
-  auto yi_ratio_name = gate_name + std::string("_YI_error_ratio");
-  auto yy_ratio_name = gate_name + std::string("_YY_error_ratio");
+  auto iy_ratio_name = gate_name + std::string("_iy_error_ratio");
+  auto yi_ratio_name = gate_name + std::string("_yi_error_ratio");
+  auto yy_ratio_name = gate_name + std::string("_yy_error_ratio");
 
   // get error ratios from parameter
   model.pauli_error_rate = par(err_rate_name.c_str()).doubleValue();
@@ -229,9 +229,9 @@ void StationaryQubit::setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model
 }
 
 void StationaryQubit::setMeasurementErrorModel(MeasurementErrorModel &model) {
-  model.x_error_rate = par("X_measurement_error_rate").doubleValue();
-  model.y_error_rate = par("Y_measurement_error_rate").doubleValue();
-  model.z_error_rate = par("Z_measurement_error_rate").doubleValue();
+  model.x_error_rate = par("x_measurement_error_rate").doubleValue();
+  model.y_error_rate = par("y_measurement_error_rate").doubleValue();
+  model.z_error_rate = par("z_measurement_error_rate").doubleValue();
 }
 
 MeasureXResult StationaryQubit::correlationMeasureX() {

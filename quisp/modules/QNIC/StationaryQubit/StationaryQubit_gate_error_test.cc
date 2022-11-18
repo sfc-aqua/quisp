@@ -36,47 +36,47 @@ class StatQubitTarget : public StationaryQubit {
   }
   void fillParams() {
     setParDouble(this, "emission_success_probability", 0.5);
-    setParDouble(this, "memory_X_error_rate", 1.11111111e-7);
-    setParDouble(this, "memory_Y_error_rate", 1.11111111e-7);
-    setParDouble(this, "memory_Z_error_rate", 1.11111111e-7);
+    setParDouble(this, "memory_x_error_rate", 1.11111111e-7);
+    setParDouble(this, "memory_y_error_rate", 1.11111111e-7);
+    setParDouble(this, "memory_z_error_rate", 1.11111111e-7);
     setParDouble(this, "memory_energy_excitation_rate", 0.000198);
     setParDouble(this, "memory_energy_relaxation_rate", 0.00000198);
     setParDouble(this, "memory_completely_mixed_rate", 0);
 
     // No error= 0.4, X error = 0.6, Z error = 0.8, Y error = 1.0
-    setParDouble(this, "Hgate_error_rate", 0.6);
-    setParDouble(this, "Hgate_X_error_ratio", 1);
-    setParDouble(this, "Hgate_Z_error_ratio", 1);
-    setParDouble(this, "Hgate_Y_error_ratio", 1);
+    setParDouble(this, "h_gate_error_rate", 0.6);
+    setParDouble(this, "h_gate_x_error_ratio", 1);
+    setParDouble(this, "h_gate_z_error_ratio", 1);
+    setParDouble(this, "h_gate_y_error_ratio", 1);
 
-    setParDouble(this, "Xgate_error_rate", 0.6);
-    setParDouble(this, "Xgate_X_error_ratio", 1);
-    setParDouble(this, "Xgate_Z_error_ratio", 1);
-    setParDouble(this, "Xgate_Y_error_ratio", 1);
+    setParDouble(this, "x_gate_error_rate", 0.6);
+    setParDouble(this, "x_gate_x_error_ratio", 1);
+    setParDouble(this, "x_gate_z_error_ratio", 1);
+    setParDouble(this, "x_gate_y_error_ratio", 1);
 
-    setParDouble(this, "Zgate_error_rate", 0.6);
-    setParDouble(this, "Zgate_X_error_ratio", 1);
-    setParDouble(this, "Zgate_Z_error_ratio", 1);
-    setParDouble(this, "Zgate_Y_error_ratio", 1);
+    setParDouble(this, "z_gate_error_rate", 0.6);
+    setParDouble(this, "z_gate_x_error_ratio", 1);
+    setParDouble(this, "z_gate_z_error_ratio", 1);
+    setParDouble(this, "z_gate_y_error_ratio", 1);
 
     // clean = 0.1,
     // IX = 0.2, XI = 0.3, XX = 0.4,
     // IZ = 0.5, ZI = 0.6, ZZ = 0.7,
     // IY = 0.8, IY = 0.9, YY = 1.0
-    setParDouble(this, "CNOTgate_error_rate", 0.9);
-    setParDouble(this, "CNOTgate_IX_error_ratio", 1);
-    setParDouble(this, "CNOTgate_XI_error_ratio", 1);
-    setParDouble(this, "CNOTgate_XX_error_ratio", 1);
-    setParDouble(this, "CNOTgate_IZ_error_ratio", 1);
-    setParDouble(this, "CNOTgate_ZI_error_ratio", 1);
-    setParDouble(this, "CNOTgate_ZZ_error_ratio", 1);
-    setParDouble(this, "CNOTgate_IY_error_ratio", 1);
-    setParDouble(this, "CNOTgate_YI_error_ratio", 1);
-    setParDouble(this, "CNOTgate_YY_error_ratio", 1);
+    setParDouble(this, "cnot_gate_error_rate", 0.9);
+    setParDouble(this, "cnot_gate_ix_error_ratio", 1);
+    setParDouble(this, "cnot_gate_xi_error_ratio", 1);
+    setParDouble(this, "cnot_gate_xx_error_ratio", 1);
+    setParDouble(this, "cnot_gate_iz_error_ratio", 1);
+    setParDouble(this, "cnot_gate_zi_error_ratio", 1);
+    setParDouble(this, "cnot_gate_zz_error_ratio", 1);
+    setParDouble(this, "cnot_gate_iy_error_ratio", 1);
+    setParDouble(this, "cnot_gate_yi_error_ratio", 1);
+    setParDouble(this, "cnot_gate_yy_error_ratio", 1);
 
-    setParDouble(this, "X_measurement_error_rate", 1.0 / 2000);
-    setParDouble(this, "Y_measurement_error_rate", 1.0 / 2000);
-    setParDouble(this, "Z_measurement_error_rate", 1.0 / 2000);
+    setParDouble(this, "x_measurement_error_rate", 1.0 / 2000);
+    setParDouble(this, "y_measurement_error_rate", 1.0 / 2000);
+    setParDouble(this, "z_measurement_error_rate", 1.0 / 2000);
 
     setParInt(this, "stationary_qubit_address", 1);
     setParInt(this, "node_address", 1);
@@ -105,12 +105,12 @@ TEST(StatQubitGateErrorTest, SetSingleQubitGateErrorCeilings) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
-  setParDouble(qubit, "Xgate_error_rate", 0.1);
-  setParDouble(qubit, "Xgate_X_error_ratio", 1);
-  setParDouble(qubit, "Xgate_Z_error_ratio", 2);
-  setParDouble(qubit, "Xgate_Y_error_ratio", 3);
+  setParDouble(qubit, "x_gate_error_rate", 0.1);
+  setParDouble(qubit, "x_gate_x_error_ratio", 1);
+  setParDouble(qubit, "x_gate_z_error_ratio", 2);
+  setParDouble(qubit, "x_gate_y_error_ratio", 3);
   sim->registerComponent(qubit);
-  qubit->setSingleQubitGateErrorModel(qubit->Xgate_error, std::string("Xgate"));
+  qubit->setSingleQubitGateErrorModel(qubit->Xgate_error, std::string("x_gate"));
   auto &error_model = qubit->Xgate_error;
   EXPECT_FALSE(std::isnan(error_model.X_error_rate));
   EXPECT_FALSE(std::isnan(error_model.Y_error_rate));
@@ -138,12 +138,12 @@ TEST(StatQubitGateErrorTest, SetSingleQubitGateErrorCeilings_div_by_zero) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
-  setParDouble(qubit, "Xgate_error_rate", 0.1);
-  setParDouble(qubit, "Xgate_X_error_ratio", 0);
-  setParDouble(qubit, "Xgate_Z_error_ratio", 0);
-  setParDouble(qubit, "Xgate_Y_error_ratio", 0);
+  setParDouble(qubit, "x_gate_error_rate", 0.1);
+  setParDouble(qubit, "x_gate_x_error_ratio", 0);
+  setParDouble(qubit, "x_gate_z_error_ratio", 0);
+  setParDouble(qubit, "x_gate_y_error_ratio", 0);
   sim->registerComponent(qubit);
-  qubit->setSingleQubitGateErrorModel(qubit->Xgate_error, std::string("Xgate"));
+  qubit->setSingleQubitGateErrorModel(qubit->Xgate_error, std::string("x_gate"));
   auto &error_model = qubit->Xgate_error;
   EXPECT_FALSE(std::isnan(error_model.X_error_rate));
   EXPECT_FALSE(std::isnan(error_model.Y_error_rate));
@@ -171,18 +171,18 @@ TEST(StatQubitGateErrorTest, SetTwoQubitGateErrorCeilings) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
-  setParDouble(qubit, "CNOTgate_error_rate", 0.1);
-  setParDouble(qubit, "CNOTgate_IX_error_ratio", 1);
-  setParDouble(qubit, "CNOTgate_XI_error_ratio", 1);
-  setParDouble(qubit, "CNOTgate_XX_error_ratio", 1);
-  setParDouble(qubit, "CNOTgate_IZ_error_ratio", 1);
-  setParDouble(qubit, "CNOTgate_ZI_error_ratio", 1);
-  setParDouble(qubit, "CNOTgate_ZZ_error_ratio", 1);
-  setParDouble(qubit, "CNOTgate_IY_error_ratio", 1);
-  setParDouble(qubit, "CNOTgate_YI_error_ratio", 1);
-  setParDouble(qubit, "CNOTgate_YY_error_ratio", 1);
+  setParDouble(qubit, "cnot_gate_error_rate", 0.1);
+  setParDouble(qubit, "cnot_gate_ix_error_ratio", 1);
+  setParDouble(qubit, "cnot_gate_xi_error_ratio", 1);
+  setParDouble(qubit, "cnot_gate_xx_error_ratio", 1);
+  setParDouble(qubit, "cnot_gate_iz_error_ratio", 1);
+  setParDouble(qubit, "cnot_gate_zi_error_ratio", 1);
+  setParDouble(qubit, "cnot_gate_zz_error_ratio", 1);
+  setParDouble(qubit, "cnot_gate_iy_error_ratio", 1);
+  setParDouble(qubit, "cnot_gate_yi_error_ratio", 1);
+  setParDouble(qubit, "cnot_gate_yy_error_ratio", 1);
   sim->registerComponent(qubit);
-  qubit->setTwoQubitGateErrorCeilings(qubit->CNOTgate_error, std::string("CNOTgate"));
+  qubit->setTwoQubitGateErrorCeilings(qubit->CNOTgate_error, std::string("cnot_gate"));
   auto const &error_model = qubit->CNOTgate_error;
   EXPECT_FALSE(std::isnan(error_model.IX_error_rate));
   EXPECT_FALSE(std::isnan(error_model.XI_error_rate));
@@ -241,18 +241,18 @@ TEST(StatQubitGateErrorTest, SetTwoQubitGateErrorCeilings_div_by_zero) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
-  setParDouble(qubit, "CNOTgate_error_rate", 0.1);
-  setParDouble(qubit, "CNOTgate_IX_error_ratio", 0);
-  setParDouble(qubit, "CNOTgate_XI_error_ratio", 0);
-  setParDouble(qubit, "CNOTgate_XX_error_ratio", 0);
-  setParDouble(qubit, "CNOTgate_IZ_error_ratio", 0);
-  setParDouble(qubit, "CNOTgate_ZI_error_ratio", 0);
-  setParDouble(qubit, "CNOTgate_ZZ_error_ratio", 0);
-  setParDouble(qubit, "CNOTgate_IY_error_ratio", 0);
-  setParDouble(qubit, "CNOTgate_YI_error_ratio", 0);
-  setParDouble(qubit, "CNOTgate_YY_error_ratio", 0);
+  setParDouble(qubit, "cnot_gate_error_rate", 0.1);
+  setParDouble(qubit, "cnot_gate_ix_error_ratio", 0);
+  setParDouble(qubit, "cnot_gate_xi_error_ratio", 0);
+  setParDouble(qubit, "cnot_gate_xx_error_ratio", 0);
+  setParDouble(qubit, "cnot_gate_iz_error_ratio", 0);
+  setParDouble(qubit, "cnot_gate_zi_error_ratio", 0);
+  setParDouble(qubit, "cnot_gate_zz_error_ratio", 0);
+  setParDouble(qubit, "cnot_gate_iy_error_ratio", 0);
+  setParDouble(qubit, "cnot_gate_yi_error_ratio", 0);
+  setParDouble(qubit, "cnot_gate_yy_error_ratio", 0);
   sim->registerComponent(qubit);
-  qubit->setTwoQubitGateErrorCeilings(qubit->CNOTgate_error, std::string("CNOTgate"));
+  qubit->setTwoQubitGateErrorCeilings(qubit->CNOTgate_error, std::string("cnot_gate"));
   auto const &error_model = qubit->CNOTgate_error;
   EXPECT_FALSE(std::isnan(error_model.IX_error_rate));
   EXPECT_FALSE(std::isnan(error_model.XI_error_rate));
@@ -311,7 +311,7 @@ TEST(StatQubitGateErrorTest, do_nothing_single_qubit_gate) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
-  setParDouble(qubit, "Xgate_error_rate", 0.0);
+  setParDouble(qubit, "x_gate_error_rate", 0.0);
   sim->registerComponent(qubit);
 
   qubit->callInitialize();
@@ -341,7 +341,7 @@ TEST(StatQubitGateErrorTest, do_nothing_two_qubit_gate) {
 
   qubit->fillParams();
   qubit2->fillParams();
-  setParDouble(qubit, "CNOTgate_error_rate", 0.0);
+  setParDouble(qubit, "cnot_gate_error_rate", 0.0);
   qubit->callInitialize();
   qubit2->callInitialize();
   qubit->reset();
