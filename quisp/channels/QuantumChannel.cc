@@ -6,7 +6,7 @@
 #include <omnetpp.h>
 #include <unsupported/Eigen/MatrixFunctions>
 #include <vector>
-//#include <Eigen/Dense>
+// #include <Eigen/Dense>
 #include <PhotonicQubit_m.h>
 
 using namespace Eigen;
@@ -56,10 +56,10 @@ Define_Channel(QuantumChannel)
 void QuantumChannel::initialize() {
   cDatarateChannel::initialize();
   distance = par("distance");  // in km
-  photon_loss_rate = par("channel_Loss_error_rate");
-  err.X_error_rate = par("channel_X_error_rate");
-  err.Y_error_rate = par("channel_Y_error_rate");
-  err.Z_error_rate = par("channel_Z_error_rate");
+  photon_loss_rate = par("channel_loss_rate");
+  err.X_error_rate = par("channel_x_error_rate");
+  err.Y_error_rate = par("channel_y_error_rate");
+  err.Z_error_rate = par("channel_z_error_rate");
   err.pauli_error_rate = err.X_error_rate + err.Y_error_rate + err.Z_error_rate + photon_loss_rate;
 
   MatrixXd Transition_matrix(5, 5);

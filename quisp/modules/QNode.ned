@@ -9,15 +9,15 @@ import modules.Common.*;
 module QNode
 {
     parameters:
-        int bufferSize = default(10);
+        int buffer_size = default(10);
         int address = default(0);
         int buffers = default(10); //default is defined as 10 in .ini file but can be changed independently in .ned file
         int mass = default(100);
-        bool isInitiator = default(false);
+        bool is_initiator = default(false);
         @display("bgl=4");
 
-        string includeInTopo = "yes";
-        string nodeType = default("none");
+        string included_in_topology = "yes";
+        string node_type = default("none");
         double emission_timing_std = default(0);//in seconds
         bool simultaneous_es_enabled = default(false);
 
@@ -35,7 +35,6 @@ module QNode
     submodules:
         app: Application {
             parameters:
-                address = parent.address;//share the same address within all inner modules
                 @display("p=30,43");
         }
         router: Router {
@@ -68,7 +67,7 @@ module QNode
                 parent_node_address = parent.address;
                 self_qnic_address = index;
                 self_qnic_index = index;
-                numBuffer = default(int(parent.buffers));//number of buffers for each qnic
+                num_buffer = default(int(parent.buffers));//number of buffers for each qnic
                 receiver = false;
                 emission_std = parent.emission_timing_std;
                 self_qnic_type = 0;
@@ -81,7 +80,7 @@ module QNode
                 parent_node_address = parent.address;
                 self_qnic_address = index + sizeof(parent.quantum_port);
                 self_qnic_index = index;
-                numBuffer = default(int(parent.buffers));//number of buffers for each qnic
+                num_buffer = default(int(parent.buffers));//number of buffers for each qnic
                 receiver = true;
                 passive = false;
                 self_qnic_type = 1;
@@ -94,7 +93,7 @@ module QNode
                 parent_node_address = parent.address;
                 self_qnic_address = index + sizeof(parent.quantum_port) + sizeof(parent.quantum_port_receiver);
                 self_qnic_index = index;
-                numBuffer = default(int(buffers));//number of buffers for each qnic
+                num_buffer = default(int(buffers));//number of buffers for each qnic
                 receiver = true;
                 passive = true;
                 self_qnic_type = 2;
@@ -103,7 +102,7 @@ module QNode
         }
 
     connections:
-        if (nodeType=="EndNode") {
+        if (node_type=="EndNode") {
             router.toApp --> app.fromRouter;
             router.fromApp <-- app.toRouter;
         }

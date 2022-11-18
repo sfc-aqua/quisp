@@ -69,9 +69,9 @@ module HOM
         double duration = default(0);
         int hom_photon_detection_per_sec = default(100000);
         int address = default(0);
-        string includeInTopo = default("yes");
+        string included_in_topology = default("yes");
         @display("bgl=2");
-        string nodeType = default("HOM");
+        string node_type = default("HOM");
         bool interHOM = default(false);
 
     gates:

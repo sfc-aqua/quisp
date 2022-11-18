@@ -34,7 +34,7 @@ void Application::initialize() {
   }
 
   my_address = provider.getQNode()->par("address");
-  is_initiator = provider.getQNode()->par("isInitiator");
+  is_initiator = provider.getQNode()->par("is_initiator");
 
   if (!is_initiator) {
     return;
@@ -107,7 +107,7 @@ void Application::handleMessage(cMessage *msg) {
 void Application::createEndNodeWeightMap() {
   cTopology *topo = new cTopology("topo");
 
-  topo->extractByParameter("nodeType", provider.getQNode()->par("nodeType").str().c_str());
+  topo->extractByParameter("node_type", provider.getQNode()->par("node_type").str().c_str());
 
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cModule *endnodeModule = topo->getNode(i)->getModule();
@@ -150,15 +150,15 @@ void Application::generateTraffic() {
   std::mt19937 gen;
   gen.seed(time(0));  // if you want different results from different runs
 
-  simtime_t send_time = simTime() + par("sendIaTime").doubleValue();
+  simtime_t send_time = simTime() + par("request_generation_interval").doubleValue();
 
   while (send_time < generate_up_to_time) {
     int dest_addr = addresses[dist(gen)];
-    int num_request_bell_pair = par("numberOfBellpair").intValue();
+    int num_request_bell_pair = par("number_of_bellpair").intValue();
     ConnectionSetupRequest *pk = createConnectionSetupRequest(dest_addr, num_request_bell_pair);
     EV_INFO << "Node " << my_address << " will initiate connection to " << dest_addr << " at " << send_time << " with " << num_request_bell_pair << " Bell pairs\n";
     scheduleAt(send_time, pk);
-    send_time = send_time + par("sendIaTime").doubleValue();
+    send_time = send_time + par("request_generation_interval").doubleValue();
   }
 }
 

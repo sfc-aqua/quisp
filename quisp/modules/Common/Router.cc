@@ -38,8 +38,8 @@ void Router::initialize(int stage) {
   // Topology creation for routing table
   cTopology *topo = new cTopology("topo");
 
-  // Any node that has a parameter includeInTopo will be included in routing
-  topo->extractByParameter("includeInTopo", "\"yes\"");
+  // Any node that has a parameter included_in_topology will be included in routing
+  topo->extractByParameter("included_in_topology", "\"yes\"");
 
   // If no node with the parameter & value found, do nothing.
   if (topo->getNumNodes() == 0 || topo == nullptr) {

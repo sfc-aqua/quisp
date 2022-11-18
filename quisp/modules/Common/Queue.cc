@@ -18,7 +18,7 @@ void Queue::initialize() {
     gate("line$i")->setDeliverOnReceptionStart(true);
   }
 
-  frame_capacity = par("frameCapacity");
+  frame_capacity = par("frame_capacity");
 
   qlen_signal = registerSignal("qlen");
   busy_signal = registerSignal("busy");

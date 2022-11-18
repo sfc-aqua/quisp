@@ -38,44 +38,44 @@ class StatQubitTarget : public StationaryQubit {
   void fillParams() {
     // see networks/omnetpp.ini
     setParDouble(this, "emission_success_probability", 0.5);
-    setParDouble(this, "memory_X_error_rate", 1.11111111e-7);
-    setParDouble(this, "memory_Y_error_rate", 1.11111111e-7);
-    setParDouble(this, "memory_Z_error_rate", 1.11111111e-7);
+    setParDouble(this, "memory_x_error_rate", 1.11111111e-7);
+    setParDouble(this, "memory_y_error_rate", 1.11111111e-7);
+    setParDouble(this, "memory_z_error_rate", 1.11111111e-7);
     setParDouble(this, "memory_energy_excitation_rate", 0.000198);
     setParDouble(this, "memory_energy_relaxation_rate", 0.00000198);
     setParDouble(this, "memory_completely_mixed_rate", 0);
 
-    setParDouble(this, "Hgate_error_rate", 1. / 2000);
-    setParDouble(this, "Hgate_X_error_ratio", 0);
-    setParDouble(this, "Hgate_Z_error_ratio", 0);
-    setParDouble(this, "Hgate_Y_error_ratio", 0);
+    setParDouble(this, "h_gate_error_rate", 1. / 2000);
+    setParDouble(this, "h_gate_x_error_ratio", 0);
+    setParDouble(this, "h_gate_z_error_ratio", 0);
+    setParDouble(this, "h_gate_y_error_ratio", 0);
 
-    setParDouble(this, "Xgate_error_rate", 1. / 2000);
-    setParDouble(this, "Xgate_X_error_ratio", 0);
-    setParDouble(this, "Xgate_Z_error_ratio", 0);
-    setParDouble(this, "Xgate_Y_error_ratio", 0);
+    setParDouble(this, "x_gate_error_rate", 1. / 2000);
+    setParDouble(this, "x_gate_x_error_ratio", 0);
+    setParDouble(this, "x_gate_z_error_ratio", 0);
+    setParDouble(this, "x_gate_y_error_ratio", 0);
 
-    setParDouble(this, "Zgate_error_rate", 1. / 2000);
-    setParDouble(this, "Zgate_X_error_ratio", 0);
-    setParDouble(this, "Zgate_Z_error_ratio", 0);
-    setParDouble(this, "Zgate_Y_error_ratio", 0);
+    setParDouble(this, "z_gate_error_rate", 1. / 2000);
+    setParDouble(this, "z_gate_x_error_ratio", 0);
+    setParDouble(this, "z_gate_z_error_ratio", 0);
+    setParDouble(this, "z_gate_y_error_ratio", 0);
 
-    setParDouble(this, "CNOTgate_error_rate", 1. / 2000);
-    setParDouble(this, "CNOTgate_IX_error_ratio", 1);
-    setParDouble(this, "CNOTgate_XI_error_ratio", 1);
-    setParDouble(this, "CNOTgate_XX_error_ratio", 1);
-    setParDouble(this, "CNOTgate_IZ_error_ratio", 1);
-    setParDouble(this, "CNOTgate_ZI_error_ratio", 1);
-    setParDouble(this, "CNOTgate_ZZ_error_ratio", 1);
-    setParDouble(this, "CNOTgate_IY_error_ratio", 1);
-    setParDouble(this, "CNOTgate_YI_error_ratio", 1);
-    setParDouble(this, "CNOTgate_YY_error_ratio", 1);
+    setParDouble(this, "cnot_gate_error_rate", 1. / 2000);
+    setParDouble(this, "cnot_gate_ix_error_ratio", 1);
+    setParDouble(this, "cnot_gate_xi_error_ratio", 1);
+    setParDouble(this, "cnot_gate_xx_error_ratio", 1);
+    setParDouble(this, "cnot_gate_iz_error_ratio", 1);
+    setParDouble(this, "cnot_gate_zi_error_ratio", 1);
+    setParDouble(this, "cnot_gate_zz_error_ratio", 1);
+    setParDouble(this, "cnot_gate_iy_error_ratio", 1);
+    setParDouble(this, "cnot_gate_yi_error_ratio", 1);
+    setParDouble(this, "cnot_gate_yy_error_ratio", 1);
 
-    setParDouble(this, "X_measurement_error_rate", 1. / 2000);
-    setParDouble(this, "Y_measurement_error_rate", 1. / 2000);
-    setParDouble(this, "Z_measurement_error_rate", 1. / 2000);
+    setParDouble(this, "x_measurement_error_rate", 1. / 2000);
+    setParDouble(this, "y_measurement_error_rate", 1. / 2000);
+    setParDouble(this, "z_measurement_error_rate", 1. / 2000);
 
-    setParInt(this, "stationaryQubit_address", 1);
+    setParInt(this, "stationary_qubit_address", 1);
     setParInt(this, "node_address", 1);
     setParInt(this, "qnic_address", 1);
     setParInt(this, "qnic_type", 0);
@@ -84,16 +84,16 @@ class StatQubitTarget : public StationaryQubit {
 
     setParDouble(this, "photon_emitted_at", 0.0);
     setParDouble(this, "last_updated_at", 0.0);
-    setParBool(this, "GOD_Xerror", false);
-    setParBool(this, "GOD_Zerror", false);
-    setParBool(this, "GOD_CMerror", false);
-    setParBool(this, "GOD_EXerror", false);
-    setParBool(this, "GOD_REerror", false);
-    setParBool(this, "isBusy", false);
-    setParInt(this, "GOD_entangled_stationaryQubit_address", 0);
-    setParInt(this, "GOD_entangled_node_address", 0);
-    setParInt(this, "GOD_entangled_qnic_address", 0);
-    setParInt(this, "GOD_entangled_qnic_type", 0);
+    setParBool(this, "god_x_error", false);
+    setParBool(this, "god_z_error", false);
+    setParBool(this, "god_completely_mixed_error", false);
+    setParBool(this, "god_excitation_error", false);
+    setParBool(this, "god_relaxation_error", false);
+    setParBool(this, "is_busy", false);
+    setParInt(this, "god_entangled_stationary_qubit_address", 0);
+    setParInt(this, "god_entangled_node_address", 0);
+    setParInt(this, "god_entangled_qnic_address", 0);
+    setParInt(this, "god_entangled_qnic_type", 0);
     setParDouble(this, "fidelity", -1.0);
   }
 };
@@ -102,9 +102,9 @@ TEST(StatQubitTest, initialize_memory_transition_matrix) {
   auto *sim = prepareSimulation();
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
-  setParDouble(qubit, "memory_X_error_rate", .011);
-  setParDouble(qubit, "memory_Y_error_rate", .012);
-  setParDouble(qubit, "memory_Z_error_rate", .013);
+  setParDouble(qubit, "memory_x_error_rate", .011);
+  setParDouble(qubit, "memory_y_error_rate", .012);
+  setParDouble(qubit, "memory_z_error_rate", .013);
   setParDouble(qubit, "memory_energy_excitation_rate", .014);
   setParDouble(qubit, "memory_energy_relaxation_rate", .015);
   setParDouble(qubit, "memory_completely_mixed_rate", 0);
@@ -150,11 +150,11 @@ TEST(StatQubitTest, setFree) {
   sim->registerComponent(qubit);
   qubit->fillParams();
   qubit->callInitialize();
-  qubit->par("GOD_Xerror") = true;
-  qubit->par("GOD_Zerror") = true;
-  qubit->par("GOD_EXerror") = true;
-  qubit->par("GOD_REerror") = true;
-  qubit->par("GOD_CMerror") = true;
+  qubit->par("god_x_error") = true;
+  qubit->par("god_z_error") = true;
+  qubit->par("god_excitation_error") = true;
+  qubit->par("god_relaxation_error") = true;
+  qubit->par("god_completely_mixed_error") = true;
 
   qubit->setFree(true);
   EXPECT_EQ(qubit->updated_time, simTime());
@@ -165,11 +165,11 @@ TEST(StatQubitTest, setFree) {
   EXPECT_EQ(qubit->updated_time, simTime());
 
   // check the qubit reset properly
-  EXPECT_FALSE(qubit->par("GOD_Xerror").boolValue());
-  EXPECT_FALSE(qubit->par("GOD_Zerror").boolValue());
-  EXPECT_FALSE(qubit->par("GOD_EXerror").boolValue());
-  EXPECT_FALSE(qubit->par("GOD_REerror").boolValue());
-  EXPECT_FALSE(qubit->par("GOD_CMerror").boolValue());
+  EXPECT_FALSE(qubit->par("god_x_error").boolValue());
+  EXPECT_FALSE(qubit->par("god_z_error").boolValue());
+  EXPECT_FALSE(qubit->par("god_excitation_error").boolValue());
+  EXPECT_FALSE(qubit->par("god_relaxation_error").boolValue());
+  EXPECT_FALSE(qubit->par("god_completely_mixed_error").boolValue());
 }
 
 TEST(StatQubitTest, setFreeUpdatesTime) {
@@ -195,11 +195,11 @@ TEST(StatQubitTest, addXError) {
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
   sim->registerComponent(qubit);
-  EXPECT_FALSE(qubit->par("GOD_Xerror"));
+  EXPECT_FALSE(qubit->par("god_x_error"));
   qubit->addXerror();
-  EXPECT_TRUE(qubit->par("GOD_Xerror"));
+  EXPECT_TRUE(qubit->par("god_x_error"));
   qubit->addXerror();
-  EXPECT_FALSE(qubit->par("GOD_Xerror"));
+  EXPECT_FALSE(qubit->par("god_x_error"));
 }
 
 TEST(StatQubitTest, addZError) {
@@ -207,11 +207,11 @@ TEST(StatQubitTest, addZError) {
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
   sim->registerComponent(qubit);
-  EXPECT_FALSE(qubit->par("GOD_Zerror"));
+  EXPECT_FALSE(qubit->par("god_z_error"));
   qubit->addZerror();
-  EXPECT_TRUE(qubit->par("GOD_Zerror"));
+  EXPECT_TRUE(qubit->par("god_z_error"));
   qubit->addZerror();
-  EXPECT_FALSE(qubit->par("GOD_Zerror"));
+  EXPECT_FALSE(qubit->par("god_z_error"));
 }
 
 TEST(StatQubitTest, getErrorMatrixTest) {

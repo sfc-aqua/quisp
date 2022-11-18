@@ -12,7 +12,7 @@ import modules.Logger.Logger;
 network Simple_constant_quantum_cost
 {
     parameters:
-        **.Speed_of_light_in_fiber = 205336.986301 km;
+        **.speed_of_light_in_fiber = 205336.986301 km;
         **.buffers = default(30);
         **.distance = 20 km;
         @display("bgb=746,327");
@@ -22,12 +22,12 @@ network Simple_constant_quantum_cost
         logger: Logger;
         endnode[3]: QNode {
             address = 10000000+index;
-            nodeType = "EndNode";
+            node_type = "EndNode";
             @display("i=COMP;p=480,88");
         }
         repeater[3]: QNode {
             address = sizeof(endnode) + index;
-            nodeType = "Repeater";
+            node_type = "Repeater";
             @display("i=REP1G;p=445,236");
         }
         HOM[6]: HOM {
@@ -36,7 +36,7 @@ network Simple_constant_quantum_cost
         }
         router[1]: QNode {
             address = sizeof(endnode) +sizeof(repeater) +sizeof(HOM) + index;
-            nodeType = "Router";
+            node_type = "Router";
             @display("i=RTR;p=357,144");
         }
     connections:
