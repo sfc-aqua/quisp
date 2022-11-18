@@ -1,5 +1,6 @@
 var dir_c08467b708a2125d4a83276329bbafb5 =
 [
+    [ "DisabledLogger.h", "_disabled_logger_8h.html", "_disabled_logger_8h" ],
     [ "ILogger.h", "_i_logger_8h.html", "_i_logger_8h" ],
     [ "JsonLogger.cc", "_json_logger_8cc.html", null ],
     [ "JsonLogger.h", "_json_logger_8h.html", "_json_logger_8h" ],

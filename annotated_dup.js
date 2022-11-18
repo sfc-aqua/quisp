@@ -33,6 +33,7 @@ var annotated_dup =
           [ "BackendContainer", "classquisp_1_1modules_1_1backend_1_1_backend_container.html", "classquisp_1_1modules_1_1backend_1_1_backend_container" ]
         ] ],
         [ "Logger", "namespacequisp_1_1modules_1_1_logger.html", [
+          [ "DisabledLogger", "classquisp_1_1modules_1_1_logger_1_1_disabled_logger.html", "classquisp_1_1modules_1_1_logger_1_1_disabled_logger" ],
           [ "ILogger", "classquisp_1_1modules_1_1_logger_1_1_i_logger.html", "classquisp_1_1modules_1_1_logger_1_1_i_logger" ],
           [ "JsonLogger", "classquisp_1_1modules_1_1_logger_1_1_json_logger.html", "classquisp_1_1modules_1_1_logger_1_1_json_logger" ],
           [ "LoggerBase", "classquisp_1_1modules_1_1_logger_1_1_logger_base.html", "classquisp_1_1modules_1_1_logger_1_1_logger_base" ],

@@ -130,6 +130,8 @@ var NAVTREEINDEX0 =
 "_default_component_provider_strategy_8cc.html":[17,0,0,6,2],
 "_default_component_provider_strategy_8h.html":[17,0,0,6,3],
 "_default_component_provider_strategy_8h_source.html":[17,0,0,6,3],
+"_disabled_logger_8h.html":[17,0,0,3,3,0],
+"_disabled_logger_8h_source.html":[17,0,0,3,3,0],
 "_double_purify_action_8cc.html":[17,0,0,4,0,0,3],
 "_double_purify_action_8h.html":[17,0,0,4,0,0,4],
 "_double_purify_action_8h_source.html":[17,0,0,4,0,0,4],
@@ -189,8 +191,8 @@ var NAVTREEINDEX0 =
 "_i_hardware_monitor_8h.html#aa8221402c1bbaa72e7188e116ef1193b":[17,0,0,3,6,1,3,8],
 "_i_hardware_monitor_8h.html#af3ccf887db6fb13ad8cb3dd947247a4b":[17,0,0,3,6,1,3,7],
 "_i_hardware_monitor_8h_source.html":[17,0,0,3,6,1,3],
-"_i_logger_8h.html":[17,0,0,3,3,0],
-"_i_logger_8h_source.html":[17,0,0,3,3,0],
+"_i_logger_8h.html":[17,0,0,3,3,1],
+"_i_logger_8h_source.html":[17,0,0,3,3,1],
 "_i_q_nic_record_8h.html":[17,0,0,3,6,4,1,0],
 "_i_q_nic_record_8h_source.html":[17,0,0,3,6,4,1,0],
 "_i_q_nic_store_8h.html":[17,0,0,3,6,4,2,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX0 =
 "_i_stationary_qubit_8h.html#a7d975efdf0e514097cc27f3bf2832d43a398e2a39cc03f41ad6761e6f365ac49e":[17,0,0,3,5,1,0,12,18],
 "_i_stationary_qubit_8h.html#a7d975efdf0e514097cc27f3bf2832d43a490aa6e856ccf208a054389e47ce0d06":[17,0,0,3,5,1,0,12,0],
 "_i_stationary_qubit_8h.html#a7d975efdf0e514097cc27f3bf2832d43a57cec4137b614c87cb4e24a3d003a3e0":[17,0,0,3,5,1,0,12,2],
-"_i_stationary_qubit_8h.html#a7d975efdf0e514097cc27f3bf2832d43a5c1f2e6ab420faca44be7cc77dc7177a":[17,0,0,3,5,1,0,12,8],
-"_i_stationary_qubit_8h.html#a7d975efdf0e514097cc27f3bf2832d43a5dbc98dcc983a70728bd082d1a47546e":[17,0,0,3,5,1,0,12,13],
-"_i_stationary_qubit_8h.html#a7d975efdf0e514097cc27f3bf2832d43a7a4dcdc03a7845b85b4d185243994cae":[17,0,0,3,5,1,0,12,16]
+"_i_stationary_qubit_8h.html#a7d975efdf0e514097cc27f3bf2832d43a5c1f2e6ab420faca44be7cc77dc7177a":[17,0,0,3,5,1,0,12,8]
 };

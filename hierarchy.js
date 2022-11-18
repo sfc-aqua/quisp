@@ -93,6 +93,7 @@ var hierarchy =
       [ "quisp_test::strategy::TestComponentProviderStrategy", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html", null ]
     ] ],
     [ "quisp::modules::Logger::ILogger", "classquisp_1_1modules_1_1_logger_1_1_i_logger.html", [
+      [ "quisp::modules::Logger::DisabledLogger", "classquisp_1_1modules_1_1_logger_1_1_disabled_logger.html", null ],
       [ "quisp::modules::Logger::JsonLogger", "classquisp_1_1modules_1_1_logger_1_1_json_logger.html", null ],
       [ "quisp_test::Logger::TestLogger", "classquisp__test_1_1_logger_1_1_test_logger.html", null ]
     ] ],
