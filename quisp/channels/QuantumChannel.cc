@@ -41,8 +41,8 @@ class QuantumChannel : public cDatarateChannel {
   double Lost_ceil;
   int DEBUG_darkcount_count = 0;
   MatrixXd Q_to_the_distance;
-  virtual void initialize();
-  virtual cChannel::Result processMessage(cMessage *msg, simtime_t t);
+  virtual void initialize() override;
+  virtual cChannel::Result processMessage(cMessage *msg, const SendOptions &options, simtime_t t) override;
 
  public:
   QuantumChannel();
@@ -72,7 +72,7 @@ void QuantumChannel::initialize() {
   Q_to_the_distance = Apow(distance);
 }
 
-cChannel::Result QuantumChannel::processMessage(cMessage *msg, simtime_t t) {
+cChannel::Result QuantumChannel::processMessage(cMessage *msg, const SendOptions &options, simtime_t t) {
   try {
     PhotonicQubit *q = check_and_cast<PhotonicQubit *>(msg);
 
@@ -101,7 +101,6 @@ cChannel::Result QuantumChannel::processMessage(cMessage *msg, simtime_t t) {
     Z_error_ceil = X_error_ceil + Output_condition(0, 2);
     Y_error_ceil = Z_error_ceil + Output_condition(0, 3);
     Lost_ceil = Y_error_ceil + Output_condition(0, 4);
-
     // Gives a random double between 0.0 ~ 1.0
     double rand = dblrand();
     if (rand < No_error_ceil) {
