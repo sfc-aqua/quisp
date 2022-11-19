@@ -8,7 +8,7 @@ var searchData=
   ['predictresourcefidelity_5',['predictResourceFidelity',['../classquisp_1_1modules_1_1_rule_engine.html#af8c95c7a05169d101c9962be40f0a58b',1,'quisp::modules::RuleEngine']]],
   ['prepareneighbortable_6',['prepareNeighborTable',['../classquisp_1_1modules_1_1_hardware_monitor.html#a715deb69363050ca9c969cbc2d466c7d',1,'quisp::modules::HardwareMonitor']]],
   ['preparesimulation_7',['prepareSimulation',['../namespacequisp__test_1_1utils.html#a8f56fe8b435500c54ff9eaf068d4c313',1,'quisp_test::utils']]],
-  ['processmessage_8',['processMessage',['../classquisp_1_1channels_1_1_quantum_channel.html#a4616c7c631a21688794476f1513e417c',1,'quisp::channels::QuantumChannel']]],
+  ['processmessage_8',['processMessage',['../classquisp_1_1channels_1_1_quantum_channel.html#ae776db0c4b587795f2f4afeac143fef8',1,'quisp::channels::QuantumChannel']]],
   ['purification_9',['Purification',['../classquisp_1_1rules_1_1_purification.html#ae839631b908bf317f62eaf1d8913b8f3',1,'quisp::rules::Purification::Purification(json serialized)'],['../classquisp_1_1rules_1_1_purification.html#ac499227ed1bc49e343a5d85662bdb535',1,'quisp::rules::Purification::Purification(PurType purification_type, int partner_addr, QNIC_type qnic_type, int qnic_id)']]],
   ['purificationcountclause_10',['PurificationCountClause',['../classquisp_1_1rules_1_1active_1_1clauses_1_1_purification_count_clause.html#a4296d4e56187a37dbfa1abc3961fbcaf',1,'quisp::rules::active::clauses::PurificationCountClause']]],
   ['purifyaction_11',['PurifyAction',['../classquisp_1_1rules_1_1active_1_1actions_1_1_purify_action.html#a2295bab5473fea53ada2191d0adfd436',1,'quisp::rules::active::actions::PurifyAction']]],
