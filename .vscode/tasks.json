@@ -1,0 +1,51 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build unit test",
+            "type": "shell",
+            "command": "make run-unit-test MODE=debug",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "build quisp",
+            "type": "shell",
+            "command": "make exe MODE=debug",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "make clean",
+            "problemMatcher": [],
+        },
+        {
+            "label": "distclean",
+            "type": "shell",
+            "command": "make distclean",
+            "problemMatcher": [],
+        },
+        {
+            "label": "format",
+            "type": "shell",
+            "command": "make format",
+            "problemMatcher": [],
+        },
+        {
+            "label": "tidy",
+            "type": "shell",
+            "command": "make tidy",
+            "problemMatcher": [],
+        }
+    ]
+}

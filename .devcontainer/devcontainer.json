@@ -1,0 +1,45 @@
+{
+	"name": "QuISP Dev",
+
+	"containerEnv": {
+		"DOCKER_DEFAULT_PLATFORM": "$(echo $(uname) | tr '[:upper:]' '[:lower:]')/$(uname -i)"
+	},
+
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "uname -a",
+	"remoteUser": "vscode",
+	"postStartCommand": "sudo service ssh start",
+
+	"forwardPorts": [
+		2222
+	],
+
+	"appPort": ["2222:22", "5901:5901", "6080:6080"], // [SSH, VNC, noVNC]
+
+	"features": {
+		"ghcr.io/devcontainers/features/desktop-lite:1": {
+			"version": "latest"
+		}
+	},
+
+	/*"runArgs": ["--net-host", "--shm-size=1g"],
+	"remoteEnv": {
+		"DISPLAY": ":0"
+	},*/
+
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode-remote.remote-containers",
+				"llvm-vs-code-extensions.vscode-clangd",
+				"vadimcn.vscode-lldb",
+				"matepek.vscode-catch2-test-adapter"
+			]
+		}
+	}
+}
