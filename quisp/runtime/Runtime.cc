@@ -20,7 +20,9 @@ Runtime::Runtime() : visitor(InstructionVisitor{this}) {}
 Runtime::Runtime(const RuleSet& ruleset, ICallBack* cb) : visitor(InstructionVisitor{this}), callback(cb) { assignRuleSet(ruleset); }
 Runtime::~Runtime() {}
 
-void Runtime::exec(const RuleSet& ruleset) {
+void Runtime::exec() { execRuleSet(ruleset); }
+
+void Runtime::execRuleSet(const RuleSet& ruleset) {
   if (terminated) return;
   cleanup();
   debugging = ruleset.debugging;

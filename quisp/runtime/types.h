@@ -10,20 +10,41 @@
 namespace quisp::runtime {
 
 using RuleId = int;
+
+// these types are mainly used for describing type name in def_instruction.h
 using String = std::string;
 
 using IQubitRecord = quisp::modules::qrsa::IQubitRecord;
+
+/// @brief measurement outcome for Instructions.
 using MeasurementOutcome = quisp::modules::measurement_outcome;
+
+/// @brief alias for omnetpp's simulation time.
 using Time = omnetpp::SimTime;
+/// @brief purification type for Instructions. see @ref rules::PurType enum.
 using PurType = int;
 
-// these types are mainly used for describing type name in def_instruction.h
+/// @brief internal register id representation for Instructions.
 enum class RegId : int { REG0, REG1, REG2, REG3, REG4 };
 std::ostream& operator<<(std::ostream& stream, const RegId& value);
 
-enum class ReturnCode : int { NONE, COND_FAILED, COND_PASSED, RS_TERMINATED };
+/**
+ * @brief Program specify a ReturnCode during the execution. Then, the Runtime
+ * determines to perform the action, execute the next Rule, or stop the RuleSet.
+ */
+enum class ReturnCode : int {
+  /// @brief do nothing.
+  NONE,
+  /// @brief condition failed. stop the rule execution.
+  COND_FAILED,
+  /// @brief condition passed. will perform the action.
+  COND_PASSED,
+  /// @brief RuleSet terminated. will delete the RuleSet and the Runtime.
+  RS_TERMINATED
+};
 std::ostream& operator<<(std::ostream& stream, const ReturnCode& value);
 
+/// @brief internal class to describe QNode's address.
 struct QNodeAddr {
   QNodeAddr(int val);
   int val;
@@ -32,8 +53,10 @@ std::ostream& operator<<(std::ostream& stream, const QNodeAddr& value);
 bool operator<(const QNodeAddr& a, const QNodeAddr& b);
 bool operator==(const QNodeAddr& a, const QNodeAddr& b);
 
+/// @brief describes Qubit id in a Program.
 struct QubitId {
   QubitId(int val);
+  /// @brief hash function for unordered map
   size_t operator()(const QubitId&) const;
   int val;
 };
@@ -41,6 +64,7 @@ std::ostream& operator<<(std::ostream& stream, const QubitId& value);
 bool operator<(const QubitId& a, const QubitId& b);
 bool operator==(const QubitId& a, const QubitId& b);
 
+/// @brief label to annotate the instruction index in a Program.
 struct Label {
   Label(std::string val);
   std::string val;
@@ -48,6 +72,7 @@ struct Label {
 std::ostream& operator<<(std::ostream& stream, const Label& value);
 bool operator==(const Label& a, const Label& b);
 
+/// @brief a key of memory key-value store in a RuleSet
 struct MemoryKey {
   MemoryKey(std::string key);
   std::string val;
@@ -56,14 +81,18 @@ std::ostream& operator<<(std::ostream& stream, const MemoryKey& key);
 bool operator==(const MemoryKey& a, const MemoryKey& b);
 
 using None = std::nullptr_t;
+
+/// @brief utility type for storing a label and corresponding instruction index.
 using LabelMap = std::unordered_map<Label, int>;
 
+/// @brief basis for measurement instruction in a Program.
 enum class Basis : int { Z, X, RANDOM };
 std::ostream& operator<<(std::ostream& stream, const Basis& value);
 
 }  // namespace quisp::runtime
 
 namespace std {
+// hash functions
 template <>
 struct ::std::hash<quisp::runtime::QNodeAddr> {
  public:

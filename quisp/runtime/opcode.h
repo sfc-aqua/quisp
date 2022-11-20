@@ -51,6 +51,7 @@ struct Instruction {
   std::tuple<Operands...> args;
   std::string label;
 
+  /// @brief returns string representation for debugging
   std::string toString() const {
     std::stringstream ss;
     ss << OpTypeStr[opcode];
@@ -61,6 +62,7 @@ struct Instruction {
     }
     return ss.str();
   }
+
   template <size_t N = 0, typename T>
   void toStringArgs(const T& t, std::stringstream& s) const {
     if constexpr (N < std::tuple_size<T>::value) {
