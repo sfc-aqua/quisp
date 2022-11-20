@@ -8,10 +8,9 @@
 
 namespace quisp::runtime {
 
-Program::Program(const std::string& name, const std::vector<InstructionTypes>& opcodes, bool debugging) : name(name), opcodes(opcodes), debugging(debugging) {
+Program::Program(const std::string& name, const std::vector<InstructionTypes>& opcodes, bool debugging) : opcodes(opcodes), name(name), debugging(debugging) {
   auto len = opcodes.size();
-  int pc = 0;
-  for (pc = 0; pc < len; pc++) {
+  for (int pc = 0; pc < len; pc++) {
     auto op = opcodes[pc];
     auto label = std::visit([](auto& o) { return o.label; }, op);
     if (label.size() > 0) {
@@ -19,7 +18,6 @@ Program::Program(const std::string& name, const std::vector<InstructionTypes>& o
     }
   }
 }
-void Rule::finalize() {}
 
 void RuleSet::finalize() {
   // set index for each rule
@@ -51,8 +49,6 @@ void RuleSet::finalize() {
     }
     partner_initial_rule_table.emplace(partner_addr, rule_ids.at(0));
   }
-
-  finalized = true;
 }
 
 void RuleSet::collectPartners(const RuleId rule_id, const InstructionTypes& instr, std::set<QNodeAddr>& partners,

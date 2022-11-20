@@ -1,5 +1,7 @@
 # Runtime
 
+@ref quisp::runtime
+
 # RuleSet Execution with Runtime
 @htmlonly
 <div class="mermaid">

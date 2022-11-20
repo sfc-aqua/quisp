@@ -76,28 +76,16 @@ INSTR_ERROR_String_{"no qubit"},
   EXPECT_EQ(runtime->getQubitByQubitId(q2), nullptr);
 }
 
-TEST_F(RuntimeTest, CannotGetLockedQubits) {
+TEST_F(RuntimeTest, CannotGetLockedQubits) {}
 
-}
+TEST_F(RuntimeTest, ExecRuleSetWithCondPassed) {}
 
-TEST_F(RuntimeTest, ExecRuleSetWithCondPassed) {
+TEST_F(RuntimeTest, ExecRuleSetWithCondFailed) {}
 
-}
+TEST_F(RuntimeTest, ExecRuleSetWithTerminating) {}
 
-TEST_F(RuntimeTest, ExecRuleSetWithCondFailed) {
+TEST_F(RuntimeTest, PromoteQubit) {}
 
-}
-
-TEST_F(RuntimeTest, ExecRuleSetWithTerminating) {
-
-}
-
-TEST_F(RuntimeTest, PromoteQubit) {
-
-}
-
-TEST_F(RuntimeTest, AssignQubit) {
-
-}
+TEST_F(RuntimeTest, AssignQubit) {}
 
 }  // namespace

@@ -32,8 +32,10 @@ struct Register {
 // (partner's qnode addr, assigned RuleId) => [half bell pair qubit record]
 using QubitResources = std::unordered_multimap<std::pair<QNodeAddr, RuleId>, IQubitRecord*>;
 
+/// @brief QubitId and qubit record map. This is initialized in before each Program execution
 using QubitNameMap = std::unordered_map<QubitId, IQubitRecord*>;
 
+/// @brief Memory is a simple dict to store the value during RuleSet execution.
 using Memory = std::unordered_map<MemoryKey, MemoryValue>;
 
 /**
@@ -102,10 +104,34 @@ class Runtime {
    */
   void cleanup();
 
-  void exec(const RuleSet& ruleset);
+  /// @brief execute the assigned RuleSet.
+  void exec();
+
+  /// @brief execute the given RuleSet.
+  void execRuleSet(const RuleSet& ruleset);
+
+  /// @brief execute the given Program in a Rule
   void execProgram(const Program& program);
+
+  /// @brief execute the one Instruction
   void execInstruction(const InstructionTypes& op);
+
+  /**
+   * @brief assign the entangled qubit to the RuleSet. The Runtime assign it to
+   * the first rule and the Rule can use the qubit.
+   *
+   * @param partner_addr the entangled partner QNode address for the qubit.
+   * @param qubit_record the entangled qubit's record.
+   */
   void assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_record);
+
+  /**
+   * @brief assign the entangled qubit to the rule
+   *
+   * @param partner_addr the entangled partner QNode address for the qubit.
+   * @param rule_id the rule id to assign the qubit
+   * @param qubit_record  the entangled qubit's record
+   */
   void assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record);
 
   /** @name register operations */
@@ -129,35 +155,64 @@ class Runtime {
   /**
    * @brief Set the given value to the Register
    *
-   * @param reg_id
-   * @param val
+   * @param reg_id the id for the register
+   * @param val the value to set the register
    */
   void setRegVal(RegId reg_id, int32_t val);
 
   /**
    * @brief jump to the instruction that has the given label
    *
-   * @param label
+   * @param label label to jump.
    */
   void jumpTo(const Label& label);
 
   /**
    * @brief Set the RuntimeError and will stop the Program execution
    *
-   * @param message
+   * @param message the error message for debugging
    */
   void setError(const String& message);
   //@}
 
   /** @name memory operations */
   //@{
+
+  /**
+   * @brief store the value into memory.
+   *
+   * @param key
+   * @param val
+   */
   void storeVal(MemoryKey key, MemoryValue val);
+
+  /**
+   * @brief load the value from memory, and put it into the given register.
+   *
+   * @param key
+   * @param reg_id
+   */
   void loadVal(MemoryKey key, RegId reg_id);
+
+  /**
+   * @brief load the value from memory.
+   *
+   * @param key
+   * @return MemoryValue
+   */
   MemoryValue loadVal(MemoryKey key);
   //@}
 
   /** @name qubit record operations */
   //@{
+
+  /**
+   * @brief check the qubit is locked or not. Purification uses the lock state
+   * in a qubit.
+   *
+   * @return true the qubit is locked by a Rule
+   * @return false the qubit is not locked
+   */
   bool isQubitLocked(IQubitRecord* const);
 
   /**
@@ -181,19 +236,63 @@ class Runtime {
    * @return IQubitRecord*
    */
   IQubitRecord* getQubitByQubitId(QubitId qubit_id) const;
+
+  /**
+   * @brief bind the assigned Qubit to the given qubit id to use it in a Program.
+   *
+   * @param qubit_record
+   * @param qubit_id
+   */
   void setQubit(IQubitRecord* qubit_record, QubitId qubit_id);
+
+  /**
+   * @brief promote the qubit to the next rule.
+   *
+   * the next rule id is automatically derived by the Programs in the RuleSet.
+   *
+   * @param it iterator to specify the qubit
+   */
   void promoteQubit(QubitResources::iterator it);
+
+  /**
+   * @brief promote the qubit that has new entangled partner.
+   *
+   * entanglement swapping operations need the promotion of the qubit
+   *
+   * @param qubit_record the entangled qubit's record already assigned to the RuleSet
+   * @param new_partner_addr new entangled partner's QNode address.
+   */
   void promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr new_partner_addr);
   //@}
 
   /** @name quantum operations */
   //@{
+
+  /**
+   * @brief measure qubit with the given basis and store the result to the memory.
+   *
+   * @param qubit_id the measurement target qubit's id
+   * @param result_key the key to store the measurement result
+   * @param basis the measurement result
+   */
   void measureQubit(QubitId qubit_id, MemoryKey result_key, Basis basis);
+
+  /// @brief free qubit and release it from the Rule and the RuleSet
   void freeQubit(QubitId);
+
+  /// @brief apply X gate
   void gateX(QubitId);
+
+  /// @brief apply Z gate
   void gateZ(QubitId);
+
+  /// @brief apply CNOT gate
   void gateCNOT(QubitId control_qubit_id, QubitId target_qubit_id);
+
+  /// @brief perform X purification and store the measurement result
   void purifyX(RegId result, QubitId qubit_id, QubitId trash_qubit_id);
+
+  /// @brief perform Z purification and store the measurement result
   void purifyZ(RegId result, QubitId qubit_id, QubitId trash_qubit_id);
   //@}
 
@@ -206,22 +305,16 @@ class Runtime {
 
   /** @name related components */
   //@{
-  /**
-   * @brief The visitor handles all instruction types for Program execution.
-   */
+  /// @brief The visitor handles all instruction types for Program execution.
   InstructionVisitor visitor;
 
-  /**
-   * @brief The callback provides a way to access the RuleEngine.
-   */
+  /// @brief The callback provides a way to access the RuleEngine.
   ICallBack* callback;
   //@}
 
   /** @name states */
   //@{
-  /**
-   * @brief current evaluating rule id
-   */
+  /// @brief current evaluating rule id
   RuleId rule_id = -1;
 
   /**
