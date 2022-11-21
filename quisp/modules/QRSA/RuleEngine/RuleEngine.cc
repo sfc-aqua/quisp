@@ -998,7 +998,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
 void RuleEngine::traverseThroughAllProcesses2() {
   for (auto &runtime : runtimes) {
     // how should we delete the runtime and its ruleset?
-    runtime.exec(runtime.ruleset);
+    runtime.exec();
   }
   return;
   /*
