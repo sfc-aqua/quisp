@@ -497,16 +497,19 @@ Program RuleSetConverter::constructTomographyAction(const Tomography *act) {
   /*
   LOAD count "count"
   GET_QUBIT q0 partner_addr qubit_resource_index
-  BNERR L1
+  BNERR QUBIT_FOUND
   ERROR "Qubit not found"
-L1:
+QUBIT_FOUND:
   MEASURE_RONDOM "outcome" q0
   INC count
   STORE "count" count
   FREE_QUBIT q0
   SEND_LINK_TOMOGRAPHY_RESULT partner_addr count "outcome" max_count
   */
-  auto q0 = 0;
+  QubitId q0{0};
+  MemoryKey outcome_key{"outcome"};
+  MemoryKey count_key{"count"};
+  Label qubit_found_label{"qubit_found"};
   auto count = RegId::REG0;
   int max_count = act->num_measurement;
   auto &qnic = act->qnic_interfaces.at(0);
@@ -520,15 +523,15 @@ L1:
       "Tomography",
       {
           // clang-format off
-INSTR_LOAD_RegId_MemoryKey_{{count, MemoryKey{"count"}}},
+INSTR_LOAD_RegId_MemoryKey_{{count, count_key}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, qubit_resource_index}},
-INSTR_BNERR_Label_{Label{"L1"}},
+INSTR_BNERR_Label_{qubit_found_label},
 INSTR_ERROR_String_{"Qubit not found for mesaurement"},
-INSTR_MEASURE_RANDOM_MemoryKey_QubitId_{{MemoryKey{"outcome"}, q0}, "L1"},
+INSTR_MEASURE_RANDOM_MemoryKey_QubitId_{{outcome_key, q0}, qubit_found_label},
 INSTR_INC_RegId_{count},
-INSTR_STORE_MemoryKey_RegId_{{MemoryKey{"count"}, count}},
+INSTR_STORE_MemoryKey_RegId_{{count_key, count}},
 INSTR_FREE_QUBIT_QubitId_{q0},
-INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_Time_{{partner_addr, count,MemoryKey{"outcome"}, max_count, start_time }}
+INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_Time_{{partner_addr, count, outcome_key, max_count, start_time}}
           // clang-format on
       },
   };
