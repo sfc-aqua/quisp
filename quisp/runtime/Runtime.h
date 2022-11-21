@@ -30,7 +30,7 @@ struct Register {
 };
 
 // (partner's qnode addr, assigned RuleId) => [half bell pair qubit record]
-using QubitResources = std::unordered_multimap<std::pair<QNodeAddr, RuleId>, IQubitRecord*>;
+using QubitResources = std::multimap<std::pair<QNodeAddr, RuleId>, IQubitRecord*>;
 
 /// @brief QubitId and qubit record map. This is initialized in before each Program execution
 using QubitNameMap = std::unordered_map<QubitId, IQubitRecord*>;
@@ -104,11 +104,8 @@ class Runtime {
    */
   void cleanup();
 
-  /// @brief execute the assigned RuleSet.
+  /// @brief public method to execute the assigned RuleSet.
   void exec();
-
-  /// @brief execute the given RuleSet.
-  void execRuleSet(const RuleSet& ruleset);
 
   /// @brief execute the given Program in a Rule
   void execProgram(const Program& program);
@@ -220,7 +217,7 @@ class Runtime {
    *
    * This method finds an index-th qubit record entangled with the partner from
    * the @ref qubits member. If the Runtime cannot find the qubit, this returns
-   * nullptr.
+   * nullptr. The qubit must be assigned to the current rule_id.
    * @param index
    * @return IQubitRecord*
    */

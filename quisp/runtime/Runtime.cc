@@ -20,9 +20,7 @@ Runtime::Runtime() : visitor(InstructionVisitor{this}) {}
 Runtime::Runtime(const RuleSet& ruleset, ICallBack* cb) : visitor(InstructionVisitor{this}), callback(cb) { assignRuleSet(ruleset); }
 Runtime::~Runtime() {}
 
-void Runtime::exec() { execRuleSet(ruleset); }
-
-void Runtime::execRuleSet(const RuleSet& ruleset) {
+void Runtime::exec() {
   if (terminated) return;
   cleanup();
   debugging = ruleset.debugging;
@@ -71,6 +69,9 @@ void Runtime::execProgram(const Program& program) {
     debugRuntimeState();
   }
   if (error != nullptr && !error->caught) {
+    std::cout << "Uncaught Error >>>>>>" << std::endl;
+    debugRuntimeState();
+    debugSource(program);
     throw std::runtime_error("uncaught error");
   }
 }
@@ -83,6 +84,7 @@ void Runtime::cleanup() {
   error = nullptr;
   named_qubits.clear();
   should_exit = false;
+  return_code = ReturnCode::NONE;
 }
 
 void Runtime::execInstruction(const InstructionTypes& instruction) { std::visit(visitor, instruction); }
