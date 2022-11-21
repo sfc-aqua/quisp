@@ -238,7 +238,7 @@ TEST_F(RuntimeInstructionsTest, ERROR) {
             }};
   execProgram(p);
   EXPECT_TRUE(checkRegisters({1, 0, 0, 0, 0}));
-  EXPECT_NE(runtime->error, nullptr);
+  ASSERT_NE(runtime->error, nullptr);
   EXPECT_STREQ(runtime->error->message.c_str(), "Some error happened");
   EXPECT_EQ(runtime->return_code, ReturnCode::NONE);
 }
