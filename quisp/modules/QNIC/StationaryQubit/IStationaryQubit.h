@@ -225,15 +225,15 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   virtual void addXerror() = 0;
   virtual void addZerror() = 0;
 
-  int stationaryQubit_address;
+  int stationary_qubit_address;
   int node_address;
   int qnic_address;
   int qnic_type;
   int qnic_index;
-  int GOD_entangled_stationaryQubit_address;
-  int GOD_entangled_node_address;
-  int GOD_entangled_qnic_address;
-  int GOD_entangled_qnic_type;
+  int god_entangled_stationary_qubit_address;
+  int god_entangled_node_address;
+  int god_entangled_qnic_address;
+  int god_entangled_qnic_type;
 
   int action_index;
   bool no_density_matrix_nullptr_entangled_partner_ok;
