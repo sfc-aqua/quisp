@@ -40,7 +40,9 @@ enum class ReturnCode : int {
   /// @brief condition passed. will perform the action.
   COND_PASSED,
   /// @brief RuleSet terminated. will delete the RuleSet and the Runtime.
-  RS_TERMINATED
+  RS_TERMINATED,
+  /// @brief unrecorverable error raised. stop the simulation.
+  ERROR,
 };
 std::ostream& operator<<(std::ostream& stream, const ReturnCode& value);
 

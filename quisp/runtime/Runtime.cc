@@ -57,7 +57,7 @@ void Runtime::execProgram(const Program& program) {
 
   cleanup();
   for (pc = 0; pc < len; pc++) {
-    if (should_exit) return;
+    if (should_exit) break;
     if (program.debugging || debugging) {
       debugSource(program);
       debugRuntimeState();
@@ -68,8 +68,9 @@ void Runtime::execProgram(const Program& program) {
   if (program.debugging || debugging) {
     debugRuntimeState();
   }
-  if (error != nullptr && !error->caught) {
-    std::cout << "Uncaught Error >>>>>>" << std::endl;
+
+  if (return_code == ReturnCode::ERROR) {
+    std::cout << "Uncaught Error >>>>>> " << callback->getNodeInfo() << std::endl;
     debugRuntimeState();
     debugSource(program);
     throw std::runtime_error("uncaught error");
@@ -81,9 +82,9 @@ void Runtime::cleanup() {
     reg.value = 0;
   }
   pc = 0;
-  error = nullptr;
   named_qubits.clear();
   should_exit = false;
+  qubit_found = false;
   return_code = ReturnCode::NONE;
 }
 
@@ -162,8 +163,6 @@ void Runtime::jumpTo(const Label& label) {
     pc = it->second - 1;
   }
 }
-
-void Runtime::setError(const String& message) { error = new RuntimeError(message, pc); }
 
 void Runtime::storeVal(MemoryKey key, MemoryValue val) { memory.insert_or_assign(key, val); }
 void Runtime::loadVal(MemoryKey key, RegId reg_id) {
@@ -262,7 +261,7 @@ void Runtime::purifyZ(RegId result_reg_id, QubitId qubit_id, QubitId trash_qubit
 bool Runtime::isQubitLocked(IQubitRecord* const qubit) { return callback->isQubitLocked(qubit); }
 void Runtime::debugRuntimeState() {
   std::cout << "\n---------runtime-state---------"
-            << "\npc: " << pc << ", rule_id: " << rule_id << ", error: " << (error == nullptr ? "no error" : error->message);
+            << "\npc: " << pc << ", rule_id: " << rule_id << ", qubit_found: " << (qubit_found ? "true" : "false");
   std::cout << "\nReg0: " << registers[0].value << ", Reg1: " << registers[1].value << ", Reg2: " << registers[2].value << ", Reg3: " << registers[3].value
             << ", Reg4: " << registers[4].value << "\n----------memory------------\n";
   for (auto it : memory) {

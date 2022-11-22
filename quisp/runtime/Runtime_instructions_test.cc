@@ -72,7 +72,6 @@ TEST_F(RuntimeInstructionsTest, SetRegisters) {
             }};
   execProgram(p);
   EXPECT_TRUE(checkRegisters({1, 2, 3, 4, 5}));
-  EXPECT_EQ(runtime->error, nullptr);
   EXPECT_EQ(runtime->return_code, ReturnCode::NONE);
 }
 
@@ -92,7 +91,6 @@ TEST_F(RuntimeInstructionsTest, SimpleArithmetics) {
             }};
   execProgram(p);
   EXPECT_TRUE(checkRegisters({2, 4, 6, 3, 3}));
-  EXPECT_EQ(runtime->error, nullptr);
   EXPECT_EQ(runtime->return_code, ReturnCode::NONE);
 }
 TEST_F(RuntimeInstructionsTest, Increment) {
@@ -112,7 +110,6 @@ TEST_F(RuntimeInstructionsTest, Increment) {
             }};
   execProgram(p);
   EXPECT_TRUE(checkRegisters({2, 3, 4, 5, 6}));
-  EXPECT_EQ(runtime->error, nullptr);
   EXPECT_EQ(runtime->return_code, ReturnCode::NONE);
 }
 
@@ -143,7 +140,6 @@ TEST_F(RuntimeInstructionsTest, BEQ) {
             }};
   execProgram(p);
   EXPECT_TRUE(checkRegisters({0, 3, 2, 2, 3}));
-  EXPECT_EQ(runtime->error, nullptr);
   EXPECT_EQ(runtime->return_code, ReturnCode::NONE);
 }
 
@@ -168,7 +164,6 @@ TEST_F(RuntimeInstructionsTest, BEZ) {
       }};
   execProgram(p);
   EXPECT_TRUE(checkRegisters({1, 3, 2, 0, 0}));
-  EXPECT_EQ(runtime->error, nullptr);
   EXPECT_EQ(runtime->return_code, ReturnCode::NONE);
 }
 
@@ -193,7 +188,6 @@ TEST_F(RuntimeInstructionsTest, BNZ) {
       }};
   execProgram(p);
   EXPECT_TRUE(checkRegisters({1, 2, 3, 0, 0}));
-  EXPECT_EQ(runtime->error, nullptr);
   EXPECT_EQ(runtime->return_code, ReturnCode::NONE);
 }
 
@@ -220,7 +214,6 @@ TEST_F(RuntimeInstructionsTest, BLT) {
             }};
   execProgram(p);
   EXPECT_TRUE(checkRegisters({0, 2, 3, 2, 0}));
-  EXPECT_EQ(runtime->error, nullptr);
   EXPECT_EQ(runtime->return_code, ReturnCode::NONE);
 }
 
@@ -231,16 +224,14 @@ TEST_F(RuntimeInstructionsTest, ERROR) {
             {
                 // clang-format off
                 INSTR_SET_RegId_int_{{r0, 1} },
-                INSTR_ERROR_String_{{"Some error happened"}},
+                INSTR_RET_ReturnCode_{{ReturnCode::ERROR}},
                 INSTR_SET_RegId_int_{{r1, 1} },
                 INSTR_SET_RegId_int_{{r2, 1} },
                 // clang-format on
             }};
-  execProgram(p);
+  EXPECT_THROW({ execProgram(p); }, std::runtime_error);
   EXPECT_TRUE(checkRegisters({1, 0, 0, 0, 0}));
-  ASSERT_NE(runtime->error, nullptr);
-  EXPECT_STREQ(runtime->error->message.c_str(), "Some error happened");
-  EXPECT_EQ(runtime->return_code, ReturnCode::NONE);
+  EXPECT_EQ(runtime->return_code, ReturnCode::ERROR);
 }
 
 TEST_F(RuntimeInstructionsTest, RET) {
@@ -257,7 +248,6 @@ TEST_F(RuntimeInstructionsTest, RET) {
             }};
   execProgram(p);
   EXPECT_TRUE(checkRegisters({1, 0, 0, 0, 0}));
-  EXPECT_EQ(runtime->error, nullptr);
   EXPECT_EQ(runtime->return_code, ReturnCode::COND_PASSED);
 }
 
@@ -280,7 +270,6 @@ TEST_F(RuntimeInstructionsTest, MemoryOperation) {
   EXPECT_TRUE(checkRegisters({0, 15, 15, 23, 0}));
   EXPECT_EQ(runtime->loadVal(key1).intValue(), 15);
   EXPECT_EQ(runtime->loadVal(key2).intValue(), 23);
-  EXPECT_EQ(runtime->error, nullptr);
   EXPECT_EQ(runtime->return_code, ReturnCode::NONE);
 }
 }  // namespace

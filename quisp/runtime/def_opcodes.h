@@ -20,8 +20,8 @@ OP(BNZ)  // branch if not zero
 OP(BNE)  // branch if not equal
 OP(BLT)  // branch if less than
 OP(BGE)  // branch if greater or equal
-OP(BNERR)  // branch if no error
 OP(BRANCH_IF_LOCKED)  // branch if the given qubit is locked
+OP(BRANCH_IF_QUBIT_FOUND)  // branch if the qubit found after GET_QUBIT
 
 // memory
 OP(LOAD)

@@ -24,8 +24,8 @@ INSTR(BEQ, Label, RegId, int)  // branch if the reg value is equal to the int va
 INSTR(BEZ, Label, RegId)  // branch if the reg value is zero
 INSTR(BNZ, Label, RegId)  // branch if the reg val is not zero
 INSTR(BLT, Label, RegId, int)  // branch if the reg val is less than the int value
-INSTR(BNERR, Label)  // branch if no error
 INSTR(BRANCH_IF_LOCKED, Label, RegId)
+INSTR(BRANCH_IF_QUBIT_FOUND, Label)
 INSTR(JMP, Label)
 INSTR(ERROR, String)  // stop execution and show error
 INSTR(RET, ReturnCode)  // stop execution with the ReturnCode
