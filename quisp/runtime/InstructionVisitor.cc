@@ -3,6 +3,7 @@
 
 #include "InstructionVisitor.h"
 #include "Runtime.h"
+#include "runtime/types.h"
 
 namespace quisp::runtime {
 
@@ -159,9 +160,9 @@ void InstructionVisitor::operator()(const INSTR_STORE_MemoryKey_int_& instructio
   runtime->storeVal(memory_key, MemoryValue(value));
 }
 
-void InstructionVisitor::operator()(const INSTR_BNERR_Label_& instruction) {
+void InstructionVisitor::operator()(const INSTR_BRANCH_IF_QUBIT_FOUND_Label_& instruction) {
   auto [label] = instruction.args;
-  if (runtime->error == nullptr) {
+  if (runtime->qubit_found) {
     runtime->jumpTo(label);
   }
 }
@@ -203,9 +204,10 @@ void InstructionVisitor::operator()(const INSTR_INC_RegId_& instruction) {
 
 void InstructionVisitor::operator()(const INSTR_ERROR_String_& instruction) {
   auto [message] = instruction.args;
-  runtime->setError(message);
-  runtime->error->caught = true;
+  std::cerr << "RuntimeError : " << message << std::endl;
+  runtime->debugRuntimeState();
   runtime->should_exit = true;
+  runtime->return_code = ReturnCode::ERROR;
 }
 
 void InstructionVisitor::operator()(const INSTR_DEBUG_RUNTIME_STATE_None_& _instruction) { runtime->debugRuntimeState(); }
@@ -267,9 +269,10 @@ void InstructionVisitor::operator()(const INSTR_GET_QUBIT_QubitId_QNodeAddr_RegI
   int qubit_resource_index = runtime->getRegVal(qubit_resource_index_reg_id);
   auto* qubit_ref = runtime->getQubitByPartnerAddr(partner_addr, qubit_resource_index);
   if (qubit_ref == nullptr) {
-    runtime->setError("Qubit not found");
+    runtime->qubit_found = false;
     return;
   }
+  runtime->qubit_found = true;
   runtime->setQubit(qubit_ref, qubit_id);
 }
 
@@ -277,9 +280,10 @@ void InstructionVisitor::operator()(const INSTR_GET_QUBIT_QubitId_QNodeAddr_int_
   auto [qubit_id, partner_addr, qubit_resource_index] = instruction.args;
   auto* qubit_ref = runtime->getQubitByPartnerAddr(partner_addr, qubit_resource_index);
   if (qubit_ref == nullptr) {
-    runtime->setError("Qubit not found");
+    runtime->qubit_found = false;
     return;
   }
+  runtime->qubit_found = true;
   runtime->setQubit(qubit_ref, qubit_id);
 }
 
@@ -289,9 +293,10 @@ void InstructionVisitor::operator()(const INSTR_GET_QUBIT_RegId_QNodeAddr_RegId_
   int qubit_id = runtime->getRegVal(qubit_id_reg);
   auto* qubit_ref = runtime->getQubitByPartnerAddr(partner_addr, qubit_resource_index);
   if (qubit_ref == nullptr) {
-    runtime->setError("Qubit not found");
+    runtime->qubit_found = false;
     return;
   }
+  runtime->qubit_found = true;
   runtime->setQubit(qubit_ref, qubit_id);
 }
 

@@ -60,7 +60,6 @@ TEST_F(RuntimeTest, getMultipleQubits) {
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, 0}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q1, partner_addr, 1}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q2, partner_addr, 2}},
-INSTR_ERROR_String_{"no qubit"},
                       // clang-format on
                   }};
   runtime->assignQubitToRule(partner_addr, runtime->rule_id, qubit);
@@ -75,6 +74,7 @@ INSTR_ERROR_String_{"no qubit"},
   EXPECT_EQ(runtime->getQubitByQubitId(q0), qubit);
   EXPECT_EQ(runtime->getQubitByQubitId(q1), qubit3);
   EXPECT_EQ(runtime->getQubitByQubitId(q2), nullptr);
+  EXPECT_FALSE(runtime->qubit_found);
 }
 
 TEST_F(RuntimeTest, CannotGetLockedQubits) {
@@ -82,7 +82,6 @@ TEST_F(RuntimeTest, CannotGetLockedQubits) {
                   {
                       // clang-format off
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, 0}},
-INSTR_ERROR_String_{"no qubit"},
                       // clang-format on
                   }};
   runtime->assignQubitToRule(partner_addr, runtime->rule_id, qubit);
@@ -90,6 +89,7 @@ INSTR_ERROR_String_{"no qubit"},
   runtime->execProgram(program);
 
   EXPECT_EQ(runtime->getQubitByQubitId(q0), nullptr);
+  EXPECT_FALSE(runtime->qubit_found);
 }
 
 TEST_F(RuntimeTest, ExecRuleSetWithCondPassed) {
@@ -153,9 +153,8 @@ TEST_F(RuntimeTest, PromoteQubit) {
                               {
                                   // clang-format off
                               INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, 0}},
-                              INSTR_BNERR_Label_{{Label{"qubit found"}}},
-                              INSTR_ERROR_String_{{"ignore"}},
-                              // return COND_PASSED
+                              INSTR_BRANCH_IF_QUBIT_FOUND_Label_{{Label{"qubit found"}}},
+                              INSTR_RET_ReturnCode_{{ReturnCode::ERROR}},
                               INSTR_RET_ReturnCode_{{ReturnCode::COND_FAILED}, Label{"qubit found"}}
                                   // clang-format on
                               }},

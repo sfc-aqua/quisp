@@ -17,14 +17,6 @@
 #include "types.h"
 
 namespace quisp::runtime {
-
-struct RuntimeError {
-  RuntimeError(std::string msg, int pc) : message(msg), pc(pc) {}
-  std::string message;
-  int pc;
-  bool caught = false;
-};
-
 struct Register {
   int32_t value = 0;
 };
@@ -164,12 +156,6 @@ class Runtime {
    */
   void jumpTo(const Label& label);
 
-  /**
-   * @brief Set the RuntimeError and will stop the Program execution
-   *
-   * @param message the error message for debugging
-   */
-  void setError(const String& message);
   //@}
 
   /** @name memory operations */
@@ -405,10 +391,11 @@ class Runtime {
   bool terminated = false;
 
   /**
-   * @brief if the Program faces a problem during execution,
-   * the Runtime puts the error to this member variable.
+   * @brief The GET_QUBIT instruction sets this flag. if it's true, the GET_QUBIT
+   * instruction successfully found the qubit. if not, the instruction cannot
+   * find qubit.
    */
-  RuntimeError* error = nullptr;
+  bool qubit_found = false;
 
   /**
    * @brief if the flag is true, show debug information during RuleSet execution.

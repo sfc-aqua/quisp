@@ -71,6 +71,9 @@ std::ostream& operator<<(std::ostream& stream, const ReturnCode& value) {
     case ReturnCode::RS_TERMINATED:
       stream << std::string("RS_TERMINATED");
       break;
+    case ReturnCode::ERROR:
+      stream << std::string("ERROR");
+      break;
   }
   return stream;
 };
