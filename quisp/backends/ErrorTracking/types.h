@@ -141,11 +141,11 @@ struct MeasurementErrorModel {
 };
 
 struct GodErrorState {
-  bool has_X_error;
-  bool has_Z_error;
-  bool has_EX_error;
-  bool has_RE_error;
-  bool has_CM_error;
+  bool has_x_error;
+  bool has_z_error;
+  bool has_excitation_error;
+  bool has_relaxation_error;
+  bool has_completely_mixed_error;
 };
 
 // Matrices of single qubit errors. Used when conducting tomography.

@@ -102,12 +102,12 @@ TEST(StatQubitMemoryErrorTest, do_nothing) {
 
   qubit->callInitialize();
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
-  qubit->GOD_err.has_Z_error = true;
-  EXPECT_TRUE(qubit->GOD_err.has_X_error);
-  EXPECT_TRUE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
+  qubit->god_err.has_x_error = true;
+  qubit->god_err.has_z_error = true;
+  EXPECT_TRUE(qubit->god_err.has_x_error);
+  EXPECT_TRUE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
 
   // if current time and updated_time are same, do nothing
   EXPECT_EQ(qubit->updated_time, SimTime(0));
@@ -115,10 +115,10 @@ TEST(StatQubitMemoryErrorTest, do_nothing) {
   qubit->applyMemoryError();
 
   EXPECT_EQ(qubit->updated_time, SimTime(0, SIMTIME_US));
-  EXPECT_TRUE(qubit->GOD_err.has_X_error);
-  EXPECT_TRUE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
+  EXPECT_TRUE(qubit->god_err.has_x_error);
+  EXPECT_TRUE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
 }
 TEST(StatQubitMemoryErrorTest, update_timestamp) {
   auto *sim = prepareSimulation();
@@ -158,51 +158,51 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_no_error) {
   qubit->reset();
   rng->doubleValue = 0.55;
   qubit->applyMemoryError();
-  EXPECT_TRUE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_TRUE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Z error
   rng->doubleValue = 0.65;
   qubit->reset();
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_TRUE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_TRUE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Y error
   rng->doubleValue = 0.75;
   qubit->reset();
   qubit->applyMemoryError();
-  EXPECT_TRUE(qubit->GOD_err.has_X_error);
-  EXPECT_TRUE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_TRUE(qubit->god_err.has_x_error);
+  EXPECT_TRUE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Excitation error
   rng->doubleValue = 0.85;
   qubit->reset();
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_TRUE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_TRUE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Relaxation error
   rng->doubleValue = 0.95;
   qubit->reset();
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_TRUE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_TRUE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 }
 
 TEST(StatQubitMemoryErrorTest, apply_memory_error_x_error) {
@@ -227,58 +227,58 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_x_error) {
 
   // X error
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
+  qubit->god_err.has_x_error = true;
   rng->doubleValue = 0.55;
   qubit->applyMemoryError();
-  EXPECT_TRUE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_TRUE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Z error
   rng->doubleValue = 0.65;
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
+  qubit->god_err.has_x_error = true;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_TRUE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_TRUE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Y error
   rng->doubleValue = 0.75;
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
+  qubit->god_err.has_x_error = true;
   qubit->applyMemoryError();
-  EXPECT_TRUE(qubit->GOD_err.has_X_error);
-  EXPECT_TRUE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_TRUE(qubit->god_err.has_x_error);
+  EXPECT_TRUE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Excitation error
   rng->doubleValue = 0.85;
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
+  qubit->god_err.has_x_error = true;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_TRUE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_TRUE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Relaxation error
   rng->doubleValue = 0.95;
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
+  qubit->god_err.has_x_error = true;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_TRUE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_TRUE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 }
 
 TEST(StatQubitMemoryErrorTest, apply_memory_error_z_error) {
@@ -303,58 +303,58 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_z_error) {
 
   // X error
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
+  qubit->god_err.has_x_error = true;
   rng->doubleValue = 0.55;
   qubit->applyMemoryError();
-  EXPECT_TRUE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_TRUE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Z error
   rng->doubleValue = 0.65;
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
+  qubit->god_err.has_x_error = true;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_TRUE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_TRUE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Y error
   rng->doubleValue = 0.75;
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
+  qubit->god_err.has_x_error = true;
   qubit->applyMemoryError();
-  EXPECT_TRUE(qubit->GOD_err.has_X_error);
-  EXPECT_TRUE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_TRUE(qubit->god_err.has_x_error);
+  EXPECT_TRUE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Excitation error
   rng->doubleValue = 0.85;
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
+  qubit->god_err.has_x_error = true;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_TRUE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_TRUE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Relaxation error
   rng->doubleValue = 0.95;
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
+  qubit->god_err.has_x_error = true;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_TRUE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_TRUE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 }
 
 TEST(StatQubitMemoryErrorTest, apply_memory_error_y_error) {
@@ -379,63 +379,63 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_y_error) {
 
   // X error
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
-  qubit->GOD_err.has_Z_error = true;
+  qubit->god_err.has_x_error = true;
+  qubit->god_err.has_z_error = true;
   rng->doubleValue = 0.15;
   qubit->applyMemoryError();
-  EXPECT_TRUE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_TRUE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Z error
   rng->doubleValue = 0.25;
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
-  qubit->GOD_err.has_Z_error = true;
+  qubit->god_err.has_x_error = true;
+  qubit->god_err.has_z_error = true;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_TRUE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_TRUE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Y error
   rng->doubleValue = 0.5;
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
-  qubit->GOD_err.has_Z_error = true;
+  qubit->god_err.has_x_error = true;
+  qubit->god_err.has_z_error = true;
   qubit->applyMemoryError();
-  EXPECT_TRUE(qubit->GOD_err.has_X_error);
-  EXPECT_TRUE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_TRUE(qubit->god_err.has_x_error);
+  EXPECT_TRUE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Excitation error
   rng->doubleValue = 0.85;
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
-  qubit->GOD_err.has_Z_error = true;
+  qubit->god_err.has_x_error = true;
+  qubit->god_err.has_z_error = true;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_TRUE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_TRUE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Relaxation error
   rng->doubleValue = 0.95;
   qubit->reset();
-  qubit->GOD_err.has_X_error = true;
-  qubit->GOD_err.has_Z_error = true;
+  qubit->god_err.has_x_error = true;
+  qubit->god_err.has_z_error = true;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_TRUE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_TRUE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 }
 
 TEST(StatQubitMemoryErrorTest, apply_memory_error_excitation_error) {
@@ -460,58 +460,58 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_excitation_error) {
 
   // X error
   qubit->reset();
-  qubit->GOD_err.has_EX_error = true;
+  qubit->god_err.has_excitation_error = true;
   rng->doubleValue = 0.15;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_TRUE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_TRUE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Z error
   rng->doubleValue = 0.25;
   qubit->reset();
-  qubit->GOD_err.has_EX_error = true;
+  qubit->god_err.has_excitation_error = true;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_TRUE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_TRUE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Y error
   rng->doubleValue = 0.5;
   qubit->reset();
-  qubit->GOD_err.has_EX_error = true;
+  qubit->god_err.has_excitation_error = true;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_TRUE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_TRUE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Excitation error
   rng->doubleValue = 0.85;
   qubit->reset();
-  qubit->GOD_err.has_EX_error = true;
+  qubit->god_err.has_excitation_error = true;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_TRUE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_TRUE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Relaxation error
   rng->doubleValue = 0.95;
   qubit->reset();
-  qubit->GOD_err.has_EX_error = true;
+  qubit->god_err.has_excitation_error = true;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_TRUE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_TRUE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 }
 
 TEST(StatQubitMemoryErrorTest, apply_memory_error_relaxation_error) {
@@ -537,24 +537,24 @@ TEST(StatQubitMemoryErrorTest, apply_memory_error_relaxation_error) {
   // Excitation error
   rng->doubleValue = 0.05;
   qubit->reset();
-  qubit->GOD_err.has_RE_error = true;
+  qubit->god_err.has_relaxation_error = true;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_TRUE(qubit->GOD_err.has_EX_error);
-  EXPECT_FALSE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_TRUE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 
   // Relaxation error
   rng->doubleValue = 0.95;
   qubit->reset();
-  qubit->GOD_err.has_RE_error = true;
+  qubit->god_err.has_relaxation_error = true;
   qubit->applyMemoryError();
-  EXPECT_FALSE(qubit->GOD_err.has_X_error);
-  EXPECT_FALSE(qubit->GOD_err.has_Z_error);
-  EXPECT_FALSE(qubit->GOD_err.has_EX_error);
-  EXPECT_TRUE(qubit->GOD_err.has_RE_error);
-  EXPECT_FALSE(qubit->GOD_err.has_CM_error);
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_TRUE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 }
 
 }  // namespace
