@@ -22,19 +22,19 @@ statement nor for-loop syntax in the language due to simplicity for
 implementation and debugging. Here is an pseudo code to perform the random
 measure action and its C++ representations.
 
-```
+```plaintext
   // load the "count" key from memory to the register
   LOAD count "count"
 
   // find a n-th qubit entangled with partner_addr and set as q0.
-  // if qubit is not found, set error.
+  // if qubit is not found, set qubit_found flag false.
   GET_QUBIT q0 partner_addr qubit_resource_index
 
-  // if error not set, go to QUBIT_FOUND label
-  BNERR QUBIT_FOUND
+  // if qubit_found flag is set true, go to QUBIT_FOUND label
+  BRANCH_IF_QUBIT_FOUND QUBIT_FOUND
 
-  // raise error and stop execution
-  ERROR "Qubit not found"
+  // raise unrecoverable error and stop execution
+  RET ReturnCode::ERROR
 
 QUBIT_FOUND: // this is a label
 
@@ -78,8 +78,8 @@ instantiate by the C++ initializers list with curly braces like
           // clang-format off
 INSTR_LOAD_RegId_MemoryKey_{{count, count_key}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, qubit_resource_index}},
-INSTR_BNERR_Label_{qubit_found_label},
-INSTR_ERROR_String_{"Qubit not found for mesaurement"},
+INSTR_BRANCH_IF_QUBIT_FOUND_Label_{qubit_found_label},
+INSTR_RET_ReturnCode_{{ReturnCode::ERROR}},
 INSTR_MEASURE_RANDOM_MemoryKey_QubitId_{{outcome_key, q0}, qubit_found_label},
 INSTR_INC_RegId_{count},
 INSTR_STORE_MemoryKey_RegId_{{count_key, count}},
@@ -89,7 +89,6 @@ INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_Time_{{partner_a
       },
   };
 ```
-
 
 ## RuleSet Execution with Runtime
 @htmlonly
