@@ -89,7 +89,7 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       LOOP:
         INC qubit_id
         GET_QUBIT qubit_id partner_addr qubit_id
-        BNERR FOUND_QUBIT
+        BRANCH_IF_QUBIT_FOUND FOUND_QUBIT
         RET COND_FAILED
       FOUND_QUBIT:
         BRANCH_IF_LOCKED qubit_id LOOP
@@ -104,7 +104,7 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
 
       opcodes.push_back(INSTR_INC_RegId_{qubit_id, loop_label});
       opcodes.push_back(INSTR_GET_QUBIT_RegId_QNodeAddr_RegId_{{qubit_id, c->partner_address, qubit_id}});
-      opcodes.push_back(INSTR_BNERR_Label_{found_qubit_label});
+      opcodes.push_back(INSTR_BRANCH_IF_QUBIT_FOUND_Label_{found_qubit_label});
       opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::COND_FAILED});
 
       opcodes.push_back(INSTR_INC_RegId_{{counter}, found_qubit_label});
@@ -121,8 +121,7 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       QubitId q0{0};
       Label found_qubit_label{std::string("FOUND_QUBIT_") + std::to_string(i)};
       opcodes.push_back(INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, c->partner_address, 0}});
-      opcodes.push_back(INSTR_BNERR_Label_{found_qubit_label});
-      opcodes.push_back(INSTR_ERROR_String_{"qubit not found"});
+      opcodes.push_back(INSTR_BRANCH_IF_QUBIT_FOUND_Label_{found_qubit_label});
       // always failed the condition. swapping result handler will promote the qubit resource to next rule
       opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::COND_FAILED, found_qubit_label});
       name += "Wait ";
@@ -497,8 +496,8 @@ Program RuleSetConverter::constructTomographyAction(const Tomography *act) {
   /*
   LOAD count "count"
   GET_QUBIT q0 partner_addr qubit_resource_index
-  BNERR QUBIT_FOUND
-  ERROR "Qubit not found"
+  BRANCH_IF_QUBIT_FOUND QUBIT_FOUND
+  RET ERROR
 QUBIT_FOUND:
   MEASURE_RONDOM "outcome" q0
   INC count
@@ -525,7 +524,7 @@ QUBIT_FOUND:
           // clang-format off
 INSTR_LOAD_RegId_MemoryKey_{{count, count_key}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, qubit_resource_index}},
-INSTR_BNERR_Label_{qubit_found_label},
+INSTR_BRANCH_IF_QUBIT_FOUND_Label_{qubit_found_label},
 INSTR_ERROR_String_{"Qubit not found for mesaurement"},
 INSTR_MEASURE_RANDOM_MemoryKey_QubitId_{{outcome_key, q0}, qubit_found_label},
 INSTR_INC_RegId_{count},
