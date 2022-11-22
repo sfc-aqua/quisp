@@ -960,7 +960,8 @@ measurement_outcome StationaryQubit::measure_density_independent() {
     if (this->entangled_partner->excited_or_relaxed && !this->entangled_partner->god_err.has_excitation_error && !this->entangled_partner->god_err.has_relaxation_error) {
       error("Partner Re/Ex track wrong\n");
     }
-    if (this->entangled_partner->god_err.has_completely_mixed_error || this->entangled_partner->god_err.has_relaxation_error || this->entangled_partner->god_err.has_excitation_error) {
+    if (this->entangled_partner->god_err.has_completely_mixed_error || this->entangled_partner->god_err.has_relaxation_error ||
+        this->entangled_partner->god_err.has_excitation_error) {
       // error("Partner CM/Re/Ex track wrong\n");
     }
   }
