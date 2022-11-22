@@ -30,7 +30,7 @@ PhotonicQubit *EntangledPhotonPairSource::generateEntangledPhotons() {
   // PhotonicQubit *photon_two = new PhotonicQubit();
   // photon_one->addPar("gate") = 0;
   // photon_two->addPar("gate") = 1;
-  // photon->setStationaryQubitEntangledWith(stationaryQubit_address);
+  // photon->setStationaryQubitEntangledWith(stationary_qubit_address);
   // entangledPhotons *qubits;
   // qubits->qubitTwo = photon_two;
   // qubits->qubitOne = photon_one;
