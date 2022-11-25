@@ -5,11 +5,12 @@
 #include <memory>
 #include <utility>
 
-#include <modules/Logger/DisabledLogger.h>
 #include "BellPairStore/BellPairStore.h"
 #include "IRuleEngine.h"
 #include "RuleEngine.h"
 
+#include <messages/purification_messages_m.h>
+#include <modules/Logger/DisabledLogger.h>
 #include <modules/QNIC.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/HardwareMonitor/HardwareMonitor.h>
@@ -18,52 +19,14 @@
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>
 #include <modules/QRSA/RoutingDaemon/RoutingDaemon.h>
 #include <modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h>
-#include <rules/Active/ActiveAction.h>
-#include <rules/Active/ActiveRuleSet.h>
+#include <rules/Action.h>
+#include <rules/Active/actions/WaitAction.h>
+#include <rules/RuleSet.h>
 #include <runtime/RuleSet.h>
 #include <runtime/Runtime.h>
 #include <runtime/opcode.h>
-
-ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, partner);
-ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, num_resource_required);
-
-ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, unsigned long, ruleset_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, int, rule_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, QNIC_type, qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, partner);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, resource);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, trash_resource);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, purification_count);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, bool, X);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, bool, Z);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, num_purify);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, action_index);
-
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_partner);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, self_left_qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_qnic_address);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, left_qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, self_left_qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_resource);
-
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_partner);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, self_right_qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_qnic_address);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, right_qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, self_right_qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_resource);
-
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, partner);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, QNIC_type, qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, resource);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, src);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, dst);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, current_count);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, max_count);
+#include <runtime/test.h>
+#include <runtime/types.h>
 
 namespace {
 
@@ -111,11 +74,12 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
 
 class RuleEngineTestTarget : public quisp::modules::RuleEngine {
  public:
+  using quisp::modules::RuleEngine::handlePurificationResult;
   using quisp::modules::RuleEngine::initialize;
   using quisp::modules::RuleEngine::par;
+  using quisp::modules::RuleEngine::purification_result_table;
   using quisp::modules::RuleEngine::qnic_store;
   using quisp::modules::RuleEngine::runtimes;
-  using quisp::modules::RuleEngine::storeCheck_Purification_Agreement;
   using quisp::modules::RuleEngine::Unlock_resource_and_discard;
   using quisp::modules::RuleEngine::Unlock_resource_and_upgrade_stage;
   using quisp::modules::RuleEngine::updateResources_EntanglementSwapping;
@@ -286,71 +250,72 @@ TEST(RuleEngineTest, trackerUpdate) {
   delete mockRealTimeController;
 }
 
-TEST(RuleEngineTest, storeCheckPurificationAgreement_no_process) {
-  auto* sim = prepareSimulation();
-  auto* routing_daemon = new MockRoutingDaemon;
-  auto* hardware_monitor = new MockHardwareMonitor;
-  auto* realtime_controller = new MockRealTimeController;
-  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
-  sim->registerComponent(rule_engine);
-  rule_engine->callInitialize();
-  purification_result result{
-      .outcome = true,
-  };
-  rule_engine->storeCheck_Purification_Agreement(result);
-  delete hardware_monitor;
-}
-
 TEST(RuleEngineTest, storeCheckPurificationAgreement_running_process) {
   auto* sim = prepareSimulation();
   auto* routing_daemon = new MockRoutingDaemon;
   auto* hardware_monitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
-  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
+  QNIC_type qnic_type = QNIC_E;
+  int qnic_id = 0;
+  int shared_tag = 1;
+  int action_index = 3;
+  auto* qubit = new MockQubit{qnic_type, qnic_id};
+  qubit->action_index = action_index;
+  auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
   unsigned long ruleset_id = 4;
-  int partner_addr = 5;
-  int action_index = 3;
-  auto* ruleset = new ActiveRuleSet(ruleset_id, rule_engine->parentAddress);
-  int target_rule_id = 10;
-  auto rule1 = new ActiveRule(ruleset_id, target_rule_id, 0);
-  auto rule2 = new ActiveRule(ruleset_id, 11, 1);
-  auto* qubit = new MockQubit(QNIC_E, 0);
+  QNodeAddr partner_addr{5};
+  auto* ruleset = new quisp::rules::RuleSet(ruleset_id, rule_engine->parentAddress);
+  auto rule1 = new Rule(ruleset_id, qnic_type, qnic_id, shared_tag, false);  // target_rule_id, 0);
+  auto rule2 = new Rule(ruleset_id, qnic_type, qnic_id, shared_tag, false);  // 11, 1);
+  rule1->setAction(std::make_unique<Wait>(0, qnic_type, qnic_id));
+  rule2->setAction(std::make_unique<Wait>(0, qnic_type, qnic_id));
+  auto* qubit_record = new QubitRecord{qnic_type, qnic_id, 0};
 
-  qubit->action_index = action_index;
-  rule1->addResource(partner_addr, qubit);
-  rule1->next_rule_id = rule2->rule_id;
-  ruleset->addRule(std::unique_ptr<ActiveRule>(rule1));
-  ruleset->addRule(std::unique_ptr<ActiveRule>(rule2));
+  // qubit->action_index = action_index;
+  ruleset->addRule(std::unique_ptr<Rule>(rule1));
+  ruleset->addRule(std::unique_ptr<Rule>(rule2));
+  auto* callback = new quisp_test::MockRuntimeCallback();
+  rule_engine->runtimes.push_back(Runtime{ruleset->construct(), callback});
+  auto& rt = rule_engine->runtimes.at(0);
+  auto rule1_id = rt.ruleset.rules.at(0).id;
+  auto rule2_id = rt.ruleset.rules.at(1).id;
 
-  rule_engine->rp.insert(ruleset);
-  EXPECT_CALL(*qubit, Unlock()).Times(1);
+  rt.ruleset.partner_initial_rule_table.insert({partner_addr, rule1_id});
+  // set rule1 -> rule2
+  rt.ruleset.next_rule_table.insert({{partner_addr, rule1_id}, rule2_id});
 
-  purification_result result{
-      .id = {.ruleset_id = ruleset_id, .rule_id = rule1->rule_id, .index = action_index},
-      .outcome = true,
-  };
+  rt.assignQubitToRuleSet(partner_addr, qubit_record);
+  EXPECT_EQ(getResourceSizeByRuleId(rt, rule1_id), 1);
+  EXPECT_EQ(getResourceSizeByRuleId(rt, rule2_id), 0);
 
-  EXPECT_EQ(rule1->resources.size(), 1);
-  EXPECT_EQ(rule2->resources.size(), 0);
-
-  EXPECT_EQ(rule_engine->Purification_table.size(), 0);
+  EXPECT_EQ(rule_engine->purification_result_table.size(), 0);
   // got the result from the node itself
-  rule_engine->storeCheck_Purification_Agreement(result);
+  PurificationResultKey key;
+  key.rs_id = ruleset_id;
+  key.rule_id = 0;
+  key.action_index = action_index;
+  key.shared_tag = shared_tag;
+  key.type = PurType::SINGLE_X;
+  PurificationResultData data;
+  data.is_z_plus = true;
+  rule_engine->handlePurificationResult(key, data, true);
 
-  EXPECT_EQ(rule1->resources.size(), 1);
-  EXPECT_EQ(rule2->resources.size(), 0);
-  EXPECT_EQ(rule_engine->Purification_table.size(), 1);
+  EXPECT_EQ(getResourceSizeByRuleId(rt, rule1_id), 1);
+  EXPECT_EQ(getResourceSizeByRuleId(rt, rule2_id), 0);
+  EXPECT_EQ(rule_engine->purification_result_table.size(), 1);
 
+  EXPECT_CALL(*qubit, Unlock()).Times(1);
   // got the same result from the opposite node
   // and then the resource will be upgrade.
   // but obviously we should separate this into 2 methods.
-  rule_engine->storeCheck_Purification_Agreement(result);
-  EXPECT_EQ(rule1->resources.size(), 0);
-  EXPECT_EQ(rule2->resources.size(), 1);
-  delete qubit;
+  rule_engine->handlePurificationResult(key, data, false);
+  EXPECT_EQ(getResourceSizeByRuleId(rt, rule1_id), 0);
+  EXPECT_EQ(getResourceSizeByRuleId(rt, rule2_id), 1);
+  delete qubit_record;
   delete hardware_monitor;
+  delete qubit;
 }
 
 TEST(RuleEngineTest, freeConsumedResource) {

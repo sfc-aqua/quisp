@@ -39,6 +39,9 @@ RuleSet RuleSetConverter::construct(const RSData &data) {
 }
 
 Program RuleSetConverter::constructTerminateCondition(const ConditionData *data) {
+  if (data == nullptr) {
+    return Program{"no terminate condition", {}};
+  }
   auto opcodes = std::vector<InstructionTypes>{};
   std::string name;
   int i = 0;
@@ -68,6 +71,9 @@ Program RuleSetConverter::constructTerminateCondition(const ConditionData *data)
 }
 
 Program RuleSetConverter::constructCondition(const ConditionData *data) {
+  if (data == nullptr) {
+    return Program{"no condition", {}};
+  }
   auto opcodes = std::vector<InstructionTypes>{};
   std::string name;
   int i = 0;
@@ -535,4 +541,4 @@ INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_Time_{{partner_a
       },
   };
 }
-}  // namespace quisp::modules::rs_converter
+}  // namespace quisp::rules::rs_converter

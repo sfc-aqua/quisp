@@ -14,6 +14,7 @@ struct PurificationResultKey {
   int action_index = -1;
   int shared_tag = -1;
   rules::PurType type;
+  PurificationResultKey() {}
 
   PurificationResultKey(const messages::PurificationResult& result) {
     rs_id = result.getRuleset_id();
@@ -58,6 +59,8 @@ struct PurificationResultData {
   bool is_ds_z_plus = false;
   bool is_ds_plus = false;
   PurType pur_type = PurType::INVALID;
+
+  PurificationResultData() {}
 
   bool isResultMatched(const PurificationResultData& result, PurType type) const {
     switch (type) {
