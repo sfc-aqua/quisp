@@ -10,7 +10,7 @@
 #include <rules/Clause.h>
 #include <runtime/Runtime.h>
 
-namespace quisp::modules::rs_converter {
+namespace quisp::rules::rs_converter {
 
 using runtime::InstructionTypes;
 

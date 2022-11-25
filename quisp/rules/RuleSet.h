@@ -1,6 +1,9 @@
 #pragma once
 #include <memory>
 #include <nlohmann/json.hpp>
+
+#include <runtime/RuleSet.h>
+
 #include "Rule.h"
 
 using json = nlohmann::json;
@@ -23,6 +26,7 @@ class RuleSet {
   json serialize_json();
   void deserialize_json(json serialized);
   unsigned long createUniqueId();
+  runtime::RuleSet construct() const;
 };
 
 }  // namespace quisp::rules

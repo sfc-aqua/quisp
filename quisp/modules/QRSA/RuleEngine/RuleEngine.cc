@@ -15,7 +15,6 @@
 #include <utils/ComponentProvider.h>
 #include "QNicStore/QNicStore.h"
 #include "RuleEngine.h"
-#include "RuleSetConverter/RuleSetConverter.h"
 #include "RuntimeCallback.h"
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "runtime/RuleSet.h"
@@ -27,7 +26,6 @@ namespace quisp::modules {
 using namespace rules;
 using namespace rules::active;
 using qnic_store::QNicStore;
-using rs_converter::RuleSetConverter;
 using runtime_callback::RuntimeCallback;
 
 RuleEngine::RuleEngine() : provider(utils::ComponentProvider{this}) {}
@@ -161,7 +159,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
   else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     auto *ruleset = pk->getRuleSet();
-    auto rs = RuleSetConverter::construct(*ruleset);
+    auto rs = ruleset->construct();
     runtimes.emplace_back(runtime::Runtime(rs, runtime_callback.get()));
   } else if (auto *pkt = dynamic_cast<PurificationResult *>(msg)) {
     bool from_self = pkt->getSrcAddr() == parentAddress;
@@ -228,7 +226,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
 
-    auto rs = RuleSetConverter::construct(ruleset);
+    auto rs = ruleset.construct();
     runtimes.emplace_back(runtime::Runtime(rs, runtime_callback.get()));
 
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
@@ -236,7 +234,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto serialized_ruleset = pkt->getRuleSet();
     RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
-    auto rs = RuleSetConverter::construct(ruleset);
+    auto rs = ruleset.construct();
     runtimes.emplace_back(runtime::Runtime(rs, runtime_callback.get()));
 
   } else if (auto *pkt = dynamic_cast<StopEmitting *>(msg)) {

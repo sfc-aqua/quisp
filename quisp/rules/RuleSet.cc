@@ -1,8 +1,10 @@
-#include "RuleSet.h"
 #include <omnetpp.h>
 #include <memory>
 #include <random>
 #include <string>
+
+#include "RuleSet.h"
+#include "RuleSetConverter/RuleSetConverter.h"
 
 using json = nlohmann::json;
 
@@ -48,4 +50,5 @@ void RuleSet::deserialize_json(json serialized) {
   }
 };
 
+runtime::RuleSet RuleSet::construct() const { return rs_converter::RuleSetConverter::construct(*this); }
 }  // namespace quisp::rules
