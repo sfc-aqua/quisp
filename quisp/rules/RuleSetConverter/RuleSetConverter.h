@@ -51,4 +51,4 @@ class RuleSetConverter {
   static Program constructWaitAction(const Wait* data);
   static Program constructTomographyAction(const Tomography* data);
 };
-}  // namespace quisp::modules::rs_converter
+}  // namespace quisp::rules::rs_converter
