@@ -8,7 +8,7 @@
 #include <runtime/types.h>
 #include <cstddef>
 
-namespace quisp::modules::rs_converter {
+namespace quisp::rules::rs_converter {
 
 // serialized RuleSet data
 using RSData = quisp::rules::RuleSet;

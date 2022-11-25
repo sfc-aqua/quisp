@@ -13,7 +13,7 @@
 
 namespace {
 using namespace quisp_test;
-using namespace quisp::modules::rs_converter;
+using namespace quisp::rules::rs_converter;
 using RSData = quisp::rules::RuleSet;
 
 template <typename T>
