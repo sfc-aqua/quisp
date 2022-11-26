@@ -114,7 +114,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void clearTrackerTable(int destAddr, int internal_qnic_address);
   void handlePurificationResult(const PurificationResultKey &, const PurificationResultData &, bool from_self);
   void handleSwappingResult(const SwappingResultData &data);
-  void updateResources_EntanglementSwapping(swapping_result swapr);
   double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
 
   [[deprecated]] void traverseThroughAllProcesses2();

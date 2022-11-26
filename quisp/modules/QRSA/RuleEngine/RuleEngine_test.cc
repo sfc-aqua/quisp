@@ -8,6 +8,8 @@
 #include "BellPairStore/BellPairStore.h"
 #include "IRuleEngine.h"
 #include "RuleEngine.h"
+#include "rules/Rule.h"
+#include "test_utils/mock_modules/MockRoutingDaemon.h"
 
 #include <messages/purification_messages_m.h>
 #include <modules/Logger/DisabledLogger.h>
@@ -75,6 +77,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
 class RuleEngineTestTarget : public quisp::modules::RuleEngine {
  public:
   using quisp::modules::RuleEngine::handlePurificationResult;
+  using quisp::modules::RuleEngine::handleSwappingResult;
   using quisp::modules::RuleEngine::initialize;
   using quisp::modules::RuleEngine::par;
   using quisp::modules::RuleEngine::purification_result_table;
@@ -82,7 +85,6 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
   using quisp::modules::RuleEngine::runtimes;
   using quisp::modules::RuleEngine::Unlock_resource_and_discard;
   using quisp::modules::RuleEngine::Unlock_resource_and_upgrade_stage;
-  using quisp::modules::RuleEngine::updateResources_EntanglementSwapping;
 
   RuleEngineTestTarget(IStationaryQubit* mockQubit, MockRoutingDaemon* routingdaemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller,
                        std::vector<QNicSpec> qnic_specs = {})
@@ -131,42 +133,47 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   int mock_next_rule_id = 1;
   int shared_tag = 3;
 
-  swapping_result swapr;
-  swapr.id.ruleset_id = mock_ruleset_id;
-  swapr.id.rule_id = mock_rule_id;
-  swapr.id.shared_tag = shared_tag;
-  swapr.new_partner = 3;
-  swapr.swapper_addr = 2;
-  swapr.operation_type = 0;
-  swapr.new_partner_qnic_address = 1;
-  swapr.new_partner_qnic_index = 1;
-  swapr.new_partner_qnic_type = QNIC_E;
-  swapr.measured_qubit_index = 1;
+  int qnic_id = info->qnic.index;
+  QNIC_type qnic_type = info->qnic.type;
+  int swapper_addr = 2;
+  int new_partner = 3;
 
-  EXPECT_CALL(*routingdaemon, return_QNIC_address_to_destAddr(swapr.new_partner)).WillOnce(Return(1));
+  EXPECT_CALL(*routingdaemon, return_QNIC_address_to_destAddr(new_partner)).WillOnce(Return(1));
   EXPECT_CALL(*mockHardwareMonitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(std::move(info))));
   EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(QNIC_E, 0, 1)).Times(1).WillOnce(Return(qubit_record.get()));
-  EXPECT_CALL(*realtime_controller, assertNoEntanglement(qubit_record.get())).Times(1);
-  // 0. set ruleset
+
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
-  auto* rs = new ActiveRuleSet(mock_ruleset_id, mock_rule_id);  // ruleset_id, ruleset_owner, partners
-  auto wait_rule = std::make_unique<ActiveRule>(mock_ruleset_id, mock_rule_id, shared_tag);
-  wait_rule->next_rule_id = mock_next_rule_id;
-  wait_rule->action_partners.push_back(swapr.swapper_addr);
-  rs->addRule(std::move(wait_rule));
-  auto next_rule = std::make_unique<ActiveRule>(mock_ruleset_id, mock_next_rule_id, 0);
-  rs->addRule(std::move(next_rule));
 
-  rule_engine->rp.insert(rs);
-  rule_engine->rp[0]->getRule(0)->addResource(1, mockQubit1);
-  ASSERT_EQ(rule_engine->rp[0]->getRule(0)->resources.size(), 1);
-  ASSERT_EQ(rule_engine->rp[0]->getRule(1)->resources.size(), 0);
-  rule_engine->updateResources_EntanglementSwapping(swapr);
-  // 1. remove from previous rule
-  ASSERT_EQ(rule_engine->rp[0]->getRule(0)->resources.size(), 0);
-  // // 2. add to the next rule
-  ASSERT_EQ(rule_engine->rp[0]->getRule(1)->resources.size(), 1);
+  RuleSet rs{mock_ruleset_id, rule_engine->parentAddress};
+  auto wait_rule = std::make_unique<Rule>(mock_ruleset_id, qnic_type, qnic_id, shared_tag, false);
+  wait_rule->setAction(std::make_unique<Wait>(swapper_addr, qnic_type, qnic_id));
+  rs.addRule(std::move(wait_rule));
+  auto next_rule = std::make_unique<Rule>(mock_ruleset_id, qnic_type, qnic_id, shared_tag, false);
+  next_rule->setAction(std::make_unique<Wait>(swapper_addr, qnic_type, qnic_id));
+  rs.addRule(std::move(next_rule));
+
+  auto* callback = new MockRuntimeCallback{};
+  rule_engine->runtimes.push_back(Runtime{rs.construct(), callback});
+  auto& rt = rule_engine->runtimes.at(0);
+  auto wait_rule_id = rt.ruleset.rules.at(0).id;
+  auto next_rule_id = rt.ruleset.rules.at(1).id;
+  rt.ruleset.partner_initial_rule_table.insert({QNodeAddr(1), wait_rule_id});
+  rt.ruleset.partner_initial_rule_table.insert({QNodeAddr(new_partner), next_rule_id});
+  rt.assignQubitToRuleSet(1, qubit_record.get());
+
+  ASSERT_EQ(getResourceSizeByRuleId(rt, wait_rule_id), 1);
+  ASSERT_EQ(getResourceSizeByRuleId(rt, next_rule_id), 0);
+  SwappingResultData swapr{
+      .ruleset_id = mock_ruleset_id,
+      .shared_tag = shared_tag,
+      .new_partner_addr = 3,
+      .operation_type = 0,
+      .qubit_index = 1,
+  };
+  rule_engine->handleSwappingResult(swapr);
+  ASSERT_EQ(getResourceSizeByRuleId(rt, wait_rule_id), 0);
+  ASSERT_EQ(getResourceSizeByRuleId(rt, next_rule_id), 1);
   delete mockHardwareMonitor;
   delete routingdaemon;
   delete realtime_controller;
@@ -273,7 +280,6 @@ TEST(RuleEngineTest, storeCheckPurificationAgreement_running_process) {
   rule2->setAction(std::make_unique<Wait>(0, qnic_type, qnic_id));
   auto* qubit_record = new QubitRecord{qnic_type, qnic_id, 0};
 
-  // qubit->action_index = action_index;
   ruleset->addRule(std::unique_ptr<Rule>(rule1));
   ruleset->addRule(std::unique_ptr<Rule>(rule2));
   auto* callback = new quisp_test::MockRuntimeCallback();
@@ -538,12 +544,17 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
   auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
   std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(QNIC_E, 0, 0);
   EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(QNIC_E, 0, 0)).Times(3).WillRepeatedly(Return(qubit_record.get()));
-  EXPECT_CALL(*realtime_controller, assertNoEntanglement(qubit_record.get())).Times(3);
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
+  quisp::runtime::RuleSet rs{""};
+  rs.id = 0;
+  rule_engine->runtimes.push_back(Runtime{rs, nullptr});
+  auto& rt = rule_engine->runtimes.at(0);
+  rt.ruleset.partner_initial_rule_table.insert({QNodeAddr{2}, 0});
+  rt.assignQubitToRuleSet(QNodeAddr{2}, qubit_record.get());
 
   {  // swap result doesn't need an action
-    swapping_result result{.new_partner = 2, .operation_type = 0};
+    SwappingResultData result{.ruleset_id = 0, .new_partner_addr = 2, .operation_type = 0};
     EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(2)).Times(1).WillOnce(Return(5));
     auto info = std::make_unique<ConnectionSetupInfo>();
     info->qnic.type = QNIC_E;
@@ -551,10 +562,10 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
     EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(5)).Times(1).WillOnce(Return(ByMove(std::move(info))));
     EXPECT_CALL(*realtime_controller, applyXGate(_)).Times(0);
     EXPECT_CALL(*realtime_controller, applyZGate(_)).Times(0);
-    rule_engine->updateResources_EntanglementSwapping(result);
+    rule_engine->handleSwappingResult(result);
   }
   {  // swap result needs to apply X gate
-    swapping_result result{.new_partner = 2, .operation_type = 1};
+    SwappingResultData result{.ruleset_id = 0, .new_partner_addr = 2, .operation_type = 1};
     EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(2)).Times(1).WillOnce(Return(5));
     auto info = std::make_unique<ConnectionSetupInfo>();
     info->qnic.type = QNIC_E;
@@ -562,10 +573,10 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
     EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(5)).Times(1).WillOnce(Return(ByMove(std::move(info))));
     EXPECT_CALL(*realtime_controller, applyXGate(qubit_record.get())).Times(1);
     EXPECT_CALL(*realtime_controller, applyZGate(_)).Times(0);
-    rule_engine->updateResources_EntanglementSwapping(result);
+    rule_engine->handleSwappingResult(result);
   }
   {  // swap result needs to apply Z gate
-    swapping_result result{.new_partner = 2, .operation_type = 2};
+    SwappingResultData result{.ruleset_id = 0, .new_partner_addr = 2, .operation_type = 2};
     EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(2)).Times(1).WillOnce(Return(5));
     auto info = std::make_unique<ConnectionSetupInfo>();
     info->qnic.type = QNIC_E;
@@ -573,7 +584,7 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
     EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(5)).Times(1).WillOnce(Return(ByMove(std::move(info))));
     EXPECT_CALL(*realtime_controller, applyZGate(qubit_record.get())).Times(1);
     EXPECT_CALL(*realtime_controller, applyXGate(_)).Times(0);
-    rule_engine->updateResources_EntanglementSwapping(result);
+    rule_engine->handleSwappingResult(result);
   }
   delete qubit;
   delete hardware_monitor;
@@ -581,58 +592,65 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
   delete realtime_controller;
   delete rule_engine->qnic_store.get();
 }
+
 TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   /* setup components */
   auto* sim = prepareSimulation();
   auto* routing_daemon = new MockRoutingDaemon;
   auto* hardware_monitor = new MockHardwareMonitor;
   auto* realtime_controller = new MockRealTimeController;
-  auto* qubit = new MockQubit(QNIC_E, 7);
+  QNIC_type qnic_type = QNIC_E;
+  int qnic_index = 0;
+  int qubit_index = 7;
+  auto* qubit = new MockQubit(qnic_type, qnic_index);
   auto* rule_engine = new RuleEngineTestTarget{qubit, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
-  std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(QNIC_E, 7, 0);
-  EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(QNIC_E, 0, 0)).Times(1).WillRepeatedly(Return(qubit_record.get()));
-  EXPECT_CALL(*realtime_controller, assertNoEntanglement(qubit_record.get())).Times(1);
+  std::unique_ptr<IQubitRecord> qubit_record = std::make_unique<QubitRecord>(qnic_type, qnic_index, qubit_index);
+  EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(qnic_type, qnic_index, qubit_index)).Times(1).WillRepeatedly(Return(qubit_record.get()));
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
 
-  unsigned long ruleset_id = 3;
+  unsigned long ruleset_id = 4;
   int rule_id = 0;
-  int shared_tag = 3;
-  auto* ruleset = new ActiveRuleSet(ruleset_id, rule_id);
+  int shared_tag = 5;
+  int swapper_addr = 3;
+  int new_partner_addr = 2;
+  RuleSet rs{ruleset_id, rule_id};
   {  // generate RuleSet
-    auto rule = std::make_unique<ActiveRule>(ruleset_id, rule_id, 0);
-    rule->next_rule_id = rule_id + 1;
-    rule->action_partners.push_back(1);
-    rule->action_partners.push_back(2);
-    rule->addResource(2, qubit);
+    auto rule = std::make_unique<Rule>(ruleset_id, qnic_type, qnic_index, shared_tag, false);
     rule->shared_tag = shared_tag;
-    auto next_rule = std::make_unique<ActiveRule>(ruleset_id, rule_id + 1, 0);
+    rule->setAction(std::make_unique<Wait>(swapper_addr, qnic_type, qnic_index));
+    auto next_rule = std::make_unique<Rule>(ruleset_id, qnic_type, qnic_index, shared_tag, false);
+    next_rule->setAction(std::make_unique<Wait>(swapper_addr, qnic_type, qnic_index));
 
-    ruleset->addRule(std::move(rule));
-    ruleset->addRule(std::move(next_rule));
-    rule_engine->rp.insert(ruleset);
-    EXPECT_EQ(ruleset->rules.at(0)->resources.size(), 1);
-    EXPECT_EQ(ruleset->rules.at(1)->resources.size(), 0);
+    rs.addRule(std::move(rule));
+    rs.addRule(std::move(next_rule));
+    rule_engine->runtimes.push_back(Runtime{rs.construct(), nullptr});
   }
+  auto& rt = rule_engine->runtimes.at(0);
+  rt.assignQubitToRule(QNodeAddr{new_partner_addr}, 0, qubit_record.get());
+  rt.ruleset.partner_initial_rule_table.insert({QNodeAddr{new_partner_addr}, 1});
+  EXPECT_EQ(getResourceSizeByRuleId(rt, 0), 1);
+  EXPECT_EQ(getResourceSizeByRuleId(rt, 1), 0);
 
-  swapping_result result{
-      .id = {.ruleset_id = ruleset_id, .rule_id = rule_id, .index = 0, .shared_tag = shared_tag},
-      .new_partner = 2,
-      .operation_type = 0,
-      .swapper_addr = 1,
-  };
-  EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(2)).Times(1).WillOnce(Return(5));
+  EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(new_partner_addr)).Times(1).WillOnce(Return(5));
   auto info = std::make_unique<ConnectionSetupInfo>();
-  info->qnic.type = QNIC_E;
-  info->qnic.index = 0;
+  info->qnic.type = qnic_type;
+  info->qnic.index = qnic_index;
   EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(5)).Times(1).WillOnce(Return(ByMove(std::move(info))));
   EXPECT_CALL(*qubit, X_gate()).Times(0);
   EXPECT_CALL(*qubit, Z_gate()).Times(0);
-  rule_engine->updateResources_EntanglementSwapping(result);
+  SwappingResultData result{
+      .ruleset_id = ruleset_id,
+      .shared_tag = shared_tag,
+      .new_partner_addr = 2,
+      .operation_type = 0,
+      .qubit_index = qubit_index,
+  };
+  rule_engine->handleSwappingResult(result);
 
   // check whether the qubit is promoted or not
-  EXPECT_EQ(ruleset->rules.at(0)->resources.size(), 0);
-  EXPECT_EQ(ruleset->rules.at(1)->resources.size(), 1);
+  EXPECT_EQ(getResourceSizeByRuleId(rt, 0), 0);
+  EXPECT_EQ(getResourceSizeByRuleId(rt, 1), 1);
 
   delete qubit;
   delete hardware_monitor;
