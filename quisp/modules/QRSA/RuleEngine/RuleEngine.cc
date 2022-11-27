@@ -188,38 +188,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
     handleSwappingResult(data);
   }
 
-  else if (auto *pkt = dynamic_cast<SimultaneousSwappingResult *>(msg)) {
-    // Add messeage to collection [ruleSetid][index_in_path]
-    error("Simultaneous Swapping is not implemented yet");
-    unsigned long rule_id = pkt->getRuleSet_id();
-    simultaneous_es_results[rule_id][pkt->getIndex_in_path()] = pkt->getOperation_type();
-
-    // Check if all message is here or not
-    if (simultaneous_es_results[rule_id].size() == pkt->getPath_length_exclude_IR()) {
-      // optimize correction operation, without global phase consideration
-      std::map<int, int>::iterator it;
-      int oco_result = 0;
-      for (it = simultaneous_es_results[rule_id].begin(); it != simultaneous_es_results[rule_id].end(); it++) {  // this may wrong due to using of index, not iterator
-        oco_result ^= it->second;
-      }
-
-      process_id swapping_id;
-      swapping_id.ruleset_id = pkt->getRuleSet_id();  // just in case
-      swapping_id.rule_id = pkt->getRule_id();
-      swapping_id.index = pkt->getAction_index();
-
-      swapping_result swapr;  // result of entanglement swapping
-      swapr.id = swapping_id;
-      swapr.new_partner = pkt->getNew_partner();
-      swapr.new_partner_qnic_index = pkt->getNew_partner_qnic_index();
-      swapr.new_partner_qnic_address = pkt->getNew_partner_qnic_address();
-      swapr.new_partner_qnic_type = pkt->getNew_partner_qnic_type();
-      swapr.measured_qubit_index = pkt->getMeasured_qubit_index();
-      swapr.operation_type = oco_result;
-      updateResources_SimultaneousEntanglementSwapping(swapr);
-    }
-  }
-
   else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     // add actual process
     auto serialized_ruleset = pkt->getRuleSet();
@@ -620,61 +588,6 @@ void RuleEngine::handleSwappingResult(const SwappingResultData &data) {
   bell_pair_store.eraseQubit(qubit_record);
   bell_pair_store.insertEntangledQubit(data.new_partner_addr, qubit_record);
   runtime->promoteQubitWithNewPartner(qubit_record, data.new_partner_addr);
-}
-
-void RuleEngine::updateResources_SimultaneousEntanglementSwapping(swapping_result swapr) {
-  int new_partner = swapr.new_partner;
-  int operation_type = swapr.operation_type;
-
-  int qnic_address = routingdaemon->return_QNIC_address_to_destAddr(new_partner);
-  auto info = hardware_monitor->findConnectionInfoByQnicAddr(qnic_address);
-  if (info == nullptr) {
-    error("qnic(addr: %d) info not found", qnic_address);
-  }
-  int qnic_index = info->qnic.index;
-  QNIC_type qnic_type = info->qnic.type;
-  int qubit_index = swapr.measured_qubit_index;
-  auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit_index);
-
-  if (operation_type == 0) {
-    // nothing
-  } else if (operation_type == 1) {
-    // do Z
-    realtime_controller->applyZGate(qubit_record);
-  } else if (operation_type == 2) {
-    // do X
-    realtime_controller->applyZGate(qubit_record);
-
-  } else if (operation_type == 3) {
-    // do XZ
-    realtime_controller->applyZGate(qubit_record);
-    realtime_controller->applyXGate(qubit_record);
-  } else {
-    error("something error happened! This operation type doesn't recorded!");
-  }
-  realtime_controller->assertNoEntanglement(qubit_record);
-  IStationaryQubit *qubit = provider.getStationaryQubit(qubit_record);
-  // first delete old record
-  bell_pair_store.eraseQubit(qubit_record);
-
-  // Make this qubit available for rules
-  if (qubit_record->isAllocated()) {
-    error("qubit is already allocated");
-  }
-  if (qubit->isLocked()) {
-    error("qubit is locked");
-  }
-  bell_pair_store.insertEntangledQubit(new_partner, qubit_record);
-  if (qubit->entangled_partner != nullptr) {
-    if (qubit->entangled_partner->entangled_partner == nullptr) {
-      error("1. Entanglement tracking is not doing its job. in update resource E.S.");
-    }
-    if (qubit->entangled_partner->entangled_partner != qubit) {
-      error("2. Entanglement tracking is not doing its job. in update resource E.S.");
-    }
-  }
-  ResourceAllocation(qnic_type, qnic_index);
-  traverseThroughAllProcesses2();  // New resource added to QNIC with qnic_type qnic_index.
 }
 
 // Only for MIM and MM
