@@ -117,8 +117,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
 
   [[deprecated]] void traverseThroughAllProcesses2();
-  [[deprecated]] void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int shared_tag, int index);
-  [[deprecated]] void Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int shared_tag, int index);
 
   utils::ComponentProvider provider;
   std::unique_ptr<IQNicStore> qnic_store = nullptr;
