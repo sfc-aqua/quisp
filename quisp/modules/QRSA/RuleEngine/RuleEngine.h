@@ -120,8 +120,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   [[deprecated]] void Unlock_resource_and_upgrade_stage(unsigned long ruleset_id, int rule_id, int shared_tag, int index);
   [[deprecated]] void Unlock_resource_and_discard(unsigned long ruleset_id, int rule_id, int shared_tag, int index);
 
-  virtual void updateResources_SimultaneousEntanglementSwapping(swapping_result swapr);
-
   utils::ComponentProvider provider;
   std::unique_ptr<IQNicStore> qnic_store = nullptr;
 
