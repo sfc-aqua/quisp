@@ -7,6 +7,8 @@
 namespace {
 using namespace quisp_test;
 using namespace quisp::rules;
+using namespace quisp::rules::active;
+
 using OriginalActiveRule = quisp::rules::active::ActiveRule;
 class Rule : public OriginalActiveRule {
  public:

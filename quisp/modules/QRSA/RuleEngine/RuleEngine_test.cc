@@ -83,8 +83,6 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
   using quisp::modules::RuleEngine::purification_result_table;
   using quisp::modules::RuleEngine::qnic_store;
   using quisp::modules::RuleEngine::runtimes;
-  using quisp::modules::RuleEngine::Unlock_resource_and_discard;
-  using quisp::modules::RuleEngine::Unlock_resource_and_upgrade_stage;
 
   RuleEngineTestTarget(IStationaryQubit* mockQubit, MockRoutingDaemon* routingdaemon, MockHardwareMonitor* hardware_monitor, MockRealTimeController* realtime_controller,
                        std::vector<QNicSpec> qnic_specs = {})
@@ -129,8 +127,6 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   info->qnic.index = 0;
 
   unsigned long mock_ruleset_id = 10;
-  int mock_rule_id = 0;
-  int mock_next_rule_id = 1;
   int shared_tag = 3;
 
   int qnic_id = info->qnic.index;

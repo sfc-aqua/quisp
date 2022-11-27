@@ -3,6 +3,8 @@
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 #include "base/TransferMessage.cc"
 
+using quisp::modules::IRuleEngine;
+
 namespace quisp::rules::active::actions {
 DoubleSelectionDualAction::DoubleSelectionDualAction(unsigned long ruleset_id, int rule_id, int shared_tag, int partner, QNIC_type qnic_type, int qnic_index, int resource,
                                                      int trash_resource_x, int trash_resource_z, int ds_trash_resource_x, int ds_trash_resource_z)

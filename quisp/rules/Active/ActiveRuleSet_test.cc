@@ -4,6 +4,7 @@
 
 namespace {
 using namespace quisp::rules;
+using namespace quisp::rules::active;
 using namespace quisp_test;
 
 TEST(ActiveRuleSetTest, Init) {

@@ -2,6 +2,8 @@
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
+using quisp::messages::SwappingResult;
+using quisp::modules::IRuleEngine;
 using quisp::types::EigenvalueResult;
 
 namespace quisp::rules::active::actions {

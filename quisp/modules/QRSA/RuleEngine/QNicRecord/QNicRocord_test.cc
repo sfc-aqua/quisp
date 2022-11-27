@@ -10,6 +10,9 @@ using namespace quisp_test;
 using quisp::utils::ComponentProvider;
 using namespace quisp::modules::qnic_record;
 using namespace quisp::modules::Logger;
+using quisp::modules::QNIC_E;
+using quisp::modules::QNIC_R;
+using quisp::modules::QNIC_RP;
 
 TEST(QNicRecord, InitWithoutQubits) {
   ComponentProvider provider(new cModule());

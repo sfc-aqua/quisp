@@ -32,6 +32,7 @@ using namespace quisp::rules::active::actions;
 using quisp::rules::active::actions::ActiveAction;
 using namespace quisp::modules;
 using namespace quisp_test;
+using namespace quisp::messages;
 using namespace testing;
 
 class Strategy : public TestComponentProviderStrategy {

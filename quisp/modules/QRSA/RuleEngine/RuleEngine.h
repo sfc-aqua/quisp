@@ -9,17 +9,11 @@
 #include <omnetpp.h>
 #include <vector>
 
-#include <messages/classical_messages.h>
 #include <modules/Logger/LoggerBase.h>
-#include <modules/PhysicalConnection/BSA/HOMController.h>
-#include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
-#include <modules/QRSA/HardwareMonitor/HardwareMonitor.h>
+#include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>
-#include <modules/QRSA/RoutingDaemon/RoutingDaemon.h>
-#include <modules/QUBIT.h>
-#include <rules/Active/ActiveRuleSet.h>
+#include <modules/QRSA/RoutingDaemon/IRoutingDaemon.h>
 #include <rules/RuleSet.h>
-#include <runtime/RuleSet.h>
 #include <runtime/Runtime.h>
 #include <utils/ComponentProvider.h>
 
@@ -45,6 +39,18 @@ using pur_result_table::PurificationResultTable;
 using qnic_store::IQNicStore;
 using qubit_record::IQubitRecord;
 
+struct PhotonTransmissionConfig {
+  int transmission_partner_address;
+  int qnic_index;
+  int qnic_address;
+  QNIC_type qnic_type;
+  simtime_t timing;
+  double interval;
+};
+
+/// @brief nth shot -> node/qnic/qubit index (node addr not needed actually)
+using SentQubitIndexTracker = std::map<int, QubitAddr_cons>;
+
 struct SwappingResultData {
   unsigned long ruleset_id;
   int shared_tag;
@@ -67,7 +73,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   friend runtime_callback::RuntimeCallback;
   RuleEngine();
   int parentAddress;  // Parent QNode's address
-  EmitPhotonRequest *emt;
+  messages::EmitPhotonRequest *emt;
   NeighborTable ntable;
   int number_of_qnics_all;  // qnic,qnic_r,_qnic_rp
   int number_of_qnics;
@@ -76,7 +82,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   PurificationResultTable purification_result_table;
 
   bool *terminated_qnic;  // When you need to intentionally stop the link to make the simulation lighter.
-  sentQubitIndexTracker *tracker;
+  SentQubitIndexTracker *tracker;
   IHardwareMonitor *hardware_monitor;
   IRoutingDaemon *routingdaemon;
   IRealTimeController *realtime_controller;
@@ -101,16 +107,16 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void initialize() override;
   void finish() override;
   void handleMessage(cMessage *msg) override;
-  void scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type);
+  void scheduleFirstPhotonEmission(messages::BSMtimingNotifier *pk, QNIC_type qnic_type);
   void sendPhotonTransmissionSchedule(PhotonTransmissionConfig transmission_config);
-  void shootPhoton(SchedulePhotonTransmissionsOnebyOne *pk);
+  void shootPhoton(messages::SchedulePhotonTransmissionsOnebyOne *pk);
   void incrementBurstTrial(int destAddr, int internal_qnic_address, int internal_qnic_index);
-  void shootPhoton_internal(SchedulePhotonTransmissionsOnebyOne *pk);
+  void shootPhoton_internal(messages::SchedulePhotonTransmissionsOnebyOne *pk);
   bool burstTrial_outdated(int this_trial, int qnic_address);
   InterfaceInfo getInterface_toNeighbor(int destAddr);
   InterfaceInfo getInterface_toNeighbor_Internal(int local_qnic_index);
   void scheduleNextEmissionEvent(int qnic_index, int qnic_address, double interval, simtime_t timing, int num_sent, bool internal, int trial);
-  void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, CombinedBSAresults *pk_result);
+  void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, messages::CombinedBSAresults *pk_result);
   void clearTrackerTable(int destAddr, int internal_qnic_address);
   void handlePurificationResult(const PurificationResultKey &, const PurificationResultData &, bool from_self);
   void handleSwappingResult(const SwappingResultData &data);
