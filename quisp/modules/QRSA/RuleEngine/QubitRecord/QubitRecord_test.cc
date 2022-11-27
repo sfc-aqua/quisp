@@ -8,8 +8,13 @@
 
 namespace {
 using namespace quisp_test;
-using quisp::utils::ComponentProvider;
 using namespace quisp::modules::Logger;
+using quisp::modules::QNIC_E;
+using quisp::modules::QNIC_N;
+using quisp::modules::QNIC_R;
+using quisp::modules::QNIC_RP;
+using quisp::utils::ComponentProvider;
+
 class QubitRecord : public quisp::modules::qubit_record::QubitRecord {
  public:
   using quisp::modules::qubit_record::QubitRecord::applied_rule_ids;

@@ -2,7 +2,10 @@
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
+using quisp::messages::SimultaneousSwappingResult;
+using quisp::modules::IRuleEngine;
 using quisp::types::MeasureZResult;
+
 namespace quisp::rules::active::actions {
 SimultaneousSwappingAction::SimultaneousSwappingAction(unsigned long ruleset_id, unsigned long rule_id, int left_partner, QNIC_type left_qnic_type, int left_qnic_index,
                                                        int left_qnic_address, int left_resource, int right_partner, QNIC_type right_qnic_type, int right_qnic_index,

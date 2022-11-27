@@ -7,6 +7,10 @@
 namespace {
 using namespace quisp_test;
 using namespace quisp::rules;
+using quisp::modules::QNIC_E;
+using quisp::modules::QNIC_N;
+using quisp::modules::QNIC_R;
+using quisp::modules::QNIC_RP;
 using quisp::modules::QNIC_type;
 
 TEST(ClauseTest, EnoughResourceConditionClause_serialize_json) {

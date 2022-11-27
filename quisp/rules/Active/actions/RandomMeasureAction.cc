@@ -2,6 +2,10 @@
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 
+using quisp::messages::LinkTomographyResult;
+using quisp::modules::IRuleEngine;
+using quisp::modules::measurement_outcome;
+
 namespace quisp::rules::active::actions {
 
 RandomMeasureAction::RandomMeasureAction(unsigned long ruleset_id, unsigned long rule_id, int owner_address, int partner, QNIC_type qnic_type, int qnic_id, int resource,

@@ -16,6 +16,7 @@ namespace quisp::modules::runtime_callback {
 using namespace quisp::runtime;
 using quisp::modules::RuleEngine;
 using quisp::runtime::QNodeAddr;
+using namespace quisp::messages;
 
 struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   RuntimeCallback(RuleEngine *re) : rule_engine(re), provider(re->provider) {}

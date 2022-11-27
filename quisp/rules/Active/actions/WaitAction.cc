@@ -4,7 +4,7 @@
 
 namespace quisp::rules::active::actions {
 cPacket *WaitAction::run(cModule *re) {
-  auto *pk = new WaitResult;
+  auto *pk = new messages::WaitResult;
   pk->setKind(6);
   pk->setRuleSet_id(ruleset_id);
   pk->setRule_id(rule_id);

@@ -3,6 +3,8 @@
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 #include "base/TransferMessage.cc"
 
+using quisp::modules::IRuleEngine;
+
 namespace quisp::rules::active::actions {
 
 DoubleSelectionDualActionSecond::DoubleSelectionDualActionSecond(unsigned long ruleset_id, int rule_id, int shared_tag, int partner, QNIC_type qnic_type, int qnic_id, int resource,

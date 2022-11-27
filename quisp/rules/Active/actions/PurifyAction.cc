@@ -3,6 +3,8 @@
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 #include "base/TransferMessage.cc"
 
+using quisp::modules::IRuleEngine;
+
 namespace quisp::rules::active::actions {
 
 PurifyAction::PurifyAction(unsigned long ruleset_id, int rule_id, int shared_tag, bool x_purification, bool z_purification, int num_purification, int partner, QNIC_type qnic_type,

@@ -10,6 +10,7 @@
 #include <modules/QNIC.h>
 #include <modules/QUBIT.h>
 #include <omnetpp.h>
+#include <map>
 #include <memory>
 
 namespace quisp::rules::active::actions {

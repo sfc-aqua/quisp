@@ -7,7 +7,12 @@
 namespace {
 using namespace quisp_test;
 using namespace quisp::rules;
+using quisp::modules::QNIC_E;
+using quisp::modules::QNIC_N;
+using quisp::modules::QNIC_R;
+using quisp::modules::QNIC_RP;
 using quisp::modules::QNIC_type;
+
 TEST(ActionTest, Purification_serialize_json) {
   prepareSimulation();
   // purification_type, partner_addr, qnic_type, qnic_id

@@ -12,19 +12,16 @@
 #include <stdexcept>
 #include <utility>
 
-#include <utils/ComponentProvider.h>
+#include <messages/classical_messages.h>
 #include "QNicStore/QNicStore.h"
 #include "RuleEngine.h"
 #include "RuntimeCallback.h"
-#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
-#include "runtime/RuleSet.h"
-#include "runtime/Runtime.h"
-#include "runtime/types.h"
 
 namespace quisp::modules {
 
 using namespace rules;
 using namespace rules::active;
+using namespace messages;
 using qnic_store::QNicStore;
 using runtime_callback::RuntimeCallback;
 
@@ -60,7 +57,7 @@ void RuleEngine::initialize() {
   }
 
   // Tracks which qubit was sent first, second and so on per qnic(r,rp)
-  tracker = new sentQubitIndexTracker[number_of_qnics_all];
+  tracker = new SentQubitIndexTracker[number_of_qnics_all];
   for (int qnic_address = 0; qnic_address < number_of_qnics_all; qnic_address++) {
     tracker_accessible.push_back(true);
   }
