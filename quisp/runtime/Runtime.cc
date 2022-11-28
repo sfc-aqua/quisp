@@ -4,6 +4,7 @@
 #include "InstructionVisitor.h"
 #include "Runtime.h"
 #include "Value.h"
+#include "omnetpp/cexception.h"
 #include "types.h"
 
 namespace quisp::runtime {
@@ -100,6 +101,18 @@ void Runtime::assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_r
   auto it = ruleset.partner_initial_rule_table.find(partner_addr);
   assert(it != ruleset.partner_initial_rule_table.end());
   qubits.emplace(std::make_pair(partner_addr, it->second), qubit_record);
+}
+
+QubitResources::iterator Runtime::findQubit(int target_rule_id, int shared_tag, int action_index) {
+  runtime::QubitResources::iterator qubit_key;
+  for (auto it = qubits.begin(); it != qubits.end(); it++) {
+    auto& [addr, current_rule_id] = it->first;
+    if (current_rule_id != target_rule_id) continue;
+    if (callback->getActionIndex(it->second) == action_index) {
+      return it;
+    }
+  }
+  throw cRuntimeError("Qubit not found: (rule_id: %d, shared_tag: %d, action_index: %d)", target_rule_id, shared_tag, action_index);
 }
 
 void Runtime::promoteQubit(QubitResources::iterator iter) {

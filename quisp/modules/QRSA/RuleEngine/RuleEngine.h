@@ -15,6 +15,7 @@
 #include <modules/QRSA/RoutingDaemon/IRoutingDaemon.h>
 #include <rules/RuleSet.h>
 #include <runtime/Runtime.h>
+#include <runtime/RuntimeManager.h>
 #include <utils/ComponentProvider.h>
 
 #include "BellPairStore/BellPairStore.h"
@@ -117,14 +118,12 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void handlePurificationResult(const PurificationResultKey &, const PurificationResultData &, bool from_self);
   void handleSwappingResult(const SwappingResultData &data);
   double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
-
-  [[deprecated]] void traverseThroughAllProcesses2();
+  void executeAllRuleSets();
 
   utils::ComponentProvider provider;
   std::unique_ptr<IQNicStore> qnic_store = nullptr;
 
-  std::vector<runtime::Runtime> runtimes;
-  std::unique_ptr<runtime::Runtime::ICallBack> runtime_callback;
+  runtime::RuntimeManager runtimes;
 };
 
 Define_Module(RuleEngine);

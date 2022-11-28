@@ -24,7 +24,7 @@ using namespace messages;
 using qnic_store::QNicStore;
 using runtime_callback::RuntimeCallback;
 
-RuleEngine::RuleEngine() : provider(utils::ComponentProvider{this}) {}
+RuleEngine::RuleEngine() : provider(utils::ComponentProvider{this}), runtimes(std::make_unique<RuntimeCallback>(this)) {}
 
 void RuleEngine::initialize() {
   // HardwareMonitor's neighbor table is checked in the initialization stage of the simulation
@@ -61,12 +61,10 @@ void RuleEngine::initialize() {
     tracker_accessible.push_back(true);
   }
   WATCH_VECTOR(tracker_accessible);
-
-  runtime_callback = std::make_unique<RuntimeCallback>(this);
 }
 
 void RuleEngine::handleMessage(cMessage *msg) {
-  traverseThroughAllProcesses2();  // New resource added to QNIC with qnic_type qnic_index.
+  executeAllRuleSets();  // New resource added to QNIC with qnic_type qnic_index.
 
   if (auto *pk = dynamic_cast<EmitPhotonRequest *>(msg)) {  // From self.
     // Index the qnic and qubit index to the tracker.
@@ -155,8 +153,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
   else if (auto *pk = dynamic_cast<LinkTomographyRuleSet *>(msg)) {
     auto *ruleset = pk->getRuleSet();
-    auto rs = ruleset->construct();
-    runtimes.emplace_back(runtime::Runtime(rs, runtime_callback.get()));
+    runtimes.acceptRuleSet(ruleset->construct());
   } else if (auto *pkt = dynamic_cast<PurificationResult *>(msg)) {
     bool from_self = pkt->getSrcAddr() == parentAddress;
     const PurificationResultKey key{*pkt};
@@ -189,18 +186,13 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto serialized_ruleset = pkt->getRuleSet();
     RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
-
-    auto rs = ruleset.construct();
-    runtimes.emplace_back(runtime::Runtime(rs, runtime_callback.get()));
-
+    runtimes.acceptRuleSet(ruleset.construct());
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
     if (pkt->getApplication_type() != 0) error("This application is not recognized yet");
     auto serialized_ruleset = pkt->getRuleSet();
     RuleSet ruleset(0, 0);
     ruleset.deserialize_json(serialized_ruleset);
-    auto rs = ruleset.construct();
-    runtimes.emplace_back(runtime::Runtime(rs, runtime_callback.get()));
-
+    runtimes.acceptRuleSet(ruleset.construct());
   } else if (auto *pkt = dynamic_cast<StopEmitting *>(msg)) {
     terminated_qnic[pkt->getQnic_address()] = true;
   }
@@ -215,7 +207,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
     ResourceAllocation(QNIC_RP, i);
   }
 
-  traverseThroughAllProcesses2();
+  executeAllRuleSets();
   delete msg;
 }
 
@@ -228,48 +220,16 @@ void RuleEngine::handlePurificationResult(const PurificationResultKey &key, cons
   // rule_id might be different from other node's rule, so use rule id comes from our runtime
   auto rule_id = from_self ? key.rule_id : it->first.rule_id;
 
-  runtime::Runtime *runtime = nullptr;
-  for (auto &rt : runtimes) {
-    if (rt.ruleset.id == key.rs_id) {
-      runtime = &rt;
-      break;
-    }
-  }
-  assert(runtime != nullptr);
+  auto &runtime = runtimes.findById(key.rs_id);
+  auto qubit_key = runtime.findQubit(rule_id, key.shared_tag, key.action_index);
 
-  // find qubit
-  runtime::Rule *rule;
-  for (auto &_rule : runtime->ruleset.rules) {
-    if (_rule.id == rule_id && _rule.shared_tag == key.shared_tag) {
-      rule = &_rule;
-    }
-  }
-  assert(rule != nullptr);
-
-  IQubitRecord *qubit_rec = nullptr;
-  IStationaryQubit *qubit = nullptr;
-  runtime::QubitResources::iterator qubit_key;
-  for (auto it = runtime->qubits.begin(); it != runtime->qubits.end(); it++) {
-    auto &[addr, rule_id] = it->first;
-    if (rule_id != rule->id) continue;
-    auto *q = provider.getStationaryQubit(it->second);
-    if (q->action_index == key.action_index) {
-      // found qubit
-      qubit = q;
-      qubit_rec = it->second;
-      qubit_key = it;
-      break;
-    }
-  }
-
-  if (qubit == nullptr) error("cannot find the qubit for purification result");
-  assert(qubit_rec != nullptr);
+  auto *qubit = provider.getStationaryQubit(qubit_key->second);
   qubit->Unlock();
 
   if (result.isResultMatched(it->second, key.type)) {
-    runtime->promoteQubit(qubit_key);
+    runtime.promoteQubit(qubit_key);
   } else {
-    runtime->qubits.erase(qubit_key);
+    runtime.qubits.erase(qubit_key);
     freeConsumedResource(qubit->qnic_index, qubit, (QNIC_type)qubit->qnic_type);
   }
   purification_result_table.erase(it);
@@ -477,6 +437,7 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
       provider.getQNIC(qnic_index, QNIC_type(qnic_type))->par("burst_trial_counter") = qnic_burst_trial_counter[qnic_address];
   }
 }
+
 void RuleEngine::handleSwappingResult(const SwappingResultData &data) {
   auto qnic_addr = routingdaemon->return_QNIC_address_to_destAddr(data.new_partner_addr);
   auto conn_info = hardware_monitor->findConnectionInfoByQnicAddr(qnic_addr);
@@ -499,17 +460,10 @@ void RuleEngine::handleSwappingResult(const SwappingResultData &data) {
       error("Something went wrong. This operation type: %d isn't recorded!", data.operation_type);
   }
 
-  runtime::Runtime *runtime = nullptr;
-  for (auto &rt : runtimes) {
-    if (rt.ruleset.id == data.ruleset_id) {
-      runtime = &rt;
-      break;
-    }
-  }
-  assert(runtime != nullptr);
+  auto &runtime = runtimes.findById(data.ruleset_id);
   bell_pair_store.eraseQubit(qubit_record);
   bell_pair_store.insertEntangledQubit(data.new_partner_addr, qubit_record);
-  runtime->promoteQubitWithNewPartner(qubit_record, data.new_partner_addr);
+  runtime.promoteQubitWithNewPartner(qubit_record, data.new_partner_addr);
 }
 
 // Only for MIM and MM
@@ -589,7 +543,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
     }
   }
   ResourceAllocation(qnic_type, qnic_index);
-  traverseThroughAllProcesses2();  // New resource added to QNIC with qnic_type qnic_index.
+  executeAllRuleSets();  // New resource added to QNIC with qnic_type qnic_index.
 }
 
 void RuleEngine::freeResource(int qnic_index /*The actual index. Not address. This with qnic_type makes the id unique.*/, int qubit_index, QNIC_type qnic_type) {
@@ -638,12 +592,8 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
   }
 }
 
-void RuleEngine::traverseThroughAllProcesses2() {
-  for (auto &runtime : runtimes) {
-    // how should we delete the runtime and its ruleset?
-    runtime.exec();
-  }
-  return;
+void RuleEngine::executeAllRuleSets() {
+  runtimes.exec();
 }
 
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
