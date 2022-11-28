@@ -7,6 +7,7 @@
 
 #include "BellPairStore/BellPairStore.h"
 #include "IRuleEngine.h"
+#include "QubitRecord/QubitRecord.h"
 #include "RuleEngine.h"
 #include "rules/Rule.h"
 #include "test_utils/mock_modules/MockRoutingDaemon.h"
@@ -20,7 +21,6 @@
 #include <modules/QRSA/QRSA.h>
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>
 #include <modules/QRSA/RoutingDaemon/RoutingDaemon.h>
-#include <modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h>
 #include <rules/Action.h>
 #include <rules/RuleSet.h>
 #include <runtime/RuleSet.h>
@@ -146,8 +146,7 @@ TEST(RuleEngineTest, ESResourceUpdate) {
   next_rule->setAction(std::make_unique<Wait>(swapper_addr, qnic_type, qnic_id));
   rs.addRule(std::move(next_rule));
 
-  auto* callback = new MockRuntimeCallback{};
-  rule_engine->runtimes.push_back(Runtime{rs.construct(), callback});
+  rule_engine->runtimes.acceptRuleSet(rs.construct());
   auto& rt = rule_engine->runtimes.at(0);
   auto wait_rule_id = rt.ruleset.rules.at(0).id;
   auto next_rule_id = rt.ruleset.rules.at(1).id;
@@ -194,14 +193,13 @@ TEST(RuleEngineTest, resourceAllocation) {
   Program empty_condition{"emptyCondition", {}};
   auto rs = quisp::runtime::RuleSet{"test rs", {quisp::runtime::Rule{"test", 0, empty_condition, test_action}}};
   auto runtime = quisp::runtime::Runtime{};
-  runtime.assignRuleSet(rs);
-  rule_engine->runtimes.push_back(runtime);
+  rule_engine->runtimes.acceptRuleSet(rs);
 
   rule_engine->ResourceAllocation(QNIC_E, 3);
   EXPECT_TRUE(qubit_record1->isAllocated());
 
   // resource allocation assigns a corresponding qubit to action's resource
-  auto& rt = rule_engine->runtimes[0];
+  auto& rt = rule_engine->runtimes.at(0);
   EXPECT_EQ(rt.ruleset.rules.size(), 1);
   EXPECT_EQ(rt.qubits.size(), 1);
   delete mockHardwareMonitor;
@@ -266,8 +264,7 @@ TEST(RuleEngineTest, storeCheckPurificationAgreement_running_process) {
 
   ruleset->addRule(std::unique_ptr<Rule>(rule1));
   ruleset->addRule(std::unique_ptr<Rule>(rule2));
-  auto* callback = new quisp_test::MockRuntimeCallback();
-  rule_engine->runtimes.push_back(Runtime{ruleset->construct(), callback});
+  rule_engine->runtimes.acceptRuleSet(ruleset->construct());
   auto& rt = rule_engine->runtimes.at(0);
   auto rule1_id = rt.ruleset.rules.at(0).id;
   auto rule2_id = rt.ruleset.rules.at(1).id;
@@ -393,7 +390,7 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
   rule_engine->callInitialize();
   quisp::runtime::RuleSet rs{""};
   rs.id = 0;
-  rule_engine->runtimes.push_back(Runtime{rs, nullptr});
+  rule_engine->runtimes.acceptRuleSet(rs);
   auto& rt = rule_engine->runtimes.at(0);
   rt.ruleset.partner_initial_rule_table.insert({QNodeAddr{2}, 0});
   rt.assignQubitToRuleSet(QNodeAddr{2}, qubit_record.get());
@@ -469,7 +466,7 @@ TEST(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
 
     rs.addRule(std::move(rule));
     rs.addRule(std::move(next_rule));
-    rule_engine->runtimes.push_back(Runtime{rs.construct(), nullptr});
+    rule_engine->runtimes.acceptRuleSet(rs.construct());
   }
   auto& rt = rule_engine->runtimes.at(0);
   rt.assignQubitToRule(QNodeAddr{new_partner_addr}, 0, qubit_record.get());

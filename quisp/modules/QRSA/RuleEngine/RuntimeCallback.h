@@ -220,6 +220,10 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     qubit->Lock(rs_id, rule_id, action_index);
   }
+  int getActionIndex(IQubitRecord *const qubit_rec) override {
+    auto *qubit = provider.getStationaryQubit(qubit_rec);
+    return qubit->action_index;
+  }
 
   void hackSwappingPartners(IQubitRecord *const left_qubit_rec, IQubitRecord *const right_qubit_rec) override {
     // HACK: this comes from the original SwappingAction.cc

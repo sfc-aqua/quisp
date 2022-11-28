@@ -51,6 +51,7 @@ class Runtime {
     virtual void freeAndResetQubit(IQubitRecord*) = 0;
     virtual bool isQubitLocked(IQubitRecord* const) = 0;
     virtual void lockQubit(IQubitRecord* const, unsigned long rs_id, int rule_id, int action_index) = 0;
+    virtual int getActionIndex(IQubitRecord* const) = 0;
 
     // Quantum Operations
     virtual MeasurementOutcome measureQubitRandomly(IQubitRecord*) = 0;
@@ -122,6 +123,9 @@ class Runtime {
    * @param qubit_record  the entangled qubit's record
    */
   void assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record);
+
+  /// @brief find the qubit that has the action_index and allocated in the rule_id, shared_tag;
+  QubitResources::iterator findQubit(int rule_id, int shared_tag, int action_index);
 
   /** @name register operations */
   //@{
