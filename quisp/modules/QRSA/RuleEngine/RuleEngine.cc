@@ -20,7 +20,6 @@
 namespace quisp::modules {
 
 using namespace rules;
-using namespace rules::active;
 using namespace messages;
 using qnic_store::QNicStore;
 using runtime_callback::RuntimeCallback;

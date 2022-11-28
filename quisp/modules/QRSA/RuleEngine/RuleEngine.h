@@ -24,14 +24,13 @@
 #include "QubitRecord/IQubitRecord.h"
 
 using namespace omnetpp;
+using namespace quisp::rules;
 
 namespace quisp::modules::runtime_callback {
 struct RuntimeCallback;
 }
 
 namespace quisp::modules {
-using namespace rules;
-using namespace rules::active;
 using pur_result_table::PurificationResultData;
 using pur_result_table::PurificationResultKey;
 using pur_result_table::PurificationResultTable;

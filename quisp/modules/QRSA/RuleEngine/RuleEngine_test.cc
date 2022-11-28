@@ -22,7 +22,6 @@
 #include <modules/QRSA/RoutingDaemon/RoutingDaemon.h>
 #include <modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h>
 #include <rules/Action.h>
-#include <rules/Active/actions/WaitAction.h>
 #include <rules/RuleSet.h>
 #include <runtime/RuleSet.h>
 #include <runtime/Runtime.h>
@@ -35,8 +34,6 @@ namespace {
 using namespace omnetpp;
 using namespace quisp::utils;
 using namespace quisp::rules;
-using namespace quisp::rules::active::actions;
-using quisp::rules::active::actions::ActiveAction;
 using namespace quisp::modules;
 using quisp::modules::qrsa::IQubitRecord;
 using quisp::modules::qubit_record::QubitRecord;

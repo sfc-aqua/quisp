@@ -17,19 +17,12 @@
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
 #include "modules/QRSA/RealTimeController/IRealTimeController.h"
-#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
-#include "omnetpp/cmodule.h"
-#include "omnetpp/simtime_t.h"
-#include "rules/Active/ActiveAction.h"
-#include "rules/Active/ActiveRuleSet.h"
 
 namespace {
 
 using namespace omnetpp;
 using namespace quisp::utils;
 using namespace quisp::rules;
-using namespace quisp::rules::active::actions;
-using quisp::rules::active::actions::ActiveAction;
 using namespace quisp::modules;
 using namespace quisp_test;
 using namespace quisp::messages;
