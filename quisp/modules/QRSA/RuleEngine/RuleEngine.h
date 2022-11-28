@@ -22,7 +22,6 @@
 #include "PurificationResultTable/PurificationResultTable.h"
 #include "QNicStore/IQNicStore.h"
 #include "QubitRecord/IQubitRecord.h"
-#include "RuleSetStore/RuleSetStore.h"
 
 using namespace omnetpp;
 
@@ -88,8 +87,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   IRealTimeController *realtime_controller;
   int *qnic_burst_trial_counter;
   BellPairStore bell_pair_store;
-
-  [[deprecated]] ruleset_store::RuleSetStore rp;
 
   // Vector for store package for simultaneous entanglement swapping
   std::map<int, std::map<int, int>> simultaneous_es_results;
