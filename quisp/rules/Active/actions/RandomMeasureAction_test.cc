@@ -6,6 +6,7 @@
 #include <modules/QNIC/StationaryQubit/StationaryQubit.h>
 #include <modules/QRSA/RuleEngine/IRuleEngine.h>
 #include <test_utils/TestUtils.h>
+#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/RuleEngine/RuleEngine.h"
 
 namespace {
@@ -19,6 +20,7 @@ using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_type;
 using quisp::modules::StationaryQubit;
 using OriginalRandomMeasureAction = quisp::rules::active::actions::RandomMeasureAction;
+using quisp::modules::measurement_outcome;
 
 class RandomMeasureAction : public OriginalRandomMeasureAction {
  public:

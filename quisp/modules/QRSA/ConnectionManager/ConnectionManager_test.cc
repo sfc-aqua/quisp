@@ -5,51 +5,7 @@
 #include <nlohmann/json.hpp>
 #include "modules/QNIC.h"
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
-#include "rules/Active/ActiveAction.h"
-#include "rules/Active/ActiveClause.h"
-#include "rules/Active/clauses/EnoughResourceClause.h"
 #include "test_utils/TestUtils.h"
-
-ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, partner);
-ACCESS_PRIVATE_FIELD(quisp::modules::EnoughResourceClause, int, num_resource_required);
-
-ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, unsigned long, ruleset_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::ActiveAction, int, rule_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, QNIC_type, qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, partner);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, resource);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, trash_resource);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, purification_count);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, bool, X);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, bool, Z);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, num_purify);
-ACCESS_PRIVATE_FIELD(quisp::modules::PurifyAction, int, action_index);
-
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_partner);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, self_left_qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_qnic_address);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, left_qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, self_left_qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, left_resource);
-
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_partner);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, self_right_qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_qnic_address);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, right_qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, QNIC_type, self_right_qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::SwappingAction, int, right_resource);
-
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, partner);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, qnic_id);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, QNIC_type, qnic_type);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, resource);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, src);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, dst);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, current_count);
-ACCESS_PRIVATE_FIELD(quisp::modules::RandomMeasureAction, int, max_count);
 
 using json = nlohmann::json;
 namespace {
