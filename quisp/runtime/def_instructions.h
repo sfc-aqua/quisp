@@ -19,11 +19,11 @@ INSTR(INC, RegId)
 INSTR(SET, RegId, int)
 
 // control flow
-INSTR(BEQ, Label, RegId, RegId)  // branch if the regs are same
+INSTR(BEQ, Label, RegId, RegId)  // branch if the reg values are same
 INSTR(BEQ, Label, RegId, int)  // branch if the reg value is equal to the int value
 INSTR(BEZ, Label, RegId)  // branch if the reg value is zero
-INSTR(BNZ, Label, RegId)  // branch if the reg val is not zero
-INSTR(BLT, Label, RegId, int)  // branch if the reg val is less than the int value
+INSTR(BNZ, Label, RegId)  // branch if the reg value is not zero
+INSTR(BLT, Label, RegId, int)  // branch if the reg value is less than the int value
 INSTR(BRANCH_IF_LOCKED, Label, RegId)
 INSTR(BRANCH_IF_QUBIT_FOUND, Label)
 INSTR(JMP, Label)

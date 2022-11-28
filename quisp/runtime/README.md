@@ -39,7 +39,7 @@ measure action and its C++ representations.
 QUBIT_FOUND: // this is a label
 
   // measure the qubit q0 and store the result to the "outcome" key
-  MEASURE_RONDOM "outcome" q0
+  MEASURE_RANDOM "outcome" q0
 
   // increment the count register
   INC count
@@ -115,7 +115,7 @@ INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_Time_{{partner_a
         alt RuleSet not terminated
             RT->>-RE: finish RuleSet execution
         else RuleSet terminated
-            RT->>RE: finsih RuleSet execution
+            RT->>RE: finish RuleSet execution
             RE->>RT: delete the RuleSet and the Runtime
         end
 </div>
