@@ -32,10 +32,11 @@ class ActionExecutionTest : public testing::Test {
     runtime = new Runtime;
     callback = new MockRuntimeCallback;
     runtime->callback = callback;
-    qubit1 = new QubitRecord{QNIC_E, 0, 1};
-    qubit2 = new QubitRecord{QNIC_E, 0, 2};
-    qubit3 = new QubitRecord{QNIC_E, 0, 3};
-    qubit4 = new QubitRecord{QNIC_E, 0, 4};
+    qubit1 = new QubitRecord{QNIC_E, qnic_id, 1};
+    qubit2 = new QubitRecord{QNIC_E, qnic_id, 2};
+    qubit3 = new QubitRecord{QNIC_E, qnic_id, 3};
+    qubit4 = new QubitRecord{QNIC_E, qnic_id, 4};
+    qubit5 = new QubitRecord{QNIC_E, qnic_id, 5};
   }
   void TearDown() {
     delete runtime;
@@ -45,8 +46,9 @@ class ActionExecutionTest : public testing::Test {
     delete qubit3;
     delete qubit4;
   }
-  void setAction(const quisp::rules::Action* actionData) {
+  void setAction(const quisp::rules::Action* actionData, bool debugging = false) {
     Program action = RuleSetConverter::constructAction(actionData);
+    action.debugging = debugging;
     Rule rule{"", 0, always_pass, action};
     RuleSet rs{
         "test",
@@ -63,6 +65,7 @@ class ActionExecutionTest : public testing::Test {
   IQubitRecord* qubit2;
   IQubitRecord* qubit3;
   IQubitRecord* qubit4;
+  IQubitRecord* qubit5;
   int partner_addr = 1;
   QNIC_type qnic_type = QNIC_E;
   int qnic_id = 3;
@@ -483,4 +486,331 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyInvZTrue) {
   runtime->exec();
   ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
 }
+
+// TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurify) {
+//   PurType pur_type = PurType::DSDA_SECOND;
+//   Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+//   setAction(&action);
+//   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
+
+//   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
+//   EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
+//   EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
+//   EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
+//   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+//   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
+//   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
+//   EXPECT_CALL(*callback, purifyZ(qubit1, qubit3)).Times(1).WillOnce(Return(false));
+//   EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(true));
+//   EXPECT_CALL(*callback, purifyZ(qubit2, qubit4)).Times(1).WillOnce(Return(false));
+//   EXPECT_CALL(*callback, sendTriplePurificationResult(ruleset_id, _, 0 /* action_index */, QNodeAddr(partner_addr), false, true, true, pur_type)).Times(1);
+//   runtime->assignQubitToRuleSet(partner_addr, qubit1);
+//   runtime->assignQubitToRuleSet(partner_addr, qubit2);
+//   runtime->assignQubitToRuleSet(partner_addr, qubit3);
+//   runtime->assignQubitToRuleSet(partner_addr, qubit4);
+//   ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 4);
+//   runtime->exec();
+//   ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
+// }
+
+TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyAllTrue) {
+  PurType pur_type = PurType::DSDA;
+  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  setAction(&action);
+  EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
+
+  EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit5)).Times(1);
+  EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyZ(qubit2, qubit5)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyZ(qubit1, qubit3)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyX(qubit3, qubit4)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, sendQuadruplePurificationResult(ruleset_id, _, 0 /* action_index */, QNodeAddr(partner_addr), true, true, true, true, pur_type)).Times(1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit2);
+  runtime->assignQubitToRuleSet(partner_addr, qubit3);
+  runtime->assignQubitToRuleSet(partner_addr, qubit4);
+  runtime->assignQubitToRuleSet(partner_addr, qubit5);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 5);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
+}
+
+TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyAllFalse) {
+  PurType pur_type = PurType::DSDA;
+  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  setAction(&action);
+  EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
+
+  EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit5)).Times(1);
+  EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, purifyZ(qubit2, qubit5)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, purifyZ(qubit1, qubit3)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, purifyX(qubit3, qubit4)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, sendQuadruplePurificationResult(ruleset_id, _, 0 /* action_index */, QNodeAddr(partner_addr), false, false, false, false, pur_type)).Times(1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit2);
+  runtime->assignQubitToRuleSet(partner_addr, qubit3);
+  runtime->assignQubitToRuleSet(partner_addr, qubit4);
+  runtime->assignQubitToRuleSet(partner_addr, qubit5);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 5);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
+}
+
+TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyAllXTrueZTrueZFalseXFalse) {
+  PurType pur_type = PurType::DSDA;
+  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  setAction(&action);
+  EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
+
+  EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit5)).Times(1);
+  EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyZ(qubit2, qubit5)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyZ(qubit1, qubit3)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, purifyX(qubit3, qubit4)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, sendQuadruplePurificationResult(ruleset_id, _, 0 /* action_index */, QNodeAddr(partner_addr), false, true, true, false, pur_type)).Times(1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit2);
+  runtime->assignQubitToRuleSet(partner_addr, qubit3);
+  runtime->assignQubitToRuleSet(partner_addr, qubit4);
+  runtime->assignQubitToRuleSet(partner_addr, qubit5);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 5);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
+}
+
+TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyXFalseZFalseZTrueXTrue) {
+  PurType pur_type = PurType::DSDA;
+  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  setAction(&action);
+  EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
+
+  EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit5)).Times(1);
+  EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, purifyZ(qubit2, qubit5)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, purifyZ(qubit1, qubit3)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyX(qubit3, qubit4)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, sendQuadruplePurificationResult(ruleset_id, _, 0 /* action_index */, QNodeAddr(partner_addr), true, false, false, true, pur_type)).Times(1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit2);
+  runtime->assignQubitToRuleSet(partner_addr, qubit3);
+  runtime->assignQubitToRuleSet(partner_addr, qubit4);
+  runtime->assignQubitToRuleSet(partner_addr, qubit5);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 5);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
+}
+
+TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyXFalseZTrueZTrueXFalse) {
+  PurType pur_type = PurType::DSDA;
+  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  setAction(&action);
+  EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
+
+  EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit5)).Times(1);
+  EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, purifyZ(qubit2, qubit5)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyZ(qubit1, qubit3)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyX(qubit3, qubit4)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, sendQuadruplePurificationResult(ruleset_id, _, 0 /* action_index */, QNodeAddr(partner_addr), true, false, true, false, pur_type)).Times(1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit2);
+  runtime->assignQubitToRuleSet(partner_addr, qubit3);
+  runtime->assignQubitToRuleSet(partner_addr, qubit4);
+  runtime->assignQubitToRuleSet(partner_addr, qubit5);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 5);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
+}
+
+TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvAllTrue) {
+  PurType pur_type = PurType::DSDA_INV;
+  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  setAction(&action);
+  EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
+
+  EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit5)).Times(1);
+  EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyZ(qubit2, qubit5)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyZ(qubit1, qubit3)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyX(qubit3, qubit4)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, sendQuadruplePurificationResult(ruleset_id, _, 0 /* action_index */, QNodeAddr(partner_addr), true, true, true, true, pur_type)).Times(1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit2);
+  runtime->assignQubitToRuleSet(partner_addr, qubit3);
+  runtime->assignQubitToRuleSet(partner_addr, qubit4);
+  runtime->assignQubitToRuleSet(partner_addr, qubit5);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 5);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
+}
+
+TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvAllFalse) {
+  PurType pur_type = PurType::DSDA_INV;
+  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  setAction(&action);
+  EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
+
+  EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit5)).Times(1);
+  EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, purifyZ(qubit2, qubit5)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, purifyZ(qubit1, qubit3)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, purifyX(qubit3, qubit4)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, sendQuadruplePurificationResult(ruleset_id, _, 0 /* action_index */, QNodeAddr(partner_addr), false, false, false, false, pur_type)).Times(1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit2);
+  runtime->assignQubitToRuleSet(partner_addr, qubit3);
+  runtime->assignQubitToRuleSet(partner_addr, qubit4);
+  runtime->assignQubitToRuleSet(partner_addr, qubit5);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 5);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
+}
+
+TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvXTrueZTrueZFalseXFalse) {
+  PurType pur_type = PurType::DSDA_INV;
+  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  setAction(&action);
+  EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
+
+  EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit5)).Times(1);
+  EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyZ(qubit2, qubit5)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyZ(qubit1, qubit3)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, purifyX(qubit3, qubit4)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, sendQuadruplePurificationResult(ruleset_id, _, 0 /* action_index */, QNodeAddr(partner_addr), false, true, true, false, pur_type)).Times(1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit2);
+  runtime->assignQubitToRuleSet(partner_addr, qubit3);
+  runtime->assignQubitToRuleSet(partner_addr, qubit4);
+  runtime->assignQubitToRuleSet(partner_addr, qubit5);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 5);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
+}
+
+TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvXFalseZFalseZTrueXTrue) {
+  PurType pur_type = PurType::DSDA_INV;
+  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  setAction(&action);
+  EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
+
+  EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit5)).Times(1);
+  EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, purifyZ(qubit2, qubit5)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, purifyZ(qubit1, qubit3)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyX(qubit3, qubit4)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, sendQuadruplePurificationResult(ruleset_id, _, 0 /* action_index */, QNodeAddr(partner_addr), true, false, false, true, pur_type)).Times(1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit2);
+  runtime->assignQubitToRuleSet(partner_addr, qubit3);
+  runtime->assignQubitToRuleSet(partner_addr, qubit4);
+  runtime->assignQubitToRuleSet(partner_addr, qubit5);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 5);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
+}
+
+TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvXFalseZTrueZTrueXFalse) {
+  PurType pur_type = PurType::DSDA_INV;
+  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  setAction(&action);
+  EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
+
+  EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
+  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit5)).Times(1);
+  EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, purifyZ(qubit2, qubit5)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyZ(qubit1, qubit3)).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(*callback, purifyX(qubit3, qubit4)).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(*callback, sendQuadruplePurificationResult(ruleset_id, _, 0 /* action_index */, QNodeAddr(partner_addr), true, false, true, false, pur_type)).Times(1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit1);
+  runtime->assignQubitToRuleSet(partner_addr, qubit2);
+  runtime->assignQubitToRuleSet(partner_addr, qubit3);
+  runtime->assignQubitToRuleSet(partner_addr, qubit4);
+  runtime->assignQubitToRuleSet(partner_addr, qubit5);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 5);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
+}
+
 }  // namespace
