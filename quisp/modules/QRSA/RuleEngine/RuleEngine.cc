@@ -592,9 +592,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
   }
 }
 
-void RuleEngine::executeAllRuleSets() {
-  runtimes.exec();
-}
+void RuleEngine::executeAllRuleSets() { runtimes.exec(); }
 
 void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, IStationaryQubit *qubit, QNIC_type qnic_type) {
   auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit->par("stationary_qubit_address"));
