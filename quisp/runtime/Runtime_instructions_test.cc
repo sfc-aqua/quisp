@@ -218,6 +218,7 @@ TEST_F(RuntimeInstructionsTest, BLT) {
 }
 
 TEST_F(RuntimeInstructionsTest, ERROR) {
+  testing::internal::CaptureStdout();
   Label passed1{"passed1"}, passed2{"passed2"}, passed3{"passed3"};
   Label l1{"l1"}, l2{"l2"}, l3{"l3"};
   Program p{"",
@@ -232,6 +233,7 @@ TEST_F(RuntimeInstructionsTest, ERROR) {
   EXPECT_THROW({ execProgram(p); }, std::runtime_error);
   EXPECT_TRUE(checkRegisters({1, 0, 0, 0, 0}));
   EXPECT_EQ(runtime->return_code, ReturnCode::ERROR);
+  testing::internal::GetCapturedStdout();
 }
 
 TEST_F(RuntimeInstructionsTest, RET) {
