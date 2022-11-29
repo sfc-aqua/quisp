@@ -326,6 +326,7 @@ INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
         }};
   }
 
+  // https://arxiv.org/abs/0811.2639
   if (pur_type == rules::PurType::DSSA || pur_type == rules::PurType::DSSA_INV) {
     /*
   SET action_index 0
@@ -371,10 +372,10 @@ INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_x, partner_addr, 1}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_z, partner_addr, 2}},
-(pur_type == rules::PurType::DSSA) /* else DOUBLE_INV */?
+(pur_type == rules::PurType::DSSA) /* else DSSA_INV */?
   (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}} :
   (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}},
-(pur_type == rules::PurType::DSSA) /* else DOUBLE_INV */?
+(pur_type == rules::PurType::DSSA) /* else DSSA_INV */?
   (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, trash_qubit_x, trash_qubit_z}} :
   (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, trash_qubit_z, trash_qubit_x}},
 INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit_x}},
