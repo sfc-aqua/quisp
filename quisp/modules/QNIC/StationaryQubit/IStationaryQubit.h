@@ -168,6 +168,7 @@ struct measurement_outcome {
   char basis;
   bool outcome_is_plus;
   char GOD_clean;
+  bool operator==(const measurement_outcome &outcome) const { return basis == outcome.basis && outcome_is_plus == outcome.outcome_is_plus && GOD_clean == outcome.GOD_clean; }
 };
 
 class IStationaryQubit : public omnetpp::cSimpleModule {
