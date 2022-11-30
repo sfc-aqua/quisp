@@ -9,6 +9,7 @@
 
 #include "Action.h"
 #include "modules/QNIC.h"
+#include "omnetpp/simtime.h"
 #include "rules/RuleSetConverter/RuleSetConverter.h"
 
 namespace {
@@ -21,8 +22,10 @@ using quisp::modules::QNIC_R;
 using quisp::modules::QNIC_RP;
 using quisp::modules::QNIC_type;
 using quisp::modules::qubit_record::QubitRecord;
+using quisp::rules::EntanglementSwapping;
 using quisp::rules::Purification;
 using quisp::rules::PurType;
+using quisp::rules::Tomography;
 using quisp::rules::rs_converter::RuleSetConverter;
 Program terminator{"terminator", {INSTR_RET_ReturnCode_{{ReturnCode::RS_TERMINATED}}}};
 Program always_pass{"cond", {INSTR_RET_ReturnCode_{{ReturnCode::COND_PASSED}}}};
@@ -70,6 +73,111 @@ class ActionExecutionTest : public testing::Test {
   QNIC_type qnic_type = QNIC_E;
   int qnic_id = 3;
 };
+
+TEST_F(ActionExecutionTest, Tomography) {
+  Tomography action{500, 0, partner_addr, qnic_type, qnic_id};
+  setAction(&action);
+  EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
+
+  runtime->assignQubitToRuleSet(partner_addr, qubit1);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
+  EXPECT_CALL(*callback, measureQubitRandomly(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'X', .outcome_is_plus = true}));
+  EXPECT_CALL(*callback, sendLinkTomographyResult(ruleset_id, _, 0, QNodeAddr(partner_addr), 1, MeasurementOutcome{.basis = 'X', .outcome_is_plus = true}, 500, _)).Times(1);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 0);
+
+  runtime->terminated = false;
+  runtime->assignQubitToRuleSet(partner_addr, qubit2);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+  EXPECT_CALL(*callback, measureQubitRandomly(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = false}));
+  EXPECT_CALL(*callback, sendLinkTomographyResult(ruleset_id, _, 0, QNodeAddr(partner_addr), 2, MeasurementOutcome{.basis = 'Z', .outcome_is_plus = false}, 500, _)).Times(1);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 0);
+}
+
+TEST_F(ActionExecutionTest, Swapping) {
+  int left_partner_addr = 2;
+  QNIC_type left_qnic_type = QNIC_E;
+
+  int right_partner_addr = 6;
+  QNIC_type right_qnic_type = QNIC_E;
+
+  int self_left_qnic_id = 11;
+  QNIC_type self_left_qnic_type = QNIC_E;
+  int self_right_qnic_id = 13;
+  QNIC_type self_right_qnic_type = QNIC_E;
+  EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
+
+  // -1 means no longer used. it will be deleted
+  EntanglementSwapping action{{left_partner_addr, right_partner_addr},
+                              {self_left_qnic_type, self_right_qnic_type},
+                              {self_left_qnic_id, self_right_qnic_id},
+                              {left_qnic_type, right_qnic_type},
+                              {-1, -1},
+                              {-1, -1}};
+  setAction(&action);
+
+  EXPECT_CALL(*callback, gateCNOT(qubit1, qubit2)).Times(1);
+  EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'X', .outcome_is_plus = true}));
+  EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = true}));
+  EXPECT_CALL(*callback, hackSwappingPartners(qubit1, qubit2)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+  EXPECT_CALL(*callback, sendSwappingResults(ruleset_id, _, QNodeAddr{left_partner_addr}, 0, QNodeAddr{right_partner_addr}, 0)).Times(1);
+
+  runtime->assignQubitToRuleSet(QNodeAddr{left_partner_addr}, qubit1);
+  runtime->assignQubitToRuleSet(QNodeAddr{right_partner_addr}, qubit2);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 2);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 0);
+
+  runtime->terminated = false;
+  EXPECT_CALL(*callback, gateCNOT(qubit1, qubit2)).Times(1);
+  EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'X', .outcome_is_plus = false}));
+  EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = false}));
+  EXPECT_CALL(*callback, hackSwappingPartners(qubit1, qubit2)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+  EXPECT_CALL(*callback, sendSwappingResults(ruleset_id, _, QNodeAddr{left_partner_addr}, 2, QNodeAddr{right_partner_addr}, 1)).Times(1);
+
+  runtime->assignQubitToRuleSet(QNodeAddr{left_partner_addr}, qubit1);
+  runtime->assignQubitToRuleSet(QNodeAddr{right_partner_addr}, qubit2);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 2);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 0);
+
+  runtime->terminated = false;
+  EXPECT_CALL(*callback, gateCNOT(qubit1, qubit2)).Times(1);
+  EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'X', .outcome_is_plus = true}));
+  EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = false}));
+  EXPECT_CALL(*callback, hackSwappingPartners(qubit1, qubit2)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+  EXPECT_CALL(*callback, sendSwappingResults(ruleset_id, _, QNodeAddr{left_partner_addr}, 0, QNodeAddr{right_partner_addr}, 1)).Times(1);
+
+  runtime->assignQubitToRuleSet(QNodeAddr{left_partner_addr}, qubit1);
+  runtime->assignQubitToRuleSet(QNodeAddr{right_partner_addr}, qubit2);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 2);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 0);
+
+  runtime->terminated = false;
+  EXPECT_CALL(*callback, gateCNOT(qubit1, qubit2)).Times(1);
+  EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'X', .outcome_is_plus = false}));
+  EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = true}));
+  EXPECT_CALL(*callback, hackSwappingPartners(qubit1, qubit2)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
+  EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
+  EXPECT_CALL(*callback, sendSwappingResults(ruleset_id, _, QNodeAddr{left_partner_addr}, 2, QNodeAddr{right_partner_addr}, 0)).Times(1);
+
+  runtime->assignQubitToRuleSet(QNodeAddr{left_partner_addr}, qubit1);
+  runtime->assignQubitToRuleSet(QNodeAddr{right_partner_addr}, qubit2);
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 2);
+  runtime->exec();
+  ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 0);
+}
 
 TEST_F(ActionExecutionTest, PurifyX) {
   PurType pur_type = PurType::SINGLE_X;
