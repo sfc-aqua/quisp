@@ -16,7 +16,6 @@
 using namespace omnetpp;
 using namespace quisp::messages;
 using namespace quisp::rules;
-using namespace quisp::rules::active;
 
 namespace quisp {
 namespace modules {

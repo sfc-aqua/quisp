@@ -3,16 +3,17 @@
 #include <cstddef>
 #include <sstream>
 #include "Runtime.h"
+#include "modules/QNIC.h"
 #include "modules/QRSA/QRSA.h"
-#include "rules/Active/ActiveRuleSet.h"
 #include "runtime/types.h"
 #include "test.h"
 
 using namespace quisp::runtime;
-using namespace quisp::rules;
-using namespace quisp::rules::active;
 using quisp::modules::qubit_record::QubitRecord;
 using namespace quisp_test;
+using quisp::modules::QNIC_E;
+using quisp::modules::QNIC_R;
+using quisp::modules::QNIC_type;
 
 namespace {
 auto r0 = RegId::REG0;
@@ -58,7 +59,7 @@ class RuntimeInstructionsTest : public testing::Test {
     return testing::AssertionFailure() << ss.str();
   }
   Runtime* runtime;
-  qrsa::IQubitRecord* qubit;
+  IQubitRecord* qubit;
 };
 
 TEST_F(RuntimeInstructionsTest, SetRegisters) {

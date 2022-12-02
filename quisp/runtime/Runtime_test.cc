@@ -2,16 +2,16 @@
 #include <gtest/gtest.h>
 #include <modules/QRSA/RuleEngine/QubitRecord/QubitRecord.h>
 #include "modules/QRSA/QRSA.h"
-#include "rules/Active/ActiveRuleSet.h"
 #include "runtime/InstructionVisitor.h"
 #include "runtime/types.h"
 #include "test.h"
 
 using namespace testing;
 using namespace quisp::runtime;
-using namespace quisp::rules;
-using namespace quisp::rules::active;
 using namespace quisp_test;
+using quisp::modules::QNIC_E;
+using quisp::modules::QNIC_R;
+using quisp::modules::QNIC_type;
 using quisp::modules::qubit_record::QubitRecord;
 namespace {
 
@@ -38,11 +38,11 @@ class RuntimeTest : public testing::Test {
  public:
   Runtime* runtime;
   MockRuntimeCallback* callback;
-  qrsa::IQubitRecord* qubit;
-  qrsa::IQubitRecord* qubit2;
-  qrsa::IQubitRecord* qubit3;
-  qrsa::IQubitRecord* qubit4;
-  qrsa::IQubitRecord* qubit5;
+  IQubitRecord* qubit;
+  IQubitRecord* qubit2;
+  IQubitRecord* qubit3;
+  IQubitRecord* qubit4;
+  IQubitRecord* qubit5;
   QubitId q0{0};
   QubitId q1{1};
   QubitId q2{2};
