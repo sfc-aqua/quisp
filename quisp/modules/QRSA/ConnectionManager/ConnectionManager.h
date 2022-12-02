@@ -13,7 +13,6 @@
 
 using namespace omnetpp;
 using namespace quisp::messages;
-using namespace quisp::rules::active;
 using quisp::rules::PurType;
 
 namespace quisp {

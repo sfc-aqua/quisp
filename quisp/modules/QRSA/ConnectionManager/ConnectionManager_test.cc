@@ -1,17 +1,24 @@
 #include "ConnectionManager.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <messages/classical_messages.h>
+#include <modules/QNIC.h>
+#include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
+#include <modules/QRSA/RoutingDaemon/IRoutingDaemon.h>
 #include <omnetpp.h>
+#include <test_utils/TestUtils.h>
 #include <nlohmann/json.hpp>
-#include "modules/QNIC.h"
-#include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
-#include "test_utils/TestUtils.h"
 
 using json = nlohmann::json;
 namespace {
 using namespace omnetpp;
 using namespace quisp_test;
 using namespace testing;
+using namespace quisp::messages;
+using namespace quisp::modules;
+using quisp::modules::QNIC_E;
+using quisp::modules::QNIC_R;
+using quisp::modules::QNIC_type;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
