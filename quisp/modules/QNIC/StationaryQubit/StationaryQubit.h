@@ -33,7 +33,6 @@ class StationaryQubit : public IStationaryQubit {
  protected:
   std::unordered_set<StationaryQubit *> neighbors;
   types::CliffordOperator vertex_operator;
-
   void applyClifford(types::CliffordOperator op);
   void applyRightClifford(types::CliffordOperator op);
   bool isNeighbor(StationaryQubit *another_qubit);
