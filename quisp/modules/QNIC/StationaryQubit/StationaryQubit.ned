@@ -24,8 +24,6 @@ simple StationaryQubit
         // ZZZ -- these are volatile elements of the object (module) state
         // and should be private data members of the class object
         int x_position_graphics;		// can this be usefully set in a .ned file?
-        double photon_emitted_at @mutable = default(-1);
-        double last_updated_at @mutable = default(-1);
         bool is_busy @mutable = default(false);
         double std @mutable = default(0);
 
