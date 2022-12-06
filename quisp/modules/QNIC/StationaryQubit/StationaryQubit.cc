@@ -123,6 +123,7 @@ void StationaryQubit::initialize() {
   WATCH(god_err.has_excitation_error);
   WATCH(god_err.has_relaxation_error);
   WATCH(god_err.has_completely_mixed_error);
+  WATCH(is_busy);
 }
 
 void StationaryQubit::finish() {}
@@ -361,7 +362,6 @@ void StationaryQubit::setBusy() {
   updated_time = simTime();  // Should be no error at this time.
   if (hasGUI()) {
     getDisplayString().setTagArg("i", 1, "red");
-    par("is_busy") = true;
   }
 }
 
@@ -397,7 +397,6 @@ void StationaryQubit::setFree(bool consumed) {
   entangled_partner = nullptr;
   EV_DEBUG << "Freeing this qubit!!!" << this << " at qnode: " << node_address << " qnic_type: " << qnic_type << " qnic_index: " << qnic_index << "\n";
   if (hasGUI()) {
-    par("is_busy") = false;
     par("god_entangled_stationary_qubit_address") = -1;
     par("god_entangled_node_address") = -1;
     par("god_entangled_qnic_address") = -1;
