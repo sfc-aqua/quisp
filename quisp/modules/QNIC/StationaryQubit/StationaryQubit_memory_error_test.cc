@@ -78,12 +78,6 @@ class StatQubitTarget : public StationaryQubit {
     setParInt(this, "qnic_index", 0);
     setParDouble(this, "std", 0.5);
 
-    setParBool(this, "god_x_error", false);
-    setParBool(this, "god_z_error", false);
-    setParBool(this, "god_completely_mixed_error", false);
-    setParBool(this, "god_excitation_error", false);
-    setParBool(this, "god_relaxation_error", false);
-    setParBool(this, "is_busy", false);
     setParInt(this, "god_entangled_stationary_qubit_address", 0);
     setParInt(this, "god_entangled_node_address", 0);
     setParInt(this, "god_entangled_qnic_address", 0);
