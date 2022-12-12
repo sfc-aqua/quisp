@@ -84,9 +84,6 @@ simple StationaryQubit
         double x_measurement_error_rate = default(0);
         double y_measurement_error_rate = default(0);
         double z_measurement_error_rate = default(0);
-        //int ruleset_id = default(-1);
-        //int rule_id = default(-1);
-        //int action_index = default(-1);
     gates:
         inout tolens_quantum_port;
 }
