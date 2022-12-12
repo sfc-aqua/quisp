@@ -19,11 +19,6 @@ simple StationaryQubit
         int x_position_graphics;		// can this be usefully set in a .ned file?
         double std @mutable = default(0);
 
-        // ZZZ -- this is a volatile element of the object (module) state
-        // and should be private data member of the class object
-        // n.b.: this should be _software's_ idea of what the fidelity is?
-        double fidelity @mutable = default(-1.0);
-
         // ZZZ -- these are configured at boot time
         // characteristics of the hardware
         // could eventually change over time if we model dynamic
