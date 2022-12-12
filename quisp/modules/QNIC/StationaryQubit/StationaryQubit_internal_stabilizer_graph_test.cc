@@ -83,10 +83,6 @@ class StatQubitFixture : public StationaryQubit {
     setParInt(this, "qnic_index", 0);
     setParDouble(this, "std", 0.5);
 
-    setParInt(this, "god_entangled_stationary_qubit_address", 0);
-    setParInt(this, "god_entangled_node_address", 0);
-    setParInt(this, "god_entangled_qnic_address", 0);
-    setParInt(this, "god_entangled_qnic_type", 0);
     setParDouble(this, "fidelity", -1.0);
   }
 

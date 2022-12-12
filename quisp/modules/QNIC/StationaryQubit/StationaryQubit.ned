@@ -16,31 +16,13 @@ simple StationaryQubit
 
         // ZZZ -- these are volatile elements of the object (module) state
         // and should be private data members of the class object
-        int god_entangled_stationary_qubit_address @mutable = default(-1);
-        int god_entangled_node_address @mutable = default(-1);
-        int god_entangled_qnic_address @mutable = default(-1);
-        int god_entangled_qnic_type @mutable = default(-1);
-
-        // ZZZ -- these are volatile elements of the object (module) state
-        // and should be private data members of the class object
         int x_position_graphics;		// can this be usefully set in a .ned file?
-        bool is_busy @mutable = default(false);
         double std @mutable = default(0);
 
         // ZZZ -- this is a volatile element of the object (module) state
         // and should be private data member of the class object
         // n.b.: this should be _software's_ idea of what the fidelity is?
         double fidelity @mutable = default(-1.0);
-
-        // ZZZ -- these are volatile elements of the object (module) state
-        // and should be private data members of the class object
-        // n.b.: these represent the _hardware_ state, and aren't directly
-        // accessible to repeater software (qrsa)
-        bool god_x_error @mutable = false;//Physical error on qubit
-        bool god_z_error @mutable = false;//Physical error on qubit
-        bool god_excitation_error @mutable = false;//Physical error on qubit
-        bool god_relaxation_error @mutable = false;//Physical error on qubit
-        bool god_completely_mixed_error @mutable = false;//Physical error on qubit
 
         // ZZZ -- these are configured at boot time
         // characteristics of the hardware

@@ -95,10 +95,6 @@ void StationaryQubit::initialize() {
   meas_op.identity << 1, 0, 0, 1;
 
   // Get parameters from omnet
-  god_entangled_stationary_qubit_address = par("god_entangled_stationary_qubit_address");
-  god_entangled_node_address = par("god_entangled_node_address");
-  god_entangled_qnic_address = par("god_entangled_qnic_address");
-  god_entangled_qnic_type = par("god_entangled_qnic_type");
   stationary_qubit_address = par("stationary_qubit_address");
   node_address = par("node_address");
   qnic_address = par("qnic_address");
@@ -397,10 +393,6 @@ void StationaryQubit::setFree(bool consumed) {
   entangled_partner = nullptr;
   EV_DEBUG << "Freeing this qubit!!!" << this << " at qnode: " << node_address << " qnic_type: " << qnic_type << " qnic_index: " << qnic_index << "\n";
   if (hasGUI()) {
-    par("god_entangled_stationary_qubit_address") = -1;
-    par("god_entangled_node_address") = -1;
-    par("god_entangled_qnic_address") = -1;
-    par("god_entangled_qnic_type") = -1;
     if (consumed) {
       bubble("Consumed!");
       getDisplayString().setTagArg("i", 1, "yellow");
@@ -564,12 +556,6 @@ void StationaryQubit::setEntangledPartnerInfo(IStationaryQubit *partner) {
   god_entangled_node_address = partner->node_address;
   god_entangled_qnic_address = partner->qnic_address;
   god_entangled_qnic_type = partner->qnic_type;
-  if (hasGUI()) {
-    par("god_entangled_stationary_qubit_address") = partner->stationary_qubit_address;
-    par("god_entangled_node_address") = partner->node_address;
-    par("god_entangled_qnic_address") = partner->qnic_address;
-    par("god_entangled_qnic_type") = partner->qnic_type;
-  }
 }
 
 /* Add another X error. If an X error already exists, then they cancel out */
