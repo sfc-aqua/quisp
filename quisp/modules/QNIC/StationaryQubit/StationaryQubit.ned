@@ -17,7 +17,7 @@ simple StationaryQubit
         // ZZZ -- these are volatile elements of the object (module) state
         // and should be private data members of the class object
         int x_position_graphics;		// can this be usefully set in a .ned file?
-        double std @mutable = default(0);
+        double emission_jittering_standard_deviation = default(0);
 
         // ZZZ -- these are configured at boot time
         // characteristics of the hardware

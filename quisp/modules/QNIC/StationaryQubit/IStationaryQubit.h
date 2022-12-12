@@ -246,7 +246,7 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   omnetpp::simtime_t updated_time = -1;
 
   /** Standard deviation */
-  double std;
+  double emission_jittering_standard_deviation;
 
   SingleGateErrorModel Hgate_error;
   SingleGateErrorModel Xgate_error;

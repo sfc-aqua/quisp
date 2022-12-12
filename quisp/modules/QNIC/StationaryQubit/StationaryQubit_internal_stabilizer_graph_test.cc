@@ -81,7 +81,7 @@ class StatQubitFixture : public StationaryQubit {
     setParInt(this, "qnic_address", 1);
     setParInt(this, "qnic_type", 0);
     setParInt(this, "qnic_index", 0);
-    setParDouble(this, "std", 0.5);
+    setParDouble(this, "emission_jittering_standard_deviation", 0.5);
   }
 
   std::unordered_set<StationaryQubit *> getNeighborSet() { return this->neighbors; }

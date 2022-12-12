@@ -100,7 +100,7 @@ void StationaryQubit::initialize() {
   qnic_address = par("qnic_address");
   qnic_type = par("qnic_type");
   qnic_index = par("qnic_index");
-  std = par("std");
+  emission_jittering_standard_deviation = par("emission_jittering_standard_deviation").doubleValue();
   setFree(false);
 
   /* e^(t/T1) energy relaxation, e^(t/T2) phase relaxation. Want to use only 1/10 of T1 and T2 in general.*/
@@ -470,7 +470,7 @@ void StationaryQubit::emitPhoton(int pulse) {
   if (pulse & STATIONARYQUBIT_PULSE_BEGIN) pk->setFirst(true);
   if (pulse & STATIONARYQUBIT_PULSE_END) pk->setLast(true);
   if (pulse & STATIONARYQUBIT_PULSE_BOUND) pk->setKind(3);
-  float jitter_timing = normal(0, std);
+  float jitter_timing = normal(0, emission_jittering_standard_deviation);
   float abso = fabs(jitter_timing);
   scheduleAt(simTime() + abso, pk);  // cannot send back in time, so only positive lag
 }
