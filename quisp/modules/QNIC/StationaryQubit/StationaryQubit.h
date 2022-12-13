@@ -33,7 +33,6 @@ class StationaryQubit : public IStationaryQubit {
  protected:
   std::unordered_set<StationaryQubit *> neighbors;
   types::CliffordOperator vertex_operator;
-
   void applyClifford(types::CliffordOperator op);
   void applyRightClifford(types::CliffordOperator op);
   bool isNeighbor(StationaryQubit *another_qubit);
@@ -148,12 +147,6 @@ class StationaryQubit : public IStationaryQubit {
   TwoQubitGateErrorModel CNOTgate_error;
   MeasurementErrorModel Measurement_error;
   memory_error_model memory_err;
-  double memory_No_error_ceil;
-  double memory_X_error_ceil;
-  double memory_Y_error_ceil;
-  double memory_Z_error_ceil;
-  double memory_Excitation_error_ceil;
-  double memory_Relaxation_error_ceil;
 
   single_qubit_error Pauli;
   measurement_operators meas_op;

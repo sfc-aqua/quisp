@@ -80,21 +80,7 @@ class StatQubitTarget : public StationaryQubit {
     setParInt(this, "qnic_address", 1);
     setParInt(this, "qnic_type", 0);
     setParInt(this, "qnic_index", 0);
-    setParDouble(this, "std", 0.5);
-
-    setParDouble(this, "photon_emitted_at", 0.0);
-    setParDouble(this, "last_updated_at", 0.0);
-    setParBool(this, "god_x_error", false);
-    setParBool(this, "god_z_error", false);
-    setParBool(this, "god_completely_mixed_error", false);
-    setParBool(this, "god_excitation_error", false);
-    setParBool(this, "god_relaxation_error", false);
-    setParBool(this, "is_busy", false);
-    setParInt(this, "god_entangled_stationary_qubit_address", 0);
-    setParInt(this, "god_entangled_node_address", 0);
-    setParInt(this, "god_entangled_qnic_address", 0);
-    setParInt(this, "god_entangled_qnic_type", 0);
-    setParDouble(this, "fidelity", -1.0);
+    setParDouble(this, "emission_jittering_standard_deviation", 0.5);
   }
 };
 
@@ -150,11 +136,11 @@ TEST(StatQubitTest, setFree) {
   sim->registerComponent(qubit);
   qubit->fillParams();
   qubit->callInitialize();
-  qubit->par("god_x_error") = true;
-  qubit->par("god_z_error") = true;
-  qubit->par("god_excitation_error") = true;
-  qubit->par("god_relaxation_error") = true;
-  qubit->par("god_completely_mixed_error") = true;
+  qubit->god_err.has_x_error = true;
+  qubit->god_err.has_z_error = true;
+  qubit->god_err.has_excitation_error = true;
+  qubit->god_err.has_relaxation_error = true;
+  qubit->god_err.has_completely_mixed_error = true;
 
   qubit->setFree(true);
   EXPECT_EQ(qubit->updated_time, simTime());
@@ -165,11 +151,11 @@ TEST(StatQubitTest, setFree) {
   EXPECT_EQ(qubit->updated_time, simTime());
 
   // check the qubit reset properly
-  EXPECT_FALSE(qubit->par("god_x_error").boolValue());
-  EXPECT_FALSE(qubit->par("god_z_error").boolValue());
-  EXPECT_FALSE(qubit->par("god_excitation_error").boolValue());
-  EXPECT_FALSE(qubit->par("god_relaxation_error").boolValue());
-  EXPECT_FALSE(qubit->par("god_completely_mixed_error").boolValue());
+  EXPECT_FALSE(qubit->god_err.has_x_error);
+  EXPECT_FALSE(qubit->god_err.has_z_error);
+  EXPECT_FALSE(qubit->god_err.has_excitation_error);
+  EXPECT_FALSE(qubit->god_err.has_relaxation_error);
+  EXPECT_FALSE(qubit->god_err.has_completely_mixed_error);
 }
 
 TEST(StatQubitTest, setFreeUpdatesTime) {
@@ -195,11 +181,11 @@ TEST(StatQubitTest, addXError) {
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
   sim->registerComponent(qubit);
-  EXPECT_FALSE(qubit->par("god_x_error"));
+  EXPECT_FALSE(qubit->god_err.has_x_error);
   qubit->addXerror();
-  EXPECT_TRUE(qubit->par("god_x_error"));
+  EXPECT_TRUE(qubit->god_err.has_x_error);
   qubit->addXerror();
-  EXPECT_FALSE(qubit->par("god_x_error"));
+  EXPECT_FALSE(qubit->god_err.has_x_error);
 }
 
 TEST(StatQubitTest, addZError) {
@@ -207,11 +193,11 @@ TEST(StatQubitTest, addZError) {
   auto *qubit = new StatQubitTarget{};
   qubit->fillParams();
   sim->registerComponent(qubit);
-  EXPECT_FALSE(qubit->par("god_z_error"));
+  EXPECT_FALSE(qubit->god_err.has_z_error);
   qubit->addZerror();
-  EXPECT_TRUE(qubit->par("god_z_error"));
+  EXPECT_TRUE(qubit->god_err.has_z_error);
   qubit->addZerror();
-  EXPECT_FALSE(qubit->par("god_z_error"));
+  EXPECT_FALSE(qubit->god_err.has_z_error);
 }
 
 TEST(StatQubitTest, getErrorMatrixTest) {

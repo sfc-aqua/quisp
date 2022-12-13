@@ -120,6 +120,14 @@ struct MeasurementErrorModel {
   double z_error_rate;
 };
 
+struct GodErrorState {
+  bool has_x_error = false;
+  bool has_z_error = false;
+  bool has_excitation_error = false;
+  bool has_relaxation_error = false;
+  bool has_completely_mixed_error = false;
+};
+
 // Matrices of single qubit errors. Used when conducting tomography.
 struct single_qubit_error {
   Eigen::Matrix2cd X;  // double 2*2 matrix
@@ -211,16 +219,21 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   virtual void relax() = 0;
 
   /*GOD parameters*/
+  GodErrorState god_err;
   virtual void setEntangledPartnerInfo(IStationaryQubit *partner) = 0;
   virtual void setCompletelyMixedDensityMatrix() = 0;
   virtual void addXerror() = 0;
   virtual void addZerror() = 0;
 
-  int stationaryQubit_address;
+  int stationary_qubit_address;
   int node_address;
   int qnic_address;
   int qnic_type;
   int qnic_index;
+  int god_entangled_stationary_qubit_address;
+  int god_entangled_node_address;
+  int god_entangled_qnic_address;
+  int god_entangled_qnic_type;
 
   int action_index;
   bool no_density_matrix_nullptr_entangled_partner_ok;
@@ -233,7 +246,7 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   omnetpp::simtime_t updated_time = -1;
 
   /** Standard deviation */
-  double std;
+  double emission_jittering_standard_deviation;
 
   SingleGateErrorModel Hgate_error;
   SingleGateErrorModel Xgate_error;

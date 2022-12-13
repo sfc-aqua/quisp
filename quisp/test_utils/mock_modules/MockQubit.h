@@ -113,8 +113,6 @@ class MockQubit : public IStationaryQubit {
     setParInt(this, "qnic_index", 0);
     setParDouble(this, "std", 0.5);
 
-    setParDouble(this, "photon_emitted_at", 0.0);
-    setParDouble(this, "last_updated_at", 0.0);
     setParBool(this, "god_x_error", false);
     setParBool(this, "god_z_error", false);
     setParBool(this, "god_completely_mixed_error", false);

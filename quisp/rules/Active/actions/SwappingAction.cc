@@ -56,8 +56,8 @@ cPacket *SwappingAction::run(cModule *re) {
   right_qubit->CNOT_gate(left_qubit);
 
   // TODO This is a little bit cheating. This must be tracked!
-  int lindex = left_partner_qubit->stationaryQubit_address;
-  int rindex = right_partner_qubit->stationaryQubit_address;
+  int lindex = left_partner_qubit->stationary_qubit_address;
+  int rindex = right_partner_qubit->stationary_qubit_address;
 
   auto left_measure = left_qubit->localMeasureX();
   auto right_measure = right_qubit->localMeasureZ();
