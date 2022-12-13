@@ -1,11 +1,11 @@
 <map id="quisp/modules/Logger/LoggerModule.h" name="quisp/modules/Logger/LoggerModule.h">
-<area shape="rect" id="node1" title=" " alt="" coords="224,5,375,47"/>
-<area shape="rect" id="node2" title=" " alt="" coords="418,259,501,285"/>
-<area shape="rect" id="node3" title=" " alt="" coords="30,102,138,129"/>
-<area shape="rect" id="node4" title=" " alt="" coords="162,95,293,136"/>
-<area shape="rect" id="node5" title=" " alt="" coords="317,102,429,129"/>
-<area shape="rect" id="node6" title=" " alt="" coords="452,102,520,129"/>
-<area shape="rect" id="node7" href="$_i_logger_8h.html" title=" " alt="" coords="544,102,620,129"/>
-<area shape="rect" id="node8" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="523,184,642,211"/>
-<area shape="rect" id="node9" title=" " alt="" coords="525,259,656,285"/>
+<area shape="rect" id="node1" title=" " alt="" coords="224,5,375,45"/>
+<area shape="rect" id="node2" title=" " alt="" coords="420,255,502,280"/>
+<area shape="rect" id="node3" title=" " alt="" coords="30,101,138,126"/>
+<area shape="rect" id="node4" title=" " alt="" coords="162,93,293,133"/>
+<area shape="rect" id="node5" title=" " alt="" coords="317,101,429,126"/>
+<area shape="rect" id="node6" title=" " alt="" coords="454,101,522,126"/>
+<area shape="rect" id="node7" href="$_i_logger_8h.html" title=" " alt="" coords="546,101,622,126"/>
+<area shape="rect" id="node8" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="524,181,643,207"/>
+<area shape="rect" id="node9" title=" " alt="" coords="526,255,657,280"/>
 </map>

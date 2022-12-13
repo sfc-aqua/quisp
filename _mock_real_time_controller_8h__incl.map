@@ -1,15 +1,15 @@
 <map id="quisp/test_utils/mock_modules/MockRealTimeController.h" name="quisp/test_utils/mock_modules/MockRealTimeController.h">
-<area shape="rect" id="node1" title=" " alt="" coords="191,5,426,47"/>
-<area shape="rect" id="node2" title=" " alt="" coords="82,102,197,129"/>
-<area shape="rect" id="node3" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="411,355,529,382"/>
-<area shape="rect" id="node6" href="$_q_r_s_a_8h.html" title=" " alt="" coords="185,184,347,211"/>
-<area shape="rect" id="node13" href="$_i_real_time_controller_8h.html" title=" " alt="" coords="271,95,498,136"/>
-<area shape="rect" id="node4" title=" " alt="" coords="559,437,642,464"/>
-<area shape="rect" id="node5" title=" " alt="" coords="405,437,535,464"/>
-<area shape="rect" id="node7" title=" " alt="" coords="93,355,161,382"/>
-<area shape="rect" id="node8" href="$_i_qubit_record_8h.html" title=" " alt="" coords="205,259,367,300"/>
-<area shape="rect" id="node9" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="185,348,387,389"/>
-<area shape="rect" id="node10" title=" " alt="" coords="5,437,137,464"/>
-<area shape="rect" id="node11" title=" " alt="" coords="162,437,253,464"/>
-<area shape="rect" id="node12" title=" " alt="" coords="277,437,381,464"/>
+<area shape="rect" id="node1" title=" " alt="" coords="191,5,426,45"/>
+<area shape="rect" id="node2" title=" " alt="" coords="82,101,197,126"/>
+<area shape="rect" id="node3" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="411,350,529,375"/>
+<area shape="rect" id="node6" href="$_q_r_s_a_8h.html" title=" " alt="" coords="185,181,347,207"/>
+<area shape="rect" id="node13" href="$_i_real_time_controller_8h.html" title=" " alt="" coords="271,93,498,133"/>
+<area shape="rect" id="node4" title=" " alt="" coords="559,431,642,456"/>
+<area shape="rect" id="node5" title=" " alt="" coords="405,431,535,456"/>
+<area shape="rect" id="node7" title=" " alt="" coords="93,350,161,375"/>
+<area shape="rect" id="node8" href="$_i_qubit_record_8h.html" title=" " alt="" coords="205,255,367,295"/>
+<area shape="rect" id="node9" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="185,343,387,383"/>
+<area shape="rect" id="node10" title=" " alt="" coords="5,431,137,456"/>
+<area shape="rect" id="node11" title=" " alt="" coords="162,431,253,456"/>
+<area shape="rect" id="node12" title=" " alt="" coords="277,431,381,456"/>
 </map>

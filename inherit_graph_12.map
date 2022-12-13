@@ -1,13 +1,13 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,259,172,286"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="231,37,407,79"/>
-<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1_logger_1_1_logger_module.html" title=" " alt="" coords="242,103,397,144"/>
-<area shape="rect" id="node6" href="$classquisp_1_1modules_1_1_photonic_switch.html" title="PhotonicSwitch." alt="" coords="237,168,402,209"/>
-<area shape="rect" id="node7" href="$classquisp_1_1modules_1_1_queue.html" title="Queue." alt="" coords="243,234,395,261"/>
-<area shape="rect" id="node8" href="$classquisp_1_1modules_1_1_router.html" title="Router." alt="" coords="243,285,395,311"/>
-<area shape="rect" id="node9" href="$classquisp_1_1modules_1_1_s_p_d_c___controller.html" title="SPDC_Controller." alt="" coords="244,336,395,377"/>
-<area shape="rect" id="node10" href="$classquisp_1_1modules_1_1backend_1_1_backend_container.html" title=" " alt="" coords="238,401,401,443"/>
-<area shape="rect" id="node11" href="$classquisp_1_1modules_1_1dummy_module.html" title="dummyModule" alt="" coords="220,467,419,494"/>
-<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_stationary_qubit.html" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="475,5,647,47"/>
-<area shape="rect" id="node4" href="$classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html" title=" " alt="" coords="467,71,655,112"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,255,172,281"/>
+<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="231,37,407,77"/>
+<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1_logger_1_1_logger_module.html" title=" " alt="" coords="242,101,397,141"/>
+<area shape="rect" id="node6" href="$classquisp_1_1modules_1_1_photonic_switch.html" title="PhotonicSwitch." alt="" coords="237,165,402,205"/>
+<area shape="rect" id="node7" href="$classquisp_1_1modules_1_1_queue.html" title="Queue." alt="" coords="243,230,395,255"/>
+<area shape="rect" id="node8" href="$classquisp_1_1modules_1_1_router.html" title="Router." alt="" coords="243,279,395,305"/>
+<area shape="rect" id="node9" href="$classquisp_1_1modules_1_1_s_p_d_c___controller.html" title="SPDC_Controller." alt="" coords="244,329,395,369"/>
+<area shape="rect" id="node10" href="$classquisp_1_1modules_1_1backend_1_1_backend_container.html" title=" " alt="" coords="238,393,401,433"/>
+<area shape="rect" id="node11" href="$classquisp_1_1modules_1_1dummy_module.html" title="dummyModule" alt="" coords="220,458,419,483"/>
+<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_stationary_qubit.html" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="475,5,647,45"/>
+<area shape="rect" id="node4" href="$classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html" title=" " alt="" coords="467,69,655,109"/>
 </map>

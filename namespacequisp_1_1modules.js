@@ -27,6 +27,7 @@ var namespacequisp_1_1modules =
     [ "emission_error_model", "structquisp_1_1modules_1_1emission__error__model.html", "structquisp_1_1modules_1_1emission__error__model" ],
     [ "EntangledPhotonPairSource", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html", "classquisp_1_1modules_1_1_entangled_photon_pair_source" ],
     [ "entangledPhotons", "structquisp_1_1modules_1_1entangled_photons.html", "structquisp_1_1modules_1_1entangled_photons" ],
+    [ "GodErrorState", "structquisp_1_1modules_1_1_god_error_state.html", "structquisp_1_1modules_1_1_god_error_state" ],
     [ "HardwareMonitor", "classquisp_1_1modules_1_1_hardware_monitor.html", "classquisp_1_1modules_1_1_hardware_monitor" ],
     [ "HOMController", "classquisp_1_1modules_1_1_h_o_m_controller.html", "classquisp_1_1modules_1_1_h_o_m_controller" ],
     [ "IApplication", "classquisp_1_1modules_1_1_i_application.html", "classquisp_1_1modules_1_1_i_application" ],

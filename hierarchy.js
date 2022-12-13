@@ -87,6 +87,8 @@ var hierarchy =
     [ "ErrorTrackingQubit", null, [
       [ "quisp_test::backends::Qubit", "classquisp__test_1_1backends_1_1_qubit.html", null ]
     ] ],
+    [ "quisp::backends::error_tracking::GodErrorState", "structquisp_1_1backends_1_1error__tracking_1_1_god_error_state.html", null ],
+    [ "quisp::modules::GodErrorState", "structquisp_1_1modules_1_1_god_error_state.html", null ],
     [ "quisp::backends::abstract::IQubitId::Hash", "classquisp_1_1backends_1_1abstract_1_1_i_qubit_id_1_1_hash.html", null ],
     [ "quisp::utils::IComponentProviderStrategy", "classquisp_1_1utils_1_1_i_component_provider_strategy.html", [
       [ "quisp::utils::DefaultComponentProviderStrategy", "classquisp_1_1utils_1_1_default_component_provider_strategy.html", null ],

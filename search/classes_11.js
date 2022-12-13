@@ -1,16 +1,13 @@
 var searchData=
 [
-  ['tempgate_0',['TempGate',['../classquisp__test_1_1gate_1_1_temp_gate.html',1,'quisp_test::gate']]],
-  ['testcomponentproviderstrategy_1',['TestComponentProviderStrategy',['../classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html',1,'quisp_test::strategy']]],
-  ['testgate_2',['TestGate',['../classquisp__test_1_1gate_1_1_test_gate.html',1,'quisp_test::gate']]],
-  ['testkeyvalue_3',['TestKeyValue',['../classquisp__test_1_1key__value_1_1_test_key_value.html',1,'quisp_test::key_value']]],
-  ['testlogger_4',['TestLogger',['../classquisp__test_1_1_logger_1_1_test_logger.html',1,'quisp_test::Logger']]],
-  ['testmoduletype_5',['TestModuleType',['../classquisp__test_1_1module__type_1_1_test_module_type.html',1,'quisp_test::module_type']]],
-  ['testqnode_6',['TestQNode',['../classquisp__test_1_1qnode_1_1_test_q_node.html',1,'quisp_test::qnode']]],
-  ['testrng_7',['TestRNG',['../classquisp__test_1_1backends_1_1_test_r_n_g.html',1,'quisp_test::backends::TestRNG'],['../classquisp__test_1_1rng_1_1_test_r_n_g.html',1,'quisp_test::rng::TestRNG']]],
-  ['testsimulation_8',['TestSimulation',['../classquisp__test_1_1simulation_1_1_test_simulation.html',1,'quisp_test::simulation']]],
-  ['tomography_9',['Tomography',['../classquisp_1_1rules_1_1_tomography.html',1,'quisp::rules']]],
-  ['tomography_5foutcome_10',['tomography_outcome',['../structquisp_1_1modules_1_1tomography__outcome.html',1,'quisp::modules']]],
-  ['triplepurification_5fresult_11',['Triplepurification_result',['../structquisp_1_1modules_1_1_triplepurification__result.html',1,'quisp::modules']]],
-  ['twoqubitgateerrormodel_12',['TwoQubitGateErrorModel',['../structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model.html',1,'quisp::backends::error_tracking::TwoQubitGateErrorModel'],['../structquisp_1_1modules_1_1_two_qubit_gate_error_model.html',1,'quisp::modules::TwoQubitGateErrorModel']]]
+  ['simultaneousswappingaction_0',['SimultaneousSwappingAction',['../classquisp_1_1rules_1_1active_1_1actions_1_1_simultaneous_swapping_action.html',1,'quisp::rules::active::actions']]],
+  ['single_5fqubit_5ferror_1',['single_qubit_error',['../structquisp_1_1modules_1_1single__qubit__error.html',1,'quisp::modules']]],
+  ['singlegateerrormodel_2',['SingleGateErrorModel',['../structquisp_1_1backends_1_1error__tracking_1_1_single_gate_error_model.html',1,'quisp::backends::error_tracking::SingleGateErrorModel'],['../structquisp_1_1modules_1_1_single_gate_error_model.html',1,'quisp::modules::SingleGateErrorModel']]],
+  ['singlequbiterrormodel_3',['SingleQubitErrorModel',['../structquisp_1_1backends_1_1error__tracking_1_1_single_qubit_error_model.html',1,'quisp::backends::error_tracking']]],
+  ['spdc_5fcontroller_4',['SPDC_Controller',['../classquisp_1_1modules_1_1_s_p_d_c___controller.html',1,'quisp::modules']]],
+  ['staticenv_5',['StaticEnv',['../classquisp__test_1_1env_1_1_static_env.html',1,'quisp_test::env']]],
+  ['stationaryqubit_6',['StationaryQubit',['../classquisp_1_1modules_1_1_stationary_qubit.html',1,'quisp::modules']]],
+  ['swapping_5fresult_7',['swapping_result',['../structquisp_1_1modules_1_1swapping__result.html',1,'quisp::modules']]],
+  ['swappingaction_8',['SwappingAction',['../classquisp_1_1rules_1_1active_1_1actions_1_1_swapping_action.html',1,'quisp::rules::active::actions']]],
+  ['swappingconfig_9',['SwappingConfig',['../structquisp_1_1modules_1_1_swapping_config.html',1,'quisp::modules']]]
 ];

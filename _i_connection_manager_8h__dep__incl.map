@@ -1,7 +1,7 @@
 <map id="quisp/modules/QRSA/ConnectionManager/IConnectionManager.h" name="quisp/modules/QRSA/ConnectionManager/IConnectionManager.h">
-<area shape="rect" id="node1" title=" " alt="" coords="354,5,569,61"/>
-<area shape="rect" id="node2" href="$_connection_manager_8h.html" title=" " alt="" coords="285,109,496,165"/>
-<area shape="rect" id="node4" href="$_connection_manager__ruleset__test_8cc.html" title=" " alt="" coords="475,213,685,269"/>
-<area shape="rect" id="node3" href="$_connection_manager_8cc.html" title="ConnectionManager." alt="" coords="5,213,216,269"/>
-<area shape="rect" id="node5" href="$_connection_manager__test_8cc.html" title=" " alt="" coords="240,213,451,269"/>
+<area shape="rect" id="node1" title=" " alt="" coords="354,5,569,60"/>
+<area shape="rect" id="node2" href="$_connection_manager_8h.html" title=" " alt="" coords="263,108,473,163"/>
+<area shape="rect" id="node4" href="$_connection_manager__ruleset__test_8cc.html" title=" " alt="" coords="475,211,685,265"/>
+<area shape="rect" id="node3" href="$_connection_manager_8cc.html" title="ConnectionManager." alt="" coords="5,211,216,265"/>
+<area shape="rect" id="node5" href="$_connection_manager__test_8cc.html" title=" " alt="" coords="240,211,451,265"/>
 </map>

@@ -1,15 +1,15 @@
 <map id="quisp/modules/QRSA/RuleEngine/QubitRecord/QubitRecord.cc" name="quisp/modules/QRSA/RuleEngine/QubitRecord/QubitRecord.cc">
-<area shape="rect" id="node1" title=" " alt="" coords="108,5,275,61"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,109,153,136"/>
-<area shape="rect" id="node3" href="$_i_logger_8h.html" title=" " alt="" coords="87,184,261,211"/>
-<area shape="rect" id="node7" href="$_qubit_record_8h.html" title=" " alt="" coords="246,109,350,136"/>
-<area shape="rect" id="node4" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="213,266,332,293"/>
-<area shape="rect" id="node5" title=" " alt="" coords="109,348,191,375"/>
-<area shape="rect" id="node6" title=" " alt="" coords="215,348,346,375"/>
-<area shape="rect" id="node8" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="448,259,649,300"/>
-<area shape="rect" id="node12" href="$_i_qubit_record_8h.html" title=" " alt="" coords="336,184,444,211"/>
-<area shape="rect" id="node9" title=" " alt="" coords="371,348,503,375"/>
-<area shape="rect" id="node10" title=" " alt="" coords="527,348,618,375"/>
-<area shape="rect" id="node11" title=" " alt="" coords="642,348,746,375"/>
-<area shape="rect" id="node13" title=" " alt="" coords="356,266,424,293"/>
+<area shape="rect" id="node1" title=" " alt="" coords="108,5,275,60"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,108,153,133"/>
+<area shape="rect" id="node3" href="$_i_logger_8h.html" title=" " alt="" coords="87,181,261,207"/>
+<area shape="rect" id="node7" href="$_qubit_record_8h.html" title=" " alt="" coords="246,108,350,133"/>
+<area shape="rect" id="node4" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="213,262,332,287"/>
+<area shape="rect" id="node5" title=" " alt="" coords="109,343,191,368"/>
+<area shape="rect" id="node6" title=" " alt="" coords="215,343,346,368"/>
+<area shape="rect" id="node8" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="448,255,649,295"/>
+<area shape="rect" id="node12" href="$_i_qubit_record_8h.html" title=" " alt="" coords="336,181,444,207"/>
+<area shape="rect" id="node9" title=" " alt="" coords="371,343,503,368"/>
+<area shape="rect" id="node10" title=" " alt="" coords="527,343,618,368"/>
+<area shape="rect" id="node11" title=" " alt="" coords="642,343,746,368"/>
+<area shape="rect" id="node13" title=" " alt="" coords="356,262,424,287"/>
 </map>

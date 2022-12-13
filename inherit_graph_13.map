@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="5,39,173,80"/>
-<area shape="rect" id="node2" href="$classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html" title=" " alt="" coords="221,5,431,47"/>
-<area shape="rect" id="node3" href="$classquisp__test_1_1mock__backends_1_1_mock_quantum_backend.html" title=" " alt="" coords="235,71,417,112"/>
+<area shape="rect" id="node1" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="5,37,173,77"/>
+<area shape="rect" id="node2" href="$classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html" title=" " alt="" coords="221,5,431,45"/>
+<area shape="rect" id="node3" href="$classquisp__test_1_1mock__backends_1_1_mock_quantum_backend.html" title=" " alt="" coords="235,69,417,109"/>
 </map>

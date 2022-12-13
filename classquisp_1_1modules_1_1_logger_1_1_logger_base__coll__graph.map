@@ -1,4 +1,4 @@
 <map id="quisp::modules::Logger::LoggerBase" name="quisp::modules::Logger::LoggerBase">
-<area shape="rect" id="node1" title="LoggerBase class integrate abilities to log simulation results into your components." alt="" coords="5,109,160,151"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_logger_1_1_i_logger.html" title="Interface of Logger class. Logger class that inherits ILogger is responsible for logging simulation r..." alt="" coords="5,5,160,47"/>
+<area shape="rect" id="node1" title="LoggerBase class integrate abilities to log simulation results into your components." alt="" coords="5,108,160,148"/>
+<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_logger_1_1_i_logger.html" title="Interface of Logger class. Logger class that inherits ILogger is responsible for logging simulation r..." alt="" coords="5,5,160,45"/>
 </map>

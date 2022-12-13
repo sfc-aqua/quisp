@@ -1,13 +1,12 @@
 var searchData=
 [
-  ['simultaneousswappingaction_0',['SimultaneousSwappingAction',['../classquisp_1_1rules_1_1active_1_1actions_1_1_simultaneous_swapping_action.html',1,'quisp::rules::active::actions']]],
-  ['single_5fqubit_5ferror_1',['single_qubit_error',['../structquisp_1_1modules_1_1single__qubit__error.html',1,'quisp::modules']]],
-  ['singlegateerrormodel_2',['SingleGateErrorModel',['../structquisp_1_1backends_1_1error__tracking_1_1_single_gate_error_model.html',1,'quisp::backends::error_tracking::SingleGateErrorModel'],['../structquisp_1_1modules_1_1_single_gate_error_model.html',1,'quisp::modules::SingleGateErrorModel']]],
-  ['singlequbiterrormodel_3',['SingleQubitErrorModel',['../structquisp_1_1backends_1_1error__tracking_1_1_single_qubit_error_model.html',1,'quisp::backends::error_tracking']]],
-  ['spdc_5fcontroller_4',['SPDC_Controller',['../classquisp_1_1modules_1_1_s_p_d_c___controller.html',1,'quisp::modules']]],
-  ['staticenv_5',['StaticEnv',['../classquisp__test_1_1env_1_1_static_env.html',1,'quisp_test::env']]],
-  ['stationaryqubit_6',['StationaryQubit',['../classquisp_1_1modules_1_1_stationary_qubit.html',1,'quisp::modules']]],
-  ['swapping_5fresult_7',['swapping_result',['../structquisp_1_1modules_1_1swapping__result.html',1,'quisp::modules']]],
-  ['swappingaction_8',['SwappingAction',['../classquisp_1_1rules_1_1active_1_1actions_1_1_swapping_action.html',1,'quisp::rules::active::actions']]],
-  ['swappingconfig_9',['SwappingConfig',['../structquisp_1_1modules_1_1_swapping_config.html',1,'quisp::modules']]]
+  ['randommeasureaction_0',['RandomMeasureAction',['../classquisp_1_1rules_1_1active_1_1actions_1_1_random_measure_action.html',1,'quisp::rules::active::actions']]],
+  ['realtimecontroller_1',['RealTimeController',['../classquisp_1_1modules_1_1_real_time_controller.html',1,'quisp::modules']]],
+  ['rng_2',['RNG',['../classquisp_1_1modules_1_1backend_1_1rng_1_1_r_n_g.html',1,'quisp::modules::backend::rng']]],
+  ['router_3',['Router',['../classquisp_1_1modules_1_1_router.html',1,'quisp::modules']]],
+  ['routingdaemon_4',['RoutingDaemon',['../classquisp_1_1modules_1_1_routing_daemon.html',1,'quisp::modules::RoutingDaemon'],['../class_routing_daemon.html',1,'RoutingDaemon']]],
+  ['rule_5',['Rule',['../classquisp_1_1rules_1_1_rule.html',1,'quisp::rules']]],
+  ['ruleengine_6',['RuleEngine',['../classquisp_1_1modules_1_1_rule_engine.html',1,'quisp::modules']]],
+  ['ruleset_7',['RuleSet',['../classquisp_1_1rules_1_1_rule_set.html',1,'quisp::rules']]],
+  ['rulesetstore_8',['RuleSetStore',['../classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store.html',1,'quisp::modules::ruleset_store']]]
 ];

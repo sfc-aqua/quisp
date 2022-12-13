@@ -1,4 +1,4 @@
 <map id="quisp::modules::Logger::DisabledLogger" name="quisp::modules::Logger::DisabledLogger">
-<area shape="rect" id="node1" title="DisabledLogger class is used for." alt="" coords="5,95,160,136"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_logger_1_1_i_logger.html" title="Interface of Logger class. Logger class that inherits ILogger is responsible for logging simulation r..." alt="" coords="5,5,160,47"/>
+<area shape="rect" id="node1" title="DisabledLogger class is used for." alt="" coords="5,93,160,133"/>
+<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_logger_1_1_i_logger.html" title="Interface of Logger class. Logger class that inherits ILogger is responsible for logging simulation r..." alt="" coords="5,5,160,45"/>
 </map>

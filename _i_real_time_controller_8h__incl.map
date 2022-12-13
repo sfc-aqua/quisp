@@ -1,13 +1,13 @@
 <map id="quisp/modules/QRSA/RealTimeController/IRealTimeController.h" name="quisp/modules/QRSA/RealTimeController/IRealTimeController.h">
-<area shape="rect" id="node1" title=" " alt="" coords="206,5,357,61"/>
-<area shape="rect" id="node2" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="138,281,257,307"/>
-<area shape="rect" id="node5" href="$_q_r_s_a_8h.html" title=" " alt="" coords="200,109,363,136"/>
-<area shape="rect" id="node7" href="$_i_qubit_record_8h.html" title=" " alt="" coords="319,184,481,225"/>
-<area shape="rect" id="node3" title=" " alt="" coords="160,363,243,389"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,363,136,389"/>
-<area shape="rect" id="node6" title=" " alt="" coords="281,281,349,307"/>
-<area shape="rect" id="node8" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="373,273,574,315"/>
-<area shape="rect" id="node9" title=" " alt="" coords="271,363,403,389"/>
-<area shape="rect" id="node10" title=" " alt="" coords="428,363,519,389"/>
-<area shape="rect" id="node11" title=" " alt="" coords="543,363,647,389"/>
+<area shape="rect" id="node1" title=" " alt="" coords="206,5,357,60"/>
+<area shape="rect" id="node2" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="138,277,257,302"/>
+<area shape="rect" id="node5" href="$_q_r_s_a_8h.html" title=" " alt="" coords="200,108,363,133"/>
+<area shape="rect" id="node7" href="$_i_qubit_record_8h.html" title=" " alt="" coords="319,181,481,221"/>
+<area shape="rect" id="node3" title=" " alt="" coords="160,357,243,383"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,357,136,383"/>
+<area shape="rect" id="node6" title=" " alt="" coords="281,277,349,302"/>
+<area shape="rect" id="node8" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="373,269,574,309"/>
+<area shape="rect" id="node9" title=" " alt="" coords="271,357,403,383"/>
+<area shape="rect" id="node10" title=" " alt="" coords="428,357,519,383"/>
+<area shape="rect" id="node11" title=" " alt="" coords="543,357,647,383"/>
 </map>

@@ -3,6 +3,7 @@ var namespacequisp_1_1backends_1_1error__tracking =
     [ "emission_error_model", "structquisp_1_1backends_1_1error__tracking_1_1emission__error__model.html", "structquisp_1_1backends_1_1error__tracking_1_1emission__error__model" ],
     [ "ErrorTrackingBackend", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend" ],
     [ "ErrorTrackingQubit", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit" ],
+    [ "GodErrorState", "structquisp_1_1backends_1_1error__tracking_1_1_god_error_state.html", "structquisp_1_1backends_1_1error__tracking_1_1_god_error_state" ],
     [ "MeasurementErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_error_model.html", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_error_model" ],
     [ "MeasurementOperator", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_operator.html", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_operator" ],
     [ "MeasurementOperators", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_operators.html", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_operators" ],
