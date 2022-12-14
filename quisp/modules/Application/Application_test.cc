@@ -205,7 +205,7 @@ TEST(AppTest, Specifying_Valid_Addresses_As_Recipients) {
   app->callInitialize();
 
   ASSERT_EQ(app->getAddress(), mock_qnode->address);
-  ASSERT_EQ(app->getEndNodeWeightMap().size(), 2); // self and 456
+  ASSERT_EQ(app->getEndNodeWeightMap().size(), 2);  // self and 456
   ASSERT_NE(app->getEndNodeWeightMap().find(123), app->getEndNodeWeightMap().end());
   ASSERT_NE(app->getEndNodeWeightMap().find(456), app->getEndNodeWeightMap().end());
   ASSERT_EQ(app->getEndNodeWeightMap().find(789), app->getEndNodeWeightMap().end());
