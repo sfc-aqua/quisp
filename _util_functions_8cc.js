@@ -6,6 +6,7 @@ var _util_functions_8cc =
     [ "setParBool", "_util_functions_8cc.html#af9a2f1c08763158b1b0dddbf058c0a24", null ],
     [ "setParDouble", "_util_functions_8cc.html#aa40021f1932822ecb91a27e6c5701d7f", null ],
     [ "setParInt", "_util_functions_8cc.html#afa45b6ff482c6c650b51dc1bddd66a8d", null ],
+    [ "setParObject", "_util_functions_8cc.html#aeaf6a12ea4f70da1bcaa519519bdf2df", null ],
     [ "setParStr", "_util_functions_8cc.html#a2a16f066980624adbfef202f0d20b77f", null ],
     [ "useTestRNG", "_util_functions_8cc.html#ac9608fdc54533daf8f1d6f999bce6e56", null ]
 ];

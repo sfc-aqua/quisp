@@ -20,6 +20,8 @@ var namespacequisp__test =
       [ "setParBool", "namespacequisp__test_1_1utils.html#af9a2f1c08763158b1b0dddbf058c0a24", null ],
       [ "setParDouble", "namespacequisp__test_1_1utils.html#aa40021f1932822ecb91a27e6c5701d7f", null ],
       [ "setParInt", "namespacequisp__test_1_1utils.html#afa45b6ff482c6c650b51dc1bddd66a8d", null ],
+      [ "setParObject", "namespacequisp__test_1_1utils.html#aeaf6a12ea4f70da1bcaa519519bdf2df", null ],
+      [ "setParObject", "namespacequisp__test_1_1utils.html#a579e49c7974f76b68ef9e555536876b2", null ],
       [ "setParStr", "namespacequisp__test_1_1utils.html#a2a16f066980624adbfef202f0d20b77f", null ],
       [ "useTestRNG", "namespacequisp__test_1_1utils.html#ac9608fdc54533daf8f1d6f999bce6e56", null ]
     ] ]

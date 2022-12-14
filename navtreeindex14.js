@@ -1,5 +1,7 @@
 var NAVTREEINDEX14 =
 {
+"functions_a.html":[16,3,0,1],
+"functions_b.html":[16,3,0,2],
 "functions_c.html":[16,3,0,3],
 "functions_d.html":[16,3,0,4],
 "functions_e.html":[16,3,0,5],
@@ -247,7 +249,5 @@ var NAVTREEINDEX14 =
 "namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43a20c8c8d72be701928b59754d55627825":[15,0,1,4,0,17],
 "namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43a21c2e59531c8710156d34a3c30ac81d5":[15,0,1,4,0,3],
 "namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43a263c1ac5e30fdef351d5c91b4470c9e6":[15,0,1,4,0,12],
-"namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43a27a0684003735392aef2020518dc0d20":[15,0,1,4,0,19],
-"namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43a398e2a39cc03f41ad6761e6f365ac49e":[15,0,1,4,0,18],
-"namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43a490aa6e856ccf208a054389e47ce0d06":[15,0,1,4,0,0]
+"namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43a27a0684003735392aef2020518dc0d20":[15,0,1,4,0,19]
 };
