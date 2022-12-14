@@ -122,7 +122,7 @@ void Application::createEndNodeWeightMap() {
   if (!par("has_specific_recipients").boolValue()) {
     // set self weight to 0; so we don't create self traffic
     temp_end_node_weight_map[my_address] = 0;
-    end_node_weight_map = std::ref(temp_end_node_weight_map);
+    std::swap(end_node_weight_map, temp_end_node_weight_map);
     return;
   }
 
