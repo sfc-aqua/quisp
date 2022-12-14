@@ -1,3 +1,9 @@
+/**
+ * @file types.h
+ * @brief this file contains the definitions of all the user-defined types
+ * widely used alongside the runtime::RuleSet.
+ */
+
 #pragma once
 
 #include <omnetpp/simtime.h>
@@ -55,7 +61,10 @@ std::ostream& operator<<(std::ostream& stream, const QNodeAddr& value);
 bool operator<(const QNodeAddr& a, const QNodeAddr& b);
 bool operator==(const QNodeAddr& a, const QNodeAddr& b);
 
-/// @brief describes Qubit id in a Program.
+/**
+ * @brief describes Qubit id in a Program. This is like a local variable name
+ * in a runtime::Program. Be careful, this is not used for RuleEngine or QNIC.
+ */
 struct QubitId {
   QubitId(int val);
   /// @brief hash function for unordered map

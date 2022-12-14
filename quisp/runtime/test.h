@@ -1,8 +1,12 @@
+/**
+ * @file test.h
+ * @brief test utilities for Runtime. You can include this file for unit testing.
+ */
 #pragma once
 
 #include <gmock/gmock.h>
-#include <runtime/Runtime.h>
-#include "runtime/types.h"
+#include "Runtime.h"
+#include "types.h"
 
 namespace quisp_test {
 using quisp::runtime::IQubitRecord;

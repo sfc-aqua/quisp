@@ -1,3 +1,12 @@
+/**
+ * @brief def_instructions.h
+ * @brief this file contains list of macros defining 
+ * the Intermediate Representations (IR) used in a runtime::Program.
+ *
+ * If you want to add new instruction, add new opcode in def_opcodes.h,
+ * and then define how it works in InstructionVisitor.cc.
+ */
+
 // X-macro pattern
 // https://quuxplusone.github.io/blog/2021/02/01/x-macros/
 #ifndef INSTR_LAST

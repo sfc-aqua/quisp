@@ -1,3 +1,9 @@
+/**
+ * @file def_opcodes.h
+ * @brief this file contains a list of macros defining the opcodes used in 
+ * the IR. These opcodes are used in def_instructions.h and opcode.h.
+ */
+
 // X-macro pattern
 // https://quuxplusone.github.io/blog/2021/02/01/x-macros/
 #ifdef OP
