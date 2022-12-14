@@ -81,7 +81,7 @@ class RuleSet {
           bool debugging = false)
       : name(name), rules(rules), termination_condition(termination_cond), debugging(debugging) {}
 
-  /// @brief analizes its rules and instructions to collect informations for execution.
+  /// @brief analyzes its rules and instructions to collect informations for execution.
   void finalize();
 
   /// @brief the partner QNodeAddrs used in this RuleSet.
