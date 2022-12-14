@@ -1,5 +1,6 @@
 #include "UtilFunctions.h"
 #include <omnetpp.h>
+#include <omnetpp/cobjectparimpl.h>
 #include "RNG.h"
 #include "StaticEnv.h"
 
@@ -53,6 +54,18 @@ void setParBool(cModule *module, const char *name, const bool val) {
   cParImpl *p = new cBoolParImpl();
   p->setName(name);
   p->setBoolValue(val);
+  p->setIsMutable(true);
+  module->addPar(p);
+}
+
+void setParObject(cModule *module, const char *name, cObject *val) {
+  if (module->findPar(name) != -1) {
+    module->par(name) = val;
+    return;
+  }
+  cParImpl *p = new cObjectParImpl();
+  p->setName(name);
+  p->setObjectValue(val);
   p->setIsMutable(true);
   module->addPar(p);
 }

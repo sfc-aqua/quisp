@@ -128,4 +128,89 @@ TEST(AppTest, Init_Connection_Setup_Message_Send) {
   ASSERT_EQ(pkt->getDestAddr(), 123);
 }
 
+TEST(AppTest, Specifying_Empty_As_Recipients) {
+  auto *sim = prepareSimulation();
+  auto *mock_qnode = new TestQNode{123, 100, true};
+  auto *mock_qnode2 = new TestQNode{456, 100, false};
+  auto *app = new AppTestTarget{mock_qnode};
+
+  setParDouble(app, "request_generation_interval", 5);
+  setParInt(app, "number_of_bellpair", 10);
+  setParBool(app, "has_specific_recipients", true);
+
+  cValueArray *cval_arr = new cValueArray();
+  quisp_test::utils::setParObject(app, "possible_recipients", cval_arr);
+
+  sim->registerComponent(app);
+  EXPECT_ANY_THROW(app->callInitialize());
+}
+
+TEST(AppTest, Specifying_Self_As_Recipients) {
+  auto *sim = prepareSimulation();
+  auto *mock_qnode = new TestQNode{123, 100, true};
+  auto *mock_qnode2 = new TestQNode{456, 100, false};
+  auto *app = new AppTestTarget{mock_qnode};
+
+  setParDouble(app, "request_generation_interval", 5);
+  setParInt(app, "number_of_bellpair", 10);
+  setParBool(app, "has_specific_recipients", true);
+
+  cValueArray *cval_arr = new cValueArray();
+  cval_arr->add(123);
+  cval_arr->add(456);
+
+  quisp_test::utils::setParObject(app, "possible_recipients", cval_arr);
+
+  sim->registerComponent(app);
+  EXPECT_ANY_THROW(app->callInitialize());
+}
+
+TEST(AppTest, Specifying_Not_Existing_Address_As_Recipients) {
+  auto *sim = prepareSimulation();
+  auto *mock_qnode = new TestQNode{123, 100, true};
+  auto *mock_qnode2 = new TestQNode{456, 100, false};
+  auto *app = new AppTestTarget{mock_qnode};
+
+  setParDouble(app, "request_generation_interval", 5);
+  setParInt(app, "number_of_bellpair", 10);
+  setParBool(app, "has_specific_recipients", true);
+
+  cValueArray *cval_arr = new cValueArray();
+  cval_arr->add(456);
+  cval_arr->add(999);
+
+  quisp_test::utils::setParObject(app, "possible_recipients", cval_arr);
+
+  sim->registerComponent(app);
+  EXPECT_ANY_THROW(app->callInitialize());
+}
+
+TEST(AppTest, Specifying_Valid_Addresses_As_Recipients) {
+  auto *sim = prepareSimulation();
+  auto *mock_qnode = new TestQNode{123, 100, true};
+  auto *mock_qnode2 = new TestQNode{456, 654, false};
+  auto *mock_qnode3 = new TestQNode{789, 987, false};
+  auto *app = new AppTestTarget{mock_qnode};
+
+  setParDouble(app, "request_generation_interval", 5);
+  setParInt(app, "number_of_bellpair", 10);
+  setParBool(app, "has_specific_recipients", true);
+
+  cValueArray *cval_arr = new cValueArray();
+  cval_arr->add(456);
+
+  quisp_test::utils::setParObject(app, "possible_recipients", cval_arr);
+
+  sim->registerComponent(app);
+  app->callInitialize();
+
+  ASSERT_EQ(app->getAddress(), mock_qnode->address);
+  ASSERT_EQ(app->getEndNodeWeightMap().size(), 2); // self and 456
+  ASSERT_NE(app->getEndNodeWeightMap().find(123), app->getEndNodeWeightMap().end());
+  ASSERT_NE(app->getEndNodeWeightMap().find(456), app->getEndNodeWeightMap().end());
+  ASSERT_EQ(app->getEndNodeWeightMap().find(789), app->getEndNodeWeightMap().end());
+
+  ASSERT_EQ(app->getEndNodeWeightMap()[456], 654);
+}
+
 }  // namespace

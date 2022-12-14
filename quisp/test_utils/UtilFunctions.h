@@ -14,6 +14,7 @@ void setParInt(cModule *module, const char *name, const int val);
 void setParDouble(cModule *module, const char *name, const double val);
 void setParBool(cModule *module, const char *name, const bool val);
 void setParStr(cModule *module, const char *name, const char *val);
+void setParObject(cModule *module, const char *name, omnetpp::cObject *val);
 TestSimulation *prepareSimulation();
 TestSimulation *getTestSimulation();
 omnetpp::cEnvir *createStaticEnv();
