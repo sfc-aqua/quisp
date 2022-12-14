@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['loggertype_0',['LoggerType',['../namespacequisp_1_1modules_1_1_logger.html#a3a0d52194cb4fdee8ab9d5c6cfa4c228',1,'quisp::modules::Logger']]]
+  ['eigenvalueresult_0',['EigenvalueResult',['../namespacequisp_1_1backends_1_1abstract.html#a62ea4b6babf182573968ca80708cce0d',1,'quisp::backends::abstract::EigenvalueResult()'],['../namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57',1,'quisp::types::EigenvalueResult()']]]
 ];

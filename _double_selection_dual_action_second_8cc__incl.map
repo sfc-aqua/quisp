@@ -7,7 +7,7 @@
 <area shape="rect" id="node3" href="$actions_2_active_action_8h.html" title="Action." alt="" coords="445,548,552,573"/>
 <area shape="rect" id="node4" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="1074,1377,1193,1402"/>
 <area shape="rect" id="node5" title=" " alt="" coords="271,1457,353,1483"/>
-<area shape="rect" id="node7" href="$modules_2_qubit_8h.html" title="QUBIT." alt="" coords="633,629,759,654"/>
+<area shape="rect" id="node7" href="$modules_2_q_u_b_i_t_8h.html" title="QUBIT." alt="" coords="633,629,759,654"/>
 <area shape="rect" id="node15" title=" " alt="" coords="611,1377,679,1402"/>
 <area shape="rect" id="node6" title=" " alt="" coords="431,1457,561,1483"/>
 <area shape="rect" id="node8" href="$_stationary_qubit_8h.html" title="StationaryQubit." alt="" coords="1782,709,1983,749"/>
@@ -43,7 +43,7 @@
 <area shape="rect" id="node41" href="$_hardware_monitor_8h.html" title="HardwareMonitor." alt="" coords="1425,621,1639,661"/>
 <area shape="rect" id="node42" href="$_routing_daemon_8h.html" title=" " alt="" coords="859,1032,1067,1072"/>
 <area shape="rect" id="node43" href="$_active_rule_set_8h.html" title=" " alt="" coords="318,203,506,229"/>
-<area shape="rect" id="node48" href="$_rule_set_8h.html" title=" " alt="" coords="391,1208,502,1233"/>
+<area shape="rect" id="node48" href="$rules_2_rule_set_8h.html" title=" " alt="" coords="391,1208,502,1233"/>
 <area shape="rect" id="node44" href="$_active_rule_8h.html" title=" " alt="" coords="365,291,459,317"/>
 <area shape="rect" id="node45" title=" " alt="" coords="297,1377,357,1402"/>
 <area shape="rect" id="node46" href="$_active_action_8h.html" title=" " alt="" coords="596,379,703,405"/>

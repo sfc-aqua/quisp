@@ -4,6 +4,7 @@ var namespacequisp =
     [ "channels", "namespacequisp_1_1channels.html", "namespacequisp_1_1channels" ],
     [ "modules", "namespacequisp_1_1modules.html", "namespacequisp_1_1modules" ],
     [ "rules", "namespacequisp_1_1rules.html", "namespacequisp_1_1rules" ],
+    [ "runtime", "namespacequisp_1_1runtime.html", "namespacequisp_1_1runtime" ],
     [ "types", "namespacequisp_1_1types.html", [
       [ "CliffordOperator", "namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43", [
         [ "Id", "namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43a490aa6e856ccf208a054389e47ce0d06", null ],

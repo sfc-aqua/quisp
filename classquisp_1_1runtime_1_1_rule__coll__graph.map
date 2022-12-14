@@ -1,0 +1,4 @@
+<map id="quisp::runtime::Rule" name="quisp::runtime::Rule">
+<area shape="rect" id="node1" title="The Runtime executable Rule in a RuleSet." alt="" coords="17,108,151,133"/>
+<area shape="rect" id="node2" href="$classquisp_1_1runtime_1_1_program.html" title="The Program is a list of Instructions with metadata. The Runtime can execute the Program." alt="" coords="5,5,163,31"/>
+</map>

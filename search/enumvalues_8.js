@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['rx_0',['RX',['../namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43af9c24782c24c237d16e79f18e2fa9046',1,'quisp::types']]],
-  ['rx_5finv_1',['RX_INV',['../namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43ac6c5572791a83468f4540b22461c1cf6',1,'quisp::types']]],
-  ['ry_2',['RY',['../namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43accb21680cb44cbc3715ed8acc0145efe',1,'quisp::types']]],
-  ['ry_5finv_3',['RY_INV',['../namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43a5c1f2e6ab420faca44be7cc77dc7177a',1,'quisp::types']]]
+  ['plus_5fone_0',['PLUS_ONE',['../namespacequisp_1_1backends_1_1abstract.html#a62ea4b6babf182573968ca80708cce0da9c0ed0366bbc920f92606585259a1664',1,'quisp::backends::abstract::PLUS_ONE()'],['../namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57a9c0ed0366bbc920f92606585259a1664',1,'quisp::types::PLUS_ONE()']]]
 ];

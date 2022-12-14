@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['emitphoton_0',['EmitPhoton',['../classquisp_1_1modules_1_1_real_time_controller.html#a9b336c0f7d0c893bbac1f19bb400b9d2',1,'quisp::modules::RealTimeController']]],
-  ['emitphoton_1',['emitPhoton',['../classquisp_1_1modules_1_1_i_stationary_qubit.html#afb5a94d328f0054b708dfa021afd193c',1,'quisp::modules::IStationaryQubit::emitPhoton()'],['../classquisp_1_1modules_1_1_stationary_qubit.html#aa271f8eed9884a510ceb80fa156b15b6',1,'quisp::modules::StationaryQubit::emitPhoton()']]],
-  ['emitphoton_2',['EmitPhoton',['../classquisp_1_1modules_1_1_i_real_time_controller.html#a4a0287b562edf7acdd5320f075647a80',1,'quisp::modules::IRealTimeController']]],
+  ['emitphoton_0',['emitPhoton',['../classquisp_1_1modules_1_1_stationary_qubit.html#aa271f8eed9884a510ceb80fa156b15b6',1,'quisp::modules::StationaryQubit']]],
+  ['emitphoton_1',['EmitPhoton',['../classquisp_1_1modules_1_1_i_real_time_controller.html#a4a0287b562edf7acdd5320f075647a80',1,'quisp::modules::IRealTimeController::EmitPhoton()'],['../classquisp_1_1modules_1_1_real_time_controller.html#a9b336c0f7d0c893bbac1f19bb400b9d2',1,'quisp::modules::RealTimeController::EmitPhoton()']]],
+  ['emitphoton_2',['emitPhoton',['../classquisp_1_1modules_1_1_i_stationary_qubit.html#afb5a94d328f0054b708dfa021afd193c',1,'quisp::modules::IStationaryQubit']]],
   ['emitphotons_3',['emitPhotons',['../classquisp_1_1modules_1_1_entangled_photon_pair_source.html#af8889812a3e6fe04f0588906ca6ac789',1,'quisp::modules::EntangledPhotonPairSource']]],
   ['empty_4',['empty',['../classquisp_1_1rules_1_1active_1_1_active_rule_set.html#ad9e1d1cc6f8280c7da859288056a3046',1,'quisp::rules::active::ActiveRuleSet']]],
   ['end_5',['end',['../classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store.html#aaa6eecf4f1ba61d2c77d868d6519b831',1,'quisp::modules::ruleset_store::RuleSetStore']]],
@@ -18,5 +18,8 @@ var searchData=
   ['errortrackingbackend_15',['ErrorTrackingBackend',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html#a8ff995dd07ffe4023d6bc870f897a198',1,'quisp::backends::error_tracking::ErrorTrackingBackend']]],
   ['errortrackingqubit_16',['ErrorTrackingQubit',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a67983823b9bb8d18eb283d05b224cd14',1,'quisp::backends::error_tracking::ErrorTrackingQubit']]],
   ['excite_17',['excite',['../classquisp_1_1modules_1_1_i_stationary_qubit.html#a8fd854148dec85e311a6813624670952',1,'quisp::modules::IStationaryQubit::excite()'],['../classquisp_1_1modules_1_1_stationary_qubit.html#a33b483d072140558dcada8b6d06e6bd0',1,'quisp::modules::StationaryQubit::excite()']]],
-  ['executenextevent_18',['executeNextEvent',['../classquisp__test_1_1simulation_1_1_test_simulation.html#a0986ee37d1779fef315756e8a09139d5',1,'quisp_test::simulation::TestSimulation']]]
+  ['exec_18',['exec',['../classquisp_1_1runtime_1_1_runtime.html#a3a1786a73d06af052a24c3113007c525',1,'quisp::runtime::Runtime']]],
+  ['execinstruction_19',['execInstruction',['../classquisp_1_1runtime_1_1_runtime.html#af4b7ec1424dcf3d65bc4483879e1f778',1,'quisp::runtime::Runtime']]],
+  ['execprogram_20',['execProgram',['../classquisp_1_1runtime_1_1_runtime.html#a51868858bd1948ac0d90b12efc03c879',1,'quisp::runtime::Runtime']]],
+  ['executenextevent_21',['executeNextEvent',['../classquisp__test_1_1simulation_1_1_test_simulation.html#a0986ee37d1779fef315756e8a09139d5',1,'quisp_test::simulation::TestSimulation']]]
 ];

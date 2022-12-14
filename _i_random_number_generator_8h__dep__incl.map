@@ -1,7 +1,7 @@
 <map id="quisp/backends/interfaces/IRandomNumberGenerator.h" name="quisp/backends/interfaces/IRandomNumberGenerator.h">
 <area shape="rect" id="node1" title=" " alt="" coords="259,5,450,45"/>
 <area shape="rect" id="node2" href="$backends_2_error_tracking_2_backend_8h.html" title=" " alt="" coords="257,93,452,133"/>
-<area shape="rect" id="node5" href="$test_8h.html" title=" " alt="" coords="283,269,477,309"/>
+<area shape="rect" id="node5" href="$backends_2_error_tracking_2test_8h.html" title=" " alt="" coords="283,269,477,309"/>
 <area shape="rect" id="node6" href="$backends_2_error_tracking_2_backend__test_8cc.html" title=" " alt="" coords="47,357,241,397"/>
 <area shape="rect" id="node3" href="$_backends_8h.html" title=" " alt="" coords="746,189,931,214"/>
 <area shape="rect" id="node49" href="$backends_2_error_tracking_2_backend_8cc.html" title=" " alt="" coords="257,181,452,221"/>
@@ -43,7 +43,7 @@
 <area shape="rect" id="node39" href="$_random_measure_action__test_8cc.html" title=" " alt="" coords="2549,937,2755,991"/>
 <area shape="rect" id="node40" href="$_swapping_action__test_8cc.html" title=" " alt="" coords="2779,937,2946,991"/>
 <area shape="rect" id="node41" href="$_routing_daemon__test_8cc.html" title=" " alt="" coords="3383,937,3598,991"/>
-<area shape="rect" id="node42" href="$modules_2_qubit_8h.html" title="QUBIT." alt="" coords="1871,739,2033,764"/>
+<area shape="rect" id="node42" href="$modules_2_q_u_b_i_t_8h.html" title="QUBIT." alt="" coords="1871,739,2033,764"/>
 <area shape="rect" id="node43" href="$_mock_hardware_monitor_8h.html" title=" " alt="" coords="2649,731,2871,771"/>
 <area shape="rect" id="node45" href="$_mock_q_nic_store_8h.html" title=" " alt="" coords="2439,731,2625,771"/>
 <area shape="rect" id="node46" href="$_mock_qubit_8h.html" title=" " alt="" coords="2260,731,2415,771"/>

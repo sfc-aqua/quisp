@@ -11,11 +11,14 @@ var searchData=
   ['measurementoperators_8',['MeasurementOperators',['../structquisp_1_1backends_1_1error__tracking_1_1_measurement_operators.html',1,'quisp::backends::error_tracking']]],
   ['memory_5ferror_5fmodel_9',['memory_error_model',['../structquisp_1_1modules_1_1memory__error__model.html',1,'quisp::modules']]],
   ['memoryerrormodel_10',['MemoryErrorModel',['../structquisp_1_1backends_1_1error__tracking_1_1_memory_error_model.html',1,'quisp::backends::error_tracking']]],
-  ['mockhardwaremonitor_11',['MockHardwareMonitor',['../classquisp__test_1_1mock__modules_1_1hardware__monitor_1_1_mock_hardware_monitor.html',1,'quisp_test::mock_modules::hardware_monitor']]],
-  ['mockqnicstore_12',['MockQNicStore',['../classquisp__test_1_1mock__modules_1_1qnic__store_1_1_mock_q_nic_store.html',1,'quisp_test::mock_modules::qnic_store']]],
-  ['mockquantumbackend_13',['MockQuantumBackend',['../classquisp__test_1_1mock__backends_1_1_mock_quantum_backend.html',1,'quisp_test::mock_backends']]],
-  ['mockqubit_14',['MockQubit',['../classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html',1,'quisp_test::mock_modules::stationary_qubit']]],
-  ['mockrealtimecontroller_15',['MockRealTimeController',['../classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html',1,'quisp_test::mock_modules::realtime_controller']]],
-  ['mockroutingdaemon_16',['MockRoutingDaemon',['../classquisp__test_1_1mock__modules_1_1routing__daemon_1_1_mock_routing_daemon.html',1,'quisp_test::mock_modules::routing_daemon']]],
-  ['mockruleengine_17',['MockRuleEngine',['../classquisp__test_1_1mock__modules_1_1rule__engine_1_1_mock_rule_engine.html',1,'quisp_test::mock_modules::rule_engine']]]
+  ['memorykey_11',['MemoryKey',['../structquisp_1_1runtime_1_1_memory_key.html',1,'quisp::runtime']]],
+  ['memoryvalue_12',['MemoryValue',['../classquisp_1_1runtime_1_1_memory_value.html',1,'quisp::runtime']]],
+  ['mockhardwaremonitor_13',['MockHardwareMonitor',['../classquisp__test_1_1mock__modules_1_1hardware__monitor_1_1_mock_hardware_monitor.html',1,'quisp_test::mock_modules::hardware_monitor']]],
+  ['mockqnicstore_14',['MockQNicStore',['../classquisp__test_1_1mock__modules_1_1qnic__store_1_1_mock_q_nic_store.html',1,'quisp_test::mock_modules::qnic_store']]],
+  ['mockquantumbackend_15',['MockQuantumBackend',['../classquisp__test_1_1mock__backends_1_1_mock_quantum_backend.html',1,'quisp_test::mock_backends']]],
+  ['mockqubit_16',['MockQubit',['../classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html',1,'quisp_test::mock_modules::stationary_qubit']]],
+  ['mockrealtimecontroller_17',['MockRealTimeController',['../classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html',1,'quisp_test::mock_modules::realtime_controller']]],
+  ['mockroutingdaemon_18',['MockRoutingDaemon',['../classquisp__test_1_1mock__modules_1_1routing__daemon_1_1_mock_routing_daemon.html',1,'quisp_test::mock_modules::routing_daemon']]],
+  ['mockruleengine_19',['MockRuleEngine',['../classquisp__test_1_1mock__modules_1_1rule__engine_1_1_mock_rule_engine.html',1,'quisp_test::mock_modules::rule_engine']]],
+  ['mockruntimecallback_20',['MockRuntimeCallback',['../classquisp__test_1_1_mock_runtime_callback.html',1,'quisp_test']]]
 ];

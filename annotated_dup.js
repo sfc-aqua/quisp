@@ -160,6 +160,22 @@ var annotated_dup =
         [ "Wait", "classquisp_1_1rules_1_1_wait.html", "classquisp_1_1rules_1_1_wait" ],
         [ "WaitConditionClause", "classquisp_1_1rules_1_1_wait_condition_clause.html", "classquisp_1_1rules_1_1_wait_condition_clause" ]
       ] ],
+      [ "runtime", "namespacequisp_1_1runtime.html", [
+        [ "Instruction", "structquisp_1_1runtime_1_1_instruction.html", "structquisp_1_1runtime_1_1_instruction" ],
+        [ "InstructionVisitor", "structquisp_1_1runtime_1_1_instruction_visitor.html", "structquisp_1_1runtime_1_1_instruction_visitor" ],
+        [ "Label", "structquisp_1_1runtime_1_1_label.html", "structquisp_1_1runtime_1_1_label" ],
+        [ "MemoryKey", "structquisp_1_1runtime_1_1_memory_key.html", "structquisp_1_1runtime_1_1_memory_key" ],
+        [ "MemoryValue", "classquisp_1_1runtime_1_1_memory_value.html", "classquisp_1_1runtime_1_1_memory_value" ],
+        [ "Op", "structquisp_1_1runtime_1_1_op.html", null ],
+        [ "Program", "classquisp_1_1runtime_1_1_program.html", "classquisp_1_1runtime_1_1_program" ],
+        [ "QNodeAddr", "structquisp_1_1runtime_1_1_q_node_addr.html", "structquisp_1_1runtime_1_1_q_node_addr" ],
+        [ "QubitId", "structquisp_1_1runtime_1_1_qubit_id.html", "structquisp_1_1runtime_1_1_qubit_id" ],
+        [ "Register", "structquisp_1_1runtime_1_1_register.html", "structquisp_1_1runtime_1_1_register" ],
+        [ "Rule", "classquisp_1_1runtime_1_1_rule.html", "classquisp_1_1runtime_1_1_rule" ],
+        [ "RuleSet", "classquisp_1_1runtime_1_1_rule_set.html", "classquisp_1_1runtime_1_1_rule_set" ],
+        [ "Runtime", "classquisp_1_1runtime_1_1_runtime.html", "classquisp_1_1runtime_1_1_runtime" ],
+        [ "ValueUnion", "unionquisp_1_1runtime_1_1_value_union.html", "unionquisp_1_1runtime_1_1_value_union" ]
+      ] ],
       [ "utils", "namespacequisp_1_1utils.html", [
         [ "ComponentProvider", "classquisp_1_1utils_1_1_component_provider.html", "classquisp_1_1utils_1_1_component_provider" ],
         [ "DefaultComponentProviderStrategy", "classquisp_1_1utils_1_1_default_component_provider_strategy.html", "classquisp_1_1utils_1_1_default_component_provider_strategy" ],
@@ -227,7 +243,8 @@ var annotated_dup =
       [ "strategy", "namespacequisp__test_1_1strategy.html", [
         [ "QNicSpec", "structquisp__test_1_1strategy_1_1_q_nic_spec.html", "structquisp__test_1_1strategy_1_1_q_nic_spec" ],
         [ "TestComponentProviderStrategy", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy" ]
-      ] ]
+      ] ],
+      [ "MockRuntimeCallback", "classquisp__test_1_1_mock_runtime_callback.html", "classquisp__test_1_1_mock_runtime_callback" ]
     ] ],
     [ "RoutingDaemon", "class_routing_daemon.html", null ]
 ];

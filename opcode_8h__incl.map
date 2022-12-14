@@ -1,0 +1,23 @@
+<map id="quisp/runtime/opcode.h" name="quisp/runtime/opcode.h">
+<area shape="rect" id="node1" title=" " alt="" coords="353,5,509,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="133,79,203,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="63,152,118,177"/>
+<area shape="rect" id="node4" title=" " alt="" coords="365,79,416,104"/>
+<area shape="rect" id="node5" title=" " alt="" coords="440,79,501,104"/>
+<area shape="rect" id="node6" href="$macro__utils_8h.html" title=" " alt="" coords="525,79,624,104"/>
+<area shape="rect" id="node7" href="$runtime_2types_8h.html" title="this file contains the definitions of all the user&#45;defined types widely used alongside the runtime::R..." alt="" coords="278,79,341,104"/>
+<area shape="rect" id="node20" href="$def__opcodes_8h.html" title="this file contains a list of macros defining the opcodes used in the IR. These opcodes are used in de..." alt="" coords="648,79,755,104"/>
+<area shape="rect" id="node21" href="$def__instructions_8h.html" title=" " alt="" coords="779,79,903,104"/>
+<area shape="rect" id="node8" title=" " alt="" coords="330,152,462,177"/>
+<area shape="rect" id="node9" title=" " alt="" coords="486,152,551,177"/>
+<area shape="rect" id="node10" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="465,313,666,353"/>
+<area shape="rect" id="node14" href="$_q_r_s_a_8h.html" title=" " alt="" coords="143,152,305,177"/>
+<area shape="rect" id="node11" title=" " alt="" coords="363,401,495,427"/>
+<area shape="rect" id="node12" title=" " alt="" coords="520,401,611,427"/>
+<area shape="rect" id="node13" title=" " alt="" coords="635,401,739,427"/>
+<area shape="rect" id="node15" title=" " alt="" coords="269,321,337,346"/>
+<area shape="rect" id="node16" href="$_i_qubit_record_8h.html" title=" " alt="" coords="167,225,329,265"/>
+<area shape="rect" id="node17" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="70,321,189,346"/>
+<area shape="rect" id="node18" title=" " alt="" coords="5,401,88,427"/>
+<area shape="rect" id="node19" title=" " alt="" coords="112,401,243,427"/>
+</map>

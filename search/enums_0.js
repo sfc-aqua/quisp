@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['cliffordoperator_0',['CliffordOperator',['../namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43',1,'quisp::types']]]
+  ['basis_0',['Basis',['../namespacequisp_1_1runtime.html#a27006afddc56aedab6041bcb072ef2c5',1,'quisp::runtime']]]
 ];

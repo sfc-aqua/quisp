@@ -1,0 +1,8 @@
+<map id="quisp::runtime::Runtime" name="quisp::runtime::Runtime">
+<area shape="rect" id="node1" title="Runtime class is responsible for executing the given RuleSet and the states&#39; management." alt="" coords="595,70,751,95"/>
+<area shape="rect" id="node2" href="$structquisp_1_1runtime_1_1_instruction_visitor.html" title="Visitor class for instructions in a Program." alt="" coords="845,63,1015,103"/>
+<area shape="rect" id="node3" href="$structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html" title="ICallBack is an interface for the callback of the Runtime." alt="" coords="337,5,493,45"/>
+<area shape="rect" id="node4" href="$structquisp_1_1runtime_1_1_register.html" title=" " alt="" coords="337,70,493,95"/>
+<area shape="rect" id="node5" href="$classquisp_1_1runtime_1_1_rule_set.html" title="The RuleSet." alt="" coords="338,119,493,145"/>
+<area shape="rect" id="node6" href="$classquisp_1_1runtime_1_1_program.html" title="The Program is a list of Instructions with metadata. The Runtime can execute the Program." alt="" coords="5,119,163,145"/>
+</map>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['qnic_5ftype_0',['QNIC_type',['../namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d',1,'quisp::modules']]]
+  ['optype_0',['OpType',['../namespacequisp_1_1runtime.html#a12fff06daf959f6628aae98a7f5be29d',1,'quisp::runtime']]]
 ];
