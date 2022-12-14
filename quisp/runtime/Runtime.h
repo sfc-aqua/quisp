@@ -21,7 +21,7 @@ struct Register {
   int32_t value = 0;
 };
 
-// (partner's qnode addr, assigned RuleId) => [half bell pair qubit record]
+// (partner's qnode addr, assigned RuleId) => [local half of the bell pair qubit record]
 using QubitResources = std::multimap<std::pair<QNodeAddr, RuleId>, IQubitRecord*>;
 
 /// @brief QubitId and qubit record map. This is initialized in before each Program execution

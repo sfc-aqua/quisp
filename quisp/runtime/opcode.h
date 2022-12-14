@@ -68,6 +68,8 @@ struct Instruction {
     if constexpr (N < std::tuple_size<T>::value) {
       const auto& x = std::get<N>(t);
       s << x << ", ";
+      // this recursion will not cause the stack overflow because the number of
+      // arguments in T are fixed.
       toStringArgs<N + 1>(t, s);
     }
   }

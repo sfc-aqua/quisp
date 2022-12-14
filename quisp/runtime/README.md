@@ -26,7 +26,8 @@ measure action and its C++ representations.
   // load the "count" key from memory to the register
   LOAD count "count"
 
-  // find a n-th qubit entangled with partner_addr and set as q0.
+  // get the n-th resource qubit pointer that is entangled with partner_addr 
+  // into q0. the qubits are ordered by allocation to the current Rule.
   // if qubit is not found, set qubit_found flag false.
   GET_QUBIT q0 partner_addr qubit_resource_index
 

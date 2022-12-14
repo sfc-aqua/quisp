@@ -41,7 +41,7 @@ INSTR(LOAD_RIGHT_OP, RegId, MemoryKey)
 // qubit operations
 INSTR(GET_QUBIT, QubitId, QNodeAddr, int)  // may throw "no qubit error"
 INSTR(GET_QUBIT, QubitId, QNodeAddr, RegId)  // may throw "no qubit error"
-INSTR(GET_QUBIT, RegId /* qubit id */, QNodeAddr /* partner addr */, RegId /* given qubit index */)  // may throw "no qubit error"
+INSTR(GET_QUBIT, RegId /* qubit id */, QNodeAddr /* partner addr */, RegId /* given qubit index */)
 INSTR(MEASURE_RANDOM, MemoryKey, QubitId)
 INSTR(MEASURE, MemoryKey, QubitId, Basis)
 INSTR(FREE_QUBIT, QubitId)

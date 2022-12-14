@@ -269,7 +269,7 @@ void Runtime::debugRuntimeState() {
   }
   std::cout << "\n----------qubits---------\n";
   for (auto& [key, qubit] : qubits) {
-    //// (partner's qnode addr, assigned RuleId) => [half bell pair qubit record]
+    //// (partner's qnode addr, assigned RuleId) => [local half of the bell pair qubit record]
     auto& [partner_addr, rule_id] = key;
     auto locked = callback->isQubitLocked(qubit);
     std::cout << "  Qubit(qnic:" << qubit->getQNicIndex() << ", qubit_index:" << qubit->getQubitIndex() << "):" << partner_addr << " rule_id:" << rule_id << ", locked:" << locked
