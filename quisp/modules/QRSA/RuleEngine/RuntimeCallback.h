@@ -243,8 +243,8 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     // so here these qubit indices are stored and later sendSwappingResults method uses it
     // this must be tracked in another way because we can't know these information
     // from the actual qubits in real world
-    right_qubit_index = right_partner_qubit->stationaryQubit_address;
-    left_qubit_index = left_partner_qubit->stationaryQubit_address;
+    right_qubit_index = right_partner_qubit->stationary_qubit_address;
+    left_qubit_index = left_partner_qubit->stationary_qubit_address;
   }
 
   void hackBreakEntanglement(IQubitRecord *qubit) override {
