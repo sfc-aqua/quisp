@@ -1,6 +1,6 @@
 /**
  * @file def_opcodes.h
- * @brief this file contains a list of macros defining the opcodes used in 
+ * @brief this file contains a list of macros defining the opcodes used in
  * the IR. These opcodes are used in def_instructions.h and opcode.h.
  */
 

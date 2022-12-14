@@ -1,6 +1,6 @@
 /**
  * @brief def_instructions.h
- * @brief this file contains list of macros defining 
+ * @brief this file contains list of macros defining
  * the Intermediate Representations (IR) used in a runtime::Program.
  *
  * If you want to add new instruction, add new opcode in def_opcodes.h,

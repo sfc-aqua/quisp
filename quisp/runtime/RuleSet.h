@@ -84,7 +84,7 @@ class RuleSet {
   /// @brief analyzes its rules and instructions to collect informations for execution.
   void finalize();
 
-  /// @brief the partner QNodeAddrs used in this RuleSet.
+  /// @brief the partner(connection participating nodes) QNodeAddrs used in this RuleSet.
   std::set<QNodeAddr> partners;
 
   /**
