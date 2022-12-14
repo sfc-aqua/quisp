@@ -106,24 +106,42 @@ void Application::handleMessage(cMessage *msg) {
  */
 void Application::createEndNodeWeightMap() {
   cTopology *topo = new cTopology("topo");
+  std::unordered_map<int, int> temp_end_node_weight_map;
 
   topo->extractByParameter("node_type", provider.getQNode()->par("node_type").str().c_str());
 
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cModule *endnodeModule = topo->getNode(i)->getModule();
-
-    int addr = endnodeModule->par("address").intValue();
+    int address = endnodeModule->par("address").intValue();
     int weight = endnodeModule->par("mass").intValue();
 
-    if (addr == my_address) {
-      // set self weight to 0 to avoid creating connection request with self
-      end_node_weight_map[addr] = 0;
-    } else {
-      end_node_weight_map[addr] = weight;
-    }
+    temp_end_node_weight_map[address] = weight;
+  }
+  delete topo;
+
+  if (!par("has_specific_recipients").boolValue()) {
+    // set self weight to 0; so we don't create self traffic
+    temp_end_node_weight_map[my_address] = 0;
+    std::swap(end_node_weight_map, temp_end_node_weight_map);
+    return;
   }
 
-  delete topo;
+  auto recipient_addresses = ((cValueArray *)(par("possible_recipients").objectValue()))->asIntVector();
+
+  for (int address : recipient_addresses) {
+    if (temp_end_node_weight_map.find(address) == temp_end_node_weight_map.end()) {
+      error("possible recipints list contains non-existing address");
+    }
+    end_node_weight_map[address] = temp_end_node_weight_map[address];
+  }
+
+  // error checking
+  if (recipient_addresses.size() == 0) {
+    error("setting has_specific_recipients to true but given an empty array of recipients is not allowed");
+  }
+  if (end_node_weight_map[my_address] != 0) {
+    error("setting self as possible recipient is not allowed");
+  }
 }
 
 void Application::generateTraffic() {
