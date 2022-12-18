@@ -22,67 +22,67 @@ network aparicio_MM
         EndNodeA: QNode {
             address = 1;
             node_type = "EndNode";
-            @display("p=107,159");
+            @display("i=COMP;p=107,159");
         }
         EndNodeB: QNode {
             address = 2;
             node_type = "EndNode";
-            @display("p=107,234");
+            @display("i=COMP;p=107,234");
         }
         EndNodeC: QNode {
             address = 3;
             node_type = "EndNode";
-            @display("p=107,318");
+            @display("i=COMP;p=107,318");
         }
         EndNodeD: QNode {
             address = 4;
             node_type = "EndNode";
-            @display("p=107,400;is=l");
+            @display("i=COMP;p=107,400");
         }
         RouterE: QNode {
             address = 5;
             node_type = "Router";
-            @display("p=287,279");
+            @display("i=RTR;p=287,279");
         }
         RouterF: QNode {
             address = 6;
             node_type = "Router";
-            @display("p=496,279");
+            @display("i=RTR;p=496,279");
         }
         EndNodeG: QNode {
             address = 7;
             node_type = "EndNode";
-            @display("p=387,364");
+            @display("i=COMP;p=387,364");
         }
         EndNodeH: QNode {
             address = 8;
             node_type = "EndNode";
-            @display("p=558,377");
+            @display("i=COMP;p=558,377");
         }
         EndNodeI: QNode {
             address = 9;
             node_type = "EndNode";
-            @display("p=655,325");
+            @display("i=COMP;p=655,325");
         }
         RouterJ: QNode {
             address = 10;
             node_type = "Router";
-            @display("p=605,186");
+            @display("i=RTR;p=605,186");
         }
         EndNodeK: QNode {
             address = 11;
             node_type = "EndNode";
-            @display("p=686,61");
+            @display("i=COMP;p=686,61");
         }
         EndNodeL: QNode {
             address = 12;
             node_type = "EndNode";
-            @display("p=760,110");
+            @display("i=COMP;p=760,110");
         }
         EndNodeM: QNode {
             address = 13;
             node_type = "EndNode";
-            @display("p=760,186");
+            @display("i=COMP;p=760,186");
         }
 
     connections:
@@ -131,115 +131,127 @@ network aparicio_MIM
         EndNodeA: QNode {
             address = 1;
             node_type = "EndNode";
-            @display("p=107,159");
+            @display("i=COMP;p=107,159");
         }
         EndNodeB: QNode {
             address = 2;
             node_type = "EndNode";
-            @display("p=107,234");
+            @display("i=COMP;p=107,234");
         }
         EndNodeC: QNode {
             address = 3;
             node_type = "EndNode";
-            @display("p=107,318");
+            @display("i=COMP;p=107,318");
         }
         EndNodeD: QNode {
             address = 4;
             node_type = "EndNode";
-            @display("p=107,400;is=l");
+            @display("i=COMP;p=107,400");
         }
         RouterE: QNode {
             address = 5;
             node_type = "Router";
-            @display("p=287,279");
+            @display("i=RTR;p=287,279");
         }
         RouterF: QNode {
             address = 6;
             node_type = "Router";
-            @display("p=496,279");
+            @display("i=RTR;p=496,279");
         }
         EndNodeG: QNode {
             address = 7;
             node_type = "EndNode";
-            @display("p=387,364");
+            @display("i=COMP;p=387,364");
         }
         EndNodeH: QNode {
             address = 8;
             node_type = "EndNode";
-            @display("p=558,377");
+            @display("i=COMP;p=558,377");
         }
         EndNodeI: QNode {
             address = 9;
             node_type = "EndNode";
-            @display("p=655,325");
+            @display("i=COMP;p=655,325");
         }
         RouterJ: QNode {
             address = 10;
             node_type = "Router";
-            @display("p=605,186");
+            @display("i=RTR;p=605,186");
         }
         EndNodeK: QNode {
             address = 11;
             node_type = "EndNode";
-            @display("p=686,61");
+            @display("i=COMP;p=686,61");
         }
         EndNodeL: QNode {
             address = 12;
             node_type = "EndNode";
-            @display("p=760,110");
+            @display("i=COMP;p=760,110");
         }
         EndNodeM: QNode {
             address = 13;
             node_type = "EndNode";
-            @display("p=760,186");
+            @display("i=COMP;p=760,186");
         }
         BSANode0: HOM {
             address = 100;
             node_type = "BSA";
+            @display("i=BSA");
         }
         BSANode1: HOM {
             address = 101;
             node_type = "BSA";
+            @display("i=BSA");
         }
         BSANode2: HOM {
             address = 102;
             node_type = "BSA";
+            @display("i=BSA");
         }
         BSANode3: HOM {
             address = 103;
             node_type = "BSA";
+            @display("i=BSA");
         }
         BSANode4: HOM {
             address = 104;
             node_type = "BSA";
+            @display("i=BSA");
         }
         BSANode5: HOM {
             address = 105;
             node_type = "BSA";
+            @display("i=BSA");
         }
         BSANode6: HOM {
             address = 106;
             node_type = "BSA";
+            @display("i=BSA");
         }
         BSANode7: HOM {
             address = 107;
             node_type = "BSA";
+            @display("i=BSA");
         }
         BSANode8: HOM {
             address = 108;
             node_type = "BSA";
+            @display("i=BSA");
         }
         BSANode9: HOM {
             address = 109;
             node_type = "BSA";
+            @display("i=BSA");
         }
         BSANode10: HOM {
             address = 110;
             node_type = "BSA";
+            @display("i=BSA");
         }
         BSANode11: HOM {
             address = 111;
             node_type = "BSA";
+            @display("i=BSA");
         }
     connections:
         // classical channels
