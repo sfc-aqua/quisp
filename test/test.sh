@@ -24,7 +24,7 @@ NUM_TEST=35
 for((i=0; i<$NUM_TEST; i++)); do
 echo "start test $i"
 echo "init$i" >> $QUISP_ROOT/test/testresults.txt
-$QUISP_ROOT/quisp/out/clang-release/quisp -u Cmdenv --cmdenv-express-mode=true -c "Test$i" -f $QUISP_ROOT/quisp/networks/test.ini -n $NEDPATH >> $QUISP_ROOT/test/Test$i.log
+$QUISP_ROOT/quisp/out/clang-release/quisp -u Cmdenv --cmdenv-express-mode=true -c "Test$i" -f $QUISP_ROOT/quisp/simulations/test.ini -n $NEDPATH >> $QUISP_ROOT/test/Test$i.log
 cat $QUISP_ROOT/test/Test$i.log | grep "fidelity" | tr ";" "\n" | tr "{" "\n"| tr "}" "\n"|sed s/"<-->"/"\n"/g>> $QUISP_ROOT/test/testresults.txt
 echo "next">>$QUISP_ROOT/test/testresults.txt
 echo "finish test $i"
