@@ -89,7 +89,6 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       Label passed_label{std::string("PASSED_") + std::to_string(i)};
 
       /*
-        SET temp_qubit_id -1
         SET qubit_id -1
         SET counter 0
       LOOP:
@@ -122,7 +121,7 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       name += "EnoughResource ";
     } else if (auto *c = dynamic_cast<const FidelityConditionClause *>(clause_ptr)) {
       // XXX: no impl in the original
-      name += "FidelityCondition ";
+      throw std::runtime_error("FidelityCondition has not implemented yet");
     } else if (auto *c = dynamic_cast<const WaitConditionClause *>(clause_ptr)) {
       QubitId q0{0};
       Label found_qubit_label{std::string("FOUND_QUBIT_") + std::to_string(i)};
@@ -177,7 +176,7 @@ Program RuleSetConverter::constructAction(const ActionData *data) {
 Program RuleSetConverter::constructEntanglementSwappingAction(const EntanglementSwapping *act) {
   /*
   GET_QUBIT q0 left_partner 0
-  GET_QUBIT q1 right_partner 1
+  GET_QUBIT q1 right_partner 0
   GATE_CNOTE q0 q1
   MEASURE r0 q0
   MEASURE r1 q1
