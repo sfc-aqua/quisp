@@ -158,18 +158,6 @@ void RuleEngine::handleMessage(cMessage *msg) {
     bool from_self = pkt->getSrcAddr() == parentAddress;
     const PurificationResultKey key{*pkt};
     handlePurificationResult(key, PurificationResultData{*pkt}, from_self);
-  } else if (auto *pkt = dynamic_cast<DoublePurificationResult *>(msg)) {
-    bool from_self = pkt->getSrcAddr() == parentAddress;
-    const PurificationResultKey key{*pkt};
-    handlePurificationResult(key, PurificationResultData{*pkt}, from_self);
-  } else if (auto *pkt = dynamic_cast<DS_DoublePurificationResult *>(msg)) {
-    bool from_self = pkt->getSrcAddr() == parentAddress;
-    const PurificationResultKey key{*pkt};
-    handlePurificationResult(key, PurificationResultData{*pkt}, from_self);
-  } else if (auto *pkt = dynamic_cast<DS_DoublePurificationSecondResult *>(msg)) {
-    bool from_self = pkt->getSrcAddr() == parentAddress;
-    const PurificationResultKey key{*pkt};
-    handlePurificationResult(key, PurificationResultData{*pkt}, from_self);
   } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
     const SwappingResultData data{
         .ruleset_id = pkt->getRuleSet_id(),
