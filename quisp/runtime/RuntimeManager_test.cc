@@ -23,6 +23,18 @@ class RuntimeManagerTest : public testing::Test {
   MockRuntimeCallback* callback;
 };
 
+Program empty{"empty", {}};
+Program cond_passed_once{"passed_once",
+                         {
+                             INSTR_LOAD_RegId_MemoryKey_{{RegId::REG0, MemoryKey{"count"}}},
+                             INSTR_BEZ_Label_RegId_{{Label{"first_time"}, RegId::REG0}},
+                             INSTR_RET_ReturnCode_{{ReturnCode::COND_FAILED}},
+                             INSTR_INC_RegId_{{RegId::REG0}, "first_time"},
+                             INSTR_STORE_MemoryKey_RegId_{{MemoryKey{"count"}, RegId::REG0}},
+                             INSTR_RET_ReturnCode_{{ReturnCode::COND_PASSED}},
+                         }};
+Program checker{"cond", {INSTR_STORE_MemoryKey_int_{{MemoryKey{"test"}, 123}}}};
+
 TEST_F(RuntimeManagerTest, AcceptRuleSet) {
   RuleSet rs{"test ruleset"};
   EXPECT_EQ(runtimes->size(), 0);
@@ -74,28 +86,63 @@ TEST_F(RuntimeManagerTest, Iterate) {
 }
 
 TEST_F(RuntimeManagerTest, Exec) {
-  Program empty{"empty", {}};
-  Program terminater{"terminater", {INSTR_RET_ReturnCode_{{ReturnCode::RS_TERMINATED}}}};
-  Program checker{"cond", {INSTR_STORE_MemoryKey_int_{{MemoryKey{"test"}, 123}}}};
   Rule rule{
       "",
       0,
+      cond_passed_once,
       checker,
-      empty,
   };
-  RuleSet rs1{"", {rule}, terminater};
+  RuleSet rs1{"", {rule}, empty};
   rs1.id = 1;
-  RuleSet rs2{"", {rule}, terminater};
+  RuleSet rs2{"", {rule}, empty};
   rs2.id = 2;
-  RuleSet rs3{"", {rule}, terminater};
+  RuleSet rs3{"", {rule}, empty};
   rs3.id = 3;
   runtimes->acceptRuleSet(rs1);
   runtimes->acceptRuleSet(rs2);
   runtimes->acceptRuleSet(rs3);
   EXPECT_EQ(runtimes->size(), 3);
   runtimes->exec();
-  EXPECT_EQ(runtimes->at(0).loadVal(MemoryKey{"test"}).intValue(), 123);
-  EXPECT_EQ(runtimes->at(1).loadVal(MemoryKey{"test"}).intValue(), 123);
-  EXPECT_EQ(runtimes->at(2).loadVal(MemoryKey{"test"}).intValue(), 123);
+  {
+    auto& rs1 = runtimes->at(0);
+    auto& rs2 = runtimes->at(1);
+    auto& rs3 = runtimes->at(2);
+    EXPECT_EQ(rs1.loadVal(MemoryKey{"test"}).intValue(), 123);
+    EXPECT_EQ(rs2.loadVal(MemoryKey{"test"}).intValue(), 123);
+    EXPECT_EQ(rs3.loadVal(MemoryKey{"test"}).intValue(), 123);
+    EXPECT_FALSE(rs1.terminated);
+    EXPECT_FALSE(rs2.terminated);
+    EXPECT_FALSE(rs3.terminated);
+  }
+}
+
+TEST_F(RuntimeManagerTest, ExecAndTerminated) {
+  Program terminator{"terminator", {INSTR_RET_ReturnCode_{{ReturnCode::RS_TERMINATED}}}};
+  Rule rule{
+      "",
+      0,
+      cond_passed_once,
+      checker,
+  };
+  RuleSet rs1{"rs1", {rule}, empty};
+  rs1.id = 1;
+  RuleSet rs2{"rs2", {rule}, terminator};
+  rs2.id = 2;
+  RuleSet rs3{"rs3", {rule}, empty};
+  rs3.id = 3;
+  runtimes->acceptRuleSet(rs1);
+  runtimes->acceptRuleSet(rs2);
+  runtimes->acceptRuleSet(rs3);
+  EXPECT_EQ(runtimes->size(), 3);
+  runtimes->exec();
+  ASSERT_EQ(runtimes->size(), 2);
+  {
+    auto& rs1 = runtimes->at(0);
+    auto& rs3 = runtimes->at(1);
+    EXPECT_EQ(rs1.loadVal(MemoryKey{"test"}).intValue(), 123);
+    EXPECT_EQ(rs3.loadVal(MemoryKey{"test"}).intValue(), 123);
+    EXPECT_FALSE(rs1.terminated);
+    EXPECT_FALSE(rs3.terminated);
+  }
 }
 }  // namespace

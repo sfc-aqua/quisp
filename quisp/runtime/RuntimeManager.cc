@@ -17,9 +17,13 @@ Runtime &RuntimeManager::findById(unsigned long long ruleset_id) {
 }
 
 void RuntimeManager::exec() {
-  for (auto &runtime : runtimes) {
-    // how should we delete the runtime and its ruleset?
-    runtime.exec();
+  for (auto it = runtimes.begin(); it != runtimes.end();) {
+    it->exec();
+    if (it->terminated) {
+      it = runtimes.erase(it);
+    } else {
+      ++it;
+    }
   }
 }
 
