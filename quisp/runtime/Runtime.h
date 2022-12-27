@@ -88,6 +88,7 @@ class Runtime {
   Runtime();
   Runtime(const RuleSet& ruleset, ICallBack* callback);
   Runtime(const Runtime&);
+  Runtime& operator=(Runtime&& runtime);
   ~Runtime();
 
   void assignRuleSet(const RuleSet& ruleset);

@@ -10,15 +10,33 @@
 namespace quisp::runtime {
 
 Runtime::Runtime(const Runtime& rt) : Runtime() {
+  visitor = rt.visitor;
+  visitor.runtime = this;
+  callback = rt.callback;
   rule_id = rt.rule_id;
-  debugging = rt.debugging;
+  qubits = rt.qubits;
+  memory = rt.memory;
   ruleset = rt.ruleset;
   partners = rt.partners;
-  callback = rt.callback;
+  terminated = rt.terminated;
+  debugging = rt.debugging;
 }
 
 Runtime::Runtime() : visitor(InstructionVisitor{this}) {}
 Runtime::Runtime(const RuleSet& ruleset, ICallBack* cb) : visitor(InstructionVisitor{this}), callback(cb) { assignRuleSet(ruleset); }
+Runtime& Runtime::operator=(Runtime&& rt) {
+  visitor = rt.visitor;
+  visitor.runtime = this;
+  callback = rt.callback;
+  rule_id = rt.rule_id;
+  qubits = std::move(rt.qubits);
+  memory = std::move(rt.memory);
+  ruleset = std::move(rt.ruleset);
+  partners = std::move(rt.partners);
+  terminated = rt.terminated;
+  debugging = rt.debugging;
+  return *this;
+}
 Runtime::~Runtime() {}
 
 void Runtime::exec() {
