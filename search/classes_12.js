@@ -11,6 +11,5 @@ var searchData=
   ['testsimulation_8',['TestSimulation',['../classquisp__test_1_1simulation_1_1_test_simulation.html',1,'quisp_test::simulation']]],
   ['tomography_9',['Tomography',['../classquisp_1_1rules_1_1_tomography.html',1,'quisp::rules']]],
   ['tomography_5foutcome_10',['tomography_outcome',['../structquisp_1_1modules_1_1tomography__outcome.html',1,'quisp::modules']]],
-  ['triplepurification_5fresult_11',['Triplepurification_result',['../structquisp_1_1modules_1_1_triplepurification__result.html',1,'quisp::modules']]],
-  ['twoqubitgateerrormodel_12',['TwoQubitGateErrorModel',['../structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model.html',1,'quisp::backends::error_tracking::TwoQubitGateErrorModel'],['../structquisp_1_1modules_1_1_two_qubit_gate_error_model.html',1,'quisp::modules::TwoQubitGateErrorModel']]]
+  ['twoqubitgateerrormodel_11',['TwoQubitGateErrorModel',['../structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model.html',1,'quisp::backends::error_tracking::TwoQubitGateErrorModel'],['../structquisp_1_1modules_1_1_two_qubit_gate_error_model.html',1,'quisp::modules::TwoQubitGateErrorModel']]]
 ];

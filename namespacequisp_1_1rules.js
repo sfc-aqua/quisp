@@ -1,6 +1,6 @@
 var namespacequisp_1_1rules =
 [
-    [ "active", "namespacequisp_1_1rules_1_1active.html", "namespacequisp_1_1rules_1_1active" ],
+    [ "rs_converter", "namespacequisp_1_1rules_1_1rs__converter.html", "namespacequisp_1_1rules_1_1rs__converter" ],
     [ "Action", "classquisp_1_1rules_1_1_action.html", "classquisp_1_1rules_1_1_action" ],
     [ "Clause", "classquisp_1_1rules_1_1_clause.html", "classquisp_1_1rules_1_1_clause" ],
     [ "Condition", "classquisp_1_1rules_1_1_condition.html", "classquisp_1_1rules_1_1_condition" ],

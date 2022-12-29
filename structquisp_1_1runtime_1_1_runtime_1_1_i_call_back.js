@@ -5,6 +5,7 @@ var structquisp_1_1runtime_1_1_runtime_1_1_i_call_back =
     [ "gateCNOT", "structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html#aea6cd72f7fab1deb510cac5371fc1a08", null ],
     [ "gateX", "structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html#a71336e92970842df1022029de1d90b8f", null ],
     [ "gateZ", "structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html#af6811be2b13121146173d86e3df2d745", null ],
+    [ "getActionIndex", "structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html#ac211a229b117a70eb4a62b3143212542", null ],
     [ "getNodeInfo", "structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html#ad0ad2c1164c9c7fecc9f47c7257c0c26", null ],
     [ "hackBreakEntanglement", "structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html#aa6e0bea7ea775f01e4f981a54ceb56b6", null ],
     [ "hackSwappingPartners", "structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html#ad4feb795b8da8ae6768d615aaa03c409", null ],

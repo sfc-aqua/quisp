@@ -25,5 +25,6 @@ var namespacequisp__test =
       [ "setParStr", "namespacequisp__test_1_1utils.html#a2a16f066980624adbfef202f0d20b77f", null ],
       [ "useTestRNG", "namespacequisp__test_1_1utils.html#ac9608fdc54533daf8f1d6f999bce6e56", null ]
     ] ],
-    [ "MockRuntimeCallback", "classquisp__test_1_1_mock_runtime_callback.html", "classquisp__test_1_1_mock_runtime_callback" ]
+    [ "MockRuntimeCallback", "classquisp__test_1_1_mock_runtime_callback.html", "classquisp__test_1_1_mock_runtime_callback" ],
+    [ "getResourceSizeByRuleId", "namespacequisp__test.html#a1c8ef9eb53591f00038683d509bc95c9", null ]
 ];

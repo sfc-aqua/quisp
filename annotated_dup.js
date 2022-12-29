@@ -40,6 +40,10 @@ var annotated_dup =
           [ "LoggerBase", "classquisp_1_1modules_1_1_logger_1_1_logger_base.html", "classquisp_1_1modules_1_1_logger_1_1_logger_base" ],
           [ "LoggerModule", "classquisp_1_1modules_1_1_logger_1_1_logger_module.html", "classquisp_1_1modules_1_1_logger_1_1_logger_module" ]
         ] ],
+        [ "pur_result_table", "namespacequisp_1_1modules_1_1pur__result__table.html", [
+          [ "PurificationResultData", "structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html", "structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data" ],
+          [ "PurificationResultKey", "structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_key.html", "structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_key" ]
+        ] ],
         [ "qnic_record", "namespacequisp_1_1modules_1_1qnic__record.html", [
           [ "IQNicRecord", "classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record.html", "classquisp_1_1modules_1_1qnic__record_1_1_i_q_nic_record" ],
           [ "QNicRecord", "classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record.html", "classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record" ]
@@ -55,15 +59,14 @@ var annotated_dup =
           [ "IQubitRecord", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record" ],
           [ "QubitRecord", "classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html", "classquisp_1_1modules_1_1qubit__record_1_1_qubit_record" ]
         ] ],
-        [ "ruleset_store", "namespacequisp_1_1modules_1_1ruleset__store.html", [
-          [ "RuleSetStore", "classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store.html", "classquisp_1_1modules_1_1ruleset__store_1_1_rule_set_store" ]
+        [ "runtime_callback", "namespacequisp_1_1modules_1_1runtime__callback.html", [
+          [ "RuntimeCallback", "structquisp_1_1modules_1_1runtime__callback_1_1_runtime_callback.html", "structquisp_1_1modules_1_1runtime__callback_1_1_runtime_callback" ]
         ] ],
         [ "Application", "classquisp_1_1modules_1_1_application.html", "classquisp_1_1modules_1_1_application" ],
         [ "BellPairStore", "classquisp_1_1modules_1_1_bell_pair_store.html", "classquisp_1_1modules_1_1_bell_pair_store" ],
         [ "BellStateAnalyzer", "classquisp_1_1modules_1_1_bell_state_analyzer.html", "classquisp_1_1modules_1_1_bell_state_analyzer" ],
         [ "ConnectionManager", "classquisp_1_1modules_1_1_connection_manager.html", "classquisp_1_1modules_1_1_connection_manager" ],
         [ "ConnectionSetupInfo", "structquisp_1_1modules_1_1_connection_setup_info.html", "structquisp_1_1modules_1_1_connection_setup_info" ],
-        [ "Doublepurification_result", "structquisp_1_1modules_1_1_doublepurification__result.html", "structquisp_1_1modules_1_1_doublepurification__result" ],
         [ "dummyModule", "classquisp_1_1modules_1_1dummy_module.html", "classquisp_1_1modules_1_1dummy_module" ],
         [ "emission_error_model", "structquisp_1_1modules_1_1emission__error__model.html", "structquisp_1_1modules_1_1emission__error__model" ],
         [ "EntangledPhotonPairSource", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html", "classquisp_1_1modules_1_1_entangled_photon_pair_source" ],
@@ -90,13 +93,10 @@ var annotated_dup =
         [ "output_count", "structquisp_1_1modules_1_1output__count.html", "structquisp_1_1modules_1_1output__count" ],
         [ "PhotonicSwitch", "classquisp_1_1modules_1_1_photonic_switch.html", "classquisp_1_1modules_1_1_photonic_switch" ],
         [ "PhotonTransmissionConfig", "structquisp_1_1modules_1_1_photon_transmission_config.html", "structquisp_1_1modules_1_1_photon_transmission_config" ],
-        [ "process_id", "structquisp_1_1modules_1_1process__id.html", "structquisp_1_1modules_1_1process__id" ],
-        [ "purification_result", "structquisp_1_1modules_1_1purification__result.html", "structquisp_1_1modules_1_1purification__result" ],
         [ "QNIC", "structquisp_1_1modules_1_1_q_n_i_c.html", "structquisp_1_1modules_1_1_q_n_i_c" ],
         [ "QNIC_id", "structquisp_1_1modules_1_1_q_n_i_c__id.html", "structquisp_1_1modules_1_1_q_n_i_c__id" ],
         [ "QNIC_pair_info", "structquisp_1_1modules_1_1_q_n_i_c__pair__info.html", "structquisp_1_1modules_1_1_q_n_i_c__pair__info" ],
         [ "quantum_state", "structquisp_1_1modules_1_1quantum__state.html", "structquisp_1_1modules_1_1quantum__state" ],
-        [ "Quatropurification_result", "structquisp_1_1modules_1_1_quatropurification__result.html", "structquisp_1_1modules_1_1_quatropurification__result" ],
         [ "QubitAddr", "structquisp_1_1modules_1_1_qubit_addr.html", "structquisp_1_1modules_1_1_qubit_addr" ],
         [ "QubitAddr_cons", "structquisp_1_1modules_1_1_qubit_addr__cons.html", "structquisp_1_1modules_1_1_qubit_addr__cons" ],
         [ "QubitState", "structquisp_1_1modules_1_1_qubit_state.html", "structquisp_1_1modules_1_1_qubit_state" ],
@@ -109,41 +109,14 @@ var annotated_dup =
         [ "SingleGateErrorModel", "structquisp_1_1modules_1_1_single_gate_error_model.html", "structquisp_1_1modules_1_1_single_gate_error_model" ],
         [ "SPDC_Controller", "classquisp_1_1modules_1_1_s_p_d_c___controller.html", "classquisp_1_1modules_1_1_s_p_d_c___controller" ],
         [ "StationaryQubit", "classquisp_1_1modules_1_1_stationary_qubit.html", "classquisp_1_1modules_1_1_stationary_qubit" ],
-        [ "swapping_result", "structquisp_1_1modules_1_1swapping__result.html", "structquisp_1_1modules_1_1swapping__result" ],
         [ "SwappingConfig", "structquisp_1_1modules_1_1_swapping_config.html", "structquisp_1_1modules_1_1_swapping_config" ],
+        [ "SwappingResultData", "structquisp_1_1modules_1_1_swapping_result_data.html", "structquisp_1_1modules_1_1_swapping_result_data" ],
         [ "tomography_outcome", "structquisp_1_1modules_1_1tomography__outcome.html", "structquisp_1_1modules_1_1tomography__outcome" ],
-        [ "Triplepurification_result", "structquisp_1_1modules_1_1_triplepurification__result.html", "structquisp_1_1modules_1_1_triplepurification__result" ],
         [ "TwoQubitGateErrorModel", "structquisp_1_1modules_1_1_two_qubit_gate_error_model.html", "structquisp_1_1modules_1_1_two_qubit_gate_error_model" ]
       ] ],
       [ "rules", "namespacequisp_1_1rules.html", [
-        [ "active", "namespacequisp_1_1rules_1_1active.html", [
-          [ "actions", "namespacequisp_1_1rules_1_1active_1_1actions.html", [
-            [ "ActiveAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_active_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_active_action" ],
-            [ "DoublePurifyAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_purify_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_purify_action" ],
-            [ "DoublePurifyActionInv", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_purify_action_inv.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_purify_action_inv" ],
-            [ "DoubleSelectionAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_action" ],
-            [ "DoubleSelectionActionInv", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_action_inv.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_action_inv" ],
-            [ "DoubleSelectionDualAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action" ],
-            [ "DoubleSelectionDualActionInv", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_inv.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_inv" ],
-            [ "DoubleSelectionDualActionSecond", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_second.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_second" ],
-            [ "DoubleSelectionDualActionSecondInv", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_second_inv.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_double_selection_dual_action_second_inv" ],
-            [ "PurifyAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_purify_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_purify_action" ],
-            [ "RandomMeasureAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_random_measure_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_random_measure_action" ],
-            [ "SimultaneousSwappingAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_simultaneous_swapping_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_simultaneous_swapping_action" ],
-            [ "SwappingAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_swapping_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_swapping_action" ],
-            [ "WaitAction", "classquisp_1_1rules_1_1active_1_1actions_1_1_wait_action.html", "classquisp_1_1rules_1_1active_1_1actions_1_1_wait_action" ]
-          ] ],
-          [ "clauses", "namespacequisp_1_1rules_1_1active_1_1clauses.html", [
-            [ "ActiveClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_active_clause.html", "classquisp_1_1rules_1_1active_1_1clauses_1_1_active_clause" ],
-            [ "EnoughResourceClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_enough_resource_clause.html", "classquisp_1_1rules_1_1active_1_1clauses_1_1_enough_resource_clause" ],
-            [ "FidelityClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_fidelity_clause.html", "classquisp_1_1rules_1_1active_1_1clauses_1_1_fidelity_clause" ],
-            [ "MeasureCountClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_measure_count_clause.html", "classquisp_1_1rules_1_1active_1_1clauses_1_1_measure_count_clause" ],
-            [ "PurificationCountClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_purification_count_clause.html", "classquisp_1_1rules_1_1active_1_1clauses_1_1_purification_count_clause" ],
-            [ "WaitClause", "classquisp_1_1rules_1_1active_1_1clauses_1_1_wait_clause.html", "classquisp_1_1rules_1_1active_1_1clauses_1_1_wait_clause" ]
-          ] ],
-          [ "ActiveCondition", "classquisp_1_1rules_1_1active_1_1_active_condition.html", "classquisp_1_1rules_1_1active_1_1_active_condition" ],
-          [ "ActiveRule", "classquisp_1_1rules_1_1active_1_1_active_rule.html", "classquisp_1_1rules_1_1active_1_1_active_rule" ],
-          [ "ActiveRuleSet", "classquisp_1_1rules_1_1active_1_1_active_rule_set.html", "classquisp_1_1rules_1_1active_1_1_active_rule_set" ]
+        [ "rs_converter", "namespacequisp_1_1rules_1_1rs__converter.html", [
+          [ "RuleSetConverter", "classquisp_1_1rules_1_1rs__converter_1_1_rule_set_converter.html", "classquisp_1_1rules_1_1rs__converter_1_1_rule_set_converter" ]
         ] ],
         [ "Action", "classquisp_1_1rules_1_1_action.html", "classquisp_1_1rules_1_1_action" ],
         [ "Clause", "classquisp_1_1rules_1_1_clause.html", "classquisp_1_1rules_1_1_clause" ],
@@ -174,6 +147,7 @@ var annotated_dup =
         [ "Rule", "classquisp_1_1runtime_1_1_rule.html", "classquisp_1_1runtime_1_1_rule" ],
         [ "RuleSet", "classquisp_1_1runtime_1_1_rule_set.html", "classquisp_1_1runtime_1_1_rule_set" ],
         [ "Runtime", "classquisp_1_1runtime_1_1_runtime.html", "classquisp_1_1runtime_1_1_runtime" ],
+        [ "RuntimeManager", "classquisp_1_1runtime_1_1_runtime_manager.html", "classquisp_1_1runtime_1_1_runtime_manager" ],
         [ "ValueUnion", "unionquisp_1_1runtime_1_1_value_union.html", "unionquisp_1_1runtime_1_1_value_union" ]
       ] ],
       [ "utils", "namespacequisp_1_1utils.html", [

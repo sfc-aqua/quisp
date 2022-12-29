@@ -3,6 +3,7 @@ var classquisp__test_1_1_mock_runtime_callback =
     [ "MOCK_METHOD", "classquisp__test_1_1_mock_runtime_callback.html#a0c1677e6dded1add9867f1c5a87ecca4", null ],
     [ "MOCK_METHOD", "classquisp__test_1_1_mock_runtime_callback.html#a52437aa7f49d29146b0d54c82d509ce1", null ],
     [ "MOCK_METHOD", "classquisp__test_1_1_mock_runtime_callback.html#a285bd4a3631d38641f03d6927fa7361b", null ],
+    [ "MOCK_METHOD", "classquisp__test_1_1_mock_runtime_callback.html#a4625368d7715441acc549c998c46ce9b", null ],
     [ "MOCK_METHOD", "classquisp__test_1_1_mock_runtime_callback.html#a0507da32e75eafe96a7c6e87510618ea", null ],
     [ "MOCK_METHOD", "classquisp__test_1_1_mock_runtime_callback.html#a140328cf52bed5ba6735b4a04b097e70", null ],
     [ "MOCK_METHOD", "classquisp__test_1_1_mock_runtime_callback.html#a5b9682e281f30515aec30deacd7bffd3", null ],

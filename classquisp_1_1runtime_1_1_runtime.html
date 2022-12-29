@@ -129,6 +129,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8104bea6bc5dac2afb57284bb8a55f34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1203145ecb4f871bf546c872f4ff110f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a1203145ecb4f871bf546c872f4ff110f">Runtime</a> (const <a class="el" href="classquisp_1_1runtime_1_1_runtime.html">Runtime</a> &amp;)</td></tr>
 <tr class="separator:a1203145ecb4f871bf546c872f4ff110f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8a179ae2ee0214938a1d95bef87fed6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html">Runtime</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ad8a179ae2ee0214938a1d95bef87fed6">operator=</a> (<a class="el" href="classquisp_1_1runtime_1_1_runtime.html">Runtime</a> &amp;&amp;runtime)</td></tr>
+<tr class="separator:ad8a179ae2ee0214938a1d95bef87fed6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7059fd9b7f0f5dfbb359bb51023b4bde"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a7059fd9b7f0f5dfbb359bb51023b4bde">~Runtime</a> ()</td></tr>
 <tr class="separator:a7059fd9b7f0f5dfbb359bb51023b4bde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78f206d92cdf9aec9287aff6bbd00c47"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a78f206d92cdf9aec9287aff6bbd00c47">assignRuleSet</a> (const <a class="el" href="classquisp_1_1runtime_1_1_rule_set.html">RuleSet</a> &amp;<a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a0a378b64149557491f98b898d7a030e0">ruleset</a>)</td></tr>
@@ -151,6 +153,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a498b5dad108ac5d80c6b69a7ce907642"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#a498b5dad108ac5d80c6b69a7ce907642">assignQubitToRule</a> (<a class="el" href="structquisp_1_1runtime_1_1_q_node_addr.html">QNodeAddr</a> partner_addr, <a class="el" href="namespacequisp_1_1runtime.html#a07053e5e0fc67af04aa6620794d4fe5a">RuleId</a> <a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ab399412a280837d814ec626e501e685f">rule_id</a>, <a class="el" href="namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a">IQubitRecord</a> *qubit_record)</td></tr>
 <tr class="memdesc:a498b5dad108ac5d80c6b69a7ce907642"><td class="mdescLeft">&#160;</td><td class="mdescRight">assign the entangled qubit to the rule  <a href="classquisp_1_1runtime_1_1_runtime.html#a498b5dad108ac5d80c6b69a7ce907642">More...</a><br /></td></tr>
 <tr class="separator:a498b5dad108ac5d80c6b69a7ce907642"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae527b19e714ed2b4b26e995550dcf1df"><td class="memItemLeft" align="right" valign="top">QubitResources::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ae527b19e714ed2b4b26e995550dcf1df">findQubit</a> (int <a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ab399412a280837d814ec626e501e685f">rule_id</a>, int shared_tag, int action_index)</td></tr>
+<tr class="memdesc:ae527b19e714ed2b4b26e995550dcf1df"><td class="mdescLeft">&#160;</td><td class="mdescRight">find the qubit that has the action_index and allocated in the rule_id, shared_tag;  <a href="classquisp_1_1runtime_1_1_runtime.html#ae527b19e714ed2b4b26e995550dcf1df">More...</a><br /></td></tr>
+<tr class="separator:ae527b19e714ed2b4b26e995550dcf1df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">register operations</div></td></tr>
 <tr class="memitem:ad7e03df20a87b22d83863bdca866314c"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structquisp_1_1runtime_1_1_register.html">Register</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html#ad7e03df20a87b22d83863bdca866314c">getReg</a> (<a class="el" href="namespacequisp_1_1runtime.html#a4af986369354532b95ee1afe7aa78af9">RegId</a> reg_id) const</td></tr>
 <tr class="memdesc:ad7e03df20a87b22d83863bdca866314c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="structquisp_1_1runtime_1_1_register.html">Register</a> in <a class="el" href="classquisp_1_1runtime_1_1_runtime.html#aaad312edf64a272b92976d4b4a829e84">registers</a> by RegId.  <a href="classquisp_1_1runtime_1_1_runtime.html#ad7e03df20a87b22d83863bdca866314c">More...</a><br /></td></tr>
@@ -591,6 +596,42 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ae527b19e714ed2b4b26e995550dcf1df" name="ae527b19e714ed2b4b26e995550dcf1df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae527b19e714ed2b4b26e995550dcf1df">&#9670;&#160;</a></span>findQubit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QubitResources::iterator quisp::runtime::Runtime::findQubit </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>rule_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>shared_tag</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>action_index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>find the qubit that has the action_index and allocated in the rule_id, shared_tag; </p>
+
+</div>
+</div>
 <a id="af723224404234fc76cc0d85203a73590" name="af723224404234fc76cc0d85203a73590"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af723224404234fc76cc0d85203a73590">&#9670;&#160;</a></span>freeQubit()</h2>
 
@@ -954,6 +995,24 @@ false the qubit is not locked </dd></dl>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ad8a179ae2ee0214938a1d95bef87fed6" name="ad8a179ae2ee0214938a1d95bef87fed6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8a179ae2ee0214938a1d95bef87fed6">&#9670;&#160;</a></span>operator=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html">Runtime</a> &amp; quisp::runtime::Runtime::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classquisp_1_1runtime_1_1_runtime.html">Runtime</a> &amp;&amp;&#160;</td>
+          <td class="paramname"><em>runtime</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

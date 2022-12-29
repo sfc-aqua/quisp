@@ -1,52 +1,38 @@
 <map id="quisp/runtime/Runtime_instructions_test.cc" name="quisp/runtime/Runtime_instructions_test.cc">
-<area shape="rect" id="node1" title=" " alt="" coords="436,5,588,45"/>
-<area shape="rect" id="node2" title=" " alt="" coords="106,93,201,119"/>
-<area shape="rect" id="node3" href="$_qubit_record_8h.html" title=" " alt="" coords="159,460,343,500"/>
-<area shape="rect" id="node14" title=" " alt="" coords="789,467,854,493"/>
-<area shape="rect" id="node15" title=" " alt="" coords="517,387,587,412"/>
-<area shape="rect" id="node16" href="$_runtime_8h.html" title=" " alt="" coords="1024,167,1104,192"/>
-<area shape="rect" id="node28" href="$runtime_2types_8h.html" title="this file contains the definitions of all the user&#45;defined types widely used alongside the runtime::R..." alt="" coords="430,387,493,412"/>
-<area shape="rect" id="node30" href="$_q_r_s_a_8h.html" title=" " alt="" coords="367,467,529,493"/>
-<area shape="rect" id="node35" href="$_active_rule_set_8h.html" title=" " alt="" coords="2511,240,2699,265"/>
-<area shape="rect" id="node49" href="$runtime_2test_8h.html" title="test utilities for Runtime. You can include this file for unit testing." alt="" coords="565,93,619,119"/>
-<area shape="rect" id="node4" href="$_i_logger_8h.html" title=" " alt="" coords="209,548,383,573"/>
-<area shape="rect" id="node5" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="499,629,618,654"/>
-<area shape="rect" id="node8" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="71,621,273,661"/>
-<area shape="rect" id="node12" href="$_i_qubit_record_8h.html" title=" " alt="" coords="458,548,566,573"/>
-<area shape="rect" id="node6" title=" " alt="" coords="1513,709,1596,735"/>
-<area shape="rect" id="node7" title=" " alt="" coords="493,709,624,735"/>
-<area shape="rect" id="node9" title=" " alt="" coords="249,709,381,735"/>
-<area shape="rect" id="node10" title=" " alt="" coords="5,709,96,735"/>
-<area shape="rect" id="node11" title=" " alt="" coords="120,709,224,735"/>
-<area shape="rect" id="node13" title=" " alt="" coords="1429,629,1497,654"/>
-<area shape="rect" id="node17" title=" " alt="" coords="1191,240,1257,265"/>
-<area shape="rect" id="node18" title=" " alt="" coords="921,313,993,339"/>
-<area shape="rect" id="node19" title=" " alt="" coords="1333,240,1411,265"/>
-<area shape="rect" id="node20" title=" " alt="" coords="1064,387,1115,412"/>
-<area shape="rect" id="node21" title=" " alt="" coords="1151,313,1262,339"/>
-<area shape="rect" id="node22" title=" " alt="" coords="1221,387,1283,412"/>
-<area shape="rect" id="node23" title=" " alt="" coords="1068,313,1127,339"/>
-<area shape="rect" id="node24" href="$_instruction_visitor_8h.html" title=" " alt="" coords="780,240,911,265"/>
-<area shape="rect" id="node25" href="$macro__utils_8h.html" title=" " alt="" coords="941,387,1040,412"/>
-<area shape="rect" id="node26" href="$opcode_8h.html" title=" " alt="" coords="772,313,847,339"/>
-<area shape="rect" id="node33" href="$runtime_2_rule_set_8h.html" title=" " alt="" coords="986,240,1065,265"/>
-<area shape="rect" id="node34" href="$_value_8h.html" title=" " alt="" coords="429,313,494,339"/>
-<area shape="rect" id="node32" href="$def__instructions_8h.html" title=" " alt="" coords="611,387,735,412"/>
-<area shape="rect" id="node27" title=" " alt="" coords="710,467,765,493"/>
-<area shape="rect" id="node31" href="$def__opcodes_8h.html" title="this file contains a list of macros defining the opcodes used in the IR. These opcodes are used in de..." alt="" coords="811,387,917,412"/>
-<area shape="rect" id="node29" title=" " alt="" coords="554,467,686,493"/>
-<area shape="rect" id="node36" href="$_active_rule_8h.html" title=" " alt="" coords="2558,313,2653,339"/>
-<area shape="rect" id="node37" title=" " alt="" coords="2643,387,2703,412"/>
-<area shape="rect" id="node38" href="$_active_action_8h.html" title=" " alt="" coords="1744,387,1851,412"/>
-<area shape="rect" id="node48" href="$_active_condition_8h.html" title=" " alt="" coords="2445,387,2568,412"/>
-<area shape="rect" id="node39" href="$actions_2_active_action_8h.html" title="Action." alt="" coords="1479,548,1631,573"/>
-<area shape="rect" id="node40" href="$_double_purify_action_8h.html" title=" " alt="" coords="1593,467,1781,493"/>
-<area shape="rect" id="node41" href="$_double_selection_action_8h.html" title=" " alt="" coords="1805,467,2014,493"/>
-<area shape="rect" id="node42" href="$_double_selection_dual_action_8h.html" title=" " alt="" coords="2038,460,2226,500"/>
-<area shape="rect" id="node43" href="$_double_selection_dual_action_second_8h.html" title=" " alt="" coords="2250,460,2438,500"/>
-<area shape="rect" id="node44" href="$_purify_action_8h.html" title=" " alt="" coords="2462,467,2610,493"/>
-<area shape="rect" id="node45" href="$_random_measure_action_8h.html" title=" " alt="" coords="879,467,1092,493"/>
-<area shape="rect" id="node46" href="$_simultaneous_swapping_action_8h.html" title=" " alt="" coords="1117,460,1321,500"/>
-<area shape="rect" id="node47" href="$_swapping_action_8h.html" title=" " alt="" coords="1345,467,1517,493"/>
-<area shape="rect" id="node50" title=" " alt="" coords="549,167,664,192"/>
+<area shape="rect" id="node1" title=" " alt="" coords="395,5,547,45"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,93,100,119"/>
+<area shape="rect" id="node3" href="$_qubit_record_8h.html" title=" " alt="" coords="293,460,477,500"/>
+<area shape="rect" id="node5" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="327,629,445,654"/>
+<area shape="rect" id="node14" title=" " alt="" coords="1551,467,1616,493"/>
+<area shape="rect" id="node15" title=" " alt="" coords="541,387,610,412"/>
+<area shape="rect" id="node16" href="$_runtime_8h.html" title=" " alt="" coords="1046,167,1126,192"/>
+<area shape="rect" id="node28" href="$runtime_2types_8h.html" title="this file contains the definitions of all the user&#45;defined types widely used alongside the runtime::R..." alt="" coords="757,387,820,412"/>
+<area shape="rect" id="node30" href="$_q_r_s_a_8h.html" title=" " alt="" coords="501,467,663,493"/>
+<area shape="rect" id="node35" href="$runtime_2test_8h.html" title="test utilities for Runtime. You can include this file for unit testing." alt="" coords="600,93,655,119"/>
+<area shape="rect" id="node4" href="$_i_logger_8h.html" title=" " alt="" coords="175,548,349,573"/>
+<area shape="rect" id="node8" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="473,621,675,661"/>
+<area shape="rect" id="node12" href="$_i_qubit_record_8h.html" title=" " alt="" coords="525,548,633,573"/>
+<area shape="rect" id="node6" title=" " alt="" coords="217,709,299,735"/>
+<area shape="rect" id="node7" title=" " alt="" coords="323,709,454,735"/>
+<area shape="rect" id="node9" title=" " alt="" coords="607,709,739,735"/>
+<area shape="rect" id="node10" title=" " alt="" coords="763,709,854,735"/>
+<area shape="rect" id="node11" title=" " alt="" coords="478,709,582,735"/>
+<area shape="rect" id="node13" title=" " alt="" coords="699,629,767,654"/>
+<area shape="rect" id="node17" title=" " alt="" coords="919,240,984,265"/>
+<area shape="rect" id="node18" title=" " alt="" coords="1373,313,1445,339"/>
+<area shape="rect" id="node19" title=" " alt="" coords="1008,240,1087,265"/>
+<area shape="rect" id="node20" title=" " alt="" coords="1137,387,1187,412"/>
+<area shape="rect" id="node21" title=" " alt="" coords="936,313,1047,339"/>
+<area shape="rect" id="node22" title=" " alt="" coords="1361,387,1422,412"/>
+<area shape="rect" id="node23" title=" " alt="" coords="751,313,810,339"/>
+<area shape="rect" id="node24" href="$_instruction_visitor_8h.html" title=" " alt="" coords="1263,240,1394,265"/>
+<area shape="rect" id="node25" href="$macro__utils_8h.html" title=" " alt="" coords="1446,387,1545,412"/>
+<area shape="rect" id="node26" href="$opcode_8h.html" title=" " alt="" coords="1122,313,1197,339"/>
+<area shape="rect" id="node33" href="$runtime_2_rule_set_8h.html" title=" " alt="" coords="816,240,895,265"/>
+<area shape="rect" id="node34" href="$_value_8h.html" title=" " alt="" coords="661,313,727,339"/>
+<area shape="rect" id="node32" href="$def__instructions_8h.html" title=" " alt="" coords="1212,387,1336,412"/>
+<area shape="rect" id="node27" title=" " alt="" coords="916,467,971,493"/>
+<area shape="rect" id="node31" href="$def__opcodes_8h.html" title="this file contains a list of macros defining the opcodes used in the IR. These opcodes are used in de..." alt="" coords="1006,387,1113,412"/>
+<area shape="rect" id="node29" title=" " alt="" coords="760,467,892,493"/>
+<area shape="rect" id="node36" title=" " alt="" coords="610,167,725,192"/>
 </map>

@@ -1,10 +1,25 @@
 var searchData=
 [
-  ['photonicswitch_2ecc_0',['PhotonicSwitch.cc',['../_photonic_switch_8cc.html',1,'']]],
-  ['photonicswitch_2eh_1',['PhotonicSwitch.h',['../_photonic_switch_8h.html',1,'']]],
-  ['purificationcountclause_2ecc_2',['PurificationCountClause.cc',['../_purification_count_clause_8cc.html',1,'']]],
-  ['purificationcountclause_2eh_3',['PurificationCountClause.h',['../_purification_count_clause_8h.html',1,'']]],
-  ['purifyaction_2ecc_4',['PurifyAction.cc',['../_purify_action_8cc.html',1,'']]],
-  ['purifyaction_2eh_5',['PurifyAction.h',['../_purify_action_8h.html',1,'']]],
-  ['purifyaction_5ftest_2ecc_6',['PurifyAction_test.cc',['../_purify_action__test_8cc.html',1,'']]]
+  ['qnic_2eh_0',['QNIC.h',['../_q_n_i_c_8h.html',1,'']]],
+  ['qnicrecord_2ecc_1',['QNicRecord.cc',['../_q_nic_record_8cc.html',1,'']]],
+  ['qnicrecord_2eh_2',['QNicRecord.h',['../_q_nic_record_8h.html',1,'']]],
+  ['qnicrecord_5ftest_2ecc_3',['QNicRecord_test.cc',['../_q_nic_record__test_8cc.html',1,'']]],
+  ['qnicstore_2ecc_4',['QNicStore.cc',['../_q_nic_store_8cc.html',1,'']]],
+  ['qnicstore_2eh_5',['QNicStore.h',['../_q_nic_store_8h.html',1,'']]],
+  ['qnicstore_5ftest_2ecc_6',['QNicStore_test.cc',['../_q_nic_store__test_8cc.html',1,'']]],
+  ['qnode_2ecc_7',['QNode.cc',['../_q_node_8cc.html',1,'']]],
+  ['qnode_2eh_8',['QNode.h',['../_q_node_8h.html',1,'']]],
+  ['qrsa_2eh_9',['QRSA.h',['../_q_r_s_a_8h.html',1,'']]],
+  ['quantumchannel_2ecc_10',['QuantumChannel.cc',['../_quantum_channel_8cc.html',1,'']]],
+  ['qubit_2ecc_11',['Qubit.cc',['../_qubit_8cc.html',1,'']]],
+  ['qubit_2eh_12',['Qubit.h',['../backends_2_error_tracking_2_q_u_b_i_t_8h.html',1,'']]],
+  ['qubit_2eh_13',['QUBIT.h',['../modules_2_q_u_b_i_t_8h.html',1,'']]],
+  ['qubit_5fgate_5ferror_5ftest_2ecc_14',['Qubit_gate_error_test.cc',['../_qubit__gate__error__test_8cc.html',1,'']]],
+  ['qubit_5fmeasurement_5ftest_2ecc_15',['Qubit_measurement_test.cc',['../_qubit__measurement__test_8cc.html',1,'']]],
+  ['qubit_5fmemory_5ferror_5ftest_2ecc_16',['Qubit_memory_error_test.cc',['../_qubit__memory__error__test_8cc.html',1,'']]],
+  ['qubitrecord_2ecc_17',['QubitRecord.cc',['../_qubit_record_8cc.html',1,'']]],
+  ['qubitrecord_2eh_18',['QubitRecord.h',['../_qubit_record_8h.html',1,'']]],
+  ['qubitrecord_5ftest_2ecc_19',['QubitRecord_test.cc',['../_qubit_record__test_8cc.html',1,'']]],
+  ['queue_2ecc_20',['Queue.cc',['../_queue_8cc.html',1,'']]],
+  ['queue_2eh_21',['Queue.h',['../_queue_8h.html',1,'']]]
 ];

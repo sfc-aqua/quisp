@@ -13,6 +13,7 @@ var namespacequisp_1_1runtime =
     [ "Rule", "classquisp_1_1runtime_1_1_rule.html", "classquisp_1_1runtime_1_1_rule" ],
     [ "RuleSet", "classquisp_1_1runtime_1_1_rule_set.html", "classquisp_1_1runtime_1_1_rule_set" ],
     [ "Runtime", "classquisp_1_1runtime_1_1_runtime.html", "classquisp_1_1runtime_1_1_runtime" ],
+    [ "RuntimeManager", "classquisp_1_1runtime_1_1_runtime_manager.html", "classquisp_1_1runtime_1_1_runtime_manager" ],
     [ "ValueUnion", "unionquisp_1_1runtime_1_1_value_union.html", "unionquisp_1_1runtime_1_1_value_union" ],
     [ "InstructionTypes", "namespacequisp_1_1runtime.html#a3ca0235adcdf503333f54cc7b2a98ef1", null ],
     [ "IQubitRecord", "namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a", null ],
