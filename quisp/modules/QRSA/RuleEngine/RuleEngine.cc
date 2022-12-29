@@ -208,16 +208,21 @@ void RuleEngine::handlePurificationResult(const PurificationResultKey &key, cons
   // rule_id might be different from other node's rule, so use rule id comes from our runtime
   auto rule_id = from_self ? key.rule_id : it->first.rule_id;
 
-  auto &runtime = runtimes.findById(key.rs_id);
-  auto qubit_key = runtime.findQubit(rule_id, key.shared_tag, key.action_index);
+  auto *runtime = runtimes.findById(key.rs_id);
+  if (runtime == nullptr) {
+    purification_result_table.erase(it);
+    return;
+  }
+
+  auto qubit_key = runtime->findQubit(rule_id, key.shared_tag, key.action_index);
 
   auto *qubit = provider.getStationaryQubit(qubit_key->second);
   qubit->Unlock();
 
   if (result.isResultMatched(it->second, key.type)) {
-    runtime.promoteQubit(qubit_key);
+    runtime->promoteQubit(qubit_key);
   } else {
-    runtime.qubits.erase(qubit_key);
+    runtime->qubits.erase(qubit_key);
     freeConsumedResource(qubit->qnic_index, qubit, (QNIC_type)qubit->qnic_type);
   }
   purification_result_table.erase(it);
@@ -448,10 +453,10 @@ void RuleEngine::handleSwappingResult(const SwappingResultData &data) {
       error("Something went wrong. This operation type: %d isn't recorded!", data.operation_type);
   }
 
-  auto &runtime = runtimes.findById(data.ruleset_id);
+  auto *runtime = runtimes.findById(data.ruleset_id);
   bell_pair_store.eraseQubit(qubit_record);
   bell_pair_store.insertEntangledQubit(data.new_partner_addr, qubit_record);
-  runtime.promoteQubitWithNewPartner(qubit_record, data.new_partner_addr);
+  runtime->promoteQubitWithNewPartner(qubit_record, data.new_partner_addr);
 }
 
 // Only for MIM and MM

@@ -55,9 +55,9 @@ TEST_F(RuntimeManagerTest, FindById) {
   runtimes->acceptRuleSet(rs2);
   runtimes->acceptRuleSet(rs3);
   EXPECT_EQ(runtimes->size(), 3);
-  EXPECT_EQ(runtimes->findById(rs2.id).ruleset.id, rs2.id);
-  EXPECT_EQ(runtimes->findById(rs1.id).ruleset.id, rs1.id);
-  EXPECT_EQ(runtimes->findById(rs3.id).ruleset.id, rs3.id);
+  EXPECT_EQ(runtimes->findById(rs2.id)->ruleset.id, rs2.id);
+  EXPECT_EQ(runtimes->findById(rs1.id)->ruleset.id, rs1.id);
+  EXPECT_EQ(runtimes->findById(rs3.id)->ruleset.id, rs3.id);
 }
 
 TEST_F(RuntimeManagerTest, Iterate) {

@@ -7,13 +7,13 @@ RuntimeManager::RuntimeManager(std::unique_ptr<Runtime::ICallBack> &&callback) :
 
 void RuntimeManager::acceptRuleSet(const RuleSet &ruleset) { runtimes.emplace_back(runtime::Runtime(ruleset, callback.get())); }
 
-Runtime &RuntimeManager::findById(unsigned long long ruleset_id) {
+Runtime *RuntimeManager::findById(unsigned long long ruleset_id) {
   for (auto &rt : runtimes) {
     if (rt.ruleset.id == ruleset_id) {
-      return rt;
+      return &rt;
     }
   }
-  throw cRuntimeError("Runtime for the ruleset: %llu not found", ruleset_id);
+  return nullptr;
 }
 
 void RuntimeManager::exec() {
