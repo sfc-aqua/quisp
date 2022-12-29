@@ -86,37 +86,35 @@ struct PurificationResultData {
 
   PurificationResultData(const messages::PurificationResult& result) {
     pur_type = (PurType)result.getPurType();
-    assert(pur_type == PurType::SINGLE_X || pur_type == PurType::SINGLE_Z);
     if (pur_type == PurType::SINGLE_X) {
       is_z_plus = result.getOutput_is_plus();
+      return;
     }
     if (pur_type == PurType::SINGLE_Z) {
       is_x_plus = result.getOutput_is_plus();
+      return;
     }
-  }
-
-  PurificationResultData(const messages::DoublePurificationResult& result) {
-    pur_type = (PurType)result.getPurType();
-    assert(pur_type == PurType::DOUBLE || pur_type == PurType::DOUBLE_INV || pur_type == PurType::DSSA || pur_type == PurType::DSSA_INV);
-    is_z_plus = result.getZOutput_is_plus();
-    is_x_plus = result.getXOutput_is_plus();
-  }
-
-  PurificationResultData(const messages::DS_DoublePurificationSecondResult& result) {
-    pur_type = (PurType)result.getPurType();
-    assert(pur_type == PurType::DSDA_SECOND || pur_type == PurType::DSDA_SECOND_INV);
-    is_z_plus = result.getZOutput_is_plus();
-    is_x_plus = result.getXOutput_is_plus();
-    is_ds_plus = result.getDS_Output_is_plus();
-  }
-
-  PurificationResultData(const messages::DS_DoublePurificationResult& result) {
-    pur_type = (PurType)result.getPurType();
-    assert(pur_type == PurType::DSDA || pur_type == PurType::DSDA_INV);
-    is_z_plus = result.getZOutput_is_plus();
-    is_x_plus = result.getXOutput_is_plus();
-    is_ds_x_plus = result.getDS_XOutput_is_plus();
-    is_ds_z_plus = result.getDS_ZOutput_is_plus();
+    if (pur_type == PurType::DOUBLE || pur_type == PurType::DOUBLE_INV || pur_type == PurType::DSSA || pur_type == PurType::DSSA_INV) {
+      const auto& r = dynamic_cast<const messages::DoublePurificationResult&>(result);
+      is_z_plus = r.getZOutput_is_plus();
+      is_x_plus = r.getXOutput_is_plus();
+      return;
+    }
+    if (pur_type == PurType::DSDA_SECOND || pur_type == PurType::DSDA_SECOND_INV) {
+      const auto& r = dynamic_cast<const messages::DS_DoublePurificationSecondResult&>(result);
+      is_z_plus = r.getZOutput_is_plus();
+      is_x_plus = r.getXOutput_is_plus();
+      is_ds_plus = r.getDS_Output_is_plus();
+      return;
+    }
+    if (pur_type == PurType::DSDA || pur_type == PurType::DSDA_INV) {
+      const auto& r = dynamic_cast<const messages::DS_DoublePurificationResult&>(result);
+      is_z_plus = r.getZOutput_is_plus();
+      is_x_plus = r.getXOutput_is_plus();
+      is_ds_x_plus = r.getDS_XOutput_is_plus();
+      is_ds_z_plus = r.getDS_ZOutput_is_plus();
+      return;
+    }
   }
 };
 
