@@ -9,6 +9,10 @@ using json = nlohmann::json;
 namespace {
 using namespace quisp::rules;
 using namespace quisp_test;
+using quisp::modules::QNIC_E;
+using quisp::modules::QNIC_N;
+using quisp::modules::QNIC_R;
+using quisp::modules::QNIC_RP;
 using quisp::rules::PurType;
 
 TEST(RuleSetTest, Init) {

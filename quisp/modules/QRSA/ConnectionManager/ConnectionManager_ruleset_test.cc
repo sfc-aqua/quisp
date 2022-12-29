@@ -15,6 +15,9 @@ using namespace omnetpp;
 using namespace quisp_test;
 using namespace quisp::rules;
 using PurType = quisp::rules::PurType;
+using quisp::modules::QNIC_E;
+using quisp::modules::QNIC_R;
+using quisp::modules::QNIC_type;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:

@@ -14,7 +14,8 @@
 #include "mock_modules/MockRealTimeController.h"
 #include "mock_modules/MockRoutingDaemon.h"
 #include "mock_modules/MockRuleEngine.h"
-#include "test_utils/mock_modules/MockQNicStore.h"
+
+#include "mock_modules/MockQNicStore.h"
 
 namespace quisp_test {
 

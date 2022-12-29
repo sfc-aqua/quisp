@@ -8,6 +8,10 @@
 namespace {
 using namespace quisp_test;
 using namespace quisp::rules;
+using quisp::modules::QNIC_E;
+using quisp::modules::QNIC_N;
+using quisp::modules::QNIC_R;
+using quisp::modules::QNIC_RP;
 
 TEST(ConditionTest, Init) {
   prepareSimulation();

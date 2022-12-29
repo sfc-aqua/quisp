@@ -1,15 +1,20 @@
+#include "QNicRecord.h"
+
 #include <gtest/gtest.h>
-#include <modules/Logger/DisabledLogger.h>
 #include <omnetpp/cmodule.h>
+
+#include <modules/Logger/DisabledLogger.h>
 #include <test_utils/TestUtils.h>
 #include <utils/ComponentProvider.h>
-#include "QNicRecord.h"
 
 namespace {
 using namespace quisp_test;
 using quisp::utils::ComponentProvider;
 using namespace quisp::modules::qnic_record;
 using namespace quisp::modules::Logger;
+using quisp::modules::QNIC_E;
+using quisp::modules::QNIC_R;
+using quisp::modules::QNIC_RP;
 
 TEST(QNicRecord, InitWithoutQubits) {
   ComponentProvider provider(new cModule());

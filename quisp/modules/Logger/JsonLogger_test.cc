@@ -15,6 +15,7 @@ namespace {
 
 using quisp::messages::ConnectionSetupRequest;
 using quisp::modules::Logger::JsonLogger;
+using namespace quisp::messages;
 using namespace quisp_test;
 
 class JsonLoggerTest : public testing::Test {

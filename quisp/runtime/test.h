@@ -46,7 +46,21 @@ class MockRuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   MOCK_METHOD(void, freeAndResetQubit, (IQubitRecord*), (override));
   MOCK_METHOD(bool, isQubitLocked, (IQubitRecord* const), (override));
   MOCK_METHOD(void, lockQubit, (IQubitRecord* const, unsigned long rs_id, int rule_id, int action_index), (override));
+  MOCK_METHOD(int, getActionIndex, (IQubitRecord* const), (override));
+
   MOCK_METHOD(void, hackSwappingPartners, (IQubitRecord* const, IQubitRecord* const), (override));
   MOCK_METHOD(void, hackBreakEntanglement, (IQubitRecord* const), (override));
 };
+
+/// @brief count the number of qubit resources assigned to the rule.
+static int getResourceSizeByRuleId(quisp::runtime::Runtime& rt, quisp::runtime::RuleId id) {
+  int count = 0;
+  for (auto& it : rt.qubits) {
+    auto& [_, rule_id] = it.first;
+    if (rule_id == id) {
+      count++;
+    }
+  }
+  return count;
+}
 }  // namespace quisp_test

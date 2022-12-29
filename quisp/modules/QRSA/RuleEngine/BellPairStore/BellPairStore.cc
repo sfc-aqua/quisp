@@ -1,10 +1,10 @@
 #include "BellPairStore.h"
+#include <sstream>
 #include <utility>
 #include "modules/QNIC.h"
 #include "modules/QRSA/QRSA.h"
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 BellPairStore::BellPairStore(Logger::ILogger *logger) : logger(logger) {}
 BellPairStore::~BellPairStore() {}
 
@@ -58,5 +58,18 @@ PartnerAddrQubitMapRange BellPairStore::getBellPairsRange(QNIC_type qnic_type, i
   return _resources[key].equal_range(partner_addr);
 }
 
-}  // namespace modules
-}  // namespace quisp
+std::string BellPairStore::toString() const {
+  std::stringstream ss;
+  for (auto &[key, partner_qubit_map] : _resources) {
+    for (auto &[partner, qubit] : partner_qubit_map) {
+      ss << "(type:" << key.first << ", qnic:" << key.second << ", qubit:" << qubit->getQubitIndex() << ")=>(partner:" << partner << "), ";
+    }
+  }
+  return ss.str();
+}
+
+std::ostream &operator<<(std::ostream &os, const quisp::modules::BellPairStore &store) {
+  os << store.toString();
+  return os;
+}
+}  // namespace quisp::modules
