@@ -1,9 +1,11 @@
+#include "QNicRecord.h"
+
 #include <gtest/gtest.h>
-#include <modules/Logger/DisabledLogger.h>
 #include <omnetpp/cmodule.h>
+
+#include <modules/Logger/DisabledLogger.h>
 #include <test_utils/TestUtils.h>
 #include <utils/ComponentProvider.h>
-#include "QNicRecord.h"
 
 namespace {
 using namespace quisp_test;
