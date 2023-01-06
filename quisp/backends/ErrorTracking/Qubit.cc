@@ -369,7 +369,7 @@ void ErrorTrackingQubit::gateH() {
   applySingleQubitGateError(gate_err_h);
   bool z = has_z_error;
   has_z_error = has_x_error;
-  has_z_error = z;
+  has_x_error = z;
 }
 void ErrorTrackingQubit::gateCNOT(IQubit* const control_qubit) {
   // Need to add noise here later
