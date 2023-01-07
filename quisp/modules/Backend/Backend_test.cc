@@ -65,20 +65,20 @@ class BackendContainerTest : public ::testing::Test {
 TEST_F(BackendContainerTest, constructor) { BackendContainer backend; }
 
 TEST_F(BackendContainerTest, callInitialize) {
-  setParStr(backend, "backendType", "ErrorTrackingBackend");
+  setParStr(backend, "backend_type", "ErrorTrackingBackend");
   EXPECT_EQ(backend->backend, nullptr);
   backend->callInitialize();
   EXPECT_NE(backend->backend, nullptr);
 }
 
 TEST_F(BackendContainerTest, callInitializeWithInvalidBackend) {
-  setParStr(backend, "backendType", "SomeInvalidBackend");
+  setParStr(backend, "backend_type", "SomeInvalidBackend");
   EXPECT_EQ(backend->backend, nullptr);
   EXPECT_THROW(backend->callInitialize(), omnetpp::cRuntimeError);
 }
 
 TEST_F(BackendContainerTest, getQuantumBackend) {
-  setParStr(backend, "backendType", "ErrorTrackingBackend");
+  setParStr(backend, "backend_type", "ErrorTrackingBackend");
   backend->callInitialize();
   ASSERT_NE(backend->backend, nullptr);
   auto *b = backend->getQuantumBackend();
@@ -88,13 +88,13 @@ TEST_F(BackendContainerTest, getQuantumBackend) {
 }
 
 TEST_F(BackendContainerTest, getQuantumBackendWithoutInit) {
-  setParStr(backend, "backendType", "ErrorTrackingBackend");
+  setParStr(backend, "backend_type", "ErrorTrackingBackend");
   ASSERT_EQ(backend->backend, nullptr);
   EXPECT_ANY_THROW({ backend->getQuantumBackend(); });
 }
 
 TEST_F(BackendContainerTest, getBackendConfiguration) {
-  setParStr(backend, "backendType", "ErrorTrackingBackend");
+  setParStr(backend, "backend_type", "ErrorTrackingBackend");
   backend->callInitialize();
   ASSERT_NE(backend->backend, nullptr);
   auto *b = backend->getQuantumBackend();
@@ -108,7 +108,7 @@ TEST_F(BackendContainerTest, getBackendConfiguration) {
 }
 
 TEST_F(BackendContainerTest, getCopyOfBackendConfiguration) {
-  setParStr(backend, "backendType", "ErrorTrackingBackend");
+  setParStr(backend, "backend_type", "ErrorTrackingBackend");
   backend->callInitialize();
   ASSERT_NE(backend->backend, nullptr);
   auto *b = backend->getQuantumBackend();

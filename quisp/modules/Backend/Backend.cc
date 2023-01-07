@@ -8,7 +8,7 @@ BackendContainer::BackendContainer() {}
 BackendContainer::~BackendContainer() {}
 
 void BackendContainer::initialize() {
-  auto backend_type = std::string(par("backendType").stringValue());
+  auto backend_type = std::string(par("backend_type").stringValue());
   if (backend_type == "ErrorTrackingBackend") {
     configureErrorTrackingBackend();
   } else {
@@ -23,9 +23,9 @@ void BackendContainer::configureErrorTrackingBackend() {
   conf->measurement_z_err_rate = par("z_measurement_error_rate").doubleValue();
 
   conf->h_gate_err_rate = par("h_gate_error_rate").doubleValue();
-  conf->h_gate_x_err_ratio = par("h_gate_X_error_ratio").doubleValue();
-  conf->h_gate_y_err_ratio = par("h_gate_Y_error_ratio").doubleValue();
-  conf->h_gate_z_err_ratio = par("h_gate_Z_error_ratio").doubleValue();
+  conf->h_gate_x_err_ratio = par("h_gate_x_error_ratio").doubleValue();
+  conf->h_gate_y_err_ratio = par("h_gate_y_error_ratio").doubleValue();
+  conf->h_gate_z_err_ratio = par("h_gate_z_error_ratio").doubleValue();
 
   conf->x_gate_err_rate = par("x_gate_error_rate").doubleValue();
   conf->x_gate_x_err_ratio = par("x_gate_x_error_ratio").doubleValue();
