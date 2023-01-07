@@ -177,7 +177,7 @@ class StationaryQubit : public IStationaryQubit {
   omnetpp::simtime_t emitted_time = -1;
   // Standard deviation
   double emission_jittering_standard_deviation;
-  int stationaryQubit_address;
+  int stationary_qubit_address;
   int node_address;
 
   utils::ComponentProvider provider;

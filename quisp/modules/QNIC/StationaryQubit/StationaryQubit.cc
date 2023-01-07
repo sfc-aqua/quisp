@@ -62,7 +62,7 @@ void StationaryQubit::initialize() {
 
   backend = provider.getQuantumBackend();
   auto config = prepareBackendQubitConfiguration(par("overwrite_backend_qubit_config").boolValue());
-  qubit_ref = backend->getQubit(new QubitId(node_address, qnic_index, qnic_type, stationaryQubit_address), std::move(config));
+  qubit_ref = backend->getQubit(new QubitId(node_address, qnic_index, qnic_type, stationary_qubit_address), std::move(config));
   if (qubit_ref == nullptr) throw std::runtime_error("qubit_ref nullptr error");
   setFree(false);
 
