@@ -24,6 +24,7 @@ using namespace quisp_test;
 using namespace Eigen;
 using namespace omnetpp;
 using quisp::backends::ErrorTrackingConfiguration;
+using quisp::messages::PhotonicQubit;
 
 namespace {
 
