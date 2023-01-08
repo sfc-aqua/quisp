@@ -22,6 +22,7 @@ struct MeasurementOutcome {
   char basis;
   bool outcome_is_plus;
   char GOD_clean;
+  bool operator==(const MeasurementOutcome &outcome) const { return basis == outcome.basis && outcome_is_plus == outcome.outcome_is_plus && GOD_clean == outcome.GOD_clean; }
 };
 
 class IQubitId;

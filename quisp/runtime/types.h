@@ -23,7 +23,7 @@ using String = std::string;
 using IQubitRecord = quisp::modules::qrsa::IQubitRecord;
 
 /// @brief measurement outcome for Instructions.
-using MeasurementOutcome = quisp::modules::measurement_outcome;
+using MeasurementOutcome = quisp::backends::MeasurementOutcome;
 
 /// @brief alias for omnetpp's simulation time.
 using Time = omnetpp::SimTime;
