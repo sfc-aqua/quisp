@@ -175,7 +175,7 @@ TEST_F(StatQubitTest, errorTrackingQubitConfigurationOverwrite) {
 
   EXPECT_NE(config->cnot_gate_err_rate, qubit->par("cnot_gate_error_rate").doubleValue());
   EXPECT_NE(config->cnot_gate_ix_err_ratio, qubit->par("cnot_gate_ix_error_ratio").doubleValue());
-  EXPECT_NE(config->cnot_gate_xi_err_ratio, qubit->par("cnot_gate_xI_error_ratio").doubleValue());
+  EXPECT_NE(config->cnot_gate_xi_err_ratio, qubit->par("cnot_gate_xi_error_ratio").doubleValue());
   EXPECT_NE(config->cnot_gate_xx_err_ratio, qubit->par("cnot_gate_xx_error_ratio").doubleValue());
   EXPECT_NE(config->cnot_gate_iz_err_ratio, qubit->par("cnot_gate_iz_error_ratio").doubleValue());
   EXPECT_NE(config->cnot_gate_zi_err_ratio, qubit->par("cnot_gate_zi_error_ratio").doubleValue());
