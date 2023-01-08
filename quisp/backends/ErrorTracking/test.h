@@ -18,6 +18,7 @@ using ::quisp::backends::error_tracking::ErrorTrackingConfiguration;
 using ::quisp::backends::error_tracking::ErrorTrackingQubit;
 using namespace ::quisp::backends;
 using namespace ::quisp::backends::abstract;
+using Complex = std::complex<double>;
 
 class QubitId : public IQubitId {
  public:
