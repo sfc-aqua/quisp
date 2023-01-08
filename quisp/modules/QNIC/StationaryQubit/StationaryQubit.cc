@@ -53,7 +53,6 @@ void StationaryQubit::initialize() {
   qnic_type = par("qnic_type");
   qnic_index = par("qnic_index");
   emission_jittering_standard_deviation = par("emission_jittering_standard_deviation").doubleValue();
-  setFree(false);
 
   /* e^(t/T1) energy relaxation, e^(t/T2) phase relaxation. Want to use only 1/10 of T1 and T2 in general.*/
 
