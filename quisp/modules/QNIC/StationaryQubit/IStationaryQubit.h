@@ -44,13 +44,6 @@ enum class CliffordOperator : int {
 }  // namespace types
 
 namespace modules {
-// Matrices of single qubit errors. Used when conducting tomography.
-struct single_qubit_error {
-  Eigen::Matrix2cd X;  // double 2*2 matrix
-  Eigen::Matrix2cd Y;  // complex double 2*2 matrix
-  Eigen::Matrix2cd Z;
-  Eigen::Matrix2cd I;
-};
 
 class IStationaryQubit : public omnetpp::cSimpleModule {
  public:

@@ -43,7 +43,7 @@ void HardwareMonitor::initialize(int stage) {
   initial.total_count = 0;
 
   Pauli.X << 0, 1, 1, 0;
-  Pauli.Y << 0, Complex(0, -1), Complex(0, 1), 0;
+  Pauli.Y << 0, std::complex<double>(0, -1), std::complex<double>(0, 1), 0;
   Pauli.Z << 1, 0, 0, -1;
   Pauli.I << 1, 0, 0, 1;
 
@@ -371,11 +371,11 @@ void HardwareMonitor::finish() {
     Bellpair_Z << 1 / sqrt(2), 0, 0, -1 / sqrt(2);
     Matrix4cd density_matrix_Z = Bellpair_Z * Bellpair_Z.adjoint();
     double Zerr_rate = (extended_density_matrix_reconstructed.real() * density_matrix_Z.real()).trace();
-    Complex checkZ = Bellpair_Z.adjoint() * extended_density_matrix_reconstructed * Bellpair_Z;
+    std::complex<double> checkZ = Bellpair_Z.adjoint() * extended_density_matrix_reconstructed * Bellpair_Z;
     EV << "Zerr = " << Zerr_rate << " or, " << checkZ.real() << "+" << checkZ.imag() << "\n";
 
     Vector4cd Bellpair_Y;
-    Bellpair_Y << 0, Complex(0, 1 / sqrt(2)), Complex(0, -1 / sqrt(2)), 0;
+    Bellpair_Y << 0, std::complex<double>(0, 1 / sqrt(2)), std::complex<double>(0, -1 / sqrt(2)), 0;
     Matrix4cd density_matrix_Y = Bellpair_Y * Bellpair_Y.adjoint();
     double Yerr_rate = (extended_density_matrix_reconstructed.real() * density_matrix_Y.real()).trace();
     EV << "Yerr = " << Yerr_rate << "\n";

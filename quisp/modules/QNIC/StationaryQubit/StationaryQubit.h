@@ -27,7 +27,6 @@ namespace quisp::modules {
  *  \ref https://arxiv.org/abs/1908.10758
  */
 
-typedef std::complex<double> Complex;
 using quisp::modules::common::IBackendQubit;
 using quisp::modules::common::IConfiguration;
 using quisp::modules::common::IQuantumBackend;
