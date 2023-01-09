@@ -32,8 +32,6 @@ class GssQubit : public GraphStateStabilizerQubit {
     this->vertex_operator = CliffordOperator::H;
   }
 
-  void fillParams() {}
-
   std::unordered_set<GraphStateStabilizerQubit*> getNeighborSet() { return this->neighbors; }
 
   void setVertexOperator(CliffordOperator op) { this->vertex_operator = op; }
@@ -62,8 +60,9 @@ class TestRNG : public quisp::backends::abstract::IRandomNumberGenerator {
 class GssQubitTest : public ::testing::Test {
  protected:
   void SetUp() {
+    SimTime::setScaleExp(-9);
     rng = new TestRNG();
-    backend = new GraphStateStabilizerBackend(std::unique_ptr<IRandomNumberGenerator>(rng));
+    backend = new GraphStateStabilizerBackend(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateStabilizerConfiguration>());
     qubit = new GssQubit(new QubitId(1), backend);
     another_qubit = new GssQubit(new QubitId(2), backend);
     shared_neighbor = new GssQubit(new QubitId(3), backend);
