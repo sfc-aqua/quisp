@@ -1,5 +1,6 @@
 #include "Qubit.h"
 #include "types.h"
+#include "backend.h"
 
 namespace quisp::backends::graph_state_stabilizer {
 using types::CliffordOperator;
@@ -7,8 +8,237 @@ GraphStateStabilizerQubit::GraphStateStabilizerQubit(const IQubitId *id, GraphSt
   // initialize variables for graph state representation tracking
   vertex_operator = CliffordOperator::H;
 }
+
 GraphStateStabilizerQubit::~GraphStateStabilizerQubit() {}
+
+void GraphStateStabilizerQubit::configure(std::unique_ptr<GraphStateStabilizerConfiguration> c) {
+  setMemoryErrorRates(c->memory_x_err_rate, c->memory_y_err_rate, c->memory_z_err_rate, c->memory_excitation_rate, c->memory_relaxation_rate, c->memory_completely_mixed_rate);
+  measurement_err.setParams(c->measurement_x_err_rate, c->measurement_y_err_rate, c->measurement_z_err_rate);
+  gate_err_h.setParams(c->h_gate_x_err_ratio, c->h_gate_y_err_ratio, c->h_gate_z_err_ratio, c->h_gate_err_rate);
+  gate_err_x.setParams(c->x_gate_x_err_ratio, c->x_gate_y_err_ratio, c->x_gate_z_err_ratio, c->x_gate_err_rate);
+  gate_err_z.setParams(c->z_gate_x_err_ratio, c->z_gate_y_err_ratio, c->z_gate_z_err_ratio, c->z_gate_err_rate);
+  gate_err_cnot.setParams(c->cnot_gate_err_rate, c->cnot_gate_ix_err_ratio, c->cnot_gate_xi_err_ratio, c->cnot_gate_xx_err_ratio, c->cnot_gate_iz_err_ratio,
+                          c->cnot_gate_zi_err_ratio, c->cnot_gate_zz_err_ratio, c->cnot_gate_iy_err_ratio, c->cnot_gate_yi_err_ratio, c->cnot_gate_yy_err_ratio);
+}
+void GraphStateStabilizerQubit::setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate,
+                                             double completely_mixed_rate) {
+  memory_err.x_error_rate = x_error_rate;
+  memory_err.y_error_rate = y_error_rate;
+  memory_err.z_error_rate = z_error_rate;
+  memory_err.excitation_error_rate = excitation_rate;
+  memory_err.relaxation_error_rate = relaxation_rate;
+  memory_err.completely_mixed_rate = completely_mixed_rate;
+  double error_rate = x_error_rate + y_error_rate + z_error_rate + excitation_rate + relaxation_rate + completely_mixed_rate;  // This is per μs.
+  memory_err.error_rate = error_rate;
+  // clang-format off
+  memory_transition_matrix <<
+    1 - error_rate,  x_error_rate,   z_error_rate,   y_error_rate,   excitation_rate,                             relaxation_rate,                             completely_mixed_rate,
+    x_error_rate,    1 - error_rate, y_error_rate,   z_error_rate,   excitation_rate,                             relaxation_rate,                             completely_mixed_rate,
+    z_error_rate,    y_error_rate,   1 - error_rate, x_error_rate,   excitation_rate,                             relaxation_rate,                             completely_mixed_rate,
+    y_error_rate,    z_error_rate,   x_error_rate,   1 - error_rate, excitation_rate,                             relaxation_rate,                             completely_mixed_rate,
+    0,               0,              0,              0,              1 - relaxation_rate - completely_mixed_rate, relaxation_rate,                             completely_mixed_rate,
+    0,               0,              0,              0,              excitation_rate,                             1 - excitation_rate - completely_mixed_rate, completely_mixed_rate,
+    0,               0,              0,              0,              excitation_rate,                             relaxation_rate,                             1 - excitation_rate - relaxation_rate;
+  // clang-format on
+}
+
+void GraphStateStabilizerQubit::applySingleQubitGateError(SingleGateErrorModel const& err) {
+  if (err.pauli_error_rate == 0) {
+    return;
+  }
+  // Gives a random double between 0.0 ~ 1.0
+  double rand = backend->dblrand();
+
+  /*
+   * 0.0    No_error_ceil       Z_error_ceil  1.0
+   *  |          |                   |         |
+   *  | No Error | X Error | Z Error | Y Error |
+   *                       |
+   *                  X_error_ceil
+   */
+  if (rand <= err.no_error_ceil) {
+    // No error
+  } else if (err.no_error_ceil < rand && rand <= err.x_error_ceil && (err.no_error_ceil != err.x_error_ceil)) {
+    // X error
+    this->applyClifford(CliffordOperator::X);
+  } else if (err.x_error_ceil < rand && rand <= err.z_error_ceil && (err.x_error_ceil != err.z_error_ceil)) {
+    // Z error
+    applyClifford(CliffordOperator::Z);
+  } else {
+    // Y error
+    this->applyClifford(CliffordOperator::X);
+    applyClifford(CliffordOperator::Z);
+  }
+}
+
+void GraphStateStabilizerQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const& err, GraphStateStabilizerQubit* another_qubit) {
+  if (err.pauli_error_rate == 0) {
+    return;
+  }
+
+  // Gives a random double between 0.0 ~ 1.0
+  double rand = backend->dblrand();
+
+  /*
+   * 0.0  No_error_ceil    XI_error_ceil     IY_error_ceil     YY_error_ceil    ZI_error_ceil  1.0
+   *  |        |                 |                 |                 |                 |        |
+   *  | No err | IX err | XI err | XX err | IY err | YI err | YY err | IZ err | ZI err | ZZ err |
+   *                    |                 |                 |                 |
+   *              IX_error_ceil      XX_error_ceil     YI_error_ceil    IZ_error_ceil
+   */
+  if (rand <= err.no_error_ceil) {
+    // No error
+  } else if (err.no_error_ceil < rand && rand <= err.ix_error_ceil && (err.no_error_ceil != err.ix_error_ceil)) {
+    // IX error
+    this->applyClifford(CliffordOperator::X);
+  } else if (err.ix_error_ceil < rand && rand <= err.xi_error_ceil && (err.ix_error_ceil != err.xi_error_ceil)) {
+    // XI error
+    another_qubit->applyClifford(CliffordOperator::X);
+  } else if (err.xi_error_ceil < rand && rand <= err.xx_error_ceil && (err.xi_error_ceil != err.xx_error_ceil)) {
+    // XX error
+    this->applyClifford(CliffordOperator::X);
+    another_qubit->applyClifford(CliffordOperator::X);
+  } else if (err.xx_error_ceil < rand && rand <= err.iz_error_ceil && (err.xx_error_ceil != err.iz_error_ceil)) {
+    // IZ error
+    this->applyClifford(CliffordOperator::Z);
+  } else if (err.iz_error_ceil < rand && rand <= err.zi_error_ceil && (err.iz_error_ceil != err.zi_error_ceil)) {
+    // ZI error
+    another_qubit->applyClifford(CliffordOperator::Z);
+  } else if (err.zi_error_ceil < rand && rand <= err.zz_error_ceil && (err.zi_error_ceil != err.zz_error_ceil)) {
+    // ZZ error
+    this->applyClifford(CliffordOperator::Z);
+    another_qubit->applyClifford(CliffordOperator::Z);
+  } else if (err.zz_error_ceil < rand && rand <= err.iy_error_ceil && (err.zz_error_ceil != err.iy_error_ceil)) {
+    // IY error
+    this->applyClifford(CliffordOperator::X);
+    this->applyClifford(CliffordOperator::Z);
+  } else if (err.iy_error_ceil < rand && rand <= err.yi_error_ceil && (err.iy_error_ceil != err.yi_error_ceil)) {
+    // YI error
+    another_qubit->applyClifford(CliffordOperator::X);
+    another_qubit->applyClifford(CliffordOperator::Z);
+  } else {
+    // YY error
+    this->applyClifford(CliffordOperator::X);
+    this->applyClifford(CliffordOperator::Z);
+    another_qubit->applyClifford(CliffordOperator::X);
+    another_qubit->applyClifford(CliffordOperator::Z);
+  }
+}
+void GraphStateStabilizerQubit::applyMemoryError() {
+  // If no memory error occurs, or if the state is completely mixed, skip this memory error simulation.
+  if (memory_err.error_rate == 0) return;
+
+  SimTime current_time = backend->getSimTime();
+
+  // Check when the error got updated last time.
+  // Errors will be performed depending on the difference between that time and the current time.
+  double time_evolution = current_time.dbl() - updated_time.dbl();
+  double time_evolution_microsec = time_evolution * 1000000 /** 100*/;
+  if (time_evolution_microsec > 0) {
+    bool skip_exponentiation = false;
+    for (int i = 0; i < memory_transition_matrix.cols(); i++) {
+      if (memory_transition_matrix(0, i) == 1) {
+        // Do not to the exponentiation! Eigen will mess up the exponentiation anyway...
+        skip_exponentiation = true;
+        break;
+      }
+    }
+
+    MatrixXd transition_mat(7, 7);
+    if (!skip_exponentiation) {
+      // calculate time evoluted error matrix: Q^(time_evolution_microsec) in Eq 5.3
+      MatrixPower<MatrixXd> q_pow(memory_transition_matrix);
+      transition_mat = q_pow(time_evolution_microsec);
+    } else {
+      transition_mat = memory_transition_matrix;
+    }
+
+    // validate transition_mat
+    for (int r = 0; r < transition_mat.rows(); r++) {
+      double col_sum = 0;
+      for (int i = 0; i < transition_mat.cols(); i++) {
+        col_sum += transition_mat(r, i);
+      }
+      if (col_sum > 1.01 || col_sum < 0.99) {
+        throw std::runtime_error("Row of the transition matrix does not sum up to 1.");
+      }
+    }
+
+    if (std::isnan(transition_mat(0, 0))) {
+      throw std::runtime_error("Transition matrix is NaN. This is Eigen's fault.");
+    }
+
+    // pi(0 ~ 6) vector in Eq 5.3
+    MatrixXd pi_vector(1, 7);  // I, X, Z, Y, Ex, Re, Cm
+    pi_vector << 1, 0, 0, 0, 0 ,0 ,0;
+    // if (has_excitation_error) {
+    //   pi_vector << 0, 0, 0, 0, 1, 0, 0;  // excitation error
+    // } else if (has_relaxation_error) {
+    //   pi_vector << 0, 0, 0, 0, 0, 1, 0;  // relaxation error
+    // } else if (has_completely_mixed_error) {
+    //   pi_vector << 0, 0, 0, 0, 0, 0, 1;  // completely mixed error
+    // } else if (has_z_error && has_x_error) {
+    //   pi_vector << 0, 0, 0, 1, 0, 0, 0;  // Y error
+    // } else if (has_z_error && !has_x_error) {
+    //   pi_vector << 0, 0, 1, 0, 0, 0, 0;  // Z error
+    // } else if (!has_z_error && has_x_error) {
+    //   pi_vector << 0, 1, 0, 0, 0, 0, 0;  // X error
+    // } else {
+    //   pi_vector << 1, 0, 0, 0, 0, 0, 0;  // No error
+    // }
+    // pi(t) in Eq 5.3
+    // Clean, X, Z, Y, Excited, Relaxed
+    MatrixXd output_vector(1, 6);
+    // take error rate vector from DynamicTransitionMatrix Eq 5.3
+    output_vector = pi_vector * transition_mat;
+
+    /* this prepares the sectors for Monte-Carlo. later, we'll pick a random value and check with this sectors.
+     *
+     * 0.0    clean_ceil             z_ceil              excited_ceil                       1.0
+     *  |          |                   |                      |                              |
+     *  | No Error | X Error | Z Error | Y Error | Excitation | Relaxation | Completely Mixed |
+     *                       |                   |                         |
+     *                    x_ceil               y_ceil                relaxed_ceil
+     */
+    double clean_ceil = output_vector(0, 0);
+    double x_ceil = clean_ceil + output_vector(0, 1);
+    double z_ceil = x_ceil + output_vector(0, 2);
+    double y_ceil = z_ceil + output_vector(0, 3);
+    double excited_ceil = y_ceil + output_vector(0, 4);
+    double relaxed_ceil = excited_ceil + output_vector(0, 5);
+
+    // Gives a random double between 0.0 ~ 1.0
+    double rand = backend->dblrand();
+
+    if (rand < clean_ceil) {
+      // Qubit will end up with no error
+    } else if (clean_ceil <= rand && rand < x_ceil && (clean_ceil != x_ceil)) {
+      // X error
+      this->applyClifford(CliffordOperator::X);
+    } else if (x_ceil <= rand && rand < z_ceil && (x_ceil != z_ceil)) {
+      // Z error
+      this->applyClifford(CliffordOperator::Z);
+    } else if (z_ceil <= rand && rand < y_ceil && (z_ceil != y_ceil)) {
+      // Y error
+      this->applyClifford(CliffordOperator::X);
+      this->applyClifford(CliffordOperator::Z);
+    } else if (y_ceil <= rand && rand < excited_ceil && (y_ceil != excited_ceil)) {
+      // Excitation error
+      this->excite();
+    } else if (excited_ceil <= rand && rand < relaxed_ceil && (excited_ceil != relaxed_ceil)) {
+      // Relaxation error
+      this->relax();
+    } else {
+      // Memory completely mixed error
+      // This should never happen
+      assert();
+    }
+  }
+  updated_time = current_time;
+}
+
 void GraphStateStabilizerQubit::setFree() {}
+
 void GraphStateStabilizerQubit::applyClifford(types::CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)op][(int)(this->vertex_operator)]; }
 
 void GraphStateStabilizerQubit::applyRightClifford(types::CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)(this->vertex_operator)][(int)op]; }
@@ -125,45 +355,47 @@ EigenvalueResult GraphStateStabilizerQubit::graphMeasureZ() {
 // public member functions
 
 void GraphStateStabilizerQubit::gateCNOT(IQubit *const control_qubit) {
-  // apply memory error
+  this->applyMemoryError();
   this->applyClifford(CliffordOperator::H);  // use apply Clifford for pure operation
   this->applyPureCZ((GraphStateStabilizerQubit *)control_qubit);
   this->applyClifford(CliffordOperator::H);
-  // apply CNOT error
+  this->applyTwoQubitGateError(gate_err_cnot,(GraphStateStabilizerQubit *)control_qubit);
 }
 
 void GraphStateStabilizerQubit::gateH() {
-  // apply memory error
+  this->applyMemoryError();
   this->applyClifford(CliffordOperator::H);
-  // apply single qubit gate error
+  this->applySingleQubitGateError(gate_err_h);
 }
 void GraphStateStabilizerQubit::gateZ() {
-  // apply memory error
+  this->applyMemoryError();
   this->applyClifford(CliffordOperator::Z);
-  // apply single qubit gate error
+  this->applySingleQubitGateError(gate_err_z);
 }
 void GraphStateStabilizerQubit::gateX() {
-  // apply memory error
+  this->applyMemoryError();
   this->applyClifford(CliffordOperator::X);
-  // apply single qubit gate error
+  this->applySingleQubitGateError(gate_err_x);
 }
 void GraphStateStabilizerQubit::gateS() {
-  // apply memory error
+  this->applyMemoryError();
   this->applyClifford(CliffordOperator::S);
-  // apply single qubit gate error
+  // apply s error, not implemented yet
 }
 void GraphStateStabilizerQubit::gateSdg() {
-  // apply memory error
+  this->applyMemoryError();
   this->applyClifford(CliffordOperator::S_INV);
-  // apply single qubit gate error
+  // apply sdg error, not implemented yet
 }
 void GraphStateStabilizerQubit::excite() {
+  // check if it is correct
   auto result = this->measureZ();
   if (result == EigenvalueResult::PLUS_ONE) {
     this->applyClifford(CliffordOperator::X);
   }
 }
 void GraphStateStabilizerQubit::relax() {
+  // check if it is correct
   auto result = this->measureZ();
   if (result == EigenvalueResult::MINUS_ONE) {
     this->applyClifford(CliffordOperator::X);
