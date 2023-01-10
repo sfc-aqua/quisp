@@ -102,7 +102,7 @@ TEST_F(GssBackendTest, getQubitWithConfiguration) {
   conf->memory_z_err_rate = 0.28;
   conf->memory_relaxation_rate = 0.29;
   conf->memory_excitation_rate = 0.30;
-  conf->memory_completely_mixed_rate = 0.31;
+  conf->memory_completely_mixed_rate = 0;
 
   auto conf2 = std::make_unique<GraphStateStabilizerConfiguration>(*conf);
 

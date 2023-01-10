@@ -46,12 +46,20 @@ class GraphStateStabilizerQubit : public IQubit {
 
  protected:
   // error simulation
-  void setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate, double completely_mixed_rate);
+  void setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate);
   void applySingleQubitGateError(SingleGateErrorModel const &err);
   void applyTwoQubitGateError(TwoQubitGateErrorModel const &err, GraphStateStabilizerQubit *another_qubit);
   void applyMemoryError();
   void excite();
   void relax();
+  // error simulation constants
+  SingleGateErrorModel gate_err_h;
+  SingleGateErrorModel gate_err_x;
+  SingleGateErrorModel gate_err_z;
+  TwoQubitGateErrorModel gate_err_cnot;
+  MeasurementErrorModel measurement_err;
+  MemoryErrorModel memory_err;
+  Eigen::MatrixXd memory_transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
 
   // graph state specific operations
   void applyClifford(CliffordOperator op);
@@ -67,16 +75,6 @@ class GraphStateStabilizerQubit : public IQubit {
   EigenvalueResult graphMeasureZ();
 
   SimTime updated_time = SimTime(0);
-  
-  // constants
-  SingleGateErrorModel gate_err_h;
-  SingleGateErrorModel gate_err_x;
-  SingleGateErrorModel gate_err_z;
-  TwoQubitGateErrorModel gate_err_cnot;
-  MeasurementErrorModel measurement_err;
-  MemoryErrorModel memory_err;
-  Eigen::MatrixXd memory_transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
-  double emission_success_probability;
 
   // graph state
   std::unordered_set<GraphStateStabilizerQubit *> neighbors;

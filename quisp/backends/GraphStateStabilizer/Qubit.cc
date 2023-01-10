@@ -5,7 +5,7 @@
 namespace quisp::backends::graph_state_stabilizer {
 using types::CliffordOperator;
 GraphStateStabilizerQubit::GraphStateStabilizerQubit(const IQubitId *id, GraphStateStabilizerBackend *const backend)
-    : id(id), memory_transition_matrix(MatrixXd::Zero(7, 7)), backend(backend) {
+    : id(id), memory_transition_matrix(MatrixXd::Zero(6, 6)), backend(backend) {
   // initialize variables for graph state representation tracking
   vertex_operator = CliffordOperator::H;
 }
@@ -13,7 +13,7 @@ GraphStateStabilizerQubit::GraphStateStabilizerQubit(const IQubitId *id, GraphSt
 GraphStateStabilizerQubit::~GraphStateStabilizerQubit() {}
 
 void GraphStateStabilizerQubit::configure(std::unique_ptr<GraphStateStabilizerConfiguration> c) {
-  setMemoryErrorRates(c->memory_x_err_rate, c->memory_y_err_rate, c->memory_z_err_rate, c->memory_excitation_rate, c->memory_relaxation_rate, c->memory_completely_mixed_rate);
+  setMemoryErrorRates(c->memory_x_err_rate, c->memory_y_err_rate, c->memory_z_err_rate, c->memory_excitation_rate, c->memory_relaxation_rate);
   measurement_err.setParams(c->measurement_x_err_rate, c->measurement_y_err_rate, c->measurement_z_err_rate);
   gate_err_h.setParams(c->h_gate_x_err_ratio, c->h_gate_y_err_ratio, c->h_gate_z_err_ratio, c->h_gate_err_rate);
   gate_err_x.setParams(c->x_gate_x_err_ratio, c->x_gate_y_err_ratio, c->x_gate_z_err_ratio, c->x_gate_err_rate);
@@ -21,25 +21,22 @@ void GraphStateStabilizerQubit::configure(std::unique_ptr<GraphStateStabilizerCo
   gate_err_cnot.setParams(c->cnot_gate_err_rate, c->cnot_gate_ix_err_ratio, c->cnot_gate_xi_err_ratio, c->cnot_gate_xx_err_ratio, c->cnot_gate_iz_err_ratio,
                           c->cnot_gate_zi_err_ratio, c->cnot_gate_zz_err_ratio, c->cnot_gate_iy_err_ratio, c->cnot_gate_yi_err_ratio, c->cnot_gate_yy_err_ratio);
 }
-void GraphStateStabilizerQubit::setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate,
-                                                    double completely_mixed_rate) {
+void GraphStateStabilizerQubit::setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate) {
   memory_err.x_error_rate = x_error_rate;
   memory_err.y_error_rate = y_error_rate;
   memory_err.z_error_rate = z_error_rate;
   memory_err.excitation_error_rate = excitation_rate;
   memory_err.relaxation_error_rate = relaxation_rate;
-  memory_err.completely_mixed_rate = completely_mixed_rate;
-  double error_rate = x_error_rate + y_error_rate + z_error_rate + excitation_rate + relaxation_rate + completely_mixed_rate;  // This is per μs.
+  double error_rate = x_error_rate + y_error_rate + z_error_rate + excitation_rate + relaxation_rate;  // This is per μs.
   memory_err.error_rate = error_rate;
   // clang-format off
   memory_transition_matrix <<
-    1 - error_rate,  x_error_rate,   z_error_rate,   y_error_rate,   excitation_rate,                             relaxation_rate,                             completely_mixed_rate,
-    x_error_rate,    1 - error_rate, y_error_rate,   z_error_rate,   excitation_rate,                             relaxation_rate,                             completely_mixed_rate,
-    z_error_rate,    y_error_rate,   1 - error_rate, x_error_rate,   excitation_rate,                             relaxation_rate,                             completely_mixed_rate,
-    y_error_rate,    z_error_rate,   x_error_rate,   1 - error_rate, excitation_rate,                             relaxation_rate,                             completely_mixed_rate,
-    0,               0,              0,              0,              1 - relaxation_rate - completely_mixed_rate, relaxation_rate,                             completely_mixed_rate,
-    0,               0,              0,              0,              excitation_rate,                             1 - excitation_rate - completely_mixed_rate, completely_mixed_rate,
-    0,               0,              0,              0,              excitation_rate,                             relaxation_rate,                             1 - excitation_rate - relaxation_rate;
+    1 - error_rate,  x_error_rate,   z_error_rate,   y_error_rate,   excitation_rate,     relaxation_rate,
+    x_error_rate,    1 - error_rate, y_error_rate,   z_error_rate,   excitation_rate,     relaxation_rate,
+    z_error_rate,    y_error_rate,   1 - error_rate, x_error_rate,   excitation_rate,     relaxation_rate,
+    y_error_rate,    z_error_rate,   x_error_rate,   1 - error_rate, excitation_rate,     relaxation_rate,
+    0,               0,              0,              0,              1 - relaxation_rate, relaxation_rate,
+    0,               0,              0,              0,              excitation_rate,     1 - excitation_rate;
   // clang-format on
 }
 
@@ -126,7 +123,7 @@ void GraphStateStabilizerQubit::applyTwoQubitGateError(TwoQubitGateErrorModel co
   }
 }
 void GraphStateStabilizerQubit::applyMemoryError() {
-  // If no memory error occurs, or if the state is completely mixed, skip this memory error simulation.
+  // If no memory error occurs, skip this memory error simulation.
   if (memory_err.error_rate == 0) return;
 
   SimTime current_time = backend->getSimTime();
@@ -145,7 +142,7 @@ void GraphStateStabilizerQubit::applyMemoryError() {
       }
     }
 
-    MatrixXd transition_mat(7, 7);
+    MatrixXd transition_mat(6, 6);
     if (!skip_exponentiation) {
       // calculate time evoluted error matrix: Q^(time_evolution_microsec) in Eq 5.3
       MatrixPower<MatrixXd> q_pow(memory_transition_matrix);
@@ -170,43 +167,27 @@ void GraphStateStabilizerQubit::applyMemoryError() {
     }
 
     // pi(0 ~ 6) vector in Eq 5.3
-    MatrixXd pi_vector(1, 7);  // I, X, Z, Y, Ex, Re, Cm
-    pi_vector << 1, 0, 0, 0, 0, 0, 0;
-    // if (has_excitation_error) {
-    //   pi_vector << 0, 0, 0, 0, 1, 0, 0;  // excitation error
-    // } else if (has_relaxation_error) {
-    //   pi_vector << 0, 0, 0, 0, 0, 1, 0;  // relaxation error
-    // } else if (has_completely_mixed_error) {
-    //   pi_vector << 0, 0, 0, 0, 0, 0, 1;  // completely mixed error
-    // } else if (has_z_error && has_x_error) {
-    //   pi_vector << 0, 0, 0, 1, 0, 0, 0;  // Y error
-    // } else if (has_z_error && !has_x_error) {
-    //   pi_vector << 0, 0, 1, 0, 0, 0, 0;  // Z error
-    // } else if (!has_z_error && has_x_error) {
-    //   pi_vector << 0, 1, 0, 0, 0, 0, 0;  // X error
-    // } else {
-    //   pi_vector << 1, 0, 0, 0, 0, 0, 0;  // No error
-    // }
+    MatrixXd pi_vector(1, 6);  // I, X, Z, Y, Ex, Re
+    pi_vector << 1, 0, 0, 0, 0, 0;
     // pi(t) in Eq 5.3
     // Clean, X, Z, Y, Excited, Relaxed
-    MatrixXd output_vector(1, 6);
     // take error rate vector from DynamicTransitionMatrix Eq 5.3
-    output_vector = pi_vector * transition_mat;
+    pi_vector = pi_vector * transition_mat;
 
     /* this prepares the sectors for Monte-Carlo. later, we'll pick a random value and check with this sectors.
      *
-     * 0.0    clean_ceil             z_ceil              excited_ceil                       1.0
-     *  |          |                   |                      |                              |
-     *  | No Error | X Error | Z Error | Y Error | Excitation | Relaxation | Completely Mixed |
+     * 0.0    clean_ceil             z_ceil              excited_ceil
+     *  |          |                   |                      |                              
+     *  | No Error | X Error | Z Error | Y Error | Excitation | Relaxation |
      *                       |                   |                         |
-     *                    x_ceil               y_ceil                relaxed_ceil
+     *                    x_ceil               y_ceil                     1.0
      */
-    double clean_ceil = output_vector(0, 0);
-    double x_ceil = clean_ceil + output_vector(0, 1);
-    double z_ceil = x_ceil + output_vector(0, 2);
-    double y_ceil = z_ceil + output_vector(0, 3);
-    double excited_ceil = y_ceil + output_vector(0, 4);
-    double relaxed_ceil = excited_ceil + output_vector(0, 5);
+    double clean_ceil = pi_vector(0, 0);
+    double x_ceil = clean_ceil + pi_vector(0, 1);
+    double z_ceil = x_ceil + pi_vector(0, 2);
+    double y_ceil = z_ceil + pi_vector(0, 3);
+    double excited_ceil = y_ceil + pi_vector(0, 4);
+    double relaxed_ceil = excited_ceil + pi_vector(0, 5);
 
     // Gives a random double between 0.0 ~ 1.0
     double rand = backend->dblrand();
