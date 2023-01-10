@@ -4,7 +4,7 @@
 
 namespace quisp::backends::graph_state_stabilizer {
 using types::CliffordOperator;
-GraphStateStabilizerQubit::GraphStateStabilizerQubit(const IQubitId *id, GraphStateStabilizerBackend *const backend) : id(id), backend(backend) {
+GraphStateStabilizerQubit::GraphStateStabilizerQubit(const IQubitId *id, GraphStateStabilizerBackend *const backend) : id(id), memory_transition_matrix(MatrixXd::Zero(7, 7)),backend(backend) {
   // initialize variables for graph state representation tracking
   vertex_operator = CliffordOperator::H;
 }
@@ -63,11 +63,11 @@ void GraphStateStabilizerQubit::applySingleQubitGateError(SingleGateErrorModel c
     this->applyClifford(CliffordOperator::X);
   } else if (err.x_error_ceil < rand && rand <= err.z_error_ceil && (err.x_error_ceil != err.z_error_ceil)) {
     // Z error
-    applyClifford(CliffordOperator::Z);
+    this->applyClifford(CliffordOperator::Z);
   } else {
     // Y error
     this->applyClifford(CliffordOperator::X);
-    applyClifford(CliffordOperator::Z);
+    this->applyClifford(CliffordOperator::Z);
   }
 }
 
