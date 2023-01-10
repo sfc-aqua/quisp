@@ -237,12 +237,11 @@ void GraphStateStabilizerQubit::applyMemoryError() {
   }
   updated_time = current_time;
 }
+ 
 
-void GraphStateStabilizerQubit::setFree() {}
+void GraphStateStabilizerQubit::applyClifford(CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)op][(int)(this->vertex_operator)]; }
 
-void GraphStateStabilizerQubit::applyClifford(types::CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)op][(int)(this->vertex_operator)]; }
-
-void GraphStateStabilizerQubit::applyRightClifford(types::CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)(this->vertex_operator)][(int)op]; }
+void GraphStateStabilizerQubit::applyRightClifford(CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)(this->vertex_operator)][(int)op]; }
 
 bool GraphStateStabilizerQubit::isNeighbor(GraphStateStabilizerQubit *another_qubit) { return this->neighbors.find(another_qubit) != this->neighbors.end(); }
 
@@ -287,7 +286,7 @@ void GraphStateStabilizerQubit::localComplement() {
 }
 
 void GraphStateStabilizerQubit::removeVertexOperation(GraphStateStabilizerQubit *qubit_to_avoid) {
-  if (this->neighbors.empty() || this->vertex_operator == types::CliffordOperator::Id) {
+  if (this->neighbors.empty() || this->vertex_operator == CliffordOperator::Id) {
     return;
   }
   auto *swapping_partner_temp = qubit_to_avoid;
@@ -355,6 +354,15 @@ EigenvalueResult GraphStateStabilizerQubit::graphMeasureZ() {
 
 // public member functions
 
+void GraphStateStabilizerQubit::setFree() {
+  // force qubit to be in |0> state
+  auto result = this->graphMeasureZ();
+  if (result == EigenvalueResult::MINUS_ONE) {
+    this->applyClifford(CliffordOperator::X);
+  }
+  updated_time = backend->getSimTime();
+  }
+
 void GraphStateStabilizerQubit::gateCNOT(IQubit *const control_qubit) {
   this->applyMemoryError();
   this->applyClifford(CliffordOperator::H);  // use apply Clifford for pure operation
@@ -390,14 +398,14 @@ void GraphStateStabilizerQubit::gateSdg() {
 }
 void GraphStateStabilizerQubit::excite() {
   // check if it is correct
-  auto result = this->measureZ();
+  auto result = this->graphMeasureZ();
   if (result == EigenvalueResult::PLUS_ONE) {
     this->applyClifford(CliffordOperator::X);
   }
 }
 void GraphStateStabilizerQubit::relax() {
   // check if it is correct
-  auto result = this->measureZ();
+  auto result = this->graphMeasureZ();
   if (result == EigenvalueResult::MINUS_ONE) {
     this->applyClifford(CliffordOperator::X);
   }
