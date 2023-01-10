@@ -147,4 +147,4 @@ struct MeasurementErrorModel {
     z_error_rate = z;
   }
 };
-}
+}  // namespace quisp::backends::graph_state_stabilizer::types

@@ -22,10 +22,10 @@ using Eigen::MatrixXd;
 using Eigen::Vector2cd;
 using Eigen::Vector4cd;
 using types::CliffordOperator;
+using types::MeasurementErrorModel;
+using types::MemoryErrorModel;
 using types::SingleGateErrorModel;
 using types::TwoQubitGateErrorModel;
-using types::MemoryErrorModel;
-using types::MeasurementErrorModel;
 
 class GraphStateStabilizerBackend;
 class GraphStateStabilizerQubit : public IQubit {
@@ -42,13 +42,13 @@ class GraphStateStabilizerQubit : public IQubit {
   EigenvalueResult measureX();
   EigenvalueResult measureY();
   EigenvalueResult measureZ();
-  protected:
+
+ protected:
   // error simulation
   void setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate, double completely_mixed_rate);
-  void applySingleQubitGateError(SingleGateErrorModel const& err);
-  void applyTwoQubitGateError(TwoQubitGateErrorModel const& err, GraphStateStabilizerQubit* another_qubit);
+  void applySingleQubitGateError(SingleGateErrorModel const &err);
+  void applyTwoQubitGateError(TwoQubitGateErrorModel const &err, GraphStateStabilizerQubit *another_qubit);
   void applyMemoryError();
-  
 
   // graph state specific operations
   void applyClifford(CliffordOperator op);
@@ -75,7 +75,7 @@ class GraphStateStabilizerQubit : public IQubit {
   MemoryErrorModel memory_err;
   Eigen::MatrixXd memory_transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
   double emission_success_probability;
-  
+
   std::unordered_set<GraphStateStabilizerQubit *> neighbors;
   CliffordOperator vertex_operator;
   const IQubitId *id;

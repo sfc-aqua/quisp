@@ -14,7 +14,7 @@ using quisp::modules::common::GraphStateStabilizerConfiguration;
 using quisp::modules::common::IQuantumBackend;
 using rng::RNG;
 
-class BackendContainer : public omnetpp::cSimpleModule, ErrorTrackingBackend::ICallback,  GraphStateStabilizerBackend::ICallback{
+class BackendContainer : public omnetpp::cSimpleModule, ErrorTrackingBackend::ICallback, GraphStateStabilizerBackend::ICallback {
  public:
   BackendContainer();
   ~BackendContainer();

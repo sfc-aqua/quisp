@@ -41,15 +41,14 @@ class TestRNG : public quisp::backends::abstract::IRandomNumberGenerator {
 class Qubit : public GraphStateStabilizerQubit {
  public:
   Qubit(const IQubitId* id, GraphStateStabilizerBackend* const backend) : GraphStateStabilizerQubit(id, backend) {}
-  void reset() {
-    setFree();
-  }
+  void reset() { setFree(); }
 };
 
 class Backend : public GraphStateStabilizerBackend {
  public:
   using GraphStateStabilizerBackend::qubits;
-  Backend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateStabilizerConfiguration> config) : GraphStateStabilizerBackend(std::move(rng), std::move(config)) {}
+  Backend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateStabilizerConfiguration> config)
+      : GraphStateStabilizerBackend(std::move(rng), std::move(config)) {}
   IQubit* getQubit(int id) { return this->getQubitInternal(new QubitId(id)); }
   IQubit* getQubitInternal(const IQubitId* id) {
     auto qubit = qubits.find(id);

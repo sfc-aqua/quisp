@@ -13,8 +13,7 @@ void BackendContainer::initialize() {
     configureErrorTrackingBackend();
   } else if (backend_type == "GraphStateStabilizerBackend") {
     configureGraphStateStabilizerBackend();
-  }
-  else {
+  } else {
     throw omnetpp::cRuntimeError("Unknown backend type: %s", backend_type.c_str());
   }
 }
