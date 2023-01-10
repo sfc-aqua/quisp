@@ -218,7 +218,22 @@ void GraphStateStabilizerQubit::applyMemoryError() {
   }
   updated_time = current_time;
 }
- 
+
+void GraphStateStabilizerQubit::excite() {
+  // check if it is correct
+  auto result = this->graphMeasureZ();
+  if (result == EigenvalueResult::PLUS_ONE) {
+    this->applyClifford(CliffordOperator::X);
+  }
+}
+
+void GraphStateStabilizerQubit::relax() {
+  // check if it is correct
+  auto result = this->graphMeasureZ();
+  if (result == EigenvalueResult::MINUS_ONE) {
+    this->applyClifford(CliffordOperator::X);
+  }
+}
 
 void GraphStateStabilizerQubit::applyClifford(CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)op][(int)(this->vertex_operator)]; }
 
@@ -377,20 +392,6 @@ void GraphStateStabilizerQubit::gateSdg() {
   this->applyClifford(CliffordOperator::S_INV);
   // apply sdg error, not implemented yet
 }
-void GraphStateStabilizerQubit::excite() {
-  // check if it is correct
-  auto result = this->graphMeasureZ();
-  if (result == EigenvalueResult::PLUS_ONE) {
-    this->applyClifford(CliffordOperator::X);
-  }
-}
-void GraphStateStabilizerQubit::relax() {
-  // check if it is correct
-  auto result = this->graphMeasureZ();
-  if (result == EigenvalueResult::MINUS_ONE) {
-    this->applyClifford(CliffordOperator::X);
-  }
-}
 
 EigenvalueResult GraphStateStabilizerQubit::localMeasureX() {
   this->gateH();
@@ -404,9 +405,12 @@ EigenvalueResult GraphStateStabilizerQubit::localMeasureY() {
 }
 
 EigenvalueResult GraphStateStabilizerQubit::localMeasureZ() {
-  // apply memory error
+  applyMemoryError();
   auto result = this->graphMeasureZ();
-  // apply measurement error
+  // measurement error
+  if (backend->dblrand() < this->measurement_err.z_error_rate) {
+    result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
+  }
   return result;
 }
 
