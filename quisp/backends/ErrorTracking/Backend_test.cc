@@ -9,7 +9,7 @@
 
 namespace {
 using namespace quisp::backends::error_tracking;
-using namespace quisp_test::backends;
+using namespace quisp_test::backends::error_tracking;
 using namespace omnetpp;
 
 class TestEtQubit : public ErrorTrackingQubit {
