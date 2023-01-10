@@ -36,10 +36,10 @@ class HardwareMonitor : public IHardwareMonitor {
  private:
   // Matrices of single qubit errors. Used when conducting tomography.
   struct single_qubit_error {
-  Eigen::Matrix2cd X;  // double 2*2 matrix
-  Eigen::Matrix2cd Y;  // complex double 2*2 matrix
-  Eigen::Matrix2cd Z;
-  Eigen::Matrix2cd I;
+    Eigen::Matrix2cd X;  // double 2*2 matrix
+    Eigen::Matrix2cd Y;  // complex double 2*2 matrix
+    Eigen::Matrix2cd Z;
+    Eigen::Matrix2cd I;
   };
 
   int my_address;

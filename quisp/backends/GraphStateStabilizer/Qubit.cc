@@ -1,10 +1,11 @@
 #include "Qubit.h"
-#include "types.h"
 #include "backend.h"
+#include "types.h"
 
 namespace quisp::backends::graph_state_stabilizer {
 using types::CliffordOperator;
-GraphStateStabilizerQubit::GraphStateStabilizerQubit(const IQubitId *id, GraphStateStabilizerBackend *const backend) : id(id), memory_transition_matrix(MatrixXd::Zero(7, 7)),backend(backend) {
+GraphStateStabilizerQubit::GraphStateStabilizerQubit(const IQubitId *id, GraphStateStabilizerBackend *const backend)
+    : id(id), memory_transition_matrix(MatrixXd::Zero(7, 7)), backend(backend) {
   // initialize variables for graph state representation tracking
   vertex_operator = CliffordOperator::H;
 }
@@ -21,7 +22,7 @@ void GraphStateStabilizerQubit::configure(std::unique_ptr<GraphStateStabilizerCo
                           c->cnot_gate_zi_err_ratio, c->cnot_gate_zz_err_ratio, c->cnot_gate_iy_err_ratio, c->cnot_gate_yi_err_ratio, c->cnot_gate_yy_err_ratio);
 }
 void GraphStateStabilizerQubit::setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate,
-                                             double completely_mixed_rate) {
+                                                    double completely_mixed_rate) {
   memory_err.x_error_rate = x_error_rate;
   memory_err.y_error_rate = y_error_rate;
   memory_err.z_error_rate = z_error_rate;
@@ -42,7 +43,7 @@ void GraphStateStabilizerQubit::setMemoryErrorRates(double x_error_rate, double 
   // clang-format on
 }
 
-void GraphStateStabilizerQubit::applySingleQubitGateError(SingleGateErrorModel const& err) {
+void GraphStateStabilizerQubit::applySingleQubitGateError(SingleGateErrorModel const &err) {
   if (err.pauli_error_rate == 0) {
     return;
   }
@@ -71,7 +72,7 @@ void GraphStateStabilizerQubit::applySingleQubitGateError(SingleGateErrorModel c
   }
 }
 
-void GraphStateStabilizerQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const& err, GraphStateStabilizerQubit* another_qubit) {
+void GraphStateStabilizerQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, GraphStateStabilizerQubit *another_qubit) {
   if (err.pauli_error_rate == 0) {
     return;
   }
@@ -170,7 +171,7 @@ void GraphStateStabilizerQubit::applyMemoryError() {
 
     // pi(0 ~ 6) vector in Eq 5.3
     MatrixXd pi_vector(1, 7);  // I, X, Z, Y, Ex, Re, Cm
-    pi_vector << 1, 0, 0, 0, 0 ,0 ,0;
+    pi_vector << 1, 0, 0, 0, 0, 0, 0;
     // if (has_excitation_error) {
     //   pi_vector << 0, 0, 0, 0, 1, 0, 0;  // excitation error
     // } else if (has_relaxation_error) {
@@ -359,7 +360,7 @@ void GraphStateStabilizerQubit::gateCNOT(IQubit *const control_qubit) {
   this->applyClifford(CliffordOperator::H);  // use apply Clifford for pure operation
   this->applyPureCZ((GraphStateStabilizerQubit *)control_qubit);
   this->applyClifford(CliffordOperator::H);
-  this->applyTwoQubitGateError(gate_err_cnot,(GraphStateStabilizerQubit *)control_qubit);
+  this->applyTwoQubitGateError(gate_err_cnot, (GraphStateStabilizerQubit *)control_qubit);
 }
 
 void GraphStateStabilizerQubit::gateH() {
