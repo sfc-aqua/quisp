@@ -1,5 +1,5 @@
 #include "Qubit.h"
-#include "backend.h"
+#include "Backend.h"
 #include "types.h"
 
 namespace quisp::backends::graph_state_stabilizer {
