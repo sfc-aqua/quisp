@@ -50,7 +50,7 @@ TEST_F(GssQubitTest, setFreeUpdatesTime) {
   EXPECT_EQ(qubit->updated_time, backend->getSimTime());
 }
 
-TEST_F(GssQubitTest, initialize_memory_transition_matrix) {
+TEST_F(GssQubitTest, initializeMemoryTransitionMatrix) {
   qubit->setMemoryErrorRates(.011, .012, .013, .014, .015, .0);
 
   auto mat = qubit->memory_transition_matrix;
