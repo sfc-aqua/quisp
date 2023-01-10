@@ -38,6 +38,7 @@ class GraphStateStabilizerQubit : public IQubit {
   void gateZ() override;
   void gateX() override;
   void gateS() override;
+  void gateSdg() override;
   void gateCNOT(IQubit *const control_qubit) override;
   EigenvalueResult measureX();
   EigenvalueResult measureY();
@@ -49,6 +50,8 @@ class GraphStateStabilizerQubit : public IQubit {
   void applySingleQubitGateError(SingleGateErrorModel const &err);
   void applyTwoQubitGateError(TwoQubitGateErrorModel const &err, GraphStateStabilizerQubit *another_qubit);
   void applyMemoryError();
+  void excite();
+  void relax();
 
   // graph state specific operations
   void applyClifford(CliffordOperator op);
@@ -62,10 +65,9 @@ class GraphStateStabilizerQubit : public IQubit {
   void removeVertexOperation(GraphStateStabilizerQubit *qubit_to_avoid);
   void applyPureCZ(GraphStateStabilizerQubit *another_qubit);
   EigenvalueResult graphMeasureZ();
-  void gateSdg();
-  void excite();
-  void relax();
 
+  SimTime updated_time = SimTime(0);
+  
   // constants
   SingleGateErrorModel gate_err_h;
   SingleGateErrorModel gate_err_x;
@@ -76,10 +78,9 @@ class GraphStateStabilizerQubit : public IQubit {
   Eigen::MatrixXd memory_transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
   double emission_success_probability;
 
+  // graph state
   std::unordered_set<GraphStateStabilizerQubit *> neighbors;
   CliffordOperator vertex_operator;
-  const IQubitId *id;
-  GraphStateStabilizerBackend *const backend;
 
   // graph state tables
   static std::string decomposition_table[24];
@@ -88,7 +89,8 @@ class GraphStateStabilizerQubit : public IQubit {
   static CliffordOperator controlled_Z_lookup_node_1[2][24][24];
   static CliffordOperator controlled_Z_lookup_node_2[2][24][24];
 
-  SimTime updated_time = SimTime(0);
+  const IQubitId *id;
+  GraphStateStabilizerBackend *const backend;
 };
 
 }  // namespace quisp::backends::graph_state_stabilizer
