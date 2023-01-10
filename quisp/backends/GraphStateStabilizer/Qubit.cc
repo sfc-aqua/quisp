@@ -392,18 +392,18 @@ void GraphStateStabilizerQubit::relax() {
   }
 }
 
-EigenvalueResult GraphStateStabilizerQubit::measureX() {
+EigenvalueResult GraphStateStabilizerQubit::localMeasureX() {
   this->gateH();
-  return this->measureZ();
+  return this->localMeasureZ();
 }
 
-EigenvalueResult GraphStateStabilizerQubit::measureY() {
+EigenvalueResult GraphStateStabilizerQubit::localMeasureY() {
   this->gateSdg();
   this->gateH();
-  return this->measureZ();
+  return this->localMeasureZ();
 }
 
-EigenvalueResult GraphStateStabilizerQubit::measureZ() {
+EigenvalueResult GraphStateStabilizerQubit::localMeasureZ() {
   // apply memory error
   auto result = this->graphMeasureZ();
   // apply measurement error

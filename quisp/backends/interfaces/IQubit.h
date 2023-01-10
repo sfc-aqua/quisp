@@ -56,6 +56,7 @@ class IQubit {
   virtual MeasureYResult correlationMeasureY() { throw std::runtime_error("correlationMeasureY not implemented"); }
   virtual MeasureZResult correlationMeasureZ() { throw std::runtime_error("correlationMeasureZ not implemented"); }
   virtual EigenvalueResult localMeasureX() { throw std::runtime_error("localMeasureX not implemented"); }
+  virtual EigenvalueResult localMeasureY() { throw std::runtime_error("localMeasureY not implemented"); }
   virtual EigenvalueResult localMeasureZ() { throw std::runtime_error("localMeasureZ not implemented"); }
   virtual MeasurementOutcome measureDensityIndependent() { throw std::runtime_error("measureDensityIndependent not implemented"); }
 
