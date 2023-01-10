@@ -77,7 +77,6 @@ class Qubit : public GraphStateStabilizerQubit {
   using GraphStateStabilizerQubit::measurement_err;
   using GraphStateStabilizerQubit::memory_transition_matrix;
   using GraphStateStabilizerQubit::updated_time;
-  using GraphStateStabilizerQubit::emission_success_probability;
   using GraphStateStabilizerQubit::neighbors;
   using GraphStateStabilizerQubit::vertex_operator;
 
