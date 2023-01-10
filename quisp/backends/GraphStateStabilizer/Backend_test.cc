@@ -10,7 +10,7 @@
 
 namespace {
 using namespace quisp::backends::graph_state_stabilizer;
-using namespace quisp_test::backends;
+using namespace quisp_test::backends::graph_state_stabilizer;
 using namespace omnetpp;
 
 class TestGssQubit : public GraphStateStabilizerQubit {

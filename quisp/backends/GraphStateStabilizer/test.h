@@ -9,7 +9,10 @@
 #include "Configuration.h"
 #include "Qubit.h"
 
-namespace quisp_test::backends {
+using namespace quisp::backends::graph_state_stabilizer;
+using namespace quisp::backends::graph_state_stabilizer::types;
+
+namespace quisp_test::backends::graph_state_stabilizer {
 using omnetpp::SimTime;
 using ::quisp::backends::abstract::IQubit;
 using ::quisp::backends::abstract::IQubitId;
@@ -39,9 +42,54 @@ class TestRNG : public quisp::backends::abstract::IRandomNumberGenerator {
 };
 
 class Qubit : public GraphStateStabilizerQubit {
- public:
+  public:
+  using GraphStateStabilizerQubit::setFree;
+  using GraphStateStabilizerQubit::gateH;
+  using GraphStateStabilizerQubit::gateZ;
+  using GraphStateStabilizerQubit::gateX;
+  using GraphStateStabilizerQubit::gateS;
+  using GraphStateStabilizerQubit::gateSdg;
+  using GraphStateStabilizerQubit::gateCNOT;
+  using GraphStateStabilizerQubit::measureX;
+  using GraphStateStabilizerQubit::measureY;
+  using GraphStateStabilizerQubit::measureZ;
+  using GraphStateStabilizerQubit::setMemoryErrorRates;
+  using GraphStateStabilizerQubit::applySingleQubitGateError;
+  using GraphStateStabilizerQubit::applyTwoQubitGateError;
+  using GraphStateStabilizerQubit::applyMemoryError;
+  using GraphStateStabilizerQubit::addEdge;
+  using GraphStateStabilizerQubit::applyClifford;
+  using GraphStateStabilizerQubit::applyPureCZ;
+  using GraphStateStabilizerQubit::applyRightClifford;
+  using GraphStateStabilizerQubit::deleteEdge;
+  using GraphStateStabilizerQubit::graphMeasureZ;
+  using GraphStateStabilizerQubit::isNeighbor;
+  using GraphStateStabilizerQubit::localComplement;
+  using GraphStateStabilizerQubit::removeAllEdges;
+  using GraphStateStabilizerQubit::removeVertexOperation;
+  using GraphStateStabilizerQubit::toggleEdge;
+  using GraphStateStabilizerQubit::excite;
+  using GraphStateStabilizerQubit::relax;
+  using GraphStateStabilizerQubit::gate_err_h;
+  using GraphStateStabilizerQubit::gate_err_x;
+  using GraphStateStabilizerQubit::gate_err_z;
+  using GraphStateStabilizerQubit::gate_err_cnot;
+  using GraphStateStabilizerQubit::measurement_err;
+  using GraphStateStabilizerQubit::memory_transition_matrix;
+  using GraphStateStabilizerQubit::updated_time;
+  using GraphStateStabilizerQubit::emission_success_probability;
+  using GraphStateStabilizerQubit::neighbors;
+  using GraphStateStabilizerQubit::vertex_operator;
+
+  std::unordered_set<GraphStateStabilizerQubit*> getNeighborSet() { return neighbors; }
+  void setVertexOperator(CliffordOperator op) { this->vertex_operator = op; }
+  CliffordOperator getVertexOperator() { return this->vertex_operator; }
   Qubit(const IQubitId* id, GraphStateStabilizerBackend* const backend) : GraphStateStabilizerQubit(id, backend) {}
-  void reset() { setFree(); }
+  void reset() {
+    // we should not call setFree() here
+    this->neighbors.clear();
+    this->vertex_operator = CliffordOperator::H;
+  }
 };
 
 class Backend : public GraphStateStabilizerBackend {
