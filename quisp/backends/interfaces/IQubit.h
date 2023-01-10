@@ -43,6 +43,7 @@ class IQubit {
   virtual void gateH() { throw std::runtime_error("gateH not implemented"); }
   virtual void gateT() { throw std::runtime_error("gateT not implemented"); }
   virtual void gateS() { throw std::runtime_error("gateS not implemented"); }
+  virtual void gateSdg() { throw std::runtime_error("gateS not implemented"); }
 
   // two qubit operations
   virtual void gateCNOT(IQubit *const control_qubit) { throw std::runtime_error("gateCNOT not implemented"); };
