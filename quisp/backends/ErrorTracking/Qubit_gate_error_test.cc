@@ -6,7 +6,7 @@
 
 namespace {
 
-using namespace quisp_test::backends;
+using namespace quisp_test::backends::error_tracking;
 
 class EtQubitGateErrorTest : public ::testing::Test {
  protected:

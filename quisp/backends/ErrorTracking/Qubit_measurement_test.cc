@@ -5,7 +5,7 @@
 #include "test.h"
 
 namespace {
-using namespace quisp_test::backends;
+using namespace quisp_test::backends::error_tracking;
 
 class EtQubitMeasurementTest : public ::testing::Test {
  protected:

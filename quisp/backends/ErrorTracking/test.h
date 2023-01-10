@@ -9,7 +9,7 @@
 #include "Configuration.h"
 #include "Qubit.h"
 
-namespace quisp_test::backends {
+namespace quisp_test::backends::error_tracking {
 using omnetpp::SimTime;
 using ::quisp::backends::abstract::IQubit;
 using ::quisp::backends::abstract::IQubitId;
@@ -95,4 +95,4 @@ class Backend : public ErrorTrackingBackend {
   }
 };
 
-}  // namespace quisp_test::backends
+}  // namespace quisp_test::backends::error_tracking

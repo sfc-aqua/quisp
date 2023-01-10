@@ -7,7 +7,7 @@
 #include "test.h"
 
 namespace {
-using namespace quisp_test::backends;
+using namespace quisp_test::backends::error_tracking;
 using Eigen::Matrix2cd;
 using Eigen::Matrix4cd;
 using Eigen::Vector4cd;
