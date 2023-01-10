@@ -40,9 +40,9 @@ class GraphStateStabilizerQubit : public IQubit {
   void gateS() override;
   void gateSdg() override;
   void gateCNOT(IQubit *const control_qubit) override;
-  EigenvalueResult measureX();
-  EigenvalueResult measureY();
-  EigenvalueResult measureZ();
+  EigenvalueResult localMeasureX() override;
+  EigenvalueResult localMeasureY() override;
+  EigenvalueResult localMeasureZ() override;
 
  protected:
   // error simulation

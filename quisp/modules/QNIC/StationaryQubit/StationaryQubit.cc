@@ -137,9 +137,7 @@ MeasureXResult StationaryQubit::correlationMeasureX() { return qubit_ref->correl
 MeasureYResult StationaryQubit::correlationMeasureY() { return qubit_ref->correlationMeasureY(); }
 MeasureZResult StationaryQubit::correlationMeasureZ() { return qubit_ref->correlationMeasureZ(); }
 EigenvalueResult StationaryQubit::localMeasureX() { return qubit_ref->localMeasureX(); }
-EigenvalueResult StationaryQubit::localMeasureY() {
-  error("Not Yet Implemented");
-  return EigenvalueResult::PLUS_ONE;
+EigenvalueResult StationaryQubit::localMeasureY() { return qubit_ref->localMeasureY(); 
 }
 EigenvalueResult StationaryQubit::localMeasureZ() { return qubit_ref->localMeasureZ(); }
 
