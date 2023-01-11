@@ -68,8 +68,17 @@ class Qubit : public GraphStateStabilizerQubit {
   using GraphStateStabilizerQubit::localMeasureX;
   using GraphStateStabilizerQubit::localMeasureY;
   using GraphStateStabilizerQubit::localMeasureZ;
+  using GraphStateStabilizerQubit::correlationMeasureX;
+  using GraphStateStabilizerQubit::correlationMeasureY;
+  using GraphStateStabilizerQubit::correlationMeasureZ;
+  using GraphStateStabilizerQubit::measureDensityIndependent;
+  using GraphStateStabilizerQubit::purifyX;
+  using GraphStateStabilizerQubit::purifyZ;
+  using GraphStateStabilizerQubit::setCompletelyMixedDensityMatrix;
+  using GraphStateStabilizerQubit::setEntangledPartner;
   using GraphStateStabilizerQubit::measurement_err;
   using GraphStateStabilizerQubit::memory_transition_matrix;
+  using GraphStateStabilizerQubit::pi_vector;
   using GraphStateStabilizerQubit::neighbors;
   using GraphStateStabilizerQubit::relax;
   using GraphStateStabilizerQubit::removeAllEdges;
