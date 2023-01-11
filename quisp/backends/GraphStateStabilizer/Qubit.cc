@@ -6,6 +6,8 @@ namespace quisp::backends::graph_state_stabilizer {
 using types::CliffordOperator;
 GraphStateStabilizerQubit::GraphStateStabilizerQubit(const IQubitId *id, GraphStateStabilizerBackend *const backend)
     : id(id), memory_transition_matrix(MatrixXd::Zero(6, 6)), backend(backend) {
+  // initialize pi vector
+  pi_vector << 1,0,0,0,0,0;
   // initialize variables for graph state representation tracking
   vertex_operator = CliffordOperator::H;
 }
@@ -166,9 +168,7 @@ void GraphStateStabilizerQubit::applyMemoryError() {
       throw std::runtime_error("Transition matrix is NaN. This is Eigen's fault.");
     }
 
-    // pi(0 ~ 6) vector in Eq 5.3
-    MatrixXd pi_vector(1, 6);  // I, X, Z, Y, Ex, Re
-    pi_vector << 1, 0, 0, 0, 0, 0;
+    pi_vector << 1, 0, 0, 0, 0 ,0;
     // pi(t) in Eq 5.3
     // Clean, X, Z, Y, Excited, Relaxed
     // take error rate vector from DynamicTransitionMatrix Eq 5.3
