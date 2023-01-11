@@ -17,14 +17,18 @@ class GssMultiQubitTest : public ::testing::Test {
     rng = new TestRNG();
     backend = new GraphStateStabilizerBackend(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateStabilizerConfiguration>());
     std::vector<Qubit*> quantum_register(20);
-    for(auto qubit: quantum_register){
-        qubit = new Qubit(new QubitId(&qubit - &quantum_register[0]), backend);
+    for (auto qubit : quantum_register) {
+      qubit = new Qubit(new QubitId(&qubit - &quantum_register[0]), backend);
     }
   }
   std::vector<Qubit*> quantum_register;
-  Qubit* qubit;
   GraphStateStabilizerBackend* backend;
   TestRNG* rng;
 };
 
-}// namespace
+TESTF(GssMultiQubitTest, multiGateEntanglementSwapping) {
+  quantum_register[0]->gateH();
+  quantum_register[0]->gateH();
+}
+
+}  // namespace
