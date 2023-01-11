@@ -50,9 +50,9 @@ class Qubit : public GraphStateStabilizerQubit {
   using GraphStateStabilizerQubit::gateS;
   using GraphStateStabilizerQubit::gateSdg;
   using GraphStateStabilizerQubit::gateCNOT;
-  using GraphStateStabilizerQubit::measureX;
-  using GraphStateStabilizerQubit::measureY;
-  using GraphStateStabilizerQubit::measureZ;
+  using GraphStateStabilizerQubit::localMeasureX;
+  using GraphStateStabilizerQubit::localMeasureY;
+  using GraphStateStabilizerQubit::localMeasureZ;
   using GraphStateStabilizerQubit::setMemoryErrorRates;
   using GraphStateStabilizerQubit::applySingleQubitGateError;
   using GraphStateStabilizerQubit::applyTwoQubitGateError;
