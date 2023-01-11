@@ -359,6 +359,18 @@ void GraphStateStabilizerQubit::setFree() {
   updated_time = backend->getSimTime();
 }
 
+void GraphStateStabilizerQubit::setCompletelyMixedDensityMatrix(){
+  pi_vector << 0, (double)1 / (double)3, (double)1 / (double)3, (double)1 / (double)3, 0, 0;
+}
+
+void GraphStateStabilizerQubit::setEntangledPartner(IQubit *const partner) {
+  auto gss_partner_qubit = (GraphStateStabilizerQubit *)partner;
+  //　HACK: here we only consider the current qubit and the partner qubit
+  if (!this->isNeighbor(gss_partner_qubit)) this->addEdge(gss_partner_qubit);
+  this->vertex_operator = CliffordOperator::H;
+  gss_partner_qubit->vertex_operator = CliffordOperator::Id;
+}
+
 void GraphStateStabilizerQubit::gateCNOT(IQubit *const control_qubit) {
   this->applyMemoryError();
   this->applyClifford(CliffordOperator::H);  // use apply Clifford for pure operation
