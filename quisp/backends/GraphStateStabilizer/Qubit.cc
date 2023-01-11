@@ -414,6 +414,55 @@ EigenvalueResult GraphStateStabilizerQubit::localMeasureZ() {
   return result;
 }
 
+[[deprecated]] bool GraphStateStabilizerQubit::purifyX(IQubit *const control_qubit) {
+  this->gateCNOT(control_qubit);
+  auto result = this->localMeasureZ() != control_qubit->localMeasureZ();
+  return result;
+}
+
+[[deprecated]] bool GraphStateStabilizerQubit::purifyZ(IQubit *const target_qubit) {
+  target_qubit->gateCNOT(this);
+  auto result = this->localMeasureZ() != target_qubit->localMeasureZ();
+  return result;
+}
+
+[[deprecated]] MeasureXResult GraphStateStabilizerQubit::correlationMeasureX(IQubit *const entangled_qubit) {
+  auto result = this->localMeasureX() != entangled_qubit->localMeasureX();
+  return result ? MeasureXResult::HAS_Z_ERROR : MeasureXResult::NO_Z_ERROR;
+}
+
+[[deprecated]] MeasureYResult GraphStateStabilizerQubit::correlationMeasureY(IQubit *const entangled_qubit) {
+  auto result = this->localMeasureY() == entangled_qubit->localMeasureY();
+  return result ? MeasureYResult::HAS_XZ_ERROR : MeasureYResult::NO_XZ_ERROR;
+}
+
+[[deprecated]] MeasureZResult GraphStateStabilizerQubit::correlationMeasureZ(IQubit *const entangled_qubit) {
+  auto result = this->localMeasureZ() != entangled_qubit->localMeasureX();
+  return result ? MeasureZResult::HAS_X_ERROR : MeasureZResult::NO_X_ERROR;
+}
+
+[[deprecated]] MeasurementOutcome GraphStateStabilizerQubit::measureDensityIndependent(IQubit *const entangled_qubit) {
+  auto rand_num = backend->dblrand();
+  MeasurementOutcome o;
+  std::cout << "Random num = " << rand_num << "! \n ";
+  if (rand_num < ((double)1 / (double)3)) {
+    std::cout << "X measurement\n";
+    o.basis = 'X';
+    o.outcome_is_plus = this->correlationMeasureX(entangled_qubit) == MeasureXResult::NO_Z_ERROR;
+  } else if (rand_num >= ((double)1 / (double)3) && rand_num < ((double)2 / (double)3)) {
+    std::cout << "Z measurement\n";
+    o.basis = 'Z';
+    o.outcome_is_plus = this->correlationMeasureZ(entangled_qubit) == MeasureZResult::NO_X_ERROR;
+  } else {
+    std::cout << "Y measurement\n";
+    o.basis = 'Y';
+    o.outcome_is_plus = this->correlationMeasureY(entangled_qubit) == MeasureYResult::NO_XZ_ERROR;
+  }
+  // we can't obtain this for now, however this is for debugging, so it is ok
+  o.GOD_clean = 'Q';
+  return o;
+}
+
 // initialize static variables
 CliffordOperator GraphStateStabilizerQubit::clifford_application_lookup[24][24] =
 #include "clifford_application_lookup.tbl"
