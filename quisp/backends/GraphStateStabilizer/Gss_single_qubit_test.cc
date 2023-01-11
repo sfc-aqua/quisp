@@ -68,7 +68,7 @@ TEST_F(GssSingleQubitTest, initializeMemoryTransitionMatrix) {
   row5 << 0, 0, 0, 0, .014, 1 - .014;
   ASSERT_EQ(mat.row(5), row5);
 }
-TEST_F(GssSingleQubitTest, singleGatemeasureZ){
+TEST_F(GssSingleQubitTest, singleGatemeasureZ) {
   // do nothing
   auto meas = qubit->localMeasureZ();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
@@ -111,7 +111,7 @@ TEST_F(GssSingleQubitTest, singleGatemeasureZ){
   qubit->setFree();
 }
 
-TEST_F(GssSingleQubitTest, singleGatemeasureX){
+TEST_F(GssSingleQubitTest, singleGatemeasureX) {
   // do nothing
   rng->double_value = 0;
   auto meas = qubit->localMeasureX();
@@ -177,7 +177,7 @@ TEST_F(GssSingleQubitTest, singleGatemeasureX){
   qubit->setFree();
 }
 
-TEST_F(GssSingleQubitTest, singleGatemeasureY){
+TEST_F(GssSingleQubitTest, singleGatemeasureY) {
   // do nothing
   rng->double_value = 0;
   auto meas = qubit->localMeasureY();
@@ -249,4 +249,4 @@ TEST_F(GssSingleQubitTest, singleGatemeasureY){
   qubit->setFree();
 }
 
-}// namespace
+}  // namespace

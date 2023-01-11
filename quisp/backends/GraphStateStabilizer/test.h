@@ -42,42 +42,42 @@ class TestRNG : public quisp::backends::abstract::IRandomNumberGenerator {
 };
 
 class Qubit : public GraphStateStabilizerQubit {
-  public:
-  using GraphStateStabilizerQubit::setFree;
-  using GraphStateStabilizerQubit::gateH;
-  using GraphStateStabilizerQubit::gateZ;
-  using GraphStateStabilizerQubit::gateX;
-  using GraphStateStabilizerQubit::gateS;
-  using GraphStateStabilizerQubit::gateSdg;
-  using GraphStateStabilizerQubit::gateCNOT;
-  using GraphStateStabilizerQubit::localMeasureX;
-  using GraphStateStabilizerQubit::localMeasureY;
-  using GraphStateStabilizerQubit::localMeasureZ;
-  using GraphStateStabilizerQubit::setMemoryErrorRates;
-  using GraphStateStabilizerQubit::applySingleQubitGateError;
-  using GraphStateStabilizerQubit::applyTwoQubitGateError;
-  using GraphStateStabilizerQubit::applyMemoryError;
+ public:
   using GraphStateStabilizerQubit::addEdge;
   using GraphStateStabilizerQubit::applyClifford;
+  using GraphStateStabilizerQubit::applyMemoryError;
   using GraphStateStabilizerQubit::applyPureCZ;
   using GraphStateStabilizerQubit::applyRightClifford;
+  using GraphStateStabilizerQubit::applySingleQubitGateError;
+  using GraphStateStabilizerQubit::applyTwoQubitGateError;
   using GraphStateStabilizerQubit::deleteEdge;
-  using GraphStateStabilizerQubit::graphMeasureZ;
-  using GraphStateStabilizerQubit::isNeighbor;
-  using GraphStateStabilizerQubit::localComplement;
-  using GraphStateStabilizerQubit::removeAllEdges;
-  using GraphStateStabilizerQubit::removeVertexOperation;
-  using GraphStateStabilizerQubit::toggleEdge;
   using GraphStateStabilizerQubit::excite;
-  using GraphStateStabilizerQubit::relax;
+  using GraphStateStabilizerQubit::gate_err_cnot;
   using GraphStateStabilizerQubit::gate_err_h;
   using GraphStateStabilizerQubit::gate_err_x;
   using GraphStateStabilizerQubit::gate_err_z;
-  using GraphStateStabilizerQubit::gate_err_cnot;
+  using GraphStateStabilizerQubit::gateCNOT;
+  using GraphStateStabilizerQubit::gateH;
+  using GraphStateStabilizerQubit::gateS;
+  using GraphStateStabilizerQubit::gateSdg;
+  using GraphStateStabilizerQubit::gateX;
+  using GraphStateStabilizerQubit::gateZ;
+  using GraphStateStabilizerQubit::graphMeasureZ;
+  using GraphStateStabilizerQubit::isNeighbor;
+  using GraphStateStabilizerQubit::localComplement;
+  using GraphStateStabilizerQubit::localMeasureX;
+  using GraphStateStabilizerQubit::localMeasureY;
+  using GraphStateStabilizerQubit::localMeasureZ;
   using GraphStateStabilizerQubit::measurement_err;
   using GraphStateStabilizerQubit::memory_transition_matrix;
-  using GraphStateStabilizerQubit::updated_time;
   using GraphStateStabilizerQubit::neighbors;
+  using GraphStateStabilizerQubit::relax;
+  using GraphStateStabilizerQubit::removeAllEdges;
+  using GraphStateStabilizerQubit::removeVertexOperation;
+  using GraphStateStabilizerQubit::setFree;
+  using GraphStateStabilizerQubit::setMemoryErrorRates;
+  using GraphStateStabilizerQubit::toggleEdge;
+  using GraphStateStabilizerQubit::updated_time;
   using GraphStateStabilizerQubit::vertex_operator;
 
   std::unordered_set<GraphStateStabilizerQubit*> getNeighborSet() { return neighbors; }
@@ -110,4 +110,4 @@ class Backend : public GraphStateStabilizerBackend {
   }
 };
 
-}  // namespace quisp_test::backends
+}  // namespace quisp_test::backends::graph_state_stabilizer

@@ -177,7 +177,7 @@ void GraphStateStabilizerQubit::applyMemoryError() {
     /* this prepares the sectors for Monte-Carlo. later, we'll pick a random value and check with this sectors.
      *
      * 0.0    clean_ceil             z_ceil              excited_ceil
-     *  |          |                   |                      |                              
+     *  |          |                   |                      |
      *  | No Error | X Error | Z Error | Y Error | Excitation | Relaxation |
      *                       |                   |                         |
      *                    x_ceil               y_ceil                     1.0
@@ -357,7 +357,7 @@ void GraphStateStabilizerQubit::setFree() {
     this->applyClifford(CliffordOperator::X);
   }
   updated_time = backend->getSimTime();
-  }
+}
 
 void GraphStateStabilizerQubit::gateCNOT(IQubit *const control_qubit) {
   this->applyMemoryError();
