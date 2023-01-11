@@ -4,6 +4,7 @@
 #include "../interfaces/IQuantumBackend.h"
 #include "../interfaces/IQubit.h"
 #include "Configuration.h"
+#include "Eigen/src/Core/Matrix.h"
 #include "backends/interfaces/IQubitId.h"
 #include "omnetpp/simtime.h"
 #include "types.h"
@@ -11,16 +12,17 @@
 namespace quisp::backends::graph_state_stabilizer {
 
 using abstract::EigenvalueResult;
+using abstract::MeasureXResult;
+using abstract::MeasureYResult;
+using abstract::MeasureZResult;
+using abstract::MeasurementOutcome;
 using abstract::IQuantumBackend;
 using abstract::IQubit;
 using abstract::IQubitId;
 using abstract::SimTime;
-using Eigen::Matrix2cd;
-using Eigen::Matrix4cd;
 using Eigen::MatrixPower;
 using Eigen::MatrixXd;
-using Eigen::Vector2cd;
-using Eigen::Vector4cd;
+using Eigen::Matrix;
 using types::CliffordOperator;
 using types::MeasurementErrorModel;
 using types::MemoryErrorModel;
@@ -34,6 +36,9 @@ class GraphStateStabilizerQubit : public IQubit {
   ~GraphStateStabilizerQubit();
   void configure(std::unique_ptr<GraphStateStabilizerConfiguration> configuration);
   void setFree() override;
+  // The name of these functions might be misleading; these are used in bsa, will be renamed and modifed in the future
+  void setCompletelyMixedDensityMatrix() override;
+  void setEntangledPartner(IQubit *const partner) override;
   void gateH() override;
   void gateZ() override;
   void gateX() override;
@@ -43,6 +48,14 @@ class GraphStateStabilizerQubit : public IQubit {
   EigenvalueResult localMeasureX() override;
   EigenvalueResult localMeasureY() override;
   EigenvalueResult localMeasureZ() override;
+  // functions below here are deprecated ones, just for the compatibility with stationary qubit. Will be deleted.
+  bool purifyX(IQubit *const control_qubit) override;
+  bool purifyZ(IQubit *const target_qubit) override;
+  // these functions assume that our ideal state is phi+.
+  MeasureXResult correlationMeasureX(IQubit *const entangled_qubit);
+  MeasureYResult correlationMeasureY(IQubit *const entangled_qubit);
+  MeasureZResult correlationMeasureZ(IQubit *const entangled_qubit);
+  MeasurementOutcome measureDensityIndependent(IQubit *const entangled_qubit);
 
  protected:
   // error simulation
@@ -52,6 +65,10 @@ class GraphStateStabilizerQubit : public IQubit {
   void applyMemoryError();
   void excite();
   void relax();
+  // pi(0 ~ 6) vector in Eq 5.3
+  // I, X, Z, Y, Ex, Re
+  
+  Matrix<double, 6 ,1> pi_vector;
   // error simulation constants
   SingleGateErrorModel gate_err_h;
   SingleGateErrorModel gate_err_x;
