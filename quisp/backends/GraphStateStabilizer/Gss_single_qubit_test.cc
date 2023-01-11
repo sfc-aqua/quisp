@@ -70,43 +70,43 @@ TEST_F(GssSingleQubitTest, initializeMemoryTransitionMatrix) {
 }
 TEST_F(GssSingleQubitTest, singleGatemeasureZ){
   // do nothing
-  auto meas = qubit->measureZ();
+  auto meas = qubit->localMeasureZ();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
 
   // hadamard gate
   qubit->gateH();
   rng->double_value = 0;
-  meas = qubit->measureZ();
+  meas = qubit->localMeasureZ();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateH();
   rng->double_value = 0.5;
-  meas = qubit->measureZ();
+  meas = qubit->localMeasureZ();
   ASSERT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // x gate
   qubit->gateX();
-  meas = qubit->measureZ();
+  meas = qubit->localMeasureZ();
   ASSERT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // z gate
   qubit->gateZ();
-  meas = qubit->measureZ();
+  meas = qubit->localMeasureZ();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
 
   // s gate
   qubit->gateS();
-  meas = qubit->measureZ();
+  meas = qubit->localMeasureZ();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
 
   // sdg gate
   qubit->gateSdg();
-  meas = qubit->measureZ();
+  meas = qubit->localMeasureZ();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
 }
@@ -114,65 +114,65 @@ TEST_F(GssSingleQubitTest, singleGatemeasureZ){
 TEST_F(GssSingleQubitTest, singleGatemeasureX){
   // do nothing
   rng->double_value = 0;
-  auto meas = qubit->measureX();
+  auto meas = qubit->localMeasureX();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   rng->double_value = 0.5;
-  meas = qubit->measureX();
+  meas = qubit->localMeasureX();
   ASSERT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // hadamard gate
   qubit->gateH();
-  meas = qubit->measureX();
+  meas = qubit->localMeasureX();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
 
   // x gate
   qubit->gateX();
   rng->double_value = 0;
-  meas = qubit->measureX();
+  meas = qubit->localMeasureX();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateX();
   rng->double_value = 0.5;
-  meas = qubit->measureX();
+  meas = qubit->localMeasureX();
   ASSERT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // z gate
   qubit->gateZ();
   rng->double_value = 0;
-  meas = qubit->measureX();
+  meas = qubit->localMeasureX();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateZ();
   rng->double_value = 0.5;
-  meas = qubit->measureX();
+  meas = qubit->localMeasureX();
   ASSERT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // s gate
   qubit->gateS();
   rng->double_value = 0;
-  meas = qubit->measureX();
+  meas = qubit->localMeasureX();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateS();
   rng->double_value = 0.5;
-  meas = qubit->measureX();
+  meas = qubit->localMeasureX();
   ASSERT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // sdg gate
   qubit->gateSdg();
   rng->double_value = 0;
-  meas = qubit->measureX();
+  meas = qubit->localMeasureX();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateSdg();
   rng->double_value = 0.5;
-  meas = qubit->measureX();
+  meas = qubit->localMeasureX();
   ASSERT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 }
@@ -180,71 +180,71 @@ TEST_F(GssSingleQubitTest, singleGatemeasureX){
 TEST_F(GssSingleQubitTest, singleGatemeasureY){
   // do nothing
   rng->double_value = 0;
-  auto meas = qubit->measureY();
+  auto meas = qubit->localMeasureY();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   rng->double_value = 0.5;
-  meas = qubit->measureY();
+  meas = qubit->localMeasureY();
   ASSERT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // hadamard gate
   qubit->gateH();
   rng->double_value = 0;
-  meas = qubit->measureY();
+  meas = qubit->localMeasureY();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateH();
   rng->double_value = 0.5;
-  meas = qubit->measureY();
+  meas = qubit->localMeasureY();
   ASSERT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // x gate
   qubit->gateX();
   rng->double_value = 0;
-  meas = qubit->measureY();
+  meas = qubit->localMeasureY();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateX();
   rng->double_value = 0.5;
-  meas = qubit->measureY();
+  meas = qubit->localMeasureY();
   ASSERT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // z gate
   qubit->gateZ();
   rng->double_value = 0;
-  meas = qubit->measureY();
+  meas = qubit->localMeasureY();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateZ();
   rng->double_value = 0.5;
-  meas = qubit->measureX();
+  meas = qubit->localMeasureX();
   ASSERT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // s gate
   qubit->gateS();
   rng->double_value = 0;
-  meas = qubit->measureY();
+  meas = qubit->localMeasureY();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateS();
   rng->double_value = 0.5;
-  meas = qubit->measureX();
+  meas = qubit->localMeasureX();
   ASSERT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // sdg gate
   qubit->gateSdg();
   rng->double_value = 0;
-  meas = qubit->measureY();
+  meas = qubit->localMeasureY();
   ASSERT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateSdg();
   rng->double_value = 0.5;
-  meas = qubit->measureY();
+  meas = qubit->localMeasureY();
   ASSERT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 }
