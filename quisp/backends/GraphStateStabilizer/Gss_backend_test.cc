@@ -102,7 +102,6 @@ TEST_F(GssBackendTest, getQubitWithConfiguration) {
   conf->memory_z_err_rate = 0.28;
   conf->memory_relaxation_rate = 0.29;
   conf->memory_excitation_rate = 0.30;
-  conf->memory_completely_mixed_rate = 0;
 
   auto conf2 = std::make_unique<GraphStateStabilizerConfiguration>(*conf);
 
@@ -135,7 +134,6 @@ TEST_F(GssBackendTest, getQubitWithConfiguration) {
   EXPECT_EQ(gss_qubit->memory_err.z_error_rate, conf->memory_z_err_rate);
   EXPECT_EQ(gss_qubit->memory_err.excitation_error_rate, conf->memory_excitation_rate);
   EXPECT_EQ(gss_qubit->memory_err.relaxation_error_rate, conf->memory_relaxation_rate);
-  EXPECT_EQ(gss_qubit->memory_err.completely_mixed_rate, conf->memory_completely_mixed_rate);
 
   EXPECT_EQ(gss_qubit->gate_err_cnot.ix_error_rate, conf->cnot_gate_ix_err_ratio);
   EXPECT_EQ(gss_qubit->gate_err_cnot.xi_error_rate, conf->cnot_gate_xi_err_ratio);
