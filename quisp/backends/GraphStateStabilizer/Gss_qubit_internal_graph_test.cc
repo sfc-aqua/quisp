@@ -26,6 +26,10 @@ class GssQubitInternalGraphTest : public ::testing::Test {
     qubit_to_avoid = new Qubit(new QubitId(5), backend);
     isolated_qubit = new Qubit(new QubitId(6), backend);
   }
+  void TearDown() {
+    delete backend;
+    delete rng;
+  }
   Qubit* qubit;
   Qubit* another_qubit;
   Qubit* shared_neighbor;
