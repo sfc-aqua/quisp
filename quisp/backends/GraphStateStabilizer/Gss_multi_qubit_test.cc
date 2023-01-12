@@ -16,14 +16,18 @@ class GssMultiQubitTest : public ::testing::Test {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
     backend = new GraphStateStabilizerBackend(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateStabilizerConfiguration>());
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 16; i++) {
       quantum_register.push_back(new Qubit(new QubitId(i+1), backend));
     }
   }
   void resetRegister() {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 16; i++) {
       quantum_register.at(i)->reset();
     }
+  }
+  virtual void TearDown() {
+    delete rng;
+    delete backend;
   }
   std::vector<Qubit*> quantum_register;
   GraphStateStabilizerBackend* backend;
@@ -139,6 +143,20 @@ TEST_F(GssMultiQubitTest, checkCorrelatedMeasurementResultsBellPairZmeasurement)
   EXPECT_EQ(meas0, EigenvalueResult::MINUS_ONE);
   EXPECT_EQ(meas1, EigenvalueResult::MINUS_ONE);
   resetRegister();
+
+  // check phi+ with correlationMeasureZ
+  rng->double_value = 0;
+  quantum_register.at(0)->gateH();
+  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  auto meas = quantum_register.at(0)->correlationMeasureZ(quantum_register.at(1));
+  EXPECT_EQ(meas, MeasureZResult::NO_X_ERROR);
+  resetRegister();
+  rng->double_value = 0.5;
+  quantum_register.at(0)->gateH();
+  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  meas = quantum_register.at(0)->correlationMeasureZ(quantum_register.at(1));
+  EXPECT_EQ(meas, MeasureZResult::NO_X_ERROR);
+  resetRegister();
   // check phi-
   quantum_register.at(0)->gateH();
   quantum_register.at(1)->gateCNOT(quantum_register.at(0));
@@ -206,21 +224,21 @@ TEST_F(GssMultiQubitTest, checkCorrelatedMeasurementResultsBellPairZmeasurement)
 }
 TEST_F(GssMultiQubitTest, checkCorrelatedMeasurementResultsGHZstateZmeasurement) {
   quantum_register.at(0)->gateH();
-  for(int i = 1; i <10; i++){
+  for(int i = 1; i <15; i++){
     quantum_register.at(i)->gateCNOT(quantum_register.at(0));
   }
   rng->double_value = 0;
-  for(int i = 0; i <10; i++){
+  for(int i = 0; i <15; i++){
     auto meas = quantum_register.at(i)->localMeasureZ();
     EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   }
   resetRegister();
   quantum_register.at(0)->gateH();
-  for(int i = 1; i <10; i++){
+  for(int i = 1; i <15; i++){
     quantum_register.at(i)->gateCNOT(quantum_register.at(0));
   }
   rng->double_value = 0.5;
-  for(int i = 0; i <10; i++){
+  for(int i = 0; i <15; i++){
     auto meas = quantum_register.at(i)->localMeasureZ();
     EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   }

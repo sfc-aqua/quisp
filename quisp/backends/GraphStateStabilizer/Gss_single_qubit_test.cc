@@ -22,7 +22,10 @@ class GssSingleQubitTest : public ::testing::Test {
     qubit = new Qubit(new QubitId(1), backend);
     qubit->setFree();
   }
-
+  void TearDown() {
+    delete rng;
+    delete backend;
+  }
   Qubit* qubit;
   GraphStateStabilizerBackend* backend;
   TestRNG* rng;
