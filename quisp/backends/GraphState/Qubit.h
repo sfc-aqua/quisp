@@ -9,7 +9,7 @@
 #include "omnetpp/simtime.h"
 #include "types.h"
 
-namespace quisp::backends::graph_state_stabilizer {
+namespace quisp::backends::graph_state {
 
 using abstract::EigenvalueResult;
 using abstract::MeasureXResult;
@@ -29,12 +29,12 @@ using types::MemoryErrorModel;
 using types::SingleGateErrorModel;
 using types::TwoQubitGateErrorModel;
 
-class GraphStateStabilizerBackend;
-class GraphStateStabilizerQubit : public IQubit {
+class GraphStateBackend;
+class GraphStateQubit : public IQubit {
  public:
-  GraphStateStabilizerQubit(const IQubitId *id, GraphStateStabilizerBackend *const backend);
-  ~GraphStateStabilizerQubit();
-  void configure(std::unique_ptr<GraphStateStabilizerConfiguration> configuration);
+  GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend);
+  ~GraphStateQubit();
+  void configure(std::unique_ptr<GraphStateConfiguration> configuration);
   void setFree() override;
   // The name of these functions might be misleading; these are used in bsa, will be renamed and modifed in the future
   void setCompletelyMixedDensityMatrix() override;
@@ -61,7 +61,7 @@ class GraphStateStabilizerQubit : public IQubit {
   // error simulation
   void setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate);
   void applySingleQubitGateError(SingleGateErrorModel const &err);
-  void applyTwoQubitGateError(TwoQubitGateErrorModel const &err, GraphStateStabilizerQubit *another_qubit);
+  void applyTwoQubitGateError(TwoQubitGateErrorModel const &err, GraphStateQubit *another_qubit);
   void applyMemoryError();
   void excite();
   void relax();
@@ -81,20 +81,20 @@ class GraphStateStabilizerQubit : public IQubit {
   // graph state specific operations
   void applyClifford(CliffordOperator op);
   void applyRightClifford(CliffordOperator op);
-  bool isNeighbor(GraphStateStabilizerQubit *another_qubit);
-  void addEdge(GraphStateStabilizerQubit *another_qubit);
-  void deleteEdge(GraphStateStabilizerQubit *another_qubit);
-  void toggleEdge(GraphStateStabilizerQubit *another_qubit);
+  bool isNeighbor(GraphStateQubit *another_qubit);
+  void addEdge(GraphStateQubit *another_qubit);
+  void deleteEdge(GraphStateQubit *another_qubit);
+  void toggleEdge(GraphStateQubit *another_qubit);
   void removeAllEdges();
   void localComplement();
-  void removeVertexOperation(GraphStateStabilizerQubit *qubit_to_avoid);
-  void applyPureCZ(GraphStateStabilizerQubit *another_qubit);
+  void removeVertexOperation(GraphStateQubit *qubit_to_avoid);
+  void applyPureCZ(GraphStateQubit *another_qubit);
   EigenvalueResult graphMeasureZ();
 
   SimTime updated_time = SimTime(0);
 
   // graph state
-  std::unordered_set<GraphStateStabilizerQubit *> neighbors;
+  std::unordered_set<GraphStateQubit *> neighbors;
   CliffordOperator vertex_operator;
 
   // graph state tables
@@ -105,7 +105,7 @@ class GraphStateStabilizerQubit : public IQubit {
   static CliffordOperator controlled_Z_lookup_node_2[2][24][24];
 
   const IQubitId *id;
-  GraphStateStabilizerBackend *const backend;
+  GraphStateBackend *const backend;
 };
 
-}  // namespace quisp::backends::graph_state_stabilizer
+}  // namespace quisp::backends::graph_state

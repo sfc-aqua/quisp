@@ -9,25 +9,25 @@
 #include "Configuration.h"
 #include "Qubit.h"
 
-namespace quisp::backends::graph_state_stabilizer {
+namespace quisp::backends::graph_state {
 using abstract::IConfiguration;
 using abstract::IQuantumBackend;
 using abstract::IQubit;
 using abstract::IQubitId;
 using abstract::IRandomNumberGenerator;
-using graph_state_stabilizer::GraphStateStabilizerQubit;
+using graph_state::GraphStateQubit;
 using omnetpp::SimTime;
 
-class GraphStateStabilizerBackend : public IQuantumBackend {
+class GraphStateBackend : public IQuantumBackend {
  public:
   class ICallback {
    public:
     virtual ~ICallback() {}
-    virtual void willUpdate(GraphStateStabilizerBackend& backend) = 0;
+    virtual void willUpdate(GraphStateBackend& backend) = 0;
   };
-  GraphStateStabilizerBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateStabilizerConfiguration> configuration);
-  GraphStateStabilizerBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateStabilizerConfiguration> configuration, ICallback* callback);
-  ~GraphStateStabilizerBackend();
+  GraphStateBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateConfiguration> configuration);
+  GraphStateBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateConfiguration> configuration, ICallback* callback);
+  ~GraphStateBackend();
   IQubit* getQubit(const IQubitId* id) override;
   IQubit* getQubit(const IQubitId* id, std::unique_ptr<IConfiguration> configuration) override;
   std::unique_ptr<IConfiguration> getDefaultConfiguration() const override;
@@ -36,10 +36,10 @@ class GraphStateStabilizerBackend : public IQuantumBackend {
   double dblrand();
 
  protected:
-  std::unordered_map<const IQubitId*, std::unique_ptr<GraphStateStabilizerQubit>, IQubitId::Hash, IQubitId::Pred> qubits;
+  std::unordered_map<const IQubitId*, std::unique_ptr<GraphStateQubit>, IQubitId::Hash, IQubitId::Pred> qubits;
   SimTime current_time;
   const std::unique_ptr<IRandomNumberGenerator> rng;
-  std::unique_ptr<GraphStateStabilizerConfiguration> config;
+  std::unique_ptr<GraphStateConfiguration> config;
   ICallback* callback = nullptr;
 };
-}  // namespace quisp::backends::graph_state_stabilizer
+}  // namespace quisp::backends::graph_state

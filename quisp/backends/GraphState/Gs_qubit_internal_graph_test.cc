@@ -4,21 +4,21 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include <vector>
 #include "Qubit.h"
-#include "backends/GraphStateStabilizer/Backend.h"
+#include "backends/GraphState/Backend.h"
 #include "omnetpp/cexception.h"
 #include "omnetpp/simtime.h"
 #include "test.h"
 namespace {
-using namespace quisp_test::backends::graph_state_stabilizer;
-using namespace quisp::backends::graph_state_stabilizer;
-using namespace quisp::backends::graph_state_stabilizer::types;
+using namespace quisp_test::backends::graph_state;
+using namespace quisp::backends::graph_state;
+using namespace quisp::backends::graph_state::types;
 
-class GssQubitInternalGraphTest : public ::testing::Test {
+class GsQubitInternalGraphTest : public ::testing::Test {
  protected:
   void SetUp() {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
-    backend = new GraphStateStabilizerBackend(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateStabilizerConfiguration>());
+    backend = new GraphStateBackend(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateConfiguration>());
     qubit = new Qubit(new QubitId(1), backend);
     another_qubit = new Qubit(new QubitId(2), backend);
     shared_neighbor = new Qubit(new QubitId(3), backend);
@@ -36,11 +36,11 @@ class GssQubitInternalGraphTest : public ::testing::Test {
   Qubit* center_qubit;
   Qubit* qubit_to_avoid;
   Qubit* isolated_qubit;
-  GraphStateStabilizerBackend* backend;
+  GraphStateBackend* backend;
   TestRNG* rng;
 };
 
-TEST_F(GssQubitInternalGraphTest, AddEdge) {
+TEST_F(GsQubitInternalGraphTest, AddEdge) {
   // try adding self
   EXPECT_THROW({ qubit->addEdge(qubit); }, std::runtime_error);
 
@@ -60,7 +60,7 @@ TEST_F(GssQubitInternalGraphTest, AddEdge) {
   EXPECT_NE(another_qubit->getNeighborSet().find(qubit), another_qubit->getNeighborSet().end());
 }
 
-TEST_F(GssQubitInternalGraphTest, isNeighbor) {
+TEST_F(GsQubitInternalGraphTest, isNeighbor) {
   qubit->addEdge(another_qubit);
 
   EXPECT_FALSE(qubit->isNeighbor(qubit));
@@ -74,7 +74,7 @@ TEST_F(GssQubitInternalGraphTest, isNeighbor) {
   EXPECT_FALSE(isolated_qubit->isNeighbor(isolated_qubit));
 }
 
-TEST_F(GssQubitInternalGraphTest, DeleteEdge) {
+TEST_F(GsQubitInternalGraphTest, DeleteEdge) {
   qubit->addEdge(another_qubit);
   qubit->deleteEdge(another_qubit);
   EXPECT_TRUE(qubit->getNeighborSet().empty());
@@ -98,7 +98,7 @@ TEST_F(GssQubitInternalGraphTest, DeleteEdge) {
   EXPECT_TRUE(another_qubit->isNeighbor(shared_neighbor));
 }
 
-TEST_F(GssQubitInternalGraphTest, ToggleEdge) {
+TEST_F(GsQubitInternalGraphTest, ToggleEdge) {
   // no edge -> edge
   shared_neighbor->addEdge(qubit);
   shared_neighbor->addEdge(another_qubit);
@@ -122,7 +122,7 @@ TEST_F(GssQubitInternalGraphTest, ToggleEdge) {
   EXPECT_TRUE(another_qubit->isNeighbor(shared_neighbor));
 }
 
-TEST_F(GssQubitInternalGraphTest, removeAllEdges) {
+TEST_F(GsQubitInternalGraphTest, removeAllEdges) {
   qubit->addEdge(another_qubit);
   qubit->addEdge(shared_neighbor);
   another_qubit->addEdge(shared_neighbor);
@@ -139,7 +139,7 @@ TEST_F(GssQubitInternalGraphTest, removeAllEdges) {
   EXPECT_TRUE(another_qubit->isNeighbor(shared_neighbor));
 }
 
-TEST_F(GssQubitInternalGraphTest, applyClifford) {
+TEST_F(GsQubitInternalGraphTest, applyClifford) {
   // test on isolated qubit
   for (int k = 0; k < 24; k++) {
     for (int i = 0; i < 24; i++) {
@@ -172,7 +172,7 @@ TEST_F(GssQubitInternalGraphTest, applyClifford) {
   }
 }
 
-TEST_F(GssQubitInternalGraphTest, applyRightClifford) {
+TEST_F(GsQubitInternalGraphTest, applyRightClifford) {
   // test on isolated qubit
   for (int k = 0; k < 24; k++) {
     for (int i = 0; i < 24; i++) {
@@ -205,7 +205,7 @@ TEST_F(GssQubitInternalGraphTest, applyRightClifford) {
   }
 }
 
-TEST_F(GssQubitInternalGraphTest, localComplement) {
+TEST_F(GsQubitInternalGraphTest, localComplement) {
   std::vector<Qubit*> first_layer_qubits;
   std::vector<Qubit*> second_layer_qubits;
 
@@ -294,7 +294,7 @@ TEST_F(GssQubitInternalGraphTest, localComplement) {
   }
 }
 
-TEST_F(GssQubitInternalGraphTest, removeVertexOperation) {
+TEST_F(GsQubitInternalGraphTest, removeVertexOperation) {
   // apply RZ to qubit and qubit_to_avoid should not be affected by it
   qubit->reset();
   another_qubit->reset();
@@ -345,7 +345,7 @@ TEST_F(GssQubitInternalGraphTest, removeVertexOperation) {
   }
 }
 
-TEST_F(GssQubitInternalGraphTest, graphMeasureZIsolatedQubit) {
+TEST_F(GsQubitInternalGraphTest, graphMeasureZIsolatedQubit) {
   std::vector<CliffordOperator> zero_state_cliffords = {CliffordOperator::Id, CliffordOperator::Z, CliffordOperator::S, CliffordOperator::S_INV};
   std::vector<CliffordOperator> one_state_cliffords = {CliffordOperator::X, CliffordOperator::Y, CliffordOperator::X_S, CliffordOperator::X_S_INV};
   std::vector<CliffordOperator> superposition_state_cliffords = {
@@ -411,7 +411,7 @@ TEST_F(GssQubitInternalGraphTest, graphMeasureZIsolatedQubit) {
   }
 }
 
-TEST_F(GssQubitInternalGraphTest, graphMeasureZGHZState) {
+TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZState) {
   std::vector<Qubit*> qarrs;
   for (int i = 0; i < 10; i++) {
     qarrs.push_back(new Qubit{new QubitId(i), backend});

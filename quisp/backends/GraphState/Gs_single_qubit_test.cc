@@ -4,21 +4,21 @@
 #include <Eigen/Eigen>
 #include <memory>
 #include <unsupported/Eigen/MatrixFunctions>
-#include "backends/GraphStateStabilizer/types.h"
+#include "backends/GraphState/types.h"
 #include "test.h"
 
 namespace {
-using namespace quisp_test::backends::graph_state_stabilizer;
+using namespace quisp_test::backends::graph_state;
 using Eigen::Matrix2cd;
 using Eigen::Matrix4cd;
 using Eigen::Vector4cd;
 
-class GssSingleQubitTest : public ::testing::Test {
+class GsSingleQubitTest : public ::testing::Test {
  protected:
   void SetUp() {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
-    backend = new GraphStateStabilizerBackend(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateStabilizerConfiguration>());
+    backend = new GraphStateBackend(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateConfiguration>());
     qubit = new Qubit(new QubitId(1), backend);
     qubit->setFree();
   }
@@ -27,11 +27,11 @@ class GssSingleQubitTest : public ::testing::Test {
     delete backend;
   }
   Qubit* qubit;
-  GraphStateStabilizerBackend* backend;
+  GraphStateBackend* backend;
   TestRNG* rng;
 };
 
-TEST_F(GssSingleQubitTest, setFreeUpdatesTime) {
+TEST_F(GsSingleQubitTest, setFreeUpdatesTime) {
   qubit->setFree();
   EXPECT_EQ(qubit->updated_time, backend->getSimTime());
   auto last_updated_at = qubit->updated_time;
@@ -41,7 +41,7 @@ TEST_F(GssSingleQubitTest, setFreeUpdatesTime) {
   EXPECT_EQ(qubit->updated_time, backend->getSimTime());
 }
 
-TEST_F(GssSingleQubitTest, setMemoryErrorTransitionMatrix) {
+TEST_F(GsSingleQubitTest, setMemoryErrorTransitionMatrix) {
   qubit->setMemoryErrorRates(.011, .012, .013, .014, .015);
 
   auto mat = qubit->memory_transition_matrix;
@@ -74,19 +74,19 @@ TEST_F(GssSingleQubitTest, setMemoryErrorTransitionMatrix) {
   qubit->setMemoryErrorRates(0, 0, 0, 0, 0);
 }
 
-TEST_F(GssSingleQubitTest, getInitializedPiVector){
+TEST_F(GsSingleQubitTest, getInitializedPiVector){
   MatrixXd testing_pi_vector(1,6);
   testing_pi_vector << 1, 0, 0, 0, 0, 0;
   EXPECT_EQ(qubit->pi_vector,testing_pi_vector);
 }
-TEST_F(GssSingleQubitTest, setCompletelyMixedDensityMatrix){
+TEST_F(GsSingleQubitTest, setCompletelyMixedDensityMatrix){
   qubit->setCompletelyMixedDensityMatrix();
   MatrixXd testing_pi_vector(1,6);
   testing_pi_vector << 0, (double)1/(double)3, (double)1/(double)3, (double)1/(double)3, 0, 0;
   EXPECT_EQ(qubit->pi_vector,testing_pi_vector);
 }
 
-TEST_F(GssSingleQubitTest, singleGatemeasureZ) {
+TEST_F(GsSingleQubitTest, singleGatemeasureZ) {
   // do nothing
   auto meas = qubit->localMeasureZ();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
@@ -129,7 +129,7 @@ TEST_F(GssSingleQubitTest, singleGatemeasureZ) {
   qubit->setFree();
 }
 
-TEST_F(GssSingleQubitTest, singleGatemeasureX) {
+TEST_F(GsSingleQubitTest, singleGatemeasureX) {
   // do nothing
   rng->double_value = 0;
   auto meas = qubit->localMeasureX();
@@ -195,7 +195,7 @@ TEST_F(GssSingleQubitTest, singleGatemeasureX) {
   qubit->setFree();
 }
 
-TEST_F(GssSingleQubitTest, singleGatemeasureY) {
+TEST_F(GsSingleQubitTest, singleGatemeasureY) {
   // do nothing
   rng->double_value = 0;
   auto meas = qubit->localMeasureY();

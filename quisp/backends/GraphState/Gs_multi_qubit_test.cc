@@ -5,17 +5,17 @@
 #include <memory>
 #include <unsupported/Eigen/MatrixFunctions>
 #include <vector>
-#include "backends/GraphStateStabilizer/types.h"
+#include "backends/GraphState/types.h"
 #include "test.h"
 
 namespace {
-using namespace quisp_test::backends::graph_state_stabilizer;
-class GssMultiQubitTest : public ::testing::Test {
+using namespace quisp_test::backends::graph_state;
+class GsMultiQubitTest : public ::testing::Test {
  protected:
   virtual void SetUp() {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
-    backend = new GraphStateStabilizerBackend(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateStabilizerConfiguration>());
+    backend = new GraphStateBackend(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateConfiguration>());
     for (int i = 0; i < 16; i++) {
       quantum_register.push_back(new Qubit(new QubitId(i+1), backend));
     }
@@ -30,10 +30,10 @@ class GssMultiQubitTest : public ::testing::Test {
     delete backend;
   }
   std::vector<Qubit*> quantum_register;
-  GraphStateStabilizerBackend* backend;
+  GraphStateBackend* backend;
   TestRNG* rng;
 };
-TEST_F(GssMultiQubitTest, gateCNOTZmeasurement) {
+TEST_F(GsMultiQubitTest, gateCNOTZmeasurement) {
   // state : |0(target)0(control)> --> |0(target)0(control)>
   quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   rng->double_value = 0;
@@ -107,7 +107,7 @@ TEST_F(GssMultiQubitTest, gateCNOTZmeasurement) {
   EXPECT_EQ(meas1,EigenvalueResult::MINUS_ONE);
   resetRegister();
 }
-TEST_F(GssMultiQubitTest, setFree){
+TEST_F(GsMultiQubitTest, setFree){
   // state |0>+|1>(control) |0>(target) --> |00> + |11> --> |0> |0>+|1>
   rng->double_value = 0;
   quantum_register.at(0)->gateH();
@@ -124,7 +124,7 @@ TEST_F(GssMultiQubitTest, setFree){
   EXPECT_EQ(quantum_register.at(1)->localMeasureZ(), EigenvalueResult::MINUS_ONE);
   resetRegister();
 }
-TEST_F(GssMultiQubitTest, checkCorrelatedMeasurementResultsBellPairZmeasurement) {
+TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairZmeasurement) {
   // check phi+
   quantum_register.at(0)->gateH();
   quantum_register.at(1)->gateCNOT(quantum_register.at(0));
@@ -222,7 +222,7 @@ TEST_F(GssMultiQubitTest, checkCorrelatedMeasurementResultsBellPairZmeasurement)
   EXPECT_EQ(meas1, EigenvalueResult::PLUS_ONE);
   resetRegister();
 }
-TEST_F(GssMultiQubitTest, checkCorrelatedMeasurementResultsGHZstateZmeasurement) {
+TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsGHZstateZmeasurement) {
   quantum_register.at(0)->gateH();
   for(int i = 1; i <15; i++){
     quantum_register.at(i)->gateCNOT(quantum_register.at(0));

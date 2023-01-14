@@ -1,15 +1,15 @@
 #pragma once
 
 #include "../interfaces/IConfiguration.h"
-namespace quisp::backends::graph_state_stabilizer {
+namespace quisp::backends::graph_state {
 /**
 @brief Configuration class contains all parameters and provides the way to retrieve it
 */
-class GraphStateStabilizerConfiguration : public abstract::IConfiguration {
+class GraphStateConfiguration : public abstract::IConfiguration {
  public:
-  GraphStateStabilizerConfiguration() {}
-  ~GraphStateStabilizerConfiguration() {}
-  // GraphStateStabilizerConfiguration(const GraphStateStabilizerConfiguration&c) = default;
+  GraphStateConfiguration() {}
+  ~GraphStateConfiguration() {}
+  // GraphStateConfiguration(const GraphStateConfiguration&c) = default;
 
   // list up all params
   double memory_x_err_rate;
@@ -51,4 +51,4 @@ class GraphStateStabilizerConfiguration : public abstract::IConfiguration {
 
  protected:
 };
-}  // namespace quisp::backends::graph_state_stabilizer
+}  // namespace quisp::backends::graph_state
