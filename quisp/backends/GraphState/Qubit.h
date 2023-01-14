@@ -39,6 +39,7 @@ class GraphStateQubit : public IQubit {
   // The name of these functions might be misleading; these are used in bsa, will be renamed and modifed in the future
   void setCompletelyMixedDensityMatrix() override;
   void setEntangledPartner(IQubit *const partner) override;
+
   void gateH() override;
   void gateZ() override;
   void gateX() override;
@@ -51,11 +52,7 @@ class GraphStateQubit : public IQubit {
   // functions below here are deprecated ones, just for the compatibility with stationary qubit. Will be deleted.
   bool purifyX(IQubit *const control_qubit) override;
   bool purifyZ(IQubit *const target_qubit) override;
-  // these functions assume that our ideal state is phi+.
-  MeasureXResult correlationMeasureX(IQubit *const entangled_qubit);
-  MeasureYResult correlationMeasureY(IQubit *const entangled_qubit);
-  MeasureZResult correlationMeasureZ(IQubit *const entangled_qubit);
-  MeasurementOutcome measureDensityIndependent(IQubit *const entangled_qubit);
+  MeasurementOutcome measureDensityIndependent() override;
 
  protected:
   // error simulation
@@ -67,7 +64,6 @@ class GraphStateQubit : public IQubit {
   void relax();
   // pi(0 ~ 6) vector in Eq 5.3
   // I, X, Z, Y, Ex, Re
-  
   Matrix<double, 6 ,1> pi_vector;
   // error simulation constants
   SingleGateErrorModel gate_err_h;

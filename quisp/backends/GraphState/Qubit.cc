@@ -213,7 +213,6 @@ void GraphStateQubit::applyMemoryError() {
     } else {
       // Memory completely mixed error
       // This should never happen
-      assert();
     }
   }
   updated_time = current_time;
@@ -438,40 +437,25 @@ EigenvalueResult GraphStateQubit::localMeasureZ() {
   return result;
 }
 
-[[deprecated]] MeasureXResult GraphStateQubit::correlationMeasureX(IQubit *const entangled_qubit) {
-  auto result = this->localMeasureX() != entangled_qubit->localMeasureX();
-  return result ? MeasureXResult::HAS_Z_ERROR : MeasureXResult::NO_Z_ERROR;
-}
-
-[[deprecated]] MeasureYResult GraphStateQubit::correlationMeasureY(IQubit *const entangled_qubit) {
-  auto result = this->localMeasureY() == entangled_qubit->localMeasureY();
-  return result ? MeasureYResult::HAS_XZ_ERROR : MeasureYResult::NO_XZ_ERROR;
-}
-
-[[deprecated]] MeasureZResult GraphStateQubit::correlationMeasureZ(IQubit *const entangled_qubit) {
-  auto result = this->localMeasureZ() != entangled_qubit->localMeasureX();
-  return result ? MeasureZResult::HAS_X_ERROR : MeasureZResult::NO_X_ERROR;
-}
-
-[[deprecated]] MeasurementOutcome GraphStateQubit::measureDensityIndependent(IQubit *const entangled_qubit) {
+[[deprecated]] MeasurementOutcome GraphStateQubit::measureDensityIndependent() {
   auto rand_num = backend->dblrand();
   MeasurementOutcome o;
   std::cout << "Random num = " << rand_num << "! \n ";
   if (rand_num < ((double)1 / (double)3)) {
     std::cout << "X measurement\n";
     o.basis = 'X';
-    o.outcome_is_plus = this->correlationMeasureX(entangled_qubit) == MeasureXResult::NO_Z_ERROR;
+    o.outcome_is_plus = this->localMeasureX() == EigenvalueResult::PLUS_ONE ? true: false;
   } else if (rand_num >= ((double)1 / (double)3) && rand_num < ((double)2 / (double)3)) {
     std::cout << "Z measurement\n";
     o.basis = 'Z';
-    o.outcome_is_plus = this->correlationMeasureZ(entangled_qubit) == MeasureZResult::NO_X_ERROR;
+    o.outcome_is_plus = this->localMeasureZ() == EigenvalueResult::PLUS_ONE ? true: false;
   } else {
     std::cout << "Y measurement\n";
     o.basis = 'Y';
-    o.outcome_is_plus = this->correlationMeasureY(entangled_qubit) == MeasureYResult::NO_XZ_ERROR;
+    o.outcome_is_plus = this->localMeasureY() == EigenvalueResult::PLUS_ONE ? true: false;
   }
-  // we can't obtain this for now, however this is for debugging, so it is ok
-  o.GOD_clean = 'Q';
+  // the pi vector should be always [1,0,0,0,0,0], just for compatibility
+  o.GOD_clean = 'F';
   return o;
 }
 
