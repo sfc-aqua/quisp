@@ -1,6 +1,6 @@
 #pragma once
 #include <Eigen/Eigen>
-namespace quisp::backends::graph_state_stabilizer::types {
+namespace quisp::backends::graph_state::types {
 enum class CliffordOperator : int {
   Id = 0,
   X,
@@ -147,4 +147,4 @@ struct MeasurementErrorModel {
     z_error_rate = z;
   }
 };
-}  // namespace quisp::backends::graph_state_stabilizer::types
+}  // namespace quisp::backends::graph_state::types

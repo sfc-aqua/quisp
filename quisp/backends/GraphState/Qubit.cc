@@ -2,9 +2,9 @@
 #include "Backend.h"
 #include "types.h"
 
-namespace quisp::backends::graph_state_stabilizer {
+namespace quisp::backends::graph_state {
 using types::CliffordOperator;
-GraphStateStabilizerQubit::GraphStateStabilizerQubit(const IQubitId *id, GraphStateStabilizerBackend *const backend)
+GraphStateQubit::GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend)
     : id(id), memory_transition_matrix(MatrixXd::Zero(6, 6)), backend(backend) {
   // initialize pi vector
   pi_vector << 1,0,0,0,0,0;
@@ -12,9 +12,9 @@ GraphStateStabilizerQubit::GraphStateStabilizerQubit(const IQubitId *id, GraphSt
   vertex_operator = CliffordOperator::H;
 }
 
-GraphStateStabilizerQubit::~GraphStateStabilizerQubit() {}
+GraphStateQubit::~GraphStateQubit() {}
 
-void GraphStateStabilizerQubit::configure(std::unique_ptr<GraphStateStabilizerConfiguration> c) {
+void GraphStateQubit::configure(std::unique_ptr<GraphStateConfiguration> c) {
   setMemoryErrorRates(c->memory_x_err_rate, c->memory_y_err_rate, c->memory_z_err_rate, c->memory_excitation_rate, c->memory_relaxation_rate);
   measurement_err.setParams(c->measurement_x_err_rate, c->measurement_y_err_rate, c->measurement_z_err_rate);
   gate_err_h.setParams(c->h_gate_x_err_ratio, c->h_gate_y_err_ratio, c->h_gate_z_err_ratio, c->h_gate_err_rate);
@@ -23,7 +23,7 @@ void GraphStateStabilizerQubit::configure(std::unique_ptr<GraphStateStabilizerCo
   gate_err_cnot.setParams(c->cnot_gate_err_rate, c->cnot_gate_ix_err_ratio, c->cnot_gate_xi_err_ratio, c->cnot_gate_xx_err_ratio, c->cnot_gate_iz_err_ratio,
                           c->cnot_gate_zi_err_ratio, c->cnot_gate_zz_err_ratio, c->cnot_gate_iy_err_ratio, c->cnot_gate_yi_err_ratio, c->cnot_gate_yy_err_ratio);
 }
-void GraphStateStabilizerQubit::setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate) {
+void GraphStateQubit::setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate) {
   memory_err.x_error_rate = x_error_rate;
   memory_err.y_error_rate = y_error_rate;
   memory_err.z_error_rate = z_error_rate;
@@ -42,7 +42,7 @@ void GraphStateStabilizerQubit::setMemoryErrorRates(double x_error_rate, double 
   // clang-format on
 }
 
-void GraphStateStabilizerQubit::applySingleQubitGateError(SingleGateErrorModel const &err) {
+void GraphStateQubit::applySingleQubitGateError(SingleGateErrorModel const &err) {
   if (err.pauli_error_rate == 0) {
     return;
   }
@@ -71,7 +71,7 @@ void GraphStateStabilizerQubit::applySingleQubitGateError(SingleGateErrorModel c
   }
 }
 
-void GraphStateStabilizerQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, GraphStateStabilizerQubit *another_qubit) {
+void GraphStateQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, GraphStateQubit *another_qubit) {
   if (err.pauli_error_rate == 0) {
     return;
   }
@@ -124,7 +124,7 @@ void GraphStateStabilizerQubit::applyTwoQubitGateError(TwoQubitGateErrorModel co
     another_qubit->applyClifford(CliffordOperator::Z);
   }
 }
-void GraphStateStabilizerQubit::applyMemoryError() {
+void GraphStateQubit::applyMemoryError() {
   // If no memory error occurs, skip this memory error simulation.
   if (memory_err.error_rate == 0) return;
 
@@ -219,7 +219,7 @@ void GraphStateStabilizerQubit::applyMemoryError() {
   updated_time = current_time;
 }
 
-void GraphStateStabilizerQubit::excite() {
+void GraphStateQubit::excite() {
   // check if it is correct
   auto result = this->graphMeasureZ();
   if (result == EigenvalueResult::PLUS_ONE) {
@@ -227,7 +227,7 @@ void GraphStateStabilizerQubit::excite() {
   }
 }
 
-void GraphStateStabilizerQubit::relax() {
+void GraphStateQubit::relax() {
   // check if it is correct
   auto result = this->graphMeasureZ();
   if (result == EigenvalueResult::MINUS_ONE) {
@@ -235,24 +235,24 @@ void GraphStateStabilizerQubit::relax() {
   }
 }
 
-void GraphStateStabilizerQubit::applyClifford(CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)op][(int)(this->vertex_operator)]; }
+void GraphStateQubit::applyClifford(CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)op][(int)(this->vertex_operator)]; }
 
-void GraphStateStabilizerQubit::applyRightClifford(CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)(this->vertex_operator)][(int)op]; }
+void GraphStateQubit::applyRightClifford(CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)(this->vertex_operator)][(int)op]; }
 
-bool GraphStateStabilizerQubit::isNeighbor(GraphStateStabilizerQubit *another_qubit) { return this->neighbors.find(another_qubit) != this->neighbors.end(); }
+bool GraphStateQubit::isNeighbor(GraphStateQubit *another_qubit) { return this->neighbors.find(another_qubit) != this->neighbors.end(); }
 
-void GraphStateStabilizerQubit::addEdge(GraphStateStabilizerQubit *another_qubit) {
+void GraphStateQubit::addEdge(GraphStateQubit *another_qubit) {
   if (another_qubit == this) throw std::runtime_error("adding edge to self is not allowed");
   this->neighbors.insert(another_qubit);
   another_qubit->neighbors.insert(this);
 }
 
-void GraphStateStabilizerQubit::deleteEdge(GraphStateStabilizerQubit *another_qubit) {
+void GraphStateQubit::deleteEdge(GraphStateQubit *another_qubit) {
   this->neighbors.erase(another_qubit);
   another_qubit->neighbors.erase(this);
 }
 
-void GraphStateStabilizerQubit::toggleEdge(GraphStateStabilizerQubit *another_qubit) {
+void GraphStateQubit::toggleEdge(GraphStateQubit *another_qubit) {
   if (this->isNeighbor(another_qubit)) {
     this->deleteEdge(another_qubit);
   } else {
@@ -260,14 +260,14 @@ void GraphStateStabilizerQubit::toggleEdge(GraphStateStabilizerQubit *another_qu
   }
 }
 
-void GraphStateStabilizerQubit::removeAllEdges() {
+void GraphStateQubit::removeAllEdges() {
   for (auto *v : this->neighbors) {
     v->neighbors.erase(this);
   }
   this->neighbors.clear();
 }
 
-void GraphStateStabilizerQubit::localComplement() {
+void GraphStateQubit::localComplement() {
   auto it_end = this->neighbors.end();
   for (auto it_u = this->neighbors.begin(); it_u != it_end; it_u++) {
     auto it_v = std::next(it_u);
@@ -281,7 +281,7 @@ void GraphStateStabilizerQubit::localComplement() {
   this->applyRightClifford(CliffordOperator::RX_INV);
 }
 
-void GraphStateStabilizerQubit::removeVertexOperation(GraphStateStabilizerQubit *qubit_to_avoid) {
+void GraphStateQubit::removeVertexOperation(GraphStateQubit *qubit_to_avoid) {
   if (this->neighbors.empty() || this->vertex_operator == CliffordOperator::Id) {
     return;
   }
@@ -304,7 +304,7 @@ void GraphStateStabilizerQubit::removeVertexOperation(GraphStateStabilizerQubit 
   }
 }
 
-void GraphStateStabilizerQubit::applyPureCZ(GraphStateStabilizerQubit *another_qubit) {
+void GraphStateQubit::applyPureCZ(GraphStateQubit *another_qubit) {
   auto *aq = another_qubit;
   this->removeVertexOperation(aq);
   aq->removeVertexOperation(this);
@@ -320,7 +320,7 @@ void GraphStateStabilizerQubit::applyPureCZ(GraphStateStabilizerQubit *another_q
   }
 }
 
-EigenvalueResult GraphStateStabilizerQubit::graphMeasureZ() {
+EigenvalueResult GraphStateQubit::graphMeasureZ() {
   auto vop = this->vertex_operator;
   auto result = EigenvalueResult::PLUS_ONE;
   if (this->neighbors.empty()) {
@@ -350,7 +350,7 @@ EigenvalueResult GraphStateStabilizerQubit::graphMeasureZ() {
 
 // public member functions
 
-void GraphStateStabilizerQubit::setFree() {
+void GraphStateQubit::setFree() {
   // force qubit to be in |0> state
   auto result = this->graphMeasureZ();
   if (result == EigenvalueResult::MINUS_ONE) {
@@ -359,64 +359,64 @@ void GraphStateStabilizerQubit::setFree() {
   updated_time = backend->getSimTime();
 }
 
-void GraphStateStabilizerQubit::setCompletelyMixedDensityMatrix(){
+void GraphStateQubit::setCompletelyMixedDensityMatrix(){
   pi_vector << 0, (double)1 / (double)3, (double)1 / (double)3, (double)1 / (double)3, 0, 0;
 }
 
-void GraphStateStabilizerQubit::setEntangledPartner(IQubit *const partner) {
-  auto gss_partner_qubit = (GraphStateStabilizerQubit *)partner;
+void GraphStateQubit::setEntangledPartner(IQubit *const partner) {
+  auto gs_partner_qubit = (GraphStateQubit *)partner;
   //　HACK: here we only consider the current qubit and the partner qubit
-  if (!this->isNeighbor(gss_partner_qubit)) this->addEdge(gss_partner_qubit);
+  if (!this->isNeighbor(gs_partner_qubit)) this->addEdge(gs_partner_qubit);
   this->vertex_operator = CliffordOperator::H;
-  gss_partner_qubit->vertex_operator = CliffordOperator::Id;
+  gs_partner_qubit->vertex_operator = CliffordOperator::Id;
 }
 
-void GraphStateStabilizerQubit::gateCNOT(IQubit *const control_qubit) {
+void GraphStateQubit::gateCNOT(IQubit *const control_qubit) {
   this->applyMemoryError();
   this->applyClifford(CliffordOperator::H);  // use apply Clifford for pure operation
-  this->applyPureCZ((GraphStateStabilizerQubit *)control_qubit);
+  this->applyPureCZ((GraphStateQubit *)control_qubit);
   this->applyClifford(CliffordOperator::H);
-  this->applyTwoQubitGateError(gate_err_cnot, (GraphStateStabilizerQubit *)control_qubit);
+  this->applyTwoQubitGateError(gate_err_cnot, (GraphStateQubit *)control_qubit);
 }
 
-void GraphStateStabilizerQubit::gateH() {
+void GraphStateQubit::gateH() {
   this->applyMemoryError();
   this->applyClifford(CliffordOperator::H);
   this->applySingleQubitGateError(gate_err_h);
 }
-void GraphStateStabilizerQubit::gateZ() {
+void GraphStateQubit::gateZ() {
   this->applyMemoryError();
   this->applyClifford(CliffordOperator::Z);
   this->applySingleQubitGateError(gate_err_z);
 }
-void GraphStateStabilizerQubit::gateX() {
+void GraphStateQubit::gateX() {
   this->applyMemoryError();
   this->applyClifford(CliffordOperator::X);
   this->applySingleQubitGateError(gate_err_x);
 }
-void GraphStateStabilizerQubit::gateS() {
+void GraphStateQubit::gateS() {
   this->applyMemoryError();
   this->applyClifford(CliffordOperator::S);
   // apply s error, not implemented yet
 }
-void GraphStateStabilizerQubit::gateSdg() {
+void GraphStateQubit::gateSdg() {
   this->applyMemoryError();
   this->applyClifford(CliffordOperator::S_INV);
   // apply sdg error, not implemented yet
 }
 
-EigenvalueResult GraphStateStabilizerQubit::localMeasureX() {
+EigenvalueResult GraphStateQubit::localMeasureX() {
   this->gateH();
   return this->localMeasureZ();
 }
 
-EigenvalueResult GraphStateStabilizerQubit::localMeasureY() {
+EigenvalueResult GraphStateQubit::localMeasureY() {
   this->gateSdg();
   this->gateH();
   return this->localMeasureZ();
 }
 
-EigenvalueResult GraphStateStabilizerQubit::localMeasureZ() {
+EigenvalueResult GraphStateQubit::localMeasureZ() {
   applyMemoryError();
   auto result = this->graphMeasureZ();
   // measurement error
@@ -426,34 +426,34 @@ EigenvalueResult GraphStateStabilizerQubit::localMeasureZ() {
   return result;
 }
 
-[[deprecated]] bool GraphStateStabilizerQubit::purifyX(IQubit *const control_qubit) {
+[[deprecated]] bool GraphStateQubit::purifyX(IQubit *const control_qubit) {
   this->gateCNOT(control_qubit);
   auto result = this->localMeasureZ() != control_qubit->localMeasureZ();
   return result;
 }
 
-[[deprecated]] bool GraphStateStabilizerQubit::purifyZ(IQubit *const target_qubit) {
+[[deprecated]] bool GraphStateQubit::purifyZ(IQubit *const target_qubit) {
   target_qubit->gateCNOT(this);
   auto result = this->localMeasureZ() != target_qubit->localMeasureZ();
   return result;
 }
 
-[[deprecated]] MeasureXResult GraphStateStabilizerQubit::correlationMeasureX(IQubit *const entangled_qubit) {
+[[deprecated]] MeasureXResult GraphStateQubit::correlationMeasureX(IQubit *const entangled_qubit) {
   auto result = this->localMeasureX() != entangled_qubit->localMeasureX();
   return result ? MeasureXResult::HAS_Z_ERROR : MeasureXResult::NO_Z_ERROR;
 }
 
-[[deprecated]] MeasureYResult GraphStateStabilizerQubit::correlationMeasureY(IQubit *const entangled_qubit) {
+[[deprecated]] MeasureYResult GraphStateQubit::correlationMeasureY(IQubit *const entangled_qubit) {
   auto result = this->localMeasureY() == entangled_qubit->localMeasureY();
   return result ? MeasureYResult::HAS_XZ_ERROR : MeasureYResult::NO_XZ_ERROR;
 }
 
-[[deprecated]] MeasureZResult GraphStateStabilizerQubit::correlationMeasureZ(IQubit *const entangled_qubit) {
+[[deprecated]] MeasureZResult GraphStateQubit::correlationMeasureZ(IQubit *const entangled_qubit) {
   auto result = this->localMeasureZ() != entangled_qubit->localMeasureX();
   return result ? MeasureZResult::HAS_X_ERROR : MeasureZResult::NO_X_ERROR;
 }
 
-[[deprecated]] MeasurementOutcome GraphStateStabilizerQubit::measureDensityIndependent(IQubit *const entangled_qubit) {
+[[deprecated]] MeasurementOutcome GraphStateQubit::measureDensityIndependent(IQubit *const entangled_qubit) {
   auto rand_num = backend->dblrand();
   MeasurementOutcome o;
   std::cout << "Random num = " << rand_num << "! \n ";
@@ -476,23 +476,23 @@ EigenvalueResult GraphStateStabilizerQubit::localMeasureZ() {
 }
 
 // initialize static variables
-CliffordOperator GraphStateStabilizerQubit::clifford_application_lookup[24][24] =
+CliffordOperator GraphStateQubit::clifford_application_lookup[24][24] =
 #include "clifford_application_lookup.tbl"
     ;
 
-bool GraphStateStabilizerQubit::controlled_Z_lookup_edge[2][24][24] =
+bool GraphStateQubit::controlled_Z_lookup_edge[2][24][24] =
 #include "cz_lookup_edge.tbl"
     ;
 
-CliffordOperator GraphStateStabilizerQubit::controlled_Z_lookup_node_1[2][24][24] =
+CliffordOperator GraphStateQubit::controlled_Z_lookup_node_1[2][24][24] =
 #include "cz_lookup_node_1.tbl"
     ;
 
-CliffordOperator GraphStateStabilizerQubit::controlled_Z_lookup_node_2[2][24][24] =
+CliffordOperator GraphStateQubit::controlled_Z_lookup_node_2[2][24][24] =
 #include "cz_lookup_node_2.tbl"
     ;
 
-std::string GraphStateStabilizerQubit::decomposition_table[24] = {
+std::string GraphStateQubit::decomposition_table[24] = {
     "", "VV", "UUVV", "UU", "VVV", "V", "VUU", "UUV", "UVUUU", "UUUVU", "UVVVU", "UVU", "U", "UUU", "VVU", "UVV", "UVVV", "UV", "UVUU", "UUUV", "VVVU", "VU", "VUUU", "UUVU",
 };
-}  // namespace quisp::backends::graph_state_stabilizer
+}  // namespace quisp::backends::graph_state
