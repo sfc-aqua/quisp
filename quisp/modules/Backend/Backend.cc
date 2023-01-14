@@ -11,8 +11,8 @@ void BackendContainer::initialize() {
   auto backend_type = std::string(par("backend_type").stringValue());
   if (backend_type == "ErrorTrackingBackend") {
     configureErrorTrackingBackend();
-  } else if (backend_type == "GraphStateStabilizerBackend") {
-    configureGraphStateStabilizerBackend();
+  } else if (backend_type == "GraphStateBackend") {
+    configureGraphStateBackend();
   } else {
     throw omnetpp::cRuntimeError("Unknown backend type: %s", backend_type.c_str());
   }
@@ -60,8 +60,8 @@ void BackendContainer::configureErrorTrackingBackend() {
   backend = std::make_unique<ErrorTrackingBackend>(std::make_unique<RNG>(this), std::move(conf), static_cast<ErrorTrackingBackend::ICallback*>(this));
 }
 
-void BackendContainer::configureGraphStateStabilizerBackend() {
-  auto conf = std::make_unique<GraphStateStabilizerConfiguration>();
+void BackendContainer::configureGraphStateBackend() {
+  auto conf = std::make_unique<GraphStateConfiguration>();
   conf->measurement_x_err_rate = par("x_measurement_error_rate").doubleValue();
   conf->measurement_y_err_rate = par("y_measurement_error_rate").doubleValue();
   conf->measurement_z_err_rate = par("z_measurement_error_rate").doubleValue();
@@ -99,10 +99,10 @@ void BackendContainer::configureGraphStateStabilizerBackend() {
   conf->memory_relaxation_rate = par("memory_energy_relaxation_rate").doubleValue();
   conf->memory_completely_mixed_rate = par("memory_completely_mixed_rate").doubleValue();
 
-  backend = std::make_unique<GraphStateStabilizerBackend>(std::make_unique<RNG>(this), std::move(conf), static_cast<GraphStateStabilizerBackend::ICallback*>(this));
+  backend = std::make_unique<GraphStateBackend>(std::make_unique<RNG>(this), std::move(conf), static_cast<GraphStateBackend::ICallback*>(this));
 }
 void BackendContainer::willUpdate(ErrorTrackingBackend& backend) { backend.setSimTime(omnetpp::simTime()); }
-void BackendContainer::willUpdate(GraphStateStabilizerBackend& backend) { backend.setSimTime(omnetpp::simTime()); }
+void BackendContainer::willUpdate(GraphStateBackend& backend) { backend.setSimTime(omnetpp::simTime()); }
 void BackendContainer::finish() {}
 
 IQuantumBackend* BackendContainer::getQuantumBackend() {

@@ -9,8 +9,8 @@ using namespace quisp_test;
 using OriginalBackendContainer = quisp::modules::backend::BackendContainer;
 using quisp::modules::backend::ErrorTrackingBackend;
 using quisp::modules::backend::ErrorTrackingConfiguration;
-using quisp::modules::backend::GraphStateStabilizerBackend;
-using quisp::modules::backend::GraphStateStabilizerConfiguration;
+using quisp::modules::backend::GraphStateBackend;
+using quisp::modules::backend::GraphStateConfiguration;
 
 class BackendContainer : public OriginalBackendContainer {
  public:
@@ -74,7 +74,7 @@ TEST_F(BackendContainerTest, callEtInitialize) {
 }
 
 TEST_F(BackendContainerTest, callGssInitialize) {
-  setParStr(backend, "backend_type", "GraphStateStabilizerBackend");
+  setParStr(backend, "backend_type", "GraphStateBackend");
   EXPECT_EQ(backend->backend, nullptr);
   backend->callInitialize();
   EXPECT_NE(backend->backend, nullptr);
@@ -137,48 +137,48 @@ TEST_F(BackendContainerTest, getCopyOfEtBackendConfiguration) {
 }
 
 TEST_F(BackendContainerTest, getGssQuantumBackend) {
-  setParStr(backend, "backend_type", "GraphStateStabilizerBackend");
+  setParStr(backend, "backend_type", "GraphStateBackend");
   backend->callInitialize();
   ASSERT_NE(backend->backend, nullptr);
   auto *b = backend->getQuantumBackend();
   ASSERT_NE(b, nullptr);
-  auto *gss_backend = dynamic_cast<GraphStateStabilizerBackend *>(b);
+  auto *gss_backend = dynamic_cast<GraphStateBackend *>(b);
   EXPECT_NE(gss_backend, nullptr);
 }
 
 TEST_F(BackendContainerTest, getGssQuantumBackendWithoutInit) {
-  setParStr(backend, "backend_type", "GraphStateStabilizerBackend");
+  setParStr(backend, "backend_type", "GraphStateBackend");
   ASSERT_EQ(backend->backend, nullptr);
   EXPECT_ANY_THROW({ backend->getQuantumBackend(); });
 }
 
 TEST_F(BackendContainerTest, getGssBackendConfiguration) {
-  setParStr(backend, "backend_type", "GraphStateStabilizerBackend");
+  setParStr(backend, "backend_type", "GraphStateBackend");
   backend->callInitialize();
   ASSERT_NE(backend->backend, nullptr);
   auto *b = backend->getQuantumBackend();
   ASSERT_NE(b, nullptr);
-  auto *gss_backend = dynamic_cast<GraphStateStabilizerBackend *>(b);
+  auto *gss_backend = dynamic_cast<GraphStateBackend *>(b);
 
   auto conf = gss_backend->getDefaultConfiguration();
   ASSERT_NE(conf, nullptr);
-  auto gss_conf = dynamic_cast<GraphStateStabilizerConfiguration *>(conf.get());
+  auto gss_conf = dynamic_cast<GraphStateConfiguration *>(conf.get());
   ASSERT_NE(gss_conf, nullptr);
 }
 
 TEST_F(BackendContainerTest, getCopyOfGssBackendConfiguration) {
-  setParStr(backend, "backend_type", "GraphStateStabilizerBackend");
+  setParStr(backend, "backend_type", "GraphStateBackend");
   backend->callInitialize();
   ASSERT_NE(backend->backend, nullptr);
   auto *b = backend->getQuantumBackend();
   ASSERT_NE(b, nullptr);
-  auto *gss_backend = dynamic_cast<GraphStateStabilizerBackend *>(b);
+  auto *gss_backend = dynamic_cast<GraphStateBackend *>(b);
 
   auto conf = gss_backend->getDefaultConfiguration();
-  auto gss_conf = dynamic_cast<GraphStateStabilizerConfiguration *>(conf.get());
+  auto gss_conf = dynamic_cast<GraphStateConfiguration *>(conf.get());
 
   auto conf2 = gss_backend->getDefaultConfiguration();
-  auto gss_conf2 = dynamic_cast<GraphStateStabilizerConfiguration *>(conf2.get());
+  auto gss_conf2 = dynamic_cast<GraphStateConfiguration *>(conf2.get());
 
   // confirm gss_conf and gss_conf2 are different intstances
   gss_conf->cnot_gate_err_rate = 10;

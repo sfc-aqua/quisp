@@ -4,17 +4,17 @@
 #include <memory>
 #include "RNG.h"
 #include "backends/ErrorTracking/Qubit.h"
-#include "backends/GraphStateStabilizer/Qubit.h"
+#include "backends/GraphState/Qubit.h"
 
 namespace quisp::modules::backend {
 using quisp::modules::common::ErrorTrackingBackend;
 using quisp::modules::common::ErrorTrackingConfiguration;
-using quisp::modules::common::GraphStateStabilizerBackend;
-using quisp::modules::common::GraphStateStabilizerConfiguration;
+using quisp::modules::common::GraphStateBackend;
+using quisp::modules::common::GraphStateConfiguration;
 using quisp::modules::common::IQuantumBackend;
 using rng::RNG;
 
-class BackendContainer : public omnetpp::cSimpleModule, ErrorTrackingBackend::ICallback, GraphStateStabilizerBackend::ICallback {
+class BackendContainer : public omnetpp::cSimpleModule, ErrorTrackingBackend::ICallback, GraphStateBackend::ICallback {
  public:
   BackendContainer();
   ~BackendContainer();
@@ -24,11 +24,11 @@ class BackendContainer : public omnetpp::cSimpleModule, ErrorTrackingBackend::IC
 
   IQuantumBackend* getQuantumBackend();
   void willUpdate(ErrorTrackingBackend& backend) override;
-  void willUpdate(GraphStateStabilizerBackend& backend) override;
+  void willUpdate(GraphStateBackend& backend) override;
 
  protected:
   void configureErrorTrackingBackend();
-  void configureGraphStateStabilizerBackend();
+  void configureGraphStateBackend();
   std::unique_ptr<IQuantumBackend> backend = nullptr;
 };
 
