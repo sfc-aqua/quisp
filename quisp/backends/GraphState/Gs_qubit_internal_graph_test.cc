@@ -25,6 +25,12 @@ class GsQubitInternalGraphTest : public ::testing::Test {
     center_qubit = dynamic_cast<Qubit*>(backend->getQubit(4));
     qubit_to_avoid = dynamic_cast<Qubit*>(backend->getQubit(5));
     isolated_qubit = dynamic_cast<Qubit*>(backend->getQubit(6));
+    qubit->fillParams();
+    another_qubit->fillParams();
+    shared_neighbor->fillParams();
+    center_qubit->fillParams();
+    qubit_to_avoid->fillParams();
+    isolated_qubit->fillParams();
   }
   Qubit* qubit;
   Qubit* another_qubit;
