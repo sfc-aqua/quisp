@@ -18,17 +18,13 @@ class GsQubitInternalGraphTest : public ::testing::Test {
   void SetUp() {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
-    backend = new GraphStateBackend(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateConfiguration>());
-    qubit = new Qubit(new QubitId(1), backend);
-    another_qubit = new Qubit(new QubitId(2), backend);
-    shared_neighbor = new Qubit(new QubitId(3), backend);
-    center_qubit = new Qubit(new QubitId(4), backend);
-    qubit_to_avoid = new Qubit(new QubitId(5), backend);
-    isolated_qubit = new Qubit(new QubitId(6), backend);
-  }
-  void TearDown() {
-    delete backend;
-    delete rng;
+    backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateConfiguration>());
+    qubit = dynamic_cast<Qubit*>(backend->getQubit(1));
+    another_qubit = dynamic_cast<Qubit*>(backend->getQubit(2));
+    shared_neighbor = dynamic_cast<Qubit*>(backend->getQubit(3));
+    center_qubit = dynamic_cast<Qubit*>(backend->getQubit(4));
+    qubit_to_avoid = dynamic_cast<Qubit*>(backend->getQubit(5));
+    isolated_qubit = dynamic_cast<Qubit*>(backend->getQubit(6));
   }
   Qubit* qubit;
   Qubit* another_qubit;
@@ -36,7 +32,7 @@ class GsQubitInternalGraphTest : public ::testing::Test {
   Qubit* center_qubit;
   Qubit* qubit_to_avoid;
   Qubit* isolated_qubit;
-  GraphStateBackend* backend;
+  std::unique_ptr<Backend> backend;
   TestRNG* rng;
 };
 
@@ -210,8 +206,8 @@ TEST_F(GsQubitInternalGraphTest, localComplement) {
   std::vector<Qubit*> second_layer_qubits;
 
   for (int i = 0; i < 10; i++) {
-    first_layer_qubits.push_back(new Qubit{new QubitId(i), backend});
-    second_layer_qubits.push_back(new Qubit{new QubitId(i + 10), backend});
+    first_layer_qubits.push_back(dynamic_cast<Qubit*>(backend->getQubit(i+10)));
+    second_layer_qubits.push_back(dynamic_cast<Qubit*>(backend->getQubit(i+20)));
   }
 
   center_qubit->reset();
@@ -411,10 +407,85 @@ TEST_F(GsQubitInternalGraphTest, graphMeasureZIsolatedQubit) {
   }
 }
 
-TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZState) {
+TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZStatePlusEigenvalue) {
   std::vector<Qubit*> qarrs;
   for (int i = 0; i < 10; i++) {
-    qarrs.push_back(new Qubit{new QubitId(i), backend});
+    qarrs.push_back(dynamic_cast<Qubit*>(backend->getQubit(i+50)));
+  }
+
+  // Bell pair
+  for (int i = 0; i < 1000; i++) {
+    qubit->reset();
+    another_qubit->reset();
+    qubit->addEdge(another_qubit);
+    qubit->setVertexOperator(CliffordOperator::Id);
+
+    auto result_left = qubit->graphMeasureZ();
+    EXPECT_TRUE(qubit->getNeighborSet().empty());
+    EXPECT_TRUE(another_qubit->getNeighborSet().empty());
+    auto result_right = another_qubit->graphMeasureZ();
+    EXPECT_EQ(result_left, result_right);
+  }
+
+  // GHZ state measure in Z; star graph; measure from center
+  for (int i = 0; i < 1000; i++) {
+    qubit->reset();
+    qubit->setVertexOperator(CliffordOperator::Id);
+    for (auto v : qarrs) {
+      v->reset();
+      v->addEdge(qubit);
+      v->setVertexOperator(CliffordOperator::H);
+    }
+    std::vector<quisp::types::EigenvalueResult> measurement_result;
+
+    measurement_result.push_back(qubit->graphMeasureZ());
+
+    // check that all nodes now isolated
+    EXPECT_TRUE(qubit->getNeighborSet().empty());
+    for (auto v : qarrs) {
+      EXPECT_TRUE(v->getNeighborSet().empty());
+    }
+
+    for (auto v : qarrs) {
+      measurement_result.push_back(v->localMeasureZ());
+    }
+    for (auto r : measurement_result) {
+      EXPECT_EQ(r, measurement_result[0]);
+    }
+  }
+
+  // GHZ state measure in Z; star graph; measure center last
+  for (int i = 0; i < 1000; i++) {
+    qubit->reset();
+    qubit->setVertexOperator(CliffordOperator::Id);
+    for (auto v : qarrs) {
+      v->reset();
+      v->addEdge(qubit);
+      v->setVertexOperator(CliffordOperator::H);
+    }
+    std::vector<quisp::types::EigenvalueResult> measurement_result;
+    // measure one leaf node
+    qarrs[0]->graphMeasureZ();
+    // check that all nodes now isolated
+    EXPECT_TRUE(qubit->getNeighborSet().empty());
+    for (auto v : qarrs) {
+      EXPECT_TRUE(v->getNeighborSet().empty());
+    }
+    // collect all measurement results
+    for (auto v : qarrs) {
+      measurement_result.push_back(v->localMeasureZ());
+    }
+    measurement_result.push_back(qubit->graphMeasureZ());
+    for (auto r : measurement_result) {
+      EXPECT_EQ(r, measurement_result[0]);
+    }
+  }
+}
+TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZStateMinusEigenvalue) {
+  std::vector<Qubit*> qarrs;
+  rng->double_value = 0.5;
+  for (int i = 0; i < 10; i++) {
+    qarrs.push_back(dynamic_cast<Qubit*>(backend->getQubit(i+100)));
   }
 
   // Bell pair

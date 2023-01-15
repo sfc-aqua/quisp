@@ -18,16 +18,11 @@ class GsSingleQubitTest : public ::testing::Test {
   void SetUp() {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
-    backend = new GraphStateBackend(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateConfiguration>());
-    qubit = new Qubit(new QubitId(1), backend);
-    qubit->setFree();
-  }
-  void TearDown() {
-    delete rng;
-    delete backend;
+    backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateConfiguration>());
+    qubit = dynamic_cast<Qubit*>(backend->getQubit(1));
   }
   Qubit* qubit;
-  GraphStateBackend* backend;
+  std::unique_ptr<Backend> backend;
   TestRNG* rng;
 };
 
@@ -74,16 +69,13 @@ TEST_F(GsSingleQubitTest, setMemoryErrorTransitionMatrix) {
   qubit->setMemoryErrorRates(0, 0, 0, 0, 0);
 }
 
-TEST_F(GsSingleQubitTest, getInitializedPiVector){
-  MatrixXd testing_pi_vector(1,6);
-  testing_pi_vector << 1, 0, 0, 0, 0, 0;
-  EXPECT_EQ(qubit->pi_vector,testing_pi_vector);
+TEST_F(GsSingleQubitTest, dontSetCompletelyMixedDensityMatrix) {
+  EXPECT_EQ(qubit->pi_vector_completely_mixed, false);
 }
-TEST_F(GsSingleQubitTest, setCompletelyMixedDensityMatrix){
+
+TEST_F(GsSingleQubitTest, setCompletelyMixedDensityMatrix) {
   qubit->setCompletelyMixedDensityMatrix();
-  MatrixXd testing_pi_vector(1,6);
-  testing_pi_vector << 0, (double)1/(double)3, (double)1/(double)3, (double)1/(double)3, 0, 0;
-  EXPECT_EQ(qubit->pi_vector,testing_pi_vector);
+  EXPECT_EQ(qubit->pi_vector_completely_mixed, true);
 }
 
 TEST_F(GsSingleQubitTest, singleGatemeasureZ) {
