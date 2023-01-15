@@ -342,6 +342,11 @@ EigenvalueResult GraphStateQubit::graphMeasureZ() {
   } else {
     this->removeVertexOperation(this);  // nothing to be avoided
     result = (backend->dblrand() < 0.5) ? EigenvalueResult::PLUS_ONE : EigenvalueResult::MINUS_ONE;
+    if (result == EigenvalueResult::MINUS_ONE) {
+      for (auto *v: neighbors) {
+        v->applyRightClifford(CliffordOperator::Z);
+      }
+    }
     this->removeAllEdges();
   }
   this->vertex_operator = (result == EigenvalueResult::PLUS_ONE) ? CliffordOperator::H : CliffordOperator::RY;
@@ -353,17 +358,15 @@ EigenvalueResult GraphStateQubit::graphMeasureZ() {
 void GraphStateQubit::setFree() {
   // force qubit to be in |0> state
   auto result = this->graphMeasureZ();
-  if (result == EigenvalueResult::MINUS_ONE) {
-    this->applyClifford(CliffordOperator::X);
-  }
+  this->vertex_operator = CliffordOperator::H;
   updated_time = backend->getSimTime();
 }
 
 void GraphStateQubit::setCompletelyMixedDensityMatrix() { pi_vector_completely_mixed = true; }
 
 void GraphStateQubit::setEntangledPartner(IQubit *const partner) {
-  auto gs_partner_qubit = dynamic_cast<GraphStateQubit*>(partner);
-  //　HACK: here we only consider the current qubit and the partner qubit
+  auto gs_partner_qubit = dynamic_cast<GraphStateQubit *>(partner);
+  // 　HACK: here we only consider the current qubit and the partner qubit
   if (!this->isNeighbor(gs_partner_qubit)) this->addEdge(gs_partner_qubit);
   this->vertex_operator = CliffordOperator::H;
   gs_partner_qubit->vertex_operator = CliffordOperator::Id;
@@ -372,9 +375,9 @@ void GraphStateQubit::setEntangledPartner(IQubit *const partner) {
 void GraphStateQubit::gateCNOT(IQubit *const control_qubit) {
   this->applyMemoryError();
   this->applyClifford(CliffordOperator::H);  // use apply Clifford for pure operation
-  this->applyPureCZ(dynamic_cast<GraphStateQubit*>(control_qubit));
+  this->applyPureCZ(dynamic_cast<GraphStateQubit *>(control_qubit));
   this->applyClifford(CliffordOperator::H);
-  this->applyTwoQubitGateError(gate_err_cnot, dynamic_cast<GraphStateQubit*>(control_qubit));
+  this->applyTwoQubitGateError(gate_err_cnot, dynamic_cast<GraphStateQubit *>(control_qubit));
 }
 
 void GraphStateQubit::gateH() {
