@@ -68,21 +68,18 @@ class Qubit : public GraphStateQubit {
   using GraphStateQubit::localMeasureX;
   using GraphStateQubit::localMeasureY;
   using GraphStateQubit::localMeasureZ;
-  using GraphStateQubit::correlationMeasureX;
-  using GraphStateQubit::correlationMeasureY;
-  using GraphStateQubit::correlationMeasureZ;
   using GraphStateQubit::measureDensityIndependent;
-  using GraphStateQubit::purifyX;
-  using GraphStateQubit::purifyZ;
-  using GraphStateQubit::setCompletelyMixedDensityMatrix;
-  using GraphStateQubit::setEntangledPartner;
   using GraphStateQubit::measurement_err;
   using GraphStateQubit::memory_transition_matrix;
-  using GraphStateQubit::pi_vector;
   using GraphStateQubit::neighbors;
+  using GraphStateQubit::pi_vector_completely_mixed;
+  using GraphStateQubit::purifyX;
+  using GraphStateQubit::purifyZ;
   using GraphStateQubit::relax;
   using GraphStateQubit::removeAllEdges;
   using GraphStateQubit::removeVertexOperation;
+  using GraphStateQubit::setCompletelyMixedDensityMatrix;
+  using GraphStateQubit::setEntangledPartner;
   using GraphStateQubit::setFree;
   using GraphStateQubit::setMemoryErrorRates;
   using GraphStateQubit::toggleEdge;
@@ -103,8 +100,7 @@ class Qubit : public GraphStateQubit {
 class Backend : public GraphStateBackend {
  public:
   using GraphStateBackend::qubits;
-  Backend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateConfiguration> config)
-      : GraphStateBackend(std::move(rng), std::move(config)) {}
+  Backend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateConfiguration> config) : GraphStateBackend(std::move(rng), std::move(config)) {}
   IQubit* getQubit(int id) { return this->getQubitInternal(new QubitId(id)); }
   IQubit* getQubitInternal(const IQubitId* id) {
     auto qubit = qubits.find(id);

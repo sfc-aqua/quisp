@@ -12,8 +12,7 @@ GraphStateBackend::GraphStateBackend(std::unique_ptr<IRandomNumberGenerator> rng
     : current_time(SimTime()), rng(std::move(rng)) {
   config = std::move(configuration);
 }
-GraphStateBackend::GraphStateBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateConfiguration> configuration,
-                                                         ICallback* cb)
+GraphStateBackend::GraphStateBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateConfiguration> configuration, ICallback* cb)
     : GraphStateBackend(std::move(rng), std::move(configuration)) {
   callback = cb;
 }

@@ -26,8 +26,7 @@ class TestGsQubit : public GraphStateQubit {
 class GsBackend : public GraphStateBackend {
  public:
   using GraphStateBackend::qubits;
-  GsBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateConfiguration> config)
-      : GraphStateBackend(std::move(rng), std::move(config)) {}
+  GsBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateConfiguration> config) : GraphStateBackend(std::move(rng), std::move(config)) {}
 };
 
 class GsBackendTest : public ::testing::Test {

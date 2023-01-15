@@ -4,10 +4,7 @@
 
 namespace quisp::backends::graph_state {
 using types::CliffordOperator;
-GraphStateQubit::GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend)
-    : id(id), memory_transition_matrix(MatrixXd::Zero(6, 6)), backend(backend) {
-  // initialize pi vector
-  pi_vector << 1,0,0,0,0,0;
+GraphStateQubit::GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend) : id(id), memory_transition_matrix(MatrixXd::Zero(6, 6)), backend(backend) {
   // initialize variables for graph state representation tracking
   vertex_operator = CliffordOperator::H;
 }
@@ -168,7 +165,11 @@ void GraphStateQubit::applyMemoryError() {
       throw std::runtime_error("Transition matrix is NaN. This is Eigen's fault.");
     }
 
-    pi_vector << 1, 0, 0, 0, 0 ,0;
+    MatrixXd pi_vector;
+    if (pi_vector_completely_mixed)
+      pi_vector << 0, (double)1 / (double)3, (double)1 / (double)3, (double)1 / (double)3, 0, 0;
+    else
+      pi_vector << 1, 0, 0, 0, 0, 0;
     // pi(t) in Eq 5.3
     // Clean, X, Z, Y, Excited, Relaxed
     // take error rate vector from DynamicTransitionMatrix Eq 5.3
@@ -358,12 +359,10 @@ void GraphStateQubit::setFree() {
   updated_time = backend->getSimTime();
 }
 
-void GraphStateQubit::setCompletelyMixedDensityMatrix(){
-  pi_vector << 0, (double)1 / (double)3, (double)1 / (double)3, (double)1 / (double)3, 0, 0;
-}
+void GraphStateQubit::setCompletelyMixedDensityMatrix() { pi_vector_completely_mixed = true; }
 
 void GraphStateQubit::setEntangledPartner(IQubit *const partner) {
-  auto gs_partner_qubit = (GraphStateQubit *)partner;
+  auto gs_partner_qubit = dynamic_cast<GraphStateQubit*>(partner);
   //　HACK: here we only consider the current qubit and the partner qubit
   if (!this->isNeighbor(gs_partner_qubit)) this->addEdge(gs_partner_qubit);
   this->vertex_operator = CliffordOperator::H;
@@ -373,9 +372,9 @@ void GraphStateQubit::setEntangledPartner(IQubit *const partner) {
 void GraphStateQubit::gateCNOT(IQubit *const control_qubit) {
   this->applyMemoryError();
   this->applyClifford(CliffordOperator::H);  // use apply Clifford for pure operation
-  this->applyPureCZ((GraphStateQubit *)control_qubit);
+  this->applyPureCZ(dynamic_cast<GraphStateQubit*>(control_qubit));
   this->applyClifford(CliffordOperator::H);
-  this->applyTwoQubitGateError(gate_err_cnot, (GraphStateQubit *)control_qubit);
+  this->applyTwoQubitGateError(gate_err_cnot, dynamic_cast<GraphStateQubit*>(control_qubit));
 }
 
 void GraphStateQubit::gateH() {
@@ -397,22 +396,36 @@ void GraphStateQubit::gateS() {
   this->applyMemoryError();
   this->applyClifford(CliffordOperator::S);
   // apply s error, not implemented yet
+  // or do we need to expose this gate to stat qubit?
 }
 void GraphStateQubit::gateSdg() {
   this->applyMemoryError();
   this->applyClifford(CliffordOperator::S_INV);
   // apply sdg error, not implemented yet
+  // or do we need to expose this gate to stat qubit?
 }
 
 EigenvalueResult GraphStateQubit::localMeasureX() {
-  this->gateH();
-  return this->localMeasureZ();
+  applyMemoryError();
+  this->applyClifford(CliffordOperator::H);
+  auto result = this->localMeasureZ();
+  // measurement error
+  if (backend->dblrand() < this->measurement_err.x_error_rate) {
+    result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
+  }
+  return result;
 }
 
 EigenvalueResult GraphStateQubit::localMeasureY() {
-  this->gateSdg();
-  this->gateH();
-  return this->localMeasureZ();
+  applyMemoryError();
+  this->applyClifford(CliffordOperator::S_INV);
+  this->applyClifford(CliffordOperator::H);
+  auto result = this->localMeasureZ();
+  // measurement error
+  if (backend->dblrand() < this->measurement_err.y_error_rate) {
+    result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
+  }
+  return result;
 }
 
 EigenvalueResult GraphStateQubit::localMeasureZ() {
@@ -438,21 +451,21 @@ EigenvalueResult GraphStateQubit::localMeasureZ() {
 }
 
 [[deprecated]] MeasurementOutcome GraphStateQubit::measureDensityIndependent() {
-  auto rand_num = backend->dblrand();
+  auto rand = backend->dblrand();
   MeasurementOutcome o;
-  std::cout << "Random num = " << rand_num << "! \n ";
-  if (rand_num < ((double)1 / (double)3)) {
+  std::cout << "Random num = " << rand << "! \n ";
+  if (rand < ((double)1 / (double)3)) {
     std::cout << "X measurement\n";
     o.basis = 'X';
-    o.outcome_is_plus = this->localMeasureX() == EigenvalueResult::PLUS_ONE ? true: false;
-  } else if (rand_num >= ((double)1 / (double)3) && rand_num < ((double)2 / (double)3)) {
+    o.outcome_is_plus = this->localMeasureX() == EigenvalueResult::PLUS_ONE ? true : false;
+  } else if (rand >= ((double)1 / (double)3) && rand < ((double)2 / (double)3)) {
     std::cout << "Z measurement\n";
     o.basis = 'Z';
-    o.outcome_is_plus = this->localMeasureZ() == EigenvalueResult::PLUS_ONE ? true: false;
+    o.outcome_is_plus = this->localMeasureZ() == EigenvalueResult::PLUS_ONE ? true : false;
   } else {
     std::cout << "Y measurement\n";
     o.basis = 'Y';
-    o.outcome_is_plus = this->localMeasureY() == EigenvalueResult::PLUS_ONE ? true: false;
+    o.outcome_is_plus = this->localMeasureY() == EigenvalueResult::PLUS_ONE ? true : false;
   }
   // the pi vector should be always [1,0,0,0,0,0], just for compatibility
   o.GOD_clean = 'F';

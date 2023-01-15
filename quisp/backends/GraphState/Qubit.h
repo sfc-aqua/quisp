@@ -12,17 +12,17 @@
 namespace quisp::backends::graph_state {
 
 using abstract::EigenvalueResult;
-using abstract::MeasureXResult;
-using abstract::MeasureYResult;
-using abstract::MeasureZResult;
-using abstract::MeasurementOutcome;
 using abstract::IQuantumBackend;
 using abstract::IQubit;
 using abstract::IQubitId;
+using abstract::MeasurementOutcome;
+using abstract::MeasureXResult;
+using abstract::MeasureYResult;
+using abstract::MeasureZResult;
 using abstract::SimTime;
+using Eigen::Matrix;
 using Eigen::MatrixPower;
 using Eigen::MatrixXd;
-using Eigen::Matrix;
 using types::CliffordOperator;
 using types::MeasurementErrorModel;
 using types::MemoryErrorModel;
@@ -62,9 +62,8 @@ class GraphStateQubit : public IQubit {
   void applyMemoryError();
   void excite();
   void relax();
-  // pi(0 ~ 6) vector in Eq 5.3
-  // I, X, Z, Y, Ex, Re
-  Matrix<double, 6 ,1> pi_vector;
+  // whether pi(0 ~ 6) vector in Eq 5.3 is (0,1/3,1/3,1/3,0,0)
+  bool pi_vector_completely_mixed;
   // error simulation constants
   SingleGateErrorModel gate_err_h;
   SingleGateErrorModel gate_err_x;
