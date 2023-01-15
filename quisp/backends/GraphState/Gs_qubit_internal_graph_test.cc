@@ -447,7 +447,7 @@ TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZStatePlusEigenvalue) {
     }
 
     for (auto v : qarrs) {
-      measurement_result.push_back(v->localMeasureZ());
+      measurement_result.push_back(v->graphMeasureZ());
     }
     for (auto r : measurement_result) {
       EXPECT_EQ(r, measurement_result[0]);
@@ -473,7 +473,7 @@ TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZStatePlusEigenvalue) {
     }
     // collect all measurement results
     for (auto v : qarrs) {
-      measurement_result.push_back(v->localMeasureZ());
+      measurement_result.push_back(v->graphMeasureZ());
     }
     measurement_result.push_back(qubit->graphMeasureZ());
     for (auto r : measurement_result) {
@@ -522,7 +522,7 @@ TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZStateMinusEigenvalue) {
     }
 
     for (auto v : qarrs) {
-      measurement_result.push_back(v->localMeasureZ());
+      measurement_result.push_back(v->graphMeasureZ());
     }
     for (auto r : measurement_result) {
       EXPECT_EQ(r, measurement_result[0]);
@@ -548,7 +548,7 @@ TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZStateMinusEigenvalue) {
     }
     // collect all measurement results
     for (auto v : qarrs) {
-      measurement_result.push_back(v->localMeasureZ());
+      measurement_result.push_back(v->graphMeasureZ());
     }
     measurement_result.push_back(qubit->graphMeasureZ());
     for (auto r : measurement_result) {
