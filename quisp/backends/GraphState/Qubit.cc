@@ -411,7 +411,7 @@ void GraphStateQubit::gateSdg() {
 EigenvalueResult GraphStateQubit::localMeasureX() {
   applyMemoryError();
   this->applyClifford(CliffordOperator::H);
-  auto result = this->localMeasureZ();
+  auto result = this->graphMeasureZ();
   // measurement error
   if (backend->dblrand() < this->measurement_err.x_error_rate) {
     result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
@@ -423,7 +423,7 @@ EigenvalueResult GraphStateQubit::localMeasureY() {
   applyMemoryError();
   this->applyClifford(CliffordOperator::S_INV);
   this->applyClifford(CliffordOperator::H);
-  auto result = this->localMeasureZ();
+  auto result = this->graphMeasureZ();
   // measurement error
   if (backend->dblrand() < this->measurement_err.y_error_rate) {
     result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
