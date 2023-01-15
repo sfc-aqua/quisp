@@ -95,6 +95,53 @@ class Qubit : public GraphStateQubit {
     this->neighbors.clear();
     this->vertex_operator = CliffordOperator::H;
   }
+  void fillParams() {
+    // ceiled values should be:
+    // No error= 0.1, X error = 0.6, Z error = 0.7, Y error = 0.8, Excitation = 0.9, Relaxation = 1.0
+    double x_error_rate = 0;
+    double y_error_rate = 0;
+    double z_error_rate = 0;
+    double energy_excitation_rate = 0;
+    double energy_relaxation_rate = 0;
+    this->setMemoryErrorRates(x_error_rate, y_error_rate, z_error_rate, energy_excitation_rate, energy_relaxation_rate);
+
+    // // No error= 0.4, X error = 0.6, Z error = 0.8, Y error = 1.0
+    double h_gate_error_rate = 0;
+    double h_gate_x_error_ratio = 0;
+    double h_gate_z_error_ratio = 0;
+    double h_gate_y_error_ratio = 0;
+    this->gate_err_h.setParams(h_gate_x_error_ratio, h_gate_y_error_ratio, h_gate_z_error_ratio, h_gate_error_rate);
+
+    double x_gate_error_rate = 0;
+    double x_gate_x_error_ratio = 0;
+    double x_gate_z_error_ratio = 0;
+    double x_gate_y_error_ratio = 0;
+    this->gate_err_x.setParams(x_gate_x_error_ratio, x_gate_y_error_ratio, x_gate_z_error_ratio, x_gate_error_rate);
+
+    double z_gate_error_rate = 0;
+    double z_gate_x_error_ratio = 0;
+    double z_gate_z_error_ratio = 0;
+    double z_gate_y_error_ratio = 0;
+    this->gate_err_z.setParams(z_gate_x_error_ratio, z_gate_y_error_ratio, z_gate_z_error_ratio, z_gate_error_rate);
+
+    double cnot_gate_error_rate = 0;
+    double cnot_gate_ix_error_ratio = 0;
+    double cnot_gate_xi_error_ratio = 0;
+    double cnot_gate_xx_error_ratio = 0;
+    double cnot_gate_iz_error_ratio = 0;
+    double cnot_gate_zi_error_ratio = 0;
+    double cnot_gate_zz_error_ratio = 0;
+    double cnot_gate_iy_error_ratio = 0;
+    double cnot_gate_yi_error_ratio = 0;
+    double cnot_gate_yy_error_ratio = 0;
+    this->gate_err_cnot.setParams(cnot_gate_error_rate, cnot_gate_ix_error_ratio, cnot_gate_xi_error_ratio, cnot_gate_xx_error_ratio, cnot_gate_iz_error_ratio,
+                                   cnot_gate_zi_error_ratio, cnot_gate_zz_error_ratio, cnot_gate_iy_error_ratio, cnot_gate_yi_error_ratio, cnot_gate_yy_error_ratio);
+
+    double x_measurement_error_rate = 0;
+    double y_measurement_error_rate = 0;
+    double z_measurement_error_rate = 0;
+    this->measurement_err.setParams(x_measurement_error_rate, y_measurement_error_rate, z_measurement_error_rate);
+  }
 };
 
 class Backend : public GraphStateBackend {

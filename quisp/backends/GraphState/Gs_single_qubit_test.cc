@@ -20,6 +20,7 @@ class GsSingleQubitTest : public ::testing::Test {
     rng = new TestRNG();
     backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateConfiguration>());
     qubit = dynamic_cast<Qubit*>(backend->getQubit(1));
+    qubit->fillParams();
   }
   Qubit* qubit;
   std::unique_ptr<Backend> backend;
