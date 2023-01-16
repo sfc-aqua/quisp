@@ -135,7 +135,7 @@ class Qubit : public GraphStateQubit {
     double cnot_gate_yi_error_ratio = 0;
     double cnot_gate_yy_error_ratio = 0;
     this->gate_err_cnot.setParams(cnot_gate_error_rate, cnot_gate_ix_error_ratio, cnot_gate_xi_error_ratio, cnot_gate_xx_error_ratio, cnot_gate_iz_error_ratio,
-                                   cnot_gate_zi_error_ratio, cnot_gate_zz_error_ratio, cnot_gate_iy_error_ratio, cnot_gate_yi_error_ratio, cnot_gate_yy_error_ratio);
+                                  cnot_gate_zi_error_ratio, cnot_gate_zz_error_ratio, cnot_gate_iy_error_ratio, cnot_gate_yi_error_ratio, cnot_gate_yy_error_ratio);
 
     double x_measurement_error_rate = 0;
     double y_measurement_error_rate = 0;

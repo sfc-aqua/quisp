@@ -343,7 +343,7 @@ EigenvalueResult GraphStateQubit::graphMeasureZ() {
     this->removeVertexOperation(this);  // nothing to be avoided
     result = (backend->dblrand() < 0.5) ? EigenvalueResult::PLUS_ONE : EigenvalueResult::MINUS_ONE;
     if (result == EigenvalueResult::MINUS_ONE) {
-      for (auto *v: neighbors) {
+      for (auto *v : neighbors) {
         v->applyRightClifford(CliffordOperator::Z);
       }
     }

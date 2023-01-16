@@ -70,9 +70,7 @@ TEST_F(GsSingleQubitTest, setMemoryErrorTransitionMatrix) {
   qubit->setMemoryErrorRates(0, 0, 0, 0, 0);
 }
 
-TEST_F(GsSingleQubitTest, dontSetCompletelyMixedDensityMatrix) {
-  EXPECT_EQ(qubit->pi_vector_completely_mixed, false);
-}
+TEST_F(GsSingleQubitTest, dontSetCompletelyMixedDensityMatrix) { EXPECT_EQ(qubit->pi_vector_completely_mixed, false); }
 
 TEST_F(GsSingleQubitTest, setCompletelyMixedDensityMatrix) {
   qubit->setCompletelyMixedDensityMatrix();
