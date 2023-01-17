@@ -838,7 +838,7 @@ std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType
   purify_rule->setCondition(std::move(condition));
 
   // prepare action
-  auto purify_action = std::make_unique<Purification>(purification_type, partner_address, qnic_type, qnic_id);
+  auto purify_action = std::make_unique<Purification>(purification_type, partner_address);
   purify_rule->setAction(std::move(purify_action));
 
   return purify_rule;
@@ -859,7 +859,7 @@ std::unique_ptr<Rule> ConnectionManager::swapRule(std::vector<int> partner_addre
   swap_rule->setCondition(std::move(condition));
 
   // prepare swapping action (partners, qnic_types, qnic_ids, remote_qnic_types, remote_qnic_ids, remote_qnic_address)
-  auto swap_action = std::make_unique<EntanglementSwapping>(partner_address, qnic_type, qnic_id, remote_qnic_type, remote_qnic_id, remote_qnic_address);
+  auto swap_action = std::make_unique<EntanglementSwapping>(partner_address);
   swap_rule->setAction(std::move(swap_action));
 
   return swap_rule;
@@ -874,7 +874,7 @@ std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, QNIC_type
   condition->addClause(std::move(wait_clause));
   wait_rule->setCondition(std::move(condition));
 
-  auto wait_action = std::make_unique<Wait>(partner_address, qnic_type, qnic_id);
+  auto wait_action = std::make_unique<Wait>(partner_address);
   wait_rule->setAction(std::move(wait_action));
 
   return wait_rule;
@@ -894,7 +894,7 @@ std::unique_ptr<Rule> ConnectionManager::tomographyRule(int partner_address, int
   tomography_rule->setCondition(std::move(condition));
 
   // prepare action
-  auto tomography_action = std::make_unique<Tomography>(num_measure, owner_address, partner_address, qnic_type, qnic_id);
+  auto tomography_action = std::make_unique<Tomography>(num_measure, owner_address, partner_address);
   tomography_rule->setAction(std::move(tomography_action));
 
   return tomography_rule;

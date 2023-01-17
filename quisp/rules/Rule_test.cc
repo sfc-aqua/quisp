@@ -50,7 +50,7 @@ TEST(RuleTest, serialize_json_purification_rule) {
   auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.85, 1, QNIC_E, 13);
   condition->addClause(std::move(enough_resource_clause));
   // purification_type, partner_addr, qnic_type, qnic_id
-  auto action = std::make_unique<Purification>(PurType::DSSA, 1, QNIC_E, 13);
+  auto action = std::make_unique<Purification>(PurType::DSSA, 1);
   // add condition and action
   purification->setCondition(std::move(condition));
   purification->setAction(std::move(action));
@@ -102,7 +102,7 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   condition->addClause(std::move(enough_resource_clause_left));
   condition->addClause(std::move(enough_resource_clause_right));
 
-  auto action = std::make_unique<EntanglementSwapping>(partners, qnic_types, qnic_id, remote_qnic_types, remote_qnic_id, remote_qnic_address);
+  auto action = std::make_unique<EntanglementSwapping>(partners);
 
   // add condition and action
   swapping->setCondition(std::move(condition));
@@ -158,7 +158,7 @@ TEST(RuleTest, deserialize_json_purification_rule) {
   auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.85, 1, QNIC_E, 13);
   condition->addClause(std::move(enough_resource_clause));
   // purification_type, partner_addr, qnic_type, qnic_id
-  auto action = std::make_unique<Purification>(PurType::DSSA, 1, QNIC_E, 13);
+  auto action = std::make_unique<Purification>(PurType::DSSA, 1);
   // add condition and action
   purification->setCondition(std::move(condition));
   purification->setAction(std::move(action));

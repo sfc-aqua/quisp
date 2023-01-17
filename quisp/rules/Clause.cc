@@ -25,7 +25,7 @@ void EnoughResourceConditionClause::deserialize_json(json serialized) {
 }
 
 MeasureCountConditionClause::MeasureCountConditionClause(int num_measurement, int partner_addr, QNIC_type qnic_type, int qnic_id)
-    : num_measure(num_measurement), Clause(partner_addr, qnic_type, qnic_id) {}
+    : Clause(partner_addr, qnic_type, qnic_id), num_measure(num_measurement) {}
 
 json MeasureCountConditionClause::serialize_json() {
   json measure_count_json;
@@ -45,7 +45,7 @@ void MeasureCountConditionClause::deserialize_json(json serialized) {
 }
 
 FidelityConditionClause::FidelityConditionClause(double required_fidelity, int partner_addr, QNIC_type qnic_type, int qnic_id)
-    : required_fidelity(required_fidelity), Clause(partner_addr, qnic_type, qnic_id) {}
+    : Clause(partner_addr, qnic_type, qnic_id), required_fidelity(required_fidelity) {}
 
 json FidelityConditionClause::serialize_json() {
   json fidelity_json;

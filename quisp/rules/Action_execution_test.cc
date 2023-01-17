@@ -75,7 +75,7 @@ class ActionExecutionTest : public testing::Test {
 };
 
 TEST_F(ActionExecutionTest, Tomography) {
-  Tomography action{500, 0, partner_addr, qnic_type, qnic_id};
+  Tomography action{500, 0, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -99,24 +99,11 @@ TEST_F(ActionExecutionTest, Tomography) {
 
 TEST_F(ActionExecutionTest, Swapping) {
   int left_partner_addr = 2;
-  QNIC_type left_qnic_type = QNIC_E;
-
   int right_partner_addr = 6;
-  QNIC_type right_qnic_type = QNIC_E;
-
-  int self_left_qnic_id = 11;
-  QNIC_type self_left_qnic_type = QNIC_E;
-  int self_right_qnic_id = 13;
-  QNIC_type self_right_qnic_type = QNIC_E;
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   // -1 means no longer used. it will be deleted
-  EntanglementSwapping action{{left_partner_addr, right_partner_addr},
-                              {self_left_qnic_type, self_right_qnic_type},
-                              {self_left_qnic_id, self_right_qnic_id},
-                              {left_qnic_type, right_qnic_type},
-                              {-1, -1},
-                              {-1, -1}};
+  EntanglementSwapping action{std::vector{left_partner_addr, right_partner_addr}};
   setAction(&action);
 
   EXPECT_CALL(*callback, gateCNOT(qubit1, qubit2)).Times(1);
@@ -181,7 +168,7 @@ TEST_F(ActionExecutionTest, Swapping) {
 
 TEST_F(ActionExecutionTest, PurifyX) {
   PurType pur_type = PurType::SINGLE_X;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -213,7 +200,7 @@ TEST_F(ActionExecutionTest, PurifyX) {
 
 TEST_F(ActionExecutionTest, PurifyZ) {
   PurType pur_type = PurType::SINGLE_Z;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -245,7 +232,7 @@ TEST_F(ActionExecutionTest, PurifyZ) {
 
 TEST_F(ActionExecutionTest, DoublePurifyBothTrue) {
   PurType pur_type = PurType::DOUBLE;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -267,7 +254,7 @@ TEST_F(ActionExecutionTest, DoublePurifyBothTrue) {
 
 TEST_F(ActionExecutionTest, DoublePurifyBothFalse) {
   PurType pur_type = PurType::DOUBLE;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -289,7 +276,7 @@ TEST_F(ActionExecutionTest, DoublePurifyBothFalse) {
 
 TEST_F(ActionExecutionTest, DoublePurifyXTrue) {
   PurType pur_type = PurType::DOUBLE;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -311,7 +298,7 @@ TEST_F(ActionExecutionTest, DoublePurifyXTrue) {
 
 TEST_F(ActionExecutionTest, DoublePurifyZTrue) {
   PurType pur_type = PurType::DOUBLE;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -333,7 +320,7 @@ TEST_F(ActionExecutionTest, DoublePurifyZTrue) {
 
 TEST_F(ActionExecutionTest, DoublePurifyInvBothTrue) {
   PurType pur_type = PurType::DOUBLE_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -355,7 +342,7 @@ TEST_F(ActionExecutionTest, DoublePurifyInvBothTrue) {
 
 TEST_F(ActionExecutionTest, DoublePurifyInvBothFalse) {
   PurType pur_type = PurType::DOUBLE_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -377,7 +364,7 @@ TEST_F(ActionExecutionTest, DoublePurifyInvBothFalse) {
 
 TEST_F(ActionExecutionTest, DoublePurifyInvXTrue) {
   PurType pur_type = PurType::DOUBLE_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -399,7 +386,7 @@ TEST_F(ActionExecutionTest, DoublePurifyInvXTrue) {
 
 TEST_F(ActionExecutionTest, DoublePurifyInvZTrue) {
   PurType pur_type = PurType::DOUBLE_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -421,7 +408,7 @@ TEST_F(ActionExecutionTest, DoublePurifyInvZTrue) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionPurifyBothTrue) {
   PurType pur_type = PurType::DSSA;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -443,7 +430,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyBothTrue) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionPurifyBothFalse) {
   PurType pur_type = PurType::DSSA;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -465,7 +452,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyBothFalse) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionPurifyXTrue) {
   PurType pur_type = PurType::DSSA;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -487,7 +474,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyXTrue) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionPurifyZTrue) {
   PurType pur_type = PurType::DSSA;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -509,7 +496,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyZTrue) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionPurifyInvBothTrue) {
   PurType pur_type = PurType::DSSA_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -531,7 +518,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyInvBothTrue) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionPurifyInvBothFalse) {
   PurType pur_type = PurType::DSSA_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -553,7 +540,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyInvBothFalse) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionPurifyInvXTrue) {
   PurType pur_type = PurType::DSSA_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -575,7 +562,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyInvXTrue) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionPurifyInvZTrue) {
   PurType pur_type = PurType::DSSA_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -597,7 +584,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyInvZTrue) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyAllTrue) {
   PurType pur_type = PurType::DSDA_SECOND;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -623,7 +610,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyAllTrue) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyAllFalse) {
   PurType pur_type = PurType::DSDA_SECOND;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -649,7 +636,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyAllFalse) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyZTrue) {
   PurType pur_type = PurType::DSDA_SECOND;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -675,7 +662,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyZTrue) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyDSTrue) {
   PurType pur_type = PurType::DSDA_SECOND;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -701,7 +688,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyDSTrue) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyInvAllTrue) {
   PurType pur_type = PurType::DSDA_SECOND_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -727,7 +714,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyInvAllTrue) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyInvAllFalse) {
   PurType pur_type = PurType::DSDA_SECOND_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -753,7 +740,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyInvAllFalse) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyInvZTrue) {
   PurType pur_type = PurType::DSDA_SECOND_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -779,7 +766,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyInvZTrue) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyInvDSTrue) {
   PurType pur_type = PurType::DSDA_SECOND_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -805,7 +792,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyInvDSTrue) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyAllTrue) {
   PurType pur_type = PurType::DSDA;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -835,7 +822,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyAllTrue) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyAllFalse) {
   PurType pur_type = PurType::DSDA;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -865,7 +852,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyAllFalse) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyAllXTrueZTrueZFalseXFalse) {
   PurType pur_type = PurType::DSDA;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -895,7 +882,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyAllXTrueZTrueZFalseXF
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyXFalseZFalseZTrueXTrue) {
   PurType pur_type = PurType::DSDA;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -925,7 +912,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyXFalseZFalseZTrueXTru
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyXFalseZTrueZTrueXFalse) {
   PurType pur_type = PurType::DSDA;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -955,7 +942,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyXFalseZTrueZTrueXFals
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvAllTrue) {
   PurType pur_type = PurType::DSDA_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -985,7 +972,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvAllTrue) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvAllFalse) {
   PurType pur_type = PurType::DSDA_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -1015,7 +1002,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvAllFalse) {
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvXTrueZTrueZFalseXFalse) {
   PurType pur_type = PurType::DSDA_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -1045,7 +1032,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvXTrueZTrueZFalseXF
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvXFalseZFalseZTrueXTrue) {
   PurType pur_type = PurType::DSDA_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -1075,7 +1062,7 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvXFalseZFalseZTrueX
 
 TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvXFalseZTrueZTrueXFalse) {
   PurType pur_type = PurType::DSDA_INV;
-  Purification action{pur_type, partner_addr, qnic_type, qnic_id};
+  Purification action{pur_type, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 

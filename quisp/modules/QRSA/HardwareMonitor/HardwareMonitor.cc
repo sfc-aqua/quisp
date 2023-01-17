@@ -886,10 +886,10 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         condition->addClause(std::move(resource_clause));
         rule->setCondition(std::move(condition));
         if (i % 2 == 0) {
-          auto purify_action = std::make_unique<Purification>(PurType::DSSA, partner_address, qnic_type, qnic_index);
+          auto purify_action = std::make_unique<Purification>(PurType::DSSA, partner_address);
           rule->setAction(std::move(purify_action));
         } else {
-          auto purify_action = std::make_unique<Purification>(PurType::DSDA_INV, partner_address, qnic_type, qnic_index);
+          auto purify_action = std::make_unique<Purification>(PurType::DSDA_INV, partner_address);
           rule->setAction(std::move(purify_action));
         }
 
@@ -981,7 +981,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
     rule->setCondition(std::move(condition));
 
     // Measure the local resource between it->second.neighborQNode_address.
-    auto measure_action = std::make_unique<Tomography>(num_measure, my_address, partner_address, qnic_type, qnic_index);
+    auto measure_action = std::make_unique<Tomography>(num_measure, my_address, partner_address);
     measure_action->start_time = simTime();
     rule->setAction(std::move(measure_action));
 
@@ -1000,7 +1000,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
     rule->setCondition(std::move(condition));
 
     // Measure the local resource between it->second.neighborQNode_address.
-    auto measure = std::make_unique<Tomography>(num_measure, my_address, partner_address, qnic_type, qnic_index);
+    auto measure = std::make_unique<Tomography>(num_measure, my_address, partner_address);
     measure->start_time = simTime();
     rule->setAction(std::move(measure));
 
@@ -1044,7 +1044,7 @@ std::unique_ptr<quisp::rules::Rule> HardwareMonitor::constructPurifyRule(const s
   condition->addClause(std::move(resource_clause));
   rule->setCondition(std::move(condition));
 
-  auto purify_action = std::make_unique<Purification>(pur_type, partner_address, qnic_type, qnic_index);
+  auto purify_action = std::make_unique<Purification>(pur_type, partner_address);
   rule->setAction(std::move(purify_action));
   rule->setNextRule(rule_id + 1);
   return rule;

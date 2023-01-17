@@ -158,10 +158,10 @@ TEST_F(RuleEngineTest, ESResourceUpdate) {
 
   RuleSet rs{mock_ruleset_id, rule_engine->parentAddress};
   auto wait_rule = std::make_unique<Rule>(mock_ruleset_id, qnic_type, qnic_id, shared_tag, false);
-  wait_rule->setAction(std::make_unique<Wait>(swapper_addr, qnic_type, qnic_id));
+  wait_rule->setAction(std::make_unique<Wait>(swapper_addr));
   rs.addRule(std::move(wait_rule));
   auto next_rule = std::make_unique<Rule>(mock_ruleset_id, qnic_type, qnic_id, shared_tag, false);
-  next_rule->setAction(std::make_unique<Wait>(swapper_addr, qnic_type, qnic_id));
+  next_rule->setAction(std::make_unique<Wait>(swapper_addr));
   rs.addRule(std::move(next_rule));
 
   rule_engine->runtimes.acceptRuleSet(rs.construct());
@@ -257,8 +257,8 @@ TEST_F(RuleEngineTest, storeCheckPurificationAgreement_running_process) {
   auto* ruleset = new quisp::rules::RuleSet(ruleset_id, rule_engine->parentAddress);
   auto rule1 = new Rule(ruleset_id, qnic_type, qnic_id, shared_tag, false);  // target_rule_id, 0);
   auto rule2 = new Rule(ruleset_id, qnic_type, qnic_id, shared_tag, false);  // 11, 1);
-  rule1->setAction(std::make_unique<Wait>(0, qnic_type, qnic_id));
-  rule2->setAction(std::make_unique<Wait>(0, qnic_type, qnic_id));
+  rule1->setAction(std::make_unique<Wait>(0));
+  rule2->setAction(std::make_unique<Wait>(0));
   auto* qubit_record = new QubitRecord{qnic_type, qnic_id, 0};
 
   ruleset->addRule(std::unique_ptr<Rule>(rule1));
@@ -429,9 +429,9 @@ TEST_F(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   {  // generate RuleSet
     auto rule = std::make_unique<Rule>(ruleset_id, qnic_type, qnic_index, shared_tag, false);
     rule->shared_tag = shared_tag;
-    rule->setAction(std::make_unique<Wait>(swapper_addr, qnic_type, qnic_index));
+    rule->setAction(std::make_unique<Wait>(swapper_addr));
     auto next_rule = std::make_unique<Rule>(ruleset_id, qnic_type, qnic_index, shared_tag, false);
-    next_rule->setAction(std::make_unique<Wait>(swapper_addr, qnic_type, qnic_index));
+    next_rule->setAction(std::make_unique<Wait>(swapper_addr));
 
     rs.addRule(std::move(rule));
     rs.addRule(std::move(next_rule));

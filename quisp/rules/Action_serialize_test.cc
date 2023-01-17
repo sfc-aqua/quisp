@@ -16,7 +16,7 @@ using quisp::modules::QNIC_type;
 TEST(ActionTest, Purification_serialize_json) {
   prepareSimulation();
   // purification_type, partner_addr, qnic_type, qnic_id
-  auto purification = std::make_unique<Purification>(PurType::DSDA, 3, QNIC_E, 123);
+  auto purification = std::make_unique<Purification>(PurType::DSDA, 3);
   json purification_json = purification->serialize_json();
   EXPECT_EQ(purification_json["type"], "purification");
   EXPECT_EQ(purification_json["options"]["purification_type"], "DSDA");
@@ -49,7 +49,7 @@ TEST(ActionTest, EntanglementSwapping_serialize_json) {
   std::vector<QNIC_type> remote_qnic_types = {QNIC_R, QNIC_E};
   std::vector<int> remote_qnic_ids = {12, 16};
   std::vector<int> remote_qnic_address = {21, 22};
-  auto swapping = std::make_unique<EntanglementSwapping>(partners, qnic_types, qnic_ids, remote_qnic_types, remote_qnic_ids, remote_qnic_address);
+  auto swapping = std::make_unique<EntanglementSwapping>(partners);
   json swapping_json = swapping->serialize_json();
   EXPECT_EQ(swapping_json["type"], "swapping");
   EXPECT_EQ(swapping_json["options"]["interface"][0]["partner_address"], 1);
@@ -81,10 +81,10 @@ TEST(ActionTest, EntanglementSwapping_deserialize_json) {
 TEST(ActionTest, Wait_serialize_json) {
   prepareSimulation();
   // num measure
-  auto wait = std::make_unique<Wait>(1, QNIC_R, 13);
+  auto wait = std::make_unique<Wait>(13);
   json wait_json = wait->serialize_json();
   EXPECT_EQ(wait_json["type"], "wait");
-  EXPECT_EQ(wait_json["options"]["interface"][0]["partner_address"], 1);
+  EXPECT_EQ(wait_json["options"]["interface"][0]["partner_address"], 13);
 }
 
 TEST(ActionTest, Wait_deserialize_json) {
@@ -105,7 +105,7 @@ TEST(ActionTest, Wait_deserialize_json) {
 TEST(ActionTest, Tomography_serialize_json) {
   prepareSimulation();
   // num measure
-  auto tomography = std::make_unique<Tomography>(1000, 2, 3, QNIC_E, 15);
+  auto tomography = std::make_unique<Tomography>(1000, 2, 3);
   json tomography_json = tomography->serialize_json();
   EXPECT_EQ(tomography_json["type"], "tomography");
   EXPECT_EQ(tomography_json["options"]["num_measure"], 1000);

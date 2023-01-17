@@ -275,7 +275,7 @@ TEST(RSConverterTest, generateActiveRuleSetFromRuleSet) {
   auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0, 0, quisp::modules::QNIC_E, 0);
   pur_condition->addClause(std::move(enough_resource_clause));
   purify_rule->setCondition(std::move(pur_condition));
-  auto pur_action = std::make_unique<Purification>(quisp::rules::PurType::DSDA, 0, quisp::modules::QNIC_E, 0);
+  auto pur_action = std::make_unique<Purification>(quisp::rules::PurType::DSDA, 0);
   purify_rule->setAction(std::move(pur_action));
   ruleset.addRule(std::move(purify_rule));
   // swapping rule
@@ -293,7 +293,7 @@ TEST(RSConverterTest, generateActiveRuleSetFromRuleSet) {
   std::vector<QNIC_type> remote_qnic_type = {quisp::modules::QNIC_E, quisp::modules::QNIC_E};
   std::vector<int> remote_qnic_id = {0, 0};
   std::vector<int> remote_qnic_address = {0, 0};
-  auto swap_action = std::make_unique<EntanglementSwapping>(partners, qnic_type, qnic_id, remote_qnic_type, remote_qnic_id, remote_qnic_address);
+  auto swap_action = std::make_unique<EntanglementSwapping>(partners);
   swapping_rule->setAction(std::move(swap_action));
   ruleset.addRule(std::move(swapping_rule));
   // wait rule
@@ -303,7 +303,7 @@ TEST(RSConverterTest, generateActiveRuleSetFromRuleSet) {
   auto wait_clause = std::make_unique<WaitConditionClause>(0, quisp::modules::QNIC_E, 0);
   wait_condition->addClause(std::move(wait_clause));
   wait_rule->setCondition(std::move(wait_condition));
-  auto wait_action = std::make_unique<Wait>(0, quisp::modules::QNIC_E, 0);
+  auto wait_action = std::make_unique<Wait>(0);
   wait_rule->setAction(std::move(wait_action));
   ruleset.addRule(std::move(wait_rule));
   // tomography rule
@@ -313,7 +313,7 @@ TEST(RSConverterTest, generateActiveRuleSetFromRuleSet) {
   auto enough_resource_clause_tomo = std::make_unique<EnoughResourceConditionClause>(0, 0, 0, quisp::modules::QNIC_E, 0);
   tomo_condition->addClause(std::move(enough_resource_clause_tomo));
   tomography_rule->setCondition(std::move(tomo_condition));
-  auto tomo_action = std::make_unique<Tomography>(0, 0, 0, quisp::modules::QNIC_E, 0);
+  auto tomo_action = std::make_unique<Tomography>(0, 0, 0);
   tomography_rule->setAction(std::move(tomo_action));
   ruleset.addRule(std::move(tomography_rule));
 
