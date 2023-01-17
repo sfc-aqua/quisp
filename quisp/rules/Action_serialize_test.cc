@@ -21,8 +21,6 @@ TEST(ActionTest, Purification_serialize_json) {
   EXPECT_EQ(purification_json["type"], "purification");
   EXPECT_EQ(purification_json["options"]["purification_type"], "DSDA");
   EXPECT_EQ(purification_json["options"]["interface"][0]["partner_address"], 3);
-  EXPECT_EQ(purification_json["options"]["interface"][0]["qnic_type"], "QNIC_E");
-  EXPECT_EQ(purification_json["options"]["interface"][0]["qnic_id"], 123);
 }
 
 TEST(ActionTest, Purification_deserialize_json) {
@@ -32,7 +30,7 @@ TEST(ActionTest, Purification_deserialize_json) {
     "options": {
       "purification_type": "DOUBLE_INV",
       "interface": [
-        {"partner_address": 1, "qnic_type": "QNIC_R", "qnic_id": 30}
+        {"partner_address": 1}
         ]
       }
     })");
@@ -40,8 +38,6 @@ TEST(ActionTest, Purification_deserialize_json) {
   auto qnic_interface = empty_purification->qnic_interfaces.at(0);
   EXPECT_EQ(empty_purification->purification_type, PurType::DOUBLE_INV);
   EXPECT_EQ(qnic_interface.partner_addr, 1);
-  EXPECT_EQ(qnic_interface.qnic_type, QNIC_R);
-  EXPECT_EQ(qnic_interface.qnic_id, 30);
 }
 
 TEST(ActionTest, EntanglementSwapping_serialize_json) {
@@ -57,17 +53,7 @@ TEST(ActionTest, EntanglementSwapping_serialize_json) {
   json swapping_json = swapping->serialize_json();
   EXPECT_EQ(swapping_json["type"], "swapping");
   EXPECT_EQ(swapping_json["options"]["interface"][0]["partner_address"], 1);
-  EXPECT_EQ(swapping_json["options"]["interface"][0]["qnic_type"], "QNIC_E");
-  EXPECT_EQ(swapping_json["options"]["interface"][0]["qnic_id"], 13);
   EXPECT_EQ(swapping_json["options"]["interface"][1]["partner_address"], 3);
-  EXPECT_EQ(swapping_json["options"]["interface"][1]["qnic_type"], "QNIC_RP");
-  EXPECT_EQ(swapping_json["options"]["interface"][1]["qnic_id"], 15);
-  EXPECT_EQ(swapping_json["options"]["remote_interface"][0]["qnic_type"], "QNIC_R");
-  EXPECT_EQ(swapping_json["options"]["remote_interface"][0]["qnic_id"], 12);
-  EXPECT_EQ(swapping_json["options"]["remote_interface"][0]["qnic_address"], 21);
-  EXPECT_EQ(swapping_json["options"]["remote_interface"][1]["qnic_type"], "QNIC_E");
-  EXPECT_EQ(swapping_json["options"]["remote_interface"][1]["qnic_id"], 16);
-  EXPECT_EQ(swapping_json["options"]["remote_interface"][1]["qnic_address"], 22);
 }
 
 TEST(ActionTest, EntanglementSwapping_deserialize_json) {
@@ -76,32 +62,20 @@ TEST(ActionTest, EntanglementSwapping_deserialize_json) {
     "type": "swapping",
     "options": {
       "interface": [
-        {"partner_address":1,  "qnic_type":"QNIC_R", "qnic_id":30},
-        {"partner_address":3,  "qnic_type":"QNIC_RP", "qnic_id":32}
+        {"partner_address":1},
+        {"partner_address":3}
       ],
       "remote_interface":[
-        {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 29, "qnic_address": 13},
-        {"partner_address": 3, "qnic_type": "QNIC_E", "qnic_id": 33, "qnic_address": 14}
+        {"partner_address": 1},
+        {"partner_address": 3}
       ]
       }
     })");
   auto empty_swapping = std::make_unique<EntanglementSwapping>(serialized);
   auto qnic_interface_left = empty_swapping->qnic_interfaces.at(0);
   EXPECT_EQ(qnic_interface_left.partner_addr, 1);
-  EXPECT_EQ(qnic_interface_left.qnic_type, QNIC_R);
-  EXPECT_EQ(qnic_interface_left.qnic_id, 30);
   auto qnic_interface_right = empty_swapping->qnic_interfaces.at(1);
   EXPECT_EQ(qnic_interface_right.partner_addr, 3);
-  EXPECT_EQ(qnic_interface_right.qnic_type, QNIC_RP);
-  EXPECT_EQ(qnic_interface_right.qnic_id, 32);
-  auto left_partner_qnic_interface = empty_swapping->remote_qnic_interfaces.at(0);
-  EXPECT_EQ(left_partner_qnic_interface.qnic_type, QNIC_E);
-  EXPECT_EQ(left_partner_qnic_interface.qnic_id, 29);
-  EXPECT_EQ(left_partner_qnic_interface.qnic_address, 13);
-  auto right_partner_qnic_interface = empty_swapping->remote_qnic_interfaces.at(1);
-  EXPECT_EQ(right_partner_qnic_interface.qnic_type, QNIC_E);
-  EXPECT_EQ(right_partner_qnic_interface.qnic_id, 33);
-  EXPECT_EQ(right_partner_qnic_interface.qnic_address, 14);
 }
 
 TEST(ActionTest, Wait_serialize_json) {
@@ -111,8 +85,6 @@ TEST(ActionTest, Wait_serialize_json) {
   json wait_json = wait->serialize_json();
   EXPECT_EQ(wait_json["type"], "wait");
   EXPECT_EQ(wait_json["options"]["interface"][0]["partner_address"], 1);
-  EXPECT_EQ(wait_json["options"]["interface"][0]["qnic_type"], "QNIC_R");
-  EXPECT_EQ(wait_json["options"]["interface"][0]["qnic_id"], 13);
 }
 
 TEST(ActionTest, Wait_deserialize_json) {
@@ -121,15 +93,13 @@ TEST(ActionTest, Wait_deserialize_json) {
     "type": "wait",
     "options": {
       "interface":[
-        {"partner_address": 1, "qnic_type": "QNIC_R", "qnic_id": 30}
+        {"partner_address": 1}
       ]
       }
     })");
   auto empty_wait = std::make_unique<Wait>(serialized);
   auto qnic_interface = empty_wait->qnic_interfaces.at(0);
   EXPECT_EQ(qnic_interface.partner_addr, 1);
-  EXPECT_EQ(qnic_interface.qnic_type, QNIC_R);
-  EXPECT_EQ(qnic_interface.qnic_id, 30);
 }
 
 TEST(ActionTest, Tomography_serialize_json) {
@@ -140,9 +110,6 @@ TEST(ActionTest, Tomography_serialize_json) {
   EXPECT_EQ(tomography_json["type"], "tomography");
   EXPECT_EQ(tomography_json["options"]["num_measure"], 1000);
   EXPECT_EQ(tomography_json["options"]["owner_address"], 2);
-  EXPECT_EQ(tomography_json["options"]["interface"][0]["partner_address"], 3);
-  EXPECT_EQ(tomography_json["options"]["interface"][0]["qnic_type"], "QNIC_E");
-  EXPECT_EQ(tomography_json["options"]["interface"][0]["qnic_id"], 15);
 }
 
 TEST(ActionTest, Tomography_deserialize_json) {
@@ -153,7 +120,7 @@ TEST(ActionTest, Tomography_deserialize_json) {
       "num_measure": 1000,
       "owner_address": 2,
       "interface": [
-        {"partner_address": 1, "qnic_type": "QNIC_R","qnic_id": 30}
+        {"partner_address": 1}
       ]
       }
     })");
@@ -162,7 +129,5 @@ TEST(ActionTest, Tomography_deserialize_json) {
   EXPECT_EQ(empty_tomography->num_measurement, 1000);
   EXPECT_EQ(empty_tomography->owner_address, 2);
   EXPECT_EQ(qnic_interface.partner_addr, 1);
-  EXPECT_EQ(qnic_interface.qnic_type, QNIC_R);
-  EXPECT_EQ(qnic_interface.qnic_id, 30);
 }
 }  // namespace

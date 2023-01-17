@@ -3,13 +3,13 @@
 namespace quisp::rules {
 
 Action::Action(int partner_addr, QNIC_type qnic_type, int qnic_id) {
-  QnicInterface qnic_interface{partner_addr, qnic_type, qnic_id};
+  QnicInterface qnic_interface{partner_addr};
   qnic_interfaces.push_back(qnic_interface);
 };
 
 Action::Action(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id) {
   for (int i = 0; i < partner_addr.size(); i++) {
-    QnicInterface qnic_interface{partner_addr.at(i), qnic_type.at(i), qnic_id.at(i)};
+    QnicInterface qnic_interface{partner_addr.at(i)};
     qnic_interfaces.push_back(qnic_interface);
   }
 }
@@ -38,7 +38,7 @@ EntanglementSwapping::EntanglementSwapping(std::vector<int> partner_addr, std::v
                                            std::vector<int> remote_qnic_id, std::vector<int> remote_qnic_address)
     : Action(partner_addr, qnic_type, qnic_id) {
   for (int i = 0; i < partner_addr.size(); i++) {
-    QnicInterface remote_qnic_interface{partner_addr.at(i), remote_qnic_type.at(i), remote_qnic_id.at(i), remote_qnic_address.at(i)};
+    QnicInterface remote_qnic_interface{partner_addr.at(i)};
     remote_qnic_interfaces.push_back(remote_qnic_interface);
   }
 }

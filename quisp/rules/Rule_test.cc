@@ -75,14 +75,10 @@ TEST(RuleTest, serialize_json_purification_rule) {
   EXPECT_EQ(clause_json["options"]["num_resource"], 1);
   EXPECT_EQ(clause_json["options"]["required_fidelity"], 0.85);
   EXPECT_EQ(clause_json["options"]["interface"]["partner_address"], 1);
-  EXPECT_EQ(clause_json["options"]["interface"]["qnic_type"], QNIC_E);
-  EXPECT_EQ(clause_json["options"]["interface"]["qnic_id"], 13);
   auto action_json = purification_json["action"];
   EXPECT_EQ(action_json["type"], "purification");
   EXPECT_EQ(action_json["options"]["purification_type"], "DSSA");
   EXPECT_EQ(action_json["options"]["interface"][0]["partner_address"], 1);
-  EXPECT_EQ(action_json["options"]["interface"][0]["qnic_type"], "QNIC_E");
-  EXPECT_EQ(action_json["options"]["interface"][0]["qnic_id"], 13);
 }
 
 TEST(RuleTest, serialize_json_swapping_rule) {
@@ -136,8 +132,6 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   EXPECT_EQ(clause1_json["options"]["num_resource"], 1);
   EXPECT_EQ(clause1_json["options"]["required_fidelity"], 0.85);
   EXPECT_EQ(clause1_json["options"]["interface"]["partner_address"], 1);
-  EXPECT_EQ(clause1_json["options"]["interface"]["qnic_type"], "QNIC_E");
-  EXPECT_EQ(clause1_json["options"]["interface"]["qnic_id"], 13);
 
   // second clause: enough resource with partner 3 and fidelity > 0.85
   auto clause2_json = swapping_json["condition"]["clauses"][1];
@@ -145,18 +139,12 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   EXPECT_EQ(clause2_json["options"]["num_resource"], 1);
   EXPECT_EQ(clause2_json["options"]["required_fidelity"], 0.85);
   EXPECT_EQ(clause2_json["options"]["interface"]["partner_address"], 3);
-  EXPECT_EQ(clause2_json["options"]["interface"]["qnic_type"], "QNIC_R");
-  EXPECT_EQ(clause2_json["options"]["interface"]["qnic_id"], 15);
 
   // action: entanglement swapping ("swapping")
   auto action_json = swapping_json["action"];
   EXPECT_EQ(action_json["type"], "swapping");
   EXPECT_EQ(action_json["options"]["interface"][0]["partner_address"], 1);
-  EXPECT_EQ(action_json["options"]["interface"][0]["qnic_type"], "QNIC_E");
-  EXPECT_EQ(action_json["options"]["interface"][0]["qnic_id"], 13);
   EXPECT_EQ(action_json["options"]["interface"][1]["partner_address"], 3);
-  EXPECT_EQ(action_json["options"]["interface"][1]["qnic_type"], "QNIC_R");
-  EXPECT_EQ(action_json["options"]["interface"][1]["qnic_id"], 15);
 }
 
 TEST(RuleTest, deserialize_json_purification_rule) {

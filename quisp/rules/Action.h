@@ -6,11 +6,9 @@
 using nlohmann::json;
 using quisp::modules::QNIC_type;
 namespace quisp::rules {
+
 struct QnicInterface {
   int partner_addr;
-  QNIC_type qnic_type;
-  int qnic_id;
-  int qnic_address;
 };
 
 enum PurType : int {
@@ -41,21 +39,9 @@ NLOHMANN_JSON_SERIALIZE_ENUM(PurType, {
                                           {DSDA_SECOND_INV, "DSDA_SECOND_INV"},
                                       })
 
-inline void to_json(json& j, const QnicInterface& qi) {
-  j = json{{"partner_address", qi.partner_addr}, {"qnic_type", qi.qnic_type}, {"qnic_id", qi.qnic_id}};
-  if (qi.qnic_address) {
-    j["qnic_address"] = qi.qnic_address;
-  }
-}
+inline void to_json(json& j, const QnicInterface& qi) { j = json{{"partner_address", qi.partner_addr}}; }
 
-inline void from_json(const json& j, QnicInterface& qi) {
-  j.at("partner_address").get_to(qi.partner_addr);
-  j.at("qnic_type").get_to(qi.qnic_type);
-  j.at("qnic_id").get_to(qi.qnic_id);
-  if (j.contains("qnic_address")) {
-    j.at("qnic_address").get_to(qi.qnic_address);
-  }
-}
+inline void from_json(const json& j, QnicInterface& qi) { j.at("partner_address").get_to(qi.partner_addr); }
 class Action {
  public:
   Action() {}  // for deserialization

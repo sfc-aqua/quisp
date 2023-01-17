@@ -68,7 +68,7 @@ TEST(RuleSetTest, metadata_serialize_json) {
                              "next_rule_id": -1,
                              "shared_tag": 0,
                              "interface":[
-                               {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 10}
+                               {"partner_address": 1}
                              ],
                              "rule_id": 0
                             }]

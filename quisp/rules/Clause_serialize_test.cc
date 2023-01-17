@@ -22,8 +22,6 @@ TEST(ClauseTest, EnoughResourceConditionClause_serialize_json) {
   EXPECT_EQ(enough_resource_json["options"]["num_resource"], 3);
   EXPECT_EQ(enough_resource_json["options"]["required_fidelity"], 0.85);
   EXPECT_EQ(enough_resource_json["options"]["interface"]["partner_address"], 1);
-  EXPECT_EQ(enough_resource_json["options"]["interface"]["qnic_type"], "QNIC_R");
-  EXPECT_EQ(enough_resource_json["options"]["interface"]["qnic_id"], 13);
 }
 
 TEST(ClauseTest, EnoughResourceConditionClause_deserialize_json) {
@@ -34,9 +32,7 @@ TEST(ClauseTest, EnoughResourceConditionClause_deserialize_json) {
       "num_resource": 3,
       "required_fidelity": 0.95,
       "interface":{
-        "partner_address": 1,
-        "qnic_type": "QNIC_R",
-        "qnic_id": 30
+        "partner_address": 1
       }
       }
     })");
@@ -45,8 +41,6 @@ TEST(ClauseTest, EnoughResourceConditionClause_deserialize_json) {
   EXPECT_EQ(enough_resource->num_resource, 3);
   EXPECT_EQ(enough_resource->required_fidelity, 0.95);
   EXPECT_EQ(enough_resource->partner_address, 1);
-  EXPECT_EQ(enough_resource->qnic_type, QNIC_R);
-  EXPECT_EQ(enough_resource->qnic_id, 30);
 }
 
 TEST(ClauseTest, MeasureCountConditionClause_serialize_json) {
@@ -57,8 +51,6 @@ TEST(ClauseTest, MeasureCountConditionClause_serialize_json) {
   EXPECT_EQ(measure_count_json["type"], "measure_count");
   EXPECT_EQ(measure_count_json["options"]["num_measure"], 1000);
   EXPECT_EQ(measure_count_json["options"]["interface"]["partner_address"], 1);
-  EXPECT_EQ(measure_count_json["options"]["interface"]["qnic_type"], "QNIC_E");
-  EXPECT_EQ(measure_count_json["options"]["interface"]["qnic_id"], 15);
 }
 
 TEST(ClauseTest, MeasureCountConditionClause_deserialize_json) {
@@ -68,9 +60,7 @@ TEST(ClauseTest, MeasureCountConditionClause_deserialize_json) {
     "options": {
       "num_measure": 500,
       "interface": {
-        "partner_address": 1,
-        "qnic_type": "QNIC_R",
-        "qnic_id": 30
+        "partner_address": 1
       }
       }
     })");
@@ -78,8 +68,6 @@ TEST(ClauseTest, MeasureCountConditionClause_deserialize_json) {
   EXPECT_EQ(empty_measure_count->name, "measure_count");
   EXPECT_EQ(empty_measure_count->num_measure, 500);
   EXPECT_EQ(empty_measure_count->partner_address, 1);
-  EXPECT_EQ(empty_measure_count->qnic_type, QNIC_R);
-  EXPECT_EQ(empty_measure_count->qnic_id, 30);
 }
 
 TEST(ClauseTest, FidelityConditionClause_serialize_json) {
@@ -90,8 +78,6 @@ TEST(ClauseTest, FidelityConditionClause_serialize_json) {
   EXPECT_EQ(fidelity_json["type"], "fidelity");
   EXPECT_EQ(fidelity_json["options"]["required_fidelity"], 0.8);
   EXPECT_EQ(fidelity_json["options"]["interface"]["partner_address"], 3);
-  EXPECT_EQ(fidelity_json["options"]["interface"]["qnic_type"], "QNIC_RP");
-  EXPECT_EQ(fidelity_json["options"]["interface"]["qnic_id"], 103);
 }
 
 TEST(ClauseTest, FidelityConditionClause_deserialize_json) {
@@ -101,9 +87,7 @@ TEST(ClauseTest, FidelityConditionClause_deserialize_json) {
     "options": {
       "required_fidelity": 0.9,
       "interface": {
-        "partner_address": 1,
-        "qnic_type": "QNIC_R",
-        "qnic_id": 30
+        "partner_address": 1
       }
       }
     })");
@@ -111,8 +95,6 @@ TEST(ClauseTest, FidelityConditionClause_deserialize_json) {
   EXPECT_EQ(empty_fidelity->name, "fidelity");
   EXPECT_EQ(empty_fidelity->required_fidelity, 0.9);
   EXPECT_EQ(empty_fidelity->partner_address, 1);
-  EXPECT_EQ(empty_fidelity->qnic_type, QNIC_R);
-  EXPECT_EQ(empty_fidelity->qnic_id, 30);
 }
 
 }  // namespace

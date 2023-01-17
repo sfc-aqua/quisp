@@ -10,12 +10,10 @@ namespace quisp::rules {
 class Clause {
  public:
   Clause() {}
-  Clause(int partner_addr, QNIC_type qnic_type, int qnic_id) : partner_address(partner_addr), qnic_type(qnic_type), qnic_id(qnic_id){};
+  Clause(int partner_addr, QNIC_type qnic_type, int qnic_id) : partner_address(partner_addr){};
   virtual ~Clause(){};
   std::string name = "";
   int partner_address;
-  QNIC_type qnic_type;
-  int qnic_id;
   virtual json serialize_json() = 0;
   virtual void deserialize_json(json serialized) = 0;
 };

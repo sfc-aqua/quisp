@@ -480,25 +480,6 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
         // if the rule is entanglement swapping or tomography rule, no need to specify the next rule
         break;
       }
-      // so far, we assume if an action has two partners, it means entanglement swapping. And it's finalized here.
-      auto qnic_interface = appended_rule->qnic_interfaces;
-      // purification, wait, have only one partner
-      auto target_qnic_type = qnic_interface.at(0).qnic_type;
-      auto target_qnic_id = qnic_interface.at(0).qnic_id;
-
-      // 3.2 find next rule (if the qnic type and qnic id is the same, promote entanglement if the rule is not ES)
-      for (int j = i + 1; j < rules.size(); j++) {  // start from the next rule
-        auto next_qnic_interface = rules.at(j)->qnic_interfaces;
-        for (auto interface : next_qnic_interface) {
-          if (interface.qnic_type == target_qnic_type && interface.qnic_id == target_qnic_id) {
-            appended_rule->setNextRule(j);
-            break;
-          }
-        }
-        if (appended_rule->to != -1) {
-          break;
-        }
-      }
     }
     auto serialized_ruleset = ruleset.serialize_json();
 
