@@ -87,14 +87,10 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
                                         int num_resources);
   SwappingConfig generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources);
 
-  std::unique_ptr<Rule> purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, int shared_tag,
-                                   std::string name = "purification");
-  std::unique_ptr<Rule> swapRule(std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id,
-                                 std::vector<QNIC_type> remote_qnic_type, std::vector<int> remote_qnic_id, std::vector<int> remote_qnic_address, int shared_tag,
-                                 std::string name = "swapping");
-  std::unique_ptr<Rule> waitRule(int partner_address, QNIC_type qnic_type, int qnic_id, int shared_tag, std::string name = "wait");
-  std::unique_ptr<Rule> tomographyRule(int partner_address, int owner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, int shared_tag,
-                                       std::string name = "tomography");
+  std::unique_ptr<Rule> purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, int shared_tag, std::string name = "purification");
+  std::unique_ptr<Rule> swapRule(std::vector<int> partner_address, double threshold_fidelity, int shared_tag, std::string name = "swapping");
+  std::unique_ptr<Rule> waitRule(int partner_address, int shared_tag, std::string name = "wait");
+  std::unique_ptr<Rule> tomographyRule(int partner_address, int owner_address, int num_measure, double threshold_fidelity, int shared_tag, std::string name = "tomography");
   void reserveQnic(int qnic_address);
   void releaseQnic(int qnic_address);
   bool isQnicBusy(int qnic_address);

@@ -52,7 +52,7 @@ TEST(ConnectionManagerRuleSetTest, PurificationRule) {
   int qnic_id = 4;
   double threshold_fidelity = 0;
 
-  auto purification_rule = connection_manager.purifyRule(partner_addr, purification_type, threshold_fidelity, qnic_type, qnic_id, 0);
+  auto purification_rule = connection_manager.purifyRule(partner_addr, purification_type, threshold_fidelity, 0);
   EXPECT_EQ(purification_rule->rule_id, -1);
   EXPECT_EQ(purification_rule->name, "purification");
 
@@ -106,7 +106,7 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
   std::vector<int> remote_qnic_address = {11, 12};
   double threshold_fidelity = 0;
 
-  auto purification_rule = connection_manager.swapRule(partner_addr, threshold_fidelity, qnic_type, qnic_id, remote_qnic_type, remote_qnic_id, remote_qnic_address, 0);
+  auto purification_rule = connection_manager.swapRule(partner_addr, threshold_fidelity, 0);
   EXPECT_EQ(purification_rule->rule_id, -1);
   EXPECT_EQ(purification_rule->name, "swapping");
 
@@ -172,7 +172,7 @@ TEST(ConnectionManagerRuleSetTest, waitRule) {
   int qnic_id = 4;
   int shared_tag = 0;
 
-  auto purification_rule = connection_manager.waitRule(partner_addr, qnic_type, qnic_id, shared_tag);
+  auto purification_rule = connection_manager.waitRule(partner_addr, shared_tag);
   EXPECT_EQ(purification_rule->rule_id, -1);
   EXPECT_EQ(purification_rule->name, "wait");
 
@@ -223,7 +223,7 @@ TEST(ConnectionManagerRuleSetTest, tomographyRule) {
   double threshold_fidelity = 0;
   int shared_tag = 3;
 
-  auto tomography_rule = connection_manager.tomographyRule(partner_addr, owner_addr, num_measurement, threshold_fidelity, qnic_type, qnic_id, shared_tag);
+  auto tomography_rule = connection_manager.tomographyRule(partner_addr, owner_addr, num_measurement, threshold_fidelity, shared_tag);
   EXPECT_EQ(tomography_rule->rule_id, -1);
   EXPECT_EQ(tomography_rule->name, "tomography");
 
