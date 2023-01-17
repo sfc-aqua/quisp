@@ -269,21 +269,21 @@ TEST(RSConverterTest, generateActiveRuleSetFromRuleSet) {
   ruleset.ruleset_id = ruleset_id;
   ruleset.owner_addr = owner_address;
 
-  auto purify_rule = std::make_unique<quisp::rules::Rule>(0, quisp::modules::QNIC_E, 0, 0, false);
+  auto purify_rule = std::make_unique<quisp::rules::Rule>(0, 0, false);
   purify_rule->setName("purification");
   auto pur_condition = std::make_unique<quisp::rules::Condition>();
-  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0, 0, quisp::modules::QNIC_E, 0);
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0, 0);
   pur_condition->addClause(std::move(enough_resource_clause));
   purify_rule->setCondition(std::move(pur_condition));
   auto pur_action = std::make_unique<Purification>(quisp::rules::PurType::DSDA, 0);
   purify_rule->setAction(std::move(pur_action));
   ruleset.addRule(std::move(purify_rule));
   // swapping rule
-  auto swapping_rule = std::make_unique<quisp::rules::Rule>(0, quisp::modules::QNIC_E, 0, 0, false);
+  auto swapping_rule = std::make_unique<quisp::rules::Rule>(0, 0, false);
   swapping_rule->setName("swapping");
   auto swap_condition = std::make_unique<quisp::rules::Condition>();
-  auto enough_resource_clause_left = std::make_unique<EnoughResourceConditionClause>(1, 0, 0, quisp::modules::QNIC_E, 0);
-  auto enough_resource_clause_right = std::make_unique<EnoughResourceConditionClause>(1, 0, 0, quisp::modules::QNIC_E, 0);
+  auto enough_resource_clause_left = std::make_unique<EnoughResourceConditionClause>(1, 0, 0);
+  auto enough_resource_clause_right = std::make_unique<EnoughResourceConditionClause>(1, 0, 0);
   swap_condition->addClause(std::move(enough_resource_clause_left));
   swap_condition->addClause(std::move(enough_resource_clause_right));
   swapping_rule->setCondition(std::move(swap_condition));
@@ -297,20 +297,20 @@ TEST(RSConverterTest, generateActiveRuleSetFromRuleSet) {
   swapping_rule->setAction(std::move(swap_action));
   ruleset.addRule(std::move(swapping_rule));
   // wait rule
-  auto wait_rule = std::make_unique<quisp::rules::Rule>(0, quisp::modules::QNIC_E, 0, 0, false);
+  auto wait_rule = std::make_unique<quisp::rules::Rule>(0, 0, false);
   wait_rule->setName("wait");
   auto wait_condition = std::make_unique<quisp::rules::Condition>();
-  auto wait_clause = std::make_unique<WaitConditionClause>(0, quisp::modules::QNIC_E, 0);
+  auto wait_clause = std::make_unique<WaitConditionClause>(0);
   wait_condition->addClause(std::move(wait_clause));
   wait_rule->setCondition(std::move(wait_condition));
   auto wait_action = std::make_unique<Wait>(0);
   wait_rule->setAction(std::move(wait_action));
   ruleset.addRule(std::move(wait_rule));
   // tomography rule
-  auto tomography_rule = std::make_unique<quisp::rules::Rule>(0, quisp::modules::QNIC_E, 0, 0, true);
+  auto tomography_rule = std::make_unique<quisp::rules::Rule>(0, 0, true);
   tomography_rule->setName("tomography");
   auto tomo_condition = std::make_unique<quisp::rules::Condition>();
-  auto enough_resource_clause_tomo = std::make_unique<EnoughResourceConditionClause>(0, 0, 0, quisp::modules::QNIC_E, 0);
+  auto enough_resource_clause_tomo = std::make_unique<EnoughResourceConditionClause>(0, 0, 0);
   tomo_condition->addClause(std::move(enough_resource_clause_tomo));
   tomography_rule->setCondition(std::move(tomo_condition));
   auto tomo_action = std::make_unique<Tomography>(0, 0, 0);

@@ -814,7 +814,7 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
 
 std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, QNIC_type qnic_type, int qnic_id, int shared_tag,
                                                     std::string name) {
-  auto purify_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, shared_tag, false);
+  auto purify_rule = std::make_unique<Rule>(partner_address, shared_tag, false);
   purify_rule->setName(name);
 
   // decide how many Bell pairs are required
@@ -833,7 +833,7 @@ std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType
 
   // prepare condition
   auto condition = std::make_unique<Condition>();
-  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(num_resource, threshold_fidelity, partner_address, qnic_type, qnic_id);
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(num_resource, threshold_fidelity, partner_address);
   condition->addClause(std::move(enough_resource_clause));
   purify_rule->setCondition(std::move(condition));
 
@@ -847,13 +847,13 @@ std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType
 std::unique_ptr<Rule> ConnectionManager::swapRule(std::vector<int> partner_address, double threshold_fidelity, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id,
                                                   std::vector<QNIC_type> remote_qnic_type, std::vector<int> remote_qnic_id, std::vector<int> remote_qnic_address, int shared_tag,
                                                   std::string name) {
-  auto swap_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, shared_tag, true);
+  auto swap_rule = std::make_unique<Rule>(partner_address, shared_tag, true);
   swap_rule->setName(name);
 
   // prepare condition and two enough resource clauses
   auto condition = std::make_unique<Condition>();
-  auto enough_resource_clause_first = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address.at(0), qnic_type.at(0), qnic_id.at(0));
-  auto enough_resource_clause_second = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address.at(1), qnic_type.at(1), qnic_id.at(1));
+  auto enough_resource_clause_first = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address.at(0));
+  auto enough_resource_clause_second = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address.at(1));
   condition->addClause(std::move(enough_resource_clause_first));
   condition->addClause(std::move(enough_resource_clause_second));
   swap_rule->setCondition(std::move(condition));
@@ -866,11 +866,11 @@ std::unique_ptr<Rule> ConnectionManager::swapRule(std::vector<int> partner_addre
 }
 
 std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, QNIC_type qnic_type, int qnic_id, int shared_tag, std::string name) {
-  auto wait_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, shared_tag, false);
+  auto wait_rule = std::make_unique<Rule>(partner_address, shared_tag, false);
   wait_rule->setName(name);
 
   auto condition = std::make_unique<Condition>();
-  auto wait_clause = std::make_unique<WaitConditionClause>(partner_address, qnic_type, qnic_id);
+  auto wait_clause = std::make_unique<WaitConditionClause>(partner_address);
   condition->addClause(std::move(wait_clause));
   wait_rule->setCondition(std::move(condition));
 
@@ -882,13 +882,13 @@ std::unique_ptr<Rule> ConnectionManager::waitRule(int partner_address, QNIC_type
 
 std::unique_ptr<Rule> ConnectionManager::tomographyRule(int partner_address, int owner_address, int num_measure, double threshold_fidelity, QNIC_type qnic_type, int qnic_id,
                                                         int shared_tag, std::string name) {
-  auto tomography_rule = std::make_unique<Rule>(partner_address, qnic_type, qnic_id, shared_tag, true);
+  auto tomography_rule = std::make_unique<Rule>(partner_address, shared_tag, true);
   tomography_rule->setName(name);
 
   // prepare condition
   auto condition = std::make_unique<Condition>();
-  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address, qnic_type, qnic_id);
-  auto measure_count_clause = std::make_unique<MeasureCountConditionClause>(num_measure, partner_address, qnic_type, qnic_id);
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address);
+  auto measure_count_clause = std::make_unique<MeasureCountConditionClause>(num_measure, partner_address);
   condition->addClause(std::move(enough_resource_clause));
   condition->addClause(std::move(measure_count_clause));
   tomography_rule->setCondition(std::move(condition));

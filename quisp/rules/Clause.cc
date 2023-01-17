@@ -2,8 +2,8 @@
 
 namespace quisp::rules {
 
-EnoughResourceConditionClause::EnoughResourceConditionClause(int num_resource, double required_fidelity, int partner_addr, QNIC_type qnic_type, int qnic_id)
-    : Clause(partner_addr, qnic_type, qnic_id), num_resource(num_resource), required_fidelity(required_fidelity) {}
+EnoughResourceConditionClause::EnoughResourceConditionClause(int num_resource, double required_fidelity, int partner_addr)
+    : Clause(partner_addr), num_resource(num_resource), required_fidelity(required_fidelity) {}
 
 json EnoughResourceConditionClause::serialize_json() {
   json enough_resource_json;
@@ -24,8 +24,7 @@ void EnoughResourceConditionClause::deserialize_json(json serialized) {
   }
 }
 
-MeasureCountConditionClause::MeasureCountConditionClause(int num_measurement, int partner_addr, QNIC_type qnic_type, int qnic_id)
-    : Clause(partner_addr, qnic_type, qnic_id), num_measure(num_measurement) {}
+MeasureCountConditionClause::MeasureCountConditionClause(int num_measurement, int partner_addr) : Clause(partner_addr), num_measure(num_measurement) {}
 
 json MeasureCountConditionClause::serialize_json() {
   json measure_count_json;
@@ -44,8 +43,7 @@ void MeasureCountConditionClause::deserialize_json(json serialized) {
   }
 }
 
-FidelityConditionClause::FidelityConditionClause(double required_fidelity, int partner_addr, QNIC_type qnic_type, int qnic_id)
-    : Clause(partner_addr, qnic_type, qnic_id), required_fidelity(required_fidelity) {}
+FidelityConditionClause::FidelityConditionClause(double required_fidelity, int partner_addr) : Clause(partner_addr), required_fidelity(required_fidelity) {}
 
 json FidelityConditionClause::serialize_json() {
   json fidelity_json;
@@ -64,7 +62,7 @@ void FidelityConditionClause::deserialize_json(json serialized) {
   }
 }
 
-WaitConditionClause::WaitConditionClause(int swapper_addr, QNIC_type qnic_type, int qnic_id) : Clause(swapper_addr, qnic_type, qnic_id) {}
+WaitConditionClause::WaitConditionClause(int swapper_addr) : Clause(swapper_addr) {}
 
 json WaitConditionClause::serialize_json() {
   json wait_json;
