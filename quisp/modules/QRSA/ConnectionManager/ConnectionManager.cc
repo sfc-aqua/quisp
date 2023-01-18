@@ -574,58 +574,6 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
   return config;
 }
 
-SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources) {
-  // Set the left and right partner to be initiator and responder.
-
-  auto iter = std::find(path.begin(), path.end(), swapper_address);
-  size_t index = std::distance(path.begin(), iter);  // index of swapper in the path
-  if (index == 0 || index == path.size()) {
-    error("This shouldn't happen. Endnode was recognized as swapper with some reason.");
-  }
-  QNIC_id left_self_qnic = qnics.at(index).fst;
-  QNIC_id right_self_qnic = qnics.at(index).snd;
-
-  size_t left_partner_index = std::distance(path.begin(), iter - 1);
-  size_t right_partner_index = std::distance(path.begin(), iter + 1);
-
-  int left_partner = path.at(left_partner_index);
-  int right_partner = path.at(right_partner_index);
-
-  // left partner must be second
-  // right partner must be first
-  // TODO: detail description of this.
-  QNIC_id left_partner_qnic = qnics.at(left_partner_index).snd;
-  QNIC_id right_partner_qnic = qnics.at(right_partner_index).fst;
-  EV << "left_index: " << left_partner_index << " right_index: " << right_partner_index << "path size: " << path.size() << "\n";
-
-  size_t initiator_index = std::distance(path.begin(), path.begin());
-  size_t responder_index = std::distance(path.begin(), path.end());
-  EV << "ini_index: " << initiator_index << " res_index: " << responder_index << "path size: " << path.size() << "\n";
-
-  if (right_self_qnic.type == QNIC_RP || left_self_qnic.type == QNIC_RP || right_partner_qnic.type == QNIC_RP || left_partner_qnic.type == QNIC_RP) {
-    error("MSM link not implemented");
-  }
-
-  SwappingConfig config;
-  config.left_partner = left_partner;
-  config.lres = num_resources;
-
-  config.right_partner = right_partner;
-  config.rres = num_resources;
-
-  // For end nodes
-  config.initiator = path.at(initiator_index);
-  config.initiator_res = num_resources;
-
-  config.responder = path.at(responder_index - 1);
-  config.responder_res = num_resources;
-
-  // Addition info
-  config.index = index;
-
-  return config;
-}
-
 /**
  *  This method is called to handle the ConnectionSetupRequest at an intermediate.
  *  This method reserves requested qnics and then send the request to next hop.

@@ -85,7 +85,6 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
 
   SwappingConfig generateSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners, std::vector<QNIC_pair_info> qnics,
                                         int num_resources);
-  SwappingConfig generateSimultaneousSwappingConfig(int swapper_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics, int num_resources);
 
   std::unique_ptr<Rule> purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, int shared_tag, std::string name = "purification");
   std::unique_ptr<Rule> swapRule(std::vector<int> partner_address, double threshold_fidelity, int shared_tag, std::string name = "swapping");
