@@ -374,11 +374,13 @@ void GraphStateQubit::setEntangledPartner(IQubit *const partner) {
 }
 
 void GraphStateQubit::gateCNOT(IQubit *const control_qubit) {
+  auto gs_control_qubit = dynamic_cast<GraphStateQubit *>(control_qubit);
   this->applyMemoryError();
+  gs_control_qubit->applyMemoryError();
   this->applyClifford(CliffordOperator::H);  // use apply Clifford for pure operation
-  this->applyPureCZ(dynamic_cast<GraphStateQubit *>(control_qubit));
+  this->applyPureCZ(gs_control_qubit);
   this->applyClifford(CliffordOperator::H);
-  this->applyTwoQubitGateError(gate_err_cnot, dynamic_cast<GraphStateQubit *>(control_qubit));
+  this->applyTwoQubitGateError(gate_err_cnot, gs_control_qubit);
 }
 
 void GraphStateQubit::gateH() {
