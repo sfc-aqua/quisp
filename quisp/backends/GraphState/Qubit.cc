@@ -1,5 +1,6 @@
 #include "Qubit.h"
 #include "Backend.h"
+#include "backends/interfaces/IQubit.h"
 #include "types.h"
 
 namespace quisp::backends::graph_state {
@@ -443,13 +444,13 @@ EigenvalueResult GraphStateQubit::localMeasureZ() {
 
 [[deprecated]] bool GraphStateQubit::purifyX(IQubit *const control_qubit) {
   this->gateCNOT(control_qubit);
-  auto result = this->localMeasureZ() != control_qubit->localMeasureZ();
+  auto result = this->localMeasureZ() == EigenvalueResult::PLUS_ONE;
   return result;
 }
 
 [[deprecated]] bool GraphStateQubit::purifyZ(IQubit *const target_qubit) {
   target_qubit->gateCNOT(this);
-  auto result = this->localMeasureZ() != target_qubit->localMeasureZ();
+  auto result = this->localMeasureZ() == EigenvalueResult::PLUS_ONE;
   return result;
 }
 
