@@ -343,8 +343,6 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     // 2.2.1 purification required
     for (int i = 1; i < path.size(); i++) {
       int left_node = path.at(i - 1), right_node = path.at(i);
-      auto left_qnic = getQnicInterface(left_node, right_node, path, qnics);
-      auto right_qnic = getQnicInterface(right_node, left_node, path, qnics);
       for (int i = 0; i < num_remote_purification; i++) {
         auto pur_rule_left = purifyRule(right_node, purification_type, threshold_fidelity, shared_tag);
         auto pur_rule_right = purifyRule(left_node, purification_type, threshold_fidelity, shared_tag);
@@ -448,8 +446,6 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   int initiator_address = path.at(0);
   int responder_address = my_address;
   int num_measure = req->getNum_measure();
-  auto initiator_qnic = getQnicInterface(initiator_address, responder_address, path, qnics);
-  auto responder_qnic = getQnicInterface(responder_address, initiator_address, path, qnics);
   auto tomo_rule_initiator = tomographyRule(responder_address, initiator_address, num_measure, threshold_fidelity, shared_tag);
   auto tomo_rule_responder = tomographyRule(initiator_address, responder_address, num_measure, threshold_fidelity, shared_tag);
   shared_tag++;
@@ -485,29 +481,6 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     send(pkt, "RouterPort$o");
   }
   reserveQnic(src_info->qnic.address);
-}
-
-QNIC_id ConnectionManager::getQnicInterface(int owner_address, int partner_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics) {
-  // owner index in the path
-  auto iter_owner = std::find(path.begin(), path.end(), owner_address);
-  size_t owner_index = std::distance(path.begin(), iter_owner);
-  // partner index in the path
-  auto iter_partner = std::find(path.begin(), path.end(), partner_address);
-  size_t partner_index = std::distance(path.begin(), iter_partner);
-
-  if (owner_address == partner_address) {
-    error("owner address and parnter address must be different");
-  }
-  // if the owner is closer to the reponder than the partner, then this returns left qnic interface,
-  // otherwise, this returns right qnic interface
-  // initiator <-- (fst) owner (snd) --> responder
-  QNIC_id qnic_interface;
-  if (partner_index < owner_index) {
-    qnic_interface = qnics.at(owner_index).fst;
-  } else if (partner_index > owner_index) {
-    qnic_interface = qnics.at(owner_index).snd;
-  }
-  return qnic_interface;
 }
 
 /**
@@ -594,21 +567,10 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
   }
   SwappingConfig config;
   config.left_partner = left_partner;
-  config.lqnic_type = left_partner_qnic.type;
-  config.lqnic_index = left_partner_qnic.index;
-  config.lqnic_address = left_partner_qnic.address;
   config.lres = num_resources;
-
   config.right_partner = right_partner;
-  config.rqnic_type = right_partner_qnic.type;
-  config.rqnic_index = right_partner_qnic.index;
-  config.rqnic_address = right_partner_qnic.address;
   config.rres = num_resources;
 
-  config.self_left_qnic_index = left_self_qnic.index;
-  config.self_right_qnic_index = right_self_qnic.index;
-  config.self_left_qnic_type = left_self_qnic.type;
-  config.self_right_qnic_type = right_self_qnic.type;
   return config;
 }
 
@@ -640,47 +602,27 @@ SwappingConfig ConnectionManager::generateSimultaneousSwappingConfig(int swapper
   size_t responder_index = std::distance(path.begin(), path.end());
   EV << "ini_index: " << initiator_index << " res_index: " << responder_index << "path size: " << path.size() << "\n";
 
-  QNIC_id initiator_qnic = qnics.at(0).snd;
-
-  QNIC_id responder_qnic = qnics.at(responder_index - 1).fst;
-
   if (right_self_qnic.type == QNIC_RP || left_self_qnic.type == QNIC_RP || right_partner_qnic.type == QNIC_RP || left_partner_qnic.type == QNIC_RP) {
     error("MSM link not implemented");
   }
 
   SwappingConfig config;
   config.left_partner = left_partner;
-  config.lqnic_type = left_partner_qnic.type;
-  config.lqnic_index = left_partner_qnic.index;
-  config.lqnic_address = left_partner_qnic.address;
   config.lres = num_resources;
 
   config.right_partner = right_partner;
-  config.rqnic_type = right_partner_qnic.type;
-  config.rqnic_index = right_partner_qnic.index;
-  config.rqnic_address = right_partner_qnic.address;
   config.rres = num_resources;
 
   // For end nodes
   config.initiator = path.at(initiator_index);
-  config.initiator_qnic_type = initiator_qnic.type;
-  config.initiator_qnic_index = initiator_qnic.index;
-  config.initiator_qnic_address = initiator_qnic.address;
   config.initiator_res = num_resources;
 
   config.responder = path.at(responder_index - 1);
-  config.responder_qnic_type = responder_qnic.type;
-  config.responder_qnic_index = responder_qnic.index;
-  config.responder_qnic_address = responder_qnic.address;
   config.responder_res = num_resources;
 
   // Addition info
   config.index = index;
 
-  config.self_left_qnic_index = left_self_qnic.index;
-  config.self_right_qnic_index = right_self_qnic.index;
-  config.self_left_qnic_type = left_self_qnic.type;
-  config.self_right_qnic_type = right_self_qnic.type;
   return config;
 }
 

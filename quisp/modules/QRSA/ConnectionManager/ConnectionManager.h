@@ -94,7 +94,6 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   void reserveQnic(int qnic_address);
   void releaseQnic(int qnic_address);
   bool isQnicBusy(int qnic_address);
-  QNIC_id getQnicInterface(int owner_address, int partner_address, std::vector<int> path, std::vector<QNIC_pair_info> qnics);
 
   static int computePathDivisionSize(int l);
   static int fillPathDivision(std::vector<int> path, int i, int l, int *link_left, int *link_right, int *swapper, int fill_start);
