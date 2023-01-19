@@ -879,17 +879,17 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         } else {
           rule_name = "Double selection action inverse with: " + std::to_string(partner_address);
         }
-        auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
+        auto rule = std::make_unique<Rule>(my_address, shared_tag, false);
         rule->setName(rule_name);
         auto condition = std::make_unique<Condition>();
-        auto resource_clause = std::make_unique<EnoughResourceConditionClause>(3, 0, partner_address, qnic_type, qnic_index);
+        auto resource_clause = std::make_unique<EnoughResourceConditionClause>(3, 0, partner_address);
         condition->addClause(std::move(resource_clause));
         rule->setCondition(std::move(condition));
         if (i % 2 == 0) {
-          auto purify_action = std::make_unique<Purification>(PurType::DSSA, partner_address, qnic_type, qnic_index);
+          auto purify_action = std::make_unique<Purification>(PurType::DSSA, partner_address);
           rule->setAction(std::move(purify_action));
         } else {
-          auto purify_action = std::make_unique<Purification>(PurType::DSDA_INV, partner_address, qnic_type, qnic_index);
+          auto purify_action = std::make_unique<Purification>(PurType::DSDA_INV, partner_address);
           rule->setAction(std::move(purify_action));
         }
 
@@ -965,23 +965,23 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
     }
 
     // Let's make nodes select measurement basis randomly, because it it easier.
-    auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
+    auto rule = std::make_unique<Rule>(my_address, shared_tag, false);
     rule->setName("tomography");
 
     auto condition = std::make_unique<Condition>();
 
     // 1 qubit resource required to perform tomography action
-    auto res_check_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.9, partner_address, qnic_type, qnic_index);
+    auto res_check_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.9, partner_address);
     condition->addClause(std::move(res_check_clause));
 
     // 3000 measurements in total. There are 3*3 = 9 patterns of measurements.
     // So each combination must perform 3000/9 measurements.
-    auto measure_count_clause = std::make_unique<MeasureCountConditionClause>(num_measure, partner_address, qnic_type, qnic_index);
+    auto measure_count_clause = std::make_unique<MeasureCountConditionClause>(num_measure, partner_address);
     condition->addClause(std::move(measure_count_clause));
     rule->setCondition(std::move(condition));
 
     // Measure the local resource between it->second.neighborQNode_address.
-    auto measure_action = std::make_unique<Tomography>(num_measure, my_address, partner_address, qnic_type, qnic_index);
+    auto measure_action = std::make_unique<Tomography>(num_measure, my_address, partner_address);
     measure_action->start_time = simTime();
     rule->setAction(std::move(measure_action));
 
@@ -991,16 +991,16 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   } else {
     // RuleSet with no purification. Pure measurement only link level tomography.
 
-    auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
+    auto rule = std::make_unique<Rule>(my_address, shared_tag, false);
     auto condition = std::make_unique<Condition>();
-    auto res_check_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.9, partner_address, qnic_type, qnic_index);
-    auto measure_count_clause = std::make_unique<MeasureCountConditionClause>(num_measure, partner_address, qnic_type, qnic_index);
+    auto res_check_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.9, partner_address);
+    auto measure_count_clause = std::make_unique<MeasureCountConditionClause>(num_measure, partner_address);
     condition->addClause(std::move(res_check_clause));
     condition->addClause(std::move(measure_count_clause));
     rule->setCondition(std::move(condition));
 
     // Measure the local resource between it->second.neighborQNode_address.
-    auto measure = std::make_unique<Tomography>(num_measure, my_address, partner_address, qnic_type, qnic_index);
+    auto measure = std::make_unique<Tomography>(num_measure, my_address, partner_address);
     measure->start_time = simTime();
     rule->setAction(std::move(measure));
 
@@ -1037,14 +1037,14 @@ std::unique_ptr<quisp::rules::Rule> HardwareMonitor::constructPurifyRule(const s
     default:
       error("got invalid purification type");
   }
-  auto rule = std::make_unique<Rule>(my_address, qnic_type, qnic_index, shared_tag, false);
+  auto rule = std::make_unique<Rule>(my_address, shared_tag, false);
   rule->setName(rule_name);
   auto condition = std::make_unique<Condition>();
-  auto resource_clause = std::make_unique<EnoughResourceConditionClause>(required_qubits, 0.9, partner_address, qnic_type, qnic_index);
+  auto resource_clause = std::make_unique<EnoughResourceConditionClause>(required_qubits, 0.9, partner_address);
   condition->addClause(std::move(resource_clause));
   rule->setCondition(std::move(condition));
 
-  auto purify_action = std::make_unique<Purification>(pur_type, partner_address, qnic_type, qnic_index);
+  auto purify_action = std::make_unique<Purification>(pur_type, partner_address);
   rule->setAction(std::move(purify_action));
   rule->setNextRule(rule_id + 1);
   return rule;

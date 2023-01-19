@@ -2,20 +2,19 @@
 
 namespace quisp::rules {
 
-Action::Action(int partner_addr, QNIC_type qnic_type, int qnic_id) {
-  QnicInterface qnic_interface{partner_addr, qnic_type, qnic_id};
+Action::Action(int partner_addr) {
+  QnicInterface qnic_interface{partner_addr};
   qnic_interfaces.push_back(qnic_interface);
 };
 
-Action::Action(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id) {
+Action::Action(std::vector<int> partner_addr) {
   for (int i = 0; i < partner_addr.size(); i++) {
-    QnicInterface qnic_interface{partner_addr.at(i), qnic_type.at(i), qnic_id.at(i)};
+    QnicInterface qnic_interface{partner_addr.at(i)};
     qnic_interfaces.push_back(qnic_interface);
   }
 }
 
-Purification::Purification(PurType purification_type, int partner_addr, QNIC_type qnic_type, int qnic_id)
-    : Action(partner_addr, qnic_type, qnic_id), purification_type(purification_type) {}
+Purification::Purification(PurType purification_type, int partner_addr) : Action(partner_addr), purification_type(purification_type) {}
 
 json Purification::serialize_json() {
   json purification_json;
@@ -34,11 +33,9 @@ void Purification::deserialize_json(json serialized) {
   }
 }
 
-EntanglementSwapping::EntanglementSwapping(std::vector<int> partner_addr, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id, std::vector<QNIC_type> remote_qnic_type,
-                                           std::vector<int> remote_qnic_id, std::vector<int> remote_qnic_address)
-    : Action(partner_addr, qnic_type, qnic_id) {
+EntanglementSwapping::EntanglementSwapping(std::vector<int> partner_addr) : Action(partner_addr) {
   for (int i = 0; i < partner_addr.size(); i++) {
-    QnicInterface remote_qnic_interface{partner_addr.at(i), remote_qnic_type.at(i), remote_qnic_id.at(i), remote_qnic_address.at(i)};
+    QnicInterface remote_qnic_interface{partner_addr.at(i)};
     remote_qnic_interfaces.push_back(remote_qnic_interface);
   }
 }
@@ -60,7 +57,7 @@ void EntanglementSwapping::deserialize_json(json serialized) {
   }
 }
 
-Wait::Wait(int swapper_addr, QNIC_type qnic_type, int qnic_id) : Action(swapper_addr, qnic_type, qnic_id) {}
+Wait::Wait(int swapper_addr) : Action(swapper_addr) {}
 
 json Wait::serialize_json() {
   json wait_json;
@@ -77,8 +74,7 @@ void Wait::deserialize_json(json serialized) {
   }
 }
 
-Tomography::Tomography(int num_measurement, int owner_addr, int partner_addr, QNIC_type qnic_type, int qnic_id)
-    : Action(partner_addr, qnic_type, qnic_id), owner_address(owner_addr), num_measurement(num_measurement) {}
+Tomography::Tomography(int num_measurement, int owner_addr, int partner_addr) : Action(partner_addr), num_measurement(num_measurement), owner_address(owner_addr) {}
 
 json Tomography::serialize_json() {
   json tomography_json;

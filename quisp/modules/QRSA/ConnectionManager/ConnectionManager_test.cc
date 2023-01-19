@@ -6,6 +6,7 @@
 #include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
 #include <modules/QRSA/RoutingDaemon/IRoutingDaemon.h>
 #include <omnetpp.h>
+#include <rules/Action.h>
 #include <test_utils/TestUtils.h>
 #include <nlohmann/json.hpp>
 
@@ -19,6 +20,7 @@ using namespace quisp::modules;
 using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_R;
 using quisp::modules::QNIC_type;
+using quisp::rules::PurType;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
@@ -161,9 +163,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 3,
-					"qnic_id": 11,
-					"qnic_type": "QNIC_E"
+					"partner_address": 3
 				}],
 				"purification_type": "SINGLE_X"
 			},
@@ -173,9 +173,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 3,
-						"qnic_id": 11,
-						"qnic_type": "QNIC_E"
+						"partner_address": 3
 					},
 					"num_resource": 2,
 					"required_fidelity": 0.0
@@ -184,21 +182,17 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 3,
-			"qnic_id": 11,
-			"qnic_type": "QNIC_E"
+			"partner_address": 3
 		}],
     "shared_tag": 0,
 		"name": "purification",
-		"next_rule_id": 1,
+		"next_rule_id": -1,
 		"rule_id": 0
 	}, {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 3,
-					"qnic_id": 11,
-					"qnic_type": "QNIC_E"
+					"partner_address": 3
 				}]
 			},
 			"type": "wait"
@@ -207,30 +201,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 3,
-						"qnic_id": 11,
-						"qnic_type": "QNIC_E"
+						"partner_address": 3
 					}
 				},
 				"type": "wait"
 			}]
 		},
 		"interface": [{
-			"partner_address": 3,
-			"qnic_id": 11,
-			"qnic_type": "QNIC_E"
+			"partner_address": 3
 		}],
     "shared_tag": 5,
 		"name": "wait",
-		"next_rule_id": 2,
+		"next_rule_id": -1,
 		"rule_id": 1
 	}, {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 5,
-					"qnic_id": 11,
-					"qnic_type": "QNIC_E"
+					"partner_address": 5
 				}],
 				"purification_type": "SINGLE_X"
 			},
@@ -240,9 +228,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 5,
-						"qnic_id": 11,
-						"qnic_type": "QNIC_E"
+						"partner_address": 5
 					},
 					"num_resource": 2,
 					"required_fidelity": 0.0
@@ -251,21 +237,17 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 5,
-			"qnic_id": 11,
-			"qnic_type": "QNIC_E"
+			"partner_address": 5
 		}],
     "shared_tag": 6,
 		"name": "purification",
-		"next_rule_id": 3,
+		"next_rule_id": -1,
 		"rule_id": 2
 	}, {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 5,
-					"qnic_id": 11,
-					"qnic_type": "QNIC_E"
+					"partner_address": 5
 				}],
 				"num_measure": 0,
 				"owner_address": 2
@@ -276,9 +258,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 5,
-						"qnic_id": 11,
-						"qnic_type": "QNIC_E"
+						"partner_address": 5
 					},
 					"num_resource": 1,
 					"required_fidelity": 0.0
@@ -287,9 +267,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}, {
 				"options": {
 					"interface": {
-						"partner_address": 5,
-						"qnic_id": 11,
-						"qnic_type": "QNIC_E"
+						"partner_address": 5
 					},
 					"num_measure": 0
 				},
@@ -297,9 +275,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 5,
-			"qnic_id": 11,
-			"qnic_type": "QNIC_E"
+			"partner_address": 5
 		}],
     "shared_tag": 7,
 		"name": "tomography",
@@ -327,9 +303,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 2,
-					"qnic_id": 12,
-					"qnic_type": "QNIC_E"
+					"partner_address": 2
 				}],
 				"purification_type": "SINGLE_X"
 			},
@@ -339,9 +313,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 2,
-						"qnic_id": 12,
-						"qnic_type": "QNIC_E"
+						"partner_address": 2
 					},
 					"num_resource": 2,
 					"required_fidelity": 0.0
@@ -350,21 +322,17 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 2,
-			"qnic_id": 12,
-			"qnic_type": "QNIC_E"
+			"partner_address": 2
 		}],
     "shared_tag": 0,
 		"name": "purification",
-		"next_rule_id": 4,
+		"next_rule_id": -1,
 		"rule_id": 0
 	}, {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 4,
-					"qnic_id": 13,
-					"qnic_type": "QNIC_E"
+					"partner_address": 4
 				}],
 				"purification_type": "SINGLE_X"
 			},
@@ -374,9 +342,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 4,
-						"qnic_id": 13,
-						"qnic_type": "QNIC_E"
+						"partner_address": 4
 					},
 					"num_resource": 2,
 					"required_fidelity": 0.0
@@ -385,21 +351,17 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 4,
-			"qnic_id": 13,
-			"qnic_type": "QNIC_E"
+			"partner_address": 4
 		}],
     "shared_tag": 1,
 		"name": "purification",
-		"next_rule_id": 2,
+		"next_rule_id": -1,
 		"rule_id": 1
 	}, {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 4,
-					"qnic_id": 13,
-					"qnic_type": "QNIC_E"
+					"partner_address": 4
 				}]
 			},
 			"type": "wait"
@@ -408,30 +370,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 4,
-						"qnic_id": 13,
-						"qnic_type": "QNIC_E"
+						"partner_address": 4
 					}
 				},
 				"type": "wait"
 			}]
 		},
 		"interface": [{
-			"partner_address": 4,
-			"qnic_id": 13,
-			"qnic_type": "QNIC_E"
+			"partner_address": 4
 		}],
     "shared_tag": 3,
 		"name": "wait",
-		"next_rule_id": 3,
+		"next_rule_id": -1,
 		"rule_id": 2
 	}, {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 5,
-					"qnic_id": 13,
-					"qnic_type": "QNIC_E"
+					"partner_address": 5
 				}],
 				"purification_type": "SINGLE_X"
 			},
@@ -441,9 +397,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 5,
-						"qnic_id": 13,
-						"qnic_type": "QNIC_E"
+						"partner_address": 5
 					},
 					"num_resource": 2,
 					"required_fidelity": 0.0
@@ -452,36 +406,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 5,
-			"qnic_id": 13,
-			"qnic_type": "QNIC_E"
+			"partner_address": 5
 		}],
     "shared_tag": 4,
 		"name": "purification",
-		"next_rule_id": 4,
+		"next_rule_id": -1,
 		"rule_id": 3
 	}, {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 2,
-					"qnic_id": 12,
-					"qnic_type": "QNIC_E"
+					"partner_address": 2
 				}, {
-					"partner_address": 5,
-					"qnic_id": 13,
-					"qnic_type": "QNIC_E"
+					"partner_address": 5
 				}],
 				"remote_interface": [{
-					"partner_address": 2,
-					"qnic_address": 101,
-					"qnic_id": 11,
-					"qnic_type": "QNIC_E"
+					"partner_address": 2
 				}, {
-					"partner_address": 5,
-					"qnic_address": 106,
-					"qnic_id": 16,
-					"qnic_type": "QNIC_E"
+					"partner_address": 5
 				}]
 			},
 			"type": "swapping"
@@ -490,9 +432,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 2,
-						"qnic_id": 12,
-						"qnic_type": "QNIC_E"
+						"partner_address": 2
 					},
 					"num_resource": 1,
 					"required_fidelity": 0.0
@@ -501,9 +441,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}, {
 				"options": {
 					"interface": {
-						"partner_address": 5,
-						"qnic_id": 13,
-						"qnic_type": "QNIC_E"
+						"partner_address": 5
 					},
 					"num_resource": 1,
 					"required_fidelity": 0.0
@@ -512,14 +450,10 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 2,
-			"qnic_id": 12,
-			"qnic_type": "QNIC_E"
+			"partner_address": 2
 		},
     {
-			"partner_address": 5,
-			"qnic_id": 13,
-			"qnic_type": "QNIC_E"
+			"partner_address": 5
     }],
     "shared_tag": 5,
 		"name": "swapping",
@@ -550,9 +484,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 3,
-					"qnic_id": 14,
-					"qnic_type": "QNIC_E"
+					"partner_address": 3
 				}],
 				"purification_type": "SINGLE_X"
 			},
@@ -562,9 +494,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 3,
-						"qnic_id": 14,
-						"qnic_type": "QNIC_E"
+						"partner_address": 3
 					},
 					"num_resource": 2,
 					"required_fidelity": 0.0
@@ -573,21 +503,17 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 3,
-			"qnic_id": 14,
-			"qnic_type": "QNIC_E"
+			"partner_address": 3
 		}],
     "shared_tag": 1,
 		"name": "purification",
-		"next_rule_id": 2,
+		"next_rule_id": -1,
 		"rule_id": 0
 	}, {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 5,
-					"qnic_id": 15,
-					"qnic_type": "QNIC_E"
+					"partner_address": 5
 				}],
 				"purification_type": "SINGLE_X"
 			},
@@ -597,9 +523,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 5,
-						"qnic_id": 15,
-						"qnic_type": "QNIC_E"
+						"partner_address": 5
 					},
 					"num_resource": 2,
 					"required_fidelity": 0.0
@@ -608,36 +532,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 5,
-			"qnic_id": 15,
-			"qnic_type": "QNIC_E"
+			"partner_address": 5
 		}],
     "shared_tag": 2,
 		"name": "purification",
-		"next_rule_id": 2,
+		"next_rule_id": -1,
 		"rule_id": 1
 	}, {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 3,
-					"qnic_id": 14,
-					"qnic_type": "QNIC_E"
+					"partner_address": 3
 				}, {
-					"partner_address": 5,
-					"qnic_id": 15,
-					"qnic_type": "QNIC_E"
+					"partner_address": 5
 				}],
 				"remote_interface": [{
-					"partner_address": 3,
-					"qnic_address": 103,
-					"qnic_id": 13,
-					"qnic_type": "QNIC_E"
+					"partner_address": 3
 				}, {
-					"partner_address": 5,
-					"qnic_address": 106,
-					"qnic_id": 16,
-					"qnic_type": "QNIC_E"
+					"partner_address": 5
 				}]
 			},
 			"type": "swapping"
@@ -646,9 +558,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 3,
-						"qnic_id": 14,
-						"qnic_type": "QNIC_E"
+						"partner_address": 3
 					},
 					"num_resource": 1,
 					"required_fidelity": 0.0
@@ -657,9 +567,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}, {
 				"options": {
 					"interface": {
-						"partner_address": 5,
-						"qnic_id": 15,
-						"qnic_type": "QNIC_E"
+						"partner_address": 5
 					},
 					"num_resource": 1,
 					"required_fidelity": 0.0
@@ -668,13 +576,9 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 3,
-			"qnic_id": 14,
-			"qnic_type": "QNIC_E"
+			"partner_address": 3
 		}, {
-			"partner_address": 5,
-			"qnic_id": 15,
-			"qnic_type": "QNIC_E"
+			"partner_address": 5
 		}],
     "shared_tag": 3,
 		"name": "swapping",
@@ -708,9 +612,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 4,
-					"qnic_id": 16,
-					"qnic_type": "QNIC_E"
+					"partner_address": 4
 				}],
 				"purification_type": "SINGLE_X"
 			},
@@ -720,9 +622,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 4,
-						"qnic_id": 16,
-						"qnic_type": "QNIC_E"
+						"partner_address": 4
 					},
 					"num_resource": 2,
 					"required_fidelity": 0.0
@@ -731,21 +631,17 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 4,
-			"qnic_id": 16,
-			"qnic_type": "QNIC_E"
+			"partner_address": 4
 		}],
     "shared_tag": 2,
 		"name": "purification",
-		"next_rule_id": 1,
+		"next_rule_id": -1,
 		"rule_id": 0
 	}, {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 4,
-					"qnic_id": 16,
-					"qnic_type": "QNIC_E"
+					"partner_address": 4
 				}]
 			},
 			"type": "wait"
@@ -754,30 +650,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 4,
-						"qnic_id": 16,
-						"qnic_type": "QNIC_E"
+						"partner_address": 4
 					}
 				},
 				"type": "wait"
 			}]
 		},
 		"interface": [{
-			"partner_address": 4,
-			"qnic_id": 16,
-			"qnic_type": "QNIC_E"
+			"partner_address": 4
 		}],
     "shared_tag": 3,
 		"name": "wait",
-		"next_rule_id": 2,
+		"next_rule_id": -1,
 		"rule_id": 1
 	}, {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 3,
-					"qnic_id": 16,
-					"qnic_type": "QNIC_E"
+					"partner_address": 3
 				}],
 				"purification_type": "SINGLE_X"
 			},
@@ -787,9 +677,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 3,
-						"qnic_id": 16,
-						"qnic_type": "QNIC_E"
+						"partner_address": 3
 					},
 					"num_resource": 2,
 					"required_fidelity": 0.0
@@ -799,20 +687,16 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 		},
     "shared_tag": 4,
 		"interface": [{
-			"partner_address": 3,
-			"qnic_id": 16,
-			"qnic_type": "QNIC_E"
+			"partner_address": 3
 		}],
 		"name": "purification",
-		"next_rule_id": 3,
+		"next_rule_id": -1,
 		"rule_id": 2
 	}, {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 3,
-					"qnic_id": 16,
-					"qnic_type": "QNIC_E"
+					"partner_address": 3
 				}]
 			},
 			"type": "wait"
@@ -821,30 +705,24 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 3,
-						"qnic_id": 16,
-						"qnic_type": "QNIC_E"
+						"partner_address": 3
 					}
 				},
 				"type": "wait"
 			}]
 		},
 		"interface": [{
-			"partner_address": 3,
-			"qnic_id": 16,
-			"qnic_type": "QNIC_E"
+			"partner_address": 3
 		}],
     "shared_tag": 5,
 		"name": "wait",
-		"next_rule_id": 4,
+		"next_rule_id": -1,
 		"rule_id": 3
 	}, {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 2,
-					"qnic_id": 16,
-					"qnic_type": "QNIC_E"
+					"partner_address": 2
 				}],
 				"purification_type": "SINGLE_X"
 			},
@@ -854,9 +732,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 2,
-						"qnic_id": 16,
-						"qnic_type": "QNIC_E"
+						"partner_address": 2
 					},
 					"num_resource": 2,
 					"required_fidelity": 0.0
@@ -865,21 +741,17 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 2,
-			"qnic_id": 16,
-			"qnic_type": "QNIC_E"
+			"partner_address": 2
 		}],
     "shared_tag": 6,
 		"name": "purification",
-		"next_rule_id": 5,
+		"next_rule_id": -1,
 		"rule_id": 4
 	}, {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 2,
-					"qnic_id": 16,
-					"qnic_type": "QNIC_E"
+					"partner_address": 2
 				}],
 				"num_measure": 0,
 				"owner_address": 5
@@ -890,9 +762,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 2,
-						"qnic_id": 16,
-						"qnic_type": "QNIC_E"
+						"partner_address": 2
 					},
 					"num_resource": 1,
 					"required_fidelity": 0.0
@@ -901,9 +771,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}, {
 				"options": {
 					"interface": {
-						"partner_address": 2,
-						"qnic_id": 16,
-						"qnic_type": "QNIC_E"
+						"partner_address": 2
 					},
 					"num_measure": 0
 				},
@@ -911,9 +779,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 2,
-			"qnic_id": 16,
-			"qnic_type": "QNIC_E"
+			"partner_address": 2
 		}],
     "shared_tag": 7,
 		"name": "tomography",

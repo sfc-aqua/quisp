@@ -70,7 +70,7 @@ class ConditionExecutionTest : public testing::Test {
 TEST_F(ConditionExecutionTest, MeasurementCount) {
   int num_measure = 100;
   Condition cond{};
-  auto clause = new MeasureCountConditionClause(num_measure, partner_addr, qnic_type, qnic_id);
+  auto clause = new MeasureCountConditionClause(num_measure, partner_addr);
   cond.addClause(std::unique_ptr<Clause>(clause));
   auto program = RuleSetConverter::constructCondition(&cond);
 
@@ -97,7 +97,7 @@ TEST_F(ConditionExecutionTest, MeasurementCount) {
 TEST_F(ConditionExecutionTest, MeasurementCountTermination) {
   int num_measure = 100;
   Condition cond{};
-  auto clause = new MeasureCountConditionClause(num_measure, partner_addr, qnic_type, qnic_id);
+  auto clause = new MeasureCountConditionClause(num_measure, partner_addr);
   cond.addClause(std::unique_ptr<Clause>(clause));
   runtime->execProgram(RuleSetConverter::constructCondition(&cond));
   auto program = RuleSetConverter::constructTerminateCondition(&cond);
@@ -123,7 +123,7 @@ TEST_F(ConditionExecutionTest, EnoughResourceCondition) {
   int num_resource_required = 3;
   double required_fidelity = 0.89;
   Condition cond{};
-  auto clause = new EnoughResourceConditionClause(num_resource_required, required_fidelity, partner_addr, qnic_type, qnic_id);
+  auto clause = new EnoughResourceConditionClause(num_resource_required, required_fidelity, partner_addr);
   cond.addClause(std::unique_ptr<Clause>(clause));
   auto program = RuleSetConverter::constructCondition(&cond);
   runtime->ruleset.partner_initial_rule_table.insert({QNodeAddr{partner_addr}, 0});

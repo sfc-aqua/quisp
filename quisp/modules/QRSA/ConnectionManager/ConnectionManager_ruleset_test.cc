@@ -52,7 +52,7 @@ TEST(ConnectionManagerRuleSetTest, PurificationRule) {
   int qnic_id = 4;
   double threshold_fidelity = 0;
 
-  auto purification_rule = connection_manager.purifyRule(partner_addr, purification_type, threshold_fidelity, qnic_type, qnic_id, 0);
+  auto purification_rule = connection_manager.purifyRule(partner_addr, purification_type, threshold_fidelity, 0);
   EXPECT_EQ(purification_rule->rule_id, -1);
   EXPECT_EQ(purification_rule->name, "purification");
 
@@ -64,7 +64,7 @@ TEST(ConnectionManagerRuleSetTest, PurificationRule) {
    "name":"purification",
    "shared_tag": 0,
    "interface":[
-     {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 4}
+     {"partner_address": 1}
    ],
    "condition":{
       "clauses":[
@@ -74,9 +74,7 @@ TEST(ConnectionManagerRuleSetTest, PurificationRule) {
                "num_resource":3,
                "required_fidelity":0.0,
                "interface":{
-                 "partner_address":1,
-                 "qnic_type":"QNIC_E",
-                 "qnic_id":4
+                 "partner_address":1
                 }
             }
          }
@@ -87,7 +85,7 @@ TEST(ConnectionManagerRuleSetTest, PurificationRule) {
       "options":{
          "purification_type":"DOUBLE",
          "interface": [
-           {"partner_address":1,"qnic_type":"QNIC_E","qnic_id":4}
+           {"partner_address":1}
           ]
       }
    }
@@ -108,7 +106,7 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
   std::vector<int> remote_qnic_address = {11, 12};
   double threshold_fidelity = 0;
 
-  auto purification_rule = connection_manager.swapRule(partner_addr, threshold_fidelity, qnic_type, qnic_id, remote_qnic_type, remote_qnic_id, remote_qnic_address, 0);
+  auto purification_rule = connection_manager.swapRule(partner_addr, threshold_fidelity, 0);
   EXPECT_EQ(purification_rule->rule_id, -1);
   EXPECT_EQ(purification_rule->name, "swapping");
 
@@ -120,8 +118,8 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
    "name":"swapping",
    "shared_tag": 0,
    "interface":[
-     {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 4},
-     {"partner_address": 3, "qnic_type": "QNIC_R", "qnic_id": 5}
+     {"partner_address": 1},
+     {"partner_address": 3}
    ],
    "condition":{
       "clauses":[
@@ -131,9 +129,7 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
                "num_resource":1,
                "required_fidelity":0.0,
                "interface": {
-                 "partner_address":1,
-                 "qnic_type":"QNIC_E",
-                 "qnic_id":4
+                 "partner_address":1
                }
             }
          },
@@ -143,9 +139,7 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
                "num_resource":1,
                "required_fidelity":0.0,
                "interface":{
-                 "partner_address":3,
-                 "qnic_type":"QNIC_R",
-                 "qnic_id":5
+                 "partner_address":3
                }
             }
          }
@@ -155,12 +149,12 @@ TEST(ConnectionManagerRuleSetTest, SwapRule) {
       "type":"swapping",
       "options":{
         "interface":[
-          {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 4},
-          {"partner_address": 3, "qnic_type": "QNIC_R", "qnic_id": 5}
+          {"partner_address": 1},
+          {"partner_address": 3}
         ],
         "remote_interface": [
-          {"partner_address": 1, "qnic_type": "QNIC_R", "qnic_id": 3, "qnic_address": 11},
-          {"partner_address": 3, "qnic_type": "QNIC_E", "qnic_id": 6, "qnic_address": 12}
+          {"partner_address": 1},
+          {"partner_address": 3}
         ]
       }
    }
@@ -178,7 +172,7 @@ TEST(ConnectionManagerRuleSetTest, waitRule) {
   int qnic_id = 4;
   int shared_tag = 0;
 
-  auto purification_rule = connection_manager.waitRule(partner_addr, qnic_type, qnic_id, shared_tag);
+  auto purification_rule = connection_manager.waitRule(partner_addr, shared_tag);
   EXPECT_EQ(purification_rule->rule_id, -1);
   EXPECT_EQ(purification_rule->name, "wait");
 
@@ -190,7 +184,7 @@ TEST(ConnectionManagerRuleSetTest, waitRule) {
    "name":"wait",
    "shared_tag": 0,
    "interface":[
-     {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 4}
+     {"partner_address": 1}
    ],
    "condition":{
       "clauses":[
@@ -198,9 +192,7 @@ TEST(ConnectionManagerRuleSetTest, waitRule) {
             "type":"wait",
             "options":{
               "interface":{
-                "partner_address": 1,
-                "qnic_type":"QNIC_E",
-                "qnic_id":4
+                "partner_address": 1
               }
             }
          }
@@ -210,7 +202,7 @@ TEST(ConnectionManagerRuleSetTest, waitRule) {
       "type":"wait",
       "options":{
         "interface":[
-          {"partner_address": 1, "qnic_type": "QNIC_E", "qnic_id": 4}
+          {"partner_address": 1}
         ]
       }
    }
@@ -231,7 +223,7 @@ TEST(ConnectionManagerRuleSetTest, tomographyRule) {
   double threshold_fidelity = 0;
   int shared_tag = 3;
 
-  auto tomography_rule = connection_manager.tomographyRule(partner_addr, owner_addr, num_measurement, threshold_fidelity, qnic_type, qnic_id, shared_tag);
+  auto tomography_rule = connection_manager.tomographyRule(partner_addr, owner_addr, num_measurement, threshold_fidelity, shared_tag);
   EXPECT_EQ(tomography_rule->rule_id, -1);
   EXPECT_EQ(tomography_rule->name, "tomography");
 
@@ -241,9 +233,7 @@ TEST(ConnectionManagerRuleSetTest, tomographyRule) {
  	"action": {
  		"options": {
  			"interface": [{
- 				"partner_address": 1,
- 				"qnic_id": 4,
- 				"qnic_type": "QNIC_E"
+ 				"partner_address": 1
  			}],
  			"num_measure": 5000,
  			"owner_address": 2
@@ -254,9 +244,7 @@ TEST(ConnectionManagerRuleSetTest, tomographyRule) {
  		"clauses": [{
  			"options": {
  				"interface": {
- 					"partner_address": 1,
- 					"qnic_id": 4,
- 					"qnic_type": "QNIC_E"
+ 					"partner_address": 1
  				},
  				"num_resource": 1,
  				"required_fidelity": 0.0
@@ -265,9 +253,7 @@ TEST(ConnectionManagerRuleSetTest, tomographyRule) {
  		}, {
  			"options": {
  				"interface": {
- 					"partner_address": 1,
- 					"qnic_id": 4,
- 					"qnic_type": "QNIC_E"
+ 					"partner_address": 1
  				},
  				"num_measure": 5000
  			},
@@ -275,9 +261,7 @@ TEST(ConnectionManagerRuleSetTest, tomographyRule) {
  		}]
  	},
  	"interface": [{
- 		"partner_address": 1,
- 		"qnic_id": 4,
- 		"qnic_type": "QNIC_E"
+ 		"partner_address": 1
  	}],
   "shared_tag": 3,
  	"name": "tomography",

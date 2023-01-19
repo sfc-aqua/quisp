@@ -5,16 +5,11 @@
 
 namespace quisp::rules {
 
-Rule::Rule(int partner_address, QNIC_type qnic_type, int qnic_id, int shared_tag, bool is_finalized) : shared_tag(shared_tag), is_finalized(is_finalized) {
-  QnicInterface interface { partner_address, qnic_type, qnic_id };
-  qnic_interfaces.push_back(interface);
-};
+Rule::Rule(int partner_address, int shared_tag, bool is_finalized) : shared_tag(shared_tag), is_finalized(is_finalized) { qnic_interfaces.push_back({partner_address}); };
 
-Rule::Rule(std::vector<int> partner_address, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id, int shared_tag, bool is_finalized)
-    : shared_tag(shared_tag), is_finalized(is_finalized) {
+Rule::Rule(std::vector<int> partner_address, int shared_tag, bool is_finalized) : shared_tag(shared_tag), is_finalized(is_finalized) {
   for (int i = 0; i < partner_address.size(); i++) {
-    QnicInterface interface { partner_address.at(i), qnic_type.at(i), qnic_id.at(i) };
-    qnic_interfaces.push_back(interface);
+    qnic_interfaces.push_back({partner_address.at(i)});
   }
 }
 

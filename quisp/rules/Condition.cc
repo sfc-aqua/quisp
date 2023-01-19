@@ -14,7 +14,6 @@ json Condition::serialize_json() {
 
 void Condition::deserialize_json(json serialized) {
   // prepare empty clauses
-  int num_clause;
   auto serialized_clauses = serialized["clauses"];
   if (serialized["clauses"] != nullptr) {
     for (auto clause : serialized_clauses) {

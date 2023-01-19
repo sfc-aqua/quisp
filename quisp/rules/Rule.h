@@ -18,9 +18,8 @@ namespace quisp::rules {
 class Rule {
  public:
   Rule(){};
-  Rule(int partner_address, QNIC_type qnic_type, int qnic_id, int shared_tag, bool is_finalized);
-  Rule(std::vector<int> partner_address, std::vector<QNIC_type> qnic_type, std::vector<int> qnic_id, int shared_tag, bool is_finalized);
-  // Rule(int partner_address, int next_partner_address, QNIC_type qnic_type, int qnic_id, bool is_finalized);
+  Rule(int partner_address, int shared_tag, bool is_finalized);
+  Rule(std::vector<int> partner_address, int shared_tag, bool is_finalized);
   Rule(json serialized) { deserialize_json(serialized); };
   unsigned long parent_ruleset_id;
   int rule_id = -1;
