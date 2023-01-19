@@ -247,16 +247,16 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     // left_qubit_index = left_partner_qubit->stationary_qubit_address;
   }
 
-  void hackBreakEntanglement(IQubitRecord *qubit) override {
-    // auto *stat_qubit = rule_engine->provider.getStationaryQubit((qubit));
-    // // HACK: comes from the original PurifyAction.cc.
-    // // we're freeing the qubit but its entangled_partner will be freed later.
-    // // to pass the validation in RuleEngine::freeFailedQubits_and_AddAsResource for next round,
-    // // break the entanglement manually.
-    // if (stat_qubit->entangled_partner != nullptr && stat_qubit->entangled_partner->entangled_partner != nullptr) {
-    //   stat_qubit->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
-    //   stat_qubit->entangled_partner->entangled_partner = nullptr;
-    // }
+  void hackBreakEntanglement(IQubitRecord *qubit) override{
+      // auto *stat_qubit = rule_engine->provider.getStationaryQubit((qubit));
+      // // HACK: comes from the original PurifyAction.cc.
+      // // we're freeing the qubit but its entangled_partner will be freed later.
+      // // to pass the validation in RuleEngine::freeFailedQubits_and_AddAsResource for next round,
+      // // break the entanglement manually.
+      // if (stat_qubit->entangled_partner != nullptr && stat_qubit->entangled_partner->entangled_partner != nullptr) {
+      //   stat_qubit->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
+      //   stat_qubit->entangled_partner->entangled_partner = nullptr;
+      // }
   };
 
   std::string getNodeInfo() override {
