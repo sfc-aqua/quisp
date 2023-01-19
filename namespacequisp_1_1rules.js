@@ -29,7 +29,6 @@ var namespacequisp_1_1rules =
       [ "DSDA_SECOND_INV", "namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066da16b5a710f0e1ace1025ddebdbd03384e", null ]
     ] ],
     [ "from_json", "namespacequisp_1_1rules.html#af34662426ca77de6ead9099ecc3770e2", null ],
-    [ "if", "namespacequisp_1_1rules.html#a2731968255c46a15fbfeb5c5a7ec425f", null ],
     [ "NLOHMANN_JSON_SERIALIZE_ENUM", "namespacequisp_1_1rules.html#aebe7d59db01c3889f02bb5fc865ff25f", null ],
     [ "qi", "namespacequisp_1_1rules.html#a0dae1416cf15ad53fc2b80547a564928", null ]
 ];

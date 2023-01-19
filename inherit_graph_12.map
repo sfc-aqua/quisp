@@ -1,13 +1,34 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,255,172,281"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="231,37,407,77"/>
-<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1_logger_1_1_logger_module.html" title=" " alt="" coords="242,101,397,141"/>
-<area shape="rect" id="node6" href="$classquisp_1_1modules_1_1_photonic_switch.html" title="PhotonicSwitch." alt="" coords="237,165,402,205"/>
-<area shape="rect" id="node7" href="$classquisp_1_1modules_1_1_queue.html" title="Queue." alt="" coords="243,230,395,255"/>
-<area shape="rect" id="node8" href="$classquisp_1_1modules_1_1_router.html" title="Router." alt="" coords="243,279,395,305"/>
-<area shape="rect" id="node9" href="$classquisp_1_1modules_1_1_s_p_d_c___controller.html" title="SPDC_Controller." alt="" coords="244,329,395,369"/>
-<area shape="rect" id="node10" href="$classquisp_1_1modules_1_1backend_1_1_backend_container.html" title=" " alt="" coords="238,393,401,433"/>
-<area shape="rect" id="node11" href="$classquisp_1_1modules_1_1dummy_module.html" title="dummyModule" alt="" coords="220,458,419,483"/>
-<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_stationary_qubit.html" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="475,5,647,45"/>
-<area shape="rect" id="node4" href="$classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html" title=" " alt="" coords="467,69,655,109"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,327,172,353"/>
+<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_connection_manager.html" title=" " alt="" coords="229,595,411,635"/>
+<area shape="rect" id="node4" href="$classquisp_1_1modules_1_1_i_hardware_monitor.html" title=" " alt="" coords="233,348,407,388"/>
+<area shape="rect" id="node7" href="$classquisp_1_1modules_1_1_i_real_time_controller.html" title=" " alt="" coords="233,412,407,452"/>
+<area shape="rect" id="node10" href="$classquisp_1_1modules_1_1_i_rule_engine.html" title=" " alt="" coords="229,545,411,570"/>
+<area shape="rect" id="node13" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="232,480,408,520"/>
+<area shape="rect" id="node16" href="$classquisp_1_1modules_1_1_logger_1_1_logger_module.html" title=" " alt="" coords="243,659,397,699"/>
+<area shape="rect" id="node17" href="$classquisp_1_1modules_1_1_photonic_switch.html" title="PhotonicSwitch." alt="" coords="237,5,403,45"/>
+<area shape="rect" id="node18" href="$classquisp_1_1modules_1_1_queue.html" title="Queue." alt="" coords="244,70,396,95"/>
+<area shape="rect" id="node19" href="$classquisp_1_1modules_1_1_router.html" title="Router." alt="" coords="244,119,396,145"/>
+<area shape="rect" id="node20" href="$classquisp_1_1modules_1_1_s_p_d_c___controller.html" title="SPDC_Controller." alt="" coords="245,169,395,209"/>
+<area shape="rect" id="node21" href="$classquisp_1_1modules_1_1backend_1_1_backend_container.html" title=" " alt="" coords="239,233,401,273"/>
+<area shape="rect" id="node22" href="$classquisp_1_1modules_1_1dummy_module.html" title="dummyModule" alt="" coords="221,298,419,323"/>
+<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager." alt="" coords="504,723,683,763"/>
+<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1_hardware_monitor.html" title="HardwareMonitor." alt="" coords="508,192,679,232"/>
+<area shape="rect" id="node6" href="$classquisp__test_1_1mock__modules_1_1hardware__monitor_1_1_mock_hardware_monitor.html" title=" " alt="" coords="481,257,706,311"/>
+<area shape="rect" id="node8" href="$classquisp_1_1modules_1_1_real_time_controller.html" title="RealTimeController." alt="" coords="509,336,678,376"/>
+<area shape="rect" id="node9" href="$classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html" title=" " alt="" coords="505,401,681,455"/>
+<area shape="rect" id="node11" href="$classquisp_1_1modules_1_1_rule_engine.html" title="RuleEngine." alt="" coords="504,673,683,698"/>
+<area shape="rect" id="node12" href="$classquisp__test_1_1mock__modules_1_1rule__engine_1_1_mock_rule_engine.html" title=" " alt="" coords="495,608,692,648"/>
+<area shape="rect" id="node14" href="$classquisp_1_1modules_1_1_stationary_qubit.html" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="507,480,679,520"/>
+<area shape="rect" id="node15" href="$classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html" title=" " alt="" coords="499,544,687,584"/>
+<area shape="rect" id="node23" href="$classquisp_1_1modules_1_1_logger_1_1_logger_base.html" title="LoggerBase class integrate abilities to log simulation results into your components." alt="" coords="243,723,397,763"/>
+<area shape="rect" id="node24" href="$classquisp_1_1modules_1_1_application.html" title="Application." alt="" coords="504,874,683,899"/>
+<area shape="rect" id="node25" title=" " alt="" coords="33,901,144,926"/>
+<area shape="rect" id="node26" href="$classquisp_1_1modules_1_1_bell_state_analyzer.html" title="BellStateAnalyzer." alt="" coords="237,1015,403,1055"/>
+<area shape="rect" id="node27" href="$classquisp_1_1modules_1_1_entangled_photon_pair_source.html" title="Entangled Photons Pairs Source." alt="" coords="235,787,405,827"/>
+<area shape="rect" id="node28" href="$classquisp_1_1modules_1_1_h_o_m_controller.html" title="HOMController." alt="" coords="220,851,420,877"/>
+<area shape="rect" id="node29" href="$classquisp_1_1modules_1_1_i_application.html" title=" " alt="" coords="229,901,411,926"/>
+<area shape="rect" id="node30" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="239,951,401,991"/>
+<area shape="rect" id="node31" href="$classquisp_1_1modules_1_1_routing_daemon.html" title=" " alt="" coords="490,927,697,953"/>
+<area shape="rect" id="node32" href="$classquisp__test_1_1mock__modules_1_1routing__daemon_1_1_mock_routing_daemon.html" title=" " alt="" coords="468,977,719,1017"/>
 </map>

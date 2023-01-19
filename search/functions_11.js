@@ -59,10 +59,10 @@ var searchData=
   ['starttransmitting_56',['startTransmitting',['../classquisp_1_1modules_1_1_queue.html#ab29522b4a44347f0abe9075883c19943',1,'quisp::modules::Queue']]],
   ['staticenv_57',['StaticEnv',['../classquisp__test_1_1env_1_1_static_env.html#adfaed69116d98ca97fa21d1d16e21ad0',1,'quisp_test::env::StaticEnv']]],
   ['stationaryqubit_58',['StationaryQubit',['../classquisp_1_1modules_1_1_stationary_qubit.html#a7b33af9b282c8b3d681b0e17b1cd3d7b',1,'quisp::modules::StationaryQubit']]],
-  ['storeruleset_59',['storeRuleSet',['../classquisp_1_1modules_1_1_connection_manager.html#aae521e6b55586c2bba790d8e34d170ad',1,'quisp::modules::ConnectionManager']]],
-  ['storerulesetforapplication_60',['storeRuleSetForApplication',['../classquisp_1_1modules_1_1_connection_manager.html#a823e0a2837b79727a7bc611544f445cc',1,'quisp::modules::ConnectionManager']]],
+  ['storeruleset_59',['storeRuleSet',['../classquisp_1_1modules_1_1_connection_manager.html#a96147fa0f19c6ba14b2d41c99723390c',1,'quisp::modules::ConnectionManager']]],
+  ['storerulesetforapplication_60',['storeRuleSetForApplication',['../classquisp_1_1modules_1_1_connection_manager.html#a71394ca99b934b8d8ab5c2c1b936eba8',1,'quisp::modules::ConnectionManager']]],
   ['storeval_61',['storeVal',['../classquisp_1_1runtime_1_1_runtime.html#ad82f932d94602bd508b5013838f57029',1,'quisp::runtime::Runtime']]],
   ['str_62',['str',['../classquisp__test_1_1module__type_1_1_test_module_type.html#a076264967633c90c5b7149853302f7f7',1,'quisp_test::module_type::TestModuleType']]],
   ['substitutevariables_63',['substituteVariables',['../classquisp__test_1_1configuration_1_1_configuration.html#a2819bea7b32484a4d59bbc2070d0ef45',1,'quisp_test::configuration::Configuration']]],
-  ['swaprule_64',['swapRule',['../classquisp_1_1modules_1_1_connection_manager.html#a58a6d50f0381f39a3ae665dea69c672a',1,'quisp::modules::ConnectionManager']]]
+  ['swaprule_64',['swapRule',['../classquisp_1_1modules_1_1_connection_manager.html#a9fa116d70a22cd0e86c96f7deecd221d',1,'quisp::modules::ConnectionManager']]]
 ];

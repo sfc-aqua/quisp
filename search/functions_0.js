@@ -1,7 +1,7 @@
 var searchData=
 [
   ['acceptruleset_0',['acceptRuleSet',['../classquisp_1_1runtime_1_1_runtime_manager.html#abf4dfc555f30816626feca54041bb790',1,'quisp::runtime::RuntimeManager']]],
-  ['action_1',['Action',['../classquisp_1_1rules_1_1_action.html#a80c6a356aa72092117eef5a18d856cd5',1,'quisp::rules::Action::Action()'],['../classquisp_1_1rules_1_1_action.html#acbd323c777f2e244251523abff3b447f',1,'quisp::rules::Action::Action(std::vector&lt; int &gt; partner_addr, std::vector&lt; QNIC_type &gt; qnic_type, std::vector&lt; int &gt; qnic_id)'],['../classquisp_1_1rules_1_1_action.html#a3db592adce33a45ed71268d22933229e',1,'quisp::rules::Action::Action(int partner_addr, QNIC_type qnic_type, int qnic_id)']]],
+  ['action_1',['Action',['../classquisp_1_1rules_1_1_action.html#a80c6a356aa72092117eef5a18d856cd5',1,'quisp::rules::Action::Action()'],['../classquisp_1_1rules_1_1_action.html#ae1808802b6ded9200d3c97d77f7019e1',1,'quisp::rules::Action::Action(std::vector&lt; int &gt; partner_addr)'],['../classquisp_1_1rules_1_1_action.html#a49ab5488e7c46c9f808e09ffc317b941',1,'quisp::rules::Action::Action(int partner_addr)']]],
   ['addclause_2',['addClause',['../classquisp_1_1rules_1_1_condition.html#aeed8d41a6b4093bb1661bf1749762ab9',1,'quisp::rules::Condition']]],
   ['addedge_3',['addEdge',['../classquisp_1_1modules_1_1_stationary_qubit.html#aff2645006d81d048c8bb3e6bcf6cd6ba',1,'quisp::modules::StationaryQubit']]],
   ['adderrorx_4',['addErrorX',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a071491a4d8556e473779842f2992f706',1,'quisp::backends::error_tracking::ErrorTrackingQubit']]],

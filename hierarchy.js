@@ -40,6 +40,21 @@ var hierarchy =
       [ "quisp_test::rng::TestRNG", "classquisp__test_1_1rng_1_1_test_r_n_g.html", null ]
     ] ],
     [ "omnetpp::cSimpleModule", null, [
+      [ "quisp::modules::IConnectionManager", "classquisp_1_1modules_1_1_i_connection_manager.html", [
+        [ "quisp::modules::ConnectionManager", "classquisp_1_1modules_1_1_connection_manager.html", null ]
+      ] ],
+      [ "quisp::modules::IHardwareMonitor", "classquisp_1_1modules_1_1_i_hardware_monitor.html", [
+        [ "quisp::modules::HardwareMonitor", "classquisp_1_1modules_1_1_hardware_monitor.html", null ],
+        [ "quisp_test::mock_modules::hardware_monitor::MockHardwareMonitor", "classquisp__test_1_1mock__modules_1_1hardware__monitor_1_1_mock_hardware_monitor.html", null ]
+      ] ],
+      [ "quisp::modules::IRealTimeController", "classquisp_1_1modules_1_1_i_real_time_controller.html", [
+        [ "quisp::modules::RealTimeController", "classquisp_1_1modules_1_1_real_time_controller.html", null ],
+        [ "quisp_test::mock_modules::realtime_controller::MockRealTimeController", "classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html", null ]
+      ] ],
+      [ "quisp::modules::IRuleEngine", "classquisp_1_1modules_1_1_i_rule_engine.html", [
+        [ "quisp::modules::RuleEngine", "classquisp_1_1modules_1_1_rule_engine.html", null ],
+        [ "quisp_test::mock_modules::rule_engine::MockRuleEngine", "classquisp__test_1_1mock__modules_1_1rule__engine_1_1_mock_rule_engine.html", null ]
+      ] ],
       [ "quisp::modules::IStationaryQubit", "classquisp_1_1modules_1_1_i_stationary_qubit.html", [
         [ "quisp::modules::StationaryQubit", "classquisp_1_1modules_1_1_stationary_qubit.html", null ],
         [ "quisp_test::mock_modules::stationary_qubit::MockQubit", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html", null ]
@@ -161,7 +176,7 @@ var hierarchy =
     [ "quisp::backends::error_tracking::SingleGateErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_single_gate_error_model.html", null ],
     [ "quisp::modules::SingleGateErrorModel", "structquisp_1_1modules_1_1_single_gate_error_model.html", null ],
     [ "quisp::backends::error_tracking::SingleQubitErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_single_qubit_error_model.html", null ],
-    [ "quisp::modules::SwappingConfig", "structquisp_1_1modules_1_1_swapping_config.html", null ],
+    [ "SwappingConfig", "struct_swapping_config.html", null ],
     [ "quisp::modules::SwappingResultData", "structquisp_1_1modules_1_1_swapping_result_data.html", null ],
     [ "quisp::modules::tomography_outcome", "structquisp_1_1modules_1_1tomography__outcome.html", null ],
     [ "quisp::backends::error_tracking::TwoQubitGateErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model.html", null ],
@@ -174,24 +189,9 @@ var hierarchy =
       [ "quisp::modules::IApplication", "classquisp_1_1modules_1_1_i_application.html", [
         [ "quisp::modules::Application", "classquisp_1_1modules_1_1_application.html", null ]
       ] ],
-      [ "quisp::modules::IConnectionManager", "classquisp_1_1modules_1_1_i_connection_manager.html", [
-        [ "quisp::modules::ConnectionManager", "classquisp_1_1modules_1_1_connection_manager.html", null ]
-      ] ],
-      [ "quisp::modules::IHardwareMonitor", "classquisp_1_1modules_1_1_i_hardware_monitor.html", [
-        [ "quisp::modules::HardwareMonitor", "classquisp_1_1modules_1_1_hardware_monitor.html", null ],
-        [ "quisp_test::mock_modules::hardware_monitor::MockHardwareMonitor", "classquisp__test_1_1mock__modules_1_1hardware__monitor_1_1_mock_hardware_monitor.html", null ]
-      ] ],
-      [ "quisp::modules::IRealTimeController", "classquisp_1_1modules_1_1_i_real_time_controller.html", [
-        [ "quisp::modules::RealTimeController", "classquisp_1_1modules_1_1_real_time_controller.html", null ],
-        [ "quisp_test::mock_modules::realtime_controller::MockRealTimeController", "classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html", null ]
-      ] ],
       [ "quisp::modules::IRoutingDaemon", "classquisp_1_1modules_1_1_i_routing_daemon.html", [
         [ "quisp::modules::RoutingDaemon", "classquisp_1_1modules_1_1_routing_daemon.html", null ],
         [ "quisp_test::mock_modules::routing_daemon::MockRoutingDaemon", "classquisp__test_1_1mock__modules_1_1routing__daemon_1_1_mock_routing_daemon.html", null ]
-      ] ],
-      [ "quisp::modules::IRuleEngine", "classquisp_1_1modules_1_1_i_rule_engine.html", [
-        [ "quisp::modules::RuleEngine", "classquisp_1_1modules_1_1_rule_engine.html", null ],
-        [ "quisp_test::mock_modules::rule_engine::MockRuleEngine", "classquisp__test_1_1mock__modules_1_1rule__engine_1_1_mock_rule_engine.html", null ]
       ] ]
     ] ],
     [ "cSimulation", null, [

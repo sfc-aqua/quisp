@@ -65,7 +65,6 @@ var namespacequisp_1_1modules =
     [ "SingleGateErrorModel", "structquisp_1_1modules_1_1_single_gate_error_model.html", "structquisp_1_1modules_1_1_single_gate_error_model" ],
     [ "SPDC_Controller", "classquisp_1_1modules_1_1_s_p_d_c___controller.html", "classquisp_1_1modules_1_1_s_p_d_c___controller" ],
     [ "StationaryQubit", "classquisp_1_1modules_1_1_stationary_qubit.html", "classquisp_1_1modules_1_1_stationary_qubit" ],
-    [ "SwappingConfig", "structquisp_1_1modules_1_1_swapping_config.html", "structquisp_1_1modules_1_1_swapping_config" ],
     [ "SwappingResultData", "structquisp_1_1modules_1_1_swapping_result_data.html", "structquisp_1_1modules_1_1_swapping_result_data" ],
     [ "tomography_outcome", "structquisp_1_1modules_1_1tomography__outcome.html", "structquisp_1_1modules_1_1tomography__outcome" ],
     [ "TwoQubitGateErrorModel", "structquisp_1_1modules_1_1_two_qubit_gate_error_model.html", "structquisp_1_1modules_1_1_two_qubit_gate_error_model" ],

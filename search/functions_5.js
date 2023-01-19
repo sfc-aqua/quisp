@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['fidelityconditionclause_0',['FidelityConditionClause',['../classquisp_1_1rules_1_1_fidelity_condition_clause.html#aa78b5f63a34833a22c92ad0ed1f46014',1,'quisp::rules::FidelityConditionClause::FidelityConditionClause(double required_fidelity, int partner_addr, QNIC_type qnic_type, int qnic_id)'],['../classquisp_1_1rules_1_1_fidelity_condition_clause.html#affc95380feff5bd3f01755d64f6a42a8',1,'quisp::rules::FidelityConditionClause::FidelityConditionClause(json serialized)']]],
+  ['fidelityconditionclause_0',['FidelityConditionClause',['../classquisp_1_1rules_1_1_fidelity_condition_clause.html#afe121e601518faa75fca3bcacae8ea53',1,'quisp::rules::FidelityConditionClause::FidelityConditionClause(double required_fidelity, int partner_addr)'],['../classquisp_1_1rules_1_1_fidelity_condition_clause.html#affc95380feff5bd3f01755d64f6a42a8',1,'quisp::rules::FidelityConditionClause::FidelityConditionClause(json serialized)']]],
   ['fillparams_1',['fillParams',['../classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html#a276a2cd73cd82e862802d68f8d4429bf',1,'quisp_test::mock_modules::stationary_qubit::MockQubit']]],
   ['fillpathdivision_2',['fillPathDivision',['../classquisp_1_1modules_1_1_connection_manager.html#a93ce7efb2b81d167574ba6704fd0caf7',1,'quisp::modules::ConnectionManager']]],
   ['finalize_3',['finalize',['../classquisp_1_1runtime_1_1_rule_set.html#a9bab7a1093e3a6a975ed0d2e70cd6915',1,'quisp::runtime::RuleSet']]],
