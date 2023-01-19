@@ -5,20 +5,12 @@
  */
 
 #include "ConnectionManager.h"
-#include <algorithm>
-#include <iterator>
-#include <memory>
-#include <string>
-#include <utility>
-#include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
-#include "utils/ComponentProvider.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
 using namespace quisp::rules;
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
 Define_Module(ConnectionManager);
 ConnectionManager::ConnectionManager() : provider(utils::ComponentProvider{this}) {}
@@ -347,7 +339,6 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
         auto pur_rule_left = purifyRule(right_node, purification_type, threshold_fidelity, shared_tag);
         auto pur_rule_right = purifyRule(left_node, purification_type, threshold_fidelity, shared_tag);
         shared_tag++;
-        std::vector<int> left_partner = {right_node}, right_partner = {left_node};
         rules_map[left_node].push_back(std::move(pur_rule_left));  // add rule with partner info
         rules_map[right_node].push_back(std::move(pur_rule_right));  // add rule with partner info
       }
@@ -544,6 +535,8 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
   int left_partner = it->second.at(0);
   int right_partner = it->second.at(1);
   EV_DEBUG << "swapping" << left_partner << "<-->" << swapper_address << "<-->" << right_partner << "\n";
+
+  // validating QNIC type
   auto iter_left = std::find(path.begin(), path.end(), left_partner);
   auto iter_right = std::find(path.begin(), path.end(), right_partner);
   if (iter_left == path.end()) {
@@ -552,19 +545,15 @@ SwappingConfig ConnectionManager::generateSwappingConfig(int swapper_address, st
   if (iter_right == path.end()) {
     error("right nodes are not found in path");
   }
-
   size_t left_partner_index = std::distance(path.begin(), iter_left);
   size_t right_partner_index = std::distance(path.begin(), iter_right);
-
-  // left partner must be second
-  // right partner must be first
-  // TODO: detail description of this.
   QNIC_id left_partner_qnic = qnics.at(left_partner_index).snd;
   QNIC_id right_partner_qnic = qnics.at(right_partner_index).fst;
 
   if (right_self_qnic.type == QNIC_RP || left_self_qnic.type == QNIC_RP || right_partner_qnic.type == QNIC_RP || left_partner_qnic.type == QNIC_RP) {
     error("MSM link not implemented");
   }
+
   SwappingConfig config;
   config.left_partner = left_partner;
   config.lres = num_resources;
@@ -876,5 +865,4 @@ void ConnectionManager::finish() {
   }
 }
 
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules

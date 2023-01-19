@@ -6,6 +6,7 @@
 #include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
 #include <modules/QRSA/RoutingDaemon/IRoutingDaemon.h>
 #include <omnetpp.h>
+#include <rules/Action.h>
 #include <test_utils/TestUtils.h>
 #include <nlohmann/json.hpp>
 
@@ -19,6 +20,7 @@ using namespace quisp::modules;
 using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_R;
 using quisp::modules::QNIC_type;
+using quisp::rules::PurType;
 
 class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
