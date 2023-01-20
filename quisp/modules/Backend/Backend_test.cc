@@ -8,8 +8,8 @@ namespace {
 using namespace quisp_test;
 using OriginalBackendContainer = quisp::modules::backend::BackendContainer;
 using quisp::modules::backend::ErrorTrackingBackend;
-using quisp::modules::backend::StationaryQubitConfiguration;
 using quisp::modules::backend::GraphStateBackend;
+using quisp::modules::backend::StationaryQubitConfiguration;
 
 class BackendContainer : public OriginalBackendContainer {
  public:

@@ -14,10 +14,10 @@ using namespace quisp::backends::graph_state::types;
 
 namespace quisp_test::backends::graph_state {
 using omnetpp::SimTime;
+using ::quisp::backends::StationaryQubitConfiguration;
 using ::quisp::backends::abstract::IQubit;
 using ::quisp::backends::abstract::IQubitId;
 using ::quisp::backends::graph_state::GraphStateBackend;
-using ::quisp::backends::StationaryQubitConfiguration;
 using ::quisp::backends::graph_state::GraphStateQubit;
 using namespace ::quisp::backends;
 using namespace ::quisp::backends::abstract;

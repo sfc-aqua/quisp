@@ -414,7 +414,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsGHZstateXmeasurement) 
   rng->double_value = 0.5;
   for (int i = 0; i < 16; i++) {
     auto meas = quantum_register.at(i)->localMeasureX();
-    //あとで計算する
+    // あとで計算する
     EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   }
   resetRegister();
