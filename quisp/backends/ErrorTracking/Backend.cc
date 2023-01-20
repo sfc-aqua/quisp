@@ -50,9 +50,7 @@ IQubit* ErrorTrackingBackend::createQubit(const IQubitId* id, std::unique_ptr<IC
   return qubit_ptr;
 }
 
-IQubit* ErrorTrackingBackend::createQubit(const IQubitId* id) {
-  return createQubit(id, std::move(getDefaultConfiguration()));
-}
+IQubit* ErrorTrackingBackend::createQubit(const IQubitId* id) { return createQubit(id, std::move(getDefaultConfiguration())); }
 
 void ErrorTrackingBackend::deleteQubit(const IQubitId* id) {
   auto qubit_iterator = qubits.find(id);

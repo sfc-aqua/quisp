@@ -225,11 +225,9 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     return qubit->action_index;
   }
 
-  void hackSwappingPartners(IQubitRecord *const left_qubit_rec, IQubitRecord *const right_qubit_rec) override {
-  }
+  void hackSwappingPartners(IQubitRecord *const left_qubit_rec, IQubitRecord *const right_qubit_rec) override {}
 
-  void hackBreakEntanglement(IQubitRecord *qubit) override{
-  };
+  void hackBreakEntanglement(IQubitRecord *qubit) override{};
 
   std::string getNodeInfo() override {
     std::stringstream ss;

@@ -83,9 +83,7 @@ class Backend : public ErrorTrackingBackend {
   Backend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<ErrorTrackingConfiguration> config) : ErrorTrackingBackend(std::move(rng), std::move(config)) {}
   IQubit* createQubit(int id) { return this->createQubitInternal(new QubitId(id)); }
   IQubit* getQubit(int id) { return this->getQubitInternal(new QubitId(id)); }
-  IQubit* getQubitInternal(const IQubitId* id) {
-    return qubits.find(id)->second.get();
-  }
+  IQubit* getQubitInternal(const IQubitId* id) { return qubits.find(id)->second.get(); }
   IQubit* createQubitInternal(const IQubitId* id) {
     auto qubit = qubits.find(id);
     if (qubit != qubits.cend()) {
