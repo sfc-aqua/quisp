@@ -1,5 +1,6 @@
 var _i_qubit_8h =
 [
+    [ "quisp::backends::abstract::MeasurementOutcome", "structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html", "structquisp_1_1backends_1_1abstract_1_1_measurement_outcome" ],
     [ "quisp::backends::abstract::IQubit", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html", "classquisp_1_1backends_1_1abstract_1_1_i_qubit" ],
     [ "EigenvalueResult", "_i_qubit_8h.html#a62ea4b6babf182573968ca80708cce0d", [
       [ "PLUS_ONE", "_i_qubit_8h.html#a62ea4b6babf182573968ca80708cce0da9c0ed0366bbc920f92606585259a1664", null ],

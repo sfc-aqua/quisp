@@ -31,22 +31,6 @@ var namespacequisp =
         [ "S_INV_RY", "namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43aba063a32e79c5196256f62d4f2575d2c", null ],
         [ "S_RY_INV", "namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43aecc02c6ea51551582cfc2a4300ab40c0", null ],
         [ "S_RY", "namespacequisp_1_1types.html#a7d975efdf0e514097cc27f3bf2832d43afe08f643cc4b0892bd114667748831b7", null ]
-      ] ],
-      [ "EigenvalueResult", "namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57", [
-        [ "PLUS_ONE", "namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57a9c0ed0366bbc920f92606585259a1664", null ],
-        [ "MINUS_ONE", "namespacequisp_1_1types.html#aa24270bdfb1fac470362edc943649d57a25725c81fc4f00fa5b881c17af6a2a3e", null ]
-      ] ],
-      [ "MeasureXResult", "namespacequisp_1_1types.html#a312e2e3b1de3e59d939ff3688ed26d80", [
-        [ "NO_Z_ERROR", "namespacequisp_1_1types.html#a312e2e3b1de3e59d939ff3688ed26d80a6a9643dc71b2b01f457096880d5c22c2", null ],
-        [ "HAS_Z_ERROR", "namespacequisp_1_1types.html#a312e2e3b1de3e59d939ff3688ed26d80a0292f9bdf50bbd0fd2d8fb6e420c4f1a", null ]
-      ] ],
-      [ "MeasureYResult", "namespacequisp_1_1types.html#aa9712dd9c693c474b93606fafc4e63a9", [
-        [ "NO_XZ_ERROR", "namespacequisp_1_1types.html#aa9712dd9c693c474b93606fafc4e63a9ac03af9ea4243133514988e83d0f7bcae", null ],
-        [ "HAS_XZ_ERROR", "namespacequisp_1_1types.html#aa9712dd9c693c474b93606fafc4e63a9a4c1abf890b95d5ce646ba8db98505f76", null ]
-      ] ],
-      [ "MeasureZResult", "namespacequisp_1_1types.html#a0e08c99e31d441475c6b1d118fe55f30", [
-        [ "NO_X_ERROR", "namespacequisp_1_1types.html#a0e08c99e31d441475c6b1d118fe55f30a7db09b73ae4b533d72b71aa6e57bf744", null ],
-        [ "HAS_X_ERROR", "namespacequisp_1_1types.html#a0e08c99e31d441475c6b1d118fe55f30ad52ac6a2f7e6cb207081ac138ffc6612", null ]
       ] ]
     ] ],
     [ "utils", "namespacequisp_1_1utils.html", "namespacequisp_1_1utils" ]

@@ -1,5 +1,6 @@
 var classquisp_1_1modules_1_1_hardware_monitor =
 [
+    [ "SingleQubitError", "structquisp_1_1modules_1_1_hardware_monitor_1_1_single_qubit_error.html", "structquisp_1_1modules_1_1_hardware_monitor_1_1_single_qubit_error" ],
     [ "HardwareMonitor", "classquisp_1_1modules_1_1_hardware_monitor.html#a8d17b53aa9012a7e35381d0fc69758b6", null ],
     [ "~HardwareMonitor", "classquisp_1_1modules_1_1_hardware_monitor.html#a907bdd14844249d3a4000dfa06ff7196", null ],
     [ "constructPurifyRule", "classquisp_1_1modules_1_1_hardware_monitor.html#a8e8238c4e0a12b30d483f8ea3a08a0ed", null ],
@@ -33,7 +34,7 @@ var classquisp_1_1modules_1_1_hardware_monitor =
     [ "num_qnic_r", "classquisp_1_1modules_1_1_hardware_monitor.html#a7438f7da6259f8f26b80f6f60dde56b8", null ],
     [ "num_qnic_rp", "classquisp_1_1modules_1_1_hardware_monitor.html#a699e6560e71c1f262be6b2d608331f95", null ],
     [ "num_qnic_total", "classquisp_1_1modules_1_1_hardware_monitor.html#adaeda69e137a24c4637da1c687f93bcd", null ],
-    [ "Pauli", "classquisp_1_1modules_1_1_hardware_monitor.html#a042dc5fecf258b685ab4070675a6e67a", null ],
+    [ "Pauli", "classquisp_1_1modules_1_1_hardware_monitor.html#a34a7b3d23be779949189005311f28afe", null ],
     [ "provider", "classquisp_1_1modules_1_1_hardware_monitor.html#ac0d06857a13d981170e1a345d2b28b11", null ],
     [ "purification_type", "classquisp_1_1modules_1_1_hardware_monitor.html#abea007dc494d2b29d3e8ec21f48e28d6", null ],
     [ "qnic_partner_map", "classquisp_1_1modules_1_1_hardware_monitor.html#a9ead24255064977561c176e18b78ce9d", null ],

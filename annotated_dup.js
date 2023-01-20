@@ -3,20 +3,23 @@ var annotated_dup =
     [ "quisp", "namespacequisp.html", [
       [ "backends", "namespacequisp_1_1backends.html", [
         [ "abstract", "namespacequisp_1_1backends_1_1abstract.html", [
+          [ "IConfiguration", "classquisp_1_1backends_1_1abstract_1_1_i_configuration.html", "classquisp_1_1backends_1_1abstract_1_1_i_configuration" ],
           [ "IQuantumBackend", "classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html", "classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend" ],
           [ "IQubit", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html", "classquisp_1_1backends_1_1abstract_1_1_i_qubit" ],
           [ "IQubitId", "classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html", "classquisp_1_1backends_1_1abstract_1_1_i_qubit_id" ],
-          [ "IRandomNumberGenerator", "classquisp_1_1backends_1_1abstract_1_1_i_random_number_generator.html", "classquisp_1_1backends_1_1abstract_1_1_i_random_number_generator" ]
+          [ "IRandomNumberGenerator", "classquisp_1_1backends_1_1abstract_1_1_i_random_number_generator.html", "classquisp_1_1backends_1_1abstract_1_1_i_random_number_generator" ],
+          [ "MeasurementOutcome", "structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html", "structquisp_1_1backends_1_1abstract_1_1_measurement_outcome" ]
         ] ],
         [ "error_tracking", "namespacequisp_1_1backends_1_1error__tracking.html", [
           [ "emission_error_model", "structquisp_1_1backends_1_1error__tracking_1_1emission__error__model.html", "structquisp_1_1backends_1_1error__tracking_1_1emission__error__model" ],
           [ "ErrorTrackingBackend", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend" ],
+          [ "ErrorTrackingConfiguration", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_configuration.html", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_configuration" ],
           [ "ErrorTrackingQubit", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit" ],
-          [ "GodErrorState", "structquisp_1_1backends_1_1error__tracking_1_1_god_error_state.html", "structquisp_1_1backends_1_1error__tracking_1_1_god_error_state" ],
           [ "MeasurementErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_error_model.html", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_error_model" ],
           [ "MeasurementOperator", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_operator.html", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_operator" ],
           [ "MeasurementOperators", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_operators.html", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_operators" ],
           [ "MemoryErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_memory_error_model.html", "structquisp_1_1backends_1_1error__tracking_1_1_memory_error_model" ],
+          [ "QuantumState", "structquisp_1_1backends_1_1error__tracking_1_1_quantum_state.html", "structquisp_1_1backends_1_1error__tracking_1_1_quantum_state" ],
           [ "SingleGateErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_single_gate_error_model.html", "structquisp_1_1backends_1_1error__tracking_1_1_single_gate_error_model" ],
           [ "SingleQubitErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_single_qubit_error_model.html", "structquisp_1_1backends_1_1error__tracking_1_1_single_qubit_error_model" ],
           [ "TwoQubitGateErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model.html", "structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model" ]
@@ -55,6 +58,9 @@ var annotated_dup =
         [ "qrsa", "namespacequisp_1_1modules_1_1qrsa.html", [
           [ "LocalQubitRef", "structquisp_1_1modules_1_1qrsa_1_1_local_qubit_ref.html", "structquisp_1_1modules_1_1qrsa_1_1_local_qubit_ref" ]
         ] ],
+        [ "qubit_id", "namespacequisp_1_1modules_1_1qubit__id.html", [
+          [ "QubitId", "classquisp_1_1modules_1_1qubit__id_1_1_qubit_id.html", "classquisp_1_1modules_1_1qubit__id_1_1_qubit_id" ]
+        ] ],
         [ "qubit_record", "namespacequisp_1_1modules_1_1qubit__record.html", [
           [ "IQubitRecord", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record.html", "classquisp_1_1modules_1_1qubit__record_1_1_i_qubit_record" ],
           [ "QubitRecord", "classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html", "classquisp_1_1modules_1_1qubit__record_1_1_qubit_record" ]
@@ -68,10 +74,8 @@ var annotated_dup =
         [ "ConnectionManager", "classquisp_1_1modules_1_1_connection_manager.html", "classquisp_1_1modules_1_1_connection_manager" ],
         [ "ConnectionSetupInfo", "structquisp_1_1modules_1_1_connection_setup_info.html", "structquisp_1_1modules_1_1_connection_setup_info" ],
         [ "dummyModule", "classquisp_1_1modules_1_1dummy_module.html", "classquisp_1_1modules_1_1dummy_module" ],
-        [ "emission_error_model", "structquisp_1_1modules_1_1emission__error__model.html", "structquisp_1_1modules_1_1emission__error__model" ],
         [ "EntangledPhotonPairSource", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html", "classquisp_1_1modules_1_1_entangled_photon_pair_source" ],
         [ "entangledPhotons", "structquisp_1_1modules_1_1entangled_photons.html", "structquisp_1_1modules_1_1entangled_photons" ],
-        [ "GodErrorState", "structquisp_1_1modules_1_1_god_error_state.html", "structquisp_1_1modules_1_1_god_error_state" ],
         [ "HardwareMonitor", "classquisp_1_1modules_1_1_hardware_monitor.html", "classquisp_1_1modules_1_1_hardware_monitor" ],
         [ "HOMController", "classquisp_1_1modules_1_1_h_o_m_controller.html", "classquisp_1_1modules_1_1_h_o_m_controller" ],
         [ "IApplication", "classquisp_1_1modules_1_1_i_application.html", "classquisp_1_1modules_1_1_i_application" ],
@@ -83,12 +87,6 @@ var annotated_dup =
         [ "IRuleEngine", "classquisp_1_1modules_1_1_i_rule_engine.html", "classquisp_1_1modules_1_1_i_rule_engine" ],
         [ "IStationaryQubit", "classquisp_1_1modules_1_1_i_stationary_qubit.html", "classquisp_1_1modules_1_1_i_stationary_qubit" ],
         [ "link_cost", "structquisp_1_1modules_1_1link__cost.html", "structquisp_1_1modules_1_1link__cost" ],
-        [ "measurement_operator", "structquisp_1_1modules_1_1measurement__operator.html", "structquisp_1_1modules_1_1measurement__operator" ],
-        [ "measurement_operators", "structquisp_1_1modules_1_1measurement__operators.html", "structquisp_1_1modules_1_1measurement__operators" ],
-        [ "measurement_outcome", "structquisp_1_1modules_1_1measurement__outcome.html", "structquisp_1_1modules_1_1measurement__outcome" ],
-        [ "measurement_output_probabilities", "structquisp_1_1modules_1_1measurement__output__probabilities.html", "structquisp_1_1modules_1_1measurement__output__probabilities" ],
-        [ "MeasurementErrorModel", "structquisp_1_1modules_1_1_measurement_error_model.html", "structquisp_1_1modules_1_1_measurement_error_model" ],
-        [ "memory_error_model", "structquisp_1_1modules_1_1memory__error__model.html", "structquisp_1_1modules_1_1memory__error__model" ],
         [ "NeighborInfo", "structquisp_1_1modules_1_1_neighbor_info.html", "structquisp_1_1modules_1_1_neighbor_info" ],
         [ "output_count", "structquisp_1_1modules_1_1output__count.html", "structquisp_1_1modules_1_1output__count" ],
         [ "PhotonicSwitch", "classquisp_1_1modules_1_1_photonic_switch.html", "classquisp_1_1modules_1_1_photonic_switch" ],
@@ -96,7 +94,6 @@ var annotated_dup =
         [ "QNIC", "structquisp_1_1modules_1_1_q_n_i_c.html", "structquisp_1_1modules_1_1_q_n_i_c" ],
         [ "QNIC_id", "structquisp_1_1modules_1_1_q_n_i_c__id.html", "structquisp_1_1modules_1_1_q_n_i_c__id" ],
         [ "QNIC_pair_info", "structquisp_1_1modules_1_1_q_n_i_c__pair__info.html", "structquisp_1_1modules_1_1_q_n_i_c__pair__info" ],
-        [ "quantum_state", "structquisp_1_1modules_1_1quantum__state.html", "structquisp_1_1modules_1_1quantum__state" ],
         [ "QubitAddr", "structquisp_1_1modules_1_1_qubit_addr.html", "structquisp_1_1modules_1_1_qubit_addr" ],
         [ "QubitAddr_cons", "structquisp_1_1modules_1_1_qubit_addr__cons.html", "structquisp_1_1modules_1_1_qubit_addr__cons" ],
         [ "QubitState", "structquisp_1_1modules_1_1_qubit_state.html", "structquisp_1_1modules_1_1_qubit_state" ],
@@ -105,13 +102,10 @@ var annotated_dup =
         [ "Router", "classquisp_1_1modules_1_1_router.html", "classquisp_1_1modules_1_1_router" ],
         [ "RoutingDaemon", "classquisp_1_1modules_1_1_routing_daemon.html", "classquisp_1_1modules_1_1_routing_daemon" ],
         [ "RuleEngine", "classquisp_1_1modules_1_1_rule_engine.html", "classquisp_1_1modules_1_1_rule_engine" ],
-        [ "single_qubit_error", "structquisp_1_1modules_1_1single__qubit__error.html", "structquisp_1_1modules_1_1single__qubit__error" ],
-        [ "SingleGateErrorModel", "structquisp_1_1modules_1_1_single_gate_error_model.html", "structquisp_1_1modules_1_1_single_gate_error_model" ],
         [ "SPDC_Controller", "classquisp_1_1modules_1_1_s_p_d_c___controller.html", "classquisp_1_1modules_1_1_s_p_d_c___controller" ],
         [ "StationaryQubit", "classquisp_1_1modules_1_1_stationary_qubit.html", "classquisp_1_1modules_1_1_stationary_qubit" ],
         [ "SwappingResultData", "structquisp_1_1modules_1_1_swapping_result_data.html", "structquisp_1_1modules_1_1_swapping_result_data" ],
-        [ "tomography_outcome", "structquisp_1_1modules_1_1tomography__outcome.html", "structquisp_1_1modules_1_1tomography__outcome" ],
-        [ "TwoQubitGateErrorModel", "structquisp_1_1modules_1_1_two_qubit_gate_error_model.html", "structquisp_1_1modules_1_1_two_qubit_gate_error_model" ]
+        [ "tomography_outcome", "structquisp_1_1modules_1_1tomography__outcome.html", "structquisp_1_1modules_1_1tomography__outcome" ]
       ] ],
       [ "rules", "namespacequisp_1_1rules.html", [
         [ "rs_converter", "namespacequisp_1_1rules_1_1rs__converter.html", [
@@ -179,6 +173,7 @@ var annotated_dup =
         [ "TestLogger", "classquisp__test_1_1_logger_1_1_test_logger.html", "classquisp__test_1_1_logger_1_1_test_logger" ]
       ] ],
       [ "mock_backends", "namespacequisp__test_1_1mock__backends.html", [
+        [ "MockBackendQubit", "classquisp__test_1_1mock__backends_1_1_mock_backend_qubit.html", "classquisp__test_1_1mock__backends_1_1_mock_backend_qubit" ],
         [ "MockQuantumBackend", "classquisp__test_1_1mock__backends_1_1_mock_quantum_backend.html", "classquisp__test_1_1mock__backends_1_1_mock_quantum_backend" ]
       ] ],
       [ "mock_modules", "namespacequisp__test_1_1mock__modules.html", [

@@ -118,16 +118,20 @@ Collaboration diagram for quisp_test::backends::Backend:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af8885a749c4fdb68c45d8444d3e8b7be"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1backends_1_1_backend.html#af8885a749c4fdb68c45d8444d3e8b7be">Backend</a> (std::unique_ptr&lt; IRandomNumberGenerator &gt; rng)</td></tr>
-<tr class="separator:af8885a749c4fdb68c45d8444d3e8b7be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a599bda9abfb3fc31f1c0dc38649c4c7f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1backends_1_1_backend.html#a599bda9abfb3fc31f1c0dc38649c4c7f">Backend</a> (std::unique_ptr&lt; IRandomNumberGenerator &gt; rng, std::unique_ptr&lt; ErrorTrackingConfiguration &gt; config)</td></tr>
+<tr class="separator:a599bda9abfb3fc31f1c0dc38649c4c7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5cc8a8c1c7da1693079c4dbd4efdb35"><td class="memItemLeft" align="right" valign="top">IQubit *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1backends_1_1_backend.html#ab5cc8a8c1c7da1693079c4dbd4efdb35">createQubit</a> (int id)</td></tr>
+<tr class="separator:ab5cc8a8c1c7da1693079c4dbd4efdb35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a553e8ac3cb3dc683c3f8fab6216126"><td class="memItemLeft" align="right" valign="top">IQubit *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1backends_1_1_backend.html#a0a553e8ac3cb3dc683c3f8fab6216126">getQubit</a> (int id)</td></tr>
 <tr class="separator:a0a553e8ac3cb3dc683c3f8fab6216126"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54638a6fd965c9ae854a9e11d156c1f4"><td class="memItemLeft" align="right" valign="top">IQubit *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1backends_1_1_backend.html#a54638a6fd965c9ae854a9e11d156c1f4">getQubit</a> (const IQubitId *id) override</td></tr>
-<tr class="separator:a54638a6fd965c9ae854a9e11d156c1f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc7c11086f14d822aec921419f16b3bb"><td class="memItemLeft" align="right" valign="top">IQubit *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1backends_1_1_backend.html#acc7c11086f14d822aec921419f16b3bb">getQubitInternal</a> (const IQubitId *id)</td></tr>
+<tr class="separator:acc7c11086f14d822aec921419f16b3bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a436007890bab0d3388e95457b4185759"><td class="memItemLeft" align="right" valign="top">IQubit *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp__test_1_1backends_1_1_backend.html#a436007890bab0d3388e95457b4185759">createQubitInternal</a> (const IQubitId *id)</td></tr>
+<tr class="separator:a436007890bab0d3388e95457b4185759"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="af8885a749c4fdb68c45d8444d3e8b7be" name="af8885a749c4fdb68c45d8444d3e8b7be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af8885a749c4fdb68c45d8444d3e8b7be">&#9670;&#160;</a></span>Backend()</h2>
+<a id="a599bda9abfb3fc31f1c0dc38649c4c7f" name="a599bda9abfb3fc31f1c0dc38649c4c7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a599bda9abfb3fc31f1c0dc38649c4c7f">&#9670;&#160;</a></span>Backend()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -139,8 +143,18 @@ Public Member Functions</h2></td></tr>
           <td class="memname">quisp_test::backends::Backend::Backend </td>
           <td>(</td>
           <td class="paramtype">std::unique_ptr&lt; IRandomNumberGenerator &gt;&#160;</td>
-          <td class="paramname"><em>rng</em></td><td>)</td>
+          <td class="paramname"><em>rng</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::unique_ptr&lt; ErrorTrackingConfiguration &gt;&#160;</td>
+          <td class="paramname"><em>config</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -153,8 +167,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a54638a6fd965c9ae854a9e11d156c1f4" name="a54638a6fd965c9ae854a9e11d156c1f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54638a6fd965c9ae854a9e11d156c1f4">&#9670;&#160;</a></span>getQubit() <span class="overload">[1/2]</span></h2>
+<a id="ab5cc8a8c1c7da1693079c4dbd4efdb35" name="ab5cc8a8c1c7da1693079c4dbd4efdb35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5cc8a8c1c7da1693079c4dbd4efdb35">&#9670;&#160;</a></span>createQubit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -163,7 +177,33 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">IQubit * quisp_test::backends::Backend::getQubit </td>
+          <td class="memname">IQubit * quisp_test::backends::Backend::createQubit </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a436007890bab0d3388e95457b4185759" name="a436007890bab0d3388e95457b4185759"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a436007890bab0d3388e95457b4185759">&#9670;&#160;</a></span>createQubitInternal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IQubit * quisp_test::backends::Backend::createQubitInternal </td>
           <td>(</td>
           <td class="paramtype">const IQubitId *&#160;</td>
           <td class="paramname"><em>id</em></td><td>)</td>
@@ -172,7 +212,7 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -180,7 +220,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a0a553e8ac3cb3dc683c3f8fab6216126" name="a0a553e8ac3cb3dc683c3f8fab6216126"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a553e8ac3cb3dc683c3f8fab6216126">&#9670;&#160;</a></span>getQubit() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a553e8ac3cb3dc683c3f8fab6216126">&#9670;&#160;</a></span>getQubit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -192,6 +232,32 @@ Public Member Functions</h2></td></tr>
           <td class="memname">IQubit * quisp_test::backends::Backend::getQubit </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acc7c11086f14d822aec921419f16b3bb" name="acc7c11086f14d822aec921419f16b3bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc7c11086f14d822aec921419f16b3bb">&#9670;&#160;</a></span>getQubitInternal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IQubit * quisp_test::backends::Backend::getQubitInternal </td>
+          <td>(</td>
+          <td class="paramtype">const IQubitId *&#160;</td>
           <td class="paramname"><em>id</em></td><td>)</td>
           <td></td>
         </tr>

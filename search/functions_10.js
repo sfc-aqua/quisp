@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['random_5fmeasurement_5fbasis_5fselection_0',['Random_Measurement_Basis_Selection',['../classquisp_1_1modules_1_1_stationary_qubit.html#a76879fc0549549ecc6d3d638c313de38',1,'quisp::modules::StationaryQubit']]],
+  ['randommeasurementbasisselection_0',['randomMeasurementBasisSelection',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a995f98f3b56076e5f676bab8e8a200cb',1,'quisp::backends::error_tracking::ErrorTrackingQubit']]],
   ['readparameter_1',['readParameter',['../classquisp__test_1_1env_1_1_static_env.html#a2218b62aa6704c308a0e54f3d9e09e33',1,'quisp_test::env::StaticEnv']]],
   ['realtimecontroller_2',['RealTimeController',['../classquisp_1_1modules_1_1_real_time_controller.html#a94685c5ee25bdf67dd261187c1beea56',1,'quisp::modules::RealTimeController']]],
   ['reconstruct_5fdensity_5fmatrix_3',['reconstruct_density_matrix',['../classquisp_1_1modules_1_1_hardware_monitor.html#a358f4014d787d077fba31ed2eb7cfbd7',1,'quisp::modules::HardwareMonitor']]],

@@ -1,4 +1,4 @@
 <map id="quisp::runtime::ValueUnion" name="quisp::runtime::ValueUnion">
-<area shape="rect" id="node1" title="actual memory value that can hold multiple types of values." alt="" coords="15,108,189,133"/>
-<area shape="rect" id="node2" href="$structquisp_1_1modules_1_1measurement__outcome.html" title=" " alt="" coords="5,5,199,45"/>
+<area shape="rect" id="node1" title="actual memory value that can hold multiple types of values." alt="" coords="5,108,180,133"/>
+<area shape="rect" id="node2" href="$structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html" title=" " alt="" coords="9,5,177,45"/>
 </map>

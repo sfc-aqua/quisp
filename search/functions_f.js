@@ -6,7 +6,7 @@ var searchData=
   ['quantumchannel_3',['QuantumChannel',['../classquisp_1_1channels_1_1_quantum_channel.html#a039e7090bd962414c70d8b85d1e8105a',1,'quisp::channels::QuantumChannel']]],
   ['qubit_4',['Qubit',['../classquisp__test_1_1backends_1_1_qubit.html#aa4a55124b132fcb84063f404665a1d41',1,'quisp_test::backends::Qubit']]],
   ['qubitaddr_5fcons_5',['QubitAddr_cons',['../structquisp_1_1modules_1_1_qubit_addr__cons.html#a0c691563730946fcdc275de061cfa9a3',1,'quisp::modules::QubitAddr_cons']]],
-  ['qubitid_6',['QubitId',['../classquisp__test_1_1backends_1_1_qubit_id.html#a6c3eb38f49ffd54e9d358f315e5f864a',1,'quisp_test::backends::QubitId::QubitId()'],['../structquisp_1_1runtime_1_1_qubit_id.html#a6b98fbb5d25f0456a93442eb268dbccb',1,'quisp::runtime::QubitId::QubitId()']]],
+  ['qubitid_6',['QubitId',['../classquisp__test_1_1backends_1_1_qubit_id.html#a6c3eb38f49ffd54e9d358f315e5f864a',1,'quisp_test::backends::QubitId::QubitId()'],['../classquisp_1_1modules_1_1qubit__id_1_1_qubit_id.html#a09e2f4175b02cb79d06d3b1330981c69',1,'quisp::modules::qubit_id::QubitId::QubitId()'],['../structquisp_1_1runtime_1_1_qubit_id.html#a6b98fbb5d25f0456a93442eb268dbccb',1,'quisp::runtime::QubitId::QubitId()']]],
   ['qubitrecord_7',['QubitRecord',['../classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html#ac5dd8087f4715a8824773cf9a1ce49bc',1,'quisp::modules::qubit_record::QubitRecord']]],
   ['queueapplicationrequest_8',['queueApplicationRequest',['../classquisp_1_1modules_1_1_connection_manager.html#a63a3b9329e6ff0f14d40bb7f8277f698',1,'quisp::modules::ConnectionManager']]]
 ];

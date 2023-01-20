@@ -102,8 +102,9 @@ Inheritance diagram for quisp::backends::abstract::IQubit:</div>
 <div class="dyncontent">
 <div class="center"><img src="classquisp_1_1backends_1_1abstract_1_1_i_qubit__inherit__graph.png" border="0" usemap="#aquisp_1_1backends_1_1abstract_1_1_i_qubit_inherit__map" alt="Inheritance graph"/></div>
 <map name="aquisp_1_1backends_1_1abstract_1_1_i_qubit_inherit__map" id="aquisp_1_1backends_1_1abstract_1_1_i_qubit_inherit__map">
-<area shape="rect" title=" " alt="" coords="16,5,184,45"/>
-<area shape="rect" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html" title=" " alt="" coords="5,93,195,133"/>
+<area shape="rect" title=" " alt="" coords="5,37,173,77"/>
+<area shape="rect" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html" title=" " alt="" coords="221,5,411,45"/>
+<area shape="rect" href="classquisp__test_1_1mock__backends_1_1_mock_backend_qubit.html" title=" " alt="" coords="225,69,407,109"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -115,6 +116,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a726ac8a635057faacfce1b55a1a02409"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8810cf3cdcd3e9e59d831fd11705f0af"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a8810cf3cdcd3e9e59d831fd11705f0af">setFree</a> ()=0</td></tr>
 <tr class="separator:a8810cf3cdcd3e9e59d831fd11705f0af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb1405d50412d706a989e4e2d6398016"><td class="memItemLeft" align="right" valign="top">virtual const <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html">IQubitId</a> *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#adb1405d50412d706a989e4e2d6398016">getId</a> () const</td></tr>
+<tr class="separator:adb1405d50412d706a989e4e2d6398016"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa3069cb6b040490c23ce067f3723310"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#aaa3069cb6b040490c23ce067f3723310">gateX</a> ()</td></tr>
 <tr class="separator:aaa3069cb6b040490c23ce067f3723310"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57adf76060c41efd439fe106566776a8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a57adf76060c41efd439fe106566776a8">gateY</a> ()</td></tr>
@@ -137,6 +140,30 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1c356f4505f2379666f1d490cdacf85b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ddbc4f87d897e9b24908656c7c95b95"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a3ddbc4f87d897e9b24908656c7c95b95">purifyZ</a> (<a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> *const target_qubit)</td></tr>
 <tr class="separator:a3ddbc4f87d897e9b24908656c7c95b95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ccbadedd67b38375b87c01ca49a309b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1backends_1_1abstract.html#ac7c2b065649ec1612c11fa9390ce1b01">MeasureXResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a3ccbadedd67b38375b87c01ca49a309b">correlationMeasureX</a> ()</td></tr>
+<tr class="separator:a3ccbadedd67b38375b87c01ca49a309b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd8085b5813bf67fe6b1892837e36736"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1backends_1_1abstract.html#aa5487584ddf960f8f4f3772be52f0b77">MeasureYResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#abd8085b5813bf67fe6b1892837e36736">correlationMeasureY</a> ()</td></tr>
+<tr class="separator:abd8085b5813bf67fe6b1892837e36736"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37ebf1244ee2853e99427d23bd64b935"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1backends_1_1abstract.html#a2442b24e047131bc0bc2ee7da6805be3">MeasureZResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a37ebf1244ee2853e99427d23bd64b935">correlationMeasureZ</a> ()</td></tr>
+<tr class="separator:a37ebf1244ee2853e99427d23bd64b935"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adad77709ab24d4665aaf001043ddabad"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1backends_1_1abstract.html#a62ea4b6babf182573968ca80708cce0d">EigenvalueResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#adad77709ab24d4665aaf001043ddabad">localMeasureX</a> ()</td></tr>
+<tr class="separator:adad77709ab24d4665aaf001043ddabad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a19e9363814eae6c1017a5f6eb48ab1"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacequisp_1_1backends_1_1abstract.html#a62ea4b6babf182573968ca80708cce0d">EigenvalueResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a7a19e9363814eae6c1017a5f6eb48ab1">localMeasureZ</a> ()</td></tr>
+<tr class="separator:a7a19e9363814eae6c1017a5f6eb48ab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab589dcf9e8b7a036f3cb0f20ed0c47a9"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html">MeasurementOutcome</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#ab589dcf9e8b7a036f3cb0f20ed0c47a9">measureDensityIndependent</a> ()</td></tr>
+<tr class="separator:ab589dcf9e8b7a036f3cb0f20ed0c47a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64a5cff10147aebafa8fab614e744e4d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a64a5cff10147aebafa8fab614e744e4d">assertEntangledPartnerValid</a> ()</td></tr>
+<tr class="separator:a64a5cff10147aebafa8fab614e744e4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0973f490c41c42ff502c623a44d0d850"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a0973f490c41c42ff502c623a44d0d850">addErrorX</a> ()</td></tr>
+<tr class="separator:a0973f490c41c42ff502c623a44d0d850"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76460a7d116a84b3b67e7b172f4cfd97"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a76460a7d116a84b3b67e7b172f4cfd97">addErrorZ</a> ()</td></tr>
+<tr class="separator:a76460a7d116a84b3b67e7b172f4cfd97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ad4f1fdd9765d1cae84ea937cbc328d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a3ad4f1fdd9765d1cae84ea937cbc328d">setCompletelyMixedDensityMatrix</a> ()</td></tr>
+<tr class="separator:a3ad4f1fdd9765d1cae84ea937cbc328d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7e26503a434c1350a817e5757f4f0e4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#ae7e26503a434c1350a817e5757f4f0e4">setEntangledPartner</a> (<a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> *const partner)</td></tr>
+<tr class="separator:ae7e26503a434c1350a817e5757f4f0e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa63bf9320f399609feab27836bf86902"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#aa63bf9320f399609feab27836bf86902">getEntangledPartner</a> () const</td></tr>
+<tr class="separator:aa63bf9320f399609feab27836bf86902"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a13fedde793b344c2515a8446f97b8135" name="a13fedde793b344c2515a8446f97b8135"></a>
@@ -190,6 +217,168 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a0973f490c41c42ff502c623a44d0d850" name="a0973f490c41c42ff502c623a44d0d850"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0973f490c41c42ff502c623a44d0d850">&#9670;&#160;</a></span>addErrorX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void quisp::backends::abstract::IQubit::addErrorX </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a1943f3425e9dc741736e8c93c23ff3b2">quisp::backends::error_tracking::ErrorTrackingQubit</a>.</p>
+
+</div>
+</div>
+<a id="a76460a7d116a84b3b67e7b172f4cfd97" name="a76460a7d116a84b3b67e7b172f4cfd97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76460a7d116a84b3b67e7b172f4cfd97">&#9670;&#160;</a></span>addErrorZ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void quisp::backends::abstract::IQubit::addErrorZ </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a6c3726e9300488b448f6a0d4af34df45">quisp::backends::error_tracking::ErrorTrackingQubit</a>.</p>
+
+</div>
+</div>
+<a id="a64a5cff10147aebafa8fab614e744e4d" name="a64a5cff10147aebafa8fab614e744e4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64a5cff10147aebafa8fab614e744e4d">&#9670;&#160;</a></span>assertEntangledPartnerValid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void quisp::backends::abstract::IQubit::assertEntangledPartnerValid </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a83bca268d3ed8fe4c9a1279905d9b2bb">quisp::backends::error_tracking::ErrorTrackingQubit</a>.</p>
+
+</div>
+</div>
+<a id="a3ccbadedd67b38375b87c01ca49a309b" name="a3ccbadedd67b38375b87c01ca49a309b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ccbadedd67b38375b87c01ca49a309b">&#9670;&#160;</a></span>correlationMeasureX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacequisp_1_1backends_1_1abstract.html#ac7c2b065649ec1612c11fa9390ce1b01">MeasureXResult</a> quisp::backends::abstract::IQubit::correlationMeasureX </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a1bdc475edc69ac5ce293102e74ebaea1">quisp::backends::error_tracking::ErrorTrackingQubit</a>.</p>
+
+</div>
+</div>
+<a id="abd8085b5813bf67fe6b1892837e36736" name="abd8085b5813bf67fe6b1892837e36736"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd8085b5813bf67fe6b1892837e36736">&#9670;&#160;</a></span>correlationMeasureY()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacequisp_1_1backends_1_1abstract.html#aa5487584ddf960f8f4f3772be52f0b77">MeasureYResult</a> quisp::backends::abstract::IQubit::correlationMeasureY </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#af0910253f74715c1b6babc41d0e87d55">quisp::backends::error_tracking::ErrorTrackingQubit</a>.</p>
+
+</div>
+</div>
+<a id="a37ebf1244ee2853e99427d23bd64b935" name="a37ebf1244ee2853e99427d23bd64b935"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37ebf1244ee2853e99427d23bd64b935">&#9670;&#160;</a></span>correlationMeasureZ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacequisp_1_1backends_1_1abstract.html#a2442b24e047131bc0bc2ee7da6805be3">MeasureZResult</a> quisp::backends::abstract::IQubit::correlationMeasureZ </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#aff0e81d7a467dbe4532ddf2d3ce53001">quisp::backends::error_tracking::ErrorTrackingQubit</a>.</p>
+
+</div>
+</div>
 <a id="a76c5295c6b153d912f61c38d6a252846" name="a76c5295c6b153d912f61c38d6a252846"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a76c5295c6b153d912f61c38d6a252846">&#9670;&#160;</a></span>gateCNOT()</h2>
 
@@ -425,6 +614,141 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aa63bf9320f399609feab27836bf86902" name="aa63bf9320f399609feab27836bf86902"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa63bf9320f399609feab27836bf86902">&#9670;&#160;</a></span>getEntangledPartner()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> *const quisp::backends::abstract::IQubit::getEntangledPartner </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a024eaf8350a7299060e688fa9e421fc6">quisp::backends::error_tracking::ErrorTrackingQubit</a>.</p>
+
+</div>
+</div>
+<a id="adb1405d50412d706a989e4e2d6398016" name="adb1405d50412d706a989e4e2d6398016"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb1405d50412d706a989e4e2d6398016">&#9670;&#160;</a></span>getId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual const <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html">IQubitId</a> *const quisp::backends::abstract::IQubit::getId </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#ad8bc6c157bc1c7f1bd4dbe36a63ad8ab">quisp::backends::error_tracking::ErrorTrackingQubit</a>.</p>
+
+</div>
+</div>
+<a id="adad77709ab24d4665aaf001043ddabad" name="adad77709ab24d4665aaf001043ddabad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adad77709ab24d4665aaf001043ddabad">&#9670;&#160;</a></span>localMeasureX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacequisp_1_1backends_1_1abstract.html#a62ea4b6babf182573968ca80708cce0d">EigenvalueResult</a> quisp::backends::abstract::IQubit::localMeasureX </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a8ce6248e8e3cfb84353a97af54fc3ec3">quisp::backends::error_tracking::ErrorTrackingQubit</a>.</p>
+
+</div>
+</div>
+<a id="a7a19e9363814eae6c1017a5f6eb48ab1" name="a7a19e9363814eae6c1017a5f6eb48ab1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a19e9363814eae6c1017a5f6eb48ab1">&#9670;&#160;</a></span>localMeasureZ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacequisp_1_1backends_1_1abstract.html#a62ea4b6babf182573968ca80708cce0d">EigenvalueResult</a> quisp::backends::abstract::IQubit::localMeasureZ </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a5bc79f5833d5b342856a309519c02fd2">quisp::backends::error_tracking::ErrorTrackingQubit</a>.</p>
+
+</div>
+</div>
+<a id="ab589dcf9e8b7a036f3cb0f20ed0c47a9" name="ab589dcf9e8b7a036f3cb0f20ed0c47a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab589dcf9e8b7a036f3cb0f20ed0c47a9">&#9670;&#160;</a></span>measureDensityIndependent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html">MeasurementOutcome</a> quisp::backends::abstract::IQubit::measureDensityIndependent </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#af420fc09f855f08711c334f64d1e96f4">quisp::backends::error_tracking::ErrorTrackingQubit</a>.</p>
+
+</div>
+</div>
 <a id="a1c356f4505f2379666f1d490cdacf85b" name="a1c356f4505f2379666f1d490cdacf85b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1c356f4505f2379666f1d490cdacf85b">&#9670;&#160;</a></span>purifyX()</h2>
 
@@ -478,6 +802,61 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Reimplemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a1ea8e90bc61f1494d587c688ebdcbebb">quisp::backends::error_tracking::ErrorTrackingQubit</a>.</p>
+
+</div>
+</div>
+<a id="a3ad4f1fdd9765d1cae84ea937cbc328d" name="a3ad4f1fdd9765d1cae84ea937cbc328d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ad4f1fdd9765d1cae84ea937cbc328d">&#9670;&#160;</a></span>setCompletelyMixedDensityMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void quisp::backends::abstract::IQubit::setCompletelyMixedDensityMatrix </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#ac215dae8931c6e9e3c20efe883775253">quisp::backends::error_tracking::ErrorTrackingQubit</a>.</p>
+
+</div>
+</div>
+<a id="ae7e26503a434c1350a817e5757f4f0e4" name="ae7e26503a434c1350a817e5757f4f0e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7e26503a434c1350a817e5757f4f0e4">&#9670;&#160;</a></span>setEntangledPartner()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void quisp::backends::abstract::IQubit::setEntangledPartner </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> *const&#160;</td>
+          <td class="paramname"><em>partner</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a58c0f832d1ca390cbba92ab913b26178">quisp::backends::error_tracking::ErrorTrackingQubit</a>.</p>
 
 </div>
 </div>

@@ -1,9 +1,11 @@
 var namespacequisp_1_1backends_1_1abstract =
 [
+    [ "IConfiguration", "classquisp_1_1backends_1_1abstract_1_1_i_configuration.html", "classquisp_1_1backends_1_1abstract_1_1_i_configuration" ],
     [ "IQuantumBackend", "classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html", "classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend" ],
     [ "IQubit", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html", "classquisp_1_1backends_1_1abstract_1_1_i_qubit" ],
     [ "IQubitId", "classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html", "classquisp_1_1backends_1_1abstract_1_1_i_qubit_id" ],
     [ "IRandomNumberGenerator", "classquisp_1_1backends_1_1abstract_1_1_i_random_number_generator.html", "classquisp_1_1backends_1_1abstract_1_1_i_random_number_generator" ],
+    [ "MeasurementOutcome", "structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html", "structquisp_1_1backends_1_1abstract_1_1_measurement_outcome" ],
     [ "EigenvalueResult", "namespacequisp_1_1backends_1_1abstract.html#a62ea4b6babf182573968ca80708cce0d", [
       [ "PLUS_ONE", "namespacequisp_1_1backends_1_1abstract.html#a62ea4b6babf182573968ca80708cce0da9c0ed0366bbc920f92606585259a1664", null ],
       [ "MINUS_ONE", "namespacequisp_1_1backends_1_1abstract.html#a62ea4b6babf182573968ca80708cce0da25725c81fc4f00fa5b881c17af6a2a3e", null ]

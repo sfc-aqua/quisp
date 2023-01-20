@@ -117,8 +117,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7b33ba92fb50cfccac330bf93c1bba77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4ce2538208336b63c7251fd11016b53"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#aa4ce2538208336b63c7251fd11016b53">~IQuantumBackend</a> ()</td></tr>
 <tr class="separator:aa4ce2538208336b63c7251fd11016b53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af10bb05ffe7bd664d857935f2961ae07"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#af10bb05ffe7bd664d857935f2961ae07">createQubit</a> (const <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html">IQubitId</a> *id, std::unique_ptr&lt; <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_configuration.html">IConfiguration</a> &gt; conf)=0</td></tr>
+<tr class="separator:af10bb05ffe7bd664d857935f2961ae07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4daa60338233721c756d2711f3526f0"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#ae4daa60338233721c756d2711f3526f0">createQubit</a> (const <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html">IQubitId</a> *id)=0</td></tr>
+<tr class="separator:ae4daa60338233721c756d2711f3526f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50b5d598727b6d8f87f52364e12d031e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#a50b5d598727b6d8f87f52364e12d031e">getQubit</a> (const <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html">IQubitId</a> *id)=0</td></tr>
 <tr class="separator:a50b5d598727b6d8f87f52364e12d031e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab065a548f26778b3ac46d2069690f061"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#ab065a548f26778b3ac46d2069690f061">deleteQubit</a> (const <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html">IQubitId</a> *id)=0</td></tr>
+<tr class="separator:ab065a548f26778b3ac46d2069690f061"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab76ded5bfd32a0743f570af4fc70196f"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_configuration.html">IConfiguration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#ab76ded5bfd32a0743f570af4fc70196f">getDefaultConfiguration</a> () const =0</td></tr>
+<tr class="separator:ab76ded5bfd32a0743f570af4fc70196f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae865db84f76bcb791ca81c6f4ced09fe"><td class="memItemLeft" align="right" valign="top">virtual const SimTime &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#ae865db84f76bcb791ca81c6f4ced09fe">getSimTime</a> ()=0</td></tr>
 <tr class="separator:ae865db84f76bcb791ca81c6f4ced09fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a1850fb61664bafd92774ca53bdaa13"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#a9a1850fb61664bafd92774ca53bdaa13">setSimTime</a> (SimTime time)=0</td></tr>
@@ -179,6 +187,127 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ae4daa60338233721c756d2711f3526f0" name="ae4daa60338233721c756d2711f3526f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4daa60338233721c756d2711f3526f0">&#9670;&#160;</a></span>createQubit() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> * quisp::backends::abstract::IQuantumBackend::createQubit </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html">IQubitId</a> *&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html#a57c6c4860b23752c5781add705d24665">quisp::backends::error_tracking::ErrorTrackingBackend</a>.</p>
+
+</div>
+</div>
+<a id="af10bb05ffe7bd664d857935f2961ae07" name="af10bb05ffe7bd664d857935f2961ae07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af10bb05ffe7bd664d857935f2961ae07">&#9670;&#160;</a></span>createQubit() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> * quisp::backends::abstract::IQuantumBackend::createQubit </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html">IQubitId</a> *&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_configuration.html">IConfiguration</a> &gt;&#160;</td>
+          <td class="paramname"><em>conf</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html#a2a7436653f4236cb7e36f1e49c507a37">quisp::backends::error_tracking::ErrorTrackingBackend</a>.</p>
+
+</div>
+</div>
+<a id="ab065a548f26778b3ac46d2069690f061" name="ab065a548f26778b3ac46d2069690f061"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab065a548f26778b3ac46d2069690f061">&#9670;&#160;</a></span>deleteQubit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void quisp::backends::abstract::IQuantumBackend::deleteQubit </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html">IQubitId</a> *&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html#a15fa7d909f3157367be616627b7052ea">quisp::backends::error_tracking::ErrorTrackingBackend</a>.</p>
+
+</div>
+</div>
+<a id="ab76ded5bfd32a0743f570af4fc70196f" name="ab76ded5bfd32a0743f570af4fc70196f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab76ded5bfd32a0743f570af4fc70196f">&#9670;&#160;</a></span>getDefaultConfiguration()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::unique_ptr&lt; <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_configuration.html">IConfiguration</a> &gt; quisp::backends::abstract::IQuantumBackend::getDefaultConfiguration </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html#aeaafcb35c64acfa2feee37a85487906b">quisp::backends::error_tracking::ErrorTrackingBackend</a>.</p>
+
+</div>
+</div>
 <a id="a50b5d598727b6d8f87f52364e12d031e" name="a50b5d598727b6d8f87f52364e12d031e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a50b5d598727b6d8f87f52364e12d031e">&#9670;&#160;</a></span>getQubit()</h2>
 
@@ -203,7 +332,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html#a59412b4f0dccba53b51291c539203906">quisp::backends::error_tracking::ErrorTrackingBackend</a>.</p>
+<p>Implemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html#afee9b2d748e5e887f38db6fbe3134c5f">quisp::backends::error_tracking::ErrorTrackingBackend</a>.</p>
 
 </div>
 </div>
@@ -230,7 +359,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html#aade370c5f7a6dd3b0300ba8abcc70b4c">quisp::backends::error_tracking::ErrorTrackingBackend</a>.</p>
+<p>Implemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html#a282fedea811ef22ffb65d8bd03ccc3e9">quisp::backends::error_tracking::ErrorTrackingBackend</a>.</p>
 
 </div>
 </div>
@@ -258,7 +387,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html#af674a82e0965129bf62f6da31c9d383b">quisp::backends::error_tracking::ErrorTrackingBackend</a>.</p>
+<p>Implemented in <a class="el" href="classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html#a1e00ee471dd629b416baa995fb52ae98">quisp::backends::error_tracking::ErrorTrackingBackend</a>.</p>
 
 </div>
 </div>

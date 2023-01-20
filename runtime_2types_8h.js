@@ -6,7 +6,7 @@ var runtime_2types_8h =
     [ "quisp::runtime::MemoryKey", "structquisp_1_1runtime_1_1_memory_key.html", "structquisp_1_1runtime_1_1_memory_key" ],
     [ "IQubitRecord", "runtime_2types_8h.html#a953019cdd6e768eeff1c6c1f68d92d0a", null ],
     [ "LabelMap", "runtime_2types_8h.html#a20aebb1c7bbd99c0cf78fdb160163483", null ],
-    [ "MeasurementOutcome", "runtime_2types_8h.html#a99961f4721459be67a581ea6cd04a44a", null ],
+    [ "MeasurementOutcome", "runtime_2types_8h.html#ae7425dfd46aad2a6c02ca61ae0140cf4", null ],
     [ "None", "runtime_2types_8h.html#ab81d221407ab14480e6661777f8f23bd", null ],
     [ "PurType", "runtime_2types_8h.html#ac32d2f170825dfbdf51cafc838b4666d", null ],
     [ "RuleId", "runtime_2types_8h.html#a07053e5e0fc67af04aa6620794d4fe5a", null ],

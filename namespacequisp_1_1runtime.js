@@ -18,7 +18,7 @@ var namespacequisp_1_1runtime =
     [ "InstructionTypes", "namespacequisp_1_1runtime.html#a3ca0235adcdf503333f54cc7b2a98ef1", null ],
     [ "IQubitRecord", "namespacequisp_1_1runtime.html#a953019cdd6e768eeff1c6c1f68d92d0a", null ],
     [ "LabelMap", "namespacequisp_1_1runtime.html#a20aebb1c7bbd99c0cf78fdb160163483", null ],
-    [ "MeasurementOutcome", "namespacequisp_1_1runtime.html#a99961f4721459be67a581ea6cd04a44a", null ],
+    [ "MeasurementOutcome", "namespacequisp_1_1runtime.html#ae7425dfd46aad2a6c02ca61ae0140cf4", null ],
     [ "Memory", "namespacequisp_1_1runtime.html#a83426325f358c6d138f0f6adabbba45b", null ],
     [ "None", "namespacequisp_1_1runtime.html#ab81d221407ab14480e6661777f8f23bd", null ],
     [ "PurType", "namespacequisp_1_1runtime.html#ac32d2f170825dfbdf51cafc838b4666d", null ],

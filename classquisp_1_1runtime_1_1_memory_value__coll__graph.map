@@ -1,5 +1,5 @@
 <map id="quisp::runtime::MemoryValue" name="quisp::runtime::MemoryValue">
-<area shape="rect" id="node1" title="memory value" alt="" coords="9,196,195,221"/>
-<area shape="rect" id="node2" href="$unionquisp_1_1runtime_1_1_value_union.html" title="actual memory value that can hold multiple types of values." alt="" coords="15,108,189,133"/>
-<area shape="rect" id="node3" href="$structquisp_1_1modules_1_1measurement__outcome.html" title=" " alt="" coords="5,5,199,45"/>
+<area shape="rect" id="node1" title="memory value" alt="" coords="5,196,192,221"/>
+<area shape="rect" id="node2" href="$unionquisp_1_1runtime_1_1_value_union.html" title="actual memory value that can hold multiple types of values." alt="" coords="11,108,186,133"/>
+<area shape="rect" id="node3" href="$structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html" title=" " alt="" coords="15,5,183,45"/>
 </map>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['labelmap_0',['LabelMap',['../namespacequisp_1_1runtime.html#a20aebb1c7bbd99c0cf78fdb160163483',1,'quisp::runtime']]],
-  ['linkcostmap_1',['LinkCostMap',['../namespacequisp_1_1modules.html#af3ccf887db6fb13ad8cb3dd947247a4b',1,'quisp::modules']]]
+  ['measurementoutcome_0',['MeasurementOutcome',['../namespacequisp_1_1runtime.html#ae7425dfd46aad2a6c02ca61ae0140cf4',1,'quisp::runtime']]],
+  ['memory_1',['Memory',['../namespacequisp_1_1runtime.html#a83426325f358c6d138f0f6adabbba45b',1,'quisp::runtime']]]
 ];

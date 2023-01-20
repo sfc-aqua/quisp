@@ -2,6 +2,12 @@ var classquisp_1_1backends_1_1abstract_1_1_i_qubit =
 [
     [ "IQubit", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a13fedde793b344c2515a8446f97b8135", null ],
     [ "~IQubit", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a726ac8a635057faacfce1b55a1a02409", null ],
+    [ "addErrorX", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a0973f490c41c42ff502c623a44d0d850", null ],
+    [ "addErrorZ", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a76460a7d116a84b3b67e7b172f4cfd97", null ],
+    [ "assertEntangledPartnerValid", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a64a5cff10147aebafa8fab614e744e4d", null ],
+    [ "correlationMeasureX", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a3ccbadedd67b38375b87c01ca49a309b", null ],
+    [ "correlationMeasureY", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#abd8085b5813bf67fe6b1892837e36736", null ],
+    [ "correlationMeasureZ", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a37ebf1244ee2853e99427d23bd64b935", null ],
     [ "gateCNOT", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a76c5295c6b153d912f61c38d6a252846", null ],
     [ "gateCZ", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#adb309eb9fcf8805d4e1c6c4963ad04b8", null ],
     [ "gateH", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#ad43c49dbc987691562cb5b95020d967b", null ],
@@ -11,7 +17,14 @@ var classquisp_1_1backends_1_1abstract_1_1_i_qubit =
     [ "gateX", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#aaa3069cb6b040490c23ce067f3723310", null ],
     [ "gateY", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a57adf76060c41efd439fe106566776a8", null ],
     [ "gateZ", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#ad0a6a192a46338821710931b37ff1140", null ],
+    [ "getEntangledPartner", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#aa63bf9320f399609feab27836bf86902", null ],
+    [ "getId", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#adb1405d50412d706a989e4e2d6398016", null ],
+    [ "localMeasureX", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#adad77709ab24d4665aaf001043ddabad", null ],
+    [ "localMeasureZ", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a7a19e9363814eae6c1017a5f6eb48ab1", null ],
+    [ "measureDensityIndependent", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#ab589dcf9e8b7a036f3cb0f20ed0c47a9", null ],
     [ "purifyX", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a1c356f4505f2379666f1d490cdacf85b", null ],
     [ "purifyZ", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a3ddbc4f87d897e9b24908656c7c95b95", null ],
+    [ "setCompletelyMixedDensityMatrix", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a3ad4f1fdd9765d1cae84ea937cbc328d", null ],
+    [ "setEntangledPartner", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#ae7e26503a434c1350a817e5757f4f0e4", null ],
     [ "setFree", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a8810cf3cdcd3e9e59d831fd11705f0af", null ]
 ];

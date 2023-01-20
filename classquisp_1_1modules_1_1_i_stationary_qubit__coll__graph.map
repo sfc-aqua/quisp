@@ -1,10 +1,4 @@
 <map id="quisp::modules::IStationaryQubit" name="quisp::modules::IStationaryQubit">
-<area shape="rect" id="node1" title=" " alt="" coords="400,190,576,230"/>
-<area shape="rect" id="node2" title=" " alt="" coords="19,5,185,31"/>
-<area shape="rect" id="node3" href="$structquisp_1_1modules_1_1_god_error_state.html" title=" " alt="" coords="19,55,185,95"/>
-<area shape="rect" id="node4" title=" " alt="" coords="63,123,141,148"/>
-<area shape="rect" id="node5" href="$structquisp_1_1modules_1_1_single_gate_error_model.html" title=" " alt="" coords="13,173,191,213"/>
-<area shape="rect" id="node6" href="$structquisp_1_1modules_1_1_two_qubit_gate_error_model.html" title=" " alt="" coords="17,237,187,277"/>
-<area shape="rect" id="node7" href="$structquisp_1_1modules_1_1_measurement_error_model.html" title=" " alt="" coords="5,301,199,341"/>
-<area shape="rect" id="node8" title=" " alt="" coords="63,365,141,391"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,79,181,119"/>
+<area shape="rect" id="node2" title=" " alt="" coords="10,5,177,31"/>
 </map>
