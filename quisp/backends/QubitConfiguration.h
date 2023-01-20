@@ -1,14 +1,14 @@
 #pragma once
 
-#include "../interfaces/IConfiguration.h"
-namespace quisp::backends::graph_state {
+#include "interfaces/IConfiguration.h"
+namespace quisp::backends {
 /**
 @brief Configuration class contains all parameters and provides the way to retrieve it
 */
-class GraphStateConfiguration : public abstract::IConfiguration {
+class StationaryQubitConfiguration : public abstract::IConfiguration {
  public:
-  GraphStateConfiguration() {}
-  ~GraphStateConfiguration() {}
+  StationaryQubitConfiguration() {}
+  ~StationaryQubitConfiguration() {}
 
   // list up all params
   double memory_x_err_rate = 0;
@@ -50,4 +50,4 @@ class GraphStateConfiguration : public abstract::IConfiguration {
 
  protected:
 };
-}  // namespace quisp::backends::graph_state
+}  // namespace quisp::backends

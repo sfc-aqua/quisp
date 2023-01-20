@@ -8,9 +8,8 @@ namespace {
 using namespace quisp_test;
 using OriginalBackendContainer = quisp::modules::backend::BackendContainer;
 using quisp::modules::backend::ErrorTrackingBackend;
-using quisp::modules::backend::ErrorTrackingConfiguration;
+using quisp::modules::backend::StationaryQubitConfiguration;
 using quisp::modules::backend::GraphStateBackend;
-using quisp::modules::backend::GraphStateConfiguration;
 
 class BackendContainer : public OriginalBackendContainer {
  public:
@@ -112,7 +111,7 @@ TEST_F(BackendContainerTest, getEtBackendConfiguration) {
 
   auto conf = et_backend->getDefaultConfiguration();
   ASSERT_NE(conf, nullptr);
-  auto et_conf = dynamic_cast<ErrorTrackingConfiguration *>(conf.get());
+  auto et_conf = dynamic_cast<StationaryQubitConfiguration *>(conf.get());
   ASSERT_NE(et_conf, nullptr);
 }
 
@@ -125,10 +124,10 @@ TEST_F(BackendContainerTest, getCopyOfEtBackendConfiguration) {
   auto *et_backend = dynamic_cast<ErrorTrackingBackend *>(b);
 
   auto conf = et_backend->getDefaultConfiguration();
-  auto et_conf = dynamic_cast<ErrorTrackingConfiguration *>(conf.get());
+  auto et_conf = dynamic_cast<StationaryQubitConfiguration *>(conf.get());
 
   auto conf2 = et_backend->getDefaultConfiguration();
-  auto et_conf2 = dynamic_cast<ErrorTrackingConfiguration *>(conf2.get());
+  auto et_conf2 = dynamic_cast<StationaryQubitConfiguration *>(conf2.get());
 
   // confirm et_conf and et_conf2 are different intstances
   et_conf->cnot_gate_err_rate = 10;
@@ -162,7 +161,7 @@ TEST_F(BackendContainerTest, getGssBackendConfiguration) {
 
   auto conf = gss_backend->getDefaultConfiguration();
   ASSERT_NE(conf, nullptr);
-  auto gss_conf = dynamic_cast<GraphStateConfiguration *>(conf.get());
+  auto gss_conf = dynamic_cast<StationaryQubitConfiguration *>(conf.get());
   ASSERT_NE(gss_conf, nullptr);
 }
 
@@ -175,10 +174,10 @@ TEST_F(BackendContainerTest, getCopyOfGssBackendConfiguration) {
   auto *gss_backend = dynamic_cast<GraphStateBackend *>(b);
 
   auto conf = gss_backend->getDefaultConfiguration();
-  auto gss_conf = dynamic_cast<GraphStateConfiguration *>(conf.get());
+  auto gss_conf = dynamic_cast<StationaryQubitConfiguration *>(conf.get());
 
   auto conf2 = gss_backend->getDefaultConfiguration();
-  auto gss_conf2 = dynamic_cast<GraphStateConfiguration *>(conf2.get());
+  auto gss_conf2 = dynamic_cast<StationaryQubitConfiguration *>(conf2.get());
 
   // confirm gss_conf and gss_conf2 are different intstances
   gss_conf->cnot_gate_err_rate = 10;

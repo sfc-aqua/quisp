@@ -3,7 +3,6 @@
 #include <omnetpp.h>
 #include <stdexcept>
 #include "Backend.h"
-#include "Configuration.h"
 #include "Qubit.h"
 #include "backends/interfaces/IConfiguration.h"
 #include "test.h"
@@ -26,7 +25,7 @@ class TestGsQubit : public GraphStateQubit {
 class GsBackend : public GraphStateBackend {
  public:
   using GraphStateBackend::qubits;
-  GsBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateConfiguration> config) : GraphStateBackend(std::move(rng), std::move(config)) {}
+  GsBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<StationaryQubitConfiguration> config) : GraphStateBackend(std::move(rng), std::move(config)) {}
 };
 
 class GsBackendTest : public ::testing::Test {
@@ -34,7 +33,7 @@ class GsBackendTest : public ::testing::Test {
   virtual void SetUp() {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
-    backend = std::make_unique<GsBackend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateConfiguration>());
+    backend = std::make_unique<GsBackend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<StationaryQubitConfiguration>());
   }
   TestRNG* rng;
   std::unique_ptr<GsBackend> backend;
@@ -80,7 +79,7 @@ TEST_F(GsBackendTest, createQubitWithInvalidConfiguration) {
 }
 
 TEST_F(GsBackendTest, getQubitWithConfiguration) {
-  auto conf = new GraphStateConfiguration;
+  auto conf = new StationaryQubitConfiguration;
   conf->cnot_gate_err_rate = 0.75;
   conf->cnot_gate_ix_err_ratio = 0.75 / 9.;
   conf->cnot_gate_xi_err_ratio = 0.75 / 9.;
@@ -112,7 +111,7 @@ TEST_F(GsBackendTest, getQubitWithConfiguration) {
   conf->memory_relaxation_rate = 0.29;
   conf->memory_excitation_rate = 0.30;
 
-  auto conf2 = std::make_unique<GraphStateConfiguration>(*conf);
+  auto conf2 = std::make_unique<StationaryQubitConfiguration>(*conf);
 
   auto* id = new QubitId(123);
   EXPECT_EQ(backend->qubits.size(), 0);

@@ -6,7 +6,6 @@
 #include "../interfaces/IQubitId.h"
 #include "../interfaces/IRandomNumberGenerator.h"
 #include "Backend.h"
-#include "Configuration.h"
 #include "Qubit.h"
 #include "omnetpp/simtime.h"
 
@@ -18,7 +17,7 @@ using omnetpp::SimTime;
 using ::quisp::backends::abstract::IQubit;
 using ::quisp::backends::abstract::IQubitId;
 using ::quisp::backends::graph_state::GraphStateBackend;
-using ::quisp::backends::graph_state::GraphStateConfiguration;
+using ::quisp::backends::StationaryQubitConfiguration;
 using ::quisp::backends::graph_state::GraphStateQubit;
 using namespace ::quisp::backends;
 using namespace ::quisp::backends::abstract;
@@ -151,7 +150,7 @@ class Qubit : public GraphStateQubit {
 class Backend : public GraphStateBackend {
  public:
   using GraphStateBackend::qubits;
-  Backend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateConfiguration> config) : GraphStateBackend(std::move(rng), std::move(config)) {}
+  Backend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<StationaryQubitConfiguration> config) : GraphStateBackend(std::move(rng), std::move(config)) {}
   IQubit* createQubit(int id) { return this->createQubitInternal(new QubitId(id)); }
   IQubit* getQubit(int id) { return this->getQubitInternal(new QubitId(id)); }
   IQubit* createQubitInternal(const IQubitId* id) {

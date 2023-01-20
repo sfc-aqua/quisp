@@ -18,7 +18,7 @@ class GsQubitInternalGraphTest : public ::testing::Test {
   void SetUp() {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
-    backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateConfiguration>());
+    backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<StationaryQubitConfiguration>());
     qubit = dynamic_cast<Qubit*>(backend->createQubit(1));
     another_qubit = dynamic_cast<Qubit*>(backend->createQubit(2));
     shared_neighbor = dynamic_cast<Qubit*>(backend->createQubit(3));

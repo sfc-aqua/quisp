@@ -3,8 +3,8 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include "../interfaces/IQuantumBackend.h"
 #include "../interfaces/IQubit.h"
-#include "Configuration.h"
 #include "Eigen/src/Core/Matrix.h"
+#include "backends/QubitConfiguration.h"
 #include "backends/interfaces/IQubitId.h"
 #include "omnetpp/simtime.h"
 #include "types.h"
@@ -34,7 +34,7 @@ class GraphStateQubit : public IQubit {
  public:
   GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend);
   ~GraphStateQubit();
-  void configure(std::unique_ptr<GraphStateConfiguration> configuration);
+  void configure(std::unique_ptr<StationaryQubitConfiguration> configuration);
   void setFree() override;
   // The name of these functions might be misleading; these are used in bsa, will be renamed and modifed in the future
   void setCompletelyMixedDensityMatrix() override;

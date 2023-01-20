@@ -1,16 +1,16 @@
 #include "Backend.h"
 #include "Qubit.h"
-#include "backends/ErrorTracking/Configuration.h"
+#include "backends/QubitConfiguration.h"
 #include "backends/interfaces/IConfiguration.h"
 
 namespace quisp::backends::error_tracking {
 using error_tracking::ErrorTrackingQubit;
 
-ErrorTrackingBackend::ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<ErrorTrackingConfiguration> configuration)
+ErrorTrackingBackend::ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<StationaryQubitConfiguration> configuration)
     : current_time(SimTime()), rng(std::move(rng)) {
   config = std::move(configuration);
 }
-ErrorTrackingBackend::ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<ErrorTrackingConfiguration> configuration, ICallback* cb)
+ErrorTrackingBackend::ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<StationaryQubitConfiguration> configuration, ICallback* cb)
     : ErrorTrackingBackend(std::move(rng), std::move(configuration)) {
   callback = cb;
 }
@@ -37,14 +37,14 @@ IQubit* ErrorTrackingBackend::createQubit(const IQubitId* id, std::unique_ptr<IC
   auto original_qubit = std::make_unique<ErrorTrackingQubit>(id, this);
 
   IConfiguration* raw_conf = conf.release();
-  ErrorTrackingConfiguration* et_conf = dynamic_cast<ErrorTrackingConfiguration*>(raw_conf);
+  StationaryQubitConfiguration* et_conf = dynamic_cast<StationaryQubitConfiguration*>(raw_conf);
 
   if (et_conf == nullptr) {
     delete raw_conf;
     throw std::runtime_error("ErrorTrackingBackend::getQubit: failed to cast. got invalid configulation.");
   }
 
-  original_qubit->configure(std::unique_ptr<ErrorTrackingConfiguration>(et_conf));
+  original_qubit->configure(std::unique_ptr<StationaryQubitConfiguration>(et_conf));
   auto* qubit_ptr = original_qubit.get();
   qubits.insert({id, std::move(original_qubit)});
   return qubit_ptr;
@@ -62,7 +62,7 @@ void ErrorTrackingBackend::deleteQubit(const IQubitId* id) {
 
 std::unique_ptr<IConfiguration> ErrorTrackingBackend::getDefaultConfiguration() const {
   // copy the default backend configuration for each qubit
-  return std::make_unique<ErrorTrackingConfiguration>(*config.get());
+  return std::make_unique<StationaryQubitConfiguration>(*config.get());
 }
 const SimTime& ErrorTrackingBackend::getSimTime() {
   if (callback != nullptr) callback->willUpdate(*this);

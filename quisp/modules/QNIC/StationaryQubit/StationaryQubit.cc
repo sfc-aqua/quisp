@@ -69,7 +69,7 @@ void StationaryQubit::initialize() {
 std::unique_ptr<IConfiguration> StationaryQubit::prepareBackendQubitConfiguration(bool overwrite) {
   auto conf = backend->getDefaultConfiguration();
   if (!overwrite) return conf;
-  if (auto et_conf = dynamic_cast<backend::ErrorTrackingConfiguration *>(conf.get())) {
+  if (auto et_conf = dynamic_cast<backend::StationaryQubitConfiguration *>(conf.get())) {
     et_conf->measurement_x_err_rate = par("x_measurement_error_rate").doubleValue();
     et_conf->measurement_y_err_rate = par("y_measurement_error_rate").doubleValue();
     et_conf->measurement_z_err_rate = par("z_measurement_error_rate").doubleValue();

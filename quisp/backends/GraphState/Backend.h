@@ -6,8 +6,8 @@
 #include "../interfaces/IQuantumBackend.h"
 #include "../interfaces/IQubit.h"
 #include "../interfaces/IRandomNumberGenerator.h"
-#include "Configuration.h"
 #include "Qubit.h"
+#include "backends/QubitConfiguration.h"
 
 namespace quisp::backends::graph_state {
 using abstract::IConfiguration;
@@ -25,8 +25,8 @@ class GraphStateBackend : public IQuantumBackend {
     virtual ~ICallback() {}
     virtual void willUpdate(GraphStateBackend& backend) = 0;
   };
-  GraphStateBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateConfiguration> configuration);
-  GraphStateBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateConfiguration> configuration, ICallback* callback);
+  GraphStateBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<StationaryQubitConfiguration> configuration);
+  GraphStateBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<StationaryQubitConfiguration> configuration, ICallback* callback);
   ~GraphStateBackend();
   IQubit* createQubit(const IQubitId* id, std::unique_ptr<IConfiguration> conf) override;
   IQubit* createQubit(const IQubitId* id) override;
@@ -41,7 +41,7 @@ class GraphStateBackend : public IQuantumBackend {
   std::unordered_map<const IQubitId*, std::unique_ptr<GraphStateQubit>, IQubitId::Hash, IQubitId::Pred> qubits;
   SimTime current_time;
   const std::unique_ptr<IRandomNumberGenerator> rng;
-  std::unique_ptr<GraphStateConfiguration> config;
+  std::unique_ptr<StationaryQubitConfiguration> config;
   ICallback* callback = nullptr;
 };
 }  // namespace quisp::backends::graph_state

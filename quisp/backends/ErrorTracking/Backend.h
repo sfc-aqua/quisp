@@ -7,8 +7,8 @@
 #include "../interfaces/IQuantumBackend.h"
 #include "../interfaces/IQubitId.h"
 #include "../interfaces/IRandomNumberGenerator.h"
-#include "Configuration.h"
 #include "Qubit.h"
+#include "backends/QubitConfiguration.h"
 
 namespace quisp::backends::error_tracking {
 using abstract::IConfiguration;
@@ -26,8 +26,8 @@ class ErrorTrackingBackend : public IQuantumBackend {
     virtual ~ICallback() {}
     virtual void willUpdate(ErrorTrackingBackend& backend) = 0;
   };
-  ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<ErrorTrackingConfiguration> configuration);
-  ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<ErrorTrackingConfiguration> configuration, ICallback* callback);
+  ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<StationaryQubitConfiguration> configuration);
+  ErrorTrackingBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<StationaryQubitConfiguration> configuration, ICallback* callback);
   ~ErrorTrackingBackend();
   IQubit* createQubit(const IQubitId* id, std::unique_ptr<IConfiguration> conf) override;
   IQubit* createQubit(const IQubitId* id) override;
@@ -42,7 +42,7 @@ class ErrorTrackingBackend : public IQuantumBackend {
   std::unordered_map<const IQubitId*, std::unique_ptr<ErrorTrackingQubit>, IQubitId::Hash, IQubitId::Pred> qubits;
   SimTime current_time;
   const std::unique_ptr<IRandomNumberGenerator> rng;
-  std::unique_ptr<ErrorTrackingConfiguration> config;
+  std::unique_ptr<StationaryQubitConfiguration> config;
   ICallback* callback = nullptr;
 };
 

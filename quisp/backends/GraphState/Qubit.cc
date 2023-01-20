@@ -12,7 +12,7 @@ GraphStateQubit::GraphStateQubit(const IQubitId *id, GraphStateBackend *const ba
 
 GraphStateQubit::~GraphStateQubit() {}
 
-void GraphStateQubit::configure(std::unique_ptr<GraphStateConfiguration> c) {
+void GraphStateQubit::configure(std::unique_ptr<StationaryQubitConfiguration> c) {
   setMemoryErrorRates(c->memory_x_err_rate, c->memory_y_err_rate, c->memory_z_err_rate, c->memory_excitation_rate, c->memory_relaxation_rate);
   measurement_err.setParams(c->measurement_x_err_rate, c->measurement_y_err_rate, c->measurement_z_err_rate);
   gate_err_h.setParams(c->h_gate_x_err_ratio, c->h_gate_y_err_ratio, c->h_gate_z_err_ratio, c->h_gate_err_rate);
