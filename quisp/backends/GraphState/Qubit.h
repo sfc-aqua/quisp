@@ -54,6 +54,10 @@ class GraphStateQubit : public IQubit {
   bool purifyZ(IQubit *const target_qubit) override;
   MeasurementOutcome measureDensityIndependent() override;
 
+  void assertEntangledPartnerValid() override;
+  void addErrorX() override;
+  void addErrorZ() override;
+
  protected:
   // error simulation
   void setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate);

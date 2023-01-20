@@ -166,7 +166,7 @@ void GraphStateQubit::applyMemoryError() {
       throw std::runtime_error("Transition matrix is NaN. This is Eigen's fault.");
     }
 
-    MatrixXd pi_vector;
+    MatrixXd pi_vector(1, 6);
     if (pi_vector_completely_mixed)
       pi_vector << 0, (double)1 / (double)3, (double)1 / (double)3, (double)1 / (double)3, 0, 0;
     else
@@ -443,6 +443,10 @@ EigenvalueResult GraphStateQubit::localMeasureZ() {
   }
   return result;
 }
+
+[[deprecated]] void GraphStateQubit::assertEntangledPartnerValid() {}
+[[deprecated]] void GraphStateQubit::addErrorX() { this->gateX(); }
+[[deprecated]] void GraphStateQubit::addErrorZ() { this->gateZ(); }
 
 [[deprecated]] bool GraphStateQubit::purifyX(IQubit *const control_qubit) {
   this->gateCNOT(control_qubit);
