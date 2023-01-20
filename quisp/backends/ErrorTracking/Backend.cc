@@ -1,7 +1,4 @@
 #include "Backend.h"
-#include <cstddef>
-#include <memory>
-#include <stdexcept>
 #include "Qubit.h"
 #include "backends/ErrorTracking/Configuration.h"
 #include "backends/interfaces/IConfiguration.h"
@@ -24,11 +21,18 @@ ErrorTrackingBackend::~ErrorTrackingBackend() {
   }
 }
 
-IQubit* ErrorTrackingBackend::getQubit(const IQubitId* id, std::unique_ptr<IConfiguration> conf) {
+IQubit* ErrorTrackingBackend::getQubit(const IQubitId* id) {
   auto qubit = qubits.find(id);
 
   if (qubit != qubits.cend()) {
     return qubit->second.get();
+  }
+  throw std::runtime_error("ErrorTrackingBackend::getQubit: trying to get qubit with nonexisted Id.");
+}
+
+IQubit* ErrorTrackingBackend::createQubit(const IQubitId* id, std::unique_ptr<IConfiguration> conf) {
+  if (qubits.find(id) != qubits.cend()) {
+    throw std::runtime_error("ErrorTrackingBackend::createQubit: trying to create qubit with already existing Id.");
   }
   auto original_qubit = std::make_unique<ErrorTrackingQubit>(id, this);
 
@@ -46,7 +50,18 @@ IQubit* ErrorTrackingBackend::getQubit(const IQubitId* id, std::unique_ptr<IConf
   return qubit_ptr;
 }
 
-IQubit* ErrorTrackingBackend::getQubit(const IQubitId* id) { return getQubit(id, getDefaultConfiguration()); }
+IQubit* ErrorTrackingBackend::createQubit(const IQubitId* id) {
+  return createQubit(id, std::move(getDefaultConfiguration()));
+}
+
+void ErrorTrackingBackend::deleteQubit(const IQubitId* id) {
+  auto qubit_iterator = qubits.find(id);
+  if (qubit_iterator == qubits.cend()) {
+    throw std::runtime_error("ErrorTrackingBackend::deleteQubit: trying to delete qubit with unknown Id.");
+  }
+  qubits.erase(qubit_iterator);
+}
+
 std::unique_ptr<IConfiguration> ErrorTrackingBackend::getDefaultConfiguration() const {
   // copy the default backend configuration for each qubit
   return std::make_unique<ErrorTrackingConfiguration>(*config.get());

@@ -96,7 +96,6 @@ class StatQubitTarget : public StationaryQubit {
     setParInt(this, "qnic_type", 0);
     setParInt(this, "qnic_index", 0);
     setParDouble(this, "emission_jittering_standard_deviation", 0.5);
-    setParBool(this, "overwrite_backend_qubit_config", false);
   }
 
   TestGate *toLensGate;
@@ -128,7 +127,7 @@ TEST_F(StatQubitTest, init) {
   auto *backend_qubit = new MockBackendQubit();
   auto *config = new IConfiguration();
   EXPECT_CALL(*backend, getDefaultConfiguration()).WillOnce(Return(ByMove(std::unique_ptr<IConfiguration>(config))));
-  EXPECT_CALL(*backend, getQubit(NotNull(), NotNull())).WillOnce(Return(backend_qubit));
+  EXPECT_CALL(*backend, createQubit(NotNull(), NotNull())).WillOnce(Return(backend_qubit));
   EXPECT_CALL(*backend_qubit, setFree()).WillOnce(Return());
   qubit->callInitialize();
   delete backend_qubit;

@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
-#include <stdexcept>
 #include <unsupported/Eigen/MatrixFunctions>
 #include "test.h"
 
@@ -16,8 +15,8 @@ class EtQubitMeasurementTest : public ::testing::Test {
     rng->double_value = .0;
 
     backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<ErrorTrackingConfiguration>());
-    qubit = dynamic_cast<Qubit*>(backend->getQubit(0));
-    another_qubit = dynamic_cast<Qubit*>(backend->getQubit(2));
+    qubit = dynamic_cast<Qubit*>(backend->createQubit(0));
+    another_qubit = dynamic_cast<Qubit*>(backend->createQubit(2));
 
     backend->setSimTime(SimTime(1, SIMTIME_US));
     fillParams(qubit);

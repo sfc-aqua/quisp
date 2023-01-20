@@ -9,7 +9,6 @@ class ErrorTrackingConfiguration : public abstract::IConfiguration {
  public:
   ErrorTrackingConfiguration() {}
   ~ErrorTrackingConfiguration() {}
-  // ErrorTrackingConfiguration(const ErrorTrackingConfiguration&c) = default;
 
   // list up all params
   double memory_x_err_rate;

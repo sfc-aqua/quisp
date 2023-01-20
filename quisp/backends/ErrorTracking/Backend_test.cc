@@ -1,8 +1,6 @@
 #include "Backend.h"
-#include <cxxabi.h>
 #include <gtest/gtest.h>
 #include <omnetpp.h>
-#include <stdexcept>
 #include "../interfaces/IRandomNumberGenerator.h"
 #include "Configuration.h"
 #include "Qubit.h"
@@ -62,10 +60,19 @@ class EtBackendTest : public ::testing::Test {
   std::unique_ptr<EtBackend> backend;
 };
 
+TEST_F(EtBackendTest, createQubit) {
+  auto* id = new QubitId(123);
+  EXPECT_EQ(backend->qubits.size(), 0);
+  auto qubit = backend->createQubit(id);
+  EXPECT_EQ(backend->qubits.size(), 1);
+  ASSERT_THROW(backend->createQubit(id), std::runtime_error);
+  EXPECT_EQ(backend->qubits.size(), 1);
+}
+
 TEST_F(EtBackendTest, getQubit) {
   auto* id = new QubitId(123);
   EXPECT_EQ(backend->qubits.size(), 0);
-  auto qubit = backend->getQubit(id);
+  auto qubit = backend->createQubit(id);
   EXPECT_EQ(backend->qubits.size(), 1);
   EXPECT_EQ(qubit, backend->getQubit(id));
   EXPECT_EQ(backend->qubits.size(), 1);
@@ -78,6 +85,7 @@ TEST_F(EtBackendTest, getQubit) {
 
 TEST_F(EtBackendTest, getQubitTwice) {
   auto* id = new QubitId(3);
+  backend->createQubit(id);
   auto* qubit1 = backend->getQubit(id);
   auto* qubit2 = backend->getQubit(id);
   EXPECT_NE(qubit1, nullptr);
@@ -85,13 +93,13 @@ TEST_F(EtBackendTest, getQubitTwice) {
   EXPECT_EQ(qubit1, qubit2);
 }
 
-TEST_F(EtBackendTest, getQubitWithInvalidConfiguration) {
+TEST_F(EtBackendTest, createQubitWithInvalidConfiguration) {
   auto conf = new IConfiguration;
   auto* id = new QubitId(4);
-  ASSERT_THROW({ backend->getQubit(id, std::unique_ptr<IConfiguration>(conf)); }, std::runtime_error);
+  ASSERT_THROW({ backend->createQubit(id, std::unique_ptr<IConfiguration>(conf)); }, std::runtime_error);
 }
 
-TEST_F(EtBackendTest, getQubitWithConfiguration) {
+TEST_F(EtBackendTest, createQubitWithConfiguration) {
   auto conf = new ErrorTrackingConfiguration;
   conf->cnot_gate_err_rate = 0.75;
   conf->cnot_gate_ix_err_ratio = 0.75 / 9.;
@@ -129,7 +137,7 @@ TEST_F(EtBackendTest, getQubitWithConfiguration) {
 
   auto* id = new QubitId(123);
   EXPECT_EQ(backend->qubits.size(), 0);
-  auto* qubit = backend->getQubit(id, std::move(conf2));
+  auto* qubit = backend->createQubit(id, std::move(conf2));
   EXPECT_EQ(backend->qubits.size(), 1);
   EXPECT_EQ(qubit, backend->getQubit(id));
   EXPECT_EQ(backend->qubits.size(), 1);

@@ -60,8 +60,8 @@ void StationaryQubit::initialize() {
   vertex_operator = CliffordOperator::H;
 
   backend = provider.getQuantumBackend();
-  auto config = prepareBackendQubitConfiguration(par("overwrite_backend_qubit_config").boolValue());
-  qubit_ref = backend->getQubit(new QubitId(node_address, qnic_index, qnic_type, stationary_qubit_address), std::move(config));
+  auto config = prepareBackendQubitConfiguration(true);
+  qubit_ref = backend->createQubit(new QubitId(node_address, qnic_index, qnic_type, stationary_qubit_address), std::move(config));
   if (qubit_ref == nullptr) throw std::runtime_error("qubit_ref nullptr error");
   setFree(false);
 

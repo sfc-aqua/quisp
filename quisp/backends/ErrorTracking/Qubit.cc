@@ -1,5 +1,4 @@
 #include "Qubit.h"
-#include <stdexcept>
 #include "Backend.h"
 namespace quisp::backends::error_tracking {
 

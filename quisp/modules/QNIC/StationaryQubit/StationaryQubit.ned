@@ -28,8 +28,6 @@ simple StationaryQubit
         double emission_x_error_rate = default(0);
         double emission_y_error_rate = default(0);
 
-        bool overwrite_backend_qubit_config = default(false);
-
         // ErrorTracking Backend Qubit Configuration
         // if overwrite_backend_qubit_config is true,
         // these params overwrite the default configuration at the backend module.
