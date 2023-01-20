@@ -26,8 +26,6 @@ module BSAInternal
         @display("i=BSA");
 
     gates:
-        //inout quantum_port_one @loose;
-        //inout quantum_port_two @loose;
         inout quantum_port[] @loose;
         output toRouter @loose;
     submodules:
