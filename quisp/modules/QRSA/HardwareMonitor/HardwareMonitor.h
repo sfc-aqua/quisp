@@ -35,7 +35,7 @@ class HardwareMonitor : public IHardwareMonitor {
 
  private:
   // Matrices of single qubit errors. Used when conducting tomography.
-  struct single_qubit_error {
+  struct SingleQubitError {
     Eigen::Matrix2cd X;  // double 2*2 matrix
     Eigen::Matrix2cd Y;  // complex double 2*2 matrix
     Eigen::Matrix2cd Z;
@@ -68,7 +68,7 @@ class HardwareMonitor : public IHardwareMonitor {
   cModule *getQnic(int qnic_index, QNIC_type qnic_type);
   NeighborTable neighbor_table;
   raw_data *tomography_data;
-  single_qubit_error Pauli;
+  SingleQubitError Pauli;
 
   TomographyOutcomeTable *temporal_tomography_output;  // qnic address -> partner . count_id . outcome
   LinkCostMap *tomography_runningtime_holder;
