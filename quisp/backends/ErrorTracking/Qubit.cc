@@ -1,12 +1,21 @@
 #include "Qubit.h"
-#include <stdexcept>
 #include "Backend.h"
 namespace quisp::backends::error_tracking {
 
-ErrorTrackingQubit::ErrorTrackingQubit(const IQubitId* id, ErrorTrackingBackend* const backend) : id(id), memory_transition_matrix(MatrixXd::Zero(7, 7)), backend(backend) {
-  // emission_success_probability = par("emission_success_probability");
-}
+ErrorTrackingQubit::ErrorTrackingQubit(const IQubitId* id, ErrorTrackingBackend* const backend) : id(id), memory_transition_matrix(MatrixXd::Zero(7, 7)), backend(backend) {}
+
 ErrorTrackingQubit::~ErrorTrackingQubit() {}
+
+void ErrorTrackingQubit::configure(std::unique_ptr<ErrorTrackingConfiguration> c) {
+  setMemoryErrorRates(c->memory_x_err_rate, c->memory_y_err_rate, c->memory_z_err_rate, c->memory_excitation_rate, c->memory_relaxation_rate, c->memory_completely_mixed_rate);
+  measurement_err.setParams(c->measurement_x_err_rate, c->measurement_y_err_rate, c->measurement_z_err_rate);
+  gate_err_h.setParams(c->h_gate_x_err_ratio, c->h_gate_y_err_ratio, c->h_gate_z_err_ratio, c->h_gate_err_rate);
+  gate_err_x.setParams(c->x_gate_x_err_ratio, c->x_gate_y_err_ratio, c->x_gate_z_err_ratio, c->x_gate_err_rate);
+  gate_err_z.setParams(c->z_gate_x_err_ratio, c->z_gate_y_err_ratio, c->z_gate_z_err_ratio, c->z_gate_err_rate);
+  gate_err_cnot.setParams(c->cnot_gate_err_rate, c->cnot_gate_ix_err_ratio, c->cnot_gate_xi_err_ratio, c->cnot_gate_xx_err_ratio, c->cnot_gate_iz_err_ratio,
+                          c->cnot_gate_zi_err_ratio, c->cnot_gate_zz_err_ratio, c->cnot_gate_iy_err_ratio, c->cnot_gate_yi_err_ratio, c->cnot_gate_yy_err_ratio);
+}
+
 void ErrorTrackingQubit::setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate,
                                              double completely_mixed_rate) {
   memory_err.x_error_rate = x_error_rate;
@@ -112,7 +121,6 @@ void ErrorTrackingQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const& er
   }
 }
 void ErrorTrackingQubit::applyMemoryError() {
-  // update();
   if (entangled_partner == nullptr && density_matrix_collapsed(0, 0).real() == -111 && !no_density_matrix_nullptr_entangled_partner_ok) {
     throw std::runtime_error("This must not happen in apply memory error");
   }
@@ -247,6 +255,14 @@ void ErrorTrackingQubit::setFree() {
   has_relaxation_error = false;
   has_excitation_error = false;
   has_completely_mixed_error = false;
+
+  density_matrix_collapsed << -111, -111, -111, -111;
+  no_density_matrix_nullptr_entangled_partner_ok = false;
+  if (entangled_partner != nullptr) {
+    // entangled_partner->entangled_partner = nullptr;
+    entangled_partner = nullptr;
+  }
+  updated_time = backend->getSimTime();
 }
 void ErrorTrackingQubit::setRelaxedDensityMatrix() {
   density_matrix_collapsed << 0, 0, 0, 1;
@@ -255,8 +271,8 @@ void ErrorTrackingQubit::setRelaxedDensityMatrix() {
   has_relaxation_error = true;
   has_x_error = false;
   has_z_error = false;
-  // GOD_dm_Xerror = false;
-  // GOD_dm_Zerror = false;
+  god_dm_has_x_error = false;
+  god_dm_has_z_error = false;
 
   // Still entangled
   if (entangled_partner != nullptr) {
@@ -271,8 +287,8 @@ void ErrorTrackingQubit::setExcitedDensityMatrix() {
   has_relaxation_error = false;
   has_x_error = false;
   has_z_error = false;
-  // GOD_dm_Xerror = false;
-  // GOD_dm_Zerror = false;
+  god_dm_has_x_error = false;
+  god_dm_has_z_error = false;
 
   if (entangled_partner != nullptr) {  // If it used to be entangled...
     entangled_partner->updated_time = backend->getSimTime();
@@ -291,8 +307,6 @@ void ErrorTrackingQubit::setCompletelyMixedDensityMatrix() {
     entangled_partner = nullptr;
   }
 }
-
-void ErrorTrackingQubit::update() { updated_time = backend->getSimTime(); }
 
 MeasureXResult ErrorTrackingQubit::correlationMeasureX() {
   bool error = has_z_error;
@@ -399,7 +413,15 @@ bool ErrorTrackingQubit::purifyX(IQubit* const control_qubit) {
   applyMemoryError();
   et_control_qubit->applyMemoryError();
   gateCNOT(control_qubit);
-  return correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
+  auto result = correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
+
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (entangled_partner != nullptr) {
+    entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
+    entangled_partner->entangled_partner = nullptr;
+  }
+  return result;
 }
 
 bool ErrorTrackingQubit::purifyZ(IQubit* const target_qubit) {
@@ -411,8 +433,251 @@ bool ErrorTrackingQubit::purifyZ(IQubit* const target_qubit) {
   et_target_qubit->applyMemoryError();
   et_target_qubit->gateCNOT(this);
   gateH();
-  return this->correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
+  auto result = correlationMeasureZ() == MeasureZResult::NO_X_ERROR;
+
+  // Trash qubit has been measured. Now, break the entanglement info of the partner.
+  // There is no need to overwrite its density matrix since we are only tracking errors.
+  if (entangled_partner != nullptr) {
+    entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
+    entangled_partner->entangled_partner = nullptr;
+  }
+
+  return result;
 }
+
+Matrix2cd ErrorTrackingQubit::getErrorMatrix() {
+  if (has_completely_mixed_error || has_relaxation_error) {
+    throw std::runtime_error("CMerror in getErrorMatrix. Not supposed to happen.");
+  }
+  if (has_z_error && has_x_error) return pauli.Y;
+  if (has_z_error) return pauli.Z;
+  if (has_x_error) return pauli.X;
+  return pauli.I;
+}
+
+// returns the density matrix of the Bell pair with error. This assumes that this is entangled with another stationary qubit.
+// Measurement output will be based on this matrix, as long as it is still entangled.
+QuantumState ErrorTrackingQubit::getQuantumState() {
+  if (has_excitation_error || has_relaxation_error) throw std::runtime_error("this qubit is excited or relaxed");
+  if (entangled_partner == nullptr) throw std::runtime_error("no entangled partner");
+  if (entangled_partner->has_excitation_error || entangled_partner->has_relaxation_error) throw std::runtime_error("partner qubit is excited or relaxed");
+
+  Matrix4cd error_mat = kroneckerProduct(getErrorMatrix(), entangled_partner->getErrorMatrix()).eval();
+  // Assumes that the state is a 2 qubit state |00> + |11>
+  Vector4cd ideal_bell_state(1 / sqrt(2), 0, 0, 1 / sqrt(2));
+  Vector4cd actual_bell_state = error_mat * ideal_bell_state;
+
+  QuantumState q;
+  q.state_in_density_matrix = actual_bell_state * actual_bell_state.adjoint();
+  q.state_in_ket = actual_bell_state;
+  return q;
+}
+
+MeasurementOutcome ErrorTrackingQubit::measureDensityIndependent() {
+  if (this->entangled_partner == nullptr && density_matrix_collapsed(0, 0).real() == -111) {
+    std::cout << density_matrix_collapsed << "\n";
+    throw std::runtime_error("Measuring a qubit that is not entangled with another qubit. Probably not what you want! Check whether address for each node is unique!!!");
+  }
+  MeasurementOperator this_measurement = randomMeasurementBasisSelection();  // Select basis randomly
+  char output;
+  bool output_is_plus;
+
+  // Add memory error depending on the idle time. If excited/relaxed, this will immediately break entanglement, leaving the other qubit as completely mixed.
+  applyMemoryError();
+
+  // This becomes nullptr if this qubit got excited/relaxed or measured.
+  if (this->entangled_partner != nullptr) {
+    if (this->entangled_partner->entangled_partner == nullptr) {
+      throw std::runtime_error("invalid entanglement partner");
+    }
+    // if (partner_measured) error("Entangled partner not nullptr but partner already measured....? Probably wrong.");
+    if (has_completely_mixed_error || has_excitation_error || has_relaxation_error) {
+      std::cout << "[Error]" << this << "\n";
+      throw std::runtime_error("Entangled but completely mixed / Excited / Relaxed ? Probably wrong.");
+    }
+    // Also do the same on the partner if it is still entangled! This could break the entanglement due to relaxation/excitation error!
+    entangled_partner->applyMemoryError();
+  }
+
+  /*-For debugging-*/
+  char god_state = 'F';  // Completely mixed
+
+  if (has_excitation_error)
+    god_state = 'E';
+  else if (has_excitation_error /* XXX: this might be relaxation error? */)
+    god_state = 'R';
+  else if (has_completely_mixed_error)
+    god_state = 'C';
+  else if (!has_x_error && has_z_error)  // To check stabilizers....
+    god_state = 'Z';
+  else if (has_x_error && !has_z_error)
+    god_state = 'X';
+  else if (has_x_error && has_z_error)
+    god_state = 'Y';
+
+  /*---------------*/
+
+  // if there is an entanglement
+  if (this->entangled_partner != nullptr) {
+    // This qubit is nullptr
+    if (this->entangled_partner->entangled_partner == nullptr) {
+      throw std::runtime_error("Entangled_partner track wrong\n");
+    }
+  }
+
+  // if the partner qubit is measured,
+  if (this->partner_measured || has_completely_mixed_error || has_excitation_error ||
+      has_relaxation_error) {  // The case when the density matrix is completely local to this qubit.
+
+    if (density_matrix_collapsed(0, 0).real() == -111) {  // We always need some kind of density matrix inside this if statement.
+      throw std::runtime_error("Single qubit density matrix not stored properly after partner's measurement, excitation/relaxation error.");
+    }
+    bool x_err = has_x_error;
+    bool z_err = has_z_error;
+    // This qubit's density matrix was created when the partner measured his own.
+    // Because this qubit can be measured after that, we need to update the stored density matrix according to new errors occurred due to memory error.
+
+    if (x_err != god_dm_has_x_error) {  // Another X error to the dm.
+      density_matrix_collapsed = pauli.X * density_matrix_collapsed * pauli.X.adjoint();
+    }
+    if (z_err != god_dm_has_z_error) {  // Another Z error to the dm.
+      density_matrix_collapsed = pauli.Z * density_matrix_collapsed * pauli.Z.adjoint();
+    }
+
+    // std::cout<<"Not entangled anymore. Density matrix is "<<density_matrix_collapsed<<"\n";
+
+    Complex prob_plus = (density_matrix_collapsed * this_measurement.plus.adjoint() * this_measurement.plus).trace();
+    Complex prob_minus = (density_matrix_collapsed * this_measurement.minus.adjoint() * this_measurement.minus).trace();
+    double dbl = backend->dblrand();
+    if (dbl < prob_plus.real()) {
+      output = '+';
+      output_is_plus = true;
+    } else {
+      output = '-';
+      output_is_plus = false;
+    }
+    // std::cout<<"\n This qubit was "<<this_measurement.basis<<"("<<Output<<"). \n";
+  } else if (!this->partner_measured && !has_completely_mixed_error && !(has_relaxation_error || has_excitation_error) && this->entangled_partner != nullptr) {
+    // This is assuming that this is some other qubit is entangled. Only Pauli errors are assumed.
+    QuantumState current_state = getQuantumState();
+    std::cout << "Current entangled state is " << current_state.state_in_ket << "\n";
+
+    bool x_err = god_dm_has_x_error;
+    bool z_err = god_dm_has_z_error;
+    // std::cout<<"Entangled state is "<<current_state.state_in_ket<<"\n";
+
+    Complex prob_plus = current_state.state_in_ket.adjoint() * kroneckerProduct(this_measurement.plus, measurement_op.identity).eval().adjoint() *
+                        kroneckerProduct(this_measurement.plus, measurement_op.identity).eval() * current_state.state_in_ket;
+    Complex prob_minus = current_state.state_in_ket.adjoint() * kroneckerProduct(this_measurement.minus, measurement_op.identity).eval().adjoint() *
+                         kroneckerProduct(this_measurement.minus, measurement_op.identity).eval() * current_state.state_in_ket;
+
+    // std::cout<<"Measurement basis = "<<this_measurement.basis<<"P(+) = "<<Prob_plus.real()<<", P(-) = "<<Prob_minus.real()<<"\n";
+    double dbl = backend->dblrand();
+
+    Vector2cd ms;
+    if (dbl < prob_plus.real()) {  // Measurement output was plus
+      output = '+';
+      ms = this_measurement.plus_ket;
+      output_is_plus = true;
+    } else {  // Otherwise, it was negative.
+      output = '-';
+      ms = this_measurement.minus_ket;
+      output_is_plus = false;
+    }
+    // Now we have to calculate the density matrix of a single qubit that used to be entangled with this.
+    Matrix2cd partners_dm, normalized_partners_dm;
+    partners_dm = kroneckerProduct(ms.adjoint(), measurement_op.identity).eval() * current_state.state_in_density_matrix *
+                  kroneckerProduct(ms.adjoint(), measurement_op.identity).eval().adjoint();
+    normalized_partners_dm = partners_dm / partners_dm.trace();
+    std::cout << "kroneckerProduct(ms.adjoint(),meas_op.identity).eval() = " << kroneckerProduct(ms.adjoint(), measurement_op.identity).eval() << "\n";
+    std::cout << "dm = " << current_state.state_in_density_matrix << "\n";
+    std::cout << "State was " << kroneckerProduct(ms.adjoint(), measurement_op.identity).eval() * current_state.state_in_density_matrix << "\n";
+    std::cout << "\n This qubit was " << this_measurement.basis << "(" << output << "). Partner's dm is now = " << normalized_partners_dm << "\n";
+    entangled_partner->density_matrix_collapsed = normalized_partners_dm;
+
+    // We actually do not need this as long as deleting entangled_partner completely is totally fine.
+    entangled_partner->partner_measured = true;
+    // if(entangled_partner->getIndex() == 71 && entangled_partner->node_address == 3)
+    //	std::cout<<"-------------------"<<entangled_partner<<" in node["<<entangled_partner->node_address<<"] overwritten dm.\n";
+
+    // Break entanglement.
+    entangled_partner->entangled_partner = nullptr;
+    // Save what error it had, when this density matrix was calculated.
+    // Error may get updated in the future, so we need to track what error has been considered already in the dm.
+    entangled_partner->god_dm_has_x_error = entangled_partner->has_x_error;
+    entangled_partner->god_dm_has_z_error = entangled_partner->has_z_error;
+  } else {
+    throw std::runtime_error("Check condition in measure func.");
+  }
+
+  // add measurement error
+  auto rand_num = backend->dblrand();
+  if ((this_measurement.basis == measurement_op.x_basis.basis && rand_num < measurement_err.x_error_rate) ||
+      (this_measurement.basis == measurement_op.y_basis.basis && rand_num < measurement_err.y_error_rate) ||
+      (this_measurement.basis == measurement_op.z_basis.basis && rand_num < measurement_err.z_error_rate)) {
+    output_is_plus = !output_is_plus;
+  }
+
+  MeasurementOutcome o;
+  o.basis = this_measurement.basis;
+  o.outcome_is_plus = output_is_plus;
+  o.GOD_clean = god_state;
+  return o;
+}
+
+MeasurementOperator ErrorTrackingQubit::randomMeasurementBasisSelection() {
+  MeasurementOperator this_measurement;
+  double dbl = backend->dblrand();  // Random double value for random basis selection.
+  std::cout << "Random dbl = " << dbl << "! \n ";
+
+  if (dbl < ((double)1 / (double)3)) {  // X measurement!
+    std::cout << "X measurement\n";
+    this_measurement.plus = measurement_op.x_basis.plus;
+    this_measurement.minus = measurement_op.x_basis.minus;
+    this_measurement.basis = measurement_op.x_basis.basis;
+    this_measurement.plus_ket = measurement_op.x_basis.plus_ket;
+    this_measurement.minus_ket = measurement_op.x_basis.minus_ket;
+  } else if (dbl >= ((double)1 / (double)3) && dbl < ((double)2 / (double)3)) {
+    std::cout << "Z measurement\n";
+    this_measurement.plus = measurement_op.z_basis.plus;
+    this_measurement.minus = measurement_op.z_basis.minus;
+    this_measurement.basis = measurement_op.z_basis.basis;
+    this_measurement.plus_ket = measurement_op.z_basis.plus_ket;
+    this_measurement.minus_ket = measurement_op.z_basis.minus_ket;
+  } else {
+    std::cout << "Y measurement\n";
+    this_measurement.plus = measurement_op.y_basis.plus;
+    this_measurement.minus = measurement_op.y_basis.minus;
+    this_measurement.basis = measurement_op.y_basis.basis;
+    this_measurement.plus_ket = measurement_op.y_basis.plus_ket;
+    this_measurement.minus_ket = measurement_op.y_basis.minus_ket;
+  }
+  return this_measurement;
+}
+
+void ErrorTrackingQubit::assertEntangledPartnerValid() {
+  if (entangled_partner == nullptr && density_matrix_collapsed(0, 0).real() == -111 && !no_density_matrix_nullptr_entangled_partner_ok) {
+    throw std::runtime_error("ErrorTrackingQubit::assertEntangledPartnerValid: something went wrong");
+  }
+  if (entangled_partner != nullptr) {
+    if (entangled_partner->entangled_partner == nullptr) {
+      throw std::runtime_error("ErrorTrackingQubit::assertEntangledPartnerValid: 1. Entanglement tracking is not doing its job.");
+    }
+    if (entangled_partner->entangled_partner != this) {
+      throw std::runtime_error("ErrorTrackingQubit::assertEntangledPartnerValid: 2. Entanglement tracking is not doing its job.");
+    }
+  }
+}
+
+void ErrorTrackingQubit::setEntangledPartner(IQubit* const partner) {
+  auto* et_partner_qubit = dynamic_cast<ErrorTrackingQubit*>(partner);
+  if (et_partner_qubit == nullptr) throw std::runtime_error("ErrorTrackingQubit::setEntangledPartner: invalid qubit type passed");
+  entangled_partner = et_partner_qubit;
+}
+
+IQubit* const ErrorTrackingQubit::getEntangledPartner() const { return entangled_partner; }
+
+const IQubitId* const ErrorTrackingQubit::getId() const { return id; }
 
 // Set error matrices. This is used in the process of simulating tomography.
 const SingleQubitErrorModel ErrorTrackingQubit::pauli = {.X = (Matrix2cd() << 0, 1, 1, 0).finished(),

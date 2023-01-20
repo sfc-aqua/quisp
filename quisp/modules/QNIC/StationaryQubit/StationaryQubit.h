@@ -7,13 +7,15 @@
 #pragma once
 
 #include <PhotonicQubit_m.h>
+#include <backends/Backends.h>
 #include <modules/common_types.h>
 #include <utils/ComponentProvider.h>
 #include <string>
 #include "IStationaryQubit.h"
+#include "QubitId.h"
+#include "backends/interfaces/IQuantumBackend.h"
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
 #define STATIONARYQUBIT_PULSE_BEGIN 0x01
 #define STATIONARYQUBIT_PULSE_END 0x02
@@ -25,8 +27,8 @@ namespace modules {
  *  \ref https://arxiv.org/abs/1908.10758
  */
 
-typedef std::complex<double> Complex;
 using quisp::modules::common::IBackendQubit;
+using quisp::modules::common::IConfiguration;
 using quisp::modules::common::IQuantumBackend;
 
 class StationaryQubit : public IStationaryQubit {
@@ -96,14 +98,14 @@ class StationaryQubit : public IStationaryQubit {
   virtual types::EigenvalueResult localMeasureY() override;
   virtual types::EigenvalueResult localMeasureZ() override;
 
-  virtual types::EigenvalueResult measureX() override;
-  virtual types::EigenvalueResult measureY() override;
-  virtual types::EigenvalueResult measureZ() override;
+  virtual types::EigenvalueResult measureX();
+  virtual types::EigenvalueResult measureY();
+  virtual types::EigenvalueResult measureZ();
   /**
    * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
    * */
   // virtual std::bitset<1> measure_density(char basis_this_qubit);/*Simultaneous dm calculation*/
-  virtual measurement_outcome measure_density_independent() override; /*Separate dm calculation*/
+  virtual types::MeasurementOutcome measure_density_independent() override; /*Separate dm calculation*/
 
   /**
    * \brief Two qubit CNOT gate.
@@ -133,26 +135,19 @@ class StationaryQubit : public IStationaryQubit {
 
   /*GOD parameters*/
   void setEntangledPartnerInfo(IStationaryQubit *partner) override;
-  void setCompletelyMixedDensityMatrix() override;
+  void setCompletelyMixedDensityMatrix();
   void setRelaxedDensityMatrix();
   void setExcitedDensityMatrix();
-  void addXerror() override;
-  void addZerror() override;
+  void addXerror();
+  void addZerror();
+  backends::IQubit *getEntangledPartner() const override;
+  backends::IQubit *getBackendQubitRef() const override;
+  int getPartnerStationaryQubitAddress() const override;
+
+  // for debugging
+  void assertEntangledPartnerValid() override;
 
   double emission_success_probability;
-
-  SingleGateErrorModel Hgate_error;
-  SingleGateErrorModel Xgate_error;
-  SingleGateErrorModel Zgate_error;
-  TwoQubitGateErrorModel CNOTgate_error;
-  MeasurementErrorModel Measurement_error;
-  memory_error_model memory_err;
-
-  single_qubit_error Pauli;
-  measurement_operators meas_op;
-  // https://arxiv.org/abs/1908.10758 Eq 5.2
-  Eigen::MatrixXd Memory_Transition_matrix; /*I,X,Y,Z,Ex,Rl for single qubit. Unit in μs.*/
-  int num_purified;
 
   bool locked;
   unsigned long locked_ruleset_id;
@@ -164,25 +159,28 @@ class StationaryQubit : public IStationaryQubit {
   void handleMessage(omnetpp::cMessage *msg) override;
   messages::PhotonicQubit *generateEntangledPhoton();
   void setBusy();
-  // returns the matrix that represents the errors on the Bell pair. (e.g. XY, XZ and ZI...)
   Eigen::Matrix2cd getErrorMatrix(StationaryQubit *qubit);
-  // returns the dm of the physical Bell pair. Used for tomography.
-  quantum_state getQuantumState();
-  measurement_operator Random_Measurement_Basis_Selection();
-  void setSingleQubitGateErrorModel(SingleGateErrorModel &model, std::string gate_name);
-  void setTwoQubitGateErrorCeilings(TwoQubitGateErrorModel &model, std::string gate_name);
-  void setMeasurementErrorModel(MeasurementErrorModel &model);
-  /*Applies memory error to the given qubit*/
-  void applyMemoryError();
 
-  void applySingleQubitGateError(SingleGateErrorModel const &err);
-  void applyTwoQubitGateError(TwoQubitGateErrorModel const &err, StationaryQubit *another_qubit);
+  /**
+   * get the default backend configuration from the Bcakend module.
+   * if overwrite arg is true, collect StationaryQubit's backend qubit config
+   * and overwrite the default configuration with it.
+   * if you want to use different qubit configuration, it's useful.
+   */
+  std::unique_ptr<IConfiguration> prepareBackendQubitConfiguration(bool overwrite);
 
   // this is for debugging. class internal use only.
   // and it's different from QubitRecord's one.
   bool is_busy;
+  // photon emitted at
+  omnetpp::simtime_t emitted_time = -1;
+  // Standard deviation
+  double emission_jittering_standard_deviation;
+  int stationary_qubit_address;
+  int node_address;
+
   utils::ComponentProvider provider;
+  IQuantumBackend *backend;
 };
 
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules

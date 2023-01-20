@@ -1,4 +1,4 @@
-#include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
+#pragma once
 #include <Eigen/Eigen>
 #include <complex>
 
@@ -140,14 +140,6 @@ struct MeasurementErrorModel {
   }
 };
 
-struct GodErrorState {
-  bool has_x_error;
-  bool has_z_error;
-  bool has_excitation_error;
-  bool has_relaxation_error;
-  bool has_completely_mixed_error;
-};
-
 // Matrices of single qubit errors. Used when conducting tomography.
 struct SingleQubitErrorModel {
   Eigen::Matrix2cd X;  // double 2*2 matrix
@@ -170,6 +162,11 @@ struct MeasurementOperators {
   MeasurementOperator z_basis;
   MeasurementOperator y_basis;
   Eigen::Matrix2cd identity;
+};
+
+struct QuantumState {
+  Eigen::Matrix4cd state_in_density_matrix;
+  Eigen::Vector4cd state_in_ket;
 };
 
 }  // namespace quisp::backends::error_tracking

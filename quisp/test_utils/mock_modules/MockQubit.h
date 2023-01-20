@@ -4,13 +4,17 @@
 #include <modules/QNIC/StationaryQubit/StationaryQubit.h>
 #include <test_utils/ModuleType.h>
 #include <test_utils/UtilFunctions.h>
+#include "backends/Backends.h"
 #include "modules/QNIC.h"
+#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/RuleEngine/BellPairStore/BellPairStore.h"
 
 namespace quisp_test {
 namespace mock_modules {
 namespace stationary_qubit {
 
+using quisp::backends::IQubit;
+using quisp::backends::IQubitId;
 using quisp::modules::IStationaryQubit;
 using quisp_test::utils::setParBool;
 using quisp_test::utils::setParDouble;
@@ -20,6 +24,8 @@ class MockQubit : public IStationaryQubit {
  public:
   using IStationaryQubit::initialize;
   using IStationaryQubit::par;
+  IStationaryQubit *entangled_partner;
+
   MOCK_METHOD(void, emitPhoton, (int pulse), (override));
   MOCK_METHOD(void, setFree, (bool consumed), (override));
   MOCK_METHOD(quisp::types::MeasureZResult, correlationMeasureZ, (), (override));
@@ -30,8 +36,6 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(quisp::types::EigenvalueResult, localMeasureZ, (), (override));
   MOCK_METHOD(bool, Xpurify, (IStationaryQubit *), (override));
   MOCK_METHOD(bool, Zpurify, (IStationaryQubit *), (override));
-  MOCK_METHOD(void, addXerror, (), (override));
-  MOCK_METHOD(void, addZerror, (), (override));
   MOCK_METHOD(void, Z_gate, (), (override));
   MOCK_METHOD(void, X_gate, (), (override));
   MOCK_METHOD(void, Hadamard_gate, (), (override));
@@ -39,13 +43,8 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(void, Lock, (unsigned long rs_id, int rule_id, int action_id), (override));
   MOCK_METHOD(void, Unlock, (), (override));
   MOCK_METHOD(bool, isLocked, (), (override));
-  MOCK_METHOD(quisp::modules::measurement_outcome, measure_density_independent, (), (override));
-  MOCK_METHOD(void, setCompletelyMixedDensityMatrix, (), (override));
+  MOCK_METHOD(quisp::types::MeasurementOutcome, measure_density_independent, (), (override));
   MOCK_METHOD(void, setEntangledPartnerInfo, (IStationaryQubit *), (override));
-
-  MOCK_METHOD(quisp::types::EigenvalueResult, measureX, (), (override));
-  MOCK_METHOD(quisp::types::EigenvalueResult, measureY, (), (override));
-  MOCK_METHOD(quisp::types::EigenvalueResult, measureZ, (), (override));
 
   MOCK_METHOD(void, cnotGate, (IStationaryQubit * control_qubit), (override));
   MOCK_METHOD(void, hadamardGate, (), (override));
@@ -55,17 +54,17 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(void, sdgGate, (), (override));
   MOCK_METHOD(void, excite, (), (override));
   MOCK_METHOD(void, relax, (), (override));
+  MOCK_METHOD(void, assertEntangledPartnerValid, (), (override));
+  MOCK_METHOD(IQubit *const, getEntangledPartner, (), (const, override));
+  MOCK_METHOD(IQubit *const, getBackendQubitRef, (), (const, override));
+  MOCK_METHOD(int, getPartnerStationaryQubitAddress, (), (const, override));
 
   MockQubit() : IStationaryQubit() { setComponentType(new module_type::TestModuleType("test qubit")); }
   MockQubit(quisp::modules::QNIC_type _type, quisp::modules::QNicIndex _qnic_index) : MockQubit() {
     qnic_type = _type;
     qnic_index = _qnic_index;
   }
-  void reset() {
-    setFree(true);
-    updated_time = SimTime(0);
-    no_density_matrix_nullptr_entangled_partner_ok = true;
-  }
+  void reset() { setFree(true); }
   void fillParams() {
     // see networks/omnetpp.ini
     setParDouble(this, "emission_success_probability", 0.5);
@@ -119,10 +118,6 @@ class MockQubit : public IStationaryQubit {
     setParBool(this, "god_excitation_error", false);
     setParBool(this, "god_relaxation_error", false);
     setParBool(this, "is_busy", false);
-    setParInt(this, "god_entangled_stationary_qubit_address", 0);
-    setParInt(this, "god_entangled_node_address", 0);
-    setParInt(this, "god_entangled_qnic_address", 0);
-    setParInt(this, "god_entangled_qnic_type", 0);
     setParDouble(this, "fidelity", -1.0);
   }
 };

@@ -6,6 +6,7 @@
 #include "../interfaces/IQubitId.h"
 #include "../interfaces/IRandomNumberGenerator.h"
 #include "Backend.h"
+#include "Configuration.h"
 #include "Qubit.h"
 
 namespace quisp_test::backends {
@@ -13,9 +14,11 @@ using omnetpp::SimTime;
 using ::quisp::backends::abstract::IQubit;
 using ::quisp::backends::abstract::IQubitId;
 using ::quisp::backends::error_tracking::ErrorTrackingBackend;
+using ::quisp::backends::error_tracking::ErrorTrackingConfiguration;
 using ::quisp::backends::error_tracking::ErrorTrackingQubit;
 using namespace ::quisp::backends;
 using namespace ::quisp::backends::abstract;
+using Complex = std::complex<double>;
 
 class QubitId : public IQubitId {
  public:
@@ -51,6 +54,8 @@ class Qubit : public ErrorTrackingQubit {
   using ErrorTrackingQubit::gate_err_h;
   using ErrorTrackingQubit::gate_err_x;
   using ErrorTrackingQubit::gate_err_z;
+  using ErrorTrackingQubit::getErrorMatrix;
+  using ErrorTrackingQubit::getQuantumState;
   using ErrorTrackingQubit::has_completely_mixed_error;
   using ErrorTrackingQubit::has_excitation_error;
   using ErrorTrackingQubit::has_relaxation_error;
@@ -58,7 +63,9 @@ class Qubit : public ErrorTrackingQubit {
   using ErrorTrackingQubit::has_z_error;
   using ErrorTrackingQubit::localMeasureX;
   using ErrorTrackingQubit::localMeasureZ;
+  using ErrorTrackingQubit::measureDensityIndependent;
   using ErrorTrackingQubit::measurement_err;
+  using ErrorTrackingQubit::memory_transition_matrix;
   using ErrorTrackingQubit::setMemoryErrorRates;
   using ErrorTrackingQubit::updated_time;
 
@@ -73,13 +80,14 @@ class Qubit : public ErrorTrackingQubit {
 class Backend : public ErrorTrackingBackend {
  public:
   using ErrorTrackingBackend::qubits;
-  Backend(std::unique_ptr<IRandomNumberGenerator> rng) : ErrorTrackingBackend(std::move(rng)) {}
-  IQubit* getQubit(int id) { return getQubit(new QubitId(id)); }
-  IQubit* getQubit(const IQubitId* id) override {
+  Backend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<ErrorTrackingConfiguration> config) : ErrorTrackingBackend(std::move(rng), std::move(config)) {}
+  IQubit* createQubit(int id) { return this->createQubitInternal(new QubitId(id)); }
+  IQubit* getQubit(int id) { return this->getQubitInternal(new QubitId(id)); }
+  IQubit* getQubitInternal(const IQubitId* id) { return qubits.find(id)->second.get(); }
+  IQubit* createQubitInternal(const IQubitId* id) {
     auto qubit = qubits.find(id);
-
     if (qubit != qubits.cend()) {
-      return qubit->second.get();
+      return nullptr;
     }
     auto original_qubit = std::make_unique<Qubit>(id, this);
     auto* qubit_ptr = original_qubit.get();

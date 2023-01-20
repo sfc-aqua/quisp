@@ -45,17 +45,7 @@ void RealTimeController::applyZGate(qrsa::IQubitRecord *const qubit_record) {
 }
 void RealTimeController::assertNoEntanglement(qrsa::IQubitRecord *const qubit_record) {
   auto *qubit = provider.getStationaryQubit(qubit_record);
-  if (qubit->entangled_partner == nullptr && qubit->Density_Matrix_Collapsed(0, 0).real() == -111 && !qubit->no_density_matrix_nullptr_entangled_partner_ok) {
-    error("something went wrong");
-  }
-  if (qubit->entangled_partner != nullptr) {
-    if (qubit->entangled_partner->entangled_partner == nullptr) {
-      error("1. Entanglement tracking is not doing its job. in update resource E.S.");
-    }
-    if (qubit->entangled_partner->entangled_partner != qubit) {
-      error("2. Entanglement tracking is not doing its job. in update resource E.S.");
-    }
-  }
+  qubit->assertEntangledPartnerValid();
 }
 }  // namespace modules
 }  // namespace quisp

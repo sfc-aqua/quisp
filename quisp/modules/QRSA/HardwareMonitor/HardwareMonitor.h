@@ -12,6 +12,7 @@
 #include <rules/Action.h>
 #include <rules/Rule.h>
 #include <utils/ComponentProvider.h>
+#include <complex>
 
 namespace quisp::modules {
 
@@ -33,6 +34,14 @@ class HardwareMonitor : public IHardwareMonitor {
   utils::ComponentProvider provider;
 
  private:
+  // Matrices of single qubit errors. Used when conducting tomography.
+  struct SingleQubitError {
+    Eigen::Matrix2cd X;  // double 2*2 matrix
+    Eigen::Matrix2cd Y;  // complex double 2*2 matrix
+    Eigen::Matrix2cd Z;
+    Eigen::Matrix2cd I;
+  };
+
   int my_address;
 
   // number of qnics connected to stand alone HOM or internal hom in the neighbor.
@@ -59,7 +68,7 @@ class HardwareMonitor : public IHardwareMonitor {
   cModule *getQnic(int qnic_index, QNIC_type qnic_type);
   NeighborTable neighbor_table;
   raw_data *tomography_data;
-  single_qubit_error Pauli;
+  SingleQubitError Pauli;
 
   TomographyOutcomeTable *temporal_tomography_output;  // qnic address -> partner . count_id . outcome
   LinkCostMap *tomography_runningtime_holder;

@@ -1,5 +1,7 @@
 #pragma once
 #include <omnetpp/simtime_t.h>
+#include <memory>
+#include "IConfiguration.h"
 #include "IQubitId.h"
 
 namespace quisp::backends::abstract {
@@ -19,7 +21,11 @@ class IQuantumBackend {
   IQuantumBackend(){};
   virtual ~IQuantumBackend(){};
 
+  virtual IQubit* createQubit(const IQubitId* id, std::unique_ptr<IConfiguration> conf) = 0;
+  virtual IQubit* createQubit(const IQubitId* id) = 0;
   virtual IQubit* getQubit(const IQubitId* id) = 0;
+  virtual void deleteQubit(const IQubitId* id) = 0;
+  virtual std::unique_ptr<IConfiguration> getDefaultConfiguration() const = 0;
   virtual const SimTime& getSimTime() = 0;
   virtual void setSimTime(SimTime time) = 0;
 
