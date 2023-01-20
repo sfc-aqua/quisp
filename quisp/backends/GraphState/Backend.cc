@@ -22,11 +22,9 @@ GraphStateBackend::~GraphStateBackend() {
   }
 }
 
-IQubit* GraphStateBackend::getQubit(const IQubitId* id, std::unique_ptr<IConfiguration> conf) {
-  auto qubit = qubits.find(id);
-
-  if (qubit != qubits.cend()) {
-    return qubit->second.get();
+IQubit* GraphStateBackend::createQubit(const IQubitId* id, std::unique_ptr<IConfiguration> conf) {
+  if (qubits.find(id) != qubits.cend()) {
+    throw std::runtime_error("GraphState::createQubit: trying to get qubit with already existed Id.");
   }
   auto original_qubit = std::make_unique<GraphStateQubit>(id, this);
 
@@ -43,7 +41,24 @@ IQubit* GraphStateBackend::getQubit(const IQubitId* id, std::unique_ptr<IConfigu
   qubits.insert({id, std::move(original_qubit)});
   return qubit_ptr;
 }
-IQubit* GraphStateBackend::getQubit(const IQubitId* id) { return getQubit(id, getDefaultConfiguration()); }
+IQubit* GraphStateBackend::createQubit(const IQubitId* id) { return createQubit(id, getDefaultConfiguration()); }
+
+IQubit* GraphStateBackend::getQubit(const IQubitId* id) {
+  auto qubit_iterator = qubits.find(id);
+  if (qubit_iterator == qubits.cend()) {
+    throw std::runtime_error("GraphState::getQubit: trying to get qubit with non existing Id.");
+  }
+  return qubit_iterator->second.get();
+}
+
+void GraphStateBackend::deleteQubit(const IQubitId* id) {
+  auto qubit_iterator = qubits.find(id);
+  if (qubit_iterator == qubits.cend()) {
+    throw std::runtime_error("GraphState::getQubit: trying to delete qubit with non existing Id.");
+  }
+  qubits.erase(qubit_iterator);
+}
+
 std::unique_ptr<IConfiguration> GraphStateBackend::getDefaultConfiguration() const {
   // copy the default backend configuration for each qubit
   return std::make_unique<GraphStateConfiguration>(*config.get());

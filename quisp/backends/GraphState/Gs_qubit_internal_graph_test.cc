@@ -19,12 +19,12 @@ class GsQubitInternalGraphTest : public ::testing::Test {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
     backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateConfiguration>());
-    qubit = dynamic_cast<Qubit*>(backend->getQubit(1));
-    another_qubit = dynamic_cast<Qubit*>(backend->getQubit(2));
-    shared_neighbor = dynamic_cast<Qubit*>(backend->getQubit(3));
-    center_qubit = dynamic_cast<Qubit*>(backend->getQubit(4));
-    qubit_to_avoid = dynamic_cast<Qubit*>(backend->getQubit(5));
-    isolated_qubit = dynamic_cast<Qubit*>(backend->getQubit(6));
+    qubit = dynamic_cast<Qubit*>(backend->createQubit(1));
+    another_qubit = dynamic_cast<Qubit*>(backend->createQubit(2));
+    shared_neighbor = dynamic_cast<Qubit*>(backend->createQubit(3));
+    center_qubit = dynamic_cast<Qubit*>(backend->createQubit(4));
+    qubit_to_avoid = dynamic_cast<Qubit*>(backend->createQubit(5));
+    isolated_qubit = dynamic_cast<Qubit*>(backend->createQubit(6));
     qubit->fillParams();
     another_qubit->fillParams();
     shared_neighbor->fillParams();
@@ -212,8 +212,8 @@ TEST_F(GsQubitInternalGraphTest, localComplement) {
   std::vector<Qubit*> second_layer_qubits;
 
   for (int i = 0; i < 10; i++) {
-    first_layer_qubits.push_back(dynamic_cast<Qubit*>(backend->getQubit(i + 10)));
-    second_layer_qubits.push_back(dynamic_cast<Qubit*>(backend->getQubit(i + 20)));
+    first_layer_qubits.push_back(dynamic_cast<Qubit*>(backend->createQubit(i + 10)));
+    second_layer_qubits.push_back(dynamic_cast<Qubit*>(backend->createQubit(i + 20)));
   }
 
   center_qubit->reset();
@@ -416,7 +416,7 @@ TEST_F(GsQubitInternalGraphTest, graphMeasureZIsolatedQubit) {
 TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZStatePlusEigenvalue) {
   std::vector<Qubit*> qarrs;
   for (int i = 0; i < 10; i++) {
-    qarrs.push_back(dynamic_cast<Qubit*>(backend->getQubit(i + 50)));
+    qarrs.push_back(dynamic_cast<Qubit*>(backend->createQubit(i + 50)));
   }
 
   // Bell pair
@@ -491,7 +491,7 @@ TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZStateMinusEigenvalue) {
   std::vector<Qubit*> qarrs;
   rng->double_value = 0.5;
   for (int i = 0; i < 10; i++) {
-    qarrs.push_back(dynamic_cast<Qubit*>(backend->getQubit(i + 100)));
+    qarrs.push_back(dynamic_cast<Qubit*>(backend->createQubit(i + 100)));
   }
 
   // Bell pair

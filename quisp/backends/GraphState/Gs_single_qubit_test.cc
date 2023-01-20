@@ -19,7 +19,7 @@ class GsSingleQubitTest : public ::testing::Test {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
     backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateConfiguration>());
-    qubit = dynamic_cast<Qubit*>(backend->getQubit(1));
+    qubit = dynamic_cast<Qubit*>(backend->createQubit(1));
     qubit->fillParams();
   }
   Qubit* qubit;

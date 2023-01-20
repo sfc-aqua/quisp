@@ -8,6 +8,7 @@
 #include "Backend.h"
 #include "Configuration.h"
 #include "Qubit.h"
+#include "omnetpp/simtime.h"
 
 using namespace quisp::backends::graph_state;
 using namespace quisp::backends::graph_state::types;
@@ -141,6 +142,9 @@ class Qubit : public GraphStateQubit {
     double y_measurement_error_rate = 0;
     double z_measurement_error_rate = 0;
     this->measurement_err.setParams(x_measurement_error_rate, y_measurement_error_rate, z_measurement_error_rate);
+
+    this->pi_vector_completely_mixed = false;
+    this->updated_time = SimTime(0);
   }
 };
 
@@ -148,18 +152,20 @@ class Backend : public GraphStateBackend {
  public:
   using GraphStateBackend::qubits;
   Backend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateConfiguration> config) : GraphStateBackend(std::move(rng), std::move(config)) {}
+  IQubit* createQubit(int id) { return this->createQubitInternal(new QubitId(id)); }
   IQubit* getQubit(int id) { return this->getQubitInternal(new QubitId(id)); }
-  IQubit* getQubitInternal(const IQubitId* id) {
+  IQubit* createQubitInternal(const IQubitId* id) {
     auto qubit = qubits.find(id);
 
     if (qubit != qubits.cend()) {
-      return qubit->second.get();
+      return nullptr;
     }
     auto original_qubit = std::make_unique<Qubit>(id, this);
     auto* qubit_ptr = original_qubit.get();
     qubits.insert({id, std::move(original_qubit)});
     return qubit_ptr;
   }
+  IQubit* getQubitInternal(const IQubitId* id) { return qubits.find(id)->second.get(); }
 };
 
 }  // namespace quisp_test::backends::graph_state

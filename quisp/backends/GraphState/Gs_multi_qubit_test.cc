@@ -18,7 +18,7 @@ class GsMultiQubitTest : public ::testing::Test {
     rng = new TestRNG();
     backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<GraphStateConfiguration>());
     for (int i = 0; i < 16; i++) {
-      quantum_register.push_back(dynamic_cast<Qubit*>(backend->getQubit(i)));
+      quantum_register.push_back(dynamic_cast<Qubit*>(backend->createQubit(i)));
       quantum_register.at(i)->fillParams();
     }
   }

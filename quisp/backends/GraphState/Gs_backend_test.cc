@@ -40,10 +40,19 @@ class GsBackendTest : public ::testing::Test {
   std::unique_ptr<GsBackend> backend;
 };
 
+TEST_F(GsBackendTest, createQubit) {
+  auto* id = new QubitId(123);
+  EXPECT_EQ(backend->qubits.size(), 0);
+  auto qubit = backend->createQubit(id);
+  EXPECT_EQ(backend->qubits.size(), 1);
+  ASSERT_THROW(backend->createQubit(id), std::runtime_error);
+  EXPECT_EQ(backend->qubits.size(), 1);
+}
+
 TEST_F(GsBackendTest, getQubit) {
   auto* id = new QubitId(123);
   EXPECT_EQ(backend->qubits.size(), 0);
-  auto qubit = backend->getQubit(id);
+  auto qubit = backend->createQubit(id);
   EXPECT_EQ(backend->qubits.size(), 1);
   EXPECT_EQ(qubit, backend->getQubit(id));
   EXPECT_EQ(backend->qubits.size(), 1);
@@ -56,6 +65,7 @@ TEST_F(GsBackendTest, getQubit) {
 
 TEST_F(GsBackendTest, getQubitTwice) {
   auto* id = new QubitId(3);
+  backend->createQubit(id);
   auto* qubit1 = backend->getQubit(id);
   auto* qubit2 = backend->getQubit(id);
   EXPECT_NE(qubit1, nullptr);
@@ -63,10 +73,10 @@ TEST_F(GsBackendTest, getQubitTwice) {
   EXPECT_EQ(qubit1, qubit2);
 }
 
-TEST_F(GsBackendTest, getQubitWithInvalidConfiguration) {
+TEST_F(GsBackendTest, createQubitWithInvalidConfiguration) {
   auto conf = new IConfiguration;
   auto* id = new QubitId(4);
-  ASSERT_THROW({ backend->getQubit(id, std::unique_ptr<IConfiguration>(conf)); }, std::runtime_error);
+  ASSERT_THROW({ backend->createQubit(id, std::unique_ptr<IConfiguration>(conf)); }, std::runtime_error);
 }
 
 TEST_F(GsBackendTest, getQubitWithConfiguration) {
@@ -106,7 +116,7 @@ TEST_F(GsBackendTest, getQubitWithConfiguration) {
 
   auto* id = new QubitId(123);
   EXPECT_EQ(backend->qubits.size(), 0);
-  auto* qubit = backend->getQubit(id, std::move(conf2));
+  auto* qubit = backend->createQubit(id, std::move(conf2));
   EXPECT_EQ(backend->qubits.size(), 1);
   EXPECT_EQ(qubit, backend->getQubit(id));
   EXPECT_EQ(backend->qubits.size(), 1);

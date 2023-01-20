@@ -28,8 +28,10 @@ class GraphStateBackend : public IQuantumBackend {
   GraphStateBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateConfiguration> configuration);
   GraphStateBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<GraphStateConfiguration> configuration, ICallback* callback);
   ~GraphStateBackend();
+  IQubit* createQubit(const IQubitId* id, std::unique_ptr<IConfiguration> conf) override;
+  IQubit* createQubit(const IQubitId* id) override;
   IQubit* getQubit(const IQubitId* id) override;
-  IQubit* getQubit(const IQubitId* id, std::unique_ptr<IConfiguration> configuration) override;
+  void deleteQubit(const IQubitId* id) override;
   std::unique_ptr<IConfiguration> getDefaultConfiguration() const override;
   const SimTime& getSimTime() override;
   void setSimTime(SimTime time) override;
