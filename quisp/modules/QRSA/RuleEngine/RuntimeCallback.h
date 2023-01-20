@@ -226,37 +226,9 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   }
 
   void hackSwappingPartners(IQubitRecord *const left_qubit_rec, IQubitRecord *const right_qubit_rec) override {
-    // // HACK: this comes from the original SwappingAction.cc
-    // // manipulate entangled partners to reproduce the situation of entanglement swapping
-    // // this will be not used if we implement more realistic qubit backend
-    // auto *left_qubit = provider.getStationaryQubit(left_qubit_rec);
-    // auto *right_qubit = provider.getStationaryQubit(right_qubit_rec);
-    // auto left_partner_qubit = left_qubit->entangled_partner;
-    // auto right_partner_qubit = right_qubit->entangled_partner;
-    // if (right_partner_qubit == nullptr) throw std::runtime_error("invalid right partner qubit");
-    // if (left_partner_qubit == nullptr) throw std::runtime_error("invalid left partner qubit");
-    // right_partner_qubit->setEntangledPartnerInfo(left_partner_qubit);
-    // left_partner_qubit->setEntangledPartnerInfo(right_partner_qubit);
-
-    // // HACK: this is also comes from the original SwappingAction.cc
-    // // at the both partner nodes, they need know which qubits are swapped.
-    // // so here these qubit indices are stored and later sendSwappingResults method uses it
-    // // this must be tracked in another way because we can't know these information
-    // // from the actual qubits in real world
-    // right_qubit_index = right_partner_qubit->stationary_qubit_address;
-    // left_qubit_index = left_partner_qubit->stationary_qubit_address;
   }
 
   void hackBreakEntanglement(IQubitRecord *qubit) override{
-      // auto *stat_qubit = rule_engine->provider.getStationaryQubit((qubit));
-      // // HACK: comes from the original PurifyAction.cc.
-      // // we're freeing the qubit but its entangled_partner will be freed later.
-      // // to pass the validation in RuleEngine::freeFailedQubits_and_AddAsResource for next round,
-      // // break the entanglement manually.
-      // if (stat_qubit->entangled_partner != nullptr && stat_qubit->entangled_partner->entangled_partner != nullptr) {
-      //   stat_qubit->entangled_partner->no_density_matrix_nullptr_entangled_partner_ok = true;
-      //   stat_qubit->entangled_partner->entangled_partner = nullptr;
-      // }
   };
 
   std::string getNodeInfo() override {
