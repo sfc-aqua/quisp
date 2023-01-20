@@ -22,7 +22,7 @@ class EtQubitMeasurementTest : public ::testing::Test {
     fillParams(qubit);
     fillParams(another_qubit);
   }
-  void reset() {
+  void reinitializeBellpair() {
     qubit->reset();
     another_qubit->reset();
     qubit->entangled_partner = another_qubit;
@@ -198,7 +198,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithoutError) {
   ASSERT_NE(qubit->entangled_partner, nullptr);
   ASSERT_NE(another_qubit->entangled_partner, nullptr);
 
-  reset();
+  reinitializeBellpair();
   rng->double_value = 0.7;
   EXPECT_EQ(qubit->localMeasureX(), EigenvalueResult::PLUS_ONE);
   EXPECT_FALSE(qubit->has_x_error);
@@ -206,7 +206,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithoutError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   rng->double_value = 0.3;
   EXPECT_EQ(qubit->localMeasureX(), EigenvalueResult::MINUS_ONE);
   EXPECT_FALSE(qubit->has_x_error);
@@ -214,7 +214,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithoutError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_TRUE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   rng->double_value = 0.7;
   EXPECT_EQ(qubit->localMeasureX(), EigenvalueResult::PLUS_ONE);
@@ -223,7 +223,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithoutError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_TRUE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   rng->double_value = 0.3;
   EXPECT_EQ(qubit->localMeasureX(), EigenvalueResult::MINUS_ONE);
@@ -232,7 +232,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithoutError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorX();
   rng->double_value = 0.7;
   EXPECT_EQ(qubit->localMeasureX(), EigenvalueResult::PLUS_ONE);
@@ -241,7 +241,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithoutError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorX();
   rng->double_value = 0.3;
   EXPECT_EQ(qubit->localMeasureX(), EigenvalueResult::MINUS_ONE);
@@ -250,7 +250,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithoutError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_TRUE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   qubit->addErrorX();
   rng->double_value = 0.7;
@@ -260,7 +260,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithoutError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_TRUE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   qubit->addErrorX();
   rng->double_value = 0.3;
@@ -273,7 +273,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithoutError) {
 
 TEST_F(EtQubitMeasurementTest, localXMeasurementWithError) {
   qubit->measurement_err.x_error_rate = 0.99;
-  reset();
+  reinitializeBellpair();
   rng->double_value = 0.7;
   EXPECT_EQ(qubit->localMeasureX(), EigenvalueResult::MINUS_ONE);
   EXPECT_FALSE(qubit->has_x_error);
@@ -281,7 +281,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   rng->double_value = 0.3;
   EXPECT_EQ(qubit->localMeasureX(), EigenvalueResult::PLUS_ONE);
   EXPECT_FALSE(qubit->has_x_error);
@@ -289,7 +289,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_TRUE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   rng->double_value = 0.7;
   EXPECT_EQ(qubit->localMeasureX(), EigenvalueResult::MINUS_ONE);
@@ -298,7 +298,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_TRUE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   rng->double_value = 0.3;
   EXPECT_EQ(qubit->localMeasureX(), EigenvalueResult::PLUS_ONE);
@@ -307,7 +307,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorX();
   rng->double_value = 0.7;
   EXPECT_EQ(qubit->localMeasureX(), EigenvalueResult::MINUS_ONE);
@@ -316,7 +316,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorX();
   rng->double_value = 0.3;
   EXPECT_EQ(qubit->localMeasureX(), EigenvalueResult::PLUS_ONE);
@@ -325,7 +325,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_TRUE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   qubit->addErrorX();
   rng->double_value = 0.7;
@@ -335,7 +335,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_TRUE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   qubit->addErrorX();
   rng->double_value = 0.3;
@@ -347,7 +347,7 @@ TEST_F(EtQubitMeasurementTest, localXMeasurementWithError) {
 }
 
 TEST_F(EtQubitMeasurementTest, localZMeasurementWithoutError) {
-  reset();
+  reinitializeBellpair();
   rng->double_value = 0.7;
   EXPECT_EQ(qubit->localMeasureZ(), EigenvalueResult::PLUS_ONE);
   EXPECT_FALSE(qubit->has_x_error);
@@ -355,7 +355,7 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithoutError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   rng->double_value = 0.3;
   EXPECT_EQ(qubit->localMeasureZ(), EigenvalueResult::MINUS_ONE);
   EXPECT_FALSE(qubit->has_x_error);
@@ -363,7 +363,7 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithoutError) {
   EXPECT_TRUE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   rng->double_value = 0.7;
   EXPECT_EQ(qubit->localMeasureZ(), EigenvalueResult::PLUS_ONE);
@@ -372,7 +372,7 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithoutError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   rng->double_value = 0.3;
   EXPECT_EQ(qubit->localMeasureZ(), EigenvalueResult::MINUS_ONE);
@@ -381,7 +381,7 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithoutError) {
   EXPECT_TRUE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorX();
   rng->double_value = 0.7;
   EXPECT_EQ(qubit->localMeasureZ(), EigenvalueResult::PLUS_ONE);
@@ -390,7 +390,7 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithoutError) {
   EXPECT_TRUE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorX();
   rng->double_value = 0.3;
   EXPECT_EQ(qubit->localMeasureZ(), EigenvalueResult::MINUS_ONE);
@@ -399,7 +399,7 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithoutError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   qubit->addErrorX();
   rng->double_value = 0.7;
@@ -409,7 +409,7 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithoutError) {
   EXPECT_TRUE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   qubit->addErrorX();
   rng->double_value = 0.3;
@@ -423,7 +423,7 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithoutError) {
 TEST_F(EtQubitMeasurementTest, localZMeasurementWithError) {
   qubit->measurement_err.z_error_rate = 0.99;
 
-  reset();
+  reinitializeBellpair();
   rng->double_value = 0.7;
   EXPECT_EQ(qubit->localMeasureZ(), EigenvalueResult::MINUS_ONE);
   EXPECT_FALSE(qubit->has_x_error);
@@ -431,7 +431,7 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   rng->double_value = 0.3;
   EXPECT_EQ(qubit->localMeasureZ(), EigenvalueResult::PLUS_ONE);
   EXPECT_FALSE(qubit->has_x_error);
@@ -439,7 +439,7 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithError) {
   EXPECT_TRUE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   rng->double_value = 0.7;
   EXPECT_EQ(qubit->localMeasureZ(), EigenvalueResult::MINUS_ONE);
@@ -448,7 +448,7 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   rng->double_value = 0.3;
   EXPECT_EQ(qubit->localMeasureZ(), EigenvalueResult::PLUS_ONE);
@@ -457,7 +457,7 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithError) {
   EXPECT_TRUE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorX();
   rng->double_value = 0.7;
   EXPECT_EQ(qubit->localMeasureZ(), EigenvalueResult::MINUS_ONE);
@@ -466,7 +466,7 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithError) {
   EXPECT_TRUE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorX();
   rng->double_value = 0.3;
   EXPECT_EQ(qubit->localMeasureZ(), EigenvalueResult::PLUS_ONE);
@@ -475,7 +475,7 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithError) {
   EXPECT_FALSE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   qubit->addErrorX();
   rng->double_value = 0.7;
@@ -485,7 +485,7 @@ TEST_F(EtQubitMeasurementTest, localZMeasurementWithError) {
   EXPECT_TRUE(another_qubit->has_x_error);
   EXPECT_FALSE(another_qubit->has_z_error);
 
-  reset();
+  reinitializeBellpair();
   qubit->addErrorZ();
   qubit->addErrorX();
   rng->double_value = 0.3;
