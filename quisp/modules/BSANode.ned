@@ -39,7 +39,7 @@ module BSAInternal
         }
         BSA: BellStateAnalyzer {
             parameters:
-                address = parent.address;//share the same address within all inner modules
+                address = parent.address; // share the same address within all inner modules
                 darkcount_probability = parent.internal_hom_darkcount_probability;
                 loss_rate = parent.internal_hom_loss_rate;
                 error_rate = parent.internal_hom_error_rate;
@@ -109,7 +109,7 @@ module BSA
     connections:
 
         for i=0..sizeof(port)-1 {
-            router.toQueue[i] --> nic[i].in;//Each routing port is connected to its own queue
+            router.toQueue[i] --> nic[i].in; // Each routing port is connected to its own queue
             router.fromQueue[i] <-- nic[i].out;
             nic[i].line <--> port[i];
         }

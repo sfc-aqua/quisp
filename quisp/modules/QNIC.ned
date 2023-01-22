@@ -16,7 +16,6 @@ module QNIC
         int self_qnic_index;
         int parent_node_address;
         int neighbor_node_address @mutable = default(-1);
-        //int neighbor_qnode_address = default(-1);
         int self_qnic_type;
         bool receiver = default(false);
         double emission_std = default(0);
