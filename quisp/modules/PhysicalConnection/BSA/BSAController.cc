@@ -4,14 +4,14 @@
  *
  *  \brief BSAController
  */
-#include "../BSA/BSAController.h"
+#include "./BSAController.h"
 
 namespace quisp {
 namespace modules {
 
 Define_Module(BSAController);
 
-BSAController::BSAController() {}
+BSAController::BSAController(): provider(utils::ComponentProvider{this}){}
 
 void BSAController::initialize(int stage) {
   handshake = false;

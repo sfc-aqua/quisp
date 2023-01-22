@@ -14,14 +14,24 @@
 using namespace omnetpp;
 using namespace quisp::messages;
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
-/** \class BSAController BSA_Controller.h
- *  \note How about if two nodes have imbalanced buffers?
- *        Maybe use unused qnic (which is ought to be used for another path)?
+/** @class BSAController BSA_Controller.h
  *
- *  \brief BSAController
+ *  \brief This module takes the click event from BSA,
+ *         compile the result and report back to QNode that sent the photons.
+ *
+ *         The controller can be in 2 operational modes.
+ *           1) active mode
+ *           2) passive mode
+ *
+ *  In the active mode, it will be responsible for deciding when the photons should come in.
+ *  It will check the distance between two QNodes (possible one could be self), and decide
+ *  on when the first photon should arrive. The result will be sent back in batches
+ *  not on every photon pairs/single coming in.
+ *
+ *  In the passive mode, this assumes that the BSA is internal and EPPS will tell us
+ *  how many photons will arrive, when the first one will arrive, and what the iterval is.
  */
 class BSAController : public cSimpleModule {
  private:
@@ -29,6 +39,7 @@ class BSAController : public cSimpleModule {
   int photon_detection_per_sec;  ///< The number of detectable photon in a second. This info is used to decide the number of photon in one trial.
   double speed_of_light_in_channel;  ///< Speed of light in optical fiber.
   cPar* c;
+  utils::ComponentProvider provider;
 
  public:
   int neighbor_address;  ///< Address of one of two neighbor node.
@@ -81,5 +92,4 @@ class BSAController : public cSimpleModule {
   BSAController();
 };
 
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules

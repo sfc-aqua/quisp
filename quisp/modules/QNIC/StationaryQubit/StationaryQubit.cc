@@ -124,7 +124,7 @@ void StationaryQubit::handleMessage(cMessage *msg) {
   double rand = dblrand();
   if (rand < (1 - emission_success_probability)) {
     PhotonicQubit *pk = check_and_cast<PhotonicQubit *>(msg);
-    pk->setPhotonLost(true);
+    pk->setLost(true);
     send(pk, "tolens_quantum_port$o");
   } else {
     send(msg, "tolens_quantum_port$o");
@@ -215,15 +215,7 @@ PhotonicQubit *StationaryQubit::generateEntangledPhoton() {
   // To simulate the actual physical entangled partner, not what the system thinks!!! we need this.
 
   // This photon is entangled with.... node_address = node's index
-  photon->setNodeEntangledWith(node_address);
-
-  // qnic_address != qnic_index. qnic_index is not unique because there are 3 types.
-  photon->setQNICEntangledWith(qnic_address);
-
-  // stationary_qubit_address = StationaryQubit's index
-  photon->setStationaryQubitEntangledWith(stationary_qubit_address);
-  photon->setQNICtypeEntangledWith(qnic_type);
-  photon->setEntangled_with(this);
+  photon->setQubit_ref(this->qubit_ref);
   return photon;
 }
 

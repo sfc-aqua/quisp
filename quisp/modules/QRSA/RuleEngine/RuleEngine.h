@@ -104,7 +104,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void initialize() override;
   void finish() override;
   void handleMessage(cMessage *msg) override;
-  void scheduleFirstPhotonEmission(messages::BSMtimingNotifier *pk, QNIC_type qnic_type);
+  void scheduleFirstPhotonEmission(messages::BSMTimingNotification *pk, QNIC_type qnic_type);
   void sendPhotonTransmissionSchedule(PhotonTransmissionConfig transmission_config);
   void shootPhoton(messages::SchedulePhotonTransmissionsOnebyOne *pk);
   void incrementBurstTrial(int destAddr, int internal_qnic_address, int internal_qnic_index);

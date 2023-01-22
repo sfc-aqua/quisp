@@ -26,7 +26,7 @@ module BSAInternal
         @display("i=BSA");
 
     gates:
-        inout quantum_port[] @loose;
+        input quantum_port[] @loose;
         output toRouter @loose;
     submodules:
         Controller: BSAController {

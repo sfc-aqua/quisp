@@ -5,11 +5,11 @@ simple BSAController
 {
     parameters:
         int address;
-        volatile double speed_of_light_in_fiber @unit(km);//per sec
+        volatile double speed_of_light_in_fiber @unit(km); //per sec
         int photon_detection_per_sec = default(10000);
         double initial_notification_timing_buffer @unit(s) = default(0s);
-        //rate can be up to 1 billion photons per second by default
-        //interval will be 1photon/ns
+        // rate can be up to 1 billion photons per second by default
+        // interval will be 1photon/ns
         int neighbor_address @mutable = default(-1);
         int neighbor_address_two @mutable = default(-1);
         double distance_to_neighbor @mutable = default(-1);//in km

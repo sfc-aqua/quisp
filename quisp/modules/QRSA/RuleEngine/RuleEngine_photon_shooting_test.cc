@@ -761,7 +761,7 @@ TEST(RuleEnginePhotonShootingTest, scheduleFirstPhotonEmission) {
   simtime_t timing = 1.0;
 
   // QNIC_E
-  auto* pk = new BSMtimingNotifier();
+  auto* pk = new BSMTimingNotification();
   pk->setInternal_qnic_address(qnic_address);
   pk->setInternal_qnic_index(qnic_index);
   pk->setTiming_at(timing);
@@ -788,7 +788,7 @@ TEST(RuleEnginePhotonShootingTest, scheduleFirstPhotonEmission) {
   // QNIC_R
   qnic_type = QNIC_R;
   qnic_index = 0;
-  pk = new BSMtimingNotifier();
+  pk = new BSMTimingNotification();
   pk->setInternal_qnic_address(qnic_address);
   pk->setInternal_qnic_index(qnic_index);
   pk->setTiming_at(timing);

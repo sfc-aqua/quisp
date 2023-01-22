@@ -1,4 +1,5 @@
 #include "StationaryQubit.h"
+#include <backends/interfaces/IQubit.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <modules/common_types.h>
@@ -15,6 +16,8 @@
 #include "test_utils/Simulation.h"
 #include "test_utils/UtilFunctions.h"
 #include "test_utils/mock_backends/MockQuantumBackend.h"
+
+using quisp::backends::abstract::IQubit;
 
 using namespace testing;
 using namespace quisp::modules;
@@ -265,7 +268,7 @@ TEST_F(StatQubitTest, emissionFailedPhotonLost) {
 
   auto *photon = dynamic_cast<PhotonicQubit *>(new_msg);
   ASSERT_NE(photon, nullptr);
-  EXPECT_TRUE(photon->getPhotonLost());
+  EXPECT_TRUE(photon->isLost());
 }
 
 TEST_F(StatQubitTest, emissionSuccess) {
@@ -280,7 +283,7 @@ TEST_F(StatQubitTest, emissionSuccess) {
 
   auto *photon = dynamic_cast<PhotonicQubit *>(new_msg);
   ASSERT_NE(photon, nullptr);
-  EXPECT_FALSE(photon->getPhotonLost());
+  EXPECT_FALSE(photon->isLost());
 }
 
 TEST_F(StatQubitTest, finish) {

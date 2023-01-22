@@ -28,7 +28,6 @@ module QNIC
     gates:
         inout qnic_quantum_port @loose;//One quantum port for every qnic in a node
         output toParentRouter @loose;//If not used, this still needs to be connected somewhere!!
-        //inout dummyRoutingDaemonLink @loose;
 
     submodules:
         statQubit[num_buffer]: StationaryQubit {

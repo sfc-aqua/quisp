@@ -86,7 +86,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
 
   else if (auto *pk_result = dynamic_cast<CombinedBSAresults *>(msg)) {
     // First, keep all the qubits that were successfully entangled, and reinitialize the failed ones.
-    BSMtimingNotifier *pk = check_and_cast<BSMtimingNotifier *>(msg);
+    BSMTimingNotification *pk = check_and_cast<BSMTimingNotification *>(msg);
     bubble("trial over is set to true");
     // Set qubits free according to results
     // Also needs to send which qubit was which to the neighbor (not BSA but the neighboring QNode). To update the QubitState table's entangled address.
@@ -135,10 +135,10 @@ void RuleEngine::handleMessage(cMessage *msg) {
   }
 
   // Bell pair generation timing syncronization from BSA
-  else if (dynamic_cast<BSMtimingNotifier *>(msg) != nullptr && dynamic_cast<CombinedBSAresults *>(msg) == nullptr) {
+  else if (dynamic_cast<BSMTimingNotification *>(msg) != nullptr && dynamic_cast<CombinedBSAresults *>(msg) == nullptr) {
     bubble("timing received");
     EV << "BSM timing notifier received\n";
-    BSMtimingNotifier *pk = check_and_cast<BSMtimingNotifier *>(msg);
+    BSMTimingNotification *pk = check_and_cast<BSMTimingNotification *>(msg);
     if (pk->getInternal_qnic_index() == -1) {  // MIM, or the other node without internnal BSA of MM
       EV_DEBUG << "This BSA request is non-internal\n";
       scheduleFirstPhotonEmission(pk, QNIC_E);
@@ -251,7 +251,7 @@ InterfaceInfo RuleEngine::getInterface_toNeighbor_Internal(int local_qnic_addres
   return inf;
 }
 
-void RuleEngine::scheduleFirstPhotonEmission(BSMtimingNotifier *pk, QNIC_type qnic_type) {
+void RuleEngine::scheduleFirstPhotonEmission(BSMTimingNotification *pk, QNIC_type qnic_type) {
   if (ntable.empty()) {
     ntable = hardware_monitor->passNeighborTable();  // Get neighbor table from Hardware Manager: neighbor address--> InterfaceInfo.
   }  // Just do this once, unless the network changes during the simulation.
