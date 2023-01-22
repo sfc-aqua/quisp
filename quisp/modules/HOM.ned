@@ -11,7 +11,7 @@ import modules.Common.Router;
 import modules.Common.Queue;
 
 
-module interHOM
+module BSAInternal
 {
     parameters:
         int address;
@@ -31,7 +31,7 @@ module interHOM
         inout quantum_port[] @loose;
         output toRouter @loose;
     submodules:
-        Controller: HOMController {
+        Controller: BSAController {
             parameters:
                 address = parent.address;
                 @display("p=103.55499,121.435");
@@ -51,14 +51,14 @@ module interHOM
         }
     connections:
         Controller.toRouter_port --> toRouter;
-        BSA.toHOMController_port --> Controller.fromBSA_port;
+        BSA.toBSAController_port --> Controller.fromBSA_port;
 
-        quantum_port++ <--> BSA.fromHOM_quantum_port++;
-        quantum_port++ <--> BSA.fromHOM_quantum_port++;
+        quantum_port++ <--> BSA.fromBSA_quantum_port++;
+        quantum_port++ <--> BSA.fromBSA_quantum_port++;
 }
 
 
-module HOM
+module BSA
 {
     parameters:
         @display("i=BSA");
@@ -71,8 +71,8 @@ module HOM
         int address = default(0);
         string included_in_topology = default("yes");
         @display("bgl=2");
-        string node_type = default("HOM");
-        bool interHOM = default(false);
+        string node_type = default("BSA");
+        bool BSAInternal = default(false);
 
     gates:
         inout quantum_port[] @loose;
@@ -102,7 +102,7 @@ module HOM
                 address = 0;
                 @display("p=281.61,55.874996");
         }
-        Controller: HOMController {
+        Controller: BSAController {
             parameters:
                 address = parent.address;
                 photon_detection_per_sec = parent.hom_photon_detection_per_sec;
@@ -117,10 +117,10 @@ module HOM
         }
 
         for i=0..sizeof(quantum_port)-1 {
-            quantum_port[i] <--> BSA.fromHOM_quantum_port++;
+            quantum_port[i] <--> BSA.fromBSA_quantum_port++;
         }
 
         Controller.toRouter_port --> router.fromApp;
         router.toApp --> Controller.fromRouter_port;
-        BSA.toHOMController_port --> Controller.fromBSA_port;
+        BSA.toBSAController_port --> Controller.fromBSA_port;
 }

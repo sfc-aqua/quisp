@@ -111,7 +111,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
       // error("qnic should not be terminated here, Node: %d, qnic_address: %d", parentAddress, qnic_address);
       delete msg;
       return;
-    } else if (pk->getInternal_qnic_index() == -1) {  // Schedule next burst. MIM, or the other node without internal HOM of MM
+    } else if (pk->getInternal_qnic_index() == -1) {  // Schedule next burst. MIM, or the other node without internal BSA of MM
       EV_DEBUG << "This BSA request is non-internal\n";
       scheduleFirstPhotonEmission(pk, QNIC_E);
     } else {
@@ -134,12 +134,12 @@ void RuleEngine::handleMessage(cMessage *msg) {
     }
   }
 
-  // Bell pair generation timing syncronization from HOM
+  // Bell pair generation timing syncronization from BSA
   else if (dynamic_cast<BSMtimingNotifier *>(msg) != nullptr && dynamic_cast<CombinedBSAresults *>(msg) == nullptr) {
     bubble("timing received");
     EV << "BSM timing notifier received\n";
     BSMtimingNotifier *pk = check_and_cast<BSMtimingNotifier *>(msg);
-    if (pk->getInternal_qnic_index() == -1) {  // MIM, or the other node without internnal HOM of MM
+    if (pk->getInternal_qnic_index() == -1) {  // MIM, or the other node without internnal BSA of MM
       EV_DEBUG << "This BSA request is non-internal\n";
       scheduleFirstPhotonEmission(pk, QNIC_E);
     } else {
@@ -466,7 +466,7 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
   int qnic_index, qnic_address, neighborQNodeAddress = -1;
   QNIC_type qnic_type;
 
-  // if the HOM is external
+  // if the BSA is external
   if (internal_qnic_index == -1) {  // destination hom is outside this node.
     InterfaceInfo inf = getInterface_toNeighbor(destAddr);
     neighborQNodeAddress = inf.neighborQNode_address;  // Because we need the address of the neighboring QNode, not BSA!

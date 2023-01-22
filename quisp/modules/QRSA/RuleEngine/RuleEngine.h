@@ -62,7 +62,7 @@ struct SwappingResultData {
  *  \note The Connection Manager responds to connection requests received from other nodes.
  *        Connection setup, so a regular operation but not high bandwidth, relatively low constraints.
  *        Connections from nearest neighbors only.
- *        Connection manager needs to know which qnic is connected to where, which QNode not HOM/EPPS.
+ *        Connection manager needs to know which qnic is connected to where, which QNode not BSA/EPPS.
  *
  *  \brief RuleEngine
  */

@@ -44,7 +44,7 @@ class HardwareMonitor : public IHardwareMonitor {
 
   int my_address;
 
-  // number of qnics connected to stand alone HOM or internal hom in the neighbor.
+  // number of qnics connected to stand alone BSA or internal hom in the neighbor.
   int num_qnic;
   // number of qnics connected to internal hom.
   int num_qnic_r;

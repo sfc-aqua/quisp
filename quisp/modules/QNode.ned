@@ -11,27 +11,22 @@ module QNode
     parameters:
         int buffer_size = default(10);
         int address = default(0);
-        int buffers = default(10); //default is defined as 10 in .ini file but can be changed independently in .ned file
+        int buffers = default(10); // default is defined as 10 in .ini file but can be changed independently in .ned file
         int mass = default(100);
         bool is_initiator = default(false);
         @display("bgl=4");
 
         string included_in_topology = "yes";
         string node_type = default("none");
-        double emission_timing_std = default(0);//in seconds
+        double emission_timing_std = default(0); // in seconds
         bool simultaneous_es_enabled = default(false);
 
     gates:
-        inout port[];//size will be determined by the number of connections defined at the end of this file
+        inout port[]; // size will be determined by the number of connections defined at the end of this file
         inout quantum_port[] @loose;
-        inout quantum_port_receiver[] @loose;//HOM is active. Tells the neighboring nodes about the timings and so on.
-        inout quantum_port_receiver_passive[] @loose;//HOM is passive. Doesnt do anything. SPDC is in charge here.
-        //inout qp_test[2] @loose;
+        inout quantum_port_receiver[] @loose; // BSA is active. Tells the neighboring nodes about the timings and so on.
+        inout quantum_port_receiver_passive[] @loose; // BSA is passive. Doesnt do anything. SPDC is in charge here.
 
-    //types:
-    //    channel I extends IdealChannel{
-    //
-    //    }
     submodules:
         app: Application {
             parameters:
@@ -55,24 +50,21 @@ module QNode
         qrsa: quantumRoutingSoft {
             parameters:
                 address = parent.address;
-                //@display("p=110.05918,124.85208;is=vl");
                 @display("p=171,33");
                 number_of_qnics = sizeof(parent.quantum_port);
                 number_of_qnics_r = sizeof(parent.quantum_port_receiver);
                 number_of_qnics_rp = sizeof(parent.quantum_port_receiver_passive);
                 simultaneous_es_enabled = parent.simultaneous_es_enabled;
         }
-        qnic[sizeof(quantum_port)]: QNIC {//number of QNIC is the same as number of classical queue/NIC
+        qnic[sizeof(quantum_port)]: QNIC { // number of QNIC is the same as number of classical queue/NIC
             parameters:
                 parent_node_address = parent.address;
                 self_qnic_address = index;
                 self_qnic_index = index;
-                num_buffer = default(int(parent.buffers));//number of buffers for each qnic
+                num_buffer = default(int(parent.buffers)); // number of buffers for each qnic
                 receiver = false;
                 emission_std = parent.emission_timing_std;
                 self_qnic_type = 0;
-                //@display("p=198,124");
-                //@display("p=209,195;b=,,,white");
                 @display("p=300,200,m,5,100,50");
         }
         qnic_r[sizeof(quantum_port_receiver)]: QNIC {
@@ -80,12 +72,11 @@ module QNode
                 parent_node_address = parent.address;
                 self_qnic_address = index + sizeof(parent.quantum_port);
                 self_qnic_index = index;
-                num_buffer = default(int(parent.buffers));//number of buffers for each qnic
+                num_buffer = default(int(parent.buffers)); // number of buffers for each qnic
                 receiver = true;
                 passive = false;
                 self_qnic_type = 1;
                 emission_std = parent.emission_timing_std;
-                //@display("p=232,173");
                 @display("p=100, 250,m,5,50,60");
         }
         qnic_rp[sizeof(quantum_port_receiver_passive)]: QNIC {
@@ -93,7 +84,7 @@ module QNode
                 parent_node_address = parent.address;
                 self_qnic_address = index + sizeof(parent.quantum_port) + sizeof(parent.quantum_port_receiver);
                 self_qnic_index = index;
-                num_buffer = default(int(buffers));//number of buffers for each qnic
+                num_buffer = default(int(buffers)); // number of buffers for each qnic
                 receiver = true;
                 passive = true;
                 self_qnic_type = 2;
@@ -107,23 +98,20 @@ module QNode
             router.fromApp <-- app.toRouter;
         }
         for i=0..sizeof(port)-1 {
-            router.toQueue[i] --> queue[i].in;//Each routing port is connected to its own queue
+            router.toQueue[i] --> queue[i].in; // Each routing port is connected to its own queue
             router.fromQueue[i] <-- queue[i].out;
             queue[i].line <--> port[i];
         }
         for i=0..sizeof(quantum_port)-1 {
             qnic[i].qnic_quantum_port <--> quantum_port[i];
-        		//qnic[i].dummyRoutingDaemonLink <--> qrsa.qnics++;
         }
         for i=0..sizeof(quantum_port_receiver)-1 {
             qnic_r[i].qnic_quantum_port <--> quantum_port_receiver[i];
-            qnic_r[i].toParentRouter --> router.fromQNIC++;//Directly connected to internal HOM
-        		//qnic_r[i].dummyRoutingDaemonLink <--> qrsa.qnics++;
+            qnic_r[i].toParentRouter --> router.fromQNIC++; // Directly connected to internal BSA
         }
         for i=0..sizeof(quantum_port_receiver_passive)-1 {
             qnic_rp[i].qnic_quantum_port <--> quantum_port_receiver_passive[i];
-            qnic_rp[i].toParentRouter --> router.fromQNIC++;//Directly connected to internal HOM
-        		//qnic_rp[i].dummyRoutingDaemonLink <--> qrsa.qnics++;
+            qnic_rp[i].toParentRouter --> router.fromQNIC++; // Directly connected to internal BSA
         }
 
         router.rePort <--> qrsa.rePort;
