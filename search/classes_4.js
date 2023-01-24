@@ -6,6 +6,5 @@ var searchData=
   ['entangledphotons_3',['entangledPhotons',['../structquisp_1_1modules_1_1entangled_photons.html',1,'quisp::modules']]],
   ['entanglementswapping_4',['EntanglementSwapping',['../classquisp_1_1rules_1_1_entanglement_swapping.html',1,'quisp::rules']]],
   ['errortrackingbackend_5',['ErrorTrackingBackend',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html',1,'quisp::backends::error_tracking']]],
-  ['errortrackingconfiguration_6',['ErrorTrackingConfiguration',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_configuration.html',1,'quisp::backends::error_tracking']]],
-  ['errortrackingqubit_7',['ErrorTrackingQubit',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html',1,'quisp::backends::error_tracking']]]
+  ['errortrackingqubit_6',['ErrorTrackingQubit',['../classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html',1,'quisp::backends::error_tracking']]]
 ];

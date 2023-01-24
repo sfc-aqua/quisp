@@ -1,0 +1,4 @@
+<map id="quisp::backends::StationaryQubitConfiguration" name="quisp::backends::StationaryQubitConfiguration">
+<area shape="rect" id="node1" title="Configuration class contains all parameters and provides the way to retrieve it." alt="" coords="5,93,184,133"/>
+<area shape="rect" id="node2" href="$classquisp_1_1backends_1_1abstract_1_1_i_configuration.html" title="just an interface for the configuration to the backend" alt="" coords="11,5,179,45"/>
+</map>

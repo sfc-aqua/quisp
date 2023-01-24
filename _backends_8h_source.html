@@ -94,40 +94,44 @@ $(document).ready(function(){initNavTree('_backends_8h_source.html',''); initRes
 <div class="contents">
 <a href="_backends_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#include &quot;<a class="code" href="backends_2_error_tracking_2_backend_8h.html">ErrorTracking/Backend.h</a>&quot;</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="backends_2_error_tracking_2_configuration_8h.html">ErrorTracking/Configuration.h</a>&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="_i_configuration_8h.html">interfaces/IConfiguration.h</a>&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="_i_quantum_backend_8h.html">interfaces/IQuantumBackend.h</a>&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="_i_qubit_8h.html">interfaces/IQubit.h</a>&quot;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="_i_qubit_id_8h.html">interfaces/IQubitId.h</a>&quot;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">// the namespace for exposing the backend</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="namespacequisp.html">   10</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacequisp_1_1backends.html">quisp::backends</a> {</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">using </span><a class="code hl_enumeration" href="namespacequisp_1_1backends_1_1abstract.html#a62ea4b6babf182573968ca80708cce0d">abstract::EigenvalueResult</a>;</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">using </span>abstract::IConfiguration;</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">using </span>abstract::IQuantumBackend;</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">using </span>abstract::IQubit;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">using </span>abstract::IQubitId;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">using </span>abstract::MeasurementOutcome;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">using </span><a class="code hl_enumeration" href="namespacequisp_1_1backends_1_1abstract.html#ac7c2b065649ec1612c11fa9390ce1b01">abstract::MeasureXResult</a>;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">using </span><a class="code hl_enumeration" href="namespacequisp_1_1backends_1_1abstract.html#aa5487584ddf960f8f4f3772be52f0b77">abstract::MeasureYResult</a>;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">using </span><a class="code hl_enumeration" href="namespacequisp_1_1backends_1_1abstract.html#a2442b24e047131bc0bc2ee7da6805be3">abstract::MeasureZResult</a>;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">using </span>error_tracking::ErrorTrackingBackend;</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">using </span>error_tracking::ErrorTrackingConfiguration;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">using </span>error_tracking::ErrorTrackingQubit;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>}  <span class="comment">// namespace quisp::backends</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;<a class="code" href="backends_2_graph_state_2_backend_8h.html">GraphState/Backend.h</a>&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="_qubit_configuration_8h.html">backends/QubitConfiguration.h</a>&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;<a class="code" href="_i_configuration_8h.html">interfaces/IConfiguration.h</a>&quot;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="_i_quantum_backend_8h.html">interfaces/IQuantumBackend.h</a>&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="_i_qubit_8h.html">interfaces/IQubit.h</a>&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="_i_qubit_id_8h.html">interfaces/IQubitId.h</a>&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">// the namespace for exposing the backend</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="namespacequisp.html">   11</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacequisp_1_1backends.html">quisp::backends</a> {</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">using </span><a class="code hl_enumeration" href="namespacequisp_1_1backends_1_1abstract.html#a62ea4b6babf182573968ca80708cce0d">abstract::EigenvalueResult</a>;</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">using </span>abstract::IConfiguration;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">using </span>abstract::IQuantumBackend;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">using </span>abstract::IQubit;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">using </span>abstract::IQubitId;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">using </span>abstract::MeasurementOutcome;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">using </span><a class="code hl_enumeration" href="namespacequisp_1_1backends_1_1abstract.html#ac7c2b065649ec1612c11fa9390ce1b01">abstract::MeasureXResult</a>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">using </span><a class="code hl_enumeration" href="namespacequisp_1_1backends_1_1abstract.html#aa5487584ddf960f8f4f3772be52f0b77">abstract::MeasureYResult</a>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">using </span><a class="code hl_enumeration" href="namespacequisp_1_1backends_1_1abstract.html#a2442b24e047131bc0bc2ee7da6805be3">abstract::MeasureZResult</a>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">// using backends::StationaryQubitConfiguration;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">using </span>error_tracking::ErrorTrackingBackend;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">using </span>error_tracking::ErrorTrackingQubit;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">using </span>graph_state::GraphStateBackend;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">using </span>graph_state::GraphStateQubit;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>}  <span class="comment">// namespace quisp::backends</span></div>
 <div class="ttc" id="a_i_configuration_8h_html"><div class="ttname"><a href="_i_configuration_8h.html">IConfiguration.h</a></div></div>
 <div class="ttc" id="a_i_quantum_backend_8h_html"><div class="ttname"><a href="_i_quantum_backend_8h.html">IQuantumBackend.h</a></div></div>
 <div class="ttc" id="a_i_qubit_8h_html"><div class="ttname"><a href="_i_qubit_8h.html">IQubit.h</a></div></div>
 <div class="ttc" id="a_i_qubit_id_8h_html"><div class="ttname"><a href="_i_qubit_id_8h.html">IQubitId.h</a></div></div>
+<div class="ttc" id="a_qubit_configuration_8h_html"><div class="ttname"><a href="_qubit_configuration_8h.html">QubitConfiguration.h</a></div></div>
 <div class="ttc" id="abackends_2_error_tracking_2_backend_8h_html"><div class="ttname"><a href="backends_2_error_tracking_2_backend_8h.html">Backend.h</a></div></div>
-<div class="ttc" id="abackends_2_error_tracking_2_configuration_8h_html"><div class="ttname"><a href="backends_2_error_tracking_2_configuration_8h.html">Configuration.h</a></div></div>
+<div class="ttc" id="abackends_2_graph_state_2_backend_8h_html"><div class="ttname"><a href="backends_2_graph_state_2_backend_8h.html">Backend.h</a></div></div>
 <div class="ttc" id="anamespacequisp_1_1backends_1_1abstract_html_a2442b24e047131bc0bc2ee7da6805be3"><div class="ttname"><a href="namespacequisp_1_1backends_1_1abstract.html#a2442b24e047131bc0bc2ee7da6805be3">quisp::backends::abstract::MeasureZResult</a></div><div class="ttdeci">MeasureZResult</div><div class="ttdef"><b>Definition:</b> IQubit.h:13</div></div>
 <div class="ttc" id="anamespacequisp_1_1backends_1_1abstract_html_a62ea4b6babf182573968ca80708cce0d"><div class="ttname"><a href="namespacequisp_1_1backends_1_1abstract.html#a62ea4b6babf182573968ca80708cce0d">quisp::backends::abstract::EigenvalueResult</a></div><div class="ttdeci">EigenvalueResult</div><div class="ttdef"><b>Definition:</b> IQubit.h:17</div></div>
 <div class="ttc" id="anamespacequisp_1_1backends_1_1abstract_html_aa5487584ddf960f8f4f3772be52f0b77"><div class="ttname"><a href="namespacequisp_1_1backends_1_1abstract.html#aa5487584ddf960f8f4f3772be52f0b77">quisp::backends::abstract::MeasureYResult</a></div><div class="ttdeci">MeasureYResult</div><div class="ttdef"><b>Definition:</b> IQubit.h:9</div></div>
 <div class="ttc" id="anamespacequisp_1_1backends_1_1abstract_html_ac7c2b065649ec1612c11fa9390ce1b01"><div class="ttname"><a href="namespacequisp_1_1backends_1_1abstract.html#ac7c2b065649ec1612c11fa9390ce1b01">quisp::backends::abstract::MeasureXResult</a></div><div class="ttdeci">MeasureXResult</div><div class="ttdef"><b>Definition:</b> IQubit.h:5</div></div>
-<div class="ttc" id="anamespacequisp_1_1backends_html"><div class="ttname"><a href="namespacequisp_1_1backends.html">quisp::backends</a></div><div class="ttdef"><b>Definition:</b> Backends.h:10</div></div>
+<div class="ttc" id="anamespacequisp_1_1backends_html"><div class="ttname"><a href="namespacequisp_1_1backends.html">quisp::backends</a></div><div class="ttdef"><b>Definition:</b> Backends.h:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

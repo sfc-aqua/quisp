@@ -10,6 +10,6 @@ var searchData=
   ['value_2eh_7',['Value.h',['../_value_8h.html',1,'']]],
   ['valuetype_8',['ValueType',['../namespacequisp_1_1runtime.html#a26ed411782aba743676e85bbe9cc2ba4',1,'quisp::runtime']]],
   ['valueunion_9',['ValueUnion',['../unionquisp_1_1runtime_1_1_value_union.html',1,'quisp::runtime::ValueUnion'],['../unionquisp_1_1runtime_1_1_value_union.html#a9ab8d61b0198556f5ba7b684d0c31348',1,'quisp::runtime::ValueUnion::ValueUnion(MeasurementOutcome val)'],['../unionquisp_1_1runtime_1_1_value_union.html#a9b3d1c2842af0e7b2645a264e78acda6',1,'quisp::runtime::ValueUnion::ValueUnion(int val)']]],
-  ['vertex_5foperator_10',['vertex_operator',['../classquisp_1_1modules_1_1_stationary_qubit.html#a56058e5659cc8738c353feb36597724f',1,'quisp::modules::StationaryQubit']]],
+  ['vertex_5foperator_10',['vertex_operator',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#abb063d49f9d0eaf60b33c5d59ce78c46',1,'quisp::backends::graph_state::GraphStateQubit']]],
   ['visitor_11',['visitor',['../classquisp_1_1runtime_1_1_runtime.html#a0c499d39f628605c9401d0c2c63cd9cc',1,'quisp::runtime::Runtime']]]
 ];

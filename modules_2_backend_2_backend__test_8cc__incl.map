@@ -1,52 +1,52 @@
 <map id="quisp/modules/Backend/Backend_test.cc" name="quisp/modules/Backend/Backend_test.cc">
-<area shape="rect" id="node1" title=" " alt="" coords="880,5,1041,45"/>
-<area shape="rect" id="node2" href="$modules_2_backend_2_backend_8h.html" title=" " alt="" coords="841,174,923,199"/>
-<area shape="rect" id="node3" href="$common__types_8h.html" title=" " alt="" coords="977,262,1150,287"/>
-<area shape="rect" id="node8" href="$_i_quantum_backend_8h.html" title=" " alt="" coords="1090,423,1301,449"/>
-<area shape="rect" id="node24" title=" " alt="" coords="999,93,1093,119"/>
-<area shape="rect" id="node25" href="$_test_utils_8h.html" title=" " alt="" coords="1935,93,2077,119"/>
-<area shape="rect" id="node10" title=" " alt="" coords="589,504,657,529"/>
-<area shape="rect" id="node15" title=" " alt="" coords="1735,423,1818,449"/>
-<area shape="rect" id="node16" href="$modules_2_backend_2_r_n_g_8h.html" title=" " alt="" coords="891,262,953,287"/>
-<area shape="rect" id="node17" href="$backends_2_error_tracking_2_qubit_8h.html" title=" " alt="" coords="703,343,765,368"/>
-<area shape="rect" id="node4" href="$_backends_8h.html" title=" " alt="" coords="1303,343,1453,368"/>
-<area shape="rect" id="node14" title=" " alt="" coords="1038,343,1089,368"/>
-<area shape="rect" id="node5" href="$backends_2_error_tracking_2_configuration_8h.html" title=" " alt="" coords="1325,423,1431,449"/>
-<area shape="rect" id="node6" href="$_i_configuration_8h.html" title=" " alt="" coords="1287,504,1469,529"/>
-<area shape="rect" id="node11" href="$_i_qubit_id_8h.html" title=" " alt="" coords="1493,504,1572,529"/>
-<area shape="rect" id="node12" href="$_i_qubit_8h.html" title=" " alt="" coords="927,423,1066,449"/>
-<area shape="rect" id="node7" title=" " alt="" coords="1659,577,1713,603"/>
-<area shape="rect" id="node9" title=" " alt="" coords="1120,504,1263,529"/>
-<area shape="rect" id="node13" title=" " alt="" coords="904,504,983,529"/>
-<area shape="rect" id="node18" title=" " alt="" coords="682,504,773,529"/>
-<area shape="rect" id="node19" title=" " alt="" coords="730,423,802,449"/>
-<area shape="rect" id="node20" title=" " alt="" coords="26,416,218,456"/>
-<area shape="rect" id="node21" title=" " alt="" coords="242,416,410,456"/>
-<area shape="rect" id="node22" title=" " alt="" coords="435,423,567,449"/>
-<area shape="rect" id="node23" href="$backends_2_error_tracking_2types_8h.html" title=" " alt="" coords="643,423,705,449"/>
-<area shape="rect" id="node26" href="$_access_private_8h.html" title=" " alt="" coords="3325,174,3442,199"/>
-<area shape="rect" id="node29" href="$_gate_8h.html" title=" " alt="" coords="3479,174,3539,199"/>
-<area shape="rect" id="node31" href="$_module_type_8h.html" title=" " alt="" coords="1895,262,1997,287"/>
-<area shape="rect" id="node33" href="$_q_node_8h.html" title=" " alt="" coords="1480,343,1553,368"/>
-<area shape="rect" id="node34" href="$_simulation_8h.html" title=" " alt="" coords="1583,343,1677,368"/>
-<area shape="rect" id="node36" href="$_static_env_8h.html" title=" " alt="" coords="1759,262,1847,287"/>
-<area shape="rect" id="node37" href="$_test_component_provider_strategy_8h.html" title=" " alt="" coords="2855,174,3075,199"/>
-<area shape="rect" id="node42" href="$_util_functions_8h.html" title=" " alt="" coords="1575,262,1685,287"/>
-<area shape="rect" id="node43" href="$_mock_backend_qubit_8h.html" title=" " alt="" coords="1049,167,1253,207"/>
-<area shape="rect" id="node44" href="$_mock_quantum_backend_8h.html" title=" " alt="" coords="1380,167,1587,207"/>
-<area shape="rect" id="node45" href="$_mock_hardware_monitor_8h.html" title=" " alt="" coords="1905,167,2107,207"/>
-<area shape="rect" id="node46" href="$_mock_qubit_8h.html" title=" " alt="" coords="2131,174,2318,199"/>
-<area shape="rect" id="node47" href="$_mock_real_time_controller_8h.html" title=" " alt="" coords="3099,167,3300,207"/>
-<area shape="rect" id="node48" href="$_mock_routing_daemon_8h.html" title=" " alt="" coords="2393,167,2584,207"/>
-<area shape="rect" id="node49" href="$_mock_rule_engine_8h.html" title=" " alt="" coords="2609,174,2830,199"/>
-<area shape="rect" id="node50" href="$_mock_q_nic_store_8h.html" title=" " alt="" coords="1663,174,1880,199"/>
-<area shape="rect" id="node27" title=" " alt="" coords="3252,262,3304,287"/>
-<area shape="rect" id="node28" title=" " alt="" coords="3329,262,3411,287"/>
-<area shape="rect" id="node30" title=" " alt="" coords="3435,262,3582,287"/>
-<area shape="rect" id="node32" href="$test__utils_2_configuration_8h.html" title=" " alt="" coords="1802,343,1909,368"/>
-<area shape="rect" id="node35" title=" " alt="" coords="1557,423,1711,449"/>
-<area shape="rect" id="node38" href="$_i_logger_8h.html" title=" " alt="" coords="2574,262,2747,287"/>
-<area shape="rect" id="node39" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="2751,343,2869,368"/>
-<area shape="rect" id="node40" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="2053,255,2255,295"/>
-<area shape="rect" id="node41" href="$_i_real_time_controller_8h.html" title=" " alt="" coords="2873,255,3099,295"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1360,5,1521,45"/>
+<area shape="rect" id="node2" href="$modules_2_backend_2_backend_8h.html" title=" " alt="" coords="1321,174,1403,199"/>
+<area shape="rect" id="node3" href="$common__types_8h.html" title=" " alt="" coords="1758,255,1931,280"/>
+<area shape="rect" id="node8" href="$_i_quantum_backend_8h.html" title=" " alt="" coords="1537,409,1747,434"/>
+<area shape="rect" id="node28" title=" " alt="" coords="1479,93,1573,119"/>
+<area shape="rect" id="node29" href="$_test_utils_8h.html" title=" " alt="" coords="2741,93,2884,119"/>
+<area shape="rect" id="node5" href="$_qubit_configuration_8h.html" title=" " alt="" coords="1772,409,1971,434"/>
+<area shape="rect" id="node10" title=" " alt="" coords="5,489,73,515"/>
+<area shape="rect" id="node15" title=" " alt="" coords="2301,409,2383,434"/>
+<area shape="rect" id="node16" href="$modules_2_backend_2_r_n_g_8h.html" title=" " alt="" coords="1611,255,1673,280"/>
+<area shape="rect" id="node17" href="$backends_2_error_tracking_2_qubit_8h.html" title=" " alt="" coords="571,328,633,353"/>
+<area shape="rect" id="node24" href="$backends_2_graph_state_2_qubit_8h.html" title=" " alt="" coords="1197,328,1260,353"/>
+<area shape="rect" id="node4" href="$_backends_8h.html" title=" " alt="" coords="1567,328,1717,353"/>
+<area shape="rect" id="node14" title=" " alt="" coords="1894,328,1945,353"/>
+<area shape="rect" id="node6" href="$_i_configuration_8h.html" title=" " alt="" coords="1835,489,2017,515"/>
+<area shape="rect" id="node11" href="$_i_qubit_id_8h.html" title=" " alt="" coords="1516,489,1595,515"/>
+<area shape="rect" id="node12" href="$_i_qubit_8h.html" title=" " alt="" coords="1014,409,1153,434"/>
+<area shape="rect" id="node7" title=" " alt="" coords="2017,563,2072,588"/>
+<area shape="rect" id="node9" title=" " alt="" coords="1619,489,1761,515"/>
+<area shape="rect" id="node13" title=" " alt="" coords="803,489,881,515"/>
+<area shape="rect" id="node18" title=" " alt="" coords="445,489,535,515"/>
+<area shape="rect" id="node19" title=" " alt="" coords="77,409,149,434"/>
+<area shape="rect" id="node20" title=" " alt="" coords="261,401,453,441"/>
+<area shape="rect" id="node21" title=" " alt="" coords="578,401,746,441"/>
+<area shape="rect" id="node22" title=" " alt="" coords="771,409,903,434"/>
+<area shape="rect" id="node23" href="$backends_2_error_tracking_2types_8h.html" title=" " alt="" coords="173,409,236,434"/>
+<area shape="rect" id="node25" title=" " alt="" coords="1177,409,1281,434"/>
+<area shape="rect" id="node26" title=" " alt="" coords="1305,409,1461,434"/>
+<area shape="rect" id="node27" href="$backends_2_graph_state_2types_8h.html" title=" " alt="" coords="927,409,989,434"/>
+<area shape="rect" id="node30" href="$_access_private_8h.html" title=" " alt="" coords="3591,174,3709,199"/>
+<area shape="rect" id="node33" href="$_gate_8h.html" title=" " alt="" coords="3507,174,3567,199"/>
+<area shape="rect" id="node35" href="$_module_type_8h.html" title=" " alt="" coords="2084,255,2187,280"/>
+<area shape="rect" id="node37" href="$_q_node_8h.html" title=" " alt="" coords="2861,328,2935,353"/>
+<area shape="rect" id="node38" href="$_simulation_8h.html" title=" " alt="" coords="3599,328,3693,353"/>
+<area shape="rect" id="node40" href="$_static_env_8h.html" title=" " alt="" coords="2211,255,2299,280"/>
+<area shape="rect" id="node41" href="$_test_component_provider_strategy_8h.html" title=" " alt="" coords="3745,255,3965,280"/>
+<area shape="rect" id="node42" href="$_util_functions_8h.html" title=" " alt="" coords="2329,255,2438,280"/>
+<area shape="rect" id="node43" href="$_mock_backend_qubit_8h.html" title=" " alt="" coords="1479,167,1683,207"/>
+<area shape="rect" id="node44" href="$_mock_quantum_backend_8h.html" title=" " alt="" coords="1707,167,1913,207"/>
+<area shape="rect" id="node45" href="$_mock_hardware_monitor_8h.html" title=" " alt="" coords="3178,167,3381,207"/>
+<area shape="rect" id="node46" href="$_mock_qubit_8h.html" title=" " alt="" coords="1938,174,2125,199"/>
+<area shape="rect" id="node47" href="$_mock_real_time_controller_8h.html" title=" " alt="" coords="2492,167,2693,207"/>
+<area shape="rect" id="node48" href="$_mock_routing_daemon_8h.html" title=" " alt="" coords="2717,167,2908,207"/>
+<area shape="rect" id="node49" href="$_mock_rule_engine_8h.html" title=" " alt="" coords="2933,174,3154,199"/>
+<area shape="rect" id="node50" href="$_mock_q_nic_store_8h.html" title=" " alt="" coords="2251,174,2468,199"/>
+<area shape="rect" id="node31" title=" " alt="" coords="3669,255,3721,280"/>
+<area shape="rect" id="node32" title=" " alt="" coords="3562,255,3645,280"/>
+<area shape="rect" id="node34" title=" " alt="" coords="3391,255,3538,280"/>
+<area shape="rect" id="node36" href="$_configuration_8h.html" title=" " alt="" coords="2198,328,2305,353"/>
+<area shape="rect" id="node39" title=" " alt="" coords="3569,409,3723,434"/>
 </map>

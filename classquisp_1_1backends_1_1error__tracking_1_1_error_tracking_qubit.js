@@ -8,7 +8,7 @@ var classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit =
     [ "applySingleQubitGateError", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#aef04868303ead583647f5986455a2462", null ],
     [ "applyTwoQubitGateError", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a36dabd33bcfd67edf3abc88906f772d6", null ],
     [ "assertEntangledPartnerValid", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a83bca268d3ed8fe4c9a1279905d9b2bb", null ],
-    [ "configure", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#ab0a76199c9ead653c890db869337b2c2", null ],
+    [ "configure", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a3a31221927afea05788d1c85f289bab7", null ],
     [ "correlationMeasureX", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#a1bdc475edc69ac5ce293102e74ebaea1", null ],
     [ "correlationMeasureY", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#af0910253f74715c1b6babc41d0e87d55", null ],
     [ "correlationMeasureZ", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html#aff0e81d7a467dbe4532ddf2d3ce53001", null ],

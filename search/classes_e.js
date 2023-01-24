@@ -1,20 +1,10 @@
 var searchData=
 [
-  ['qnic_0',['QNIC',['../structquisp_1_1modules_1_1_q_n_i_c.html',1,'quisp::modules']]],
-  ['qnic_5fid_1',['QNIC_id',['../structquisp_1_1modules_1_1_q_n_i_c__id.html',1,'quisp::modules']]],
-  ['qnic_5fpair_5finfo_2',['QNIC_pair_info',['../structquisp_1_1modules_1_1_q_n_i_c__pair__info.html',1,'quisp::modules']]],
-  ['qnicinterface_3',['QnicInterface',['../structquisp_1_1rules_1_1_qnic_interface.html',1,'quisp::rules']]],
-  ['qnicrecord_4',['QNicRecord',['../classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record.html',1,'quisp::modules::qnic_record']]],
-  ['qnicspec_5',['QNicSpec',['../structquisp__test_1_1strategy_1_1_q_nic_spec.html',1,'quisp_test::strategy']]],
-  ['qnicstore_6',['QNicStore',['../classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html',1,'quisp::modules::qnic_store']]],
-  ['qnodeaddr_7',['QNodeAddr',['../structquisp_1_1runtime_1_1_q_node_addr.html',1,'quisp::runtime']]],
-  ['quantumchannel_8',['QuantumChannel',['../classquisp_1_1channels_1_1_quantum_channel.html',1,'quisp::channels']]],
-  ['quantumstate_9',['QuantumState',['../structquisp_1_1backends_1_1error__tracking_1_1_quantum_state.html',1,'quisp::backends::error_tracking']]],
-  ['qubit_10',['Qubit',['../classquisp__test_1_1backends_1_1_qubit.html',1,'quisp_test::backends']]],
-  ['qubitaddr_11',['QubitAddr',['../structquisp_1_1modules_1_1_qubit_addr.html',1,'quisp::modules']]],
-  ['qubitaddr_5fcons_12',['QubitAddr_cons',['../structquisp_1_1modules_1_1_qubit_addr__cons.html',1,'quisp::modules']]],
-  ['qubitid_13',['QubitId',['../classquisp_1_1modules_1_1qubit__id_1_1_qubit_id.html',1,'quisp::modules::qubit_id::QubitId'],['../structquisp_1_1runtime_1_1_qubit_id.html',1,'quisp::runtime::QubitId'],['../classquisp__test_1_1backends_1_1_qubit_id.html',1,'quisp_test::backends::QubitId']]],
-  ['qubitrecord_14',['QubitRecord',['../classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html',1,'quisp::modules::qubit_record']]],
-  ['qubitstate_15',['QubitState',['../structquisp_1_1modules_1_1_qubit_state.html',1,'quisp::modules']]],
-  ['queue_16',['Queue',['../classquisp_1_1modules_1_1_queue.html',1,'quisp::modules']]]
+  ['photonicswitch_0',['PhotonicSwitch',['../classquisp_1_1modules_1_1_photonic_switch.html',1,'quisp::modules']]],
+  ['photontransmissionconfig_1',['PhotonTransmissionConfig',['../structquisp_1_1modules_1_1_photon_transmission_config.html',1,'quisp::modules']]],
+  ['pred_2',['Pred',['../classquisp_1_1backends_1_1abstract_1_1_i_qubit_id_1_1_pred.html',1,'quisp::backends::abstract::IQubitId']]],
+  ['program_3',['Program',['../classquisp_1_1runtime_1_1_program.html',1,'quisp::runtime']]],
+  ['purification_4',['Purification',['../classquisp_1_1rules_1_1_purification.html',1,'quisp::rules']]],
+  ['purificationresultdata_5',['PurificationResultData',['../structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html',1,'quisp::modules::pur_result_table']]],
+  ['purificationresultkey_6',['PurificationResultKey',['../structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_key.html',1,'quisp::modules::pur_result_table']]]
 ];
