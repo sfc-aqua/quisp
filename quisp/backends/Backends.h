@@ -1,5 +1,4 @@
 #pragma once
-#include "ErrorTracking/Backend.h"
 #include "GraphState/Backend.h"
 #include "backends/QubitConfiguration.h"
 #include "interfaces/IConfiguration.h"
@@ -19,9 +18,7 @@ using abstract::MeasurementOutcome;
 using abstract::MeasureXResult;
 using abstract::MeasureYResult;
 using abstract::MeasureZResult;
-// using backends::StationaryQubitConfiguration;
-using error_tracking::ErrorTrackingBackend;
-using error_tracking::ErrorTrackingQubit;
+using backends::StationaryQubitConfiguration;
 using graph_state::GraphStateBackend;
 using graph_state::GraphStateQubit;
 

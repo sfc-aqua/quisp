@@ -1,6 +1,5 @@
 #include "Backend.h"
 #include <memory>
-#include "backends/ErrorTracking/Qubit.h"
 #include "backends/QubitConfiguration.h"
 
 namespace quisp::modules::backend {
@@ -11,10 +10,7 @@ BackendContainer::~BackendContainer() {}
 
 void BackendContainer::initialize() {
   auto backend_type = std::string(par("backend_type").stringValue());
-  if (backend_type == "ErrorTrackingBackend") {
-    auto config = getDefaultQubitErrorModelConfiguration();
-    backend = std::make_unique<ErrorTrackingBackend>(std::make_unique<RNG>(this), std::move(config), static_cast<ErrorTrackingBackend::ICallback*>(this));
-  } else if (backend_type == "GraphStateBackend") {
+  if (backend_type == "GraphStateBackend") {
     auto config = getDefaultQubitErrorModelConfiguration();
     backend = std::make_unique<GraphStateBackend>(std::make_unique<RNG>(this), std::move(config), static_cast<GraphStateBackend::ICallback*>(this));
   } else {
@@ -64,7 +60,6 @@ std::unique_ptr<StationaryQubitConfiguration> BackendContainer::getDefaultQubitE
   return conf;
 }
 
-void BackendContainer::willUpdate(ErrorTrackingBackend& backend) { backend.setSimTime(omnetpp::simTime()); }
 void BackendContainer::willUpdate(GraphStateBackend& backend) { backend.setSimTime(omnetpp::simTime()); }
 void BackendContainer::finish() {}
 
