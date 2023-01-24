@@ -6,10 +6,9 @@ simple Backend
     parameters:
         @class(BackendContainer);
         @display("p=30,40;");
-        string backend_type = default("ErrorTrackingBackend");
+        string backend_type = default("GraphStateBackend");
 
-        // ErrorTracking Backend Configurations
-        // characteristics of the hardware
+        // Default characteristics of qubits in the hardware
         double memory_error_rate = default(0);
         double memory_z_error_rate = default(1);
         double memory_x_error_rate = default(1);

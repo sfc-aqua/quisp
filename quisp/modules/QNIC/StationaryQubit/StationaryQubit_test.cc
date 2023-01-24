@@ -132,7 +132,7 @@ TEST_F(StatQubitTest, init) {
   delete backend_qubit;
 }
 
-TEST_F(StatQubitTest, errorTrackingQubitConfigurationOverwrite) {
+TEST_F(StatQubitTest, StationaryQubitConfigurationOverwrite) {
   auto *config = new StationaryQubitConfiguration();
   setParDouble(qubit, "cnot_gate_error_rate", 0.01);
   setParDouble(qubit, "cnot_gate_ix_error_ratio", 0.02);
