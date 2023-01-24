@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
 #include <test_utils/TestUtils.h>
 #include <unsupported/Eigen/MatrixFunctions>
+#include "backends/QubitConfiguration.h"
 #include "test.h"
 
 namespace {
 
-using namespace quisp_test::backends;
+using namespace quisp_test::backends::error_tracking;
 
 class EtQubitGateErrorTest : public ::testing::Test {
  protected:
@@ -14,7 +15,7 @@ class EtQubitGateErrorTest : public ::testing::Test {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
     rng->double_value = .0;
-    backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<ErrorTrackingConfiguration>());
+    backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<StationaryQubitConfiguration>());
     qubit = dynamic_cast<Qubit*>(backend->createQubit(0));
     if (qubit == nullptr) throw std::runtime_error("Qubit is nullptr");
     qubit2 = dynamic_cast<Qubit*>(backend->createQubit(1));

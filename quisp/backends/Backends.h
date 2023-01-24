@@ -1,6 +1,7 @@
 #pragma once
 #include "ErrorTracking/Backend.h"
-#include "ErrorTracking/Configuration.h"
+#include "GraphState/Backend.h"
+#include "backends/QubitConfiguration.h"
 #include "interfaces/IConfiguration.h"
 #include "interfaces/IQuantumBackend.h"
 #include "interfaces/IQubit.h"
@@ -18,8 +19,10 @@ using abstract::MeasurementOutcome;
 using abstract::MeasureXResult;
 using abstract::MeasureYResult;
 using abstract::MeasureZResult;
+// using backends::StationaryQubitConfiguration;
 using error_tracking::ErrorTrackingBackend;
-using error_tracking::ErrorTrackingConfiguration;
 using error_tracking::ErrorTrackingQubit;
+using graph_state::GraphStateBackend;
+using graph_state::GraphStateQubit;
 
 }  // namespace quisp::backends

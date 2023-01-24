@@ -4,14 +4,17 @@
 #include <memory>
 #include "RNG.h"
 #include "backends/ErrorTracking/Qubit.h"
+#include "backends/GraphState/Qubit.h"
+#include "backends/QubitConfiguration.h"
 
 namespace quisp::modules::backend {
 using quisp::modules::common::ErrorTrackingBackend;
-using quisp::modules::common::ErrorTrackingConfiguration;
+using quisp::modules::common::GraphStateBackend;
 using quisp::modules::common::IQuantumBackend;
+using quisp::modules::common::StationaryQubitConfiguration;
 using rng::RNG;
 
-class BackendContainer : public omnetpp::cSimpleModule, ErrorTrackingBackend::ICallback {
+class BackendContainer : public omnetpp::cSimpleModule, ErrorTrackingBackend::ICallback, GraphStateBackend::ICallback {
  public:
   BackendContainer();
   ~BackendContainer();
@@ -21,9 +24,10 @@ class BackendContainer : public omnetpp::cSimpleModule, ErrorTrackingBackend::IC
 
   IQuantumBackend* getQuantumBackend();
   void willUpdate(ErrorTrackingBackend& backend) override;
+  void willUpdate(GraphStateBackend& backend) override;
 
  protected:
-  void configureErrorTrackingBackend();
+  std::unique_ptr<StationaryQubitConfiguration> getDefaultQubitErrorModelConfiguration();
   std::unique_ptr<IQuantumBackend> backend = nullptr;
 };
 

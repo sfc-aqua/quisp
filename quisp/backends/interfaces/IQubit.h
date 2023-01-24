@@ -43,6 +43,7 @@ class IQubit {
   virtual void gateH() { throw std::runtime_error("gateH not implemented"); }
   virtual void gateT() { throw std::runtime_error("gateT not implemented"); }
   virtual void gateS() { throw std::runtime_error("gateS not implemented"); }
+  virtual void gateSdg() { throw std::runtime_error("gateS not implemented"); }
 
   // two qubit operations
   virtual void gateCNOT(IQubit *const control_qubit) { throw std::runtime_error("gateCNOT not implemented"); };
@@ -55,6 +56,7 @@ class IQubit {
   virtual MeasureYResult correlationMeasureY() { throw std::runtime_error("correlationMeasureY not implemented"); }
   virtual MeasureZResult correlationMeasureZ() { throw std::runtime_error("correlationMeasureZ not implemented"); }
   virtual EigenvalueResult localMeasureX() { throw std::runtime_error("localMeasureX not implemented"); }
+  virtual EigenvalueResult localMeasureY() { throw std::runtime_error("localMeasureY not implemented"); }
   virtual EigenvalueResult localMeasureZ() { throw std::runtime_error("localMeasureZ not implemented"); }
   virtual MeasurementOutcome measureDensityIndependent() { throw std::runtime_error("measureDensityIndependent not implemented"); }
 

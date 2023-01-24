@@ -2,14 +2,14 @@
 #include <gtest/gtest.h>
 #include <omnetpp.h>
 #include "../interfaces/IRandomNumberGenerator.h"
-#include "Configuration.h"
 #include "Qubit.h"
+#include "backends/QubitConfiguration.h"
 #include "backends/interfaces/IConfiguration.h"
 #include "test.h"
 
 namespace {
 using namespace quisp::backends::error_tracking;
-using namespace quisp_test::backends;
+using namespace quisp_test::backends::error_tracking;
 using namespace omnetpp;
 
 class TestEtQubit : public ErrorTrackingQubit {
@@ -46,7 +46,7 @@ class TestEtQubit : public ErrorTrackingQubit {
 class EtBackend : public ErrorTrackingBackend {
  public:
   using ErrorTrackingBackend::qubits;
-  EtBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<ErrorTrackingConfiguration> config) : ErrorTrackingBackend(std::move(rng), std::move(config)) {}
+  EtBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<StationaryQubitConfiguration> config) : ErrorTrackingBackend(std::move(rng), std::move(config)) {}
 };
 
 class EtBackendTest : public ::testing::Test {
@@ -54,7 +54,7 @@ class EtBackendTest : public ::testing::Test {
   virtual void SetUp() {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
-    backend = std::make_unique<EtBackend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<ErrorTrackingConfiguration>());
+    backend = std::make_unique<EtBackend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<StationaryQubitConfiguration>());
   }
   TestRNG* rng;
   std::unique_ptr<EtBackend> backend;
@@ -100,7 +100,7 @@ TEST_F(EtBackendTest, createQubitWithInvalidConfiguration) {
 }
 
 TEST_F(EtBackendTest, createQubitWithConfiguration) {
-  auto conf = new ErrorTrackingConfiguration;
+  auto conf = new StationaryQubitConfiguration;
   conf->cnot_gate_err_rate = 0.75;
   conf->cnot_gate_ix_err_ratio = 0.75 / 9.;
   conf->cnot_gate_xi_err_ratio = 0.75 / 9.;
@@ -133,7 +133,7 @@ TEST_F(EtBackendTest, createQubitWithConfiguration) {
   conf->memory_excitation_rate = 0.30;
   conf->memory_completely_mixed_rate = 0.31;
 
-  auto conf2 = std::make_unique<ErrorTrackingConfiguration>(*conf);
+  auto conf2 = std::make_unique<StationaryQubitConfiguration>(*conf);
 
   auto* id = new QubitId(123);
   EXPECT_EQ(backend->qubits.size(), 0);

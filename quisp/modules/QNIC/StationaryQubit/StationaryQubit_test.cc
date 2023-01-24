@@ -9,7 +9,6 @@
 #include <stdexcept>
 #include <unsupported/Eigen/MatrixFunctions>
 #include "backends/Backends.h"
-#include "backends/ErrorTracking/Configuration.h"
 #include "backends/interfaces/IConfiguration.h"
 #include "backends/interfaces/IQuantumBackend.h"
 #include "omnetpp/cmessage.h"
@@ -23,7 +22,7 @@ using namespace quisp::modules::common;
 using namespace quisp_test;
 using namespace Eigen;
 using namespace omnetpp;
-using quisp::backends::ErrorTrackingConfiguration;
+using quisp::backends::StationaryQubitConfiguration;
 using quisp::messages::PhotonicQubit;
 
 namespace {
@@ -134,7 +133,7 @@ TEST_F(StatQubitTest, init) {
 }
 
 TEST_F(StatQubitTest, errorTrackingQubitConfigurationOverwrite) {
-  auto *config = new ErrorTrackingConfiguration();
+  auto *config = new StationaryQubitConfiguration();
   setParDouble(qubit, "cnot_gate_error_rate", 0.01);
   setParDouble(qubit, "cnot_gate_ix_error_ratio", 0.02);
   setParDouble(qubit, "cnot_gate_xi_error_ratio", 0.03);

@@ -4,10 +4,11 @@
 #include <Eigen/Eigen>
 #include <unsupported/Eigen/MatrixFunctions>
 #include "backends/ErrorTracking/types.h"
+#include "backends/QubitConfiguration.h"
 #include "test.h"
 
 namespace {
-using namespace quisp_test::backends;
+using namespace quisp_test::backends::error_tracking;
 using Eigen::Matrix2cd;
 using Eigen::Matrix4cd;
 using Eigen::Vector4cd;
@@ -20,7 +21,7 @@ class EtQubitTest : public ::testing::Test {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
     rng->double_value = .0;
-    backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<ErrorTrackingConfiguration>());
+    backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<StationaryQubitConfiguration>());
     qubit = dynamic_cast<Qubit*>(backend->createQubit(0));
     partner_qubit = dynamic_cast<Qubit*>(backend->createQubit(1));
     if (qubit == nullptr) throw std::runtime_error("Qubit is nullptr");

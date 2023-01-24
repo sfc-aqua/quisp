@@ -6,15 +6,15 @@
 #include "../interfaces/IQubitId.h"
 #include "../interfaces/IRandomNumberGenerator.h"
 #include "Backend.h"
-#include "Configuration.h"
 #include "Qubit.h"
+#include "backends/QubitConfiguration.h"
 
-namespace quisp_test::backends {
+namespace quisp_test::backends::error_tracking {
 using omnetpp::SimTime;
+using ::quisp::backends::StationaryQubitConfiguration;
 using ::quisp::backends::abstract::IQubit;
 using ::quisp::backends::abstract::IQubitId;
 using ::quisp::backends::error_tracking::ErrorTrackingBackend;
-using ::quisp::backends::error_tracking::ErrorTrackingConfiguration;
 using ::quisp::backends::error_tracking::ErrorTrackingQubit;
 using namespace ::quisp::backends;
 using namespace ::quisp::backends::abstract;
@@ -80,7 +80,7 @@ class Qubit : public ErrorTrackingQubit {
 class Backend : public ErrorTrackingBackend {
  public:
   using ErrorTrackingBackend::qubits;
-  Backend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<ErrorTrackingConfiguration> config) : ErrorTrackingBackend(std::move(rng), std::move(config)) {}
+  Backend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<StationaryQubitConfiguration> config) : ErrorTrackingBackend(std::move(rng), std::move(config)) {}
   IQubit* createQubit(int id) { return this->createQubitInternal(new QubitId(id)); }
   IQubit* getQubit(int id) { return this->getQubitInternal(new QubitId(id)); }
   IQubit* getQubitInternal(const IQubitId* id) { return qubits.find(id)->second.get(); }
@@ -96,4 +96,4 @@ class Backend : public ErrorTrackingBackend {
   }
 };
 
-}  // namespace quisp_test::backends
+}  // namespace quisp_test::backends::error_tracking
