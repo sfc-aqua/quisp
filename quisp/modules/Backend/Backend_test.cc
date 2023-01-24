@@ -83,8 +83,8 @@ TEST_F(BackendContainerTest, getGsQuantumBackend) {
   ASSERT_NE(backend->backend, nullptr);
   auto *b = backend->getQuantumBackend();
   ASSERT_NE(b, nullptr);
-  auto *gss_backend = dynamic_cast<GraphStateBackend *>(b);
-  EXPECT_NE(gss_backend, nullptr);
+  auto *gs_backend = dynamic_cast<GraphStateBackend *>(b);
+  EXPECT_NE(gs_backend, nullptr);
 }
 
 TEST_F(BackendContainerTest, getGsQuantumBackendWithoutInit) {
@@ -99,12 +99,12 @@ TEST_F(BackendContainerTest, getGsBackendConfiguration) {
   ASSERT_NE(backend->backend, nullptr);
   auto *b = backend->getQuantumBackend();
   ASSERT_NE(b, nullptr);
-  auto *gss_backend = dynamic_cast<GraphStateBackend *>(b);
+  auto *gs_backend = dynamic_cast<GraphStateBackend *>(b);
 
-  auto conf = gss_backend->getDefaultConfiguration();
+  auto conf = gs_backend->getDefaultConfiguration();
   ASSERT_NE(conf, nullptr);
-  auto gss_conf = dynamic_cast<StationaryQubitConfiguration *>(conf.get());
-  ASSERT_NE(gss_conf, nullptr);
+  auto gs_conf = dynamic_cast<StationaryQubitConfiguration *>(conf.get());
+  ASSERT_NE(gs_conf, nullptr);
 }
 
 TEST_F(BackendContainerTest, getCopyOfGsBackendConfiguration) {
@@ -113,18 +113,18 @@ TEST_F(BackendContainerTest, getCopyOfGsBackendConfiguration) {
   ASSERT_NE(backend->backend, nullptr);
   auto *b = backend->getQuantumBackend();
   ASSERT_NE(b, nullptr);
-  auto *gss_backend = dynamic_cast<GraphStateBackend *>(b);
+  auto *gs_backend = dynamic_cast<GraphStateBackend *>(b);
 
-  auto conf = gss_backend->getDefaultConfiguration();
-  auto gss_conf = dynamic_cast<StationaryQubitConfiguration *>(conf.get());
+  auto conf = gs_backend->getDefaultConfiguration();
+  auto gs_conf = dynamic_cast<StationaryQubitConfiguration *>(conf.get());
 
-  auto conf2 = gss_backend->getDefaultConfiguration();
-  auto gss_conf2 = dynamic_cast<StationaryQubitConfiguration *>(conf2.get());
+  auto conf2 = gs_backend->getDefaultConfiguration();
+  auto gs_conf2 = dynamic_cast<StationaryQubitConfiguration *>(conf2.get());
 
-  // confirm gss_conf and gss_conf2 are different intstances
-  gss_conf->cnot_gate_err_rate = 10;
-  EXPECT_NE(gss_conf->cnot_gate_err_rate, gss_conf2->cnot_gate_err_rate);
-  EXPECT_NE(gss_conf, gss_conf2);
+  // confirm gs_conf and gs_conf2 are different intstances
+  gs_conf->cnot_gate_err_rate = 10;
+  EXPECT_NE(gs_conf->cnot_gate_err_rate, gs_conf2->cnot_gate_err_rate);
+  EXPECT_NE(gs_conf, gs_conf2);
 }
 
 TEST_F(BackendContainerTest, finish) {
