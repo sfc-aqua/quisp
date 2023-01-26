@@ -372,9 +372,17 @@ void GraphStateQubit::setFree() {
   updated_time = backend->getSimTime();
 }
 
-void GraphStateQubit::setCompletelyMixedDensityMatrix() { pi_vector_completely_mixed = true; }
+void GraphStateQubit::setCompletelyMixedState() {
+  auto random_number = backend->dblrand();
+  if (random_number < (double)1 / 3)
+    this->applyClifford(CliffordOperator::X);
+  else if (random_number < (double)2 / 3)
+    this->applyClifford(CliffordOperator::Y);
+  else
+    this->applyClifford(CliffordOperator::Z);
+}
 
-void GraphStateQubit::setEntangledPartner(IQubit *const partner) {
+void GraphStateQubit::setMaximallyEntangledWith(IQubit *const partner) {
   auto gs_partner_qubit = dynamic_cast<GraphStateQubit *>(partner);
   // Only for used by BSA
   if (this->isNeighbor(gs_partner_qubit)) return;
@@ -422,7 +430,7 @@ void GraphStateQubit::gateSdg() {
   // or do we need to expose this gate to stat qubit?
 }
 
-EigenvalueResult GraphStateQubit::localMeasureX() {
+EigenvalueResult GraphStateQubit::measureX() {
   applyMemoryError();
   this->applyClifford(CliffordOperator::H);
   auto result = this->graphMeasureZ();
@@ -433,7 +441,7 @@ EigenvalueResult GraphStateQubit::localMeasureX() {
   return result;
 }
 
-EigenvalueResult GraphStateQubit::localMeasureY() {
+EigenvalueResult GraphStateQubit::measureY() {
   applyMemoryError();
   this->applyClifford(CliffordOperator::S_INV);
   this->applyClifford(CliffordOperator::H);
@@ -445,7 +453,7 @@ EigenvalueResult GraphStateQubit::localMeasureY() {
   return result;
 }
 
-EigenvalueResult GraphStateQubit::localMeasureZ() {
+EigenvalueResult GraphStateQubit::measureZ() {
   applyMemoryError();
   auto result = this->graphMeasureZ();
   // measurement error
@@ -455,32 +463,21 @@ EigenvalueResult GraphStateQubit::localMeasureZ() {
   return result;
 }
 
-[[deprecated]] void GraphStateQubit::assertEntangledPartnerValid() {}
 [[deprecated]] void GraphStateQubit::addErrorX() { this->gateX(); }
 [[deprecated]] void GraphStateQubit::addErrorZ() { this->gateZ(); }
 
-[[deprecated]] bool GraphStateQubit::purifyX(IQubit *const control_qubit) {
-  this->gateCNOT(control_qubit);
-  return this->localMeasureZ() == EigenvalueResult::PLUS_ONE;
-}
-
-[[deprecated]] bool GraphStateQubit::purifyZ(IQubit *const target_qubit) {
-  target_qubit->gateCNOT(this);
-  return this->localMeasureX() == EigenvalueResult::PLUS_ONE;
-}
-
-[[deprecated]] MeasurementOutcome GraphStateQubit::measureDensityIndependent() {
+[[deprecated]] MeasurementOutcome GraphStateQubit::measureRandomPauliBasis() {
   auto rand = backend->dblrand();
   MeasurementOutcome o;
   if (rand < ((double)1 / (double)3)) {
     o.basis = 'X';
-    o.outcome_is_plus = this->localMeasureX() == EigenvalueResult::PLUS_ONE ? true : false;
+    o.outcome_is_plus = this->measureX() == EigenvalueResult::PLUS_ONE ? true : false;
   } else if (rand < ((double)2 / (double)3)) {
     o.basis = 'Z';
-    o.outcome_is_plus = this->localMeasureZ() == EigenvalueResult::PLUS_ONE ? true : false;
+    o.outcome_is_plus = this->measureZ() == EigenvalueResult::PLUS_ONE ? true : false;
   } else {
     o.basis = 'Y';
-    o.outcome_is_plus = this->localMeasureY() == EigenvalueResult::PLUS_ONE ? true : false;
+    o.outcome_is_plus = this->measureY() == EigenvalueResult::PLUS_ONE ? true : false;
   }
   // the pi vector should be always [1,0,0,0,0,0], just for compatibility
   o.GOD_clean = 'F';

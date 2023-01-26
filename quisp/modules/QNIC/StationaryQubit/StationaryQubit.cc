@@ -15,6 +15,7 @@
 #include <unsupported/Eigen/KroneckerProduct>
 #include <unsupported/Eigen/MatrixFunctions>
 #include <vector>
+#include "backends/interfaces/IQubit.h"
 #include "modules/QNIC/StationaryQubit/QubitId.h"
 #include "omnetpp/cexception.h"
 
@@ -133,12 +134,9 @@ void StationaryQubit::handleMessage(cMessage *msg) {
   }
 }
 
-MeasureXResult StationaryQubit::correlationMeasureX() { return qubit_ref->correlationMeasureX(); }
-MeasureYResult StationaryQubit::correlationMeasureY() { return qubit_ref->correlationMeasureY(); }
-MeasureZResult StationaryQubit::correlationMeasureZ() { return qubit_ref->correlationMeasureZ(); }
-EigenvalueResult StationaryQubit::localMeasureX() { return qubit_ref->localMeasureX(); }
-EigenvalueResult StationaryQubit::localMeasureY() { return qubit_ref->localMeasureY(); }
-EigenvalueResult StationaryQubit::localMeasureZ() { return qubit_ref->localMeasureZ(); }
+EigenvalueResult StationaryQubit::localMeasureX() { return qubit_ref->measureX(); }
+EigenvalueResult StationaryQubit::localMeasureY() { return qubit_ref->measureY(); }
+EigenvalueResult StationaryQubit::localMeasureZ() { return qubit_ref->measureZ(); }
 
 // Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
 void StationaryQubit::Hadamard_gate() { qubit_ref->gateH(); }
@@ -255,12 +253,12 @@ void StationaryQubit::emitPhoton(int pulse) {
 }
 
 // This gets direcltly invoked when darkcount happened in BellStateAnalyzer.cc.
-[[deprecated]] void StationaryQubit::setCompletelyMixedDensityMatrix() { qubit_ref->setCompletelyMixedDensityMatrix(); }
+[[deprecated]] void StationaryQubit::setCompletelyMixedDensityMatrix() { qubit_ref->setCompletelyMixedState(); }
 
 void StationaryQubit::setEntangledPartnerInfo(IStationaryQubit *partner) {
   // When BSA succeeds, this method gets invoked to store entangled partner information.
   // This will also be sent classically to the partner node afterwards.
-  qubit_ref->setEntangledPartner(partner->getBackendQubitRef());
+  qubit_ref->setMaximallyEntangledWith(partner->getBackendQubitRef());
 }
 
 backends::IQubit *StationaryQubit::getBackendQubitRef() const { return qubit_ref; }
@@ -278,11 +276,21 @@ int StationaryQubit::getPartnerStationaryQubitAddress() const {
 [[deprecated]] void StationaryQubit::addZerror() { qubit_ref->addErrorZ(); }
 
 // Only tracks error propagation. If two booleans (Alice and Bob) agree (truetrue or falsefalse), keep the purified ebit.
-bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) { return qubit_ref->purifyX(check_and_cast<StationaryQubit *>(resource_qubit)->qubit_ref); }
+bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
+  auto q = static_cast<StationaryQubit *>(resource_qubit)->qubit_ref;
+  auto p = qubit_ref;
+  p->gateCNOT(q);
+  return p->measureZ() == EigenvalueResult::PLUS_ONE;
+}
 
-bool StationaryQubit::Zpurify(IStationaryQubit *resource_qubit /*Target*/) { return qubit_ref->purifyZ(check_and_cast<StationaryQubit *>(resource_qubit)->qubit_ref); }
+bool StationaryQubit::Zpurify(IStationaryQubit *resource_qubit /*Target*/) {
+  auto q = static_cast<StationaryQubit *>(resource_qubit)->qubit_ref;
+  auto p = qubit_ref;
+  q->gateCNOT(p);
+  return p->measureX() == EigenvalueResult::PLUS_ONE;
+}
 
-MeasurementOutcome StationaryQubit::measure_density_independent() { return qubit_ref->measureDensityIndependent(); }
+MeasurementOutcome StationaryQubit::measure_density_independent() { return qubit_ref->measureRandomPauliBasis(); }
 
 }  // namespace modules
 }  // namespace quisp

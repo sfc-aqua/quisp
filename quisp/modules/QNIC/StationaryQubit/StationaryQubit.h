@@ -49,30 +49,6 @@ class StationaryQubit : public IStationaryQubit {
    */
   void emitPhoton(int pulse) override;
 
-  /**
-   * \brief Single Qubit X measurement.
-   * \param This is only for simulating error propagations.
-   * New errors only occur when wrong measurement result is delivered for feed-forward
-   * (The error on the measured qubit propagates to the byproduct gate target qubit).
-   */
-  virtual quisp::types::MeasureXResult correlationMeasureX() override;
-
-  /**
-   * \brief Single Qubit Y measurement.
-   * This is only for simulating error propagations.
-   * New errors only occur when wrong measurement result is delivered for feed-forward
-   * (The error on the measured qubit propagates to the byproduct gate target qubit).
-   */
-  virtual types::MeasureYResult correlationMeasureY() override;
-
-  /**
-   * \brief Single Qubit Z measurement.
-   * This is only for simulating error propagations.
-   * New errors only occur when wrong measurement result is delivered for feed-forward
-   * (The error on the measured qubit propagates to the byproduct gate target qubit).
-   */
-  virtual types::MeasureZResult correlationMeasureZ() override;
-
   virtual types::EigenvalueResult localMeasureX() override;
   virtual types::EigenvalueResult localMeasureY() override;
   virtual types::EigenvalueResult localMeasureZ() override;

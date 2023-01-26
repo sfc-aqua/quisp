@@ -10,6 +10,6 @@ namespace quisp_test::mock_backends {
 class MockBackendQubit : public quisp::backends::abstract::IQubit {
  public:
   MOCK_METHOD(void, setFree, (), (override));
-  MOCK_METHOD(void, setEntangledPartner, (IQubit * partner_qubit), (override));
+  MOCK_METHOD(void, setMaximallyEntangledWith, (IQubit * partner_qubit), (override));
 };
 }  // namespace quisp_test::mock_backends

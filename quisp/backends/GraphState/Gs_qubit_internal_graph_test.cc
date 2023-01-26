@@ -411,9 +411,9 @@ TEST_F(GsQubitInternalGraphTest, Phiplus_Measure_in_ZZ) {
       qubit->addEdge(another_qubit);
       qubit->vertex_operator = CliffordOperator::Id;
       rng->double_value = (double)i / 100;
-      auto result_left = qubit->localMeasureZ();
+      auto result_left = qubit->measureZ();
       rng->double_value = (double)j / 100;
-      auto result_right = another_qubit->localMeasureZ();
+      auto result_right = another_qubit->measureZ();
       EXPECT_EQ(result_left, result_right);
     }
   }
@@ -428,9 +428,9 @@ TEST_F(GsQubitInternalGraphTest, Phiplus_Measure_in_ZZ) {
       qubit->addEdge(another_qubit);
       another_qubit->vertex_operator = CliffordOperator::Id;
       rng->double_value = (double)i / 100;
-      auto result_left = qubit->localMeasureZ();
+      auto result_left = qubit->measureZ();
       rng->double_value = (double)j / 100;
-      auto result_right = another_qubit->localMeasureZ();
+      auto result_right = another_qubit->measureZ();
       EXPECT_EQ(result_left, result_right);
     }
   }
@@ -448,9 +448,9 @@ TEST_F(GsQubitInternalGraphTest, Phiplus_Measure_in_XX) {
       qubit->vertex_operator = CliffordOperator::Id;
       another_qubit->vertex_operator = CliffordOperator::H;
       rng->double_value = (double)i / 100;
-      auto result_left = qubit->localMeasureX();
+      auto result_left = qubit->measureX();
       rng->double_value = (double)j / 100;
-      auto result_right = another_qubit->localMeasureX();
+      auto result_right = another_qubit->measureX();
       EXPECT_EQ(result_left, result_right);
     }
   }
@@ -469,9 +469,9 @@ TEST_F(GsQubitInternalGraphTest, Phiplus_Measure_in_XX) {
       auto c1 = qubit->vertex_operator;
       auto c2 = another_qubit->vertex_operator;
 
-      auto result_left = qubit->localMeasureX();
+      auto result_left = qubit->measureX();
       rng->double_value = (double)j / 100;
-      auto result_right = another_qubit->localMeasureX();
+      auto result_right = another_qubit->measureX();
       EXPECT_EQ(result_left, result_right);
     }
   }
@@ -488,9 +488,9 @@ TEST_F(GsQubitInternalGraphTest, Phiplus_Measure_in_YY) {
       qubit->addEdge(another_qubit);
       qubit->vertex_operator = CliffordOperator::Id;
       rng->double_value = (double)i / 100;
-      auto result_left = qubit->localMeasureY();
+      auto result_left = qubit->measureY();
       rng->double_value = (double)j / 100;
-      auto result_right = another_qubit->localMeasureY();
+      auto result_right = another_qubit->measureY();
       EXPECT_NE(result_left, result_right);
     }
   }
@@ -504,9 +504,9 @@ TEST_F(GsQubitInternalGraphTest, Phiplus_Measure_in_YY) {
       qubit->addEdge(another_qubit);
       another_qubit->vertex_operator = CliffordOperator::Id;
       rng->double_value = (double)i / 100;
-      auto result_left = qubit->localMeasureY();
+      auto result_left = qubit->measureY();
       rng->double_value = (double)j / 100;
-      auto result_right = another_qubit->localMeasureY();
+      auto result_right = another_qubit->measureY();
       EXPECT_NE(result_left, result_right);
     }
   }
@@ -541,9 +541,9 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_ZZ) {
           bob_trash->gateCNOT(bob_keep);
 
           rng->double_value = (double)i / 3;
-          auto alice_result = alice_trash->localMeasureZ();
+          auto alice_result = alice_trash->measureZ();
           rng->double_value = (double)j / 3;
-          auto bob_result = bob_trash->localMeasureZ();
+          auto bob_result = bob_trash->measureZ();
 
           EXPECT_EQ(alice_result, bob_result);
 
@@ -554,9 +554,9 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_ZZ) {
           EXPECT_TRUE(bob_keep->isNeighbor(alice_keep));
 
           rng->double_value = double(m) / 100;
-          alice_result = alice_keep->localMeasureZ();
+          alice_result = alice_keep->measureZ();
           rng->double_value = double(n) / 100;
-          bob_result = alice_keep->localMeasureZ();
+          bob_result = alice_keep->measureZ();
           EXPECT_EQ(alice_result, bob_result);
         }
       }
@@ -595,7 +595,7 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_ZZ) {
           bt = bob_trash->vertex_operator;
 
           rng->double_value = (double)i / 3;
-          auto alice_result = alice_trash->localMeasureZ();
+          auto alice_result = alice_trash->measureZ();
 
           alk = alice_keep->vertex_operator;
           alt = alice_trash->vertex_operator;
@@ -611,7 +611,7 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_ZZ) {
           EXPECT_TRUE(bob_keep->isNeighbor(alice_keep));
 
           rng->double_value = (double)j / 3;
-          auto bob_result = bob_trash->localMeasureZ();
+          auto bob_result = bob_trash->measureZ();
 
           EXPECT_EQ(alice_result, bob_result);
 
@@ -622,9 +622,9 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_ZZ) {
           EXPECT_TRUE(bob_keep->isNeighbor(alice_keep));
 
           rng->double_value = double(m) / 100;
-          alice_result = alice_keep->localMeasureZ();
+          alice_result = alice_keep->measureZ();
           rng->double_value = double(n) / 100;
-          bob_result = alice_keep->localMeasureZ();
+          bob_result = alice_keep->measureZ();
           EXPECT_EQ(alice_result, bob_result);
         }
       }
@@ -660,9 +660,9 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_XX) {
           bob_trash->gateCNOT(bob_keep);
 
           rng->double_value = (double)i / 3;
-          auto alice_result = alice_trash->localMeasureZ();
+          auto alice_result = alice_trash->measureZ();
           rng->double_value = (double)j / 3;
-          auto bob_result = bob_trash->localMeasureZ();
+          auto bob_result = bob_trash->measureZ();
 
           EXPECT_EQ(alice_result, bob_result);
 
@@ -679,9 +679,9 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_XX) {
           EXPECT_EQ(c2, CliffordOperator::H);
 
           rng->double_value = double(m) / 100;
-          alice_result = alice_keep->localMeasureX();
+          alice_result = alice_keep->measureX();
           rng->double_value = double(n) / 100;
-          bob_result = bob_keep->localMeasureX();
+          bob_result = bob_keep->measureX();
           EXPECT_EQ(alice_result, bob_result);
         }
       }
@@ -717,9 +717,9 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_YY) {
           bob_trash->gateCNOT(bob_keep);
 
           rng->double_value = (double)i / 3;
-          auto alice_result = alice_trash->localMeasureZ();
+          auto alice_result = alice_trash->measureZ();
           rng->double_value = (double)j / 3;
-          auto bob_result = bob_trash->localMeasureZ();
+          auto bob_result = bob_trash->measureZ();
 
           EXPECT_EQ(alice_result, bob_result);
 
@@ -736,9 +736,9 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_YY) {
           EXPECT_EQ(c2, CliffordOperator::H);
 
           rng->double_value = double(m) / 100;
-          alice_result = alice_keep->localMeasureY();
+          alice_result = alice_keep->measureY();
           rng->double_value = double(n) / 100;
-          bob_result = bob_keep->localMeasureY();
+          bob_result = bob_keep->measureY();
           EXPECT_NE(alice_result, bob_result);
         }
       }
