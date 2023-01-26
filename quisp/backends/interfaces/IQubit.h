@@ -62,7 +62,7 @@ class IQubit {
   virtual void addErrorZ() { throw std::runtime_error("addErrorZ is not implemented. will be removed"); }
   virtual void setCompletelyMixedState() { throw std::runtime_error("setCompletelyMixedState is not implemented. will be removed"); }
   virtual void setMaximallyEntangledWith(IQubit *const partner) { throw std::runtime_error("setMaximallyEntangledWith is not implemented. will be removed"); }
-    virtual IQubit *const getEntangledPartner() const { throw std::runtime_error("getEntangledPartner is not implemented. will be removed"); }
+  virtual IQubit *const getEntangledPartner() const { throw std::runtime_error("getEntangledPartner is not implemented. will be removed"); }
 };
 
 }  // namespace quisp::backends::abstract
