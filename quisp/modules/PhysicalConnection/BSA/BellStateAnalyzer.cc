@@ -289,7 +289,6 @@ void BellStateAnalyzer::GOD_updateEntangledInfoParameters_of_qubits() {
   if (left_photon_Xerr) left_statQubit_ptr->addXerror();
   if (left_photon_Zerr) left_statQubit_ptr->addZerror();
 
-  right_statQubit_ptr->setEntangledPartnerInfo(left_statQubit_ptr);
   if (right_photon_Xerr) right_statQubit_ptr->addXerror();
   if (right_photon_Zerr) right_statQubit_ptr->addZerror();
   n_res++;
