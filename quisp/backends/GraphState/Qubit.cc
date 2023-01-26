@@ -168,10 +168,7 @@ void GraphStateQubit::applyMemoryError() {
     }
 
     MatrixXd pi_vector(1, 6);
-    if (pi_vector_completely_mixed)
-      pi_vector << 0, (double)1 / (double)3, (double)1 / (double)3, (double)1 / (double)3, 0, 0;
-    else
-      pi_vector << 1, 0, 0, 0, 0, 0;
+    pi_vector << 1, 0, 0, 0, 0, 0;
     // pi(t) in Eq 5.3
     // Clean, X, Z, Y, Excited, Relaxed
     // take error rate vector from DynamicTransitionMatrix Eq 5.3
@@ -380,6 +377,7 @@ void GraphStateQubit::setCompletelyMixedState() {
     this->applyClifford(CliffordOperator::Y);
   else
     this->applyClifford(CliffordOperator::Z);
+  this->updated_time = backend->getSimTime();
 }
 
 void GraphStateQubit::setMaximallyEntangledWith(IQubit *const partner) {

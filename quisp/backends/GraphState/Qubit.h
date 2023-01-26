@@ -63,8 +63,6 @@ class GraphStateQubit : public IQubit {
   void applyMemoryError();
   void excite();
   void relax();
-  // whether pi(0 ~ 6) vector in Eq 5.3 is (0,1/3,1/3,1/3,0,0)
-  bool pi_vector_completely_mixed;
   // error simulation constants
   SingleGateErrorModel gate_err_h;
   SingleGateErrorModel gate_err_x;
