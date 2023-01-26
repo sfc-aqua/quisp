@@ -5,6 +5,7 @@
  */
 
 #include "ConnectionManager.h"
+#include <string>
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -14,6 +15,19 @@ namespace quisp::modules {
 
 Define_Module(ConnectionManager);
 ConnectionManager::ConnectionManager() : provider(utils::ComponentProvider{this}) {}
+
+ConnectionManager::~ConnectionManager() {
+  for (auto *msg : request_send_timing) {
+    cancelAndDelete(msg);
+  }
+  for (auto &[qnic_num, q] : connection_setup_buffer) {
+    while (!q.empty()) {
+      auto req = q.front();
+      q.pop();
+      delete req;
+    }
+  }
+}
 
 void ConnectionManager::initialize() {
   initializeLogger(provider);
@@ -39,9 +53,8 @@ void ConnectionManager::initialize() {
   }
 
   for (int i = 0; i < num_of_qnics; i++) {
-    char msgname[32];
-    sprintf(msgname, "send timing qnic address-%d", i);
-    request_send_timing.push_back(new cMessage(msgname));
+    auto msgname = "send timing qnic address-" + std::to_string(i);
+    request_send_timing.push_back(new cMessage(msgname.c_str()));
     connection_retry_count[i] = 0;
   }
 }
@@ -850,19 +863,12 @@ void ConnectionManager::scheduleRequestRetry(int qnic_address) {
   connection_retry_count[qnic_address]++;
   int upper_bound = (1 << connection_retry_count[qnic_address]) - 1;
   int k = intuniform(0, upper_bound);
-  // simtime_t upper_bound = SimTime(50, SIMTIME_US) * connection_retry_count[qnic_address];  // 50 microsec
   EV << "upper bound = " << upper_bound << endl;
   simtime_t backoff = SimTime(50, SIMTIME_US) * k;
   EV << "cannot initiate the connection. Retry attempt = " << connection_retry_count[qnic_address] << " Retry again in " << backoff << " .\n";
   EV << "schedule from retry" << endl;
   scheduleAt(simTime() + backoff, request_send_timing[qnic_address]);
   return;
-}
-
-void ConnectionManager::finish() {
-  for (auto *msg : request_send_timing) {
-    cancelAndDelete(msg);
-  }
 }
 
 }  // namespace quisp::modules

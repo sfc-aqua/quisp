@@ -56,6 +56,7 @@ namespace quisp::modules {
 class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
  public:
   ConnectionManager();
+  ~ConnectionManager();
   utils::ComponentProvider provider;
 
  protected:
@@ -75,7 +76,6 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
 
   void initialize() override;
   void handleMessage(cMessage *msg) override;
-  void finish() override;
 
   void respondToRequest(messages::ConnectionSetupRequest *pk);
   void respondToRequest_deprecated(messages::ConnectionSetupRequest *pk);
