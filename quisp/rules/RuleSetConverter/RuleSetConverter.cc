@@ -247,7 +247,7 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
       program_name = "Z Purification";
     }
 
-    return Program{"X Purification",
+    return Program{program_name,
                    {
                        // clang-format off
 INSTR_SET_RegId_int_{{action_index, 0}},
