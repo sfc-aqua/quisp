@@ -65,8 +65,7 @@ void GraphStateQubit::applySingleQubitGateError(SingleGateErrorModel const &err)
     this->applyClifford(CliffordOperator::Z);
   } else {
     // Y error
-    this->applyClifford(CliffordOperator::X);
-    this->applyClifford(CliffordOperator::Z);
+    this->applyClifford(CliffordOperator::Y);
   }
 }
 
@@ -109,18 +108,14 @@ void GraphStateQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, 
     another_qubit->applyClifford(CliffordOperator::Z);
   } else if (err.zz_error_ceil < rand && rand <= err.iy_error_ceil && (err.zz_error_ceil != err.iy_error_ceil)) {
     // IY error
-    this->applyClifford(CliffordOperator::X);
-    this->applyClifford(CliffordOperator::Z);
+    this->applyClifford(CliffordOperator::Y);
   } else if (err.iy_error_ceil < rand && rand <= err.yi_error_ceil && (err.iy_error_ceil != err.yi_error_ceil)) {
     // YI error
-    another_qubit->applyClifford(CliffordOperator::X);
-    another_qubit->applyClifford(CliffordOperator::Z);
+    another_qubit->applyClifford(CliffordOperator::Y);
   } else {
     // YY error
-    this->applyClifford(CliffordOperator::X);
-    this->applyClifford(CliffordOperator::Z);
-    another_qubit->applyClifford(CliffordOperator::X);
-    another_qubit->applyClifford(CliffordOperator::Z);
+    this->applyClifford(CliffordOperator::Y);
+    another_qubit->applyClifford(CliffordOperator::Y);
   }
 }
 void GraphStateQubit::applyMemoryError() {
@@ -461,8 +456,8 @@ EigenvalueResult GraphStateQubit::measureZ() {
   return result;
 }
 
-[[deprecated]] void GraphStateQubit::addErrorX() { this->gateX(); }
-[[deprecated]] void GraphStateQubit::addErrorZ() { this->gateZ(); }
+[[deprecated]] void GraphStateQubit::addErrorX() { this->applyClifford(CliffordOperator::X); }
+[[deprecated]] void GraphStateQubit::addErrorZ() { this->applyClifford(CliffordOperator::Z); }
 
 [[deprecated]] MeasurementOutcome GraphStateQubit::measureRandomPauliBasis() {
   auto rand = backend->dblrand();
