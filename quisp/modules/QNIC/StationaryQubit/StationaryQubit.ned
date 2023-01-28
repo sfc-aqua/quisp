@@ -10,13 +10,13 @@ simple StationaryQubit
         // these are configured at boot time
         int stationary_qubit_address;
         int node_address;
-        int qnic_address;//Unique
+        int qnic_address; // Unique
         int qnic_type;
-        int qnic_index;//Not unique
+        int qnic_index; // Not unique
 
         // ZZZ -- these are volatile elements of the object (module) state
         // and should be private data members of the class object
-        int x_position_graphics;		// can this be usefully set in a .ned file?
+        int x_position_graphics; // can this be usefully set in a .ned file?
         double emission_jittering_standard_deviation = default(0);
 
         // ZZZ -- these are configured at boot time
@@ -28,7 +28,7 @@ simple StationaryQubit
         double emission_x_error_rate = default(0);
         double emission_y_error_rate = default(0);
 
-        // ErrorTracking Backend Qubit Configuration
+        // Backend StationaryQubit Configuration
         // if overwrite_backend_qubit_config is true,
         // these params overwrite the default configuration at the backend module.
         double memory_error_rate = default(0);

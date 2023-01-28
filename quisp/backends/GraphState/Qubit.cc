@@ -1,11 +1,12 @@
 #include "Qubit.h"
+#include <stdexcept>
 #include "Backend.h"
 #include "backends/interfaces/IQubit.h"
 #include "types.h"
 
 namespace quisp::backends::graph_state {
 using types::CliffordOperator;
-GraphStateQubit::GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend) : id(id), memory_transition_matrix(MatrixXd::Zero(6, 6)), backend(backend) {
+GraphStateQubit::GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend) : memory_transition_matrix(MatrixXd::Zero(6, 6)), id(id), backend(backend) {
   // initialize variables for graph state representation tracking
   vertex_operator = CliffordOperator::H;
 }
@@ -262,13 +263,14 @@ void GraphStateQubit::toggleEdge(GraphStateQubit *another_qubit) {
 }
 
 void GraphStateQubit::removeAllEdges() {
-  for (auto *v : this->neighbors) {
+  for (auto *v : neighbors) {
     v->neighbors.erase(this);
   }
   this->neighbors.clear();
 }
 
 void GraphStateQubit::localComplement() {
+  // this should work and not interfere with iterating orders
   auto it_end = this->neighbors.end();
   for (auto it_u = this->neighbors.begin(); it_u != it_end; it_u++) {
     auto it_v = std::next(it_u);
@@ -306,18 +308,25 @@ void GraphStateQubit::removeVertexOperation(GraphStateQubit *qubit_to_avoid) {
 }
 
 void GraphStateQubit::applyPureCZ(GraphStateQubit *another_qubit) {
-  auto *aq = another_qubit;
-  this->removeVertexOperation(aq);
-  aq->removeVertexOperation(this);
-  this->removeVertexOperation(aq);
+  // clang-format off
+  if ((this->isNeighbor(another_qubit) && this->neighbors.size() > 1) ||
+      (!this->isNeighbor(another_qubit) && this->neighbors.size() > 0))
+      this->removeVertexOperation(another_qubit);
+  if ((another_qubit->isNeighbor(this) && another_qubit->neighbors.size() > 1) ||
+      (!another_qubit->isNeighbor(this) && another_qubit->neighbors.size() > 0))
+      another_qubit->removeVertexOperation(this);
+  if ((this->isNeighbor(another_qubit) && this->neighbors.size() > 1) ||
+      (!this->isNeighbor(another_qubit) && this->neighbors.size() > 0))
+      this->removeVertexOperation(another_qubit);
+  // clang-format on
 
-  bool has_edge = this->isNeighbor(aq);
+  bool has_edge = this->isNeighbor(another_qubit);
   int current_vop = (int)(this->vertex_operator);
-  int aq_vop = (int)(aq->vertex_operator);
+  int aq_vop = (int)(another_qubit->vertex_operator);
   this->vertex_operator = controlled_Z_lookup_node_1[has_edge][current_vop][aq_vop];
-  aq->vertex_operator = controlled_Z_lookup_node_2[has_edge][current_vop][aq_vop];
+  another_qubit->vertex_operator = controlled_Z_lookup_node_2[has_edge][current_vop][aq_vop];
   if (has_edge != controlled_Z_lookup_edge[has_edge][current_vop][aq_vop]) {
-    this->toggleEdge(aq);
+    this->toggleEdge(another_qubit);
   }
 }
 
@@ -367,8 +376,10 @@ void GraphStateQubit::setCompletelyMixedDensityMatrix() { pi_vector_completely_m
 
 void GraphStateQubit::setEntangledPartner(IQubit *const partner) {
   auto gs_partner_qubit = dynamic_cast<GraphStateQubit *>(partner);
-  // 　HACK: here we only consider the current qubit and the partner qubit
-  if (!this->isNeighbor(gs_partner_qubit)) this->addEdge(gs_partner_qubit);
+  // Only for used by BSA
+  if (this->isNeighbor(gs_partner_qubit)) return;
+
+  this->addEdge(gs_partner_qubit);
   this->vertex_operator = CliffordOperator::H;
   gs_partner_qubit->vertex_operator = CliffordOperator::Id;
 }
@@ -450,30 +461,24 @@ EigenvalueResult GraphStateQubit::localMeasureZ() {
 
 [[deprecated]] bool GraphStateQubit::purifyX(IQubit *const control_qubit) {
   this->gateCNOT(control_qubit);
-  auto result = this->localMeasureZ() == EigenvalueResult::PLUS_ONE;
-  return result;
+  return this->localMeasureZ() == EigenvalueResult::PLUS_ONE;
 }
 
 [[deprecated]] bool GraphStateQubit::purifyZ(IQubit *const target_qubit) {
   target_qubit->gateCNOT(this);
-  auto result = this->localMeasureZ() == EigenvalueResult::PLUS_ONE;
-  return result;
+  return this->localMeasureX() == EigenvalueResult::PLUS_ONE;
 }
 
 [[deprecated]] MeasurementOutcome GraphStateQubit::measureDensityIndependent() {
   auto rand = backend->dblrand();
   MeasurementOutcome o;
-  std::cout << "Random num = " << rand << "! \n ";
   if (rand < ((double)1 / (double)3)) {
-    std::cout << "X measurement\n";
     o.basis = 'X';
     o.outcome_is_plus = this->localMeasureX() == EigenvalueResult::PLUS_ONE ? true : false;
-  } else if (rand >= ((double)1 / (double)3) && rand < ((double)2 / (double)3)) {
-    std::cout << "Z measurement\n";
+  } else if (rand < ((double)2 / (double)3)) {
     o.basis = 'Z';
     o.outcome_is_plus = this->localMeasureZ() == EigenvalueResult::PLUS_ONE ? true : false;
   } else {
-    std::cout << "Y measurement\n";
     o.basis = 'Y';
     o.outcome_is_plus = this->localMeasureY() == EigenvalueResult::PLUS_ONE ? true : false;
   }

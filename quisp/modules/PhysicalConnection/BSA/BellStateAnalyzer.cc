@@ -67,6 +67,7 @@ class BellStateAnalyzer : public cSimpleModule {
 
  protected:
   virtual void initialize();
+  virtual void finish();
   virtual void handleMessage(cMessage *msg);
   virtual void forDEBUG_countErrorTypes(cMessage *msg);
   virtual void sendBSAresult(bool result, bool last);
@@ -277,6 +278,14 @@ void BellStateAnalyzer::forDEBUG_countErrorTypes(cMessage *msg) {
      << ", L%=" << (double)count_L / (double)count_total << ", I% =" << (double)count_I / (double)count_total << "\n";
 }
 
+void BellStateAnalyzer::finish() {
+  std::cout << "===== ratio: =====" << '\n';
+  std::cout << "Y%=" << (double)count_Y / (double)count_total << ", X%=" << (double)count_X / (double)count_total << ", Z%=" << (double)count_Z / (double)count_total
+            << ", L%=" << (double)count_L / (double)count_total << ", I% =" << (double)count_I / (double)count_total << "\n";
+  std::cout << "===== raw: =====" << '\n';
+  std::cout << "Y%=" << count_Y << ", X%=" << count_X << ", Z%=" << count_Z << ", L%=" << count_L << ", I% =" << count_I << "\n";
+}
+
 void BellStateAnalyzer::GOD_setCompletelyMixedDensityMatrix() {
   left_statQubit_ptr->setCompletelyMixedDensityMatrix();
   right_statQubit_ptr->setCompletelyMixedDensityMatrix();
@@ -289,7 +298,6 @@ void BellStateAnalyzer::GOD_updateEntangledInfoParameters_of_qubits() {
   if (left_photon_Xerr) left_statQubit_ptr->addXerror();
   if (left_photon_Zerr) left_statQubit_ptr->addZerror();
 
-  right_statQubit_ptr->setEntangledPartnerInfo(left_statQubit_ptr);
   if (right_photon_Xerr) right_statQubit_ptr->addXerror();
   if (right_photon_Zerr) right_statQubit_ptr->addZerror();
   n_res++;

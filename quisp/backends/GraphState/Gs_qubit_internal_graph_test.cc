@@ -19,12 +19,12 @@ class GsQubitInternalGraphTest : public ::testing::Test {
     SimTime::setScaleExp(-9);
     rng = new TestRNG();
     backend = std::make_unique<Backend>(std::unique_ptr<IRandomNumberGenerator>(rng), std::make_unique<StationaryQubitConfiguration>());
-    qubit = dynamic_cast<Qubit*>(backend->createQubit(1));
-    another_qubit = dynamic_cast<Qubit*>(backend->createQubit(2));
-    shared_neighbor = dynamic_cast<Qubit*>(backend->createQubit(3));
-    center_qubit = dynamic_cast<Qubit*>(backend->createQubit(4));
-    qubit_to_avoid = dynamic_cast<Qubit*>(backend->createQubit(5));
-    isolated_qubit = dynamic_cast<Qubit*>(backend->createQubit(6));
+    qubit = dynamic_cast<Qubit *>(backend->createQubit(1));
+    another_qubit = dynamic_cast<Qubit *>(backend->createQubit(2));
+    shared_neighbor = dynamic_cast<Qubit *>(backend->createQubit(3));
+    center_qubit = dynamic_cast<Qubit *>(backend->createQubit(4));
+    qubit_to_avoid = dynamic_cast<Qubit *>(backend->createQubit(5));
+    isolated_qubit = dynamic_cast<Qubit *>(backend->createQubit(6));
     qubit->fillParams();
     another_qubit->fillParams();
     shared_neighbor->fillParams();
@@ -32,14 +32,14 @@ class GsQubitInternalGraphTest : public ::testing::Test {
     qubit_to_avoid->fillParams();
     isolated_qubit->fillParams();
   }
-  Qubit* qubit;
-  Qubit* another_qubit;
-  Qubit* shared_neighbor;
-  Qubit* center_qubit;
-  Qubit* qubit_to_avoid;
-  Qubit* isolated_qubit;
+  Qubit *qubit;
+  Qubit *another_qubit;
+  Qubit *shared_neighbor;
+  Qubit *center_qubit;
+  Qubit *qubit_to_avoid;
+  Qubit *isolated_qubit;
   std::unique_ptr<Backend> backend;
-  TestRNG* rng;
+  TestRNG *rng;
 };
 
 TEST_F(GsQubitInternalGraphTest, AddEdge) {
@@ -208,12 +208,12 @@ TEST_F(GsQubitInternalGraphTest, applyRightClifford) {
 }
 
 TEST_F(GsQubitInternalGraphTest, localComplement) {
-  std::vector<Qubit*> first_layer_qubits;
-  std::vector<Qubit*> second_layer_qubits;
+  std::vector<Qubit *> first_layer_qubits;
+  std::vector<Qubit *> second_layer_qubits;
 
   for (int i = 0; i < 10; i++) {
-    first_layer_qubits.push_back(dynamic_cast<Qubit*>(backend->createQubit(i + 10)));
-    second_layer_qubits.push_back(dynamic_cast<Qubit*>(backend->createQubit(i + 20)));
+    first_layer_qubits.push_back(dynamic_cast<Qubit *>(backend->createQubit(i + 10)));
+    second_layer_qubits.push_back(dynamic_cast<Qubit *>(backend->createQubit(i + 20)));
   }
 
   center_qubit->reset();
@@ -296,38 +296,7 @@ TEST_F(GsQubitInternalGraphTest, localComplement) {
   }
 }
 
-TEST_F(GsQubitInternalGraphTest, removeVertexOperation) {
-  // apply RZ to qubit and qubit_to_avoid should not be affected by it
-  qubit->reset();
-  another_qubit->reset();
-  qubit_to_avoid->reset();
-  qubit->addEdge(qubit_to_avoid);
-  qubit->addEdge(another_qubit);
-  qubit_to_avoid->setVertexOperator(CliffordOperator::Id);
-  qubit->setVertexOperator(CliffordOperator::S);
-  qubit->removeVertexOperation(qubit_to_avoid);
-  EXPECT_EQ(qubit_to_avoid->getVertexOperator(), CliffordOperator::Id);
-
-  qubit->reset();
-  another_qubit->reset();
-  qubit_to_avoid->reset();
-  qubit->addEdge(qubit_to_avoid);
-  qubit->addEdge(another_qubit);
-  qubit_to_avoid->setVertexOperator(CliffordOperator::Id);
-  qubit->setVertexOperator(CliffordOperator::S_INV);
-  qubit->removeVertexOperation(qubit_to_avoid);
-  EXPECT_EQ(qubit_to_avoid->getVertexOperator(), CliffordOperator::Id);
-
-  qubit->reset();
-  another_qubit->reset();
-  qubit_to_avoid->reset();
-  qubit->addEdge(qubit_to_avoid);
-  qubit->addEdge(another_qubit);
-  qubit_to_avoid->setVertexOperator(CliffordOperator::Id);
-  qubit->setVertexOperator(CliffordOperator::Z);
-  qubit->removeVertexOperation(qubit_to_avoid);
-  EXPECT_EQ(qubit_to_avoid->getVertexOperator(), CliffordOperator::Id);
-
+TEST_F(GsQubitInternalGraphTest, removeVertexOperationResultShouldBeinIdentity) {
   // expect qubit to be Id after
   for (int i = 0; i < 24; i++) {
     for (int j = 0; j < 24; j++) {
@@ -342,6 +311,436 @@ TEST_F(GsQubitInternalGraphTest, removeVertexOperation) {
         qubit_to_avoid->setVertexOperator((CliffordOperator)k);
         qubit->removeVertexOperation(qubit_to_avoid);
         EXPECT_EQ(qubit->getVertexOperator(), CliffordOperator::Id);
+      }
+    }
+  }
+}
+
+TEST_F(GsQubitInternalGraphTest, removeVertexOperationForGroupZ) {
+  std::vector<CliffordOperator> clifford_z_group = {CliffordOperator::Id, CliffordOperator::S, CliffordOperator::S_INV, CliffordOperator::Z};
+
+  // apply RZ to qubit. qubit_to_avoid should not be affected by it
+  for (int vop = 0; vop < 24; vop++) {
+    for (int i = 0; i < 4; i++) {
+      qubit->reset();
+      another_qubit->reset();
+      qubit_to_avoid->reset();
+      qubit->addEdge(qubit_to_avoid);
+      qubit->addEdge(another_qubit);
+      qubit_to_avoid->setVertexOperator((CliffordOperator)vop);
+      qubit->setVertexOperator(clifford_z_group[i]);
+      qubit->removeVertexOperation(qubit_to_avoid);
+      EXPECT_EQ(qubit_to_avoid->getVertexOperator(), (CliffordOperator)vop);
+    }
+  }
+}
+
+TEST_F(GsQubitInternalGraphTest, removeVertexOperationForGroupX) {
+  std::vector<CliffordOperator> clifford_x_group = {CliffordOperator::Id, CliffordOperator::X, CliffordOperator::RX_INV, CliffordOperator::RX};
+  // apply RX to qubit. qubit_to_avoid should be left in Z
+  qubit->reset();
+  another_qubit->reset();
+  qubit_to_avoid->reset();
+  qubit->addEdge(qubit_to_avoid);
+  qubit->addEdge(another_qubit);
+  qubit_to_avoid->setVertexOperator(CliffordOperator::Id);
+  qubit->setVertexOperator(CliffordOperator::Id);
+  qubit->removeVertexOperation(qubit_to_avoid);
+  EXPECT_EQ(qubit_to_avoid->getVertexOperator(), CliffordOperator::Id);
+
+  qubit->reset();
+  another_qubit->reset();
+  qubit_to_avoid->reset();
+  qubit->addEdge(qubit_to_avoid);
+  qubit->addEdge(another_qubit);
+  qubit_to_avoid->setVertexOperator(CliffordOperator::Id);
+  qubit->setVertexOperator(CliffordOperator::RX);
+  qubit->removeVertexOperation(qubit_to_avoid);
+  EXPECT_EQ(qubit_to_avoid->getVertexOperator(), CliffordOperator::S);
+
+  qubit->reset();
+  another_qubit->reset();
+  qubit_to_avoid->reset();
+  qubit->addEdge(qubit_to_avoid);
+  qubit->addEdge(another_qubit);
+  qubit_to_avoid->setVertexOperator(CliffordOperator::Id);
+  qubit->setVertexOperator(CliffordOperator::RX_INV);
+  qubit->removeVertexOperation(qubit_to_avoid);
+  EXPECT_EQ(qubit_to_avoid->getVertexOperator(), CliffordOperator::S_INV);
+
+  qubit->reset();
+  another_qubit->reset();
+  qubit_to_avoid->reset();
+  qubit->addEdge(qubit_to_avoid);
+  qubit->addEdge(another_qubit);
+  qubit_to_avoid->setVertexOperator(CliffordOperator::Id);
+  qubit->setVertexOperator(CliffordOperator::X);
+  qubit->removeVertexOperation(qubit_to_avoid);
+  EXPECT_EQ(qubit_to_avoid->getVertexOperator(), CliffordOperator::Z);
+}
+
+TEST_F(GsQubitInternalGraphTest, removeVertexOperation_QubitToAvoidShouldStaysInGroupZ) {
+  std::vector<CliffordOperator> clifford_z_group = {CliffordOperator::Id, CliffordOperator::S, CliffordOperator::S_INV, CliffordOperator::Z};
+  // if qubit_to_avoid starts in Z; it should still be in Z
+  for (int i = 0; i < 24; i++) {
+    for (int j = 0; j < 24; j++) {
+      for (int k = 0; k < 4; k++) {
+        qubit->reset();
+        another_qubit->reset();
+        qubit_to_avoid->reset();
+        qubit->addEdge(another_qubit);
+        qubit->addEdge(qubit_to_avoid);
+        qubit->setVertexOperator((CliffordOperator)i);
+        another_qubit->setVertexOperator((CliffordOperator)j);
+        qubit_to_avoid->setVertexOperator(clifford_z_group[k]);
+        qubit->removeVertexOperation(qubit_to_avoid);
+        EXPECT_THAT(clifford_z_group, testing::Contains(qubit_to_avoid->vertex_operator));
+      }
+    }
+  }
+}
+
+TEST_F(GsQubitInternalGraphTest, Phiplus_Measure_in_ZZ) {
+  for (int i = 0; i < 100; i++) {
+    for (int j = 0; j < 100; j++) {
+      qubit->reset();
+      qubit->fillParams();
+      another_qubit->reset();
+      another_qubit->fillParams();
+
+      qubit->addEdge(another_qubit);
+      qubit->vertex_operator = CliffordOperator::Id;
+      rng->double_value = (double)i / 100;
+      auto result_left = qubit->localMeasureZ();
+      rng->double_value = (double)j / 100;
+      auto result_right = another_qubit->localMeasureZ();
+      EXPECT_EQ(result_left, result_right);
+    }
+  }
+
+  for (int i = 0; i < 100; i++) {
+    for (int j = 0; j < 100; j++) {
+      qubit->reset();
+      qubit->fillParams();
+      another_qubit->reset();
+      another_qubit->fillParams();
+
+      qubit->addEdge(another_qubit);
+      another_qubit->vertex_operator = CliffordOperator::Id;
+      rng->double_value = (double)i / 100;
+      auto result_left = qubit->localMeasureZ();
+      rng->double_value = (double)j / 100;
+      auto result_right = another_qubit->localMeasureZ();
+      EXPECT_EQ(result_left, result_right);
+    }
+  }
+}
+
+TEST_F(GsQubitInternalGraphTest, Phiplus_Measure_in_XX) {
+  for (int i = 0; i < 100; i++) {
+    for (int j = 0; j < 100; j++) {
+      qubit->reset();
+      qubit->fillParams();
+      another_qubit->reset();
+      another_qubit->fillParams();
+
+      qubit->addEdge(another_qubit);
+      qubit->vertex_operator = CliffordOperator::Id;
+      another_qubit->vertex_operator = CliffordOperator::H;
+      rng->double_value = (double)i / 100;
+      auto result_left = qubit->localMeasureX();
+      rng->double_value = (double)j / 100;
+      auto result_right = another_qubit->localMeasureX();
+      EXPECT_EQ(result_left, result_right);
+    }
+  }
+  for (int i = 0; i < 100; i++) {
+    for (int j = 0; j < 100; j++) {
+      qubit->reset();
+      qubit->fillParams();
+      another_qubit->reset();
+      another_qubit->fillParams();
+
+      qubit->addEdge(another_qubit);
+      another_qubit->vertex_operator = CliffordOperator::Id;
+      qubit->vertex_operator = CliffordOperator::H;
+      rng->double_value = (double)i / 100;
+
+      auto c1 = qubit->vertex_operator;
+      auto c2 = another_qubit->vertex_operator;
+
+      auto result_left = qubit->localMeasureX();
+      rng->double_value = (double)j / 100;
+      auto result_right = another_qubit->localMeasureX();
+      EXPECT_EQ(result_left, result_right);
+    }
+  }
+}
+
+TEST_F(GsQubitInternalGraphTest, Phiplus_Measure_in_YY) {
+  for (int i = 0; i < 100; i++) {
+    for (int j = 0; j < 100; j++) {
+      qubit->reset();
+      qubit->fillParams();
+      another_qubit->reset();
+      another_qubit->fillParams();
+
+      qubit->addEdge(another_qubit);
+      qubit->vertex_operator = CliffordOperator::Id;
+      rng->double_value = (double)i / 100;
+      auto result_left = qubit->localMeasureY();
+      rng->double_value = (double)j / 100;
+      auto result_right = another_qubit->localMeasureY();
+      EXPECT_NE(result_left, result_right);
+    }
+  }
+  for (int i = 0; i < 100; i++) {
+    for (int j = 0; j < 100; j++) {
+      qubit->reset();
+      qubit->fillParams();
+      another_qubit->reset();
+      another_qubit->fillParams();
+
+      qubit->addEdge(another_qubit);
+      another_qubit->vertex_operator = CliffordOperator::Id;
+      rng->double_value = (double)i / 100;
+      auto result_left = qubit->localMeasureY();
+      rng->double_value = (double)j / 100;
+      auto result_right = another_qubit->localMeasureY();
+      EXPECT_NE(result_left, result_right);
+    }
+  }
+}
+
+TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_ZZ) {
+  auto *alice_keep = static_cast<Qubit *>(backend->createQubit(11));
+  auto *alice_trash = static_cast<Qubit *>(backend->createQubit(12));
+  auto *bob_keep = static_cast<Qubit *>(backend->createQubit(13));
+  auto *bob_trash = static_cast<Qubit *>(backend->createQubit(14));
+
+  // measure in order
+  for (int i = 1; i <= 2; i++) {
+    for (int j = 1; j <= 2; j++) {
+      for (int m = 1; m < 100; m++) {
+        for (int n = 1; n < 100; n++) {
+          alice_keep->reset();
+          alice_trash->reset();
+          bob_keep->reset();
+          bob_trash->reset();
+          alice_keep->fillParams();
+          alice_trash->fillParams();
+          bob_keep->fillParams();
+          bob_trash->fillParams();
+
+          alice_keep->addEdge(bob_keep);
+          alice_keep->vertex_operator = CliffordOperator::Id;
+          alice_trash->addEdge(bob_trash);
+          alice_trash->vertex_operator = CliffordOperator::Id;
+
+          alice_trash->gateCNOT(alice_keep);
+          bob_trash->gateCNOT(bob_keep);
+
+          rng->double_value = (double)i / 3;
+          auto alice_result = alice_trash->localMeasureZ();
+          rng->double_value = (double)j / 3;
+          auto bob_result = bob_trash->localMeasureZ();
+
+          EXPECT_EQ(alice_result, bob_result);
+
+          // expect a bell pair
+          EXPECT_EQ(alice_keep->neighbors.size(), 1);
+          EXPECT_EQ(bob_keep->neighbors.size(), 1);
+          EXPECT_TRUE(alice_keep->isNeighbor(bob_keep));
+          EXPECT_TRUE(bob_keep->isNeighbor(alice_keep));
+
+          rng->double_value = double(m) / 100;
+          alice_result = alice_keep->localMeasureZ();
+          rng->double_value = double(n) / 100;
+          bob_result = alice_keep->localMeasureZ();
+          EXPECT_EQ(alice_result, bob_result);
+        }
+      }
+    }
+  }
+
+  // measure out of order
+  for (int i = 1; i <= 2; i++) {
+    for (int j = 1; j <= 2; j++) {
+      for (int m = 0; m < 100; m++) {
+        for (int n = 0; n < 100; n++) {
+          alice_keep->reset();
+          alice_trash->reset();
+          bob_keep->reset();
+          bob_trash->reset();
+          alice_keep->fillParams();
+          alice_trash->fillParams();
+          bob_keep->fillParams();
+          bob_trash->fillParams();
+
+          alice_keep->addEdge(bob_keep);
+          alice_keep->vertex_operator = CliffordOperator::Id;
+          alice_trash->addEdge(bob_trash);
+          alice_trash->vertex_operator = CliffordOperator::Id;
+
+          auto alk = alice_keep->vertex_operator;
+          auto alt = alice_trash->vertex_operator;
+          auto bk = bob_keep->vertex_operator;
+          auto bt = bob_trash->vertex_operator;
+
+          alice_trash->gateCNOT(alice_keep);
+
+          alk = alice_keep->vertex_operator;
+          alt = alice_trash->vertex_operator;
+          bk = bob_keep->vertex_operator;
+          bt = bob_trash->vertex_operator;
+
+          rng->double_value = (double)i / 3;
+          auto alice_result = alice_trash->localMeasureZ();
+
+          alk = alice_keep->vertex_operator;
+          alt = alice_trash->vertex_operator;
+          bk = bob_keep->vertex_operator;
+          bt = bob_trash->vertex_operator;
+
+          bob_trash->gateCNOT(bob_keep);
+
+          EXPECT_EQ(bob_trash->neighbors.size(), 0);
+          EXPECT_EQ(alice_keep->neighbors.size(), 1);
+          EXPECT_EQ(bob_keep->neighbors.size(), 1);
+          EXPECT_TRUE(alice_keep->isNeighbor(bob_keep));
+          EXPECT_TRUE(bob_keep->isNeighbor(alice_keep));
+
+          rng->double_value = (double)j / 3;
+          auto bob_result = bob_trash->localMeasureZ();
+
+          EXPECT_EQ(alice_result, bob_result);
+
+          // expect a bell pair
+          EXPECT_EQ(alice_keep->neighbors.size(), 1);
+          EXPECT_EQ(bob_keep->neighbors.size(), 1);
+          EXPECT_TRUE(alice_keep->isNeighbor(bob_keep));
+          EXPECT_TRUE(bob_keep->isNeighbor(alice_keep));
+
+          rng->double_value = double(m) / 100;
+          alice_result = alice_keep->localMeasureZ();
+          rng->double_value = double(n) / 100;
+          bob_result = alice_keep->localMeasureZ();
+          EXPECT_EQ(alice_result, bob_result);
+        }
+      }
+    }
+  }
+}
+
+TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_XX) {
+  auto *alice_keep = static_cast<Qubit *>(backend->createQubit(11));
+  auto *alice_trash = static_cast<Qubit *>(backend->createQubit(12));
+  auto *bob_keep = static_cast<Qubit *>(backend->createQubit(13));
+  auto *bob_trash = static_cast<Qubit *>(backend->createQubit(14));
+
+  for (int i = 1; i <= 2; i++) {
+    for (int j = 1; j <= 2; j++) {
+      for (int m = 0; m < 100; m++) {
+        for (int n = 0; n < 100; n++) {
+          alice_keep->reset();
+          alice_trash->reset();
+          bob_keep->reset();
+          bob_trash->reset();
+          alice_keep->fillParams();
+          alice_trash->fillParams();
+          bob_keep->fillParams();
+          bob_trash->fillParams();
+
+          alice_keep->addEdge(bob_keep);
+          alice_keep->vertex_operator = CliffordOperator::Id;
+          alice_trash->addEdge(bob_trash);
+          alice_trash->vertex_operator = CliffordOperator::Id;
+
+          alice_trash->gateCNOT(alice_keep);
+          bob_trash->gateCNOT(bob_keep);
+
+          rng->double_value = (double)i / 3;
+          auto alice_result = alice_trash->localMeasureZ();
+          rng->double_value = (double)j / 3;
+          auto bob_result = bob_trash->localMeasureZ();
+
+          EXPECT_EQ(alice_result, bob_result);
+
+          // expect a bell pair
+          EXPECT_EQ(alice_keep->neighbors.size(), 1);
+          EXPECT_EQ(bob_keep->neighbors.size(), 1);
+          EXPECT_TRUE(alice_keep->isNeighbor(bob_keep));
+          EXPECT_TRUE(bob_keep->isNeighbor(alice_keep));
+
+          auto c1 = alice_keep->vertex_operator;
+          auto c2 = bob_keep->vertex_operator;
+          if (c2 < c1) std::swap(c1, c2);
+          EXPECT_EQ(c1, CliffordOperator::Id);
+          EXPECT_EQ(c2, CliffordOperator::H);
+
+          rng->double_value = double(m) / 100;
+          alice_result = alice_keep->localMeasureX();
+          rng->double_value = double(n) / 100;
+          bob_result = bob_keep->localMeasureX();
+          EXPECT_EQ(alice_result, bob_result);
+        }
+      }
+    }
+  }
+}
+
+TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_YY) {
+  auto *alice_keep = static_cast<Qubit *>(backend->createQubit(11));
+  auto *alice_trash = static_cast<Qubit *>(backend->createQubit(12));
+  auto *bob_keep = static_cast<Qubit *>(backend->createQubit(13));
+  auto *bob_trash = static_cast<Qubit *>(backend->createQubit(14));
+
+  for (int i = 1; i <= 2; i++) {
+    for (int j = 1; j <= 2; j++) {
+      for (int m = 0; m < 100; m++) {
+        for (int n = 0; n < 100; n++) {
+          alice_keep->reset();
+          alice_trash->reset();
+          bob_keep->reset();
+          bob_trash->reset();
+          alice_keep->fillParams();
+          alice_trash->fillParams();
+          bob_keep->fillParams();
+          bob_trash->fillParams();
+
+          alice_keep->addEdge(bob_keep);
+          alice_keep->vertex_operator = CliffordOperator::Id;
+          alice_trash->addEdge(bob_trash);
+          alice_trash->vertex_operator = CliffordOperator::Id;
+
+          alice_trash->gateCNOT(alice_keep);
+          bob_trash->gateCNOT(bob_keep);
+
+          rng->double_value = (double)i / 3;
+          auto alice_result = alice_trash->localMeasureZ();
+          rng->double_value = (double)j / 3;
+          auto bob_result = bob_trash->localMeasureZ();
+
+          EXPECT_EQ(alice_result, bob_result);
+
+          // expect a bell pair
+          EXPECT_EQ(alice_keep->neighbors.size(), 1);
+          EXPECT_EQ(bob_keep->neighbors.size(), 1);
+          EXPECT_TRUE(alice_keep->isNeighbor(bob_keep));
+          EXPECT_TRUE(bob_keep->isNeighbor(alice_keep));
+
+          auto c1 = alice_keep->vertex_operator;
+          auto c2 = bob_keep->vertex_operator;
+          if (c2 < c1) std::swap(c1, c2);
+          EXPECT_EQ(c1, CliffordOperator::Id);
+          EXPECT_EQ(c2, CliffordOperator::H);
+
+          rng->double_value = double(m) / 100;
+          alice_result = alice_keep->localMeasureY();
+          rng->double_value = double(n) / 100;
+          bob_result = bob_keep->localMeasureY();
+          EXPECT_NE(alice_result, bob_result);
+        }
       }
     }
   }
@@ -414,9 +813,9 @@ TEST_F(GsQubitInternalGraphTest, graphMeasureZIsolatedQubit) {
 }
 
 TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZStatePlusEigenvalue) {
-  std::vector<Qubit*> qarrs;
+  std::vector<Qubit *> qarrs;
   for (int i = 0; i < 10; i++) {
-    qarrs.push_back(dynamic_cast<Qubit*>(backend->createQubit(i + 50)));
+    qarrs.push_back(dynamic_cast<Qubit *>(backend->createQubit(i + 50)));
   }
 
   // Bell pair
@@ -488,10 +887,10 @@ TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZStatePlusEigenvalue) {
   }
 }
 TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZStateMinusEigenvalue) {
-  std::vector<Qubit*> qarrs;
+  std::vector<Qubit *> qarrs;
   rng->double_value = 0.5;
   for (int i = 0; i < 10; i++) {
-    qarrs.push_back(dynamic_cast<Qubit*>(backend->createQubit(i + 100)));
+    qarrs.push_back(dynamic_cast<Qubit *>(backend->createQubit(i + 100)));
   }
 
   // Bell pair

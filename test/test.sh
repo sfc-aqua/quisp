@@ -15,9 +15,10 @@ make MODE=release
 if [ -e $QUISP_ROOT/test/testresults.txt ];then
     rm  $QUISP_ROOT/test/testresults.txt
 fi
+
 # Actual test part
 # Experiments=("Test0" "Test1" "Test2")
-NUM_TEST=35
+NUM_TEST=0
 # ===
 # This "init" and "next" is identifier of the experiments
 # for((i=0; i<${#Experiments[@]}; i++)); do

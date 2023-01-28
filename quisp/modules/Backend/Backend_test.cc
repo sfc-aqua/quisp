@@ -7,7 +7,6 @@
 namespace {
 using namespace quisp_test;
 using OriginalBackendContainer = quisp::modules::backend::BackendContainer;
-using quisp::modules::backend::ErrorTrackingBackend;
 using quisp::modules::backend::GraphStateBackend;
 using quisp::modules::backend::StationaryQubitConfiguration;
 
@@ -65,14 +64,7 @@ class BackendContainerTest : public ::testing::Test {
 
 TEST_F(BackendContainerTest, constructor) { BackendContainer backend; }
 
-TEST_F(BackendContainerTest, callEtInitialize) {
-  setParStr(backend, "backend_type", "ErrorTrackingBackend");
-  EXPECT_EQ(backend->backend, nullptr);
-  backend->callInitialize();
-  EXPECT_NE(backend->backend, nullptr);
-}
-
-TEST_F(BackendContainerTest, callGssInitialize) {
+TEST_F(BackendContainerTest, callGsBackendInitialize) {
   setParStr(backend, "backend_type", "GraphStateBackend");
   EXPECT_EQ(backend->backend, nullptr);
   backend->callInitialize();
@@ -85,104 +77,54 @@ TEST_F(BackendContainerTest, callInitializeWithInvalidBackend) {
   EXPECT_THROW(backend->callInitialize(), omnetpp::cRuntimeError);
 }
 
-TEST_F(BackendContainerTest, getEtQuantumBackend) {
-  setParStr(backend, "backend_type", "ErrorTrackingBackend");
-  backend->callInitialize();
-  ASSERT_NE(backend->backend, nullptr);
-  auto *b = backend->getQuantumBackend();
-  ASSERT_NE(b, nullptr);
-  auto *et_backend = dynamic_cast<ErrorTrackingBackend *>(b);
-  EXPECT_NE(et_backend, nullptr);
-}
-
-TEST_F(BackendContainerTest, getEtQuantumBackendWithoutInit) {
-  setParStr(backend, "backend_type", "ErrorTrackingBackend");
-  ASSERT_EQ(backend->backend, nullptr);
-  EXPECT_ANY_THROW({ backend->getQuantumBackend(); });
-}
-
-TEST_F(BackendContainerTest, getEtBackendConfiguration) {
-  setParStr(backend, "backend_type", "ErrorTrackingBackend");
-  backend->callInitialize();
-  ASSERT_NE(backend->backend, nullptr);
-  auto *b = backend->getQuantumBackend();
-  ASSERT_NE(b, nullptr);
-  auto *et_backend = dynamic_cast<ErrorTrackingBackend *>(b);
-
-  auto conf = et_backend->getDefaultConfiguration();
-  ASSERT_NE(conf, nullptr);
-  auto et_conf = dynamic_cast<StationaryQubitConfiguration *>(conf.get());
-  ASSERT_NE(et_conf, nullptr);
-}
-
-TEST_F(BackendContainerTest, getCopyOfEtBackendConfiguration) {
-  setParStr(backend, "backend_type", "ErrorTrackingBackend");
-  backend->callInitialize();
-  ASSERT_NE(backend->backend, nullptr);
-  auto *b = backend->getQuantumBackend();
-  ASSERT_NE(b, nullptr);
-  auto *et_backend = dynamic_cast<ErrorTrackingBackend *>(b);
-
-  auto conf = et_backend->getDefaultConfiguration();
-  auto et_conf = dynamic_cast<StationaryQubitConfiguration *>(conf.get());
-
-  auto conf2 = et_backend->getDefaultConfiguration();
-  auto et_conf2 = dynamic_cast<StationaryQubitConfiguration *>(conf2.get());
-
-  // confirm et_conf and et_conf2 are different intstances
-  et_conf->cnot_gate_err_rate = 10;
-  EXPECT_NE(et_conf->cnot_gate_err_rate, et_conf2->cnot_gate_err_rate);
-  EXPECT_NE(et_conf, et_conf2);
-}
-
-TEST_F(BackendContainerTest, getGssQuantumBackend) {
+TEST_F(BackendContainerTest, getGsQuantumBackend) {
   setParStr(backend, "backend_type", "GraphStateBackend");
   backend->callInitialize();
   ASSERT_NE(backend->backend, nullptr);
   auto *b = backend->getQuantumBackend();
   ASSERT_NE(b, nullptr);
-  auto *gss_backend = dynamic_cast<GraphStateBackend *>(b);
-  EXPECT_NE(gss_backend, nullptr);
+  auto *gs_backend = dynamic_cast<GraphStateBackend *>(b);
+  EXPECT_NE(gs_backend, nullptr);
 }
 
-TEST_F(BackendContainerTest, getGssQuantumBackendWithoutInit) {
+TEST_F(BackendContainerTest, getGsQuantumBackendWithoutInit) {
   setParStr(backend, "backend_type", "GraphStateBackend");
   ASSERT_EQ(backend->backend, nullptr);
   EXPECT_ANY_THROW({ backend->getQuantumBackend(); });
 }
 
-TEST_F(BackendContainerTest, getGssBackendConfiguration) {
+TEST_F(BackendContainerTest, getGsBackendConfiguration) {
   setParStr(backend, "backend_type", "GraphStateBackend");
   backend->callInitialize();
   ASSERT_NE(backend->backend, nullptr);
   auto *b = backend->getQuantumBackend();
   ASSERT_NE(b, nullptr);
-  auto *gss_backend = dynamic_cast<GraphStateBackend *>(b);
+  auto *gs_backend = dynamic_cast<GraphStateBackend *>(b);
 
-  auto conf = gss_backend->getDefaultConfiguration();
+  auto conf = gs_backend->getDefaultConfiguration();
   ASSERT_NE(conf, nullptr);
-  auto gss_conf = dynamic_cast<StationaryQubitConfiguration *>(conf.get());
-  ASSERT_NE(gss_conf, nullptr);
+  auto gs_conf = dynamic_cast<StationaryQubitConfiguration *>(conf.get());
+  ASSERT_NE(gs_conf, nullptr);
 }
 
-TEST_F(BackendContainerTest, getCopyOfGssBackendConfiguration) {
+TEST_F(BackendContainerTest, getCopyOfGsBackendConfiguration) {
   setParStr(backend, "backend_type", "GraphStateBackend");
   backend->callInitialize();
   ASSERT_NE(backend->backend, nullptr);
   auto *b = backend->getQuantumBackend();
   ASSERT_NE(b, nullptr);
-  auto *gss_backend = dynamic_cast<GraphStateBackend *>(b);
+  auto *gs_backend = dynamic_cast<GraphStateBackend *>(b);
 
-  auto conf = gss_backend->getDefaultConfiguration();
-  auto gss_conf = dynamic_cast<StationaryQubitConfiguration *>(conf.get());
+  auto conf = gs_backend->getDefaultConfiguration();
+  auto gs_conf = dynamic_cast<StationaryQubitConfiguration *>(conf.get());
 
-  auto conf2 = gss_backend->getDefaultConfiguration();
-  auto gss_conf2 = dynamic_cast<StationaryQubitConfiguration *>(conf2.get());
+  auto conf2 = gs_backend->getDefaultConfiguration();
+  auto gs_conf2 = dynamic_cast<StationaryQubitConfiguration *>(conf2.get());
 
-  // confirm gss_conf and gss_conf2 are different intstances
-  gss_conf->cnot_gate_err_rate = 10;
-  EXPECT_NE(gss_conf->cnot_gate_err_rate, gss_conf2->cnot_gate_err_rate);
-  EXPECT_NE(gss_conf, gss_conf2);
+  // confirm gs_conf and gs_conf2 are different intstances
+  gs_conf->cnot_gate_err_rate = 10;
+  EXPECT_NE(gs_conf->cnot_gate_err_rate, gs_conf2->cnot_gate_err_rate);
+  EXPECT_NE(gs_conf, gs_conf2);
 }
 
 TEST_F(BackendContainerTest, finish) {
