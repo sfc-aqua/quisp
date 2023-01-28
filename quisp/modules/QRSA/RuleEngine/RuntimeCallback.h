@@ -10,6 +10,7 @@
 #include <utils/ComponentProvider.h>
 
 #include "RuleEngine.h"
+#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 
 namespace quisp::modules::runtime_callback {
 
@@ -23,29 +24,29 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
 
   MeasurementOutcome measureQubitRandomly(IQubitRecord *qubit_rec) override {
     auto qubit = provider.getStationaryQubit(qubit_rec);
-    return qubit->measure_density_independent();
+    return qubit->measureRandomPauliBasis();
   }
 
   MeasurementOutcome measureQubitX(IQubitRecord *qubit_rec) override {
     auto qubit = provider.getStationaryQubit(qubit_rec);
-    return MeasurementOutcome{.basis = 'X', .outcome_is_plus = qubit->localMeasureX() == types::EigenvalueResult::PLUS_ONE};
+    return MeasurementOutcome{.basis = 'X', .outcome_is_plus = qubit->measureX() == types::EigenvalueResult::PLUS_ONE};
   }
 
   MeasurementOutcome measureQubitZ(IQubitRecord *qubit_rec) override {
     auto qubit = provider.getStationaryQubit(qubit_rec);
-    return MeasurementOutcome{.basis = 'Z', .outcome_is_plus = qubit->localMeasureZ() == types::EigenvalueResult::PLUS_ONE};
+    return MeasurementOutcome{.basis = 'Z', .outcome_is_plus = qubit->measureZ() == types::EigenvalueResult::PLUS_ONE};
   }
 
   void gateX(IQubitRecord *qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     assert(qubit != nullptr);
-    qubit->X_gate();
+    qubit->gateX();
   }
 
   void gateZ(IQubitRecord *qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     assert(qubit != nullptr);
-    qubit->Z_gate();
+    qubit->gateZ();
   }
 
   void gateCNOT(IQubitRecord *control_qubit_rec, IQubitRecord *target_qubit_rec) override {
@@ -53,7 +54,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     auto *target_qubit = provider.getStationaryQubit(target_qubit_rec);
     assert(control_qubit != nullptr);
     assert(target_qubit != nullptr);
-    target_qubit->CNOT_gate(control_qubit);
+    target_qubit->gateCNOT(control_qubit);
   }
 
   bool purifyX(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
@@ -61,7 +62,8 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     auto *trash_qubit = provider.getStationaryQubit(trash_qubit_rec);
     assert(qubit != nullptr);
     assert(trash_qubit != nullptr);
-    return trash_qubit->Xpurify(qubit);
+    trash_qubit->gateCNOT(qubit);
+    return trash_qubit->measureZ() == types::EigenvalueResult::PLUS_ONE;
   }
 
   bool purifyZ(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
@@ -69,7 +71,8 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     auto *trash_qubit = provider.getStationaryQubit(trash_qubit_rec);
     assert(qubit != nullptr);
     assert(trash_qubit != nullptr);
-    return trash_qubit->Zpurify(qubit);
+    qubit->gateCNOT(trash_qubit);
+    return trash_qubit->measureX() == types::EigenvalueResult::PLUS_ONE;
   }
 
   void sendLinkTomographyResult(const unsigned long ruleset_id, const runtime::Rule &rule, const int action_index, const runtime::QNodeAddr partner_addr, int count,

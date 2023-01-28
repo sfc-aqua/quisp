@@ -446,8 +446,8 @@ TEST_F(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   info->qnic.type = qnic_type;
   info->qnic.index = qnic_index;
   EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(5)).Times(1).WillOnce(Return(ByMove(std::move(info))));
-  EXPECT_CALL(*qubit, X_gate()).Times(0);
-  EXPECT_CALL(*qubit, Z_gate()).Times(0);
+  EXPECT_CALL(*qubit, gateX()).Times(0);
+  EXPECT_CALL(*qubit, gateZ()).Times(0);
   SwappingResultData result{
       .ruleset_id = ruleset_id,
       .shared_tag = shared_tag,

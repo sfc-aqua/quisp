@@ -9,12 +9,9 @@
 #include <PhotonicQubit_m.h>
 #include <messages/classical_messages.h>
 #include <omnetpp.h>
-#include <bitset>
 #include <stdexcept>
-#include <unordered_set>
 #include <unsupported/Eigen/KroneckerProduct>
 #include <unsupported/Eigen/MatrixFunctions>
-#include <vector>
 #include "backends/interfaces/IQubit.h"
 #include "modules/QNIC/StationaryQubit/QubitId.h"
 #include "omnetpp/cexception.h"
@@ -134,16 +131,16 @@ void StationaryQubit::handleMessage(cMessage *msg) {
   }
 }
 
-EigenvalueResult StationaryQubit::localMeasureX() { return qubit_ref->measureX(); }
-EigenvalueResult StationaryQubit::localMeasureY() { return qubit_ref->measureY(); }
-EigenvalueResult StationaryQubit::localMeasureZ() { return qubit_ref->measureZ(); }
+EigenvalueResult StationaryQubit::measureX() { return qubit_ref->measureX(); }
+EigenvalueResult StationaryQubit::measureY() { return qubit_ref->measureY(); }
+EigenvalueResult StationaryQubit::measureZ() { return qubit_ref->measureZ(); }
 
 // Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
-void StationaryQubit::Hadamard_gate() { qubit_ref->gateH(); }
-void StationaryQubit::Z_gate() { qubit_ref->gateZ(); }
-void StationaryQubit::X_gate() { qubit_ref->gateX(); }
+void StationaryQubit::gateHadamard() { qubit_ref->gateH(); }
+void StationaryQubit::gateZ() { qubit_ref->gateZ(); }
+void StationaryQubit::gateX() { qubit_ref->gateX(); }
 
-void StationaryQubit::CNOT_gate(IStationaryQubit *control_qubit) { qubit_ref->gateCNOT(check_and_cast<StationaryQubit *>(control_qubit)->qubit_ref); }
+void StationaryQubit::gateCNOT(IStationaryQubit *control_qubit) { qubit_ref->gateCNOT(check_and_cast<StationaryQubit *>(control_qubit)->qubit_ref); }
 
 // This is invoked whenever a photon is emitted out from this particular qubit.
 void StationaryQubit::setBusy() {
@@ -275,22 +272,7 @@ int StationaryQubit::getPartnerStationaryQubitAddress() const {
 /* Add another Z error. If an Z error already exists, then they cancel out */
 [[deprecated]] void StationaryQubit::addZerror() { qubit_ref->addErrorZ(); }
 
-// Only tracks error propagation. If two booleans (Alice and Bob) agree (truetrue or falsefalse), keep the purified ebit.
-bool StationaryQubit::Xpurify(IStationaryQubit *resource_qubit /*Controlled*/) {
-  auto q = static_cast<StationaryQubit *>(resource_qubit)->qubit_ref;
-  auto p = qubit_ref;
-  p->gateCNOT(q);
-  return p->measureZ() == EigenvalueResult::PLUS_ONE;
-}
-
-bool StationaryQubit::Zpurify(IStationaryQubit *resource_qubit /*Target*/) {
-  auto q = static_cast<StationaryQubit *>(resource_qubit)->qubit_ref;
-  auto p = qubit_ref;
-  q->gateCNOT(p);
-  return p->measureX() == EigenvalueResult::PLUS_ONE;
-}
-
-MeasurementOutcome StationaryQubit::measure_density_independent() { return qubit_ref->measureRandomPauliBasis(); }
+MeasurementOutcome StationaryQubit::measureRandomPauliBasis() { return qubit_ref->measureRandomPauliBasis(); }
 
 }  // namespace modules
 }  // namespace quisp
