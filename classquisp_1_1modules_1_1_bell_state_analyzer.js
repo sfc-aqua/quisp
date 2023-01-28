@@ -1,5 +1,6 @@
 var classquisp_1_1modules_1_1_bell_state_analyzer =
 [
+    [ "finish", "classquisp_1_1modules_1_1_bell_state_analyzer.html#a14dc5c55f3a3cb6c61a430852bf5cfc1", null ],
     [ "forDEBUG_countErrorTypes", "classquisp_1_1modules_1_1_bell_state_analyzer.html#ac8fbc2526440978d4fc8db12a7b03e20", null ],
     [ "GOD_setCompletelyMixedDensityMatrix", "classquisp_1_1modules_1_1_bell_state_analyzer.html#a762c67a1d6bd26288f608c49f999b353", null ],
     [ "GOD_updateEntangledInfoParameters_of_qubits", "classquisp_1_1modules_1_1_bell_state_analyzer.html#a14156810b5364815260425f14e24edcd", null ],

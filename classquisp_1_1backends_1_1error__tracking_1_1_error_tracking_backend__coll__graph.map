@@ -1,6 +1,0 @@
-<map id="quisp::backends::error_tracking::ErrorTrackingBackend" name="quisp::backends::error_tracking::ErrorTrackingBackend">
-<area shape="rect" id="node1" title=" " alt="" coords="339,63,548,103"/>
-<area shape="rect" id="node2" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="26,5,194,45"/>
-<area shape="rect" id="node3" title=" " alt="" coords="73,70,147,95"/>
-<area shape="rect" id="node4" href="$classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend_1_1_i_callback.html" title=" " alt="" coords="5,119,215,174"/>
-</map>

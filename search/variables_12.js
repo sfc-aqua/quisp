@@ -11,8 +11,6 @@ var searchData=
   ['spdlog_5flogger_8',['spdlog_logger',['../classquisp_1_1modules_1_1_logger_1_1_logger_module.html#aaf22aaa1fab6cf4a93a44e940973382c',1,'quisp::modules::Logger::LoggerModule']]],
   ['speed_5fof_5flight_5fin_5fchannel_9',['speed_of_light_in_channel',['../classquisp_1_1modules_1_1_h_o_m_controller.html#a9b330bc2894c63e08de54fd3177ed0a0',1,'quisp::modules::HOMController::speed_of_light_in_channel()'],['../classquisp_1_1modules_1_1_s_p_d_c___controller.html#acd4bbcb234be6ef5f0630b2536e8f8bc',1,'quisp::modules::SPDC_Controller::speed_of_light_in_channel()']]],
   ['start_5ftime_10',['start_time',['../classquisp_1_1rules_1_1_tomography.html#a004c9af6a18ecc6890256a201a3946d1',1,'quisp::rules::Tomography']]],
-  ['state_5fin_5fdensity_5fmatrix_11',['state_in_density_matrix',['../structquisp_1_1backends_1_1error__tracking_1_1_quantum_state.html#a25cd49522f55fdaaf9fc5c894ceab253',1,'quisp::backends::error_tracking::QuantumState']]],
-  ['state_5fin_5fket_12',['state_in_ket',['../structquisp_1_1backends_1_1error__tracking_1_1_quantum_state.html#ab319ea94354165bf7a2fe046f5357d89',1,'quisp::backends::error_tracking::QuantumState']]],
-  ['stationary_5fqubit_5faddress_13',['stationary_qubit_address',['../classquisp_1_1modules_1_1_stationary_qubit.html#aa9e385eb871c4e317a4feed6cd60339e',1,'quisp::modules::StationaryQubit']]],
-  ['strategy_14',['strategy',['../classquisp_1_1utils_1_1_component_provider.html#ad9f4a1cc768e0bce2f11c4309df6b5e0',1,'quisp::utils::ComponentProvider']]]
+  ['stationary_5fqubit_5faddress_11',['stationary_qubit_address',['../classquisp_1_1modules_1_1_stationary_qubit.html#aa9e385eb871c4e317a4feed6cd60339e',1,'quisp::modules::StationaryQubit']]],
+  ['strategy_12',['strategy',['../classquisp_1_1utils_1_1_component_provider.html#ad9f4a1cc768e0bce2f11c4309df6b5e0',1,'quisp::utils::ComponentProvider']]]
 ];

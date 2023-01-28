@@ -1,10 +1,10 @@
 var classquisp_1_1modules_1_1_connection_manager =
 [
     [ "ConnectionManager", "classquisp_1_1modules_1_1_connection_manager.html#ac8e88ade73985ceb99ef1a016eea8f01", null ],
+    [ "~ConnectionManager", "classquisp_1_1modules_1_1_connection_manager.html#a506b5aa87d41c3b79e179439c6cf3505", null ],
     [ "computePathDivisionSize", "classquisp_1_1modules_1_1_connection_manager.html#ab147295817fedfef216c6fa0327b4487", null ],
     [ "createUniqueId", "classquisp_1_1modules_1_1_connection_manager.html#aa7711e2290728c96e42cd9a01ec04a50", null ],
     [ "fillPathDivision", "classquisp_1_1modules_1_1_connection_manager.html#a93ce7efb2b81d167574ba6704fd0caf7", null ],
-    [ "finish", "classquisp_1_1modules_1_1_connection_manager.html#a98108ea6ee5ea9ff0f92fb5f6b59af8d", null ],
     [ "generateSwappingConfig", "classquisp_1_1modules_1_1_connection_manager.html#af9acf2b883945403061e6f9c383d651d", null ],
     [ "handleMessage", "classquisp_1_1modules_1_1_connection_manager.html#a079dba7a2efcc6ea70b2c1e1f03bf760", null ],
     [ "initialize", "classquisp_1_1modules_1_1_connection_manager.html#aed75f2009716a1e7f4d6be096631ce5b", null ],

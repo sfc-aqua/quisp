@@ -1,36 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,366,172,391"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1_i_connection_manager.html" title=" " alt="" coords="229,623,411,663"/>
-<area shape="rect" id="node4" href="$classquisp_1_1modules_1_1_i_hardware_monitor.html" title=" " alt="" coords="233,444,407,484"/>
-<area shape="rect" id="node7" href="$classquisp_1_1modules_1_1_i_real_time_controller.html" title=" " alt="" coords="233,508,407,548"/>
-<area shape="rect" id="node10" href="$classquisp_1_1modules_1_1_i_rule_engine.html" title=" " alt="" coords="229,573,411,598"/>
-<area shape="rect" id="node13" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="232,37,408,77"/>
-<area shape="rect" id="node16" href="$classquisp_1_1modules_1_1_logger_1_1_logger_module.html" title=" " alt="" coords="243,101,397,141"/>
-<area shape="rect" id="node17" href="$classquisp_1_1modules_1_1_photonic_switch.html" title="PhotonicSwitch." alt="" coords="237,165,403,205"/>
-<area shape="rect" id="node18" href="$classquisp_1_1modules_1_1_queue.html" title="Queue." alt="" coords="244,230,396,255"/>
-<area shape="rect" id="node19" href="$classquisp_1_1modules_1_1_router.html" title="Router." alt="" coords="244,279,396,305"/>
-<area shape="rect" id="node20" href="$classquisp_1_1modules_1_1_s_p_d_c___controller.html" title="SPDC_Controller." alt="" coords="245,329,395,369"/>
-<area shape="rect" id="node21" href="$classquisp_1_1modules_1_1backend_1_1_backend_container.html" title=" " alt="" coords="239,687,401,727"/>
-<area shape="rect" id="node22" href="$classquisp_1_1modules_1_1dummy_module.html" title="dummyModule" alt="" coords="221,394,419,419"/>
-<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager." alt="" coords="504,751,683,791"/>
-<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1_hardware_monitor.html" title="HardwareMonitor." alt="" coords="508,348,679,388"/>
-<area shape="rect" id="node6" href="$classquisp__test_1_1mock__modules_1_1hardware__monitor_1_1_mock_hardware_monitor.html" title=" " alt="" coords="481,413,706,467"/>
-<area shape="rect" id="node8" href="$classquisp_1_1modules_1_1_real_time_controller.html" title="RealTimeController." alt="" coords="509,492,678,532"/>
-<area shape="rect" id="node9" href="$classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html" title=" " alt="" coords="505,557,681,611"/>
-<area shape="rect" id="node11" href="$classquisp_1_1modules_1_1_rule_engine.html" title="RuleEngine." alt="" coords="504,701,683,726"/>
-<area shape="rect" id="node12" href="$classquisp__test_1_1mock__modules_1_1rule__engine_1_1_mock_rule_engine.html" title=" " alt="" coords="495,636,692,676"/>
-<area shape="rect" id="node14" href="$classquisp_1_1modules_1_1_stationary_qubit.html" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="507,5,679,45"/>
-<area shape="rect" id="node15" href="$classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html" title=" " alt="" coords="499,69,687,109"/>
-<area shape="rect" id="node23" title=" " alt="" coords="13,655,164,695"/>
-<area shape="rect" id="node24" title=" " alt="" coords="16,719,161,759"/>
-<area shape="rect" id="node25" href="$classquisp_1_1modules_1_1_logger_1_1_logger_base.html" title="LoggerBase class integrate abilities to log simulation results into your components." alt="" coords="243,751,397,791"/>
-<area shape="rect" id="node26" href="$classquisp_1_1modules_1_1_application.html" title="Application." alt="" coords="504,841,683,866"/>
-<area shape="rect" id="node27" title=" " alt="" coords="33,922,144,947"/>
-<area shape="rect" id="node28" href="$classquisp_1_1modules_1_1_bell_state_analyzer.html" title="BellStateAnalyzer." alt="" coords="237,979,403,1019"/>
-<area shape="rect" id="node29" href="$classquisp_1_1modules_1_1_entangled_photon_pair_source.html" title="Entangled Photons Pairs Source." alt="" coords="235,1043,405,1083"/>
-<area shape="rect" id="node30" href="$classquisp_1_1modules_1_1_h_o_m_controller.html" title="HOMController." alt="" coords="220,815,420,841"/>
-<area shape="rect" id="node31" href="$classquisp_1_1modules_1_1_i_application.html" title=" " alt="" coords="229,865,411,890"/>
-<area shape="rect" id="node32" href="$classquisp_1_1modules_1_1_i_routing_daemon.html" title=" " alt="" coords="239,915,401,955"/>
-<area shape="rect" id="node33" href="$classquisp_1_1modules_1_1_routing_daemon.html" title=" " alt="" coords="490,894,697,919"/>
-<area shape="rect" id="node34" href="$classquisp__test_1_1mock__modules_1_1routing__daemon_1_1_mock_routing_daemon.html" title=" " alt="" coords="468,944,719,984"/>
+<area shape="rect" id="node1" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="5,37,173,77"/>
+<area shape="rect" id="node2" href="$classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html" title=" " alt="" coords="222,5,403,45"/>
+<area shape="rect" id="node4" href="$classquisp__test_1_1mock__backends_1_1_mock_quantum_backend.html" title=" " alt="" coords="221,69,404,109"/>
+<area shape="rect" id="node3" href="$classquisp__test_1_1backends_1_1graph__state_1_1_backend.html" title=" " alt="" coords="452,5,605,45"/>
 </map>

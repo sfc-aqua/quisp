@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['backend_0',['Backend',['../classquisp__test_1_1backends_1_1error__tracking_1_1_backend.html#ae594aef59f5623afe6f643e63c053fa6',1,'quisp_test::backends::error_tracking::Backend::Backend()'],['../classquisp__test_1_1backends_1_1graph__state_1_1_backend.html#a78d81cdda9930fa2a5ab25ed15d74c30',1,'quisp_test::backends::graph_state::Backend::Backend()']]],
+  ['backend_0',['Backend',['../classquisp__test_1_1backends_1_1graph__state_1_1_backend.html#a78d81cdda9930fa2a5ab25ed15d74c30',1,'quisp_test::backends::graph_state::Backend']]],
   ['backendcontainer_1',['BackendContainer',['../classquisp_1_1modules_1_1backend_1_1_backend_container.html#ad6f9364d085379b32f477d8e942ca1bf',1,'quisp::modules::backend::BackendContainer']]],
   ['begin_2',['begin',['../classquisp_1_1runtime_1_1_runtime_manager.html#a667c74b3871f6768c0db4cfe629ce8b4',1,'quisp::runtime::RuntimeManager']]],
   ['beginsend_3',['beginSend',['../classquisp__test_1_1env_1_1_static_env.html#a008746fe7e84e5e82367a56606e4a045',1,'quisp_test::env::StaticEnv']]],

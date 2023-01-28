@@ -67,19 +67,11 @@ var hierarchy =
       [ "quisp::modules::backend::BackendContainer", "classquisp_1_1modules_1_1backend_1_1_backend_container.html", null ],
       [ "quisp::modules::dummyModule", "classquisp_1_1modules_1_1dummy_module.html", null ]
     ] ],
-    [ "quisp::backends::error_tracking::emission_error_model", "structquisp_1_1backends_1_1error__tracking_1_1emission__error__model.html", null ],
     [ "quisp::modules::entangledPhotons", "structquisp_1_1modules_1_1entangled_photons.html", null ],
-    [ "ErrorTrackingQubit", null, [
-      [ "quisp_test::backends::error_tracking::Qubit", "classquisp__test_1_1backends_1_1error__tracking_1_1_qubit.html", null ]
-    ] ],
     [ "quisp::backends::abstract::IQubitId::Hash", "classquisp_1_1backends_1_1abstract_1_1_i_qubit_id_1_1_hash.html", null ],
-    [ "ErrorTrackingBackend::ICallback", null, [
-      [ "quisp::modules::backend::BackendContainer", "classquisp_1_1modules_1_1backend_1_1_backend_container.html", null ]
-    ] ],
     [ "GraphStateBackend::ICallback", null, [
       [ "quisp::modules::backend::BackendContainer", "classquisp_1_1modules_1_1backend_1_1_backend_container.html", null ]
     ] ],
-    [ "quisp::backends::error_tracking::ErrorTrackingBackend::ICallback", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend_1_1_i_callback.html", null ],
     [ "quisp::backends::graph_state::GraphStateBackend::ICallback", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend_1_1_i_callback.html", null ],
     [ "quisp::runtime::Runtime::ICallBack", "structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html", [
       [ "quisp::modules::runtime_callback::RuntimeCallback", "structquisp_1_1modules_1_1runtime__callback_1_1_runtime_callback.html", null ],
@@ -108,21 +100,18 @@ var hierarchy =
       [ "quisp_test::mock_modules::qnic_store::MockQNicStore", "classquisp__test_1_1mock__modules_1_1qnic__store_1_1_mock_q_nic_store.html", null ]
     ] ],
     [ "quisp::backends::abstract::IQuantumBackend", "classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html", [
-      [ "quisp::backends::error_tracking::ErrorTrackingBackend", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html", null ],
       [ "quisp::backends::graph_state::GraphStateBackend", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html", [
         [ "quisp_test::backends::graph_state::Backend", "classquisp__test_1_1backends_1_1graph__state_1_1_backend.html", null ]
       ] ],
       [ "quisp_test::mock_backends::MockQuantumBackend", "classquisp__test_1_1mock__backends_1_1_mock_quantum_backend.html", null ]
     ] ],
     [ "quisp::backends::abstract::IQubit", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html", [
-      [ "quisp::backends::error_tracking::ErrorTrackingQubit", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html", null ],
       [ "quisp::backends::graph_state::GraphStateQubit", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html", [
         [ "quisp_test::backends::graph_state::Qubit", "classquisp__test_1_1backends_1_1graph__state_1_1_qubit.html", null ]
       ] ],
       [ "quisp_test::mock_backends::MockBackendQubit", "classquisp__test_1_1mock__backends_1_1_mock_backend_qubit.html", null ]
     ] ],
     [ "IQubitId", null, [
-      [ "quisp_test::backends::error_tracking::QubitId", "classquisp__test_1_1backends_1_1error__tracking_1_1_qubit_id.html", null ],
       [ "quisp_test::backends::graph_state::QubitId", "classquisp__test_1_1backends_1_1graph__state_1_1_qubit_id.html", null ]
     ] ],
     [ "quisp::backends::abstract::IQubitId", "classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html", [
@@ -133,7 +122,6 @@ var hierarchy =
     ] ],
     [ "quisp::backends::abstract::IRandomNumberGenerator", "classquisp_1_1backends_1_1abstract_1_1_i_random_number_generator.html", [
       [ "quisp::modules::backend::rng::RNG", "classquisp_1_1modules_1_1backend_1_1rng_1_1_r_n_g.html", null ],
-      [ "quisp_test::backends::error_tracking::TestRNG", "classquisp__test_1_1backends_1_1error__tracking_1_1_test_r_n_g.html", null ],
       [ "quisp_test::backends::graph_state::TestRNG", "classquisp__test_1_1backends_1_1graph__state_1_1_test_r_n_g.html", null ]
     ] ],
     [ "omnetpp::cConfiguration::KeyValue", null, [
@@ -147,12 +135,8 @@ var hierarchy =
       [ "quisp::modules::ConnectionManager", "classquisp_1_1modules_1_1_connection_manager.html", null ],
       [ "quisp::modules::RuleEngine", "classquisp_1_1modules_1_1_rule_engine.html", null ]
     ] ],
-    [ "quisp::backends::error_tracking::MeasurementErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_error_model.html", null ],
     [ "quisp::backends::graph_state::types::MeasurementErrorModel", "structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html", null ],
-    [ "quisp::backends::error_tracking::MeasurementOperator", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_operator.html", null ],
-    [ "quisp::backends::error_tracking::MeasurementOperators", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_operators.html", null ],
     [ "quisp::backends::abstract::MeasurementOutcome", "structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html", null ],
-    [ "quisp::backends::error_tracking::MemoryErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_memory_error_model.html", null ],
     [ "quisp::backends::graph_state::types::MemoryErrorModel", "structquisp_1_1backends_1_1graph__state_1_1types_1_1_memory_error_model.html", null ],
     [ "quisp::runtime::MemoryKey", "structquisp_1_1runtime_1_1_memory_key.html", null ],
     [ "quisp::runtime::MemoryValue", "classquisp_1_1runtime_1_1_memory_value.html", null ],
@@ -171,7 +155,6 @@ var hierarchy =
     [ "quisp::rules::QnicInterface", "structquisp_1_1rules_1_1_qnic_interface.html", null ],
     [ "quisp_test::strategy::QNicSpec", "structquisp__test_1_1strategy_1_1_q_nic_spec.html", null ],
     [ "quisp::runtime::QNodeAddr", "structquisp_1_1runtime_1_1_q_node_addr.html", null ],
-    [ "quisp::backends::error_tracking::QuantumState", "structquisp_1_1backends_1_1error__tracking_1_1_quantum_state.html", null ],
     [ "quisp::modules::QubitAddr", "structquisp_1_1modules_1_1_qubit_addr.html", null ],
     [ "quisp::modules::QubitAddr_cons", "structquisp_1_1modules_1_1_qubit_addr__cons.html", null ],
     [ "quisp::runtime::QubitId", "structquisp_1_1runtime_1_1_qubit_id.html", null ],
@@ -185,14 +168,11 @@ var hierarchy =
     [ "quisp::rules::rs_converter::RuleSetConverter", "classquisp_1_1rules_1_1rs__converter_1_1_rule_set_converter.html", null ],
     [ "quisp::runtime::Runtime", "classquisp_1_1runtime_1_1_runtime.html", null ],
     [ "quisp::runtime::RuntimeManager", "classquisp_1_1runtime_1_1_runtime_manager.html", null ],
-    [ "quisp::backends::error_tracking::SingleGateErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_single_gate_error_model.html", null ],
     [ "quisp::backends::graph_state::types::SingleGateErrorModel", "structquisp_1_1backends_1_1graph__state_1_1types_1_1_single_gate_error_model.html", null ],
     [ "quisp::modules::HardwareMonitor::SingleQubitError", "structquisp_1_1modules_1_1_hardware_monitor_1_1_single_qubit_error.html", null ],
-    [ "quisp::backends::error_tracking::SingleQubitErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_single_qubit_error_model.html", null ],
     [ "SwappingConfig", "struct_swapping_config.html", null ],
     [ "quisp::modules::SwappingResultData", "structquisp_1_1modules_1_1_swapping_result_data.html", null ],
     [ "quisp::modules::tomography_outcome", "structquisp_1_1modules_1_1tomography__outcome.html", null ],
-    [ "quisp::backends::error_tracking::TwoQubitGateErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model.html", null ],
     [ "quisp::backends::graph_state::types::TwoQubitGateErrorModel", "structquisp_1_1backends_1_1graph__state_1_1types_1_1_two_qubit_gate_error_model.html", null ],
     [ "quisp::runtime::ValueUnion", "unionquisp_1_1runtime_1_1_value_union.html", null ],
     [ "cSimpleModule", null, [
@@ -209,8 +189,5 @@ var hierarchy =
     ] ],
     [ "cSimulation", null, [
       [ "quisp_test::simulation::TestSimulation", "classquisp__test_1_1simulation_1_1_test_simulation.html", null ]
-    ] ],
-    [ "ErrorTrackingBackend", null, [
-      [ "quisp_test::backends::error_tracking::Backend", "classquisp__test_1_1backends_1_1error__tracking_1_1_backend.html", null ]
     ] ]
 ];

@@ -1,8 +1,8 @@
 <map id="quisp/modules/PhysicalConnection/BSA" name="quisp/modules/PhysicalConnection/BSA">
 <area shape="rect" id="node1" href="dir_39adc711ddf03b7cf2c76bbebdeb523c.html" title="BSA" alt="" coords="69,52,118,77"/>
 <area shape="rect" id="node2" href="dir_a836f5e64f274e5f0ad02ce32d2d2034.html" title="messages" alt="" coords="5,125,88,151"/>
-<area shape="rect" id="edge1-headlabel" href="dir_000004_000014.html" title="2" alt="" coords="68,107,76,122"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000004_000013.html" title="2" alt="" coords="68,107,76,122"/>
 <area shape="rect" id="node3" href="dir_d5a888b414a72d278ec0e70b4b76cbad.html" title="QRSA" alt="" coords="112,125,171,151"/>
-<area shape="rect" id="edge2-headlabel" href="dir_000004_000024.html" title="1" alt="" coords="126,98,134,112"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000004_000023.html" title="1" alt="" coords="126,98,134,112"/>
 <area shape="rect" id="clust1" href="dir_613ea0b845b544fcb4bbcc1caa07a8a8.html" title="PhysicalConnection" alt="" coords="25,16,161,88"/>
 </map>

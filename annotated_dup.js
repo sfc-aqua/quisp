@@ -10,19 +10,6 @@ var annotated_dup =
           [ "IRandomNumberGenerator", "classquisp_1_1backends_1_1abstract_1_1_i_random_number_generator.html", "classquisp_1_1backends_1_1abstract_1_1_i_random_number_generator" ],
           [ "MeasurementOutcome", "structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html", "structquisp_1_1backends_1_1abstract_1_1_measurement_outcome" ]
         ] ],
-        [ "error_tracking", "namespacequisp_1_1backends_1_1error__tracking.html", [
-          [ "emission_error_model", "structquisp_1_1backends_1_1error__tracking_1_1emission__error__model.html", "structquisp_1_1backends_1_1error__tracking_1_1emission__error__model" ],
-          [ "ErrorTrackingBackend", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend.html", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_backend" ],
-          [ "ErrorTrackingQubit", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit.html", "classquisp_1_1backends_1_1error__tracking_1_1_error_tracking_qubit" ],
-          [ "MeasurementErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_error_model.html", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_error_model" ],
-          [ "MeasurementOperator", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_operator.html", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_operator" ],
-          [ "MeasurementOperators", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_operators.html", "structquisp_1_1backends_1_1error__tracking_1_1_measurement_operators" ],
-          [ "MemoryErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_memory_error_model.html", "structquisp_1_1backends_1_1error__tracking_1_1_memory_error_model" ],
-          [ "QuantumState", "structquisp_1_1backends_1_1error__tracking_1_1_quantum_state.html", "structquisp_1_1backends_1_1error__tracking_1_1_quantum_state" ],
-          [ "SingleGateErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_single_gate_error_model.html", "structquisp_1_1backends_1_1error__tracking_1_1_single_gate_error_model" ],
-          [ "SingleQubitErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_single_qubit_error_model.html", "structquisp_1_1backends_1_1error__tracking_1_1_single_qubit_error_model" ],
-          [ "TwoQubitGateErrorModel", "structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model.html", "structquisp_1_1backends_1_1error__tracking_1_1_two_qubit_gate_error_model" ]
-        ] ],
         [ "graph_state", "namespacequisp_1_1backends_1_1graph__state.html", [
           [ "types", "namespacequisp_1_1backends_1_1graph__state_1_1types.html", [
             [ "MeasurementErrorModel", "structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html", "structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model" ],
@@ -161,12 +148,6 @@ var annotated_dup =
     ] ],
     [ "quisp_test", "namespacequisp__test.html", [
       [ "backends", "namespacequisp__test_1_1backends.html", [
-        [ "error_tracking", "namespacequisp__test_1_1backends_1_1error__tracking.html", [
-          [ "Backend", "classquisp__test_1_1backends_1_1error__tracking_1_1_backend.html", "classquisp__test_1_1backends_1_1error__tracking_1_1_backend" ],
-          [ "Qubit", "classquisp__test_1_1backends_1_1error__tracking_1_1_qubit.html", "classquisp__test_1_1backends_1_1error__tracking_1_1_qubit" ],
-          [ "QubitId", "classquisp__test_1_1backends_1_1error__tracking_1_1_qubit_id.html", "classquisp__test_1_1backends_1_1error__tracking_1_1_qubit_id" ],
-          [ "TestRNG", "classquisp__test_1_1backends_1_1error__tracking_1_1_test_r_n_g.html", "classquisp__test_1_1backends_1_1error__tracking_1_1_test_r_n_g" ]
-        ] ],
         [ "graph_state", "namespacequisp__test_1_1backends_1_1graph__state.html", [
           [ "Backend", "classquisp__test_1_1backends_1_1graph__state_1_1_backend.html", "classquisp__test_1_1backends_1_1graph__state_1_1_backend" ],
           [ "Qubit", "classquisp__test_1_1backends_1_1graph__state_1_1_qubit.html", "classquisp__test_1_1backends_1_1graph__state_1_1_qubit" ],

@@ -135,6 +135,8 @@ Collaboration diagram for quisp::modules::ConnectionManager:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ac8e88ade73985ceb99ef1a016eea8f01"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_connection_manager.html#ac8e88ade73985ceb99ef1a016eea8f01">ConnectionManager</a> ()</td></tr>
 <tr class="separator:ac8e88ade73985ceb99ef1a016eea8f01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a506b5aa87d41c3b79e179439c6cf3505"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_connection_manager.html#a506b5aa87d41c3b79e179439c6cf3505">~ConnectionManager</a> ()</td></tr>
+<tr class="separator:a506b5aa87d41c3b79e179439c6cf3505"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classquisp_1_1modules_1_1_i_connection_manager"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classquisp_1_1modules_1_1_i_connection_manager')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classquisp_1_1modules_1_1_i_connection_manager.html">quisp::modules::IConnectionManager</a></td></tr>
 <tr class="memitem:a221f082afbe7be5c1353f6aee56f46a9 inherit pub_methods_classquisp_1_1modules_1_1_i_connection_manager"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_connection_manager.html#a221f082afbe7be5c1353f6aee56f46a9">~IConnectionManager</a> ()</td></tr>
 <tr class="separator:a221f082afbe7be5c1353f6aee56f46a9 inherit pub_methods_classquisp_1_1modules_1_1_i_connection_manager"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,8 +161,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:aed75f2009716a1e7f4d6be096631ce5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a079dba7a2efcc6ea70b2c1e1f03bf760"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_connection_manager.html#a079dba7a2efcc6ea70b2c1e1f03bf760">handleMessage</a> (cMessage *msg) override</td></tr>
 <tr class="separator:a079dba7a2efcc6ea70b2c1e1f03bf760"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98108ea6ee5ea9ff0f92fb5f6b59af8d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_connection_manager.html#a98108ea6ee5ea9ff0f92fb5f6b59af8d">finish</a> () override</td></tr>
-<tr class="separator:a98108ea6ee5ea9ff0f92fb5f6b59af8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67c130403b115a957571b0096f7a1860"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_connection_manager.html#a67c130403b115a957571b0096f7a1860">respondToRequest</a> (messages::ConnectionSetupRequest *pk)</td></tr>
 <tr class="separator:a67c130403b115a957571b0096f7a1860"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4221477412fa454dbb752a0953cc0f13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_connection_manager.html#a4221477412fa454dbb752a0953cc0f13">respondToRequest_deprecated</a> (messages::ConnectionSetupRequest *pk)</td></tr>
@@ -262,6 +262,23 @@ Protected Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">quisp::modules::ConnectionManager::ConnectionManager </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a506b5aa87d41c3b79e179439c6cf3505" name="a506b5aa87d41c3b79e179439c6cf3505"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a506b5aa87d41c3b79e179439c6cf3505">&#9670;&#160;</a></span>~ConnectionManager()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">quisp::modules::ConnectionManager::~ConnectionManager </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -406,31 +423,6 @@ Protected Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="a98108ea6ee5ea9ff0f92fb5f6b59af8d" name="a98108ea6ee5ea9ff0f92fb5f6b59af8d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a98108ea6ee5ea9ff0f92fb5f6b59af8d">&#9670;&#160;</a></span>finish()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void quisp::modules::ConnectionManager::finish </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>

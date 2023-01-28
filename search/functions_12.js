@@ -8,7 +8,7 @@ var searchData=
   ['testlogger_5',['TestLogger',['../classquisp__test_1_1_logger_1_1_test_logger.html#a5ac2ac1ec87cf39c4eaabcc633ec3a34',1,'quisp_test::Logger::TestLogger']]],
   ['testmoduletype_6',['TestModuleType',['../classquisp__test_1_1module__type_1_1_test_module_type.html#aad45cd931ec980dd99bb5cd7efadd632',1,'quisp_test::module_type::TestModuleType']]],
   ['testqnode_7',['TestQNode',['../classquisp__test_1_1qnode_1_1_test_q_node.html#af8f93434def81f5ae2c0ca83b562a138',1,'quisp_test::qnode::TestQNode']]],
-  ['testrng_8',['TestRNG',['../classquisp__test_1_1backends_1_1error__tracking_1_1_test_r_n_g.html#a4e8487dd6557625b62f5bac3c2facbab',1,'quisp_test::backends::error_tracking::TestRNG::TestRNG()'],['../classquisp__test_1_1backends_1_1graph__state_1_1_test_r_n_g.html#abd3e8789c7baf124b62f9a6069545b6e',1,'quisp_test::backends::graph_state::TestRNG::TestRNG()']]],
+  ['testrng_8',['TestRNG',['../classquisp__test_1_1backends_1_1graph__state_1_1_test_r_n_g.html#abd3e8789c7baf124b62f9a6069545b6e',1,'quisp_test::backends::graph_state::TestRNG']]],
   ['testsimulation_9',['TestSimulation',['../classquisp__test_1_1simulation_1_1_test_simulation.html#a16e6f7a5be69e039d45db2ee7d1c158a',1,'quisp_test::simulation::TestSimulation']]],
   ['toggleedge_10',['toggleEdge',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#a45498e6307ff9eaa3068325fac54aa7b',1,'quisp::backends::graph_state::GraphStateQubit']]],
   ['tologgertype_11',['toLoggerType',['../classquisp_1_1modules_1_1_logger_1_1_logger_module.html#abfcb140ea82ad4928b2cf400c6bfc3d3',1,'quisp::modules::Logger::LoggerModule']]],
