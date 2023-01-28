@@ -355,6 +355,26 @@ EigenvalueResult GraphStateQubit::graphMeasureZ() {
   return result;
 }
 
+EigenvalueResult GraphStateQubit::graphMeasureZ(const EigenvalueResult eigenvalue) {
+  auto vop = this->vertex_operator;
+  auto result = eigenvalue;
+  if (this->neighbors.empty()) {
+    bool resultMustBePlus = (vop == CliffordOperator::H || vop == CliffordOperator::RY_INV || vop == CliffordOperator::S_INV_RY_INV || vop == CliffordOperator::S_RY_INV);
+    bool resultMustBeMinus = (vop == CliffordOperator::RY || vop == CliffordOperator::S_INV_RY || vop == CliffordOperator::S_RY || vop == CliffordOperator::Z_RY);
+    if ((eigenvalue == EigenvalueResult::PLUS_ONE && resultMustBeMinus) || (eigenvalue == EigenvalueResult::MINUS_ONE && resultMustBePlus))
+      std::runtime_error("graphMeasureZ:: cannot force isolated qubit with specified result");
+  } else {
+    this->removeVertexOperation(this);  // nothing to be avoided
+    if (eigenvalue == EigenvalueResult::MINUS_ONE) {
+      for (auto *v : neighbors) {
+        v->applyRightClifford(CliffordOperator::Z);
+      }
+    }
+    this->removeAllEdges();
+  }
+  return eigenvalue;
+}
+
 // public member functions
 
 void GraphStateQubit::setFree() {
@@ -454,6 +474,26 @@ EigenvalueResult GraphStateQubit::measureZ() {
     result = result == EigenvalueResult::PLUS_ONE ? EigenvalueResult::MINUS_ONE : EigenvalueResult::PLUS_ONE;
   }
   return result;
+}
+
+void GraphStateQubit::noiselessX() { applyClifford(CliffordOperator::X); }
+void GraphStateQubit::noiselessZ() { applyClifford(CliffordOperator::Z); }
+void GraphStateQubit::noiselessH() { applyClifford(CliffordOperator::H); }
+void GraphStateQubit::noiselessCNOT(IQubit *const control_qubit) {
+  auto gs_control_qubit = static_cast<GraphStateQubit *>(control_qubit);
+  applyClifford(CliffordOperator::H);
+  applyPureCZ(gs_control_qubit);
+  applyClifford(CliffordOperator::H);
+}
+EigenvalueResult GraphStateQubit::noiselessMeasureZ() { return graphMeasureZ(); }
+EigenvalueResult GraphStateQubit::noiselessMeasureX() {
+  applyClifford(CliffordOperator::H);
+  return graphMeasureZ();
+}
+EigenvalueResult GraphStateQubit::noiselessMeasureZ(EigenvalueResult eigenvalue) { return graphMeasureZ(eigenvalue); }
+EigenvalueResult GraphStateQubit::noiselessMeasureX(EigenvalueResult eigenvalue) {
+  applyClifford(CliffordOperator::H);
+  return graphMeasureZ(eigenvalue);
 }
 
 [[deprecated]] void GraphStateQubit::addErrorX() { this->applyClifford(CliffordOperator::X); }
