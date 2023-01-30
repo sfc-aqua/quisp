@@ -43,9 +43,5 @@ void RealTimeController::applyZGate(qrsa::IQubitRecord *const qubit_record) {
   auto *qubit = provider.getStationaryQubit(qubit_record);
   qubit->gateZ();
 }
-void RealTimeController::assertNoEntanglement(qrsa::IQubitRecord *const qubit_record) {
-  auto *qubit = provider.getStationaryQubit(qubit_record);
-  qubit->assertEntangledPartnerValid();
-}
 }  // namespace modules
 }  // namespace quisp
