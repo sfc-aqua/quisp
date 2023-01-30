@@ -14,12 +14,17 @@ namespace quisp::messages;
 
 packet BSMTimingNotification extends Header
 {
+    simtime_t first_photon_arrival_time @setter(setFirstPhotonArrivalTime);
+    double interval;
+    int qnic_index @setter(setQnicIndex);
+}
+
+packet EPPStimingNotifier extends Header
+{
     simtime_t timing_at;
-    int accepted_photons_per_sec;
     double interval;
     int number_of_qubits;
-    int internal_qnic_index = -1;
-    int internal_qnic_address = -1;
+    int internal_qnic = -1;
 }
 
 // Used for MIM and MM. BSA results are sent back to the neighboring nodes, together with the timing notifier

@@ -9,7 +9,6 @@ import modules.BSAInternal;
 module QNIC
 {
     parameters:
-
         int num_buffer = default(7);
         int self_qnic_address; // Buffer identifier/address
         int self_qnic_index;
@@ -21,7 +20,6 @@ module QNIC
         bool passive = default(false);
         @display("bgb=654.39,1687.06006");
         int burst_trial_counter @mutable = default(0);
-
         bool is_reserved @mutable = default(false);
 
     gates:
@@ -52,7 +50,8 @@ module QNIC
         }
 
         bsa_controller: BSAController if receiver {
-            mode = "active"
+            is_internal = true;
+            mode = "active";
         }
 
         gate_closer: dummyModule if !receiver;

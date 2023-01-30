@@ -8,11 +8,14 @@
 
 #include <PhotonicQubit_m.h>
 #include <messages/classical_messages.h>
+#include <modules/PhysicalConnection/BSA/types.h>
 #include <omnetpp.h>
 #include <vector>
+#include "messages/link_generation_messages_m.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
+using namespace quisp::physical::types;
 
 namespace quisp::modules {
 
@@ -34,62 +37,36 @@ namespace quisp::modules {
  *  how many photons will arrive, when the first one will arrive, and what the iterval is.
  */
 class BSAController : public cSimpleModule {
- private:
-  int address;
-  int photon_detection_per_sec;  ///< The number of detectable photon in a second. This info is used to decide the number of photon in one trial.
-  double speed_of_light_in_channel;  ///< Speed of light in optical fiber.
-  cPar* c;
-  utils::ComponentProvider provider;
-
  public:
-  int neighbor_address;  ///< Address of one of two neighbor node.
-  int neighbor_address_two;  ///< Address of the other node from "neighbor address"
-  int neighbor_buffer;  ///< The number of qubits in a qnic in the neighbor node
-  int neighbor_buffer_two;  ///< The number of qubits in a qnic in the other neighbor node
-  int max_buffer;  ///< Maximum number of qubits available for BSA process
-  double distance_to_neighbor;  ///< Physical distance of fiber to the neighbor node (unit: km)
-  double distance_to_neighbor_two;  ///< Physical distance of fiber to the other neighbor node (unit: km)
-  double max_neighbor_distance;  ///< Store longer one of "distance_to_neighbor" and "distance_to_neighbor_two". max(distance_to_neighbor, distance_to_neighbor_two)(unit: km)
-  double accepted_burst_interval;  ///< Calculated phton burst interval calculated by distance and light speed. (unit: s)
+  BSAController();
 
-  int BSAtimingNotifier_type = 4;  ///< Type of packet
-
-  bool receiver, passive;  ///< Type of QNIC. receiver: receive phton from counter part. passive: Not implemented yet. Will be used for MSM link.
-  int qnic_index = -1;  ///< Index of qnic. If the qnic is internal (used in MM link), the index is -1. (default: -1)
-  int qnic_address = -1;  ///< Address of qnic. If the qnic is internal (used in MM link), the index is -1. (default: -1)
-
-  int* BSAresults;  ///< not used?
-  typedef std::map<int, bool> BSAresultTable;  ///< A table to store the pair of BSA trial index --> success or failure
-  BSAresultTable results;
-
-  bool handshake = false;  ///< True: Return ack and negotiate the number of available qubits. False: Use maximum number of available qubits
-  double bsa_notification_interval;  ///< Interval to send BSA notification
+  void registerClickBatches(std::vector<BSAClickResult>& result);
 
  protected:
-  virtual void initialize(int stage) override;
-  virtual int numInitStages() const override { return 1; };
-  virtual void standaloneInitializer();
-  virtual void internodeInitializer();
+  virtual void initialize() override;
   virtual void handleMessage(cMessage* msg) override;
-  virtual double calculateEmissionStartTime(double timing, double distance_to_node, double c);
-  virtual double calculateTimeToTravel(double distance, double c);
-  virtual BSMtimingNotifier* generateNotifier(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
-                                              int photon_detection_per_sec, int max_buffer);
-  virtual CombinedBSAresults* generateNotifier_c(double time, double speed_of_light_in_channel, double distance_to_neighbor, int destAddr, double accepted_burst_interval,
-                                                 int photon_detection_per_sec, int max_buffer);
-  virtual cModule* getQNode();
-  virtual void checkNeighborAddress(bool receiver);
-  virtual void checkNeighborBuffer(bool receiver);
-  virtual void updateIDE_Parameter(bool receiver);
-  virtual void sendNotifiers();
-  virtual void pushToBSAresults(bool attempt_success);
-  virtual int getStoredBSAresultsSize();
-  virtual void clearBSAresults();
-  virtual void sendBSAresultsToNeighbors();
 
- public:
-  virtual void setMax_buffer(int buffer);
-  BSAController();
+ private:
+  BSMTimingNotification* generateFirstNotificationTiming(bool is_left);
+  CombinedBSAresults* generateNextNotificationTiming(bool is_left);
+
+  int getExternalAdressFromPort(int port);
+  int getExternalQNICIndexFromPort(int port);
+
+  // information for communications
+  int address;
+  int left_address;
+  int left_qnic_index;
+  int right_address;
+  int right_qnic_index;
+
+  // cache information for timing notification
+  double offset_time_for_first_photon;
+
+  // BSA characteristics
+  double time_interval_between_photons;  ///< how separated should the photons be; is calculated by the dead time of the detector
+  double speed_of_light_in_channel;  ///< Speed of light in optical fiber (in km per sec).
+  utils::ComponentProvider provider;
 };
 
 }  // namespace quisp::modules
