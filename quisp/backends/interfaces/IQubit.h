@@ -48,26 +48,20 @@ class IQubit {
   // two qubit operations
   virtual void gateCNOT(IQubit *const control_qubit) { throw std::runtime_error("gateCNOT not implemented"); };
   virtual void gateCZ(IQubit *const control_qubit) { throw std::runtime_error("gateCZ not implemented"); };
-  virtual bool purifyX(IQubit *const control_qubit) { throw std::runtime_error("gateCZ not implemented"); };
-  virtual bool purifyZ(IQubit *const target_qubit) { throw std::runtime_error("gateCZ not implemented"); };
 
   // measurements
-  virtual MeasureXResult correlationMeasureX() { throw std::runtime_error("correlationMeasureX not implemented"); }
-  virtual MeasureYResult correlationMeasureY() { throw std::runtime_error("correlationMeasureY not implemented"); }
-  virtual MeasureZResult correlationMeasureZ() { throw std::runtime_error("correlationMeasureZ not implemented"); }
-  virtual EigenvalueResult localMeasureX() { throw std::runtime_error("localMeasureX not implemented"); }
-  virtual EigenvalueResult localMeasureY() { throw std::runtime_error("localMeasureY not implemented"); }
-  virtual EigenvalueResult localMeasureZ() { throw std::runtime_error("localMeasureZ not implemented"); }
-  virtual MeasurementOutcome measureDensityIndependent() { throw std::runtime_error("measureDensityIndependent not implemented"); }
-
+  virtual EigenvalueResult measureX() { throw std::runtime_error("measureX not implemented"); }
+  virtual EigenvalueResult measureY() { throw std::runtime_error("measureY not implemented"); }
+  virtual EigenvalueResult measureZ() { throw std::runtime_error("measureZ not implemented"); }
+  virtual MeasurementOutcome measureRandomPauliBasis() { throw std::runtime_error("measureRandomPauliBasis not implemented"); }  // for debugging
   // for debugging
   virtual void assertEntangledPartnerValid() { throw std::runtime_error("assertEntangledPartnerValid not implemented"); };
 
   // deprecated (ErrorTraciking Qubit specific)
   virtual void addErrorX() { throw std::runtime_error("addErrorX is not implemented. will be removed"); }
   virtual void addErrorZ() { throw std::runtime_error("addErrorZ is not implemented. will be removed"); }
-  virtual void setCompletelyMixedDensityMatrix() { throw std::runtime_error("setCompletelyMixedDensityMatrix is not implemented. will be removed"); }
-  virtual void setEntangledPartner(IQubit *const partner) { throw std::runtime_error("setEntangledPartner is not implemented. will be removed"); }
+  virtual void setCompletelyMixedState() { throw std::runtime_error("setCompletelyMixedState is not implemented. will be removed"); }
+  virtual void setMaximallyEntangledWith(IQubit *const partner) { throw std::runtime_error("setMaximallyEntangledWith is not implemented. will be removed"); }
   virtual IQubit *const getEntangledPartner() const { throw std::runtime_error("getEntangledPartner is not implemented. will be removed"); }
 };
 

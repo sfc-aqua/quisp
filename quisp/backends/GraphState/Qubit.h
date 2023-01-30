@@ -37,8 +37,8 @@ class GraphStateQubit : public IQubit {
   void configure(std::unique_ptr<StationaryQubitConfiguration> configuration);
   void setFree() override;
   // The name of these functions might be misleading; these are used in bsa, will be renamed and modifed in the future
-  void setCompletelyMixedDensityMatrix() override;
-  void setEntangledPartner(IQubit *const partner) override;
+  void setCompletelyMixedState() override;
+  void setMaximallyEntangledWith(IQubit *const partner) override;
 
   void gateH() override;
   void gateZ() override;
@@ -46,15 +46,12 @@ class GraphStateQubit : public IQubit {
   void gateS() override;
   void gateSdg() override;
   void gateCNOT(IQubit *const control_qubit) override;
-  EigenvalueResult localMeasureX() override;
-  EigenvalueResult localMeasureY() override;
-  EigenvalueResult localMeasureZ() override;
+  EigenvalueResult measureX() override;
+  EigenvalueResult measureY() override;
+  EigenvalueResult measureZ() override;
   // functions below here are deprecated ones, just for the compatibility with stationary qubit. Will be deleted.
-  bool purifyX(IQubit *const control_qubit) override;
-  bool purifyZ(IQubit *const target_qubit) override;
-  MeasurementOutcome measureDensityIndependent() override;
+  MeasurementOutcome measureRandomPauliBasis() override;
 
-  void assertEntangledPartnerValid() override;
   void addErrorX() override;
   void addErrorZ() override;
 
@@ -66,8 +63,6 @@ class GraphStateQubit : public IQubit {
   void applyMemoryError();
   void excite();
   void relax();
-  // whether pi(0 ~ 6) vector in Eq 5.3 is (0,1/3,1/3,1/3,0,0)
-  bool pi_vector_completely_mixed;
   // error simulation constants
   SingleGateErrorModel gate_err_h;
   SingleGateErrorModel gate_err_x;

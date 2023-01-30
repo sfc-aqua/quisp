@@ -70,52 +70,62 @@ TEST_F(GsSingleQubitTest, setMemoryErrorTransitionMatrix) {
   qubit->setMemoryErrorRates(0, 0, 0, 0, 0);
 }
 
-TEST_F(GsSingleQubitTest, dontSetCompletelyMixedDensityMatrix) { EXPECT_EQ(qubit->pi_vector_completely_mixed, false); }
+TEST_F(GsSingleQubitTest, setCompletelyMixedState) {
+  qubit->setVertexOperator(CliffordOperator::Id);
+  rng->double_value = 0;  // < 1/3
+  qubit->setCompletelyMixedState();
+  EXPECT_EQ(qubit->vertex_operator, CliffordOperator::X);
 
-TEST_F(GsSingleQubitTest, setCompletelyMixedDensityMatrix) {
-  qubit->setCompletelyMixedDensityMatrix();
-  EXPECT_EQ(qubit->pi_vector_completely_mixed, true);
+  qubit->setVertexOperator(CliffordOperator::Id);
+  rng->double_value = 0.4;  // < 2/3
+  qubit->setCompletelyMixedState();
+  EXPECT_EQ(qubit->vertex_operator, CliffordOperator::Y);
+
+  qubit->setVertexOperator(CliffordOperator::Id);
+  rng->double_value = 0.7;  // > 2/3
+  qubit->setCompletelyMixedState();
+  EXPECT_EQ(qubit->vertex_operator, CliffordOperator::Z);
 }
 
 TEST_F(GsSingleQubitTest, singleGatemeasureZ) {
   // do nothing
-  auto meas = qubit->localMeasureZ();
+  auto meas = qubit->measureZ();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
 
   // hadamard gate
   qubit->gateH();
   rng->double_value = 0;
-  meas = qubit->localMeasureZ();
+  meas = qubit->measureZ();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateH();
   rng->double_value = 0.5;
-  meas = qubit->localMeasureZ();
+  meas = qubit->measureZ();
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // x gate
   qubit->gateX();
-  meas = qubit->localMeasureZ();
+  meas = qubit->measureZ();
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // z gate
   qubit->gateZ();
-  meas = qubit->localMeasureZ();
+  meas = qubit->measureZ();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
 
   // s gate
   qubit->gateS();
-  meas = qubit->localMeasureZ();
+  meas = qubit->measureZ();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
 
   // sdg gate
   qubit->gateSdg();
-  meas = qubit->localMeasureZ();
+  meas = qubit->measureZ();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
 }
@@ -123,65 +133,65 @@ TEST_F(GsSingleQubitTest, singleGatemeasureZ) {
 TEST_F(GsSingleQubitTest, singleGatemeasureX) {
   // do nothing
   rng->double_value = 0;
-  auto meas = qubit->localMeasureX();
+  auto meas = qubit->measureX();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   rng->double_value = 0.5;
-  meas = qubit->localMeasureX();
+  meas = qubit->measureX();
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // hadamard gate
   qubit->gateH();
-  meas = qubit->localMeasureX();
+  meas = qubit->measureX();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
 
   // x gate
   qubit->gateX();
   rng->double_value = 0;
-  meas = qubit->localMeasureX();
+  meas = qubit->measureX();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateX();
   rng->double_value = 0.5;
-  meas = qubit->localMeasureX();
+  meas = qubit->measureX();
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // z gate
   qubit->gateZ();
   rng->double_value = 0;
-  meas = qubit->localMeasureX();
+  meas = qubit->measureX();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateZ();
   rng->double_value = 0.5;
-  meas = qubit->localMeasureX();
+  meas = qubit->measureX();
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // s gate
   qubit->gateS();
   rng->double_value = 0;
-  meas = qubit->localMeasureX();
+  meas = qubit->measureX();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateS();
   rng->double_value = 0.5;
-  meas = qubit->localMeasureX();
+  meas = qubit->measureX();
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // sdg gate
   qubit->gateSdg();
   rng->double_value = 0;
-  meas = qubit->localMeasureX();
+  meas = qubit->measureX();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateSdg();
   rng->double_value = 0.5;
-  meas = qubit->localMeasureX();
+  meas = qubit->measureX();
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 }
@@ -189,71 +199,71 @@ TEST_F(GsSingleQubitTest, singleGatemeasureX) {
 TEST_F(GsSingleQubitTest, singleGatemeasureY) {
   // do nothing
   rng->double_value = 0;
-  auto meas = qubit->localMeasureY();
+  auto meas = qubit->measureY();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   rng->double_value = 0.5;
-  meas = qubit->localMeasureY();
+  meas = qubit->measureY();
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // hadamard gate
   qubit->gateH();
   rng->double_value = 0;
-  meas = qubit->localMeasureY();
+  meas = qubit->measureY();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateH();
   rng->double_value = 0.5;
-  meas = qubit->localMeasureY();
+  meas = qubit->measureY();
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // x gate
   qubit->gateX();
   rng->double_value = 0;
-  meas = qubit->localMeasureY();
+  meas = qubit->measureY();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateX();
   rng->double_value = 0.5;
-  meas = qubit->localMeasureY();
+  meas = qubit->measureY();
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // z gate
   qubit->gateZ();
   rng->double_value = 0;
-  meas = qubit->localMeasureY();
+  meas = qubit->measureY();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateZ();
   rng->double_value = 0.5;
-  meas = qubit->localMeasureX();
+  meas = qubit->measureX();
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // s gate
   qubit->gateS();
   rng->double_value = 0;
-  meas = qubit->localMeasureY();
+  meas = qubit->measureY();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateS();
   rng->double_value = 0.5;
-  meas = qubit->localMeasureX();
+  meas = qubit->measureX();
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 
   // sdg gate
   qubit->gateSdg();
   rng->double_value = 0;
-  meas = qubit->localMeasureY();
+  meas = qubit->measureY();
   EXPECT_EQ(meas, EigenvalueResult::PLUS_ONE);
   qubit->setFree();
   qubit->gateSdg();
   rng->double_value = 0.5;
-  meas = qubit->localMeasureY();
+  meas = qubit->measureY();
   EXPECT_EQ(meas, EigenvalueResult::MINUS_ONE);
   qubit->setFree();
 }

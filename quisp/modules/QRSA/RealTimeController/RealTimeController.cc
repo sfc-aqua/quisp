@@ -37,11 +37,11 @@ void RealTimeController::ReInitialize_StationaryQubit(qrsa::IQubitRecord *const 
 
 void RealTimeController::applyXGate(qrsa::IQubitRecord *const qubit_record) {
   auto *qubit = provider.getStationaryQubit(qubit_record);
-  qubit->X_gate();
+  qubit->gateX();
 }
 void RealTimeController::applyZGate(qrsa::IQubitRecord *const qubit_record) {
   auto *qubit = provider.getStationaryQubit(qubit_record);
-  qubit->Z_gate();
+  qubit->gateZ();
 }
 void RealTimeController::assertNoEntanglement(qrsa::IQubitRecord *const qubit_record) {
   auto *qubit = provider.getStationaryQubit(qubit_record);

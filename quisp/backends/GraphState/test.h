@@ -65,22 +65,19 @@ class Qubit : public GraphStateQubit {
   using GraphStateQubit::graphMeasureZ;
   using GraphStateQubit::isNeighbor;
   using GraphStateQubit::localComplement;
-  using GraphStateQubit::localMeasureX;
-  using GraphStateQubit::localMeasureY;
-  using GraphStateQubit::localMeasureZ;
-  using GraphStateQubit::measureDensityIndependent;
   using GraphStateQubit::measurement_err;
+  using GraphStateQubit::measureRandomPauliBasis;
+  using GraphStateQubit::measureX;
+  using GraphStateQubit::measureY;
+  using GraphStateQubit::measureZ;
   using GraphStateQubit::memory_transition_matrix;
   using GraphStateQubit::neighbors;
-  using GraphStateQubit::pi_vector_completely_mixed;
-  using GraphStateQubit::purifyX;
-  using GraphStateQubit::purifyZ;
   using GraphStateQubit::relax;
   using GraphStateQubit::removeAllEdges;
   using GraphStateQubit::removeVertexOperation;
-  using GraphStateQubit::setCompletelyMixedDensityMatrix;
-  using GraphStateQubit::setEntangledPartner;
+  using GraphStateQubit::setCompletelyMixedState;
   using GraphStateQubit::setFree;
+  using GraphStateQubit::setMaximallyEntangledWith;
   using GraphStateQubit::setMemoryErrorRates;
   using GraphStateQubit::toggleEdge;
   using GraphStateQubit::updated_time;
@@ -142,7 +139,6 @@ class Qubit : public GraphStateQubit {
     double z_measurement_error_rate = 0;
     this->measurement_err.setParams(x_measurement_error_rate, y_measurement_error_rate, z_measurement_error_rate);
 
-    this->pi_vector_completely_mixed = false;
     this->updated_time = SimTime(0);
   }
 };

@@ -49,55 +49,24 @@ class StationaryQubit : public IStationaryQubit {
    */
   void emitPhoton(int pulse) override;
 
-  /**
-   * \brief Single Qubit X measurement.
-   * \param This is only for simulating error propagations.
-   * New errors only occur when wrong measurement result is delivered for feed-forward
-   * (The error on the measured qubit propagates to the byproduct gate target qubit).
-   */
-  virtual quisp::types::MeasureXResult correlationMeasureX() override;
-
-  /**
-   * \brief Single Qubit Y measurement.
-   * This is only for simulating error propagations.
-   * New errors only occur when wrong measurement result is delivered for feed-forward
-   * (The error on the measured qubit propagates to the byproduct gate target qubit).
-   */
-  virtual types::MeasureYResult correlationMeasureY() override;
-
-  /**
-   * \brief Single Qubit Z measurement.
-   * This is only for simulating error propagations.
-   * New errors only occur when wrong measurement result is delivered for feed-forward
-   * (The error on the measured qubit propagates to the byproduct gate target qubit).
-   */
-  virtual types::MeasureZResult correlationMeasureZ() override;
-
-  virtual types::EigenvalueResult localMeasureX() override;
-  virtual types::EigenvalueResult localMeasureY() override;
-  virtual types::EigenvalueResult localMeasureZ() override;
-
-  /**
-   * Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography.
-   * */
-  // virtual std::bitset<1> measure_density(char basis_this_qubit);/*Simultaneous dm calculation*/
-  virtual types::MeasurementOutcome measure_density_independent() override; /*Separate dm calculation*/
+  virtual types::EigenvalueResult measureX() override;
+  virtual types::EigenvalueResult measureY() override;
+  virtual types::EigenvalueResult measureZ() override;
+  virtual types::MeasurementOutcome measureRandomPauliBasis() override;
 
   /**
    * \brief Two qubit CNOT gate.
    * \param Need to specify the control qubit as an argument.
    */
-  void CNOT_gate(IStationaryQubit *control_qubit) override;
+  void gateCNOT(IStationaryQubit *control_qubit) override;
 
   /**
    * \brief Single qubit Hadamard gate
    * \param X error transforms to Z, and vise-versa.
    */
-  void Hadamard_gate() override;
-  void Z_gate() override;
-  void X_gate() override;
-  bool Xpurify(IStationaryQubit *resource_qubit) override;
-  bool Zpurify(IStationaryQubit *resource_qubit) override;
+  void gateHadamard() override;
+  void gateZ() override;
+  void gateX() override;
 
   /*GOD parameters*/
   void setEntangledPartnerInfo(IStationaryQubit *partner) override;
