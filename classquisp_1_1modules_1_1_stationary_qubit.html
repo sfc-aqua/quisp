@@ -142,37 +142,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa271f8eed9884a510ceb80fa156b15b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#aa271f8eed9884a510ceb80fa156b15b6">emitPhoton</a> (int pulse) override</td></tr>
 <tr class="memdesc:aa271f8eed9884a510ceb80fa156b15b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emit photon.  <a href="classquisp_1_1modules_1_1_stationary_qubit.html#aa271f8eed9884a510ceb80fa156b15b6">More...</a><br /></td></tr>
 <tr class="separator:aa271f8eed9884a510ceb80fa156b15b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6fbb4563d9a0c3be58ab27a852da0938"><td class="memItemLeft" align="right" valign="top">virtual quisp::types::MeasureXResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a6fbb4563d9a0c3be58ab27a852da0938">correlationMeasureX</a> () override</td></tr>
-<tr class="memdesc:a6fbb4563d9a0c3be58ab27a852da0938"><td class="mdescLeft">&#160;</td><td class="mdescRight">Single Qubit X measurement.  <a href="classquisp_1_1modules_1_1_stationary_qubit.html#a6fbb4563d9a0c3be58ab27a852da0938">More...</a><br /></td></tr>
-<tr class="separator:a6fbb4563d9a0c3be58ab27a852da0938"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41824e86ef2ab121d9eb3e8e1c4cb0b6"><td class="memItemLeft" align="right" valign="top">virtual types::MeasureYResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a41824e86ef2ab121d9eb3e8e1c4cb0b6">correlationMeasureY</a> () override</td></tr>
-<tr class="memdesc:a41824e86ef2ab121d9eb3e8e1c4cb0b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Single Qubit Y measurement. This is only for simulating error propagations. New errors only occur when wrong measurement result is delivered for feed-forward (The error on the measured qubit propagates to the byproduct gate target qubit).  <a href="classquisp_1_1modules_1_1_stationary_qubit.html#a41824e86ef2ab121d9eb3e8e1c4cb0b6">More...</a><br /></td></tr>
-<tr class="separator:a41824e86ef2ab121d9eb3e8e1c4cb0b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc5969ec3ed3aa2433e4c3cbd0b526a2"><td class="memItemLeft" align="right" valign="top">virtual types::MeasureZResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#abc5969ec3ed3aa2433e4c3cbd0b526a2">correlationMeasureZ</a> () override</td></tr>
-<tr class="memdesc:abc5969ec3ed3aa2433e4c3cbd0b526a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Single Qubit Z measurement. This is only for simulating error propagations. New errors only occur when wrong measurement result is delivered for feed-forward (The error on the measured qubit propagates to the byproduct gate target qubit).  <a href="classquisp_1_1modules_1_1_stationary_qubit.html#abc5969ec3ed3aa2433e4c3cbd0b526a2">More...</a><br /></td></tr>
-<tr class="separator:abc5969ec3ed3aa2433e4c3cbd0b526a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0650b07a41b8ebe5b1516a5ba4839fd7"><td class="memItemLeft" align="right" valign="top">virtual types::EigenvalueResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a0650b07a41b8ebe5b1516a5ba4839fd7">localMeasureX</a> () override</td></tr>
-<tr class="separator:a0650b07a41b8ebe5b1516a5ba4839fd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b1bf7b17ab1ec42dc9d7dd018950c34"><td class="memItemLeft" align="right" valign="top">virtual types::EigenvalueResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a2b1bf7b17ab1ec42dc9d7dd018950c34">localMeasureY</a> () override</td></tr>
-<tr class="separator:a2b1bf7b17ab1ec42dc9d7dd018950c34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f28f51cc75a79d59fab15aab8733a90"><td class="memItemLeft" align="right" valign="top">virtual types::EigenvalueResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a8f28f51cc75a79d59fab15aab8733a90">localMeasureZ</a> () override</td></tr>
-<tr class="separator:a8f28f51cc75a79d59fab15aab8733a90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af33307485647fe2f7a384ff746732db7"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html">types::MeasurementOutcome</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#af33307485647fe2f7a384ff746732db7">measure_density_independent</a> () override</td></tr>
-<tr class="separator:af33307485647fe2f7a384ff746732db7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a148bb1bab30250dcc9c1b1367a6113"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a2a148bb1bab30250dcc9c1b1367a6113">CNOT_gate</a> (<a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *control_qubit) override</td></tr>
-<tr class="memdesc:a2a148bb1bab30250dcc9c1b1367a6113"><td class="mdescLeft">&#160;</td><td class="mdescRight">Two qubit CNOT gate.  <a href="classquisp_1_1modules_1_1_stationary_qubit.html#a2a148bb1bab30250dcc9c1b1367a6113">More...</a><br /></td></tr>
-<tr class="separator:a2a148bb1bab30250dcc9c1b1367a6113"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad136c5d0db3eb996ea2f2119281aa04"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#aad136c5d0db3eb996ea2f2119281aa04">Hadamard_gate</a> () override</td></tr>
-<tr class="memdesc:aad136c5d0db3eb996ea2f2119281aa04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Single qubit Hadamard gate.  <a href="classquisp_1_1modules_1_1_stationary_qubit.html#aad136c5d0db3eb996ea2f2119281aa04">More...</a><br /></td></tr>
-<tr class="separator:aad136c5d0db3eb996ea2f2119281aa04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49c4d47a993fb5af2c2548e1d098f0a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a49c4d47a993fb5af2c2548e1d098f0a4">Z_gate</a> () override</td></tr>
-<tr class="separator:a49c4d47a993fb5af2c2548e1d098f0a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9c32bb1abb7374b1f0781bdffcc6147"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#ac9c32bb1abb7374b1f0781bdffcc6147">X_gate</a> () override</td></tr>
-<tr class="separator:ac9c32bb1abb7374b1f0781bdffcc6147"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af33de92a3a2410645dfec042225d2fd4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#af33de92a3a2410645dfec042225d2fd4">Xpurify</a> (<a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *resource_qubit) override</td></tr>
-<tr class="separator:af33de92a3a2410645dfec042225d2fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab17cdc51b6b03fbe12a1fc3b21b73a02"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#ab17cdc51b6b03fbe12a1fc3b21b73a02">Zpurify</a> (<a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *resource_qubit) override</td></tr>
-<tr class="separator:ab17cdc51b6b03fbe12a1fc3b21b73a02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a709b66f026577a4bf79c27aff4502adc"><td class="memItemLeft" align="right" valign="top">virtual types::EigenvalueResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a709b66f026577a4bf79c27aff4502adc">measureX</a> () override</td></tr>
+<tr class="separator:a709b66f026577a4bf79c27aff4502adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9efc5d213f1028f35182f20e34bb2d39"><td class="memItemLeft" align="right" valign="top">virtual types::EigenvalueResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a9efc5d213f1028f35182f20e34bb2d39">measureY</a> () override</td></tr>
+<tr class="separator:a9efc5d213f1028f35182f20e34bb2d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9417810f941c791c1edfdf1e1169c1b"><td class="memItemLeft" align="right" valign="top">virtual types::EigenvalueResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#ac9417810f941c791c1edfdf1e1169c1b">measureZ</a> () override</td></tr>
+<tr class="separator:ac9417810f941c791c1edfdf1e1169c1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92c5623d25703e8ee1689de547195bf9"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html">types::MeasurementOutcome</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a92c5623d25703e8ee1689de547195bf9">measureRandomPauliBasis</a> () override</td></tr>
+<tr class="separator:a92c5623d25703e8ee1689de547195bf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62079af53967234b9e575250fd675c67"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a62079af53967234b9e575250fd675c67">gateCNOT</a> (<a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *control_qubit) override</td></tr>
+<tr class="memdesc:a62079af53967234b9e575250fd675c67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Two qubit CNOT gate.  <a href="classquisp_1_1modules_1_1_stationary_qubit.html#a62079af53967234b9e575250fd675c67">More...</a><br /></td></tr>
+<tr class="separator:a62079af53967234b9e575250fd675c67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0192e47f6d7b33907e50d2ba234dc45"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#aa0192e47f6d7b33907e50d2ba234dc45">gateHadamard</a> () override</td></tr>
+<tr class="memdesc:aa0192e47f6d7b33907e50d2ba234dc45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Single qubit Hadamard gate.  <a href="classquisp_1_1modules_1_1_stationary_qubit.html#aa0192e47f6d7b33907e50d2ba234dc45">More...</a><br /></td></tr>
+<tr class="separator:aa0192e47f6d7b33907e50d2ba234dc45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b42d8026a6f521b0e579994a8fd9011"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a0b42d8026a6f521b0e579994a8fd9011">gateZ</a> () override</td></tr>
+<tr class="separator:a0b42d8026a6f521b0e579994a8fd9011"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff58eda945e591d5d93aed992a58a9a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#aff58eda945e591d5d93aed992a58a9a7">gateX</a> () override</td></tr>
+<tr class="separator:aff58eda945e591d5d93aed992a58a9a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc1aef3a8ee3066fd31b3311ee70d79c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#adc1aef3a8ee3066fd31b3311ee70d79c">setEntangledPartnerInfo</a> (<a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *partner) override</td></tr>
 <tr class="separator:adc1aef3a8ee3066fd31b3311ee70d79c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a840cd69a1724204959d902bb848103c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_stationary_qubit.html#a840cd69a1724204959d902bb848103c1">setCompletelyMixedDensityMatrix</a> ()</td></tr>
@@ -209,32 +196,22 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afb5a94d328f0054b708dfa021afd193c inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#afb5a94d328f0054b708dfa021afd193c">emitPhoton</a> (int pulse)=0</td></tr>
 <tr class="memdesc:afb5a94d328f0054b708dfa021afd193c inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emit photon.  <a href="classquisp_1_1modules_1_1_i_stationary_qubit.html#afb5a94d328f0054b708dfa021afd193c">More...</a><br /></td></tr>
 <tr class="separator:afb5a94d328f0054b708dfa021afd193c inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44b88d44e1d5a2389256ccb96ecb618b inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual types::MeasureXResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a44b88d44e1d5a2389256ccb96ecb618b">correlationMeasureX</a> ()=0</td></tr>
-<tr class="separator:a44b88d44e1d5a2389256ccb96ecb618b inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62517b1d09c61eccec09d47006b28195 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual types::MeasureYResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a62517b1d09c61eccec09d47006b28195">correlationMeasureY</a> ()=0</td></tr>
-<tr class="separator:a62517b1d09c61eccec09d47006b28195 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afbf16bfaf2103b37cbd31cfe8d3826ca inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual types::MeasureZResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#afbf16bfaf2103b37cbd31cfe8d3826ca">correlationMeasureZ</a> ()=0</td></tr>
-<tr class="separator:afbf16bfaf2103b37cbd31cfe8d3826ca inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64aea80efebc000555f07c3fa4b5e3f9 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual types::EigenvalueResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a64aea80efebc000555f07c3fa4b5e3f9">localMeasureX</a> ()=0</td></tr>
-<tr class="separator:a64aea80efebc000555f07c3fa4b5e3f9 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b82d57796b51fc83cf1b37a2d90a58b inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual types::EigenvalueResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a4b82d57796b51fc83cf1b37a2d90a58b">localMeasureY</a> ()=0</td></tr>
-<tr class="separator:a4b82d57796b51fc83cf1b37a2d90a58b inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e881984265cb09a43e59f452e0e25b1 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual types::EigenvalueResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a4e881984265cb09a43e59f452e0e25b1">localMeasureZ</a> ()=0</td></tr>
-<tr class="separator:a4e881984265cb09a43e59f452e0e25b1 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24525603ba12f9820efd37aac191d6eb inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html">types::MeasurementOutcome</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a24525603ba12f9820efd37aac191d6eb">measure_density_independent</a> ()=0</td></tr>
-<tr class="separator:a24525603ba12f9820efd37aac191d6eb inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae34e3fea4008504689063466a7ab3fb0 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#ae34e3fea4008504689063466a7ab3fb0">CNOT_gate</a> (<a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *control_qubit)=0</td></tr>
-<tr class="separator:ae34e3fea4008504689063466a7ab3fb0 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a119f5ff1d485301aee4aaecd8ba4d08b inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a119f5ff1d485301aee4aaecd8ba4d08b">Hadamard_gate</a> ()=0</td></tr>
-<tr class="separator:a119f5ff1d485301aee4aaecd8ba4d08b inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa79236fde0102752c8a85590362a1401 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#aa79236fde0102752c8a85590362a1401">Z_gate</a> ()=0</td></tr>
-<tr class="separator:aa79236fde0102752c8a85590362a1401 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a557592b61cd1f917633553914ebddf28 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a557592b61cd1f917633553914ebddf28">X_gate</a> ()=0</td></tr>
-<tr class="separator:a557592b61cd1f917633553914ebddf28 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a582efd180e7b8b980f68ac4be9cab014 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a582efd180e7b8b980f68ac4be9cab014">Xpurify</a> (<a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *resource_qubit)=0</td></tr>
-<tr class="separator:a582efd180e7b8b980f68ac4be9cab014 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a468dab95a71d9655ba004992c8ce2854 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a468dab95a71d9655ba004992c8ce2854">Zpurify</a> (<a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *resource_qubit)=0</td></tr>
-<tr class="separator:a468dab95a71d9655ba004992c8ce2854 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1881a3f2199711ddeba61c76d114712a inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual types::EigenvalueResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a1881a3f2199711ddeba61c76d114712a">measureX</a> ()=0</td></tr>
+<tr class="separator:a1881a3f2199711ddeba61c76d114712a inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1941daaa62061507edad1ea6e21f355 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual types::EigenvalueResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#ac1941daaa62061507edad1ea6e21f355">measureY</a> ()=0</td></tr>
+<tr class="separator:ac1941daaa62061507edad1ea6e21f355 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebdf2b25d6031d8eecdb073ba2a830ef inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual types::EigenvalueResult&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#aebdf2b25d6031d8eecdb073ba2a830ef">measureZ</a> ()=0</td></tr>
+<tr class="separator:aebdf2b25d6031d8eecdb073ba2a830ef inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85800652c1b18e225fa719bb88c52501 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html">types::MeasurementOutcome</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a85800652c1b18e225fa719bb88c52501">measureRandomPauliBasis</a> ()=0</td></tr>
+<tr class="separator:a85800652c1b18e225fa719bb88c52501 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3118514aac726524297eef96990ecdce inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a3118514aac726524297eef96990ecdce">gateCNOT</a> (<a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *control_qubit)=0</td></tr>
+<tr class="separator:a3118514aac726524297eef96990ecdce inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5649f9150b29f79b5810588dade081c0 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a5649f9150b29f79b5810588dade081c0">gateHadamard</a> ()=0</td></tr>
+<tr class="separator:a5649f9150b29f79b5810588dade081c0 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7df148bda88a639932a9bbe0a2746c35 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a7df148bda88a639932a9bbe0a2746c35">gateZ</a> ()=0</td></tr>
+<tr class="separator:a7df148bda88a639932a9bbe0a2746c35 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3ebf12a1748943a2ba03312089af2a3 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#ab3ebf12a1748943a2ba03312089af2a3">gateX</a> ()=0</td></tr>
+<tr class="separator:ab3ebf12a1748943a2ba03312089af2a3 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a184b1ecc2254f6c225b48e4b0b4c2642 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a184b1ecc2254f6c225b48e4b0b4c2642">setEntangledPartnerInfo</a> (<a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *partner)=0</td></tr>
 <tr class="separator:a184b1ecc2254f6c225b48e4b0b4c2642 inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdfa7f0bf741f0b53185a8482e47f6bf inherit pub_methods_classquisp_1_1modules_1_1_i_stationary_qubit"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">backends::IQubit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#afdfa7f0bf741f0b53185a8482e47f6bf">getEntangledPartner</a> () const =0</td></tr>
@@ -387,135 +364,6 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a2a148bb1bab30250dcc9c1b1367a6113" name="a2a148bb1bab30250dcc9c1b1367a6113"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a148bb1bab30250dcc9c1b1367a6113">&#9670;&#160;</a></span>CNOT_gate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void quisp::modules::StationaryQubit::CNOT_gate </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *&#160;</td>
-          <td class="paramname"><em>control_qubit</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Two qubit CNOT gate. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">Need</td><td>to specify the control qubit as an argument. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#ae34e3fea4008504689063466a7ab3fb0">quisp::modules::IStationaryQubit</a>.</p>
-
-</div>
-</div>
-<a id="a6fbb4563d9a0c3be58ab27a852da0938" name="a6fbb4563d9a0c3be58ab27a852da0938"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6fbb4563d9a0c3be58ab27a852da0938">&#9670;&#160;</a></span>correlationMeasureX()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">MeasureXResult quisp::modules::StationaryQubit::correlationMeasureX </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Single Qubit X measurement. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">This</td><td>is only for simulating error propagations. New errors only occur when wrong measurement result is delivered for feed-forward (The error on the measured qubit propagates to the byproduct gate target qubit). </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a44b88d44e1d5a2389256ccb96ecb618b">quisp::modules::IStationaryQubit</a>.</p>
-
-</div>
-</div>
-<a id="a41824e86ef2ab121d9eb3e8e1c4cb0b6" name="a41824e86ef2ab121d9eb3e8e1c4cb0b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41824e86ef2ab121d9eb3e8e1c4cb0b6">&#9670;&#160;</a></span>correlationMeasureY()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">MeasureYResult quisp::modules::StationaryQubit::correlationMeasureY </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Single Qubit Y measurement. This is only for simulating error propagations. New errors only occur when wrong measurement result is delivered for feed-forward (The error on the measured qubit propagates to the byproduct gate target qubit). </p>
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a62517b1d09c61eccec09d47006b28195">quisp::modules::IStationaryQubit</a>.</p>
-
-</div>
-</div>
-<a id="abc5969ec3ed3aa2433e4c3cbd0b526a2" name="abc5969ec3ed3aa2433e4c3cbd0b526a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc5969ec3ed3aa2433e4c3cbd0b526a2">&#9670;&#160;</a></span>correlationMeasureZ()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">MeasureZResult quisp::modules::StationaryQubit::correlationMeasureZ </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Single Qubit Z measurement. This is only for simulating error propagations. New errors only occur when wrong measurement result is delivered for feed-forward (The error on the measured qubit propagates to the byproduct gate target qubit). </p>
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#afbf16bfaf2103b37cbd31cfe8d3826ca">quisp::modules::IStationaryQubit</a>.</p>
-
-</div>
-</div>
 <a id="aa271f8eed9884a510ceb80fa156b15b6" name="aa271f8eed9884a510ceb80fa156b15b6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa271f8eed9884a510ceb80fa156b15b6">&#9670;&#160;</a></span>emitPhoton()</h2>
 
@@ -581,6 +429,131 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a62079af53967234b9e575250fd675c67" name="a62079af53967234b9e575250fd675c67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62079af53967234b9e575250fd675c67">&#9670;&#160;</a></span>gateCNOT()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp::modules::StationaryQubit::gateCNOT </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *&#160;</td>
+          <td class="paramname"><em>control_qubit</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Two qubit CNOT gate. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Need</td><td>to specify the control qubit as an argument. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a3118514aac726524297eef96990ecdce">quisp::modules::IStationaryQubit</a>.</p>
+
+</div>
+</div>
+<a id="aa0192e47f6d7b33907e50d2ba234dc45" name="aa0192e47f6d7b33907e50d2ba234dc45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0192e47f6d7b33907e50d2ba234dc45">&#9670;&#160;</a></span>gateHadamard()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp::modules::StationaryQubit::gateHadamard </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Single qubit Hadamard gate. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">X</td><td>error transforms to Z, and vise-versa. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a5649f9150b29f79b5810588dade081c0">quisp::modules::IStationaryQubit</a>.</p>
+
+</div>
+</div>
+<a id="aff58eda945e591d5d93aed992a58a9a7" name="aff58eda945e591d5d93aed992a58a9a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff58eda945e591d5d93aed992a58a9a7">&#9670;&#160;</a></span>gateX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp::modules::StationaryQubit::gateX </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#ab3ebf12a1748943a2ba03312089af2a3">quisp::modules::IStationaryQubit</a>.</p>
+
+</div>
+</div>
+<a id="a0b42d8026a6f521b0e579994a8fd9011" name="a0b42d8026a6f521b0e579994a8fd9011"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b42d8026a6f521b0e579994a8fd9011">&#9670;&#160;</a></span>gateZ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void quisp::modules::StationaryQubit::gateZ </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a7df148bda88a639932a9bbe0a2746c35">quisp::modules::IStationaryQubit</a>.</p>
 
 </div>
 </div>
@@ -719,41 +692,6 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aad136c5d0db3eb996ea2f2119281aa04" name="aad136c5d0db3eb996ea2f2119281aa04"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aad136c5d0db3eb996ea2f2119281aa04">&#9670;&#160;</a></span>Hadamard_gate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void quisp::modules::StationaryQubit::Hadamard_gate </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Single qubit Hadamard gate. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">X</td><td>error transforms to Z, and vise-versa. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a119f5ff1d485301aee4aaecd8ba4d08b">quisp::modules::IStationaryQubit</a>.</p>
-
-</div>
-</div>
 <a id="a166b4d5519865191b82c424fe55a65b4" name="a166b4d5519865191b82c424fe55a65b4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a166b4d5519865191b82c424fe55a65b4">&#9670;&#160;</a></span>handleMessage()</h2>
 
@@ -843,87 +781,6 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a0650b07a41b8ebe5b1516a5ba4839fd7" name="a0650b07a41b8ebe5b1516a5ba4839fd7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0650b07a41b8ebe5b1516a5ba4839fd7">&#9670;&#160;</a></span>localMeasureX()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">EigenvalueResult quisp::modules::StationaryQubit::localMeasureX </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a64aea80efebc000555f07c3fa4b5e3f9">quisp::modules::IStationaryQubit</a>.</p>
-
-</div>
-</div>
-<a id="a2b1bf7b17ab1ec42dc9d7dd018950c34" name="a2b1bf7b17ab1ec42dc9d7dd018950c34"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b1bf7b17ab1ec42dc9d7dd018950c34">&#9670;&#160;</a></span>localMeasureY()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">EigenvalueResult quisp::modules::StationaryQubit::localMeasureY </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a4b82d57796b51fc83cf1b37a2d90a58b">quisp::modules::IStationaryQubit</a>.</p>
-
-</div>
-</div>
-<a id="a8f28f51cc75a79d59fab15aab8733a90" name="a8f28f51cc75a79d59fab15aab8733a90"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f28f51cc75a79d59fab15aab8733a90">&#9670;&#160;</a></span>localMeasureZ()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">EigenvalueResult quisp::modules::StationaryQubit::localMeasureZ </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a4e881984265cb09a43e59f452e0e25b1">quisp::modules::IStationaryQubit</a>.</p>
-
-</div>
-</div>
 <a id="a765dc7e22703de07fab415ecaa43fd9b" name="a765dc7e22703de07fab415ecaa43fd9b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a765dc7e22703de07fab415ecaa43fd9b">&#9670;&#160;</a></span>Lock()</h2>
 
@@ -968,8 +825,8 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="af33307485647fe2f7a384ff746732db7" name="af33307485647fe2f7a384ff746732db7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af33307485647fe2f7a384ff746732db7">&#9670;&#160;</a></span>measure_density_independent()</h2>
+<a id="a92c5623d25703e8ee1689de547195bf9" name="a92c5623d25703e8ee1689de547195bf9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92c5623d25703e8ee1689de547195bf9">&#9670;&#160;</a></span>measureRandomPauliBasis()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -978,7 +835,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html">MeasurementOutcome</a> quisp::modules::StationaryQubit::measure_density_independent </td>
+          <td class="memname"><a class="el" href="structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html">MeasurementOutcome</a> quisp::modules::StationaryQubit::measureRandomPauliBasis </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -990,9 +847,89 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p >Performs measurement and returns +(true) or -(false) based on the density matrix of the state. Used for tomography. </p>
 
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a24525603ba12f9820efd37aac191d6eb">quisp::modules::IStationaryQubit</a>.</p>
+<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a85800652c1b18e225fa719bb88c52501">quisp::modules::IStationaryQubit</a>.</p>
+
+</div>
+</div>
+<a id="a709b66f026577a4bf79c27aff4502adc" name="a709b66f026577a4bf79c27aff4502adc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a709b66f026577a4bf79c27aff4502adc">&#9670;&#160;</a></span>measureX()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">EigenvalueResult quisp::modules::StationaryQubit::measureX </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a1881a3f2199711ddeba61c76d114712a">quisp::modules::IStationaryQubit</a>.</p>
+
+</div>
+</div>
+<a id="a9efc5d213f1028f35182f20e34bb2d39" name="a9efc5d213f1028f35182f20e34bb2d39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9efc5d213f1028f35182f20e34bb2d39">&#9670;&#160;</a></span>measureY()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">EigenvalueResult quisp::modules::StationaryQubit::measureY </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#ac1941daaa62061507edad1ea6e21f355">quisp::modules::IStationaryQubit</a>.</p>
+
+</div>
+</div>
+<a id="ac9417810f941c791c1edfdf1e1169c1b" name="ac9417810f941c791c1edfdf1e1169c1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9417810f941c791c1edfdf1e1169c1b">&#9670;&#160;</a></span>measureZ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">EigenvalueResult quisp::modules::StationaryQubit::measureZ </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#aebdf2b25d6031d8eecdb073ba2a830ef">quisp::modules::IStationaryQubit</a>.</p>
 
 </div>
 </div>
@@ -1179,116 +1116,6 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a7994f362fba966f10ffc8dd24cecfd3d">quisp::modules::IStationaryQubit</a>.</p>
-
-</div>
-</div>
-<a id="ac9c32bb1abb7374b1f0781bdffcc6147" name="ac9c32bb1abb7374b1f0781bdffcc6147"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9c32bb1abb7374b1f0781bdffcc6147">&#9670;&#160;</a></span>X_gate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void quisp::modules::StationaryQubit::X_gate </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a557592b61cd1f917633553914ebddf28">quisp::modules::IStationaryQubit</a>.</p>
-
-</div>
-</div>
-<a id="af33de92a3a2410645dfec042225d2fd4" name="af33de92a3a2410645dfec042225d2fd4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af33de92a3a2410645dfec042225d2fd4">&#9670;&#160;</a></span>Xpurify()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool quisp::modules::StationaryQubit::Xpurify </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *&#160;</td>
-          <td class="paramname"><em>resource_qubit</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a582efd180e7b8b980f68ac4be9cab014">quisp::modules::IStationaryQubit</a>.</p>
-
-</div>
-</div>
-<a id="a49c4d47a993fb5af2c2548e1d098f0a4" name="a49c4d47a993fb5af2c2548e1d098f0a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a49c4d47a993fb5af2c2548e1d098f0a4">&#9670;&#160;</a></span>Z_gate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void quisp::modules::StationaryQubit::Z_gate </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#aa79236fde0102752c8a85590362a1401">quisp::modules::IStationaryQubit</a>.</p>
-
-</div>
-</div>
-<a id="ab17cdc51b6b03fbe12a1fc3b21b73a02" name="ab17cdc51b6b03fbe12a1fc3b21b73a02"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab17cdc51b6b03fbe12a1fc3b21b73a02">&#9670;&#160;</a></span>Zpurify()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool quisp::modules::StationaryQubit::Zpurify </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html">IStationaryQubit</a> *&#160;</td>
-          <td class="paramname"><em>resource_qubit</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_stationary_qubit.html#a468dab95a71d9655ba004992c8ce2854">quisp::modules::IStationaryQubit</a>.</p>
 
 </div>
 </div>
