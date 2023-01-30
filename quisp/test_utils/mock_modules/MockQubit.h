@@ -41,7 +41,6 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(quisp::types::MeasurementOutcome, measureRandomPauliBasis, (), (override));
   MOCK_METHOD(void, setEntangledPartnerInfo, (IStationaryQubit *), (override));
 
-  MOCK_METHOD(void, assertEntangledPartnerValid, (), (override));
   MOCK_METHOD(IQubit *const, getEntangledPartner, (), (const, override));
   MOCK_METHOD(IQubit *const, getBackendQubitRef, (), (const, override));
   MOCK_METHOD(int, getPartnerStationaryQubitAddress, (), (const, override));
