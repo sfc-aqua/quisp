@@ -5,8 +5,7 @@
  */
 #include "PhotonicSwitch.h"
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
 void PhotonicSwitch::initialize() {
   ensureCorrespondingNeighborAddress();
@@ -24,7 +23,7 @@ void PhotonicSwitch::ensureCorrespondingNeighborAddress() {
   getParentModule()->par("neighbor_node_address") = neighbor_address;
 }
 
-void PhotonicSwitch::handleMessage(cMessage *msg) { send(msg, "toQNIC_quantum_port$o"); }
+void PhotonicSwitch::handleMessage(cMessage *msg) { send(msg, "to_bsa"); }
 
 cModule *PhotonicSwitch::getQNode() {
   cModule *module = getParentModule();
@@ -61,5 +60,4 @@ void PhotonicSwitch::release() {
 
 bool PhotonicSwitch::isReserved() { return getParentModule()->par("is_reserved"); }
 
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules
