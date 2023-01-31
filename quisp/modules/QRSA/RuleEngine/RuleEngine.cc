@@ -500,7 +500,6 @@ void RuleEngine::freeFailedQubits_and_AddAsResource(int destAddr, int internal_q
       // Keep the entangled qubits
       auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, it->second.qubit_index);
       IStationaryQubit *qubit = provider.getStationaryQubit(qubit_record);
-      qubit->assertEntangledPartnerValid();
       // Add qubit as available resource between NeighborQNodeAddress.
       bell_pair_store.insertEntangledQubit(neighborQNodeAddress, qubit_record);
     }

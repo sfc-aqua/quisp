@@ -20,7 +20,6 @@ class MockRealTimeController : public quisp::modules::IRealTimeController {
   MOCK_METHOD(void, ReInitialize_StationaryQubit, (IQubitRecord* const qubit_record, bool consumed), (override));
   MOCK_METHOD(void, applyXGate, (IQubitRecord* const qubit_record), (override));
   MOCK_METHOD(void, applyZGate, (IQubitRecord* const qubit_record), (override));
-  MOCK_METHOD(void, assertNoEntanglement, (IQubitRecord* const qubit_record), (override));
 };
 }  // namespace realtime_controller
 }  // namespace mock_modules
