@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include "messages/link_generation_messages_m.h"
 #include "modules/PhysicalConnection/BSA/types.h"
+#include "modules/QNIC.h"
 #include "omnetpp/csimulation.h"
 
 namespace quisp::modules {
@@ -18,18 +19,17 @@ Define_Module(BSAController);
 BSAController::BSAController() : provider(utils::ComponentProvider{this}) {}
 
 void BSAController::initialize() {
-  // BSA port 0 should always be to QNIC if it is internal
+  // if this BSA is internal set left to be self node
   if (strcmp(getParentModule()->getName(), "QNIC") == 0) {
     address = provider.getQNode()->par("address").intValue();
-    left_address = provider.getQNode()->par("address").intValue();
-    left_qnic_index = getParentModule()->par("self_qnic_index").intValue();
+    left_qnic.address = provider.getQNode()->par("address").intValue();
+    left_qnic.index = getParentModule()->par("self_qnic_index").intValue();
+    left_qnic.type = QNIC_R;
   } else {
     address = getParentModule()->par("address").intValue();
-    left_address = getExternalAdressFromPort(0);
-    left_qnic_index = getExternalQNICIndexFromPort(0);
+    left_qnic = getExternalQNICInfoFromPort(0);
   }
-  right_address = getExternalAdressFromPort(1);
-  right_qnic_index = getExternalQNICIndexFromPort(1);
+  right_qnic = getExternalQNICInfoFromPort(1);
 }
 
 void BSAController::handleMessage(cMessage *msg) {
@@ -49,7 +49,6 @@ void BSAController::registerClickBatches(std::vector<BSAClickResult> &results) {
 
     leftpk->appendSuccessIndex(index);
     rightpk->appendSuccessIndex(index);
-
     leftpk->appendCorrectionOperation(PauliOperator::I);
     rightpk->appendCorrectionOperation(results[index].correction_operation);
   }
@@ -58,8 +57,8 @@ void BSAController::registerClickBatches(std::vector<BSAClickResult> &results) {
 }
 
 BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_left) {
-  int destination = (is_left) ? left_address : right_address;
-  int qnic_index = (is_left) ? left_qnic_index : right_qnic_index;
+  int destination = (is_left) ? left_qnic.address : right_qnic.address;
+  int qnic_index = (is_left) ? left_qnic.index : right_qnic.index;
   auto *notification_packet = new BSMTimingNotification();
 
   notification_packet->setSrcAddr(address);
@@ -71,8 +70,8 @@ BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_le
 }
 
 CombinedBSAresults *BSAController::generateNextNotificationTiming(bool is_left) {
-  int destination = (is_left) ? left_address : right_address;
-  int qnic_index = (is_left) ? left_qnic_index : right_qnic_index;
+  int destination = (is_left) ? left_qnic.address : right_qnic.address;
+  int qnic_index = (is_left) ? left_qnic.index : right_qnic.index;
   auto *notification_packet = new CombinedBSAresults();
 
   notification_packet->setSrcAddr(address);
@@ -102,6 +101,14 @@ int BSAController::getExternalQNICIndexFromPort(int port) {
       ->getPreviousGate()  // QNIC quantum port
       ->getOwnerModule()
       ->par("self_qnic_index");
+}
+
+QNIC_id BSAController::getExternalQNICInfoFromPort(int port) {
+  QNIC_id qid;
+  qid.address = getExternalAdressFromPort(port);
+  qid.index = getExternalQNICIndexFromPort(port);
+  qid.type = QNIC_E;
+  return qid;
 }
 
 }  // namespace quisp::modules

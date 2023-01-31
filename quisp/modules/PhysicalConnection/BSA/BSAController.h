@@ -9,6 +9,7 @@
 #include <PhotonicQubit_m.h>
 #include <messages/classical_messages.h>
 #include <modules/PhysicalConnection/BSA/types.h>
+#include <modules/QNIC.h>
 #include <omnetpp.h>
 #include <vector>
 #include "messages/link_generation_messages_m.h"
@@ -16,6 +17,7 @@
 using namespace omnetpp;
 using namespace quisp::messages;
 using namespace quisp::physical::types;
+using quisp::modules::QNIC_id;
 
 namespace quisp::modules {
 
@@ -52,13 +54,12 @@ class BSAController : public cSimpleModule {
 
   int getExternalAdressFromPort(int port);
   int getExternalQNICIndexFromPort(int port);
+  QNIC_id getExternalQNICInfoFromPort(int port);
 
   // information for communications
   int address;
-  int left_address;
-  int left_qnic_index;
-  int right_address;
-  int right_qnic_index;
+  QNIC_id left_qnic;
+  QNIC_id right_qnic;
 
   // cache information for timing notification
   double offset_time_for_first_photon;
