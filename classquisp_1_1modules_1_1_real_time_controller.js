@@ -3,7 +3,6 @@ var classquisp_1_1modules_1_1_real_time_controller =
     [ "RealTimeController", "classquisp_1_1modules_1_1_real_time_controller.html#a94685c5ee25bdf67dd261187c1beea56", null ],
     [ "applyXGate", "classquisp_1_1modules_1_1_real_time_controller.html#ae2f26b93b218622fe5cf312df1d3fc6b", null ],
     [ "applyZGate", "classquisp_1_1modules_1_1_real_time_controller.html#a9dd0f6c9e1f136d053c01ff00529b7a9", null ],
-    [ "assertNoEntanglement", "classquisp_1_1modules_1_1_real_time_controller.html#a175d18b9d714a4d2c87bcfd43e15d022", null ],
     [ "EmitPhoton", "classquisp_1_1modules_1_1_real_time_controller.html#a9b336c0f7d0c893bbac1f19bb400b9d2", null ],
     [ "handleMessage", "classquisp_1_1modules_1_1_real_time_controller.html#a497940d13d0f2e22b15f5a69314ba2fa", null ],
     [ "initialize", "classquisp_1_1modules_1_1_real_time_controller.html#a99069d00e7159048802c1776cb83cdb0", null ],

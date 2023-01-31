@@ -1,11 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"namespacequisp_1_1modules.html#a98cca7be6a2f8b2d118c11ce5f3d4b0a":[16,0,1,2,72],
-"namespacequisp_1_1modules.html#a9904d5b47cc4c29cd51ee4472c932c4b":[16,0,1,2,71],
-"namespacequisp_1_1modules.html#a99e933fb6ff21c41958a49267b4e2b09":[16,0,1,2,67],
-"namespacequisp_1_1modules.html#a9f379547b18d1561693fc6e06b244b2b":[16,0,1,2,64],
-"namespacequisp_1_1modules.html#aa641f48448e2dfbb936a8ff273ae400b":[16,0,1,2,76],
-"namespacequisp_1_1modules.html#aa8221402c1bbaa72e7188e116ef1193b":[16,0,1,2,50],
 "namespacequisp_1_1modules.html#aaddacfaab29681c46ad5a418968ecb7d":[16,0,1,2,51],
 "namespacequisp_1_1modules.html#aba85a43351c674be7b688dbf0c807651":[16,0,1,2,65],
 "namespacequisp_1_1modules.html#abdd22aa8828057efcbeac6ee7fc73f92":[16,0,1,2,73],
@@ -249,5 +243,11 @@ var NAVTREEINDEX13 =
 "structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html#a2ec5d27c8de3f77b8718699adfb96c32":[16,0,1,0,1,0,0,0],
 "structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html#a2ec5d27c8de3f77b8718699adfb96c32":[17,0,0,0,1,0,0,0],
 "structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html#a4e9b171be09c9a74f536b60d9ffa006e":[16,0,1,0,1,0,0,3],
-"structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html#a4e9b171be09c9a74f536b60d9ffa006e":[17,0,0,0,1,0,0,3]
+"structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html#a4e9b171be09c9a74f536b60d9ffa006e":[17,0,0,0,1,0,0,3],
+"structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html#a6f02101f36fc722cd3a1021941d829e5":[17,0,0,0,1,0,0,1],
+"structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html#a6f02101f36fc722cd3a1021941d829e5":[16,0,1,0,1,0,0,1],
+"structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html#ac1d7dbf986758995ba8d30b7de8f5202":[17,0,0,0,1,0,0,2],
+"structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html#ac1d7dbf986758995ba8d30b7de8f5202":[16,0,1,0,1,0,0,2],
+"structquisp_1_1backends_1_1graph__state_1_1types_1_1_memory_error_model.html":[16,0,1,0,1,0,1],
+"structquisp_1_1backends_1_1graph__state_1_1types_1_1_memory_error_model.html":[17,0,0,0,1,0,1]
 };

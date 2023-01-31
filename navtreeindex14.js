@@ -1,11 +1,5 @@
 var NAVTREEINDEX14 =
 {
-"structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html#a6f02101f36fc722cd3a1021941d829e5":[17,0,0,0,1,0,0,1],
-"structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html#a6f02101f36fc722cd3a1021941d829e5":[16,0,1,0,1,0,0,1],
-"structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html#ac1d7dbf986758995ba8d30b7de8f5202":[17,0,0,0,1,0,0,2],
-"structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html#ac1d7dbf986758995ba8d30b7de8f5202":[16,0,1,0,1,0,0,2],
-"structquisp_1_1backends_1_1graph__state_1_1types_1_1_memory_error_model.html":[16,0,1,0,1,0,1],
-"structquisp_1_1backends_1_1graph__state_1_1types_1_1_memory_error_model.html":[17,0,0,0,1,0,1],
 "structquisp_1_1backends_1_1graph__state_1_1types_1_1_memory_error_model.html#a25b3a8229cb5a6f09341e1b64f825950":[17,0,0,0,1,0,1,0],
 "structquisp_1_1backends_1_1graph__state_1_1types_1_1_memory_error_model.html#a25b3a8229cb5a6f09341e1b64f825950":[16,0,1,0,1,0,1,0],
 "structquisp_1_1backends_1_1graph__state_1_1types_1_1_memory_error_model.html#a301f48048cb4fd8e5e01b849ec8672f7":[16,0,1,0,1,0,1,2],
@@ -249,5 +243,11 @@ var NAVTREEINDEX14 =
 "structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html#aacf7a5fd27153f4d11506cb59a57f162":[16,0,1,2,3,0,0],
 "structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html#aacf7a5fd27153f4d11506cb59a57f162":[17,0,0,2,2,0,0],
 "structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html#ac467398d75fe339fe936ef6f6a92c515":[16,0,1,2,3,0,1],
-"structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html#ac467398d75fe339fe936ef6f6a92c515":[17,0,0,2,2,0,1]
+"structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html#ac467398d75fe339fe936ef6f6a92c515":[17,0,0,2,2,0,1],
+"structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html#ac48f62324369d49570a18353ac6b4503":[16,0,1,2,3,0,2],
+"structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html#ac48f62324369d49570a18353ac6b4503":[17,0,0,2,2,0,2],
+"structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html#acb1e0605b53237958d35d45b9716aa91":[17,0,0,2,2,0,7],
+"structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html#acb1e0605b53237958d35d45b9716aa91":[16,0,1,2,3,0,7],
+"structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html#aefa8c7156f478d5856c687f5244bb228":[17,0,0,2,2,0,5],
+"structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html#aefa8c7156f478d5856c687f5244bb228":[16,0,1,2,3,0,5]
 };
