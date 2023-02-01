@@ -26,8 +26,7 @@ using quisp::types::MeasureXResult;
 using quisp::types::MeasureYResult;
 using quisp::types::MeasureZResult;
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
 Define_Module(StationaryQubit);
 
@@ -132,12 +131,15 @@ void StationaryQubit::handleMessage(cMessage *msg) {
 }
 
 EigenvalueResult StationaryQubit::measureX() { return qubit_ref->measureX(); }
+
 EigenvalueResult StationaryQubit::measureY() { return qubit_ref->measureY(); }
+
 EigenvalueResult StationaryQubit::measureZ() { return qubit_ref->measureZ(); }
 
-// Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
 void StationaryQubit::gateHadamard() { qubit_ref->gateH(); }
+
 void StationaryQubit::gateZ() { qubit_ref->gateZ(); }
+
 void StationaryQubit::gateX() { qubit_ref->gateX(); }
 
 void StationaryQubit::gateCNOT(IStationaryQubit *control_qubit) { qubit_ref->gateCNOT(check_and_cast<StationaryQubit *>(control_qubit)->qubit_ref); }
@@ -251,6 +253,7 @@ void StationaryQubit::setEntangledPartnerInfo(IStationaryQubit *partner) {
 }
 
 backends::IQubit *StationaryQubit::getBackendQubitRef() const { return qubit_ref; }
+
 int StationaryQubit::getPartnerStationaryQubitAddress() const {
   auto *partner_qubit_ref = qubit_ref->getEntangledPartner();
   auto *partner_id = dynamic_cast<const QubitId *const>(partner_qubit_ref->getId());
@@ -266,5 +269,4 @@ int StationaryQubit::getPartnerStationaryQubitAddress() const {
 
 MeasurementOutcome StationaryQubit::measureRandomPauliBasis() { return qubit_ref->measureRandomPauliBasis(); }
 
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules

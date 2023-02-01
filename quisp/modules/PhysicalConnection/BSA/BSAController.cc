@@ -30,6 +30,7 @@ void BSAController::initialize() {
     left_qnic = getExternalQNICInfoFromPort(0);
   }
   right_qnic = getExternalQNICInfoFromPort(1);
+  // TODO: set offset_time_for_first_photon
 }
 
 void BSAController::handleMessage(cMessage *msg) {
@@ -48,9 +49,11 @@ void BSAController::registerClickBatches(std::vector<BSAClickResult> &results) {
     if (!results[index].success) continue;
 
     leftpk->appendSuccessIndex(index);
-    rightpk->appendSuccessIndex(index);
     leftpk->appendCorrectionOperation(PauliOperator::I);
+    leftpk->setNeighborAddress(right_qnic.address);
+    rightpk->appendSuccessIndex(index);
     rightpk->appendCorrectionOperation(results[index].correction_operation);
+    rightpk->setNeighborAddress(left_qnic.address);
   }
   send(leftpk, "to_router");
   send(rightpk, "to_router");
@@ -59,6 +62,7 @@ void BSAController::registerClickBatches(std::vector<BSAClickResult> &results) {
 BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_left) {
   int destination = (is_left) ? left_qnic.address : right_qnic.address;
   int qnic_index = (is_left) ? left_qnic.index : right_qnic.index;
+  auto qnic_type = (is_left) ? left_qnic.type : right_qnic.type;
   auto *notification_packet = new BSMTimingNotification();
 
   notification_packet->setSrcAddr(address);
@@ -66,12 +70,14 @@ BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_le
   notification_packet->setFirstPhotonArrivalTime(simTime().dbl() + offset_time_for_first_photon);
   notification_packet->setInterval(time_interval_between_photons);
   notification_packet->setQnicIndex(qnic_index);
+  notification_packet->setQnicType(qnic_type);
   return notification_packet;
 }
 
 CombinedBSAresults *BSAController::generateNextNotificationTiming(bool is_left) {
   int destination = (is_left) ? left_qnic.address : right_qnic.address;
   int qnic_index = (is_left) ? left_qnic.index : right_qnic.index;
+  auto qnic_type = (is_left) ? left_qnic.type : right_qnic.type;
   auto *notification_packet = new CombinedBSAresults();
 
   notification_packet->setSrcAddr(address);
@@ -79,6 +85,7 @@ CombinedBSAresults *BSAController::generateNextNotificationTiming(bool is_left) 
   notification_packet->setFirstPhotonArrivalTime(simTime().dbl() + offset_time_for_first_photon);
   notification_packet->setInterval(time_interval_between_photons);
   notification_packet->setQnicIndex(qnic_index);
+  notification_packet->setQnicType(qnic_type);
   return notification_packet;
 }
 

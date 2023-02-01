@@ -16,7 +16,8 @@ packet BSMTimingNotification extends Header
 {
     simtime_t first_photon_arrival_time @setter(setFirstPhotonArrivalTime);
     double interval;
-    int qnic_index @setter(setQnicIndex);
+    QNIC_type qnic_type @setter(setQnicType)  @getter(getQnicType);
+    int qnic_index      @setter(setQnicIndex) @getter(getQnicIndex);
 }
 
 packet EPPStimingNotifier extends Header
@@ -30,6 +31,7 @@ packet EPPStimingNotifier extends Header
 // Used for MIM and MM. BSA results are sent back to the neighboring nodes, together with the timing notifier
 packet CombinedBSAresults extends BSMTimingNotification
 {
-    bool list_of_succesful_photon_indices[] @appender(appendSuccessIndex);
-    PauliOperator list_of_correction_operations[] @appender(appendCorrectionOperation);
+    int neighbor_address @getter(getNeighborAddress) @setter(setNeighborAddress);
+    int list_of_succesful_photon_indices[] @appender(appendSuccessIndex) @getter(getSuccessfulPhotonIndices) @sizeGetter(getSuccessCount);
+    PauliOperator list_of_correction_operations[] @appender(appendCorrectionOperation) @getter(getCorrectionOperationList) ;
 }

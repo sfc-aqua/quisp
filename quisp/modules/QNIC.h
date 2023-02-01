@@ -11,8 +11,7 @@
 #include <nlohmann/json.hpp>
 using namespace omnetpp;
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
 using json = nlohmann::json;
 typedef enum : int {
@@ -54,7 +53,19 @@ typedef struct QNIC : QNIC_id {
 // Table to check the qnic is reserved or not.
 typedef std::map<int, std::map<int, bool>> QNIC_reservation_table;
 
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules
+
+namespace std {
+template <>
+class hash<pair<quisp::modules::QNIC_type, int>> {
+ public:
+  /**
+   * @brief hash function for pair<QNIC_type, int> this only work assuming each node won't have more than 10,000 QNICs
+   *
+   * @return std::size_t the hash result
+   */
+  std::size_t operator()(pair<quisp::modules::QNIC_type, int> const& key) const noexcept { return std::hash<int>()((int)key.first * 10000 + key.second); }
+};
+}  // namespace std
 
 #endif  // QUISP_MODULES_QNIC_H_

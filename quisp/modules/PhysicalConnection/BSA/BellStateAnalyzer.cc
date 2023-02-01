@@ -68,6 +68,8 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
   }
 
   if (state != BSAState::Accepting) {  // must be last photon
+    // TODO: if idle for too long; send out a bsm notification
+    // TODO: return results as soon as one side finishes
     state = BSAState::Idle;
     processPhotonRecords();
     return;

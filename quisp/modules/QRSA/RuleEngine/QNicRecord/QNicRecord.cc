@@ -33,7 +33,7 @@ int QNicRecord::takeFreeQubitIndex() {
 }
 qrsa::IQubitRecord* QNicRecord::getQubit(int qubit_index) {
   if (qubits.size() <= qubit_index) {
-    throw omnetpp::cRuntimeError("QNicRecord::setQubitBusy: Qubit index:%d out of range. QNIC{%s, %d}, qubits.size(): %d", qubit_index, QNIC_names[type], index, qubits.size());
+    throw omnetpp::cRuntimeError("QNicRecord::getQubit: Qubit index:%d out of range. QNIC{%s, %d}, qubits.size(): %lu", qubit_index, QNIC_names[type], index, qubits.size());
   }
   return qubits.at(qubit_index).get();
 }

@@ -10,14 +10,12 @@ packet ConditionNotSatisfied{}
 
 packet EmitPhotonRequest extends Header
 {
-    int qubit_index;
-    int qnic_index;
-    int qnic_address;
-    int qnic_type;
-    bool receiver;
-    bool first;
-    bool last;
-    int trial;
+    int qubit_index @setter(setQubitIndex) @getter(getQubitIndex);
+    int qnic_index  @setter(setQniceIndex) @getter(getQnicIndex);
+    QNIC_type qnic_type   @setter(setQnicType)   @getter(getQnicType);
+    double interval_between_photons @setter(setIntervalBetweenPhotons) @getter(getIntervalBetweenPhotons);
+    bool is_first @getter(isFirst) @setter(setFirst);
+    bool is_last  @getter(isLast)  @setter(setLast);
 }
 
 packet SchedulePhotonTransmissionsOnebyOne extends Header

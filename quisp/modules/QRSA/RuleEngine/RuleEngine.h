@@ -7,6 +7,7 @@
 #pragma once
 
 #include <omnetpp.h>
+#include <unordered_map>
 #include <vector>
 
 #include <modules/Logger/LoggerBase.h>
@@ -23,6 +24,10 @@
 #include "PurificationResultTable/PurificationResultTable.h"
 #include "QNicStore/IQNicStore.h"
 #include "QubitRecord/IQubitRecord.h"
+#include "messages/QNode_ipc_messages_m.h"
+#include "messages/link_generation_messages_m.h"
+#include "modules/QNIC.h"
+#include "omnetpp/simtime.h"
 
 using namespace omnetpp;
 using namespace quisp::rules;
@@ -71,6 +76,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
  public:
   friend runtime_callback::RuntimeCallback;
   RuleEngine();
+  ~RuleEngine();
   int parentAddress;  // Parent QNode's address
   messages::EmitPhotonRequest *emt;
   NeighborTable ntable;
@@ -102,7 +108,6 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
 
  protected:
   void initialize() override;
-  void finish() override;
   void handleMessage(cMessage *msg) override;
   void scheduleFirstPhotonEmission(messages::BSMTimingNotification *pk, QNIC_type qnic_type);
   void sendPhotonTransmissionSchedule(PhotonTransmissionConfig transmission_config);
@@ -115,15 +120,23 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void scheduleNextEmissionEvent(int qnic_index, int qnic_address, double interval, simtime_t timing, int num_sent, bool internal, int trial);
   void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, messages::CombinedBSAresults *pk_result);
   void clearTrackerTable(int destAddr, int internal_qnic_address);
+  void handleLinkGenerationResult(messages::CombinedBSAresults *bsa_result);
   void handlePurificationResult(const PurificationResultKey &, const PurificationResultData &, bool from_self);
   void handleSwappingResult(const SwappingResultData &data);
   double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
   void executeAllRuleSets();
+  void sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_first, bool is_last);
+  void stopOnGoingPhotonEmission(QNIC_type qnic_type, int qnic_index);
+  void freeFailedEntanglementAttemptQubits(QNIC_type qnic_type, int qnic_index);
+  simtime_t getEmitTimeFromArrivalTime(messages::BSMTimingNotification *notification);
+  void schedulePhotonEmission(QNIC_type qnic_type, int qnic_index, messages::BSMTimingNotification *notification);
 
   utils::ComponentProvider provider;
   std::unique_ptr<IQNicStore> qnic_store = nullptr;
 
   runtime::RuntimeManager runtimes;
+  std::unordered_map<std::pair<QNIC_type, int>, messages::EmitPhotonRequest *> emit_photon_timer_map;
+  std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
 };
 
 Define_Module(RuleEngine);
