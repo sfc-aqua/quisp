@@ -12,6 +12,7 @@
 #include <modules/QNIC.h>
 #include <omnetpp.h>
 #include <vector>
+#include "messages/BSA_ipc_messages_m.h"
 #include "messages/link_generation_messages_m.h"
 
 using namespace omnetpp;
@@ -41,6 +42,7 @@ namespace quisp::modules {
 class BSAController : public cSimpleModule {
  public:
   BSAController();
+  ~BSAController();
 
   void registerClickBatches(std::vector<BSAClickResult>& result);
 
@@ -54,6 +56,9 @@ class BSAController : public cSimpleModule {
 
   int getExternalAdressFromPort(int port);
   int getExternalQNICIndexFromPort(int port);
+  double calculateOffsetTimeFromDistance();
+  double getTravelTimeFromPort(int port);
+  double getExternalDistanceFromPort(int port);
   QNIC_id getExternalQNICInfoFromPort(int port);
 
   // information for communications
@@ -63,6 +68,7 @@ class BSAController : public cSimpleModule {
 
   // cache information for timing notification
   double offset_time_for_first_photon;
+  BSMNotificationTimeout* timeout_message;
 
   // BSA characteristics
   double time_interval_between_photons;  ///< how separated should the photons be; is calculated by the dead time of the detector

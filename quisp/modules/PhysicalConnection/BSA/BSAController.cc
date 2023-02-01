@@ -7,16 +7,19 @@
 #include "./BSAController.h"
 #include <cstring>
 #include <stdexcept>
+#include "messages/BSA_ipc_messages_m.h"
 #include "messages/link_generation_messages_m.h"
 #include "modules/PhysicalConnection/BSA/types.h"
 #include "modules/QNIC.h"
-#include "omnetpp/csimulation.h"
+#include "omnetpp/cchannel.h"
 
 namespace quisp::modules {
 
 Define_Module(BSAController);
 
 BSAController::BSAController() : provider(utils::ComponentProvider{this}) {}
+
+BSAController::~BSAController() { delete timeout_message; }
 
 void BSAController::initialize() {
   // if this BSA is internal set left to be self node
@@ -30,11 +33,21 @@ void BSAController::initialize() {
     left_qnic = getExternalQNICInfoFromPort(0);
   }
   right_qnic = getExternalQNICInfoFromPort(1);
-  // TODO: set offset_time_for_first_photon
+  offset_time_for_first_photon = calculateOffsetTimeFromDistance();
+  auto first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
+  timeout_message = new BSMNotificationTimeout("bsm_notification_timeout");
+  // TODO: set timeout in case no photons coming in at all. So we send out BSMTimingNotification again.
+  scheduleAt(first_notification_timer, timeout_message);
 }
 
 void BSAController::handleMessage(cMessage *msg) {
-  delete msg;
+  if (msg->isSelfMessage()) {
+    send(generateFirstNotificationTiming(true), "to_router");
+    send(generateFirstNotificationTiming(false), "to_router");
+    // set timeout to be twice the travel time
+    scheduleAt(simTime() + 2 * offset_time_for_first_photon, msg);
+    return;
+  }
   // a more realistic way of execution would be to send click events through here.
   // but we opt for a better performance, since we are more interested in protocols
   // no emulating physical hardwares.
@@ -57,6 +70,10 @@ void BSAController::registerClickBatches(std::vector<BSAClickResult> &results) {
   }
   send(leftpk, "to_router");
   send(rightpk, "to_router");
+
+  // need to cancel the timeout and restart the timeout timer
+  cancelEvent(timeout_message);
+  scheduleAt(simTime() + 2 * offset_time_for_first_photon, timeout_message);
 }
 
 BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_left) {
@@ -89,6 +106,13 @@ CombinedBSAresults *BSAController::generateNextNotificationTiming(bool is_left) 
   return notification_packet;
 }
 
+double BSAController::calculateOffsetTimeFromDistance() {
+  // this bsa is internal and left is connected to this node's qnic
+  double one_way_travel_time = std::max(getTravelTimeFromPort(0), getTravelTimeFromPort(1));
+  // we add 10 times the photon interval to offset the travel time for safety in case RuleEngine has internal delay;
+  return one_way_travel_time * 2 + time_interval_between_photons * 10;
+}
+
 int BSAController::getExternalAdressFromPort(int port) {
   return getParentModule()
       ->getSubmodule("BellStateAnalyzer")
@@ -108,6 +132,26 @@ int BSAController::getExternalQNICIndexFromPort(int port) {
       ->getPreviousGate()  // QNIC quantum port
       ->getOwnerModule()
       ->par("self_qnic_index");
+}
+
+double BSAController::getTravelTimeFromPort(int port) {
+  // this port connects to internal QNIC
+  // since only port 0 is supposed to be connected to internal QNIC
+  cChannel *channel;
+  if (port == 0 && strcmp(getParentModule()->getName(), "QNIC") == 0) {
+    auto this_qnic_index = getParentModule()->par("self_qnic_index").intValue();
+    channel = provider.getQNode()->gate("quantum_port_receiver$o", this_qnic_index)->getChannel();
+  } else {
+    // this port connects to outside QNode
+    channel = getParentModule()
+                  ->getSubmodule("BellStateAnalyzer")
+                  ->gate("quantum_port", port)
+                  ->getPreviousGate()  // BSANode quantum_port
+                  ->getChannel();
+  }
+  double distance = channel->par("distance").doubleValue();
+  double speed_of_light_in_channel = channel->par("speed_of_light_in_fiber");
+  return distance / speed_of_light_in_channel;
 }
 
 QNIC_id BSAController::getExternalQNICInfoFromPort(int port) {
