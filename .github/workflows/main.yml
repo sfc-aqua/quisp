@@ -44,18 +44,14 @@ jobs:
         run: git config --global --add safe.directory /__w/quisp/quisp
       - name: Check out repository
         uses: actions/checkout@v3
+      - name: Install python dependencies for simulation tests
+        run: pip install -r requirements.txt
       - name: make eigen
         run: make eigen
-      - name: generate makefile
-        run: make makefile-lib
-      - name: generate message headers
-        run: make msgheaders
+      - name: build
+        run: make exe
       - name: Run Simulations
-        run: /bin/bash test.sh
-        working-directory: test
-      - name: Check Simulation Results
-        run: python -m unittest discover
-        working-directory: test
+        run: pytest simulation_tests -n auto
 
   clang-tidy:
     runs-on: ubuntu-latest
