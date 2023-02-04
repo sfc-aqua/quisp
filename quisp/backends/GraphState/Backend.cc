@@ -1,6 +1,7 @@
 #include "Backend.h"
 #include "Qubit.h"
 #include "backends/interfaces/IConfiguration.h"
+#include "backends/interfaces/IQubit.h"
 
 namespace quisp::backends::graph_state {
 GraphStateBackend::GraphStateBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<StationaryQubitConfiguration> configuration)
@@ -19,7 +20,7 @@ GraphStateBackend::~GraphStateBackend() {
 
 IQubit* GraphStateBackend::createQubit(const IQubitId* id, std::unique_ptr<IConfiguration> conf) {
   if (qubits.find(id) != qubits.cend()) {
-    throw std::runtime_error("GraphState::createQubit: trying to get qubit with already existed Id.");
+    throw std::runtime_error("GraphState::createQubit: trying to create qubit with already existed Id.");
   }
   auto original_qubit = std::make_unique<GraphStateQubit>(id, this);
 
@@ -28,7 +29,7 @@ IQubit* GraphStateBackend::createQubit(const IQubitId* id, std::unique_ptr<IConf
 
   if (gss_conf == nullptr) {
     delete raw_conf;
-    throw std::runtime_error("GraphState::getQubit: failed to cast. got invalid configulation.");
+    throw std::runtime_error("GraphState::getQubit: failed to cast. got invalid configuration.");
   }
 
   original_qubit->configure(std::unique_ptr<StationaryQubitConfiguration>(gss_conf));
@@ -37,6 +38,14 @@ IQubit* GraphStateBackend::createQubit(const IQubitId* id, std::unique_ptr<IConf
   return qubit_ptr;
 }
 IQubit* GraphStateBackend::createQubit(const IQubitId* id) { return createQubit(id, getDefaultConfiguration()); }
+
+IQubit* GraphStateBackend::createOrGetQubit(const IQubitId* id) {
+  auto qubit_iterator = qubits.find(id);
+  if (qubit_iterator == qubits.end()) {
+    return createQubit(id);
+  }
+  return getQubit(id);
+}
 
 IQubit* GraphStateBackend::getQubit(const IQubitId* id) {
   auto qubit_iterator = qubits.find(id);

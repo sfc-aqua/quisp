@@ -107,11 +107,11 @@ module QNode
         }
         for i=0..sizeof(quantum_port_receiver)-1 {
             qnic_r[i].qnic_quantum_port <--> quantum_port_receiver[i];
-            qnic_r[i].toParentRouter --> router.fromQNIC++; // Directly connected to internal BSA
+            qnic_r[i].to_parent_router --> router.fromQNIC++; // Directly connected to internal BSA
         }
         for i=0..sizeof(quantum_port_receiver_passive)-1 {
             qnic_rp[i].qnic_quantum_port <--> quantum_port_receiver_passive[i];
-            qnic_rp[i].toParentRouter --> router.fromQNIC++; // Directly connected to internal BSA
+            qnic_rp[i].to_parent_router --> router.fromQNIC++; // Directly connected to internal BSA
         }
 
         router.rePort <--> qrsa.rePort;

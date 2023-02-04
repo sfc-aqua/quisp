@@ -1,4 +1,5 @@
 #include "DefaultComponentProviderStrategy.h"
+#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
 #include "modules/QRSA/RealTimeController/IRealTimeController.h"
 #include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
@@ -33,6 +34,10 @@ IStationaryQubit *DefaultComponentProviderStrategy::getStationaryQubit(int qnic_
     throw cRuntimeError("QNIC not found. index: %d, type: %d", qnic_index, qnic_type);
   }
   auto *qubit = qnic->getSubmodule("statQubit", qubit_index);
+  auto *casted_qubit = dynamic_cast<IStationaryQubit *>(qubit);
+  if (casted_qubit == nullptr) {
+    throw cRuntimeError("FAIL TO CAST QUBITS qubit index %d", qubit_index);
+  }
   return check_and_cast<IStationaryQubit *>(qubit);
 }
 

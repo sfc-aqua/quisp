@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include "Backend.h"
 #include "backends/interfaces/IQubit.h"
+#include "backends/interfaces/IQubitId.h"
 #include "types.h"
 
 namespace quisp::backends::graph_state {

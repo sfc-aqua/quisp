@@ -60,18 +60,14 @@ network Linear_One_MIM
             address = 1;
             node_type = "EndNode";
             @display("i=COMP");
-            //buffers = 15;
-            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
-            //emission_timing_uncertainty = 10;
         }
-        BSA: BSA {
+        BSA: BSANode {
             address = 2;
             @display("i=BSA");
         }
         target: QNode {
             address = 3;
             node_type = "EndNode";
-            //buffers = 20;
             @display("i=COMP");
         }
     connections:

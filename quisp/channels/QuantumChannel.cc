@@ -12,8 +12,7 @@ using namespace Eigen;
 using namespace omnetpp;
 using namespace quisp::messages;
 
-namespace quisp {
-namespace channels {
+namespace quisp::channels {
 
 /*The sum of Z,X and Y error rate equates to pauli_error_rate. Value could potentially between 0 ~ 1. */
 struct channel_error_model {
@@ -98,13 +97,18 @@ cChannel::Result QuantumChannel::processMessage(cMessage *msg, const SendOptions
       // Qubit will end up with no error
     } else if (No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil != X_error_ceil)) {
       // X error
-      q->getQubitRefForUpdate()->gateX();
+      q->getQubitRefForUpdate()->noiselessX();
+      q->setXError(true);
     } else if (X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil != Z_error_ceil)) {
       // Z error
-      q->getQubitRefForUpdate()->gateZ();
+      q->getQubitRefForUpdate()->noiselessZ();
+      q->setZError(true);
     } else if (Z_error_ceil <= rand && rand < Y_error_ceil && (Z_error_ceil != Y_error_ceil)) {
       // Y error
-      q->getQubitRefForUpdate()->gateY();
+      q->getQubitRefForUpdate()->noiselessX();
+      q->getQubitRefForUpdate()->noiselessZ();
+      q->setXError(true);
+      q->setZError(true);
     } else {
       // Photon was lost
       DEBUG_darkcount_count++;
@@ -116,5 +120,4 @@ cChannel::Result QuantumChannel::processMessage(cMessage *msg, const SendOptions
   return cChannel::Result();
 }
 
-}  // namespace channels
-}  // namespace quisp
+}  // namespace quisp::channels

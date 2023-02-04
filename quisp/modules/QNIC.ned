@@ -3,8 +3,8 @@ package modules;
 
 import modules.QNIC.StationaryQubit.*;
 import modules.QNIC.PhotonicSwitch.*;
-import modules.BSA;
-import modules.BSAInternal;
+import modules.BSANode;
+import modules.PhysicalConnection.BSA.*;
 
 module QNIC
 {
@@ -23,7 +23,7 @@ module QNIC
         bool is_reserved @mutable = default(false);
 
     gates:
-        output toParentRouter @loose; // If not used, this still needs to be connected somewhere!!
+        output to_parent_router @loose; // Even if it is not used. Internally it's still need to be connected
         inout qnic_quantum_port @loose; // One quantum port for every qnic in a node;
                                         // input - if BSA is inside
                                         // output - if BSA is outside
@@ -50,21 +50,36 @@ module QNIC
         }
 
         bsa_controller: BSAController if receiver {
-            is_internal = true;
             mode = "active";
         }
 
-        gate_closer: dummyModule if !receiver;
+        gate_closer: dummyModule;
     connections:
         for i=0..num_buffer-1 {
-            lens.from_emitters++ <--> statQubit[i].tolens_quantum_port; //Put QuantumChannel_internal here if wanted
+            lens.from_emitters++ <-- statQubit[i].tolens_quantum_port; // Put QuantumChannel_internal here if wanted
         }
-        // If no BSA is inside the node
-        qnic_quantum_port <--> lens.to_bsa if !receiver;
-        toParentRouter <-- gate_closer.close_output if !receiver; // Seal the unused gate. Otherwise, this causes an error.
-        // If BSA is inside this QNIC
-        bsa.quantum_port++ <-- lens.to_bsa if receiver;;
-        bsa.quantum_port++ <-- qnic_quantum_port if receiver;;
-        bsa.to_bsa_controller --> bsa_controller.from_bsa if receiver;;
-        bsa_controller.to_router --> toParentRouter if receiver;
-}
+        // // inside connections
+        // bsa.to_bsa_controller --> bsa_controller.from_bsa if receiver;
+        // bsa_controller --> toParentRouter if receiver;
+
+        // if qnic is qnic_emitter
+        qnic_quantum_port <--> lens.to_bsa              if !receiver;
+        to_parent_router  <--  gate_closer.close_output if !receiver;
+
+        // if qnic is qnic_receiver
+        bsa.quantum_port++       <--> lens.to_bsa               if receiver;
+        bsa.quantum_port++       <--> qnic_quantum_port         if receiver;
+        bsa.to_bsa_controller     --> bsa_controller.from_bsa   if receiver;
+        bsa_controller.to_router  --> to_parent_router          if receiver;
+        bsa_controller.from_router <-- gate_closer.close_output if receiver;
+
+
+        // // If no BSA is inside the node
+        // qnic_quantum_port <--> lens.to_bsa if !receiver;
+        // toParentRouter <-- gate_closer.close_output if !receiver; // Seal the unused gate. Otherwise, this causes an error.
+        // // If BSA is inside this QNIC
+        // bsa.quantum_port++ <--> lens.to_bsa if receiver;
+        // bsa.quantum_port++ <-- qnic_quantum_port.in if receiver;
+        // bsa.to_bsa_controller --> bsa_controller.from_bsa if receiver;
+        // bsa_controller.to_router --> toParentRouter if receiver;
+    }

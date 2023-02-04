@@ -19,6 +19,8 @@ struct PhotonRecord {
   bool is_lost;
   bool is_first;
   bool is_last;
+  bool has_x_error;
+  bool has_z_error;
 };
 
 namespace quisp::modules {
@@ -44,13 +46,19 @@ class BellStateAnalyzer : public omnetpp::cSimpleModule {
   double collection_efficiency;
   double darkcount_probability;
   double detection_efficiency;
-  double indistinguishability_window;  // Precision of photon arrivial time ~1.5ns
+  simtime_t indistinguishability_window;  // Precision of photon arrivial time ~1.5ns
 
   BSAState state;
-  BSAController *controller;
 
   // data structures for processing
   std::vector<PhotonRecord> first_port_records;
   std::vector<PhotonRecord> second_port_records;
+  std::vector<BSAClickResult> click_results;
+
+  // for testing and debugging
+  long long no_error_count = 0;
+  long long x_error_count = 0;
+  long long y_error_count = 0;
+  long long z_error_count = 0;
 };
 }  // namespace quisp::modules

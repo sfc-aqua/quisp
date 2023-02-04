@@ -109,17 +109,8 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
  protected:
   void initialize() override;
   void handleMessage(cMessage *msg) override;
-  void scheduleFirstPhotonEmission(messages::BSMTimingNotification *pk, QNIC_type qnic_type);
-  void sendPhotonTransmissionSchedule(PhotonTransmissionConfig transmission_config);
-  void shootPhoton(messages::SchedulePhotonTransmissionsOnebyOne *pk);
-  void incrementBurstTrial(int destAddr, int internal_qnic_address, int internal_qnic_index);
-  void shootPhoton_internal(messages::SchedulePhotonTransmissionsOnebyOne *pk);
-  bool burstTrial_outdated(int this_trial, int qnic_address);
   InterfaceInfo getInterface_toNeighbor(int destAddr);
   InterfaceInfo getInterface_toNeighbor_Internal(int local_qnic_index);
-  void scheduleNextEmissionEvent(int qnic_index, int qnic_address, double interval, simtime_t timing, int num_sent, bool internal, int trial);
-  void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, messages::CombinedBSAresults *pk_result);
-  void clearTrackerTable(int destAddr, int internal_qnic_address);
   void handleLinkGenerationResult(messages::CombinedBSAresults *bsa_result);
   void handlePurificationResult(const PurificationResultKey &, const PurificationResultData &, bool from_self);
   void handleSwappingResult(const SwappingResultData &data);
@@ -128,7 +119,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_first, bool is_last);
   void stopOnGoingPhotonEmission(QNIC_type qnic_type, int qnic_index);
   void freeFailedEntanglementAttemptQubits(QNIC_type qnic_type, int qnic_index);
-  simtime_t getEmitTimeFromArrivalTime(messages::BSMTimingNotification *notification);
+  simtime_t getEmitTimeFromBSMNotification(messages::BSMTimingNotification *notification);
   void schedulePhotonEmission(QNIC_type qnic_type, int qnic_index, messages::BSMTimingNotification *notification);
 
   utils::ComponentProvider provider;

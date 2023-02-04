@@ -1,5 +1,4 @@
 /** \file BellStateAnalyzer.cc
- *  \authors cldurand,takaakimatsuo
  *
  *  \brief BellStateAnalyzer
  */
@@ -8,6 +7,9 @@
 #include <omnetpp.h>
 #include <stdexcept>
 #include <vector>
+#include "backends/GraphState/Qubit.h"
+#include "messages/BSA_ipc_messages_m.h"
+#include "modules/PhysicalConnection/BSA/types.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -28,8 +30,6 @@ void BellStateAnalyzer::initialize() {
   detection_efficiency = par("detection_efficiency").doubleValue();
   indistinguishability_window = par("indistinguishable_time_window").doubleValue();
   collection_efficiency = par("collection_efficiency").doubleValue();
-  controller = static_cast<BSAController *>(this->getParentModule()->getSubmodule("BSAController"));
-
   validateProperties();
 }
 
@@ -56,6 +56,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
 
   if (state == BSAState::Idle) {  // must be first photon
     state = BSAState::Accepting;
+    send(new CancelBSMTimeOutMsg(), "to_bsa_controller");
   }
 
   if (photon.from_port == PortNumber::First)
@@ -68,7 +69,6 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
   }
 
   if (state != BSAState::Accepting) {  // must be last photon
-    // TODO: if idle for too long; send out a bsm notification
     // TODO: return results as soon as one side finishes
     state = BSAState::Idle;
     processPhotonRecords();
@@ -82,30 +82,32 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
 }
 
 void BellStateAnalyzer::processPhotonRecords() {
+  auto *batch_click_msg = new BatchClickEvent();
   int number_of_possible_pairs = std::min(first_port_records.size(), second_port_records.size());
-  std::vector<BSAClickResult> results;
   for (int i = 0; i < number_of_possible_pairs; i++) {
     auto p = first_port_records[i];
     auto q = second_port_records[i];
 
-    if (std::abs(p.arrival_time.dbl() - q.arrival_time.dbl()) < indistinguishability_window)
-      results.emplace_back(processIndistinguishPhotons(p, q));
-    else
-      results.push_back({.success = false, .correction_operation = PauliOperator::I});
+    if (fabs(p.arrival_time - q.arrival_time) < indistinguishability_window) {
+      batch_click_msg->appendClickResults(processIndistinguishPhotons(p, q));
+    } else {
+      batch_click_msg->appendClickResults({.success = false, .correction_operation = PauliOperator::I});
+    }
   }
-  // TODO: process this at controller
-  controller->registerClickBatches(results);
+  first_port_records.clear();
+  second_port_records.clear();
+  send(batch_click_msg, "to_bsa_controller");
 }
 
 PhotonRecord BellStateAnalyzer::getPhotonRecordFromMessage(PhotonicQubit *photon_msg) {
-  PhotonRecord photon{
-      .qubit_ref = photon_msg->getQubitRefForUpdate(),
-      .arrival_time = photon_msg->getArrivalTime(),
-      .from_port = (photon_msg->arrivedOn("quantum_port", 0)) ? PortNumber::First : PortNumber::Second,
-      .is_lost = photon_msg->isLost(),
-      .is_first = photon_msg->isFirst(),
-      .is_last = photon_msg->isLast(),
-  };
+  PhotonRecord photon{.qubit_ref = photon_msg->getQubitRefForUpdate(),
+                      .arrival_time = photon_msg->getArrivalTime(),
+                      .from_port = (photon_msg->arrivedOn("quantum_port$i", 0)) ? PortNumber::First : PortNumber::Second,
+                      .is_lost = photon_msg->isLost(),
+                      .is_first = photon_msg->isFirst(),
+                      .is_last = photon_msg->isLast(),
+                      .has_x_error = photon_msg->hasXError(),
+                      .has_z_error = photon_msg->hasZError()};
 
   return photon;
 }
@@ -143,7 +145,7 @@ BSAClickResult BellStateAnalyzer::processIndistinguishPhotons(PhotonRecord &p, P
 
 void BellStateAnalyzer::validateProperties() {
   // currently we only allow 2 port BSA
-  if (this->gateSize("fromBSA_quantum_port$i") != 2) {
+  if (this->gateSize("quantum_port") != 2) {
     throw std::runtime_error("BellStateAnalyzer::parameter validation fail; BSA doesn't have 2 input quantum ports");
   }
   // validating parameters
@@ -151,26 +153,46 @@ void BellStateAnalyzer::validateProperties() {
     throw std::runtime_error("BellStateAnalyzer::parameter validation fail; darkcount_probability does not in the [0, 1] range");
   if (detection_efficiency < 0 || detection_efficiency > 1)
     throw std::runtime_error("BellStateAnalyzer::parameter validation fail; detection_efficiency does not in the [0, 1] range");
-  if (indistinguishability_window < 0 || indistinguishability_window > 1)
-    throw std::runtime_error("BellStateAnalyzer::parameter validation fail; indistinguishability_window does not in the [0, 1] range");
+  if (indistinguishability_window < 0) throw std::runtime_error("BellStateAnalyzer::parameter validation fail; indistinguishability_window cannot be lower than 0");
   if (collection_efficiency < 0 || collection_efficiency > 1)
     throw std::runtime_error("BellStateAnalyzer::parameter validation fail; collection_efficiency does not in the [0, 1] range");
-  if (controller == nullptr) {
-    throw std::runtime_error("BellStateAnalyzer::parameter validation fail; cannot find BSAController for this BSA");
-  }
 }
 
 void BellStateAnalyzer::measureSuccessfully(PhotonRecord &p, PhotonRecord &q, bool is_psi_plus) {
   auto p_ref = p.qubit_ref;
   auto q_ref = q.qubit_ref;
+
+  if (p.has_x_error && p.has_z_error)
+    y_error_count++;
+  else if (p.has_x_error)
+    x_error_count++;
+  else if (p.has_z_error)
+    z_error_count++;
+  else
+    no_error_count++;
+
+  if (q.has_x_error && q.has_z_error)
+    y_error_count++;
+  else if (q.has_x_error)
+    x_error_count++;
+  else if (q.has_z_error)
+    z_error_count++;
+  else
+    no_error_count++;
+
   p_ref->noiselessX();
-  if (is_psi_plus) p_ref->noiselessZ();
+  if (!is_psi_plus) {
+    p_ref->noiselessZ();
+  }
   q_ref->gateCNOT(p_ref);
   p_ref->noiselessMeasureX(backends::abstract::EigenvalueResult::PLUS_ONE);
   q_ref->noiselessMeasureZ(backends::abstract::EigenvalueResult::PLUS_ONE);
 }
 
-void BellStateAnalyzer::finish() {}
+void BellStateAnalyzer::finish() {
+  std::cout << "BSA Statistics (raw):\n";
+  std::cout << "    " << no_error_count << ' ' << x_error_count << ' ' << y_error_count << ' ' << z_error_count << '\n';
+}
 
 void BellStateAnalyzer::discardPhoton(PhotonRecord &photon) { photon.qubit_ref->noiselessMeasureZ(); };
 

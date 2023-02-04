@@ -13,6 +13,8 @@
 #include <string>
 #include <unsupported/Eigen/KroneckerProduct>
 #include <unsupported/Eigen/MatrixFunctions>
+#include "modules/PhysicalConnection/BSA/BSAController.h"
+#include "modules/PhysicalConnection/BSA/BellStateAnalyzer.h"
 
 #include <messages/classical_messages.h>
 #include <rules/Action.h>
@@ -1140,7 +1142,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module)
   // Owner could be BSA, EPPS, QNode
   const cModule *neighbor_node = neighbor_gate->getOwnerModule();
   if (neighbor_node == nullptr) {
-    error("neighbor nod not found.");
+    error("neighbor node not found.");
   }
   auto neighbor_info = createNeighborInfo(*neighbor_node);
   return neighbor_info;
@@ -1178,13 +1180,13 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
   }
 
   if (provider.isBSANodeType(type)) {
-    cModule *controller = thisNode.getSubmodule("Controller");
+    auto *controller = dynamic_cast<BSAController *>(thisNode.getSubmodule("bsa_controller"));
     if (controller == nullptr) {
-      error("BSA Controller not found");
+      error("BSA not found");
     }
 
-    int address_one = controller->par("neighbor_address");
-    int address_two = controller->par("neighbor_address_two");
+    int address_one = controller->getExternalAdressFromPort(0);
+    int address_two = controller->getExternalAdressFromPort(1);
     int myaddress = par("address");
 
     EV_DEBUG << "myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << controller->getFullName() << "\n";

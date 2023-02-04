@@ -49,7 +49,7 @@ class StatQubitTarget : public StationaryQubit {
   StatQubitTarget(IQuantumBackend *backend) : StationaryQubit() {
     setComponentType(new TestModuleType("test qubit"));
     provider.setStrategy(std::make_unique<Strategy>(backend));
-    toLensGate = new TestGate(this, "tolens_quantum_port$o");
+    toLensGate = new TestGate(this, "tolens_quantum_port");
   }
   void reset() { setFree(true); }
   void fillParams() {
@@ -102,7 +102,7 @@ class StatQubitTarget : public StationaryQubit {
 
   TestGate *toLensGate;
   cGate *gate(const char *gatename, int index = -1) override {
-    if (strcmp("tolens_quantum_port$o", gatename) != 0) {
+    if (strcmp("tolens_quantum_port", gatename) != 0) {
       throw std::runtime_error("unexpected gate name");
     }
     return toLensGate;

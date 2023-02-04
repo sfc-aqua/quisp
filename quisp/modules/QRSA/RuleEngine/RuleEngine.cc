@@ -1,6 +1,4 @@
 /** \file RuleEngine.cc
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/04/04
  *
  *  \brief RuleEngine
  */
@@ -20,6 +18,8 @@
 #include "messages/link_generation_messages_m.h"
 #include "modules/PhysicalConnection/BSA/types.h"
 #include "modules/QNIC.h"
+#include "omnetpp/cexception.h"
+#include "omnetpp/csimulation.h"
 
 namespace quisp::modules {
 
@@ -57,17 +57,17 @@ void RuleEngine::initialize() {
   for (int i = 0; i < number_of_qnics; i++) {
     emit_photon_timer_map[{QNIC_type::QNIC_E, i}] = new EmitPhotonRequest();
     emit_photon_timer_map[{QNIC_type::QNIC_E, i}]->setQnicType(QNIC_type::QNIC_E);
-    emit_photon_timer_map[{QNIC_type::QNIC_E, i}]->setQniceIndex(i);
+    emit_photon_timer_map[{QNIC_type::QNIC_E, i}]->setQnicIndex(i);
   }
   for (int i = 0; i < number_of_qnics_r; i++) {
     emit_photon_timer_map[{QNIC_type::QNIC_R, i}] = new EmitPhotonRequest();
     emit_photon_timer_map[{QNIC_type::QNIC_R, i}]->setQnicType(QNIC_type::QNIC_R);
-    emit_photon_timer_map[{QNIC_type::QNIC_R, i}]->setQniceIndex(i);
+    emit_photon_timer_map[{QNIC_type::QNIC_R, i}]->setQnicIndex(i);
   }
   for (int i = 0; i < number_of_qnics_rp; i++) {
     emit_photon_timer_map[{QNIC_type::QNIC_RP, i}] = new EmitPhotonRequest();
     emit_photon_timer_map[{QNIC_type::QNIC_RP, i}]->setQnicType(QNIC_type::QNIC_RP);
-    emit_photon_timer_map[{QNIC_type::QNIC_RP, i}]->setQniceIndex(i);
+    emit_photon_timer_map[{QNIC_type::QNIC_RP, i}]->setQnicIndex(i);
   }
 }
 
@@ -84,19 +84,16 @@ void RuleEngine::handleMessage(cMessage *msg) {
     freeFailedEntanglementAttemptQubits(type, qnic_index);
     schedulePhotonEmission(type, qnic_index, notification_packet);
   } else if (auto *pk = dynamic_cast<EmitPhotonRequest *>(msg)) {
-    /** pseudocode
-     * emit the request photons if possible.
-     * set first and last appropriately.
-     * if this is the last free photon set last
-     * schedule this message again with interval
-     */
     auto type = pk->getQnicType();
     auto qnic_index = pk->getQnicIndex();
+    auto number_of_free_emitters = qnic_store->countNumFreeQubits(type, qnic_index);
     auto is_first = pk->isFirst();
-    auto is_last = (qnic_store->countNumFreeQubits(type, qnic_index) == 1);
+    auto is_last = (number_of_free_emitters == 1);
     auto qubit_index = qnic_store->takeFreeQubitIndex(type, qnic_index);
 
-    // need to set is_first to false;
+    if (number_of_free_emitters == 0) return;
+
+    // need to set is_first to false
     pk->setFirst(false);
     sendEmitPhotonSignalToQnic(type, qnic_index, qubit_index, is_first, is_last);
     if (!is_last) {
@@ -150,7 +147,7 @@ void RuleEngine::handleMessage(cMessage *msg) {
 }
 
 void RuleEngine::schedulePhotonEmission(QNIC_type type, int qnic_index, BSMTimingNotification *notification) {
-  auto first_photon_emit_time = getEmitTimeFromArrivalTime(notification);
+  auto first_photon_emit_time = getEmitTimeFromBSMNotification(notification);
   auto *timer = emit_photon_timer_map[{type, qnic_index}];
   timer->setFirst(true);
   timer->setIntervalBetweenPhotons(notification->getInterval());
@@ -165,7 +162,7 @@ void RuleEngine::sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index,
   emitted_photon_order_map[{qnic_type, qnic_index}].push_back(qubit_index);
 }
 
-simtime_t RuleEngine::getEmitTimeFromArrivalTime(quisp::messages::BSMTimingNotification *) { return 0; }
+simtime_t RuleEngine::getEmitTimeFromBSMNotification(quisp::messages::BSMTimingNotification *notification) { return notification->getFirstPhotonEmitTime(); }
 
 void RuleEngine::stopOnGoingPhotonEmission(QNIC_type type, int qnic_index) { cancelEvent(emit_photon_timer_map[{type, qnic_index}]); }
 
@@ -173,6 +170,7 @@ void RuleEngine::freeFailedEntanglementAttemptQubits(QNIC_type type, int qnic_in
   auto &emitted_indices = emitted_photon_order_map[{type, qnic_index}];
   for (auto qubit_index : emitted_indices) {
     realtime_controller->ReInitialize_StationaryQubit(qnic_index, qubit_index, type, false);
+    qnic_store->setQubitBusy(type, qnic_index, qubit_index, false);
   }
   emitted_indices.clear();
 }
@@ -184,12 +182,11 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
   auto partner_address = bsa_result->getNeighborAddress();
   auto &emitted_indices = emitted_photon_order_map[{type, qnic_index}];
   for (int i = num_success - 1; i >= 0; i--) {
-    auto qubit_index = bsa_result->getSuccessfulPhotonIndices(i);
+    auto emitted_index = bsa_result->getSuccessfulPhotonIndices(i);
+    auto qubit_index = emitted_indices[emitted_index];
     auto *qubit_record = qnic_store->getQubitRecord(type, qnic_index, qubit_index);
     auto iterator = emitted_indices.begin();
-    std::advance(iterator, qubit_index);
-    // TODO: revamp is_busy
-    qnic_store->setQubitBusy(type, qnic_index, qubit_index, false);
+    std::advance(iterator, emitted_index);
     bell_pair_store.insertEntangledQubit(partner_address, qubit_record);
     emitted_indices.erase(iterator);
 
@@ -197,7 +194,6 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
     if (correction_operation == PauliOperator::X) {
       realtime_controller->applyXGate(qubit_record);
     } else if (correction_operation == PauliOperator::Y) {
-      // TODO: Y gate?
       realtime_controller->applyXGate(qubit_record);
       realtime_controller->applyZGate(qubit_record);
     }

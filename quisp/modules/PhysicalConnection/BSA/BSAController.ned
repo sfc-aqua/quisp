@@ -5,8 +5,7 @@ simple BSAController
 {
     parameters:
         double initial_notification_timing_buffer @unit(s) = default(0s);
-        string mode;
-        bool is_internal;
+        string mode = default("active");
     gates:
         input from_bsa;
         input from_router;

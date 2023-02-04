@@ -23,7 +23,7 @@ void PhotonicSwitch::ensureCorrespondingNeighborAddress() {
   getParentModule()->par("neighbor_node_address") = neighbor_address;
 }
 
-void PhotonicSwitch::handleMessage(cMessage *msg) { send(msg, "to_bsa"); }
+void PhotonicSwitch::handleMessage(cMessage *msg) { send(msg, "to_bsa$o"); }
 
 cModule *PhotonicSwitch::getQNode() {
   cModule *module = getParentModule();

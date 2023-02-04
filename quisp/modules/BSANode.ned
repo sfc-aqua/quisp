@@ -19,7 +19,7 @@ module BSANode
         string node_type = default("BSA");
 
     gates:
-        input quantum_port[];
+        inout quantum_port[];
         inout port[] @loose;
 
     submodules:
@@ -40,9 +40,8 @@ module BSANode
                 address = 0;
                 @display("p=281.61,55.874996");
         }
-        controller: BSAController {
+        bsa_controller: BSAController {
             parameters:
-                address = parent.address;
                 @display("p=103.55499,121.435");
         }
 
@@ -54,10 +53,10 @@ module BSANode
         }
 
         for i=0..sizeof(quantum_port)-1 {
-            quantum_port[i] --> bsa.quantum_port++;
+            quantum_port[i] <--> bsa.quantum_port++;
         }
 
-        controller.to_router --> router.fromApp;
-        router.toApp --> controller.from_router;
-        bsa.to_bsa_controller --> controller.from_bsa;
+        bsa_controller.to_router --> router.fromApp;
+        router.toApp --> bsa_controller.from_router;
+        bsa.to_bsa_controller --> bsa_controller.from_bsa;
 }
