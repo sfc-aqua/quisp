@@ -1,6 +1,35 @@
-from typing import List, Dict
+from typing import List, Dict, Optional
 from enum import Enum
 import asyncio, re, os
+import re, logging
+from rich.logging import RichHandler
+from rich.console import Console
+from rich.theme import Theme
+
+DEFAULT_RICH_CONSOLE_THEME = Theme(
+    {
+        "task_name": "magenta",
+        "sim_name": "blue",
+        "log": "green",
+        "status": "cyan",
+        "num_events": "green",
+        "ev_per_sec": "yellow",
+    }
+)
+
+
+console = Console(theme=DEFAULT_RICH_CONSOLE_THEME)
+error_console = Console(theme=DEFAULT_RICH_CONSOLE_THEME, stderr=True)
+
+FORMAT = "%(message)s"
+logging.basicConfig(
+    level="WARNING",
+    format=FORMAT,
+    datefmt="[%X]",
+    handlers=[RichHandler(console=console)],
+)
+
+logger = logging.getLogger("rich")
 
 
 class WorkerStatus(Enum):
@@ -23,6 +52,7 @@ class Worker:
     status: WorkerStatus = WorkerStatus.WAINTING_FOR_TASK
     output: str = ""
     results: Dict[str, Dict]
+    config_name: str = ""
 
     def __init__(self) -> None:
         # quisp dir
@@ -43,6 +73,7 @@ class Worker:
         ned_file_path: str = "simulations/test.ini",
         ned_path: str = "modules:channels:networks",
     ):
+        self.config_name = config_name
         commands = [
             "./quisp",
             "-u",
@@ -124,17 +155,29 @@ class Worker:
         if self.status is WorkerStatus.ERROR:
             raise RuntimeError(self.error_messages)
         for result in [parse_output(l) for l in self.output.split("\n")]:
-            if result:
-                self.results[result["name"]] = result
+            if not result:
+                continue
+            self.results[result["name"]] = result
+
+    def print_results(self) -> str:
+        print(f"config: {self.config_name}")
+        for name in self.results:
+            print(name, self.results[name]["data"])
 
 
 def parse_time(s: str) -> float:
-    """parse `time` command result time"""
+    """parse `time` command result time."""
 
     return float(s)
 
 
-def parse_output(s: str):
+def parse_output(s: str) -> "Optional[Dict]":
+    """read one line of simulation output and parse it if it can be.
+
+    >>> parse_output("Repeater1[0]<-->QuantumChannel{cost=0.00795483;distance=2.5km;fidelity=0.647462;bellpair_per_sec=299.875;}<-->EndNode2[0]; Fidelity=0.647462; Xerror=-0.00802559; Zerror=0.352538; Yerror=0.00802559")
+    {'name': 'Repeater1[0]<-->EndNode2[0]', 'channel': {'cost': 0.00795483, 'distance': '2.5km', 'fidelity': 0.647462, 'bellpair_per_sec': 299.875}, 'data': {'Fidelity': 0.647462, 'Xerror': -0.00802559, 'Zerror': 0.352538, 'Yerror': 0.00802559}}
+
+    """
     if not "<-->" in s:
         return None
     channel_info, *rest = s.split(" ")
@@ -147,16 +190,36 @@ def parse_output(s: str):
 
 
 def remove_end_semi(s: str) -> str:
-    """remove the last semicolon if exists"""
+    """remove the last semicolon if exists.
+
+    >>> remove_end_semi("test;")
+    'test'
+
+    >>> remove_end_semi("test")
+    'test'
+    """
+
     if s.endswith(";"):
         return s[:-1]
     return s
 
 
 def parse_object(s: "List[str]") -> "Dict[str, float]":
+    """parse object literal from simulation results.
+    the values are converted into float if it can be.
+
+    >>> parse_object(["Fidelity=0.647462","Xerror=-0.00802559", " Zerror=0.352538", "Yerror=0.00802559;"])
+    {'Fidelity': 0.647462, 'Xerror': -0.00802559, 'Zerror': 0.352538, 'Yerror': 0.00802559}
+
+    >>> parse_object("cost=0.00795483;distance=2.5km;fidelity=0.647462;bellpair_per_sec=299.875;".split(";"))
+    {'cost': 0.00795483, 'distance': '2.5km', 'fidelity': 0.647462, 'bellpair_per_sec': 299.875}
+    """
     obj = dict()
     for kv in s:
+        if not kv:
+            continue
         k, v = kv.split("=")
+        k = k.strip(" ")
         v = remove_end_semi(v)
         try:
             obj[k] = float(v)
@@ -164,3 +227,9 @@ def parse_object(s: "List[str]") -> "Dict[str, float]":
             obj[k] = v
 
     return obj
+
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()
