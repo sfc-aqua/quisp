@@ -2,9 +2,9 @@
 
 #include <gmock/gmock.h>
 #include <modules/common_types.h>
+#include <omnetpp.h>
 #include <test_utils/ModuleType.h>
 #include <test_utils/UtilFunctions.h>
-#include <omnetpp.h>
 #include "omnetpp/simtime_t.h"
 
 namespace quisp_test::mock_backends {
