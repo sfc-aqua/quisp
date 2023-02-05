@@ -358,7 +358,6 @@ EigenvalueResult GraphStateQubit::graphMeasureZ() {
 
 EigenvalueResult GraphStateQubit::graphMeasureZ(const EigenvalueResult eigenvalue) {
   auto vop = this->vertex_operator;
-  auto result = eigenvalue;
   if (this->neighbors.empty()) {
     bool resultMustBePlus = (vop == CliffordOperator::H || vop == CliffordOperator::RY_INV || vop == CliffordOperator::S_INV_RY_INV || vop == CliffordOperator::S_RY_INV);
     bool resultMustBeMinus = (vop == CliffordOperator::RY || vop == CliffordOperator::S_INV_RY || vop == CliffordOperator::S_RY || vop == CliffordOperator::Z_RY);

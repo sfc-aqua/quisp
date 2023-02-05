@@ -83,27 +83,27 @@ network Realistic_Layer2_Simple_MIM_MM_all_in_one
             @display("i=REP1G;p=140,273");
         }
 
-        BSA1[1]: BSANodeNode {
+        BSA1[1]: BSANode {
             address = 14;
             @display("p=389,195");
         }
-        BSA2[1]: BSANodeNode {
+        BSA2[1]: BSANode {
             address = 15;
             @display("p=105,137");
         }
-        BSA3[1]: BSANodeNode {
+        BSA3[1]: BSANode {
             address = 16;
             @display("p=275,30");
         }
-        BSA4[1]: BSANodeNode {
+        BSA4[1]: BSANode {
             address = 17;
             @display("p=523,68");
         }
-        BSA5[1]: BSANodeNode {
+        BSA5[1]: BSANode {
             address = 18;
             @display("p=350,273");
         }
-        BSA6[1]: BSANodeNode {
+        BSA6[1]: BSANode {
             address = 19;
             @display("p=66,241");
         }
@@ -218,7 +218,7 @@ network Realistic_Layer2_Simple_MIM_MM_5km
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
-        BSA1[1]: BSANodeNode {
+        BSA1[1]: BSANode {
             address = 4;
             @display("p=163,182");
         }
@@ -306,7 +306,7 @@ network Realistic_Layer2_Simple_MIM_MM_7_5km
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
-        BSA1[1]: BSANodeNode {
+        BSA1[1]: BSANode {
             address = 4;
             @display("p=164,176");
         }
@@ -349,7 +349,7 @@ network Realistic_Layer2_Simple_MIM_MM_10km
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
-        BSA1[1]: BSANodeNode {
+        BSA1[1]: BSANode {
             address = 4;
             @display("p=164,176");
         }
@@ -393,7 +393,7 @@ network Realistic_Layer2_Simple_MIM_MM_15km
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
-        BSA1[1]: BSANodeNode {
+        BSA1[1]: BSANode {
             address = 4;
             @display("p=164,176");
         }
@@ -435,7 +435,7 @@ network Realistic_Layer2_Simple_MIM_MM_50km
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
-        BSA1[1]: BSANodeNode {
+        BSA1[1]: BSANode {
             address = 4;
             @display("p=164,176");
         }
@@ -478,7 +478,7 @@ network Realistic_Layer2_Simple_MIM_MM_40km
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
-        BSA1[1]: BSANodeNode {
+        BSA1[1]: BSANode {
             address = 4;
             @display("p=164,176");
         }
@@ -522,7 +522,7 @@ network Realistic_Layer2_Simple_MIM_MM_25km
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
-        BSA1[1]: BSANodeNode {
+        BSA1[1]: BSANode {
             address = 4;
             @display("p=164,176");
         }
@@ -564,7 +564,7 @@ network Realistic_Layer2_Simple_MIM_MM_30km
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
-        BSA1[1]: BSANodeNode {
+        BSA1[1]: BSANode {
             address = 4;
             @display("p=164,176");
         }
@@ -608,7 +608,7 @@ network Realistic_Layer2_Simple_MIM_MM
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
-        BSA[1]: BSANodeNode {
+        BSA[1]: BSANode {
             address = 4;
             @display("p=269,85");
         }
@@ -653,7 +653,7 @@ network Realistic_Layer2_Simple_MIM_MM_same
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
-        BSA1[1]: BSANodeNode {
+        BSA1[1]: BSANode {
             address = 4;
             @display("p=164,176");
         }
@@ -696,7 +696,7 @@ network Realistic_Layer2_RouterNet
             node_type = "Router";
             @display("i=RTR;p=220,137");
         }
-        BSA1[1]: BSANodeNode {
+        BSA1[1]: BSANode {
             address = 4;
             @display("p=164,176");
         }
@@ -855,31 +855,31 @@ network Realistic_Layer2_Star_Sep
             //buffers = 25;
             @display("i=REP1G;p=58,143");
         }
-        BSA21[1]: BSANodeNode {
+        BSA21[1]: BSANode {
             address = 21;
             @display("p=164,176");
         }
-        BSA22[1]: BSANodeNode {
+        BSA22[1]: BSANode {
             address = 22;
             @display("p=484,98");
         }
-        BSA23[1]: BSANodeNode {
+        BSA23[1]: BSANode {
             address = 23;
             @display("p=445,157");
         }
-        BSA24[1]: BSANodeNode {
+        BSA24[1]: BSANode {
             address = 24;
             @display("p=324,98");
         }
-        BSA25[1]: BSANodeNode {
+        BSA25[1]: BSANode {
             address = 25;
             @display("p=270,70");
         }
-        BSA26[1]: BSANodeNode {
+        BSA26[1]: BSANode {
             address = 26;
             @display("p=193,77");
         }
-        BSA27[1]: BSANodeNode {
+        BSA27[1]: BSANode {
             address = 27;
             @display("p=128,137");
         }
@@ -996,8 +996,7 @@ network Realistic_Layer2_MM_MIM_MIM_MIM_MM
             @display("i=REP1G");
         }
 
-        //BSA[3]: BSANodeNode {
-        BSA[1]: BSANodeNode {
+        BSA[1]: BSANode {
             address = 100000+sizeof(EndNode)+ sizeof(repeater)+ index;
          }
 
@@ -1034,7 +1033,7 @@ network Realistic_Layer2_MIM_MIM
             @display("i=REP1G");
         }
 
-        BSA[2]: BSANodeNode {
+        BSA[2]: BSANode {
             address = sizeof(EndNode)+ sizeof(repeater)+ index;
         }
 
@@ -1075,7 +1074,7 @@ network Realistic_Layer2_MIM_tomography
             @display("i=REP1G");
         }
 
-        BSA[10]: BSANodeNode {
+        BSA[10]: BSANode {
             address = sizeof(EndNode)+ sizeof(repeater)+ index;
         }
 

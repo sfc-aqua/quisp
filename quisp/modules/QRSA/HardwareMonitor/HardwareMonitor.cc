@@ -1182,7 +1182,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
   if (provider.isBSANodeType(type)) {
     auto *controller = dynamic_cast<BSAController *>(thisNode.getSubmodule("bsa_controller"));
     if (controller == nullptr) {
-      error("BSA not found");
+      error("BSA controller not found");
     }
 
     int address_one = controller->getExternalAdressFromPort(0);

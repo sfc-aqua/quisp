@@ -61,7 +61,7 @@ network Linear_One_MIM
             node_type = "EndNode";
             @display("i=COMP");
         }
-        BSA: BSANodeNode {
+        BSA: BSANode {
             address = 2;
             @display("i=BSA");
         }
