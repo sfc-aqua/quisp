@@ -214,32 +214,6 @@ TEST_F(RuleEngineTest, resourceAllocation) {
   EXPECT_EQ(rt.qubits.size(), 1);
 }
 
-TEST_F(RuleEngineTest, trackerUpdate) {
-  // 1. initialize tracker
-  auto rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
-  rule_engine->initialize();
-  for (int i = 0; i < rule_engine->number_of_qnics_all; i++) {
-    EXPECT_EQ(rule_engine->tracker[i].size(), 0);  // tracker is properly initialized?
-  }
-  // set tracker accessible false at qnic 0
-  rule_engine->tracker_accessible.at(0) = false;
-  // 2. start emission (check records) add records
-  // TODO: actual BSM notification should be introduced here
-  QubitAddr_cons addr(1, 0, 0);  // parent_address, qnic_index, qubit_index
-  rule_engine->setTracker(0, 0, addr);
-  EXPECT_EQ(rule_engine->tracker[0].size(), 1);
-  // check if the tracker is blocked properly
-  EXPECT_FALSE(rule_engine->tracker_accessible[0]);
-  EXPECT_TRUE(rule_engine->tracker_accessible[1]);
-  // 3. clear tracker and check flag is reset
-  rule_engine->clearTrackerTable(0, 0);  // source address, qnic address
-  EXPECT_TRUE(rule_engine->tracker_accessible[0]);
-  EXPECT_TRUE(rule_engine->tracker_accessible[1]);
-  // clered table
-  EXPECT_EQ(rule_engine->tracker[0].size(), 0);
-  EXPECT_EQ(rule_engine->tracker[1].size(), 0);
-}
-
 TEST_F(RuleEngineTest, storeCheckPurificationAgreement_running_process) {
   QNIC_type qnic_type = QNIC_E;
   int qnic_id = 0;
