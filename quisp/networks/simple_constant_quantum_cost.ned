@@ -30,7 +30,7 @@ network Simple_constant_quantum_cost
             node_type = "Repeater";
             @display("i=REP1G;p=445,236");
         }
-        BSA[6]: BSA {
+        BSA[6]: BSANode {
             address = sizeof(endnode) +sizeof(repeater) + index;
             @display("p=560,137");
         }

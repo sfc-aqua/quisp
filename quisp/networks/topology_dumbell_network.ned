@@ -138,39 +138,39 @@ network topology_dumbell_MIM
             node_type = "Repeater";
             @display("i=RTR;p=197,21");
         }
-        BSA1: BSA {
+        BSA1: BSANode {
             address = 9;
             node_type = "BSA";
             @dispaly("p=42,150");
             @display("p=105,238");
         }
-        BSA2: BSA {
+        BSA2: BSANode {
             address = 10;
             node_type = "BSA";
             @dispaly("p=52,140");
             @display("p=186,238");
         }
-        BSA3: BSA {
+        BSA3: BSANode {
             address = 11;
             node_type = "BSA";
             @dispaly("p=32,130");
         }
-        BSA4: BSA {
+        BSA4: BSANode {
             address = 12;
             node_type = "BSA";
             @display("p=113,87");
         }
-        BSA5: BSA {
+        BSA5: BSANode {
             address = 13;
             node_type = "BSA";
             @display("p=326,118");
         }
-        BSA6: BSA {
+        BSA6: BSANode {
             address = 14;
             node_type = "BSA";
             @display("p=421,118");
         }
-        BSA7: BSA {
+        BSA7: BSANode {
             address = 15;
             node_type = "BSA";
             @display("p=454,54");

@@ -193,62 +193,62 @@ network aparicio_MIM
             node_type = "EndNode";
             @display("i=COMP;p=760,186");
         }
-        BSANode0: BSA {
+        BSANode0: BSANode {
             address = 100;
             node_type = "BSA";
             @display("i=BSA");
         }
-        BSANode1: BSA {
+        BSANode1: BSANode {
             address = 101;
             node_type = "BSA";
             @display("i=BSA");
         }
-        BSANode2: BSA {
+        BSANode2: BSANode {
             address = 102;
             node_type = "BSA";
             @display("i=BSA");
         }
-        BSANode3: BSA {
+        BSANode3: BSANode {
             address = 103;
             node_type = "BSA";
             @display("i=BSA");
         }
-        BSANode4: BSA {
+        BSANode4: BSANode {
             address = 104;
             node_type = "BSA";
             @display("i=BSA");
         }
-        BSANode5: BSA {
+        BSANode5: BSANode {
             address = 105;
             node_type = "BSA";
             @display("i=BSA");
         }
-        BSANode6: BSA {
+        BSANode6: BSANode {
             address = 106;
             node_type = "BSA";
             @display("i=BSA");
         }
-        BSANode7: BSA {
+        BSANode7: BSANode {
             address = 107;
             node_type = "BSA";
             @display("i=BSA");
         }
-        BSANode8: BSA {
+        BSANode8: BSANode {
             address = 108;
             node_type = "BSA";
             @display("i=BSA");
         }
-        BSANode9: BSA {
+        BSANode9: BSANode {
             address = 109;
             node_type = "BSA";
             @display("i=BSA");
         }
-        BSANode10: BSA {
+        BSANode10: BSANode {
             address = 110;
             node_type = "BSA";
             @display("i=BSA");
         }
-        BSANode11: BSA {
+        BSANode11: BSANode {
             address = 111;
             node_type = "BSA";
             @display("i=BSA");

@@ -32,7 +32,7 @@ network Tomography_Linear_One_MM_MIM
             @display("i=REP1G");
         }
 
-        BSA: BSA {
+        BSA: BSANode {
             address = 2;
             @display("i=BSA");
         }
@@ -61,7 +61,7 @@ network Linear_One_MIM
             node_type = "EndNode";
             @display("i=COMP");
         }
-        BSA: BSANode {
+        BSA: BSANodeNode {
             address = 2;
             @display("i=BSA");
         }
@@ -96,7 +96,7 @@ network Linear_One_MIM_biasedDistance
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
-        BSA: BSA {
+        BSA: BSANode {
             address = 2;
             @display("i=BSA");
         }
@@ -259,7 +259,7 @@ network Linear_One_MIM_MM_MSM
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
             //emission_timing_uncertainty = 10;
         }
-        BSA: BSA {
+        BSA: BSANode {
             address = 2;
             @display("i=BSA;p=304,132");
         }
