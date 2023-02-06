@@ -54,32 +54,19 @@ module QNIC
         }
 
         gate_closer: dummyModule;
+        
     connections:
         for i=0..num_buffer-1 {
-            lens.from_emitters++ <-- statQubit[i].tolens_quantum_port; // Put QuantumChannel_internal here if wanted
+            lens.from_emitters++ <-- statQubit[i].tolens_quantum_port;
         }
-        // // inside connections
-        // bsa.to_bsa_controller --> bsa_controller.from_bsa if receiver;
-        // bsa_controller --> toParentRouter if receiver;
-
         // if qnic is qnic_emitter
         qnic_quantum_port <--> lens.to_bsa              if !receiver;
         to_parent_router  <--  gate_closer.close_output if !receiver;
 
         // if qnic is qnic_receiver
-        bsa.quantum_port++       <--> lens.to_bsa               if receiver;
-        bsa.quantum_port++       <--> qnic_quantum_port         if receiver;
-        bsa.to_bsa_controller     --> bsa_controller.from_bsa   if receiver;
-        bsa_controller.to_router  --> to_parent_router          if receiver;
-        bsa_controller.from_router <-- gate_closer.close_output if receiver;
-
-
-        // // If no BSA is inside the node
-        // qnic_quantum_port <--> lens.to_bsa if !receiver;
-        // toParentRouter <-- gate_closer.close_output if !receiver; // Seal the unused gate. Otherwise, this causes an error.
-        // // If BSA is inside this QNIC
-        // bsa.quantum_port++ <--> lens.to_bsa if receiver;
-        // bsa.quantum_port++ <-- qnic_quantum_port.in if receiver;
-        // bsa.to_bsa_controller --> bsa_controller.from_bsa if receiver;
-        // bsa_controller.to_router --> toParentRouter if receiver;
+        bsa.quantum_port++         <--> lens.to_bsa              if receiver;
+        bsa.quantum_port++         <--> qnic_quantum_port        if receiver;
+        bsa.to_bsa_controller       --> bsa_controller.from_bsa  if receiver;
+        bsa_controller.to_router    --> to_parent_router         if receiver;
+        bsa_controller.from_router <--  gate_closer.close_output if receiver;
     }
