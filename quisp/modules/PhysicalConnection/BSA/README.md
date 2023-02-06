@@ -15,7 +15,7 @@ The module hierarchy traversal to find the incoming channel and which nodes this
 
 ## How BellStateAnalyzer Module works
 
-The BellStateAnalyzer manage its behaviour using a state machine. It has 4 states namely; `idle`, `accepting`, `accepting_left`, and `accepting_right`.
+The BellStateAnalyzer manages its behaviour using a state machine. It has 4 states namely; `idle`, `accepting`, `accepting_left`, and `accepting_right`.
 Currently, it caches all the photons coming in from both sides until the last photons from both sides arrive.
 Then it compiles the results in batches and signals the BSAController which then sends it to QNodes.
 
