@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "type": "lldb",
             "request": "launch",
@@ -28,5 +29,59 @@
             ],
             "cwd": "${workspaceFolder}/quisp"
         },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "MIM Simulation",
+            "program": "${workspaceFolder}/quisp/quisp_dbg",
+            "args": [
+                "-n",
+                "./networks:./channels:./modules",
+                "-i",
+                "./images",
+                "./simulations/two_nodes.ini",
+                "-c",
+                "two_node_MIM",
+                "-u",
+                "Qtenv"
+            ],
+            "cwd": "${workspaceFolder}/quisp"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Qleap Simulation",
+            "program": "${workspaceFolder}/quisp/quisp_dbg",
+            "args": [
+                "-n",
+                "./networks:./channels:./modules",
+                "-i",
+                "./images",
+                "./simulations/qleap_edu_examples.ini",
+                "-c",
+                "base",
+                "-u",
+                "Cmdenv"
+            ],
+            "cwd": "${workspaceFolder}/quisp"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Qleap w/ error Simulation",
+            "program": "${workspaceFolder}/quisp/quisp_dbg",
+            "args": [
+                "-n",
+                "./networks:./channels:./modules",
+                "-i",
+                "./images",
+                "./simulations/qleap_edu_examples.ini",
+                "-c",
+                "purification_no_error_1",
+                "-u",
+                "Qtenv"
+            ],
+            "cwd": "${workspaceFolder}/quisp"
+        }
     ],
 }

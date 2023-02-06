@@ -349,11 +349,19 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     for (int i = 1; i < path.size(); i++) {
       int left_node = path.at(i - 1), right_node = path.at(i);
       for (int i = 0; i < num_remote_purification; i++) {
-        auto pur_rule_left = purifyRule(right_node, purification_type, threshold_fidelity, shared_tag);
-        auto pur_rule_right = purifyRule(left_node, purification_type, threshold_fidelity, shared_tag);
+        auto pur_rule_left = purifyRule(right_node, PurType::SINGLE_X, threshold_fidelity, shared_tag);
+        auto pur_rule_right = purifyRule(left_node, PurType::SINGLE_X, threshold_fidelity, shared_tag);
         shared_tag++;
+        // std::vector<int> left_partner = {right_node}, right_partner = {left_node};
         rules_map[left_node].push_back(std::move(pur_rule_left));  // add rule with partner info
         rules_map[right_node].push_back(std::move(pur_rule_right));  // add rule with partner info
+
+        auto pur_rule_left_2 = purifyRule(right_node, PurType::SINGLE_Z, threshold_fidelity, shared_tag);
+        auto pur_rule_right_2 = purifyRule(left_node, PurType::SINGLE_Z, threshold_fidelity, shared_tag);
+        shared_tag++;
+        // std::vector<int> left_partner_2 = {right_node}, right_partner_2 = {left_node};
+        rules_map[left_node].push_back(std::move(pur_rule_left_2));  // add rule with partner info
+        rules_map[right_node].push_back(std::move(pur_rule_right_2));  // add rule with partner info
       }
     }
     // 2.2.2 alternate EntanglementSwapping and Purification from one hop entanglement to multihop entanglement
