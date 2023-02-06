@@ -13,7 +13,7 @@ var classquisp__test_1_1strategy_1_1_test_component_provider_strategy =
     [ "getRealTimeController", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a77b169c5b35c5d57190ff94ed5a13315", null ],
     [ "getRoutingDaemon", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#ab89b21e3df281992b782392fa0e745e6", null ],
     [ "getStationaryQubit", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a61ad443e153f985d249a46de8cfe3e07", null ],
-    [ "isHOMNodeType", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#ab5c91a81f7822bcae7763f427255e404", null ],
+    [ "isBSANodeType", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a29e6ed3cd1c5a2627544a79538f62512", null ],
     [ "isQNodeType", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#ab05145a60d82c6717dd18f9774272fe0", null ],
     [ "isSPDCNodeType", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#a03a228b030c38a1e44229fc994673a46", null ],
     [ "qnic_specs", "classquisp__test_1_1strategy_1_1_test_component_provider_strategy.html#adb2de64a174ff8bd6ac4a0d23f0d0a46", null ]

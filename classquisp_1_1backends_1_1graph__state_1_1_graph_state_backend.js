@@ -4,6 +4,7 @@ var classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend =
     [ "GraphStateBackend", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#a505233bd804e97bf5423e269fdf677fe", null ],
     [ "GraphStateBackend", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#a8ebdbfbe3e41b182cf4cfd13c3ebde03", null ],
     [ "~GraphStateBackend", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#a0d5d443defacf18c5d30e1a0d7bf74fc", null ],
+    [ "createOrGetQubit", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#a6bfacbf5985bd0cba05f4c55db6f3585", null ],
     [ "createQubit", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#ac9adeb8241dbba1c7821f8d71792ffa2", null ],
     [ "createQubit", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#a838b63d4cdd9d8a074555b254d63f46a", null ],
     [ "dblrand", "classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#ac53edbe46cf129fe19c48e6bc5b523f6", null ],

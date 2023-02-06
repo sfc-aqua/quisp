@@ -40,25 +40,28 @@ var NAVTREE =
     [ "Logging", "md_quisp_modules__logger__r_e_a_d_m_e.html", [
       [ "Usage", "md_quisp_modules__logger__r_e_a_d_m_e.html#autotoc_md14", null ]
     ] ],
+    [ "Bell State Analyzer", "md_quisp_modules__physical_connection__b_s_a__r_e_a_d_m_e.html", [
+      [ "How BellStateAnalyzer Module works", "md_quisp_modules__physical_connection__b_s_a__r_e_a_d_m_e.html#autotoc_md16", null ]
+    ] ],
     [ "Runtime", "md_quisp_runtime__r_e_a_d_m_e.html", [
-      [ "Intermediate Representations (IR)", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md38", null ],
-      [ "RuleSet Execution with Runtime", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md39", null ],
-      [ "Storage Scopes", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md40", null ],
-      [ "Storage types", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md41", [
-        [ "Register", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md42", null ],
-        [ "Memory", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md43", null ],
-        [ "Flags (pc, should_exit, terminated, error, and return_code)", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md44", null ],
-        [ "Qubits", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md45", null ]
+      [ "Intermediate Representations (IR)", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md40", null ],
+      [ "RuleSet Execution with Runtime", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md41", null ],
+      [ "Storage Scopes", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md42", null ],
+      [ "Storage types", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md43", [
+        [ "Register", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md44", null ],
+        [ "Memory", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md45", null ],
+        [ "Flags (pc, should_exit, terminated, error, and return_code)", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md46", null ],
+        [ "Qubits", "md_quisp_runtime__r_e_a_d_m_e.html#autotoc_md47", null ]
       ] ]
     ] ],
     [ "Test Utilities", "md_quisp_test_utils__r_e_a_d_m_e.html", [
-      [ "Usage", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md47", null ],
-      [ "Grab a packet", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md48", null ],
-      [ "Example", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md49", null ]
+      [ "Usage", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md49", null ],
+      [ "Grab a packet", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md50", null ],
+      [ "Example", "md_quisp_test_utils__r_e_a_d_m_e.html#autotoc_md51", null ]
     ] ],
     [ "quisp::utils", "md_quisp_utils__r_e_a_d_m_e.html", [
-      [ "ComponentProvider", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md51", null ],
-      [ "Unit Testing", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md52", null ]
+      [ "ComponentProvider", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md53", null ],
+      [ "Unit Testing", "md_quisp_utils__r_e_a_d_m_e.html#autotoc_md54", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -89,6 +92,7 @@ var NAVTREE =
         [ "All", "globals.html", null ],
         [ "Functions", "globals_func.html", null ],
         [ "Typedefs", "globals_type.html", null ],
+        [ "Enumerations", "globals_enum.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]
@@ -98,22 +102,22 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_access_private_8h.html",
-"_queue_8cc.html",
-"classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a64a5cff10147aebafa8fab614e744e4d",
-"classquisp_1_1modules_1_1_application.html#a89347a6f3ea0078be536262b7a604070",
-"classquisp_1_1modules_1_1_h_o_m_controller.html#a48241ecaec2a8784a5aa53ea4390007c",
-"classquisp_1_1modules_1_1_i_stationary_qubit.html#ac1941daaa62061507edad1ea6e21f355",
-"classquisp_1_1modules_1_1_rule_engine.html#a87972d1b6231b7cc767469104e66a756",
-"classquisp_1_1modules_1_1qnic__record_1_1_q_nic_record.html#a94227d1183f7bdb6a0322074a1bbfe77",
-"classquisp_1_1rules_1_1_rule.html#a3d4b531fb26491bf4d941ce58e43994e",
-"classquisp_1_1runtime_1_1_runtime.html#ab97e7c70fcd5ec118e95d5f3f560802d",
-"classquisp__test_1_1backends_1_1graph__state_1_1_qubit.html#aea738c80c7588cef052abaeda5208dff",
-"classquisp__test_1_1mock__backends_1_1_mock_quantum_backend.html#a6605f3ea2d238c43084dc5d87b3d77d8",
-"dir_39adc711ddf03b7cf2c76bbebdeb523c.html",
-"namespacequisp_1_1modules.html#aaddacfaab29681c46ad5a418968ecb7d",
-"structquisp_1_1backends_1_1graph__state_1_1types_1_1_memory_error_model.html#a25b3a8229cb5a6f09341e1b64f825950",
-"structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_key.html",
-"utils_8h.html"
+"_quantum_channel_8cc.html#a96762b209a269617eb9288ea0161aa75",
+"classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a0973f490c41c42ff502c623a44d0d850",
+"classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#af33c73817f92da3be7c6a71504d92c7c",
+"classquisp_1_1modules_1_1_connection_manager.html#aa7711e2290728c96e42cd9a01ec04a50",
+"classquisp_1_1modules_1_1_logger_1_1_disabled_logger.html#a9cbdae7b875c47f01305479d21caaffa",
+"classquisp_1_1modules_1_1_rule_engine.html#abd367670eb20d7eb422c4725e0816aa8",
+"classquisp_1_1modules_1_1qnic__store_1_1_q_nic_store.html#a34659e0ce725cf9d5bdef7725cd93c97",
+"classquisp_1_1rules_1_1_rule.html#ab490fd1ae3ab56783d303d7312ab863f",
+"classquisp_1_1runtime_1_1_runtime.html#aeab7a72099cee5c39a5c559a7c068bab",
+"classquisp__test_1_1backends_1_1graph__state_1_1_test_r_n_g.html#a4af6208db94265eba1e4fd270a40ee92",
+"classquisp__test_1_1mock__modules_1_1hardware__monitor_1_1_mock_hardware_monitor.html#a7ddd71ff46acb82325755db0d3de9690",
+"dir_840cf67bb13a64e2335d8e463a630ed7.html",
+"namespacequisp_1_1modules.html#a9904d5b47cc4c29cd51ee4472c932c4b",
+"struct_swapping_config.html#a1e46873030558351cc3c5982a36e5e20",
+"structquisp_1_1modules_1_1output__count.html#a720ae6745ab388f4f27a412390cf2ad0",
+"structquisp__test_1_1strategy_1_1_q_nic_spec.html#aa43d752af210a60952295b0173c3b565"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

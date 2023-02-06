@@ -3,6 +3,7 @@ var _q_n_i_c_8h =
     [ "quisp::modules::QNIC_id", "structquisp_1_1modules_1_1_q_n_i_c__id.html", "structquisp_1_1modules_1_1_q_n_i_c__id" ],
     [ "quisp::modules::QNIC_pair_info", "structquisp_1_1modules_1_1_q_n_i_c__pair__info.html", "structquisp_1_1modules_1_1_q_n_i_c__pair__info" ],
     [ "quisp::modules::QNIC", "structquisp_1_1modules_1_1_q_n_i_c.html", "structquisp_1_1modules_1_1_q_n_i_c" ],
+    [ "std::hash< pair< quisp::modules::QNIC_type, int > >", "classstd_1_1hash_3_01pair_3_01quisp_1_1modules_1_1_q_n_i_c__type_00_01int_01_4_01_4.html", "classstd_1_1hash_3_01pair_3_01quisp_1_1modules_1_1_q_n_i_c__type_00_01int_01_4_01_4" ],
     [ "json", "_q_n_i_c_8h.html#ac5600e2cedff8162864c3e7019ccd4d3", null ],
     [ "QNIC", "_q_n_i_c_8h.html#a3991da9b9702c427d36b804b21a31956", null ],
     [ "QNIC_reservation_table", "_q_n_i_c_8h.html#a27ddf07eb98a314604f173d9de2bbd77", null ],

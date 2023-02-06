@@ -90,7 +90,6 @@ $(document).ready(function(){initNavTree('_bell_state_analyzer_8cc.html',''); in
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">BellStateAnalyzer.cc File Reference</div></div>
@@ -99,50 +98,43 @@ $(document).ready(function(){initNavTree('_bell_state_analyzer_8cc.html',''); in
 
 <p>BellStateAnalyzer.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;PhotonicQubit_m.h&gt;</code><br />
-<code>#include &lt;<a class="el" href="classical__messages_8h_source.html">messages/classical_messages.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="_i_hardware_monitor_8h_source.html">modules/QRSA/HardwareMonitor/IHardwareMonitor.h</a>&gt;</code><br />
-<code>#include &lt;omnetpp.h&gt;</code><br />
-<code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
-<code>#include &lt;string.h&gt;</code><br />
-<code>#include &lt;fstream&gt;</code><br />
+<div class="textblock"><code>#include &lt;omnetpp.h&gt;</code><br />
+<code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
+<code>#include &quot;<a class="el" href="_bell_state_analyzer_8h_source.html">BellStateAnalyzer.h</a>&quot;</code><br />
+<code>#include &quot;PhotonicQubit_m.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="_i_qubit_8h_source.html">backends/interfaces/IQubit.h</a>&quot;</code><br />
+<code>#include &quot;messages/BSA_ipc_messages_m.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="modules_2_physical_connection_2_b_s_a_2types_8h_source.html">modules/PhysicalConnection/BSA/types.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for BellStateAnalyzer.cc:</div>
 <div class="dyncontent">
 <div class="center"><img src="_bell_state_analyzer_8cc__incl.png" border="0" usemap="#aquisp_2modules_2_physical_connection_2_b_s_a_2_bell_state_analyzer_8cc" alt=""/></div>
 <map name="aquisp_2modules_2_physical_connection_2_b_s_a_2_bell_state_analyzer_8cc" id="aquisp_2modules_2_physical_connection_2_b_s_a_2_bell_state_analyzer_8cc">
-<area shape="rect" title="BellStateAnalyzer." alt="" coords="1881,5,2105,45"/>
-<area shape="rect" title=" " alt="" coords="716,101,848,126"/>
-<area shape="rect" href="classical__messages_8h.html" title=" " alt="" coords="872,93,1009,133"/>
-<area shape="rect" href="_i_hardware_monitor_8h.html" title=" " alt="" coords="1597,93,1812,133"/>
-<area shape="rect" title=" " alt="" coords="1801,269,1883,295"/>
-<area shape="rect" title=" " alt="" coords="1963,101,2023,126"/>
-<area shape="rect" title=" " alt="" coords="2047,101,2109,126"/>
-<area shape="rect" title=" " alt="" coords="2134,101,2198,126"/>
-<area shape="rect" title=" " alt="" coords="2222,101,2289,126"/>
-<area shape="rect" title=" " alt="" coords="2313,101,2371,126"/>
-<area shape="rect" title=" " alt="" coords="5,189,177,214"/>
-<area shape="rect" title=" " alt="" coords="201,189,384,214"/>
-<area shape="rect" title=" " alt="" coords="409,189,627,214"/>
-<area shape="rect" title=" " alt="" coords="651,181,814,221"/>
-<area shape="rect" title=" " alt="" coords="839,189,1043,214"/>
-<area shape="rect" title=" " alt="" coords="1067,189,1246,214"/>
-<area shape="rect" title=" " alt="" coords="1270,189,1454,214"/>
-<area shape="rect" title=" " alt="" coords="1479,189,1547,214"/>
-<area shape="rect" href="_q_n_i_c_8h.html" title="QNIC." alt="" coords="1571,189,1689,214"/>
-<area shape="rect" title=" " alt="" coords="1714,189,1887,214"/>
-<area shape="rect" title=" " alt="" coords="1565,269,1695,295"/>
+<area shape="rect" title="BellStateAnalyzer." alt="" coords="517,5,741,45"/>
+<area shape="rect" title=" " alt="" coords="121,350,204,375"/>
+<area shape="rect" title=" " alt="" coords="1338,262,1417,287"/>
+<area shape="rect" title=" " alt="" coords="24,262,83,287"/>
+<area shape="rect" href="_bell_state_analyzer_8h.html" title=" " alt="" coords="490,93,625,119"/>
+<area shape="rect" title=" " alt="" coords="107,262,239,287"/>
+<area shape="rect" title=" " alt="" coords="868,262,1100,287"/>
+<area shape="rect" href="modules_2_physical_connection_2_b_s_a_2types_8h.html" title=" " alt="" coords="1124,255,1313,295"/>
+<area shape="rect" href="_i_qubit_8h.html" title=" " alt="" coords="771,167,909,207"/>
+<area shape="rect" href="_b_s_a_controller_8h.html" title=" " alt="" coords="480,174,595,199"/>
+<area shape="rect" href="classical__messages_8h.html" title=" " alt="" coords="706,255,843,295"/>
+<area shape="rect" title=" " alt="" coords="365,255,539,295"/>
+<area shape="rect" href="_q_n_i_c_8h.html" title="QNIC." alt="" coords="563,262,682,287"/>
+<area shape="rect" title=" " alt="" coords="591,350,759,375"/>
+<area shape="rect" title=" " alt="" coords="783,350,966,375"/>
+<area shape="rect" title=" " alt="" coords="991,350,1209,375"/>
+<area shape="rect" title=" " alt="" coords="1233,343,1396,383"/>
+<area shape="rect" title=" " alt="" coords="1421,350,1625,375"/>
+<area shape="rect" title=" " alt="" coords="1649,350,1828,375"/>
+<area shape="rect" title=" " alt="" coords="383,350,567,375"/>
+<area shape="rect" title=" " alt="" coords="228,350,359,375"/>
 </map>
 </div>
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html">quisp::modules::BellStateAnalyzer</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html" title="BellStateAnalyzer.">BellStateAnalyzer</a>.  <a href="classquisp_1_1modules_1_1_bell_state_analyzer.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespacequisp"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacequisp.html">quisp</a></td></tr>
@@ -157,7 +149,6 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >BellStateAnalyzer. </p>
-<dl class="section author"><dt>Authors</dt><dd>cldurand,takaakimatsuo </dd></dl>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

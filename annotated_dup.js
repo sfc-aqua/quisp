@@ -68,13 +68,13 @@ var annotated_dup =
         [ "Application", "classquisp_1_1modules_1_1_application.html", "classquisp_1_1modules_1_1_application" ],
         [ "BellPairStore", "classquisp_1_1modules_1_1_bell_pair_store.html", "classquisp_1_1modules_1_1_bell_pair_store" ],
         [ "BellStateAnalyzer", "classquisp_1_1modules_1_1_bell_state_analyzer.html", "classquisp_1_1modules_1_1_bell_state_analyzer" ],
+        [ "BSAController", "classquisp_1_1modules_1_1_b_s_a_controller.html", "classquisp_1_1modules_1_1_b_s_a_controller" ],
         [ "ConnectionManager", "classquisp_1_1modules_1_1_connection_manager.html", "classquisp_1_1modules_1_1_connection_manager" ],
         [ "ConnectionSetupInfo", "structquisp_1_1modules_1_1_connection_setup_info.html", "structquisp_1_1modules_1_1_connection_setup_info" ],
         [ "dummyModule", "classquisp_1_1modules_1_1dummy_module.html", "classquisp_1_1modules_1_1dummy_module" ],
         [ "EntangledPhotonPairSource", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html", "classquisp_1_1modules_1_1_entangled_photon_pair_source" ],
         [ "entangledPhotons", "structquisp_1_1modules_1_1entangled_photons.html", "structquisp_1_1modules_1_1entangled_photons" ],
         [ "HardwareMonitor", "classquisp_1_1modules_1_1_hardware_monitor.html", "classquisp_1_1modules_1_1_hardware_monitor" ],
-        [ "HOMController", "classquisp_1_1modules_1_1_h_o_m_controller.html", "classquisp_1_1modules_1_1_h_o_m_controller" ],
         [ "IApplication", "classquisp_1_1modules_1_1_i_application.html", "classquisp_1_1modules_1_1_i_application" ],
         [ "IConnectionManager", "classquisp_1_1modules_1_1_i_connection_manager.html", "classquisp_1_1modules_1_1_i_connection_manager" ],
         [ "IHardwareMonitor", "classquisp_1_1modules_1_1_i_hardware_monitor.html", "classquisp_1_1modules_1_1_i_hardware_monitor" ],
@@ -103,6 +103,11 @@ var annotated_dup =
         [ "StationaryQubit", "classquisp_1_1modules_1_1_stationary_qubit.html", "classquisp_1_1modules_1_1_stationary_qubit" ],
         [ "SwappingResultData", "structquisp_1_1modules_1_1_swapping_result_data.html", "structquisp_1_1modules_1_1_swapping_result_data" ],
         [ "tomography_outcome", "structquisp_1_1modules_1_1tomography__outcome.html", "structquisp_1_1modules_1_1tomography__outcome" ]
+      ] ],
+      [ "physical", "namespacequisp_1_1physical.html", [
+        [ "types", "namespacequisp_1_1physical_1_1types.html", [
+          [ "BSAClickResult", "structquisp_1_1physical_1_1types_1_1_b_s_a_click_result.html", "structquisp_1_1physical_1_1types_1_1_b_s_a_click_result" ]
+        ] ]
       ] ],
       [ "rules", "namespacequisp_1_1rules.html", [
         [ "rs_converter", "namespacequisp_1_1rules_1_1rs__converter.html", [
@@ -213,6 +218,10 @@ var annotated_dup =
       ] ],
       [ "MockRuntimeCallback", "classquisp__test_1_1_mock_runtime_callback.html", "classquisp__test_1_1_mock_runtime_callback" ]
     ] ],
+    [ "std", "namespacestd.html", [
+      [ "hash< pair< quisp::modules::QNIC_type, int > >", "classstd_1_1hash_3_01pair_3_01quisp_1_1modules_1_1_q_n_i_c__type_00_01int_01_4_01_4.html", "classstd_1_1hash_3_01pair_3_01quisp_1_1modules_1_1_q_n_i_c__type_00_01int_01_4_01_4" ]
+    ] ],
+    [ "PhotonRecord", "struct_photon_record.html", "struct_photon_record" ],
     [ "RoutingDaemon", "class_routing_daemon.html", null ],
     [ "SwappingConfig", "struct_swapping_config.html", "struct_swapping_config" ]
 ];

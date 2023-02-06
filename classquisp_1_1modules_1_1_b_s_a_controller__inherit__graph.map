@@ -1,0 +1,4 @@
+<map id="quisp::modules::BSAController" name="quisp::modules::BSAController">
+<area shape="rect" id="node1" title="This module takes the click event from BSA, compile the result and report back to QNode that sent the..." alt="" coords="5,79,201,104"/>
+<area shape="rect" id="node2" title=" " alt="" coords="48,5,159,31"/>
+</map>

@@ -13,7 +13,7 @@ var classquisp_1_1utils_1_1_component_provider =
     [ "getRoutingDaemon", "classquisp_1_1utils_1_1_component_provider.html#ad0c156e34d31dbc39564bb4eb746f5cf", null ],
     [ "getStationaryQubit", "classquisp_1_1utils_1_1_component_provider.html#ad119a53fb7d1f5027c242e03b74c1100", null ],
     [ "getStationaryQubit", "classquisp_1_1utils_1_1_component_provider.html#a4d6b46dd5dd01d265ac690a651392e66", null ],
-    [ "isHOMNodeType", "classquisp_1_1utils_1_1_component_provider.html#a4e95c33f84dc2a168be43b09f7650fe2", null ],
+    [ "isBSANodeType", "classquisp_1_1utils_1_1_component_provider.html#ab8fb52089dd73178dd3476d8acb40bf0", null ],
     [ "isQNodeType", "classquisp_1_1utils_1_1_component_provider.html#a3cde44b796de7f3789d359389cb24046", null ],
     [ "isSPDCNodeType", "classquisp_1_1utils_1_1_component_provider.html#a00d307f43558c011c7952b51f594a7d2", null ],
     [ "setStrategy", "classquisp_1_1utils_1_1_component_provider.html#abba267196c30c742e53b8ccdcac40455", null ],

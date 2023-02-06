@@ -12,7 +12,7 @@ var classquisp_1_1utils_1_1_i_component_provider_strategy =
     [ "getRealTimeController", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a496b556c593114eaf807821ed9935a40", null ],
     [ "getRoutingDaemon", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a35ba29ab9de79a0f1209c806d65bb94f", null ],
     [ "getStationaryQubit", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a12f1414f62bef1a64c4b1129e9177f98", null ],
-    [ "isHOMNodeType", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a4dbdebc573a3edf8f19f7acb7ee41fe0", null ],
+    [ "isBSANodeType", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a4ef49663eb60fb445fc9fdc920dfbebc", null ],
     [ "isQNodeType", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#ab23170a1049ca45b78a177f51c8bea93", null ],
     [ "isSPDCNodeType", "classquisp_1_1utils_1_1_i_component_provider_strategy.html#a7dd56e39404312d92dafcdde635b9ca3", null ]
 ];

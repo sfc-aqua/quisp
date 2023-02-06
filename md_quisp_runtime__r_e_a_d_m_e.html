@@ -93,7 +93,7 @@ $(document).ready(function(){initNavTree('md_quisp_runtime__r_e_a_d_m_e.html',''
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p >The Runtime is an environment for executing RuleSet. This Runtime abstraction allows us to analyze the behavior of RuleSet execution for further research about RuleSet-based quantum networks. The Runtime is a simple register-based machine with a simple key-value memory store. It's responsible for executing RuleSet written in intermediate representations(IR) and managing its states like assigned qubits entangled with a partner, temporary values (Registers and Memory), and flags. The current Runtime design focuses on 1). easy to implement and debug, 2). flexible in tweaking the instructions. See also <a class="el" href="namespacequisp_1_1runtime.html">quisp::runtime</a></p>
-<h1><a class="anchor" id="autotoc_md38"></a>
+<h1><a class="anchor" id="autotoc_md40"></a>
 Intermediate Representations (IR)</h1>
 <p >The IR is similar to the Intel syntax so that we can write down the instruction: "load the value of the _KEY_ from the memory to the register _REG0_" into "LOAD REG0 KEY". Be careful about the order of the destination (<em>REG0</em>) and the source (<em>KEY</em>). The IR is like a simple assembly language with labels. Action and Condition in a Rule are written in the IR to describe how it works. We can write a control flow with jump or branch instructions. So there is no if-else statement nor for-loop syntax in the language due to simplicity for implementation and debugging. Here is an pseudo code to perform the random measure action and its C++ representations.</p>
 <div class="fragment"><div class="line">  // load the &quot;count&quot; key from memory to the register</div>
@@ -154,7 +154,7 @@ Intermediate Representations (IR)</h1>
 <div class="line">          <span class="comment">// clang-format on</span></div>
 <div class="line">      },</div>
 <div class="line">  };</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md39"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md41"></a>
 RuleSet Execution with Runtime</h1>
 <p > 
 <div class="mermaid">
@@ -187,22 +187,22 @@ RuleSet Execution with Runtime</h1>
 <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
 <script>mermaid.initialize({startOnLoad:true});</script>
 </p>
-<h1><a class="anchor" id="autotoc_md40"></a>
+<h1><a class="anchor" id="autotoc_md42"></a>
 Storage Scopes</h1>
 <p >The Runtime has two types of storage scopes. One is Program-scope, where the Runtime initializes the storage before every Program execution. Only the Program can read/write the storage. Another is RuleSet-scope, where all Rule can read/write their value and the Runtime initializes it only once.</p>
-<h1><a class="anchor" id="autotoc_md41"></a>
+<h1><a class="anchor" id="autotoc_md43"></a>
 Storage types</h1>
 <p >The Runtime has four types of storage, Register, Memory, Flags, and Qubits.</p>
-<h2><a class="anchor" id="autotoc_md42"></a>
+<h2><a class="anchor" id="autotoc_md44"></a>
 Register</h2>
 <p >The Register is Program-scope storage that can store one number. You can use these Registers to perform simple arithmetic or check the number of measurements the RuleSet has done or qubits you can use in The Program.</p>
-<h2><a class="anchor" id="autotoc_md43"></a>
+<h2><a class="anchor" id="autotoc_md45"></a>
 Memory</h2>
 <p >The Memory is RuleSet-scope storage that can store any value with the MemoryKey. Unlike ordinary computer memory, the Memory is a simple key-value store for simplicity and safety. The RuleSet uses this Memory to keep the RuleSet-wise values like the total measurement count. You should load the value to the Register to use the Memory values.</p>
-<h2><a class="anchor" id="autotoc_md44"></a>
+<h2><a class="anchor" id="autotoc_md46"></a>
 Flags (pc, should_exit, terminated, error, and return_code)</h2>
 <p >The Flag is Program-scope storage that can store a value for control flow. The Program cannot access these values directly.</p>
-<h2><a class="anchor" id="autotoc_md45"></a>
+<h2><a class="anchor" id="autotoc_md47"></a>
 Qubits</h2>
 <p >The Qubits is RuleSet-scope storage that can store the qubits entangled with other QNode. The RuleEngine assigns the qubits to some Runtime when it detects the entangled qubits. Then the Runtime can use the assigned qubits as their resources to executing the RuleSet. </p>
 </div></div><!-- contents -->

@@ -92,16 +92,16 @@ $(document).ready(function(){initNavTree('md_quisp_test_utils__r_e_a_d_m_e.html'
   <div class="headertitle"><div class="title">Test Utilities </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md47"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md49"></a>
 Usage</h1>
 <p >use <code><a class="el" href="_test_utils_8h.html">TestUtils.h</a></code> and write <code>using namespace <a class="el" href="namespacequisp__test.html">quisp_test</a></code> in your test file.</p>
 <p >first you need call <code>prepareSimulation</code> in your test. this remove current simulation if it exists and create new simulation.</p>
 <p >when you want to set value to your test component, use <code>setPar~</code> functions. if you finish setting up the test network, call <code>TestSimulation::run</code> and then it runs the simulation on the test network. if you want to run a simulation step by step, you can call <code>TestSimulation::executeNextEvent</code>.</p>
 <p >if you write a test for QRSA modules, you need QNode component because QRSA modules depends on QNode.</p>
-<h1><a class="anchor" id="autotoc_md48"></a>
+<h1><a class="anchor" id="autotoc_md50"></a>
 Grab a packet</h1>
 <p >you can use <code>TestGate</code> to grab a packet from a test target module. <code>TestGate</code> has <code>messages</code> member and if the gate received <code>cMessage</code>, <code>TestGate</code> copies the message and store it into <code>messages</code> field. After runnig the simulation, you can get <code>messages</code> field of <code>TestGate</code></p>
-<h1><a class="anchor" id="autotoc_md49"></a>
+<h1><a class="anchor" id="autotoc_md51"></a>
 Example</h1>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacequisp__test.html">quisp_test</a>;</div>
 <div class="line"> </div>

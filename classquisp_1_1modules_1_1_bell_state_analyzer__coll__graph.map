@@ -1,9 +1,5 @@
 <map id="quisp::modules::BellStateAnalyzer" name="quisp::modules::BellStateAnalyzer">
-<area shape="rect" id="node1" title="BellStateAnalyzer." alt="" coords="823,31,989,71"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,33,116,58"/>
-<area shape="rect" id="node5" href="$classquisp_1_1modules_1_1_i_stationary_qubit.html" title=" " alt="" coords="179,87,355,127"/>
-<area shape="rect" id="node3" title=" " alt="" coords="227,37,306,62"/>
-<area shape="rect" id="node4" href="$classquisp_1_1modules_1_1_stationary_qubit.html" title="StationaryQubit. https://arxiv.org/abs/1908.10758." alt="" coords="495,109,667,149"/>
-<area shape="rect" id="node6" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="165,151,368,177"/>
-<area shape="rect" id="node7" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="183,201,351,241"/>
+<area shape="rect" id="node1" title="BellStateAnalyzer." alt="" coords="79,108,245,148"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,172,31"/>
+<area shape="rect" id="node3" title=" " alt="" coords="196,5,275,31"/>
 </map>

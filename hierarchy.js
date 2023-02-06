@@ -7,6 +7,7 @@ var hierarchy =
       [ "quisp::rules::Wait", "classquisp_1_1rules_1_1_wait.html", null ]
     ] ],
     [ "quisp::modules::BellPairStore", "classquisp_1_1modules_1_1_bell_pair_store.html", null ],
+    [ "quisp::physical::types::BSAClickResult", "structquisp_1_1physical_1_1types_1_1_b_s_a_click_result.html", null ],
     [ "omnetpp::cConfiguration", null, [
       [ "quisp_test::configuration::Configuration", "classquisp__test_1_1configuration_1_1_configuration.html", null ]
     ] ],
@@ -40,6 +41,11 @@ var hierarchy =
       [ "quisp_test::rng::TestRNG", "classquisp__test_1_1rng_1_1_test_r_n_g.html", null ]
     ] ],
     [ "omnetpp::cSimpleModule", null, [
+      [ "quisp::modules::BellStateAnalyzer", "classquisp_1_1modules_1_1_bell_state_analyzer.html", null ],
+      [ "quisp::modules::EntangledPhotonPairSource", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html", null ],
+      [ "quisp::modules::IApplication", "classquisp_1_1modules_1_1_i_application.html", [
+        [ "quisp::modules::Application", "classquisp_1_1modules_1_1_application.html", null ]
+      ] ],
       [ "quisp::modules::IConnectionManager", "classquisp_1_1modules_1_1_i_connection_manager.html", [
         [ "quisp::modules::ConnectionManager", "classquisp_1_1modules_1_1_connection_manager.html", null ]
       ] ],
@@ -69,6 +75,7 @@ var hierarchy =
     ] ],
     [ "quisp::modules::entangledPhotons", "structquisp_1_1modules_1_1entangled_photons.html", null ],
     [ "quisp::backends::abstract::IQubitId::Hash", "classquisp_1_1backends_1_1abstract_1_1_i_qubit_id_1_1_hash.html", null ],
+    [ "std::hash< pair< quisp::modules::QNIC_type, int > >", "classstd_1_1hash_3_01pair_3_01quisp_1_1modules_1_1_q_n_i_c__type_00_01int_01_4_01_4.html", null ],
     [ "GraphStateBackend::ICallback", null, [
       [ "quisp::modules::backend::BackendContainer", "classquisp_1_1modules_1_1backend_1_1_backend_container.html", null ]
     ] ],
@@ -143,6 +150,7 @@ var hierarchy =
     [ "quisp::modules::NeighborInfo", "structquisp_1_1modules_1_1_neighbor_info.html", null ],
     [ "quisp::runtime::Op< I >", "structquisp_1_1runtime_1_1_op.html", null ],
     [ "quisp::modules::output_count", "structquisp_1_1modules_1_1output__count.html", null ],
+    [ "PhotonRecord", "struct_photon_record.html", null ],
     [ "quisp::modules::PhotonTransmissionConfig", "structquisp_1_1modules_1_1_photon_transmission_config.html", null ],
     [ "quisp::backends::abstract::IQubitId::Pred", "classquisp_1_1backends_1_1abstract_1_1_i_qubit_id_1_1_pred.html", null ],
     [ "quisp::runtime::Program", "classquisp_1_1runtime_1_1_program.html", null ],
@@ -176,12 +184,7 @@ var hierarchy =
     [ "quisp::backends::graph_state::types::TwoQubitGateErrorModel", "structquisp_1_1backends_1_1graph__state_1_1types_1_1_two_qubit_gate_error_model.html", null ],
     [ "quisp::runtime::ValueUnion", "unionquisp_1_1runtime_1_1_value_union.html", null ],
     [ "cSimpleModule", null, [
-      [ "quisp::modules::BellStateAnalyzer", "classquisp_1_1modules_1_1_bell_state_analyzer.html", null ],
-      [ "quisp::modules::EntangledPhotonPairSource", "classquisp_1_1modules_1_1_entangled_photon_pair_source.html", null ],
-      [ "quisp::modules::HOMController", "classquisp_1_1modules_1_1_h_o_m_controller.html", null ],
-      [ "quisp::modules::IApplication", "classquisp_1_1modules_1_1_i_application.html", [
-        [ "quisp::modules::Application", "classquisp_1_1modules_1_1_application.html", null ]
-      ] ],
+      [ "quisp::modules::BSAController", "classquisp_1_1modules_1_1_b_s_a_controller.html", null ],
       [ "quisp::modules::IRoutingDaemon", "classquisp_1_1modules_1_1_i_routing_daemon.html", [
         [ "quisp::modules::RoutingDaemon", "classquisp_1_1modules_1_1_routing_daemon.html", null ],
         [ "quisp_test::mock_modules::routing_daemon::MockRoutingDaemon", "classquisp__test_1_1mock__modules_1_1routing__daemon_1_1_mock_routing_daemon.html", null ]

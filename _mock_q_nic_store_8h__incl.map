@@ -1,52 +1,52 @@
 <map id="quisp/test_utils/mock_modules/MockQNicStore.h" name="quisp/test_utils/mock_modules/MockQNicStore.h">
-<area shape="rect" id="node1" title=" " alt="" coords="2334,5,2519,45"/>
-<area shape="rect" id="node2" title=" " alt="" coords="983,101,1097,126"/>
-<area shape="rect" id="node3" href="$_stationary_qubit_8h.html" title="StationaryQubit." alt="" coords="1122,93,1323,133"/>
-<area shape="rect" id="node38" href="$_i_hardware_monitor_8h.html" title=" " alt="" coords="2003,504,2218,544"/>
-<area shape="rect" id="node42" href="$_module_type_8h.html" title=" " alt="" coords="2446,511,2605,537"/>
-<area shape="rect" id="node45" href="$_util_functions_8h.html" title=" " alt="" coords="2650,599,2817,625"/>
-<area shape="rect" id="node50" href="$_i_q_nic_store_8h.html" title=" " alt="" coords="2240,255,2421,295"/>
-<area shape="rect" id="node4" title=" " alt="" coords="1255,599,1387,625"/>
-<area shape="rect" id="node5" href="$_backends_8h.html" title=" " alt="" coords="698,599,849,625"/>
-<area shape="rect" id="node11" title=" " alt="" coords="1190,988,1245,1013"/>
-<area shape="rect" id="node12" href="$_i_quantum_backend_8h.html" title=" " alt="" coords="303,841,513,867"/>
-<area shape="rect" id="node23" href="$common__types_8h.html" title=" " alt="" coords="836,511,1009,537"/>
-<area shape="rect" id="node25" href="$_component_provider_8h.html" title=" " alt="" coords="1422,181,1597,207"/>
-<area shape="rect" id="node30" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="1034,504,1235,544"/>
-<area shape="rect" id="node41" href="$_qubit_id_8h.html" title=" " alt="" coords="959,423,1033,449"/>
-<area shape="rect" id="node6" href="$backends_2_graph_state_2_backend_8h.html" title=" " alt="" coords="591,680,745,705"/>
-<area shape="rect" id="node10" href="$_i_configuration_8h.html" title=" " alt="" coords="597,915,779,940"/>
-<area shape="rect" id="node14" href="$_i_qubit_id_8h.html" title=" " alt="" coords="226,915,305,940"/>
-<area shape="rect" id="node17" href="$_i_qubit_8h.html" title=" " alt="" coords="89,841,228,867"/>
-<area shape="rect" id="node22" href="$_qubit_configuration_8h.html" title=" " alt="" coords="589,841,787,867"/>
-<area shape="rect" id="node7" title=" " alt="" coords="2443,761,2525,786"/>
-<area shape="rect" id="node8" title=" " alt="" coords="1729,915,1797,940"/>
-<area shape="rect" id="node9" title=" " alt="" coords="701,761,811,786"/>
-<area shape="rect" id="node19" href="$_i_random_number_generator_8h.html" title=" " alt="" coords="486,753,677,793"/>
-<area shape="rect" id="node20" href="$backends_2_graph_state_2_qubit_8h.html" title=" " alt="" coords="297,761,359,786"/>
-<area shape="rect" id="node13" title=" " alt="" coords="337,915,479,940"/>
-<area shape="rect" id="node15" title=" " alt="" coords="281,988,346,1013"/>
-<area shape="rect" id="node16" title=" " alt="" coords="178,988,257,1013"/>
-<area shape="rect" id="node18" title=" " alt="" coords="119,915,198,940"/>
-<area shape="rect" id="node21" title=" " alt="" coords="812,841,916,867"/>
-<area shape="rect" id="node24" title=" " alt="" coords="964,599,1015,625"/>
-<area shape="rect" id="node26" href="$_q_r_s_a_8h.html" title=" " alt="" coords="1901,343,2064,368"/>
-<area shape="rect" id="node32" href="$_default_component_provider_strategy_8h.html" title=" " alt="" coords="1573,255,1750,295"/>
-<area shape="rect" id="node33" href="$_i_component_provider_strategy_8h.html" title=" " alt="" coords="1506,343,1705,368"/>
-<area shape="rect" id="node34" href="$utils_8h.html" title=" " alt="" coords="1720,423,1776,449"/>
-<area shape="rect" id="node35" href="$_logger_module_8h.html" title=" " alt="" coords="1515,511,1725,537"/>
-<area shape="rect" id="node40" title=" " alt="" coords="1311,262,1446,287"/>
-<area shape="rect" id="node27" href="$_i_qubit_record_8h.html" title=" " alt="" coords="1901,416,2064,456"/>
-<area shape="rect" id="node28" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="2251,599,2370,625"/>
-<area shape="rect" id="node29" title=" " alt="" coords="2189,680,2320,705"/>
-<area shape="rect" id="node31" title=" " alt="" coords="1089,599,1180,625"/>
-<area shape="rect" id="node36" title=" " alt="" coords="1411,599,1519,625"/>
-<area shape="rect" id="node37" title=" " alt="" coords="1544,592,1675,632"/>
-<area shape="rect" id="node39" title=" " alt="" coords="2053,599,2227,625"/>
-<area shape="rect" id="node43" href="$_configuration_8h.html" title=" " alt="" coords="2496,599,2603,625"/>
-<area shape="rect" id="node44" href="$_key_value_8h.html" title=" " alt="" coords="2547,680,2634,705"/>
-<area shape="rect" id="node46" href="$test__utils_2_r_n_g_8h.html" title=" " alt="" coords="2827,680,2888,705"/>
-<area shape="rect" id="node48" href="$_simulation_8h.html" title=" " alt="" coords="2709,680,2803,705"/>
-<area shape="rect" id="node47" title=" " alt="" coords="2842,761,2902,786"/>
-<area shape="rect" id="node49" title=" " alt="" coords="2665,761,2818,786"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1946,5,2131,45"/>
+<area shape="rect" id="node2" title=" " alt="" coords="671,101,785,126"/>
+<area shape="rect" id="node3" href="$_stationary_qubit_8h.html" title="StationaryQubit." alt="" coords="810,93,1011,133"/>
+<area shape="rect" id="node38" href="$_i_hardware_monitor_8h.html" title=" " alt="" coords="1717,504,1931,544"/>
+<area shape="rect" id="node42" href="$_module_type_8h.html" title=" " alt="" coords="2159,511,2318,537"/>
+<area shape="rect" id="node45" href="$_util_functions_8h.html" title=" " alt="" coords="2363,599,2530,625"/>
+<area shape="rect" id="node50" href="$_i_q_nic_store_8h.html" title=" " alt="" coords="1852,255,2033,295"/>
+<area shape="rect" id="node4" title=" " alt="" coords="1407,599,1539,625"/>
+<area shape="rect" id="node5" href="$_backends_8h.html" title=" " alt="" coords="501,599,651,625"/>
+<area shape="rect" id="node11" title=" " alt="" coords="711,988,766,1013"/>
+<area shape="rect" id="node12" href="$_i_quantum_backend_8h.html" title=" " alt="" coords="316,841,527,867"/>
+<area shape="rect" id="node23" href="$common__types_8h.html" title=" " alt="" coords="669,511,843,537"/>
+<area shape="rect" id="node25" href="$_component_provider_8h.html" title=" " alt="" coords="1110,181,1285,207"/>
+<area shape="rect" id="node30" href="$_i_stationary_qubit_8h.html" title=" " alt="" coords="1130,504,1331,544"/>
+<area shape="rect" id="node41" href="$_qubit_id_8h.html" title=" " alt="" coords="799,423,873,449"/>
+<area shape="rect" id="node6" href="$backends_2_graph_state_2_backend_8h.html" title=" " alt="" coords="499,680,653,705"/>
+<area shape="rect" id="node10" href="$_i_configuration_8h.html" title=" " alt="" coords="647,915,830,940"/>
+<area shape="rect" id="node14" href="$_i_qubit_id_8h.html" title=" " alt="" coords="243,915,322,940"/>
+<area shape="rect" id="node17" href="$_i_qubit_8h.html" title=" " alt="" coords="103,841,241,867"/>
+<area shape="rect" id="node22" href="$_qubit_configuration_8h.html" title=" " alt="" coords="765,841,963,867"/>
+<area shape="rect" id="node7" title=" " alt="" coords="2156,761,2239,786"/>
+<area shape="rect" id="node8" title=" " alt="" coords="1335,915,1403,940"/>
+<area shape="rect" id="node9" title=" " alt="" coords="537,761,647,786"/>
+<area shape="rect" id="node19" href="$_i_random_number_generator_8h.html" title=" " alt="" coords="671,753,862,793"/>
+<area shape="rect" id="node20" href="$backends_2_graph_state_2_qubit_8h.html" title=" " alt="" coords="398,761,461,786"/>
+<area shape="rect" id="node13" title=" " alt="" coords="350,915,493,940"/>
+<area shape="rect" id="node15" title=" " alt="" coords="298,988,363,1013"/>
+<area shape="rect" id="node16" title=" " alt="" coords="195,988,274,1013"/>
+<area shape="rect" id="node18" title=" " alt="" coords="133,915,211,940"/>
+<area shape="rect" id="node21" title=" " alt="" coords="1039,841,1143,867"/>
+<area shape="rect" id="node24" title=" " alt="" coords="727,599,777,625"/>
+<area shape="rect" id="node26" href="$_q_r_s_a_8h.html" title=" " alt="" coords="1615,343,1777,368"/>
+<area shape="rect" id="node32" href="$_default_component_provider_strategy_8h.html" title=" " alt="" coords="1261,255,1438,295"/>
+<area shape="rect" id="node33" href="$_i_component_provider_strategy_8h.html" title=" " alt="" coords="1189,343,1387,368"/>
+<area shape="rect" id="node34" href="$utils_8h.html" title=" " alt="" coords="1407,423,1463,449"/>
+<area shape="rect" id="node35" href="$_logger_module_8h.html" title=" " alt="" coords="895,511,1105,537"/>
+<area shape="rect" id="node40" title=" " alt="" coords="999,262,1134,287"/>
+<area shape="rect" id="node27" href="$_i_qubit_record_8h.html" title=" " alt="" coords="1615,416,1777,456"/>
+<area shape="rect" id="node28" href="$_q_n_i_c_8h.html" title="QNIC." alt="" coords="1965,599,2083,625"/>
+<area shape="rect" id="node29" title=" " alt="" coords="1903,680,2033,705"/>
+<area shape="rect" id="node31" title=" " alt="" coords="1241,599,1332,625"/>
+<area shape="rect" id="node36" title=" " alt="" coords="802,599,910,625"/>
+<area shape="rect" id="node37" title=" " alt="" coords="935,592,1065,632"/>
+<area shape="rect" id="node39" title=" " alt="" coords="1767,599,1940,625"/>
+<area shape="rect" id="node43" href="$_configuration_8h.html" title=" " alt="" coords="2209,599,2316,625"/>
+<area shape="rect" id="node44" href="$_key_value_8h.html" title=" " alt="" coords="2261,680,2347,705"/>
+<area shape="rect" id="node46" href="$test__utils_2_r_n_g_8h.html" title=" " alt="" coords="2540,680,2601,705"/>
+<area shape="rect" id="node48" href="$_simulation_8h.html" title=" " alt="" coords="2423,680,2516,705"/>
+<area shape="rect" id="node47" title=" " alt="" coords="2555,761,2615,786"/>
+<area shape="rect" id="node49" title=" " alt="" coords="2378,761,2531,786"/>
 </map>

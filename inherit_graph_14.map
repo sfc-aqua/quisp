@@ -1,4 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html" title="a key to identify a qubit in a backend." alt="" coords="5,5,173,45"/>
-<area shape="rect" id="node2" href="$classquisp_1_1modules_1_1qubit__id_1_1_qubit_id.html" title=" " alt="" coords="221,5,364,45"/>
+<area shape="rect" id="node1" href="$classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="5,37,173,77"/>
+<area shape="rect" id="node2" href="$classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html" title=" " alt="" coords="222,5,403,45"/>
+<area shape="rect" id="node4" href="$classquisp__test_1_1mock__backends_1_1_mock_quantum_backend.html" title=" " alt="" coords="221,69,404,109"/>
+<area shape="rect" id="node3" href="$classquisp__test_1_1backends_1_1graph__state_1_1_backend.html" title=" " alt="" coords="452,5,605,45"/>
 </map>
