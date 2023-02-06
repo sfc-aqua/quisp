@@ -70,8 +70,6 @@ void BSAController::handleMessage(cMessage *msg) {
   // no emulating physical hardwares.
 }
 
-void BSAController::registerClickBatches(std::vector<BSAClickResult> &results) { results.swap(click_results); }
-
 void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
   // we will apply corrections at right nodes
   auto *leftpk = generateNextNotificationTiming(true);
