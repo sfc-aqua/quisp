@@ -1,20 +1,17 @@
 /** \file BSA_Controller.h
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/04/01
  *
  *  \brief BSAController
  */
 #pragma once
 
-#include <PhotonicQubit_m.h>
-#include <messages/classical_messages.h>
-#include <modules/PhysicalConnection/BSA/types.h>
-#include <modules/QNIC.h>
 #include <omnetpp.h>
 #include <vector>
+#include "PhotonicQubit_m.h"
 #include "messages/BSA_ipc_messages_m.h"
+#include "messages/classical_messages.h"
 #include "messages/link_generation_messages_m.h"
-#include "omnetpp/simtime_t.h"
+#include "modules/PhysicalConnection/BSA/types.h"
+#include "modules/QNIC.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -44,7 +41,6 @@ class BSAController : public cSimpleModule {
   ~BSAController();
   int getExternalAdressFromPort(int port);
   void cancelBSMTimeOut();
-  void registerClickBatches(std::vector<BSAClickResult>& results);
 
  protected:
   virtual void initialize() override;
@@ -71,7 +67,7 @@ class BSAController : public cSimpleModule {
 
   // cache information for timing notification
   double offset_time_for_first_photon;
-  BSMNotificationTimeout* timeout_message;
+  BSMNotificationTimeout* time_out_message;
   std::vector<BSAClickResult> click_results;
   int time_out_count;
 

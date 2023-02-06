@@ -18,7 +18,7 @@ Define_Module(BSAController);
 
 BSAController::BSAController() : provider(utils::ComponentProvider{this}) {}
 
-BSAController::~BSAController() { cancelAndDelete(timeout_message); }
+BSAController::~BSAController() { cancelAndDelete(time_out_message); }
 
 void BSAController::finish() { std::cout << "last BSM message that was sent " << last_result_send_time << "\n"; }
 
@@ -40,12 +40,12 @@ void BSAController::initialize() {
   time_interval_between_photons = SimTime(1, SIMTIME_S).dbl() / getParentModule()->getSubmodule("bsa")->par("photon_detection_per_second").intValue();
   auto first_notification_timer = par("initial_notification_timing_buffer").doubleValue();
   time_out_count = 0;
-  timeout_message = new BSMNotificationTimeout("bsm_notification_timeout");
-  scheduleAt(first_notification_timer, timeout_message);
+  time_out_message = new BSMNotificationTimeout("bsm_notification_timeout");
+  scheduleAt(first_notification_timer, time_out_message);
 }
 
 void BSAController::handleMessage(cMessage *msg) {
-  if (msg == timeout_message) {
+  if (msg == time_out_message) {
     send(generateFirstNotificationTiming(true), "to_router");
     send(generateFirstNotificationTiming(false), "to_router");
     // set timeout to be twice the travel time plus number of no response
@@ -90,8 +90,8 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
   last_result_send_time = simTime();
 
   // need to cancel the timeout and restart the timeout timer
-  cancelEvent(timeout_message);
-  scheduleAt(simTime() + 2 * offset_time_for_first_photon, timeout_message);
+  cancelEvent(time_out_message);
+  scheduleAt(simTime() + 2 * offset_time_for_first_photon, time_out_message);
 }
 
 BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_left) {
@@ -221,7 +221,7 @@ QNIC_id BSAController::getExternalQNICInfoFromPort(int port) {
 }
 
 void BSAController::cancelBSMTimeOut() {
-  cancelEvent(timeout_message);
+  cancelEvent(time_out_message);
   time_out_count = 0;
 }
 

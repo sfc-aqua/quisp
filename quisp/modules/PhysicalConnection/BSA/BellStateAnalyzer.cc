@@ -2,12 +2,13 @@
  *
  *  \brief BellStateAnalyzer
  */
-#include "BellStateAnalyzer.h"
-#include <PhotonicQubit_m.h>
 #include <omnetpp.h>
 #include <stdexcept>
 #include <vector>
-#include "backends/GraphState/Qubit.h"
+
+#include "BellStateAnalyzer.h"
+#include "PhotonicQubit_m.h"
+#include "backends/interfaces/IQubit.h"
 #include "messages/BSA_ipc_messages_m.h"
 #include "modules/PhysicalConnection/BSA/types.h"
 
@@ -69,7 +70,6 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
   }
 
   if (state != BSAState::Accepting) {  // must be last photon
-    // TODO: return results as soon as one side finishes
     state = BSAState::Idle;
     processPhotonRecords();
     return;
@@ -184,7 +184,7 @@ void BellStateAnalyzer::measureSuccessfully(PhotonRecord &p, PhotonRecord &q, bo
   if (!is_psi_plus) {
     p_ref->noiselessZ();
   }
-  q_ref->gateCNOT(p_ref);
+  q_ref->noiselessCNOT(p_ref);
   p_ref->noiselessMeasureX(backends::abstract::EigenvalueResult::PLUS_ONE);
   q_ref->noiselessMeasureZ(backends::abstract::EigenvalueResult::PLUS_ONE);
 }

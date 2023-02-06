@@ -5,7 +5,6 @@
 #include "PhotonicQubit_m.h"
 #include "backends/interfaces/IQubit.h"
 #include "modules/PhysicalConnection/BSA/types.h"
-#include "omnetpp/simtime_t.h"
 
 enum class BSAState : int { Idle = 0, Accepting, AcceptingFirstPort, AcceptingSecondPort };
 enum class PortNumber : int { First = 0, Second };
@@ -32,7 +31,6 @@ class BellStateAnalyzer : public omnetpp::cSimpleModule {
   virtual void handleMessage(omnetpp::cMessage *msg) override;
 
  private:
-  void registerClickBatches();
   void discardPhoton(PhotonRecord &photon);
   PhotonRecord getPhotonRecordFromMessage(messages::PhotonicQubit *);
   void processPhotonRecords();
@@ -41,14 +39,13 @@ class BellStateAnalyzer : public omnetpp::cSimpleModule {
   void validateProperties();
 
   // device parameters
-  double collection_efficiency;
+  double collection_efficiency;  // might get deleted later if collection efficiency is implemented at StationaryQubit during emission
   double darkcount_probability;
   double detection_efficiency;
   simtime_t indistinguishability_window;  // Precision of photon arrivial time ~1.5ns
 
+  // data members for processing
   BSAState state;
-
-  // data structures for processing
   std::vector<PhotonRecord> first_port_records;
   std::vector<PhotonRecord> second_port_records;
   std::vector<BSAClickResult> click_results;
