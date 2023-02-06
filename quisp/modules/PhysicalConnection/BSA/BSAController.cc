@@ -147,7 +147,6 @@ int BSAController::getExternalAdressFromPort(int port) {
 
   // this BSAController is inside QNIC_R but the port is connecting to outside
   if (port != 0 && strcmp(getParentModule()->getName(), "qnic_r") == 0) {
-    auto *bsa = getParentModule()->getSubmodule("bsa");
     return getParentModule()
         ->getSubmodule("bsa")
         ->gate("quantum_port$i", port)

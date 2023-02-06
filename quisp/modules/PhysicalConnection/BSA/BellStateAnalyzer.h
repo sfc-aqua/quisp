@@ -7,8 +7,6 @@
 #include "modules/PhysicalConnection/BSA/types.h"
 #include "omnetpp/simtime_t.h"
 
-using namespace quisp::physical::types;
-
 enum class BSAState : int { Idle = 0, Accepting, AcceptingFirstPort, AcceptingSecondPort };
 enum class PortNumber : int { First = 0, Second };
 

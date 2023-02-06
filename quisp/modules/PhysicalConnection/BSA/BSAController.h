@@ -18,8 +18,6 @@
 
 using namespace omnetpp;
 using namespace quisp::messages;
-using namespace quisp::physical::types;
-using quisp::modules::QNIC_id;
 
 namespace quisp::modules {
 
