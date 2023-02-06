@@ -5,8 +5,7 @@
  */
 #include "PhotonicSwitch.h"
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
 void PhotonicSwitch::initialize() {
   ensureCorrespondingNeighborAddress();
@@ -17,14 +16,14 @@ void PhotonicSwitch::initialize() {
  * this method finds the corresponding neighbor node and save its address to the QNIC parameter.
  */
 void PhotonicSwitch::ensureCorrespondingNeighborAddress() {
-  // |qnic_quantum_port$o -(next gate)-> quantum_port$i | ---(next gate)---> | quantum_port$i --> fromHOM_quantum_port$i
+  // |qnic_quantum_port$o -(next gate)-> quantum_port$i | ---(next gate)---> | quantum_port$i --> fromBSA_quantum_port$i
   // Inner-port of this node in qnic - connected to another qnic in another node
   cGate *gate = getParentModule()->gate("qnic_quantum_port$o");
   int neighbor_address = gate->getNextGate()->getNextGate()->getOwnerModule()->par("address");
   getParentModule()->par("neighbor_node_address") = neighbor_address;
 }
 
-void PhotonicSwitch::handleMessage(cMessage *msg) { send(msg, "toQNIC_quantum_port$o"); }
+void PhotonicSwitch::handleMessage(cMessage *msg) { send(msg, "to_bsa$o"); }
 
 cModule *PhotonicSwitch::getQNode() {
   cModule *module = getParentModule();
@@ -61,5 +60,4 @@ void PhotonicSwitch::release() {
 
 bool PhotonicSwitch::isReserved() { return getParentModule()->par("is_reserved"); }
 
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules

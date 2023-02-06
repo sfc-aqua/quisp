@@ -3,18 +3,16 @@
  *
  *  \brief QuantumChannel
  */
+#include <PhotonicQubit_m.h>
 #include <omnetpp.h>
 #include <unsupported/Eigen/MatrixFunctions>
 #include <vector>
-// #include <Eigen/Dense>
-#include <PhotonicQubit_m.h>
 
 using namespace Eigen;
 using namespace omnetpp;
 using namespace quisp::messages;
 
-namespace quisp {
-namespace channels {
+namespace quisp::channels {
 
 /*The sum of Z,X and Y error rate equates to pauli_error_rate. Value could potentially between 0 ~ 1. */
 struct channel_error_model {
@@ -76,20 +74,12 @@ cChannel::Result QuantumChannel::processMessage(cMessage *msg, const SendOptions
   try {
     PhotonicQubit *q = check_and_cast<PhotonicQubit *>(msg);
 
-    bool lost = q->getPhotonLost();
-    bool Zerr = q->getPauliZerr();
-    bool Xerr = q->getPauliXerr();
+    bool lost = q->isLost();
 
     // The photon may have an error when emitted.
     MatrixXd Initial_condition(1, 5);  // I, X, Z, Y, Photon Lost
     if (lost) {
       Initial_condition << 0, 0, 0, 0, 1;  // Photon already lost. Maybe by emission time. Not implemented though.
-    } else if (Zerr && Xerr) {
-      Initial_condition << 0, 0, 0, 1, 0;  // Has a Y error
-    } else if (Zerr && !Xerr) {
-      Initial_condition << 0, 0, 1, 0, 0;  // Has a Z error
-    } else if (!Zerr && Xerr) {
-      Initial_condition << 0, 1, 0, 0, 0;  // Has an X error
     } else {
       Initial_condition << 1, 0, 0, 0, 0;  // No error
     }
@@ -107,29 +97,27 @@ cChannel::Result QuantumChannel::processMessage(cMessage *msg, const SendOptions
       // Qubit will end up with no error
     } else if (No_error_ceil <= rand && rand < X_error_ceil && (No_error_ceil != X_error_ceil)) {
       // X error
-      bool xerr = q->getPauliXerr();
-      q->setPauliXerr(!xerr);  // if xerr already was true, then another x error will make it false
+      q->getQubitRefForUpdate()->noiselessX();
+      q->setXError(true);
     } else if (X_error_ceil <= rand && rand < Z_error_ceil && (X_error_ceil != Z_error_ceil)) {
       // Z error
-      bool zerr = q->getPauliZerr();
-      q->setPauliZerr(!zerr);
+      q->getQubitRefForUpdate()->noiselessZ();
+      q->setZError(true);
     } else if (Z_error_ceil <= rand && rand < Y_error_ceil && (Z_error_ceil != Y_error_ceil)) {
       // Y error
-      bool xerr = q->getPauliXerr();
-      q->setPauliXerr(!xerr);
-      bool zerr = q->getPauliZerr();
-      q->setPauliZerr(!zerr);
+      q->getQubitRefForUpdate()->noiselessX();
+      q->getQubitRefForUpdate()->noiselessZ();
+      q->setXError(true);
+      q->setZError(true);
     } else {
       // Photon was lost
       DEBUG_darkcount_count++;
-      q->setPhotonLost(true);
+      q->setLost(true);
     }
-    q->setError_random_for_debug(rand);
   } catch (std::exception &e) {
     EV << "Only PhotonicQubit is allowed in quantum channel";
   }
   return cChannel::Result();
 }
 
-}  // namespace channels
-}  // namespace quisp
+}  // namespace quisp::channels

@@ -23,6 +23,7 @@ class IQuantumBackend {
 
   virtual IQubit* createQubit(const IQubitId* id, std::unique_ptr<IConfiguration> conf) = 0;
   virtual IQubit* createQubit(const IQubitId* id) = 0;
+  virtual IQubit* createOrGetQubit(const IQubitId* id) = 0;
   virtual IQubit* getQubit(const IQubitId* id) = 0;
   virtual void deleteQubit(const IQubitId* id) = 0;
   virtual std::unique_ptr<IConfiguration> getDefaultConfiguration() const = 0;

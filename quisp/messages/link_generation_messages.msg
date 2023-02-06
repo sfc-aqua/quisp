@@ -1,32 +1,37 @@
 import base_messages;
+
+cplusplus  {{
+    #include <modules/PhysicalConnection/BSA/types.h>
+    using quisp::physical::types::PauliOperator;
+}}
+
+class PauliOperator {
+    @existingClass;
+    @opaque;
+};
+
 namespace quisp::messages;
 
-packet BSMtimingNotifier extends Header
+packet BSMTimingNotification extends Header
 {
-    simtime_t timing_at;
-    int accepted_photons_per_sec;
+    double first_photon_emit_time @setter(setFirstPhotonEmitTime) @getter(getFirstPhotonEmitTime);
     double interval;
-    int number_of_qubits;
-    int internal_qnic_index = -1;
-    int internal_qnic_address = -1;
+    QNIC_type qnic_type @setter(setQnicType)  @getter(getQnicType);
+    int qnic_index      @setter(setQnicIndex) @getter(getQnicIndex);
 }
 
 packet EPPStimingNotifier extends Header
 {
-    simtime_t timing_at;
+    double timing_at;
     double interval;
     int number_of_qubits;
     int internal_qnic = -1;
 }
 
-//Used for MIM and MM. BSA results are sent back to the neighboring nodes, together with the timing notifier
-packet CombinedBSAresults extends BSMtimingNotifier
+// Used for MIM and MM. BSA results are sent back to the neighboring nodes, together with the timing notifier
+packet CombinedBSAresults extends BSMTimingNotification
 {
-    bool list_of_failed[];
-}
-
-//Used for MSM. BSA results are sent back to EPPS. EPPS will generate the next order based on that.
-packet CombinedBSAresults_epps extends Header
-{
-    bool list_of_failed[];
+    int neighbor_address @getter(getNeighborAddress) @setter(setNeighborAddress);
+    int list_of_succesful_photon_indices[] @appender(appendSuccessIndex) @getter(getSuccessfulPhotonIndices) @sizeGetter(getSuccessCount);
+    PauliOperator list_of_correction_operations[] @appender(appendCorrectionOperation) @getter(getCorrectionOperationList) ;
 }

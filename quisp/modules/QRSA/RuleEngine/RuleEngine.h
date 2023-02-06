@@ -1,12 +1,11 @@
 /** \file RuleEngine.h
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/04/04
  *
  *  \brief RuleEngine
  */
 #pragma once
 
 #include <omnetpp.h>
+#include <unordered_map>
 #include <vector>
 
 #include <modules/Logger/LoggerBase.h>
@@ -23,6 +22,10 @@
 #include "PurificationResultTable/PurificationResultTable.h"
 #include "QNicStore/IQNicStore.h"
 #include "QubitRecord/IQubitRecord.h"
+#include "messages/QNode_ipc_messages_m.h"
+#include "messages/link_generation_messages_m.h"
+#include "modules/QNIC.h"
+#include "omnetpp/simtime.h"
 
 using namespace omnetpp;
 using namespace quisp::rules;
@@ -62,7 +65,7 @@ struct SwappingResultData {
  *  \note The Connection Manager responds to connection requests received from other nodes.
  *        Connection setup, so a regular operation but not high bandwidth, relatively low constraints.
  *        Connections from nearest neighbors only.
- *        Connection manager needs to know which qnic is connected to where, which QNode not HOM/EPPS.
+ *        Connection manager needs to know which qnic is connected to where, which QNode not BSA/EPPS.
  *
  *  \brief RuleEngine
  */
@@ -71,6 +74,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
  public:
   friend runtime_callback::RuntimeCallback;
   RuleEngine();
+  ~RuleEngine();
   int parentAddress;  // Parent QNode's address
   messages::EmitPhotonRequest *emt;
   NeighborTable ntable;
@@ -102,28 +106,26 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
 
  protected:
   void initialize() override;
-  void finish() override;
   void handleMessage(cMessage *msg) override;
-  void scheduleFirstPhotonEmission(messages::BSMtimingNotifier *pk, QNIC_type qnic_type);
-  void sendPhotonTransmissionSchedule(PhotonTransmissionConfig transmission_config);
-  void shootPhoton(messages::SchedulePhotonTransmissionsOnebyOne *pk);
-  void incrementBurstTrial(int destAddr, int internal_qnic_address, int internal_qnic_index);
-  void shootPhoton_internal(messages::SchedulePhotonTransmissionsOnebyOne *pk);
-  bool burstTrial_outdated(int this_trial, int qnic_address);
   InterfaceInfo getInterface_toNeighbor(int destAddr);
   InterfaceInfo getInterface_toNeighbor_Internal(int local_qnic_index);
-  void scheduleNextEmissionEvent(int qnic_index, int qnic_address, double interval, simtime_t timing, int num_sent, bool internal, int trial);
-  void freeFailedQubits_and_AddAsResource(int destAddr, int internal_qnic_address, int internal_qnic_index, messages::CombinedBSAresults *pk_result);
-  void clearTrackerTable(int destAddr, int internal_qnic_address);
+  void handleLinkGenerationResult(messages::CombinedBSAresults *bsa_result);
   void handlePurificationResult(const PurificationResultKey &, const PurificationResultData &, bool from_self);
   void handleSwappingResult(const SwappingResultData &data);
   double predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index);
   void executeAllRuleSets();
+  void sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_first, bool is_last);
+  void stopOnGoingPhotonEmission(QNIC_type qnic_type, int qnic_index);
+  void freeFailedEntanglementAttemptQubits(QNIC_type qnic_type, int qnic_index);
+  simtime_t getEmitTimeFromBSMNotification(messages::BSMTimingNotification *notification);
+  void schedulePhotonEmission(QNIC_type qnic_type, int qnic_index, messages::BSMTimingNotification *notification);
 
   utils::ComponentProvider provider;
   std::unique_ptr<IQNicStore> qnic_store = nullptr;
 
   runtime::RuntimeManager runtimes;
+  std::unordered_map<std::pair<QNIC_type, int>, messages::EmitPhotonRequest *> emit_photon_timer_map;
+  std::unordered_map<std::pair<QNIC_type, int>, std::vector<int>> emitted_photon_order_map;
 };
 
 Define_Module(RuleEngine);

@@ -1,6 +1,4 @@
 /** \file StationaryQubit.cc
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/03/14
  *
  *  \brief StationaryQubit
  */
@@ -26,8 +24,7 @@ using quisp::types::MeasureXResult;
 using quisp::types::MeasureYResult;
 using quisp::types::MeasureZResult;
 
-namespace quisp {
-namespace modules {
+namespace quisp::modules {
 
 Define_Module(StationaryQubit);
 
@@ -124,20 +121,23 @@ void StationaryQubit::handleMessage(cMessage *msg) {
   double rand = dblrand();
   if (rand < (1 - emission_success_probability)) {
     PhotonicQubit *pk = check_and_cast<PhotonicQubit *>(msg);
-    pk->setPhotonLost(true);
-    send(pk, "tolens_quantum_port$o");
+    pk->setLost(true);
+    send(pk, "tolens_quantum_port");
   } else {
-    send(msg, "tolens_quantum_port$o");
+    send(msg, "tolens_quantum_port");
   }
 }
 
 EigenvalueResult StationaryQubit::measureX() { return qubit_ref->measureX(); }
+
 EigenvalueResult StationaryQubit::measureY() { return qubit_ref->measureY(); }
+
 EigenvalueResult StationaryQubit::measureZ() { return qubit_ref->measureZ(); }
 
-// Convert X to Z, and Z to X error. Therefore, Y error stays as Y.
 void StationaryQubit::gateHadamard() { qubit_ref->gateH(); }
+
 void StationaryQubit::gateZ() { qubit_ref->gateZ(); }
+
 void StationaryQubit::gateX() { qubit_ref->gateX(); }
 
 void StationaryQubit::gateCNOT(IStationaryQubit *control_qubit) { qubit_ref->gateCNOT(check_and_cast<StationaryQubit *>(control_qubit)->qubit_ref); }
@@ -214,16 +214,12 @@ PhotonicQubit *StationaryQubit::generateEntangledPhoton() {
   auto *photon = new PhotonicQubit("Photon");
   // To simulate the actual physical entangled partner, not what the system thinks!!! we need this.
 
-  // This photon is entangled with.... node_address = node's index
-  photon->setNodeEntangledWith(node_address);
-
-  // qnic_address != qnic_index. qnic_index is not unique because there are 3 types.
-  photon->setQNICEntangledWith(qnic_address);
-
-  // stationary_qubit_address = StationaryQubit's index
-  photon->setStationaryQubitEntangledWith(stationary_qubit_address);
-  photon->setQNICtypeEntangledWith(qnic_type);
-  photon->setEntangled_with(this);
+  // TODO: make a more sophisticated hash and support emitting multiple photons
+  auto *photon_ref = backend->createOrGetQubit(new QubitId(node_address, qnic_index, 100, stationary_qubit_address));
+  photon_ref->setFree();
+  qubit_ref->noiselessH();
+  photon_ref->noiselessCNOT(qubit_ref);
+  photon->setQubit_ref(photon_ref);
   return photon;
 }
 
@@ -259,6 +255,7 @@ void StationaryQubit::setEntangledPartnerInfo(IStationaryQubit *partner) {
 }
 
 backends::IQubit *StationaryQubit::getBackendQubitRef() const { return qubit_ref; }
+
 int StationaryQubit::getPartnerStationaryQubitAddress() const {
   auto *partner_qubit_ref = qubit_ref->getEntangledPartner();
   auto *partner_id = dynamic_cast<const QubitId *const>(partner_qubit_ref->getId());
@@ -274,5 +271,4 @@ int StationaryQubit::getPartnerStationaryQubitAddress() const {
 
 MeasurementOutcome StationaryQubit::measureRandomPauliBasis() { return qubit_ref->measureRandomPauliBasis(); }
 
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules

@@ -8,6 +8,7 @@
 #include "../interfaces/IRandomNumberGenerator.h"
 #include "Qubit.h"
 #include "backends/QubitConfiguration.h"
+#include "backends/interfaces/IQubitId.h"
 
 namespace quisp::backends::graph_state {
 using abstract::IConfiguration;
@@ -30,6 +31,7 @@ class GraphStateBackend : public IQuantumBackend {
   ~GraphStateBackend();
   IQubit* createQubit(const IQubitId* id, std::unique_ptr<IConfiguration> conf) override;
   IQubit* createQubit(const IQubitId* id) override;
+  IQubit* createOrGetQubit(const IQubitId* id) override;
   IQubit* getQubit(const IQubitId* id) override;
   void deleteQubit(const IQubitId* id) override;
   std::unique_ptr<IConfiguration> getDefaultConfiguration() const override;

@@ -49,8 +49,16 @@ class GraphStateQubit : public IQubit {
   EigenvalueResult measureX() override;
   EigenvalueResult measureY() override;
   EigenvalueResult measureZ() override;
-  // functions below here are deprecated ones, just for the compatibility with stationary qubit. Will be deleted.
   MeasurementOutcome measureRandomPauliBasis() override;
+
+  void noiselessH() override;
+  void noiselessX() override;
+  void noiselessZ() override;
+  void noiselessCNOT(IQubit *const control_qubit) override;
+  EigenvalueResult noiselessMeasureZ() override;
+  EigenvalueResult noiselessMeasureX() override;
+  EigenvalueResult noiselessMeasureZ(EigenvalueResult forced_result) override;
+  EigenvalueResult noiselessMeasureX(EigenvalueResult forced_result) override;
 
   void addErrorX() override;
   void addErrorZ() override;
@@ -84,6 +92,7 @@ class GraphStateQubit : public IQubit {
   void removeVertexOperation(GraphStateQubit *qubit_to_avoid);
   void applyPureCZ(GraphStateQubit *another_qubit);
   EigenvalueResult graphMeasureZ();
+  EigenvalueResult graphMeasureZ(EigenvalueResult eigenvalue);
 
   SimTime updated_time = SimTime(0);
 

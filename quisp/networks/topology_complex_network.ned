@@ -18,7 +18,7 @@ network ispMap_1239_node_23_48_hetero_distance
     submodules:
         backend: Backend;
         logger: Logger;
-        hom[177]: HOM {
+        hom[177]: BSANode {
             address = index+1000;
             @display("p=105.85,66.7,m,5,60,60");
             hom_photon_detection_per_sec = default(uniform(1000,40000));
@@ -765,7 +765,7 @@ network ispMap_1239_node_23_48
     submodules:
         backend: Backend;
         logger: Logger;
-        hom[177]: HOM {
+        hom[177]: BSANode {
             address = index+1000;
             @display("p=139.425,72.215,m,5,60,60");
         }

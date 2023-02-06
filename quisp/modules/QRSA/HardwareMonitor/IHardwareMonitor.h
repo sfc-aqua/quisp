@@ -10,10 +10,10 @@ using quisp::modules::QNIC;
 using quisp::modules::QNIC_N;
 
 struct NeighborInfo {
-  // QNode, SPDC, HOM
+  // QNode, SPDC, BSA
   cModuleType *type;
   int address;
-  int neighborQNode_address;  // QNode (May be across SDPC or HOM node)
+  int neighborQNode_address;  // QNode (May be across SDPC or BSA node)
 };
 
 struct InterfaceInfo {

@@ -107,8 +107,8 @@ void Router::handleMessage(cMessage *msg) {
   if (destAddr == myAddress && who_are_you == 1) {
     send(pk, "toApp");
     return;
-  } else if (destAddr == myAddress && dynamic_cast<BSMtimingNotifier *>(msg)) {  // Timing for BSM
-    bubble("Timing Notifier from HOM (stand-alone or internal) received");
+  } else if (destAddr == myAddress && dynamic_cast<BSMTimingNotification *>(msg)) {  // Timing for BSM
+    bubble("Timing Notifier from BSA (stand-alone or internal) received");
     send(pk, "rePort$o");  // send to Application locally
     return;
   } else if (destAddr == myAddress && dynamic_cast<EPPStimingNotifier *>(msg)) {  // Timing for BSM

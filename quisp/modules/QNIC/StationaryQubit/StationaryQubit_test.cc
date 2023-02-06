@@ -1,4 +1,5 @@
 #include "StationaryQubit.h"
+#include <backends/interfaces/IQubit.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <modules/common_types.h>
@@ -15,6 +16,8 @@
 #include "test_utils/Simulation.h"
 #include "test_utils/UtilFunctions.h"
 #include "test_utils/mock_backends/MockQuantumBackend.h"
+
+using quisp::backends::abstract::IQubit;
 
 using namespace testing;
 using namespace quisp::modules;
@@ -46,7 +49,7 @@ class StatQubitTarget : public StationaryQubit {
   StatQubitTarget(IQuantumBackend *backend) : StationaryQubit() {
     setComponentType(new TestModuleType("test qubit"));
     provider.setStrategy(std::make_unique<Strategy>(backend));
-    toLensGate = new TestGate(this, "tolens_quantum_port$o");
+    toLensGate = new TestGate(this, "tolens_quantum_port");
   }
   void reset() { setFree(true); }
   void fillParams() {
@@ -99,7 +102,7 @@ class StatQubitTarget : public StationaryQubit {
 
   TestGate *toLensGate;
   cGate *gate(const char *gatename, int index = -1) override {
-    if (strcmp("tolens_quantum_port$o", gatename) != 0) {
+    if (strcmp("tolens_quantum_port", gatename) != 0) {
       throw std::runtime_error("unexpected gate name");
     }
     return toLensGate;
@@ -265,7 +268,7 @@ TEST_F(StatQubitTest, emissionFailedPhotonLost) {
 
   auto *photon = dynamic_cast<PhotonicQubit *>(new_msg);
   ASSERT_NE(photon, nullptr);
-  EXPECT_TRUE(photon->getPhotonLost());
+  EXPECT_TRUE(photon->isLost());
 }
 
 TEST_F(StatQubitTest, emissionSuccess) {
@@ -280,7 +283,7 @@ TEST_F(StatQubitTest, emissionSuccess) {
 
   auto *photon = dynamic_cast<PhotonicQubit *>(new_msg);
   ASSERT_NE(photon, nullptr);
-  EXPECT_FALSE(photon->getPhotonLost());
+  EXPECT_FALSE(photon->isLost());
 }
 
 TEST_F(StatQubitTest, finish) {

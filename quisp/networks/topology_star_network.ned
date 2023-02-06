@@ -8,7 +8,7 @@ import modules.Backend.Backend;
 import modules.Logger.Logger;
 import channels.*;
 
-network Three_HOM_star
+network Three_BSA_star
 {
     parameters:
         **.speed_of_light_in_fiber = 208189.206944 km;
@@ -27,7 +27,7 @@ network Three_HOM_star
             node_type = "EndNode";
             @display("i=COMP;p=60.333336,16.893333,m,5,60,60");
         }
-        HOM[3]: HOM {
+        BSA[3]: BSANode {
             address = index+1000;
             //@display("p=326,57");
             @display("p=67.57333,70.590004,m,5,60,60");
@@ -38,20 +38,20 @@ network Three_HOM_star
             @display("i=RTR;p=126,87,m,5,60,60");
         }
     connections:
-        EndNode[0].port++ <--> ClassicalChannel {  distance = 5km; } <--> HOM[0].port++;
-        HOM[0].port++ <--> ClassicalChannel <--> Router[0].port++;
-        EndNode[0].quantum_port++ <--> QuantumChannel {  distance = 5km; } <--> HOM[0].quantum_port++;
-        HOM[0].quantum_port++ <--> QuantumChannel <--> Router[0].quantum_port++;
+        EndNode[0].port++ <--> ClassicalChannel {  distance = 5km; } <--> BSA[0].port++;
+        BSA[0].port++ <--> ClassicalChannel <--> Router[0].port++;
+        EndNode[0].quantum_port++ <--> QuantumChannel {  distance = 5km; } <--> BSA[0].quantum_port++;
+        BSA[0].quantum_port++ <--> QuantumChannel <--> Router[0].quantum_port++;
 
-        EndNode[1].port++ <--> ClassicalChannel <--> HOM[1].port++;
-        HOM[1].port++ <--> ClassicalChannel {  distance = 100km; } <--> Router[0].port++;
-        EndNode[1].quantum_port++ <--> QuantumChannel <--> HOM[1].quantum_port++;
-        HOM[1].quantum_port++ <--> QuantumChannel {  distance = 100km; } <--> Router[0].quantum_port++;
+        EndNode[1].port++ <--> ClassicalChannel <--> BSA[1].port++;
+        BSA[1].port++ <--> ClassicalChannel {  distance = 100km; } <--> Router[0].port++;
+        EndNode[1].quantum_port++ <--> QuantumChannel <--> BSA[1].quantum_port++;
+        BSA[1].quantum_port++ <--> QuantumChannel {  distance = 100km; } <--> Router[0].quantum_port++;
 
-        EndNode[2].port++ <--> ClassicalChannel <--> HOM[2].port++;
-        HOM[2].port++ <--> ClassicalChannel {  distance = 40km; } <--> Router[0].port++;
-        EndNode[2].quantum_port++ <--> QuantumChannel <--> HOM[2].quantum_port++;
-        HOM[2].quantum_port++ <--> QuantumChannel {  distance = 40km; } <--> Router[0].quantum_port++;
+        EndNode[2].port++ <--> ClassicalChannel <--> BSA[2].port++;
+        BSA[2].port++ <--> ClassicalChannel {  distance = 40km; } <--> Router[0].port++;
+        EndNode[2].quantum_port++ <--> QuantumChannel <--> BSA[2].quantum_port++;
+        BSA[2].quantum_port++ <--> QuantumChannel {  distance = 40km; } <--> Router[0].quantum_port++;
 }
 
 

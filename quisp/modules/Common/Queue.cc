@@ -15,7 +15,7 @@ void Queue::initialize() {
   end_transmission_event = new cMessage("endTxEvent");
 
   if (par("useCutThroughSwitching")) {
-    gate("line$i")->setDeliverOnReceptionStart(true);
+    gate("line$i")->setDeliverImmediately(true);
   }
 
   frame_capacity = par("frame_capacity");
