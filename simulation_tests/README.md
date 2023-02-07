@@ -19,7 +19,8 @@ $ pytest -n auto
 # run all tests with 4 cores
 $ pytest -n 4
 
-# run all tests in single process with stdout for debugging
+# run all tests in single process with stdout for debugging.
+# you can use `print()` to check something to debug.
 $ pytest -s
 
 # run "NoErrorMIM" test
