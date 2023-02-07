@@ -26,7 +26,7 @@ network Simple_MIM
             node_type = "EndNode";
             @display("i=COMP;p=60.333336,16.893333,m,5,60,60");
         }
-        BSA: HOM {
+        BSA: BSANode {
             address = 3;
             @display("p=67.57333,70.590004,m,5,60,60");
         }
