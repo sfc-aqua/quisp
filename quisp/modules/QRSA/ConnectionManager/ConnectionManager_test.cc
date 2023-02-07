@@ -55,6 +55,7 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
     setParStr(this, "purification_type_cm", "SINGLE_X");
     setParDouble(this, "threshold_fidelity", 0);
     setParInt(this, "seed_cm", 0);
+	setParStr(this, "ruleset_folder_path", "");
 
     this->provider.setStrategy(std::make_unique<Strategy>(routing_daemon, hardware_monitor));
     setComponentType(new module_type::TestModuleType("test cm"));
@@ -121,6 +122,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   sim->registerComponent(connection_manager);
   connection_manager->par("address") = 5;
   connection_manager->par("entanglement_swapping_with_purification") = true;
+  connection_manager->par("ruleset_folder_path") = "./";
 
   connection_manager->callInitialize();
   auto *req = new ConnectionSetupRequest;

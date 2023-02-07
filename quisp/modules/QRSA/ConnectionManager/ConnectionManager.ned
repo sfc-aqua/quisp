@@ -14,6 +14,7 @@ simple ConnectionManager
         string purification_type_cm = default("SINGLE_X");
         double threshold_fidelity = default(0);
         int seed_cm = default(0);
+        string ruleset_folder_path;
 
     gates:
         inout RouterPort;

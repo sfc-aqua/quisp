@@ -70,6 +70,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   bool es_with_purify = false;
   int num_remote_purification;
   double threshold_fidelity;
+  std::string ruleset_folder_path;
   rules::PurType purification_type;
   IRoutingDaemon *routing_daemon;
   IHardwareMonitor *hardware_monitor;

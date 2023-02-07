@@ -37,6 +37,7 @@ void ConnectionManager::initialize() {
   num_of_qnics = par("total_number_of_qnics");
   simultaneous_es_enabled = par("simultaneous_es_enabled");
   num_remote_purification = par("num_remote_purification");
+  ruleset_folder_path = par("ruleset_folder_path").str();
   if (num_remote_purification > 0) {
     es_with_purify = true;
   }
