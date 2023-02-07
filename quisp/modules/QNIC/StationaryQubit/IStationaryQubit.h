@@ -40,7 +40,7 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   virtual types::EigenvalueResult measureZ() = 0;
   virtual types::MeasurementOutcome measureRandomPauliBasis() = 0;
 
-  virtual void gateCNOT(IStationaryQubit *control_qubit) = 0;
+  virtual void gateCNOT(IStationaryQubit *target_qubit) = 0;
   virtual void gateHadamard() = 0;
   // RTC
   virtual void gateZ() = 0;

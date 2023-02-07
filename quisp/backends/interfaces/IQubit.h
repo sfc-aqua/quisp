@@ -46,14 +46,14 @@ class IQubit {
   virtual void gateSdg() { throw std::runtime_error("gateS not implemented"); }
 
   // two qubit operations
-  virtual void gateCNOT(IQubit *const control_qubit) { throw std::runtime_error("gateCNOT not implemented"); };
-  virtual void gateCZ(IQubit *const control_qubit) { throw std::runtime_error("gateCZ not implemented"); };
+  virtual void gateCNOT(IQubit *const target_qubit) { throw std::runtime_error("gateCNOT not implemented"); };
+  virtual void gateCZ(IQubit *const target_qubit) { throw std::runtime_error("gateCZ not implemented"); };
 
   // ideal noiseless operations
   virtual void noiselessX() { throw std::runtime_error("noiselessX not implemented"); }
   virtual void noiselessZ() { throw std::runtime_error("noiselessZ not implemented"); }
   virtual void noiselessH() { throw std::runtime_error("noiselessH not implemented"); }
-  virtual void noiselessCNOT(IQubit *const control_qubit) { throw std::runtime_error("noiselessCNOT not implemented"); }
+  virtual void noiselessCNOT(IQubit *const target_qubit) { throw std::runtime_error("noiselessCNOT not implemented"); }
   virtual EigenvalueResult noiselessMeasureZ() { throw std::runtime_error("noiselessMeasureZ not implemented"); }
   virtual EigenvalueResult noiselessMeasureX() { throw std::runtime_error("noiselessMeasureX not implemented"); }
   virtual EigenvalueResult noiselessMeasureZ(EigenvalueResult forced_result) { throw std::runtime_error("noiselessMeasureZ not implemented"); }

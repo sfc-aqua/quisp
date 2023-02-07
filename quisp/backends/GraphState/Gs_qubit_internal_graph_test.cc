@@ -537,8 +537,8 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_ZZ) {
           alice_trash->addEdge(bob_trash);
           alice_trash->vertex_operator = CliffordOperator::Id;
 
-          alice_trash->gateCNOT(alice_keep);
-          bob_trash->gateCNOT(bob_keep);
+          alice_keep->gateCNOT(alice_trash);
+          bob_keep->gateCNOT(bob_trash);
 
           rng->double_value = (double)i / 3;
           auto alice_result = alice_trash->measureZ();
@@ -587,7 +587,7 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_ZZ) {
           auto bk = bob_keep->vertex_operator;
           auto bt = bob_trash->vertex_operator;
 
-          alice_trash->gateCNOT(alice_keep);
+          alice_keep->gateCNOT(alice_trash);
 
           alk = alice_keep->vertex_operator;
           alt = alice_trash->vertex_operator;
@@ -602,7 +602,7 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_ZZ) {
           bk = bob_keep->vertex_operator;
           bt = bob_trash->vertex_operator;
 
-          bob_trash->gateCNOT(bob_keep);
+          bob_keep->gateCNOT(bob_trash);
 
           EXPECT_EQ(bob_trash->neighbors.size(), 0);
           EXPECT_EQ(alice_keep->neighbors.size(), 1);
@@ -656,8 +656,8 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_XX) {
           alice_trash->addEdge(bob_trash);
           alice_trash->vertex_operator = CliffordOperator::Id;
 
-          alice_trash->gateCNOT(alice_keep);
-          bob_trash->gateCNOT(bob_keep);
+          alice_keep->gateCNOT(alice_trash);
+          bob_keep->gateCNOT(bob_trash);
 
           rng->double_value = (double)i / 3;
           auto alice_result = alice_trash->measureZ();
@@ -713,8 +713,8 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_YY) {
           alice_trash->addEdge(bob_trash);
           alice_trash->vertex_operator = CliffordOperator::Id;
 
-          alice_trash->gateCNOT(alice_keep);
-          bob_trash->gateCNOT(bob_keep);
+          alice_keep->gateCNOT(alice_trash);
+          bob_keep->gateCNOT(bob_trash);
 
           rng->double_value = (double)i / 3;
           auto alice_result = alice_trash->measureZ();
