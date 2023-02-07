@@ -3,10 +3,10 @@ import pytest
 
 
 @pytest.mark.asyncio
-async def test_NoErrorMIM():
+async def test_ChannelXErrorSimpleMIM():
     worker = Worker()
     await worker.run(
-        config_name="XChannelErrorSimpleMIM",
+        config_name="ChannelXErrorSimpleMIM",
         ned_file_path="simulations/simulation_test.ini",
     )
     print(worker.output)
@@ -26,10 +26,10 @@ async def test_NoErrorMIM():
 
 
 @pytest.mark.asyncio
-async def test_NoErrorMM():
+async def test_ChannelXErrorSimpleMM():
     worker = Worker()
     await worker.run(
-        config_name="XChannelErrorSimpleMM",
+        config_name="ChannelXErrorSimpleMM",
         ned_file_path="simulations/simulation_test.ini",
     )
     print(worker.output)
