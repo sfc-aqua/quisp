@@ -46,6 +46,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Install python dependencies for simulation tests
         run: pip install -r requirements.txt
+      - name: doctest for simulation test utils
+        run:  python3 -m doctest simulation_tests/utils.py -v
       - name: make eigen
         run: make eigen
       - name: build
