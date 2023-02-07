@@ -32,7 +32,7 @@ logger = logging.getLogger("rich")
 
 
 class WorkerStatus(Enum):
-    WAINTING_FOR_TASK = "Waiting for task"
+    WAITING_FOR_TASK = "Waiting for task"
     STARTING = "Starting"
     RUNNING = "Running"
     FINISHING = "Finishing"
@@ -48,7 +48,7 @@ class Worker:
     sys_time: float = 0.0
     user_time: float = 0.0
     lock: asyncio.Lock
-    status: WorkerStatus = WorkerStatus.WAINTING_FOR_TASK
+    status: WorkerStatus = WorkerStatus.WAITING_FOR_TASK
     output: str = ""
     results: Dict[str, Dict]
     config_name: str = ""
