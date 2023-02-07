@@ -56,8 +56,8 @@ class Worker:
 
     def __init__(self) -> None:
         # quisp dir
-        self.working_dir = os.path.abspath(
-            os.path.join(os.path.basename(__file__), "..", "quisp")
+        self.working_dir = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "..", "quisp"
         )
         self.lock = asyncio.Lock()
         self.results = dict()
