@@ -316,9 +316,9 @@ void GraphStateQubit::applyPureCZ(GraphStateQubit *another_qubit) {
   bool has_edge = this->isNeighbor(another_qubit);
   int current_vop = (int)(this->vertex_operator);
   int aq_vop = (int)(another_qubit->vertex_operator);
-  this->vertex_operator = controlled_Z_lookup_node_1[has_edge][current_vop][aq_vop];
-  another_qubit->vertex_operator = controlled_Z_lookup_node_2[has_edge][current_vop][aq_vop];
-  if (has_edge != controlled_Z_lookup_edge[has_edge][current_vop][aq_vop]) {
+  this->vertex_operator = controlled_z_lookup_node_1[has_edge][current_vop][aq_vop];
+  another_qubit->vertex_operator = controlled_z_lookup_node_2[has_edge][current_vop][aq_vop];
+  if (has_edge != controlled_z_lookup_edge[has_edge][current_vop][aq_vop]) {
     this->toggleEdge(another_qubit);
   }
 }
@@ -382,27 +382,6 @@ void GraphStateQubit::setFree() {
   auto result = this->graphMeasureZ();
   this->vertex_operator = CliffordOperator::H;
   updated_time = backend->getSimTime();
-}
-
-void GraphStateQubit::setCompletelyMixedState() {
-  auto random_number = backend->dblrand();
-  if (random_number < (double)1 / 3)
-    this->applyClifford(CliffordOperator::X);
-  else if (random_number < (double)2 / 3)
-    this->applyClifford(CliffordOperator::Y);
-  else
-    this->applyClifford(CliffordOperator::Z);
-  this->updated_time = backend->getSimTime();
-}
-
-void GraphStateQubit::setMaximallyEntangledWith(IQubit *const partner) {
-  auto gs_partner_qubit = dynamic_cast<GraphStateQubit *>(partner);
-  // Only for used by BSA
-  if (this->isNeighbor(gs_partner_qubit)) return;
-
-  this->addEdge(gs_partner_qubit);
-  this->vertex_operator = CliffordOperator::H;
-  gs_partner_qubit->vertex_operator = CliffordOperator::Id;
 }
 
 void GraphStateQubit::gateCNOT(IQubit *const control_qubit) {
@@ -496,41 +475,20 @@ EigenvalueResult GraphStateQubit::noiselessMeasureX(EigenvalueResult eigenvalue)
   return graphMeasureZ(eigenvalue);
 }
 
-[[deprecated]] void GraphStateQubit::addErrorX() { this->applyClifford(CliffordOperator::X); }
-[[deprecated]] void GraphStateQubit::addErrorZ() { this->applyClifford(CliffordOperator::Z); }
-
-[[deprecated]] MeasurementOutcome GraphStateQubit::measureRandomPauliBasis() {
-  auto rand = backend->dblrand();
-  MeasurementOutcome o;
-  if (rand < ((double)1 / (double)3)) {
-    o.basis = 'X';
-    o.outcome_is_plus = this->measureX() == EigenvalueResult::PLUS_ONE ? true : false;
-  } else if (rand < ((double)2 / (double)3)) {
-    o.basis = 'Z';
-    o.outcome_is_plus = this->measureZ() == EigenvalueResult::PLUS_ONE ? true : false;
-  } else {
-    o.basis = 'Y';
-    o.outcome_is_plus = this->measureY() == EigenvalueResult::PLUS_ONE ? true : false;
-  }
-  // the pi vector should be always [1,0,0,0,0,0], just for compatibility
-  o.GOD_clean = 'F';
-  return o;
-}
-
 // initialize static variables
 CliffordOperator GraphStateQubit::clifford_application_lookup[24][24] =
 #include "clifford_application_lookup.tbl"
     ;
 
-bool GraphStateQubit::controlled_Z_lookup_edge[2][24][24] =
+bool GraphStateQubit::controlled_z_lookup_edge[2][24][24] =
 #include "cz_lookup_edge.tbl"
     ;
 
-CliffordOperator GraphStateQubit::controlled_Z_lookup_node_1[2][24][24] =
+CliffordOperator GraphStateQubit::controlled_z_lookup_node_1[2][24][24] =
 #include "cz_lookup_node_1.tbl"
     ;
 
-CliffordOperator GraphStateQubit::controlled_Z_lookup_node_2[2][24][24] =
+CliffordOperator GraphStateQubit::controlled_z_lookup_node_2[2][24][24] =
 #include "cz_lookup_node_2.tbl"
     ;
 
