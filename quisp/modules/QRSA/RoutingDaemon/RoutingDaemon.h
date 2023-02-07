@@ -24,7 +24,13 @@ class RoutingDaemon : public IRoutingDaemon {
   int myAddress;
   typedef std::map<int, QNIC> RoutingTable;  // destaddr -> {gate_index (We need this to access qnic, but it is not unique because we have 3 types of qnics), qnic_address (unique)}
   RoutingTable qrtable;
-  double calculateSecPerBellPair(cTopology::LinkOut* node);
+
+  void updateChannelWeightsInTopology(cTopology* topo);
+  void updateChannelWeightsOfNode(cTopology::Node* node);
+  double calculateSecPerBellPair(cTopology::LinkOut* outgoing_link);
+
+  void set_qrtable(cTopology* topo);
+  QNIC get_QNIC_info_of(cGate *parentModuleGate);
 
  protected:
   void initialize(int stage) override;
