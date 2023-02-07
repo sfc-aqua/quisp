@@ -66,7 +66,6 @@ class Qubit : public GraphStateQubit {
   using GraphStateQubit::isNeighbor;
   using GraphStateQubit::localComplement;
   using GraphStateQubit::measurement_err;
-  using GraphStateQubit::measureRandomPauliBasis;
   using GraphStateQubit::measureX;
   using GraphStateQubit::measureY;
   using GraphStateQubit::measureZ;
@@ -75,9 +74,7 @@ class Qubit : public GraphStateQubit {
   using GraphStateQubit::relax;
   using GraphStateQubit::removeAllEdges;
   using GraphStateQubit::removeVertexOperation;
-  using GraphStateQubit::setCompletelyMixedState;
   using GraphStateQubit::setFree;
-  using GraphStateQubit::setMaximallyEntangledWith;
   using GraphStateQubit::setMemoryErrorRates;
   using GraphStateQubit::toggleEdge;
   using GraphStateQubit::updated_time;

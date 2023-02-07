@@ -10,7 +10,6 @@
 #include <backends/Backends.h>
 #include <modules/common_types.h>
 #include <utils/ComponentProvider.h>
-#include <string>
 #include "IStationaryQubit.h"
 #include "QubitId.h"
 #include "backends/interfaces/IQuantumBackend.h"
@@ -68,19 +67,7 @@ class StationaryQubit : public IStationaryQubit {
   void gateZ() override;
   void gateX() override;
 
-  /*GOD parameters*/
-  void setEntangledPartnerInfo(IStationaryQubit *partner) override;
-  void setCompletelyMixedDensityMatrix();
-  void setRelaxedDensityMatrix();
-  void setExcitedDensityMatrix();
-  void addXerror();
-  void addZerror();
-  backends::IQubit *getEntangledPartner() const override;
   backends::IQubit *getBackendQubitRef() const override;
-  int getPartnerStationaryQubitAddress() const override;
-
-  // for debugging
-  void assertEntangledPartnerValid() override;
 
   double emission_success_probability;
 
@@ -113,6 +100,7 @@ class StationaryQubit : public IStationaryQubit {
   double emission_jittering_standard_deviation;
   int stationary_qubit_address;
   int node_address;
+  int qnic_address;
 
   utils::ComponentProvider provider;
   IQuantumBackend *backend;

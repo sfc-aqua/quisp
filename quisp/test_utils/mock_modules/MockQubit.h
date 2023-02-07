@@ -9,9 +9,7 @@
 #include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
 #include "modules/QRSA/RuleEngine/BellPairStore/BellPairStore.h"
 
-namespace quisp_test {
-namespace mock_modules {
-namespace stationary_qubit {
+namespace quisp_test::mock_modules::stationary_qubit {
 
 using quisp::backends::IQubit;
 using quisp::backends::IQubitId;
@@ -39,12 +37,7 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(void, Unlock, (), (override));
   MOCK_METHOD(bool, isLocked, (), (override));
   MOCK_METHOD(quisp::types::MeasurementOutcome, measureRandomPauliBasis, (), (override));
-  MOCK_METHOD(void, setEntangledPartnerInfo, (IStationaryQubit *), (override));
-
-  MOCK_METHOD(void, assertEntangledPartnerValid, (), (override));
-  MOCK_METHOD(IQubit *const, getEntangledPartner, (), (const, override));
   MOCK_METHOD(IQubit *const, getBackendQubitRef, (), (const, override));
-  MOCK_METHOD(int, getPartnerStationaryQubitAddress, (), (const, override));
 
   MockQubit() : IStationaryQubit() { setComponentType(new module_type::TestModuleType("test qubit")); }
   MockQubit(quisp::modules::QNIC_type _type, quisp::modules::QNicIndex _qnic_index) : MockQubit() {
@@ -97,17 +90,10 @@ class MockQubit : public IStationaryQubit {
     setParInt(this, "qnic_address", 1);
     setParInt(this, "qnic_type", 0);
     setParInt(this, "qnic_index", 0);
-    setParDouble(this, "std", 0.5);
+    setParDouble(this, "emission_jittering_standard_deviation", 0.5);
 
-    setParBool(this, "god_x_error", false);
-    setParBool(this, "god_z_error", false);
-    setParBool(this, "god_completely_mixed_error", false);
-    setParBool(this, "god_excitation_error", false);
-    setParBool(this, "god_relaxation_error", false);
     setParBool(this, "is_busy", false);
     setParDouble(this, "fidelity", -1.0);
   }
 };
-}  // namespace stationary_qubit
-}  // namespace mock_modules
-}  // namespace quisp_test
+}  // namespace quisp_test::mock_modules::stationary_qubit

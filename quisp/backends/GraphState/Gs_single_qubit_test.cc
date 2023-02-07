@@ -70,23 +70,6 @@ TEST_F(GsSingleQubitTest, setMemoryErrorTransitionMatrix) {
   qubit->setMemoryErrorRates(0, 0, 0, 0, 0);
 }
 
-TEST_F(GsSingleQubitTest, setCompletelyMixedState) {
-  qubit->setVertexOperator(CliffordOperator::Id);
-  rng->double_value = 0;  // < 1/3
-  qubit->setCompletelyMixedState();
-  EXPECT_EQ(qubit->vertex_operator, CliffordOperator::X);
-
-  qubit->setVertexOperator(CliffordOperator::Id);
-  rng->double_value = 0.4;  // < 2/3
-  qubit->setCompletelyMixedState();
-  EXPECT_EQ(qubit->vertex_operator, CliffordOperator::Y);
-
-  qubit->setVertexOperator(CliffordOperator::Id);
-  rng->double_value = 0.7;  // > 2/3
-  qubit->setCompletelyMixedState();
-  EXPECT_EQ(qubit->vertex_operator, CliffordOperator::Z);
-}
-
 TEST_F(GsSingleQubitTest, singleGatemeasureZ) {
   // do nothing
   auto meas = qubit->measureZ();

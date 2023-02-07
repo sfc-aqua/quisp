@@ -63,16 +63,6 @@ class IQubit {
   virtual EigenvalueResult measureX() { throw std::runtime_error("measureX not implemented"); }
   virtual EigenvalueResult measureY() { throw std::runtime_error("measureY not implemented"); }
   virtual EigenvalueResult measureZ() { throw std::runtime_error("measureZ not implemented"); }
-  virtual MeasurementOutcome measureRandomPauliBasis() { throw std::runtime_error("measureRandomPauliBasis not implemented"); }  // for debugging
-  // for debugging
-  virtual void assertEntangledPartnerValid() { throw std::runtime_error("assertEntangledPartnerValid not implemented"); };
-
-  // deprecated (ErrorTraciking Qubit specific)
-  virtual void addErrorX() { throw std::runtime_error("addErrorX is not implemented. will be removed"); }
-  virtual void addErrorZ() { throw std::runtime_error("addErrorZ is not implemented. will be removed"); }
-  virtual void setCompletelyMixedState() { throw std::runtime_error("setCompletelyMixedState is not implemented. will be removed"); }
-  virtual void setMaximallyEntangledWith(IQubit *const partner) { throw std::runtime_error("setMaximallyEntangledWith is not implemented. will be removed"); }
-  virtual IQubit *const getEntangledPartner() const { throw std::runtime_error("getEntangledPartner is not implemented. will be removed"); }
 };
 
 }  // namespace quisp::backends::abstract
