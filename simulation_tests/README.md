@@ -4,7 +4,7 @@ These simulation tests run multiple simulation scenarios and check their results
 
 ## Usage
 
-```
+```sh
 $ cd simulation_tests
 
 # install dependencies

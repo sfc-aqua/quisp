@@ -1,4 +1,4 @@
-from .utils import Worker, parse_output
+from .utils import Worker
 import pytest
 
 

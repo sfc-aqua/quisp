@@ -1,7 +1,6 @@
 from typing import List, Dict, Optional
 from enum import Enum
-import asyncio, re, os
-import re, logging
+import asyncio, re, os, logging
 from rich.logging import RichHandler
 from rich.console import Console
 from rich.theme import Theme
