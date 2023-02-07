@@ -60,58 +60,39 @@ void RoutingDaemon::initialize(int stage) {
     return;
   }
 
-  cTopology::Node *thisNode = topo->getNodeFor(getParentModule()->getParentModule());  // The parent node with this specific router
-
-  // Initialize channel weights for all existing links.
-  for (int x = 0; x < topo->getNumNodes(); x++) {  // Traverse through all nodes
-    auto node = topo->getNode(x);
-    // For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
-    for (int j = 0; j < node->getNumOutLinks(); j++) {  // Traverse through all links from a specific node.
-
-      auto outgoing_link = node->getLinkOut(j);
-
-      double channel_weight = calculateSecPerBellPair(outgoing_link);
-
-      if (strstr(outgoing_link->getLocalGate()->getFullName(), "quantum")) {
-        // Otherwise, keep the quantum channels and set the weight
-        outgoing_link->setWeight(channel_weight);  // Set channel weight
-      } else {
-        // Ignore classical link in quantum routing table
-        outgoing_link->disable();
-      }
-    }
-  }
-
-  for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all the destinations from the thisNode
-    auto node = topo->getNode(i);
-    if (node == thisNode) continue;  // skip the node that is running this specific router app
-    // Apply dijkstra to each node to find all shortest paths.
-    topo->calculateWeightedSingleShortestPathsTo(node);  // Overwrites getNumPaths() and so on.
-
-    // Check the number of shortest paths towards the target node. This may be more than 1 if multiple paths have the same minimum cost.
-    // EV<<"\n Quantum....\n";
-    if (thisNode->getNumPaths() == 0) {
-      error("Path not found. This means that a node is completely separated...Probably not what you want now");
-      continue;  // not connected
-    }
-    // Returns the next link/gate in the ith shortest paths towards the target node.
-    cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();
-    QNIC thisqnic;
-    int destAddr = node->getModule()->par("address");
-    thisqnic.address = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
-    thisqnic.type = (QNIC_type)(int)parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_type");
-    thisqnic.index = parentModuleGate->getPreviousGate()->getOwnerModule()->getIndex();
-    ;
-    thisqnic.pointer = parentModuleGate->getPreviousGate()->getOwnerModule();
-
-    qrtable[destAddr] = thisqnic;
-    if (!strstr(parentModuleGate->getFullName(), "quantum")) {
-      error("Quantum routing table referring to classical gates...");
-    }
-  }
+  updateChannelWeightsInTopology(topo);
+  set_qrtable(topo);
+  
   delete topo;
 }
 
+
+
+// Initialize channel weights for all existing links.
+void RoutingDaemon::updateChannelWeightsInTopology(cTopology* topo) {
+  for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all nodes
+    auto node = topo->getNode(i);
+    updateChannelWeightsOfNode(node);
+  }
+}
+
+void RoutingDaemon::updateChannelWeightsOfNode(cTopology::Node* node) {
+  for (int i = 0; i < node->getNumOutLinks(); i++) {  // Traverse through all links from a specific node.
+
+    // For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
+    auto outgoing_link = node->getLinkOut(i);
+
+    double channel_weight = calculateSecPerBellPair(outgoing_link);
+
+    if (strstr(outgoing_link->getLocalGate()->getFullName(), "quantum")) {
+      // Otherwise, keep the quantum channels and set the weight
+      outgoing_link->setWeight(channel_weight);  // Set channel weight
+    } else {
+      // Ignore classical link in quantum routing table
+      outgoing_link->disable();
+    }
+  }
+}
 
 // Calculate bell pair generation rate to use it as channel cost
 // The cost metric is taken from https://arxiv.org/abs/1206.5655
@@ -134,6 +115,47 @@ double RoutingDaemon::calculateSecPerBellPair(cTopology::LinkOut* outgoing_link)
 
   return (channel_length / speed_of_light_in_fiber) * emission_prob;
 }
+
+
+
+void RoutingDaemon::set_qrtable(cTopology* topo) {
+  cTopology::Node *thisNode = topo->getNodeFor(getParentModule()->getParentModule());  // The parent node with this specific router
+
+  for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all the destinations from the thisNode
+    auto node = topo->getNode(i);
+    if (node == thisNode) continue;  // skip the node that is running this specific router app
+
+    // Apply dijkstra to each node to find all shortest paths.
+    topo->calculateWeightedSingleShortestPathsTo(node);  // Overwrites getNumPaths() and so on.
+
+    // Check the number of shortest paths towards the target node. This may be more than 1 if multiple paths have the same minimum cost.
+    if (thisNode->getNumPaths() == 0) {
+      error("Path not found. This means that a node is completely separated...Probably not what you want now");
+      continue;  // not connected
+    }
+    // Returns the next link/gate in the ith shortest paths towards the target node.
+    cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();
+    int destAddr = node->getModule()->par("address");
+
+    qrtable[destAddr] = get_QNIC_info_of(parentModuleGate);
+    
+    if (!strstr(parentModuleGate->getFullName(), "quantum")) {
+      error("Quantum routing table referring to classical gates...");
+    }
+  }
+}
+
+QNIC RoutingDaemon::get_QNIC_info_of(cGate *parentModuleGate) {
+  QNIC thisqnic;
+  thisqnic.address = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
+  thisqnic.type = (QNIC_type)(int)parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_type");
+  thisqnic.index = parentModuleGate->getPreviousGate()->getOwnerModule()->getIndex();
+  thisqnic.pointer = parentModuleGate->getPreviousGate()->getOwnerModule();
+
+  return thisqnic;
+}
+
+
 
 /**
  * This is the only routine, at the moment, with any outside contact.
