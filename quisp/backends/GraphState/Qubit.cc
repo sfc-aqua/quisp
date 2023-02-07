@@ -384,14 +384,14 @@ void GraphStateQubit::setFree() {
   updated_time = backend->getSimTime();
 }
 
-void GraphStateQubit::gateCNOT(IQubit *const control_qubit) {
-  auto gs_control_qubit = dynamic_cast<GraphStateQubit *>(control_qubit);
+void GraphStateQubit::gateCNOT(IQubit *const target_qubit) {
+  auto gs_target_qubit = dynamic_cast<GraphStateQubit *>(target_qubit);
   this->applyMemoryError();
-  gs_control_qubit->applyMemoryError();
-  this->applyClifford(CliffordOperator::H);  // use apply Clifford for pure operation
-  this->applyPureCZ(gs_control_qubit);
-  this->applyClifford(CliffordOperator::H);
-  this->applyTwoQubitGateError(gate_err_cnot, gs_control_qubit);
+  gs_target_qubit->applyMemoryError();
+  gs_target_qubit->noiselessH();
+  this->applyPureCZ(gs_target_qubit);
+  gs_target_qubit->noiselessH();
+  this->applyTwoQubitGateError(gate_err_cnot, gs_target_qubit);
 }
 
 void GraphStateQubit::gateH() {
@@ -458,11 +458,11 @@ EigenvalueResult GraphStateQubit::measureZ() {
 void GraphStateQubit::noiselessX() { applyClifford(CliffordOperator::X); }
 void GraphStateQubit::noiselessZ() { applyClifford(CliffordOperator::Z); }
 void GraphStateQubit::noiselessH() { applyClifford(CliffordOperator::H); }
-void GraphStateQubit::noiselessCNOT(IQubit *const control_qubit) {
-  auto gs_control_qubit = static_cast<GraphStateQubit *>(control_qubit);
-  applyClifford(CliffordOperator::H);
-  applyPureCZ(gs_control_qubit);
-  applyClifford(CliffordOperator::H);
+void GraphStateQubit::noiselessCNOT(IQubit *const target_qubit) {
+  auto gs_target_qubit = static_cast<GraphStateQubit *>(target_qubit);
+  gs_target_qubit->noiselessH();
+  applyPureCZ(gs_target_qubit);
+  gs_target_qubit->noiselessH();
 }
 EigenvalueResult GraphStateQubit::noiselessMeasureZ() { return graphMeasureZ(); }
 EigenvalueResult GraphStateQubit::noiselessMeasureX() {

@@ -42,7 +42,7 @@ class GraphStateQubit : public IQubit {
   void gateH() override;
   void gateS() override;
   void gateSdg() override;
-  void gateCNOT(IQubit *const control_qubit) override;
+  void gateCNOT(IQubit *const target_qubit) override;
   EigenvalueResult measureX() override;
   EigenvalueResult measureY() override;
   EigenvalueResult measureZ() override;
@@ -50,7 +50,7 @@ class GraphStateQubit : public IQubit {
   void noiselessH() override;
   void noiselessX() override;
   void noiselessZ() override;
-  void noiselessCNOT(IQubit *const control_qubit) override;
+  void noiselessCNOT(IQubit *const target_qubit) override;
   EigenvalueResult noiselessMeasureZ() override;
   EigenvalueResult noiselessMeasureX() override;
   EigenvalueResult noiselessMeasureZ(EigenvalueResult forced_result) override;

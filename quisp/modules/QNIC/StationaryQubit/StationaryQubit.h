@@ -53,16 +53,7 @@ class StationaryQubit : public IStationaryQubit {
   virtual types::EigenvalueResult measureZ() override;
   virtual types::MeasurementOutcome measureRandomPauliBasis() override;
 
-  /**
-   * \brief Two qubit CNOT gate.
-   * \param Need to specify the control qubit as an argument.
-   */
-  void gateCNOT(IStationaryQubit *control_qubit) override;
-
-  /**
-   * \brief Single qubit Hadamard gate
-   * \param X error transforms to Z, and vise-versa.
-   */
+  void gateCNOT(IStationaryQubit *target_qubit) override;
   void gateHadamard() override;
   void gateZ() override;
   void gateX() override;
@@ -81,7 +72,6 @@ class StationaryQubit : public IStationaryQubit {
   void handleMessage(omnetpp::cMessage *msg) override;
   messages::PhotonicQubit *generateEntangledPhoton();
   void setBusy();
-  Eigen::Matrix2cd getErrorMatrix(StationaryQubit *qubit);
 
   /**
    * get the default backend configuration from the Bcakend module.

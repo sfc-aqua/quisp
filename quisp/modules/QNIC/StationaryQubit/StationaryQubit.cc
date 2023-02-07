@@ -140,7 +140,7 @@ void StationaryQubit::gateZ() { qubit_ref->gateZ(); }
 
 void StationaryQubit::gateX() { qubit_ref->gateX(); }
 
-void StationaryQubit::gateCNOT(IStationaryQubit *control_qubit) { qubit_ref->gateCNOT(check_and_cast<StationaryQubit *>(control_qubit)->qubit_ref); }
+void StationaryQubit::gateCNOT(IStationaryQubit *target_qubit) { qubit_ref->gateCNOT(check_and_cast<StationaryQubit *>(target_qubit)->qubit_ref); }
 
 // This is invoked whenever a photon is emitted out from this particular qubit.
 void StationaryQubit::setBusy() {
@@ -215,7 +215,7 @@ PhotonicQubit *StationaryQubit::generateEntangledPhoton() {
   auto *photon_ref = backend->createOrGetQubit(new QubitId(node_address, qnic_index, 100, stationary_qubit_address));
   photon_ref->setFree();
   qubit_ref->noiselessH();
-  photon_ref->noiselessCNOT(qubit_ref);
+  qubit_ref->noiselessCNOT(photon_ref);
   photon->setQubit_ref(photon_ref);
   return photon;
 }

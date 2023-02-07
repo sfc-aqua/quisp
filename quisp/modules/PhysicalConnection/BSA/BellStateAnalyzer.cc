@@ -184,7 +184,7 @@ void BellStateAnalyzer::measureSuccessfully(PhotonRecord &p, PhotonRecord &q, bo
   if (!is_psi_plus) {
     p_ref->noiselessZ();
   }
-  q_ref->noiselessCNOT(p_ref);
+  p_ref->noiselessCNOT(q_ref);
   p_ref->noiselessMeasureX(backends::abstract::EigenvalueResult::PLUS_ONE);
   q_ref->noiselessMeasureZ(backends::abstract::EigenvalueResult::PLUS_ONE);
 }
