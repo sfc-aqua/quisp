@@ -32,7 +32,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ./quisp/lcov_filtered.info
-  e2e-test:
+  simulation-test:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/sfc-aqua/quisp-ci:latest
