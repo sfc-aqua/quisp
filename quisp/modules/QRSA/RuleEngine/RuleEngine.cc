@@ -432,7 +432,7 @@ void RuleEngine::incrementBurstTrial(int destAddr, int internal_qnic_address, in
 }
 
 void RuleEngine::handleSwappingResult(const SwappingResultData &data) {
-  auto qnic_addr = routingdaemon->return_QNIC_address_to_destAddr(data.new_partner_addr);
+  auto qnic_addr = routingdaemon->findQNicAddrByDestAddr(data.new_partner_addr);
   auto conn_info = hardware_monitor->findConnectionInfoByQnicAddr(qnic_addr);
   if (conn_info == nullptr) error("qnic(addr: %d) info not found", qnic_addr);
   auto qnic_type = conn_info->qnic.type;

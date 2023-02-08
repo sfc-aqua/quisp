@@ -27,19 +27,19 @@ class RoutingDaemon : public IRoutingDaemon {
 
   void updateChannelWeightsInTopology(cTopology* topo);
   void updateChannelWeightsOfNode(cTopology::Node* node);
-  double calculateSecPerBellPair(cTopology::LinkOut* outgoing_link);
+  double calculateSecPerBellPair(const cTopology::LinkOut* const outgoing_link);
 
-  void set_qrtable(cTopology* topo);
-  QNIC get_QNIC_info_of(cGate *parentModuleGate);
+  void generateRoutingTable(cTopology* topo);
+  QNIC getQNicInfoOf(const cGate* const parentModuleGate);
 
  protected:
   void initialize(int stage) override;
-  void handleMessage(cMessage *msg) override;
+  void handleMessage(cMessage* msg) override;
   int numInitStages() const override { return 3; };
 
  public:
-  int returnNumEndNodes() override;
-  int return_QNIC_address_to_destAddr(int destAddr) override;
+  int getNumEndNodes() override;
+  int findQNicAddrByDestAddr(int destAddr) override;
 };
 
 }  // namespace modules

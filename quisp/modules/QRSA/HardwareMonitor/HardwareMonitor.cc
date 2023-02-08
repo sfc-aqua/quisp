@@ -52,7 +52,7 @@ void HardwareMonitor::initialize(int stage) {
   num_qnic = par("number_of_qnics");
   num_qnic_total = num_qnic + num_qnic_r + num_qnic_rp;
 
-  num_end_nodes = routing_daemon->returnNumEndNodes();
+  num_end_nodes = routing_daemon->getNumEndNodes();
 
   /* This is used to keep your own tomography data, and also to match and store the received partner's tomography data */
   // Assumes link tomography only between neighbors.
@@ -165,7 +165,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     /*Link tomography measurement result/basis from neighbor received.*/
     int partner_addr = result->getPartner_address();
     // Get QNIC info from neighbor address.
-    int qnic_addr_to_partner = routing_daemon->return_QNIC_address_to_destAddr(partner_addr);
+    int qnic_addr_to_partner = routing_daemon->findQNicAddrByDestAddr(partner_addr);
     auto local_qnic_info = findConnectionInfoByQnicAddr(qnic_addr_to_partner);
     if (local_qnic_info == nullptr) {
       error("local qnic info should not be null");

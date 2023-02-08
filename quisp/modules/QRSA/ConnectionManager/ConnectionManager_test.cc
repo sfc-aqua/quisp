@@ -139,8 +139,8 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   req->setStack_of_QNICs(0, QNIC_pair_info{.fst = NULL_CONNECTION_SETUP_INFO.qnic, .snd = {.type = QNIC_E, .index = 11, .address = 101}});
   req->setStack_of_QNICs(1, QNIC_pair_info{.fst = {.type = QNIC_E, .index = 12, .address = 102}, .snd = {.type = QNIC_E, .index = 13, .address = 103}});
   req->setStack_of_QNICs(2, QNIC_pair_info{.fst = {.type = QNIC_E, .index = 14, .address = 104}, .snd = {.type = QNIC_E, .index = 15, .address = 105}});
-  EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(5)).Times(1).WillOnce(Return(-1));
-  EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(2)).Times(1).WillOnce(Return(106));
+  EXPECT_CALL(*routing_daemon, findQNicAddrByDestAddr(5)).Times(1).WillOnce(Return(-1));
+  EXPECT_CALL(*routing_daemon, findQNicAddrByDestAddr(2)).Times(1).WillOnce(Return(106));
   auto src_info = new ConnectionSetupInfo{.qnic = {.type = QNIC_E, .index = 16, .address = 106}, .neighbor_address = 4, .quantum_link_cost = 10};
   EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(106)).Times(1).WillOnce(Return(ByMove(std::unique_ptr<ConnectionSetupInfo>(src_info))));
 
