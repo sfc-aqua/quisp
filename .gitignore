@@ -1,6 +1,9 @@
 ### direnv https://github.com/direnv/direnv
 .envrc
 
+### pyenv virtualenv
+.python-version
+
 ### quisp specific
 /doc/html/
 *.orig
