@@ -1,6 +1,6 @@
 QUISP_MAKEFILE = "./quisp/Makefile"
 NPROC ?= $(shell nproc)
-.PHONY: all tidy format ci makefile-exe makefile-lib checkmakefile googletest clean test coverage coverage-report help quispr
+.PHONY: all tidy format ci makefile-exe makefile-lib checkmakefile googletest clean test coverage coverage-report help quispr run-unit-test run-sim-test
 
 all: makefile-exe
 	$(MAKE) -C quisp -j$(NPROC)
@@ -11,7 +11,11 @@ run-module-test: lib
 run-unit-test: makefile-lib googletest
 	$(MAKE) -C quisp run-unit-test -j$(NPROC)
 
-test: run-module-test run-unit-test
+run-sim-test: exe
+	pip install -r requirements.txt
+	pytest ./simulation_tests -n auto
+
+test: run-unit-test run-module-test run-sim-test
 
 exe: makefile-exe
 	$(MAKE) -C quisp -j$(NPROC)
@@ -75,6 +79,7 @@ quispr:
 	git submodule update --init
 	pip install -e quispr
 
+
 checkmakefile:
 	@if [ ! -f "$(QUISP_MAKEFILE)" ]; then \
 	echo; \
@@ -99,6 +104,7 @@ help:
 	echo '  clean               remove objcet files, executables and libraries'; \
 	echo '  distclean           remove everything includes submoduled components'; \
 	echo '  run-unit-test       build unit tests and run it'; \
+	echo '  run-sim-test       	build simulation tests and run it'; \
 	echo '  run-module-test     build modele tests(opp_test) and run it'; \
 	echo '  coverage            generate coverage as quisp/lcov.info'; \
 	echo '  coverage-report     generate html coverage report at quisp/coverage/index.html'; \
