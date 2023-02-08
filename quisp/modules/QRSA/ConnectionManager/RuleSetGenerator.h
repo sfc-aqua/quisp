@@ -8,7 +8,7 @@ namespace quisp::modules::ruleset_gen {
 class RuleSetGenerator {
  public:
   RuleSetGenerator(int responder_addr) : responder_addr(responder_addr) {}
-  void generateRuleSets(messages::ConnectionSetupRequest* req);
+  std::map<int, RuleSet> generateRuleSets(messages::ConnectionSetupRequest* req, unsigned long ruleset_id);
 
  protected:
   /**
@@ -23,7 +23,7 @@ class RuleSetGenerator {
   std::unique_ptr<rules::Rule> waitRule(int partner_address, int shared_tag);
   std::unique_ptr<rules::Rule> tomographyRule(int partner_address, int owner_address, int num_measure, double threshold_fidelity, int shared_tag, std::string name);
   std::unique_ptr<rules::Rule> purifyRule(int partner_address, rules::PurType purification_type, double threshold_fidelity, int shared_tag, std::string name);
-  std::unique_ptr<rules::Rule> swapRule(std::vector<int> partner_address, double threshold_fidelity, int shared_tag, std::string name);
+  std::unique_ptr<rules::Rule> swapRule(std::pair<int, int> partner_address, int shared_tag);
 
   int responder_addr;
 };

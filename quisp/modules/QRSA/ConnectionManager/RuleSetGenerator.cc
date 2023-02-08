@@ -4,19 +4,13 @@ namespace quisp::modules::ruleset_gen {
 
 using namespace quisp::rules;
 
-void RuleSetGenerator::generateRuleSets(messages::ConnectionSetupRequest* req) {
+std::map<int, RuleSet> RuleSetGenerator::generateRuleSets(messages::ConnectionSetupRequest* req, unsigned long ruleset_id) {
   auto path = collectPath(req);
   size_t hop_count = req->getStack_of_QNodeIndexesArraySize();
   size_t divisions = hop_count * 2 - 1;
   auto swapping_partners_table = collectSwappingPartners(path, divisions, hop_count);
 
-  // Initialize empty RuleSet
-  // store rule as a map and vector
-  /* {node1_addr, {rule1, rule2, ...}}
-   * {node2_addr, {rule1, rule2, ...}}
-   * ...
-   */
-  std::map<int, std::vector<std::unique_ptr<Rule>>> rules_map;
+  std::map<int /* node addr */, std::vector<std::unique_ptr<Rule>>> rules_map;
   auto rev_path = path;
   std::reverse(rev_path.begin(), rev_path.end());
   int shared_tag = 0;  // used for identifying the partner rule.
@@ -32,8 +26,8 @@ void RuleSetGenerator::generateRuleSets(messages::ConnectionSetupRequest* req) {
       }
       // iterate swapper nodes
       for (int swapper_node : swapper_nodes) {
-        auto config = generateSwappingConfig(swapper_node, path, swapping_partners_table, qnics, 0);
-        int left_partner = config.left_partner, right_partner = config.right_partner;
+        auto it = swapping_partners_table.find(swapper_node);
+        int left_partner = it->second.first, right_partner = it->second.second;
         // check if the distance of swapping is the same as the target distance
         auto swapper_it = std::find(path.begin(), path.end(), swapper_node);
         auto left_it = std::find(path.begin(), path.end(), left_partner);
@@ -50,7 +44,7 @@ void RuleSetGenerator::generateRuleSets(messages::ConnectionSetupRequest* req) {
           // Swapping Rules
           auto wait_rule_left = waitRule(swapper_node, shared_tag);
           auto wait_rule_right = waitRule(swapper_node, shared_tag);
-          auto swapping_rule = swapRule(swapping_partners_table[swapper_node], threshold_fidelity, shared_tag);
+          auto swapping_rule = swapRule(swapping_partners_table[swapper_node], shared_tag);
           shared_tag++;
           rules_map[left_partner].push_back(std::move(wait_rule_left));
           rules_map[right_partner].push_back(std::move(wait_rule_right));
@@ -68,6 +62,23 @@ void RuleSetGenerator::generateRuleSets(messages::ConnectionSetupRequest* req) {
       }
     }
   }
+
+  std::map<int, RuleSet> rulesets;
+  for (auto it = rules_map.begin(); it != rules_map.end(); ++it) {
+    int owner_address = it->first;
+    auto rules = std::move(it->second);
+    RuleSet ruleset(ruleset_id, owner_address);
+    for (int i = 0; i < rules.size(); i++) {
+      auto rule = std::move(rules.at(i));
+      auto appended_rule = ruleset.addRule(std::move(rule));
+      if (appended_rule->is_finalized) {
+        // if the rule is entanglement swapping or tomography rule, no need to specify the next rule
+        break;
+      }
+    }
+    rulesets.emplace(owner_address, ruleset);
+  }
+  return rulesets;
 }
 
 std::vector<int> RuleSetGenerator::collectPath(messages::ConnectionSetupRequest* req) {
@@ -178,14 +189,14 @@ std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType 
   return purify_rule;
 }
 
-std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::vector<int> partner_address, double threshold_fidelity, int shared_tag, std::string name) {
-  auto swap_rule = std::make_unique<Rule>(partner_address, shared_tag, true);
-  swap_rule->setName(name);
+std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::pair<int, int> partner_address, int shared_tag) {
+  auto swap_rule = std::make_unique<Rule>(std::vector<int>{partner_address.first, partner_address.second}, shared_tag, true);
 
   // prepare condition and two enough resource clauses
   auto condition = std::make_unique<Condition>();
-  auto enough_resource_clause_first = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address.at(0));
-  auto enough_resource_clause_second = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address.at(1));
+  double threshold_fidelity = 0.9;  // placeholder
+  auto enough_resource_clause_first = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address.first);
+  auto enough_resource_clause_second = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address.second);
   condition->addClause(std::move(enough_resource_clause_first));
   condition->addClause(std::move(enough_resource_clause_second));
   swap_rule->setCondition(std::move(condition));
