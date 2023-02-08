@@ -236,8 +236,22 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     error("No qnic to source node. Something wrong with routing.");
   }
 
-  // check if the qnics are reserved or not
-  if (isQnicBusy(qnic_addr)) {
+  // 1.2 get qnic interface infomation
+  int local_qnic_address_to_actual_dst = routing_daemon->findQNicAddrByDestAddr(responder_addr);  // This must be -1 (not found) because not interface to itself
+  int local_qnic_address_to_actual_src = routing_daemon->findQNicAddrByDestAddr(initiator_addr);  // interface toward to the initiator node
+  if (local_qnic_address_to_actual_dst != -1 || local_qnic_address_to_actual_src == -1) {
+    error("Unknown interface to the end node itself found or no interface found to source node. Something wrong with routing.");
+  }
+
+  // 1.3 destination and source information
+  auto dst_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
+  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
+  if (src_info == nullptr) {
+    error("source info not found");
+  }
+
+  // 1.4 check if the qnics are reserved or not
+  if (isQnicBusy(src_info->qnic.address) || isQnicBusy(dst_info->qnic.address)) {
     rejectRequest(req);
     return;
   }
@@ -343,7 +357,7 @@ bool ConnectionManager::isQnicBusy(int qnic_address) {
 
 void ConnectionManager::initiator_reject_req_handler(RejectConnectionSetupRequest *pk) {
   int actual_dest = pk->getActual_destAddr();
-  int outbound_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(actual_dest);
+  int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(actual_dest);
 
   releaseQnic(outbound_qnic_address);
   scheduleRequestRetry(outbound_qnic_address);
@@ -371,8 +385,8 @@ void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupReq
   int actual_src = pk->getActual_srcAddr();  // initiator address (to get input qnic)
 
   // Currently, sending path and returning path are same, but for future, this might not good way
-  int outbound_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(actual_dst);
-  int inbound_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(actual_src);
+  int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(actual_dst);
+  int inbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(actual_src);
 
   releaseQnic(outbound_qnic_address);
   releaseQnic(inbound_qnic_address);
@@ -391,7 +405,7 @@ unsigned long ConnectionManager::createUniqueId() {
 
 void ConnectionManager::queueApplicationRequest(ConnectionSetupRequest *req) {
   int responder_address = req->getActual_destAddr();
-  int outbound_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(responder_address);
+  int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(responder_address);
 
   if (outbound_qnic_address == -1) {
     error("QNIC to destination cannot be found");

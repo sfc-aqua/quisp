@@ -61,22 +61,22 @@ void RoutingDaemon::initialize(int stage) {
   }
 
   updateChannelWeightsInTopology(topo);
-  set_qrtable(topo);
-  
+  generateRoutingTable(topo);
+
   delete topo;
 }
 
 
 
 // Initialize channel weights for all existing links.
-void RoutingDaemon::updateChannelWeightsInTopology(cTopology* topo) {
+void RoutingDaemon::updateChannelWeightsInTopology(cTopology *topo) {
   for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all nodes
     auto node = topo->getNode(i);
     updateChannelWeightsOfNode(node);
   }
 }
 
-void RoutingDaemon::updateChannelWeightsOfNode(cTopology::Node* node) {
+void RoutingDaemon::updateChannelWeightsOfNode(cTopology::Node *node) {
   for (int i = 0; i < node->getNumOutLinks(); i++) {  // Traverse through all links from a specific node.
 
     // For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
@@ -96,7 +96,7 @@ void RoutingDaemon::updateChannelWeightsOfNode(cTopology::Node* node) {
 
 // Calculate bell pair generation rate to use it as channel cost
 // The cost metric is taken from https://arxiv.org/abs/1206.5655
-double RoutingDaemon::calculateSecPerBellPair(cTopology::LinkOut* outgoing_link) {
+double RoutingDaemon::calculateSecPerBellPair(const cTopology::LinkOut *const outgoing_link) {
   double speed_of_light_in_fiber = outgoing_link->getLocalGate()->getChannel()->par("speed_of_light_in_fiber");
   double channel_length = outgoing_link->getLocalGate()->getChannel()->par("distance");
 
@@ -118,41 +118,42 @@ double RoutingDaemon::calculateSecPerBellPair(cTopology::LinkOut* outgoing_link)
 
 
 
-void RoutingDaemon::set_qrtable(cTopology* topo) {
-  cTopology::Node *thisNode = topo->getNodeFor(getParentModule()->getParentModule());  // The parent node with this specific router
+void RoutingDaemon::generateRoutingTable(cTopology *topo) {
+  const cTopology::Node *const this_node = topo->getNodeFor(getParentModule()->getParentModule());  // The parent node with this specific router
+  const cGate *const parent_module_gate = this_node->getPath(0)->getLocalGate();
+  auto this_qnic = getQNicInfoOf(parent_module_gate);
 
-  for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all the destinations from the thisNode
-    auto node = topo->getNode(i);
-    if (node == thisNode) continue;  // skip the node that is running this specific router app
+  for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all the destinations from the this_node
+    const auto node = topo->getNode(i);
+    if (node == this_node) continue;  // skip the node that is running this specific router app
 
     // Apply dijkstra to each node to find all shortest paths.
     topo->calculateWeightedSingleShortestPathsTo(node);  // Overwrites getNumPaths() and so on.
 
     // Check the number of shortest paths towards the target node. This may be more than 1 if multiple paths have the same minimum cost.
-    if (thisNode->getNumPaths() == 0) {
+    if (this_node->getNumPaths() == 0) {
       error("Path not found. This means that a node is completely separated...Probably not what you want now");
       continue;  // not connected
     }
     // Returns the next link/gate in the ith shortest paths towards the target node.
-    cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();
     int destAddr = node->getModule()->par("address");
 
-    qrtable[destAddr] = get_QNIC_info_of(parentModuleGate);
-    
-    if (!strstr(parentModuleGate->getFullName(), "quantum")) {
+    qrtable[destAddr] = this_qnic;
+
+    if (!strstr(parent_module_gate->getFullName(), "quantum")) {
       error("Quantum routing table referring to classical gates...");
     }
   }
 }
 
-QNIC RoutingDaemon::get_QNIC_info_of(cGate *parentModuleGate) {
-  QNIC thisqnic;
-  thisqnic.address = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
-  thisqnic.type = (QNIC_type)(int)parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_type");
-  thisqnic.index = parentModuleGate->getPreviousGate()->getOwnerModule()->getIndex();
-  thisqnic.pointer = parentModuleGate->getPreviousGate()->getOwnerModule();
+QNIC RoutingDaemon::getQNicInfoOf(const cGate *const module_gate) {
+  QNIC qnic;
+  qnic.address = module_gate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
+  qnic.type = (QNIC_type)(int)module_gate->getPreviousGate()->getOwnerModule()->par("self_qnic_type");
+  qnic.index = module_gate->getPreviousGate()->getOwnerModule()->getIndex();
+  qnic.pointer = module_gate->getPreviousGate()->getOwnerModule();
 
-  return thisqnic;
+  return qnic;
 }
 
 
@@ -163,7 +164,7 @@ QNIC RoutingDaemon::get_QNIC_info_of(cGate *parentModuleGate) {
  * and in one case RuleEngine), this is a direct call that they make.
  *
  */
-int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr) {
+int RoutingDaemon::findQNicAddrByDestAddr(int destAddr) {
   RoutingTable::iterator it = qrtable.find(destAddr);
   if (it == qrtable.end()) {
     EV << "Quantum: address " << destAddr << " unreachable from this node \n";
@@ -172,19 +173,19 @@ int RoutingDaemon::return_QNIC_address_to_destAddr(int destAddr) {
   return it->second.address;
 }
 
-int RoutingDaemon::returnNumEndNodes() {
+int RoutingDaemon::getNumEndNodes() {
   cTopology *topo = new cTopology("topo");
   topo->extractByParameter("included_in_topology", "\"yes\"");
-  int index = 0;
+  int num_end_nodes = 0;
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);
     std::string node_type = node->getModule()->par("node_type");
     if (node_type == "EndNode") {  // ignore myself
-      index++;
+      num_end_nodes++;
     }
   }
   delete topo;
-  return index;
+  return num_end_nodes;
 };
 
 /**
