@@ -62,6 +62,7 @@ class Runtime {
     virtual void gateCNOT(IQubitRecord* control_qubit_rec, IQubitRecord* target_qubit_rec) = 0;
     virtual bool purifyX(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
     virtual bool purifyZ(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
+    virtual bool purifyY(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
 
     // Messaging
     virtual void sendLinkTomographyResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, int count,
@@ -282,6 +283,9 @@ class Runtime {
 
   /// @brief perform Z purification and store the measurement result
   void purifyZ(RegId result, QubitId qubit_id, QubitId trash_qubit_id);
+
+  /// @brief perform Y purification and store the measurement result
+  void purifyY(RegId result, QubitId qubit_id, QubitId trash_qubit_id);
   //@}
 
   /** @name debugging */

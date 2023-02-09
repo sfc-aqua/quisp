@@ -140,6 +140,10 @@ void StationaryQubit::gateZ() { qubit_ref->gateZ(); }
 
 void StationaryQubit::gateX() { qubit_ref->gateX(); }
 
+void StationaryQubit::gateS() { qubit_ref->gateS(); }
+
+void StationaryQubit::gateSdg() { qubit_ref->gateSdg(); }
+
 void StationaryQubit::gateCNOT(IStationaryQubit *target_qubit) { qubit_ref->gateCNOT(check_and_cast<StationaryQubit *>(target_qubit)->qubit_ref); }
 
 // This is invoked whenever a photon is emitted out from this particular qubit.

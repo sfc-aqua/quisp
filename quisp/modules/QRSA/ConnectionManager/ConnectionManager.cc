@@ -131,6 +131,9 @@ PurType ConnectionManager::parsePurType(const std::string &pur_type) {
   if (pur_type == "SINGLE_Z") {
     return PurType::SINGLE_Z;
   }
+  if (pur_type == "SINGLE_Y") {
+    return PurType::SINGLE_Y;
+  }
   if (pur_type == "DOUBLE") {
     return PurType::DOUBLE;
   }
@@ -700,7 +703,7 @@ std::unique_ptr<Rule> ConnectionManager::purifyRule(int partner_address, PurType
 
   // decide how many Bell pairs are required
   int num_resource;
-  if (purification_type == PurType::SINGLE_X || purification_type == PurType::SINGLE_Z) {
+  if (purification_type == PurType::SINGLE_X || purification_type == PurType::SINGLE_Z || purification_type == PurType::SINGLE_Y) {
     num_resource = 2;
   } else if (purification_type == PurType::DOUBLE || purification_type == PurType::DOUBLE_INV || purification_type == PurType::DSSA || purification_type == PurType::DSSA_INV) {
     num_resource = 3;

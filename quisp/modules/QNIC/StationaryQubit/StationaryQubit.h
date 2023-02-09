@@ -57,6 +57,8 @@ class StationaryQubit : public IStationaryQubit {
   void gateHadamard() override;
   void gateZ() override;
   void gateX() override;
+  void gateS() override;
+  void gateSdg() override;
 
   backends::IQubit *getBackendQubitRef() const override;
 

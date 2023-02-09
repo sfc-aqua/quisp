@@ -75,6 +75,31 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     return trash_qubit->measureX() == types::EigenvalueResult::PLUS_ONE;
   }
 
+  bool purifyY(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
+    auto *qubit = provider.getStationaryQubit(qubit_rec);
+    auto *trash_qubit = provider.getStationaryQubit(trash_qubit_rec);
+    assert(qubit != nullptr);
+    assert(trash_qubit != nullptr);
+
+    // we can do this as well
+    /*
+    trash_qubit->gateSdg();
+    qubit->gateSdg();
+    trash_qubit->gateCNOT(qubit);
+    qubit->gateS();
+    trash_qubit->measureX();
+    */
+
+    trash_qubit->gateSdg();
+    trash_qubit->gateHadamard();
+    qubit->gateSdg();
+    qubit->gateHadamard();
+    qubit->gateCNOT(trash_qubit);
+    qubit->gateHadamard();
+    qubit->gateS();
+    return trash_qubit->measureZ() == types::EigenvalueResult::PLUS_ONE;
+  }
+
   void sendLinkTomographyResult(const unsigned long ruleset_id, const runtime::Rule &rule, const int action_index, const runtime::QNodeAddr partner_addr, int count,
                                 MeasurementOutcome outcome, int max_count, SimTime start_time) override {
     LinkTomographyResult *pk = new LinkTomographyResult{"LinkTomographyResult"};

@@ -15,6 +15,7 @@ enum PurType : int {
   INVALID,  ///< Invalid purification type
   SINGLE_X,  ///< Single purification for X error
   SINGLE_Z,  ///< Single purification for Z error
+  SINGLE_Y,
   DOUBLE,  ///< Double purification both for X and Z errors
   DOUBLE_INV,  ///< Double inverse purification both for X and Z errors
   DSSA,  ///< Double selection XZ and single action (DoubleSelectionAction) for X error
@@ -29,6 +30,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(PurType, {
                                           {INVALID, "INVALID"},
                                           {SINGLE_X, "SINGLE_X"},
                                           {SINGLE_Z, "SINGLE_Z"},
+                                          {SINGLE_Y, "SINGLE_Y"},
                                           {DOUBLE, "DOUBLE"},
                                           {DOUBLE_INV, "DOUBLE_INV"},
                                           {DSSA, "DSSA"},
