@@ -133,6 +133,9 @@ PurType ConnectionManager::parsePurType(const std::string &pur_type) {
   if (pur_type == "SINGLE_Z") {
     return PurType::SINGLE_Z;
   }
+  if (pur_type == "SINGLE_Y") {
+    return PurType::SINGLE_Y;
+  }
   if (pur_type == "DOUBLE") {
     return PurType::DOUBLE;
   }

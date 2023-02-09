@@ -1019,6 +1019,7 @@ std::unique_ptr<quisp::rules::Rule> HardwareMonitor::constructPurifyRule(const s
   switch (pur_type) {
     case PurType::SINGLE_X:
     case PurType::SINGLE_Z:
+    case PurType::SINGLE_Y:
       required_qubits = 2;
       break;
     case PurType::DOUBLE:

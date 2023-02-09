@@ -289,6 +289,15 @@ void Runtime::purifyZ(RegId result_reg_id, QubitId qubit_id, QubitId trash_qubit
   setRegVal(result_reg_id, result);
 }
 
+void Runtime::purifyY(RegId result_reg_id, QubitId qubit_id, QubitId trash_qubit_id) {
+  auto qubit = getQubitByQubitId(qubit_id);
+  auto trash_qubit = getQubitByQubitId(trash_qubit_id);
+  if (qubit == nullptr) return;
+  if (trash_qubit == nullptr) return;
+  bool result = callback->purifyY(qubit, trash_qubit);
+  setRegVal(result_reg_id, result);
+}
+
 bool Runtime::isQubitLocked(IQubitRecord* const qubit) { return callback->isQubitLocked(qubit); }
 void Runtime::debugRuntimeState() {
   std::cout << "\n---------runtime-state---------"

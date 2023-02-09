@@ -216,7 +216,7 @@ INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_{{left_partner_addr, 
 }
 Program RuleSetConverter::constructPurificationAction(const Purification *act) {
   auto pur_type = act->purification_type;
-  if (pur_type == rules::PurType::SINGLE_X || pur_type == rules::PurType::SINGLE_Z) {
+  if (pur_type == rules::PurType::SINGLE_X || pur_type == rules::PurType::SINGLE_Z || pur_type == rules::PurType::SINGLE_Y) {
     /*
     SET action_index 0
     LOAD action_index "action_index_{partner_addr}"
@@ -243,6 +243,8 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
     std::string program_name;
     if (pur_type == rules::PurType::SINGLE_X) {
       program_name = "X Purification";
+    } else if (pur_type == rules::PurType::SINGLE_Y) {
+      program_name = "Y Purification";
     } else {
       program_name = "Z Purification";
     }
@@ -256,7 +258,9 @@ INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit, partner_addr, 1}},
 (pur_type == rules::PurType::SINGLE_X) /* else SINGLE_Z */?
   (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}} :
-  (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}},
+  (pur_type == rules::PurType::SINGLE_Z) ?
+  (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}} :
+  (InstructionTypes)INSTR_PURIFY_Y_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}},
 INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit}},
 INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit}},

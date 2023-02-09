@@ -68,6 +68,8 @@ struct PurificationResultData {
         return result.is_z_plus == is_z_plus;
       case PurType::SINGLE_Z:
         return result.is_x_plus == is_x_plus;
+      case PurType::SINGLE_Y:
+        return result.is_z_plus == is_z_plus;
       case PurType::DOUBLE:
       case PurType::DOUBLE_INV:
       case PurType::DSSA:
@@ -92,6 +94,10 @@ struct PurificationResultData {
     }
     if (pur_type == PurType::SINGLE_Z) {
       is_x_plus = result.getOutput_is_plus();
+      return;
+    }
+    if (pur_type == PurType::SINGLE_Y) {
+      is_z_plus = result.getOutput_is_plus();
       return;
     }
     if (pur_type == PurType::DOUBLE || pur_type == PurType::DOUBLE_INV || pur_type == PurType::DSSA || pur_type == PurType::DSSA_INV) {

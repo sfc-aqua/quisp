@@ -45,6 +45,8 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   // RTC
   virtual void gateZ() = 0;
   virtual void gateX() = 0;
+  virtual void gateS() = 0;
+  virtual void gateSdg() = 0;
 
   virtual backends::IQubit *getBackendQubitRef() const = 0;
   int qnic_type;

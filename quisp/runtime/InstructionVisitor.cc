@@ -122,6 +122,11 @@ void InstructionVisitor::operator()(const INSTR_PURIFY_Z_RegId_QubitId_QubitId_&
   runtime->purifyZ(result_reg_id, qubit_id, trash_qubit_id);
 }
 
+void InstructionVisitor::operator()(const INSTR_PURIFY_Y_RegId_QubitId_QubitId_& instruction) {
+  auto [result_reg_id, qubit_id, trash_qubit_id] = instruction.args;
+  runtime->purifyY(result_reg_id, qubit_id, trash_qubit_id);
+}
+
 void InstructionVisitor::operator()(const INSTR_FREE_QUBIT_QubitId_& instruction) {
   auto [qubit_id] = instruction.args;
   runtime->freeQubit(qubit_id);

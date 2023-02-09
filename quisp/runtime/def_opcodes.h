@@ -47,6 +47,7 @@ OP(GATE_X)
 OP(GATE_Z)
 OP(GATE_CNOT)
 OP(PURIFY_X)
+OP(PURIFY_Y)
 OP(PURIFY_Z)
 
 // send classical messages
