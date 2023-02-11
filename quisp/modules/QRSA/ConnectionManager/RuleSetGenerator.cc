@@ -4,7 +4,7 @@ namespace quisp::modules::ruleset_gen {
 
 using namespace quisp::rules;
 
-std::map<int, RuleSet> RuleSetGenerator::generateRuleSets(messages::ConnectionSetupRequest* req, unsigned long ruleset_id) {
+std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetupRequest* req, unsigned long ruleset_id) {
   auto path = collectPath(req);
   size_t hop_count = req->getStack_of_QNodeIndexesArraySize();
   size_t divisions = hop_count * 2 - 1;
@@ -42,28 +42,23 @@ std::map<int, RuleSet> RuleSetGenerator::generateRuleSets(messages::ConnectionSe
         }
         if (std::max(std::abs(index - lindex), std::abs(index - rindex)) == distance) {
           // Swapping Rules
-          auto wait_rule_left = waitRule(swapper_node, shared_tag);
-          auto wait_rule_right = waitRule(swapper_node, shared_tag);
           auto swapping_rule = swapRule(swapping_partners_table[swapper_node], shared_tag);
           shared_tag++;
-          rules_map[left_partner].push_back(std::move(wait_rule_left));
-          rules_map[right_partner].push_back(std::move(wait_rule_right));
           rules_map[swapper_node].push_back(std::move(swapping_rule));
-
-          // Purification Rules
-          // for (int i = 0; i < num_remote_purification; i++) {
-          //   auto pur_rule_left = purifyRule(right_partner, purification_type, threshold_fidelity, shared_tag);
-          //   auto pur_rule_right = purifyRule(left_partner, purification_type, threshold_fidelity, shared_tag);
-          //   shared_tag++;
-          //   rules_map[left_partner].push_back(std::move(pur_rule_left));
-          //   rules_map[right_partner].push_back(std::move(pur_rule_right));
-          // }
         }
       }
     }
   }
 
-  std::map<int, RuleSet> rulesets;
+  int initiator_addr = path.at(0);
+  int num_measure = req->getNum_measure();
+  auto tomo_rule_initiator = tomographyRule(responder_addr, initiator_addr, num_measure, shared_tag);
+  auto tomo_rule_responder = tomographyRule(initiator_addr, responder_addr, num_measure, shared_tag);
+  shared_tag++;
+  rules_map[initiator_addr].push_back(std::move(tomo_rule_initiator));
+  rules_map[responder_addr].push_back(std::move(tomo_rule_responder));
+
+  std::map<int, json> rulesets{};
   for (auto it = rules_map.begin(); it != rules_map.end(); ++it) {
     int owner_address = it->first;
     auto rules = std::move(it->second);
@@ -76,7 +71,7 @@ std::map<int, RuleSet> RuleSetGenerator::generateRuleSets(messages::ConnectionSe
         break;
       }
     }
-    rulesets.emplace(owner_address, ruleset);
+    rulesets.emplace(owner_address, ruleset.serialize_json());
   }
   return rulesets;
 }
@@ -139,9 +134,10 @@ std::unique_ptr<Rule> RuleSetGenerator::waitRule(int partner_address, int shared
   return wait_rule;
 }
 
-std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int owner_address, int num_measure, double threshold_fidelity, int shared_tag, std::string name) {
+std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int owner_address, int num_measure, int shared_tag) {
   auto tomography_rule = std::make_unique<Rule>(partner_address, shared_tag, true);
-  tomography_rule->setName(name);
+
+  [[deprecated]] double threshold_fidelity = 0.9;  // placeholder
 
   // prepare condition
   auto condition = std::make_unique<Condition>();
@@ -158,10 +154,10 @@ std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int 
   return tomography_rule;
 }
 
-std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType purification_type, double threshold_fidelity, int shared_tag, std::string name) {
+std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType purification_type, int shared_tag) {
   auto purify_rule = std::make_unique<Rule>(partner_address, shared_tag, false);
-  purify_rule->setName(name);
 
+  [[deprecated]] double threshold_fidelity = 0.9;
   // decide how many Bell pairs are required
   int num_resource;
   if (purification_type == PurType::SINGLE_X || purification_type == PurType::SINGLE_Z) {
@@ -201,7 +197,7 @@ std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::pair<int, int> partner_add
   condition->addClause(std::move(enough_resource_clause_second));
   swap_rule->setCondition(std::move(condition));
 
-  auto swap_action = std::make_unique<EntanglementSwapping>(partner_address);
+  auto swap_action = std::make_unique<EntanglementSwapping>(std::vector<int>({partner_address.first, partner_address.second}));
   swap_rule->setAction(std::move(swap_action));
 
   return swap_rule;
