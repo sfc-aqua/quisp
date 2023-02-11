@@ -52,11 +52,9 @@ std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetup
 
   int initiator_addr = path.at(0);
   int num_measure = req->getNum_measure();
-  auto tomo_rule_initiator = tomographyRule(responder_addr, initiator_addr, num_measure, shared_tag);
-  auto tomo_rule_responder = tomographyRule(initiator_addr, responder_addr, num_measure, shared_tag);
+  rules_map[initiator_addr].emplace_back(tomographyRule(responder_addr, initiator_addr, num_measure, shared_tag));
+  rules_map[responder_addr].emplace_back(tomographyRule(initiator_addr, responder_addr, num_measure, shared_tag));
   shared_tag++;
-  rules_map[initiator_addr].push_back(std::move(tomo_rule_initiator));
-  rules_map[responder_addr].push_back(std::move(tomo_rule_responder));
 
   std::map<int, json> rulesets{};
   for (auto it = rules_map.begin(); it != rules_map.end(); ++it) {
@@ -137,7 +135,7 @@ std::unique_ptr<Rule> RuleSetGenerator::waitRule(int partner_address, int shared
 std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int owner_address, int num_measure, int shared_tag) {
   auto tomography_rule = std::make_unique<Rule>(partner_address, shared_tag, true);
 
-  [[deprecated]] double threshold_fidelity = 0.9;  // placeholder
+  [[deprecated]] double threshold_fidelity = 0.0;  // placeholder
 
   // prepare condition
   auto condition = std::make_unique<Condition>();
@@ -157,7 +155,7 @@ std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int 
 std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType purification_type, int shared_tag) {
   auto purify_rule = std::make_unique<Rule>(partner_address, shared_tag, false);
 
-  [[deprecated]] double threshold_fidelity = 0.9;
+  [[deprecated]] double threshold_fidelity = 0.0;
   // decide how many Bell pairs are required
   int num_resource;
   if (purification_type == PurType::SINGLE_X || purification_type == PurType::SINGLE_Z) {
@@ -190,7 +188,7 @@ std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::pair<int, int> partner_add
 
   // prepare condition and two enough resource clauses
   auto condition = std::make_unique<Condition>();
-  double threshold_fidelity = 0.9;  // placeholder
+  double threshold_fidelity = 0.0;  // placeholder
   auto enough_resource_clause_first = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address.first);
   auto enough_resource_clause_second = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address.second);
   condition->addClause(std::move(enough_resource_clause_first));

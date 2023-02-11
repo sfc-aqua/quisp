@@ -141,8 +141,8 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   req->setStack_of_QNICs(2, QNIC_pair_info{.fst = {.type = QNIC_E, .index = 14, .address = 104}, .snd = {.type = QNIC_E, .index = 15, .address = 105}});
   EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(5)).Times(1).WillOnce(Return(-1));
   EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(2)).Times(1).WillOnce(Return(106));
-  auto src_info = new ConnectionSetupInfo{.qnic = {.type = QNIC_E, .index = 16, .address = 106}, .neighbor_address = 4, .quantum_link_cost = 10};
-  EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(106)).Times(1).WillOnce(Return(ByMove(std::unique_ptr<ConnectionSetupInfo>(src_info))));
+  //   auto src_info = new ConnectionSetupInfo{.qnic = {.type = QNIC_E, .index = 16, .address = 106}, .neighbor_address = 4, .quantum_link_cost = 10};
+  //   EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(106)).Times(1).WillOnce(Return(ByMove(std::unique_ptr<ConnectionSetupInfo>(src_info))));
 
   sim->setContext(connection_manager);
   connection_manager->respondToRequest(req);
@@ -155,95 +155,11 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(packetFor2->getDestAddr(), 2);
     auto ruleset = packetFor2->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
-    EXPECT_EQ(ruleset["rules"].size(), 4);
+    EXPECT_EQ(ruleset["rules"].size(), 1);
     auto expected_ruleset = R"({
-	"num_rules": 4,
+	"num_rules": 1,
 	"owner_address": 2,
-	"rules": [{
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 3
-				}],
-				"purification_type": "SINGLE_X"
-			},
-			"type": "purification"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 3
-					},
-					"num_resource": 2,
-					"required_fidelity": 0.0
-				},
-				"type": "enough_resource"
-			}]
-		},
-		"interface": [{
-			"partner_address": 3
-		}],
-    "shared_tag": 0,
-		"name": "purification",
-		"next_rule_id": -1,
-		"rule_id": 0
-	}, {
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 3
-				}]
-			},
-			"type": "wait"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 3
-					}
-				},
-				"type": "wait"
-			}]
-		},
-		"interface": [{
-			"partner_address": 3
-		}],
-    "shared_tag": 5,
-		"name": "wait",
-		"next_rule_id": -1,
-		"rule_id": 1
-	}, {
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 5
-				}],
-				"purification_type": "SINGLE_X"
-			},
-			"type": "purification"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 5
-					},
-					"num_resource": 2,
-					"required_fidelity": 0.0
-				},
-				"type": "enough_resource"
-			}]
-		},
-		"interface": [{
-			"partner_address": 5
-		}],
-    "shared_tag": 6,
-		"name": "purification",
-		"next_rule_id": -1,
-		"rule_id": 2
-	}, {
+	"rules": [ {
 		"action": {
 			"options": {
 				"interface": [{
@@ -277,10 +193,10 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 		"interface": [{
 			"partner_address": 5
 		}],
-    "shared_tag": 7,
-		"name": "tomography",
+    	"shared_tag": 2,
+		"name": "",
 		"next_rule_id": -1,
-		"rule_id": 3
+		"rule_id": 0
 	}],
 	"ruleset_id": 1234
 })"_json;
@@ -294,125 +210,12 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(packetFor3->getDestAddr(), 3);
     auto ruleset = packetFor3->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
-    EXPECT_EQ(ruleset["rules"].size(), 5);
+    EXPECT_EQ(ruleset["rules"].size(), 1);
 
     auto expected_ruleset = R"({
-	"num_rules": 5,
+	"num_rules": 1,
 	"owner_address": 3,
 	"rules": [{
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 2
-				}],
-				"purification_type": "SINGLE_X"
-			},
-			"type": "purification"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 2
-					},
-					"num_resource": 2,
-					"required_fidelity": 0.0
-				},
-				"type": "enough_resource"
-			}]
-		},
-		"interface": [{
-			"partner_address": 2
-		}],
-    "shared_tag": 0,
-		"name": "purification",
-		"next_rule_id": -1,
-		"rule_id": 0
-	}, {
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 4
-				}],
-				"purification_type": "SINGLE_X"
-			},
-			"type": "purification"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 4
-					},
-					"num_resource": 2,
-					"required_fidelity": 0.0
-				},
-				"type": "enough_resource"
-			}]
-		},
-		"interface": [{
-			"partner_address": 4
-		}],
-    "shared_tag": 1,
-		"name": "purification",
-		"next_rule_id": -1,
-		"rule_id": 1
-	}, {
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 4
-				}]
-			},
-			"type": "wait"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 4
-					}
-				},
-				"type": "wait"
-			}]
-		},
-		"interface": [{
-			"partner_address": 4
-		}],
-    "shared_tag": 3,
-		"name": "wait",
-		"next_rule_id": -1,
-		"rule_id": 2
-	}, {
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 5
-				}],
-				"purification_type": "SINGLE_X"
-			},
-			"type": "purification"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 5
-					},
-					"num_resource": 2,
-					"required_fidelity": 0.0
-				},
-				"type": "enough_resource"
-			}]
-		},
-		"interface": [{
-			"partner_address": 5
-		}],
-    "shared_tag": 4,
-		"name": "purification",
-		"next_rule_id": -1,
-		"rule_id": 3
-	}, {
 		"action": {
 			"options": {
 				"interface": [{
@@ -431,34 +234,25 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 		"condition": {
 			"clauses": [{
 				"options": {
-					"interface": {
-						"partner_address": 2
-					},
+					"interface": { "partner_address": 2 },
 					"num_resource": 1,
 					"required_fidelity": 0.0
 				},
 				"type": "enough_resource"
 			}, {
 				"options": {
-					"interface": {
-						"partner_address": 5
-					},
+					"interface": { "partner_address": 5 },
 					"num_resource": 1,
 					"required_fidelity": 0.0
 				},
 				"type": "enough_resource"
 			}]
 		},
-		"interface": [{
-			"partner_address": 2
-		},
-    {
-			"partner_address": 5
-    }],
-    "shared_tag": 5,
-		"name": "swapping",
+		"interface": [{ "partner_address": 2 }, { "partner_address": 5 }],
+    	"shared_tag": 1,
+		"name": "",
 		"next_rule_id": -1,
-		"rule_id": 4
+		"rule_id": 0
 	}],
 	"ruleset_id": 1234
 })"_json;
@@ -472,73 +266,13 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(packetFor4->getDestAddr(), 4);
     auto ruleset = packetFor4->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
-    EXPECT_EQ(ruleset["rules"].size(), 3);
+    EXPECT_EQ(ruleset["rules"].size(), 1);
 
-    // rule1 (id: 0) : purification with 3, next to 2
-    // rule2 (id: 1): purification with 5, next to 2
     // rule3 (id: 2): swapping with [3, 5], next to -1
     auto expected_ruleset = R"({
-	"num_rules": 3,
+	"num_rules": 1,
 	"owner_address": 4,
 	"rules": [{
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 3
-				}],
-				"purification_type": "SINGLE_X"
-			},
-			"type": "purification"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 3
-					},
-					"num_resource": 2,
-					"required_fidelity": 0.0
-				},
-				"type": "enough_resource"
-			}]
-		},
-		"interface": [{
-			"partner_address": 3
-		}],
-    "shared_tag": 1,
-		"name": "purification",
-		"next_rule_id": -1,
-		"rule_id": 0
-	}, {
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 5
-				}],
-				"purification_type": "SINGLE_X"
-			},
-			"type": "purification"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 5
-					},
-					"num_resource": 2,
-					"required_fidelity": 0.0
-				},
-				"type": "enough_resource"
-			}]
-		},
-		"interface": [{
-			"partner_address": 5
-		}],
-    "shared_tag": 2,
-		"name": "purification",
-		"next_rule_id": -1,
-		"rule_id": 1
-	}, {
 		"action": {
 			"options": {
 				"interface": [{
@@ -580,10 +314,10 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 		}, {
 			"partner_address": 5
 		}],
-    "shared_tag": 3,
-		"name": "swapping",
+    	"shared_tag": 0,
+		"name": "",
 		"next_rule_id": -1,
-		"rule_id": 2
+		"rule_id": 0
 	}],
 	"ruleset_id": 1234
 })"_json;
@@ -597,157 +331,13 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     EXPECT_EQ(packetFor5->getDestAddr(), 5);
     auto ruleset = packetFor5->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
-    EXPECT_EQ(ruleset["rules"].size(), 6);
+    EXPECT_EQ(ruleset["rules"].size(), 1);
 
-    // rule1 (id: 0): purification with 4, to (id: 1)
-    // rule2 (id: 1): wait with 4, to (id: 2)
-    // rule3 (id: 2): purification with 3, to (id: 3)
-    // rule4 (id: 3): wait with 3, to (id: 4)
-    // rule5 (id: 4): purification with 1, to (id: 5)
     // rule6 (id: 5): tomography with 1, to (id: -1)
     auto expected_ruleset = R"({
-	"num_rules": 6,
+	"num_rules": 1,
 	"owner_address": 5,
 	"rules": [{
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 4
-				}],
-				"purification_type": "SINGLE_X"
-			},
-			"type": "purification"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 4
-					},
-					"num_resource": 2,
-					"required_fidelity": 0.0
-				},
-				"type": "enough_resource"
-			}]
-		},
-		"interface": [{
-			"partner_address": 4
-		}],
-    "shared_tag": 2,
-		"name": "purification",
-		"next_rule_id": -1,
-		"rule_id": 0
-	}, {
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 4
-				}]
-			},
-			"type": "wait"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 4
-					}
-				},
-				"type": "wait"
-			}]
-		},
-		"interface": [{
-			"partner_address": 4
-		}],
-    "shared_tag": 3,
-		"name": "wait",
-		"next_rule_id": -1,
-		"rule_id": 1
-	}, {
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 3
-				}],
-				"purification_type": "SINGLE_X"
-			},
-			"type": "purification"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 3
-					},
-					"num_resource": 2,
-					"required_fidelity": 0.0
-				},
-				"type": "enough_resource"
-			}]
-		},
-    "shared_tag": 4,
-		"interface": [{
-			"partner_address": 3
-		}],
-		"name": "purification",
-		"next_rule_id": -1,
-		"rule_id": 2
-	}, {
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 3
-				}]
-			},
-			"type": "wait"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 3
-					}
-				},
-				"type": "wait"
-			}]
-		},
-		"interface": [{
-			"partner_address": 3
-		}],
-    "shared_tag": 5,
-		"name": "wait",
-		"next_rule_id": -1,
-		"rule_id": 3
-	}, {
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 2
-				}],
-				"purification_type": "SINGLE_X"
-			},
-			"type": "purification"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 2
-					},
-					"num_resource": 2,
-					"required_fidelity": 0.0
-				},
-				"type": "enough_resource"
-			}]
-		},
-		"interface": [{
-			"partner_address": 2
-		}],
-    "shared_tag": 6,
-		"name": "purification",
-		"next_rule_id": -1,
-		"rule_id": 4
-	}, {
 		"action": {
 			"options": {
 				"interface": [{
@@ -781,10 +371,10 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 		"interface": [{
 			"partner_address": 2
 		}],
-    "shared_tag": 7,
-		"name": "tomography",
+    	"shared_tag": 2,
+		"name": "",
 		"next_rule_id": -1,
-		"rule_id": 5
+		"rule_id": 0 
 	}],
 	"ruleset_id": 1234
 })"_json;

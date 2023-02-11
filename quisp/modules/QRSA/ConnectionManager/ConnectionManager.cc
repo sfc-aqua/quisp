@@ -234,12 +234,12 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
 
   // interface toward to the initiator node
   int src_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
-  if (src_qnic_address != -1) {
+  if (src_qnic_address == -1) {
     error("No qnic to source node. Something wrong with routing.");
   }
 
   // check if the qnics are reserved or not
-  if (isQnicBusy(src_qnic_address) || isQnicBusy(dest_qnic_address)) {
+  if (isQnicBusy(src_qnic_address)) {
     rejectRequest(req);
     return;
   }
