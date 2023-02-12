@@ -129,8 +129,7 @@ TEST_F(RuleSetGeneratorTest, Simple) {
 					"interface": {
 						"partner_address": 5
 					},
-					"num_resource": 1,
-					"required_fidelity": 0.0
+					"num_resource": 1
 				},
 				"type": "enough_resource"
 			}, {
@@ -181,7 +180,6 @@ TEST_F(RuleSetGeneratorTest, PurificationRule) {
             "type":"enough_resource",
             "options":{
                "num_resource":3,
-               "required_fidelity":0.0,
                "interface":{
                  "partner_address":1
                 }
@@ -231,7 +229,6 @@ TEST_F(RuleSetGeneratorTest, SwapRule) {
             "type":"enough_resource",
             "options":{
                "num_resource":1,
-               "required_fidelity":0.0,
                "interface": {
                  "partner_address":1
                }
@@ -241,7 +238,6 @@ TEST_F(RuleSetGeneratorTest, SwapRule) {
             "type":"enough_resource",
             "options":{
                "num_resource":1,
-               "required_fidelity":0.0,
                "interface":{
                  "partner_address":3
                }
@@ -295,8 +291,7 @@ TEST_F(RuleSetGeneratorTest, tomographyRule) {
  				"interface": {
  					"partner_address": 1
  				},
- 				"num_resource": 1,
- 				"required_fidelity": 0.0
+ 				"num_resource": 1
  			},
  			"type": "enough_resource"
  		}, {

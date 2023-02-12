@@ -141,8 +141,6 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   req->setStack_of_QNICs(2, QNIC_pair_info{.fst = {.type = QNIC_E, .index = 14, .address = 104}, .snd = {.type = QNIC_E, .index = 15, .address = 105}});
   EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(5)).Times(1).WillOnce(Return(-1));
   EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(2)).Times(1).WillOnce(Return(106));
-  //   auto src_info = new ConnectionSetupInfo{.qnic = {.type = QNIC_E, .index = 16, .address = 106}, .neighbor_address = 4, .quantum_link_cost = 10};
-  //   EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(106)).Times(1).WillOnce(Return(ByMove(std::unique_ptr<ConnectionSetupInfo>(src_info))));
 
   sim->setContext(connection_manager);
   connection_manager->respondToRequest(req);
@@ -176,8 +174,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 					"interface": {
 						"partner_address": 5
 					},
-					"num_resource": 1,
-					"required_fidelity": 0.0
+					"num_resource": 1
 				},
 				"type": "enough_resource"
 			}, {
@@ -235,15 +232,13 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			"clauses": [{
 				"options": {
 					"interface": { "partner_address": 2 },
-					"num_resource": 1,
-					"required_fidelity": 0.0
+					"num_resource": 1
 				},
 				"type": "enough_resource"
 			}, {
 				"options": {
 					"interface": { "partner_address": 5 },
-					"num_resource": 1,
-					"required_fidelity": 0.0
+					"num_resource": 1
 				},
 				"type": "enough_resource"
 			}]
@@ -294,8 +289,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 					"interface": {
 						"partner_address": 3
 					},
-					"num_resource": 1,
-					"required_fidelity": 0.0
+					"num_resource": 1
 				},
 				"type": "enough_resource"
 			}, {
@@ -303,8 +297,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 					"interface": {
 						"partner_address": 5
 					},
-					"num_resource": 1,
-					"required_fidelity": 0.0
+					"num_resource": 1
 				},
 				"type": "enough_resource"
 			}]
@@ -354,8 +347,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 					"interface": {
 						"partner_address": 2
 					},
-					"num_resource": 1,
-					"required_fidelity": 0.0
+					"num_resource": 1
 				},
 				"type": "enough_resource"
 			}, {

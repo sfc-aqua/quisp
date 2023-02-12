@@ -156,11 +156,9 @@ int RuleSetGenerator::fillPathDivision(std::vector<int>& path, int i, int l, std
 std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int owner_address, int num_measure, int shared_tag) {
   auto tomography_rule = std::make_unique<Rule>(partner_address, shared_tag, true);
 
-  [[deprecated]] double threshold_fidelity = 0.0;  // placeholder
-
   // prepare condition
   auto condition = std::make_unique<Condition>();
-  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address);
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, partner_address);
   auto measure_count_clause = std::make_unique<MeasureCountConditionClause>(num_measure, partner_address);
   condition->addClause(std::move(enough_resource_clause));
   condition->addClause(std::move(measure_count_clause));
@@ -176,7 +174,6 @@ std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int 
 std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType purification_type, int shared_tag) {
   auto purify_rule = std::make_unique<Rule>(partner_address, shared_tag, false);
 
-  [[deprecated]] double threshold_fidelity = 0.0;
   // decide how many Bell pairs are required
   int num_resource;
   if (purification_type == PurType::SINGLE_X || purification_type == PurType::SINGLE_Z) {
@@ -193,7 +190,7 @@ std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType 
 
   // prepare condition
   auto condition = std::make_unique<Condition>();
-  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(num_resource, threshold_fidelity, partner_address);
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(num_resource, partner_address);
   condition->addClause(std::move(enough_resource_clause));
   purify_rule->setCondition(std::move(condition));
 
@@ -209,9 +206,8 @@ std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::pair<int, int> partner_add
 
   // prepare condition and two enough resource clauses
   auto condition = std::make_unique<Condition>();
-  double threshold_fidelity = 0.0;  // placeholder
-  auto enough_resource_clause_first = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address.first);
-  auto enough_resource_clause_second = std::make_unique<EnoughResourceConditionClause>(1, threshold_fidelity, partner_address.second);
+  auto enough_resource_clause_first = std::make_unique<EnoughResourceConditionClause>(1, partner_address.first);
+  auto enough_resource_clause_second = std::make_unique<EnoughResourceConditionClause>(1, partner_address.second);
   condition->addClause(std::move(enough_resource_clause_first));
   condition->addClause(std::move(enough_resource_clause_second));
   swap_rule->setCondition(std::move(condition));
