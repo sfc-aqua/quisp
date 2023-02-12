@@ -31,6 +31,8 @@ class MockQubit : public IStationaryQubit {
   MOCK_METHOD(quisp::types::EigenvalueResult, measureZ, (), (override));
   MOCK_METHOD(void, gateZ, (), (override));
   MOCK_METHOD(void, gateX, (), (override));
+  MOCK_METHOD(void, gateS, (), (override));
+  MOCK_METHOD(void, gateSdg, (), (override));
   MOCK_METHOD(void, gateHadamard, (), (override));
   MOCK_METHOD(void, gateCNOT, (IStationaryQubit *), (override));
   MOCK_METHOD(void, Lock, (unsigned long rs_id, int rule_id, int action_id), (override));

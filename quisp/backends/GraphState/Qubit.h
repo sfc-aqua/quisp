@@ -32,10 +32,12 @@ using types::TwoQubitGateErrorModel;
 class GraphStateBackend;
 class GraphStateQubit : public IQubit {
  public:
-  GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend);
+  GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend, bool is_short_live);
   ~GraphStateQubit();
   void configure(std::unique_ptr<StationaryQubitConfiguration> configuration);
   void setFree() override;
+  const IQubitId *const getId() const override;
+  void relaseBackToPool() override;
 
   void gateX() override;
   void gateZ() override;
@@ -102,6 +104,7 @@ class GraphStateQubit : public IQubit {
 
   const IQubitId *id;
   GraphStateBackend *const backend;
+  const bool is_short_live;
 };
 
 }  // namespace quisp::backends::graph_state
