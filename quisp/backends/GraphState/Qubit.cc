@@ -7,12 +7,23 @@
 
 namespace quisp::backends::graph_state {
 using types::CliffordOperator;
-GraphStateQubit::GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend) : memory_transition_matrix(MatrixXd::Zero(6, 6)), id(id), backend(backend) {
+GraphStateQubit::GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend, bool is_short_live = false)
+    : memory_transition_matrix(MatrixXd::Zero(6, 6)), id(id), backend(backend), is_short_live(is_short_live) {
   // initialize variables for graph state representation tracking
   vertex_operator = CliffordOperator::H;
+  is_short_live = false;
 }
 
 GraphStateQubit::~GraphStateQubit() {}
+
+const IQubitId *const GraphStateQubit::getId() const { return id; }
+
+void GraphStateQubit::relaseBackToPool() {
+  if (!is_short_live) {
+    throw std::runtime_error("cannot release non short-live qubit");
+  }
+  backend->returnToPool(this);
+}
 
 void GraphStateQubit::configure(std::unique_ptr<StationaryQubitConfiguration> c) {
   setMemoryErrorRates(c->memory_x_err_rate, c->memory_y_err_rate, c->memory_z_err_rate, c->memory_excitation_rate, c->memory_relaxation_rate);

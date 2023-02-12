@@ -83,7 +83,7 @@ class Qubit : public GraphStateQubit {
   std::unordered_set<GraphStateQubit*> getNeighborSet() { return neighbors; }
   void setVertexOperator(CliffordOperator op) { this->vertex_operator = op; }
   CliffordOperator getVertexOperator() { return this->vertex_operator; }
-  Qubit(const IQubitId* id, GraphStateBackend* const backend) : GraphStateQubit(id, backend) {}
+  Qubit(const IQubitId* id, GraphStateBackend* const backend) : GraphStateQubit(id, backend, false) {}
   void reset() {
     // we should not call setFree() here
     this->neighbors.clear();
@@ -145,7 +145,6 @@ class Backend : public GraphStateBackend {
   using GraphStateBackend::qubits;
   Backend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<StationaryQubitConfiguration> config) : GraphStateBackend(std::move(rng), std::move(config)) {}
   IQubit* createQubit(int id) { return this->createQubitInternal(new QubitId(id)); }
-  IQubit* createOrGetQubit(int id) { return this->createOrGetQubitInternal(new QubitId(id)); }
   IQubit* getQubit(int id) { return this->getQubitInternal(new QubitId(id)); }
   IQubit* createQubitInternal(const IQubitId* id) {
     auto qubit = qubits.find(id);
@@ -157,13 +156,6 @@ class Backend : public GraphStateBackend {
     auto* qubit_ptr = original_qubit.get();
     qubits.insert({id, std::move(original_qubit)});
     return qubit_ptr;
-  }
-  IQubit* createOrGetQubitInternal(const IQubitId* id) {
-    auto* qubit = createQubitInternal(id);
-    if (qubit == nullptr)
-      return getQubitInternal(id);
-    else
-      return qubit;
   }
   IQubit* getQubitInternal(const IQubitId* id) { return qubits.find(id)->second.get(); }
 };

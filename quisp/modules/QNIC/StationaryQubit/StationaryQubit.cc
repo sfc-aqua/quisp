@@ -11,7 +11,6 @@
 #include <unsupported/Eigen/KroneckerProduct>
 #include <unsupported/Eigen/MatrixFunctions>
 #include "backends/interfaces/IQubit.h"
-#include "modules/QNIC/StationaryQubit/QubitId.h"
 #include "omnetpp/cexception.h"
 
 using namespace Eigen;
@@ -213,10 +212,7 @@ bool StationaryQubit::isLocked() { return locked; }
 PhotonicQubit *StationaryQubit::generateEntangledPhoton() {
   Enter_Method("generateEntangledPhoton()");
   auto *photon = new PhotonicQubit("Photon");
-  // To simulate the actual physical entangled partner, not what the system thinks!!! we need this.
-
-  // TODO: make a more sophisticated hash and support emitting multiple photons
-  auto *photon_ref = backend->createOrGetQubit(new QubitId(node_address, qnic_index, 100, stationary_qubit_address));
+  auto *photon_ref = backend->getShortLiveQubit();
   photon_ref->setFree();
   qubit_ref->noiselessH();
   qubit_ref->noiselessCNOT(photon_ref);

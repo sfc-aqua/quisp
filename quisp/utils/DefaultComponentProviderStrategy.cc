@@ -69,8 +69,8 @@ modules::IRealTimeController *DefaultComponentProviderStrategy::getRealTimeContr
   return check_and_cast<IRealTimeController *>(qrsa->getSubmodule("rt"));
 }
 IQuantumBackend *DefaultComponentProviderStrategy::getQuantumBackend() {
-  auto *qnode = getQNode();
-  auto *mod = qnode->findModuleByPath("backend");
+  cModule *currentModule = self->getParentModule();
+  auto *mod = currentModule->findModuleByPath("backend");
   if (mod == nullptr) {
     throw cRuntimeError("Quantum backend not found");
   }
