@@ -5,7 +5,7 @@ NPROC ?= $(shell nproc)
 all: makefile-exe
 	$(MAKE) -C quisp -j$(NPROC)
 
-run-module-test: lib
+run-module-test: lib-debug
 	cd module_tests && ./runtest
 
 run-unit-test: makefile-lib googletest
@@ -22,6 +22,9 @@ exe: makefile-exe
 
 lib: makefile-lib
 	$(MAKE) -C quisp -j$(NPROC)
+
+lib-debug: makefile-lib
+	$(MAKE) -C quisp -j$(NPROC) MODE=debug
 
 msgheaders: checkmakefile
 	$(MAKE) -C quisp msgheaders
