@@ -40,6 +40,7 @@ $(TEST_OBJS): $O/%.o : %.cc
 	$(Q)$(CXX) -c $(CXXFLAGS) $(COPTS) $(TEST_INCLUDE) -o $@ $<
 
 $(TARGET_DIR)/run_unit_test: $(TARGET_DIR)/$(TARGET) $(TEST_OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)
+	MODE=debug
 	@$(MKPATH) $O
 	@echo Creating test executable:
 	$(Q)$(CXX) $(LDFLAGS) -lpthread -o $(TARGET_DIR)/run_unit_test $(TEST_OBJS) $(OBJS) $(EXTRA_OBJS) $(LIBS) $(TEST_LIBS) $(OMNETPP_LIBS)
