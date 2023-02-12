@@ -90,6 +90,37 @@ std::vector<int> RuleSetGenerator::collectPath(messages::ConnectionSetupRequest*
 }
 
 std::map<int, std::pair<int, int>> RuleSetGenerator::collectSwappingPartners(std::vector<int>& path, int divisions, int hop_count) {
+  /// recognize partner. (which node is left partner, right partner)
+  /// Currently, we choose every other node in the path to do swapping in the first round.
+  /// In the examples below, the number in parentheses is the round of swapping,
+  /// and designates which nodes are swapping.
+  /// If the number of hops is a power of two, we get something like
+  /// \verbatim
+  /// node1 --- node2(1) --- node3 --- node4(1) --- node5
+  /// node1 ---------------- node3 ---------------- node5
+  /// node1 ---------------- node3(2) ------------- node5
+  /// node1 --------------------------------------- node5
+  /// \endverbatim
+  /// If the number of hops is not a power of two, at some stage
+  /// the number of hops will become become odd as we proceed,
+  /// forcing us to decide which to do first.  In this version
+  /// of the code, we just give priority starting from the left
+  /// (start of our list)
+  /// \verbatim
+  /// node1 --- node2(1) --- node3 --- node4(1) --- node5 --- node6
+  /// node1 ---------------- node3 ---------------- node5 --- node6
+  /// node1 ---------------- node3(2) ------------- node5 --- node6
+  /// node1 --------------------------------------- node5 --- node6
+  /// node1 ------------------------------------ node5(3) --- node6
+  /// node1 ------------------------------------------------- node6
+  /// \endverbatim
+  /// todo hypothetically, with no purification, all of the intermediate
+  /// nodes could swap asynchronously and essentially simultaneously.
+  /// In fact, that's probably what we want, to minimize decoherence.
+  /// But, the condition clause will have to be extended in order to support
+  /// "when part of this connection" rather than "when entangled with this node"
+  /// and you have to be careful of not creating the wrong result by accident.
+
   std::vector<int> link_left_nodes(divisions);
   std::vector<int> link_right_nodes(divisions);
   std::vector<int> swapper_nodes(divisions);
@@ -120,20 +151,6 @@ int RuleSetGenerator::fillPathDivision(std::vector<int>& path, int i, int l, std
     fill_start++;
   }
   return fill_start;
-}
-
-std::unique_ptr<Rule> RuleSetGenerator::waitRule(int partner_address, int shared_tag) {
-  auto wait_rule = std::make_unique<Rule>(partner_address, shared_tag, false);
-
-  auto condition = std::make_unique<Condition>();
-  auto wait_clause = std::make_unique<WaitConditionClause>(partner_address);
-  condition->addClause(std::move(wait_clause));
-  wait_rule->setCondition(std::move(condition));
-
-  auto wait_action = std::make_unique<Wait>(partner_address);
-  wait_rule->setAction(std::move(wait_action));
-
-  return wait_rule;
 }
 
 std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int owner_address, int num_measure, int shared_tag) {

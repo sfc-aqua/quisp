@@ -29,7 +29,6 @@ class RuleSetGenerator : public OriginalRSG {
   using OriginalRSG::purifyRule;
   using OriginalRSG::swapRule;
   using OriginalRSG::tomographyRule;
-  using OriginalRSG::waitRule;
 };
 
 class RuleSetGeneratorTest : public testing::Test {
@@ -260,48 +259,6 @@ TEST_F(RuleSetGeneratorTest, SwapRule) {
         "remote_interface": [
           {"partner_address": 1},
           {"partner_address": 3}
-        ]
-      }
-   }
-})"_json;
-  EXPECT_EQ(serialized, expected);
-}
-
-TEST_F(RuleSetGeneratorTest, waitRule) {
-  // rule arguments
-  int partner_addr = 1;
-  int shared_tag = 0;
-
-  auto purification_rule = rsg->waitRule(partner_addr, shared_tag);
-  EXPECT_EQ(purification_rule->rule_id, -1);
-
-  auto serialized = purification_rule->serialize_json();
-  //  rule_id is given by RuleSet and next_rule_id is given outside of Rule decration.
-  json expected = R"({
-   "rule_id":-1,
-   "next_rule_id":-1,
-   "name":"",
-   "shared_tag": 0,
-   "interface":[
-     {"partner_address": 1}
-   ],
-   "condition":{
-      "clauses":[
-         {
-            "type":"wait",
-            "options":{
-              "interface":{
-                "partner_address": 1
-              }
-            }
-         }
-      ]
-   },
-   "action":{
-      "type":"wait",
-      "options":{
-        "interface":[
-          {"partner_address": 1}
         ]
       }
    }
