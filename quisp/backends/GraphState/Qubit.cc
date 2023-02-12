@@ -7,11 +7,10 @@
 
 namespace quisp::backends::graph_state {
 using types::CliffordOperator;
-GraphStateQubit::GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend, bool is_short_live = false)
+GraphStateQubit::GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend, bool is_short_live)
     : memory_transition_matrix(MatrixXd::Zero(6, 6)), id(id), backend(backend), is_short_live(is_short_live) {
   // initialize variables for graph state representation tracking
   vertex_operator = CliffordOperator::H;
-  is_short_live = false;
 }
 
 GraphStateQubit::~GraphStateQubit() {}
