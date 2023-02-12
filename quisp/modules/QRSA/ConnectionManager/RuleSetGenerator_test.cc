@@ -43,6 +43,53 @@ class RuleSetGeneratorTest : public testing::Test {
   RuleSetGenerator *rsg;
 };
 
+TEST_F(RuleSetGeneratorTest, generateSimpleSwappingRuleSets) {
+  std::map<int, std::vector<std::unique_ptr<Rule>>> rules_map{};
+  std::vector<int> path{1, 2, 3, 4, 5};
+  std::vector<int> rev_path{5, 4, 3, 2, 1};
+  std::map<int, std::pair<int, int>> swapping_partners_table{{2, {1, 3}}, {4, {3, 5}}, {3, {1, 5}}};
+  int num_measure = 50;
+  rsg->generateSimpleSwappingRuleSets(rules_map, path, rev_path, swapping_partners_table, num_measure);
+  EXPECT_EQ(rules_map.size(), 5);
+  EXPECT_EQ(rules_map.find(1)->second.size(), 1);
+  {
+    auto &rule = rules_map.find(1)->second.at(0);
+    EXPECT_EQ(rule->qnic_interfaces.size(), 1);
+    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 5);
+  }
+
+  EXPECT_EQ(rules_map.find(2)->second.size(), 1);
+  {
+    auto &rule = rules_map.find(2)->second.at(0);
+    EXPECT_EQ(rule->qnic_interfaces.size(), 2);
+    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 1);
+    EXPECT_EQ(rule->qnic_interfaces.at(1).partner_addr, 3);
+  }
+
+  EXPECT_EQ(rules_map.find(3)->second.size(), 1);
+  {
+    auto &rule = rules_map.find(3)->second.at(0);
+    EXPECT_EQ(rule->qnic_interfaces.size(), 2);
+    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 1);
+    EXPECT_EQ(rule->qnic_interfaces.at(1).partner_addr, 5);
+  }
+
+  EXPECT_EQ(rules_map.find(4)->second.size(), 1);
+  {
+    auto &rule = rules_map.find(4)->second.at(0);
+    EXPECT_EQ(rule->qnic_interfaces.size(), 2);
+    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 3);
+    EXPECT_EQ(rule->qnic_interfaces.at(1).partner_addr, 5);
+  }
+
+  EXPECT_EQ(rules_map.find(5)->second.size(), 1);
+  {
+    auto &rule = rules_map.find(5)->second.at(0);
+    EXPECT_EQ(rule->qnic_interfaces.size(), 1);
+    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 1);
+  }
+}
+
 TEST_F(RuleSetGeneratorTest, Simple) {
   auto *req = new ConnectionSetupRequest();
   // qnic_index(id)     11       12           13       14           15       16

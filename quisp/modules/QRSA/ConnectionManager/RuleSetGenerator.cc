@@ -4,19 +4,14 @@ namespace quisp::modules::ruleset_gen {
 
 using namespace quisp::rules;
 
-std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetupRequest* req, unsigned long ruleset_id) {
-  auto path = collectPath(req);
-  size_t hop_count = req->getStack_of_QNodeIndexesArraySize();
-  size_t divisions = hop_count * 2 - 1;
-  auto swapping_partners_table = collectSwappingPartners(path, divisions, hop_count);
+void RuleSetGenerator::generateSimpleSwappingRuleSets(std::map<int, std::vector<std::unique_ptr<Rule>>>& rules_map, std::vector<int>& path, std::vector<int>& rev_path,
+                                                      std::map<int, std::pair<int, int>>& swapping_partners_table, int num_measure) {
+  // used for identifying the partner rule.
+  int shared_tag = 0;
 
-  std::map<int /* node addr */, std::vector<std::unique_ptr<Rule>>> rules_map;
-  auto rev_path = path;
-  std::reverse(rev_path.begin(), rev_path.end());
-  int shared_tag = 0;  // used for identifying the partner rule.
-
+  // distance between swapper and its partners
   for (int distance = 1; distance < path.size() / 2 + 1; distance++) {
-    // Entanglement Swapping
+    // swapper's index
     for (int i = 1; i < (path.size() + 1) / 2; i++) {
       std::vector<int> swapper_nodes;
       if (rev_path.at(i) != path.at(i)) {
@@ -26,48 +21,57 @@ std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetup
       }
       // iterate swapper nodes
       for (int swapper_node : swapper_nodes) {
-        auto it = swapping_partners_table.find(swapper_node);
-        int left_partner = it->second.first, right_partner = it->second.second;
-        // check if the distance of swapping is the same as the target distance
+        auto [left_partner, right_partner] = swapping_partners_table.find(swapper_node)->second;
+
         auto swapper_it = std::find(path.begin(), path.end(), swapper_node);
         auto left_it = std::find(path.begin(), path.end(), left_partner);
         auto right_it = std::find(path.begin(), path.end(), right_partner);
-        int index = 0, lindex = 0, rindex = 0;
-        if (swapper_it != path.end() && left_it != path.end() && right_it != path.end()) {
-          index = swapper_it - path.begin();
-          lindex = left_it - path.begin();
-          rindex = right_it - path.begin();
-        } else {
+        if (swapper_it == path.end() || left_it == path.end() || right_it == path.end()) {
           throw std::runtime_error("swapper and partner indices are not found in the path. Should not happen.");
         }
-        if (std::max(std::abs(index - lindex), std::abs(index - rindex)) == distance) {
-          // Swapping Rules
-          auto swapping_rule = swapRule(swapping_partners_table[swapper_node], shared_tag);
+
+        // check if the distance of swapping is the same as the target distance
+        auto left_swapper_dist = std::abs(std::distance(left_it, swapper_it));
+        auto right_swapper_dist = std::abs(std::distance(swapper_it, right_it));
+        if (std::max(left_swapper_dist, right_swapper_dist) == distance) {
+          rules_map[swapper_node].push_back(swapRule(swapping_partners_table[swapper_node], shared_tag));
           shared_tag++;
-          rules_map[swapper_node].push_back(std::move(swapping_rule));
         }
       }
     }
   }
 
+  // add tomography rules
   int initiator_addr = path.at(0);
-  int num_measure = req->getNum_measure();
   rules_map[initiator_addr].emplace_back(tomographyRule(responder_addr, initiator_addr, num_measure, shared_tag));
   rules_map[responder_addr].emplace_back(tomographyRule(initiator_addr, responder_addr, num_measure, shared_tag));
   shared_tag++;
+}
 
+std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetupRequest* req, unsigned long ruleset_id) {
+  // prepare information for RuleSets generation
+  auto path = collectPath(req);
+  size_t hop_count = req->getStack_of_QNodeIndexesArraySize();
+  size_t divisions = hop_count * 2 - 1;
+  auto swapping_partners_table = collectSwappingPartners(path, divisions, hop_count);
+
+  std::map<int /* node addr */, std::vector<std::unique_ptr<Rule>>> rules_map;
+  auto rev_path = path;
+  std::reverse(rev_path.begin(), rev_path.end());
+  int num_measure = req->getNum_measure();
   std::map<int, json> rulesets{};
+
+  // generate rules and put it into rules_map
+  generateSimpleSwappingRuleSets(rules_map, path, rev_path, swapping_partners_table, num_measure);
+
+  // pack rules into RuleSets and serialize it as json
   for (auto it = rules_map.begin(); it != rules_map.end(); ++it) {
     int owner_address = it->first;
     auto rules = std::move(it->second);
     RuleSet ruleset(ruleset_id, owner_address);
     for (int i = 0; i < rules.size(); i++) {
       auto rule = std::move(rules.at(i));
-      auto appended_rule = ruleset.addRule(std::move(rule));
-      if (appended_rule->is_finalized) {
-        // if the rule is entanglement swapping or tomography rule, no need to specify the next rule
-        break;
-      }
+      ruleset.addRule(std::move(rule));
     }
     rulesets.emplace(owner_address, ruleset.serialize_json());
   }

@@ -21,6 +21,9 @@ class RuleSetGenerator {
    */
   std::map<int, nlohmann::json> generateRuleSets(messages::ConnectionSetupRequest* req, unsigned long ruleset_id);
 
+  void generateSimpleSwappingRuleSets(std::map<int, std::vector<std::unique_ptr<rules::Rule>>>& rules_map, std::vector<int>& path, std::vector<int>& rev_path,
+                                      std::map<int, std::pair<int, int>>& swapping_partners_table, int num_measure);
+
  protected:
   /**
    * @brief collect path infomation from initiator to responder
