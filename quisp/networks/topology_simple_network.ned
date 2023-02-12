@@ -30,11 +30,12 @@ network Simple_MIM
             address = 3;
             @display("p=184,85,m,5,60,60");
         }
+        
     connections:
-        EndNode1.port++ <--> ClassicalChannel {  distance = 5km; } <--> BSA.port++;
-        BSA.port++ <--> ClassicalChannel {  distance = 5km; } <--> EndNode2.port++;
-        EndNode1.quantum_port++ <--> QuantumChannel {  distance = 5km; } <--> BSA.quantum_port++;
-        BSA.quantum_port++ <--> QuantumChannel {  distance = 5km; } <--> EndNode2.quantum_port++;
+        EndNode1.port++ <--> ClassicalChannel {  distance = 1km; } <--> BSA.port++;
+        BSA.port++ <--> ClassicalChannel {  distance = 1km; } <--> EndNode2.port++;
+        EndNode1.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> BSA.quantum_port++;
+        BSA.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> EndNode2.quantum_port++;
 
 }
 
@@ -56,8 +57,8 @@ network Simple_MM
             node_type = "EndNode";
             @display("i=COMP;p=248,39,m,5,60,60");
         }
-    connections:
-        EndNode1.port++ <--> ClassicalChannel {  distance = 5km; } <--> EndNode2.port++;
-        EndNode1.quantum_port++ <--> QuantumChannel {  distance = 5km; } <--> EndNode2.quantum_port_receiver++;
 
+    connections:
+        EndNode1.port++ <--> ClassicalChannel {  distance = 1km; } <--> EndNode2.port++;
+        EndNode1.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> EndNode2.quantum_port_receiver++;
 }
