@@ -225,10 +225,10 @@ void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
  * @endverbatim
  */
 void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
-  int initiator_addr = req->getActual_srcAddr();
+  int prev_hop_addr = req->getSrcAddr();
 
   // qnic toward to the previous node
-  int qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
+  int qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(prev_hop_addr);
   if (qnic_addr == -1) {
     error("No qnic to source node. Something wrong with routing.");
   }
@@ -245,13 +245,13 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   // distribute rulesets to each qnode in the path
   for (auto [owner_address, rs] : rulesets) {
     ConnectionSetupResponse *pkt = new ConnectionSetupResponse("ConnectionSetupResponse");
-    pkt->setDestAddr(owner_address);
-    pkt->setSrcAddr(my_address);
-    pkt->setKind(2);
     pkt->setRuleSet(rs);
-    pkt->setActual_srcAddr(initiator_addr);
-    pkt->setActual_destAddr(my_address);
+    pkt->setSrcAddr(my_address);
+    pkt->setDestAddr(owner_address);
+    pkt->setActual_srcAddr(my_address);
+    pkt->setActual_destAddr(owner_address);
     pkt->setApplication_type(0);
+    pkt->setKind(2);
     send(pkt, "RouterPort$o");
   }
   reserveQnic(qnic_addr);
@@ -266,9 +266,9 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
  **/
 void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
   int responder_addr = req->getActual_destAddr();
-  int initiator_addr = req->getActual_srcAddr();
+  int prev_hop_addr = req->getSrcAddr();
   int outbound_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(responder_addr);
-  int inbound_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
+  int inbound_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(prev_hop_addr);
 
   if (outbound_qnic_address == -1) {
     error("QNIC to destination not found");
