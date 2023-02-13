@@ -1,16 +1,17 @@
 /** \file ConnectionManager.cc
- *  \authors cldurand,takaakimatsuo,cocori,rdv
  *
  *  \brief ConnectionManager
  */
 
-#include "ConnectionManager.h"
 #include <string>
+
+#include "ConnectionManager.h"
 #include "RuleSetGenerator.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
 using namespace quisp::rules;
+using quisp::modules::ruleset_gen::RuleSetGenerator;
 
 namespace quisp::modules {
 
@@ -212,34 +213,28 @@ void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
  * This function is called to handle the ConnectionSetupRequest at the responder.
  * This is where much of the work happens, and there is the potential for new value
  * if you have a better way to do this.
- * \param pk pointer to the ConnectionSetupRequest packet itself
- * \returns nothing
+ * @param pk pointer to the ConnectionSetupRequest packet itself
+ * @returns nothing
  *
  * The procedure:
- * \verbatim
- * 1. figure out swapping order & partners by calling EntanglementSwappingConfig
- * 2. generate all the RuleSets by calling generateEntanglementSwappingRuleSet
- * 3. return ConnectionSetupResponse to each node in this connection.
- * \endverbatim
+ * @verbatim
+ * 1. check the qnic is busy or not
+ * 2. generate all the RuleSets by calling RuleSetGenerator
+ * 3. reserve the qnic for the connection
+ * 4. return ConnectionSetupResponse to each node in this connection.
+ * @endverbatim
  */
 void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
-  int responder_addr = req->getActual_destAddr();
   int initiator_addr = req->getActual_srcAddr();
 
-  // This must be -1 (not found) because not interface to itself
-  int dest_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(responder_addr);
-  if (dest_qnic_address != -1) {
-    error("Unknown qnic found. Something wrong with routing.");
-  }
-
-  // interface toward to the initiator node
-  int src_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
-  if (src_qnic_address == -1) {
+  // qnic toward to the previous node
+  int qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(initiator_addr);
+  if (qnic_addr == -1) {
     error("No qnic to source node. Something wrong with routing.");
   }
 
   // check if the qnics are reserved or not
-  if (isQnicBusy(src_qnic_address)) {
+  if (isQnicBusy(qnic_addr)) {
     rejectRequest(req);
     return;
   }
@@ -255,11 +250,11 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
     pkt->setKind(2);
     pkt->setRuleSet(rs);
     pkt->setActual_srcAddr(initiator_addr);
-    pkt->setActual_destAddr(responder_addr);
+    pkt->setActual_destAddr(my_address);
     pkt->setApplication_type(0);
     send(pkt, "RouterPort$o");
   }
-  reserveQnic(src_qnic_address);
+  reserveQnic(qnic_addr);
 }
 
 /**
