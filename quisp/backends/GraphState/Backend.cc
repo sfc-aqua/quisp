@@ -71,7 +71,10 @@ IQubit* GraphStateBackend::getShortLiveQubit() {
   return qubit;
 }
 
-void GraphStateBackend::returnToPool(IQubit* pool_qubit) { short_live_qubit_pool.emplace_back(pool_qubit); }
+void GraphStateBackend::returnToPool(IQubit* pool_qubit) {
+  pool_qubit->setFree();
+  short_live_qubit_pool.emplace_back(pool_qubit);
+}
 
 void GraphStateBackend::deleteQubit(const IQubitId* id) {
   auto qubit_iterator = qubits.find(id);

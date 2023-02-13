@@ -213,7 +213,6 @@ PhotonicQubit *StationaryQubit::generateEntangledPhoton() {
   Enter_Method("generateEntangledPhoton()");
   auto *photon = new PhotonicQubit("Photon");
   auto *photon_ref = backend->getShortLiveQubit();
-  photon_ref->setFree();
   qubit_ref->noiselessH();
   qubit_ref->noiselessCNOT(photon_ref);
   photon->setQubit_ref(photon_ref);
