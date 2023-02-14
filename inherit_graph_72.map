@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classquisp_1_1runtime_1_1_runtime_manager.html" title=" " alt="" coords="5,5,212,31"/>
+<area shape="rect" id="node1" href="$structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html" title="ICallBack is an interface for the callback of the Runtime." alt="" coords="5,35,161,75"/>
+<area shape="rect" id="node2" href="$structquisp_1_1modules_1_1runtime__callback_1_1_runtime_callback.html" title=" " alt="" coords="228,5,409,45"/>
+<area shape="rect" id="node3" href="$classquisp__test_1_1_mock_runtime_callback.html" title=" " alt="" coords="209,70,428,95"/>
 </map>

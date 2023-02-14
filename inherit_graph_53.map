@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classquisp_1_1rules_1_1_condition.html" title=" " alt="" coords="5,5,152,31"/>
+<area shape="rect" id="node1" href="$classquisp_1_1rules_1_1_clause.html" title=" " alt="" coords="5,109,139,134"/>
+<area shape="rect" id="node2" href="$classquisp_1_1rules_1_1_enough_resource_condition_clause.html" title=" " alt="" coords="187,5,377,45"/>
+<area shape="rect" id="node3" href="$classquisp_1_1rules_1_1_fidelity_condition_clause.html" title=" " alt="" coords="188,69,376,109"/>
+<area shape="rect" id="node4" href="$classquisp_1_1rules_1_1_measure_count_condition_clause.html" title=" " alt="" coords="193,133,371,173"/>
+<area shape="rect" id="node5" href="$classquisp_1_1rules_1_1_wait_condition_clause.html" title=" " alt="" coords="195,197,369,237"/>
 </map>

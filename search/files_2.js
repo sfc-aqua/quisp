@@ -14,6 +14,5 @@ var searchData=
   ['configuration_2eh_11',['Configuration.h',['../_configuration_8h.html',1,'']]],
   ['connectionmanager_2ecc_12',['ConnectionManager.cc',['../_connection_manager_8cc.html',1,'']]],
   ['connectionmanager_2eh_13',['ConnectionManager.h',['../_connection_manager_8h.html',1,'']]],
-  ['connectionmanager_5fruleset_5ftest_2ecc_14',['ConnectionManager_ruleset_test.cc',['../_connection_manager__ruleset__test_8cc.html',1,'']]],
-  ['connectionmanager_5ftest_2ecc_15',['ConnectionManager_test.cc',['../_connection_manager__test_8cc.html',1,'']]]
+  ['connectionmanager_5ftest_2ecc_14',['ConnectionManager_test.cc',['../_connection_manager__test_8cc.html',1,'']]]
 ];

@@ -104,5 +104,5 @@ var searchData=
   ['success_101',['success',['../structquisp_1_1physical_1_1types_1_1_b_s_a_click_result.html#ae9ac505f61e1b8c27f4b62efc367b66f',1,'quisp::physical::types::BSAClickResult']]],
   ['swappingconfig_102',['SwappingConfig',['../struct_swapping_config.html',1,'']]],
   ['swappingresultdata_103',['SwappingResultData',['../structquisp_1_1modules_1_1_swapping_result_data.html',1,'quisp::modules']]],
-  ['swaprule_104',['swapRule',['../classquisp_1_1modules_1_1_connection_manager.html#a9fa116d70a22cd0e86c96f7deecd221d',1,'quisp::modules::ConnectionManager']]]
+  ['swaprule_104',['swapRule',['../classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#a03c8ba075e2328e3a069303139774bb1',1,'quisp::modules::ruleset_gen::RuleSetGenerator']]]
 ];

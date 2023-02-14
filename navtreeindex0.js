@@ -89,10 +89,8 @@ var NAVTREEINDEX0 =
 "_connection_manager_8cc.html#a9f379547b18d1561693fc6e06b244b2b":[19,0,0,3,6,0,0,0],
 "_connection_manager_8h.html":[19,0,0,3,6,0,1],
 "_connection_manager_8h_source.html":[19,0,0,3,6,0,1],
-"_connection_manager__ruleset__test_8cc.html":[19,0,0,3,6,0,2],
-"_connection_manager__ruleset__test_8cc.html#ab701e3ac61a85b337ec5c1abaad6742d":[19,0,0,3,6,0,2,0],
-"_connection_manager__test_8cc.html":[19,0,0,3,6,0,3],
-"_connection_manager__test_8cc.html#ab701e3ac61a85b337ec5c1abaad6742d":[19,0,0,3,6,0,3,0],
+"_connection_manager__test_8cc.html":[19,0,0,3,6,0,2],
+"_connection_manager__test_8cc.html#ab701e3ac61a85b337ec5c1abaad6742d":[19,0,0,3,6,0,2,0],
 "_default_component_provider_strategy_8cc.html":[19,0,0,7,2],
 "_default_component_provider_strategy_8h.html":[19,0,0,7,3],
 "_default_component_provider_strategy_8h_source.html":[19,0,0,7,3],
@@ -124,8 +122,8 @@ var NAVTREEINDEX0 =
 "_i_component_provider_strategy_8h_source.html":[19,0,0,7,4],
 "_i_configuration_8h.html":[19,0,0,0,1,0],
 "_i_configuration_8h_source.html":[19,0,0,0,1,0],
-"_i_connection_manager_8h.html":[19,0,0,3,6,0,4],
-"_i_connection_manager_8h_source.html":[19,0,0,3,6,0,4],
+"_i_connection_manager_8h.html":[19,0,0,3,6,0,3],
+"_i_connection_manager_8h_source.html":[19,0,0,3,6,0,3],
 "_i_hardware_monitor_8h.html":[19,0,0,3,6,1,3],
 "_i_hardware_monitor_8h.html#a2defc0c764ef7e29d546e4c3368248e1":[19,0,0,3,6,1,3,10],
 "_i_hardware_monitor_8h.html#a47b510b280e1ac42bcf95908dc72facb":[19,0,0,3,6,1,3,9],
@@ -249,5 +247,7 @@ var NAVTREEINDEX0 =
 "_q_r_s_a_8h.html":[19,0,0,3,6,5],
 "_q_r_s_a_8h.html#a03b0866b48bb748920c561500cc46c17":[19,0,0,3,6,5,1],
 "_q_r_s_a_8h_source.html":[19,0,0,3,6,5],
-"_quantum_channel_8cc.html":[19,0,0,1,0]
+"_quantum_channel_8cc.html":[19,0,0,1,0],
+"_quantum_channel_8cc.html#a96762b209a269617eb9288ea0161aa75":[19,0,0,1,0,2],
+"_qubit_8cc.html":[19,0,0,0,0,6]
 };

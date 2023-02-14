@@ -40,7 +40,7 @@ var searchData=
   ['tomography_5frunningtime_5fholder_37',['tomography_runningtime_holder',['../classquisp_1_1modules_1_1_hardware_monitor.html#abd69dc5fc14cb6203922de76134ab552',1,'quisp::modules::HardwareMonitor']]],
   ['tomography_5ftime_38',['tomography_time',['../structquisp_1_1modules_1_1link__cost.html#a30524f9e8e7ece7741971d68230ed2c4',1,'quisp::modules::link_cost']]],
   ['tomographyoutcometable_39',['TomographyOutcomeTable',['../namespacequisp_1_1modules.html#a2defc0c764ef7e29d546e4c3368248e1',1,'quisp::modules']]],
-  ['tomographyrule_40',['tomographyRule',['../classquisp_1_1modules_1_1_connection_manager.html#a200515db67131b43a419f70048497256',1,'quisp::modules::ConnectionManager']]],
+  ['tomographyrule_40',['tomographyRule',['../classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html#ae460283f78bb799e05f4d39b4560ed8c',1,'quisp::modules::ruleset_gen::RuleSetGenerator']]],
   ['tostring_41',['toString',['../classquisp_1_1modules_1_1_bell_pair_store.html#ad65976daa037643d9c57a02212b05892',1,'quisp::modules::BellPairStore::toString()'],['../structquisp_1_1runtime_1_1_instruction.html#ae0dc0466c7ccfd3587d673d13a9095c4',1,'quisp::runtime::Instruction::toString() const']]],
   ['tostringargs_42',['toStringArgs',['../structquisp_1_1runtime_1_1_instruction.html#a59e037edc7634995e3f36fe6e359ff73',1,'quisp::runtime::Instruction']]],
   ['total_5fcount_43',['total_count',['../structquisp_1_1modules_1_1output__count.html#a6fb05796956767cb0f077fb062199602',1,'quisp::modules::output_count']]],

@@ -174,6 +174,7 @@ var hierarchy =
     [ "quisp::rules::RuleSet", "classquisp_1_1rules_1_1_rule_set.html", null ],
     [ "quisp::runtime::RuleSet", "classquisp_1_1runtime_1_1_rule_set.html", null ],
     [ "quisp::rules::rs_converter::RuleSetConverter", "classquisp_1_1rules_1_1rs__converter_1_1_rule_set_converter.html", null ],
+    [ "quisp::modules::ruleset_gen::RuleSetGenerator", "classquisp_1_1modules_1_1ruleset__gen_1_1_rule_set_generator.html", null ],
     [ "quisp::runtime::Runtime", "classquisp_1_1runtime_1_1_runtime.html", null ],
     [ "quisp::runtime::RuntimeManager", "classquisp_1_1runtime_1_1_runtime_manager.html", null ],
     [ "quisp::backends::graph_state::types::SingleGateErrorModel", "structquisp_1_1backends_1_1graph__state_1_1types_1_1_single_gate_error_model.html", null ],
