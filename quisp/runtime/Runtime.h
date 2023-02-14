@@ -78,10 +78,6 @@ class Runtime {
     virtual void sendSwappingResults(const unsigned long ruleset_id, const Rule& rule, const QNodeAddr left_partner_addr, int left_op, const QNodeAddr right_partner_addr,
                                      int right_op) = 0;
 
-    // Hack
-    virtual void hackSwappingPartners(IQubitRecord* const, IQubitRecord* const) = 0;
-    virtual void hackBreakEntanglement(IQubitRecord* qubit) = 0;
-
     // Debugging
     virtual std::string getNodeInfo() { return ""; };
   };

@@ -70,10 +70,6 @@ INSTR(SEND_PURIFICATION_RESULT, QNodeAddr, RegId /* result_z */, RegId /* result
 INSTR(SEND_PURIFICATION_RESULT, QNodeAddr, RegId /* result_z */, RegId /* result_x */, RegId /* ds_res_z */, RegId /* ds_res_x */, RegId /* action_index */, PurType)
 INSTR(SEND_SWAPPING_RESULT, QNodeAddr /* left partner*/, RegId /* left operation */, QNodeAddr /* right partner*/, RegId /* right operation */)
 
-// hacks. will be deleted
-INSTR(HACK_SWAPPING_PARTNERS, QubitId, QubitId)
-INSTR(HACK_BREAK_ENTANGLEMENT, QubitId)
-
 INSTR_LAST(NOP, None)
 #undef INSTR
 #undef INSTR_LAST

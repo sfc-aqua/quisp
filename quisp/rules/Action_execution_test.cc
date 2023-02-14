@@ -109,7 +109,6 @@ TEST_F(ActionExecutionTest, Swapping) {
   EXPECT_CALL(*callback, gateCNOT(qubit1, qubit2)).Times(1);
   EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'X', .outcome_is_plus = true}));
   EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = true}));
-  EXPECT_CALL(*callback, hackSwappingPartners(qubit1, qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, sendSwappingResults(ruleset_id, _, QNodeAddr{left_partner_addr}, 0, QNodeAddr{right_partner_addr}, 0)).Times(1);
@@ -124,7 +123,6 @@ TEST_F(ActionExecutionTest, Swapping) {
   EXPECT_CALL(*callback, gateCNOT(qubit1, qubit2)).Times(1);
   EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'X', .outcome_is_plus = false}));
   EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = false}));
-  EXPECT_CALL(*callback, hackSwappingPartners(qubit1, qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, sendSwappingResults(ruleset_id, _, QNodeAddr{left_partner_addr}, 2, QNodeAddr{right_partner_addr}, 1)).Times(1);
@@ -139,7 +137,6 @@ TEST_F(ActionExecutionTest, Swapping) {
   EXPECT_CALL(*callback, gateCNOT(qubit1, qubit2)).Times(1);
   EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'X', .outcome_is_plus = true}));
   EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = false}));
-  EXPECT_CALL(*callback, hackSwappingPartners(qubit1, qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, sendSwappingResults(ruleset_id, _, QNodeAddr{left_partner_addr}, 0, QNodeAddr{right_partner_addr}, 1)).Times(1);
@@ -154,7 +151,6 @@ TEST_F(ActionExecutionTest, Swapping) {
   EXPECT_CALL(*callback, gateCNOT(qubit1, qubit2)).Times(1);
   EXPECT_CALL(*callback, measureQubitX(qubit1)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'X', .outcome_is_plus = false}));
   EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = true}));
-  EXPECT_CALL(*callback, hackSwappingPartners(qubit1, qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, sendSwappingResults(ruleset_id, _, QNodeAddr{left_partner_addr}, 2, QNodeAddr{right_partner_addr}, 0)).Times(1);
@@ -173,7 +169,6 @@ TEST_F(ActionExecutionTest, PurifyX) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(true));
   EXPECT_CALL(*callback, sendSinglePurificationResult(ruleset_id, _, 0 /* action_index */, QNodeAddr(partner_addr), true, pur_type)).Times(1);
@@ -190,7 +185,6 @@ TEST_F(ActionExecutionTest, PurifyX) {
   runtime->assignQubitToRuleSet(partner_addr, qubit4);
   ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 3);
   EXPECT_CALL(*callback, lockQubit(qubit3, ruleset_id, 0, 1)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit3, qubit4)).Times(1).WillOnce(Return(false));
   EXPECT_CALL(*callback, sendSinglePurificationResult(ruleset_id, _, 1 /* action_index */, QNodeAddr(partner_addr), false, pur_type)).Times(1);
@@ -205,7 +199,6 @@ TEST_F(ActionExecutionTest, PurifyZ) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, purifyZ(qubit1, qubit2)).Times(1).WillOnce(Return(true));
   EXPECT_CALL(*callback, sendSinglePurificationResult(ruleset_id, _, 0 /* action_index */, QNodeAddr(partner_addr), true, pur_type)).Times(1);
@@ -222,7 +215,6 @@ TEST_F(ActionExecutionTest, PurifyZ) {
   runtime->assignQubitToRuleSet(partner_addr, qubit4);
   ASSERT_EQ(getResourceSizeByRuleId(*runtime, 0), 3);
   EXPECT_CALL(*callback, lockQubit(qubit3, ruleset_id, 0, 1)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
   EXPECT_CALL(*callback, purifyZ(qubit3, qubit4)).Times(1).WillOnce(Return(false));
   EXPECT_CALL(*callback, sendSinglePurificationResult(ruleset_id, _, 1 /* action_index */, QNodeAddr(partner_addr), false, pur_type)).Times(1);
@@ -237,8 +229,6 @@ TEST_F(ActionExecutionTest, DoublePurifyBothTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(true));
@@ -259,8 +249,6 @@ TEST_F(ActionExecutionTest, DoublePurifyBothFalse) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(false));
@@ -281,8 +269,6 @@ TEST_F(ActionExecutionTest, DoublePurifyXTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(false));
@@ -303,8 +289,6 @@ TEST_F(ActionExecutionTest, DoublePurifyZTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(true));
@@ -325,8 +309,6 @@ TEST_F(ActionExecutionTest, DoublePurifyInvBothTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(true));
@@ -347,8 +329,6 @@ TEST_F(ActionExecutionTest, DoublePurifyInvBothFalse) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(false));
@@ -369,8 +349,6 @@ TEST_F(ActionExecutionTest, DoublePurifyInvXTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(false));
@@ -391,8 +369,6 @@ TEST_F(ActionExecutionTest, DoublePurifyInvZTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(true));
@@ -413,8 +389,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyBothTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(true));
@@ -435,8 +409,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyBothFalse) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(false));
@@ -457,8 +429,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyXTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(false));
@@ -479,8 +449,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyZTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit1, qubit2)).Times(1).WillOnce(Return(true));
@@ -501,8 +469,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyInvBothTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit3, qubit2)).Times(1).WillOnce(Return(true));
@@ -523,8 +489,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyInvBothFalse) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit3, qubit2)).Times(1).WillOnce(Return(false));
@@ -545,8 +509,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyInvXTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit3, qubit2)).Times(1).WillOnce(Return(false));
@@ -567,8 +529,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionPurifyInvZTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, purifyX(qubit3, qubit2)).Times(1).WillOnce(Return(true));
@@ -589,9 +549,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyAllTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -615,9 +572,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyAllFalse) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -641,9 +595,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyZTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -667,9 +618,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyDSTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -693,9 +641,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyInvAllTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -719,9 +664,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyInvAllFalse) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -745,9 +687,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyInvZTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -771,9 +710,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionSecondPurifyInvDSTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -797,10 +733,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyAllTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -827,10 +759,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyAllFalse) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -857,10 +785,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyAllXTrueZTrueZFalseXF
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -887,10 +811,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyXFalseZFalseZTrueXTru
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -917,10 +837,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyXFalseZTrueZTrueXFals
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -947,10 +863,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvAllTrue) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -977,10 +889,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvAllFalse) {
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -1007,10 +915,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvXTrueZTrueZFalseXF
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -1037,10 +941,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvXFalseZFalseZTrueX
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
@@ -1067,10 +967,6 @@ TEST_F(ActionExecutionTest, DoubleSelectionDualActionPurifyInvXFalseZTrueZTrueXF
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   EXPECT_CALL(*callback, lockQubit(qubit1, ruleset_id, 0, 0)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit2)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit3)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit4)).Times(1);
-  EXPECT_CALL(*callback, hackBreakEntanglement(qubit5)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit3)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit4)).Times(1);
