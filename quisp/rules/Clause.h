@@ -21,10 +21,9 @@ class Clause {
 class EnoughResourceConditionClause : public Clause {
  public:
   EnoughResourceConditionClause(json serialized) { deserialize_json(serialized); }
-  EnoughResourceConditionClause(int num_resources, double required_fidelity, int partner_addr);
+  EnoughResourceConditionClause(int num_resources, int partner_addr);
   const std::string name = "enough_resource";
   int num_resource;
-  double required_fidelity;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };

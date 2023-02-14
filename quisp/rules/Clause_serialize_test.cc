@@ -16,11 +16,10 @@ using quisp::modules::QNIC_type;
 TEST(ClauseTest, EnoughResourceConditionClause_serialize_json) {
   prepareSimulation();
   // num_resource, required_fidelity, partner_addr, qnic_type, qnic_id
-  auto enough_resource = std::make_unique<EnoughResourceConditionClause>(3, 0.85, 1);
+  auto enough_resource = std::make_unique<EnoughResourceConditionClause>(3, 1);
   json enough_resource_json = enough_resource->serialize_json();
   EXPECT_EQ(enough_resource_json["type"], "enough_resource");
   EXPECT_EQ(enough_resource_json["options"]["num_resource"], 3);
-  EXPECT_EQ(enough_resource_json["options"]["required_fidelity"], 0.85);
   EXPECT_EQ(enough_resource_json["options"]["interface"]["partner_address"], 1);
 }
 
@@ -39,7 +38,6 @@ TEST(ClauseTest, EnoughResourceConditionClause_deserialize_json) {
   auto enough_resource = std::make_unique<EnoughResourceConditionClause>(serialized);
   EXPECT_EQ(enough_resource->name, "enough_resource");
   EXPECT_EQ(enough_resource->num_resource, 3);
-  EXPECT_EQ(enough_resource->required_fidelity, 0.95);
   EXPECT_EQ(enough_resource->partner_address, 1);
 }
 

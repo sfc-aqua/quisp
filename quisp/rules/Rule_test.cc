@@ -46,8 +46,8 @@ TEST(RuleTest, serialize_json_purification_rule) {
   auto purification = std::make_unique<Rule>(1, 0, false);
   purification->setName("purification");
   auto condition = std::make_unique<Condition>();
-  // arguments: num_resource, required_fidelity, partner_addr, qnic_type, qnic_id
-  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.85, 1);
+  // arguments: num_resource, partner_addr, qnic_type, qnic_id
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 1);
   condition->addClause(std::move(enough_resource_clause));
   // purification_type, partner_addr, qnic_type, qnic_id
   auto action = std::make_unique<Purification>(PurType::DSSA, 1);
@@ -73,7 +73,6 @@ TEST(RuleTest, serialize_json_purification_rule) {
   auto clause_json = purification_json["condition"]["clauses"][0];  // (first clause) enough resource clause
   EXPECT_EQ(clause_json["type"], "enough_resource");
   EXPECT_EQ(clause_json["options"]["num_resource"], 1);
-  EXPECT_EQ(clause_json["options"]["required_fidelity"], 0.85);
   EXPECT_EQ(clause_json["options"]["interface"]["partner_address"], 1);
   auto action_json = purification_json["action"];
   EXPECT_EQ(action_json["type"], "purification");
@@ -96,9 +95,9 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   swapping->setName("swapping");
   auto condition = std::make_unique<Condition>();
 
-  // arguments: num_resource, required_fidelity, partner_addr, qnic_type, qnic_id
-  auto enough_resource_clause_left = std::make_unique<EnoughResourceConditionClause>(1, 0.85, partners.at(0));
-  auto enough_resource_clause_right = std::make_unique<EnoughResourceConditionClause>(1, 0.85, partners.at(1));
+  // arguments: num_resource, partner_addr, qnic_type, qnic_id
+  auto enough_resource_clause_left = std::make_unique<EnoughResourceConditionClause>(1, partners.at(0));
+  auto enough_resource_clause_right = std::make_unique<EnoughResourceConditionClause>(1, partners.at(1));
   condition->addClause(std::move(enough_resource_clause_left));
   condition->addClause(std::move(enough_resource_clause_right));
 
@@ -115,7 +114,7 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   // append rules to RuleSet
   auto rule1 = ruleset.addRule(std::move(swapping));
   auto rule2 = ruleset.addRule(std::move(purification1));
-  auto rule3 = ruleset.addRule(std::move(purification3));
+  ruleset.addRule(std::move(purification3));
 
   rule1->setNextRule(rule2->rule_id);
 
@@ -126,18 +125,16 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   EXPECT_EQ(swapping_json["interface"][0]["partner_address"], 1);
   EXPECT_EQ(swapping_json["interface"][1]["partner_address"], 3);
 
-  // first clause: enough resource with partner 1 and fidelity > 0.85
+  // first clause: enough resource with partner 1
   auto clause1_json = swapping_json["condition"]["clauses"][0];
   EXPECT_EQ(clause1_json["type"], "enough_resource");
   EXPECT_EQ(clause1_json["options"]["num_resource"], 1);
-  EXPECT_EQ(clause1_json["options"]["required_fidelity"], 0.85);
   EXPECT_EQ(clause1_json["options"]["interface"]["partner_address"], 1);
 
-  // second clause: enough resource with partner 3 and fidelity > 0.85
+  // second clause: enough resource with partner 3
   auto clause2_json = swapping_json["condition"]["clauses"][1];
   EXPECT_EQ(clause2_json["type"], "enough_resource");
   EXPECT_EQ(clause2_json["options"]["num_resource"], 1);
-  EXPECT_EQ(clause2_json["options"]["required_fidelity"], 0.85);
   EXPECT_EQ(clause2_json["options"]["interface"]["partner_address"], 3);
 
   // action: entanglement swapping ("swapping")
@@ -155,7 +152,7 @@ TEST(RuleTest, deserialize_json_purification_rule) {
   purification->setName("purification");
   auto condition = std::make_unique<Condition>();
   // arguments: num_resource, required_fidelity, partner_addr, qnic_type, qnic_id
-  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.85, 1);
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 1);
   condition->addClause(std::move(enough_resource_clause));
   // purification_type, partner_addr, qnic_type, qnic_id
   auto action = std::make_unique<Purification>(PurType::DSSA, 1);

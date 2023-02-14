@@ -95,19 +95,10 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
 
   void rejectRequest(messages::ConnectionSetupRequest *req);
 
-  SwappingConfig generateSwappingConfig(int swapper_address, std::vector<int> path, std::map<int, std::vector<int>> swapping_partners, std::vector<QNIC_pair_info> qnics,
-                                        int num_resources);
-
-  std::unique_ptr<rules::Rule> purifyRule(int partner_address, rules::PurType purification_type, double threshold_fidelity, int shared_tag, std::string name = "purification");
-  std::unique_ptr<rules::Rule> swapRule(std::vector<int> partner_address, double threshold_fidelity, int shared_tag, std::string name = "swapping");
-  std::unique_ptr<rules::Rule> waitRule(int partner_address, int shared_tag, std::string name = "wait");
-  std::unique_ptr<rules::Rule> tomographyRule(int partner_address, int owner_address, int num_measure, double threshold_fidelity, int shared_tag, std::string name = "tomography");
   void reserveQnic(int qnic_address);
   void releaseQnic(int qnic_address);
   bool isQnicBusy(int qnic_address);
 
-  static int computePathDivisionSize(int l);
-  static int fillPathDivision(std::vector<int> path, int i, int l, int *link_left, int *link_right, int *swapper, int fill_start);
   static rules::PurType parsePurType(const std::string &pur_type);
 
   unsigned long createUniqueId() override;

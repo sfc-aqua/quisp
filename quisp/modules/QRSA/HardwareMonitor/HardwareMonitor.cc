@@ -884,7 +884,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         auto rule = std::make_unique<Rule>(my_address, shared_tag, false);
         rule->setName(rule_name);
         auto condition = std::make_unique<Condition>();
-        auto resource_clause = std::make_unique<EnoughResourceConditionClause>(3, 0, partner_address);
+        auto resource_clause = std::make_unique<EnoughResourceConditionClause>(3, partner_address);
         condition->addClause(std::move(resource_clause));
         rule->setCondition(std::move(condition));
         if (i % 2 == 0) {
@@ -973,7 +973,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
     auto condition = std::make_unique<Condition>();
 
     // 1 qubit resource required to perform tomography action
-    auto res_check_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.9, partner_address);
+    auto res_check_clause = std::make_unique<EnoughResourceConditionClause>(1, partner_address);
     condition->addClause(std::move(res_check_clause));
 
     // 3000 measurements in total. There are 3*3 = 9 patterns of measurements.
@@ -995,7 +995,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
 
     auto rule = std::make_unique<Rule>(my_address, shared_tag, false);
     auto condition = std::make_unique<Condition>();
-    auto res_check_clause = std::make_unique<EnoughResourceConditionClause>(1, 0.9, partner_address);
+    auto res_check_clause = std::make_unique<EnoughResourceConditionClause>(1, partner_address);
     auto measure_count_clause = std::make_unique<MeasureCountConditionClause>(num_measure, partner_address);
     condition->addClause(std::move(res_check_clause));
     condition->addClause(std::move(measure_count_clause));
@@ -1042,7 +1042,7 @@ std::unique_ptr<quisp::rules::Rule> HardwareMonitor::constructPurifyRule(const s
   auto rule = std::make_unique<Rule>(my_address, shared_tag, false);
   rule->setName(rule_name);
   auto condition = std::make_unique<Condition>();
-  auto resource_clause = std::make_unique<EnoughResourceConditionClause>(required_qubits, 0.9, partner_address);
+  auto resource_clause = std::make_unique<EnoughResourceConditionClause>(required_qubits, partner_address);
   condition->addClause(std::move(resource_clause));
   rule->setCondition(std::move(condition));
 

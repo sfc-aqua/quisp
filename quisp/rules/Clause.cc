@@ -2,14 +2,12 @@
 
 namespace quisp::rules {
 
-EnoughResourceConditionClause::EnoughResourceConditionClause(int num_resource, double required_fidelity, int partner_addr)
-    : Clause(partner_addr), num_resource(num_resource), required_fidelity(required_fidelity) {}
+EnoughResourceConditionClause::EnoughResourceConditionClause(int num_resource, int partner_addr) : Clause(partner_addr), num_resource(num_resource) {}
 
 json EnoughResourceConditionClause::serialize_json() {
   json enough_resource_json;
   enough_resource_json["type"] = "enough_resource";
   enough_resource_json["options"]["num_resource"] = num_resource;
-  enough_resource_json["options"]["required_fidelity"] = required_fidelity;
   enough_resource_json["options"]["interface"]["partner_address"] = partner_address;
   return enough_resource_json;
 }
@@ -19,7 +17,6 @@ void EnoughResourceConditionClause::deserialize_json(json serialized) {
   if (options != nullptr) {
     // get options one by one
     options["num_resource"].get_to(num_resource);
-    options["required_fidelity"].get_to(required_fidelity);
     options["interface"]["partner_address"].get_to(partner_address);
   }
 }

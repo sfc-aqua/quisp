@@ -272,7 +272,7 @@ TEST(RSConverterTest, generateActiveRuleSetFromRuleSet) {
   auto purify_rule = std::make_unique<quisp::rules::Rule>(0, 0, false);
   purify_rule->setName("purification");
   auto pur_condition = std::make_unique<quisp::rules::Condition>();
-  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0, 0);
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0);
   pur_condition->addClause(std::move(enough_resource_clause));
   purify_rule->setCondition(std::move(pur_condition));
   auto pur_action = std::make_unique<Purification>(quisp::rules::PurType::DSDA, 0);
@@ -282,8 +282,8 @@ TEST(RSConverterTest, generateActiveRuleSetFromRuleSet) {
   auto swapping_rule = std::make_unique<quisp::rules::Rule>(0, 0, false);
   swapping_rule->setName("swapping");
   auto swap_condition = std::make_unique<quisp::rules::Condition>();
-  auto enough_resource_clause_left = std::make_unique<EnoughResourceConditionClause>(1, 0, 0);
-  auto enough_resource_clause_right = std::make_unique<EnoughResourceConditionClause>(1, 0, 0);
+  auto enough_resource_clause_left = std::make_unique<EnoughResourceConditionClause>(1, 0);
+  auto enough_resource_clause_right = std::make_unique<EnoughResourceConditionClause>(1, 0);
   swap_condition->addClause(std::move(enough_resource_clause_left));
   swap_condition->addClause(std::move(enough_resource_clause_right));
   swapping_rule->setCondition(std::move(swap_condition));
@@ -310,7 +310,7 @@ TEST(RSConverterTest, generateActiveRuleSetFromRuleSet) {
   auto tomography_rule = std::make_unique<quisp::rules::Rule>(0, 0, true);
   tomography_rule->setName("tomography");
   auto tomo_condition = std::make_unique<quisp::rules::Condition>();
-  auto enough_resource_clause_tomo = std::make_unique<EnoughResourceConditionClause>(0, 0, 0);
+  auto enough_resource_clause_tomo = std::make_unique<EnoughResourceConditionClause>(0, 0);
   tomo_condition->addClause(std::move(enough_resource_clause_tomo));
   tomography_rule->setCondition(std::move(tomo_condition));
   auto tomo_action = std::make_unique<Tomography>(0, 0, 0);

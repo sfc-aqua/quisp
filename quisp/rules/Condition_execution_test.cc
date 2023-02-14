@@ -121,9 +121,8 @@ TEST_F(ConditionExecutionTest, MeasurementCountTermination) {
 
 TEST_F(ConditionExecutionTest, EnoughResourceCondition) {
   int num_resource_required = 3;
-  double required_fidelity = 0.89;
   Condition cond{};
-  auto clause = new EnoughResourceConditionClause(num_resource_required, required_fidelity, partner_addr);
+  auto clause = new EnoughResourceConditionClause(num_resource_required, partner_addr);
   cond.addClause(std::unique_ptr<Clause>(clause));
   auto program = RuleSetConverter::constructCondition(&cond);
   runtime->ruleset.partner_initial_rule_table.insert({QNodeAddr{partner_addr}, 0});
