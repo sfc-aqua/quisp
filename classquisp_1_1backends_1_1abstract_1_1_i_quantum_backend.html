@@ -122,10 +122,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af10bb05ffe7bd664d857935f2961ae07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4daa60338233721c756d2711f3526f0"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#ae4daa60338233721c756d2711f3526f0">createQubit</a> (const <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html">IQubitId</a> *id)=0</td></tr>
 <tr class="separator:ae4daa60338233721c756d2711f3526f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d526889c9a0f09d0e14618e90ea6952"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#a3d526889c9a0f09d0e14618e90ea6952">createOrGetQubit</a> (const <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html">IQubitId</a> *id)=0</td></tr>
-<tr class="separator:a3d526889c9a0f09d0e14618e90ea6952"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaea1124c73bc1ab895895ad74a169481"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#aaea1124c73bc1ab895895ad74a169481">createShortLiveQubit</a> ()=0</td></tr>
+<tr class="separator:aaea1124c73bc1ab895895ad74a169481"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50b5d598727b6d8f87f52364e12d031e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#a50b5d598727b6d8f87f52364e12d031e">getQubit</a> (const <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html">IQubitId</a> *id)=0</td></tr>
 <tr class="separator:a50b5d598727b6d8f87f52364e12d031e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ee1234f79551d3cfc41e6b47235f81a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#a6ee1234f79551d3cfc41e6b47235f81a">getShortLiveQubit</a> ()=0</td></tr>
+<tr class="separator:a6ee1234f79551d3cfc41e6b47235f81a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06f0bd988306657225c3bcf2faa2f99a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#a06f0bd988306657225c3bcf2faa2f99a">returnToPool</a> (<a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> *)=0</td></tr>
+<tr class="separator:a06f0bd988306657225c3bcf2faa2f99a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab065a548f26778b3ac46d2069690f061"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#ab065a548f26778b3ac46d2069690f061">deleteQubit</a> (const <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html">IQubitId</a> *id)=0</td></tr>
 <tr class="separator:ab065a548f26778b3ac46d2069690f061"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab76ded5bfd32a0743f570af4fc70196f"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_configuration.html">IConfiguration</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#ab76ded5bfd32a0743f570af4fc70196f">getDefaultConfiguration</a> () const =0</td></tr>
@@ -190,34 +194,6 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a3d526889c9a0f09d0e14618e90ea6952" name="a3d526889c9a0f09d0e14618e90ea6952"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d526889c9a0f09d0e14618e90ea6952">&#9670;&#160;</a></span>createOrGetQubit()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> * quisp::backends::abstract::IQuantumBackend::createOrGetQubit </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit_id.html">IQubitId</a> *&#160;</td>
-          <td class="paramname"><em>id</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implemented in <a class="el" href="classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#a6bfacbf5985bd0cba05f4c55db6f3585">quisp::backends::graph_state::GraphStateBackend</a>.</p>
-
-</div>
-</div>
 <a id="ae4daa60338233721c756d2711f3526f0" name="ae4daa60338233721c756d2711f3526f0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae4daa60338233721c756d2711f3526f0">&#9670;&#160;</a></span>createQubit() <span class="overload">[1/2]</span></h2>
 
@@ -281,6 +257,33 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#a838b63d4cdd9d8a074555b254d63f46a">quisp::backends::graph_state::GraphStateBackend</a>.</p>
+
+</div>
+</div>
+<a id="aaea1124c73bc1ab895895ad74a169481" name="aaea1124c73bc1ab895895ad74a169481"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaea1124c73bc1ab895895ad74a169481">&#9670;&#160;</a></span>createShortLiveQubit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> * quisp::backends::abstract::IQuantumBackend::createShortLiveQubit </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#a9d0e07a9b4e89589064aa6fa1b424a13">quisp::backends::graph_state::GraphStateBackend</a>.</p>
 
 </div>
 </div>
@@ -367,6 +370,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a6ee1234f79551d3cfc41e6b47235f81a" name="a6ee1234f79551d3cfc41e6b47235f81a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ee1234f79551d3cfc41e6b47235f81a">&#9670;&#160;</a></span>getShortLiveQubit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> * quisp::backends::abstract::IQuantumBackend::getShortLiveQubit </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#a0337a0cf5d4fe48b0e34c81777f3fa08">quisp::backends::graph_state::GraphStateBackend</a>.</p>
+
+</div>
+</div>
 <a id="ae865db84f76bcb791ca81c6f4ced09fe" name="ae865db84f76bcb791ca81c6f4ced09fe"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae865db84f76bcb791ca81c6f4ced09fe">&#9670;&#160;</a></span>getSimTime()</h2>
 
@@ -391,6 +421,34 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#aa1cb88de27b9ce50b17fa15fb3cb51c9">quisp::backends::graph_state::GraphStateBackend</a>.</p>
+
+</div>
+</div>
+<a id="a06f0bd988306657225c3bcf2faa2f99a" name="a06f0bd988306657225c3bcf2faa2f99a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06f0bd988306657225c3bcf2faa2f99a">&#9670;&#160;</a></span>returnToPool()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void quisp::backends::abstract::IQuantumBackend::returnToPool </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_qubit.html">IQubit</a> *&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#a7c0c3af8397f9ed02d62f99d02cf43b7">quisp::backends::graph_state::GraphStateBackend</a>.</p>
 
 </div>
 </div>

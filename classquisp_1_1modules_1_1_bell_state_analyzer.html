@@ -117,9 +117,11 @@ Collaboration diagram for quisp::modules::BellStateAnalyzer:</div>
 <div class="dyncontent">
 <div class="center"><img src="classquisp_1_1modules_1_1_bell_state_analyzer__coll__graph.png" border="0" usemap="#aquisp_1_1modules_1_1_bell_state_analyzer_coll__map" alt="Collaboration graph"/></div>
 <map name="aquisp_1_1modules_1_1_bell_state_analyzer_coll__map" id="aquisp_1_1modules_1_1_bell_state_analyzer_coll__map">
-<area shape="rect" title="BellStateAnalyzer." alt="" coords="79,108,245,148"/>
-<area shape="rect" title=" " alt="" coords="5,5,172,31"/>
-<area shape="rect" title=" " alt="" coords="196,5,275,31"/>
+<area shape="rect" title="BellStateAnalyzer." alt="" coords="365,73,532,113"/>
+<area shape="rect" title=" " alt="" coords="23,5,190,31"/>
+<area shape="rect" title=" " alt="" coords="67,55,146,80"/>
+<area shape="rect" href="classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="5,104,208,129"/>
+<area shape="rect" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html" title="The abstract interface for a quantum backend." alt="" coords="23,154,191,194"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -171,6 +173,10 @@ Private Attributes</h2></td></tr>
 <tr class="separator:addb8ee654154d5bb74d90ed99d743cfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad543d91fdc8e3f302cf20512f61b6066"><td class="memItemLeft" align="right" valign="top">std::vector&lt; BSAClickResult &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ad543d91fdc8e3f302cf20512f61b6066">click_results</a></td></tr>
 <tr class="separator:ad543d91fdc8e3f302cf20512f61b6066"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3eec9a03df986c0a877511bba7b69d2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1utils_1_1_component_provider.html">utils::ComponentProvider</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#ab3eec9a03df986c0a877511bba7b69d2">provider</a></td></tr>
+<tr class="separator:ab3eec9a03df986c0a877511bba7b69d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a378b9ed4c72a7978dcf082b045b362bc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html">backends::IQuantumBackend</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a378b9ed4c72a7978dcf082b045b362bc">backend</a></td></tr>
+<tr class="separator:a378b9ed4c72a7978dcf082b045b362bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36c54679c4cf40c096e91204a327dc98"><td class="memItemLeft" align="right" valign="top">long long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#a36c54679c4cf40c096e91204a327dc98">no_error_count</a> = 0</td></tr>
 <tr class="separator:a36c54679c4cf40c096e91204a327dc98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7ac9b0e3c63cb47c7a4f743d0dd4140"><td class="memItemLeft" align="right" valign="top">long long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_bell_state_analyzer.html#aa7ac9b0e3c63cb47c7a4f743d0dd4140">x_error_count</a> = 0</td></tr>
@@ -466,6 +472,28 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a378b9ed4c72a7978dcf082b045b362bc" name="a378b9ed4c72a7978dcf082b045b362bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a378b9ed4c72a7978dcf082b045b362bc">&#9670;&#160;</a></span>backend</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html">backends::IQuantumBackend</a>* quisp::modules::BellStateAnalyzer::backend</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ad543d91fdc8e3f302cf20512f61b6066" name="ad543d91fdc8e3f302cf20512f61b6066"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad543d91fdc8e3f302cf20512f61b6066">&#9670;&#160;</a></span>click_results</h2>
 
@@ -609,6 +637,28 @@ Private Attributes</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">long long quisp::modules::BellStateAnalyzer::no_error_count = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab3eec9a03df986c0a877511bba7b69d2" name="ab3eec9a03df986c0a877511bba7b69d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3eec9a03df986c0a877511bba7b69d2">&#9670;&#160;</a></span>provider</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classquisp_1_1utils_1_1_component_provider.html">utils::ComponentProvider</a> quisp::modules::BellStateAnalyzer::provider</td>
         </tr>
       </table>
   </td>

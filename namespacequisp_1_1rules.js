@@ -19,6 +19,7 @@ var namespacequisp_1_1rules =
       [ "INVALID", "namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066da99370beed01a4f675d525ca0a62b4a7e", null ],
       [ "SINGLE_X", "namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066da65eeead068a36831adbb2aa61e7513b1", null ],
       [ "SINGLE_Z", "namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066daec7ccc4b9ca43c2b37ceafd93d0b16eb", null ],
+      [ "SINGLE_Y", "namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066da050db8f23a0a9c970de8c3b6c0384d26", null ],
       [ "DOUBLE", "namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066daa00d9553fe5f499209eb6adb9f54f34e", null ],
       [ "DOUBLE_INV", "namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066da836a01f283e3f7aea24b9c2c1293a95e", null ],
       [ "DSSA", "namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066daa680c3a0e9f1e1869cbb0f535cd91beb", null ],
@@ -29,6 +30,6 @@ var namespacequisp_1_1rules =
       [ "DSDA_SECOND_INV", "namespacequisp_1_1rules.html#a5693ea435ef2194a383d996d838b066da16b5a710f0e1ace1025ddebdbd03384e", null ]
     ] ],
     [ "from_json", "namespacequisp_1_1rules.html#af34662426ca77de6ead9099ecc3770e2", null ],
-    [ "NLOHMANN_JSON_SERIALIZE_ENUM", "namespacequisp_1_1rules.html#aebe7d59db01c3889f02bb5fc865ff25f", null ],
+    [ "NLOHMANN_JSON_SERIALIZE_ENUM", "namespacequisp_1_1rules.html#aa33409d23c94ab9d6e98ea66e54c1130", null ],
     [ "qi", "namespacequisp_1_1rules.html#a0dae1416cf15ad53fc2b80547a564928", null ]
 ];

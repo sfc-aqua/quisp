@@ -2,11 +2,8 @@ var classquisp_1_1backends_1_1abstract_1_1_i_qubit =
 [
     [ "IQubit", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a13fedde793b344c2515a8446f97b8135", null ],
     [ "~IQubit", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a726ac8a635057faacfce1b55a1a02409", null ],
-    [ "addErrorX", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a0973f490c41c42ff502c623a44d0d850", null ],
-    [ "addErrorZ", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a76460a7d116a84b3b67e7b172f4cfd97", null ],
-    [ "assertEntangledPartnerValid", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a64a5cff10147aebafa8fab614e744e4d", null ],
-    [ "gateCNOT", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a76c5295c6b153d912f61c38d6a252846", null ],
-    [ "gateCZ", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#adb309eb9fcf8805d4e1c6c4963ad04b8", null ],
+    [ "gateCNOT", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#aaaf72bb094caa23c3f846e0b59d9e5fa", null ],
+    [ "gateCZ", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a48e9b9c0e8f6c709b8c06667ed96aca6", null ],
     [ "gateH", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#ad43c49dbc987691562cb5b95020d967b", null ],
     [ "gateI", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a10d498d13632a4bed9aeece761dcd63a", null ],
     [ "gateS", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a23e7b73b914cfb34a07f3467af425d8e", null ],
@@ -15,13 +12,11 @@ var classquisp_1_1backends_1_1abstract_1_1_i_qubit =
     [ "gateX", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#aaa3069cb6b040490c23ce067f3723310", null ],
     [ "gateY", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a57adf76060c41efd439fe106566776a8", null ],
     [ "gateZ", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#ad0a6a192a46338821710931b37ff1140", null ],
-    [ "getEntangledPartner", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#aa63bf9320f399609feab27836bf86902", null ],
     [ "getId", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#adb1405d50412d706a989e4e2d6398016", null ],
-    [ "measureRandomPauliBasis", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#aff075d54e7bd41300383d1d7044cb45c", null ],
     [ "measureX", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#add3b863a029d9671c0be8a2b19ce4571", null ],
     [ "measureY", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a2cd9c6570f13e445c990397de9194019", null ],
     [ "measureZ", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a8484babbfd033233c841834b6a72fc7a", null ],
-    [ "noiselessCNOT", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a0a314ae1703ff28dc298d7892c1d8497", null ],
+    [ "noiselessCNOT", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a72070258832cadb068daf70e5ed07c1d", null ],
     [ "noiselessH", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#ab75b462f37fc886482be8bbcaf7ecbe6", null ],
     [ "noiselessMeasureX", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a7ea024cb4f84c00b81ae27f29cfef09f", null ],
     [ "noiselessMeasureX", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a72b131fd9f2f280854ab7c9d1b562413", null ],
@@ -29,7 +24,6 @@ var classquisp_1_1backends_1_1abstract_1_1_i_qubit =
     [ "noiselessMeasureZ", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a094006e97f86c3830f4cdb7648cab9d3", null ],
     [ "noiselessX", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#ada7e27f1a9a1f08d3ad2dc456755d954", null ],
     [ "noiselessZ", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a8641a2bff3044919424f87aaa58b9e9b", null ],
-    [ "setCompletelyMixedState", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a16a353fab6d7bcc35f0df377b0cfb749", null ],
-    [ "setFree", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a8810cf3cdcd3e9e59d831fd11705f0af", null ],
-    [ "setMaximallyEntangledWith", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#aaf0cc1b09b7ee0d4cb6c41c19265f589", null ]
+    [ "relaseBackToPool", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a8249e0483d5d2ce574b731f0447866d8", null ],
+    [ "setFree", "classquisp_1_1backends_1_1abstract_1_1_i_qubit.html#a8810cf3cdcd3e9e59d831fd11705f0af", null ]
 ];

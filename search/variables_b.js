@@ -13,6 +13,6 @@ var searchData=
   ['locked_5fruleset_5fid_10',['locked_ruleset_id',['../classquisp_1_1modules_1_1_stationary_qubit.html#a90539861e5f9451e435bf43dcc9f1355',1,'quisp::modules::StationaryQubit']]],
   ['logger_11',['logger',['../classquisp_1_1modules_1_1_logger_1_1_logger_base.html#ab0e218b86937c9d19a75c5511604824b',1,'quisp::modules::Logger::LoggerBase::logger()'],['../classquisp_1_1modules_1_1_bell_pair_store.html#a0d850b190583d9e6741073ee5f3d5c84',1,'quisp::modules::BellPairStore::logger()'],['../classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html#ac0a9b3419c336176154cd857e7091ba4',1,'quisp::modules::qubit_record::QubitRecord::logger()']]],
   ['logger_5ftype_12',['logger_type',['../classquisp_1_1modules_1_1_logger_1_1_logger_module.html#a925d8a6102f4678b641ba47538eb3d2d',1,'quisp::modules::Logger::LoggerModule']]],
-  ['lost_5fceil_13',['Lost_ceil',['../classquisp_1_1channels_1_1_quantum_channel.html#a5ff3cd700f326d14ef4b88b4ea9d6412',1,'quisp::channels::QuantumChannel']]],
+  ['loss_5frate_13',['loss_rate',['../structquisp_1_1channels_1_1channel__error__model.html#a66f3426a9615fb1d281c21dcbe6eab94',1,'quisp::channels::channel_error_model']]],
   ['lres_14',['lres',['../struct_swapping_config.html#a1e46873030558351cc3c5982a36e5e20',1,'SwappingConfig']]]
 ];

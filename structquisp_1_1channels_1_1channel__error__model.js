@@ -1,7 +1,8 @@
 var structquisp_1_1channels_1_1channel__error__model =
 [
-    [ "pauli_error_rate", "structquisp_1_1channels_1_1channel__error__model.html#aa23ab353eb0337263095bce340a46462", null ],
-    [ "X_error_rate", "structquisp_1_1channels_1_1channel__error__model.html#a2d8de8aa9d695c363600819250a19869", null ],
-    [ "Y_error_rate", "structquisp_1_1channels_1_1channel__error__model.html#af4f75ba5cbd64b9fef922eaf7f61a584", null ],
-    [ "Z_error_rate", "structquisp_1_1channels_1_1channel__error__model.html#a89436e4b4b601dde9202568b90e38a68", null ]
+    [ "error_rate", "structquisp_1_1channels_1_1channel__error__model.html#aa6f495ef027913f2cae01f5b0199f70e", null ],
+    [ "loss_rate", "structquisp_1_1channels_1_1channel__error__model.html#a66f3426a9615fb1d281c21dcbe6eab94", null ],
+    [ "x_error_rate", "structquisp_1_1channels_1_1channel__error__model.html#a3373ff334273d0bc47eff85d4e66457f", null ],
+    [ "y_error_rate", "structquisp_1_1channels_1_1channel__error__model.html#a9a4d5eff91c3ebbfd3f0ec8f33af92d2", null ],
+    [ "z_error_rate", "structquisp_1_1channels_1_1channel__error__model.html#a468ea930972edf989b6e29aa52a8a803", null ]
 ];

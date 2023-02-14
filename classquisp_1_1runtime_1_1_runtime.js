@@ -33,6 +33,7 @@ var classquisp_1_1runtime_1_1_runtime =
     [ "promoteQubit", "classquisp_1_1runtime_1_1_runtime.html#a2eee6108b491277eb9e9c61d244c9577", null ],
     [ "promoteQubitWithNewPartner", "classquisp_1_1runtime_1_1_runtime.html#aed2ee34b1cef1e860800bba735f395ac", null ],
     [ "purifyX", "classquisp_1_1runtime_1_1_runtime.html#a1b50821ac5ac6d0ec1e1626f4ebf6fac", null ],
+    [ "purifyY", "classquisp_1_1runtime_1_1_runtime.html#a41777d9fc085ba5f02494e6c52dd3360", null ],
     [ "purifyZ", "classquisp_1_1runtime_1_1_runtime.html#ac641cd1e14c360000ce66fd2833475eb", null ],
     [ "setQubit", "classquisp_1_1runtime_1_1_runtime.html#ab81248760e924ef763c87a09b89e2db5", null ],
     [ "setRegVal", "classquisp_1_1runtime_1_1_runtime.html#a958eb5900a26235e159206a36651eb29", null ],
