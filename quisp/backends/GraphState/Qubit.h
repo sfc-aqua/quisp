@@ -32,36 +32,31 @@ using types::TwoQubitGateErrorModel;
 class GraphStateBackend;
 class GraphStateQubit : public IQubit {
  public:
-  GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend);
+  GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend, bool is_short_live);
   ~GraphStateQubit();
   void configure(std::unique_ptr<StationaryQubitConfiguration> configuration);
   void setFree() override;
-  // The name of these functions might be misleading; these are used in bsa, will be renamed and modifed in the future
-  void setCompletelyMixedState() override;
-  void setMaximallyEntangledWith(IQubit *const partner) override;
+  const IQubitId *const getId() const override;
+  void relaseBackToPool() override;
 
-  void gateH() override;
-  void gateZ() override;
   void gateX() override;
+  void gateZ() override;
+  void gateH() override;
   void gateS() override;
   void gateSdg() override;
-  void gateCNOT(IQubit *const control_qubit) override;
+  void gateCNOT(IQubit *const target_qubit) override;
   EigenvalueResult measureX() override;
   EigenvalueResult measureY() override;
   EigenvalueResult measureZ() override;
-  MeasurementOutcome measureRandomPauliBasis() override;
 
   void noiselessH() override;
   void noiselessX() override;
   void noiselessZ() override;
-  void noiselessCNOT(IQubit *const control_qubit) override;
+  void noiselessCNOT(IQubit *const target_qubit) override;
   EigenvalueResult noiselessMeasureZ() override;
   EigenvalueResult noiselessMeasureX() override;
   EigenvalueResult noiselessMeasureZ(EigenvalueResult forced_result) override;
   EigenvalueResult noiselessMeasureX(EigenvalueResult forced_result) override;
-
-  void addErrorX() override;
-  void addErrorZ() override;
 
  protected:
   // error simulation
@@ -103,12 +98,13 @@ class GraphStateQubit : public IQubit {
   // graph state tables
   static std::string decomposition_table[24];
   static CliffordOperator clifford_application_lookup[24][24];
-  static bool controlled_Z_lookup_edge[2][24][24];
-  static CliffordOperator controlled_Z_lookup_node_1[2][24][24];
-  static CliffordOperator controlled_Z_lookup_node_2[2][24][24];
+  static bool controlled_z_lookup_edge[2][24][24];
+  static CliffordOperator controlled_z_lookup_node_1[2][24][24];
+  static CliffordOperator controlled_z_lookup_node_2[2][24][24];
 
   const IQubitId *id;
   GraphStateBackend *const backend;
+  const bool is_short_live;
 };
 
 }  // namespace quisp::backends::graph_state

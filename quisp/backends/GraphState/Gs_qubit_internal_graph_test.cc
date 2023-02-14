@@ -537,8 +537,8 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_ZZ) {
           alice_trash->addEdge(bob_trash);
           alice_trash->vertex_operator = CliffordOperator::Id;
 
-          alice_trash->gateCNOT(alice_keep);
-          bob_trash->gateCNOT(bob_keep);
+          alice_keep->gateCNOT(alice_trash);
+          bob_keep->gateCNOT(bob_trash);
 
           rng->double_value = (double)i / 3;
           auto alice_result = alice_trash->measureZ();
@@ -587,7 +587,7 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_ZZ) {
           auto bk = bob_keep->vertex_operator;
           auto bt = bob_trash->vertex_operator;
 
-          alice_trash->gateCNOT(alice_keep);
+          alice_keep->gateCNOT(alice_trash);
 
           alk = alice_keep->vertex_operator;
           alt = alice_trash->vertex_operator;
@@ -602,7 +602,7 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_ZZ) {
           bk = bob_keep->vertex_operator;
           bt = bob_trash->vertex_operator;
 
-          bob_trash->gateCNOT(bob_keep);
+          bob_keep->gateCNOT(bob_trash);
 
           EXPECT_EQ(bob_trash->neighbors.size(), 0);
           EXPECT_EQ(alice_keep->neighbors.size(), 1);
@@ -656,8 +656,8 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_XX) {
           alice_trash->addEdge(bob_trash);
           alice_trash->vertex_operator = CliffordOperator::Id;
 
-          alice_trash->gateCNOT(alice_keep);
-          bob_trash->gateCNOT(bob_keep);
+          alice_keep->gateCNOT(alice_trash);
+          bob_keep->gateCNOT(bob_trash);
 
           rng->double_value = (double)i / 3;
           auto alice_result = alice_trash->measureZ();
@@ -713,8 +713,8 @@ TEST_F(GsQubitInternalGraphTest, purifyX_Phiplus_Phiplus_Measure_in_YY) {
           alice_trash->addEdge(bob_trash);
           alice_trash->vertex_operator = CliffordOperator::Id;
 
-          alice_trash->gateCNOT(alice_keep);
-          bob_trash->gateCNOT(bob_keep);
+          alice_keep->gateCNOT(alice_trash);
+          bob_keep->gateCNOT(bob_trash);
 
           rng->double_value = (double)i / 3;
           auto alice_result = alice_trash->measureZ();
@@ -756,9 +756,10 @@ TEST_F(GsQubitInternalGraphTest, graphMeasureZIsolatedQubit) {
 
   // repeated measurement shouldn't change the result
   // test 1000 times with rng
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     qubit->reset();
     qubit->applyClifford(CliffordOperator::H);
+    rng->double_value = 1.0 * i / 100;
     auto first_measure = qubit->graphMeasureZ();
     auto second_measure = qubit->graphMeasureZ();
     EXPECT_EQ(first_measure, second_measure);
@@ -812,19 +813,20 @@ TEST_F(GsQubitInternalGraphTest, graphMeasureZIsolatedQubit) {
   }
 }
 
-TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZStatePlusEigenvalue) {
+TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZState) {
   std::vector<Qubit *> qarrs;
   for (int i = 0; i < 10; i++) {
     qarrs.push_back(dynamic_cast<Qubit *>(backend->createQubit(i + 50)));
   }
 
   // Bell pair
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     qubit->reset();
     another_qubit->reset();
     qubit->addEdge(another_qubit);
     qubit->setVertexOperator(CliffordOperator::Id);
 
+    rng->double_value = 1.0 * i / 100;
     auto result_left = qubit->graphMeasureZ();
     EXPECT_TRUE(qubit->getNeighborSet().empty());
     EXPECT_TRUE(another_qubit->getNeighborSet().empty());
@@ -833,131 +835,68 @@ TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZStatePlusEigenvalue) {
   }
 
   // GHZ state measure in Z; star graph; measure from center
-  for (int i = 0; i < 1000; i++) {
-    qubit->reset();
-    qubit->setVertexOperator(CliffordOperator::Id);
-    for (auto v : qarrs) {
-      v->reset();
-      v->addEdge(qubit);
-      v->setVertexOperator(CliffordOperator::H);
-    }
-    std::vector<quisp::types::EigenvalueResult> measurement_result;
-
-    measurement_result.push_back(qubit->graphMeasureZ());
-
-    // check that all nodes now isolated
-    EXPECT_TRUE(qubit->getNeighborSet().empty());
-    for (auto v : qarrs) {
-      EXPECT_TRUE(v->getNeighborSet().empty());
-    }
-
-    for (auto v : qarrs) {
-      measurement_result.push_back(v->graphMeasureZ());
-    }
-    for (auto r : measurement_result) {
-      EXPECT_EQ(r, measurement_result[0]);
-    }
-  }
-
-  // GHZ state measure in Z; star graph; measure center last
-  for (int i = 0; i < 1000; i++) {
-    qubit->reset();
-    qubit->setVertexOperator(CliffordOperator::Id);
-    for (auto v : qarrs) {
-      v->reset();
-      v->addEdge(qubit);
-      v->setVertexOperator(CliffordOperator::H);
-    }
-    std::vector<quisp::types::EigenvalueResult> measurement_result;
-    // measure one leaf node
-    qarrs[0]->graphMeasureZ();
-    // check that all nodes now isolated
-    EXPECT_TRUE(qubit->getNeighborSet().empty());
-    for (auto v : qarrs) {
-      EXPECT_TRUE(v->getNeighborSet().empty());
-    }
-    // collect all measurement results
-    for (auto v : qarrs) {
-      measurement_result.push_back(v->graphMeasureZ());
-    }
-    measurement_result.push_back(qubit->graphMeasureZ());
-    for (auto r : measurement_result) {
-      EXPECT_EQ(r, measurement_result[0]);
-    }
-  }
-}
-TEST_F(GsQubitInternalGraphTest, graphMeasureZGHZStateMinusEigenvalue) {
-  std::vector<Qubit *> qarrs;
-  rng->double_value = 0.5;
   for (int i = 0; i < 10; i++) {
-    qarrs.push_back(dynamic_cast<Qubit *>(backend->createQubit(i + 100)));
-  }
+    for (int j = 0; j < 10; j++) {
+      qubit->reset();
+      qubit->setVertexOperator(CliffordOperator::Id);
+      for (auto v : qarrs) {
+        v->reset();
+        v->addEdge(qubit);
+        v->setVertexOperator(CliffordOperator::H);
+      }
+      std::vector<quisp::types::EigenvalueResult> measurement_result;
 
-  // Bell pair
-  for (int i = 0; i < 1000; i++) {
-    qubit->reset();
-    another_qubit->reset();
-    qubit->addEdge(another_qubit);
-    qubit->setVertexOperator(CliffordOperator::Id);
+      rng->double_value = 1.0 * i / 10;
+      measurement_result.push_back(qubit->graphMeasureZ());
 
-    auto result_left = qubit->graphMeasureZ();
-    EXPECT_TRUE(qubit->getNeighborSet().empty());
-    EXPECT_TRUE(another_qubit->getNeighborSet().empty());
-    auto result_right = another_qubit->graphMeasureZ();
-    EXPECT_EQ(result_left, result_right);
-  }
+      // check that all nodes now isolated
+      EXPECT_TRUE(qubit->getNeighborSet().empty());
+      for (auto v : qarrs) {
+        EXPECT_TRUE(v->getNeighborSet().empty());
+      }
 
-  // GHZ state measure in Z; star graph; measure from center
-  for (int i = 0; i < 1000; i++) {
-    qubit->reset();
-    qubit->setVertexOperator(CliffordOperator::Id);
-    for (auto v : qarrs) {
-      v->reset();
-      v->addEdge(qubit);
-      v->setVertexOperator(CliffordOperator::H);
-    }
-    std::vector<quisp::types::EigenvalueResult> measurement_result;
-
-    measurement_result.push_back(qubit->graphMeasureZ());
-
-    // check that all nodes now isolated
-    EXPECT_TRUE(qubit->getNeighborSet().empty());
-    for (auto v : qarrs) {
-      EXPECT_TRUE(v->getNeighborSet().empty());
-    }
-
-    for (auto v : qarrs) {
-      measurement_result.push_back(v->graphMeasureZ());
-    }
-    for (auto r : measurement_result) {
-      EXPECT_EQ(r, measurement_result[0]);
+      rng->double_value = 1.0 * j / 10;
+      for (auto v : qarrs) {
+        measurement_result.push_back(v->graphMeasureZ());
+      }
+      for (auto r : measurement_result) {
+        EXPECT_EQ(r, measurement_result[0]);
+      }
     }
   }
 
   // GHZ state measure in Z; star graph; measure center last
-  for (int i = 0; i < 1000; i++) {
-    qubit->reset();
-    qubit->setVertexOperator(CliffordOperator::Id);
-    for (auto v : qarrs) {
-      v->reset();
-      v->addEdge(qubit);
-      v->setVertexOperator(CliffordOperator::H);
-    }
-    std::vector<quisp::types::EigenvalueResult> measurement_result;
-    // measure one leaf node
-    qarrs[0]->graphMeasureZ();
-    // check that all nodes now isolated
-    EXPECT_TRUE(qubit->getNeighborSet().empty());
-    for (auto v : qarrs) {
-      EXPECT_TRUE(v->getNeighborSet().empty());
-    }
-    // collect all measurement results
-    for (auto v : qarrs) {
-      measurement_result.push_back(v->graphMeasureZ());
-    }
-    measurement_result.push_back(qubit->graphMeasureZ());
-    for (auto r : measurement_result) {
-      EXPECT_EQ(r, measurement_result[0]);
+  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < 10; j++) {
+      for (int k = 0; k < 10; k++) {
+        qubit->reset();
+        qubit->setVertexOperator(CliffordOperator::Id);
+        for (auto v : qarrs) {
+          v->reset();
+          v->addEdge(qubit);
+          v->setVertexOperator(CliffordOperator::H);
+        }
+        std::vector<quisp::types::EigenvalueResult> measurement_result;
+
+        rng->double_value = 1.0 * i / 10;
+        // measure one leaf node
+        qarrs[0]->graphMeasureZ();
+        // check that all nodes now isolated
+        EXPECT_TRUE(qubit->getNeighborSet().empty());
+        for (auto v : qarrs) {
+          EXPECT_TRUE(v->getNeighborSet().empty());
+        }
+        rng->double_value = 1.0 * j / 10;
+        // collect all measurement results
+        for (auto v : qarrs) {
+          measurement_result.push_back(v->graphMeasureZ());
+        }
+        rng->double_value = 1.0 * k / 10;
+        measurement_result.push_back(qubit->graphMeasureZ());
+        for (auto r : measurement_result) {
+          EXPECT_EQ(r, measurement_result[0]);
+        }
+      }
     }
   }
 }

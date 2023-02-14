@@ -23,6 +23,7 @@ class MockRuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   MOCK_METHOD(void, gateCNOT, (IQubitRecord*, IQubitRecord*), (override));
   MOCK_METHOD(bool, purifyX, (IQubitRecord*, IQubitRecord*), (override));
   MOCK_METHOD(bool, purifyZ, (IQubitRecord*, IQubitRecord*), (override));
+  MOCK_METHOD(bool, purifyY, (IQubitRecord*, IQubitRecord*), (override));
   MOCK_METHOD(void, sendLinkTomographyResult,
               (const unsigned long ruleset_id, const quisp::runtime::Rule& rule, const int action_index, QNodeAddr partner_addr, int count, MeasurementOutcome outcome,
                int max_count, SimTime started_time),
@@ -47,9 +48,6 @@ class MockRuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   MOCK_METHOD(bool, isQubitLocked, (IQubitRecord* const), (override));
   MOCK_METHOD(void, lockQubit, (IQubitRecord* const, unsigned long rs_id, int rule_id, int action_index), (override));
   MOCK_METHOD(int, getActionIndex, (IQubitRecord* const), (override));
-
-  MOCK_METHOD(void, hackSwappingPartners, (IQubitRecord* const, IQubitRecord* const), (override));
-  MOCK_METHOD(void, hackBreakEntanglement, (IQubitRecord* const), (override));
 };
 
 /// @brief count the number of qubit resources assigned to the rule.

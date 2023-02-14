@@ -54,7 +54,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     auto *target_qubit = provider.getStationaryQubit(target_qubit_rec);
     assert(control_qubit != nullptr);
     assert(target_qubit != nullptr);
-    target_qubit->gateCNOT(control_qubit);
+    control_qubit->gateCNOT(target_qubit);
   }
 
   bool purifyX(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
@@ -62,7 +62,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     auto *trash_qubit = provider.getStationaryQubit(trash_qubit_rec);
     assert(qubit != nullptr);
     assert(trash_qubit != nullptr);
-    trash_qubit->gateCNOT(qubit);
+    qubit->gateCNOT(trash_qubit);
     return trash_qubit->measureZ() == types::EigenvalueResult::PLUS_ONE;
   }
 
@@ -71,7 +71,20 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     auto *trash_qubit = provider.getStationaryQubit(trash_qubit_rec);
     assert(qubit != nullptr);
     assert(trash_qubit != nullptr);
-    qubit->gateCNOT(trash_qubit);
+    trash_qubit->gateCNOT(qubit);
+    return trash_qubit->measureX() == types::EigenvalueResult::PLUS_ONE;
+  }
+
+  bool purifyY(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
+    auto *qubit = provider.getStationaryQubit(qubit_rec);
+    auto *trash_qubit = provider.getStationaryQubit(trash_qubit_rec);
+    assert(qubit != nullptr);
+    assert(trash_qubit != nullptr);
+
+    trash_qubit->gateSdg();
+    qubit->gateSdg();
+    trash_qubit->gateCNOT(qubit);
+    qubit->gateS();
     return trash_qubit->measureX() == types::EigenvalueResult::PLUS_ONE;
   }
 
@@ -195,14 +208,12 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     pkt_for_left->setDestAddr(left_partner_addr.val);
     pkt_for_left->setOperation_type(left_op);
     pkt_for_left->setNew_partner(right_partner_addr.val);
-    // HACK: see hackSwappingPartners method
     pkt_for_left->setMeasured_qubit_index(left_qubit_index);
 
     // packet for right node
     pkt_for_right->setDestAddr(right_partner_addr.val);
     pkt_for_right->setOperation_type(right_op);
     pkt_for_right->setNew_partner(left_partner_addr.val);
-    // HACK: see hackSwappingPartners method
     pkt_for_right->setMeasured_qubit_index(right_qubit_index);
 
     rule_engine->send(pkt_for_left, "RouterPort$o");
@@ -227,10 +238,6 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     return qubit->action_index;
   }
-
-  void hackSwappingPartners(IQubitRecord *const left_qubit_rec, IQubitRecord *const right_qubit_rec) override {}
-
-  void hackBreakEntanglement(IQubitRecord *qubit) override{};
 
   std::string getNodeInfo() override {
     std::stringstream ss;

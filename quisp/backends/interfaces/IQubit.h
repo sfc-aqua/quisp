@@ -34,6 +34,7 @@ class IQubit {
 
   virtual void setFree() = 0;
   virtual const IQubitId *const getId() const { throw std::runtime_error("getId is not implemented"); }
+  virtual void relaseBackToPool() { throw std::runtime_error("release back to pool is not implemented. Is this a short-live qubit?"); }
 
   // single qubit operations
   virtual void gateX() { throw std::runtime_error("gateX not implemented"); }
@@ -46,14 +47,14 @@ class IQubit {
   virtual void gateSdg() { throw std::runtime_error("gateS not implemented"); }
 
   // two qubit operations
-  virtual void gateCNOT(IQubit *const control_qubit) { throw std::runtime_error("gateCNOT not implemented"); };
-  virtual void gateCZ(IQubit *const control_qubit) { throw std::runtime_error("gateCZ not implemented"); };
+  virtual void gateCNOT(IQubit *const target_qubit) { throw std::runtime_error("gateCNOT not implemented"); };
+  virtual void gateCZ(IQubit *const target_qubit) { throw std::runtime_error("gateCZ not implemented"); };
 
   // ideal noiseless operations
   virtual void noiselessX() { throw std::runtime_error("noiselessX not implemented"); }
   virtual void noiselessZ() { throw std::runtime_error("noiselessZ not implemented"); }
   virtual void noiselessH() { throw std::runtime_error("noiselessH not implemented"); }
-  virtual void noiselessCNOT(IQubit *const control_qubit) { throw std::runtime_error("noiselessCNOT not implemented"); }
+  virtual void noiselessCNOT(IQubit *const target_qubit) { throw std::runtime_error("noiselessCNOT not implemented"); }
   virtual EigenvalueResult noiselessMeasureZ() { throw std::runtime_error("noiselessMeasureZ not implemented"); }
   virtual EigenvalueResult noiselessMeasureX() { throw std::runtime_error("noiselessMeasureX not implemented"); }
   virtual EigenvalueResult noiselessMeasureZ(EigenvalueResult forced_result) { throw std::runtime_error("noiselessMeasureZ not implemented"); }
@@ -63,16 +64,6 @@ class IQubit {
   virtual EigenvalueResult measureX() { throw std::runtime_error("measureX not implemented"); }
   virtual EigenvalueResult measureY() { throw std::runtime_error("measureY not implemented"); }
   virtual EigenvalueResult measureZ() { throw std::runtime_error("measureZ not implemented"); }
-  virtual MeasurementOutcome measureRandomPauliBasis() { throw std::runtime_error("measureRandomPauliBasis not implemented"); }  // for debugging
-  // for debugging
-  virtual void assertEntangledPartnerValid() { throw std::runtime_error("assertEntangledPartnerValid not implemented"); };
-
-  // deprecated (ErrorTraciking Qubit specific)
-  virtual void addErrorX() { throw std::runtime_error("addErrorX is not implemented. will be removed"); }
-  virtual void addErrorZ() { throw std::runtime_error("addErrorZ is not implemented. will be removed"); }
-  virtual void setCompletelyMixedState() { throw std::runtime_error("setCompletelyMixedState is not implemented. will be removed"); }
-  virtual void setMaximallyEntangledWith(IQubit *const partner) { throw std::runtime_error("setMaximallyEntangledWith is not implemented. will be removed"); }
-  virtual IQubit *const getEntangledPartner() const { throw std::runtime_error("getEntangledPartner is not implemented. will be removed"); }
 };
 
 }  // namespace quisp::backends::abstract

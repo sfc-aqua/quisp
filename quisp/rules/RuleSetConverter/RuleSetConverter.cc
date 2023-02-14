@@ -204,7 +204,6 @@ INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q1, right_partner_addr, 0}},
 INSTR_GATE_CNOT_QubitId_QubitId_{{q0, q1}},
 INSTR_MEASURE_MemoryKey_QubitId_Basis_{{result_left, q0, Basis::X}},
 INSTR_MEASURE_MemoryKey_QubitId_Basis_{{result_right, q1, Basis::Z}},
-INSTR_HACK_SWAPPING_PARTNERS_QubitId_QubitId_{{q0, q1}},
 INSTR_FREE_QUBIT_QubitId_{q0},
 INSTR_FREE_QUBIT_QubitId_{q1},
 INSTR_LOAD_LEFT_OP_RegId_MemoryKey_{{op_left, result_left}},
@@ -216,7 +215,7 @@ INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_{{left_partner_addr, 
 }
 Program RuleSetConverter::constructPurificationAction(const Purification *act) {
   auto pur_type = act->purification_type;
-  if (pur_type == rules::PurType::SINGLE_X || pur_type == rules::PurType::SINGLE_Z) {
+  if (pur_type == rules::PurType::SINGLE_X || pur_type == rules::PurType::SINGLE_Z || pur_type == rules::PurType::SINGLE_Y) {
     /*
     SET action_index 0
     LOAD action_index "action_index_{partner_addr}"
@@ -243,6 +242,8 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
     std::string program_name;
     if (pur_type == rules::PurType::SINGLE_X) {
       program_name = "X Purification";
+    } else if (pur_type == rules::PurType::SINGLE_Y) {
+      program_name = "Y Purification";
     } else {
       program_name = "Z Purification";
     }
@@ -256,8 +257,9 @@ INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit, partner_addr, 1}},
 (pur_type == rules::PurType::SINGLE_X) /* else SINGLE_Z */?
   (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}} :
-  (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}},
-INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit}},
+  (pur_type == rules::PurType::SINGLE_Z) ?
+  (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}} :
+  (InstructionTypes)INSTR_PURIFY_Y_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}},
 INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit}},
 INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_PurType_{{partner_addr, measure_result, action_index, pur_type}},
@@ -277,8 +279,6 @@ INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
     GET_QUBIT trash_qubit_z partner_addr 2
     PURIFY_X measure_result_x qubit trash_qubit_x
     PURIFY_Z measure_result_z qubit trash_qubit_z
-    HACK_BREAK_ENTANGLEMENT trash_qubit_x
-    HACK_BREAK_ENTANGLEMENT trash_qubit_Z
     FREE_QUBIT trash_qubit_x
     FREE_QUBIT trash_qubit_z
     LOCK_QUBIT qubit action_index
@@ -314,8 +314,6 @@ INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_z, partner_addr, 2}},
 (pur_type == rules::PurType::DOUBLE) /* else DOUBLE_INV */?
   (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}} :
   (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}},
-INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit_x}},
-INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit_z}},
 INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
@@ -340,8 +338,6 @@ INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
   PURIFY_Z measure_result_z qubit trash_qubit_z
   PURIFY_X measure_result_x trash_qubit_z trash_qubit_x
 #endif:
-  HACK_BREAK_ENTANGLEMENT trash_qubit_x
-  HACK_BREAK_ENTANGLEMENT trash_qubit_Z
   FREE_QUBIT trash_qubit_x
   FREE_QUBIT trash_qubit_z
   LOCK_QUBIT qubit action_index
@@ -377,8 +373,6 @@ INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_z, partner_addr, 2}},
 (pur_type == rules::PurType::DSSA) /* else DSSA_INV */?
   (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, trash_qubit_x, trash_qubit_z}} :
   (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, trash_qubit_z, trash_qubit_x}},
-INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit_x}},
-INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit_z}},
 INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
@@ -406,9 +400,6 @@ INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
   PURIFY_X measure_result_z     qubit         trash_qubit_x
   PURIFY_Z ds_measure_result  trash_qubit_z ds_trash_qubit
 #endif:
-  HACK_BREAK_ENTANGLEMENT trash_qubit_x
-  HACK_BREAK_ENTANGLEMENT trash_qubit_Z
-  HACK_BREAK_ENTANGLEMENT ds_trash_qubit_Z
   FREE_QUBIT trash_qubit_x
   FREE_QUBIT trash_qubit_z
   FREE_QUBIT ds_trash_qubit_z
@@ -451,9 +442,6 @@ INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{ds_trash_qubit, partner_addr, 3}},
 (pur_type == rules::PurType::DSDA_SECOND) /* else DSDA_SECOND_INV */?
   (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{ds_measure_result, trash_qubit_z, ds_trash_qubit}} :
   (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{ds_measure_result, trash_qubit_x, ds_trash_qubit}},
-INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit_x}},
-INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit_z}},
-INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{ds_trash_qubit}},
 INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
@@ -485,10 +473,6 @@ INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
    PURIFY_X measure_result_x qubit trash_qubit_x
    PURIFY_Z ds_measure_result_z trash_qubit_x ds_trash_qubit_z
  #endif
-   HACK_BREAK_ENTANGLEMENT trash_qubit_x
-   HACK_BREAK_ENTANGLEMENT trash_qubit_Z
-   HACK_BREAK_ENTANGLEMENT ds_trash_qubit_X
-   HACK_BREAK_ENTANGLEMENT ds_trash_qubit_Z
    FREE_QUBIT trash_qubit_x
    FREE_QUBIT trash_qubit_z
    FREE_QUBIT ds_trash_qubit_x
@@ -544,10 +528,6 @@ INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
     }
     opcodes.insert(opcodes.end(), v.begin(), v.end());
     v = {
-        INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit_x}},
-        INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{trash_qubit_z}},
-        INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{ds_trash_qubit_x}},
-        INSTR_HACK_BREAK_ENTANGLEMENT_QubitId_{{ds_trash_qubit_z}},
         INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
         INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
         INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},

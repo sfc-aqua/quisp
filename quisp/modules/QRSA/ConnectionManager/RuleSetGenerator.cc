@@ -176,7 +176,7 @@ std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType 
 
   // decide how many Bell pairs are required
   int num_resource;
-  if (purification_type == PurType::SINGLE_X || purification_type == PurType::SINGLE_Z) {
+  if (purification_type == PurType::SINGLE_X || purification_type == PurType::SINGLE_Z || purification_type == PurType::SINGLE_Y) {
     num_resource = 2;
   } else if (purification_type == PurType::DOUBLE || purification_type == PurType::DOUBLE_INV || purification_type == PurType::DSSA || purification_type == PurType::DSSA_INV) {
     num_resource = 3;

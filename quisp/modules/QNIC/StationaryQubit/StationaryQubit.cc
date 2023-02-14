@@ -11,7 +11,6 @@
 #include <unsupported/Eigen/KroneckerProduct>
 #include <unsupported/Eigen/MatrixFunctions>
 #include "backends/interfaces/IQubit.h"
-#include "modules/QNIC/StationaryQubit/QubitId.h"
 #include "omnetpp/cexception.h"
 
 using namespace Eigen;
@@ -140,7 +139,11 @@ void StationaryQubit::gateZ() { qubit_ref->gateZ(); }
 
 void StationaryQubit::gateX() { qubit_ref->gateX(); }
 
-void StationaryQubit::gateCNOT(IStationaryQubit *control_qubit) { qubit_ref->gateCNOT(check_and_cast<StationaryQubit *>(control_qubit)->qubit_ref); }
+void StationaryQubit::gateS() { qubit_ref->gateS(); }
+
+void StationaryQubit::gateSdg() { qubit_ref->gateSdg(); }
+
+void StationaryQubit::gateCNOT(IStationaryQubit *target_qubit) { qubit_ref->gateCNOT(check_and_cast<StationaryQubit *>(target_qubit)->qubit_ref); }
 
 // This is invoked whenever a photon is emitted out from this particular qubit.
 void StationaryQubit::setBusy() {
@@ -173,9 +176,6 @@ void StationaryQubit::setFree(bool consumed) {
     }
   }
 }
-
-backends::IQubit *StationaryQubit::getEntangledPartner() const { return qubit_ref->getEntangledPartner(); }
-void StationaryQubit::assertEntangledPartnerValid() { qubit_ref->assertEntangledPartnerValid(); }
 
 /*To avoid disturbing this qubit.*/
 void StationaryQubit::Lock(unsigned long rs_id, int rule_id, int action_id) {
@@ -212,13 +212,9 @@ bool StationaryQubit::isLocked() { return locked; }
 PhotonicQubit *StationaryQubit::generateEntangledPhoton() {
   Enter_Method("generateEntangledPhoton()");
   auto *photon = new PhotonicQubit("Photon");
-  // To simulate the actual physical entangled partner, not what the system thinks!!! we need this.
-
-  // TODO: make a more sophisticated hash and support emitting multiple photons
-  auto *photon_ref = backend->createOrGetQubit(new QubitId(node_address, qnic_index, 100, stationary_qubit_address));
-  photon_ref->setFree();
+  auto *photon_ref = backend->getShortLiveQubit();
   qubit_ref->noiselessH();
-  photon_ref->noiselessCNOT(qubit_ref);
+  qubit_ref->noiselessCNOT(photon_ref);
   photon->setQubit_ref(photon_ref);
   return photon;
 }
@@ -245,30 +241,23 @@ void StationaryQubit::emitPhoton(int pulse) {
   scheduleAt(simTime() + abso, pk);  // cannot send back in time, so only positive lag
 }
 
-// This gets direcltly invoked when darkcount happened in BellStateAnalyzer.cc.
-[[deprecated]] void StationaryQubit::setCompletelyMixedDensityMatrix() { qubit_ref->setCompletelyMixedState(); }
-
-void StationaryQubit::setEntangledPartnerInfo(IStationaryQubit *partner) {
-  // When BSA succeeds, this method gets invoked to store entangled partner information.
-  // This will also be sent classically to the partner node afterwards.
-  qubit_ref->setMaximallyEntangledWith(partner->getBackendQubitRef());
-}
-
 backends::IQubit *StationaryQubit::getBackendQubitRef() const { return qubit_ref; }
 
-int StationaryQubit::getPartnerStationaryQubitAddress() const {
-  auto *partner_qubit_ref = qubit_ref->getEntangledPartner();
-  auto *partner_id = dynamic_cast<const QubitId *const>(partner_qubit_ref->getId());
-  if (partner_id == nullptr) cRuntimeError("StationaryQubit::getPartnerStationaryQubitAddress: null partner backend qubit id cast");
-  return partner_id->qubit_addr;
+MeasurementOutcome StationaryQubit::measureRandomPauliBasis() {
+  auto rand = dblrand();
+  auto outcome = MeasurementOutcome();
+  if (rand < 1.0 / 3) {
+    outcome.outcome_is_plus = qubit_ref->measureX() == EigenvalueResult::PLUS_ONE;
+    outcome.basis = 'X';
+  } else if (rand < 2.0 / 3) {
+    outcome.outcome_is_plus = qubit_ref->measureY() == EigenvalueResult::PLUS_ONE;
+    outcome.basis = 'Y';
+  } else {
+    outcome.outcome_is_plus = qubit_ref->measureZ() == EigenvalueResult::PLUS_ONE;
+    outcome.basis = 'Z';
+  }
+  outcome.GOD_clean = 'F';  // need to fix this to properly track the error
+  return outcome;
 }
-
-/* Add another X error. If an X error already exists, then they cancel out */
-[[deprecated]] void StationaryQubit::addXerror() { qubit_ref->addErrorX(); }
-
-/* Add another Z error. If an Z error already exists, then they cancel out */
-[[deprecated]] void StationaryQubit::addZerror() { qubit_ref->addErrorZ(); }
-
-MeasurementOutcome StationaryQubit::measureRandomPauliBasis() { return qubit_ref->measureRandomPauliBasis(); }
 
 }  // namespace quisp::modules

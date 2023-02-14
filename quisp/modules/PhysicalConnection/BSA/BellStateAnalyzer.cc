@@ -23,7 +23,7 @@ namespace quisp::modules {
  */
 Define_Module(BellStateAnalyzer);
 
-BellStateAnalyzer::BellStateAnalyzer() {}
+BellStateAnalyzer::BellStateAnalyzer() : provider(utils::ComponentProvider{this}) {}
 
 void BellStateAnalyzer::initialize() {
   state = BSAState::Idle;
@@ -31,6 +31,7 @@ void BellStateAnalyzer::initialize() {
   detection_efficiency = par("detection_efficiency").doubleValue();
   indistinguishability_window = par("indistinguishable_time_window").doubleValue();
   collection_efficiency = par("collection_efficiency").doubleValue();
+  backend = provider.getQuantumBackend();
   validateProperties();
 }
 
@@ -55,6 +56,7 @@ void BellStateAnalyzer::handleMessage(cMessage *msg) {
   }
   // clang-format on
 
+  // TODO: add timeout when one side sends photon while the other don't
   if (state == BSAState::Idle) {  // must be first photon
     state = BSAState::Accepting;
     send(new CancelBSMTimeOutMsg(), "to_bsa_controller");
@@ -184,7 +186,7 @@ void BellStateAnalyzer::measureSuccessfully(PhotonRecord &p, PhotonRecord &q, bo
   if (!is_psi_plus) {
     p_ref->noiselessZ();
   }
-  q_ref->noiselessCNOT(p_ref);
+  p_ref->noiselessCNOT(q_ref);
   p_ref->noiselessMeasureX(backends::abstract::EigenvalueResult::PLUS_ONE);
   q_ref->noiselessMeasureZ(backends::abstract::EigenvalueResult::PLUS_ONE);
 }

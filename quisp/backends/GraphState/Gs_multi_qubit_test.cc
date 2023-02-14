@@ -32,7 +32,7 @@ class GsMultiQubitTest : public ::testing::Test {
   TestRNG* rng;
 };
 TEST_F(GsMultiQubitTest, gateCNOTZmeasurement) {
-  // state : |0(target)0(control)> --> |0(target)0(control)>
+  // state : |0(control)0(target)> --> |0(control)0(target)>
   quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   rng->double_value = 0;
   auto meas0 = quantum_register.at(0)->measureZ();
@@ -49,8 +49,8 @@ TEST_F(GsMultiQubitTest, gateCNOTZmeasurement) {
   EXPECT_EQ(meas1, EigenvalueResult::PLUS_ONE);
   resetRegister();
 
-  // state : |0(target)1(control)> --> |1(target)1(control)>
-  quantum_register.at(1)->gateX();
+  // state : |1(control)0(target)> --> |1(control)1(target)>
+  quantum_register.at(0)->gateX();
   quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   rng->double_value = 0;
   meas0 = quantum_register.at(0)->measureZ();
@@ -58,7 +58,7 @@ TEST_F(GsMultiQubitTest, gateCNOTZmeasurement) {
   EXPECT_EQ(meas0, EigenvalueResult::MINUS_ONE);
   EXPECT_EQ(meas1, EigenvalueResult::MINUS_ONE);
   resetRegister();
-  quantum_register.at(1)->gateX();
+  quantum_register.at(0)->gateX();
   quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   rng->double_value = 0.5;
   meas0 = quantum_register.at(0)->measureZ();
@@ -67,56 +67,56 @@ TEST_F(GsMultiQubitTest, gateCNOTZmeasurement) {
   EXPECT_EQ(meas1, EigenvalueResult::MINUS_ONE);
   resetRegister();
 
-  // state : |1(target)0(control)> --> |1(target)0(control)>
-  quantum_register.at(0)->gateX();
+  // state : |0(control)1(target)> --> |0(control)1(target)>
+  quantum_register.at(1)->gateX();
   quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   rng->double_value = 0;
   meas0 = quantum_register.at(0)->measureZ();
   meas1 = quantum_register.at(1)->measureZ();
-  EXPECT_EQ(meas0, EigenvalueResult::MINUS_ONE);
-  EXPECT_EQ(meas1, EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(meas0, EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(meas1, EigenvalueResult::MINUS_ONE);
   resetRegister();
-  quantum_register.at(0)->gateX();
+  quantum_register.at(1)->gateX();
   quantum_register.at(0)->gateCNOT(quantum_register.at(1));
-  rng->double_value = 0;
+  rng->double_value = 0.5;
   meas0 = quantum_register.at(0)->measureZ();
   meas1 = quantum_register.at(1)->measureZ();
-  EXPECT_EQ(meas0, EigenvalueResult::MINUS_ONE);
-  EXPECT_EQ(meas1, EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(meas0, EigenvalueResult::PLUS_ONE);
+  EXPECT_EQ(meas1, EigenvalueResult::MINUS_ONE);
   resetRegister();
 
-  // state : |1(target)1(control)> --> |0(target)1(control)>
+  // state : |1(control)1(target)> --> |1(control)0(target)>
   quantum_register.at(0)->gateX();
   quantum_register.at(1)->gateX();
   quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   rng->double_value = 0;
   meas0 = quantum_register.at(0)->measureZ();
   meas1 = quantum_register.at(1)->measureZ();
-  EXPECT_EQ(meas0, EigenvalueResult::PLUS_ONE);
-  EXPECT_EQ(meas1, EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(meas0, EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(meas1, EigenvalueResult::PLUS_ONE);
   resetRegister();
   quantum_register.at(0)->gateX();
   quantum_register.at(1)->gateX();
   quantum_register.at(0)->gateCNOT(quantum_register.at(1));
-  rng->double_value = 0;
+  rng->double_value = 0.5;
   meas0 = quantum_register.at(0)->measureZ();
   meas1 = quantum_register.at(1)->measureZ();
-  EXPECT_EQ(meas0, EigenvalueResult::PLUS_ONE);
-  EXPECT_EQ(meas1, EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(meas0, EigenvalueResult::MINUS_ONE);
+  EXPECT_EQ(meas1, EigenvalueResult::PLUS_ONE);
   resetRegister();
 }
 TEST_F(GsMultiQubitTest, setFree) {
   // state |0>+|1>(control) |0>(target) --> |00> + |11> --> |0> |0>+|1>
   rng->double_value = 0;
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(0)->setFree();
   EXPECT_EQ(quantum_register.at(0)->measureZ(), EigenvalueResult::PLUS_ONE);
   EXPECT_EQ(quantum_register.at(1)->measureZ(), EigenvalueResult::PLUS_ONE);
   resetRegister();
   rng->double_value = 0.5;
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(0)->setFree();
   EXPECT_EQ(quantum_register.at(0)->measureZ(), EigenvalueResult::PLUS_ONE);
   EXPECT_EQ(quantum_register.at(1)->measureZ(), EigenvalueResult::MINUS_ONE);
@@ -125,7 +125,7 @@ TEST_F(GsMultiQubitTest, setFree) {
 TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairZmeasurement) {
   // check phi+
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   rng->double_value = 0;
   auto meas0 = quantum_register.at(0)->measureZ();
   auto meas1 = quantum_register.at(1)->measureZ();
@@ -134,16 +134,17 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairZmeasurement) 
   resetRegister();
 
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   rng->double_value = 0.5;
   meas0 = quantum_register.at(0)->measureZ();
   meas1 = quantum_register.at(1)->measureZ();
   EXPECT_EQ(meas0, EigenvalueResult::MINUS_ONE);
   EXPECT_EQ(meas1, EigenvalueResult::MINUS_ONE);
   resetRegister();
+
   // check phi-
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateZ();
   rng->double_value = 0;
   meas0 = quantum_register.at(0)->measureZ();
@@ -153,7 +154,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairZmeasurement) 
   resetRegister();
 
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateZ();
   rng->double_value = 0.5;
   meas0 = quantum_register.at(0)->measureZ();
@@ -164,7 +165,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairZmeasurement) 
 
   // check psi+
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateX();
   rng->double_value = 0;
   meas0 = quantum_register.at(0)->measureZ();
@@ -174,7 +175,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairZmeasurement) 
   resetRegister();
 
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateX();
   rng->double_value = 0.5;
   meas0 = quantum_register.at(0)->measureZ();
@@ -185,7 +186,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairZmeasurement) 
 
   // check psi-
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateZ();
   quantum_register.at(1)->gateX();
   rng->double_value = 0;
@@ -196,7 +197,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairZmeasurement) 
   resetRegister();
 
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateZ();
   quantum_register.at(1)->gateX();
   rng->double_value = 0.5;
@@ -209,7 +210,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairZmeasurement) 
 TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairXmeasurement) {
   // check phi+
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   rng->double_value = 0;
   auto meas0 = quantum_register.at(0)->measureX();
   auto meas1 = quantum_register.at(1)->measureX();
@@ -218,7 +219,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairXmeasurement) 
   resetRegister();
 
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   rng->double_value = 0.5;
   meas0 = quantum_register.at(0)->measureX();
   meas1 = quantum_register.at(1)->measureX();
@@ -227,7 +228,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairXmeasurement) 
   resetRegister();
   // check phi-
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateZ();
   rng->double_value = 0;
   meas0 = quantum_register.at(0)->measureX();
@@ -237,7 +238,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairXmeasurement) 
   resetRegister();
 
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateZ();
   rng->double_value = 0.5;
   meas0 = quantum_register.at(0)->measureX();
@@ -248,7 +249,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairXmeasurement) 
 
   // check psi+
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateX();
   rng->double_value = 0;
   meas0 = quantum_register.at(0)->measureX();
@@ -258,7 +259,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairXmeasurement) 
   resetRegister();
 
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateX();
   rng->double_value = 0.5;
   meas0 = quantum_register.at(0)->measureX();
@@ -269,7 +270,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairXmeasurement) 
 
   // check psi-
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateZ();
   quantum_register.at(1)->gateX();
   rng->double_value = 0;
@@ -280,7 +281,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairXmeasurement) 
   resetRegister();
 
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateZ();
   quantum_register.at(1)->gateX();
   rng->double_value = 0.5;
@@ -293,7 +294,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairXmeasurement) 
 TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairYmeasurement) {
   // check phi+
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   rng->double_value = 0;
   auto meas0 = quantum_register.at(0)->measureY();
   auto meas1 = quantum_register.at(1)->measureY();
@@ -302,7 +303,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairYmeasurement) 
   resetRegister();
 
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   rng->double_value = 0.5;
   meas0 = quantum_register.at(0)->measureY();
   meas1 = quantum_register.at(1)->measureY();
@@ -311,7 +312,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairYmeasurement) 
   resetRegister();
   // check phi-
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateZ();
   rng->double_value = 0;
   meas0 = quantum_register.at(0)->measureY();
@@ -321,7 +322,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairYmeasurement) 
   resetRegister();
 
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateZ();
   rng->double_value = 0.5;
   meas0 = quantum_register.at(0)->measureY();
@@ -332,7 +333,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairYmeasurement) 
 
   // check psi+
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateX();
   rng->double_value = 0;
   meas0 = quantum_register.at(0)->measureY();
@@ -342,7 +343,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairYmeasurement) 
   resetRegister();
 
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateX();
   rng->double_value = 0.5;
   meas0 = quantum_register.at(0)->measureY();
@@ -353,7 +354,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairYmeasurement) 
 
   // check psi-
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateZ();
   quantum_register.at(1)->gateX();
   rng->double_value = 0;
@@ -364,7 +365,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairYmeasurement) 
   resetRegister();
 
   quantum_register.at(0)->gateH();
-  quantum_register.at(1)->gateCNOT(quantum_register.at(0));
+  quantum_register.at(0)->gateCNOT(quantum_register.at(1));
   quantum_register.at(1)->gateZ();
   quantum_register.at(1)->gateX();
   rng->double_value = 0.5;
@@ -377,7 +378,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsBellPairYmeasurement) 
 TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsGHZstateZmeasurement) {
   quantum_register.at(0)->gateH();
   for (int i = 1; i < 16; i++) {
-    quantum_register.at(i)->gateCNOT(quantum_register.at(0));
+    quantum_register.at(0)->gateCNOT(quantum_register.at(i));
   }
   rng->double_value = 0;
   for (int i = 0; i < 16; i++) {
@@ -387,7 +388,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsGHZstateZmeasurement) 
   resetRegister();
   quantum_register.at(0)->gateH();
   for (int i = 1; i < 16; i++) {
-    quantum_register.at(i)->gateCNOT(quantum_register.at(0));
+    quantum_register.at(0)->gateCNOT(quantum_register.at(i));
   }
   rng->double_value = 0.5;
   for (int i = 0; i < 16; i++) {
@@ -399,7 +400,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsGHZstateZmeasurement) 
 TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsGHZstateXmeasurement) {
   quantum_register.at(0)->gateH();
   for (int i = 1; i < 16; i++) {
-    quantum_register.at(i)->gateCNOT(quantum_register.at(0));
+    quantum_register.at(0)->gateCNOT(quantum_register.at(i));
   }
   rng->double_value = 0;
   for (int i = 0; i < 16; i++) {
@@ -409,7 +410,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsGHZstateXmeasurement) 
   resetRegister();
   quantum_register.at(0)->gateH();
   for (int i = 1; i < 16; i++) {
-    quantum_register.at(i)->gateCNOT(quantum_register.at(0));
+    quantum_register.at(0)->gateCNOT(quantum_register.at(i));
   }
   rng->double_value = 0.5;
   for (int i = 0; i < 16; i++) {
@@ -422,7 +423,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsGHZstateXmeasurement) 
 TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsGHZstateYmeasurement) {
   quantum_register.at(0)->gateH();
   for (int i = 1; i < 16; i++) {
-    quantum_register.at(i)->gateCNOT(quantum_register.at(0));
+    quantum_register.at(0)->gateCNOT(quantum_register.at(i));
   }
   rng->double_value = 0;
   for (int i = 0; i < 16; i++) {
@@ -432,7 +433,7 @@ TEST_F(GsMultiQubitTest, checkCorrelatedMeasurementResultsGHZstateYmeasurement) 
   resetRegister();
   quantum_register.at(0)->gateH();
   for (int i = 1; i < 16; i++) {
-    quantum_register.at(i)->gateCNOT(quantum_register.at(0));
+    quantum_register.at(0)->gateCNOT(quantum_register.at(i));
   }
   rng->double_value = 0.5;
   for (int i = 0; i < 16; i++) {

@@ -17,7 +17,9 @@ class MockQuantumBackend : public IQuantumBackend {
   MOCK_METHOD(IBackendQubit *, getQubit, (const IQubitId *), (override));
   MOCK_METHOD(IBackendQubit *, createQubit, (const IQubitId *, std::unique_ptr<IConfiguration> configuration), (override));
   MOCK_METHOD(IBackendQubit *, createQubit, (const IQubitId *), (override));
-  MOCK_METHOD(IBackendQubit *, createOrGetQubit, (const IQubitId *), (override));
+  MOCK_METHOD(IBackendQubit *, createShortLiveQubit, (), (override));
+  MOCK_METHOD(IBackendQubit *, getShortLiveQubit, (), (override));
+  MOCK_METHOD(void, returnToPool, (IQubit *), (override));
   MOCK_METHOD(void, deleteQubit, (const IQubitId *), (override));
   MOCK_METHOD(const omnetpp::simtime_t &, getSimTime, (), (override));
   MOCK_METHOD(void, setSimTime, (omnetpp::simtime_t time), (override));

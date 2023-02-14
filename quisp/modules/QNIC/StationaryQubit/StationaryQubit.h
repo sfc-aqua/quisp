@@ -10,7 +10,6 @@
 #include <backends/Backends.h>
 #include <modules/common_types.h>
 #include <utils/ComponentProvider.h>
-#include <string>
 #include "IStationaryQubit.h"
 #include "QubitId.h"
 #include "backends/interfaces/IQuantumBackend.h"
@@ -54,33 +53,14 @@ class StationaryQubit : public IStationaryQubit {
   virtual types::EigenvalueResult measureZ() override;
   virtual types::MeasurementOutcome measureRandomPauliBasis() override;
 
-  /**
-   * \brief Two qubit CNOT gate.
-   * \param Need to specify the control qubit as an argument.
-   */
-  void gateCNOT(IStationaryQubit *control_qubit) override;
-
-  /**
-   * \brief Single qubit Hadamard gate
-   * \param X error transforms to Z, and vise-versa.
-   */
+  void gateCNOT(IStationaryQubit *target_qubit) override;
   void gateHadamard() override;
   void gateZ() override;
   void gateX() override;
+  void gateS() override;
+  void gateSdg() override;
 
-  /*GOD parameters*/
-  void setEntangledPartnerInfo(IStationaryQubit *partner) override;
-  void setCompletelyMixedDensityMatrix();
-  void setRelaxedDensityMatrix();
-  void setExcitedDensityMatrix();
-  void addXerror();
-  void addZerror();
-  backends::IQubit *getEntangledPartner() const override;
   backends::IQubit *getBackendQubitRef() const override;
-  int getPartnerStationaryQubitAddress() const override;
-
-  // for debugging
-  void assertEntangledPartnerValid() override;
 
   double emission_success_probability;
 
@@ -94,7 +74,6 @@ class StationaryQubit : public IStationaryQubit {
   void handleMessage(omnetpp::cMessage *msg) override;
   messages::PhotonicQubit *generateEntangledPhoton();
   void setBusy();
-  Eigen::Matrix2cd getErrorMatrix(StationaryQubit *qubit);
 
   /**
    * get the default backend configuration from the Bcakend module.
@@ -113,6 +92,7 @@ class StationaryQubit : public IStationaryQubit {
   double emission_jittering_standard_deviation;
   int stationary_qubit_address;
   int node_address;
+  int qnic_address;
 
   utils::ComponentProvider provider;
   IQuantumBackend *backend;

@@ -3,6 +3,7 @@
 #include <omnetpp.h>
 #include "BSAController.h"
 #include "PhotonicQubit_m.h"
+#include "backends/Backends.h"
 #include "backends/interfaces/IQubit.h"
 #include "modules/PhysicalConnection/BSA/types.h"
 
@@ -49,6 +50,8 @@ class BellStateAnalyzer : public omnetpp::cSimpleModule {
   std::vector<PhotonRecord> first_port_records;
   std::vector<PhotonRecord> second_port_records;
   std::vector<BSAClickResult> click_results;
+  utils::ComponentProvider provider;
+  backends::IQuantumBackend *backend;
 
   // for testing and debugging
   long long no_error_count = 0;
