@@ -14,6 +14,7 @@ TEST_SRCS=$(filter %_test.cc,$(SRCS)) $(test_utils/%.cc) ./unit_test_main.cc
 TEST_OBJS=$(foreach obj,$(TEST_SRCS:.cc=.o),$O/$(obj))
 TEST_INCLUDE=-I$(PROJ_ROOT)/googletest/googletest/include/ -I$(PROJ_ROOT)/googletest/googlemock/include/
 TEST_LIBS=-L$(PROJ_ROOT)/googletest/build/lib -lgtest -lgmock
+NPROC?=$(shell nproc)
 
 ifneq (,$(ENABLE_COVERAGE))
 CXXFLAGS+=-ftest-coverage -fprofile-instr-generate -fcoverage-mapping
@@ -40,6 +41,7 @@ $(TEST_OBJS): $O/%.o : %.cc
 	$(Q)$(CXX) -c $(CXXFLAGS) $(COPTS) $(TEST_INCLUDE) -o $@ $<
 
 $(TARGET_DIR)/run_unit_test: $(TARGET_DIR)/$(TARGET) $(TEST_OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)
+	MODE=debug
 	@$(MKPATH) $O
 	@echo Creating test executable:
 	$(Q)$(CXX) $(LDFLAGS) -lpthread -o $(TARGET_DIR)/run_unit_test $(TEST_OBJS) $(OBJS) $(EXTRA_OBJS) $(LIBS) $(TEST_LIBS) $(OMNETPP_LIBS)
@@ -49,7 +51,7 @@ run-unit-test: $(TARGET_DIR)/run_unit_test
 
 $(TARGET_DIR)/coverage.profraw:
 	rm -rf coverage*
-	ENABLE_COVERAGE=true make run-unit-test
+	ENABLE_COVERAGE=true make run-unit-test -j$(NPROC)
 	LLVM_PROFILE_FILE=$(TARGET_DIR)/coverage.profraw $(TARGET_DIR)/run_unit_test
 
 $(TARGET_DIR)/coverage.profdata: $(TARGET_DIR)/coverage.profraw

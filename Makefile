@@ -5,7 +5,7 @@ NPROC ?= $(shell nproc)
 all: makefile-exe
 	$(MAKE) -C quisp -j$(NPROC)
 
-run-module-test: lib
+run-module-test: lib-debug
 	cd module_tests && ./runtest
 
 run-unit-test: makefile-lib googletest
@@ -23,6 +23,9 @@ exe: makefile-exe
 lib: makefile-lib
 	$(MAKE) -C quisp -j$(NPROC)
 
+lib-debug: makefile-lib
+	$(MAKE) -C quisp -j$(NPROC) MODE=debug
+
 msgheaders: checkmakefile
 	$(MAKE) -C quisp msgheaders
 
@@ -35,8 +38,14 @@ format: quisp/Makefile
 tidy: quisp/Makefile
 	$(MAKE) -C quisp tidy
 
+makefile-exe: eigen spdlog json
+	cd quisp && opp_makemake -f --deep -O out -i ./makefrag
+
+makefile-lib: eigen spdlog json
+	cd quisp && opp_makemake -f --deep -O out -i ./makefrag -M debug  --make-so
+
 googletest/CMakeLists.txt:
-	git submodule update --init
+	git submodule update --init googletest
 
 googletest/build: googletest/CMakeLists.txt
 	mkdir -p googletest/build && cd googletest/build && cmake .. -G "Unix Makefiles"
@@ -46,17 +55,20 @@ googletest/build/lib: googletest/build
 
 googletest: googletest/build/lib
 
+spdlog/CMakeLists.txt:
+	git submodule update --init spdlog
+
+spdlog: spdlog/CMakeLists.txt
+
+json/CMakeLists.txt:
+	git submodule update --init json
+
+json: json/CMakeLists.txt
+
 eigen/CMakeLists.txt:
-	git submodule update --init
+	git submodule update --init eigen
 
 eigen: eigen/CMakeLists.txt
-
-makefile-exe: eigen
-	cd quisp && opp_makemake -f --deep -O out -i ./makefrag
-
-makefile-lib: eigen
-	cd quisp && opp_makemake -f --deep -O out -i ./makefrag -M debug  --make-so
-
 clean:
 	@if [ -f "$(QUISP_MAKEFILE)" ]; then \
 		$(MAKE) -C quisp clean; \
@@ -74,10 +86,6 @@ coverage: makefile-lib
 
 coverage-report: makefile-lib
 	$(MAKE) -C quisp/ coverage/index.html
-
-quispr:
-	git submodule update --init
-	pip install -e quispr
 
 
 checkmakefile:
@@ -103,6 +111,7 @@ help:
 	echo '  lib                 build the library quisp/libquisp{_dbg}.{dylib,so}'; \
 	echo '  clean               remove objcet files, executables and libraries'; \
 	echo '  distclean           remove everything includes submoduled components'; \
+	echo '  test       			build and run all tests'; \
 	echo '  run-unit-test       build unit tests and run it'; \
 	echo '  run-sim-test       	build simulation tests and run it'; \
 	echo '  run-module-test     build modele tests(opp_test) and run it'; \
