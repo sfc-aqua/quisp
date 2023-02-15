@@ -147,11 +147,12 @@ void RoutingDaemon::generateRoutingTable(cTopology *topo) {
 }
 
 QNIC RoutingDaemon::getQNicInfoOf(const cGate *const module_gate) {
+  const auto module = module_gate->getPreviousGate()->getOwnerModule();
   QNIC qnic;
-  qnic.address = module_gate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
-  qnic.type = (QNIC_type)(int)module_gate->getPreviousGate()->getOwnerModule()->par("self_qnic_type");
-  qnic.index = module_gate->getPreviousGate()->getOwnerModule()->getIndex();
-  qnic.pointer = module_gate->getPreviousGate()->getOwnerModule();
+  qnic.address = module->par("self_qnic_address");
+  qnic.type = (QNIC_type)module->par("self_qnic_type").intValue();
+  qnic.index = module->getIndex();
+  qnic.pointer = module;
 
   return qnic;
 }
