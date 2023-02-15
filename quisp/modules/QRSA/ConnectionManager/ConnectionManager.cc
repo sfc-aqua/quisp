@@ -231,27 +231,13 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
   int prev_hop_addr = req->getSrcAddr();
 
   // qnic toward to the previous node
-  int qnic_addr = routing_daemon->return_QNIC_address_to_destAddr(prev_hop_addr);
+  int qnic_addr = routing_daemon->findQNicAddrByDestAddr(prev_hop_addr);
   if (qnic_addr == -1) {
     error("No qnic to source node. Something wrong with routing.");
   }
 
-  // 1.2 get qnic interface infomation
-  int local_qnic_address_to_actual_dst = routing_daemon->findQNicAddrByDestAddr(responder_addr);  // This must be -1 (not found) because not interface to itself
-  int local_qnic_address_to_actual_src = routing_daemon->findQNicAddrByDestAddr(initiator_addr);  // interface toward to the initiator node
-  if (local_qnic_address_to_actual_dst != -1 || local_qnic_address_to_actual_src == -1) {
-    error("Unknown interface to the end node itself found or no interface found to source node. Something wrong with routing.");
-  }
-
-  // 1.3 destination and source information
-  auto dst_info = std::make_unique<ConnectionSetupInfo>(NULL_CONNECTION_SETUP_INFO);
-  auto src_info = hardware_monitor->findConnectionInfoByQnicAddr(local_qnic_address_to_actual_src);
-  if (src_info == nullptr) {
-    error("source info not found");
-  }
-
-  // 1.4 check if the qnics are reserved or not
-  if (isQnicBusy(src_info->qnic.address) || isQnicBusy(dst_info->qnic.address)) {
+  // check if the qnics are reserved or not
+  if (isQnicBusy(qnic_addr)) {
     rejectRequest(req);
     return;
   }
@@ -284,8 +270,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
 void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
   int responder_addr = req->getActual_destAddr();
   int prev_hop_addr = req->getSrcAddr();
-  int outbound_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(responder_addr);
-  int inbound_qnic_address = routing_daemon->return_QNIC_address_to_destAddr(prev_hop_addr);
+  int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(responder_addr);
+  int inbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(prev_hop_addr);
 
   if (outbound_qnic_address == -1) {
     error("QNIC to destination not found");
