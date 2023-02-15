@@ -145,14 +145,15 @@ void RoutingDaemon::set_qrtable(cTopology* topo) {
   }
 }
 
-QNIC RoutingDaemon::get_QNIC_info_of(cGate *parentModuleGate) {
-  QNIC thisqnic;
-  thisqnic.address = parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_address");
-  thisqnic.type = (QNIC_type)(int)parentModuleGate->getPreviousGate()->getOwnerModule()->par("self_qnic_type");
-  thisqnic.index = parentModuleGate->getPreviousGate()->getOwnerModule()->getIndex();
-  thisqnic.pointer = parentModuleGate->getPreviousGate()->getOwnerModule();
+QNIC RoutingDaemon::getQNicInfoOf(const cGate *const module_gate) {
+  const auto module = module_gate->getPreviousGate()->getOwnerModule();
+  QNIC qnic;
+  qnic.address = module->par("self_qnic_address");
+  qnic.type = (QNIC_type)module->par("self_qnic_type").intValue();
+  qnic.index = module->getIndex();
+  qnic.pointer = module;
 
-  return thisqnic;
+  return qnic;
 }
 
 
