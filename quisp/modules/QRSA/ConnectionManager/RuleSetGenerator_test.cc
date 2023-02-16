@@ -24,8 +24,6 @@ class RuleSetGenerator : public OriginalRSG {
  public:
   RuleSetGenerator(int responder_addr) : OriginalRSG(responder_addr) {}
   using OriginalRSG::collectPath;
-  using OriginalRSG::collectSwappingPartners;
-  using OriginalRSG::fillPathDivision;
   using OriginalRSG::purifyRule;
   using OriginalRSG::swapRule;
   using OriginalRSG::tomographyRule;
@@ -45,17 +43,17 @@ class RuleSetGeneratorTest : public testing::Test {
 TEST_F(RuleSetGeneratorTest, generateSimpleSwappingRuleSets) {
   std::map<int, std::vector<std::unique_ptr<Rule>>> rules_map{};
   std::vector<int> path{1, 2, 3, 4, 5};
-  std::vector<int> rev_path{5, 4, 3, 2, 1};
   std::map<int, std::pair<int, int>> swapping_partners_table{{2, {1, 3}}, {4, {3, 5}}, {3, {1, 5}}};
+  int shared_rule_tag = 0;
   int num_measure = 50;
-  rsg->generateSimpleSwappingRuleSets(rules_map, path, rev_path, swapping_partners_table, num_measure);
-  EXPECT_EQ(rules_map.size(), 5);
-  EXPECT_EQ(rules_map.find(1)->second.size(), 1);
-  {
-    auto &rule = rules_map.find(1)->second.at(0);
-    EXPECT_EQ(rule->qnic_interfaces.size(), 1);
-    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 5);
-  }
+  rsg->generateReverseSwapAtHalfRuleSets(0, 4, rules_map, path, shared_rule_tag);
+  EXPECT_EQ(rules_map.size(), 3);
+  // EXPECT_EQ(rules_map.find(1)->second.size(), 1);
+  // {
+  //   auto &rule = rules_map.find(1)->second.at(0);
+  //   EXPECT_EQ(rule->qnic_interfaces.size(), 1);
+  //   EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 5);
+  // }
 
   EXPECT_EQ(rules_map.find(2)->second.size(), 1);
   {
@@ -81,12 +79,12 @@ TEST_F(RuleSetGeneratorTest, generateSimpleSwappingRuleSets) {
     EXPECT_EQ(rule->qnic_interfaces.at(1).partner_addr, 5);
   }
 
-  EXPECT_EQ(rules_map.find(5)->second.size(), 1);
-  {
-    auto &rule = rules_map.find(5)->second.at(0);
-    EXPECT_EQ(rule->qnic_interfaces.size(), 1);
-    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 1);
-  }
+  // EXPECT_EQ(rules_map.find(5)->second.size(), 1);
+  // {
+  //   auto &rule = rules_map.find(5)->second.at(0);
+  //   EXPECT_EQ(rule->qnic_interfaces.size(), 1);
+  //   EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 1);
+  // }
 }
 
 TEST_F(RuleSetGeneratorTest, Simple) {
@@ -145,7 +143,7 @@ TEST_F(RuleSetGeneratorTest, Simple) {
 		"interface": [{
 			"partner_address": 5
 		}],
-    	"shared_tag": 2,
+    	"shared_tag": 3,
 		"name": "",
 		"next_rule_id": -1,
 		"rule_id": 0

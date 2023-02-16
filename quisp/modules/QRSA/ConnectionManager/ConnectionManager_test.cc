@@ -89,7 +89,8 @@ TEST(ConnectionManagerTest, parsePurType) {
 
   auto pur_type = connection_manager->parsePurType("SINGLE_X");
   EXPECT_EQ(pur_type, PurType::SINGLE_X);
-
+  pur_type = connection_manager->parsePurType("SINGLE_Y");
+  EXPECT_EQ(pur_type, PurType::SINGLE_Y);
   pur_type = connection_manager->parsePurType("SINGLE_Z");
   EXPECT_EQ(pur_type, PurType::SINGLE_Z);
   pur_type = connection_manager->parsePurType("DOUBLE");
@@ -189,7 +190,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 		"interface": [{
 			"partner_address": 5
 		}],
-    	"shared_tag": 2,
+    	"shared_tag": 3,
 		"name": "",
 		"next_rule_id": -1,
 		"rule_id": 0
@@ -306,7 +307,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 		}, {
 			"partner_address": 5
 		}],
-    	"shared_tag": 0,
+    	"shared_tag": 2,
 		"name": "",
 		"next_rule_id": -1,
 		"rule_id": 0
@@ -362,10 +363,10 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 		"interface": [{
 			"partner_address": 2
 		}],
-    	"shared_tag": 2,
+    	"shared_tag": 3,
 		"name": "",
 		"next_rule_id": -1,
-		"rule_id": 0 
+		"rule_id": 0
 	}],
 	"ruleset_id": 1234
 })"_json;
