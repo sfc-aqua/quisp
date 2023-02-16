@@ -25,12 +25,12 @@ using abstract::SimTime;
 using Eigen::Matrix;
 using Eigen::MatrixPower;
 using Eigen::MatrixXd;
+using std::vector;
 using types::CliffordOperator;
 using types::MeasurementErrorModel;
 using types::MemoryErrorModel;
 using types::SingleGateErrorModel;
 using types::TwoQubitGateErrorModel;
-using std::vector;
 
 class GraphStateBackend;
 class GraphStateQubit : public IQubit {
@@ -70,7 +70,7 @@ class GraphStateQubit : public IQubit {
   void excite();
   void relax();
   int randomSamplingWithLabelsAndWeights(std::vector<int> labels, std::vector<double> weights);
-  
+
   // error simulation constants
   SingleGateErrorModel gate_err_h;
   SingleGateErrorModel gate_err_x;
