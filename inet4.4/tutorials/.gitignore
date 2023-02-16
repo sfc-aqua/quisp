@@ -1,8 +1,0 @@
-.qtenvrc
-.tkenvrc
-.tkenvlog
-.cmdenv-log
-**/results/*
-*/cache/*
-*.png
-*.mp4
