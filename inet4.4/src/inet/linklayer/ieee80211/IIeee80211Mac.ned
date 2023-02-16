@@ -1,0 +1,23 @@
+//
+// Copyright (C) 2015 OpenSim Ltd.
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+//
+
+
+package inet.linklayer.ieee80211;
+
+import inet.linklayer.contract.IMacProtocol;
+
+//
+// Module interface for all ieee802.11 mac modul
+//
+moduleinterface IIeee80211Mac extends IMacProtocol
+{
+    parameters:
+        @display("i=block/layer");
+    gates:
+        input mgmtIn;
+        output mgmtOut;
+}
+

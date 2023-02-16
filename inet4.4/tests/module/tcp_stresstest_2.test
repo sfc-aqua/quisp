@@ -1,0 +1,38 @@
+%description:
+Test using a long transmission and lossy channel (TCPRandomTester).
+Here: packet loss (5% of packets), and packet delays (20% of packets, by
+mean=1s)
+
+%inifile: omnetpp.ini
+[General]
+ned-path = .;../../../../src;../../lib
+network = inet.test.moduletest.lib.TcpTestNet2
+
+cmdenv-express-mode=false
+
+*.testing=true
+
+*.cli_app.tSend=1s
+*.cli_app.sendBytes=655360B  # 640K
+
+*.tcptester.pdelete=0.05
+*.tcptester.pdelay=0.2
+*.tcptester.delayValue=exponential(1)
+
+include ../../lib/defaults.ini
+
+%#--------------------------------------------------------------------------------------------------------------
+%contains: stdout
+Calling finish() at end of Run #0...
+TcpTestNet2.cli_app: received 0 bytes in 0 packets
+TcpTestNet2.cli_tcp: finishing with 1 connections open.
+TcpTestNet2.srv_tcp: finishing with 1 connections open.
+TcpTestNet2.srv_app: received 655360 bytes in 457 packets
+[282.016] tcpdump finished, A:729 B:523 segments
+
+End.
+%#--------------------------------------------------------------------------------------------------------------
+%postrun-command: grep "undisposed object:" test.out > test_undisposed.out || true
+%not-contains: test_undisposed.out
+undisposed object: (
+%#--------------------------------------------------------------------------------------------------------------

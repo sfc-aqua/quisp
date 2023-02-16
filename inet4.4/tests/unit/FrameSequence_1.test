@@ -1,0 +1,500 @@
+%description:
+Test 802.11 frame sequences
+
+%includes:
+#include <stdio.h>
+#include "inet/linklayer/common/MacAddress.h"
+#include "inet/linklayer/ieee80211/mac/contract/IFrameSequence.h"
+#include "inet/linklayer/ieee80211/mac/framesequence/FrameSequenceContext.h"
+#include "inet/linklayer/ieee80211/mac/framesequence/FrameSequenceStep.h"
+#include "inet/linklayer/ieee80211/mac/framesequence/GenericFrameSequences.h"
+
+%inifile: omnetpp.ini
+
+#debug-on-errors = true
+#debugger-attach-on-error = true
+
+%global:
+
+using namespace inet;
+using namespace inet::ieee80211;
+
+enum Role
+{
+    ORIGINATOR,
+    RECIPIENT,
+};
+
+FrameSequenceContext *originatorContext = nullptr;
+FrameSequenceContext *recipientContext = nullptr;
+
+class DataFs : public IFrameSequence
+{
+    protected:
+        int firstStep = -1;
+        int step = -1;
+
+    public:
+        virtual void startSequence(FrameSequenceContext *context, int firstStep) override {
+            this->firstStep = firstStep;
+            step = 0;
+        }
+
+        virtual IFrameSequenceStep *prepareStep(FrameSequenceContext *context) override {
+            if (context == originatorContext) {
+                switch (step) {
+                    case 0: {
+                        const auto& header = makeShared<Ieee80211MacHeader>();
+                        Packet *packet = new Packet("DATA");
+                        header->setType(ST_DATA);
+                        packet->insertAtFront(header);
+                        return new TransmitStep(packet, 0);
+                    }
+                    case 1:
+                        return nullptr;
+                    default:
+                        throw cRuntimeError("Unknown step");
+                }
+            }
+            else {
+                switch (step) {
+                    case 0:
+                        return new ReceiveStep();
+                    case 1:
+                        return nullptr;
+                    default:
+                        throw cRuntimeError("Unknown step");
+                }
+            }
+        }
+
+        virtual bool completeStep(FrameSequenceContext *context) override {
+            if (context == originatorContext) {
+                switch (step) {
+                    case 0:
+                        step++;
+                        return true;
+                    default:
+                        throw cRuntimeError("Unknown step");
+                }
+            }
+            else {
+                switch (step) {
+                    case 0: {
+                        IReceiveStep *receiveStep = check_and_cast<IReceiveStep *>(context->getStep(firstStep + step));
+                        step++;
+                        Packet *pk = receiveStep->getReceivedFrame();
+                        const auto& header = pk->peekAtFront<Ieee80211MacHeader>();
+                        return header->getType() == ST_DATA;
+                    }
+                    default:
+                        throw cRuntimeError("Unknown step");
+                }
+            }
+        }
+
+        virtual std::string getHistory() const override { return ""; }
+};
+
+class INET_API AckFs : public IFrameSequence
+{
+    protected:
+        int firstStep = -1;
+        int step = -1;
+
+    public:
+        virtual void startSequence(FrameSequenceContext *context, int firstStep) override {
+            this->firstStep = firstStep;
+            step = 0;
+        }
+
+        virtual IFrameSequenceStep *prepareStep(FrameSequenceContext *context) override {
+            if (context == originatorContext) {
+                switch (step) {
+                    case 0:
+                        return new ReceiveStep();
+                    case 1:
+                        return nullptr;
+                    default:
+                        throw cRuntimeError("Unknown step");
+                }
+            }
+            else {
+                switch (step) {
+                    case 0: {
+                        const auto& header = makeShared<Ieee80211MacHeader>();
+                        Packet *packet = new Packet("ACK");
+                        header->setType(ST_ACK);
+                        packet->insertAtFront(header);
+                        return new TransmitStep(packet, 0);
+                    }
+                    case 1:
+                        return nullptr;
+                    default:
+                        throw cRuntimeError("Unknown step");
+                }
+            }
+        }
+
+        virtual bool completeStep(FrameSequenceContext *context) override {
+            if (context == originatorContext) {
+                switch (step) {
+                    case 0: {
+                        IReceiveStep *receiveStep = check_and_cast<IReceiveStep *>(context->getStep(firstStep + step));
+                        step++;
+                        Packet *pk = receiveStep->getReceivedFrame();
+                        const auto& header = pk->peekAtFront<Ieee80211MacHeader>();
+                        return header->getType() == ST_ACK;
+                    }
+                    default:
+                        throw cRuntimeError("Unknown step");
+                }
+            }
+            else {
+                switch (step) {
+                    case 0:
+                        step++;
+                        return true;
+                    default:
+                        throw cRuntimeError("Unknown step");
+                }
+            }
+        }
+
+        virtual std::string getHistory() const override { return ""; }
+};
+
+class RtsCtsFs : public IFrameSequence
+{
+    protected:
+        int firstStep = -1;
+        int step = -1;
+
+    public:
+        RtsCtsFs() { }
+
+        virtual void startSequence(FrameSequenceContext *context, int firstStep) override {
+            step = 0;
+            this->firstStep = firstStep;
+        }
+
+        IFrameSequenceStep *prepareStep(FrameSequenceContext *context) override {
+            if (context == originatorContext) {
+                switch (step) {
+                    case 0: {
+                        const auto& header = makeShared<Ieee80211MacHeader>();
+                        Packet *packet = new Packet("RTS");
+                        header->setType(ST_RTS);
+                        packet->insertAtFront(header);
+                        return new TransmitStep(packet, 0);
+                    }
+                    case 1:
+                        return new ReceiveStep();
+                    case 2:
+                        return nullptr;
+                    default:
+                        throw cRuntimeError("Unknown step");
+                }
+            }
+            else {
+                switch (step) {
+                    case 0:
+                        return new ReceiveStep();
+                    case 1: {
+                        const auto& header = makeShared<Ieee80211MacHeader>();
+                        Packet *packet = new Packet("CTS");
+                        header->setType(ST_CTS);
+                        packet->insertAtFront(header);
+                        return new TransmitStep(packet, 0);
+                    }
+                    case 2:
+                        return nullptr;
+                    default:
+                        throw cRuntimeError("Unknown step");
+                }
+            }
+        }
+
+        bool completeStep(FrameSequenceContext *context) override {
+            if (context == originatorContext) {
+                switch (step) {
+                    case 0:
+                        step++;
+                        return true;
+                    case 1: {
+                        IReceiveStep *receiveStep = check_and_cast<IReceiveStep *>(context->getStep(firstStep + step));
+                        step++;
+                        Packet *pk = receiveStep->getReceivedFrame();
+                        const auto& header = pk->peekAtFront<Ieee80211MacHeader>();
+                        return header->getType() == ST_CTS;
+                    }
+                    default:
+                        throw cRuntimeError("Unknown step");
+                }
+            }
+            else {
+                switch (step) {
+                    case 0: {
+                        IReceiveStep *receiveStep = check_and_cast<IReceiveStep *>(context->getStep(firstStep + step));
+                        step++;
+                        Packet *pk = receiveStep->getReceivedFrame();
+                        const auto& header = pk->peekAtFront<Ieee80211MacHeader>();
+                        return header->getType() == ST_RTS;
+                    }
+                    case 1:
+                        step++;
+                        return true;
+                    default:
+                        throw cRuntimeError("Unknown step");
+                }
+            }
+        }
+
+        virtual std::string getHistory() const override { return ""; }
+};
+
+static void runFrameSequence(IFrameSequence *originatorFrameSequence, IFrameSequence *recipientFrameSequence)
+{
+    // prepare originator
+    bool isOriginatorRunning = true;
+    IFrameSequenceStep *originatorStep = nullptr;
+    Packet *originatorFrame = nullptr;
+    originatorContext = new FrameSequenceContext(MacAddress(ORIGINATOR), nullptr, new InProgressFrames(), nullptr, nullptr, nullptr, nullptr);
+    originatorFrameSequence->startSequence(originatorContext, 0);
+
+    // prepare recipient
+    bool isRecipientRunning = true;
+    IFrameSequenceStep *recipientStep = nullptr;
+    Packet *recipientFrame = nullptr;
+    recipientContext = new FrameSequenceContext(MacAddress(RECIPIENT), nullptr, new InProgressFrames(), nullptr, nullptr, nullptr, nullptr);
+    recipientFrameSequence->startSequence(recipientContext, 0);
+
+    // run frame sequence
+    while (isOriginatorRunning || isRecipientRunning) {
+        if (isOriginatorRunning) {
+            // advance originator
+            originatorStep = originatorFrameSequence->prepareStep(originatorContext);
+            if (originatorStep == nullptr) {
+                EV_INFO << "originator complete\n";
+                isOriginatorRunning = false;
+            }
+            else
+                originatorContext->addStep(originatorStep);
+        }
+
+        if (isRecipientRunning) {
+            // advance recipient
+            recipientStep = recipientFrameSequence->prepareStep(recipientContext);
+            if (recipientStep == nullptr) {
+                EV_INFO << "recipient complete\n";
+                isRecipientRunning = false;
+            }
+            else
+                recipientContext->addStep(recipientStep);
+        }
+
+        // handle originator transmit
+        if (isOriginatorRunning) {
+            if (originatorStep->getType() == IFrameSequenceStep::Type::TRANSMIT) {
+                ITransmitStep *transmitStep = check_and_cast<ITransmitStep *>(originatorStep);
+                originatorFrame = transmitStep->getFrameToTransmit();
+                EV_INFO << "originator transmit: " << originatorFrame->getName() << "\n";
+            }
+        }
+
+        // handle recipient transmit
+        if (isRecipientRunning) {
+            if (recipientStep->getType() == IFrameSequenceStep::Type::TRANSMIT) {
+                ITransmitStep *transmitStep = check_and_cast<ITransmitStep *>(recipientStep);
+                recipientFrame = transmitStep->getFrameToTransmit();
+                EV_INFO << "recipient transmit: " << recipientFrame->getName() << "\n";
+            }
+        }
+
+        // handle originator receive
+        if (isOriginatorRunning) {
+            if (originatorStep->getType() == IFrameSequenceStep::Type::RECEIVE) {
+                IReceiveStep *receiveStep = check_and_cast<IReceiveStep *>(originatorStep);
+                ASSERT(recipientFrame);
+                receiveStep->setFrameToReceive(recipientFrame->dup());
+                EV_INFO << "originator receive: " << recipientFrame->getName() << "\n";
+            }
+        }
+
+        // handle recipient receive
+        if (isRecipientRunning) {
+            if (recipientStep->getType() == IFrameSequenceStep::Type::RECEIVE) {
+                IReceiveStep *receiveStep = check_and_cast<IReceiveStep *>(recipientStep);
+                ASSERT(originatorFrame);
+                receiveStep->setFrameToReceive(originatorFrame->dup());
+                EV_INFO << "recipient receive: " << originatorFrame->getName() << "\n";
+            }
+        }
+
+        // complete originator
+        if (isOriginatorRunning) {
+            bool originatorStepCompletion = originatorFrameSequence->completeStep(originatorContext);
+            if (!originatorStepCompletion) {
+                EV_INFO << "originator abort\n";
+                isOriginatorRunning = false;
+            }
+        }
+
+        // complete recipient
+        if (isRecipientRunning) {
+            bool recipientStepCompletion = recipientFrameSequence->completeStep(recipientContext);
+            if (!recipientStepCompletion) {
+                EV_INFO << "recipient abort\n";
+                isRecipientRunning = false;
+            }
+        }
+
+        originatorFrame = nullptr;
+        recipientFrame = nullptr;
+    }
+    delete originatorContext;
+    delete recipientContext;
+    delete originatorFrameSequence;
+    delete recipientFrameSequence;
+}
+
+bool applyOptional(OptionalFs *frameSequence, FrameSequenceContext *context) {
+    return true;
+}
+
+bool skipOptional(OptionalFs *frameSequence, FrameSequenceContext *context) {
+    return false;
+}
+
+bool skipRepeated(RepeatingFs *frameSequence, FrameSequenceContext *context) {
+    return false;
+}
+
+bool applyRepeatedOneTime(RepeatingFs *frameSequence, FrameSequenceContext *context) {
+    return frameSequence->getCount() <= 0;
+}
+
+bool applyRepeatedTwoTimes(RepeatingFs *frameSequence, FrameSequenceContext *context) {
+    return frameSequence->getCount() <= 1;
+}
+
+int selectFirstAlternative(AlternativesFs *frameSequence, FrameSequenceContext *context) {
+    return 0;
+}
+
+int selectSecondAlternative(AlternativesFs *frameSequences, FrameSequenceContext *context) {
+    return 1;
+}
+
+int selectSubsequentAlternativeCounter = 0;
+int selectSubsequentAlternative(AlternativesFs *frameSequences, FrameSequenceContext *context) {
+    if (context == originatorContext)
+        return selectSubsequentAlternativeCounter++ / 2;
+    else {
+        selectSubsequentAlternativeCounter++;
+        if (selectSubsequentAlternativeCounter < 2)
+            return -1;
+        else
+            return selectSubsequentAlternativeCounter / 2;
+    }
+}
+
+%activity:
+EV_INFO << "\nTesting DATA frame sequence\n";
+runFrameSequence(new DataFs(), new DataFs());
+
+EV_INFO << "\nTesting sequential frame sequence\n";
+runFrameSequence(new SequentialFs({new DataFs(), new DataFs()}), new SequentialFs({new DataFs(), new DataFs()}));
+
+EV_INFO << "\nTesting applied optional frame sequence\n";
+runFrameSequence(new OptionalFs(new DataFs(), applyOptional), new OptionalFs(new DataFs(), applyOptional));
+
+EV_INFO << "\nTesting skipped optional frame sequence\n";
+runFrameSequence(new OptionalFs(new DataFs(), skipOptional), new OptionalFs(new DataFs(), skipOptional));
+
+EV_INFO << "\nTesting skipped repeated frame sequence\n";
+runFrameSequence(new RepeatingFs(new DataFs(), skipRepeated), new RepeatingFs(new DataFs(), skipRepeated));
+
+EV_INFO << "\nTesting one time applied repeated frame sequence\n";
+runFrameSequence(new RepeatingFs(new DataFs(), applyRepeatedOneTime), new RepeatingFs(new DataFs(), applyRepeatedOneTime));
+
+EV_INFO << "\nTesting alternative frame sequence\n";
+runFrameSequence(new AlternativesFs({new DataFs()}, selectFirstAlternative), new AlternativesFs({new DataFs()}, selectFirstAlternative));
+
+EV_INFO << "\nTesting DATA ACK frame sequence\n";
+runFrameSequence(new SequentialFs({new DataFs(), new AckFs()}), new SequentialFs({new DataFs(), new AckFs()}));
+
+EV_INFO << "\nTesting skipped [RTS CTS] DATA ACK frame sequence\n";
+runFrameSequence(new SequentialFs({new OptionalFs(new RtsCtsFs(), skipOptional), new DataFs(), new AckFs()}), new SequentialFs({new OptionalFs(new RtsCtsFs(), skipOptional), new DataFs(), new AckFs()}));
+
+EV_INFO << "\nTesting applied [RTS CTS] DATA ACK frame sequence\n";
+runFrameSequence(new SequentialFs({new OptionalFs(new RtsCtsFs(), applyOptional), new DataFs(), new AckFs()}), new SequentialFs({new OptionalFs(new RtsCtsFs(), applyOptional), new DataFs(), new AckFs()}));
+
+%contains: stdout
+Testing DATA frame sequence
+originator transmit: DATA
+recipient receive: DATA
+originator complete
+recipient complete
+
+Testing sequential frame sequence
+originator transmit: DATA
+recipient receive: DATA
+originator transmit: DATA
+recipient receive: DATA
+originator complete
+recipient complete
+
+Testing applied optional frame sequence
+originator transmit: DATA
+recipient receive: DATA
+originator complete
+recipient complete
+
+Testing skipped optional frame sequence
+originator complete
+recipient complete
+
+Testing skipped repeated frame sequence
+originator complete
+recipient complete
+
+Testing one time applied repeated frame sequence
+originator transmit: DATA
+recipient receive: DATA
+originator complete
+recipient complete
+
+Testing alternative frame sequence
+originator transmit: DATA
+recipient receive: DATA
+originator complete
+recipient complete
+
+Testing DATA ACK frame sequence
+originator transmit: DATA
+recipient receive: DATA
+recipient transmit: ACK
+originator receive: ACK
+originator complete
+recipient complete
+
+Testing skipped [RTS CTS] DATA ACK frame sequence
+originator transmit: DATA
+recipient receive: DATA
+recipient transmit: ACK
+originator receive: ACK
+originator complete
+recipient complete
+
+Testing applied [RTS CTS] DATA ACK frame sequence
+originator transmit: RTS
+recipient receive: RTS
+recipient transmit: CTS
+originator receive: CTS
+originator transmit: DATA
+recipient receive: DATA
+recipient transmit: ACK
+originator receive: ACK
+originator complete
+recipient complete

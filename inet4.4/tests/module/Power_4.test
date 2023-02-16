@@ -1,0 +1,94 @@
+%description:
+
+Test for IEEE 802.11 power model with two adhoc nodes. One node is pinging the
+other. The source node is initially down, the destination node is initially up.
+The battery of the source node is initially depleted and it's being charged. The
+source node starts when the battery reaches the configured capacity. The battery
+of the destination node is initially full and gets depleted during the run. The
+destination node shuts down when the battery reaches the configured capacity.
+The end result is that the number of successful ping messages is less than if
+there were no batteries involved at all.
+
+%file: test.ned
+
+import inet.test.moduletest.lib.*;
+import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
+import inet.node.inet.AdhocHost;
+import inet.physicallayer.wireless.ieee80211.packetlevel.Ieee80211ScalarRadioMedium;
+
+network Test
+{
+    submodules:
+        radioMedium: Ieee80211ScalarRadioMedium;
+        configurator: Ipv4NetworkConfigurator;
+        hostSource: AdhocHost;
+        hostDestination: AdhocHost;
+}
+
+%inifile: omnetpp.ini
+
+[General]
+network = Test
+ned-path = .;../../../../src;../../lib
+sim-time-limit = 100s
+cmdenv-express-mode = false
+
+#omnetpp 5.0 - 5.1 compatibility:
+eventlog-file = "${resultdir}/${configname}-${runnumber}.elog"
+output-scalar-file = "${resultdir}/${configname}-${runnumber}.sca"
+output-vector-file = "${resultdir}/${configname}-${runnumber}.vec"
+snapshot-file = "${resultdir}/${configname}-${runnumber}.sna"
+
+# status
+**.hasStatus = true
+*.hostSource.status.initialStatus = "down"
+*.hostDestination.status.initialStatus = "up"
+
+# power
+**.energyStorage.typename = "SimpleEpEnergyStorage"
+**.energyManagement.typename = "SimpleEpEnergyManagement"
+**.energyConsumer.typename = "StateBasedEpEnergyConsumer"
+**.energyStorage.nominalCapacity = 1J
+**.energyManagement.nodeShutdownCapacity = 0J
+**.energyManagement.nodeStartCapacity = 0.2J
+*.hostSource.energyStorage.initialCapacity = 0J
+*.hostDestination.energyStorage.initialCapacity = 0.1J
+*.hostSource.energyGenerator.typename = "AlternatingEpEnergyGenerator"
+*.hostSource.energyGenerator.energySinkModule = "hostSource.energyStorage"
+*.hostSource.energyGenerator.powerGeneration = 10mW
+*.hostSource.energyGenerator.sleepInterval = 0s
+*.hostSource.energyGenerator.generationInterval = 10s
+
+# mobility
+**.mobility.constraintAreaMinZ = 0m
+**.mobility.constraintAreaMinX = 0m
+**.mobility.constraintAreaMinY = 0m
+**.mobility.constraintAreaMaxX = 100m
+**.mobility.constraintAreaMaxY = 100m
+**.mobility.constraintAreaMaxZ = 0m
+**.mobility.initFromDisplayString = false
+**.mobility.initialY = 50m
+**.mobility.initialZ = 0m
+*.host*.mobility.typename = "StationaryMobility"
+*.hostSource.mobility.initialX = 20m
+*.hostDestination.mobility.initialX = 80m
+
+# ping app
+*.host*.numApps = 1
+*.host*.app[0].typename = "PingApp"
+*.hostSource.app[0].destAddr = "hostDestination"
+*.hostSource.app[0].printPing = true
+
+%contains: stdout
+--------------------------------------------------------
+	Test.hostSource.app[0]
+--------------------------------------------------------
+sent: 81   received: 30   loss rate (%): 62.963
+round-trip min/avg/max (ms): 0.2344/0.553547/1.5488
+stddev (ms): 0.25787   variance:6.64969e-08
+--------------------------------------------------------
+%#--------------------------------------------------------------------------------------------------------------
+%postrun-command: grep "undisposed object:" test.out > test_undisposed.out || true
+%not-contains: test_undisposed.out
+undisposed object: (
+%#--------------------------------------------------------------------------------------------------------------

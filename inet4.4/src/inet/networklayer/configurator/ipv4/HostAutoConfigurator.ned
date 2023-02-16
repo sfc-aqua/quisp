@@ -1,0 +1,30 @@
+//
+// Copyright (C) 2009 Christoph Sommer <christoph.sommer@informatik.uni-erlangen.de>
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+//
+
+
+package inet.networklayer.configurator.ipv4;
+
+import inet.networklayer.configurator.contract.IIpv4NodeConfigurator;
+
+//
+// ~HostAutoConfigurator automatically assigns IP addresses and sets up routing table.
+// It has to be added into each host.
+//
+// This configurator is deprecated. Please use ~Ipv4NetworkConfigurator whenever it is possible.
+// This module is kept only because the ~Ipv4NetworkConfigurator cannot assign IP addresses
+// to modules that are dynamically created/destroyed.
+//
+simple HostAutoConfigurator like IIpv4NodeConfigurator
+{
+    parameters:
+        string interfaceTableModule;
+        string interfaces = default("wlan");         // list of interfaces to autoassign addresses to, separated by a single space characters
+        string addressBase = default("10.0.0.0");    // start of address range from which to automatically assign an address to the autoassignInterfaces
+        string netmask = default("255.0.0.0");       // netmask of subnet in which to automatically assign an address to the autoassignInterfaces
+        string mcastGroups = default("");         // list of IP addresses of multicast groups to join, separated by a single space characters
+        @display("i=block/cogwheel");
+}
+

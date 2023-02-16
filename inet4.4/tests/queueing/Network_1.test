@@ -1,0 +1,200 @@
+%description:
+
+TODO
+
+%file: test.ned
+
+import inet.queueing.sink.PassivePacketSink;
+import inet.queueing.common.PacketDelayer;
+import inet.queueing.source.ActivePacketSource;
+import inet.queueing.queue.PacketQueue;
+import inet.queueing.server.PacketServer;
+
+module TestMac
+{
+    gates:
+        input lowerIn;
+        input upperIn;
+        output lowerOut;
+        output upperOut;
+    submodules:
+        queue: PacketQueue;
+        server: PacketServer;
+    connections:
+        upperIn --> queue.in;
+        queue.out --> server.in;
+        server.out --> lowerOut;
+        lowerIn --> upperOut;
+}
+
+module TestHost
+{
+    gates:
+        input lowerIn;
+        output lowerOut;
+    submodules:
+        sourceApplication: ActivePacketSource;
+        destinationApplication: PassivePacketSink;
+        mac: TestMac;
+    connections:
+    	sourceApplication.out --> mac.upperIn;
+    	mac.lowerOut --> lowerOut;
+        lowerIn --> mac.lowerIn;
+    	mac.upperOut --> destinationApplication.in;
+}
+
+module TestCable
+{
+    gates:
+        input aIn;
+        output aOut;
+        input bIn;
+        output bOut;
+    submodules:
+        aDelayer: PacketDelayer;
+        bDelayer: PacketDelayer;
+    connections:
+        aIn --> aDelayer.in;
+        aDelayer.out --> aOut;
+        bIn --> bDelayer.in;
+        bDelayer.out --> bOut;
+}
+
+network TestNetwork
+{
+    submodules:
+        source: TestHost;
+        destination: TestHost;
+        cable: TestCable;
+    connections:
+        source.lowerOut --> cable.aIn;
+        cable.aOut --> destination.lowerIn;
+        destination.lowerOut --> cable.bIn;
+        cable.bOut --> source.lowerIn;
+}
+
+%inifile: omnetpp.ini
+
+[General]
+network = TestNetwork
+sim-time-limit = 10s
+cmdenv-event-banners = false
+*.*.sourceApplication.packetLength = 1B
+*.*.sourceApplication.productionInterval = uniform(0s, 2s)
+*.*.mac.server.processingTime = uniform(0s, 2s)
+*.cable.*Delayer.delay = uniform(0s, 2s)
+
+%# remove formatting
+%subst: /\x1B\[[0-9;]*m//
+
+%subst: /\nRunning simulation\.\.\.\n//
+
+%contains-regex: stdout
+Producing packet, .*?sourceApplication-0.*?
+Pushing packet, .*?sourceApplication-0.*?
+Pulling packet, .*?sourceApplication-0.*?
+Processing packet started, (.*?sourceApplication-0).*?
+Producing packet, .*?sourceApplication-0.*?
+Pushing packet, .*?sourceApplication-0.*?
+Pulling packet, .*?sourceApplication-0.*?
+Processing packet started, (.*?sourceApplication-0).*?
+Producing packet, .*?sourceApplication-1.*?
+Pushing packet, .*?sourceApplication-1.*?
+Processing packet ended, (.*?sourceApplication-0).*?
+Delaying packet, .*?sourceApplication-0.*?
+Pulling packet, .*?sourceApplication-1.*?
+Processing packet started, (.*?sourceApplication-1).*?
+Producing packet, .*?sourceApplication-1.*?
+Pushing packet, .*?sourceApplication-1.*?
+Processing packet ended, (.*?sourceApplication-0).*?
+Delaying packet, .*?sourceApplication-0.*?
+Pulling packet, .*?sourceApplication-1.*?
+Processing packet started, (.*?sourceApplication-1).*?
+Processing packet ended, (.*?sourceApplication-1).*?
+Delaying packet, .*?sourceApplication-1.*?
+Producing packet, .*?sourceApplication-2.*?
+Pushing packet, .*?sourceApplication-2.*?
+Pulling packet, .*?sourceApplication-2.*?
+Processing packet started, (.*?sourceApplication-2).*?
+Consuming packet, .*?sourceApplication-0.*?
+Consuming packet, .*?sourceApplication-0.*?
+Processing packet ended, (.*?sourceApplication-1).*?
+Delaying packet, .*?sourceApplication-1.*?
+Producing packet, .*?sourceApplication-3.*?
+Pushing packet, .*?sourceApplication-3.*?
+Producing packet, .*?sourceApplication-2.*?
+Pushing packet, .*?sourceApplication-2.*?
+Pulling packet, .*?sourceApplication-2.*?
+Processing packet started, (.*?sourceApplication-2).*?
+Processing packet ended, (.*?sourceApplication-2).*?
+Delaying packet, .*?sourceApplication-2.*?
+Pulling packet, .*?sourceApplication-3.*?
+Processing packet started, (.*?sourceApplication-3).*?
+Producing packet, .*?sourceApplication-3.*?
+Pushing packet, .*?sourceApplication-3.*?
+Consuming packet, .*?sourceApplication-1.*?
+Consuming packet, .*?sourceApplication-1.*?
+Consuming packet, .*?sourceApplication-2.*?
+Processing packet ended, (.*?sourceApplication-3).*?
+Delaying packet, .*?sourceApplication-3.*?
+Producing packet, .*?sourceApplication-4.*?
+Pushing packet, .*?sourceApplication-4.*?
+Producing packet, .*?sourceApplication-4.*?
+Pushing packet, .*?sourceApplication-4.*?
+Pulling packet, .*?sourceApplication-4.*?
+Processing packet started, (.*?sourceApplication-4).*?
+Processing packet ended, (.*?sourceApplication-2).*?
+Delaying packet, .*?sourceApplication-2.*?
+Pulling packet, .*?sourceApplication-3.*?
+Processing packet started, (.*?sourceApplication-3).*?
+Consuming packet, .*?sourceApplication-3.*?
+Processing packet ended, (.*?sourceApplication-4).*?
+Delaying packet, .*?sourceApplication-4.*?
+Producing packet, .*?sourceApplication-5.*?
+Pushing packet, .*?sourceApplication-5.*?
+Processing packet ended, (.*?sourceApplication-3).*?
+Delaying packet, .*?sourceApplication-3.*?
+Pulling packet, .*?sourceApplication-4.*?
+Processing packet started, (.*?sourceApplication-4).*?
+Producing packet, .*?sourceApplication-5.*?
+Pushing packet, .*?sourceApplication-5.*?
+Pulling packet, .*?sourceApplication-5.*?
+Processing packet started, (.*?sourceApplication-5).*?
+Consuming packet, .*?sourceApplication-3.*?
+Producing packet, .*?sourceApplication-6.*?
+Pushing packet, .*?sourceApplication-6.*?
+Producing packet, .*?sourceApplication-7.*?
+Pushing packet, .*?sourceApplication-7.*?
+Consuming packet, .*?sourceApplication-2.*?
+Processing packet ended, (.*?sourceApplication-4).*?
+Delaying packet, .*?sourceApplication-4.*?
+Pulling packet, .*?sourceApplication-5.*?
+Processing packet started, (.*?sourceApplication-5).*?
+Producing packet, .*?sourceApplication-8.*?
+Pushing packet, .*?sourceApplication-8.*?
+Processing packet ended, (.*?sourceApplication-5).*?
+Delaying packet, .*?sourceApplication-5.*?
+Pulling packet, .*?sourceApplication-6.*?
+Processing packet started, (.*?sourceApplication-6).*?
+Producing packet, .*?sourceApplication-6.*?
+Pushing packet, .*?sourceApplication-6.*?
+Consuming packet, .*?sourceApplication-5.*?
+Consuming packet, .*?sourceApplication-4.*?
+Consuming packet, .*?sourceApplication-4.*?
+Producing packet, .*?sourceApplication-9.*?
+Pushing packet, .*?sourceApplication-9.*?
+Processing packet ended, (.*?sourceApplication-5).*?
+Delaying packet, .*?sourceApplication-5.*?
+Pulling packet, .*?sourceApplication-6.*?
+Processing packet started, (.*?sourceApplication-6).*?
+Processing packet ended, (.*?sourceApplication-6).*?
+Delaying packet, .*?sourceApplication-6.*?
+Pulling packet, .*?sourceApplication-7.*?
+Processing packet started, (.*?sourceApplication-7).*?
+Producing packet, .*?sourceApplication-7.*?
+Pushing packet, .*?sourceApplication-7.*?
+Consuming packet, .*?sourceApplication-5.*?
+Processing packet ended, (.*?sourceApplication-7).*?
+Delaying packet, .*?sourceApplication-7.*?
+Pulling packet, .*?sourceApplication-8.*?
+Processing packet started, (.*?sourceApplication-8).*?

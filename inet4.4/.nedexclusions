@@ -1,0 +1,10 @@
+inet.common.selfdoc
+inet.linklayer.configurator.gatescheduling.z3
+inet.emulation
+inet.showcases.visualizer.osg
+inet.examples.emulation
+inet.showcases.emulation
+inet.transportlayer.tcp_lwip
+inet.applications.voipstream
+inet.visualizer.osg
+inet.examples.voipstream

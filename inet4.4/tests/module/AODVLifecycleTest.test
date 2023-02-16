@@ -1,0 +1,144 @@
+%description:
+This example tests the AODV's lifecycle capability. When intermediateNodeA shuts down at 12.3s
+sender gets a link break signal and then discovers a new route to the receiver node.
+%#--------------------------------------------------------------------------------------------------------------
+%file: test.ned
+
+import inet.test.moduletest.lib.*;
+import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
+import inet.networklayer.ipv4.RoutingTableRecorder;
+import inet.node.aodv.AodvRouter;
+import inet.physicallayer.wireless.unitdisk.UnitDiskRadioMedium;
+import inet.common.scenario.ScenarioManager;
+
+
+network AODVTest
+{
+    parameters:
+        @display("bgb=961,662");
+    submodules:
+        radioMedium: UnitDiskRadioMedium {
+            parameters:
+                @display("p=50,50");
+        }
+        configurator: Ipv4NetworkConfigurator {
+            parameters:
+                addDefaultRoutes = false;
+                addStaticRoutes = false;
+                addSubnetRoutes = false;
+                config = xml("<config><interface hosts='*' address='145.236.x.x' netmask='255.255.0.0'/></config>");
+                @display("p=50,100");
+        }
+
+        routingTableRecorder: RoutingTableRecorder {
+            parameters:
+                @display("p=50,150");
+        }
+        scenarioManager: ScenarioManager {
+            parameters:
+                script = default(xml("<scenario/>"));
+                @display("p=50,250");
+        }
+        sender: AodvRouter {
+            parameters:
+                @display("i=device/pocketpc_s;r=,,#707070;p=284,51");
+        }
+        intermediateNodeA: AodvRouter {
+            parameters:
+                @display("i=device/pocketpc_s;r=,,#707070;p=203,206");
+        }
+        intermediateNodeB: AodvRouter {
+            parameters:
+                @display("i=device/pocketpc_s;r=,,#707070;p=386,206");
+        }
+        receiver: AodvRouter {
+            parameters:
+                @display("i=device/pocketpc_s;r=,,#707070;p=284,378");
+        }
+    connections allowunconnected:
+}
+
+%#--------------------------------------------------------------------------------------------------------------
+%inifile: omnetpp.ini
+[General]
+network = AODVTest
+record-eventlog = true
+sim-time-limit = 100s
+num-rngs = 3
+ned-path = .;../../../../src;../../lib
+
+#omnetpp 5.0 - 5.1 compatibility:
+eventlog-file = "${resultdir}/${configname}-${runnumber}.elog"
+output-scalar-file = "${resultdir}/${configname}-${runnumber}.sca"
+output-vector-file = "${resultdir}/${configname}-${runnumber}.vec"
+snapshot-file = "${resultdir}/${configname}-${runnumber}.sna"
+
+**.mobility.rng-0 = 1
+**.wlan[*].mac.rng-0 = 2
+**.aodv.useHelloMessages = false
+*.sender.aodv.jitter = 1ms
+*.receiver.aodv.jitter = 2ms
+*.intermediateNodeA.aodv.jitter = 3ms
+*.intermediateNodeB.aodv.jitter = 4ms
+# mobility
+*.*.mobility.typename = "StationaryMobility"
+**.mobility.constraintAreaMinZ = 0m
+**.mobility.constraintAreaMaxZ = 0m
+**.mobility.constraintAreaMinX = 0m
+**.mobility.constraintAreaMinY = 0m
+**.mobility.constraintAreaMaxX = 600m
+**.mobility.constraintAreaMaxY = 600m
+
+# ping app (host[0] pinged by others)
+**.sender.numApps = 1
+**.sender.app[0].typename = "PingApp"
+**.sender.app[0].startTime = uniform(1s,5s)
+**.sender.app[0].printPing = true
+**.sender.app[0].destAddr = "receiver(ipv4)"
+
+# nic settings
+**.wlan[*].typename = "AckingWirelessInterface"
+**.wlan[*].radio.transmitter.communicationRange = 240m
+**.wlan[*].radio.transmitter.headerLength = 4b
+**.wlan[*].bitrate = 2Mbps
+**.wlan[*].mac.address = "auto"
+**.wlan[*].mac.headerLength = 20B
+
+**.hasStatus = true
+*.scenarioManager.script = xmldoc("scenario.xml")
+%#--------------------------------------------------------------------------------------------------------------
+%file: scenario.xml
+<scenario>
+    <at t="12.3">
+        <shutdown module="intermediateNodeA"/>
+    </at>
+</scenario>
+%#--------------------------------------------------------------------------------------------------------------
+%contains-regex: results/General-0.rt
+\+R #\d+  3\.1965\d+s  AODVTest\.intermediateNodeA  145\.236\.0\.2  145\.236\.0\.1/32  145\.236\.0\.1  wlan0
+\+R #\d+  3\.1965\d+s  AODVTest\.intermediateNodeB  145\.236\.0\.3  145\.236\.0\.1/32  145\.236\.0\.1  wlan0
+\+R #\d+  3\.1998\d+s  AODVTest\.sender  145\.236\.0\.1  145\.236\.0\.2/32  145\.236\.0\.2  wlan0
+\+R #\d+  3\.1998\d+s  AODVTest\.intermediateNodeB  145\.236\.0\.3  145\.236\.0\.2/32  145\.236\.0\.2  wlan0
+\+R #\d+  3\.1998\d+s  AODVTest\.receiver  145\.236\.0\.4  145\.236\.0\.2/32  145\.236\.0\.2  wlan0
+\+R #\d+  3\.1998\d+s  AODVTest\.receiver  145\.236\.0\.4  145\.236\.0\.1/32  145\.236\.0\.2  wlan0
+\+R #\d+  3\.2004\d+s  AODVTest\.intermediateNodeA  145\.236\.0\.2  145\.236\.0\.4/32  145\.236\.0\.4  wlan0
+\+R #\d+  3\.2008\d+s  AODVTest\.intermediateNodeA  145\.236\.0\.2  145\.236\.0\.3/32  145\.236\.0\.3  wlan0
+\+R #\d+  3\.2008\d+s  AODVTest\.sender  145\.236\.0\.1  145\.236\.0\.3/32  145\.236\.0\.3  wlan0
+\+R #\d+  3\.2008\d+s  AODVTest\.receiver  145\.236\.0\.4  145\.236\.0\.3/32  145\.236\.0\.3  wlan0
+\+R #\d+  3\.2041\d+s  AODVTest\.sender  145\.236\.0\.1  145\.236\.0\.4/32  145\.236\.0\.2  wlan0
+\-R #\d+  12\.3s  AODVTest\.intermediateNodeA  145\.236\.0\.2  145\.236\.0\.1/32  145\.236\.0\.1  wlan0
+\-R #\d+  12\.3s  AODVTest\.intermediateNodeA  145\.236\.0\.2  145\.236\.0\.3/32  145\.236\.0\.3  wlan0
+\-R #\d+  12\.3s  AODVTest\.intermediateNodeA  145\.236\.0\.2  145\.236\.0\.4/32  145\.236\.0\.4  wlan0
+\-R #\d+  12\.3s  AODVTest\.intermediateNodeA  145\.236\.0\.2  145\.236\.0\.0/16  <unspec>  wlan0
+\-R #\d+  12\.3s  AODVTest\.intermediateNodeA  145\.236\.0\.2  127\.0\.0\.0/8  <unspec>  lo0
+\*R #\d+  14\.2008\d+s  AODVTest\.receiver  145\.236\.0\.4  145\.236\.0\.1/32  145\.236\.0\.3  wlan0
+\+R #\d+  14\.2014\d+s  AODVTest\.intermediateNodeB  145\.236\.0\.3  145\.236\.0\.4/32  145\.236\.0\.4  wlan0
+\*R #\d+  14\.2061\d+s  AODVTest\.sender  145\.236\.0\.1  145\.236\.0\.4/32  145\.236\.0\.3  wlan0
+\-R #\d+  21\.1998\d+s  AODVTest\.intermediateNodeB  145\.236\.0\.3  145\.236\.0\.2/32  145\.236\.0\.2  wlan0
+\-R #\d+  28\.2952\d+s  AODVTest\.sender  145\.236\.0\.1  145\.236\.0\.2/32  145\.236\.0\.2  wlan0
+\-R #\d+  30\.1960\d+s  AODVTest\.receiver  145\.236\.0\.4  145\.236\.0\.2/32  145\.236\.0\.2  wlan0
+%#--------------------------------------------------------------------------------------------------------------
+%postrun-command: grep "undisposed object:" test.out > test_undisposed.out || true
+%not-contains: test_undisposed.out
+undisposed object: (
+%#--------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,84 @@
+%description:
+
+This is a test for ideal radio idle reception state.
+The received signal is too weak to sense at all.
+
+%file: test.ned
+
+import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
+import inet.node.inet.WirelessHost;
+import inet.physicallayer.wireless.unitdisk.UnitDiskRadioMedium;
+
+network Test
+{
+    submodules:
+        radioMedium: UnitDiskRadioMedium;
+        configurator: Ipv4NetworkConfigurator;
+        host1: WirelessHost;
+        host2: WirelessHost;
+}
+
+%inifile: omnetpp.ini
+
+[General]
+network = Test
+sim-time-limit = 80us
+record-eventlog = true
+ned-path = .;../../../../src
+
+#omnetpp 5.0 - 5.1 compatibility:
+eventlog-file = "${resultdir}/${configname}-${runnumber}.elog"
+output-scalar-file = "${resultdir}/${configname}-${runnumber}.sca"
+output-vector-file = "${resultdir}/${configname}-${runnumber}.vec"
+snapshot-file = "${resultdir}/${configname}-${runnumber}.sna"
+
+**.arp.typename = "GlobalArp"
+
+**.mobility.constraintAreaMinZ = 0m
+**.mobility.constraintAreaMinX = 0m
+**.mobility.constraintAreaMinY = 0m
+**.mobility.constraintAreaMaxX = 1000m
+**.mobility.constraintAreaMaxY = 1000m
+**.mobility.constraintAreaMaxZ = 0m
+**.mobility.initFromDisplayString = false
+**.mobility.initialY = 500m
+**.mobility.initialZ = 0m
+*.host*.mobility.typename = "StationaryMobility"
+*.host1.mobility.initialX = 100m
+*.host2.mobility.initialX = 900m
+
+# nic
+*.host*.wlan[*].typename = "AckingWirelessInterface"
+*.host*.wlan[*].bitrate = 2Mbps
+*.host*.wlan[*].mac.headerLength = 10B
+*.host*.wlan[*].mac.fullDuplex = false
+*.host*.wlan[*].radio.typename = "UnitDiskRadio"
+*.host*.wlan[*].radio.transmitter.bitrate = 2Mbps
+*.host*.wlan[*].radio.transmitter.preambleDuration = 0s
+*.host*.wlan[*].radio.transmitter.headerLength = 96b
+*.host*.wlan[*].radio.transmitter.communicationRange = 200m
+*.host*.wlan[*].radio.transmitter.interferenceRange = 400m
+*.host*.wlan[*].radio.transmitter.detectionRange = 600m
+*.host*.wlan[*].radio.receiver.ignoreInterference = true
+
+# ping app
+*.host1.numApps = 1
+*.host1.app[0].typename = "PingApp"
+*.host1.app[0].count = 1
+*.host1.app[0].printPing = true
+*.host1.app[0].destAddr = "host2"
+*.host1.app[0].startTime = 0s
+
+%#--------------------------------------------------------------------------------------------------------------
+%# remove colorizing
+%subst: /\x1B\[[0-9;]*m//
+%#--------------------------------------------------------------------------------------------------------------
+%not-contains: results/General-0.elog
+Changing radio reception state from IDLE to BUSY.
+%not-contains: results/General-0.elog
+Changing radio reception state from IDLE to RECEIVING.
+%#--------------------------------------------------------------------------------------------------------------
+%postrun-command: grep "undisposed object:" test.out > test_undisposed.out || true
+%not-contains: test_undisposed.out
+undisposed object: (
+%#--------------------------------------------------------------------------------------------------------------

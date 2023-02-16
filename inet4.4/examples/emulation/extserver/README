@@ -1,0 +1,14 @@
+In this example the network consists of one client, one router, one internal
+server and one external (real) server.
+
+The client sends 100 MB of data to the external server using TCP for uplink traffic.
+For downlink traffic the external server may send data to the internal server.
+
+To run this example:
+
+- For uplink traffic use e.g. FileZilla and setup your external server to
+  listen on port 10021.
+- For downlink traffic use e.g. Iperf with following command line:
+  iperf -c 172.0.1.111 -P 1 -i 1 -m -p 10021 -M 1452.0B -l 100.0M -f m -t 0
+
+IP addresses and routing tables are set up by using mrt files.

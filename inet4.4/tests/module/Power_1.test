@@ -1,0 +1,50 @@
+%description:
+
+Test for normal operation, energy storage should not be depleted and should not be charged.
+
+%file: test.ned
+
+import inet.power.storage.SimpleEpEnergyStorage;
+import inet.power.consumer.AlternatingEpEnergyConsumer;
+import inet.power.generator.AlternatingEpEnergyGenerator;
+
+network Test
+{
+    submodules:
+        energyStorage: SimpleEpEnergyStorage;
+        energyConsumer: AlternatingEpEnergyConsumer;
+        energyGenerator: AlternatingEpEnergyGenerator;
+}
+
+%inifile: omnetpp.ini
+
+[General]
+network = Test
+ned-path = .;../../../../src
+sim-time-limit = 11s
+cmdenv-express-mode = false
+
+#omnetpp 5.0 - 5.1 compatibility:
+eventlog-file = "${resultdir}/${configname}-${runnumber}.elog"
+output-scalar-file = "${resultdir}/${configname}-${runnumber}.sca"
+output-vector-file = "${resultdir}/${configname}-${runnumber}.vec"
+snapshot-file = "${resultdir}/${configname}-${runnumber}.sna"
+
+**.energyStorage.nominalCapacity = 10 J
+**.energyStorage.initialCapacity = 5 J
+**.energyConsumer.sleepInterval = uniform(10ms, 20ms)
+**.energyConsumer.consumptionInterval = uniform(5ms, 10ms)
+**.energyConsumer.powerConsumption = uniform(1W, 2W)
+**.energyGenerator.sleepInterval = uniform(10ms, 20ms)
+**.energyGenerator.generationInterval = uniform(5ms, 10ms)
+**.energyGenerator.powerGeneration = uniform(1W, 2W)
+
+%not-contains: stdout
+Energy storage depleted
+%not-contains: stdout
+Energy storage charged
+%#--------------------------------------------------------------------------------------------------------------
+%postrun-command: grep "undisposed object:" test.out > test_undisposed.out || true
+%not-contains: test_undisposed.out
+undisposed object: (
+%#--------------------------------------------------------------------------------------------------------------

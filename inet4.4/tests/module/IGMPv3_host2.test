@@ -1,0 +1,65 @@
+%description:
+
+Checks that a host responds to a General Query with a correct response.
+
+%#--------------------------------------------------------------------------------------------------------------
+
+%inifile: omnetpp.ini
+[General]
+ned-path = .;../../../../src;../../lib
+sim-time-limit=300s
+cmdenv-express-mode = false
+#cmdenv-log-prefix = "%t %N: "
+
+#omnetpp 5.0 - 5.1 compatibility:
+eventlog-file = "${resultdir}/${configname}-${runnumber}.elog"
+output-scalar-file = "${resultdir}/${configname}-${runnumber}.sca"
+output-vector-file = "${resultdir}/${configname}-${runnumber}.vec"
+snapshot-file = "${resultdir}/${configname}-${runnumber}.sna"
+
+network = inet.test.moduletest.lib.TestIGMPNetwork
+**.igmp.typename = "Igmpv3"
+**.IPForward = false
+**.multicastForwarding = false
+
+**.scenarioManager.script = xmldoc("scenario.xml")
+
+%#--------------------------------------------------------------------------------------------------------------
+
+%file: scenario.xml
+<scenario>
+
+<join t="2" module="node.tester.mac" ifname="eth0" group="225.0.0.1" sources="10.0.0.1"/>
+<dump t="2" module="node.tester.mac" ifname="eth0" what="groups"/>
+<send t="2" module="node.tester.mac" ifname="eth0" type="Igmpv3Query" maxRespCode="10"/>
+
+<set-filter t="3" module="node.tester.mac" ifname="eth0" group="225.0.0.1" sources="E 10.0.0.2"/>
+<dump t="3" module="node.tester.mac" ifname="eth0" what="groups"/>
+<send t="3" module="node.tester.mac" ifname="eth0" type="Igmpv3Query" maxRespCode="10"/>
+
+</scenario>
+
+%#--------------------------------------------------------------------------------------------------------------
+
+%#
+%# First check that the join was successful
+%#
+%postrun-command: grep "IGMPTester: .*groups =" test.out > groups.out || true
+%contains: groups.out
+IGMPTester: eth0: groups = 224.0.0.1 E, 224.0.0.2 E, 225.0.0.1 I 10.0.0.1.
+IGMPTester: eth0: groups = 224.0.0.1 E, 224.0.0.2 E, 225.0.0.1 E 10.0.0.2.
+
+%#
+%# Now check that the IGMP module responded with a correct report
+%#
+%postrun-command: grep "IGMPTester: .*Received" test.out > received.out || true
+%contains-regex: received.out
+IGMPTester: Received: inet::Igmpv3Report<225.0.0.1=IS_IN \(10.0.0.1\)>.
+.*
+IGMPTester: Received: inet::Igmpv3Report<225.0.0.1=IS_EX \(10.0.0.2\)>.
+
+%#--------------------------------------------------------------------------------------------------------------
+%postrun-command: grep "undisposed object:" test.out > test_undisposed.out || true
+%not-contains: test_undisposed.out
+undisposed object: (
+%#--------------------------------------------------------------------------------------------------------------

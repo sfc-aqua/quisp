@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<RIPConfig>
+  <interface among="R1 RB" metric="2"/>
+  <interface among="R? R?" metric="1"/>
+  <interface source="R?" dest="H?" mode="PASSIVE" metric="1"/>
+</RIPConfig>

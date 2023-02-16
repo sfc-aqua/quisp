@@ -1,0 +1,31 @@
+====== inet-4.x ======
+
+2022-07-27  ------ inet-4.4.1 released ------
+
+2022-05-13  ------ inet-4.4.0 released ------
+
+2022-03-02  Levente Mészáros
+
+	Renamed *GateSchedulingConfigurator to *GateScheduleConfigurator.
+
+2022-02-24  Levente Mészáros
+
+	Replaced the old Z3 SAT based implementation with a greatly simplified new one.
+
+2022-02-07  Levente Mészáros
+
+	Renamed priority fields to pcp and gateIndex as appropriate.
+
+2022-01-31  Levente Mészáros
+
+	Added NED documentation.
+
+2021-04-21  Levente Mészáros
+
+	Added Z3GateSchedulingConfigurator module.
+
+	The source was copied from https://github.com/ACassimiro/TSNsched with the
+	permission of the original authors. The code is adapted to INET interfaces,
+	simplified and cleaned up a bit. Further changes to the original source are
+	not going to be taken over. See TSNschedGateSchedulingConfigurator for using
+	the latest version of the original work.

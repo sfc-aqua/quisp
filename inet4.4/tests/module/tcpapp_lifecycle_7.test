@@ -1,0 +1,100 @@
+%description:
+
+Test for basic TCP application lifecycle handling.
+
+Sequence of operations:
+ - at 0 client initializes to up
+ - at 0 server initializes to up
+ - at 1 client executes shutdown operation
+ - at 2 server executes shutdown operation
+ - simulation stops at 10s
+
+%inifile: omnetpp.ini
+
+[General]
+network = Test
+ned-path = .;../../../../src;../../lib
+cmdenv-express-mode = false
+sim-time-limit = 10s
+record-eventlog = true
+
+#omnetpp 5.0 - 5.1 compatibility:
+eventlog-file = "${resultdir}/${configname}-${runnumber}.elog"
+output-scalar-file = "${resultdir}/${configname}-${runnumber}.sca"
+output-vector-file = "${resultdir}/${configname}-${runnumber}.vec"
+snapshot-file = "${resultdir}/${configname}-${runnumber}.sna"
+
+**.hasStatus = true
+**.initialStatus = "up"
+**.scenarioManager.script = xmldoc("scenario.xml")
+
+**.arp.retryCount = 0
+**.arp.retryTimeout = 100ms
+
+# tcp apps
+**.client.numApps = 1
+**.client.app[0].typename = "TcpBasicClientApp"
+**.client.app[0].startTime = 0s
+**.client.app[0].localPort = -1
+**.client.app[0].connectAddress = "server"
+**.client.app[0].connectPort = 1000
+**.client.app[0].numRequestsPerSession = 1000
+**.client.app[0].requestLength = 100B
+**.client.app[0].idleInterval = 1000000s
+**.client.app[0].thinkTime = 100ms
+
+**.server.numApps = 1
+**.server.app[0].typename = "TcpEchoApp"
+**.server.app[0].localPort = 1000
+
+**.app[0].dataTransferMode = "bytecount"
+
+%file: test.ned
+
+import inet.test.moduletest.lib.*;
+import inet.node.ethernet.Eth10M;
+import inet.node.inet.StandardHost;
+import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
+import inet.common.scenario.ScenarioManager;
+
+network Test
+{
+    submodules:
+        scenarioManager: ScenarioManager;
+        configurator: Ipv4NetworkConfigurator;
+        client: StandardHost;
+        server: StandardHost;
+    connections:
+        client.ethg++ <--> Eth10M <--> server.ethg++;
+}
+
+%file: scenario.xml
+
+<scenario>
+    <at t="1">
+        <shutdown module="client"/>
+    </at>
+    <at t="2">
+        <shutdown module="server"/>
+    </at>
+</scenario>
+
+%contains-regex: stdout
+
+.*
+Test.client shutting down
+.*
+Test.client shut down
+.*
+Test.server shutting down
+.*
+Test.server shut down
+.*
+Test.client.app\[0\]: received 1000 bytes in 10 packets
+.*
+
+%#--------------------------------------------------------------------------------------------------------------
+%postrun-command: grep "undisposed object:" test.out > test_undisposed.out || true
+%not-contains: test_undisposed.out
+undisposed object: (
+%#--------------------------------------------------------------------------------------------------------------

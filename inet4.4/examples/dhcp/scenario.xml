@@ -1,0 +1,16 @@
+
+<scenario>
+    <at t="60.0">
+        <shutdown module="client"/>
+    </at>
+    <at t="70.0">
+        <startup module="client"/>
+    </at>
+    <at t="80.0">
+        <shutdown module="server"/>
+    </at>
+    <at t="160.0">
+        <startup module="server"/>
+    </at>
+</scenario>
+

@@ -1,0 +1,23 @@
+//
+// Copyright (C) 2004 Andras Varga
+// Copyright (C) 2000 Institut fuer Telematik, Universitaet Karlsruhe
+//
+// SPDX-License-Identifier: LGPL-3.0-or-later
+//
+// A copy of UDPBasicApp, just for testing.
+//
+simple SomeUDPApp like UDPApp
+{
+    parameters:
+        int localPort; // if -1, app doesn't bind in UDP
+        int destPort;
+        int messageLength; // (bits)
+        volatile double sendInterval; // should usually be a random value, e.g. exponential(1)
+        string destAddresses; // list of \IP addresses, separated by spaces
+    gates:
+        input udpIn;
+        output udpOut;
+}
+
+
+

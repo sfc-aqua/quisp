@@ -1,0 +1,172 @@
+.DEFAULT_GOAL := all-pch
+
+#
+# Use the new message compiler introduced in OMNeT++ 5.3
+#
+MSGC:=$(MSGC) --msg6
+
+FEATURETOOL := opp_featuretool
+
+#
+# compiler warning for c-style cast
+#
+#CFLAGS += -Wold-style-cast
+
+ifeq ($(PLATFORM),win32)
+  #
+  # on windows we have to link with the ws2_32 (winsock2) library as it is no longer added
+  # to the omnetpp system libraries by default (as of OMNeT++ 5.1)
+  #
+  LDFLAGS += -lws2_32
+  DEFINES += -DINET_EXPORT
+endif
+
+#
+# TCP implementation using the lwIP stack
+#
+WITH_TCP_LWIP := $(shell (cd .. && $(FEATURETOOL) -q isenabled TcpLwip && echo enabled) )
+ifeq ($(WITH_TCP_LWIP), enabled)
+  INCLUDE_PATH += -Iinet/transportlayer/tcp_lwip/lwip/include -Iinet/transportlayer/tcp_lwip/lwip/include/ipv4 -Iinet/transportlayer/tcp_lwip/lwip/include/ipv6
+endif
+
+#
+# pkg-config:
+#
+HAVE_PKGCFG := $(shell pkg-config --version 2>/dev/null)
+ifeq ($(strip $(HAVE_PKGCFG)),)
+  HAVE_PKGCFG := no
+else
+  HAVE_PKGCFG := yes
+  PKGCFG := $(shell which pkg-config)
+endif
+
+#
+# VoipStream feature:
+#
+WITH_VOIPSTREAM := $(shell (cd .. && $(FEATURETOOL) -q isenabled VoipStream && echo enabled) )
+ifeq ($(WITH_VOIPSTREAM), enabled)
+  ifeq ($(HAVE_PKGCFG), yes)
+    HAVE_FFMPEG := $(shell $(PKGCFG) --exists libavcodec libavformat libavutil && echo yes || echo no)
+    ifeq ($(HAVE_FFMPEG), yes)
+      LIBS += $(shell $(PKGCFG) --libs libavcodec libavformat libavutil)
+      CFLAGS += $(shell $(PKGCFG) --cflags libavcodec libavformat libavutil) -DHAVE_FFMPEG
+    endif
+    HAVE_FFMPEG_SWRESAMPLE := $(shell $(PKGCFG) --exists libswresample && echo yes || echo no)
+    ifeq ($(HAVE_FFMPEG_SWRESAMPLE), yes)
+      LIBS += $(shell $(PKGCFG) --libs libswresample)
+      CFLAGS += $(shell $(PKGCFG) --cflags libswresample) -DHAVE_FFMPEG_SWRESAMPLE
+    endif
+  endif
+endif
+
+#
+# VisualizationOsg feature requires (optionally) some extra osg and osgEarth libraries
+#
+WITH_VISUALIZATIONOSG := $(shell (cd .. && $(FEATURETOOL) -q isenabled VisualizationOsg && echo enabled) )
+ifeq ($(WITH_VISUALIZATIONOSG), enabled)
+  ifeq ($(WITH_OSG), yes)
+    OMNETPP_LIBS += -losg -losgText -losgDB -losgGA -losgViewer -losgUtil -lOpenThreads # TODO: use $(OSG_LIBS) from Makefile.inc? Does that include -losgText? Why not?
+    ifeq ($(WITH_OSGEARTH), yes)
+      OMNETPP_LIBS += -losgEarth -losgEarthUtil # TODO: use $(OSGEARTH_LIBS) from Makefile.inc? -lgeos_c might also be needed. Is that included? Should it be?
+    endif
+  else
+    $(error Please rebuild OMNeT++/OMNEST with OSG support, or disable 'VisualizationOsg' feature in INET )
+  endif
+endif
+
+#
+# OpenMP feature allows faster execution of certain visualizations (like transmission power spectral density maps )
+#
+WITH_OPENMP := $(shell (cd .. && $(FEATURETOOL) -q isenabled OpenMP && echo enabled) )
+ifeq ($(WITH_OPENMP), enabled)
+  CFLAGS += $(OPENMP_FLAGS)
+  LDFLAGS += $(OPENMP_FLAGS)
+endif
+
+# uncomment this if you want to run the NS3 vs INET 802.11 cross validation tests in the 'tests/misc/ns3' folder.
+# CFLAGS += -DNS3_VALIDATION
+
+# disable anoying "... hides overloaded virtual function" warning
+CFLAGS += -Wno-overloaded-virtual
+
+#########################################################################
+# precompiled header support for GCC and CLANG
+
+# Set this to "no" if you want to avoid using the precompiled header. The default is "yes".
+ifndef USE_PRECOMPILED_HEADER # don't detect ccache if this setting is passed in as a command line argument
+  # force turning off precompiled headers if ccache is used as it is not compatible with precompiled headers.
+  ifneq (,$(findstring ccache,$(shell (which $(CC)))))
+    USE_PRECOMPILED_HEADER = no
+    $(info *** CCACHE detected - precompiled headers disabled)
+  else
+    USE_PRECOMPILED_HEADER = yes
+    $(info *** CCACHE not detected - using precompiled headers)
+  endif
+endif
+
+PRECOMPILED_HEADER=inet/common/precompiled_$(MODE).h
+
+ifeq ($(USE_PRECOMPILED_HEADER),yes)
+  ifneq (,$(findstring gcc,$(CC)))
+    PRECOMPILED_EXT=gch
+  else ifneq (,$(findstring clang,$(CC)))
+    PRECOMPILED_EXT=pch
+  else
+    PRECOMPILED_EXT=
+  endif
+  CFLAGS += -include $(PRECOMPILED_HEADER)
+endif
+
+PRECOMPILED_HEADER_PCH=$(PRECOMPILED_HEADER).$(PRECOMPILED_EXT)
+PRECOMPILED_HEADER_D=$(PRECOMPILED_HEADER_PCH:%.$(PRECOMPILED_EXT)=%.d)
+
+# Main target
+all-pch: | pch msgheaders all
+
+.PHONY: pch clean-pch
+
+pch : $(PRECOMPILED_HEADER_PCH)
+
+$(PRECOMPILED_HEADER_PCH): $(PRECOMPILED_HEADER)
+ifneq ("$(PRECOMPILED_EXT)","")
+	@echo Creating precompiled header for $(CC)...
+	$(Q)$(CXX) -x c++-header $(CXXFLAGS) $(filter-out -MMD -include $(PRECOMPILED_HEADER),$(COPTS)) -MD -o $@ $<
+endif
+
+clean: clean-pch clean-defines
+
+clean-pch:
+	$(Q)-rm -f $(PRECOMPILED_HEADER_D) $(PRECOMPILED_HEADER).pch $(PRECOMPILED_HEADER).gch
+
+-include $(PRECOMPILED_HEADER_D)
+
+# Create opp_defines.h so important WITH_* macros from OMNeT++ can be included as macros from a header file
+# This helps the IDE to properly enable/disable conditional code in the editor
+DEFINES_FILE=inet/opp_defines.h
+
+msgheaders: $(DEFINES_FILE)
+
+clean-defines:
+	$(Q)-rm -f $(DEFINES_FILE)
+
+$(DEFINES_FILE) : $(COPTS_FILE)
+	@echo "// Generated file, do not edit" >$(DEFINES_FILE)
+ifeq ($(WITH_OSG),yes)
+	@echo "#ifndef WITH_OSG" >>$(DEFINES_FILE)
+	@echo "#define WITH_OSG" >>$(DEFINES_FILE)
+	@echo "#endif" >>$(DEFINES_FILE)
+endif
+ifeq ($(WITH_OSGEARTH),yes)
+	@echo "#ifndef WITH_OSGEARTH" >>$(DEFINES_FILE)
+	@echo "#define WITH_OSGEARTH" >>$(DEFINES_FILE)
+	@echo "#endif" >>$(DEFINES_FILE)
+endif
+
+# dump out the actual compiler and linker command line for easier debugging
+ifneq ($(MAKECMDGOALS),clean)
+$(info *** COMPILING with:)
+$(info $(CXX) -c $(CXXFLAGS) $(COPTS))
+$(info *** LINKING with:)
+$(info $(SHLIB_LD) -o $O/$(TARGET) $(AS_NEEDED_OFF) $(WHOLE_ARCHIVE_ON) $(LIBS) $(WHOLE_ARCHIVE_OFF) $(OMNETPP_LIBS) $(LDFLAGS))
+$(info Building...)
+endif

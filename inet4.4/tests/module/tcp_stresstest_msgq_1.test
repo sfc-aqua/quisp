@@ -1,0 +1,45 @@
+%description:
+Test TCPMsgBasedSendQueue/TCPMsgBasedRcvQueue using a long transmission
+and lossy channel (TCPRandomTester).
+Here: packet loss (5%), packet delays (20%, by mean=1s), packet duplication
+(20%, original packet is lost, mean=3 copies created with delay mean=1s)
+
+%inifile: omnetpp.ini
+[General]
+ned-path = .;../../../../src;../../lib
+network = inet.test.moduletest.lib.TcpTestNet2
+
+cmdenv-express-mode=false
+
+*.testing=true
+
+# script format: "time numbytes; time numbytes; ..."
+*.cli_app.sendScript="1 1; 1 100; 1 4000; 1 16000; 1 10; 1 1; 1 1; 1 1; 1 64000; 1 10;\
+                      1 1; 1 100; 1 4000; 1 16000; 1 10; 1 1; 1 1; 1 1; 1 64000; 1 10;\
+                      1 1; 1 100; 1 4000; 1 16000; 1 10; 1 1; 1 1; 1 1; 1 64000; 1 10"
+
+*.tcptester.pdelete=0.05
+*.tcptester.pdelay=0.2
+*.tcptester.pcopy=0.2
+*.tcptester.numCopies=int(exponential(3))
+*.tcptester.delayValue=exponential(1)
+
+*.tcp*.dataTransferMode="object"
+
+include ../../lib/defaults.ini
+
+%#--------------------------------------------------------------------------------------------------------------
+%contains: stdout
+Calling finish() at end of Run #0...
+TcpTestNet2.cli_app: received 0 bytes in 0 packets
+TcpTestNet2.cli_tcp: finishing with 1 connections open.
+TcpTestNet2.srv_tcp: finishing with 1 connections open.
+TcpTestNet2.srv_app: received 252372 bytes in 112 packets
+[174.661] tcpdump finished, A:327 B:365 segments
+
+End.
+%#--------------------------------------------------------------------------------------------------------------
+%postrun-command: grep "undisposed object:" test.out > test_undisposed.out || true
+%not-contains: test_undisposed.out
+undisposed object: (
+%#--------------------------------------------------------------------------------------------------------------

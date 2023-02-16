@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include <unordered_set>
 #include <unsupported/Eigen/MatrixFunctions>
 #include "../interfaces/IQuantumBackend.h"
@@ -8,6 +9,7 @@
 #include "backends/interfaces/IQubitId.h"
 #include "omnetpp/simtime.h"
 #include "types.h"
+#include "vector"
 
 namespace quisp::backends::graph_state {
 
@@ -28,6 +30,7 @@ using types::MeasurementErrorModel;
 using types::MemoryErrorModel;
 using types::SingleGateErrorModel;
 using types::TwoQubitGateErrorModel;
+using std::vector;
 
 class GraphStateBackend;
 class GraphStateQubit : public IQubit {
@@ -66,6 +69,8 @@ class GraphStateQubit : public IQubit {
   void applyMemoryError();
   void excite();
   void relax();
+  int randomSamplingWithLabelsAndWeights(std::vector<int> labels, std::vector<double> weights);
+  
   // error simulation constants
   SingleGateErrorModel gate_err_h;
   SingleGateErrorModel gate_err_x;

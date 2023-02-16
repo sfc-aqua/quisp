@@ -1,0 +1,114 @@
+%description:
+Testing InternetCloud delay asymmetric
+%#--------------------------------------------------------------------------------------------------------------
+%file: test.ned
+
+import inet.test.moduletest.lib.*;
+import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
+import inet.node.inet.StandardHost;
+import inet.node.internetcloud.InternetCloud;
+import ned.DatarateChannel;
+
+
+network CloudAndHosts
+{
+    parameters:
+        int numSenders;
+
+    types:
+        channel C extends DatarateChannel
+        {
+            delay = 10ms;
+            datarate = 5Mbps;
+        }
+    submodules:
+        configurator: Ipv4NetworkConfigurator {
+            parameters:
+                @display("p=61,163");
+        }
+
+        sender[numSenders]: StandardHost;
+        recip: StandardHost;
+        internet: InternetCloud;
+    connections:
+        recip.pppg++ <--> C <--> internet.pppg++;
+        for i=0..numSenders-1 {
+            sender[i].pppg++ <--> C <--> internet.pppg++;
+        }
+}
+
+
+%#--------------------------------------------------------------------------------------------------------------
+%inifile: omnetpp.ini
+
+[General]
+network = CloudAndHosts
+ned-path = .;../../../../src;../../lib
+
+#omnetpp 5.0 - 5.1 compatibility:
+eventlog-file = "${resultdir}/${configname}-${runnumber}.elog"
+output-scalar-file = "${resultdir}/${configname}-${runnumber}.sca"
+output-vector-file = "${resultdir}/${configname}-${runnumber}.vec"
+snapshot-file = "${resultdir}/${configname}-${runnumber}.sna"
+
+*.sender[*].numApps = 1
+*.sender[*].app[0].typename = "PingApp"
+*.sender[*].app[0].destAddr = "recip"
+*.sender[*].app[0].startTime = 10s
+*.sender[*].app[0].stopTime = 10.5s
+*.sender[*].app[0].sendInterval = 1s
+*.sender[*].app[0].printPing = true
+
+**.internet.ipv4Delayer.typename = "MatrixCloudDelayer"
+**.internet.ipv4Delayer.config = xmldoc("internetCloud.xml")
+
+**.numSenders = 10
+%#--------------------------------------------------------------------------------------------------------------
+%file: internetCloud.xml
+
+<internetCloud symmetric="false">
+  <parameters name="good">
+    <traffic src="sender[0]" dest="recip" delay="100ms+280ms" datarate="1Mbps" drop="false" />
+    <traffic src="sender[1]" dest="recip" delay="150ms"       datarate="1Mbps" drop="false" />
+    <traffic src="sender[2]" dest="recip" delay="200ms+240ms" datarate="1Mbps" drop="false" />
+    <traffic src="sender[3]" dest="recip" delay="250ms"       datarate="1Mbps" drop="false" />
+    <traffic src="sender[4]" dest="recip" delay="300ms+200ms" datarate="1Mbps" drop="false" />
+    <traffic src="sender[5]" dest="recip" delay="350ms"       datarate="1Mbps" drop="false" />
+    <traffic src="sender[6]" dest="recip" delay="400ms+160ms" datarate="1Mbps" drop="false" />
+    <traffic src="sender[7]" dest="recip" delay="450ms"       datarate="1Mbps" drop="false" />
+    <traffic src="sender[8]" dest="recip" delay="500ms+120ms" datarate="1Mbps" drop="false" />
+    <traffic src="sender[9]" dest="recip" delay="550ms"       datarate="1Mbps" drop="false" />
+    <traffic src="recip" dest="sender[0]" delay="600ms"       datarate="1Mbps" drop="false" />
+    <traffic src="recip" dest="sender[1]" delay="550ms+260ms" datarate="1Mbps" drop="false" />
+    <traffic src="recip" dest="sender[2]" delay="500ms"       datarate="1Mbps" drop="false" />
+    <traffic src="recip" dest="sender[3]" delay="450ms+220ms" datarate="1Mbps" drop="false" />
+    <traffic src="recip" dest="sender[4]" delay="400ms"       datarate="1Mbps" drop="false" />
+    <traffic src="recip" dest="sender[5]" delay="350ms+180ms" datarate="1Mbps" drop="false" />
+    <traffic src="recip" dest="sender[6]" delay="300ms"       datarate="1Mbps" drop="false" />
+    <traffic src="recip" dest="sender[7]" delay="250ms+140ms" datarate="1Mbps" drop="false" />
+    <traffic src="recip" dest="sender[8]" delay="200ms"       datarate="1Mbps" drop="false" />
+    <traffic src="recip" dest="sender[9]" delay="150ms+100ms" datarate="1Mbps" drop="false" />
+<!--
+    <traffic src="**" dest="**" delay="10ms+truncnormal(100ms,20ms)" datarate="uniform(100kbps,500kbps)" drop="uniform(0.01, 0.05)" />
+-->
+  </parameters>
+</internetCloud>
+%#--------------------------------------------------------------------------------------------------------------
+%contains-regex: stdout
+[^C].*
+CloudAndHosts\.sender\[9\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[8\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[7\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[6\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[5\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[4\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[3\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[2\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[1\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+CloudAndHosts\.sender\[0\]\.app\[0\]: reply of 56 bytes from 10\.0\.0.\d+ icmp_seq=0 ttl=\d+ time=.*
+[^C].*
+%#--------------------------------------------------------------------------------------------------------------
+%postrun-command: grep "undisposed object:" test.out > test_undisposed.out || true
+%not-contains: test_undisposed.out
+undisposed object: (
+%#--------------------------------------------------------------------------------------------------------------
