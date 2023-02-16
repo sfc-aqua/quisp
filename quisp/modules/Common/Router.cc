@@ -11,8 +11,10 @@ using namespace quisp::messages;
 
 namespace quisp::modules {
 
+Router::Router() : provider(utils::ComponentProvider{this}) {}
+
 void Router::initialize() {
-  my_address = getParentModule()->par("address");
+  my_address = provider.getQNode()->par("address");
 
   // Topology creation for routing table
   cTopology *topo = new cTopology("topo");

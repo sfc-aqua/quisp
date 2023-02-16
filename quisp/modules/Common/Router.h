@@ -1,23 +1,27 @@
 #include <omnetpp.h>
+#include <utils/ComponentProvider.h>
 #include <map>
 
 namespace quisp::modules {
 
 using RoutingTable = std::map<int, int>;  // destaddr -> gateindex
 
-/** \class Router Router.cc
+/** \class Router
  *
- *  \brief Router
+ *  \brief Router routes messages to components or other qnode according to the message header
  */
 class Router : public omnetpp::cSimpleModule {
- private:
-  int my_address;
-
-  RoutingTable routing_table;
+ public:
+  Router();
 
  protected:
   virtual void initialize() override;
   virtual void handleMessage(omnetpp::cMessage *msg) override;
+  utils::ComponentProvider provider;
+
+ private:
+  int my_address;
+  RoutingTable routing_table;
 };
 
 Define_Module(Router);
