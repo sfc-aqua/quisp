@@ -49,5 +49,6 @@
         "--ignore=googletest",
         "--ignore=eigen",
         "--ignore=scripts",
+        "--ignore=spdlog"
     ]
 }
