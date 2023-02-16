@@ -1,10 +1,10 @@
 #include "Simulation.h"
 #include "omnetpp/cexception.h"
+#include "test_utils/Configuration.h"
 
 using namespace omnetpp;
 
-namespace quisp_test {
-namespace simulation {
+namespace quisp_test::simulation {
 
 /**
  * \brief simulation class for unit test.
@@ -35,15 +35,24 @@ bool TestSimulation::executeNextEvent() {
     cEvent *event = takeNextEvent();
     if (event) {
       executeEvent(event);
-      return true;
+      return false;
     };
   } catch (cTerminationException &e) {
   } catch (std::exception &e) {
     std::cerr << "ERROR: " << e.what() << std::endl;
     throw e;
   }
-  return false;
+  return true;
 }
 
-}  // namespace simulation
-}  // namespace quisp_test
+void TestSimulation::setConfigValue(const char *key, const char *value) {
+  auto *envir = getActiveEnvir();
+  auto *config = dynamic_cast<configuration::Configuration *>(envir->getConfig());
+  for (auto &kv : config->kvs) {
+    if (strcmp(kv.getKey(), key) == 0) {
+      kv.value = value;
+      return;
+    }
+  }
+}
+}  // namespace quisp_test::simulation

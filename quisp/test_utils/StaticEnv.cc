@@ -4,13 +4,12 @@
 #include "omnetpp/cownedobject.h"
 #include "omnetpp/csimulation.h"
 
-namespace quisp_test {
-namespace env {
+namespace quisp_test::env {
 using configuration::Configuration;
 
-StaticEnv::StaticEnv() {}
+StaticEnv::StaticEnv() : config(new Configuration) {}
 
-cConfiguration *StaticEnv::getConfig() { return new Configuration(); }
+cConfiguration *StaticEnv::getConfig() { return config; }
 std::string StaticEnv::gets(const char *prompt, const char *defaultreply) {
   unsupported();
   return "";
@@ -55,5 +54,4 @@ void StaticEnv::resetSimulation() {
   }
 }
 
-}  // namespace env
-}  // namespace quisp_test
+}  // namespace quisp_test::env

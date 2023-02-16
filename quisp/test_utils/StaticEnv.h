@@ -2,9 +2,9 @@
 
 #include <omnetpp.h>
 #include "Configuration.h"
+#include "omnetpp/cconfiguration.h"
 
-namespace quisp_test {
-namespace env {
+namespace quisp_test::env {
 
 using namespace omnetpp;
 
@@ -148,7 +148,7 @@ class StaticEnv : public omnetpp::cEnvir {
   cSimulation *newSimulation();
   void resetSimulation();
   cRNG *rng = nullptr;
+  cConfiguration *config = nullptr;
 };
 
-}  // namespace env
-}  // namespace quisp_test
+}  // namespace quisp_test::env
