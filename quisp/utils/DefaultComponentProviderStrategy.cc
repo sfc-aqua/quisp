@@ -21,6 +21,19 @@ cModule *DefaultComponentProviderStrategy::getQNode() {
   }
   return currentModule;
 }
+
+cModule *DefaultComponentProviderStrategy::getNode() {
+  cModule *currentModule = self->getParentModule();
+  auto *mod_type = currentModule->getModuleType();
+  while (mod_type != QNodeType && mod_type != BSAType && mod_type != SPDCType) {
+    currentModule = currentModule->getParentModule();
+    if (currentModule == nullptr) {
+      throw cRuntimeError("Node module not found. Have you changed the type name in ned file?");
+    }
+  }
+  return currentModule;
+}
+
 cModule *DefaultComponentProviderStrategy::getNeighborNode(cModule *qnic) {
   if (qnic == nullptr) throw cRuntimeError("failed to get neighbor node. given qnic is nullptr");
   auto *neighbor_node = qnic->gate("qnic_quantum_port$o")->getNextGate()->getNextGate()->getOwnerModule();

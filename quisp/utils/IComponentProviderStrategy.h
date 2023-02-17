@@ -12,6 +12,7 @@ class IComponentProviderStrategy {
   IComponentProviderStrategy() {}
   virtual ~IComponentProviderStrategy() {}
   virtual cModule *getQNode() = 0;
+  virtual cModule *getNode() = 0;
   virtual cModule *getNeighborNode(cModule *qnic) = 0;
   virtual bool isQNodeType(const cModuleType *const module) = 0;
   virtual bool isBSANodeType(const cModuleType *const module) = 0;

@@ -13,6 +13,11 @@ cModule *ComponentProvider::getQNode() {
   return strategy->getQNode();
 }
 
+cModule *ComponentProvider::getNode() {
+  ensureStrategy();
+  return strategy->getNode();
+}
+
 cModule *ComponentProvider::getNeighborNode(cModule *qnic) {
   ensureStrategy();
   return strategy->getNeighborNode(qnic);

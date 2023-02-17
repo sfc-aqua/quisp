@@ -11,6 +11,7 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
  public:
   DefaultComponentProviderStrategy(cModule *_self);
   cModule *getQNode() override;
+  cModule *getNode() override;
   cModule *getNeighborNode(cModule *qnic) override;
   bool isQNodeType(const cModuleType *const type) override;
   bool isBSANodeType(const cModuleType *const type) override;
