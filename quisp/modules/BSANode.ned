@@ -29,7 +29,6 @@ module BSANode
         }
         router: Router {
             parameters:
-                address = parent.address;
                 @display("p=157,40");
             gates:
                 fromQueue[sizeof(parent.port)];

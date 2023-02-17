@@ -5,8 +5,6 @@ simple Router
 {
     parameters:
         @display("i=block/routing");
-        int address;
-        string classical_router_soft = "yes";
     gates:
         input fromQueue[];
         output toQueue[];
@@ -17,6 +15,4 @@ simple Router
         inout cmPort @loose;
         inout rePort @loose;
         inout hmPort @loose;
-
-        input fromRuleSet @directIn;//A little bit cheating but why not.
 }

@@ -34,7 +34,6 @@ module QNode
         }
         router: Router {
             parameters:
-                address = parent.address;
                 @display("p=140,94");
             gates:
                 fromQueue[sizeof(parent.port)];
