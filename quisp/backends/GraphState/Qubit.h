@@ -34,6 +34,8 @@ using types::TwoQubitGateErrorModel;
 
 class GraphStateBackend;
 class GraphStateQubit : public IQubit {
+  friend class GsBackendTest;
+
  public:
   GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend, bool is_short_live);
   ~GraphStateQubit();
@@ -69,7 +71,7 @@ class GraphStateQubit : public IQubit {
   void applyMemoryError();
   void excite();
   void relax();
-  int randomSamplingWithLabelsAndWeights(std::vector<int> labels, std::vector<double> weights);
+  virtual int randomSamplingWithLabelsAndWeights(std::vector<int> labels, std::vector<double> weights);
 
   // error simulation constants
   SingleGateErrorModel gate_err_h;
