@@ -20,7 +20,6 @@ class Router : public omnetpp::cSimpleModule {
 
   utils::ComponentProvider provider;
 
- private:
   int my_address;
   RoutingTable routing_table;
 };
