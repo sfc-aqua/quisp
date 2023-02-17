@@ -244,6 +244,10 @@ int GraphStateQubit::randomSamplingWithLabelsAndWeights(std::vector<int> labels,
   double rand = backend->dblrand();
   int index = 0;
 
+  if (labels.size() != weights.size() + 1) {
+    throw std::runtime_error("Length of labels must be 1 longer than length of weights");
+  }
+
   for (const double &w : weights) {
     if (rand <= w) {
       break;
