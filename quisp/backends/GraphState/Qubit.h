@@ -34,8 +34,6 @@ using types::TwoQubitGateErrorModel;
 
 class GraphStateBackend;
 class GraphStateQubit : public IQubit {
-  friend class GsBackendTest;
-
  public:
   GraphStateQubit(const IQubitId *id, GraphStateBackend *const backend, bool is_short_live);
   ~GraphStateQubit();
@@ -63,6 +61,8 @@ class GraphStateQubit : public IQubit {
   EigenvalueResult noiselessMeasureZ(EigenvalueResult forced_result) override;
   EigenvalueResult noiselessMeasureX(EigenvalueResult forced_result) override;
 
+  static int randomSamplingWithLabelsAndWeights(std::vector<int> labels, std::vector<double> weights);
+
  protected:
   // error simulation
   void setMemoryErrorRates(double x_error_rate, double y_error_rate, double z_error_rate, double excitation_rate, double relaxation_rate);
@@ -71,7 +71,6 @@ class GraphStateQubit : public IQubit {
   void applyMemoryError();
   void excite();
   void relax();
-  virtual int randomSamplingWithLabelsAndWeights(std::vector<int> labels, std::vector<double> weights);
 
   // error simulation constants
   SingleGateErrorModel gate_err_h;

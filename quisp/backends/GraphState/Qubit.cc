@@ -241,7 +241,7 @@ void GraphStateQubit::relax() {
 
 int GraphStateQubit::randomSamplingWithLabelsAndWeights(std::vector<int> labels, std::vector<double> weights) {
   // Gives a random double between 0.0 ~ 1.0
-  double rand = backend->dblrand();
+  double rand = (double)std::rand() / RAND_MAX;
   int index = 0;
 
   if (labels.size() != weights.size() + 1) {
