@@ -65,7 +65,7 @@ TEST(HardwareMonitorTestTarget, Init) {
   prepareSimulation();
   auto* mock_routing_daemon = new MockRoutingDaemon;
   auto* mock_qubit = new MockQubit;
-  EXPECT_CALL(*mock_routing_daemon, returnNumEndNodes()).WillOnce(Return(1));
+  EXPECT_CALL(*mock_routing_daemon, getNumEndNodes()).WillOnce(Return(1));
   HardwareMonitorTestTarget c{mock_qubit, mock_routing_daemon};
 
   c.initialize(0);
