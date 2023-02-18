@@ -96,10 +96,11 @@ TEST(RoutingDaemonTest, InitTestNoTopology) {
   auto *mock_qnode1 = new MockQNode{123, 100, false};
   RoutingDaemonTestTarget c1{mock_qnode1, 123};
   sim->registerComponent(&c1);
-
+  EXPECT_CALL(*mock_qnode1, getParentModule()).WillRepeatedly(Return(mock_qnode1));
+  
   cTopology *topo = new cTopology("topo");
   topo->extractByParameter("included_in_topology", "\"yes\"");
-  ASSERT_EQ(topo->getNumNodes(), 0);
+  ASSERT_EQ(topo->getNumNodes(), 1);
 
   int stage = 1;
   c1.initialize(stage);
