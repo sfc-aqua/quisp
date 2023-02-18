@@ -16,6 +16,7 @@ TestQNode::TestQNode(int addr, int mass, bool is_initiator) : omnetpp::cModule()
   setParInt(this, "mass", mass);
   setParStr(this, "node_type", "qnode");
   setParBool(this, "is_initiator", is_initiator);
+  setParStr(this, "included_in_topology", "yes");
   setComponentType(new TestModuleType("test qnode"));
   setName("TestQNode");
   auto *sim = getTestSimulation();

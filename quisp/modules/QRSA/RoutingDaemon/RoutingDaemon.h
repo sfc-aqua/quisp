@@ -9,6 +9,7 @@
 #define MODULES_ROUTINGDAEMON_H_
 
 #include <modules/QNIC.h>
+#include "utils/ComponentProvider.h"
 #include "IRoutingDaemon.h"
 
 /** \class RoutingDaemon RoutingDaemon.cc
@@ -37,7 +38,11 @@ class RoutingDaemon : public IRoutingDaemon {
   void handleMessage(cMessage* msg) override;
   int numInitStages() const override { return 3; };
 
+
  public:
+  utils::ComponentProvider provider;
+  RoutingDaemon();
+  ~RoutingDaemon() {}
   int getNumEndNodes() override;
   int findQNicAddrByDestAddr(int destAddr) override;
 };

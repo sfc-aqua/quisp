@@ -7,6 +7,7 @@
 #include <messages/classical_messages.h>
 #include <omnetpp.h>
 #include <vector>
+#include "omnetpp/cenvir.h"
 
 using namespace omnetpp;
 
@@ -14,6 +15,7 @@ namespace quisp {
 namespace modules {
 
 Define_Module(RoutingDaemon);
+RoutingDaemon::RoutingDaemon() : provider(utils::ComponentProvider{this}) {}
 
 /**
  *
@@ -69,14 +71,18 @@ void RoutingDaemon::initialize(int stage) {
 
 
 // Initialize channel weights for all existing links.
-void RoutingDaemon::updateChannelWeightsInTopology(cTopology* topo) {
+void RoutingDaemon::updateChannelWeightsInTopology(cTopology *topo) {
+  printf("updateChannelWeightsInTopology\n");
+  printf("topo->getNumNodes() = %d\n", topo->getNumNodes());
   for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all nodes
     auto node = topo->getNode(i);
     updateChannelWeightsOfNode(node);
   }
 }
 
-void RoutingDaemon::updateChannelWeightsOfNode(cTopology::Node* node) {
+void RoutingDaemon::updateChannelWeightsOfNode(cTopology::Node *node) {
+  printf("updateChannelWeightsOfNode\n");
+  printf("node->getNumOutLinks() = %d\n", node->getNumOutLinks());
   for (int i = 0; i < node->getNumOutLinks(); i++) {  // Traverse through all links from a specific node.
 
     // For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
@@ -96,7 +102,10 @@ void RoutingDaemon::updateChannelWeightsOfNode(cTopology::Node* node) {
 
 // Calculate bell pair generation rate to use it as channel cost
 // The cost metric is taken from https://arxiv.org/abs/1206.5655
-double RoutingDaemon::calculateSecPerBellPair(const cTopology::LinkOut* const outgoing_link) {
+double RoutingDaemon::calculateSecPerBellPair(const cTopology::LinkOut *const outgoing_link) {
+  printf("calculateSecPerBellPair\n");
+  auto channel = outgoing_link->getLocalGate()->getChannel();
+  printf("channel is null = %d\n", channel == nullptr);
   double speed_of_light_in_fiber = outgoing_link->getLocalGate()->getChannel()->par("speed_of_light_in_fiber");
   double channel_length = outgoing_link->getLocalGate()->getChannel()->par("distance");
 
@@ -116,10 +125,46 @@ double RoutingDaemon::calculateSecPerBellPair(const cTopology::LinkOut* const ou
   return (channel_length / speed_of_light_in_fiber) * emission_prob;
 }
 
+template <class T>
+constexpr
+std::string_view
+type_name()
+{
+    using namespace std;
+#ifdef __clang__
+    string_view p = __PRETTY_FUNCTION__;
+    return string_view(p.data() + 34, p.size() - 34 - 1);
+#elif defined(__GNUC__)
+    string_view p = __PRETTY_FUNCTION__;
+#  if __cplusplus < 201402
+    return string_view(p.data() + 36, p.size() - 36 - 1);
+#  else
+    return string_view(p.data() + 49, p.find(';', 49) - 49);
+#  endif
+#elif defined(_MSC_VER)
+    string_view p = __FUNCSIG__;
+    return string_view(p.data() + 84, p.size() - 84 - 7);
+#endif
+}
 
-
-void RoutingDaemon::generateRoutingTable(cTopology* topo) {
-  cTopology::Node *this_node = topo->getNodeFor(getParentModule()->getParentModule());  // The parent node with this specific router
+void RoutingDaemon::generateRoutingTable(cTopology *topo) {
+  printf("generateRoutingTable\n");
+  printf("1\n");
+  auto q = getParentModule();
+  std::cout << "decltype(q) is " << type_name<decltype(q)>() << std::endl;
+  std::cout << "path is " << q->getFullPath() << std::endl;
+  auto qq = q->getParentModule();
+  std::cout << "decltype(qq) is " << type_name<decltype(qq)>() << std::endl;
+  std::cout << "path is " << qq->getFullPath() << std::endl;
+  const cTopology::Node *const this_node = topo->getNodeFor(getParentModule()->getParentModule());  // The parent node with this specific router
+  printf("2\n");
+  auto v = this_node->getPath(0);
+  printf("null = %d\n", v == nullptr);
+  printf("3\n");
+  auto vv = v->getLocalGate();
+  printf("4\n");
+  const cGate *const parent_module_gate = this_node->getPath(0)->getLocalGate();
+  auto this_qnic = getQNicInfoOf(parent_module_gate);
 
   for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all the destinations from the thisNode
     const auto node = topo->getNode(i);
@@ -146,6 +191,7 @@ void RoutingDaemon::generateRoutingTable(cTopology* topo) {
 }
 
 QNIC RoutingDaemon::getQNicInfoOf(const cGate *const module_gate) {
+  printf("getQNicInfoOf\n");
   const auto module = module_gate->getPreviousGate()->getOwnerModule();
   QNIC qnic;
   qnic.address = module->par("self_qnic_address");
