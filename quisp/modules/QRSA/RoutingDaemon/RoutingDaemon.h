@@ -33,7 +33,7 @@ class RoutingDaemon : public IRoutingDaemon {
   double calculateSecPerBellPair(const cTopology::LinkOut* const outgoing_link);
 
   void generateRoutingTable(cTopology* topo);
-  QNIC getQNicInfoOf(const cGate* const parentModuleGate);
+  virtual QNIC getQNicInfoOf(const cGate* const parentModuleGate);
 
   void initialize(int stage) override;
   void handleMessage(cMessage* msg) override;

@@ -58,8 +58,14 @@ class RoutingDaemon : public OriginalRoutingDaemon {
  public:
   using OriginalRoutingDaemon::generateRoutingTable;
   using OriginalRoutingDaemon::provider;
+  using OriginalRoutingDaemon::qrtable;
   RoutingDaemon() {}
   void setParentQNode(cModule *mod) { provider.setStrategy(std::make_unique<Strategy>(mod)); }
+  /* this might be in the ComponentProvider */
+  QNIC getQNicInfoOf(const cGate *const parentModuleGate) override {
+    std::cout << parentModuleGate->getName() << std::endl;
+    return QNIC{.address = myAddress};
+  }
 };
 
 class RoutingDaemonTest : public testing::Test {
@@ -78,15 +84,15 @@ TEST_F(RoutingDaemonTest, threeNodes) {
   auto *qnode1 = new TestQNode{1, 0, false};
   auto *qnode2 = new TestQNode{2, 0, false};
   auto *qnode3 = new TestQNode{3, 0, false};
-  qnode1->addGate("qnode1-gate-out", cGate::Type::OUTPUT);
-  qnode1->addGate("qnode1-gate-in", cGate::Type::INPUT);
-  qnode2->addGate("qnode2-gate-out", cGate::Type::OUTPUT);
-  qnode2->addGate("qnode2-gate-in", cGate::Type::INPUT);
-  qnode3->addGate("qnode3-gate-out", cGate::Type::OUTPUT);
-  qnode3->addGate("qnode3-gate-in", cGate::Type::INPUT);
-  qnode1->gate("qnode1-gate-out")->connectTo(qnode2->gate("qnode2-gate-in"));
-  qnode2->gate("qnode2-gate-out")->connectTo(qnode3->gate("qnode3-gate-in"));
-  qnode3->gate("qnode3-gate-out")->connectTo(qnode1->gate("qnode1-gate-in"));
+  qnode1->addGate("quantum-node1-gate-out", cGate::Type::OUTPUT);
+  qnode1->addGate("quantum-node1-gate-in", cGate::Type::INPUT);
+  qnode2->addGate("quantum-node2-gate-out", cGate::Type::OUTPUT);
+  qnode2->addGate("quantum-node2-gate-in", cGate::Type::INPUT);
+  qnode3->addGate("quantum-node3-gate-out", cGate::Type::OUTPUT);
+  qnode3->addGate("quantum-node3-gate-in", cGate::Type::INPUT);
+  qnode1->gate("quantum-node1-gate-out")->connectTo(qnode2->gate("quantum-node2-gate-in"));
+  qnode2->gate("quantum-node2-gate-out")->connectTo(qnode3->gate("quantum-node3-gate-in"));
+  qnode3->gate("quantum-node3-gate-out")->connectTo(qnode1->gate("quantum-node1-gate-in"));
   rd->setParentQNode(qnode1);
 
   // setup cTopology instance to fake the next line
@@ -98,9 +104,9 @@ TEST_F(RoutingDaemonTest, threeNodes) {
   topo->addNode(mock_node1);
   topo->addNode(mock_node2);
   topo->addNode(mock_node3);
-  topo->addLink(new MockTopologyLink, qnode1->gate("qnode1-gate-out"), qnode2->gate("qnode2-gate-in"));
-  topo->addLink(new MockTopologyLink, qnode2->gate("qnode2-gate-out"), qnode3->gate("qnode3-gate-in"));
-  topo->addLink(new MockTopologyLink, qnode3->gate("qnode3-gate-out"), qnode1->gate("qnode1-gate-in"));
+  topo->addLink(new MockTopologyLink, qnode1->gate("quantum-node1-gate-out"), qnode2->gate("quantum-node2-gate-in"));
+  topo->addLink(new MockTopologyLink, qnode2->gate("quantum-node2-gate-out"), qnode3->gate("quantum-node3-gate-in"));
+  topo->addLink(new MockTopologyLink, qnode3->gate("quantum-node3-gate-out"), qnode1->gate("quantum-node1-gate-in"));
 
   ASSERT_EQ(topo->getNumNodes(), 3);
 
@@ -109,6 +115,7 @@ TEST_F(RoutingDaemonTest, threeNodes) {
   ASSERT_EQ(node->getNumPaths(), 0);
 
   rd->generateRoutingTable(topo);
+  EXPECT_EQ(rd->qrtable.size(), 2);
 }
 
 }  // namespace
