@@ -17,7 +17,7 @@ TestQNode::TestQNode(int addr, int mass, bool is_initiator) : omnetpp::cModule()
   setParStr(this, "node_type", "qnode");
   setParBool(this, "is_initiator", is_initiator);
   setComponentType(new TestModuleType("test qnode"));
-  setName("TestQNode");
+  setName((std::string("TestQNode") + std::to_string(addr)).c_str());
   auto *sim = getTestSimulation();
   sim->registerComponent(this);
   finalizeParameters();

@@ -8,6 +8,7 @@
 #include <modules/QNIC/StationaryQubit/StationaryQubit.h>
 #include <test_utils/TestUtils.h>
 #include <utils/IComponentProviderStrategy.h>
+#include "omnetpp/ctopology.h"
 
 namespace {
 
@@ -26,6 +27,12 @@ class MockTopologyLink : public cTopology::Link {
   using cTopology::Link::srcGateId;
   using cTopology::Link::srcNode;
   MockTopologyLink() {}
+  MockTopologyLink(cTopology::Node *src_node, cTopology::Node *dest_node) {
+    srcNode = src_node;
+    srcGateId = 0;
+    destGateId = 0;
+    destNode = dest_node;
+  }
 };
 
 class MockTopologyNode : public cTopology::Node {
@@ -67,17 +74,23 @@ class RoutingDaemonTest : public testing::Test {
   RoutingDaemon *rd;
 };
 
-TEST_F(RoutingDaemonTest, updateChannelWeights) {
-  auto *topo = new MockTopology{};
-  topo->extractByParameter("included_in_topology", "\"yes\"");
-  ASSERT_EQ(topo->getNumNodes(), 0);
-}
-
-TEST_F(RoutingDaemonTest, oneNode) {
+TEST_F(RoutingDaemonTest, threeNodes) {
   auto *qnode1 = new TestQNode{1, 0, false};
   auto *qnode2 = new TestQNode{2, 0, false};
   auto *qnode3 = new TestQNode{3, 0, false};
+  qnode1->addGate("qnode1-gate-out", cGate::Type::OUTPUT);
+  qnode1->addGate("qnode1-gate-in", cGate::Type::INPUT);
+  qnode2->addGate("qnode2-gate-out", cGate::Type::OUTPUT);
+  qnode2->addGate("qnode2-gate-in", cGate::Type::INPUT);
+  qnode3->addGate("qnode3-gate-out", cGate::Type::OUTPUT);
+  qnode3->addGate("qnode3-gate-in", cGate::Type::INPUT);
+  qnode1->gate("qnode1-gate-out")->connectTo(qnode2->gate("qnode2-gate-in"));
+  qnode2->gate("qnode2-gate-out")->connectTo(qnode3->gate("qnode3-gate-in"));
+  qnode3->gate("qnode3-gate-out")->connectTo(qnode1->gate("qnode1-gate-in"));
   rd->setParentQNode(qnode1);
+
+  // setup cTopology instance to fake the next line
+  // topo->extractByParameter("included_in_topology", "\"yes\"");
   auto *mock_node1 = new MockTopologyNode{qnode1};
   auto *mock_node2 = new MockTopologyNode{qnode2};
   auto *mock_node3 = new MockTopologyNode{qnode3};
@@ -85,9 +98,10 @@ TEST_F(RoutingDaemonTest, oneNode) {
   topo->addNode(mock_node1);
   topo->addNode(mock_node2);
   topo->addNode(mock_node3);
-  auto *link_12 = new MockTopologyLink{};
-  topo->addLink(link_12, mock_node1, mock_node2);
-  // topo->extractByParameter("included_in_topology", "\"yes\"");
+  topo->addLink(new MockTopologyLink, qnode1->gate("qnode1-gate-out"), qnode2->gate("qnode2-gate-in"));
+  topo->addLink(new MockTopologyLink, qnode2->gate("qnode2-gate-out"), qnode3->gate("qnode3-gate-in"));
+  topo->addLink(new MockTopologyLink, qnode3->gate("qnode3-gate-out"), qnode1->gate("qnode1-gate-in"));
+
   ASSERT_EQ(topo->getNumNodes(), 3);
 
   auto *node = topo->getNodeFor(qnode1);
