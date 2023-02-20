@@ -106,6 +106,7 @@ TEST(AppTest, Init_Connection_Setup_Message_Send) {
   auto *mock_qnode = new TestQNode{123, 100, true};
   auto *mock_qnode2 = new TestQNode{456, 100, false};
   auto *app = new AppTestTarget{mock_qnode};
+  sim->setConfigValue("sim-time-limit", "5.1s");
 
   setParDouble(app, "request_generation_interval", 5);
   setParInt(app, "number_of_bellpair", 10);
