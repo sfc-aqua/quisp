@@ -20,7 +20,7 @@ namespace quisp {
 namespace modules {
 
 class RoutingDaemon : public IRoutingDaemon {
- private:
+ protected:
   int myAddress;
   typedef std::map<int, QNIC> RoutingTable;  // destaddr -> {gate_index (We need this to access qnic, but it is not unique because we have 3 types of qnics), qnic_address (unique)}
   RoutingTable qrtable;
@@ -32,7 +32,6 @@ class RoutingDaemon : public IRoutingDaemon {
   void generateRoutingTable(cTopology* topo);
   QNIC getQNicInfoOf(const cGate* const parentModuleGate);
 
- protected:
   void initialize(int stage) override;
   void handleMessage(cMessage* msg) override;
   int numInitStages() const override { return 3; };
