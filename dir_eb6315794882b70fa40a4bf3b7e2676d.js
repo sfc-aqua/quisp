@@ -10,5 +10,5 @@ var dir_eb6315794882b70fa40a4bf3b7e2676d =
     [ "common_types.h", "common__types_8h.html", "common__types_8h" ],
     [ "dummyModule.cc", "dummy_module_8cc.html", "dummy_module_8cc" ],
     [ "QNIC.h", "_q_n_i_c_8h.html", "_q_n_i_c_8h" ],
-    [ "QUBIT.h", "modules_2_qubit_8h.html", "modules_2_qubit_8h" ]
+    [ "QUBIT.h", "modules_2_q_u_b_i_t_8h.html", "modules_2_q_u_b_i_t_8h" ]
 ];

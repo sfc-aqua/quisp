@@ -102,7 +102,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_access_private_8h.html",
-"_qubit_8cc.html",
+"_quantum_channel_8cc.html#a7c51cae0d9f85f9b65a4850229aeb5db",
 "classquisp_1_1backends_1_1abstract_1_1_i_quantum_backend.html#ae865db84f76bcb791ca81c6f4ced09fe",
 "classquisp_1_1backends_1_1graph__state_1_1_graph_state_qubit.html#af2d9056fbfc594ec02d17437f90a4d56",
 "classquisp_1_1modules_1_1_entangled_photon_pair_source.html",
@@ -112,12 +112,12 @@ var NAVTREEINDEX =
 "classquisp_1_1rules_1_1_rule_set.html#aa62a1df1bd5155a3de6df0f2e0be1176",
 "classquisp_1_1runtime_1_1_runtime_manager.html#a5e2748e8a63de113af7adfcb949494a6",
 "classquisp__test_1_1env_1_1_static_env.html#a0aa410ff444a56832d3e9152fc6780c4",
-"classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html#a783c4982afc71ad5606fdd61b01ca30b",
-"functions_e.html",
-"namespacequisp_1_1modules_1_1backend.html",
-"structquisp_1_1backends_1_1graph__state_1_1types_1_1_memory_error_model.html#a25b3a8229cb5a6f09341e1b64f825950",
-"structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html#aefa8c7156f478d5856c687f5244bb228",
-"unionquisp_1_1runtime_1_1_value_union.html#ac74506c266a79b75dea9cfa1c99b8dbd"
+"classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html#a0384ce389b252d6f1e5b1a48ef5c8358",
+"dir_f50702ceef2bd7c8eb12ef54d61eb01e.html",
+"namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3da18aba56dae027f8a6ffaf49c8bf39d17",
+"structquisp_1_1backends_1_1graph__state_1_1types_1_1_measurement_error_model.html#a2ec5d27c8de3f77b8718699adfb96c32",
+"structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html#a69142a16a33e054caff6665760268894",
+"types_8cc.html#ac1950e4b452e97a61cae4c9b9d4dc6c1"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

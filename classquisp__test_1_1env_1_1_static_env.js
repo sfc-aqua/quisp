@@ -85,5 +85,6 @@ var classquisp__test_1_1env_1_1_static_env =
     [ "undisposedObject", "classquisp__test_1_1env_1_1_static_env.html#a6f9be36c1b84afdb1445c6fc8ce244c6", null ],
     [ "unrefOsgNode", "classquisp__test_1_1env_1_1_static_env.html#a6f3b720479d093d912573d3df9247921", null ],
     [ "unsupported", "classquisp__test_1_1env_1_1_static_env.html#af372c0c3b4bce34b7d0b240aae07c40a", null ],
+    [ "config", "classquisp__test_1_1env_1_1_static_env.html#ae52b5e17c2d87cb1eeed32e906128883", null ],
     [ "rng", "classquisp__test_1_1env_1_1_static_env.html#ad93c904776a819d9d7df5430377d6bb7", null ]
 ];

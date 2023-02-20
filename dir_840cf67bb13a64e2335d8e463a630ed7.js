@@ -7,7 +7,7 @@ var dir_840cf67bb13a64e2335d8e463a630ed7 =
     [ "Gs_qubit_internal_graph_test.cc", "_gs__qubit__internal__graph__test_8cc.html", null ],
     [ "Gs_single_qubit_test.cc", "_gs__single__qubit__test_8cc.html", null ],
     [ "Qubit.cc", "_qubit_8cc.html", null ],
-    [ "Qubit.h", "backends_2_graph_state_2_qubit_8h.html", "backends_2_graph_state_2_qubit_8h" ],
+    [ "Qubit.h", "backends_2_graph_state_2_q_u_b_i_t_8h.html", "backends_2_graph_state_2_q_u_b_i_t_8h" ],
     [ "test.h", "backends_2_graph_state_2test_8h.html", "backends_2_graph_state_2test_8h" ],
     [ "types.h", "backends_2_graph_state_2types_8h.html", "backends_2_graph_state_2types_8h" ]
 ];

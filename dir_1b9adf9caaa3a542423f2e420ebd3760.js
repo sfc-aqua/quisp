@@ -3,6 +3,7 @@ var dir_1b9adf9caaa3a542423f2e420ebd3760 =
     [ "mock_backends", "dir_e63aae68189dffd440e434c45c8ee5e8.html", "dir_e63aae68189dffd440e434c45c8ee5e8" ],
     [ "mock_modules", "dir_eaeabafc95fe4969aa33649114886196.html", "dir_eaeabafc95fe4969aa33649114886196" ],
     [ "AccessPrivate.h", "_access_private_8h.html", "_access_private_8h" ],
+    [ "Configuration.cc", "_configuration_8cc.html", null ],
     [ "Configuration.h", "_configuration_8h.html", "_configuration_8h" ],
     [ "Gate.cc", "_gate_8cc.html", null ],
     [ "Gate.h", "_gate_8h.html", "_gate_8h" ],

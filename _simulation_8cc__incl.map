@@ -1,7 +1,9 @@
 <map id="quisp/test_utils/Simulation.cc" name="quisp/test_utils/Simulation.cc">
-<area shape="rect" id="node1" title=" " alt="" coords="93,5,285,31"/>
-<area shape="rect" id="node2" href="$_simulation_8h.html" title=" " alt="" coords="71,79,164,104"/>
-<area shape="rect" id="node5" title=" " alt="" coords="189,79,337,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,152,88,177"/>
-<area shape="rect" id="node4" title=" " alt="" coords="113,152,266,177"/>
+<area shape="rect" id="node1" title=" " alt="" coords="101,5,293,31"/>
+<area shape="rect" id="node2" href="$_simulation_8h.html" title=" " alt="" coords="5,79,99,104"/>
+<area shape="rect" id="node5" title=" " alt="" coords="123,79,271,104"/>
+<area shape="rect" id="node6" href="$_configuration_8h.html" title=" " alt="" coords="295,79,459,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="255,225,337,251"/>
+<area shape="rect" id="node4" title=" " alt="" coords="90,152,243,177"/>
+<area shape="rect" id="node7" href="$_key_value_8h.html" title=" " alt="" coords="334,152,421,177"/>
 </map>
