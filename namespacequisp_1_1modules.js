@@ -67,6 +67,7 @@ var namespacequisp_1_1modules =
     [ "QNodeAddr", "namespacequisp_1_1modules.html#a0f71b198c963a11406c9846dc8062c8c", null ],
     [ "raw_data", "namespacequisp_1_1modules.html#a47b510b280e1ac42bcf95908dc72facb", null ],
     [ "ResourceKey", "namespacequisp_1_1modules.html#ac2ba3b50171b853416c32771dd1ab2cd", null ],
+    [ "RoutingTable", "namespacequisp_1_1modules.html#a6ed397618ce66c3adc03cc39b964c4a7", null ],
     [ "SentQubitIndexTracker", "namespacequisp_1_1modules.html#ae18de830eb5e540622d59cad5bec5788", null ],
     [ "TomographyOutcomeTable", "namespacequisp_1_1modules.html#a2defc0c764ef7e29d546e4c3368248e1", null ],
     [ "QNIC_type", "namespacequisp_1_1modules.html#af32f152795f192fb6a9b311e0eabae3d", [

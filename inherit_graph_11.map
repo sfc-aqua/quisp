@@ -11,7 +11,7 @@
 <area shape="rect" id="node20" href="$classquisp_1_1modules_1_1_logger_1_1_logger_module.html" title=" " alt="" coords="242,5,397,45"/>
 <area shape="rect" id="node21" href="$classquisp_1_1modules_1_1_photonic_switch.html" title="PhotonicSwitch." alt="" coords="237,69,402,109"/>
 <area shape="rect" id="node22" href="$classquisp_1_1modules_1_1_queue.html" title="Queue." alt="" coords="243,134,395,159"/>
-<area shape="rect" id="node23" href="$classquisp_1_1modules_1_1_router.html" title="Router." alt="" coords="243,183,395,209"/>
+<area shape="rect" id="node23" href="$classquisp_1_1modules_1_1_router.html" title="Router routes messages to components or other qnode according to the message header." alt="" coords="243,183,395,209"/>
 <area shape="rect" id="node24" href="$classquisp_1_1modules_1_1_s_p_d_c___controller.html" title="SPDC_Controller." alt="" coords="244,233,395,273"/>
 <area shape="rect" id="node25" href="$classquisp_1_1modules_1_1backend_1_1_backend_container.html" title=" " alt="" coords="238,1000,401,1040"/>
 <area shape="rect" id="node26" href="$classquisp_1_1modules_1_1dummy_module.html" title="dummyModule" alt="" coords="220,298,419,323"/>

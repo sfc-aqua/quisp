@@ -125,6 +125,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0ae2ef8b7a6704089bed4c91d5064e97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a331e3458aa07ee63df44ce9cab0da136"><td class="memItemLeft" align="right" valign="top">cModule *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_default_component_provider_strategy.html#a331e3458aa07ee63df44ce9cab0da136">getQNode</a> () override</td></tr>
 <tr class="separator:a331e3458aa07ee63df44ce9cab0da136"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17d2b583fe174393dd710f2230fa0885"><td class="memItemLeft" align="right" valign="top">cModule *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_default_component_provider_strategy.html#a17d2b583fe174393dd710f2230fa0885">getNode</a> () override</td></tr>
+<tr class="separator:a17d2b583fe174393dd710f2230fa0885"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a89a02f1f3f373da965f978d84978b5"><td class="memItemLeft" align="right" valign="top">cModule *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_default_component_provider_strategy.html#a1a89a02f1f3f373da965f978d84978b5">getNeighborNode</a> (cModule *qnic) override</td></tr>
 <tr class="separator:a1a89a02f1f3f373da965f978d84978b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea1f7f5818ec2ae0dd0334c18c22bb8e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_default_component_provider_strategy.html#aea1f7f5818ec2ae0dd0334c18c22bb8e">isQNodeType</a> (const cModuleType *const type) override</td></tr>
@@ -156,6 +158,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a216a11486fe764113d233b7c362e5b89 inherit pub_methods_classquisp_1_1utils_1_1_i_component_provider_strategy"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab949f0617aeb166b49ccb5b827f17e24 inherit pub_methods_classquisp_1_1utils_1_1_i_component_provider_strategy"><td class="memItemLeft" align="right" valign="top">virtual cModule *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_i_component_provider_strategy.html#ab949f0617aeb166b49ccb5b827f17e24">getQNode</a> ()=0</td></tr>
 <tr class="separator:ab949f0617aeb166b49ccb5b827f17e24 inherit pub_methods_classquisp_1_1utils_1_1_i_component_provider_strategy"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78040a44b4d95151532eca2202306d28 inherit pub_methods_classquisp_1_1utils_1_1_i_component_provider_strategy"><td class="memItemLeft" align="right" valign="top">virtual cModule *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_i_component_provider_strategy.html#a78040a44b4d95151532eca2202306d28">getNode</a> ()=0</td></tr>
+<tr class="separator:a78040a44b4d95151532eca2202306d28 inherit pub_methods_classquisp_1_1utils_1_1_i_component_provider_strategy"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa58727e3b203aeaf9a0363f03f093b0d inherit pub_methods_classquisp_1_1utils_1_1_i_component_provider_strategy"><td class="memItemLeft" align="right" valign="top">virtual cModule *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_i_component_provider_strategy.html#aa58727e3b203aeaf9a0363f03f093b0d">getNeighborNode</a> (cModule *qnic)=0</td></tr>
 <tr class="separator:aa58727e3b203aeaf9a0363f03f093b0d inherit pub_methods_classquisp_1_1utils_1_1_i_component_provider_strategy"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab23170a1049ca45b78a177f51c8bea93 inherit pub_methods_classquisp_1_1utils_1_1_i_component_provider_strategy"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1utils_1_1_i_component_provider_strategy.html#ab23170a1049ca45b78a177f51c8bea93">isQNodeType</a> (const cModuleType *const module)=0</td></tr>
@@ -296,6 +300,33 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classquisp_1_1utils_1_1_i_component_provider_strategy.html#aa58727e3b203aeaf9a0363f03f093b0d">quisp::utils::IComponentProviderStrategy</a>.</p>
+
+</div>
+</div>
+<a id="a17d2b583fe174393dd710f2230fa0885" name="a17d2b583fe174393dd710f2230fa0885"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17d2b583fe174393dd710f2230fa0885">&#9670;&#160;</a></span>getNode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cModule * quisp::utils::DefaultComponentProviderStrategy::getNode </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classquisp_1_1utils_1_1_i_component_provider_strategy.html#a78040a44b4d95151532eca2202306d28">quisp::utils::IComponentProviderStrategy</a>.</p>
 
 </div>
 </div>

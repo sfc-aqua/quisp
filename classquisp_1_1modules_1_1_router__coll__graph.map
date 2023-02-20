@@ -1,4 +1,5 @@
 <map id="quisp::modules::Router" name="quisp::modules::Router">
-<area shape="rect" id="node1" title="Router." alt="" coords="13,79,165,104"/>
+<area shape="rect" id="node1" title="Router routes messages to components or other qnode according to the message header." alt="" coords="117,93,269,119"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,5,172,31"/>
+<area shape="rect" id="node3" href="$classquisp_1_1utils_1_1_component_provider.html" title="ComponentProvider class provides a way to access other quisp other modules." alt="" coords="197,5,399,31"/>
 </map>

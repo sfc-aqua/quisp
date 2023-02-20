@@ -1,9 +1,9 @@
 var classquisp_1_1modules_1_1_router =
 [
-    [ "RoutingTable", "classquisp_1_1modules_1_1_router.html#adf7cc53670411dc984b6eee3d5fb4051", null ],
-    [ "handleMessage", "classquisp_1_1modules_1_1_router.html#af83325e5a74d5d12b41ca29ad2af7da8", null ],
-    [ "initialize", "classquisp_1_1modules_1_1_router.html#ac06a9f19d472b2beff4e4be16634f5d6", null ],
-    [ "numInitStages", "classquisp_1_1modules_1_1_router.html#a87c5e8d7d46382fee15a3386b86b2012", null ],
-    [ "myAddress", "classquisp_1_1modules_1_1_router.html#a3c25555e61da641e6167ade9a9bf4b3d", null ],
-    [ "rtable", "classquisp_1_1modules_1_1_router.html#ad327b3cad08b41001494b5264ba8a933", null ]
+    [ "Router", "classquisp_1_1modules_1_1_router.html#a12ee8a5cbb3f725082279576d0b26ef5", null ],
+    [ "handleMessage", "classquisp_1_1modules_1_1_router.html#ac91ca65d180b361249f786a5e941d4e1", null ],
+    [ "initialize", "classquisp_1_1modules_1_1_router.html#afaeefc8d7fcf034e518946fb5f9c6594", null ],
+    [ "my_address", "classquisp_1_1modules_1_1_router.html#a575a9574e168af9e74092f596137908c", null ],
+    [ "provider", "classquisp_1_1modules_1_1_router.html#a1831f2d8de2f07e6eff19c084f7bbbb5", null ],
+    [ "routing_table", "classquisp_1_1modules_1_1_router.html#adb2b7c9b4384beefc7245bbd920feb81", null ]
 ];
