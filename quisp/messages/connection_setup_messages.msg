@@ -2,7 +2,6 @@ import base_messages;
 namespace quisp::messages;
 
 
-
 packet ConnectionSetupRequest extends Header
 {
     int application_id @getter(getApplicationId) @setter(setApplicationId);
@@ -13,6 +12,9 @@ packet ConnectionSetupRequest extends Header
     QNodeAddr stack_of_QNodeIndexes[];
     int stack_of_linkCosts[];
     QNIC_pair_info stack_of_QNICs[];
+
+    // for internetworking. this contains ConnectionSetupRequest
+    Header *upperLayerRequest;
 }
 
 packet RejectConnectionSetupRequest extends Header
