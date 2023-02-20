@@ -1,3 +1,4 @@
+#pragma once
 #include <omnetpp.h>
 #include <utils/ComponentProvider.h>
 #include <map>
