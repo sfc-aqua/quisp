@@ -25,6 +25,7 @@ class ComponentProvider {
   ComponentProvider(omnetpp::cModule *_module);
 
   cModule *getQNode();
+  cModule *getNode();
   cModule *getNeighborNode(cModule *qnic);
   bool isQNodeType(const cModuleType *const type);
   bool isBSANodeType(const cModuleType *const type);

@@ -33,6 +33,7 @@ class TestComponentProviderStrategy : public IComponentProviderStrategy {
   TestComponentProviderStrategy(std::vector<QNicSpec> specs) : qnic_specs(specs) {}
   virtual ~TestComponentProviderStrategy() {}
   virtual cModule *getQNode() override { return nullptr; };
+  virtual cModule *getNode() override { return nullptr; };
   virtual cModule *getNeighborNode(cModule *qnic) override { return nullptr; };
   virtual bool isQNodeType(const cModuleType *const type) override { return false; };
   virtual bool isBSANodeType(const cModuleType *const type) override { return false; };
