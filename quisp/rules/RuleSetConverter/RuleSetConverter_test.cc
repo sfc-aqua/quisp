@@ -8,8 +8,8 @@
 #include <modules/QNIC.h>
 #include <rules/RuleSet.h>
 #include <runtime/types.h>
-#include <test_utils/TestUtils.h>
 #include <test_utils/TestUtilFunctions.h>
+#include <test_utils/TestUtils.h>
 
 namespace {
 using namespace quisp_test;
