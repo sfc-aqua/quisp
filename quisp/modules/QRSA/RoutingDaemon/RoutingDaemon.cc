@@ -62,21 +62,19 @@ void RoutingDaemon::initialize(int stage) {
 
   updateChannelWeightsInTopology(topo);
   generateRoutingTable(topo);
-  
+
   delete topo;
 }
 
-
-
 // Initialize channel weights for all existing links.
-void RoutingDaemon::updateChannelWeightsInTopology(cTopology* topo) {
+void RoutingDaemon::updateChannelWeightsInTopology(cTopology *topo) {
   for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all nodes
     auto node = topo->getNode(i);
     updateChannelWeightsOfNode(node);
   }
 }
 
-void RoutingDaemon::updateChannelWeightsOfNode(cTopology::Node* node) {
+void RoutingDaemon::updateChannelWeightsOfNode(cTopology::Node *node) {
   for (int i = 0; i < node->getNumOutLinks(); i++) {  // Traverse through all links from a specific node.
 
     // For Bidirectional channels, parameters are stored in LinkOut not LinkIn.
@@ -96,7 +94,7 @@ void RoutingDaemon::updateChannelWeightsOfNode(cTopology::Node* node) {
 
 // Calculate bell pair generation rate to use it as channel cost
 // The cost metric is taken from https://arxiv.org/abs/1206.5655
-double RoutingDaemon::calculateSecPerBellPair(const cTopology::LinkOut* const outgoing_link) {
+double RoutingDaemon::calculateSecPerBellPair(const cTopology::LinkOut *const outgoing_link) {
   double speed_of_light_in_fiber = outgoing_link->getLocalGate()->getChannel()->par("speed_of_light_in_fiber");
   double channel_length = outgoing_link->getLocalGate()->getChannel()->par("distance");
 
@@ -116,9 +114,7 @@ double RoutingDaemon::calculateSecPerBellPair(const cTopology::LinkOut* const ou
   return (channel_length / speed_of_light_in_fiber) * emission_prob;
 }
 
-
-
-void RoutingDaemon::generateRoutingTable(cTopology* topo) {
+void RoutingDaemon::generateRoutingTable(cTopology *topo) {
   cTopology::Node *this_node = topo->getNodeFor(getParentModule()->getParentModule());  // The parent node with this specific router
 
   for (int i = 0; i < topo->getNumNodes(); i++) {  // Traverse through all the destinations from the thisNode
@@ -138,7 +134,7 @@ void RoutingDaemon::generateRoutingTable(cTopology* topo) {
     int destAddr = node->getModule()->par("address");
 
     qrtable[destAddr] = getQNicInfoOf(parentModuleGate);
-    
+
     if (!strstr(parentModuleGate->getFullName(), "quantum")) {
       error("Quantum routing table referring to classical gates...");
     }
@@ -155,8 +151,6 @@ QNIC RoutingDaemon::getQNicInfoOf(const cGate *const module_gate) {
 
   return qnic;
 }
-
-
 
 /**
  * This is the only routine, at the moment, with any outside contact.
