@@ -10,7 +10,7 @@
 #include "QubitRecord/QubitRecord.h"
 #include "RuleEngine.h"
 #include "rules/Rule.h"
-#include "test_utils/UtilFunctions.h"
+#include "test_utils/TestUtilFunctions.h"
 #include "test_utils/mock_modules/MockHardwareMonitor.h"
 #include "test_utils/mock_modules/MockRealTimeController.h"
 #include "test_utils/mock_modules/MockRoutingDaemon.h"

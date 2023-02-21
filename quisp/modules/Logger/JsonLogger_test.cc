@@ -9,7 +9,7 @@
 #include "messages/connection_setup_messages_m.h"
 #include "modules/QNIC.h"
 #include "omnetpp/cmessage.h"
-#include "test_utils/UtilFunctions.h"
+#include "test_utils/TestUtilFunctions.h"
 
 namespace {
 

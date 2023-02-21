@@ -5,7 +5,7 @@
 
 #include <messages/classical_messages.h>
 #include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
-#include <test_utils/UtilFunctions.h>
+#include "test_utils/TestUtilFunctions.h"
 #include "ConnectionManager.h"
 #include "RuleSetGenerator.h"
 

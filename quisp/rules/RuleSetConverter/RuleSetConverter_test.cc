@@ -9,7 +9,7 @@
 #include <rules/RuleSet.h>
 #include <runtime/types.h>
 #include <test_utils/TestUtils.h>
-#include <test_utils/UtilFunctions.h>
+#include <test_utils/TestUtilFunctions.h>
 
 namespace {
 using namespace quisp_test;
