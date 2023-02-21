@@ -1,47 +1,65 @@
 %description:
-Application module should send back the ConnectionSetupReq and InternalRuleSetForwarding to the router
+RoutingDaemon initialize function test
+
+%file: package.ned
+package RoutingDaemon;
+@namespace(RoutingDaemon);
 
 %file: test.ned
+package RoutingDaemon;
+
 import ned.DatarateChannel;
 import modules.QRSA.RoutingDaemon.*;
 import modules.QNode;
 
-channel ClassicalChannel extends DatarateChannel
-{
-    double cost = default(1);
-    double distance @unit(km) = default(20km);
-    double speed_of_light_in_fiber @unit(km) = default(208189.206944km);
-    delay = this.distance / speed_of_light_in_fiber * 1s;
-    datarate = uniform(1kbps, 100kbps);
-}
 
+channel MockChannel extends DatarateChannel {
+    parameters:
+        double distance @unit(km) = default(20km);
+        double speed_of_light_in_fiber @unit(km) = default(208189.206944km);
+}
 simple TestRoutingDaemon extends RoutingDaemon {
     parameters:
-        double emission_success_probability;
     @class(TestRoutingDaemon);
     gates:
-        inout port;
+        inout quantum_port;
 }
 module MockQRSA {
 
     parameters:
-        // Application needs the parent node's address
         int address;
         bool is_initiator = false;
-        double emission_success_probability;
     gates:
-        inout port;
+        inout quantum_port;
 
     submodules:
         rd: TestRoutingDaemon {
             parameters:
                 address = parent.address;
-                // emission_success_probability = parent.emission_success_probability;
         }
 
     connections:
-        port <--> rd.port;
+        quantum_port <--> rd.quantum_port;
 }
+
+simple MockStationaryQubit {
+    parameters:
+        double emission_success_probability = default(1);
+    gates:
+        inout quantum_port;
+}
+module MockQNIC {
+    parameters:
+        int self_qnic_address;
+        int self_qnic_type;
+    gates:
+        inout quantum_port;
+    submodules:
+        statQubit[1] : MockStationaryQubit;
+    connections:
+        quantum_port <--> statQubit[0].quantum_port;
+}
+
 module MockQNode {
 
     parameters:
@@ -50,19 +68,23 @@ module MockQNode {
         bool is_initiator;
         int mass;
         string included_in_topology = "yes";
-        double emission_success_probability;
     gates:
-        inout port[];
+        inout quantum_port[2] @loose;
 
     submodules:
-        qrsa: MockQRSA {
+        qrsa[1]: MockQRSA {
             parameters:
                 address = parent.address;
-                // emission_success_probability = parent.emission_success_probability;
+        }
+        qnic[1]: MockQNIC {
+            parameters:
+                self_qnic_address = parent.address;
+                self_qnic_type = parent.address;
         }
 
     connections:
-        port[0] <--> qrsa.port;
+        quantum_port[0] <--> qnic[0].quantum_port;
+        quantum_port[1] <--> qrsa[0].quantum_port;
 }
 
 network RoutingDaemonTestNet
@@ -81,48 +103,43 @@ network RoutingDaemonTestNet
             mass = 100;
         }
     connections:
-        mockQNode1.port++ <--> ClassicalChannel {  distance = 10km; } <--> mockQNode2.port++;
+        mockQNode1.quantum_port++ <--> MockChannel {  distance = 10km; } <--> mockQNode2.quantum_port++;
 }
 
-%inifile: routingdaemon.ini
+%inifile: omnetpp.ini
 
 [General]
 network = RoutingDaemonTestNet
 **.emission_success_probability = 1
-RoutingDaemonTestNet.mockQNode1.qrsa.rd.emission_success_probability = 1;
 
 %file: test_routingdaemon.cc
 #include <omnetpp.h>
 #include <messages/classical_messages.h>
 #include <modules/QRSA/RoutingDaemon/RoutingDaemon.h>
+#include <modules/Common/Queue.h>
 #include <test_utils/TestUtils.h>
 using namespace omnetpp;
 using namespace quisp::messages;
 namespace RoutingDaemon {
-class Strategy : public quisp_test::TestComponentProviderStrategy {
-    public:
-    Strategy(cModule *_self): self(_self){}
-    cModule* getQNode() override {return self->getParentModule(); }
-    cModule *self;
-};
 
 class TestRoutingDaemon : public quisp::modules::RoutingDaemon {
  public:
-  double emission_success_probability;
-  TestRoutingDaemon() : RoutingDaemon() {
-    this->provider.setStrategy(std::make_unique<Strategy>(this));
-  }
+  TestRoutingDaemon() : RoutingDaemon() {}
   void finish() override {
     int other_node_addr = 3 - myAddress;
     if (qrtable[other_node_addr].pointer == nullptr) 
-      printf("fail, routing table is not updated and the the pointer is nullptr\n");
+      printf("FAIL: routing table is not updated and the the pointer is nullptr\n");
     if (qrtable[other_node_addr].address != myAddress) 
-      printf("node%d: fail, value is %d but the expected value is %d\n", myAddress, qrtable[other_node_addr].address, myAddress);
-    else printf("you good\n");
+      printf("FAIL: in the routing table, the value is %d but the expected value is %d\n", qrtable[other_node_addr].address, myAddress);
   }
 };
 Define_Module(TestRoutingDaemon);
+
+class MockStationaryQubit : public cSimpleModule {
+};
+Define_Module(MockStationaryQubit);
+
 }; //namespace
 
 %not-contains: test.out
-fail
+FAIL
