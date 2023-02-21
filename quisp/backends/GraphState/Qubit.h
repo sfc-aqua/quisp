@@ -7,13 +7,13 @@
 #include "Eigen/src/Core/Matrix.h"
 #include "backends/QubitConfiguration.h"
 #include "backends/interfaces/IQubitId.h"
-#include "utils/UtilFunctions.h"
 #include "omnetpp/simtime.h"
 #include "types.h"
+#include "utils/UtilFunctions.h"
 #include "vector"
 
-namespace quisp{
-  using utilFunctions::sample;
+namespace quisp {
+using utilFunctions::sample;
 namespace backends::graph_state {
 
 using abstract::EigenvalueResult;
@@ -113,5 +113,5 @@ class GraphStateQubit : public IQubit {
   const bool is_short_live;
 };
 
-}  // namespace quisp::backends::graph_state
-}
+}  // namespace backends::graph_state
+}  // namespace quisp

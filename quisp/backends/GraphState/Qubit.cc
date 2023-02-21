@@ -60,7 +60,7 @@ void GraphStateQubit::applySingleQubitGateError(SingleGateErrorModel const &err)
   enum class ErrorLabel : int { NO_ERR, X, Z, Y };
   std::map<double, ErrorLabel> weights = {
       {err.no_error_ceil, ErrorLabel::NO_ERR}, {err.x_error_ceil, ErrorLabel::X}, {err.z_error_ceil, ErrorLabel::Z}, {err.y_error_ceil, ErrorLabel::Y}};
-  
+
   ErrorLabel r = sample(weights);
 
   /*
@@ -197,8 +197,8 @@ void GraphStateQubit::applyMemoryError() {
 
     enum class ErrorLabel { NO_ERR, X, Z, Y, Exitation, Relaxation };
     std::map<double, ErrorLabel> weights = {
-    {clean_ceil, ErrorLabel::NO_ERR}, {x_ceil, ErrorLabel::X}, {z_ceil, ErrorLabel::Z}, {y_ceil, ErrorLabel::Y}, 
-    {excited_ceil, ErrorLabel::Exitation}, {relaxed_ceil, ErrorLabel::Relaxation}};
+        {clean_ceil, ErrorLabel::NO_ERR},      {x_ceil, ErrorLabel::X}, {z_ceil, ErrorLabel::Z}, {y_ceil, ErrorLabel::Y}, {excited_ceil, ErrorLabel::Exitation},
+        {relaxed_ceil, ErrorLabel::Relaxation}};
 
     ErrorLabel r = sample(weights);
 
@@ -239,7 +239,6 @@ void GraphStateQubit::relax() {
     this->applyClifford(CliffordOperator::X);
   }
 }
-
 
 void GraphStateQubit::applyClifford(CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)op][(int)(this->vertex_operator)]; }
 
