@@ -1,5 +1,15 @@
 var NAVTREEINDEX16 =
 {
+"structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html#af6811be2b13121146173d86e3df2d745":[18,0,0,5,12,0,4],
+"structquisp_1_1runtime_1_1_runtime_1_1_i_call_back.html#af6811be2b13121146173d86e3df2d745":[17,0,1,5,12,0,4],
+"structquisp__test_1_1strategy_1_1_q_nic_spec.html":[18,0,1,12,0],
+"structquisp__test_1_1strategy_1_1_q_nic_spec.html":[17,0,2,12,0],
+"structquisp__test_1_1strategy_1_1_q_nic_spec.html#a40b1aec36acce2e79bad565c87f8f7da":[18,0,1,12,0,0],
+"structquisp__test_1_1strategy_1_1_q_nic_spec.html#a40b1aec36acce2e79bad565c87f8f7da":[17,0,2,12,0,0],
+"structquisp__test_1_1strategy_1_1_q_nic_spec.html#aa43d752af210a60952295b0173c3b565":[17,0,2,12,0,2],
+"structquisp__test_1_1strategy_1_1_q_nic_spec.html#aa43d752af210a60952295b0173c3b565":[18,0,1,12,0,2],
+"structquisp__test_1_1strategy_1_1_q_nic_spec.html#afe4a7ca522729cfdcfc3622770068a15":[18,0,1,12,0,1],
+"structquisp__test_1_1strategy_1_1_q_nic_spec.html#afe4a7ca522729cfdcfc3622770068a15":[17,0,2,12,0,1],
 "test__utils_2_r_n_g_8h.html":[19,0,0,6,12],
 "test__utils_2_r_n_g_8h_source.html":[19,0,0,6,12],
 "types_8cc.html":[19,0,0,5,17],

@@ -91,9 +91,9 @@ $(document).ready(function(){initNavTree('classquisp_1_1modules_1_1_routing_daem
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-types">Protected Types</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pri-types">Private Types</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classquisp_1_1modules_1_1_routing_daemon-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">quisp::modules::RoutingDaemon Class Reference</div></div>
 </div><!--header-->
@@ -123,17 +123,32 @@ Collaboration diagram for quisp::modules::RoutingDaemon:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7c49f6aeb4a41d9da0d0bc01a11bb673"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#a7c49f6aeb4a41d9da0d0bc01a11bb673">returnNumEndNodes</a> () override</td></tr>
-<tr class="separator:a7c49f6aeb4a41d9da0d0bc01a11bb673"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6680efbc12fcf2b9ae1bbfda6211a4a1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#a6680efbc12fcf2b9ae1bbfda6211a4a1">return_QNIC_address_to_destAddr</a> (int destAddr) override</td></tr>
-<tr class="separator:a6680efbc12fcf2b9ae1bbfda6211a4a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acee1aa1f10e7411f94ccf9c0f32cd0c9"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_routing_daemon.html#acee1aa1f10e7411f94ccf9c0f32cd0c9">returnNumEndNodes</a> ()=0</td></tr>
-<tr class="separator:acee1aa1f10e7411f94ccf9c0f32cd0c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61143da95188b64280c07a1294855b07"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_routing_daemon.html#a61143da95188b64280c07a1294855b07">return_QNIC_address_to_destAddr</a> (int destAddr)=0</td></tr>
-<tr class="separator:a61143da95188b64280c07a1294855b07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ab2d751126659f270564026eddca017"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#a3ab2d751126659f270564026eddca017">getNumEndNodes</a> () override</td></tr>
+<tr class="separator:a3ab2d751126659f270564026eddca017"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4576d99ea4fe854405eda8be64512abb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#a4576d99ea4fe854405eda8be64512abb">findQNicAddrByDestAddr</a> (int destAddr) override</td></tr>
+<tr class="separator:a4576d99ea4fe854405eda8be64512abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b51f81cdd6f05aa22e735bc7b6165e3"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_routing_daemon.html#a9b51f81cdd6f05aa22e735bc7b6165e3">getNumEndNodes</a> ()=0</td></tr>
+<tr class="separator:a9b51f81cdd6f05aa22e735bc7b6165e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66106d278498c18a0371d58ccad0617a"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_i_routing_daemon.html#a66106d278498c18a0371d58ccad0617a">findQNicAddrByDestAddr</a> (int destAddr)=0</td></tr>
+<tr class="separator:a66106d278498c18a0371d58ccad0617a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-types" name="pro-types"></a>
+Protected Types</h2></td></tr>
+<tr class="memitem:a0df2463d16d339d5e64dbcc8ba7c7890"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; int, <a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#a0df2463d16d339d5e64dbcc8ba7c7890">RoutingTable</a></td></tr>
+<tr class="separator:a0df2463d16d339d5e64dbcc8ba7c7890"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:af998204d4a1b253d64572862d047e77a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#af998204d4a1b253d64572862d047e77a">updateChannelWeightsInTopology</a> (cTopology *topo)</td></tr>
+<tr class="separator:af998204d4a1b253d64572862d047e77a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a788d355d4e6375457741c735ebb6c492"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#a788d355d4e6375457741c735ebb6c492">updateChannelWeightsOfNode</a> (cTopology::Node *node)</td></tr>
+<tr class="separator:a788d355d4e6375457741c735ebb6c492"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1895a97ae2add3e86fa04eeed8491aa5"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#a1895a97ae2add3e86fa04eeed8491aa5">calculateSecPerBellPair</a> (const cTopology::LinkOut *const outgoing_link)</td></tr>
+<tr class="separator:a1895a97ae2add3e86fa04eeed8491aa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fb207c650238f446c2abc90be8582e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#a2fb207c650238f446c2abc90be8582e2">generateRoutingTable</a> (cTopology *topo)</td></tr>
+<tr class="separator:a2fb207c650238f446c2abc90be8582e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ce85548617df9b8b4ab24cddee6d5eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#a8ce85548617df9b8b4ab24cddee6d5eb">getQNicInfoOf</a> (const cGate *const parentModuleGate)</td></tr>
+<tr class="separator:a8ce85548617df9b8b4ab24cddee6d5eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73b6f86e81c59e819c1ae291a4f614a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#a73b6f86e81c59e819c1ae291a4f614a2">initialize</a> (int stage) override</td></tr>
 <tr class="memdesc:a73b6f86e81c59e819c1ae291a4f614a2"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html">RoutingDaemon</a>.  <a href="classquisp_1_1modules_1_1_routing_daemon.html#a73b6f86e81c59e819c1ae291a4f614a2">More...</a><br /></td></tr>
 <tr class="separator:a73b6f86e81c59e819c1ae291a4f614a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,13 +157,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a2d715d69b36061b44315b35499b3779f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#a2d715d69b36061b44315b35499b3779f">numInitStages</a> () const override</td></tr>
 <tr class="separator:a2d715d69b36061b44315b35499b3779f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-types" name="pri-types"></a>
-Private Types</h2></td></tr>
-<tr class="memitem:a0df2463d16d339d5e64dbcc8ba7c7890"><td class="memItemLeft" align="right" valign="top">typedef std::map&lt; int, <a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#a0df2463d16d339d5e64dbcc8ba7c7890">RoutingTable</a></td></tr>
-<tr class="separator:a0df2463d16d339d5e64dbcc8ba7c7890"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
-Private Attributes</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
 <tr class="memitem:a95afebf0bbf8325404b4dfd3fa599298"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#a95afebf0bbf8325404b4dfd3fa599298">myAddress</a></td></tr>
 <tr class="separator:a95afebf0bbf8325404b4dfd3fa599298"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ef235442db46c9ef7adcf744fc5ba2a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#a0df2463d16d339d5e64dbcc8ba7c7890">RoutingTable</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classquisp_1_1modules_1_1_routing_daemon.html#a5ef235442db46c9ef7adcf744fc5ba2a">qrtable</a></td></tr>
@@ -170,7 +180,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -178,6 +188,140 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a1895a97ae2add3e86fa04eeed8491aa5" name="a1895a97ae2add3e86fa04eeed8491aa5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1895a97ae2add3e86fa04eeed8491aa5">&#9670;&#160;</a></span>calculateSecPerBellPair()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double RoutingDaemon::calculateSecPerBellPair </td>
+          <td>(</td>
+          <td class="paramtype">const cTopology::LinkOut *const&#160;</td>
+          <td class="paramname"><em>outgoing_link</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4576d99ea4fe854405eda8be64512abb" name="a4576d99ea4fe854405eda8be64512abb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4576d99ea4fe854405eda8be64512abb">&#9670;&#160;</a></span>findQNicAddrByDestAddr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int RoutingDaemon::findQNicAddrByDestAddr </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>destAddr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >This is the only routine, at the moment, with any outside contact. Rather than exchanging a message with those who need this information (<a class="el" href="classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager.">ConnectionManager</a>, mainly, and in one case <a class="el" href="classquisp_1_1modules_1_1_rule_engine.html" title="RuleEngine.">RuleEngine</a>), this is a direct call that they make. </p>
+
+<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_routing_daemon.html#a66106d278498c18a0371d58ccad0617a">quisp::modules::IRoutingDaemon</a>.</p>
+
+</div>
+</div>
+<a id="a2fb207c650238f446c2abc90be8582e2" name="a2fb207c650238f446c2abc90be8582e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fb207c650238f446c2abc90be8582e2">&#9670;&#160;</a></span>generateRoutingTable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RoutingDaemon::generateRoutingTable </td>
+          <td>(</td>
+          <td class="paramtype">cTopology *&#160;</td>
+          <td class="paramname"><em>topo</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3ab2d751126659f270564026eddca017" name="a3ab2d751126659f270564026eddca017"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ab2d751126659f270564026eddca017">&#9670;&#160;</a></span>getNumEndNodes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int RoutingDaemon::getNumEndNodes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_routing_daemon.html#a9b51f81cdd6f05aa22e735bc7b6165e3">quisp::modules::IRoutingDaemon</a>.</p>
+
+</div>
+</div>
+<a id="a8ce85548617df9b8b4ab24cddee6d5eb" name="a8ce85548617df9b8b4ab24cddee6d5eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ce85548617df9b8b4ab24cddee6d5eb">&#9670;&#160;</a></span>getQNicInfoOf()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structquisp_1_1modules_1_1_q_n_i_c.html">QNIC</a> RoutingDaemon::getQNicInfoOf </td>
+          <td>(</td>
+          <td class="paramtype">const cGate *const&#160;</td>
+          <td class="paramname"><em>parentModuleGate</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a16f78f12814695f48b391b604fc6d393" name="a16f78f12814695f48b391b604fc6d393"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a16f78f12814695f48b391b604fc6d393">&#9670;&#160;</a></span>handleMessage()</h2>
 
@@ -264,8 +408,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6680efbc12fcf2b9ae1bbfda6211a4a1" name="a6680efbc12fcf2b9ae1bbfda6211a4a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6680efbc12fcf2b9ae1bbfda6211a4a1">&#9670;&#160;</a></span>return_QNIC_address_to_destAddr()</h2>
+<a id="af998204d4a1b253d64572862d047e77a" name="af998204d4a1b253d64572862d047e77a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af998204d4a1b253d64572862d047e77a">&#9670;&#160;</a></span>updateChannelWeightsInTopology()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -274,27 +418,24 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int RoutingDaemon::return_QNIC_address_to_destAddr </td>
+          <td class="memname">void RoutingDaemon::updateChannelWeightsInTopology </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>destAddr</em></td><td>)</td>
+          <td class="paramtype">cTopology *&#160;</td>
+          <td class="paramname"><em>topo</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p >This is the only routine, at the moment, with any outside contact. Rather than exchanging a message with those who need this information (<a class="el" href="classquisp_1_1modules_1_1_connection_manager.html" title="ConnectionManager.">ConnectionManager</a>, mainly, and in one case <a class="el" href="classquisp_1_1modules_1_1_rule_engine.html" title="RuleEngine.">RuleEngine</a>), this is a direct call that they make. </p>
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_routing_daemon.html#a61143da95188b64280c07a1294855b07">quisp::modules::IRoutingDaemon</a>.</p>
 
 </div>
 </div>
-<a id="a7c49f6aeb4a41d9da0d0bc01a11bb673" name="a7c49f6aeb4a41d9da0d0bc01a11bb673"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7c49f6aeb4a41d9da0d0bc01a11bb673">&#9670;&#160;</a></span>returnNumEndNodes()</h2>
+<a id="a788d355d4e6375457741c735ebb6c492" name="a788d355d4e6375457741c735ebb6c492"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a788d355d4e6375457741c735ebb6c492">&#9670;&#160;</a></span>updateChannelWeightsOfNode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -303,20 +444,19 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int RoutingDaemon::returnNumEndNodes </td>
+          <td class="memname">void RoutingDaemon::updateChannelWeightsOfNode </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">cTopology::Node *&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Implements <a class="el" href="classquisp_1_1modules_1_1_i_routing_daemon.html#acee1aa1f10e7411f94ccf9c0f32cd0c9">quisp::modules::IRoutingDaemon</a>.</p>
 
 </div>
 </div>
@@ -336,7 +476,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -358,7 +498,7 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

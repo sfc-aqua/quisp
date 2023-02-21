@@ -1,5 +1,15 @@
 var NAVTREEINDEX14 =
 {
+"struct_photon_record.html#a26feeca99c9ab489782d6dd8f9bf12d5":[18,0,3,6],
+"struct_photon_record.html#a4ca27daf26563eb5123d88b990a2e0d2":[18,0,3,4],
+"struct_photon_record.html#a68882deb02a029b1466a86e791c9854b":[18,0,3,1],
+"struct_photon_record.html#a6a5c6c0a36df022b7f515bd180ace327":[18,0,3,2],
+"struct_photon_record.html#a75a1bfb80b95a3099c1d2292cd9c5cdd":[18,0,3,0],
+"struct_photon_record.html#ac75595ff31bed7a98d928821ea64fb38":[18,0,3,7],
+"struct_photon_record.html#af2134b7ce3553a514aff527c1e7afd86":[18,0,3,3],
+"struct_swapping_config.html":[18,0,5],
+"struct_swapping_config.html#a1e46873030558351cc3c5982a36e5e20":[18,0,5,1],
+"struct_swapping_config.html#a2d6e41ae5bee727466e9ceeaf027348c":[18,0,5,3],
 "struct_swapping_config.html#a6d0af9a2181b964bc3d00a47994b0ac8":[18,0,5,0],
 "struct_swapping_config.html#a9bfd92faa1ca0c3218eb89dbe0221b27":[18,0,5,2],
 "structquisp_1_1backends_1_1abstract_1_1_measurement_outcome.html":[17,0,1,0,0,5],
@@ -239,15 +249,5 @@ var NAVTREEINDEX14 =
 "structquisp_1_1modules_1_1link__cost.html":[18,0,0,2,28],
 "structquisp_1_1modules_1_1link__cost.html":[17,0,1,2,29],
 "structquisp_1_1modules_1_1link__cost.html#a30524f9e8e7ece7741971d68230ed2c4":[17,0,1,2,29,2],
-"structquisp_1_1modules_1_1link__cost.html#a30524f9e8e7ece7741971d68230ed2c4":[18,0,0,2,28,2],
-"structquisp_1_1modules_1_1link__cost.html#a54aed6f107d46f3ea44e054340d4505f":[17,0,1,2,29,1],
-"structquisp_1_1modules_1_1link__cost.html#a54aed6f107d46f3ea44e054340d4505f":[18,0,0,2,28,1],
-"structquisp_1_1modules_1_1link__cost.html#ac8d33547f897defb8b79f5afb9e5ba66":[18,0,0,2,28,0],
-"structquisp_1_1modules_1_1link__cost.html#ac8d33547f897defb8b79f5afb9e5ba66":[17,0,1,2,29,0],
-"structquisp_1_1modules_1_1output__count.html":[18,0,0,2,30],
-"structquisp_1_1modules_1_1output__count.html":[17,0,1,2,31],
-"structquisp_1_1modules_1_1output__count.html#a209e8ae0e1425935343d450021cccba6":[18,0,0,2,30,0],
-"structquisp_1_1modules_1_1output__count.html#a209e8ae0e1425935343d450021cccba6":[17,0,1,2,31,0],
-"structquisp_1_1modules_1_1output__count.html#a6fb05796956767cb0f077fb062199602":[17,0,1,2,31,4],
-"structquisp_1_1modules_1_1output__count.html#a6fb05796956767cb0f077fb062199602":[18,0,0,2,30,4]
+"structquisp_1_1modules_1_1link__cost.html#a30524f9e8e7ece7741971d68230ed2c4":[18,0,0,2,28,2]
 };
