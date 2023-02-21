@@ -7,7 +7,7 @@
 #include "Simulation.h"
 #include "StaticEnv.h"
 #include "TestComponentProviderStrategy.h"
-#include "UtilFunctions.h"
+#include "TestUtilFunctions.h"
 #include "mock_backends/MockBackendQubit.h"
 #include "mock_backends/MockQuantumBackend.h"
 #include "mock_modules/MockHardwareMonitor.h"
