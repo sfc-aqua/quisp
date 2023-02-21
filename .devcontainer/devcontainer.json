@@ -34,7 +34,9 @@
 				"llvm-vs-code-extensions.vscode-clangd",
 				"vadimcn.vscode-lldb",
 				"matepek.vscode-catch2-test-adapter",
-				"littlefoxteam.vscode-python-test-adapter"
+				"littlefoxteam.vscode-python-test-adapter",
+				"EditorConfig.EditorConfig",
+				"cschlosser.doxdocgen"
 			]
 		}
 	}
