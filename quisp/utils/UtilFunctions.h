@@ -2,8 +2,7 @@
 #include <map>
 #include "backends/interfaces/IRandomNumberGenerator.h"
 
-namespace quisp {
-namespace utilFunctions {
+namespace quisp::utilFunctions {
 using quisp::backends::abstract::IRandomNumberGenerator;
 
 template <typename Label>
@@ -21,5 +20,4 @@ Label sample(std::map<double, Label> weights) {
   }
   return label;
 }
-}  // namespace utilFunctions
-}  // namespace quisp
+}  // namespace quisp::utilFunctions
