@@ -7,11 +7,14 @@
 #include "Eigen/src/Core/Matrix.h"
 #include "backends/QubitConfiguration.h"
 #include "backends/interfaces/IQubitId.h"
+#include "utils/UtilFunctions.h"
 #include "omnetpp/simtime.h"
 #include "types.h"
 #include "vector"
 
-namespace quisp::backends::graph_state {
+namespace quisp{
+  using utilFunctions::sample;
+namespace backends::graph_state {
 
 using abstract::EigenvalueResult;
 using abstract::IQuantumBackend;
@@ -25,7 +28,6 @@ using abstract::SimTime;
 using Eigen::Matrix;
 using Eigen::MatrixPower;
 using Eigen::MatrixXd;
-using std::vector;
 using types::CliffordOperator;
 using types::MeasurementErrorModel;
 using types::MemoryErrorModel;
@@ -60,8 +62,6 @@ class GraphStateQubit : public IQubit {
   EigenvalueResult noiselessMeasureX() override;
   EigenvalueResult noiselessMeasureZ(EigenvalueResult forced_result) override;
   EigenvalueResult noiselessMeasureX(EigenvalueResult forced_result) override;
-
-  static int randomSamplingWithLabelsAndWeights(std::vector<int> labels, std::vector<double> weights);
 
  protected:
   // error simulation
@@ -114,3 +114,4 @@ class GraphStateQubit : public IQubit {
 };
 
 }  // namespace quisp::backends::graph_state
+}

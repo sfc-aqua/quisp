@@ -1,7 +1,5 @@
 #include "Qubit.h"
 #include <stdexcept>
-#include <string>
-#include <vector>
 #include "Backend.h"
 #include "backends/interfaces/IQubit.h"
 #include "backends/interfaces/IQubitId.h"
@@ -59,11 +57,11 @@ void GraphStateQubit::applySingleQubitGateError(SingleGateErrorModel const &err)
     return;
   }
 
-  enum Labels { No_err, X_err, Z_err, Y_err };
-  std::vector<int> labels = {No_err, X_err, Z_err, Y_err};
-  std::vector<double> weights = {err.no_error_ceil, err.x_error_ceil, err.z_error_ceil};
-
-  int res = this->randomSamplingWithLabelsAndWeights(labels, weights);
+  enum class ErrorLabel : int { NO_ERR, X, Z, Y };
+  std::map<double, ErrorLabel> weights = {
+      {err.no_error_ceil, ErrorLabel::NO_ERR}, {err.x_error_ceil, ErrorLabel::X}, {err.z_error_ceil, ErrorLabel::Z}, {err.y_error_ceil, ErrorLabel::Y}};
+  
+  ErrorLabel r = sample(weights);
 
   /*
    * 0.0    No_error_ceil       Z_error_ceil  1.0
@@ -73,13 +71,13 @@ void GraphStateQubit::applySingleQubitGateError(SingleGateErrorModel const &err)
    *                  X_error_ceil
    */
 
-  switch (res) {
-    case No_err:;
-    case X_err:
+  switch (r) {
+    case ErrorLabel::NO_ERR:;
+    case ErrorLabel::X:
       this->applyClifford(CliffordOperator::X);
-    case Z_err:
+    case ErrorLabel::Z:
       this->applyClifford(CliffordOperator::Z);
-    case Y_err:
+    case ErrorLabel::Y:
       this->applyClifford(CliffordOperator::Y);
   }
 }
@@ -89,12 +87,13 @@ void GraphStateQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, 
     return;
   }
 
-  enum Labels { No_err, IX_err, XI_err, XX_err, IY_err, YI_err, YY_err, IZ_err, ZI_err, ZZ_err };
-  std::vector<int> labels = {No_err, IX_err, XI_err, XX_err, IY_err, YI_err, YY_err, IZ_err, ZI_err, ZZ_err};
-  std::vector<double> weights = {err.no_error_ceil, err.ix_error_ceil, err.xi_error_ceil, err.xx_error_ceil, err.iz_error_ceil,
-                                 err.zi_error_ceil, err.zz_error_ceil, err.iy_error_ceil, err.yi_error_ceil, err.yy_error_ceil};
-
-  int res = this->randomSamplingWithLabelsAndWeights(labels, weights);
+  enum class ErrorLabel : int { NO_ERR, IX, XI, XX, IY, YI, YY, IZ, ZI, ZZ };
+  std::map<double, ErrorLabel> weights{
+      {err.no_error_ceil, ErrorLabel::NO_ERR}, {err.ix_error_ceil, ErrorLabel::IX}, {err.xi_error_ceil, ErrorLabel::XI}, {err.xx_error_ceil, ErrorLabel::XX},
+      {err.iy_error_ceil, ErrorLabel::IY},     {err.yi_error_ceil, ErrorLabel::YI}, {err.yy_error_ceil, ErrorLabel::YY}, {err.iz_error_ceil, ErrorLabel::IZ},
+      {err.zi_error_ceil, ErrorLabel::ZI},     {err.zz_error_ceil, ErrorLabel::ZZ},
+  };
+  ErrorLabel r = sample(weights);
 
   /*
    * 0.0  No_error_ceil    XI_error_ceil     IY_error_ceil     YY_error_ceil    ZI_error_ceil  1.0
@@ -104,31 +103,32 @@ void GraphStateQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, 
    *              IX_error_ceil      XX_error_ceil     YI_error_ceil    IZ_error_ceil
    */
 
-  switch (res) {
-    case No_err:;
-    case IX_err:
+  switch (r) {
+    case ErrorLabel::NO_ERR:;
+    case ErrorLabel::IX:
       this->applyClifford(CliffordOperator::X);
-    case XI_err:
+    case ErrorLabel::XI:
       another_qubit->applyClifford(CliffordOperator::X);
-    case XX_err:
+    case ErrorLabel::XX:
       this->applyClifford(CliffordOperator::X);
       another_qubit->applyClifford(CliffordOperator::X);
-    case IZ_err:
+    case ErrorLabel::IZ:
       this->applyClifford(CliffordOperator::Z);
-    case ZI_err:
+    case ErrorLabel::ZI:
       another_qubit->applyClifford(CliffordOperator::Z);
-    case ZZ_err:
+    case ErrorLabel::ZZ:
       this->applyClifford(CliffordOperator::Z);
       another_qubit->applyClifford(CliffordOperator::Z);
-    case IY_err:
+    case ErrorLabel::IY:
       this->applyClifford(CliffordOperator::Y);
-    case YI_err:
+    case ErrorLabel::YI:
       another_qubit->applyClifford(CliffordOperator::Y);
-    case YY_err:
+    case ErrorLabel::YY:
       this->applyClifford(CliffordOperator::Y);
       another_qubit->applyClifford(CliffordOperator::Y);
   }
 }
+
 void GraphStateQubit::applyMemoryError() {
   // If no memory error occurs, skip this memory error simulation.
   if (memory_err.error_rate == 0) return;
@@ -195,24 +195,25 @@ void GraphStateQubit::applyMemoryError() {
     double excited_ceil = y_ceil + pi_vector(0, 4);
     double relaxed_ceil = excited_ceil + pi_vector(0, 5);
 
-    enum Labels { No_err, X_err, Z_err, Y_err, Exitation, Relaxation };
-    std::vector<int> labels = {No_err, X_err, Z_err, Y_err, Exitation, Relaxation};
-    std::vector<double> weights = {clean_ceil, x_ceil, y_ceil, z_ceil, excited_ceil, relaxed_ceil};
+    enum class ErrorLabel { NO_ERR, X, Z, Y, Exitation, Relaxation };
+    std::map<double, ErrorLabel> weights = {
+    {clean_ceil, ErrorLabel::NO_ERR}, {x_ceil, ErrorLabel::X}, {z_ceil, ErrorLabel::Z}, {y_ceil, ErrorLabel::Y}, 
+    {excited_ceil, ErrorLabel::Exitation}, {relaxed_ceil, ErrorLabel::Relaxation}};
 
-    int res = this->randomSamplingWithLabelsAndWeights(labels, weights);
+    ErrorLabel r = sample(weights);
 
-    switch (res) {
-      case No_err:;
-      case X_err:
+    switch (r) {
+      case ErrorLabel::NO_ERR:;
+      case ErrorLabel::X:
         this->applyClifford(CliffordOperator::X);
-      case Z_err:
+      case ErrorLabel::Z:
         this->applyClifford(CliffordOperator::Z);
-      case Y_err:
+      case ErrorLabel::Y:
         this->applyClifford(CliffordOperator::X);
         this->applyClifford(CliffordOperator::Z);
-      case Exitation:
+      case ErrorLabel::Exitation:
         this->excite();
-      case Relaxation:
+      case ErrorLabel::Relaxation:
         this->relax();
       default:
           // Memory completely mixed error
@@ -239,24 +240,6 @@ void GraphStateQubit::relax() {
   }
 }
 
-int GraphStateQubit::randomSamplingWithLabelsAndWeights(std::vector<int> labels, std::vector<double> weights) {
-  // Gives a random double between 0.0 ~ 1.0
-  double rand = (double)std::rand() / RAND_MAX;
-  int index = 0;
-
-  if (labels.size() != weights.size() + 1) {
-    throw std::runtime_error("Length of labels must be 1 longer than length of weights");
-  }
-
-  for (const double &w : weights) {
-    if (rand <= w) {
-      break;
-    }
-    index++;
-  }
-
-  return labels[index];
-}
 
 void GraphStateQubit::applyClifford(CliffordOperator op) { this->vertex_operator = clifford_application_lookup[(int)op][(int)(this->vertex_operator)]; }
 

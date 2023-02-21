@@ -37,7 +37,6 @@ class GsBackendTest : public ::testing::Test {
   }
   TestRNG* rng;
   std::unique_ptr<GsBackend> backend;
-  int randomSamplingWithLabelsAndWeights(std::vector<int> labels, std::vector<double> weights) { return GraphStateQubit::randomSamplingWithLabelsAndWeights(labels, weights); }
 };
 
 TEST_F(GsBackendTest, createQubit) {
@@ -153,28 +152,5 @@ TEST_F(GsBackendTest, getQubitWithConfiguration) {
   EXPECT_EQ(Gs_qubit->gate_err_cnot.iz_error_rate, conf->cnot_gate_iz_err_ratio);
   EXPECT_EQ(Gs_qubit->gate_err_cnot.zi_error_rate, conf->cnot_gate_zi_err_ratio);
   EXPECT_EQ(Gs_qubit->gate_err_cnot.zz_error_rate, conf->cnot_gate_zz_err_ratio);
-}
-
-TEST_F(GsBackendTest, ThrowRuntimeErrorOnRandomSamplingWithLabelsAndWeights1) {
-  enum Labels { No_err, X_err, Z_err, Y_err };
-  std::vector<int> labels = {No_err, X_err, Z_err, Y_err};
-  std::vector<double> weights = {0.3, 0.5, 0.8, 0.9};
-
-  EXPECT_THROW(randomSamplingWithLabelsAndWeights(labels, weights), std::runtime_error);
-}
-TEST_F(GsBackendTest, ThrowRuntimeErrorOnRandomSamplingWithLabelsAndWeights2) {
-  enum Labels { No_err, X_err, Z_err, Y_err };
-  std::vector<int> labels = {No_err, X_err, Z_err};
-  std::vector<double> weights = {0.3, 0.5, 0.8, 0.9};
-
-  EXPECT_THROW(randomSamplingWithLabelsAndWeights(labels, weights), std::runtime_error);
-}
-
-TEST_F(GsBackendTest, ThrowRuntimeErrorOnRandomSamplingWithLabelsAndWeights3) {
-  enum Labels { No_err, X_err, Z_err, Y_err };
-  std::vector<int> labels = {No_err, X_err, Z_err};
-  std::vector<double> weights = {0.3};
-
-  EXPECT_THROW(randomSamplingWithLabelsAndWeights(labels, weights), std::runtime_error);
 }
 }  // namespace
