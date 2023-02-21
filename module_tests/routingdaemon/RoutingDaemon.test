@@ -30,7 +30,7 @@ module MockQRSA {
         int address;
         bool is_initiator = false;
     gates:
-        inout quantum_port;
+        inout quantum_port @loose;
 
     submodules:
         rd: TestRoutingDaemon {
@@ -69,7 +69,7 @@ module MockQNode {
         int mass;
         string included_in_topology = "yes";
     gates:
-        inout quantum_port[2] @loose;
+        inout quantum_port[] @loose;
 
     submodules:
         qrsa[1]: MockQRSA {
@@ -84,7 +84,6 @@ module MockQNode {
 
     connections:
         quantum_port[0] <--> qnic[0].quantum_port;
-        quantum_port[1] <--> qrsa[0].quantum_port;
 }
 
 network RoutingDaemonTestNet
