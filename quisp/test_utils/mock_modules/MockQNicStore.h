@@ -3,7 +3,7 @@
 #include <gmock/gmock.h>
 #include <modules/QNIC/StationaryQubit/StationaryQubit.h>
 #include <test_utils/ModuleType.h>
-#include <test_utils/UtilFunctions.h>
+#include <test_utils/TestUtilFunctions.h>
 #include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
 #include "modules/QRSA/RuleEngine/QNicStore/IQNicStore.h"
 
