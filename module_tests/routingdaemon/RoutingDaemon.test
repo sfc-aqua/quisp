@@ -1,0 +1,144 @@
+%description:
+RoutingDaemon initialize function test
+
+%file: package.ned
+package RoutingDaemon;
+@namespace(RoutingDaemon);
+
+%file: test.ned
+package RoutingDaemon;
+
+import ned.DatarateChannel;
+import modules.QRSA.RoutingDaemon.*;
+import modules.QNode;
+
+
+channel MockChannel extends DatarateChannel {
+    parameters:
+        double distance @unit(km) = default(20km);
+        double speed_of_light_in_fiber @unit(km) = default(208189.206944km);
+}
+simple TestRoutingDaemon extends RoutingDaemon {
+    parameters:
+    @class(TestRoutingDaemon);
+    gates:
+        inout quantum_port;
+}
+module MockQRSA {
+
+    parameters:
+        int address;
+        bool is_initiator = false;
+    gates:
+        inout quantum_port @loose;
+
+    submodules:
+        rd: TestRoutingDaemon {
+            parameters:
+                address = parent.address;
+        }
+
+    connections:
+        quantum_port <--> rd.quantum_port;
+}
+
+simple MockStationaryQubit {
+    parameters:
+        double emission_success_probability = default(1);
+    gates:
+        inout quantum_port;
+}
+module MockQNIC {
+    parameters:
+        int self_qnic_address;
+        int self_qnic_type;
+    gates:
+        inout quantum_port;
+    submodules:
+        statQubit[1] : MockStationaryQubit;
+    connections:
+        quantum_port <--> statQubit[0].quantum_port;
+}
+
+module MockQNode {
+
+    parameters:
+        int address;
+        string node_type;
+        bool is_initiator;
+        int mass;
+        string included_in_topology = "yes";
+    gates:
+        inout quantum_port[] @loose;
+
+    submodules:
+        qrsa[1]: MockQRSA {
+            parameters:
+                address = parent.address;
+        }
+        qnic[1]: MockQNIC {
+            parameters:
+                self_qnic_address = parent.address;
+                self_qnic_type = parent.address;
+        }
+
+    connections:
+        quantum_port[0] <--> qnic[0].quantum_port;
+}
+
+network RoutingDaemonTestNet
+{
+    submodules:
+        mockQNode1: MockQNode {
+            address = 1;
+            node_type = "EndNode";
+            is_initiator = false;
+            mass = 100;
+        }
+        mockQNode2: MockQNode {
+            address = 2;
+            node_type = "EndNode";
+            is_initiator = false;
+            mass = 100;
+        }
+    connections:
+        mockQNode1.quantum_port++ <--> MockChannel {  distance = 10km; } <--> mockQNode2.quantum_port++;
+}
+
+%inifile: omnetpp.ini
+
+[General]
+network = RoutingDaemonTestNet
+**.emission_success_probability = 1
+
+%file: test_routingdaemon.cc
+#include <omnetpp.h>
+#include <messages/classical_messages.h>
+#include <modules/QRSA/RoutingDaemon/RoutingDaemon.h>
+#include <modules/Common/Queue.h>
+#include <test_utils/TestUtils.h>
+using namespace omnetpp;
+using namespace quisp::messages;
+namespace RoutingDaemon {
+
+class TestRoutingDaemon : public quisp::modules::RoutingDaemon {
+ public:
+  TestRoutingDaemon() : RoutingDaemon() {}
+  void finish() override {
+    int other_node_addr = 3 - myAddress;
+    if (qrtable[other_node_addr].pointer == nullptr) 
+      printf("FAIL: routing table is not updated and the the pointer is nullptr\n");
+    if (qrtable[other_node_addr].address != myAddress) 
+      printf("FAIL: in the routing table, the value is %d but the expected value is %d\n", qrtable[other_node_addr].address, myAddress);
+  }
+};
+Define_Module(TestRoutingDaemon);
+
+class MockStationaryQubit : public cSimpleModule {
+};
+Define_Module(MockStationaryQubit);
+
+}; //namespace
+
+%not-contains: test.out
+FAIL

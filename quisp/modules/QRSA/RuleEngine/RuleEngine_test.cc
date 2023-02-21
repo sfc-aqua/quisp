@@ -147,7 +147,7 @@ TEST_F(RuleEngineTest, ESResourceUpdate) {
   int swapper_addr = 2;
   int new_partner = 3;
 
-  EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(new_partner)).WillOnce(Return(1));
+  EXPECT_CALL(*routing_daemon, findQNicAddrByDestAddr(new_partner)).WillOnce(Return(1));
   EXPECT_CALL(*hardware_monitor, findConnectionInfoByQnicAddr(1)).Times(1).WillOnce(Return(ByMove(std::move(info))));
   EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(QNIC_E, 0, 1)).Times(1).WillOnce(Return(qubit_record.get()));
 
@@ -346,7 +346,7 @@ TEST_F(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
 
   {  // swap result doesn't need an action
     SwappingResultData result{.ruleset_id = 0, .new_partner_addr = 2, .operation_type = 0};
-    EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(2)).Times(1).WillOnce(Return(5));
+    EXPECT_CALL(*routing_daemon, findQNicAddrByDestAddr(2)).Times(1).WillOnce(Return(5));
     auto info = std::make_unique<ConnectionSetupInfo>();
     info->qnic.type = QNIC_E;
     info->qnic.index = 0;
@@ -357,7 +357,7 @@ TEST_F(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
   }
   {  // swap result needs to apply X gate
     SwappingResultData result{.ruleset_id = 0, .new_partner_addr = 2, .operation_type = 1};
-    EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(2)).Times(1).WillOnce(Return(5));
+    EXPECT_CALL(*routing_daemon, findQNicAddrByDestAddr(2)).Times(1).WillOnce(Return(5));
     auto info = std::make_unique<ConnectionSetupInfo>();
     info->qnic.type = QNIC_E;
     info->qnic.index = 0;
@@ -368,7 +368,7 @@ TEST_F(RuleEngineTest, updateResourcesEntanglementSwappingWithoutRuleSet) {
   }
   {  // swap result needs to apply Z gate
     SwappingResultData result{.ruleset_id = 0, .new_partner_addr = 2, .operation_type = 2};
-    EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(2)).Times(1).WillOnce(Return(5));
+    EXPECT_CALL(*routing_daemon, findQNicAddrByDestAddr(2)).Times(1).WillOnce(Return(5));
     auto info = std::make_unique<ConnectionSetupInfo>();
     info->qnic.type = QNIC_E;
     info->qnic.index = 0;
@@ -415,7 +415,7 @@ TEST_F(RuleEngineTest, updateResourcesEntanglementSwappingWithRuleSet) {
   EXPECT_EQ(getResourceSizeByRuleId(rt, 0), 1);
   EXPECT_EQ(getResourceSizeByRuleId(rt, 1), 0);
 
-  EXPECT_CALL(*routing_daemon, return_QNIC_address_to_destAddr(new_partner_addr)).Times(1).WillOnce(Return(5));
+  EXPECT_CALL(*routing_daemon, findQNicAddrByDestAddr(new_partner_addr)).Times(1).WillOnce(Return(5));
   auto info = std::make_unique<ConnectionSetupInfo>();
   info->qnic.type = qnic_type;
   info->qnic.index = qnic_index;
