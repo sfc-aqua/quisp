@@ -21,5 +21,5 @@ Label sample(std::map<double, Label> weights) {
   }
   return label;
 }
-} // namespace utilFunctions
+}  // namespace utilFunctions
 }  // namespace quisp
