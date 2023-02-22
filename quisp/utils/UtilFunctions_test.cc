@@ -3,7 +3,7 @@
 #include "utils/UtilFunctions.h"
 
 namespace {
-using quisp::utilFunctions::mapToLabel;
+using quisp::util_functions::mapToLabel;
 
 TEST(UtilFunctionsTest, mapToLabelTest1) {
   enum class ErrorLabel : int { NO_ERR, X, Z, Y };

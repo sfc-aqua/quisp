@@ -2,7 +2,7 @@
 #include <map>
 #include "backends/interfaces/IRandomNumberGenerator.h"
 
-namespace quisp::utilFunctions {
+namespace quisp::util_functions {
 using quisp::backends::abstract::IRandomNumberGenerator;
 
 /*
@@ -27,4 +27,4 @@ Label mapToLabel(std::map<double, Label> weights, double rand) {
     }
   }
 }
-}  // namespace quisp::utilFunctions
+}  // namespace quisp::util_functions
