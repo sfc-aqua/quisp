@@ -20,7 +20,7 @@ using quisp::backends::abstract::IRandomNumberGenerator;
     returns ErrorLabel::Z
  */
 template <typename Label>
-Label getLabel(std::map<double, Label> weights, double rand) {
+Label mapToLabel(std::map<double, Label> weights, double rand) {
   Label label = weights.begin()->second;
 
   for (auto &[w, l] : weights) {
