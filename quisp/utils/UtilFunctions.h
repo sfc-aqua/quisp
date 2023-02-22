@@ -21,14 +21,10 @@ using quisp::backends::abstract::IRandomNumberGenerator;
  */
 template <typename Label>
 Label mapToLabel(std::map<double, Label> weights, double rand) {
-  Label label = weights.begin()->second;
-
   for (auto &[w, l] : weights) {
     if (rand <= w) {
-      break;
+      return l;
     }
-    label = l;
   }
-  return label;
 }
 }  // namespace quisp::utilFunctions
