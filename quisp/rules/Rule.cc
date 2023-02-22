@@ -60,9 +60,12 @@ void Rule::deserialize_json(json serialized) {
     } else if (action_name == "swapping") {
       auto swapping_action = std::make_unique<EntanglementSwapping>(serialized_action);
       setAction(std::move(swapping_action));
-    } else if (action_name == "wait") {
-      auto wait_action = std::make_unique<Wait>(serialized_action);
-      setAction(std::move(wait_action));
+    } else if (action_name == "wait_purification") {
+      auto wait_purification_action = std::make_unique<WaitPurification>(serialized_action);
+      setAction(std::move(wait_purification_action));
+    } else if (action_name == "wait_swapping") {
+      auto wait_swapping_action = std::make_unique<WaitSwapping>(serialized_action);
+      setAction(std::move(wait_swapping_action));
     } else if (action_name == "tomography") {
       auto tomography_action = std::make_unique<Tomography>(serialized_action);
       setAction(std::move(tomography_action));

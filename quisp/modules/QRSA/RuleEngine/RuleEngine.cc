@@ -15,7 +15,9 @@
 #include "RuleEngine.h"
 #include "RuntimeCallback.h"
 #include "messages/QNode_ipc_messages_m.h"
+#include "messages/entanglement_swapping_messages_m.h"
 #include "messages/link_generation_messages_m.h"
+#include "messages/purification_messages_m.h"
 #include "modules/PhysicalConnection/BSA/types.h"
 #include "modules/QNIC.h"
 #include "omnetpp/cexception.h"
@@ -106,18 +108,9 @@ void RuleEngine::handleMessage(cMessage *msg) {
     auto *ruleset = pk->getRuleSet();
     runtimes.acceptRuleSet(ruleset->construct());
   } else if (auto *pkt = dynamic_cast<PurificationResult *>(msg)) {
-    bool from_self = pkt->getSrcAddr() == parentAddress;
-    const PurificationResultKey key{*pkt};
-    handlePurificationResult(key, PurificationResultData{*pkt}, from_self);
+    handlePurificationResult(pkt);
   } else if (auto *pkt = dynamic_cast<SwappingResult *>(msg)) {
-    const SwappingResultData data{
-        .ruleset_id = pkt->getRuleSet_id(),
-        .shared_tag = pkt->getShared_tag(),
-        .new_partner_addr = pkt->getNew_partner(),
-        .operation_type = pkt->getOperation_type(),
-        .qubit_index = pkt->getMeasured_qubit_index()  // qubit index for this node, the name is misleading
-    };
-    handleSwappingResult(data);
+    handleSwappingResult(pkt);
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     // add actual process
     auto serialized_ruleset = pkt->getRuleSet();
@@ -200,68 +193,23 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
   }
 }
 
-void RuleEngine::handlePurificationResult(const PurificationResultKey &key, const PurificationResultData &result, bool from_self) {
-  auto it = purification_result_table.find(key);
-  if (it == purification_result_table.end()) {
-    purification_result_table.insert({key, result});
-    return;
-  }
-  // rule_id might be different from other node's rule, so use rule id comes from our runtime
-  auto rule_id = from_self ? key.rule_id : it->first.rule_id;
-
-  auto *runtime = runtimes.findById(key.rs_id);
-  if (runtime == nullptr) {
-    purification_result_table.erase(it);
-    return;
-  }
-
-  auto qubit_key = runtime->findQubit(rule_id, key.shared_tag, key.action_index);
-
-  auto *qubit = provider.getStationaryQubit(qubit_key->second);
-  qubit->Unlock();
-
-  if (result.isResultMatched(it->second, key.type)) {
-    runtime->promoteQubit(qubit_key);
-  } else {
-    runtime->qubits.erase(qubit_key);
-    freeConsumedResource(qubit->qnic_index, qubit, (QNIC_type)qubit->qnic_type);
-  }
-  purification_result_table.erase(it);
+void RuleEngine::handlePurificationResult(PurificationResult *result) {
+  auto ruleset_id = result->getRulesetId();
+  auto shared_rule_tag = result->getSharedRuleTag();
+  auto sequence_number = result->getSequenceNumber();
+  auto measurement_result = result->getMeasurementResult();
+  auto purification_protocol = result->getProtocol();
+  std::vector<int> message_content = {measurement_result, sequence_number, purification_protocol};
+  runtimes.findById(ruleset_id)->assignMessageToRuleSet(shared_rule_tag, message_content);
 }
 
-void RuleEngine::handleSwappingResult(const SwappingResultData &data) {
-  auto qnic_addr = routingdaemon->findQNicAddrByDestAddr(data.new_partner_addr);
-  auto conn_info = hardware_monitor->findConnectionInfoByQnicAddr(qnic_addr);
-  if (conn_info == nullptr) error("qnic(addr: %d) info not found", qnic_addr);
-  auto qnic_type = conn_info->qnic.type;
-  auto qnic_index = conn_info->qnic.index;
-  auto qubit_index = data.qubit_index;
-
-  auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit_index);
-  switch (data.operation_type) {
-    case 0:  // do nothing
-      break;
-    case 1:
-      realtime_controller->applyXGate(qubit_record);
-      break;
-    case 2:
-      realtime_controller->applyZGate(qubit_record);
-      break;
-    default:
-      error("Something went wrong. This operation type: %d isn't recorded!", data.operation_type);
-  }
-
-  auto *runtime = runtimes.findById(data.ruleset_id);
-  bell_pair_store.eraseQubit(qubit_record);
-  bell_pair_store.insertEntangledQubit(data.new_partner_addr, qubit_record);
-  runtime->promoteQubitWithNewPartner(qubit_record, data.new_partner_addr);
-}
-
-void RuleEngine::freeResource(int qnic_index /*The actual index. Not address. This with qnic_type makes the id unique.*/, int qubit_index, QNIC_type qnic_type) {
-  auto *qubit_record = qnic_store->getQubitRecord(qnic_type, qnic_index, qubit_index);
-  realtime_controller->ReInitialize_StationaryQubit(qubit_record, false);
-  qubit_record->setBusy(false);
-  if (qubit_record->isAllocated()) qubit_record->setAllocated(false);
+void RuleEngine::handleSwappingResult(SwappingResult *result) {
+  auto ruleset_id = result->getRulesetId();
+  auto shared_rule_tag = result->getSharedRuleTag();
+  auto sequence_number = result->getSequenceNumber();
+  auto correction_frame = result->getCorrectionFrame();
+  std::vector<int> message_content = {correction_frame, sequence_number};
+  runtimes.findById(ruleset_id)->assignMessageToRuleSet(shared_rule_tag, message_content);
 }
 
 // Invoked whenever a new resource (entangled with neighbor) has been created.

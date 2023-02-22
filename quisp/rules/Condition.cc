@@ -1,5 +1,6 @@
 #include "Condition.h"
 #include <memory>
+#include "rules/Clause.h"
 namespace quisp::rules {
 void Condition::addClause(std::unique_ptr<Clause> clause) { clauses.push_back(std::move(clause)); }
 
@@ -28,8 +29,11 @@ void Condition::deserialize_json(json serialized) {
       } else if (clause_type == "fidelity") {
         auto fidelity = std::make_unique<FidelityConditionClause>(clause);
         clauses.push_back(std::move(fidelity));
-      } else if (clause_type == "wait") {
-        auto wait = std::make_unique<WaitConditionClause>(clause);
+      } else if (clause_type == "wait_purification") {
+        auto wait = std::make_unique<WaitPurificationClause>(clause);
+        clauses.push_back(std::move(wait));
+      } else if (clause_type == "wait_swapping") {
+        auto wait = std::make_unique<WaitSwappingClause>(clause);
         clauses.push_back(std::move(wait));
       } else {
         throw omnetpp::cRuntimeError("No matching clause found");

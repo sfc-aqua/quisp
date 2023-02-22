@@ -12,6 +12,8 @@ void RuleSetGenerator::generateReverseSwapAtHalfRuleSets(int left_index, int rig
   // if you want to do purification between from and swapper or swapper and to before the swap; do it here.
   // e.g. generatePurificationRule(from, swapper, <protocol>);
   // e.g. generatePurificationRule(swapper, to, <protocol>);
+
+  // TODO: add wait rule at the left and right node
   generateReverseSwapAtHalfRuleSets(left_index, swapper_index, rules_map, path, shared_rule_tag);
   generateReverseSwapAtHalfRuleSets(swapper_index, right_index, rules_map, path, shared_rule_tag);
 };
@@ -121,6 +123,8 @@ std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::pair<int, int> partner_add
 
   auto swap_action = std::make_unique<EntanglementSwapping>(std::vector<int>({partner_address.first, partner_address.second}));
   swap_rule->setAction(std::move(swap_action));
+
+  // TODO: add wait rules after purification circuit to wait for the result
 
   return swap_rule;
 }

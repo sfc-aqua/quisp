@@ -15,6 +15,12 @@ Runtime::Runtime(const Runtime& rt) : Runtime() {
   callback = rt.callback;
   rule_id = rt.rule_id;
   qubits = rt.qubits;
+  resource_counter = rt.resource_counter;
+  sequence_number_to_qubit = rt.sequence_number_to_qubit;
+  qubit_to_sequence_number = rt.qubit_to_sequence_number;
+  shared_tag_to_rule_id = rt.shared_tag_to_rule_id;
+  rule_id_to_shared_tag = rt.rule_id_to_shared_tag;
+  messages = rt.messages;
   memory = rt.memory;
   ruleset = rt.ruleset;
   partners = rt.partners;
@@ -30,6 +36,12 @@ Runtime& Runtime::operator=(Runtime&& rt) {
   callback = rt.callback;
   rule_id = rt.rule_id;
   qubits = std::move(rt.qubits);
+  resource_counter = std::move(rt.resource_counter);
+  sequence_number_to_qubit = std::move(rt.sequence_number_to_qubit);
+  qubit_to_sequence_number = std::move(rt.qubit_to_sequence_number);
+  shared_tag_to_rule_id = std::move(rt.shared_tag_to_rule_id);
+  rule_id_to_shared_tag = std::move(rt.rule_id_to_shared_tag);
+  messages = std::move(rt.messages);
   memory = std::move(rt.memory);
   ruleset = std::move(rt.ruleset);
   partners = std::move(rt.partners);
@@ -104,6 +116,7 @@ void Runtime::cleanup() {
   named_qubits.clear();
   should_exit = false;
   qubit_found = false;
+  message_found = false;
   return_code = ReturnCode::NONE;
 }
 
@@ -115,10 +128,19 @@ void Runtime::assignRuleSet(const RuleSet& rs) {
   partners = ruleset.partners;
 }
 
+void Runtime::assignMessageToRuleSet(int shared_rule_tag, MessageRecord& msg_content) {
+  auto rule_id = shared_tag_to_rule_id[shared_rule_tag];
+  messages[rule_id].emplace_back(msg_content);
+}
+
 void Runtime::assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_record) {
   auto it = ruleset.partner_initial_rule_table.find(partner_addr);
   assert(it != ruleset.partner_initial_rule_table.end());
-  qubits.emplace(std::make_pair(partner_addr, it->second), qubit_record);
+  auto rule_id = it->second;
+  auto sequence_number = resource_counter[{partner_addr, rule_id}]++;
+  qubits.emplace(std::make_pair(partner_addr, rule_id), qubit_record);
+  sequence_number_to_qubit[{partner_addr, rule_id, sequence_number}] = qubit_record;
+  qubit_to_sequence_number[qubit_record] = {partner_addr, rule_id, sequence_number};
 }
 
 QubitResources::iterator Runtime::findQubit(int target_rule_id, int shared_tag, int action_index) {
@@ -139,8 +161,12 @@ void Runtime::promoteQubit(QubitResources::iterator iter) {
   assert(it != ruleset.next_rule_table.end());
   auto next_rule_id = it->second;
   auto* qubit = iter->second;
+  auto next_rule_sequence_number = resource_counter[{partner_addr, next_rule_id}]++;
   qubits.erase(iter);
   qubits.emplace(std::make_pair(partner_addr, next_rule_id), qubit);
+  sequence_number_to_qubit.erase(qubit_to_sequence_number[qubit]);
+  sequence_number_to_qubit[{partner_addr, next_rule_id, next_rule_sequence_number}] = qubit;
+  qubit_to_sequence_number[qubit] = {partner_addr, next_rule_id, next_rule_sequence_number};
 }
 void Runtime::promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr new_partner_addr) {
   QubitResources::iterator qubit_iter;
@@ -157,9 +183,19 @@ void Runtime::promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr n
   auto it = ruleset.partner_initial_rule_table.find(new_partner_addr);
   assert(it != ruleset.partner_initial_rule_table.end());
   auto next_rule_id = it->second;
+  auto next_rule_sequence_number = resource_counter[{new_partner_addr, next_rule_id}]++;
   qubits.emplace(std::make_pair(new_partner_addr, next_rule_id), qubit_record);
+  sequence_number_to_qubit.erase(qubit_to_sequence_number[qubit_record]);
+  sequence_number_to_qubit[{new_partner_addr, next_rule_id, next_rule_id}] = qubit_record;
+  qubit_to_sequence_number[qubit_record] = {new_partner_addr, next_rule_id, next_rule_sequence_number};
 }
-void Runtime::assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record) { qubits.emplace(std::make_pair(partner_addr, rule_id), qubit_record); }
+void Runtime::assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record) {
+  qubits.emplace(std::make_pair(partner_addr, rule_id), qubit_record);
+  auto sequence_number = resource_counter[{partner_addr, rule_id}]++;
+  sequence_number_to_qubit.erase(qubit_to_sequence_number[qubit_record]);
+  sequence_number_to_qubit[{partner_addr, rule_id, sequence_number}] = qubit_record;
+  qubit_to_sequence_number[qubit_record] = {partner_addr, rule_id, sequence_number};
+}
 const Register& Runtime::getReg(RegId reg_id) const { return registers[(int)reg_id]; }
 int32_t Runtime::getRegVal(RegId reg_id) const { return registers[(int)reg_id].value; }
 void Runtime::setRegVal(RegId reg_id, int32_t val) { registers[(int)reg_id].value = val; }
@@ -179,12 +215,23 @@ IQubitRecord* Runtime::getQubitByPartnerAddr(QNodeAddr partner_addr, int index) 
   return nullptr;
 }
 
+IQubitRecord* Runtime::getQubitBySequenceNumber(QNodeAddr partner_addr, RuleId rule_id, SequenceNumber sequence_number) {
+  if (sequence_number_to_qubit.find({partner_addr, rule_id, sequence_number}) == sequence_number_to_qubit.end()) {
+    return nullptr;
+  }
+  return sequence_number_to_qubit[{partner_addr, rule_id, sequence_number}];
+}
+
 IQubitRecord* Runtime::getQubitByQubitId(QubitId id) const {
   auto it = named_qubits.find(id);
   if (it != named_qubits.end()) {
     return it->second;
   }
   return nullptr;
+}
+
+void Runtime::updateQubitPartner(IQubitRecord* qubit_record, QNodeAddr new_partner_address) {
+  // TODO: call to call back to change the Bell pari store.
 }
 
 void Runtime::jumpTo(const Label& label) {

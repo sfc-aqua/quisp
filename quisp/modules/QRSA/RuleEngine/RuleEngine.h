@@ -24,6 +24,12 @@
 #include "PurificationResultTable/PurificationResultTable.h"
 #include "QNicStore/IQNicStore.h"
 #include "QubitRecord/IQubitRecord.h"
+#include "messages/QNode_ipc_messages_m.h"
+#include "messages/entanglement_swapping_messages_m.h"
+#include "messages/link_generation_messages_m.h"
+#include "messages/purification_messages_m.h"
+#include "modules/QNIC.h"
+#include "omnetpp/simtime.h"
 
 using namespace omnetpp;
 using namespace quisp::rules;
@@ -33,9 +39,9 @@ struct RuntimeCallback;
 }
 
 namespace quisp::modules {
-using pur_result_table::PurificationResultData;
-using pur_result_table::PurificationResultKey;
-using pur_result_table::PurificationResultTable;
+// using pur_result_table::PurificationResultData;
+// // using pur_result_table::PurificationResultKey;
+// // // using pur_result_table::PurificationResultTable;
 using qnic_store::IQNicStore;
 using qubit_record::IQubitRecord;
 
@@ -67,7 +73,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   int number_of_qnics;
   int number_of_qnics_r;
   int number_of_qnics_rp;
-  PurificationResultTable purification_result_table;
+  // PurificationResultTable purification_result_table;
 
   IHardwareMonitor *hardware_monitor;
   IRoutingDaemon *routingdaemon;
@@ -82,8 +88,8 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   void initialize() override;
   void handleMessage(cMessage *msg) override;
   void handleLinkGenerationResult(messages::CombinedBSAresults *bsa_result);
-  void handlePurificationResult(const PurificationResultKey &, const PurificationResultData &, bool from_self);
-  void handleSwappingResult(const SwappingResultData &data);
+  void handlePurificationResult(messages::PurificationResult *purification_result);
+  void handleSwappingResult(messages::SwappingResult *swapping_result);
   void executeAllRuleSets();
   void sendEmitPhotonSignalToQnic(QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_first, bool is_last);
   void stopOnGoingPhotonEmission(QNIC_type qnic_type, int qnic_index);

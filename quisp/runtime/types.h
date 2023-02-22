@@ -17,6 +17,20 @@ namespace quisp::runtime {
 
 using RuleId = int;
 
+/**
+ * @brief describes the order which Qubit is assigned to a Stage/Rule.
+ * This allows us to make assumptions that the same resource will be used
+ * in the same order across multiple nodes.
+ */
+using SequenceNumber = unsigned long;
+
+/**
+ * @brief describes message received that takes part in decision making of RuleSet.
+ *
+ * first index [0], always contain the sequence number.
+ */
+using MessageRecord = std::vector<int32_t>;
+
 // these types are mainly used for describing type name in def_instruction.h
 using String = std::string;
 
@@ -54,6 +68,7 @@ std::ostream& operator<<(std::ostream& stream, const ReturnCode& value);
 
 /// @brief internal class to describe QNode's address.
 struct QNodeAddr {
+  QNodeAddr() : val(-1){};
   QNodeAddr(int val);
   int val;
 };
@@ -66,6 +81,7 @@ bool operator==(const QNodeAddr& a, const QNodeAddr& b);
  * in a runtime::Program. Be careful, this is not used for RuleEngine or QNIC.
  */
 struct QubitId {
+  QubitId() : val(-1){};
   QubitId(int val);
   /// @brief hash function for unordered map
   size_t operator()(const QubitId&) const;

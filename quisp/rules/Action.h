@@ -74,10 +74,24 @@ class EntanglementSwapping : public Action {
   void deserialize_json(json serialized) override;
 };
 
-class Wait : public Action {
+class WaitPurification : public Action {
  public:
-  Wait(json serialized) { deserialize_json(serialized); }  // for deserialization
-  Wait(int swapper_addr);
+  WaitPurification(json serialized) { deserialize_json(serialized); }  // for deserialization
+  WaitPurification(int partner_addr, int sequence_number, int measurement_result, int protocol);
+  int sequence_number;
+  int measurement_result;
+  int protocol;
+  json serialize_json() override;
+  void deserialize_json(json serialized) override;
+};
+
+class WaitSwapping : public Action {
+ public:
+  WaitSwapping(json serialized) { deserialize_json(serialized); }  // for deserialization
+  WaitSwapping(int swapper_addr, int sequence_number, int correction_operation, int new_partner_addr);
+  int sequence_number;
+  int correction_operation;
+  int new_partner_address;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };

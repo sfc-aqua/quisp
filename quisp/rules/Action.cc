@@ -57,19 +57,35 @@ void EntanglementSwapping::deserialize_json(json serialized) {
   }
 }
 
-Wait::Wait(int swapper_addr) : Action(swapper_addr) {}
-
-json Wait::serialize_json() {
+WaitPurification::WaitPurification(int partner_addr, int sequence_number, int measurement_result, int protocol)
+    : Action(partner_addr), sequence_number(sequence_number), measurement_result(measurement_result), protocol(protocol) {}
+json WaitPurification::serialize_json() {
   json wait_json;
   wait_json["type"] = "wait";
   wait_json["options"]["interface"] = qnic_interfaces;
   return wait_json;
 }
 
-void Wait::deserialize_json(json serialized) {
+void WaitPurification::deserialize_json(json serialized) {
   auto options = serialized["options"];
   if (options != nullptr) {
-    // get options one by one
+    options["interface"].get_to(qnic_interfaces);
+  }
+}
+
+WaitSwapping::WaitSwapping(int swapper_addr, int sequence_number, int correction_operation, int new_partner_addr)
+    : Action(swapper_addr), sequence_number(sequence_number), correction_operation(correction_operation), new_partner_address(new_partner_addr) {}
+
+json WaitSwapping::serialize_json() {
+  json wait_json;
+  wait_json["type"] = "wait";
+  wait_json["options"]["interface"] = qnic_interfaces;
+  return wait_json;
+}
+
+void WaitSwapping::deserialize_json(json serialized) {
+  auto options = serialized["options"];
+  if (options != nullptr) {
     options["interface"].get_to(qnic_interfaces);
   }
 }

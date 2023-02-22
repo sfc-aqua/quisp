@@ -122,14 +122,107 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
     } else if (auto *c = dynamic_cast<const FidelityConditionClause *>(clause_ptr)) {
       // XXX: no impl in the original
       throw std::runtime_error("FidelityCondition has not implemented yet");
-    } else if (auto *c = dynamic_cast<const WaitConditionClause *>(clause_ptr)) {
-      QubitId q0{0};
+    } else if (auto *c = dynamic_cast<const WaitPurificationClause *>(clause_ptr)) {
+      /*
+        SET msg_index -1
+        SET seq_no -1
+        SET msg_count -1
+        SET qubit_id -1
+      LOOP:
+        INC msg_index
+        GET_MESSAGE_SEQ msg_index seq_no
+        BRANCH_IF_MESSAGE_FOUND FOUND_MESSAGE
+        RET COND_FAILED
+      FOUND_MESSAGE:
+        COUNT_MESSAGE seq_no msg_count
+        BEQ FIND_QUBIT msg_count 2
+        JMP LOOP
+      FIND_QUBIT:
+        GET_QUBIT_BY_SEQ_NO qubit_id partner_addr seq_no
+        BRANCH_IF_QUBIT_FOUND FOUND_QUBIT
+        JMP LOOP
+      FOUND_QUBIT:
+        STORE "purification_<shared_rule_tag>_seq_no" seq_no
+        RET COND_PASSED
+      */
+      auto msg_index = RegId::REG0;
+      auto seq_no = RegId::REG1;
+      auto msg_count = RegId::REG2;
+      auto qubit_id = RegId::REG3;
+      MemoryKey key{"purification_" + std::to_string(c->shared_rule_tag) + "_seq_no"};
+
+      Label loop_label{std::string("LOOP_") + std::to_string(i)};
+      Label found_message_label{std::string("FOUND_MESSAGE_") + std::to_string(i)};
+      Label find_qubit_label{std::string("FIND_QUBIT_") + std::to_string(i)};
       Label found_qubit_label{std::string("FOUND_QUBIT_") + std::to_string(i)};
-      opcodes.push_back(INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, c->partner_address, 0}});
+      // variable init
+      opcodes.push_back(INSTR_SET_RegId_int_{{msg_index, -1}});
+      opcodes.push_back(INSTR_SET_RegId_int_{{seq_no, -1}});
+      opcodes.push_back(INSTR_SET_RegId_int_{{msg_count, -1}});
+      opcodes.push_back(INSTR_SET_RegId_int_{{qubit_id, -1}});
+      // LOOP
+      opcodes.push_back(INSTR_INC_RegId_{{msg_index}, {loop_label}});
+      opcodes.push_back(INSTR_GET_MESSAGE_SEQ_RegId_RegId_{{msg_index, seq_no}});
+      opcodes.push_back(INSTR_BRANCH_IF_MESSAGE_FOUND_Label_{found_message_label});
+      opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::COND_FAILED});
+      // FOUND_MESSAGE
+      opcodes.push_back(INSTR_COUNT_MESSAGE_RegId_RegId_{{seq_no, msg_count}, found_message_label});
+      opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{find_qubit_label, msg_count, 2}});
+      opcodes.push_back(INSTR_JMP_Label_{loop_label});
+      // FIND_QUBIT
+      opcodes.push_back(INSTR_GET_QUBIT_BY_SEQ_NO_RegId_QNodeAddr_RegId_{{qubit_id, c->partner_address, seq_no}, find_qubit_label});
       opcodes.push_back(INSTR_BRANCH_IF_QUBIT_FOUND_Label_{found_qubit_label});
-      // always failed the condition. swapping result handler will promote the qubit resource to next rule
-      opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::COND_FAILED, found_qubit_label});
-      name += "Wait ";
+      opcodes.push_back(INSTR_JMP_Label_{loop_label});
+      // FOUND_QUBIT
+      opcodes.push_back(INSTR_STORE_MemoryKey_RegId_{{key, seq_no}, found_qubit_label});
+      opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::COND_PASSED});
+
+    } else if (auto *c = dynamic_cast<const WaitSwappingClause *>(clause_ptr)) {
+      /*
+        SET msg_index -1
+        SET seq_no -1
+        SET msg_count -1
+        SET qubit_id -1
+      LOOP:
+        INC msg_index
+        GET_MESSAGE_SEQ msg_index seq_no
+        BRANCH_IF_MESSAGE_FOUND FIND_QUBIT
+        RET COND_FAILED
+      FIND_QUBIT:
+        GET_QUBIT_BY_SEQ_NO qubit_id partner_addr seq_no
+        BRANCH_IF_QUBIT_FOUND FOUND_QUBIT
+        JMP LOOP
+      FOUND_QUBIT:
+        STORE "swapping_<shared_rule_tag>_seq_no" seq_no
+        RET COND_PASSED
+      */
+      auto msg_index = RegId::REG0;
+      auto seq_no = RegId::REG1;
+      auto msg_count = RegId::REG2;
+      auto qubit_id = RegId::REG3;
+      MemoryKey key{"swapping_" + std::to_string(c->shared_rule_tag) + "_seq_no"};
+
+      Label loop_label{std::string("LOOP_") + std::to_string(i)};
+      Label found_message_label{std::string("FOUND_MESSAGE_") + std::to_string(i)};
+      Label find_qubit_label{std::string("FIND_QUBIT_") + std::to_string(i)};
+      Label found_qubit_label{std::string("FOUND_QUBIT_") + std::to_string(i)};
+      // variable init
+      opcodes.push_back(INSTR_SET_RegId_int_{{msg_index, -1}});
+      opcodes.push_back(INSTR_SET_RegId_int_{{seq_no, -1}});
+      opcodes.push_back(INSTR_SET_RegId_int_{{msg_count, -1}});
+      opcodes.push_back(INSTR_SET_RegId_int_{{qubit_id, -1}});
+      // LOOP
+      opcodes.push_back(INSTR_INC_RegId_{{msg_index}, {loop_label}});
+      opcodes.push_back(INSTR_GET_MESSAGE_SEQ_RegId_RegId_{{msg_index, seq_no}});
+      opcodes.push_back(INSTR_BRANCH_IF_MESSAGE_FOUND_Label_{find_qubit_label});
+      opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::COND_FAILED});
+      // FIND_QUBIT
+      opcodes.push_back(INSTR_GET_QUBIT_BY_SEQ_NO_RegId_QNodeAddr_RegId_{{qubit_id, c->partner_address, seq_no}, find_qubit_label});
+      opcodes.push_back(INSTR_BRANCH_IF_QUBIT_FOUND_Label_{found_qubit_label});
+      opcodes.push_back(INSTR_JMP_Label_{loop_label});
+      // FOUND_QUBIT
+      opcodes.push_back(INSTR_STORE_MemoryKey_RegId_{{key, seq_no}, found_qubit_label});
+      opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::COND_PASSED});
     } else if (auto *c = dynamic_cast<const MeasureCountConditionClause *>(clause_ptr)) {
       /*
       LOAD count MemoryKey("count")
@@ -165,8 +258,11 @@ Program RuleSetConverter::constructAction(const ActionData *data) {
   if (auto *act = dynamic_cast<const Tomography *>(data)) {
     return constructTomographyAction(act);
   }
-  if (auto *act = dynamic_cast<const Wait *>(data)) {
-    return constructWaitAction(act);
+  if (auto *act = dynamic_cast<const WaitPurification *>(data)) {
+    return constructWaitPurificationAction(act);
+  }
+  if (auto *act = dynamic_cast<const WaitSwapping *>(data)) {
+    return constructWaitSwappingAction(act);
   }
 
   throw std::runtime_error("got invalid actions");
@@ -262,7 +358,7 @@ INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit, partner_addr, 1}},
   (InstructionTypes)INSTR_PURIFY_Y_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}},
 INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit}},
-INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_PurType_{{partner_addr, measure_result, action_index, pur_type}},
+// TODO: SEND PURIFICATION RESULT
 INSTR_INC_RegId_{action_index},
 INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
                        // clang-format on
@@ -317,7 +413,7 @@ INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_z, partner_addr, 2}},
 INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
-INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_RegId_PurType_{{partner_addr, measure_result_z, measure_result_x, action_index, pur_type}},
+// TODO: SEND PURIFICATION RESULT
 INSTR_INC_RegId_{action_index},
 INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
             // clang-format on
@@ -376,7 +472,7 @@ INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_z, partner_addr, 2}},
 INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
-INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_RegId_PurType_{{partner_addr, measure_result_z, measure_result_x, action_index, pur_type}},
+// TODO: SEND PURIFICATION RESULT
 INSTR_INC_RegId_{action_index},
 INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
             // clang-format on
@@ -446,7 +542,7 @@ INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
 INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
 INSTR_FREE_QUBIT_QubitId_{{ds_trash_qubit}},
-INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_RegId_RegId_PurType_{{partner_addr, measure_result_z, measure_result_x,ds_measure_result, action_index, pur_type}},
+// TODO: SEND PURIFICATION RESULT
 INSTR_INC_RegId_{action_index},
 INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
             // clang-format on
@@ -533,8 +629,7 @@ INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
         INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
         INSTR_FREE_QUBIT_QubitId_{{ds_trash_qubit_x}},
         INSTR_FREE_QUBIT_QubitId_{{ds_trash_qubit_z}},
-        INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_RegId_RegId_RegId_PurType_{
-            {partner_addr, measure_result_z, measure_result_x, ds_measure_result_z, ds_measure_result_x, action_index, pur_type}},
+        // TODO: SEND PURIFICATION RESULT
         INSTR_INC_RegId_{action_index},
         INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
     };
@@ -548,11 +643,14 @@ INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
   return Program{"Purification", {}};
 }
 
-Program RuleSetConverter::constructWaitAction(const Wait *act) {
-  // No actual action for now. maybe we can remove the wait action from RuleSet
-  // because essentially RuleSet mechanism doesn't need the wait action and it's for tweak rule index
-  return Program{"Wait", {}};
+Program RuleSetConverter::constructWaitPurificationAction(const WaitPurification *act) {
+  /*
+
+  */
+  return Program{"Wait_Purification", {}};
 }
+
+Program RuleSetConverter::constructWaitSwappingAction(const WaitSwapping *act) { return Program{"Wait_Swapping", {}}; }
 
 Program RuleSetConverter::constructTomographyAction(const Tomography *act) {
   /*
