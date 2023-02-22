@@ -61,7 +61,7 @@ void GraphStateQubit::applySingleQubitGateError(SingleGateErrorModel const &err)
   std::map<double, ErrorLabel> weights = {
       {err.no_error_ceil, ErrorLabel::NO_ERR}, {err.x_error_ceil, ErrorLabel::X}, {err.z_error_ceil, ErrorLabel::Z}, {err.y_error_ceil, ErrorLabel::Y}};
 
-  ErrorLabel r = sample(weights);
+  ErrorLabel r = getLabel(weights);
 
   /*
    * 0.0    No_error_ceil       Z_error_ceil  1.0
@@ -93,7 +93,7 @@ void GraphStateQubit::applyTwoQubitGateError(TwoQubitGateErrorModel const &err, 
       {err.iy_error_ceil, ErrorLabel::IY},     {err.yi_error_ceil, ErrorLabel::YI}, {err.yy_error_ceil, ErrorLabel::YY}, {err.iz_error_ceil, ErrorLabel::IZ},
       {err.zi_error_ceil, ErrorLabel::ZI},     {err.zz_error_ceil, ErrorLabel::ZZ},
   };
-  ErrorLabel r = sample(weights);
+  ErrorLabel r = getLabel(weights);
 
   /*
    * 0.0  No_error_ceil    XI_error_ceil     IY_error_ceil     YY_error_ceil    ZI_error_ceil  1.0
@@ -200,7 +200,7 @@ void GraphStateQubit::applyMemoryError() {
         {clean_ceil, ErrorLabel::NO_ERR},      {x_ceil, ErrorLabel::X}, {z_ceil, ErrorLabel::Z}, {y_ceil, ErrorLabel::Y}, {excited_ceil, ErrorLabel::Exitation},
         {relaxed_ceil, ErrorLabel::Relaxation}};
 
-    ErrorLabel r = sample(weights);
+    ErrorLabel r = getLabel(weights);
 
     switch (r) {
       case ErrorLabel::NO_ERR:;

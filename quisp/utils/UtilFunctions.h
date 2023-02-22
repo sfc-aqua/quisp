@@ -6,7 +6,7 @@ namespace quisp::utilFunctions {
 using quisp::backends::abstract::IRandomNumberGenerator;
 
 template <typename Label>
-Label sample(std::map<double, Label> weights, double rand) {
+Label getLabel(std::map<double, Label> weights, double rand) {
   Label label;
 
   for (auto &[w, l] : weights) {
