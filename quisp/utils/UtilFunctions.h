@@ -21,7 +21,7 @@ using quisp::backends::abstract::IRandomNumberGenerator;
  */
 template <typename Label>
 Label getLabel(std::map<double, Label> weights, double rand) {
-  Label label;
+  Label label = weights.begin()->second;
 
   for (auto &[w, l] : weights) {
     if (rand <= w) {
