@@ -1,11 +1,8 @@
-#ifndef QUISP_UTILS_DEFAULT_COMPONENT_PROVIDER_STRATEGY_H_
-#define QUISP_UTILS_DEFAULT_COMPONENT_PROVIDER_STRATEGY_H_
+#pragma once
 
 #include "IComponentProviderStrategy.h"
-#include "utils.h"
 
-namespace quisp {
-namespace utils {
+namespace quisp::utils {
 
 class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
  public:
@@ -13,6 +10,7 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
   cModule *getQNode() override;
   cModule *getNode() override;
   cModule *getNeighborNode(cModule *qnic) override;
+  int getNodeAddr() override;
   bool isQNodeType(const cModuleType *const type) override;
   bool isBSANodeType(const cModuleType *const type) override;
   bool isSPDCNodeType(const cModuleType *const type) override;
@@ -33,7 +31,4 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
   cModule *getQRSA();
 };
 
-}  // namespace utils
-}  // namespace quisp
-
-#endif /* QUISP_UTILS_DEFAULT_COMPONENT_PROVIDER_STRATEGY_H_ */
+}  // namespace quisp::utils
