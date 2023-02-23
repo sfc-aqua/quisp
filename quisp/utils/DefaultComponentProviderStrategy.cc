@@ -1,11 +1,6 @@
+#include <omnetpp.h>
+
 #include "DefaultComponentProviderStrategy.h"
-#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
-#include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
-#include "modules/QRSA/RealTimeController/IRealTimeController.h"
-#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
-#include "omnetpp/cexception.h"
-#include "omnetpp/cmodule.h"
-#include "utils/utils.h"
 
 namespace quisp::utils {
 
@@ -27,12 +22,15 @@ cModule *DefaultComponentProviderStrategy::getNode() {
   auto *mod_type = currentModule->getModuleType();
   while (mod_type != QNodeType && mod_type != BSAType && mod_type != SPDCType) {
     currentModule = currentModule->getParentModule();
+    mod_type = currentModule->getModuleType();
     if (currentModule == nullptr) {
       throw cRuntimeError("Node module not found. Have you changed the type name in ned file?");
     }
   }
   return currentModule;
 }
+
+int DefaultComponentProviderStrategy::getNodeAddr() { return getNode()->par("address"); }
 
 cModule *DefaultComponentProviderStrategy::getNeighborNode(cModule *qnic) {
   if (qnic == nullptr) throw cRuntimeError("failed to get neighbor node. given qnic is nullptr");
