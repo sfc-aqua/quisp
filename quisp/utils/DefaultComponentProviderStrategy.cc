@@ -30,7 +30,7 @@ cModule *DefaultComponentProviderStrategy::getNode() {
   return currentModule;
 }
 
-int DefaultComponentProviderStrategy::getNodeAddr() { return getNode()->par("address"); }
+QNodeAddr DefaultComponentProviderStrategy::getNodeAddr() { return QNodeAddr{getNode()->par("address").str().c_str()}; }
 
 cModule *DefaultComponentProviderStrategy::getNeighborNode(cModule *qnic) {
   if (qnic == nullptr) throw cRuntimeError("failed to get neighbor node. given qnic is nullptr");

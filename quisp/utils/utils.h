@@ -11,6 +11,7 @@
 #include <modules/QRSA/RoutingDaemon/IRoutingDaemon.h>
 #include <modules/common_types.h>
 #include <omnetpp.h>
+#include <types/QNodeAddr.h>
 
 namespace quisp {
 namespace utils {
@@ -27,6 +28,7 @@ using modules::common::IQuantumBackend;
 using modules::Logger::ILogger;
 using modules::Logger::LoggerModule;
 using omnetpp::cModule;
+using types::QNodeAddr;
 
 }  // namespace utils
 }  // namespace quisp

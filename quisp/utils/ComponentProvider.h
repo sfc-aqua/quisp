@@ -26,7 +26,7 @@ class ComponentProvider {
 
   cModule *getQNode();
   cModule *getNode();
-  int getNodeAddr();
+  QNodeAddr getNodeAddr();
   cModule *getNeighborNode(cModule *qnic);
   bool isQNodeType(const cModuleType *const type);
   bool isBSANodeType(const cModuleType *const type);
