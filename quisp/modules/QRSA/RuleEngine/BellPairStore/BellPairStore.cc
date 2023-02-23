@@ -14,7 +14,7 @@ void BellPairStore::insertEntangledQubit(QNodeAddr partner_addr, qrsa::IQubitRec
   ResourceKey key{qnic_type, qnic_index};
   logger->logBellPairInfo("Generated", partner_addr, qubit->getQNicType(), qubit->getQNicIndex(), qubit->getQubitIndex());
   if (_resources.find(key) == _resources.cend()) {
-    _resources.emplace(key, std::multimap<int, qrsa::IQubitRecord *>{std::make_pair(partner_addr, qubit)});
+    _resources.emplace(key, std::multimap<QNodeAddr, qrsa::IQubitRecord *>{std::make_pair(partner_addr, qubit)});
   } else {
     _resources[key].emplace(partner_addr, qubit);
   }
@@ -50,10 +50,10 @@ qrsa::IQubitRecord *BellPairStore::findQubit(QNIC_type qnic_type, QNicIndex qnic
   return it->second;
 }
 
-PartnerAddrQubitMapRange BellPairStore::getBellPairsRange(QNIC_type qnic_type, int qnic_index, int partner_addr) {
+PartnerAddrQubitMapRange BellPairStore::getBellPairsRange(QNIC_type qnic_type, int qnic_index, QNodeAddr partner_addr) {
   auto key = std::make_pair(qnic_type, qnic_index);
   if (_resources.find(key) == _resources.cend()) {
-    _resources.emplace(key, std::multimap<int, qrsa::IQubitRecord *>{});
+    _resources.emplace(key, std::multimap<QNodeAddr, qrsa::IQubitRecord *>{});
   }
   return _resources[key].equal_range(partner_addr);
 }

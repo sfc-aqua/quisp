@@ -8,9 +8,10 @@
 #include "RuleSetConverter/RuleSetConverter.h"
 
 using json = nlohmann::json;
+using quisp::types::QNodeAddr;
 
 namespace quisp::rules {
-RuleSet::RuleSet(unsigned long ruleset_id, int owner_address) : ruleset_id(ruleset_id), owner_addr(owner_address) {}
+RuleSet::RuleSet(unsigned long ruleset_id, QNodeAddr owner_address) : ruleset_id(ruleset_id), owner_addr(owner_address) {}
 
 Rule *RuleSet::addRule(std::unique_ptr<Rule> rule) {
   Rule *raw_ptr = rule.get();

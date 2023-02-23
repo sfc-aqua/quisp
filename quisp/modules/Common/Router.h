@@ -1,11 +1,12 @@
 #pragma once
 #include <omnetpp.h>
+#include <types/QNodeAddr.h>
 #include <utils/ComponentProvider.h>
 #include <map>
 
 namespace quisp::modules {
 
-using RoutingTable = std::map<int, int>;  // destaddr -> gateindex
+using RoutingTable = std::map<types::QNodeAddr, int>;  // destaddr -> gateindex
 
 /** \class Router
  *
@@ -21,7 +22,7 @@ class Router : public omnetpp::cSimpleModule {
 
   utils::ComponentProvider provider;
 
-  int my_address;
+  types::QNodeAddr my_address;
   RoutingTable routing_table;
 };
 

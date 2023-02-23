@@ -105,7 +105,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     LinkTomographyResult *pk = new LinkTomographyResult{"LinkTomographyResult"};
     auto src = rule_engine->parentAddress;
     pk->setSrcAddr(src);
-    pk->setDestAddr(partner_addr.val);
+    pk->setDestAddr(partner_addr);
     pk->setCount_id(count);
     pk->setPartner_address(src);  // Partner's partner is self/src
     pk->setKind(6);
@@ -128,7 +128,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
                               PurType protocol) override {
     auto *pkt = new PurificationResult{"PurificationResult"};
     pkt->setSrcAddr(rule_engine->parentAddress);
-    pkt->setDestAddr(partner_addr.val);
+    pkt->setDestAddr(partner_addr);
     pkt->setKind(7);
     pkt->setRulesetId(ruleset_id);
     pkt->setSharedRuleTag(shared_rule_tag);
@@ -145,13 +145,13 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
                           const int frame_correction) override {
     SwappingResult *pkt = new SwappingResult("SwappingResult");
     pkt->setSrcAddr(rule_engine->parentAddress);
-    pkt->setDestAddr(partner_addr.val);
+    pkt->setDestAddr(partner_addr);
     pkt->setRulesetId(ruleset_id);
     pkt->setSharedRuleTag(shared_rule_tag);
     pkt->setSequenceNumber(sequence_number);
     pkt->setKind(5);  // cyan
     pkt->setCorrectionFrame(frame_correction);
-    pkt->setNewPartner(new_partner_addr.val);
+    pkt->setNewPartner(new_partner_addr);
     rule_engine->send(pkt, "RouterPort$o");
   }
 

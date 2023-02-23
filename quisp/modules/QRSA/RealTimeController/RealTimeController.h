@@ -6,6 +6,7 @@
 #define QUISP_MODULES_REALTIMECONTROLLER_H_
 
 #include "IRealTimeController.h"
+#include "types/QNodeAddr.h"
 #include "utils/ComponentProvider.h"
 
 namespace quisp {
@@ -17,7 +18,7 @@ namespace modules {
  */
 class RealTimeController : public IRealTimeController {
  private:
-  int myAddress;
+  types::QNodeAddr myAddress;
 
  protected:
   virtual void initialize() override;

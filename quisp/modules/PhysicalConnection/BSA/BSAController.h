@@ -13,6 +13,7 @@
 #include "modules/PhysicalConnection/BSA/BellStateAnalyzer.h"
 #include "modules/PhysicalConnection/BSA/types.h"
 #include "modules/QNIC.h"
+#include "types/QNodeAddr.h"
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -22,7 +23,7 @@ namespace quisp::modules {
 struct BsaQNicId {
   QNIC_type type;
   int index;
-  int parent_node_addr;
+  QNodeAddr parent_node_addr;
 };
 
 /** @class BSAController BSA_Controller.h
@@ -46,7 +47,7 @@ class BSAController : public cSimpleModule {
  public:
   BSAController();
   ~BSAController();
-  int getExternalAdressFromPort(int port);
+  QNodeAddr getExternalAdressFromPort(int port);
   void cancelBSMTimeOut();
 
  protected:
@@ -66,7 +67,7 @@ class BSAController : public cSimpleModule {
   void sendMeasurementResults(BatchClickEvent* msg);
 
   // information for communications
-  int address;
+  QNodeAddr address;
   BsaQNicId left_qnic;
   BsaQNicId right_qnic;
   simtime_t left_travel_time;

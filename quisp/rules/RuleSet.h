@@ -5,6 +5,7 @@
 
 #include "Rule.h"
 #include "runtime/RuleSet.h"
+#include "types/QNodeAddr.h"
 
 using json = nlohmann::json;
 namespace quisp::rules {
@@ -15,10 +16,10 @@ namespace quisp::rules {
 class RuleSet {
  public:
   RuleSet(){};
-  RuleSet(unsigned long ruleset_id, int owner_address);
+  RuleSet(unsigned long ruleset_id, types::QNodeAddr owner_address);
 
   unsigned long ruleset_id;  ///< `ruleset_id` is used for identifying connection
-  int owner_addr;  ///< Address of RuleSet owner
+  types::QNodeAddr owner_addr;  ///< Address of RuleSet owner
   std::vector<std::unique_ptr<Rule>> rules;
 
   Rule *addRule(std::unique_ptr<Rule> rule);

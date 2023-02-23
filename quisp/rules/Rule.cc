@@ -1,11 +1,12 @@
 #include "Rule.h"
 
 namespace quisp::rules {
+using types::QNodeAddr;
 
-Rule::Rule(int partner_address, int send_tag, int receive_tag) : send_tag(send_tag), receive_tag(receive_tag) { qnic_interfaces.push_back({partner_address}); };
+Rule::Rule(QNodeAddr partner_address, int send_tag, int receive_tag) : send_tag(send_tag), receive_tag(receive_tag) { qnic_interfaces.push_back({partner_address}); };
 
-Rule::Rule(std::vector<int> partner_address, int send_tag, int receive_tag) : send_tag(send_tag), receive_tag(receive_tag) {
-  for (int addr : partner_address) {
+Rule::Rule(std::vector<QNodeAddr> partner_address, int send_tag, int receive_tag) : send_tag(send_tag), receive_tag(receive_tag) {
+  for (QNodeAddr addr : partner_address) {
     qnic_interfaces.push_back({addr});
   }
 }

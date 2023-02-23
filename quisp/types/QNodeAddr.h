@@ -28,6 +28,8 @@ struct QNodeAddr {
     if (*this < addr || *this == addr) return false;
     return true;
   };
+
+  int to_int();
 };
 
 std::ostream& operator<<(std::ostream& stream, const quisp::types::QNodeAddr& addr);

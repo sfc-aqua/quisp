@@ -1,21 +1,21 @@
 #include "Action.h"
 
 namespace quisp::rules {
+using types::QNodeAddr;
 
-Action::Action(int partner_addr) {
-  partner_address = partner_addr;
+Action::Action(QNodeAddr partner_addr) : partner_address(partner_addr) {
   QnicInterface qnic_interface{partner_addr};
   qnic_interfaces.emplace_back(qnic_interface);
 };
 
-Action::Action(std::vector<int> partner_addr) {
+Action::Action(std::vector<QNodeAddr> partner_addr) {
   for (int i = 0; i < partner_addr.size(); i++) {
     QnicInterface qnic_interface{partner_addr.at(i)};
     qnic_interfaces.emplace_back(qnic_interface);
   }
 }
 
-Purification::Purification(PurType purification_type, int partner_addr, int shared_rule_tag)
+Purification::Purification(PurType purification_type, QNodeAddr partner_addr, int shared_rule_tag)
     : Action(partner_addr), purification_type(purification_type), shared_rule_tag(shared_rule_tag) {}
 
 json Purification::serialize_json() {
@@ -37,7 +37,7 @@ void Purification::deserialize_json(json serialized) {
   }
 }
 
-EntanglementSwapping::EntanglementSwapping(std::vector<int> partner_addr, int shared_rule_tag) : Action(partner_addr), shared_rule_tag(shared_rule_tag) {
+EntanglementSwapping::EntanglementSwapping(std::vector<QNodeAddr> partner_addr, int shared_rule_tag) : Action(partner_addr), shared_rule_tag(shared_rule_tag) {
   for (int i = 0; i < partner_addr.size(); i++) {
     QnicInterface remote_qnic_interface{partner_addr.at(i)};
     remote_qnic_interfaces.push_back(remote_qnic_interface);
@@ -63,7 +63,8 @@ void EntanglementSwapping::deserialize_json(json serialized) {
   }
 }
 
-PurificationCorrelation::PurificationCorrelation(int partner_addr, int shared_rule_tag) : Action(partner_addr), shared_rule_tag(shared_rule_tag) {}
+PurificationCorrelation::PurificationCorrelation(QNodeAddr partner_addr, int shared_rule_tag) : Action(partner_addr), shared_rule_tag(shared_rule_tag) {}
+
 json PurificationCorrelation::serialize_json() {
   json wait_json;
   wait_json["type"] = "purification_correlation";
@@ -80,7 +81,7 @@ void PurificationCorrelation::deserialize_json(json serialized) {
   }
 }
 
-SwappingCorrection::SwappingCorrection(int swapper_addr, int shared_rule_tag) : Action(swapper_addr), shared_rule_tag(shared_rule_tag) {}
+SwappingCorrection::SwappingCorrection(QNodeAddr swapper_addr, int shared_rule_tag) : Action(swapper_addr), shared_rule_tag(shared_rule_tag) {}
 
 json SwappingCorrection::serialize_json() {
   json wait_json;
@@ -98,7 +99,7 @@ void SwappingCorrection::deserialize_json(json serialized) {
   }
 }
 
-Tomography::Tomography(int num_measurement, int owner_addr, int partner_addr) : Action(partner_addr), num_measurement(num_measurement), owner_address(owner_addr) {}
+Tomography::Tomography(int num_measurement, QNodeAddr owner_addr, QNodeAddr partner_addr) : Action(partner_addr), num_measurement(num_measurement), owner_address(owner_addr) {}
 
 json Tomography::serialize_json() {
   json tomography_json;

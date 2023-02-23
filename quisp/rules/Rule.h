@@ -5,6 +5,7 @@
 #pragma once
 #include <omnetpp.h>
 #include <stdio.h>
+#include <types/QNodeAddr.h>
 #include <memory>
 
 #include <nlohmann/json.hpp>
@@ -18,8 +19,8 @@ namespace quisp::rules {
 class Rule {
  public:
   Rule(){};
-  Rule(int partner_address, int send_tag, int receive_tag);
-  Rule(std::vector<int> partner_address, int send_tag, int receive_tag);
+  Rule(types::QNodeAddr partner_address, int send_tag, int receive_tag);
+  Rule(std::vector<types::QNodeAddr> partner_address, int send_tag, int receive_tag);
   Rule(json serialized) { deserialize_json(serialized); };
   int send_tag;  ///< used to denote which rules should receive this message
   int receive_tag;  ///< RuleEngine will assign a message with this tag to this rule.

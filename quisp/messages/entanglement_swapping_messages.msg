@@ -7,5 +7,5 @@ packet SwappingResult extends Header {
     int shared_rule_tag      @setter(setSharedRuleTag)     @getter(getSharedRuleTag);
     int sequence_number      @setter(setSequenceNumber)    @getter(getSequenceNumber);
     int correction_frame     @setter(setCorrectionFrame)   @getter(getCorrectionFrame);
-    int new_partner          @setter(setNewPartner)        @getter(getNewPartner);
+    QNodeAddr new_partner          @setter(setNewPartner)        @getter(getNewPartner);
 }

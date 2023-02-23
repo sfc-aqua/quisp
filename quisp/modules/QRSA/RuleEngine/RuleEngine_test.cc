@@ -30,6 +30,7 @@
 #include "test_utils/mock_modules/MockHardwareMonitor.h"
 #include "test_utils/mock_modules/MockRealTimeController.h"
 #include "test_utils/mock_modules/MockRoutingDaemon.h"
+#include "types/QNodeAddr.h"
 
 namespace {
 
@@ -96,11 +97,8 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
     qnic_store = std::make_unique<StrictMock<MockQNicStore>>();
   }
   // setter function for allResorces[qnic_type][qnic_index]
-  void setAllResources(int partner_addr, IQubitRecord* qubit) { this->bell_pair_store.insertEntangledQubit(partner_addr, qubit); };
+  void setAllResources(QNodeAddr partner_addr, IQubitRecord* qubit) { this->bell_pair_store.insertEntangledQubit(partner_addr, qubit); };
 
- private:
-  FRIEND_TEST(RuleEngineTest, ESResourceUpdate);
-  FRIEND_TEST(RuleEngineTest, trackerUpdate);
   friend class MockRoutingDaemon;
   friend class MockHardwareMonitor;
 };
@@ -135,9 +133,9 @@ TEST_F(RuleEngineTest, resourceAllocation) {
   auto rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, nullptr, qnic_specs};
   sim->registerComponent(rule_engine);
   rule_engine->callInitialize();
-  rule_engine->setAllResources(0, qubit_record0);
-  rule_engine->setAllResources(1, qubit_record1);
-  rule_engine->setAllResources(2, qubit_record2);
+  rule_engine->setAllResources(QNodeAddr{0}, qubit_record0);
+  rule_engine->setAllResources(QNodeAddr{1}, qubit_record1);
+  rule_engine->setAllResources(QNodeAddr{2}, qubit_record2);
   int q0 = 0;
   QNodeAddr partner_addr{1};
   // this action needs a resource qubit that is entangled with partner 1.

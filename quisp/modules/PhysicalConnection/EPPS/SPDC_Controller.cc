@@ -25,9 +25,9 @@ namespace modules {
  */
 class SPDC_Controller : public cSimpleModule {
  private:
-  int address;
-  int neighbor_address;
-  int neighbor_address_two;
+  QNodeAddr address;
+  QNodeAddr neighbor_address;
+  QNodeAddr neighbor_address_two;
   int neighbor_buffer;
   int neighbor_buffer_two;
   int max_buffer;
@@ -55,7 +55,7 @@ class SPDC_Controller : public cSimpleModule {
   virtual void checkNeighborsBSACapacity();
   virtual void checkNeighborsBuffer();
   virtual double calculateTimeToTravel(double distance, double c);
-  virtual EPPStimingNotifier *generateNotifier(double distance_to_neighbor, double c, int destAddr);
+  virtual EPPStimingNotifier *generateNotifier(double distance_to_neighbor, double c, QNodeAddr destAddr);
   virtual void startPump();
 };
 
@@ -65,7 +65,7 @@ void SPDC_Controller::initialize() {
   frequency = par("frequency");
   cModule *pump = getParentModule()->getSubmodule("PairSource");
   epps = check_and_cast<EntangledPhotonPairSource *>(pump);
-  address = par("address");
+  address = QNodeAddr{par("address").stringValue()};
   timing_buffer = par("timing_buffer");
   cPar *c = &par("speed_of_light_in_fiber");
   speed_of_light_in_channel = c->doubleValue();
@@ -116,7 +116,7 @@ void SPDC_Controller::startPump() {
   scheduleAt(simTime() + timing_buffer + (max_accepted_rate), emt);
 }
 
-EPPStimingNotifier *SPDC_Controller::generateNotifier(double distance_to_neighbor, double c, int destAddr) {
+EPPStimingNotifier *SPDC_Controller::generateNotifier(double distance_to_neighbor, double c, QNodeAddr destAddr) {
   EPPStimingNotifier *pk = new EPPStimingNotifier("EppsTimingNotifier");
   double time_to_reach = calculateTimeToTravel(distance_to_neighbor, c);
 
@@ -173,16 +173,9 @@ void SPDC_Controller::checkNeighborsAddress() {
   // First, check the node address of neighbors and their channel length.
   cModule *epps = getNode("SPDC");
   cModule *neighbor_one = getNextNode(epps, 0, "QNode");
-  neighbor_address = neighbor_one->par("address");
+  neighbor_address = QNodeAddr{neighbor_one->par("address").stringValue()};
   cModule *neighbor_two = getNextNode(epps, 1, "QNode");
-  neighbor_address_two = neighbor_two->par("address");
-
-  try {
-    par("neighbor_address") = neighbor_address;
-    par("neighbor_address_two") = neighbor_address_two;
-  } catch (std::exception &e) {
-    error("parameter not found in SPDC_Controller initialize()");
-  }
+  neighbor_address_two = QNodeAddr{neighbor_two->par("address").stringValue()};
 }
 
 // Store the buffer size

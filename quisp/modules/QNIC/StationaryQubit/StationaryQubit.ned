@@ -9,7 +9,7 @@ simple StationaryQubit
         // @statistic[update_timing](title="actual number of resource"; record=vector, max; interpolationmode=sample-hold);
         // these are configured at boot time
         int stationary_qubit_address;
-        int node_address;
+        string node_address;
         int qnic_address; // Unique
         int qnic_type;
         int qnic_index; // Not unique
