@@ -14,7 +14,7 @@ cModule *ComponentProvider::getNode() {
   return strategy->getNode();
 }
 
-int ComponentProvider::getNodeAddr() {
+QNodeAddr ComponentProvider::getNodeAddr() {
   ensureStrategy();
   return strategy->getNodeAddr();
 }

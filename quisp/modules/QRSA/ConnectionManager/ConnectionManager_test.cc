@@ -29,7 +29,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
   Strategy(IRoutingDaemon *_routing_daemon, IHardwareMonitor *_hardware_monitor) : routing_daemon(_routing_daemon), hardware_monitor(_hardware_monitor) {}
   Strategy() {}
   ~Strategy() {}
-  int getNodeAddr() override { return 5; };
+  QNodeAddr getNodeAddr() override { return QNodeAddr{5}; };
   IRoutingDaemon *getRoutingDaemon() override { return routing_daemon; }
   IHardwareMonitor *getHardwareMonitor() override { return hardware_monitor; }
   IRoutingDaemon *routing_daemon = nullptr;

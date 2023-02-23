@@ -10,7 +10,7 @@ class DefaultComponentProviderStrategy : public IComponentProviderStrategy {
   cModule *getQNode() override;
   cModule *getNode() override;
   cModule *getNeighborNode(cModule *qnic) override;
-  int getNodeAddr() override;
+  QNodeAddr getNodeAddr() override;
   bool isQNodeType(const cModuleType *const type) override;
   bool isBSANodeType(const cModuleType *const type) override;
   bool isSPDCNodeType(const cModuleType *const type) override;

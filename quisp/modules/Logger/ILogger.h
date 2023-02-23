@@ -1,9 +1,11 @@
 #pragma once
-#include <modules/QNIC.h>
 #include <omnetpp.h>
 
-namespace quisp::modules::Logger {
+#include "modules/QNIC.h"
+#include "types/QNodeAddr.h"
 
+namespace quisp::modules::Logger {
+using types::QNodeAddr;
 /**
  * \brief Interface of Logger class. Logger class that inherits ILogger is
  * responsible for logging simulation results.
@@ -24,8 +26,8 @@ class ILogger {
   virtual ~ILogger(){};
   virtual void logPacket(const std::string& event_type, omnetpp::cMessage const* const msg) = 0;
   virtual void logQubitState(quisp::modules::QNIC_type qnic_type, int qnic_index, int qubit_index, bool is_busy, bool is_allocated) = 0;
-  virtual void logBellPairInfo(const std::string& event_type, int partner_addr, quisp::modules::QNIC_type qnic_type, int qnic_index, int qubit_index) = 0;
+  virtual void logBellPairInfo(const std::string& event_type, QNodeAddr partner_addr, quisp::modules::QNIC_type qnic_type, int qnic_index, int qubit_index) = 0;
   virtual void setModule(omnetpp::cModule const* const mod) = 0;
-  virtual void setQNodeAddress(int address) = 0;
+  virtual void setQNodeAddress(QNodeAddr address) = 0;
 };
 }  // namespace quisp::modules::Logger
