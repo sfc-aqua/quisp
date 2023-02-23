@@ -22,7 +22,7 @@ packet LinkTomographyResult extends Header
     bool Output_is_plus;
     char Basis;
     int count_id;
-    int partner_address;
+    QNodeAddr partner_address;
     simtime_t finish = -1;
     int max_count;
     char GOD_clean;

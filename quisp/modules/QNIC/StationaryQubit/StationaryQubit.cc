@@ -41,7 +41,7 @@ void StationaryQubit::initialize() {
 
   // Get parameters from omnet
   stationary_qubit_address = par("stationary_qubit_address");
-  node_address = par("node_address");
+  node_address = provider.getNodeAddr();
   qnic_address = par("qnic_address");
   qnic_type = par("qnic_type");
   qnic_index = par("qnic_index");

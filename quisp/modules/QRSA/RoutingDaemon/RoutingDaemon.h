@@ -18,11 +18,11 @@
 namespace quisp::modules::routing_daemon {
 
 // destaddr -> {self_qnic_address (unique)}
-using RoutingTable = std::map<int, int>;
+using RoutingTable = std::map<types::QNodeAddr, int>;
 
 class RoutingDaemon : public IRoutingDaemon {
  protected:
-  int myAddress;
+  types::QNodeAddr myAddress;
   RoutingTable qrtable;
 
   void updateChannelWeightsInTopology(cTopology* topo);
@@ -41,7 +41,7 @@ class RoutingDaemon : public IRoutingDaemon {
  public:
   RoutingDaemon();
   int getNumEndNodes() override;
-  int findQNicAddrByDestAddr(int destAddr) override;
+  int findQNicAddrByDestAddr(types::QNodeAddr destAddr) override;
 };
 
 }  // namespace quisp::modules::routing_daemon

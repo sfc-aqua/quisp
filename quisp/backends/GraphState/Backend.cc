@@ -3,8 +3,10 @@
 #include "backends/interfaces/IConfiguration.h"
 #include "backends/interfaces/IQubit.h"
 #include "modules/QNIC/StationaryQubit/QubitId.h"
+#include "types/QNodeAddr.h"
 
 using quisp::modules::qubit_id::QubitId;
+using quisp::types::QNodeAddr;
 
 namespace quisp::backends::graph_state {
 GraphStateBackend::GraphStateBackend(std::unique_ptr<IRandomNumberGenerator> rng, std::unique_ptr<StationaryQubitConfiguration> configuration)
@@ -22,7 +24,7 @@ GraphStateBackend::~GraphStateBackend() {
 }
 
 IQubit* GraphStateBackend::createShortLiveQubit() {
-  auto* qubit_id = new QubitId(-1, -1, -1, ++short_live_qubit_pool_size);
+  auto* qubit_id = new QubitId(QNodeAddr{-1}, -1, -1, ++short_live_qubit_pool_size);
   auto original_qubit = std::make_unique<GraphStateQubit>(qubit_id, this, true);
   auto conf = getDefaultConfiguration();
   IConfiguration* raw_conf = conf.release();

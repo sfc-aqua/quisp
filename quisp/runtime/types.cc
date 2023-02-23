@@ -6,14 +6,6 @@
 
 namespace quisp::runtime {
 
-QNodeAddr::QNodeAddr(int val) : val(val) {}
-std::ostream& operator<<(std::ostream& stream, const QNodeAddr& value) {
-  stream << "QNodeAddr(" << std::to_string(value.val) << ")";
-  return stream;
-}
-bool operator<(const QNodeAddr& a, const QNodeAddr& b) { return a.val < b.val; }
-bool operator==(const QNodeAddr& a, const QNodeAddr& b) { return a.val == b.val; }
-
 QubitId::QubitId(int val) : val(val) {}
 size_t QubitId::operator()(const QubitId& id) const { return std::hash<int>()(id.val); }
 std::ostream& operator<<(std::ostream& stream, const QubitId& value) {

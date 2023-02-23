@@ -57,7 +57,7 @@ class ConditionExecutionTest : public testing::Test {
   IQubitRecord* qubit3;
   IQubitRecord* qubit4;
   IQubitRecord* qubit5;
-  int partner_addr = 1;
+  QNodeAddr partner_addr{1};
   QNIC_type qnic_type = QNIC_E;
   int qnic_id = 3;
 };

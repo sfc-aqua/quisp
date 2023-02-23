@@ -24,7 +24,7 @@ module MockQNode {
 
     parameters:
         // Application needs the parent node's address
-        int address;
+        string address;
         string node_type;
         bool is_initiator;
         int mass;
@@ -43,7 +43,7 @@ network ApplicationTestNet
 {
     submodules:
         mockQNode: MockQNode {
-            address = 1;
+            address = "0.1";
             node_type = "none";
             is_initiator = false;
             mass = 100;
@@ -87,8 +87,8 @@ Define_Module(TestApplication);
 class MockRouter: public cSimpleModule
 {
     public:
-        int my_address = 1;
-        int dest_addr = 2;
+        QNodeAddr my_address{1};
+        QNodeAddr dest_addr{2};
         MockRouter() : cSimpleModule(65536) {}
         virtual void initialize() {
             sendConnectionSetupRequest();

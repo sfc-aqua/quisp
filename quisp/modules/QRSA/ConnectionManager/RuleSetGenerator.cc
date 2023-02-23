@@ -8,15 +8,16 @@
 namespace quisp::modules::ruleset_gen {
 
 using namespace quisp::rules;
+using quisp::types::QNodeAddr;
 
-void RuleSetGenerator::generateReverseSwapAtHalfRuleSets(int left_index, int right_index, std::map<int, std::vector<std::unique_ptr<Rule>>>& rules_map, std::vector<int>& path,
-                                                         int& shared_rule_tag) {
+void RuleSetGenerator::generateReverseSwapAtHalfRuleSets(int left_index, int right_index, std::map<QNodeAddr, std::vector<std::unique_ptr<Rule>>>& rules_map,
+                                                         std::vector<QNodeAddr>& path, int& shared_rule_tag) {
   if (left_index == right_index || left_index + 1 == right_index) return;
   int swapper_index = (left_index + right_index) / 2;
 
-  int swapper_addr = path[swapper_index];
-  int left_addr = path[left_index];
-  int right_addr = path[right_index];
+  auto swapper_addr = path[swapper_index];
+  auto left_addr = path[left_index];
+  auto right_addr = path[right_index];
   rules_map[swapper_addr].emplace_back(swapRule({left_addr, right_addr}, ++shared_rule_tag));
   rules_map[left_addr].emplace_back(swapCorrectionRule(swapper_addr, shared_rule_tag));
   rules_map[right_addr].emplace_back(swapCorrectionRule(swapper_addr, shared_rule_tag));
@@ -29,10 +30,10 @@ void RuleSetGenerator::generateReverseSwapAtHalfRuleSets(int left_index, int rig
   generateReverseSwapAtHalfRuleSets(swapper_index, right_index, rules_map, path, shared_rule_tag);
 };
 
-std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetupRequest* req, unsigned long ruleset_id) {
+std::map<QNodeAddr, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetupRequest* req, unsigned long ruleset_id) {
   // prepare information for RuleSets generation
   auto path = collectPath(req);
-  std::map<int /* node addr */, std::vector<std::unique_ptr<Rule>>> rules_map;
+  std::map<QNodeAddr, std::vector<std::unique_ptr<Rule>>> rules_map;
   int num_measure = req->getNum_measure();
   int shared_rule_tag = 0;
 
@@ -61,10 +62,10 @@ std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetup
   rules_map[initiator_addr].emplace_back(tomographyRule(responder_addr, initiator_addr, num_measure, shared_rule_tag));
   rules_map[responder_addr].emplace_back(tomographyRule(initiator_addr, responder_addr, num_measure, shared_rule_tag));
 
-  std::map<int, json> rulesets{};
+  std::map<QNodeAddr, json> rulesets{};
   // pack rules into RuleSets and serialize it as json
   for (auto it = rules_map.begin(); it != rules_map.end(); ++it) {
-    int owner_address = it->first;
+    auto owner_address = it->first;
     auto rules = std::move(it->second);
     RuleSet ruleset(ruleset_id, owner_address);
     for (int i = 0; i < rules.size(); i++) {
@@ -76,10 +77,10 @@ std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetup
   return rulesets;
 }
 
-std::vector<int> RuleSetGenerator::collectPath(messages::ConnectionSetupRequest* req) {
+std::vector<QNodeAddr> RuleSetGenerator::collectPath(messages::ConnectionSetupRequest* req) {
   // the number of nodes in between
   int hop_count = req->getStack_of_QNodeIndexesArraySize();
-  std::vector<int> path;
+  std::vector<QNodeAddr> path;
   for (int i = 0; i < hop_count; i++) {
     path.push_back(req->getStack_of_QNodeIndexes(i));
   }
@@ -87,7 +88,7 @@ std::vector<int> RuleSetGenerator::collectPath(messages::ConnectionSetupRequest*
   return path;
 }
 
-std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int owner_address, int num_measure, int shared_rule_tag) {
+std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(QNodeAddr partner_address, QNodeAddr owner_address, int num_measure, int shared_rule_tag) {
   auto tomography_rule = std::make_unique<Rule>(partner_address, shared_rule_tag, shared_rule_tag);
   tomography_rule->setName("tomography with address " + std::to_string(partner_address));
 
@@ -106,7 +107,7 @@ std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int 
   return tomography_rule;
 }
 
-std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType purification_type, int shared_rule_tag) {
+std::unique_ptr<Rule> RuleSetGenerator::purifyRule(QNodeAddr partner_address, PurType purification_type, int shared_rule_tag) {
   auto purify_rule = std::make_unique<Rule>(partner_address, shared_rule_tag, -1);
   // TODO: add purification protocol to rule name
   purify_rule->setName("purification with " + std::to_string(partner_address));
@@ -138,7 +139,7 @@ std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType 
   return purify_rule;
 }
 
-std::unique_ptr<Rule> RuleSetGenerator::purificationCorrelationRule(int partner_address, PurType protocol, int shared_rule_tag) {
+std::unique_ptr<Rule> RuleSetGenerator::purificationCorrelationRule(QNodeAddr partner_address, PurType protocol, int shared_rule_tag) {
   auto correlation_rule = std::make_unique<Rule>(partner_address, -1, shared_rule_tag);
   correlation_rule->setName("purification correlation with " + std::to_string(partner_address));
 
@@ -153,8 +154,8 @@ std::unique_ptr<Rule> RuleSetGenerator::purificationCorrelationRule(int partner_
   return correlation_rule;
 }
 
-std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::pair<int, int> partner_address, int shared_rule_tag) {
-  auto swap_rule = std::make_unique<Rule>(std::vector<int>{partner_address.first, partner_address.second}, shared_rule_tag, -1);
+std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::pair<QNodeAddr, QNodeAddr> partner_address, int shared_rule_tag) {
+  auto swap_rule = std::make_unique<Rule>(std::vector<QNodeAddr>{partner_address.first, partner_address.second}, shared_rule_tag, -1);
   swap_rule->setName("swap between " + std::to_string(partner_address.first) + " and " + std::to_string(partner_address.second));
   auto condition = std::make_unique<Condition>();
   auto enough_resource_clause_first = std::make_unique<EnoughResourceConditionClause>(1, partner_address.first);
@@ -162,14 +163,14 @@ std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::pair<int, int> partner_add
   condition->addClause(std::move(enough_resource_clause_first));
   condition->addClause(std::move(enough_resource_clause_second));
 
-  auto swap_action = std::make_unique<EntanglementSwapping>(std::vector<int>({partner_address.first, partner_address.second}), shared_rule_tag);
+  auto swap_action = std::make_unique<EntanglementSwapping>(std::vector<QNodeAddr>({partner_address.first, partner_address.second}), shared_rule_tag);
 
   swap_rule->setCondition(std::move(condition));
   swap_rule->setAction(std::move(swap_action));
   return swap_rule;
 }
 
-std::unique_ptr<Rule> RuleSetGenerator::swapCorrectionRule(int swapper_address, int shared_rule_tag) {
+std::unique_ptr<Rule> RuleSetGenerator::swapCorrectionRule(QNodeAddr swapper_address, int shared_rule_tag) {
   auto correction_rule = std::make_unique<Rule>(swapper_address, -1, shared_rule_tag);
   correction_rule->setName("swapping correction from " + std::to_string(swapper_address));
   auto condition = std::make_unique<Condition>();

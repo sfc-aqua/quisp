@@ -8,6 +8,7 @@
 
 using namespace omnetpp;
 using namespace quisp::messages;
+using namespace quisp::types;
 
 namespace quisp::modules {
 
@@ -62,7 +63,7 @@ void Router::initialize() {
     // Returns the next link/gate in the ith shortest paths towards the target node.
     cGate *parentModuleGate = thisNode->getPath(0)->getLocalGate();
     int gateIndex = parentModuleGate->getIndex();
-    int address = topo->getNode(i)->getModule()->par("address");
+    auto address = QNodeAddr{topo->getNode(i)->getModule()->par("address").stringValue()};
 
     // Store gate index per destination from this node
     routing_table[address] = gateIndex;
@@ -79,7 +80,7 @@ void Router::handleMessage(cMessage *msg) {
   // check the header of the received package
   Header *pk = check_and_cast<Header *>(msg);
 
-  int dest_addr = pk->getDestAddr();
+  auto dest_addr = pk->getDestAddr();
   int who_are_you = pk->getKind();
 
   // If destination is this node: Path selection

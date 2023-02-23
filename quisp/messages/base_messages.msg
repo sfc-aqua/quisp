@@ -3,12 +3,19 @@ cplusplus  {{
     #include <modules/QNIC.h>
     #include <rules/RuleSet.h>
     #include <nlohmann/json.hpp>
+    #include <types/QNodeAddr.h>
     using quisp::rules::RuleSet;
     using quisp::modules::QNIC_pair_info;
     using nlohmann::json;
+    using quisp::types::QNodeAddr;
 }}
 
 class QNIC_type {
+    @existingClass;
+    @opaque;
+};
+
+class QNodeAddr {
     @existingClass;
     @opaque;
 };
@@ -32,8 +39,8 @@ namespace quisp::messages;
 
 packet Header
 {
-    int srcAddr;
-    int destAddr;
+    QNodeAddr srcAddr;
+    QNodeAddr destAddr;
     int hopCount;
 }
 

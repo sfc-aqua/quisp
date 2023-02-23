@@ -17,7 +17,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
  public:
   Strategy(TestQNode* _qnode) : parent_qnode(_qnode) {}
   cModule* getNode() override { return parent_qnode; }
-  int getNodeAddr() override { return parent_qnode->address; }
+  QNodeAddr getNodeAddr() override { return parent_qnode->address; }
 
  private:
   TestQNode* parent_qnode;
@@ -35,7 +35,7 @@ class Router : public OriginalRouter {
     rePort = new TestGate(this, "rePort$o");
     cmPort = new TestGate(this, "cmPort$o");
     queueGate = new TestGate(this, "toQueue");
-    routing_table.insert({8, queueGate->getId()});
+    routing_table.insert({QNodeAddr{8}, queueGate->getId()});
   }
 
   TestGate* hmPort;
@@ -73,13 +73,13 @@ class RouterTest : public ::testing::Test {
 
 TEST_F(RouterTest, handlePacketForUnknownAddr) {
   auto msg = new ConnectionSetupRequest;
-  msg->setDestAddr(7);
+  msg->setDestAddr(QNodeAddr{7});
   EXPECT_THROW({ router->handleMessage(msg); }, cRuntimeError);
 }
 
 TEST_F(RouterTest, handlePacketForOtherNode) {
   auto msg = new ConnectionSetupRequest;
-  msg->setDestAddr(8);
+  msg->setDestAddr(QNodeAddr{8});
   router->handleMessage(msg);
   ASSERT_EQ(router->queueGate->messages.size(), 1);
   {
@@ -91,91 +91,91 @@ TEST_F(RouterTest, handlePacketForOtherNode) {
 
 TEST_F(RouterTest, handleConnSetupRequest) {
   auto msg = new ConnectionSetupRequest;
-  msg->setDestAddr(10);
+  msg->setDestAddr(QNodeAddr{10});
   router->handleMessage(msg);
   ASSERT_EQ(router->cmPort->messages.size(), 1);
 }
 
 TEST_F(RouterTest, handleConnSetupResponse) {
   auto msg = new ConnectionSetupResponse;
-  msg->setDestAddr(10);
+  msg->setDestAddr(QNodeAddr{10});
   router->handleMessage(msg);
   ASSERT_EQ(router->cmPort->messages.size(), 1);
 }
 
 TEST_F(RouterTest, handleBSMTimingNotification) {
   auto msg = new BSMTimingNotification;
-  msg->setDestAddr(10);
+  msg->setDestAddr(QNodeAddr{10});
   router->handleMessage(msg);
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
 TEST_F(RouterTest, handleEPPSTimingNotifier) {
   auto msg = new EPPStimingNotifier;
-  msg->setDestAddr(10);
+  msg->setDestAddr(QNodeAddr{10});
   router->handleMessage(msg);
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
 TEST_F(RouterTest, handleRejectConnectionSetupReq) {
   auto msg = new RejectConnectionSetupRequest;
-  msg->setDestAddr(10);
+  msg->setDestAddr(QNodeAddr{10});
   router->handleMessage(msg);
   ASSERT_EQ(router->cmPort->messages.size(), 1);
 }
 
 TEST_F(RouterTest, handleInternalRuleSetForwarding) {
   auto msg = new InternalRuleSetForwarding;
-  msg->setDestAddr(10);
+  msg->setDestAddr(QNodeAddr{10});
   router->handleMessage(msg);
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
 TEST_F(RouterTest, handleInternalRuleSetForwarding_Application) {
   auto msg = new InternalRuleSetForwarding_Application;
-  msg->setDestAddr(10);
+  msg->setDestAddr(QNodeAddr{10});
   router->handleMessage(msg);
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
 TEST_F(RouterTest, handleSwappingResult) {
   auto msg = new SwappingResult;
-  msg->setDestAddr(10);
+  msg->setDestAddr(QNodeAddr{10});
   router->handleMessage(msg);
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
 TEST_F(RouterTest, handleLinkTomographyAck) {
   auto msg = new LinkTomographyAck;
-  msg->setDestAddr(10);
+  msg->setDestAddr(QNodeAddr{10});
   router->handleMessage(msg);
   ASSERT_EQ(router->hmPort->messages.size(), 1);
 }
 
 TEST_F(RouterTest, handleLinkTomographyRequest) {
   auto msg = new LinkTomographyRequest;
-  msg->setDestAddr(10);
+  msg->setDestAddr(QNodeAddr{10});
   router->handleMessage(msg);
   ASSERT_EQ(router->hmPort->messages.size(), 1);
 }
 
 TEST_F(RouterTest, handleLinkTomographyRuleSet) {
   auto msg = new LinkTomographyRuleSet;
-  msg->setDestAddr(10);
+  msg->setDestAddr(QNodeAddr{10});
   router->handleMessage(msg);
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
 TEST_F(RouterTest, handlePurificationResult) {
   auto msg = new PurificationResult;
-  msg->setDestAddr(10);
+  msg->setDestAddr(QNodeAddr{10});
   router->handleMessage(msg);
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }
 
 TEST_F(RouterTest, handleStopEmitting) {
   auto msg = new StopEmitting;
-  msg->setDestAddr(10);
+  msg->setDestAddr(QNodeAddr{10});
   router->handleMessage(msg);
   ASSERT_EQ(router->rePort->messages.size(), 1);
 }

@@ -92,7 +92,7 @@ class StationaryQubit : public IStationaryQubit {
   // Standard deviation
   double emission_jittering_standard_deviation;
   int stationary_qubit_address;
-  int node_address;
+  types::QNodeAddr node_address;
   int qnic_address;
 
   utils::ComponentProvider provider;

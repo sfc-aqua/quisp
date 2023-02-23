@@ -7,6 +7,7 @@ namespace quisp::modules::Logger {
 using quisp::messages::ConnectionSetupRequest;
 using quisp::messages::ConnectionSetupResponse;
 using quisp::messages::RejectConnectionSetupRequest;
+using quisp::types::QNodeAddr;
 
 JsonLogger::JsonLogger(std::shared_ptr<spdlog::logger> logger) : _logger(logger) {
   std::string jsonpattern = {"{%v}"};
@@ -20,7 +21,7 @@ void JsonLogger::setModule(omnetpp::cModule const* const mod) {
   module_path = mod->getFullPath();
 }
 
-void JsonLogger::setQNodeAddress(int addr) { qnode_address = addr; }
+void JsonLogger::setQNodeAddress(QNodeAddr addr) { qnode_address = addr; }
 
 void JsonLogger::logPacket(const std::string& event_type, omnetpp::cMessage const* const msg) {
   auto current_time = omnetpp::simTime();
@@ -39,9 +40,9 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     std::stringstream os;
     os << "\"msg_type\": \"ConnectionSetupRequest\"";
     os << ", \"application_id\": " << req->getApplicationId();
-    os << ", \"actual_dest_addr\": " << req->getActual_destAddr();
-    os << ", \"actual_src_addr\": " << req->getActual_srcAddr();
-    os << ", \"num_measure\": " << req->getNum_measure();
+    os << ", \"actual_dest_addr\": \"" << req->getActual_destAddr();
+    os << "\", \"actual_src_addr\": \"" << req->getActual_srcAddr();
+    os << "\", \"num_measure\": " << req->getNum_measure();
     os << ", \"num_required_bell_pairs\": " << req->getNumber_of_required_Bellpairs();
     return os.str();
   }
@@ -49,18 +50,18 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
     std::stringstream os;
     os << "\"msg_type\": \"RejectConnectionSetupRequest\"";
     os << ", \"application_id\": " << req->getApplicationId();
-    os << ", \"actual_dest_addr\": " << req->getActual_destAddr();
-    os << ", \"actual_src_addr\": " << req->getActual_srcAddr();
-    os << ", \"num_required_bell_pairs\": " << req->getNumber_of_required_Bellpairs();
+    os << ", \"actual_dest_addr\": \"" << req->getActual_destAddr();
+    os << "\", \"actual_src_addr\": \"" << req->getActual_srcAddr();
+    os << "\", \"num_required_bell_pairs\": " << req->getNumber_of_required_Bellpairs();
     return os.str();
   }
   if (auto* req = dynamic_cast<const quisp::messages::ConnectionSetupResponse*>(msg)) {
     std::stringstream os;
     os << "\"msg_type\": \"ConnectionSetupResponse\"";
     os << ", \"application_id\": " << req->getApplicationId();
-    os << ", \"actual_dest_addr\": " << req->getActual_destAddr();
-    os << ", \"actual_src_addr\": " << req->getActual_srcAddr();
-    os << ", \"ruleset_id\": " << req->getRuleSet_id();
+    os << ", \"actual_dest_addr\": \"" << req->getActual_destAddr();
+    os << "\", \"actual_src_addr\": \"" << req->getActual_srcAddr();
+    os << "\", \"ruleset_id\": " << req->getRuleSet_id();
     os << ", \"ruleset\": " << req->getRuleSet();
     os << ", \"application_type\": " << req->getApplication_type();
     os << ", \"stack_of_qnode_indices\": [";
@@ -75,9 +76,9 @@ std::string JsonLogger::format(omnetpp::cMessage const* const msg) {
   return "\"msg\": \"unknown class\": \"" + msg->getFullPath() + "\"";
 }
 
-void JsonLogger::logBellPairInfo(const std::string& event_type, int partner_addr, quisp::modules::QNIC_type qnic_type, int qnic_index, int qubit_index) {
+void JsonLogger::logBellPairInfo(const std::string& event_type, QNodeAddr partner_addr, quisp::modules::QNIC_type qnic_type, int qnic_index, int qubit_index) {
   auto current_time = omnetpp::simTime();
-  _logger->info("\"simtime\": {}, \"event_type\": \"BellPair{}\", \"address\": \"{}\", \"partner_addr\": {}, \"qnic_type\": {}, \"qnic_index\": {}, \"qubit_index\": {}",
+  _logger->info("\"simtime\": {}, \"event_type\": \"BellPair{}\", \"address\": \"{}\", \"partner_addr\": \"{}\", \"qnic_type\": {}, \"qnic_index\": {}, \"qubit_index\": {}",
                 current_time, event_type, qnode_address, partner_addr, qnic_type, qnic_index, qubit_index);
 }
 

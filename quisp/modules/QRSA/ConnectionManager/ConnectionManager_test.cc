@@ -132,19 +132,19 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   // qnic_index(id)     11       12           13       14           15       16
   // [QNode2](qnic_addr:101) -- (102)[QNode3](103) -- (104)[QNode4](105) -- (106)[QNode5(test target)]
   req->setApplicationId(1);
-  req->setActual_destAddr(5);
-  req->setActual_srcAddr(2);
-  req->setDestAddr(5);
-  req->setSrcAddr(4);
+  req->setActual_destAddr(QNodeAddr{5});
+  req->setActual_srcAddr(QNodeAddr{2});
+  req->setDestAddr(QNodeAddr{5});
+  req->setSrcAddr(QNodeAddr{4});
   req->setStack_of_QNICsArraySize(3);
   req->setStack_of_QNodeIndexesArraySize(3);
-  req->setStack_of_QNodeIndexes(0, 2);
-  req->setStack_of_QNodeIndexes(1, 3);
-  req->setStack_of_QNodeIndexes(2, 4);
+  req->setStack_of_QNodeIndexes(0, QNodeAddr{2});
+  req->setStack_of_QNodeIndexes(1, QNodeAddr{3});
+  req->setStack_of_QNodeIndexes(2, QNodeAddr{4});
   req->setStack_of_QNICs(0, QNIC_pair_info{.fst = NULL_CONNECTION_SETUP_INFO.qnic, .snd = {.type = QNIC_E, .index = 11, .address = 101}});
   req->setStack_of_QNICs(1, QNIC_pair_info{.fst = {.type = QNIC_E, .index = 12, .address = 102}, .snd = {.type = QNIC_E, .index = 13, .address = 103}});
   req->setStack_of_QNICs(2, QNIC_pair_info{.fst = {.type = QNIC_E, .index = 14, .address = 104}, .snd = {.type = QNIC_E, .index = 15, .address = 105}});
-  EXPECT_CALL(*routing_daemon, findQNicAddrByDestAddr(4)).Times(1).WillOnce(Return(106));
+  EXPECT_CALL(*routing_daemon, findQNicAddrByDestAddr(QNodeAddr(4))).Times(1).WillOnce(Return(106));
 
   sim->setContext(connection_manager);
   connection_manager->respondToRequest(req);
@@ -155,20 +155,20 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     auto *packetFor2 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[0]);
     ASSERT_NE(packetFor2, nullptr);
     EXPECT_EQ(packetFor2->getApplicationId(), 1);
-    EXPECT_EQ(packetFor2->getDestAddr(), 2);
+    EXPECT_EQ(packetFor2->getDestAddr(), QNodeAddr{2});
     auto ruleset = packetFor2->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 2);
     auto expected_ruleset = R"({
   "num_rules": 2,
-  "owner_address": 2,
+  "owner_address": "0.2",
   "rules": [
     {
       "action": {
         "options": {
           "interface": [
             {
-              "partner_address": 3
+              "partner_address": "0.3"
             }
           ],
           "shared_rule_tag": 1
@@ -180,7 +180,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
           {
             "options": {
               "interface": {
-                "partner_address": 3
+                "partner_address": "0.3"
               },
               "shared_rule_tag": 1
             },
@@ -190,10 +190,10 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       },
       "interface": [
         {
-          "partner_address": 3
+          "partner_address": "0.3"
         }
       ],
-      "name": "swapping correction from 3",
+      "name": "swapping correction from 0.3",
       "receive_tag": 1,
       "send_tag": -1
     },
@@ -202,11 +202,11 @@ TEST(ConnectionManagerTest, RespondToRequest) {
         "options": {
           "interface": [
             {
-              "partner_address": 5
+              "partner_address": "0.5"
             }
           ],
           "num_measure": 0,
-          "owner_address": 2
+          "owner_address": "0.2"
         },
         "type": "tomography"
       },
@@ -215,7 +215,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
           {
             "options": {
               "interface": {
-                "partner_address": 5
+                "partner_address": "0.5"
               },
               "num_resource": 1
             },
@@ -224,7 +224,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
           {
             "options": {
               "interface": {
-                "partner_address": 5
+                "partner_address": "0.5"
               },
               "num_measure": 0
             },
@@ -234,10 +234,10 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       },
       "interface": [
         {
-          "partner_address": 5
+          "partner_address": "0.5"
         }
       ],
-      "name": "tomography with address 5",
+      "name": "tomography with address 0.5",
       "receive_tag": 3,
       "send_tag": 3
     }
@@ -252,21 +252,21 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     auto *packetFor3 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[1]);
     ASSERT_NE(packetFor3, nullptr);
     EXPECT_EQ(packetFor3->getApplicationId(), 1);
-    EXPECT_EQ(packetFor3->getDestAddr(), 3);
+    EXPECT_EQ(packetFor3->getDestAddr(), QNodeAddr{3});
     auto ruleset = packetFor3->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 2);
 
     auto expected_ruleset = R"({
   "num_rules": 2,
-  "owner_address": 3,
+  "owner_address": "0.3",
   "rules": [
     {
       "action": {
         "options": {
           "interface": [
             {
-              "partner_address": 4
+              "partner_address": "0.4"
             }
           ],
           "shared_rule_tag": 2
@@ -278,7 +278,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
           {
             "options": {
               "interface": {
-                "partner_address": 4
+                "partner_address": "0.4"
               },
               "shared_rule_tag": 2
             },
@@ -288,10 +288,10 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       },
       "interface": [
         {
-          "partner_address": 4
+          "partner_address": "0.4"
         }
       ],
-      "name": "swapping correction from 4",
+      "name": "swapping correction from 0.4",
       "receive_tag": 2,
       "send_tag": -1
     },
@@ -300,18 +300,18 @@ TEST(ConnectionManagerTest, RespondToRequest) {
         "options": {
           "interface": [
             {
-              "partner_address": 2
+              "partner_address": "0.2"
             },
             {
-              "partner_address": 5
+              "partner_address": "0.5"
             }
           ],
           "remote_interface": [
             {
-              "partner_address": 2
+              "partner_address": "0.2"
             },
             {
-              "partner_address": 5
+              "partner_address": "0.5"
             }
           ],
           "shared_rule_tag": 1
@@ -323,7 +323,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
           {
             "options": {
               "interface": {
-                "partner_address": 2
+                "partner_address": "0.2"
               },
               "num_resource": 1
             },
@@ -332,7 +332,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
           {
             "options": {
               "interface": {
-                "partner_address": 5
+                "partner_address": "0.5"
               },
               "num_resource": 1
             },
@@ -342,13 +342,13 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       },
       "interface": [
         {
-          "partner_address": 2
+          "partner_address": "0.2"
         },
         {
-          "partner_address": 5
+          "partner_address": "0.5"
         }
       ],
-      "name": "swap between 2 and 5",
+      "name": "swap between 0.2 and 0.5",
       "receive_tag": -1,
       "send_tag": 1
     }
@@ -363,7 +363,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     auto *packetFor4 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[2]);
     ASSERT_NE(packetFor4, nullptr);
     EXPECT_EQ(packetFor4->getApplicationId(), 1);
-    EXPECT_EQ(packetFor4->getDestAddr(), 4);
+    EXPECT_EQ(packetFor4->getDestAddr(), QNodeAddr{4});
     auto ruleset = packetFor4->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 1);
@@ -371,25 +371,25 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     // rule3 (id: 2): swapping with [3, 5], next to -1
     auto expected_ruleset = R"({
   "num_rules": 1,
-  "owner_address": 4,
+  "owner_address": "0.4",
   "rules": [
     {
       "action": {
         "options": {
           "interface": [
             {
-              "partner_address": 3
+              "partner_address": "0.3"
             },
             {
-              "partner_address": 5
+              "partner_address": "0.5"
             }
           ],
           "remote_interface": [
             {
-              "partner_address": 3
+              "partner_address": "0.3"
             },
             {
-              "partner_address": 5
+              "partner_address": "0.5"
             }
           ],
           "shared_rule_tag": 2
@@ -401,7 +401,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
           {
             "options": {
               "interface": {
-                "partner_address": 3
+                "partner_address": "0.3"
               },
               "num_resource": 1
             },
@@ -410,7 +410,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
           {
             "options": {
               "interface": {
-                "partner_address": 5
+                "partner_address": "0.5"
               },
               "num_resource": 1
             },
@@ -420,13 +420,13 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       },
       "interface": [
         {
-          "partner_address": 3
+          "partner_address": "0.3"
         },
         {
-          "partner_address": 5
+          "partner_address": "0.5"
         }
       ],
-      "name": "swap between 3 and 5",
+      "name": "swap between 0.3 and 0.5",
       "receive_tag": -1,
       "send_tag": 2
     }
@@ -441,7 +441,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     auto *packetFor5 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[3]);
     ASSERT_NE(packetFor5, nullptr);
     EXPECT_EQ(packetFor5->getApplicationId(), 1);
-    EXPECT_EQ(packetFor5->getDestAddr(), 5);
+    EXPECT_EQ(packetFor5->getDestAddr(), QNodeAddr{5});
     auto ruleset = packetFor5->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 3);
@@ -449,14 +449,14 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     // rule6 (id: 5): tomography with 1, to (id: -1)
     auto expected_ruleset = R"({
   "num_rules": 3,
-  "owner_address": 5,
+  "owner_address": "0.5",
   "rules": [
     {
       "action": {
         "options": {
           "interface": [
             {
-              "partner_address": 4
+              "partner_address": "0.4"
             }
           ],
           "shared_rule_tag": 2
@@ -468,7 +468,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
           {
             "options": {
               "interface": {
-                "partner_address": 4
+                "partner_address": "0.4"
               },
               "shared_rule_tag": 2
             },
@@ -478,10 +478,10 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       },
       "interface": [
         {
-          "partner_address": 4
+          "partner_address": "0.4"
         }
       ],
-      "name": "swapping correction from 4",
+      "name": "swapping correction from 0.4",
       "receive_tag": 2,
       "send_tag": -1
     },
@@ -490,7 +490,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
         "options": {
           "interface": [
             {
-              "partner_address": 3
+              "partner_address": "0.3"
             }
           ],
           "shared_rule_tag": 1
@@ -502,7 +502,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
           {
             "options": {
               "interface": {
-                "partner_address": 3
+                "partner_address": "0.3"
               },
               "shared_rule_tag": 1
             },
@@ -512,10 +512,10 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       },
       "interface": [
         {
-          "partner_address": 3
+          "partner_address": "0.3"
         }
       ],
-      "name": "swapping correction from 3",
+      "name": "swapping correction from 0.3",
       "receive_tag": 1,
       "send_tag": -1
     },
@@ -524,11 +524,11 @@ TEST(ConnectionManagerTest, RespondToRequest) {
         "options": {
           "interface": [
             {
-              "partner_address": 2
+              "partner_address": "0.2"
             }
           ],
           "num_measure": 0,
-          "owner_address": 5
+          "owner_address": "0.5"
         },
         "type": "tomography"
       },
@@ -537,7 +537,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
           {
             "options": {
               "interface": {
-                "partner_address": 2
+                "partner_address": "0.2"
               },
               "num_resource": 1
             },
@@ -546,7 +546,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
           {
             "options": {
               "interface": {
-                "partner_address": 2
+                "partner_address": "0.2"
               },
               "num_measure": 0
             },
@@ -556,10 +556,10 @@ TEST(ConnectionManagerTest, RespondToRequest) {
       },
       "interface": [
         {
-          "partner_address": 2
+          "partner_address": "0.2"
         }
       ],
-      "name": "tomography with address 2",
+      "name": "tomography with address 0.2",
       "receive_tag": 3,
       "send_tag": 3
     }

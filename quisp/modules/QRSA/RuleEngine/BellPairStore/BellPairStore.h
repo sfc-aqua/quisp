@@ -4,10 +4,11 @@
 #include <modules/QNIC.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/QRSA.h>
+#include <types/QNodeAddr.h>
 
 namespace quisp::modules {
 
-using QNodeAddr = int;
+using types::QNodeAddr;
 using QNicIndex = int;
 // entangled partner qnode address -> qubit
 using PartnerAddrQubitMap = std::multimap<QNodeAddr, qrsa::IQubitRecord*>;

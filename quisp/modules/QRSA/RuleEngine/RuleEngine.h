@@ -38,7 +38,7 @@ using qubit_record::IQubitRecord;
 struct SwappingResultData {
   unsigned long ruleset_id;
   int shared_tag;
-  int new_partner_addr;
+  types::QNodeAddr new_partner_addr;
   int operation_type;
   int qubit_index;
 };
@@ -57,7 +57,7 @@ class RuleEngine : public IRuleEngine, public Logger::LoggerBase {
   friend runtime_callback::RuntimeCallback;
   RuleEngine();
   ~RuleEngine();
-  int parentAddress;  // Parent QNode's address
+  types::QNodeAddr parentAddress;  // Parent QNode's address
   messages::EmitPhotonRequest *emt;
   int number_of_qnics_all;  // qnic,qnic_r,_qnic_rp
   int number_of_qnics;

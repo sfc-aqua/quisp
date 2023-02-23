@@ -1,7 +1,7 @@
 #pragma once
 #include <backends/Backends.h>
+#include <backends/QubitConfiguration.h>
 #include <tuple>
-#include "backends/QubitConfiguration.h"
 
 namespace quisp::modules::common {
 

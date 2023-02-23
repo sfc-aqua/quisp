@@ -6,21 +6,24 @@
 
 #include "messages/classical_messages.h"
 #include "rules/RuleSet.h"
+#include "types/QNodeAddr.h"
 
 namespace quisp::modules::ruleset_gen {
 
+using types::QNodeAddr;
+
 class RuleSetGenerator {
  public:
-  RuleSetGenerator(int responder_addr) : responder_addr(responder_addr) {}
+  RuleSetGenerator(QNodeAddr responder_addr) : responder_addr(responder_addr) {}
 
   /**
    * @brief generate RuleSets for the given connection setup request.
    *
    * @param req
    * @param ruleset_id
-   * @return std::map<int, nlohmann::json> a map of json serialized RuleSets and its node addresses as key
+   * @return std::map<QNodeAddr, nlohmann::json> a map of json serialized RuleSets and its node addresses as key
    */
-  std::map<int, nlohmann::json> generateRuleSets(messages::ConnectionSetupRequest* req, unsigned long ruleset_id);
+  std::map<QNodeAddr, nlohmann::json> generateRuleSets(messages::ConnectionSetupRequest* req, unsigned long ruleset_id);
 
   /**
    * @brief generate rules for each node in the path.
@@ -31,8 +34,8 @@ class RuleSetGenerator {
    * @param path             store address from initiator to responder
    * @param shared_rule_tag
    */
-  void generateReverseSwapAtHalfRuleSets(int left_node_index, int right_node_index, std::map<int, std::vector<std::unique_ptr<rules::Rule>>>& rules_map, std::vector<int>& path,
-                                         int& shared_rule_tag);
+  void generateReverseSwapAtHalfRuleSets(int left_node_index, int right_node_index, std::map<QNodeAddr, std::vector<std::unique_ptr<rules::Rule>>>& rules_map,
+                                         std::vector<QNodeAddr>& path, int& shared_rule_tag);
 
  protected:
   /**
@@ -41,7 +44,7 @@ class RuleSetGenerator {
    * @param req
    * @return std::vector<int> vector to store node addresses
    */
-  std::vector<int> collectPath(messages::ConnectionSetupRequest* req);
+  std::vector<QNodeAddr> collectPath(messages::ConnectionSetupRequest* req);
 
   /**
    * @brief create tomography rule
@@ -52,7 +55,7 @@ class RuleSetGenerator {
    * @param shared_rule_tag
    * @return std::unique_ptr<rules::Rule>
    */
-  std::unique_ptr<rules::Rule> tomographyRule(int partner_address, int owner_address, int num_measure, int shared_rule_tag);
+  std::unique_ptr<rules::Rule> tomographyRule(QNodeAddr partner_address, QNodeAddr owner_address, int num_measure, int shared_rule_tag);
 
   /**
    * @brief create purification rule
@@ -62,7 +65,7 @@ class RuleSetGenerator {
    * @param shared_rule_tag
    * @return std::unique_ptr<rules::Rule>
    */
-  std::unique_ptr<rules::Rule> purifyRule(int partner_address, rules::PurType purification_type, int shared_rule_tag);
+  std::unique_ptr<rules::Rule> purifyRule(QNodeAddr partner_address, rules::PurType purification_type, int shared_rule_tag);
 
   /**
    * @brief create rule that waits for purification measurement result and check for its correlation
@@ -72,7 +75,7 @@ class RuleSetGenerator {
    * @param shared_rule_tag
    * @return std::unique_ptr<rules::Rule>
    */
-  std::unique_ptr<rules::Rule> purificationCorrelationRule(int partner_address, rules::PurType purification_protocol, int shared_rule_tag);
+  std::unique_ptr<rules::Rule> purificationCorrelationRule(QNodeAddr partner_address, rules::PurType purification_protocol, int shared_rule_tag);
 
   /**
    * @brief create entanglement swapping rule
@@ -81,7 +84,7 @@ class RuleSetGenerator {
    * @param shared_rule_tag
    * @return std::unique_ptr<rules::Rule>
    */
-  std::unique_ptr<rules::Rule> swapRule(std::pair<int, int> partner_address, int shared_rule_tag);
+  std::unique_ptr<rules::Rule> swapRule(std::pair<QNodeAddr, QNodeAddr> partner_address, int shared_rule_tag);
 
   /**
    * @brief create rule that waits for the swapping correction/notification from swapper node
@@ -90,8 +93,8 @@ class RuleSetGenerator {
    * @param shared_rule_tag
    * @return std::unique_ptr<rules::Rule>
    */
-  std::unique_ptr<rules::Rule> swapCorrectionRule(int swapper_address, int shared_rule_tag);
+  std::unique_ptr<rules::Rule> swapCorrectionRule(QNodeAddr swapper_address, int shared_rule_tag);
 
-  int responder_addr;
+  QNodeAddr responder_addr;
 };
 }  // namespace quisp::modules::ruleset_gen

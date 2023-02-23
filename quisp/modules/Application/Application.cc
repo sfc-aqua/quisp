@@ -50,7 +50,7 @@ void Application::initialize() {
  * \brief Generate connection setup response packet
  * @param dest_addr Destination address of this request
  */
-ConnectionSetupRequest *Application::createConnectionSetupRequest(int dest_addr, int num_of_required_resources) {
+ConnectionSetupRequest *Application::createConnectionSetupRequest(QNodeAddr dest_addr, int num_of_required_resources) {
   ConnectionSetupRequest *pk = new ConnectionSetupRequest("ConnSetupRequest");
   pk->setApplicationId(id);
   pk->setActual_srcAddr(my_address);
@@ -107,13 +107,13 @@ void Application::handleMessage(cMessage *msg) {
  */
 void Application::createEndNodeWeightMap() {
   cTopology *topo = new cTopology("topo");
-  std::unordered_map<int, int> temp_end_node_weight_map;
+  std::unordered_map<QNodeAddr, int> temp_end_node_weight_map;
 
   topo->extractByParameter("node_type", provider.getQNode()->par("node_type").str().c_str());
 
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cModule *endnodeModule = topo->getNode(i)->getModule();
-    int address = endnodeModule->par("address").intValue();
+    auto address = QNodeAddr{endnodeModule->par("address").str().c_str()};
     int weight = endnodeModule->par("mass").intValue();
 
     temp_end_node_weight_map[address] = weight;
@@ -127,9 +127,13 @@ void Application::createEndNodeWeightMap() {
     return;
   }
 
-  auto recipient_addresses = ((cValueArray *)(par("possible_recipients").objectValue()))->asIntVector();
+  auto recipient_addresses_str = ((cValueArray *)(par("possible_recipients").objectValue()))->asStringVector();
+  std::vector<QNodeAddr> recipient_addresses = {};
+  for (auto &s : recipient_addresses_str) {
+    recipient_addresses.push_back(QNodeAddr{s.c_str()});
+  }
 
-  for (int address : recipient_addresses) {
+  for (auto address : recipient_addresses) {
     if (temp_end_node_weight_map.find(address) == temp_end_node_weight_map.end()) {
       error("possible recipints list contains non-existing address");
     }
@@ -147,7 +151,7 @@ void Application::createEndNodeWeightMap() {
 
 void Application::generateTraffic() {
   std::vector<int> weights;
-  std::vector<int> addresses;
+  std::vector<QNodeAddr> addresses;
 
   cConfiguration *config = getEnvir()->getConfig();
   auto *sim_time_limit_option = cConfigOption::get("sim-time-limit");
@@ -172,7 +176,7 @@ void Application::generateTraffic() {
   simtime_t send_time = simTime() + par("request_generation_interval").doubleValue();
 
   while (send_time < generate_up_to_time) {
-    int dest_addr = addresses[dist(gen)];
+    auto dest_addr = addresses[dist(gen)];
     int num_request_bell_pair = par("number_of_bellpair").intValue();
     ConnectionSetupRequest *pk = createConnectionSetupRequest(dest_addr, num_request_bell_pair);
     EV_INFO << "Node " << my_address << " will initiate connection to " << dest_addr << " at " << send_time << " with " << num_request_bell_pair << " Bell pairs\n";
