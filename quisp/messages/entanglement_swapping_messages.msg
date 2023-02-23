@@ -27,7 +27,7 @@ packet SwappingResult extends Header{
     int operation_type_right;
 
     int operation_type; // when this would reach the destination
-    int new_partner;
+    QNodeAddr new_partner;
     int new_partner_qnic_index;
     int new_partner_qnic_address;
     int measured_qubit_index;

@@ -9,6 +9,7 @@
 
 #include <utils/ComponentProvider.h>
 #include "IRealTimeController.h"
+#include "types/QNodeAddr.h"
 
 namespace quisp {
 namespace modules {
@@ -19,7 +20,7 @@ namespace modules {
  */
 class RealTimeController : public IRealTimeController {
  private:
-  int myAddress;
+  types::QNodeAddr myAddress;
 
  protected:
   virtual void initialize() override;

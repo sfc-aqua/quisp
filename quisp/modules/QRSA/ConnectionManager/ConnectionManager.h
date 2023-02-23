@@ -60,7 +60,7 @@ class ConnectionManager : public IConnectionManager, public Logger::LoggerBase {
   utils::ComponentProvider provider;
 
  protected:
-  int my_address;
+  types::QNodeAddr my_address;
   int num_of_qnics;
   std::map<int, std::queue<messages::ConnectionSetupRequest *>> connection_setup_buffer;  // key is qnic address
   std::map<int, int> connection_retry_count;  // key is qnic address

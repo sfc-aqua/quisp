@@ -12,8 +12,11 @@
 
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
 #include <modules/QRSA/QRSA.h>
+#include <types/QNodeAddr.h>
 
 namespace quisp::runtime {
+
+using quisp::types::QNodeAddr;
 
 using RuleId = int;
 
@@ -51,15 +54,6 @@ enum class ReturnCode : int {
   ERROR,
 };
 std::ostream& operator<<(std::ostream& stream, const ReturnCode& value);
-
-/// @brief internal class to describe QNode's address.
-struct QNodeAddr {
-  QNodeAddr(int val);
-  int val;
-};
-std::ostream& operator<<(std::ostream& stream, const QNodeAddr& value);
-bool operator<(const QNodeAddr& a, const QNodeAddr& b);
-bool operator==(const QNodeAddr& a, const QNodeAddr& b);
 
 /**
  * @brief describes Qubit id in a Program. This is like a local variable name
@@ -105,12 +99,6 @@ std::ostream& operator<<(std::ostream& stream, const Basis& value);
 namespace std {
 // hash functions
 template <>
-struct ::std::hash<quisp::runtime::QNodeAddr> {
- public:
-  size_t operator()(const quisp::runtime::QNodeAddr& addr) const { return std::hash<int>()(addr.val); }
-};
-
-template <>
 struct ::std::hash<quisp::runtime::QubitId> {
  public:
   size_t operator()(const quisp::runtime::QubitId& id) const { return std::hash<int>()(id.val); }
@@ -132,7 +120,7 @@ template <>
 struct ::std::hash<std::pair<quisp::runtime::QNodeAddr, quisp::runtime::RuleId>> {
  public:
   size_t operator()(const std::pair<quisp::runtime::QNodeAddr, quisp::runtime::RuleId>& p) const {
-    auto seed = std::hash<int>()(p.first.val);
+    auto seed = std::hash<quisp::runtime::QNodeAddr>()(p.first);
     // https://stackoverflow.com/questions/4948780/magic-number-in-boosthash-combine
     seed ^= std::hash<int>()(p.second) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     return seed;

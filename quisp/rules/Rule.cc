@@ -4,10 +4,11 @@
 #include "Condition.h"
 
 namespace quisp::rules {
+using types::QNodeAddr;
 
-Rule::Rule(int partner_address, int shared_tag, bool is_finalized) : shared_tag(shared_tag), is_finalized(is_finalized) { qnic_interfaces.push_back({partner_address}); };
+Rule::Rule(QNodeAddr partner_address, int shared_tag, bool is_finalized) : shared_tag(shared_tag), is_finalized(is_finalized) { qnic_interfaces.push_back({partner_address}); };
 
-Rule::Rule(std::vector<int> partner_address, int shared_tag, bool is_finalized) : shared_tag(shared_tag), is_finalized(is_finalized) {
+Rule::Rule(std::vector<QNodeAddr> partner_address, int shared_tag, bool is_finalized) : shared_tag(shared_tag), is_finalized(is_finalized) {
   for (int i = 0; i < partner_address.size(); i++) {
     qnic_interfaces.push_back({partner_address.at(i)});
   }

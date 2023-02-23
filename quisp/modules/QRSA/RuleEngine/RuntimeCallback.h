@@ -93,7 +93,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     LinkTomographyResult *pk = new LinkTomographyResult{"LinkTomographyResult"};
     auto src = rule_engine->parentAddress;
     pk->setSrcAddr(src);
-    pk->setDestAddr(partner_addr.val);
+    pk->setDestAddr(partner_addr);
     pk->setCount_id(count);
     pk->setPartner_address(src);  // Partner's partner is self/src
     pk->setKind(6);
@@ -116,7 +116,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
                                     int pur_type) override {
     auto *pkt = new PurificationResult{"PurificationResult"};
     pkt->setSrcAddr(rule_engine->parentAddress);
-    pkt->setDestAddr(partner_addr.val);
+    pkt->setDestAddr(partner_addr);
     pkt->setKind(7);
     pkt->setAction_index(action_index);
     pkt->setRule_id(rule.id);
@@ -134,7 +134,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
                                     int pur_type) override {
     auto *pkt = new DoublePurificationResult{"DoublePurificationResult"};
     pkt->setSrcAddr(rule_engine->parentAddress);
-    pkt->setDestAddr(partner_addr.val);
+    pkt->setDestAddr(partner_addr);
     pkt->setKind(7);
     pkt->setAction_index(action_index);
     pkt->setRule_id(rule.id);
@@ -153,7 +153,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
                                     bool result_ds, int pur_type) override {
     auto *pkt = new DS_DoublePurificationSecondResult{"DS_DoublePurificationSecondResult"};
     pkt->setSrcAddr(rule_engine->parentAddress);
-    pkt->setDestAddr(partner_addr.val);
+    pkt->setDestAddr(partner_addr);
     pkt->setKind(7);
     pkt->setAction_index(action_index);
     pkt->setRule_id(rule.id);
@@ -173,7 +173,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
                                        bool result_x, bool result_ds_z, bool result_ds_x, int pur_type) override {
     auto *pkt = new DS_DoublePurificationResult{"DS_DoublePurificationResult"};
     pkt->setSrcAddr(rule_engine->parentAddress);
-    pkt->setDestAddr(partner_addr.val);
+    pkt->setDestAddr(partner_addr);
     pkt->setKind(7);
     pkt->setAction_index(action_index);
     pkt->setRule_id(rule.id);
@@ -205,15 +205,15 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     pkt_for_right->setName("SwappingResult(Right)");
 
     // packet for left node
-    pkt_for_left->setDestAddr(left_partner_addr.val);
+    pkt_for_left->setDestAddr(left_partner_addr);
     pkt_for_left->setOperation_type(left_op);
-    pkt_for_left->setNew_partner(right_partner_addr.val);
+    pkt_for_left->setNew_partner(right_partner_addr);
     pkt_for_left->setMeasured_qubit_index(left_qubit_index);
 
     // packet for right node
-    pkt_for_right->setDestAddr(right_partner_addr.val);
+    pkt_for_right->setDestAddr(right_partner_addr);
     pkt_for_right->setOperation_type(right_op);
-    pkt_for_right->setNew_partner(left_partner_addr.val);
+    pkt_for_right->setNew_partner(left_partner_addr);
     pkt_for_right->setMeasured_qubit_index(right_qubit_index);
 
     rule_engine->send(pkt_for_left, "RouterPort$o");

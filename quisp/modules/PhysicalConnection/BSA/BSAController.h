@@ -21,7 +21,7 @@ namespace quisp::modules {
 struct BsaQNicId {
   QNIC_type type;
   int index;
-  int parent_node_addr;
+  QNodeAddr parent_node_addr;
 };
 
 /** @class BSAController BSA_Controller.h
@@ -45,7 +45,7 @@ class BSAController : public cSimpleModule {
  public:
   BSAController();
   ~BSAController();
-  int getExternalAdressFromPort(int port);
+  QNodeAddr getExternalAdressFromPort(int port);
   void cancelBSMTimeOut();
 
  protected:
@@ -65,7 +65,7 @@ class BSAController : public cSimpleModule {
   void sendMeasurementResults(BatchClickEvent* msg);
 
   // information for communications
-  int address;
+  QNodeAddr address;
   BsaQNicId left_qnic;
   BsaQNicId right_qnic;
   double left_travel_time;

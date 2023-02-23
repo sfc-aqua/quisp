@@ -129,7 +129,7 @@ void RoutingDaemon::generateRoutingTable(cTopology *topo) {
     }
     // Returns the next link/gate in the ith shortest paths towards the target node.
     cGate *parentModuleGate = this_node->getPath(0)->getLocalGate();
-    int destAddr = node->getModule()->par("address");
+    auto destAddr = QNodeAddr{node->getModule()->par("address").stringValue()};
 
     qrtable[destAddr] = getQNicAddr(parentModuleGate);
 
@@ -150,7 +150,7 @@ int RoutingDaemon::getQNicAddr(const cGate *const module_gate) {
  * and in one case RuleEngine), this is a direct call that they make.
  *
  */
-int RoutingDaemon::findQNicAddrByDestAddr(int destAddr) {
+int RoutingDaemon::findQNicAddrByDestAddr(QNodeAddr destAddr) {
   RoutingTable::iterator it = qrtable.find(destAddr);
   if (it == qrtable.end()) {
     EV << "Quantum: address " << destAddr << " unreachable from this node \n";

@@ -12,7 +12,7 @@ module QNIC
         int num_buffer = default(7);
         int self_qnic_address; // Buffer identifier/address
         int self_qnic_index;
-        int parent_node_address;
+        string parent_node_address;
         int neighbor_node_address @mutable = default(-1);
         int self_qnic_type;
         bool receiver = default(false);
@@ -40,7 +40,6 @@ module QNIC
         }
 
         lens: PhotonicSwitch {
-            address = parent.self_qnic_address;
             @display("i=block/dispatch;p=75.240005,117.810005");
         }
 

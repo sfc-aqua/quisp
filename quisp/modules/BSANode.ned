@@ -14,7 +14,7 @@ module BSANode
 {
     parameters:
         @display("i=BSA");
-        int address = default(0);
+        string address = default("0.0");
         string included_in_topology = default("yes");
         string node_type = default("BSA");
 

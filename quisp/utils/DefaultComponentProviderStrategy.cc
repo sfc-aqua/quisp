@@ -21,16 +21,17 @@ cModule *DefaultComponentProviderStrategy::getNode() {
   cModule *currentModule = self->getParentModule();
   auto *mod_type = currentModule->getModuleType();
   while (mod_type != QNodeType && mod_type != BSAType && mod_type != SPDCType) {
+    std::cout << mod_type->getFullName() << std::endl;
     currentModule = currentModule->getParentModule();
-    mod_type = currentModule->getModuleType();
     if (currentModule == nullptr) {
       throw cRuntimeError("Node module not found. Have you changed the type name in ned file?");
     }
+    mod_type = currentModule->getModuleType();
   }
   return currentModule;
 }
 
-QNodeAddr DefaultComponentProviderStrategy::getNodeAddr() { return QNodeAddr{getNode()->par("address").str().c_str()}; }
+QNodeAddr DefaultComponentProviderStrategy::getNodeAddr() { return QNodeAddr{getNode()->par("address").stringValue()}; }
 
 cModule *DefaultComponentProviderStrategy::getNeighborNode(cModule *qnic) {
   if (qnic == nullptr) throw cRuntimeError("failed to get neighbor node. given qnic is nullptr");

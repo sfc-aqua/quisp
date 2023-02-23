@@ -1,6 +1,7 @@
 #pragma once
 #include <modules/QNIC.h>
 #include <modules/QUBIT.h>
+#include <types/QNodeAddr.h>
 #include <nlohmann/json.hpp>
 
 using nlohmann::json;
@@ -8,7 +9,7 @@ using quisp::modules::QNIC_type;
 namespace quisp::rules {
 
 struct QnicInterface {
-  int partner_addr;
+  types::QNodeAddr partner_addr;
 };
 
 enum PurType : int {
@@ -47,8 +48,8 @@ inline void from_json(const json& j, QnicInterface& qi) { j.at("partner_address"
 class Action {
  public:
   Action() {}  // for deserialization
-  Action(int partner_addr);
-  Action(std::vector<int> partner_addr);
+  Action(types::QNodeAddr partner_addr);
+  Action(std::vector<types::QNodeAddr> partner_addr);
   virtual ~Action() {}
   std::vector<QnicInterface> qnic_interfaces;
 
@@ -59,7 +60,7 @@ class Action {
 class Purification : public Action {
  public:
   Purification(json serialized) { deserialize_json(serialized); }  // for deserialization
-  Purification(PurType purification_type, int partner_addr);
+  Purification(PurType purification_type, types::QNodeAddr partner_addr);
   PurType purification_type;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
@@ -68,7 +69,7 @@ class Purification : public Action {
 class EntanglementSwapping : public Action {
  public:
   EntanglementSwapping(json serialized) { deserialize_json(serialized); }  // for deserialization
-  EntanglementSwapping(std::vector<int> partner_addr);
+  EntanglementSwapping(std::vector<types::QNodeAddr> partner_addr);
   std::vector<QnicInterface> remote_qnic_interfaces;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
@@ -77,7 +78,7 @@ class EntanglementSwapping : public Action {
 class Wait : public Action {
  public:
   Wait(json serialized) { deserialize_json(serialized); }  // for deserialization
-  Wait(int swapper_addr);
+  Wait(types::QNodeAddr swapper_addr);
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };
@@ -85,10 +86,10 @@ class Wait : public Action {
 class Tomography : public Action {
  public:
   Tomography(json serialized) { deserialize_json(serialized); }  // for deserialization
-  Tomography(int num_measurement, int owner_addr, int partner_addr);
+  Tomography(int num_measurement, types::QNodeAddr owner_addr, types::QNodeAddr partner_addr);
   simtime_t start_time = -1;
   int num_measurement;
-  int owner_address;
+  types::QNodeAddr owner_address;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };

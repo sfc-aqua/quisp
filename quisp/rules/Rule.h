@@ -7,6 +7,7 @@
 #pragma once
 #include <omnetpp.h>
 #include <stdio.h>
+#include <types/QNodeAddr.h>
 #include <memory>
 #include <nlohmann/json.hpp>
 #include "Action.h"
@@ -18,8 +19,8 @@ namespace quisp::rules {
 class Rule {
  public:
   Rule(){};
-  Rule(int partner_address, int shared_tag, bool is_finalized);
-  Rule(std::vector<int> partner_address, int shared_tag, bool is_finalized);
+  Rule(types::QNodeAddr partner_address, int shared_tag, bool is_finalized);
+  Rule(std::vector<types::QNodeAddr> partner_address, int shared_tag, bool is_finalized);
   Rule(json serialized) { deserialize_json(serialized); };
   unsigned long parent_ruleset_id;
   int rule_id = -1;
@@ -28,7 +29,7 @@ class Rule {
   bool is_finalized;
   std::string name;
   std::vector<QnicInterface> qnic_interfaces;
-  std::vector<int> next_partner_addresses;
+  std::vector<types::QNodeAddr> next_partner_addresses;
   std::unique_ptr<Condition> condition;  ///< Condition includes a set of clauses
   std::unique_ptr<Action> action;
 

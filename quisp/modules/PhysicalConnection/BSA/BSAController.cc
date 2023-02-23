@@ -11,6 +11,7 @@
 #include "modules/QNIC.h"
 #include "omnetpp/cchannel.h"
 #include "omnetpp/cexception.h"
+#include "types/QNodeAddr.h"
 
 namespace quisp::modules {
 
@@ -30,7 +31,8 @@ void BSAController::initialize() {
     left_qnic.index = getParentModule()->par("self_qnic_index").intValue();
     left_qnic.type = QNIC_R;
   } else {
-    address = getParentModule()->par("address").intValue();
+    auto address_str = getParentModule()->par("address").stringValue();
+    address = QNodeAddr{address_str};
     left_qnic = getExternalQNICInfoFromPort(0);
   }
   right_qnic = getExternalQNICInfoFromPort(1);
@@ -93,7 +95,7 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
 }
 
 BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_left) {
-  int destination = (is_left) ? left_qnic.parent_node_addr : right_qnic.parent_node_addr;
+  auto destination = (is_left) ? left_qnic.parent_node_addr : right_qnic.parent_node_addr;
   int qnic_index = (is_left) ? left_qnic.index : right_qnic.index;
   auto qnic_type = (is_left) ? left_qnic.type : right_qnic.type;
   auto *notification_packet = new BSMTimingNotification();
@@ -113,7 +115,7 @@ BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_le
 }
 
 CombinedBSAresults *BSAController::generateNextNotificationTiming(bool is_left) {
-  int destination = (is_left) ? left_qnic.parent_node_addr : right_qnic.parent_node_addr;
+  auto destination = (is_left) ? left_qnic.parent_node_addr : right_qnic.parent_node_addr;
   int qnic_index = (is_left) ? left_qnic.index : right_qnic.index;
   auto qnic_type = (is_left) ? left_qnic.type : right_qnic.type;
   auto *notification_packet = new CombinedBSAresults();
@@ -138,31 +140,35 @@ double BSAController::calculateOffsetTimeFromDistance() {
   return 2 * one_way_longer_travel_time + time_interval_between_photons * 5;
 }
 
-int BSAController::getExternalAdressFromPort(int port) {
+QNodeAddr BSAController::getExternalAdressFromPort(int port) {
   if (port == 0 && strcmp(getParentModule()->getName(), "qnic_r") == 0) {
     throw cRuntimeError("Trying to get external QNIC information from a port connecting to internal QNIC_R. Address %d, BSAController port %d", address, port);
   }
 
+  std::string addr_str;
   // this BSAController is inside QNIC_R but the port is connecting to outside
   if (port != 0 && strcmp(getParentModule()->getName(), "qnic_r") == 0) {
-    return getParentModule()
-        ->getSubmodule("bsa")
-        ->gate("quantum_port$i", port)
-        ->getPreviousGate()  // qnic_quantum_port
-        ->getPreviousGate()  // QNode quantum_port_receiver
-        ->getPreviousGate()  // another QNode quantum_port
-        ->getOwnerModule()
-        ->par("address");
+    addr_str = getParentModule()
+                   ->getSubmodule("bsa")
+                   ->gate("quantum_port$i", port)
+                   ->getPreviousGate()  // qnic_quantum_port
+                   ->getPreviousGate()  // QNode quantum_port_receiver
+                   ->getPreviousGate()  // another QNode quantum_port
+                   ->getOwnerModule()
+                   ->par("address")
+                   .stringValue();
+  } else {
+    // this BSAController is in a stand-alone BSANode
+    addr_str = getParentModule()
+                   ->getSubmodule("bsa")
+                   ->gate("quantum_port$i", port)
+                   ->getPreviousGate()  // BSANode quantum_port
+                   ->getPreviousGate()  // QNode quantum_port
+                   ->getOwnerModule()  // QNode
+                   ->par("address")
+                   .stringValue();
   }
-
-  // this BSAController is in a stand-alone BSANode
-  return getParentModule()
-      ->getSubmodule("bsa")
-      ->gate("quantum_port$i", port)
-      ->getPreviousGate()  // BSANode quantum_port
-      ->getPreviousGate()  // QNode quantum_port
-      ->getOwnerModule()  // QNode
-      ->par("address");
+  return QNodeAddr{addr_str.c_str()};
 }
 
 int BSAController::getExternalQNICIndexFromPort(int port) {

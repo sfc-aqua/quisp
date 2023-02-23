@@ -80,8 +80,8 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   logger->logPacket("handleMessage", msg);
 
   if (auto *req = dynamic_cast<ConnectionSetupRequest *>(msg)) {
-    int actual_dst = req->getActual_destAddr();
-    int actual_src = req->getActual_srcAddr();
+    auto actual_dst = req->getActual_destAddr();
+    auto actual_src = req->getActual_srcAddr();
 
     if (actual_dst == my_address) {
       // got ConnectionSetupRequest and return the response
@@ -98,8 +98,8 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   }
 
   if (auto *resp = dynamic_cast<ConnectionSetupResponse *>(msg)) {
-    int initiator_addr = resp->getActual_destAddr();
-    int responder_addr = resp->getActual_srcAddr();
+    auto initiator_addr = resp->getActual_destAddr();
+    auto responder_addr = resp->getActual_srcAddr();
 
     if (initiator_addr == my_address || responder_addr == my_address) {
       // this node is not a swapper
@@ -114,7 +114,7 @@ void ConnectionManager::handleMessage(cMessage *msg) {
   }
 
   if (auto *pk = dynamic_cast<RejectConnectionSetupRequest *>(msg)) {
-    int actual_src = pk->getActual_srcAddr();
+    auto actual_src = pk->getActual_srcAddr();
 
     if (actual_src == my_address) {
       initiator_reject_req_handler(pk);
@@ -201,7 +201,7 @@ void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
   int hop_count = req->getStack_of_QNodeIndexesArraySize();
   std::vector<int> path;
   for (int i = 0; i < hop_count; i++) {
-    int destination_address = req->getStack_of_QNodeIndexes(i);
+    auto destination_address = req->getStack_of_QNodeIndexes(i);
     RejectConnectionSetupRequest *packet = new RejectConnectionSetupRequest("RejectConnSetup");
     packet->setKind(6);
     packet->setDestAddr(destination_address);
@@ -228,7 +228,7 @@ void ConnectionManager::rejectRequest(ConnectionSetupRequest *req) {
  * @endverbatim
  */
 void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
-  int prev_hop_addr = req->getSrcAddr();
+  auto prev_hop_addr = req->getSrcAddr();
 
   // qnic toward to the previous node
   int qnic_addr = routing_daemon->findQNicAddrByDestAddr(prev_hop_addr);
@@ -268,8 +268,8 @@ void ConnectionManager::respondToRequest(ConnectionSetupRequest *req) {
  * \returns nothing
  **/
 void ConnectionManager::tryRelayRequestToNextHop(ConnectionSetupRequest *req) {
-  int responder_addr = req->getActual_destAddr();
-  int prev_hop_addr = req->getSrcAddr();
+  auto responder_addr = req->getActual_destAddr();
+  auto prev_hop_addr = req->getSrcAddr();
   int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(responder_addr);
   int inbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(prev_hop_addr);
 
@@ -342,7 +342,7 @@ bool ConnectionManager::isQnicBusy(int qnic_address) {
 }
 
 void ConnectionManager::initiator_reject_req_handler(RejectConnectionSetupRequest *pk) {
-  int actual_dest = pk->getActual_destAddr();
+  auto actual_dest = pk->getActual_destAddr();
   int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(actual_dest);
 
   releaseQnic(outbound_qnic_address);
@@ -367,8 +367,8 @@ void ConnectionManager::responder_reject_req_handler(RejectConnectionSetupReques
  * primarily due to resource reservation conflicts.
  **/
 void ConnectionManager::intermediate_reject_req_handler(RejectConnectionSetupRequest *pk) {
-  int actual_dst = pk->getActual_destAddr();  // responder address
-  int actual_src = pk->getActual_srcAddr();  // initiator address (to get input qnic)
+  auto actual_dst = pk->getActual_destAddr();  // responder address
+  auto actual_src = pk->getActual_srcAddr();  // initiator address (to get input qnic)
 
   // Currently, sending path and returning path are same, but for future, this might not good way
   int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(actual_dst);
@@ -390,8 +390,8 @@ unsigned long ConnectionManager::createUniqueId() {
 }
 
 void ConnectionManager::queueApplicationRequest(ConnectionSetupRequest *req) {
-  int responder_address = req->getActual_destAddr();
-  int outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(responder_address);
+  auto responder_address = req->getActual_destAddr();
+  auto outbound_qnic_address = routing_daemon->findQNicAddrByDestAddr(responder_address);
 
   if (outbound_qnic_address == -1) {
     error("QNIC to destination cannot be found");

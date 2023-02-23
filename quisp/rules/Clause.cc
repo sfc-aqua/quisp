@@ -1,8 +1,9 @@
 #include "Clause.h"
 
 namespace quisp::rules {
+using types::QNodeAddr;
 
-EnoughResourceConditionClause::EnoughResourceConditionClause(int num_resource, int partner_addr) : Clause(partner_addr), num_resource(num_resource) {}
+EnoughResourceConditionClause::EnoughResourceConditionClause(int num_resource, QNodeAddr partner_addr) : Clause(partner_addr), num_resource(num_resource) {}
 
 json EnoughResourceConditionClause::serialize_json() {
   json enough_resource_json;
@@ -21,7 +22,7 @@ void EnoughResourceConditionClause::deserialize_json(json serialized) {
   }
 }
 
-MeasureCountConditionClause::MeasureCountConditionClause(int num_measurement, int partner_addr) : Clause(partner_addr), num_measure(num_measurement) {}
+MeasureCountConditionClause::MeasureCountConditionClause(int num_measurement, QNodeAddr partner_addr) : Clause(partner_addr), num_measure(num_measurement) {}
 
 json MeasureCountConditionClause::serialize_json() {
   json measure_count_json;
@@ -40,7 +41,7 @@ void MeasureCountConditionClause::deserialize_json(json serialized) {
   }
 }
 
-FidelityConditionClause::FidelityConditionClause(double required_fidelity, int partner_addr) : Clause(partner_addr), required_fidelity(required_fidelity) {}
+FidelityConditionClause::FidelityConditionClause(double required_fidelity, QNodeAddr partner_addr) : Clause(partner_addr), required_fidelity(required_fidelity) {}
 
 json FidelityConditionClause::serialize_json() {
   json fidelity_json;
@@ -59,7 +60,7 @@ void FidelityConditionClause::deserialize_json(json serialized) {
   }
 }
 
-WaitConditionClause::WaitConditionClause(int swapper_addr) : Clause(swapper_addr) {}
+WaitConditionClause::WaitConditionClause(QNodeAddr swapper_addr) : Clause(swapper_addr) {}
 
 json WaitConditionClause::serialize_json() {
   json wait_json;

@@ -105,7 +105,7 @@ class RuleSet {
   unsigned long id;
 
   /// @brief the owner's QNode address.
-  int owner_addr;
+  QNodeAddr owner_addr;
 
   /// @brief the RuleSet name for debugging.
   std::string name;

@@ -22,7 +22,7 @@ using namespace quisp::rules;
 
 class RuleSetGenerator : public OriginalRSG {
  public:
-  RuleSetGenerator(int responder_addr) : OriginalRSG(responder_addr) {}
+  RuleSetGenerator(QNodeAddr responder_addr) : OriginalRSG(responder_addr) {}
   using OriginalRSG::collectPath;
   using OriginalRSG::collectSwappingPartners;
   using OriginalRSG::fillPathDivision;
@@ -38,54 +38,55 @@ class RuleSetGeneratorTest : public testing::Test {
     rsg = new RuleSetGenerator{responder_addr};
   }
   void TearDown() { delete rsg; }
-  int responder_addr = 5;
+  QNodeAddr responder_addr{5};
   RuleSetGenerator *rsg;
 };
 
 TEST_F(RuleSetGeneratorTest, generateSimpleSwappingRuleSets) {
-  std::map<int, std::vector<std::unique_ptr<Rule>>> rules_map{};
-  std::vector<int> path{1, 2, 3, 4, 5};
-  std::vector<int> rev_path{5, 4, 3, 2, 1};
-  std::map<int, std::pair<int, int>> swapping_partners_table{{2, {1, 3}}, {4, {3, 5}}, {3, {1, 5}}};
+  std::map<QNodeAddr, std::vector<std::unique_ptr<Rule>>> rules_map{};
+  std::vector<QNodeAddr> path{QNodeAddr{1}, QNodeAddr{2}, QNodeAddr{3}, QNodeAddr{4}, QNodeAddr{5}};
+  std::vector<QNodeAddr> rev_path{QNodeAddr{5}, QNodeAddr{4}, QNodeAddr{3}, QNodeAddr{2}, QNodeAddr{1}};
+  std::map<QNodeAddr, std::pair<QNodeAddr, QNodeAddr>> swapping_partners_table{
+      {QNodeAddr{2}, {QNodeAddr{1}, QNodeAddr{3}}}, {QNodeAddr{4}, {QNodeAddr{3}, QNodeAddr{5}}}, {QNodeAddr{3}, {QNodeAddr{1}, QNodeAddr{5}}}};
   int num_measure = 50;
   rsg->generateSimpleSwappingRuleSets(rules_map, path, rev_path, swapping_partners_table, num_measure);
   EXPECT_EQ(rules_map.size(), 5);
-  EXPECT_EQ(rules_map.find(1)->second.size(), 1);
+  EXPECT_EQ(rules_map.find(QNodeAddr{1})->second.size(), 1);
   {
-    auto &rule = rules_map.find(1)->second.at(0);
+    auto &rule = rules_map.find(QNodeAddr{1})->second.at(0);
     EXPECT_EQ(rule->qnic_interfaces.size(), 1);
-    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 5);
+    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, QNodeAddr{5});
   }
 
-  EXPECT_EQ(rules_map.find(2)->second.size(), 1);
+  EXPECT_EQ(rules_map.find(QNodeAddr{2})->second.size(), 1);
   {
-    auto &rule = rules_map.find(2)->second.at(0);
+    auto &rule = rules_map.find(QNodeAddr{2})->second.at(0);
     EXPECT_EQ(rule->qnic_interfaces.size(), 2);
-    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 1);
-    EXPECT_EQ(rule->qnic_interfaces.at(1).partner_addr, 3);
+    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, QNodeAddr{1});
+    EXPECT_EQ(rule->qnic_interfaces.at(1).partner_addr, QNodeAddr{3});
   }
 
-  EXPECT_EQ(rules_map.find(3)->second.size(), 1);
+  EXPECT_EQ(rules_map.find(QNodeAddr{3})->second.size(), 1);
   {
-    auto &rule = rules_map.find(3)->second.at(0);
+    auto &rule = rules_map.find(QNodeAddr{3})->second.at(0);
     EXPECT_EQ(rule->qnic_interfaces.size(), 2);
-    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 1);
-    EXPECT_EQ(rule->qnic_interfaces.at(1).partner_addr, 5);
+    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, QNodeAddr{1});
+    EXPECT_EQ(rule->qnic_interfaces.at(1).partner_addr, QNodeAddr{5});
   }
 
-  EXPECT_EQ(rules_map.find(4)->second.size(), 1);
+  EXPECT_EQ(rules_map.find(QNodeAddr{4})->second.size(), 1);
   {
-    auto &rule = rules_map.find(4)->second.at(0);
+    auto &rule = rules_map.find(QNodeAddr{4})->second.at(0);
     EXPECT_EQ(rule->qnic_interfaces.size(), 2);
-    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 3);
-    EXPECT_EQ(rule->qnic_interfaces.at(1).partner_addr, 5);
+    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, QNodeAddr{3});
+    EXPECT_EQ(rule->qnic_interfaces.at(1).partner_addr, QNodeAddr{5});
   }
 
-  EXPECT_EQ(rules_map.find(5)->second.size(), 1);
+  EXPECT_EQ(rules_map.find(QNodeAddr{5})->second.size(), 1);
   {
-    auto &rule = rules_map.find(5)->second.at(0);
+    auto &rule = rules_map.find(QNodeAddr{5})->second.at(0);
     EXPECT_EQ(rule->qnic_interfaces.size(), 1);
-    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 1);
+    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, QNodeAddr{1});
   }
 }
 
@@ -93,33 +94,33 @@ TEST_F(RuleSetGeneratorTest, Simple) {
   auto *req = new ConnectionSetupRequest();
   // qnic_index(id)     11       12           13       14           15       16
   // [QNode2](qnic_addr:101) -- (102)[QNode3](103) -- (104)[QNode4](105) -- (106)[QNode5(test target)]
-  req->setActual_destAddr(5);
-  req->setActual_srcAddr(2);
-  req->setDestAddr(5);
-  req->setSrcAddr(4);
+  req->setActual_destAddr(QNodeAddr{5});
+  req->setActual_srcAddr(QNodeAddr{2});
+  req->setDestAddr(QNodeAddr{5});
+  req->setSrcAddr(QNodeAddr{4});
   req->setStack_of_QNICsArraySize(3);
   req->setStack_of_QNodeIndexesArraySize(3);
-  req->setStack_of_QNodeIndexes(0, 2);
-  req->setStack_of_QNodeIndexes(1, 3);
-  req->setStack_of_QNodeIndexes(2, 4);
+  req->setStack_of_QNodeIndexes(0, QNodeAddr{2});
+  req->setStack_of_QNodeIndexes(1, QNodeAddr{3});
+  req->setStack_of_QNodeIndexes(2, QNodeAddr{4});
   req->setStack_of_QNICs(0, QNIC_pair_info{.fst = NULL_CONNECTION_SETUP_INFO.qnic, .snd = {.type = QNIC_E, .index = 11, .address = 101}});
   req->setStack_of_QNICs(1, QNIC_pair_info{.fst = {.type = QNIC_E, .index = 12, .address = 102}, .snd = {.type = QNIC_E, .index = 13, .address = 103}});
   req->setStack_of_QNICs(2, QNIC_pair_info{.fst = {.type = QNIC_E, .index = 14, .address = 104}, .snd = {.type = QNIC_E, .index = 15, .address = 105}});
   auto rulesets = rsg->generateRuleSets(req, 1234);
   EXPECT_EQ(rulesets.size(), 4);
   {
-    auto ruleset = rulesets.find(2)->second;
+    auto ruleset = rulesets.find(QNodeAddr{2})->second;
     auto expected_ruleset = R"({
 	"num_rules": 1,
-	"owner_address": 2,
+	"owner_address": "0.2",
 	"rules": [ {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 5
+					"partner_address": "0.5"
 				}],
 				"num_measure": 0,
-				"owner_address": 2
+				"owner_address": "0.2"
 			},
 			"type": "tomography"
 		},
@@ -127,7 +128,7 @@ TEST_F(RuleSetGeneratorTest, Simple) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 5
+						"partner_address": "0.5"
 					},
 					"num_resource": 1
 				},
@@ -135,7 +136,7 @@ TEST_F(RuleSetGeneratorTest, Simple) {
 			}, {
 				"options": {
 					"interface": {
-						"partner_address": 5
+						"partner_address": "0.5"
 					},
 					"num_measure": 0
 				},
@@ -143,7 +144,7 @@ TEST_F(RuleSetGeneratorTest, Simple) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 5
+			"partner_address": "0.5"
 		}],
     	"shared_tag": 2,
 		"name": "",
@@ -158,7 +159,7 @@ TEST_F(RuleSetGeneratorTest, Simple) {
 
 TEST_F(RuleSetGeneratorTest, PurificationRule) {
   // rule arguments
-  int partner_addr = 1;
+  QNodeAddr partner_addr{1};
   PurType purification_type = PurType::DOUBLE;
 
   auto purification_rule = rsg->purifyRule(partner_addr, purification_type, 0);
@@ -172,16 +173,16 @@ TEST_F(RuleSetGeneratorTest, PurificationRule) {
    "name":"",
    "shared_tag": 0,
    "interface":[
-     {"partner_address": 1}
+     {"partner_address": "0.1"}
    ],
    "condition":{
       "clauses":[
          {
             "type":"enough_resource",
             "options":{
-               "num_resource":3,
+               "num_resource": 3,
                "interface":{
-                 "partner_address":1
+                 "partner_address": "0.1"
                 }
             }
          }
@@ -192,7 +193,7 @@ TEST_F(RuleSetGeneratorTest, PurificationRule) {
       "options":{
          "purification_type":"DOUBLE",
          "interface": [
-           {"partner_address":1}
+           {"partner_address": "0.1"}
           ]
       }
    }
@@ -202,7 +203,7 @@ TEST_F(RuleSetGeneratorTest, PurificationRule) {
 
 TEST_F(RuleSetGeneratorTest, SwapRule) {
   // rule arguments
-  std::pair<int, int> partner_addr{1, 3};
+  std::pair<QNodeAddr, QNodeAddr> partner_addr{1, 3};
   std::vector<QNIC_type> qnic_type = {QNIC_E, QNIC_R};
   std::vector<int> qnic_id = {4, 5};
   std::vector<QNIC_type> remote_qnic_type = {QNIC_R, QNIC_E};
@@ -220,8 +221,8 @@ TEST_F(RuleSetGeneratorTest, SwapRule) {
    "name":"",
    "shared_tag": 0,
    "interface":[
-     {"partner_address": 1},
-     {"partner_address": 3}
+     {"partner_address": "0.1"},
+     {"partner_address": "0.3"}
    ],
    "condition":{
       "clauses":[
@@ -230,7 +231,7 @@ TEST_F(RuleSetGeneratorTest, SwapRule) {
             "options":{
                "num_resource":1,
                "interface": {
-                 "partner_address":1
+                 "partner_address": "0.1"
                }
             }
          },
@@ -239,7 +240,7 @@ TEST_F(RuleSetGeneratorTest, SwapRule) {
             "options":{
                "num_resource":1,
                "interface":{
-                 "partner_address":3
+                 "partner_address": "0.3"
                }
             }
          }
@@ -249,12 +250,12 @@ TEST_F(RuleSetGeneratorTest, SwapRule) {
       "type":"swapping",
       "options":{
         "interface":[
-          {"partner_address": 1},
-          {"partner_address": 3}
+          {"partner_address": "0.1"},
+          {"partner_address": "0.3"}
         ],
         "remote_interface": [
-          {"partner_address": 1},
-          {"partner_address": 3}
+          {"partner_address": "0.1"},
+          {"partner_address": "0.3"}
         ]
       }
    }
@@ -264,8 +265,8 @@ TEST_F(RuleSetGeneratorTest, SwapRule) {
 
 TEST_F(RuleSetGeneratorTest, tomographyRule) {
   // rule arguments
-  int partner_addr = 1;
-  int owner_addr = 2;
+  QNodeAddr partner_addr{1};
+  QNodeAddr owner_addr{2};
   int num_measurement = 5000;
   int shared_tag = 3;
 
@@ -278,10 +279,10 @@ TEST_F(RuleSetGeneratorTest, tomographyRule) {
  	"action": {
  		"options": {
  			"interface": [{
- 				"partner_address": 1
+ 				"partner_address": "0.1"
  			}],
  			"num_measure": 5000,
- 			"owner_address": 2
+ 			"owner_address": "0.2"
  		},
  		"type": "tomography"
  	},
@@ -289,7 +290,7 @@ TEST_F(RuleSetGeneratorTest, tomographyRule) {
  		"clauses": [{
  			"options": {
  				"interface": {
- 					"partner_address": 1
+ 					"partner_address": "0.1"
  				},
  				"num_resource": 1
  			},
@@ -297,7 +298,7 @@ TEST_F(RuleSetGeneratorTest, tomographyRule) {
  		}, {
  			"options": {
  				"interface": {
- 					"partner_address": 1
+ 					"partner_address": "0.1"
  				},
  				"num_measure": 5000
  			},
@@ -305,9 +306,9 @@ TEST_F(RuleSetGeneratorTest, tomographyRule) {
  		}]
  	},
  	"interface": [{
- 		"partner_address": 1
+ 		"partner_address": "0.1"
  	}],
-    "shared_tag": 3,
+  "shared_tag": 3,
  	"name": "",
  	"next_rule_id": -1,
  	"rule_id": -1

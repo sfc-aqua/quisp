@@ -121,13 +121,13 @@ void RuleEngine::handleMessage(cMessage *msg) {
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding *>(msg)) {
     // add actual process
     auto serialized_ruleset = pkt->getRuleSet();
-    RuleSet ruleset(0, 0);
+    RuleSet ruleset(0, QNodeAddr{0});
     ruleset.deserialize_json(serialized_ruleset);
     runtimes.acceptRuleSet(ruleset.construct());
   } else if (auto *pkt = dynamic_cast<InternalRuleSetForwarding_Application *>(msg)) {
     if (pkt->getApplication_type() != 0) error("This application is not recognized yet");
     auto serialized_ruleset = pkt->getRuleSet();
-    RuleSet ruleset(0, 0);
+    RuleSet ruleset(0, QNodeAddr{0});
     ruleset.deserialize_json(serialized_ruleset);
     runtimes.acceptRuleSet(ruleset.construct());
   }
@@ -270,7 +270,7 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
   for (auto &runtime : runtimes) {
     auto &partners = runtime.partners;
     for (auto &partner_addr : partners) {
-      auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, partner_addr.val);
+      auto range = bell_pair_store.getBellPairsRange((QNIC_type)qnic_type, qnic_index, partner_addr);
       for (auto it = range.first; it != range.second; ++it) {
         auto qubit_record = it->second;
 

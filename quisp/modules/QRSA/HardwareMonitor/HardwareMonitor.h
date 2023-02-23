@@ -11,6 +11,7 @@
 #include <modules/QNIC/StationaryQubit/StationaryQubit.h>
 #include <rules/Action.h>
 #include <rules/Rule.h>
+#include <types/QNodeAddr.h>
 #include <utils/ComponentProvider.h>
 #include <complex>
 
@@ -26,7 +27,7 @@ class HardwareMonitor : public IHardwareMonitor {
   HardwareMonitor();
   ~HardwareMonitor();
   int getQnicNumQubits(int qnic_index, QNIC_type qnic_type) override;
-  std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(int neighbor_address) override;
+  std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(types::QNodeAddr neighbor_address) override;
   std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address) override;
 
  protected:
@@ -41,7 +42,7 @@ class HardwareMonitor : public IHardwareMonitor {
     Eigen::Matrix2cd I;
   };
 
-  int my_address;
+  types::QNodeAddr my_address;
 
   // number of qnics connected to stand alone BSA or internal hom in the neighbor.
   int num_qnic;
@@ -60,7 +61,7 @@ class HardwareMonitor : public IHardwareMonitor {
   int num_end_nodes;
 
   // in the case of retry connection setup, the partner could be changed.
-  std::map<int, int> qnic_partner_map;
+  std::map<int, types::QNodeAddr> qnic_partner_map;
 
   IRoutingDaemon *routing_daemon;
 
@@ -82,15 +83,15 @@ class HardwareMonitor : public IHardwareMonitor {
   void prepareNeighborTable();
   virtual std::unique_ptr<NeighborInfo> createNeighborInfo(const cModule &thisNode);
   virtual std::unique_ptr<NeighborInfo> getNeighbor(cModule *qnic_pointer);
-  virtual cModule *getQNodeWithAddress(int address);
+  virtual cModule *getQNodeWithAddress(types::QNodeAddr address);
   virtual InterfaceInfo getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
-  virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);
-  virtual Eigen::Matrix4cd reconstruct_density_matrix(int qnic_id, int partner);
+  virtual void sendLinkTomographyRuleSet(types::QNodeAddr my_address, types::QNodeAddr partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);
+  virtual Eigen::Matrix4cd reconstruct_density_matrix(int qnic_id, types::QNodeAddr partner);
   virtual unsigned long createUniqueId();
   virtual void writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec);
 
-  std::unique_ptr<quisp::rules::Rule> constructPurifyRule(const std::string &rule_name, const rules::PurType pur_type, const int partner_address, const QNIC_type qnic_type,
-                                                          const int qnic_index, const int rule_id, const int shared_tag) const;
+  std::unique_ptr<quisp::rules::Rule> constructPurifyRule(const std::string &rule_name, const rules::PurType pur_type, const types::QNodeAddr partner_address,
+                                                          const QNIC_type qnic_type, const int qnic_index, const int rule_id, const int shared_tag) const;
 
   // virtual QnicInfo* initializeQTable(int numQnic, QnicInfo *qtable);
   // simtime_t tomography_time;

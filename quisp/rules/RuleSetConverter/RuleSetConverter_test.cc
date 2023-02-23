@@ -15,6 +15,7 @@ namespace {
 using namespace quisp_test;
 using namespace quisp::rules::rs_converter;
 using RSData = quisp::rules::RuleSet;
+using quisp::types::QNodeAddr;
 
 template <typename T>
 T get_instruction(const quisp::runtime::Rule& rule) {
@@ -47,12 +48,12 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
 
   auto serialized_ruleset = R"({
 	"num_rules": 4,
-	"owner_address": 2,
+	"owner_address": "0.2",
 	"rules": [{
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 3,
+					"partner_address": "0.3",
 					"qnic_id": 11,
 					"qnic_type": "QNIC_E"
 				}],
@@ -64,7 +65,7 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 3,
+						"partner_address": "0.3",
 						"qnic_id": 11,
 						"qnic_type": "QNIC_E"
 					},
@@ -75,7 +76,7 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 3,
+			"partner_address": "0.3",
 			"qnic_id": 11,
 			"qnic_type": "QNIC_E"
 		}],
@@ -87,7 +88,7 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 3,
+					"partner_address": "0.3",
 					"qnic_id": 11,
 					"qnic_type": "QNIC_E"
 				}]
@@ -98,7 +99,7 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 3,
+						"partner_address": "0.3",
 						"qnic_id": 11,
 						"qnic_type": "QNIC_E"
 					}
@@ -107,7 +108,7 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 3,
+			"partner_address": "0.3",
 			"qnic_id": 11,
 			"qnic_type": "QNIC_E"
 		}],
@@ -119,7 +120,7 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 5,
+					"partner_address": "0.5",
 					"qnic_id": 11,
 					"qnic_type": "QNIC_E"
 				}],
@@ -131,7 +132,7 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 5,
+						"partner_address": "0.5",
 						"qnic_id": 11,
 						"qnic_type": "QNIC_E"
 					},
@@ -142,7 +143,7 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 5,
+			"partner_address": "0.5",
 			"qnic_id": 11,
 			"qnic_type": "QNIC_E"
 		}],
@@ -154,12 +155,12 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
 		"action": {
 			"options": {
 				"interface": [{
-					"partner_address": 5,
+					"partner_address": "0.5",
 					"qnic_id": 11,
 					"qnic_type": "QNIC_E"
 				}],
 				"num_measure": 0,
-				"owner_address": 2
+				"owner_address": "0.2"
 			},
 			"type": "tomography"
 		},
@@ -167,7 +168,7 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
 			"clauses": [{
 				"options": {
 					"interface": {
-						"partner_address": 5,
+						"partner_address": "0.5",
 						"qnic_id": 11,
 						"qnic_type": "QNIC_E"
 					},
@@ -178,7 +179,7 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
 			}, {
 				"options": {
 					"interface": {
-						"partner_address": 5,
+						"partner_address": "0.5",
 						"qnic_id": 11,
 						"qnic_type": "QNIC_E"
 					},
@@ -188,7 +189,7 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
 			}]
 		},
 		"interface": [{
-			"partner_address": 5,
+			"partner_address": "0.5",
 			"qnic_id": 11,
 			"qnic_type": "QNIC_E"
 		}],
@@ -213,7 +214,7 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
   ASSERT_EQ(active_ruleset.partners.size(), 2);
 
   // partner must be the next neighbor qnode3 (this qnode is qnode2[initiator])
-  EXPECT_NE(active_ruleset.partners.find(3), active_ruleset.partners.end());
+  EXPECT_NE(active_ruleset.partners.find(QNodeAddr{3}), active_ruleset.partners.end());
 
   // checking the 1st rule of QNode2(initiator): if EnoughResource -> Purify
   {
@@ -224,20 +225,20 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
   // checking the 2nd rule of QNode2(initiator): Wait
   {
     auto rule = active_ruleset.rules.at(1);
-    EXPECT_EQ(rule.name, "wait with 3");
+    EXPECT_EQ(rule.name, "wait with 0.3");
     auto partners = get_partners(rule);
     ASSERT_EQ(partners.size(), 1);
-    EXPECT_EQ(partners.at(0), 3);  // just wait QNode 3
+    EXPECT_EQ(partners.at(0), QNodeAddr{3});  // just wait QNode 3
   }
   // checking the 3rd rule of QNode2(initiator): if EnoughResource -> Purify
   {
     auto rule = active_ruleset.rules.at(2);
-    EXPECT_EQ(rule.name, "purification with 5");
+    EXPECT_EQ(rule.name, "purification with 0.5");
     auto partners = get_partners(rule);
     ASSERT_EQ(partners.size(), 1);
     // action partner must be the qnode5(responder)
     // third action is the purification with the opposite end qnode
-    EXPECT_EQ(partners.at(0), 5);
+    EXPECT_EQ(partners.at(0), QNodeAddr{5});
 
     auto action = rule.action;
     get_instruction<quisp::runtime::INSTR_PURIFY_X_RegId_QubitId_QubitId_>(rule);
@@ -246,13 +247,13 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
   // checking the 4th rule of QNode2(initiator): EnoughResource && MeasureCount -> Tomography
   {
     auto rule = active_ruleset.rules.at(3);
-    EXPECT_EQ(rule.name, "tomography with 5");
+    EXPECT_EQ(rule.name, "tomography with 0.5");
 
     auto partners = get_partners(rule);
     ASSERT_EQ(partners.size(), 1);
     // action partner must be the qnode5(responder)
     // last action is the tomography with the opposite end qnode
-    EXPECT_EQ(partners.at(0), 5);
+    EXPECT_EQ(partners.at(0), QNodeAddr{5});
 
     get_instruction<quisp::runtime::INSTR_MEASURE_RANDOM_MemoryKey_QubitId_>(rule);
   }
@@ -263,31 +264,31 @@ TEST(RSConverterTest, generateActiveRuleSetFromRuleSet) {
 
   // prepare (static) ruleset being sent by responder
   unsigned long ruleset_id = 1234;
-  int owner_address = 2;
+  QNodeAddr owner_address{2};
   // ruleset creation
   quisp::rules::RuleSet ruleset(ruleset_id, owner_address);  // static ruleset
   ruleset.ruleset_id = ruleset_id;
   ruleset.owner_addr = owner_address;
 
-  auto purify_rule = std::make_unique<quisp::rules::Rule>(0, 0, false);
+  auto purify_rule = std::make_unique<quisp::rules::Rule>(QNodeAddr{0}, 0, false);
   purify_rule->setName("purification");
   auto pur_condition = std::make_unique<quisp::rules::Condition>();
-  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 0);
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, QNodeAddr{0});
   pur_condition->addClause(std::move(enough_resource_clause));
   purify_rule->setCondition(std::move(pur_condition));
-  auto pur_action = std::make_unique<Purification>(quisp::rules::PurType::DSDA, 0);
+  auto pur_action = std::make_unique<Purification>(quisp::rules::PurType::DSDA, QNodeAddr{0});
   purify_rule->setAction(std::move(pur_action));
   ruleset.addRule(std::move(purify_rule));
   // swapping rule
-  auto swapping_rule = std::make_unique<quisp::rules::Rule>(0, 0, false);
+  auto swapping_rule = std::make_unique<quisp::rules::Rule>(QNodeAddr{0}, 0, false);
   swapping_rule->setName("swapping");
   auto swap_condition = std::make_unique<quisp::rules::Condition>();
-  auto enough_resource_clause_left = std::make_unique<EnoughResourceConditionClause>(1, 0);
-  auto enough_resource_clause_right = std::make_unique<EnoughResourceConditionClause>(1, 0);
+  auto enough_resource_clause_left = std::make_unique<EnoughResourceConditionClause>(1, QNodeAddr{0});
+  auto enough_resource_clause_right = std::make_unique<EnoughResourceConditionClause>(1, QNodeAddr{0});
   swap_condition->addClause(std::move(enough_resource_clause_left));
   swap_condition->addClause(std::move(enough_resource_clause_right));
   swapping_rule->setCondition(std::move(swap_condition));
-  std::vector<int> partners = {0, 0};
+  std::vector<QNodeAddr> partners = {QNodeAddr{0}, QNodeAddr{0}};
   std::vector<QNIC_type> qnic_type = {quisp::modules::QNIC_E, quisp::modules::QNIC_E};
   std::vector<int> qnic_id = {0, 0};
   std::vector<QNIC_type> remote_qnic_type = {quisp::modules::QNIC_E, quisp::modules::QNIC_E};
@@ -297,23 +298,23 @@ TEST(RSConverterTest, generateActiveRuleSetFromRuleSet) {
   swapping_rule->setAction(std::move(swap_action));
   ruleset.addRule(std::move(swapping_rule));
   // wait rule
-  auto wait_rule = std::make_unique<quisp::rules::Rule>(0, 0, false);
+  auto wait_rule = std::make_unique<quisp::rules::Rule>(QNodeAddr{0}, 0, false);
   wait_rule->setName("wait");
   auto wait_condition = std::make_unique<quisp::rules::Condition>();
-  auto wait_clause = std::make_unique<WaitConditionClause>(0);
+  auto wait_clause = std::make_unique<WaitConditionClause>(QNodeAddr{0});
   wait_condition->addClause(std::move(wait_clause));
   wait_rule->setCondition(std::move(wait_condition));
-  auto wait_action = std::make_unique<Wait>(0);
+  auto wait_action = std::make_unique<Wait>(QNodeAddr{0});
   wait_rule->setAction(std::move(wait_action));
   ruleset.addRule(std::move(wait_rule));
   // tomography rule
-  auto tomography_rule = std::make_unique<quisp::rules::Rule>(0, 0, true);
+  auto tomography_rule = std::make_unique<quisp::rules::Rule>(QNodeAddr{0}, 0, true);
   tomography_rule->setName("tomography");
   auto tomo_condition = std::make_unique<quisp::rules::Condition>();
-  auto enough_resource_clause_tomo = std::make_unique<EnoughResourceConditionClause>(0, 0);
+  auto enough_resource_clause_tomo = std::make_unique<EnoughResourceConditionClause>(0, QNodeAddr{0});
   tomo_condition->addClause(std::move(enough_resource_clause_tomo));
   tomography_rule->setCondition(std::move(tomo_condition));
-  auto tomo_action = std::make_unique<Tomography>(0, 0, 0);
+  auto tomo_action = std::make_unique<Tomography>(0, QNodeAddr{0}, QNodeAddr{0});
   tomography_rule->setAction(std::move(tomo_action));
   ruleset.addRule(std::move(tomography_rule));
 
@@ -324,15 +325,15 @@ TEST(RSConverterTest, generateActiveRuleSetFromRuleSet) {
   EXPECT_EQ(active_ruleset.rules.size(), 4);
   auto rule0 = std::move(active_ruleset.rules.at(0));
   EXPECT_EQ(rule0.id, 0);
-  EXPECT_EQ(rule0.name, "purification with 0");
+  EXPECT_EQ(rule0.name, "purification with 0.0");
   auto rule1 = std::move(active_ruleset.rules.at(1));
   EXPECT_EQ(rule1.id, 1);
-  EXPECT_EQ(rule1.name, "swapping with 0");
+  EXPECT_EQ(rule1.name, "swapping with 0.0");
   auto rule2 = std::move(active_ruleset.rules.at(2));
   EXPECT_EQ(rule2.id, 2);
-  EXPECT_EQ(rule2.name, "wait with 0");
+  EXPECT_EQ(rule2.name, "wait with 0.0");
   auto rule3 = std::move(active_ruleset.rules.at(3));
   EXPECT_EQ(rule3.id, 3);
-  EXPECT_EQ(rule3.name, "tomography with 0");
+  EXPECT_EQ(rule3.name, "tomography with 0.0");
 }
 }  // namespace

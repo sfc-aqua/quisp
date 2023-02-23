@@ -15,6 +15,7 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include "modules/PhysicalConnection/BSA/BSAController.h"
 #include "modules/PhysicalConnection/BSA/BellStateAnalyzer.h"
+#include "types/QNodeAddr.h"
 
 #include <messages/classical_messages.h>
 #include <rules/Action.h>
@@ -26,6 +27,7 @@ using namespace quisp::messages;
 using namespace quisp::rules;
 using Eigen::Matrix4cd;
 using Eigen::Vector4cd;
+using quisp::types::QNodeAddr;
 
 namespace quisp::modules {
 
@@ -102,7 +104,7 @@ unsigned long HardwareMonitor::createUniqueId() {
   return ruleset_id;
 }
 
-std::unique_ptr<InterfaceInfo> HardwareMonitor::findInterfaceByNeighborAddr(int neighbor_address) {
+std::unique_ptr<InterfaceInfo> HardwareMonitor::findInterfaceByNeighborAddr(types::QNodeAddr neighbor_address) {
   for (auto it = neighbor_table.cbegin(); it != neighbor_table.cend(); ++it) {
     if (it->second.neighborQNode_address == neighbor_address) {
       // return unique_ptr<InterfaceInfo>(new InterfaceInfo(it->second));
@@ -138,7 +140,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     /*Received an acknowledgment for tomography from neighbor.*/
 
     /*Create and send RuleSets*/
-    int partner_address = ack->getSrcAddr();
+    auto partner_address = ack->getSrcAddr();
 
     auto my_qnic_info = findInterfaceByNeighborAddr(partner_address);
     if (my_qnic_info == nullptr) {
@@ -158,7 +160,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
 
   if (auto *result = dynamic_cast<LinkTomographyResult *>(msg)) {
     /*Link tomography measurement result/basis from neighbor received.*/
-    int partner_addr = result->getPartner_address();
+    auto partner_addr = result->getPartner_address();
     // Get QNIC info from neighbor address.
     int qnic_addr_to_partner = routing_daemon->findQNicAddrByDestAddr(partner_addr);
     auto local_qnic_info = findConnectionInfoByQnicAddr(qnic_addr_to_partner);
@@ -278,7 +280,7 @@ void HardwareMonitor::finish() {
   initial.total_count = 0;
   for (auto it = qnic_partner_map.begin(); it != qnic_partner_map.end(); ++it) {
     int qnic_id = it->first;
-    int part = it->second;
+    auto part = it->second;
     tomography_data[qnic_id][part].insert(std::make_pair("XX", initial));
     tomography_data[qnic_id][part].insert(std::make_pair("XY", initial));
     tomography_data[qnic_id][part].insert(std::make_pair("XZ", initial));
@@ -292,7 +294,7 @@ void HardwareMonitor::finish() {
 
   for (auto it = qnic_partner_map.begin(); it != qnic_partner_map.end(); it++) {
     int qnic = it->first;
-    int partner_address = it->second;
+    auto partner_address = it->second;
     // qnic index
     //  - partner address
     //  - - measurement counts
@@ -309,7 +311,7 @@ void HardwareMonitor::finish() {
       basis_combination += it->second.my_basis;
       basis_combination += it->second.partner_basis;
       if (tomography_data[qnic][partner_address].count(basis_combination) != 1) {
-        error("Basis combination for tomography with partner: %d at %d is not found", partner_address, qnic);
+        error("Basis combination for tomography with partner: %s at %d is not found", std::to_string(partner_address).c_str(), qnic);
       }
       tomography_data[qnic][partner_address][basis_combination].total_count++;
       // the number of total measurement
@@ -423,7 +425,7 @@ void HardwareMonitor::finish() {
   std::cout << "Closed file to write.\n";
 }
 
-Matrix4cd HardwareMonitor::reconstruct_density_matrix(int qnic_id, int partner) {
+Matrix4cd HardwareMonitor::reconstruct_density_matrix(int qnic_id, QNodeAddr partner) {
   // II
   auto data = tomography_data[qnic_id][partner];
   double S00 = 1.0;
@@ -431,86 +433,86 @@ Matrix4cd HardwareMonitor::reconstruct_density_matrix(int qnic_id, int partner) 
                (double)data["XX"].minus_plus / (double)data["XX"].total_count - (double)data["XX"].minus_minus / (double)data["XX"].total_count;
   if (std::isnan(S01)) {
     EV << "totoal count: " << (double)data["XX"].total_count << "\n";
-    error("S01 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error("S01 error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
   double S02 = (double)data["YY"].plus_plus / (double)data["YY"].total_count - (double)data["YY"].plus_minus / (double)data["YY"].total_count +
                (double)data["YY"].minus_plus / (double)data["YY"].total_count - (double)data["YY"].minus_minus / (double)data["YY"].total_count;
   if (std::isnan(S02)) {
-    error("S02 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error("S02 error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
   double S03 = (double)data["ZZ"].plus_plus / (double)data["ZZ"].total_count - (double)data["ZZ"].plus_minus / (double)data["ZZ"].total_count +
                (double)data["ZZ"].minus_plus / (double)data["ZZ"].total_count - (double)data["ZZ"].minus_minus / (double)data["ZZ"].total_count;
   if (std::isnan(S03)) {
-    error("S03 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error("S03 error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
   // XX
   double S10 = (double)data["XX"].plus_plus / (double)data["XX"].total_count + (double)data["XX"].plus_minus / (double)data["XX"].total_count -
                (double)data["XX"].minus_plus / (double)data["XX"].total_count - (double)data["XX"].minus_minus / (double)data["XX"].total_count;
   if (std::isnan(S10)) {
-    error("S10 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error("S10 error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
   double S11 = (double)data["XX"].plus_plus / (double)data["XX"].total_count - (double)data["XX"].plus_minus / (double)data["XX"].total_count -
                (double)data["XX"].minus_plus / (double)data["XX"].total_count + (double)data["XX"].minus_minus / (double)data["XX"].total_count;
   if (std::isnan(S11)) {
-    error("S11 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error("S11 error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
   double S12 = (double)data["XY"].plus_plus / (double)data["XY"].total_count - (double)data["XY"].plus_minus / (double)data["XY"].total_count -
                (double)data["XY"].minus_plus / (double)data["XY"].total_count + (double)data["XY"].minus_minus / (double)data["XY"].total_count;
   if (std::isnan(S12)) {
-    error("S12 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error("S12 error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
   double S13 = (double)data["XZ"].plus_plus / (double)data["XZ"].total_count - (double)data["XZ"].plus_minus / (double)data["XZ"].total_count -
                (double)data["XZ"].minus_plus / (double)data["XZ"].total_count + (double)data["XZ"].minus_minus / (double)data["XZ"].total_count;
   if (std::isnan(S13)) {
-    error("S13 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error("S13 error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
   // YY
   double S20 = (double)data["YY"].plus_plus / (double)data["YY"].total_count + (double)data["YY"].plus_minus / (double)data["YY"].total_count -
                (double)data["YY"].minus_plus / (double)data["YY"].total_count - (double)data["YY"].minus_minus / (double)data["YY"].total_count;
   if (std::isnan(S20)) {
-    error("S20 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error("S20 error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
   double S21 = (double)data["YX"].plus_plus / (double)data["YX"].total_count - (double)data["YX"].plus_minus / (double)data["YX"].total_count -
                (double)data["YX"].minus_plus / (double)data["YX"].total_count + (double)data["YX"].minus_minus / (double)data["YX"].total_count;
   if (std::isnan(S21)) {
-    error("S21 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error("S21 error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
   double S22 = (double)data["YY"].plus_plus / (double)data["YY"].total_count - (double)data["YY"].plus_minus / (double)data["YY"].total_count -
                (double)data["YY"].minus_plus / (double)data["YY"].total_count + (double)data["YY"].minus_minus / (double)data["YY"].total_count;
   if (std::isnan(S22)) {
-    error("S22 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error("S22 error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
   double S23 = (double)data["YZ"].plus_plus / (double)data["YZ"].total_count - (double)data["YZ"].plus_minus / (double)data["YZ"].total_count -
                (double)data["YZ"].minus_plus / (double)data["YZ"].total_count + (double)data["YZ"].minus_minus / (double)data["YZ"].total_count;
   if (std::isnan(S23)) {
-    error("S23 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error("S23 error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
   // ZZ
   double S30 = (double)data["ZZ"].plus_plus / (double)data["ZZ"].total_count + (double)data["ZZ"].plus_minus / (double)data["ZZ"].total_count -
                (double)data["ZZ"].minus_plus / (double)data["ZZ"].total_count - (double)data["ZZ"].minus_minus / (double)data["ZZ"].total_count;
   if (std::isnan(S30)) {
-    error("S30 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error("S30 error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
   double S31 = (double)data["ZX"].plus_plus / (double)data["ZX"].total_count - (double)data["ZX"].plus_minus / (double)data["ZX"].total_count -
                (double)data["ZX"].minus_plus / (double)data["ZX"].total_count + (double)data["ZX"].minus_minus / (double)data["ZX"].total_count;
   if (std::isnan(S31)) {
-    error("S31 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error("S31 error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
   double S32 = (double)data["ZY"].plus_plus / (double)data["ZY"].total_count - (double)data["ZY"].plus_minus / (double)data["ZY"].total_count -
                (double)data["ZY"].minus_plus / (double)data["ZY"].total_count + (double)data["ZY"].minus_minus / (double)data["ZY"].total_count;
   if (std::isnan(S32)) {
-    error("S32 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error("S32 error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
   double S33 = (double)data["ZZ"].plus_plus / (double)data["ZZ"].total_count - (double)data["ZZ"].plus_minus / (double)data["ZZ"].total_count -
                (double)data["ZZ"].minus_plus / (double)data["ZZ"].total_count + (double)data["ZZ"].minus_minus / (double)data["ZZ"].total_count;
   if (std::isnan(S33)) {
-    error("S33 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error("S33 error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
 
   double S = (double)data["XX"].plus_plus / (double)data["XX"].total_count + (double)data["XX"].plus_minus / (double)data["XX"].total_count +
              (double)data["XX"].minus_plus / (double)data["XX"].total_count + (double)data["XX"].minus_minus / (double)data["XX"].total_count;
   if (std::isnan(S)) {
-    error(" final S error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
+    error(" final S error at node %s qnic: %d, with partner: %s", std::to_string(my_address).c_str(), qnic_id, std::to_string(partner).c_str());
   }
 
   EV << S00 << ", " << S01 << ", " << S02 << ", " << S03 << "\n";
@@ -598,7 +600,7 @@ symmetric tree (perfect binary tree), or banded, and should also
 specify how the resources are sorted.  Currently, this is hard-coded
 to select oldest first, and is geared toward symmetric tree.
   **/
-void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long RuleSet_id) {
+void HardwareMonitor::sendLinkTomographyRuleSet(QNodeAddr my_address, QNodeAddr partner_address, QNIC_type qnic_type, int qnic_index, unsigned long RuleSet_id) {
   LinkTomographyRuleSet *pk = new LinkTomographyRuleSet("LinkTomographyRuleSet");
   pk->setDestAddr(my_address);
   pk->setSrcAddr(partner_address);
@@ -612,7 +614,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   int rule_id = 0;
   int shared_tag = 0;
   std::string rule_name;
-  std::vector<int> partners = {partner_address};
+  std::vector<QNodeAddr> partners = {partner_address};
 
   if (num_purification > 0) {
     if (purification_type == 2002) {  // Performs both X and Z purification for each n.
@@ -993,7 +995,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   }
 }
 
-std::unique_ptr<quisp::rules::Rule> HardwareMonitor::constructPurifyRule(const std::string &rule_name, const rules::PurType pur_type, const int partner_address,
+std::unique_ptr<quisp::rules::Rule> HardwareMonitor::constructPurifyRule(const std::string &rule_name, const rules::PurType pur_type, const QNodeAddr partner_address,
                                                                          const QNIC_type qnic_type, const int qnic_index, const int rule_id, const int shared_tag) const {
   int required_qubits = 0;
   switch (pur_type) {
@@ -1093,21 +1095,21 @@ void HardwareMonitor::prepareNeighborTable() {
   for (int index = 0; index < num_qnic; index++) {
     InterfaceInfo inf = getQnicInterfaceByQnicAddr(index, QNIC_E);
     auto n_inf = getNeighbor(inf.qnic.pointer);
-    int neighborNodeAddress = n_inf->address;  // get the address of the Node nearby.
+    auto neighborNodeAddress = n_inf->address;  // get the address of the Node nearby.
     inf.neighborQNode_address = n_inf->neighborQNode_address;
     neighbor_table[neighborNodeAddress] = inf;
   }
   for (int index = 0; index < num_qnic_r; index++) {
     InterfaceInfo inf = getQnicInterfaceByQnicAddr(index, QNIC_R);
     auto n_inf = getNeighbor(inf.qnic.pointer);
-    int neighborNodeAddress = n_inf->address;  // get the address of the Node nearby.
+    auto neighborNodeAddress = n_inf->address;  // get the address of the Node nearby.
     inf.neighborQNode_address = n_inf->neighborQNode_address;
     neighbor_table[neighborNodeAddress] = inf;
   }
   for (int index = 0; index < num_qnic_rp; index++) {
     InterfaceInfo inf = getQnicInterfaceByQnicAddr(index, QNIC_RP);
     auto n_inf = getNeighbor(inf.qnic.pointer);
-    int neighborNodeAddress = n_inf->address;  // get the address of the Node nearby.
+    auto neighborNodeAddress = n_inf->address;  // get the address of the Node nearby.
     inf.neighborQNode_address = n_inf->neighborQNode_address;
     neighbor_table[neighborNodeAddress] = inf;
   }
@@ -1129,14 +1131,14 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::getNeighbor(cModule *qnic_module)
   return neighbor_info;
 }
 
-cModule *HardwareMonitor::getQNodeWithAddress(int address) {
+cModule *HardwareMonitor::getQNodeWithAddress(QNodeAddr address) {
   cTopology *topo = new cTopology("topo");
   // veryfication?
   topo->extractByParameter("included_in_topology", "\"yes\"");
-  int addr;
+  QNodeAddr addr;
   for (int i = 0; i < topo->getNumNodes(); i++) {
     cTopology::Node *node = topo->getNode(i);
-    addr = (int)node->getModule()->par("address");
+    addr = QNodeAddr{node->getModule()->par("address").stringValue()};
     EV_DEBUG << "End node address is " << addr << "\n";
     if (addr == address) {
       auto *mod = node->getModule();
@@ -1151,11 +1153,11 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
   cModuleType *type = thisNode.getModuleType();
 
   auto inf = std::make_unique<NeighborInfo>();
-  inf->address = thisNode.par("address");
+  inf->address = QNodeAddr{thisNode.par("address").stringValue()};
 
   if (provider.isQNodeType(type)) {
-    inf->neighborQNode_address = thisNode.par("address");
-    inf->address = thisNode.par("address");
+    inf->neighborQNode_address = QNodeAddr{thisNode.par("address").stringValue()};
+    inf->address = QNodeAddr{thisNode.par("address").stringValue()};
     return inf;
   }
 
@@ -1165,13 +1167,13 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
       error("BSA controller not found");
     }
 
-    int address_one = controller->getExternalAdressFromPort(0);
-    int address_two = controller->getExternalAdressFromPort(1);
-    int myaddress = provider.getNodeAddr();
+    auto address_one = controller->getExternalAdressFromPort(0);
+    auto address_two = controller->getExternalAdressFromPort(1);
+    auto myaddress = provider.getNodeAddr();
 
     EV_DEBUG << "myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << controller->getFullName() << "\n";
 
-    if (address_one == -1 && address_two == -1) {
+    if (address_one.host_addr == -1 && address_two.host_addr == -1) {
       error("BSA Controller is not initialized properly");
     }
 

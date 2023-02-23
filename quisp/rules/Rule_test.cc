@@ -6,6 +6,7 @@
 #include "Action.h"
 #include "Clause.h"
 #include "RuleSet.h"
+
 namespace {
 using namespace quisp_test;
 using namespace quisp::rules;
@@ -15,12 +16,13 @@ using quisp::modules::QNIC_R;
 using quisp::modules::QNIC_RP;
 using quisp::modules::QNIC_type;
 using quisp::rules::PurType;
+using quisp::types::QNodeAddr;
 
 TEST(RuleTest, setNextRule) {
   prepareSimulation();
-  RuleSet ruleset(1, 2);
+  RuleSet ruleset(1, QNodeAddr{2});
 
-  std::vector<int> partners = {1, 3};
+  std::vector<QNodeAddr> partners = {QNodeAddr{1}, QNodeAddr{3}};
   std::vector<QNIC_type> qnic_types = {QNIC_E, QNIC_R};
   std::vector<int> qnic_id = {10, 11};
 
@@ -41,20 +43,20 @@ TEST(RuleTest, setNextRule) {
 
 TEST(RuleTest, serialize_json_purification_rule) {
   prepareSimulation();
-  RuleSet ruleset(1234, 2);
+  RuleSet ruleset(1234, QNodeAddr{2});
 
-  auto purification = std::make_unique<Rule>(1, 0, false);
+  auto purification = std::make_unique<Rule>(QNodeAddr{1}, 0, false);
   purification->setName("purification");
   auto condition = std::make_unique<Condition>();
   // arguments: num_resource, partner_addr, qnic_type, qnic_id
-  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 1);
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, QNodeAddr{1});
   condition->addClause(std::move(enough_resource_clause));
   // purification_type, partner_addr, qnic_type, qnic_id
-  auto action = std::make_unique<Purification>(PurType::DSSA, 1);
+  auto action = std::make_unique<Purification>(PurType::DSSA, QNodeAddr{1});
   // add condition and action
   purification->setCondition(std::move(condition));
   purification->setAction(std::move(action));
-  std::vector<int> partners = {1, 3};
+  std::vector<QNodeAddr> partners = {QNodeAddr{1}, QNodeAddr{3}};
   std::vector<QNIC_type> qnic_type = {QNIC_R, QNIC_E};
   std::vector<int> qnic_id = {10, 11};
   auto swapping = std::make_unique<Rule>(partners, 0, true);
@@ -69,23 +71,23 @@ TEST(RuleTest, serialize_json_purification_rule) {
   EXPECT_EQ(purification_json["rule_id"], rule1->rule_id);
   EXPECT_EQ(purification_json["next_rule_id"], rule1->to);
   EXPECT_EQ(purification_json["name"], "purification");
-  EXPECT_EQ(purification_json["interface"][0]["partner_address"], 1);
+  EXPECT_EQ(purification_json["interface"][0]["partner_address"], "0.1");
   auto clause_json = purification_json["condition"]["clauses"][0];  // (first clause) enough resource clause
   EXPECT_EQ(clause_json["type"], "enough_resource");
   EXPECT_EQ(clause_json["options"]["num_resource"], 1);
-  EXPECT_EQ(clause_json["options"]["interface"]["partner_address"], 1);
+  EXPECT_EQ(clause_json["options"]["interface"]["partner_address"], "0.1");
   auto action_json = purification_json["action"];
   EXPECT_EQ(action_json["type"], "purification");
   EXPECT_EQ(action_json["options"]["purification_type"], "DSSA");
-  EXPECT_EQ(action_json["options"]["interface"][0]["partner_address"], 1);
+  EXPECT_EQ(action_json["options"]["interface"][0]["partner_address"], "0.1");
 }
 
 TEST(RuleTest, serialize_json_swapping_rule) {
   prepareSimulation();
-  RuleSet ruleset(1234, 2);
+  RuleSet ruleset(1234, QNodeAddr{2});
 
   // {partner_addrs}, {qnic_type}, {qnic_id}
-  std::vector<int> partners = {1, 3};
+  std::vector<QNodeAddr> partners = {QNodeAddr{1}, QNodeAddr{3}};
   std::vector<QNIC_type> qnic_types = {QNIC_E, QNIC_R};
   std::vector<int> qnic_id = {13, 15};
   std::vector<QNIC_type> remote_qnic_types = {QNIC_R, QNIC_E};
@@ -122,44 +124,42 @@ TEST(RuleTest, serialize_json_swapping_rule) {
   EXPECT_EQ(swapping_json["rule_id"], rule1->rule_id);
   EXPECT_EQ(swapping_json["next_rule_id"], rule1->to);
   EXPECT_EQ(swapping_json["name"], "swapping");
-  EXPECT_EQ(swapping_json["interface"][0]["partner_address"], 1);
-  EXPECT_EQ(swapping_json["interface"][1]["partner_address"], 3);
+  EXPECT_EQ(swapping_json["interface"][0]["partner_address"], "0.1");
+  EXPECT_EQ(swapping_json["interface"][1]["partner_address"], "0.3");
 
   // first clause: enough resource with partner 1
   auto clause1_json = swapping_json["condition"]["clauses"][0];
   EXPECT_EQ(clause1_json["type"], "enough_resource");
   EXPECT_EQ(clause1_json["options"]["num_resource"], 1);
-  EXPECT_EQ(clause1_json["options"]["interface"]["partner_address"], 1);
+  EXPECT_EQ(clause1_json["options"]["interface"]["partner_address"], "0.1");
 
   // second clause: enough resource with partner 3
   auto clause2_json = swapping_json["condition"]["clauses"][1];
   EXPECT_EQ(clause2_json["type"], "enough_resource");
   EXPECT_EQ(clause2_json["options"]["num_resource"], 1);
-  EXPECT_EQ(clause2_json["options"]["interface"]["partner_address"], 3);
+  EXPECT_EQ(clause2_json["options"]["interface"]["partner_address"], "0.3");
 
   // action: entanglement swapping ("swapping")
   auto action_json = swapping_json["action"];
   EXPECT_EQ(action_json["type"], "swapping");
-  EXPECT_EQ(action_json["options"]["interface"][0]["partner_address"], 1);
-  EXPECT_EQ(action_json["options"]["interface"][1]["partner_address"], 3);
+  EXPECT_EQ(action_json["options"]["interface"][0]["partner_address"], "0.1");
+  EXPECT_EQ(action_json["options"]["interface"][1]["partner_address"], "0.3");
 }
 
 TEST(RuleTest, deserialize_json_purification_rule) {
   prepareSimulation();
-  RuleSet ruleset(1234, 2);
+  RuleSet ruleset(1234, QNodeAddr{2});
 
-  auto purification = std::make_unique<Rule>(1, 0, false);
+  auto purification = std::make_unique<Rule>(QNodeAddr{1}, 0, false);
   purification->setName("purification");
   auto condition = std::make_unique<Condition>();
-  // arguments: num_resource, required_fidelity, partner_addr, qnic_type, qnic_id
-  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, 1);
+  auto enough_resource_clause = std::make_unique<EnoughResourceConditionClause>(1, QNodeAddr{1});
   condition->addClause(std::move(enough_resource_clause));
-  // purification_type, partner_addr, qnic_type, qnic_id
-  auto action = std::make_unique<Purification>(PurType::DSSA, 1);
+  auto action = std::make_unique<Purification>(PurType::DSSA, QNodeAddr{1});
   // add condition and action
   purification->setCondition(std::move(condition));
   purification->setAction(std::move(action));
-  std::vector<int> partners = {1, 3};
+  std::vector<QNodeAddr> partners = {QNodeAddr{1}, QNodeAddr{3}};
   std::vector<QNIC_type> qnic_type = {QNIC_E, QNIC_R};
   std::vector<int> qnic_id = {14, 15};
   auto swapping = std::make_unique<Rule>(partners, 0, true);
@@ -177,7 +177,7 @@ TEST(RuleTest, deserialize_json_purification_rule) {
   EXPECT_EQ(empty_rule->rule_id, 0);
   EXPECT_EQ(empty_rule->to, 1);
   EXPECT_EQ(empty_rule->name, "purification");
-  EXPECT_EQ(empty_rule->qnic_interfaces.at(0).partner_addr, 1);
+  EXPECT_EQ(empty_rule->qnic_interfaces.at(0).partner_addr, QNodeAddr{1});
 }
 
 }  // namespace

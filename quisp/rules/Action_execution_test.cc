@@ -11,6 +11,8 @@
 #include "modules/QNIC.h"
 #include "omnetpp/simtime.h"
 #include "rules/RuleSetConverter/RuleSetConverter.h"
+#include "test_utils/UtilFunctions.h"
+#include "types/QNodeAddr.h"
 
 namespace {
 using namespace quisp_test;
@@ -27,11 +29,13 @@ using quisp::rules::Purification;
 using quisp::rules::PurType;
 using quisp::rules::Tomography;
 using quisp::rules::rs_converter::RuleSetConverter;
+using quisp::types::QNodeAddr;
 Program terminator{"terminator", {INSTR_RET_ReturnCode_{{ReturnCode::RS_TERMINATED}}}};
 Program always_pass{"cond", {INSTR_RET_ReturnCode_{{ReturnCode::COND_PASSED}}}};
 class ActionExecutionTest : public testing::Test {
  protected:
   void SetUp() {
+    utils::prepareSimulation();
     runtime = new Runtime;
     callback = new MockRuntimeCallback;
     runtime->callback = callback;
@@ -69,13 +73,13 @@ class ActionExecutionTest : public testing::Test {
   IQubitRecord* qubit3;
   IQubitRecord* qubit4;
   IQubitRecord* qubit5;
-  int partner_addr = 1;
+  QNodeAddr partner_addr{1};
   QNIC_type qnic_type = QNIC_E;
   int qnic_id = 3;
 };
 
 TEST_F(ActionExecutionTest, Tomography) {
-  Tomography action{500, 0, partner_addr};
+  Tomography action{500, QNodeAddr{0}, partner_addr};
   setAction(&action);
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
@@ -98,8 +102,8 @@ TEST_F(ActionExecutionTest, Tomography) {
 }
 
 TEST_F(ActionExecutionTest, Swapping) {
-  int left_partner_addr = 2;
-  int right_partner_addr = 6;
+  QNodeAddr left_partner_addr{2};
+  QNodeAddr right_partner_addr{6};
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
   // -1 means no longer used. it will be deleted

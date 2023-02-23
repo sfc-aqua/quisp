@@ -4,22 +4,25 @@
 
 #include <messages/classical_messages.h>
 #include <rules/RuleSet.h>
+#include <types/QNodeAddr.h>
 #include <nlohmann/json.hpp>
 
 namespace quisp::modules::ruleset_gen {
 
+using types::QNodeAddr;
+
 class RuleSetGenerator {
  public:
-  RuleSetGenerator(int responder_addr) : responder_addr(responder_addr) {}
+  RuleSetGenerator(QNodeAddr responder_addr) : responder_addr(responder_addr) {}
 
   /**
    * @brief generate RuleSets for the given connection setup request.
    *
    * @param req
    * @param ruleset_id
-   * @return std::map<int, nlohmann::json> a map of json serialized RuleSets and its node addresses as key
+   * @return std::map<QNodeAddr, nlohmann::json> a map of json serialized RuleSets and its node addresses as key
    */
-  std::map<int, nlohmann::json> generateRuleSets(messages::ConnectionSetupRequest* req, unsigned long ruleset_id);
+  std::map<QNodeAddr, nlohmann::json> generateRuleSets(messages::ConnectionSetupRequest* req, unsigned long ruleset_id);
 
   /**
    * @brief generate rules for each node in the path.
@@ -30,8 +33,8 @@ class RuleSetGenerator {
    * @param swapping_partners_table
    * @param num_measure
    */
-  void generateSimpleSwappingRuleSets(std::map<int, std::vector<std::unique_ptr<rules::Rule>>>& rules_map, std::vector<int>& path, std::vector<int>& rev_path,
-                                      std::map<int, std::pair<int, int>>& swapping_partners_table, int num_measure);
+  void generateSimpleSwappingRuleSets(std::map<QNodeAddr, std::vector<std::unique_ptr<rules::Rule>>>& rules_map, std::vector<QNodeAddr>& path, std::vector<QNodeAddr>& rev_path,
+                                      std::map<QNodeAddr, std::pair<QNodeAddr, QNodeAddr>>& swapping_partners_table, int num_measure);
 
  protected:
   /**
@@ -40,7 +43,7 @@ class RuleSetGenerator {
    * @param req
    * @return std::vector<int> vector to store node addresses
    */
-  std::vector<int> collectPath(messages::ConnectionSetupRequest* req);
+  std::vector<QNodeAddr> collectPath(messages::ConnectionSetupRequest* req);
 
   /**
    * @brief collect swapper and partners from the given path information
@@ -48,9 +51,9 @@ class RuleSetGenerator {
    * @param path
    * @param divisions
    * @param hop_count
-   * @return std::map<int, std::pair<int, int>> swapper addr -> {left partner addr, right partner addr}
+   * @return std::map<QNodeAddr, std::pair<QNodeAddr, QNodeAddr>> swapper addr -> {left partner addr, right partner addr}
    */
-  std::map<int, std::pair<int, int>> collectSwappingPartners(std::vector<int>& path, int divisions, int hop_count);
+  std::map<QNodeAddr, std::pair<QNodeAddr, QNodeAddr>> collectSwappingPartners(std::vector<QNodeAddr>& path, int divisions, int hop_count);
 
   /**
    * Treat subpath [i:...] of length l
@@ -62,7 +65,8 @@ class RuleSetGenerator {
    * @param swapper Swappers to create those links (might be -1 for real links)
    * @param fill_start [0:fill_start[ is already filled
    **/
-  int fillPathDivision(std::vector<int>& path, int i, int l, std::vector<int>& link_left, std::vector<int>& link_right, std::vector<int>& swapper, int fill_start);
+  int fillPathDivision(std::vector<QNodeAddr>& path, int i, int l, std::vector<QNodeAddr>& link_left, std::vector<QNodeAddr>& link_right, std::vector<QNodeAddr>& swapper,
+                       int fill_start);
 
   /**
    * @brief create tomography rule
@@ -73,7 +77,7 @@ class RuleSetGenerator {
    * @param shared_tag
    * @return std::unique_ptr<rules::Rule>
    */
-  std::unique_ptr<rules::Rule> tomographyRule(int partner_address, int owner_address, int num_measure, int shared_tag);
+  std::unique_ptr<rules::Rule> tomographyRule(QNodeAddr partner_address, QNodeAddr owner_address, int num_measure, int shared_tag);
 
   /**
    * @brief create purification rule
@@ -83,7 +87,7 @@ class RuleSetGenerator {
    * @param shared_tag
    * @return std::unique_ptr<rules::Rule>
    */
-  std::unique_ptr<rules::Rule> purifyRule(int partner_address, rules::PurType purification_type, int shared_tag);
+  std::unique_ptr<rules::Rule> purifyRule(QNodeAddr partner_address, rules::PurType purification_type, int shared_tag);
 
   /**
    * @brief create entanglement swapping rule
@@ -92,8 +96,8 @@ class RuleSetGenerator {
    * @param shared_tag
    * @return std::unique_ptr<rules::Rule>
    */
-  std::unique_ptr<rules::Rule> swapRule(std::pair<int, int> partner_address, int shared_tag);
+  std::unique_ptr<rules::Rule> swapRule(std::pair<QNodeAddr, QNodeAddr> partner_address, int shared_tag);
 
-  int responder_addr;
+  QNodeAddr responder_addr;
 };
 }  // namespace quisp::modules::ruleset_gen

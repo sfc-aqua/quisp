@@ -10,6 +10,7 @@
 
 #include "IApplication.h"
 #include "modules/Logger/LoggerBase.h"
+#include "types/QNodeAddr.h"
 #include "utils/ComponentProvider.h"
 
 using namespace omnetpp;
@@ -30,10 +31,10 @@ class Application : public IApplication, public Logger::LoggerBase {
   cMessage *generateTrafficMsg;
 
  protected:
-  int my_address;
+  QNodeAddr my_address;
   bool is_initiator;
 
-  std::unordered_map<int, int> end_node_weight_map;
+  std::unordered_map<types::QNodeAddr, int> end_node_weight_map;
 
   void initialize() override;
   void handleMessage(cMessage *msg) override;
@@ -41,7 +42,7 @@ class Application : public IApplication, public Logger::LoggerBase {
   void createEndNodeWeightMap();
   void generateTraffic();
 
-  messages::ConnectionSetupRequest *createConnectionSetupRequest(int dest_addr, int num_of_required_resources);
+  messages::ConnectionSetupRequest *createConnectionSetupRequest(QNodeAddr dest_addr, int num_of_required_resources);
   utils::ComponentProvider provider;
 };
 
