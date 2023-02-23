@@ -19,7 +19,6 @@
 #include <modules/Logger/DisabledLogger.h>
 #include <modules/QNIC.h>
 #include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
-#include <modules/QRSA/HardwareMonitor/HardwareMonitor.h>
 #include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
 #include <modules/QRSA/QRSA.h>
 #include <modules/QRSA/RealTimeController/IRealTimeController.h>
@@ -99,7 +98,6 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
   }
   // setter function for allResorces[qnic_type][qnic_index]
   void setAllResources(int partner_addr, IQubitRecord* qubit) { this->bell_pair_store.insertEntangledQubit(partner_addr, qubit); };
-  void setTracker(int qnic_address, int shot_number, QubitAddr_cons qubit_address) { this->tracker[qnic_address].insert(std::make_pair(shot_number, qubit_address)); };
 
  private:
   FRIEND_TEST(RuleEngineTest, ESResourceUpdate);

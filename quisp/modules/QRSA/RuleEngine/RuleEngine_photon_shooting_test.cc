@@ -6,18 +6,15 @@
 #include <memory>
 #include <utility>
 
+#include <messages/classical_messages.h>
+#include <modules/QNIC.h>
+#include <modules/QNIC/StationaryQubit/StationaryQubit.h>
+#include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
+#include <modules/QRSA/RealTimeController/IRealTimeController.h>
+
 #include "BellPairStore/BellPairStore.h"
 #include "IRuleEngine.h"
 #include "RuleEngine.h"
-
-#include "messages/QNode_ipc_messages_m.h"
-#include "messages/link_generation_messages_m.h"
-#include "modules/QNIC.h"
-#include "modules/QNIC/StationaryQubit/StationaryQubit.h"
-#include "modules/QRSA/HardwareMonitor/HardwareMonitor.h"
-#include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
-#include "modules/QRSA/RealTimeController/IRealTimeController.h"
-#include "omnetpp/csimulation.h"
 
 namespace {
 
@@ -55,7 +52,6 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
   using quisp::modules::RuleEngine::getEmitTimeFromBSMNotification;
   using quisp::modules::RuleEngine::handleMessage;
   using quisp::modules::RuleEngine::initialize;
-  using quisp::modules::RuleEngine::ntable;
   using quisp::modules::RuleEngine::par;
   using quisp::modules::RuleEngine::schedulePhotonEmission;
   using quisp::modules::RuleEngine::sendEmitPhotonSignalToQnic;
@@ -74,7 +70,6 @@ class RuleEngineTestTarget : public quisp::modules::RuleEngine {
   // setter function for allResorces[qnic_type][qnic_index]
   void setQubitBusyInQnic(int qnic_type, int qnic_index, int qubit_index) { qnic_store->setQubitBusy(QNIC_type(qnic_type), qnic_index, qubit_index, true); };
   int getNumFreeQubitsInQnic(int qnic_type, int qnic_index) { return qnic_store->countNumFreeQubits(QNIC_type(qnic_type), qnic_index); }
-  int getBurstCountByQnic(int qnic_address) { return this->qnic_burst_trial_counter[qnic_address]; }
 };
 
 TEST(RuleEnginePhotonShootingTest, RequestEmissionWithoutFreeQubit) {

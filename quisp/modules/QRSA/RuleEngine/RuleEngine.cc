@@ -229,29 +229,6 @@ void RuleEngine::handlePurificationResult(const PurificationResultKey &key, cons
   purification_result_table.erase(it);
 }
 
-InterfaceInfo RuleEngine::getInterface_toNeighbor(int destAddr) {
-  InterfaceInfo inf;
-  auto it = ntable.find(destAddr);
-
-  // Neighbor not found! This should not happen unless you simulate broken links in real time.
-  if (it == ntable.end())
-    error("Interface to neighbor not found in neighbor table prepared by the Hardware Manager.... This should probably not happen now.");
-  else
-    inf = (*it).second;  // store gate index connected to the destination (BSA) node by refering to the neighbor table.
-  return inf;
-}
-
-InterfaceInfo RuleEngine::getInterface_toNeighbor_Internal(int local_qnic_address) {
-  InterfaceInfo inf;
-  for (auto i = ntable.begin(); i != ntable.end(); i++) {
-    // Neighbor not found! This should not happen unless you simulate broken links in real time.
-    if (i == ntable.end()) error("Interface to neighbor not found in neighbor table prepared by the Hardware Manager.... This should probably not happen now.");
-
-    if (i->second.qnic.address == local_qnic_address) inf = (*i).second;
-  }
-  return inf;
-}
-
 void RuleEngine::handleSwappingResult(const SwappingResultData &data) {
   auto qnic_addr = routingdaemon->findQNicAddrByDestAddr(data.new_partner_addr);
   auto conn_info = hardware_monitor->findConnectionInfoByQnicAddr(qnic_addr);
@@ -286,8 +263,6 @@ void RuleEngine::freeResource(int qnic_index /*The actual index. Not address. Th
   qubit_record->setBusy(false);
   if (qubit_record->isAllocated()) qubit_record->setAllocated(false);
 }
-
-double RuleEngine::predictResourceFidelity(QNIC_type qnic_type, int qnic_index, int entangled_node_address, int resource_index) { return uniform(.6, .9); }
 
 // Invoked whenever a new resource (entangled with neighbor) has been created.
 // Allocates those resources to a particular ruleset, from top to bottom (all of it).

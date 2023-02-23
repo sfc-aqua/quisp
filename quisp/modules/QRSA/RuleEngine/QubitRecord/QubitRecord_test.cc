@@ -1,10 +1,10 @@
-#include "QubitRecord.h"
 #include <gtest/gtest.h>
 #include <modules/Logger/DisabledLogger.h>
-#include <omnetpp/cexception.h>
-#include <omnetpp/cmodule.h>
+#include <modules/QNIC.h>
 #include <test_utils/TestUtils.h>
 #include <utils/ComponentProvider.h>
+
+#include "QubitRecord.h"
 
 namespace {
 using namespace quisp_test;
@@ -13,6 +13,7 @@ using quisp::modules::QNIC_E;
 using quisp::modules::QNIC_N;
 using quisp::modules::QNIC_R;
 using quisp::modules::QNIC_RP;
+using quisp::modules::QNIC_type;
 using quisp::utils::ComponentProvider;
 
 class QubitRecord : public quisp::modules::qubit_record::QubitRecord {
