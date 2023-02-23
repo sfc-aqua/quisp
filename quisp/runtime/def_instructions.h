@@ -27,6 +27,19 @@ INSTR(SUB, RegId, RegId, int)
 INSTR(SUB, RegId, RegId, RegId)
 INSTR(INC, RegId)
 INSTR(SET, RegId, int)
+INSTR(BITWISE_AND, RegId /* write */, RegId /* read */, RegId /* read */)
+INSTR(BITWISE_AND, RegId /* write */, RegId /* read */, int /* read */)
+INSTR(BITWISE_OR, RegId /* write */, RegId /* read */, RegId /* read */)
+INSTR(BITWISE_OR, RegId /* write */, RegId /* read */, int /* read */)
+INSTR(BITWISE_XOR, RegId /* write */, RegId /* read */, RegId /* read */)
+INSTR(BITWISE_XOR, RegId /* write */, RegId /* read */, int /* read */)
+// in place operation
+INSTR(BITWISE_AND, RegId /* write */, RegId /* read */)  // in-place operation: first_reg = first_reg | second_reg (bitwise and)
+INSTR(BITWISE_AND, RegId /* write */, int /* read */)  //  in-place operation: first_reg = first_reg | int (bitwise and)
+INSTR(BITWISE_OR, RegId /* write */, RegId /* read */)  //  in-place operation: first_reg = first_reg | second_reg (bitwise or)
+INSTR(BITWISE_OR, RegId /* write */, int /* read */)  //  in-place operation: first_reg = first_reg | int (bitwise or)
+INSTR(BITWISE_XOR, RegId /* write */, RegId /* read */)  //  in-place operation: first_reg = first_reg | second_reg (bitwise xor)
+INSTR(BITWISE_XOR, RegId /* write */, int /* read */)  //  in-place operation: first_reg = first_reg | int (bitwise xor)
 
 // control flow
 INSTR(BEQ, Label, RegId, RegId)  // branch if the reg values are same
@@ -49,30 +62,36 @@ INSTR(STORE, MemoryKey, int)
 INSTR(LOAD_LEFT_OP, RegId, MemoryKey)
 INSTR(LOAD_RIGHT_OP, RegId, MemoryKey)
 
-// qubit operations
+// qubit retrieval operations
 INSTR(GET_QUBIT, QubitId, QNodeAddr, int)  // may throw "no qubit error"
 INSTR(GET_QUBIT, QubitId, QNodeAddr, RegId)  // may throw "no qubit error"
 INSTR(GET_QUBIT, RegId /* qubit id */, QNodeAddr /* partner addr */, RegId /* given qubit index */)
-INSTR(GET_QUBIT_BY_SEQ_NO, RegId, QNodeAddr, RegId) 
+INSTR(GET_QUBIT_BY_SEQ_NO, RegId /* write: qubit */, QNodeAddr /* read */, RegId /* read: seq_no */)
+INSTR(GET_QUBIT_BY_SEQ_NO, QubitId /* write: qubit */, QNodeAddr /* read */, RegId /* read: seq_no */)
+
+// qubit quantum gate operations
 INSTR(MEASURE_RANDOM, MemoryKey, QubitId)
 INSTR(MEASURE, MemoryKey, QubitId, Basis)
-INSTR(FREE_QUBIT, QubitId)
-INSTR(LOCK_QUBIT, QubitId, RegId /* action index */)
 INSTR(GATE_X, QubitId)
 INSTR(GATE_Z, QubitId)
 INSTR(GATE_CNOT, QubitId, QubitId)
+// circuit operations
 INSTR(PURIFY_X, RegId /* measurement_result */, QubitId /* keep_qubit */, QubitId /* trash_qubit */)
 INSTR(PURIFY_Z, RegId /* measurement_result */, QubitId /* keep_qubit */, QubitId /* trash_qubit */)
 INSTR(PURIFY_Y, RegId /* measurement_result */, QubitId /* keep_qubit */, QubitId /* trash_qubit */)
 
-// naming (resource management) operations
+// resource management operations
 INSTR(SET_PARTNER, QubitId, QNodeAddr /* new partner address */)  // TODO: in the future we would like to use SET_NAME or SET_ID instead to allow multipartite purification
+INSTR(FREE_QUBIT, QubitId)
+INSTR(PROMOTE, QubitId)
+INSTR(PROMOTE, RegId /* qubit */)
+INSTR(LOCK_QUBIT, QubitId, RegId /* action index */)
 
 // message operations
 INSTR(GET_MESSAGE_SEQ, RegId /* read: message index */, RegId /* write: sequence number */)
 INSTR(COUNT_MESSAGE, RegId /* read: sequence number */, RegId /* write: count */)
-INSTR(GET_MESSAGE, RegId /* read: sequence number */, RegId /* read: message index */, RegId /* write: correction_frame */) // for swapping
-INSTR(GET_MESSAGE, RegId /* read: sequence number */, RegId /* read: message index */, RegId /* write: measurement_result */, RegId /* write: protocol */)  // for purification
+INSTR(GET_MESSAGE, RegId /* read: sequence number */, int /* read: message index */, RegId /* write: correction_frame */)  // for swapping
+INSTR(GET_MESSAGE, RegId /* read: sequence number */, int /* read: message index */, RegId /* write: measurement_result */, RegId /* write: protocol */)  // for purification
 
 // send classical messages
 INSTR(SEND_LINK_TOMOGRAPHY_RESULT, QNodeAddr, RegId, MemoryKey, int, Time)  // partner addr, current count reg_id, outcome key, max_count, start_time

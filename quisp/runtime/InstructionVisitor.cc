@@ -250,6 +250,89 @@ void InstructionVisitor::operator()(const INSTR_SUB_RegId_RegId_RegId_& instruct
   runtime->setRegVal(reg_id1, val);
 }
 
+// bitwise operation with output reg
+void InstructionVisitor::operator()(const INSTR_BITWISE_AND_RegId_RegId_RegId_& instruction) {
+  auto [result_reg, reg_1, reg_2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto arg2 = (int)runtime->getRegVal(reg_2);
+  auto val = arg1 & arg2;
+  runtime->setRegVal(result_reg, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_AND_RegId_RegId_int_& instruction) {
+  auto [result_reg, reg_1, arg2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto val = arg1 & arg2;
+  runtime->setRegVal(result_reg, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_OR_RegId_RegId_RegId_& instruction) {
+  auto [result_reg, reg_1, reg_2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto arg2 = (int)runtime->getRegVal(reg_2);
+  auto val = arg1 | arg2;
+  runtime->setRegVal(result_reg, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_OR_RegId_RegId_int_& instruction) {
+  auto [result_reg, reg_1, arg2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto val = arg1 | arg2;
+  runtime->setRegVal(result_reg, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_XOR_RegId_RegId_RegId_& instruction) {
+  auto [result_reg, reg_1, reg_2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto arg2 = (int)runtime->getRegVal(reg_2);
+  auto val = arg1 ^ arg2;
+  runtime->setRegVal(result_reg, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_XOR_RegId_RegId_int_& instruction) {
+  auto [result_reg, reg_1, arg2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto val = arg1 ^ arg2;
+  runtime->setRegVal(result_reg, val);
+}
+
+// bitwise operation in-place
+void InstructionVisitor::operator()(const INSTR_BITWISE_AND_RegId_RegId_& instruction) {
+  auto [reg_1, reg_2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto arg2 = (int)runtime->getRegVal(reg_2);
+  auto val = arg1 & arg2;
+  runtime->setRegVal(reg_1, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_AND_RegId_int_& instruction) {
+  auto [reg_1, arg2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto val = arg1 & arg2;
+  runtime->setRegVal(reg_1, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_OR_RegId_RegId_& instruction) {
+  auto [reg_1, reg_2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto arg2 = (int)runtime->getRegVal(reg_2);
+  auto val = arg1 | arg2;
+  runtime->setRegVal(reg_1, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_OR_RegId_int_& instruction) {
+  auto [reg_1, arg2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto val = arg1 | arg2;
+  runtime->setRegVal(reg_1, val);
+}
+void InstructionVisitor::operator()(const INSTR_BITWISE_XOR_RegId_RegId_& instruction) {
+  auto [reg_1, reg_2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto arg2 = (int)runtime->getRegVal(reg_2);
+  auto val = arg1 ^ arg2;
+  runtime->setRegVal(reg_1, val);
+}
+
+void InstructionVisitor::operator()(const INSTR_BITWISE_XOR_RegId_int_& instruction) {
+  auto [reg_1, arg2] = instruction.args;
+  auto arg1 = (int)runtime->getRegVal(reg_1);
+  auto val = arg1 ^ arg2;
+  runtime->setRegVal(reg_1, val);
+}
+
 void InstructionVisitor::operator()(const INSTR_SET_RegId_int_& instruction) {
   auto [reg_id1, arg1] = instruction.args;
   runtime->setRegVal(reg_id1, arg1);
@@ -304,6 +387,25 @@ void InstructionVisitor::operator()(const INSTR_GET_QUBIT_BY_SEQ_NO_RegId_QNodeA
   runtime->setQubit(qubit_ref, qubit_id);
 }
 
+void InstructionVisitor::operator()(const INSTR_GET_QUBIT_BY_SEQ_NO_QubitId_QNodeAddr_RegId_& instruction) {
+  auto [qubit_id, partner_addr, sequence_number_reg] = instruction.args;
+  auto sequence_number = runtime->getRegVal(sequence_number_reg);
+  auto* qubit_ref = runtime->getQubitBySequenceNumber(partner_addr, runtime->rule_id, sequence_number);
+  if (qubit_ref == nullptr) {
+    runtime->qubit_found = false;
+    return;
+  }
+  runtime->qubit_found = true;
+  runtime->setQubit(qubit_ref, qubit_id);
+}
+
+void InstructionVisitor::operator()(const INSTR_PROMOTE_QubitId_& instruction) {
+  auto [qubit_id] = instruction.args;
+  auto* qubit_rec = runtime->getQubitByQubitId(qubit_id);
+  auto it = runtime->findQubit(qubit_rec);
+  runtime->promoteQubit(it);
+}
+
 void InstructionVisitor::operator()(const INSTR_SET_PARTNER_QubitId_QNodeAddr_& instruction) {
   auto [qubit_id, partner_addr] = instruction.args;
   auto* qubit = runtime->getQubitByQubitId(qubit_id);
@@ -335,10 +437,9 @@ void InstructionVisitor::operator()(const INSTR_COUNT_MESSAGE_RegId_RegId_& inst
   runtime->setRegVal(return_reg_id, count);
 }
 
-void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_RegId_RegId_& instruction) {
-  auto [sequence_number_reg_id, message_index_reg, content_reg_id_1] = instruction.args;
+void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_int_RegId_& instruction) {
+  auto [sequence_number_reg_id, message_index, content_reg_id_1] = instruction.args;
   auto sequence_number = runtime->getRegVal(sequence_number_reg_id);
-  auto message_index = runtime->getRegVal(message_index_reg);
   auto& rule_messages = runtime->messages[{runtime->rule_id}];
 
   int i = 0;
@@ -355,10 +456,9 @@ void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_RegId_RegId_& 
   runtime->message_found = false;
 }
 
-void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_RegId_RegId_RegId_& instruction) {
-  auto [sequence_number_reg_id, message_index_reg, content_reg_id_1, content_reg_id_2] = instruction.args;
+void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_int_RegId_RegId_& instruction) {
+  auto [sequence_number_reg_id, message_index, content_reg_id_1, content_reg_id_2] = instruction.args;
   auto sequence_number = runtime->getRegVal(sequence_number_reg_id);
-  auto message_index = runtime->getRegVal(message_index_reg);
   auto& rule_messages = runtime->messages[{runtime->rule_id}];
 
   int i = 0;
