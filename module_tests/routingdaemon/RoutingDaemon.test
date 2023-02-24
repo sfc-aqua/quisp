@@ -121,15 +121,13 @@ using namespace omnetpp;
 using namespace quisp::messages;
 namespace RoutingDaemon {
 
-class TestRoutingDaemon : public quisp::modules::RoutingDaemon {
+class TestRoutingDaemon : public quisp::modules::routing_daemon::RoutingDaemon {
  public:
   TestRoutingDaemon() : RoutingDaemon() {}
   void finish() override {
     int other_node_addr = 3 - myAddress;
-    if (qrtable[other_node_addr].pointer == nullptr) 
-      printf("FAIL: routing table is not updated and the the pointer is nullptr\n");
-    if (qrtable[other_node_addr].address != myAddress) 
-      printf("FAIL: in the routing table, the value is %d but the expected value is %d\n", qrtable[other_node_addr].address, myAddress);
+    if (qrtable[other_node_addr] != myAddress)
+      printf("FAIL: in the routing table, the value is %d but the expected value is %d\n", qrtable[other_node_addr], myAddress);
   }
 };
 Define_Module(TestRoutingDaemon);
