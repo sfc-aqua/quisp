@@ -34,13 +34,6 @@ void HardwareMonitor::initialize(int stage) {
   EV_INFO << "HardwareMonitor booted\n";
   routing_daemon = provider.getRoutingDaemon();
 
-  output_count initial;
-  initial.minus_minus = 0;
-  initial.minus_plus = 0;
-  initial.plus_minus = 0;
-  initial.plus_plus = 0;
-  initial.total_count = 0;
-
   Pauli.X << 0, 1, 1, 0;
   Pauli.Y << 0, std::complex<double>(0, -1), std::complex<double>(0, 1), 0;
   Pauli.Z << 1, 0, 0, -1;
@@ -179,7 +172,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
       auto partner_output_iter = temporal_tomography_output[local_qnic.address][partner_addr].find(result->getCount_id());
       if (partner_output_iter != temporal_tomography_output[local_qnic.address][partner_addr].end()) {
         EV << "Tomography data already found. Updating with result from partner\n";
-        tomography_outcome temp = partner_output_iter->second;
+        TomographyOutcome temp = partner_output_iter->second;
         if (result->getSrcAddr() == my_address) {
           temp.my_basis = result->getBasis();
           temp.my_output_is_plus = result->getOutput_is_plus();
@@ -192,7 +185,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
         partner_output_iter->second = temp;
       } else {
         EV << "Fresh tomography data with partner :" << partner_addr << "\n";
-        tomography_outcome temp;
+        TomographyOutcome temp;
         if (result->getSrcAddr() == my_address) {
           temp.my_basis = result->getBasis();
           temp.my_output_is_plus = result->getOutput_is_plus();
@@ -207,7 +200,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
     } else {
       // no partner info found in this output
       EV << "No partner information found with partner: " << partner_addr << "\n";
-      tomography_outcome temp;
+      TomographyOutcome temp;
       if (result->getSrcAddr() == my_address) {
         temp.my_basis = result->getBasis();
         temp.my_output_is_plus = result->getOutput_is_plus();
@@ -218,7 +211,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
         temp.partner_GOD_clean = result->getGOD_clean();
       }
       // If this partner is new, then initialize tables
-      std::map<int, tomography_outcome> temp_result;
+      std::map<int, TomographyOutcome> temp_result;
       temp_result.insert(std::make_pair(result->getCount_id(), temp));
       /* temporal_tomography_output is filled in, those data are summarized into basis based measurement outcome table.
        * This accumulates the number of ++, +-, -+ and -- for each basis combination.*/
@@ -227,7 +220,7 @@ void HardwareMonitor::handleMessage(cMessage *msg) {
       qnic_partner_map.insert(std::make_pair(local_qnic.address, partner_addr));
 
       // initialize link cost
-      link_cost temp_cost;
+      LinkCost temp_cost;
       temp_cost.Bellpair_per_sec = -1;
       temp_cost.tomography_measurements = -1;
       temp_cost.tomography_time = -1;
@@ -272,9 +265,9 @@ void HardwareMonitor::finish() {
   std::cout << "Opened new file to write.\n";
 
   // here generate tomography data storage
-  tomography_data = new raw_data[num_qnic_total];
+  tomography_data = new RawData[num_qnic_total];
 
-  output_count initial;
+  OutputCount initial;
   initial.minus_minus = 0;
   initial.minus_plus = 0;
   initial.plus_minus = 0;
@@ -559,19 +552,6 @@ void HardwareMonitor::writeToFile_Topology_with_LinkCost(int qnic_id, double lin
               << this_node->getFullName() << "<--> QuantumChannel{ cost = " << link_cost << "; distance = " << dis << "km; fidelity = " << fidelity
               << "; bellpair_per_sec = " << bellpair_per_sec << ";} <-->" << neighbor_node->getFullName() << "\n";
   }
-}
-
-// Excludes Hom, Epps and other intermediate nodes.
-QNIC HardwareMonitor::search_QNIC_from_Neighbor_QNode_address(int neighbor_address) {
-  for (auto it = neighbor_table.cbegin(); it != neighbor_table.cend(); ++it) {
-    if (it->second.neighborQNode_address == neighbor_address) {
-      return it->second.qnic;
-    }
-  }
-
-  throw cRuntimeError(
-      "Something is wrong when looking for QNIC info from neighbor QNode "
-      "address. Tomography is also only available between neighbor.");
 }
 
 /**
@@ -1181,7 +1161,6 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
   cModuleType *type = thisNode.getModuleType();
 
   auto inf = std::make_unique<NeighborInfo>();
-  inf->type = type;
   inf->address = thisNode.par("address");
 
   if (provider.isQNodeType(type)) {
@@ -1223,11 +1202,6 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
       "This simulator only recognizes the following network level node "
       "types: QNode, EPPS and BSA. Not %s",
       thisNode.getClassName());
-}
-
-NeighborTable HardwareMonitor::passNeighborTable() {
-  Enter_Method("passNeighborTable()");
-  return neighbor_table;
 }
 
 }  // namespace quisp::modules
