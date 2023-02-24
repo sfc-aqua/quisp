@@ -25,7 +25,6 @@ class HardwareMonitor : public IHardwareMonitor {
  public:
   HardwareMonitor();
   ~HardwareMonitor();
-  NeighborTable passNeighborTable() override;
   int getQnicNumQubits(int qnic_index, QNIC_type qnic_type) override;
   std::unique_ptr<InterfaceInfo> findInterfaceByNeighborAddr(int neighbor_address) override;
   std::unique_ptr<ConnectionSetupInfo> findConnectionInfoByQnicAddr(int qnic_address) override;
@@ -59,7 +58,7 @@ class HardwareMonitor : public IHardwareMonitor {
   int purification_type = -1;
   int num_measure;
   int num_end_nodes;
-  std::vector<int> tomography_partners;
+
   // in the case of retry connection setup, the partner could be changed.
   std::map<int, int> qnic_partner_map;
 
@@ -67,7 +66,7 @@ class HardwareMonitor : public IHardwareMonitor {
 
   cModule *getQnic(int qnic_index, QNIC_type qnic_type);
   NeighborTable neighbor_table;
-  raw_data *tomography_data;
+  RawData *tomography_data;
   SingleQubitError Pauli;
 
   TomographyOutcomeTable *temporal_tomography_output;  // qnic address -> partner . count_id . outcome
@@ -86,7 +85,6 @@ class HardwareMonitor : public IHardwareMonitor {
   virtual cModule *getQNodeWithAddress(int address);
   virtual InterfaceInfo getQnicInterfaceByQnicAddr(int qnic_index, QNIC_type qnic_type);
   virtual void sendLinkTomographyRuleSet(int my_address, int partner_address, QNIC_type qnic_type, int qnic_index, unsigned long rule_id);
-  virtual QNIC search_QNIC_from_Neighbor_QNode_address(int neighbor_address);
   virtual Eigen::Matrix4cd reconstruct_density_matrix(int qnic_id, int partner);
   virtual unsigned long createUniqueId();
   virtual void writeToFile_Topology_with_LinkCost(int qnic_id, double link_cost, double fidelity, double bellpair_per_sec);
