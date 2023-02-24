@@ -22,7 +22,7 @@ void BSAController::initialize() {
   // if this BSA is internal set left to be self node
   if (strcmp(getParentModule()->getName(), "qnic_r") == 0) {
     address = provider.getQNode()->par("address").intValue();
-    left_qnic.address = provider.getQNode()->par("address").intValue();
+    left_qnic.parent_node_addr = provider.getQNode()->par("address").intValue();
     left_qnic.index = getParentModule()->par("self_qnic_index").intValue();
     left_qnic.type = QNIC_R;
   } else {
@@ -75,10 +75,10 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
     if (!batch_click_msg->getClickResults(index).success) continue;
     leftpk->appendSuccessIndex(index);
     leftpk->appendCorrectionOperation(PauliOperator::I);
-    leftpk->setNeighborAddress(right_qnic.address);
+    leftpk->setNeighborAddress(right_qnic.parent_node_addr);
     rightpk->appendSuccessIndex(index);
     rightpk->appendCorrectionOperation(batch_click_msg->getClickResults(index).correction_operation);
-    rightpk->setNeighborAddress(left_qnic.address);
+    rightpk->setNeighborAddress(left_qnic.parent_node_addr);
   }
   send(leftpk, "to_router");
   send(rightpk, "to_router");
@@ -88,7 +88,7 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
 }
 
 BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_left) {
-  int destination = (is_left) ? left_qnic.address : right_qnic.address;
+  int destination = (is_left) ? left_qnic.parent_node_addr : right_qnic.parent_node_addr;
   int qnic_index = (is_left) ? left_qnic.index : right_qnic.index;
   auto qnic_type = (is_left) ? left_qnic.type : right_qnic.type;
   auto *notification_packet = new BSMTimingNotification();
@@ -108,7 +108,7 @@ BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_le
 }
 
 CombinedBSAresults *BSAController::generateNextNotificationTiming(bool is_left) {
-  int destination = (is_left) ? left_qnic.address : right_qnic.address;
+  int destination = (is_left) ? left_qnic.parent_node_addr : right_qnic.parent_node_addr;
   int qnic_index = (is_left) ? left_qnic.index : right_qnic.index;
   auto qnic_type = (is_left) ? left_qnic.type : right_qnic.type;
   auto *notification_packet = new CombinedBSAresults();
@@ -204,12 +204,8 @@ simtime_t BSAController::getTravelTimeFromPort(int port) {
   return SimTime(distance / speed_of_light_in_channel);
 }
 
-QNIC_id BSAController::getExternalQNICInfoFromPort(int port) {
-  QNIC_id qid;
-  qid.address = getExternalAdressFromPort(port);
-  qid.index = getExternalQNICIndexFromPort(port);
-  qid.type = QNIC_E;
-  return qid;
+BsaQNicId BSAController::getExternalQNICInfoFromPort(int port) {
+  return BsaQNicId{.type = QNIC_E, .index = getExternalQNICIndexFromPort(port), .parent_node_addr = getExternalAdressFromPort(port)};
 }
 
 void BSAController::cancelBSMTimeOut() {
