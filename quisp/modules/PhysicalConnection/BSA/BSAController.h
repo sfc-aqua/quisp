@@ -19,6 +19,12 @@ using namespace quisp::messages;
 
 namespace quisp::modules {
 
+struct BsaQNicId {
+  QNIC_type type;
+  int index;
+  int parent_node_addr;
+};
+
 /** @class BSAController BSA_Controller.h
  *
  *  \brief This module takes the click event from BSA,
@@ -56,13 +62,13 @@ class BSAController : public cSimpleModule {
   simtime_t calculateOffsetTimeFromDistance();
   simtime_t getTravelTimeFromPort(int port);
   double getExternalDistanceFromPort(int port);
-  QNIC_id getExternalQNICInfoFromPort(int port);
+  BsaQNicId getExternalQNICInfoFromPort(int port);
   void sendMeasurementResults(BatchClickEvent* msg);
 
   // information for communications
   int address;
-  QNIC_id left_qnic;
-  QNIC_id right_qnic;
+  BsaQNicId left_qnic;
+  BsaQNicId right_qnic;
   simtime_t left_travel_time;
   simtime_t right_travel_time;
 
