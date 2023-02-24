@@ -24,7 +24,7 @@ struct InterfaceInfo {
 };
 
 struct ConnectionSetupInfo {
-  QNIC_id qnic;
+  QNIC qnic;
   int neighbor_address;
   int quantum_link_cost;
 };

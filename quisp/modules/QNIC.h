@@ -33,26 +33,19 @@ static const char* QNIC_names[QNIC_N] = {
     "qnic_rp",
 };
 
-typedef struct {
+struct QNIC {
   QNIC_type type;
   int index;
+  // QNIC's self_qnic_address
   int address;
-  bool isReserved;
-} QNIC_id;
+  // Pointer to that particular QNIC.
+  cModule* pointer = nullptr;
+};
 
-typedef struct {
-  QNIC_id fst;
-  QNIC_id snd;
-} QNIC_pair_info;
-
-typedef struct QNIC : QNIC_id {
-  cModule* pointer;  // Pointer to that particular QNIC.
-  int address;
-} QNIC;
-
-// Table to check the qnic is reserved or not.
-typedef std::map<int, std::map<int, bool>> QNIC_reservation_table;
-
+struct QNIC_pair_info {
+  QNIC fst;
+  QNIC snd;
+};
 }  // namespace quisp::modules
 
 namespace std {
