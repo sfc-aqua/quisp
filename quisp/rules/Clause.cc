@@ -59,9 +59,9 @@ void FidelityConditionClause::deserialize_json(json serialized) {
   }
 }
 
-WaitPurificationClause::WaitPurificationClause(int partner_address, int shared_rule_tag) : Clause(partner_address), shared_rule_tag(shared_rule_tag) {}
+PurificationCorrelationClause::PurificationCorrelationClause(int partner_address, int shared_rule_tag) : Clause(partner_address), shared_rule_tag(shared_rule_tag) {}
 
-json WaitPurificationClause::serialize_json() {
+json PurificationCorrelationClause::serialize_json() {
   json wait_json;
   wait_json["type"] = "wait";
   wait_json["options"]["interface"]["partner_address"] = partner_address;
@@ -69,7 +69,7 @@ json WaitPurificationClause::serialize_json() {
   return wait_json;
 }
 
-void WaitPurificationClause::deserialize_json(json serialized) {
+void PurificationCorrelationClause::deserialize_json(json serialized) {
   auto options = serialized["options"];
   if (options != nullptr) {
     options["interface"]["partner_address"].get_to(partner_address);
@@ -77,9 +77,9 @@ void WaitPurificationClause::deserialize_json(json serialized) {
   }
 }
 
-WaitSwappingClause::WaitSwappingClause(int swapper_address, int shared_rule_tag) : Clause(swapper_address), shared_rule_tag(shared_rule_tag) {}
+SwappingCorrectionClause::SwappingCorrectionClause(int swapper_address, int shared_rule_tag) : Clause(swapper_address), shared_rule_tag(shared_rule_tag) {}
 
-json WaitSwappingClause::serialize_json() {
+json SwappingCorrectionClause::serialize_json() {
   json wait_json;
   wait_json["type"] = "wait";
   wait_json["options"]["interface"]["partner_address"] = partner_address;
@@ -87,7 +87,7 @@ json WaitSwappingClause::serialize_json() {
   return wait_json;
 }
 
-void WaitSwappingClause::deserialize_json(json serialized) {
+void SwappingCorrectionClause::deserialize_json(json serialized) {
   auto options = serialized["options"];
   if (options != nullptr) {
     options["interface"]["partner_address"].get_to(partner_address);

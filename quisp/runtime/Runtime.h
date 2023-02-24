@@ -68,12 +68,13 @@ class Runtime {
     virtual MeasurementOutcome measureQubitRandomly(IQubitRecord*) = 0;
     virtual MeasurementOutcome measureQubitX(IQubitRecord*) = 0;
     virtual MeasurementOutcome measureQubitZ(IQubitRecord*) = 0;
+    virtual MeasurementOutcome measureQubitY(IQubitRecord*) = 0;
     virtual void gateX(IQubitRecord*) = 0;
     virtual void gateZ(IQubitRecord*) = 0;
     virtual void gateCNOT(IQubitRecord* control_qubit_rec, IQubitRecord* target_qubit_rec) = 0;
-    virtual bool purifyX(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
-    virtual bool purifyZ(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
-    virtual bool purifyY(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
+    virtual int purifyX(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
+    virtual int purifyZ(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
+    virtual int purifyY(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
     virtual void updateQubitPartner(IQubitRecord* qubit_rec, QNodeAddr partner_addr) = 0;
 
     // Messaging
@@ -139,6 +140,8 @@ class Runtime {
 
   /// @brief find the qubit that has the action_index and allocated in the rule_id, shared_tag;
   QubitResources::iterator findQubit(int rule_id, int shared_tag, int action_index);
+  /// @brief find the qubit iterator that match with this rule_id and sequence_number
+  QubitResources::iterator findQubit(IQubitRecord*);
 
   /** @name register operations */
   //@{
@@ -293,6 +296,14 @@ class Runtime {
    * @param basis the measurement result
    */
   void measureQubit(QubitId qubit_id, MemoryKey result_key, Basis basis);
+  /**
+   * @brief measure qubit with given basis and put result into register
+   *
+   * @param qubit_id qubit to measure
+   * @param result_reg register to put result into
+   * @param basis measurement basis
+   */
+  void measureQubit(QubitId qubit_id, RegId result_reg, Basis basis);
 
   /// @brief free qubit and release it from the Rule and the RuleSet
   void freeQubit(QubitId);

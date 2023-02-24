@@ -58,25 +58,25 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     control_qubit->gateCNOT(target_qubit);
   }
 
-  bool purifyX(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
+  int purifyX(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     auto *trash_qubit = provider.getStationaryQubit(trash_qubit_rec);
     assert(qubit != nullptr);
     assert(trash_qubit != nullptr);
     qubit->gateCNOT(trash_qubit);
-    return trash_qubit->measureZ() == types::EigenvalueResult::PLUS_ONE;
+    return trash_qubit->measureZ() == types::EigenvalueResult::PLUS_ONE ? 0 : 1;
   }
 
-  bool purifyZ(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
+  int purifyZ(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     auto *trash_qubit = provider.getStationaryQubit(trash_qubit_rec);
     assert(qubit != nullptr);
     assert(trash_qubit != nullptr);
     trash_qubit->gateCNOT(qubit);
-    return trash_qubit->measureX() == types::EigenvalueResult::PLUS_ONE;
+    return trash_qubit->measureX() == types::EigenvalueResult::PLUS_ONE ? 0 : 1;
   }
 
-  bool purifyY(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
+  int purifyY(IQubitRecord *qubit_rec, IQubitRecord *trash_qubit_rec) override {
     auto *qubit = provider.getStationaryQubit(qubit_rec);
     auto *trash_qubit = provider.getStationaryQubit(trash_qubit_rec);
     assert(qubit != nullptr);
@@ -86,7 +86,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     qubit->gateSdg();
     trash_qubit->gateCNOT(qubit);
     qubit->gateS();
-    return trash_qubit->measureX() == types::EigenvalueResult::PLUS_ONE;
+    return trash_qubit->measureX() == types::EigenvalueResult::PLUS_ONE ? 0 : 1;
   }
 
   void updateQubitPartner(IQubitRecord *qubit, QNodeAddr new_partner_addr) override {

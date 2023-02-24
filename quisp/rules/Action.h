@@ -51,7 +51,7 @@ class Action {
   Action(std::vector<int> partner_addr);
   virtual ~Action() {}
   std::vector<QnicInterface> qnic_interfaces;
-
+  int partner_address;
   virtual json serialize_json() = 0;
   virtual void deserialize_json(json serialized) = 0;
 };
@@ -59,8 +59,9 @@ class Action {
 class Purification : public Action {
  public:
   Purification(json serialized) { deserialize_json(serialized); }  // for deserialization
-  Purification(PurType purification_type, int partner_addr);
+  Purification(PurType purification_type, int partner_addr, int shared_rule_tag);
   PurType purification_type;
+  int shared_rule_tag;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };
@@ -68,30 +69,27 @@ class Purification : public Action {
 class EntanglementSwapping : public Action {
  public:
   EntanglementSwapping(json serialized) { deserialize_json(serialized); }  // for deserialization
-  EntanglementSwapping(std::vector<int> partner_addr);
+  EntanglementSwapping(std::vector<int> partner_addr, int shared_rule_tag);
   std::vector<QnicInterface> remote_qnic_interfaces;
+  int shared_rule_tag;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };
 
-class WaitPurification : public Action {
+class PurificationCorrelation : public Action {
  public:
-  WaitPurification(json serialized) { deserialize_json(serialized); }  // for deserialization
-  WaitPurification(int partner_addr, int sequence_number, int measurement_result, int protocol);
-  int sequence_number;
-  int measurement_result;
-  int protocol;
+  PurificationCorrelation(json serialized) { deserialize_json(serialized); }  // for deserialization
+  PurificationCorrelation(int partner_addr, int shared_rule_tag);
+  int shared_rule_tag;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };
 
-class WaitSwapping : public Action {
+class SwappingCorrection : public Action {
  public:
-  WaitSwapping(json serialized) { deserialize_json(serialized); }  // for deserialization
-  WaitSwapping(int swapper_addr, int sequence_number, int correction_operation, int new_partner_addr);
-  int sequence_number;
-  int correction_operation;
-  int new_partner_address;
+  SwappingCorrection(json serialized) { deserialize_json(serialized); }  // for deserialization
+  SwappingCorrection(int swapper_addr, int shared_rule_tag);
+  int shared_rule_tag;
   json serialize_json() override;
   void deserialize_json(json serialized) override;
 };

@@ -23,8 +23,8 @@ using rules::FidelityConditionClause;
 using rules::MeasureCountConditionClause;
 using rules::Purification;
 using rules::Tomography;
-using rules::WaitPurificationClause;
-using rules::WaitSwappingClause;
+using rules::PurificationCorrelationClause;
+using rules::SwappingCorrectionClause;
 
 // Runtime's RuleSet representation
 using quisp::runtime::Label;
@@ -49,7 +49,7 @@ class RuleSetConverter {
   static Program constructEntanglementSwappingAction(const EntanglementSwapping* data);
   static Program constructPurificationAction(const Purification* data);
   static Program constructTomographyAction(const Tomography* data);
-  static Program constructWaitPurificationAction(const WaitPurification* data);
-  static Program constructWaitSwappingAction(const WaitSwapping* data);
+  static Program constructPurificationCorrelationAction(const PurificationCorrelation* data);
+  static Program constructSwappingCorrectionAction(const SwappingCorrection* data);
 };
 }  // namespace quisp::rules::rs_converter

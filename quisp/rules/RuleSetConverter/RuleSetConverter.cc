@@ -122,7 +122,7 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
     } else if (auto *c = dynamic_cast<const FidelityConditionClause *>(clause_ptr)) {
       // XXX: no impl in the original
       throw std::runtime_error("FidelityCondition has not implemented yet");
-    } else if (auto *c = dynamic_cast<const WaitPurificationClause *>(clause_ptr)) {
+    } else if (auto *c = dynamic_cast<const PurificationCorrelationClause *>(clause_ptr)) {
       /*
         SET msg_index -1
         SET seq_no -1
@@ -177,7 +177,8 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       opcodes.push_back(INSTR_STORE_MemoryKey_RegId_{{key, seq_no}, found_qubit_label});
       opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::COND_PASSED});
 
-    } else if (auto *c = dynamic_cast<const WaitSwappingClause *>(clause_ptr)) {
+      name += "PurificationCorrelation ";
+    } else if (auto *c = dynamic_cast<const SwappingCorrectionClause *>(clause_ptr)) {
       /*
         SET msg_index -1
         SET seq_no -1
@@ -223,6 +224,8 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       // FOUND_QUBIT
       opcodes.push_back(INSTR_STORE_MemoryKey_RegId_{{key, seq_no}, found_qubit_label});
       opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::COND_PASSED});
+
+      name += "SwappingCorrection ";
     } else if (auto *c = dynamic_cast<const MeasureCountConditionClause *>(clause_ptr)) {
       /*
       LOAD count MemoryKey("count")
@@ -258,11 +261,11 @@ Program RuleSetConverter::constructAction(const ActionData *data) {
   if (auto *act = dynamic_cast<const Tomography *>(data)) {
     return constructTomographyAction(act);
   }
-  if (auto *act = dynamic_cast<const WaitPurification *>(data)) {
-    return constructWaitPurificationAction(act);
+  if (auto *act = dynamic_cast<const PurificationCorrelation *>(data)) {
+    return constructPurificationCorrelationAction(act);
   }
-  if (auto *act = dynamic_cast<const WaitSwapping *>(data)) {
-    return constructWaitSwappingAction(act);
+  if (auto *act = dynamic_cast<const SwappingCorrection *>(data)) {
+    return constructSwappingCorrectionAction(act);
   }
 
   throw std::runtime_error("got invalid actions");
@@ -273,11 +276,12 @@ Program RuleSetConverter::constructEntanglementSwappingAction(const Entanglement
   /*
   GET_QUBIT q0 left_partner 0
   GET_QUBIT q1 right_partner 0
-  GATE_CNOTE q0 q1
-  MEASURE r0 q0
-  MEASURE r1 q1
+  GATE_CNOT q0 q1
+  MEASURE result_x q0 X
+  MEASURE result_z q1 Z
   FREE_QUBIT q0
   FREE_QUBIT q1
+  // TODO: complete this
   SEND_SWAPPING_RESULT
   */
   auto left_interface = act->qnic_interfaces.at(0);
@@ -286,10 +290,8 @@ Program RuleSetConverter::constructEntanglementSwappingAction(const Entanglement
   QubitId q1{1};
   QNodeAddr left_partner_addr{left_interface.partner_addr};
   QNodeAddr right_partner_addr{right_interface.partner_addr};
-  MemoryKey result_left{"result_left"};
-  MemoryKey result_right{"result_right"};
-  auto op_left = RegId::REG0;
-  auto op_right = RegId::REG1;
+  auto result_reg_x = RegId::REG0;
+  auto result_reg_z = RegId::REG1;
 
   return Program{
       "EntanglementSwapping",
@@ -298,13 +300,11 @@ Program RuleSetConverter::constructEntanglementSwappingAction(const Entanglement
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, left_partner_addr, 0}},
 INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q1, right_partner_addr, 0}},
 INSTR_GATE_CNOT_QubitId_QubitId_{{q0, q1}},
-INSTR_MEASURE_MemoryKey_QubitId_Basis_{{result_left, q0, Basis::X}},
-INSTR_MEASURE_MemoryKey_QubitId_Basis_{{result_right, q1, Basis::Z}},
+INSTR_MEASURE_RegId_QubitId_Basis_{{result_reg_x, q0, Basis::X}},
+INSTR_MEASURE_RegId_QubitId_Basis_{{result_reg_z, q1, Basis::Z}},
 INSTR_FREE_QUBIT_QubitId_{q0},
 INSTR_FREE_QUBIT_QubitId_{q1},
-INSTR_LOAD_LEFT_OP_RegId_MemoryKey_{{op_left, result_left}},
-INSTR_LOAD_RIGHT_OP_RegId_MemoryKey_{{op_right, result_right}},
-INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_{{left_partner_addr, op_left, right_partner_addr, op_right}},
+// INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_{{left_partner_addr, op_left, right_partner_addr, op_right}},
           // clang-format on
       },
   };
@@ -313,56 +313,55 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
   auto pur_type = act->purification_type;
   if (pur_type == rules::PurType::SINGLE_X || pur_type == rules::PurType::SINGLE_Z || pur_type == rules::PurType::SINGLE_Y) {
     /*
-    SET action_index 0
-    LOAD action_index "action_index_{partner_addr}"
+    qubitId: qubit, trash_qubit
+    Reg: result, seq_no // the sequence number of the qubit in the next rule
+    // start program
+    SET seq_no 0
+    LOAD seq_no "sent_purification_message_{shared_rule}" // if it has not been set the value stays as is
     GET_QUBIT qubit partner_addr 0
     GET_QUBIT trash_qubit partner_addr 1
-    PURIFY_X/Z measure_result qubit trash_qubit
-    FREE_QUBIT trash_qubit
-    LOCK_QUBIT qubit action_index
-    SEND_PURIFICATION_RESULT partner_addr measure_result action_index
-    INC action_index
-    STORE "action_index_{partner_addr}" action_index
+    PURIFY_X/Y/Z result qubit trash_qubit // perform the circuit [0/1] as output
+    PROMOTE qubit
+    FREE_QUBIT trash_qubit // free the measured qubits
+    SEND_PURIFICATION_RESULT partner_addr result seq_no
+    INC seq_no
+    STORE "sent_purificaiton_message_{shared_rule}"
     */
     QubitId qubit{0};
     QubitId trash_qubit{1};
     RegId measure_result = RegId::REG0;
-    RegId action_index = RegId::REG1;
+    RegId seq_no = RegId::REG1;
 
     auto &interface = act->qnic_interfaces.at(0);
     QNodeAddr partner_addr{interface.partner_addr};
-    MemoryKey action_index_key{"action_index_" + std::to_string(interface.partner_addr)};
-    MemoryKey qubit_index_key{"qubit_index"};
-    MemoryKey trash_qubit_index_key{"trash_qubit_index"};
+    MemoryKey seq_no_key{"sent_purification_message_" + std::to_string(act->shared_rule_tag)};
 
     std::string program_name;
+    InstructionTypes purify_instruction = (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}};
+    ;
     if (pur_type == rules::PurType::SINGLE_X) {
+      purify_instruction = (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}};
       program_name = "X Purification";
     } else if (pur_type == rules::PurType::SINGLE_Y) {
       program_name = "Y Purification";
+      purify_instruction = (InstructionTypes)INSTR_PURIFY_Y_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}};
     } else {
       program_name = "Z Purification";
+      purify_instruction = (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}};
     }
-
-    return Program{program_name,
-                   {
-                       // clang-format off
-INSTR_SET_RegId_int_{{action_index, 0}},
-INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit, partner_addr, 1}},
-(pur_type == rules::PurType::SINGLE_X) /* else SINGLE_Z */?
-  (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}} :
-  (pur_type == rules::PurType::SINGLE_Z) ?
-  (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}} :
-  (InstructionTypes)INSTR_PURIFY_Y_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}},
-INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
-INSTR_FREE_QUBIT_QubitId_{{trash_qubit}},
-// TODO: SEND PURIFICATION RESULT
-INSTR_INC_RegId_{action_index},
-INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
-                       // clang-format on
-                   }};
+    std::vector<InstructionTypes> opcodes{
+        INSTR_SET_RegId_int_{{seq_no, 0}},
+        INSTR_LOAD_RegId_MemoryKey_{{seq_no, seq_no_key}},
+        INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
+        INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit, partner_addr, 1}},
+        purify_instruction,
+        INSTR_PROMOTE_QubitId_{{qubit}},
+        INSTR_FREE_QUBIT_QubitId_{{trash_qubit}},
+        INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_PurType_{{partner_addr, measure_result, seq_no, pur_type}},
+        INSTR_INC_RegId_{seq_no},
+        INSTR_STORE_MemoryKey_RegId_{{seq_no_key, seq_no}},
+    };
+    return Program{program_name, opcodes};
   }
 
   // https://arxiv.org/abs/0811.2639
@@ -643,14 +642,85 @@ INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
   return Program{"Purification", {}};
 }
 
-Program RuleSetConverter::constructWaitPurificationAction(const WaitPurification *act) {
+Program RuleSetConverter::constructPurificationCorrelationAction(const PurificationCorrelation *act) {
   /*
+    qubit_id: qubit
+    Reg: seq_no, result_0, result_1
 
+    LOAD seq_no "purification_<shared_rule_tag>_seq_no"
+    GET_QUBIT_BY_SEQ_NO q0 <partner_addr> seq
+    GET_MESSAGE seq_no 0 result_0
+    GET_MESSAGE seq_no 1 result_1
+    DELETE_MESSAGE seq_no
+    BEQ RESULT_MATCH result_0 result_1
+    FREE_QUBIT q0
+    RET NONE // result not match
+  RESULT_MATCH:
+    PROMOTE q0
   */
-  return Program{"Wait_Purification", {}};
+  // init
+  QubitId qubit{0};
+  auto seq_no = RegId::REG0;
+  auto result_0 = RegId::REG1;
+  auto result_1 = RegId::REG2;
+  QNodeAddr partner_address = act->qnic_interfaces[0].partner_addr;
+  MemoryKey key{"purification_" + std::to_string(act->shared_rule_tag) + "_seq_no"};
+  // label
+  Label result_match_label{"result_match"};
+  Label result_not_match_label{"result_not_match"};
+  // start of program
+  std::vector<InstructionTypes> opcodes;
+  opcodes.push_back(INSTR_LOAD_RegId_MemoryKey_{{seq_no, key}});
+  opcodes.push_back(INSTR_GET_QUBIT_BY_SEQ_NO_QubitId_QNodeAddr_RegId_{{qubit, partner_address, seq_no}});
+  opcodes.push_back(INSTR_GET_MESSAGE_RegId_int_RegId_{{seq_no, 0, result_0}});
+  opcodes.push_back(INSTR_GET_MESSAGE_RegId_int_RegId_{{seq_no, 1, result_1}});
+  opcodes.push_back(INSTR_DELETE_MESSAGE_RegId_{seq_no});
+  opcodes.push_back(INSTR_BEQ_Label_RegId_RegId_{{result_match_label, result_0, result_1}});
+  opcodes.push_back(INSTR_FREE_QUBIT_QubitId_{qubit});
+  opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::NONE});
+  // RESULT MATCH
+  opcodes.push_back(INSTR_PROMOTE_QubitId_{qubit, result_match_label});
+  return Program{"PurificationCorrelation", opcodes};
 }
 
-Program RuleSetConverter::constructWaitSwappingAction(const WaitSwapping *act) { return Program{"Wait_Swapping", {}}; }
+Program RuleSetConverter::constructSwappingCorrectionAction(const SwappingCorrection *act) {
+  /*
+    qubit_id: qubit
+    Reg: seq_no, correction_operation
+
+    LOAD seq_no "swapping_<shared_rule_tag>_seq_no"
+    GET_QUBIT_BY_SEQ_NO q0 <partner_addr> seq
+    GET_MESSAGE seq_no 0 correction_operation
+      note: correction_operation uses 2 bits
+      if correction_operation & 1 != 0 -> apply X
+      if correction_operation & 2 != 0 -> apply Z
+    // TODO: complete this swapping
+  */
+  // init
+  QubitId qubit{0};
+  auto seq_no = RegId::REG0;
+  auto result_0 = RegId::REG1;
+  auto result_1 = RegId::REG2;
+  QNodeAddr partner_address = act->qnic_interfaces[0].partner_addr;
+  MemoryKey key{"swapping_" + std::to_string(act->shared_rule_tag) + "_seq_no"};
+  // label
+  Label result_match_label{"result_match"};
+  Label result_not_match_label{"result_not_match"};
+  // start of program
+  std::vector<InstructionTypes> opcodes;
+  opcodes.push_back(INSTR_LOAD_RegId_MemoryKey_{{seq_no, key}});
+  opcodes.push_back(INSTR_GET_QUBIT_BY_SEQ_NO_QubitId_QNodeAddr_RegId_{{qubit, partner_address, seq_no}});
+  opcodes.push_back(INSTR_GET_MESSAGE_RegId_int_RegId_{{seq_no, 0, result_0}});
+  opcodes.push_back(INSTR_GET_MESSAGE_RegId_int_RegId_{{seq_no, 1, result_1}});
+  opcodes.push_back(INSTR_BEQ_Label_RegId_RegId_{{result_match_label, result_0, result_1}});
+  // RESULT MATCH
+  opcodes.push_back(INSTR_PROMOTE_QubitId_{qubit, result_match_label});
+  opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::NONE});
+  // RESULT NOT MATCH
+  opcodes.push_back(INSTR_FREE_QUBIT_QubitId_{qubit});
+  // END
+  return Program{"SwappingCorrection", opcodes};
+}
 
 Program RuleSetConverter::constructTomographyAction(const Tomography *act) {
   /*
@@ -659,7 +729,7 @@ Program RuleSetConverter::constructTomographyAction(const Tomography *act) {
   BRANCH_IF_QUBIT_FOUND QUBIT_FOUND
   RET ERROR
 QUBIT_FOUND:
-  MEASURE_RONDOM "outcome" q0
+  MEASURE_RANDOM "outcome" q0
   INC count
   STORE "count" count
   FREE_QUBIT q0

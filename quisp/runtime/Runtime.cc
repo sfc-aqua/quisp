@@ -144,7 +144,6 @@ void Runtime::assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_r
 }
 
 QubitResources::iterator Runtime::findQubit(int target_rule_id, int shared_tag, int action_index) {
-  runtime::QubitResources::iterator qubit_key;
   for (auto it = qubits.begin(); it != qubits.end(); it++) {
     auto& [addr, current_rule_id] = it->first;
     if (current_rule_id != target_rule_id) continue;
@@ -153,6 +152,14 @@ QubitResources::iterator Runtime::findQubit(int target_rule_id, int shared_tag, 
     }
   }
   throw cRuntimeError("Qubit not found: (rule_id: %d, shared_tag: %d, action_index: %d)", target_rule_id, shared_tag, action_index);
+}
+QubitResources::iterator Runtime::findQubit(IQubitRecord* qubit_record) {
+  for (auto it = qubits.begin(); it != qubits.end(); it++) {
+    if (it->second == qubit_record) {
+      return it;
+    }
+  }
+  throw cRuntimeError("Qubit not found: from the given QubitRecord");
 }
 
 void Runtime::promoteQubit(QubitResources::iterator iter) {
@@ -277,6 +284,29 @@ void Runtime::measureQubit(QubitId qubit_id, MemoryKey memory_key, Basis basis) 
   std::runtime_error("measure qubit with the specified basis is not implemented yet");
 }
 
+void Runtime::measureQubit(QubitId qubit_id, RegId reg, Basis basis) {
+  auto qubit_ref = getQubitByQubitId(qubit_id);
+  if (qubit_ref == nullptr) {
+    return;
+  }
+  if (basis == Basis::RANDOM) {
+    auto outcome = callback->measureQubitRandomly(qubit_ref);
+    setRegVal(reg, outcome.outcome_is_plus ? 0 : 1);
+    return;
+  }
+  if (basis == Basis::X) {
+    auto outcome = callback->measureQubitX(qubit_ref);
+    setRegVal(reg, outcome.outcome_is_plus ? 0 : 1);
+    return;
+  }
+  if (basis == Basis::Z) {
+    auto outcome = callback->measureQubitZ(qubit_ref);
+    setRegVal(reg, outcome.outcome_is_plus ? 0 : 1);
+    return;
+  }
+  std::runtime_error("measure qubit with the specified basis is not implemented yet");
+}
+
 void Runtime::freeQubit(QubitId qubit_id) {
   auto qubit_ref = getQubitByQubitId(qubit_id);
   if (qubit_ref == nullptr) {
@@ -323,7 +353,7 @@ void Runtime::purifyX(RegId result_reg_id, QubitId qubit_id, QubitId trash_qubit
   auto trash_qubit = getQubitByQubitId(trash_qubit_id);
   if (qubit == nullptr) return;
   if (trash_qubit == nullptr) return;
-  bool result = callback->purifyX(qubit, trash_qubit);
+  int result = callback->purifyX(qubit, trash_qubit);
   setRegVal(result_reg_id, result);
 }
 
@@ -332,7 +362,7 @@ void Runtime::purifyZ(RegId result_reg_id, QubitId qubit_id, QubitId trash_qubit
   auto trash_qubit = getQubitByQubitId(trash_qubit_id);
   if (qubit == nullptr) return;
   if (trash_qubit == nullptr) return;
-  bool result = callback->purifyZ(qubit, trash_qubit);
+  int result = callback->purifyZ(qubit, trash_qubit) ? 1 : 0;
   setRegVal(result_reg_id, result);
 }
 
@@ -341,7 +371,7 @@ void Runtime::purifyY(RegId result_reg_id, QubitId qubit_id, QubitId trash_qubit
   auto trash_qubit = getQubitByQubitId(trash_qubit_id);
   if (qubit == nullptr) return;
   if (trash_qubit == nullptr) return;
-  bool result = callback->purifyY(qubit, trash_qubit);
+  int result = callback->purifyY(qubit, trash_qubit);
   setRegVal(result_reg_id, result);
 }
 

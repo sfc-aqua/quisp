@@ -40,6 +40,8 @@ INSTR(BITWISE_OR, RegId /* write */, RegId /* read */)  //  in-place operation: 
 INSTR(BITWISE_OR, RegId /* write */, int /* read */)  //  in-place operation: first_reg = first_reg | int (bitwise or)
 INSTR(BITWISE_XOR, RegId /* write */, RegId /* read */)  //  in-place operation: first_reg = first_reg | second_reg (bitwise xor)
 INSTR(BITWISE_XOR, RegId /* write */, int /* read */)  //  in-place operation: first_reg = first_reg | int (bitwise xor)
+// // bitset operation
+// INSTR(BITSET, RegId /* write */, int /* index to set */, RegId /*  */)
 
 // control flow
 INSTR(BEQ, Label, RegId, RegId)  // branch if the reg values are same
@@ -72,6 +74,7 @@ INSTR(GET_QUBIT_BY_SEQ_NO, QubitId /* write: qubit */, QNodeAddr /* read */, Reg
 // qubit quantum gate operations
 INSTR(MEASURE_RANDOM, MemoryKey, QubitId)
 INSTR(MEASURE, MemoryKey, QubitId, Basis)
+INSTR(MEASURE, RegId, QubitId, Basis)
 INSTR(GATE_X, QubitId)
 INSTR(GATE_Z, QubitId)
 INSTR(GATE_CNOT, QubitId, QubitId)
@@ -92,6 +95,7 @@ INSTR(GET_MESSAGE_SEQ, RegId /* read: message index */, RegId /* write: sequence
 INSTR(COUNT_MESSAGE, RegId /* read: sequence number */, RegId /* write: count */)
 INSTR(GET_MESSAGE, RegId /* read: sequence number */, int /* read: message index */, RegId /* write: correction_frame */)  // for swapping
 INSTR(GET_MESSAGE, RegId /* read: sequence number */, int /* read: message index */, RegId /* write: measurement_result */, RegId /* write: protocol */)  // for purification
+INSTR(DELETE_MESSAGE, RegId /* read: sequence number */) // delete all messages with this sequence number
 
 // send classical messages
 INSTR(SEND_LINK_TOMOGRAPHY_RESULT, QNodeAddr, RegId, MemoryKey, int, Time)  // partner addr, current count reg_id, outcome key, max_count, start_time

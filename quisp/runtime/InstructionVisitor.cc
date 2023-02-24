@@ -65,6 +65,11 @@ void InstructionVisitor::operator()(const INSTR_MEASURE_MemoryKey_QubitId_Basis_
   runtime->measureQubit(qubit_id, memory_key, basis);
 }
 
+void InstructionVisitor::operator()(const INSTR_MEASURE_RegId_QubitId_Basis_& instruction) {
+  auto [reg, qubit_id, basis] = instruction.args;
+  runtime->measureQubit(qubit_id, reg, basis);
+}
+
 void InstructionVisitor::operator()(const INSTR_GATE_X_QubitId_& instruction) {
   auto [qubit_id] = instruction.args;
   runtime->gateX(qubit_id);
@@ -474,6 +479,20 @@ void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_int_RegId_RegI
     i++;
   }
   runtime->message_found = false;
+}
+
+void InstructionVisitor::operator()(const INSTR_DELETE_MESSAGE_RegId_& instruction) {
+  auto [seq_no_reg] = instruction.args;
+  auto sequence_number = runtime->getRegVal(seq_no_reg);
+  auto& rule_messages = runtime->messages[{runtime->rule_id}];
+
+  for (auto it = rule_messages.begin(); it != rule_messages.end();) {
+    if (it->at(0) == sequence_number) {
+      rule_messages.erase(it);
+    } else {
+      it++;
+    }
+  }
 }
 
 }  // namespace quisp::runtime
