@@ -40,7 +40,7 @@ void RuleEngine::initialize() {
   initializeLogger(provider);
   bell_pair_store.logger = logger;
 
-  parentAddress = par("address");
+  parentAddress = provider.getNodeAddr();
   number_of_qnics_all = par("total_number_of_qnics");
   number_of_qnics = par("number_of_qnics");
   number_of_qnics_r = par("number_of_qnics_r");

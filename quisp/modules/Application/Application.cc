@@ -33,7 +33,7 @@ void Application::initialize() {
     return;
   }
   id = 0;
-  my_address = provider.getQNode()->par("address");
+  my_address = provider.getNodeAddr();
   is_initiator = provider.getQNode()->par("is_initiator");
 
   if (!is_initiator) {

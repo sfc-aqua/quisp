@@ -13,6 +13,8 @@ using namespace omnetpp;
 
 namespace quisp::modules::routing_daemon {
 
+RoutingDaemon::RoutingDaemon() : provider(this) {}
+
 /**
  *
  *  \brief RoutingDaemon
@@ -45,7 +47,7 @@ namespace quisp::modules::routing_daemon {
  * addressed.
  */
 void RoutingDaemon::initialize(int stage) {
-  myAddress = getParentModule()->par("address");
+  myAddress = provider.getNodeAddr();
 
   // Topology creation for routing table
   cTopology *topo = new cTopology("topo");

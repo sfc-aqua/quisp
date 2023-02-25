@@ -8,6 +8,7 @@
 #pragma once
 
 #include "IRoutingDaemon.h"
+#include "utils/ComponentProvider.h"
 
 #include "modules/QNIC.h"
 
@@ -36,7 +37,10 @@ class RoutingDaemon : public IRoutingDaemon {
   void handleMessage(cMessage* msg) override;
   int numInitStages() const override { return 3; };
 
+  utils::ComponentProvider provider;
+
  public:
+  RoutingDaemon();
   int getNumEndNodes() override;
   int findQNicAddrByDestAddr(int destAddr) override;
 };
