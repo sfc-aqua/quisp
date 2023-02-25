@@ -33,6 +33,7 @@ class JsonLoggerTest : public testing::Test {
 
 TEST_F(JsonLoggerTest, ConnSetupTest) {
   auto* req = new ConnectionSetupRequest();
+  req->setApplication_id(1);
   req->setActual_destAddr(1);
   req->setActual_srcAddr(2);
   req->setNum_measure(5);
@@ -40,7 +41,8 @@ TEST_F(JsonLoggerTest, ConnSetupTest) {
   logger->setQNodeAddress(7);
   logger->logPacket("test", req);
   EXPECT_EQ(log_stream.str(),
-            "{\"simtime\": 0, \"event_type\": \"test\", \"address\": \"7\", \"msg_type\": \"ConnectionSetupRequest\", \"actual_dest_addr\": 1, "
+            "{\"simtime\": 0, \"event_type\": \"test\", \"address\": \"7\", \"msg_type\": \"ConnectionSetupRequest\", "
+            "\"application_id\": 1, \"actual_dest_addr\": 1, "
             "\"actual_src_addr\": 2, \"num_measure\": 5, "
             "\"num_required_bell_pairs\": 7}\n");
 }
