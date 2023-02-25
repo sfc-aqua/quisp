@@ -207,8 +207,6 @@ var NAVTREEINDEX0 =
 "_mock_real_time_controller_8h_source.html":[19,0,0,6,1,3],
 "_mock_routing_daemon_8h.html":[19,0,0,6,1,4],
 "_mock_routing_daemon_8h_source.html":[19,0,0,6,1,4],
-"_mock_rule_engine_8h.html":[19,0,0,6,1,5],
-"_mock_rule_engine_8h_source.html":[19,0,0,6,1,5],
 "_module_type_8h.html":[19,0,0,6,9],
 "_module_type_8h_source.html":[19,0,0,6,9],
 "_photonic_switch_8cc.html":[19,0,0,3,5,0,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX0 =
 "_q_r_s_a_8h.html":[19,0,0,3,6,5],
 "_q_r_s_a_8h.html#a03b0866b48bb748920c561500cc46c17":[19,0,0,3,6,5,1],
 "_q_r_s_a_8h_source.html":[19,0,0,3,6,5],
-"_quantum_channel_8cc.html":[19,0,0,1,0]
+"_quantum_channel_8cc.html":[19,0,0,1,0],
+"_quantum_channel_8cc.html#a7c51cae0d9f85f9b65a4850229aeb5db":[19,0,0,1,0,2],
+"_qubit_8cc.html":[19,0,0,0,0,6]
 };

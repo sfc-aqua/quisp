@@ -90,13 +90,10 @@ var annotated_dup =
         [ "NeighborInfo", "structquisp_1_1modules_1_1_neighbor_info.html", "structquisp_1_1modules_1_1_neighbor_info" ],
         [ "output_count", "structquisp_1_1modules_1_1output__count.html", "structquisp_1_1modules_1_1output__count" ],
         [ "PhotonicSwitch", "classquisp_1_1modules_1_1_photonic_switch.html", "classquisp_1_1modules_1_1_photonic_switch" ],
-        [ "PhotonTransmissionConfig", "structquisp_1_1modules_1_1_photon_transmission_config.html", "structquisp_1_1modules_1_1_photon_transmission_config" ],
         [ "QNIC", "structquisp_1_1modules_1_1_q_n_i_c.html", "structquisp_1_1modules_1_1_q_n_i_c" ],
         [ "QNIC_id", "structquisp_1_1modules_1_1_q_n_i_c__id.html", "structquisp_1_1modules_1_1_q_n_i_c__id" ],
         [ "QNIC_pair_info", "structquisp_1_1modules_1_1_q_n_i_c__pair__info.html", "structquisp_1_1modules_1_1_q_n_i_c__pair__info" ],
-        [ "QubitAddr", "structquisp_1_1modules_1_1_qubit_addr.html", "structquisp_1_1modules_1_1_qubit_addr" ],
         [ "QubitAddr_cons", "structquisp_1_1modules_1_1_qubit_addr__cons.html", "structquisp_1_1modules_1_1_qubit_addr__cons" ],
-        [ "QubitState", "structquisp_1_1modules_1_1_qubit_state.html", "structquisp_1_1modules_1_1_qubit_state" ],
         [ "Queue", "classquisp_1_1modules_1_1_queue.html", "classquisp_1_1modules_1_1_queue" ],
         [ "RealTimeController", "classquisp_1_1modules_1_1_real_time_controller.html", "classquisp_1_1modules_1_1_real_time_controller" ],
         [ "Router", "classquisp_1_1modules_1_1_router.html", "classquisp_1_1modules_1_1_router" ],
@@ -195,9 +192,6 @@ var annotated_dup =
         ] ],
         [ "routing_daemon", "namespacequisp__test_1_1mock__modules_1_1routing__daemon.html", [
           [ "MockRoutingDaemon", "classquisp__test_1_1mock__modules_1_1routing__daemon_1_1_mock_routing_daemon.html", "classquisp__test_1_1mock__modules_1_1routing__daemon_1_1_mock_routing_daemon" ]
-        ] ],
-        [ "rule_engine", "namespacequisp__test_1_1mock__modules_1_1rule__engine.html", [
-          [ "MockRuleEngine", "classquisp__test_1_1mock__modules_1_1rule__engine_1_1_mock_rule_engine.html", "classquisp__test_1_1mock__modules_1_1rule__engine_1_1_mock_rule_engine" ]
         ] ],
         [ "stationary_qubit", "namespacequisp__test_1_1mock__modules_1_1stationary__qubit.html", [
           [ "MockQubit", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit.html", "classquisp__test_1_1mock__modules_1_1stationary__qubit_1_1_mock_qubit" ]

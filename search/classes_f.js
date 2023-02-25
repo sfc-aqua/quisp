@@ -10,10 +10,8 @@ var searchData=
   ['qnodeaddr_7',['QNodeAddr',['../structquisp_1_1runtime_1_1_q_node_addr.html',1,'quisp::runtime']]],
   ['quantumchannel_8',['QuantumChannel',['../classquisp_1_1channels_1_1_quantum_channel.html',1,'quisp::channels']]],
   ['qubit_9',['Qubit',['../classquisp__test_1_1backends_1_1graph__state_1_1_qubit.html',1,'quisp_test::backends::graph_state']]],
-  ['qubitaddr_10',['QubitAddr',['../structquisp_1_1modules_1_1_qubit_addr.html',1,'quisp::modules']]],
-  ['qubitaddr_5fcons_11',['QubitAddr_cons',['../structquisp_1_1modules_1_1_qubit_addr__cons.html',1,'quisp::modules']]],
-  ['qubitid_12',['QubitId',['../classquisp_1_1modules_1_1qubit__id_1_1_qubit_id.html',1,'quisp::modules::qubit_id::QubitId'],['../structquisp_1_1runtime_1_1_qubit_id.html',1,'quisp::runtime::QubitId'],['../classquisp__test_1_1backends_1_1graph__state_1_1_qubit_id.html',1,'quisp_test::backends::graph_state::QubitId']]],
-  ['qubitrecord_13',['QubitRecord',['../classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html',1,'quisp::modules::qubit_record']]],
-  ['qubitstate_14',['QubitState',['../structquisp_1_1modules_1_1_qubit_state.html',1,'quisp::modules']]],
-  ['queue_15',['Queue',['../classquisp_1_1modules_1_1_queue.html',1,'quisp::modules']]]
+  ['qubitaddr_5fcons_10',['QubitAddr_cons',['../structquisp_1_1modules_1_1_qubit_addr__cons.html',1,'quisp::modules']]],
+  ['qubitid_11',['QubitId',['../classquisp_1_1modules_1_1qubit__id_1_1_qubit_id.html',1,'quisp::modules::qubit_id::QubitId'],['../structquisp_1_1runtime_1_1_qubit_id.html',1,'quisp::runtime::QubitId'],['../classquisp__test_1_1backends_1_1graph__state_1_1_qubit_id.html',1,'quisp_test::backends::graph_state::QubitId']]],
+  ['qubitrecord_12',['QubitRecord',['../classquisp_1_1modules_1_1qubit__record_1_1_qubit_record.html',1,'quisp::modules::qubit_record']]],
+  ['queue_13',['Queue',['../classquisp_1_1modules_1_1_queue.html',1,'quisp::modules']]]
 ];

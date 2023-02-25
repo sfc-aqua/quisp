@@ -58,8 +58,7 @@ var hierarchy =
         [ "quisp_test::mock_modules::realtime_controller::MockRealTimeController", "classquisp__test_1_1mock__modules_1_1realtime__controller_1_1_mock_real_time_controller.html", null ]
       ] ],
       [ "quisp::modules::IRuleEngine", "classquisp_1_1modules_1_1_i_rule_engine.html", [
-        [ "quisp::modules::RuleEngine", "classquisp_1_1modules_1_1_rule_engine.html", null ],
-        [ "quisp_test::mock_modules::rule_engine::MockRuleEngine", "classquisp__test_1_1mock__modules_1_1rule__engine_1_1_mock_rule_engine.html", null ]
+        [ "quisp::modules::RuleEngine", "classquisp_1_1modules_1_1_rule_engine.html", null ]
       ] ],
       [ "quisp::modules::IStationaryQubit", "classquisp_1_1modules_1_1_i_stationary_qubit.html", [
         [ "quisp::modules::StationaryQubit", "classquisp_1_1modules_1_1_stationary_qubit.html", null ],
@@ -151,7 +150,6 @@ var hierarchy =
     [ "quisp::runtime::Op< I >", "structquisp_1_1runtime_1_1_op.html", null ],
     [ "quisp::modules::output_count", "structquisp_1_1modules_1_1output__count.html", null ],
     [ "PhotonRecord", "struct_photon_record.html", null ],
-    [ "quisp::modules::PhotonTransmissionConfig", "structquisp_1_1modules_1_1_photon_transmission_config.html", null ],
     [ "quisp::backends::abstract::IQubitId::Pred", "classquisp_1_1backends_1_1abstract_1_1_i_qubit_id_1_1_pred.html", null ],
     [ "quisp::runtime::Program", "classquisp_1_1runtime_1_1_program.html", null ],
     [ "quisp::modules::pur_result_table::PurificationResultData", "structquisp_1_1modules_1_1pur__result__table_1_1_purification_result_data.html", null ],
@@ -163,10 +161,8 @@ var hierarchy =
     [ "quisp::rules::QnicInterface", "structquisp_1_1rules_1_1_qnic_interface.html", null ],
     [ "quisp_test::strategy::QNicSpec", "structquisp__test_1_1strategy_1_1_q_nic_spec.html", null ],
     [ "quisp::runtime::QNodeAddr", "structquisp_1_1runtime_1_1_q_node_addr.html", null ],
-    [ "quisp::modules::QubitAddr", "structquisp_1_1modules_1_1_qubit_addr.html", null ],
     [ "quisp::modules::QubitAddr_cons", "structquisp_1_1modules_1_1_qubit_addr__cons.html", null ],
     [ "quisp::runtime::QubitId", "structquisp_1_1runtime_1_1_qubit_id.html", null ],
-    [ "quisp::modules::QubitState", "structquisp_1_1modules_1_1_qubit_state.html", null ],
     [ "quisp::runtime::Register", "structquisp_1_1runtime_1_1_register.html", null ],
     [ "RoutingDaemon", "class_routing_daemon.html", null ],
     [ "quisp::rules::Rule", "classquisp_1_1rules_1_1_rule.html", null ],

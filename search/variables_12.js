@@ -7,14 +7,13 @@ var searchData=
   ['short_5flive_5fqubit_5fpool_5fsize_4',['short_live_qubit_pool_size',['../classquisp_1_1backends_1_1graph__state_1_1_graph_state_backend.html#a0774fe895460d7424e280ee8e7e5c61f',1,'quisp::backends::graph_state::GraphStateBackend']]],
   ['should_5fexit_5',['should_exit',['../classquisp_1_1runtime_1_1_runtime.html#a5ca82175c8ca4922e70c4de44c1679e8',1,'quisp::runtime::Runtime']]],
   ['simultaneous_5fes_5fenabled_6',['simultaneous_es_enabled',['../classquisp_1_1modules_1_1_connection_manager.html#adef8b3d53759e698cc72bade6df42fb6',1,'quisp::modules::ConnectionManager']]],
-  ['simultaneous_5fes_5fresults_7',['simultaneous_es_results',['../classquisp_1_1modules_1_1_rule_engine.html#ab1a411dcd71bb843fc9e522417cbf39e',1,'quisp::modules::RuleEngine']]],
-  ['snd_8',['snd',['../structquisp_1_1modules_1_1_q_n_i_c__pair__info.html#a917ae0f6103464d391c91cc2b1ecafe4',1,'quisp::modules::QNIC_pair_info']]],
-  ['spdctype_9',['SPDCType',['../classquisp_1_1utils_1_1_default_component_provider_strategy.html#a08c7d20c7488b58df71d6a5761310c68',1,'quisp::utils::DefaultComponentProviderStrategy']]],
-  ['spdlog_5flogger_10',['spdlog_logger',['../classquisp_1_1modules_1_1_logger_1_1_logger_module.html#aaf22aaa1fab6cf4a93a44e940973382c',1,'quisp::modules::Logger::LoggerModule']]],
-  ['speed_5fof_5flight_5fin_5fchannel_11',['speed_of_light_in_channel',['../classquisp_1_1modules_1_1_b_s_a_controller.html#a4de3457746362f613763c6d75d367ab5',1,'quisp::modules::BSAController::speed_of_light_in_channel()'],['../classquisp_1_1modules_1_1_s_p_d_c___controller.html#acd4bbcb234be6ef5f0630b2536e8f8bc',1,'quisp::modules::SPDC_Controller::speed_of_light_in_channel()']]],
-  ['start_5ftime_12',['start_time',['../classquisp_1_1rules_1_1_tomography.html#a004c9af6a18ecc6890256a201a3946d1',1,'quisp::rules::Tomography']]],
-  ['state_13',['state',['../classquisp_1_1modules_1_1_bell_state_analyzer.html#ac2797e126f76785b8e9efe4d0b98759c',1,'quisp::modules::BellStateAnalyzer']]],
-  ['stationary_5fqubit_5faddress_14',['stationary_qubit_address',['../classquisp_1_1modules_1_1_stationary_qubit.html#aa9e385eb871c4e317a4feed6cd60339e',1,'quisp::modules::StationaryQubit']]],
-  ['strategy_15',['strategy',['../classquisp_1_1utils_1_1_component_provider.html#ad9f4a1cc768e0bce2f11c4309df6b5e0',1,'quisp::utils::ComponentProvider']]],
-  ['success_16',['success',['../structquisp_1_1physical_1_1types_1_1_b_s_a_click_result.html#ae9ac505f61e1b8c27f4b62efc367b66f',1,'quisp::physical::types::BSAClickResult']]]
+  ['snd_7',['snd',['../structquisp_1_1modules_1_1_q_n_i_c__pair__info.html#a917ae0f6103464d391c91cc2b1ecafe4',1,'quisp::modules::QNIC_pair_info']]],
+  ['spdctype_8',['SPDCType',['../classquisp_1_1utils_1_1_default_component_provider_strategy.html#a08c7d20c7488b58df71d6a5761310c68',1,'quisp::utils::DefaultComponentProviderStrategy']]],
+  ['spdlog_5flogger_9',['spdlog_logger',['../classquisp_1_1modules_1_1_logger_1_1_logger_module.html#aaf22aaa1fab6cf4a93a44e940973382c',1,'quisp::modules::Logger::LoggerModule']]],
+  ['speed_5fof_5flight_5fin_5fchannel_10',['speed_of_light_in_channel',['../classquisp_1_1modules_1_1_b_s_a_controller.html#a4de3457746362f613763c6d75d367ab5',1,'quisp::modules::BSAController::speed_of_light_in_channel()'],['../classquisp_1_1modules_1_1_s_p_d_c___controller.html#acd4bbcb234be6ef5f0630b2536e8f8bc',1,'quisp::modules::SPDC_Controller::speed_of_light_in_channel()']]],
+  ['start_5ftime_11',['start_time',['../classquisp_1_1rules_1_1_tomography.html#a004c9af6a18ecc6890256a201a3946d1',1,'quisp::rules::Tomography']]],
+  ['state_12',['state',['../classquisp_1_1modules_1_1_bell_state_analyzer.html#ac2797e126f76785b8e9efe4d0b98759c',1,'quisp::modules::BellStateAnalyzer']]],
+  ['stationary_5fqubit_5faddress_13',['stationary_qubit_address',['../classquisp_1_1modules_1_1_stationary_qubit.html#aa9e385eb871c4e317a4feed6cd60339e',1,'quisp::modules::StationaryQubit']]],
+  ['strategy_14',['strategy',['../classquisp_1_1utils_1_1_component_provider.html#ad9f4a1cc768e0bce2f11c4309df6b5e0',1,'quisp::utils::ComponentProvider']]],
+  ['success_15',['success',['../structquisp_1_1physical_1_1types_1_1_b_s_a_click_result.html#ae9ac505f61e1b8c27f4b62efc367b66f',1,'quisp::physical::types::BSAClickResult']]]
 ];

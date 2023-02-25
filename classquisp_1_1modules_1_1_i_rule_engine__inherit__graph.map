@@ -1,6 +1,5 @@
 <map id="quisp::modules::IRuleEngine" name="quisp::modules::IRuleEngine">
-<area shape="rect" id="node1" title=" " alt="" coords="109,79,291,104"/>
-<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_rule_engine.html" title="RuleEngine." alt="" coords="5,159,184,185"/>
-<area shape="rect" id="node4" href="$classquisp__test_1_1mock__modules_1_1rule__engine_1_1_mock_rule_engine.html" title=" " alt="" coords="208,152,405,192"/>
-<area shape="rect" id="node2" title=" " alt="" coords="117,5,283,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,79,188,104"/>
+<area shape="rect" id="node3" href="$classquisp_1_1modules_1_1_rule_engine.html" title="RuleEngine." alt="" coords="7,152,186,177"/>
+<area shape="rect" id="node2" title=" " alt="" coords="13,5,180,31"/>
 </map>
