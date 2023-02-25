@@ -4,7 +4,6 @@ package modules.QRSA.HardwareMonitor;
 simple HardwareMonitor
 {
     parameters:
-        int address;
         int number_of_qnics;
         int number_of_qnics_r;
         int number_of_qnics_rp;
