@@ -39,20 +39,18 @@ void InstructionVisitor::operator()(const INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNod
 }
 
 void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_RegId_RegId_PurType_& instruction) {
-  auto [partner_addr, result_reg_id, sequence_number_reg_id, pur_type] = instruction.args;
-  bool result = runtime->getRegVal(result_reg_id);
-  int action_index = runtime->getRegVal(sequence_number_reg_id);
-  auto& rs = runtime->ruleset;
-  auto& rule = rs.rules.at(runtime->rule_id);
-  // TODO: properly add protocol
-  runtime->callback->sendPurificationResult(rs.id, runtime->rule_id_to_shared_tag[runtime->rule_id], partner_addr, 0 /*measurement_result*/, pur_type);
+  auto [partner_addr, result_reg, sequence_number_reg, protocol] = instruction.args;
+  int measurement_result = runtime->getRegVal(result_reg);  // can only handle up to 32 qubits
+  int sequence_number = runtime->getRegVal(sequence_number_reg);
+  auto ruleset_id = runtime->ruleset.id;
+  runtime->callback->sendPurificationResult(ruleset_id, partner_addr, runtime->shared_rule_tag, sequence_number, measurement_result, protocol);
 }
 
 void InstructionVisitor::operator()(const INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_& instruction) {
+  // TODO: complete this
   auto [left_partner, left_op_id, right_partner, right_op_id] = instruction.args;
   auto& rs = runtime->ruleset;
   auto& rule = rs.rules.at(runtime->rule_id);
-  runtime->callback->sendSwappingResults(rs.id, rule, left_partner, runtime->getRegVal(left_op_id), right_partner, runtime->getRegVal(right_op_id));
 }
 
 void InstructionVisitor::operator()(const INSTR_MEASURE_RANDOM_MemoryKey_QubitId_& instruction) {
@@ -431,6 +429,7 @@ void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_SEQ_RegId_RegId_& in
     runtime->message_found = false;
     return;
   }
+  runtime->message_found = true;
   runtime->setRegVal(sequence_number_reg_id, rule_messages[message_index][0]);
 }
 
@@ -463,7 +462,6 @@ void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_int_RegId_& in
     }
     i++;
   }
-  runtime->message_found = false;
 }
 
 void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_int_RegId_RegId_& instruction) {
@@ -483,7 +481,6 @@ void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_int_RegId_RegI
     }
     i++;
   }
-  runtime->message_found = false;
 }
 
 void InstructionVisitor::operator()(const INSTR_DELETE_MESSAGE_RegId_& instruction) {

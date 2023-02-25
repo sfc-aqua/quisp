@@ -881,19 +881,19 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
         } else {
           rule_name = "Double selection action inverse with: " + std::to_string(partner_address);
         }
-        auto rule = std::make_unique<Rule>(my_address, shared_tag, false);
+        auto rule = std::make_unique<Rule>(my_address, shared_tag);
         rule->setName(rule_name);
         auto condition = std::make_unique<Condition>();
         auto resource_clause = std::make_unique<EnoughResourceConditionClause>(3, partner_address);
         condition->addClause(std::move(resource_clause));
         rule->setCondition(std::move(condition));
-        if (i % 2 == 0) {
-          auto purify_action = std::make_unique<Purification>(PurType::DSSA, partner_address);
-          rule->setAction(std::move(purify_action));
-        } else {
-          auto purify_action = std::make_unique<Purification>(PurType::DSDA_INV, partner_address);
-          rule->setAction(std::move(purify_action));
-        }
+        // if (i % 2 == 0) {
+        //   auto purify_action = std::make_unique<Purification>(PurType::DSSA, partner_address);
+        //   rule->setAction(std::move(purify_action));
+        // } else {
+        //   auto purify_action = std::make_unique<Purification>(PurType::DSDA_INV, partner_address);
+        //   rule->setAction(std::move(purify_action));
+        // }
 
         rule->setNextRule(rule_id + 1);
         rule_id++;
@@ -967,7 +967,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
     }
 
     // Let's make nodes select measurement basis randomly, because it it easier.
-    auto rule = std::make_unique<Rule>(my_address, shared_tag, false);
+    auto rule = std::make_unique<Rule>(my_address, shared_tag);
     rule->setName("tomography");
 
     auto condition = std::make_unique<Condition>();
@@ -993,7 +993,7 @@ void HardwareMonitor::sendLinkTomographyRuleSet(int my_address, int partner_addr
   } else {
     // RuleSet with no purification. Pure measurement only link level tomography.
 
-    auto rule = std::make_unique<Rule>(my_address, shared_tag, false);
+    auto rule = std::make_unique<Rule>(my_address, shared_tag);
     auto condition = std::make_unique<Condition>();
     auto res_check_clause = std::make_unique<EnoughResourceConditionClause>(1, partner_address);
     auto measure_count_clause = std::make_unique<MeasureCountConditionClause>(num_measure, partner_address);
@@ -1040,15 +1040,15 @@ std::unique_ptr<quisp::rules::Rule> HardwareMonitor::constructPurifyRule(const s
     default:
       error("got invalid purification type");
   }
-  auto rule = std::make_unique<Rule>(my_address, shared_tag, false);
+  auto rule = std::make_unique<Rule>(my_address, shared_tag);
   rule->setName(rule_name);
   auto condition = std::make_unique<Condition>();
   auto resource_clause = std::make_unique<EnoughResourceConditionClause>(required_qubits, partner_address);
   condition->addClause(std::move(resource_clause));
   rule->setCondition(std::move(condition));
 
-  auto purify_action = std::make_unique<Purification>(pur_type, partner_address);
-  rule->setAction(std::move(purify_action));
+  // auto purify_action = std::make_unique<Purification>(pur_type, partner_address);
+  // rule->setAction(std::move(purify_action));
   rule->setNextRule(rule_id + 1);
   return rule;
 }

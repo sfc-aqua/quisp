@@ -81,11 +81,12 @@ class Runtime {
     // Messaging
     virtual void sendLinkTomographyResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, int count,
                                           MeasurementOutcome outcome, int max_count, Time start_time) = 0;
-    virtual void sendPurificationResult(const unsigned long ruleset_id, const int shared_rule_tag, const QNodeAddr partner_addr, const int measurement_result,
-                                        PurType protocol) = 0;
-    virtual void sendSwappingResults(const unsigned long ruleset_id, const Rule& rule, const QNodeAddr left_partner_addr, int left_op, const QNodeAddr right_partner_addr,
-                                     int right_op) = 0;
-
+    // TODO: change to this
+    // virtual void sendTomographyResult(const QNodeAddr partner_addr, const int shared_rule_tag, const int sequence_number, const int measurement_result, const basis) = 0;
+    virtual void sendPurificationResult(const unsigned long ruleset_id, const QNodeAddr partner_addr, const int shared_rule_tag, const int sequence_number,
+                                        const int measurement_result, PurType protocol) = 0;
+    virtual void sendSwappingResult(const unsigned long ruleset_id, const QNodeAddr partner_addr, const QNodeAddr new_partner_addr, const int shared_rule_tag,
+                                    const int sequence_number, const int frame_correction) = 0;
     // Debugging
     virtual std::string getNodeInfo() { return ""; };
   };
@@ -343,8 +344,11 @@ class Runtime {
 
   /** @name states */
   //@{
-  /// @brief current evaluating rule id
+  /// @brief currently evaluating rule id
   RuleId rule_id = -1;
+
+  /// @brief currently evaluating shared_rule_tag (if it is defined)
+  int shared_rule_tag = -1;
 
   /**
    * @brief program counter for Program execution.

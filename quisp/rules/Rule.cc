@@ -5,17 +5,17 @@
 
 namespace quisp::rules {
 
-Rule::Rule(int partner_address, int shared_tag, bool is_finalized) : shared_tag(shared_tag), is_finalized(is_finalized) { qnic_interfaces.push_back({partner_address}); };
+Rule::Rule(int partner_address, int shared_rule_tag) : shared_rule_tag(shared_rule_tag) { qnic_interfaces.push_back({partner_address}); };
 
-Rule::Rule(std::vector<int> partner_address, int shared_tag, bool is_finalized) : shared_tag(shared_tag), is_finalized(is_finalized) {
-  for (int i = 0; i < partner_address.size(); i++) {
-    qnic_interfaces.push_back({partner_address.at(i)});
+Rule::Rule(std::vector<int> partner_address, int shared_rule_tag) : shared_rule_tag(shared_rule_tag) {
+  for (int addr : partner_address) {
+    qnic_interfaces.push_back({addr});
   }
 }
 
 void Rule::setCondition(std::unique_ptr<Condition> cond) { condition = std::move(cond); }
 
-void Rule::setAction(std::unique_ptr<Action> act) { action = std::move(act); }
+void Rule::setAction(std::unique_ptr<Action> act) { action = std::move(act);}
 
 void Rule::setNextRule(int next_rule_id) {
   if (to != -1) {
@@ -31,7 +31,7 @@ json Rule::serialize_json() {
   rule_json["next_rule_id"] = to;
   rule_json["name"] = name;
   rule_json["interface"] = qnic_interfaces;
-  rule_json["shared_tag"] = shared_tag;
+  rule_json["shared_rule_tag"] = shared_rule_tag;
   if (condition != nullptr) {
     rule_json["condition"] = condition->serialize_json();
   }
@@ -47,7 +47,7 @@ void Rule::deserialize_json(json serialized) {
   serialized["next_rule_id"].get_to(to);
   serialized["name"].get_to(name);
   serialized["interface"].get_to(qnic_interfaces);
-  serialized["shared_tag"].get_to(shared_tag);
+  serialized["shared_rule_tag"].get_to(shared_rule_tag);
 
   // deserialize actions
   if (serialized["action"] != nullptr) {  // action found

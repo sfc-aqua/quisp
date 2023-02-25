@@ -1,4 +1,9 @@
+#include <memory>
+
 #include "RuleSetGenerator.h"
+#include "rules/Action.h"
+#include "rules/Clause.h"
+#include "rules/Rule.h"
 
 namespace quisp::modules::ruleset_gen {
 
@@ -8,12 +13,18 @@ void RuleSetGenerator::generateReverseSwapAtHalfRuleSets(int left_index, int rig
                                                          int& shared_rule_tag) {
   if (left_index == right_index || left_index + 1 == right_index) return;
   int swapper_index = (left_index + right_index) / 2;
-  rules_map[path[swapper_index]].emplace_back(swapRule({path[left_index], path[right_index]}, ++shared_rule_tag));
+
+  int swapper_addr = path[swapper_index];
+  int left_addr = path[left_index];
+  int right_addr = path[right_index];
+  rules_map[swapper_addr].emplace_back(swapRule({left_addr, right_addr}, ++shared_rule_tag));
+  rules_map[left_addr].emplace_back(swapCorrectionRule(swapper_addr, shared_rule_tag));
+  rules_map[right_addr].emplace_back(swapCorrectionRule(swapper_addr, shared_rule_tag));
+
   // if you want to do purification between from and swapper or swapper and to before the swap; do it here.
   // e.g. generatePurificationRule(from, swapper, <protocol>);
   // e.g. generatePurificationRule(swapper, to, <protocol>);
 
-  // TODO: add wait rule at the left and right node
   generateReverseSwapAtHalfRuleSets(left_index, swapper_index, rules_map, path, shared_rule_tag);
   generateReverseSwapAtHalfRuleSets(swapper_index, right_index, rules_map, path, shared_rule_tag);
 };
@@ -30,6 +41,20 @@ std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetup
   for (auto& [address, rs] : rules_map) {
     std::reverse(rs.begin(), rs.end());
   }
+
+  // if you want to do e2e purification before tomography do it here
+  int left_addr = path.front();
+  int right_addr = path.back();
+  rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_X, ++shared_rule_tag));
+  rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_X, shared_rule_tag));
+  rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_X, shared_rule_tag));
+  rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_X, shared_rule_tag));
+
+  rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_Z, ++shared_rule_tag));
+  rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_Z, shared_rule_tag));
+  rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_Z, shared_rule_tag));
+  rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_Z, shared_rule_tag));
+
   // add tomography rules
   auto initiator_addr = path.front();
   ++shared_rule_tag;
@@ -63,7 +88,7 @@ std::vector<int> RuleSetGenerator::collectPath(messages::ConnectionSetupRequest*
 }
 
 std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int owner_address, int num_measure, int shared_rule_tag) {
-  auto tomography_rule = std::make_unique<Rule>(partner_address, shared_rule_tag, true);
+  auto tomography_rule = std::make_unique<Rule>(partner_address, shared_rule_tag);
 
   // prepare condition
   auto condition = std::make_unique<Condition>();
@@ -81,7 +106,7 @@ std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int 
 }
 
 std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType purification_type, int shared_rule_tag) {
-  auto purify_rule = std::make_unique<Rule>(partner_address, shared_rule_tag, false);
+  auto purify_rule = std::make_unique<Rule>(partner_address, -1);
 
   // decide how many Bell pairs are required
   int num_resource;
@@ -104,28 +129,53 @@ std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType 
   purify_rule->setCondition(std::move(condition));
 
   // prepare action
-  auto purify_action = std::make_unique<Purification>(purification_type, partner_address);
+  auto purify_action = std::make_unique<Purification>(purification_type, partner_address, shared_rule_tag);
   purify_rule->setAction(std::move(purify_action));
 
   return purify_rule;
 }
 
-std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::pair<int, int> partner_address, int shared_rule_tag) {
-  auto swap_rule = std::make_unique<Rule>(std::vector<int>{partner_address.first, partner_address.second}, shared_rule_tag, true);
+std::unique_ptr<Rule> RuleSetGenerator::purificationCorrelationRule(int partner_address, PurType protocol, int shared_rule_tag) {
+  auto correlation_rule = std::make_unique<Rule>(partner_address, shared_rule_tag);
 
-  // prepare condition and two enough resource clauses
+  auto condition = std::make_unique<Condition>();
+  auto correlation_clause = std::make_unique<PurificationCorrelationClause>(partner_address, shared_rule_tag);
+  condition->addClause(std::move(correlation_clause));
+
+  auto action = std::make_unique<PurificationCorrelation>(partner_address, shared_rule_tag);
+
+  correlation_rule->setCondition(std::move(condition));
+  correlation_rule->setAction(std::move(action));
+  return correlation_rule;
+}
+
+std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::pair<int, int> partner_address, int shared_rule_tag) {
+  auto swap_rule = std::make_unique<Rule>(std::vector<int>{partner_address.first, partner_address.second}, -1);
+
   auto condition = std::make_unique<Condition>();
   auto enough_resource_clause_first = std::make_unique<EnoughResourceConditionClause>(1, partner_address.first);
   auto enough_resource_clause_second = std::make_unique<EnoughResourceConditionClause>(1, partner_address.second);
   condition->addClause(std::move(enough_resource_clause_first));
   condition->addClause(std::move(enough_resource_clause_second));
-  swap_rule->setCondition(std::move(condition));
 
   auto swap_action = std::make_unique<EntanglementSwapping>(std::vector<int>({partner_address.first, partner_address.second}));
+
+  swap_rule->setCondition(std::move(condition));
   swap_rule->setAction(std::move(swap_action));
-
-  // TODO: add wait rules after purification circuit to wait for the result
-
   return swap_rule;
+}
+
+std::unique_ptr<Rule> RuleSetGenerator::swapCorrectionRule(int swapper_address, int shared_rule_tag) {
+  auto correction_rule = std::make_unique<Rule>(swapper_address, shared_rule_tag);
+
+  auto condition = std::make_unique<Condition>();
+  auto swapping_correction_clause = std::make_unique<SwappingCorrectionClause>(swapper_address, shared_rule_tag);
+  condition->addClause(std::move(swapping_correction_clause));
+
+  auto action = std::make_unique<SwappingCorrection>(swapper_address, shared_rule_tag);
+
+  correction_rule->setCondition(std::move(condition));
+  correction_rule->setAction(std::move(action));
+  return correction_rule;
 }
 }  // namespace quisp::modules::ruleset_gen

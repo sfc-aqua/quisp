@@ -33,7 +33,7 @@ RuleSet RuleSetConverter::construct(const RSData &data) {
     if (terminate_condition.opcodes.size() > 0) {
       rs.termination_condition = terminate_condition;
     }
-    rs.rules.emplace_back(Rule{name, rule_data->shared_tag, condition, action});
+    rs.rules.emplace_back(Rule{name, rule_data->shared_rule_tag, condition, action});
   }
   return rs;
 }
@@ -316,7 +316,7 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
     qubitId: qubit, trash_qubit
     Reg: result, seq_no // the sequence number of the qubit in the next rule
     // start program
-    SET seq_no 0
+    SET seq_no 1 // sequence_number starts at 1
     LOAD seq_no "sent_purification_message_{shared_rule}" // if it has not been set the value stays as is
     GET_QUBIT qubit partner_addr 0
     GET_QUBIT trash_qubit partner_addr 1

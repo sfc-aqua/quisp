@@ -8,6 +8,7 @@ packet SwappingResult extends Header{
     int shared_rule_tag      @setter(setSharedRuleTag)     @getter(getSharedRuleTag);
     int sequence_number      @setter(setSequenceNumber)    @getter(getSequenceNumber);
     int correction_frame     @setter(setCorrectionFrame)   @getter(getCorrectionFrame);
+    int new_partner          @setter(setNewPartner)        @getter(getNewPartner);
 
     unsigned long RuleSet_id;
     int Rule_id;
@@ -33,7 +34,6 @@ packet SwappingResult extends Header{
     int operation_type_right;
 
     int operation_type; // when this would reach the destination
-    int new_partner;
     int new_partner_qnic_index;
     int new_partner_qnic_address;
     int measured_qubit_index;

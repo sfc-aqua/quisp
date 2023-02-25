@@ -129,51 +129,35 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     rule_engine->send(pk_for_self, "RouterPort$o");
   }
 
-  void sendPurificationResult(const unsigned long ruleset_id, int shared_rule_tag, const QNodeAddr partner_addr, int measurement_result, int purification_protocol) override {
+  void sendPurificationResult(const unsigned long ruleset_id, const QNodeAddr partner_addr, const int shared_rule_tag, const int sequence_number, const int measurement_result,
+                              PurType protocol) override {
     auto *pkt = new PurificationResult{"PurificationResult"};
     pkt->setSrcAddr(rule_engine->parentAddress);
     pkt->setDestAddr(partner_addr.val);
     pkt->setKind(7);
-    // TODO: COMPLETE THIS
+    pkt->setRulesetId(ruleset_id);
+    pkt->setSharedRuleTag(shared_rule_tag);
+    pkt->setSequenceNumber(sequence_number);
+    pkt->setMeasurementResult(measurement_result);
+    pkt->setProtocol(protocol);
     auto *pk_for_self = pkt->dup();
     pk_for_self->setDestAddr(rule_engine->parentAddress);
     rule_engine->send(pkt, "RouterPort$o");
     rule_engine->send(pk_for_self, "RouterPort$o");
   }
 
-  void sendSwappingResults(const unsigned long ruleset_id, const runtime::Rule &rule, const QNodeAddr left_partner_addr, int left_op, const QNodeAddr right_partner_addr,
-                           int right_op) override {
-    /**
-     * what we need is just the ruleset id, shared_rule_tag (so we know which rule to apply), and resource_id (sequence number)
-     *
-     */
-
-    auto src_addr = rule_engine->parentAddress;
-
-    SwappingResult *pkt_for_left = new SwappingResult("SwappingResult(Left)");
-    pkt_for_left->setRuleSet_id(ruleset_id);
-    pkt_for_left->setRule_id(rule.id);
-    pkt_for_left->setShared_tag(rule.shared_tag);
-    pkt_for_left->setKind(5);  // cyan
-    pkt_for_left->setSrcAddr(src_addr);
-
-    SwappingResult *pkt_for_right = pkt_for_left->dup();
-    pkt_for_right->setName("SwappingResult(Right)");
-
-    // packet for left node
-    pkt_for_left->setDestAddr(left_partner_addr.val);
-    pkt_for_left->setOperation_type(left_op);
-    pkt_for_left->setNew_partner(right_partner_addr.val);
-    pkt_for_left->setMeasured_qubit_index(left_qubit_index);
-
-    // packet for right node
-    pkt_for_right->setDestAddr(right_partner_addr.val);
-    pkt_for_right->setOperation_type(right_op);
-    pkt_for_right->setNew_partner(left_partner_addr.val);
-    pkt_for_right->setMeasured_qubit_index(right_qubit_index);
-
-    rule_engine->send(pkt_for_left, "RouterPort$o");
-    rule_engine->send(pkt_for_right, "RouterPort$o");
+  void sendSwappingResult(const unsigned long ruleset_id, const QNodeAddr partner_addr, const QNodeAddr new_partner_addr, const int shared_rule_tag, const int sequence_number,
+                          const int frame_correction) override {
+    SwappingResult *pkt = new SwappingResult("SwappingResult");
+    pkt->setSrcAddr(rule_engine->parentAddress);
+    pkt->setDestAddr(partner_addr.val);
+    pkt->setRulesetId(ruleset_id);
+    pkt->setSharedRuleTag(shared_rule_tag);
+    pkt->setSequenceNumber(sequence_number);
+    pkt->setKind(5);  // cyan
+    pkt->setCorrectionFrame(frame_correction);
+    pkt->setNewPartner(new_partner_addr.val);
+    rule_engine->send(pkt, "RouterPort$o");
   }
 
   void freeAndResetQubit(IQubitRecord *qubit) override {

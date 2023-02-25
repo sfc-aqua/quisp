@@ -90,7 +90,6 @@ INSTR(PURIFY_Y, RegId /* measurement_result */, QubitId /* keep_qubit */, QubitI
 INSTR(FREE_QUBIT, QubitId)
 INSTR(PROMOTE, QubitId)
 INSTR(PROMOTE, QubitId, RegId /* new partner addr */) // promote with new partner/new name
-INSTR(PROMOTE, RegId /* qubit */)
 INSTR(LOCK_QUBIT, QubitId, RegId /* action index */)
 
 // message operations

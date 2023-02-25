@@ -18,17 +18,15 @@ namespace quisp::rules {
 class Rule {
  public:
   Rule(){};
-  Rule(int partner_address, int shared_tag, bool is_finalized);
-  Rule(std::vector<int> partner_address, int shared_tag, bool is_finalized);
+  Rule(int partner_address, int shared_rule_tag);
+  Rule(std::vector<int> partner_address, int shared_rule_tag);
   Rule(json serialized) { deserialize_json(serialized); };
   unsigned long parent_ruleset_id;
   int rule_id = -1;
   int to = -1;
-  int shared_tag;  // Used to identify the partner Rule
-  bool is_finalized;
-  std::string name;
+  int shared_rule_tag;  ///< Used to identify set of rules where they communicate via messages; undefined value if doesn't need messaging
   std::vector<QnicInterface> qnic_interfaces;
-  std::vector<int> next_partner_addresses;
+  std::string name;
   std::unique_ptr<Condition> condition;  ///< Condition includes a set of clauses
   std::unique_ptr<Action> action;
 

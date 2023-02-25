@@ -63,7 +63,7 @@ PurificationCorrelationClause::PurificationCorrelationClause(int partner_address
 
 json PurificationCorrelationClause::serialize_json() {
   json wait_json;
-  wait_json["type"] = "wait";
+  wait_json["type"] = "purification_correlation";
   wait_json["options"]["interface"]["partner_address"] = partner_address;
   wait_json["options"]["shared_rule_tag"] = shared_rule_tag;
   return wait_json;
@@ -81,7 +81,7 @@ SwappingCorrectionClause::SwappingCorrectionClause(int swapper_address, int shar
 
 json SwappingCorrectionClause::serialize_json() {
   json wait_json;
-  wait_json["type"] = "wait";
+  wait_json["type"] = "swapping_correction";
   wait_json["options"]["interface"]["partner_address"] = partner_address;
   wait_json["options"]["shared_rule_tag"] = shared_rule_tag;
   return wait_json;
