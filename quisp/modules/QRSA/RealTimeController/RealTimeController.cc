@@ -9,10 +9,7 @@ namespace quisp::modules {
 Define_Module(RealTimeController);
 
 RealTimeController::RealTimeController() : provider(utils::ComponentProvider{this}) {}
-void RealTimeController::initialize() {
-  EV << "RealTimeController booted\n";
-  myAddress = par("address");
-}
+void RealTimeController::initialize() { myAddress = provider.getNodeAddr(); }
 
 void RealTimeController::handleMessage(cMessage *msg) {}
 
