@@ -25,6 +25,7 @@ packet RejectConnectionSetupRequest extends Header
 
 packet ConnectionSetupResponse extends Header
 {
+    int application_id;
     int actual_srcAddr;
     int actual_destAddr;
     unsigned long RuleSet_id;
