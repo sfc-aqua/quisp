@@ -27,6 +27,7 @@ class Strategy : public quisp_test::TestComponentProviderStrategy {
   Strategy(IRoutingDaemon *_routing_daemon, IHardwareMonitor *_hardware_monitor) : routing_daemon(_routing_daemon), hardware_monitor(_hardware_monitor) {}
   Strategy() {}
   ~Strategy() {}
+  int getNodeAddr() override { return 5; };
   IRoutingDaemon *getRoutingDaemon() override { return routing_daemon; }
   IHardwareMonitor *getHardwareMonitor() override { return hardware_monitor; }
   IRoutingDaemon *routing_daemon = nullptr;
@@ -46,7 +47,7 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
   using quisp::modules::ConnectionManager::respondToRequest_deprecated;
   ConnectionManagerTestTarget(IRoutingDaemon *routing_daemon, IHardwareMonitor *hardware_monitor)
       : quisp::modules::ConnectionManager(), toRouterGate(new TestGate(this, "RouterPort$o")) {
-    setParInt(this, "address", 123);
+    setParInt(this, "address", 5);
     setParInt(this, "total_number_of_qnics", 10);
     this->setName("connection_manager_test_target");
     setParBool(this, "simultaneous_es_enabled", false);
@@ -60,7 +61,7 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
     setComponentType(new module_type::TestModuleType("test cm"));
   }
   ConnectionManagerTestTarget() : quisp::modules::ConnectionManager() {
-    setParInt(this, "address", 123);
+    setParInt(this, "address", 5);
     setParInt(this, "total_number_of_qnics", 10);
     this->setName("connection_manager_test_target");
     this->provider.setStrategy(std::make_unique<Strategy>());
@@ -78,7 +79,7 @@ class ConnectionManagerTestTarget : public quisp::modules::ConnectionManager {
 
 TEST(ConnectionManagerTest, Init) {
   ConnectionManagerTestTarget c;
-  ASSERT_EQ(c.par("address").intValue(), 123);
+  ASSERT_EQ(c.par("address").intValue(), 5);
 }
 
 TEST(ConnectionManagerTest, parsePurType) {
@@ -365,7 +366,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     	"shared_tag": 2,
 		"name": "",
 		"next_rule_id": -1,
-		"rule_id": 0 
+		"rule_id": 0
 	}],
 	"ruleset_id": 1234
 })"_json;
@@ -373,11 +374,6 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   }
   delete routing_daemon;
   delete hardware_monitor;
-}
-
-TEST(ConnectionManagerTest, GetQNICInterface) {
-  ConnectionManagerTestTarget c;
-  ASSERT_EQ(c.par("address").intValue(), 123);
 }
 
 TEST(ConnectionManagerTest, QnicReservation) {

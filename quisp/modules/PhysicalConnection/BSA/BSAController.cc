@@ -25,8 +25,8 @@ void BSAController::finish() { std::cout << "last BSM message that was sent " <<
 void BSAController::initialize() {
   // if this BSA is internal set left to be self node
   if (strcmp(getParentModule()->getName(), "qnic_r") == 0) {
-    address = provider.getQNode()->par("address").intValue();
-    left_qnic.parent_node_addr = provider.getQNode()->par("address").intValue();
+    address = provider.getNodeAddr();
+    left_qnic.parent_node_addr = address;
     left_qnic.index = getParentModule()->par("self_qnic_index").intValue();
     left_qnic.type = QNIC_R;
   } else {

@@ -65,7 +65,7 @@ void HardwareMonitor::initialize(int stage) {
   Z_Purification = par("z_purification");
   purification_type = par("purification_type");
   num_measure = par("num_measure");
-  my_address = par("address");
+  my_address = provider.getNodeAddr();
 
   if (stage == 0) {
     return;
@@ -1167,7 +1167,7 @@ std::unique_ptr<NeighborInfo> HardwareMonitor::createNeighborInfo(const cModule 
 
     int address_one = controller->getExternalAdressFromPort(0);
     int address_two = controller->getExternalAdressFromPort(1);
-    int myaddress = par("address");
+    int myaddress = provider.getNodeAddr();
 
     EV_DEBUG << "myaddress = " << myaddress << ", address = " << address_one << ", address_two = " << address_two << " in " << controller->getFullName() << "\n";
 
