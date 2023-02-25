@@ -20,7 +20,6 @@ module QNIC
         bool passive = default(false);
         @display("bgb=654.39,1687.06006");
         int burst_trial_counter @mutable = default(0);
-        bool is_reserved @mutable = default(false);
 
     gates:
         output to_parent_router @loose; // Even if it is not used. Internally it's still need to be connected
@@ -54,7 +53,7 @@ module QNIC
         }
 
         gate_closer: dummyModule;
-        
+
     connections:
         for i=0..num_buffer-1 {
             lens.from_emitters++ <-- statQubit[i].tolens_quantum_port;

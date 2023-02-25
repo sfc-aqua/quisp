@@ -10,7 +10,6 @@ import modules.QRSA.RuleEngine.*;
 module quantumRoutingSoft
 {
     parameters:
-        int address;
         int number_of_qnics;
         int number_of_qnics_r;
         int number_of_qnics_rp;
@@ -26,12 +25,10 @@ module quantumRoutingSoft
     submodules:
         rd: RoutingDaemon {
             parameters:
-                address = parent.address;//share the same address within all inner modules
                 @display("p=115,63");
         }
         hm: HardwareMonitor {
             parameters:
-                address = parent.address;//share the same address within all inner modules
                 @display("p=115,231");
                 number_of_qnics = parent.number_of_qnics;
                 number_of_qnics_r = parent.number_of_qnics_r;
@@ -40,7 +37,6 @@ module quantumRoutingSoft
         }
         cm: ConnectionManager {
             parameters:
-                address = parent.address;//share the same address within all inner modules
                 number_of_qnics = parent.number_of_qnics;
                 number_of_qnics_r = parent.number_of_qnics_r;
                 number_of_qnics_rp = parent.number_of_qnics_rp;
@@ -50,12 +46,10 @@ module quantumRoutingSoft
         }
         rt: RealTimeController {
             parameters:
-                address = parent.address;//share the same address within all inner modules
                 @display("p=227,231");
         }
         re: RuleEngine {
             parameters:
-                address = parent.address;//share the same address within all inner modules
                 @display("p=227,63");
                 number_of_qnics = parent.number_of_qnics;
                 number_of_qnics_r = parent.number_of_qnics_r;
@@ -69,9 +63,5 @@ module quantumRoutingSoft
         re.RouterPort <--> rePort;
         re.HardwareMonitorPort <--> hm.RuleEnginePort;
         hm.RouterPort <--> hmPort;
-
-        //for i=0..sizeof(qnics)-1{
-        //    rd.dummyQNICLink++ <--> qnics[i];
-        //}
 
 }
