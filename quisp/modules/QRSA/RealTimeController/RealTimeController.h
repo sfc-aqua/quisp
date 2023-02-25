@@ -33,6 +33,7 @@ class RealTimeController : public IRealTimeController {
 
   void applyXGate(qrsa::IQubitRecord* const qubit_record) override;
   void applyZGate(qrsa::IQubitRecord* const qubit_record) override;
+  void applyYGate(qrsa::IQubitRecord* const qubit_record) override;
   utils::ComponentProvider provider;
 };
 

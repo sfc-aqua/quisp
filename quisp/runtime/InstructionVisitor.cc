@@ -80,6 +80,11 @@ void InstructionVisitor::operator()(const INSTR_GATE_Z_QubitId_& instruction) {
   runtime->gateZ(qubit_id);
 }
 
+void InstructionVisitor::operator()(const INSTR_GATE_Y_QubitId_& instruction) {
+  auto [qubit_id] = instruction.args;
+  runtime->gateY(qubit_id);
+}
+
 void InstructionVisitor::operator()(const INSTR_GATE_CNOT_QubitId_QubitId_& instruction) {
   auto [control_qubit_id, target_qubit_id] = instruction.args;
   runtime->gateCNOT(control_qubit_id, target_qubit_id);
@@ -407,14 +412,14 @@ void InstructionVisitor::operator()(const INSTR_GET_QUBIT_BY_SEQ_NO_QubitId_QNod
 void InstructionVisitor::operator()(const INSTR_PROMOTE_QubitId_& instruction) {
   auto [qubit_id] = instruction.args;
   auto* qubit_rec = runtime->getQubitByQubitId(qubit_id);
-  auto it = runtime->findQubit(qubit_rec);
-  runtime->promoteQubit(it);
+  runtime->promoteQubit(qubit_rec);
 }
 
-void InstructionVisitor::operator()(const INSTR_SET_PARTNER_QubitId_QNodeAddr_& instruction) {
-  auto [qubit_id, partner_addr] = instruction.args;
-  auto* qubit = runtime->getQubitByQubitId(qubit_id);
-  runtime->updateQubitPartner(qubit, partner_addr);
+void InstructionVisitor::operator()(const INSTR_PROMOTE_QubitId_RegId_& instruction) {
+  auto [qubit_id, new_partner_addr_reg] = instruction.args;
+  auto* qubit_rec = runtime->getQubitByQubitId(qubit_id);
+  auto new_partner_addr = QNodeAddr(runtime->getRegVal(new_partner_addr_reg));
+  runtime->promoteQubitWithNewPartner(qubit_rec, new_partner_addr);
 }
 
 void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_SEQ_RegId_RegId_& instruction) {

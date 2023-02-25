@@ -55,8 +55,9 @@ class StationaryQubit : public IStationaryQubit {
 
   void gateCNOT(IStationaryQubit *target_qubit) override;
   void gateHadamard() override;
-  void gateZ() override;
   void gateX() override;
+  void gateZ() override;
+  void gateY() override;
   void gateS() override;
   void gateSdg() override;
 

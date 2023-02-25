@@ -143,16 +143,6 @@ void Runtime::assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_r
   qubit_to_sequence_number[qubit_record] = {partner_addr, rule_id, sequence_number};
 }
 
-QubitResources::iterator Runtime::findQubit(int target_rule_id, int shared_tag, int action_index) {
-  for (auto it = qubits.begin(); it != qubits.end(); it++) {
-    auto& [addr, current_rule_id] = it->first;
-    if (current_rule_id != target_rule_id) continue;
-    if (callback->getActionIndex(it->second) == action_index) {
-      return it;
-    }
-  }
-  throw cRuntimeError("Qubit not found: (rule_id: %d, shared_tag: %d, action_index: %d)", target_rule_id, shared_tag, action_index);
-}
 QubitResources::iterator Runtime::findQubit(IQubitRecord* qubit_record) {
   for (auto it = qubits.begin(); it != qubits.end(); it++) {
     if (it->second == qubit_record) {
@@ -162,14 +152,13 @@ QubitResources::iterator Runtime::findQubit(IQubitRecord* qubit_record) {
   throw cRuntimeError("Qubit not found: from the given QubitRecord");
 }
 
-void Runtime::promoteQubit(QubitResources::iterator iter) {
-  auto [partner_addr, current_rule_id] = iter->first;
+void Runtime::promoteQubit(IQubitRecord* qubit) {
+  auto [partner_addr, current_rule_id, sequence_number] = qubit_to_sequence_number[qubit];
   auto it = ruleset.next_rule_table.find({partner_addr, current_rule_id});
   assert(it != ruleset.next_rule_table.end());
   auto next_rule_id = it->second;
-  auto* qubit = iter->second;
   auto next_rule_sequence_number = resource_counter[{partner_addr, next_rule_id}]++;
-  qubits.erase(iter);
+  qubits.erase(findQubit(qubit));
   qubits.emplace(std::make_pair(partner_addr, next_rule_id), qubit);
   sequence_number_to_qubit.erase(qubit_to_sequence_number[qubit]);
   sequence_number_to_qubit[{partner_addr, next_rule_id, next_rule_sequence_number}] = qubit;
@@ -235,10 +224,6 @@ IQubitRecord* Runtime::getQubitByQubitId(QubitId id) const {
     return it->second;
   }
   return nullptr;
-}
-
-void Runtime::updateQubitPartner(IQubitRecord* qubit_record, QNodeAddr new_partner_address) {
-  // TODO: call to call back to change the Bell pari store.
 }
 
 void Runtime::jumpTo(const Label& label) {
@@ -338,6 +323,14 @@ void Runtime::gateZ(QubitId qubit_id) {
     return;
   }
   callback->gateZ(qubit_ref);
+}
+
+void Runtime::gateY(QubitId qubit_id) {
+  auto qubit_ref = getQubitByQubitId(qubit_id);
+  if (qubit_ref == nullptr) {
+    return;
+  }
+  callback->gateY(qubit_ref);
 }
 
 void Runtime::gateCNOT(QubitId control_qubit_id, QubitId target_qubit_id) {

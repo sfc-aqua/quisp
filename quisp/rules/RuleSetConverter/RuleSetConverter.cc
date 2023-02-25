@@ -686,38 +686,56 @@ Program RuleSetConverter::constructPurificationCorrelationAction(const Purificat
 Program RuleSetConverter::constructSwappingCorrectionAction(const SwappingCorrection *act) {
   /*
     qubit_id: qubit
-    Reg: seq_no, correction_operation
-
+    Reg: seq_no, pauli_op, new_partner_addr
+  // start of the program
     LOAD seq_no "swapping_<shared_rule_tag>_seq_no"
     GET_QUBIT_BY_SEQ_NO q0 <partner_addr> seq
-    GET_MESSAGE seq_no 0 correction_operation
-      note: correction_operation uses 2 bits
-      if correction_operation & 1 != 0 -> apply X
-      if correction_operation & 2 != 0 -> apply Z
-    // TODO: complete this swapping
+    GET_MESSAGE seq_no 0 pauli_op new_partner_addr
+    DELETE_MESSAGE seq_no
+    BEQ PAULI_X pauli_op 1
+    BEQ PAULI_Z pauli_op 2
+    BEQ PAULI_Y pauli_op 3
+  PAULI_X
+    GATE_X qubit
+    JMP PROMOTE
+  PAULI_Z
+    GATE_Z qubit
+    JMP PROMOTE
+  PAULI_Y
+    GATE_Y qubit
+  UPDATE_PARTNER
+    PROMOTE qubit new_partner_addr
   */
-  // init
   QubitId qubit{0};
   auto seq_no = RegId::REG0;
-  auto result_0 = RegId::REG1;
-  auto result_1 = RegId::REG2;
+  auto pauli_op = RegId::REG1;
+  auto new_partner_addr = RegId::REG2;
   QNodeAddr partner_address = act->qnic_interfaces[0].partner_addr;
   MemoryKey key{"swapping_" + std::to_string(act->shared_rule_tag) + "_seq_no"};
   // label
-  Label result_match_label{"result_match"};
-  Label result_not_match_label{"result_not_match"};
+  Label pauli_x_label{"pauli_x"};
+  Label pauli_y_label{"pauli_y"};
+  Label pauli_z_label{"pauli_z"};
+  Label update_partner_label{"update_partner"};
   // start of program
   std::vector<InstructionTypes> opcodes;
   opcodes.push_back(INSTR_LOAD_RegId_MemoryKey_{{seq_no, key}});
   opcodes.push_back(INSTR_GET_QUBIT_BY_SEQ_NO_QubitId_QNodeAddr_RegId_{{qubit, partner_address, seq_no}});
-  opcodes.push_back(INSTR_GET_MESSAGE_RegId_int_RegId_{{seq_no, 0, result_0}});
-  opcodes.push_back(INSTR_GET_MESSAGE_RegId_int_RegId_{{seq_no, 1, result_1}});
-  opcodes.push_back(INSTR_BEQ_Label_RegId_RegId_{{result_match_label, result_0, result_1}});
-  // RESULT MATCH
-  opcodes.push_back(INSTR_PROMOTE_QubitId_{qubit, result_match_label});
-  opcodes.push_back(INSTR_RET_ReturnCode_{ReturnCode::NONE});
-  // RESULT NOT MATCH
-  opcodes.push_back(INSTR_FREE_QUBIT_QubitId_{qubit});
+  opcodes.push_back(INSTR_GET_MESSAGE_RegId_int_RegId_RegId_{{seq_no, 0, pauli_op, new_partner_addr}});
+  opcodes.push_back(INSTR_DELETE_MESSAGE_RegId_{seq_no});
+  opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{pauli_x_label, pauli_op, 1}});
+  opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{pauli_z_label, pauli_op, 2}});
+  opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{pauli_y_label, pauli_op, 3}});
+  // PAULI_X
+  opcodes.push_back(INSTR_GATE_X_QubitId_{qubit, pauli_x_label});
+  opcodes.push_back(INSTR_JMP_Label_{update_partner_label});
+  // PAULI_Z
+  opcodes.push_back(INSTR_GATE_Z_QubitId_{qubit, pauli_z_label});
+  opcodes.push_back(INSTR_JMP_Label_{update_partner_label});
+  // PAULI_Y
+  opcodes.push_back(INSTR_GATE_Y_QubitId_{qubit, pauli_y_label});
+  // UPDATE_PARTNER
+  opcodes.push_back(INSTR_PROMOTE_QubitId_RegId_{{qubit, new_partner_addr}, update_partner_label});
   // END
   return Program{"SwappingCorrection", opcodes};
 }

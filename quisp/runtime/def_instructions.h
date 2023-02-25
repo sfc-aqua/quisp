@@ -77,6 +77,7 @@ INSTR(MEASURE, MemoryKey, QubitId, Basis)
 INSTR(MEASURE, RegId, QubitId, Basis)
 INSTR(GATE_X, QubitId)
 INSTR(GATE_Z, QubitId)
+INSTR(GATE_Y, QubitId)
 INSTR(GATE_CNOT, QubitId, QubitId)
 // circuit operations
 INSTR(PURIFY_X, RegId /* measurement_result */, QubitId /* keep_qubit */, QubitId /* trash_qubit */)
@@ -84,9 +85,11 @@ INSTR(PURIFY_Z, RegId /* measurement_result */, QubitId /* keep_qubit */, QubitI
 INSTR(PURIFY_Y, RegId /* measurement_result */, QubitId /* keep_qubit */, QubitId /* trash_qubit */)
 
 // resource management operations
-INSTR(SET_PARTNER, QubitId, QNodeAddr /* new partner address */)  // TODO: in the future we would like to use SET_NAME or SET_ID instead to allow multipartite purification
+// instructions we would want later: crucial for entanglement pumping, banding, and multipartite states
+// INSTR(SET_NAME, QubitId, {new_name: string | RegId }) // when using partner as name is not enough
 INSTR(FREE_QUBIT, QubitId)
 INSTR(PROMOTE, QubitId)
+INSTR(PROMOTE, QubitId, RegId /* new partner addr */) // promote with new partner/new name
 INSTR(PROMOTE, RegId /* qubit */)
 INSTR(LOCK_QUBIT, QubitId, RegId /* action index */)
 

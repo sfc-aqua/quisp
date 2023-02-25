@@ -43,8 +43,9 @@ class IStationaryQubit : public omnetpp::cSimpleModule {
   virtual void gateCNOT(IStationaryQubit *target_qubit) = 0;
   virtual void gateHadamard() = 0;
   // RTC
-  virtual void gateZ() = 0;
   virtual void gateX() = 0;
+  virtual void gateZ() = 0;
+  virtual void gateY() = 0;
   virtual void gateS() = 0;
   virtual void gateSdg() = 0;
 

@@ -43,5 +43,9 @@ void RealTimeController::applyZGate(qrsa::IQubitRecord *const qubit_record) {
   auto *qubit = provider.getStationaryQubit(qubit_record);
   qubit->gateZ();
 }
+void RealTimeController::applyYGate(qrsa::IQubitRecord *const qubit_record) {
+  auto *qubit = provider.getStationaryQubit(qubit_record);
+  qubit->gateY();
+}
 }  // namespace modules
 }  // namespace quisp

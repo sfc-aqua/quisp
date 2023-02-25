@@ -18,6 +18,7 @@ class IRealTimeController : public cSimpleModule {
   virtual void ReInitialize_StationaryQubit(qrsa::IQubitRecord* const qubit_record, bool consumed) = 0;
   virtual void applyXGate(qrsa::IQubitRecord* const qubit_record) = 0;
   virtual void applyZGate(qrsa::IQubitRecord* const qubit_record) = 0;
+  virtual void applyYGate(qrsa::IQubitRecord* const qubit_record) = 0;
 };
 }  // namespace modules
 }  // namespace quisp

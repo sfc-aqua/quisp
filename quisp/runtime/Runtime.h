@@ -71,6 +71,7 @@ class Runtime {
     virtual MeasurementOutcome measureQubitY(IQubitRecord*) = 0;
     virtual void gateX(IQubitRecord*) = 0;
     virtual void gateZ(IQubitRecord*) = 0;
+    virtual void gateY(IQubitRecord*) = 0;
     virtual void gateCNOT(IQubitRecord* control_qubit_rec, IQubitRecord* target_qubit_rec) = 0;
     virtual int purifyX(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
     virtual int purifyZ(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
@@ -138,8 +139,6 @@ class Runtime {
    */
   void assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record);
 
-  /// @brief find the qubit that has the action_index and allocated in the rule_id, shared_tag;
-  QubitResources::iterator findQubit(int rule_id, int shared_tag, int action_index);
   /// @brief find the qubit iterator that match with this rule_id and sequence_number
   QubitResources::iterator findQubit(IQubitRecord*);
 
@@ -266,9 +265,9 @@ class Runtime {
    *
    * the next rule id is automatically derived by the Programs in the RuleSet.
    *
-   * @param it iterator to specify the qubit
+   * @param qubit_record the entangled qubit's record already assigned to the RuleSet
    */
-  void promoteQubit(QubitResources::iterator it);
+  void promoteQubit(IQubitRecord* qubit_record);
 
   /**
    * @brief promote the qubit that has new entangled partner.
@@ -279,10 +278,6 @@ class Runtime {
    * @param new_partner_addr new entangled partner's QNode address.
    */
   void promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr new_partner_addr);
-
-  // TODO: maybe this needs to deal with regid??
-  /// @brief update qubit naming (for now it's just the partner address), mainly for swapping purposes
-  void updateQubitPartner(IQubitRecord* qubit_record, QNodeAddr partner_addr);
   //@}
 
   /** @name quantum operations */
@@ -313,6 +308,9 @@ class Runtime {
 
   /// @brief apply Z gate
   void gateZ(QubitId);
+
+  /// @brief apply Z gate
+  void gateY(QubitId);
 
   /// @brief apply CNOT gate
   void gateCNOT(QubitId control_qubit_id, QubitId target_qubit_id);
