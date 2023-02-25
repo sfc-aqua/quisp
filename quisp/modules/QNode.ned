@@ -48,7 +48,6 @@ module QNode
         }
         qrsa: quantumRoutingSoft {
             parameters:
-                address = parent.address;
                 @display("p=171,33");
                 number_of_qnics = sizeof(parent.quantum_port);
                 number_of_qnics_r = sizeof(parent.quantum_port_receiver);

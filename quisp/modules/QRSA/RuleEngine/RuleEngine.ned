@@ -19,7 +19,6 @@ package modules.QRSA.RuleEngine;
 simple RuleEngine
 {
     parameters:
-        int address;
         int number_of_qnics;
         int number_of_qnics_r;
         int number_of_qnics_rp;
