@@ -60,12 +60,14 @@ TEST_F(JsonLoggerTest, ConnSetupRespTest) {
 
 TEST_F(JsonLoggerTest, ConnRejectTest) {
   auto* rej = new RejectConnectionSetupRequest();
+  rej->setApplication_id(1);
   rej->setActual_destAddr(1);
   rej->setActual_srcAddr(2);
   logger->setQNodeAddress(7);
   logger->logPacket("test", rej);
   EXPECT_EQ(log_stream.str(),
-            "{\"simtime\": 0, \"event_type\": \"test\", \"address\": \"7\", \"msg_type\": \"RejectConnectionSetupRequest\", \"actual_dest_addr\": 1, "
+            "{\"simtime\": 0, \"event_type\": \"test\", \"address\": \"7\", \"msg_type\": \"RejectConnectionSetupRequest\", "
+            "\"application_id\": 1, \"actual_dest_addr\": 1, "
             "\"actual_src_addr\": 2, \"num_required_bell_pairs\": 0}\n");
 }
 TEST_F(JsonLoggerTest, UnknownPacket) {
