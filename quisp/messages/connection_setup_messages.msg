@@ -5,6 +5,7 @@ namespace quisp::messages;
 
 packet ConnectionSetupRequest extends Header
 {
+    int application_id;
     int actual_destAddr;
     int actual_srcAddr;
     int num_measure;
