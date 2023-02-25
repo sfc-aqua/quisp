@@ -33,7 +33,7 @@ RuleSet RuleSetConverter::construct(const RSData &data) {
     if (terminate_condition.opcodes.size() > 0) {
       rs.termination_condition = terminate_condition;
     }
-    rs.rules.emplace_back(Rule{name, rule_data->shared_rule_tag, condition, action});
+    rs.rules.emplace_back(Rule{name, rule_data->send_tag, rule_data->receive_tag, condition, action});
   }
   return rs;
 }
@@ -315,7 +315,7 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
     /*
     qubitId: qubit, trash_qubit
     Reg: result, seq_no // the sequence number of the qubit in the next rule
-    // start program
+  START:
     SET seq_no 1 // sequence_number starts at 1
     LOAD seq_no "sent_purification_message_{shared_rule}" // if it has not been set the value stays as is
     GET_QUBIT qubit partner_addr 0
@@ -350,7 +350,7 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
       purify_instruction = (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result, qubit, trash_qubit}};
     }
     std::vector<InstructionTypes> opcodes{
-        INSTR_SET_RegId_int_{{seq_no, 0}},
+        INSTR_SET_RegId_int_{{seq_no, 1}},
         INSTR_LOAD_RegId_MemoryKey_{{seq_no, seq_no_key}},
         INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
         INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit, partner_addr, 1}},

@@ -46,15 +46,29 @@ void RuleSet::finalize() {
       auto second_rule_id = rule_ids.at(i + 1);
 
       next_rule_table.emplace(std::make_pair(partner_addr, first_rule_id), second_rule_id);
+      // std::cout << "rule " << first_rule_id << " points to " << second_rule_id << '\n';
     }
     partner_initial_rule_table.emplace(partner_addr, rule_ids.at(0));
   }
+  // std::cout << "finalized" << '\n';
 }
 
 void RuleSet::collectPartners(const RuleId rule_id, const InstructionTypes& instr, std::set<QNodeAddr>& partners,
                               std::unordered_map<QNodeAddr, std::vector<RuleId>>& partner_rules) {
   if (std::holds_alternative<INSTR_GET_QUBIT_QubitId_QNodeAddr_int_>(instr)) {
     auto [_qubit_id, partner_addr, _index] = std::get<INSTR_GET_QUBIT_QubitId_QNodeAddr_int_>(instr).args;
+    partners.insert(partner_addr);
+
+    if (partner_rules.find(partner_addr) == partner_rules.end()) {
+      partner_rules.insert({partner_addr, {}});
+    }
+    auto& rule_ids = partner_rules.at(partner_addr);
+    // if the rule_id doesn't exist, add it
+    if (!std::binary_search(rule_ids.begin(), rule_ids.end(), rule_id)) {
+      rule_ids.push_back(rule_id);
+    }
+  } else if (std::holds_alternative<INSTR_GET_QUBIT_BY_SEQ_NO_QubitId_QNodeAddr_RegId_>(instr)) {
+    auto [_qubit_id, partner_addr, _seq_no] = std::get<INSTR_GET_QUBIT_BY_SEQ_NO_QubitId_QNodeAddr_RegId_>(instr).args;
     partners.insert(partner_addr);
 
     if (partner_rules.find(partner_addr) == partner_rules.end()) {

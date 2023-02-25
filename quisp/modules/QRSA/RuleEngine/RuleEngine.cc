@@ -199,10 +199,11 @@ void RuleEngine::handlePurificationResult(PurificationResult *result) {
   auto sequence_number = result->getSequenceNumber();
   auto measurement_result = result->getMeasurementResult();
   auto purification_protocol = result->getProtocol();
-  std::vector<int> message_content = {measurement_result, sequence_number, purification_protocol};
+  std::vector<int> message_content = {sequence_number, measurement_result, purification_protocol};
   auto runtime = runtimes.findById(ruleset_id);
   if (runtime == nullptr) return;
   runtime->assignMessageToRuleSet(shared_rule_tag, message_content);
+  // std::cout << "receive message at " << parentAddress << " w/ seq_no " << sequence_number << '\n';
 }
 
 void RuleEngine::handleSwappingResult(SwappingResult *result) {
@@ -210,7 +211,7 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
   auto shared_rule_tag = result->getSharedRuleTag();
   auto sequence_number = result->getSequenceNumber();
   auto correction_frame = result->getCorrectionFrame();
-  std::vector<int> message_content = {correction_frame, sequence_number};
+  std::vector<int> message_content = {sequence_number, correction_frame};
   runtimes.findById(ruleset_id)->assignMessageToRuleSet(shared_rule_tag, message_content);
 }
 

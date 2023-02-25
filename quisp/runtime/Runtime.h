@@ -347,8 +347,9 @@ class Runtime {
   /// @brief currently evaluating rule id
   RuleId rule_id = -1;
 
-  /// @brief currently evaluating shared_rule_tag (if it is defined)
-  int shared_rule_tag = -1;
+  /// @brief currently evaluating send/receive tag of this rule id (if it is defined)
+  int send_tag = -1;
+  int receive_tag = -1;
 
   /**
    * @brief program counter for Program execution.
@@ -475,7 +476,7 @@ class Runtime {
    * The showing debugging information is a heavy operation. We recommend you
    * enable this with a debugger.
    */
-  bool debugging = false;
+  bool debugging = true;
   //@}
 };
 }  // namespace quisp::runtime

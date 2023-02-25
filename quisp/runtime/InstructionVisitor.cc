@@ -43,7 +43,8 @@ void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAd
   int measurement_result = runtime->getRegVal(result_reg);  // can only handle up to 32 qubits
   int sequence_number = runtime->getRegVal(sequence_number_reg);
   auto ruleset_id = runtime->ruleset.id;
-  runtime->callback->sendPurificationResult(ruleset_id, partner_addr, runtime->shared_rule_tag, sequence_number, measurement_result, protocol);
+  // TODO: get shared_rule_tag from action not from rules
+  runtime->callback->sendPurificationResult(ruleset_id, partner_addr, runtime->send_tag, sequence_number, measurement_result, protocol);
 }
 
 void InstructionVisitor::operator()(const INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_& instruction) {
@@ -423,14 +424,14 @@ void InstructionVisitor::operator()(const INSTR_PROMOTE_QubitId_RegId_& instruct
 void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_SEQ_RegId_RegId_& instruction) {
   auto [message_index_reg_id, sequence_number_reg_id] = instruction.args;
   auto message_index = runtime->getRegVal(message_index_reg_id);
-  auto sequence_number = runtime->getRegVal(sequence_number_reg_id);
   auto& rule_messages = runtime->messages[{runtime->rule_id}];
   if (message_index >= rule_messages.size()) {
     runtime->message_found = false;
     return;
   }
   runtime->message_found = true;
-  runtime->setRegVal(sequence_number_reg_id, rule_messages[message_index][0]);
+  auto sequence_number = rule_messages[message_index][0];
+  runtime->setRegVal(sequence_number_reg_id, sequence_number);
 }
 
 void InstructionVisitor::operator()(const INSTR_COUNT_MESSAGE_RegId_RegId_& instruction) {
@@ -470,7 +471,7 @@ void InstructionVisitor::operator()(const INSTR_GET_MESSAGE_RegId_int_RegId_RegI
   auto& rule_messages = runtime->messages[{runtime->rule_id}];
 
   int i = 0;
-  bool message_found = false;
+  runtime->message_found = false;
   for (auto& message : rule_messages) {
     if (message[0] != sequence_number) continue;
     if (i == message_index && message.size() >= 3) {
@@ -490,7 +491,7 @@ void InstructionVisitor::operator()(const INSTR_DELETE_MESSAGE_RegId_& instructi
 
   for (auto it = rule_messages.begin(); it != rule_messages.end();) {
     if (it->at(0) == sequence_number) {
-      rule_messages.erase(it);
+      it = rule_messages.erase(it);
     } else {
       it++;
     }

@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+
 #include "opcode.h"
 #include "types.h"
 
@@ -38,9 +39,9 @@ class Program {
  */
 class Rule {
  public:
-  Rule(const Program& condition, const Program& action, bool debugging = false) : Rule("", -1, condition, action, debugging) {}
-  Rule(const std::string& name, int shared_tag, const Program& condition, const Program& action, bool debugging = false)
-      : name(name), shared_rule_tag(shared_tag), condition(condition), action(action), debugging(debugging) {}
+  Rule(const Program& condition, const Program& action, bool debugging = false) : Rule("", -1, -1, condition, action, debugging) {}
+  Rule(const std::string& name, int send_tag, int receive_tag, const Program& condition, const Program& action, bool debugging = false)
+      : name(name), send_tag(send_tag), receive_tag(receive_tag), condition(condition), action(action), debugging(debugging) {}
 
   /// @brief the RuleSet name for debugging
   std::string name;
@@ -49,7 +50,8 @@ class Rule {
   int id = -1;
 
   /// @brief the shared tag for identify a rule across QNodes in a connection.
-  int shared_rule_tag = -1;
+  int send_tag = -1;
+  int receive_tag = -1;
 
   /**
    * @brief The condition for the Rule. The Runtime executes the following.

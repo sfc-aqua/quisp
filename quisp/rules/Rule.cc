@@ -1,13 +1,10 @@
 #include "Rule.h"
-#include <omnetpp.h>
-#include "Action.h"
-#include "Condition.h"
 
 namespace quisp::rules {
 
-Rule::Rule(int partner_address, int shared_rule_tag) : shared_rule_tag(shared_rule_tag) { qnic_interfaces.push_back({partner_address}); };
+Rule::Rule(int partner_address, int send_tag, int receive_tag) : send_tag(send_tag), receive_tag(receive_tag) { qnic_interfaces.push_back({partner_address}); };
 
-Rule::Rule(std::vector<int> partner_address, int shared_rule_tag) : shared_rule_tag(shared_rule_tag) {
+Rule::Rule(std::vector<int> partner_address, int send_tag, int receive_tag) : send_tag(send_tag), receive_tag(receive_tag) {
   for (int addr : partner_address) {
     qnic_interfaces.push_back({addr});
   }
@@ -15,23 +12,14 @@ Rule::Rule(std::vector<int> partner_address, int shared_rule_tag) : shared_rule_
 
 void Rule::setCondition(std::unique_ptr<Condition> cond) { condition = std::move(cond); }
 
-void Rule::setAction(std::unique_ptr<Action> act) { action = std::move(act);}
-
-void Rule::setNextRule(int next_rule_id) {
-  if (to != -1) {
-    throw omnetpp::cRuntimeError("next_rule_id has already been set");
-  } else {
-    to = next_rule_id;
-  }
-}
+void Rule::setAction(std::unique_ptr<Action> act) { action = std::move(act); }
 
 json Rule::serialize_json() {
   json rule_json;
-  rule_json["rule_id"] = rule_id;
-  rule_json["next_rule_id"] = to;
   rule_json["name"] = name;
   rule_json["interface"] = qnic_interfaces;
-  rule_json["shared_rule_tag"] = shared_rule_tag;
+  rule_json["send_tag"] = send_tag;
+  rule_json["receive_tag"] = receive_tag;
   if (condition != nullptr) {
     rule_json["condition"] = condition->serialize_json();
   }
@@ -43,11 +31,10 @@ json Rule::serialize_json() {
 
 void Rule::deserialize_json(json serialized) {
   // deserialize rule meta data
-  serialized["rule_id"].get_to(rule_id);
-  serialized["next_rule_id"].get_to(to);
   serialized["name"].get_to(name);
   serialized["interface"].get_to(qnic_interfaces);
-  serialized["shared_rule_tag"].get_to(shared_rule_tag);
+  serialized["send_tag"].get_to(send_tag);
+  serialized["receive_tag"].get_to(receive_tag);
 
   // deserialize actions
   if (serialized["action"] != nullptr) {  // action found
