@@ -30,6 +30,7 @@ class Application : public IApplication, public Logger::LoggerBase {
   cMessage *generateTrafficMsg;
 
  protected:
+  int application_id;
   int my_address;
   bool is_initiator;
 
