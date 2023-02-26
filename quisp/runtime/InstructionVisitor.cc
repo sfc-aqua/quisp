@@ -43,15 +43,15 @@ void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAd
   int measurement_result = runtime->getRegVal(result_reg);  // can only handle up to 32 qubits
   int sequence_number = runtime->getRegVal(sequence_number_reg);
   auto ruleset_id = runtime->ruleset.id;
-  // TODO: get shared_rule_tag from action not from rules
   runtime->callback->sendPurificationResult(ruleset_id, partner_addr, runtime->send_tag, sequence_number, measurement_result, protocol);
 }
 
 void InstructionVisitor::operator()(const INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_& instruction) {
-  // TODO: complete this
-  auto [left_partner, left_op_id, right_partner, right_op_id] = instruction.args;
-  auto& rs = runtime->ruleset;
-  auto& rule = rs.rules.at(runtime->rule_id);
+  auto [partner, pauli_op_reg, new_partner, sequence_number_reg] = instruction.args;
+  int pauli_op = runtime->getRegVal(pauli_op_reg);
+  int sequence_number = runtime->getRegVal(sequence_number_reg);
+  auto ruleset_id = runtime->ruleset.id;
+  runtime->callback->sendSwappingResult(ruleset_id, partner, new_partner, runtime->send_tag, sequence_number, pauli_op);
 }
 
 void InstructionVisitor::operator()(const INSTR_MEASURE_RANDOM_MemoryKey_QubitId_& instruction) {
@@ -67,6 +67,11 @@ void InstructionVisitor::operator()(const INSTR_MEASURE_MemoryKey_QubitId_Basis_
 void InstructionVisitor::operator()(const INSTR_MEASURE_RegId_QubitId_Basis_& instruction) {
   auto [reg, qubit_id, basis] = instruction.args;
   runtime->measureQubit(qubit_id, reg, basis);
+}
+
+void InstructionVisitor::operator()(const INSTR_MEASURE_RegId_int_QubitId_Basis_& instruction) {
+  auto [reg, bit_index, qubit, basis] = instruction.args;
+  runtime->measureQubit(qubit, reg, bit_index, basis);
 }
 
 void InstructionVisitor::operator()(const INSTR_GATE_X_QubitId_& instruction) {

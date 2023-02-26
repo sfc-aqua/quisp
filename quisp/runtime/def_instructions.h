@@ -75,6 +75,7 @@ INSTR(GET_QUBIT_BY_SEQ_NO, QubitId /* write: qubit */, QNodeAddr /* read */, Reg
 INSTR(MEASURE_RANDOM, MemoryKey, QubitId)
 INSTR(MEASURE, MemoryKey, QubitId, Basis)
 INSTR(MEASURE, RegId, QubitId, Basis)
+INSTR(MEASURE, RegId /* w: bitset */, int /* bit to set */, QubitId, Basis) // this will store the result at index (bitset) of the RegId specified by the int
 INSTR(GATE_X, QubitId)
 INSTR(GATE_Z, QubitId)
 INSTR(GATE_Y, QubitId)
@@ -101,8 +102,8 @@ INSTR(DELETE_MESSAGE, RegId /* read: sequence number */) // delete all messages 
 
 // send classical messages
 INSTR(SEND_LINK_TOMOGRAPHY_RESULT, QNodeAddr, RegId, MemoryKey, int, Time)  // partner addr, current count reg_id, outcome key, max_count, start_time
-INSTR(SEND_PURIFICATION_RESULT, QNodeAddr, RegId /* measurement_result encoded in int */, RegId /* shared_rule_tag */, PurType)
-INSTR(SEND_SWAPPING_RESULT, QNodeAddr /* left partner*/, RegId /* left operation */, QNodeAddr /* right partner*/, RegId /* right operation */)
+INSTR(SEND_PURIFICATION_RESULT, QNodeAddr, RegId /* measurement_result encoded in int */, RegId /* sequence_number */, PurType)
+INSTR(SEND_SWAPPING_RESULT, QNodeAddr /* receipient */, RegId /* pauli_op */, QNodeAddr /* new partner*/, RegId /* sequence_number */)
 
 INSTR_LAST(NOP, None)
 #undef INSTR

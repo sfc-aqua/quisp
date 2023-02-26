@@ -7,10 +7,12 @@
 #include <stdexcept>
 #include "messages/BSA_ipc_messages_m.h"
 #include "messages/link_generation_messages_m.h"
+#include "modules/PhysicalConnection/BSA/BellStateAnalyzer.h"
 #include "modules/PhysicalConnection/BSA/types.h"
 #include "modules/QNIC.h"
 #include "omnetpp/cchannel.h"
 #include "omnetpp/cexception.h"
+#include "omnetpp/checkandcast.h"
 
 namespace quisp::modules {
 
@@ -23,6 +25,7 @@ BSAController::~BSAController() { cancelAndDelete(time_out_message); }
 void BSAController::finish() { std::cout << "last BSM message that was sent " << last_result_send_time << "\n"; }
 
 void BSAController::initialize() {
+  bsa = check_and_cast<BellStateAnalyzer *>(getParentModule()->getSubmodule("bsa"));
   // if this BSA is internal set left to be self node
   if (strcmp(getParentModule()->getName(), "qnic_r") == 0) {
     address = provider.getQNode()->par("address").intValue();
@@ -48,9 +51,11 @@ void BSAController::handleMessage(cMessage *msg) {
   if (msg == time_out_message) {
     send(generateFirstNotificationTiming(true), "to_router");
     send(generateFirstNotificationTiming(false), "to_router");
+    bsa->resetState();
     // set timeout to be twice the travel time plus number of no response
     time_out_count++;
     scheduleAt(simTime() + (2 + time_out_count) * (offset_time_for_first_photon), msg);
+    // scheduleAt(simTime() + (9) * (offset_time_for_first_photon), msg);
     return;
   }
 
@@ -87,9 +92,7 @@ void BSAController::sendMeasurementResults(BatchClickEvent *batch_click_msg) {
   send(rightpk, "to_router");
   last_result_send_time = simTime();
 
-  // need to cancel the timeout and restart the timeout timer
-  cancelEvent(time_out_message);
-  scheduleAt(simTime() + 2 * offset_time_for_first_photon, time_out_message);
+  scheduleAt(simTime() + 1.1 * offset_time_for_first_photon, time_out_message);
 }
 
 BSMTimingNotification *BSAController::generateFirstNotificationTiming(bool is_left) {
@@ -172,7 +175,6 @@ int BSAController::getExternalQNICIndexFromPort(int port) {
 
   // this BSAController is inside QNIC_R but the port is connecting to outside
   if (port != 0 && strcmp(getParentModule()->getName(), "qnic_r") == 0) {
-    auto *bsa = getParentModule()->getSubmodule("bsa");
     return getParentModule()
         ->getSubmodule("bsa")
         ->gate("quantum_port$i", port)

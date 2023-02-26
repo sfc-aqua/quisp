@@ -46,9 +46,10 @@ void RuleSet::finalize() {
       auto second_rule_id = rule_ids.at(i + 1);
 
       next_rule_table.emplace(std::make_pair(partner_addr, first_rule_id), second_rule_id);
-      // std::cout << "rule " << first_rule_id << " points to " << second_rule_id << '\n';
+      std::cout << "rule " << first_rule_id << " points to " << second_rule_id << '\n';
     }
     partner_initial_rule_table.emplace(partner_addr, rule_ids.at(0));
+    std::cout << owner_addr << ' ' << partner_addr << " initial_rule " << rule_ids.at(0) << '\n';
   }
   // std::cout << "finalized" << '\n';
 }

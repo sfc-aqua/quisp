@@ -18,31 +18,26 @@ class MockRuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   MOCK_METHOD(MeasurementOutcome, measureQubitRandomly, (IQubitRecord*), (override));
   MOCK_METHOD(MeasurementOutcome, measureQubitX, (IQubitRecord*), (override));
   MOCK_METHOD(MeasurementOutcome, measureQubitZ, (IQubitRecord*), (override));
+  MOCK_METHOD(MeasurementOutcome, measureQubitY, (IQubitRecord*), (override));
   MOCK_METHOD(void, gateX, (IQubitRecord*), (override));
+  MOCK_METHOD(void, gateY, (IQubitRecord*), (override));
   MOCK_METHOD(void, gateZ, (IQubitRecord*), (override));
   MOCK_METHOD(void, gateCNOT, (IQubitRecord*, IQubitRecord*), (override));
-  MOCK_METHOD(bool, purifyX, (IQubitRecord*, IQubitRecord*), (override));
-  MOCK_METHOD(bool, purifyZ, (IQubitRecord*, IQubitRecord*), (override));
-  MOCK_METHOD(bool, purifyY, (IQubitRecord*, IQubitRecord*), (override));
+  MOCK_METHOD(int, purifyX, (IQubitRecord*, IQubitRecord*), (override));
+  MOCK_METHOD(int, purifyY, (IQubitRecord*, IQubitRecord*), (override));
+  MOCK_METHOD(int, purifyZ, (IQubitRecord*, IQubitRecord*), (override));
+  MOCK_METHOD(void, updateQubitPartner, (IQubitRecord*, QNodeAddr), (override));
   MOCK_METHOD(void, sendLinkTomographyResult,
               (const unsigned long ruleset_id, const quisp::runtime::Rule& rule, const int action_index, QNodeAddr partner_addr, int count, MeasurementOutcome outcome,
                int max_count, SimTime started_time),
               (override));
-  MOCK_METHOD(void, sendSinglePurificationResult,
-              (const unsigned long ruleset_id, const quisp::runtime::Rule& rule, const int action_index, QNodeAddr partner_addr, bool result, int pur_type), (override));
-  MOCK_METHOD(void, sendDoublePurificationResult,
-              (const unsigned long ruleset_id, const quisp::runtime::Rule& rule, const int action_index, QNodeAddr partner_addr, bool result_z, bool result_x, int pur_type),
+  MOCK_METHOD(void, sendPurificationResult,
+              (const unsigned long ruleset_id, const QNodeAddr partner_addr, const int shared_rule_tag, const int sequence_number, const int measurement_result,
+               quisp::runtime::PurType protocol),
               (override));
-  MOCK_METHOD(void, sendTriplePurificationResult,
-              (const unsigned long ruleset_id, const quisp::runtime::Rule& rule, const int action_index, QNodeAddr partner_addr, bool result_z, bool result_x, bool result_ds,
-               int pur_type),
-              (override));
-  MOCK_METHOD(void, sendQuadruplePurificationResult,
-              (const unsigned long ruleset_id, const quisp::runtime::Rule& rule, const int action_index, QNodeAddr partner_addr, bool result_z, bool result_x, bool result_ds_z,
-               bool result_ds_x, int pur_type),
-              (override));
-  MOCK_METHOD(void, sendSwappingResults,
-              (const unsigned long ruleset_id, const quisp::runtime::Rule& rule, const QNodeAddr left_partner_addr, int left_op, const QNodeAddr right_partner_addr, int right_op),
+  MOCK_METHOD(void, sendSwappingResult,
+              (const unsigned long ruleset_id, const QNodeAddr partner_addr, const QNodeAddr new_partner_addr, const int shared_rule_tag, const int sequence_number,
+               const int frame_correction),
               (override));
   MOCK_METHOD(void, freeAndResetQubit, (IQubitRecord*), (override));
   MOCK_METHOD(bool, isQubitLocked, (IQubitRecord* const), (override));

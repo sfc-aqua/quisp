@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "omnetpp/cexception.h"
+#include "runtime/opcode.h"
 #include "runtime/types.h"
 
 #include <rules/Action.h>
@@ -228,13 +229,13 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       name += "SwappingCorrection ";
     } else if (auto *c = dynamic_cast<const MeasureCountConditionClause *>(clause_ptr)) {
       /*
-      LOAD count MemoryKey("count")
-      BLT PASSED count max_count
-      RET COND_FAILED
-    PASSED:
-      INC count
-      STORE MemoryKey("count") count
-      RET COND_PASSED
+        LOAD count MemoryKey("count")
+        BLT PASSED count max_count
+        RET COND_FAILED
+      PASSED:
+        INC count
+        STORE MemoryKey("count") count
+        RET COND_PASSED
       */
       auto count = RegId::REG2;
       MemoryKey count_key{"measure_count" + std::to_string(i)};
@@ -274,15 +275,25 @@ Program RuleSetConverter::constructAction(const ActionData *data) {
 
 Program RuleSetConverter::constructEntanglementSwappingAction(const EntanglementSwapping *act) {
   /*
-  GET_QUBIT q0 left_partner 0
-  GET_QUBIT q1 right_partner 0
-  GATE_CNOT q0 q1
-  MEASURE result_x q0 X
-  MEASURE result_z q1 Z
-  FREE_QUBIT q0
-  FREE_QUBIT q1
-  // TODO: complete this
-  SEND_SWAPPING_RESULT
+    qubit: q0, q1
+    reg: pauli_op_left, pauli_op_right, seq_no
+    key: "sent_swap_message_{shared_rule}"
+  START
+    SET pauli_op_left  0
+    SET pauli_op_right 0
+    SET seq_no 1
+    LOAD seq_no "sent_swap_message_{shared_rule}" // if the key has not been set the value stays as is
+    GET_QUBIT q0 left_partner  0
+    GET_QUBIT q1 right_partner 0
+    GATE_CNOT q0 q1
+    MEASURE pauli_op_left 0 q0 x
+    MEASURE pauli_op_left 1 q1 z
+    FREE_QUBIT q0
+    FREE_QUBIT q1
+    SEND_SWAPPING_RESULT left_partner right_partner pauli_op_left  seq_no
+    SEND_SWAPPING_RESULT right_partner left_partner pauli_op_right seq_no
+    INC seq_no
+    STORE "sent_swap_message_{shared_rule}" seq_no
   */
   auto left_interface = act->qnic_interfaces.at(0);
   auto right_interface = act->qnic_interfaces.at(1);
@@ -290,23 +301,33 @@ Program RuleSetConverter::constructEntanglementSwappingAction(const Entanglement
   QubitId q1{1};
   QNodeAddr left_partner_addr{left_interface.partner_addr};
   QNodeAddr right_partner_addr{right_interface.partner_addr};
-  auto result_reg_x = RegId::REG0;
-  auto result_reg_z = RegId::REG1;
+  RegId op_left = RegId::REG0;
+  RegId op_right = RegId::REG1;
+  RegId seq_no = RegId::REG2;
+  MemoryKey seq_key{"sent_swap_message_" + std::to_string(act->shared_rule_tag)};
 
+  std::vector<InstructionTypes> opcodes = {
+      // clang-format off
+    INSTR_SET_RegId_int_{{op_left, 0}},
+    INSTR_SET_RegId_int_{{op_right, 0}},
+    INSTR_SET_RegId_int_{{seq_no, 1}},
+    INSTR_LOAD_RegId_MemoryKey_{{seq_no, seq_key}},
+    INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, left_partner_addr, 0}},
+    INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q1, right_partner_addr, 0}},
+    INSTR_GATE_CNOT_QubitId_QubitId_{{q0, q1}},
+    INSTR_MEASURE_RegId_int_QubitId_Basis_{{op_left, 0, q0, Basis::X}},
+    INSTR_MEASURE_RegId_int_QubitId_Basis_{{op_left, 1, q1, Basis::Z}},
+    INSTR_FREE_QUBIT_QubitId_{{q0}},
+    INSTR_FREE_QUBIT_QubitId_{{q1}},
+    INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_{{left_partner_addr, op_left, right_partner_addr, seq_no}},
+    INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_{{right_partner_addr, op_right, left_partner_addr, seq_no}},
+    INSTR_INC_RegId_{{seq_no}},
+    INSTR_STORE_MemoryKey_RegId_{{seq_key, seq_no}}
+      // clang-format on
+  };
   return Program{
       "EntanglementSwapping",
-      {
-          // clang-format off
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, left_partner_addr, 0}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q1, right_partner_addr, 0}},
-INSTR_GATE_CNOT_QubitId_QubitId_{{q0, q1}},
-INSTR_MEASURE_RegId_QubitId_Basis_{{result_reg_x, q0, Basis::X}},
-INSTR_MEASURE_RegId_QubitId_Basis_{{result_reg_z, q1, Basis::Z}},
-INSTR_FREE_QUBIT_QubitId_{q0},
-INSTR_FREE_QUBIT_QubitId_{q1},
-// INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_{{left_partner_addr, op_left, right_partner_addr, op_right}},
-          // clang-format on
-      },
+      opcodes,
   };
 }
 Program RuleSetConverter::constructPurificationAction(const Purification *act) {
@@ -325,7 +346,7 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
     FREE_QUBIT trash_qubit // free the measured qubits
     SEND_PURIFICATION_RESULT partner_addr result seq_no
     INC seq_no
-    STORE "sent_purificaiton_message_{shared_rule}"
+    STORE "sent_purificaiton_message_{shared_rule}" seq_no
     */
     QubitId qubit{0};
     QubitId trash_qubit{1};
@@ -398,23 +419,23 @@ Program RuleSetConverter::constructPurificationAction(const Purification *act) {
         "Double Purification",
         {
             // clang-format off
-INSTR_SET_RegId_int_{{action_index, 0}},
-INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_x, partner_addr, 1}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_z, partner_addr, 2}},
-(pur_type == rules::PurType::DOUBLE) /* else DOUBLE_INV */?
-  (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}} :
-  (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}},
-(pur_type == rules::PurType::DOUBLE) /* else DOUBLE_INV */?
-  (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}} :
-  (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}},
-INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
-INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
-INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
-// TODO: SEND PURIFICATION RESULT
-INSTR_INC_RegId_{action_index},
-INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
+        INSTR_SET_RegId_int_{{action_index, 0}},
+        INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
+        INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
+        INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_x, partner_addr, 1}},
+        INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_z, partner_addr, 2}},
+        (pur_type == rules::PurType::DOUBLE) /* else DOUBLE_INV */?
+          (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}} :
+          (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}},
+        (pur_type == rules::PurType::DOUBLE) /* else DOUBLE_INV */?
+          (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}} :
+          (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}},
+        INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
+        INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
+        INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
+        // TODO: SEND PURIFICATION RESULT
+        INSTR_INC_RegId_{action_index},
+        INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
             // clang-format on
         }};
   }
@@ -457,23 +478,23 @@ INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
         "Double Selection Purification",
         {
             // clang-format off
-INSTR_SET_RegId_int_{{action_index, 0}},
-INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_x, partner_addr, 1}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_z, partner_addr, 2}},
-(pur_type == rules::PurType::DSSA) /* else DSSA_INV */?
-  (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}} :
-  (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}},
-(pur_type == rules::PurType::DSSA) /* else DSSA_INV */?
-  (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, trash_qubit_x, trash_qubit_z}} :
-  (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, trash_qubit_z, trash_qubit_x}},
-INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
-INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
-INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
-// TODO: SEND PURIFICATION RESULT
-INSTR_INC_RegId_{action_index},
-INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
+        INSTR_SET_RegId_int_{{action_index, 0}},
+        INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
+        INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
+        INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_x, partner_addr, 1}},
+        INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_z, partner_addr, 2}},
+        (pur_type == rules::PurType::DSSA) /* else DSSA_INV */?
+          (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}} :
+          (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}},
+        (pur_type == rules::PurType::DSSA) /* else DSSA_INV */?
+          (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, trash_qubit_x, trash_qubit_z}} :
+          (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, trash_qubit_z, trash_qubit_x}},
+        INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
+        INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
+        INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
+        // TODO: SEND PURIFICATION RESULT
+        INSTR_INC_RegId_{action_index},
+        INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
             // clang-format on
         }};
   }
@@ -522,61 +543,61 @@ INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
         "Double Selection Purification",
         {
             // clang-format off
-INSTR_SET_RegId_int_{{action_index, 0}},
-INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_x, partner_addr, 1}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_z, partner_addr, 2}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{ds_trash_qubit, partner_addr, 3}},
-(pur_type == rules::PurType::DSDA_SECOND) /* else DSDA_SECOND_INV */?
-  (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}} :
-  (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}},
-(pur_type == rules::PurType::DSDA_SECOND) /* else DSDA_SECOND_INV */?
-  (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}} :
-  (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}},
-(pur_type == rules::PurType::DSDA_SECOND) /* else DSDA_SECOND_INV */?
-  (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{ds_measure_result, trash_qubit_z, ds_trash_qubit}} :
-  (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{ds_measure_result, trash_qubit_x, ds_trash_qubit}},
-INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
-INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
-INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
-INSTR_FREE_QUBIT_QubitId_{{ds_trash_qubit}},
-// TODO: SEND PURIFICATION RESULT
-INSTR_INC_RegId_{action_index},
-INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
+      INSTR_SET_RegId_int_{{action_index, 0}},
+      INSTR_LOAD_RegId_MemoryKey_{{action_index, action_index_key}},
+      INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{qubit, partner_addr, 0}},
+      INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_x, partner_addr, 1}},
+      INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{trash_qubit_z, partner_addr, 2}},
+      INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{ds_trash_qubit, partner_addr, 3}},
+      (pur_type == rules::PurType::DSDA_SECOND) /* else DSDA_SECOND_INV */?
+        (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}} :
+        (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}},
+      (pur_type == rules::PurType::DSDA_SECOND) /* else DSDA_SECOND_INV */?
+        (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{measure_result_z, qubit, trash_qubit_z}} :
+        (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{measure_result_x, qubit, trash_qubit_x}},
+      (pur_type == rules::PurType::DSDA_SECOND) /* else DSDA_SECOND_INV */?
+        (InstructionTypes)INSTR_PURIFY_X_RegId_QubitId_QubitId_{{ds_measure_result, trash_qubit_z, ds_trash_qubit}} :
+        (InstructionTypes)INSTR_PURIFY_Z_RegId_QubitId_QubitId_{{ds_measure_result, trash_qubit_x, ds_trash_qubit}},
+      INSTR_LOCK_QUBIT_QubitId_RegId_{{qubit, action_index}},
+      INSTR_FREE_QUBIT_QubitId_{{trash_qubit_x}},
+      INSTR_FREE_QUBIT_QubitId_{{trash_qubit_z}},
+      INSTR_FREE_QUBIT_QubitId_{{ds_trash_qubit}},
+      // TODO: SEND PURIFICATION RESULT
+      INSTR_INC_RegId_{action_index},
+      INSTR_STORE_MemoryKey_RegId_{{action_index_key, action_index}},
             // clang-format on
         }};
   }
 
   if (pur_type == rules::PurType::DSDA || pur_type == rules::PurType::DSDA_INV) {
     /*
-   SET action_index 0
-   LOAD action_index "action_index_{partner_addr}"
-   GET_QUBIT qubit partner_addr 0
-   GET_QUBIT trash_qubit_x partner_addr 1
-   GET_QUBIT trash_qubit_z partner_addr 2
-   GET_QUBIT ds_trash_qubit_x partner_addr 3
-   GET_QUBIT ds_trash_qubit_z partner_addr 4
- #if DSDA:
-   PURIFY_X measure_result_x qubit trash_qubit_x
-   PURIFY_Z ds_measure_result_z trash_qubit_x ds_trash_qubit_z
-   PURIFY_Z measure_result_z qubit trash_qubit_z
-   PURIFY_X ds_measure_result_x trash_qubit_z ds_trash_qubit_x
- #elseif DSDA_INV:
-   PURIFY_Z measure_result_z qubit trash_qubit_z
-   PURIFY_X ds_measure_result_x trash_qubit_z ds_trash_qubit_x
-   PURIFY_X measure_result_x qubit trash_qubit_x
-   PURIFY_Z ds_measure_result_z trash_qubit_x ds_trash_qubit_z
- #endif
-   FREE_QUBIT trash_qubit_x
-   FREE_QUBIT trash_qubit_z
-   FREE_QUBIT ds_trash_qubit_x
-   FREE_QUBIT ds_trash_qubit_z
-   LOCK_QUBIT qubit action_index
-   SEND_PURIFICATION_RESULT partner_addr measure_result_z measure_result_x ds_measure_result_z ds_measure_result_x action_index
-   INC action_index
-   STORE "action_index_{partner_addr}" action_index
-   */
+    SET action_index 0
+    LOAD action_index "action_index_{partner_addr}"
+    GET_QUBIT qubit partner_addr 0
+    GET_QUBIT trash_qubit_x partner_addr 1
+    GET_QUBIT trash_qubit_z partner_addr 2
+    GET_QUBIT ds_trash_qubit_x partner_addr 3
+    GET_QUBIT ds_trash_qubit_z partner_addr 4
+  #if DSDA:
+    PURIFY_X measure_result_x qubit trash_qubit_x
+    PURIFY_Z ds_measure_result_z trash_qubit_x ds_trash_qubit_z
+    PURIFY_Z measure_result_z qubit trash_qubit_z
+    PURIFY_X ds_measure_result_x trash_qubit_z ds_trash_qubit_x
+  #elseif DSDA_INV:
+    PURIFY_Z measure_result_z qubit trash_qubit_z
+    PURIFY_X ds_measure_result_x trash_qubit_z ds_trash_qubit_x
+    PURIFY_X measure_result_x qubit trash_qubit_x
+    PURIFY_Z ds_measure_result_z trash_qubit_x ds_trash_qubit_z
+  #endif
+    FREE_QUBIT trash_qubit_x
+    FREE_QUBIT trash_qubit_z
+    FREE_QUBIT ds_trash_qubit_x
+    FREE_QUBIT ds_trash_qubit_z
+    LOCK_QUBIT qubit action_index
+    SEND_PURIFICATION_RESULT partner_addr measure_result_z measure_result_x ds_measure_result_z ds_measure_result_x action_index
+    INC action_index
+    STORE "action_index_{partner_addr}" action_index
+  */
     QubitId qubit{0};
     QubitId trash_qubit_x{1};
     QubitId trash_qubit_z{2};
@@ -646,7 +667,7 @@ Program RuleSetConverter::constructPurificationCorrelationAction(const Purificat
   /*
     qubit_id: qubit
     Reg: seq_no, result_0, result_1
-
+  START
     LOAD seq_no "purification_<shared_rule_tag>_seq_no"
     GET_QUBIT_BY_SEQ_NO q0 <partner_addr> seq
     GET_MESSAGE seq_no 0 result_0
@@ -692,15 +713,16 @@ Program RuleSetConverter::constructSwappingCorrectionAction(const SwappingCorrec
     GET_QUBIT_BY_SEQ_NO q0 <partner_addr> seq
     GET_MESSAGE seq_no 0 pauli_op new_partner_addr
     DELETE_MESSAGE seq_no
-    BEQ PAULI_X pauli_op 1
-    BEQ PAULI_Z pauli_op 2
+    BEQ PAULI_Z pauli_op 1
+    BEQ PAULI_X pauli_op 2
     BEQ PAULI_Y pauli_op 3
-  PAULI_X
-    GATE_X qubit
-    JMP PROMOTE
+    JMP UPDATE_PARTER
   PAULI_Z
     GATE_Z qubit
-    JMP PROMOTE
+    JMP UPDATE_PARTNER
+  PAULI_X
+    GATE_X qubit
+    JMP UPDATE_PARTNER
   PAULI_Y
     GATE_Y qubit
   UPDATE_PARTNER
@@ -723,14 +745,15 @@ Program RuleSetConverter::constructSwappingCorrectionAction(const SwappingCorrec
   opcodes.push_back(INSTR_GET_QUBIT_BY_SEQ_NO_QubitId_QNodeAddr_RegId_{{qubit, partner_address, seq_no}});
   opcodes.push_back(INSTR_GET_MESSAGE_RegId_int_RegId_RegId_{{seq_no, 0, pauli_op, new_partner_addr}});
   opcodes.push_back(INSTR_DELETE_MESSAGE_RegId_{seq_no});
-  opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{pauli_x_label, pauli_op, 1}});
-  opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{pauli_z_label, pauli_op, 2}});
+  opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{pauli_z_label, pauli_op, 1}});
+  opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{pauli_x_label, pauli_op, 2}});
   opcodes.push_back(INSTR_BEQ_Label_RegId_int_{{pauli_y_label, pauli_op, 3}});
-  // PAULI_X
-  opcodes.push_back(INSTR_GATE_X_QubitId_{qubit, pauli_x_label});
-  opcodes.push_back(INSTR_JMP_Label_{update_partner_label});
+  opcodes.push_back(INSTR_JMP_Label_{{update_partner_label}});
   // PAULI_Z
   opcodes.push_back(INSTR_GATE_Z_QubitId_{qubit, pauli_z_label});
+  opcodes.push_back(INSTR_JMP_Label_{update_partner_label});
+  // PAULI_X
+  opcodes.push_back(INSTR_GATE_X_QubitId_{qubit, pauli_x_label});
   opcodes.push_back(INSTR_JMP_Label_{update_partner_label});
   // PAULI_Y
   opcodes.push_back(INSTR_GATE_Y_QubitId_{qubit, pauli_y_label});
@@ -742,16 +765,16 @@ Program RuleSetConverter::constructSwappingCorrectionAction(const SwappingCorrec
 
 Program RuleSetConverter::constructTomographyAction(const Tomography *act) {
   /*
-  LOAD count "count"
-  GET_QUBIT q0 partner_addr qubit_resource_index
-  BRANCH_IF_QUBIT_FOUND QUBIT_FOUND
-  RET ERROR
-QUBIT_FOUND:
-  MEASURE_RANDOM "outcome" q0
-  INC count
-  STORE "count" count
-  FREE_QUBIT q0
-  SEND_LINK_TOMOGRAPHY_RESULT partner_addr count "outcome" max_count
+    LOAD count "count"
+    GET_QUBIT q0 partner_addr qubit_resource_index
+    BRANCH_IF_QUBIT_FOUND QUBIT_FOUND
+    RET ERROR
+  QUBIT_FOUND:
+    MEASURE_RANDOM "outcome" q0
+    INC count
+    STORE "count" count
+    FREE_QUBIT q0
+    SEND_LINK_TOMOGRAPHY_RESULT partner_addr count "outcome" max_count
   */
   QubitId q0{0};
   MemoryKey outcome_key{"outcome"};
@@ -770,15 +793,15 @@ QUBIT_FOUND:
       "Tomography",
       {
           // clang-format off
-INSTR_LOAD_RegId_MemoryKey_{{count, count_key}},
-INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, qubit_resource_index}},
-INSTR_BRANCH_IF_QUBIT_FOUND_Label_{qubit_found_label},
-INSTR_ERROR_String_{"Qubit not found for mesaurement"},
-INSTR_MEASURE_RANDOM_MemoryKey_QubitId_{{outcome_key, q0}, qubit_found_label},
-INSTR_INC_RegId_{count},
-INSTR_STORE_MemoryKey_RegId_{{count_key, count}},
-INSTR_FREE_QUBIT_QubitId_{q0},
-INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_Time_{{partner_addr, count, outcome_key, max_count, start_time}}
+  INSTR_LOAD_RegId_MemoryKey_{{count, count_key}},
+  INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner_addr, qubit_resource_index}},
+  INSTR_BRANCH_IF_QUBIT_FOUND_Label_{qubit_found_label},
+  INSTR_ERROR_String_{"Qubit not found for measurement"},
+  INSTR_MEASURE_RANDOM_MemoryKey_QubitId_{{outcome_key, q0}, qubit_found_label},
+  INSTR_INC_RegId_{count},
+  INSTR_STORE_MemoryKey_RegId_{{count_key, count}},
+  INSTR_FREE_QUBIT_QubitId_{q0},
+  INSTR_SEND_LINK_TOMOGRAPHY_RESULT_QNodeAddr_RegId_MemoryKey_int_Time_{{partner_addr, count, outcome_key, max_count, start_time}}
           // clang-format on
       },
   };

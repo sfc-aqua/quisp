@@ -174,6 +174,12 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
   auto num_success = bsa_result->getSuccessCount();
   auto partner_address = bsa_result->getNeighborAddress();
   auto &emitted_indices = emitted_photon_order_map[{type, qnic_index}];
+  auto indices_copy = emitted_indices;
+
+  if (num_success > emitted_indices.size()) {
+    std::cout << "something is wrong ..." << std::endl;
+  }
+
   for (int i = num_success - 1; i >= 0; i--) {
     auto emitted_index = bsa_result->getSuccessfulPhotonIndices(i);
     auto qubit_index = emitted_indices[emitted_index];
@@ -181,6 +187,9 @@ void RuleEngine::handleLinkGenerationResult(CombinedBSAresults *bsa_result) {
     auto iterator = emitted_indices.begin();
     std::advance(iterator, emitted_index);
     bell_pair_store.insertEntangledQubit(partner_address, qubit_record);
+    if (emitted_index >= emitted_indices.size()) {
+      std::cout << "something is wrong ..." << std::endl;
+    }
     emitted_indices.erase(iterator);
 
     auto correction_operation = bsa_result->getCorrectionOperationList(i);
@@ -211,8 +220,12 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
   auto shared_rule_tag = result->getSharedRuleTag();
   auto sequence_number = result->getSequenceNumber();
   auto correction_frame = result->getCorrectionFrame();
-  std::vector<int> message_content = {sequence_number, correction_frame};
-  runtimes.findById(ruleset_id)->assignMessageToRuleSet(shared_rule_tag, message_content);
+  auto new_partner_addr = result->getNewPartner();
+  std::vector<int> message_content = {sequence_number, correction_frame, new_partner_addr};
+  auto runtime = runtimes.findById(ruleset_id);
+  if (runtime == nullptr) return;
+  runtime->assignMessageToRuleSet(shared_rule_tag, message_content);
+  // std::cout << "RuleEngine: " << sequence_number << '\n';
 }
 
 // Invoked whenever a new resource (entangled with neighbor) has been created.

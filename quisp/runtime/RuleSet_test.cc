@@ -6,14 +6,13 @@ namespace {
 using namespace quisp::runtime;
 
 TEST(RuntimeRuleSetTest, OneRule) {
-  int shared_tag = 1;
   QubitId q0{0};
   QubitId q1{1};
   QNodeAddr partner1{1};
   QNodeAddr partner2{2};
   RuleSet rs{"test ruleset",
              {
-                 Rule{"rule1", shared_tag,
+                 Rule{"rule1", -1, -1,
                       Program{"condition",
                               {
                                   INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner1, 0}},
@@ -39,20 +38,19 @@ TEST(RuntimeRuleSetTest, OneRule) {
 }
 
 TEST(RuntimeRuleSetTest, TwoRule) {
-  int shared_tag = 1;
   QubitId q0{0};
   QubitId q1{1};
   QNodeAddr partner1{1};
   QNodeAddr partner2{2};
   RuleSet rs{"test ruleset",
              {
-                 Rule{"rule1", shared_tag,
+                 Rule{"rule1", -1, -1,
                       Program{"condition",
                               {
                                   INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner1, 0}},
                               }},
                       Program{"action", {}}},
-                 Rule{"rule2", shared_tag,
+                 Rule{"rule2", -1, -1,
                       Program{"condition",
                               {
                                   INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner1, 0}},
@@ -85,7 +83,6 @@ TEST(RuntimeRuleSetTest, TwoRule) {
 }
 
 TEST(RuntimeRuleSetTest, ThreeRule) {
-  int shared_tag = 1;
   QubitId q0{0};
   QubitId q1{1};
   QubitId q2{2};
@@ -94,19 +91,19 @@ TEST(RuntimeRuleSetTest, ThreeRule) {
   QNodeAddr partner3{3};
   RuleSet rs{"test ruleset",
              {
-                 Rule{"rule1", shared_tag,
+                 Rule{"rule1", -1, -1,
                       Program{"condition",
                               {
                                   INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner1, 0}},
                               }},
                       Program{"action", {}}},
-                 Rule{"rule2", shared_tag,
+                 Rule{"rule2", -1, -1,
                       Program{"",
                               {
                                   INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q1, partner2, 0}},
                               }},
                       Program{"", {}}},
-                 Rule{"rule3", shared_tag,
+                 Rule{"rule3", -1, -1,
                       Program{"condition",
                               {
                                   INSTR_GET_QUBIT_QubitId_QNodeAddr_int_{{q0, partner1, 0}},

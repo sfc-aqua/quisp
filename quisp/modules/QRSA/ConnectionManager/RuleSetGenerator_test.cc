@@ -1,13 +1,14 @@
+#include <utility>
+
 #include <gtest/gtest.h>
 #include <omnetpp.h>
 #include <nlohmann/json.hpp>
-#include <utility>
 
-#include <messages/classical_messages.h>
-#include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
-#include <test_utils/UtilFunctions.h>
 #include "ConnectionManager.h"
 #include "RuleSetGenerator.h"
+#include "messages/classical_messages.h"
+#include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
+#include "test_utils/UtilFunctions.h"
 
 namespace {
 using json = nlohmann::json;
@@ -159,16 +160,13 @@ TEST_F(RuleSetGeneratorTest, PurificationRule) {
   int partner_addr = 1;
   PurType purification_type = PurType::DOUBLE;
 
-  auto purification_rule = rsg->purifyRule(partner_addr, purification_type, 0);
-  EXPECT_EQ(purification_rule->rule_id, -1);
-
+  auto purification_rule = rsg->purifyRule(partner_addr, purification_type, 15);
   auto serialized = purification_rule->serialize_json();
   //  rule_id is given by RuleSet and next_rule_id is given outside of Rule decration.
   json expected = R"({
-   "rule_id":-1,
-   "next_rule_id":-1,
    "name":"",
-   "shared_tag": 0,
+   "send_tag": 15,
+   "receive_tag": -1,
    "interface":[
      {"partner_address": 1}
    ],
@@ -189,6 +187,7 @@ TEST_F(RuleSetGeneratorTest, PurificationRule) {
       "type":"purification",
       "options":{
          "purification_type":"DOUBLE",
+         "shared_rule_tag": 15,
          "interface": [
            {"partner_address":1}
           ]
@@ -207,16 +206,14 @@ TEST_F(RuleSetGeneratorTest, SwapRule) {
   std::vector<int> remote_qnic_id = {3, 6};
   std::vector<int> remote_qnic_address = {11, 12};
 
-  auto swap_rule = rsg->swapRule(partner_addr, 0);
-  EXPECT_EQ(swap_rule->rule_id, -1);
+  auto swap_rule = rsg->swapRule(partner_addr, 14);
 
   auto serialized = swap_rule->serialize_json();
   //  rule_id is given by RuleSet and next_rule_id is given outside of Rule decration.
   json expected = R"({
-   "rule_id":-1,
-   "next_rule_id":-1,
    "name":"",
-   "shared_tag": 0,
+   "send_tag": 14,
+   "receive_tag": -1,
    "interface":[
      {"partner_address": 1},
      {"partner_address": 3}
@@ -253,7 +250,8 @@ TEST_F(RuleSetGeneratorTest, SwapRule) {
         "remote_interface": [
           {"partner_address": 1},
           {"partner_address": 3}
-        ]
+        ],
+        "shared_rule_tag": 14
       }
    }
 })"_json;
@@ -268,7 +266,6 @@ TEST_F(RuleSetGeneratorTest, tomographyRule) {
   int shared_tag = 3;
 
   auto tomography_rule = rsg->tomographyRule(partner_addr, owner_addr, num_measurement, shared_tag);
-  EXPECT_EQ(tomography_rule->rule_id, -1);
 
   auto serialized = tomography_rule->serialize_json();
   //  rule_id is given by RuleSet and next_rule_id is given outside of Rule decration.
@@ -307,8 +304,6 @@ TEST_F(RuleSetGeneratorTest, tomographyRule) {
  	}],
     "shared_tag": 3,
  	"name": "",
- 	"next_rule_id": -1,
- 	"rule_id": -1
  })"_json;
   EXPECT_EQ(serialized, expected);
 }

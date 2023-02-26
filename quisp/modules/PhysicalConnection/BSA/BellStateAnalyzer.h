@@ -1,13 +1,15 @@
 #pragma once
 
 #include <omnetpp.h>
-#include "BSAController.h"
+
 #include "PhotonicQubit_m.h"
 #include "backends/Backends.h"
 #include "backends/interfaces/IQubit.h"
+#include "messages/BSA_ipc_messages_m.h"
 #include "modules/PhysicalConnection/BSA/types.h"
+#include "utils/ComponentProvider.h"
 
-enum class BSAState : int { Idle = 0, Accepting, AcceptingFirstPort, AcceptingSecondPort };
+enum class BSAState : int { Idle = 0, FirstPortArrive, SecondPortArrive, Accepting, AcceptingFirstPort, AcceptingSecondPort };
 enum class PortNumber : int { First = 0, Second };
 
 struct PhotonRecord {
@@ -25,6 +27,7 @@ namespace quisp::modules {
 class BellStateAnalyzer : public omnetpp::cSimpleModule {
  public:
   BellStateAnalyzer();
+  void resetState();
 
  protected:
   virtual void initialize() override;
@@ -35,7 +38,7 @@ class BellStateAnalyzer : public omnetpp::cSimpleModule {
   void discardPhoton(PhotonRecord &photon);
   PhotonRecord getPhotonRecordFromMessage(messages::PhotonicQubit *);
   void processPhotonRecords();
-  BSAClickResult processIndistinguishPhotons(PhotonRecord &left_photon, PhotonRecord &right_photon);
+  physical::types::BSAClickResult processIndistinguishPhotons(PhotonRecord &left_photon, PhotonRecord &right_photon);
   void measureSuccessfully(PhotonRecord &left_photon, PhotonRecord &right_photon, bool is_psi_plus);
   void validateProperties();
 
@@ -43,13 +46,12 @@ class BellStateAnalyzer : public omnetpp::cSimpleModule {
   double collection_efficiency;  // might get deleted later if collection efficiency is implemented at StationaryQubit during emission
   double darkcount_probability;
   double detection_efficiency;
-  simtime_t indistinguishability_window;  // Precision of photon arrivial time ~1.5ns
+  omnetpp::simtime_t indistinguishability_window;  // Precision of photon arrivial time ~1.5ns
 
   // data members for processing
   BSAState state;
   std::vector<PhotonRecord> first_port_records;
   std::vector<PhotonRecord> second_port_records;
-  std::vector<BSAClickResult> click_results;
   utils::ComponentProvider provider;
   backends::IQuantumBackend *backend;
 

@@ -10,6 +10,7 @@
 #include "messages/BSA_ipc_messages_m.h"
 #include "messages/classical_messages.h"
 #include "messages/link_generation_messages_m.h"
+#include "modules/PhysicalConnection/BSA/BellStateAnalyzer.h"
 #include "modules/PhysicalConnection/BSA/types.h"
 #include "modules/QNIC.h"
 
@@ -75,6 +76,7 @@ class BSAController : public cSimpleModule {
   double time_interval_between_photons;  ///< how separated should the photons be; is calculated by the dead time of the detector
   double speed_of_light_in_channel;  ///< Speed of light in optical fiber (in km per sec).
   utils::ComponentProvider provider;
+  BellStateAnalyzer* bsa;
 
   // testing and debugging members
   simtime_t last_result_send_time = 0;

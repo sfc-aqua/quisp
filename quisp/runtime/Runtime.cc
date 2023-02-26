@@ -194,6 +194,7 @@ void Runtime::promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr n
   sequence_number_to_qubit.erase(qubit_to_sequence_number[qubit_record]);
   sequence_number_to_qubit[{new_partner_addr, next_rule_id, next_rule_id}] = qubit_record;
   qubit_to_sequence_number[qubit_record] = {new_partner_addr, next_rule_id, next_rule_sequence_number};
+  // std::cout << "promote w/n partner to " << next_rule_id << " w/ seq_no: " << next_rule_sequence_number << '\n';
 }
 void Runtime::assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record) {
   qubits.emplace(std::make_pair(partner_addr, rule_id), qubit_record);
@@ -300,6 +301,30 @@ void Runtime::measureQubit(QubitId qubit_id, RegId reg, Basis basis) {
     return;
   }
   std::runtime_error("measure qubit with the specified basis is not implemented yet");
+}
+
+void Runtime::measureQubit(QubitId qubit_id, RegId reg, int bitset_index, Basis basis) {
+  auto qubit_ref = getQubitByQubitId(qubit_id);
+  if (qubit_ref == nullptr) {
+    return;
+  }
+  MeasurementOutcome outcome;
+  if (basis == Basis::RANDOM) {
+    outcome = callback->measureQubitRandomly(qubit_ref);
+  } else if (basis == Basis::X) {
+    outcome = callback->measureQubitX(qubit_ref);
+  } else if (basis == Basis::Z) {
+    outcome = callback->measureQubitZ(qubit_ref);
+  } else {
+    std::runtime_error("measure qubit with the specified basis is not implemented yet");
+  }
+  if (outcome.outcome_is_plus) {
+    return;
+  } else {
+    auto val = getRegVal(reg);
+    val |= (1 << bitset_index);
+    setRegVal(reg, val);
+  }
 }
 
 void Runtime::freeQubit(QubitId qubit_id) {

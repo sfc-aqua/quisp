@@ -76,7 +76,6 @@ class Runtime {
     virtual int purifyX(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
     virtual int purifyZ(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
     virtual int purifyY(IQubitRecord* qubit_rec, IQubitRecord* trash_qubit_rec) = 0;
-    virtual void updateQubitPartner(IQubitRecord* qubit_rec, QNodeAddr partner_addr) = 0;
 
     // Messaging
     virtual void sendLinkTomographyResult(const unsigned long ruleset_id, const Rule& rule, const int action_index, const QNodeAddr partner_addr, int count,
@@ -300,6 +299,14 @@ class Runtime {
    * @param basis measurement basis
    */
   void measureQubit(QubitId qubit_id, RegId result_reg, Basis basis);
+  /**
+   * @brief measure qubit with given basis and put result into register
+   *
+   * @param qubit_id qubit to measure
+   * @param result_reg register to put result into
+   * @param basis measurement basis
+   */
+  void measureQubit(QubitId qubit_id, RegId result_reg, int bitset_index, Basis basis);
 
   /// @brief free qubit and release it from the Rule and the RuleSet
   void freeQubit(QubitId);

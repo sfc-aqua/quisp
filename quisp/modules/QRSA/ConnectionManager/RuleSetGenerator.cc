@@ -42,18 +42,18 @@ std::map<int, json> RuleSetGenerator::generateRuleSets(messages::ConnectionSetup
     std::reverse(rs.begin(), rs.end());
   }
 
-  // if you want to do e2e purification before tomography do it here
-  int left_addr = path.front();
-  int right_addr = path.back();
-  rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_X, ++shared_rule_tag));
-  rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_X, shared_rule_tag));
-  rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_X, shared_rule_tag));
-  rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_X, shared_rule_tag));
+  // // if you want to do e2e purification before tomography do it here
+  // int left_addr = path.front();
+  // int right_addr = path.back();
+  // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_X, ++shared_rule_tag));
+  // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_X, shared_rule_tag));
+  // rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_X, shared_rule_tag));
+  // rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_X, shared_rule_tag));
 
-  rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_Z, ++shared_rule_tag));
-  rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_Z, shared_rule_tag));
-  rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_Z, shared_rule_tag));
-  rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_Z, shared_rule_tag));
+  // rules_map[left_addr].emplace_back(purifyRule(right_addr, PurType::SINGLE_Z, ++shared_rule_tag));
+  // rules_map[right_addr].emplace_back(purifyRule(left_addr, PurType::SINGLE_Z, shared_rule_tag));
+  // rules_map[left_addr].emplace_back(purificationCorrelationRule(right_addr, PurType::SINGLE_Z, shared_rule_tag));
+  // rules_map[right_addr].emplace_back(purificationCorrelationRule(left_addr, PurType::SINGLE_Z, shared_rule_tag));
 
   // add tomography rules
   auto initiator_addr = path.front();
@@ -158,7 +158,7 @@ std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::pair<int, int> partner_add
   condition->addClause(std::move(enough_resource_clause_first));
   condition->addClause(std::move(enough_resource_clause_second));
 
-  auto swap_action = std::make_unique<EntanglementSwapping>(std::vector<int>({partner_address.first, partner_address.second}));
+  auto swap_action = std::make_unique<EntanglementSwapping>(std::vector<int>({partner_address.first, partner_address.second}), shared_rule_tag);
 
   swap_rule->setCondition(std::move(condition));
   swap_rule->setAction(std::move(swap_action));

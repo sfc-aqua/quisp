@@ -437,7 +437,7 @@ Matrix4cd HardwareMonitor::reconstruct_density_matrix(int qnic_id, int partner) 
   double S01 = (double)data["XX"].plus_plus / (double)data["XX"].total_count - (double)data["XX"].plus_minus / (double)data["XX"].total_count +
                (double)data["XX"].minus_plus / (double)data["XX"].total_count - (double)data["XX"].minus_minus / (double)data["XX"].total_count;
   if (std::isnan(S01)) {
-    EV << "totoal count: " << (double)data["XX"].total_count << "\n";
+    EV << "total count: " << (double)data["XX"].total_count << "\n";
     error("S01 error at node %d qnic: %d, with partner: %d", my_address, qnic_id, partner);
   }
   double S02 = (double)data["YY"].plus_plus / (double)data["YY"].total_count - (double)data["YY"].plus_minus / (double)data["YY"].total_count +
