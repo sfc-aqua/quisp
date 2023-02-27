@@ -2,6 +2,7 @@
  *
  *  \brief RuleEngine
  */
+#include "RuleEngine.h"
 
 #include <cassert>
 #include <fstream>
@@ -10,18 +11,12 @@
 #include <stdexcept>
 #include <utility>
 
-#include <messages/classical_messages.h>
-#include "QNicStore/QNicStore.h"
-#include "RuleEngine.h"
-#include "RuntimeCallback.h"
-#include "messages/QNode_ipc_messages_m.h"
-#include "messages/entanglement_swapping_messages_m.h"
-#include "messages/link_generation_messages_m.h"
-#include "messages/purification_messages_m.h"
-#include "modules/PhysicalConnection/BSA/types.h"
-#include "modules/QNIC.h"
 #include "omnetpp/cexception.h"
 #include "omnetpp/csimulation.h"
+
+#include "QNicStore/QNicStore.h"
+#include "RuntimeCallback.h"
+#include "modules/PhysicalConnection/BSA/types.h"
 
 namespace quisp::modules {
 
@@ -212,7 +207,6 @@ void RuleEngine::handlePurificationResult(PurificationResult *result) {
   auto runtime = runtimes.findById(ruleset_id);
   if (runtime == nullptr) return;
   runtime->assignMessageToRuleSet(shared_rule_tag, message_content);
-  // std::cout << "receive message at " << parentAddress << " w/ seq_no " << sequence_number << '\n';
 }
 
 void RuleEngine::handleSwappingResult(SwappingResult *result) {
@@ -225,7 +219,6 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
   auto runtime = runtimes.findById(ruleset_id);
   if (runtime == nullptr) return;
   runtime->assignMessageToRuleSet(shared_rule_tag, message_content);
-  // std::cout << "RuleEngine: " << sequence_number << '\n';
 }
 
 // Invoked whenever a new resource (entangled with neighbor) has been created.
@@ -242,7 +235,6 @@ void RuleEngine::ResourceAllocation(int qnic_type, int qnic_index) {
         // if the qubit has already been assigned to the rule, the qubit is not allocatable to that rule
         if (!qubit_record->isAllocated()) {  //&& !qubit_record->isRuleApplied((*rule)->rule_id
           qubit_record->setAllocated(true);
-          // qubit_record->markRuleApplied((*rule)->rule_id);
           runtime.assignQubitToRuleSet(partner_addr, qubit_record);
         }
       }

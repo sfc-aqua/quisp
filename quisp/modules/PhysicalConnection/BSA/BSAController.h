@@ -4,8 +4,10 @@
  */
 #pragma once
 
-#include <omnetpp.h>
 #include <vector>
+
+#include <omnetpp.h>
+
 #include "PhotonicQubit_m.h"
 #include "messages/BSA_ipc_messages_m.h"
 #include "messages/classical_messages.h"
@@ -53,8 +55,8 @@ class BSAController : public cSimpleModule {
   CombinedBSAresults* generateNextNotificationTiming(bool is_left);
 
   int getExternalQNICIndexFromPort(int port);
-  double calculateOffsetTimeFromDistance();
-  double getTravelTimeFromPort(int port);
+  simtime_t calculateOffsetTimeFromDistance();
+  simtime_t getTravelTimeFromPort(int port);
   double getExternalDistanceFromPort(int port);
   QNIC_id getExternalQNICInfoFromPort(int port);
   void sendMeasurementResults(BatchClickEvent* msg);
@@ -63,18 +65,18 @@ class BSAController : public cSimpleModule {
   int address;
   QNIC_id left_qnic;
   QNIC_id right_qnic;
-  double left_travel_time;
-  double right_travel_time;
+  simtime_t left_travel_time;
+  simtime_t right_travel_time;
 
   // cache information for timing notification
-  double offset_time_for_first_photon;
+  simtime_t offset_time_for_first_photon;
   BSMNotificationTimeout* time_out_message;
   std::vector<BSAClickResult> click_results;
   int time_out_count;
 
   // BSA characteristics
-  double time_interval_between_photons;  ///< how separated should the photons be; is calculated by the dead time of the detector
-  double speed_of_light_in_channel;  ///< Speed of light in optical fiber (in km per sec).
+  simtime_t time_interval_between_photons;  ///< how separated should the photons be; is calculated by the dead time of the detector
+  simtime_t speed_of_light_in_channel;  ///< Speed of light in optical fiber (in km per sec).
   utils::ComponentProvider provider;
   BellStateAnalyzer* bsa;
 
