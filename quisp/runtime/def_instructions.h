@@ -9,7 +9,6 @@
 
 // X-macro pattern
 // https://quuxplusone.github.io/blog/2021/02/01/x-macros/
-#include <sys/_types/_u_int32_t.h>
 #ifndef INSTR_LAST
 #define INSTR_LAST INSTR
 #endif
@@ -40,8 +39,6 @@ INSTR(BITWISE_OR, RegId /* write */, RegId /* read */)  //  in-place operation: 
 INSTR(BITWISE_OR, RegId /* write */, int /* read */)  //  in-place operation: first_reg = first_reg | int (bitwise or)
 INSTR(BITWISE_XOR, RegId /* write */, RegId /* read */)  //  in-place operation: first_reg = first_reg | second_reg (bitwise xor)
 INSTR(BITWISE_XOR, RegId /* write */, int /* read */)  //  in-place operation: first_reg = first_reg | int (bitwise xor)
-// // bitset operation
-// INSTR(BITSET, RegId /* write */, int /* index to set */, RegId /*  */)
 
 // control flow
 INSTR(BEQ, Label, RegId, RegId)  // branch if the reg values are same

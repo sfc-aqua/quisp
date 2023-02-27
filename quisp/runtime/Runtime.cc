@@ -131,8 +131,7 @@ void Runtime::assignRuleSet(const RuleSet& rs) {
 }
 
 void Runtime::assignMessageToRuleSet(int shared_rule_tag, MessageRecord& msg_content) {
-  // if map size is small, for loop might be faster. need further investigation.
-  // messages[shared_tag_to_rule_id[shared_rule_tag]].emplace_back(msg_content);
+  // Currently using for loops with assumption that messages deque size is small, if it is large bimap might be better. need further investigation.
   for (auto& rule : ruleset.rules) {
     if (rule.receive_tag == shared_rule_tag) {
       messages[rule.id].emplace_back(msg_content);
@@ -149,7 +148,6 @@ void Runtime::assignQubitToRuleSet(QNodeAddr partner_addr, IQubitRecord* qubit_r
   qubits.emplace(std::make_pair(partner_addr, rule_id), qubit_record);
   sequence_number_to_qubit[{partner_addr, rule_id, sequence_number}] = qubit_record;
   qubit_to_sequence_number[qubit_record] = {partner_addr, rule_id, sequence_number};
-  // std::cout << "assigned to " << rule_id << " w/ seq_no " << sequence_number << '\n';
 }
 
 QubitResources::iterator Runtime::findQubit(IQubitRecord* qubit_record) {
@@ -167,7 +165,6 @@ void Runtime::promoteQubit(IQubitRecord* qubit) {
   assert(it != ruleset.next_rule_table.end());
   auto next_rule_id = it->second;
   auto next_rule_sequence_number = ++resource_counter[{partner_addr, next_rule_id}];
-  // std::cout << "promote to " << next_rule_id << " w/ seq_no: " << next_rule_sequence_number << '\n';
   qubits.erase(findQubit(qubit));
   qubits.emplace(std::make_pair(partner_addr, next_rule_id), qubit);
   sequence_number_to_qubit.erase(qubit_to_sequence_number[qubit]);
@@ -194,7 +191,6 @@ void Runtime::promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr n
   sequence_number_to_qubit.erase(qubit_to_sequence_number[qubit_record]);
   sequence_number_to_qubit[{new_partner_addr, next_rule_id, next_rule_id}] = qubit_record;
   qubit_to_sequence_number[qubit_record] = {new_partner_addr, next_rule_id, next_rule_sequence_number};
-  // std::cout << "promote w/n partner to " << next_rule_id << " w/ seq_no: " << next_rule_sequence_number << '\n';
 }
 void Runtime::assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record) {
   qubits.emplace(std::make_pair(partner_addr, rule_id), qubit_record);

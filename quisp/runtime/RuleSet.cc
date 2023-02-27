@@ -51,7 +51,6 @@ void RuleSet::finalize() {
     partner_initial_rule_table.emplace(partner_addr, rule_ids.at(0));
     std::cout << owner_addr << ' ' << partner_addr << " initial_rule " << rule_ids.at(0) << '\n';
   }
-  // std::cout << "finalized" << '\n';
 }
 
 void RuleSet::collectPartners(const RuleId rule_id, const InstructionTypes& instr, std::set<QNodeAddr>& partners,

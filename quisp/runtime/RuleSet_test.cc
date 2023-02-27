@@ -1,4 +1,5 @@
 #include "RuleSet.h"
+
 #include <gtest/gtest.h>
 #include "runtime/types.h"
 

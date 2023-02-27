@@ -26,7 +26,6 @@ class MockRuntimeCallback : public quisp::runtime::Runtime::ICallBack {
   MOCK_METHOD(int, purifyX, (IQubitRecord*, IQubitRecord*), (override));
   MOCK_METHOD(int, purifyY, (IQubitRecord*, IQubitRecord*), (override));
   MOCK_METHOD(int, purifyZ, (IQubitRecord*, IQubitRecord*), (override));
-  MOCK_METHOD(void, updateQubitPartner, (IQubitRecord*, QNodeAddr), (override));
   MOCK_METHOD(void, sendLinkTomographyResult,
               (const unsigned long ruleset_id, const quisp::runtime::Rule& rule, const int action_index, QNodeAddr partner_addr, int count, MeasurementOutcome outcome,
                int max_count, SimTime started_time),
