@@ -32,10 +32,10 @@ network Simple_MIM
         }
 
     connections:
-        EndNode1.port++ <--> ClassicalChannel {  distance = 1km; } <--> BSA.port++;
-        BSA.port++ <--> ClassicalChannel {  distance = 1km; } <--> EndNode2.port++;
-        EndNode1.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> BSA.quantum_port++;
-        BSA.quantum_port++ <--> QuantumChannel {  distance = 1km; } <--> EndNode2.quantum_port++;
+        EndNode1.port++ <--> ClassicalChannel {  distance = 0.5km; } <--> BSA.port++;
+        BSA.port++      <--> ClassicalChannel {  distance = 0.5km; } <--> EndNode2.port++;
+        EndNode1.quantum_port++ <--> QuantumChannel {  distance = 0.5km; } <--> BSA.quantum_port++;
+        BSA.quantum_port++      <--> QuantumChannel {  distance = 0.5km; } <--> EndNode2.quantum_port++;
 
 }
 
