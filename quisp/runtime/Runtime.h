@@ -324,13 +324,13 @@ class Runtime {
   void gateCNOT(QubitId control_qubit_id, QubitId target_qubit_id);
 
   /// @brief perform X purification and store the measurement result
-  void purifyX(RegId result, QubitId qubit_id, QubitId trash_qubit_id);
+  void purifyX(RegId result, int bitset_index, QubitId qubit_id, QubitId trash_qubit_id);
 
   /// @brief perform Z purification and store the measurement result
-  void purifyZ(RegId result, QubitId qubit_id, QubitId trash_qubit_id);
+  void purifyZ(RegId result, int bitset_index, QubitId qubit_id, QubitId trash_qubit_id);
 
   /// @brief perform Y purification and store the measurement result
-  void purifyY(RegId result, QubitId qubit_id, QubitId trash_qubit_id);
+  void purifyY(RegId result, int bitset_index, QubitId qubit_id, QubitId trash_qubit_id);
   //@}
 
   /** @name debugging */

@@ -75,22 +75,22 @@ INSTR(GET_QUBIT_BY_SEQ_NO, QubitId /* write: qubit */, QNodeAddr /* read */, Reg
 INSTR(MEASURE_RANDOM, MemoryKey, QubitId)
 INSTR(MEASURE, MemoryKey, QubitId, Basis)
 INSTR(MEASURE, RegId, QubitId, Basis)
-INSTR(MEASURE, RegId /* w: bitset */, int /* bit to set */, QubitId, Basis) // this will store the result at index (bitset) of the RegId specified by the int
+INSTR(MEASURE, RegId /* w: bitset */, int /* bit to set */, QubitId, Basis)  // this will store the result at index (bitset) of the RegId specified by the int
 INSTR(GATE_X, QubitId)
 INSTR(GATE_Z, QubitId)
 INSTR(GATE_Y, QubitId)
 INSTR(GATE_CNOT, QubitId, QubitId)
 // circuit operations
-INSTR(PURIFY_X, RegId /* measurement_result */, QubitId /* keep_qubit */, QubitId /* trash_qubit */)
-INSTR(PURIFY_Z, RegId /* measurement_result */, QubitId /* keep_qubit */, QubitId /* trash_qubit */)
-INSTR(PURIFY_Y, RegId /* measurement_result */, QubitId /* keep_qubit */, QubitId /* trash_qubit */)
+INSTR(PURIFY_X, RegId /* measurement_result */, int, QubitId /* keep_qubit */, QubitId /* trash_qubit */)
+INSTR(PURIFY_Z, RegId /* measurement_result */, int, QubitId /* keep_qubit */, QubitId /* trash_qubit */)
+INSTR(PURIFY_Y, RegId /* measurement_result */, int, QubitId /* keep_qubit */, QubitId /* trash_qubit */)
 
 // resource management operations
 // instructions we would want later: crucial for entanglement pumping, banding, and multipartite states
 // INSTR(SET_NAME, QubitId, {new_name: string | RegId }) // when using partner as name is not enough
 INSTR(FREE_QUBIT, QubitId)
 INSTR(PROMOTE, QubitId)
-INSTR(PROMOTE, QubitId, RegId /* new partner addr */) // promote with new partner/new name
+INSTR(PROMOTE, QubitId, RegId /* new partner addr */)  // promote with new partner/new name
 INSTR(LOCK_QUBIT, QubitId, RegId /* action index */)
 
 // message operations
@@ -98,7 +98,7 @@ INSTR(GET_MESSAGE_SEQ, RegId /* read: message index */, RegId /* write: sequence
 INSTR(COUNT_MESSAGE, RegId /* read: sequence number */, RegId /* write: count */)
 INSTR(GET_MESSAGE, RegId /* read: sequence number */, int /* read: message index */, RegId /* write: correction_frame */)  // for swapping
 INSTR(GET_MESSAGE, RegId /* read: sequence number */, int /* read: message index */, RegId /* write: measurement_result */, RegId /* write: protocol */)  // for purification
-INSTR(DELETE_MESSAGE, RegId /* read: sequence number */) // delete all messages with this sequence number
+INSTR(DELETE_MESSAGE, RegId /* read: sequence number */)  // delete all messages with this sequence number
 
 // send classical messages
 INSTR(SEND_LINK_TOMOGRAPHY_RESULT, QNodeAddr, RegId, MemoryKey, int, Time)  // partner addr, current count reg_id, outcome key, max_count, start_time
