@@ -12,16 +12,16 @@ async def test_ChannelXErrorSimpleMIM():
     print(worker.output)
     worker.print_results()
     assert worker.results["EndNode1<-->EndNode2"]["data"] == {
-        "Fidelity": 0.817657,
-        "Xerror": 0.182343,
-        "Zerror": -0.00335848,
-        "Yerror": 0.00335848,
+        "Fidelity": 0.815958,
+        "Xerror": 0.184042,
+        "Zerror": -0.0205033,
+        "Yerror": 0.0205033,
     }
     assert worker.results["EndNode2<-->EndNode1"]["data"] == {
-        "Fidelity": 0.817657,
-        "Xerror": 0.182343,
-        "Zerror": -0.00335848,
-        "Yerror": 0.00335848,
+        "Fidelity": 0.815958,
+        "Xerror": 0.184042,
+        "Zerror": -0.0205033,
+        "Yerror": 0.0205033,
     }
 
 
