@@ -106,8 +106,7 @@ TEST_F(ActionExecutionTest, Swapping) {
   int right_partner_addr = 6;
   EXPECT_CALL(*callback, isQubitLocked(_)).WillRepeatedly(Return(false));
 
-  // -1 means no longer used. it will be deleted
-  EntanglementSwapping action{std::vector{left_partner_addr, right_partner_addr}};
+  EntanglementSwapping action{std::vector{left_partner_addr, right_partner_addr}, -1};
   setAction(&action);
 
   EXPECT_CALL(*callback, gateCNOT(qubit1, qubit2)).Times(1);
@@ -115,8 +114,8 @@ TEST_F(ActionExecutionTest, Swapping) {
   EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = true}));
   EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
-  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{left_partner_addr}, QNodeAddr{right_partner_addr}, 1, 1, 0)).Times(1);
-  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{right_partner_addr}, QNodeAddr{left_partner_addr}, 1, 1, 0)).Times(1);
+  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{left_partner_addr}, QNodeAddr{right_partner_addr}, -1, 1, 0b00)).Times(1);
+  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{right_partner_addr}, QNodeAddr{left_partner_addr}, -1, 1, 0b00)).Times(1);
 
   runtime->assignQubitToRuleSet(QNodeAddr{left_partner_addr}, qubit1);
   runtime->assignQubitToRuleSet(QNodeAddr{right_partner_addr}, qubit2);
@@ -130,8 +129,8 @@ TEST_F(ActionExecutionTest, Swapping) {
   EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = false}));
   EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
-  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{left_partner_addr}, QNodeAddr{right_partner_addr}, 1, 2, 0)).Times(1);
-  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{right_partner_addr}, QNodeAddr{left_partner_addr}, 1, 2, 0)).Times(1);
+  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{left_partner_addr}, QNodeAddr{right_partner_addr}, -1, 2, 0b11)).Times(1);
+  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{right_partner_addr}, QNodeAddr{left_partner_addr}, -1, 2, 0b00)).Times(1);
 
   runtime->assignQubitToRuleSet(QNodeAddr{left_partner_addr}, qubit1);
   runtime->assignQubitToRuleSet(QNodeAddr{right_partner_addr}, qubit2);
@@ -145,8 +144,8 @@ TEST_F(ActionExecutionTest, Swapping) {
   EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = false}));
   EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
-  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{left_partner_addr}, QNodeAddr{right_partner_addr}, 1, 3, 0)).Times(1);
-  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{right_partner_addr}, QNodeAddr{left_partner_addr}, 1, 3, 0)).Times(1);
+  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{left_partner_addr}, QNodeAddr{right_partner_addr}, -1, 3, 0b10)).Times(1);
+  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{right_partner_addr}, QNodeAddr{left_partner_addr}, -1, 3, 0b00)).Times(1);
 
   runtime->assignQubitToRuleSet(QNodeAddr{left_partner_addr}, qubit1);
   runtime->assignQubitToRuleSet(QNodeAddr{right_partner_addr}, qubit2);
@@ -160,8 +159,8 @@ TEST_F(ActionExecutionTest, Swapping) {
   EXPECT_CALL(*callback, measureQubitZ(qubit2)).Times(1).WillOnce(Return(MeasurementOutcome{.basis = 'Z', .outcome_is_plus = true}));
   EXPECT_CALL(*callback, freeAndResetQubit(qubit1)).Times(1);
   EXPECT_CALL(*callback, freeAndResetQubit(qubit2)).Times(1);
-  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{left_partner_addr}, QNodeAddr{right_partner_addr}, 1, 4, 0)).Times(1);
-  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{right_partner_addr}, QNodeAddr{left_partner_addr}, 1, 4, 0)).Times(1);
+  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{left_partner_addr}, QNodeAddr{right_partner_addr}, -1, 4, 0b01)).Times(1);
+  EXPECT_CALL(*callback, sendSwappingResult(ruleset_id, QNodeAddr{right_partner_addr}, QNodeAddr{left_partner_addr}, -1, 4, 0b00)).Times(1);
 
   runtime->assignQubitToRuleSet(QNodeAddr{left_partner_addr}, qubit1);
   runtime->assignQubitToRuleSet(QNodeAddr{right_partner_addr}, qubit2);
