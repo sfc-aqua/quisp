@@ -7,7 +7,7 @@ import ned.IdealChannel;
 
 import modules.Common.*;
 
-simple SPDC_Controller
+simple EPPSController
 {
     parameters:
         int address;
@@ -84,7 +84,7 @@ module SPDC
         inout quantum_port[] @loose;
         inout port[] @loose;
     submodules:
-        Controller: SPDC_Controller {
+        Controller: EPPSController {
             parameters:
                 address = address;//share the same address within all inner modules
                 timing_buffer = epps_timing_buffer;
