@@ -11,9 +11,6 @@
 #include <stdexcept>
 #include <utility>
 
-#include "omnetpp/cexception.h"
-#include "omnetpp/csimulation.h"
-
 #include "QNicStore/QNicStore.h"
 #include "RuntimeCallback.h"
 #include "modules/PhysicalConnection/BSA/types.h"
@@ -218,7 +215,12 @@ void RuleEngine::handleSwappingResult(SwappingResult *result) {
   std::vector<int> message_content = {sequence_number, correction_frame, new_partner_addr};
   auto runtime = runtimes.findById(ruleset_id);
   if (runtime == nullptr) return;
+  auto x = 1;
+  if (parentAddress == 2) {
+    x++;
+  }
   runtime->assignMessageToRuleSet(shared_rule_tag, message_content);
+  std::cout << "receive correction from " << result->getSrcAddr() << " at " << parentAddress << '\n';
 }
 
 // Invoked whenever a new resource (entangled with neighbor) has been created.
@@ -251,7 +253,6 @@ void RuleEngine::freeConsumedResource(int qnic_index /*Not the address!!!*/, ISt
   if (qubit_record->isAllocated()) {
     qubit_record->setAllocated(false);
   }
-  qubit_record->clearAppliedRules();
   bell_pair_store.eraseQubit(qubit_record);
 }
 

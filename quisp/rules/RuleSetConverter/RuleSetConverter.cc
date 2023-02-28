@@ -3,13 +3,11 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include "omnetpp/cexception.h"
-#include "runtime/opcode.h"
-#include "runtime/types.h"
 
-#include <rules/Action.h>
-#include <rules/Clause.h>
-#include <runtime/Runtime.h>
+#include <omnetpp.h>
+
+#include "runtime/Runtime.h"
+#include "runtime/opcode.h"
 
 namespace quisp::rules::rs_converter {
 
@@ -51,11 +49,11 @@ Program RuleSetConverter::constructTerminateCondition(const ConditionData *data)
     auto clause_ptr = clause_data.get();
     if (auto *c = dynamic_cast<const MeasureCountConditionClause *>(clause_ptr)) {
       /*
-      LOAD count MemoryKey("count")
-      BLT CONTINUE count max_count
-      RET RS_TERMINATED
-    CONTINUE:
-      NOP
+        LOAD count MemoryKey("count")
+        BLT CONTINUE count max_count
+        RET RS_TERMINATED
+      CONTINUE:
+        NOP
       */
       auto count = RegId::REG2;
       MemoryKey count_key{"measure_count" + std::to_string(i)};
@@ -88,7 +86,6 @@ Program RuleSetConverter::constructCondition(const ConditionData *data) {
       Label loop_label{std::string("LOOP_") + std::to_string(i)};
       Label found_qubit_label{std::string("FOUND_QUBIT_") + std::to_string(i)};
       Label passed_label{std::string("PASSED_") + std::to_string(i)};
-
       /*
         SET qubit_id -1
         SET counter 0

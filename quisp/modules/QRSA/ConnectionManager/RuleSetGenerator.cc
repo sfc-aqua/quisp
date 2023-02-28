@@ -89,6 +89,7 @@ std::vector<int> RuleSetGenerator::collectPath(messages::ConnectionSetupRequest*
 
 std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int owner_address, int num_measure, int shared_rule_tag) {
   auto tomography_rule = std::make_unique<Rule>(partner_address, shared_rule_tag, shared_rule_tag);
+  tomography_rule->setName("tomography with address " + std::to_string(partner_address));
 
   // prepare condition
   auto condition = std::make_unique<Condition>();
@@ -107,6 +108,8 @@ std::unique_ptr<Rule> RuleSetGenerator::tomographyRule(int partner_address, int 
 
 std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType purification_type, int shared_rule_tag) {
   auto purify_rule = std::make_unique<Rule>(partner_address, shared_rule_tag, -1);
+  // TODO: add purification protocol to rule name
+  purify_rule->setName("purification with " + std::to_string(partner_address));
 
   // decide how many Bell pairs are required
   int num_resource;
@@ -137,6 +140,7 @@ std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType 
 
 std::unique_ptr<Rule> RuleSetGenerator::purificationCorrelationRule(int partner_address, PurType protocol, int shared_rule_tag) {
   auto correlation_rule = std::make_unique<Rule>(partner_address, -1, shared_rule_tag);
+  correlation_rule->setName("purification correlation with " + std::to_string(partner_address));
 
   auto condition = std::make_unique<Condition>();
   auto correlation_clause = std::make_unique<PurificationCorrelationClause>(partner_address, shared_rule_tag);
@@ -151,7 +155,7 @@ std::unique_ptr<Rule> RuleSetGenerator::purificationCorrelationRule(int partner_
 
 std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::pair<int, int> partner_address, int shared_rule_tag) {
   auto swap_rule = std::make_unique<Rule>(std::vector<int>{partner_address.first, partner_address.second}, shared_rule_tag, -1);
-
+  swap_rule->setName("swap between " + std::to_string(partner_address.first) + " and " + std::to_string(partner_address.second));
   auto condition = std::make_unique<Condition>();
   auto enough_resource_clause_first = std::make_unique<EnoughResourceConditionClause>(1, partner_address.first);
   auto enough_resource_clause_second = std::make_unique<EnoughResourceConditionClause>(1, partner_address.second);
@@ -167,7 +171,7 @@ std::unique_ptr<Rule> RuleSetGenerator::swapRule(std::pair<int, int> partner_add
 
 std::unique_ptr<Rule> RuleSetGenerator::swapCorrectionRule(int swapper_address, int shared_rule_tag) {
   auto correction_rule = std::make_unique<Rule>(swapper_address, -1, shared_rule_tag);
-
+  correction_rule->setName("swapping correction from " + std::to_string(swapper_address));
   auto condition = std::make_unique<Condition>();
   auto swapping_correction_clause = std::make_unique<SwappingCorrectionClause>(swapper_address, shared_rule_tag);
   condition->addClause(std::move(swapping_correction_clause));

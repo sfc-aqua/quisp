@@ -94,7 +94,7 @@ network two_node_fake_MM
         EndNode2.quantum_port++ <--> QuantumChannel {  distance = 0km; } <--> HOM.quantum_port++;
 }
 
-network three_node_MIM
+network three_node_MIM_qleap
 {
     parameters:
         **.speed_of_light_in_fiber = 205336.986301 km;

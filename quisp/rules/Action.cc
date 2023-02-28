@@ -5,13 +5,13 @@ namespace quisp::rules {
 Action::Action(int partner_addr) {
   partner_address = partner_addr;
   QnicInterface qnic_interface{partner_addr};
-  qnic_interfaces.push_back(qnic_interface);
+  qnic_interfaces.emplace_back(qnic_interface);
 };
 
 Action::Action(std::vector<int> partner_addr) {
   for (int i = 0; i < partner_addr.size(); i++) {
     QnicInterface qnic_interface{partner_addr.at(i)};
-    qnic_interfaces.push_back(qnic_interface);
+    qnic_interfaces.emplace_back(qnic_interface);
   }
 }
 

@@ -48,13 +48,13 @@ TEST_F(RuleSetGeneratorTest, generateSimpleSwappingRuleSets) {
   int shared_rule_tag = 0;
   int num_measure = 50;
   rsg->generateReverseSwapAtHalfRuleSets(0, 4, rules_map, path, shared_rule_tag);
-  EXPECT_EQ(rules_map.size(), 3);
-  // EXPECT_EQ(rules_map.find(1)->second.size(), 1);
-  // {
-  //   auto &rule = rules_map.find(1)->second.at(0);
-  //   EXPECT_EQ(rule->qnic_interfaces.size(), 1);
-  //   EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 5);
-  // }
+  EXPECT_EQ(rules_map.size(), 5);
+  EXPECT_EQ(rules_map.find(1)->second.size(), 2);
+  {
+    auto &rule = rules_map.find(1)->second.at(0);
+    EXPECT_EQ(rule->qnic_interfaces.size(), 1);
+    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 3);
+  }
 
   EXPECT_EQ(rules_map.find(2)->second.size(), 1);
   {
@@ -64,7 +64,7 @@ TEST_F(RuleSetGeneratorTest, generateSimpleSwappingRuleSets) {
     EXPECT_EQ(rule->qnic_interfaces.at(1).partner_addr, 3);
   }
 
-  EXPECT_EQ(rules_map.find(3)->second.size(), 1);
+  EXPECT_EQ(rules_map.find(3)->second.size(), 3);
   {
     auto &rule = rules_map.find(3)->second.at(0);
     EXPECT_EQ(rule->qnic_interfaces.size(), 2);
@@ -80,12 +80,12 @@ TEST_F(RuleSetGeneratorTest, generateSimpleSwappingRuleSets) {
     EXPECT_EQ(rule->qnic_interfaces.at(1).partner_addr, 5);
   }
 
-  // EXPECT_EQ(rules_map.find(5)->second.size(), 1);
-  // {
-  //   auto &rule = rules_map.find(5)->second.at(0);
-  //   EXPECT_EQ(rule->qnic_interfaces.size(), 1);
-  //   EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 1);
-  // }
+  EXPECT_EQ(rules_map.find(5)->second.size(), 2);
+  {
+    auto &rule = rules_map.find(5)->second.at(0);
+    EXPECT_EQ(rule->qnic_interfaces.size(), 1);
+    EXPECT_EQ(rule->qnic_interfaces.at(0).partner_addr, 3);
+  }
 }
 
 TEST_F(RuleSetGeneratorTest, Simple) {
@@ -109,47 +109,89 @@ TEST_F(RuleSetGeneratorTest, Simple) {
   {
     auto ruleset = rulesets.find(2)->second;
     auto expected_ruleset = R"({
-	"num_rules": 1,
-	"owner_address": 2,
-	"rules": [ {
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 5
-				}],
-				"num_measure": 0,
-				"owner_address": 2
-			},
-			"type": "tomography"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 5
-					},
-					"num_resource": 1
-				},
-				"type": "enough_resource"
-			}, {
-				"options": {
-					"interface": {
-						"partner_address": 5
-					},
-					"num_measure": 0
-				},
-				"type": "measure_count"
-			}]
-		},
-		"interface": [{
-			"partner_address": 5
-		}],
-    	"shared_tag": 3,
-		"name": "",
-		"next_rule_id": -1,
-		"rule_id": 0
-	}],
-	"ruleset_id": 1234
+  "num_rules": 2,
+  "owner_address": 2,
+  "rules": [
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 3
+            }
+          ],
+          "shared_rule_tag": 1
+        },
+        "type": "swapping_correction"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 3
+              },
+              "shared_rule_tag": 1
+            },
+            "type": "swapping_correction"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 3
+        }
+      ],
+      "name": "swapping correction from 3",
+      "receive_tag": 1,
+      "send_tag": -1
+    },
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 5
+            }
+          ],
+          "num_measure": 0,
+          "owner_address": 2
+        },
+        "type": "tomography"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 5
+              },
+              "num_resource": 1
+            },
+            "type": "enough_resource"
+          },
+          {
+            "options": {
+              "interface": {
+                "partner_address": 5
+              },
+              "num_measure": 0
+            },
+            "type": "measure_count"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 5
+        }
+      ],
+      "name": "tomography with address 5",
+      "receive_tag": 3,
+      "send_tag": 3
+    }
+  ],
+  "ruleset_id": 1234
 })"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }
@@ -164,7 +206,7 @@ TEST_F(RuleSetGeneratorTest, PurificationRule) {
   auto serialized = purification_rule->serialize_json();
   //  rule_id is given by RuleSet and next_rule_id is given outside of Rule decration.
   json expected = R"({
-   "name":"",
+   "name":"purification with 1",
    "send_tag": 15,
    "receive_tag": -1,
    "interface":[
@@ -211,7 +253,7 @@ TEST_F(RuleSetGeneratorTest, SwapRule) {
   auto serialized = swap_rule->serialize_json();
   //  rule_id is given by RuleSet and next_rule_id is given outside of Rule decration.
   json expected = R"({
-   "name":"",
+   "name": "swap between 1 and 3",
    "send_tag": 14,
    "receive_tag": -1,
    "interface":[
@@ -269,42 +311,50 @@ TEST_F(RuleSetGeneratorTest, tomographyRule) {
 
   auto serialized = tomography_rule->serialize_json();
   //  rule_id is given by RuleSet and next_rule_id is given outside of Rule decration.
-  json expected = R"( {
- 	"action": {
- 		"options": {
- 			"interface": [{
- 				"partner_address": 1
- 			}],
- 			"num_measure": 5000,
- 			"owner_address": 2
- 		},
- 		"type": "tomography"
- 	},
- 	"condition": {
- 		"clauses": [{
- 			"options": {
- 				"interface": {
- 					"partner_address": 1
- 				},
- 				"num_resource": 1
- 			},
- 			"type": "enough_resource"
- 		}, {
- 			"options": {
- 				"interface": {
- 					"partner_address": 1
- 				},
- 				"num_measure": 5000
- 			},
- 			"type": "measure_count"
- 		}]
- 	},
- 	"interface": [{
- 		"partner_address": 1
- 	}],
-    "shared_tag": 3,
- 	"name": "",
- })"_json;
+  json expected = R"({
+  "action": {
+    "options": {
+      "interface": [
+        {
+          "partner_address": 1
+        }
+      ],
+      "num_measure": 5000,
+      "owner_address": 2
+    },
+    "type": "tomography"
+  },
+  "condition": {
+    "clauses": [
+      {
+        "options": {
+          "interface": {
+            "partner_address": 1
+          },
+          "num_resource": 1
+        },
+        "type": "enough_resource"
+      },
+      {
+        "options": {
+          "interface": {
+            "partner_address": 1
+          },
+          "num_measure": 5000
+        },
+        "type": "measure_count"
+      }
+    ]
+  },
+  "interface": [
+    {
+      "partner_address": 1
+    }
+  ],
+  "name": "tomography with address 1",
+  "receive_tag": 3,
+  "send_tag": 3
+})"_json;
   EXPECT_EQ(serialized, expected);
 }
 }  // namespace

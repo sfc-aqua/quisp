@@ -4,7 +4,7 @@
  *  \brief Router
  */
 #include "Router.h"
-#include <messages/classical_messages.h>  //Path selection: type = 1, Timing notifier for BMA: type = 4
+#include "messages/classical_messages.h"  //Path selection: type = 1, Timing notifier for BMA: type = 4
 
 using namespace omnetpp;
 using namespace quisp::messages;
@@ -117,10 +117,6 @@ void Router::handleMessage(cMessage *msg) {
     send(pk, "rePort$o");
     return;
   } else if (dest_addr == my_address && dynamic_cast<SwappingResult *>(msg)) {
-    bubble("Swapping Result packet received");
-    send(pk, "rePort$o");
-    return;
-  } else if (dest_addr == my_address && dynamic_cast<SimultaneousSwappingResult *>(msg)) {
     bubble("Swapping Result packet received");
     send(pk, "rePort$o");
     return;

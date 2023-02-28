@@ -155,48 +155,125 @@ TEST(ConnectionManagerTest, RespondToRequest) {
     ASSERT_NE(ruleset, nullptr);
     EXPECT_EQ(ruleset["rules"].size(), 1);
     auto expected_ruleset = R"({
-	"num_rules": 1,
-	"owner_address": 2,
-	"rules": [ {
-		"action": {
-			"options": {
-				"interface": [{
-					"partner_address": 5
-				}],
-				"num_measure": 0,
-				"owner_address": 2
-			},
-			"type": "tomography"
-		},
-		"condition": {
-			"clauses": [{
-				"options": {
-					"interface": {
-						"partner_address": 5
-					},
-					"num_resource": 1
-				},
-				"type": "enough_resource"
-			}, {
-				"options": {
-					"interface": {
-						"partner_address": 5
-					},
-					"num_measure": 0
-				},
-				"type": "measure_count"
-			}]
-		},
-		"interface": [{
-			"partner_address": 5
-		}],
-    	"shared_tag": 3,
-		"name": "",
-		"next_rule_id": -1,
-		"rule_id": 0
-	}],
-	"ruleset_id": 1234
-})"_json;
+  "num_rules": 3,
+  "owner_address": 5,
+  "rules": [
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 4
+            }
+          ],
+          "shared_rule_tag": 2
+        },
+        "type": "swapping_correction"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 4
+              },
+              "shared_rule_tag": 2
+            },
+            "type": "swapping_correction"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 4
+        }
+      ],
+      "name": "",
+      "receive_tag": 2,
+      "send_tag": -1
+    },
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 3
+            }
+          ],
+          "shared_rule_tag": 1
+        },
+        "type": "swapping_correction"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 3
+              },
+              "shared_rule_tag": 1
+            },
+            "type": "swapping_correction"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 3
+        }
+      ],
+      "name": "",
+      "receive_tag": 1,
+      "send_tag": -1
+    },
+    {
+      "action": {
+        "options": {
+          "interface": [
+            {
+              "partner_address": 2
+            }
+          ],
+          "num_measure": 0,
+          "owner_address": 5
+        },
+        "type": "tomography"
+      },
+      "condition": {
+        "clauses": [
+          {
+            "options": {
+              "interface": {
+                "partner_address": 2
+              },
+              "num_resource": 1
+            },
+            "type": "enough_resource"
+          },
+          {
+            "options": {
+              "interface": {
+                "partner_address": 2
+              },
+              "num_measure": 0
+            },
+            "type": "measure_count"
+          }
+        ]
+      },
+      "interface": [
+        {
+          "partner_address": 2
+        }
+      ],
+      "name": "",
+      "receive_tag": 3,
+      "send_tag": 3
+    }
+  ],
+  "ruleset_id": 1234
+}
+)"_json;
     EXPECT_EQ(expected_ruleset, ruleset);
   }
 
@@ -244,7 +321,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 			}]
 		},
 		"interface": [{ "partner_address": 2 }, { "partner_address": 5 }],
-    	"shared_tag": 1,
+			"shared_tag": 1,
 		"name": "",
 		"next_rule_id": -1,
 		"rule_id": 0

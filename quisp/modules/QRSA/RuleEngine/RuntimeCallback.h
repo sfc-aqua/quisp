@@ -122,6 +122,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     pk_for_self->setDestAddr(pk->getSrcAddr());
     rule_engine->send(pk, "RouterPort$o");
     rule_engine->send(pk_for_self, "RouterPort$o");
+    std::cout << "measured for tomo at " << src << '\n';
   }
 
   void sendPurificationResult(const unsigned long ruleset_id, const QNodeAddr partner_addr, const int shared_rule_tag, const int sequence_number, const int measurement_result,
@@ -153,6 +154,7 @@ struct RuntimeCallback : public quisp::runtime::Runtime::ICallBack {
     pkt->setCorrectionFrame(frame_correction);
     pkt->setNewPartner(new_partner_addr.val);
     rule_engine->send(pkt, "RouterPort$o");
+    std::cout << "swap at: " << rule_engine->parentAddress << " w/seq_no  " << sequence_number << '\n';
   }
 
   void freeAndResetQubit(IQubitRecord *qubit) override {

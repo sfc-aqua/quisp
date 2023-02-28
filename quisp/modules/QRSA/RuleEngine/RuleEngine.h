@@ -8,7 +8,6 @@
 #include <vector>
 
 #include <omnetpp.h>
-#include <omnetpp/simtime.h>
 
 #include "BellPairStore/BellPairStore.h"
 #include "IRuleEngine.h"

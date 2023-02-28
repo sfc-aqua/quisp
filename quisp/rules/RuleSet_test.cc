@@ -52,42 +52,27 @@ TEST(RuleSetTest, addRule) {
   EXPECT_EQ(ruleset.rules.at(2)->qnic_interfaces.at(1).partner_addr, 3);
 }
 
-TEST(RuleSetTest, metadata_serialize_json) {
+TEST(RuleSetTest, Reversible_Check) {
   prepareSimulation();
-  RuleSet ruleset(1234, 2);  // ruleset_id, owner_addr
-  auto purification = std::make_unique<Rule>(1, -1, 2);
-  ruleset.addRule(std::move(purification));  // rule type, partners
+  unsigned long ruleset_id = 123987;
+  int self_addr = 13;
+  int partner_addr = 84;
+  int send_tag = 14;
+  int receive_tag = 93;
+  RuleSet ruleset(ruleset_id, self_addr);
+  auto rule = std::make_unique<Rule>(partner_addr, send_tag, receive_tag);
+  ruleset.addRule(std::move(rule));
+  RuleSet reverted_ruleset;
+  reverted_ruleset.deserialize_json(ruleset.serialize_json());
 
-  auto ruleset_json = ruleset.serialize_json();
-  json expected_json = R"({"ruleset_id": 1234,
-                           "owner_address": 2,
-                           "num_rules": 1,
-                           "rules": [{
-                             "name": "",
-                             "send_tag": -1,
-                             "receive_tag": 2,
-                             "interface":[
-                               {"partner_address": 1}
-                             ],
-                            }]
-                          })"_json;
-  EXPECT_EQ(ruleset_json, expected_json);
-}
-
-TEST(RuleSetTest, deserialize_json) {
-  prepareSimulation();
-  RuleSet ruleset(1234, 2);  // ruleset_id, owner_addr
-
-  auto purification = std::make_unique<Rule>(1, -1, 2);
-  ruleset.addRule(std::move(purification));  // rule type, partners
-  auto serialized = ruleset.serialize_json();
-
-  // transfer serialized ruleset from HM to RE here.
-  RuleSet empty_ruleset(1234, 2);
-  empty_ruleset.deserialize_json(serialized);
-  EXPECT_EQ(empty_ruleset.ruleset_id, 1234);
-  EXPECT_EQ(empty_ruleset.owner_addr, 2);
-  EXPECT_EQ(empty_ruleset.rules.size(), 1);
+  EXPECT_EQ(ruleset.owner_addr, reverted_ruleset.owner_addr);
+  EXPECT_EQ(ruleset.ruleset_id, reverted_ruleset.ruleset_id);
+  EXPECT_EQ(ruleset.rules.size(), reverted_ruleset.rules.size());
+  EXPECT_EQ(ruleset.rules.at(0)->parent_ruleset_id, reverted_ruleset.rules.at(0)->parent_ruleset_id);
+  EXPECT_EQ(ruleset.rules.at(0)->send_tag, reverted_ruleset.rules.at(0)->send_tag);
+  EXPECT_EQ(ruleset.rules.at(0)->receive_tag, reverted_ruleset.rules.at(0)->receive_tag);
+  EXPECT_EQ(ruleset.rules.at(0)->qnic_interfaces.size(), reverted_ruleset.rules.at(0)->qnic_interfaces.size());
+  EXPECT_EQ(ruleset.rules.at(0)->qnic_interfaces.at(0).partner_addr, reverted_ruleset.rules.at(0)->qnic_interfaces.at(0).partner_addr);
 }
 
 }  // namespace

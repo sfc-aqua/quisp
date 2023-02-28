@@ -1,7 +1,8 @@
 #pragma once
-#include <modules/QNIC.h>
-#include <modules/QUBIT.h>
 #include <nlohmann/json.hpp>
+
+#include "modules/QNIC.h"
+#include "modules/QUBIT.h"
 
 using nlohmann::json;
 using quisp::modules::QNIC_type;

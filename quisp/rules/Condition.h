@@ -1,7 +1,9 @@
 #pragma once
 #include <memory>
-#include <nlohmann/json.hpp>
 #include <vector>
+
+#include <nlohmann/json.hpp>
+
 #include "Clause.h"
 
 using json = nlohmann::json;

@@ -170,6 +170,7 @@ void Runtime::promoteQubit(IQubitRecord* qubit) {
   sequence_number_to_qubit.erase(qubit_to_sequence_number[qubit]);
   sequence_number_to_qubit[{partner_addr, next_rule_id, next_rule_sequence_number}] = qubit;
   qubit_to_sequence_number[qubit] = {partner_addr, next_rule_id, next_rule_sequence_number};
+  std::cout << "promote partner " << partner_addr << " seq_no " << next_rule_sequence_number << '\n';
 }
 void Runtime::promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr new_partner_addr) {
   QubitResources::iterator qubit_iter;
@@ -181,6 +182,7 @@ void Runtime::promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr n
       break;
     }
   }
+  auto [partner_addr, current_rule_id, sequence_number] = qubit_to_sequence_number[qubit_record];
   assert(found);
   qubits.erase(qubit_iter);
   auto it = ruleset.partner_initial_rule_table.find(new_partner_addr);
@@ -189,8 +191,9 @@ void Runtime::promoteQubitWithNewPartner(IQubitRecord* qubit_record, QNodeAddr n
   auto next_rule_sequence_number = ++resource_counter[{new_partner_addr, next_rule_id}];
   qubits.emplace(std::make_pair(new_partner_addr, next_rule_id), qubit_record);
   sequence_number_to_qubit.erase(qubit_to_sequence_number[qubit_record]);
-  sequence_number_to_qubit[{new_partner_addr, next_rule_id, next_rule_id}] = qubit_record;
+  sequence_number_to_qubit[{new_partner_addr, next_rule_id, next_rule_sequence_number}] = qubit_record;
   qubit_to_sequence_number[qubit_record] = {new_partner_addr, next_rule_id, next_rule_sequence_number};
+  std::cout << "promote from " << partner_addr << " to " << new_partner_addr << " seq_no " << next_rule_sequence_number << '\n';
 }
 void Runtime::assignQubitToRule(QNodeAddr partner_addr, RuleId rule_id, IQubitRecord* qubit_record) {
   qubits.emplace(std::make_pair(partner_addr, rule_id), qubit_record);

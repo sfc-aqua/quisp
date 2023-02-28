@@ -1,10 +1,10 @@
-#include <memory>
+#include "RuleSet.h"
+
 #include <random>
 #include <string>
 
 #include <omnetpp.h>
 
-#include "RuleSet.h"
 #include "RuleSetConverter/RuleSetConverter.h"
 
 using json = nlohmann::json;
@@ -45,6 +45,7 @@ void RuleSet::deserialize_json(json serialized) {
   auto serialized_rules = serialized.at("rules");
   for (auto rule : serialized_rules) {
     auto deserialized_rule = std::make_unique<Rule>(rule);
+    deserialized_rule->parent_ruleset_id = ruleset_id;
     rules.push_back(std::move(deserialized_rule));
   }
 };

@@ -1,35 +1,35 @@
+#include <memory>
+#include <utility>
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <omnetpp.h>
-#include <test_utils/TestUtils.h>
-#include <memory>
-#include <utility>
 
 #include "BellPairStore/BellPairStore.h"
 #include "IRuleEngine.h"
 #include "QubitRecord/QubitRecord.h"
 #include "RuleEngine.h"
+#include "messages/purification_messages_m.h"
+#include "modules/Logger/DisabledLogger.h"
+#include "modules/QNIC.h"
+#include "modules/QNIC/StationaryQubit/IStationaryQubit.h"
+#include "modules/QRSA/HardwareMonitor/IHardwareMonitor.h"
+#include "modules/QRSA/QRSA.h"
+#include "modules/QRSA/RealTimeController/IRealTimeController.h"
+#include "modules/QRSA/RoutingDaemon/RoutingDaemon.h"
+#include "rules/Action.h"
 #include "rules/Rule.h"
+#include "rules/RuleSet.h"
+#include "runtime/RuleSet.h"
+#include "runtime/Runtime.h"
+#include "runtime/opcode.h"
+#include "runtime/test.h"
+#include "runtime/types.h"
+#include "test_utils/TestUtils.h"
 #include "test_utils/UtilFunctions.h"
 #include "test_utils/mock_modules/MockHardwareMonitor.h"
 #include "test_utils/mock_modules/MockRealTimeController.h"
 #include "test_utils/mock_modules/MockRoutingDaemon.h"
-
-#include <messages/purification_messages_m.h>
-#include <modules/Logger/DisabledLogger.h>
-#include <modules/QNIC.h>
-#include <modules/QNIC/StationaryQubit/IStationaryQubit.h>
-#include <modules/QRSA/HardwareMonitor/IHardwareMonitor.h>
-#include <modules/QRSA/QRSA.h>
-#include <modules/QRSA/RealTimeController/IRealTimeController.h>
-#include <modules/QRSA/RoutingDaemon/RoutingDaemon.h>
-#include <rules/Action.h>
-#include <rules/RuleSet.h>
-#include <runtime/RuleSet.h>
-#include <runtime/Runtime.h>
-#include <runtime/opcode.h>
-#include <runtime/test.h>
-#include <runtime/types.h>
 
 namespace {
 
@@ -166,48 +166,13 @@ TEST_F(RuleEngineTest, freeConsumedResource) {
   auto* qubit_record = new QubitRecord(QNIC_E, qnic_index, 1, logger.get());
   qubit_record->setBusy(true);
   qubit->fillParams();
-  qubit_record->markRuleApplied(0);
-  EXPECT_FALSE(!qubit_record->isRuleApplied(0));
 
   EXPECT_CALL(*realtime_controller, ReInitialize_StationaryQubit(qubit_record, false)).Times(1).WillOnce(Return());
   EXPECT_CALL(*dynamic_cast<MockQNicStore*>(rule_engine->qnic_store.get()), getQubitRecord(QNIC_E, qnic_index, 1)).Times(1).WillOnce(Return(qubit_record));
   rule_engine->freeConsumedResource(qnic_index, qubit, QNIC_E);
-  EXPECT_TRUE(!qubit_record->isRuleApplied(0));
   EXPECT_FALSE(qubit_record->isBusy());
   delete qubit;
   delete rule_engine->qnic_store.get();
-}
-
-TEST_F(RuleEngineTest, updateAndCheckAppliedRule) {
-  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
-  sim->registerComponent(rule_engine);
-  rule_engine->callInitialize();
-
-  auto* qubit_record1 = new QubitRecord(QNIC_E, 7, 0);
-  auto* qubit_record2 = new QubitRecord(QNIC_E, 11, 0);
-  EXPECT_TRUE(!qubit_record1->isRuleApplied(1));
-  qubit_record1->markRuleApplied(1);
-  EXPECT_FALSE(!qubit_record1->isRuleApplied(1));
-  EXPECT_TRUE(!qubit_record1->isRuleApplied(2));
-  EXPECT_TRUE(!qubit_record2->isRuleApplied(1));
-}
-
-TEST_F(RuleEngineTest, checkAppliedRule) {
-  auto* rule_engine = new RuleEngineTestTarget{nullptr, routing_daemon, hardware_monitor, realtime_controller, qnic_specs};
-  sim->registerComponent(rule_engine);
-  rule_engine->callInitialize();
-
-  auto* qubit = new MockQubit(QNIC_E, 7);
-  auto* qubit_record = new QubitRecord(QNIC_E, 7, 1);
-  EXPECT_TRUE(!qubit_record->isRuleApplied(1));
-  qubit_record->markRuleApplied(1);
-  EXPECT_FALSE(!qubit_record->isRuleApplied(1));
-
-  qubit_record->clearAppliedRules();
-  EXPECT_TRUE(!qubit_record->isRuleApplied(1));
-
-  delete qubit;
-  delete qubit_record;
 }
 
 }  // namespace
