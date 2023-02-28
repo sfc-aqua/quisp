@@ -1,69 +1,60 @@
-/** \file EntangledPhotonPairSource.cc
- *  \authors cldurand,takaakimatsuo
- *  \date 2018/03/25
- *
- *  \brief EntangledPhotonPairSource
- */
-#include "../EPPS/EntangledPhotonPairSource.h"
+#include "EntangledPhotonPairSource.h"
+#include "PhotonicQubit_m.h"
+#include "omnetpp/ccontextswitcher.h"
 
-namespace quisp {
-namespace modules {
+using quisp::messages::PhotonicQubit;
+using namespace omnetpp;
+
+namespace quisp::modules {
 
 Define_Module(EntangledPhotonPairSource);
 
+StationaryQubit::StationaryQubit() : provider(utils::ComponentProvider{this}) {}
+
 void EntangledPhotonPairSource::initialize() {
-  error_rate = par("error_rate");
-  Y_error_ratio = par("Y_error_ratio");
-  X_error_ratio = par("X_error_ratio");
-  Z_error_ratio = par("Z_error_ratio");
-  emission_std = par("emission_std");
-  frequency = par("frequency");
-  EV << "------------------" << frequency << " aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+  emission_success_probability = par("error_rate").doubleValue();
+  emission_x_error_rate = par("x_error_ratio").doubleValue();
+  emission_y_error_rate = par("y_error_ratio").doubleValue();
+  emission_z_error_rate = par("z_error_ratio").doubleValue();
+  emission_jittering_standard_deviation = par("emission_jittering_standard_deviation").doubleValue();
+
+  backend = provider.getQuantumBackend();
 }
 
 void EntangledPhotonPairSource::handleMessage(cMessage *msg) { send(msg, "to_quantum_port$o", msg->par("gate")); }
 
-PhotonicQubit *EntangledPhotonPairSource::generateEntangledPhotons() {
-  Enter_Method("generateEntangledPhotons()");
-  PhotonicQubit *photon_one = new PhotonicQubit("Photon");
-  return photon_one;
-  // PhotonicQubit *photon_two = new PhotonicQubit();
-  // photon_one->addPar("gate") = 0;
-  // photon_two->addPar("gate") = 1;
-  // photon->setStationaryQubitEntangledWith(stationary_qubit_address);
-  // entangledPhotons *qubits;
-  // qubits->qubitTwo = photon_two;
-  // qubits->qubitOne = photon_one;
-  // return qubits;
+PhotonicQubit *EntangledPhotonPairSource::generatePhoton() {
+  Enter_Method("generatePhoton()");
+  auto* photon = new PhotonicQubit("Photon");
+  return photon;
+}
+
+void EntangledPhotonPairSource::entanglePhotons(PhotonicQubit *photon_one, PhotonicQubit *photon_two) {
+  Enter_Method("entanglePhotons()");
+  auto *photon_one_ref = backend->getShortLiveQubit();
+  auto *photon_two_ref = backend->getShortLiveQubit();
+  photon_one_ref->noiselessH();
+  photon_two_ref->noiselessCNOT(photon_one_ref);
+  photon_one->setQubit_ref(photon_one_ref);
+  photon_two->setQubit_ref(photon_two_ref);
 }
 
 void EntangledPhotonPairSource::emitPhotons() {
   Enter_Method("emitPhotons()");
-  PhotonicQubit *qubit = generateEntangledPhotons();
-  qubit->addPar("gate") = 0;
-  PhotonicQubit *qubitTwo = generateEntangledPhotons();
-  qubitTwo->addPar("gate") = 1;
-  float jitter_timing = normal(0, emission_std);
+  PhotonicQubit *photon_one = generatePhoton();
+  PhotonicQubit *photon_two = generatePhoton();
+  float jitter_timing = normal(0, emission_jittering_standard_deviation);
   float abso = fabs(jitter_timing);
-
-  scheduleAt(simTime() + abso, qubit);
-  scheduleAt(simTime() + abso, qubitTwo);
+  scheduleAt(simTime() + abso, photon_one);
+  scheduleAt(simTime() + abso, photon_two);
 }
 
-void EntangledPhotonPairSource::BubbleText(const char *txt) {
-  if (hasGUI()) {
-    char text[32];
-    sprintf(text, "%s", txt);
-    bubble(text);
-  }
-}
-
-cModule *EntangledPhotonPairSource::getSPDCNode() {
-  // We know that Connection manager is not the SPDC, so start from the parent.
+cModule *EntangledPhotonPairSource::getEPPSNode() {
+  // We know that Connection manager is not the EPPS, so start from the parent.
   cModule *currentModule = getParentModule();
   try {
     // Assumes the node in a network has a type SPDC
-    cModuleType *QNodeType = cModuleType::get("modules.SPDC");
+    cModuleType *QNodeType = cModuleType::get("modules.EPPS");
     while (currentModule->getModuleType() != QNodeType) {
       currentModule = currentModule->getParentModule();
     }
@@ -75,11 +66,4 @@ cModule *EntangledPhotonPairSource::getSPDCNode() {
   return currentModule;
 }
 
-double EntangledPhotonPairSource::getEmissionFrequency() {
-  Enter_Method("getEmissionFrequency()");
-  EV << "**********************Returning frequency" << frequency;
-  return frequency;
-}
-
-}  // namespace modules
-}  // namespace quisp
+}  // namespace quisp::modules
