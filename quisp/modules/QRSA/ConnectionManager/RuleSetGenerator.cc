@@ -121,8 +121,6 @@ std::unique_ptr<Rule> RuleSetGenerator::purifyRule(int partner_address, PurType 
     num_resource = 4;
   } else if (purification_type == PurType::DSDA || purification_type == PurType::DSDA_INV) {
     num_resource = 5;
-  } else if (purification_type == PurType::STEANE_DECODER) {
-    num_resource = 7;
   } else {
     throw std::runtime_error("unknown purification type");
   }
