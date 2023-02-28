@@ -15,96 +15,96 @@ network Realistic_Layer2_Simple_MIM_MM_all_in_one
 
         @display("bgb=707,326");
     submodules:
-        backend: Backend{}
+        backend: Backend;
         logger: Logger;
         EndNode1[1]: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=314,124");
         }
         EndNode2[1]: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=42,190");
         }
         Repeater1[1]: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Repeater";
             @display("i=REP1G;p=378,137");
         }
         Repeater2[1]: QNode {
-            address = 4;
+            address = "0.4";
             node_type = "Repeater";
             @display("i=REP1G;p=275,209");
         }
         Repeater3[1]: QNode {
-            address = 5;
+            address = "0.5";
             node_type = "Repeater";
             @display("i=REP1G;p=187,201");
         }
         Repeater4[1]: QNode {
-            address = 6;
+            address = "0.6";
             node_type = "Repeater";
             @display("i=REP1G;p=105,68");
         }
         Repeater5[1]: QNode {
-            address = 7;
+            address = "0.7";
             node_type = "Repeater";
             @display("i=REP1G;p=179,36");
         }
         Repeater6[1]: QNode {
-            address = 8;
+            address = "0.8";
             node_type = "Repeater";
             @display("i=REP1G;p=350,36");
         }
         Repeater7[1]: QNode {
-            address = 9;
+            address = "0.9";
             node_type = "Repeater";
             @display("i=REP1G;p=424,42");
         }
         Repeater8[1]: QNode {
-            address = 10;
+            address = "0.10";
             node_type = "Repeater";
             @display("i=REP1G;p=563,143");
         }
         Repeater9[1]: QNode {
-            address = 11;
+            address = "0.11";
             node_type = "Repeater";
             @display("i=REP1G;p=505,241");
         }
         Repeater10[1]: QNode {
-            address = 12;
+            address = "0.12";
             node_type = "Repeater";
             @display("i=REP1G;p=232,273");
         }
         Repeater11[1]: QNode {
-            address = 13;
+            address = "0.13";
             node_type = "Repeater";
             @display("i=REP1G;p=140,273");
         }
 
         BSA1[1]: BSANode {
-            address = 14;
+            address = "0.14";
             @display("p=389,195");
         }
         BSA2[1]: BSANode {
-            address = 15;
+            address = "0.15";
             @display("p=105,137");
         }
         BSA3[1]: BSANode {
-            address = 16;
+            address = "0.16";
             @display("p=275,30");
         }
         BSA4[1]: BSANode {
-            address = 17;
+            address = "0.17";
             @display("p=523,68");
         }
         BSA5[1]: BSANode {
-            address = 18;
+            address = "0.18";
             @display("p=350,273");
         }
         BSA6[1]: BSANode {
-            address = 19;
+            address = "0.19";
             @display("p=66,241");
         }
 
@@ -204,22 +204,22 @@ network Realistic_Layer2_Simple_MIM_MM_5km
         backend: Backend;
         logger: Logger;
         EndNode1[1]: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=98,233");
         }
         Repeater1[1]: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         BSA1[1]: BSANode {
-            address = 4;
+            address = "0.4";
             @display("p=163,182");
         }
 
@@ -246,22 +246,22 @@ network Realistic_Layer3_Simple_MM_MM_5km
         backend: Backend;
         logger: Logger;
         EndNode1[1]: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=98,233");
         }
         Repeater1[1]: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         Repeater2[1]: QNode {
-            address = 4;
+            address = "0.4";
             node_type = "Repeater";
             @display("i=REP1G;p=163,182");
         }
@@ -292,22 +292,22 @@ network Realistic_Layer2_Simple_MIM_MM_7_5km
         backend: Backend;
         logger: Logger;
         EndNode1[1]: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         BSA1[1]: BSANode {
-            address = 4;
+            address = "0.4";
             @display("p=164,176");
         }
 
@@ -335,22 +335,22 @@ network Realistic_Layer2_Simple_MIM_MM_10km
         backend: Backend;
         logger: Logger;
         EndNode1[1]: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         BSA1[1]: BSANode {
-            address = 4;
+            address = "0.4";
             @display("p=164,176");
         }
 
@@ -379,22 +379,22 @@ network Realistic_Layer2_Simple_MIM_MM_15km
         backend: Backend;
         logger: Logger;
         EndNode1[1]: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         BSA1[1]: BSANode {
-            address = 4;
+            address = "0.4";
             @display("p=164,176");
         }
 
@@ -421,22 +421,22 @@ network Realistic_Layer2_Simple_MIM_MM_50km
         backend: Backend;
         logger: Logger;
         EndNode1[1]: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         BSA1[1]: BSANode {
-            address = 4;
+            address = "0.4";
             @display("p=164,176");
         }
 
@@ -464,22 +464,22 @@ network Realistic_Layer2_Simple_MIM_MM_40km
         backend: Backend;
         logger: Logger;
         EndNode1[1]: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         BSA1[1]: BSANode {
-            address = 4;
+            address = "0.4";
             @display("p=164,176");
         }
 
@@ -508,22 +508,22 @@ network Realistic_Layer2_Simple_MIM_MM_25km
         backend: Backend;
         logger: Logger;
         EndNode1[1]: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         BSA1[1]: BSANode {
-            address = 4;
+            address = "0.4";
             @display("p=164,176");
         }
 
@@ -550,22 +550,22 @@ network Realistic_Layer2_Simple_MIM_MM_30km
         backend: Backend;
         logger: Logger;
         EndNode1[1]: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         BSA1[1]: BSANode {
-            address = 4;
+            address = "0.4";
             @display("p=164,176");
         }
 
@@ -594,22 +594,22 @@ network Realistic_Layer2_Simple_MIM_MM
         backend: Backend;
         logger: Logger;
         EndNode1[1]: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=350,78");
         }
         Repeater1[1]: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         BSA[1]: BSANode {
-            address = 4;
+            address = "0.4";
             @display("p=269,85");
         }
 
@@ -639,22 +639,22 @@ network Realistic_Layer2_Simple_MIM_MM_same
         backend: Backend;
         logger: Logger;
         EndNode1[1]: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=350,157");
         }
         EndNode2[1]: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=211,224");
         }
         Repeater1[1]: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Repeater";
             @display("i=REP1G;p=220,137");
         }
         BSA1[1]: BSANode {
-            address = 4;
+            address = "0.4";
             @display("p=164,176");
         }
 
@@ -682,30 +682,30 @@ network Realistic_Layer2_RouterNet
         backend: Backend;
         logger: Logger;
         Router1[1]: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "Router";
             @display("i=RTR;p=350,157");
         }
         Router2[1]: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "Router";
             @display("i=RTR;p=211,224");
         }
         Router3[1]: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Router";
             @display("i=RTR;p=220,137");
         }
         BSA1[1]: BSANode {
-            address = 4;
+            address = "0.4";
             @display("p=164,176");
         }
         Router5[1]: QNode {
-            address = 5;
+            address = "0.5";
             @display("i=RTR;p=313,246");
         }
         Router4[1]: QNode {
-            address = 6;
+            address = "0.6";
             node_type = "Router";
             @display("i=RTR;p=432,246");
         }
@@ -752,135 +752,135 @@ network Realistic_Layer2_Star_Sep
         backend: Backend;
         logger: Logger;
         EndNode1[1]: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=551,84");
         }
         EndNode2[1]: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=518,157");
         }
         EndNode3[1]: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "EndNode";
             @display("i=COMP;p=220,297");
         }
         EndNode4[1]: QNode {
-            address = 4;
+            address = "0.4";
             node_type = "EndNode";
             @display("i=COMP;p=128,285");
         }
         EndNode5[1]: QNode {
-            address = 5;
+            address = "0.5";
             node_type = "EndNode";
             @display("i=COMP;p=109,246");
         }
         EndNode6[1]: QNode {
-            address = 6;
+            address = "0.6";
             node_type = "EndNode";
             @display("i=COMP;p=503,263");
         }
         EndNode7[1]: QNode {
-            address = 7;
+            address = "0.7";
             node_type = "EndNode";
             @display("i=COMP;p=419,16");
         }
         EndNode8[1]: QNode {
-            address = 8;
+            address = "0.8";
             node_type = "EndNode";
             @display("i=COMP;p=211,16");
         }
         EndNode9[1]: QNode {
-            address = 9;
+            address = "0.9";
             node_type = "EndNode";
             @display("i=COMP;p=34,77");
         }
         EndNode10[1]: QNode {
-            address = 10;
+            address = "0.10";
             node_type = "EndNode";
             @display("i=COMP;p=13,208");
         }
         Router11[1]: QNode {
-            address = 11;
+            address = "0.11";
             node_type = "Router";
             @display("i=RTR;p=350,157");
         }
         Router12[1]: QNode {
-            address = 12;
+            address = "0.12";
             node_type = "Router";
             @display("i=RTR;p=211,224");
         }
         Router13[1]: QNode {
-            address = 13;
+            address = "0.13";
             node_type = "Router";
             @display("i=RTR;p=220,137");
         }
         Router14[1]: QNode {
-            address = 14;
+            address = "0.14";
             @display("i=RTR;p=313,246");
         }
         Router15[1]: QNode {
-            address = 15;
+            address = "0.15";
             node_type = "Router";
             @display("i=RTR;p=432,246");
         }
         Repeater16[1]: QNode {
-            address = 16;
+            address = "0.16";
             node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G;p=406,109");
         }
         Repeater17[1]: QNode {
-            address = 17;
+            address = "0.17";
             node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G;p=350,54");
         }
         Repeater18[1]: QNode {
-            address = 18;
+            address = "0.18";
             node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G;p=285,22");
         }
         Repeater19[1]: QNode {
-            address = 19;
+            address = "0.19";
             node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G;p=89,60");
         }
         Repeater20[1]: QNode {
-            address = 20;
+            address = "0.20";
             node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G;p=58,143");
         }
         BSA21[1]: BSANode {
-            address = 21;
+            address = "0.21";
             @display("p=164,176");
         }
         BSA22[1]: BSANode {
-            address = 22;
+            address = "0.22";
             @display("p=484,98");
         }
         BSA23[1]: BSANode {
-            address = 23;
+            address = "0.23";
             @display("p=445,157");
         }
         BSA24[1]: BSANode {
-            address = 24;
+            address = "0.24";
             @display("p=324,98");
         }
         BSA25[1]: BSANode {
-            address = 25;
+            address = "0.25";
             @display("p=270,70");
         }
         BSA26[1]: BSANode {
-            address = 26;
+            address = "0.26";
             @display("p=193,77");
         }
         BSA27[1]: BSANode {
-            address = 27;
+            address = "0.27";
             @display("p=128,137");
         }
 
@@ -979,26 +979,21 @@ network Realistic_Layer2_MM_MIM_MIM_MIM_MM
     submodules:
         backend: Backend;
         logger: Logger;
-        //EndNode[2]: QNode {
         EndNode[1]: QNode {
             address = 100+index;
             node_type = "EndNode";
             @display("i=COMP;");
-            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
-            //emission_timing_uncertainty = 10;
         }
 
-        //repeater[4]: QNode {
         repeater[2]: QNode {
-            address = 10000+sizeof(EndNode) + index;
+            address = 10000+ 1 + index;
             node_type = "Repeater";
-            //buffers = 25;
             @display("i=REP1G");
         }
 
         BSA[1]: BSANode {
-            address = 100000+sizeof(EndNode)+ sizeof(repeater)+ index;
-         }
+            address = "0." + string(100000+ 1+ 2+ index);
+        }
 
     connections:
         EndNode[0].port++ <--> ClassicalChannel {  distance = 20km; } <--> repeater[0].port++;//MM
@@ -1019,7 +1014,7 @@ network Realistic_Layer2_MIM_MIM
         backend: Backend;
         logger: Logger;
         EndNode[2]: QNode {
-            address = index;
+            address = "0." + index;
             node_type = "EndNode";
             @display("i=COMP;p=174,138");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
@@ -1027,14 +1022,14 @@ network Realistic_Layer2_MIM_MIM
         }
 
         repeater[1]: QNode {
-            address = sizeof(EndNode) + index;
+            address = "0." + string(2 + index);
             node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G");
         }
 
         BSA[2]: BSANode {
-            address = sizeof(EndNode)+ sizeof(repeater)+ index;
+            address = "0." + string(2 + 1 + index);
         }
 
     connections:
@@ -1060,22 +1055,19 @@ network Realistic_Layer2_MIM_tomography
         backend: Backend;
         logger: Logger;
         EndNode[2]: QNode {
-            address = index;
+            address = "0." + string(index);
             node_type = "EndNode";
             @display("i=COMP");
-            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
-            //emission_timing_uncertainty = 10;
         }
 
         repeater[9]: QNode {
-            address = sizeof(EndNode) + index;
+            address = "0." + string(2 + index);
             node_type = "Repeater";
-            //buffers = 25;
             @display("i=REP1G");
         }
 
         BSA[10]: BSANode {
-            address = sizeof(EndNode)+ sizeof(repeater)+ index;
+            address = "0." + string(2 + 9 + index);
         }
 
     connections:

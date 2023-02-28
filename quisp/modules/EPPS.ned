@@ -70,7 +70,7 @@ simple EntangledPhotonPairSource{
 module SPDC
 {
     parameters:
-        int address;
+        string address;
         double epps_frequency = default(5.9*10^6);// 5.9*10^6 = 5.9million pairs per sec as a default https://arxiv.org/pdf/1707.01339.pdf
         double epps_error_rate = default(0.093);//From 0~1. Fidelity = 0.907. This is the fidelity of the entangled qubit before entering the channel.
         string included_in_topology = "yes";
@@ -93,7 +93,6 @@ module SPDC
         }
         router: Router {
             parameters:
-                address = address;
                 @display("p=105.045,57.364998");
             gates:
                 fromQueue[sizeof(port)];

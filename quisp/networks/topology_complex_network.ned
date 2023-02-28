@@ -19,12 +19,11 @@ network ispMap_1239_node_23_48_hetero_distance
         backend: Backend;
         logger: Logger;
         hom[177]: BSANode {
-            address = index+1000;
+            address = "0." + string(index+1000);
             @display("p=105.85,66.7,m,5,60,60");
-            hom_photon_detection_per_sec = default(uniform(1000,40000));
         }
         repeater[118]: QNode {
-            address = index+10000;
+            address = "0." + string(index+10000);
             node_type = "Repeater";
             @display("i=REP1G;p=150.8,99.325,m,5,60,60");
         }
@@ -34,7 +33,7 @@ network ispMap_1239_node_23_48_hetero_distance
             @display("i=COMP;p=72.5,98.6,m,5,60,60");
         }
         router[10]: QNode {
-            address = index+1000000;
+            address = "0." + string(index+1000000);
             node_type = "Router";
             @display("i=RTR;p=87,27.55,m,5,60,60");
         }
@@ -766,21 +765,21 @@ network ispMap_1239_node_23_48
         backend: Backend;
         logger: Logger;
         hom[177]: BSANode {
-            address = index+1000;
+            address = "0." + string(index+1000);
             @display("p=139.425,72.215,m,5,60,60");
         }
         repeater[118]: QNode {
-            address = index+10000;
+            address = "0." + string(index+10000);
             node_type = "Repeater";
             @display("i=REP1G;p=157.3,109.395,m,5,60,60");
         }
         endnode[38]: QNode {
-            address = index;
+            address = "0." + string(index);
             node_type = "EndNode";
             @display("i=COMP;p=82.94,72.215,m,5,60,60");
         }
         router[10]: QNode {
-            address = index+1000000;
+            address = "0." + string(index+1000000);
             node_type = "Router";
             @display("i=RTR;p=114.4,25.025,m,5,60,60");
         }
