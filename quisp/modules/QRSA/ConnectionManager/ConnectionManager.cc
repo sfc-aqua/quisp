@@ -160,9 +160,6 @@ PurType ConnectionManager::parsePurType(const std::string &pur_type) {
   if (pur_type == "DSDA_SECOND_INV") {
     return PurType::DSDA_SECOND_INV;
   }
-  if (pur_type == "STEANE_DECODER") {
-    return PurType::STEANE_DECODER;
-  }
   return PurType::INVALID;
 }
 
