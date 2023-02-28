@@ -220,7 +220,7 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
   {
     auto rule = active_ruleset.rules.at(0);
     // first action is the purification with the neighbor qnode
-    get_instruction<quisp::runtime::INSTR_PURIFY_X_RegId_QubitId_QubitId_>(rule);
+    get_instruction<quisp::runtime::INSTR_PURIFY_X_RegId_int_QubitId_QubitId_>(rule);
   }
   // checking the 2nd rule of QNode2(initiator): Wait
   {
@@ -241,7 +241,7 @@ TEST(RSConverterTest, activeRuleSetConstructionFromJson) {
     EXPECT_EQ(partners.at(0), 5);
 
     auto action = rule.action;
-    get_instruction<quisp::runtime::INSTR_PURIFY_X_RegId_QubitId_QubitId_>(rule);
+    get_instruction<quisp::runtime::INSTR_PURIFY_X_RegId_int_QubitId_QubitId_>(rule);
   }
 
   // checking the 4th rule of QNode2(initiator): EnoughResource && MeasureCount -> Tomography
