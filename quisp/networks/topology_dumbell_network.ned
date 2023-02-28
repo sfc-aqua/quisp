@@ -31,42 +31,42 @@ network topology_dumbell_MM
         backend: Backend;
         logger: Logger;
         EndNode1: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=152,238");
         }
         EndNode2: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=324,245");
         }
         EndNode3: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "EndNode";
             @display("i=COMP;p=220,137");
         }
         EndNode4: QNode {
-            address = 4;
+            address = "0.4";
             node_type = "EndNode";
             @display("i=COMP;p=350,22");
         }
         EndNode5: QNode {
-            address = 5;
+            address = "0.5";
             node_type = "EndNode";
             @display("i=COMP;p=401,118");
         }
         EndNode6: QNode {
-            address = 6;
+            address = "0.6";
             node_type = "EndNode";
             @display("i=COMP;p=421,61");
         }
         Repeater1: QNode {
-            address = 7;
+            address = "0.7";
             node_type = "Repeater";
             @display("i=RTR;p=66,124");
         }
         Repeater2: QNode {
-            address = 8;
+            address = "0.8";
             node_type = "Repeater";
             @display("i=RTR;p=132,36");
         }
@@ -99,79 +99,79 @@ network topology_dumbell_MIM
         backend: Backend;
         logger: Logger;
         EndNode1: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=200,331");
         }
         EndNode2: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=329,322");
         }
         EndNode3: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "EndNode";
             @display("i=COMP;p=454,285");
         }
         EndNode4: QNode {
-            address = 4;
+            address = "0.4";
             node_type = "EndNode";
             @display("i=COMP;p=454,199");
         }
         EndNode5: QNode {
-            address = 5;
+            address = "0.5";
             node_type = "EndNode";
             @display("i=COMP;p=554,168");
         }
         EndNode6: QNode {
-            address = 6;
+            address = "0.6";
             node_type = "EndNode";
             @display("i=COMP;p=602,73");
         }
         Repeater1: QNode {
-            address = 7;
+            address = "0.7";
             node_type = "Repeater";
             @display("i=RTR;p=45,161");
         }
         Repeater2: QNode {
-            address = 8;
+            address = "0.8";
             node_type = "Repeater";
             @display("i=RTR;p=197,21");
         }
         BSA1: BSANode {
-            address = 9;
+            address = "0.9";
             node_type = "BSA";
             @dispaly("p=42,150");
             @display("p=105,238");
         }
         BSA2: BSANode {
-            address = 10;
+            address = "0.10";
             node_type = "BSA";
             @dispaly("p=52,140");
             @display("p=186,238");
         }
         BSA3: BSANode {
-            address = 11;
+            address = "0.11";
             node_type = "BSA";
             @dispaly("p=32,130");
         }
         BSA4: BSANode {
-            address = 12;
+            address = "0.12";
             node_type = "BSA";
             @display("p=113,87");
         }
         BSA5: BSANode {
-            address = 13;
+            address = "0.13";
             node_type = "BSA";
             @display("p=326,118");
         }
         BSA6: BSANode {
-            address = 14;
+            address = "0.14";
             node_type = "BSA";
             @display("p=421,118");
         }
         BSA7: BSANode {
-            address = 15;
+            address = "0.15";
             node_type = "BSA";
             @display("p=454,54");
         }

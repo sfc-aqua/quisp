@@ -16,25 +16,19 @@ network Three_BSA_star
         @display("bgl=2;bgb=177,120");
 
     submodules:
-        //configurator: IPv4NetworkConfigurator {
-        //    @display("p=100,100");
-        //}
         backend: Backend;
         logger: Logger;
         EndNode[3]: QNode {
-            //Initializerでaddress = node idにすればconflict無くなるかも。
-            address = index+100000;
+            address = "0." + string(index+100000);
             node_type = "EndNode";
             @display("i=COMP;p=60.333336,16.893333,m,5,60,60");
         }
         BSA[3]: BSANode {
-            address = index+1000;
-            //@display("p=326,57");
+            address = "0." + string(index+1000);
             @display("p=67.57333,70.590004,m,5,60,60");
         }
         Router[1]: QNode {
-            address = index;
-            //@display("p=246,56");
+            address = "0." + string(index);
             @display("i=RTR;p=126,87,m,5,60,60");
         }
     connections:
@@ -65,22 +59,20 @@ network Star_MSM
         backend: Backend;
         logger: Logger;
         node[3]: QNode {
-            address = index;
+            address = "0." + string(index);
             node_type = "EndNode";
             @display("i=COMP;p=182,120,m,5,60,60");
-            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
-            //emission_timing_uncertainty = 10;
         }
         spdc[6]: SPDC {
-            address = index+1000;
+            address = "0." + string(index+1000);
             @display("i=EPPS;p=110,77,m,5,60,60");
         }
         router[1]: QNode {
-            address = index+1000000;
+            address = "0." + string(index+1000000);
             @display("i=RTR;p=91,148,m,5,60,60");
         }
         repeater[3]: QNode {
-            address = index+1000;
+            address = "0." + string(index+1000);
             @display("i=REP1G;p=175,40,m,5,60,60");
         }
 
@@ -128,14 +120,12 @@ network Star_MM
         backend: Backend;
         logger: Logger;
         node[3]: QNode {
-            address = index;
+            address = "0." + string(index);
             node_type = "EndNode";
             @display("i=device/pc");
-            //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
-            //emission_timing_uncertainty = 10;
         }
         router[1]: QNode {
-            address = index+1000000;
+            address = "0." + string(index+1000000);
             @display("i=device/router");
         }
 
