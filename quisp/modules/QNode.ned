@@ -3,7 +3,6 @@ package modules;
 
 import modules.Application.Application;
 import modules.QRSA.quantumRoutingSoft;
-import modules.QNIC.*;
 import modules.Common.*;
 
 module QNode

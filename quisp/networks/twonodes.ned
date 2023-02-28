@@ -14,9 +14,6 @@ network twonodes
         channel C extends DatarateChannel
         {
             double cost = default(1);
-            double distance @unit(km);
-            distance = default(20km);
-            //delay = uniform(0.01ms, 1s);
             delay = this.distance / 200000km * 1s;
             datarate = uniform(1kbps, 100kbps);
         }
@@ -25,12 +22,12 @@ network twonodes
         backend: Backend;
         logger: Logger;
         source: QNode {
-            address = 1;
+            address = "0.1";
             buffers = 7;
             @display("i=COMP");
         }
         target: QNode {
-            address = 3;
+            address = "0.3";
             buffers = 7;
             @display("i=COMP;p=118.745,36.465");
         }
@@ -47,9 +44,6 @@ network threenodes
         {
             int index_temp;
             double cost = default(1);
-            double distance @unit(km);
-            distance = default(20km);
-            //delay = uniform(0.01ms, 1s);
             delay = this.distance / 200000km * 1s;
             datarate = uniform(1kbps, 100kbps);
         }
@@ -58,18 +52,18 @@ network threenodes
         backend: Backend;
         logger: Logger;
         source: QNode {
-            address = 1;
+            address = "0.1";
             buffers = 7;
             @display("i=COMP;p=230,165");
 
         }
         target: QNode {
-            address = 3;
+            address = "0.3";
             buffers = 3;
             @display("i=COMP;p=296,96");
         }
         anothertarget: QNode {
-            address = 2;
+            address = "0.2";
             buffers = 3;
             @display("i=COMP;p=358,201");
         }
@@ -89,9 +83,6 @@ network morenodes
         {
             //int index_temp;
             double cost = default(1);
-            double distance @unit(km);
-            distance = default(20km);
-            //delay = uniform(0.01ms, 1s);
             delay = this.distance / 200000km * 1s;
             datarate = uniform(1kbps, 100kbps);
         }
@@ -100,19 +91,19 @@ network morenodes
         backend: Backend;
         logger: Logger;
         source: QNode {
-            address = 1;
+            address = "0.1";
             @display("i=COMP;p=278,81");
         }
         target: QNode {
-            address = 2;
+            address = "0.2";
             @display("i=COMP;p=182,56");
         }
         anotherTarget: QNode {
-            address = 3;
+            address = "0.3";
             @display("i=COMP;p=299,147");
         }
         andmoreTarget: QNode {
-            address = 4;
+            address = "0.4";
             @display("i=COMP;p=57,79");
         }
 

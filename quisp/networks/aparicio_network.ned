@@ -20,67 +20,67 @@ network aparicio_MM
         backend: Backend;
         logger: Logger;
         EndNodeA: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=107,159");
         }
         EndNodeB: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=107,234");
         }
         EndNodeC: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "EndNode";
             @display("i=COMP;p=107,318");
         }
         EndNodeD: QNode {
-            address = 4;
+            address = "0.4";
             node_type = "EndNode";
             @display("i=COMP;p=107,400");
         }
         RouterE: QNode {
-            address = 5;
+            address = "0.5";
             node_type = "Router";
             @display("i=RTR;p=287,279");
         }
         RouterF: QNode {
-            address = 6;
+            address = "0.6";
             node_type = "Router";
             @display("i=RTR;p=496,279");
         }
         EndNodeG: QNode {
-            address = 7;
+            address = "0.7";
             node_type = "EndNode";
             @display("i=COMP;p=387,364");
         }
         EndNodeH: QNode {
-            address = 8;
+            address = "0.8";
             node_type = "EndNode";
             @display("i=COMP;p=558,377");
         }
         EndNodeI: QNode {
-            address = 9;
+            address = "0.9";
             node_type = "EndNode";
             @display("i=COMP;p=655,325");
         }
         RouterJ: QNode {
-            address = 10;
+            address = "0.10";
             node_type = "Router";
             @display("i=RTR;p=605,186");
         }
         EndNodeK: QNode {
-            address = 11;
+            address = "0.11";
             node_type = "EndNode";
             @display("i=COMP;p=686,61");
         }
         EndNodeL: QNode {
-            address = 12;
+            address = "0.12";
             node_type = "EndNode";
             @display("i=COMP;p=760,110");
         }
         EndNodeM: QNode {
-            address = 13;
+            address = "0.13";
             node_type = "EndNode";
             @display("i=COMP;p=760,186");
         }
@@ -129,127 +129,127 @@ network aparicio_MIM
         backend: Backend;
         logger: Logger;
         EndNodeA: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=107,159");
         }
         EndNodeB: QNode {
-            address = 2;
+            address = "0.2";
             node_type = "EndNode";
             @display("i=COMP;p=107,234");
         }
         EndNodeC: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "EndNode";
             @display("i=COMP;p=107,318");
         }
         EndNodeD: QNode {
-            address = 4;
+            address = "0.4";
             node_type = "EndNode";
             @display("i=COMP;p=107,400");
         }
         RouterE: QNode {
-            address = 5;
+            address = "0.5";
             node_type = "Router";
             @display("i=RTR;p=287,279");
         }
         RouterF: QNode {
-            address = 6;
+            address = "0.6";
             node_type = "Router";
             @display("i=RTR;p=496,279");
         }
         EndNodeG: QNode {
-            address = 7;
+            address = "0.7";
             node_type = "EndNode";
             @display("i=COMP;p=387,364");
         }
         EndNodeH: QNode {
-            address = 8;
+            address = "0.8";
             node_type = "EndNode";
             @display("i=COMP;p=558,377");
         }
         EndNodeI: QNode {
-            address = 9;
+            address = "0.9";
             node_type = "EndNode";
             @display("i=COMP;p=655,325");
         }
         RouterJ: QNode {
-            address = 10;
+            address = "0.10";
             node_type = "Router";
             @display("i=RTR;p=605,186");
         }
         EndNodeK: QNode {
-            address = 11;
+            address = "0.11";
             node_type = "EndNode";
             @display("i=COMP;p=686,61");
         }
         EndNodeL: QNode {
-            address = 12;
+            address = "0.12";
             node_type = "EndNode";
             @display("i=COMP;p=760,110");
         }
         EndNodeM: QNode {
-            address = 13;
+            address = "0.13";
             node_type = "EndNode";
             @display("i=COMP;p=760,186");
         }
         BSANode0: BSANode {
-            address = 100;
+            address = "0.100";
             node_type = "BSA";
             @display("i=BSA");
         }
         BSANode1: BSANode {
-            address = 101;
+            address = "0.101";
             node_type = "BSA";
             @display("i=BSA");
         }
         BSANode2: BSANode {
-            address = 102;
+            address = "0.102";
             node_type = "BSA";
             @display("i=BSA");
         }
         BSANode3: BSANode {
-            address = 103;
+            address = "0.103";
             node_type = "BSA";
             @display("i=BSA");
         }
         BSANode4: BSANode {
-            address = 104;
+            address = "0.104";
             node_type = "BSA";
             @display("i=BSA");
         }
         BSANode5: BSANode {
-            address = 105;
+            address = "0.105";
             node_type = "BSA";
             @display("i=BSA");
         }
         BSANode6: BSANode {
-            address = 106;
+            address = "0.106";
             node_type = "BSA";
             @display("i=BSA");
         }
         BSANode7: BSANode {
-            address = 107;
+            address = "0.107";
             node_type = "BSA";
             @display("i=BSA");
         }
         BSANode8: BSANode {
-            address = 108;
+            address = "0.108";
             node_type = "BSA";
             @display("i=BSA");
         }
         BSANode9: BSANode {
-            address = 109;
+            address = "0.109";
             node_type = "BSA";
             @display("i=BSA");
         }
         BSANode10: BSANode {
-            address = 110;
+            address = "0.110";
             node_type = "BSA";
             @display("i=BSA");
         }
         BSANode11: BSANode {
-            address = 111;
+            address = "0.111";
             node_type = "BSA";
             @display("i=BSA");
         }

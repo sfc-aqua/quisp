@@ -26,16 +26,16 @@ network Simple_constant_quantum_cost
             @display("i=COMP;p=480,88");
         }
         repeater[3]: QNode {
-            address = sizeof(endnode) + index;
+            address = "0." + string(3 + index);
             node_type = "Repeater";
             @display("i=REP1G;p=445,236");
         }
         BSA[6]: BSANode {
-            address = sizeof(endnode) +sizeof(repeater) + index;
+            address = "0." + string(3  + 3 + index);
             @display("p=560,137");
         }
         router[1]: QNode {
-            address = sizeof(endnode) +sizeof(repeater) +sizeof(BSA) + index;
+            address = "0." + string(3  +3 +6 + index);
             node_type = "Router";
             @display("i=RTR;p=357,144");
         }

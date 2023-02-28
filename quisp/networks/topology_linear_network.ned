@@ -26,14 +26,14 @@ network Tomography_Linear_One_MM_MIM
         }
 
         repeater: QNode {
-            address = 1234;
+            address = "0.1234";
             node_type = "Repeater";
             //buffers = 25;
             @display("i=REP1G");
         }
 
         BSA: BSANode {
-            address = 2;
+            address = "0.2";
             @display("i=BSA");
         }
 
@@ -57,16 +57,16 @@ network Linear_One_MIM
         backend: Backend;
         logger: Logger;
         source: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP");
         }
         BSA: BSANode {
-            address = 2;
+            address = "0.2";
             @display("i=BSA");
         }
         target: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "EndNode";
             @display("i=COMP");
         }
@@ -89,7 +89,7 @@ network Linear_One_MIM_biasedDistance
         backend: Backend;
         logger: Logger;
         source: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP");
             //buffers = 15;
@@ -97,11 +97,11 @@ network Linear_One_MIM_biasedDistance
             //emission_timing_uncertainty = 10;
         }
         BSA: BSANode {
-            address = 2;
+            address = "0.2";
             @display("i=BSA");
         }
         target: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "EndNode";
             //buffers = 20;
             @display("i=COMP");
@@ -125,7 +125,7 @@ network Linear_One_MM
         backend: Backend;
         logger: Logger;
         EndNode[2]: QNode {
-            address = index;
+            address = "0." + string(index);
             node_type = "EndNode";
             @display("i=COMP");
             //emission_timing_std = 1e-5;//standard deviation. normal(0, 1e-9)
@@ -146,7 +146,7 @@ network Linear_One_MM_bufferGap
         backend: Backend;
         logger: Logger;
         Small: QNode {
-            address = 112302;
+            address = "0.112302";
             node_type = "EndNode";
             buffers = 1;
             @display("i=COMP");
@@ -155,7 +155,7 @@ network Linear_One_MM_bufferGap
         }
 
         Big: QNode {
-            address = 300;
+            address = "0.300";
             buffers = 1;
             node_type = "EndNode";
             @display("i=COMP");
@@ -176,7 +176,7 @@ network Linear_One_MSM
         backend: Backend;
         logger: Logger;
         source: QNode {
-            address = 1;
+            address = "0.1";
             node_type = "EndNode";
             @display("i=COMP;p=240,48");
 
@@ -184,11 +184,10 @@ network Linear_One_MSM
             //emission_timing_uncertainty = 10;
         }
         epps: SPDC {//needs to check the buffersize, and tell each node how many photon arrivals to expect.
-            address = 2;
             @display("i=EPPS;p=132,48");
         }
         target: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "EndNode";
             @display("i=COMP");
         }
@@ -252,7 +251,7 @@ network Linear_One_MIM_MM_MSM
 
     submodules:
         source: QNode {
-            address = 10000000;
+            address = "0.10000000";
             node_type = "EndNode";
             @display("i=COMP;p=502,132");
             //buffers = 15;
@@ -260,35 +259,34 @@ network Linear_One_MIM_MM_MSM
             //emission_timing_uncertainty = 10;
         }
         BSA: BSANode {
-            address = 2;
+            address = "0.2";
             @display("i=BSA;p=304,132");
         }
         repeater: QNode {
-            address = 1234;
+            address = "0.1234";
             node_type = "Repeater";
         		//buffers = 25;
 
             @display("i=REP1G;p=408,131");
         }
         router: QNode {
-            address = 3;
+            address = "0.3";
             node_type = "Router";
             //buffers = 30;
             @display("i=RTR;p=207,131");
         }
         mm[2]: QNode {
-            address = index + 100;
+            address = "0." + string(index + 100);
             //buffers = 20;
             node_type = "EndNode";
             @display("i=COMP;p=207,31");
         }
         epps: SPDC {
-            address = 5;
             @display("i=EPPS;p=110,132");
         }
 
         pas: QNode {
-            address = 6;
+            address = "0.6";
             //buffers = 5;
             node_type = "EndNode";
             @display("i=COMP;p=21,132");
