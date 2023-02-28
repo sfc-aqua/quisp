@@ -127,6 +127,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
 
   // qnic_index(id)     11       12           13       14           15       16
   // [QNode2](qnic_addr:101) -- (102)[QNode3](103) -- (104)[QNode4](105) -- (106)[QNode5(test target)]
+  req->setApplication_id(1);
   req->setActual_destAddr(5);
   req->setActual_srcAddr(2);
   req->setDestAddr(5);
@@ -149,6 +150,7 @@ TEST(ConnectionManagerTest, RespondToRequest) {
   {
     auto *packetFor2 = dynamic_cast<ConnectionSetupResponse *>(gate->messages[0]);
     ASSERT_NE(packetFor2, nullptr);
+    EXPECT_EQ(packetFor2->getApplication_id(), 1);
     EXPECT_EQ(packetFor2->getDestAddr(), 2);
     auto ruleset = packetFor2->getRuleSet();  // json serialized ruleset
     ASSERT_NE(ruleset, nullptr);
