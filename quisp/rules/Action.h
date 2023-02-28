@@ -25,7 +25,6 @@ enum PurType : int {
   DSDA_INV,  ///< Inverse Double Selection and Dual Action for both X and Z errors
   DSDA_SECOND,  ///< Different type of Double Selection and Dual Action for both X and Z errors
   DSDA_SECOND_INV,  ///< Different type of Inverse Double Selection and Dual Action for both X and Z errors
-  STEANE_DECODER, ///< Based on the decoding circuit of the [[7, 1, 3]] Steane code
 };
 
 NLOHMANN_JSON_SERIALIZE_ENUM(PurType, {
@@ -41,7 +40,6 @@ NLOHMANN_JSON_SERIALIZE_ENUM(PurType, {
                                           {DSDA_INV, "DSDA_INV"},
                                           {DSDA_SECOND, "DSDA_SECOND"},
                                           {DSDA_SECOND_INV, "DSDA_SECOND_INV"},
-                                          {STEANE_DECODER, "STEANE_DECODER"},
                                       })
 
 inline void to_json(json& j, const QnicInterface& qi) { j = json{{"partner_address", qi.partner_addr}}; }
