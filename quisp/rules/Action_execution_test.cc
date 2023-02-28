@@ -60,6 +60,8 @@ class ActionExecutionTest : public testing::Test {
         terminator,
     };
     rs.id = ruleset_id;
+    // when runtime tries to promote qubit with 1 in rule0, it goes to rule -1 for testing purpose.
+    rs.next_rule_table.insert({{QNodeAddr{1}, 0}, -1});
     runtime->assignRuleSet(rs);
   }
   unsigned long long ruleset_id = 123;
