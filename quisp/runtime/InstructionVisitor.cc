@@ -45,6 +45,20 @@ void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAd
   runtime->callback->sendPurificationResult(ruleset_id, partner_addr, runtime->send_tag, sequence_number, measurement_result, protocol);
 }
 
+void InstructionVisitor::operator()(const INSTR_SEND_PURIFICATION_RESULT_QNodeAddr_MemoryKey_MemoryKey_MemoryKey_MemoryKey_MemoryKey_MemoryKey_RegId_PurType_& instruction) {
+  auto [partner_addr, measure_result_1, measure_result_2, measure_result_3, measure_result_4, measure_result_5, measure_result_6, action_index_reg_id, pur_type] = instruction.args;
+  bool result_1 = runtime->loadVal(measure_result_1).outcome().outcome_is_plus;
+  bool result_2 = runtime->loadVal(measure_result_2).outcome().outcome_is_plus;
+  bool result_3 = runtime->loadVal(measure_result_3).outcome().outcome_is_plus;
+  bool result_4 = runtime->loadVal(measure_result_4).outcome().outcome_is_plus;
+  bool result_5 = runtime->loadVal(measure_result_5).outcome().outcome_is_plus;
+  bool result_6 = runtime->loadVal(measure_result_6).outcome().outcome_is_plus;
+  int action_index = runtime->getRegVal(action_index_reg_id);
+  auto& rs = runtime->ruleset;
+  auto& rule = rs.rules.at(runtime->rule_id);
+  runtime->callback->sendSextuplePurificationResult(rs.id, rule, action_index, partner_addr, result_1, result_2, result_3, result_4, result_5, result_6, pur_type);
+}
+
 void InstructionVisitor::operator()(const INSTR_SEND_SWAPPING_RESULT_QNodeAddr_RegId_QNodeAddr_RegId_& instruction) {
   auto [partner, pauli_op_reg, new_partner, sequence_number_reg] = instruction.args;
   int pauli_op = runtime->getRegVal(pauli_op_reg);
