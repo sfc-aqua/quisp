@@ -33,6 +33,7 @@ Program always_pass{"cond", {INSTR_RET_ReturnCode_{{ReturnCode::COND_PASSED}}}};
 class ActionExecutionTest : public testing::Test {
  protected:
   void SetUp() {
+    prepareSimulation();
     runtime = new Runtime;
     callback = new MockRuntimeCallback;
     runtime->callback = callback;
